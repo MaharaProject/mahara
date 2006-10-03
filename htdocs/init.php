@@ -35,22 +35,21 @@ if (array_key_exists('MAHARA_LIBDIR',$_SERVER) && !empty($_SERVER['MAHARA_LIBDIR
 set_include_path('.'.PATH_SEPARATOR.$CFG->libroot);
 
 if (!file_exists($CFG->libroot.'config.php') || !is_readable($CFG->libroot.'config.php')) {
-    throw new Exception("Not installed! Please create config.php from config-dist.php");
+    trigger_error("Not installed! Please create config.php from config-dist.php");
 }
 
 require('config.php');
 $CFG = (object)array_merge((array)$cfg,(array)$CFG);
 
 require('mahara.php');
-ensure_config_sanity();
-ensure_php_sanity();
+ensure_sanity();
 
 require('adodb/adodb.inc.php'); // Database access functions
 $db = &ADONewConnection($CFG->dbtype);
 
 ob_start();
 if (!empty($CFG->dbport)) {
-    $CFG->dbhost .= ':'.$CFG->dbhost;
+    $CFG->dbhost .= ':'.$CFG->dbport;
 }
 if (!isset($CFG->dbpersist) or !empty($CFG->dbpersist)) {    // Use persistent connection (default)
     $dbconnected = $db->PConnect($CFG->dbhost,$CFG->dbuser,$CFG->dbpass,$CFG->dbname);
@@ -60,10 +59,9 @@ if (!isset($CFG->dbpersist) or !empty($CFG->dbpersist)) {    // Use persistent c
 if (empty($dbconnected)) {
     $errormessage = ob_get_contents();
     ob_end_clean();
-    throw new Exception("Database connection failed with error: ".$db->ErrorMsg()." (".$errormessage.")");
+    trigger_error(get_string('dbconnfailed','error',$errormessage));
 }
 ob_end_clean();
-
 
 
 ?>
