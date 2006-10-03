@@ -1,0 +1,405 @@
+<?php // $Id: oci8po.class.php,v 1.21 2006/09/28 23:06:04 stronk7 Exp $
+
+///////////////////////////////////////////////////////////////////////////
+//                                                                       //
+// NOTICE OF COPYRIGHT                                                   //
+//                                                                       //
+// Moodle - Modular Object-Oriented Dynamic Learning Environment         //
+//          http://moodle.com                                            //
+//                                                                       //
+// Copyright (C) 2001-3001 Martin Dougiamas        http://dougiamas.com  //
+//           (C) 2001-3001 Eloy Lafuente (stronk7) http://contiento.com  //
+//                                                                       //
+// This program is free software; you can redistribute it and/or modify  //
+// it under the terms of the GNU General Public License as published by  //
+// the Free Software Foundation; either version 2 of the License, or     //
+// (at your option) any later version.                                   //
+//                                                                       //
+// This program is distributed in the hope that it will be useful,       //
+// but WITHOUT ANY WARRANTY; without even the implied warranty of        //
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         //
+// GNU General Public License for more details:                          //
+//                                                                       //
+//          http://www.gnu.org/copyleft/gpl.html                         //
+//                                                                       //
+///////////////////////////////////////////////////////////////////////////
+
+/// This class generate SQL code to be used against Oracle
+/// It extends XMLDBgenerator so everything can be
+/// overriden as needed to generate correct SQL.
+
+class XMLDBoci8po extends XMLDBgenerator {
+
+/// Only set values that are different from the defaults present in XMLDBgenerator
+
+    var $statement_end = "\n/"; // String to be automatically added at the end of each statement
+                                // Using "/" because the standard ";" isn't good for stored procedures (triggers)
+
+    var $number_type = 'NUMBER';    // Proper type for NUMBER(x) in this DB
+
+    var $unsigned_allowed = false;    // To define in the generator must handle unsigned information
+    var $default_for_char = ' ';      // To define the default to set for NOT NULLs CHARs without default (null=do nothing)
+                                      // Using this whitespace here because Oracle doesn't distinguish empty and null! :-(
+
+    var $drop_default_clause_required = true; //To specify if the generator must use some DEFAULT clause to drop defaults
+    var $drop_default_clause = 'NULL'; //The DEFAULT clause required to drop defaults
+
+    var $default_after_null = false;  //To decide if the default clause of each field must go after the null clause
+
+    var $sequence_extra_code = true; //Does the generator need to add extra code to generate the sequence fields
+    var $sequence_name = ''; //Particular name for inline sequences in this generator
+
+    var $drop_table_extra_code = true; //Does the generatos need to add code after table drop
+
+    var $enum_inline_code = false; //Does the generator need to add inline code in the column definition
+
+    var $alter_column_sql = 'ALTER TABLE TABLENAME MODIFY (COLUMNSPECS)'; //The SQL template to alter columns
+
+    /**
+     * Creates one new XMLDBpostgres7
+     */
+    function XMLDBoci8po() {
+        parent::XMLDBgenerator();
+        $this->prefix = '';
+        $this->reserved_words = $this->getReservedWords();
+    }
+
+    /**
+     * Given one XMLDB Type, lenght and decimals, returns the DB proper SQL type
+     */
+    function getTypeSQL ($xmldb_type, $xmldb_length=null, $xmldb_decimals=null) {
+
+        switch ($xmldb_type) {
+            case XMLDB_TYPE_INTEGER:    // From http://www.postgresql.org/docs/7.4/interactive/datatype.html
+                if (empty($xmldb_length)) {
+                    $xmldb_length = 10;
+                }
+                $dbtype = 'NUMBER(' .  $xmldb_length . ')';
+                break;
+            case XMLDB_TYPE_NUMBER:
+                $dbtype = $this->number_type;
+            /// 38 is the max allowed
+                if ($xmldb_length > 38) {
+                    $xmldb_length = 38;
+                }
+                if (!empty($xmldb_length)) {
+                    $dbtype .= '(' . $xmldb_length;
+                    if (!empty($xmldb_decimals)) {
+                        $dbtype .= ',' . $xmldb_decimals;
+                    }
+                    $dbtype .= ')';
+                }
+                break;
+            case XMLDB_TYPE_FLOAT:
+                $dbtype = 'NUMBER';
+                break;
+            case XMLDB_TYPE_CHAR:
+                $dbtype = 'VARCHAR2';
+                if (empty($xmldb_length)) {
+                    $xmldb_length='255';
+                }
+                $dbtype .= '(' . $xmldb_length . ')';
+                break;
+            case XMLDB_TYPE_TEXT:
+                $dbtype = 'CLOB';
+                break;
+            case XMLDB_TYPE_BINARY:
+                $dbtype = 'BLOB';
+                break;
+            case XMLDB_TYPE_DATETIME:
+                $dbtype = 'DATE';
+                break;
+        }
+        return $dbtype;
+    }
+
+    /**
+     * Returns the code needed to create one enum for the xmldb_table and xmldb_field passes
+     */
+    function getEnumExtraSQL ($xmldb_table, $xmldb_field) {
+
+        $sql = 'CONSTRAINT ' . $this->getNameForObject($xmldb_table->getName(), $xmldb_field->getName(), 'ck');
+        $sql.= ' CHECK (' . $this->getEncQuoted($xmldb_field->getName()) . ' IN (' . implode(', ', $xmldb_field->getEnumValues()) . '))';
+
+        return $sql;
+    }
+
+    /**
+     * Returns the code needed to create one sequence for the xmldb_table and xmldb_field passes
+     */
+    function getCreateSequenceSQL ($xmldb_table, $xmldb_field) {
+
+        $sequence_name = $this->getNameForObject($xmldb_table->getName(), $xmldb_field->getName(), 'seq');
+
+        $sequence = "CREATE SEQUENCE " . $sequence_name;
+        $sequence.= "\n    START WITH 1";
+        $sequence.= "\n    INCREMENT BY 1";
+        $sequence.= "\n    NOMAXVALUE";
+
+        $trigger_name = $this->getNameForObject($xmldb_table->getName(), $xmldb_field->getName(), 'trg');
+
+        $trigger = "CREATE TRIGGER " . $trigger_name;
+        $trigger.= "\n    BEFORE INSERT";
+        $trigger.= "\nON " . $this->getEncQuoted($this->prefix . $xmldb_table->getName());
+        $trigger.= "\n    FOR EACH ROW";
+        $trigger.= "\nBEGIN";
+        $trigger.= "\n    IF :new." . $this->getEncQuoted($xmldb_field->getName()) . ' IS NULL THEN';
+        $trigger.= "\n        SELECT " . $sequence_name . '.nextval INTO :new.' . $this->getEncQuoted($xmldb_field->getName()) . " FROM dual;";
+        $trigger.= "\n    END IF;";
+        $trigger.= "\nEND;";
+        return array($sequence, $trigger);
+    }
+
+    /**
+     * Returns the code needed to drop one sequence for the xmldb_table and xmldb_field passed
+     * Can, optionally, specify if the underlying trigger will be also dropped
+     */
+    function getDropSequenceSQL ($xmldb_table, $xmldb_field, $include_trigger=false) {
+
+        $sequence_name = $this->getNameForObject($xmldb_table->getName(), $xmldb_field->getName(), 'seq');
+
+        $sequence = "DROP SEQUENCE " . $sequence_name;
+
+        $trigger_name = $this->getNameForObject($xmldb_table->getName(), $xmldb_field->getName(), 'trg');
+
+        $trigger = "DROP TRIGGER " . $trigger_name;
+
+        if ($include_trigger) {
+            $result =  array($sequence, $trigger);
+        } else {
+            $result = array($sequence);
+        }
+        return $result;
+    }
+
+    /**
+     * Returns the code (in array) needed to add one comment to the table
+     */
+    function getCommentSQL ($xmldb_table) {
+
+        $comment = "COMMENT ON TABLE " . $this->getEncQuoted($this->prefix . $xmldb_table->getName());
+        $comment.= " IS '" . substr($xmldb_table->getComment(), 0, 250) . "'";
+
+        return array($comment);
+    }
+
+    /**
+     * Returns the code (array of statements) needed to execute extra statements on table drop
+     */
+    function getDropTableExtraSQL ($xmldb_table) {
+        $xmldb_field = new XMLDBField('id'); // Fields having sequences should be exclusively, id.
+        return $this->getDropSequenceSQL($xmldb_table, $xmldb_field, false);
+    }
+
+    /**
+     * Given one XMLDBTable and one XMLDBField, return the SQL statements needded to alter the field in the table
+     * Oracle has some severe limits:
+     *     - clob and blob fields doesn't allow type to be specified
+     *     - error is dropped if the null/not null clause is specified and hasn't changed
+     *     - changes in precision/decimals of numeric fields drop an ORA-1440 error
+     */
+    function getAlterFieldSQL($xmldb_table, $xmldb_field) {
+
+        global $db;
+
+        $results = array(); /// To store all the needed SQL commands
+
+    /// Get the quoted name of the table and field
+        $tablename = $this->getEncQuoted($this->prefix . $xmldb_table->getName());
+        $fieldname = $this->getEncQuoted($xmldb_field->getName());
+
+    /// Take a look to field metadata
+        $meta = array_change_key_case($db->MetaColumns($tablename));
+        $metac = $meta[$fieldname];
+        $oldtype = strtolower($metac->type);
+        $oldmetatype = column_type($xmldb_table->getName(), $fieldname);
+        $oldlength = $metac->max_length;
+    /// To calculate the oldlength if the field is numeric, we need to perform one extra query
+    /// because ADOdb has one bug here. http://phplens.com/lens/lensforum/msgs.php?id=15883
+        if ($oldmetatype == 'N') {
+            $uppertablename = strtoupper($tablename);
+            $upperfieldname = strtoupper($fieldname);
+            if ($col = get_record_sql("SELECT cname, precision
+                                   FROM col
+                                   WHERE tname = '$uppertablename'
+                                     AND cname = '$upperfieldname'")) {
+                $oldlength = $col->precision;
+            }
+        }
+        $olddecimals = empty($metac->scale) ? null : $metac->scale;
+        $oldnotnull = empty($metac->not_null) ? false : $metac->not_null;
+        $olddefault = empty($metac->default_value) || strtoupper($metac->default_value) == 'NULL' ? null : $metac->default_value;
+
+        $typechanged = true;  //By default, assume that the column type has changed
+        $precisionchanged = true;  //By default, assume that the column precision has changed
+        $decimalchanged = true;  //By default, assume that the column decimal has changed
+        $defaultchanged = true;  //By default, assume that the column default has changed
+        $notnullchanged = true;  //By default, assume that the column notnull has changed
+
+        $from_temp_fields = false; //By default don't assume we are going to use temporal fields
+
+    /// Detect if we are changing the type of the column
+        if (($xmldb_field->getType() == XMLDB_TYPE_INTEGER && substr($oldmetatype, 0, 1) == 'I') ||
+            ($xmldb_field->getType() == XMLDB_TYPE_NUMBER  && $oldmetatype == 'N') ||
+            ($xmldb_field->getType() == XMLDB_TYPE_FLOAT   && $oldmetatype == 'F') ||
+            ($xmldb_field->getType() == XMLDB_TYPE_CHAR    && substr($oldmetatype, 0, 1) == 'C') ||
+            ($xmldb_field->getType() == XMLDB_TYPE_TEXT    && substr($oldmetatype, 0, 1) == 'X') ||
+            ($xmldb_field->getType() == XMLDB_TYPE_BINARY  && $oldmetatype == 'B')) {
+            $typechanged = false;
+        } 
+    /// Detect if precision has changed
+        if (($xmldb_field->getType() == XMLDB_TYPE_TEXT) ||
+            ($xmldb_field->getType() == XMLDB_TYPE_BINARY) ||
+            ($oldlength == -1) ||
+            ($xmldb_field->getLength() == $oldlength)) {
+            $precisionchanged = false;
+        }
+    /// Detect if decimal has changed
+        if (($xmldb_field->getType() == XMLDB_TYPE_INTEGER) ||
+            ($xmldb_field->getType() == XMLDB_TYPE_CHAR) ||
+            ($xmldb_field->getType() == XMLDB_TYPE_TEXT) ||
+            ($xmldb_field->getType() == XMLDB_TYPE_BINARY) ||
+            (!$xmldb_field->getDecimals()) ||
+            (!$olddecimals) ||
+            ($xmldb_field->getDecimals() == $olddecimals)) {
+            $decimalchanged = false;
+        }
+    /// Detect if we are changing the default
+        if (($xmldb_field->getDefault() === null && $olddefault === null) ||
+            ($xmldb_field->getDefault() === $olddefault) ||             //Check both equality and
+            ("'" . $xmldb_field->getDefault() . "'" === $olddefault)) {  //Equality with quotes because ADOdb returns the default with quotes
+            $defaultchanged = false;
+        }
+
+    /// Detect if we are changing the nullability
+        if (($xmldb_field->getNotnull() === $oldnotnull)) {
+            $notnullchanged = false;
+        }
+
+    /// If type has changed or precision or decimal has changed and we are in one numeric field
+    ///     - create one temp column with the new specs
+    ///     - fill the new column with the values from the old one
+    ///     - drop the old column
+    ///     - rename the temp column to the original name
+        if (($typechanged) || ($oldmetatype == 'N' && ($precisionchanged || $decimalchanged))) {
+            $tempcolname = $xmldb_field->getName() . '_alter_column_tmp';
+        /// Prevent temp field to have both NULL/NOT NULL and DEFAULT constraints
+            $this->alter_column_skip_notnull = true;
+            $this->alter_column_skip_default = true;
+            $xmldb_field->setName($tempcolname);
+        /// Create the temporal column
+            $results = array_merge($results, $this->getAddFieldSQL($xmldb_table, $xmldb_field));
+        /// Copy contents from original col to the temporal one
+            $results[] = 'UPDATE ' . $tablename . ' SET ' . $tempcolname . ' = ' . $fieldname;
+        /// Drop the old column
+            $xmldb_field->setName($fieldname); //Set back the original field name
+            $results = array_merge($results, $this->getDropFieldSQL($xmldb_table, $xmldb_field));
+        /// Rename the temp column to the original one
+            $results[] = 'ALTER TABLE ' . $tablename . ' RENAME COLUMN ' . $tempcolname . ' TO ' . $fieldname;
+        /// Mark we have performed one change based in temp fields
+            $from_temp_fields = true;
+        /// Re-enable the notnull and default sections so the general AlterFieldSQL can use it
+            $this->alter_column_skip_notnull = false;
+            $this->alter_column_skip_default = false;
+        /// Dissable the type section because we have done it with the temp field
+            $this->alter_column_skip_type = true;
+        /// If new field is nullable, nullability hasn't changed
+            if (!$xmldb_field->getNotnull()) {
+                $notnullchanged = false;
+            }
+        /// If new field hasn't default, default hasn't changed
+            if ($xmldb_field->getDefault() === null) {
+                $defaultchanged = false;
+            }
+        }
+
+    /// If type and precision and decimals hasn't changed, prevent the type clause
+        if (!$typechanged && !$precisionchanged && !$decimalchanged) {
+            $this->alter_column_skip_type = true;
+        }
+
+    /// If NULL/NOT NULL hasn't changed
+    /// prevent null clause to be specified
+        if (!$notnullchanged) {
+            $this->alter_column_skip_notnull = true; /// Initially, prevent the notnull clause
+        /// But, if we have used the temp field and the new field is not null, then enforce the not null clause
+            if ($from_temp_fields &&  $xmldb_field->getNotnull()) {
+                $this->alter_column_skip_notnull = false;
+            }
+        }
+    /// If default hasn't changed
+    /// prevent default clause to be specified
+        if (!$defaultchanged) {
+            $this->alter_column_skip_default = true; /// Initially, prevent the default clause
+        /// But, if we have used the temp field and the new field has default clause, then enforce the default clause
+            if ($from_temp_fields && $default_clause = $this->getDefaultClause($xmldb_field)) {
+                $this->alter_column_skip_default = false;
+            }
+        }
+
+    /// If arriving here, something is not being skiped (type, notnull, default), calculate the standar AlterFieldSQL
+        if (!$this->alter_column_skip_type || !$this->alter_column_skip_notnull || !$this->alter_column_skip_default) {
+            $results = array_merge($results, parent::getAlterFieldSQL($xmldb_table, $xmldb_field));
+            return $results;
+        }
+
+    /// Finally return results
+        return $results;
+    }
+
+    /**
+     * Given one XMLDBTable and one XMLDBField, return the SQL statements needded to create its default 
+     * (usually invoked from getModifyDefaultSQL()
+     */
+    function getCreateDefaultSQL($xmldb_table, $xmldb_field) {
+    /// Just a wrapper over the getAlterFieldSQL() function for Oracle that
+    /// is capable of handling defaults
+        return $this->getAlterFieldSQL($xmldb_table, $xmldb_field);
+    }
+                                                       
+    /**     
+     * Given one XMLDBTable and one XMLDBField, return the SQL statements needded to drop its default 
+     * (usually invoked from getModifyDefaultSQL()
+     */         
+    function getDropDefaultSQL($xmldb_table, $xmldb_field) {
+    /// Just a wrapper over the getAlterFieldSQL() function for Oracle that
+    /// is capable of handling defaults
+        return $this->getAlterFieldSQL($xmldb_table, $xmldb_field);
+    }   
+
+    /**
+     * Returns an array of reserved words (lowercase) for this DB
+     */
+    function getReservedWords() {
+    /// This file contains the reserved words for Oracle databases
+    /// from http://download-uk.oracle.com/docs/cd/B10501_01/server.920/a96540/ap_keywd.htm
+        $reserved_words = array (
+            'access', 'add', 'all', 'alter', 'and', 'any',
+            'as', 'asc', 'audit', 'between', 'by', 'char',
+            'check', 'cluster', 'column', 'comment',
+            'compress', 'connect', 'create', 'current',
+            'date', 'decimal', 'default', 'delete', 'desc',
+            'distinct', 'drop', 'else', 'exclusive', 'exists',
+            'file', 'float', 'for', 'from', 'grant', 'group',
+            'having', 'identified', 'immediate', 'in',
+            'increment', 'index', 'initial', 'insert',
+            'integer', 'intersect', 'into', 'is', 'level',
+            'like', 'lock', 'long', 'maxextents', 'minus',
+            'mlslabel', 'mode', 'modify', 'noaudit',
+            'nocompress', 'not', 'nowait', 'null', 'number',
+            'of', 'offline', 'on', 'online', 'option', 'or',
+            'order', 'pctfree', 'prior', 'privileges',
+            'public', 'raw', 'rename', 'resource', 'revoke',
+            'row', 'rowid', 'rownum', 'rows', 'select',
+            'session', 'set', 'share', 'size', 'smallint',
+            'start', 'successful', 'synonym', 'sysdate',
+            'table', 'then', 'to', 'trigger', 'uid', 'union',
+            'unique', 'update', 'user', 'validate', 'values',
+            'varchar', 'varchar2', 'view', 'whenever',
+            'where', 'with'
+        );
+        return $reserved_words;
+    }
+}
+
+?>
