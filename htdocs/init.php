@@ -33,32 +33,32 @@ function exception($e) {
     echo $e;
 }
 
-
 $CFG = new StdClass;
-$CFG->docroot = dirname(__FILE__);
+$CFG->docroot = dirname(__FILE__).'/';
 
 // Figure out our include path
 if (!empty($_SERVER['MAHARA_LIBDIR'])) {
     $CFG->libroot = $_SERVER['MAHARA_LIBDIR'];
 }
 else {
-    $CFG->libroot = dirname(dirname(__FILE__)) . '/lib/';
+    $CFG->libroot = dirname(__FILE__) . '/lib/';
 }
 set_include_path('.' . PATH_SEPARATOR . $CFG->libroot);
 
-if (!is_readable($CFG->libroot . 'config.php')) {
+if (!is_readable($CFG->docroot . 'config.php')) {
     trigger_error('Not installed! Please create config.php from config-dist.php');
 }
 
-require 'config.php';
+require('config.php');
 $CFG = (object)array_merge((array)$cfg, (array)$CFG);
 
-require 'mahara.php';
+require('mahara.php');
+require('dml.php');
 ensure_sanity();
 
 // Database access functions
-require 'adodb/adodb-exceptions.inc.php';
-require 'adodb/adodb.inc.php';
+require('adodb/adodb-exceptions.inc.php');
+require('adodb/adodb.inc.php');
 
 try {
     // ADODB does not provide the raw driver error message if the connection
@@ -72,10 +72,14 @@ try {
     }
     if (!empty($CFG->dbpersist)) {    // Use persistent connection (default)
         $dbconnected = $db->PConnect($CFG->dbhost,$CFG->dbuser,$CFG->dbpass,$CFG->dbname);
-    } else {                                                     // Use single connection
+    } 
+    else {                                                     // Use single connection
         $dbconnected = $db->Connect($CFG->dbhost,$CFG->dbuser,$CFG->dbpass,$CFG->dbname);
     }
     
+    $db->SetFetchMode(ADODB_FETCH_ASSOC);
+    configure_dbconnection();
+
     ob_end_clean();
 }
 catch (Exception $e) {
