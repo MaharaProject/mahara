@@ -189,7 +189,6 @@ function get_string_from_file($identifier, $langfile) {
     return $string[$identifier];
 }
 
-
 /**
  * This function makes the return value of ini_get consistent if you are
  * setting server directives through the .htaccess file in apache.
@@ -197,9 +196,8 @@ function get_string_from_file($identifier, $langfile) {
  * Current behavior for value set from .htaccess On = On, Off = Off
  * Contributed by jdell @ unr.edu
  *
- * @param string $ini_get_arg ?
+ * @param string $ini_get_arg setting to look for
  * @return bool
- * @todo Finish documenting this function
  */
 function ini_get_bool($ini_get_arg) {
     $temp = ini_get($ini_get_arg);
@@ -210,6 +208,13 @@ function ini_get_bool($ini_get_arg) {
     return false;
 }
 
+/*
+ * This function returns a value from $CFG
+ * or null if it is not found
+ * 
+ * @param string $key config setting to look for 
+ * @return mixed
+ */
 function get_config($key) {
     global $CFG;
     if (array_key_exists($key,$CFG)) {
@@ -218,12 +223,25 @@ function get_config($key) {
     return null;
 }
 
+/*
+ * This function prints an array or object
+ * wrapped inside <pre></pre>
+ * 
+ * @param $mixed value to print
+ */
 function print_object($mixed) {
     echo '<pre>';
     print_r($mixed);
     echo '</pre>';
 }
 
+/*
+ * This function returns the current 
+ * language to use, either for a given user
+ * or sitewide, or the default
+ * 
+ * @return string
+ */
 function current_language() {
     global $USER, $CFG;
     if (!empty($USER->lang)) {
@@ -235,6 +253,13 @@ function current_language() {
     return 'en.utf8';
 }
 
+/*
+ * Helper function to sprintf language strings
+ * with a variable number of arguments
+ * 
+ * @param string $string raw string to use
+ * @param array $args arguments to sprintf
+ */
 function format_langstring($string,$args) {
     return call_user_func_array('sprintf',array_merge(array($string),$args));
 }
