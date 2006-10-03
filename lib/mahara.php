@@ -109,13 +109,10 @@ function get_string($identifier,$section) {
         }
     }
 
-    print_object($locations);
-
     // First check all the normal locations for the string in the current language
     foreach ($locations as $location) {
         //if local directory not found, or particular string does not exist in local direcotry
         $langfile = $location.$lang.'/'.$section.'.php';
-        echo $langfile;
         if (file_exists($langfile)) {
             if ($result = get_string_from_file($identifier, $langfile)) {
                 return format_langstring($result,$variables);
