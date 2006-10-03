@@ -19,49 +19,75 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-// set up basic error handling here
+// @todo <nigel> Set up error handling. For now, use trigger_error. I will
+// update all calls as necessary once error handling is finalised.
+set_error_handler('error');
+set_exception_handler('exception');
 
 
-unset($CFG);
+function error($code, $message, $file, $lines, $vars) {
+    echo "$code:$message in $file on line $line<br>";
+}
+
+function exception($e) {
+    echo $e;
+}
+
+
 $CFG = new StdClass;
 $CFG->docroot = dirname(__FILE__);
 
-// figure out our include path
-$CFG->libroot = dirname(dirname(__FILE__)).'/lib/';
-if (array_key_exists('MAHARA_LIBDIR',$_SERVER) && !empty($_SERVER['MAHARA_LIBDIR'])) {
+// Figure out our include path
+if (!empty($_SERVER['MAHARA_LIBDIR'])) {
     $CFG->libroot = $_SERVER['MAHARA_LIBDIR'];
 }
+else {
+    $CFG->libroot = dirname(dirname(__FILE__)) . '/lib/';
+}
+set_include_path('.' . PATH_SEPARATOR . $CFG->libroot);
 
-set_include_path('.'.PATH_SEPARATOR.$CFG->libroot);
-
-if (!file_exists($CFG->libroot.'config.php') || !is_readable($CFG->libroot.'config.php')) {
-    trigger_error("Not installed! Please create config.php from config-dist.php");
+if (!is_readable($CFG->libroot . 'config.php')) {
+    trigger_error('Not installed! Please create config.php from config-dist.php');
 }
 
-require('config.php');
-$CFG = (object)array_merge((array)$cfg,(array)$CFG);
+require 'config.php';
+$CFG = (object)array_merge((array)$cfg, (array)$CFG);
 
-require('mahara.php');
+require 'mahara.php';
 ensure_sanity();
 
-require('adodb/adodb.inc.php'); // Database access functions
-$db = &ADONewConnection($CFG->dbtype);
+// Database access functions
+require 'adodb/adodb-exceptions.inc.php';
+require 'adodb/adodb.inc.php';
 
-ob_start();
-if (!empty($CFG->dbport)) {
-    $CFG->dbhost .= ':'.$CFG->dbport;
+try {
+    // ADODB does not provide the raw driver error message if the connection
+    // fails for some reason, so we use output buffering to catch whatever
+    // the error is instead.
+    ob_start();
+    
+    $db = &ADONewConnection($CFG->dbtype);
+    if (!empty($CFG->dbport)) {
+        $CFG->dbhost .= ':'.$CFG->dbport;
+    }
+    if (!empty($CFG->dbpersist)) {    // Use persistent connection (default)
+        $dbconnected = $db->PConnect($CFG->dbhost,$CFG->dbuser,$CFG->dbpass,$CFG->dbname);
+    } else {                                                     // Use single connection
+        $dbconnected = $db->Connect($CFG->dbhost,$CFG->dbuser,$CFG->dbpass,$CFG->dbname);
+    }
+    
+    ob_end_clean();
 }
-if (!isset($CFG->dbpersist) or !empty($CFG->dbpersist)) {    // Use persistent connection (default)
-    $dbconnected = $db->PConnect($CFG->dbhost,$CFG->dbuser,$CFG->dbpass,$CFG->dbname);
-} else {                                                     // Use single connection
-    $dbconnected = $db->Connect($CFG->dbhost,$CFG->dbuser,$CFG->dbpass,$CFG->dbname);
-}
-if (empty($dbconnected)) {
+catch (Exception $e) {
     $errormessage = ob_get_contents();
     ob_end_clean();
-    trigger_error(get_string('dbconnfailed','error',$errormessage));
+    // @todo <nigel|penny>: At this point the raw error message can be munged from
+    // $errormessage, while the $e object holds some other information (like backtrace,
+    // which can be parsed with adodb_backtrace($e->gettrace());). At this point a
+    // nice message should be displayed explaining the problem etc. etc.
+    echo $e;
+    echo $errormessage;
+    die;
 }
-ob_end_clean();
-
 
 ?>
