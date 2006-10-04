@@ -19,7 +19,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-
+defined('INTERNAL') || die();
 /** 
  * work around silly php settings
  * and broken setup stuff about the install
