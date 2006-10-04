@@ -223,7 +223,7 @@ function get_config($key) {
     return null;
 }
 
-/*
+/**
  * This function prints an array or object
  * wrapped inside <pre></pre>
  * 
@@ -235,7 +235,7 @@ function print_object($mixed) {
     echo '</pre>';
 }
 
-/*
+/**
  * This function returns the current 
  * language to use, either for a given user
  * or sitewide, or the default
@@ -253,7 +253,7 @@ function current_language() {
     return 'en.utf8';
 }
 
-/*
+/**
  * Helper function to sprintf language strings
  * with a variable number of arguments
  * 
@@ -262,6 +262,19 @@ function current_language() {
  */
 function format_langstring($string,$args) {
     return call_user_func_array('sprintf',array_merge(array($string),$args));
+}
+
+/**
+ * Helper function to figure out whether an array is an array or a hash
+ * @param array $array array to check
+ * @return bool true if the array is a hash
+ */
+function is_hash($array) {
+    if (!is_array($array)) {
+        return false;
+    }
+    $diff = array_diff_assoc($array,array_values($array));
+    return !empty($diff);
 }
 
 ?>
