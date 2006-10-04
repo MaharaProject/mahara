@@ -58,6 +58,13 @@ function ensure_sanity() {
         }
     }
 
+    if (ini_get_bool('magic_quotes_runtime')) {
+        // try turn it off, if we can't, complain bitterly
+        if (!ini_set('magic_quotes_runtime',0)) {
+            log_environ(get_string('magicquotesruntime','error'));
+        }
+    }
+
     // dataroot inside document root.
     if (strpos(get_config('dataroot'),get_config('docroot')) !== false) {
         trigger_error(get_string('datarootinsidedocroot','error'));
