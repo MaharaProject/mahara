@@ -93,12 +93,11 @@ function get_string($identifier,$section) {
     }
 
     // Define the locations of language strings for this section
-    $libroot = get_config('libroot');
     $docroot = get_config('docroot');
     $locations = array();
     
     if ($section == 'mahara' || $section != 'langconfig') {
-        $locations[] = $libroot.'lang/';
+        $locations[] = $docroot.'lang/';
     } else {
         $extras = array('artefacts','auth'); // more later..
         foreach ($extras as $tocheck) {
@@ -113,7 +112,7 @@ function get_string($identifier,$section) {
     foreach ($locations as $location) {
         //if local directory not found, or particular string does not exist in local direcotry
         $langfile = $location.$lang.'/'.$section.'.php';
-        if (file_exists($langfile)) {
+        if (is_readable($langfile)) {
             if ($result = get_string_from_file($identifier, $langfile)) {
                 return format_langstring($result,$variables);
             }
@@ -130,10 +129,10 @@ function get_string($identifier,$section) {
 
     foreach ($locations as $location) {
         $langfile = $location.$lang.'/langconfig.php';
-        if (file_exists($langfile)) {
+        if (is_readable($langfile)) {
             if ($parentlang = get_string_from_file('parentlanguage', $langfile)) {
                 $langfile = $location.$parentlang.'/'.$section.'.php';
-                if (file_exists($langfile)) {
+                if (is_readable($langfile)) {
                     if ($result = get_string_from_file($identifier, $langfile)) {
                         return format_langstring($result,$variables);
                     }
@@ -146,7 +145,7 @@ function get_string($identifier,$section) {
     foreach ($locations as $location) {
         //if local_en not found, or string not found in local_en
         $langfile = $location.'en.utf8/'.$module.'.php';
-        if (file_exists($langfile)) {
+        if (is_readable($langfile)) {
             if ($result = get_string_from_file($identifier, $langfile)) {
                 return format_langstring($result,$variables);
             }
