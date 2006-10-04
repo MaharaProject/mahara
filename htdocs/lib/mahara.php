@@ -29,7 +29,7 @@ function ensure_sanity() {
 
     // register globals workaround
     if (ini_get_bool('register_globals')) {
-        trigger_error(get_string('error','registerglobals'),E_USER_NOTICE);
+        trigger_error(get_string('registerglobals','error'),E_USER_NOTICE);
         $massivearray = array_keys(array_merge($_POST,$_GET,$_COOKIE,$_SERVER,$_REQUEST,$_FILES));
         foreach ($massivearray as $tounset) {
             unset($GLOBALS[$tounset]);
@@ -38,7 +38,7 @@ function ensure_sanity() {
 
     // magic_quotes_gpc workaround
     if (ini_get_bool('magic_quotes_gpc')) {
-        trigger_error(get_string('error','magicquotesgpc'),E_USER_NOTICE);
+        trigger_error(get_string('magicquotesgpc','error'),E_USER_NOTICE);
         function stripslashes_deep($value) {
             $value = is_array($value) ?
                 array_map('stripslashes_deep', $value) :
