@@ -36,7 +36,7 @@
 /// (feel free to modify, improve and document such page, thanks!)
 
 /// FUNCTIONS FOR DATABASE HANDLING  ////////////////////////////////
-
+defined('INTERNAL') || die();
 /**
  * Execute a given sql command string
  *
