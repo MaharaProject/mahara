@@ -210,4 +210,45 @@ function error ($code, $message, $file, $line, $vars) {
     log_warn($message);
 }
 
+
+// Standard exceptions
+class ConfigSanityException extends Exception {}
+
+// Catch exceptions that fall through to main()
+set_exception_handler('exception');
+
+function exception ($e) {
+    // @todo<nigel>: maybe later, rewrite as:
+    // if $e not Exception
+    //     get language string based on class name
+    // rather than by switch on class name
+    switch (get_class($e)) {
+        case 'ConfigSanityException':
+            $message = get_string('configsanityexception', 'error', $e->getMessage());
+            break;
+        default:
+            $message = $e->getMessage();
+    }
+
+    echo <<<EOF
+<html>
+<head>
+    <title>\$projectname - Site Unavailable</title>
+    <style type="text/css">
+        #reason {
+            margin: 0 3em;
+        }
+    </style>
+</head>
+<h1>OMGWTF</h1>
+<body>
+<p>$message</p>
+<hr>
+<p>@todo&lt;nigel&gt;: make this page more shiny :)</p>
+</body>
+</html>
+EOF;
+    die();
+}
+
 ?>
