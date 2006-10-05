@@ -29,7 +29,7 @@ function ensure_sanity() {
 
     // register globals workaround
     if (ini_get_bool('register_globals')) {
-        trigger_error(get_string('registerglobals','error'),E_USER_NOTICE);
+        log_environ(get_string('registerglobals', 'error'));
         $massivearray = array_keys(array_merge($_POST,$_GET,$_COOKIE,$_SERVER,$_REQUEST,$_FILES));
         foreach ($massivearray as $tounset) {
             unset($GLOBALS[$tounset]);
@@ -38,7 +38,7 @@ function ensure_sanity() {
 
     // magic_quotes_gpc workaround
     if (ini_get_bool('magic_quotes_gpc')) {
-        trigger_error(get_string('magicquotesgpc','error'),E_USER_NOTICE);
+        log_environ(get_string('magicquotesgpc', 'error'));
         function stripslashes_deep($value) {
             $value = is_array($value) ?
                 array_map('stripslashes_deep', $value) :
@@ -60,8 +60,12 @@ function ensure_sanity() {
 
     if (ini_get_bool('magic_quotes_runtime')) {
         // try turn it off, if we can't, complain bitterly
-        if (!ini_set('magic_quotes_runtime',0)) {
+        if (!ini_set('magic_quotes_runtime', 0)) {
+            // @todo this should be an ERROR that halts the script
             log_environ(get_string('magicquotesruntime','error'));
+        }
+        else {
+            log_environ(get_string('magicquoteruntimeworkaround', 'error'));
         }
     }
 
