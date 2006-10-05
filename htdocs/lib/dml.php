@@ -1,42 +1,32 @@
-<?php // $Id: dmllib.php,v 1.40 2006/10/01 09:16:49 moodler Exp $
+<?php 
+/**
+ * This program is part of moodle
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ *
+ * @package    mahara
+ * @subpackage core or plugintype/pluginname
+ * @author     Your Name <you@example.org>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
+ * @copyright  (C) 2001-3001 Martin Dougiamas http://dougiamas.com
+ * @copyright  additional modifications (c) Catalyst IT Ltd http://catalyst.net.nz
+ *
+ */
 
-///////////////////////////////////////////////////////////////////////////
-//                                                                       //
-// NOTICE OF COPYRIGHT                                                   //
-//                                                                       //
-// Moodle - Modular Object-Oriented Dynamic Learning Environment         //
-//          http://moodle.com                                            //
-//                                                                       //
-// Copyright (C) 2001-3001 Martin Dougiamas        http://dougiamas.com  //
-//                                                                       //
-// This program is free software; you can redistribute it and/or modify  //
-// it under the terms of the GNU General Public License as published by  //
-// the Free Software Foundation; either version 2 of the License, or     //
-// (at your option) any later version.                                   //
-//                                                                       //
-// This program is distributed in the hope that it will be useful,       //
-// but WITHOUT ANY WARRANTY; without even the implied warranty of        //
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         //
-// GNU General Public License for more details:                          //
-//                                                                       //
-//          http://www.gnu.org/copyleft/gpl.html                         //
-//                                                                       //
-///////////////////////////////////////////////////////////////////////////
-
-/// This library contains all the Data Manipulation Language (DML) functions
-/// used to interact with the DB. All the dunctions in this library must be
-/// generic and work against the major number of RDBMS possible. This is the
-/// list of currently supported and tested DBs: mysql, postresql, mssql, oracle
-
-/// This library is automatically included by Moodle core so you never need to
-/// include it yourself.
-
-/// For more info about the functions available in this library, please visit:
-///     http://docs.moodle.org/en/DML_functions
-/// (feel free to modify, improve and document such page, thanks!)
-
-/// FUNCTIONS FOR DATABASE HANDLING  ////////////////////////////////
 defined('INTERNAL') || die();
+
 /**
  * Execute a given sql command string
  *
