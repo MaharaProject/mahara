@@ -19,22 +19,13 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+defined('INTERNAL') || die();
+
 // @todo <nigel> Set up error handling. For now, use trigger_error. I will
 // update all calls as necessary once error handling is finalised.
-set_error_handler('error');
-set_exception_handler('exception');
-
-
-function error($code, $message, $file, $lines, $vars) {
-    echo "$code:$message in $file on line $line<br>";
-}
-
-function exception($e) {
-    echo $e;
-}
 
 $CFG = new StdClass;
-$CFG->docroot = dirname(__FILE__).'/';
+$CFG->docroot = dirname(__FILE__) . '/';
 
 // Figure out our include path
 if (!empty($_SERVER['MAHARA_LIBDIR'])) {
@@ -45,8 +36,14 @@ else {
 }
 set_include_path('.' . PATH_SEPARATOR . $CFG->libroot);
 
+// Set up error handling
+require 'errors.php';
+
 if (!is_readable($CFG->docroot . 'config.php')) {
-    trigger_error('Not installed! Please create config.php from config-dist.php');
+    // @todo Later, this will redirect to the installer script. For now, we
+    // just log and exit.
+    log_environ('Not installed! Please create config.php from config-dist.php');
+    exit;
 }
 
 require('config.php');
@@ -98,9 +95,5 @@ catch (Exception $e) {
 }
 
 load_config();
-
-if (!get_config('theme')) {
-    set_config('theme','default');
-}
 
 ?>

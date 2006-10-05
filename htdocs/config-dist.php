@@ -35,4 +35,13 @@ $cfg->wwwroot = 'http://myhost.com/mahara/';
 // dirroot - uploaded files - include trailing slash.
 // must be writable by the webserver and outside document root.
 $cfg->dataroot = '/path/to/uploaddir';
+
+// Logging configuration
+$cfg->log_dbg_targets = LOG_TARGET_SCREEN | LOG_TARGET_ERRORLOG;
+$cfg->log_info_targets = LOG_TARGET_SCREEN | LOG_TARGET_ERRORLOG;
+$cfg->log_warn_targets = LOG_TARGET_SCREEN | LOG_TARGET_ERRORLOG;
+$cfg->log_environ_targets = LOG_TARGET_SCREEN | LOG_TARGET_ERRORLOG;
+
+$cfg->log_backtrace_levels = LOG_LEVEL_DBG | LOG_LEVEL_INFO;
+
 ?>

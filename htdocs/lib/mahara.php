@@ -96,7 +96,7 @@ function ensure_sanity() {
 
     // register globals workaround
     if (ini_get_bool('register_globals')) {
-        trigger_error(get_string('registerglobals','error'),E_USER_NOTICE);
+        log_environ(get_string('registerglobals', 'error'));
         $massivearray = array_keys(array_merge($_POST,$_GET,$_COOKIE,$_SERVER,$_REQUEST,$_FILES));
         foreach ($massivearray as $tounset) {
             unset($GLOBALS[$tounset]);
@@ -105,7 +105,7 @@ function ensure_sanity() {
 
     // magic_quotes_gpc workaround
     if (ini_get_bool('magic_quotes_gpc')) {
-        trigger_error(get_string('magicquotesgpc','error'),E_USER_NOTICE);
+        log_environ(get_string('magicquotesgpc', 'error'));
         function stripslashes_deep($value) {
             $value = is_array($value) ?
                 array_map('stripslashes_deep', $value) :
@@ -126,11 +126,28 @@ function ensure_sanity() {
     }
 
     if (ini_get_bool('magic_quotes_runtime')) {
-        // try turn it off, if we can't, complain bitterly
-        if (!ini_set('magic_quotes_runtime',0)) {
-            log_environ(get_string('magicquotesruntime','error'));
-        }
+        // Turn of magic_quotes_runtime. Anyone with this on deserves a slap in the face
+        set_magic_quotes_runtime(0);
+        log_environ(get_string('magicquotesruntime', 'error'));
     }
+
+    if (ini_get_bool('magic_quotes_sybase')) {
+        // See above comment re. magic_quotes_runtime
+        @ini_set('magic_quotes_sybase', 0);
+        log_environ(get_string('magicquotessybase', 'error'));
+    }
+
+    if (ini_get_bool('safe_mode')) {
+        // We don't run with safe mode
+        throw new ConfigSanityException(get_string('safemodeon', 'error'));
+    }
+
+    // Other things that might be worth checking:
+    //    memory limit
+    //    file_uploads (off|on)
+    //    upload_max_filesize
+    //    allow_url_fopen (only if we use this)
+    //
 
     // dataroot inside document root.
     if (strpos(get_config('dataroot'),get_config('docroot')) !== false) {
@@ -144,8 +161,6 @@ function ensure_sanity() {
     
     check_dir_exists(get_config('dataroot').'smarty/compile');
     check_dir_exists(get_config('dataroot').'smarty/cache');
-
-    // more later?
 
 }
 
@@ -591,7 +606,6 @@ function clean_param($key, $type, $from=REQUEST_EITHER) {
  */
 function check_dir_exists($dir, $create=true, $recursive=true) {
 
-    error_log("checking $dir");
     $status = true;
 
     if(!is_dir($dir)) {
@@ -604,6 +618,5 @@ function check_dir_exists($dir, $create=true, $recursive=true) {
     }
     return $status;
 }
-
 
 ?>

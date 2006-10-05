@@ -50,17 +50,23 @@ defined('INTERNAL') || die();
  * @return Smarty
  */
 function &smarty($javascript = array(), $headers = array(), $onload=false) {
-    global $USER;
+    global $USER, $CFG;
 
     require_once(get_config('libroot') . 'smarty/Smarty.class.php');
 
     $smarty =& new Smarty();
+    
+    if (!get_config('theme')) {
+        // if it's not set, we're probably not installed, 
+        // so set it in $CFG directly rather than the db which doesn't yet exist
+        $CFG->theme = 'default'; 
+    }
 
-    $smarty->template_dir = get_config('docroot').'themes/'.get_config('theme').'/templates/';
+    $smarty->template_dir = get_config('docroot').'theme/'.get_config('theme').'/templates/';
     $smarty->compile_dir  = get_config('dataroot').'smarty/compile';
     $smarty->cache_dir    = get_config('dataroot').'smarty/cache';
 
-    $smarty->assign('THEMEURL', get_config('wwwroot').'themes/'.get_config('theme').'/static/');
+    $smarty->assign('THEMEURL', get_config('wwwroot').'theme/'.get_config('theme').'/static/');
     $smarty->assign('WWWROOT', get_config('wwwroot'));
 
     $smarty->assign_by_ref('USER', $USER);
