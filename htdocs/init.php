@@ -52,8 +52,11 @@ if (!is_readable($CFG->docroot . 'config.php')) {
 require('config.php');
 $CFG = (object)array_merge((array)$cfg, (array)$CFG);
 
+// core libraries
 require('mahara.php');
 require('dml.php');
+require('constants.php');
+require('web.php');
 ensure_sanity();
 
 // Database access functions
@@ -92,6 +95,12 @@ catch (Exception $e) {
     echo $e;
     echo $errormessage;
     die;
+}
+
+load_config();
+
+if (!get_config('theme')) {
+    set_config('theme','default');
 }
 
 ?>
