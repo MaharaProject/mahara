@@ -21,17 +21,6 @@
 
 // @todo <nigel> Set up error handling. For now, use trigger_error. I will
 // update all calls as necessary once error handling is finalised.
-set_error_handler('error');
-set_exception_handler('exception');
-
-
-function error($code, $message, $file, $lines, $vars) {
-    echo "$code:$message in $file on line $line<br>";
-}
-
-function exception($e) {
-    echo $e;
-}
 
 $CFG = new StdClass;
 $CFG->docroot = dirname(__FILE__).'/';
@@ -44,6 +33,9 @@ else {
     $CFG->libroot = dirname(__FILE__) . '/lib/';
 }
 set_include_path('.' . PATH_SEPARATOR . $CFG->libroot);
+
+// Set up error handling
+require 'errors.php';
 
 if (!is_readable($CFG->docroot . 'config.php')) {
     trigger_error('Not installed! Please create config.php from config-dist.php');
