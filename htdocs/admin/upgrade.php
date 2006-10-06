@@ -28,9 +28,40 @@ define('INTERNAL',1);
 
 require(dirname(dirname(__FILE__)).'/init.php');
 
-$smarty = &smarty();
-
 $upgrades = check_upgrades();
+
+$js = 'var todo = ' . json_encode(array_keys($upgrades)) . ";\n";
+$js .= <<< EOJS
+            function processNext() {
+                var element = todo.shift();
+
+                if ( ! element ) {
+                    // we're done
+                    return;
+                }
+
+                var d = loadJSONDoc('upgrade.json.php', { 'name': element });
+
+                $(element).innerHTML = 'working... ';
+
+                d.addCallback(function (data) {
+                    if ( data.success ) {
+                        $(data.key).innerHTML = 'Done! Upgraded to version ' + data.newversion;
+                    }
+                    else {
+                        $(data.key).innerHTML = 'Poo, Error: ' + data.errormessage;
+                    }
+                    processNext();
+                });
+            }
+
+            addLoadEvent( processNext );
+EOJS;
+
+
+$smarty = &smarty(array('mochikit'));
+$smarty->assign('INLINEJAVASCRIPT',$js);
+
 
 $smarty->assign_by_ref('upgrades',$upgrades);
 $smarty->display('admin/upgrade.tpl');

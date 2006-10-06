@@ -7,8 +7,12 @@
                 <script language="javascript" type="text/javascript" src="{$script}">
                 </script>
             {/foreach}
-            
+            {if $INLINEJAVASCRIPT}
+               <script language="javascript" type="text/javascript">
+                   {$INLINEJAVASCRIPT}
+               </script>
+            {/if}   
             {foreach from=$HEADERS item=header}{$header}{/foreach}
         {/strip}
     </head>
-    <body {if $ONLOAD} {$ONLOAD} {/if}>
+    <body>

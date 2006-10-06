@@ -32,7 +32,13 @@ $smarty = &smarty();
 
 $upgrades = check_upgrades();
 
-$smarty->assign_by_ref('upgrades',$upgrades);
-$smarty->display('admin/index.tpl');
+if (isset($upgrades['core']) && !empty($upgrades['core']->install)) {
+    $smarty->assign('installing',true);
+    $smarty->assign('releaseargs',array($upgrades['core']->torelease,$upgrades['core']->to));
+    $smarty->display('admin/installgpl.tpl');
+    exit;
+}
+
+// normal admin page starts here
 
 ?>

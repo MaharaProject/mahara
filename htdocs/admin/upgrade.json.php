@@ -25,7 +25,28 @@
  */
 
 define('INTERNAL',1);
-require('init.php');
+require(dirname(dirname(__FILE__)) . '/init.php');
+
+$name = clean_requestdata('name',PARAM_ALPHAEXT,REQUEST_EITHER);
+
+// todo upgrade stuff
+sleep(1);
+
+// key, success, newversion ,errormessage
+
+$data = array(
+    'key' => $name,
+    'success' => true,
+    'newversion' => 0.1,
+);
+
+echo json_encode($data);    
+              
+    
+                  
+
+
+
 
 
 ?>

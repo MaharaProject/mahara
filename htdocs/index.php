@@ -29,7 +29,7 @@ require('init.php');
 
 // check to see if we're installed...
 if (!get_config('version')) {
-    header("Location: ".get_config('wwwroot').'admin/upgrade.php');
+    header("Location: ".get_config('wwwroot').'admin/index.php');
     die();
 }
 
