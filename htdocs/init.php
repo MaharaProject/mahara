@@ -96,4 +96,12 @@ catch (Exception $e) {
 
 load_config();
 
+if (!get_config('theme')) { 
+    // if it's not set, we're probably not installed, 
+    // so set it in $CFG directly rather than the db which doesn't yet exist
+    $CFG->theme = 'default'; 
+}
+
+$CFG->themeurl = get_config('wwwroot').'theme/'.get_config('theme').'/static/';
+
 ?>

@@ -35,53 +35,62 @@ defined('INTERNAL') || die();
 function check_upgrades() {
 
     $toupgrade = array();
+    $installing = false;
 
+    require('version.php');
     // check core first...
     if (!$coreversion = get_config('version')) {
         $core = new StdClass;
         $core->install = true;
+        $core->to = $config->version;
+        $core->torelease = $config->release;
         $toupgrade['core'] = $core;
-        // just return here, there's no point doing anything else right now...
-        return $toupgrade;
+        $installing = true;
     } 
-    else {
-        require('version.php');
-        if ($config->version > $coreversion) {
-            $core = new StdClass;
-            $core->upgrade = true;
-            $core->from = $coreversion;
-            if ($corerelease = get_config('release')) {
-                $core->fromrelease = $corerelease;
-            }
-            $core->to = $config->version;
-            $core->torelease = $config->release;
-            $toupgrade['core'] = $core;
-        }
+    else if ($config->version > $coreversion) {
+        $core = new StdClass;
+        $core->upgrade = true;
+        $core->from = $coreversion;
+        $core->fromrelease = get_config('release');
+        $core->to = $config->version;
+        $core->torelease = $config->release;
+        $toupgrade['core'] = $core;
     }
 
     // artefact plugins next..
-    $dirhandle = opendir(get_config('docroot').'artefacts/');
+    $dirhandle = opendir(get_config('docroot').'artefact/');
     while (false !== ($dir = readdir($dirhandle))) {
-        if (!$pluginversion = get_config_plugin('arfetact',$dir,'version')) {
-            $plugin = new StdClass;
-            $plugin->install = true;
-            $toupgrade['artefact'][$dir] = $plugin;
-        } 
-        else {
-            require(get_config('docroot').'artefacts/'.$dir.'/version.php');
-            if ($config->version > $pluginversion) {
-                $plugin = new StdClass;
-                $plugin->upgrade = true;
-                $plugin->from = $pluginversion;
-                if ($pluginrelease = get_config_plugin('artefact',$dir,'release')) {
-                    $plugin->fromrelease = $pluginrelease;
-                }
-                $plugin->to = $config->version;
-                if (!empty($config->release)) {
-                    $plugin->torelease = $config->release;
-                }
+        if (!empty($installing) && $dir != 'internal') {
+            continue;
+        }
+        require(get_config('docroot').'artefact/'.$dir.'/version.php');
+        $pluginversion = 0;
+        try {
+            $pluginversion = get_config_plugin('arfetact',$dir,'version');
+        }
+        catch (ADODB_Exception $e) { 
+            if (empty($installing)) {
+                // it's ok to have an exception here
+                // the table won't exist...
+                throw $e;
             }
         }
+        if (empty($pluginversion)) {
+            $plugin = new StdClass;
+            $plugin->install = true;
+            $plugin->to = $config->version;
+            $plugin->torelease = $config->release;
+            $toupgrade['artefact.' . $dir] = $plugin;
+        }
+        else if ($config->version > $pluginversion) {
+            $plugin = new StdClass;
+            $plugin->upgrade = true;
+            $plugin->from = $pluginversion;
+            $plugin->fromrelease = get_config_plugin('artefact',$dir,'release');
+            $plugin->to = $config->version;
+            $plugin->torelease = $config->release;
+            $toupgrade['artefact.' . $dir] = $plugin;
+        } 
     }
 
     return $toupgrade;
@@ -444,156 +453,7 @@ function is_hash($array) {
     return !empty($diff);
 }
 
-/**
- * clean the variables and/or cast to specific types, based on
- * an options field.
- *
- * @uses PARAM_INT
- * @uses PARAM_INTEGER
- * @uses PARAM_ALPHA
- * @uses PARAM_ALPHANUM
- * @uses PARAM_NOTAGS
- * @uses PARAM_ALPHAEXT
- * @uses PARAM_BOOL
- * @uses PARAM_SAFEDIR
- * @uses PARAM_CLEANFILE
- * @uses PARAM_FILE
- * @uses PARAM_PATH
- * @uses PARAM_HOST
- * @uses PARAM_URL
- * @uses PARAM_LOCALURL
- * @uses PARAM_CLEANHTML
- * @uses PARAM_SEQUENCE
- * @param mixed $param the variable we are cleaning
- * @param int $type expected format of param after cleaning.
- * @return mixed
- */
-function clean_param($key, $type, $from=REQUEST_EITHER) {
 
-    if (is_array($param)) {              // Let's loop
-        $newparam = array();
-        foreach ($param as $key => $value) {
-            $newparam[$key] = clean_param($value, $type);
-        }
-        return $newparam;
-    }
-
-    switch ($type) {
-        case PARAM_CLEANHTML:    // prepare html fragment for display, do not store it into db!!
-            $param = stripslashes($param);   // Remove any slashes
-            $param = clean_text($param);     // Sweep for scripts, etc
-            return trim($param);
-
-        case PARAM_INT:
-            return (int)$param;  // Convert to integer
-
-        case PARAM_ALPHA:        // Remove everything not a-z
-            return eregi_replace('[^a-zA-Z]', '', $param);
-
-        case PARAM_ALPHANUM:     // Remove everything not a-zA-Z0-9
-            return eregi_replace('[^A-Za-z0-9]', '', $param);
-
-        case PARAM_ALPHAEXT:     // Remove everything not a-zA-Z/_-
-            return eregi_replace('[^a-zA-Z/_-]', '', $param);
-
-        case PARAM_SEQUENCE:     // Remove everything not 0-9,
-            return eregi_replace('[^0-9,]', '', $param);
-
-        case PARAM_BOOL:         // Convert to 1 or 0
-            $tempstr = strtolower($param);
-            if ($tempstr == 'on' or $tempstr == 'yes' ) {
-                $param = 1;
-            } else if ($tempstr == 'off' or $tempstr == 'no') {
-                $param = 0;
-            } else {
-                $param = empty($param) ? 0 : 1;
-            }
-            return $param;
-
-        case PARAM_NOTAGS:       // Strip all tags
-            return strip_tags($param);
-
-        case PARAM_MULTILANG:    // leave only tags needed for multilang
-            return clean_param(strip_tags($param, '<lang><span>'), PARAM_CLEAN);
-
-        case PARAM_SAFEDIR:      // Remove everything not a-zA-Z0-9_-
-            return eregi_replace('[^a-zA-Z0-9_-]', '', $param);
-
-        case PARAM_CLEANFILE:    // allow only safe characters
-            return clean_filename($param);
-
-        case PARAM_FILE:         // Strip all suspicious characters from filename
-            $param = ereg_replace('[[:cntrl:]]|[<>"`\|\':\\/]', '', $param);
-            $param = ereg_replace('\.\.+', '', $param);
-            if($param == '.') {
-                $param = '';
-            }
-            return $param;
-
-        case PARAM_PATH:         // Strip all suspicious characters from file path
-            $param = str_replace('\\\'', '\'', $param);
-            $param = str_replace('\\"', '"', $param);
-            $param = str_replace('\\', '/', $param);
-            $param = ereg_replace('[[:cntrl:]]|[<>"`\|\':]', '', $param);
-            $param = ereg_replace('\.\.+', '', $param);
-            $param = ereg_replace('//+', '/', $param);
-            return ereg_replace('/(\./)+', '/', $param);
-
-        case PARAM_HOST:         // allow FQDN or IPv4 dotted quad
-            preg_replace('/[^\.\d\w-]/','', $param ); // only allowed chars
-            // match ipv4 dotted quad
-            if (preg_match('/(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/',$param, $match)){
-                // confirm values are ok
-                if ( $match[0] > 255
-                     || $match[1] > 255
-                     || $match[3] > 255
-                     || $match[4] > 255 ) {
-                    // hmmm, what kind of dotted quad is this?
-                    $param = '';
-                }
-            } elseif ( preg_match('/^[\w\d\.-]+$/', $param) // dots, hyphens, numbers
-                       && !preg_match('/^[\.-]/',  $param) // no leading dots/hyphens
-                       && !preg_match('/[\.-]$/',  $param) // no trailing dots/hyphens
-                       ) {
-                // all is ok - $param is respected
-            } else {
-                // all is not ok...
-                $param='';
-            }
-            return $param;
-
-        case PARAM_URL:          // allow safe ftp, http, mailto urls
-            include_once(get_config('libroot').'validateurlsyntax.php');
-            if (!empty($param) && validateUrlSyntax($param, 's?H?S?F?E?u-P-a?I?p-f?q?r?')) {
-                // all is ok, param is respected
-            } else {
-                $param =''; // not really ok
-            }
-            return $param;
-
-        case PARAM_LOCALURL:     // allow http absolute, root relative and relative URLs within wwwroot
-            clean_param($param, PARAM_URL);
-            if (!empty($param)) {
-                if (preg_match(':^/:', $param)) {
-                    // root-relative, ok!
-                } elseif (preg_match('/^'.preg_quote(get_config('wwwroot')).'/i',$param)) {
-                    // absolute, and matches our wwwroot
-                } else {
-                    // relative - let's make sure there are no tricks
-                    if (validateUrlSyntax($param, 's-u-P-a-p-f+q?r?')) {
-                        // looks ok.
-                    } else {
-                        $param = '';
-                    }
-                }
-            }
-            return $param;
-
-        default:                 // throw error, switched parameters in optional_param or another serious problem
-            // @todo nigel hissy fit
-            error("Unknown parameter type: $type");
-    }
-}
 
 /**
  * Function to check if a directory exists and optionally create it.
@@ -613,7 +473,7 @@ function check_dir_exists($dir, $create=true, $recursive=true) {
             $status = false;
         } else {
             umask(0000); 
-            $status = mkdir($dir, 0777, true);
+            $status = @mkdir($dir, 0777, true);
         }
     }
     return $status;
