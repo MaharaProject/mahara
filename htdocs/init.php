@@ -56,7 +56,11 @@ foreach (array('docroot', 'dataroot') as $path) {
 if (!isset($CFG->wwwroot)) {
     $proto = (isset($_SERVER['HTTPS'])) ? 'https://' : 'http://';
     $host =  (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : $_SERVER['HTTP_HOST'];
-    $CFG->wwwroot = $proto . $host . '/' . substr(dirname(__FILE__), strlen($_SERVER['DOCUMENT_ROOT'])). '/';
+    $path = substr(dirname(__FILE__), strlen($_SERVER['DOCUMENT_ROOT']));
+    if ($path) {
+        $path .= '/';
+    }
+    $CFG->wwwroot = $proto . $host . '/' . $path;
 }
 
 // core libraries
