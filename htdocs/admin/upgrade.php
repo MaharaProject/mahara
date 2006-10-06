@@ -58,7 +58,7 @@ $js .= <<< EOJS
             addLoadEvent( processNext );
 EOJS;
 
-
+// @todo<nigel>: given that this is PHP5, I am unsure of the need for & here - will check this out
 $smarty = &smarty(array('mochikit'));
 $smarty->assign('INLINEJAVASCRIPT',$js);
 
