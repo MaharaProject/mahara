@@ -70,6 +70,8 @@ function check_upgrades() {
         }
         catch (ADODB_Exception $e) { 
             if (empty($installing)) {
+                // it's ok to have an exception here
+                // the table won't exist...
                 throw $e;
             }
         }
