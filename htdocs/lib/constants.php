@@ -114,9 +114,8 @@ define('PARAM_BOOL',     0x0800);
 define('PARAM_CLEANHTML',0x1000);
 
 /**
- * PARAM_ALPHAEXT the same contents as PARAM_ALPHA plus the chars in quotes: "/-_" allowed,
+ * PARAM_ALPHAEXT the same contents as PARAM_ALPHA plus the chars in quotes: "/-_." allowed,
  * suitable for include() and require()
- * @TODO: should we rename this function to PARAM_SAFEDIRS??
  */
 define('PARAM_ALPHAEXT', 0x2000);
 
@@ -147,6 +146,22 @@ define('REQUEST_GET', 1);
  */
 define('REQUEST_EITHER',0);
 
+
+
+/**
+ * Allowed tags - string of html tags that can be tested against for safe html tags
+ * @global string $ALLOWED_TAGS
+ */
+$ALLOWED_TAGS =
+'<p><br><b><i><u><font><table><tbody><span><div><tr><td><th><ol><ul><dl><li><dt><dd><h1><h2><h3><h4><h5><h6><hr><img><a><strong><emphasis><em><sup><sub><address><cite><blockquote><pre><strike><param><acronym><nolink><lang><tex><algebra><math><mi><mn><mo><mtext><mspace><ms><mrow><mfrac><msqrt><mroot><mstyle><merror><mpadded><mphantom><mfenced><msub><msup><msubsup><munder><mover><munderover><mmultiscripts><mtable><mtr><mtd><maligngroup><malignmark><maction><cn><ci><apply><reln><fn><interval><inverse><sep><condition><declare><lambda><compose><ident><quotient><exp><factorial><divide><max><min><minus><plus><power><rem><times><root><gcd><and><or><xor><not><implies><forall><exists><abs><conjugate><eq><neq><gt><lt><geq><leq><ln><log><int><diff><partialdiff><lowlimit><uplimit><bvar><degree><set><list><union><intersect><in><notin><subset><prsubset><notsubset><notprsubset><setdiff><sum><product><limit><tendsto><mean><sdev><variance><median><mode><moment><vector><matrix><matrixrow><determinant><transpose><selector><annotation><semantics><annotation-xml><tt><code>';
+
+/**
+ * Allowed protocols - array of protocols that are safe to use in links and so on
+ * @global string $ALLOWED_PROTOCOLS
+ */
+$ALLOWED_PROTOCOLS = array('http', 'https', 'ftp', 'news', 'mailto', 'rtsp', 'teamspeak', 'gopher', 'mms',
+                           'color', 'callto', 'cursor', 'text-align', 'font-size', 'font-weight', 'font-style',
+                           'border', 'margin', 'padding', 'background');   // CSS as well to get through kses
 
 
 ?>
