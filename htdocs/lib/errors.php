@@ -218,12 +218,17 @@ function error ($code, $message, $file, $line, $vars) {
         return;
     }
 
+    // Fix up the message, which is in HTML form
+    $message = strip_tags($message);
+    $message = htmlspecialchars_decode($message);
+
     log_message($message, LOG_LEVEL_WARN, $file, $line);
 }
 
 
 // Standard exceptions
 class ConfigSanityException extends Exception {}
+class SQLException extends Exception {}
 
 // Catch exceptions that fall through to main()
 set_exception_handler('exception');
