@@ -167,6 +167,11 @@ function ensure_sanity() {
     if (!check_dir_exists(get_config('dataroot')) || !is_writable(get_config('dataroot'))) {
         throw new ConfigSanityException(get_string('datarootnotwritable', 'error', get_config('dataroot')));
     }
+
+    // Json functions not available
+    if (!function_exists('json_encode') || !function_exists('json_decode')) {
+        throw new ConfigSanityException(get_string('jsonextensionnotloaded', 'error'));
+    }
     
     check_dir_exists(get_config('dataroot').'smarty/compile');
     check_dir_exists(get_config('dataroot').'smarty/cache');
