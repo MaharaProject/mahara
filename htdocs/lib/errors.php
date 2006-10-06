@@ -58,7 +58,7 @@ function log_environ ($message) {
     log_message($message, LOG_LEVEL_ENVIRON);
 }
 
-function log_message ($message, $loglevel) {
+function log_message ($message, $loglevel, $file = null, $line = null) {
     static $loglevelnames = array(
         LOG_LEVEL_ENVIRON => 'environ',
         LOG_LEVEL_DBG     => 'dbg',
@@ -72,8 +72,16 @@ function log_message ($message, $loglevel) {
 
     // Get nice backtrace information if required
     $backtrace = debug_backtrace();
-    $filename  = $backtrace[1]['file'];
-    $linenum   = $backtrace[1]['line'];
+    // If the last caller was the 'error' function then it came from a PHP warning
+    //print_r($backtrace);
+    if (!is_null($file)) {
+        $filename = $file;
+        $linenum  = $line;
+    }
+    else {
+        $filename  = $backtrace[1]['file'];
+        $linenum   = $backtrace[1]['line'];
+    }
 
     if (!function_exists('get_config') || get_config('log_backtrace_levels') & $loglevel) {
         list($textbacktrace, $htmlbacktrace) = log_build_backtrace(debug_backtrace());
@@ -193,7 +201,13 @@ set_error_handler('error');
 function error ($code, $message, $file, $line, $vars) {
     static $error_lookup = array(
         E_NOTICE => 'Notice',
-        E_WARNING => 'Warning'
+        E_WARNING => 'Warning',
+        // Not sure if these ever get handled here
+        E_ERROR => 'Error',
+        // These three are not used by this application but may be used by third parties
+        E_USER_NOTICE => 'User Notice',
+        E_USER_WARNING => 'User Warning',
+        E_USER_ERROR => 'User Error'
     );
 
     if (!error_reporting()) {
@@ -204,10 +218,7 @@ function error ($code, $message, $file, $line, $vars) {
         return;
     }
 
-    // @todo:
-    //   skip errors we don't care about (only passing E_WARNING and E_NOTICE here
-    //   build a full backtrace, either here or in the log_message function
-    log_warn($message);
+    log_message($message, LOG_LEVEL_WARN, $file, $line);
 }
 
 
