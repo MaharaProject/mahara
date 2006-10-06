@@ -7,7 +7,7 @@
                 <script language="javascript" type="text/javascript" src="{$script}">
                 </script>
             {/foreach}
-            {if $INLINEJAVASCRIPT}
+            {if isset($INLINEJAVASCRIPT)}
                <script language="javascript" type="text/javascript">
                    {$INLINEJAVASCRIPT}
                </script>
