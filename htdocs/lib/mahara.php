@@ -160,12 +160,12 @@ function ensure_sanity() {
 
     // dataroot inside document root.
     if (strpos(get_config('dataroot'),get_config('docroot')) !== false) {
-        trigger_error(get_string('datarootinsidedocroot','error'));
+        throw new ConfigSanityException(get_string('datarootinsidedocroot','error'));
     }
 
     // dataroot not writable..
     if (!check_dir_exists(get_config('dataroot')) || !is_writable(get_config('dataroot'))) {
-        trigger_error(get_string('datarootnotwritable','error',get_config('dataroot')));
+        throw new ConfigSanityException(get_string('datarootnotwritable', 'error', get_config('dataroot')));
     }
     
     check_dir_exists(get_config('dataroot').'smarty/compile');
@@ -383,7 +383,7 @@ function set_config($key, $value) {
  */
 function get_config_plugin($plugintype, $pluginname, $key) {
     global $CFG;
-    
+
     if (array_key_exists('plugin',$CFG)
         && array_key_exists($plugintype,$CFG->plugin)
         && array_key_exists($pluginname,$CFG->plugin->{$plugintype})
@@ -391,6 +391,9 @@ function get_config_plugin($plugintype, $pluginname, $key) {
         return  $CFG->plugin->{$plugintype}->{$pluginname}->{$key};
     }
     
+    // @todo: an optimisation might be to get all fields related to the plugin instead, as
+    // it may be quite likely that if one config item is requested for a plugin another
+    // might be.
     if (!$value = get_field('config_'.$plugintype,'value','plugin',$pluginname,'field',$key)) {
         $value = null;
     } 
