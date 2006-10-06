@@ -56,8 +56,7 @@ foreach (array('docroot', 'dataroot') as $path) {
 if (!isset($CFG->wwwroot)) {
     $proto = (isset($_SERVER['HTTPS'])) ? 'https://' : 'http://';
     $host =  (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : $_SERVER['HTTP_HOST'];
-    $CFG->wwwroot = $proto . $host . substr(dirname(__FILE__), strlen($_SERVER['DOCUMENT_ROOT'])). '/';
-    //if (false !== strpos($_SERVER['REQUEST_URI'], 'admin')) {print_r($_SERVER);echo $CFG->docroot;echo $CFG->wwwroot;}
+    $CFG->wwwroot = $proto . $host . '/' . substr(dirname(__FILE__), strlen($_SERVER['DOCUMENT_ROOT'])). '/';
 }
 
 // core libraries
