@@ -860,7 +860,7 @@ function insert_record($table, $dataobject, $primarykey=false, $returnpk=false) 
              && ($rs->RecordCount() == 1) ) {
             return (integer)$rs->fields[0];
         } 
-        trigger_error('Failed to retrieve primary key after insert: SELECT '. $primarykey .
+        throw new SQLException('Failed to retrieve primary key after insert: SELECT '. $primarykey .
                       ' FROM '. $CFG->dbprefix . $table .' WHERE oid = '. $id);
         return false;
     }
