@@ -58,12 +58,12 @@ function check_upgrades() {
     }
 
     // artefact plugins next..
-    $dirhandle = opendir(get_config('docroot').'artefacts/');
+    $dirhandle = opendir(get_config('docroot').'artefact/');
     while (false !== ($dir = readdir($dirhandle))) {
         if (!empty($installing) && $dir != 'internal') {
             continue;
         }
-        require(get_config('docroot').'artefacts/'.$dir.'/version.php');
+        require(get_config('docroot').'artefact/'.$dir.'/version.php');
         $pluginversion = 0;
         try {
             $pluginversion = get_config_plugin('arfetact',$dir,'version');
