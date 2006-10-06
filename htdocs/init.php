@@ -49,6 +49,17 @@ if (!is_readable($CFG->docroot . 'config.php')) {
 require('config.php');
 $CFG = (object)array_merge((array)$cfg, (array)$CFG);
 
+// Fix up paths in $CFG
+foreach (array('docroot', 'dataroot') as $path) {
+    $CFG->{$path} = (substr($CFG->{$path}, -1) != DIRECTORY_SEPARATOR) ? $CFG->{$path} . DIRECTORY_SEPARATOR : $CFG->{$path};
+}
+if (!isset($CFG->wwwroot)) {
+    $proto = (isset($_SERVER['HTTPS'])) ? 'https://' : 'http://';
+    $host =  (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : $_SERVER['HTTP_HOST'];
+    $CFG->wwwroot = $proto . $host . substr(dirname(__FILE__), strlen($_SERVER['DOCUMENT_ROOT'])). '/';
+    //if (false !== strpos($_SERVER['REQUEST_URI'], 'admin')) {print_r($_SERVER);echo $CFG->docroot;echo $CFG->wwwroot;}
+}
+
 // core libraries
 require('mahara.php');
 require('dml.php');
@@ -89,9 +100,7 @@ catch (Exception $e) {
     // $errormessage, while the $e object holds some other information (like backtrace,
     // which can be parsed with adodb_backtrace($e->gettrace());). At this point a
     // nice message should be displayed explaining the problem etc. etc.
-    echo $e;
-    echo $errormessage;
-    die;
+    throw new Exception($errormessage);
 }
 
 load_config();
