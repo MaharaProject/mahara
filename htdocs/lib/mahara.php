@@ -1,6 +1,6 @@
 <?php
 /**
- * This program is part of mahara
+ * This program is part of Mahara
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -482,6 +482,7 @@ function check_dir_exists($dir, $create=true, $recursive=true) {
         } else {
             umask(0000); 
             $status = @mkdir($dir, 0777, true);
+            // @todo has the umask been clobbered at this point, and is this a bad thing?
         }
     }
     return $status;
