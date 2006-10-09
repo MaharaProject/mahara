@@ -1,6 +1,6 @@
 <?php
 /**
- * This program is part of mahara
+ * This program is part of Mahara
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -42,23 +42,24 @@ error_reporting(E_ALL);
 
 // Logging functions
 
-function log_dbg ($message) {
-    log_message($message, LOG_LEVEL_DBG);
+function log_dbg ($message, $escape=true) {
+    log_message($message, LOG_LEVEL_DBG, $escape);
 }
 
-function log_info ($message) {
-    log_message($message, LOG_LEVEL_INFO);
+function log_info ($message, $escape=true) {
+    log_message($message, LOG_LEVEL_INFO, $escape);
 }
 
-function log_warn ($message) {
-    log_message($message, LOG_LEVEL_WARN);
+function log_warn ($message, $escape=true) {
+    log_message($message, LOG_LEVEL_WARN, $escape);
 }
 
-function log_environ ($message) {
-    log_message($message, LOG_LEVEL_ENVIRON);
+function log_environ ($message, $escape=true) {
+    log_message($message, LOG_LEVEL_ENVIRON, $escape);
 }
 
-function log_message ($message, $loglevel, $file = null, $line = null) {
+function log_message ($message, $loglevel, $escape, $file=null, $line=null) {
+    global $SESSION;
     static $loglevelnames = array(
         LOG_LEVEL_ENVIRON => 'environ',
         LOG_LEVEL_DBG     => 'dbg',
@@ -101,13 +102,23 @@ function log_message ($message, $loglevel, $file = null, $line = null) {
     }
 
     if ($targets & LOG_TARGET_SCREEN) {
+        // Work out which method to call for displaying the message
+        if ($loglevel == LOG_LEVEL_DBG || $loglevel == LOG_LEVEL_INFO) {
+            $method = 'add_info_msg';
+        }
+        else {
+            $method = 'add_err_msg';
+        }
+
         foreach ($loglines as $line) {
-            $line = $prefix . htmlspecialchars($line, ENT_COMPAT, 'UTF-8');
-            $line = str_replace('  ', '&nbsp; ', $line);
-            echo '<div style="font-family: monospace;">' . $line . "</div>\n";
+            if ($escape) {
+                $line =htmlspecialchars($line, ENT_COMPAT, 'UTF-8');
+                $line = str_replace('  ', '&nbsp; ', $line);
+            }
+            $SESSION->$method('<div style="font-family: monospace;">' . $prefix . $line . "</div>\n", false);
         }
         if ($htmlbacktrace) {
-            echo $htmlbacktrace;
+            $SESSION->add_info_msg($htmlbacktrace, false);
         }
     }
 
@@ -222,7 +233,7 @@ function error ($code, $message, $file, $line, $vars) {
     $message = strip_tags($message);
     $message = htmlspecialchars_decode($message);
 
-    log_message($message, LOG_LEVEL_WARN, $file, $line);
+    log_message($message, LOG_LEVEL_WARN, true, $file, $line);
 }
 
 
@@ -266,5 +277,6 @@ function exception ($e) {
 EOF;
     die();
 }
+
 
 ?>
