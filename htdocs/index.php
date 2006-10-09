@@ -1,6 +1,6 @@
 <?php
 /**
- * This program is part of mahara
+ * This program is part of Mahara
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ require('init.php');
 
 // check to see if we're installed...
 if (!get_config('version')) {
-    header("Location: ".get_config('wwwroot').'admin/index.php');
+    header('Location: ' . get_config('wwwroot') . 'admin/index.php');
     die();
 }
 
