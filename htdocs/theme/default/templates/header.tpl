@@ -16,3 +16,4 @@
         {/strip}
     </head>
     <body>
+    {insert name="messages"}
