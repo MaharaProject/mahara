@@ -49,6 +49,7 @@ abstract class Auth {
     /**
      * Given a username, returns a hash of information about a user.
      *
+     */
     public static abstract function get_user_info ($username);
 
     public static function get_config_options () {
