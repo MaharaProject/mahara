@@ -58,6 +58,10 @@ function check_upgrades() {
     }
 
     // artefact plugins next..
+    // Note: on initial installation each plugin configuration
+    // version check will cause an exception, which is caught
+    // just fine although it does show in the logs (with the
+    // default logging configuration)
     $dirhandle = opendir(get_config('docroot').'artefact/');
     while (false !== ($dir = readdir($dirhandle))) {
         if (!empty($installing) && $dir != 'internal') {
@@ -68,7 +72,7 @@ function check_upgrades() {
         try {
             $pluginversion = get_config_plugin('arfetact',$dir,'version');
         }
-        catch (ADODB_Exception $e) { 
+        catch (DatalibException $e) { 
             if (empty($installing)) {
                 // it's ok to have an exception here
                 // the table won't exist...
@@ -331,13 +335,13 @@ function load_config() {
     try {
         $dbconfig = get_records('config');
     } 
-    catch (ADODB_Exception $e) {
+    catch (DatalibException $e) {
         return false;
     }
     
     foreach ($dbconfig as $cfg) {
         if (isset($CFG->{$cfg->field}) && $CFG->{$cfg->field} != $CFG->value) {
-            // @todo warn that we're overriding db config with $CFG
+            log_info('Overriding database configuration for ' . $cfg->field . ' with config file value ' . $cfg->field);
             continue;
         }
         $CFG->{$cfg->field} = $cfg->value;
