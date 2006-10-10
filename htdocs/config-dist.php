@@ -56,10 +56,23 @@ $cfg->dataroot = '/path/to/uploaddir';
 // for all log levels.
 // You can combine them with bitwise operations,
 // e.g. LOG_TARGET_SCREEN | LOG_TARGET_ERRORLOG
-$cfg->log_dbg_targets      = LOG_TARGET_SCREEN | LOG_TARGET_ERRORLOG;
-$cfg->log_info_targets     = LOG_TARGET_SCREEN | LOG_TARGET_ERRORLOG;
-$cfg->log_warn_targets     = LOG_TARGET_SCREEN | LOG_TARGET_ERRORLOG;
-$cfg->log_environ_targets  = LOG_TARGET_SCREEN | LOG_TARGET_ERRORLOG;
+//
+// This configuration is suitable for people running Mahara for the first
+// time. You will immediately see environment errors, and so can correct
+// them. You will be able to see other debugging information in your error
+// logs. Once your site is up and running you might want to remove the
+// environment level logging completely, and just log everything else to
+// the error log.
+$cfg->log_dbg_targets     = LOG_TARGET_ERRORLOG;
+$cfg->log_info_targets    = LOG_TARGET_ERRORLOG;
+$cfg->log_warn_targets    = LOG_TARGET_ERRORLOG;
+$cfg->log_environ_targets = LOG_TARGET_SCREEN | LOG_TARGET_ERRORLOG;
+// This configuration is suitable for developers. You will see all errors
+// and they will also be in the logs.
+//$cfg->log_dbg_targets     = LOG_TARGET_SCREEN | LOG_TARGET_ERRORLOG;
+//$cfg->log_info_targets    = LOG_TARGET_SCREEN | LOG_TARGET_ERRORLOG;
+//$cfg->log_warn_targets    = LOG_TARGET_SCREEN | LOG_TARGET_ERRORLOG;
+//$cfg->log_environ_targets = LOG_TARGET_SCREEN | LOG_TARGET_ERRORLOG;
 
 // The log levels that will generate backtraces. Useful for development,
 // but probably only warnings are useful on a live site.
