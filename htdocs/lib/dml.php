@@ -553,7 +553,14 @@ function get_records_sql_menu($sql,$values=null) {
 function get_field($table, $field, $field1, $value1, $field2=null, $value2=null, $field3=null, $value3=null) {
     $select = where_clause_prepared($field1, $field2, $field3);
     $values = where_values_prepared($value1, $value2, $value3);
-    return get_field_sql('SELECT ' . $field . ' FROM ' . get_config('dbprefix') . $table . ' ' . $select, $values);
+    
+    $rs = get_recordset_sql($sql, $values);
+    if ($rs->RecordCount() == 1) {
+        return reset($rs->fields);
+    } else {
+        throw new DatalibException('Got more than one row when getting a field value');
+    }
+    //return get_field_sql('SELECT ' . $field . ' FROM ' . get_config('dbprefix') . $table . ' ' . $select, $values);
 }
 
 /**
