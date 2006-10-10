@@ -115,10 +115,21 @@ function log_message ($message, $loglevel, $escape, $file=null, $line=null) {
                 $line =htmlspecialchars($line, ENT_COMPAT, 'UTF-8');
                 $line = str_replace('  ', '&nbsp; ', $line);
             }
-            $SESSION->$method('<div style="font-family: monospace;">' . $prefix . $line . "</div>\n", false);
+            $line = '<div style="font-family: monospace;">' . $prefix . $line . "</div>\n";
+            if (is_a($SESSION, 'Session')) {
+                $SESSION->$method($line, false);
+            }
+            else {
+                echo $line;
+            }
         }
         if ($htmlbacktrace) {
-            $SESSION->add_info_msg($htmlbacktrace, false);
+            if (is_a($SESSION, 'Session')) {
+                $SESSION->add_info_msg($htmlbacktrace, false);
+            }
+            else {
+                echo $htmlbacktrace;
+            }
         }
     }
 
@@ -239,7 +250,7 @@ function error ($code, $message, $file, $line, $vars) {
 
 // Standard exceptions
 class ConfigSanityException extends Exception {}
-class SQLException extends Exception {}
+class DatalibException extends Exception {}
 
 // Catch exceptions that fall through to main()
 set_exception_handler('exception');
@@ -256,6 +267,8 @@ function exception ($e) {
         default:
             $message = $e->getMessage();
     }
+
+    log_warn($message);
 
     echo <<<EOF
 <html>
