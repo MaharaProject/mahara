@@ -280,8 +280,14 @@ function exception ($e) {
         }
     </style>
 </head>
-<h1>OMGWTF</h1>
 <body>
+EOF;
+    if (function_exists('get_config') && get_config('debug_mode')
+        && function_exists('insert_messages')) {
+        echo insert_messages();
+    }
+    echo <<<EOF
+<h1>OMGWTF</h1>
 <p>$message</p>
 <hr>
 <p>@todo&lt;nigel&gt;: make this page more shiny :)</p>
