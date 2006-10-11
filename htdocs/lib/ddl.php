@@ -24,6 +24,15 @@
 //                                                                       //
 ///////////////////////////////////////////////////////////////////////////
 
+// Mahara hacks
+$CFG->libdir = get_config('libroot');
+$CFG->prefix = $CFG->dbprefix;
+if (is_postgres()) {
+    $CFG->dbtype = 'postgres7';
+}
+// Mahara hacks end
+
+
 // This library includes all the required functions used to handle the DB
 // structure (DDL) independently of the underlying RDBMS in use. All the functions
 // rely on the XMLDBDriver classes to be able to generate the correct SQL
@@ -539,7 +548,13 @@ function install_from_xmldb_file($file) {
         return true; //Empty array = nothing to do = no error
     }
 
-    return execute_sql_arr($sqlarr);
+    $status = $status && $db->StartTrans();
+    $status = $status && execute_sql_arr($sqlarr);
+    if ($db->HasFailedTrans()) {
+        $status = false;
+    }
+    $db->CompleteTrans();
+    return $status;
 }
 
 /**
