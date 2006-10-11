@@ -71,7 +71,6 @@ require('dml.php');
 require('constants.php');
 require('web.php');
 require('session.php');
-require('auth.php');
 ensure_sanity();
 
 // Database access functions
