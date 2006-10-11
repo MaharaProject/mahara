@@ -1,4 +1,4 @@
-<?php // $Id: XMLDBTable.class.php,v 1.11 2006/09/28 17:25:00 stronk7 Exp $
+<?php // $Id: XMLDBTable.class.php,v 1.16 2006/10/08 09:36:54 stronk7 Exp $
 
 ///////////////////////////////////////////////////////////////////////////
 //                                                                       //
@@ -892,6 +892,24 @@ class XMLDBTable extends XMLDBObject {
     }
 
     /**
+     * This function will return the SQL code needed to modify the enum of one field in the table for the specified DB and
+     * prefix. Just one simple wrapper over generators.
+     */
+    function getModifyEnumSQL ($dbtype, $prefix, $xmldb_field, $statement_end=true) {
+
+        $results = array();
+
+        $classname = 'XMLDB' . $dbtype;
+        $generator = new $classname();
+        $generator->setPrefix($prefix);
+        $results = $generator->getModifyEnumSQL($this, $xmldb_field);
+        if ($statement_end) {
+            $results = $generator->getEndedStatements($results);
+        }
+        return $results;
+    }
+
+    /**
      * This function will return the SQL code needed to modify the default of one field in the table for the specified DB and
      * prefix. Just one simple wrapper over generators.
      */
@@ -946,6 +964,24 @@ class XMLDBTable extends XMLDBObject {
     }
 
     /**
+     * This function will return the SQL code needed to rename one key from the table for the specified DB and
+     * prefix. Just one simple wrapper over generators.
+     */
+    function getRenameKeySQL ($dbtype, $prefix, $xmldb_key, $newname, $statement_end=true) {
+
+        $results = array();
+
+        $classname = 'XMLDB' . $dbtype;
+        $generator = new $classname();
+        $generator->setPrefix($prefix);
+        $results = $generator->getRenameKeySQL($this, $xmldb_key, $newname);
+        if ($statement_end) {
+            $results = $generator->getEndedStatements($results);
+        }
+        return $results;
+    }
+
+    /**
      * This function will return the SQL code needed to add one index to the table for the specified DB and
      * prefix. Just one simple wrapper over generators.
      */
@@ -979,6 +1015,38 @@ class XMLDBTable extends XMLDBObject {
             $results = $generator->getEndedStatements($results);
         }
         return $results;
+    }
+
+    /**
+     * This function will return the SQL code needed to rename one index from the table for the specified DB and
+     * prefix. Just one simple wrapper over generators.
+     * Experimental. Shouldn't be used at all!
+     */
+    function getRenameIndexSQL ($dbtype, $prefix, $xmldb_index, $newname, $statement_end=true) {
+
+        $results = array();
+
+        $classname = 'XMLDB' . $dbtype;
+        $generator = new $classname();
+        $generator->setPrefix($prefix);
+        $results = $generator->getRenameIndexSQL($this, $xmldb_index, $newname);
+        if ($statement_end) {
+            $results = $generator->getEndedStatements($results);
+        }
+        return $results;
+    }
+
+    /**
+     * This function will return the name of the sequence created for the pk of the table specified
+     * Just one simple wrapper over generators. Returns false if not found
+     * Note that not all DB use sequences (only Oracle and PostgreSQL)
+     */
+    function getSequenceFromDB($dbtype, $prefix) {
+
+        $classname = 'XMLDB' . $dbtype;
+        $generator = new $classname();
+        $generator->setPrefix($prefix);
+        return $generator->getSequenceFromDB($this);
     }
 }
 
