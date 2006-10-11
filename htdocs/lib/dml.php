@@ -53,7 +53,7 @@ function execute_sql($command) {
         $result = $db->Execute($command);
     }
     catch (ADODB_Exception $e) {
-        log_warn($e->getMessage() . "Command was: $command");
+        log_dbg($e->getMessage() . "Command was: $command");
         $db->debug = $olddebug;
         throw new DatalibException('Could not execute command: ' . $command);
     }
@@ -357,7 +357,7 @@ function get_recordset_sql($sql, $values=null, $limitfrom=null, $limitnum=null) 
     }
     catch (ADODB_Exception $e) {
         $message = 'Failed to get a recordset: ' . $e->getMessage() . "Command was: $sql";
-        log_warn($message);
+        log_dbg($message);
         throw new DatalibException($message);
     }
  
