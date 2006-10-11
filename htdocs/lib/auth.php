@@ -26,31 +26,55 @@
 
 defined('INTERNAL') || die();
 
+// Constants for authentication
+define('AUTH_PASSED', 1);
+define('AUTH_FAILED', 2);
+
+/** Exception - unknown user */
+class AuthUnknownUserException extends Exception {}
+
 /**
  * Base authentication class
+ *
+ * Institutions are tied to a particular plugin
  */
 abstract class Auth {
 
     /**
-     * Given a username, password and institution, attempts to log the user
-     * in.
-     *
-     * This method should return one of three values:
+     * Given a username, password and institution, attempts to log the use in.
+     * 
+     * This method should return one of two values:
      *
      * <ul>
      *   <li>AUTH_PASSED - the user has provided correct credentials</li>
      *   <li>AUTH_FAILED - the user has provided incorrect credentials</li>
-     *   <li>AUTH_UNKNOWN - the authentication system does not know about
-     *   this user.</li>
      * </ul>
+     *
+     * @param string $username  The username to attempt to authenticate
+     * @param string $password  The password to use for the attempt
+     * @param string $institute The institution the user belongs to
      */
     public static abstract function authenticate_user_account($username, $password, $institute);
 
     /**
      * Given a username, returns a hash of information about a user.
      *
+     * Should throw an exception if the authentication method doesn't know
+     * about the user, since this method should only be called after a
+     * successful authentication method (so we know the user exists)
+     *
+     * @param string $username The username to look up information for
+     * @return array           The information for the user
+     * @throws AuthUnknownUserException
+     */
     public static abstract function get_user_info ($username);
 
+    /**
+     * Returns a hash of information that will be rendered into a form
+     * when configuring authentication.
+     *
+     * @return array
+     */
     public static function get_config_options () {
     }
 
