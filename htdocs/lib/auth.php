@@ -59,7 +59,6 @@ abstract class Auth {
     /**
      * Given a username, returns a hash of information about a user.
      *
-<<<<<<< HEAD/htdocs/lib/auth.php
      * Should throw an exception if the authentication method doesn't know
      * about the user, since this method should only be called after a
      * successful authentication method (so we know the user exists)
