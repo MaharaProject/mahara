@@ -282,8 +282,7 @@ function exception ($e) {
 </head>
 <body>
 EOF;
-    if (function_exists('get_config') && get_config('debug_mode')
-        && function_exists('insert_messages')) {
+    if (function_exists('insert_messages')) {
         echo insert_messages();
     }
     echo <<<EOF
