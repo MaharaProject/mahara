@@ -548,7 +548,9 @@ function install_from_xmldb_file($file) {
         return true; //Empty array = nothing to do = no error
     }
 
-    $status = $status && $db->StartTrans();
+    // @todo investigate whether the transaction should be started and committed
+    // by the caller so that updating version # in db can be same transaction
+    $status && $db->StartTrans();
     $status = $status && execute_sql_arr($sqlarr);
     if ($db->HasFailedTrans()) {
         $status = false;
