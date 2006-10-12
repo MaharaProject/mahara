@@ -554,33 +554,9 @@ function get_field($table, $field, $field1, $value1, $field2=null, $value2=null,
     $select = where_clause_prepared($field1, $field2, $field3);
     $values = where_values_prepared($value1, $value2, $value3);
     
-    $rs = get_recordset_sql($sql, $values);
-    if ($rs->RecordCount() == 1) {
-        return reset($rs->fields);
-    } else {
-        throw new DatalibException('Got more than one row when getting a field value');
-    }
-    //return get_field_sql('SELECT ' . $field . ' FROM ' . get_config('dbprefix') . $table . ' ' . $select, $values);
+    return get_field_sql('SELECT ' . $field . ' FROM ' . get_config('dbprefix') . $table . ' ' . $select, $values);
 }
 
-/**
- * Get a single value from a table row where a particular select clause is true.
- *
- * @param string $table the table to query.
- * @param string $return the field to return the value of.
- * @param string $select A fragment of SQL to be used in a where clause in the SQL call.
- * @return mixed the specified value.
- * @throws DatalibException
- */
-// NOTE: Commented out until an overwhelming reason is found to uncomment them
-/*
-function get_field_select($table, $return, $select, $values=null) {
-    if ($select) {
-        $select = 'WHERE '. $select;
-    }
-    return get_field_sql('SELECT ' . $return . ' FROM ' . get_config('dbprefix') . $table . ' ' . $select, $values);
-}
- */
 /**
  * Get a single value from a table.
  *
@@ -588,8 +564,6 @@ function get_field_select($table, $return, $select, $values=null) {
  * @return mixed the specified value.
  * @throws DatalibException
  */
-// NOTE: Commented out until an overwhelming reason is found to uncomment them
-/*
 function get_field_sql($sql, $values=null) {
     $rs = get_recordset_sql($sql, $values);
     if ($rs && $rs->RecordCount() == 1) {
@@ -598,7 +572,6 @@ function get_field_sql($sql, $values=null) {
         return false;
     }
 }
-*/
 
 /**
  * Set a single field in every table row where all the given fields match the given values.
@@ -620,7 +593,7 @@ function set_field($table, $newfield, $newvalue, $field1, $value1, $field2=null,
     global $db;
 
     $select = where_clause_prepared($field1, $field2, $field3);
-    $values = where_values_prepared($newfield, $value1, $value2, $value3);
+    $values = where_values_prepared($newvalue, $value1, $value2, $value3);
 
     try {
         $stmt = $db->Prepare('UPDATE '. get_config('dbprefix') . $table .' SET '. $newfield  .' = ? ' . $select);
@@ -1021,16 +994,15 @@ function column_type($table, $column) {
  * This function will execute an array of SQL commands, returning
  * true/false if any error is found and stopping/continue as desired.
  * It's widely used by all the ddllib.php functions
- *
+ * 
+ * @private
  * @param array sqlarr array of sql statements to execute
  * @param boolean continue to specify if must continue on error (true) or stop (false)
  * @param boolean feedback to specify to show status info (true) or not (false)
  * @param boolean true if everything was ok, false if some error was found
  */
-// NOTE: if this is used by ddllib then it should be in there, NOT in here. If the first
-// person who discovers this comment can verify that ddllib still needs it, then they
-// can move it.
-/*
+// in dml not ddl because we want to keep ddl 'clean upstream' - p
+
 function execute_sql_arr($sqlarr, $continue=true, $feedback=true) {
 
     if (!is_array($sqlarr)) {
@@ -1048,7 +1020,6 @@ function execute_sql_arr($sqlarr, $continue=true, $feedback=true) {
     }
     return $status;
 }
- */
 
 /**
  * This function, called from setup.php includes all the configuration
@@ -1063,8 +1034,8 @@ function configure_dbconnection() {
     // more later..
 }
 
-function  is_postgres() {
-    return (strpos(get_config('dbtype'), 'postgres' === 0));
+function is_postgres() {
+    return (strpos(get_config('dbtype'), 'postgres') === 0);
 }
 
 ?>

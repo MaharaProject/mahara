@@ -1,4 +1,4 @@
-<?php // $Id: XMLDBGenerator.class.php,v 1.35 2006/09/28 21:47:36 stronk7 Exp $
+<?php // $Id: XMLDBGenerator.class.php,v 1.53 2006/10/08 09:36:33 stronk7 Exp $
 
 ///////////////////////////////////////////////////////////////////////////
 //                                                                       //
@@ -91,15 +91,16 @@ class XMLDBgenerator {
 
     var $concat_character = '||'; //Characters to be used as concatenation operator. If not defined
                                   //MySQL CONCAT function will be used
+
     var $rename_table_sql = 'ALTER TABLE OLDNAME RENAME TO NEWNAME'; //SQL sentence to rename one table, both
                                   //OLDNAME and NEWNAME are dinamically replaced
 
-    var $rename_table_extra_code = false; //Does the generatos need to add code after table rename
+    var $rename_table_extra_code = false; //Does the generator need to add code after table rename
 
     var $drop_table_sql = 'DROP TABLE TABLENAME'; //SQL sentence to drop one table
                                   //TABLENAME is dinamically replaced
 
-    var $drop_table_extra_code = false; //Does the generatos need to add code after table drop
+    var $drop_table_extra_code = false; //Does the generator need to add code after table drop
 
     var $alter_column_sql = 'ALTER TABLE TABLENAME ALTER COLUMN COLUMNSPECS'; //The SQL template to alter columns
 
@@ -109,8 +110,19 @@ class XMLDBgenerator {
 
     var $alter_column_skip_notnull = false; //The generator will skip the null/notnull clause on alter columns
 
+    var $rename_column_sql = 'ALTER TABLE TABLENAME RENAME COLUMN OLDFIELDNAME TO NEWFIELDNAME';
+                                  ///TABLENAME, OLDFIELDNAME and NEWFIELDNAME are dianmically replaced
+
+    var $rename_column_extra_code = false; //Does the generator need to add code after column rename
+
     var $drop_index_sql = 'DROP INDEX INDEXNAME'; //SQL sentence to drop one index
                                   //TABLENAME, INDEXNAME are dinamically replaced
+
+    var $rename_index_sql = 'ALTER INDEX OLDINDEXNAME RENAME TO NEWINDEXNAME'; //SQL sentence to rename one index
+                                  //TABLENAME, OLDINDEXNAME, NEWINDEXNAME are dinamically replaced
+
+    var $rename_key_sql = 'ALTER TABLE TABLENAME CONSTRAINT OLDKEYNAME RENAME TO NEWKEYNAME'; //SQL sentence to rename one key
+                                  //TABLENAME, OLDKEYNAME, NEWKEYNAME are dinamically replaced
 
     var $prefix;         // Prefix to be used for all the DB objects
 
@@ -137,28 +149,50 @@ class XMLDBgenerator {
     }
 
     /**
+     * Given one XMLDBTable, returns it's correct name, depending of all the parametrization
+     *
+     * @param XMLDBTable table whose name we want
+     * @param boolean to specify if the name must be quoted (if reserved word, only!)
+     * @return string the correct name of the table
+     */
+    function getTableName($xmldb_table, $quoted = true) {
+
+        $prefixtouse = $this->prefix;
+    /// Determinate if this table must have prefix or no
+        if (in_array($xmldb_table->getName(), $this->getTablesWithoutPrefix())) {
+            $prefixtouse = '';
+        }
+    /// Get the name
+        $tablename = $prefixtouse . $xmldb_table->getName();
+    /// Apply quotes conditionally
+        if ($quoted) {
+            $tablename = $this->getEncQuoted($tablename);
+        }
+
+        return $tablename;
+    }
+
+    /**
      * Given one correct XMLDBTable, returns the SQL statements
      * to create it (inside one array)
      */
     function getCreateTableSQL($xmldb_table) {
 
-        $tempprefix = '';
-    /// If the table needs to be created without prefix
-        if (in_array($xmldb_table->getName(), $this->getTablesWithoutPrefix())) {
-        /// Save current prefix to be restore later
-            $tempprefix = $this->prefix;
-        /// Empty prefix
-            $this->prefix = '';
-        }
-
         $results = array();  //Array where all the sentences will be stored
 
     /// Table header
-        $table = 'CREATE TABLE ' . $this->getEncQuoted($this->prefix . $xmldb_table->getName()) . ' (';
+        $table = 'CREATE TABLE ' . $this->getTableName($xmldb_table) . ' (';
 
         if (!$xmldb_fields = $xmldb_table->getFields()) {
-            return false;
+            return $results;
         }
+
+    /// Prevent tables without prefix to be duplicated (part of MDL-6614)
+        if (in_array($xmldb_table->getName(), $this->getTablesWithoutPrefix()) &&
+            table_exists($xmldb_table)) {
+            return $results; // false here would break the install, empty array is better ;-)
+        }
+
     /// Add the fields, separated by commas
         foreach ($xmldb_fields as $xmldb_field) {
             $table .= "\n    " . $this->getFieldSQL($xmldb_field);
@@ -207,7 +241,7 @@ class XMLDBgenerator {
         if ($xmldb_indexes = $xmldb_table->getIndexes()) {
             foreach ($xmldb_indexes as $xmldb_index) {
             ///Only process all this if the index doesn't exist in DB
-                if (!find_index_name($xmldb_table, $xmldb_index)) {
+                if (!index_exists($xmldb_table, $xmldb_index)) {
                     if ($indextext = $this->getCreateIndexSQL($xmldb_table, $xmldb_index)) {
                         $results = array_merge($results, $indextext);
                     }
@@ -225,7 +259,7 @@ class XMLDBgenerator {
                     $index = new XMLDBIndex('anyname');
                     $index->setFields($xmldb_key->getFields());
                 ///Only process all this if the index doesn't exist in DB
-                    if (!find_index_name($xmldb_table, $index)) {
+                    if (!index_exists($xmldb_table, $index)) {
                         $createindex = false; //By default
                         switch ($xmldb_key->getType()) {
                             case XMLDB_KEY_UNIQUE:
@@ -262,11 +296,6 @@ class XMLDBgenerator {
             }
         }
 
-    /// Re-set the original prefix if it has changed
-        if ($tempprefix) {
-            $this->prefix = $tempprefix;
-        }
-
         return $results;
     }
 
@@ -285,7 +314,7 @@ class XMLDBgenerator {
 
         $index = 'CREATE' . $unique . ' INDEX ';
         $index .= $this->getNameForObject($xmldb_table->getName(), implode(', ', $xmldb_index->getFields()), $suffix);
-        $index .= ' ON ' . $this->getEncQuoted($this->prefix . $xmldb_table->getName());
+        $index .= ' ON ' . $this->getTableName($xmldb_table);
         $index .= ' (' . implode(', ', $this->getEncQuoted($xmldb_index->getFields())) . ')';
 
         return array($index);
@@ -404,19 +433,18 @@ class XMLDBgenerator {
     }
 
     /**
-     * Give one XMLDBField, returns the correct "default clause" for the current configuration
+     * Give one XMLDBField, returns the correct "default value" for the current configuration
      */
-    function getDefaultClause ($xmldb_field) {
+    function getDefaultValue ($xmldb_field) {
 
-        $default = '';
+        $default = null;
 
         if ($xmldb_field->getDefault() != NULL) {
-            $default = ' DEFAULT ';
             if ($xmldb_field->getType() == XMLDB_TYPE_CHAR ||
                 $xmldb_field->getType() == XMLDB_TYPE_TEXT) {
-                    $default .= "'" . addslashes($xmldb_field->getDefault()) . "'";
+                    $default = "'" . addslashes($xmldb_field->getDefault()) . "'";
             } else {
-                $default .= $xmldb_field->getDefault();
+                $default = $xmldb_field->getDefault();
             }
         } else {
         /// We force default '' for not null char columns without proper default
@@ -424,18 +452,32 @@ class XMLDBgenerator {
             if ($this->default_for_char !== NULL &&
                 $xmldb_field->getType() == XMLDB_TYPE_CHAR &&
                 $xmldb_field->getNotNull()) {
-                $default = ' DEFAULT ' . "'" . $this->default_for_char . "'";
+                $default = "'" . $this->default_for_char . "'";
             } else {
             /// If the DB requires to explicity define some clause to drop one default, do it here
             /// never applying defaults to TEXT and BINARY fields
                 if ($this->drop_default_clause_required &&
                     $xmldb_field->getType() != XMLDB_TYPE_TEXT &&
                     $xmldb_field->getType() != XMLDB_TYPE_BINARY && !$xmldb_field->getNotNull()) {
-                    $default = ' DEFAULT ' . $this->drop_default_clause;
+                    $default = $this->drop_default_clause;
                 }
             }
         }
         return $default;
+    }
+
+    /**
+     * Given one XMLDBField, returns the correct "default clause" for the current configuration
+     */
+    function getDefaultClause ($xmldb_field) {
+
+        $defaultvalue = $this->getDefaultValue ($xmldb_field);
+
+        if ($defaultvalue !== null) {
+            return ' DEFAULT ' . $defaultvalue;
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -446,14 +488,16 @@ class XMLDBgenerator {
 
         $results = array();  //Array where all the sentences will be stored
 
-        $rename = str_replace('OLDNAME', $this->getEncQuoted($this->prefix . $xmldb_table->getName()), $this->rename_table_sql);
-        $rename = str_replace('NEWNAME', $this->getEncQuoted($this->prefix . $newname), $rename_table_sql);
+        $newt = new XMLDBTable($newname); //Temporal table for name calculations
+
+        $rename = str_replace('OLDNAME', $this->getTableName($xmldb_table), $this->rename_table_sql);
+        $rename = str_replace('NEWNAME', $this->getTableName($newt), $rename);
 
         $results[] = $rename;
 
-    /// TODO, call to getRenameTableExtraSQL() if $rename_table_extra_code is enabled. It will add sequence regeneration code.
+    /// Call to getRenameTableExtraSQL() if $rename_table_extra_code is enabled. It will add sequence regeneration code.
         if ($this->rename_table_extra_code) {
-            $extra_sentences = $this->getRenameTableExtraSQL();
+            $extra_sentences = $this->getRenameTableExtraSQL($xmldb_table, $newname);
             $results = array_merge($results, $extra_sentences);
         }
 
@@ -466,18 +510,9 @@ class XMLDBgenerator {
      */
     function getDropTableSQL($xmldb_table) {
 
-        $tempprefix = '';
-    /// If the table needs to be created without prefix
-        if (in_array($xmldb_table->getName(), $this->getTablesWithoutPrefix())) {
-        /// Save current prefix to be restore later
-            $tempprefix = $this->prefix;
-        /// Empty prefix
-            $this->prefix = '';
-        }
-
         $results = array();  //Array where all the sentences will be stored
 
-        $drop = str_replace('TABLENAME', $this->getEncQuoted($this->prefix . $xmldb_table->getName()), $this->drop_table_sql);
+        $drop = str_replace('TABLENAME', $this->getTableName($xmldb_table), $this->drop_table_sql);
 
         $results[] = $drop;
 
@@ -485,11 +520,6 @@ class XMLDBgenerator {
         if ($this->drop_table_extra_code) {
             $extra_sentences = $this->getDropTableExtraSQL($xmldb_table);
             $results = array_merge($results, $extra_sentences);
-        }
-
-    /// Re-set the original prefix if it has changed
-        if ($tempprefix) {
-            $this->prefix = $tempprefix;
         }
 
         return $results;
@@ -503,7 +533,7 @@ class XMLDBgenerator {
         $results = array();
 
     /// Get the quoted name of the table and field
-        $tablename = $this->getEncQuoted($this->prefix . $xmldb_table->getName());
+        $tablename = $this->getTableName($xmldb_table);
 
     /// Build the standard alter table add
         $altertable = 'ALTER TABLE ' . $tablename . ' ADD ' . 
@@ -535,7 +565,7 @@ class XMLDBgenerator {
         $results = array();
 
     /// Get the quoted name of the table and field
-        $tablename = $this->getEncQuoted($this->prefix . $xmldb_table->getName());
+        $tablename = $this->getTableName($xmldb_table);
         $fieldname = $this->getEncQuoted($xmldb_field->getName());
 
     /// Build the standard alter table drop
@@ -555,21 +585,42 @@ class XMLDBgenerator {
         $this->specify_nulls = true;
 
     /// Get the quoted name of the table and field
-        $tablename = $this->getEncQuoted($this->prefix . $xmldb_table->getName());
+        $tablename = $this->getTableName($xmldb_table);
         $fieldname = $this->getEncQuoted($xmldb_field->getName());
 
     /// Build de alter sentence using the alter_column_sql template
-        $alter = str_replace('TABLENAME', $this->getEncQuoted($this->prefix . $xmldb_table->getName()), $this->alter_column_sql);
+        $alter = str_replace('TABLENAME', $this->getTableName($xmldb_table), $this->alter_column_sql);
         $alter = str_replace('COLUMNSPECS', $this->getFieldSQL($xmldb_field, $this->alter_column_skip_type,
                                                                              $this->alter_column_skip_default,
                                                                              $this->alter_column_skip_notnull), $alter);
 
+    /// Add the after clause if necesary
+        if ($this->add_after_clause && $xmldb_field->getPrevious()) {
+            $alter .= ' after ' . $this->getEncQuoted($xmldb_field->getPrevious());
+        }
+
     /// Build the standard alter table modify
         $results[] = $alter;
 
-    /// Add the after clause if necesary
-        if ($this->add_after_clause && $xmldb_field->getPrevious()) {
-            $altertable .= ' after ' . $this->getEncQuoted($xmldb_field->getPrevious());
+        return $results;
+    }
+
+    /**
+     * Given one XMLDBTable and one XMLDBField, return the SQL statements needded to modify the enum of the field in the table
+     */
+    function getModifyEnumSQL($xmldb_table, $xmldb_field) {
+
+        $results = array();
+
+    /// Get the quoted name of the table and field
+        $tablename = $this->getTableName($xmldb_table);
+        $fieldname = $this->getEncQuoted($xmldb_field->getName());
+
+    /// Decide if we are going to create or to drop the enum (based exclusively in the values passed!)
+        if (!$xmldb_field->getEnum()) {
+            $results = $this->getDropEnumSQL($xmldb_table, $xmldb_field); //Drop
+        } else {
+            $results = $this->getCreateEnumSQL($xmldb_table, $xmldb_field); //Create/modify
         }
 
         return $results;
@@ -583,15 +634,51 @@ class XMLDBgenerator {
         $results = array();
 
     /// Get the quoted name of the table and field
-        $tablename = $this->getEncQuoted($this->prefix . $xmldb_table->getName());
+        $tablename = $this->getTableName($xmldb_table);
         $fieldname = $this->getEncQuoted($xmldb_field->getName());
 
     /// Decide if we are going to create/modify or to drop the default
         if ($xmldb_field->getDefault() === null) {
-            return $this->getDropDefaultSQL($xmldb_table, $xmldb_field); //Drop
+            $results = $this->getDropDefaultSQL($xmldb_table, $xmldb_field); //Drop
         } else {
-            return $this->getCreateDefaultSQL($xmldb_table, $xmldb_field); //Create/modify
+            $results = $this->getCreateDefaultSQL($xmldb_table, $xmldb_field); //Create/modify
         }
+
+        return $results;
+    }
+
+    /**
+     * Given one correct XMLDBField and the new name, returns the SQL statements
+     * to rename it (inside one array)
+     */
+    function getRenameFieldSQL($xmldb_table, $xmldb_field, $newname) {
+
+        $results = array();  //Array where all the sentences will be stored
+
+    /// Although this is checked in ddllib - rename_field() - double check
+    /// that we aren't trying to rename one "id" field. Although it could be
+    /// implemented (if adding the necessary code to rename sequences, defaults,
+    /// triggers... and so on under each getRenameFieldExtraSQL() function, it's
+    /// better to forbide it, mainly because this field is the default PK and
+    /// in the future, a lot of FKs can be pointing here. So, this field, more
+    /// or less, must be considered inmutable!
+        if ($xmldb_field->getName() == 'id') {
+            return array();
+        }
+
+        $rename = str_replace('TABLENAME', $this->getTableName($xmldb_table), $this->rename_column_sql);
+        $rename = str_replace('OLDFIELDNAME', $xmldb_field->getName(), $rename);
+        $rename = str_replace('NEWFIELDNAME', $newname, $rename);
+
+        $results[] = $rename;
+
+    /// Call to getRenameFieldExtraSQL() if $rename_column_extra_code is enabled (will add some required sentences)
+        if ($this->rename_column_extra_code) {
+            $extra_sentences = $this->getRenameFieldExtraSQL($xmldb_table, $xmldb_field, $newname);
+            $results = array_merge($results, $extra_sentences);
+        }
+
+        return $results;
     }
 
     /**
@@ -604,7 +691,7 @@ class XMLDBgenerator {
 
     /// Just use the CreateKeySQL function
         if ($keyclause = $this->getKeySQL($xmldb_table, $xmldb_key)) {
-            $key = 'ALTER TABLE ' . $this->getEncQuoted($this->prefix . $xmldb_table->getName()) .
+            $key = 'ALTER TABLE ' . $this->getTableName($xmldb_table) .
                ' ADD CONSTRAINT ' . $keyclause;
             $results[] = $key;
         }
@@ -620,7 +707,7 @@ class XMLDBgenerator {
             }
             $xmldb_index = new XMLDBIndex('anyname');
             $xmldb_index->setAttributes($indextype, $xmldb_key->getFields());
-            if (!$indexname = find_index_name($xmldb_table, $xmldb_index)) {
+            if (!index_exists($xmldb_table, $xmldb_index)) {
                 $results = array_merge($results, $this->getAddIndexSQL($xmldb_table, $xmldb_index));
             }
         }
@@ -676,7 +763,7 @@ class XMLDBgenerator {
     /// If we have decided to drop the key, let's do it
         if ($dropkey) {
         /// Replace TABLENAME, CONSTRAINTTYPE and KEYNAME as needed
-            $dropsql = str_replace('TABLENAME', $this->getEncQuoted($this->prefix . $xmldb_table->getName()), $template);
+            $dropsql = str_replace('TABLENAME', $this->getTableName($xmldb_table), $template);
             $dropsql = str_replace('KEYNAME', $dbkeyname, $dropsql);
 
             $results[] = $dropsql;
@@ -688,7 +775,7 @@ class XMLDBgenerator {
         /// Only if they exist
             $xmldb_index = new XMLDBIndex('anyname');
             $xmldb_index->setAttributes(XMLDB_INDEX_UNIQUE, $xmldb_key->getFields());
-            if ($indexname = find_index_name($xmldb_table, $xmldb_index)) {
+            if (index_exists($xmldb_table, $xmldb_index)) {
                 $results = array_merge($results, $this->getDropIndexSQL($xmldb_table, $xmldb_index));
             }
         }
@@ -701,6 +788,43 @@ class XMLDBgenerator {
         }
         
     /// Return results
+        return $results;
+    }
+
+    /**
+     * Given one XMLDBTable and one XMLDBKey, return the SQL statements needded to rename the key in the table
+     * Experimental! Shouldn't be used at all!
+     */
+
+    function getRenameKeySQL($xmldb_table, $xmldb_key, $newname) {
+
+        $results = array();
+
+    /// Get the real key name
+        $dbkeyname = find_key_name($xmldb_table, $xmldb_key);
+
+    /// Check we are really generating this type of keys
+        if (($xmldb_key->getType() == XMLDB_KEY_PRIMARY && !$this->primary_keys) ||
+            ($xmldb_key->getType() == XMLDB_KEY_UNIQUE && !$this->unique_keys) ||
+            ($xmldb_key->getType() == XMLDB_KEY_FOREIGN && !$this->foreign_keys) ||
+            ($xmldb_key->getType() == XMLDB_KEY_FOREIGN_UNIQUE && !$this->unique_keys && !$this->foreign_keys)) {
+        /// We aren't generating this type of keys, delegate to child indexes
+            $xmldb_index = new XMLDBIndex($xmldb_key->getName());
+            $xmldb_index->setFields($xmldb_key->getFields());
+            return $this->getRenameIndexSQL($xmldb_table, $xmldb_index, $newname);
+        }
+
+    /// Arrived here so we are working with keys, lets rename them
+    /// Replace TABLENAME and KEYNAME as needed
+        $renamesql = str_replace('TABLENAME', $this->getTableName($xmldb_table), $this->rename_key_sql);
+        $renamesql = str_replace('OLDKEYNAME', $dbkeyname, $renamesql);
+        $renamesql = str_replace('NEWKEYNAME', $newname, $renamesql);
+
+    /// Some DB doesn't support key renaming so this can be empty
+        if ($renamesql) {
+            $results[] = $renamesql;
+        }
+
         return $results;
     }
 
@@ -724,7 +848,7 @@ class XMLDBgenerator {
         $dbindexname = find_index_name($xmldb_table, $xmldb_index);
 
     /// Replace TABLENAME and INDEXNAME as needed
-        $dropsql = str_replace('TABLENAME', $this->getEncQuoted($this->prefix . $xmldb_table->getName()), $this->drop_index_sql);
+        $dropsql = str_replace('TABLENAME', $this->getTableName($xmldb_table), $this->drop_index_sql);
         $dropsql = str_replace('INDEXNAME', $dbindexname, $dropsql);
 
         $results[] = $dropsql;
@@ -732,12 +856,36 @@ class XMLDBgenerator {
         return $results;
     }
 
+    /**
+     * Given one XMLDBTable and one XMLDBIndex, return the SQL statements needded to rename the index in the table
+     * Experimental! Shouldn't be used at all!
+     */
+
+    function getRenameIndexSQL($xmldb_table, $xmldb_index, $newname) {
+
+        $results = array();
+
+    /// Get the real index name
+        $dbindexname = find_index_name($xmldb_table, $xmldb_index);
+
+    /// Replace TABLENAME and INDEXNAME as needed
+        $renamesql = str_replace('TABLENAME', $this->getTableName($xmldb_table), $this->rename_index_sql);
+        $renamesql = str_replace('OLDINDEXNAME', $dbindexname, $renamesql);
+        $renamesql = str_replace('NEWINDEXNAME', $newname, $renamesql);
+
+    /// Some DB doesn't support index renaming (MySQL) so this can be empty
+        if ($renamesql) {
+            $results[] = $renamesql;
+        }
+
+        return $results;
+    }
 
     /**
      * Given three strings (table name, list of fields (comma separated) and suffix), create the proper object name
      * quoting it if necessary
      */
-    function getNameForObject($tablename, $fields, $suffix) {
+    function getNameForObject($tablename, $fields, $suffix='') {
 
         $name = '';
 
@@ -768,7 +916,10 @@ class XMLDBgenerator {
         $name = substr(trim($name), 0, $this->names_max_length - 1 - strlen($suffix)); //Max names_max_length
 
     /// Add the suffix
-        $namewithsuffix = $name . '_' . $suffix;
+        $namewithsuffix = $name;
+        if ($suffix) {
+            $namewithsuffix = $namewithsuffix . '_' . $suffix;
+        }
 
     /// If the calculated name is in the cache, let's modify if
         if (in_array($namewithsuffix, $used_names)) {
@@ -780,11 +931,17 @@ class XMLDBgenerator {
             } else {
                 $newname = substr($name, 0, strlen($name)-1) . $counter;
             }
-            $newnamewithsuffix = $newname . '_' . $suffix;
+            $newnamewithsuffix = $newname;
+            if ($suffix) {
+                $newnamewithsuffix = $newnamewithsuffix . '_' . $suffix;
+            }
         /// Now iterate until not used name is found, incrementing the counter
             while (in_array($newnamewithsuffix, $used_names)) {
                 $newname = substr($name, 0, strlen($newname)-1) . $counter;
-                $newnamewithsuffix = $newname . '_' . $suffix;
+                $newnamewithsuffix = $newname;
+                if ($suffix) {
+                    $newnamewithsuffix = $newnamewithsuffix . '_' . $suffix;
+                }
                 $counter++;
             }
             $namewithsuffix = $newnamewithsuffix;
@@ -909,6 +1066,15 @@ class XMLDBgenerator {
         }
     }
 
+    /**
+     * Returns the name (string) of the sequence used in the table for the autonumeric pk
+     * Only some DB have this implemented
+     */
+    function getSequenceFromDB($xmldb_table) {
+        return false;
+    }
+
+
 /// ALL THESE FUNCTION MUST BE CUSTOMISED BY ALL THE XMLDGenerator classes
 
     /**
@@ -930,6 +1096,13 @@ class XMLDBgenerator {
      */
     function getEnumExtraSQL ($xmldb_table, $xmldb_field) {
         return 'Code for extra enum SQL goes to getEnumExtraSQL(). Can be disabled with enum_extra_code=false';
+    }
+
+    /**
+     * Returns the code (array of statements) needed to execute extra statements on field rename
+     */
+    function getRenameFieldExtraSQL ($xmldb_table, $xmldb_field) {
+        return array('Code for field rename goes to getRenameFieldExtraSQL(). Can be disabled with rename_column_extra_code=false;');
     }
 
     /**
@@ -962,6 +1135,22 @@ class XMLDBgenerator {
     }
 
     /**
+     * Given one XMLDBTable and one XMLDBField, return the SQL statements needded to drop its enum 
+     * (usually invoked from getModifyEnumSQL()
+     */
+    function getDropEnumSQL($xmldb_table, $xmldb_field) {
+        return array('Code to drop one enum goes to getDropEnumSQL()');
+    }
+
+    /**
+     * Given one XMLDBTable and one XMLDBField, return the SQL statements needded to add its enum 
+     * (usually invoked from getModifyEnumSQL()
+     */
+    function getCreateEnumSQL($xmldb_table, $xmldb_field) {
+        return array('Code to create one enum goes to getCreateEnumSQL()');
+    }
+
+    /**
      * Given one XMLDBTable and one XMLDBField, return the SQL statements needded to drop its default 
      * (usually invoked from getModifyDefaultSQL()
      */
@@ -974,7 +1163,7 @@ class XMLDBgenerator {
      * (usually invoked from getModifyDefaultSQL()
      */
     function getCreateDefaultSQL($xmldb_table, $xmldb_field) {
-        return array('Code to create one default goes to getCreate()');
+        return array('Code to create one default goes to getCreateDefaultSQL()');
     }
 
     /**

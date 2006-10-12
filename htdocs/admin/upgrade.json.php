@@ -25,28 +25,37 @@
  */
 
 define('INTERNAL',1);
+define('INSTALLER',1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 
 $name = clean_requestdata('name',PARAM_ALPHAEXT,REQUEST_EITHER);
 
-// todo upgrade stuff
-sleep(1);
-
-// key, success, newversion ,errormessage
-
+$upgrade = check_upgrades($name);
 $data = array(
-    'key' => $name,
-    'success' => true,
-    'newversion' => 0.1,
-);
+    'key'        => $name
+);             
 
+if (!empty($upgrade)) {
+    $data['newversion'] = $upgrade->torelease . '( ' . $upgrade->to . ')' ;
+    if ($name == 'core') {
+        $funname = 'upgrade_core';
+    } 
+    else {
+        $funname = 'upgrade_plugin';
+    }
+    try {
+        $funname($upgrade);
+        $data['success'] = 1;
+    } 
+    catch (Exception $e) {
+        error_log(print_r($e,true));
+        $data['errormessage'] = $e->getMessage();
+        $data['success']      = 0;
+    }
+}
+else {
+    $data['success'] = 1;
+    $data['errormessage'] = get_string('nothingtoupgrade','admin');
+}
 echo json_encode($data);    
-              
-    
-                  
-
-
-
-
-
 ?>

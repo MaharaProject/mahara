@@ -1,4 +1,4 @@
-<?php // $Id: postgres7.class.php,v 1.16 2006/09/28 18:35:37 stronk7 Exp $
+<?php // $Id: postgres7.class.php,v 1.25 2006/10/03 15:00:55 stronk7 Exp $
 
 ///////////////////////////////////////////////////////////////////////////
 //                                                                       //
@@ -41,7 +41,17 @@ class XMLDBpostgres7 extends XMLDBgenerator {
     var $sequence_name = 'BIGSERIAL'; //Particular name for inline sequences in this generator
     var $sequence_only = true; //To avoid to output the rest of the field specs, leaving only the name and the sequence_name variable
 
+    var $rename_table_extra_code = true; //Does the generator need to add code after table rename
+
+    var $rename_column_extra_code = true; //Does the generator need to add code after column rename
+
     var $enum_inline_code = false; //Does the generator need to add inline code in the column definition
+
+    var $rename_index_sql = 'ALTER TABLE OLDINDEXNAME RENAME TO NEWINDEXNAME'; //SQL sentence to rename one index
+                                      //TABLENAME, OLDINDEXNAME, NEWINDEXNAME are dinamically replaced
+
+    var $rename_key_sql = null; //SQL sentence to rename one key (PostgreSQL doesn't support this!)
+                                          //TABLENAME, OLDKEYNAME, NEWKEYNAME are dinamically replaced
 
     /**
      * Creates one new XMLDBpostgres7
@@ -124,10 +134,100 @@ class XMLDBpostgres7 extends XMLDBgenerator {
      */
     function getCommentSQL ($xmldb_table) {
 
-        $comment = "COMMENT ON TABLE " . $this->getEncQuoted($this->prefix . $xmldb_table->getName());
+        $comment = "COMMENT ON TABLE " . $this->getTableName($xmldb_table);
         $comment.= " IS '" . substr($xmldb_table->getComment(), 0, 250) . "'";
 
         return array($comment);
+    }
+
+    /**
+     * Returns the code (array of statements) needed to execute extra statements on table rename
+     */
+    function getRenameTableExtraSQL ($xmldb_table, $newname) {
+
+        $results = array();
+
+        $newt = new XMLDBTable($newname);
+
+        $xmldb_field = new XMLDBField('id'); // Fields having sequences should be exclusively, id.
+
+        $oldseqname = $this->getTableName($xmldb_table) . '_' . $xmldb_field->getName() . '_seq';
+        $newseqname = $this->getTableName($newt) . '_' . $xmldb_field->getName() . '_seq';
+
+    /// Rename de sequence
+        $results[] = 'ALTER TABLE ' . $oldseqname . ' RENAME TO ' . $newseqname;
+
+    /// Rename all the check constraints in the table
+        $oldtablename = $this->getTableName($xmldb_table);
+        $newtablename = $this->getTableName($newt);
+
+        $oldconstraintprefix = $this->getNameForObject($xmldb_table->getName(), '');
+        $newconstraintprefix = $this->getNameForObject($newt->getName(), '', '');
+
+        if ($constraints = $this->getCheckConstraintsFromDB($xmldb_table)) {
+            foreach ($constraints as $constraint) {
+            /// Drop the old constraint
+                $results[] = 'ALTER TABLE ' . $newtablename . ' DROP CONSTRAINT ' . $constraint->name;
+            /// Calculate the new constraint name
+                $newconstraintname = str_replace($oldconstraintprefix, $newconstraintprefix, $constraint->name);
+            /// Add the new constraint
+                $results[] = 'ALTER TABLE ' . $newtablename . ' ADD CONSTRAINT ' . $newconstraintname .
+                             ' CHECK ' . $constraint->description;
+             }
+         }
+
+        return $results;
+    }
+
+    /**
+     * Given one XMLDBTable and one XMLDBField, return the SQL statements needded to add the field to the table
+     * PostgreSQL is pretty standard but with one severe restriction under 7.4 that forces us to overload
+     * this function: Default clause is not allowed when adding fields.
+     * 
+     * This function can be safely removed once min req. for PG will be 8.0
+     */
+    function getAddFieldSQL($xmldb_table, $xmldb_field) {
+    
+        $results = array();
+
+        $tablename = $this->getTableName($xmldb_table);
+        $fieldname = $this->getEncQuoted($xmldb_field->getName());
+
+        $defaultvalue = null;
+
+    /// Save old flags
+        $old_skip_default = $this->alter_column_skip_default;
+        $old_skip_notnull = $this->alter_column_skip_notnull;
+
+    /// Prevent default clause and launch parent getAddField()
+        $this->alter_column_skip_default = true;
+        $this->alter_column_skip_notnull = true;
+        $results = parent::getAddFieldSQL($xmldb_table, $xmldb_field);
+
+    /// Re-set old flags
+        $this->alter_column_skip_default = $old_skip_default;
+        $this->alter_column_skip_notnull = $old_skip_notnull;
+
+    /// Add default (only if not skip_default)
+        if (!$this->alter_column_skip_default) {
+            if ($defaultclause = $this->getDefaultClause($xmldb_field)) {
+                $defaultvalue = $this->getDefaultValue($xmldb_field);
+                $results[] = 'ALTER TABLE ' . $tablename . ' ALTER COLUMN ' . $fieldname . ' SET' . $defaultclause; /// Add default clause
+            }
+        /// Update default value (if exists) to all the records
+            if ($defaultvalue !== null) {
+                $results[] = 'UPDATE ' . $tablename . ' SET ' . $fieldname . '=' . $defaultvalue;
+            }
+        }
+
+    /// Add not null (only if no skip_notnull)
+        if (!$this->alter_column_skip_notnull) {
+            if ($xmldb_field->getNotnull()) {
+                $results[] = 'ALTER TABLE ' . $tablename . ' ALTER COLUMN ' . $fieldname . ' SET NOT NULL'; /// Add not null
+            }
+        }
+
+        return $results;
     }
 
     /**
@@ -146,7 +246,7 @@ class XMLDBpostgres7 extends XMLDBgenerator {
         $results = array(); /// To store all the needed SQL commands
 
     /// Get the quoted name of the table and field
-        $tablename = $this->getEncQuoted($this->prefix . $xmldb_table->getName());
+        $tablename = $this->getTableName($xmldb_table);
         $fieldname = $this->getEncQuoted($xmldb_field->getName());
 
     /// Take a look to field metadata
@@ -260,6 +360,46 @@ class XMLDBpostgres7 extends XMLDBgenerator {
     }
 
     /**
+     * Returns the code (array of statements) needed to execute extra statements on field rename
+     */
+    function getRenameFieldExtraSQL ($xmldb_table, $xmldb_field, $newname) {
+
+        $results = array();
+
+    /// If the field is enum, drop and re-create the check constraint
+        if ($xmldb_field->getEnum()) {
+        /// Drop the current enum
+            $results = array_merge($results, $this->getDropEnumSQL($xmldb_table, $xmldb_field));
+        /// Change field name
+            $xmldb_field->setName($newname);
+        /// Recreate the enum
+            $results = array_merge($results, $this->getCreateEnumSQL($xmldb_table, $xmldb_field));
+        }
+
+        return $results;
+    }
+
+    /**
+     * Given one XMLDBTable and one XMLDBField, return the SQL statements needded to create its enum 
+     * (usually invoked from getModifyEnumSQL()
+     */
+    function getCreateEnumSQL($xmldb_table, $xmldb_field) {
+    /// All we have to do is to create the check constraint
+        return array('ALTER TABLE ' . $this->getTableName($xmldb_table) .
+                     ' ADD ' . $this->getEnumExtraSQL($xmldb_table, $xmldb_field));
+    }
+
+    /**     
+     * Given one XMLDBTable and one XMLDBField, return the SQL statements needded to drop its enum 
+     * (usually invoked from getModifyEnumSQL()
+     */
+    function getDropEnumSQL($xmldb_table, $xmldb_field) {
+    /// All we have to do is to drop the check constraint
+        return array('ALTER TABLE ' . $this->getTableName($xmldb_table) .
+                     ' DROP CONSTRAINT ' . $this->getNameForObject($xmldb_table->getName(), $xmldb_field->getName(), 'ck'));
+    }
+
+    /**
      * Given one XMLDBTable and one XMLDBField, return the SQL statements needded to create its default 
      * (usually invoked from getModifyDefaultSQL()
      */
@@ -277,6 +417,32 @@ class XMLDBpostgres7 extends XMLDBgenerator {
     /// Just a wrapper over the getAlterFieldSQL() function for PostgreSQL that
     /// is capable of handling defaults
         return $this->getAlterFieldSQL($xmldb_table, $xmldb_field);
+    }
+
+    /**
+     * Given one XMLDBTable returns one array with all the check constrainsts 
+     * in the table (fetched from DB)
+     * Each element contains the name of the constraint and its description
+     * If no check constraints are found, returns an empty array
+     */
+    function getCheckConstraintsFromDB($xmldb_table) {
+
+        $results = array();
+
+        $tablename = $this->getTableName($xmldb_table);
+
+        if ($constraints = get_records_sql("SELECT co.conname AS name, co.consrc AS description
+                                              FROM pg_constraint co,
+                                                   pg_class cl
+                                             WHERE co.conrelid = cl.oid
+                                               AND co.contype = 'c'
+                                               AND cl.relname = '{$tablename}'")) {
+            foreach ($constraints as $constraint) {
+                $results[$constraint->name] = $constraint;
+            }
+        }
+
+        return $results;
     }
 
     /**

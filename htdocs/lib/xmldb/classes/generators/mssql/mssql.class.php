@@ -1,4 +1,4 @@
-<?php // $Id: mssql.class.php,v 1.20 2006/09/28 18:33:48 stronk7 Exp $
+<?php // $Id: mssql.class.php,v 1.30 2006/10/02 17:42:14 stronk7 Exp $
 
 ///////////////////////////////////////////////////////////////////////////
 //                                                                       //
@@ -53,8 +53,24 @@ class XMLDBmssql extends XMLDBgenerator {
     var $concat_character = '+'; //Characters to be used as concatenation operator. If not defined
                                   //MySQL CONCAT function will be use
 
+    var $rename_table_sql = "sp_rename 'OLDNAME', 'NEWNAME'"; //SQL sentence to rename one table, both
+                                  //OLDNAME and NEWNAME are dinamically replaced
+
+    var $rename_table_extra_code = true; //Does the generator need to add code after table rename
+
+    var $rename_column_extra_code = true; //Does the generator need to add code after field rename
+
+    var $rename_column_sql = "sp_rename 'TABLENAME.OLDFIELDNAME', 'NEWFIELDNAME', 'COLUMN'";
+                                      ///TABLENAME, OLDFIELDNAME and NEWFIELDNAME are dianmically replaced
+
     var $drop_index_sql = 'DROP INDEX TABLENAME.INDEXNAME'; //SQL sentence to drop one index
                                                                //TABLENAME, INDEXNAME are dinamically replaced
+
+    var $rename_index_sql = "sp_rename 'TABLENAME.OLDINDEXNAME', 'NEWINDEXNAME', 'INDEX'"; //SQL sentence to rename one index
+                                      //TABLENAME, OLDINDEXNAME, NEWINDEXNAME are dinamically replaced
+
+    var $rename_key_sql = null; //SQL sentence to rename one key
+                                          //TABLENAME, OLDKEYNAME, NEWKEYNAME are dinamically replaced
 
     /**
      * Creates one new XMLDBmssql
@@ -147,7 +163,7 @@ class XMLDBmssql extends XMLDBgenerator {
         $results = array();
 
     /// Get the quoted name of the table and field
-        $tablename = $this->getEncQuoted($this->prefix . $xmldb_table->getName());
+        $tablename = $this->getTableName($xmldb_table);
         $fieldname = $this->getEncQuoted($xmldb_field->getName());
 
         $checkconsname = $this->getNameForObject($xmldb_table->getName(), $xmldb_field->getName(), 'ck');
@@ -171,12 +187,186 @@ class XMLDBmssql extends XMLDBgenerator {
     }
 
     /**
+     * Given one correct XMLDBField and the new name, returns the SQL statements
+     * to rename it (inside one array)
+     * MSSQL is special, so we overload the function here. It needs to
+     * drop the constraints BEFORE renaming the field
+     */
+    function getRenameFieldSQL($xmldb_table, $xmldb_field, $newname) {
+
+        $results = array();  //Array where all the sentences will be stored
+
+    /// Although this is checked in ddllib - rename_field() - double check
+    /// that we aren't trying to rename one "id" field. Although it could be
+    /// implemented (if adding the necessary code to rename sequences, defaults,
+    /// triggers... and so on under each getRenameFieldExtraSQL() function, it's
+    /// better to forbide it, mainly because this field is the default PK and
+    /// in the future, a lot of FKs can be pointing here. So, this field, more
+    /// or less, must be considered inmutable!
+        if ($xmldb_field->getName() == 'id') {
+            return array();
+        }
+
+    /// Drop the check constraint if exists
+        if ($xmldb_field->getEnum()) {
+            $results = array_merge($results, $this->getDropEnumSQL($xmldb_table, $xmldb_field));
+        }
+
+    /// Call to standard (parent) getRenameFieldSQL() function
+        $results = array_merge($results, parent::getRenameFieldSQL($xmldb_table, $xmldb_field, $newname));
+
+        return $results;
+    }
+
+    /**
+     * Returns the code (array of statements) needed to execute extra statements on field rename
+     */
+    function getRenameFieldExtraSQL ($xmldb_table, $xmldb_field, $newname) {
+
+        $results = array();
+
+    /// If the field is enum, drop and re-create the check constraint
+        if ($xmldb_field->getEnum()) {
+        /// Drop the current enum (not needed, it has been dropped before for msqql (in getRenameFieldSQL)
+            //$results = array_merge($results, $this->getDropEnumSQL($xmldb_table, $xmldb_field));
+        /// Change field name
+            $xmldb_field->setName($newname);
+        /// Recreate the enum
+            $results = array_merge($results, $this->getCreateEnumSQL($xmldb_table, $xmldb_field));
+        }
+
+        return $results;
+    }
+
+    /**
+     * Returns the code (array of statements) needed to execute extra statements on table rename
+     */
+    function getRenameTableExtraSQL ($xmldb_table, $newname) {
+
+        $results = array();
+
+        $newt = new XMLDBTable($newname); //Temporal table for name calculations
+
+        $oldtablename = $this->getTableName($xmldb_table);
+        $newtablename = $this->getTableName($newt);
+
+    /// Rename all the check constraints in the table
+        $oldconstraintprefix = $this->getNameForObject($xmldb_table->getName(), '');
+        $newconstraintprefix = $this->getNameForObject($newt->getName(), '', '');
+
+        if ($constraints = $this->getCheckConstraintsFromDB($xmldb_table)) {
+            foreach ($constraints as $constraint) {
+            /// Drop the old constraint
+                $results[] = 'ALTER TABLE ' . $newtablename . ' DROP CONSTRAINT ' . $constraint->name;
+            /// Calculate the new constraint name
+                $newconstraintname = str_replace($oldconstraintprefix, $newconstraintprefix, $constraint->name);
+            /// Add the new constraint
+                $results[] = 'ALTER TABLE ' . $newtablename . ' ADD CONSTRAINT ' . $newconstraintname .
+                             ' CHECK ' . $constraint->description;
+            }
+        }
+
+        return $results;
+    }
+
+    /**
      * Given one XMLDBTable and one XMLDBField, return the SQL statements needded to alter the field in the table
      */
     function getAlterFieldSQL($xmldb_table, $xmldb_field) {
+
+        global $db;
+
+        $results = array(); /// To store all the needed SQL commands
+
+    /// Get the quoted name of the table and field
+        $tablename = $this->getTableName($xmldb_table);
+        $fieldname = $this->getEncQuoted($xmldb_field->getName());
+
+    /// Take a look to field metadata
+        $meta = array_change_key_case($db->MetaColumns($tablename));
+        $metac = $meta[$fieldname];
+        $oldtype = strtolower($metac->type);
+        $oldmetatype = column_type($xmldb_table->getName(), $fieldname);
+        $oldlength = $metac->max_length;
+        $olddecimals = empty($metac->scale) ? null : $metac->scale;
+        $oldnotnull = empty($metac->not_null) ? false : $metac->not_null;
+        $olddefault = empty($metac->has_default) ? null : strtok($metac->default_value, ':');
+
+        $typechanged = true;  //By default, assume that the column type has changed
+
+    /// Detect if we are changing the type of the column
+        if (($xmldb_field->getType() == XMLDB_TYPE_INTEGER && substr($oldmetatype, 0, 1) == 'I') ||
+            ($xmldb_field->getType() == XMLDB_TYPE_NUMBER  && $oldmetatype == 'N') ||
+            ($xmldb_field->getType() == XMLDB_TYPE_FLOAT   && $oldmetatype == 'F') ||
+            ($xmldb_field->getType() == XMLDB_TYPE_CHAR    && substr($oldmetatype, 0, 1) == 'C') ||
+            ($xmldb_field->getType() == XMLDB_TYPE_TEXT    && substr($oldmetatype, 0, 1) == 'X') ||
+            ($xmldb_field->getType() == XMLDB_TYPE_BINARY  && $oldmetatype == 'B')) {
+            $typechanged = false;
+        }
+
+    /// If type has changed drop the default if exists
+        if ($typechanged) {
+            $results = $this->getDropDefaultSQL($xmldb_table, $xmldb_field);
+        }
+
     /// Just prevent default clauses in this type of sentences for mssql and launch the parent one
         $this->alter_column_skip_default = true;
-        return parent::getAlterFieldSQL($xmldb_table, $xmldb_field);
+        $results = array_merge($results, parent::getAlterFieldSQL($xmldb_table, $xmldb_field)); // Call parent
+
+    /// Finally, process the default clause to add it back if necessary
+        if ($typechanged) {
+            $results = array_merge($results, $this->getCreateDefaultSQL($xmldb_table, $xmldb_field));
+        }
+
+    /// Return results
+        return $results;
+    }
+
+    /**
+     * Given one XMLDBTable and one XMLDBField, return the SQL statements needded to modify the default of the field in the table
+     */
+    function getModifyDefaultSQL($xmldb_table, $xmldb_field) {
+    /// MSSQL is a bit special with default constraints because it implements them as external constraints so
+    /// normal ALTER TABLE ALTER COLUMN don't work to change defaults. Because this, we have this method overloaded here
+
+        $results = array();
+
+    /// Get the quoted name of the table and field
+        $tablename = $this->getTableName($xmldb_table);
+        $fieldname = $this->getEncQuoted($xmldb_field->getName());
+
+    /// Decide if we are going to create/modify or to drop the default
+        if ($xmldb_field->getDefault() === null) {
+            $results = $this->getDropDefaultSQL($xmldb_table, $xmldb_field); //Drop but, under some circumptances, re-enable
+            if ($this->getDefaultClause($xmldb_field)) { //If getDefaultClause() it must have one default, create it
+                $results = array_merge($results, $this->getCreateDefaultSQL($xmldb_table, $xmldb_field)); //Create/modify
+            }
+        } else {
+            $results = $this->getDropDefaultSQL($xmldb_table, $xmldb_field); //Drop (only if exists)
+            $results = array_merge($results, $this->getCreateDefaultSQL($xmldb_table, $xmldb_field)); //Create/modify
+        }
+
+        return $results;
+    }
+
+    /**
+     * Given one XMLDBTable and one XMLDBField, return the SQL statements needded to create its enum 
+     * (usually invoked from getModifyEnumSQL()
+     */
+    function getCreateEnumSQL($xmldb_table, $xmldb_field) {
+    /// All we have to do is to create the check constraint
+        return array('ALTER TABLE ' . $this->getTableName($xmldb_table) .
+                     ' ADD ' . $this->getEnumExtraSQL($xmldb_table, $xmldb_field));
+    }
+
+    /**     
+     * Given one XMLDBTable and one XMLDBField, return the SQL statements needded to drop its enum 
+     * (usually invoked from getModifyEnumSQL()
+     */
+    function getDropEnumSQL($xmldb_table, $xmldb_field) {
+    /// All we have to do is to drop the check constraint
+        return array('ALTER TABLE ' . $this->getTableName($xmldb_table) .
+                     ' DROP CONSTRAINT ' . $this->getNameForObject($xmldb_table->getName(), $xmldb_field->getName(), 'ck'));
     }
 
     /**
@@ -184,9 +374,21 @@ class XMLDBmssql extends XMLDBgenerator {
      * (usually invoked from getModifyDefaultSQL()
      */
     function getCreateDefaultSQL($xmldb_table, $xmldb_field) {
-    /// This method does exactly the same than getDropDefaultSQL(), first trying to
-    /// drop the default if it exists and then, regenerating it, so we simply wrap over it
-        return $this->getDropDefaultSQL($xmldb_table, $xmldb_field);
+    /// MSSQL is a bit special and it requires the corresponding DEFAULT CONSTRAINT to be dropped
+
+        $results = array();
+
+    /// Get the quoted name of the table and field
+        $tablename = $this->getTableName($xmldb_table);
+        $fieldname = $this->getEncQuoted($xmldb_field->getName());
+
+    /// Now, check if, with the current field attributes, we have to build one default
+        if ($default_clause = $this->getDefaultClause($xmldb_field)) {
+        /// We need to build the default (Moodle) default, so do it
+            $results[] = 'ALTER TABLE ' . $tablename . ' ADD' . $default_clause . ' FOR ' . $fieldname;
+        }
+
+        return $results;
     }
 
     /**
@@ -199,19 +401,14 @@ class XMLDBmssql extends XMLDBgenerator {
         $results = array();
 
     /// Get the quoted name of the table and field
-        $tablename = $this->getEncQuoted($this->prefix . $xmldb_table->getName());
+        $tablename = $this->getTableName($xmldb_table);
         $fieldname = $this->getEncQuoted($xmldb_field->getName());
 
     /// Look for the default contraint and, if found, drop it
         if ($defaultname = $this->getDefaultConstraintName($xmldb_table, $xmldb_field)) {
             $results[] = 'ALTER TABLE ' . $tablename . ' DROP CONSTRAINT ' . $defaultname;
-        }
+        } 
 
-    /// Now, check if, with the current field attributes, we have to build one default
-        if ($default_clause = $this->getDefaultClause($xmldb_field)) {
-        /// We need to build the default (Moodle) default, so do it
-            $results[] = 'ALTER TABLE ' . $tablename . ' ADD' . $default_clause . ' FOR ' . $fieldname;
-        }
         return $results;
     }
 
@@ -222,10 +419,8 @@ class XMLDBmssql extends XMLDBgenerator {
      */
     function getDefaultConstraintName($xmldb_table, $xmldb_field) {
 
-        global $db;
-
     /// Get the quoted name of the table and field
-        $tablename = $this->getEncQuoted($this->prefix . $xmldb_table->getName());
+        $tablename = $this->getTableName($xmldb_table);
         $fieldname = $this->getEncQuoted($xmldb_field->getName());
 
     /// Look for any default constraint in this field and drop it
@@ -237,6 +432,34 @@ class XMLDBmssql extends XMLDBgenerator {
         } else {
             return false;
         }
+    }
+
+    /**
+     * Given one XMLDBTable returns one array with all the check constrainsts 
+     * in the table (fetched from DB)
+     * Each element contains the name of the constraint and its description
+     * If no check constraints are found, returns an empty array
+     */
+    function getCheckConstraintsFromDB($xmldb_table) {
+
+        $results = array();
+
+        $tablename = $this->getTableName($xmldb_table);
+
+        if ($constraints = get_records_sql("SELECT o.name, c.text AS description
+                                            FROM sysobjects o,
+                                                 sysobjects p,
+                                                 syscomments c
+                                           WHERE p.id = o.parent_obj
+                                             AND o.id = c.id
+                                             AND o.xtype = 'C'
+                                             AND p.name = '{$tablename}'")) {
+            foreach ($constraints as $constraint) {
+                $results[$constraint->name] = $constraint;
+            }
+        }
+
+        return $results;
     }
 
     /**

@@ -69,6 +69,7 @@ if (!isset($CFG->wwwroot)) {
 require('mahara.php');
 ensure_sanity();
 require('dml.php');
+require('ddl.php');
 require('constants.php');
 require('web.php');
 require('session.php');
@@ -108,8 +109,14 @@ catch (Exception $e) {
     // nice message should be displayed explaining the problem etc. etc.
     throw new Exception($errormessage);
 }
-
-load_config();
+try {
+    load_config();
+} 
+catch (DatalibException $e) {
+    if (!defined('INSTALLER')) {
+        throw $e;
+    }
+}
 
 if (!get_config('theme')) { 
     // if it's not set, we're probably not installed, 

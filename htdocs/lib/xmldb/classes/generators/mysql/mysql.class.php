@@ -1,4 +1,4 @@
-<?php // $Id: mysql.class.php,v 1.23 2006/09/28 21:48:34 stronk7 Exp $
+<?php // $Id: mysql.class.php,v 1.29 2006/10/02 17:02:07 stronk7 Exp $
 
 ///////////////////////////////////////////////////////////////////////////
 //                                                                       //
@@ -64,6 +64,12 @@ class XMLDBmysql extends XMLDBGenerator {
 
     var $drop_index_sql = 'ALTER TABLE TABLENAME DROP INDEX INDEXNAME'; //SQL sentence to drop one index
                                                                //TABLENAME, INDEXNAME are dinamically replaced
+
+    var $rename_index_sql = null; //SQL sentence to rename one index (MySQL doesn't support this!)
+                                      //TABLENAME, OLDINDEXNAME, NEWINDEXNAME are dinamically replaced
+
+    var $rename_key_sql = null; //SQL sentence to rename one key (MySQL doesn't support this!)
+                                      //TABLENAME, OLDKEYNAME, NEWKEYNAME are dinamically replaced
 
     /**
      * Creates one new XMLDBmysql
@@ -161,6 +167,24 @@ class XMLDBmysql extends XMLDBGenerator {
     }
 
     /**
+     * Given one XMLDBTable and one XMLDBField, return the SQL statements needded to create its enum 
+     * (usually invoked from getModifyEnumSQL()
+     */
+    function getCreateEnumSQL($xmldb_table, $xmldb_field) {
+    /// For MySQL, just alter the field
+        return $this->getAlterFieldSQL($xmldb_table, $xmldb_field);
+    }
+
+    /**     
+     * Given one XMLDBTable and one XMLDBField, return the SQL statements needded to drop its enum 
+     * (usually invoked from getModifyEnumSQL()
+     */
+    function getDropEnumSQL($xmldb_table, $xmldb_field) {
+    /// For MySQL, just alter the field
+        return $this->getAlterFieldSQL($xmldb_table, $xmldb_field);
+    }
+
+    /**
      * Given one XMLDBTable and one XMLDBField, return the SQL statements needded to create its default 
      * (usually invoked from getModifyDefaultSQL()
      */
@@ -168,6 +192,24 @@ class XMLDBmysql extends XMLDBGenerator {
     /// Just a wrapper over the getAlterFieldSQL() function for MySQL that
     /// is capable of handling defaults
         return $this->getAlterFieldSQL($xmldb_table, $xmldb_field);
+    }
+
+    /**
+     * Given one correct XMLDBField and the new name, returns the SQL statements
+     * to rename it (inside one array)
+     * MySQL is pretty diferent from the standard to justify this oveloading
+     */
+    function getRenameFieldSQL($xmldb_table, $xmldb_field, $newname) {
+
+        $results = array();  //Array where all the sentences will be stored
+
+    /// Change the name of the field to perform the change
+        $xmldb_field->setName($xmldb_field->getName() . ' ' . $newname);
+
+        $results[] = 'ALTER TABLE ' . $this->getTableName($xmldb_table) . ' CHANGE ' .
+                     $this->getFieldSQL($xmldb_field);
+
+        return $results;
     }
 
     /**
@@ -195,10 +237,22 @@ class XMLDBmysql extends XMLDBGenerator {
         $comment = '';
 
         if ($xmldb_table->getComment()) {
-            $comment .= 'ALTER TABLE ' . $this->getEncQuoted($this->prefix . $xmldb_table->getName());
+            $comment .= 'ALTER TABLE ' . $this->getTableName($xmldb_table);
             $comment .= " COMMENT='" . substr($xmldb_table->getComment(), 0, 250) . "'";
         }
         return array($comment);
+    }
+
+    /**
+     * Given one XMLDBTable returns one array with all the check constrainsts 
+     * in the table (fetched from DB)
+     * Each element contains the name of the constraint and its description
+     * If no check constraints are found, returns an empty array
+     * MySQL doesn't have check constraints in this implementation
+     */
+    function getCheckConstraintsFromDB($xmldb_table) {
+
+        return array();
     }
 
     /**

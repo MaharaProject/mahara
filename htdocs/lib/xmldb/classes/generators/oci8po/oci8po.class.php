@@ -1,4 +1,4 @@
-<?php // $Id: oci8po.class.php,v 1.21 2006/09/28 23:06:04 stronk7 Exp $
+<?php // $Id: oci8po.class.php,v 1.27 2006/10/08 09:36:33 stronk7 Exp $
 
 ///////////////////////////////////////////////////////////////////////////
 //                                                                       //
@@ -49,14 +49,18 @@ class XMLDBoci8po extends XMLDBgenerator {
     var $sequence_extra_code = true; //Does the generator need to add extra code to generate the sequence fields
     var $sequence_name = ''; //Particular name for inline sequences in this generator
 
-    var $drop_table_extra_code = true; //Does the generatos need to add code after table drop
+    var $drop_table_extra_code = true; //Does the generator need to add code after table drop
+
+    var $rename_table_extra_code = true; //Does the generator need to add code after table rename
+
+    var $rename_column_extra_code = true; //Does the generator need to add code after field rename
 
     var $enum_inline_code = false; //Does the generator need to add inline code in the column definition
 
     var $alter_column_sql = 'ALTER TABLE TABLENAME MODIFY (COLUMNSPECS)'; //The SQL template to alter columns
 
     /**
-     * Creates one new XMLDBpostgres7
+     * Creates one new XMLDBoci8po
      */
     function XMLDBoci8po() {
         parent::XMLDBgenerator();
@@ -129,6 +133,8 @@ class XMLDBoci8po extends XMLDBgenerator {
      */
     function getCreateSequenceSQL ($xmldb_table, $xmldb_field) {
 
+        $results = array();
+
         $sequence_name = $this->getNameForObject($xmldb_table->getName(), $xmldb_field->getName(), 'seq');
 
         $sequence = "CREATE SEQUENCE " . $sequence_name;
@@ -136,18 +142,32 @@ class XMLDBoci8po extends XMLDBgenerator {
         $sequence.= "\n    INCREMENT BY 1";
         $sequence.= "\n    NOMAXVALUE";
 
+        $results[] = $sequence;
+
+        $results = array_merge($results, $this->getCreateTriggerSQL ($xmldb_table, $xmldb_field));
+
+        return $results;
+    }
+
+    /**
+     * Returns the code needed to create one trigger for the xmldb_table and xmldb_field passed
+     */
+    function getCreateTriggerSQL ($xmldb_table, $xmldb_field) {
+
         $trigger_name = $this->getNameForObject($xmldb_table->getName(), $xmldb_field->getName(), 'trg');
+        $sequence_name = $this->getNameForObject($xmldb_table->getName(), $xmldb_field->getName(), 'seq');
 
         $trigger = "CREATE TRIGGER " . $trigger_name;
         $trigger.= "\n    BEFORE INSERT";
-        $trigger.= "\nON " . $this->getEncQuoted($this->prefix . $xmldb_table->getName());
+        $trigger.= "\nON " . $this->getTableName($xmldb_table);
         $trigger.= "\n    FOR EACH ROW";
         $trigger.= "\nBEGIN";
         $trigger.= "\n    IF :new." . $this->getEncQuoted($xmldb_field->getName()) . ' IS NULL THEN';
         $trigger.= "\n        SELECT " . $sequence_name . '.nextval INTO :new.' . $this->getEncQuoted($xmldb_field->getName()) . " FROM dual;";
         $trigger.= "\n    END IF;";
         $trigger.= "\nEND;";
-        return array($sequence, $trigger);
+
+        return array($trigger);
     }
 
     /**
@@ -177,10 +197,30 @@ class XMLDBoci8po extends XMLDBgenerator {
      */
     function getCommentSQL ($xmldb_table) {
 
-        $comment = "COMMENT ON TABLE " . $this->getEncQuoted($this->prefix . $xmldb_table->getName());
+        $comment = "COMMENT ON TABLE " . $this->getTableName($xmldb_table);
         $comment.= " IS '" . substr($xmldb_table->getComment(), 0, 250) . "'";
 
         return array($comment);
+    }
+
+    /**
+     * Returns the code (array of statements) needed to execute extra statements on field rename
+     */
+    function getRenameFieldExtraSQL ($xmldb_table, $xmldb_field, $newname) {
+
+        $results = array();
+
+    /// If the field is enum, drop and re-create the check constraint
+        if ($xmldb_field->getEnum()) {
+        /// Drop the current enum
+            $results = array_merge($results, $this->getDropEnumSQL($xmldb_table, $xmldb_field));
+        /// Change field name
+            $xmldb_field->setName($newname);
+        /// Recreate the enum
+            $results = array_merge($results, $this->getCreateEnumSQL($xmldb_table, $xmldb_field));
+        }
+
+        return $results;
     }
 
     /**
@@ -189,6 +229,54 @@ class XMLDBoci8po extends XMLDBgenerator {
     function getDropTableExtraSQL ($xmldb_table) {
         $xmldb_field = new XMLDBField('id'); // Fields having sequences should be exclusively, id.
         return $this->getDropSequenceSQL($xmldb_table, $xmldb_field, false);
+    }
+
+    /**
+     * Returns the code (array of statements) needed to execute extra statements on table rename
+     */
+    function getRenameTableExtraSQL ($xmldb_table, $newname) {
+
+        $results = array();
+
+        $xmldb_field = new XMLDBField('id'); // Fields having sequences should be exclusively, id.
+
+        $oldseqname = $this->getNameForObject($xmldb_table->getName(), $xmldb_field->getName(), 'seq');
+        $newseqname = $this->getNameForObject($newname, $xmldb_field->getName(), 'seq');
+
+    /// Rename de sequence
+        $results[] = 'RENAME ' . $oldseqname . ' TO ' . $newseqname;
+
+        $oldtriggername = $this->getNameForObject($xmldb_table->getName(), $xmldb_field->getName(), 'trg');
+        $newtriggername = $this->getNameForObject($newname, $xmldb_field->getName(), 'trg');
+
+    /// Drop old trigger
+        $results[] = "DROP TRIGGER " . $oldtriggername;
+
+        $newt = new XMLDBTable($newname); /// Temp table for trigger code generation
+
+    /// Create new trigger
+        $results = array_merge($results, $this->getCreateTriggerSQL($newt, $xmldb_field));
+
+    /// Rename all the check constraints in the table
+        $oldtablename = $this->getTableName($xmldb_table);
+        $newtablename = $this->getTableName($newt);
+
+        $oldconstraintprefix = $this->getNameForObject($xmldb_table->getName(), '');
+        $newconstraintprefix = $this->getNameForObject($newt->getName(), '', '');
+
+        if ($constraints = $this->getCheckConstraintsFromDB($xmldb_table)) {
+            foreach ($constraints as $constraint) {
+            /// Drop the old constraint
+                $results[] = 'ALTER TABLE ' . $newtablename . ' DROP CONSTRAINT ' . $constraint->name;
+            /// Calculate the new constraint name
+                $newconstraintname = str_replace($oldconstraintprefix, $newconstraintprefix, $constraint->name);
+            /// Add the new constraint
+                $results[] = 'ALTER TABLE ' . $newtablename . ' ADD CONSTRAINT ' . $newconstraintname .
+                             ' CHECK (' . $constraint->description . ')';
+            }
+        }
+
+        return $results;
     }
 
     /**
@@ -205,7 +293,7 @@ class XMLDBoci8po extends XMLDBgenerator {
         $results = array(); /// To store all the needed SQL commands
 
     /// Get the quoted name of the table and field
-        $tablename = $this->getEncQuoted($this->prefix . $xmldb_table->getName());
+        $tablename = $this->getTableName($xmldb_table);
         $fieldname = $this->getEncQuoted($xmldb_field->getName());
 
     /// Take a look to field metadata
@@ -348,6 +436,26 @@ class XMLDBoci8po extends XMLDBgenerator {
     }
 
     /**
+     * Given one XMLDBTable and one XMLDBField, return the SQL statements needded to create its enum 
+     * (usually invoked from getModifyEnumSQL()
+     */
+    function getCreateEnumSQL($xmldb_table, $xmldb_field) {
+    /// All we have to do is to create the check constraint
+        return array('ALTER TABLE ' . $this->getTableName($xmldb_table) . 
+                     ' ADD ' . $this->getEnumExtraSQL($xmldb_table, $xmldb_field));
+    }
+                                                       
+    /**     
+     * Given one XMLDBTable and one XMLDBField, return the SQL statements needded to drop its enum 
+     * (usually invoked from getModifyEnumSQL()
+     */         
+    function getDropEnumSQL($xmldb_table, $xmldb_field) {
+    /// All we have to do is to drop the check constraint
+        return array('ALTER TABLE ' . $this->getTableName($xmldb_table) . 
+                     ' DROP CONSTRAINT ' . $this->getNameForObject($xmldb_table->getName(), $xmldb_field->getName(), 'ck'));
+    }   
+
+    /**
      * Given one XMLDBTable and one XMLDBField, return the SQL statements needded to create its default 
      * (usually invoked from getModifyDefaultSQL()
      */
@@ -366,6 +474,57 @@ class XMLDBoci8po extends XMLDBgenerator {
     /// is capable of handling defaults
         return $this->getAlterFieldSQL($xmldb_table, $xmldb_field);
     }   
+
+    /**
+     * Given one XMLDBTable returns one array with all the check constrainsts 
+     * in the table (fetched from DB)
+     * Each element contains the name of the constraint and its description
+     * If no check constraints are found, returns an empty array
+     */
+    function getCheckConstraintsFromDB($xmldb_table) {
+
+        $results = array();
+
+        $tablename = strtoupper($this->getTableName($xmldb_table));
+
+        if ($constraints = get_records_sql("SELECT lower(c.constraint_name) AS name, c.search_condition AS description
+                                              FROM user_constraints c
+                                             WHERE c.table_name = '{$tablename}'
+                                               AND c.constraint_type = 'C'
+                                               AND c.constraint_name not like 'SYS%'")) {
+            foreach ($constraints as $constraint) {
+                $results[$constraint->name] = $constraint;
+            }
+        }
+
+        return $results;
+    }
+
+    /**
+     * Given one XMLDBTable returns one string with the sequence of the table
+     * in the table (fetched from DB)
+     * The sequence name for oracle is calculated by looking the corresponding
+     * trigger and retrieving the sequence name from it (because sequences are
+     * independent elements)
+     * If no sequence is found, returns false
+     */
+    function getSequenceFromDB($xmldb_table) {
+
+         $tablename = strtoupper($this->getTableName($xmldb_table));
+         $sequencename = false;
+
+        if ($trigger = get_record_sql("SELECT trigger_name, trigger_body
+                                         FROM user_triggers
+                                        WHERE table_name = '{$tablename}'")) {
+        /// If trigger found, regexp it looking for the sequence name
+            preg_match('/.*SELECT (.*)\.nextval/i', $trigger->trigger_body, $matches);
+            if (isset($matches[1])) {
+                $sequencename = $matches[1];
+            }
+        }
+
+        return $sequencename;
+    }
 
     /**
      * Returns an array of reserved words (lowercase) for this DB
