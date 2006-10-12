@@ -95,7 +95,11 @@ function log_message ($message, $loglevel, $escape, $file=null, $line=null) {
 
     // Make a prefix for each line, if we are logging a normal debug/info/warn message
     if ($loglevel != LOG_LEVEL_ENVIRON && function_exists('get_config')) {
-        $prefix = '(' . substr($filename, strlen(get_config('docroot'))) . ':' . $linenum . ') ';
+        $docroot = get_config('docroot');
+        $prefixfilename = (substr($filename, 0, strlen($docroot)) == $docroot)
+            ? substr($filename, strlen($docroot))
+            : $filename;
+        $prefix = '(' . $prefixfilename . ':' . $linenum . ') ';
     }
     else {
         $prefix = '';
@@ -237,6 +241,12 @@ function error ($code, $message, $file, $line, $vars) {
     }
 
     if (!isset($error_lookup[$code])) {
+        return;
+    }
+
+    // Ignore errors from smarty templates, which happen all too often
+    $compiledir = get_config('dataroot') . 'smarty/compile';
+    if (E_NOTICE == $code && substr($file, 0, strlen($compiledir)) == $compiledir) {
         return;
     }
 
