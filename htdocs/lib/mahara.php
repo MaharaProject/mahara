@@ -39,7 +39,13 @@ function check_upgrades($name = null) {
     require('version.php');
     // check core first...
     if (empty($name) || $name == 'core') {
-        if (!$coreversion = get_config('version')) {
+        try {
+            $coreversion = get_config('version');
+        } 
+        catch (Exception $e) {
+            $coreversion = 0;
+        }
+        if (empty($coreversion)) {
             $core = new StdClass;
             $core->install = true;
             $core->to = $config->version;
