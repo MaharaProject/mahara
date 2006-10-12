@@ -67,11 +67,11 @@ if (!isset($CFG->wwwroot)) {
 
 // core libraries
 require('mahara.php');
+ensure_sanity();
 require('dml.php');
 require('constants.php');
 require('web.php');
 require('session.php');
-ensure_sanity();
 
 // Database access functions
 require('adodb/adodb-exceptions.inc.php');
@@ -118,5 +118,10 @@ if (!get_config('theme')) {
 }
 
 $CFG->themeurl = get_config('wwwroot') . 'theme/' . get_config('theme') . '/static/';
+
+// Only do authentication once we know the page theme, so that the login form
+// can have the correct theming.
+require('auth.php');
+auth_setup();
 
 ?>
