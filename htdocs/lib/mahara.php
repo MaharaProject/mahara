@@ -416,7 +416,7 @@ function load_config() {
     try {
         $dbconfig = get_records('config');
     } 
-    catch (ADODB_Exception $e) {
+    catch (DatalibException $e) {
         return false;
     }
     
