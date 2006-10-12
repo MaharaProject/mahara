@@ -32,53 +32,57 @@ defined('INTERNAL') || die();
  * for which need to be upgraded/installed
  * @returns array of objects
  */
-function check_upgrades() {
-
+function check_upgrades($name = null) {
     $toupgrade = array();
     $installing = false;
 
     require('version.php');
     // check core first...
-    if (!$coreversion = get_config('version')) {
-        $core = new StdClass;
-        $core->install = true;
-        $core->to = $config->version;
-        $core->torelease = $config->release;
-        $toupgrade['core'] = $core;
-        $installing = true;
-    } 
-    else if ($config->version > $coreversion) {
-        $core = new StdClass;
-        $core->upgrade = true;
-        $core->from = $coreversion;
-        $core->fromrelease = get_config('release');
-        $core->to = $config->version;
-        $core->torelease = $config->release;
-        $toupgrade['core'] = $core;
+    if (empty($name) || $name == 'core') {
+        if (!$coreversion = get_config('version')) {
+            $core = new StdClass;
+            $core->install = true;
+            $core->to = $config->version;
+            $core->torelease = $config->release;
+            $toupgrade['core'] = $core;
+            $installing = true;
+        } 
+        else if ($config->version > $coreversion) {
+            $core = new StdClass;
+            $core->upgrade = true;
+            $core->from = $coreversion;
+            $core->fromrelease = get_config('release');
+            $core->to = $config->version;
+            $core->torelease = $config->release;
+            $toupgrade['core'] = $core;
+        }
     }
 
-    // artefact plugins next..
-    // Note: on initial installation each plugin configuration
-    // version check will cause an exception, which is caught
-    // just fine although it does show in the logs (with the
-    // default logging configuration)
-    $dirhandle = opendir(get_config('docroot').'artefact/');
-    while (false !== ($dir = readdir($dirhandle))) {
-        if (!empty($installing) && $dir != 'internal') {
-            continue;
+    $plugins = array();
+    if (strpos($name,'artefact.') === 0) {
+        $plugins[] = substr($name,9);
+    } 
+    else if (empty($name)) {
+        // artefact plugins next..
+        $dirhandle = opendir(get_config('docroot').'artefact/');
+        while (false !== ($dir = readdir($dirhandle))) {
+            if (strpos($dir,'.') === 0) {
+                continue;
+            }
+            if (!empty($installing) && $dir != 'internal') {
+                continue;
+            }
+            $plugins[] = $dir;
         }
-        require(get_config('docroot').'artefact/'.$dir.'/version.php');
+    }
+
+    foreach ($plugins as $dir) {
+        require(get_config('docroot') . 'artefact/' . $dir . '/version.php');
         $pluginversion = 0;
         try {
-            $pluginversion = get_config_plugin('arfetact',$dir,'version');
+            $pluginversion = get_config_plugin('arfetact', $dir, 'version');
         }
-        catch (DatalibException $e) { 
-            if (empty($installing)) {
-                // it's ok to have an exception here
-                // the table won't exist...
-                throw $e;
-            }
-        }
+        catch (Exception $e) { }
         if (empty($pluginversion)) {
             $plugin = new StdClass;
             $plugin->install = true;
@@ -90,14 +94,80 @@ function check_upgrades() {
             $plugin = new StdClass;
             $plugin->upgrade = true;
             $plugin->from = $pluginversion;
-            $plugin->fromrelease = get_config_plugin('artefact',$dir,'release');
+            try {
+                $plugin->fromrelease = get_config_plugin('artefact',$dir,'release');
+            }
+            catch (Exception $e) { }
             $plugin->to = $config->version;
             $plugin->torelease = $config->release;
             $toupgrade['artefact.' . $dir] = $plugin;
         } 
     }
 
+    // if we've just asked for one, don't return an array...
+    if (!empty($name) && count($toupgrade) == 1) {
+        $upgrade = new StdClass;
+        $upgrade->name = $name;
+        foreach ((array)$toupgrade[$name] as $key => $value) {
+            $upgrade->{$key} = $value;
+        }    
+        return $upgrade;
+    }
+
     return $toupgrade;
+}
+
+function upgrade_core($upgrade) {
+
+    $location = get_config('libroot') . '/db/';
+    
+    if (!empty($upgrade->install)) {
+        $status = install_from_xmldb_file($location . 'install.xml'); 
+    }
+    else {
+        require_once($location . 'upgrade.php');
+        $status = xmldb_core_upgrade($upgrade->from);
+    }
+    if (!$status) {
+        throw new DatalibException("Failed to upgrade core");
+    }
+
+    $status = set_config('version', $upgrade->to);
+    $status = $status && set_config('release', $upgrade->torelease);
+    return $status;
+}
+
+function upgrade_plugin($upgrade) {
+    
+    $plugintype = '';
+    $pluginname = '';
+
+    if (strpos($upgrade->name,'artefact.') === 0) {
+        $pluginname = substr($upgrade->name,9);
+        $plugintype = 'artefact';
+    }
+
+    $location = get_config('dirroot') . $plugintype . '/' . $pluginname . '/db/';
+    
+    if (!empty($upgrade->install)) {
+        $status = install_from_xmldb_file($location . 'install.xml'); 
+    }
+    else {
+        require_once($location . 'upgrade.php');
+        $function = 'xmldb_' . $plugintype . '_' . $pluginname . '_upgrade';
+        $status = $function($upgrade->from);
+    }
+    
+    if (!$status) {
+        throw new DatalibException("Failed to upgrade $upgrade->name");
+    }
+    
+    $status = set_config_plugin($plugintype,$pluginname,'version',$upgrade->to);
+    $status = $status && set_config_plugin($plugintype,$pluginname,'release',$upgrade->torelease);
+
+    // @todo here is where plugins register events and set their crons up
+    
+    return $status;
 }
 
 /** 
@@ -335,13 +405,13 @@ function load_config() {
     try {
         $dbconfig = get_records('config');
     } 
-    catch (DatalibException $e) {
+    catch (ADODB_Exception $e) {
         return false;
     }
     
     foreach ($dbconfig as $cfg) {
         if (isset($CFG->{$cfg->field}) && $CFG->{$cfg->field} != $CFG->value) {
-            log_info('Overriding database configuration for ' . $cfg->field . ' with config file value ' . $cfg->field);
+            // @todo warn that we're overriding db config with $CFG
             continue;
         }
         $CFG->{$cfg->field} = $cfg->value;
@@ -374,10 +444,23 @@ function get_config($key) {
  * @param string $value config value
  */
 function set_config($key, $value) {
-    if (set_field('config',$key,$value,'field',$key)) {
+    if (get_record('config','field',$key)) {
+        if (set_field('config','value',$value,'field',$key)) {
+            $status = true;
+        }
+    } 
+    else {
+        $config = new StdClass;
+        $config->field = $key;
+        $config->value = $value;
+        $status = insert_record('config',$config);
+    }
+
+    if (!empty($status)) {
         $CFG->{$key} = $value;
         return true;
     }
+
     return false;
 }
 
@@ -409,6 +492,28 @@ function get_config_plugin($plugintype, $pluginname, $key) {
     
     $CFG->plugin->{$plugintype}->{$pluginname}->{$key} = $value;
     return $value;
+}
+
+function set_config_plugin($plugintype, $pluginname, $key, $value) {
+    $tablename = 'config_' . $plugintype;
+
+    if (get_field($table,'value','plugin',$pluginname,'field',$key)) {
+        if (set_field($table,'value',$key,'plugin',$pluginname, 'field',$value)) { 
+            $status = true;
+        }
+    }
+    else {
+        $pconfig = new StdClass;
+        $pconfig->plugin = $pluginname;
+        $pconfig->field  = $key;
+        $pconfig->value  = $value;
+        $status = insert_record($table,$pconfig);
+    }
+    if ($status) {
+        $CFG->plugin->{$plugintype}->{$pluginname}->{$key} = $value;
+        return true;
+    }
+    return false;
 }
 
 /**
