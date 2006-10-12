@@ -4,4 +4,5 @@ $string['component'] = 'Component or plugin';
 $string['fromversion'] = 'From version';
 $string['toversion'] =  'To version';
 $string['notinstalled'] = 'Not installed';
+$string['nothingtoupgrade'] = 'Nothing to upgrade';
 ?>

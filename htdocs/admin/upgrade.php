@@ -24,7 +24,8 @@
  *
  */
 
-define('INTERNAL',1);
+define('INTERNAL', 1);
+define('INSTALLER', 1);
 
 require(dirname(dirname(__FILE__)).'/init.php');
 
