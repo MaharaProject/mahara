@@ -150,10 +150,15 @@ function upgrade_plugin($upgrade) {
     $location = get_config('dirroot') . $plugintype . '/' . $pluginname . '/db/';
     
     if (!empty($upgrade->install)) {
+        // @todo check file exists first - reasonable for it not to have 
+        // db tables at all. should still insert version number and cron etc
+        // @todo add to installed_artefacts
         $status = install_from_xmldb_file($location . 'install.xml'); 
     }
     else {
         require_once($location . 'upgrade.php');
+        // @todo check file exists first - reasonable for it not to have 
+        // db tables at all. should still insert version number and cron etc
         $function = 'xmldb_' . $plugintype . '_' . $pluginname . '_upgrade';
         $status = $function($upgrade->from);
     }
