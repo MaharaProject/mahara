@@ -1,5 +1,8 @@
 <?php // $Id: ddllib.php,v 1.42 2006/10/09 22:28:22 stronk7 Exp $
-
+/**
+ * @package mahara
+ * @subpackage core
+ */
 ///////////////////////////////////////////////////////////////////////////
 //                                                                       //
 // NOTICE OF COPYRIGHT                                                   //
