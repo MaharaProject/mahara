@@ -58,7 +58,7 @@ function log_environ ($message, $escape=true) {
     log_message($message, LOG_LEVEL_ENVIRON, $escape);
 }
 
-function log_message ($message, $loglevel, $escape, $file=null, $line=null) {
+function log_message ($message, $loglevel, $escape, $file=null, $line=null, $trace=null) {
     global $SESSION;
     static $loglevelnames = array(
         LOG_LEVEL_ENVIRON => 'environ',
@@ -72,7 +72,7 @@ function log_message ($message, $loglevel, $escape, $file=null, $line=null) {
     }
 
     // Get nice backtrace information if required
-    $backtrace = debug_backtrace();
+    $backtrace = ($trace) ? $trace : debug_backtrace();
     // If the last caller was the 'error' function then it came from a PHP warning
     //print_r($backtrace);
     if (!is_null($file)) {
@@ -85,7 +85,7 @@ function log_message ($message, $loglevel, $escape, $file=null, $line=null) {
     }
 
     if (!function_exists('get_config') || get_config('log_backtrace_levels') & $loglevel) {
-        list($textbacktrace, $htmlbacktrace) = log_build_backtrace(debug_backtrace());
+        list($textbacktrace, $htmlbacktrace) = log_build_backtrace($backtrace);
     }
     else {
         $textbacktrace = $htmlbacktrace = '';
@@ -165,36 +165,38 @@ function log_build_backtrace($backtrace) {
         $bt['args']  = (isset($bt['args'])) ? $bt['args'] : '';
 
         $args = '';
-        foreach ($bt['args'] as $arg) {
-            if (!empty($args)) {
-                $args .= ', ';
-            }
-            switch (gettype($arg)) {
-                case 'integer':
-                case 'double':
-                    $args .= $arg;
-                    break;
-                case 'string':
-                    $arg = substr($arg, 0, 50) . ((strlen($arg) > 50) ? '...' : '');
-                    $args .= '"' . $arg . '"';
-                    break;
-                case 'array':
-                    $args .= 'array(size ' . count($arg) . ')';
-                    break;
-                case 'object':
-                    $args .= 'object(' . get_class($arg) . ')';
-                    break;
-                case 'resource':
-                    $args .= 'resource(' . strstr($arg, '#') . ')';
-                    break;
-                case 'boolean':
-                    $args .= $arg ? 'true' : 'false';
-                    break;
-                case 'NULL':
-                    $args .= 'null';
-                    break;
-                default:
-                    $args .= 'unknown';
+        if ($bt['args']) {
+            foreach ($bt['args'] as $arg) {
+                if (!empty($args)) {
+                    $args .= ', ';
+                }
+                switch (gettype($arg)) {
+                    case 'integer':
+                    case 'double':
+                        $args .= $arg;
+                        break;
+                    case 'string':
+                        $arg = substr($arg, 0, 50) . ((strlen($arg) > 50) ? '...' : '');
+                        $args .= '"' . $arg . '"';
+                        break;
+                    case 'array':
+                        $args .= 'array(size ' . count($arg) . ')';
+                        break;
+                    case 'object':
+                        $args .= 'object(' . get_class($arg) . ')';
+                        break;
+                    case 'resource':
+                        $args .= 'resource(' . strstr($arg, '#') . ')';
+                        break;
+                    case 'boolean':
+                        $args .= $arg ? 'true' : 'false';
+                        break;
+                    case 'NULL':
+                        $args .= 'null';
+                        break;
+                    default:
+                        $args .= 'unknown';
+                }
             }
         }
 
@@ -278,7 +280,7 @@ function exception ($e) {
             $message = $e->getMessage();
     }
 
-    log_warn($message);
+    log_message($message, LOG_LEVEL_WARN, true, $e->getFile(), $e->getLine(), $e->getTrace());
 
     echo <<<EOF
 <html>
