@@ -74,7 +74,6 @@ function log_message ($message, $loglevel, $escape, $file=null, $line=null, $tra
     // Get nice backtrace information if required
     $backtrace = ($trace) ? $trace : debug_backtrace();
     // If the last caller was the 'error' function then it came from a PHP warning
-    //print_r($backtrace);
     if (!is_null($file)) {
         $filename = $file;
         $linenum  = $line;
@@ -104,6 +103,7 @@ function log_message ($message, $loglevel, $escape, $file=null, $line=null, $tra
     else {
         $prefix = '';
     }
+    $prefix = '[' . str_pad(substr(strtoupper($loglevelnames[$loglevel]), 0, 3), 3) . '] ' . $prefix;
 
     if ($targets & LOG_TARGET_SCREEN) {
         // Work out which method to call for displaying the message
