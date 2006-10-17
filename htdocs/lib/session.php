@@ -30,20 +30,119 @@ defined('INTERNAL') || die();
 /**
  * The session class handles user sessions and session messages.
  *
- * Messages are stored in the session and are displayed the next time
- * a page is displayed to a user, even over multiple requests (but not
- * over multiple sessions)
+ * This class stores information about the user across page loads,
+ * so it only needs to be requested once when a user logs in.
  *
- * This is a _really rough_ first cut, in order to support messaging.
+ * This class also is smart about giving out sessions - if a visitor
+ * has not logged in (e.g. they are a guest, searchbot or a simple
+ * 'curl' request), a session will not be created for them.
+ *
+ * Messages are stored in the session and are displayed the next time
+ * a page is displayed to a user, even over multiple requests.
  */
 class Session {
 
-    function __construct() {
-        session_start();
-        if (!$_SESSION) {
-            $_SESSION = array();
+    /**
+     * Defaults for user information.
+     */
+    private $defaults;
+
+    /**
+     * Sets defaults for the session object (only because PHP5 does not appear
+     * to support private static const arrays), and resumes a session only if
+     * a session already exists.
+     */
+    public function __construct() {
+        $this->defaults = array(
+            'logout_time' => 0,
+            'username'    => ''
+        );
+        // Resume an existing session if required
+        if (isset($_COOKIE['PHPSESSID'])) {
+            session_start();
         }
     }
+
+    /**
+     * Gets the session property keyed by $key.
+     *
+     * @param string $key The key to get the value of
+     * @return mixed
+     * @throws KeyInvalidException
+     * @todo<nigel>: Given that KeyInvalidException doesn't actually exist,
+     * referring to an incorrect key will be fatal.
+     */
+    public function get($key) {
+        if (!isset($this->defaults[$key])) {
+            throw new KeyInvalidException($key);
+        }
+        if (isset($_SESSION[$key])) {
+            return $_SESSION[$key];
+        }
+        return $this->defaults[$key];
+    }
+
+    /**
+     * Sets the session property keyed by $key.
+     *
+     * @param string $key   The key to set.
+     * @param string $value The value to set for the key
+     */
+    public function set($key, $value) {
+        if (!isset($this->defaults[$key])) {
+            throw new KeyInvalidException($key);
+        }
+        if (!$_SESSION) {
+            $this->create_session();
+        }
+        $_SESSION[$key] = $value;
+    }
+
+    /**
+     * Logs in the given user.
+     *
+     * The passed object should contain the basic information to persist across
+     * page loads.
+     *
+     * @param object $USER  The user object with properties to persist already
+     *                      set
+     */
+    public function login($USER) {
+        if (empty($_SESSION)) {
+            $this->create_session();
+        }
+        foreach (array_keys($this->defaults) as $key) {
+            $this->set($key, (isset($USER->{$key})) ? $USER->{$key} : $this->defaults[$key]);
+        }
+        $this->set('logout_time', time() + get_config('session_timeout'));
+    }
+
+    /**
+     * Assuming that a session is already active for a user, this method
+     * retrieves the information from the session and creates a user object
+     * that the script can use
+     *
+     * @return object
+     */
+    public function renew() {
+        $this->set('logout_time', time() + get_config('session_timeout'));
+        $USER = new StdClass;
+        foreach (array_keys($this->defaults) as $key) {
+            $USER->{$key} = $this->get($key);
+        }
+        return $USER;
+    }
+
+    /**
+     * Logs the current user out
+     */
+    public function logout () {
+        $_SESSION = array(
+            'logout_time' => 0,
+            'messages'    => array()
+        );
+    }
+
 
     /**
      * Adds a message that indicates something was successful
@@ -99,22 +198,34 @@ class Session {
      */
     public function render_messages() {
         $result = '';
-        foreach ($_SESSION['messages'] as $data) {
-            if ($data['type'] == 'ok') {
-                $color = 'green';
+        if (isset($_SESSION['messages'])) {
+            foreach ($_SESSION['messages'] as $data) {
+                if ($data['type'] == 'ok') {
+                    $color = 'green';
+                }
+                elseif ($data['type'] == 'info') {
+                    $color = '#990;';
+                }
+                else {
+                    $color = 'red';
+                }
+                $result .= '<div style="color:' . $color . ';">' . $data['msg'] . '</div>';
             }
-            elseif ($data['type'] == 'info') {
-                $color = '#990;';
-            }
-            else {
-                $color = 'red';
-            }
-            $result .= '<div style="color:' . $color . ';">' . $data['msg'] . '</div>';
+            $_SESSION['messages'] = array();
         }
-        $_SESSION['messages'] = array();
         return $result;
     }
 
+
+    /**
+     * Create a session
+     */
+    private function create_session() {
+        session_start();
+        $_SESSION = array(
+            'messages' => array()
+        );
+    }
 }
 
 /**
