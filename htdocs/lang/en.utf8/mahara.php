@@ -24,6 +24,8 @@
  *
  */
 
+define('INTERNAL') || die();
 
+$string['loginfailed'] = 'You have not provided the correct credentials to log in. Please check your username and password are correct.';
 
 ?>
