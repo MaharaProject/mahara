@@ -99,7 +99,7 @@ function auth_setup () {
         if (isset($_GET['logout'])) {
             log_dbg('logging user ' . $SESSION->get('username') . ' out');
             $SESSION->logout();
-            $SESSION->add_ok_msg('You have been logged out successfully');
+            $SESSION->add_ok_msg(get_string('loggedoutok', 'mahara'));
             header('Location: ' . get_config('wwwroot'));
             exit;
         }
@@ -111,7 +111,7 @@ function auth_setup () {
         // The session timed out
         log_dbg('session timed out');
         $SESSION->logout();
-        $SESSION->add_info_msg(get_string('sessiontimedout', 'auth'));
+        $SESSION->add_info_msg(get_string('sessiontimedout', 'mahara'));
         // @todo<nigel>: if page is public, no need to show the login page again
         auth_draw_login_page();
         exit;
@@ -145,14 +145,14 @@ function auth_setup () {
                 else {
                     // Login attempt failed
                     log_dbg('login attempt FAILED');
-                    $SESSION->add_err_msg(get_string('loginfailed', 'auth'));
+                    $SESSION->add_err_msg(get_string('loginfailed', 'mahara'));
                     auth_draw_login_page();
                     exit;
                 }
             }
             catch (AuthUnknownUserException $e) {
                 log_dbg('unknown user ' . $username);
-                $SESSION->add_err_msg(get_string('loginfailed', 'auth'));
+                $SESSION->add_err_msg(get_string('loginfailed', 'mahara'));
                 auth_draw_login_page();
                 exit;
             }
@@ -189,20 +189,20 @@ function auth_draw_login_page() {
     $elements = array(
         'login' => array(
             'type'   => 'fieldset',
-            'legend' => get_string('Login', 'mahara'),
+            'legend' => get_string('login', 'mahara'),
             'elements' => array(
                 'login_username' => array(
                     'type'        => 'text',
-                    'title'       => get_string('Username', 'mahara'),
-                    'description' => get_string('Your username', 'mahara'),
-                    'help'        => get_string('help for username', 'help'),
+                    'title'       => get_string('username', 'mahara'),
+                    'description' => get_string('usernamedesc', 'mahara'),
+                    'help'        => get_string('usernamehelp', 'mahara'),
                     'required'    => true
                 ),
                 'login_password' => array(
                     'type'        => 'password',
-                    'title'       => get_string('Password', 'maraha'),
-                    'description' => get_string('Your password', 'mahara'),
-                    'help'        => get_string('help for password', 'help'),
+                    'title'       => get_string('password', 'mahara'),
+                    'description' => get_string('passworddesc', 'mahara'),
+                    'help'        => get_string('passwordhelp', 'mahara'),
                     'required'    => true,
                     'value'       => ''
                 )
@@ -211,7 +211,7 @@ function auth_draw_login_page() {
 
         'submit' => array(
             'type'  => 'submit',
-            'value' => get_string('Log in', 'mahara')
+            'value' => get_string('login', 'mahara')
         )
     );
 
@@ -260,9 +260,9 @@ function auth_draw_login_page() {
     exit;
 }
 
-function login_validate($values) {
+function login_validate($form, $values) {
     if (!validate_username($values['login_username'])) {
-        form_set_error('login_username', get_string('Username is not in valid form, it can only'
+        $form->set_error('login_username', get_string('Username is not in valid form, it can only'
            . ' contain alphanumeric characters, underscores, full stops and @ symbols', 'mahara'));
     }
 }
