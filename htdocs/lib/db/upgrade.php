@@ -30,6 +30,26 @@ function xmldb_core_upgrade($oldversion=0) {
 
     $status = true;
 
+    if ($status && $oldversion < 2006101700) {
+        // Creating the usr table with basic fields required for authentication
+        $table = new XMLDBTable('usr');
+
+        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED,
+            XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null, null);
+        $table->addFieldInfo('username', XMLDB_TYPE_CHAR, '100', XMLDB_NOTNULL,
+            null, null, null, null);
+        $table->addFieldInfo('password', XMLDB_TYPE_CHAR, '40', XMLDB_NOTNULL,
+            null, null, null, null);
+        $table->addFieldInfo('salt', XMLDB_TYPE_CHAR, '8', XMLDB_NOTNULL,
+            null, null, null, null);
+
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->addIndexInfo('usernameuk', XMLDB_KEY_UNIQUE, array('LOWER(username)'));
+
+        $status = $status && create_table($table);
+    }
+
+
     return $status;
 
 }
