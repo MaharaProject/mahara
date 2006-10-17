@@ -189,7 +189,7 @@ class Form {
             // Then user specific validation if a function is available for that
             $function = $this->name . '_validate';
             if (function_exists($function)) {
-                $function($values);
+                $function($this, $values);
             }
 
             // Submit the form if things went OK
@@ -315,7 +315,7 @@ class Form {
     /**
      * Marks a field has having an error
      */
-    private function set_error($name, $message) {
+    public function set_error($name, $message) {
         foreach ($this->elements as &$element) {
             if ($element['type'] == 'fieldset') {
                 foreach ($element['elements'] as &$subelement) {
@@ -380,7 +380,7 @@ class Form {
      * This EXCLUDES the "value" attribute, as various form elements set
      * their value in different ways.
      */
-    public static function element_attributes($element, $exclude=array()) {log_dbg($element);
+    public static function element_attributes($element, $exclude=array()) {
         static $attributes = array('accesskey', 'class', 'dir', 'id', 'lang', 'maxlength', 'name', 'size', 'style', 'tabindex');
         $elementattributes = array_diff($attributes, $exclude);
         $result = '';
