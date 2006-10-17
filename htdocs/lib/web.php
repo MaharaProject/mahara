@@ -54,7 +54,10 @@ function &smarty($javascript = array(), $headers = array()) {
 
     $smarty =& new Smarty();
     
-    $smarty->template_dir = get_config('docroot').'theme/'.get_config('theme').'/templates/';
+    $theme = theme_setup();
+
+    $smarty->template_dir = $theme->template_dir;
+
     $smarty->compile_dir  = get_config('dataroot').'smarty/compile';
     $smarty->cache_dir    = get_config('dataroot').'smarty/cache';
 
@@ -75,6 +78,80 @@ function &smarty($javascript = array(), $headers = array()) {
     
 
     return $smarty;
+}
+
+/** 
+ * This function sets up and caches info about the current selected theme
+ * contains inheritance path (used for locating images) and template dirs
+ * and potentially more stuff later ( like mime header to send (html vs xhtml))
+ * @return object
+ */
+
+function theme_setup() {
+    
+    static $theme;
+
+    if (!empty($theme)) {
+        return $theme;
+    }
+    
+    $theme = new StdClass;
+    $theme->theme = get_config('theme');
+    $theme->path = get_config('docroot') . 'theme/' . $theme->theme . '/';
+    $theme->template_dir = array($theme->path . 'templates/');
+    $theme->inheritance = array($theme->theme);
+
+    $parent = $theme->theme;
+
+    while (true) {
+        if (!$parent = theme_get_parent($parent)) {
+            break;
+        }
+        if ($parent != 'default') {
+            $theme->template_dir[] = get_config('docroot') . 'theme/' . $parent . '/templates/';
+            $theme->inheritance[] = $parent;
+        }
+    }
+
+    // always put the parent at the top of the tree, unless we're already it
+    if ($theme->theme != 'default') {
+        $theme->template_dir[] = get_config('docroot')  . 'theme/default/templates/';
+        $theme->inheritance[] = $parent;
+    }
+    return $theme;
+}
+
+/** 
+ * helper function to walk up the inheritance tree and find a parent
+ * @param $currtheme the name of the theme to find the parent for
+ * @return parent name or false
+ */
+function theme_get_parent($currtheme) {
+
+    // look for a config file 
+    if (is_readable(get_config('docroot') . 'theme/ ' . $currtheme. '/config.php')) {
+        require_once(get_config('docroot') . 'theme/ ' . $currtheme. '/config.php');
+        if (!empty($theme->parent) && is_dir(get_config('docroot') . 'theme/ ' . $theme->parent)) {
+            return $theme->parent;
+        }
+    }
+    return false;
+}
+
+/** 
+ * This function returns the full url to an image
+ * Always use it to get image urls
+ * @param $imagelocation path to image relative to theme/$theme/static/
+ * @param $pluginlocation path to plugin relative to docroot
+ */
+function theme_get_image_path($imagelocation, $pluginlocation='') {
+    $theme = theme_setup();
+
+    foreach ($theme->inheritance as $themedir) {
+        if (is_readable(get_config('docroot') . $pluginlocation . 'theme/' . $themedir . '/static/' . $imagelocation)) {
+            return get_config('wwwroot') . $pluginlocation . 'theme/' . $themedir . '/static/' . $imagelocation;
+        }
+    }
 }
 
 function clean_requestdata($paramname,$paramtype,$where=REQUEST_EITHER) {
