@@ -31,7 +31,8 @@ defined('INTERNAL') || die();
  */
 function form_render_submit($element, $form) {
     return '<input type="submit"'
-        . Form::element_attributes($element) . '>';
+        . Form::element_attributes($element)
+        . ' value="' . hsc($form->get_value($element)) . '">';
 }
 
 ?>
