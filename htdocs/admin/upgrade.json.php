@@ -48,7 +48,6 @@ if (!empty($upgrade)) {
         $data['success'] = 1;
     } 
     catch (Exception $e) {
-        error_log(print_r($e,true));
         $data['errormessage'] = $e->getMessage();
         $data['success']      = 0;
     }

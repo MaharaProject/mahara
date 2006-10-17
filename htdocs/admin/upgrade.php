@@ -32,6 +32,15 @@ require(dirname(dirname(__FILE__)).'/init.php');
 $upgrades = check_upgrades();
 
 $js = 'var todo = ' . json_encode(array_keys($upgrades)) . ";\n";
+
+$loadingicon = theme_get_image_path('loading.gif');
+$successicon = theme_get_image_path('success.gif');
+$failureicon = theme_get_image_path('failure.gif');
+
+$loadingstring = get_string('upgradeloading','admin');
+$successstring = get_string('upgradesuccess','admin');
+$failurestring = get_string('upgradefailure','admin');
+
 $js .= <<< EOJS
             function processNext() {
                 var element = todo.shift();
@@ -43,14 +52,22 @@ $js .= <<< EOJS
 
                 var d = loadJSONDoc('upgrade.json.php', { 'name': element });
 
-                $(element).innerHTML = 'working... ';
+                $(element).innerHTML = '<img src="{$loadingicon}" alt="{$loadingstring}" />';
 
                 d.addCallback(function (data) {
                     if ( data.success ) {
-                        $(data.key).innerHTML = 'Done! Upgraded to version ' + data.newversion;
+                        var message = '{$successstring}' + data.newversion;
+                        $(data.key).innerHTML = '<img src="{$successicon}" alt="' + message + '" />  ' + message;
                     }
                     else {
-                        $(data.key).innerHTML = 'Poo, Error: ' + data.errormessage;
+                        var message = '';
+                        if (data.errormessage) {
+                            message = data.errormessage;
+                        } 
+                        else {
+                            message = '{$failurestring}';
+                        }
+                        $(data.key).innerHTML = '<img src="{$failureicon}" alt="' + message + '" /> ' + message;
                     }
                     processNext();
                 });
