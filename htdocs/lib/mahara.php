@@ -608,4 +608,13 @@ function check_dir_exists($dir, $create=true, $recursive=true) {
     return $status;
 }
 
+/**
+ * Checks that a username is in valid form
+ *
+ * @todo need such a function for password too.
+ */
+function validate_username($username) {
+    return preg_match('/^[a-zA-Z0-9_\.@]+$/', $username);
+}
+
 ?>
