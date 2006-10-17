@@ -33,4 +33,6 @@ if (!get_config('version')) {
     die();
 }
 
+$smarty = smarty();
+$smarty->display('index.tpl');
 ?>
