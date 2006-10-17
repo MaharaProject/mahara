@@ -24,8 +24,16 @@
  *
  */
 
-define('INTERNAL') || die();
+defined('INTERNAL') || die();
 
+$string['loggedoutok'] = 'You have been logged out successfully';
+$string['login'] = 'Log In';
 $string['loginfailed'] = 'You have not provided the correct credentials to log in. Please check your username and password are correct.';
-
+$string['password'] = 'Password';
+$string['passworddesc'] = 'Your password';
+$string['passwordhelp'] = 'The password you use to access the system.';
+$string['sessiontimedout'] = 'Your session has timed out, please enter your login details to continue';
+$string['username'] = 'Username';
+$string['usernamedesc'] = 'Your username';
+$string['usernamehelp'] = 'The username you have been given to access this system.';
 ?>
