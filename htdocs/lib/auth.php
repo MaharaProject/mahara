@@ -66,6 +66,27 @@ abstract class Auth {
     public static function get_config_options () {
     }
 
+    /**
+     * Returns the internal name of the auth plugin.
+     */
+    public static function get_internal_name() {
+        return get_string('internalname', 'auth');
+    }
+
+    /**
+     * Returns the human readable name of the auth plugin.
+     */
+    public static function get_name() {
+        return get_string('name', 'auth');
+    }
+
+    /**
+     * Returns the descriptoin of the auth plugin
+     */
+    public static function get_description() {
+        return get_string('description', 'auth');
+    }
+
 }
 
 
@@ -87,7 +108,7 @@ function auth_setup () {
 
     // If the system is not installed, let the user through in the hope that
     // they can fix this little problem :)
-    if (!get_config('version')) {
+    if (!get_config('installed')) {
         log_dbg('system not installed, letting user through');
         return;
     }
@@ -132,7 +153,8 @@ function auth_setup () {
             $institution = clean_requestdata('login_institution', PARAM_INT);
             
             $authtype = auth_get_authtype_for_institution($institution);
-            require('auth/' . $authtype . '/auth.php');
+            require(get_config('docroot').'auth/' . $authtype . '/lib.php');
+            //safe_require('auth', $authtype, 'auth.php');
             $authclass = 'Auth_' . ucfirst($authtype);
             try {
                 if (eval("return $authclass::authenticate_user_account(\$username, \$password, \$institution);")) {
