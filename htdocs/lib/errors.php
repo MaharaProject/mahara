@@ -90,7 +90,12 @@ function log_message ($message, $loglevel, $escape, $file=null, $line=null, $tra
         $textbacktrace = $htmlbacktrace = '';
     }
 
-    $loglines = explode("\n", print_r($message, true));
+    if (is_bool($message)) {
+        $loglines = array(($message ? 'bool(true)' : 'bool(false)'));
+    }
+    else {
+        $loglines = explode("\n", print_r($message, true));
+    }
 
     // Make a prefix for each line, if we are logging a normal debug/info/warn message
     if ($loglevel != LOG_LEVEL_ENVIRON && function_exists('get_config')) {
