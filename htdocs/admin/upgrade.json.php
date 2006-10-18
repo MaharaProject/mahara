@@ -28,7 +28,14 @@ define('INTERNAL',1);
 define('INSTALLER',1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 
-$name = clean_requestdata('name',PARAM_ALPHAEXT,REQUEST_EITHER);
+$name = clean_requestdata('name', PARAM_ALPHAEXT, REQUEST_EITHER);
+$install = clean_requestdata('install', PARAM_BOOL, REQUEST_EITHER);
+
+if ($install) {
+    if (!get_config('installed')) {
+        set_config('installed', true);
+    }
+}
 
 $upgrade = check_upgrades($name);
 $data = array(
@@ -36,7 +43,7 @@ $data = array(
 );             
 
 if (!empty($upgrade)) {
-    $data['newversion'] = $upgrade->torelease . '( ' . $upgrade->to . ')' ;
+    $data['newversion'] = $upgrade->torelease . ' (' . $upgrade->to . ')' ;
     if ($name == 'core') {
         $funname = 'upgrade_core';
     } 
