@@ -37,9 +37,9 @@ $loadingicon = theme_get_image_path('loading.gif');
 $successicon = theme_get_image_path('success.gif');
 $failureicon = theme_get_image_path('failure.gif');
 
-$loadingstring = get_string('upgradeloading','admin');
-$successstring = get_string('upgradesuccess','admin');
-$failurestring = get_string('upgradefailure','admin');
+$loadingstring = get_string('upgradeloading', 'admin');
+$successstring = get_string('upgradesuccess', 'admin');
+$failurestring = get_string('upgradefailure', 'admin');
 
 $js .= <<< EOJS
             function processNext() {
@@ -47,6 +47,7 @@ $js .= <<< EOJS
 
                 if ( ! element ) {
                     // we're done
+                    loadJSONDoc('upgrade.json.php', { 'install' : 1 });
                     return;
                 }
 
@@ -57,7 +58,7 @@ $js .= <<< EOJS
                 d.addCallback(function (data) {
                     if ( data.success ) {
                         var message = '{$successstring}' + data.newversion;
-                        $(data.key).innerHTML = '<img src="{$successicon}" alt="' + message + '" />  ' + message;
+                        $(data.key).innerHTML = '<img src="{$successicon}" alt=":)" />  ' + message;
                     }
                     else {
                         var message = '';
@@ -67,21 +68,23 @@ $js .= <<< EOJS
                         else {
                             message = '{$failurestring}';
                         }
-                        $(data.key).innerHTML = '<img src="{$failureicon}" alt="' + message + '" /> ' + message;
+                        $(data.key).innerHTML = '<img src="{$failureicon}" alt=":(" /> ' + message;
                     }
                     processNext();
                 });
+                d.addErrback(function () {
+                    $(element).innerHTML = '<img src="{$failureicon}" alt=":(" /> {$failurestring}';
+                }
             }
 
             addLoadEvent( processNext );
 EOJS;
 
-// @todo<nigel>: given that this is PHP5, I am unsure of the need for & here - will check this out
-$smarty = &smarty(array('mochikit'));
-$smarty->assign('INLINEJAVASCRIPT',$js);
+$smarty = smarty(array('mochikit'));
+$smarty->assign('INLINEJAVASCRIPT', $js);
 
 
-$smarty->assign_by_ref('upgrades',$upgrades);
+$smarty->assign_by_ref('upgrades', $upgrades);
 $smarty->display('admin/upgrade.tpl');
 
 
