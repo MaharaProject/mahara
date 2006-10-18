@@ -74,7 +74,7 @@ $js .= <<< EOJS
                 });
                 d.addErrback(function () {
                     $(element).innerHTML = '<img src="{$failureicon}" alt=":(" /> {$failurestring}';
-                }
+                });
             }
 
             addLoadEvent( processNext );
