@@ -608,4 +608,49 @@ function check_dir_exists($dir, $create=true, $recursive=true) {
     return $status;
 }
 
+/**
+ * Function to require a plugin file. This is to avoid doing 
+ * require and include directly with variables.
+ * This function is the one safe point to require plugin files.
+ * so USE it :)
+ * @param string $plugintype the type of plugin (eg artefact)
+ * @param string $pluginname the name of the plugin (eg blog)
+ * @param string $filename the name of the file to include within the plugin structure
+ * @param string $function (optional, defaults to require) the require/include function to use
+ * @param string $nonfatal (optional, defaults to false) just returns false if the file doesn't exist
+ */
+function safe_require($plugintype, $pluginname, $filename, $function='require', $nonfatal=false) {
+
+    $plugintype = clean_filename($plugintype);
+    $pluginname = clean_filename($pluginname);
+
+    if (!in_array($function,array('require','include','require_once','include_once'))) {
+        if (!empty($nonfatal)) {
+            return false;
+        }
+        throw new Exception ('invalid require type');
+    }
+
+    $fullpath = get_config('docroot') . $plugintype . '/' . $pluginname . '/' . $filename;
+    if (!$realpath = realpath($fullpath)) {
+        if (!empty($nonfatal)) {
+            return false;
+        }
+        throw new Exception ("File $fullpath did not exist");
+    }
+
+    if (strpos($realpath, get_config('docroot') !== 0)) {
+        if (!empty($nonfatal)) {
+            return false;
+        }
+        throw new Exception ("File $fullpath was outside document root!");
+    }
+
+    if ($function == 'require') { return require($realpath); }
+    if ($function == 'include') { return include($realpath); }
+    if ($function == 'require_once') { return require_once($realpath); }
+    if ($function == 'include_once') { return include_once($realpath); }
+    
+}
+
 ?>
