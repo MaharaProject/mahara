@@ -258,6 +258,7 @@ function clean_param($param, $type) {
             return eregi_replace('[^a-zA-Z0-9_-]', '', $param);
 
         case PARAM_CLEANFILE:    // allow only safe characters
+            // @todo this function hasn't been ported from moodle yet.
             return clean_filename($param);
 
         case PARAM_FILE:         // Strip all suspicious characters from filename
@@ -441,6 +442,12 @@ function cleanAttributes2($htmlArray){
         $xhtml_slash = ' /';
     }
     return '<'. $slash . $elem . $attStr . $xhtml_slash .'>';
+}
+
+function clean_filename($filename) {
+    //@todo 
+
+    return $filename;
 }
 
 ?>
