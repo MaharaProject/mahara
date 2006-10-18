@@ -3,50 +3,71 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../lib/xmldb/xmldb.xsd"
 >
-  <TABLES>
-    <TABLE NAME="installed_artefact" COMMENT="Information about each installed artefact plugin" NEXT="config">
-      <FIELDS> 
-        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" ENUM="false" NEXT="version" />
-        <FIELD NAME="version" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="false" SEQUENCE="false" ENUM="false" PREVIOUS="name" NEXT="active"/>
-        <FIELD NAME="active" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false" ENUM="false" PREVIOUS="version"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="name" COMMENT="Primary key for installed artefact plugins" />
-      </KEYS>
-    </TABLE>
-    <TABLE NAME="config" COMMENT="Mahara configuration variables" NEXT="config_artefact" PREVIOUS="installed_artefact">
-      <FIELDS>
-        <FIELD NAME="field" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" ENUM="false" NEXT="value"/>
-        <FIELD NAME="value" TYPE="text" LENGTH="small" NOTNULL="true" SEQUENCE="false" ENUM="false" PREVIOUS="field"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="field" COMMENT="Primary key for config" />
-      </KEYS>
-    </TABLE>
-    <TABLE NAME="config_artefact" COMMENT="Mahara artefact plugins configuration variables" NEXT="usr" PREVIOUS="config">
-      <FIELDS>
-        <FIELD NAME="plugin" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false" ENUM="false" NEXT="field"/>
-        <FIELD NAME="field" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false" ENUM="false" PREVIOUS="plugin" NEXT="value"/>
-        <FIELD NAME="value" TYPE="text" LENGTH="small" NOTNULL="true" SEQUENCE="false" ENUM="false" PREVIOUS="field"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="plugin,field" COMMENT="Primary key for config_artefact" NEXT="pluginfk" />
-        <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="installed_artefact" REFFIELDS="name" PREVIOUS="primary"/>
-      </KEYS>
-    </TABLE>
-    <TABLE NAME="usr" COMMENT="Basic user information for all system users" PREVIOUS="config_artefact">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="false" SEQUENCE="true" ENUM="false" NEXT="username"/>
-        <FIELD NAME="username" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false" ENUM="false" PREVIOUS="id" NEXT="password"/>
-        <FIELD NAME="password" TYPE="char" LENGTH="40" NOTNULL="true" SEQUENCE="false" ENUM="false" PREVIOUS="username" NEXT="salt"/>
-        <FIELD NAME="salt" TYPE="char" LENGTH="8" NOTNULL="true" SEQUENCE="false" ENUM="false" PREVIOUS="password"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for usr"/>
-    </KEYS>
-    <INDEXES>
-      <INDEX NAME="usernameuk" UNIQUE="true" FIELDS="LOWER(username)"/>
-    </INDEXES>
-    </TABLE>
- </TABLES>
+    <TABLES>
+        <TABLE NAME="installed_artefact" COMMENT="Information about each installed artefact plugin" NEXT="installed_auth">
+            <FIELDS> 
+                <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" ENUM="false" NEXT="version" />
+                <FIELD NAME="version" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="false" SEQUENCE="false" ENUM="false" PREVIOUS="name" NEXT="active"/>
+                <FIELD NAME="active" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false" ENUM="false" PREVIOUS="version"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="name" COMMENT="Primary key for installed artefact plugins" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="installed_auth" COMMENT="Information about each installed authentication plugin" PREVIOUS="installed_artefact" NEXT="config">
+            <FIELDS> 
+                <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" ENUM="false" NEXT="version" />
+                <FIELD NAME="version" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="false" SEQUENCE="false" ENUM="false" PREVIOUS="name" NEXT="active"/>
+                <FIELD NAME="active" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false" ENUM="false" PREVIOUS="version"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="name" COMMENT="Primary key for installed authentication plugins" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="config" COMMENT="Mahara configuration variables" NEXT="config_artefact" PREVIOUS="installed_auth">
+            <FIELDS>
+                <FIELD NAME="field" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" ENUM="false" NEXT="value"/>
+                <FIELD NAME="value" TYPE="text" LENGTH="small" NOTNULL="true" SEQUENCE="false" ENUM="false" PREVIOUS="field"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="field" COMMENT="Primary key for config" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="config_artefact" COMMENT="Mahara artefact plugins configuration variables" NEXT="config_auth" PREVIOUS="config">
+            <FIELDS>
+                <FIELD NAME="plugin" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false" ENUM="false" NEXT="field"/>
+                <FIELD NAME="field" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false" ENUM="false" PREVIOUS="plugin" NEXT="value"/>
+                <FIELD NAME="value" TYPE="text" LENGTH="small" NOTNULL="true" SEQUENCE="false" ENUM="false" PREVIOUS="field"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="plugin,field" COMMENT="Primary key for config_artefact" NEXT="pluginfk"/>
+                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="installed_artefact" REFFIELDS="name" PREVIOUS="primary"/>
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="config_auth" COMMENT="Mahara authentication plugins configuration variables" NEXT="usr" PREVIOUS="config_artefact">
+            <FIELDS>
+                <FIELD NAME="plugin" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false" ENUM="false" NEXT="field"/>
+                <FIELD NAME="field" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false" ENUM="false" PREVIOUS="plugin" NEXT="value"/>
+                <FIELD NAME="value" TYPE="text" LENGTH="small" NOTNULL="true" SEQUENCE="false" ENUM="false" PREVIOUS="field"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="plugin,field" COMMENT="Primary key for config_artefact" NEXT="pluginfk"/>
+                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="installed_artefact" REFFIELDS="name" PREVIOUS="primary"/>
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="usr" COMMENT="Basic user information for all system users" PREVIOUS="config_auth">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="false" SEQUENCE="true" ENUM="false" NEXT="username"/>
+                <FIELD NAME="username" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false" ENUM="false" PREVIOUS="id" NEXT="password"/>
+                <FIELD NAME="password" TYPE="char" LENGTH="40" NOTNULL="true" SEQUENCE="false" ENUM="false" PREVIOUS="username" NEXT="salt"/>
+                <FIELD NAME="salt" TYPE="char" LENGTH="8" NOTNULL="true" SEQUENCE="false" ENUM="false" PREVIOUS="password"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for usr"/>
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="usernameuk" UNIQUE="true" FIELDS="LOWER(username)"/>
+            </INDEXES>
+        </TABLE>
+    </TABLES>
 </XMLDB>
