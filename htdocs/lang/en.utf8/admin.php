@@ -26,6 +26,11 @@
 
 defined('INTERNAL') || die();
 
+$string['adminoptionsauthenticationtitle'] = 'AdminOptionsAuthentication';
+$string['adminoptionsauthenticationdescription'] = '<p>List of installed authentication methods. Internal is used by default, if an
+institution uses another authentication type then they will be listed beside it.</p>
+
+<p>Did you want to <a href="institution.php">change the type of authenication for an institution</a>?</p>';
 $string['release'] = 'Release %s (%s)';
 $string['component'] = 'Component or plugin';
 $string['fromversion'] = 'From version';
