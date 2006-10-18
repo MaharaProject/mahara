@@ -28,17 +28,19 @@ define('INTERNAL',1);
 
 require(dirname(dirname(__FILE__)).'/init.php');
 
-$smarty = &smarty();
+$smarty = smarty();
 
 $upgrades = check_upgrades();
 
 if (isset($upgrades['core']) && !empty($upgrades['core']->install)) {
-    $smarty->assign('installing',true);
-    $smarty->assign('releaseargs',array($upgrades['core']->torelease,$upgrades['core']->to));
+    $smarty->assign('installing', true);
+    $smarty->assign('releaseargs', array($upgrades['core']->torelease,$upgrades['core']->to));
     $smarty->display('admin/installgpl.tpl');
     exit;
 }
 
 // normal admin page starts here
+
+$smarty->display('admin/index.tpl');
 
 ?>
