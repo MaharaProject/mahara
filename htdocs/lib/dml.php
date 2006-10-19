@@ -786,6 +786,8 @@ function insert_record($table, $dataobject, $primarykey=false, $returnpk=false) 
  * @uses $db
  * @param string $table The database table to be checked against.
  * @param array $dataobject An object with contents equal to fieldname=>fieldvalue. Must have an entry for 'id' to map to the table specified.
+ * @param mixed $where defines the WHERE part of the upgrade. Can be string (key) or array (keys) or hash (keys/values).
+ * If the first two, values are expected to be in $dataobject. 
  * @return bool
  * @throws DatalibException
  */
