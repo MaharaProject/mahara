@@ -308,7 +308,7 @@ function ensure_sanity() {
 
 }
 
-function get_string($identifier,$section) {
+function get_string($identifier, $section='mahara') {
 
     $langconfigstrs = array('parentlanguage', 'strftimedate', 'strftimedateshort', 'strftimedatetime',
                             'strftimedaydate', 'strftimedaydatetime', 'strftimedayshort', 'strftimedaytime',
@@ -323,28 +323,26 @@ function get_string($identifier,$section) {
     if (count($variables) > 2) { // we have some stuff we need to sprintf
         array_shift($variables);
         array_shift($variables); //shift off the first two.
-    } else {
+    }
+    else {
         $variables = array();
     }
     
     $lang = current_language();
 
-    if ($section == '') {
-        $section = 'mahara';
-    }
-
     // Define the locations of language strings for this section
     $docroot = get_config('docroot');
     $locations = array();
     
-    if ($section == 'mahara' || $section != 'langconfig') {
-        $locations[] = $docroot.'lang/';
-    } else {
-        $extras = array('artefacts','auth'); // more later..
+    if ($section == 'mahara' || $section == 'langconfig') {
+        $locations[] = $docroot . 'lang/';
+    }
+    else {
+        $extras = plugin_types(); // more later..
         foreach ($extras as $tocheck) {
-            if (strpos($section,$tocheck.'.') === 0) {
-                $pluginname = substr($section,strlen($tocheck));
-                $locations[] = $docroot.$tocheck.'/'.$pluginname.'/lang/';
+            if (strpos($section,$tocheck . '.') === 0) {
+                $pluginname = substr($section,strlen($tocheck) + 1);
+                $locations[] = $docroot . $tocheck . '/' . $pluginname . '/lang/';
             }
         }
     }
@@ -352,10 +350,10 @@ function get_string($identifier,$section) {
     // First check all the normal locations for the string in the current language
     foreach ($locations as $location) {
         //if local directory not found, or particular string does not exist in local direcotry
-        $langfile = $location.$lang.'/'.$section.'.php';
+        $langfile = $location . $lang . '/' . $section . '.php';
         if (is_readable($langfile)) {
             if ($result = get_string_from_file($identifier, $langfile)) {
-                return format_langstring($result,$variables);
+                return format_langstring($result, $variables);
             }
         }
     }
@@ -363,19 +361,19 @@ function get_string($identifier,$section) {
     // If the preferred language was English (utf8) we can abort now
     // saving some checks beacuse it's the only "root" lang
     if ($lang == 'en.utf8') {
-        return '[['. $identifier .']]';
+        return '[[' . $identifier . ']]';
     }
 
     // Is a parent language defined?  If so, try to find this string in a parent language file
 
     foreach ($locations as $location) {
-        $langfile = $location.$lang.'/langconfig.php';
+        $langfile = $location . $lang . '/langconfig.php';
         if (is_readable($langfile)) {
             if ($parentlang = get_string_from_file('parentlanguage', $langfile)) {
-                $langfile = $location.$parentlang.'/'.$section.'.php';
+                $langfile = $location . $parentlang . '/' . $section . '.php';
                 if (is_readable($langfile)) {
                     if ($result = get_string_from_file($identifier, $langfile)) {
-                        return format_langstring($result,$variables);
+                        return format_langstring($result, $variables);
                     }
                 }
             }
@@ -385,15 +383,15 @@ function get_string($identifier,$section) {
     /// Our only remaining option is to try English
     foreach ($locations as $location) {
         //if local_en not found, or string not found in local_en
-        $langfile = $location.'en.utf8/'.$module.'.php';
+        $langfile = $location . 'en.utf8/' . $module . '.php';
         if (is_readable($langfile)) {
             if ($result = get_string_from_file($identifier, $langfile)) {
-                return format_langstring($result,$variables);
+                return format_langstring($result, $variables);
             }
         }
     }
 
-    return '[['.$identifier.']]';  // Last resort
+    return '[[' . $identifier . ']]';  // Last resort
 }
 
 
