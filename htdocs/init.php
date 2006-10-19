@@ -128,7 +128,7 @@ $CFG->themeurl = get_config('wwwroot') . 'theme/' . get_config('theme') . '/stat
 
 // Only do authentication once we know the page theme, so that the login form
 // can have the correct theming.
-require('auth.php');
+require('auth/lib.php');
 $USER = auth_setup();
 
 ?>
