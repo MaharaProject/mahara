@@ -532,8 +532,6 @@ function install_from_xmldb_file($file) {
     global $CFG, $db;
 
     $status = true;
-
-
     $xmldb_file = new XMLDBFile($file);
 
     if (!$xmldb_file->fileExists()) {
@@ -553,12 +551,7 @@ function install_from_xmldb_file($file) {
 
     // @todo investigate whether the transaction should be started and committed
     // by the caller so that updating version # in db can be same transaction
-    $status && $db->StartTrans();
     $status = $status && execute_sql_arr($sqlarr);
-    if ($db->HasFailedTrans()) {
-        $status = false;
-    }
-    $db->CompleteTrans();
     return $status;
 }
 
