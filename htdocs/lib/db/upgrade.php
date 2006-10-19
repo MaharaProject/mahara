@@ -49,6 +49,31 @@ function xmldb_core_upgrade($oldversion=0) {
         $status = $status && create_table($table);
     }
 
+    if ($status && $oldversion < 2006101900) {
+        // Insert core configuration option
+        $status = $status && set_config('session_timeout', 1800);
+
+        // Add password_change field
+        $table = new XMLDBTable('usr');
+        $field = new XMLDBField('password_change');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, '1', XMLDB_UNSIGNED,
+            XMLDB_NOTNULL, null, null, null, 0, null);
+
+        $status = $status && add_field($table, $field);
+
+        // Insert the root user
+        try {
+            log_dbg('trying to insert root user');
+            $root = new StdClass;
+            $root->username = 'root';
+            $root->password = 'mahara';
+            $root->password_change = 1;
+            insert_record('usr', $root);
+        }
+        catch (DatalibException $e) {
+            return false;
+        }
+    }
 
     return $status;
 
