@@ -32,7 +32,6 @@ require(dirname(dirname(__FILE__)).'/init.php');
 $upgrades = check_upgrades();
 
 $js = 'var todo = ' . json_encode(array_keys($upgrades)) . ";\n";
-
 $loadingicon = theme_get_image_path('loading.gif');
 $successicon = theme_get_image_path('success.gif');
 $failureicon = theme_get_image_path('failure.gif');
@@ -47,7 +46,13 @@ $js .= <<< EOJS
 
                 if ( ! element ) {
                     // we're done
+                    // @todo this needs work:
+                    //   - should only hit upgrade.json.php with install message
+                    //     if we are actually installing - can check $upgrades
+                    //     in this file for that
                     loadJSONDoc('upgrade.json.php', { 'install' : 1 });
+                    // @todo do as a deferred on the above call
+                    $('finished').style.display = 'block';
                     return;
                 }
 
