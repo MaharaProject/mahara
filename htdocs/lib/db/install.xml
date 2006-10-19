@@ -60,7 +60,8 @@
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="false" SEQUENCE="true" ENUM="false" NEXT="username"/>
                 <FIELD NAME="username" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false" ENUM="false" PREVIOUS="id" NEXT="password"/>
                 <FIELD NAME="password" TYPE="char" LENGTH="40" NOTNULL="true" SEQUENCE="false" ENUM="false" PREVIOUS="username" NEXT="salt"/>
-                <FIELD NAME="salt" TYPE="char" LENGTH="8" NOTNULL="true" SEQUENCE="false" ENUM="false" PREVIOUS="password"/>
+                <FIELD NAME="salt" TYPE="char" LENGTH="8" NOTNULL="true" SEQUENCE="false" ENUM="false" PREVIOUS="password" NEXT="password_change"/>
+                <FIELD NAME="password_change" TYPE="int" LENGTH="1" NOTNULL="true" UNSIGNED="false" DEFAULT="0" SEQUENCE="true" ENUM="false" PREVIOUS="salt"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for usr"/>
@@ -70,4 +71,16 @@
             </INDEXES>
         </TABLE>
     </TABLES>
+    <STATEMENTS>
+        <STATEMENT NAME="insert config" TYPE="insert" TABLE="config" COMMENT="Initial insert of records on table config" NEXT="insert root user">
+            <SENTENCES>
+                <SENTENCE TEXT="(field, value) VALUES ('session_timeout', 1800)" />
+            </SENTENCES>
+        </STATEMENT>
+        <STATEMENT NAME="insert root user" TYPE="insert" TABLE="usr" COMMENT="Inserting the root user" PREVIOUS="insert config">
+            <SENTENCES>
+                <SENTENCE TEXT="(username, password, password_change) VALUES ('root', 'mahara', 1)"/>
+            </SENTENCES>
+        </STATEMENT>
+    </STATEMENTS>
 </XMLDB>
