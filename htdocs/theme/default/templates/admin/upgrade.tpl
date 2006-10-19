@@ -16,6 +16,7 @@
     </tr>
 {/foreach}
 </table>
+<div id="finished" style="display: none;">All done! <a href="{$WWWROOT}">Continue</a> (FIXME: displays on errors)</div>
 {else}
 {str section=admin tag=noupgrades}
 {/if}
