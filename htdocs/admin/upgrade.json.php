@@ -24,17 +24,19 @@
  *
  */
 
-define('INTERNAL',1);
-define('INSTALLER',1);
+define('INTERNAL', 1);
+define('INSTALLER', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 
-$name = clean_requestdata('name', PARAM_ALPHAEXT, REQUEST_EITHER);
+$name    = clean_requestdata('name', PARAM_ALPHAEXT, REQUEST_EITHER);
 $install = clean_requestdata('install', PARAM_BOOL, REQUEST_EITHER);
 
 if ($install) {
+    // @todo should probably report errors. Also see upgrade.php to make the js detect any errors
     if (!get_config('installed')) {
         set_config('installed', true);
     }
+    exit;
 }
 
 $upgrade = check_upgrades($name);
