@@ -75,6 +75,19 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($status && $oldversion < 2006102000) {
+        // add release field to installed_artefact and installed_auth
+        $artefact_t = new XMLDBTable('installed_artefact');
+        $auth_t = new XMLDBTable('installed_auth');
+
+        $field = new XMLDBField('release');
+        $field->setAttributes(XMLDB_TYPE_TEXT, 'small', null, XMLDB_NOTNULL);
+        
+        $status = $status && add_field($artefact_t, $field);
+        $status = $status && add_field($auth_t, $field);
+                                         
+    }
+
     return $status;
 
 }

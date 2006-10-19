@@ -33,8 +33,8 @@ defined('INTERNAL') || die();
  * @returns array of objects
  */
 function check_upgrades($name = null) {
-    // An array of plugins to check
-    static $pluginstocheck = array('artefact', 'auth');
+ 
+    $pluginstocheck = plugin_types();
 
     $toupgrade = array();
     $installing = false;
@@ -74,9 +74,6 @@ function check_upgrades($name = null) {
     }
 
     $plugins = array();
-    //if (strpos($name, 'artefact.') === 0) {
-    //    $plugins[] = substr($name, 9);
-    //}
     if (!empty($name)) {
         $plugins[] = explode('.', $name);
     }
@@ -104,15 +101,17 @@ function check_upgrades($name = null) {
         $pluginpath = "$plugin[0]/$plugin[1]";
         $pluginkey  = "$plugin[0].$plugin[1]";
 
-        require(get_config('docroot') . $pluginpath . '/version.php');
-        $pluginversion = 0;
-        // Don't try to get a plugin version if we are installing - it will
+        
+        // Don't try to get the plugin info if we are installing - it will
         // definitely fail
+        $pluginversion = 0;
         if (!$installing) {
-            try {
-                $pluginversion = get_config_plugin($plugintype, $pluginname, 'version');
+            if ($installed = get_record('installed_' . $plugintype, 'name', $pluginname)) {
+                $pluginversion = $installed->version;
+                $pluginrelease =  $installed->release;
             }
-            catch (Exception $e) { }
+            
+            require(get_config('docroot') . $pluginpath . '/version.php');
         }
 
         if (empty($pluginversion)) {
@@ -126,10 +125,7 @@ function check_upgrades($name = null) {
             $plugininfo = new StdClass;
             $plugininfo->upgrade = true;
             $plugininfo->from = $pluginversion;
-            try {
-                $plugininfo->fromrelease = get_config_plugin('artefact', $dir, 'release');
-            }
-            catch (Exception $e) { }
+            $plugininfo->fromrelease = $pluginrelease;
             $plugininfo->to = $config->version;
             $plugininfo->torelease = $config->release;
             $toupgrade[$pluginkey] = $plugininfo;
@@ -213,8 +209,18 @@ function upgrade_plugin($upgrade) {
         throw new DatalibException("Failed to upgrade $upgrade->name");
     }
 
-    $status = set_config_plugin($plugintype, $pluginname, 'version', $upgrade->to);
-    $status = $status && set_config_plugin($plugintype, $pluginname, 'release', $upgrade->torelease);
+    $installed = new StdClass;
+    $installed->name = $pluginname;
+    $installed->version = $upgrade->to;
+    $installed->release = $upgrade->torelease;
+    $installtable = 'installed_' . $plugintype;
+
+    if (!empty($upgrade->install)) {
+        insert_record($installtable,$installed);
+    } 
+    else {
+        update_record($installtable, $installed, 'name');
+    }
 
     // @todo here is where plugins register events and set their crons up
     
@@ -707,6 +713,19 @@ function safe_require($plugintype, $pluginname, $filename, $function='require', 
     if ($function == 'require_once') { return require_once($realpath); }
     if ($function == 'include_once') { return include_once($realpath); }
     
+}
+
+
+/**
+ * This function returns the list of plugintypes we currently care about
+ * @return array of names
+ */
+function plugin_types() {
+    static $pluginstocheck;
+    if (empty($pluginstocheck)) {
+        $pluginstocheck = array('artefact', 'auth');
+    }
+    return $pluginstocheck;
 }
 
 /**
