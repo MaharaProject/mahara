@@ -1,6 +1,6 @@
 <?php
 /**
- * This program is part of mahara
+ * This program is part of Mahara
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage core or plugintype/pluginname
- * @author     Your Name <you@example.org>
+ * @subpackage core
+ * @author     Penny Leach <penny@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
@@ -27,7 +27,7 @@
 defined('INTERNAL') || die();
 
 $config = new StdClass;
-$config->version = 2006101700;
+$config->version = 2006101900;
 $config->release = '0.1';
 
 ?>
