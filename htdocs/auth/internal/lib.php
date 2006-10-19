@@ -64,11 +64,11 @@ class Auth_Internal extends Auth {
     }
 
     private static function validate_password($theysent, $wehave, $salt) {
-        if (substr($wehave, 0, 2) == '**') {
+        if ($salt == null) {
             // This allows "plaintext" passwords, which are eaiser for an admin to
             // create by hacking in the database directly. The application does not
             // create passwords in this form.
-            return "**$theysent" == $wehave;
+            return $theysent == $wehave;
         }
 
         // The main type - a salted sha1
