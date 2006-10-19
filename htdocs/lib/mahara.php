@@ -77,7 +77,7 @@ function check_upgrades($name = null) {
     //if (strpos($name, 'artefact.') === 0) {
     //    $plugins[] = substr($name, 9);
     //}
-    if (!empty($name) && $name != 'core') {
+    if (!empty($name)) {
         $plugins[] = explode('.', $name);
     }
     else {
@@ -88,6 +88,9 @@ function check_upgrades($name = null) {
                     continue;
                 }
                 if (!empty($installing) && $dir != 'internal') {
+                    continue;
+                }
+                if (!is_dir(get_config('docroot') . $plugin . '/' . $dir)) {
                     continue;
                 }
                 $plugins[] = array($plugin, $dir);
@@ -150,9 +153,11 @@ function check_upgrades($name = null) {
 }
 
 function upgrade_core($upgrade) {
+    global $db;
 
     $location = get_config('libroot') . '/db/';
-    
+    $db->StartTrans();
+
     if (!empty($upgrade->install)) {
         $status = install_from_xmldb_file($location . 'install.xml'); 
     }
@@ -166,18 +171,25 @@ function upgrade_core($upgrade) {
 
     $status = set_config('version', $upgrade->to);
     $status = $status && set_config('release', $upgrade->torelease);
+    
+    if ($db->HasFailedTrans()) {
+        $status = false;
+    }
+    $db->CompleteTrans();
+
     return $status;
 }
 
 function upgrade_plugin($upgrade) {
-    
+    global $db;
+
     $plugintype = '';
     $pluginname = '';
 
     list($plugintype, $pluginname) = explode('.', $upgrade->name);
-    log_dbg($plugintype . ' ' . $pluginname);
 
     $location = get_config('dirroot') . $plugintype . '/' . $pluginname . '/db/';
+    $db->StartTrans();
 
     if (!empty($upgrade->install)) {
         // @todo add to installed_artefacts
@@ -196,7 +208,8 @@ function upgrade_plugin($upgrade) {
         $status = $function($upgrade->from);
     }
     
-    if (!$status) {
+    if (!$status || $db->HasFailedTrans()) {
+        $db->CompleteTrans();
         throw new DatalibException("Failed to upgrade $upgrade->name");
     }
 
@@ -204,6 +217,11 @@ function upgrade_plugin($upgrade) {
     $status = $status && set_config_plugin($plugintype, $pluginname, 'release', $upgrade->torelease);
 
     // @todo here is where plugins register events and set their crons up
+    
+    if ($db->HasFailedTrans()) {
+        $status = false;
+    }
+    $db->CompleteTrans();
     
     return $status;
 }
@@ -448,7 +466,7 @@ function load_config() {
     }
     
     foreach ($dbconfig as $cfg) {
-        if (isset($CFG->{$cfg->field}) && $CFG->{$cfg->field} != $CFG->value) {
+        if (isset($CFG->{$cfg->field}) && $CFG->{$cfg->field} != $cfg->value) {
             // @todo warn that we're overriding db config with $CFG
             continue;
         }
@@ -690,5 +708,16 @@ function safe_require($plugintype, $pluginname, $filename, $function='require', 
     if ($function == 'include_once') { return include_once($realpath); }
     
 }
+
+/**
+ * Used by XMLDB
+ */
+function debugging ($message, $level) {
+    log_dbg($message);
+}
+function xmldb_dbg($message) {
+    log_warn($message);
+}
+define('DEBUG_DEVELOPER', 'whocares');
 
 ?>
