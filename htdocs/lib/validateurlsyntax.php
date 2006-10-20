@@ -1,9 +1,8 @@
 <?php
 /**
  * @package mahara
- * @subpackage core
+ * @subpackage thirdparty/validateurlsyntax
  */
-
 /*
 About validateUrlSyntax():
     This function will verify if a http URL is formatted properly, returning
