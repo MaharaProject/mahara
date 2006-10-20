@@ -93,6 +93,9 @@ function log_message ($message, $loglevel, $escape, $file=null, $line=null, $tra
     if (is_bool($message)) {
         $loglines = array(($message ? 'bool(true)' : 'bool(false)'));
     }
+    else if (is_null($message)) {
+        $loglines = array('NULL');
+    }
     else {
         $loglines = explode("\n", print_r($message, true));
     }
@@ -272,6 +275,9 @@ class DatalibException extends Exception {}
 // Catch exceptions that fall through to main()
 set_exception_handler('exception');
 
+/**
+ * Should only be called if something _really_ screwed up happened
+ */
 function exception ($e) {
     // @todo<nigel>: maybe later, rewrite as:
     // if $e not Exception
@@ -304,14 +310,46 @@ EOF;
     }
     echo <<<EOF
 <h1>OMGWTF</h1>
-<p>$message</p>
+<p>Sorry, an unrecoverable error occured. Eventually, this page will look nice
+and say something that won't make the viewer think that they broke something,
+but since at the moment the viewer is a developer, allow me to laugh at you :)</p>
+<p><a href="#" onclick="history.go(-1)">back</a></p>
 <hr>
-<p>@todo&lt;nigel&gt;: make this page more shiny :)</p>
 </body>
 </html>
 EOF;
     die();
 }
 
+
+/**
+ * Ends the script with an error message.
+ * NOTE: think very carefully about whether you should be throwing an
+ * exception instead!
+ *
+ * For example, if your script is hit by a form where people could choose
+ * some option from a dropdown, and when the script tries to use it somehow
+ * it runs into an error, then this is an exception, NOT an error.
+ *
+ */
+function die_error($message) {
+    $smarty = smarty();
+    $smarty->assign('message', $message);
+    $smarty->assign('type', 'error');
+    $smarty->display('message.tpl');
+    exit;
+}
+
+/**
+ * Ends the script with an informational message
+ */
+function die_info($message) {
+    $smarty = smarty();
+    $message .= '<p><a href="#" onclick="history.go(-1)">back</a></p>';
+    $smarty->assign('message', $message);
+    $smarty->assign('type', 'info');
+    $smarty->display('message.tpl');
+    exit;
+}
 
 ?>
