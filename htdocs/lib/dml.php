@@ -956,7 +956,7 @@ function where_clause_prepared($field1='', $field2='', $field3='') {
  *
  * @private
  */
-function where_values_prepared($value1=null, $value2=null, $value3=null) {
+function where_values_prepared($value1=null, $value2=null, $value3=null, $value4=null) {
     $values = array();
     if (isset($value1)) {
         $values[] = $value1;
@@ -964,6 +964,9 @@ function where_values_prepared($value1=null, $value2=null, $value3=null) {
             $values[] = $value2;
             if (isset($value3)) {
                 $values[] = $value3;
+                if (isset($value4)) {
+                    $values[] = $value4;
+                }
             }
         }
     }
