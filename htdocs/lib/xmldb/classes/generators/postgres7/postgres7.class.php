@@ -52,6 +52,7 @@ class XMLDBpostgres7 extends XMLDBgenerator {
 
     var $rename_key_sql = null; //SQL sentence to rename one key (PostgreSQL doesn't support this!)
                                           //TABLENAME, OLDKEYNAME, NEWKEYNAME are dinamically replaced
+    var $foreign_keys = true; // Does the generator build foreign keys
 
     /**
      * Creates one new XMLDBpostgres7
