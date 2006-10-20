@@ -50,6 +50,18 @@ class Auth_Internal extends Auth {
         return $user;
     }
 
+    public static function get_configuration_form() {
+        //return Auth::build_form('internal', array(
+        //    'foo' => array(
+        //        'type' => 'text',
+        //        'title' => 'wtf',
+        //        'description' => 'Testing',
+        //        'help' => 'help',
+        //        'defaultvalue' => get_config_plugin('auth', 'internal', 'foo')
+        //    )
+        //));
+    }
+                
     /*
      The following two functions are inspired by Andrew McMillan's salted md5
      functions in AWL, adapted with his kind permission. Changed to use sha1
