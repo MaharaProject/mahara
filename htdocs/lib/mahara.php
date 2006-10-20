@@ -26,7 +26,6 @@
 
 defined('INTERNAL') || die();
 
-
 /**
  * This function checks core and plugins
  * for which need to be upgraded/installed
@@ -340,7 +339,7 @@ function get_string($identifier, $section='mahara') {
     $docroot = get_config('docroot');
     $locations = array();
     
-    if ($section == 'mahara' || $section == 'langconfig') {
+    if (false === strpos($section, '.')) {
         $locations[] = $docroot . 'lang/';
     }
     else {
