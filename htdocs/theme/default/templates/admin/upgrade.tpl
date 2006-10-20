@@ -1,5 +1,4 @@
 {include file='header.tpl'}
-{if $upgrades}
 <table>
     <tr>
         <th>{str section=admin tag=component}</th>
@@ -17,7 +16,4 @@
 {/foreach}
 </table>
 <div id="finished" style="display: none;">All done! <a href="{$WWWROOT}">Continue</a> (FIXME: displays on errors)</div>
-{else}
-{str section=admin tag=noupgrades}
-{/if}
 {include file='footer.tpl'}
