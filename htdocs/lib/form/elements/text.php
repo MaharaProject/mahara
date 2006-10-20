@@ -32,7 +32,7 @@ defined('INTERNAL') || die();
 function form_render_text($element, $form) {
     return '<input type="text"'
         . Form::element_attributes($element)
-        . ' value="' . $form->get_value($element) . '">';
+        . ' value="' . hsc($form->get_value($element)) . '">';
 }
 
 ?>
