@@ -17,7 +17,7 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage core
+ * @subpackage form
  * @author     Nigel McNie <nigel@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
@@ -84,7 +84,7 @@ function form($data) {
 }
 
 // For general form exceptions
-class FormException extends Form {}
+class FormException extends Exception {}
 
 class Form {
     public static $formtabindex = 1;
