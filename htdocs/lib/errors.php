@@ -124,14 +124,16 @@ function log_message ($message, $loglevel, $escape, $file=null, $line=null, $tra
 
         foreach ($loglines as $line) {
             if ($escape) {
-                $line =htmlspecialchars($line, ENT_COMPAT, 'UTF-8');
+                $line = htmlspecialchars($line, ENT_COMPAT, 'UTF-8');
                 $line = str_replace('  ', '&nbsp; ', $line);
             }
             $line = '<div style="font-family: monospace;">' . $prefix . $line . "</div>\n";
             if (is_a($SESSION, 'Session')) {
                 $SESSION->$method($line, false);
             }
-            else {
+            else if (!get_config('installed')) {
+                // Don't output when we are not installed, since this will cause the
+                // redirect to the install page to fail.
                 echo $line;
             }
         }
@@ -140,8 +142,6 @@ function log_message ($message, $loglevel, $escape, $file=null, $line=null, $tra
                 $SESSION->add_info_msg($htmlbacktrace, false);
             }
             else if (!get_config('installed')) {
-                // Don't output when we are not installed, since this will cause the
-                // redirect to the install page to fail.
                 echo $htmlbacktrace;
             }
         }
