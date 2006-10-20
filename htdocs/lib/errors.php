@@ -139,7 +139,9 @@ function log_message ($message, $loglevel, $escape, $file=null, $line=null, $tra
             if (is_a($SESSION, 'Session')) {
                 $SESSION->add_info_msg($htmlbacktrace, false);
             }
-            else {
+            else if (!get_config('installed')) {
+                // Don't output when we are not installed, since this will cause the
+                // redirect to the install page to fail.
                 echo $htmlbacktrace;
             }
         }
