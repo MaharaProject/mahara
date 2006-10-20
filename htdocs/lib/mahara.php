@@ -549,17 +549,19 @@ function get_config_plugin($plugintype, $pluginname, $key) {
     // might be.
     if (!$value = get_field('config_'.$plugintype,'value','plugin',$pluginname,'field',$key)) {
         $value = null;
-    } 
-    
+    }
+
     $CFG->plugin->{$plugintype}->{$pluginname}->{$key} = $value;
     return $value;
 }
 
 function set_config_plugin($plugintype, $pluginname, $key, $value) {
+    global $CFG;
     $table = 'config_' . $plugintype;
 
-    if (get_field($table, 'value', 'plugin', $pluginname, 'field', $key)) {
-        if (set_field($table,'value',$key,'plugin',$pluginname, 'field',$value)) { 
+    if (false !== get_field($table, 'value', 'plugin', $pluginname, 'field', $key)) {
+        //if (set_field($table, 'value', $key, 'plugin', $pluginname, 'field', $value)) {
+        if (set_field($table, 'value', $value, 'plugin', $pluginname, 'field', $key)) {
             $status = true;
         }
     }
@@ -568,7 +570,7 @@ function set_config_plugin($plugintype, $pluginname, $key, $value) {
         $pconfig->plugin = $pluginname;
         $pconfig->field  = $key;
         $pconfig->value  = $value;
-        $status = insert_record($table,$pconfig);
+        $status = insert_record($table, $pconfig);
     }
     if ($status) {
         $CFG->plugin->{$plugintype}->{$pluginname}->{$key} = $value;
@@ -723,6 +725,26 @@ function plugin_types() {
         $pluginstocheck = array('artefact', 'auth');
     }
     return $pluginstocheck;
+}
+
+/**
+ * Helper to call a static method when you do not know the name of the class
+ * you want to call the method on. PHP5 does not support $class::method().
+ */
+function call_static_method($class, $method) {
+    $args = func_get_args();
+    array_shift($args);
+    array_shift($args);
+    return call_user_func_array(array($class, $method), $args);
+}
+
+function redirect($location) {
+    if (headers_sent()) {
+        throw new Exception('Headers already sent when redirect() was called');
+    }
+    header('HTTP/1.1 303 See Other');
+    header('Location:' . $location);
+    exit;
 }
 
 /**
