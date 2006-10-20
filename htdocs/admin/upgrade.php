@@ -30,6 +30,9 @@ define('INSTALLER', 1);
 require(dirname(dirname(__FILE__)).'/init.php');
 
 $upgrades = check_upgrades();
+if (!$upgrades) {
+    die_info(get_string('noupgrades', 'admin'));
+}
 
 $js = 'var todo = ' . json_encode(array_keys($upgrades)) . ";\n";
 $loadingicon = theme_get_image_path('loading.gif');
@@ -88,10 +91,7 @@ EOJS;
 $smarty = smarty(array('mochikit'));
 $smarty->assign('INLINEJAVASCRIPT', $js);
 
-
 $smarty->assign_by_ref('upgrades', $upgrades);
 $smarty->display('admin/upgrade.tpl');
-
-
 
 ?>
