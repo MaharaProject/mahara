@@ -55,7 +55,7 @@ abstract class Auth {
      * @throws AuthUnknownUserException If the user is unknown to the
      *                                  authentication method
      */
-    public static abstract function get_user_info ($username);
+    public static abstract function get_user_info($username);
 
     /**
      * Returns a hash of information that will be rendered into a form
@@ -63,7 +63,25 @@ abstract class Auth {
      *
      * @return array
      */
-    public static function get_config_options () {
+    public static function get_configuration_form() {
+    }
+
+    protected static function build_form($method, $elements) {
+        if (count($elements)) {
+            $elements['submit'] = array(
+                'type' => 'submit',
+                'value' => 'Update'
+            );
+            $elements['method'] = array(
+                'type' => 'hidden',
+                'value' => $method 
+            );
+            return array(
+                'name' => 'auth',
+                'elements' => $elements
+            );
+        }
+        return false;
     }
 
     /**
@@ -104,7 +122,6 @@ abstract class Auth {
  */
 function auth_setup () {
     global $SESSION;
-    $time = time();
 
     // If the system is not installed, let the user through in the hope that
     // they can fix this little problem :)
@@ -116,13 +133,12 @@ function auth_setup () {
     // Check the time that the session is set to log out. If the user does
     // not have a session, this time will be 0.
     $sessionlogouttime = $SESSION->get('logout_time');
-    if ($sessionlogouttime > $time) {
+    if ($sessionlogouttime > time()) {
         if (isset($_GET['logout'])) {
             log_dbg('logging user ' . $SESSION->get('username') . ' out');
             $SESSION->logout();
             $SESSION->add_ok_msg(get_string('loggedoutok', 'mahara'));
-            header('Location: ' . get_config('wwwroot'));
-            exit;
+            redirect(get_config('wwwroot'));
         }
         // The session is still active, so continue it.
         log_dbg('session still active from previous time');
@@ -156,9 +172,9 @@ function auth_setup () {
             safe_require('auth', $authtype, 'lib.php');
             $authclass = 'Auth_' . ucfirst($authtype);
             try {
-                if (eval("return $authclass::authenticate_user_account(\$username, \$password, \$institution);")) {
+                if (call_static_method($authclass, 'authenticate_user_account', $username, $password, $institution)) {
                     log_dbg('user ' . $username . ' logged in OK');
-                    $USER = eval("return $authclass::get_user_info(\$username);");
+                    $USER = call_static_method($authclass, 'get_user_info', $username);
                     $SESSION->login($USER);
                     $USER->logout_time = $SESSION->get('logout_time');
                     return $USER;
@@ -281,6 +297,9 @@ function auth_draw_login_page() {
     exit;
 }
 
+/**
+ * Helper for validating the log in form
+ */
 function login_validate($form, $values) {
     if (!validate_username($values['login_username'])) {
         $form->set_error('login_username', get_string('Username is not in valid form, it can only'
@@ -288,12 +307,31 @@ function login_validate($form, $values) {
     }
 }
 
+/**
+ * Helper for submitting the log in form.
+ *
+ * This function does nothing, as the logging in is handled by auth_setup
+ */
 function login_submit($values) {
     // Do nothing with the form submission - auth_setup() will handle it
-    //global $SESSION;
-    //$SESSION->add_ok_msg('logged in!');
-    //header('Location: ' . get_config('wwwroot'));
-    //exit;
+}
+
+// handles form submission when an admin options form is submitted
+function auth_submit($values) {
+    global $SESSION, $db;
+    $db->StartTrans();
+
+    foreach ($values as $key => $value) {
+        if (!in_array($key, array('submit', 'method'))) {
+            set_config_plugin('auth', $values['method'], $key, $value);
+        }
+    }
+    if ($db->HasFailedTrans()) {
+        $db->CompleteTrans();
+        throw new Exception('Could not update the configuration options for the auth method');
+    }
+    $db->CompleteTrans();
+    $SESSION->add_ok_msg(get_string('authconfigurationoptionssaved') . ' ' . get_config_plugin('auth', $values['method'], $key));
 }
 
 ?>
