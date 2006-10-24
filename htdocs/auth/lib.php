@@ -290,7 +290,10 @@ function auth_get_login_form() {
 
 
 /**
- * Helper for validating the log in form
+ * Helper for validating the login form
+ *
+ * @param Form $form The form that is being validated
+ * @param array $values  The submitted values
  */
 function login_validate($form, $values) {
     if (!$form->get_error('login_username') && !validate_username($values['login_username'])) {
@@ -300,14 +303,14 @@ function login_validate($form, $values) {
 }
 
 /**
- * Helper for submitting the log in form.
+ * Called when the login form is submittd. Validates the user and password, and
+ * if they are valid, starts a new session for the user.
  *
- * This function does nothing, as the logging in is handled by auth_setup
+ * @param array $values The submitted values
  */
 function login_submit($values) {
     global $SESSION, $USER;
 
-    // Do nothing with the form submission - auth_setup() will handle it
     log_dbg('auth details supplied, attempting to log user in');
     $username    = $values['login_username'];
     $password    = $values['login_password'];
@@ -322,26 +325,21 @@ function login_submit($values) {
             $USER = call_static_method($authclass, 'get_user_info', $username);
             $SESSION->login($USER);
             $USER->logout_time = $SESSION->get('logout_time');
-            //redirect('');
-            //return $USER;
         }
         else {
             // Login attempt failed
             log_dbg('login attempt FAILED');
             $SESSION->add_err_msg(get_string('loginfailed', 'mahara'));
-            //auth_draw_login_page();
-            //exit;
         }
     }
     catch (AuthUnknownUserException $e) {
         log_dbg('unknown user ' . $username);
         $SESSION->add_err_msg(get_string('loginfailed', 'mahara'));
-        //auth_draw_login_page();
-        //exit;
     }
 }
 
 // handles form submission when an admin options form is submitted
+// @todo<nigel>: allow each auth method to have a validation method
 function auth_submit($values) {
     global $SESSION, $db;
     $db->StartTrans();
