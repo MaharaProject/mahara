@@ -40,7 +40,7 @@ class UndefinedArtefactFieldException extends Exception {}
  * Base artefact plugin class
  * @abstract
  */
-abstract class ArtefactPlugin {
+abstract class PluginArtefact extends Plugin {
 
     /** 
      * This function returns a list of classnames 
@@ -48,6 +48,13 @@ abstract class ArtefactPlugin {
      * @return array
      */
     public static abstract function get_artefact_types();
+
+    /**
+     * This function returns the name of the plugin.
+     * @return string
+     */
+    public static abstract function get_plugin_name();
+
 
     /**
      * This function returns an array of menu items
@@ -60,6 +67,7 @@ abstract class ArtefactPlugin {
     public static function menu_items() {
         return array();
     }
+
 
     /**
      * This function handles an event that has been
@@ -150,16 +158,34 @@ abstract class ArtefactType {
         // @todo 
     }
 
+    /**
+     * This function returns the db rows 
+     * from the artefact table that have this 
+     * artefact as the parent.
+     * If you want instances, use {@link get_children_instances}
+     * but bear in mind this will have a performance impact.
+     * 
+     * @return array
+     */
     public function get_children_metadata() {
-        // @todo 
+        return get_records('artefact','parentid',$this->id);
     }
             
     public function get_parent_instance() {
         // @todo
     }
-    
+
+    /** 
+     * This function returns the db row 
+     * (if there is one) of the parent
+     * artefact for this instance.
+     * If you want the instance, use 
+     * {@link get_parent_instance} instead.
+     * 
+     * @return object (db row)
+     */
     public function get_parent_metadata() {
-        // @todo
+        return get_record('artefact','id',$this->parentid);
     }
 
     public function get($field) {
@@ -204,7 +230,6 @@ abstract class ArtefactType {
     public static function get_metadata_by_userid($userid, $order, $offset, $limit) {
         // @todo
     }
-
 
     public static abstract function get_render_list($format);
 
