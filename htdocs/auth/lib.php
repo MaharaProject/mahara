@@ -121,7 +121,7 @@ abstract class Auth {
  * or more.
  */
 function auth_setup () {
-    global $SESSION;
+    global $SESSION, $USER;
 
     // If the system is not installed, let the user through in the hope that
     // they can fix this little problem :)
@@ -162,44 +162,18 @@ function auth_setup () {
             return;
         }
 
-        $username = (isset($_POST['login_username'])) ? $_POST['login_username'] : '';//clean_requestdata('login_username', PARAM_ALPHA);
-        if ($username != '') {
-            log_dbg('auth details supplied, attempting to log user in');
-            $password = clean_requestdata('login_password', PARAM_ALPHA);
-            $institution = clean_requestdata('login_institution', PARAM_INT);
-            
-            $authtype = auth_get_authtype_for_institution($institution);
-            safe_require('auth', $authtype, 'lib.php');
-            $authclass = 'Auth_' . ucfirst($authtype);
-            try {
-                if (call_static_method($authclass, 'authenticate_user_account', $username, $password, $institution)) {
-                    log_dbg('user ' . $username . ' logged in OK');
-                    $USER = call_static_method($authclass, 'get_user_info', $username);
-                    $SESSION->login($USER);
-                    $USER->logout_time = $SESSION->get('logout_time');
-                    return $USER;
-                }
-                else {
-                    // Login attempt failed
-                    log_dbg('login attempt FAILED');
-                    $SESSION->add_err_msg(get_string('loginfailed', 'mahara'));
-                    auth_draw_login_page();
-                    exit;
-                }
-            }
-            catch (AuthUnknownUserException $e) {
-                log_dbg('unknown user ' . $username);
-                $SESSION->add_err_msg(get_string('loginfailed', 'mahara'));
-                auth_draw_login_page();
-                exit;
-            }
+        // Build login form. If the form is submitted it will be handled here,
+        // and set $USER for us.
+        require_once('form.php');
+        $form = new Form(auth_get_login_form());
+        if ($USER) {
+            log_dbg('user logged in just fine');
+            return;
         }
-        else {
-            // No login attempt, no session and page is private
-            log_dbg('no session or old session, and page is private');
-            auth_draw_login_page();
-            exit;
-        }
+        
+        log_dbg('no session or old session, and page is private hello');
+        auth_draw_login_page($form);
+        exit;
     }
 }
 
@@ -218,11 +192,26 @@ function auth_get_authtype_for_institution($institution) {
  * Creates and displays the transient login page
  *
  */
-function auth_draw_login_page() {
+function auth_draw_login_page($form=null) {
+    if ($form != null) {
+        $loginform = $form->build();
+    }
+    else {
+        require_once('form.php');
+        $loginform = form(auth_get_login_form());
+    }
     $smarty = smarty();
-    require_once('form.php');
+    $smarty->assign('login_form', $loginform);
+    $smarty->display('login.tpl');
+    exit;
+}
 
-
+/**
+ * Returns the definition of the login form
+ *
+ * @return array
+ */
+function auth_get_login_form() {
     $elements = array(
         'login' => array(
             'type'   => 'fieldset',
@@ -233,15 +222,19 @@ function auth_draw_login_page() {
                     'title'       => get_string('username', 'mahara'),
                     'description' => get_string('usernamedesc', 'mahara'),
                     'help'        => get_string('usernamehelp', 'mahara'),
-                    'required'    => true
+                    'rules' => array(
+                        'required'    => true
+                    )
                 ),
                 'login_password' => array(
                     'type'        => 'password',
                     'title'       => get_string('password', 'mahara'),
                     'description' => get_string('passworddesc', 'mahara'),
                     'help'        => get_string('passwordhelp', 'mahara'),
-                    'required'    => true,
-                    'value'       => ''
+                    'value'       => '',
+                    'rules' => array(
+                        'required'    => true
+                    )
                 )
             )
         ),
@@ -286,22 +279,21 @@ function auth_draw_login_page() {
     }
 
     $form = array(
-        'name' => 'login',
-        'method' => 'post',
-        'action' => $action,
+        'name'     => 'login',
+        'method'   => 'post',
+        'action'   => $action,
         'elements' => $elements
     );
 
-    $smarty->assign('login_form', form($form));
-    $smarty->display('login.tpl');
-    exit;
+    return $form;
 }
+
 
 /**
  * Helper for validating the log in form
  */
 function login_validate($form, $values) {
-    if (!validate_username($values['login_username'])) {
+    if (!$form->get_error('login_username') && !validate_username($values['login_username'])) {
         $form->set_error('login_username', get_string('Username is not in valid form, it can only'
            . ' contain alphanumeric characters, underscores, full stops and @ symbols', 'mahara'));
     }
@@ -313,7 +305,40 @@ function login_validate($form, $values) {
  * This function does nothing, as the logging in is handled by auth_setup
  */
 function login_submit($values) {
+    global $SESSION, $USER;
+
     // Do nothing with the form submission - auth_setup() will handle it
+    log_dbg('auth details supplied, attempting to log user in');
+    $username    = $values['login_username'];
+    $password    = $values['login_password'];
+    $institution = (isset($values['login_institution'])) ? $values['login_institution'] : 0;
+            
+    $authtype = auth_get_authtype_for_institution($institution);
+    safe_require('auth', $authtype, 'lib.php', 'require_once');
+    $authclass = 'Auth_' . ucfirst($authtype);
+    try {
+        if (call_static_method($authclass, 'authenticate_user_account', $username, $password, $institution)) {
+            log_dbg('user ' . $username . ' logged in OK');
+            $USER = call_static_method($authclass, 'get_user_info', $username);
+            $SESSION->login($USER);
+            $USER->logout_time = $SESSION->get('logout_time');
+            //redirect('');
+            //return $USER;
+        }
+        else {
+            // Login attempt failed
+            log_dbg('login attempt FAILED');
+            $SESSION->add_err_msg(get_string('loginfailed', 'mahara'));
+            //auth_draw_login_page();
+            //exit;
+        }
+    }
+    catch (AuthUnknownUserException $e) {
+        log_dbg('unknown user ' . $username);
+        $SESSION->add_err_msg(get_string('loginfailed', 'mahara'));
+        //auth_draw_login_page();
+        //exit;
+    }
 }
 
 // handles form submission when an admin options form is submitted
