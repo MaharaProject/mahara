@@ -798,6 +798,7 @@ function update_record($table, $dataobject, $where=null) {
 
     if (empty($where) && !isset($dataobject->id) ) { 
         // nothing to put in the where clause and we don't want to update everything
+        // @todo please make a proper message here.
         throw new DatalibException('reeeeowwww! hhhssssssss');
     }
 
