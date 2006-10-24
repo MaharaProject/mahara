@@ -14,6 +14,15 @@
             {/if}   
             {foreach from=$HEADERS item=header}{$header}{/foreach}
         {/strip}
+        <style type="text/css">{literal}
+        .required label { color: orange; }
+        .help { font-size: smaller; vertical-align: sup; }
+        .description { font-size: smaller; font-style: italic; }
+        .error { color: red; }
+        .errmsg { color: red; font-size: smaller; }
+        label { vertical-align: top; }
+        {/literal}
+        </style>
     </head>
     <body>
     {insert name="messages"}
