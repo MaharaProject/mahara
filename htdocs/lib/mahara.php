@@ -187,7 +187,6 @@ function upgrade_plugin($upgrade) {
     $db->StartTrans();
 
     if (!empty($upgrade->install)) {
-        // @todo add to installed_artefacts
         if (is_readable($location . 'install.xml')) {
             $status = install_from_xmldb_file($location . 'install.xml');
         }
@@ -196,13 +195,15 @@ function upgrade_plugin($upgrade) {
         }
     }
     else {
-        require_once($location . 'upgrade.php');
-        // @todo check file exists first - reasonable for it not to have 
-        // db tables at all. should still insert version number and cron etc
-        $function = 'xmldb_' . $plugintype . '_' . $pluginname . '_upgrade';
-        $status = $function($upgrade->from);
+        if (is_readable($location .  'upgrade.php')) {
+            require_once($location . 'upgrade.php');
+            $function = 'xmldb_' . $plugintype . '_' . $pluginname . '_upgrade';
+            $status = $function($upgrade->from);
+        }
+        else {
+            $status = true;
+        }
     }
-    
     if (!$status || $db->HasFailedTrans()) {
         $db->CompleteTrans();
         throw new DatalibException("Failed to upgrade $upgrade->name");
@@ -221,7 +222,17 @@ function upgrade_plugin($upgrade) {
         update_record($installtable, $installed, 'name');
     }
 
-    // @todo here is where plugins register events and set their crons up
+    // postinst stuff...
+    safe_require($plugintype, $pluginname, 'lib.php');
+    $pcname = 'Plugin' . ucfirst($plugintype) . ucfirst($pluginname);
+
+    $crons = call_static_method($pcname, 'get_cron');
+    // @todo save cronjobs.
+    
+    $events = call_static_method($pcname, 'get_event_subscriptions');
+    // @todo save event subscriptions
+
+    call_static_method($pcname,'postinst');
     
     if ($db->HasFailedTrans()) {
         $status = false;
@@ -757,5 +768,24 @@ function xmldb_dbg($message) {
     log_warn($message);
 }
 define('DEBUG_DEVELOPER', 'whocares');
+
+/** 
+ * Base class for all plugintypes.
+ * @abstract
+ */
+abstract class Plugin {
+    
+    public static function get_cron() {
+        return array();
+    }
+
+    public static function get_event_subscriptions() {
+        return array();
+    }
+
+    public static function postinst() {
+        return true;
+    }
+}
 
 ?>
