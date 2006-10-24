@@ -64,7 +64,6 @@ function form($data) {
     // TODO:
     // 
     //  - more form element types (inc. types like autocomplete and date picker and wyswiyg)
-    //  - remove the # prefix - unnecessary
     //  - only truly supports "post" due to use of $_POST - should put the value in #sent
     //    or similar so it can be accessed
     //  - for elements like <select>, detect if an invalid option is submitted
@@ -94,6 +93,7 @@ class Form {
     private $action = '';
     private $tabindex = 1;
     private $data = array();
+    private $renderer = 'div';
     private $fileupload = false; 
 
     public static function process($data) {
@@ -101,6 +101,11 @@ class Form {
         return $form->build();
     }
 
+    /**
+     * Sets the attributes of the form according to the passed data, performing
+     * validation on the way. If the form is submitted, this checks and processes
+     * the form.
+     */
     public function __construct($data) {
         if (!isset($data['name']) || !preg_match('/^[a-z_][a-z0-9_]*$/', $data['name'])) {
             throw new FormException('Forms must have a name, and that name must be valid (validity test: could you give a PHP function the name?)');
@@ -181,7 +186,8 @@ class Form {
         }
 
         // Check if the form was submitted
-        if (isset($_POST['form_' . $this->name])) {
+        $global = ($this->method == 'get') ? $_GET: $_POST;
+        if (isset($global['form_' . $this->name] )) {
             // Get the values that were submitted
             $values = $this->get_submitted_values();
             // Perform general validation first
@@ -205,6 +211,14 @@ class Form {
                 }
             }
         }
+    }
+
+    function get_name() {
+        return $this->name;
+    }
+
+    function get_renderer() {
+        return $this->renderer;
     }
 
     /**
@@ -234,11 +248,12 @@ class Form {
      */
     public function get_value($element) {
         // @todo consult $this->method to see whether to get from $_POST or $_GET
+        $global = ($this->method == 'get') ? $_GET : $_POST;
         if (isset($element['value'])) {
             return $element['value'];
         }
-        else if (isset($_POST[$element['name']]) && $element['type'] != 'submit') {
-            return $_POST[$element['name']];
+        else if (isset($global[$element['name']]) && $element['type'] != 'submit') {
+            return $global[$element['name']];
         }
         else if (isset($element['defaultvalue'])) {
             return $element['defaultvalue'];
@@ -275,8 +290,8 @@ class Form {
             $elementnames[] = $element['name'];
         }
 
-        // @todo inspect $this->method for the array to use
-        foreach ($_POST as $key => $value) {
+        $global = ($this->method == 'get') ? $_GET : $_POST;
+        foreach ($global as $key => $value) {
             if (in_array($key, $elementnames)) {
                 $result[$key] = $value;
             }
@@ -290,24 +305,22 @@ class Form {
      */
     private function validate($values) {
         foreach ($this->get_elements() as $element) {
-            if (!empty($element['required']) && (!isset($values[$element['name']]) || $values[$element['name']] == '')) {
+            if (!empty($element['rules']['required']) && (!isset($values[$element['name']]) || $values[$element['name']] == '')) {
                 $this->set_error($element['name'], get_string('This field is required', 'mahara'));
             }
-            if (!empty($element['minlength'])
-                && (
-                    !isset($values[$element['name']])
-                    || strlen($values[$element['name']]) < intval($element['minlength'])
-            )) {
-                $this->set_error($element['name'], get_string('You must put a minimum of '
-                    . intval($element['minlength']) . ' characters in this field', 'mahara'));
+            if (!empty($element['rules']['minlength'])) {
+                $minlength = intval($element['rules']['minlength']);
+                if (!isset($values[$element['name']]) || strlen($values[$element['name']]) < $minlength) {
+                    $this->set_error($element['name'], get_string('You must put a minimum of '
+                        . $minlength . ' characters in this field'));
+                }
             }
-            if (!empty($element['maxlength'])
-                && (
-                    !isset($values[$element['name']])
-                    || strlen($values[$element['name']]) > intval($element['maxlength'])
-            )) {
-                $this->set_error($element['name'], get_string('You must put a maximum of '
-                    . intval($element['maxlength']) . ' characters in this field', 'mahara'));
+            if (!empty($element['rules']['maxlength'])) {
+                $maxlength = intval($element['rules']['maxlength']);
+                if (!isset($values[$element['name']]) || strlen($values[$element['name']]) > $maxlength) {
+                    $this->set_error($element['name'], get_string('You must put a maximum of '
+                        . $maxlength . ' characters in this field'));
+                }
             }
         }
     }
@@ -332,6 +345,27 @@ class Form {
                 }
             }
         }
+    }
+
+    /**
+     * Returns whether a field has an error marked on it
+     *
+     * behaviour undefined for a fieldset - I wonder if it should be smarter?
+     */
+    public function get_error($name) {
+        foreach ($this->elements as $element) {
+            if ($element['type'] == 'fieldset') {
+                foreach ($element['elements'] as $subelement) {
+                    if ($subelement['name'] == $name) {
+                        return isset($subelement['error']);
+                    }
+                }
+            }
+            else if ($element['name'] == $name) {
+                return isset($element['error']);
+            }
+        }
+        return false;
     }
 
     /**
@@ -364,7 +398,7 @@ class Form {
         if (isset($element['class'])) {
             $classes[] = $element['class'];
         }
-        if (!empty($element['required'])) {
+        if (!empty($element['rules']['required'])) {
             $classes[] = 'required';
         }
         if (!empty($element['error'])) {
@@ -412,6 +446,20 @@ class Form {
  *   - title
  */
 function form_render_element($element, $form) {
+    if ($renderer = $form->get_renderer()) {
+        $rendererfunction = 'form_renderer_' . $renderer;
+        if (!function_exists($rendererfunction)) {
+            @include('form/renderers/' . $renderer . '.php');
+            if (!function_exists($rendererfunction)) {
+                throw new FormException('No such form renderer: "' . $renderer . '"');
+            }
+        }
+    }
+    else {
+        throw new FormException('No form renderer specified for form "' . $form->get_name() . '"');
+    }
+
+    // Render the element, so the renderer doesn't have to deal with it
     $function = 'form_render_' . $element['type'];
     if (!function_exists($function)) {
         // Attempt to include the relevant file
@@ -424,137 +472,12 @@ function form_render_element($element, $form) {
     $element['id']    = Form::make_id($element);
     $element['class'] = Form::make_class($element);
 
-    $result = '';
-    if (isset($element['prefix'])) {
-        $result .= $element['prefix'];
-    }
+    // Prepare the prefix and suffix
+    $prefix = (isset($element['prefix'])) ? $element['prefix'] : '';
+    $suffix = (isset($element['suffix'])) ? $element['suffix'] : '';
 
-    $result .= '<div';
-    // Set the class of the enclosing <div> to match that of the element
-    if ($element['class']) {
-        $result .= ' class="' . $element['class'] . '"';
-    }
-    // For debugging only
-    if (isset($element['error'])) {
-        $result .= ' style="color:red;"';
-    }
-    $result .= '>';
-
-    if (isset($element['title']) && $element['type'] != 'fieldset') {
-        $result .= '<label for="' . $element['id'] . '">' . hsc($element['title']) . '</label>';
-    }
-
-    // Build the actual form widget
-    $result .= $function($element, $form);
-
-    // Contextual help
-    if (isset($element['help'])) {
-        $result .= ' <span class="help" style="font-size: smaller;"><a href="#" title="' . hsc($element['help']) . '">?</a></span>';
-    }
-
-    // Description - optional description of the element, or other note that should be visible
-    // on the form itself (without the user having to hover over contextual help 
-    if (isset($element['description'])) {
-        $result .= '<div class="description" style="font-size: smaller;"> ' . hsc($element['description']) . "</div>";
-    }
-
-    if (isset($element['error'])) {
-        $result .= '<div class="errmsg" style="font-size: smaller;">' . hsc($element['error']) . '</div>';
-    }
-
-    $result .= '</div>';
-    if (isset($element['suffix'])) {
-        $result .= $element['suffix'];
-    }
-    $result .= "\n";
-    return $result;
+    return $prefix . $rendererfunction($function($element, $form), $element) . $suffix;
 }
-
-
-
-function form_render_select($element) {
-    if (!empty($element['#multiple'])) {
-        $element['#name'] .= '[]';
-    }
-    $result = '<select'
-        . form_element_attributes($element)
-        . (!empty($element['#multiple']) ? ' multiple="multiple"' : '')
-        . ">\n";
-    if (!is_array($element['#options']) || count($element['#options']) < 1) {
-        $result .= "\t<option></option>\n";
-        log_warn('Select elements should have at least one option');
-    }
-
-    if (empty($element['#multiple'])) {
-        $values = array(form_get_value($element)); 
-    }
-    else {
-        if (isset($element['#value'])) {
-            $values = (array) $element['#value'];
-        }
-        else if (isset($_POST[$element['#name']])) {
-            $values = (array) $_POST[$element['#name']];
-        }
-        else if (isset($element['#defaultvalue'])) {
-            $values = (array) $element['#defaultvalue'];
-        }
-        else {
-            $values = array();
-        }
-    }
-    foreach ($element['#options'] as $key => $value) {
-        if (in_array($key, $values)) {
-            $selected = ' selected="selected"';
-        }
-        else {
-            $selected = '';
-        }
-        $result .= "\t<option value=\"" . hsc($key) . "\"$selected>" . hsc($value) . "</option>\n";
-    }
-
-    $result .= "</select>\n";
-    return $result;
-}
-
-function form_render_textarea($element) {
-    $rows = $cols = $style = '';
-    if (isset($element['#height'])) {
-        $style .= 'height:' . $element['#height'] . ';';
-        $rows   = (intval($element['#height'] > 0)) ? ceil(intval($element['#height']) / 10) : 1;
-    }
-    elseif (isset($element['#rows'])) {
-        $rows = $element['#rows'];
-    }
-    else {
-        log_warn('No value for rows or height specified for textarea ' . $element['#name']);
-    }
-
-    if (isset($element['#width'])) {
-        $style .= 'width:' . $element['#width'] . ';';
-        $cols   = (intval($element['#width'] > 0)) ? ceil(intval($element['#width']) / 10) : 1;
-    }
-    elseif (isset($element['#cols'])) {
-        $cols = $element['#cols'];
-    }
-    else {
-        log_warn('No value for cols or width specified for textarea ' . $element['#name']);
-    }
-    $element['#style'] = (isset($element['#style'])) ? $style . $element['#style'] : $style;
-    return '<textarea'
-        . (($rows) ? ' rows="' . $rows . '"' : '')
-        . (($cols) ? ' cols="' . $cols . '"' : '')
-        . form_element_attributes($element, array('maxlength', 'size'))
-        . '>' . hsc(form_get_value($element)) . '</textarea>';
-}
-
-function form_render_file($element) {
-    return '<input type="file"'
-        . form_element_attributes($element) . '>';
-}
-
-
-
-
 
 
 function hsc ($text) { return htmlspecialchars($text, ENT_COMPAT, 'UTF-8'); }
