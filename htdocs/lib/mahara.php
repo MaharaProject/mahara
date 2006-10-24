@@ -226,8 +226,34 @@ function upgrade_plugin($upgrade) {
     safe_require($plugintype, $pluginname, 'lib.php');
     $pcname = 'Plugin' . ucfirst($plugintype) . ucfirst($pluginname);
 
-    $crons = call_static_method($pcname, 'get_cron');
-    // @todo save cronjobs.
+    if ($crons = call_static_method($pcname, 'get_cron')) {
+        foreach ($crons as $cron) {
+            $cron = (object)$cron;
+            // @todo maybe these steps should break stuff rather than just complaining.
+            if (empty($cron->function)) {
+                log_warn("cron for $pcname didn't supply function name");
+                continue;
+            }
+            if (!is_callable(array($pcname,$cron->function))) {
+                log_warn("cron $cron->function for $pcname existed but wasn't callable");
+                continue;
+            }
+            $new = false;
+            if (!empty($upgrade->install)) {
+                $new = true;
+            }
+            else if (!record_exists('cron_' . $plugintype, 'plugin', $pluginname, 'function', $cron->function)) {
+                $new = true;
+            }
+            $cron->plugin = $pluginname;
+            if (!empty($new)) {
+                insert_record('cron_' . $plugintype, $cron);
+            }
+            else {
+                update_record('cron_' . $plugintype, $cron, array('plugin', 'name'));
+            }
+        }
+    }
     
     $events = call_static_method($pcname, 'get_event_subscriptions');
     // @todo save event subscriptions

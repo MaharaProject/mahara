@@ -21,7 +21,7 @@
                 <FIELD NAME="plugin" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" ENUM="false" PREVIOUS="name" />
             </FIELDS>
             <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="name" COMMENT="Primary key for installed artefact types" NEXT="pluginfk" />
+                <KEY NAME="primary" TYPE="primary" FIELDS="name,plugin" COMMENT="Primary key for installed artefact types" NEXT="pluginfk" />
                 <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="installed_artefact" REFFIELDS="name" PREVIOUS="primary" />
             </KEYS>
         </TABLE>
@@ -82,7 +82,7 @@
                 <INDEX NAME="usernameuk" UNIQUE="true" FIELDS="LOWER(username)"/>
             </INDEXES>
         </TABLE>
-        <TABLE NAME="artefact" COMMENT="Basic information common to all artefact plugin instances" PREVIOUS="usr">
+        <TABLE NAME="artefact" COMMENT="Basic information common to all artefact plugin instances" PREVIOUS="usr" NEXT="cron">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="false" SEQUENCE="true" ENUM="false" NEXT="type" />
                 <FIELD NAME="type" TYPE="char" LENGTH="255" NOTNULL="true" ENUM="false" PREVIOUS="id" NEXT="container" />
@@ -99,6 +99,53 @@
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" NEXT="pluginfk" />
                 <KEY NAME="pluginfk" TYPE="foreign" FIELDS="type" REFTABLE="installed_artefact" REFFIELDS="name" PREVIOUS="primary" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="cron" COMMENT="cron entries for the core" PREVIOUS="artefact" NEXT="cron_artefact">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="false" SEQUENCE="true" ENUM="false" NEXT="function" />
+                <FIELD NAME="function" TYPE="char" LENGTH="255" NOTNULL="true" PREVIOUS="id" NEXT="nextrun" />
+                <FIELD NAME="nextrun" TYPE="datetime" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" ENUM="false" PREVIOUS="function" NEXT="minute" />
+                <FIELD NAME="minute" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*" PREVIOUS="nextrun" NEXT="hour" />
+                <FIELD NAME="hour" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*" PREVIOUS="minute" NEXT="day" />
+                <FIELD NAME="day" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*" PREVIOUS="hour" NEXT="month" />
+                <FIELD NAME="month" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*" PREVIOUS="day" NEXT="dayofweek" />
+                <FIELD NAME="dayofweek" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*" PREVIOUS="month" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="function" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="cron_artefact" COMMENT="cron entries for the artefact plugins" PREVIOUS="cron" NEXT="cron_auth">
+            <FIELDS>
+                <FIELD NAME="plugin" TYPE="char" LENGTH="255" NOTNULL="true" NEXT="function" />
+                <FIELD NAME="function" TYPE="char" LENGTH="255" NOTNULL="true" PREVIOUS="plugin" NEXT="nextrun" />
+                <FIELD NAME="nextrun" TYPE="datetime" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" ENUM="false" PREVIOUS="function" NEXT="minute" />
+                <FIELD NAME="minute" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*" PREVIOUS="nextrun" NEXT="hour" />
+                <FIELD NAME="hour" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*" PREVIOUS="minute" NEXT="day" />
+                <FIELD NAME="day" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*" PREVIOUS="hour" NEXT="month" />
+                <FIELD NAME="month" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*" PREVIOUS="day" NEXT="dayofweek" />
+                <FIELD NAME="dayofweek" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*" PREVIOUS="month" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="plugin,function" NEXT="pluginfk" />
+                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="installed_artefact" REFFIELDS="name" PREVIOUS="primary" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="cron_auth" COMMENT="cron entries for the auth plugins" PREVIOUS="cron_artefact">
+            <FIELDS>
+                <FIELD NAME="plugin" TYPE="char" LENGTH="255" NOTNULL="true" NEXT="function" />
+                <FIELD NAME="function" TYPE="char" LENGTH="255" NOTNULL="true" PREVIOUS="plugin" NEXT="nextrun" />
+                <FIELD NAME="nextrun" TYPE="datetime" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" ENUM="false" PREVIOUS="function" NEXT="minute" />
+                <FIELD NAME="minute" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*" PREVIOUS="nextrun" NEXT="hour" />
+                <FIELD NAME="hour" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*" PREVIOUS="minute" NEXT="day" />
+                <FIELD NAME="day" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*" PREVIOUS="hour" NEXT="month" />
+                <FIELD NAME="month" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*" PREVIOUS="day" NEXT="dayofweek" />
+                <FIELD NAME="dayofweek" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*" PREVIOUS="month" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="plugin,function" NEXT="pluginfk" />
+                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="installed_auth" REFFIELDS="name" PREVIOUS="primary" />
             </KEYS>
         </TABLE>
     </TABLES>
