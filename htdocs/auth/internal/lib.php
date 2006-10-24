@@ -26,7 +26,7 @@
 
 defined('INTERNAL') || die();
 
-class Auth_Internal extends Auth {
+class AuthInternal extends Auth {
 
     /**
      * Attempt to authenticate user
@@ -38,7 +38,7 @@ class Auth_Internal extends Auth {
             throw new AuthUnknownUserException("\"$username\" is not known to Auth_Internal");
         }
 
-        return Auth_Internal::validate_password($password, $user->password, $user->salt);
+        return self::validate_password($password, $user->password, $user->salt);
     }
 
     /**
@@ -87,6 +87,12 @@ class Auth_Internal extends Auth {
         $sha1sent = Auth_Internal::encrypt_password($theysent, $salt);
         return $sha1sent == $wehave;
     }
+}
+
+/**
+ * Plugin configuration class. Nothing special required for this plugin...
+ */
+class PluginAuthInternal extends Plugin {
 }
 
 ?>

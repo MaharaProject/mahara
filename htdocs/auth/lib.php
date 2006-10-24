@@ -318,7 +318,7 @@ function login_submit($values) {
             
     $authtype = auth_get_authtype_for_institution($institution);
     safe_require('auth', $authtype, 'lib.php', 'require_once');
-    $authclass = 'Auth_' . ucfirst($authtype);
+    $authclass = 'Auth' . ucfirst($authtype);
     try {
         if (call_static_method($authclass, 'authenticate_user_account', $username, $password, $institution)) {
             log_dbg('user ' . $username . ' logged in OK');
