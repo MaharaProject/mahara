@@ -432,6 +432,8 @@ class XMLDBTable extends XMLDBObject {
      */
     function arr2XMLDBTable($xmlarr) {
 
+        global $CFG;
+
         $result = true;
 
     /// Debug the table
@@ -449,6 +451,8 @@ class XMLDBTable extends XMLDBObject {
         }
         if (isset($xmlarr['@']['COMMENT'])) {
             $this->comment = trim($xmlarr['@']['COMMENT']);
+        } else if (!empty($CFG->xmldbdisablecommentchecking)) {
+            $this->comment = '';
         } else {
             $this->errormsg = 'Missing COMMENT attribute';
             xmldb_dbg($this->errormsg);
