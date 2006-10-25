@@ -98,7 +98,7 @@
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" NEXT="pluginfk" />
-                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="type" REFTABLE="installed_artefact" REFFIELDS="name" PREVIOUS="primary" />
+                <KEY NAME="typefk" TYPE="foreign" FIELDS="type" REFTABLE="installed_artefact_type" REFFIELDS="name" PREVIOUS="primary" />
             </KEYS>
         </TABLE>
         <TABLE NAME="cron" COMMENT="cron entries for the core" PREVIOUS="artefact" NEXT="cron_artefact">
