@@ -277,7 +277,7 @@ class XMLDBObject {
     function orderElements($arr) {
         global $CFG;
         $result = true;
-        if (!empty($CFG->disablenextprevchecking)) {
+        if (!empty($CFG->xmldbdisablenextprevchecking)) {
             return $arr;
         }
     /// Create a new array
