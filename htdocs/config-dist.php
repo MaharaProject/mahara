@@ -78,4 +78,8 @@ $cfg->log_environ_targets = LOG_TARGET_SCREEN | LOG_TARGET_ERRORLOG;
 // but probably only warnings are useful on a live site.
 $cfg->log_backtrace_levels = LOG_LEVEL_WARN | LOG_LEVEL_ENVIRON;
 
+// xmldb stuff
+$CFG->xmldbdisablenextprevchecking = true;
+$CFG->xmldbdisablecommentchecking = true;
+
 ?>
