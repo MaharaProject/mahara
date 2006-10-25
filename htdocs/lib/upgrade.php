@@ -111,7 +111,7 @@ function check_upgrades($name = null) {
         // definitely fail
         $pluginversion = 0;
         if (!$installing) {
-            if ($installed = get_record('installed_' . $plugintype, 'name', $pluginname)) {
+            if ($installed = get_record($plugintype . '_installed', 'name', $pluginname)) {
                 $pluginversion = $installed->version;
                 $pluginrelease =  $installed->release;
             }
@@ -219,7 +219,7 @@ function upgrade_plugin($upgrade) {
     $installed->name = $pluginname;
     $installed->version = $upgrade->to;
     $installed->release = $upgrade->torelease;
-    $installtable = 'installed_' . $plugintype;
+    $installtable = $plugintype . '_installed';
 
     if (!empty($upgrade->install)) {
         insert_record($installtable,$installed);
@@ -244,18 +244,19 @@ function upgrade_plugin($upgrade) {
                 throw new InstallationException("cron $cron->callfunction for $pcname supplied but wasn't callable");
             }
             $new = false;
+            $table = $plugintype . '_cron';
             if (!empty($upgrade->install)) {
                 $new = true;
             }
-            else if (!record_exists('cron_' . $plugintype, 'plugin', $pluginname, 'function', $cron->callfunction)) {
+            else if (!record_exists($table, 'plugin', $pluginname, 'function', $cron->callfunction)) {
                 $new = true;
             }
             $cron->plugin = $pluginname;
             if (!empty($new)) {
-                insert_record('cron_' . $plugintype, $cron);
+                insert_record($table, $cron);
             }
             else {
-                update_record('cron_' . $plugintype, $cron, array('plugin', 'name'));
+                update_record($table, $cron, array('plugin', 'name'));
             }
         }
     }
@@ -277,15 +278,16 @@ function upgrade_plugin($upgrade) {
                 throw new InstallationException("event $event->event with function $event->callfunction for $pcname supplied but wasn't callable");
             }
             $exists = false;
+            $table = $plugtype . '_event_subscription';
             if (empty($upgrade->install)) {
-                $exists = record_exists('event_subscription_' . $plugintype, 'plugin' , $pluginname, 'event', $event->event());
+                $exists = record_exists($table, 'plugin' , $pluginname, 'event', $event->event());
             }
             $event->plugin = $pluginname;
             if (empty($exists)) {
-                insert_record('event_subscription_' . $plugintype, $event);
+                insert_record($table, $event);
             }
             else {
-                update_record('event_subscription_' . $plugintype, $event, array('id', $exists->id));
+                update_record($table, $event, array('id', $exists->id));
             }
         }
     }

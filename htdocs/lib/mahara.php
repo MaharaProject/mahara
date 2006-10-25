@@ -342,7 +342,7 @@ function get_config_plugin($plugintype, $pluginname, $key) {
     // @todo: an optimisation might be to get all fields related to the plugin instead, as
     // it may be quite likely that if one config item is requested for a plugin another
     // might be.
-    if (!$value = get_field('config_'.$plugintype,'value','plugin',$pluginname,'field',$key)) {
+    if (!$value = get_field($plugintype . '_config', 'value', 'plugin', $pluginname, 'field', $key)) {
         $value = null;
     }
 
@@ -352,7 +352,7 @@ function get_config_plugin($plugintype, $pluginname, $key) {
 
 function set_config_plugin($plugintype, $pluginname, $key, $value) {
     global $CFG;
-    $table = 'config_' . $plugintype;
+    $table = $plugintype . '_config';
 
     if (false !== get_field($table, 'value', 'plugin', $pluginname, 'field', $key)) {
         //if (set_field($table, 'value', $key, 'plugin', $pluginname, 'field', $value)) {

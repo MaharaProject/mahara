@@ -4,7 +4,7 @@
     xsi:noNamespaceSchemaLocation="../../lib/xmldb/xmldb.xsd"
 >
     <TABLES>
-        <TABLE NAME="installed_artefact">
+        <TABLE NAME="artefact_installed">
             <FIELDS> 
                 <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" />
                 <FIELD NAME="version" TYPE="int" LENGTH="10" NOTNULL="true" />
@@ -15,7 +15,7 @@
                 <KEY NAME="primary" TYPE="primary" FIELDS="name" />
             </KEYS>
         </TABLE>
-        <TABLE NAME="installed_artefact_type">
+        <TABLE NAME="artefact_installed_type">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
                 <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" />
@@ -24,10 +24,10 @@
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
                 <KEY NAME="nameuk" TYPE="unique" FIELDS="name,plugin"  />
-                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="installed_artefact" REFFIELDS="name" />
+                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="artefact_installed" REFFIELDS="name" />
             </KEYS>
         </TABLE>
-        <TABLE NAME="installed_auth">
+        <TABLE NAME="auth_installed">
             <FIELDS> 
                 <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" />
                 <FIELD NAME="version" TYPE="int" LENGTH="10" NOTNULL="true" />
@@ -47,7 +47,7 @@
                 <KEY NAME="primary" TYPE="primary" FIELDS="field" />
             </KEYS>
         </TABLE>
-        <TABLE NAME="config_artefact">
+        <TABLE NAME="artefact_config">
             <FIELDS>
                 <FIELD NAME="plugin" TYPE="char" LENGTH="100" NOTNULL="true" />
                 <FIELD NAME="field" TYPE="char" LENGTH="100" NOTNULL="true" />
@@ -55,10 +55,10 @@
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="plugin,field" />
-                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="installed_artefact" REFFIELDS="name" />
+                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="artefact_installed" REFFIELDS="name" />
             </KEYS>
         </TABLE>
-        <TABLE NAME="config_auth">
+        <TABLE NAME="auth_config">
             <FIELDS>
                 <FIELD NAME="plugin" TYPE="char" LENGTH="100" NOTNULL="true" />
                 <FIELD NAME="field" TYPE="char" LENGTH="100" NOTNULL="true" />
@@ -66,7 +66,7 @@
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="plugin,field" />
-                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="installed_auth" REFFIELDS="name" />
+                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="auth_installed" REFFIELDS="name" />
             </KEYS>
         </TABLE>
         <TABLE NAME="usr">
@@ -100,7 +100,7 @@
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
-                <KEY NAME="typefk" TYPE="foreign" FIELDS="artefacttype" REFTABLE="installed_artefact_type" REFFIELDS="id"  />
+                <KEY NAME="typefk" TYPE="foreign" FIELDS="artefacttype" REFTABLE="artefact_installed_type" REFFIELDS="id"  />
                 <KEY NAME="parentfk" TYPE="foreign" FIELDS="parentid" REFTABLE="artefact" REFFIELDS="id" />
             </KEYS>
         </TABLE>
@@ -119,7 +119,7 @@
                 <KEY NAME="primary" TYPE="primary" FIELDS="callfunction" />
             </KEYS>
         </TABLE>
-        <TABLE NAME="cron_artefact">
+        <TABLE NAME="artefact_cron">
             <FIELDS>
                 <FIELD NAME="plugin" TYPE="char" LENGTH="255" NOTNULL="true" />
                 <FIELD NAME="callfunction" TYPE="char" LENGTH="255" NOTNULL="true"  />
@@ -132,10 +132,10 @@
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="plugin,callfunction" />
-                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="installed_artefact" REFFIELDS="name" />
+                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="artefact_installed" REFFIELDS="name" />
             </KEYS>
         </TABLE>
-        <TABLE NAME="cron_auth">
+        <TABLE NAME="auth_cron">
             <FIELDS>
                 <FIELD NAME="plugin" TYPE="char" LENGTH="255" NOTNULL="true" />
                 <FIELD NAME="callfunction" TYPE="char" LENGTH="255" NOTNULL="true"  />
@@ -148,7 +148,7 @@
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="plugin,callfunction" />
-                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="installed_auth" REFFIELDS="name" />
+                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="auth_installed" REFFIELDS="name" />
             </KEYS>
         </TABLE>
         <TABLE NAME="event">
@@ -168,7 +168,7 @@
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
-                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="installed_artefact" REFFIELDS="name" />
+                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="artefact_installed" REFFIELDS="name" />
                 <KEY NAME="eventfk" TYPE="foreign" FIELDS="event" REFTABLE="event" REFFIELDS="name" />
                 <KEY NAME="subscruk" TYPE="unique" FIELDS="plugin,event,callfunction" />
             </KEYS>
@@ -182,7 +182,7 @@
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
-                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="installed_auth" REFFIELDS="name" />
+                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="auth_installed" REFFIELDS="name" />
                 <KEY NAME="eventfk" TYPE="foreign" FIELDS="event" REFTABLE="event" REFFIELDS="name" />
                 <KEY NAME="subscruk" TYPE="unique" FIELDS="plugin,event,callfunction" />
             </KEYS>

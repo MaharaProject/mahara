@@ -45,15 +45,15 @@ class PluginArtefactInternal extends PluginArtefact {
         if (is_array($types)) {
             foreach ($types as $type) {
                 $ph[] = '?';
-                if (!record_exists('installed_artefact_type', 'plugin', $plugin, 'name', $type)) {
+                if (!record_exists('artefact_installed_type', 'plugin', $plugin, 'name', $type)) {
                     $t = new StdClass;
                     $t->name = $type;
                     $t->plugin = $plugin;
-                    insert_record('installed_artefact_type',$t);
+                    insert_record('artefact_installed_type',$t);
                 }
                 // @todo handle case that two plugins provide artefacts with the same name.
             }
-            delete_records_select('installed_artefact_type','(plugin = ? AND name NOT IN (' . implode(',', $ph) . '))',
+            delete_records_select('artefact_installed_type','(plugin = ? AND name NOT IN (' . implode(',', $ph) . '))',
                                   array_merge(array($plugin),$types));
         }
     }
