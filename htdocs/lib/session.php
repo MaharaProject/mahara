@@ -151,6 +151,9 @@ class Session {
      * @param boolean $escape Whether to HTML escape the message
      */
     public function add_ok_msg($message, $escape=true) {
+        if (empty($_SESSION)) {
+            $this->create_session();
+        }
         if ($escape) {
             $message = htmlspecialchars($message, ENT_COMPAT, 'UTF-8');
             $message = str_replace('  ', '&nbsp; ', $message);
@@ -165,6 +168,9 @@ class Session {
      * @param boolean $escape Whether to HTML escape the message
      */
     public function add_info_msg($message, $escape=true) {
+        if (empty($_SESSION)) {
+            $this->create_session();
+        }
         if ($escape) {
             $message = htmlspecialchars($message, ENT_COMPAT, 'UTF-8');
             $message = str_replace('  ', '&nbsp; ', $message);
@@ -179,6 +185,9 @@ class Session {
      * @param boolean $escape Whether to HTML escape the message
      */
     public function add_err_msg($message, $escape=true) {
+        if (empty($_SESSION)) {
+            $this->create_session();
+        }
         if ($escape) {
             $message = htmlspecialchars($message, ENT_COMPAT, 'UTF-8');
             $message = str_replace('  ', '&nbsp; ', $message);
