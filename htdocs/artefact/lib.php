@@ -180,7 +180,7 @@ abstract class ArtefactType {
             if ($children = $this->get_children_metadata()) {
                 $this->childreninstances = array();
                 foreach ($children as $child) {
-                    $classname = $child->type;
+                    $classname = $child->artefacttype;
                     $instance = new $classname($child->id, $child);
                     $this->childreninstances[] = $instance;
                 }
@@ -217,7 +217,7 @@ abstract class ArtefactType {
         if (!isset($this->parentinstance)) {
             $this->parentinstance = false;
             if ($parent = $this->get_parent_metadata()) {
-                $classname = $parent->type;
+                $classname = $parent->artefacttype;
                 $this->parentinstance = new $classname($parent->id, $parent);
             }
         }
