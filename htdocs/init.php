@@ -65,6 +65,10 @@ if (!isset($CFG->wwwroot)) {
     $CFG->wwwroot = $proto . $host . '/' . $path;
 }
 
+// xmldb stuff
+$CFG->xmldbdisablenextprevchecking = true;
+$CFG->xmldbdisablecommentchecking = true;
+
 // core libraries
 require('mahara.php');
 ensure_sanity();
