@@ -57,7 +57,10 @@ class PluginArtefactInternal extends PluginArtefact {
                                   array_merge(array($plugin),$types));
         }
     }
-    
+}
+
+class ArtefactTypeInternal extends ArtefactType {
+
 }
 
 ?>

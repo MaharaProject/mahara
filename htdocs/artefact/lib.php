@@ -17,7 +17,7 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage core
+ * @subpackage artefact
  * @author     Your Name <you@example.org>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
@@ -122,6 +122,13 @@ abstract class ArtefactType {
     protected $description;
     protected $note;
 
+    protected $viewsinstances;
+    protected $viewsmetadata;
+    protected $childreninstances;
+    protected $childrenmetadata;
+    protected $parentinstance;
+    protected $parentmetadata;
+
     /** 
      * Constructer. 
      * If an id is supplied, will query the database
@@ -130,12 +137,14 @@ abstract class ArtefactType {
      * artefact, ready to be filled up
      * @param int $id artefact.id
      */
-    public function __construct($id=0) {
+    public function __construct($id=0, $data=null) {
         if (!empty($id)) {
-            if (!$record = get_record('artefact','id',$id)) {
-                throw new ArtefactNotFoundException("Artefact with id $id not found");
+            if (empty($data)) {
+                if (!$data = get_record('artefact','id',$id)) {
+                    throw new ArtefactNotFoundException("Artefact with id $id not found");
+                }
             }
-            foreach ((array)$record as $field => $value) {
+            foreach ((array)$data as $field => $value) {
                 if (property_exists($field)) {
                     $this->{$field} = $value;
                 }
@@ -154,8 +163,28 @@ abstract class ArtefactType {
         // @todo
     }
 
+    /** 
+     * This function returns the instances 
+     * of all children of this artefact
+     * If you just want the basic info, 
+     * use {@link get_children_metadata} instead.
+     * 
+     * @return array of instances.
+     */
+
     public function get_children_instances() {
-        // @todo 
+        if (!isset($this->childreninstances)) {
+            $this->childreninstances = false;
+            if ($children = $this->get_children_metadata()) {
+                $this->childreninstances = array();
+                foreach ($children as $child) {
+                    $classname = $child->type;
+                    $instance = new $classname($child->id, $child);
+                    $this->childreninstances[] = $instance;
+                }
+            }
+        }
+        return $this->childreninstances;
     }
 
     /**
@@ -168,11 +197,29 @@ abstract class ArtefactType {
      * @return array
      */
     public function get_children_metadata() {
-        return get_records('artefact','parentid',$this->id);
+        if (!isset($this->childrenmetadata)) {
+            $this->childrenmetadata = get_records('artefact', 'parentid', $this->id);
+        }
+        return $this->childrenmetadata;
     }
-            
+
+    /**
+     * This function returns the instance relating to the parent
+     * of this object, or false if there isn't one.
+     * If you just want basic information about it,
+     * use {@link get_parent_metadata} instead.
+     *
+     * @return ArtefactType
+     */
     public function get_parent_instance() {
-        // @todo
+        if (!isset($this->parentinstance)) {
+            $this->parentinstance = false;
+            if ($parent = $this->get_parent_metadata()) {
+                $classname = $parent->type;
+                $this->parentinstance = new $classname($parent->id, $parent);
+            }
+        }
+        return $this->parentinstance;
     }
 
     /** 
