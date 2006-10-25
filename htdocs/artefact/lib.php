@@ -45,12 +45,14 @@ abstract class PluginArtefact extends Plugin {
     /** 
      * This function returns a list of classnames 
      * of artefact types this plugin provides.
+     * @abstract
      * @return array
      */
     public static abstract function get_artefact_types();
 
     /**
      * This function returns the name of the plugin.
+     * @abstract
      * @return string
      */
     public static abstract function get_plugin_name();
@@ -259,12 +261,32 @@ abstract class ArtefactType {
         return false;
     }
 
+    /**
+     * Saves any changes to the database
+     * @abstract
+     */
     public abstract function commit();
     
+    /**
+     * Deletes current instance
+     * @abstract
+     */
     public abstract function delete();
 
+    /**
+     * render instance to given format
+     * @param int $format format type (constant)
+     * @param array $options options for format
+     */
     public abstract function render($format, $options);
 
+    /**
+     * returns path to icon
+     * can be called statically but not defined so
+     * so that can be either from instance or static.
+     * @abstract 
+     * @return string path to icon (relative to docroot)
+     */
     public abstract function get_icon();
     
 
@@ -278,8 +300,16 @@ abstract class ArtefactType {
         // @todo
     }
 
+    /**
+     * returns array of formats can render to (constants)
+     * @abstract
+     */
     public static abstract function get_render_list($format);
 
+    /**
+     * returns boolean for can render to given format
+     * @abstract
+     */
     public static abstract function can_render_to($format);
 }
 
