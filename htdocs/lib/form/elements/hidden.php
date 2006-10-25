@@ -29,8 +29,17 @@ defined('INTERNAL') || die();
 /**
  * Renders a hidden element
  */
-function form_render_hidden($element, $form) {
+function form_render_hidden($element, Form $form) {
     unset($element['tabindex']);
+    $value = $form->get_value($element);
+    if (is_array($value)) {
+        $result = '';
+        foreach ($value as $k => $v) {
+            $result .= '<input type="hidden" name="' . hsc($element['name'])
+                . '[' . hsc($k) . ']" value="' . hsc($v) . "\">\n";
+        }
+        return $result;
+    }
     return '<input type="hidden"'
         . Form::element_attributes($element)
         . ' value="' . hsc($form->get_value($element)) . '">';
