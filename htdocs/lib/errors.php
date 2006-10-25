@@ -141,7 +141,7 @@ function log_message ($message, $loglevel, $escape, $file=null, $line=null, $tra
             if (is_a($SESSION, 'Session')) {
                 $SESSION->add_info_msg($htmlbacktrace, false);
             }
-            else if (get_config('installed')) {
+            else if (!function_exists('get_config') || get_config('installed')) {
                 echo $htmlbacktrace;
             }
         }
