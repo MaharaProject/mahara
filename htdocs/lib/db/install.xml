@@ -107,7 +107,7 @@
         <TABLE NAME="cron">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
-                <FIELD NAME="function" TYPE="char" LENGTH="255" NOTNULL="true"  />
+                <FIELD NAME="callfunction" TYPE="char" LENGTH="255" NOTNULL="true"  />
                 <FIELD NAME="nextrun" TYPE="datetime" NOTNULL="false"  />
                 <FIELD NAME="minute" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*"  />
                 <FIELD NAME="hour" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*"  />
@@ -116,13 +116,13 @@
                 <FIELD NAME="dayofweek" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*" />
             </FIELDS>
             <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="function" />
+                <KEY NAME="primary" TYPE="primary" FIELDS="callfunction" />
             </KEYS>
         </TABLE>
         <TABLE NAME="cron_artefact">
             <FIELDS>
                 <FIELD NAME="plugin" TYPE="char" LENGTH="255" NOTNULL="true" />
-                <FIELD NAME="function" TYPE="char" LENGTH="255" NOTNULL="true"  />
+                <FIELD NAME="callfunction" TYPE="char" LENGTH="255" NOTNULL="true"  />
                 <FIELD NAME="nextrun" TYPE="datetime" NOTNULL="false"  />
                 <FIELD NAME="minute" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*"  />
                 <FIELD NAME="hour" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*"  />
@@ -131,14 +131,14 @@
                 <FIELD NAME="dayofweek" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*" />
             </FIELDS>
             <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="plugin,function" />
+                <KEY NAME="primary" TYPE="primary" FIELDS="plugin,callfunction" />
                 <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="installed_artefact" REFFIELDS="name" />
             </KEYS>
         </TABLE>
         <TABLE NAME="cron_auth">
             <FIELDS>
                 <FIELD NAME="plugin" TYPE="char" LENGTH="255" NOTNULL="true" />
-                <FIELD NAME="function" TYPE="char" LENGTH="255" NOTNULL="true"  />
+                <FIELD NAME="callfunction" TYPE="char" LENGTH="255" NOTNULL="true"  />
                 <FIELD NAME="nextrun" TYPE="datetime" NOTNULL="false"  />
                 <FIELD NAME="minute" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*"  />
                 <FIELD NAME="hour" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*"  />
@@ -147,8 +147,44 @@
                 <FIELD NAME="dayofweek" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*" />
             </FIELDS>
             <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="plugin,function" />
+                <KEY NAME="primary" TYPE="primary" FIELDS="plugin,callfunction" />
                 <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="installed_auth" REFFIELDS="name" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="event">
+            <FIELDS>
+                <FIELD NAME="name" TYPE="char" LENGTH="50" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="name" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="event_subscription_artefact">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" SEQUENCE="true"  NOTNULL="true" />
+                <FIELD NAME="plugin" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="event" TYPE="char" LENGTH="50" NOTNULL="true" />
+                <FIELD NAME="callfunction" TYPE="char" LENGTH="255" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="installed_artefact" REFFIELDS="name" />
+                <KEY NAME="eventfk" TYPE="foreign" FIELDS="event" REFTABLE="event" REFFIELDS="name" />
+                <KEY NAME="subscruk" TYPE="unique" FIELDS="plugin,event,callfunction" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="event_subscription_auth">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" SEQUENCE="true"  NOTNULL="true" />
+                <FIELD NAME="plugin" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="event" TYPE="char" LENGTH="50" NOTNULL="true" />
+                <FIELD NAME="callfunction" TYPE="char" LENGTH="255" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="installed_auth" REFFIELDS="name" />
+                <KEY NAME="eventfk" TYPE="foreign" FIELDS="event" REFTABLE="event" REFFIELDS="name" />
+                <KEY NAME="subscruk" TYPE="unique" FIELDS="plugin,event,callfunction" />
             </KEYS>
         </TABLE>
     </TABLES>
@@ -162,6 +198,14 @@
             <SENTENCES>
                 <SENTENCE TEXT="(username, password, password_change) VALUES ('root', 'mahara', 1)"/>
             </SENTENCES>
+        </STATEMENT>
+        <STATEMENT NAME="insert events" TYPE="insert" TABLE="event">
+            <SENTENCES>
+                <SENTENCE TEXT="(name) VALUES ('createuser')" />
+                <SENTENCE TEXT="(name) VALUES ('updateuser')" />
+                <SENTENCE TEXT="(name) VALUES ('suspenduser')" />
+                <SENTENCE TEXT="(name) VALUES ('deleteuser')" />
+            </SENTENCE>
         </STATEMENT>
     </STATEMENTS>
 </XMLDB>
