@@ -542,6 +542,27 @@ function redirect($location) {
     exit;
 }
 
+function handle_event($event) {
+    if (!$e = get_record('event','name',$event)) {
+        throw new Exception("Invalid event");
+    }
+    $plugintypes = plugin_types();
+    foreach ($plugintypes as $name) {
+        if ($subs = get_records('event_subscription_' . $name, 'event', $event)) {
+            foreach ($subs as $sub) {
+                $classname = 'Plugin' . ucfirst($name) . ucfirst($sub->plugin);
+                try {
+                    call_static_method($classname, $sub->callfunction);
+                }
+                catch (Exception $e) {
+                    log_warn("Event $event caused an exception from plugin $classname "
+                             . "with function $sub->callfunction. Continuing with event handlers");
+                }
+            }
+        }
+    }
+}
+
 /**
  * Used by XMLDB
  */
