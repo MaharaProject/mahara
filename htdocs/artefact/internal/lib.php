@@ -59,8 +59,7 @@ class PluginArtefactInternal extends PluginArtefact {
     }
 }
 
-class ArtefactTypeInternal extends ArtefactType {
-
-}
+// @todo write ArtefactType$name classes for each of the 
+// types returned by get_artefact_types 
 
 ?>
