@@ -282,7 +282,8 @@ function auth_get_login_form() {
         'name'     => 'login',
         'method'   => 'post',
         'action'   => $action,
-        'elements' => $elements
+        'elements' => $elements,
+        'iscancellable' => false
     );
 
     return $form;
