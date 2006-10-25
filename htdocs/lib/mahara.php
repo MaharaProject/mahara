@@ -229,20 +229,19 @@ function upgrade_plugin($upgrade) {
     if ($crons = call_static_method($pcname, 'get_cron')) {
         foreach ($crons as $cron) {
             $cron = (object)$cron;
-            // @todo maybe these steps should break stuff rather than just complaining.
-            if (empty($cron->function)) {
-                log_warn("cron for $pcname didn't supply function name");
-                continue;
+            if (empty($cron->callfunction)) {
+                $db->RollbackTrans();
+                throw new InstallationException("cron for $pcname didn't supply function name");
             }
-            if (!is_callable(array($pcname,$cron->function))) {
-                log_warn("cron $cron->function for $pcname existed but wasn't callable");
-                continue;
+            if (!is_callable(array($pcname, $cron->callfunction))) {
+                $db->RollbackTrans();
+                throw new InstallationException("cron $cron->callfunction for $pcname supplied but wasn't callable");
             }
             $new = false;
             if (!empty($upgrade->install)) {
                 $new = true;
             }
-            else if (!record_exists('cron_' . $plugintype, 'plugin', $pluginname, 'function', $cron->function)) {
+            else if (!record_exists('cron_' . $plugintype, 'plugin', $pluginname, 'function', $cron->callfunction)) {
                 $new = true;
             }
             $cron->plugin = $pluginname;
@@ -255,10 +254,37 @@ function upgrade_plugin($upgrade) {
         }
     }
     
-    $events = call_static_method($pcname, 'get_event_subscriptions');
-    // @todo save event subscriptions
+    if ($events = call_static_method($pcname, 'get_event_subscriptions')) {
+        foreach ($events as $event) {
+            $event = (object)$event;
 
-    call_static_method($pcname,'postinst');
+            if (!record_exists('event', 'name', $event->event)) {
+                $db->RollbackTrans();
+                throw new InstallationException("event $event->event for $pcname doesn't exist!");
+            }
+            if (empty($event->callfunction)) {
+                $db->RollbackTrans();
+                throw new InstallationException("event $event->event for $pcname didn't supply function name");
+            }
+            if (!is_callable(array($pcname, $event->callfunction))) {
+                $db->RollbackTrans();
+                throw new InstallationException("event $event->event with function $event->callfunction for $pcname supplied but wasn't callable");
+            }
+            $exists = false;
+            if (empty($upgrade->install)) {
+                $exists = record_exists('event_subscription_' . $plugintype, 'plugin' , $pluginname, 'event', $event->event());
+            }
+            $event->plugin = $pluginname;
+            if (empty($exists)) {
+                insert_record('event_subscription_' . $plugintype, $event);
+            }
+            else {
+                update_record('event_subscription_' . $plugintype, $event, array('id', $exists->id));
+            }
+        }
+    }
+
+    call_static_method($pcname, 'postinst');
     
     if ($db->HasFailedTrans()) {
         $status = false;
@@ -812,5 +838,7 @@ class Plugin {
         return true;
     }
 }
+
+class InstallationException extends Exception {}
 
 ?>
