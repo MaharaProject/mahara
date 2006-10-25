@@ -4,78 +4,78 @@
     xsi:noNamespaceSchemaLocation="../../lib/xmldb/xmldb.xsd"
 >
     <TABLES>
-        <TABLE NAME="installed_artefact" NEXT="installed_artefact_type">
+        <TABLE NAME="installed_artefact">
             <FIELDS> 
-                <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" NEXT="version" />
-                <FIELD NAME="version" TYPE="int" LENGTH="10" NOTNULL="true" PREVIOUS="name" NEXT="release"/>
-                <FIELD NAME="release" TYPE="text" LENGTH="small" NOTNULL="true" PREVIOUS="version" NEXT="active"/>
-                <FIELD NAME="active" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" PREVIOUS="release"/>
+                <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="version" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="release" TYPE="text" LENGTH="small" NOTNULL="true" />
+                <FIELD NAME="active" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="name" />
             </KEYS>
         </TABLE>
-        <TABLE NAME="installed_artefact_type" NEXT="installed_auth" PREVIOUS="installed_artefact">
+        <TABLE NAME="installed_artefact_type">
             <FIELDS>
-                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="name" />
-                <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" NEXT="plugin" PREVIOUS="id" />
-                <FIELD NAME="plugin" TYPE="char" LENGTH="255" NOTNULL="true" PREVIOUS="name" />
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+                <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="plugin" TYPE="char" LENGTH="255" NOTNULL="true" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
-                <KEY NAME="nameuk" TYPE="unique" FIELDS="name,plugin" PREVIOUS="primary" NEXT="pluginfk" />
-                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="installed_artefact" REFFIELDS="name" PREVIOUS="nameuk" />
+                <KEY NAME="nameuk" TYPE="unique" FIELDS="name,plugin"  />
+                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="installed_artefact" REFFIELDS="name" />
             </KEYS>
         </TABLE>
-        <TABLE NAME="installed_auth" PREVIOUS="installed_artefact_type" NEXT="config">
+        <TABLE NAME="installed_auth">
             <FIELDS> 
-                <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" NEXT="version" />
-                <FIELD NAME="version" TYPE="int" LENGTH="10" NOTNULL="true" PREVIOUS="name" NEXT="release"/>
-                <FIELD NAME="release" TYPE="text" LENGTH="small" NOTNULL="true" PREVIOUS="version" NEXT="active"/>
-                <FIELD NAME="active" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" PREVIOUS="release"/>
+                <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="version" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="release" TYPE="text" LENGTH="small" NOTNULL="true" />
+                <FIELD NAME="active" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="name" />
             </KEYS>
         </TABLE>
-        <TABLE NAME="config" NEXT="config_artefact" PREVIOUS="installed_auth">
+        <TABLE NAME="config">
             <FIELDS>
-                <FIELD NAME="field" TYPE="char" LENGTH="255" NOTNULL="true" NEXT="value"/>
-                <FIELD NAME="value" TYPE="text" LENGTH="small" NOTNULL="true" PREVIOUS="field"/>
+                <FIELD NAME="field" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="value" TYPE="text" LENGTH="small" NOTNULL="true" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="field" />
             </KEYS>
         </TABLE>
-        <TABLE NAME="config_artefact" NEXT="config_auth" PREVIOUS="config">
+        <TABLE NAME="config_artefact">
             <FIELDS>
-                <FIELD NAME="plugin" TYPE="char" LENGTH="100" NOTNULL="true" NEXT="field"/>
-                <FIELD NAME="field" TYPE="char" LENGTH="100" NOTNULL="true" PREVIOUS="plugin" NEXT="value"/>
-                <FIELD NAME="value" TYPE="text" LENGTH="small" NOTNULL="true" PREVIOUS="field"/>
+                <FIELD NAME="plugin" TYPE="char" LENGTH="100" NOTNULL="true" />
+                <FIELD NAME="field" TYPE="char" LENGTH="100" NOTNULL="true" />
+                <FIELD NAME="value" TYPE="text" LENGTH="small" NOTNULL="true" />
             </FIELDS>
             <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="plugin,field" NEXT="pluginfk"/>
-                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="installed_artefact" REFFIELDS="name" PREVIOUS="primary"/>
+                <KEY NAME="primary" TYPE="primary" FIELDS="plugin,field" />
+                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="installed_artefact" REFFIELDS="name" />
             </KEYS>
         </TABLE>
-        <TABLE NAME="config_auth" NEXT="usr" PREVIOUS="config_artefact">
+        <TABLE NAME="config_auth">
             <FIELDS>
-                <FIELD NAME="plugin" TYPE="char" LENGTH="100" NOTNULL="true" NEXT="field"/>
-                <FIELD NAME="field" TYPE="char" LENGTH="100" NOTNULL="true" PREVIOUS="plugin" NEXT="value"/>
-                <FIELD NAME="value" TYPE="text" LENGTH="small" NOTNULL="true" PREVIOUS="field"/>
+                <FIELD NAME="plugin" TYPE="char" LENGTH="100" NOTNULL="true" />
+                <FIELD NAME="field" TYPE="char" LENGTH="100" NOTNULL="true" />
+                <FIELD NAME="value" TYPE="text" LENGTH="small" NOTNULL="true" />
             </FIELDS>
             <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="plugin,field" NEXT="pluginfk"/>
-                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="installed_auth" REFFIELDS="name" PREVIOUS="primary"/>
+                <KEY NAME="primary" TYPE="primary" FIELDS="plugin,field" />
+                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="installed_auth" REFFIELDS="name" />
             </KEYS>
         </TABLE>
-        <TABLE NAME="usr" PREVIOUS="config_auth" NEXT="artefact">
+        <TABLE NAME="usr">
             <FIELDS>
-                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="username"/>
-                <FIELD NAME="username" TYPE="char" LENGTH="100" NOTNULL="true" PREVIOUS="id" NEXT="password"/>
-                <FIELD NAME="password" TYPE="char" LENGTH="40" NOTNULL="true" PREVIOUS="username" NEXT="salt"/>
-                <FIELD NAME="salt" TYPE="char" LENGTH="8" PREVIOUS="password" NEXT="password_change"/>
-                <FIELD NAME="password_change" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" PREVIOUS="salt"/>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+                <FIELD NAME="username" TYPE="char" LENGTH="100" NOTNULL="true" />
+                <FIELD NAME="password" TYPE="char" LENGTH="40" NOTNULL="true" />
+                <FIELD NAME="salt" TYPE="char" LENGTH="8" />
+                <FIELD NAME="password_change" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
@@ -84,81 +84,81 @@
                 <INDEX NAME="usernameuk" UNIQUE="true" FIELDS="LOWER(username)"/>
             </INDEXES>
         </TABLE>
-        <TABLE NAME="artefact" PREVIOUS="usr" NEXT="cron">
+        <TABLE NAME="artefact">
             <FIELDS>
-                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="artefacttype" />
-                <FIELD NAME="artefacttype" TYPE="char" LENGTH="255" NOTNULL="true" PREVIOUS="id" NEXT="container" />
-                <FIELD NAME="container" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" PREVIOUS="artefacttype" NEXT="parentid" />
-                <FIELD NAME="parentid" TYPE="int" LENGTH="10" NOTNULL="false" PREVIOUS="container" NEXT="ctime" />
-                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" PREVIOUS="parentid" NEXT="mtime" />
-                <FIELD NAME="mtime" TYPE="datetime" NOTNULL="true" PREVIOUS="ctime" NEXT="vtime" />
-                <FIELD NAME="vtime" TYPE="datetime" NOTNULL="true" PREVIOUS="mtime" NEXT="locked" />
-                <FIELD NAME="locked" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" PREVIOUS="vtime" NEXT="title" />
-                <FIELD NAME="title" TYPE="text" NOTNULL="true" PREVIOUS="locked" NEXT="description" />
-                <FIELD NAME="description" TYPE="text" NOTNULL="false" PREVIOUS="title" NEXT="note" />
-                <FIELD NAME="note" TYPE="text" NOTNULL="false" PREVIOUS="description"/>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+                <FIELD NAME="artefacttype" TYPE="char" LENGTH="255" NOTNULL="true"  />
+                <FIELD NAME="container" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"  />
+                <FIELD NAME="parentid" TYPE="int" LENGTH="10" NOTNULL="false"  />
+                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true"  />
+                <FIELD NAME="mtime" TYPE="datetime" NOTNULL="true"  />
+                <FIELD NAME="vtime" TYPE="datetime" NOTNULL="true"  />
+                <FIELD NAME="locked" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"  />
+                <FIELD NAME="title" TYPE="text" NOTNULL="true"  />
+                <FIELD NAME="description" TYPE="text" NOTNULL="false"  />
+                <FIELD NAME="note" TYPE="text" NOTNULL="false" />
             </FIELDS>
             <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="id" NEXT="typefk" />
-                <KEY NAME="typefk" TYPE="foreign" FIELDS="artefacttype" REFTABLE="installed_artefact_type" REFFIELDS="id" PREVIOUS="primary" NEXT="parentfk" />
-                <KEY NAME="parentfk" TYPE="foreign" FIELDS="parentid" REFTABLE="artefact" REFFIELDS="id" PREVIOUS="typefk" />
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+                <KEY NAME="typefk" TYPE="foreign" FIELDS="artefacttype" REFTABLE="installed_artefact_type" REFFIELDS="id"  />
+                <KEY NAME="parentfk" TYPE="foreign" FIELDS="parentid" REFTABLE="artefact" REFFIELDS="id" />
             </KEYS>
         </TABLE>
-        <TABLE NAME="cron" PREVIOUS="artefact" NEXT="cron_artefact">
+        <TABLE NAME="cron">
             <FIELDS>
-                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="function" />
-                <FIELD NAME="function" TYPE="char" LENGTH="255" NOTNULL="true" PREVIOUS="id" NEXT="nextrun" />
-                <FIELD NAME="nextrun" TYPE="datetime" NOTNULL="false" PREVIOUS="function" NEXT="minute" />
-                <FIELD NAME="minute" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*" PREVIOUS="nextrun" NEXT="hour" />
-                <FIELD NAME="hour" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*" PREVIOUS="minute" NEXT="day" />
-                <FIELD NAME="day" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*" PREVIOUS="hour" NEXT="month" />
-                <FIELD NAME="month" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*" PREVIOUS="day" NEXT="dayofweek" />
-                <FIELD NAME="dayofweek" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*" PREVIOUS="month" />
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+                <FIELD NAME="function" TYPE="char" LENGTH="255" NOTNULL="true"  />
+                <FIELD NAME="nextrun" TYPE="datetime" NOTNULL="false"  />
+                <FIELD NAME="minute" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*"  />
+                <FIELD NAME="hour" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*"  />
+                <FIELD NAME="day" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*"  />
+                <FIELD NAME="month" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*"  />
+                <FIELD NAME="dayofweek" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="function" />
             </KEYS>
         </TABLE>
-        <TABLE NAME="cron_artefact" PREVIOUS="cron" NEXT="cron_auth">
+        <TABLE NAME="cron_artefact">
             <FIELDS>
-                <FIELD NAME="plugin" TYPE="char" LENGTH="255" NOTNULL="true" NEXT="function" />
-                <FIELD NAME="function" TYPE="char" LENGTH="255" NOTNULL="true" PREVIOUS="plugin" NEXT="nextrun" />
-                <FIELD NAME="nextrun" TYPE="datetime" NOTNULL="false" PREVIOUS="function" NEXT="minute" />
-                <FIELD NAME="minute" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*" PREVIOUS="nextrun" NEXT="hour" />
-                <FIELD NAME="hour" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*" PREVIOUS="minute" NEXT="day" />
-                <FIELD NAME="day" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*" PREVIOUS="hour" NEXT="month" />
-                <FIELD NAME="month" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*" PREVIOUS="day" NEXT="dayofweek" />
-                <FIELD NAME="dayofweek" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*" PREVIOUS="month" />
+                <FIELD NAME="plugin" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="function" TYPE="char" LENGTH="255" NOTNULL="true"  />
+                <FIELD NAME="nextrun" TYPE="datetime" NOTNULL="false"  />
+                <FIELD NAME="minute" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*"  />
+                <FIELD NAME="hour" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*"  />
+                <FIELD NAME="day" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*"  />
+                <FIELD NAME="month" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*"  />
+                <FIELD NAME="dayofweek" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*" />
             </FIELDS>
             <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="plugin,function" NEXT="pluginfk" />
-                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="installed_artefact" REFFIELDS="name" PREVIOUS="primary" />
+                <KEY NAME="primary" TYPE="primary" FIELDS="plugin,function" />
+                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="installed_artefact" REFFIELDS="name" />
             </KEYS>
         </TABLE>
-        <TABLE NAME="cron_auth" PREVIOUS="cron_artefact">
+        <TABLE NAME="cron_auth">
             <FIELDS>
-                <FIELD NAME="plugin" TYPE="char" LENGTH="255" NOTNULL="true" NEXT="function" />
-                <FIELD NAME="function" TYPE="char" LENGTH="255" NOTNULL="true" PREVIOUS="plugin" NEXT="nextrun" />
-                <FIELD NAME="nextrun" TYPE="datetime" NOTNULL="false" PREVIOUS="function" NEXT="minute" />
-                <FIELD NAME="minute" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*" PREVIOUS="nextrun" NEXT="hour" />
-                <FIELD NAME="hour" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*" PREVIOUS="minute" NEXT="day" />
-                <FIELD NAME="day" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*" PREVIOUS="hour" NEXT="month" />
-                <FIELD NAME="month" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*" PREVIOUS="day" NEXT="dayofweek" />
-                <FIELD NAME="dayofweek" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*" PREVIOUS="month" />
+                <FIELD NAME="plugin" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="function" TYPE="char" LENGTH="255" NOTNULL="true"  />
+                <FIELD NAME="nextrun" TYPE="datetime" NOTNULL="false"  />
+                <FIELD NAME="minute" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*"  />
+                <FIELD NAME="hour" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*"  />
+                <FIELD NAME="day" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*"  />
+                <FIELD NAME="month" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*"  />
+                <FIELD NAME="dayofweek" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*" />
             </FIELDS>
             <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="plugin,function" NEXT="pluginfk" />
-                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="installed_auth" REFFIELDS="name" PREVIOUS="primary" />
+                <KEY NAME="primary" TYPE="primary" FIELDS="plugin,function" />
+                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="installed_auth" REFFIELDS="name" />
             </KEYS>
         </TABLE>
     </TABLES>
     <STATEMENTS>
-        <STATEMENT NAME="insert config" TYPE="insert" TABLE="config" NEXT="insert root user">
+        <STATEMENT NAME="insert config" TYPE="insert" TABLE="config">
             <SENTENCES>
                 <SENTENCE TEXT="(field, value) VALUES ('session_timeout', 1800)" />
             </SENTENCES>
         </STATEMENT>
-        <STATEMENT NAME="insert root user" TYPE="insert" TABLE="usr" PREVIOUS="insert config">
+        <STATEMENT NAME="insert root user" TYPE="insert" TABLE="usr">
             <SENTENCES>
                 <SENTENCE TEXT="(username, password, password_change) VALUES ('root', 'mahara', 1)"/>
             </SENTENCES>
