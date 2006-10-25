@@ -231,7 +231,7 @@ abstract class ArtefactType {
      * If you want the instance, use 
      * {@link get_parent_instance} instead.
      * 
-     * @return object (db row)
+     * @return object - db row
      */
     public function get_parent_metadata() {
         return get_record('artefact','id',$this->parentid);
