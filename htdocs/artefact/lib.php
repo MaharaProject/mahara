@@ -70,17 +70,6 @@ abstract class PluginArtefact extends Plugin {
         return array();
     }
 
-
-    /**
-     * This function handles an event that has been
-     * generated, that the plugin has asked to be
-     * subscribed to
-     * @param object $event
-     * @param array $options
-     * @todo finish documenting the args when we have some egs.
-     */
-    public static function handle_event($event, $options) { }
-
     /**
      * This function returns an array of crons it wants to have run
      * Each item should be a StdtClass object containing - 
