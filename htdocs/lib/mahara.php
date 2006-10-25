@@ -797,9 +797,8 @@ define('DEBUG_DEVELOPER', 'whocares');
 
 /** 
  * Base class for all plugintypes.
- * @abstract
  */
-abstract class Plugin {
+class Plugin {
     
     public static function get_cron() {
         return array();
