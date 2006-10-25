@@ -131,7 +131,7 @@ function log_message ($message, $loglevel, $escape, $file=null, $line=null, $tra
             if (is_a($SESSION, 'Session')) {
                 $SESSION->$method($line, false);
             }
-            else if (get_config('installed')) {
+            else if (!function_exists('get_config') || get_config('installed')) {
                 // Don't output when we are not installed, since this will cause the
                 // redirect to the install page to fail.
                 echo $line;
