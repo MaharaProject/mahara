@@ -16,7 +16,7 @@
         {/strip}
         <style type="text/css">{literal}
         .required label { color: orange; }
-        .help { font-size: smaller; vertical-align: sup; }
+        .help { font-size: smaller; vertical-align: super; }
         .description { font-size: smaller; font-style: italic; }
         .error { color: red; }
         .errmsg { color: red; font-size: smaller; }
