@@ -94,7 +94,8 @@ class Form {
     private $tabindex = 1;
     private $data = array();
     private $renderer = 'div';
-    private $fileupload = false; 
+    private $fileupload = false;
+    private $iscancellable = true;
 
     public static function process($data) {
         $form = new Form($data);
@@ -140,6 +141,8 @@ class Form {
         else {
             $this->tabindex = self::$formtabindex++;
         }
+
+        $this->iscancellable = (isset($data['iscancellable']) && !$data['iscancellable']) ? false : true;
 
         if (!is_array($data['elements'])) {
             throw new FormException('Forms must have a list of elements');
@@ -188,6 +191,26 @@ class Form {
         // Check if the form was submitted
         $global = ($this->method == 'get') ? $_GET: $_POST;
         if (isset($global['form_' . $this->name] )) {
+            // Check if the form has been cancelled
+            if ($this->iscancellable) {
+                foreach ($global as $key => $value) {
+                    if (substr($key, 0, 7) == 'cancel_') {
+                        $function = $this->name . '_' . $key;
+                        log_dbg($function);
+                        if (!function_exists($function)) {
+                            throw new FormException('Form "' . $this->name . '" does not have a cancel function handler for "' . substr($key, 7) . '"');
+                        }
+                        $function();
+                        $element = $this->get_element(substr($key, 7));
+                        if (!isset($element['goto'])) {
+                            throw new FormException('Cancel element "' . $element['name'] . '" has no page to go to');
+                        }
+                        redirect($element['goto']);
+                        return;
+                    }
+                }
+            }
+
             // Get the values that were submitted
             $values = $this->get_submitted_values();
             // Perform general validation first
@@ -280,6 +303,23 @@ class Form {
         }
         return $elements;
     }
+    
+    /**
+     * Returns the element with the given name. Throws a FormException if the
+     * element cannot be found.
+     *
+     * @param string $name The name of the element to find
+     * @return array       The element
+     * @throws FormException If the element could not be found
+     */
+    public function get_element($name) {
+        foreach ($this->get_elements() as $element) {
+            if ($element['name'] == $name) {
+                return $element;
+            }
+        }
+        throw new FormException('Element "' . $name . '" cannot be found');
+    }
 
     /**
      * Retrieves submitted values from POST for the elements of this form
@@ -326,6 +366,18 @@ class Form {
     }
 
     /**
+     * Returns whether a field has an error marked on it.
+     *
+     * @param string $name The name of the element to check
+     * @return bool        Whether the element has an error
+     * @throws FormException If the element could not be found
+     */
+    public function get_error($name) {
+        $element = $this->get_element($name);
+        return isset($element['error']);
+    }
+
+    /**
      * Marks a field has having an error
      */
     public function set_error($name, $message) {
@@ -347,29 +399,11 @@ class Form {
         }
     }
 
-    /**
-     * Returns whether a field has an error marked on it
-     *
-     * behaviour undefined for a fieldset - I wonder if it should be smarter?
-     */
-    public function get_error($name) {
-        foreach ($this->elements as $element) {
-            if ($element['type'] == 'fieldset') {
-                foreach ($element['elements'] as $subelement) {
-                    if ($subelement['name'] == $name) {
-                        return isset($subelement['error']);
-                    }
-                }
-            }
-            else if ($element['name'] == $name) {
-                return isset($element['error']);
-            }
-        }
-        return false;
-    }
 
     /**
-     * Return true if there are errors with the form
+     * Checks if there are errors on any of the form elements.
+     *
+     * @return bool whether there are errors with the form
      */
     private function errors() {
         foreach ($this->get_elements() as $element) {
@@ -446,6 +480,22 @@ class Form {
  *   - title
  */
 function form_render_element($element, $form) {
+    // Make sure that the function to render the element type is available
+    $function = 'form_render_' . $element['type'];
+    if (!function_exists($function)) {
+        // Attempt to include the relevant file
+        @include('form/elements/' . $element['type'] . '.php');
+        if (!function_exists($function)) {
+            throw new FormException('No such form element: ' . $element['type']);
+        }
+    }
+
+    // If the element is hidden, don't bother passing it to the renderer.
+    if ($element['type'] == 'hidden') {
+        return form_render_hidden($element, $form) . "\n";
+    }
+
+    // Work out the renderer function required and make sure it exists
     if ($renderer = $form->get_renderer()) {
         $rendererfunction = 'form_renderer_' . $renderer;
         if (!function_exists($rendererfunction)) {
@@ -459,15 +509,6 @@ function form_render_element($element, $form) {
         throw new FormException('No form renderer specified for form "' . $form->get_name() . '"');
     }
 
-    // Render the element, so the renderer doesn't have to deal with it
-    $function = 'form_render_' . $element['type'];
-    if (!function_exists($function)) {
-        // Attempt to include the relevant file
-        @include('form/elements/' . $element['type'] . '.php');
-        if (!function_exists($function)) {
-            throw new FormException('No such form element: ' . $element['type']);
-        }
-    }
 
     $element['id']    = Form::make_id($element);
     $element['class'] = Form::make_class($element);
