@@ -27,6 +27,7 @@
 define('INTERNAL',1);
 
 require(dirname(dirname(__FILE__)).'/init.php');
+require(get_config('libroot') . 'upgrade.php');
 
 $smarty = smarty();
 
