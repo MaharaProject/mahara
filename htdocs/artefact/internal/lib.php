@@ -51,7 +51,6 @@ class PluginArtefactInternal extends PluginArtefact {
                     $t->plugin = $plugin;
                     insert_record('artefact_installed_type',$t);
                 }
-                // @todo handle case that two plugins provide artefacts with the same name.
             }
             delete_records_select('artefact_installed_type','(plugin = ? AND name NOT IN (' . implode(',', $ph) . '))',
                                   array_merge(array($plugin),$types));
