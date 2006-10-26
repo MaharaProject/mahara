@@ -331,9 +331,12 @@ class Form {
         }
 
         $global = ($this->method == 'get') ? $_GET : $_POST;
-        foreach ($global as $key => $value) {
-            if (in_array($key, $elementnames)) {
-                $result[$key] = $value;
+        foreach ($elementnames as $name) {
+            if (isset($global[$name])) {
+                $result[$name] = $global[$name];
+            }
+            else {
+                $result[$name] = null;
             }
         }
         return $result;
@@ -345,21 +348,21 @@ class Form {
      */
     private function validate($values) {
         foreach ($this->get_elements() as $element) {
-            if (!empty($element['rules']['required']) && (!isset($values[$element['name']]) || $values[$element['name']] == '')) {
-                $this->set_error($element['name'], get_string('This field is required', 'mahara'));
-            }
-            if (!empty($element['rules']['minlength'])) {
-                $minlength = intval($element['rules']['minlength']);
-                if (!isset($values[$element['name']]) || strlen($values[$element['name']]) < $minlength) {
-                    $this->set_error($element['name'], get_string('You must put a minimum of '
-                        . $minlength . ' characters in this field'));
-                }
-            }
-            if (!empty($element['rules']['maxlength'])) {
-                $maxlength = intval($element['rules']['maxlength']);
-                if (!isset($values[$element['name']]) || strlen($values[$element['name']]) > $maxlength) {
-                    $this->set_error($element['name'], get_string('You must put a maximum of '
-                        . $maxlength . ' characters in this field'));
+            if (isset($element['rules']) && is_array($element['rules'])) {
+                foreach ($element['rules'] as $rule => $data) {
+                    if (!$this->get_error($element['name'])) {
+                        // Get the rule
+                        $function = 'form_rule_' . $rule;
+                        if (!function_exists($function)) {
+                            @include_once('form/rules/' . $rule . '.php');
+                            if (!function_exists($function)) {
+                                throw new FormException('No such form rule "' . $rule . '"');
+                            }
+                        }
+                        if ($error = $function($values[$element['name']], $data)) {
+                            $this->set_error($element['name'], $error);
+                        }
+                    }
                 }
             }
         }
