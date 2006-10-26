@@ -543,7 +543,7 @@ function redirect($location) {
 }
 
 function handle_event($event) {
-    if (!$e = get_record('event','name',$event)) {
+    if (!$e = get_record('event_type','name',$event)) {
         throw new Exception("Invalid event");
     }
     $plugintypes = plugin_types();
