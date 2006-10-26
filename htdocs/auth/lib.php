@@ -157,7 +157,7 @@ function auth_setup () {
         // There is no session, so we check to see if one needs to be started.
         // First, check if the page is public or the site is configured to be public.
         // @todo<nigel>: implement this :)
-        if (false) {
+        if (defined('PUBLIC')) {
             // No need to hand out a session for such pages
             return;
         }
