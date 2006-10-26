@@ -475,7 +475,7 @@ function validate_username($username) {
  * @param string $function (optional, defaults to require) the require/include function to use
  * @param string $nonfatal (optional, defaults to false) just returns false if the file doesn't exist
  */
-function safe_require($plugintype, $pluginname, $filename, $function='require', $nonfatal=false) {
+function safe_require($plugintype, $pluginname, $filename='lib.php', $function='require', $nonfatal=false) {
 
     $plugintype = clean_filename($plugintype);
     $pluginname = clean_filename($pluginname);
