@@ -27,7 +27,7 @@
 defined('INTERNAL') || die();
 
 function form_rule_required($field) {
-    if ($field == '') {
+    if ($field == '' || is_array($field) && !empty($field['error'])) {
         return get_string('This field is required');
     }
 }
