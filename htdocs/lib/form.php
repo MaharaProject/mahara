@@ -95,6 +95,7 @@ class Form {
     private $data = array();
     private $renderer = 'div';
     private $fileupload = false;
+    private $submitted = false;
     private $iscancellable = true;
 
     public static function process($data) {
@@ -191,6 +192,7 @@ class Form {
         // Check if the form was submitted
         $global = ($this->method == 'get') ? $_GET: $_POST;
         if (isset($global['form_' . $this->name] )) {
+            $this->submitted = true;
             // Check if the form has been cancelled
             if ($this->iscancellable) {
                 foreach ($global as $key => $value) {
@@ -242,6 +244,10 @@ class Form {
 
     function get_renderer() {
         return $this->renderer;
+    }
+
+    function is_submitted() {
+        return $this->submitted;
     }
 
     /**
@@ -326,17 +332,16 @@ class Form {
      */
     private function get_submitted_values() {
         $result = array();
-        foreach ($this->get_elements() as $element) {
-            $elementnames[] = $element['name'];
-        }
-
         $global = ($this->method == 'get') ? $_GET : $_POST;
-        foreach ($elementnames as $name) {
-            if (isset($global[$name])) {
-                $result[$name] = $global[$name];
+        foreach ($this->get_elements() as $element) {
+            if (isset($global[$element['name']])) {
+                $result[$element['name']] = $global[$element['name']];
+            }
+            else if ($element['type'] == 'file' && isset($_FILES[$element['name']])) {
+                $result[$element['name']] = $_FILES[$element['name']];
             }
             else {
-                $result[$name] = null;
+                $result[$element['name']] = null;
             }
         }
         return $result;
@@ -523,7 +528,5 @@ function form_render_element($element, $form) {
     return $prefix . $rendererfunction($function($element, $form), $element) . $suffix;
 }
 
-
-function hsc ($text) { return htmlspecialchars($text, ENT_COMPAT, 'UTF-8'); }
 
 ?>
