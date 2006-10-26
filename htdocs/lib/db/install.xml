@@ -29,7 +29,7 @@
                 <INDEX NAME="usernameuk" UNIQUE="true" FIELDS="LOWER(username)"/>
             </INDEXES>
         </TABLE>
-        <TABLE NAME="event">
+        <TABLE NAME="event_type">
             <FIELDS>
                 <FIELD NAME="name" TYPE="char" LENGTH="50" NOTNULL="true" />
             </FIELDS>
@@ -101,7 +101,7 @@
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
                 <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="auth_installed" REFFIELDS="name" />
-                <KEY NAME="eventfk" TYPE="foreign" FIELDS="event" REFTABLE="event" REFFIELDS="name" />
+                <KEY NAME="eventfk" TYPE="foreign" FIELDS="event" REFTABLE="event_type" REFFIELDS="name" />
                 <KEY NAME="subscruk" TYPE="unique" FIELDS="plugin,event,callfunction" />
             </KEYS>
         </TABLE>
@@ -186,7 +186,7 @@
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
                 <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="artefact_installed" REFFIELDS="name" />
-                <KEY NAME="eventfk" TYPE="foreign" FIELDS="event" REFTABLE="event" REFFIELDS="name" />
+                <KEY NAME="eventfk" TYPE="foreign" FIELDS="event" REFTABLE="event_type" REFFIELDS="name" />
                 <KEY NAME="subscruk" TYPE="unique" FIELDS="plugin,event,callfunction" />
             </KEYS>
         </TABLE>
@@ -202,7 +202,7 @@
                 <SENTENCE TEXT="(username, password, password_change) VALUES ('root', 'mahara', 1)"/>
             </SENTENCES>
         </STATEMENT>
-        <STATEMENT NAME="insert events" TYPE="insert" TABLE="event">
+        <STATEMENT NAME="insert events" TYPE="insert" TABLE="event_type">
             <SENTENCES>
                 <SENTENCE TEXT="(name) VALUES ('createuser')" />
                 <SENTENCE TEXT="(name) VALUES ('updateuser')" />

@@ -365,13 +365,31 @@ function get_recordset_sql($sql, $values=null, $limitfrom=null, $limitnum=null) 
 }
 
 /**
- * Utility function used by the following 4 methods.
+ * Utility function to turn a result set into an array of records
  *
  * @param object an ADODB RecordSet object.
  * @return mixed mixed an array of objects, or false if the RecordSet was empty.
  * @throws DatalibException
  */
 function recordset_to_array($rs) {
+    if ($rs && $rs->RecordCount() > 0) {
+        return $rs->GetArray();
+    }
+    else {
+        return false;
+    }
+}
+
+/**
+ * Utility function to turn a result set into an associative array of records
+ * This method turns a result set into a hash of records (keyed by the first
+ * field in the result set)
+ *
+ * @param object an ADODB RecordSet object.
+ * @return mixed mixed an array of objects, or false if the RecordSet was empty.
+ * @throws DatalibException
+ */
+function recordset_to_assoc($rs) {
     if ($rs && $rs->RecordCount() > 0) {
         // First of all, we are going to get the name of the first column
         // to introduce it back after transforming the recordset to assoc array
@@ -393,7 +411,7 @@ function recordset_to_array($rs) {
 }
 
 /**
- * Get a number of records as an array of objects.
+ * Get a number of records as an associative array of objects.
  *
  * If the query succeeds and returns at least one record, the
  * return value is an array of objects, one object for each
@@ -413,11 +431,35 @@ function recordset_to_array($rs) {
  */
 function get_records($table, $field='', $value='', $sort='', $fields='*', $limitfrom='', $limitnum='') {
     $rs = get_recordset($table, $field, $value, $sort, $fields, $limitfrom, $limitnum);
-    return recordset_to_array($rs);
+    return recordset_to_assoc($rs);
 }
 
 /**
  * Get a number of records as an array of objects.
+ *
+ * If the query succeeds and returns at least one record, the
+ * return value is an array of objects, one object for each
+ * record found. The array key is the value from the first
+ * column of the result set. The object associated with that key
+ * has a member variable for each column of the results.
+ *
+ * @param string $table the table to query.
+ * @param string $field a field to check (optional).
+ * @param string $value the value the field must have (requred if field1 is given, else optional).
+ * @param string $sort an order to sort the results in (optional, a valid SQL ORDER BY parameter).
+ * @param string $fields a comma separated list of fields to return (optional, by default all fields are returned).
+ * @param int $limitfrom return a subset of records, starting at this point (optional, required if $limitnum is set).
+ * @param int $limitnum return a subset comprising this many records (optional, required if $limitfrom is set).
+ * @return mixed an array of objects, or false if no records were found.
+ * @throws DatalibException
+ */
+function get_rows($table, $field='', $value='', $sort='', $fields='*', $limitfrom='', $limitnum='') {
+    $rs = get_recordset($table, $field, $value, $sort, $fields, $limitfrom, $limitnum);
+    return recordset_to_array($rs);
+}
+
+/**
+ * Get a number of records as an associative array of objects.
  *
  * Return value as for @see function get_records.
  *
@@ -433,11 +475,31 @@ function get_records($table, $field='', $value='', $sort='', $fields='*', $limit
  */
 function get_records_select($table, $select='', $values=null, $sort='', $fields='*', $limitfrom='', $limitnum='') {
     $rs = get_recordset_select($table, $select, $values, $sort, $fields, $limitfrom, $limitnum);
-    return recordset_to_array($rs);
+    return recordset_to_assoc($rs);
 }
 
 /**
  * Get a number of records as an array of objects.
+ *
+ * Return value as for {@link get_rows}.
+ *
+ * @param string $table the table to query.
+ * @param string $select A fragment of SQL to be used in a where clause in the SQL call.
+ * @param array $values if using placeholder ? in $select, pass values here.
+ * @param string $sort an order to sort the results in (optional, a valid SQL ORDER BY parameter).
+ * @param string $fields a comma separated list of fields to return (optional, by default all fields are returned).
+ * @param int $limitfrom return a subset of records, starting at this point (optional, required if $limitnum is set).
+ * @param int $limitnum return a subset comprising this many records (optional, required if $limitfrom is set).
+ * @return mixed an array of objects, or false if no records were found.
+ * @throws DatalibException
+ */
+function get_rows_select($table, $select='', $values=null, $sort='', $fields='*', $limitfrom='', $limitnum='') {
+    $rs = get_recordset_select($table, $select, $values, $sort, $fields, $limitfrom, $limitnum);
+    return recordset_to_array($rs);
+}
+
+/**
+ * Get a number of records as an associative array of objects.
  *
  * Return value as for @see function get_records.
  *
@@ -448,6 +510,22 @@ function get_records_select($table, $select='', $values=null, $sort='', $fields=
  * @throws DatalibException
  */
 function get_records_sql($sql,$values, $limitfrom='', $limitnum='') {
+    $rs = get_recordset_sql($sql, $values, $limitfrom, $limitnum);
+    return recordset_to_assoc($rs);
+}
+
+/**
+ * Get a number of records as an array of objects.
+ *
+ * Return value as for {@link get_rows}
+ *
+ * @param string $sql the SQL select query to execute.
+ * @param int $limitfrom return a subset of records, starting at this point (optional, required if $limitnum is set).
+ * @param int $limitnum return a subset comprising this many records (optional, required if $limitfrom is set).
+ * @return mixed an array of objects, or false if no records were found.
+ * @throws DatalibException
+ */
+function get_rows_sql($sql,$values, $limitfrom='', $limitnum='') {
     $rs = get_recordset_sql($sql, $values, $limitfrom, $limitnum);
     return recordset_to_array($rs);
 }
@@ -1025,6 +1103,24 @@ function execute_sql_arr($sqlarr, $continue=true, $feedback=true) {
         }
     }
     return $status;
+}
+
+/**
+ * Format the timestamp $ts in the format the database accepts; this can be a
+ * Unix integer timestamp or an ISO format Y-m-d H:i:s. Uses the fmtTimeStamp
+ * field, which holds the format to use. If null or false or '' is passed in,
+ * it will be converted to an SQL null.
+ * 
+ * Returns the timestamp as a quoted string.
+ *
+ * @param ts	a timestamp in Unix date time format.
+ *
+ * @return  timestamp string in database timestamp format
+ */
+function db_format_timestamp($ts) {
+    global $db;
+
+    return $db->DBTimeStamp($ts);
 }
 
 /**
