@@ -26,10 +26,31 @@
 
 defined('INTERNAL') || die();
 
-function form_rule_required($field) {
-    if ($field == '' || is_array($field) && !empty($field['error'])) {
-        return get_string('This field is required');
+/**
+ * Renders a set of radio buttons for a form
+ *
+ * @param array $element The element to render
+ * @param Form $form     The form the element is being rendered on 
+ */
+function form_render_radio($element, Form $form) {
+    if (!isset($element['options']) || !is_array($element['options']) || count($element['options']) < 1) {
+        log_warn('Radio elements should have at least one option');
     }
+    
+    $result = '';
+    $form_value = $form->get_value($element);
+    $id = $element['id'];
+    foreach ($element['options'] as $value => $text) {
+        $uid = $id . substr(md5(microtime()), 0, 4);
+        $element['id'] = $uid;
+        $result .= '<input type="radio"'
+            . Form::element_attributes($element)
+            . ' value="' . hsc($value) . '"'
+            . (($form_value == $value) ? ' checked="checked"' : '')
+            . "> <label for=\"$uid\">" . hsc($text) . "</label>\n";
+    }
+    
+    return $result;
 }
 
 ?>

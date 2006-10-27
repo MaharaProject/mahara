@@ -569,6 +569,16 @@ function handle_event($event) {
 }
 
 /**
+ * Returns a string, HTML escaped
+ *
+ * @param string $text The text to escape
+ * @return string      The text, HTML escaped
+ */
+function hsc ($text) {
+    return htmlspecialchars($text, ENT_COMPAT, 'UTF-8');
+}
+
+/**
  * Used by XMLDB
  */
 function debugging ($message, $level) {

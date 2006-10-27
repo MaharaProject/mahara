@@ -26,10 +26,25 @@
 
 defined('INTERNAL') || die();
 
-function form_rule_required($field) {
-    if ($field == '' || is_array($field) && !empty($field['error'])) {
-        return get_string('This field is required');
+/**
+ * Provides a basic text field input.
+ */
+function form_render_checkbox($element, $form) {
+    $checked = false;
+    if (!empty($element['value'])) {
+        $checked = true;
     }
+    if ($form->get_value($element)) {
+        $checked = true;
+    }
+    else if (!$form->is_submitted() && !empty($element['checked'])) {
+        $checked = true;
+    }
+
+    return '<input type="checkbox"'
+        . Form::element_attributes($element)
+        . ($checked ? ' checked="checked"' : '')
+        . '>';
 }
 
 ?>

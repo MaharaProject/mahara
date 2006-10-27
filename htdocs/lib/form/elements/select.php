@@ -34,7 +34,7 @@ function form_render_select($element, $form) {
         . Form::element_attributes($element)
         . (!empty($element['multiple']) ? ' multiple="multiple"' : '')
         . ">\n";
-    if (!is_array($element['options']) || count($element['options']) < 1) {
+    if (!isset($element['options']) || !is_array($element['options']) || count($element['options']) < 1) {
         $result .= "\t<option></option>\n";
         log_warn('Select elements should have at least one option');
     }
