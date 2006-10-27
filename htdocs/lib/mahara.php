@@ -533,6 +533,11 @@ function call_static_method($class, $method) {
     return call_user_func_array(array($class, $method), $args);
 }
 
+function generate_class_name() {
+    $args = func_get_args();
+    return 'Plugin' . implode('', array_map('ucfirst', $args));
+}
+
 function redirect($location) {
     if (headers_sent()) {
         throw new Exception('Headers already sent when redirect() was called');
