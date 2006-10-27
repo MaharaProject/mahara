@@ -1124,6 +1124,36 @@ function db_format_timestamp($ts) {
 }
 
 /**
+ * Given a field name, this returns a function call suitable for the current
+ * database to return a unix timestamp
+ * 
+ * @param field the field to apply the function to
+ * @param as    what to name the field (optional, defaults to $field)
+ *
+ * @return  timestamp string in database timestamp format
+ */
+function db_format_tsfield($field, $as = null) {
+    $tsfield = '';
+    if (is_postgres()) {
+        $tsfield = "FLOOR(EXTRACT(EPOCH FROM $field))";
+    }
+    else if (is_mysql()) {
+        $tsfield = "UNIX_TIMESTAMP($field)";
+    }
+    else {
+        throw new DatalibException('db_format_tsfield() is not implemented for your database engine (' . get_config('dbtype') . ')');
+    }
+
+    if ($as === null) {
+        $as = $field;
+    }
+
+    $tsfield .= " AS $as";
+
+    return $tsfield;
+}
+
+/**
  * This function, called from setup.php includes all the configuration
  * needed to properly work agains any DB. It setups connection encoding
  * and some other variables.
@@ -1138,6 +1168,10 @@ function configure_dbconnection() {
 
 function is_postgres() {
     return (strpos(get_config('dbtype'), 'postgres') === 0);
+}
+
+function is_mysql() {
+    return (strpos(get_config('dbtype'), 'mysql') === 0);
 }
 
 ?>
