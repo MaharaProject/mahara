@@ -198,7 +198,6 @@ class Form {
                 foreach ($global as $key => $value) {
                     if (substr($key, 0, 7) == 'cancel_') {
                         $function = $this->name . '_' . $key;
-                        log_dbg($function);
                         if (!function_exists($function)) {
                             throw new FormException('Form "' . $this->name . '" does not have a cancel function handler for "' . substr($key, 7) . '"');
                         }
@@ -464,6 +463,10 @@ class Form {
             if (isset($element[$attribute]) && $element[$attribute] !== '') {
                 $result .= ' ' . $attribute . '="' . hsc($element[$attribute]) . '"';
             }
+        }
+
+        if (isset($element['rules']['maxlength'])) {
+            $result .= ' maxlength="' . intval($element['rules']['maxlength']) . '"';
         }
 
         foreach (array_diff(array('disabled', 'readonly'), $exclude) as $attribute) {
