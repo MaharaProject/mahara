@@ -328,6 +328,7 @@ function die_info($message) {
  * @param string $file    The file the error was detected in
  * @param string $line    The line number the error was detected on
  * @param array  $vars    The contents of $GLOBALS at the time the error was detected
+ * @access private
  */
 function error ($code, $message, $file, $line, $vars) {
     static $error_lookup = array(
@@ -371,6 +372,7 @@ function error ($code, $message, $file, $line, $vars) {
  * any exceptions that you can deal with.
  *
  * @param Exception $e The exception that was thrown.
+ * @access private
  */
 function exception (Exception $e) {
     // @todo<nigel>: maybe later, rewrite as:
