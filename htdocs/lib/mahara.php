@@ -259,7 +259,7 @@ function load_config() {
     try {
         $dbconfig = get_records('config');
     } 
-    catch (DatalibException $e) {
+    catch (SQLException $e) {
         return false;
     }
     

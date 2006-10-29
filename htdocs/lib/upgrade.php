@@ -159,7 +159,7 @@ function check_upgrades($name=null) {
  *
  * @param object $upgrade   The version to upgrade to
  * @return bool             Whether the upgrade succeeded or not
- * @throws DatalibException If the upgrade failed due to a database error
+ * @throws SQLException     If the upgrade failed due to a database error
  */
 function upgrade_core($upgrade) {
     global $db;
@@ -175,7 +175,7 @@ function upgrade_core($upgrade) {
         $status = xmldb_core_upgrade($upgrade->from);
     }
     if (!$status) {
-        throw new DatalibException("Failed to upgrade core");
+        throw new SQLException("Failed to upgrade core");
     }
 
     $status = set_config('version', $upgrade->to);
@@ -194,7 +194,7 @@ function upgrade_core($upgrade) {
  *
  * @param object $upgrade   Information about the plugin to upgrade
  * @return bool             Whether the upgrade succeeded or not
- * @throws DatalibException If the upgrade failed due to a database error
+ * @throws SQLException     If the upgrade failed due to a database error
  */
 function upgrade_plugin($upgrade) {
     global $db;
@@ -227,7 +227,7 @@ function upgrade_plugin($upgrade) {
     }
     if (!$status || $db->HasFailedTrans()) {
         $db->CompleteTrans();
-        throw new DatalibException("Failed to upgrade $upgrade->name");
+        throw new SQLException("Failed to upgrade $upgrade->name");
     }
 
     $installed = new StdClass;

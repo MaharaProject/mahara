@@ -426,6 +426,6 @@ class ConfigSanityException extends Exception {}
 /**
  * An SQL related error occured
  */
-class DatalibException extends Exception {}
+class SQLException extends Exception {}
 
 ?>
