@@ -577,7 +577,7 @@ function hsc ($text) {
  * Used by XMLDB
  */
 function debugging ($message, $level) {
-    log_dbg($message);
+    log_debug($message);
 }
 function xmldb_dbg($message) {
     log_warn($message);
