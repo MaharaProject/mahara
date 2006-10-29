@@ -31,7 +31,7 @@ $smarty = smarty();
 $smarty->assign('title', get_string('adminoptionsauthenticationtitle', 'admin'));
 $smarty->assign('description', get_string('adminoptionsauthenticationdescription', 'admin'));
 
-$smarty->assign('methods', get_records('installed_auth', '', '', '1'));
+$smarty->assign('methods', get_records('auth_installed', '', '', '1'));
 $smarty->display('admin/options/authentication.tpl');
 
 ?>
