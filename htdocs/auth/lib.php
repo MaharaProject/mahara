@@ -26,7 +26,9 @@
 
 defined('INTERNAL') || die();
 
-/** Exception - unknown user */
+/**
+ * Unknown user exception
+ */
 class AuthUnknownUserException extends Exception {}
 
 /**
@@ -37,6 +39,8 @@ abstract class Auth {
 
     /**
      * Given a username, password and institution, attempts to log the use in.
+     *
+     * @todo Later, needs to deal with institution
      *
      * @param string $username  The username to attempt to authenticate
      * @param string $password  The password to use for the attempt
@@ -58,15 +62,92 @@ abstract class Auth {
     public static abstract function get_user_info($username);
 
     /**
-     * Returns a hash of information that will be rendered into a form
-     * when configuring authentication.
+     * Returns a hash of information that will be rendered into a form when
+     * configuring authentication.
      *
-     * @return array
+     * This is defined to be empty, so that authentication methods do not have
+     * to specify a form if they do not need to.
+     *
+     * If an authentication method is to return any elements, the return result
+     * <b>must</b> be wrapped in a call to {@link build_form}.
+     *
+     * For example:
+     *
+     * <pre>
+     * $elements = array(
+     *     // ... describe elements here ...
+     * );
+     * return Auth::build_form($elements);
+     * </pre>
+     *
+     * @return array The form for configuring the authentication method
      */
     public static function get_configuration_form() {
     }
 
-    protected static function build_form($method, $elements) {
+    /**
+     * Given a submission from the configuration form, validates it
+     *
+     * This is defined to be empty, so that authentication methods do not have
+     * to specify any validation rules if they do not need to.
+     *
+     * @param array $values The submitted values for the form
+     * @param Form $form    The form being validated
+     */
+    public static function validate_configuration_form(Form $form, $values) {
+    }
+
+    /**
+     * Given a username, returns whether it is in a valid format for this
+     * authentication method.
+     *
+     * Note: This does <b>not</b> check that the username is an existing user
+     * that this authentication method could log in given the correct password.
+     * It only checks that the format that the username is in is allowed - i.e.
+     * that it matches a specific regular expression for example.
+     *
+     * This is defined to be empty, so that authentication methods do not have
+     * to specify a format if they do not need to.
+     *
+     * The default behaviour is to assume that the username is in a valid form,
+     * so make sure to implement this method if this is not the case!
+     *
+     * @param string $username The username to check
+     * @return bool            Whether the username is in valid form.
+     */
+    public function is_username_valid($username) {
+        return true;
+    }
+
+    /**
+     * Given a password, returns whether it is in a valid format for this
+     * authentication method.
+     *
+     * This is defined to be empty, so that authentication methods do not have
+     * to specify a format if they do not need to.
+     *
+     * The default behaviour is to assume that the password is in a valid form,
+     * so make sure to implement this method if this is not the case!
+     *
+     * @param string $password The password to check
+     * @return bool            Whether the username is in valid form.
+     */
+    public function is_password_valid($password) {
+        return true;
+    }
+
+    /**
+     * If a validation form is to be used, the result of 
+     * {@link get_configuration_form} should be passed through this method
+     * before being returned. This method builds the rest of the form.
+     *
+     * @param string $method  The name of the authentication method (for
+     *                        example 'internal'). Lowercase please.
+     * @param array $elements The elements in the form.
+     * @return array          The form definition. <kbd>false</kbd> if there
+     *                        is no form for the authentication method.
+     */
+    protected static final function build_form($method, $elements) {
         if (count($elements)) {
             $elements['submit'] = array(
                 'type' => 'submit',
@@ -84,33 +165,11 @@ abstract class Auth {
         return false;
     }
 
-    /**
-     * Returns the internal name of the auth plugin.
-     */
-    public static function get_internal_name() {
-        return get_string('internalname', 'auth');
-    }
-
-    /**
-     * Returns the human readable name of the auth plugin.
-     */
-    public static function get_name() {
-        return get_string('name', 'auth');
-    }
-
-    /**
-     * Returns the descriptoin of the auth plugin
-     */
-    public static function get_description() {
-        return get_string('description', 'auth');
-    }
-
 }
 
 
 /**
- * Handles authentication by setting up a session for a user if they are logged
- * in.
+ * Handles authentication by setting up a session for a user if they are logged in.
  *
  * This function combined with the Session class is smart - if the user is not
  * logged in then they do not get a session, which prevents simple curl hits
@@ -119,6 +178,15 @@ abstract class Auth {
  * Once the user has a session, they keep it even if the log out, so it can
  * be reused. The session does expire, but the expiry time is typically a week
  * or more.
+ *
+ * If the user is not authenticated for this page, then this function will
+ * exit, printing the login page. Therefore, after including init.php, you can
+ * be sure that the user is logged in, or has a valid guest key. However, no
+ * testing is done to make sure the user has the required permissions to see
+ * the page.
+ *
+ * @return object The $USER object, if the user is logged in and continuing
+ *                their session.
  */
 function auth_setup () {
     global $SESSION, $USER;
@@ -126,7 +194,7 @@ function auth_setup () {
     // If the system is not installed, let the user through in the hope that
     // they can fix this little problem :)
     if (!get_config('installed')) {
-        log_dbg('system not installed, letting user through');
+        log_debug('system not installed, letting user through');
         return;
     }
 
@@ -135,20 +203,20 @@ function auth_setup () {
     $sessionlogouttime = $SESSION->get('logout_time');
     if ($sessionlogouttime > time()) {
         if (isset($_GET['logout'])) {
-            log_dbg('logging user ' . $SESSION->get('username') . ' out');
+            log_debug('logging user ' . $SESSION->get('username') . ' out');
             $SESSION->logout();
-            $SESSION->add_ok_msg(get_string('loggedoutok', 'mahara'));
+            $SESSION->add_ok_msg(get_string('loggedoutok'));
             redirect(get_config('wwwroot'));
         }
         // The session is still active, so continue it.
-        log_dbg('session still active from previous time');
+        log_debug('session still active from previous time');
         return $SESSION->renew();
     }
     else if ($sessionlogouttime > 0) {
         // The session timed out
-        log_dbg('session timed out');
+        log_debug('session timed out');
         $SESSION->logout();
-        $SESSION->add_info_msg(get_string('sessiontimedout', 'mahara'));
+        $SESSION->add_info_msg(get_string('sessiontimedout'));
         // @todo<nigel>: if page is public, no need to show the login page again
         auth_draw_login_page();
         exit;
@@ -156,9 +224,7 @@ function auth_setup () {
     else {
         // There is no session, so we check to see if one needs to be started.
         // First, check if the page is public or the site is configured to be public.
-        // @todo<nigel>: implement this :)
         if (defined('PUBLIC')) {
-            // No need to hand out a session for such pages
             return;
         }
 
@@ -167,11 +233,11 @@ function auth_setup () {
         require_once('form.php');
         $form = new Form(auth_get_login_form());
         if ($USER) {
-            log_dbg('user logged in just fine');
+            log_debug('user logged in just fine');
             return;
         }
         
-        log_dbg('no session or old session, and page is private hello');
+        log_debug('no session or old session, and page is private hello');
         auth_draw_login_page($form);
         exit;
     }
@@ -189,10 +255,18 @@ function auth_get_authtype_for_institution($institution) {
 }
 
 /**
- * Creates and displays the transient login page
+ * Creates and displays the transient login page.
  *
+ * This login page remembers all GET/POST data and passes it on. This way,
+ * users can have their sessions time out, and then can log in again without
+ * losing any of their data.
+ *
+ * @param Form $form If specified, just build this form to get the HTML
+ *                   required. Otherwise, this function will build and
+ *                   validate the form itself.
+ * @access private
  */
-function auth_draw_login_page($form=null) {
+function auth_draw_login_page(Form $form=null) {
     if ($form != null) {
         $loginform = $form->build();
     }
@@ -207,30 +281,31 @@ function auth_draw_login_page($form=null) {
 }
 
 /**
- * Returns the definition of the login form
+ * Returns the definition of the login form.
  *
- * @return array
+ * @return array   The login form definition array.
+ * @access private
  */
 function auth_get_login_form() {
     $elements = array(
         'login' => array(
             'type'   => 'fieldset',
-            'legend' => get_string('login', 'mahara'),
+            'legend' => get_string('login'),
             'elements' => array(
                 'login_username' => array(
                     'type'        => 'text',
-                    'title'       => get_string('username', 'mahara'),
-                    'description' => get_string('usernamedesc', 'mahara'),
-                    'help'        => get_string('usernamehelp', 'mahara'),
+                    'title'       => get_string('username'),
+                    'description' => get_string('usernamedesc'),
+                    'help'        => get_string('usernamehelp'),
                     'rules' => array(
                         'required'    => true
                     )
                 ),
                 'login_password' => array(
                     'type'        => 'password',
-                    'title'       => get_string('password', 'mahara'),
-                    'description' => get_string('passworddesc', 'mahara'),
-                    'help'        => get_string('passwordhelp', 'mahara'),
+                    'title'       => get_string('password'),
+                    'description' => get_string('passworddesc'),
+                    'help'        => get_string('passwordhelp'),
                     'value'       => '',
                     'rules' => array(
                         'required'    => true
@@ -241,7 +316,7 @@ function auth_get_login_form() {
 
         'submit' => array(
             'type'  => 'submit',
-            'value' => get_string('login', 'mahara')
+            'value' => get_string('login')
         )
     );
 
@@ -268,7 +343,6 @@ function auth_get_login_form() {
     }
     if ($_POST) {
         foreach ($_POST as $key => $value) {
-            // @todo<nigel>: probably won't pass arrays properly
             if (!isset($elements[$key]) && !isset($elements['login']['elements'][$key])) {
                 $elements[$key] = array(
                     'type'  => 'hidden',
@@ -291,28 +365,16 @@ function auth_get_login_form() {
 
 
 /**
- * Helper for validating the login form
- *
- * @param Form $form The form that is being validated
- * @param array $values  The submitted values
- */
-function login_validate($form, $values) {
-    if (!$form->get_error('login_username') && !validate_username($values['login_username'])) {
-        $form->set_error('login_username', get_string('Username is not in valid form, it can only'
-           . ' contain alphanumeric characters, underscores, full stops and @ symbols', 'mahara'));
-    }
-}
-
-/**
  * Called when the login form is submittd. Validates the user and password, and
  * if they are valid, starts a new session for the user.
  *
  * @param array $values The submitted values
+ * @access private
  */
 function login_submit($values) {
     global $SESSION, $USER;
 
-    log_dbg('auth details supplied, attempting to log user in');
+    log_debug('auth details supplied, attempting to log user in');
     $username    = $values['login_username'];
     $password    = $values['login_password'];
     $institution = (isset($values['login_institution'])) ? $values['login_institution'] : 0;
@@ -320,27 +382,50 @@ function login_submit($values) {
     $authtype = auth_get_authtype_for_institution($institution);
     safe_require('auth', $authtype, 'lib.php', 'require_once');
     $authclass = 'Auth' . ucfirst($authtype);
+
     try {
         if (call_static_method($authclass, 'authenticate_user_account', $username, $password, $institution)) {
-            log_dbg('user ' . $username . ' logged in OK');
+            log_debug('user ' . $username . ' logged in OK');
             $USER = call_static_method($authclass, 'get_user_info', $username);
             $SESSION->login($USER);
             $USER->logout_time = $SESSION->get('logout_time');
         }
         else {
             // Login attempt failed
-            log_dbg('login attempt FAILED');
-            $SESSION->add_err_msg(get_string('loginfailed', 'mahara'));
+            log_debug('login attempt FAILED');
+            $SESSION->add_err_msg(get_string('loginfailed'));
         }
     }
     catch (AuthUnknownUserException $e) {
-        log_dbg('unknown user ' . $username);
-        $SESSION->add_err_msg(get_string('loginfailed', 'mahara'));
+        log_debug('unknown user ' . $username);
+        $SESSION->add_err_msg(get_string('loginfailed'));
     }
 }
 
-// handles form submission when an admin options form is submitted
-// @todo<nigel>: allow each auth method to have a validation method
+/**
+ * Passes the form data through to the validation method of the appropriate
+ * authentication plugin, for it to validate if necessary.
+ *
+ * This is for validation of the configuration form that each authentication
+ * method exports
+ *
+ * @param Form  $form   The form to validate
+ * @param array $values The values submitted to check
+ * @access private
+ */
+function auth_validate(Form $form, $values) {
+    $class = 'Auth' . $values['method'];
+    safe_require('auth', $values['method'], 'lib.php', 'require_once');
+    call_static_method($class, 'validate_configuration_form', $form, $values);
+}
+
+/**
+ * Handles submission of the configuration form for an authentication method.
+ * Sets each configuration value in the database.
+ *
+ * @param array $values The submitted values, successfully validated
+ * @access private
+ */
 function auth_submit($values) {
     global $SESSION, $db;
     $db->StartTrans();
