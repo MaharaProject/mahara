@@ -41,3 +41,5 @@ function smarty_function_str($params, &$smarty) {
 
     return $ret;
 }
+
+?>
