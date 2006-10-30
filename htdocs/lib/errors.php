@@ -17,7 +17,7 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage core or plugintype/pluginname
+ * @subpackage core/error
  * @author     Nigel McNie <nigel@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
@@ -26,39 +26,97 @@
 
 defined('INTERNAL') || die();
 
+/**#@+
+ * @access private
+ */
 // These are bitmaps - the next one should be 4
+/** Display the errors on the screen */
 define('LOG_TARGET_SCREEN', 1);
+/** Write the errors to the error log, as specified in your php configuration */
 define('LOG_TARGET_ERRORLOG', 2);
 
 // Logging levels
+/** Environment type errors, such as register_globals being on */
 define('LOG_LEVEL_ENVIRON', 1);
+/** Debug messages */
 define('LOG_LEVEL_DBG', 2);
+/** Informational messages */
 define('LOG_LEVEL_INFO', 4);
+/** Warnings */
 define('LOG_LEVEL_WARN', 8);
+/**#@-*/
 
-// Turn error reporting all the way up
+// Tell PHP about our error settings
 error_reporting(E_ALL);
+set_error_handler('error');
+set_exception_handler('exception');
 
 
 // Logging functions
 
-function log_dbg ($message, $escape=true) {
-    log_message($message, LOG_LEVEL_DBG, $escape);
+/**
+ * Logs a message at the debug level
+ *
+ * @param string $message   The message to display
+ * @param bool   $escape    Whether to HTML escape the message
+ * @param bool   $backtrace Whether to provide a backtrace if the system is
+ *                          configured to give backtraces at this level.
+ */
+function log_debug ($message, $escape=true, $backtrace=true) {
+    log_message($message, LOG_LEVEL_DBG, $escape, $backtrace);
 }
 
-function log_info ($message, $escape=true) {
-    log_message($message, LOG_LEVEL_INFO, $escape);
+/**
+ * Logs a message at the info level
+ *
+ * @param string $message   The message to display
+ * @param bool   $escape    Whether to HTML escape the message
+ * @param bool   $backtrace Whether to provide a backtrace if the system is
+ *                          configured to give backtraces at this level.
+ */
+function log_info ($message, $escape=true, $backtrace=true) {
+    log_message($message, LOG_LEVEL_INFO, $escape, $backtrace);
 }
 
-function log_warn ($message, $escape=true) {
-    log_message($message, LOG_LEVEL_WARN, $escape);
+/**
+ * Logs a message at the warning level
+ *
+ * @param string $message   The message to display
+ * @param bool   $escape    Whether to HTML escape the message
+ * @param bool   $backtrace Whether to provide a backtrace if the system is
+ *                          configured to give backtraces at this level.
+ */
+function log_warn ($message, $escape=true, $backtrace=true) {
+    log_message($message, LOG_LEVEL_WARN, $escape, $backtrace);
 }
 
-function log_environ ($message, $escape=true) {
-    log_message($message, LOG_LEVEL_ENVIRON, $escape);
+/**
+ * Logs a message at the environment level
+ *
+ * @param string $message   The message to display
+ * @param bool   $escape    Whether to HTML escape the message
+ * @param bool   $backtrace Whether to provide a backtrace if the system is
+ *                          configured to give backtraces at this level.
+ */
+function log_environ ($message, $escape=true, $backtrace=true) {
+    log_message($message, LOG_LEVEL_ENVIRON, $escape, $backtrace);
 }
 
-function log_message ($message, $loglevel, $escape, $file=null, $line=null, $trace=null) {
+/**
+ * Logs a message at the given log level. This function should not be called by
+ * any code outside of this module.
+ *
+ * @param string $message   The message to display
+ * @param int    $loglevel  The level to log the message at
+ * @param bool   $escape    Whether to HTML escape the message
+ * @param bool   $backtrace Whether to provide a backtrace if the system is
+ *                          configured to give backtraces at this level.
+ * @param string $file      The file the error occured in
+ * @param int    $line      The line number the error occured on
+ * @param array  $trace     The backtrace for the error
+ * @access private
+ */
+function log_message ($message, $loglevel, $escape, $backtrace, $file=null, $line=null, $trace=null) {
     global $SESSION;
     static $loglevelnames = array(
         LOG_LEVEL_ENVIRON => 'environ',
@@ -137,7 +195,7 @@ function log_message ($message, $loglevel, $escape, $file=null, $line=null, $tra
                 echo $line;
             }
         }
-        if ($htmlbacktrace) {
+        if ($backtrace && $htmlbacktrace) {
             if (is_a($SESSION, 'Session')) {
                 $SESSION->add_info_msg($htmlbacktrace, false);
             }
@@ -151,7 +209,7 @@ function log_message ($message, $loglevel, $escape, $file=null, $line=null, $tra
         foreach ($loglines as $line) {
             error_log($prefix . $line);
         }
-        if ($textbacktrace) {
+        if ($backtrace && $textbacktrace) {
             $lines = explode("\n", $textbacktrace);
             foreach ($lines as $line) {
                 error_log($line);
@@ -160,7 +218,16 @@ function log_message ($message, $loglevel, $escape, $file=null, $line=null, $tra
     }
 }
 
-
+/**
+ * Given an array that contains a backtrace, builds two versions of it - one in
+ * HTML form and one in text form - for logging.
+ *
+ * @param array $backtrace The backtrace to build
+ * @return array           An array containing the backtraces, index 0
+ *                         containing the text version and index 1 containing
+ *                         the HTML version.
+ * @access private
+ */
 function log_build_backtrace($backtrace) {
     $calls = array();
 
@@ -233,9 +300,36 @@ function log_build_backtrace($backtrace) {
 
     return array($textmessage, $htmlmessage);
 }
+
+/**
+ * Ends the script with an informational message
+ *
+ * @param string $message The message to display
+ * @todo make this page better - better display, link to better/custom places
+ */
+function die_info($message) {
+    $smarty = smarty();
+    $message .= '<p><a href="#" onclick="history.go(-1)">back</a></p>';
+    $smarty->assign('message', $message);
+    $smarty->assign('type', 'info');
+    $smarty->display('message.tpl');
+    exit;
+}
+
+
 // Error/Exception handling
 
-set_error_handler('error');
+/**
+ * Called when any error occurs, due to a PHP error or through a call to
+ * {@link trigger_error}.
+ *
+ * @param int    $code    The code of the error message
+ * @param string $message The message reported
+ * @param string $file    The file the error was detected in
+ * @param string $line    The line number the error was detected on
+ * @param array  $vars    The contents of $GLOBALS at the time the error was detected
+ * @access private
+ */
 function error ($code, $message, $file, $line, $vars) {
     static $error_lookup = array(
         E_NOTICE => 'Notice',
@@ -269,21 +363,18 @@ function error ($code, $message, $file, $line, $vars) {
     $message = strip_tags($message);
     $message = htmlspecialchars_decode($message);
 
-    log_message($message, LOG_LEVEL_WARN, true, $file, $line);
+    log_message($message, LOG_LEVEL_WARN, true, true, $file, $line);
 }
 
-
-// Standard exceptions
-class ConfigSanityException extends Exception {}
-class DatalibException extends Exception {}
-
-// Catch exceptions that fall through to main()
-set_exception_handler('exception');
-
 /**
- * Should only be called if something _really_ screwed up happened
+ * Catches all otherwise uncaught exceptions. Will be deliberately used in some
+ * situations. After this is called the script will end, so make sure to catch
+ * any exceptions that you can deal with.
+ *
+ * @param Exception $e The exception that was thrown.
+ * @access private
  */
-function exception ($e) {
+function exception (Exception $e) {
     // @todo<nigel>: maybe later, rewrite as:
     // if $e not Exception
     //     get language string based on class name
@@ -296,12 +387,12 @@ function exception ($e) {
             $message = $e->getMessage();
     }
 
-    log_message($message, LOG_LEVEL_WARN, true, $e->getFile(), $e->getLine(), $e->getTrace());
+    log_message($message, LOG_LEVEL_WARN, true, true, $e->getFile(), $e->getLine(), $e->getTrace());
 
     echo <<<EOF
 <html>
 <head>
-    <title>\$projectname - Site Unavailable</title>
+    <title>Mahara - Site Unavailable</title>
     <style type="text/css">
         #reason {
             margin: 0 3em;
@@ -327,34 +418,16 @@ EOF;
 }
 
 
-/**
- * Ends the script with an error message.
- * NOTE: think very carefully about whether you should be throwing an
- * exception instead!
- *
- * For example, if your script is hit by a form where people could choose
- * some option from a dropdown, and when the script tries to use it somehow
- * it runs into an error, then this is an exception, NOT an error.
- *
+// Standard exceptions
+
+/** 
+ * The configuration that Mahara is trying to be run in is insane
  */
-function die_error($message) {
-    $smarty = smarty();
-    $smarty->assign('message', $message);
-    $smarty->assign('type', 'error');
-    $smarty->display('message.tpl');
-    exit;
-}
+class ConfigSanityException extends Exception {}
 
 /**
- * Ends the script with an informational message
+ * An SQL related error occured
  */
-function die_info($message) {
-    $smarty = smarty();
-    $message .= '<p><a href="#" onclick="history.go(-1)">back</a></p>';
-    $smarty->assign('message', $message);
-    $smarty->assign('type', 'info');
-    $smarty->display('message.tpl');
-    exit;
-}
+class SQLException extends Exception {}
 
 ?>

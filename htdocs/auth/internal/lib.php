@@ -26,6 +26,10 @@
 
 defined('INTERNAL') || die();
 
+/**
+ * The internal authentication method, which authenticates users against the
+ * Mahara database.
+ */
 class AuthInternal extends Auth {
 
     /**
@@ -50,6 +54,13 @@ class AuthInternal extends Auth {
         return $user;
     }
 
+    /**
+     * Returns a form that allows an administrator to configure this
+     * authentication method.
+     *
+     * The internal method has no configuration options. This is just
+     * here until I can document it properly.
+     */
     public static function get_configuration_form() {
         //return Auth::build_form('internal', array(
         //    'foo' => array(
@@ -61,13 +72,27 @@ class AuthInternal extends Auth {
         //    )
         //));
     }
+
+    public static function validate_configuration_form(Form $form, $values) {
+        //if (!$form->get_error('foo') && $values['foo'] != 'bar') {
+        //    $form->set_error('foo', 'WTF man!');
+        //}
+    }
                 
     /*
      The following two functions are inspired by Andrew McMillan's salted md5
      functions in AWL, adapted with his kind permission. Changed to use sha1
      and match the coding standards for Mahara.
     */
-    
+
+   /**
+    * Given a password and an optional salt, encrypt the given password.
+    *
+    * Passwords are stored in SHA1 form.
+    *
+    * @param string $password The password to encrypt
+    * @param string $salt     The salt to use to encrypt the password
+    */
     private static function encrypt_password($password, $salt='') {
         if ($salt == '') {
             $salt = substr(md5(rand(1000000, 9999999)), 2, 8);
@@ -75,6 +100,19 @@ class AuthInternal extends Auth {
         return sha1($salt . $password);
     }
 
+    /**
+     * Given a password that the user has sent, the password we have for them
+     * and the salt we have, see if the password they sent is correct.
+     *
+     * @param string $theysent The password the user sent
+     * @param string $wehave   The password we have in the database for them
+     * @param string $salt     The salt we have. If null, plaintext password
+     *                         checking is assumed. A null salt is not used
+     *                         by the application - instead, this gives
+     *                         administrators a way to set passwords inside the
+     *                         database manually without having to make up and
+     *                         encrypt a password using a salt.
+     */
     private static function validate_password($theysent, $wehave, $salt) {
         if ($salt == null) {
             // This allows "plaintext" passwords, which are eaiser for an admin to
@@ -87,6 +125,7 @@ class AuthInternal extends Auth {
         $sha1sent = Auth_Internal::encrypt_password($theysent, $salt);
         return $sha1sent == $wehave;
     }
+
 }
 
 /**

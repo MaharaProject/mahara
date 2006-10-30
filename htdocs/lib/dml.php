@@ -35,13 +35,13 @@ defined('INTERNAL') || die();
  * @uses $db
  * @param string $command The sql string you wish to be executed.
  * @return string
- * @throws DatalibException
+ * @throws SQLException
  */
 function execute_sql($command) {
     global $db;
     
     if (!is_a($db, 'ADOConnection')) {
-        throw new DatalibException('Database connection is not available ');
+        throw new SQLException('Database connection is not available ');
     }
 
     // @todo need to do more research into this flag - what is it for, we
@@ -53,9 +53,9 @@ function execute_sql($command) {
         $result = $db->Execute($command);
     }
     catch (ADODB_Exception $e) {
-        log_dbg($e->getMessage() . "Command was: $command");
+        log_debug($e->getMessage() . "Command was: $command");
         $db->debug = $olddebug;
-        throw new DatalibException('Could not execute command: ' . $command);
+        throw new SQLException('Could not execute command: ' . $command);
     }
 
     $db->debug = $olddebug;
@@ -78,7 +78,7 @@ function execute_sql($command) {
  * @param string $field3 the third field to check (optional).
  * @param string $value3 the value field3 must have (requred if field3 is given, else optional).
  * @return bool true if a matching record exists, else false.
- * @throws DatalibException
+ * @throws SQLException
  */
 function record_exists($table, $field1=null, $value1=null, $field2=null, $value2=null, $field3=null, $value3=null) {
     $select = where_clause_prepared($field1, $field2, $field3);
@@ -94,7 +94,7 @@ function record_exists($table, $field1=null, $value1=null, $field2=null, $value2
  * @param string $sql The SQL statement to be executed. If using $values, placeholder ?s are expected. If not, the string should be escaped correctly.
  * @param array $values When using prepared statements, this is the value array. Optional.
  * @return bool true if the SQL executes without errors and returns at least one record.
- * @throws DatalibException
+ * @throws SQLException
  */
 function record_exists_sql($sql, $values=null) {
     $rs = get_recordset_sql($sql, $values, 0, 1);
@@ -112,7 +112,7 @@ function record_exists_sql($sql, $values=null) {
  * @param string $field3 the third field to check (optional).
  * @param string $value3 the value field3 must have (requred if field3 is given, else optional).
  * @return int The count of records returned from the specified criteria.
- * @throws DatalibException
+ * @throws SQLException
  */
 function count_records($table, $field1=null, $value1=null, $field2=null, $value2=null, $field3=null, $value3=null) {
     $select = where_clause_prepared($field1, $field2, $field3);
@@ -128,7 +128,7 @@ function count_records($table, $field1=null, $value1=null, $field2=null, $value2
  * @param array $values if using a prepared statement with placeholders in $select, pass values here. optional
  * @param string $countitem The count string to be used in the SQL call. Default is COUNT(*).
  * @return int The count of records returned from the specified criteria.
- * @throws DatalibException
+ * @throws SQLException
  */
 // NOTE: commented out until required
 /*
@@ -151,7 +151,7 @@ function count_records_select($table, $select='', $values=null, $countitem='COUN
  * @uses $db
  * @param string $sql The SQL string you wish to be executed.
  * @return int        The count.
- * @throws DatalibException
+ * @throws SQLException
  */
 // NOTE: commented out until required
 /*
@@ -174,7 +174,7 @@ function count_records_sql($sql, $values=null) {
  * @param string $field3 the third field to check (optional).
  * @param string $value3 the value field3 must have (requred if field3 is given, else optional).
  * @return mixed a fieldset object containing the first mathcing record, or false if none found.
- * @throws DatalibException
+ * @throws SQLException
  */
 function get_record($table, $field1, $value1, $field2=null, $value2=null, $field3=null, $value3=null, $fields='*') {
     $select = where_clause_prepared($field1, $field2, $field3);
@@ -194,7 +194,7 @@ function get_record($table, $field1, $value1, $field2=null, $value2=null, $field
  * @param bool $nolimit sometimes appending ' LIMIT 1' to the SQL causes an error. Set this to true
  *      to stop your SQL being modified. This argument should probably be deprecated.
  * @return Found record as object. False if not found
- * @throws DatalibException
+ * @throws SQLException
  */
 function get_record_sql($sql, $values=null) {
     $limitfrom = 0;
@@ -213,7 +213,7 @@ function get_record_sql($sql, $values=null) {
        return (object)$rs->fields;
     }
     else {                          // Error: found more than one record
-        throw new DatalibException('get_record_sql found more than one row. If you meant to retrieve more '
+        throw new SQLException('get_record_sql found more than one row. If you meant to retrieve more '
             . 'than one record, use get_records_*, otherwise check your code or database for inconsistencies');
     }
 }
@@ -226,7 +226,7 @@ function get_record_sql($sql, $values=null) {
  * @param array $values If using placeholder ? in $select, pass values here.
  * @param string $fields A comma separated list of fields to be returned from the chosen table.
  * @return object Returns an array of found records (as objects)
- * @throws DatalibException
+ * @throws SQLException
  */
 function get_record_select($table, $select='', $values=null, $fields='*') {
     if ($select) {
@@ -268,7 +268,7 @@ function get_record_select($table, $select='', $values=null, $fields='*') {
  * @param int $limitfrom return a subset of records, starting at this point (optional, required if $limitnum is set).
  * @param int $limitnum return a subset comprising this many records (optional, required if $limitfrom is set).
  * @return mixed an ADODB RecordSet object.
- * @throws DatalibException
+ * @throws SQLException
  */
 function get_recordset($table, $field='', $value='', $sort='', $fields='*', $limitfrom='', $limitnum='') {
     $values = null;
@@ -298,7 +298,7 @@ function get_recordset($table, $field='', $value='', $sort='', $fields='*', $lim
  * @param int $limitfrom return a subset of records, starting at this point (optional, required if $limitnum is set).
  * @param int $limitnum return a subset comprising this many records (optional, required if $limitfrom is set).
  * @return mixed an ADODB RecordSet object
- * @throws DatalibException
+ * @throws SQLException
  */
 function get_recordset_select($table, $select='', $values=null, $sort='', $fields='*', $limitfrom='', $limitnum='') {
     if ($select) {
@@ -330,13 +330,13 @@ function get_recordset_select($table, $select='', $values=null, $sort='', $field
  * @param int $limitfrom return a subset of records, starting at this point (optional, required if $limitnum is set).
  * @param int $limitnum return a subset comprising this many records (optional, required if $limitfrom is set).
  * @return mixed an ADODB RecordSet object
- * @throws DatalibException
+ * @throws SQLException
  */
 function get_recordset_sql($sql, $values=null, $limitfrom=null, $limitnum=null) {
     global $db;
 
     if (!is_a($db, 'ADOConnection')) {
-        throw new DatalibException('Database connection is not available ');
+        throw new SQLException('Database connection is not available ');
     }
 
     try {
@@ -357,8 +357,8 @@ function get_recordset_sql($sql, $values=null, $limitfrom=null, $limitnum=null) 
     }
     catch (ADODB_Exception $e) {
         $message = 'Failed to get a recordset: ' . $e->getMessage() . "Command was: $sql";
-        log_dbg($message);
-        throw new DatalibException($message);
+        log_debug($message);
+        throw new SQLException($message);
     }
  
    return $rs;
@@ -369,7 +369,7 @@ function get_recordset_sql($sql, $values=null, $limitfrom=null, $limitnum=null) 
  *
  * @param object an ADODB RecordSet object.
  * @return mixed mixed an array of objects, or false if the RecordSet was empty.
- * @throws DatalibException
+ * @throws SQLException
  */
 function recordset_to_array($rs) {
     if ($rs && $rs->RecordCount() > 0) {
@@ -387,7 +387,7 @@ function recordset_to_array($rs) {
  *
  * @param object an ADODB RecordSet object.
  * @return mixed mixed an array of objects, or false if the RecordSet was empty.
- * @throws DatalibException
+ * @throws SQLException
  */
 function recordset_to_assoc($rs) {
     if ($rs && $rs->RecordCount() > 0) {
@@ -427,7 +427,7 @@ function recordset_to_assoc($rs) {
  * @param int $limitfrom return a subset of records, starting at this point (optional, required if $limitnum is set).
  * @param int $limitnum return a subset comprising this many records (optional, required if $limitfrom is set).
  * @return mixed an array of objects, or false if no records were found.
- * @throws DatalibException
+ * @throws SQLException
  */
 function get_records($table, $field='', $value='', $sort='', $fields='*', $limitfrom='', $limitnum='') {
     $rs = get_recordset($table, $field, $value, $sort, $fields, $limitfrom, $limitnum);
@@ -451,7 +451,7 @@ function get_records($table, $field='', $value='', $sort='', $fields='*', $limit
  * @param int $limitfrom return a subset of records, starting at this point (optional, required if $limitnum is set).
  * @param int $limitnum return a subset comprising this many records (optional, required if $limitfrom is set).
  * @return mixed an array of objects, or false if no records were found.
- * @throws DatalibException
+ * @throws SQLException
  */
 function get_rows($table, $field='', $value='', $sort='', $fields='*', $limitfrom='', $limitnum='') {
     $rs = get_recordset($table, $field, $value, $sort, $fields, $limitfrom, $limitnum);
@@ -471,7 +471,7 @@ function get_rows($table, $field='', $value='', $sort='', $fields='*', $limitfro
  * @param int $limitfrom return a subset of records, starting at this point (optional, required if $limitnum is set).
  * @param int $limitnum return a subset comprising this many records (optional, required if $limitfrom is set).
  * @return mixed an array of objects, or false if no records were found.
- * @throws DatalibException
+ * @throws SQLException
  */
 function get_records_select($table, $select='', $values=null, $sort='', $fields='*', $limitfrom='', $limitnum='') {
     $rs = get_recordset_select($table, $select, $values, $sort, $fields, $limitfrom, $limitnum);
@@ -491,7 +491,7 @@ function get_records_select($table, $select='', $values=null, $sort='', $fields=
  * @param int $limitfrom return a subset of records, starting at this point (optional, required if $limitnum is set).
  * @param int $limitnum return a subset comprising this many records (optional, required if $limitfrom is set).
  * @return mixed an array of objects, or false if no records were found.
- * @throws DatalibException
+ * @throws SQLException
  */
 function get_rows_select($table, $select='', $values=null, $sort='', $fields='*', $limitfrom='', $limitnum='') {
     $rs = get_recordset_select($table, $select, $values, $sort, $fields, $limitfrom, $limitnum);
@@ -507,7 +507,7 @@ function get_rows_select($table, $select='', $values=null, $sort='', $fields='*'
  * @param int $limitfrom return a subset of records, starting at this point (optional, required if $limitnum is set).
  * @param int $limitnum return a subset comprising this many records (optional, required if $limitfrom is set).
  * @return mixed an array of objects, or false if no records were found.
- * @throws DatalibException
+ * @throws SQLException
  */
 function get_records_sql($sql,$values, $limitfrom='', $limitnum='') {
     $rs = get_recordset_sql($sql, $values, $limitfrom, $limitnum);
@@ -523,7 +523,7 @@ function get_records_sql($sql,$values, $limitfrom='', $limitnum='') {
  * @param int $limitfrom return a subset of records, starting at this point (optional, required if $limitnum is set).
  * @param int $limitnum return a subset comprising this many records (optional, required if $limitfrom is set).
  * @return mixed an array of objects, or false if no records were found.
- * @throws DatalibException
+ * @throws SQLException
  */
 function get_rows_sql($sql,$values, $limitfrom='', $limitnum='') {
     $rs = get_recordset_sql($sql, $values, $limitfrom, $limitnum);
@@ -626,7 +626,7 @@ function get_records_sql_menu($sql,$values=null) {
  * @param string $field3 the third field to check (optional).
  * @param string $value3 the value field3 must have (requred if field3 is given, else optional).
  * @return mixed the specified value
- * @throws DatalibException
+ * @throws SQLException
  */
 function get_field($table, $field, $field1, $value1, $field2=null, $value2=null, $field3=null, $value3=null) {
     $select = where_clause_prepared($field1, $field2, $field3);
@@ -640,7 +640,7 @@ function get_field($table, $field, $field1, $value1, $field2=null, $value2=null,
  *
  * @param string $sql an SQL statement expected to return a single value.
  * @return mixed the specified value.
- * @throws DatalibException
+ * @throws SQLException
  */
 function get_field_sql($sql, $values=null) {
     $rs = get_recordset_sql($sql, $values);
@@ -665,7 +665,7 @@ function get_field_sql($sql, $values=null) {
  * @param string $field3 the third field to check (optional).
  * @param string $value3 the value field3 must have (requred if field3 is given, else optional).
  * @return mixed An ADODB RecordSet object with the results from the SQL call or false.
- * @throws DatalibException
+ * @throws SQLException
  */
 function set_field($table, $newfield, $newvalue, $field1, $value1, $field2=null, $value2=null, $field3=null, $value3=null) {
     global $db;
@@ -678,7 +678,7 @@ function set_field($table, $newfield, $newvalue, $field1, $value1, $field2=null,
         return $db->Execute($stmt, $values);
     }
     catch (ADODB_Exception $e) {
-        throw new DatalibException($e->getMessage());
+        throw new SQLException($e->getMessage());
     }
 }
 
@@ -694,7 +694,7 @@ function set_field($table, $newfield, $newvalue, $field1, $value1, $field2=null,
  * @param string $field3 the third field to check (optional).
  * @param string $value3 the value field3 must have (requred if field3 is given, else optional).
  * @return mixed An ADODB RecordSet object with the results from the SQL call or false.
- * @throws DatalibException
+ * @throws SQLException
  */
 // NOTE: UNTESTED with new exception stuff. Needs a database first... :)
 function delete_records($table, $field1=null, $value1=null, $field2=null, $value2=null, $field3=null, $value3=null) {
@@ -708,7 +708,7 @@ function delete_records($table, $field1=null, $value1=null, $field2=null, $value
         return $db->Execute($stmt,$values);
     }
     catch (ADODB_Exception $e) {
-        throw new DatalibException($e->getMessage());
+        throw new SQLException($e->getMessage());
     }
 }
 
@@ -719,7 +719,7 @@ function delete_records($table, $field1=null, $value1=null, $field2=null, $value
  * @param string $table The database table to be checked against.
  * @param string $select A fragment of SQL to be used in a where clause in the SQL call (used to define the selection criteria).
  * @return object A PHP standard object with the results from the SQL call.
- * @throws DatalibException
+ * @throws SQLException
  */
 // NOTE: UNTESTED with new exception stuff. Needs a database first... :)
 function delete_records_select($table, $select='',$values=null) {
@@ -738,7 +738,7 @@ function delete_records_select($table, $select='',$values=null) {
         }
     }
     catch (ADODB_Exception $e) {
-        throw new DatalibException($e->getMessage());
+        throw new SQLException($e->getMessage());
     }
     return $result;
 }
@@ -754,7 +754,7 @@ function delete_records_select($table, $select='',$values=null) {
  * @param array $dataobject A data object with values for one or more fields in the record
  * @param bool $returnpk Should the id of the newly created record entry be returned? If this option is not requested then true/false is returned.
  * @param string $primarykey The primary key of the table we are inserting into (almost always "id")
- * @throws DatalibException
+ * @throws SQLException
  */
 // NOTE: UNTESTED with new exception stuff. Needs a database first... :)
 function insert_record($table, $dataobject, $primarykey=false, $returnpk=false) {
@@ -817,7 +817,7 @@ function insert_record($table, $dataobject, $primarykey=false, $returnpk=false) 
         $rs = $db->Execute($stmt,$ddd);
     }
     catch (ADODB_Exception $e) {
-        throw new DatalibException($e->getMessage());
+        throw new SQLException($e->getMessage());
     }
 
     // If a return ID is not needed then just return true now
@@ -844,10 +844,10 @@ function insert_record($table, $dataobject, $primarykey=false, $returnpk=false) 
             if ($rs->RecordCount() == 1) {
                 return (integer)$rs->fields[0];
             }
-            throw new DatalibException('WTF: somehow got more than one record when searching for a primary key');
+            throw new SQLException('WTF: somehow got more than one record when searching for a primary key');
         }
         catch (ADODB_Exception $e) {
-            throw new DatalibException($e->getMessage());
+            throw new SQLException($e->getMessage());
         }
     }
 
@@ -867,7 +867,7 @@ function insert_record($table, $dataobject, $primarykey=false, $returnpk=false) 
  * @param mixed $where defines the WHERE part of the upgrade. Can be string (key) or array (keys) or hash (keys/values).
  * If the first two, values are expected to be in $dataobject. 
  * @return bool
- * @throws DatalibException
+ * @throws SQLException
  */
 // NOTE: UNTESTED with new exception throwing stuff. need a database first... :)
 function update_record($table, $dataobject, $where=null) {
@@ -877,7 +877,7 @@ function update_record($table, $dataobject, $where=null) {
     if (empty($where) && !isset($dataobject->id) ) { 
         // nothing to put in the where clause and we don't want to update everything
         // @todo please make a proper message here.
-        throw new DatalibException('reeeeowwww! hhhssssssss');
+        throw new SQLException('reeeeowwww! hhhssssssss');
     }
 
     $wherefields = array();
@@ -902,14 +902,14 @@ function update_record($table, $dataobject, $where=null) {
         // @todo throw hissy fit
         foreach ($where as $field) {
             if (!isset($dataobject[$field])) {
-                throw new DatalibException('Field in where clause not in the update object');
+                throw new SQLException('Field in where clause not in the update object');
             }
             $wherefields[] = $field;
             $wherevalues[] = $dataobject->{$field};
             unset($dataobject->{$field});
         }
     } else {
-        throw new DatalibException('the $where object is in a very odd form');
+        throw new SQLException('the $where object is in a very odd form');
     }
 
     static $table_columns;
@@ -919,7 +919,7 @@ function update_record($table, $dataobject, $where=null) {
         $columns = $table_columns[$table];
     } else {
         if (!$columns = $db->MetaColumns(get_config('dbprefix') . $table)) {
-            throw new DatalibException('Could not get columns for table ' . $table);
+            throw new SQLException('Could not get columns for table ' . $table);
         }
         $table_columns[$table] = $columns;
     }
@@ -969,7 +969,7 @@ function update_record($table, $dataobject, $where=null) {
         return true;
     }
     catch (ADODB_Exception $e) {
-        throw new DatalibException($e->getMessage());
+        throw new SQLException($e->getMessage());
     }
 }
 

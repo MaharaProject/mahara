@@ -35,7 +35,7 @@ $smarty->assign('method', $method);
 if (!safe_require('auth', $method, 'lib.php', 'require_once', true)) {
     throw new Exception('The specified method does not exist');
 }
-$class = 'Auth_' . ucfirst(strtolower($method));
+$class = 'Auth' . ucfirst(strtolower($method));
 
 require_once('form.php');
 $form = call_static_method($class, 'get_configuration_form');

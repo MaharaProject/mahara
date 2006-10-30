@@ -44,6 +44,8 @@ class Session {
 
     /**
      * Defaults for user information.
+     *
+     * @var array
      */
     private $defaults;
 
@@ -70,7 +72,8 @@ class Session {
      * @return mixed
      * @throws KeyInvalidException
      * @todo<nigel>: Given that KeyInvalidException doesn't actually exist,
-     * referring to an incorrect key will be fatal.
+     * referring to an incorrect key will be fatal. I'm not going to do anything
+     * about this until more is known about what will be stored in the session.
      */
     public function get($key) {
         if (!isset($this->defaults[$key])) {
@@ -213,7 +216,7 @@ class Session {
                     $color = 'green';
                 }
                 elseif ($data['type'] == 'info') {
-                    $color = '#990;';
+                    $color = '#aa6;';
                 }
                 else {
                     $color = 'red';
@@ -225,16 +228,18 @@ class Session {
         return $result;
     }
 
-
     /**
-     * Create a session
+     * Create a session, by initialising the $_SESSION array.
      */
     private function create_session() {
-        session_start();
+        if (!session_id()) {
+            session_start();
+        }
         $_SESSION = array(
             'messages' => array()
         );
     }
+
 }
 
 /**

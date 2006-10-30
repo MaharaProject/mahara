@@ -17,21 +17,29 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage admin
- * @author     Nigel McNie <nigel@catalyst.net.nz>
+ * @subpackage core or plugintype/pluginname
+ * @author     Your Name <you@example.org>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
-define('INTERNAL',1);
-require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+defined('INTERNAL') || die();
 
-$smarty = smarty();
-$smarty->assign('title', get_string('adminoptionsauthenticationtitle', 'admin'));
-$smarty->assign('description', get_string('adminoptionsauthenticationdescription', 'admin'));
+$string['parentlanguage'] = '';
+$string['strftimedate']  = '';
+$string['strftimedateshort']  = '';
+$string['strftimedatetime'] = '';
+$string['strftimedaydate'] = '',
+$string['strftimedaydatetime'] = '';
+$string['strftimedayshort'] = '';
+$string['strftimedaytime'] = '';
+$string['strftimemonthyear'] = '';
+$string['strftimerecent'] = '';
+$string['strftimerecentfull'] = '';
+$string['strftimetime'] = '';
+$string['thislanguage'] = 'English';
 
-$smarty->assign('methods', get_records('auth_installed', '', '', '1'));
-$smarty->display('admin/options/authentication.tpl');
+
 
 ?>

@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage core or plugintype/pluginname
- * @author     Your Name <you@example.org>
+ * @subpackage core
+ * @author     Penny Leach <penny@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
@@ -33,11 +33,13 @@ class InstallationException extends Exception {}
 
 
 /**
- * This function checks core and plugins
- * for which need to be upgraded/installed
- * @returns array of objects
+ * This function checks core and plugins for which need to be upgraded/installed
+ *
+ * @param string $name The name of the plugin to check. If no name is specified,
+ *                     all plugins are checked.
+ * @return array of objects
  */
-function check_upgrades($name = null) {
+function check_upgrades($name=null) {
  
     $pluginstocheck = plugin_types();
 
@@ -72,8 +74,7 @@ function check_upgrades($name = null) {
         }
     }
 
-    // If we were just checking if the core needed to be upgraded, we can stop
-    // here.
+    // If we were just checking if the core needed to be upgraded, we can stop here
     if ($name == 'core') {
         return $toupgrade['core'];
     }
@@ -89,7 +90,7 @@ function check_upgrades($name = null) {
                 if (strpos($dir, '.') === 0) {
                     continue;
                 }
-                if (!empty($installing) && $dir != 'internal') {
+                if (empty($installing) && $dir != 'internal') {
                     continue;
                 }
                 if (!is_dir(get_config('docroot') . $plugin . '/' . $dir)) {
@@ -144,15 +145,22 @@ function check_upgrades($name = null) {
         foreach ((array)$toupgrade[$name] as $key => $value) {
             $upgrade->{$key} = $value;
         }
-        log_dbg('thing to upgrade:');
-        log_dbg($upgrade);
+        log_debug('thing to upgrade:');
+        log_debug($upgrade);
         return $upgrade;
     }
-    log_dbg('stuff to upgrade:');
-    log_dbg($toupgrade);
+    log_debug('stuff to upgrade:');
+    log_debug($toupgrade);
     return $toupgrade;
 }
 
+/**
+ * Upgrades the core system to given upgrade version.
+ *
+ * @param object $upgrade   The version to upgrade to
+ * @return bool             Whether the upgrade succeeded or not
+ * @throws SQLException     If the upgrade failed due to a database error
+ */
 function upgrade_core($upgrade) {
     global $db;
 
@@ -167,7 +175,7 @@ function upgrade_core($upgrade) {
         $status = xmldb_core_upgrade($upgrade->from);
     }
     if (!$status) {
-        throw new DatalibException("Failed to upgrade core");
+        throw new SQLException("Failed to upgrade core");
     }
 
     $status = set_config('version', $upgrade->to);
@@ -181,6 +189,13 @@ function upgrade_core($upgrade) {
     return $status;
 }
 
+/**
+ * Upgrades the plugin to a new version
+ *
+ * @param object $upgrade   Information about the plugin to upgrade
+ * @return bool             Whether the upgrade succeeded or not
+ * @throws SQLException     If the upgrade failed due to a database error
+ */
 function upgrade_plugin($upgrade) {
     global $db;
 
@@ -212,7 +227,7 @@ function upgrade_plugin($upgrade) {
     }
     if (!$status || $db->HasFailedTrans()) {
         $db->CompleteTrans();
-        throw new DatalibException("Failed to upgrade $upgrade->name");
+        throw new SQLException("Failed to upgrade $upgrade->name");
     }
 
     $installed = new StdClass;
@@ -301,6 +316,5 @@ function upgrade_plugin($upgrade) {
     
     return $status;
 }
-
 
 ?>

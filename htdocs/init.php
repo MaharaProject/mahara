@@ -116,7 +116,7 @@ catch (Exception $e) {
 try {
     load_config();
 } 
-catch (DatalibException $e) {
+catch (SQLException $e) {
     if (!defined('INSTALLER')) {
         throw $e;
     }

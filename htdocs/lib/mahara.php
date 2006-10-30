@@ -183,7 +183,7 @@ function get_string($identifier, $section='mahara') {
     /// Our only remaining option is to try English
     foreach ($locations as $location) {
         //if local_en not found, or string not found in local_en
-        $langfile = $location . 'en.utf8/' . $module . '.php';
+        $langfile = $location . 'en.utf8/' . $section . '.php';
         if (is_readable($langfile)) {
             if ($result = get_string_from_file($identifier, $langfile)) {
                 return format_langstring($result, $variables);
@@ -259,7 +259,7 @@ function load_config() {
     try {
         $dbconfig = get_records('config');
     } 
-    catch (DatalibException $e) {
+    catch (SQLException $e) {
         return false;
     }
     
@@ -517,7 +517,7 @@ function safe_require($plugintype, $pluginname, $filename='lib.php', $function='
 function plugin_types() {
     static $pluginstocheck;
     if (empty($pluginstocheck)) {
-        $pluginstocheck = array('artefact', 'auth');
+        $pluginstocheck = array('artefact', 'auth', 'notification');
     }
     return $pluginstocheck;
 }
@@ -582,7 +582,7 @@ function hsc ($text) {
  * Used by XMLDB
  */
 function debugging ($message, $level) {
-    log_dbg($message);
+    log_debug($message);
 }
 function xmldb_dbg($message) {
     log_warn($message);
