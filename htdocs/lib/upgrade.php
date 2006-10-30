@@ -90,7 +90,7 @@ function check_upgrades($name=null) {
                 if (strpos($dir, '.') === 0) {
                     continue;
                 }
-                if (!empty($installing) && $dir != 'internal') {
+                if (empty($installing) && $dir != 'internal') {
                     continue;
                 }
                 if (!is_dir(get_config('docroot') . $plugin . '/' . $dir)) {
