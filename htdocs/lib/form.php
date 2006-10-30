@@ -57,17 +57,20 @@ defined('INTERNAL') || die();
  * }
  * </pre>
  *
+ * Please see https://eduforge.org/wiki/wiki/mahara/wiki?pagename=FormAPI for
+ * more information on creating and using forms.
+ *
+ * @todo finish documenting forms. Put all form stuff in the correct package. Then work on
+ * todos listed inside this function
  */
 function form($data) {
     return Form::process($data);
     //
-    // TODO:
+    // @todo<nigel>: stuff to do for forms:
     // 
     //  - more form element types (inc. types like autocomplete and date picker and wyswiyg)
-    //  - only truly supports "post" due to use of $_POST - should put the value in #sent
-    //    or similar so it can be accessed
     //  - for elements like <select>, detect if an invalid option is submitted
-    //  - support processing of data before validation occurs (e.g. trim())
+    //  - support processing of data before validation occurs (e.g. trim(), strtoupper())
     //  - Basic validation is possible as there's a callback function for checking,
     //    but some helper functions could be written to make people's job validating
     //    stuff much easier (form_validate_email, form_validate_date etc).
@@ -76,28 +79,115 @@ function form($data) {
     //  - javascript validation
     //  - handle multiple submit buttons
     //  - handle multipage forms?
+    //  - handle a tabbed interface type of form?
     //  
     //
     //  @todo: note somewhere that name, method, action are NOT html escaped, you have to
     //  do it yourself when buliding a form
 }
 
-// For general form exceptions
+/**
+ * The form module throws FormExceptions.
+ */
 class FormException extends Exception {}
 
+/**
+ * Represents an HTML form. Forms created using this class have a lot of the
+ * legwork for forms abstracted away.
+ *
+ * The form API makes it really easy to build complex HTML forms, simply by
+ * building a hash describing your form, and defining one or two callback
+ * functions.
+ *
+ * For more information on how the form API works, please see the documentation
+ * at https://eduforge.org/wiki/wiki/mahara/wiki?pagename=FormAPI
+ */
 class Form {
+
+    /**
+     * Maintains a tab index across all created forms, to make it easy for
+     * people to forget about it and have it just work for all of their forms.
+     *
+     * @var int
+     */
     public static $formtabindex = 1;
 
+    /**
+     * The form name. This is required.
+     *
+     * @var string
+     */
     private $name = '';
+
+    /**
+     * The method that the form will be submitted by. Either 'get' or 'post'.
+     *
+     * @var string
+     */
     private $method = 'get';
+
+    /**
+     * The URL that the form will be submitted to.
+     *
+     * @var string
+     */
     private $action = '';
+
+    /**
+     * The tab index for this particular form.
+     *
+     * @var int
+     */
     private $tabindex = 1;
+
+    /**
+     * The form data array. Is this used?
+     */
     private $data = array();
+
+    /**
+     * The renderer used to build the HTML for the form that each element sits
+     * in. See the form/renderer package to find out the allowed types.
+     *
+     * @var string
+     */
     private $renderer = 'div';
+
+    /**
+     * Whether this form includes a file element. If so, the enctype attribute
+     * for the form will be specified as "multipart/mixed" as required. This
+     * is auto-detected by the Form class.
+     *
+     * @var bool
+     */
     private $fileupload = false;
+
+    /**
+     * Whether the form has been submitted. Available through the
+     * {@link is_submitted} method.
+     *
+     * @var bool
+     */
     private $submitted = false;
+
+    /**
+     * Whether the form is cancellable or not - that is, whether sending a
+     * request to cancel the form will be honoured or not. This is useful for
+     * the transient login form, where it must pass on cancel requests from
+     * other forms sometimes.
+     *
+     * @var bool
+     */
     private $iscancellable = true;
 
+    /**
+     * Processes the form. Called by the {@link form} function. It simply
+     * builds the form (processing it if it has been submitted), and returns
+     * the HTML to display the form
+     *
+     * @param array $data The form description hash
+     * @return string     The HTML representing the form
+     */
     public static function process($data) {
         $form = new Form($data);
         return $form->build();
@@ -107,17 +197,20 @@ class Form {
      * Sets the attributes of the form according to the passed data, performing
      * validation on the way. If the form is submitted, this checks and processes
      * the form.
+     *
+     * @param array $data The form description hash
      */
     public function __construct($data) {
         if (!isset($data['name']) || !preg_match('/^[a-z_][a-z0-9_]*$/', $data['name'])) {
             throw new FormException('Forms must have a name, and that name must be valid (validity test: could you give a PHP function the name?)');
         }
         if ($data['name'] == 'form') {
+            // @todo<nigel>: This may not be the case any more, should test this
             throw new FormException('You cannot call your form "form" due to namespace collisions with the form library');
         }
         $this->name = $data['name'];
 
-        // Assign defaults for form
+        // Assign defaults for the form
         $form_defaults = array(
             'method' => 'post',
             'action' => '',
@@ -132,10 +225,8 @@ class Form {
         }
         $this->method = $data['method'];
 
-        // Set the action
         $this->action = $data['action'];
 
-        // Set a default tabindex
         if (isset($data['tabindex'])) {
             $this->tabindex = intval($data['tabindex']);
         }
@@ -150,14 +241,14 @@ class Form {
         }
         $this->elements = $data['elements'];
 
-        // Add a hidden element to the form that can be used to check if it has
-        // been submitted.
+        // Add a hidden element to the form that can be used to check if it has been submitted.
         $this->elements['form_' . $this->name] = array(
             'type' => 'hidden',
             'value' => ''
         );
         
         // Set some attributes for all elements
+        // @todo<nigel>: probably set the description and help for the elements too
         foreach ($this->elements as $name => &$element) {
             if (!isset($element['type'])) {
                 $element['type'] = 'markup';
@@ -189,7 +280,7 @@ class Form {
             }
         }
 
-        // Check if the form was submitted
+        // Check if the form was submitted, and if so, validate and process it
         $global = ($this->method == 'get') ? $_GET: $_POST;
         if (isset($global['form_' . $this->name] )) {
             $this->submitted = true;
@@ -197,6 +288,8 @@ class Form {
             if ($this->iscancellable) {
                 foreach ($global as $key => $value) {
                     if (substr($key, 0, 7) == 'cancel_') {
+                        // Check for and call the cancel function handler
+                        // @todo<nigel>: it might be that this function could be optional
                         $function = $this->name . '_' . $key;
                         if (!function_exists($function)) {
                             throw new FormException('Form "' . $this->name . '" does not have a cancel function handler for "' . substr($key, 7) . '"');
@@ -227,32 +320,53 @@ class Form {
                 $function = $this->name . '_submit';
                 if (function_exists($function)) {
                     // Call the user defined function for processing a submit
-                    // This function should really redirect/exit after done
+                    // This function should really redirect/exit after it has
+                    // finished processing the form.
                     $function($values);
                 }
                 else {
-                    throw new FormException('No function registered to handle form submission for form ' . $this->name);
+                    throw new FormException('No function registered to handle form submission for form "' . $this->name . '"');
                 }
             }
         }
     }
 
-    function get_name() {
+    /**
+     * Returns the form name
+     *
+     * @return string
+     */
+    public function get_name() {
         return $this->name;
     }
 
-    function get_renderer() {
+    /**
+     * Returns the renderer used on to render the form
+     *
+     * @return string
+     */
+    public function get_renderer() {
         return $this->renderer;
     }
 
+    /**
+     * Returns whether the form has been submitted
+     *
+     * @return bool
+     */
     function is_submitted() {
         return $this->submitted;
     }
 
     /**
-     * Builds the HTML for the form
+     * Builds and returns the HTML for the form, respecting the chosen renderer.
      *
-     * Note: the form action is NOT html escaped, to allow people to build their own
+     * Note that the "action" attribute for the form tag are NOT HTML escaped
+     * for you. This allows you to build your own URLs, should you require. On
+     * the other hand, this means you must be careful about escaping the URL,
+     * especially if it has data from an external source in it.
+     *
+     * @return string The form as HTML
      */
     public function build() {
         $result = '<form';
@@ -273,9 +387,12 @@ class Form {
 
     /**
      * Given an element, gets the value for it from this form
+     *
+     * @param  array $element The element to get the value for
+     * @return mixed          The element's value
+     * @throws FormException  If the element could not be found
      */
     public function get_value($element) {
-        // @todo consult $this->method to see whether to get from $_POST or $_GET
         $global = ($this->method == 'get') ? $_GET : $_POST;
         if (isset($element['value'])) {
             return $element['value'];
@@ -286,13 +403,15 @@ class Form {
         else if (isset($element['defaultvalue'])) {
             return $element['defaultvalue'];
         }
-        return null;
+        throw new FormException('Element "' . $element['name'] . '" cannot be found');
     }
 
     /**
      * Retrieves a list of elements in the form.
      *
-     * This flattens fieldsets, and ignore the actual fieldset elements
+     * This flattens fieldsets, and ignores the actual fieldset elements
+     *
+     * @return array The elements of the form
      */ 
     public function get_elements() {
         $elements = array();
@@ -313,8 +432,11 @@ class Form {
      * Returns the element with the given name. Throws a FormException if the
      * element cannot be found.
      *
-     * @param string $name The name of the element to find
-     * @return array       The element
+     * Fieldset elements are ignored. This might change if a valid case for
+     * needing them is found.
+     *
+     * @param  string $name  The name of the element to find
+     * @return array         The element
      * @throws FormException If the element could not be found
      */
     public function get_element($name) {
@@ -327,7 +449,16 @@ class Form {
     }
 
     /**
-     * Retrieves submitted values from POST for the elements of this form
+     * Retrieves submitted values from POST for the elements of this form.
+     *
+     * This takes into account that some elements may not even have been set,
+     * for example if they were check boxes that were not checked upon
+     * submission.
+     *
+     * A value is returned for every element (except fieldsets of course). If
+     * an element was not set, the value set is <kbd>null</kbd>.
+     *
+     * @return array The submitted values
      */
     private function get_submitted_values() {
         $result = array();
@@ -346,9 +477,18 @@ class Form {
         return $result;
     }
 
-
     /**
-     * Performs simple validation based off the definition array
+     * Performs simple validation based off the definition array.
+     *
+     * Rules can be added to <kbd>lib/form/rules/</kbd> directory, and then
+     * re-used in the 'rules' index of each element in the form definition
+     * hash.
+     *
+     * More complicated validation is possible by defining an optional
+     * callback with the name {$form->name}_validate. See the documentation for
+     * more information.
+     *
+     * @param array $values The submitted values from the form
      */
     private function validate($values) {
         foreach ($this->get_elements() as $element) {
@@ -375,9 +515,10 @@ class Form {
     /**
      * Returns whether a field has an error marked on it.
      *
-     * @param string $name The name of the element to check
-     * @return bool        Whether the element has an error
+     * @param  string $name  The name of the element to check
+     * @return bool          Whether the element has an error
      * @throws FormException If the element could not be found
+     * @todo<nigel>: For consistency, should pass an $element here?
      */
     public function get_error($name) {
         $element = $this->get_element($name);
@@ -386,6 +527,11 @@ class Form {
 
     /**
      * Marks a field has having an error
+     *
+     * @param string $name    The name of the element to set an error on
+     * @param string $message The error message
+     * @throws FormException  If the element could not be found
+     * @todo<nigel>: For consistency, should pass an $element here?
      */
     public function set_error($name, $message) {
         foreach ($this->elements as &$element) {
@@ -404,13 +550,15 @@ class Form {
                 }
             }
         }
+        throw new FormException('Element "' . $name . '" could not be found');
     }
 
 
     /**
      * Checks if there are errors on any of the form elements.
      *
-     * @return bool whether there are errors with the form
+     * @return bool Whether there are errors with the form
+     * @todo<nigel>: rename to has_errors()?
      */
     private function errors() {
         foreach ($this->get_elements() as $element) {
@@ -422,7 +570,16 @@ class Form {
     }
 
     /**
-     * Makes an ID for an element
+     * Makes an ID for an element.
+     *
+     * Element IDs are used for <label>s, so use this method to ensure that
+     * an element gets an ID.
+     *
+     * The element's existing 'id' and 'name' attributes are checked first. If
+     * they are not specified, a random ID is synthesised
+     *
+     * @param array $element The element to make an ID for
+     * @return string        The ID for the element
      */
     public static function make_id($element) {
         if (isset($element['id'])) {
@@ -434,6 +591,18 @@ class Form {
         return substr(md5(mt_rand()), 0, 4);
     }
 
+    /**
+     * Makes a class for an element.
+     *
+     * Elements can have several classes set on them depending on their state.
+     * The classes are useful for (among other things), styling elements
+     * differently if they are in these states.
+     *
+     * Currently, the states an element can be in are 'required' and 'error'.
+     *
+     * @param array $element The element to make a class for
+     * @return string        The class for an element
+     */
     public static function make_class($element) {
         $classes = array();
         if (isset($element['class'])) {
@@ -454,6 +623,22 @@ class Form {
      *
      * This EXCLUDES the "value" attribute, as various form elements set
      * their value in different ways.
+     *
+     * This allows each element to have most of the standard HTML attributes
+     * that you can normally set on a form element.
+     *
+     * The attributes generated by this method will include (if set for the
+     * element itself), are <kbd>accesskey, class, dir, id, lang, maxlength,
+     * name, size, style</kbd> and <kbd>tabindex</kbd>.
+     *
+     * The <kbd>class</kbd> and <kbd>id</kbd> attributes are typically built
+     * beforehand with {@link make_class} and {@link make_id} respectively.
+     * The <kbd>maxlength</kbd> attribute is only set if the element has a
+     * "maxlength" rule on it.
+     *
+     * @param array $element The element to make attributes for
+     * @param array $exclude Any attributes to explicitly exclude from adding
+     * @return string        The attributes for the element
      */
     public static function element_attributes($element, $exclude=array()) {
         static $attributes = array('accesskey', 'class', 'dir', 'id', 'lang', 'maxlength', 'name', 'size', 'style', 'tabindex');
@@ -465,7 +650,7 @@ class Form {
             }
         }
 
-        if (isset($element['rules']['maxlength'])) {
+        if (!in_array('maxlength', $exclude) && isset($element['rules']['maxlength'])) {
             $result .= ' maxlength="' . intval($element['rules']['maxlength']) . '"';
         }
 
@@ -478,7 +663,6 @@ class Form {
         return $result;
     }
 
-
 }
 
 
@@ -489,12 +673,13 @@ class Form {
  * Data guaranteed to be available:
  *   - type
  *   - title
+ *   - @todo more when I guarantee description, help
+ * @todo document properly
  */
 function form_render_element($element, $form) {
     // Make sure that the function to render the element type is available
     $function = 'form_render_' . $element['type'];
     if (!function_exists($function)) {
-        // Attempt to include the relevant file
         @include('form/elements/' . $element['type'] . '.php');
         if (!function_exists($function)) {
             throw new FormException('No such form element: ' . $element['type']);
@@ -530,6 +715,5 @@ function form_render_element($element, $form) {
 
     return $prefix . $rendererfunction($function($element, $form), $element) . $suffix;
 }
-
 
 ?>
