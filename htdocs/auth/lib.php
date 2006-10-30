@@ -115,7 +115,7 @@ abstract class Auth {
      * @param string $username The username to check
      * @return bool            Whether the username is in valid form.
      */
-    public function is_username_valid($username) {
+    public static function is_username_valid($username) {
         return true;
     }
 
@@ -132,7 +132,7 @@ abstract class Auth {
      * @param string $password The password to check
      * @return bool            Whether the username is in valid form.
      */
-    public function is_password_valid($password) {
+    public static function is_password_valid($password) {
         return true;
     }
 
