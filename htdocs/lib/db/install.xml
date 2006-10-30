@@ -4,7 +4,7 @@
     xsi:noNamespaceSchemaLocation="../../lib/xmldb/xmldb.xsd"
 >
     <TABLES>
-        <!-- core tables -->
+        <!-- core tables that plugins rely on -->
         <TABLE NAME="config">
             <FIELDS>
                 <FIELD NAME="field" TYPE="char" LENGTH="255" NOTNULL="true" />
@@ -20,7 +20,12 @@
                 <FIELD NAME="username" TYPE="char" LENGTH="100" NOTNULL="true" />
                 <FIELD NAME="password" TYPE="char" LENGTH="40" NOTNULL="true" />
                 <FIELD NAME="salt" TYPE="char" LENGTH="8" />
-                <FIELD NAME="password_change" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
+                <FIELD NAME="passwordchange" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
+                <FIELD NAME="deleted" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
+                <FIELD NAME="expiry" TYPE="datetime" NOTNULL="false" />
+                <FIELD NAME="lastlogin" TYPE="datetime" NOTNULL="false" />
+                <FIELD NAME="staff" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
+                <FIELD NAME="admin" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
@@ -50,6 +55,26 @@
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="callfunction" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="activity_type">
+            <FIELDS>
+                <FIELD NAME="name" TYPE="char" LENGTH="50" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="name" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="activity_queue">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+                <FIELD NAME="type" TYPE="char" LENGTH="50" NOTNULL="true" />
+                <FIELD NAME="data" TYPE="text" NOTNULL="true" />
+                <FIELD NAME="ctime" TYPE="datetime" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+                <KEY NAME="typefk" TYPE="foreign" FIELDS="type" REFTABLE="activity_type" REFFIELDS="name" />
             </KEYS>
         </TABLE>
         <!-- auth plugin tables -->
@@ -105,6 +130,59 @@
                 <KEY NAME="subscruk" TYPE="unique" FIELDS="plugin,event,callfunction" />
             </KEYS>
         </TABLE>
+        <!-- notification plugin tables -->
+        <TABLE NAME="notification_installed">
+            <FIELDS> 
+                <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="version" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="release" TYPE="text" LENGTH="small" NOTNULL="true" />
+                <FIELD NAME="active" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="name" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="notification_config">
+            <FIELDS>
+                <FIELD NAME="plugin" TYPE="char" LENGTH="100" NOTNULL="true" />
+                <FIELD NAME="field" TYPE="char" LENGTH="100" NOTNULL="true" />
+                <FIELD NAME="value" TYPE="text" LENGTH="small" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="plugin,field" />
+                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="notification_installed" REFFIELDS="name" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="notification_cron">
+            <FIELDS>
+                <FIELD NAME="plugin" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="callfunction" TYPE="char" LENGTH="255" NOTNULL="true"  />
+                <FIELD NAME="nextrun" TYPE="datetime" NOTNULL="false"  />
+                <FIELD NAME="minute" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*"  />
+                <FIELD NAME="hour" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*"  />
+                <FIELD NAME="day" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*"  />
+                <FIELD NAME="month" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*"  />
+                <FIELD NAME="dayofweek" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="plugin,callfunction" />
+                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="notification_installed" REFFIELDS="name" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="notification_event_subscription">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" SEQUENCE="true"  NOTNULL="true" />
+                <FIELD NAME="plugin" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="event" TYPE="char" LENGTH="50" NOTNULL="true" />
+                <FIELD NAME="callfunction" TYPE="char" LENGTH="255" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="notification_installed" REFFIELDS="name" />
+                <KEY NAME="eventfk" TYPE="foreign" FIELDS="event" REFTABLE="event_type" REFFIELDS="name" />
+                <KEY NAME="subscruk" TYPE="unique" FIELDS="plugin,event,callfunction" />
+            </KEYS>
+        </TABLE>
         <!-- artefact plugin tables -->
         <TABLE NAME="artefact_installed">
             <FIELDS> 
@@ -140,26 +218,6 @@
                 <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="artefact_installed" REFFIELDS="name" />
             </KEYS>
         </TABLE>
-        <TABLE NAME="artefact">
-            <FIELDS>
-                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
-                <FIELD NAME="artefacttype" TYPE="char" LENGTH="255" NOTNULL="true"  />
-                <FIELD NAME="container" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"  />
-                <FIELD NAME="parentid" TYPE="int" LENGTH="10" NOTNULL="false"  />
-                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true"  />
-                <FIELD NAME="mtime" TYPE="datetime" NOTNULL="true"  />
-                <FIELD NAME="vtime" TYPE="datetime" NOTNULL="true"  />
-                <FIELD NAME="locked" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"  />
-                <FIELD NAME="title" TYPE="text" NOTNULL="true"  />
-                <FIELD NAME="description" TYPE="text" NOTNULL="false"  />
-                <FIELD NAME="note" TYPE="text" NOTNULL="false" />
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
-                <KEY NAME="typefk" TYPE="foreign" FIELDS="artefacttype" REFTABLE="artefact_installed_type" REFFIELDS="id"  />
-                <KEY NAME="parentfk" TYPE="foreign" FIELDS="parentid" REFTABLE="artefact" REFFIELDS="id" />
-            </KEYS>
-        </TABLE>
         <TABLE NAME="artefact_cron">
             <FIELDS>
                 <FIELD NAME="plugin" TYPE="char" LENGTH="255" NOTNULL="true" />
@@ -190,6 +248,386 @@
                 <KEY NAME="subscruk" TYPE="unique" FIELDS="plugin,event,callfunction" />
             </KEYS>
         </TABLE>
+        <!-- end of artefact plugin tables, back to core tables -->
+        <TABLE NAME="artefact">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+                <FIELD NAME="artefacttype" TYPE="char" LENGTH="255" NOTNULL="true"  />
+                <FIELD NAME="container" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"  />
+                <FIELD NAME="parent" TYPE="int" LENGTH="10" NOTNULL="false"  />
+                <FIELD NAME="owner" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true"  />
+                <FIELD NAME="mtime" TYPE="datetime" NOTNULL="true"  />
+                <FIELD NAME="atime" TYPE="datetime" NOTNULL="true"  />
+                <FIELD NAME="locked" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"  />
+                <FIELD NAME="title" TYPE="text" NOTNULL="true"  />
+                <FIELD NAME="description" TYPE="text" NOTNULL="false"  />
+                <FIELD NAME="note" TYPE="text" NOTNULL="false" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+                <KEY NAME="typefk" TYPE="foreign" FIELDS="artefacttype" REFTABLE="artefact_installed_type" REFFIELDS="id"  />
+                <KEY NAME="parentfk" TYPE="foreign" FIELDS="parent" REFTABLE="artefact" REFFIELDS="id" />
+                <KEY NAME="userfk" TYPE="foreign" FIELDS="owner" REFTABLE="usr" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="community">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+                <FIELD NAME="name" TYPE="text" NOTNULL="true" />
+                <FIELD NAME="description" TYPE="text" NOTNULL="false" />
+                <FIELD NAME="jointype" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="anyone" />
+                <FIELD NAME="owner" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
+                <FIELD NAME="mtime" TYPE="datetime" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+                <KEY NAME="nameuk" TYPE="unique" FIELDS="name" />
+                <KEY NAME="ownerfk" TYPE="foreign" FIELDS="owner" REFTABLE="usr" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="community_member">
+            <FIELDS>
+                <FIELD NAME="community" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="member" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
+                <FIELD NAME="tutor" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="community,member" />
+                <KEY NAME="communityfk" TYPE="foreign" FIELDS="community" REFTABLE="community" REFFIELDS="id" />
+                <KEY NAME="memberfk" TYPE="foreign" FIELDS="member" REFTABLE="usr" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="community_member_request">
+            <FIELDS>
+                <FIELD NAME="community" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="member" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
+                <FIELD NAME="reason" TYPE="text" NOTNULL="false" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="community,member" />
+                <KEY NAME="communityfk" TYPE="foreign" FIELDS="community" REFTABLE="community" REFFIELDS="id" />
+                <KEY NAME="memberfk" TYPE="foreign" FIELDS="member" REFTABLE="usr" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="community_member_invite">
+            <FIELDS>
+                <FIELD NAME="community" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="member" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
+                <FIELD NAME="reason" TYPE="text" NOTNULL="false" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="community,member" />
+                <KEY NAME="communityfk" TYPE="foreign" FIELDS="community" REFTABLE="community" REFFIELDS="id" />
+                <KEY NAME="memberfk" TYPE="foreign" FIELDS="member" REFTABLE="usr" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
+        <!-- user related tables -->
+        <TABLE NAME="usr_group"> 
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+                <FIELD NAME="name" TYPE="text" NOTNULL="true" />
+                <FIELD NAME="owner" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="description" TYPE="text" NOTNULL="false" />
+                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
+                <FIELD NAME="mtime" TYPE="datetime" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+                <KEY NAME="ownerfk" TYPE="foreign" FIELDS="owner" REFTABLE="usr" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="usr_group_member">
+            <FIELDS>
+                <FIELD NAME="group" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="member" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="group,member" />
+                <KEY NAME="groupfk" TYPE="foreign" FIELDS="group" REFTABLE="usr_group" REFFIELDS="id" />
+                <KEY NAME="memberfk" TYPE="foreign" FIELDS="member" REFTABLE="usr" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="usr_account_preference">
+            <FIELDS>
+                <FIELD NAME="user" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="field" TYPE="char" LENGTH="100" NOTNULL="true" />
+                <FIELD NAME="value" TYPE="text" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="user,field" />
+                <KEY NAME="userfk" TYPE="foreign" FIELDS="user" REFTABLE="usr" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="usr_activity_preference">
+            <FIELDS>
+                <FIELD NAME="user" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="activity" TYPE="char" LENGTH="100" NOTNULL="true" />
+                <FIELD NAME="method" TYPE="text" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="user,activity" />
+                <KEY NAME="userfk" TYPE="foreign" FIELDS="user" REFTABLE="usr" REFFIELDS="id" />
+                <KEY NAME="activityfk" TYPE="foreign" FIELDS="activity" REFTABLE="activity_type" REFFIELDS="name" />
+                <KEY NAME="methodfk" TYPE="foreign" FIELDS="method" REFTABLE="notification_installed" REFFIELDS="name" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="usr_friend">
+            <FIELDS>
+                <FIELD NAME="user1" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="user2" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+               <KEY NAME="primary" TYPE="primary" FIELDS="user1,user2" />
+               <KEY NAME="user1fk" TYPE="foreign" FIELDS="user1" REFTABLE="usr" REFFIELDS="id" />
+               <KEY NAME="user2fk" TYPE="foreign" FIELDS="user2" REFTABLE="usr" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="usr_friend_request">
+            <FIELDS>
+                <FIELD NAME="owner" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="requester" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
+                <FIELD NAME="reason" TYPE="text" NOTNULL="false" />
+            </FIELDS>
+            <KEYS>
+               <KEY NAME="primary" TYPE="primary" FIELDS="owner,requester" />
+               <KEY NAME="ownerfk" TYPE="foreign" FIELDS="owner" REFTABLE="usr" REFFIELDS="id" />
+               <KEY NAME="requesterfk" TYPE="foreign" FIELDS="requester" REFTABLE="usr" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="usr_registration">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" SEQUENCE="true" NOTNULL="true" />
+                <FIELD NAME="email" TYPE="text" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="usr_password_request">
+            <FIELDS>
+                <FIELD NAME="user" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="expiry" TYPE="datetime" NOTNULL="true" />
+                <FIELD NAME="code" TYPE="char" LENGTH="20" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="user,expiry" />
+                <KEY NAME="foreign" TYPE="foreign" FIELDS="user" REFTABLE="usr" REFFIELDS="id" />
+            </KEYS>         
+        </TABLE>
+        <TABLE NAME="usr_suspension">
+            <FIELDS>
+                <FIELD NAME="user" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
+                <FIELD NAME="reason" TYPE="text" NOTNULL="false" />
+                <FIELD NAME="cuser" TYPE="int" LENGTH="10" NOTNULL="false" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="user,ctime" />
+                <KEY NAME="userfk" TYPE="foreign" FIELDS="user" REFTABLE="usr" REFFIELDS="id" />
+                <KEY NAME="cuserfk" TYPE="foreign" FIELDS="cuser" REFTABLE="usr" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="template_category">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+                <FIELD NAME="parent" TYPE="int" LENGTH="10" NOTNULL="false" />
+                <FIELD NAME="name" TYPE="text" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+                <KEY NAME="parentfk" TYPE="foreign" FIELDS="parent" REFTABLE="template_category" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="template">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+                <FIELD NAME="name" TYPE="text" NOTNULL="true" />
+                <FIELD NAME="title" TYPE="text" NOTNULL="true" />
+                <FIELD NAME="description" TYPE="text" NOTNULL="false" />
+                <FIELD NAME="category" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="owner" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
+                <FIELD NAME="mtime" TYPE="datetime" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+                <KEY NAME="ownerfk" TYPE="foreign" FIELDS="owner" REFTABLE="usr" REFFIELDS="id" />
+                <KEY NAME="categoryfk" TYPE="foreign" FIELDS="category" REFTABLE="template_category" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="view">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+                <FIELD NAME="title" TYPE="text" NOTNULL="true" />
+                <FIELD NAME="description" TYPE="text" NOTNULL="false" />
+                <FIELD NAME="owner" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="template" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
+                <FIELD NAME="mtime" TYPE="datetime" NOTNULL="true" />
+                <FIELD NAME="submitted" TYPE="int" LENGTH="10" NOTNULL="false" />
+                <FIELD NAME="public" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" />
+                <FIELD NAME="loggedin" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" />
+                <FIELD NAME="friendsonly" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+                <KEY NAME="ownerfk" TYPE="foreign" FIELDS="owner" REFTABLE="usr" REFFIELDS="id" />
+                <KEY NAME="templatefk" TYPE="foreign" FIELDS="template" REFTABLE="template" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="view_artefact">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+                <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="block" TYPE="text" NOTNULL="true" />
+                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
+                <!--more? -->
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+                <KEY NAME="viewartuk" TYPE="unique" FIELDS="view,artefact" />
+                <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id" />
+                <KEY NAME="artefactfk" TYPE="foreign" FIELDS="artefact" REFTABLE="artefact" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="view_content">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+                <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="content" TYPE="text" NOTNULL="true" />
+                <FIELD NAME="block" TYPE="text" NOTNULL="true" />
+                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+                <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="view_access_community">
+            <FIELDS>
+                <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="community" TYPE="int" LENGTH="10" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="view,community" />
+                <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id" />
+                <KEY NAME="communityfk" TYPE="foreign" FIELDS="community" REFTABLE="community" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="view_access_group">
+            <FIELDS>
+                <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="group" TYPE="int" LENGTH="10" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="view,group" />
+                <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id" />
+                <KEY NAME="groupfk" TYPE="foreign" FIELDS="group" REFTABLE="usr_group" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="view_access_user">
+            <FIELDS>
+                <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="user" TYPE="int" LENGTH="10" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="view,user" />
+                <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id" />
+                <KEY NAME="userfk" TYPE="foreign" FIELDS="user" REFTABLE="usr" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
+        <!-- site content stuff -->
+        <!-- 
+        <TABLE NAME="site_file">
+        </TABLE>
+        -->
+        <TABLE NAME="site_menu">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+                <FIELD NAME="title" TYPE="text" NOTNULL="true" />
+                <FIELD NAME="file" TYPE="int" LENGTH="10" NOTNULL="false" />
+                <FIELD NAME="url" TYPE="text" NOTNULL="false" />
+                <FIELD NAME="displayorder" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <!--- public? -->
+                <!-- displayorder maybe should be the primary key -->
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+            <!--
+                <KEY NAME="filefk" TYPE="foreign" FIELDS="file" REFTABLE="site_file" REFFIELDS="id" />
+            -->
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="site_content"> 
+            <FIELDS>
+                <FIELD NAME="name" TYPE="char" LENGTH="50" NOTNULL="true" />
+                <FIELD NAME="content" TYPE="text" NOTNULL="true" />
+                <FIELD NAME="ctime" TYPE="datetime" NOTNOT="true" />
+                <FIELD NAME="mtime" TYPE="datetime" NOTNULL="true" />
+                <FIELD NAME="mauthor" TYPE="int" LENGTH="10" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="name" />
+                <KEY NAME="mauthorfk" TYPE="foreign" FIELDS="mauthor" REFTABLE="usr" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
+        <!-- watchlist stuff -->
+        <TABLE NAME="usr_watchlist_artefact">
+            <FIELDS>
+                <FIELD NAME="user" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="user,artefact" />
+                <KEY NAME="userfk" TYPE="foreign" FIELDS="user" REFTABLE="usr" REFFIELDS="id" />
+                <KEY NAME="artefactfk" TYPE="foreign" FIELDS="artefact" REFTABLE="artefact" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="usr_watchlist_view">
+            <FIELDS>
+                <FIELD NAME="user" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="user,view" />
+                <KEY NAME="userfk" TYPE="foreign" FIELDS="user" REFTABLE="usr" REFFIELDS="id" />
+                <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="usr_watchlist_community">
+            <FIELDS>
+                <FIELD NAME="user" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="community" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="user,community" />
+                <KEY NAME="userfk" TYPE="foreign" FIELDS="user" REFTABLE="usr" REFFIELDS="id" />
+                <KEY NAME="communityfk" TYPE="foreign" FIELDS="community" REFTABLE="community" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="institution">
+            <FIELDS>
+                <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="displayname" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="plugin" TYPE="char" LENGTH="255" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="name" />
+                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="auth_installed" REFFIELDS="name" />
+            </KEYS>
+        </TABLE>
     </TABLES>
     <STATEMENTS>
         <STATEMENT NAME="insert config" TYPE="insert" TABLE="config">
@@ -199,15 +637,25 @@
         </STATEMENT>
         <STATEMENT NAME="insert root user" TYPE="insert" TABLE="usr">
             <SENTENCES>
-                <SENTENCE TEXT="(username, password, password_change) VALUES ('root', 'mahara', 1)"/>
+                <SENTENCE TEXT="(username, password, passwordchange) VALUES ('root', 'mahara', 1)"/>
             </SENTENCES>
         </STATEMENT>
-        <STATEMENT NAME="insert events" TYPE="insert" TABLE="event_type">
+        <STATEMENT NAME="insert event types" TYPE="insert" TABLE="event_type">
             <SENTENCES>
                 <SENTENCE TEXT="(name) VALUES ('createuser')" />
                 <SENTENCE TEXT="(name) VALUES ('updateuser')" />
                 <SENTENCE TEXT="(name) VALUES ('suspenduser')" />
                 <SENTENCE TEXT="(name) VALUES ('deleteuser')" />
+            </SENTENCES>
+        </STATEMENT>
+        <STATEMENT NAME="insert activity types" TYPE="insert" TABLE="activity_type">
+            <SENTENCES>
+                <SENTENCE TEXT="(name) VALUES ('maharamessage')" />
+                <SENTENCE TEXT="(name) VALUES ('usermessage')" />
+                <SENTENCE TEXT="(name) VALUES ('adminmessage')" />
+                <SENTENCE TEXT="(name) VALUES ('feedback')" />
+                <SENTENCE TEXT="(name) VALUES ('watchlist')" />
+                <SENTENCE TEXT="(name) VALUES ('newview')" />
             </SENTENCES>
         </STATEMENT>
     </STATEMENTS>
