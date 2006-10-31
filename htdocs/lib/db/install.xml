@@ -61,6 +61,7 @@
             <FIELDS>
                 <FIELD NAME="name" TYPE="char" LENGTH="50" NOTNULL="true" />
                 <FIELD NAME="admin" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
+                <FIELD NAME="delay" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="name" />
@@ -651,15 +652,15 @@
         </STATEMENT>
         <STATEMENT NAME="insert activity types" TYPE="insert" TABLE="activity_type">
             <SENTENCES>
-                <SENTENCE TEXT="(name) VALUES ('maharamessage')" />
-                <SENTENCE TEXT="(name) VALUES ('usermessage')" />
-                <SENTENCE TEXT="(name) VALUES ('feedback')" />
-                <SENTENCE TEXT="(name) VALUES ('watchlist')" />
-                <SENTENCE TEXT="(name) VALUES ('newview')" />
-                <SENTENCE TEXT="(name) VALUES ('contactus')" />
-                <SENTENCE TEXT="(name, admin) VALUES ('objectionable', 1)" />
-                <SENTENCE TEXT="(name, admin) VALUES ('virusrepeat', 1)" />
-                <SENTENCE TEXT="(name, admin) VALUES ('virusrelease', 1)" />
+                <SENTENCE TEXT="(name, admin, delay) VALUES ('maharamessage', 0, 0)" />
+                <SENTENCE TEXT="(name, admin, delay) VALUES ('usermessage', 0, 0)" />
+                <SENTENCE TEXT="(name, admin, delay) VALUES ('feedback', 0, 0)" />
+                <SENTENCE TEXT="(name, admin, delay) VALUES ('watchlist', 0, 1)" />
+                <SENTENCE TEXT="(name, admin, delay) VALUES ('newview', 0, 1)" />
+                <SENTENCE TEXT="(name, admin, delay) VALUES ('contactus', 1, 1)" />
+                <SENTENCE TEXT="(name, admin, delay) VALUES ('objectionable', 1, 1)" />
+                <SENTENCE TEXT="(name, admin, delay) VALUES ('virusrepeat', 1, 1)" />
+                <SENTENCE TEXT="(name, admin, delay) VALUES ('virusrelease', 1, 1)" />
             </SENTENCES>
         </STATEMENT>
     </STATEMENTS>
