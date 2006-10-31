@@ -523,6 +523,14 @@ function plugin_types() {
 }
 
 /**
+ * Returns the list of site content pages
+ * @return array of names
+ */
+function site_content_pages() {
+    return array('about','home','loggedouthome','privacy','termsandconditions','uploadcopyright');
+}
+
+/**
  * Helper to call a static method when you do not know the name of the class
  * you want to call the method on. PHP5 does not support $class::method().
  */
