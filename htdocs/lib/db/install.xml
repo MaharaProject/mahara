@@ -60,6 +60,7 @@
         <TABLE NAME="activity_type">
             <FIELDS>
                 <FIELD NAME="name" TYPE="char" LENGTH="50" NOTNULL="true" />
+                <FIELD NAME="admin" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="name" />
@@ -652,10 +653,13 @@
             <SENTENCES>
                 <SENTENCE TEXT="(name) VALUES ('maharamessage')" />
                 <SENTENCE TEXT="(name) VALUES ('usermessage')" />
-                <SENTENCE TEXT="(name) VALUES ('adminmessage')" />
                 <SENTENCE TEXT="(name) VALUES ('feedback')" />
                 <SENTENCE TEXT="(name) VALUES ('watchlist')" />
                 <SENTENCE TEXT="(name) VALUES ('newview')" />
+                <SENTENCE TEXT="(name) VALUES ('contactus')" />
+                <SENTENCE TEXT="(name, admin) VALUES ('objectionable', 1)" />
+                <SENTENCE TEXT="(name, admin) VALUES ('virusrepeat', 1)" />
+                <SENTENCE TEXT="(name, admin) VALUES ('virusrelease', 1)" />
             </SENTENCES>
         </STATEMENT>
     </STATEMENTS>
