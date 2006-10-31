@@ -509,7 +509,6 @@ function safe_require($plugintype, $pluginname, $filename='lib.php', $function='
     
 }
 
-
 /**
  * This function returns the list of plugintypes we currently care about
  * @return array of names
@@ -541,11 +540,25 @@ function call_static_method($class, $method) {
     return call_user_func_array(array($class, $method), $args);
 }
 
+/**
+ * Given a series of arguments, builds a Mahara coding style class name,
+ * prefixed with 'Plugin'.
+ *
+ * @todo perhaps this should be renamed? (plugin_class_name or similar)
+ * @param mixed   A list of strings to be used in generating the class name
+ * @return string A mahara class name
+ */
 function generate_class_name() {
     $args = func_get_args();
     return 'Plugin' . implode('', array_map('ucfirst', $args));
 }
 
+/**
+ * Redirects a user to the given location. Once called, the script will exit.
+ *
+ * @param string $location The place to redirect the user to. Should be an
+ *                         absolute URL.
+ */
 function redirect($location) {
     if (headers_sent()) {
         throw new Exception('Headers already sent when redirect() was called');
