@@ -17,7 +17,7 @@
         <TABLE NAME="usr">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
-                <FIELD NAME="username" TYPE="char" LENGTH="100" NOTNULL="true" />
+                <FIELD NAME="username" TYPE="char" LENGTH="30" NOTNULL="true" />
                 <FIELD NAME="password" TYPE="char" LENGTH="40" NOTNULL="true" />
                 <FIELD NAME="salt" TYPE="char" LENGTH="8" />
                 <FIELD NAME="passwordchange" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
@@ -26,6 +26,10 @@
                 <FIELD NAME="lastlogin" TYPE="datetime" NOTNULL="false" />
                 <FIELD NAME="staff" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
                 <FIELD NAME="admin" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
+                <FIELD NAME="firstname" TYPE="text" NOTNULL="true" />
+                <FIELD NAME="lastname" TYPE="text" NOTNULL="true" />
+                <FIELD NAME="prefname" TYPE="text" NOTNULL="false" />
+                <FIELD NAME="email" TYPE="text" NOTNULL="true" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
@@ -639,7 +643,7 @@
         </STATEMENT>
         <STATEMENT NAME="insert root user" TYPE="insert" TABLE="usr">
             <SENTENCES>
-                <SENTENCE TEXT="(username, password, passwordchange) VALUES ('root', 'mahara', 1)"/>
+                <SENTENCE TEXT="(username, password, passwordchange, firstname, lastname, email) VALUES ('root', 'mahara', 1, 'Admin', 'User', 'admin@example.com')"/>
             </SENTENCES>
         </STATEMENT>
         <STATEMENT NAME="insert event types" TYPE="insert" TABLE="event_type">
