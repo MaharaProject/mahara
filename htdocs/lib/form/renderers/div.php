@@ -44,17 +44,17 @@ function form_renderer_div($builtelement, $rawelement) {
     $result .= $builtelement;
 
     // Contextual help
-    if (isset($rawelement['help'])) {
+    if (!empty($rawelement['help'])) {
         $result .= ' <span class="help"><a href="#" title="' . hsc($rawelement['help']) . '">?</a></span>';
     }
 
     // Description - optional description of the element, or other note that should be visible
     // on the form itself (without the user having to hover over contextual help 
-    if (isset($rawelement['description'])) {
+    if (!empty($rawelement['description'])) {
         $result .= '<div class="description"> ' . hsc($rawelement['description']) . "</div>";
     }
 
-    if (isset($rawelement['error'])) {
+    if (!empty($rawelement['error'])) {
         $result .= '<div class="errmsg">' . hsc($rawelement['error']) . '</div>';
     }
 
