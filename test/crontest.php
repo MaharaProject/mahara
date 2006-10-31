@@ -199,3 +199,5 @@ function test_cron_finish() {
 function test_cron_prettydate($timestamp) {
     return db_format_timestamp($timestamp);
 }
+
+?>
