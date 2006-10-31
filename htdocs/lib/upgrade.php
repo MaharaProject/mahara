@@ -184,6 +184,11 @@ function upgrade_core($upgrade) {
     if ($db->HasFailedTrans()) {
         $status = false;
     }
+    
+    if (!empty($upgrade->install)) {
+        $status = $status && core_postinst();
+    }
+    
     $db->CompleteTrans();
 
     return $status;
@@ -314,6 +319,23 @@ function upgrade_plugin($upgrade) {
     }
     $db->CompleteTrans();
     
+    return $status;
+
+}
+
+function core_postinst() {
+    $status = true;
+    $pages = site_content_pages();
+    $now = db_format_timestamp(time());
+    foreach ($pages as $name) {
+        $page->name = $name;
+        $page->ctime = $now;
+        $page->mtime = $now;
+        $page->content = get_string($page->name . 'defaultcontent', 'install');
+        if (!insert_record('site_content',$page)) {
+            $status = false;
+        }
+    }
     return $status;
 }
 
