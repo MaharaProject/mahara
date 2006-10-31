@@ -56,7 +56,7 @@ else {
     $now = time();
 }
 
-log_dbg('---------- cron running ' . $now . ' ----------');
+log_debug('---------- cron running ' . $now . ' ----------');
 
 // for each plugin type
 foreach (plugin_types() as $plugintype) {
@@ -75,7 +75,7 @@ foreach (plugin_types() as $plugintype) {
         foreach ($jobs as $job) {
             $classname = generate_class_name($plugintype, $job['plugin']);
 
-            log_dbg("Running $classname::" . $job['callfunction']);
+            log_debug("Running $classname::" . $job['callfunction']);
 
             safe_require($plugintype, $job['plugin'], 'lib.php', 'require_once');
             call_static_method(
@@ -276,7 +276,7 @@ function cron_day_of_week($date_array) {
 // --------------------------------------------------------
 
 function cron_valid_month($job, $run_date) {
-    log_dbg('cron_valid_month()');
+    log_debug('cron_valid_month()');
     $propagate = 0;
     cron_next_field_value($job['month'], $run_date['mon'], 13, $propagate, $steps, false);
 
@@ -289,7 +289,7 @@ function cron_valid_month($job, $run_date) {
 }
 
 function cron_valid_day($job, $run_date) {
-    log_dbg('cron_valid_day()');
+    log_debug('cron_valid_day()');
 
     $propagate = 0;
     cron_next_field_value($job['day'], $run_date['mday'], 32, $propagate, $dayofmonth_steps, false);
@@ -314,7 +314,7 @@ function cron_valid_day($job, $run_date) {
 }
 
 function cron_valid_hour($job, $run_date) {
-    log_dbg('cron_valid_hour()');
+    log_debug('cron_valid_hour()');
     $propagate = 0;
     cron_next_field_value($job['hour'], $run_date['hours'], 24, $propagate, $steps);
 
@@ -327,7 +327,7 @@ function cron_valid_hour($job, $run_date) {
 }
 
 function cron_valid_minute($job, $run_date) {
-    log_dbg('cron_valid_minute()');
+    log_debug('cron_valid_minute()');
     $propagate = 0;
     cron_next_field_value($job['minute'], $run_date['minutes'], 60, $propagate, $steps);
 
@@ -340,7 +340,7 @@ function cron_valid_minute($job, $run_date) {
 }
 
 function cron_next_month($job, &$run_date) {
-    log_dbg('cron_next_month()');
+    log_debug('cron_next_month()');
 
     $propagate = 1;
     $run_date['mon'] = cron_next_field_value($job['month'], $run_date['mon'], 13, $propagate, $steps, false);
@@ -351,7 +351,7 @@ function cron_next_month($job, &$run_date) {
 }
 
 function cron_next_day($job, &$run_date) {
-    log_dbg('cron_next_day()');
+    log_debug('cron_next_day()');
 
     // work out which has less steps
     $propagate = 1;
@@ -381,7 +381,7 @@ function cron_next_day($job, &$run_date) {
 }
 
 function cron_next_hour($job, &$run_date) {
-    log_dbg('cron_next_hour()');
+    log_debug('cron_next_hour()');
 
     $propagate = 1;
     $run_date['hours'] = cron_next_field_value($job['hour'], $run_date['hours'], 24, $propagate, $steps);
@@ -392,7 +392,7 @@ function cron_next_hour($job, &$run_date) {
 }
 
 function cron_next_minute($job, &$run_date) {
-    log_dbg('cron_next_minute()');
+    log_debug('cron_next_minute()');
 
     $propagate = 1;
     $run_date['minutes'] = cron_next_field_value($job['minute'], $run_date['minutes'], 60, $propagate, $steps);
@@ -403,7 +403,7 @@ function cron_next_minute($job, &$run_date) {
 }
 
 function cron_first_day($job, &$run_date) {
-    log_dbg('cron_first_day()');
+    log_debug('cron_first_day()');
 
     $propagate = 0;
     cron_next_field_value($job['day'], 1, 32, $propagate, $month_steps, false);
@@ -422,22 +422,22 @@ function cron_first_day($job, &$run_date) {
         $run_date['mday'] += $month_steps;
     }
     else {
-        log_dbg('using week_steps: ' . $week_steps);
+        log_debug('using week_steps: ' . $week_steps);
         $run_date['mday'] += $week_steps;
     }
 
-    log_dbg('    setting mday to ' . $run_date['mday']);
+    log_debug('    setting mday to ' . $run_date['mday']);
 }
 
 function cron_first_hour($job, &$run_date) {
-    log_dbg('cron_first_hour()');
+    log_debug('cron_first_hour()');
 
     $propagate = 0;
     $run_date['hours'] = cron_next_field_value($job['hour'], 0, 24, $propagate, $steps);
 }
 
 function cron_first_minute($job, &$run_date) {
-    log_dbg('cron_first_minute()');
+    log_debug('cron_first_minute()');
 
     $propagate = 0;
     $run_date['minutes'] = cron_next_field_value($job['minute'], 0, 60, $propagate, $steps);
