@@ -17,7 +17,7 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage form
+ * @subpackage form/renderer
  * @author     Nigel McNie <nigel@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
@@ -28,6 +28,12 @@ defined('INTERNAL') || die();
 
 /**
  * Default renderer - renders form elements inside <div>s.
+ *
+ * @param string $builtelement The element, already built
+ * @param array  $rawelement   The element in raw form, for looking up
+ *                             information about it.
+ * @return string              The element rendered inside an appropriate
+ *                             container.
  */
 function form_renderer_div($builtelement, $rawelement) {
     // Set the class of the enclosing <div> to match that of the element
