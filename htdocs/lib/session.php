@@ -146,6 +146,15 @@ class Session {
         );
     }
 
+    /**
+     * Determines if the user is currently logged in
+     *
+     * @return boolean
+     */
+    public function is_logged_in() {
+        return ($this->get('logout_time') > 0 ? true : false);
+    }
+
 
     /**
      * Adds a message that indicates something was successful
