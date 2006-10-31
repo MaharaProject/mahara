@@ -17,7 +17,7 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage form
+ * @subpackage form/element
  * @author     Nigel McNie <nigel@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
@@ -26,7 +26,14 @@
 
 defined('INTERNAL') || die();
 
-function form_render_select($element, $form) {
+/**
+ * Renders a dropdown list, including support for multiple choices.
+ *
+ * @param array $element The element to render
+ * @param Form  $form    The form to render the element for
+ * @return string        The HTML for the element
+ */
+function form_render_select($element, Form $form) {
     if (!empty($element['multiple'])) {
         $element['name'] .= '[]';
     }
@@ -66,7 +73,7 @@ function form_render_select($element, $form) {
         $result .= "\t<option value=\"" . hsc($key) . "\"$selected>" . hsc($value) . "</option>\n";
     }
 
-    $result .= "</select>\n";
+    $result .= '</select>';
     return $result;
 }
 

@@ -17,7 +17,7 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage form
+ * @subpackage form/element
  * @author     Nigel McNie <nigel@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
@@ -27,7 +27,13 @@
 defined('INTERNAL') || die();
 
 /**
- * Renders a submit button
+ * Renders a "cancel" button. Custom buttons are rendered nearly the same as
+ * normal submit buttons, only their name is changed (for use by the Form class
+ * internally).
+ *
+ * @param array $element The element to render
+ * @param Form  $form    The form to render the element for
+ * @return string        The HTML for the element
  */
 function form_render_cancel($element, Form $form) {
     return '<input type="submit"'
