@@ -37,7 +37,7 @@ defined('INTERNAL') || die();
  * @param Form  $form    The form to render the element for
  * @return string        The HTML for the element
  */
-function form_render_textarea($element, $form) {
+function form_render_wysiwyg($element, $form) {
     $rows = $cols = $style = '';
     if (isset($element['height'])) {
         $style .= 'height:' . $element['height'] . ';';
