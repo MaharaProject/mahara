@@ -237,7 +237,7 @@ function auth_setup () {
             return;
         }
         
-        log_debug('no session or old session, and page is private hello');
+        log_debug('no session or old session, and page is private');
         auth_draw_login_page($form);
         exit;
     }
