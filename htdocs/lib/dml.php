@@ -901,7 +901,7 @@ function update_record($table, $dataobject, $where=null) {
         // look for the values in $dataobject and complain bitterly if they're not there
         // @todo throw hissy fit
         foreach ($where as $field) {
-            if (!isset($dataobject[$field])) {
+            if (!isset($dataobject->{$field})) {
                 throw new SQLException('Field in where clause not in the update object');
             }
             $wherefields[] = $field;
@@ -953,7 +953,7 @@ function update_record($table, $dataobject, $where=null) {
 
     $whereclause = '';
     $count = 0;
-    $numdd = count($wherefields);
+    $numddd = count($wherefields);
 
     foreach ($wherefields as $field) {
         $count++;
