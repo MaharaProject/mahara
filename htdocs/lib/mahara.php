@@ -555,7 +555,15 @@ function redirect($location) {
     exit;
 }
 
-function handle_event($event) {
+/**
+ * Handles an internal system event 
+ * 
+ * @param string event name of event
+ * @param mixed data data to pass to the handle function
+ * eg new user object etc.
+ * 
+ */
+function handle_event($event, $data) {
     if (!$e = get_record('event_type','name',$event)) {
         throw new Exception("Invalid event");
     }
@@ -565,7 +573,7 @@ function handle_event($event) {
             foreach ($subs as $sub) {
                 $classname = 'Plugin' . ucfirst($name) . ucfirst($sub->plugin);
                 try {
-                    call_static_method($classname, $sub->callfunction);
+                    call_static_method($classname, $sub->callfunction, $data);
                 }
                 catch (Exception $e) {
                     log_warn("Event $event caused an exception from plugin $classname "

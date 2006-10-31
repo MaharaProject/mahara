@@ -17,7 +17,7 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage form
+ * @subpackage form/renderer
  * @author     Nigel McNie <nigel@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
@@ -28,6 +28,12 @@ defined('INTERNAL') || die();
 
 /**
  * Default renderer - renders form elements inside <div>s.
+ *
+ * @param string $builtelement The element, already built
+ * @param array  $rawelement   The element in raw form, for looking up
+ *                             information about it.
+ * @return string              The element rendered inside an appropriate
+ *                             container.
  */
 function form_renderer_div($builtelement, $rawelement) {
     // Set the class of the enclosing <div> to match that of the element
@@ -44,17 +50,17 @@ function form_renderer_div($builtelement, $rawelement) {
     $result .= $builtelement;
 
     // Contextual help
-    if (isset($rawelement['help'])) {
+    if (!empty($rawelement['help'])) {
         $result .= ' <span class="help"><a href="#" title="' . hsc($rawelement['help']) . '">?</a></span>';
     }
 
     // Description - optional description of the element, or other note that should be visible
     // on the form itself (without the user having to hover over contextual help 
-    if (isset($rawelement['description'])) {
+    if (!empty($rawelement['description'])) {
         $result .= '<div class="description"> ' . hsc($rawelement['description']) . "</div>";
     }
 
-    if (isset($rawelement['error'])) {
+    if (!empty($rawelement['error'])) {
         $result .= '<div class="errmsg">' . hsc($rawelement['error']) . '</div>';
     }
 

@@ -46,7 +46,7 @@ define('MAXRUNAGE', 300);
 
 require(dirname(dirname(__FILE__)).'/htdocs/init.php');
 
-log_dbg('********** RUNNING CRON TEST **********');
+log_debug('********** RUNNING CRON TEST **********');
 
 $cronscript = get_config('libroot') . 'cron.php';
 
