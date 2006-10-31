@@ -20,7 +20,7 @@
             <FIELD NAME="user" TYPE="int" LENGTH="10" NOTNULL="true" />
             <FIELD NAME="email" TYPE="text" NOTNULL="true" />
             <FIELD NAME="verified" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
-            <FIELD NAME="primary" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
+            <FIELD NAME="principal" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
         </FIELDS>
         <KEYS>
             <KEY NAME="primary" TYPE="primary" FIELDS="user,email" />
