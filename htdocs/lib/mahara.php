@@ -555,9 +555,9 @@ function redirect($location) {
  * eg new user object etc.
  * 
  */
-function handle_event($event, $data) {
+function event_occured($event, $data) {
     if (!$e = get_record('event_type','name',$event)) {
-        throw new Exception("Invalid event");
+        throw new Exception("Invalid event type $event");
     }
     $plugintypes = plugin_types();
     foreach ($plugintypes as $name) {
