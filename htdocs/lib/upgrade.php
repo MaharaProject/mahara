@@ -204,7 +204,7 @@ function upgrade_plugin($upgrade) {
 
     list($plugintype, $pluginname) = explode('.', $upgrade->name);
 
-    $location = get_config('dirroot') . $plugintype . '/' . $pluginname . '/db/';
+    $location = get_config('docroot') . $plugintype . '/' . $pluginname . '/db/';
     $db->StartTrans();
 
     if (!empty($upgrade->install)) {
