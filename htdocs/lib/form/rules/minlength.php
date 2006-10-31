@@ -17,7 +17,7 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage form
+ * @subpackage form/rule
  * @author     Nigel McNie <nigel@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
@@ -26,6 +26,13 @@
 
 defined('INTERNAL') || die();
 
+/**
+ * Checks whether the given value is shorter than the allowed length.
+ *
+ * @param string $value     The value to check
+ * @param int    $minlength The length to check for
+ * @return string           The error message, if the value is invalid.
+ */
 function form_rule_minlength($value, $minlength) {
     if (strlen($value) < $minlength) {
         return get_string('This field must be at least ' . $minlength . ' characters long');

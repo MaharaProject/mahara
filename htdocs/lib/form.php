@@ -81,9 +81,6 @@ function form($data) {
     //  - handle multipage forms?
     //  - handle a tabbed interface type of form?
     //  
-    //
-    //  @todo: note somewhere that name, method, action are NOT html escaped, you have to
-    //  do it yourself when buliding a form
 }
 
 /**
@@ -139,11 +136,6 @@ class Form {
      * @var int
      */
     private $tabindex = 1;
-
-    /**
-     * The form data array. Is this used?
-     */
-    private $data = array();
 
     /**
      * The renderer used to build the HTML for the form that each element sits
@@ -204,10 +196,6 @@ class Form {
         if (!isset($data['name']) || !preg_match('/^[a-z_][a-z0-9_]*$/', $data['name'])) {
             throw new FormException('Forms must have a name, and that name must be valid (validity test: could you give a PHP function the name?)');
         }
-        if ($data['name'] == 'form') {
-            // @todo<nigel>: This may not be the case any more, should test this
-            throw new FormException('You cannot call your form "form" due to namespace collisions with the form library');
-        }
         $this->name = $data['name'];
 
         // Assign defaults for the form
@@ -248,10 +236,16 @@ class Form {
         );
         
         // Set some attributes for all elements
-        // @todo<nigel>: probably set the description and help for the elements too
         foreach ($this->elements as $name => &$element) {
+            if (count($element) == 0) {
+                throw new FormException('An element in form "' . $this->name . '" has no data');
+            }
             if (!isset($element['type'])) {
                 $element['type'] = 'markup';
+                if (!isset($element['value'])) {
+                    throw new FormException('The markup element "'
+                        . $name . '" has no value');
+                }
             }
             if (!isset($element['title'])) {
                 $element['title'] = '';
@@ -316,7 +310,7 @@ class Form {
             }
 
             // Submit the form if things went OK
-            if (!$this->errors()) {
+            if (!$this->has_errors()) {
                 $function = $this->name . '_submit';
                 if (function_exists($function)) {
                     // Call the user defined function for processing a submit
@@ -389,8 +383,8 @@ class Form {
      * Given an element, gets the value for it from this form
      *
      * @param  array $element The element to get the value for
-     * @return mixed          The element's value
-     * @throws FormException  If the element could not be found
+     * @return mixed          The element's value. <kbd>null</kbd> if no value
+     *                        is available for the element.
      */
     public function get_value($element) {
         $global = ($this->method == 'get') ? $_GET : $_POST;
@@ -403,7 +397,7 @@ class Form {
         else if (isset($element['defaultvalue'])) {
             return $element['defaultvalue'];
         }
-        throw new FormException('Element "' . $element['name'] . '" cannot be found');
+        return null;
     }
 
     /**
@@ -515,10 +509,20 @@ class Form {
     /**
      * Returns whether a field has an error marked on it.
      *
+     * This method should be used in the custom validation functions, to see if
+     * there is an error on an element before checking for any more validation.
+     *
+     * Example:
+     *
+     * <code>
+     * if (!$form->get_error('name') && /* condition {@*}) {
+     *     $form->set_error('name', 'error message');
+     * }
+     * </code>
+     *
      * @param  string $name  The name of the element to check
      * @return bool          Whether the element has an error
      * @throws FormException If the element could not be found
-     * @todo<nigel>: For consistency, should pass an $element here?
      */
     public function get_error($name) {
         $element = $this->get_element($name);
@@ -526,12 +530,17 @@ class Form {
     }
 
     /**
-     * Marks a field has having an error
+     * Marks a field has having an error.
+     *
+     * This method should be used to set an error on an element in a custom
+     * validation function, if one has occured.
+     *
+     * Note that for the Mahara project, your error messages must be passed
+     * through {@link get_string} to internationalise them.
      *
      * @param string $name    The name of the element to set an error on
      * @param string $message The error message
      * @throws FormException  If the element could not be found
-     * @todo<nigel>: For consistency, should pass an $element here?
      */
     public function set_error($name, $message) {
         foreach ($this->elements as &$element) {
@@ -551,22 +560,6 @@ class Form {
             }
         }
         throw new FormException('Element "' . $name . '" could not be found');
-    }
-
-
-    /**
-     * Checks if there are errors on any of the form elements.
-     *
-     * @return bool Whether there are errors with the form
-     * @todo<nigel>: rename to has_errors()?
-     */
-    private function errors() {
-        foreach ($this->get_elements() as $element) {
-            if (isset($element['error'])) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**
@@ -662,21 +655,41 @@ class Form {
         
         return $result;
     }
+    /**
+     * Checks if there are errors on any of the form elements.
+     *
+     * @return bool Whether there are errors with the form
+     */
+    private function has_errors() {
+        foreach ($this->get_elements() as $element) {
+            if (isset($element['error'])) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 }
 
 
 /**
- * This is separate so that child element types can nest other elements inside
- * them (like the fieldset element does for example.
+ * Renders an element, and returns the result.
  *
- * Data guaranteed to be available:
- *   - type
- *   - title
- *   - @todo more when I guarantee description, help
- * @todo document properly
+ * This function looks in <kbd>form/renderers</kbd> for available overall form
+ * renderers, and in <kbd>form/elements</kbd> for renderers for each form
+ * element.
+ *
+ * If any of the renderers are not available, this function will throw a
+ * FormException.
+ *
+ * {@internal This is separate so that child element types can nest other
+ * elements inside them (like the fieldset element does for example).}}
+ *
+ * @param array $element The element to render
+ * @param Form  $form    The form to render the element for
+ * @return string        The rendered element
  */
-function form_render_element($element, $form) {
+function form_render_element($element, Form $form) {
     // Make sure that the function to render the element type is available
     $function = 'form_render_' . $element['type'];
     if (!function_exists($function)) {
@@ -689,6 +702,10 @@ function form_render_element($element, $form) {
     // If the element is hidden, don't bother passing it to the renderer.
     if ($element['type'] == 'hidden') {
         return form_render_hidden($element, $form) . "\n";
+    }
+    // If the element is pure markup, don't pass it either
+    if ($element['type'] == 'markup') {
+        return $element['value'] . "\n";
     }
 
     // Work out the renderer function required and make sure it exists
