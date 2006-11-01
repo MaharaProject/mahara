@@ -1174,6 +1174,13 @@ function is_mysql() {
     return (strpos(get_config('dbtype'), 'mysql') === 0);
 }
 
+/**
+ * function to convert an array to
+ * an array of placeholders (?) 
+ * with the right number of values
+ *
+ * @param array $array input array
+ */
 function db_array_to_ph($array) {
     $repl_fun = create_function('$n', "return '?';");
     return array_map($repl_fun, $array);
