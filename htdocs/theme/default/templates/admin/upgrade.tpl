@@ -14,6 +14,14 @@
         <td id="{$name}">&nbsp;</td>
     </tr>
 {/foreach}
+{if $install}
+    <tr>
+        <td>{str section=admin tag=coredata}</td>
+        <td></td>
+        <td></td>
+        <td id="coredata">&nbsp;</td>
+    </tr>
+{/if}
 </table>
 <div id="finished" style="display: none;">All done! <a href="{$WWWROOT}">Continue</a> (FIXME: displays on errors)</div>
 {include file='footer.tpl'}
