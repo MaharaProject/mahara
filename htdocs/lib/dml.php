@@ -1174,4 +1174,11 @@ function is_mysql() {
     return (strpos(get_config('dbtype'), 'mysql') === 0);
 }
 
+function db_array_to_ph($array) {
+    $repl_fun = create_function('$n', "return '?';");
+    return array_map($repl_fun, $array);
+}
+
+
+
 ?>
