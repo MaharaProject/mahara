@@ -1182,8 +1182,7 @@ function is_mysql() {
  * @param array $array input array
  */
 function db_array_to_ph($array) {
-    $repl_fun = create_function('$n', "return '?';");
-    return array_map($repl_fun, $array);
+    return array_pad(array(), count($array), '?');
 }
 
 
