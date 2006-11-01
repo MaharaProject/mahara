@@ -607,4 +607,55 @@ class Plugin {
     }
 }
 
+/**
+ * Builds the main navigation menu and returns it as a data structure
+ *
+ * @return $mainnav a data structure containing the main navigation
+ * @todo martyn this is probably quite expenvise, perhaps it needs teh caching
+ */
+function main_nav() {
+    $wwwroot = get_config('wwwroot');
+
+    $menu = array(
+        array(
+            'name'     => 'home',
+            'link'     => $wwwroot,
+        ),
+    );
+
+    if ($plugins = get_rows('artefact_installed')) {
+        foreach ($plugins as &$plugin) {
+            safe_require('artefact', $plugin['name'], 'lib.php', 'require_once');
+            $plugin_menu = call_static_method(generate_class_name('artefact',$plugin['name']), 'menu_items');
+
+            foreach ($plugin_menu as &$menu_item) {
+                $menu_item['link'] = $wwwroot . 'artefact/' . $plugin['name'] . '/' . $menu_item['link'];
+            }
+
+            $menu = array_merge($menu, $plugin_menu);
+        }
+    }
+
+    $menu[] = array(
+        'name' => 'mycontacts',
+        'link' => $wwwroot . 'contacts/',
+    );
+
+
+    if (defined('MENUITEM')) {
+        foreach ( $menu as &$item ) {
+            if ($item['name'] == MENUITEM) {
+                $item['selected'] = true;
+            }
+        }
+    }
+    else {
+        $menu[0]['selected'] = true;
+    }
+
+    log_debug($menu);
+
+    return $menu;
+}
+
 ?>
