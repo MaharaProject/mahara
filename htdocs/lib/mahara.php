@@ -621,6 +621,21 @@ function mixed_array_to_field_array($array, $field) {
 }
 
 
+/** 
+ * Adds stuff to the log
+ * @todo write this functino
+ *
+ * @param string $plugintype plugin type or core
+ * @param string $pluginname plugin name or core component (eg 'view')
+ * @param string $action action string (like 'add')
+ * @param int $user id of user making the action
+ * @param int $id relevant id (ie, profile view would have id of profile owner)
+ * 
+ */
+function add_to_log($plugintype, $pluginname, $action, $user, $id=0) {
+
+}
+
 /**
  * Used by XMLDB
  */
