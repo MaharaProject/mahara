@@ -17,7 +17,7 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage notification
+ * @subpackage notification/email
  * @author     Penny Leach <penny@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
@@ -26,10 +26,13 @@
 
 defined('INTERNAL') || die();
 
-abstract class PluginNotification extends Plugin {
+require_once(get_config('docroot') . 'notification/lib.php');
 
-    public abstract static function notify_user($user, $data);
+class PluginNotificationEmail extends PluginNotification {
 
+    public static function notify_user($user, $data) {
+        // @todo
+    }
 }
 
 ?>

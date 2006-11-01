@@ -26,7 +26,13 @@
 
 defined('INTERNAL') || die();
 
-class PluginNotificationInternal extends Plugin {
+require_once(get_config('docroot') . 'notification/lib.php');
+
+class PluginNotificationInternal extends PluginNotification {
+
+    public static function notify_user($user, $data) {
+        // @todo
+    }
 
 }
 
