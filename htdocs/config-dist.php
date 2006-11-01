@@ -41,7 +41,7 @@ $cfg->dbprefix = '';
 // then try specifying it here
 //$cfg->wwwroot = 'http://myhost.com/mahara/';
 
-// dirroot - uploaded files are stored here
+// dataroot - uploaded files are stored here
 // must be writable by the webserver and outside document root.
 // Mahara will NOT RUN if this is inside your document root, because
 // this is a big security hole.

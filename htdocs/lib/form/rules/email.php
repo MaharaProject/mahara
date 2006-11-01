@@ -17,7 +17,7 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage form
+ * @subpackage form/rule
  * @author     Nigel McNie <nigel@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
@@ -26,6 +26,16 @@
 
 defined('INTERNAL') || die();
 
+/**
+ * Returns whether the given field is a valid e-mail address.
+ *
+ * Currently, the check is [anything]@[anything]. Someone is welcome to write
+ * something better, this was made just for testing.
+ *
+ * @param string $address The e-mail address to check
+ * @return string         The error message, if there is something wrong with
+ *                        the address.
+ */
 function form_rule_email($address) {
     if (!preg_match('/(.*)@(.*)/', $address)) {
         return get_string('E-mail address is invalid');

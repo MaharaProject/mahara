@@ -509,7 +509,6 @@ function safe_require($plugintype, $pluginname, $filename='lib.php', $function='
     
 }
 
-
 /**
  * This function returns the list of plugintypes we currently care about
  * @return array of names
@@ -523,6 +522,14 @@ function plugin_types() {
 }
 
 /**
+ * Returns the list of site content pages
+ * @return array of names
+ */
+function site_content_pages() {
+    return array('about','home','loggedouthome','privacy','termsandconditions','uploadcopyright');
+}
+
+/**
  * Helper to call a static method when you do not know the name of the class
  * you want to call the method on. PHP5 does not support $class::method().
  */
@@ -533,11 +540,25 @@ function call_static_method($class, $method) {
     return call_user_func_array(array($class, $method), $args);
 }
 
+/**
+ * Given a series of arguments, builds a Mahara coding style class name,
+ * prefixed with 'Plugin'.
+ *
+ * @todo perhaps this should be renamed? (plugin_class_name or similar)
+ * @param mixed   A list of strings to be used in generating the class name
+ * @return string A mahara class name
+ */
 function generate_class_name() {
     $args = func_get_args();
     return 'Plugin' . implode('', array_map('ucfirst', $args));
 }
 
+/**
+ * Redirects a user to the given location. Once called, the script will exit.
+ *
+ * @param string $location The place to redirect the user to. Should be an
+ *                         absolute URL.
+ */
 function redirect($location) {
     if (headers_sent()) {
         throw new Exception('Headers already sent when redirect() was called');
@@ -547,9 +568,17 @@ function redirect($location) {
     exit;
 }
 
-function handle_event($event) {
+/**
+ * Handles an internal system event 
+ * 
+ * @param string event name of event
+ * @param mixed data data to pass to the handle function
+ * eg new user object etc.
+ * 
+ */
+function event_occured($event, $data) {
     if (!$e = get_record('event_type','name',$event)) {
-        throw new Exception("Invalid event");
+        throw new Exception("Invalid event type $event");
     }
     $plugintypes = plugin_types();
     foreach ($plugintypes as $name) {
@@ -557,7 +586,7 @@ function handle_event($event) {
             foreach ($subs as $sub) {
                 $classname = 'Plugin' . ucfirst($name) . ucfirst($sub->plugin);
                 try {
-                    call_static_method($classname, $sub->callfunction);
+                    call_static_method($classname, $sub->callfunction, $data);
                 }
                 catch (Exception $e) {
                     log_warn("Event $event caused an exception from plugin $classname "

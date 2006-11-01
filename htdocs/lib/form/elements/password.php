@@ -17,7 +17,7 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage form
+ * @subpackage form/element
  * @author     Nigel McNie <nigel@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
@@ -28,6 +28,10 @@ defined('INTERNAL') || die();
 
 /**
  * Renders a password field
+ *
+ * @param array $element The element to render
+ * @param Form  $form    The form to render the element for
+ * @return string        The HTML for the element
  */
 function form_render_password($element, $form) {
     return '<input type="password"'

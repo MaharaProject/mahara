@@ -27,13 +27,17 @@
 defined('INTERNAL') || die();
 
 /**
- * Renders a basic HTML <textarea> element.
+ * Renders a textarea, but with extra javascript to turn it into a wysigyw
+ * textarea.
+ *
+ * Currently this is just a mirror of the textarea element, but it will change
+ * a bit later.
  *
  * @param array $element The element to render
  * @param Form  $form    The form to render the element for
  * @return string        The HTML for the element
  */
-function form_render_textarea($element, $form) {
+function form_render_wysiwyg($element, $form) {
     $rows = $cols = $style = '';
     if (isset($element['height'])) {
         $style .= 'height:' . $element['height'] . ';';
