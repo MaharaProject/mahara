@@ -46,4 +46,10 @@ $string['termsandconditions'] = 'Terms and Conditions';
 $string['privacystatement']   = 'Privacy Statement';
 $string['about']              = 'About';
 $string['contactus']          = 'Contact Us';
+$string['myfriends']          = 'My Friends';
+$string['myaddressbook']      = 'My Addressbook';
+$string['mycommunities']      = 'My Communities';
+$string['myownedcommunities'] = 'My Owned Communities';
+$string['mygroups']           = 'My Groups';
+
 ?>
