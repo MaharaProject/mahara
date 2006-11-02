@@ -511,6 +511,14 @@ function safe_require($plugintype, $pluginname, $filename='lib.php', $function='
 
 
 /**
+ * Returns the list of site content pages
+ * @return array of names
+ */
+function site_content_pages() {
+    return array('about','home','loggedouthome','privacy','termsandconditions','uploadcopyright');
+}
+
+/**
  * This function returns the list of plugintypes we currently care about
  * @return array of names
  */
