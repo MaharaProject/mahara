@@ -220,7 +220,7 @@ class Session {
      * @return string The HTML representing all of the session messages.
      */
     public function render_messages() {
-        $result = '';
+        $result = '<div id="messages">';
         if (isset($_SESSION['messages'])) {
             foreach ($_SESSION['messages'] as $data) {
                 if ($data['type'] == 'ok') {
@@ -236,6 +236,7 @@ class Session {
             }
             $_SESSION['messages'] = array();
         }
+        $result .= '</div>';
         return $result;
     }
 
