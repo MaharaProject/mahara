@@ -31,7 +31,7 @@ define('MENUITEM', 'home');
 require('init.php');
 
 // check to see if we're installed...
-if (!get_config('version')) {
+if (!get_config('installed')) {
     redirect(get_config('wwwroot') . 'admin/index.php');
 }
 

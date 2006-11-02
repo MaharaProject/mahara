@@ -194,6 +194,7 @@ function auth_setup () {
     // If the system is not installed, let the user through in the hope that
     // they can fix this little problem :)
     if (!get_config('installed')) {
+        $SESSION->logout();
         log_debug('system not installed, letting user through');
         return;
     }
