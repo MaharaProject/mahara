@@ -39,4 +39,15 @@ function form_render_password($element, $form) {
         . ' value="' . hsc($form->get_value($element)) . '">';
 }
 
+function form_get_value_password($element, Form $form) {
+    $global = ($form->get_method() == 'get') ? $_GET : $_POST;
+    if (isset($global[$element['name']])) {
+        return $global[$element['name']];
+    }
+    if (isset($element['value'])) {
+        return $element['value'];
+    }
+    return null;
+}
+
 ?>

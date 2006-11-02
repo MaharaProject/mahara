@@ -43,16 +43,48 @@ defined('INTERNAL') || die();
  * - PUBLIC: Set true if this page is a public page
  * - MAINNAV: Array defining the main navigation
  *
- * @param array A list of javascript includes.  Each include should be just
- *              the name of a file, and reside in {$THEMEURL}js/{filename}
- * @param array A list of additional headers.  These are to be specified as
- *              actual HTML.
+ * @param $javascript A list of javascript includes.  Each include should be just
+ *                    the name of a file, and reside in {$THEMEURL}js/{filename}
+ * @param $headers    A list of additional headers.  These are to be specified as
+ *                    actual HTML.
+ * @param $strings    A list of language strings required by the javascript code.
  * @return Smarty
  */
-function &smarty($javascript = array(), $headers = array()) {
+function &smarty($javascript = array(), $headers = array(), $strings = array()) {
     global $USER, $SESSION;
 
     require_once(get_config('libroot') . 'smarty/Smarty.class.php');
+  
+    //@todo: Handle dependencies between javascript files.
+
+    if (!empty($strings) && !in_array('get_string',$javascript)) {
+        array_push($javascript,'get_string');
+    }
+    $jsroot = get_config('wwwroot') . 'js/';
+    foreach ($javascript as &$value) {
+        if ($value == 'mochikit') {
+            $value = $jsroot . 'mochikit/MochiKit.js';
+        }
+        else if ($value == 'tinymce') {
+            $value = $jsroot . 'tinymce/tiny_mce.js';
+            $initfile = $jsroot . 'mahara_tinymce_init.html';
+            if (!$headers[] = @file_get_contents($initfile)) {
+                throw new Exception ('tinyMCE not initialised.');
+            }
+        }
+        else {
+            $value = $jsroot . $value . '.js';
+        }
+    }
+    if (!empty($strings)) {
+        foreach ($strings as &$string) {
+            $string = '"' . $string . '":"' . addslashes(get_string($string)) . '"';
+        }
+        $stringjs = '<script language="javascript" type="text/javascript">';
+        $stringjs .= 'var strings={' . implode(',', $strings) . '};';
+        $stringjs .= '</script>';
+        $headers[] = $stringjs;
+    }
 
     $smarty =& new Smarty();
     
@@ -75,17 +107,8 @@ function &smarty($javascript = array(), $headers = array()) {
     }
 
     $smarty->assign_by_ref('USER', $USER);
-
-    foreach ($javascript as &$value) {
-        if ($value == 'mochikit') {
-            $value = get_config('wwwroot').'js/mochikit/MochiKit.js';
-        }
-        // more later...
-    }
-
     $smarty->assign_by_ref('JAVASCRIPT', $javascript);
     $smarty->assign_by_ref('HEADERS', $headers);
-    
 
     return $smarty;
 }
