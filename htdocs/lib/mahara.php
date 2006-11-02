@@ -579,6 +579,20 @@ function hsc ($text) {
 }
 
 /**
+ * function to convert an array of objects to 
+ * an array containing one field per place
+ * 
+ * @param array $array input array
+ * @param mixed $field field to look for in each object
+ */
+function mixed_array_to_field_array($array, $field) {
+    $repl_fun = create_function('$n, $field', '$n = (object)$n; return $n->{$field};');
+    $fields = array_pad(array(), count($array), $field);
+    return array_map($repl_fun, $array, $fields);
+}
+
+
+/**
  * Used by XMLDB
  */
 function debugging ($message, $level) {

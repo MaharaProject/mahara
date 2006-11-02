@@ -56,8 +56,10 @@ class Session {
      */
     public function __construct() {
         $this->defaults = array(
-            'logout_time' => 0,
-            'username'    => ''
+            'logout_time'    => 0,
+            'username'       => '',
+            'passwordchange' => false,
+            'institution'    => 'mahara' 
         );
         // Resume an existing session if required
         if (isset($_COOKIE['PHPSESSID'])) {

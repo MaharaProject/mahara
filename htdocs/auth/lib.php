@@ -210,7 +210,9 @@ function auth_setup () {
         }
         // The session is still active, so continue it.
         log_debug('session still active from previous time');
-        return $SESSION->renew();
+        $USER = $SESSION->renew();
+        auth_check_password_change();
+        return $USER;
     }
     else if ($sessionlogouttime > 0) {
         // The session timed out
@@ -234,6 +236,7 @@ function auth_setup () {
         $form = new Form(auth_get_login_form());
         if ($USER) {
             log_debug('user logged in just fine');
+            auth_check_password_change();
             return;
         }
         
@@ -252,6 +255,139 @@ function auth_setup () {
  */
 function auth_get_authtype_for_institution($institution) {
     return 'internal';
+}
+
+/**
+ * Checks whether the current user needs to change their password, and handles
+ * the password changing if it's required.
+ *
+ * This only applies for the internal authentication plugin. Other plugins
+ * will, in theory, have different data stores, making changing the password
+ * via the internal form difficult.
+ */
+function auth_check_password_change() {
+    global $SESSION;
+    log_debug('checking if the user needs to change their password');
+    log_debug($SESSION);
+    if (auth_get_authtype_for_institution($SESSION->get('institution')) == 'internal' && $SESSION->get('passwordchange')) {
+        log_debug('user DOES need to change their password');
+        require_once('form.php');
+        $form = array(
+            'name' => 'change_password',
+            'method' => 'post',
+            'elements' => array(
+                'password1' => array(
+                    'type' => 'password',
+                    'title' => 'New Password:',
+                    'description' => 'Your new password',
+                    'rules' => array(
+                        'required' => true
+                    )
+                ),
+                'password2' => array(
+                    'type' => 'password',
+                    'title' => 'Confirm Password:',
+                    'description' => 'Your new password again',
+                    'rules' => array(
+                        'required' => true
+                    )
+                ),
+                'submit' => array(
+                    'type' => 'submit',
+                    'value' => 'Change Password'
+                )
+            )
+        );
+
+        $smarty = smarty();
+        $smarty->assign('change_password_form', form($form));
+        $smarty->display('change_password.tpl');
+        exit;
+    }
+}
+
+/**
+ * Validates the form for changing the password for a user.
+ *
+ * This only applies to the internal authentication plugin.
+ *
+ * @todo check that the password isn't something simple, like 'mahara'.
+ * @param Form  $form   The form to check
+ * @param array $values The values to check
+ */
+function change_password_validate(Form $form, $values) {
+    global $SESSION;
+
+    // Get the authentication type for the user (based on the institution), and
+    // use the information to validate the password
+    $authtype = auth_get_authtype_for_institution($SESSION->get('institution'));
+    if ($authtype == 'internal') {
+        safe_require('auth', $authtype, 'lib.php', 'require_once');
+
+        // Check that the password is in valid form
+        if (!$form->get_error('password1')
+            && !call_static_method('AuthInternal', 'is_password_valid', $values['password1'])) {
+            $form->set_error('password1', 'Your password is not in a valid form');
+        }
+
+        // The password must not be too easy :)
+        $suckypasswords = array(
+            'mahara', 'password', $SESSION->get('username')
+        );
+        if (!$form->get_error('password1') && in_array($values['password1'], $suckypasswords)) {
+            $form->set_error('password1', 'Your password is too easy! Please choose a harder password');
+        }
+
+        // The password cannot be the same as the old one
+        if (!$form->get_error('password1') && $values['password1'] == get_field('usr', 'password', 'username', $SESSION->get('username'))) {
+            $form->set_error('password1', 'Your did not change your password!');
+        }
+
+        // The passwords must match
+        if (!$form->get_error('password1') && !$form->get_error('password2') && $values['password1'] != $values['password2']) {
+            $form->set_error('password2', 'Your passwords do not match');
+        }
+    }
+    else {
+        throw new Exception('The user "' . $USER->username . '" is trying to'
+            . ' change their password, but they do not use the internal'
+            . ' authentication method');
+    }
+}
+
+/**
+ * Changes the password for a user, given that it is valid.
+ *
+ * This only applies to the internal authentication plugin.
+ *
+ * @param array $values The submitted form values
+ */
+function change_password_submit($values) {
+    global $SESSION;
+    log_debug('changing password to ' . $values['password1']);
+
+    $authtype = auth_get_authtype_for_institution($SESSION->get('institution'));
+    if ($authtype == 'internal') {
+        // Create a salted password and set it for the user
+        safe_require('auth', $authtype, 'lib.php', 'require_once');
+        $user = new StdClass;
+        $user->salt = substr(md5(rand(1000000, 9999999)), 2, 8);
+        $user->password = call_static_method('AuthInternal', 'encrypt_password', $values['password1'], $user->salt);
+        $user->passwordchange = 0;
+        $where = new StdClass;
+        $where->username = $SESSION->get('username');
+        update_record('usr', $user, $where);
+
+        $SESSION->set('passwordchange', 0);
+        $SESSION->add_ok_msg('Your new password has been saved');
+        redirect(get_config('wwwroot'));
+        exit;
+    }
+    else {
+        throw new Exception('The user "' . $USER->username . '" is trying to'
+            . ' change their password, but they do not use the internal'
+            . ' authentication method');
+    }
 }
 
 /**
