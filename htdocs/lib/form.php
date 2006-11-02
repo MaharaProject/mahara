@@ -150,7 +150,7 @@ class Form {
      *
      * @var string
      */
-    private $renderer = 'div';
+    private $renderer = 'table';
 
     /**
      * Whether this form includes a file element. If so, the enctype attribute
@@ -509,7 +509,6 @@ class Form {
             //}
             $result[$element['name']] = $this->get_value($element);
         }
-        log_debug($result);
         return $result;
     }
 
