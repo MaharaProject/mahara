@@ -227,7 +227,7 @@ class Session {
                     $color = 'green';
                 }
                 elseif ($data['type'] == 'info') {
-                    $color = '#aa6;';
+                    $color = '#aa6';
                 }
                 else {
                     $color = 'red';
