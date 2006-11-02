@@ -26,6 +26,8 @@
 
 defined('INTERNAL') || die();
 
+require('session.php');
+
 /**
  * Unknown user exception
  */

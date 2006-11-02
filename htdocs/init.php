@@ -76,7 +76,6 @@ require('dml.php');
 require('ddl.php');
 require('constants.php');
 require('web.php');
-require('session.php');
 
 // Database access functions
 require('adodb/adodb-exceptions.inc.php');
