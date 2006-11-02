@@ -35,4 +35,3 @@ $smarty = smarty();
 $smarty->display('artefact:internal:profile/index.tpl');
 
 ?>
-
