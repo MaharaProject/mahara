@@ -220,9 +220,10 @@ function auth_setup () {
         log_debug('session timed out');
         $SESSION->logout();
         $SESSION->add_info_msg(get_string('sessiontimedout'));
-        // @todo<nigel>: if page is public, no need to show the login page again
-        auth_draw_login_page();
-        exit;
+        if (!defined('PUBLIC')) {
+            auth_draw_login_page();
+            exit;
+        }
     }
     else {
         // There is no session, so we check to see if one needs to be started.
@@ -525,6 +526,7 @@ function login_submit($values) {
             $USER = call_static_method($authclass, 'get_user_info', $username);
             $SESSION->login($USER);
             $USER->logout_time = $SESSION->get('logout_time');
+            auth_check_password_change();
         }
         else {
             // Login attempt failed
