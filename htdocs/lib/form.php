@@ -215,6 +215,10 @@ class Form {
 
         $this->action = $data['action'];
 
+        if (isset($data['renderer'])) {
+            $this->renderer = $data['renderer'];
+        }
+
         if (isset($data['tabindex'])) {
             $this->tabindex = intval($data['tabindex']);
         }
@@ -335,6 +339,15 @@ class Form {
     }
 
     /**
+     * Returns the form submission method
+     *
+     * @return string
+     */
+    public function get_method() {
+        return $this->method;
+    }
+
+    /**
      * Returns the renderer used on to render the form
      *
      * @return string
@@ -371,11 +384,22 @@ class Form {
             $result .= ' enctype="multipart/form-data"';
         }
         $result .= ">\n";
+
+        // @todo masks attempts in form_render_element, including the error handling there
+        @include_once('form/renderers/' . $this->renderer . '.php');
+        $function = 'form_renderer_' . $this->renderer . '_header';
+        if (function_exists($function)) {
+            $result .= $function();
+        }
         foreach ($this->elements as $name => $elem) {
             $result .= form_render_element($elem, $this);
         }
-
+        $function = 'form_renderer_' . $this->renderer . '_footer';
+        if (function_exists($function)) {
+            $result .= $function();
+        }
         $result .= "</form>\n";
+
         return $result;
     }
 
@@ -387,6 +411,13 @@ class Form {
      *                        is available for the element.
      */
     public function get_value($element) {
+        $function = 'form_get_value_' . $element['type'];
+        if (!function_exists($function)) {
+            @include_once('form/elements/' . $element['type'] . '.php');
+        }
+        if (function_exists($function)) {
+            return $function($element, $this);
+        }
         $global = ($this->method == 'get') ? $_GET : $_POST;
         if (isset($element['value'])) {
             return $element['value'];
@@ -458,16 +489,18 @@ class Form {
         $result = array();
         $global = ($this->method == 'get') ? $_GET : $_POST;
         foreach ($this->get_elements() as $element) {
-            if (isset($global[$element['name']])) {
-                $result[$element['name']] = $global[$element['name']];
-            }
-            else if ($element['type'] == 'file' && isset($_FILES[$element['name']])) {
-                $result[$element['name']] = $_FILES[$element['name']];
-            }
-            else {
-                $result[$element['name']] = null;
-            }
+            //if (isset($global[$element['name']])) {
+            //    $result[$element['name']] = $global[$element['name']];
+            //}
+            //else if ($element['type'] == 'file' && isset($_FILES[$element['name']])) {
+            //    $result[$element['name']] = $_FILES[$element['name']];
+            //}
+            //else {
+            //    $result[$element['name']] = null;
+            //}
+            $result[$element['name']] = $this->get_value($element);
         }
+        log_debug($result);
         return $result;
     }
 
@@ -690,6 +723,11 @@ class Form {
  * @return string        The rendered element
  */
 function form_render_element($element, Form $form) {
+    // If the element is pure markup, don't pass it to the renderer
+    if ($element['type'] == 'markup') {
+        return $element['value'] . "\n";
+    }
+
     // Make sure that the function to render the element type is available
     $function = 'form_render_' . $element['type'];
     if (!function_exists($function)) {
@@ -702,10 +740,6 @@ function form_render_element($element, Form $form) {
     // If the element is hidden, don't bother passing it to the renderer.
     if ($element['type'] == 'hidden') {
         return form_render_hidden($element, $form) . "\n";
-    }
-    // If the element is pure markup, don't pass it either
-    if ($element['type'] == 'markup') {
-        return $element['value'] . "\n";
     }
 
     // Work out the renderer function required and make sure it exists
