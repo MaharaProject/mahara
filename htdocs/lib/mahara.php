@@ -428,7 +428,15 @@ function is_hash($array) {
     return !empty($diff);
 }
 
-
+/**
+ *
+ * Check whether to use the wysiwyg html editor or a plain textarea.
+ * @todo check user setting from db and browser capability
+ *
+ */
+function use_html_editor() {
+    return true;
+}
 
 /**
  * Function to check if a directory exists and optionally create it.
