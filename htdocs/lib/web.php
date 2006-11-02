@@ -57,8 +57,8 @@ function &smarty($javascript = array(), $headers = array(), $strings = array()) 
   
     //@todo: Handle dependencies between javascript files.
 
-    if (!empty($strings) && !in_array('get_string',$javascript)) {
-        array_push($javascript,'get_string');
+    if (!empty($strings) && !in_array('mahara',$javascript)) {
+        array_push($javascript,'mahara');
     }
     $jsroot = get_config('wwwroot') . 'js/';
     foreach ($javascript as &$value) {
@@ -72,8 +72,11 @@ function &smarty($javascript = array(), $headers = array(), $strings = array()) 
                 throw new Exception ('tinyMCE not initialised.');
             }
         }
+        else if ($value == 'mahara') {
+            $value = $jsroot . 'mahara.js';
+        }
         else {
-            $value = $jsroot . $value . '.js';
+            throw new Exception ($value . '.js: unknown');
         }
     }
     if (!empty($strings)) {

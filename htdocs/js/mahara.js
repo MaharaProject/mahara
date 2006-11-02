@@ -1,3 +1,39 @@
+// Expects strings array
+function get_string(s) {
+    // @todo Still need to sprintf these strings.
+    var flatargs = flattenArguments(arguments);
+    if (arguments.length > 1) {
+        argstr =  '(' + flatargs.slice(1).join(',') + ')';
+    } else {
+        argstr = '';
+    }
+    if (typeof(strings) == 'undefined' || typeof(strings[s]) == 'undefined') {
+        return '[[[' + s + argstr + ']]]';
+    }
+    return strings[s] + argstr;  
+}
+
+// Appends a status message to the end of elemid
+function displayMessage(m, /* optional */ elemid) {
+    var color = 'red';
+    if (m.type == 'ok') {
+        color = 'green';
+    }
+    else if (m.type == 'info') {
+        color = '#aa6;';
+    }
+    if (typeof(elemid) == 'undefined') {
+        elemid = 'messages';
+    }
+    $(elemid).appendChild(DIV({'style':'color:'+color+';'},m.message));
+}
+
+
+// Tests if elements with the 'required' class have content and
+// displays the appropriate message.
+
+// Uses the html output from form.php to find the title of required
+// fields: <label for="elementid">Element title</label>
 function testRequired(e,formid) {
     if (hasElementClass(e,'required') && e.value == '') {
         var labels = getElementsByTagAndClassName('label',null,formid);
@@ -13,6 +49,9 @@ function testRequired(e,formid) {
     }
     return true;
 }
+
+// Gets form elements, submits them to a url via post, and waits for a
+// JSON response containing the result of the submission.
 function submitForm(formid,url) {
     if (typeof(tinyMCE) != 'undefined') {
         tinyMCE.triggerSave();

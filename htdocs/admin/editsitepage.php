@@ -67,7 +67,7 @@ $f = array(
 );
 
 $form = form($f);
-$js = array('mochikit','messages','get_string','submit_form');
+$js = array('mochikit','mahara');
 if (use_html_editor()) {
     array_unshift($js,'tinymce');
 }
