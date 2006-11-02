@@ -14,15 +14,24 @@
             {/if}   
             {foreach from=$HEADERS item=header}{$header}{/foreach}
         {/strip}
-        <style type="text/css">{literal}
-        .required label { color: orange; }
-        .help { font-size: smaller; vertical-align: super; }
-        .description { font-size: smaller; font-style: italic; }
-        .error { color: red; }
-        .errmsg { color: red; font-size: smaller; }
-        label { vertical-align: top; }
-        {/literal}
-        </style>
+        <link rel="stylesheet" type="text/css" href="{$THEMEURL}style/style.css">
     </head>
     <body>
-    {insert name="messages"}
+        <div id="header">
+            <h1>Mahara</h1>
+{if $USER}
+            <a href="{$WWWROOT}?logout">Logout</a>
+{/if}
+        </div>
+{if $MAINNAV}
+        <ul id="mainnav">
+{foreach from=$MAINNAV item=item}
+    {if $item.selected}
+            <li class="selected"><a href="{$item.link|escape}">{str section=$item.section tag=$item.name}</a></li>
+    {else}
+            <li><a href="{$item.link|escape}">{str section=$item.section tag=$item.name}</a></li>
+    {/if}
+{/foreach}
+        </ul>
+{/if}
+        {insert name="messages"}
