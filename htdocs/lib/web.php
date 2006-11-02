@@ -40,6 +40,8 @@ defined('INTERNAL') || die();
  *   list is passed into this function (see below).
  * - HEADERS: An array of any further headers to set.  Each header is just
  *   straight HTML (see below).
+ * - PUBLIC: Set true if this page is a public page
+ * - MAINNAV: Array defining the main navigation
  *
  * @param array A list of javascript includes.  Each include should be just
  *              the name of a file, and reside in {$THEMEURL}js/{filename}
@@ -48,7 +50,7 @@ defined('INTERNAL') || die();
  * @return Smarty
  */
 function &smarty($javascript = array(), $headers = array()) {
-    global $USER, $CFG;
+    global $USER, $SESSION;
 
     require_once(get_config('libroot') . 'smarty/Smarty.class.php');
 
@@ -63,6 +65,14 @@ function &smarty($javascript = array(), $headers = array()) {
 
     $smarty->assign('THEMEURL', get_config('themeurl'));
     $smarty->assign('WWWROOT', get_config('wwwroot'));
+
+    if (defined('PUBLIC')) {
+        $smarty->assign('PUBLIC', true);
+    }
+
+    if ($SESSION->is_logged_in()) {
+        $smarty->assign('MAINNAV', main_nav());
+    }
 
     $smarty->assign_by_ref('USER', $USER);
 
