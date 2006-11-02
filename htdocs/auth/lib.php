@@ -268,7 +268,6 @@ function auth_get_authtype_for_institution($institution) {
 function auth_check_password_change() {
     global $SESSION;
     log_debug('checking if the user needs to change their password');
-    log_debug($SESSION);
     if (auth_get_authtype_for_institution($SESSION->get('institution')) == 'internal' && $SESSION->get('passwordchange')) {
         log_debug('user DOES need to change their password');
         require_once('form.php');
