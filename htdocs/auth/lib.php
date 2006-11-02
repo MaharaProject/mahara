@@ -220,10 +220,8 @@ function auth_setup () {
         log_debug('session timed out');
         $SESSION->logout();
         $SESSION->add_info_msg(get_string('sessiontimedout'));
-        if (!defined('PUBLIC')) {
-            auth_draw_login_page();
-            exit;
-        }
+        auth_draw_login_page();
+        exit;
     }
     else {
         // There is no session, so we check to see if one needs to be started.
