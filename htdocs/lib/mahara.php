@@ -664,6 +664,33 @@ function main_nav() {
         'name'    => 'mycontacts',
         'link'    => $wwwroot . 'contacts/',
         'section' => 'mahara',
+        'submenu' => array(
+            'myfriends' => array(
+                'name'    => 'myfriends',
+                'link'    => $wwwroot . 'contacts/',
+                'section' => 'mahara',
+            ),
+            'myaddressbook' => array(
+                'name'    => 'myaddressbook',
+                'link'    => $wwwroot . 'contacts/addressbook/',
+                'section' => 'mahara',
+            ),
+            'mycommunities' => array(
+                'name'    => 'mycommunities',
+                'link'    => $wwwroot . 'contacts/communities/',
+                'section' => 'mahara',
+            ),
+            'myownedcommunities' => array(
+                'name'    => 'myownedcommunities',
+                'link'    => $wwwroot . 'contacts/communities/owned.php',
+                'section' => 'mahara',
+            ),
+            'mygroups' => array(
+                'name'    => 'mygroups',
+                'link'    => $wwwroot . 'contacts/groups/',
+                'section' => 'mahara',
+            ),
+        ),
     );
 
 
@@ -671,6 +698,13 @@ function main_nav() {
         foreach ( $menu as &$item ) {
             if ($item['name'] == MENUITEM) {
                 $item['selected'] = true;
+                if (defined('SUBMENUITEM') and is_array($item['submenu'])) {
+                    foreach ( $item['submenu'] as &$subitem ) {
+                        if ($subitem['name'] == SUBMENUITEM) {
+                            $subitem['selected'] = true;
+                        }
+                    }
+                }
             }
         }
     }
