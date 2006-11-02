@@ -17,31 +17,21 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage admin
- * @author     Penny Leach <penny@catalyst.net.nz>
+ * @subpackage artefact/internal
+ * @author     Martyn Smith <martyn@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
-define('INTERNAL',1);
+define('INTERNAL', 1);
+define('MENUITEM', 'myprofile');
 
-require(dirname(dirname(__FILE__)).'/init.php');
-require(get_config('libroot') . 'upgrade.php');
+require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
+
 
 $smarty = smarty();
 
-$upgrades = check_upgrades();
-
-if (isset($upgrades['core']) && !empty($upgrades['core']->install)) {
-    $smarty->assign('installing', true);
-    $smarty->assign('releaseargs', array($upgrades['core']->torelease,$upgrades['core']->to));
-    $smarty->display('admin/installgpl.tpl');
-    exit;
-}
-
-// normal admin page starts here
-
-$smarty->display('admin/index.tpl');
+$smarty->display('artefact:internal:profile/index.tpl');
 
 ?>

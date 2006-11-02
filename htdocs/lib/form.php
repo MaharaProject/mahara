@@ -131,6 +131,13 @@ class Form {
     private $action = '';
 
     /**
+     * The javascript function that the form will be submitted to.
+     *
+     * @var string
+     */
+    private $onsubmit = '';
+
+    /**
      * The tab index for this particular form.
      *
      * @var int
@@ -202,6 +209,7 @@ class Form {
         $form_defaults = array(
             'method' => 'post',
             'action' => '',
+            'onsubmit' => '',
             'elements' => array()
         );
         $data = array_merge($form_defaults, $data);
@@ -212,8 +220,8 @@ class Form {
             $data['method'] = 'get';
         }
         $this->method = $data['method'];
-
         $this->action = $data['action'];
+        $this->onsubmit = $data['onsubmit'];
 
         if (isset($data['renderer'])) {
             $this->renderer = $data['renderer'];
@@ -377,9 +385,10 @@ class Form {
      */
     public function build() {
         $result = '<form';
-        foreach (array('name', 'method', 'action') as $attribute) {
+        foreach (array('name', 'method', 'action', 'onsubmit') as $attribute) {
             $result .= ' ' . $attribute . '="' . $this->{$attribute} . '"';
         }
+        $result .= ' id="' . $this->name . '"';
         if ($this->fileupload) {
             $result .= ' enctype="multipart/form-data"';
         }
@@ -667,7 +676,7 @@ class Form {
      * @return string        The attributes for the element
      */
     public static function element_attributes($element, $exclude=array()) {
-        static $attributes = array('accesskey', 'class', 'dir', 'id', 'lang', 'maxlength', 'name', 'size', 'style', 'tabindex');
+        static $attributes = array('accesskey', 'class', 'dir', 'id', 'lang', 'maxlength', 'name', 'onclick', 'size', 'style', 'tabindex');
         $elementattributes = array_diff($attributes, $exclude);
         $result = '';
         foreach ($elementattributes as $attribute) {
@@ -756,15 +765,18 @@ function form_render_element($element, Form $form) {
         throw new FormException('No form renderer specified for form "' . $form->get_name() . '"');
     }
 
-
     $element['id']    = Form::make_id($element);
     $element['class'] = Form::make_class($element);
+    $newelement = $element;
+    $newelement['class'] = (isset($newelement['class'])
+                            ? $newelement['class'] . ' ' . $form->get_name() : '');
+    $builtelement = $function($newelement, $form);
 
     // Prepare the prefix and suffix
     $prefix = (isset($element['prefix'])) ? $element['prefix'] : '';
     $suffix = (isset($element['suffix'])) ? $element['suffix'] : '';
 
-    return $prefix . $rendererfunction($function($element, $form), $element) . $suffix;
+    return $prefix . $rendererfunction($builtelement, $element) . $suffix;
 }
 
 ?>

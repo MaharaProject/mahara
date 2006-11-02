@@ -1,0 +1,19 @@
+#header {
+    border: thin dotted red;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+#footer {
+    border: thin dotted red;
+    padding: 10px;
+    clear: both;
+}
+
+#mainnav li {
+    display: inline;
+}
+
+#mainnav li.selected {
+    font-weight: bold;
+}

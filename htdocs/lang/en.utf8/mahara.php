@@ -36,4 +36,14 @@ $string['sessiontimedout'] = 'Your session has timed out, please enter your logi
 $string['username'] = 'Username';
 $string['usernamedesc'] = 'Your username';
 $string['usernamehelp'] = 'The username you have been given to access this system.';
+
+// menu
+$string['home']       = 'Home';
+$string['mycontacts'] = 'My Contacts';
+
+// footer
+$string['termsandconditions'] = 'Terms and Conditions';
+$string['privacystatement']   = 'Privacy Statement';
+$string['about']              = 'About';
+$string['contactus']          = 'Contact Us';
 ?>

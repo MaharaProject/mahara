@@ -17,31 +17,29 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage admin
+ * @subpackage core
  * @author     Penny Leach <penny@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
-define('INTERNAL',1);
+define('INTERNAL', 1);
+define('PUBLIC', 1);
+define('MENUITEM', 'mycontacts');
 
-require(dirname(dirname(__FILE__)).'/init.php');
-require(get_config('libroot') . 'upgrade.php');
+require(dirname(dirname(__FILE__)) . '/init.php');
 
-$smarty = smarty();
-
-$upgrades = check_upgrades();
-
-if (isset($upgrades['core']) && !empty($upgrades['core']->install)) {
-    $smarty->assign('installing', true);
-    $smarty->assign('releaseargs', array($upgrades['core']->torelease,$upgrades['core']->to));
-    $smarty->display('admin/installgpl.tpl');
-    exit;
+// check to see if we're installed...
+if (!get_config('version')) {
+    redirect(get_config('wwwroot') . 'admin/index.php');
 }
 
-// normal admin page starts here
-
-$smarty->display('admin/index.tpl');
+$smarty = smarty();
+if (!$SESSION->is_logged_in()) {
+    require_once('form.php');
+    $smarty->assign('login_form', form(auth_get_login_form()));
+}
+$smarty->display('index.tpl');
 
 ?>

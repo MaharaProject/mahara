@@ -24,14 +24,24 @@
  *
  */
 
-define('INTERNAL',1);
+define('INTERNAL', 1);
+define('PUBLIC', 1);
+define('MENUITEM', 'home');
+
 require('init.php');
 
 // check to see if we're installed...
-if (!get_config('version')) {
+if (!get_config('installed')) {
     redirect(get_config('wwwroot') . 'admin/index.php');
 }
 
 $smarty = smarty();
+
+if (!$SESSION->is_logged_in()) {
+    require_once('form.php');
+    $smarty->assign('login_form', form(auth_get_login_form()));
+}
+
 $smarty->display('index.tpl');
+
 ?>
