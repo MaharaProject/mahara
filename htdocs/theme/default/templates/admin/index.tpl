@@ -12,6 +12,7 @@
             <li>AdminAuthenticationOptions</li>
         </ul></li>
     </ul>
+    <li><a href="editsitepage.php">EditSitePages</a></li>
 </ul>
 
 <p><a href="upgrade.php">Run upgrade</a></p>
