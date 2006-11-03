@@ -33,6 +33,28 @@ defined('INTERNAL') || die();
  */
 function ensure_sanity() {
 
+    // PHP version
+    if (version_compare(phpversion(), '5.1.0') < 0) {
+        throw new ConfigSanityException(get_string('phpversion', 'error'));
+    }
+
+    // Various required extensions
+    if (!extension_loaded('json')) {
+        throw new ConfigSanityException(get_string('jsonextensionnotloaded', 'error'));
+    }
+    if (!extension_loaded('pgsql') && !extension_loaded('mysqli')) {
+        throw new ConfigSanityException(get_string('dbextensionnotloaded', 'error'));
+    }
+    if (!extension_loaded('libxml')) {
+        throw new ConfigSanityException(get_string('libxmlextensionnotloaded', 'error'));
+    }
+    if (!extension_loaded('gd')) {
+        throw new ConfigSanityException(get_string('gdextensionnotloaded', 'error'));
+    }
+    if (!extension_loaded('session')) {
+        throw new ConfigSanityException(get_string('sessionextensionnotloaded', 'error'));
+    }
+
     // register globals workaround
     if (ini_get_bool('register_globals')) {
         log_environ(get_string('registerglobals', 'error'));
@@ -89,8 +111,8 @@ function ensure_sanity() {
     //
 
     // dataroot inside document root.
-    if (strpos(get_config('dataroot'),get_config('docroot')) !== false) {
-        throw new ConfigSanityException(get_string('datarootinsidedocroot','error'));
+    if (strpos(get_config('dataroot'), get_config('docroot')) !== false) {
+        throw new ConfigSanityException(get_string('datarootinsidedocroot', 'error'));
     }
 
     // dataroot not writable..
@@ -99,9 +121,9 @@ function ensure_sanity() {
     }
 
     // Json functions not available
-    if (!function_exists('json_encode') || !function_exists('json_decode')) {
-        throw new ConfigSanityException(get_string('jsonextensionnotloaded', 'error'));
-    }
+    //if (!function_exists('json_encode') || !function_exists('json_decode')) {
+    //    throw new ConfigSanityException(get_string('jsonextensionnotloaded', 'error'));
+    //}
     
     check_dir_exists(get_config('dataroot').'smarty/compile');
     check_dir_exists(get_config('dataroot').'smarty/cache');
