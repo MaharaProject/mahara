@@ -75,7 +75,7 @@ sub process {
     if ( $file_data =~ m{ \@subpackage (.*?) $ }xms ) {
         my $subpackage_data = $1;
         unless (
-            $subpackage_data =~ m{ \s* ( core | form | auth | lang | tests | admin | ( artefact | notification )(?:/.+)? ) \s* }xms
+            $subpackage_data =~ m{ \A \s* ( core | auth | lang | tests | admin | ( form | artefact | notification )(?:-.+)? ) \s* \z }xms
         ) {
             print $directory, $filename, " invalid \@subpackage '$subpackage_data'\n";
         }
