@@ -74,6 +74,12 @@ function &smarty($javascript = array(), $headers = array(), $strings = array()) 
         }
         else if ($value == 'mahara') {
             $value = $jsroot . 'mahara.js';
+            $maharajsstrings = maharajsstrings();
+            foreach ($maharajsstrings as $string) {
+                if (!in_array($string, $strings)) {
+                    $strings[] = $string;
+                }
+            }
         }
         else {
             throw new Exception ($value . '.js: unknown');
@@ -115,6 +121,13 @@ function &smarty($javascript = array(), $headers = array(), $strings = array()) 
 
     return $smarty;
 }
+
+function maharajsstrings() {
+    return array('processingform',
+                 'requiredfieldempty',
+                 'unknownerror');
+}
+
 
 /** 
  * This function sets up and caches info about the current selected theme

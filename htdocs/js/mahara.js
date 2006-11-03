@@ -74,7 +74,7 @@ function submitForm(formid,url) {
         var data = evalJSONRequest(result);
         displayMessage({'message':data.message,'type':data.success});
     });
-    d.addErrback(function() { displayMessage(get_string('badjsonresponse'),'error'); });
+    d.addErrback(function() { displayMessage(get_string('unknownerror'),'error'); });
     displayMessage({'message':get_string('processingform'),'type':'info'});
     return false;
 }
