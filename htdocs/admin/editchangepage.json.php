@@ -17,22 +17,28 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage core
- * @author     Martyn Smith <martyn@catalyst.net.nz>
+ * @subpackage admin
+ * @author     Richard Mansfield <richard@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'mycontacts');
-define('SUBMENUITEM', 'myfriends');
-
 require(dirname(dirname(__FILE__)) . '/init.php');
 
+$pagename = clean_requestdata('pagename', PARAM_ALPHAEXT, REQUEST_EITHER);
 
-$smarty = smarty();
+$data['pagename'] = $pagename;
+try {
+    $page = get_record('site_content','name',$pagename);
+    $data['content'] = $page->content;
+    $data['success'] = 1;
+}
+catch (Exception $e) {
+    $data['success'] = 0;
+    $data['errormessage'] = $e->getMessage();
+}
 
-$smarty->display('contacts/index.tpl');
-
+echo json_encode($data);  
 ?>

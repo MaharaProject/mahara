@@ -26,12 +26,23 @@
 {if $MAINNAV}
         <ul id="mainnav">
 {foreach from=$MAINNAV item=item}
-    {if $item.selected}
+    {if $item.selected}{assign var=MAINNAVSELECTED value=$item}
             <li class="selected"><a href="{$item.link|escape}">{str section=$item.section tag=$item.name}</a></li>
     {else}
             <li><a href="{$item.link|escape}">{str section=$item.section tag=$item.name}</a></li>
     {/if}
 {/foreach}
         </ul>
+    {if $MAINNAVSELECTED.submenu}
+        <ul id="subnav">
+        {foreach from=$MAINNAVSELECTED.submenu item=item}
+        {if $item.selected}{assign var=MAINNAVSELECTED value=$item}
+            <li class="selected"><a href="{$item.link|escape}">{str section=$item.section tag=$item.name}</a></li>
+        {else}
+            <li><a href="{$item.link|escape}">{str section=$item.section tag=$item.name}</a></li>
+        {/if}
+        {/foreach}
+        </ul>
+    {/if}
 {/if}
         {insert name="messages"}

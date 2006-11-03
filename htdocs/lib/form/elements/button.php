@@ -17,22 +17,29 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage core
- * @author     Martyn Smith <martyn@catalyst.net.nz>
+ * @subpackage form/element
+ * @author     Nigel McNie <nigel@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
-define('INTERNAL', 1);
-define('MENUITEM', 'mycontacts');
-define('SUBMENUITEM', 'myfriends');
+defined('INTERNAL') || die();
 
-require(dirname(dirname(__FILE__)) . '/init.php');
+/**
+ * Renders a button. Custom buttons are rendered nearly the same as
+ * normal submit buttons, only their name is changed (for use by the Form class
+ * internally).
+ *
+ * @param array $element The element to render
+ * @param Form  $form    The form to render the element for
+ * @return string        The HTML for the element
+ */
 
-
-$smarty = smarty();
-
-$smarty->display('contacts/index.tpl');
+function form_render_button($element, $form) {
+    return '<input type="button"'
+        . Form::element_attributes($element)
+        . ' value="' . hsc($form->get_value($element)) . '">';
+}
 
 ?>

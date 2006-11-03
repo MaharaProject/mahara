@@ -26,13 +26,12 @@
 
 define('INTERNAL', 1);
 define('MENUITEM', 'mycontacts');
-define('SUBMENUITEM', 'myfriends');
+define('SUBMENUITEM', 'myaddressbook');
 
-require(dirname(dirname(__FILE__)) . '/init.php');
-
+require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
 $smarty = smarty();
 
-$smarty->display('contacts/index.tpl');
+$smarty->display('contacts/addressbook/index.tpl');
 
 ?>

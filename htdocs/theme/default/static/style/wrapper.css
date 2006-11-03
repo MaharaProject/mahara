@@ -17,3 +17,11 @@
 #mainnav li.selected {
     font-weight: bold;
 }
+
+#subnav li {
+    display: inline;
+}
+
+#subnav li.selected {
+    font-weight: bold;
+}
