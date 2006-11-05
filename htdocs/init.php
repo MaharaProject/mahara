@@ -100,6 +100,7 @@ try {
     
     $db->SetFetchMode(ADODB_FETCH_ASSOC);
     configure_dbconnection();
+    ensure_internal_plugins_exist();
 
     ob_end_clean();
 }

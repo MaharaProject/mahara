@@ -58,7 +58,7 @@ function ensure_sanity() {
     // register globals workaround
     if (ini_get_bool('register_globals')) {
         log_environ(get_string('registerglobals', 'error'));
-        $massivearray = array_keys(array_merge($_POST,$_GET,$_COOKIE,$_SERVER,$_REQUEST,$_FILES));
+        $massivearray = array_keys(array_merge($_POST, $_GET, $_COOKIE, $_SERVER, $_REQUEST, $_FILES));
         foreach ($massivearray as $tounset) {
             unset($GLOBALS[$tounset]);
         }
@@ -120,14 +120,24 @@ function ensure_sanity() {
         throw new ConfigSanityException(get_string('datarootnotwritable', 'error', get_config('dataroot')));
     }
 
-    // Json functions not available
-    //if (!function_exists('json_encode') || !function_exists('json_decode')) {
-    //    throw new ConfigSanityException(get_string('jsonextensionnotloaded', 'error'));
-    //}
-    
+    // @todo the results of these should be checked
     check_dir_exists(get_config('dataroot').'smarty/compile');
     check_dir_exists(get_config('dataroot').'smarty/cache');
 
+}
+
+/**
+ * Check to see if the internal plugins are installed. Die if they are not.
+ */
+function ensure_internal_plugins_exist() {
+    // Internal things installed
+    if (!get_config('installed')) {
+        foreach (plugin_types() as $type) {
+            if (!record_exists($type . '_installed', 'name', 'internal')) {
+                throw new ConfigSanityException(get_string($type . 'notinstalled'));
+            }
+        }
+    }
 }
 
 function get_string($identifier, $section='mahara') {
