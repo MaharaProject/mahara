@@ -32,11 +32,6 @@ defined('INTERNAL') || die();
 class ArtefactNotFoundException extends Exception {}
 
 /**
- * Exception - trying to get/set a field that doesn't exist
- */
-class UndefinedArtefactFieldException extends Exception {}
-
-/**
  * Base artefact plugin class
  * @abstract
  */
@@ -100,11 +95,12 @@ abstract class PluginArtefact extends Plugin {
  */
 abstract class ArtefactType {
     
-    private $_dirty;
+    protected $dirty;
+    protected $parentdirty;
     protected $id;
     protected $type;
     protected $container;
-    protected $parentid;
+    protected $parent;
     protected $ctime;
     protected $mtime;
     protected $vtime;
@@ -228,7 +224,7 @@ abstract class ArtefactType {
 
     public function get($field) {
         if (!property_exists($field)) {
-            throw new UndefinedArtefactFieldException("Field $field wasn't found in class " . get_class($this));
+            throw new InvalidArgumentException("Field $field wasn't found in class " . get_class($this));
         }
         return $this->{$field};
     }
@@ -236,14 +232,27 @@ abstract class ArtefactType {
     public function set($field, $value) {
         if (property_exists($field)) {
             $this->{$field} = $value;
-            $this->_dirty = true;
+            $this->dirty = true;
+            if ($field == 'parent') {
+                $this->parentdirty = true;
+            }
             return true;
         }
-        throw new UndefinedArtefactFieldException("Field $field wasn't found in class " . get_class($this));
+        throw new InvalidArgumentException("Field $field wasn't found in class " . get_class($this));
     }
     
+    /**
+     * Artefact destructor. Calls commit and marks the
+     * artefact cache as dirty if necessary.
+     */
     public function __destruct() {
-        $this->commit();
+        if (!empty($this->dirty)) {
+            $this->commit();
+        }
+        if (!empty($this->parentdirty)) {
+            set_field_select('artefact_parent_cache', 'dirty', 1,
+                             'artefact = ? OR parent = ?', array($this->id, $this->id));
+        }
     }
     
     public function is_container() {
@@ -258,6 +267,8 @@ abstract class ArtefactType {
     
     /**
      * Deletes current instance
+     * you MUST set $this->parentdirty to true
+     * when delete is called.
      * @abstract
      */
     public abstract function delete();
