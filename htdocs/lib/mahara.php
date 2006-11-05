@@ -712,8 +712,6 @@ function main_nav() {
         $menu[0]['selected'] = true;
     }
 
-    log_debug($menu);
-
     return $menu;
 }
 
