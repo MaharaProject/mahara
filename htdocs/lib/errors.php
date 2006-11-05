@@ -430,8 +430,4 @@ class ConfigSanityException extends Exception {}
  */
 class SQLException extends Exception {}
 
-/**
- * An invalid key or argument was passed
- */
-class InvalidArgumentException extends Exception {}
 ?>
