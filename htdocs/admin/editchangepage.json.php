@@ -18,7 +18,7 @@
  *
  * @package    mahara
  * @subpackage admin
- * @author     Richard Mansfield <richard@catalyst.net.nz>
+ * @author     Richard Mansfield <richard.mansfield@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
