@@ -57,8 +57,8 @@ foreach (array('docroot', 'dataroot') as $path) {
 }
 if (!isset($CFG->wwwroot) && isset($_SERVER['HTTP_HOST'])) {
     $proto = (isset($_SERVER['HTTPS'])) ? 'https://' : 'http://';
-    $host =  (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : $_SERVER['HTTP_HOST'];
-    $path = substr(dirname(__FILE__), strlen($_SERVER['DOCUMENT_ROOT']));
+    $host  =  (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : $_SERVER['HTTP_HOST'];
+    $path  = substr(dirname(__FILE__), strlen($_SERVER['DOCUMENT_ROOT']));
     if ($path) {
         $path .= '/';
     }
