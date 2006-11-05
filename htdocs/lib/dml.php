@@ -671,8 +671,15 @@ function set_field($table, $newfield, $newvalue, $field1, $value1, $field2=null,
     global $db;
 
     $select = where_clause_prepared($field1, $field2, $field3);
-    $values = where_values_prepared($newvalue, $value1, $value2, $value3);
+    $values = where_values_prepared($value1, $value2, $value3);
 
+    return set_field_select($table, $newfield, $newvalue, $select, $values);
+}
+
+function set_field_select($table, $newfield, $newvalue, $select, $values) {
+    global $db;
+
+    $values = array_merge(array($newvalue), $values);
     try {
         $stmt = $db->Prepare('UPDATE '. get_config('dbprefix') . $table .' SET '. $newfield  .' = ? ' . $select);
         return $db->Execute($stmt, $values);
@@ -680,6 +687,8 @@ function set_field($table, $newfield, $newvalue, $field1, $value1, $field2=null,
     catch (ADODB_Exception $e) {
         throw new SQLException($e->getMessage());
     }
+    
+    
 }
 
 /**
