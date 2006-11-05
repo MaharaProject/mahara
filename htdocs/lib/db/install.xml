@@ -281,7 +281,7 @@
             <FIELDS>
                 <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="parent" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="depth" TYPE="int" LENGTH="3" />
+                <FIELD NAME="dirty" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="artefact,parent" />
@@ -373,24 +373,24 @@
         </TABLE>
         <TABLE NAME="usr_account_preference">
             <FIELDS>
-                <FIELD NAME="user" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="field" TYPE="char" LENGTH="100" NOTNULL="true" />
                 <FIELD NAME="value" TYPE="text" NOTNULL="true" />
             </FIELDS>
             <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="user,field" />
-                <KEY NAME="userfk" TYPE="foreign" FIELDS="user" REFTABLE="usr" REFFIELDS="id" />
+                <KEY NAME="primary" TYPE="primary" FIELDS="usr,field" />
+                <KEY NAME="userfk" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id" />
             </KEYS>
         </TABLE>
         <TABLE NAME="usr_activity_preference">
             <FIELDS>
-                <FIELD NAME="user" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="activity" TYPE="char" LENGTH="100" NOTNULL="true" />
                 <FIELD NAME="method" TYPE="text" NOTNULL="true" />
             </FIELDS>
             <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="user,activity" />
-                <KEY NAME="userfk" TYPE="foreign" FIELDS="user" REFTABLE="usr" REFFIELDS="id" />
+                <KEY NAME="primary" TYPE="primary" FIELDS="usr,activity" />
+                <KEY NAME="userfk" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id" />
                 <KEY NAME="activityfk" TYPE="foreign" FIELDS="activity" REFTABLE="activity_type" REFFIELDS="name" />
                 <KEY NAME="methodfk" TYPE="foreign" FIELDS="method" REFTABLE="notification_installed" REFFIELDS="name" />
             </KEYS>
@@ -431,25 +431,25 @@
         </TABLE>
         <TABLE NAME="usr_password_request">
             <FIELDS>
-                <FIELD NAME="user" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="expiry" TYPE="datetime" NOTNULL="true" />
                 <FIELD NAME="code" TYPE="char" LENGTH="20" NOTNULL="true" />
             </FIELDS>
             <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="user,expiry" />
-                <KEY NAME="foreign" TYPE="foreign" FIELDS="user" REFTABLE="usr" REFFIELDS="id" />
+                <KEY NAME="primary" TYPE="primary" FIELDS="usr,expiry" />
+                <KEY NAME="foreign" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id" />
             </KEYS>         
         </TABLE>
         <TABLE NAME="usr_suspension">
             <FIELDS>
-                <FIELD NAME="user" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
                 <FIELD NAME="reason" TYPE="text" NOTNULL="false" />
                 <FIELD NAME="cuser" TYPE="int" LENGTH="10" NOTNULL="false" />
             </FIELDS>
             <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="user,ctime" />
-                <KEY NAME="userfk" TYPE="foreign" FIELDS="user" REFTABLE="usr" REFFIELDS="id" />
+                <KEY NAME="primary" TYPE="primary" FIELDS="usr,ctime" />
+                <KEY NAME="userfk" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id" />
                 <KEY NAME="cuserfk" TYPE="foreign" FIELDS="cuser" REFTABLE="usr" REFFIELDS="id" />
             </KEYS>
         </TABLE>
@@ -555,12 +555,12 @@
         <TABLE NAME="view_access_user">
             <FIELDS>
                 <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="user" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="true" />
             </FIELDS>
             <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="view,user" />
+                <KEY NAME="primary" TYPE="primary" FIELDS="view,usr" />
                 <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id" />
-                <KEY NAME="userfk" TYPE="foreign" FIELDS="user" REFTABLE="usr" REFFIELDS="id" />
+                <KEY NAME="userfk" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id" />
             </KEYS>
         </TABLE>
         <!-- site content stuff -->
@@ -601,37 +601,38 @@
         <!-- watchlist stuff -->
         <TABLE NAME="usr_watchlist_artefact">
             <FIELDS>
-                <FIELD NAME="user" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
             </FIELDS>
             <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="user,artefact" />
-                <KEY NAME="userfk" TYPE="foreign" FIELDS="user" REFTABLE="usr" REFFIELDS="id" />
+                <KEY NAME="primary" TYPE="primary" FIELDS="usr,artefact" />
+                <KEY NAME="userfk" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id" />
                 <KEY NAME="artefactfk" TYPE="foreign" FIELDS="artefact" REFTABLE="artefact" REFFIELDS="id" />
             </KEYS>
         </TABLE>
         <TABLE NAME="usr_watchlist_view">
             <FIELDS>
-                <FIELD NAME="user" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
+                <FIELD NAME="recurse" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" />
             </FIELDS>
             <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="user,view" />
-                <KEY NAME="userfk" TYPE="foreign" FIELDS="user" REFTABLE="usr" REFFIELDS="id" />
+                <KEY NAME="primary" TYPE="primary" FIELDS="usr,view" />
+                <KEY NAME="userfk" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id" />
                 <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id" />
             </KEYS>
         </TABLE>
         <TABLE NAME="usr_watchlist_community">
             <FIELDS>
-                <FIELD NAME="user" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="community" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
             </FIELDS>
             <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="user,community" />
-                <KEY NAME="userfk" TYPE="foreign" FIELDS="user" REFTABLE="usr" REFFIELDS="id" />
+                <KEY NAME="primary" TYPE="primary" FIELDS="usr,community" />
+                <KEY NAME="userfk" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id" />
                 <KEY NAME="communityfk" TYPE="foreign" FIELDS="community" REFTABLE="community" REFFIELDS="id" />
             </KEYS>
         </TABLE>
