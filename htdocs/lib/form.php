@@ -675,7 +675,7 @@ class Form {
      * @return string        The attributes for the element
      */
     public static function element_attributes($element, $exclude=array()) {
-        static $attributes = array('accesskey', 'class', 'dir', 'id', 'lang', 'maxlength', 'name', 'onclick', 'size', 'style', 'tabindex');
+        static $attributes = array('accesskey', 'class', 'dir', 'id', 'lang', 'name', 'onclick', 'size', 'style', 'tabindex');
         $elementattributes = array_diff($attributes, $exclude);
         $result = '';
         foreach ($elementattributes as $attribute) {

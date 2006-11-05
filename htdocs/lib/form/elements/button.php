@@ -17,7 +17,7 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage form-element
+ * @subpackage form/element
  * @author     Nigel McNie <nigel@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
@@ -27,31 +27,19 @@
 defined('INTERNAL') || die();
 
 /**
- * Renders a set of radio buttons for a form
+ * Renders a button. Custom buttons are rendered nearly the same as
+ * normal submit buttons, only their name is changed (for use by the Form class
+ * internally).
  *
  * @param array $element The element to render
  * @param Form  $form    The form to render the element for
  * @return string        The HTML for the element
  */
-function form_render_radio($element, Form $form) {
-    if (!isset($element['options']) || !is_array($element['options']) || count($element['options']) < 1) {
-        log_warn('Radio elements should have at least one option');
-    }
-    
-    $result = '';
-    $form_value = $form->get_value($element);
-    $id = $element['id'];
-    foreach ($element['options'] as $value => $text) {
-        $uid = $id . substr(md5(microtime()), 0, 4);
-        $element['id'] = $uid;
-        $result .= '<input type="radio"'
-            . Form::element_attributes($element)
-            . ' value="' . hsc($value) . '"'
-            . (($form_value == $value) ? ' checked="checked"' : '')
-            . "> <label for=\"$uid\">" . hsc($text) . "</label>\n";
-    }
-    
-    return $result;
+
+function form_render_button($element, $form) {
+    return '<input type="button"'
+        . Form::element_attributes($element)
+        . ' value="' . hsc($form->get_value($element)) . '">';
 }
 
 ?>

@@ -17,26 +17,37 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage form-element
- * @author     Nigel McNie <nigel@catalyst.net.nz>
+ * @subpackage admin
+ * @author     Richard Mansfield <richard.mansfield@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
-defined('INTERNAL') || die();
+define('INTERNAL', 1);
+require(dirname(dirname(__FILE__)) . '/init.php');
 
-/**
- * Provides a basic text field input.
- *
- * @param array $element The element to render
- * @param Form  $form    The form to render the element for
- * @return string        The HTML for the element
- */
-function form_render_text($element, $form) {
-    return '<input type="text"'
-        . Form::element_attributes($element)
-        . ' value="' . hsc($form->get_value($element)) . '">';
+$pagename = clean_requestdata('pagename', PARAM_ALPHAEXT, REQUEST_EITHER);
+$pagetext = clean_requestdata('pagetext', PARAM_CLEANHTML, REQUEST_EITHER);
+
+$result = array();
+
+global $USER;
+$data = new StdClass;
+$data->name = $pagename;
+$data->content = $pagetext;
+$data->mtime = db_format_timestamp(time());
+try {
+    $user = get_record('usr','username',$USER->username);
+    $data->muser = $user->id;
+    update_record('site_content',$data,'name');
+    $result['success'] = 'ok';
+    $result['message'] = get_string('savedsuccessfully');
+}
+catch (Exception $e) {
+    $result['success'] = 'error';
+    $result['message'] = $e->getMessage();
 }
 
+echo json_encode($result);
 ?>

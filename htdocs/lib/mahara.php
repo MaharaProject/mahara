@@ -33,10 +33,32 @@ defined('INTERNAL') || die();
  */
 function ensure_sanity() {
 
+    // PHP version
+    if (version_compare(phpversion(), '5.1.0') < 0) {
+        throw new ConfigSanityException(get_string('phpversion', 'error'));
+    }
+
+    // Various required extensions
+    if (!extension_loaded('json')) {
+        throw new ConfigSanityException(get_string('jsonextensionnotloaded', 'error'));
+    }
+    if (!extension_loaded('pgsql') && !extension_loaded('mysqli')) {
+        throw new ConfigSanityException(get_string('dbextensionnotloaded', 'error'));
+    }
+    if (!extension_loaded('libxml')) {
+        throw new ConfigSanityException(get_string('libxmlextensionnotloaded', 'error'));
+    }
+    if (!extension_loaded('gd')) {
+        throw new ConfigSanityException(get_string('gdextensionnotloaded', 'error'));
+    }
+    if (!extension_loaded('session')) {
+        throw new ConfigSanityException(get_string('sessionextensionnotloaded', 'error'));
+    }
+
     // register globals workaround
     if (ini_get_bool('register_globals')) {
         log_environ(get_string('registerglobals', 'error'));
-        $massivearray = array_keys(array_merge($_POST,$_GET,$_COOKIE,$_SERVER,$_REQUEST,$_FILES));
+        $massivearray = array_keys(array_merge($_POST, $_GET, $_COOKIE, $_SERVER, $_REQUEST, $_FILES));
         foreach ($massivearray as $tounset) {
             unset($GLOBALS[$tounset]);
         }
@@ -89,8 +111,8 @@ function ensure_sanity() {
     //
 
     // dataroot inside document root.
-    if (strpos(get_config('dataroot'),get_config('docroot')) !== false) {
-        throw new ConfigSanityException(get_string('datarootinsidedocroot','error'));
+    if (strpos(get_config('dataroot'), get_config('docroot')) !== false) {
+        throw new ConfigSanityException(get_string('datarootinsidedocroot', 'error'));
     }
 
     // dataroot not writable..
@@ -98,14 +120,24 @@ function ensure_sanity() {
         throw new ConfigSanityException(get_string('datarootnotwritable', 'error', get_config('dataroot')));
     }
 
-    // Json functions not available
-    if (!function_exists('json_encode') || !function_exists('json_decode')) {
-        throw new ConfigSanityException(get_string('jsonextensionnotloaded', 'error'));
-    }
-    
+    // @todo the results of these should be checked
     check_dir_exists(get_config('dataroot').'smarty/compile');
     check_dir_exists(get_config('dataroot').'smarty/cache');
 
+}
+
+/**
+ * Check to see if the internal plugins are installed. Die if they are not.
+ */
+function ensure_internal_plugins_exist() {
+    // Internal things installed
+    if (!get_config('installed')) {
+        foreach (plugin_types() as $type) {
+            if (!record_exists($type . '_installed', 'name', 'internal')) {
+                throw new ConfigSanityException(get_string($type . 'notinstalled'));
+            }
+        }
+    }
 }
 
 function get_string($identifier, $section='mahara') {
@@ -428,7 +460,15 @@ function is_hash($array) {
     return !empty($diff);
 }
 
-
+/**
+ *
+ * Check whether to use the wysiwyg html editor or a plain textarea.
+ * @todo check user setting from db and browser capability
+ *
+ */
+function use_html_editor() {
+    return true;
+}
 
 /**
  * Function to check if a directory exists and optionally create it.

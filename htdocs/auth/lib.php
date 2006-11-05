@@ -312,7 +312,12 @@ function auth_check_password_change() {
  *
  * This only applies to the internal authentication plugin.
  *
- * @todo check that the password isn't something simple, like 'mahara'.
+ * @todo As far as I can tell, the change password and registration forms will 
+ * only be used for internal authentication. And so, by proxy, will the 
+ * username/password valid methods for the Auth class. I think this means they 
+ * can be removed from the Auth class, and instead just be part of AuthInternal
+ * since they don't need to be specified for other types.
+ *
  * @param Form  $form   The form to check
  * @param array $values The values to check
  */
@@ -340,6 +345,7 @@ function change_password_validate(Form $form, $values) {
         }
 
         // The password cannot be the same as the old one
+        // @todo Use $USER to get the old password (if $USER has the password...)
         if (!$form->get_error('password1') && $values['password1'] == get_field('usr', 'password', 'username', $SESSION->get('username'))) {
             $form->set_error('password1', 'Your did not change your password!');
         }

@@ -379,9 +379,15 @@ function exception (Exception $e) {
     // if $e not Exception
     //     get language string based on class name
     // rather than by switch on class name
+    $outputmessage =<<<EOF
+<p>Sorry, an unrecoverable error occured. Eventually, this page will look nice
+and say something that won't make the viewer think that they broke something,
+but since at the moment the viewer is a developer, allow me to laugh at you :)</p>
+<p><a href="#" onclick="history.go(-1)">back</a></p>
+EOF;
     switch (get_class($e)) {
         case 'ConfigSanityException':
-            $message = get_string('configsanityexception', 'error', $e->getMessage());
+            $outputmessage = $message = get_string('configsanityexception', 'error', $e->getMessage());
             break;
         default:
             $message = $e->getMessage();
@@ -405,11 +411,8 @@ EOF;
         echo insert_messages();
     }
     echo <<<EOF
-<h1>OMGWTF</h1>
-<p>Sorry, an unrecoverable error occured. Eventually, this page will look nice
-and say something that won't make the viewer think that they broke something,
-but since at the moment the viewer is a developer, allow me to laugh at you :)</p>
-<p><a href="#" onclick="history.go(-1)">back</a></p>
+<h1>OMGWTFBBQ</h1>
+$outputmessage
 <hr>
 </body>
 </html>
