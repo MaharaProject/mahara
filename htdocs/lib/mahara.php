@@ -131,7 +131,7 @@ function ensure_sanity() {
  */
 function ensure_internal_plugins_exist() {
     // Internal things installed
-    if (!get_config('installed')) {
+    if (get_config('installed')) {
         foreach (plugin_types() as $type) {
             if (!record_exists($type . '_installed', 'name', 'internal')) {
                 throw new ConfigSanityException(get_string($type . 'notinstalled'));
