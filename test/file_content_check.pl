@@ -91,6 +91,7 @@ sub process {
             $author_data =~ m{ \s* Martyn \s Smith \s <martyn\@catalyst\.net\.nz> \s* }xms
             or $author_data =~ m{ \s* Penny \s Leach \s <penny\@catalyst\.net\.nz> \s* }xms
             or $author_data =~ m{ \s* Nigel \s McNie \s <nigel\@catalyst\.net\.nz> \s* }xms
+            or $author_data =~ m{ \s* Richard \s Mansfield \s <richard\.mansfield\@catalyst\.net\.nz> \s* }xms
         ) {
             print $directory, $filename, " invalid \@author '$author_data'\n";
         }
