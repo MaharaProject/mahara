@@ -36,6 +36,7 @@ $string['sessiontimedout'] = 'Your session has timed out, please enter your logi
 $string['username'] = 'Username';
 $string['usernamedesc'] = 'Your username';
 $string['usernamehelp'] = 'The username you have been given to access this system.';
+$string['cancel'] = 'Cancel';
 
 // menu
 $string['home']       = 'Home';
@@ -51,5 +52,12 @@ $string['myaddressbook']      = 'My Addressbook';
 $string['mycommunities']      = 'My Communities';
 $string['myownedcommunities'] = 'My Owned Communities';
 $string['mygroups']           = 'My Groups';
+
+// mycontacts
+
+// mygroups
+$string['creategroup']      = 'Add new group';
+$string['groupname']        = 'Group name';
+$string['groupdescription'] = 'Group description';
 
 ?>
