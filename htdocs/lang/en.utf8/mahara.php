@@ -26,14 +26,44 @@
 
 defined('INTERNAL') || die();
 
+$string['about'] = 'About';
+$string['home'] = 'Home';
+$string['loggedouthome'] = 'Logged out Home';
 $string['loggedoutok'] = 'You have been logged out successfully';
 $string['login'] = 'Log In';
 $string['loginfailed'] = 'You have not provided the correct credentials to log in. Please check your username and password are correct.';
 $string['password'] = 'Password';
 $string['passworddesc'] = 'Your password';
 $string['passwordhelp'] = 'The password you use to access the system.';
+$string['privacy'] = 'Privacy';
 $string['sessiontimedout'] = 'Your session has timed out, please enter your login details to continue';
+$string['termsandconditions'] = 'Terms and conditions';
+$string['uploadcopyright'] = 'Upload copyright';
 $string['username'] = 'Username';
 $string['usernamedesc'] = 'Your username';
 $string['usernamehelp'] = 'The username you have been given to access this system.';
+$string['cancel'] = 'Cancel';
+
+// menu
+$string['home']       = 'Home';
+$string['mycontacts'] = 'My Contacts';
+
+// footer
+$string['termsandconditions'] = 'Terms and Conditions';
+$string['privacystatement']   = 'Privacy Statement';
+$string['about']              = 'About';
+$string['contactus']          = 'Contact Us';
+$string['myfriends']          = 'My Friends';
+$string['myaddressbook']      = 'My Addressbook';
+$string['mycommunities']      = 'My Communities';
+$string['myownedcommunities'] = 'My Owned Communities';
+$string['mygroups']           = 'My Groups';
+
+// mycontacts
+
+// mygroups
+$string['creategroup']      = 'Add new group';
+$string['groupname']        = 'Group name';
+$string['groupdescription'] = 'Group description';
+
 ?>

@@ -49,8 +49,8 @@ class AuthInternal extends Auth {
      * Given a user that we know about, return an array of information about them
      */
     public static function get_user_info($username) {
-        $user = new StdClass;
-        $user->username = $username;
+        // @todo: only select the information the session requires
+        $user = get_record('usr', 'username', $username);
         return $user;
     }
 
@@ -78,7 +78,44 @@ class AuthInternal extends Auth {
         //    $form->set_error('foo', 'WTF man!');
         //}
     }
-                
+
+    /**
+     * For internal authentication, usernames can only contain alphanumeric
+     * characters, and the symbols underscore, full stop and the @ symbol.
+     *
+     * The username must also be between three and thirty characters in length.
+     *
+     * @param string $username The username to check
+     * @return bool            Whether the username is valid
+     */
+    public static function is_username_valid($username) {
+        return preg_match('/^[a-zA-Z0-9\._@]{3,30}$/', $username);
+    }
+
+    /**
+     * For internal authentication, passwords can contain a range of letters,
+     * numbers and symbols. There is a minimum limit of six characters allowed
+     * for the password, and no upper limit
+     *
+     * @param string $password The password to check
+     * @return bool            Whether the password is valid
+     */
+    public static function is_password_valid($password) {
+        if (!preg_match('/^[a-zA-Z0-9 ~!#\$%\^&\*\(\)_\-=\+\,\.<>\/\?;:"\[\]\{\}\\\|`\']{6,}$/', $password)) {
+            return false;
+        }
+        // The password must have at least one digit and two letters in it
+        if (!preg_match('/[0-9]/', $password)) {
+            return false;
+        }
+
+        $password = preg_replace('/[a-zA-Z]/', "\0", $password);
+        if (substr_count($password, "\0") < 2) {
+            return false;
+        }
+        return true;
+    }
+
     /*
      The following two functions are inspired by Andrew McMillan's salted md5
      functions in AWL, adapted with his kind permission. Changed to use sha1
@@ -92,8 +129,9 @@ class AuthInternal extends Auth {
     *
     * @param string $password The password to encrypt
     * @param string $salt     The salt to use to encrypt the password
+    * @todo salt mandatory
     */
-    private static function encrypt_password($password, $salt='') {
+    public static function encrypt_password($password, $salt='') {
         if ($salt == '') {
             $salt = substr(md5(rand(1000000, 9999999)), 2, 8);
         }
@@ -122,7 +160,7 @@ class AuthInternal extends Auth {
         }
 
         // The main type - a salted sha1
-        $sha1sent = Auth_Internal::encrypt_password($theysent, $salt);
+        $sha1sent = self::encrypt_password($theysent, $salt);
         return $sha1sent == $wehave;
     }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * This program is part of mahara
+ * This program is part of Mahara
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -30,6 +30,8 @@ define('INSTALLER', 1);
 require(dirname(dirname(__FILE__)).'/init.php');
 require(get_config('libroot') . 'upgrade.php');
 
+$smarty = smarty(array('mochikit'));
+
 $upgrades = check_upgrades();
 if (!$upgrades) {
     die_info(get_string('noupgrades', 'admin'));
@@ -44,18 +46,47 @@ $loadingstring = get_string('upgradeloading', 'admin');
 $successstring = get_string('upgradesuccess', 'admin');
 $failurestring = get_string('upgradefailure', 'admin');
 
+// Check if Mahara is being installed. An extra hook is required to insert core
+// data if so.
+if (!empty($upgrades['core']->install)) {
+    $smarty->assign('install', true);
+    $installjs =<<< EOJS
+                    var d = loadJSONDoc('upgrade.json.php', { 'install' : 1 });
+                    
+                    $('coredata').innerHTML = '<img src="{$loadingicon}" alt="{$loadingstring}" />';
+                    
+                    d.addCallback(function (data) {
+                        if ( data.success ) {
+                            var message = 'Successfully installed core data';
+                            $('coredata').innerHTML = '<img src="{$successicon}" alt=":)" />  ' + message;
+                        }
+                        else {
+                            var message = '';
+                            if (data.errormessage) {
+                                message = data.errormessage;
+                            } 
+                            else {
+                                message = '{$failurestring}';
+                            }
+                            $('coredata').innerHTML = '<img src="{$failureicon}" alt=":(" /> ' + message;
+                        }
+                    });
+                    d.addErrback(function () {
+                        $('coredata').innerHTML = '<img src="{$failureicon}" alt=":(" /> {$failurestring}';
+                    });
+EOJS;
+}
+else {
+    $installjs = '';
+}
+                    
 $js .= <<< EOJS
             function processNext() {
                 var element = todo.shift();
 
                 if ( ! element ) {
                     // we're done
-                    // @todo this needs work:
-                    //   - should only hit upgrade.json.php with install message
-                    //     if we are actually installing - can check $upgrades
-                    //     in this file for that
-                    loadJSONDoc('upgrade.json.php', { 'install' : 1 });
-                    // @todo do as a deferred on the above call
+                    $installjs
                     $('finished').style.display = 'block';
                     return;
                 }
@@ -89,7 +120,6 @@ $js .= <<< EOJS
             addLoadEvent( processNext );
 EOJS;
 
-$smarty = smarty(array('mochikit'));
 $smarty->assign('INLINEJAVASCRIPT', $js);
 
 $smarty->assign_by_ref('upgrades', $upgrades);

@@ -56,8 +56,10 @@ class Session {
      */
     public function __construct() {
         $this->defaults = array(
-            'logout_time' => 0,
-            'username'    => ''
+            'logout_time'    => 0,
+            'username'       => '',
+            'passwordchange' => false,
+            'institution'    => 'mahara' 
         );
         // Resume an existing session if required
         if (isset($_COOKIE['PHPSESSID'])) {
@@ -146,6 +148,15 @@ class Session {
         );
     }
 
+    /**
+     * Determines if the user is currently logged in
+     *
+     * @return boolean
+     */
+    public function is_logged_in() {
+        return ($this->get('logout_time') > 0 ? true : false);
+    }
+
 
     /**
      * Adds a message that indicates something was successful
@@ -209,14 +220,14 @@ class Session {
      * @return string The HTML representing all of the session messages.
      */
     public function render_messages() {
-        $result = '';
+        $result = '<div id="messages">';
         if (isset($_SESSION['messages'])) {
             foreach ($_SESSION['messages'] as $data) {
                 if ($data['type'] == 'ok') {
                     $color = 'green';
                 }
                 elseif ($data['type'] == 'info') {
-                    $color = '#aa6;';
+                    $color = '#aa6';
                 }
                 else {
                     $color = 'red';
@@ -225,6 +236,7 @@ class Session {
             }
             $_SESSION['messages'] = array();
         }
+        $result .= '</div>';
         return $result;
     }
 

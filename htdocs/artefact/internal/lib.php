@@ -38,6 +38,19 @@ class PluginArtefactInternal extends PluginArtefact {
         return 'internal';
     }
 
+    public static function menu_items() {
+        return array(
+            array(
+                'name' => 'myprofile',
+                'link' => 'profile/',
+            ),
+            array(
+                'name' => 'myfiles',
+                'link' => 'files/',
+            ),
+        );
+    }
+
     public static function postinst() {
         $types = self::get_artefact_types();
         $plugin = self::get_plugin_name();

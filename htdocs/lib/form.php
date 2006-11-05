@@ -131,6 +131,13 @@ class Form {
     private $action = '';
 
     /**
+     * The javascript function that the form will be submitted to.
+     *
+     * @var string
+     */
+    private $onsubmit = '';
+
+    /**
      * The tab index for this particular form.
      *
      * @var int
@@ -143,7 +150,7 @@ class Form {
      *
      * @var string
      */
-    private $renderer = 'div';
+    private $renderer = 'table';
 
     /**
      * Whether this form includes a file element. If so, the enctype attribute
@@ -202,6 +209,7 @@ class Form {
         $form_defaults = array(
             'method' => 'post',
             'action' => '',
+            'onsubmit' => '',
             'elements' => array()
         );
         $data = array_merge($form_defaults, $data);
@@ -212,8 +220,12 @@ class Form {
             $data['method'] = 'get';
         }
         $this->method = $data['method'];
-
         $this->action = $data['action'];
+        $this->onsubmit = $data['onsubmit'];
+
+        if (isset($data['renderer'])) {
+            $this->renderer = $data['renderer'];
+        }
 
         if (isset($data['tabindex'])) {
             $this->tabindex = intval($data['tabindex']);
@@ -335,6 +347,15 @@ class Form {
     }
 
     /**
+     * Returns the form submission method
+     *
+     * @return string
+     */
+    public function get_method() {
+        return $this->method;
+    }
+
+    /**
      * Returns the renderer used on to render the form
      *
      * @return string
@@ -364,18 +385,30 @@ class Form {
      */
     public function build() {
         $result = '<form';
-        foreach (array('name', 'method', 'action') as $attribute) {
+        foreach (array('name', 'method', 'action', 'onsubmit') as $attribute) {
             $result .= ' ' . $attribute . '="' . $this->{$attribute} . '"';
         }
+        $result .= ' id="' . $this->name . '"';
         if ($this->fileupload) {
             $result .= ' enctype="multipart/form-data"';
         }
         $result .= ">\n";
+
+        // @todo masks attempts in form_render_element, including the error handling there
+        @include_once('form/renderers/' . $this->renderer . '.php');
+        $function = 'form_renderer_' . $this->renderer . '_header';
+        if (function_exists($function)) {
+            $result .= $function();
+        }
         foreach ($this->elements as $name => $elem) {
             $result .= form_render_element($elem, $this);
         }
-
+        $function = 'form_renderer_' . $this->renderer . '_footer';
+        if (function_exists($function)) {
+            $result .= $function();
+        }
         $result .= "</form>\n";
+
         return $result;
     }
 
@@ -387,6 +420,13 @@ class Form {
      *                        is available for the element.
      */
     public function get_value($element) {
+        $function = 'form_get_value_' . $element['type'];
+        if (!function_exists($function)) {
+            @include_once('form/elements/' . $element['type'] . '.php');
+        }
+        if (function_exists($function)) {
+            return $function($element, $this);
+        }
         $global = ($this->method == 'get') ? $_GET : $_POST;
         if (isset($element['value'])) {
             return $element['value'];
@@ -458,15 +498,16 @@ class Form {
         $result = array();
         $global = ($this->method == 'get') ? $_GET : $_POST;
         foreach ($this->get_elements() as $element) {
-            if (isset($global[$element['name']])) {
-                $result[$element['name']] = $global[$element['name']];
-            }
-            else if ($element['type'] == 'file' && isset($_FILES[$element['name']])) {
-                $result[$element['name']] = $_FILES[$element['name']];
-            }
-            else {
-                $result[$element['name']] = null;
-            }
+            //if (isset($global[$element['name']])) {
+            //    $result[$element['name']] = $global[$element['name']];
+            //}
+            //else if ($element['type'] == 'file' && isset($_FILES[$element['name']])) {
+            //    $result[$element['name']] = $_FILES[$element['name']];
+            //}
+            //else {
+            //    $result[$element['name']] = null;
+            //}
+            $result[$element['name']] = $this->get_value($element);
         }
         return $result;
     }
@@ -634,7 +675,7 @@ class Form {
      * @return string        The attributes for the element
      */
     public static function element_attributes($element, $exclude=array()) {
-        static $attributes = array('accesskey', 'class', 'dir', 'id', 'lang', 'maxlength', 'name', 'size', 'style', 'tabindex');
+        static $attributes = array('accesskey', 'class', 'dir', 'id', 'lang', 'name', 'onclick', 'size', 'style', 'tabindex');
         $elementattributes = array_diff($attributes, $exclude);
         $result = '';
         foreach ($elementattributes as $attribute) {
@@ -690,6 +731,11 @@ class Form {
  * @return string        The rendered element
  */
 function form_render_element($element, Form $form) {
+    // If the element is pure markup, don't pass it to the renderer
+    if ($element['type'] == 'markup') {
+        return $element['value'] . "\n";
+    }
+
     // Make sure that the function to render the element type is available
     $function = 'form_render_' . $element['type'];
     if (!function_exists($function)) {
@@ -702,10 +748,6 @@ function form_render_element($element, Form $form) {
     // If the element is hidden, don't bother passing it to the renderer.
     if ($element['type'] == 'hidden') {
         return form_render_hidden($element, $form) . "\n";
-    }
-    // If the element is pure markup, don't pass it either
-    if ($element['type'] == 'markup') {
-        return $element['value'] . "\n";
     }
 
     // Work out the renderer function required and make sure it exists
@@ -722,15 +764,18 @@ function form_render_element($element, Form $form) {
         throw new FormException('No form renderer specified for form "' . $form->get_name() . '"');
     }
 
-
     $element['id']    = Form::make_id($element);
     $element['class'] = Form::make_class($element);
+    $newelement = $element;
+    $newelement['class'] = (isset($newelement['class'])
+                            ? $newelement['class'] . ' ' . $form->get_name() : '');
+    $builtelement = $function($newelement, $form);
 
     // Prepare the prefix and suffix
     $prefix = (isset($element['prefix'])) ? $element['prefix'] : '';
     $suffix = (isset($element['suffix'])) ? $element['suffix'] : '';
 
-    return $prefix . $rendererfunction($function($element, $form), $element) . $suffix;
+    return $prefix . $rendererfunction($builtelement, $element) . $suffix;
 }
 
 ?>

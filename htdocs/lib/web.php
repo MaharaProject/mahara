@@ -40,17 +40,60 @@ defined('INTERNAL') || die();
  *   list is passed into this function (see below).
  * - HEADERS: An array of any further headers to set.  Each header is just
  *   straight HTML (see below).
+ * - PUBLIC: Set true if this page is a public page
+ * - MAINNAV: Array defining the main navigation
  *
- * @param array A list of javascript includes.  Each include should be just
- *              the name of a file, and reside in {$THEMEURL}js/{filename}
- * @param array A list of additional headers.  These are to be specified as
- *              actual HTML.
+ * @param $javascript A list of javascript includes.  Each include should be just
+ *                    the name of a file, and reside in {$THEMEURL}js/{filename}
+ * @param $headers    A list of additional headers.  These are to be specified as
+ *                    actual HTML.
+ * @param $strings    A list of language strings required by the javascript code.
  * @return Smarty
  */
-function &smarty($javascript = array(), $headers = array()) {
-    global $USER, $CFG;
+function &smarty($javascript = array(), $headers = array(), $strings = array()) {
+    global $USER, $SESSION;
 
     require_once(get_config('libroot') . 'smarty/Smarty.class.php');
+  
+    //@todo: Handle dependencies between javascript files.
+
+    if (!empty($strings) && !in_array('mahara',$javascript)) {
+        array_push($javascript,'mahara');
+    }
+    $jsroot = get_config('wwwroot') . 'js/';
+    foreach ($javascript as &$value) {
+        if ($value == 'mochikit') {
+            $value = $jsroot . 'mochikit/MochiKit.js';
+        }
+        else if ($value == 'tinymce') {
+            $value = $jsroot . 'tinymce/tiny_mce.js';
+            $initfile = $jsroot . 'mahara_tinymce_init.html';
+            if (!$headers[] = @file_get_contents($initfile)) {
+                throw new Exception ('tinyMCE not initialised.');
+            }
+        }
+        else if ($value == 'mahara') {
+            $value = $jsroot . 'mahara.js';
+            $maharajsstrings = maharajsstrings();
+            foreach ($maharajsstrings as $string) {
+                if (!in_array($string, $strings)) {
+                    $strings[] = $string;
+                }
+            }
+        }
+        else {
+            throw new Exception ($value . '.js: unknown');
+        }
+    }
+    if (!empty($strings)) {
+        foreach ($strings as &$string) {
+            $string = '"' . $string . '":"' . addslashes(get_string($string)) . '"';
+        }
+        $stringjs = '<script language="javascript" type="text/javascript">';
+        $stringjs .= 'var strings={' . implode(',', $strings) . '};';
+        $stringjs .= '</script>';
+        $headers[] = $stringjs;
+    }
 
     $smarty =& new Smarty();
     
@@ -64,21 +107,27 @@ function &smarty($javascript = array(), $headers = array()) {
     $smarty->assign('THEMEURL', get_config('themeurl'));
     $smarty->assign('WWWROOT', get_config('wwwroot'));
 
-    $smarty->assign_by_ref('USER', $USER);
-
-    foreach ($javascript as &$value) {
-        if ($value == 'mochikit') {
-            $value = get_config('wwwroot').'js/mochikit/MochiKit.js';
-        }
-        // more later...
+    if (defined('PUBLIC')) {
+        $smarty->assign('PUBLIC', true);
     }
 
+    if ($SESSION->is_logged_in()) {
+        $smarty->assign('MAINNAV', main_nav());
+    }
+
+    $smarty->assign_by_ref('USER', $USER);
     $smarty->assign_by_ref('JAVASCRIPT', $javascript);
     $smarty->assign_by_ref('HEADERS', $headers);
-    
 
     return $smarty;
 }
+
+function maharajsstrings() {
+    return array('processingform',
+                 'requiredfieldempty',
+                 'unknownerror');
+}
+
 
 /** 
  * This function sets up and caches info about the current selected theme

@@ -33,10 +33,32 @@ defined('INTERNAL') || die();
  */
 function ensure_sanity() {
 
+    // PHP version
+    if (version_compare(phpversion(), '5.1.0') < 0) {
+        throw new ConfigSanityException(get_string('phpversion', 'error'));
+    }
+
+    // Various required extensions
+    if (!extension_loaded('json')) {
+        throw new ConfigSanityException(get_string('jsonextensionnotloaded', 'error'));
+    }
+    if (!extension_loaded('pgsql') && !extension_loaded('mysqli')) {
+        throw new ConfigSanityException(get_string('dbextensionnotloaded', 'error'));
+    }
+    if (!extension_loaded('libxml')) {
+        throw new ConfigSanityException(get_string('libxmlextensionnotloaded', 'error'));
+    }
+    if (!extension_loaded('gd')) {
+        throw new ConfigSanityException(get_string('gdextensionnotloaded', 'error'));
+    }
+    if (!extension_loaded('session')) {
+        throw new ConfigSanityException(get_string('sessionextensionnotloaded', 'error'));
+    }
+
     // register globals workaround
     if (ini_get_bool('register_globals')) {
         log_environ(get_string('registerglobals', 'error'));
-        $massivearray = array_keys(array_merge($_POST,$_GET,$_COOKIE,$_SERVER,$_REQUEST,$_FILES));
+        $massivearray = array_keys(array_merge($_POST, $_GET, $_COOKIE, $_SERVER, $_REQUEST, $_FILES));
         foreach ($massivearray as $tounset) {
             unset($GLOBALS[$tounset]);
         }
@@ -89,8 +111,8 @@ function ensure_sanity() {
     //
 
     // dataroot inside document root.
-    if (strpos(get_config('dataroot'),get_config('docroot')) !== false) {
-        throw new ConfigSanityException(get_string('datarootinsidedocroot','error'));
+    if (strpos(get_config('dataroot'), get_config('docroot')) !== false) {
+        throw new ConfigSanityException(get_string('datarootinsidedocroot', 'error'));
     }
 
     // dataroot not writable..
@@ -98,14 +120,24 @@ function ensure_sanity() {
         throw new ConfigSanityException(get_string('datarootnotwritable', 'error', get_config('dataroot')));
     }
 
-    // Json functions not available
-    if (!function_exists('json_encode') || !function_exists('json_decode')) {
-        throw new ConfigSanityException(get_string('jsonextensionnotloaded', 'error'));
-    }
-    
+    // @todo the results of these should be checked
     check_dir_exists(get_config('dataroot').'smarty/compile');
     check_dir_exists(get_config('dataroot').'smarty/cache');
 
+}
+
+/**
+ * Check to see if the internal plugins are installed. Die if they are not.
+ */
+function ensure_internal_plugins_exist() {
+    // Internal things installed
+    if (!get_config('installed')) {
+        foreach (plugin_types() as $type) {
+            if (!record_exists($type . '_installed', 'name', 'internal')) {
+                throw new ConfigSanityException(get_string($type . 'notinstalled'));
+            }
+        }
+    }
 }
 
 function get_string($identifier, $section='mahara') {
@@ -428,7 +460,15 @@ function is_hash($array) {
     return !empty($diff);
 }
 
-
+/**
+ *
+ * Check whether to use the wysiwyg html editor or a plain textarea.
+ * @todo check user setting from db and browser capability
+ *
+ */
+function use_html_editor() {
+    return true;
+}
 
 /**
  * Function to check if a directory exists and optionally create it.
@@ -509,6 +549,15 @@ function safe_require($plugintype, $pluginname, $filename='lib.php', $function='
     
 }
 
+
+/**
+ * Returns the list of site content pages
+ * @return array of names
+ */
+function site_content_pages() {
+    return array('about','home','loggedouthome','privacy','termsandconditions','uploadcopyright');
+}
+
 /**
  * This function returns the list of plugintypes we currently care about
  * @return array of names
@@ -522,14 +571,6 @@ function plugin_types() {
 }
 
 /**
- * Returns the list of site content pages
- * @return array of names
- */
-function site_content_pages() {
-    return array('about','home','loggedouthome','privacy','termsandconditions','uploadcopyright');
-}
-
-/**
  * Helper to call a static method when you do not know the name of the class
  * you want to call the method on. PHP5 does not support $class::method().
  */
@@ -540,25 +581,11 @@ function call_static_method($class, $method) {
     return call_user_func_array(array($class, $method), $args);
 }
 
-/**
- * Given a series of arguments, builds a Mahara coding style class name,
- * prefixed with 'Plugin'.
- *
- * @todo perhaps this should be renamed? (plugin_class_name or similar)
- * @param mixed   A list of strings to be used in generating the class name
- * @return string A mahara class name
- */
 function generate_class_name() {
     $args = func_get_args();
     return 'Plugin' . implode('', array_map('ucfirst', $args));
 }
 
-/**
- * Redirects a user to the given location. Once called, the script will exit.
- *
- * @param string $location The place to redirect the user to. Should be an
- *                         absolute URL.
- */
 function redirect($location) {
     if (headers_sent()) {
         throw new Exception('Headers already sent when redirect() was called');
@@ -568,17 +595,9 @@ function redirect($location) {
     exit;
 }
 
-/**
- * Handles an internal system event 
- * 
- * @param string event name of event
- * @param mixed data data to pass to the handle function
- * eg new user object etc.
- * 
- */
-function event_occured($event, $data) {
+function handle_event($event) {
     if (!$e = get_record('event_type','name',$event)) {
-        throw new Exception("Invalid event type $event");
+        throw new Exception("Invalid event");
     }
     $plugintypes = plugin_types();
     foreach ($plugintypes as $name) {
@@ -586,7 +605,7 @@ function event_occured($event, $data) {
             foreach ($subs as $sub) {
                 $classname = 'Plugin' . ucfirst($name) . ucfirst($sub->plugin);
                 try {
-                    call_static_method($classname, $sub->callfunction, $data);
+                    call_static_method($classname, $sub->callfunction);
                 }
                 catch (Exception $e) {
                     log_warn("Event $event caused an exception from plugin $classname "
@@ -663,6 +682,92 @@ class Plugin {
     public static function postinst() {
         return true;
     }
+}
+
+/**
+ * Builds the main navigation menu and returns it as a data structure
+ *
+ * @return $mainnav a data structure containing the main navigation
+ * @todo martyn this is probably quite expenvise, perhaps it needs teh caching
+ */
+function main_nav() {
+    $wwwroot = get_config('wwwroot');
+
+    $menu = array(
+        array(
+            'name'     => 'home',
+            'section'  => 'mahara',
+            'link'     => $wwwroot,
+        ),
+    );
+
+    if ($plugins = get_rows('artefact_installed')) {
+        foreach ($plugins as &$plugin) {
+            safe_require('artefact', $plugin['name'], 'lib.php', 'require_once');
+            $plugin_menu = call_static_method(generate_class_name('artefact',$plugin['name']), 'menu_items');
+
+            foreach ($plugin_menu as &$menu_item) {
+                $menu_item['link'] = $wwwroot . 'artefact/' . $plugin['name'] . '/' . $menu_item['link'];
+                $menu_item['section'] = 'artefact.' . $plugin['name'];
+            }
+
+            $menu = array_merge($menu, $plugin_menu);
+        }
+    }
+
+    $menu[] = array(
+        'name'    => 'mycontacts',
+        'link'    => $wwwroot . 'contacts/',
+        'section' => 'mahara',
+        'submenu' => array(
+            'myfriends' => array(
+                'name'    => 'myfriends',
+                'link'    => $wwwroot . 'contacts/',
+                'section' => 'mahara',
+            ),
+            'myaddressbook' => array(
+                'name'    => 'myaddressbook',
+                'link'    => $wwwroot . 'contacts/addressbook/',
+                'section' => 'mahara',
+            ),
+            'mycommunities' => array(
+                'name'    => 'mycommunities',
+                'link'    => $wwwroot . 'contacts/communities/',
+                'section' => 'mahara',
+            ),
+            'myownedcommunities' => array(
+                'name'    => 'myownedcommunities',
+                'link'    => $wwwroot . 'contacts/communities/owned.php',
+                'section' => 'mahara',
+            ),
+            'mygroups' => array(
+                'name'    => 'mygroups',
+                'link'    => $wwwroot . 'contacts/groups/',
+                'section' => 'mahara',
+            ),
+        ),
+    );
+
+
+    if (defined('MENUITEM')) {
+        foreach ( $menu as &$item ) {
+            if ($item['name'] == MENUITEM) {
+                $item['selected'] = true;
+                if (defined('SUBMENUITEM') and is_array($item['submenu'])) {
+                    foreach ( $item['submenu'] as &$subitem ) {
+                        if ($subitem['name'] == SUBMENUITEM) {
+                            $subitem['selected'] = true;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    else {
+        $menu[0]['selected'] = true;
+    }
+
+    return $menu;
 }
 
 ?>

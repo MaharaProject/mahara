@@ -1,6 +1,6 @@
 <?php
 /**
- * This program is part of mahara
+ * This program is part of Mahara
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -33,10 +33,38 @@ $name    = clean_requestdata('name', PARAM_ALPHAEXT, REQUEST_EITHER);
 $install = clean_requestdata('install', PARAM_BOOL, REQUEST_EITHER);
 
 if ($install) {
-    // @todo should probably report errors. Also see upgrade.php to make the js detect any errors
     if (!get_config('installed')) {
-        set_config('installed', true);
+        try {
+            // Install the default institution
+            $institution = new StdClass;
+            $institution->name = 'mahara';
+            $institution->displayname = 'No Institution';
+            $institution->authplugin  = 'internal';
+            insert_record('institution', $institution);
+
+            // Insert the root user
+            $user = new StdClass;
+            $user->username = 'root';
+            $user->password = 'mahara';
+            $user->institution = 'mahara';
+            $user->passwordchange = 1;
+            $user->firstname = 'Admin';
+            $user->lastname = 'User';
+            $user->email = 'admin@example.org';
+            insert_record('usr', $user);
+
+            set_config('installed', true);
+        }
+        catch (SQLException $e) {
+            echo json_encode(array(
+                'success' => 0,
+                'errormessage' => $e->getMessage()
+            ));
+            exit;
+        }
     }
+
+    echo json_encode(array('success' => 1));
     exit;
 }
 

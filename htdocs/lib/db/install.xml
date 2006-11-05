@@ -14,11 +14,34 @@
                 <KEY NAME="primary" TYPE="primary" FIELDS="field" />
             </KEYS>
         </TABLE>
+        <TABLE NAME="auth_installed">
+            <FIELDS> 
+                <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="version" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="release" TYPE="text" LENGTH="small" NOTNULL="true" />
+                <FIELD NAME="active" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="name" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="institution">
+            <FIELDS>
+                <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="displayname" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="authplugin" TYPE="char" LENGTH="255" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="name" />
+                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="authplugin" REFTABLE="auth_installed" REFFIELDS="name" />
+            </KEYS>
+        </TABLE>
         <TABLE NAME="usr">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
                 <FIELD NAME="username" TYPE="char" LENGTH="30" NOTNULL="true" />
                 <FIELD NAME="password" TYPE="char" LENGTH="40" NOTNULL="true" />
+                <FIELD NAME="institution" TYPE="char" LENGTH="255" NOTNULL="true"/>
                 <FIELD NAME="salt" TYPE="char" LENGTH="8" />
                 <FIELD NAME="passwordchange" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
                 <FIELD NAME="deleted" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
@@ -33,6 +56,7 @@
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+                <KEY NAME="institution" TYPE="foreign" FIELDS="institution" REFTABLE="institution" REFFIELDS="name"/>
             </KEYS>
             <INDEXES>
                 <INDEX NAME="usernameuk" UNIQUE="true" FIELDS="LOWER(username)"/>
@@ -84,17 +108,6 @@
             </KEYS>
         </TABLE>
         <!-- auth plugin tables -->
-        <TABLE NAME="auth_installed">
-            <FIELDS> 
-                <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" />
-                <FIELD NAME="version" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="release" TYPE="text" LENGTH="small" NOTNULL="true" />
-                <FIELD NAME="active" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" />
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="name" />
-            </KEYS>
-        </TABLE>
         <TABLE NAME="auth_config">
             <FIELDS>
                 <FIELD NAME="plugin" TYPE="char" LENGTH="100" NOTNULL="true" />
@@ -636,27 +649,11 @@
                 <KEY NAME="communityfk" TYPE="foreign" FIELDS="community" REFTABLE="community" REFFIELDS="id" />
             </KEYS>
         </TABLE>
-        <TABLE NAME="institution">
-            <FIELDS>
-                <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" />
-                <FIELD NAME="displayname" TYPE="char" LENGTH="255" NOTNULL="true" />
-                <FIELD NAME="plugin" TYPE="char" LENGTH="255" NOTNULL="true" />
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="name" />
-                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="auth_installed" REFFIELDS="name" />
-            </KEYS>
-        </TABLE>
     </TABLES>
     <STATEMENTS>
         <STATEMENT NAME="insert config" TYPE="insert" TABLE="config">
             <SENTENCES>
                 <SENTENCE TEXT="(field, value) VALUES ('session_timeout', 1800)" />
-            </SENTENCES>
-        </STATEMENT>
-        <STATEMENT NAME="insert root user" TYPE="insert" TABLE="usr">
-            <SENTENCES>
-                <SENTENCE TEXT="(username, password, passwordchange, firstname, lastname, email) VALUES ('root', 'mahara', 1, 'Admin', 'User', 'admin@example.com')"/>
             </SENTENCES>
         </STATEMENT>
         <STATEMENT NAME="insert event types" TYPE="insert" TABLE="event_type">
