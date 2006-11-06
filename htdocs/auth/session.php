@@ -60,8 +60,17 @@ class Session {
             'id'             => 0,
             'username'       => '',
             'password'       => '',
+            'institution'    => 'mahara',
             'passwordchange' => false,
-            'institution'    => 'mahara'
+            'deleted'        => false,
+            'expiry'         => 0,
+            'lastlogin'      => 0,
+            'staff'          => false,
+            'admin'          => false,
+            'firstname'      => '',
+            'lastname'       => '',
+            'prefname'       => '',
+            'email'          => ''
         );
         // Resume an existing session if required
         if (isset($_COOKIE['PHPSESSID'])) {
