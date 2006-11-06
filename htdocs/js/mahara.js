@@ -19,12 +19,20 @@ function displayMessage(m, /* optional */ elemid) {
         color = 'green';
     }
     else if (m.type == 'info') {
-        color = '#aa6;';
+        //color = '#aa6;';
+        logDebug(m.message);
+        return;
     }
+
     if (typeof(elemid) == 'undefined') {
         elemid = 'messages';
     }
-    $(elemid).appendChild(DIV({'style':'color:'+color+';'},m.message));
+    var message = DIV({'style':'color:'+color+';'},m.message);
+    appendChildNodes(elemid, message);
+    callLater(2, function() {
+        removeElement(message);
+        //fade(message);
+    });
 }
 
 
