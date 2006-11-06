@@ -52,8 +52,8 @@ $f = array(
             'type' => 'wysiwyg',
             'rows' => 20,
             'cols' => 80,
-            'title' => get_string('pagecontent'),
-            'description' => get_string('textdesc'),
+            'title' => get_string('pagetext'),
+            'description' => get_string('pagecontents'),
             'value' => '',
             'rules' => array(
                 'required' => true
@@ -131,7 +131,7 @@ function onLoad() {
 addLoadEvent(onLoad);
 EOJS;
 
-$jsstrings = array('requiredfieldempty','noresponse');
+$jsstrings = array('discardchanges');
 
 $smarty = smarty($js,array(),$jsstrings);
 $smarty->assign('pageeditform', $form);
