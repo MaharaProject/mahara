@@ -218,6 +218,12 @@ function auth_setup () {
         return $USER;
     }
     else if ($sessionlogouttime > 0) {
+        if (isset($_GET['logout'])) {
+            log_debug('logging user ' . $SESSION->get('username') . ' out');
+            $SESSION->logout();
+            $SESSION->add_ok_msg(get_string('loggedoutok'));
+            redirect(get_config('wwwroot'));
+        }
         // The session timed out
         log_debug('session timed out');
         $SESSION->logout();
@@ -464,10 +470,8 @@ function auth_draw_login_page($message=null, Form $form=null) {
          * If $USER is set, the form was submitted even before being built.
          * This happens when a user's session times out and they resend post
          * data. The request should just continue if so.
-         *
-         * Also, the request should continue if the user has opted to log out.
          */
-        if ($USER || isset($_GET['logout'])) {
+        if ($USER) {
             return;
         }
 
