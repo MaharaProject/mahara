@@ -49,8 +49,7 @@ class AuthInternal extends Auth {
      * Given a user that we know about, return an array of information about them
      */
     public static function get_user_info($username) {
-        // @todo: only select the information the session requires
-        $user = get_record('usr', 'username', $username);
+        $user = get_record('usr', 'username', $username, null, null, null, null, '*, ' . db_format_tsfield('expiry'));
         return $user;
     }
 

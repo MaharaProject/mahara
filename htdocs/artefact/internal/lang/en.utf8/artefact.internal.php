@@ -29,3 +29,4 @@ defined('INTERNAL') || die();
 $string['myprofile'] = 'My Profile';
 $string['myfiles'] = 'My Files';
 
+?>

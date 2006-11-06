@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage core or plugintype/pluginname
- * @author     Your Name <you@example.org>
+ * @subpackage core
+ * @author     Martin Dougiamas <martin@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2001-3001 Martin Dougiamas http://dougiamas.com
  * @copyright  additional modifications (c) Catalyst IT Ltd http://catalyst.net.nz
@@ -672,8 +672,15 @@ function set_field($table, $newfield, $newvalue, $field1, $value1, $field2=null,
     global $db;
 
     $select = where_clause_prepared($field1, $field2, $field3);
-    $values = where_values_prepared($newvalue, $value1, $value2, $value3);
+    $values = where_values_prepared($value1, $value2, $value3);
 
+    return set_field_select($table, $newfield, $newvalue, $select, $values);
+}
+
+function set_field_select($table, $newfield, $newvalue, $select, $values) {
+    global $db;
+
+    $values = array_merge(array($newvalue), $values);
     try {
         $stmt = $db->Prepare('UPDATE '. get_config('dbprefix') . $table .' SET '. $newfield  .' = ? ' . $select);
         return $db->Execute($stmt, $values);
@@ -681,6 +688,8 @@ function set_field($table, $newfield, $newvalue, $field1, $value1, $field2=null,
     catch (ADODB_Exception $e) {
         throw new SQLException($e->getMessage());
     }
+    
+    
 }
 
 /**

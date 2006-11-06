@@ -44,6 +44,17 @@ $string['usernamedesc'] = 'Your username';
 $string['usernamehelp'] = 'The username you have been given to access this system.';
 $string['cancel'] = 'Cancel';
 
+// Admin site page editor
+$string['discardchanges']     = 'Discard your changes to this page?';
+$string['pagecontents']       = 'Text to appear on the page';
+$string['pagename']           = 'Page name';
+$string['pagetext']           = 'Page text';
+
+// mahara.js
+$string['processingform']     = 'Processing form';
+$string['requiredfieldempty'] = 'A required field is empty';
+$string['unknownerror']       = 'An unknown error occurred (0x20f91a0)';
+
 // menu
 $string['home']       = 'Home';
 $string['mycontacts'] = 'My Contacts';
@@ -58,6 +69,7 @@ $string['myaddressbook']      = 'My Addressbook';
 $string['mycommunities']      = 'My Communities';
 $string['myownedcommunities'] = 'My Owned Communities';
 $string['mygroups']           = 'My Groups';
+
 
 // mycontacts
 

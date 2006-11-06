@@ -17,7 +17,7 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage notification/internal
+ * @subpackage notification-internal
  * @author     Penny Leach <penny@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
@@ -26,14 +26,26 @@
 
 defined('INTERNAL') || die();
 
-require_once(get_config('docroot') . 'notification/lib.php');
-
 class PluginNotificationInternal extends PluginNotification {
 
     public static function notify_user($user, $data) {
-        // @todo
+        $toinsert = new StdClass;
+        $toinsert->type = $data->activitytype;
+        $toinsert->usr = $user->id;
+        if (!empty($user->markasread)) {
+            $toinsert->read = 1;
+        } 
+        else {
+            $toinsert->read = 0;
+        }
+        $toinsert->message = $message;
+        $toinsert->cime = db_format_timestamp(time());
+        if (!empty($data->url)) {
+            $toinsert->url = $data->url;
+        }
+        
+        insert_record('notification_internal_activity', $toinsert);
     }
-
 }
 
 ?>

@@ -17,16 +17,14 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage artefact/internal
- * @author     Your Name <you@example.org>
+ * @subpackage artefact-internal
+ * @author     Penny Leach <penny@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
 defined('INTERNAL') || die();
-
-require_once(get_config('docroot') . 'artefact/lib.php');
 
 class PluginArtefactInternal extends PluginArtefact {
 

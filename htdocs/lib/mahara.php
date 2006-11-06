@@ -131,7 +131,7 @@ function ensure_sanity() {
  */
 function ensure_internal_plugins_exist() {
     // Internal things installed
-    if (!get_config('installed')) {
+    if (get_config('installed')) {
         foreach (plugin_types() as $type) {
             if (!record_exists($type . '_installed', 'name', 'internal')) {
                 throw new ConfigSanityException(get_string($type . 'notinstalled'));
@@ -517,6 +517,8 @@ function validate_username($username) {
  */
 function safe_require($plugintype, $pluginname, $filename='lib.php', $function='require', $nonfatal=false) {
 
+    require_once(get_config('docroot') . $plugintype . '/lib.php');
+
     $plugintype = clean_filename($plugintype);
     $pluginname = clean_filename($pluginname);
 
@@ -639,6 +641,21 @@ function mixed_array_to_field_array($array, $field) {
     return array_map($repl_fun, $array, $fields);
 }
 
+
+/** 
+ * Adds stuff to the log
+ * @todo write this functino
+ *
+ * @param string $plugintype plugin type or core
+ * @param string $pluginname plugin name or core component (eg 'view')
+ * @param string $action action string (like 'add')
+ * @param int $user id of user making the action
+ * @param int $id relevant id (ie, profile view would have id of profile owner)
+ * 
+ */
+function add_to_log($plugintype, $pluginname, $action, $user, $id=0) {
+
+}
 
 /**
  * Used by XMLDB

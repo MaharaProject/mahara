@@ -38,7 +38,7 @@ asort($pageoptions);
 $f = array(
     'name' => 'editsitepage',
     'method' => 'post',
-    'onsubmit' => 'return submitForm(\'editsitepage\',\'savesitepage.json.php\');',
+    'onsubmit' => 'return submitForm(\'editsitepage\',\'savesitepage.json.php\',contentSaved);',
     'action' => '',
     'elements' => array(
         'pagename' => array(
@@ -50,11 +50,11 @@ $f = array(
         'pagetext' => array(
             'name' => 'pagetext',
             'type' => 'wysiwyg',
-            'rows' => 25,
-            'cols' => 85,
-            'title' => get_string('pagecontent'),
-            'description' => get_string('textdesc'),
-            'value' => 'blah',
+            'rows' => 20,
+            'cols' => 80,
+            'title' => get_string('pagetext'),
+            'description' => get_string('pagecontents'),
+            'value' => '',
             'rules' => array(
                 'required' => true
             )
@@ -73,19 +73,30 @@ if (use_html_editor()) {
 }
 
 $ijs = <<< EOJS
-setEditorContent = function(content) { $('pagetext').innerHTML = content; };
-function onLoad() {
-    requestPageText();
-    connect('pagename', 'onchange', requestPageText);
-    if (typeof(tinyMCE) != 'undefined') {
-        setEditorContent = tinyMCE.setContent;
-    }
-}
+
+// global stuff, set in onLoad().
+setEditorContent = function () {};
+getEditorContent = function () {};
+var oldpagename = '';
+var originalcontent = '';
+
 function requestPageText() {
+    // Allow the user to abort change if changes have been made in the editor.
+    if (getEditorContent() != originalcontent) {
+        var answer = confirm(get_string('discardchanges'));
+        if (!answer) {
+            $('pagename').value = oldpagename;
+            return;
+        }
+    }
+    displayMessage({'message':get_string('loadingpagecontent', $('pagename').value),'type':'info'});
     var d = loadJSONDoc('editchangepage.json.php',{'pagename':$('pagename').value});
     d.addCallback(function(data) {
         if (data.success) {
+            displayMessage({'message':get_string('loadedsuccessfully', $('pagename').value),'type':'info'});
             setEditorContent(data.content);
+            originalcontent = getEditorContent();
+            oldpagename = $('pagename').value;
         }
         else {
             displayMessage({'message':get_string('failedloadingpagecontent', $('pagename').value),
@@ -93,10 +104,34 @@ function requestPageText() {
         }
     });
 }
+
+// Called from submitForm on successful page save.
+function contentSaved () {  
+    originalcontent = getEditorContent();
+    requestPageText();
+}
+
+function onLoad() {
+    if (typeof(tinyMCE) != 'undefined') {
+        setEditorContent = function (c) {
+            tinyMCE.setContent(c);
+            tinyMCE.execCommand('mceFocus',false,'mce_editor_0');
+        }
+        getEditorContent = tinyMCE.getContent;
+    }
+    else {
+        setEditorContent = function (c) { $('pagetext').value = c; };
+        getEditorContent = function () { return $('pagetext').value; };
+    }
+    originalcontent = getEditorContent();
+    requestPageText();
+    connect('pagename', 'onchange', requestPageText);
+}
+
 addLoadEvent(onLoad);
 EOJS;
 
-$jsstrings = array('requiredfieldempty','noresponse');
+$jsstrings = array('discardchanges');
 
 $smarty = smarty($js,array(),$jsstrings);
 $smarty->assign('pageeditform', $form);
