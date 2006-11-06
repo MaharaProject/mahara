@@ -138,7 +138,9 @@ $string['termsandconditionsdefaultcontent'] = '<p>Terms and Conditions</p>
 <p>By using [eP Site Name] you are agreeing to the Terms and Conditions
 given below.</p>
 
-<p>Our obligations The [eP Site Name] Site Administrators will undertake
+<p>Our obligations</p>
+
+<p>The [eP Site Name] Site Administrators will undertake
 all reasonable steps to provide all users with a safe , secure and
 operational electronic portfolio system.  If at any time you feel your
 rights as a user have not been upheld or you have any questions
@@ -157,7 +159,8 @@ anytime, however they will avoid doing so unless specifically required
 to support your use of <eP SiteName> or as per these Terms and
 Conditions.</p>
 
-<p>Your obligations The <Privacy Statement> should be considered an
+<p>Your obligations</p>
+<p> The [Privacy Statement] should be considered an
 extension of these Terms and Conditions and be read by all users.</p>
 
 <p>Your [eP Site Name] account will expire after a given period of time
