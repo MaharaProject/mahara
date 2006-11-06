@@ -173,7 +173,7 @@ function get_string($identifier, $section='mahara') {
         $extras = plugin_types(); // more later..
         foreach ($extras as $tocheck) {
             if (strpos($section,$tocheck . '.') === 0) {
-                $pluginname = substr($section,strlen($tocheck) + 1);
+                $pluginname = substr($section ,strlen($tocheck) + 1);
                 $locations[] = $docroot . $tocheck . '/' . $pluginname . '/lang/';
             }
         }
