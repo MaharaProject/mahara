@@ -48,6 +48,7 @@ if ($install) {
             $user->password = 'mahara';
             $user->institution = 'mahara';
             $user->passwordchange = 1;
+            $user->admin = 1;
             $user->firstname = 'Admin';
             $user->lastname = 'User';
             $user->email = 'admin@example.org';
