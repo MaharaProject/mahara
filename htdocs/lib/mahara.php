@@ -517,6 +517,8 @@ function validate_username($username) {
  */
 function safe_require($plugintype, $pluginname, $filename='lib.php', $function='require', $nonfatal=false) {
 
+    require_once(get_config('docroot') . $plugintype . '/lib.php');
+
     $plugintype = clean_filename($plugintype);
     $pluginname = clean_filename($pluginname);
 
