@@ -18,7 +18,7 @@
  *
  * @package    mahara
  * @subpackage artefact
- * @author     Your Name <you@example.org>
+ * @author     Penny Leach <penny@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
