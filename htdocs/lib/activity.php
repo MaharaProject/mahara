@@ -57,10 +57,22 @@ function activity_occured($activitytype, $data) {
  * activity and who needs to know about it.
  * 
  * @param object $activitytype record from activity_type
- * @param mixed $data
+ * @param mixed $data must contain message to save.
+ * it can also contain url.
+ * each activity type has different requirements of $data - 
+ * <b>admin types (contactus, objectionable, virusrepeat, virusrelease)</b> don't have any extra requirements
+ * <b>maharamessage</b> must contain $users, an array of userids.
+ * <b>usermessage</b> must contain $userto, id of recipient user.
+ * <b>feedback</b> must contain either $view (id of view) or $artefact (id of artefact)
+ * <b>watchlist</b> must contain either $view (id of view) or $artefact (id of artefact)
+ * <b>newview</b> must contain $owner userid of view owner AND $view (id of new view)
  */
 function handle_activity($activitytype, $data) {
 
+    $data = (object)$data;
+    if (empty($data->message)) {
+        throw new InvalidArgumentException("message was empty for $activitytype!");
+    }
     $users = array();
     $prefix = get_config('dbprefix');
 
@@ -71,7 +83,7 @@ function handle_activity($activitytype, $data) {
         switch ($activitytype->name) {
             // easy ones first :)
             case 'maharamessage':
-                $users = activity_get_users($activitytype->name, null, $data->users);
+                $users = activity_get_users($activitytype->name, $data->users);
                 break;
             case 'usermessage':
                 $users = activity_get_users($activitytype->name, array($data->userto));
@@ -140,10 +152,12 @@ function handle_activity($activitytype, $data) {
         }
     }
     safe_require('notification', 'internal', 'lib.php', 'require_once');
+    $data->type = $activitytype;
     foreach ($users as $user) {
         if ($user->method != 'internal') {
             safe_require('notification', $method, 'lib.php', 'require_once');
             call_static_method(generate_class_name('notification', $method), 'notify_user', $user, $data);
+            $user->markasread = true; // if we're doing something else, don't generate unread internal ones.
         }
         // always do internal
         call_static_method('PluginNotificationInternal', 'notify_user', $user, $data);
