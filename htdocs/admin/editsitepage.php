@@ -112,9 +112,6 @@ function contentSaved () {
 }
 
 function onLoad() {
-    originalcontent = getEditorContent();
-    requestPageText();
-    connect('pagename', 'onchange', requestPageText);
     if (typeof(tinyMCE) != 'undefined') {
         setEditorContent = function (c) {
             tinyMCE.setContent(c);
@@ -123,12 +120,12 @@ function onLoad() {
         getEditorContent = tinyMCE.getContent;
     }
     else {
-        setEditorContent = function (c) {
-            $('pagetext').innerHTML = c;
-            $('pagetext').focus();
-        };
-        getEditorContent = function () { return $('pagetext').innerHTML };
+        setEditorContent = function (c) { $('pagetext').value = c; };
+        getEditorContent = function () { return $('pagetext').value; };
     }
+    originalcontent = getEditorContent();
+    requestPageText();
+    connect('pagename', 'onchange', requestPageText);
 }
 
 addLoadEvent(onLoad);
