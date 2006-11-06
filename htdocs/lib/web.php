@@ -87,7 +87,7 @@ function &smarty($javascript = array(), $headers = array(), $strings = array()) 
     }
     if (!empty($strings)) {
         foreach ($strings as &$string) {
-            $string = '"' . $string . '":"' . addslashes(get_string($string)) . '"';
+            $string = '"' . $string . '":"' . addslashes(get_raw_string($string)) . '"';
         }
         $stringjs = '<script language="javascript" type="text/javascript">';
         $stringjs .= 'var strings={' . implode(',', $strings) . '};';
@@ -123,7 +123,8 @@ function &smarty($javascript = array(), $headers = array(), $strings = array()) 
 }
 
 function maharajsstrings() {
-    return array('processingform',
+    return array('namedfieldempty',
+                 'processingform',
                  'requiredfieldempty',
                  'unknownerror');
 }

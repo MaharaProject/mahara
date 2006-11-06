@@ -55,6 +55,7 @@ $string['pagename']           = 'Page name';
 $string['pagetext']           = 'Page text';
 
 // mahara.js
+$string['namedfieldempty'] = 'The required field "%s" is empty';
 $string['processingform']     = 'Processing form';
 $string['requiredfieldempty'] = 'A required field is empty';
 $string['unknownerror']       = 'An unknown error occurred (0x20f91a0)';
