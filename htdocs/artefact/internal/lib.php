@@ -26,8 +26,6 @@
 
 defined('INTERNAL') || die();
 
-require_once(get_config('docroot') . 'artefact/lib.php');
-
 class PluginArtefactInternal extends PluginArtefact {
 
     public static function get_artefact_types() {
