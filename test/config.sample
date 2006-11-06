@@ -1,0 +1,6 @@
+# Sample configuration for bootstrap.pl
+{
+    url => 'http://mahara.freud.wgtn.cat-it.co.nz',
+    password => '1234567',
+    debug => 1
+}

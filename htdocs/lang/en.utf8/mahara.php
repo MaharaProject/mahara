@@ -29,20 +29,25 @@ defined('INTERNAL') || die();
 $string['about'] = 'About';
 $string['home'] = 'Home';
 $string['loggedouthome'] = 'Logged out Home';
+$string['privacy'] = 'Privacy';
+$string['sessiontimedout'] = 'Your session has timed out, please enter your login details to continue';
+$string['termsandconditions'] = 'Terms and conditions';
+$string['uploadcopyright'] = 'Upload copyright';
+$string['cancel'] = 'Cancel';
+$string['sitecontentnotfound'] = '%s text not available';
+
+// auth
+$string['accountexpired'] = 'Sorry, your account has expired';
+$string['accountsuspended'] = 'Your account has been suspeneded as of %s. The reason for your suspension is:<blockquote>%s</blockquote>';
 $string['loggedoutok'] = 'You have been logged out successfully';
 $string['login'] = 'Log In';
 $string['loginfailed'] = 'You have not provided the correct credentials to log in. Please check your username and password are correct.';
 $string['password'] = 'Password';
 $string['passworddesc'] = 'Your password';
 $string['passwordhelp'] = 'The password you use to access the system.';
-$string['privacy'] = 'Privacy';
-$string['sessiontimedout'] = 'Your session has timed out, please enter your login details to continue';
-$string['termsandconditions'] = 'Terms and conditions';
-$string['uploadcopyright'] = 'Upload copyright';
 $string['username'] = 'Username';
 $string['usernamedesc'] = 'Your username';
 $string['usernamehelp'] = 'The username you have been given to access this system.';
-$string['cancel'] = 'Cancel';
 
 // Admin site page editor
 $string['discardchanges']     = 'Discard your changes to this page?';
@@ -51,6 +56,7 @@ $string['pagename']           = 'Page name';
 $string['pagetext']           = 'Page text';
 
 // mahara.js
+$string['namedfieldempty'] = 'The required field "%s" is empty';
 $string['processingform']     = 'Processing form';
 $string['requiredfieldempty'] = 'A required field is empty';
 $string['unknownerror']       = 'An unknown error occurred (0x20f91a0)';

@@ -1,16 +1,15 @@
 // Expects strings array
 function get_string(s) {
-    // @todo Still need to sprintf these strings.
-    var flatargs = flattenArguments(arguments);
-    if (arguments.length > 1) {
-        argstr =  '(' + flatargs.slice(1).join(',') + ')';
-    } else {
-        argstr = '';
-    }
+    var args = flattenArguments(arguments).slice(1);
     if (typeof(strings) == 'undefined' || typeof(strings[s]) == 'undefined') {
-        return '[[[' + s + argstr + ']]]';
+        return '[[[' + s + ((args.length > 0) ? ('(' + args.join(',') + ')') : '') + ']]]';
     }
-    return strings[s] + argstr;  
+    var str = strings[s];
+    // @todo Need to sprintf these strings properly.
+    for (var i = 0; i < args.length; i++) {
+        str = str.replace('%s',args[i]);
+    }
+    return str;
 }
 
 // Appends a status message to the end of elemid
@@ -20,12 +19,20 @@ function displayMessage(m, /* optional */ elemid) {
         color = 'green';
     }
     else if (m.type == 'info') {
-        color = '#aa6;';
+        //color = '#aa6;';
+        logDebug(m.message);
+        return;
     }
+
     if (typeof(elemid) == 'undefined') {
         elemid = 'messages';
     }
-    $(elemid).appendChild(DIV({'style':'color:'+color+';'},m.message));
+    var message = DIV({'style':'color:'+color+';'},m.message);
+    appendChildNodes(elemid, message);
+    callLater(2, function() {
+        removeElement(message);
+        //fade(message);
+    });
 }
 
 
@@ -39,7 +46,7 @@ function testRequired(e,formid) {
         var labels = getElementsByTagAndClassName('label',null,formid);
         for (var j = 0; j < labels.length; j++) {
             if (getNodeAttribute(labels[j],'for') == e.name) {
-                displayMessage({'message':get_string('requiredfieldempty',scrapeText(labels[j])),
+                displayMessage({'message':get_string('namedfieldempty',scrapeText(labels[j])),
                                     'type':'error'});
                 return false;
             }

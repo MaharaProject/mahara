@@ -17,7 +17,7 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage auth/internal
+ * @subpackage auth-internal
  * @author     Nigel McNie <nigel@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
@@ -27,5 +27,10 @@
 defined('INTERNAL') || die();
 
 $string['internal'] = 'Internal';
+$string['passwordinvalidform'] = 'Your password must be at least six characters long and contain at least one digit and two letters';
+$string['passwordtooeasy'] = 'Your password is too easy! Please choose a harder password';
+$string['passwordnotchanged'] = 'You did not change your password, please choose a new password';
+$string['passwordsaved'] = 'Your new password has been saved';
+$string['passwordsdonotmatch'] = 'The passwords do not match';
 
 ?>
