@@ -231,7 +231,8 @@ function auth_setup () {
         // There is no session, so we check to see if one needs to be started.
         
         // Build login form. If the form is submitted it will be handled here,
-        // and set $USER for us.
+        // and set $USER for us (this will happen when users hit a page and
+        // specify login data immediately
         require_once('form.php');
         $form = new Form(auth_get_login_form());
         if ($USER) {
@@ -270,9 +271,8 @@ function auth_get_authtype_for_institution($institution) {
  * via the internal form difficult.
  */
 function auth_check_password_change($user) {
-    global $SESSION;
-    log_debug('checking if the user needs to change their password');// @todo change this to $user instead of $SESSION, as long as it's safe
-    if (auth_get_authtype_for_institution($SESSION->get('institution')) == 'internal' && $SESSION->get('passwordchange')) {
+    log_debug('checking if the user needs to change their password');
+    if (auth_get_authtype_for_institution($user->institution) == 'internal' && $user->passwordchange) {
         log_debug('user DOES need to change their password');
         require_once('form.php');
         $form = array(
@@ -311,27 +311,36 @@ function auth_check_password_change($user) {
 
 /**
  * Check if the given user's account has expired
+ *
+ * @param object $user The user to check for the expired password.
+ * @todo maybe later, just use $USER because that's all we are actually checking...
+ * @private
  */
 function auth_check_user_expired($user) {
     log_debug('Checking to see if the user has expired');
     if ($user->expiry > 0 && time() > $user->expiry) {
-        // Trash the $USER object, used for checking if the user is logged in
+        // Trash the $USER object, used for checking if the user is logged in.
+        // Smarty uses it otherwise...
         global $USER;
         $USER = null;
-        die_info('Sorry, your account has expired');
+        die_info(get_string('accountexpired'));
     }
 }
 
-
-function auth_check_user_suspended() {
+/**
+ * Check if the given user's account has been suspended
+ *
+ * @param object $user The user to check for the suspended account.
+ * @private
+ */
+function auth_check_user_suspended($user) {
     global $USER;
     log_debug('Checking to see if the user is suspended');
-    $suspend = get_record('usr_suspension', 'usr', $USER->id);
-    log_debug($suspend);
+    $suspend = get_record('usr_suspension', 'usr', $user->id);
     if ($suspend) {
         global $USER;
         $USER = null;
-        die_info('Sorry, your account has been SUSPENDED!');
+        die_info(get_string('accountsuspended', 'mahara', $suspend->ctime, $suspend->reason));
     }
 }
 
@@ -345,6 +354,10 @@ function auth_check_user_suspended() {
  * username/password valid methods for the Auth class. I think this means they 
  * can be removed from the Auth class, and instead just be part of AuthInternal
  * since they don't need to be specified for other types.
+ *
+ * Furthermore, I think that the change_password stuff (as well as suspended
+ * and expired) are also quite possibly related to internal only. This will
+ * require a lot of thought about how to best structure it.
  *
  * @param Form  $form   The form to check
  * @param array $values The values to check
@@ -361,7 +374,7 @@ function change_password_validate(Form $form, $values) {
         // Check that the password is in valid form
         if (!$form->get_error('password1')
             && !call_static_method('AuthInternal', 'is_password_valid', $values['password1'])) {
-            $form->set_error('password1', 'Your password is not in a valid form');
+            $form->set_error('password1', get_string('passwordinvalidform', 'auth.internal'));
         }
 
         // The password must not be too easy :)
@@ -369,18 +382,17 @@ function change_password_validate(Form $form, $values) {
             'mahara', 'password', $SESSION->get('username')
         );
         if (!$form->get_error('password1') && in_array($values['password1'], $suckypasswords)) {
-            $form->set_error('password1', 'Your password is too easy! Please choose a harder password');
+            $form->set_error('password1', get_string('passwordtooeasy', 'auth.internal'));
         }
 
         // The password cannot be the same as the old one
-        // @todo Use $USER to get the old password (if $USER has the password...)
-        if (!$form->get_error('password1') && $values['password1'] == get_field('usr', 'password', 'username', $SESSION->get('username'))) {
-            $form->set_error('password1', 'Your did not change your password!');
+        if (!$form->get_error('password1') && $values['password1'] == $USER->password) {
+            $form->set_error('password1', get_string('passwordnotchanged', 'auth.internal'));
         }
 
         // The passwords must match
         if (!$form->get_error('password1') && !$form->get_error('password2') && $values['password1'] != $values['password2']) {
-            $form->set_error('password2', 'Your passwords do not match');
+            $form->set_error('password2', get_string('passwordsdonotmatch', 'auth.internal'));
         }
     }
     else {
@@ -414,7 +426,7 @@ function change_password_submit($values) {
         update_record('usr', $user, $where);
 
         $SESSION->set('passwordchange', 0);
-        $SESSION->add_ok_msg('Your new password has been saved');
+        $SESSION->add_ok_msg(get_string('passwordsaved', 'auth.internal'));
         redirect(get_config('wwwroot'));
         exit;
     }
