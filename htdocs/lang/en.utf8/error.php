@@ -44,4 +44,9 @@ $string['datarootnotwritable'] = 'Your defined data root directory, %s, is not w
 
 $string['dbconnfailed'] = 'Failed to connect to database, error message was %s';
 
+$string['unrecoverableerror'] = 'A nonrecoverable error occured.  This probably means that you have encountered a bug in the system';
+
+
+$string['unrecoverableerrortitle'] = 'Mahara - Site Unavailable';
+
 ?>

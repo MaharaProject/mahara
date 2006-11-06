@@ -379,12 +379,16 @@ function exception (Exception $e) {
     // if $e not Exception
     //     get language string based on class name
     // rather than by switch on class name
-    $outputmessage =<<<EOF
-<p>Sorry, an unrecoverable error occured. Eventually, this page will look nice
-and say something that won't make the viewer think that they broke something,
-but since at the moment the viewer is a developer, allow me to laugh at you :)</p>
-<p><a href="#" onclick="history.go(-1)">back</a></p>
-EOF;
+    if (function_exists('get_string')) {
+        $outputmessage = get_string('unrecoverableerror', 'error');
+        $outputtitle = get_string('unrecoverableerrortitle', 'error');
+    }
+    else {
+        // sensible english defaults
+        $outputmessage = 'A nonrecoverable error occured. '
+            . 'This probably means you have encountered a bug in the system';
+        $outputtitle = 'Mahara - Site Unavailable';
+    }
     switch (get_class($e)) {
         case 'ConfigSanityException':
             $outputmessage = $message = get_string('configsanityexception', 'error', $e->getMessage());
@@ -395,10 +399,17 @@ EOF;
 
     log_message($message, LOG_LEVEL_WARN, true, true, $e->getFile(), $e->getLine(), $e->getTrace());
 
+    if (function_exists('smarty')) {
+        $smarty = smarty();
+        $smarty->assign('title', $outputtitle);
+        $smarty->assign('message', $outputmessage);
+        $smarty->display('error.tpl');
+    }
+    else {
     echo <<<EOF
 <html>
 <head>
-    <title>Mahara - Site Unavailable</title>
+    <title>$outputtitle</title>
     <style type="text/css">
         #reason {
             margin: 0 3em;
@@ -411,12 +422,13 @@ EOF;
         echo insert_messages();
     }
     echo <<<EOF
-<h1>OMGWTFBBQ</h1>
+<h1>$outputtitle</h1>
 $outputmessage
 <hr>
 </body>
 </html>
 EOF;
+    }
     die();
 }
 
