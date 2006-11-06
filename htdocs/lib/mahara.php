@@ -772,4 +772,84 @@ function main_nav() {
     return $menu;
 }
 
+function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='') {
+
+    if (empty($userto)) {
+        throw new InvalidArgumentException("empty user given to email_user");
+    }
+    
+    require_once('phpmailer/class.phpmailer.php');
+
+    $mail = new phpmailer;
+
+    $mail->Version = 'Mahara ' . get_config('release'); 
+    $mail->PluginDir = get_config('libroot')  . '/phpmailer/';
+    
+    $mail->CharSet = 'UTF-8';
+
+    $smtphosts = get_config('smtphosts');
+    if ($smtphosts == 'qmail') {
+        // use Qmail system
+        $mail->IsQmail();
+    } 
+    else if (empty($smtphosts)) {
+        // use PHP mail() = sendmail
+        $mail->IsMail();
+    }
+    else {
+        $mail->IsSMTP();
+        // use SMTP directly
+        $mail->Host = get_config('smtphosts');
+        if (get_config('smtpuser')) {
+            // Use SMTP authentication
+            $mail->SMTPAuth = true;
+            $mail->Username = get_config('smtpuser');
+            $mail->Password = get_config('smtppass');
+        }
+    }
+
+    if (empty($userfrom)) {
+        $mail->Sender = get_config('noreplyaddress');
+        $mail->From = $mail->Sender;
+        $mail->FromName = get_string('emailname');
+    }
+    else {
+        $mail->Sender = $userfrom->email;
+        $mail->From = $mail->Sender;
+        $mail->FromName = ''; //@todo fullname
+    }
+           
+    $mail->AddReplyTo($mail->From, $mail->FromName);
+
+    $mail->Subject = substr(stripslashes($subject), 0, 78);
+
+    $usertoname = fullname($userto);
+    $mail->AddAddress($userto->email, $usertoname );
+
+    $mail->WordWrap = 79;   
+
+    // @todo get mail format and check it here before sending html
+    if ($messagehtml) { // Don't ever send HTML to users who don't want it
+        $mail->IsHTML(true);
+        $mail->Encoding = 'quoted-printable';
+        $mail->Body    =  $messagehtml;
+        $mail->AltBody =  "\n$messagetext\n";
+    } 
+    else {
+        $mail->IsHTML(false);
+        $mail->Body =  "\n$messagetext\n";
+    }
+
+    if ($mail->Send()) {
+        return true;
+    } 
+    throw new Exception("Couldn't send email to $usertoname with subject $subject. "
+                        . "Error from phpmailer was: " . $mail->ErrorInfo );
+}
+
+function fullname($user) {
+    return $user->firstname . ' ' . $user->lastname;
+    // @todo
+}
+
 ?>

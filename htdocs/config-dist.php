@@ -78,4 +78,12 @@ $cfg->log_environ_targets = LOG_TARGET_SCREEN | LOG_TARGET_ERRORLOG;
 // but probably only warnings are useful on a live site.
 $cfg->log_backtrace_levels = LOG_LEVEL_WARN | LOG_LEVEL_ENVIRON;
 
+// mail handling
+// if you want mahara to use smtp servers to send mail, enter one or more here
+// blank means mahara will use the default PHP method.
+// $cfg->smtphosts = 'mail.a.com;mail.b.com';
+// If you have specified an smtp server above, and the server requires authentication, 
+// enter them here
+// $cfg->smtpuser = '';
+// $cfg->smtppass = '';
 ?>
