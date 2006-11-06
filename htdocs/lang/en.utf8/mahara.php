@@ -34,6 +34,7 @@ $string['sessiontimedout'] = 'Your session has timed out, please enter your logi
 $string['termsandconditions'] = 'Terms and conditions';
 $string['uploadcopyright'] = 'Upload copyright';
 $string['cancel'] = 'Cancel';
+$string['sitecontentnotfound'] = '%s text not available';
 
 // auth
 $string['accountexpired'] = 'Sorry, your account has expired';

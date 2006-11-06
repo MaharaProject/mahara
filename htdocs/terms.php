@@ -25,34 +25,11 @@
  */
 
 define('INTERNAL', 1);
-define('PUBLIC', 1);
-define('MENUITEM', 'home');
 
 require('init.php');
 
-// check to see if we're installed...
-if (!get_config('installed')) {
-    redirect(get_config('wwwroot') . 'admin/index.php');
-}
-
-// Check for whether the user is logged in, before processing the page. After
-// this, we can guarantee whether the user is logged in or not for this page.
-if (!$SESSION->is_logged_in()) {
-    require_once('form.php');
-    $form = auth_get_login_form();
-    $form['renderer'] = 'div';
-    $login_form = form($form);
-    $pagename = 'loggedouthome';
-}
-else {
-    $pagename = 'home';
-}
-
 $smarty = smarty();
-if (!$SESSION->is_logged_in()) {
-    $smarty->assign('login_form', $login_form);
-}
-$smarty->assign('page_content', get_site_page_content($pagename));
-$smarty->display('index.tpl');
+$smarty->assign('page_content', get_site_page_content('termsandconditions'));
+$smarty->display('sitepage.tpl');
 
 ?>

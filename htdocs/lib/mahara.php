@@ -583,6 +583,13 @@ function site_content_pages() {
     return array('about','home','loggedouthome','privacy','termsandconditions','uploadcopyright');
 }
 
+function get_site_page_content($pagename) {
+    if ($pagedata = @get_record('site_content','name',$pagename)) {
+        return $pagedata->content;
+    }
+    return get_string('sitecontentnotfound','mahara',get_string($pagename));
+}
+
 /**
  * This function returns the list of plugintypes we currently care about
  * @return array of names

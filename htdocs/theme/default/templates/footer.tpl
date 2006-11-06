@@ -1,8 +1,8 @@
         <div id="footer">
-            <a href="">{str tag=termsandconditions}</a>
-            <a href="">{str tag=privacystatement}</a>
-            <a href="">{str tag=about}</a>
-            <a href="">{str tag=contactus}</a>
+            <a href="terms.php">{str tag=termsandconditions}</a>
+            <a href="privacy.php">{str tag=privacystatement}</a>
+            <a href="about.php">{str tag=about}</a>
+            <a href="contact.php">{str tag=contactus}</a>
         </div>
     </body>
 </html>
