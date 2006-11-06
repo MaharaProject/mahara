@@ -460,10 +460,14 @@ function auth_draw_login_page($message=null, Form $form=null) {
     else {
         require_once('form.php');
         $loginform = form(auth_get_login_form());
-        // If this is true, the form was submitted even before being built.
-        // This happens when a user's session times out and they resend post
-        // data. The request should just continue if so.
-        if ($USER) {
+        /*
+         * If $USER is set, the form was submitted even before being built.
+         * This happens when a user's session times out and they resend post
+         * data. The request should just continue if so.
+         *
+         * Also, the request should continue if the user has opted to log out.
+         */
+        if ($USER || isset($_GET['logout'])) {
             return;
         }
 
