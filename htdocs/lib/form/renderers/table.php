@@ -82,7 +82,7 @@ function form_renderer_table($builtelement, $rawelement) {
     }
 
     if (!empty($rawelement['error'])) {
-        $result .= "\t<tr>\n\t\t<td class=\"errmsg\">";
+        $result .= "\t<tr>\n\t\t<td colspan=\"2\" class=\"errmsg\">";
         $result .= hsc($rawelement['error']);
         $result .= "</td>\n\t</tr>\n";
     }

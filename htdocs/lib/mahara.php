@@ -142,15 +142,6 @@ function ensure_internal_plugins_exist() {
 
 function get_string($identifier, $section='mahara') {
 
-    $langconfigstrs = array('parentlanguage', 'strftimedate', 'strftimedateshort', 'strftimedatetime',
-                            'strftimedaydate', 'strftimedaydatetime', 'strftimedayshort', 'strftimedaytime',
-                            'strftimemonthyear', 'strftimerecent', 'strftimerecentfull', 'strftimetime',
-                            'thislanguage');
-
-    if (in_array($identifier, $langconfigstrs)) {
-        $section = 'langconfig';  
-    }
-
     $variables = func_get_args();
     if (count($variables) > 2) { // we have some stuff we need to sprintf
         array_shift($variables);
@@ -160,6 +151,40 @@ function get_string($identifier, $section='mahara') {
         $variables = array();
     }
     
+    return get_string_location($identifier, $section, $variables);
+}
+
+// get a string without sprintfing it.
+function get_raw_string($identifier, $section='mahara') {
+    // For a raw string we don't want to format any arguments using
+    // sprintf, so the replace function passed to get_string_location
+    // should just return the first argument and ignore the second.
+    return get_string_location($identifier, $section, array(), create_function('$a,$b','return $a;'));
+}
+
+
+/**
+ * This function gets a language string identified by $identifier from
+ * an appropriate location, and formats the string and any arguments
+ * in $variables using the function $replacefunc.
+ *
+ * @param string   $identifier
+ * @param string   $section
+ * @param array    $variables
+ * @param function $replacefunc
+ * @return string
+ */
+function get_string_location($identifier, $section, $variables, $replacefunc='format_langstring') {
+
+    $langconfigstrs = array('parentlanguage', 'strftimedate', 'strftimedateshort', 'strftimedatetime',
+                            'strftimedaydate', 'strftimedaydatetime', 'strftimedayshort', 'strftimedaytime',
+                            'strftimemonthyear', 'strftimerecent', 'strftimerecentfull', 'strftimetime',
+                            'thislanguage');
+
+    if (in_array($identifier, $langconfigstrs)) {
+        $section = 'langconfig';
+    }
+
     $lang = current_language();
 
     // Define the locations of language strings for this section
@@ -173,7 +198,7 @@ function get_string($identifier, $section='mahara') {
         $extras = plugin_types(); // more later..
         foreach ($extras as $tocheck) {
             if (strpos($section,$tocheck . '.') === 0) {
-                $pluginname = substr($section,strlen($tocheck) + 1);
+                $pluginname = substr($section ,strlen($tocheck) + 1);
                 $locations[] = $docroot . $tocheck . '/' . $pluginname . '/lang/';
             }
         }
@@ -185,7 +210,7 @@ function get_string($identifier, $section='mahara') {
         $langfile = $location . $lang . '/' . $section . '.php';
         if (is_readable($langfile)) {
             if ($result = get_string_from_file($identifier, $langfile)) {
-                return format_langstring($result, $variables);
+                return $replacefunc($result, $variables);
             }
         }
     }
@@ -197,7 +222,6 @@ function get_string($identifier, $section='mahara') {
     }
 
     // Is a parent language defined?  If so, try to find this string in a parent language file
-
     foreach ($locations as $location) {
         $langfile = $location . $lang . '/langconfig.php';
         if (is_readable($langfile)) {
@@ -205,7 +229,7 @@ function get_string($identifier, $section='mahara') {
                 $langfile = $location . $parentlang . '/' . $section . '.php';
                 if (is_readable($langfile)) {
                     if ($result = get_string_from_file($identifier, $langfile)) {
-                        return format_langstring($result, $variables);
+                        return $replacefunc($result, $variables);
                     }
                 }
             }
@@ -218,14 +242,13 @@ function get_string($identifier, $section='mahara') {
         $langfile = $location . 'en.utf8/' . $section . '.php';
         if (is_readable($langfile)) {
             if ($result = get_string_from_file($identifier, $langfile)) {
-                return format_langstring($result, $variables);
+                return $replacefunc($result, $variables);
             }
         }
     }
 
     return '[[' . $identifier . ']]';  // Last resort
 }
-
 
 
 /**

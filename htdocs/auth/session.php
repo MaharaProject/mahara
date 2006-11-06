@@ -59,6 +59,7 @@ class Session {
             'logout_time'    => 0,
             'id'             => 0,
             'username'       => '',
+            'password'       => '',
             'passwordchange' => false,
             'institution'    => 'mahara'
         );
