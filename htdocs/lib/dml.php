@@ -520,6 +520,7 @@ function get_records_sql($sql,$values, $limitfrom='', $limitnum='') {
  * Return value as for {@link get_rows}
  *
  * @param string $sql the SQL select query to execute.
+ * @param array values of placeholders in the SQL
  * @param int $limitfrom return a subset of records, starting at this point (optional, required if $limitnum is set).
  * @param int $limitnum return a subset comprising this many records (optional, required if $limitfrom is set).
  * @return mixed an array of objects, or false if no records were found.
