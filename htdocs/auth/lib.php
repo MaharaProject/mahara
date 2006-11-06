@@ -214,36 +214,38 @@ function auth_setup () {
         // The session is still active, so continue it.
         log_debug('session still active from previous time');
         $USER = $SESSION->renew();
-        auth_check_password_change();
+        auth_check_password_change($USER);
         return $USER;
     }
     else if ($sessionlogouttime > 0) {
         // The session timed out
         log_debug('session timed out');
         $SESSION->logout();
-        $SESSION->add_info_msg(get_string('sessiontimedout'));
-        auth_draw_login_page();
-        exit;
+        auth_draw_login_page(get_string('sessiontimedout'));
+        // The auth_draw_login_page function may authenticate a user if a login
+        // request was sent at the same time that the "timed out" message is to
+        // be displayed.
+        return $USER;
     }
     else {
         // There is no session, so we check to see if one needs to be started.
-        // First, check if the page is public or the site is configured to be public.
-        if (defined('PUBLIC')) {
-            return;
-        }
-
+        
         // Build login form. If the form is submitted it will be handled here,
         // and set $USER for us.
         require_once('form.php');
         $form = new Form(auth_get_login_form());
         if ($USER) {
             log_debug('user logged in just fine');
-            auth_check_password_change();
+            return $USER;
+        }
+        
+        // Check if the page is public or the site is configured to be public.
+        if (defined('PUBLIC')) {
             return;
         }
         
         log_debug('no session or old session, and page is private');
-        auth_draw_login_page($form);
+        auth_draw_login_page(null, $form);
         exit;
     }
 }
@@ -267,9 +269,9 @@ function auth_get_authtype_for_institution($institution) {
  * will, in theory, have different data stores, making changing the password
  * via the internal form difficult.
  */
-function auth_check_password_change() {
+function auth_check_password_change($user) {
     global $SESSION;
-    log_debug('checking if the user needs to change their password');
+    log_debug('checking if the user needs to change their password');// @todo change this to $user instead of $SESSION, as long as it's safe
     if (auth_get_authtype_for_institution($SESSION->get('institution')) == 'internal' && $SESSION->get('passwordchange')) {
         log_debug('user DOES need to change their password');
         require_once('form.php');
@@ -304,6 +306,32 @@ function auth_check_password_change() {
         $smarty->assign('change_password_form', form($form));
         $smarty->display('change_password.tpl');
         exit;
+    }
+}
+
+/**
+ * Check if the given user's account has expired
+ */
+function auth_check_user_expired($user) {
+    log_debug('Checking to see if the user has expired');
+    if ($user->expiry > 0 && time() > $user->expiry) {
+        // Trash the $USER object, used for checking if the user is logged in
+        global $USER;
+        $USER = null;
+        die_info('Sorry, your account has expired');
+    }
+}
+
+
+function auth_check_user_suspended() {
+    global $USER;
+    log_debug('Checking to see if the user is suspended');
+    $suspend = get_record('usr_suspension', 'usr', $USER->id);
+    log_debug($suspend);
+    if ($suspend) {
+        global $USER;
+        $USER = null;
+        die_info('Sorry, your account has been SUSPENDED!');
     }
 }
 
@@ -404,18 +432,33 @@ function change_password_submit($values) {
  * users can have their sessions time out, and then can log in again without
  * losing any of their data.
  *
+ * As this function builds and validates a login form, it is possible that
+ * calling this may validate a user to be logged in.
+ *
  * @param Form $form If specified, just build this form to get the HTML
  *                   required. Otherwise, this function will build and
  *                   validate the form itself.
  * @access private
  */
-function auth_draw_login_page(Form $form=null) {
+function auth_draw_login_page($message=null, Form $form=null) {
+    global $USER, $SESSION;
     if ($form != null) {
         $loginform = $form->build();
     }
     else {
         require_once('form.php');
         $loginform = form(auth_get_login_form());
+        // If this is true, the form was submitted even before being built.
+        // This happens when a user's session times out and they resend post
+        // data. The request should just continue if so.
+        if ($USER) {
+            return;
+        }
+
+    }
+
+    if ($message) {
+        $SESSION->add_info_msg($message);
     }
     $smarty = smarty();
     $smarty->assign('login_form', $loginform);
@@ -530,9 +573,11 @@ function login_submit($values) {
         if (call_static_method($authclass, 'authenticate_user_account', $username, $password, $institution)) {
             log_debug('user ' . $username . ' logged in OK');
             $USER = call_static_method($authclass, 'get_user_info', $username);
+            auth_check_user_expired($USER);
+            auth_check_user_suspended($USER);
             $SESSION->login($USER);
             $USER->logout_time = $SESSION->get('logout_time');
-            auth_check_password_change();
+            auth_check_password_change($USER);
         }
         else {
             // Login attempt failed
