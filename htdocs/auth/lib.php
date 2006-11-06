@@ -204,13 +204,15 @@ function auth_setup () {
     // Check the time that the session is set to log out. If the user does
     // not have a session, this time will be 0.
     $sessionlogouttime = $SESSION->get('logout_time');
-    if ($sessionlogouttime > time()) {
+    if ($sessionlogouttime && isset($_GET['logout'])) {
         if (isset($_GET['logout'])) {
             log_debug('logging user ' . $SESSION->get('username') . ' out');
             $SESSION->logout();
             $SESSION->add_ok_msg(get_string('loggedoutok'));
             redirect(get_config('wwwroot'));
         }
+    }
+    if ($sessionlogouttime > time()) {
         // The session is still active, so continue it.
         log_debug('session still active from previous time');
         $USER = $SESSION->renew();
@@ -218,12 +220,6 @@ function auth_setup () {
         return $USER;
     }
     else if ($sessionlogouttime > 0) {
-        if (isset($_GET['logout'])) {
-            log_debug('logging user ' . $SESSION->get('username') . ' out');
-            $SESSION->logout();
-            $SESSION->add_ok_msg(get_string('loggedoutok'));
-            redirect(get_config('wwwroot'));
-        }
         // The session timed out
         log_debug('session timed out');
         $SESSION->logout();
