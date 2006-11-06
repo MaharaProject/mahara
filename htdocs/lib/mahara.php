@@ -810,10 +810,10 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='')
     
     require_once('phpmailer/class.phpmailer.php');
 
-    $mail = new phpmailer;
+    $mail = new phpmailer();
 
     $mail->Version = 'Mahara ' . get_config('release'); 
-    $mail->PluginDir = get_config('libroot')  . '/phpmailer/';
+    $mail->PluginDir = get_config('libroot')  . 'phpmailer/';
     
     $mail->CharSet = 'UTF-8';
 
