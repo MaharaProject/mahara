@@ -29,20 +29,24 @@ defined('INTERNAL') || die();
 $string['about'] = 'About';
 $string['home'] = 'Home';
 $string['loggedouthome'] = 'Logged out Home';
+$string['privacy'] = 'Privacy';
+$string['sessiontimedout'] = 'Your session has timed out, please enter your login details to continue';
+$string['termsandconditions'] = 'Terms and conditions';
+$string['uploadcopyright'] = 'Upload copyright';
+$string['cancel'] = 'Cancel';
+
+// auth
+$string['accountexpired'] = 'Sorry, your account has expired';
+$string['accountsuspended'] = 'Your account has been suspeneded as of %s. The reason for your suspension is:<blockquote>%s</blockquote>';
 $string['loggedoutok'] = 'You have been logged out successfully';
 $string['login'] = 'Log In';
 $string['loginfailed'] = 'You have not provided the correct credentials to log in. Please check your username and password are correct.';
 $string['password'] = 'Password';
 $string['passworddesc'] = 'Your password';
 $string['passwordhelp'] = 'The password you use to access the system.';
-$string['privacy'] = 'Privacy';
-$string['sessiontimedout'] = 'Your session has timed out, please enter your login details to continue';
-$string['termsandconditions'] = 'Terms and conditions';
-$string['uploadcopyright'] = 'Upload copyright';
 $string['username'] = 'Username';
 $string['usernamedesc'] = 'Your username';
 $string['usernamehelp'] = 'The username you have been given to access this system.';
-$string['cancel'] = 'Cancel';
 
 // Admin site page editor
 $string['discardchanges']     = 'Discard your changes to this page?';
