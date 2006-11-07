@@ -39,8 +39,48 @@ if (!get_config('installed')) {
 // this, we can guarantee whether the user is logged in or not for this page.
 if (!$SESSION->is_logged_in()) {
     require_once('form.php');
-    $form = auth_get_login_form();
-    $form['renderer'] = 'div';
+    $form = array(
+        'name'     => 'login',
+        'method'   => 'post',
+        'action'   => '',
+        'renderer' => 'div',
+        'submit'   => false,
+        'elements' => array(
+            'login' => array(
+                'type'   => 'fieldset',
+                'legend' => get_string('login'),
+                'elements' => array(
+                    'login_username' => array(
+                        'type'        => 'text',
+                        'title'       => get_string('username'),
+                        'description' => get_string('usernamedesc'),
+                        'help'        => get_string('usernamehelp'),
+                        'rules' => array(
+                            'required'    => true
+                        )
+                    ),
+                    'login_password' => array(
+                        'type'        => 'password',
+                        'title'       => get_string('password'),
+                        'description' => get_string('passworddesc'),
+                        'help'        => get_string('passwordhelp'),
+                        'value'       => '',
+                        'rules' => array(
+                            'required'    => true
+                        )
+                    )
+                )
+            ),
+
+            'submit' => array(
+                'type'  => 'submit',
+                'value' => get_string('login')
+            ),
+            'register' => array(
+                'value' => '<div><a href="' . get_config('wwwroot') . 'register.php">' . get_string('register') . '</a></div>'
+            )
+        )
+    );
     $login_form = form($form);
     $pagename = 'loggedouthome';
 }
