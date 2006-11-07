@@ -9,7 +9,7 @@
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
                 <FIELD NAME="type" TYPE="char" LENGTH="50" NOTNULL="true" />
-                <FIELD NAME="user" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
                 <FIELD NAME="message" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="url" TYPE="text" NOTNULL="false" />
@@ -17,7 +17,7 @@
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
                 <KEY NAME="typefk" TYPE="foreign" FIELDS="type" REFTABLE="activity_type" REFFIELDS="name" />
-                <KEY NAME="userfk" TYPE="foreign" FIELDS="user" REFTABLE="usr" REFFIELDS="id" />
+                <KEY NAME="usrfk" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id" />
             </KEYS>
         </TABLE>
     </TABLES>

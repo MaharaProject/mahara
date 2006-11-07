@@ -31,7 +31,62 @@ require_once(get_config('docroot') . 'notification/lib.php');
 class PluginNotificationEmaildigest extends PluginNotification {
 
     public static function notify_user($user, $data) {
-        // @todo
+        $toinsert = new StdClass;
+        $toinsert->type = $data->type;
+        $toinsert->usr = $user->id;
+        $toinsert->message = $data->message;
+        $toinsert->ctime = db_format_timestamp(time());
+        if (!empty($data->url)) {
+            $toinsert->url = $data->url;
+        }
+        
+        insert_record('notification_emaildigest_queue', $toinsert);
+    }
+
+    public static function get_cron() {
+        $emaildigest = new StdClass;
+        $emaildigest->callfunction = 'send_digest';
+        $emaildigest->hour = '6';
+        return array($emaildigest);
+    }
+
+    public static function send_digest() {
+        $users = array();
+
+        $sql = 'SELECT u.firstname,u.lastname,u.prefname,u.email,q.*,' . db_format_tsfield('ctime').'
+                FROM ' . get_config('dbprefix') . 'usr u 
+                    JOIN ' . get_config('dbprefix') . 'notification_emaildigest_queue q
+                        ON q.usr = u.id
+                ORDER BY usr,type,ctime';
+
+        if ($tosend = get_records_sql($sql);
+            foreach ($tosend as $queue) {
+                if (!isset($users[$queue->usr])) {
+                    $users[$queue->usr] = new StdClass;
+
+                    $users[$queue->usr]->user = new StdClass;
+                    $users[$queue->usr]->user->firstname = $queue->firstname;
+                    $users[$queue->usr]->user->lastname  = $queue->lastname;
+                    $users[$queue->usr]->user->prefname  = $queue->prefname;
+                    $users[$queue->usr]->user->email     = $queue->email;
+                    $users[$queue->usr]->user->id        = $queue->usr;
+                    
+                    $users[$queue->usr]->entries = array();
+                }
+                $queue->nicetype = get_string('type' . $queue->type, 'activity');
+                $users[$queue->usr]->entries[$queue->id] = $queue;
+            }
+        }
+        
+        foreach ($users as $user) {
+            
+            //delete_records_select('notification_emaildigest_queue', 'ctime <= ');
+        
+        }
+
+
+
+
     }
 }
 

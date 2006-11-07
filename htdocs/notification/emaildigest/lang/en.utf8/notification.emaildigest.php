@@ -26,8 +26,8 @@
 
 defined('INTERNAL') || die();
 
-$config = new StdClass;
-$config->version = 2006110700;
-$config->release = '0.1';
+$string['emailsubject'] = 'Message from Mahara: Daily digest';
+$string['emailbodynoreply'] = "This is an auto generated notification from Mahara.  Following is the daily digest of all your notifications\n\n--------------------------------------------------\n\n";
+
 
 ?>
