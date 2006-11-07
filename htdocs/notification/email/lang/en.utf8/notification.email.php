@@ -18,7 +18,7 @@
  *
  * @package    mahara
  * @subpackage notification-internal
- * @author     Penny Leach <penny@catalyst.net.nz>
+ * @author     Nigel McNie <nigel@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
@@ -26,26 +26,9 @@
 
 defined('INTERNAL') || die();
 
-class PluginNotificationInternal extends PluginNotification {
+$string['emailsubject'] = 'Message from Mahara: %s';
+$string['emailbodynoreply'] = "This is an auto generated notification from Mahara. Please do not reply to this message.  Following is the content of your notification\n\n--------------------------------------------------\n\n";
+$string['emailbodynoreply'] = "This is an auto generated notification from Mahara.  Following is the content of your notification\n\n--------------------------------------------------\n\n";
 
-    public static function notify_user($user, $data) {
-        $toinsert = new StdClass;
-        $toinsert->type = $data->type;
-        $toinsert->usr = $user->id;
-        if (!empty($user->markasread)) {
-            $toinsert->read = 1;
-        } 
-        else {
-            $toinsert->read = 0;
-        }
-        $toinsert->message = $data->message;
-        $toinsert->ctime = db_format_timestamp(time());
-        if (!empty($data->url)) {
-            $toinsert->url = $data->url;
-        }
-        
-        insert_record('notification_internal_activity', $toinsert);
-    }
-}
 
 ?>

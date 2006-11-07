@@ -26,26 +26,14 @@
 
 defined('INTERNAL') || die();
 
-class PluginNotificationInternal extends PluginNotification {
-
-    public static function notify_user($user, $data) {
-        $toinsert = new StdClass;
-        $toinsert->type = $data->type;
-        $toinsert->usr = $user->id;
-        if (!empty($user->markasread)) {
-            $toinsert->read = 1;
-        } 
-        else {
-            $toinsert->read = 0;
-        }
-        $toinsert->message = $data->message;
-        $toinsert->ctime = db_format_timestamp(time());
-        if (!empty($data->url)) {
-            $toinsert->url = $data->url;
-        }
-        
-        insert_record('notification_internal_activity', $toinsert);
-    }
-}
+$string['typemaharamessage'] = 'System message';
+$string['typeusermessage'] = 'Message from user';
+$string['typefeedback'] = 'Feedback';
+$string['typewatchlist'] = 'Watchlist';
+$string['typenewview'] = 'New view';
+$string['typecontactus'] = 'Contact us';
+$string['typeobjectionable'] = 'Objectionable content';
+$string['typevirusrepeat'] = 'Virus flat repeat';
+$string['typevirusrelease'] = 'Virus flag release';
 
 ?>

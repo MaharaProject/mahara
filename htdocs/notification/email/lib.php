@@ -31,7 +31,21 @@ require_once(get_config('docroot') . 'notification/lib.php');
 class PluginNotificationEmail extends PluginNotification {
 
     public static function notify_user($user, $data) {
-        // @todo
+
+        $fulltype = get_string('type' . $data->type, 'activity');
+        $subject = get_string('emailsubject', 'notification.email', $fulltype);
+
+        if (!empty($data->userfrom)) {
+            $userfrom = get_record('usr', 'id', $data->userfrom);
+            $messagebody = get_string('emailbody', 'notification.email')
+                . $data->message;
+        } 
+        else {
+            $userfrom = null;
+            $messagebody = get_string('emailbodynoreply', 'notification.email')
+                . $data->message;
+        }
+        email_user($user, $userfrom, $subject, $messagebody);
     }
 }
 
