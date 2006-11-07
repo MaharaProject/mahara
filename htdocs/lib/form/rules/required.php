@@ -39,4 +39,19 @@ function form_rule_required($field) {
     }
 }
 
+/**
+ * Returns a javascript condition to check whether the field has been specified.
+ *
+ * @param string $id        id of the field to check
+ * @return string           js condition to check if the field is empty.
+ *         string           The error message, if the value is invalid.
+ */
+function form_rule_required_js($id) {
+    $r->condition = '$(\'' . $id . '\').value != \'\'';
+    $r->message = get_string('This field is required');
+    return $r;
+}
+
+
+
 ?>
