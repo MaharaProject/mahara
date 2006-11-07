@@ -159,7 +159,8 @@ function get_raw_string($identifier, $section='mahara') {
     // For a raw string we don't want to format any arguments using
     // sprintf, so the replace function passed to get_string_location
     // should just return the first argument and ignore the second.
-    return get_string_location($identifier, $section, array(), create_function('$a,$b','return $a;'));
+    return get_string_location($identifier, $section, array(), 
+                               create_function('$string, $args','return $string;'));
 }
 
 

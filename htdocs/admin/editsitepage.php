@@ -86,17 +86,17 @@ var originalcontent = '';
 function requestPageText() {
     // Allow the user to abort change if changes have been made in the editor.
     if (getEditorContent() != originalcontent) {
-        var answer = confirm(get_string('discardchanges'));
+        var answer = confirm(get_string('discardpageedits'));
         if (!answer) {
             $('pagename').value = oldpagename;
             return;
         }
     }
-    displayMessage({'message':get_string('loadingpagecontent', $('pagename').value),'type':'info'});
+    logDebug(get_string('loadingpagecontent', $('pagename').value));
     var d = loadJSONDoc('editchangepage.json.php',{'pagename':$('pagename').value});
     d.addCallback(function(data) {
         if (data.success) {
-            displayMessage({'message':get_string('loadedsuccessfully', $('pagename').value),'type':'info'});
+            logDebug(get_string('loadedsuccessfully', $('pagename').value));
             setEditorContent(data.content);
             originalcontent = getEditorContent();
             oldpagename = $('pagename').value;
@@ -134,7 +134,7 @@ function onLoad() {
 addLoadEvent(onLoad);
 EOJS;
 
-$jsstrings = array('discardchanges');
+$jsstrings = array('discardpageedits');
 
 $smarty = smarty($js,array(),$jsstrings);
 $smarty->assign('pageeditform', $form);

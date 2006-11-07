@@ -11,6 +11,7 @@ my $EXCLUDE_FILES = [
     qr{ \A examples/                        }xms,
     qr{ \A htdocs/tests                     }xms,
     qr{ \A htdocs/lib/adodb                 }xms,
+    qr{ \A htdocs/lib/phpmailer             }xms,
     qr{ \A htdocs/lib/xmldb                 }xms,
     qr{ \A htdocs/lib/smarty                }xms,
     qr{ \A htdocs/lib/ddl.php               }xms,
@@ -76,7 +77,7 @@ sub process {
     if ( $file_data =~ m{ \@subpackage (.*?) $ }xms ) {
         my $subpackage_data = $1;
         unless (
-            $subpackage_data =~ m{ \A \s* ( core | auth | lang | tests | admin | ( form | artefact | notification )(?:-.+)? ) \s* \z }xms
+            $subpackage_data =~ m{ \A \s* ( core | lang | tests | admin | ( auth | form | artefact | notification )(?:-.+)? ) \s* \z }xms
         ) {
             print $directory, $filename, " invalid \@subpackage '$subpackage_data'\n";
         }
