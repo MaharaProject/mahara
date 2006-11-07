@@ -28,10 +28,6 @@ defined('INTERNAL') || die();
 
 $string['internal'] = 'Internal';
 $string['passwordinvalidform'] = 'Your password must be at least six characters long and contain at least one digit and two letters';
-$string['passwordtooeasy'] = 'Your password is too easy! Please choose a harder password';
-$string['passwordnotchanged'] = 'You did not change your password, please choose a new password';
-$string['passwordsaved'] = 'Your new password has been saved';
-$string['passwordsdonotmatch'] = 'The passwords do not match';
-$string['usernameinvalidform'] = 'Your username may only include alphanumeric characters, full stops, underscores and @ symbols';
+$string['usernameinvalidform'] = 'Your username may only include alphanumeric characters, full stops, underscores and @ symbols. Also, it must be between 3 and 30 characters long.';
 
 ?>
