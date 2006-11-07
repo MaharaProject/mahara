@@ -53,17 +53,17 @@ class PluginNotificationEmaildigest extends PluginNotification {
     public static function send_digest() {
         $users = array();
 
-        $sql = 'SELECT u.firstname,u.lastname,u.prefname,u.email,q.*,' . db_format_tsfield('ctime').'
+        $sql = 'SELECT q.id, u.firstname,u.lastname,u.prefname,u.email,q.*,' . db_format_tsfield('ctime').'
                 FROM ' . get_config('dbprefix') . 'usr u 
                     JOIN ' . get_config('dbprefix') . 'notification_emaildigest_queue q
                         ON q.usr = u.id
-                ORDER BY usr,type,ctime';
+                ORDER BY usr,type,q.ctime';
 
-        if ($tosend = get_records_sql($sql);
+        if ($tosend = get_records_sql($sql, array())) {
             foreach ($tosend as $queue) {
                 if (!isset($users[$queue->usr])) {
                     $users[$queue->usr] = new StdClass;
-
+                    
                     $users[$queue->usr]->user = new StdClass;
                     $users[$queue->usr]->user->firstname = $queue->firstname;
                     $users[$queue->usr]->user->lastname  = $queue->lastname;
@@ -77,26 +77,26 @@ class PluginNotificationEmaildigest extends PluginNotification {
                 $users[$queue->usr]->entries[$queue->id] = $queue;
             }
         }
-        
         foreach ($users as $user) {
             $subject = get_string('emailsubject', 'notification.emaildigest');
             $body = get_string('emailbodynoreply', 'notification.emaildigest');
             foreach ($user->entries as $entry) {
                 $body .= get_string('type', 'activity') . $entry->nicetype 
-                    . get_string('attime')  . $entry->ctime . "\n"
+                    . ' ' . get_string('attime', 'activity')  . ' ' . format_date($entry->ctime) . "\n"
                     . $queue->message;
                 if (!empty($queue->url)) {
                     $body .= "\n" . $queue->url;
                 }
-                $prefurl = get_config('wwwroot') . 'account/activityprefs.php';
-                $body .= "\n\n" . get_string('emailbodyending', 'notification.emaildigest', $prefurl););
-                
+                $body .= "\n\n";
             }
+            $prefurl = get_config('wwwroot') . 'account/activityprefs.php';
+            $body .= "\n\n" . get_string('emailbodyending', 'notification.emaildigest', $prefurl);
             try {
                 email_user($user->user, null, $subject, $body);
-                // only delete them if the email succeeded! 
+                //only delete them if the email succeeded! 
+                $in = db_array_to_ph($user->entries);
                 delete_records_select('notification_emaildigest_queue', 
-                                      'id IN (' . db_array_to_ph($entries) . ')', 
+                                      'id IN (' . implode(', ', $in) . ')', 
                                       array_keys($user->entries));
             } 
             catch (Exception $e) {
