@@ -60,10 +60,13 @@ function submitForm(formid,url,callback) {
     var d = sendXMLHttpRequest(req,queryString(data));
     d.addCallback(function (result) {
         var data = evalJSONRequest(result);
-        displayMessage({'message':data.message,'type':data.success});
+        var type = data.success ? 'infomsg' : 'errmsg';
+        eval(formid + '_message(\'' + data.message + '\',\'' + type + '\')');
         callback();
     });
-    d.addErrback(function() { displayMessage(get_string('unknownerror'),'error'); });
-    displayMessage({'message':get_string('processingform'),'type':'info'});
+    d.addErrback(function() { 
+        eval(formid + '_message(\'' + get_string('unknownerror') + '\',\'' + 'errmsg\')');
+    });
+    eval(formid + '_message(\'' + get_string('processingform') + '\',\'' + 'infomsg\')');
     return false;
 }

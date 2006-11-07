@@ -403,6 +403,10 @@ class Form {
         foreach ($this->elements as $name => $elem) {
             $result .= form_render_element($elem, $this);
         }
+        $function = 'form_renderer_' . $this->renderer . '_messages';
+        if (function_exists($function)) {
+            $result .= $function($this->name);
+        }
         $function = 'form_renderer_' . $this->renderer . '_footer';
         if (function_exists($function)) {
             $result .= $function();
@@ -579,11 +583,11 @@ class Form {
         $js_error_function = 'form_renderer_' . $this->renderer . '_error_js';
         if (!function_exists($js_error_function)) {
             @include_once('form/renderers/' . $this->renderer . '.php');
-            if (!function_exists($js_error_function)) {
-                throw new FormException('No such renderer function "' . $js_error_function . '"');
-            }
         }
-        return $result . $js_error_function($this->name);
+        if (function_exists($js_error_function)) {
+            return $result . $js_error_function($this->name);
+        }
+        return $result;
     }
 
     /**
