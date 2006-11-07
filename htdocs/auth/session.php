@@ -60,6 +60,7 @@ class Session {
             'id'             => 0,
             'username'       => '',
             'password'       => '',
+            'salt'           => '',
             'institution'    => 'mahara',
             'passwordchange' => false,
             'deleted'        => false,
