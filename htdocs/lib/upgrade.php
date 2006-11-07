@@ -90,9 +90,11 @@ function check_upgrades($name=null) {
                 if (strpos($dir, '.') === 0) {
                     continue;
                 }
+                /*
                 if (empty($installing) && $dir != 'internal') {
                     continue;
                 }
+                */
                 if (!is_dir(get_config('docroot') . $plugin . '/' . $dir)) {
                     continue;
                 }
@@ -268,7 +270,7 @@ function upgrade_plugin($upgrade) {
             if (!empty($upgrade->install)) {
                 $new = true;
             }
-            else if (!record_exists($table, 'plugin', $pluginname, 'function', $cron->callfunction)) {
+            else if (!record_exists($table, 'plugin', $pluginname, 'callfunction', $cron->callfunction)) {
                 $new = true;
             }
             $cron->plugin = $pluginname;
