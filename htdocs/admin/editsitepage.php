@@ -25,6 +25,7 @@
  */
 
 define('INTERNAL',1);
+define('ADMIN', 1);
 require(dirname(dirname(__FILE__)).'/init.php');
 require_once('form.php');
 
