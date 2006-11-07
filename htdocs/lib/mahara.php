@@ -891,4 +891,17 @@ function fullname($user) {
     // @todo
 }
 
+/**
+ * formats a unix timestamp to a nice date format.
+ * 
+ * @param int $date unix timestamp to format
+ * @param string $formatkey language key to fetch the format from
+ * (see langconfig.php or the top of {@link get_string_location}
+ * for supported keys
+ */
+
+function format_date($date, $formatkey='strftimedatetime') {
+    return strftime(get_string($formatkey), $date);
+}
+
 ?>
