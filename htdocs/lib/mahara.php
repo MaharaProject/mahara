@@ -856,7 +856,7 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='')
     else {
         $mail->Sender = $userfrom->email;
         $mail->From = $mail->Sender;
-        $mail->FromName = ''; //@todo fullname
+        $mail->FromName = fullname($userfrom);
     }
            
     $mail->AddReplyTo($mail->From, $mail->FromName);
