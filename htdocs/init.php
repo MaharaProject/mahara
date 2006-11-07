@@ -69,7 +69,6 @@ if (!isset($CFG->noreplyaddress) && isset($_SERVER['HTTP_HOST'])) {
         ((isset($_SERVER['HTTP_X_FORWARDED_HOST'])) 
          ? $_SERVER['HTTP_X_FORWARDED_HOST'] 
          : $_SERVER['HTTP_HOST']);
-    error_log("set to $CFG->noreplyaddress");
 }
 
 // xmldb stuff
