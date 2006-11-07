@@ -79,14 +79,30 @@ class PluginNotificationEmaildigest extends PluginNotification {
         }
         
         foreach ($users as $user) {
-            
-            //delete_records_select('notification_emaildigest_queue', 'ctime <= ');
-        
+            $subject = get_string('emailsubject', 'notification.emaildigest');
+            $body = get_string('emailbodynoreply', 'notification.emaildigest');
+            foreach ($user->entries as $entry) {
+                $body .= get_string('type', 'activity') . $entry->nicetype 
+                    . get_string('attime')  . $entry->ctime . "\n"
+                    . $queue->message;
+                if (!empty($queue->url)) {
+                    $body .= "\n" . $queue->url;
+                }
+                $prefurl = get_config('wwwroot') . 'account/activityprefs.php';
+                $body .= "\n\n" . get_string('emailbodyending', 'notification.emaildigest', $prefurl););
+                
+            }
+            try {
+                email_user($user->user, null, $subject, $body);
+                // only delete them if the email succeeded! 
+                delete_records_select('notification_emaildigest_queue', 
+                                      'id IN (' . db_array_to_ph($entries) . ')', 
+                                      array_keys($user->entries));
+            } 
+            catch (Exception $e) {
+                // @todo
+            }
         }
-
-
-
-
     }
 }
 
