@@ -32,5 +32,6 @@ $string['passwordtooeasy'] = 'Your password is too easy! Please choose a harder 
 $string['passwordnotchanged'] = 'You did not change your password, please choose a new password';
 $string['passwordsaved'] = 'Your new password has been saved';
 $string['passwordsdonotmatch'] = 'The passwords do not match';
+$string['usernameinvalidform'] = 'Your username may only include alphanumeric characters, full stops, underscores and @ symbols';
 
 ?>
