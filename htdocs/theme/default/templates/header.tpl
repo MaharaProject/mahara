@@ -18,7 +18,7 @@
     </head>
     <body>
         <div id="header">
-            <h1>{$heading|default:"Mahara"|escape}</h1>
+            <h1><a href="{$WWWROOT}">{$heading|default:"Mahara"|escape}</a></h1>
 {if $USER}
             <a href="{$WWWROOT}?logout">Logout</a>
     {if $USER->admin}
