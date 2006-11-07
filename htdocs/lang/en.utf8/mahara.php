@@ -84,4 +84,5 @@ $string['creategroup']      = 'Add new group';
 $string['groupname']        = 'Group name';
 $string['groupdescription'] = 'Group description';
 
+$string['emailname'] = 'Mahara System'; // robot! 
 ?>

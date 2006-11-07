@@ -802,6 +802,16 @@ function main_nav() {
     return $menu;
 }
 
+
+/** 
+ * Always use this function for all emails to users
+ * 
+ * @param object $userto user object to send email to. must contain firstname,lastname,prefname,email
+ * @param object $userfrom user object to send email from. If null, email will come from mahara
+ * @param string $subject email subject
+ * @param string $messagetext text version of email
+ * @param string $messagehtml html version of email (will send both html and text)
+ */ 
 function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='') {
 
     if (empty($userto)) {
@@ -858,8 +868,7 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='')
 
     $mail->WordWrap = 79;   
 
-    // @todo get mail format and check it here before sending html
-    if ($messagehtml) { // Don't ever send HTML to users who don't want it
+    if ($messagehtml) { 
         $mail->IsHTML(true);
         $mail->Encoding = 'quoted-printable';
         $mail->Body    =  $messagehtml;
