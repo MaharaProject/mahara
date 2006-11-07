@@ -41,7 +41,7 @@ if (isset($upgrades['core']) && !empty($upgrades['core']->install)) {
 }
 
 // normal admin page starts here
-
+$smarty->assign('upgrades', $upgrades);
 $smarty->display('admin/index.tpl');
 
 ?>
