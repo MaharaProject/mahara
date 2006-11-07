@@ -50,7 +50,7 @@ $string['usernamedesc'] = 'Your username';
 $string['usernamehelp'] = 'The username you have been given to access this system.';
 
 // Admin site page editor
-$string['discardchanges']     = 'Discard your changes to this page?';
+$string['discardpageedits']   = 'Discard your changes to this page?';
 $string['pagecontents']       = 'Text to appear on the page';
 $string['pagename']           = 'Page name';
 $string['pagetext']           = 'Page text';
