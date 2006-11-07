@@ -48,8 +48,6 @@ abstract class Auth {
     /**
      * Given a username, password and institution, attempts to log the use in.
      *
-     * @todo Later, needs to deal with institution
-     *
      * @param string $username  The username to attempt to authenticate
      * @param string $password  The password to use for the attempt
      * @param string $institute The institution the user belongs to
@@ -106,36 +104,20 @@ abstract class Auth {
     }
 
     /**
-     * Given a username, returns whether it is in a valid format for this
-     * authentication method.
-     *
-     * Note: This does <b>not</b> check that the username is an existing user
-     * that this authentication method could log in given the correct password.
-     * It only checks that the format that the username is in is allowed - i.e.
-     * that it matches a specific regular expression for example.
-     *
-     * This is defined to be empty, so that authentication methods do not have
-     * to specify a format if they do not need to.
-     *
-     * The default behaviour is to assume that the username is in a valid form,
-     * so make sure to implement this method if this is not the case!
-     *
-     * @param string $username The username to check
-     * @return bool            Whether the username is in valid form.
-     */
-    public static function is_username_valid($username) {
-        return true;
-    }
-
-    /**
      * Given a password, returns whether it is in a valid format for this
      * authentication method.
      *
-     * This is defined to be empty, so that authentication methods do not have
-     * to specify a format if they do not need to.
+     * This only needs to be defined by subclasses if:
+     *  - They implement the change_password method, which means that the
+     *    system can use the <kbd>passwordchange</kbd> flag on the <kbd>usr</kbd>
+     *    table to control whether the user's password needs changing.
+     *  - The password that a user can set must be in a certain format.
      *
      * The default behaviour is to assume that the password is in a valid form,
      * so make sure to implement this method if this is not the case!
+     *
+     * This method is defined to be empty, so that authentication methods do 
+     * not have to specify a format if they do not need to.
      *
      * @param string $password The password to check
      * @return bool            Whether the username is in valid form.
@@ -222,7 +204,6 @@ function auth_setup () {
         // The session is still active, so continue it.
         log_debug('session still active from previous time');
         $USER = $SESSION->renew();
-        log_debug($USER);
         auth_check_password_change();
         return $USER;
     }
@@ -251,6 +232,7 @@ function auth_setup () {
         
         // Check if the page is public or the site is configured to be public.
         if (defined('PUBLIC')) {
+            log_debug('user viewing public page');
             return;
         }
         
@@ -362,11 +344,11 @@ function auth_check_password_change() {
  * @param array $values The values to check
  */
 function change_password_validate(Form $form, $values) {
-    global $SESSION;
+    global $USER;
 
     // Get the authentication type for the user (based on the institution), and
     // use the information to validate the password
-    $authtype  = auth_get_authtype_for_institution($SESSION->get('institution'));
+    $authtype  = auth_get_authtype_for_institution($USER->institution);
     $authclass = 'Auth' . ucfirst($authtype);
     $authlang  = 'auth.' . $authtype;
     safe_require('auth', $authtype, 'lib.php', 'require_once');
@@ -379,14 +361,15 @@ function change_password_validate(Form $form, $values) {
 
     // The password must not be too easy :)
     $suckypasswords = array(
-        'mahara', 'password', $SESSION->get('username')
+        'mahara', 'password', $USER->username
     );
     if (!$form->get_error('password1') && in_array($values['password1'], $suckypasswords)) {
         $form->set_error('password1', get_string('passwordtooeasy'));
     }
 
     // The password cannot be the same as the old one
-    if (!$form->get_error('password1') && $values['password1'] == $SESSION->get('password')) {
+    if (!$form->get_error('password1')
+        && call_static_method($authclass, 'authenticate_user_account', $USER->username, $values['password1'], $USER->institution)) {
         $form->set_error('password1', get_string('passwordnotchanged'));
     }
 
@@ -402,14 +385,14 @@ function change_password_validate(Form $form, $values) {
  * @param array $values The submitted form values
  */
 function change_password_submit($values) {
-    global $SESSION, $USER;
+    global $SESSION;
     log_debug('changing password to ' . $values['password1']);
     $authtype = auth_get_authtype_for_institution($SESSION->get('institution'));
     $authclass = 'Auth' . ucfirst($authtype);
 
     // This method should exists, because if it did not then the change
     // password form would not have been shown.
-    if ($password = call_static_method($authclass, 'change_password', $USER, $values['password1'])) {
+    if ($password = call_static_method($authclass, 'change_password', $SESSION->get('username'), $values['password1'])) {
         $user = new StdClass;
         $user->password = $password;
         $user->passwordchange = 0;
@@ -619,8 +602,11 @@ function login_submit($values) {
             }
 
             // Check if the user's account has been suspended
+            // Note: only the internal authentication method can say if a user is suspended for now.
+            // There are problems with how searching excluding suspended users will work that would
+            // need to be resolved before this could be implemented for all methods
             log_debug('Checking to see if the user is suspended');
-            if ($suspend = call_static_method($authclass, 'is_user_suspended', $USER)) {
+            if ($suspend = get_record('usr_suspension', 'usr', $USER->id)) {
                 $USER = null;
                 die_info(get_string('accountsuspended', 'mahara', $suspend->ctime, $suspend->reason));
             }
