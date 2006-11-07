@@ -47,10 +47,11 @@ class AuthInternal extends Auth {
 
     /**
      * Given a user that we know about, return an array of information about them
+     *
+     * NOTE: Does not need to be implemented for the internal authentication
+     * method, as by default information is sourced from the database.
      */
     public static function get_user_info($username) {
-        $user = get_record('usr', 'username', $username, null, null, null, null, '*, ' . db_format_tsfield('expiry'));
-        return $user;
     }
 
     /**
@@ -92,6 +93,16 @@ class AuthInternal extends Auth {
     }
 
     /**
+     * Returns information about whether the given user is suspended
+     *
+     * @param object $user The user to check
+     * @return object      Information relating to whether the user is suspended
+     */
+    public static function is_user_suspended($user) {
+        return get_record('usr_suspension', 'usr', $user->id);
+    }
+
+    /**
      * For internal authentication, passwords can contain a range of letters,
      * numbers and symbols. There is a minimum limit of six characters allowed
      * for the password, and no upper limit
@@ -113,6 +124,22 @@ class AuthInternal extends Auth {
             return false;
         }
         return true;
+    }
+
+    /**
+     * Changes the user's password.
+     *
+     * @return string The new password, or empty if the password could not be set
+     */
+    public static function change_password($user, $password) {
+        // Create a salted password and set it for the user
+        $updateuser = new StdClass;
+        $updateuser->salt = substr(md5(rand(1000000, 9999999)), 2, 8);
+        $updateuser->password = self::encrypt_password($password, $updateuser->salt);
+        $where = new StdClass;
+        $where->username = $user->username;
+        update_record('usr', $updateuser, $where);
+        return $updateuser->password;
     }
 
     /*
