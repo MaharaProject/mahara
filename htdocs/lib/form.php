@@ -131,6 +131,14 @@ class Form {
     private $action = '';
 
     /**
+     * Whether the form should be checked for submission. This is useful if you
+     * just want to build a form, that is possibly validated elsewhere.
+     * 
+     * @var bool
+     */
+    private $submit = true;
+
+    /**
      * The javascript function that the form will be submitted to.
      *
      * @var string
@@ -207,9 +215,10 @@ class Form {
 
         // Assign defaults for the form
         $form_defaults = array(
-            'method' => 'post',
-            'action' => '',
+            'method'   => 'post',
+            'action'   => '',
             'onsubmit' => '',
+            'submit'   => true,
             'elements' => array()
         );
         $data = array_merge($form_defaults, $data);
@@ -221,6 +230,7 @@ class Form {
         }
         $this->method = $data['method'];
         $this->action = $data['action'];
+        $this->submit = $data['submit'];
         $this->onsubmit = $data['onsubmit'];
 
         if (isset($data['renderer'])) {
@@ -288,7 +298,7 @@ class Form {
 
         // Check if the form was submitted, and if so, validate and process it
         $global = ($this->method == 'get') ? $_GET: $_POST;
-        if (isset($global['form_' . $this->name] )) {
+        if ($this->submit && isset($global['form_' . $this->name] )) {
             $this->submitted = true;
             // Check if the form has been cancelled
             if ($this->iscancellable) {
