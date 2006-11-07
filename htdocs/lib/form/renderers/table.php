@@ -84,8 +84,11 @@ function form_renderer_table($builtelement, $rawelement) {
     if (!empty($rawelement['error'])) {
         $result .= "\t<tr>\n\t\t<td colspan=\"2\" class=\"errmsg\">";
         $result .= hsc($rawelement['error']);
-        $result .= "</td>\n\t</tr>\n";
     }
+    else {
+        $result .= "\t<tr style=\"display:none\" id=\"" .  $rawelement['id'] . "_errmsg\"><td>";
+    }
+    $result .= "</td>\n\t</tr>\n";
 
     return $result;
 }
@@ -97,5 +100,24 @@ function form_renderer_table_header() {
 function form_renderer_table_footer() {
     return "</table>\n";
 }
+
+function form_renderer_table_messages($formid) {
+    // Element to hold messages relating to the whole form (used in javascript submission).
+    return "\t<tr id=\"" . $formid . "_msg\"><td colspan=\"2\" class=\"errmsg\"></td></tr>\n";
+}
+
+function form_renderer_table_error_js($id) {
+    $result = 'function ' . $id . '_set_error(id,m) {';
+    $result .= "swapDOM($(id),TR({'id':id},TD({'colspan':2,'class':'errmsg'},m)));";
+    $result .= "}\n";
+    $result .= 'function ' . $id . '_rem_error(id) {';
+    $result .= "swapDOM($(id),TR({'id':id,'style':'display:none;'},TD(null)));";
+    $result .= "}\n";
+    $result .= 'function ' . $id . '_message(m,type) {';
+    $result .= "replaceChildNodes($('" . $id . "_msg'),TD({'colspan':2,'class':type},m));";
+    $result .= "}\n";
+    return $result;
+}
+
 
 ?>

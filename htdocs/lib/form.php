@@ -413,13 +413,20 @@ class Form {
         foreach ($this->elements as $name => $elem) {
             $result .= form_render_element($elem, $this);
         }
+        $function = 'form_renderer_' . $this->renderer . '_messages';
+        if (function_exists($function)) {
+            $result .= $function($this->name);
+        }
         $function = 'form_renderer_' . $this->renderer . '_footer';
         if (function_exists($function)) {
             $result .= $function();
         }
         $result .= "</form>\n";
 
-        return $result;
+        $js_validator = '<script language="javascript" type="text/javascript">' . "\n"
+            . $this->validate_js() . "</script>\n";
+
+        return $result . $js_validator;
     }
 
     /**
@@ -555,6 +562,42 @@ class Form {
                 }
             }
         }
+    }
+
+    /**
+     * Returns a js function to perform simple validation based off
+     * the definition array.
+     */
+    private function validate_js() {
+        $result = 'function ' . $this->name . "_validate(){\nvar ok=true;\n";
+        foreach ($this->get_elements() as $element) {
+            if (isset($element['rules']) && is_array($element['rules'])) {
+                foreach ($element['rules'] as $rule => $data) {
+                    // Get the rule
+                    $function = 'form_rule_' . $rule . '_js';
+                    if (!function_exists($function)) {
+                        @include_once('form/rules/' . $rule . '.php');
+                    }
+                    if (function_exists($function)) {
+                        $rdata = $function($element['name']);
+                        $errmsgid = $element['name'] . '_errmsg';
+                        $result .= 'if (!(' . $rdata->condition . ")){" ;
+                        $result .= $this->name . '_set_error(\'' . $errmsgid . '\',\''
+                            . $rdata->message . "');ok=false;}\n";
+                        $result .= 'else{' . $this->name . '_rem_error(\'' . $errmsgid . "');}\n";
+                    }
+                }
+            }
+        }
+        $result .= "return ok;\n}\n";
+        $js_error_function = 'form_renderer_' . $this->renderer . '_error_js';
+        if (!function_exists($js_error_function)) {
+            @include_once('form/renderers/' . $this->renderer . '.php');
+        }
+        if (function_exists($js_error_function)) {
+            return $result . $js_error_function($this->name);
+        }
+        return $result;
     }
 
     /**

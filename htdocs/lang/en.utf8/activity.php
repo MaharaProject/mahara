@@ -17,31 +17,23 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage admin
+ * @subpackage notification-internal
  * @author     Penny Leach <penny@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
-define('INTERNAL',1);
+defined('INTERNAL') || die();
 
-require(dirname(dirname(__FILE__)).'/init.php');
-require(get_config('libroot') . 'upgrade.php');
-
-$smarty = smarty();
-
-$upgrades = check_upgrades();
-
-if (isset($upgrades['core']) && !empty($upgrades['core']->install)) {
-    $smarty->assign('installing', true);
-    $smarty->assign('releaseargs', array($upgrades['core']->torelease,$upgrades['core']->to));
-    $smarty->display('admin/installgpl.tpl');
-    exit;
-}
-
-// normal admin page starts here
-$smarty->assign('upgrades', $upgrades);
-$smarty->display('admin/index.tpl');
+$string['typemaharamessage'] = 'System message';
+$string['typeusermessage'] = 'Message from user';
+$string['typefeedback'] = 'Feedback';
+$string['typewatchlist'] = 'Watchlist';
+$string['typenewview'] = 'New view';
+$string['typecontactus'] = 'Contact us';
+$string['typeobjectionable'] = 'Objectionable content';
+$string['typevirusrepeat'] = 'Virus flat repeat';
+$string['typevirusrelease'] = 'Virus flag release';
 
 ?>

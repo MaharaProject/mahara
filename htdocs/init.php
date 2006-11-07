@@ -64,6 +64,13 @@ if (!isset($CFG->wwwroot) && isset($_SERVER['HTTP_HOST'])) {
     }
     $CFG->wwwroot = $proto . $host . '/' . $path;
 }
+if (!isset($CFG->noreplyaddress) && isset($_SERVER['HTTP_HOST'])) {
+    $CFG->noreplyaddress = 'noreply@' .
+        ((isset($_SERVER['HTTP_X_FORWARDED_HOST'])) 
+         ? $_SERVER['HTTP_X_FORWARDED_HOST'] 
+         : $_SERVER['HTTP_HOST']);
+    error_log("set to $CFG->noreplyaddress");
+}
 
 // xmldb stuff
 $CFG->xmldbdisablenextprevchecking = true;

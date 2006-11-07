@@ -63,7 +63,8 @@ class PluginArtefactInternal extends PluginArtefact {
                     insert_record('artefact_installed_type',$t);
                 }
             }
-            delete_records_select('artefact_installed_type','(plugin = ? AND name NOT IN (' . implode(',', $ph) . '))',
+            $select = '(plugin = ? AND name NOT IN (' . implode(',', $ph) . '))';
+            delete_records_select('artefact_installed_type', $select,
                                   array_merge(array($plugin),$types));
         }
     }

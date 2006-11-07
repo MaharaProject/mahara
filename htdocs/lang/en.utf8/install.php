@@ -51,7 +51,7 @@ use and modify Mahara provided you agree to:
     <li>not modify or remove the original license and copyrights, and</li>
     <li>apply this same license to any derivative work.</li></ul></p>
 
-<p>Please feel free to [Contact Us] if you have any questions regarding
+<p>Please feel free to <a href="contact.php">Contact Us</a> if you have any questions regarding
 Mahara.</p>
 
 <p><a href="http://mahara.org">http://mahara.org</a></p>';
@@ -62,8 +62,8 @@ builder and social networking system, connecting users and creating
 online communities.  Mahara provides you with the tools to set up a
 personal learning and development environment.</p>
 
-<p>For more information you can read [About] Mahara or alternatively
-please feel free to [Contact Us].</p>';
+<p>For more information you can read <a href="about.php">About</a> Mahara or alternatively
+please feel free to <a href="contact.php">Contact Us</a>.</p>';
 $string['loggedouthomedefaultcontent'] = '<p>Welcome to Mahara</p>
 
 <p>Mahara is a fully featured electronic portfolio, weblog, resume
@@ -71,8 +71,8 @@ builder and social networking system, connecting users and creating
 online communities.  Mahara provides you with the tools to set up a
 personal learning and development environment.</p>
 
-<p>For more information you can read [About] Mahara or alternatively
-please feel free to [Contact Us].</p>';
+<p>For more information you can read <a href="about.php">About</a> Mahara or alternatively
+please feel free to <a href="contact.php">Contact Us</a>.</p>';
 $string['privacydefaultcontent'] = '<h3>Introduction</h3>
 
 <p>We are committed to protecting your privacy and providing users with
@@ -131,7 +131,7 @@ visit this site.</p>
 <h3>Contact</h3>
 
 <p>If you have any questions regarding this Statement or believe we
-have not adhered to the above criteria, please [Contact Us] and we
+have not adhered to the above criteria, please <a href="contact.php">Contact Us</a> and we
 will use all reasonable efforts to remedy the issue.</p>';
 $string['termsandconditionsdefaultcontent'] = '<p>Terms and Conditions</p>
 
@@ -144,14 +144,14 @@ given below.</p>
 all reasonable steps to provide all users with a safe , secure and
 operational electronic portfolio system.  If at any time you feel your
 rights as a user have not been upheld or you have any questions
-regarding the below, please [Contact Us] immediately.</p>
+regarding the below, please <a href="contact.php">Contact Us</a> immediately.</p>
 
 <p>[eP Site Name] will occasionally be unavailable for short periods of
 time as we release new system features.  We will endeavour to provide
 at least 3 working days notice of any scheduled outage.</p>
 
 <p>You are encouraged to report objectionable material or inappropriate
-behaviour to the Site Administrator | [Contact Us] immediately.  We
+behaviour to the Site Administrator | <a href="contact.php">Contact Us</a> immediately.  We
 will ensure the matter is investigated in a timely manner.</p>
 
 <p>Site Administrators may access your portfolio and its contents at
@@ -160,7 +160,7 @@ to support your use of <eP SiteName> or as per these Terms and
 Conditions.</p>
 
 <p>Your obligations</p>
-<p> The [Privacy Statement] should be considered an
+<p> The <a href="privacy.php">Privacy Statement</a> should be considered an
 extension of these Terms and Conditions and be read by all users.</p>
 
 <p>Your [eP Site Name] account will expire after a given period of time
@@ -201,14 +201,13 @@ nuisance or offensive by the Site Administrator.</p>
 <p>Any unsolicited contact you receive as a result of personal
 information you have publicly released via your portfolio is your
 responsibility, however any misconduct in behaviour from users of the
-system should be reported to the Site Administrator | [Contact Us]
+system should be reported to the Site Administrator | <a href="contact.php">Contact Us</a>
 immediately.  We may occasionally make minor adjustments to our Terms
 and Condition to reflect changes to the system and in response to user
 feedback.  As such we suggest you check the Terms and Conditions each
 time you visit this site.  We will however notify users of any major
 changes to the Terms and Conditions via the [eP Site Name] homepage.</p>';
 $string['uploadcopyrightdefaultcontent'] = '<p>Do you promise you\'ve got permission to use the file
-you\'re about to upload, cross your heart, on pain of death, give up
-your soul and your first-born, etc.?</p>';
+you\'re about to upload?  If infringing stuff gets posted here, it\'s not our fault, it\'s yours.</p>';
 
 ?>

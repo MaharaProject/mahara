@@ -15,7 +15,9 @@
     <li><a href="editsitepage.php">EditSitePages</a></li>
 </ul>
 
+{if $upgrades}
 <p><a href="upgrade.php">Run upgrade</a></p>
+{/if}
 <p><a href="..">parent</a></p>
 
 {include file='footer.tpl'}

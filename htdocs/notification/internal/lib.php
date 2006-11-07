@@ -30,7 +30,7 @@ class PluginNotificationInternal extends PluginNotification {
 
     public static function notify_user($user, $data) {
         $toinsert = new StdClass;
-        $toinsert->type = $data->activitytype;
+        $toinsert->type = $data->type;
         $toinsert->usr = $user->id;
         if (!empty($user->markasread)) {
             $toinsert->read = 1;
@@ -38,8 +38,8 @@ class PluginNotificationInternal extends PluginNotification {
         else {
             $toinsert->read = 0;
         }
-        $toinsert->message = $message;
-        $toinsert->cime = db_format_timestamp(time());
+        $toinsert->message = $data->message;
+        $toinsert->ctime = db_format_timestamp(time());
         if (!empty($data->url)) {
             $toinsert->url = $data->url;
         }

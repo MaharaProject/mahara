@@ -24,6 +24,8 @@
  *
  */
 
+defined('INTERNAL') || die();
+
 $string['configsanityexception'] = '<p>It appears that your server\'s PHP configuration contains a setting that will prevent Mahara from working, or make your installation insecure.'
     . ' More details follow:</p><div id="reason">%s</div><p>Once you have made the appropriate changes, reload this page.</p>';
 // @todo<nigel>: most likely need much better descriptions here for these environment issues
@@ -43,5 +45,11 @@ $string['datarootinsidedocroot'] = 'You have set up your data root to be inside 
 $string['datarootnotwritable'] = 'Your defined data root directory, %s, is not writable. This means that neither session data, user files nor anything else that needs to be uploaded can be saved on your server. Please make the directory if it does not exist, or give ownership of the directory to the web server user if it does';
 
 $string['dbconnfailed'] = 'Failed to connect to database, error message was %s';
+
+
+// if you change these next two , be sure to change them in libroot/errors.php
+// as they are duplicated there, in the case that get_string was not available.
+$string['unrecoverableerror'] = 'A nonrecoverable error occured.  This probably means that you have encountered a bug in the system';
+$string['unrecoverableerrortitle'] = 'Mahara - Site Unavailable';
 
 ?>

@@ -17,31 +17,18 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage admin
+ * @subpackage notification-internal
  * @author     Penny Leach <penny@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
-define('INTERNAL',1);
+defined('INTERNAL') || die();
 
-require(dirname(dirname(__FILE__)).'/init.php');
-require(get_config('libroot') . 'upgrade.php');
+$string['emailsubject'] = 'Message from Mahara: %s';
+$string['emailbodynoreply'] = "This is an auto generated notification from Mahara. Please do not reply to this message.  Following is the content of your notification\n\n--------------------------------------------------\n\n";
+$string['emailbodynoreply'] = "This is an auto generated notification from Mahara.  Following is the content of your notification\n\n--------------------------------------------------\n\n";
 
-$smarty = smarty();
-
-$upgrades = check_upgrades();
-
-if (isset($upgrades['core']) && !empty($upgrades['core']->install)) {
-    $smarty->assign('installing', true);
-    $smarty->assign('releaseargs', array($upgrades['core']->torelease,$upgrades['core']->to));
-    $smarty->display('admin/installgpl.tpl');
-    exit;
-}
-
-// normal admin page starts here
-$smarty->assign('upgrades', $upgrades);
-$smarty->display('admin/index.tpl');
 
 ?>
