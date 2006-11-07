@@ -146,10 +146,24 @@ class Form {
     private $onsubmit = '';
 
     /**
-     * Ajax forms specify these
+     * Whether to submit the form via ajax 
+     *
+     * @var bool
      */
     private $ajaxpost = false;
+
+    /**
+     * Name of a javascript function to call on successful ajax submission
+     *
+     * @var string
+     */
     private $ajaxsuccessfunction = '';
+
+    /**
+     * Name of a php script to handle an ajax-submitted form
+     *
+     * @var string
+     */
     private $ajaxformhandler = '';
 
     /**
@@ -600,15 +614,16 @@ class Form {
                     $function = 'form_rule_' . $rule . '_js';
                     if (!function_exists($function)) {
                         @include_once('form/rules/' . $rule . '.php');
+                        if (!function_exists($function)) {
+                            throw new FormException('No such rule function "' . $function . '"');
+                        }
                     }
-                    if (function_exists($function)) {
-                        $rdata = $function($element['name']);
-                        $errmsgid = $element['name'] . '_errmsg';
-                        $result .= 'if (!(' . $rdata->condition . ")){" ;
-                        $result .= $this->name . '_set_error(\'' . $errmsgid . '\',\''
-                            . $rdata->message . "');ok=false;}\n";
-                        $result .= 'else{' . $this->name . '_rem_error(\'' . $errmsgid . "');}\n";
-                    }
+                    $rdata = $function($element['name']);
+                    $errmsgid = $element['name'] . '_errmsg';
+                    $result .= 'if (!(' . $rdata->condition . ")){" ;
+                    $result .= $this->name . '_set_error(\'' . $errmsgid . '\',\''
+                        . $rdata->message . "');ok=false;}\n";
+                    $result .= 'else{' . $this->name . '_rem_error(\'' . $errmsgid . "');}\n";
                 }
             }
         }
@@ -616,11 +631,12 @@ class Form {
         $js_error_function = 'form_renderer_' . $this->renderer . '_error_js';
         if (!function_exists($js_error_function)) {
             @include_once('form/renderers/' . $this->renderer . '.php');
+            if (!function_exists($js_error_function)) {
+                throw new FormException('No such renderer error function "' . $js_error_function . '"');
+            }
         }
-        if (function_exists($js_error_function)) {
-            return $result . $js_error_function($this->name);
-        }
-        return $result;
+        return $result . $js_error_function($this->name);
+        //return $result;
     }
 
     /**
