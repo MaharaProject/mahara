@@ -41,5 +41,5 @@ $string['nothingtoupgrade'] = 'Nothing to upgrade';
 $string['upgradeloading'] = 'Loading...';
 $string['upgradesuccess'] = 'Successfully upgraded to version ';
 $string['upgradefailure'] = 'Failed to upgrade!';
-
+$string['noupgrades'] = 'Nothing to upgrade! You are fully up to date!';
 ?>
