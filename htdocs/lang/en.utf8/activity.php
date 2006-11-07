@@ -36,4 +36,6 @@ $string['typeobjectionable'] = 'Objectionable content';
 $string['typevirusrepeat'] = 'Virus flat repeat';
 $string['typevirusrelease'] = 'Virus flag release';
 
+$string['type'] = 'Activity type: ';
+$string['attime'] = 'at';
 ?>

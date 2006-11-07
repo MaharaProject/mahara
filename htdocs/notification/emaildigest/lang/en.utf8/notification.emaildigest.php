@@ -29,5 +29,5 @@ defined('INTERNAL') || die();
 $string['emailsubject'] = 'Message from Mahara: Daily digest';
 $string['emailbodynoreply'] = "This is an auto generated notification from Mahara.  Following is the daily digest of all your notifications\n\n--------------------------------------------------\n\n";
 
-
+$string['emailbodyending'] = 'To update your notification preferences, visit %s';
 ?>
