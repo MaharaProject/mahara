@@ -24,11 +24,11 @@
  *
  */
 
-define('INTERNAL',1);
+define('INTERNAL', 1);
 // uncomment if this page is public (doesn't require login)
-// defined('PUBLIC', 1);
+// define('PUBLIC', 1);
 // uncomment and set if this page isn't public
-// defined('MENUITEM', 'TODO');
+// define('MENUITEM', 'TODO');
 require('init.php');
 
 // Your code here

@@ -36,6 +36,12 @@ class AuthUnknownUserException extends Exception {}
 /**
  * Base authentication class. Provides a common interface with which
  * authentication can be carried out for system users.
+ *
+ * @todo for authentication:
+ *   - inactivity: each institution has inactivity timeout times, this needs
+ *     to be supported
+ *     - this means the lastlogin field needs to be updated on the usr table
+ *     - warnings are handled by cron
  */
 abstract class Auth {
 
@@ -216,7 +222,8 @@ function auth_setup () {
         // The session is still active, so continue it.
         log_debug('session still active from previous time');
         $USER = $SESSION->renew();
-        auth_check_password_change($USER);
+        log_debug($USER);
+        auth_check_password_change();
         return $USER;
     }
     else if ($sessionlogouttime > 0) {
@@ -257,11 +264,13 @@ function auth_setup () {
  * Given an institution, returns the authentication method used by it.
  *
  * @return string
- * @todo<nigel>: Currently, the system doesn't have a concept of institution
- * at the database level, so the internal authentication method is assumed.
  */
 function auth_get_authtype_for_institution($institution) {
-    return 'internal';
+    static $cache = array();
+    if (isset($cache[$institution])) {
+        return $cache[$institution];
+    }
+    return $cache[$institution] = get_field('institution', 'authplugin', 'name', $institution);
 }
 
 /**
@@ -272,10 +281,28 @@ function auth_get_authtype_for_institution($institution) {
  * will, in theory, have different data stores, making changing the password
  * via the internal form difficult.
  */
-function auth_check_password_change($user) {
+function auth_check_password_change() {
+    global $USER;
     log_debug('checking if the user needs to change their password');
-    if (auth_get_authtype_for_institution($user->institution) == 'internal' && $user->passwordchange) {
+    if (!$USER->passwordchange) {
+        return;
+    }
+
+    $authtype  = auth_get_authtype_for_institution($USER->institution);
+    $authclass = 'Auth' . ucfirst($authtype);
+    $url       = '';
+    safe_require('auth', $authtype, 'lib.php', 'require_once');
+    
+    // @todo auth preference for a password change screen for all auth methods other than internal
+    if (
+        ($url = get_config_plugin('auth', $authtype, 'changepasswordurl'))
+        || (method_exists($authclass, 'change_password'))) {
         log_debug('user DOES need to change their password');
+        if ($url) {
+            redirect($url);
+            exit;
+        }
+
         require_once('form.php');
         $form = array(
             'name' => 'change_password',
@@ -312,54 +339,24 @@ function auth_check_password_change($user) {
 }
 
 /**
- * Check if the given user's account has expired
- *
- * @param object $user The user to check for the expired password.
- * @todo maybe later, just use $USER because that's all we are actually checking...
- * @private
- */
-function auth_check_user_expired($user) {
-    log_debug('Checking to see if the user has expired');
-    if ($user->expiry > 0 && time() > $user->expiry) {
-        // Trash the $USER object, used for checking if the user is logged in.
-        // Smarty uses it otherwise...
-        global $USER;
-        $USER = null;
-        die_info(get_string('accountexpired'));
-    }
-}
-
-/**
- * Check if the given user's account has been suspended
- *
- * @param object $user The user to check for the suspended account.
- * @private
- */
-function auth_check_user_suspended($user) {
-    global $USER;
-    log_debug('Checking to see if the user is suspended');
-    $suspend = get_record('usr_suspension', 'usr', $user->id);
-    if ($suspend) {
-        global $USER;
-        $USER = null;
-        die_info(get_string('accountsuspended', 'mahara', $suspend->ctime, $suspend->reason));
-    }
-}
-
-/**
  * Validates the form for changing the password for a user.
  *
  * This only applies to the internal authentication plugin.
  *
  * @todo As far as I can tell, the change password and registration forms will 
  * only be used for internal authentication. And so, by proxy, will the 
- * username/password valid methods for the Auth class. I think this means they 
- * can be removed from the Auth class, and instead just be part of AuthInternal
- * since they don't need to be specified for other types.
+ * username/password valid methods for the Auth class. [THIS IS TRUE]
+ *
+ *
+ * I think this means they can be removed from the Auth class, and instead just 
+ * be part of AuthInternal since they don't need to be specified for other types.
+ * [THIS IS ALSO TRUE]
  *
  * Furthermore, I think that the change_password stuff (as well as suspended
  * and expired) are also quite possibly related to internal only. This will
  * require a lot of thought about how to best structure it.
+ *
+ * Change password will only be if a URL for it exists, or a function exists
  *
  * @param Form  $form   The form to check
  * @param array $values The values to check
@@ -369,74 +366,64 @@ function change_password_validate(Form $form, $values) {
 
     // Get the authentication type for the user (based on the institution), and
     // use the information to validate the password
-    $authtype = auth_get_authtype_for_institution($SESSION->get('institution'));
-    if ($authtype == 'internal') {
-        safe_require('auth', $authtype, 'lib.php', 'require_once');
+    $authtype  = auth_get_authtype_for_institution($SESSION->get('institution'));
+    $authclass = 'Auth' . ucfirst($authtype);
+    $authlang  = 'auth.' . $authtype;
+    safe_require('auth', $authtype, 'lib.php', 'require_once');
 
-        // Check that the password is in valid form
-        if (!$form->get_error('password1')
-            && !call_static_method('AuthInternal', 'is_password_valid', $values['password1'])) {
-            $form->set_error('password1', get_string('passwordinvalidform', 'auth.internal'));
-        }
-
-        // The password must not be too easy :)
-        $suckypasswords = array(
-            'mahara', 'password', $SESSION->get('username')
-        );
-        if (!$form->get_error('password1') && in_array($values['password1'], $suckypasswords)) {
-            $form->set_error('password1', get_string('passwordtooeasy', 'auth.internal'));
-        }
-
-        // The password cannot be the same as the old one
-        if (!$form->get_error('password1') && $values['password1'] == $USER->password) {
-            $form->set_error('password1', get_string('passwordnotchanged', 'auth.internal'));
-        }
-
-        // The passwords must match
-        if (!$form->get_error('password1') && !$form->get_error('password2') && $values['password1'] != $values['password2']) {
-            $form->set_error('password2', get_string('passwordsdonotmatch', 'auth.internal'));
-        }
+    // Check that the password is in valid form
+    if (!$form->get_error('password1')
+        && !call_static_method($authclass, 'is_password_valid', $values['password1'])) {
+        $form->set_error('password1', get_string('passwordinvalidform', $authlang));
     }
-    else {
-        throw new Exception('The user "' . $USER->username . '" is trying to'
-            . ' change their password, but they do not use the internal'
-            . ' authentication method');
+
+    // The password must not be too easy :)
+    $suckypasswords = array(
+        'mahara', 'password', $SESSION->get('username')
+    );
+    if (!$form->get_error('password1') && in_array($values['password1'], $suckypasswords)) {
+        $form->set_error('password1', get_string('passwordtooeasy'));
+    }
+
+    // The password cannot be the same as the old one
+    if (!$form->get_error('password1') && $values['password1'] == $SESSION->get('password')) {
+        $form->set_error('password1', get_string('passwordnotchanged'));
+    }
+
+    // The passwords must match
+    if (!$form->get_error('password1') && !$form->get_error('password2') && $values['password1'] != $values['password2']) {
+        $form->set_error('password2', get_string('passwordsdonotmatch'));
     }
 }
 
 /**
  * Changes the password for a user, given that it is valid.
  *
- * This only applies to the internal authentication plugin.
- *
  * @param array $values The submitted form values
  */
 function change_password_submit($values) {
-    global $SESSION;
+    global $SESSION, $USER;
     log_debug('changing password to ' . $values['password1']);
-
     $authtype = auth_get_authtype_for_institution($SESSION->get('institution'));
-    if ($authtype == 'internal') {
-        // Create a salted password and set it for the user
-        safe_require('auth', $authtype, 'lib.php', 'require_once');
+    $authclass = 'Auth' . ucfirst($authtype);
+
+    // This method should exists, because if it did not then the change
+    // password form would not have been shown.
+    if ($password = call_static_method($authclass, 'change_password', $USER, $values['password1'])) {
         $user = new StdClass;
-        $user->salt = substr(md5(rand(1000000, 9999999)), 2, 8);
-        $user->password = call_static_method('AuthInternal', 'encrypt_password', $values['password1'], $user->salt);
+        $user->password = $password;
         $user->passwordchange = 0;
         $where = new StdClass;
         $where->username = $SESSION->get('username');
         update_record('usr', $user, $where);
-
+        $SESSION->set('password', $password);
         $SESSION->set('passwordchange', 0);
-        $SESSION->add_ok_msg(get_string('passwordsaved', 'auth.internal'));
+        $SESSION->add_ok_msg(get_string('passwordsaved'));
         redirect(get_config('wwwroot'));
         exit;
     }
-    else {
-        throw new Exception('The user "' . $USER->username . '" is trying to'
-            . ' change their password, but they do not use the internal'
-            . ' authentication method');
-    }
+
+    throw new Exception('You are trying to change your password, but the attempt failed');
 }
 
 /**
@@ -519,6 +506,9 @@ function auth_get_login_form() {
         'submit' => array(
             'type'  => 'submit',
             'value' => get_string('login')
+        ),
+        'register' => array(
+            'value' => '<tr><td colspan="2"><a href="' . get_config('wwwroot') . 'register.php">' . get_string('register') . '</a></td></tr>'
         )
     );
 
@@ -579,7 +569,7 @@ function login_submit($values) {
     log_debug('auth details supplied, attempting to log user in');
     $username    = $values['login_username'];
     $password    = $values['login_password'];
-    $institution = (isset($values['login_institution'])) ? $values['login_institution'] : 0;
+    $institution = (isset($values['login_institution'])) ? $values['login_institution'] : 'mahara';
             
     $authtype = auth_get_authtype_for_institution($institution);
     safe_require('auth', $authtype, 'lib.php', 'require_once');
@@ -588,12 +578,57 @@ function login_submit($values) {
     try {
         if (call_static_method($authclass, 'authenticate_user_account', $username, $password, $institution)) {
             log_debug('user ' . $username . ' logged in OK');
-            $USER = call_static_method($authclass, 'get_user_info', $username);
-            auth_check_user_expired($USER);
-            auth_check_user_suspended($USER);
+
+            if (!record_exists('usr', 'username', $username)) {
+                // We don't know about this user. But if the authentication
+                // method says they're fine, then we must insert data for them
+                // into the usr table.
+                log_debug('this user authenticated but not in the usr table, adding them');
+                // @todo document what needs to be returned by get_user_info
+                $USER = call_static_method($authclass, 'get_user_info', $username);
+                log_debug($USER);
+                insert_record('usr', $USER);
+            }
+            // @todo config form option for this for each external plugin. NOT for internal
+            else if (get_config_plugin('auth', $authtype, 'updateuserinfoonlogin')) {
+                log_debug('updating user info from auth method');
+                $USER = call_static_method($authclass, 'get_user_info', $username);
+                log_debug($USER);
+                $where = new StdClass;
+                $where->username = $username;
+                $where->institution = $institution;
+                // @todo as per the above todo about what needs to be returned by get_user_info,
+                // that needs to be validated somewhere. Because here we do an insert into the
+                // usr table, that needs to work. and provide enough information for future
+                // authentication attempts
+                update_record('usr', $USER, $where);
+            }
+            else {
+                log_debug('getting user info from database');
+                $USER = get_record('usr', 'username', $username, null, null, null, null, '*, ' . db_format_tsfield('expiry'));
+                log_debug($USER);
+            }
+
+            // Check if the user's account has expired
+            log_debug('Checking to see if the user has expired');
+            if ($USER->expiry > 0 && time() > $USER->expiry) {
+                // Trash the $USER object, used for checking if the user is logged in.
+                // Smarty uses it and puts login-only stuff in the output otherwise...
+                $USER = null;
+                die_info(get_string('accountexpired'));
+            }
+
+            // Check if the user's account has been suspended
+            log_debug('Checking to see if the user is suspended');
+            if ($suspend = call_static_method($authclass, 'is_user_suspended', $USER)) {
+                $USER = null;
+                die_info(get_string('accountsuspended', 'mahara', $suspend->ctime, $suspend->reason));
+            }
+
+            // User is allowed to log in
             $SESSION->login($USER);
             $USER->logout_time = $SESSION->get('logout_time');
-            auth_check_password_change($USER);
+            auth_check_password_change();
         }
         else {
             // Login attempt failed
