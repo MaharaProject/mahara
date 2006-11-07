@@ -146,6 +146,13 @@ class Form {
     private $onsubmit = '';
 
     /**
+     * Ajax forms specify these
+     */
+    private $ajaxpost = false;
+    private $ajaxsuccessfunction = '';
+    private $ajaxformhandler = '';
+
+    /**
      * The tab index for this particular form.
      *
      * @var int
@@ -218,6 +225,9 @@ class Form {
             'method'   => 'post',
             'action'   => '',
             'onsubmit' => '',
+            'ajaxpost' => false,
+            'ajaxformhandler' => '',
+            'ajaxsuccessfunction' => '',
             'submit'   => true,
             'elements' => array()
         );
@@ -232,6 +242,15 @@ class Form {
         $this->action = $data['action'];
         $this->submit = $data['submit'];
         $this->onsubmit = $data['onsubmit'];
+
+        if ($data['ajaxpost']) {
+            $this->ajaxformhandler = $data['ajaxformhandler'];
+            $this->ajaxpost = $data['ajaxpost'] && !empty($this->ajaxformhandler);
+            $this->ajaxsuccessfunction = $data['ajaxsuccessfunction'];
+            if ($this->ajaxpost) {
+                $this->onsubmit = 'return ' . $this->name . '_submit();';
+            }
+        }
 
         if (isset($data['renderer'])) {
             $this->renderer = $data['renderer'];
@@ -423,10 +442,15 @@ class Form {
         }
         $result .= "</form>\n";
 
-        $js_validator = '<script language="javascript" type="text/javascript">' . "\n"
-            . $this->validate_js() . "</script>\n";
+        if ($this->ajaxpost) {
+            $inlinejs = '<script language="javascript" type="text/javascript">';
+            $inlinejs .= $this->validate_js();
+            $inlinejs .= $this->submit_js();
+            $inlinejs .=  "</script>\n";
+            return $result . $inlinejs;
+        }
 
-        return $result . $js_validator;
+        return $result;
     }
 
     /**
@@ -597,6 +621,41 @@ class Form {
         if (function_exists($js_error_function)) {
             return $result . $js_error_function($this->name);
         }
+        return $result;
+    }
+
+    /**
+     * Returns a js function to submit an ajax form 
+     */
+    private function submit_js() {
+        $result = 'function ' . $this->name . "_submit(){\n";
+        // eventually we should check input types for wysiwyg before doing this:
+        $result .= "if (typeof(tinyMCE) != 'undefined') { tinyMCE.triggerSave(); }\n"; 
+        $result .= 'if (!' . $this->name . "_validate()) { return false; }\n";
+        $result .= "var data = {};\n";
+        foreach ($this->get_elements() as $element) {
+            $result .= "data['" . $element['name'] . "'] = $('" . $element['name'] . "').value;\n";
+        }
+        // This does a post.  Gets are much simpler in mochikit and we could check whether
+        // there are any big fields (wysiwyg,textarea) and do a get here if there aren't any.
+        $result .= 'var req = getXMLHttpRequest();';
+        $result .= "req.open('POST','" . $this->ajaxformhandler . "');\n";
+        $result .= "req.setRequestHeader('Content-type','application/x-www-form-urlencoded');\n"; 
+        $result .= "var d = sendXMLHttpRequest(req,queryString(data));\n";
+        $result .= 'd.addCallback(function (result) {';
+        $result .= 'var data = evalJSONRequest(result);';
+        $result .= "var type = data.success ? 'infomsg' : 'errmsg';\n";
+        $result .= $this->name . "_message(data.message,type);\n";
+        if (!empty($this->successcallback)) {
+            $result .= $this->successcallback . "();\n";
+        }
+        $result .= "});\n";
+        $result .= 'd.addErrback(function() {';
+        $result .= $this->name . "_message('" . get_string('unknownerror') . "','errmsg');";
+        $result .= "});\n";
+        $result .= $this->name . "_message('" . get_string('processingform') . "','infomsg');\n";
+        $result .= "return false;\n";
+        $result .= '}';
         return $result;
     }
 

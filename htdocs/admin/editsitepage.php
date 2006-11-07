@@ -38,7 +38,10 @@ asort($pageoptions);
 $f = array(
     'name' => 'editsitepage',
     'method' => 'post',
-    'onsubmit' => 'return submitForm(\'editsitepage\',\'savesitepage.json.php\',contentSaved);',
+    'ajaxpost' => true,
+    'ajaxsuccessfunction' => 'contentSaved',
+    'ajaxformhandler' => 'savesitepage.json.php',
+    //'onsubmit' => 'return submitForm(\'editsitepage\',\'savesitepage.json.php\',contentSaved);',
     'action' => '',
     'elements' => array(
         'pagename' => array(

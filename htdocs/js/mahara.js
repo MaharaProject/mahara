@@ -37,36 +37,3 @@ function displayMessage(m, /* optional */ elemid) {
     });
 }
 
-// The javascript form validating function should be available from
-// the server as formname_validate().
-
-// Gets form elements, submits them to a url via post, and waits for a
-// JSON response containing the result of the submission.
-function submitForm(formid,url,callback) {
-    if (typeof(tinyMCE) != 'undefined') {
-        tinyMCE.triggerSave();
-    }
-    if (!eval(formid + '_validate()')) {
-        return false;
-    }
-    var formelements = getElementsByTagAndClassName(null,formid,formid);
-    var data = {};
-    for (var i = 0; i < formelements.length; i++) {
-        data[formelements[i].name] = formelements[i].value;
-    }
-    var req = getXMLHttpRequest();
-    req.open('POST',url);
-    req.setRequestHeader('Content-type','application/x-www-form-urlencoded'); 
-    var d = sendXMLHttpRequest(req,queryString(data));
-    d.addCallback(function (result) {
-        var data = evalJSONRequest(result);
-        var type = data.success ? 'infomsg' : 'errmsg';
-        eval(formid + '_message(\'' + data.message + '\',\'' + type + '\')');
-        callback();
-    });
-    d.addErrback(function() { 
-        eval(formid + '_message(\'' + get_string('unknownerror') + '\',\'' + 'errmsg\')');
-    });
-    eval(formid + '_message(\'' + get_string('processingform') + '\',\'' + 'infomsg\')');
-    return false;
-}
