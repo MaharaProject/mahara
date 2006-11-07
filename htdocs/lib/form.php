@@ -443,11 +443,10 @@ class Form {
         $result .= "</form>\n";
 
         if ($this->ajaxpost) {
-            $inlinejs = '<script language="javascript" type="text/javascript">';
-            $inlinejs .= $this->validate_js();
-            $inlinejs .= $this->submit_js();
-            $inlinejs .=  "</script>\n";
-            return $result . $inlinejs;
+            $result .= '<script language="javascript" type="text/javascript">';
+            $result .= $this->validate_js();
+            $result .= $this->submit_js();
+            $result .=  "</script>\n";
         }
 
         return $result;
@@ -626,6 +625,8 @@ class Form {
 
     /**
      * Returns a js function to submit an ajax form 
+     * Expects formname_message() to be defined by the renderer,
+     * and formname_validate() to be defined.
      */
     private function submit_js() {
         $result = 'function ' . $this->name . "_submit(){\n";
@@ -636,8 +637,10 @@ class Form {
         foreach ($this->get_elements() as $element) {
             $result .= "data['" . $element['name'] . "'] = $('" . $element['name'] . "').value;\n";
         }
-        // This does a post.  Gets are much simpler in mochikit and we could check whether
-        // there are any big fields (wysiwyg,textarea) and do a get here if there aren't any.
+        // This does a post.  Gets are much simpler in mochikit and we
+        // could check whether there are any big fields (like wysiwyg,
+        // textarea) and do a get (doSimpleXmlHttpRequest) instead if
+        // there aren't any.
         $result .= 'var req = getXMLHttpRequest();';
         $result .= "req.open('POST','" . $this->ajaxformhandler . "');\n";
         $result .= "req.setRequestHeader('Content-type','application/x-www-form-urlencoded');\n"; 
