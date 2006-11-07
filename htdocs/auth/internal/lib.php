@@ -39,7 +39,7 @@ class AuthInternal extends Auth {
         if (!$user = get_record_sql('SELECT username, password, salt
             FROM ' . get_config('dbprefix') . 'usr
             WHERE LOWER(username) = ?', strtolower($username))) {
-            throw new AuthUnknownUserException("\"$username\" is not known to Auth_Internal");
+            throw new AuthUnknownUserException("\"$username\" is not known to AuthInternal");
         }
 
         return self::validate_password($password, $user->password, $user->salt);
@@ -80,29 +80,6 @@ class AuthInternal extends Auth {
     }
 
     /**
-     * For internal authentication, usernames can only contain alphanumeric
-     * characters, and the symbols underscore, full stop and the @ symbol.
-     *
-     * The username must also be between three and thirty characters in length.
-     *
-     * @param string $username The username to check
-     * @return bool            Whether the username is valid
-     */
-    public static function is_username_valid($username) {
-        return preg_match('/^[a-zA-Z0-9\._@]{3,30}$/', $username);
-    }
-
-    /**
-     * Returns information about whether the given user is suspended
-     *
-     * @param object $user The user to check
-     * @return object      Information relating to whether the user is suspended
-     */
-    public static function is_user_suspended($user) {
-        return get_record('usr_suspension', 'usr', $user->id);
-    }
-
-    /**
      * For internal authentication, passwords can contain a range of letters,
      * numbers and symbols. There is a minimum limit of six characters allowed
      * for the password, and no upper limit
@@ -129,17 +106,39 @@ class AuthInternal extends Auth {
     /**
      * Changes the user's password.
      *
+     * This method is not strictly part of the authentication API, but if
+     * defined allows the method to change a user's password.
+     *
+     * @param string $username The user to change the password for
+     * @param string $password The password to set for the user
      * @return string The new password, or empty if the password could not be set
      */
-    public static function change_password($user, $password) {
+    public static function change_password($username, $password) {
         // Create a salted password and set it for the user
-        $updateuser = new StdClass;
-        $updateuser->salt = substr(md5(rand(1000000, 9999999)), 2, 8);
-        $updateuser->password = self::encrypt_password($password, $updateuser->salt);
+        $user = new StdClass;
+        $user->salt = substr(md5(rand(1000000, 9999999)), 2, 8);
+        $user->password = self::encrypt_password($password, $user->salt);
         $where = new StdClass;
-        $where->username = $user->username;
-        update_record('usr', $updateuser, $where);
-        return $updateuser->password;
+        $where->username = $username;
+        update_record('usr', $user, $where);
+        return $user->password;
+    }
+
+    /**
+     * For internal authentication, usernames can only contain alphanumeric
+     * characters, and the symbols underscore, full stop and the @ symbol.
+     *
+     * The username must also be between three and thirty characters in length.
+     *
+     * This method is NOT part of the authentication API. Other authentication
+     * methods never have to do anything regarding usernames being validated on
+     * the Mahara side, so they do not need this method.
+     *
+     * @param string $username The username to check
+     * @return bool            Whether the username is valid
+     */
+    public static function is_username_valid($username) {
+        return preg_match('/^[a-zA-Z0-9\._@]{3,30}$/', $username);
     }
 
     /*
