@@ -24,6 +24,8 @@
  *
  */
 
+defined('INTERNAL') || die();
+
 $string['configsanityexception'] = '<p>It appears that your server\'s PHP configuration contains a setting that will prevent Mahara from working, or make your installation insecure.'
     . ' More details follow:</p><div id="reason">%s</div><p>Once you have made the appropriate changes, reload this page.</p>';
 // @todo<nigel>: most likely need much better descriptions here for these environment issues
