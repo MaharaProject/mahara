@@ -46,7 +46,7 @@ function form_render_hidden($element, Form $form) {
     }
     return '<input type="hidden"'
         . Form::element_attributes($element)
-        . ' value="' . hsc($form->get_value($element)) . '">';
+        . ' value="' . hsc($form->get_value($element)) . "\">\n";
 }
 
 ?>
