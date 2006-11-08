@@ -142,4 +142,12 @@ $CFG->themeurl = get_config('wwwroot') . 'theme/' . get_config('theme') . '/stat
 require('auth/lib.php');
 $USER = auth_setup();
 
+// check to see if we're installed...
+if (!get_config('installed')
+    && false === strpos($_SERVER['SCRIPT_FILENAME'], 'admin/index.php')
+    && false === strpos($_SERVER['SCRIPT_FILENAME'], 'admin/upgrade.php')
+    && false === strpos($_SERVER['SCRIPT_FILENAME'], 'admin/upgrade.json.php')) {
+    redirect(get_config('wwwroot') . 'admin/index.php');
+}
+
 ?>
