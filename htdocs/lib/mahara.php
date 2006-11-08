@@ -718,6 +718,67 @@ class Plugin {
 }
 
 /**
+ * Builds the admin navigation menu and returns it as a data structure
+ *
+ * @return $adminnav a data structure containing the admin navigation
+ */
+function admin_nav() {
+    $wwwroot = get_config('wwwroot');
+
+    $menu = array(
+        array(
+            'name'     => 'adminhome',
+            'section'  => 'admin',
+            'link'     => $wwwroot . 'admin/',
+        ),
+        array(
+            'name'     => 'siteoptions',
+            'section'  => 'admin',
+            'link'     => $wwwroot . 'admin/options/',
+            'submenu'  => array(
+                array(
+                    'name'     => 'authentication',
+                    'section'  => 'admin',
+                    'link'     => $wwwroot . 'admin/options/authentication.php',
+                ),
+            ),
+        ),
+        array(
+            'name'     => 'siteeditor',
+            'section'  => 'admin',
+            'link'     => $wwwroot . 'admin/todo',
+        ),
+        array(
+            'name'     => 'files',
+            'section'  => 'admin',
+            'link'     => $wwwroot . 'admin/todo',
+        ),
+        array(
+            'name'     => 'usermanagement',
+            'section'  => 'admin',
+            'link'     => $wwwroot . 'admin/todo',
+        ),
+    );
+
+    if (defined('MENUITEM')) {
+        foreach ( $menu as &$item ) {
+            if ($item['name'] == MENUITEM) {
+                $item['selected'] = true;
+                if (defined('SUBMENUITEM') and is_array($item['submenu'])) {
+                    foreach ( $item['submenu'] as &$subitem ) {
+                        if ($subitem['name'] == SUBMENUITEM) {
+                            $subitem['selected'] = true;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return $menu;
+}
+
+/**
  * Builds the main navigation menu and returns it as a data structure
  *
  * @return $mainnav a data structure containing the main navigation
@@ -725,6 +786,10 @@ class Plugin {
  */
 function main_nav() {
     $wwwroot = get_config('wwwroot');
+
+    if (defined('ADMIN')) {
+        return admin_nav();
+    }
 
     $menu = array(
         array(
@@ -753,27 +818,27 @@ function main_nav() {
         'link'    => $wwwroot . 'contacts/',
         'section' => 'mahara',
         'submenu' => array(
-            'myfriends' => array(
+            array(
                 'name'    => 'myfriends',
                 'link'    => $wwwroot . 'contacts/',
                 'section' => 'mahara',
             ),
-            'myaddressbook' => array(
+            array(
                 'name'    => 'myaddressbook',
                 'link'    => $wwwroot . 'contacts/addressbook/',
                 'section' => 'mahara',
             ),
-            'mycommunities' => array(
+            array(
                 'name'    => 'mycommunities',
                 'link'    => $wwwroot . 'contacts/communities/',
                 'section' => 'mahara',
             ),
-            'myownedcommunities' => array(
+            array(
                 'name'    => 'myownedcommunities',
                 'link'    => $wwwroot . 'contacts/communities/owned.php',
                 'section' => 'mahara',
             ),
-            'mygroups' => array(
+            array(
                 'name'    => 'mygroups',
                 'link'    => $wwwroot . 'contacts/groups/',
                 'section' => 'mahara',
