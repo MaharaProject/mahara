@@ -54,4 +54,9 @@ function form_render_radio($element, Form $form) {
     return $result;
 }
 
+function form_render_radio_set_attributes($element) {
+    $element['nolabel'] = true;
+    return $element;
+}
+
 ?>
