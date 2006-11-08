@@ -110,6 +110,9 @@ function &smarty($javascript = array(), $headers = array(), $strings = array()) 
     if (defined('PUBLIC')) {
         $smarty->assign('PUBLIC', true);
     }
+    if (defined('ADMIN')) {
+        $smarty->assign('ADMIN', true);
+    }
 
     if ($SESSION->is_logged_in()) {
         $smarty->assign('MAINNAV', main_nav());
@@ -498,6 +501,15 @@ function clean_filename($filename) {
     //@todo 
 
     return $filename;
+}
+
+/**
+ * This function sends headers suitable for all JSON returning scripts.
+ *
+ */
+function json_headers() {
+    // header('Content-type: text/x-json');
+    header('Content-type: text/plain');
 }
 
 ?>
