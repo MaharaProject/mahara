@@ -14,6 +14,8 @@ function get_string(s) {
     return str;
 }
 
+function global_error_handler(data) {}
+
 // Appends a status message to the end of elemid
 function displayMessage(m, /* optional */ elemid) {
     var color = 'red';
@@ -31,9 +33,9 @@ function displayMessage(m, /* optional */ elemid) {
     }
     var message = DIV({'style':'color:'+color+';'},m.message);
     appendChildNodes(elemid, message);
-    callLater(2, function() {
-        removeElement(message);
-        //fade(message);
-    });
+    //callLater(2, function() {
+    //    removeElement(message);
+    //    //fade(message);
+    //});
 }
 

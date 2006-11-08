@@ -97,7 +97,7 @@ function requestPageText() {
     logDebug(get_string('loadingpagecontent', $('pagename').value));
     var d = loadJSONDoc('editchangepage.json.php',{'pagename':$('pagename').value});
     d.addCallback(function(data) {
-        if (data.success) {
+        if (!data.error) {
             logDebug(get_string('loadedsuccessfully', $('pagename').value));
             setEditorContent(data.content);
             originalcontent = getEditorContent();

@@ -38,16 +38,17 @@ $data = new StdClass;
 $data->name = $pagename;
 $data->content = $pagetext;
 $data->mtime = db_format_timestamp(time());
+log_debug($USER);
 try {
     $user = get_record('usr','username',$USER->username);
     $data->muser = $user->id;
     update_record('site_content',$data,'name');
-    $result['success'] = 'ok';
+    $result['error'] = false;
     $result['message'] = get_string('savedsuccessfully');
 }
 catch (Exception $e) {
-    $result['success'] = 'error';
-    $result['message'] = $e->getMessage();
+    $result['error'] = 'local';
+    $result['message'] = get_string('savefailed');
 }
 
 echo json_encode($result);

@@ -34,11 +34,12 @@ $data['pagename'] = $pagename;
 try {
     $page = get_record('site_content','name',$pagename);
     $data['content'] = $page->content;
-    $data['success'] = 1;
+    $data['error'] = false;
+    $data['message'] = get_string('loadedsitecontent');
 }
 catch (Exception $e) {
-    $data['success'] = 0;
-    $data['errormessage'] = $e->getMessage();
+    $data['error'] = 'local';
+    $data['message'] = get_string('failedloadingsitecontent');
 }
 
 echo json_encode($data);  

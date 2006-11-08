@@ -700,12 +700,15 @@ class Form {
         $result .= "var d = sendXMLHttpRequest(req,queryString(data));\n";
         $result .= 'd.addCallback(function (result) {';
         $result .= 'var data = evalJSONRequest(result);';
-        $result .= "var type = data.success ? 'infomsg' : 'errmsg';\n";
-        $result .= $this->name . "_message(data.message,type);\n";
+        $result .= "var errtype = 'global'\n";
+        $result .= "if (!data.error) { errtype = 'infomsg'; }\n";
+        $result .= "if (data.error == 'local') { errtype = 'errmsg'; }\n";
+        $result .= "if (errtype == 'global') { global_error_handler(data); }\n";
+        $result .= 'else {' . $this->name . "_message(data.message,errtype);\n";
         if (!empty($this->successcallback)) {
             $result .= $this->successcallback . "();\n";
         }
-        $result .= "});\n";
+        $result .= "}});\n";
         $result .= 'd.addErrback(function() {';
         $result .= $this->name . "_message('" . get_string('unknownerror') . "','errmsg');";
         $result .= "});\n";
