@@ -26,12 +26,12 @@
 
 define('INTERNAL', 1);
 define('MENUITEM', 'account');
-define('SUBMENUITEM', 'activity');
+define('SUBMENUITEM', 'activityprefs');
 
-require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
 
 $smarty = smarty();
 
-$smarty->display('account/activity/index.tpl');
+$smarty->display('account/activity/preferences/index.tpl');
 
 ?>

@@ -92,6 +92,7 @@ $string['account'] =  'My account';
 $string['accountprefs'] = 'Account preferences';
 $string['activityprefs'] = 'Activity preferences';
 $string['changepassword'] = 'Change password';
+$string['activity'] = 'Recent activity';
 
 $string['emailname'] = 'Mahara System'; // robot! 
 ?>

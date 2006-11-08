@@ -790,9 +790,14 @@ function main_nav() {
                 'link'    => $wwwroot . 'account/',
                 'section' => 'mahara',
             ),
+            'activity' => array(
+                'name'    => 'activity',
+                'link'    => $wwwroot . 'account/activity/',
+                'section' => 'mahara',
+            ),
             'activityprefs' => array(
                 'name'    => 'activityprefs',
-                'link'    => $wwwroot . 'account/activity',
+                'link'    => $wwwroot . 'account/activity/preferences',
                 'section' => 'mahara',
             ),
             'changepassword' => array(
