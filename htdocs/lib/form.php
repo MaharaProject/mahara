@@ -446,10 +446,6 @@ class Form {
         foreach ($this->elements as $name => $elem) {
             $result .= form_render_element($elem, $this);
         }
-        $function = 'form_renderer_' . $this->renderer . '_messages';
-        if (function_exists($function)) {
-            $result .= $function($this->name);
-        }
         $function = 'form_renderer_' . $this->renderer . '_footer';
         if (function_exists($function)) {
             $result .= $function();
@@ -619,23 +615,29 @@ class Form {
                         }
                     }
                     $rdata = $function($element['name']);
-                    $errmsgid = $element['name'] . '_errmsg';
+                    $errmsgid = $element['name'] . '_msg';
                     $result .= 'if (!(' . $rdata->condition . ")){" ;
                     $result .= $this->name . '_set_error(\'' . $errmsgid . '\',\''
                         . $rdata->message . "');ok=false;}\n";
                     $result .= 'else{' . $this->name . '_rem_error(\'' . $errmsgid . "');}\n";
                 }
             }
-        }
-        $result .= "return ok;\n}\n";
-        $js_error_function = 'form_renderer_' . $this->renderer . '_error_js';
-        if (!function_exists($js_error_function)) {
-            @include_once('form/renderers/' . $this->renderer . '.php');
-            if (!function_exists($js_error_function)) {
-                throw new FormException('No such renderer error function "' . $js_error_function . '"');
+            if ($element['type'] == 'submit' || $element['type'] == 'submitcancel') {
+                $submitname = $element['name'];
             }
         }
-        return $result . $js_error_function($this->name);
+        $result .= "return ok;\n}\n";
+        $js_messages_function = 'form_renderer_' . $this->renderer . '_messages_js';
+        if (!function_exists($js_messages_function)) {
+            @include_once('form/renderers/' . $this->renderer . '.php');
+            if (!function_exists($js_messages_function)) {
+                throw new FormException('No renderer message function "' . $js_messages_function . '"');
+            }
+            if (!isset($submitname)) {
+                throw new FormException('Submit element required for js messages');
+            }
+        }
+        return $result . $js_messages_function($this->name,$submitname);
         //return $result;
     }
 

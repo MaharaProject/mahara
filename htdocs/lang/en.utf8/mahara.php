@@ -87,5 +87,12 @@ $string['creategroup']      = 'Add new group';
 $string['groupname']        = 'Group name';
 $string['groupdescription'] = 'Group description';
 
+// my account
+$string['account'] =  'My account';
+$string['accountprefs'] = 'Account preferences';
+$string['activityprefs'] = 'Activity preferences';
+$string['changepassword'] = 'Change password';
+$string['activity'] = 'Recent activity';
+
 $string['emailname'] = 'Mahara System'; // robot! 
 ?>

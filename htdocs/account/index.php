@@ -17,38 +17,21 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage admin
- * @author     Richard Mansfield <richard.mansfield@catalyst.net.nz>
+ * @subpackage core
+ * @author     Penny Leach <penny@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
 define('INTERNAL', 1);
-define('ADMIN', 1);
+define('MENUITEM', 'account');
+define('SUBMENUITEM', 'accountprefs');
+
 require(dirname(dirname(__FILE__)) . '/init.php');
 
-$pagename = clean_requestdata('pagename', PARAM_ALPHAEXT, REQUEST_EITHER);
-$pagetext = clean_requestdata('pagetext', PARAM_CLEANHTML, REQUEST_EITHER);
+$smarty = smarty();
 
-$result = array();
+$smarty->display('account/index.tpl');
 
-global $USER;
-$data = new StdClass;
-$data->name = $pagename;
-$data->content = $pagetext;
-$data->mtime = db_format_timestamp(time());
-try {
-    $user = get_record('usr','username',$USER->username);
-    $data->muser = $user->id;
-    update_record('site_content',$data,'name');
-    $result['success'] = 'ok';
-    $result['message'] = get_string('savedsuccessfully');
-}
-catch (Exception $e) {
-    $result['success'] = 'error';
-    $result['message'] = $e->getMessage();
-}
-
-echo json_encode($result);
 ?>

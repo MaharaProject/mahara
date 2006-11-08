@@ -2,10 +2,17 @@
 
 {include file="adminmenu.tpl"}
 
-<h2>{str tag="mygroups"}</h2>
-
 <div class="content">
-    Content from database here
+    <h2>{str tag="mygroups"}</h2>
+
+    <a href="create.php">{str tag="creategroup"}</a>
+
+    <table>
+        <thead>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
 </div>
 
 {include file="footer.tpl"}

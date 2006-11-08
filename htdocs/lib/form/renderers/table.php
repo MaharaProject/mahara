@@ -86,7 +86,7 @@ function form_renderer_table($builtelement, $rawelement) {
         $result .= hsc($rawelement['error']);
     }
     else {
-        $result .= "\t<tr style=\"display:none\" id=\"" .  $rawelement['id'] . "_errmsg\"><td>";
+        $result .= "\t<tr style=\"display:none\" id=\"" .  $rawelement['id'] . "_msg\"><td>";
     }
     $result .= "</td>\n\t</tr>\n";
 
@@ -94,19 +94,14 @@ function form_renderer_table($builtelement, $rawelement) {
 }
 
 function form_renderer_table_header() {
-    return "<table cellspacing=\"0\" border=\"0\">\n";
+    return "<table cellspacing=\"0\" border=\"0\"><tbody>\n";
 }
 
 function form_renderer_table_footer() {
-    return "</table>\n";
+    return "</tbody></table>\n";
 }
 
-function form_renderer_table_messages($formid) {
-    // Element to hold messages relating to the whole form (used in javascript submission).
-    return "\t<tr id=\"" . $formid . "_msg\"><td colspan=\"2\" class=\"errmsg\"></td></tr>\n";
-}
-
-function form_renderer_table_error_js($id) {
+function form_renderer_table_messages_js($id, $submitid) {
     $result = 'function ' . $id . '_set_error(id,m) {';
     $result .= "swapDOM($(id),TR({'id':id},TD({'colspan':2,'class':'errmsg'},m)));";
     $result .= "}\n";
@@ -114,10 +109,10 @@ function form_renderer_table_error_js($id) {
     $result .= "swapDOM($(id),TR({'id':id,'style':'display:none;'},TD(null)));";
     $result .= "}\n";
     $result .= 'function ' . $id . '_message(m,type) {';
-    $result .= "replaceChildNodes($('" . $id . "_msg'),TD({'colspan':2,'class':type},m));";
+    $result .= "swapDOM($('" . $submitid . "_msg'),TR({'id':'" . $submitid 
+        . "_msg'},TD({'colspan':2,'class':type},m)));";
     $result .= "}\n";
     return $result;
 }
-
 
 ?>

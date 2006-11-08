@@ -47,11 +47,10 @@ function form_rule_required($field) {
  *         string           The error message, if the value is invalid.
  */
 function form_rule_required_js($id) {
+    $r = new StdClass;
     $r->condition = '$(\'' . $id . '\').value != \'\'';
     $r->message = get_string('This field is required');
     return $r;
 }
-
-
 
 ?>

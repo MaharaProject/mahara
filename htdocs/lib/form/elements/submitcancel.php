@@ -17,38 +17,30 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage admin
- * @author     Richard Mansfield <richard.mansfield@catalyst.net.nz>
+ * @subpackage form-element
+ * @author     Nigel McNie <nigel@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
-define('INTERNAL', 1);
-define('ADMIN', 1);
-require(dirname(dirname(__FILE__)) . '/init.php');
+defined('INTERNAL') || die();
 
-$pagename = clean_requestdata('pagename', PARAM_ALPHAEXT, REQUEST_EITHER);
-$pagetext = clean_requestdata('pagetext', PARAM_CLEANHTML, REQUEST_EITHER);
-
-$result = array();
-
-global $USER;
-$data = new StdClass;
-$data->name = $pagename;
-$data->content = $pagetext;
-$data->mtime = db_format_timestamp(time());
-try {
-    $user = get_record('usr','username',$USER->username);
-    $data->muser = $user->id;
-    update_record('site_content',$data,'name');
-    $result['success'] = 'ok';
-    $result['message'] = get_string('savedsuccessfully');
-}
-catch (Exception $e) {
-    $result['success'] = 'error';
-    $result['message'] = $e->getMessage();
+/**
+ * Renders a submit and cancel button
+ *
+ * @param array $element The element to render
+ * @param Form  $form    The form to render the element for
+ * @return string        The HTML for the element
+ */
+function form_render_submitcancel($element, Form $form) {
+    require_once('submit.php');
+    require_once('cancel.php');
+    $submitelement = $element;
+    $submitelement['value'] = $element['value'][0];
+    $cancelelement = $element;
+    $cancelelement['value'] = $element['value'][1];
+    return form_render_submit($submitelement, $form) . ' ' . form_render_cancel($cancelelement, $form);
 }
 
-echo json_encode($result);
 ?>
