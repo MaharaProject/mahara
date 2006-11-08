@@ -701,8 +701,8 @@ class Form {
         $result .= 'd.addCallback(function (result) {';
         $result .= 'var data = evalJSONRequest(result);';
         $result .= "var errtype = 'global'\n";
-        $result .= "if (!data.error) { errtype = 'infomsg'; }\n";
-        $result .= "if (data.error == 'local') { errtype = 'errmsg'; }\n";
+        $result .= "if (!data.error) { errtype = 'info'; }\n";
+        $result .= "if (data.error == 'local') { errtype = 'error'; }\n";
         $result .= "if (errtype == 'global') { global_error_handler(data); }\n";
         $result .= 'else {' . $this->name . "_message(data.message,errtype);\n";
         if (!empty($this->successcallback)) {
@@ -710,9 +710,9 @@ class Form {
         }
         $result .= "}});\n";
         $result .= 'd.addErrback(function() {';
-        $result .= $this->name . "_message('" . get_string('unknownerror') . "','errmsg');";
+        $result .= $this->name . "_message('" . get_string('unknownerror') . "','error');";
         $result .= "});\n";
-        $result .= $this->name . "_message('" . get_string('processingform') . "','infomsg');\n";
+        $result .= $this->name . "_message('" . get_string('processingform') . "','info');\n";
         $result .= "return false;\n";
         $result .= '}';
         return $result;
