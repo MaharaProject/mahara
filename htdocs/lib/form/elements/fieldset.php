@@ -41,6 +41,9 @@ function form_render_fieldset($element, Form $form) {
     }
 
     foreach ($element['elements'] as $subname => $subelement) {
+        if ($subelement['type'] == 'hidden') {
+            throw new FormError("You cannot put hidden elements in fieldsets");
+        }
         $result .= "\t" . form_render_element($subelement, $form);
     }
 
