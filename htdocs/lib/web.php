@@ -522,4 +522,76 @@ function json_headers() {
     header('Content-type: text/plain');
 }
 
+/**
+ * This function returns a GET or POST parameter with optional default.  If the
+ * default isn't specified and the parameter hasn't been sent, a
+ * ParameterException exception is thrown
+ *
+ * @param string The GET or POST parameter you want returned
+ * @param mixed [optional] the default value for this parameter
+ *
+ * @return string The value of the parameter
+ *
+ */
+function get_variable($name) {
+    // if it's not set and we have a default
+    if (!isset($_REQUEST[$name]) && func_num_args() == 2) {
+        $php_work_around = func_get_arg(1);
+        return $php_work_around;
+    }
+
+    if (!isset($_REQUEST[$name])) {
+        throw new ParameterException("Missing parameter '$name' and no default supplied");
+    }
+
+    return $_REQUEST[$name];
+}
+
+/**
+ * This function returns a GET or POST parameter as an integer with optional
+ * default.  If the default isn't specified and the parameter hasn't been sent,
+ * a ParameterException exception is thrown. Likewise, if the parameter isn't a
+ * valid integer, a ParameterException exception is thrown
+ *
+ * @param string The GET or POST parameter you want returned
+ * @param mixed [optional] the default value for this parameter
+ *
+ * @return string The value of the parameter
+ *
+ */
+function get_integer($name) {
+    if (func_num_args() == 2) {
+        $php_work_around = func_get_arg(1);
+        $value = get_variable($name,$php_work_around);
+    }
+    else {
+        $value = get_variable($name);
+    }
+
+    if (preg_match('/^\d+$/',$value)) {
+        return (int)$value;
+    }
+
+    throw new ParameterException("Parameter '$name' = '$value' is not an integer");
+}
+
+/**
+ * This function returns a GET or POST parameter as a boolean.
+ *
+ * @param string The GET or POST parameter you want returned
+ *
+ * @return string The value of the parameter
+ *
+ */
+function get_boolean($name) {
+    $value = get_variable($name, false);
+
+    if (empty($value)) {
+        return false;
+    }
+    else {
+        return true;
+    }
+}
+
 ?>
