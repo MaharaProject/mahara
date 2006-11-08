@@ -164,4 +164,9 @@ $ALLOWED_PROTOCOLS = array('http', 'https', 'ftp', 'news', 'mailto', 'rtsp', 'te
                            'border', 'margin', 'padding', 'background');   // CSS as well to get through kses
 
 
+/**
+ * tag to use for <br> or <br />
+ */
+define('HTML_BR', '<br>');
+
 ?>
