@@ -36,8 +36,11 @@ defined('INTERNAL') || die();
  * @return string        The HTML for the element
  */
 function form_render_cancel($element, Form $form) {
+    $attributes = Form::element_attributes($element);
+    $attributes = preg_replace('/name="(.*)"/', 'name="cancel_$1"', $attributes);
+    $attributes = preg_replace('/id="(.*)"/', 'id="cancel_$1"', $attributes);
     return '<input type="submit"'
-        . preg_replace('/name="(.*)"/', 'name="cancel_$1"', Form::element_attributes($element))
+        . $attributes
         . ' value="' . hsc($form->get_value($element)) . '">';
 }
 
