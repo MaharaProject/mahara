@@ -932,10 +932,7 @@ function form_render_element($element, Form $form) {
 
     $element['id']    = Form::make_id($element);
     $element['class'] = Form::make_class($element);
-    $newelement = $element;
-    $newelement['class'] = (isset($newelement['class'])
-                            ? $newelement['class'] . ' ' . $form->get_name() : '');
-    $builtelement = $function($newelement, $form);
+    $builtelement = $function($element, $form);
 
     // Prepare the prefix and suffix
     $prefix = (isset($element['prefix'])) ? $element['prefix'] : '';
