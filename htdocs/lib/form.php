@@ -284,12 +284,6 @@ class Form {
         }
         $this->elements = $data['elements'];
 
-        // Add a hidden element to the form that can be used to check if it has been submitted.
-        $this->elements['form_' . $this->name] = array(
-            'type' => 'hidden',
-            'value' => ''
-        );
-        
         // Set some attributes for all elements
         foreach ($this->elements as $name => &$element) {
             if (count($element) == 0) {
@@ -321,11 +315,31 @@ class Form {
                     }
                     $subelement['name'] = $subname;
                     $subelement['tabindex'] = $this->tabindex;
+
+                    // Let each element set and override attributes if necessary
+                    if ($subelement['type'] != 'markup') {
+                        $function = 'form_render_' . $subelement['type'] . '_set_attributes';
+                        require_once('form/elements/' . $subelement['type'] . '.php');
+                        if (function_exists($function)) {
+                            $subelement = $function($subelement);
+                        }
+                    }
                 }
             }
             else {
                 $element['name'] = $name;
                 $element['tabindex'] = $this->tabindex;
+            }
+
+            // Let each element set and override attributes if necessary
+            if ($element['type'] != 'markup') {
+                $function = 'form_render_' . $element['type'] . '_set_attributes';
+                // @todo here, all elements are loaded that will be used, so no
+                // need to include files for them later (like in form_render_element)
+                require_once('form/elements/' . $element['type'] . '.php');
+                if (function_exists($function)) {
+                    $element = $function($element);
+                }
             }
         }
 
@@ -439,17 +453,38 @@ class Form {
 
         // @todo masks attempts in form_render_element, including the error handling there
         @include_once('form/renderers/' . $this->renderer . '.php');
+        // Form header
         $function = 'form_renderer_' . $this->renderer . '_header';
         if (function_exists($function)) {
             $result .= $function();
         }
+
+        // Render each element
         foreach ($this->elements as $name => $elem) {
-            $result .= form_render_element($elem, $this);
+            if ($elem['type'] != 'hidden') {
+                $result .= form_render_element($elem, $this);
+            }
         }
+
+        // Form footer
         $function = 'form_renderer_' . $this->renderer . '_footer';
         if (function_exists($function)) {
             $result .= $function();
         }
+
+        // Hidden elements
+        require_once('form/elements/hidden.php');
+        foreach ($this->get_elements() as $element) {
+            if ($element['type'] == 'hidden') {
+                $result .= form_render_hidden($element, $this);
+            }
+        }
+        $element = array(
+            'type'  => 'hidden',
+            'name'  => 'form_' . $this->name,
+            'value' => ''
+        );
+        $result .= form_render_hidden($element, $this);
         $result .= "</form>\n";
 
         if ($this->ajaxpost) {
@@ -505,7 +540,7 @@ class Form {
                     $elements[] = $subelement;
                 }
             }
-            elseif ($name != 'form_' . $this->name) {
+            else {
                 $elements[] = $element;
             }
         }
@@ -876,11 +911,6 @@ function form_render_element($element, Form $form) {
         if (!function_exists($function)) {
             throw new FormException('No such form element: ' . $element['type']);
         }
-    }
-
-    // If the element is hidden, don't bother passing it to the renderer.
-    if ($element['type'] == 'hidden') {
-        return form_render_hidden($element, $form) . "\n";
     }
 
     // Work out the renderer function required and make sure it exists
