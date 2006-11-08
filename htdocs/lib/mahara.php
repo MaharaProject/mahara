@@ -744,7 +744,12 @@ function admin_nav() {
             ),
         ),
         array(
-            'name'     => 'siteeditor',
+            'name'     => 'pageeditor',
+            'section'  => 'admin',
+            'link'     => $wwwroot . 'admin/editsitepage.php',
+        ),
+        array(
+            'name'     => 'menueditor',
             'section'  => 'admin',
             'link'     => $wwwroot . 'admin/todo',
         ),
