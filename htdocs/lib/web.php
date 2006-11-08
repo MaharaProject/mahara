@@ -204,6 +204,13 @@ function theme_get_image_path($imagelocation, $pluginlocation='') {
     }
 }
 
+/**
+ * cleans incoming request data.
+ * 
+ * @param string $paramname key to look for in request
+ * @param int $paramtype type of parameter to clean to (see constants.php)
+ * @param int $where where to fetch it (post, get either (see constants.php))
+ */
 function clean_requestdata($paramname,$paramtype,$where=REQUEST_EITHER) {
     $cleanversion = '';
     if ($where == REQUEST_POST || $where == REQUEST_EITHER) { // post overrides get for either
