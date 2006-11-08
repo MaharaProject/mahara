@@ -126,10 +126,13 @@ function &smarty($javascript = array(), $headers = array(), $strings = array()) 
 }
 
 function maharajsstrings() {
-    return array('namedfieldempty',
-                 'processingform',
-                 'requiredfieldempty',
-                 'unknownerror');
+    return array(
+        'namedfieldempty',
+        'processingform',
+        'requiredfieldempty',
+        'unknownerror',
+        'loading',
+    );
 }
 
 
