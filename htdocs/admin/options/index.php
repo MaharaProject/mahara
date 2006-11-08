@@ -25,6 +25,9 @@
  */
 
 define('INTERNAL',1);
+define('ADMIN',1);
+define('MENUITEM','siteoptions');
+
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
 $smarty = smarty();
