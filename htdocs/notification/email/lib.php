@@ -45,7 +45,7 @@ class PluginNotificationEmail extends PluginNotification {
             $messagebody = get_string('emailbodynoreply', 'notification.email')
                 . $data->message;
         }
-        $prefurl = get_config('wwwroot') . 'account/activityprefs.php';
+        $prefurl = get_config('wwwroot') . 'account/activity/preferences/';
         $messagebody .=  "\n\n" . get_string('emailbodyending', 'notification.email', $prefurl);
         email_user($user, $userfrom, $subject, $messagebody);
     }

@@ -780,6 +780,33 @@ function main_nav() {
             ),
         ),
     );
+    $menu[] = array(
+        'name'    => 'account',
+        'link'    => $wwwroot . 'account/',
+        'section' => 'mahara',
+        'submenu' => array(
+            'accountprefs' => array(
+                'name'    => 'accountprefs',
+                'link'    => $wwwroot . 'account/',
+                'section' => 'mahara',
+            ),
+            'activity' => array(
+                'name'    => 'activity',
+                'link'    => $wwwroot . 'account/activity/',
+                'section' => 'mahara',
+            ),
+            'activityprefs' => array(
+                'name'    => 'activityprefs',
+                'link'    => $wwwroot . 'account/activity/preferences',
+                'section' => 'mahara',
+            ),
+            'changepassword' => array(
+                'name'    => 'changepassword',
+                'link'    => $wwwroot . 'account/changepassword',
+                'section' => 'mahara',
+            ),
+        ),
+    );
 
 
     if (defined('MENUITEM')) {
