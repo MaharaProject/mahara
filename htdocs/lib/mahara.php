@@ -751,7 +751,7 @@ function admin_nav() {
         array(
             'name'     => 'menueditor',
             'section'  => 'admin',
-            'link'     => $wwwroot . 'admin/todo',
+            'link'     => $wwwroot . 'admin/editmenu.php',
         ),
         array(
             'name'     => 'files',

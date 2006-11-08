@@ -13,6 +13,7 @@
         </ul></li>
     </ul>
     <li><a href="editsitepage.php">EditSitePages</a></li>
+    <li><a href="editmenu.php">EditAdminMenu</a></li>
 </ul>
 
 {if $upgrades}
