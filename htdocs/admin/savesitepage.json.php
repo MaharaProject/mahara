@@ -38,10 +38,8 @@ $data = new StdClass;
 $data->name = $pagename;
 $data->content = $pagetext;
 $data->mtime = db_format_timestamp(time());
-log_debug($USER);
+$data->mauthor = $USER->id;
 try {
-    $user = get_record('usr','username',$USER->username);
-    $data->muser = $user->id;
     update_record('site_content',$data,'name');
     $result['error'] = false;
     $result['message'] = get_string('savedsuccessfully');
