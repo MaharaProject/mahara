@@ -37,7 +37,7 @@ defined('INTERNAL') || die();
  *                        the address.
  */
 function form_rule_email($address) {
-    if (!preg_match('/(.*)@(.*)/', $address)) {
+    if (!preg_match('/^(.*)@(.*)\.(.*)$/', $address)) {
         return get_string('E-mail address is invalid');
     }
 }

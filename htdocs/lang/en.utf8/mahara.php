@@ -31,6 +31,7 @@ $string['home'] = 'Home';
 $string['loggedouthome'] = 'Logged out Home';
 $string['privacy'] = 'Privacy';
 $string['sessiontimedout'] = 'Your session has timed out, please enter your login details to continue';
+$string['sessiontimedoutpublic'] = 'Your session has timed out. You may <a href="?login">log in</a> to continue browsing';
 $string['termsandconditions'] = 'Terms and conditions';
 $string['uploadcopyright'] = 'Upload copyright';
 $string['cancel'] = 'Cancel';

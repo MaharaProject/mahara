@@ -41,6 +41,12 @@ function form_render_radio($element, Form $form) {
     $result = '';
     $form_value = $form->get_value($element);
     $id = $element['id'];
+
+    $separator = "\n";
+    if (isset($element['separator'])) {
+        $separator = $element['separator'] . $separator;
+    }
+
     foreach ($element['options'] as $value => $text) {
         $uid = $id . substr(md5(microtime()), 0, 4);
         $element['id'] = $uid;
@@ -48,8 +54,9 @@ function form_render_radio($element, Form $form) {
             . Form::element_attributes($element)
             . ' value="' . hsc($value) . '"'
             . (($form_value == $value) ? ' checked="checked"' : '')
-            . "> <label for=\"$uid\">" . hsc($text) . "</label>\n";
+            . "> <label for=\"$uid\">" . hsc($text) . "</label>$separator";
     }
+    $result = substr($result, 0, -strlen($separator));
     
     return $result;
 }

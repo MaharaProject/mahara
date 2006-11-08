@@ -211,6 +211,17 @@ function auth_setup () {
         // The session timed out
         log_debug('session timed out');
         $SESSION->logout();
+
+        // If the page the user is viewing is public, inform them that they can
+        // log in again
+        if (defined('PUBLIC')) {
+            // @todo this links to ?login - later it should do magic to make
+            // sure that whatever GET string is made it includes the old data
+            // correctly
+            $SESSION->add_info_msg(get_string('sessiontimedoutpublic'), false);
+            return;
+        }
+
         auth_draw_login_page(get_string('sessiontimedout'));
         // The auth_draw_login_page function may authenticate a user if a login
         // request was sent at the same time that the "timed out" message is to
@@ -231,12 +242,12 @@ function auth_setup () {
         }
         
         // Check if the page is public or the site is configured to be public.
-        if (defined('PUBLIC')) {
+        if (defined('PUBLIC') && !isset($_GET['login'])) {
             log_debug('user viewing public page');
             return;
         }
         
-        log_debug('no session or old session, and page is private');
+        log_debug('no session or old session and page is private, or explicit login request');
         auth_draw_login_page(null, $form);
         exit;
     }
@@ -569,14 +580,12 @@ function login_submit($values) {
                 log_debug('this user authenticated but not in the usr table, adding them');
                 // @todo document what needs to be returned by get_user_info
                 $USER = call_static_method($authclass, 'get_user_info', $username);
-                log_debug($USER);
                 insert_record('usr', $USER);
             }
             // @todo config form option for this for each external plugin. NOT for internal
             else if (get_config_plugin('auth', $authtype, 'updateuserinfoonlogin')) {
                 log_debug('updating user info from auth method');
                 $USER = call_static_method($authclass, 'get_user_info', $username);
-                log_debug($USER);
                 $where = new StdClass;
                 $where->username = $username;
                 $where->institution = $institution;
@@ -589,7 +598,6 @@ function login_submit($values) {
             else {
                 log_debug('getting user info from database');
                 $USER = get_record('usr', 'username', $username, null, null, null, null, '*, ' . db_format_tsfield('expiry'));
-                log_debug($USER);
             }
 
             // Check if the user's account has expired
