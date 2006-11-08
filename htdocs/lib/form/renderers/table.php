@@ -60,8 +60,14 @@ function form_renderer_table($builtelement, $rawelement) {
     $result .= ">\n\t\t";
 
     $result .= '<th>';
-    if (isset($rawelement['title']) && $rawelement['type'] != 'fieldset') {
-        $result .= '<label for="' . $rawelement['id'] . '">' . hsc($rawelement['title']) . '</label>';
+    if (isset($rawelement['title'])) {
+        if (!empty($rawelement['nolabel'])) {
+            // Don't bother with a lable for the element
+            $result .= hsc($rawelement['title']);
+        }
+        else {
+            $result .= '<label for="' . $rawelement['id'] . '">' . hsc($rawelement['title']) . '</label>';
+        }
     }
     $result .= "</th>\n\t\t<td>";
     $result .= $builtelement;
