@@ -276,7 +276,6 @@ function auth_get_authtype_for_institution($institution) {
  */
 function auth_check_password_change() {
     global $USER;
-    log_debug('checking if the user needs to change their password');
     if (!$USER->passwordchange) {
         return;
     }
@@ -459,6 +458,7 @@ function auth_draw_login_page($message=null, Form $form=null) {
     }
     $smarty = smarty();
     $smarty->assign('login_form', $loginform);
+    $smarty->assign('INLINEJAVASCRIPT', 'addLoadEvent(function () { $(\'login_username\').focus(); });');
     $smarty->display('login.tpl');
     exit;
 }
