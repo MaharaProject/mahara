@@ -701,7 +701,7 @@ class Form {
         $result .= "var d = sendXMLHttpRequest(req,queryString(data));\n";
         $result .= 'd.addCallback(function (result) {';
         $result .= 'var data = evalJSONRequest(result);';
-        $result .= "var errtype = 'global'\n";
+        $result .= "var errtype = 'global';\n";
         $result .= "if (!data.error) { errtype = 'info'; }\n";
         $result .= "if (data.error == 'local') { errtype = 'error'; }\n";
         $result .= "if (errtype == 'global') { global_error_handler(data); }\n";
