@@ -54,46 +54,40 @@ function &smarty($javascript = array(), $headers = array(), $strings = array()) 
     global $USER, $SESSION;
 
     require_once(get_config('libroot') . 'smarty/Smarty.class.php');
-  
-    //@todo: Handle dependencies between javascript files.
 
-    if (!empty($strings) && !in_array('mahara',$javascript)) {
-        array_push($javascript,'mahara');
-    }
+    // Insert the appropriate javascript tags 
     $jsroot = get_config('wwwroot') . 'js/';
+
     foreach ($javascript as &$value) {
-        if ($value == 'mochikit') {
-            $value = $jsroot . 'mochikit/MochiKit.js';
-        }
-        else if ($value == 'tinymce') {
+        if ($value == 'tinymce') {
             $value = $jsroot . 'tinymce/tiny_mce.js';
             $initfile = $jsroot . 'mahara_tinymce_init.html';
             if (!$headers[] = @file_get_contents($initfile)) {
                 throw new Exception ('tinyMCE not initialised.');
             }
         }
-        else if ($value == 'mahara') {
-            $value = $jsroot . 'mahara.js';
-            $maharajsstrings = maharajsstrings();
-            foreach ($maharajsstrings as $string) {
-                if (!in_array($string, $strings)) {
-                    $strings[] = $string;
-                }
-            }
-        }
         else {
             throw new Exception ($value . '.js: unknown');
         }
     }
-    if (!empty($strings)) {
-        foreach ($strings as &$string) {
-            $string = '"' . $string . '":"' . addslashes(get_raw_string($string)) . '"';
+    
+    // Add the required mochikit and mahara javascript files
+    $javascript[] = $jsroot . 'mochikit/MochiKit.js';
+    $javascript[] = $jsroot . 'mahara.js';
+    foreach (maharajsstrings() as $string) {
+        if (!in_array($string, $strings)) {
+            $strings[] = $string;
         }
-        $stringjs = '<script language="javascript" type="text/javascript">';
-        $stringjs .= 'var strings={' . implode(',', $strings) . '};';
-        $stringjs .= '</script>';
-        $headers[] = $stringjs;
     }
+
+    // Add language strings for the javascript
+    foreach ($strings as &$string) {
+        $string = '"' . $string . '":"' . addslashes(get_raw_string($string)) . '"';
+    }
+    $stringjs = '<script language="javascript" type="text/javascript">';
+    $stringjs .= 'var strings={' . implode(',', $strings) . '};';
+    $stringjs .= '</script>';
+    $headers[] = $stringjs;
 
     $smarty =& new Smarty();
     
