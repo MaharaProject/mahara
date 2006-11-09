@@ -77,4 +77,9 @@ function form_render_select($element, Form $form) {
     return $result;
 }
 
+function form_render_select_set_attributes($element) {
+    $element['rules']['validateoptions'] = true;
+    return $element;
+}
+
 ?>
