@@ -623,7 +623,7 @@ class Form {
                                 throw new FormException('No such form rule "' . $rule . '"');
                             }
                         }
-                        if ($error = $function($values[$element['name']], $data)) {
+                        if ($error = $function($values[$element['name']], $element, $data)) {
                             $this->set_error($element['name'], $error);
                         }
                     }
@@ -646,7 +646,7 @@ class Form {
                     if (!function_exists($function)) {
                         @include_once('form/rules/' . $rule . '.php');
                         if (!function_exists($function)) {
-                            throw new FormException('No such rule function "' . $function . '"');
+                            continue;
                         }
                     }
                     $rdata = $function($element['name']);
