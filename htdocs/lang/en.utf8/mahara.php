@@ -53,6 +53,22 @@ $string['username'] = 'Username';
 $string['usernamedesc'] = 'Your username';
 $string['usernamehelp'] = 'The username you have been given to access this system.';
 
+// registration
+$string['registeredemailsubject'] = 'You have registered at Mahara';
+$string['registeredemailmessagetext'] = 'Congratulations!
+
+You have successfully registered an account! Please follow this link to
+complete the signup process:
+
+' . get_config('wwwroot') . 'register.php?key=%s';
+$string['registeredemailmessagehtml'] = '<p>Congratulations!</p>
+<p>You have successfully registered an account! Please follow this link
+to complete the signup process:</p>
+<p><a href="' . get_config('wwwroot') . 'register.php?key=%s">'
+. get_config('wwwroot') . 'register.php?key=%s</a></p>';
+$string['registeredok'] = '<p>You have successfully registered. Please check your e-mail account for instructions on how to activate your account</p>';
+$string['registrationnosuchkey'] = 'Sorry, there does not seem to be a registration with this key. Perhaps you waited longer than 24 hours to complete your registration? Otherwise, it might be our fault.';
+
 // Admin site page editor
 $string['discardpageedits']   = 'Discard your changes to this page?';
 $string['pagecontents']       = 'Text to appear on the page';
