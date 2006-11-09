@@ -34,8 +34,6 @@ function smarty_resource_artefact_source ($tpl_name, &$tpl_source, &$smarty_obj)
 }
 
 function smarty_resource_artefact_timestamp($tpl_name, &$tpl_timestamp, &$smarty_obj) {
-    log_debug("timestamp($tpl_name,$tpl_timestamp,$smarty_obj)");
-
     $name = explode(':', $tpl_name);
 
     $plugin_name = $name[0];
