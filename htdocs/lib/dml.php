@@ -706,7 +706,6 @@ function set_field_select($table, $newfield, $newvalue, $select, $values) {
  * @return mixed An ADODB RecordSet object with the results from the SQL call or false.
  * @throws SQLException
  */
-// NOTE: UNTESTED with new exception stuff. Needs a database first... :)
 function delete_records($table, $field1=null, $value1=null, $field2=null, $value2=null, $field3=null, $value3=null) {
     global $db;
 
@@ -731,7 +730,6 @@ function delete_records($table, $field1=null, $value1=null, $field2=null, $value
  * @return object A PHP standard object with the results from the SQL call.
  * @throws SQLException
  */
-// NOTE: UNTESTED with new exception stuff. Needs a database first... :)
 function delete_records_select($table, $select='',$values=null) {
     global $db;
     if ($select) {
@@ -762,11 +760,10 @@ function delete_records_select($table, $select='',$values=null) {
  * @uses $db
  * @param string $table The database table to be checked against.
  * @param array $dataobject A data object with values for one or more fields in the record
- * @param bool $returnpk Should the id of the newly created record entry be returned? If this option is not requested then true/false is returned.
  * @param string $primarykey The primary key of the table we are inserting into (almost always "id")
+ * @param bool $returnpk Should the id of the newly created record entry be returned? If this option is not requested then true/false is returned.
  * @throws SQLException
  */
-// NOTE: UNTESTED with new exception stuff. Needs a database first... :)
 function insert_record($table, $dataobject, $primarykey=false, $returnpk=false) {
     global $db;
     static $table_columns;
@@ -879,7 +876,6 @@ function insert_record($table, $dataobject, $primarykey=false, $returnpk=false) 
  * @return bool
  * @throws SQLException
  */
-// NOTE: UNTESTED with new exception throwing stuff. need a database first... :)
 function update_record($table, $dataobject, $where=null) {
 
     global $db;
