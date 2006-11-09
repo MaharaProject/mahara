@@ -31,7 +31,7 @@ define('INSTALLER', 1);
 require(dirname(dirname(__FILE__)).'/init.php');
 require(get_config('libroot') . 'upgrade.php');
 
-$smarty = smarty(array('mochikit'));
+$smarty = smarty();
 
 $upgrades = check_upgrades();
 if (!$upgrades) {
