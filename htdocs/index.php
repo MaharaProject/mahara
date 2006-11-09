@@ -91,6 +91,7 @@ else {
 $smarty = smarty();
 if (!$SESSION->is_logged_in()) {
     $smarty->assign('login_form', $login_form);
+    $smarty->assign('INLINEJAVASCRIPT', 'addLoadEvent(function () { $(\'login_username\').focus(); });');
 }
 $smarty->assign('page_content', get_site_page_content($pagename));
 $smarty->display('index.tpl');
