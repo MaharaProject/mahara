@@ -17,25 +17,36 @@ function get_string(s) {
 function global_error_handler(data) {}
 
 // Appends a status message to the end of elemid
-function displayMessage(m, /* optional */ elemid) {
-    var color = 'red';
-    if (m.type == 'ok') {
-        color = 'green';
-    }
-    else if (m.type == 'info') {
-        //color = '#aa6;';
-        logDebug(m.message);
-        return;
+function displayMessage(message, type) {
+    // ensure we have type 'ok', 'error', or 'info' (the default)
+    if (!type || (type != 'ok' && type != 'error')) {
+        type = 'info';
     }
 
-    if (typeof(elemid) == 'undefined') {
-        elemid = 'messages';
-    }
-    var message = DIV({'style':'color:'+color+';'},m.message);
-    appendChildNodes(elemid, message);
-    //callLater(2, function() {
-    //    removeElement(message);
-    //    //fade(message);
-    //});
+    var message = DIV({'class':type},message, ' ', A({'style': 'cursor: pointer;', 'onclick':'removeElement(this.parentNode)'},'[X]'));
+
+    appendChildNodes('messages', message);
+
+    // callLater(2, function() {
+    //     removeElement(message);
+    //     //fade(message);
+    // });
 }
 
+// display a nice little loading notification
+function processingStart(msg) {
+    if (!msg) {
+        msg = get_string('loading');
+    }
+
+    replaceChildNodes(
+        $('loading_box'),
+        DIV(msg)
+    );
+    $('loading_box').style.display = 'block';
+}
+
+// hide the loading notification
+function processingStop() {
+    $('loading_box').style.display = 'none';
+}

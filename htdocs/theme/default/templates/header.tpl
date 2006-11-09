@@ -18,6 +18,7 @@
     </head>
     <body>
         <div id="header">
+            <div style="position: absolute; background-color: red; color: white;" id="loading_box"></div>
             <h1><a href="{$WWWROOT}">{$heading|default:"Mahara"|escape}</a></h1>
 {if $USER}
             <a href="{$WWWROOT}?logout">Logout</a>

@@ -94,6 +94,7 @@ function requestPageText() {
             return;
         }
     }
+    processingStart();
     logDebug(get_string('loadingpagecontent', $('pagename').value));
     var d = loadJSONDoc('editchangepage.json.php',{'pagename':$('pagename').value});
     d.addCallback(function(data) {
@@ -104,9 +105,9 @@ function requestPageText() {
             oldpagename = $('pagename').value;
         }
         else {
-            displayMessage({'message':get_string('failedloadingpagecontent', $('pagename').value),
-                                'type':'error'});
+            displayMessage(get_string('failedloadingpagecontent', $('pagename').value),'error');
         }
+        processingStop();
     });
 }
 

@@ -686,6 +686,7 @@ class Form {
         // eventually we should check input types for wysiwyg before doing this:
         $result .= "if (typeof(tinyMCE) != 'undefined') { tinyMCE.triggerSave(); }\n"; 
         $result .= 'if (!' . $this->name . "_validate()) { return false; }\n";
+        $result .= 'processingStart();';
         $result .= "var data = {};\n";
         foreach ($this->get_elements() as $element) {
             $result .= "data['" . $element['name'] . "'] = $('" . $element['name'] . "').value;\n";
@@ -705,12 +706,14 @@ class Form {
         $result .= "if (data.error == 'local') { errtype = 'error'; }\n";
         $result .= "if (errtype == 'global') { global_error_handler(data); }\n";
         $result .= 'else {' . $this->name . "_message(data.message,errtype);\n";
+        $result .= 'processingStop();';
         if (!empty($this->successcallback)) {
             $result .= $this->successcallback . "();\n";
         }
         $result .= "}});\n";
         $result .= 'd.addErrback(function() {';
         $result .= $this->name . "_message('" . get_string('unknownerror') . "','error');";
+        $result .= 'processingStop();';
         $result .= "});\n";
         $result .= $this->name . "_message('" . get_string('processingform') . "','info');\n";
         $result .= "return false;\n";
