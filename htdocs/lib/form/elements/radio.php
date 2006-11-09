@@ -63,6 +63,7 @@ function form_render_radio($element, Form $form) {
 
 function form_render_radio_set_attributes($element) {
     $element['nolabel'] = true;
+    $element['rules']['validateoptions'] = true;
     return $element;
 }
 
