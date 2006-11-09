@@ -1002,4 +1002,24 @@ function format_date($date, $formatkey='strftimedatetime') {
     return strftime(get_string($formatkey), $date);
 }
 
+/**
+ * Returns a random string suitable for registration/change password requests
+ *
+ * @return string
+ */
+function get_random_key() {
+    $pool = array_merge(
+        range('A', 'Z'),
+        range('a', 'z'),
+        range(0, 9)
+    );
+    shuffle($pool);
+    $result = '';
+    for ($i = 0; $i < 16; $i++) {
+        $result .= $pool[$i];
+    }
+    log_debug($result);
+    return $result;
+}
+
 ?>
