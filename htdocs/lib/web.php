@@ -586,7 +586,7 @@ function get_integer($name) {
 function get_boolean($name) {
     $value = get_variable($name, false);
 
-    if (empty($value)) {
+    if (empty($value) || $value == 'off' || $value == 'no') {
         return false;
     }
     else {
