@@ -30,10 +30,11 @@ defined('INTERNAL') || die();
  * Checks whether the given value is longer than the allowed length.
  *
  * @param string $value     The value to check
+ * @param array  $element   The element to check
  * @param int    $maxlength The length to check for
  * @return string           The error message, if the value is invalid.
  */
-function form_rule_maxlength($value, $maxlength) {
+function form_rule_maxlength($value, $element, $maxlength) {
     if (strlen($value) > $maxlength) {
         return get_string('This field can only be ' . $maxlength . ' characters long');
     }
