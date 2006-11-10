@@ -668,9 +668,9 @@ class Form {
             if (!function_exists($js_messages_function)) {
                 throw new FormException('No renderer message function "' . $js_messages_function . '"');
             }
-            if (!isset($submitname)) {
-                throw new FormException('Submit element required for js messages');
-            }
+        }
+        if (!isset($submitname)) {
+            throw new FormException('Submit element required for js messages');
         }
         return $result . $js_messages_function($this->name,$submitname);
         //return $result;
