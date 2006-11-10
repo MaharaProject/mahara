@@ -379,13 +379,13 @@
         </TABLE>
         <TABLE NAME="usr_group_member">
             <FIELDS>
-                <FIELD NAME="group" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="grp" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="member" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
             </FIELDS>
             <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="group,member" />
-                <KEY NAME="groupfk" TYPE="foreign" FIELDS="group" REFTABLE="usr_group" REFFIELDS="id" />
+                <KEY NAME="primary" TYPE="primary" FIELDS="grp,member" />
+                <KEY NAME="grpfk" TYPE="foreign" FIELDS="grp" REFTABLE="usr_group" REFFIELDS="id" />
                 <KEY NAME="memberfk" TYPE="foreign" FIELDS="member" REFTABLE="usr" REFFIELDS="id" />
             </KEYS>
         </TABLE>
@@ -571,12 +571,12 @@
         <TABLE NAME="view_access_group">
             <FIELDS>
                 <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="group" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="grp" TYPE="int" LENGTH="10" NOTNULL="true" />
             </FIELDS>
             <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="view,group" />
+                <KEY NAME="primary" TYPE="primary" FIELDS="view,grp" />
                 <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id" />
-                <KEY NAME="groupfk" TYPE="foreign" FIELDS="group" REFTABLE="usr_group" REFFIELDS="id" />
+                <KEY NAME="grpfk" TYPE="foreign" FIELDS="grp" REFTABLE="usr_group" REFFIELDS="id" />
             </KEYS>
         </TABLE>
         <TABLE NAME="view_access_usr">
