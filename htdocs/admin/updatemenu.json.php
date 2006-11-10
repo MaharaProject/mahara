@@ -42,6 +42,7 @@ $type     = get_variable('type');
 $name     = get_variable('name');
 $linkedto = get_variable('linkedto');
 $itemid   = get_variable('itemid');
+$menu     = get_variable('menu');
 
 error_log('updatemenu.json.php '.$type .' '. $name .' '. $linkedto .' '. $itemid);
 
@@ -57,6 +58,7 @@ else { // Bad menu item type
     send_fail_message();
 }
 $data->title = $name;
+$data->public = $menu == 'public' ? 1 : 0;
 
 if ($itemid == 'new') {
     // set displayorder to be after all the existing menu items

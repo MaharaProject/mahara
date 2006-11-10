@@ -37,10 +37,10 @@ $ijs .= "var adminfile = '" . get_string('adminfile') . "';\n";
 
 $ijs .= <<< EOJS
 // Request a list of menu items from the server
-function getitems() {
+function getitems(menu) {
     logDebug(get_string('loadingmenuitems'));
     processingStart();
-    var d = loadJSONDoc('getmenuitems.json.php');
+    var d = loadJSONDoc('getmenuitems.json.php',{'menu':menu});
     d.addCallback(function(data) {
         if (!data.error) {
             logDebug(get_string('loadedmenuitems'));
@@ -200,7 +200,7 @@ function delitem(itemid) {
     d.addCallback(function(data) {
         if (data.success) {
             logDebug(get_string('menuitemdeleted'));
-            getitems();
+            getitems(menu);
         }
         else {
             displayMessage(get_string('deletefailed'),'error');
@@ -217,7 +217,8 @@ function saveitem(formid) {
     var data = {'type':f.type[0].checked ? 'externallink' : 'adminfile',
                 'name':f.name.value,
                 'linkedto':f.linkedto.value,
-                'itemid':f.itemid.value};
+                'itemid':f.itemid.value,
+                'menu':menu};
     var req = getXMLHttpRequest();
     req.open('POST','updatemenu.json.php');
     req.setRequestHeader('Content-type','application/x-www-form-urlencoded');
@@ -236,7 +237,7 @@ function saveitem(formid) {
         }
         else {
             displayMessage(data.message,errtype);
-            getitems();
+            getitems(menu);
             processingStop();
         }
     });
@@ -251,7 +252,8 @@ function getadminfiles() {
     return null;
 }
 
-addLoadEvent(getitems);
+var menu = 'public';
+addLoadEvent(function () {getitems(menu);});
 EOJS;
 
 $style = '<style type="text/css">.invisible{display:none;} .menueditcell{width:200px;}</style>';

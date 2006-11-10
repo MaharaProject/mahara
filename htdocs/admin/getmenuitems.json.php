@@ -28,10 +28,13 @@ define('INTERNAL', 1);
 define('ADMIN', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 
+$menu = get_variable('menu');
+$public = $menu == 'public' ? 1 : 0;
+
 $result = array();
 
 try { 
-    $menuitems = get_records('site_menu','','','displayorder');
+    $menuitems = get_records('site_menu','public',$public,'displayorder');
     // @todo: Get all the filenames of the files referred to in the $menuitems records.
     // (files table doesn't exist yet)
     $rows = array();
