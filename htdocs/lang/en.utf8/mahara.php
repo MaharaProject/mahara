@@ -69,6 +69,14 @@ to complete the signup process:</p>
 $string['registeredok'] = '<p>You have successfully registered. Please check your e-mail account for instructions on how to activate your account</p>';
 $string['registrationnosuchkey'] = 'Sorry, there does not seem to be a registration with this key. Perhaps you waited longer than 24 hours to complete your registration? Otherwise, it might be our fault.';
 
+// Admin menu editor
+$string['adminfile'] = 'Admin file';
+$string['externallink'] = 'External link';
+$string['type'] = 'Type';
+$string['name'] = 'Name';
+$string['noadminfiles'] = 'No admin files';
+$string['linkedto'] = 'Linked to';
+
 // Admin site page editor
 $string['discardpageedits']   = 'Discard your changes to this page?';
 $string['pagecontents']       = 'Text to appear on the page';
