@@ -29,11 +29,9 @@ define('ADMIN', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 
 $result = array();
-//$adminfile = get_string('adminfile');
-//$externallink = get_string('externallink');
 
 try { 
-    $menuitems = get_records('site_menu');
+    $menuitems = get_records('site_menu','','','displayorder');
     // @todo: Get all the filenames of the files referred to in the $menuitems records.
     // (files table doesn't exist yet)
     $rows = array();
@@ -44,19 +42,18 @@ try {
         if (empty($i->url) && !empty($i->file)) {
             $r['type'] = 'adminfile';
             $r['linkedto'] = $i->file; // @todo: substitute the appropriate filename.
-            $r['link'] = ''; // @todo: provide a link to the file
+            // $r['link'] = ''; // @todo: provide a link to the file
         }
         else if (!empty($i->url) && empty($i->file)) {
             $r['type'] = 'externallink';
             $r['linkedto'] = $i->url;
-            $r['link'] = $i->url;
+            // $r['link'] = $i->url;
         }
         else {
             throw new Exception ('Exactly one of {file,url} should be set in site_menu table');
         }
-        $rows[$i->displayorder] = $r;
+        $rows[] = $r;
     }
-    ksort($rows);
     $result['menuitems'] = array_values($rows);
     $result['error'] = false;
     $result['message'] = get_string('sitemenuloaded');
