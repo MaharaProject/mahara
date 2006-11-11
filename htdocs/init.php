@@ -39,7 +39,7 @@ else {
 set_include_path('.' . PATH_SEPARATOR . $CFG->libroot);
 
 // Set up error handling
-require 'errors.php';
+require('errors.php');
 
 if (!is_readable($CFG->docroot . 'config.php')) {
     // @todo Later, this will redirect to the installer script. For now, we
