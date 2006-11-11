@@ -40,6 +40,11 @@ if (!session_id()) {
     session_start();
 }
 
+// Logged in people can't register
+if ($SESSION->is_logged_in()) {
+    redirect(get_config('wwwroot'));
+}
+
 // @todo stuff to do for registration:
 //   - captcha image for step 1
 //   - show mandatory profile fields as configured sitewide. Relies on penny
@@ -54,7 +59,7 @@ if (!empty($_SESSION['registered'])) {
 }
 
 if (isset($_GET['key'])) {
-    if (!$registration = get_record('usr_registration', 'regkey', $_GET['key'])) {
+    if (!$registration = get_record('usr_registration', 'key', $_GET['key'])) {
         die_info(get_string('registrationnosuchkey'));
     }
 
@@ -168,6 +173,7 @@ $form = array(
     'name' => 'register',
     'method' => 'post',
     'action' => '',
+    'autofocus' => true,
     'elements' => $elements
 );
 
@@ -189,13 +195,7 @@ function register_validate(Form $form, $values) {
         $form->set_error('username', get_string('usernamealreadytaken'));
     }
 
-    if (!$form->get_error('password1') && !AuthInternal::is_password_valid($values['password1'])) {
-        $form->set_error('password1', get_string('passwordinvalidform'));
-    }
-
-    if (!$form->get_error('password1') && $values['password1'] != $values['password2']) {
-        $form->set_error('password2', get_string('passwordsdonotmatch'));
-    }
+    password_validate($form, $values, (object)$values);
 
     // First name and last name must contain at least one non whitespace
     // character, so that there's something to read
@@ -229,16 +229,16 @@ function register_submit($values) {
     safe_require('auth', 'internal', 'lib.php', 'require_once');
     $values['salt']     = substr(md5(rand(1000000, 9999999)), 2, 8);
     $values['password'] = AuthInternal::encrypt_password($values['password1'], $values['salt']);
-    $values['regkey']   = get_random_key();
-    $values['timeregistered'] = db_format_timestamp(time());
+    $values['key']   = get_random_key();
+    $values['expiry'] = db_format_timestamp(time() + 86400);
     try {
         insert_record('usr_registration', $values);
 
         $user =(object) $values;
         email_user($user, null,
             get_string('registeredemailsubject'),
-            get_string('registeredemailmessagetext', 'mahara', $values['regkey']),
-            get_string('registeredemailmessagehtml', 'mahara', $values['regkey'], $values['regkey']));
+            get_string('registeredemailmessagetext', 'mahara', $values['key']),
+            get_string('registeredemailmessagehtml', 'mahara', $values['key'], $values['key']));
     }
     catch (EmailException $e) {
         die_info(get_string('registrationunsuccessful'));
