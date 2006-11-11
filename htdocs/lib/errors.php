@@ -450,4 +450,9 @@ class SQLException extends Exception {}
  */
 class ParameterException extends Exception {}
 
+/**
+ * An exception generated when e-mail can't be sent
+ */
+class EmailException extends Exception {}
+
 ?>
