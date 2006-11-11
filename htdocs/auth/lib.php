@@ -185,7 +185,6 @@ function auth_setup () {
     // they can fix this little problem :)
     if (!get_config('installed')) {
         $SESSION->logout();
-        log_debug('system not installed, letting user through');
         return;
     }
 
@@ -289,7 +288,7 @@ function auth_check_password_change() {
     if (
         ($url = get_config_plugin('auth', $authtype, 'changepasswordurl'))
         || (method_exists($authclass, 'change_password'))) {
-        log_debug('user DOES need to change their password');
+        log_debug('user needs to change their password');
         if ($url) {
             redirect($url);
             exit;
@@ -297,28 +296,34 @@ function auth_check_password_change() {
 
         require_once('form.php');
         $form = array(
-            'name' => 'change_password',
-            'method' => 'post',
-            'elements' => array(
-                'password1' => array(
-                    'type' => 'password',
-                    'title' => 'New Password:',
-                    'description' => 'Your new password',
-                    'rules' => array(
-                        'required' => true
-                    )
-                ),
-                'password2' => array(
-                    'type' => 'password',
-                    'title' => 'Confirm Password:',
-                    'description' => 'Your new password again',
-                    'rules' => array(
-                        'required' => true
+            'name'      => 'change_password',
+            'method'    => 'post',
+            'elements'  => array(
+                'passwords' => array(
+                    'type' => 'fieldset',
+                    'legend' => get_string('newpassword'),
+                    'elements' => array(
+                        'password1' => array(
+                            'type'        => 'password',
+                            'title'       => get_string('newpassword') . ':',
+                            'description' => get_string('yournewpassword'),
+                            'rules'       => array(
+                                'required' => true
+                            )
+                        ),
+                        'password2' => array(
+                            'type'        => 'password',
+                            'title'       => get_string('confirmpassword') . ':',
+                            'description' => get_string('yournewpasswordagain'),
+                            'rules'       => array(
+                                'required' => true
+                            )
+                        )
                     )
                 ),
                 'submit' => array(
-                    'type' => 'submit',
-                    'value' => 'Change Password'
+                    'type'  => 'submit',
+                    'value' => get_string('changepassword')
                 )
             )
         );
@@ -333,22 +338,7 @@ function auth_check_password_change() {
 /**
  * Validates the form for changing the password for a user.
  *
- * This only applies to the internal authentication plugin.
- *
- * @todo As far as I can tell, the change password and registration forms will 
- * only be used for internal authentication. And so, by proxy, will the 
- * username/password valid methods for the Auth class. [THIS IS TRUE]
- *
- *
- * I think this means they can be removed from the Auth class, and instead just 
- * be part of AuthInternal since they don't need to be specified for other types.
- * [THIS IS ALSO TRUE]
- *
- * Furthermore, I think that the change_password stuff (as well as suspended
- * and expired) are also quite possibly related to internal only. This will
- * require a lot of thought about how to best structure it.
- *
- * Change password will only be if a URL for it exists, or a function exists
+ * Change password will only be if a URL for it exists, or a function exists.
  *
  * @param Form  $form   The form to check
  * @param array $values The values to check
@@ -363,29 +353,13 @@ function change_password_validate(Form $form, $values) {
     $authlang  = 'auth.' . $authtype;
     safe_require('auth', $authtype, 'lib.php', 'require_once');
 
-    // Check that the password is in valid form
-    if (!$form->get_error('password1')
-        && !call_static_method($authclass, 'is_password_valid', $values['password1'])) {
-        $form->set_error('password1', get_string('passwordinvalidform', $authlang));
-    }
-
-    // The password must not be too easy :)
-    $suckypasswords = array(
-        'mahara', 'password', $USER->username
-    );
-    if (!$form->get_error('password1') && in_array($values['password1'], $suckypasswords)) {
-        $form->set_error('password1', get_string('passwordtooeasy'));
-    }
+    // @todo this could be done by a custom form rule... 'password' => $user
+    password_validate($form, $values, $USER);
 
     // The password cannot be the same as the old one
     if (!$form->get_error('password1')
         && call_static_method($authclass, 'authenticate_user_account', $USER->username, $values['password1'], $USER->institution)) {
         $form->set_error('password1', get_string('passwordnotchanged'));
-    }
-
-    // The passwords must match
-    if (!$form->get_error('password1') && !$form->get_error('password2') && $values['password1'] != $values['password2']) {
-        $form->set_error('password2', get_string('passwordsdonotmatch'));
     }
 }
 
@@ -416,7 +390,8 @@ function change_password_submit($values) {
         exit;
     }
 
-    throw new Exception('You are trying to change your password, but the attempt failed');
+    throw new Exception('Attempt by "' . $SESSION->get('username') . '@'
+        . $SESSION->get('institution') . 'to change their password failed');
 }
 
 /**
@@ -437,11 +412,11 @@ function change_password_submit($values) {
 function auth_draw_login_page($message=null, Form $form=null) {
     global $USER, $SESSION;
     if ($form != null) {
-        $loginform = $form->build();
+        $loginform = get_login_form_js($form->build());
     }
     else {
         require_once('form.php');
-        $loginform = form(auth_get_login_form());
+        $loginform = get_login_form_js(form(auth_get_login_form()));
         /*
          * If $USER is set, the form was submitted even before being built.
          * This happens when a user's session times out and they resend post
@@ -458,7 +433,6 @@ function auth_draw_login_page($message=null, Form $form=null) {
     }
     $smarty = smarty();
     $smarty->assign('login_form', $loginform);
-    $smarty->assign('INLINEJAVASCRIPT', 'addLoadEvent(function () { $(\'login_username\').focus(); });');
     $smarty->display('login.tpl');
     exit;
 }
@@ -501,9 +475,6 @@ function auth_get_login_form() {
             'type'  => 'submit',
             'value' => get_string('login')
         ),
-        'register' => array(
-            'value' => '<tr><td colspan="2"><a href="' . get_config('wwwroot') . 'register.php">' . get_string('register') . '</a></td></tr>'
-        )
     );
 
     // The login page is completely transient, and it is smart because it
@@ -549,6 +520,36 @@ function auth_get_login_form() {
     return $form;
 }
 
+/**
+ * Returns javascript to assist with the rendering of the login forms. The
+ * javascript is used to detect whether cookies are enabled, and not show the
+ * login form if they are not.
+ *
+ * @param string $form A rendered login form
+ * @return string      The form with extra javascript added for cookie detection
+ * @private
+ */
+function get_login_form_js($form) {
+    $form = str_replace('/', '\/', str_replace("'", "\'", (str_replace(array("\n", "\t"), '', $form))));
+    $strcookiesnotenabled    = get_string('cookiesnotenabled');
+    $strjavascriptnotenabled = get_string('javascriptnotenabled');
+    $cookiename = get_config('cookieprefix') . 'ctest';
+    return <<<EOF
+<script type="text/javascript">
+var loginbox = $('loginbox');
+document.cookie = '$cookiename=1;expires=0';
+if (document.cookie) {
+    loginbox.innerHTML = '$form';
+}
+else {
+    appendChildNodes(loginbox, P(null, $strcookiesnotenabled));
+}
+</script>
+<noscript>
+<p>$strjavascriptnotenabled</p>
+</noscript>
+EOF;
+}
 
 /**
  * Called when the login form is submittd. Validates the user and password, and
@@ -561,6 +562,15 @@ function login_submit($values) {
     global $SESSION, $USER;
 
     log_debug('auth details supplied, attempting to log user in');
+
+    // Check if the cookie set to test cookies is actually set
+    if (!get_cookie('ctest')) {
+        set_cookie('ctest', '', time() - 3600);
+        log_debug('cookie for detecting cookies not set');
+        redirect(get_config('wwwroot'));
+    }
+    set_cookie('ctest', '', time() - 3600);
+
     $username    = $values['login_username'];
     $password    = $values['login_password'];
     $institution = (isset($values['login_institution'])) ? $values['login_institution'] : 'mahara';
@@ -601,8 +611,8 @@ function login_submit($values) {
             }
 
             // Check if the user's account has expired
-            log_debug('Checking to see if the user has expired');
             if ($USER->expiry > 0 && time() > $USER->expiry) {
+                log_debug('the user account has expired');
                 // Trash the $USER object, used for checking if the user is logged in.
                 // Smarty uses it and puts login-only stuff in the output otherwise...
                 $USER = null;
@@ -613,8 +623,8 @@ function login_submit($values) {
             // Note: only the internal authentication method can say if a user is suspended for now.
             // There are problems with how searching excluding suspended users will work that would
             // need to be resolved before this could be implemented for all methods
-            log_debug('Checking to see if the user is suspended');
             if ($suspend = get_record('usr_suspension', 'usr', $USER->id)) {
+                log_debug('the user account has been suspended');
                 $USER = null;
                 die_info(get_string('accountsuspended', 'mahara', $suspend->ctime, $suspend->reason));
             }
@@ -662,6 +672,7 @@ function auth_validate(Form $form, $values) {
  */
 function auth_submit($values) {
     global $SESSION, $db;
+    // @todo use db_begin/db_commit
     $db->StartTrans();
 
     foreach ($values as $key => $value) {
