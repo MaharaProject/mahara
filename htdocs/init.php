@@ -137,6 +137,8 @@ if (!get_config('theme')) {
 
 $CFG->themeurl = get_config('wwwroot') . 'theme/' . get_config('theme') . '/static/';
 
+header('Content-type: text/html; charset=UTF-8');
+
 // Only do authentication once we know the page theme, so that the login form
 // can have the correct theming.
 require('auth/lib.php');
