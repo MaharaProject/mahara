@@ -50,3 +50,15 @@ function processingStart(msg) {
 function processingStop() {
     $('loading_box').style.display = 'none';
 }
+
+// Autofocus the first element with a class of 'autofocus' on page load
+addLoadEvent(function() {
+    getFirstElementByTagAndClassName(null, 'autofocus', document.body).focus();
+});
+
+// @todo remove this when we migrate to mochikit 1.4
+if (typeof(getFirstElementByTagAndClassName) == 'undefined') {
+    function getFirstElementByTagAndClassName(tag, className, parentElement) {
+        return getElementsByTagAndClassName(tag, className, parentElement)[0];
+    }
+}
