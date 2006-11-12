@@ -37,6 +37,7 @@ if ($install) {
     if (!get_config('installed')) {
         try {
             // Install the default institution
+            // @todo Transaction!!!
             $institution = new StdClass;
             $institution->name = 'mahara';
             $institution->displayname = 'No Institution';

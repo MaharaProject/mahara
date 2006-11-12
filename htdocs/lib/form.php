@@ -66,10 +66,9 @@ defined('INTERNAL') || die();
 function form($data) {
     return Form::process($data);
     //
-    // @todo<nigel>: stuff to do for forms:
+    // @todo stuff to do for forms:
     // 
     //  - more form element types (inc. types like autocomplete and date picker and wyswiyg)
-    //  - for elements like <select>, detect if an invalid option is submitted
     //  - support processing of data before validation occurs (e.g. trim(), strtoupper())
     //  - Basic validation is possible as there's a callback function for checking,
     //    but some helper functions could be written to make people's job validating
@@ -80,6 +79,7 @@ function form($data) {
     //  - handle multiple submit buttons
     //  - handle multipage forms?
     //  - handle a tabbed interface type of form?
+    //  - i18n
     //  
 }
 
@@ -174,6 +174,14 @@ class Form {
     private $tabindex = 1;
 
     /**
+     * Whether to autofocus fields in this form, and if so, optionally which
+     * field to focus.
+     *
+     * @var mixed
+     */
+    private $autofocus = false;
+
+    /**
      * The renderer used to build the HTML for the form that each element sits
      * in. See the form/renderer package to find out the allowed types.
      *
@@ -235,27 +243,29 @@ class Form {
         $this->name = $data['name'];
 
         // Assign defaults for the form
-        $form_defaults = array(
-            'method'   => 'post',
-            'action'   => '',
-            'onsubmit' => '',
-            'ajaxpost' => false,
+        $formdefaults = array(
+            'method'    => 'post',
+            'action'    => '',
+            'onsubmit'  => '',
+            'ajaxpost'  => false,
             'ajaxformhandler' => '',
             'ajaxsuccessfunction' => '',
-            'submit'   => true,
-            'elements' => array()
+            'autofocus' => false,
+            'submit'    => true,
+            'elements'  => array()
         );
-        $data = array_merge($form_defaults, $data);
+        $data = array_merge($formdefaults, $data);
 
         // Set the method - only get/post allowed
         $data['method'] = strtolower($data['method']);
         if ($data['method'] != 'post') {
             $data['method'] = 'get';
         }
-        $this->method = $data['method'];
-        $this->action = $data['action'];
-        $this->submit = $data['submit'];
-        $this->onsubmit = $data['onsubmit'];
+        $this->method    = $data['method'];
+        $this->action    = $data['action'];
+        $this->submit    = $data['submit'];
+        $this->onsubmit  = $data['onsubmit'];
+        $this->autofocus = $data['autofocus'];
 
         if ($data['ajaxpost']) {
             $this->ajaxformhandler = $data['ajaxformhandler'];
@@ -285,6 +295,7 @@ class Form {
         $this->elements = $data['elements'];
 
         // Set some attributes for all elements
+        $autofocusadded = false;
         foreach ($this->elements as $name => &$element) {
             if (count($element) == 0) {
                 throw new FormException('An element in form "' . $this->name . '" has no data');
@@ -306,12 +317,24 @@ class Form {
                 foreach ($element['elements'] as $subname => &$subelement) {
                     if (!isset($subelement['type'])) {
                         $subelement['type'] = 'markup';
+                        if (!isset($subelement['value'])) {
+                            throw new FormException('The markup element "'
+                                . $name . '" has no value');
+                        }
                     }
                     if (!isset($subelement['title'])) {
                         $subelement['title'] = '';
                     }
                     if ($subelement['type'] == 'file') {
                         $this->fileupload = true;
+                    }
+                    if (!$autofocusadded && $this->autofocus === true) {
+                        $subelement['autofocus'] = true;
+                        $autofocusadded = true;
+                    }
+                    else if (!empty($this->autofocus) && $this->autofocus !== true
+                        && $subname == $this->autofocus) {
+                        $subelement['autofocus'] = true;
                     }
                     $subelement['name'] = $subname;
                     $subelement['tabindex'] = $this->tabindex;
@@ -327,6 +350,14 @@ class Form {
                 }
             }
             else {
+                if (!$autofocusadded && $this->autofocus === true) {
+                    $element['autofocus'] = true;
+                    $autofocusadded = true;
+                }
+                elseif (!empty($this->autofocus) && $this->autofocus !== true
+                    && $name == $this->autofocus) {
+                    $element['autofocus'] = true;
+                }
                 $element['name'] = $name;
                 $element['tabindex'] = $this->tabindex;
             }
@@ -336,6 +367,7 @@ class Form {
                 $function = 'form_render_' . $element['type'] . '_set_attributes';
                 // @todo here, all elements are loaded that will be used, so no
                 // need to include files for them later (like in form_render_element)
+                // Also, don't use require_once so nicer errors can be thrown
                 require_once('form/elements/' . $element['type'] . '.php');
                 if (function_exists($function)) {
                     $element = $function($element);
@@ -390,6 +422,11 @@ class Form {
                 else {
                     throw new FormException('No function registered to handle form submission for form "' . $this->name . '"');
                 }
+            }
+
+            // Auto focus the first element with an error if required
+            if ($this->autofocus !== false) {
+                $this->auto_focus_first_error();
             }
         }
     }
@@ -822,6 +859,12 @@ class Form {
         if (!empty($element['error'])) {
             $classes[] = 'error';
         }
+        // Please make sure that 'autofocus' is the last class added in this
+        // method. Otherwise, improve the logic for removing 'autofocus' from
+        // the elemnt class string in form_render_element
+        if (!empty($element['autofocus'])) {
+            $classes[] = 'autofocus';
+        }
         return implode(' ', $classes);
     }
 
@@ -884,6 +927,30 @@ class Form {
         return false;
     }
 
+    /**
+     * Sets the 'autofocus' property on the first element encountered that has
+     * an error on it
+     */
+    private function auto_focus_first_error() {
+        foreach ($this->elements as &$element) {
+            if ($element['type'] == 'fieldset') {
+                foreach ($element['elements'] as &$subelement) {
+                    if (isset($subelement['error'])) {
+                        $subelement['autofocus'] = true;
+                        return;
+                    }
+                    unset($subelement['autofocus']);
+                }
+            }
+            else {
+                if (isset($element['error'])) {
+                    $element['autofocus'] = true;
+                    return;
+                }
+                unset($element['autofocus']);
+            }
+        }
+    }
 }
 
 
@@ -940,6 +1007,10 @@ function form_render_element($element, Form $form) {
     // Prepare the prefix and suffix
     $prefix = (isset($element['prefix'])) ? $element['prefix'] : '';
     $suffix = (isset($element['suffix'])) ? $element['suffix'] : '';
+
+    // Remove the 'autofocus' class, because we only want it on the form input
+    // itself, not the wrapping HTML
+    $element['class'] = str_replace(' autofocus', '', $element['class']);
 
     return $prefix . $rendererfunction($builtelement, $element) . $suffix;
 }
