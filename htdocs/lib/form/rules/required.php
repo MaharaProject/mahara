@@ -30,10 +30,19 @@ defined('INTERNAL') || die();
  * Checks whether the field has been specified.
  *
  * @param string $field     The field to check
+ * @param array  $element   The element to check
  * @return string           The error message, if the value is invalid.
  */
-function form_rule_required($field) {
+function form_rule_required($field, $element) {
     // The array test is for using the "required" rule on file elements
+    $function = 'form_is_empty_' . $element['type'];
+    if (function_exists($function)) {
+        if ($function($field, $element)) {
+            return get_string('This field is required');
+        }
+        return;
+    }
+
     if ($field == '' || is_array($field) && !empty($field['error'])) {
         return get_string('This field is required');
     }
