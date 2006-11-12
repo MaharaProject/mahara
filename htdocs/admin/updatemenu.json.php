@@ -28,8 +28,6 @@ define('INTERNAL', 1);
 define('ADMIN', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 
-error_log('updatemenu.json.php');
-
 function send_fail_message() {
     $result = array();
     $result['error'] = 'local';
@@ -38,13 +36,11 @@ function send_fail_message() {
     exit;
 }
 
-$type     = param_alpha('type');        // external list or admin file
+$type     = param_variable('type');        // external list or admin file
 $name     = param_variable('name');
 $linkedto = param_variable('linkedto');
 $itemid   = param_variable('itemid');
-$menu     = param_alpha('menu');
-
-error_log('updatemenu.json.php '.$type .' '. $name .' '. $linkedto .' '. $itemid);
+$menu     = param_variable('menu');
 
 $data = new StdClass;
 if ($type == 'adminfile') {
