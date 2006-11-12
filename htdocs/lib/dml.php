@@ -1191,6 +1191,31 @@ function db_array_to_ph($array) {
     return array_pad(array(), count($array), '?');
 }
 
+/**
+ * This function starts a smart transaction
+ * 
+ */
+function db_begin() {
+    global $db;
 
+    $db->StartTrans();
+}
+
+/**
+ * This function commits a smart transaction
+ *
+ * If the transaction has failed for any reason, an exception is thrown.
+ *
+ */
+function db_commit() {
+    global $db;
+
+    if ($db->HasFailedTrans()) {
+        $db->CompleteTrans();
+        throw new SQLException('Transaction Failed');
+    }
+
+    $db->CompleteTrans();
+}
 
 ?>
