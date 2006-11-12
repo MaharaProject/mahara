@@ -83,6 +83,7 @@ require('ddl.php');
 require('constants.php');
 require('web.php');
 require('activity.php');
+require('user.php');
 
 // Database access functions
 require('adodb/adodb-exceptions.inc.php');
