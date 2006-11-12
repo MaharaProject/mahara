@@ -40,6 +40,7 @@ $string['sitecontentnotfound'] = '%s text not available';
 // auth
 $string['accountexpired'] = 'Sorry, your account has expired';
 $string['accountsuspended'] = 'Your account has been suspeneded as of %s. The reason for your suspension is:<blockquote>%s</blockquote>';
+$string['confirmpassword'] = 'Confirm password';
 $string['loggedoutok'] = 'You have been logged out successfully';
 $string['login'] = 'Log In';
 $string['loginfailed'] = 'You have not provided the correct credentials to log in. Please check your username and password are correct.';
@@ -53,7 +54,7 @@ $string['username'] = 'Username';
 $string['usernamedesc'] = 'Your username';
 $string['usernamehelp'] = 'The username you have been given to access this system.';
 
-// registration
+// Registration
 $string['registeredemailsubject'] = 'You have registered at Mahara';
 $string['registeredemailmessagetext'] = 'Congratulations!
 
@@ -68,6 +69,43 @@ to complete the signup process:</p>
 . get_config('wwwroot') . 'register.php?key=%s</a></p>';
 $string['registeredok'] = '<p>You have successfully registered. Please check your e-mail account for instructions on how to activate your account</p>';
 $string['registrationnosuchkey'] = 'Sorry, there does not seem to be a registration with this key. Perhaps you waited longer than 24 hours to complete your registration? Otherwise, it might be our fault.';
+
+// Forgot password
+$string['pwchangerequestsent'] = 'You should receive an e-mail shortly with a link you can use to change the password for your account';
+$string['forgotpassemailsubject'] = 'Change password request for Mahara';
+$string['forgotpassemailmessagetext'] = 'Dear $fullname,
+
+A request to reset your password has been received for your $sitename account.
+
+Please follow the link below to continue the reset process.
+
+' . get_config('wwwroot') . 'forgotpass.php?key=%s
+
+If you did not request a password reset, please ignore this email.
+
+If you have any questsions regarding the above, please feel free to contact
+us.
+
+' . get_config('wwwroot') . 'contact.php
+
+Regards, $sitename Site Administrator
+
+' . get_config('wwwroot') . 'forgotpass.php?key=%s';
+$string['forgotpassemailmessagehtml'] = '<p>Dear $fullname,</p>
+
+<p>A request to reset your password has been received for your $sitename account.</p>
+
+<p>Please follow the link below to continue the reset process.</p>
+
+<p><a href="' . get_config('wwwroot') . 'forgotpass.php?key=%s">' . get_config('wwwroot') . 'forgotpass.php?key=%s</a></p>
+
+<p>If you did not request a password reset, please ignore this email.</p>
+
+<p>If you have any questsions regarding the above, please feel free to <a href="' . get_config('wwwroot') . 'contact.php">contact us</a>.</p>
+
+<p>Regards, $sitename Site Administrator</p>
+
+<p><a href="' . get_config('wwwroot') . 'forgotpass.php?key=%s">' . get_config('wwwroot') . 'forgotpass.php?key=%s</a></p>';
 
 // Admin menu editor
 $string['adminfile'] = 'Admin file';

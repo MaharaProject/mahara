@@ -655,4 +655,29 @@ function param_boolean($name) {
     }
 }
 
+/**
+ * Gets a cookie, respecting the configured cookie prefix
+ *
+ * @param string $name The name of the cookie to get the value of
+ * @return string      The value of the cookie, or null if the cookie does not
+ *                     exist.
+ */
+function get_cookie($name) {
+    $name = get_config('cookieprefix') . $name;
+    return (isset($_COOKIE[$name])) ? $_COOKIE[$name] : null;
+}
+
+/**
+ * Sets a cookie, respecting the configured cookie prefix
+ *
+ * @param string $name    The name of the cookie
+ * @param string $value   The value for the cookie
+ * @param int    $expires The unix timestamp of the time the cookie should expire
+ * @todo path/domain/secure: should be set automatically by this function if possible (?)
+ */
+function set_cookie($name, $value='', $expires=0, $path='', $domain='', $secure=false) {
+    $name = get_config('cookieprefix') . $name;
+    setcookie($name, $value, $expires, $path, $domain, $secure);
+}
+
 ?>

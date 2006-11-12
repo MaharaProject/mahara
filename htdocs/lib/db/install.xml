@@ -448,8 +448,8 @@
                 <FIELD NAME="firstname" TYPE="text" NOTNULL="true"/>
                 <FIELD NAME="lastname" TYPE="text" NOTNULL="true"/>
                 <FIELD NAME="email" TYPE="text" NOTNULL="true"/>
-                <FIELD NAME="regkey" TYPE="char" LENGTH="16" NOTNULL="true"/>
-                <FIELD NAME="timeregistered" TYPE="datetime" NOTNULL="true"/>
+                <FIELD NAME="key" TYPE="char" LENGTH="16" NOTNULL="true"/>
+                <FIELD NAME="expiry" TYPE="datetime" NOTNULL="true"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
@@ -460,7 +460,7 @@
             <FIELDS>
                 <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="expiry" TYPE="datetime" NOTNULL="true" />
-                <FIELD NAME="code" TYPE="char" LENGTH="20" NOTNULL="true" />
+                <FIELD NAME="key" TYPE="char" LENGTH="20" NOTNULL="true" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="usr,expiry" />
@@ -602,6 +602,7 @@
                 <FIELD NAME="file" TYPE="int" LENGTH="10" NOTNULL="false" />
                 <FIELD NAME="url" TYPE="text" NOTNULL="false" />
                 <FIELD NAME="displayorder" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="public" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
                 <!--- public? -->
                 <!-- displayorder maybe should be the primary key -->
             </FIELDS>

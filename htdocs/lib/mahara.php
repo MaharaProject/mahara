@@ -909,6 +909,7 @@ function main_nav() {
  * @param string $subject email subject
  * @param string $messagetext text version of email
  * @param string $messagehtml html version of email (will send both html and text)
+ * @throws EmailException
  */ 
 function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='') {
 
@@ -980,7 +981,7 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='')
     if ($mail->Send()) {
         return true;
     } 
-    throw new Exception("Couldn't send email to $usertoname with subject $subject. "
+    throw new EmailException("Couldn't send email to $usertoname with subject $subject. "
                         . "Error from phpmailer was: " . $mail->ErrorInfo );
 }
 
@@ -1020,6 +1021,50 @@ function get_random_key() {
     }
     log_debug($result);
     return $result;
+}
+
+/**
+ * Given a form, an array of values with 'password1' and 'password2'
+ * indices and a user, validate that the user can change their password to
+ * the one in $values.
+ *
+ * This provides one place where validation of passwords can be done. This is
+ * used by:
+ *  - registration
+ *  - user forgot password
+ *  - user changing password on their account page
+ *  - user forced to change their password by the <kbd>passwordchange</kbd>
+ *    flag on the <kbd>usr</kbd> table.
+ *
+ * The password is checked for:
+ *  - Being in valid form according to the rules of the authentication method
+ *    for the user
+ *  - Not being an easy password (a blacklist of strings, NOT a length check or
+ *     similar), including being the user's username
+ *  - Both values being equal
+ *
+ * @param Form $form         The form to validate
+ * @param array $values      The values passed through
+ * @param string $authplugin The authentication plugin that the user uses
+ */
+function password_validate(Form $form, $values, $user) {
+    $authtype  = auth_get_authtype_for_institution($user->institution);
+    $authclass = 'Auth' . ucfirst($authtype);
+    safe_require('auth', $authtype, 'lib.php', 'require_once');
+    if (!$form->get_error('password1') && !call_static_method($authclass, 'is_password_valid', ($values['password1']))) {
+        $form->set_error('password1', get_string('passwordinvalidform'));
+    }
+
+    $suckypasswords = array(
+        'mahara', 'password', $user->username
+    );
+    if (!$form->get_error('password1') && in_array($values['password1'], $suckypasswords)) {
+        $form->set_error('password1', get_string('passwordtooeasy'));
+    }
+
+    if (!$form->get_error('password1') && $values['password1'] != $values['password2']) {
+        $form->set_error('password2', get_string('passwordsdonotmatch'));
+    }
 }
 
 ?>

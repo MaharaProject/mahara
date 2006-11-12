@@ -1,9 +1,8 @@
 {include file="header.tpl"}
 
 {if !$USER}
-<div class="sidebar">
-    {$login_form}
-</div>
+<div class="sidebar" id="loginbox"></div>
+{$login_form}
 {/if}
 
 {include file="adminmenu.tpl"}

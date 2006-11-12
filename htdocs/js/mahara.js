@@ -51,34 +51,14 @@ function processingStop() {
     $('loading_box').style.display = 'none';
 }
 
-function dumpObject(object) {
-    // gives a nice, stable string representation for objects,
-    // ignoring any methods
-    var keyValuePairs = [];
-    for (var k in object) {
-        var v = object[k];
-        keyValuePairs.push([k, v]);
-        // if (typeof(v) != 'function') {
-        //     keyValuePairs.push([k, v]);
-        // }
-    };
-    keyValuePairs.sort(compare);
-    return "{" + map(
-        function (pair) {
-            return map(repr, pair).join(":");
-        },
-        keyValuePairs
-    ).join(", ") + "}";
-};
+// Autofocus the first element with a class of 'autofocus' on page load
+addLoadEvent(function() {
+    getFirstElementByTagAndClassName(null, 'autofocus', document.body).focus();
+});
 
-function table_render(target, data, columnspec) {
-    if (typeof(node) == 'string') {
-        target = $(target);
+// @todo remove this when we migrate to mochikit 1.4
+if (typeof(getFirstElementByTagAndClassName) == 'undefined') {
+    function getFirstElementByTagAndClassName(tag, className, parentElement) {
+        return getElementsByTagAndClassName(tag, className, parentElement)[0];
     }
-
-    forEach(data, function(row) {
-        var tr = TR();
-        forEach(columnspec, function(col) {
-        });
-    });
-};
+}

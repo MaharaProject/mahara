@@ -39,12 +39,13 @@ if (!get_config('installed')) {
 // this, we can guarantee whether the user is logged in or not for this page.
 if (!$SESSION->is_logged_in()) {
     require_once('form.php');
-    $form = array(
+    $loginform = get_login_form_js(form(array(
         'name'     => 'login',
         'method'   => 'post',
         'action'   => '',
         'renderer' => 'div',
         'submit'   => false,
+        'autofocus' => 'login_password',  // only for testing for now
         'elements' => array(
             'login' => array(
                 'type'   => 'fieldset',
@@ -77,11 +78,11 @@ if (!$SESSION->is_logged_in()) {
                 'value' => get_string('login')
             ),
             'register' => array(
-                'value' => '<div><a href="' . get_config('wwwroot') . 'register.php">' . get_string('register') . '</a></div>'
+                'value' => '<div><a href="' . get_config('wwwroot') . 'register.php">' . get_string('register') . '</a> '
+                    . '| <a href="' . get_config('wwwroot') . 'forgotpass.php">' . get_string('forgotpassword') . '</a></div>'
             )
         )
-    );
-    $login_form = form($form);
+    )));
     $pagename = 'loggedouthome';
 }
 else {
@@ -90,8 +91,7 @@ else {
 
 $smarty = smarty();
 if (!$SESSION->is_logged_in()) {
-    $smarty->assign('login_form', $login_form);
-    $smarty->assign('INLINEJAVASCRIPT', 'addLoadEvent(function () { $(\'login_username\').focus(); });');
+    $smarty->assign('login_form', $loginform);
 }
 $smarty->assign('page_content', get_site_page_content($pagename));
 $smarty->display('index.tpl');
