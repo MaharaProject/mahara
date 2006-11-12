@@ -5,7 +5,7 @@
 <h2>{str tag="account"}</h2>
 
 <div class="content">
-    Content from database here
+	{$form}
 </div>
 
 {include file="footer.tpl"}

@@ -71,7 +71,9 @@ class Session {
             'firstname'      => '',
             'lastname'       => '',
             'prefname'       => '',
-            'email'          => ''
+            'email'          => '',
+            'accountprefs'   => array(),
+            'activityprefs'  => array(),
         );
         // Resume an existing session if required
         if (isset($_COOKIE['PHPSESSID'])) {
@@ -99,6 +101,33 @@ class Session {
         return $this->defaults[$key];
     }
 
+    /** 
+     * This function returns a method for a particular
+     * activity type.
+     * or null if it's not set.
+     * 
+     * @param string $key the activity type
+     */
+    public function get_activity_preference($key) {
+        if (isset($_SESSION['activityprefs'][$key])) {
+            return $_SESSION['activityprefs'][$key];
+        }
+        return null;
+    }
+
+    /** 
+     * This function returns a value for a particular
+     * account preference, or null if it's not set.
+     * 
+     * @param string $key the field name
+     */
+    public function get_account_preference($key) {
+        if (isset($_SESSION['accountprefs'][$key])) {
+            return $_SESSION['accountprefs'][$key];
+        }
+        return null;
+    }
+
     /**
      * Sets the session property keyed by $key.
      *
@@ -113,6 +142,16 @@ class Session {
             $this->create_session();
         }
         $_SESSION[$key] = $value;
+    }
+
+    function set_account_preference($field, $value) {
+        set_account_preference($this->get('id'), $field, $value);
+        $_SESSION['accountprefs'][$field] = $value;
+    }
+
+    function set_activity_preference($activity, $method) {
+        set_activity_preference($this->get('id'), $activity, $method);
+        $_SESSION['activityprefs'][$activity] = $method;
     }
 
     /**
@@ -132,6 +171,8 @@ class Session {
             $this->set($key, (isset($USER->{$key})) ? $USER->{$key} : $this->defaults[$key]);
         }
         $this->set('logout_time', time() + get_config('session_timeout'));
+        $_SESSION['activityprefs'] = load_activity_preferences($this->get('id'));
+        $_SESSION['accountprefs'] = load_account_preferences($this->get('id'));
     }
 
     /**

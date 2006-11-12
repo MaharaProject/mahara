@@ -158,4 +158,5 @@ $string['changepassword'] = 'Change password';
 $string['activity'] = 'Recent activity';
 
 $string['emailname'] = 'Mahara System'; // robot! 
+$string['save'] = 'Save';
 ?>
