@@ -906,9 +906,10 @@ function main_nav() {
  * @return $menu a data structure containing the site menu
  */
 function site_menu() {
-    //$wwwroot = get_config('wwwroot');
+    //$wwwroot = get_config('wwwroot');  (int)
+    global $SESSION;
     $menu = array();
-    if ($menuitems = @get_records('site_menu','','','displayorder')) {
+    if ($menuitems = @get_records('site_menu','public',(int) !$SESSION->is_logged_in(),'displayorder')) {
         foreach ($menuitems as $i) {
             if ($i->url) {
                 $menu[] = array('name' => $i->title,
