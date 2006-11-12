@@ -38,11 +38,11 @@ function send_fail_message() {
     exit;
 }
 
-$type     = get_variable('type');
-$name     = get_variable('name');
-$linkedto = get_variable('linkedto');
-$itemid   = get_variable('itemid');
-$menu     = get_variable('menu');
+$type     = param_alpha('type');        // external list or admin file
+$name     = param_variable('name');
+$linkedto = param_variable('linkedto');
+$itemid   = param_variable('itemid');
+$menu     = param_alpha('menu');
 
 error_log('updatemenu.json.php '.$type .' '. $name .' '. $linkedto .' '. $itemid);
 
@@ -60,7 +60,7 @@ else { // Bad menu item type
 $data->title = $name;
 
 if ($itemid == 'new') {
-    $data->public = $menu == 'public' ? 1 : 0;
+    $data->public = (int) ($menu == 'public');
     // set displayorder to be after all the existing menu items
     try {
         $displayorders = get_rows('site_menu', 'public', $data->public, '', 'displayorder');
