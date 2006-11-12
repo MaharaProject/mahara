@@ -53,7 +53,11 @@ function processingStop() {
 
 // Autofocus the first element with a class of 'autofocus' on page load
 addLoadEvent(function() {
-    getFirstElementByTagAndClassName(null, 'autofocus', document.body).focus();
+    var element = getFirstElementByTagAndClassName(null, 'autofocus', document.body)
+
+    if ( element && typeof(element.focus) == 'function' ) {
+        element.focus();
+    }
 });
 
 // @todo remove this when we migrate to mochikit 1.4

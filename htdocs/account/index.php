@@ -29,9 +29,73 @@ define('MENUITEM', 'account');
 define('SUBMENUITEM', 'accountprefs');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
+require('form.php');
+
+// load up user preferences
+$prefs = (object)($SESSION->get('accountprefs'));
+
+$prefsform = array(
+    'name'        => 'accountprefs',
+    'method'      => 'post',
+    'ajaxpost'    => true,
+    'plugintype ' => 'core',
+    'pluginname'  => 'account',
+    'elements'    => array(
+        'friendscontrol' => array(
+            'type' => 'radio',
+            'value' => $prefs->friendscontrol, 
+            'title'  => get_string('friendsdescr', 'account'),
+            'separator' => HTML_BR,
+            'options' => array(
+                'nobody' => get_string('friendsnobody', 'account'),
+                'auth'   => get_string('friendsauth', 'account'),
+                'auto'   => get_string('friendsauto', 'account')
+            ),
+           'rules' => array(
+                'required' => true
+            )
+        ),
+        'wysiwyg' => array(
+            'type' => 'radio',
+            'value' => $prefs->wysiwyg,
+            'title' => get_string('wysiwygdescr', 'account'),
+            'options' => array(
+                1 => get_string('on', 'account'),
+                0 => get_string('off', 'account'),
+            ),
+           'rules' => array(
+                'required' => true
+            )
+        ),
+        'messages' => array(
+            'type' => 'radio',
+            'value' => $prefs->messages,
+            'title' => get_string('messagesdescr', 'account'),
+            'options' => array(
+                'nobody' => get_string('messagesnobody', 'account'),
+                'friends' => get_string('messagesfriends', 'account'),
+                'allow' => get_string('messagesallow', 'account'),
+            ),
+           'rules' => array(
+                'required' => true
+            )
+        ),
+        'submit' => array(
+            'type' => 'submit',
+            'value' => get_string('save'),
+        ),
+    ),
+);
+
 
 $smarty = smarty();
-
+$smarty->assign('form', form($prefsform));
 $smarty->display('account/index.tpl');
+
+function accountprefs_submit($values) {
+
+    
+}
+
 
 ?>
