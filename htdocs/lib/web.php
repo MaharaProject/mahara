@@ -512,8 +512,10 @@ function clean_filename($filename) {
  *
  */
 function json_headers() {
+    // @todo martyn This should be changed, but for now it's useful for debugging
     // header('Content-type: text/x-json');
     header('Content-type: text/plain');
+    header('Pragma: no-cache');
 }
 
 /**
@@ -527,7 +529,7 @@ function json_headers() {
  * @return string The value of the parameter
  *
  */
-function get_variable($name) {
+function param_variable($name) {
     // if it's not set and we have a default
     if (!isset($_REQUEST[$name]) && func_num_args() == 2) {
         $php_work_around = func_get_arg(1);
@@ -553,13 +555,13 @@ function get_variable($name) {
  * @return string The value of the parameter
  *
  */
-function get_integer($name) {
+function param_integer($name) {
     if (func_num_args() == 2) {
         $php_work_around = func_get_arg(1);
-        $value = get_variable($name,$php_work_around);
+        $value = param_variable($name,$php_work_around);
     }
     else {
-        $value = get_variable($name);
+        $value = param_variable($name);
     }
 
     if (preg_match('/^\d+$/',$value)) {
@@ -570,6 +572,71 @@ function get_integer($name) {
 }
 
 /**
+ * This function returns a GET or POST parameter as an alpha string with optional
+ * default.  If the default isn't specified and the parameter hasn't been sent,
+ * a ParameterException exception is thrown. Likewise, if the parameter isn't a
+ * valid alpha string, a ParameterException exception is thrown
+ *
+ * Valid characters are a-z and A-Z
+ *
+ * @param string The GET or POST parameter you want returned
+ * @param mixed [optional] the default value for this parameter
+ *
+ * @return string The value of the parameter
+ *
+ */
+function param_alpha($name) {
+    if (func_num_args() == 2) {
+        $php_work_around = func_get_arg(1);
+        $value = param_variable($name,$php_work_around);
+    }
+    else {
+        $value = param_variable($name);
+    }
+
+    if (preg_match('/^[a-zA-Z]$/',$value)) {
+        return $value;
+    }
+
+    throw new ParameterException("Parameter '$name' = '$value' is not an alpha");
+}
+
+/**
+ * This function returns a GET or POST parameter as an array of integers with optional
+ * default.  If the default isn't specified and the parameter hasn't been sent,
+ * a ParameterException exception is thrown. Likewise, if the parameter isn't a
+ * valid integer list , a ParameterException exception is thrown.
+ *
+ * An integer list is integers separated by commas (with optional whitespace),
+ * or just whitespace which indicates an empty list
+ *
+ * @param string The GET or POST parameter you want returned
+ * @param mixed [optional] the default value for this parameter
+ *
+ * @return array The value of the parameter
+ *
+ */
+function param_integer_list($name) {
+    if (func_num_args() == 2) {
+        $php_work_around = func_get_arg(1);
+        $value = param_variable($name,$php_work_around);
+    }
+    else {
+        $value = param_variable($name);
+    }
+
+    if ($value == '') {
+        return array();
+    }
+
+    if (preg_match('/^(\d+(,\d+)*)$/',$value)) {
+        return array_map('intval', explode(',', $value));
+    }
+
+    throw new ParameterException("Parameter '$name' = '$value' is not an integer list");
+}
+
+/**
  * This function returns a GET or POST parameter as a boolean.
  *
  * @param string The GET or POST parameter you want returned
@@ -577,8 +644,8 @@ function get_integer($name) {
  * @return string The value of the parameter
  *
  */
-function get_boolean($name) {
-    $value = get_variable($name, false);
+function param_boolean($name) {
+    $value = param_variable($name, false);
 
     if (empty($value) || $value == 'off' || $value == 'no') {
         return false;
