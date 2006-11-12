@@ -594,7 +594,7 @@ function param_alpha($name) {
         $value = param_variable($name);
     }
 
-    if (preg_match('/^[a-zA-Z]$/',$value)) {
+    if (preg_match('/^[a-zA-Z]+$/',$value)) {
         return $value;
     }
 

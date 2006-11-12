@@ -66,7 +66,7 @@ $f = array(
         'submit' => array(
             'value' => get_string('savechanges'),
             'type'  => 'submit',
-        )
+        ),
     )
 );
 
