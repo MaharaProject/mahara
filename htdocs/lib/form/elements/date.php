@@ -68,6 +68,7 @@ function form_render_date($element, Form $form) {
     return $result;
 }
 
+/** gets the value explicitly from the request */
 function form_get_value_date($element, Form $form) {
     $name = $element['name'];
     $global = ($form->get_method() == 'get') ? $_GET : $_POST;
@@ -78,6 +79,7 @@ function form_get_value_date($element, Form $form) {
     return $time;
 }
 
+/** helper: used when rendering the element, to get the value for it */
 function form_render_select_get_value($timeperiod, $min, $max, $element, Form $form) {
     static $lookup = array(
         'year' => 0,
