@@ -274,7 +274,7 @@ EOJS;
 
 $style = '<style type="text/css">.invisible{display:none;} .menueditcell{width:200px;}</style>';
 $strings = array('deletefailed','deletingmenuitem','menuitemdeleted','noadminfiles',
-                 'edit','delete','update','cancel');
+                 'edit','delete','update','cancel','add','loggedinmenu','loggedoutmenu');
 $smarty = smarty(array(),array($style),$strings);
 $smarty->assign('INLINEJAVASCRIPT',$ijs);
 $smarty->display('admin/editmenu.tpl');

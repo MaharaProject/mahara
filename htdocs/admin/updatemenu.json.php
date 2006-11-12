@@ -58,12 +58,12 @@ else { // Bad menu item type
     send_fail_message();
 }
 $data->title = $name;
-$data->public = $menu == 'public' ? 1 : 0;
 
 if ($itemid == 'new') {
+    $data->public = $menu == 'public' ? 1 : 0;
     // set displayorder to be after all the existing menu items
     try {
-        $displayorders = get_rows('site_menu', '', '', '', 'displayorder');
+        $displayorders = get_rows('site_menu', 'public', $data->public, '', 'displayorder');
         $max = 0;
         foreach ($displayorders as $r) {
             $max = $r['displayorder'] >= $max ? $r['displayorder'] + 1 : $max;

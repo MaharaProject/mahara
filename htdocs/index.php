@@ -94,6 +94,7 @@ if (!$SESSION->is_logged_in()) {
     $smarty->assign('INLINEJAVASCRIPT', 'addLoadEvent(function () { $(\'login_username\').focus(); });');
 }
 $smarty->assign('page_content', get_site_page_content($pagename));
+$smarty->assign('site_menu', site_menu());
 $smarty->display('index.tpl');
 
 ?>
