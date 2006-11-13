@@ -26,16 +26,9 @@
 
 defined('INTERNAL') || die();
 
-$string['about'] = 'About';
-$string['home'] = 'Home';
-$string['loggedouthome'] = 'Logged out Home';
-$string['privacy'] = 'Privacy';
 $string['sessiontimedout'] = 'Your session has timed out, please enter your login details to continue';
 $string['sessiontimedoutpublic'] = 'Your session has timed out. You may <a href="?login">log in</a> to continue browsing';
-$string['termsandconditions'] = 'Terms and conditions';
-$string['uploadcopyright'] = 'Upload copyright';
 $string['cancel'] = 'Cancel';
-$string['sitecontentnotfound'] = '%s text not available';
 
 // auth
 $string['accountexpired'] = 'Sorry, your account has expired';
@@ -121,11 +114,18 @@ $string['edit']          = 'Edit';
 $string['loggedinmenu']  = 'Logged in menu';
 $string['loggedoutmenu'] = 'Logged out menu';
 
-// Admin site page editor
-$string['discardpageedits']   = 'Discard your changes to this page?';
-$string['pagecontents']       = 'Text to appear on the page';
-$string['pagename']           = 'Page name';
-$string['pagetext']           = 'Page text';
+// Site content
+$string['about']               = 'About';
+$string['discardpageedits']    = 'Discard your changes to this page?';
+$string['home']                = 'Home';
+$string['loggedouthome']       = 'Logged out Home';
+$string['privacy']             = 'Privacy statement';
+$string['pagecontents']        = 'Text to appear on the page';
+$string['pagename']            = 'Page name';
+$string['pagetext']            = 'Page text';
+$string['sitecontentnotfound'] = '%s text not available';
+$string['termsandconditions']  = 'Terms and conditions';
+$string['uploadcopyright']     = 'Upload copyright statement';
 
 // Contact us form
 $string['name']                     = 'Name';
