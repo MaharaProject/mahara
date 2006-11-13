@@ -43,4 +43,9 @@ function form_render_submitcancel($element, Form $form) {
     return form_render_submit($submitelement, $form) . ' ' . form_render_cancel($cancelelement, $form);
 }
 
+function form_render_submitcancel_set_attributes($element) {
+    $element['ajaxmessages'] = true;
+    return $element;
+}
+
 ?>

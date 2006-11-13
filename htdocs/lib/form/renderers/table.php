@@ -108,16 +108,20 @@ function form_renderer_table_footer() {
 }
 
 function form_renderer_table_messages_js($id, $submitid) {
-    $result = 'function ' . $id . '_set_error(id,m) {';
-    $result .= "swapDOM($(id),TR({'id':id},TD({'colspan':2,'class':'errmsg'},m)));";
-    $result .= "}\n";
-    $result .= 'function ' . $id . '_rem_error(id) {';
-    $result .= "swapDOM($(id),TR({'id':id,'style':'display:none;'},TD(null)));";
-    $result .= "}\n";
-    $result .= 'function ' . $id . '_message(m,type) {';
-    $result .= "swapDOM($('" . $submitid . "_msg'),TR({'id':'" . $submitid 
-        . "_msg'},TD({'colspan':2,'class':type},m)));";
-    $result .= "}\n";
+    $result = <<<EOF
+function {$id}_set_error(id, message) {
+    swapDOM($(id), TR({'id':id}, TD({'colspan':2, 'class':'errmsg'}, message)));
+}
+function {$id}_remove_error(id) {
+    swapDOM($(id),TR({'id':id, 'style':'display:none;'}, TD(null)));
+}
+function {$id}_message(m, type) {
+    swapDOM($('{$submitid}_msg'), TR({'id':'{$submitid}_msg'}, TD({'colspan':2, 'class':type}, m)));
+}
+function {$id}_remove_message() {
+    swapDOM($('{$submitid}_msg'), TR({'id':'{$submitid}_msg', 'style':'display:none;'}, TD({'colspan':2})));
+}
+EOF;
     return $result;
 }
 

@@ -30,8 +30,92 @@ define('SUBMENUITEM', 'activity');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
-$smarty = smarty();
+$types = get_records('activity_type', 'admin', 0);
 
+$readsavefail = get_string('failedtomarkasread', 'activity');
+$readsave = get_string('markedasread', 'activity');
+
+$javascript = <<<JAVASCRIPT
+var activitylist = new TableRenderer(
+    'activitylist',
+    'index.json.php', 
+    [
+        function(r) { 
+            if (r.url) { 
+                return TD(null,A({'href': r.url}, r.message));
+            } 
+            return TD(null,r.message);
+        },
+        'ctime',
+        function (r, d) {
+            if (r.read == 0) {
+                return TD(null,IMG({'src' : d.star, 'alt' : d.unread}));
+            }
+            return TD(null);
+        },
+        function (r) {
+            if (r.read == 0) {
+                return TD(null, INPUT({'type' : 'checkbox', 'class' : 'tocheck', 'name' : 'unread-' + r.id}));
+            }
+            return TD(null);
+        }
+    ]
+);
+
+activitylist.type = 'all';
+activitylist.statevars.push('type');
+activitylist.updateOnLoad();
+
+function checkall(c) {
+    var e = getElementsByTagAndClassName(null,c);
+    if (e) {
+        for (cb in e) {
+            log(e[cb]);
+            e[cb].checked = 'checked';
+        }
+    }
+    return false;
+}
+
+function markread(form) {
+    
+    var c = 'tocheck';
+    var e = getElementsByTagAndClassName(null,'tocheck',form);
+    var pd = {};
+    
+    for (cb in e) {
+        if (e[cb].checked == true) {
+            pd[e[cb].name] = 1;
+        }
+    }
+
+    pd['markasread'] = 1;
+    
+    var d = loadJSONDoc('index.json.php', pd);
+    d.addCallbacks(function (data) {
+        if (data.success) {
+            $('messagediv').innerHTML = '$readsave';
+            activitylist.doupdate();
+        }
+        if (data.error) {
+            $('messagediv').innerHTML = '$readsavefail(' + data.error + ')';
+        }
+    },
+                   function () {
+            $('messagediv').innerHTML = '$readsavefail';
+            activitylist.doupdate();
+        }
+    )
+}
+
+JAVASCRIPT;
+
+$smarty = smarty(array('tablerenderer'));
+$smarty->assign('site_menu', site_menu());
+$smarty->assign('selectall', 'checkall(\'tocheck\'); return false;');
+$smarty->assign('markread', 'markread(this); return false;');
+$smarty->assign('typechange', 'activitylist.doupdate({\'type\':this.options[this.selectedIndex].value});');
+$smarty->assign('types', $types);
+$smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->display('account/activity/index.tpl');
-
 ?>

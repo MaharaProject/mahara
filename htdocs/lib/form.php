@@ -143,7 +143,7 @@ class Form {
      *
      * @var string
      */
-    private $onsubmit = '';
+    //private $onsubmit = '';
 
     /**
      * Whether to submit the form via ajax 
@@ -160,11 +160,18 @@ class Form {
     private $ajaxsuccessfunction = '';
 
     /**
+     * Name of a javascript function to call on failed ajax submission
+     *
+     * @var string
+     */
+    private $ajaxfailurefunction = '';
+
+    /**
      * Name of a php script to handle an ajax-submitted form
      *
      * @var string
      */
-    private $ajaxformhandler = '';
+    //private $ajaxformhandler = '';
 
     /**
      * The tab index for this particular form.
@@ -248,8 +255,8 @@ class Form {
             'action'    => '',
             'onsubmit'  => '',
             'ajaxpost'  => false,
-            'ajaxformhandler' => '',
             'ajaxsuccessfunction' => '',
+            'ajaxfailurefunction' => '',
             'autofocus' => false,
             'submit'    => true,
             'elements'  => array()
@@ -268,12 +275,9 @@ class Form {
         $this->autofocus = $data['autofocus'];
 
         if ($data['ajaxpost']) {
-            $this->ajaxformhandler = $data['ajaxformhandler'];
-            $this->ajaxpost = $data['ajaxpost'] && !empty($this->ajaxformhandler);
+            $this->ajaxpost = true;
             $this->ajaxsuccessfunction = $data['ajaxsuccessfunction'];
-            if ($this->ajaxpost) {
-                $this->onsubmit = 'return ' . $this->name . '_submit();';
-            }
+            $this->ajaxfailurefunction = $data['ajaxfailurefunction'];
         }
 
         if (isset($data['renderer'])) {
@@ -394,6 +398,7 @@ class Form {
                         if (!isset($element['goto'])) {
                             throw new FormException('Cancel element "' . $element['name'] . '" has no page to go to');
                         }
+                        // @todo what happens in the case of ajax post?
                         redirect($element['goto']);
                         return;
                     }
@@ -417,6 +422,7 @@ class Form {
                     // Call the user defined function for processing a submit
                     // This function should really redirect/exit after it has
                     // finished processing the form.
+                    // @todo maybe it should do just that...
                     $function($values);
                 }
                 else {
@@ -427,6 +433,17 @@ class Form {
             // Auto focus the first element with an error if required
             if ($this->autofocus !== false) {
                 $this->auto_focus_first_error();
+            }
+            
+            // If the form has been submitted by ajax, return ajax
+            if ($this->ajaxpost) {
+                $errors = $this->get_errors();
+                $json = array();
+                foreach ($errors as $element) {
+                    $json[$element['name']] = $element['error'];
+                }
+                echo json_encode(array('error' => 'local', 'message' => '@todo allow forms to specify a local error message', 'errors' => $json));
+                exit;
             }
         }
     }
@@ -479,12 +496,15 @@ class Form {
      */
     public function build() {
         $result = '<form';
-        foreach (array('name', 'method', 'action', 'onsubmit') as $attribute) {
+        foreach (array('name', 'method', 'action') as $attribute) {
             $result .= ' ' . $attribute . '="' . $this->{$attribute} . '"';
         }
         $result .= ' id="' . $this->name . '"';
         if ($this->fileupload) {
             $result .= ' enctype="multipart/form-data"';
+        }
+        if ($this->ajaxpost) {
+            $result .= ' onsubmit="return ' . $this->name . '_submit();"';
         }
         $result .= ">\n";
 
@@ -526,7 +546,7 @@ class Form {
 
         if ($this->ajaxpost) {
             $result .= '<script language="javascript" type="text/javascript">';
-            $result .= $this->validate_js();
+            //$result .= $this->validate_js();
             $result .= $this->submit_js();
             $result .=  "</script>\n";
         }
@@ -620,17 +640,10 @@ class Form {
         $result = array();
         $global = ($this->method == 'get') ? $_GET : $_POST;
         foreach ($this->get_elements() as $element) {
-            //if (isset($global[$element['name']])) {
-            //    $result[$element['name']] = $global[$element['name']];
-            //}
-            //else if ($element['type'] == 'file' && isset($_FILES[$element['name']])) {
-            //    $result[$element['name']] = $_FILES[$element['name']];
-            //}
-            //else {
-            //    $result[$element['name']] = null;
-            //}
             $result[$element['name']] = $this->get_value($element);
         }
+        log_debug($result);
+        log_debug($_POST);
         return $result;
     }
 
@@ -670,93 +683,97 @@ class Form {
     }
 
     /**
-     * Returns a js function to perform simple validation based off
-     * the definition array.
-     */
-    private function validate_js() {
-        $result = 'function ' . $this->name . "_validate(){\nvar ok=true;\n";
-        foreach ($this->get_elements() as $element) {
-            if (isset($element['rules']) && is_array($element['rules'])) {
-                foreach ($element['rules'] as $rule => $data) {
-                    // Get the rule
-                    $function = 'form_rule_' . $rule . '_js';
-                    if (!function_exists($function)) {
-                        @include_once('form/rules/' . $rule . '.php');
-                        if (!function_exists($function)) {
-                            continue;
-                        }
-                    }
-                    $rdata = $function($element['name']);
-                    $errmsgid = $element['name'] . '_msg';
-                    $result .= 'if (!(' . $rdata->condition . ")){" ;
-                    $result .= $this->name . '_set_error(\'' . $errmsgid . '\',\''
-                        . $rdata->message . "');ok=false;}\n";
-                    $result .= 'else{' . $this->name . '_rem_error(\'' . $errmsgid . "');}\n";
-                }
-            }
-            if ($element['type'] == 'submit' || $element['type'] == 'submitcancel') {
-                $submitname = $element['name'];
-            }
-        }
-        $result .= "return ok;\n}\n";
-        $js_messages_function = 'form_renderer_' . $this->renderer . '_messages_js';
-        if (!function_exists($js_messages_function)) {
-            @include_once('form/renderers/' . $this->renderer . '.php');
-            if (!function_exists($js_messages_function)) {
-                throw new FormException('No renderer message function "' . $js_messages_function . '"');
-            }
-        }
-        if (!isset($submitname)) {
-            throw new FormException('Submit element required for js messages');
-        }
-        return $result . $js_messages_function($this->name,$submitname);
-        //return $result;
-    }
-
-    /**
      * Returns a js function to submit an ajax form 
      * Expects formname_message() to be defined by the renderer,
      * and formname_validate() to be defined.
      */
     private function submit_js() {
-        $result = 'function ' . $this->name . "_submit(){\n";
-        // eventually we should check input types for wysiwyg before doing this:
-        $result .= "if (typeof(tinyMCE) != 'undefined') { tinyMCE.triggerSave(); }\n"; 
-        $result .= 'if (!' . $this->name . "_validate()) { return false; }\n";
-        $result .= 'processingStart();';
-        $result .= "var data = {};\n";
-        foreach ($this->get_elements() as $element) {
-            $result .= "data['" . $element['name'] . "'] = $('" . $element['name'] . "').value;\n";
+        $result = <<<EOF
+function {$this->name}_submit() {
+    // eventually we should check input types for wysiwyg before doing this
+    // Also should only save wysiwyg elements in the form, not all of them...
+    if (typeof(tinyMCE) != 'undefined') { tinyMCE.triggerSave(); } 
+
+    processingStart();
+    var data = {};
+
+EOF;
+    foreach ($this->get_elements() as $element) {
+        $result .= "    data['" . $element['name'] . "'] = $('" . $element['name'] . "').value;\n";
+        if (!empty($element['ajaxmessages'])) {
+            $messageelement = $element['name'];
         }
-        // This does a post.  Gets are much simpler in mochikit and we
-        // could check whether there are any big fields (like wysiwyg,
-        // textarea) and do a get (doSimpleXmlHttpRequest) instead if
-        // there aren't any.
-        $result .= 'var req = getXMLHttpRequest();';
-        $result .= "req.open('POST','" . $this->ajaxformhandler . "');\n";
-        $result .= "req.setRequestHeader('Content-type','application/x-www-form-urlencoded');\n"; 
-        $result .= "var d = sendXMLHttpRequest(req,queryString(data));\n";
-        $result .= 'd.addCallback(function (result) {';
-        $result .= 'var data = evalJSONRequest(result);';
-        $result .= "var errtype = 'global';\n";
-        $result .= "if (!data.error) { errtype = 'info'; }\n";
-        $result .= "if (data.error == 'local') { errtype = 'error'; }\n";
-        $result .= "if (errtype == 'global') { global_error_handler(data); }\n";
-        $result .= 'else {' . $this->name . "_message(data.message,errtype);\n";
-        $result .= 'processingStop();';
-        if (!empty($this->successcallback)) {
-            $result .= $this->successcallback . "();\n";
-        }
-        $result .= "}});\n";
-        $result .= 'd.addErrback(function() {';
-        $result .= $this->name . "_message('" . get_string('unknownerror') . "','error');";
-        $result .= 'processingStop();';
-        $result .= "});\n";
-        $result .= $this->name . "_message('" . get_string('processingform') . "','info');\n";
-        $result .= "return false;\n";
-        $result .= '}';
-        return $result;
     }
+    $result .= "    data['form_{$this->name}'] = '';\n";
+    if (!isset($messageelement)) {
+        throw new FormException('At least one submit-type element is required for AJAX forms');
+    }
+
+    $action = ($this->action) ? $this->action : 'editsitepage.php';
+    $result .= <<<EOF
+    // This does a post.  Gets are much simpler in mochikit and we
+    // could check whether there are any big fields (like wysiwyg,
+    // textarea) and do a get (doSimpleXmlHttpRequest) instead if
+    // there aren't any.
+    var req = getXMLHttpRequest();
+    req.open('POST','{$action}');
+    req.setRequestHeader('Content-type','application/x-www-form-urlencoded'); 
+    var d = sendXMLHttpRequest(req,queryString(data));
+    d.addCallbacks(
+    function (result) {
+        var data = evalJSONRequest(result);
+        debugObject(data);
+        if (data.error) {
+            {$this->name}_message(data.message);
+            for (error in data.errors) {
+                {$this->name}_set_error(error + '_msg', data.errors[error]);
+            }
+
+EOF;
+    if (!empty($this->ajaxfailurefunction)) {
+        $result .= "            {$this->ajaxfailurefunction}();\n";
+    }
+    $result .= <<<EOF
+        }
+        else {
+            {$this->name}_message(data.message, 'ok');
+
+EOF;
+    if (!empty($this->ajaxsuccessfunction)) {
+        $result .= "            {$this->ajaxsuccessfunction}();\n";
+    }
+
+    $result .= <<<EOF
+        }
+        processingStop();
+
+EOF;
+
+
+    $strunknownerror = get_string('unknownerror');
+    $strprocessingform = get_string('processingform');
+    $result .= <<<EOF
+    },
+    function() {
+        {$this->name}_message('{$strunknownerror}', 'error');
+        processingStop();
+    });
+    {$this->name}_message('{$strprocessingform}', 'info');
+    return false;
+}
+
+EOF;
+
+    $js_messages_function = 'form_renderer_' . $this->renderer . '_messages_js';
+    if (!function_exists($js_messages_function)) {
+        @include_once('form/renderers/' . $this->renderer . '.php');
+        if (!function_exists($js_messages_function)) {
+            throw new FormException('No renderer message function "' . $js_messages_function . '"');
+        }
+    }
+
+    return $result . $js_messages_function($this->name, $messageelement);
+}
 
     /**
      * Returns whether a field has an error marked on it.
@@ -913,6 +930,7 @@ class Form {
         
         return $result;
     }
+
     /**
      * Checks if there are errors on any of the form elements.
      *
@@ -925,6 +943,22 @@ class Form {
             }
         }
         return false;
+    }
+
+    /**
+     * Returns elements with errors on them
+     *
+     * @return array An array of elements with errors on them, the empty array
+     *               in the result of no errors.
+     */
+    private function get_errors() {
+        $result = array();
+        foreach ($this->get_elements() as $element) {
+            if (isset($element['error'])) {
+                $result[] = $element;
+            }
+        }
+        return $result;
     }
 
     /**

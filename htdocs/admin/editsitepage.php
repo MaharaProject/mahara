@@ -38,28 +38,26 @@ foreach ($sitepages as $page) {
 asort($pageoptions);
 
 $f = array(
-    'name' => 'editsitepage',
-    'method' => 'post',
-    'ajaxpost' => true,
+    'name'                => 'editsitepage',
+    'method'              => 'post',
+    'ajaxpost'            => true,
     'ajaxsuccessfunction' => 'contentSaved',
-    'ajaxformhandler' => 'savesitepage.json.php',
-    'action' => '',
-    'elements' => array(
+    'action'              => '',
+    'elements'            => array(
         'pagename' => array(
-            'type' => 'select',
-            'title' => get_string('pagename'),
-            'value' => 'home',
+            'type'    => 'select',
+            'title'   => get_string('pagename'),
+            'value'   => 'home',
             'options' => $pageoptions
         ),
         'pagetext' => array(
-            'name' => 'pagetext',
-            'type' => 'wysiwyg',
-            'rows' => 20,
-            'cols' => 80,
-            'title' => get_string('pagetext'),
+            'name'        => 'pagetext',
+            'type'        => 'wysiwyg',
+            'rows'        => 20,
+            'cols'        => 80,
+            'title'       => get_string('pagetext'),
             'description' => get_string('pagecontents'),
-            'value' => '',
-            'rules' => array(
+            'rules'       => array(
                 'required' => true
             )
         ),
@@ -69,8 +67,30 @@ $f = array(
         ),
     )
 );
-
 $form = form($f);
+
+
+function editsitepage_submit($values) {
+    global $USER;
+    $data = new StdClass;
+    $data->name    = $values['pagename'];
+    $data->content = $values['pagetext'];
+    $data->mtime   = db_format_timestamp(time());
+    $data->mauthor = $USER->id;
+    try {
+        update_record('site_content', $data, 'name');
+        $result['error']   = false;
+        $result['message'] = get_string('savedsuccessfully');
+    }
+    catch (SQLException $e) {
+        $result['error']   = 'local';
+        $result['message'] = get_string('savefailed');
+    }
+    json_headers();
+    echo json_encode($result);
+    exit;
+}
+
 $js = array();
 if (use_html_editor()) {
     array_unshift($js,'tinymce');
@@ -138,7 +158,7 @@ EOJS;
 
 $jsstrings = array('discardpageedits');
 
-$smarty = smarty($js,array(),$jsstrings);
+$smarty = smarty($js, array(), $jsstrings);
 $smarty->assign('pageeditform', $form);
 $smarty->assign('INLINEJAVASCRIPT', $ijs);
 $smarty->display('admin/editsitepage.tpl');
