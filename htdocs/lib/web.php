@@ -66,6 +66,9 @@ function &smarty($javascript = array(), $headers = array(), $strings = array()) 
                 throw new Exception ('tinyMCE not initialised.');
             }
         }
+        else if ($value == 'tablerenderer') {
+            $value = $jsroot . 'tablerenderer.js';
+        }
         else {
             throw new Exception ($value . '.js: unknown');
         }
@@ -595,7 +598,7 @@ function param_alpha($name) {
         $value = param_variable($name);
     }
 
-    if (preg_match('/^[a-zA-Z]$/',$value)) {
+    if (preg_match('/^[a-zA-Z]+$/',$value)) {
         return $value;
     }
 
@@ -648,7 +651,7 @@ function param_integer_list($name) {
 function param_boolean($name) {
     $value = param_variable($name, false);
 
-    if (empty($value) || $value == 'off' || $value == 'no') {
+    if (empty($value) || $value == 'off' || $value == 'no' || $value == 'false') {
         return false;
     }
     else {

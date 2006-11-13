@@ -603,6 +603,16 @@ function plugin_types() {
     return $pluginstocheck;
 }
 
+/** 
+ * This return returns the names of plugins installed 
+ * for the given plugin type.
+ * 
+ * @param string $plugintype type of plugin
+ */
+function plugins_installed($plugintype) {
+    return get_records($plugintype . '_installed');
+}
+
 /**
  * Helper to call a static method when you do not know the name of the class
  * you want to call the method on. PHP5 does not support $class::method().
@@ -900,6 +910,25 @@ function main_nav() {
     return $menu;
 }
 
+/**
+ * Site-level sidebar menu (list of links)
+ * There is no admin files table yet so just get the urls.
+ * @return $menu a data structure containing the site menu
+ */
+function site_menu() {
+    global $SESSION;
+    $menu = array();
+    if ($menuitems = @get_records('site_menu','public',(int) !$SESSION->is_logged_in(),'displayorder')) {
+        foreach ($menuitems as $i) {
+            if ($i->url) {
+                $menu[] = array('name' => $i->title,
+                                'link' => $i->url);
+            }
+        }
+    }
+    return $menu;
+}
+
 
 /** 
  * Always use this function for all emails to users
@@ -955,14 +984,14 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='')
     else {
         $mail->Sender = $userfrom->email;
         $mail->From = $mail->Sender;
-        $mail->FromName = fullname($userfrom);
+        $mail->FromName = display_name($userfrom);
     }
            
     $mail->AddReplyTo($mail->From, $mail->FromName);
 
     $mail->Subject = substr(stripslashes($subject), 0, 78);
 
-    $usertoname = fullname($userto);
+    $usertoname = display_name($userto);
     $mail->AddAddress($userto->email, $usertoname );
 
     $mail->WordWrap = 79;   
@@ -985,7 +1014,10 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='')
                         . "Error from phpmailer was: " . $mail->ErrorInfo );
 }
 
-function fullname($user) {
+function display_name($user) {
+    if (is_array($user)) {
+        $user = (object)$user;
+    }
     return $user->firstname . ' ' . $user->lastname;
     // @todo
 }

@@ -29,7 +29,7 @@ define('MENUITEM', 'account');
 define('SUBMENUITEM', 'accountprefs');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
-require('form.php');
+require_once('form.php');
 
 // load up user preferences
 $prefs = (object)($SESSION->get('accountprefs'));
@@ -71,6 +71,7 @@ $prefsform = array(
             'type' => 'radio',
             'value' => $prefs->messages,
             'title' => get_string('messagesdescr', 'account'),
+            'separator' => HTML_BR,
             'options' => array(
                 'nobody' => get_string('messagesnobody', 'account'),
                 'friends' => get_string('messagesfriends', 'account'),
@@ -93,8 +94,16 @@ $smarty->assign('form', form($prefsform));
 $smarty->display('account/index.tpl');
 
 function accountprefs_submit($values) {
+    // use this as looping through values is not safe.
+    $expectedprefs = expected_account_preferences(); 
+    try {
+        foreach (array_keys($expectedprefs) as $pref) {
+            set_account_preference($SESSION->get('id'), $pref, $expectedprefs[$pref]);
+        }
+    } 
+    catch (Exception $e) {
 
-    
+    }
 }
 
 

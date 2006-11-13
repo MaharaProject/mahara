@@ -2,10 +2,11 @@
 
 {include file="adminmenu.tpl"}
 
-<h2>{str tag="account"}</h2>
+<h2>{str tag="activityprefs"}</h2>
 
 <div class="content">
-    Content from database here
+{$prefsdescr}
+{$form}
 </div>
 
 {include file="footer.tpl"}

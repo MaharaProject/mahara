@@ -18,20 +18,41 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Penny Leach <penny@catalyst.net.nz>
+ * @author     Martyn Smith <martyn@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
 define('INTERNAL', 1);
-define('PUBLIC', 1);
 
-require('init.php');
+require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
-$smarty = smarty();
-$smarty->assign('page_content', get_site_page_content('termsandconditions'));
-$smarty->assign('site_menu', site_menu());
-$smarty->display('sitepage.tpl');
+json_headers();
 
-?>
+$limit = param_integer('limit', 10);
+$offset = param_integer('offset', 0);
+
+$dbprefix = get_config('dbprefix');
+
+$count = get_field('usr_group', 'COUNT(*)', 'owner', $USER->id);
+
+$data = get_rows_sql(
+    'SELECT g.id, g.name, COUNT(m.*) AS count FROM ' . $dbprefix . 'usr_group g INNER JOIN ' . $dbprefix . 'usr_group_member m ON m.grp=g.id WHERE g.owner=? GROUP BY 1, 2 ORDER BY g.name',
+    array($USER->id),
+    $offset,
+    $limit
+);
+
+if (!$data) {
+    $data = array();
+}
+
+print json_encode(array(
+    'count'  => $count,
+    'limit'  => $limit,
+    'offset' => $offset,
+    'data'   => $data,
+));
+
+

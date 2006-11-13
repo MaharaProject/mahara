@@ -2,10 +2,9 @@
 
 {include file="adminmenu.tpl"}
 
-<h2>{str tag="changepassword"}</h2>
-
 <div class="content">
-    Content from database here
+    <h2>{str tag="creategroup"}</h2>
+    {$creategroup}
 </div>
 
 {include file="footer.tpl"}

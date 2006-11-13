@@ -28,9 +28,65 @@ define('INTERNAL', 1);
 define('PUBLIC', 1);
 
 require('init.php');
+require_once('form.php');
+
+if ($SESSION->is_logged_in()) {
+    $name = display_name($USER);
+    $email = $USER->email;
+}
+else {
+    $name = '';
+    $email = '';
+}
+
+$contactform = form(array(
+    'name'     => 'contactus',
+    'method'   => 'post',
+    'action'   => '',
+    'submit'   => false,
+    'autofocus' => '',  // only for testing for now
+    'elements' => array(
+        'name' => array(
+            'type'  => 'text',
+            'title' => get_string('name'),
+            'value' => $name,
+            'rules' => array(
+                'required'    => true
+            ),
+        ),
+        'email' => array(
+            'type'  => 'text',
+            'title' => get_string('email'),
+            'value' => $email,
+            'rules' => array(
+                'required'    => true
+            ),
+        ),
+        'subject' => array(
+            'type'  => 'text',
+            'title' => get_string('subject'),
+            'value' => '',
+        ),
+        'message' => array(
+            'type'  => 'textarea',
+            'rows'  => 10,
+            'cols'  => 60,
+            'title' => get_string('message'),
+            'value' => '',
+            'rules' => array(
+                'required'    => true
+            ),
+        ),
+        'submit' => array(
+            'type'  => 'submit',
+            'value' => get_string('submitcontactinformation')
+        ),
+    )
+));
 
 $smarty = smarty();
-$smarty->assign('page_content', get_site_page_content('contactus'));
+$smarty->assign('page_content', $contactform);
+$smarty->assign('site_menu', site_menu());
 $smarty->display('sitepage.tpl');
 
 ?>

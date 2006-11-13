@@ -18,20 +18,49 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Penny Leach <penny@catalyst.net.nz>
+ * @author     Martyn Smith <martyn@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
 define('INTERNAL', 1);
-define('PUBLIC', 1);
 
-require('init.php');
+require(dirname(dirname(__FILE__)) . '/init.php');
+require('searchlib.php');
 
-$smarty = smarty();
-$smarty->assign('page_content', get_site_page_content('termsandconditions'));
-$smarty->assign('site_menu', site_menu());
-$smarty->display('sitepage.tpl');
+json_headers();
+
+safe_require('search', 'internal', 'lib.php', 'require_once');
+
+try {
+    $query = param_variable('query');
+}
+catch (ParameterException $e) {
+    print json_encode(array(
+        'error'   => 'missingparameter',
+        'message' => 'Missing parameter \'query\'',
+    ));
+    exit;
+}
+
+$limit = param_integer('limit', 20);
+$offset = param_integer('offset', 0);
+
+$data = search_user($query, $limit, $offset);
+
+foreach ($data['results'] as &$result) {
+    // @todo should call magical display user function
+    $result['name'] = display_name($result);
+
+    unset($result['email']);
+    unset($result['institution']);
+    unset($result['username']);
+    unset($result['firstname']);
+    unset($result['lastname']);
+    unset($result['prefname']);
+}
+
+print json_encode($data);
 
 ?>

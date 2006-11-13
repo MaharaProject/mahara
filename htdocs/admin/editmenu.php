@@ -28,7 +28,6 @@ define('INTERNAL',1);
 define('ADMIN', 1);
 define('MENUITEM','menueditor');
 require(dirname(dirname(__FILE__)).'/init.php');
-//require_once('form.php');
 
 $thead = array(get_string('type'),get_string('name'),get_string('linkedto'),'');
 $ijs = "var thead = TR(null,map(partial(TH,null),['" . implode($thead,"','") . "']));\n";
@@ -37,10 +36,10 @@ $ijs .= "var adminfile = '" . get_string('adminfile') . "';\n";
 
 $ijs .= <<< EOJS
 // Request a list of menu items from the server
-function getitems(menu) {
+function getitems() {
     logDebug(get_string('loadingmenuitems'));
     processingStart();
-    var d = loadJSONDoc('getmenuitems.json.php',{'menu':menu});
+    var d = loadJSONDoc('getmenuitems.json.php',{'public':selectedmenu == 'public'});
     d.addCallback(function(data) {
         if (!data.error) {
             logDebug(get_string('loadedmenuitems'));
@@ -200,7 +199,7 @@ function delitem(itemid) {
     d.addCallback(function(data) {
         if (data.success) {
             logDebug(get_string('menuitemdeleted'));
-            getitems(menu);
+            getitems();
         }
         else {
             displayMessage(get_string('deletefailed'),'error');
@@ -218,7 +217,7 @@ function saveitem(formid) {
                 'name':f.name.value,
                 'linkedto':f.linkedto.value,
                 'itemid':f.itemid.value,
-                'menu':menu};
+                'public':selectedmenu == 'public'};
     var req = getXMLHttpRequest();
     req.open('POST','updatemenu.json.php');
     req.setRequestHeader('Content-type','application/x-www-form-urlencoded');
@@ -237,7 +236,7 @@ function saveitem(formid) {
         }
         else {
             displayMessage(data.message,errtype);
-            getitems(menu);
+            getitems();
             processingStop();
         }
     });
@@ -252,13 +251,29 @@ function getadminfiles() {
     return null;
 }
 
-var menu = 'public';
-addLoadEvent(function () {getitems(menu);});
+function setmenu(menu) {
+    selectedmenu = menu;
+    var pub = get_string('loggedoutmenu');
+    var priv = get_string('loggedinmenu');
+    if (menu == 'public') {
+        priv = A({'href':'#'},priv);
+        priv.onclick = function (e) {stop(e); setmenu('private');};
+    }
+    else {
+        pub = A({'href':'#'},pub);
+        pub.onclick = function (e) {stop(e); setmenu('public');};
+    }
+    replaceChildNodes($('menuselect'), [pub, priv]);
+    getitems();
+}
+
+var selectedmenu = 'public';
+addLoadEvent(function () {setmenu(selectedmenu);});
 EOJS;
 
 $style = '<style type="text/css">.invisible{display:none;} .menueditcell{width:200px;}</style>';
 $strings = array('deletefailed','deletingmenuitem','menuitemdeleted','noadminfiles',
-                 'edit','delete','update','cancel');
+                 'edit','delete','update','cancel','add','loggedinmenu','loggedoutmenu');
 $smarty = smarty(array(),array($style),$strings);
 $smarty->assign('INLINEJAVASCRIPT',$ijs);
 $smarty->display('admin/editmenu.tpl');

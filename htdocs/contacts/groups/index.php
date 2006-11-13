@@ -30,8 +30,24 @@ define('SUBMENUITEM', 'mygroups');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
-$smarty = smarty();
+$javascript = <<<JAVASCRIPT
+var grouplist = new TableRenderer(
+    'grouplist',
+    'index.json.php', 
+    [
+        'name',
+        'count',
+        function(r) { return TD(null,A({'href':'edit.php?id=' + r.id}, 'edit')); }
+    ]
+);
 
+grouplist.updateOnLoad();
+
+JAVASCRIPT;
+
+$smarty = smarty(array('tablerenderer'));
+
+$smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->display('contacts/groups/index.tpl');
 
 ?>

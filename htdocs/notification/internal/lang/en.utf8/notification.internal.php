@@ -17,21 +17,14 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage core
+ * @subpackage notification-internal
  * @author     Penny Leach <penny@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
-define('INTERNAL', 1);
-define('PUBLIC', 1);
+defined('INTERNAL') || die();
 
-require('init.php');
-
-$smarty = smarty();
-$smarty->assign('page_content', get_site_page_content('termsandconditions'));
-$smarty->assign('site_menu', site_menu());
-$smarty->display('sitepage.tpl');
-
+$string['name'] = 'Activity log';
 ?>
