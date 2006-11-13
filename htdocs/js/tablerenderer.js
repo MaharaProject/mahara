@@ -41,7 +41,7 @@ function TableRenderer(target, source, columns, options) {
     this.renderdata = function(data) {
         replaceChildNodes(self.tbody);
 
-        forEach(data, function(row) {
+        forEach(data.data, function(row) {
             var tr = TR();
             if ( row._class ) { tr.className = row._class; }
             if ( row._id ) { tr.id = row._id; }
@@ -89,7 +89,7 @@ function TableRenderer(target, source, columns, options) {
                 self.offset = data.offset;
                 self.count = data.count;
 
-                self.renderdata(data.data);
+                self.renderdata(data);
             },
             function (error) {
                 processingStop();
