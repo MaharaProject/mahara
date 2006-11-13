@@ -28,8 +28,6 @@ define('INTERNAL', 1);
 define('ADMIN', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 
-error_log('updatemenu.json.php');
-
 function send_fail_message() {
     $result = array();
     $result['error'] = 'local';
@@ -38,13 +36,11 @@ function send_fail_message() {
     exit;
 }
 
-$type     = get_variable('type');
-$name     = get_variable('name');
-$linkedto = get_variable('linkedto');
-$itemid   = get_variable('itemid');
-$menu     = get_variable('menu');
-
-error_log('updatemenu.json.php '.$type .' '. $name .' '. $linkedto .' '. $itemid);
+$type     = param_alpha('type');        // external list or admin file
+$name     = param_variable('name');
+$linkedto = param_variable('linkedto');
+$itemid   = param_variable('itemid');
+$public   = (int) param_boolean('public');
 
 $data = new StdClass;
 if ($type == 'adminfile') {
@@ -58,12 +54,12 @@ else { // Bad menu item type
     send_fail_message();
 }
 $data->title = $name;
-$data->public = $menu == 'public' ? 1 : 0;
 
 if ($itemid == 'new') {
+    $data->public = $public;
     // set displayorder to be after all the existing menu items
     try {
-        $displayorders = get_rows('site_menu', '', '', '', 'displayorder');
+        $displayorders = get_rows('site_menu', 'public', $data->public, '', 'displayorder');
         $max = 0;
         foreach ($displayorders as $r) {
             $max = $r['displayorder'] >= $max ? $r['displayorder'] + 1 : $max;

@@ -31,6 +31,7 @@ require('init.php');
 
 $smarty = smarty();
 $smarty->assign('page_content', get_site_page_content('privacy'));
+$smarty->assign('site_menu', site_menu());
 $smarty->display('sitepage.tpl');
 
 ?>

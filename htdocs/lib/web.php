@@ -594,7 +594,7 @@ function param_alpha($name) {
         $value = param_variable($name);
     }
 
-    if (preg_match('/^[a-zA-Z]$/',$value)) {
+    if (preg_match('/^[a-zA-Z]+$/',$value)) {
         return $value;
     }
 
@@ -647,7 +647,7 @@ function param_integer_list($name) {
 function param_boolean($name) {
     $value = param_variable($name, false);
 
-    if (empty($value) || $value == 'off' || $value == 'no') {
+    if (empty($value) || $value == 'off' || $value == 'no' || $value == 'false') {
         return false;
     }
     else {

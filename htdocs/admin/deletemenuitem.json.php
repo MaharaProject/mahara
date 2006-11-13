@@ -28,7 +28,8 @@ define('INTERNAL', 1);
 define('ADMIN', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 
-$itemid = clean_requestdata('itemid', PARAM_INT, REQUEST_EITHER);
+//$itemid = clean_requestdata('itemid', PARAM_INT, REQUEST_EITHER);
+$itemid = param_variable('itemid');
 $result = array();
 
 try { 

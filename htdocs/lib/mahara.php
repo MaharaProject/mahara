@@ -910,7 +910,25 @@ function main_nav() {
     return $menu;
 }
 
-
+/**
+ * Site-level sidebar menu (list of links)
+ * There is no admin files table yet so just get the urls.
+ * @return $menu a data structure containing the site menu
+ */
+function site_menu() {
+    //$wwwroot = get_config('wwwroot');  (int)
+    global $SESSION;
+    $menu = array();
+    if ($menuitems = @get_records('site_menu','public',(int) !$SESSION->is_logged_in(),'displayorder')) {
+        foreach ($menuitems as $i) {
+            if ($i->url) {
+                $menu[] = array('name' => $i->title,
+                                'link' => $i->url);
+            }
+        }
+    }
+    return $menu;
+}
 /** 
  * Always use this function for all emails to users
  * 
