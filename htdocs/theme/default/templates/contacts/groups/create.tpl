@@ -2,11 +2,9 @@
 
 {include file="adminmenu.tpl"}
 
-<h2>{str tag="account"}</h2>
-
 <div class="content">
-{$prefsdescr}
-{$form}
+    <h2>{str tag="creategroup"}</h2>
+    {$creategroup}
 </div>
 
 {include file="footer.tpl"}

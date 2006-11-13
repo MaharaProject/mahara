@@ -17,26 +17,42 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage notification-internal
- * @author     Penny Leach <penny@catalyst.net.nz>
+ * @subpackage core
+ * @author     Martyn Smith <martyn@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
-defined('INTERNAL') || die();
+define('INTERNAL', 1);
 
-$string['typemaharamessage'] = 'System message';
-$string['typeusermessage'] = 'Message from user';
-$string['typefeedback'] = 'Feedback';
-$string['typewatchlist'] = 'Watchlist';
-$string['typenewview'] = 'New view';
-$string['typecontactus'] = 'Contact us';
-$string['typeobjectionable'] = 'Objectionable content';
-$string['typevirusrepeat'] = 'Virus flat repeat';
-$string['typevirusrelease'] = 'Virus flag release';
+require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
-$string['type'] = 'Activity type: ';
-$string['attime'] = 'at';
-$string['prefsdescr'] = 'For options other than Activity log, notifications will still go into the Activity log, but will be automatically marked as read';
-?>
+json_headers();
+
+$limit = param_integer('limit', 10);
+$offset = param_integer('offset', 0);
+
+$dbprefix = get_config('dbprefix');
+
+$count = get_field('usr_group', 'COUNT(*)', 'owner', $USER->id);
+
+$data = get_rows_sql(
+    'SELECT g.id, g.name, COUNT(m.*) AS count FROM ' . $dbprefix . 'usr_group g INNER JOIN ' . $dbprefix . 'usr_group_member m ON m.grp=g.id WHERE g.owner=? GROUP BY 1, 2 ORDER BY g.name',
+    array($USER->id),
+    $offset,
+    $limit
+);
+
+if (!$data) {
+    $data = array();
+}
+
+print json_encode(array(
+    'count'  => $count,
+    'limit'  => $limit,
+    'offset' => $offset,
+    'data'   => $data,
+));
+
+

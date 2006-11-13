@@ -31,5 +31,4 @@ abstract class PluginNotification extends Plugin {
     public abstract static function notify_user($user, $data);
 
 }
-
 ?>

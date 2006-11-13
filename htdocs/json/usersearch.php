@@ -25,33 +25,42 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'mycontacts');
-define('SUBMENUITEM', 'mygroups');
 
-require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+require(dirname(dirname(__FILE__)) . '/init.php');
+require('searchlib.php');
 
-$javascript = <<<JAVASCRIPT
-var grouplist = new TableRenderer(
-    'grouplist',
-    'index.json.php', 
-    [
-        'name',
-        'count',
-        function(r) { return TD(null,A({'href':'edit.php?id=' + r.id}, 'edit')); }
-    ]
-);
+json_headers();
 
-grouplist.offset = 0;
-grouplist.limit = 10;
-grouplist.type = 'testing';
-grouplist.statevars.push('type');
-grouplist.updateOnLoad();
+safe_require('search', 'internal', 'lib.php', 'require_once');
 
-JAVASCRIPT;
+try {
+    $query = param_variable('query');
+}
+catch (ParameterException $e) {
+    print json_encode(array(
+        'error'   => 'missingparameter',
+        'message' => 'Missing parameter \'query\'',
+    ));
+    exit;
+}
 
-$smarty = smarty(array('tablerenderer'));
+$limit = param_integer('limit', 20);
+$offset = param_integer('offset', 0);
 
-$smarty->assign('INLINEJAVASCRIPT', $javascript);
-$smarty->display('contacts/groups/index.tpl');
+$data = search_user($query, $limit, $offset);
+
+foreach ($data['results'] as &$result) {
+    // @todo should call magical display user function
+    $result['name'] = $result['firstname'];
+
+    unset($result['email']);
+    unset($result['institution']);
+    unset($result['username']);
+    unset($result['firstname']);
+    unset($result['lastname']);
+    unset($result['prefname']);
+}
+
+print json_encode($data);
 
 ?>
