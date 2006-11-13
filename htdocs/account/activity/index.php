@@ -46,9 +46,10 @@ var activitylist = new TableRenderer(
             } 
             return TD(null,r.message);
         },
+        'type',
         'ctime',
         function (r, d) {
-            if (r.read == 0) {
+            if (r.read == 1) {
                 return TD(null,IMG({'src' : d.star, 'alt' : d.unread}));
             }
             return TD(null);
@@ -94,8 +95,10 @@ function markread(form) {
     var d = loadJSONDoc('index.json.php', pd);
     d.addCallbacks(function (data) {
         if (data.success) {
-            $('messagediv').innerHTML = '$readsave';
-            activitylist.doupdate();
+            if (data.count > 0) {
+                $('messagediv').innerHTML = '$readsave';
+                activitylist.doupdate();
+            }
         }
         if (data.error) {
             $('messagediv').innerHTML = '$readsavefail(' + data.error + ')';

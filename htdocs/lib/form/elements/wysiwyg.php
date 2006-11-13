@@ -68,4 +68,12 @@ function form_render_wysiwyg($element, $form) {
         . '>' . hsc($form->get_value($element)) . '</textarea>';
 }
 
+/**
+ * @todo document: basically, the required rule now works better, as stripping
+ * tags out takes away a whole bunch of hidden stuff
+ */
+function form_is_empty_wysiwyg($value, $element) {
+    return strip_tags($value) === '';
+}
+
 ?>
