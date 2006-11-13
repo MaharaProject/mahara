@@ -42,7 +42,7 @@ function form_render_userlist($element, Form $form) {
 
     $value = $form->get_value($element);
 
-    if (!is_array($value) && is_array($element['defaultvalue'])) {
+    if (!is_array($value) && isset($element['defaultvalue']) && is_array($element['defaultvalue'])) {
         $value = $element['defaultvalue'];
     }
 
