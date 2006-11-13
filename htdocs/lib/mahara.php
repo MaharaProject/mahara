@@ -253,6 +253,50 @@ function get_string_location($identifier, $section, $variables, $replacefunc='fo
 
 
 /**
+ * Return a list of available languages
+ *
+ */
+function get_languages() {
+    $langs = array();
+    $langbase = get_config('docroot') . 'lang/';
+    if (!$langdir = opendir($langbase)) {
+        throw new Exception('Unable to read language directory '.$langbase);
+    }
+    while (false !== ($subdir = readdir($langdir))) {
+        $langfile = $langbase . $subdir . '/langconfig.php';
+        if ($subdir != "." && $subdir != ".." && is_readable($langfile)) {
+            if ($langname = get_string_from_file('thislanguage',$langfile)) {
+                $langs[$subdir] = $langname;
+            }
+        }
+    }
+    closedir($langdir);
+    return $langs;
+}
+
+/**
+ * Return a list of available themes
+ * Need to add the theme names sometime; for now use get_string().
+ *
+ */
+function get_themes() {
+    $themes = array();
+    $themebase = get_config('docroot') . 'theme/';
+    if (!$themedir = opendir($themebase)) {
+        throw new Exception('Unable to read theme directory '.$themebase);
+    }
+    while (false !== ($subdir = readdir($themedir))) {
+        // Where do we get theme names from?
+        if ($subdir != "." && $subdir != "..") {
+            $themes[$subdir] = get_string($subdir);
+        }
+    }
+    closedir($themedir);
+    return $themes;
+}
+
+
+/**
  * This function is only used from {@link get_string()}.
  *
  * @internal Only used from get_string, not meant to be public API
