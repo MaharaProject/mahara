@@ -28,8 +28,7 @@ define('INTERNAL', 1);
 define('ADMIN', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 
-$menu = param_variable('menu');
-$public = (int)($menu == 'public');
+$public = (int) param_boolean('public');
 
 $result = array();
 

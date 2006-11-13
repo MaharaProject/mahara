@@ -603,6 +603,16 @@ function plugin_types() {
     return $pluginstocheck;
 }
 
+/** 
+ * This return returns the names of plugins installed 
+ * for the given plugin type.
+ * 
+ * @param string $plugintype type of plugin
+ */
+function plugins_installed($plugintype) {
+    return get_records($plugintype . '_installed');
+}
+
 /**
  * Helper to call a static method when you do not know the name of the class
  * you want to call the method on. PHP5 does not support $class::method().

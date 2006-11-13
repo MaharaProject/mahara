@@ -28,7 +28,6 @@ define('INTERNAL',1);
 define('ADMIN', 1);
 define('MENUITEM','menueditor');
 require(dirname(dirname(__FILE__)).'/init.php');
-//require_once('form.php');
 
 $thead = array(get_string('type'),get_string('name'),get_string('linkedto'),'');
 $ijs = "var thead = TR(null,map(partial(TH,null),['" . implode($thead,"','") . "']));\n";
@@ -40,7 +39,7 @@ $ijs .= <<< EOJS
 function getitems() {
     logDebug(get_string('loadingmenuitems'));
     processingStart();
-    var d = loadJSONDoc('getmenuitems.json.php',{'menu':selectedmenu});
+    var d = loadJSONDoc('getmenuitems.json.php',{'public':selectedmenu == 'public'});
     d.addCallback(function(data) {
         if (!data.error) {
             logDebug(get_string('loadedmenuitems'));
@@ -218,7 +217,7 @@ function saveitem(formid) {
                 'name':f.name.value,
                 'linkedto':f.linkedto.value,
                 'itemid':f.itemid.value,
-                'menu':selectedmenu};
+                'public':selectedmenu == 'public'};
     var req = getXMLHttpRequest();
     req.open('POST','updatemenu.json.php');
     req.setRequestHeader('Content-type','application/x-www-form-urlencoded');

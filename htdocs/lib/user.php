@@ -130,6 +130,27 @@ function set_activity_preference($userid, $activity, $method) {
     }
 }
 
+/**
+ * gets an account preference for the user, 
+ * or the default if not set for that user,
+ * as specified in {@link expected_account_preferences}
+ *
+ * @param int $userid id of user
+ * @param string $field preference to get
+ */
+function get_account_preference($userid, $field) {
+    if ($pref = record_exists('usr_account_preference', 'usr', $userid, 'field', $field)) {
+        return $pref->value;
+    }
+    $expected = expected_account_preferences();
+    return $expected[$field];
+}
+
+/**
+ * default account settings
+ * 
+ * @returns array of fields => values
+ */
 function expected_account_preferences() {
     return array('friendscontrol' => 'auth',
                  'wysiwyg'        =>  1,

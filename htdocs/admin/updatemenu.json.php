@@ -36,11 +36,11 @@ function send_fail_message() {
     exit;
 }
 
-$type     = param_variable('type');        // external list or admin file
+$type     = param_alpha('type');        // external list or admin file
 $name     = param_variable('name');
 $linkedto = param_variable('linkedto');
 $itemid   = param_variable('itemid');
-$menu     = param_variable('menu');
+$public   = (int) param_boolean('public');
 
 $data = new StdClass;
 if ($type == 'adminfile') {
@@ -56,7 +56,7 @@ else { // Bad menu item type
 $data->title = $name;
 
 if ($itemid == 'new') {
-    $data->public = (int) ($menu == 'public');
+    $data->public = $public;
     // set displayorder to be after all the existing menu items
     try {
         $displayorders = get_rows('site_menu', 'public', $data->public, '', 'displayorder');

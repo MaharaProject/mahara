@@ -26,17 +26,5 @@
 
 defined('INTERNAL') || die();
 
-$string['typemaharamessage'] = 'System message';
-$string['typeusermessage'] = 'Message from user';
-$string['typefeedback'] = 'Feedback';
-$string['typewatchlist'] = 'Watchlist';
-$string['typenewview'] = 'New view';
-$string['typecontactus'] = 'Contact us';
-$string['typeobjectionable'] = 'Objectionable content';
-$string['typevirusrepeat'] = 'Virus flat repeat';
-$string['typevirusrelease'] = 'Virus flag release';
-
-$string['type'] = 'Activity type: ';
-$string['attime'] = 'at';
-$string['prefsdescr'] = 'For options other than Activity log, notifications will still go into the Activity log, but will be automatically marked as read';
+$string['name'] = 'Activity log';
 ?>
