@@ -4119,7 +4119,12 @@ k.string=String.fromCharCode(k.code);
 if(this._event.keyCode&&typeof (this._event.charCode)=="undefined"){
 k.code=this._event.keyCode;
 k.string=String.fromCharCode(k.code);
+} else if (this._event.keyCode && 
+this._event.charCode == 0) {
+k.code = this._event.keyCode;
+k.string = String.fromCharCode(k.code);
 }
+
 }
 return k;
 }
