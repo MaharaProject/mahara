@@ -52,8 +52,10 @@ function form_renderer_table($builtelement, $rawelement) {
         $result .= "</td>\n\t</tr>";
         return $result;
     }
-    // Set the class of the enclosing <tr> to match that of the element
+    
     $result = "\t<tr";
+    $result .= ' id="' . $rawelement['name'] . '_container"';
+    // Set the class of the enclosing <tr> to match that of the element
     if ($rawelement['class']) {
         $result .= ' class="' . $rawelement['class'] . '"';
     }
@@ -91,9 +93,6 @@ function form_renderer_table($builtelement, $rawelement) {
         $result .= "\t<tr>\n\t\t<td colspan=\"2\" class=\"errmsg\">";
         $result .= hsc($rawelement['error']);
     }
-    else {
-        $result .= "\t<tr style=\"display:none\" id=\"" .  $rawelement['id'] . "_msg\"><td>";
-    }
     $result .= "</td>\n\t</tr>\n";
 
     return $result;
@@ -109,18 +108,38 @@ function form_renderer_table_footer() {
 
 function form_renderer_table_messages_js($id, $submitid) {
     $result = <<<EOF
-function {$id}_set_error(id, message) {
-    swapDOM($(id), TR({'id':id}, TD({'colspan':2, 'class':'errmsg'}, message)));
+// Given a message and form element name, should set an error on the element
+function {$id}_set_error(message, element) {
+    {$id}_remove_error(element);
+    element += '_container';
+    // @todo set error class on input elements...
+    $(element).parentNode.insertBefore(TR({'id': '{$id}_error_' + element}, TD({'colspan': 2, 'class': 'errmsg'}, message)), $(element).nextSibling);
 }
-function {$id}_remove_error(id) {
-    swapDOM($(id),TR({'id':id, 'style':'display:none;'}, TD(null)));
+// Given a form element name, should remove an error associated with it
+function {$id}_remove_error(element) {
+    element += '_container';
+    var elem = $('{$id}_error_' + element);
+    if (elem) {
+        removeElement(elem);
+    }
 }
-function {$id}_message(m, type) {
-    swapDOM($('{$submitid}_msg'), TR({'id':'{$submitid}_msg'}, TD({'colspan':2, 'class':type}, m)));
+function {$id}_message(message, type) {
+    var elem = $('{$id}_message');
+    var msg  = TR({'id': '{$id}_message'}, TD({'colspan': 2, 'class': type}, message));
+    if (elem) {
+        swapDOM(elem, msg);
+    }
+    else {
+        appendChildNodes($('{$submitid}_container').parentNode, msg);
+    }
 }
 function {$id}_remove_message() {
-    swapDOM($('{$submitid}_msg'), TR({'id':'{$submitid}_msg', 'style':'display:none;'}, TD({'colspan':2})));
+    var elem = $('{$id}_message');
+    if (elem) {
+        removeElement(elem);
+    }
 }
+    
 EOF;
     return $result;
 }

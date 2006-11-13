@@ -642,8 +642,6 @@ class Form {
         foreach ($this->get_elements() as $element) {
             $result[$element['name']] = $this->get_value($element);
         }
-        log_debug($result);
-        log_debug($_POST);
         return $result;
     }
 
@@ -709,24 +707,20 @@ EOF;
         throw new FormException('At least one submit-type element is required for AJAX forms');
     }
 
-    $action = ($this->action) ? $this->action : 'editsitepage.php';
+    $action = ($this->action) ? $this->action : basename($_SERVER['PHP_SELF']);
+    $method = ($this->get_method() == 'get') ? 'GET' : 'POST';
     $result .= <<<EOF
-    // This does a post.  Gets are much simpler in mochikit and we
-    // could check whether there are any big fields (like wysiwyg,
-    // textarea) and do a get (doSimpleXmlHttpRequest) instead if
-    // there aren't any.
     var req = getXMLHttpRequest();
-    req.open('POST','{$action}');
+    req.open('{$method}', '{$action}');
     req.setRequestHeader('Content-type','application/x-www-form-urlencoded'); 
     var d = sendXMLHttpRequest(req,queryString(data));
     d.addCallbacks(
     function (result) {
         var data = evalJSONRequest(result);
-        debugObject(data);
         if (data.error) {
-            {$this->name}_message(data.message);
+            {$this->name}_message(data.message, 'error');
             for (error in data.errors) {
-                {$this->name}_set_error(error + '_msg', data.errors[error]);
+                {$this->name}_set_error(data.errors[error], error);
             }
 
 EOF;
