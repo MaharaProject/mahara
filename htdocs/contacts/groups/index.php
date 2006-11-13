@@ -41,10 +41,6 @@ var grouplist = new TableRenderer(
     ]
 );
 
-grouplist.offset = 0;
-grouplist.limit = 10;
-grouplist.type = 'testing';
-grouplist.statevars.push('type');
 grouplist.updateOnLoad();
 
 JAVASCRIPT;

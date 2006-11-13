@@ -42,6 +42,10 @@ function form_render_userlist($element, Form $form) {
 
     $value = $form->get_value($element);
 
+    if (!is_array($value) && is_array($element['defaultvalue'])) {
+        $value = $element['defaultvalue'];
+    }
+
     if (is_array($value) && count($value)) {
         $members = get_records_select('usr','id IN (' . join(',',$value) . ')', null, '', 'id,firstname,lastname,prefname');
 
@@ -51,10 +55,7 @@ function form_render_userlist($element, Form $form) {
         }
 
         $smarty->assign('options',$members);
-        $smarty->assign('value', join(',',$form->get_value($element)));
-    }
-    else if (!is_array($value)) {
-        // @todo use the default
+        $smarty->assign('value', join(',',$value));
     }
 
     $smarty->assign('name', $element['name']);

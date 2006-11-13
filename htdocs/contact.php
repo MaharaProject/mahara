@@ -31,7 +31,7 @@ require('init.php');
 require_once('form.php');
 
 if ($SESSION->is_logged_in()) {
-    $name = fullname($USER);
+    $name = display_name($USER);
     $email = $USER->email;
 }
 else {

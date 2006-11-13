@@ -984,14 +984,14 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='')
     else {
         $mail->Sender = $userfrom->email;
         $mail->From = $mail->Sender;
-        $mail->FromName = fullname($userfrom);
+        $mail->FromName = display_name($userfrom);
     }
            
     $mail->AddReplyTo($mail->From, $mail->FromName);
 
     $mail->Subject = substr(stripslashes($subject), 0, 78);
 
-    $usertoname = fullname($userto);
+    $usertoname = display_name($userto);
     $mail->AddAddress($userto->email, $usertoname );
 
     $mail->WordWrap = 79;   
@@ -1014,7 +1014,7 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='')
                         . "Error from phpmailer was: " . $mail->ErrorInfo );
 }
 
-function fullname($user) {
+function display_name($user) {
     return $user->firstname . ' ' . $user->lastname;
     // @todo
 }
