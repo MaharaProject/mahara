@@ -66,6 +66,9 @@ function &smarty($javascript = array(), $headers = array(), $strings = array()) 
                 throw new Exception ('tinyMCE not initialised.');
             }
         }
+        else if ($value == 'tablerenderer') {
+            $value = $jsroot . 'tablerenderer.js';
+        }
         else {
             throw new Exception ($value . '.js: unknown');
         }
