@@ -73,7 +73,6 @@ if ($itemid == 'new') {
 }
 else {
     $data->id = $itemid;
-    log_debug($data);
     try {
         update_record('site_menu', $data, 'id');
     }
