@@ -30,6 +30,9 @@ $string['sessiontimedout'] = 'Your session has timed out, please enter your logi
 $string['sessiontimedoutpublic'] = 'Your session has timed out. You may <a href="?login">log in</a> to continue browsing';
 $string['cancel'] = 'Cancel';
 
+$string['nextpage'] = 'Next page';
+$string['prevpage'] = 'Previous page';
+
 // auth
 $string['accountexpired'] = 'Sorry, your account has expired';
 $string['accountsuspended'] = 'Your account has been suspeneded as of %s. The reason for your suspension is:<blockquote>%s</blockquote>';
