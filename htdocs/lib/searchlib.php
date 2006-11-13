@@ -67,3 +67,5 @@ function search_user($query_string, $limit, $offset = 0) {
 
     return call_static_method(generate_class_name('search',$plugin),'search_user',$query_string, $limit, $offset);
 }
+
+?>

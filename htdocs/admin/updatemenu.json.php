@@ -85,5 +85,5 @@ $result = array();
 $result['error'] = false;
 $result['message'] = get_string('savedsuccessfully');
 echo json_encode($result);
-?>
 
+?>
