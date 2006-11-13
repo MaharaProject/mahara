@@ -39,4 +39,9 @@ function form_render_submit($element, $form) {
         . ' value="' . hsc($form->get_value($element)) . '">';
 }
 
+function form_render_submit_set_attributes($element) {
+    $element['ajaxmessages'] = true;
+    return $element;
+}
+
 ?>
