@@ -51,7 +51,7 @@ $data = search_user($query, $limit, $offset);
 
 foreach ($data['results'] as &$result) {
     // @todo should call magical display user function
-    $result['name'] = $result['firstname'];
+    $result['name'] = display_name($result);
 
     unset($result['email']);
     unset($result['institution']);

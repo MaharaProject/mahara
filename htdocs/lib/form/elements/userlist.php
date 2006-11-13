@@ -50,8 +50,7 @@ function form_render_userlist($element, Form $form) {
         $members = get_records_select('usr','id IN (' . join(',',$value) . ')', null, '', 'id,firstname,lastname,prefname');
 
         foreach($members as &$member) {
-            // @todo should be using the pref/full name function here
-            $member = $member->firstname;
+            $member = display_name($member);
         }
 
         $smarty->assign('options',$members);

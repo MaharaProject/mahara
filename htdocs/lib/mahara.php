@@ -1015,6 +1015,9 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='')
 }
 
 function display_name($user) {
+    if (is_array($user)) {
+        $user = (object)$user;
+    }
     return $user->firstname . ' ' . $user->lastname;
     // @todo
 }
