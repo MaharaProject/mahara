@@ -47,7 +47,7 @@ $f = array(
         'pagename' => array(
             'type'    => 'select',
             'title'   => get_string('pagename'),
-            'value'   => 'home',
+            'defaultvalue'   => 'home',
             'options' => $pageoptions
         ),
         'pagetext' => array(
@@ -62,8 +62,8 @@ $f = array(
             )
         ),
         'submit' => array(
-            'value' => get_string('savechanges'),
             'type'  => 'submit',
+            'value' => get_string('savechanges')
         ),
     )
 );
@@ -104,7 +104,7 @@ getEditorContent = function () {};
 var oldpagename = '';
 var originalcontent = '';
 
-function requestPageText() {
+function requestPageText(removeMessage) {
     // Allow the user to abort change if changes have been made in the editor.
     if (getEditorContent() != originalcontent) {
         var answer = confirm(get_string('discardpageedits'));
@@ -113,7 +113,12 @@ function requestPageText() {
             return;
         }
     }
+
     processingStart();
+    if (removeMessage) {
+        editsitepage_remove_message();
+    }
+    editsitepage_remove_error('pagetext');
     logDebug(get_string('loadingpagecontent', $('pagename').value));
     var d = loadJSONDoc('editchangepage.json.php',{'pagename':$('pagename').value});
     d.addCallback(function(data) {
@@ -133,7 +138,8 @@ function requestPageText() {
 // Called from submitForm on successful page save.
 function contentSaved () {  
     originalcontent = getEditorContent();
-    requestPageText();
+    callLater(2, editsitepage_remove_message);
+    requestPageText(false);
 }
 
 function onLoad() {
