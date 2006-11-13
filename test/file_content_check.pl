@@ -46,7 +46,7 @@ EOF
 my $projectroot = qq{$FindBin::Bin/../};
 my $language_strings = {};
 
-find( \&readlang, $projectroot . 'htdocs/lang/en.utf8' );
+find( \&readlang, $projectroot );
 find( \&process, $projectroot );
 
 # loads language strings
@@ -54,10 +54,10 @@ sub readlang {
     my $filename = $_;
     my $directory = $File::Find::dir;
 
+    return unless $directory =~ m{ lang/en.utf8/? \z }xms;
     return unless $filename =~ m{ \A (.*)\.php \z }xms;
-
     my $section = $1;
-
+    
     my $file_data = slurp $directory . '/' . $filename;
 
     while ( $file_data =~ m{ \$string\['(.*?)'\] \s+ = \s+ }xmsg ) {
@@ -126,13 +126,13 @@ sub process {
     }
 
     # check language strings
-    while ( $file_data =~ m{ get_string\( (?: ['"](.*?)['"] \s* , )? \s* ['"](.*?)['"] \) }xmg ) {
-        my ( $section, $tag ) = ( $1, $2 );
+    while ( $file_data =~ m{ get_string\( ['"](.*?)['"] \s* (?: , \s* ['"](.*?)['"] )? .*? \)* }xmg ) {
+        my ( $tag, $section ) = ( $1, $2 );
 
         $section ||= 'mahara';
 
         unless ( exists $language_strings->{$section}{$tag} ) {
-            print $directory, $filename, " has call to get_string that doesn't exist: get_string('$section', '$tag')\n";
+            print $directory, $filename, " has call to get_string that doesn't exist: get_string('$tag', '$section')\n";
         }
     }
 }
