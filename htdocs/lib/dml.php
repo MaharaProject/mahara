@@ -904,7 +904,7 @@ function insert_record($table, $dataobject, $primarykey=false, $returnpk=false) 
  * @return bool
  * @throws SQLException
  */
-function update_record($table, $dataobject, $where=null) {
+function update_record($table, $dataobject, $where) {
 
     global $db;
 
