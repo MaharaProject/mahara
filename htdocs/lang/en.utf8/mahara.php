@@ -121,6 +121,13 @@ $string['pagecontents']       = 'Text to appear on the page';
 $string['pagename']           = 'Page name';
 $string['pagetext']           = 'Page text';
 
+// Contact us form
+$string['name']                     = 'Name';
+$string['email']                    = 'Email';
+$string['subject']                  = 'Subject';
+$string['message']                  = 'Message';
+$string['submitcontactinformation'] = 'Submit contact information';
+
 // mahara.js
 $string['namedfieldempty'] = 'The required field "%s" is empty';
 $string['processingform']     = 'Processing form';
