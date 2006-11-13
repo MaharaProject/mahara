@@ -51,7 +51,7 @@ function TableRenderer(target, source, columns, options) {
                     appendChildNodes(tr, TD(null,row[column]));
                 }
                 else if ( typeof(column) == 'function' ) {
-                    appendChildNodes(tr, column(row));
+                    appendChildNodes(tr, column(row,data));
                 }
                 else {
                     logError("Can't deal with column def of type: " + typeof(column));
