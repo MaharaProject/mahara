@@ -25,33 +25,34 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'mycontacts');
-define('SUBMENUITEM', 'mygroups');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
-$javascript = <<<JAVASCRIPT
-var grouplist = new TableRenderer(
-    'grouplist',
-    'index.json.php', 
-    [
-        'name',
-        'count',
-        function(r) { return TD(null,A({'href':'edit.php?id=' + r.id}, 'edit')); }
-    ]
+json_headers();
+
+$limit = param_integer('limit', 10);
+$offset = param_integer('offset', 0);
+
+$dbprefix = get_config('dbprefix');
+
+$count = get_field('usr_group', 'COUNT(*)', 'owner', $USER->id);
+
+$data = get_rows_sql(
+    'SELECT g.id, g.name, COUNT(m.*) AS count FROM ' . $dbprefix . 'usr_group g INNER JOIN ' . $dbprefix . 'usr_group_member m ON m.grp=g.id WHERE g.owner=? GROUP BY 1, 2 ORDER BY g.name',
+    array($USER->id),
+    $offset,
+    $limit
 );
 
-grouplist.offset = 0;
-grouplist.limit = 10;
-grouplist.type = 'testing';
-grouplist.statevars.push('type');
-grouplist.updateOnLoad();
+if (!$data) {
+    $data = array();
+}
 
-JAVASCRIPT;
+print json_encode(array(
+    'count'  => $count,
+    'limit'  => $limit,
+    'offset' => $offset,
+    'data'   => $data,
+));
 
-$smarty = smarty(array('tablerenderer'));
 
-$smarty->assign('INLINEJAVASCRIPT', $javascript);
-$smarty->display('contacts/groups/index.tpl');
-
-?>

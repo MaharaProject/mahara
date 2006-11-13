@@ -7,8 +7,12 @@
 
     <a href="create.php">{str tag="creategroup"}</a>
 
-    <table>
+    <table id="grouplist">
         <thead>
+            <tr>
+                <th>{str tag="groupname"}</th>
+                <th>{str tag="membercount"}</th>
+            </tr>
         </thead>
         <tbody>
         </tbody>
