@@ -108,12 +108,18 @@ $string['forgotpassemailmessagehtml'] = '<p>Dear $fullname,</p>
 <p><a href="' . get_config('wwwroot') . 'forgotpass.php?key=%s">' . get_config('wwwroot') . 'forgotpass.php?key=%s</a></p>';
 
 // Admin menu editor
-$string['adminfile'] = 'Admin file';
-$string['externallink'] = 'External link';
-$string['type'] = 'Type';
-$string['name'] = 'Name';
-$string['noadminfiles'] = 'No admin files';
-$string['linkedto'] = 'Linked to';
+//$string['menueditor']    = 'Menu editor';
+$string['adminfile']     = 'Admin file';
+$string['externallink']  = 'External link';
+$string['type']          = 'Type';
+$string['name']          = 'Name';
+$string['noadminfiles']  = 'No admin files';
+$string['linkedto']      = 'Linked to';
+$string['add']           = 'Add';
+$string['delete']        = 'Delete';
+$string['edit']          = 'Edit';
+$string['loggedinmenu']  = 'Logged in menu';
+$string['loggedoutmenu'] = 'Logged out menu';
 
 // Admin site page editor
 $string['discardpageedits']   = 'Discard your changes to this page?';
