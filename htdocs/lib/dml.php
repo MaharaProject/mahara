@@ -637,6 +637,40 @@ function get_field($table, $field, $field1, $value1, $field2=null, $value2=null,
 }
 
 /**
+ * Get a single column from a table where all the given fields match the given values.
+ *
+ * @param string $table the table to query.
+ * @param string $return the field to return the value of.
+ * @param string $field1 the first field to check (optional).
+ * @param string $value1 the value field1 must have (requred if field1 is given, else optional).
+ * @param string $field2 the second field to check (optional).
+ * @param string $value2 the value field2 must have (requred if field2 is given, else optional).
+ * @param string $field3 the third field to check (optional).
+ * @param string $value3 the value field3 must have (requred if field3 is given, else optional).
+ * @return mixed the specified value
+ * @throws SQLException
+ */
+function get_column($table, $field, $field1, $value1, $field2=null, $value2=null, $field3=null, $value3=null) {
+    $select = where_clause_prepared($field1, $field2, $field3);
+    $values = where_values_prepared($value1, $value2, $value3);
+    
+    return get_column_sql('SELECT ' . $field . ' FROM ' . get_config('dbprefix') . $table . ' ' . $select, $values);
+}
+
+/**
+ * Get a single column from a table.
+ *
+ * @param string $sql an SQL statement expected to return a single value.
+ * @return mixed the specified value.
+ * @throws SQLException
+ */
+function get_column_sql($sql, $values=null) {
+    global $db;
+
+    return $db->GetCol($sql, $values);
+}
+
+/**
  * Get a single value from a table.
  *
  * @param string $sql an SQL statement expected to return a single value.
