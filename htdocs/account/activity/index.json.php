@@ -33,12 +33,13 @@ json_headers();
 $markasread = param_integer('markasread', 0);
 
 if ($markasread) {
-
+    $count = 0;
     db_begin();
     try {
         foreach ($_GET as $k => $v) {
             if (preg_match('/^unread\-(\d+)$/',$k,$m)) {
                 set_field('notification_internal_activity', 'read', 1, 'id', $m[1]);
+                $count++;
             }
         }
     }
@@ -48,7 +49,7 @@ if ($markasread) {
         echo json_encode($data);
     }
     db_commit();
-    $data = array('success' => 1);
+    $data = array('success' => 1, 'count' => $count);
     echo json_encode($data);
     exit;
 }
@@ -80,16 +81,17 @@ $data = array();
 $star = theme_get_image_path('star.png');
 $unread = get_string('unread', 'activity');
 
-foreach ($records as $r) {
+foreach ($records as &$r) {
     $r['date'] = format_date(strtotime($r['ctime']));
+    $r['type'] = get_string('type' . $r['type'], 'activity');
 }
 
 $activity = array(
-    'count' => $count,
+    'count'  => $count,
     'offset' => $offset,
-    'limit' => $limit,
-    'data' => $records,
-    'star' => $star,
+    'limit'  => $limit,
+    'data'   => $records,
+    'star'   => $star,
     'unread' => $unread,
 );
 

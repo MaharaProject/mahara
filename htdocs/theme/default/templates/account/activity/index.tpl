@@ -5,7 +5,7 @@
 
 <div class="content">
 <form method="post">
-{str section='activity' tag='type'}
+{str section='activity' tag='type'}:
 <select name="type" onChange="{$typechange}">
     <option value="all">{str section='activity' tag='alltypes'}</option>
 {foreach from=$types item='type'}
@@ -20,6 +20,7 @@
     <thead>
         <tr>
             <th></th>
+            <th>{str section='activity' tag='type'}</th>
             <th>{str section='activity' tag='date'}</th>
             <th>{str section='activity' tag='read'}</th>
             <th>{str section='activity' tag='markasread'} [<a href="" onClick="{$selectall}">{str section='activity' tag='selectall'}</a>]</th>
