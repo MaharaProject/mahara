@@ -159,9 +159,17 @@ $string['mygroups']           = 'My Groups';
 // mycontacts
 
 // mygroups
-$string['creategroup']      = 'Add new group';
-$string['groupname']        = 'Group name';
-$string['groupdescription'] = 'Group description';
+$string['creategroup']               = 'Add new group';
+$string['canteditdontown']           = 'You can\'t edit this group because you don\'t own it';
+$string['groupname']                 = 'Group name';
+$string['groupmembers']              = 'Group members';
+$string['savegroup']                 = 'Save group';
+$string['groupsaved']                = 'Group saved';
+$string['groupcreated']              = 'Group created';
+$string['groupalreadyexists']        = 'A group by this name already exists';
+$string['groupdescription']          = 'Group description';
+$string['editgroup']                 = 'Edit group';
+$string['membercount']               = 'Member count';
 
 // my account
 $string['account'] =  'My account';
