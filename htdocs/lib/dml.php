@@ -130,15 +130,12 @@ function count_records($table, $field1=null, $value1=null, $field2=null, $value2
  * @return int The count of records returned from the specified criteria.
  * @throws SQLException
  */
-// NOTE: commented out until required
-/*
 function count_records_select($table, $select='', $values=null, $countitem='COUNT(*)') {
     if ($select) {
         $select = 'WHERE ' . $select;
     }
     return count_records_sql('SELECT '. $countitem .' FROM '. get_config('dbprefix') . $table . ' ' . $select, $values);
 }
-*/
 
 /**
  * Get the result of a SQL SELECT COUNT(...) query.
@@ -153,13 +150,10 @@ function count_records_select($table, $select='', $values=null, $countitem='COUN
  * @return int        The count.
  * @throws SQLException
  */
-// NOTE: commented out until required
-/*
 function count_records_sql($sql, $values=null) {
     $rs = get_recordset_sql($sql, $values);
     return reset($rs->fields);
 }
-*/
 
 /// GENERIC FUNCTIONS TO GET, INSERT, OR UPDATE DATA  ///////////////////////////////////
 
@@ -344,7 +338,7 @@ function get_recordset_sql($sql, $values=null, $limitfrom=null, $limitnum=null) 
             ///Special case, 0 must be -1 for ADOdb
             $limitfrom = empty($limitfrom) ? -1 : $limitfrom;
             $limitnum  = empty($limitnum) ? -1 : $limitnum;
-            $rs = $db->SelectLimit($sql, $limitnum, $limitfrom,$values);
+            $rs = $db->SelectLimit($sql, $limitnum, $limitfrom, $values);
         } else {
             $rs = false;
             if (!empty($values) && is_array($values) && count($values) > 0) {
