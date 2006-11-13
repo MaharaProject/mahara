@@ -29,9 +29,72 @@ define('MENUITEM', 'account');
 define('SUBMENUITEM', 'activityprefs');
 
 require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
+require_once('form.php');
+
+$activitytypes = get_records('activity_type', 'admin', 0);
+$notifications = plugins_installed('notification');
+
+$elements = array();
+
+foreach ($activitytypes as $type) {
+    $elements[$type->name] = array(
+        'value' => $type->name,
+        'type' => 'select',
+        'title' => get_string('type' . $type->name, 'activity'),
+        'options' => array(),
+        'rules' => array(
+            'required' => true
+        )
+    );
+
+    foreach ($notifications as $n) {
+         $elements[$type->name]['options'][$n->name] = get_string('name', 'notification.' . $n->name);
+    }
+}
+
+$elements['submit'] = array(
+    'type' => 'submit',
+    'value' => get_string('save'),
+);
+
+
+$prefsform = array(
+    'name'        => 'activityprefs',
+    'method'      => 'post',
+    'ajaxpost'    => true,
+    'plugintype ' => 'core',
+    'pluginname'  => 'account',
+    'elements'    => $elements,
+);
 
 $smarty = smarty();
-
+$smarty->assign('prefsdescr', get_string('prefsdescr', 'activity'));
+$smarty->assign('form', form($prefsform));
 $smarty->display('account/activity/preferences/index.tpl');
+
+function activityprefs_submit($values) {
+    global $activitytypes, $SESSION;
+    
+    $userid = $SESSION->get('id');
+    db_begin();
+    delete_records('usr_activity_preference', 'usr', $userid);
+    try {
+        foreach ($activitytypes as $type) {
+            $t = new StdClass;
+            $t->usr = $userid;
+            $t->type = $type->name;
+            $t->method = $values[$type->name];
+            insert_record('usr_activity_preference', $t);
+        }
+    }
+    catch (Exception $e) {
+        db_rollback();
+        throw $e;
+        // @todo actually return a json failure
+    }
+    db_commit();
+    
+}
+
 
 ?>

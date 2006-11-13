@@ -38,4 +38,5 @@ $string['typevirusrelease'] = 'Virus flag release';
 
 $string['type'] = 'Activity type: ';
 $string['attime'] = 'at';
+$string['prefsdescr'] = 'For options other than Activity log, notifications will still go into the Activity log, but will be automatically marked as read';
 ?>
