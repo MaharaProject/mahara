@@ -256,15 +256,16 @@ function setmenu(menu) {
     var pub = get_string('loggedoutmenu');
     var priv = get_string('loggedinmenu');
     if (menu == 'public') {
-        priv = A({'href':'#'},priv);
-        priv.onclick = function (e) {stop(e); setmenu('private');};
+        priv = A({'href':''},priv);
+        priv.onclick = function () {return setmenu('private');};
     }
     else {
-        pub = A({'href':'#'},pub);
-        pub.onclick = function (e) {stop(e); setmenu('public');};
+        pub = A({'href':''},pub);
+        pub.onclick = function () {return setmenu('public');};
     }
     replaceChildNodes($('menuselect'), [pub, priv]);
     getitems();
+    return false;
 }
 
 var selectedmenu = 'public';
