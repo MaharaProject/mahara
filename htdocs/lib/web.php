@@ -535,6 +535,16 @@ function json_headers() {
 }
 
 /**
+ * This function sends a JSON message.
+ *
+ */
+function json_reply($type, $message) {
+    json_headers();
+    echo json_encode(array('error' => $type, 'message' => $message));
+    exit;
+}
+
+/**
  * This function returns a GET or POST parameter with optional default.  If the
  * default isn't specified and the parameter hasn't been sent, a
  * ParameterException exception is thrown
