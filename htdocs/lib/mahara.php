@@ -1170,4 +1170,64 @@ function password_validate(Form $form, $values, $user) {
     }
 }
 
+function rebuild_artefact_parent_cache_dirty() {
+    // this will give us a list of artefacts, as the first returned column
+    // is not unqiue, but that's ok, it's what we want.
+    if (!$dirty = get_records('artefact_parent_cache', 'dirty', 1)) {
+        return;
+    }
+    db_begin();
+    delete_records('artefact_parent_cache', 'dirty', 1);
+    foreach ($dirty as $d) {
+        $parentids = array();
+        $current = $d->artefact;
+        while (true) {
+            if (!$parent = get_record('artefact', 'id', $current)) {
+                break;
+            }
+            if (!$parent->parent) {
+                break;
+            }
+            $parentids[] = $parent->parent;
+            $current = $parent->parent;
+        }
+        foreach ($parentids as $p) {
+            $apc = new StdClass;
+            $apc->artefact = $d->artefact;
+            $apc->parent   = $p;
+            $apc->dirty    = 0;
+            insert_record('artefact_parent_cache', $apc);
+        }
+    }
+    db_commit();
+}
+
+function rebuild_artefact_parent_cache_complete() {
+    db_begin();
+    delete_records('artefact_parent_cache');
+    $artefacts = get_records('artefact');
+    foreach ($artefacts as $a) {
+        $parentids = array();
+        $current = $a->id;
+        while (true) {
+            if (!$parent = get_record('artefact', 'id', $current)) {
+                break;
+            }
+            if (!$parent->parent) {
+                break;
+            }
+            $parentids[] = $parent->parent;
+            $current = $parent->parent;
+        }
+        foreach ($parentids as $p) {
+            $apc = new StdClass;
+            $apc->artefact = $a->id;
+            $apc->parent   = $p;
+            $apc->dirty    = 0;
+            insert_record('artefact_parent_cache', $apc);
+        }
+    }
+    db_commit();
+}
+
 ?>

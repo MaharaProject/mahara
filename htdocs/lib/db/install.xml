@@ -690,5 +690,13 @@
                 <SENTENCE TEXT="(name, admin, delay) VALUES ('virusrelease', 1, 1)" />
             </SENTENCES>
         </STATEMENT>
+        <STATEMENT NAME="insert core cron jobs" TYPE="insert" TABLE="cron">
+            <SENTENCES>
+                <SENTENCE TEXT="(callfunction, minute, hour, day, month, dayofweek) 
+                         VALUES (rebuild_artefact_parent_cache_dirty, '*', '*', '*', '*', '*')" />
+                <SENTENCE TEXT="(callfunction, minute, hour, day, month, dayofweek) 
+                         VALUES (rebuild_artefact_parent_cache_complete, '*', '4', '*', '*', '*')" />
+            </SENTENCES>
+        </STATEMENT>
     </STATEMENTS>
 </XMLDB>
