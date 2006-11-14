@@ -70,6 +70,7 @@ function form($data) {
     // 
     //  - more form element types (inc. types like autocomplete and date picker and wyswiyg)
     //  - support processing of data before validation occurs (e.g. trim(), strtoupper())
+    //  - do onsubmit for ajax stuff by mochikit connect()
     //  - Basic validation is possible as there's a callback function for checking,
     //    but some helper functions could be written to make people's job validating
     //    stuff much easier (form_validate_email, form_validate_date etc).
@@ -139,13 +140,6 @@ class Form {
     private $submit = true;
 
     /**
-     * The javascript function that the form will be submitted to.
-     *
-     * @var string
-     */
-    //private $onsubmit = '';
-
-    /**
      * Whether to submit the form via ajax 
      *
      * @var bool
@@ -165,13 +159,6 @@ class Form {
      * @var string
      */
     private $ajaxfailurefunction = '';
-
-    /**
-     * Name of a php script to handle an ajax-submitted form
-     *
-     * @var string
-     */
-    //private $ajaxformhandler = '';
 
     /**
      * The tab index for this particular form.
@@ -424,6 +411,14 @@ class Form {
                     // finished processing the form.
                     // @todo maybe it should do just that...
                     $function($values);
+                    // This will only work if I can make the login_submit function stuff work in login_validate
+                    //if ($this->ajaxpost) {
+                    //    $message = 'Your ' . $this->name . '_submit function should output some json and exit';
+                    //}
+                    //else {
+                    //    $message = 'Your ' . $this->name . '_submit function should redirect when it is finished';
+                    //}
+                    //throw new FormException($message);
                 }
                 else {
                     throw new FormException('No function registered to handle form submission for form "' . $this->name . '"');
@@ -513,7 +508,7 @@ class Form {
             $result .= ' enctype="multipart/form-data"';
         }
         if ($this->ajaxpost) {
-            $result .= ' onsubmit="return ' . $this->name . '_submit();"';
+            $result .= ' onsubmit="' . $this->name . '_submit(); return false;"';
         }
         $result .= ">\n";
 
@@ -705,20 +700,32 @@ function {$this->name}_submit() {
     var data = {};
 
 EOF;
-    foreach ($this->get_elements() as $element) {
-        $result .= "    data['" . $element['name'] . "'] = document.forms['$this->name'].$element[name].value;\n";
-        if (!empty($element['ajaxmessages'])) {
-            $messageelement = $element['name'];
+        // Get values for each element from the form via the DOM
+        foreach ($this->get_elements() as $element) {
+            if ($element['type'] != 'markup') {
+                $function = 'form_get_value_js_' . $element['type'];
+                if (function_exists($function)) {
+                    $result .= $function($element, $this);
+                }
+                else {
+                    $result .= "    data['" . $element['name'] . "'] = document.forms['$this->name'].elements['{$element['name']}'].value;\n";
+                }
+                if (!empty($element['ajaxmessages'])) {
+                    $messageelement = $element['name'];
+                }
+            }
         }
-    }
-    $result .= "    data['form_{$this->name}'] = '';\n";
-    if (!isset($messageelement)) {
-        throw new FormException('At least one submit-type element is required for AJAX forms');
-    }
 
-    $action = ($this->action) ? $this->action : basename($_SERVER['PHP_SELF']);
-    $method = ($this->get_method() == 'get') ? 'GET' : 'POST';
-    $result .= <<<EOF
+        if (!isset($messageelement)) {
+            throw new FormException('At least one submit-type element is required for AJAX forms');
+        }
+
+        // Add the hidden element for detecting form submission
+        $result .= "    data['form_{$this->name}'] = '';\n";
+
+        $action = ($this->action) ? $this->action : basename($_SERVER['PHP_SELF']);
+        $method = ($this->get_method() == 'get') ? 'GET' : 'POST';
+        $result .= <<<EOF
     var req = getXMLHttpRequest();
     req.open('{$method}', '{$action}');
     req.setRequestHeader('Content-type','application/x-www-form-urlencoded'); 
@@ -733,29 +740,30 @@ EOF;
             }
 
 EOF;
-    if (!empty($this->ajaxfailurefunction)) {
-        $result .= "            {$this->ajaxfailurefunction}();\n";
-    }
-    $result .= <<<EOF
+        
+        if (!empty($this->ajaxfailurefunction)) {
+            $result .= "            {$this->ajaxfailurefunction}();\n";
+        }
+        $result .= <<<EOF
         }
         else {
             {$this->name}_message(data.message, 'ok');
 
 EOF;
-    if (!empty($this->ajaxsuccessfunction)) {
-        $result .= "            {$this->ajaxsuccessfunction}();\n";
-    }
 
-    $result .= <<<EOF
+        if (!empty($this->ajaxsuccessfunction)) {
+            $result .= "            {$this->ajaxsuccessfunction}();\n";
+        }
+
+        $result .= <<<EOF
         }
         processingStop();
 
 EOF;
 
-
-    $strunknownerror = get_string('unknownerror');
-    $strprocessingform = get_string('processingform');
-    $result .= <<<EOF
+        $strunknownerror = get_string('unknownerror');
+        $strprocessingform = get_string('processingform');
+        $result .= <<<EOF
     },
     function() {
         {$this->name}_message('{$strunknownerror}', 'error');
@@ -767,16 +775,16 @@ EOF;
 
 EOF;
 
-    $js_messages_function = 'form_renderer_' . $this->renderer . '_messages_js';
-    if (!function_exists($js_messages_function)) {
-        @include_once('form/renderers/' . $this->renderer . '.php');
+        $js_messages_function = 'form_renderer_' . $this->renderer . '_messages_js';
         if (!function_exists($js_messages_function)) {
-            throw new FormException('No renderer message function "' . $js_messages_function . '"');
+            @include_once('form/renderers/' . $this->renderer . '.php');
+            if (!function_exists($js_messages_function)) {
+                throw new FormException('No renderer message function "' . $js_messages_function . '"');
+            }
         }
-    }
 
-    return $result . $js_messages_function($this->name, $messageelement);
-}
+        return $result . $js_messages_function($this->name, $messageelement);
+    }
 
     /**
      * Returns whether a field has an error marked on it.
