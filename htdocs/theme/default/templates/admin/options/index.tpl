@@ -2,12 +2,6 @@
 
 <h2>AdminSiteOptions</h2>
 
-<p>Screens in this section:</p>
-
-<ul>
-    <li><a href="authentication.php">AdminOptionsAuthentication</a></li>
-</ul>
-
-<p><a href="..">parent</a></p>
+{$SITEOPTIONFORM}
 
 {include file="footer.tpl"}
