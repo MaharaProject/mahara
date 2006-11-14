@@ -27,8 +27,12 @@
 define('INTERNAL', 1);
 // uncomment if this page is public (doesn't require login)
 // define('PUBLIC', 1);
-// uncomment and set if this page isn't public
+// uncomment if the page is in the admin section
+// define('ADMIN', 1);
+// uncomment and specify the particular item if this page is part of a menu hierarchy
 // define('MENUITEM', 'TODO');
+// uncomment and specify the particular item if this page is a submenu item as well
+// define('SUBMENUITEM', 'TODO');
 require('init.php');
 
 // Your code here
