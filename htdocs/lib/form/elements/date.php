@@ -79,6 +79,17 @@ function form_get_value_date($element, Form $form) {
     return $time;
 }
 
+function form_get_value_js_date($element, Form $form) {
+    $formname = $form->get_name();
+    $name = $element['name'];
+    return <<<EOF
+    data['{$name}_year']  = document.forms['$formname'].elements['{$name}_year'].value;
+    data['{$name}_month'] = document.forms['$formname'].elements['{$name}_month'].value;
+    data['{$name}_day']   = document.forms['$formname'].elements['{$name}_day'].value;
+
+EOF;
+}
+
 /** helper: used when rendering the element, to get the value for it */
 function form_render_select_get_value($timeperiod, $min, $max, $element, Form $form) {
     static $lookup = array(
