@@ -43,13 +43,12 @@ $contactform = form(array(
     'name'     => 'contactus',
     'method'   => 'post',
     'action'   => '',
-    'submit'   => false,
-    'autofocus' => '',  // only for testing for now
+    'ajaxpost' => true,
     'elements' => array(
         'name' => array(
             'type'  => 'text',
             'title' => get_string('name'),
-            'value' => $name,
+            'defaultvalue' => $name,
             'rules' => array(
                 'required'    => true
             ),
@@ -57,7 +56,7 @@ $contactform = form(array(
         'email' => array(
             'type'  => 'text',
             'title' => get_string('email'),
-            'value' => $email,
+            'defaultvalue' => $email,
             'rules' => array(
                 'required'    => true
             ),
@@ -65,14 +64,14 @@ $contactform = form(array(
         'subject' => array(
             'type'  => 'text',
             'title' => get_string('subject'),
-            'value' => '',
+            'defaultvalue' => '',
         ),
         'message' => array(
             'type'  => 'textarea',
             'rows'  => 10,
             'cols'  => 60,
             'title' => get_string('message'),
-            'value' => '',
+            'defaultvalue' => '',
             'rules' => array(
                 'required'    => true
             ),
@@ -83,6 +82,37 @@ $contactform = form(array(
         ),
     )
 ));
+
+function contactus_submit($values) {
+    $contactemail = get_config('contactaddress');
+    if (empty($contactemail)) {
+        json_reply('local', get_string('nositecontactaddress'));
+    }
+
+    $to = new StdClass;
+    $to->firstname = 'sitename';
+    $to->lastname = 'Contact';
+    $to->email = $contactemail;
+
+    $fromnames = explode(' ',$values['name']);
+    if (empty($fromnames)) {
+        json_reply('local', get_string('nosendernamefound'));
+    }
+    $from = new StdClass;
+    $from->firstname = $fromnames[0];
+    $from->lastname = count($fromnames) < 2 ? $fromnames[0] : implode(' ',array_slice($fromnames,1));
+    $from->email = $values['email'];
+
+    try {
+        email_user($to,$from,$values['subject'],$values['message']);
+    }
+    catch (Exception $e) {
+        json_reply('local', get_string('emailnotsent'));
+    }
+
+    json_reply(false, get_string('contactinformationsent'));
+}
+
 
 $smarty = smarty();
 $smarty->assign('page_content', $contactform);
