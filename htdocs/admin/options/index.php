@@ -29,9 +29,111 @@ define('ADMIN',1);
 define('MENUITEM','siteoptions');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+require_once('form.php');
 
-$smarty = smarty();
+$langoptions = get_languages();
+$themeoptions = get_themes();
+$yesno = array(true  => get_string('yes'),
+               false => get_string('no'));
 
+$siteoptionform = form(array(
+    'name'     => 'siteoptions',
+    'method'   => 'post',
+    'action'   => '',
+    'ajaxpost' => true,
+    'elements' => array(
+        'language' => array(
+            'type'         => 'select',
+            'title'        => get_string('language'),
+            'description'  => get_string('sitelanguagedescription'),
+            'defaultvalue' => get_config('language'),
+            'options'      => $langoptions,
+        ),
+        'theme' => array(
+            'type'         => 'select',
+            'title'        => get_string('theme'),
+            'description'  => get_string('sitethemedescription'),
+            'defaultvalue' => get_config('theme'),
+            'options'      => $themeoptions,
+        ),
+        'viruschecking' => array(
+            'type'         => 'checkbox',
+            'title'        => get_string('viruschecking'),
+            'description'  => get_string('viruscheckingdescription'),
+            'defaultvalue' => get_config('viruschecking'),
+        ),
+        'pathtoclam' => array(
+            'type'         => 'text',
+            'title'        => get_string('pathtoclam'),
+            'description'  => get_string('pathtoclamdescription'),
+            'defaultvalue' => get_config('pathtoclam'),
+        ),
+        'sessionlifetime' => array(
+            'type'         => 'text',
+            'size'         => 4,
+            'title'        => get_string('sessionlifetime'),
+            'description'  => get_string('sessionlifetimedescription'),
+            'defaultvalue' => get_config('session_timeout') / 60,
+        ),
+        'allowpublicviews' => array(
+            'type'         => 'select',
+            'title'        => get_string('allowpublicviews'),
+            'description'  => get_string('allowpublicviewsdescription'),
+            'defaultvalue' => get_config('allowpublicviews'),
+            'options'      => $yesno,
+        ),
+        'artefactviewinactivitytime' => array(
+            'type'         => 'expiry',
+            'title'        => get_string('artefactviewinactivitytime'),
+            'description'  => get_string('artefactviewinactivitytimedescription'),
+            'defaultvalue' => get_config('artefactviewinactivitytime'),
+        ),
+        'contactaddress' => array(
+            'type'         => 'text',
+            'title'        => get_string('contactaddress'),
+            'description'  => get_string('contactaddressdescription'),
+            'defaultvalue' => get_config('contactaddress'),
+            'rules'        => array(
+                'email' => true
+            )
+        ),
+        'submit' => array(
+            'type'  => 'submit',
+            'value' => get_string('updatesiteoptions')
+        ),
+    )
+));
+
+function siteoptions_fail($field) {
+    $result['error'] = 'local';
+    $result['message'] = get_string('setsiteoptionsfailed', $field);
+    error_log($result['message']);
+    json_headers();
+    echo json_encode($result);
+    exit;
+}
+function siteoptions_submit($values) {
+    $fields = array('language','theme','viruschecking','pathtoclam',
+                    'allowpublicviews','artefactviewinactivitytime',
+                    'contactaddress');
+    foreach ($fields as $field) {
+        if (!set_config($field, $values[$field])) {
+            siteoptions_fail($field);
+        }
+    }
+    if (!set_config('session_timeout', $values['sessionlifetime'] * 60)) {
+        siteoptions_fail($field);
+    }
+    $result['error'] = false;
+    $result['message'] = get_string('siteoptionsset');
+    error_log($result['message']);
+    json_headers();
+    echo json_encode($result);
+    exit;
+}
+
+$smarty = smarty(array(),array(),array('siteoptionsset'));
+$smarty->assign('SITEOPTIONFORM',$siteoptionform);
 $smarty->display('admin/options/index.tpl');
 
 ?>

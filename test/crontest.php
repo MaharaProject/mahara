@@ -181,8 +181,9 @@ function test_cron_start($text) {
 
 function test_cron_run($stamp) {
     global $cronscript;
+    $config_file = get_cfg_var('cfg_file_path');
 
-    exec("php $cronscript " . escapeshellarg($stamp));
+    exec("php -c $config_file $cronscript " . escapeshellarg($stamp));
 }
 
 function test_cron_finish() {

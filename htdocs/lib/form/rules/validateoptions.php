@@ -37,7 +37,12 @@ defined('INTERNAL') || die();
  * @todo untested :p
  */
 function form_rule_validateoptions($field, $element) {
-    $field = (array) $field;
+    // Get the value into an array as a key if it's a scalar, since
+    // the actual check involves array keys
+    if (!is_array($field)) {
+        $field = array($field => '');
+    }
+
     $allowedvalues = array_keys($element['options']);
     foreach (array_keys($field) as $key) {
         if (!in_array($key, $allowedvalues)) {

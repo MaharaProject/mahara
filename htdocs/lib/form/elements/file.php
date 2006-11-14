@@ -54,4 +54,8 @@ function form_is_empty_file($value, $element) {
     return true;
 }
 
+// @todo: provide a mechanism for elements to claim they deal with files.
+// If this is triggered, the forms is forced to POST and the enctype stuff
+// is added.
+// @todo is enctype required for ajax submission of files?
 ?>
