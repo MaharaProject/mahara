@@ -40,5 +40,9 @@ $string['messagesnobody'] = 'Allow no-one to message me';
 $string['messagesfriends'] = 'Allow people on my friends list to message me';
 $string['messagesallow'] = 'Allow anyone to message me';
 
+$string['language'] = 'Language';
+
+$string['prefssaved']  = 'Preferences saved';
+$string['prefsnotsaved'] = 'Failed to save your preferences!';
 
 ?>

@@ -43,7 +43,7 @@ $prefsform = array(
     'elements'    => array(
         'friendscontrol' => array(
             'type' => 'radio',
-            'value' => $prefs->friendscontrol, 
+            'defaultvalue' => $prefs->friendscontrol, 
             'title'  => get_string('friendsdescr', 'account'),
             'separator' => HTML_BR,
             'options' => array(
@@ -57,7 +57,7 @@ $prefsform = array(
         ),
         'wysiwyg' => array(
             'type' => 'radio',
-            'value' => $prefs->wysiwyg,
+            'defaultvalue' => $prefs->wysiwyg,
             'title' => get_string('wysiwygdescr', 'account'),
             'options' => array(
                 1 => get_string('on', 'account'),
@@ -69,7 +69,7 @@ $prefsform = array(
         ),
         'messages' => array(
             'type' => 'radio',
-            'value' => $prefs->messages,
+            'defaultvalue' => $prefs->messages,
             'title' => get_string('messagesdescr', 'account'),
             'separator' => HTML_BR,
             'options' => array(
@@ -81,6 +81,15 @@ $prefsform = array(
                 'required' => true
             )
         ),
+        'lang' => array(
+            'type' => 'select',
+            'defaultvalue' => $prefs->lang,
+            'title' => get_string('language', 'account'),
+            'options' => get_languages(),
+            'rules' => array(
+                'required' => true
+            )
+        ),                        
         'submit' => array(
             'type' => 'submit',
             'value' => get_string('save'),
@@ -94,16 +103,15 @@ $smarty->assign('form', form($prefsform));
 $smarty->display('account/index.tpl');
 
 function accountprefs_submit($values) {
+    global $SESSION;
+    log_debug($values);
     // use this as looping through values is not safe.
     $expectedprefs = expected_account_preferences(); 
-    try {
-        foreach (array_keys($expectedprefs) as $pref) {
-            set_account_preference($SESSION->get('id'), $pref, $expectedprefs[$pref]);
-        }
-    } 
-    catch (Exception $e) {
-
+    foreach (array_keys($expectedprefs) as $pref) {
+        $SESSION->set_account_preference($pref, $values[$pref]);
     }
+    echo json_encode(array('error' => false, 'message' => get_string('prefssaved', 'account')));
+    exit;
 }
 
 

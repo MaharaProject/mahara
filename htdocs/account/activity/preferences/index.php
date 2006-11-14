@@ -37,8 +37,11 @@ $notifications = plugins_installed('notification');
 $elements = array();
 
 foreach ($activitytypes as $type) {
+    if (!$dv = $SESSION->get_activity_preference($type->name)) {
+        $dv = 'internal';
+    }
     $elements[$type->name] = array(
-        'value' => $type->name,
+        'defaultvalue' => $dv,
         'type' => 'select',
         'title' => get_string('type' . $type->name, 'activity'),
         'options' => array(),
@@ -76,24 +79,11 @@ function activityprefs_submit($values) {
     global $activitytypes, $SESSION;
     
     $userid = $SESSION->get('id');
-    db_begin();
-    delete_records('usr_activity_preference', 'usr', $userid);
-    try {
-        foreach ($activitytypes as $type) {
-            $t = new StdClass;
-            $t->usr = $userid;
-            $t->type = $type->name;
-            $t->method = $values[$type->name];
-            insert_record('usr_activity_preference', $t);
-        }
+    foreach ($activitytypes as $type) {
+        $SESSION->set_activity_preference($type->name, $values[$type->name]);
     }
-    catch (Exception $e) {
-        db_rollback();
-        throw $e;
-        // @todo actually return a json failure
-    }
-    db_commit();
-    
+    echo json_encode(array('error' => false, 'message' => get_string('prefssaved', 'account')));
+    exit;
 }
 
 
