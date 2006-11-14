@@ -38,4 +38,20 @@ function form_render_file($element, Form $form) {
         . Form::element_attributes($element) . '>';
 }
 
+function form_get_value_file($element, Form $form) {
+    if (isset($_FILES[$element['name']])) {
+        if (!$_FILES[$element['name']]['error']) {
+            return $_FILES[$element['name']];
+        }
+        return null;
+    }
+}
+
+function form_is_empty_file($value, $element) {
+    if (isset($_FILES[$element['name']]) && !$_FILES[$element['name']]['error']) {
+        return false;
+    }
+    return true;
+}
+
 ?>

@@ -697,7 +697,7 @@ function {$this->name}_submit() {
 
 EOF;
     foreach ($this->get_elements() as $element) {
-        $result .= "    data['" . $element['name'] . "'] = $('" . $element['name'] . "').value;\n";
+        $result .= "    data['" . $element['name'] . "'] = document.forms['$this->name'].$element[name].value;\n";
         if (!empty($element['ajaxmessages'])) {
             $messageelement = $element['name'];
         }
