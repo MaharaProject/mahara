@@ -130,6 +130,39 @@ foreach (plugin_types() as $plugintype) {
     }
 }
 
+// and now the core ones (much simpler)
+if ($jobs = get_rows_select('cron', 'nextrun >= ? AND nextrun < ?',
+    array(db_format_timestamp($now - MAXRUNAGE), db_format_timestamp($now)))) {
+    foreach ($jobs as $job) {
+        log_debug("Running core cron " . $job['callfunction']);
+
+        $function = $job['callfunction'];
+        $function();
+        
+        $nextrun = cron_next_run_time($now, $job);
+        
+        // update next run time
+        set_field('cron', 'nextrun', db_format_timestamp($nextrun), 'id', $job['id']);
+    }
+}
+
+// and missed ones...
+if ($jobs = get_rows_select('cron', 'nextrun < ? OR nextrun IS NULL',
+    array(db_format_timestamp($now - MAXRUNAGE)))) {
+    foreach ($jobs as $job) {
+      if ($job['nextrun']) {
+          log_warn('core cronjob "' . $job['callfunction'] 
+              . '" didn\'t get run because the nextrun time was too old');
+      }
+      
+      $nextrun = cron_next_run_time($now, $job);
+      
+      // update next run time
+      set_field('cron', 'nextrun', db_format_timestamp($nextrun), 'id', $job['id']);
+    }
+}
+
+
 function cron_next_run_time($lastrun, $job) {
     $run_date = getdate($lastrun);
 
