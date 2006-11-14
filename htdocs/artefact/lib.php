@@ -250,6 +250,13 @@ abstract class ArtefactType {
             $this->commit();
         }
         if (!empty($this->parentdirty)) {
+            if (!empty($this->parent) && !record_exists('artefact_parent_cache', 'aretfact', $this->id)) {
+                $apc = new StdClass;
+                $apc->artefact = $this->id;
+                $apc->parent = $this->parent;
+                $apc->dirty  = 1; // set this so the cronjob will pick it up and go set all the other parents.
+                insert_record('artefact_parent_cache', $apc);
+            }
             set_field_select('artefact_parent_cache', 'dirty', 1,
                              'artefact = ? OR parent = ?', array($this->id, $this->id));
         }
