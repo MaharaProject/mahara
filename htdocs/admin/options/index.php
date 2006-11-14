@@ -107,6 +107,7 @@ $siteoptionform = form(array(
 function siteoptions_fail($field) {
     json_reply('local', get_string('setsiteoptionsfailed', get_string($field)));
 }
+
 function siteoptions_submit($values) {
     $fields = array('language','theme','pathtoclam',
                     'allowpublicviews','artefactviewinactivitytime',
@@ -116,9 +117,11 @@ function siteoptions_submit($values) {
             siteoptions_fail($field);
         }
     }
+    // submitted sessionlifetime is in minutes; db entry session_timeout is in seconds
     if (!set_config('session_timeout', $values['sessionlifetime'] * 60)) {
         siteoptions_fail('sessionlifetime');
     }
+    // Submitted value is on/off; database entry should be 1/0
     if (!set_config('viruschecking', (int) ($values['viruschecking'] == 'on'))) {
         siteoptions_fail('viruschecking');
     }
