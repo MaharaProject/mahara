@@ -30,6 +30,9 @@ $string['sessiontimedout'] = 'Your session has timed out, please enter your logi
 $string['sessiontimedoutpublic'] = 'Your session has timed out. You may <a href="?login">log in</a> to continue browsing';
 $string['cancel'] = 'Cancel';
 
+$string['nextpage'] = 'Next page';
+$string['prevpage'] = 'Previous page';
+
 // auth
 $string['accountexpired'] = 'Sorry, your account has expired';
 $string['accountsuspended'] = 'Your account has been suspeneded as of %s. The reason for your suspension is:<blockquote>%s</blockquote>';
@@ -159,9 +162,17 @@ $string['mygroups']           = 'My Groups';
 // mycontacts
 
 // mygroups
-$string['creategroup']      = 'Add new group';
-$string['groupname']        = 'Group name';
-$string['groupdescription'] = 'Group description';
+$string['creategroup']               = 'Add new group';
+$string['canteditdontown']           = 'You can\'t edit this group because you don\'t own it';
+$string['groupname']                 = 'Group name';
+$string['groupmembers']              = 'Group members';
+$string['savegroup']                 = 'Save group';
+$string['groupsaved']                = 'Group saved';
+$string['groupcreated']              = 'Group created';
+$string['groupalreadyexists']        = 'A group by this name already exists';
+$string['groupdescription']          = 'Group description';
+$string['editgroup']                 = 'Edit group';
+$string['membercount']               = 'Member count';
 
 // my account
 $string['account'] =  'My account';

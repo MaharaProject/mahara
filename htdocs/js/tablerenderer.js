@@ -24,8 +24,8 @@ function TableRenderer(target, source, columns, options) {
 
         if (self.paginate) {
             forEach([self.thead,self.tfoot], function(ref) {
-                var nextPage = A({'href':''}, 'Next Page');
-                var prevPage = A({'href':''}, 'Prev Page');
+                var nextPage = A({'href':''}, get_string('nextpage'));
+                var prevPage = A({'href':''}, get_string('prevpage'));
 
                 connect(nextPage, 'onclick', function(e) { self.nextPage(); e.stop(); });
                 connect(prevPage, 'onclick', function(e) { self.prevPage(); e.stop(); });

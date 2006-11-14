@@ -44,8 +44,26 @@ my $FILE_HEADER = <<EOF;
 EOF
 
 my $projectroot = qq{$FindBin::Bin/../};
+my $language_strings = {};
 
+find( \&readlang, $projectroot );
 find( \&process, $projectroot );
+
+# loads language strings
+sub readlang {
+    my $filename = $_;
+    my $directory = $File::Find::dir;
+
+    return unless $directory =~ m{ lang/en.utf8/? \z }xms;
+    return unless $filename =~ m{ \A (.*)\.php \z }xms;
+    my $section = $1;
+    
+    my $file_data = slurp $directory . '/' . $filename;
+
+    while ( $file_data =~ m{ \$string\['(.*?)'\] \s+ = \s+ }xmsg ) {
+        $language_strings->{$section}{$1} = 1;
+    }
+}
 
 sub process {
     my $filename = $_;
@@ -105,6 +123,17 @@ sub process {
     # check copyright
     if ( $file_data !~ m{\@copyright  \(C\) 2006,2007 Catalyst IT Ltd http://catalyst\.net\.nz} ) {
         print $directory, $filename, " missing \@copyright (or invalid)\n";
+    }
+
+    # check language strings
+    while ( $file_data =~ m{ get_string\( ['"](.*?)['"] \s* (?: , \s* ['"](.*?)['"] )? .*? \)* }xmg ) {
+        my ( $tag, $section ) = ( $1, $2 );
+
+        $section ||= 'mahara';
+
+        unless ( exists $language_strings->{$section}{$tag} ) {
+            print $directory, $filename, " has call to get_string that doesn't exist: get_string('$tag', '$section')\n";
+        }
     }
 }
 

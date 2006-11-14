@@ -68,6 +68,11 @@ function &smarty($javascript = array(), $headers = array(), $strings = array()) 
         }
         else if ($value == 'tablerenderer') {
             $value = $jsroot . 'tablerenderer.js';
+            foreach (tablerendererjsstrings() as $string) {
+                if (!in_array($string, $strings)) {
+                    $strings[] = $string;
+                }
+            }
         }
         else {
             throw new Exception ($value . '.js: unknown');
@@ -130,6 +135,13 @@ function maharajsstrings() {
         'requiredfieldempty',
         'unknownerror',
         'loading',
+    );
+}
+
+function tablerendererjsstrings() {
+    return array(
+        'nextpage',
+        'prevpage',
     );
 }
 
