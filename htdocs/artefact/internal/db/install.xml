@@ -4,17 +4,19 @@
     xsi:noNamespaceSchemaLocation="../../lib/xmldb/xmldb.xsd"
 >
 <TABLES>
+    <!-- This isn't required anymore ... I think ...
     <TABLE NAME="artefact_internal_profile">
         <FIELDS>
-            <FIELD NAME="user" TYPE="int" LENGTH="10" NOTNULL="true" />
+            <FIELD NAME="owner" TYPE="int" LENGTH="10" NOTNULL="true" />
             <FIELD NAME="field" TYPE="char" LENGTH="100" NOTNULL="true" />
             <FIELD NAME="value" TYPE="text" NOTNULL="true" />
         </FIELDS>
         <KEYS>
-            <KEY NAME="primary" TYPE="primary" FIELDS="user,field" />
-            <KEY NAME="userfk" TYPE="foreign" FIELDS="user" REFTABLE="usr" REFFIELDS="id" />
+            <KEY NAME="primary" TYPE="primary" FIELDS="owner,field" />
+            <KEY NAME="ownerfk" TYPE="foreign" FIELDS="owner" REFTABLE="usr" REFFIELDS="id" />
         </KEYS>
     </TABLE>
+    -->
     <TABLE NAME="artefact_internal_profile_email">
         <FIELDS>
             <FIELD NAME="user" TYPE="int" LENGTH="10" NOTNULL="true" />
