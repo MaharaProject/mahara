@@ -91,9 +91,11 @@ function editsitepage_submit($values) {
     exit;
 }
 
-$js = array();
 if (use_html_editor()) {
-    array_unshift($js,'tinymce');
+    $js = array('tinymce');
+}
+else {
+    $js = array();
 }
 
 $ijs = <<< EOJS
