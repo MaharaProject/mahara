@@ -51,4 +51,14 @@ function form_render_checkbox($element, Form $form) {
         . '>';
 }
 
+function form_get_value_js_checkbox($element, Form $form) {
+    $formname = $form->get_name();
+    $name = $element['name'];
+    return <<<EOF
+    data['{$name}'] = document.forms['$formname'].elements['$name'].checked ? 'on' : 'off';
+
+EOF;
+}
+
+
 ?>
