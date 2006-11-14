@@ -29,7 +29,37 @@ defined('INTERNAL') || die();
 class PluginArtefactInternal extends PluginArtefact {
 
     public static function get_artefact_types() {
-        return array('profile', 'file', 'folder', 'image');
+        return array(
+            'profile_firstname',
+            'profile_lastname',
+            'profile_studentid',
+            'profile_preferredname',
+            'profile_introduction',
+            'profile_emailaddress',
+            'profile_officialwebsite',
+            'profile_personalwebsite',
+            'profile_blogaddress',
+            'profile_postaladdress',
+            'profile_town',
+            'profile_cityregion',
+            'profile_country',
+            'profile_homephone',
+            'profile_businessphone',
+            'profile_mobilephone',
+            'profile_faxnumber',
+            'profile_icqnumber',
+            'profile_msnchat',
+            'profile_aimscreenname',
+            'profile_yahoochat',
+            'profile_skypeusername',
+            'profile_jabberusername',
+            'profile_occupation',
+            'profile_industry',
+            'profile_icon',
+            'file',
+            'folder',
+            'image',
+        );
     }
 
     public static function get_plugin_name() {
