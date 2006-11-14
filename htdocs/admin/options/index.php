@@ -105,12 +105,7 @@ $siteoptionform = form(array(
 ));
 
 function siteoptions_fail($field) {
-    $result['error'] = 'local';
-    $result['message'] = get_string('setsiteoptionsfailed', $field);
-    error_log($result['message']);
-    json_headers();
-    echo json_encode($result);
-    exit;
+    json_reply('local', get_string('setsiteoptionsfailed', get_string($field)));
 }
 function siteoptions_submit($values) {
     $fields = array('language','theme','pathtoclam',
@@ -122,16 +117,12 @@ function siteoptions_submit($values) {
         }
     }
     if (!set_config('session_timeout', $values['sessionlifetime'] * 60)) {
-        siteoptions_fail($field);
+        siteoptions_fail('sessionlifetime');
     }
     if (!set_config('viruschecking', (int) ($values['viruschecking'] == 'on'))) {
-        siteoptions_fail($field);
+        siteoptions_fail('viruschecking');
     }
-    $result['error'] = false;
-    $result['message'] = get_string('siteoptionsset');
-    json_headers();
-    echo json_encode($result);
-    exit;
+    json_reply(false, get_string('siteoptionsset'));
 }
 
 $smarty = smarty(array(),array(),array('siteoptionsset','setsiteoptionsfailed'));
