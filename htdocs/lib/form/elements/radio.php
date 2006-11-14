@@ -35,7 +35,7 @@ defined('INTERNAL') || die();
  */
 function form_render_radio($element, Form $form) {
     if (!isset($element['options']) || !is_array($element['options']) || count($element['options']) < 1) {
-        log_warn('Radio elements should have at least one option');
+        throw new FormException('Radio elements should have at least one option');
     }
     
     $result = '';
@@ -59,6 +59,29 @@ function form_render_radio($element, Form $form) {
     $result = substr($result, 0, -strlen($separator));
     
     return $result;
+}
+
+/**
+ * radio doesn't need a function to get a value from phpland because it comes
+ * through correctly from the request... however in javascript land things are
+ * harder.
+ *
+ * @todo maybe later: make the get_value_js functions return a javascript function,
+ * to keep their stuff in its own scope. Maybe. If js scoping rules mean this will help.
+ */
+function form_get_value_js_radio($element, Form $form) {
+    $formname = $form->get_name();
+    $name = $element['name'];
+    return <<<EOF
+    var radio = document.forms['$formname'].elements['$name'];
+    for (var i = 0; i < radio.length; i++) {
+        if (radio[i].checked) {
+            data['$name'] = radio[i].value;
+            break;
+        }
+    }
+
+EOF;
 }
 
 function form_render_radio_set_attributes($element) {

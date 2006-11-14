@@ -44,4 +44,10 @@ function form_render_cancel($element, Form $form) {
         . ' value="' . hsc($form->get_value($element)) . '">';
 }
 
+function form_get_value_js_cancel($element, $form) {
+    $formname = $form->get_name();
+    $name = $element['name'];
+    return "    data['$name'] = document.forms['$formname'].elements['{$name}_cancel'].value;\n";
+}
+
 ?>
