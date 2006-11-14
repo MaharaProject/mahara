@@ -467,6 +467,15 @@ class Form {
     }
 
     /**
+     * Is the form being submitted by ajax?
+     *
+     * @return bool
+     */
+    public function get_ajaxpost() {
+        return $this->ajaxpost;
+    }
+
+    /**
      * Returns the renderer used on to render the form
      *
      * @return string
