@@ -66,7 +66,11 @@ function form_render_expiry($element, Form $form) {
         $seconds = null;
     }
 
-    $numberinput = '<input ' . ($form->get_ajaxpost() ? 'onchange="' . $name . '_change()" ' : '');
+    $numberinput = '<input ';
+    if ($form->get_ajaxpost()) {
+        $numberinput .= 'onchange="' . $name . '_change()"';
+        $numberinput .= $values['units'] == 'noenddate' ? ' disabled="disabled"' : '';
+    }
     $numberinput .= 'type="text" size="4" ' . 'name="' . $name . '_number" ';
     $numberinput .= 'id="' . $name . '_number" value="' . $values['number'] . "\">\n";
 
@@ -100,6 +104,15 @@ function {$name}_change() {
         } else if ($('{$name}_units').value == 'years') {
             seconds = mult * 365;
         }
+    }
+    else {
+        seconds = 0;
+    }
+    if ($('{$name}_units').value == 'noenddate') {
+        $('{$name}_number').disabled = true;
+    }
+    else {
+        $('{$name}_number').disabled = false;
     }
     $('{$name}').value = seconds;
 }
