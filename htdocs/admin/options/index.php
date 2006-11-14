@@ -113,7 +113,7 @@ function siteoptions_fail($field) {
     exit;
 }
 function siteoptions_submit($values) {
-    $fields = array('language','theme','viruschecking','pathtoclam',
+    $fields = array('language','theme','pathtoclam',
                     'allowpublicviews','artefactviewinactivitytime',
                     'contactaddress');
     foreach ($fields as $field) {
@@ -122,6 +122,9 @@ function siteoptions_submit($values) {
         }
     }
     if (!set_config('session_timeout', $values['sessionlifetime'] * 60)) {
+        siteoptions_fail($field);
+    }
+    if (!set_config('viruschecking', (int) ($values['viruschecking'] == 'on'))) {
         siteoptions_fail($field);
     }
     $result['error'] = false;
