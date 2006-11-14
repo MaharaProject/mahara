@@ -815,7 +815,34 @@ function admin_nav() {
         array(
             'name'     => 'usermanagement',
             'section'  => 'admin',
-            'link'     => $wwwroot . 'admin/todo',
+            'link'     => $wwwroot . 'admin/usermanagement/uploadcsv.php',
+            'submenu'  => array(
+                array(
+                    'name' => 'uploadcsv',
+                    'section' => 'admin',
+                    'link' => $wwwroot . 'admin/usermanagement/uploadcsv.php'
+                ),
+                array(
+                    'name' => 'adminusers',
+                    'section' => 'admin',
+                    'link' => $wwwroot . 'admin/usermanagement/adminusers.php',
+                ),
+                array(
+                    'name' => 'staffusers',
+                    'section' => 'admin',
+                    'link' => $wwwroot . 'admin/usermanagement/staffusers.php'
+                ),
+                array(
+                    'name' => 'adminnotifications',
+                    'section' => 'admin',
+                    'link' => $wwwroot . 'admin/usermanagement/adminnotifications.php'
+                ),
+                array(
+                    'name' => 'suspendedusers',
+                    'section' => 'admin',
+                    'link' => $wwwroot . 'admin/usermanagement/suspendedusers.php'
+                )
+            )
         ),
     );
 
