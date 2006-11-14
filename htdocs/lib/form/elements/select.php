@@ -77,6 +77,22 @@ function form_render_select($element, Form $form) {
     return $result;
 }
 
+function form_get_value_js_select($element, Form $form) {
+    $formname = $form->get_name();
+    $name = $element['name'];
+    return <<<EOF
+    var select = document.forms['$formname'].elements['$name'];
+    data['$name'] = new Array();
+    for (var i = 0; i < select.length; i++) {
+        if (select[i].selected) {
+            data['$name'].push(select[i].value);
+        }
+    }
+    log(data['$name']);
+
+EOF;
+}
+
 function form_render_select_set_attributes($element) {
     $element['rules']['validateoptions'] = true;
     return $element;
