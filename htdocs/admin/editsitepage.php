@@ -79,16 +79,11 @@ function editsitepage_submit($values) {
     $data->mauthor = $USER->id;
     try {
         update_record('site_content', $data, 'name');
-        $result['error']   = false;
-        $result['message'] = get_string('savedsuccessfully');
     }
     catch (SQLException $e) {
-        $result['error']   = 'local';
-        $result['message'] = get_string('savefailed');
+        json_reply('local', get_string('savefailed'));
     }
-    json_headers();
-    echo json_encode($result);
-    exit;
+    json_reply(false, get_string('savedsuccessfully'));
 }
 
 if (use_html_editor()) {
