@@ -129,13 +129,12 @@ function siteoptions_submit($values) {
     }
     $result['error'] = false;
     $result['message'] = get_string('siteoptionsset');
-    error_log($result['message']);
     json_headers();
     echo json_encode($result);
     exit;
 }
 
-$smarty = smarty(array(),array(),array('siteoptionsset'));
+$smarty = smarty(array(),array(),array('siteoptionsset','setsiteoptionsfailed'));
 $smarty->assign('SITEOPTIONFORM',$siteoptionform);
 $smarty->display('admin/options/index.tpl');
 
