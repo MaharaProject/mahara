@@ -74,7 +74,7 @@ $string['registrationnosuchkey'] = 'Sorry, there does not seem to be a registrat
 
 // Forgot password
 $string['pwchangerequestsent'] = 'You should receive an e-mail shortly with a link you can use to change the password for your account';
-$string['forgotpassemailsubject'] = 'Change password request for Mahara';
+$string['forgotpassemailsubject'] = 'Change password request for %s';
 $string['forgotpassemailmessagetext'] = 'Dear $fullname,
 
 A request to reset your password has been received for your $sitename account.

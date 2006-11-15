@@ -129,7 +129,7 @@ function forgotpass_submit($values) {
         $pwrequest->expiry = db_format_timestamp(time() + 86400);
         $pwrequest->key = get_random_key();
         email_user($user, null,
-            get_string('forgotpassemailsubject'),
+            get_string('forgotpassemailsubject', 'mahara', get_config('sitename')),
             get_string('forgotpassemailmessagetext', 'mahara', $pwrequest->key, $pwrequest->key),
             get_string('forgotpassemailmessagehtml', 'mahara', $pwrequest->key, $pwrequest->key, $pwrequest->key, $pwrequest->key));
         insert_record('usr_password_request', $pwrequest);
