@@ -37,6 +37,14 @@ function form_render_select($element, Form $form) {
     if (!empty($element['multiple'])) {
         $element['name'] .= '[]';
     }
+
+    if (!empty($element['collapseifoneoption']) && count($element['options']) == 1) {
+        foreach ($element['options'] as $key => $value) {
+            $result = $value . '<input type="hidden" name="' . $element['name'] . '" value="' . $key . '">';
+        }
+        return $result;
+    }
+
     $result = '<select'
         . Form::element_attributes($element)
         . (!empty($element['multiple']) ? ' multiple="multiple"' : '')
@@ -94,6 +102,7 @@ EOF;
 }
 
 function form_render_select_set_attributes($element) {
+    $element['collapseifoneoption'] = true;
     $element['rules']['validateoptions'] = true;
     return $element;
 }
