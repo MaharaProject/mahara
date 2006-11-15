@@ -42,6 +42,7 @@ $string['confirmpassword'] = 'Confirm password';
 $string['loggedoutok'] = 'You have been logged out successfully';
 $string['login'] = 'Log In';
 $string['loginfailed'] = 'You have not provided the correct credentials to log in. Please check your username and password are correct.';
+$string['loginto'] = 'Log in to %s';
 $string['newpassword'] = 'New Password';
 $string['password'] = 'Password';
 $string['passworddesc'] = 'Your password';
