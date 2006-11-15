@@ -42,6 +42,12 @@ $siteoptionform = form(array(
     'action'   => '',
     'ajaxpost' => true,
     'elements' => array(
+        'sitename' => array(
+            'type'         => 'text',
+            'title'        => get_string('sitename'),
+            'description'  => get_string('sitenamedescription'),
+            'defaultvalue' => get_config('sitename'),
+        ),
         'language' => array(
             'type'         => 'select',
             'title'        => get_string('language'),
@@ -105,15 +111,11 @@ $siteoptionform = form(array(
 ));
 
 function siteoptions_fail($field) {
-    $result['error'] = 'local';
-    $result['message'] = get_string('setsiteoptionsfailed', $field);
-    error_log($result['message']);
-    json_headers();
-    echo json_encode($result);
-    exit;
+    json_reply('local', get_string('setsiteoptionsfailed', get_string($field)));
 }
+
 function siteoptions_submit($values) {
-    $fields = array('language','theme','pathtoclam',
+    $fields = array('sitename','language','theme','pathtoclam',
                     'allowpublicviews','artefactviewinactivitytime',
                     'contactaddress');
     foreach ($fields as $field) {
@@ -121,21 +123,18 @@ function siteoptions_submit($values) {
             siteoptions_fail($field);
         }
     }
+    // submitted sessionlifetime is in minutes; db entry session_timeout is in seconds
     if (!set_config('session_timeout', $values['sessionlifetime'] * 60)) {
-        siteoptions_fail($field);
+        siteoptions_fail('sessionlifetime');
     }
+    // Submitted value is on/off; database entry should be 1/0
     if (!set_config('viruschecking', (int) ($values['viruschecking'] == 'on'))) {
-        siteoptions_fail($field);
+        siteoptions_fail('viruschecking');
     }
-    $result['error'] = false;
-    $result['message'] = get_string('siteoptionsset');
-    error_log($result['message']);
-    json_headers();
-    echo json_encode($result);
-    exit;
+    json_reply(false, get_string('siteoptionsset'));
 }
 
-$smarty = smarty(array(),array(),array('siteoptionsset'));
+$smarty = smarty(array(),array(),array('siteoptionsset','setsiteoptionsfailed'));
 $smarty->assign('SITEOPTIONFORM',$siteoptionform);
 $smarty->display('admin/options/index.tpl');
 

@@ -53,7 +53,7 @@ class PluginNotificationEmaildigest extends PluginNotification {
     public static function send_digest() {
         $users = array();
 
-        $sql = 'SELECT q.id, u.firstname,u.lastname,u.prefname,u.email,q.*,' . db_format_tsfield('ctime').'
+        $sql = 'SELECT q.id, u.firstname,u.lastname,u.preferredname,u.email,q.*,' . db_format_tsfield('ctime').'
                 FROM ' . get_config('dbprefix') . 'usr u 
                     JOIN ' . get_config('dbprefix') . 'notification_emaildigest_queue q
                         ON q.usr = u.id
@@ -65,11 +65,11 @@ class PluginNotificationEmaildigest extends PluginNotification {
                     $users[$queue->usr] = new StdClass;
                     
                     $users[$queue->usr]->user = new StdClass;
-                    $users[$queue->usr]->user->firstname = $queue->firstname;
-                    $users[$queue->usr]->user->lastname  = $queue->lastname;
-                    $users[$queue->usr]->user->prefname  = $queue->prefname;
-                    $users[$queue->usr]->user->email     = $queue->email;
-                    $users[$queue->usr]->user->id        = $queue->usr;
+                    $users[$queue->usr]->user->firstname     = $queue->firstname;
+                    $users[$queue->usr]->user->lastname      = $queue->lastname;
+                    $users[$queue->usr]->user->preferredname = $queue->preferredname;
+                    $users[$queue->usr]->user->email         = $queue->email;
+                    $users[$queue->usr]->user->id            = $queue->usr;
                     
                     $users[$queue->usr]->entries = array();
                 }

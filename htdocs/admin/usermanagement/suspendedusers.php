@@ -17,49 +17,20 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage core
- * @author     Martyn Smith <martyn@catalyst.net.nz>
+ * @subpackage admin
+ * @author     Nigel McNie <nigel@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
 define('INTERNAL', 1);
+define('ADMIN', 1);
+define('MENUITEM', 'usermanagement');
+define('SUBMENUITEM', 'suspendedusers');
+require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
-require(dirname(dirname(__FILE__)) . '/init.php');
-require('searchlib.php');
-
-json_headers();
-
-safe_require('search', 'internal', 'lib.php', 'require_once');
-
-try {
-    $query = param_variable('query');
-}
-catch (ParameterException $e) {
-    print json_encode(array(
-        'error'   => 'missingparameter',
-        'message' => 'Missing parameter \'query\'',
-    ));
-    exit;
-}
-
-$limit = param_integer('limit', 20);
-$offset = param_integer('offset', 0);
-
-$data = search_user($query, $limit, $offset);
-
-foreach ($data['results'] as &$result) {
-    $result['name'] = display_name($result);
-
-    unset($result['email']);
-    unset($result['institution']);
-    unset($result['username']);
-    unset($result['firstname']);
-    unset($result['lastname']);
-    unset($result['preferredname']);
-}
-
-print json_encode($data);
+$smarty = smarty();
+$smarty->display('admin/usermanagement/suspendedusers.tpl');
 
 ?>

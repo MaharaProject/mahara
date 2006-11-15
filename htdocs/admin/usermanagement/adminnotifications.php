@@ -18,7 +18,7 @@
  *
  * @package    mahara
  * @subpackage admin
- * @author     Richard Mansfield <richard.mansfield@catalyst.net.nz>
+ * @author     Nigel McNie <nigel@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
@@ -26,28 +26,11 @@
 
 define('INTERNAL', 1);
 define('ADMIN', 1);
-require(dirname(dirname(__FILE__)) . '/init.php');
+define('MENUITEM', 'usermanagement');
+define('SUBMENUITEM', 'adminnotifications');
+require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
-$pagename = clean_requestdata('pagename', PARAM_ALPHAEXT, REQUEST_EITHER);
-$pagetext = clean_requestdata('pagetext', PARAM_CLEANHTML, REQUEST_EITHER);
+$smarty = smarty();
+$smarty->display('admin/usermanagement/adminnotifications.tpl');
 
-$result = array();
-
-global $USER;
-$data = new StdClass;
-$data->name = $pagename;
-$data->content = $pagetext;
-$data->mtime = db_format_timestamp(time());
-$data->mauthor = $USER->id;
-try {
-    update_record('site_content',$data,'name');
-    $result['error'] = false;
-    $result['message'] = get_string('savedsuccessfully');
-}
-catch (Exception $e) {
-    $result['error'] = 'local';
-    $result['message'] = get_string('savefailed');
-}
-
-echo json_encode($result);
 ?>

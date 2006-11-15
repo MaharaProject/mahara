@@ -14,6 +14,7 @@
     </ul>
     <li><a href="editsitepage.php">EditSitePages</a></li>
     <li><a href="editmenu.php">EditAdminMenu</a></li>
+    <li><a href="plugins">Administer Plugins</a></li>
 </ul>
 
 {if $upgrades}

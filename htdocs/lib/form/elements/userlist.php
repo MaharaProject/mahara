@@ -47,7 +47,7 @@ function form_render_userlist($element, Form $form) {
     }
 
     if (is_array($value) && count($value)) {
-        $members = get_records_select('usr','id IN (' . join(',',$value) . ')', null, '', 'id,firstname,lastname,prefname');
+        $members = get_records_select('usr','id IN (' . join(',',$value) . ')', null, '', 'id,firstname,lastname,preferredname');
 
         foreach($members as &$member) {
             $member = display_name($member);
@@ -58,6 +58,9 @@ function form_render_userlist($element, Form $form) {
     }
 
     $smarty->assign('name', $element['name']);
+    if (!empty($element['filter'])) {
+        $smarty->assign('filter', true);
+    }
 
     return $smarty->fetch('form/userlist.tpl');
 }
@@ -90,6 +93,14 @@ function form_is_empty_userlist($value, $element) {
     }
 
     return true;
+}
+
+function form_render_userlist_set_attributes($element) {
+    // By default, use the filter select box
+    if (!isset($element['filter'])) {
+        $element['filter'] = true;
+    }
+    return $element;
 }
 
 ?>

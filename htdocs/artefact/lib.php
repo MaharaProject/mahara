@@ -98,12 +98,13 @@ abstract class ArtefactType {
     protected $dirty;
     protected $parentdirty;
     protected $id;
-    protected $type;
+    protected $artefacttype;
+    protected $owner;
     protected $container;
     protected $parent;
     protected $ctime;
     protected $mtime;
-    protected $vtime;
+    protected $atime;
     protected $locked;
     protected $title;
     protected $description;
@@ -132,7 +133,7 @@ abstract class ArtefactType {
                 }
             }
             foreach ((array)$data as $field => $value) {
-                if (property_exists($field)) {
+                if (property_exists($this, $field)) {
                     $this->{$field} = $value;
                 }
             }
@@ -140,6 +141,8 @@ abstract class ArtefactType {
         else {
             $this->ctime = time();
         }
+        $this->atime = time();
+        $this->artefacttype = $this->get_artefact_type();
     }
 
     public function get_views_instances() {
@@ -165,7 +168,7 @@ abstract class ArtefactType {
             if ($children = $this->get_children_metadata()) {
                 $this->childreninstances = array();
                 foreach ($children as $child) {
-                    $classname = $child->artefacttype;
+                    $classname = generate_artefact_class_name($child->artefacttype);
                     $instance = new $classname($child->id, $child);
                     $this->childreninstances[] = $instance;
                 }
@@ -202,7 +205,8 @@ abstract class ArtefactType {
         if (!isset($this->parentinstance)) {
             $this->parentinstance = false;
             if ($parent = $this->get_parent_metadata()) {
-                $classname = $parent->artefacttype;
+                $classname = generate_artefact_class_name($parent->artefacttype);
+                // @todo this won't work.
                 $this->parentinstance = new $classname($parent->id, $parent);
             }
         }
@@ -223,19 +227,23 @@ abstract class ArtefactType {
     }
 
     public function get($field) {
-        if (!property_exists($field)) {
+        if (!property_exists($this, $field)) {
             throw new InvalidArgumentException("Field $field wasn't found in class " . get_class($this));
         }
         return $this->{$field};
     }
 
     public function set($field, $value) {
-        if (property_exists($field)) {
+        if (property_exists($this, $field)) {
+            if ($this->{$field} != $value) {
+                // only set it to dirty if it's changed
+                $this->dirty = true;
+            }
             $this->{$field} = $value;
-            $this->dirty = true;
             if ($field == 'parent') {
                 $this->parentdirty = true;
             }
+            $this->mtime = time();
             return true;
         }
         throw new InvalidArgumentException("Field $field wasn't found in class " . get_class($this));
@@ -250,6 +258,13 @@ abstract class ArtefactType {
             $this->commit();
         }
         if (!empty($this->parentdirty)) {
+            if (!empty($this->parent) && !record_exists('artefact_parent_cache', 'artefact', $this->id)) {
+                $apc = new StdClass;
+                $apc->artefact = $this->id;
+                $apc->parent = $this->parent;
+                $apc->dirty  = 1; // set this so the cronjob will pick it up and go set all the other parents.
+                insert_record('artefact_parent_cache', $apc);
+            }
             set_field_select('artefact_parent_cache', 'dirty', 1,
                              'artefact = ? OR parent = ?', array($this->id, $this->id));
         }
@@ -259,16 +274,55 @@ abstract class ArtefactType {
         return false;
     }
 
+    /** 
+     * As commit is abstract, subclasses
+     * can use this as a helper to update
+     * the contents of the artefact table
+     */
+    
+    protected function commit_basic() {
+        $fordb = new StdClass;
+        foreach (get_object_vars($this) as $k => $v) {
+            $fordb->{$k} = $v;
+            if (in_array($k, array('mtime', 'ctime', 'atime')) && !empty($v)) {
+                $fordb->{$k} = db_format_timestamp($v);
+            }
+        }
+        if (empty($this->id)) {
+            $this->id = insert_record('artefact', $fordb, 'id', true);
+        }
+        else {
+            update_record('artefact', $fordb, 'id');
+        }
+        $this->dirty = false;
+    }
+
+
     /**
      * Saves any changes to the database
+     * for basic commits, use {@link commit_basic}
      * @abstract
      */
     public abstract function commit();
     
+
+    /** 
+     * As delete is abstract, subclasses
+     * can use this to clear out the artefact
+     * table and set the parentdirty flag
+     */
+
+    protected function delete_basic() {
+        delete_records('artefact', 'id', $this->id);
+        $this->dirty = false;
+        $this->parentdirty = true;
+    }
+
     /**
      * Deletes current instance
      * you MUST set $this->parentdirty to true
      * when delete is called.
+     * for basic delete, use {@link delete_basic}
      * @abstract
      */
     public abstract function delete();
@@ -304,16 +358,55 @@ abstract class ArtefactType {
      * returns array of formats can render to (constants)
      * @abstract
      */
-    public static abstract function get_render_list($format);
+    public static abstract function get_render_list();
 
     /**
      * returns boolean for can render to given format
      * @abstract
      */
     public static abstract function can_render_to($format);
+
+
+    // ******************** HELPER FUNCTIONS ******************** //
+
+    protected function get_artefact_type() {
+        $classname = get_class($this);
+        
+        $type = strtolower(substr($classname, strlen('ArtefactType')));
+
+        if (!record_exists('artefact_installed_type', 'name', $type)) {
+            throw new InvalidArgumentException("Classname $classname not a valid artefact type");
+        }
+
+        return $type;
+    }
+
+    public static function has_config() {
+        return false;
+    }
+
+    public static function get_config_options() {
+        return array();
+    }
+
+    public static function collapse_config() {
+        return false;
+    }
 }
 
+// helper functions for artefacts in general
 
+function artefact_check_plugin_sanity($pluginname) {
+    $classname = generate_class_name('artefact', $pluginname);
+    safe_require('artefact', $pluginname);
+    $types = call_static_method($classname, 'get_artefact_types');
+    foreach ($types as $type) {
+        $typeclassname = generate_artefact_class_name($type);
+        if (!class_exists($typeclassname)) {
+            throw new Exception("class $typeclassname for type $type in plugin $pluginname was missing");
+        }
+    }
+}
 
         
 ?>

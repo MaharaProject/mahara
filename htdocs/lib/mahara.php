@@ -583,7 +583,7 @@ function validate_username($username) {
  * @param string $function (optional, defaults to require) the require/include function to use
  * @param string $nonfatal (optional, defaults to false) just returns false if the file doesn't exist
  */
-function safe_require($plugintype, $pluginname, $filename='lib.php', $function='require', $nonfatal=false) {
+function safe_require($plugintype, $pluginname, $filename='lib.php', $function='require_once', $nonfatal=false) {
 
     require_once(get_config('docroot') . $plugintype . '/lib.php');
 
@@ -671,6 +671,10 @@ function call_static_method($class, $method) {
 function generate_class_name() {
     $args = func_get_args();
     return 'Plugin' . implode('', array_map('ucfirst', $args));
+}
+
+function generate_artefact_class_name($type) {
+    return 'ArtefactType' . ucfirst($type);
 }
 
 function redirect($location) {
@@ -768,6 +772,10 @@ class Plugin {
 
     public static function postinst() {
         return true;
+    }
+
+    public static function has_config() {
+        return false;
     }
 }
 
@@ -1004,7 +1012,7 @@ function site_menu() {
 /** 
  * Always use this function for all emails to users
  * 
- * @param object $userto user object to send email to. must contain firstname,lastname,prefname,email
+ * @param object $userto user object to send email to. must contain firstname,lastname,preferredname,email
  * @param object $userfrom user object to send email from. If null, email will come from mahara
  * @param string $subject email subject
  * @param string $messagetext text version of email
@@ -1055,14 +1063,14 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='')
     else {
         $mail->Sender = $userfrom->email;
         $mail->From = $mail->Sender;
-        $mail->FromName = display_name($userfrom);
+        $mail->FromName = display_name($userfrom, $userto);
     }
            
     $mail->AddReplyTo($mail->From, $mail->FromName);
 
     $mail->Subject = substr(stripslashes($subject), 0, 78);
 
-    $usertoname = display_name($userto);
+    $usertoname = display_name($userto, $userto);
     $mail->AddAddress($userto->email, $usertoname );
 
     $mail->WordWrap = 79;   
@@ -1085,12 +1093,37 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='')
                         . "Error from phpmailer was: " . $mail->ErrorInfo );
 }
 
-function display_name($user) {
+function display_name($user, $userto=null) {
+    global $USER;
+    
+    if (empty($userto)) {
+        $userto = $USER;
+    }
     if (is_array($user)) {
         $user = (object)$user;
     }
-    return $user->firstname . ' ' . $user->lastname;
-    // @todo
+    else if (is_numeric($user)) {
+        $user = get_record('usr', 'id', $user);
+    }
+    if (!is_object($user)) {
+        throw new InvalidArgumentException("Invalid user passed to display_name");
+    }
+    
+    // if they don't have a preferred name set, just return here
+    if (empty($user->preferredname)) {
+        return $user->firstname . ' ' . $user->lastname;
+    }
+
+    $prefix = get_config('dbprefix');
+    $sql = 'SELECT c1.member
+            FROM ' . $prefix . 'community_member c1 
+            JOIN  ' .$prefix. 'community_member c2
+                ON c1.community = c2.community 
+            WHERE c1.member = ? AND c2.member = ? AND c2.tutor = ?';
+    if (record_exists_sql($sql, array($user->id, $userto->id, 1))) {
+        return $user->preferredname . ' (' . $user->firstname . ' ' . $user->lastname . ')';
+    }
+    return  $user->preferredname;
 }
 
 /**
@@ -1168,6 +1201,66 @@ function password_validate(Form $form, $values, $user) {
     if (!$form->get_error('password1') && $values['password1'] != $values['password2']) {
         $form->set_error('password2', get_string('passwordsdonotmatch'));
     }
+}
+
+function rebuild_artefact_parent_cache_dirty() {
+    // this will give us a list of artefacts, as the first returned column
+    // is not unqiue, but that's ok, it's what we want.
+    if (!$dirty = get_records('artefact_parent_cache', 'dirty', 1)) {
+        return;
+    }
+    db_begin();
+    delete_records('artefact_parent_cache', 'dirty', 1);
+    foreach ($dirty as $d) {
+        $parentids = array();
+        $current = $d->artefact;
+        while (true) {
+            if (!$parent = get_record('artefact', 'id', $current)) {
+                break;
+            }
+            if (!$parent->parent) {
+                break;
+            }
+            $parentids[] = $parent->parent;
+            $current = $parent->parent;
+        }
+        foreach ($parentids as $p) {
+            $apc = new StdClass;
+            $apc->artefact = $d->artefact;
+            $apc->parent   = $p;
+            $apc->dirty    = 0;
+            insert_record('artefact_parent_cache', $apc);
+        }
+    }
+    db_commit();
+}
+
+function rebuild_artefact_parent_cache_complete() {
+    db_begin();
+    delete_records('artefact_parent_cache');
+    $artefacts = get_records('artefact');
+    foreach ($artefacts as $a) {
+        $parentids = array();
+        $current = $a->id;
+        while (true) {
+            if (!$parent = get_record('artefact', 'id', $current)) {
+                break;
+            }
+            if (!$parent->parent) {
+                break;
+            }
+            $parentids[] = $parent->parent;
+            $current = $parent->parent;
+        }
+        foreach ($parentids as $p) {
+            $apc = new StdClass;
+            $apc->artefact = $a->id;
+            $apc->parent   = $p;
+            $apc->dirty    = 0;
+            insert_record('artefact_parent_cache', $apc);
+        }
+    }
+    db_commit();
 }
 
 ?>

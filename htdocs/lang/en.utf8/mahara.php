@@ -36,10 +36,13 @@ $string['prevpage'] = 'Previous page';
 // auth
 $string['accountexpired'] = 'Sorry, your account has expired';
 $string['accountsuspended'] = 'Your account has been suspeneded as of %s. The reason for your suspension is:<blockquote>%s</blockquote>';
+$string['changepassword'] = 'Change Password';
+$string['changepasswordinfo'] = 'You are required to change your password before you can proceed.';
 $string['confirmpassword'] = 'Confirm password';
 $string['loggedoutok'] = 'You have been logged out successfully';
 $string['login'] = 'Log In';
 $string['loginfailed'] = 'You have not provided the correct credentials to log in. Please check your username and password are correct.';
+$string['newpassword'] = 'New Password';
 $string['password'] = 'Password';
 $string['passworddesc'] = 'Your password';
 $string['passwordnotchanged'] = 'You did not change your password, please choose a new password';
@@ -49,6 +52,8 @@ $string['passwordtooeasy'] = 'Your password is too easy! Please choose a harder 
 $string['username'] = 'Username';
 $string['usernamedesc'] = 'Your username';
 $string['usernamehelp'] = 'The username you have been given to access this system.';
+$string['yournewpassword'] = 'Your new password';
+$string['yournewpasswordagain'] = 'Your new password again';
 
 // Registration
 $string['registeredemailsubject'] = 'You have registered at Mahara';
@@ -111,18 +116,20 @@ $string['artefactviewinactivitytimedescription'] = 'The time after which an inac
 $string['contactaddress'] = 'Contact address';
 $string['contactaddressdescription'] = 'The email address to which messages from the Contact Us form will be sent';
 $string['language'] = 'Language';
-$string['sitelanguagedescription'] = 'The default language for the site';
 $string['pathtoclam'] = 'Path to clam';
 $string['pathtoclamdescription'] = 'The filesystem path to clamscan or clamdscan';
 $string['sessionlifetime'] = 'Session lifetime';
 $string['sessionlifetimedescription'] = 'Time in minutes after which an inactive logged in user will be automatically logged out';
-$string['theme'] = 'Theme';
+$string['setsiteoptionsfailed'] = 'Failed setting the %s option';
+$string['sitelanguagedescription'] = 'The default language for the site';
+$string['sitename'] = 'Site name';
+$string['sitenamedescription'] = 'The overall name of the site';
+$string['siteoptionsset'] = 'Site options have been updated';
 $string['sitethemedescription'] = 'The theme for the site';
+$string['theme'] = 'Theme';
+$string['updatesiteoptions'] = 'Update site options';
 $string['viruschecking'] = 'Virus checking';
 $string['viruscheckingdescription'] = 'If checked, virus checking will be enabled for all uploaded files using ClamAV';
-$string['updatesiteoptions'] = 'Update site options';
-$string['siteoptionsset'] = 'Site options have been updated';
-$string['setsiteoptionsfailed'] = 'Failed setting the %s option';
 // Expiry times
 $string['noenddate'] = 'No end date';
 $string['days']      = 'days';
@@ -146,6 +153,8 @@ $string['delete']        = 'Delete';
 $string['edit']          = 'Edit';
 $string['loggedinmenu']  = 'Logged in menu';
 $string['loggedoutmenu'] = 'Logged out menu';
+$string['menuitemsaved'] = 'Menu item saved';
+$string['savingmenuitem'] = 'Saving menu item';
 
 // Site content
 $string['about']               = 'About';
@@ -166,6 +175,10 @@ $string['email']                    = 'Email';
 $string['subject']                  = 'Subject';
 $string['message']                  = 'Message';
 $string['submitcontactinformation'] = 'Submit contact information';
+$string['nositecontactaddress']     = 'Site contact email address not set';
+$string['nosendernamefound']        = 'No sender name was submitted';
+$string['emailnotsent']             = 'Failed to send contact email. Error message: "%s"';
+$string['contactinformationsent']   = 'Your contact information has been sent';
 
 // mahara.js
 $string['namedfieldempty'] = 'The required field "%s" is empty';
@@ -187,7 +200,6 @@ $string['myaddressbook']      = 'My Addressbook';
 $string['mycommunities']      = 'My Communities';
 $string['myownedcommunities'] = 'My Owned Communities';
 $string['mygroups']           = 'My Groups';
-
 
 // mycontacts
 
@@ -214,4 +226,6 @@ $string['activity'] = 'Recent activity';
 $string['emailname'] = 'Mahara System'; // robot! 
 $string['save'] = 'Save';
 $string['update'] = 'Update';
+
+$string['config'] = 'Config';
 ?>

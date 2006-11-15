@@ -82,6 +82,7 @@
 </script>
 <table>
     <tr>
+        {{if $filter}}
         <td colspan="3">
             <select id="{{$name}}_groups">
                 <option value="all">All Users</option>
@@ -89,6 +90,7 @@
                 <option value="all">My Group</option>
             </select>
         </td>
+        {{/if}}
     </tr>
     <tr>
         <td colspan="3" id="{{$name}}_messages">

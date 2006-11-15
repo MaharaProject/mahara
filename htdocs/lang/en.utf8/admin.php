@@ -42,4 +42,23 @@ $string['upgradeloading'] = 'Loading...';
 $string['upgradesuccess'] = 'Successfully upgraded to version ';
 $string['upgradefailure'] = 'Failed to upgrade!';
 $string['noupgrades'] = 'Nothing to upgrade! You are fully up to date!';
+
+// Admin navigation menu
+$string['usermanagement'] = 'Manage users';
+$string['siteoptions']    = 'Site options';
+$string['pageeditor']     = 'Site pages';
+$string['menueditor']     = 'Site menu';
+$string['files']          = 'Files';
+$string['adminhome']      = 'Admin home';
+
+// Upload CSV stuff
+$string['csvfile'] = 'CSV File';
+$string['csvfiledescription'] = 'The file containing users to add';
+$string['uploadcsverrorinvalidemail'] = 'Error on line %s of your file: The e-mail address for this user is not in correct form';
+$string['uploadcsverrorinvalidpassword'] = 'Error on line %s of your file: The password for this user is not in correct form';
+$string['uploadcsverrorinvalidusername'] = 'Error on line %s of your file: The username for this user is not in correct form';
+$string['uploadcsverrorincorrectfieldcount'] = 'Line %s of the file does not have the correct number of fields';
+$string['uploadcsvfile'] = 'Upload CSV File';
+$string['uploadcsvfiledescription'] = 'You may use this facility to upload new users via a <acronym title="Comma Separated Values">CSV</acronym> file. Each record in the file must have a username, e-mail address and password.';
+
 ?>

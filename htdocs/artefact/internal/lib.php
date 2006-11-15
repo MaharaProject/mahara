@@ -30,32 +30,32 @@ class PluginArtefactInternal extends PluginArtefact {
 
     public static function get_artefact_types() {
         return array(
-            'profile_firstname',
-            'profile_lastname',
-            'profile_studentid',
-            'profile_preferredname',
-            'profile_introduction',
-            'profile_emailaddress',
-            'profile_officialwebsite',
-            'profile_personalwebsite',
-            'profile_blogaddress',
-            'profile_postaladdress',
-            'profile_town',
-            'profile_cityregion',
-            'profile_country',
-            'profile_homephone',
-            'profile_businessphone',
-            'profile_mobilephone',
-            'profile_faxnumber',
-            'profile_icqnumber',
-            'profile_msnchat',
-            'profile_aimscreenname',
-            'profile_yahoochat',
-            'profile_skypeusername',
-            'profile_jabberusername',
-            'profile_occupation',
-            'profile_industry',
-            'profile_icon',
+            'firstname',
+            'lastname',
+            'studentid',
+            'preferredname',
+            'introduction',
+            'emailaddress',
+            'officialwebsite',
+            'personalwebsite',
+            'blogaddress',
+            'postaladdress',
+            'town',
+            'cityregion',
+            'country',
+            'homephone',
+            'businessphone',
+            'mobilephone',
+            'faxnumber',
+            'icqnumber',
+            'msnchat',
+            'aimscreenname',
+            'yahoochat',
+            'skypeusername',
+            'jabberusername',
+            'occupation',
+            'industry',
+            'icon',
             'file',
             'folder',
             'image',
@@ -100,7 +100,180 @@ class PluginArtefactInternal extends PluginArtefact {
     }
 }
 
-// @todo write ArtefactType$name classes for each of the 
-// types returned by get_artefact_types 
+class ArtefactTypeProfile extends ArtefactType {
+
+    /**
+     * overriding this because profile fields
+     * are unique in that except for email, you only get ONE
+     * so if we don't get an id, we still need to go look for it
+     */
+    public function __construct($id=0, $data=null) {
+        $type = $this->get_artefact_type();
+        if (!empty($id) || $type == 'email') {
+            return parent::__construct($id, $data);
+        }
+        if (!empty($data['owner'])) {
+            if ($a = get_record('artefact', 'artefacttype', $type, 'owner', $data['owner'])) {
+                return parent::__construct($a->id, $a);
+            }
+        } 
+        $this->ctime = time();
+        $this->atime = time();
+        $this->artefacttype = $type;
+    }
+
+    public function commit() {
+        $this->commit_basic();
+    }
+    
+    public function delete() {
+        $this->delete_basic();
+    }
+
+    public function render($format, $options) {
+
+    }
+
+    public function get_icon() {
+
+    }
+
+    public static function get_render_list() {
+
+    }
+    
+    public static function can_render_to($format) {
+
+    }
+
+    public static function get_mandatory_fields() {
+        return array('firstname' => 'text', 
+                     'lastname'  => 'text', 
+                     'studentid' => 'text', 
+                     'email'     => 'text');
+    }
+
+    public static function has_config() {
+        return true;
+    }
+
+    public static function get_config_options() {
+        return array(); // @todo  
+    }
+}
+
+class ArtefactTypeProfileField extends ArtefactTypeProfile {
+    public static function collapse_config() {
+        return 'profile';
+    }
+}
+
+class ArtefactTypeCachedProfileField extends ArtefactTypeProfileField {
+    
+    public function commit() {
+        $this->commit_basic();
+        $field = $this->get_artefact_type();
+        set_field('usr', $field, $this->title, 'id', $this->owner);
+    }
+
+    public function delete() {
+        $this->delete_basic();
+        $field = $this->get_artefact_type();
+        set_field('usr', $field, null, 'id', $this->owner);
+    }
+
+}
+
+class ArtefactTypeFirstname extends ArtefactTypeCachedProfileField {}
+class ArtefactTypeLastname extends ArtefactTypeCachedProfileField {}
+class ArtefactTypePreferredname extends ArtefactTypeCachedProfileField {}
+class ArtefactTypeEmail extends ArtefactTypeCachedProfileField {}
+
+class ArtefactTypeStudentid extends ArtefactTypeProfileField {}
+class ArtefactTypeIntroduction extends ArtefactTypeProfileField {}
+class ArtefactTypeOfficialwebsite extends ArtefactTypeProfileField {}
+class ArtefactTypePersonalwebsite extends ArtefactTypeProfileField {}
+class ArtefactTypeBlog extends ArtefactTypeProfileField {}
+class ArtefactTypeAddress extends ArtefactTypeProfileField {}
+class ArtefactTypeTown extends ArtefactTypeProfileField {}
+class ArtefactTypeCity extends ArtefactTypeProfileField {}
+class ArtefactTypeCountry extends ArtefactTypeProfileField {}
+class ArtefactTypeHomenumber extends ArtefactTypeProfileField {}
+class ArtefactTypeBusinessnumber extends ArtefactTypeProfileField {}
+class ArtefactTypeMobilenumber extends ArtefactTypeProfileField {}
+class ArtefactTypeFaxnumber extends ArtefactTypeProfileField {}
+class ArtefactTypeIcqnumber extends ArtefactTypeProfileField {}
+class ArtefactTypeMsnnumber extends ArtefactTypeProfileField {}
+
+class ArtefactTypeFolder extends ArtefactType {
+    public function commit() {
+        $this->commit_basic();
+    }
+    
+    public function delete() {
+        $this->delete_basic();
+    }
+
+    public function render($format, $options) {
+
+    }
+
+    public function get_icon() {
+
+    }
+
+    public static function get_render_list() {
+
+    }
+    
+    public static function can_render_to($format) {
+
+    }    
+
+    public static function collapse_config() {
+        return 'file';
+    }
+}
+
+class ArtefactTypeFile extends ArtefactType {
+
+    public function commit() {
+        $this->commit_basic();
+    }
+    
+    public function delete() {
+        $this->delete_basic();
+    }
+
+    public function render($format, $options) {
+
+    }
+
+    public function get_icon() {
+
+    }
+
+    public static function get_render_list() {
+
+    }
+    
+    public static function can_render_to($format) {
+
+    }
+
+    public static function has_config() {
+        return true;
+    }
+
+    public static function get_config_options() {
+        return array(); // @todo  
+    }
+}
+class ArtefactTypeImage extends ArtefactTypeFile {
+    
+    public static function collapse_config() {
+        return 'file';
+    }
+}
 
 ?>
