@@ -105,7 +105,10 @@ class ArtefactTypeProfile extends ArtefactType {
     }
 
     public static function get_mandatory_fields() {
-        return array('firstname', 'lastname', 'studentid', 'email');
+        return array('firstname' => 'text', 
+                     'lastname', => 'text', 
+                     'studentid' => 'text', 
+                     'email' => 'text');
     }
 }
 
