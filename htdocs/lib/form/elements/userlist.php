@@ -58,6 +58,9 @@ function form_render_userlist($element, Form $form) {
     }
 
     $smarty->assign('name', $element['name']);
+    if (!empty($element['filter'])) {
+        $smarty->assign('filter', true);
+    }
 
     return $smarty->fetch('form/userlist.tpl');
 }
@@ -90,6 +93,14 @@ function form_is_empty_userlist($value, $element) {
     }
 
     return true;
+}
+
+function form_render_userlist_set_attributes($element) {
+    // By default, use the filter select box
+    if (!isset($element['filter'])) {
+        $element['filter'] = true;
+    }
+    return $element;
 }
 
 ?>
