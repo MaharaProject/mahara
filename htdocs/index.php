@@ -30,11 +30,6 @@ define('MENUITEM', 'home');
 
 require('init.php');
 
-// check to see if we're installed...
-if (!get_config('installed')) {
-    redirect(get_config('wwwroot') . 'admin/index.php');
-}
-
 // Check for whether the user is logged in, before processing the page. After
 // this, we can guarantee whether the user is logged in or not for this page.
 if (!$SESSION->is_logged_in()) {
@@ -45,7 +40,7 @@ if (!$SESSION->is_logged_in()) {
         'action'   => '',
         'renderer' => 'div',
         'submit'   => false,
-        'autofocus' => 'login_password',  // only for testing for now
+        'autofocus' => true,
         'elements' => array(
             'login' => array(
                 'type'   => 'fieldset',
