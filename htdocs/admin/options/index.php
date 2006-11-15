@@ -53,6 +53,7 @@ $siteoptionform = form(array(
             'title'        => get_string('language'),
             'description'  => get_string('sitelanguagedescription'),
             'defaultvalue' => get_config('language'),
+            'collapseifoneoption' => true,
             'options'      => $langoptions,
         ),
         'theme' => array(
@@ -60,6 +61,7 @@ $siteoptionform = form(array(
             'title'        => get_string('theme'),
             'description'  => get_string('sitethemedescription'),
             'defaultvalue' => get_config('theme'),
+            'collapseifoneoption' => true,
             'options'      => $themeoptions,
         ),
         'viruschecking' => array(
