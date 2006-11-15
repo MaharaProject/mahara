@@ -98,6 +98,17 @@ function check_upgrades($name=null) {
                 if (!is_dir(get_config('docroot') . $plugin . '/' . $dir)) {
                     continue;
                 }
+                safe_require($plugin, $dir);
+                $funname = $plugin . '_check_plugin_sanity';
+                if (function_exists($funname)) {
+                    try {
+                        $funname($dir);
+                    }
+                    catch (Exception $e) {
+                        log_warn("Plugin $plugin $dir is not installable: " . $e->GetMessage());
+                        continue;
+                    }
+                }
                 $plugins[] = array($plugin, $dir);
             }
         }

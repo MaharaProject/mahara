@@ -583,7 +583,7 @@ function validate_username($username) {
  * @param string $function (optional, defaults to require) the require/include function to use
  * @param string $nonfatal (optional, defaults to false) just returns false if the file doesn't exist
  */
-function safe_require($plugintype, $pluginname, $filename='lib.php', $function='require', $nonfatal=false) {
+function safe_require($plugintype, $pluginname, $filename='lib.php', $function='require_once', $nonfatal=false) {
 
     require_once(get_config('docroot') . $plugintype . '/lib.php');
 
@@ -671,6 +671,10 @@ function call_static_method($class, $method) {
 function generate_class_name() {
     $args = func_get_args();
     return 'Plugin' . implode('', array_map('ucfirst', $args));
+}
+
+function generate_artefact_class_name($type) {
+    return 'ArtefactType' . ucfirst($type);
 }
 
 function redirect($location) {

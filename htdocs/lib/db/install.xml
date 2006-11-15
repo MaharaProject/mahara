@@ -54,10 +54,11 @@
                 <FIELD NAME="lastlogin" TYPE="datetime" NOTNULL="false" />
                 <FIELD NAME="staff" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
                 <FIELD NAME="admin" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
-                <FIELD NAME="firstname" TYPE="text" NOTNULL="true" />
-                <FIELD NAME="lastname" TYPE="text" NOTNULL="true" />
-                <FIELD NAME="prefname" TYPE="text" NOTNULL="false" />
-                <FIELD NAME="email" TYPE="text" NOTNULL="true" />
+                <FIELD NAME="firstname" TYPE="text" NOTNULL="false" />
+                <FIELD NAME="lastname" TYPE="text" NOTNULL="false" />
+                <FIELD NAME="studentid" TYPE="text" NOTNULL="false" />
+                <FIELD NAME="preferredname" TYPE="text" NOTNULL="false" />
+                <FIELD NAME="email" TYPE="text" NOTNULL="false" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
