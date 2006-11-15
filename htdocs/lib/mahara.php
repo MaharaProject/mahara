@@ -1008,7 +1008,7 @@ function site_menu() {
 /** 
  * Always use this function for all emails to users
  * 
- * @param object $userto user object to send email to. must contain firstname,lastname,prefname,email
+ * @param object $userto user object to send email to. must contain firstname,lastname,preferredname,email
  * @param object $userfrom user object to send email from. If null, email will come from mahara
  * @param string $subject email subject
  * @param string $messagetext text version of email
