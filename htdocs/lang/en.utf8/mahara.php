@@ -151,6 +151,8 @@ $string['delete']        = 'Delete';
 $string['edit']          = 'Edit';
 $string['loggedinmenu']  = 'Logged in menu';
 $string['loggedoutmenu'] = 'Logged out menu';
+$string['menuitemsaved'] = 'Menu item saved';
+$string['savingmenuitem'] = 'Saving menu item';
 
 // Site content
 $string['about']               = 'About';
@@ -171,6 +173,10 @@ $string['email']                    = 'Email';
 $string['subject']                  = 'Subject';
 $string['message']                  = 'Message';
 $string['submitcontactinformation'] = 'Submit contact information';
+$string['nositecontactaddress']     = 'Site contact email address not set';
+$string['nosendernamefound']        = 'No sender name was submitted';
+$string['emailnotsent']             = 'Failed to send contact email. Error message: "%s"';
+$string['contactinformationsent']   = 'Your contact information has been sent';
 
 // mahara.js
 $string['namedfieldempty'] = 'The required field "%s" is empty';
@@ -192,7 +198,6 @@ $string['myaddressbook']      = 'My Addressbook';
 $string['mycommunities']      = 'My Communities';
 $string['myownedcommunities'] = 'My Owned Communities';
 $string['mygroups']           = 'My Groups';
-
 
 // mycontacts
 

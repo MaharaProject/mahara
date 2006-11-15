@@ -28,14 +28,6 @@ define('INTERNAL', 1);
 define('ADMIN', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 
-function send_fail_message() {
-    $result = array();
-    $result['error'] = 'local';
-    $result['message'] = get_string('savefailed');
-    echo json_encode($result);
-    exit;
-}
-
 $type     = param_alpha('type');        // external list or admin file
 $name     = param_variable('name');
 $linkedto = param_variable('linkedto');
@@ -51,7 +43,7 @@ else if ($type == 'externallink') {
     $data->url = $linkedto;
 }
 else { // Bad menu item type
-    send_fail_message();
+    json_reply('local',get_string('badmenuitemtype'));
 }
 $data->title = $name;
 
@@ -61,14 +53,16 @@ if ($itemid == 'new') {
     try {
         $displayorders = get_rows('site_menu', 'public', $data->public, '', 'displayorder');
         $max = 0;
-        foreach ($displayorders as $r) {
-            $max = $r['displayorder'] >= $max ? $r['displayorder'] + 1 : $max;
+        if ($displayorders) {
+            foreach ($displayorders as $r) {
+                $max = $r['displayorder'] >= $max ? $r['displayorder'] + 1 : $max;
+            }
         }
         $data->displayorder = $max;
         insert_record('site_menu', $data);
     }
     catch (Exception $e) {
-        send_fail_message();
+        json_reply('local',get_string('savefailed'));
     }
 }
 else {
@@ -77,13 +71,10 @@ else {
         update_record('site_menu', $data, 'id');
     }
     catch (Exception $e) {
-        send_fail_message();
+        json_reply('local',get_string('savefailed'));
     }
 }
 
-$result = array();
-$result['error'] = false;
-$result['message'] = get_string('savedsuccessfully');
-echo json_encode($result);
+json_reply(false,get_string('menuitemsaved'));
 
 ?>

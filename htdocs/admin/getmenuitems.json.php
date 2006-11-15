@@ -37,24 +37,26 @@ try {
     // @todo: Get all the filenames of the files referred to in the $menuitems records.
     // (files table doesn't exist yet)
     $rows = array();
-    foreach ($menuitems as $i) {
-        $r = array();
-        $r['id'] = $i->id;
-        $r['name'] = $i->title;
-        if (empty($i->url) && !empty($i->file)) {
-            $r['type'] = 'adminfile';
-            $r['linkedto'] = $i->file; // @todo: substitute the appropriate filename.
-            // $r['link'] = ''; // @todo: provide a link to the file
+    if ($menuitems) {
+        foreach ($menuitems as $i) {
+            $r = array();
+            $r['id'] = $i->id;
+            $r['name'] = $i->title;
+            if (empty($i->url) && !empty($i->file)) {
+                $r['type'] = 'adminfile';
+                $r['linkedto'] = $i->file; // @todo: substitute the appropriate filename.
+                // $r['link'] = ''; // @todo: provide a link to the file
+            }
+            else if (!empty($i->url) && empty($i->file)) {
+                $r['type'] = 'externallink';
+                $r['linkedto'] = $i->url;
+                // $r['link'] = $i->url;
+            }
+            else {
+                throw new Exception ('Exactly one of {file,url} should be set in site_menu table');
+            }
+            $rows[] = $r;
         }
-        else if (!empty($i->url) && empty($i->file)) {
-            $r['type'] = 'externallink';
-            $r['linkedto'] = $i->url;
-            // $r['link'] = $i->url;
-        }
-        else {
-            throw new Exception ('Exactly one of {file,url} should be set in site_menu table');
-        }
-        $rows[] = $r;
     }
     $result['menuitems'] = array_values($rows);
     $result['error'] = false;

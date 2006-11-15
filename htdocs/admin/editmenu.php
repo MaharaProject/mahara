@@ -39,7 +39,7 @@ $ijs .= <<< EOJS
 function getitems() {
     logDebug(get_string('loadingmenuitems'));
     processingStart();
-    var d = loadJSONDoc('getmenuitems.json.php',{'public':selectedmenu == 'public'});
+    var d = loadJSONDoc('getmenuitems.json.php',{'public':selectedmenu == 'loggedoutmenu'});
     d.addCallback(function(data) {
         if (!data.error) {
             logDebug(get_string('loadedmenuitems'));
@@ -59,7 +59,7 @@ function displaymenuitems(itemlist) {
     var table = $('menuitemlist');
     var newrow = TR({'id':'additem','style':'background-color: #ddd;'},
                     TD({'colspan':4},addform()));
-    replaceChildNodes(table,TBODY(null,[thead,rows,newrow]));
+    replaceChildNodes(table,cols(),TBODY(null,[thead,rows,newrow]));
 }
 
 // Creates one table row
@@ -72,7 +72,7 @@ function formatrow (item) {
     var edit = INPUT({'type':'button','value':get_string('edit')});
     edit.onclick = function () { edititem(item); };
     var cells = map(partial(TD,null),[type,item.name,linkedto,[del,edit]]);
-    return TR({'id':'menuitem_'+item.id,'class':'menueditcell'},cells);
+    return TR({'id':'menuitem_'+item.id},cells);
 }
 
 // Returns the form which adds a new menu item
@@ -142,8 +142,8 @@ function editform(item) {
         setNodeAttribute(elink,'checked',true);
     }
     var radios = [DIV(null,elink,eval('externallink')),DIV(null,afile,eval('adminfile'))];
-    var row = TR(null,map(partial(TD,{'class':'menueditcell'}),[radios,name,linkedto,savecancel]));
-    return TABLE(null,TBODY(null,row));
+    var row = TR(null,map(partial(TD,null),[radios,name,linkedto,savecancel]));
+    return TABLE({'width':'100%'},cols(),TBODY(null,row));
 }
 
 // Close all open edit forms
@@ -210,14 +210,24 @@ function delitem(itemid) {
 
 // Send the menu item in the form to the database.
 function saveitem(formid) {
+    var f = $(formid);
+    var name = f.name.value;
+    var linkedto = f.linkedto.value;
+    if (name == '') {
+        displayMessage(get_string('namedfieldempty',get_string('name')),'error');
+        return false;
+    }
+    if (linkedto == '') {
+        displayMessage(get_string('namedfieldempty',get_string('linkedto')),'error');
+        return false;
+    }
     processingStart();
     displayMessage(get_string('savingmenuitem'),'info');
-    var f = $(formid);
     var data = {'type':f.type[0].checked ? 'externallink' : 'adminfile',
-                'name':f.name.value,
-                'linkedto':f.linkedto.value,
+                'name':name,
+                'linkedto':linkedto,
                 'itemid':f.itemid.value,
-                'public':selectedmenu == 'public'};
+                'public':selectedmenu == 'loggedoutmenu'};
     var req = getXMLHttpRequest();
     req.open('POST','updatemenu.json.php');
     req.setRequestHeader('Content-type','application/x-www-form-urlencoded');
@@ -228,13 +238,13 @@ function saveitem(formid) {
         if (!data.error) { 
             errtype = 'info';
         }
-        if (data.error == 'local') {
+        else if (data.error == 'local') {
             errtype = 'error';
         }
-        if (errtype == 'global') {
+        else {
             global_error_handler(data);
         }
-        else {
+        if (errtype != 'global') {
             displayMessage(data.message,errtype);
             getitems();
             processingStop();
@@ -247,36 +257,44 @@ function saveitem(formid) {
     return false;
 }
 
+// In phase 1 there are no files in the system
 function getadminfiles() {
     return null;
 }
 
-function setmenu(menu) {
-    selectedmenu = menu;
-    var pub = get_string('loggedoutmenu');
-    var priv = get_string('loggedinmenu');
-    if (menu == 'public') {
-        priv = A({'href':''},priv);
-        priv.onclick = function () {return setmenu('private');};
-    }
-    else {
-        pub = A({'href':''},pub);
-        pub.onclick = function () {return setmenu('public');};
-    }
-    replaceChildNodes($('menuselect'), [pub, priv]);
+function changemenu() {
+    selectedmenu = $('menuselect').value;
     getitems();
-    return false;
 }
 
-var selectedmenu = 'public';
-addLoadEvent(function () {setmenu(selectedmenu);});
+// Set column widths
+function cols () {
+    COL = partial(createDOM,'col');
+    return [COL({'width':"20%"}),COL({'width':"25%"}),COL({'width':"40%"}),COL({'width':"15%"})];
+}
+
+var selectedmenu = 'loggedoutmenu';
+addLoadEvent(function () {
+    $('menuselect').value = selectedmenu;
+    $('menuselect').onchange = changemenu;
+    changemenu();
+});
 EOJS;
 
-$style = '<style type="text/css">.invisible{display:none;} .menueditcell{width:200px;}</style>';
-$strings = array('deletefailed','deletingmenuitem','menuitemdeleted','noadminfiles',
-                 'edit','delete','update','cancel','add','loggedinmenu','loggedoutmenu');
+$menulist = array('loggedinmenu', 'loggedoutmenu');
+foreach ($menulist as &$menu) {
+    $menu = array('value' => $menu,
+                  'name' => get_string($menu));
+}
+
+$style = '<style type="text/css">.invisible{display:none;}</style>';
+$strings = array('deletefailed','deletingmenuitem','menuitemdeleted','savingmenuitem','noadminfiles',
+                 'edit','delete','update','cancel','add','loggedinmenu','loggedoutmenu','name',
+                 'linkedto');
 $smarty = smarty(array(),array($style),$strings);
 $smarty->assign('INLINEJAVASCRIPT',$ijs);
+$smarty->assign('EDIT',get_string('edit') . ':');
+$smarty->assign('MENUS',$menulist);
 $smarty->display('admin/editmenu.tpl');
 
 ?>
