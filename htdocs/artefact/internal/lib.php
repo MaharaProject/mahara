@@ -29,7 +29,15 @@ defined('INTERNAL') || die();
 class PluginArtefactInternal extends PluginArtefact {
 
     public static function get_artefact_types() {
-        return array('profile', 'file', 'folder', 'image');
+        return array('file', 'folder', 'image',
+                     'firstname', 'lastname', 'studentid', 
+                     'preferredname', 'introduction', 
+                     'email', 'officialwebsite', 'personalwebsite', 
+                     'blog', 'address', 'town', 'city', 
+                     'country', 'homenumber', 'businessnumber', 
+                     'mobilenumber', 'faxnumber', 'icqnumber',
+                     'msnnumber'
+                     );
     }
 
     public static function get_plugin_name() {
@@ -70,7 +78,76 @@ class PluginArtefactInternal extends PluginArtefact {
     }
 }
 
-// @todo write ArtefactType$name classes for each of the 
-// types returned by get_artefact_types 
+class ArtefactTypeProfile extends ArtefactType {
+
+    public function commit() {
+        $this->commit_basic();
+    }
+    
+    public function delete() {
+        $this->delete_basic();
+    }
+
+    public function render($format, $options) {
+
+    }
+
+    public function get_icon() {
+
+    }
+
+    public static function get_render_list() {
+
+    }
+    
+    public static function can_render_to($format) {
+
+    }
+
+    public static function get_mandatory_fields() {
+        return array('firstname', 'lastname', 'studentid', 'email');
+    }
+}
+
+class ArtefactTypeCachedProfile extends ArtefactTypeProfile {
+    
+    public function commit() {
+        $this->commit_basic();
+        $field = $this->get_artefact_type();
+        set_field('usr', $field, $this->title, 'id', $this->owner);
+    }
+
+    public function delete() {
+        $this->delete_basic();
+        $field = $this->get_artefact_type();
+        set_field('usr', $field, null, 'id', $this->owner);
+    }
+
+}
+
+class ArtefactTypeFirstname extends ArtefactTypeCachedProfile {}
+class ArtefactTypeLastname extends ArtefactTypeCachedProfile {}
+class ArtefactTypePreferredname extends ArtefactTypeCachedProfile {}
+class ArtefactTypeEmail extends ArtefactTypeCachedProfile {}
+
+class ArtefactTypeStudentid extends ArtefactTypeProfile {}
+class ArtefactTypeIntroduction extends ArtefactTypeProfile {}
+class ArtefactTypeOfficialwebsite extends ArtefactTypeProfile {}
+class ArtefactTypePersonalwebsite extends ArtefactTypeProfile {}
+class ArtefactTypeBlog extends ArtefactTypeProfile {}
+class ArtefactTypeAddress extends ArtefactTypeProfile {}
+class ArtefactTypeTown extends ArtefactTypeProfile {}
+class ArtefactTypeCity extends ArtefactTypeProfile {}
+class ArtefactTypeCountry extends ArtefactTypeProfile {}
+class ArtefactTypeHomenumber extends ArtefactTypeProfile {}
+class ArtefactTypeBusinessnumber extends ArtefactTypeProfile {}
+class ArtefactTypeMobilenumber extends ArtefactTypeProfile {}
+class ArtefactTypeFaxnumber extends ArtefactTypeProfile {}
+class ArtefactTypeIcqnumber extends ArtefactTypeProfile {}
+class ArtefactTypeMsnnumber extends ArtefactTypeProfile {}
+
+class ArtefactTypeFolder extends ArtefactTypeProfile {}
+class ArtefactTypeFile extends ArtefactTypeProfile {}
+class ArtefactTypeImage extends ArtefactTypeFile {}
 
 ?>
