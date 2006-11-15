@@ -43,6 +43,14 @@ $string['upgradesuccess'] = 'Successfully upgraded to version ';
 $string['upgradefailure'] = 'Failed to upgrade!';
 $string['noupgrades'] = 'Nothing to upgrade! You are fully up to date!';
 
+// Admin navigation menu
+$string['usermanagement'] = 'Manage users';
+$string['siteoptions']    = 'Site options';
+$string['pageeditor']     = 'Site pages';
+$string['menueditor']     = 'Site menu';
+$string['files']          = 'Files';
+$string['adminhome']      = 'Admin home';
+
 // Upload CSV stuff
 $string['csvfile'] = 'CSV File';
 $string['csvfiledescription'] = 'The file containing users to add';
