@@ -42,6 +42,12 @@ $siteoptionform = form(array(
     'action'   => '',
     'ajaxpost' => true,
     'elements' => array(
+        'sitename' => array(
+            'type'         => 'text',
+            'title'        => get_string('sitename'),
+            'description'  => get_string('sitenamedescription'),
+            'defaultvalue' => get_config('sitename'),
+        ),
         'language' => array(
             'type'         => 'select',
             'title'        => get_string('language'),
@@ -109,7 +115,7 @@ function siteoptions_fail($field) {
 }
 
 function siteoptions_submit($values) {
-    $fields = array('language','theme','pathtoclam',
+    $fields = array('sitename','language','theme','pathtoclam',
                     'allowpublicviews','artefactviewinactivitytime',
                     'contactaddress');
     foreach ($fields as $field) {
