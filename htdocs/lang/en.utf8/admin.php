@@ -42,4 +42,13 @@ $string['upgradeloading'] = 'Loading...';
 $string['upgradesuccess'] = 'Successfully upgraded to version ';
 $string['upgradefailure'] = 'Failed to upgrade!';
 $string['noupgrades'] = 'Nothing to upgrade! You are fully up to date!';
+
+// Upload CSV stuff
+$string['csvfile'] = 'CSV File';
+$string['csvfiledescription'] = 'The file containing users to add';
+$string['uploadcsverrorinvalidemail'] = 'Error on line %s of your file: The e-mail address for this user is not in correct form';
+$string['uploadcsverrorinvalidpassword'] = 'Error on line %s of your file: The password for this user is not in correct form';
+$string['uploadcsverrorinvalidusername'] = 'Error on line %s of your file: The username for this user is not in correct form';
+$string['uploadcsverrorincorrectfieldcount'] = 'Line %s of the file does not have the correct number of fields';
+$string['uploadcsvfile'] = 'Upload CSV File';
 ?>
