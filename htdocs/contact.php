@@ -90,8 +90,13 @@ function contactus_submit($values) {
     }
 
     $to = new StdClass;
-    $to->firstname = 'sitename';
-    $to->lastname = 'Contact';
+    if (!$sitename = @get_config('sitename')) {
+        $to->firstname = 'mahara';
+    }
+    else {
+        $to->firstname = $sitename;
+    }
+    $to->lastname = 'contact email';
     $to->email = $contactemail;
 
     $fromnames = explode(' ',$values['name']);
@@ -99,6 +104,7 @@ function contactus_submit($values) {
         json_reply('local', get_string('nosendernamefound'));
     }
     $from = new StdClass;
+    $from->preferredname = $values['name'];
     $from->firstname = $fromnames[0];
     $from->lastname = count($fromnames) < 2 ? $fromnames[0] : implode(' ',array_slice($fromnames,1));
     $from->email = $values['email'];
