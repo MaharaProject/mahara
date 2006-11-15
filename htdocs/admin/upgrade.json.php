@@ -97,5 +97,6 @@ else {
     $data['success'] = 1;
     $data['errormessage'] = get_string('nothingtoupgrade','admin');
 }
+
 echo json_encode($data);    
 ?>

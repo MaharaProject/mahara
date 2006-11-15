@@ -90,11 +90,6 @@ function check_upgrades($name=null) {
                 if (strpos($dir, '.') === 0) {
                     continue;
                 }
-                /*
-                if (empty($installing) && $dir != 'internal') {
-                    continue;
-                }
-                */
                 if (!is_dir(get_config('docroot') . $plugin . '/' . $dir)) {
                     continue;
                 }
@@ -104,7 +99,7 @@ function check_upgrades($name=null) {
                     try {
                         $funname($dir);
                     }
-                    catch (Exception $e) {
+                    catch (InstallationException $e) {
                         log_warn("Plugin $plugin $dir is not installable: " . $e->GetMessage());
                         continue;
                     }
@@ -134,6 +129,9 @@ function check_upgrades($name=null) {
         }
 
         if (empty($pluginversion)) {
+            if (empty($installing) && $pluginkey != $name) {
+                continue;
+            }
             $plugininfo = new StdClass;
             $plugininfo->install = true;
             $plugininfo->to = $config->version;
@@ -263,7 +261,7 @@ function upgrade_plugin($upgrade) {
 
     // postinst stuff...
     safe_require($plugintype, $pluginname, 'lib.php');
-    $pcname = 'Plugin' . ucfirst($plugintype) . ucfirst($pluginname);
+    $pcname = generate_class_name($plugintype, $pluginname);
 
     if ($crons = call_static_method($pcname, 'get_cron')) {
         foreach ($crons as $cron) {
@@ -322,6 +320,26 @@ function upgrade_plugin($upgrade) {
             else {
                 update_record($table, $event, array('id', $exists->id));
             }
+        }
+    }
+
+     // install artefact types
+    if ($plugintype == 'artefact') {
+        $types = call_static_method($pcname, 'get_artefact_types');
+        $ph = array();
+        if (is_array($types)) {
+            foreach ($types as $type) {
+                $ph[] = '?';
+                if (!record_exists('artefact_installed_type', 'plugin', $pluginname, 'name', $type)) {
+                    $t = new StdClass;
+                    $t->name = $type;
+                    $t->plugin = $pluginname;
+                    insert_record('artefact_installed_type',$t);
+                }
+            }
+            $select = '(plugin = ? AND name NOT IN (' . implode(',', $ph) . '))';
+            delete_records_select('artefact_installed_type', $select,
+                                  array_merge(array($pluginname),$types));
         }
     }
 
