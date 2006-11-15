@@ -109,6 +109,9 @@ function &smarty($javascript = array(), $headers = array(), $strings = array()) 
 
     $smarty->assign('THEMEURL', get_config('themeurl'));
     $smarty->assign('WWWROOT', get_config('wwwroot'));
+    $sitename = get_config('sitename');
+    $smarty->assign('title', $sitename);
+    $smarty->assign('heading', $sitename);
 
     if (defined('PUBLIC')) {
         $smarty->assign('PUBLIC', true);

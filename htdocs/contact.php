@@ -90,12 +90,7 @@ function contactus_submit($values) {
     }
 
     $to = new StdClass;
-    if (!$sitename = @get_config('sitename')) {
-        $to->firstname = 'mahara';
-    }
-    else {
-        $to->firstname = $sitename;
-    }
+    $to->firstname = get_config('sitename');
     $to->lastname = 'contact email';
     $to->email = $contactemail;
 
