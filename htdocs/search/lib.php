@@ -44,23 +44,24 @@ abstract class PluginSearch {
      *               limit   => integer, // how many results are returned
      *               offset  => integer, // starting from which result
      *               results => array(   // the result records
+
      *                   array(
-     *                       id          => integer,
-     *                       username    => string,
-     *                       institution => string,
-     *                       firstname   => string,
-     *                       lastname    => string,
-     *                       prefname    => string,
-     *                       email       => string,
+     *                       id            => integer,
+     *                       username      => string,
+     *                       institution   => string,
+     *                       firstname     => string,
+     *                       lastname      => string,
+     *                       preferredname => string,
+     *                       email         => string,
      *                   ),
      *                   array(
-     *                       id          => integer,
-     *                       username    => string,
-     *                       institution => string,
-     *                       firstname   => string,
-     *                       lastname    => string,
-     *                       prefname    => string,
-     *                       email       => string,
+     *                       id            => integer,
+     *                       username      => string,
+     *                       institution   => string,
+     *                       firstname     => string,
+     *                       lastname      => string,
+     *                       preferredname => string,
+     *                       email         => string,
      *                   ),
      *                   array(...),
      *               ),

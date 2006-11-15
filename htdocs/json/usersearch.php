@@ -50,7 +50,6 @@ $offset = param_integer('offset', 0);
 $data = search_user($query, $limit, $offset);
 
 foreach ($data['results'] as &$result) {
-    // @todo should call magical display user function
     $result['name'] = display_name($result);
 
     unset($result['email']);
@@ -58,7 +57,7 @@ foreach ($data['results'] as &$result) {
     unset($result['username']);
     unset($result['firstname']);
     unset($result['lastname']);
-    unset($result['prefname']);
+    unset($result['preferredname']);
 }
 
 print json_encode($data);

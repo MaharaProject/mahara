@@ -47,7 +47,7 @@ function form_render_userlist($element, Form $form) {
     }
 
     if (is_array($value) && count($value)) {
-        $members = get_records_select('usr','id IN (' . join(',',$value) . ')', null, '', 'id,firstname,lastname,prefname');
+        $members = get_records_select('usr','id IN (' . join(',',$value) . ')', null, '', 'id,firstname,lastname,preferredname');
 
         foreach($members as &$member) {
             $member = display_name($member);

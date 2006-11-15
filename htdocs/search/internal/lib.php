@@ -45,22 +45,22 @@ class PluginSearchInternal extends PluginSearch {
      *               offset  => integer, // starting from which result
      *               results => array(   // the result records
      *                   array(
-     *                       id          => integer,
-     *                       username    => string,
-     *                       institution => string,
-     *                       firstname   => string,
-     *                       lastname    => string,
-     *                       prefname    => string,
-     *                       email       => string,
+     *                       id            => integer,
+     *                       username      => string,
+     *                       institution   => string,
+     *                       firstname     => string,
+     *                       lastname      => string,
+     *                       preferredname => string,
+     *                       email         => string,
      *                   ),
      *                   array(
-     *                       id          => integer,
-     *                       username    => string,
-     *                       institution => string,
-     *                       firstname   => string,
-     *                       lastname    => string,
-     *                       prefname    => string,
-     *                       email       => string,
+     *                       id            => integer,
+     *                       username      => string,
+     *                       institution   => string,
+     *                       firstname     => string,
+     *                       lastname      => string,
+     *                       preferredname => string,
+     *                       email         => string,
      *                   ),
      *                   array(...),
      *               ),
@@ -70,13 +70,13 @@ class PluginSearchInternal extends PluginSearch {
         if ( is_postgres() ) {
             $data = get_rows_sql("
                 SELECT
-                    id, username, institution, firstname, lastname, prefname, email
+                    id, username, institution, firstname, lastname, preferredname, email
                 FROM
                     " . get_config('dbprefix') . "usr u
                 WHERE
                     firstname ILIKE '%' || ? || '%' 
                     OR lastname ILIKE '%' || ? || '%' 
-                    OR prefname ILIKE '%' || ? || '%' 
+                    OR preferredname ILIKE '%' || ? || '%' 
                     OR email ILIKE '%' || ? || '%' 
                 ",
                 array($query_string, $query_string, $query_string, $query_string),
@@ -92,7 +92,7 @@ class PluginSearchInternal extends PluginSearch {
                 WHERE
                     firstname ILIKE '%' || ? || '%' 
                     OR lastname ILIKE '%' || ? || '%' 
-                    OR prefname ILIKE '%' || ? || '%' 
+                    OR preferredname ILIKE '%' || ? || '%' 
                     OR email ILIKE '%' || ? || '%' 
             ",
                 array($query_string, $query_string, $query_string, $query_string),

@@ -70,7 +70,7 @@ class Session {
             'admin'          => false,
             'firstname'      => '',
             'lastname'       => '',
-            'prefname'       => '',
+            'preferredname'  => '',
             'email'          => '',
             'accountprefs'   => array(),
             'activityprefs'  => array(),
