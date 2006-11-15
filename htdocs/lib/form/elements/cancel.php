@@ -44,10 +44,12 @@ function form_render_cancel($element, Form $form) {
         . ' value="' . hsc($form->get_value($element)) . '">';
 }
 
+// @todo how to support cancel buttons for ajax post? Possibly do a full post regardless...
+// or allow the user to specify a javascript function to run... it could do document.location=
 function form_get_value_js_cancel($element, $form) {
     $formname = $form->get_name();
     $name = $element['name'];
-    return "    data['$name'] = document.forms['$formname'].elements['{$name}_cancel'].value;\n";
+    return "    data['{$name}_cancel'] = document.forms['$formname'].elements['{$name}_cancel'].value;\n";
 }
 
 ?>
