@@ -32,17 +32,18 @@ class PluginNotificationEmail extends PluginNotification {
 
     public static function notify_user($user, $data) {
 
+        $sitename = get_config('sitename');
         $fulltype = get_string('type' . $data->type, 'activity');
-        $subject = get_string('emailsubject', 'notification.email', $fulltype);
+        $subject = get_string('emailsubject', 'notification.email', $sitename, $fulltype);
 
         if (!empty($data->userfrom)) {
             $userfrom = get_record('usr', 'id', $data->userfrom);
-            $messagebody = get_string('emailbody', 'notification.email')
+            $messagebody = get_string('emailbody', 'notification.email', $sitename)
                 . $data->message;
         } 
         else {
             $userfrom = null;
-            $messagebody = get_string('emailbodynoreply', 'notification.email')
+            $messagebody = get_string('emailbodynoreply', 'notification.email', $sitename)
                 . $data->message;
         }
         $prefurl = get_config('wwwroot') . 'account/activity/preferences/';
