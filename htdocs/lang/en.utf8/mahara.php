@@ -36,10 +36,13 @@ $string['prevpage'] = 'Previous page';
 // auth
 $string['accountexpired'] = 'Sorry, your account has expired';
 $string['accountsuspended'] = 'Your account has been suspeneded as of %s. The reason for your suspension is:<blockquote>%s</blockquote>';
+$string['changepassword'] = 'Change Password';
+$string['changepasswordinfo'] = 'You are required to change your password before you can proceed.';
 $string['confirmpassword'] = 'Confirm password';
 $string['loggedoutok'] = 'You have been logged out successfully';
 $string['login'] = 'Log In';
 $string['loginfailed'] = 'You have not provided the correct credentials to log in. Please check your username and password are correct.';
+$string['newpassword'] = 'New Password';
 $string['password'] = 'Password';
 $string['passworddesc'] = 'Your password';
 $string['passwordnotchanged'] = 'You did not change your password, please choose a new password';
@@ -49,6 +52,8 @@ $string['passwordtooeasy'] = 'Your password is too easy! Please choose a harder 
 $string['username'] = 'Username';
 $string['usernamedesc'] = 'Your username';
 $string['usernamehelp'] = 'The username you have been given to access this system.';
+$string['yournewpassword'] = 'Your new password';
+$string['yournewpasswordagain'] = 'Your new password again';
 
 // Registration
 $string['registeredemailsubject'] = 'You have registered at Mahara';
