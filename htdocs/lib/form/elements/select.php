@@ -88,15 +88,12 @@ function form_render_select($element, Form $form) {
 function form_get_value_js_select($element, Form $form) {
     $formname = $form->get_name();
     $name = $element['name'];
-    return <<<EOF
-    var select = document.forms['$formname'].elements['$name'];
-    data['$name'] = new Array();
-    for (var i = 0; i < select.length; i++) {
-        if (select[i].selected) {
-            data['$name'].push(select[i].value);
-        }
+    if ($element['collapseifoneoption']) {
+        return "    data['$name'] = document.forms['$formname'].elements['$name'].value;\n";
     }
-    log(data['$name']);
+    return <<<EOF
+    var select = filter(function(option) { return option.selected; }, document.forms['$formname'].elements['$name'].options);
+    data['$name'] = map(function(o) { return o.value; }, select);
 
 EOF;
 }
