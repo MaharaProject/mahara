@@ -122,28 +122,6 @@ $string['forgotpassemailmessagehtml'] = '<p>Dear %s,</p>
 
 <p><a href="' . get_config('wwwroot') . 'forgotpass.php?key=%s">' . get_config('wwwroot') . 'forgotpass.php?key=%s</a></p>';
 
-// Site options
-$string['allowpublicviews'] = 'Allow public views';
-$string['allowpublicviewsdescription'] = 'If set to yes, views are accessable by the public.  If set to no, only logged in users will be able to look at views';
-$string['artefactviewinactivitytime'] = 'Artefact view inactivity time';
-$string['artefactviewinactivitytimedescription'] = 'The time after which an inactive view or artefact will be moved to the InactiveContent area';
-$string['contactaddress'] = 'Contact address';
-$string['contactaddressdescription'] = 'The email address to which messages from the Contact Us form will be sent';
-$string['language'] = 'Language';
-$string['pathtoclam'] = 'Path to clam';
-$string['pathtoclamdescription'] = 'The filesystem path to clamscan or clamdscan';
-$string['sessionlifetime'] = 'Session lifetime';
-$string['sessionlifetimedescription'] = 'Time in minutes after which an inactive logged in user will be automatically logged out';
-$string['setsiteoptionsfailed'] = 'Failed setting the %s option';
-$string['sitelanguagedescription'] = 'The default language for the site';
-$string['sitename'] = 'Site name';
-$string['sitenamedescription'] = 'The overall name of the site';
-$string['siteoptionsset'] = 'Site options have been updated';
-$string['sitethemedescription'] = 'The theme for the site';
-$string['theme'] = 'Theme';
-$string['updatesiteoptions'] = 'Update site options';
-$string['viruschecking'] = 'Virus checking';
-$string['viruscheckingdescription'] = 'If checked, virus checking will be enabled for all uploaded files using ClamAV';
 // Expiry times
 $string['noenddate'] = 'No end date';
 $string['days']      = 'days';
@@ -165,6 +143,7 @@ $string['linkedto']      = 'Linked to';
 $string['add']           = 'Add';
 $string['delete']        = 'Delete';
 $string['edit']          = 'Edit';
+$string['editmenus']     = 'Edit menus';
 $string['loggedinmenu']  = 'Logged in menu';
 $string['loggedoutmenu'] = 'Logged out menu';
 $string['menuitemsaved'] = 'Menu item saved';
@@ -173,6 +152,7 @@ $string['savingmenuitem'] = 'Saving menu item';
 // Site content
 $string['about']               = 'About';
 $string['discardpageedits']    = 'Discard your changes to this page?';
+$string['editsitecontent']     = 'Edit site content';
 $string['home']                = 'Home';
 $string['loggedouthome']       = 'Logged out Home';
 $string['privacy']             = 'Privacy statement';

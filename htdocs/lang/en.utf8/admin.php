@@ -51,6 +51,30 @@ $string['menueditor']     = 'Site menu';
 $string['files']          = 'Files';
 $string['adminhome']      = 'Admin home';
 
+// Site options
+$string['allowpublicviews'] = 'Allow public views';
+$string['allowpublicviewsdescription'] = 'If set to yes, views are accessable by the public.  If set to no, only logged in users will be able to look at views';
+$string['artefactviewinactivitytime'] = 'Artefact view inactivity time';
+$string['artefactviewinactivitytimedescription'] = 'The time after which an inactive view or artefact will be moved to the InactiveContent area';
+$string['contactaddress'] = 'Contact address';
+$string['contactaddressdescription'] = 'The email address to which messages from the Contact Us form will be sent';
+$string['language'] = 'Language';
+$string['pathtoclam'] = 'Path to clam';
+$string['pathtoclamdescription'] = 'The filesystem path to clamscan or clamdscan';
+$string['sessionlifetime'] = 'Session lifetime';
+$string['sessionlifetimedescription'] = 'Time in minutes after which an inactive logged in user will be automatically logged out';
+$string['setsiteoptionsfailed'] = 'Failed setting the %s option';
+$string['sitelanguagedescription'] = 'The default language for the site';
+$string['sitename'] = 'Site name';
+$string['sitenamedescription'] = 'The overall name of the site';
+$string['siteoptions'] = 'Site options';
+$string['siteoptionsset'] = 'Site options have been updated';
+$string['sitethemedescription'] = 'The theme for the site';
+$string['theme'] = 'Theme';
+$string['updatesiteoptions'] = 'Update site options';
+$string['viruschecking'] = 'Virus checking';
+$string['viruscheckingdescription'] = 'If checked, virus checking will be enabled for all uploaded files using ClamAV';
+
 // Upload CSV stuff
 $string['csvfile'] = 'CSV File';
 $string['csvfiledescription'] = 'The file containing users to add';
@@ -60,5 +84,7 @@ $string['uploadcsverrorinvalidusername'] = 'Error on line %s of your file: The u
 $string['uploadcsverrorincorrectfieldcount'] = 'Line %s of the file does not have the correct number of fields';
 $string['uploadcsvfile'] = 'Upload CSV File';
 $string['uploadcsvfiledescription'] = 'You may use this facility to upload new users via a <acronym title="Comma Separated Values">CSV</acronym> file. Each record in the file must have a username, e-mail address and password.';
+
+
 
 ?>
