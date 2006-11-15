@@ -236,7 +236,7 @@ function register_submit($values) {
 
         $user =(object) $values;
         email_user($user, null,
-            get_string('registeredemailsubject'),
+            get_string('registeredemailsubject', 'mahara', get_config('sitename')),
             get_string('registeredemailmessagetext', 'mahara', $values['key']),
             get_string('registeredemailmessagehtml', 'mahara', $values['key'], $values['key']));
     }

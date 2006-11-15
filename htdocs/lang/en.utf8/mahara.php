@@ -57,7 +57,7 @@ $string['yournewpassword'] = 'Your new password';
 $string['yournewpasswordagain'] = 'Your new password again';
 
 // Registration
-$string['registeredemailsubject'] = 'You have registered at Mahara';
+$string['registeredemailsubject'] = 'You have registered at %s';
 $string['registeredemailmessagetext'] = 'Congratulations!
 
 You have successfully registered an account! Please follow this link to
