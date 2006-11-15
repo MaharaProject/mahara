@@ -1059,14 +1059,14 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='')
     else {
         $mail->Sender = $userfrom->email;
         $mail->From = $mail->Sender;
-        $mail->FromName = display_name($userfrom);
+        $mail->FromName = display_name($userfrom, $userto);
     }
            
     $mail->AddReplyTo($mail->From, $mail->FromName);
 
     $mail->Subject = substr(stripslashes($subject), 0, 78);
 
-    $usertoname = display_name($userto);
+    $usertoname = display_name($userto, $userto);
     $mail->AddAddress($userto->email, $usertoname );
 
     $mail->WordWrap = 79;   
@@ -1089,12 +1089,37 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='')
                         . "Error from phpmailer was: " . $mail->ErrorInfo );
 }
 
-function display_name($user) {
+function display_name($user, $userto=null) {
+    global $USER;
+    
+    if (empty($userto)) {
+        $userto = $USER;
+    }
     if (is_array($user)) {
         $user = (object)$user;
     }
-    return $user->firstname . ' ' . $user->lastname;
-    // @todo
+    else if (is_numeric($user)) {
+        $user = get_record('usr', 'id', $user);
+    }
+    if (!is_object($user)) {
+        throw new InvalidArgumentException("Invalid user passed to display_name");
+    }
+    
+    // if they don't have a preferred name set, just return here
+    if (empty($user->preferredname)) {
+        return $user->firstname . ' ' . $user->lastname;
+    }
+
+    $prefix = get_config('dbprefix');
+    $sql = 'SELECT c1.member
+            FROM ' . $prefix . 'community_member c1 
+            JOIN  ' .$prefix. 'community_member c2
+                ON c1.community = c2.community 
+            WHERE c1.member = ? AND c2.member = ? AND c2.tutor = ?';
+    if (record_exists_sql($sql, array($user->id, $userto->id, 1))) {
+        return $user->preferredname . ' (' . $user->firstname . ' ' . $user->lastname . ')';
+    }
+    return  $user->preferredname;
 }
 
 /**
