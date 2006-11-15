@@ -24,13 +24,54 @@
  *
  */
 
+// NOTE: This script is VERY SIMILAR to the staffusers.php script, a bug fixed
+// here might need to be fixed there too.
 define('INTERNAL', 1);
 define('ADMIN', 1);
 define('MENUITEM', 'usermanagement');
 define('SUBMENUITEM', 'adminusers');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-
+require_once('form.php');
 $smarty = smarty();
+
+// Get users who are currently administrators
+// @todo later, exclude the user with uid 1
+$adminusers = get_column('usr', 'id', 'admin', 1);
+
+$form = array(
+    'name' => 'adminusers',
+    'method' => 'post',
+    'action' => '',
+    'elements' => array(
+        'users' => array(
+            'type' => 'userlist',
+            'title' => get_string('adminusers', 'admin'),
+            'defaultvalue' => $adminusers,
+            'filter' => false
+        ),
+        'submit' => array(
+            'type' => 'submitcancel',
+            'value' => array(get_string('submit'), get_string('cancel'))
+        )
+    )
+);
+
+function adminusers_submit($values) {
+    global $SESSION;
+    
+    db_begin();
+    execute_sql('UPDATE usr
+        SET admin = 0
+        WHERE admin = 1');
+    execute_sql('UPDATE usr
+        SET admin = 1
+        WHERE id IN (' . join(',', $values['users']) . ')');
+    db_commit();
+    $SESSION->add_ok_msg(get_string('adminusersupdated', 'admin'));
+    redirect(get_config('wwwroot') . 'admin/usermanagement/adminusers.php');
+}
+
+$smarty->assign('adminusersform', form($form));
 $smarty->display('admin/usermanagement/adminusers.tpl');
 
 ?>
