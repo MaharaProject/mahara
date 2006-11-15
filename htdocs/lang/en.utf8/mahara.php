@@ -146,6 +146,8 @@ $string['delete']        = 'Delete';
 $string['edit']          = 'Edit';
 $string['loggedinmenu']  = 'Logged in menu';
 $string['loggedoutmenu'] = 'Logged out menu';
+$string['menuitemsaved'] = 'Menu item saved';
+$string['savingmenuitem'] = 'Saving menu item';
 
 // Site content
 $string['about']               = 'About';

@@ -75,6 +75,6 @@ else {
     }
 }
 
-json_reply(false,get_string('savedsuccessfully'));
+json_reply(false,get_string('menuitemsaved'));
 
 ?>
