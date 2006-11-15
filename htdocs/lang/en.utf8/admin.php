@@ -51,4 +51,6 @@ $string['uploadcsverrorinvalidpassword'] = 'Error on line %s of your file: The p
 $string['uploadcsverrorinvalidusername'] = 'Error on line %s of your file: The username for this user is not in correct form';
 $string['uploadcsverrorincorrectfieldcount'] = 'Line %s of the file does not have the correct number of fields';
 $string['uploadcsvfile'] = 'Upload CSV File';
+$string['uploadcsvfiledescription'] = 'You may use this facility to upload new users via a <acronym title="Comma Separated Values">CSV</acronym> file. Each record in the file must have a username, e-mail address and password.';
+
 ?>
