@@ -104,7 +104,7 @@ function contactus_submit($values) {
         json_reply('local', get_string('nosendernamefound'));
     }
     $from = new StdClass;
-    $from->preferredname = $values['name'];
+    //$from->preferredname = $values['name'];
     $from->firstname = $fromnames[0];
     $from->lastname = count($fromnames) < 2 ? $fromnames[0] : implode(' ',array_slice($fromnames,1));
     $from->email = $values['email'];
