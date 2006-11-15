@@ -235,8 +235,11 @@ abstract class ArtefactType {
 
     public function set($field, $value) {
         if (property_exists($this, $field)) {
+            if ($this->{$field} != $value) {
+                // only set it to dirty if it's changed
+                $this->dirty = true;
+            }
             $this->{$field} = $value;
-            $this->dirty = true;
             if ($field == 'parent') {
                 $this->parentdirty = true;
             }
@@ -251,7 +254,6 @@ abstract class ArtefactType {
      * artefact cache as dirty if necessary.
      */
     public function __destruct() {
-        try {
         if (!empty($this->dirty)) {
             $this->commit();
         }
@@ -265,10 +267,6 @@ abstract class ArtefactType {
             }
             set_field_select('artefact_parent_cache', 'dirty', 1,
                              'artefact = ? OR parent = ?', array($this->id, $this->id));
-        }
-        }
-        catch (Exception $e) {
-            log_warn($e->GetMessage());
         }
     }
     
