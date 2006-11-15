@@ -107,7 +107,7 @@ function contactus_submit($values) {
         email_user($to,$from,$values['subject'],$values['message']);
     }
     catch (Exception $e) {
-        json_reply('local', get_string('emailnotsent'));
+        json_reply('local', get_string('emailnotsent', 'mahara', $e->getMessage()));
     }
 
     json_reply(false, get_string('contactinformationsent'));
