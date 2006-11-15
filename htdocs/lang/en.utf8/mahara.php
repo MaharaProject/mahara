@@ -75,9 +75,9 @@ $string['registrationnosuchkey'] = 'Sorry, there does not seem to be a registrat
 // Forgot password
 $string['pwchangerequestsent'] = 'You should receive an e-mail shortly with a link you can use to change the password for your account';
 $string['forgotpassemailsubject'] = 'Change password request for %s';
-$string['forgotpassemailmessagetext'] = 'Dear $fullname,
+$string['forgotpassemailmessagetext'] = 'Dear %s,
 
-A request to reset your password has been received for your $sitename account.
+A request to reset your password has been received for your %s account.
 
 Please follow the link below to continue the reset process.
 
@@ -90,12 +90,12 @@ us.
 
 ' . get_config('wwwroot') . 'contact.php
 
-Regards, $sitename Site Administrator
+Regards, %s Site Administrator
 
 ' . get_config('wwwroot') . 'forgotpass.php?key=%s';
-$string['forgotpassemailmessagehtml'] = '<p>Dear $fullname,</p>
+$string['forgotpassemailmessagehtml'] = '<p>Dear %s,</p>
 
-<p>A request to reset your password has been received for your $sitename account.</p>
+<p>A request to reset your password has been received for your %s account.</p>
 
 <p>Please follow the link below to continue the reset process.</p>
 
@@ -105,7 +105,7 @@ $string['forgotpassemailmessagehtml'] = '<p>Dear $fullname,</p>
 
 <p>If you have any questsions regarding the above, please feel free to <a href="' . get_config('wwwroot') . 'contact.php">contact us</a>.</p>
 
-<p>Regards, $sitename Site Administrator</p>
+<p>Regards, %s Site Administrator</p>
 
 <p><a href="' . get_config('wwwroot') . 'forgotpass.php?key=%s">' . get_config('wwwroot') . 'forgotpass.php?key=%s</a></p>';
 

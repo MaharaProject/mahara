@@ -128,10 +128,12 @@ function forgotpass_submit($values) {
         $pwrequest->usr = $user->id;
         $pwrequest->expiry = db_format_timestamp(time() + 86400);
         $pwrequest->key = get_random_key();
+        $sitename = get_config('sitename');
+        $fullname = display_name($user);
         email_user($user, null,
-            get_string('forgotpassemailsubject', 'mahara', get_config('sitename')),
-            get_string('forgotpassemailmessagetext', 'mahara', $pwrequest->key, $pwrequest->key),
-            get_string('forgotpassemailmessagehtml', 'mahara', $pwrequest->key, $pwrequest->key, $pwrequest->key, $pwrequest->key));
+            get_string('forgotpassemailsubject', 'mahara', $sitename),
+            get_string('forgotpassemailmessagetext', 'mahara', $fullname, $sitename, $pwrequest->key, $sitename, $pwrequest->key),
+            get_string('forgotpassemailmessagehtml', 'mahara', $fullname, $sitename, $pwrequest->key, $pwrequest->key, $sitename, $pwrequest->key, $pwrequest->key));
         insert_record('usr_password_request', $pwrequest);
     }
     catch (SQLException $e) {
