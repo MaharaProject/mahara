@@ -73,13 +73,8 @@ function form_get_value_js_radio($element, Form $form) {
     $formname = $form->get_name();
     $name = $element['name'];
     return <<<EOF
-    var radio = document.forms['$formname'].elements['$name'];
-    for (var i = 0; i < radio.length; i++) {
-        if (radio[i].checked) {
-            data['$name'] = radio[i].value;
-            break;
-        }
-    }
+    var radio = filter(function(radio) { return radio.checked; }, document.forms['$formname'].elements['$name']);
+    data['$name'] = radio[0].value;
 
 EOF;
 }
