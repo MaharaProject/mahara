@@ -773,6 +773,10 @@ class Plugin {
     public static function postinst() {
         return true;
     }
+
+    public static function has_config() {
+        return false;
+    }
 }
 
 /**

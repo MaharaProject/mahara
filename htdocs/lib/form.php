@@ -690,6 +690,7 @@ class Form {
      * and formname_validate() to be defined.
      */
     private function submit_js() {
+        // @todo nigel should disable all buttons on this form while the submit is happening
         $result = <<<EOF
 function {$this->name}_submit() {
     // eventually we should check input types for wysiwyg before doing this

@@ -266,6 +266,10 @@ MochiKit.Base.update(MochiKit.Signal.Event.prototype, {
                     typeof(this._event.charCode) == 'undefined') { // IE
                     k.code = this._event.keyCode;
                     k.string = String.fromCharCode(k.code);
+                } else if (this._event.keyCode &&
+                    this._event.charCode == 0) { // FF
+                    k.code = this._event.keyCode;
+                    k.string = '';
                 }
 
                 this._key = k;

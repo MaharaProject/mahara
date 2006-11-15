@@ -449,6 +449,7 @@ function auth_draw_login_page($message=null, Form $form=null) {
     }
     $smarty = smarty();
     $smarty->assign('login_form', $loginform);
+    $smarty->assign('loginmessage', get_string('loginto', 'mahara', get_config('sitename')));
     $smarty->display('login.tpl');
     exit;
 }

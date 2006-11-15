@@ -195,6 +195,10 @@ class AuthInternal extends Auth {
  * Plugin configuration class. Nothing special required for this plugin...
  */
 class PluginAuthInternal extends Plugin {
+
+    static function has_config() {
+        return true;
+    }
 }
 
 ?>

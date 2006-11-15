@@ -380,6 +380,18 @@ abstract class ArtefactType {
 
         return $type;
     }
+
+    public static function has_config() {
+        return false;
+    }
+
+    public static function get_config_options() {
+        return array();
+    }
+
+    public static function collapse_config() {
+        return false;
+    }
 }
 
 // helper functions for artefacts in general
