@@ -35,27 +35,26 @@ class PluginArtefactInternal extends PluginArtefact {
             'studentid',
             'preferredname',
             'introduction',
-            'emailaddress',
+            'email',
             'officialwebsite',
             'personalwebsite',
-            'blogaddress',
-            'postaladdress',
+            'blog',
+            'address',
             'town',
-            'cityregion',
+            'city',
             'country',
-            'homephone',
-            'businessphone',
-            'mobilephone',
+            'homenumber',
+            'businessnumber',
+            'mobilenumber',
             'faxnumber',
             'icqnumber',
-            'msnchat',
+            'msnnumber',
             'aimscreenname',
             'yahoochat',
             'skypeusername',
             'jabberusername',
             'occupation',
             'industry',
-            'icon',
             'file',
             'folder',
             'image',
@@ -146,11 +145,42 @@ class ArtefactTypeProfile extends ArtefactType {
 
     }
 
+    public static function get_all_fields() {
+        return array(
+            'firstname'       => 'text',
+            'lastname'        => 'text',
+            'studentid'       => 'text',
+            'preferredname'   => 'text',
+            'introduction'    => 'wysiwyg',
+            'email'           => 'emaillist',
+            'officialwebsite' => 'text',
+            'personalwebsite' => 'text',
+            'blog'            => 'text',
+            'address'         => 'textarea',
+            'town'            => 'text',
+            'city'            => 'text',
+            'country'         => 'select',
+            'homenumber'      => 'text',
+            'businessnumber'  => 'text',
+            'mobilenumber'    => 'text',
+            'faxnumber'       => 'text',
+            'icqnumber'       => 'text',
+            'msnnumber'       => 'text',
+            'aimscreenname'   => 'text',
+            'yahoochat'       => 'text',
+            'skypeusername'   => 'text',
+            'jabberusername'  => 'text',
+            'occupation'      => 'text',
+            'industry'        => 'text',
+        );
+    }
+
     public static function get_mandatory_fields() {
-        return array('firstname' => 'text', 
-                     'lastname'  => 'text', 
-                     'studentid' => 'text', 
-                     'email'     => 'text');
+        return array(
+            'firstname' => 'text', 
+            'lastname'  => 'text', 
+            'studentid' => 'text', 
+        );
     }
 
     public static function has_config() {
@@ -204,6 +234,12 @@ class ArtefactTypeMobilenumber extends ArtefactTypeProfileField {}
 class ArtefactTypeFaxnumber extends ArtefactTypeProfileField {}
 class ArtefactTypeIcqnumber extends ArtefactTypeProfileField {}
 class ArtefactTypeMsnnumber extends ArtefactTypeProfileField {}
+class ArtefactTypeAimscreenname extends ArtefactTypeProfileField {}
+class ArtefactTypeYahoochat extends ArtefactTypeProfileField {}
+class ArtefactTypeSkypeusername extends ArtefactTypeProfileField {}
+class ArtefactTypeJabberusername extends ArtefactTypeProfileField {}
+class ArtefactTypeOccupation extends ArtefactTypeProfileField {}
+class ArtefactTypeIndustry extends ArtefactTypeProfileField {}
 
 class ArtefactTypeFolder extends ArtefactType {
     public function commit() {
