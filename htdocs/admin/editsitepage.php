@@ -83,7 +83,7 @@ function editsitepage_submit($values) {
     catch (SQLException $e) {
         json_reply('local', get_string('savefailed'));
     }
-    json_reply(false, get_string('savedsuccessfully'));
+    json_reply(false, get_string('pagesaved'));
 }
 
 if (use_html_editor()) {

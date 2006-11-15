@@ -57,6 +57,18 @@ $string['yournewpassword'] = 'Your new password';
 $string['yournewpasswordagain'] = 'Your new password again';
 
 // Registration
+$string['usernamedescription'] = 'Your username';
+$string['passworddescription'] = 'Your password';
+$string['password2description'] = 'Your password again';
+$string['firstname'] = 'First name';
+$string['firstnamedescription'] = 'Your first name';
+$string['lastname'] = 'Last name';
+$string['lastnamedescription'] = 'Your last name';
+$string['emailaddress'] = 'Email address';
+$string['emailaddressdescription'] = 'Your email address';
+$string['iagreetothetermsandconditions'] = 'I agree to the terms and conditions';
+$string['youmustagreetothetermsandconditions'] = 'You must agree to the terms and conditions';
+$string['register'] = 'Register';
 $string['registeredemailsubject'] = 'You have registered at %s';
 $string['registeredemailmessagetext'] = 'Congratulations!
 
@@ -73,6 +85,7 @@ $string['registeredok'] = '<p>You have successfully registered. Please check you
 $string['registrationnosuchkey'] = 'Sorry, there does not seem to be a registration with this key. Perhaps you waited longer than 24 hours to complete your registration? Otherwise, it might be our fault.';
 
 // Forgot password
+$string['forgotpassword'] = 'Forgotten your password?';
 $string['pwchangerequestsent'] = 'You should receive an e-mail shortly with a link you can use to change the password for your account';
 $string['forgotpassemailsubject'] = 'Change password request for %s';
 $string['forgotpassemailmessagetext'] = 'Dear %s,
@@ -165,7 +178,9 @@ $string['loggedouthome']       = 'Logged out Home';
 $string['privacy']             = 'Privacy statement';
 $string['pagecontents']        = 'Text to appear on the page';
 $string['pagename']            = 'Page name';
+$string['pagesaved']           = 'Page saved';
 $string['pagetext']            = 'Page text';
+$string['savechanges']         = 'Save changes';
 $string['sitecontentnotfound'] = '%s text not available';
 $string['termsandconditions']  = 'Terms and conditions';
 $string['uploadcopyright']     = 'Upload copyright statement';
