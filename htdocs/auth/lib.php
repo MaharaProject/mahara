@@ -202,6 +202,22 @@ function auth_setup () {
     if ($sessionlogouttime > time()) {
         // The session is still active, so continue it.
         log_debug('session still active from previous time');
+
+        // Make sure that if a user's admin status has changed, they're kicked
+        // out of the admin section
+        if (defined('ADMIN')) {
+            $userreallyadmin = get_field('usr', 'admin', 'id', $SESSION->get('id'));
+            if (!$SESSION->get('admin') && $userreallyadmin) {
+                // The user has been made into an admin
+                $SESSION->set('admin', 1);
+            }
+            else if ($SESSION->get('admin') && !$userreallyadmin) {
+                // The user's admin rights have been taken away
+                $SESSION->set('admin', 0);
+                $SESSION->add_err_msg(get_string('accessforbiddentoadminsection'));
+                redirect(get_config('wwwroot'));
+            }
+        }
         $USER = $SESSION->renew();
         auth_check_password_change();
         return $USER;
@@ -608,6 +624,12 @@ function login_submit($values) {
             else {
                 log_debug('getting user info from database');
                 $USER = get_record('usr', 'username', $username, null, null, null, null, '*, ' . db_format_tsfield('expiry'));
+            }
+
+            // Only admins in the admin section!
+            if (defined('ADMIN') && !$USER->admin) {
+                $SESSION->add_err_msg(get_string('accessforbiddentoadminsection'));
+                redirect(get_config('wwwroot'));
             }
 
             // Check if the user's account has expired
