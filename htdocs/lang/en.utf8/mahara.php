@@ -229,4 +229,9 @@ $string['save'] = 'Save';
 $string['update'] = 'Update';
 
 $string['config'] = 'Config';
+
+$string['notinstallable'] = 'Not installable!';
+$string['installedplugins'] = 'Installed plugins';
+$string['notinstalledplugins'] = 'Not installed plugins';
+$string['plugintype'] = 'Plugin type';
 ?>

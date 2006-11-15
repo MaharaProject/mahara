@@ -27,6 +27,7 @@
 define('INTERNAL', 1);
 define('ADMIN', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+require('upgrade.php');
 
 $plugins = array();
 
@@ -38,17 +39,18 @@ foreach (plugin_types()  as $plugin) {
         foreach ($installed as $i) {
             $plugins[$plugin]['installed'][$i->name] = array();
             if ($plugin == 'artefact') {
-                safe_require('artefact','internal');
-                $types = call_static_method(generate_class_name('artefact', $i->name), 'get_artefact_types');
                 $plugins[$plugin]['installed'][$i->name]['types'] = array();
-                foreach ($types as $t) {
-                    $classname = generate_artefact_class_name($t);
-                    if ($collapseto = call_static_method($classname, 'collapse_config')) {
-                        $plugins[$plugin]['installed'][$i->name]['types'][$collapseto] = true;
-                    }
-                    else {
-                        $plugins[$plugin]['installed'][$i->name]['types'][$t] = 
-                            call_static_method($classname, 'has_config');
+                safe_require('artefact',$i->name);
+                if ($types = call_static_method(generate_class_name('artefact', $i->name), 'get_artefact_types')) {
+                    foreach ($types as $t) {
+                        $classname = generate_artefact_class_name($t);
+                        if ($collapseto = call_static_method($classname, 'collapse_config')) {
+                            $plugins[$plugin]['installed'][$i->name]['types'][$collapseto] = true;
+                        }
+                        else {
+                            $plugins[$plugin]['installed'][$i->name]['types'][$t] = 
+                                call_static_method($classname, 'has_config');
+                        }
                     }
                 }
             } 
@@ -73,12 +75,63 @@ foreach (plugin_types()  as $plugin) {
         if (array_key_exists($dir, $plugins[$plugin]['installed'])) {
             continue;
         }
-        $plugins[$plugin]['notinstalled'][] = $dir;
+        $plugins[$plugin]['notinstalled'][$dir] = array();
+        safe_require($plugin, $dir);
+        $funname = $plugin . '_check_plugin_sanity';
+        if (function_exists($funname)) {
+            try {
+                $funname($dir);
+            }
+            catch (InstallationException $e) {
+                $plugins[$plugin]['notinstalled'][$dir]['notinstallable'] = $e->GetMessage();
+            }
+        }
     }
 }
 
+$loadingicon = theme_get_image_path('loading.gif');
+$successicon = theme_get_image_path('success.gif');
+$failureicon = theme_get_image_path('failure.gif');
+
+$loadingstring = get_string('upgradeloading', 'admin');
+$successstring = get_string('upgradesuccess', 'admin');
+$failurestring = get_string('upgradefailure', 'admin');
+
+$javascript = <<<JAVASCRIPT
+
+function installplugin(name) {
+    var d = loadJSONDoc('../upgrade.json.php', { 'name': name });
+
+    $(name).innerHTML = '<img src="{$loadingicon}" alt="{$loadingstring}" />';
+
+    d.addCallbacks(function (data) {
+        if (data.success) {
+            var message = '{$successstring}' + data.newversion;
+            $(name).innerHTML = '<img src="{$successicon}" alt=":)" />  ' + message;
+        }
+        if (data.error) {
+            var message = '';
+            if (data.errormessage) {
+                message = data.errormessage;
+            } 
+            else {
+                message = '{$failurestring}';
+            }
+            $(name).innerHTML = '<img src="{$failureicon}" alt=":(" /> ' + message;
+        }
+    },
+                   function () {
+                       message = '{$failurestring}';
+                       $(name).innerHTML = message;
+                   });
+}
+JAVASCRIPT;
+
+
 $smarty = smarty();
+$smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('plugins', $plugins);
+$smarty->assign('installlink', 'installplugin');
 $smarty->display('admin/plugins/index.tpl');
 
 ?>
