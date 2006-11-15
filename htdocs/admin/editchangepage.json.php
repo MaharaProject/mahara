@@ -28,7 +28,7 @@ define('INTERNAL', 1);
 define('ADMIN', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 
-$pagename = clean_requestdata('pagename', PARAM_ALPHAEXT, REQUEST_EITHER);
+$pagename = param_alpha('pagename');
 
 $data['pagename'] = $pagename;
 try {

@@ -77,26 +77,6 @@ class PluginArtefactInternal extends PluginArtefact {
             ),
         );
     }
-
-    public static function postinst() {
-        $types = self::get_artefact_types();
-        $plugin = self::get_plugin_name();
-        $ph = array();
-        if (is_array($types)) {
-            foreach ($types as $type) {
-                $ph[] = '?';
-                if (!record_exists('artefact_installed_type', 'plugin', $plugin, 'name', $type)) {
-                    $t = new StdClass;
-                    $t->name = $type;
-                    $t->plugin = $plugin;
-                    insert_record('artefact_installed_type',$t);
-                }
-            }
-            $select = '(plugin = ? AND name NOT IN (' . implode(',', $ph) . '))';
-            delete_records_select('artefact_installed_type', $select,
-                                  array_merge(array($plugin),$types));
-        }
-    }
 }
 
 class ArtefactTypeProfile extends ArtefactType {

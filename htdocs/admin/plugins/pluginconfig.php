@@ -17,19 +17,24 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage notification-email
+ * @subpackage admin
  * @author     Penny Leach <penny@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
-defined('INTERNAL') || die();
+define('INTERNAL', 1);
+define('ADMIN', 1);
+require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
-$string['emailsubject'] = 'Message from %s: %s';
-$string['emailbodynoreply'] = "This is an auto generated notification from %s. Please do not reply to this message.  Following is the content of your notification\n\n--------------------------------------------------\n\n";
-$string['emailbody'] = "This is an auto generated notification from %s.  Following is the content of your notification\n\n--------------------------------------------------\n\n";
-$string['emailbodyending'] = 'To update your notification preferences, visit %s';
+$plugintype = param_alpha('plugintype');
+$pluginname = param_alpha('pluginname');
+$type       = param_alpha('type', null);
 
-$string['name'] = 'Email';
+if ($plugintype == 'artefact' && empty($type)) {
+    
+}
+
+
 ?>

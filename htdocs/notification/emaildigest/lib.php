@@ -52,6 +52,7 @@ class PluginNotificationEmaildigest extends PluginNotification {
 
     public static function send_digest() {
         $users = array();
+        $sitename = get_config('sitename');
 
         $sql = 'SELECT q.id, u.firstname,u.lastname,u.preferredname,u.email,q.*,' . db_format_tsfield('ctime').'
                 FROM ' . get_config('dbprefix') . 'usr u 
@@ -78,8 +79,8 @@ class PluginNotificationEmaildigest extends PluginNotification {
             }
         }
         foreach ($users as $user) {
-            $subject = get_string('emailsubject', 'notification.emaildigest');
-            $body = get_string('emailbodynoreply', 'notification.emaildigest');
+            $subject = get_string('emailsubject', 'notification.emaildigest', $sitename);
+            $body = get_string('emailbodynoreply', 'notification.emaildigest', $sitename);
             foreach ($user->entries as $entry) {
                 $body .= get_string('type', 'activity') . $entry->nicetype 
                     . ' ' . get_string('attime', 'activity')  . ' ' . format_date($entry->ctime) . "\n"
