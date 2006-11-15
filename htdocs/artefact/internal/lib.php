@@ -108,7 +108,7 @@ class ArtefactTypeProfile extends ArtefactType {
         return array('firstname' => 'text', 
                      'lastname', => 'text', 
                      'studentid' => 'text', 
-                     'email' => 'text');
+                     'email'     => 'text');
     }
 }
 
