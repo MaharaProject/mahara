@@ -1,12 +1,8 @@
 {include file="header.tpl"}
 
-<h2>ChangePass</h2>
+<h2>{str tag="changepassword"}</h2>
 
-<p>[two messages here:]</p>
-<ol>
-    <li>your password has expired, please change it</li>
-    <li>you have chosen to change your password, here is the form to change it</li>
-</ol>
+<p>{str tag="changepasswordinfo"}</p>
 
 {$change_password_form}
 

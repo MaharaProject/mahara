@@ -613,7 +613,7 @@ function get_records_sql_menu($sql,$values=null) {
  * Get a single value from a table row where all the given fields match the given values.
  *
  * @param string $table the table to query.
- * @param string $return the field to return the value of.
+ * @param string $field the field to return the value of.
  * @param string $field1 the first field to check (optional).
  * @param string $value1 the value field1 must have (requred if field1 is given, else optional).
  * @param string $field2 the second field to check (optional).
@@ -631,10 +631,26 @@ function get_field($table, $field, $field1, $value1, $field2=null, $value2=null,
 }
 
 /**
+ * Get a single value from a table.
+ *
+ * @param string $sql an SQL statement expected to return a single value.
+ * @return mixed the specified value.
+ * @throws SQLException
+ */
+function get_field_sql($sql, $values=null) {
+    $rs = get_recordset_sql($sql, $values);
+    if ($rs && $rs->RecordCount() == 1) {
+        return reset($rs->fields);
+    } else {
+        return false;
+    }
+}
+
+/**
  * Get a single column from a table where all the given fields match the given values.
  *
  * @param string $table the table to query.
- * @param string $return the field to return the value of.
+ * @param string $field the field to return the value of.
  * @param string $field1 the first field to check (optional).
  * @param string $value1 the value field1 must have (requred if field1 is given, else optional).
  * @param string $field2 the second field to check (optional).
@@ -662,22 +678,6 @@ function get_column_sql($sql, $values=null) {
     global $db;
 
     return $db->GetCol($sql, $values);
-}
-
-/**
- * Get a single value from a table.
- *
- * @param string $sql an SQL statement expected to return a single value.
- * @return mixed the specified value.
- * @throws SQLException
- */
-function get_field_sql($sql, $values=null) {
-    $rs = get_recordset_sql($sql, $values);
-    if ($rs && $rs->RecordCount() == 1) {
-        return reset($rs->fields);
-    } else {
-        return false;
-    }
 }
 
 /**
