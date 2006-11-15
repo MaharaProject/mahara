@@ -227,4 +227,6 @@ $string['activity'] = 'Recent activity';
 $string['emailname'] = 'Mahara System'; // robot! 
 $string['save'] = 'Save';
 $string['update'] = 'Update';
+
+$string['config'] = 'Config';
 ?>

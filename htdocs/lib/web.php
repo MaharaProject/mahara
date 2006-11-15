@@ -80,7 +80,7 @@ function &smarty($javascript = array(), $headers = array(), $strings = array()) 
     }
     
     // Add the required mochikit and mahara javascript files
-    $javascript[] = $jsroot . 'mochikit/MochiKit.js';
+    $javascript[] = $jsroot . 'MochiKit/MochiKit.js';
     $javascript[] = $jsroot . 'mahara.js';
     $javascript[] = $jsroot . 'debug.js';
     foreach (maharajsstrings() as $string) {

@@ -29,15 +29,37 @@ defined('INTERNAL') || die();
 class PluginArtefactInternal extends PluginArtefact {
 
     public static function get_artefact_types() {
-        return array('file', 'folder', 'image',
-                     'firstname', 'lastname', 'studentid', 
-                     'preferredname', 'introduction', 
-                     'email', 'officialwebsite', 'personalwebsite', 
-                     'blog', 'address', 'town', 'city', 
-                     'country', 'homenumber', 'businessnumber', 
-                     'mobilenumber', 'faxnumber', 'icqnumber',
-                     'msnnumber'
-                     );
+        return array(
+            'firstname',
+            'lastname',
+            'studentid',
+            'preferredname',
+            'introduction',
+            'emailaddress',
+            'officialwebsite',
+            'personalwebsite',
+            'blogaddress',
+            'postaladdress',
+            'town',
+            'cityregion',
+            'country',
+            'homephone',
+            'businessphone',
+            'mobilephone',
+            'faxnumber',
+            'icqnumber',
+            'msnchat',
+            'aimscreenname',
+            'yahoochat',
+            'skypeusername',
+            'jabberusername',
+            'occupation',
+            'industry',
+            'icon',
+            'file',
+            'folder',
+            'image',
+        );
     }
 
     public static function get_plugin_name() {
@@ -130,9 +152,23 @@ class ArtefactTypeProfile extends ArtefactType {
                      'studentid' => 'text', 
                      'email'     => 'text');
     }
+
+    public static function has_config() {
+        return true;
+    }
+
+    public static function get_config_options() {
+        return array(); // @todo  
+    }
 }
 
-class ArtefactTypeCachedProfile extends ArtefactTypeProfile {
+class ArtefactTypeProfileField extends ArtefactTypeProfile {
+    public static function collapse_config() {
+        return 'profile';
+    }
+}
+
+class ArtefactTypeCachedProfileField extends ArtefactTypeProfileField {
     
     public function commit() {
         $this->commit_basic();
@@ -148,29 +184,96 @@ class ArtefactTypeCachedProfile extends ArtefactTypeProfile {
 
 }
 
-class ArtefactTypeFirstname extends ArtefactTypeCachedProfile {}
-class ArtefactTypeLastname extends ArtefactTypeCachedProfile {}
-class ArtefactTypePreferredname extends ArtefactTypeCachedProfile {}
-class ArtefactTypeEmail extends ArtefactTypeCachedProfile {}
+class ArtefactTypeFirstname extends ArtefactTypeCachedProfileField {}
+class ArtefactTypeLastname extends ArtefactTypeCachedProfileField {}
+class ArtefactTypePreferredname extends ArtefactTypeCachedProfileField {}
+class ArtefactTypeEmail extends ArtefactTypeCachedProfileField {}
 
-class ArtefactTypeStudentid extends ArtefactTypeProfile {}
-class ArtefactTypeIntroduction extends ArtefactTypeProfile {}
-class ArtefactTypeOfficialwebsite extends ArtefactTypeProfile {}
-class ArtefactTypePersonalwebsite extends ArtefactTypeProfile {}
-class ArtefactTypeBlog extends ArtefactTypeProfile {}
-class ArtefactTypeAddress extends ArtefactTypeProfile {}
-class ArtefactTypeTown extends ArtefactTypeProfile {}
-class ArtefactTypeCity extends ArtefactTypeProfile {}
-class ArtefactTypeCountry extends ArtefactTypeProfile {}
-class ArtefactTypeHomenumber extends ArtefactTypeProfile {}
-class ArtefactTypeBusinessnumber extends ArtefactTypeProfile {}
-class ArtefactTypeMobilenumber extends ArtefactTypeProfile {}
-class ArtefactTypeFaxnumber extends ArtefactTypeProfile {}
-class ArtefactTypeIcqnumber extends ArtefactTypeProfile {}
-class ArtefactTypeMsnnumber extends ArtefactTypeProfile {}
+class ArtefactTypeStudentid extends ArtefactTypeProfileField {}
+class ArtefactTypeIntroduction extends ArtefactTypeProfileField {}
+class ArtefactTypeOfficialwebsite extends ArtefactTypeProfileField {}
+class ArtefactTypePersonalwebsite extends ArtefactTypeProfileField {}
+class ArtefactTypeBlog extends ArtefactTypeProfileField {}
+class ArtefactTypeAddress extends ArtefactTypeProfileField {}
+class ArtefactTypeTown extends ArtefactTypeProfileField {}
+class ArtefactTypeCity extends ArtefactTypeProfileField {}
+class ArtefactTypeCountry extends ArtefactTypeProfileField {}
+class ArtefactTypeHomenumber extends ArtefactTypeProfileField {}
+class ArtefactTypeBusinessnumber extends ArtefactTypeProfileField {}
+class ArtefactTypeMobilenumber extends ArtefactTypeProfileField {}
+class ArtefactTypeFaxnumber extends ArtefactTypeProfileField {}
+class ArtefactTypeIcqnumber extends ArtefactTypeProfileField {}
+class ArtefactTypeMsnnumber extends ArtefactTypeProfileField {}
 
-class ArtefactTypeFolder extends ArtefactTypeProfile {}
-class ArtefactTypeFile extends ArtefactTypeProfile {}
-class ArtefactTypeImage extends ArtefactTypeFile {}
+class ArtefactTypeFolder extends ArtefactType {
+    public function commit() {
+        $this->commit_basic();
+    }
+    
+    public function delete() {
+        $this->delete_basic();
+    }
+
+    public function render($format, $options) {
+
+    }
+
+    public function get_icon() {
+
+    }
+
+    public static function get_render_list() {
+
+    }
+    
+    public static function can_render_to($format) {
+
+    }    
+
+    public static function collapse_config() {
+        return 'file';
+    }
+}
+
+class ArtefactTypeFile extends ArtefactType {
+
+    public function commit() {
+        $this->commit_basic();
+    }
+    
+    public function delete() {
+        $this->delete_basic();
+    }
+
+    public function render($format, $options) {
+
+    }
+
+    public function get_icon() {
+
+    }
+
+    public static function get_render_list() {
+
+    }
+    
+    public static function can_render_to($format) {
+
+    }
+
+    public static function has_config() {
+        return true;
+    }
+
+    public static function get_config_options() {
+        return array(); // @todo  
+    }
+}
+class ArtefactTypeImage extends ArtefactTypeFile {
+    
+    public static function collapse_config() {
+        return 'file';
+    }
+}
 
 ?>
