@@ -39,7 +39,7 @@ $ijs .= <<< EOJS
 function getitems() {
     logDebug(get_string('loadingmenuitems'));
     processingStart();
-    var d = loadJSONDoc('getmenuitems.json.php',{'public':selectedmenu == 'public'});
+    var d = loadJSONDoc('getmenuitems.json.php',{'public':selectedmenu == 'loggedoutmenu'});
     d.addCallback(function(data) {
         if (!data.error) {
             logDebug(get_string('loadedmenuitems'));
@@ -217,7 +217,7 @@ function saveitem(formid) {
                 'name':f.name.value,
                 'linkedto':f.linkedto.value,
                 'itemid':f.itemid.value,
-                'public':selectedmenu == 'public'};
+                'public':selectedmenu == 'loggedoutmenu'};
     var req = getXMLHttpRequest();
     req.open('POST','updatemenu.json.php');
     req.setRequestHeader('Content-type','application/x-www-form-urlencoded');
@@ -228,13 +228,13 @@ function saveitem(formid) {
         if (!data.error) { 
             errtype = 'info';
         }
-        if (data.error == 'local') {
+        else if (data.error == 'local') {
             errtype = 'error';
         }
-        if (errtype == 'global') {
+        else {
             global_error_handler(data);
         }
-        else {
+        if (errtype != 'global') {
             displayMessage(data.message,errtype);
             getitems();
             processingStop();
@@ -247,36 +247,37 @@ function saveitem(formid) {
     return false;
 }
 
+// In phase 1 there are no files in the system
 function getadminfiles() {
     return null;
 }
 
-function setmenu(menu) {
-    selectedmenu = menu;
-    var pub = get_string('loggedoutmenu');
-    var priv = get_string('loggedinmenu');
-    if (menu == 'public') {
-        priv = A({'href':''},priv);
-        priv.onclick = function () {return setmenu('private');};
-    }
-    else {
-        pub = A({'href':''},pub);
-        pub.onclick = function () {return setmenu('public');};
-    }
-    replaceChildNodes($('menuselect'), [pub, priv]);
+function changemenu() {
+    selectedmenu = $('menuselect').value;
     getitems();
-    return false;
 }
 
-var selectedmenu = 'public';
-addLoadEvent(function () {setmenu(selectedmenu);});
+var selectedmenu = 'loggedoutmenu';
+addLoadEvent(function () {
+    $('menuselect').value = selectedmenu;
+    $('menuselect').onchange = changemenu;
+    changemenu();
+});
 EOJS;
+
+$menulist = array('loggedinmenu', 'loggedoutmenu');
+foreach ($menulist as &$menu) {
+    $menu = array('value' => $menu,
+                  'name' => get_string($menu));
+}
 
 $style = '<style type="text/css">.invisible{display:none;} .menueditcell{width:200px;}</style>';
 $strings = array('deletefailed','deletingmenuitem','menuitemdeleted','noadminfiles',
                  'edit','delete','update','cancel','add','loggedinmenu','loggedoutmenu');
 $smarty = smarty(array(),array($style),$strings);
 $smarty->assign('INLINEJAVASCRIPT',$ijs);
+$smarty->assign('EDIT',get_string('edit') . ':');
+$smarty->assign('MENUS',$menulist);
 $smarty->display('admin/editmenu.tpl');
 
 ?>
