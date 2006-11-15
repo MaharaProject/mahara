@@ -947,7 +947,7 @@ EOF;
      *
      * @return bool Whether there are errors with the form
      */
-    private function has_errors() {
+    public function has_errors() {
         foreach ($this->get_elements() as $element) {
             if (isset($element['error'])) {
                 return true;
