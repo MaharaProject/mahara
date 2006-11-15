@@ -673,6 +673,10 @@ function generate_class_name() {
     return 'Plugin' . implode('', array_map('ucfirst', $args));
 }
 
+function generate_artefact_class_name($type) {
+    return 'ArtefactType' . ucfirst($type);
+}
+
 function redirect($location) {
     if (headers_sent()) {
         throw new Exception('Headers already sent when redirect() was called');
