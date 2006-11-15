@@ -162,7 +162,7 @@ function expected_account_preferences() {
 function set_profile_field($userid, $field, $value) {
     safe_require('artefact', 'internal');
     $classname = generate_artefact_class_name($field);
-    $profile = new $classname();
+    $profile = new $classname(0, array('owner' => $userid));
     $profile->set('owner', $userid);
     $profile->set('title', $value);
     $profile->commit();

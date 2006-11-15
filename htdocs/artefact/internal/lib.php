@@ -80,6 +80,26 @@ class PluginArtefactInternal extends PluginArtefact {
 
 class ArtefactTypeProfile extends ArtefactType {
 
+    /**
+     * overriding this because profile fields
+     * are unique in that except for email, you only get ONE
+     * so if we don't get an id, we still need to go look for it
+     */
+    public function __construct($id=0, $data=null) {
+        $type = $this->get_artefact_type();
+        if (!empty($id) || $type == 'email') {
+            return parent::__construct($id, $data);
+        }
+        if (!empty($data['owner'])) {
+            if ($a = get_record('artefact', 'artefacttype', $type, 'owner', $data['owner'])) {
+                return parent::__construct($a->id, $a);
+            }
+        } 
+        $this->ctime = time();
+        $this->atime = time();
+        $this->artefacttype = $type;
+    }
+
     public function commit() {
         $this->commit_basic();
     }
@@ -106,7 +126,7 @@ class ArtefactTypeProfile extends ArtefactType {
 
     public static function get_mandatory_fields() {
         return array('firstname' => 'text', 
-                     'lastname', => 'text', 
+                     'lastname'  => 'text', 
                      'studentid' => 'text', 
                      'email'     => 'text');
     }
