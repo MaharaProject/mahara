@@ -31,12 +31,12 @@ defined('INTERNAL') || die();
  * the element. This prevents malicious people from doing things like
  * submitting values that aren't in a select box.
  *
+ * @param Form   $form      The form the rule is being applied to
  * @param string $field     The field to check
  * @param string $element   The element being checked
  * @return string           The error message, if the value is invalid.
- * @todo untested :p
  */
-function form_rule_validateoptions($field, $element) {
+function form_rule_validateoptions(Form $form, $field, $element) {
     // Get the value into an array as a key if it's a scalar, since
     // the actual check involves array keys
     if (!is_array($field)) {
@@ -46,7 +46,7 @@ function form_rule_validateoptions($field, $element) {
     $allowedvalues = array_keys($element['options']);
     foreach (array_keys($field) as $key) {
         if (!in_array($key, $allowedvalues)) {
-            return get_string('optionnotavailableforelement', 'error');
+            return sprintf($form->i18n('validateoptions'), $key);
         }
     }
 }

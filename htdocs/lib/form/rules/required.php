@@ -29,37 +29,24 @@ defined('INTERNAL') || die();
 /**
  * Checks whether the field has been specified.
  *
+ * @param Form $form        The form the rule is being applied to
  * @param string $field     The field to check
  * @param array  $element   The element to check
  * @return string           The error message, if the value is invalid.
  */
-function form_rule_required($field, $element) {
+function form_rule_required(Form $form, $value, $element) {
     // The array test is for using the "required" rule on file elements
     $function = 'form_is_empty_' . $element['type'];
     if (function_exists($function)) {
-        if ($function($field, $element)) {
-            return get_string('This field is required');
+        if ($function($value, $element)) {
+            return $form->i18n('required');
         }
         return;
     }
 
-    if ($field == '' || is_array($field) && !empty($field['error'])) {
-        return get_string('This field is required');
+    if ($value == '') {
+        return $form->i18n('required');
     }
-}
-
-/**
- * Returns a javascript condition to check whether the field has been specified.
- *
- * @param string $id        id of the field to check
- * @return string           js condition to check if the field is empty.
- *         string           The error message, if the value is invalid.
- */
-function form_rule_required_js($id) {
-    $r = new StdClass;
-    $r->condition = '$(\'' . $id . '\').value != \'\'';
-    $r->message = get_string('This field is required');
-    return $r;
 }
 
 ?>
