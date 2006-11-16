@@ -26,9 +26,10 @@
 
 defined('INTERNAL') || die();
 
+$string['cancel'] = 'Cancel';
 $string['sessiontimedout'] = 'Your session has timed out, please enter your login details to continue';
 $string['sessiontimedoutpublic'] = 'Your session has timed out. You may <a href="?login">log in</a> to continue browsing';
-$string['cancel'] = 'Cancel';
+$string['submit'] = 'Submit';
 
 $string['nextpage'] = 'Next page';
 $string['prevpage'] = 'Previous page';

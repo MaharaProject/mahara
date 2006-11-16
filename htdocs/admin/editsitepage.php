@@ -37,6 +37,8 @@ foreach ($sitepages as $page) {
 }
 asort($pageoptions);
 
+$getstring = array('discardpageedits' => "'" . get_string('discardpageedits','admin') . "'");
+
 $f = array(
     'name'                => 'editsitepage',
     'method'              => 'post',
@@ -104,7 +106,7 @@ var originalcontent = '';
 function requestPageText(removeMessage) {
     // Allow the user to abort change if changes have been made in the editor.
     if (getEditorContent() != originalcontent) {
-        var answer = confirm(get_string('discardpageedits'));
+        var answer = confirm({$getstring['discardpageedits']});
         if (!answer) {
             $('pagename').value = oldpagename;
             return;
@@ -159,9 +161,7 @@ function onLoad() {
 addLoadEvent(onLoad);
 EOJS;
 
-$jsstrings = array('discardpageedits');
-
-$smarty = smarty($js, array(), $jsstrings);
+$smarty = smarty($js);
 $smarty->assign('pageeditform', $form);
 $smarty->assign('INLINEJAVASCRIPT', $ijs);
 $smarty->display('admin/editsitepage.tpl');

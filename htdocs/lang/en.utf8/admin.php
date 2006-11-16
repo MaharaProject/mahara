@@ -86,6 +86,10 @@ $string['linkedto']      = 'Linked to';
 $string['editmenus']     = 'Edit menus';
 $string['menuitemsaved'] = 'Menu item saved';
 $string['savingmenuitem'] = 'Saving menu item';
+$string['menuitemsloaded'] = 'Menu items loaded';
+$string['deletingmenuitem'] = 'Deleting menu item';
+$string['menuitemdeleted'] = 'Menu item deleted';
+$string['loadingmenuitems'] = 'Loading menu items';
 $string['loggedinmenu']  = 'Logged in menu';
 $string['loggedoutmenu'] = 'Logged out menu';
 
@@ -105,7 +109,8 @@ $string['sitecontentnotfound'] = '%s text not available';
 $string['termsandconditions']  = 'Terms and conditions';
 $string['uploadcopyright']     = 'Upload copyright statement';
 
-// Upload CSV stuff
+// Upload CSV
+$string['addusersbycsv'] = 'Add Users by CSV';
 $string['csvfile'] = 'CSV File';
 $string['csvfiledescription'] = 'The file containing users to add';
 $string['uploadcsverrorinvalidemail'] = 'Error on line %s of your file: The e-mail address for this user is not in correct form';
@@ -115,6 +120,18 @@ $string['uploadcsverrorincorrectfieldcount'] = 'Line %s of the file does not hav
 $string['uploadcsvfile'] = 'Upload CSV File';
 $string['uploadcsvfiledescription'] = 'You may use this facility to upload new users via a <acronym title="Comma Separated Values">CSV</acronym> file. Each record in the file must have a username, e-mail address and password.';
 
+// Admin Users
+$string['adminusers'] = 'Admin Users';
+$string['adminusersdescription'] = 'Here you may choose which users are administrators. Admin users are listed in the right box, and potential administrators are on the left.';
 
+// Staff Users
+$string['staffusers'] = 'Staff Users';
+$string['staffusersdescription'] = 'Here you may choose which users are staff users. Staff users are listed in the right box, and potential staff users are on the left.';
+
+// Admin Notifications
+$string['adminnotifications'] = 'Admin Notifications';
+
+// Suspended Users
+$string['suspendedusers'] = 'Suspended Users';
 
 ?>

@@ -50,8 +50,8 @@ $form = array(
             'filter' => false
         ),
         'submit' => array(
-            'type' => 'submitcancel',
-            'value' => array(get_string('submit'), get_string('cancel'))
+            'type' => 'submit',
+            'value' => get_string('submit')
         )
     )
 );

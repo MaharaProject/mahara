@@ -31,15 +31,10 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 $itemid = param_variable('itemid');
 $result = array();
 
-try { 
-    delete_records('site_menu','id',$itemid);
-    $result['success'] = 'ok';
-    $result['message'] = get_string('deletedsuccessfully');
-}
-catch (Exception $e) {
-    $result['success'] = 'error';
-    $result['message'] = $e->getMessage();
+if (!delete_records('site_menu','id',$itemid)) {
+    json_reply('local', get_string('deletefailed','admin'));
 }
 
-echo json_encode($result);
+json_reply(false,get_string('menuitemdeleted','admin'));
+
 ?>

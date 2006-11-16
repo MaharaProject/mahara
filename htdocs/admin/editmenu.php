@@ -29,6 +29,17 @@ define('ADMIN', 1);
 define('MENUITEM','menueditor');
 require(dirname(dirname(__FILE__)).'/init.php');
 
+$strings = array('edit','delete','update','cancel','add','name','unknownerror');
+$adminstrings = array('deletefailed','deletingmenuitem','savingmenuitem',
+                      'noadminfiles','loggedinmenu','loggedoutmenu','linkedto','externallink','adminfile',
+                      'loadingmenuitems','menuitemsloaded','failedloadingmenuitems');
+foreach ($strings as $string) {
+    $getstring[$string] = "'" . get_string($string) . "'";
+}
+foreach ($adminstrings as $string) {
+    $getstring[$string] = "'" . get_string($string,'admin') . "'";
+}
+
 $thead = array(get_string('type','admin'),get_string('name','admin'),get_string('linkedto','admin'),'');
 $ijs = "var thead = TR(null,map(partial(TH,null),['" . implode($thead,"','") . "']));\n";
 $ijs .= "var externallink = '" . get_string('externallink','admin') . "';\n";
@@ -37,17 +48,17 @@ $ijs .= "var adminfile = '" . get_string('adminfile','admin') . "';\n";
 $ijs .= <<< EOJS
 // Request a list of menu items from the server
 function getitems() {
-    logDebug(get_string('loadingmenuitems','admin'));
+    logDebug({$getstring['loadingmenuitems']});
     processingStart();
     var d = loadJSONDoc('getmenuitems.json.php',{'public':selectedmenu == 'loggedoutmenu'});
     d.addCallback(function(data) {
         if (!data.error) {
-            logDebug(get_string('loadedmenuitems','admin'));
+            logDebug({$getstring['menuitemsloaded']});
             displaymenuitems(data.menuitems);
             processingStop();
         }
         else {
-            displayMessage(get_string('failedloadingmenuitems','admin'),'error');
+            displayMessage({$getstring['failedloadingmenuitems']},'error');
             processingStop();
         }
     });
@@ -67,9 +78,9 @@ function formatrow (item) {
     // item has id, type, name, link, linkedto
     var type = eval(item.type);
     var linkedto = item.link == '' ? item.linkedto : A({'href':item.link},item.linkedto);
-    var del = INPUT({'type':'button','value':get_string('delete')});
+    var del = INPUT({'type':'button','value':{$getstring['delete']}});
     del.onclick = function () { delitem(item.id); };
-    var edit = INPUT({'type':'button','value':get_string('edit')});
+    var edit = INPUT({'type':'button','value':{$getstring['edit']}});
     edit.onclick = function () { edititem(item); };
     var cells = map(partial(TD,null),[type,item.name,linkedto,[del,edit]]);
     return TR({'id':'menuitem_'+item.id},cells);
@@ -108,13 +119,13 @@ function editform(item) {
         elink.onclick = function () { changeaddform('externallink'); };
         afile.onclick = function () { changeaddform('adminfile'); };
         // The save button says 'add', and there's no cancel button.
-        setNodeAttribute(save,'value',get_string('add'));
+        setNodeAttribute(save,'value',{$getstring['add']});
         savecancel = [save];
     }
     else { // Editing an existing menu item.
         // The save button says 'update' and there's a cancel button.
-        setNodeAttribute(save,'value',get_string('update'));
-        var cancel = INPUT({'type':'button','value':get_string('cancel')});
+        setNodeAttribute(save,'value',{$getstring['update']});
+        var cancel = INPUT({'type':'button','value':{$getstring['cancel']}});
         cancel.onclick = closeopenedits;
         savecancel = [save,cancel];
         elink.onclick = function () { changeeditform(item,'externallink'); };
@@ -128,7 +139,7 @@ function editform(item) {
         var adminfiles = getadminfiles();
         if (adminfiles == null) {
             // There are no admin files, we don't need the select or save button
-            linkedto = get_string('noadminfiles','admin');
+            linkedto = {$getstring['noadminfiles']};
             savecancel = [cancel];
         }
         else {
@@ -141,7 +152,8 @@ function editform(item) {
         linkedto = INPUT({'type':'text','name':'linkedto','value':item.linkedto});
         setNodeAttribute(elink,'checked',true);
     }
-    var radios = [DIV(null,elink,eval('externallink')),DIV(null,afile,eval('adminfile'))];
+    var radios = [DIV(null,elink,{$getstring['externallink']}),
+                  DIV(null,afile,{$getstring['adminfile']})];
     var row = TR(null,map(partial(TD,null),[radios,name,linkedto,savecancel]));
     return TABLE({'width':'100%'},cols(),TBODY(null,row));
 }
@@ -191,21 +203,31 @@ function edititem(item) {
     menuitem.parentNode.insertBefore(newrow,menuitem);
 }
 
+// Receive standard json error message
+function get_json_status(data) {
+    var errtype = 'global';
+    if (!data.error) { 
+        errtype = 'info';
+    }
+    else if (data.error == 'local') {
+        errtype = 'error';
+    }
+    else {
+        global_error_handler(data);
+    }
+    if (errtype != 'global') {
+        displayMessage(data.message,errtype);
+        getitems();
+        processingStop();
+    }
+}
+
 // Request deletion of a menu item from the db
 function delitem(itemid) {
     processingStart();
-    logDebug(get_string('deletingmenuitem','admin'));
+    logDebug({$getstring['deletingmenuitem']});
     var d = loadJSONDoc('deletemenuitem.json.php',{'itemid':itemid});
-    d.addCallback(function(data) {
-        if (data.success) {
-            logDebug(get_string('menuitemdeleted','admin'));
-            getitems();
-        }
-        else {
-            displayMessage(get_string('deletefailed','admin'),'error');
-        }
-        processingStop();
-    });
+    d.addCallback(get_json_status);
 }
 
 // Send the menu item in the form to the database.
@@ -214,15 +236,15 @@ function saveitem(formid) {
     var name = f.name.value;
     var linkedto = f.linkedto.value;
     if (name == '') {
-        displayMessage(get_string('namedfieldempty',get_string('name','admin')),'error');
+        displayMessage(get_string('namedfieldempty',{$getstring['name']}),'error');
         return false;
     }
     if (linkedto == '') {
-        displayMessage(get_string('namedfieldempty',get_string('linkedto','admin')),'error');
+        displayMessage(get_string('namedfieldempty',{$getstring['linkedto']}),'error');
         return false;
     }
     processingStart();
-    displayMessage(get_string('savingmenuitem','admin'),'info');
+    logDebug({$getstring['savingmenuitem']});
     var data = {'type':f.type[0].checked ? 'externallink' : 'adminfile',
                 'name':name,
                 'linkedto':linkedto,
@@ -234,24 +256,10 @@ function saveitem(formid) {
     var d = sendXMLHttpRequest(req,queryString(data));
     d.addCallback(function (result) {
         var data = evalJSONRequest(result);
-        var errtype = 'global';
-        if (!data.error) { 
-            errtype = 'info';
-        }
-        else if (data.error == 'local') {
-            errtype = 'error';
-        }
-        else {
-            global_error_handler(data);
-        }
-        if (errtype != 'global') {
-            displayMessage(data.message,errtype);
-            getitems();
-            processingStop();
-        }
+        get_json_status(data);
     });
     d.addErrback(function() {
-        displayMessage(get_string('unknownerror'),'error');
+        displayMessage({$getstring['unknownerror']},'error');
         processingStop();
     });
     return false;
@@ -284,14 +292,11 @@ EOJS;
 $menulist = array('loggedinmenu', 'loggedoutmenu');
 foreach ($menulist as &$menu) {
     $menu = array('value' => $menu,
-                  'name' => get_string($menu));
+                  'name' => get_string($menu,'admin'));
 }
 
 $style = '<style type="text/css">.invisible{display:none;}</style>';
-$strings = array('deletefailed','deletingmenuitem','menuitemdeleted','savingmenuitem','noadminfiles',
-                 'edit','delete','update','cancel','add','loggedinmenu','loggedoutmenu','name',
-                 'linkedto');
-$smarty = smarty(array(),array($style),$strings);
+$smarty = smarty(array(),array($style));
 $smarty->assign('INLINEJAVASCRIPT',$ijs);
 $smarty->assign('EDIT',get_string('edit') . ':');
 $smarty->assign('MENUS',$menulist);
