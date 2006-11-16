@@ -31,16 +31,14 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 $pagename = param_alpha('pagename');
 
 $data['pagename'] = $pagename;
-try {
-    $page = get_record('site_content','name',$pagename);
-    $data['content'] = $page->content;
-    $data['error'] = false;
-    $data['message'] = get_string('loadedsitecontent','admin');
-}
-catch (Exception $e) {
-    $data['error'] = 'local';
-    $data['message'] = get_string('failedloadingsitecontent','admin');
+
+if (!$page = @get_record('site_content','name',$pagename)) {
+    json_reply('local',get_string('failedloadingsitecontent','admin'));
 }
 
+$data['content'] = $page->content;
+$data['error'] = false;
+$data['message'] = get_string('loadedsitecontent','admin');
+json_headers();
 echo json_encode($data);  
 ?>
