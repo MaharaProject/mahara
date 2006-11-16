@@ -193,7 +193,6 @@ function auth_setup () {
     $sessionlogouttime = $SESSION->get('logout_time');
     if ($sessionlogouttime && isset($_GET['logout'])) {
         if (isset($_GET['logout'])) {
-            log_debug('logging user ' . $SESSION->get('username') . ' out');
             $SESSION->logout();
             $SESSION->add_ok_msg(get_string('loggedoutok'));
             redirect(get_config('wwwroot'));
@@ -201,8 +200,6 @@ function auth_setup () {
     }
     if ($sessionlogouttime > time()) {
         // The session is still active, so continue it.
-        log_debug('session still active from previous time');
-
         // Make sure that if a user's admin status has changed, they're kicked
         // out of the admin section
         if (defined('ADMIN')) {
@@ -229,7 +226,6 @@ function auth_setup () {
     }
     else if ($sessionlogouttime > 0) {
         // The session timed out
-        log_debug('session timed out');
         $SESSION->logout();
 
         // If the page the user is viewing is public, inform them that they can
@@ -257,17 +253,14 @@ function auth_setup () {
         require_once('form.php');
         $form = new Form(auth_get_login_form());
         if ($USER) {
-            log_debug('user logged in just fine');
             return $USER;
         }
         
         // Check if the page is public or the site is configured to be public.
         if (defined('PUBLIC') && !isset($_GET['login'])) {
-            log_debug('user viewing public page');
             return;
         }
         
-        log_debug('no session or old session and page is private, or explicit login request');
         auth_draw_login_page(null, $form);
         exit;
     }
@@ -309,7 +302,6 @@ function auth_check_password_change() {
     if (
         ($url = get_config_plugin('auth', $authtype, 'changepasswordurl'))
         || (method_exists($authclass, 'change_password'))) {
-        log_debug('user needs to change their password');
         if ($url) {
             redirect($url);
             exit;
@@ -391,7 +383,6 @@ function change_password_validate(Form $form, $values) {
  */
 function change_password_submit($values) {
     global $SESSION;
-    log_debug('changing password to ' . $values['password1']);
     $authtype = auth_get_authtype_for_institution($SESSION->get('institution'));
     $authclass = 'Auth' . ucfirst($authtype);
 
@@ -558,7 +549,7 @@ function get_login_form_js($form) {
     return <<<EOF
 <script type="text/javascript">
 var loginbox = $('loginbox');
-document.cookie = '$cookiename=1;expires=0';
+document.cookie = "$cookiename=1";
 if (document.cookie) {
     loginbox.innerHTML = '$form';
     document.cookie = '$cookiename=1;expires=1/1/1990 00:00:00';
@@ -580,8 +571,6 @@ EOF;
 function login_submit($values) {
     global $SESSION, $USER;
 
-    log_debug('auth details supplied, attempting to log user in');
-
     $username    = $values['login_username'];
     $password    = $values['login_password'];
     $institution = (isset($values['login_institution'])) ? $values['login_institution'] : 'mahara';
@@ -592,20 +581,17 @@ function login_submit($values) {
 
     try {
         if (call_static_method($authclass, 'authenticate_user_account', $username, $password, $institution)) {
-            log_debug('user ' . $username . ' logged in OK');
 
             if (!record_exists('usr', 'username', $username)) {
                 // We don't know about this user. But if the authentication
                 // method says they're fine, then we must insert data for them
                 // into the usr table.
-                log_debug('this user authenticated but not in the usr table, adding them');
                 // @todo document what needs to be returned by get_user_info
                 $USER = call_static_method($authclass, 'get_user_info', $username);
                 insert_record('usr', $USER);
             }
             // @todo config form option for this for each external plugin. NOT for internal
             else if (get_config_plugin('auth', $authtype, 'updateuserinfoonlogin')) {
-                log_debug('updating user info from auth method');
                 $USER = call_static_method($authclass, 'get_user_info', $username);
                 $where = new StdClass;
                 $where->username = $username;
@@ -617,7 +603,6 @@ function login_submit($values) {
                 update_record('usr', $USER, $where);
             }
             else {
-                log_debug('getting user info from database');
                 $USER = get_record('usr', 'username', $username, null, null, null, null, '*, ' . db_format_tsfield('expiry'));
             }
 
@@ -629,7 +614,6 @@ function login_submit($values) {
 
             // Check if the user's account has expired
             if ($USER->expiry > 0 && time() > $USER->expiry) {
-                log_debug('the user account has expired');
                 // Trash the $USER object, used for checking if the user is logged in.
                 // Smarty uses it and puts login-only stuff in the output otherwise...
                 $USER = null;
@@ -641,7 +625,6 @@ function login_submit($values) {
             // There are problems with how searching excluding suspended users will work that would
             // need to be resolved before this could be implemented for all methods
             if ($suspend = get_record('usr_suspension', 'usr', $USER->id)) {
-                log_debug('the user account has been suspended');
                 $USER = null;
                 die_info(get_string('accountsuspended', 'mahara', $suspend->ctime, $suspend->reason));
             }
@@ -653,12 +636,10 @@ function login_submit($values) {
         }
         else {
             // Login attempt failed
-            log_debug('login attempt FAILED');
             $SESSION->add_err_msg(get_string('loginfailed'));
         }
     }
     catch (AuthUnknownUserException $e) {
-        log_debug('unknown user ' . $username);
         $SESSION->add_err_msg(get_string('loginfailed'));
     }
 }

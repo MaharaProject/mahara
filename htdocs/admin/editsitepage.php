@@ -118,17 +118,17 @@ function requestPageText(removeMessage) {
         editsitepage_remove_message();
     }
     editsitepage_remove_error('pagetext');
-    logDebug(get_string('loadingpagecontent', $('pagename').value));
+    logDebug(get_string('loadingpagecontent', 'admin'));
     var d = loadJSONDoc('editchangepage.json.php',{'pagename':$('pagename').value});
     d.addCallback(function(data) {
         if (!data.error) {
-            logDebug(get_string('loadedsuccessfully', $('pagename').value));
+            logDebug(get_string('sitepageloaded', 'admin'));
             setEditorContent(data.content);
             originalcontent = getEditorContent();
             oldpagename = $('pagename').value;
         }
         else {
-            displayMessage(get_string('failedloadingpagecontent', $('pagename').value),'error');
+            displayMessage(get_string('loadsitepagefailed', 'admin'));
         }
         processingStop();
     });

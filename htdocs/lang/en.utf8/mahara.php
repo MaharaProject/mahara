@@ -26,9 +26,8 @@
 
 defined('INTERNAL') || die();
 
+// General form strings
 $string['cancel'] = 'Cancel';
-$string['sessiontimedout'] = 'Your session has timed out, please enter your login details to continue';
-$string['sessiontimedoutpublic'] = 'Your session has timed out. You may <a href="?login">log in</a> to continue browsing';
 $string['submit'] = 'Submit';
 
 $string['nextpage'] = 'Next page';
@@ -52,6 +51,8 @@ $string['passwordnotchanged'] = 'You did not change your password, please choose
 $string['passwordsaved'] = 'Your new password has been saved';
 $string['passwordsdonotmatch'] = 'The passwords do not match';
 $string['passwordtooeasy'] = 'Your password is too easy! Please choose a harder password';
+$string['sessiontimedout'] = 'Your session has timed out, please enter your login details to continue';
+$string['sessiontimedoutpublic'] = 'Your session has timed out. You may <a href="?login">log in</a> to continue browsing';
 $string['username'] = 'Username';
 $string['usernamedesc'] = 'Your username';
 $string['usernamehelp'] = 'The username you have been given to access this system.';
@@ -138,7 +139,8 @@ $string['add']           = 'Add';
 $string['delete']        = 'Delete';
 $string['edit']          = 'Edit';
 
-
+// Site content pages
+$string['sitecontentnotfound'] = '%s text not available';
 
 // Contact us form
 $string['name']                     = 'Name';
@@ -150,6 +152,7 @@ $string['nositecontactaddress']     = 'Site contact email address not set';
 $string['nosendernamefound']        = 'No sender name was submitted';
 $string['emailnotsent']             = 'Failed to send contact email. Error message: "%s"';
 $string['contactinformationsent']   = 'Your contact information has been sent';
+$string['contactaddress']           = 'Contact address';
 
 // mahara.js
 $string['namedfieldempty'] = 'The required field "%s" is empty';

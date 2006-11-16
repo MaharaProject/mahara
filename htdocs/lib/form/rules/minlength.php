@@ -29,14 +29,15 @@ defined('INTERNAL') || die();
 /**
  * Checks whether the given value is shorter than the allowed length.
  *
+ * @param Form   $form      The form the rule is being applied to
  * @param string $value     The value to check
  * @param array  $element   The element to check
  * @param int    $minlength The length to check for
  * @return string           The error message, if the value is invalid.
  */
-function form_rule_minlength($value, $element, $minlength) {
+function form_rule_minlength(Form $form, $value, $element, $minlength) {
     if (strlen($value) < $minlength) {
-        return get_string('This field must be at least ' . $minlength . ' characters long');
+        return sprintf($form->i18n('minlength'), $minlength);
     }
 }
 

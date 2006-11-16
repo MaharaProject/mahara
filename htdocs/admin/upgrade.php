@@ -44,8 +44,10 @@ $successicon = theme_get_image_path('success.gif');
 $failureicon = theme_get_image_path('failure.gif');
 
 $loadingstring = get_string('upgradeloading', 'admin');
+$installsuccessstring = get_string('installsuccess', 'admin');
 $successstring = get_string('upgradesuccess', 'admin');
 $failurestring = get_string('upgradefailure', 'admin');
+$coresuccess   = get_string('coredatasuccess', 'admin');
 
 // Check if Mahara is being installed. An extra hook is required to insert core
 // data if so.
@@ -56,10 +58,11 @@ if (!empty($upgrades['core']->install)) {
                     
                     $('coredata').innerHTML = '<img src="{$loadingicon}" alt="{$loadingstring}" />';
                     
-                    d.addCallback(function (data) {
+                    d.addCallbacks(function (data) {
                         if ( data.success ) {
-                            var message = 'Successfully installed core data';
+                            var message = '{$coresuccess}';
                             $('coredata').innerHTML = '<img src="{$successicon}" alt=":)" />  ' + message;
+                            $('finished').style.visibility = 'visible';
                         }
                         else {
                             var message = '';
@@ -71,10 +74,10 @@ if (!empty($upgrades['core']->install)) {
                             }
                             $('coredata').innerHTML = '<img src="{$failureicon}" alt=":(" /> ' + message;
                         }
-                    });
-                    d.addErrback(function () {
+                    }, function () {
                         $('coredata').innerHTML = '<img src="{$failureicon}" alt=":(" /> {$failurestring}';
                     });
+
 EOJS;
 }
 else {
@@ -88,7 +91,6 @@ $js .= <<< EOJS
                 if ( ! element ) {
                     // we're done
                     $installjs
-                    $('finished').style.display = 'block';
                     return;
                 }
 
@@ -96,9 +98,16 @@ $js .= <<< EOJS
 
                 $(element).innerHTML = '<img src="{$loadingicon}" alt="{$loadingstring}" />';
 
-                d.addCallback(function (data) {
+                d.addCallbacks(function (data) {
                     if ( data.success ) {
-                        var message = '{$successstring}' + data.newversion;
+                        var message;
+                        if (data.install) {
+                            message = '{$installsuccessstring}';
+                        }
+                        else {
+                            message = '{$successstring}';
+                        }
+                        message += data.newversion;
                         $(data.key).innerHTML = '<img src="{$successicon}" alt=":)" />  ' + message;
                     }
                     else {
@@ -112,8 +121,7 @@ $js .= <<< EOJS
                         $(data.key).innerHTML = '<img src="{$failureicon}" alt=":(" /> ' + message;
                     }
                     processNext();
-                });
-                d.addErrback(function () {
+                }, function () {
                     $(element).innerHTML = '<img src="{$failureicon}" alt=":(" /> {$failurestring}';
                 });
             }

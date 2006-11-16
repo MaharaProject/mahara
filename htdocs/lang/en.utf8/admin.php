@@ -32,12 +32,19 @@ institution uses another authentication type then they will be listed beside it.
 
 <p>Did you want to <a href="institution.php">change the type of authentication for an institution</a>?</p>';
 $string['authnoconfigurationoptions'] = 'No configuration options are available for this authentication type';
+
+// Installer
 $string['release'] = 'Release %s (%s)';
 $string['component'] = 'Component or plugin';
+$string['continue'] = 'Continue';
+$string['coredata'] = 'core data';
+$string['coredatasuccess'] = 'Successfully installed core data';
 $string['fromversion'] = 'From version';
+$string['installsuccess'] = 'Successfully installed version ';
 $string['toversion'] =  'To version';
 $string['notinstalled'] = 'Not installed';
 $string['nothingtoupgrade'] = 'Nothing to upgrade';
+$string['successfullyinstalled'] = 'Successfully installed Mahara!';
 $string['upgradeloading'] = 'Loading...';
 $string['upgradesuccess'] = 'Successfully upgraded to version ';
 $string['upgradefailure'] = 'Failed to upgrade!';
@@ -77,27 +84,32 @@ $string['viruscheckingdescription'] = 'If checked, virus checking will be enable
 
 // Admin menu editor
 //$string['menueditor']    = 'Menu editor';
-$string['adminfile']     = 'Admin file';
-$string['externallink']  = 'External link';
-$string['type']          = 'Type';
-$string['name']          = 'Name';
-$string['noadminfiles']  = 'No admin files';
-$string['linkedto']      = 'Linked to';
-$string['editmenus']     = 'Edit menus';
-$string['menuitemsaved'] = 'Menu item saved';
-$string['savingmenuitem'] = 'Saving menu item';
-$string['menuitemsloaded'] = 'Menu items loaded';
-$string['deletingmenuitem'] = 'Deleting menu item';
-$string['menuitemdeleted'] = 'Menu item deleted';
-$string['loadingmenuitems'] = 'Loading menu items';
-$string['loggedinmenu']  = 'Logged in menu';
-$string['loggedoutmenu'] = 'Logged out menu';
+$string['adminfile']           = 'Admin file';
+$string['badmenuitemtype']     = 'Unknown menu item type';
+$string['externallink']        = 'External link';
+$string['type']                = 'Type';
+$string['name']                = 'Name';
+$string['noadminfiles']        = 'No admin files';
+$string['linkedto']            = 'Linked to';
+$string['editmenus']           = 'Edit menus';
+$string['menuitemsaved']       = 'Menu item saved';
+$string['savingmenuitem']      = 'Saving menu item';
+$string['menuitemsloaded']     = 'Menu items loaded';
+$string['deletingmenuitem']    = 'Deleting menu item';
+$string['deletefailed']        = 'Failed deleting menu item';
+$string['menuitemdeleted']     = 'Menu item deleted';
+$string['loadingmenuitems']    = 'Loading menu items';
+$string['loadmenuitemsfailed'] = 'Failed to load menu items';
+$string['loggedinmenu']        = 'Logged in menu';
+$string['loggedoutmenu']       = 'Logged out menu';
 
 // Site content
 $string['about']               = 'About';
 $string['discardpageedits']    = 'Discard your changes to this page?';
 $string['editsitecontent']     = 'Edit site content';
 $string['home']                = 'Home';
+$string['loadingpagecontent']  = 'Loading site page content';
+$string['loadsitepagefailed']  = 'Failed to load site page';
 $string['loggedouthome']       = 'Logged out Home';
 $string['pagecontents']        = 'Text to appear on the page';
 $string['pagename']            = 'Page name';
@@ -105,7 +117,8 @@ $string['pagesaved']           = 'Page saved';
 $string['pagetext']            = 'Page text';
 $string['privacy']             = 'Privacy statement';
 $string['savechanges']         = 'Save changes';
-$string['sitecontentnotfound'] = '%s text not available';
+$string['savefailed']          = 'Save failed';
+$string['sitepageloaded']      = 'Site page loaded';
 $string['termsandconditions']  = 'Terms and conditions';
 $string['uploadcopyright']     = 'Upload copyright statement';
 

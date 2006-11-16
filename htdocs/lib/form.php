@@ -60,8 +60,6 @@ defined('INTERNAL') || die();
  * Please see https://eduforge.org/wiki/wiki/mahara/wiki?pagename=FormAPI for
  * more information on creating and using forms.
  *
- * @todo finish documenting forms. Put all form stuff in the correct package. Then work on
- * todos listed inside this function
  */
 function form($data) {
     return Form::process($data);
@@ -132,15 +130,25 @@ class Form {
     private $action = '';
 
     /**
-     * Whether the form should be checked for submission. This is useful if you
-     * just want to build a form, that is possibly validated elsewhere.
-     * 
+     * Whether the form should be validated. Forms that are not validated are
+     * also not submitted. This is useful if you just want to draw a form, and
+     * have no validation rules apply to it.
+     */
+    private $validate = true;
+
+    /**
+     * Whether the form should be checked for submission. Forms can have
+     * validate on and submit off in order to validate submitted data, but to
+     * not bother with the submit.
+     *  
      * @var bool
      */
     private $submit = true;
 
     /**
-     * Whether to submit the form via ajax 
+     * Whether to submit the form via ajax
+     *
+     * @todo rename this probably, because AJAX GET is supported too
      *
      * @var bool
      */
@@ -182,6 +190,28 @@ class Form {
      * @var string
      */
     private $renderer = 'table';
+
+    /**
+     * The language used for form rule error messages.
+     *
+     * @var string
+     */
+    private $language = 'en';
+
+    /**
+     * Language strings for rules
+     *
+     * @var array
+     */
+    private $language_strings = array(
+        'en' => array(
+            'required'  => 'This field is required',
+            'email'     => 'E-mail address is invalid',
+            'maxlength' => 'This field must be at most %d characters long',
+            'minlength' => 'This field must be at least %d characters long', 
+            'validateoptions' => 'The option "%s" is invalid'
+        )
+    );
 
     /**
      * Whether this form includes a file element. If so, the enctype attribute
@@ -245,6 +275,8 @@ class Form {
             'ajaxsuccessfunction' => '',
             'ajaxfailurefunction' => '',
             'autofocus' => false,
+            'language'  => 'en',
+            'validate'  => true,
             'submit'    => true,
             'elements'  => array()
         );
@@ -257,9 +289,11 @@ class Form {
         }
         $this->method    = $data['method'];
         $this->action    = $data['action'];
+        $this->validate  = $data['validate'];
         $this->submit    = $data['submit'];
         $this->onsubmit  = $data['onsubmit'];
         $this->autofocus = $data['autofocus'];
+        $this->language  = $data['language'];
 
         if ($data['ajaxpost']) {
             $this->ajaxpost = true;
@@ -368,26 +402,28 @@ class Form {
 
         // Check if the form was submitted, and if so, validate and process it
         $global = ($this->method == 'get') ? $_GET: $_POST;
-        if ($this->submit && isset($global['form_' . $this->name] )) {
-            $this->submitted = true;
-            // Check if the form has been cancelled
-            if ($this->iscancellable) {
-                foreach ($global as $key => $value) {
-                    if (substr($key, 0, 7) == 'cancel_') {
-                        // Check for and call the cancel function handler
-                        // @todo<nigel>: it might be that this function could be optional
-                        $function = $this->name . '_' . $key;
-                        if (!function_exists($function)) {
-                            throw new FormException('Form "' . $this->name . '" does not have a cancel function handler for "' . substr($key, 7) . '"');
+        if ($this->validate && isset($global['form_' . $this->name] )) {
+            if ($this->submit) {
+                $this->submitted = true;
+                // Check if the form has been cancelled
+                if ($this->iscancellable) {
+                    foreach ($global as $key => $value) {
+                        if (substr($key, 0, 7) == 'cancel_') {
+                            // Check for and call the cancel function handler
+                            // @todo<nigel>: it might be that this function could be optional
+                            $function = $this->name . '_' . $key;
+                            if (!function_exists($function)) {
+                                throw new FormException('Form "' . $this->name . '" does not have a cancel function handler for "' . substr($key, 7) . '"');
+                            }
+                            $function();
+                            $element = $this->get_element(substr($key, 7));
+                            if (!isset($element['goto'])) {
+                                throw new FormException('Cancel element "' . $element['name'] . '" has no page to go to');
+                            }
+                            // @todo what happens in the case of ajax post?
+                            redirect($element['goto']);
+                            return;
                         }
-                        $function();
-                        $element = $this->get_element(substr($key, 7));
-                        if (!isset($element['goto'])) {
-                            throw new FormException('Cancel element "' . $element['name'] . '" has no page to go to');
-                        }
-                        // @todo what happens in the case of ajax post?
-                        redirect($element['goto']);
-                        return;
                     }
                 }
             }
@@ -403,7 +439,7 @@ class Form {
             }
 
             // Submit the form if things went OK
-            if (!$this->has_errors()) {
+            if ($this->submit && !$this->has_errors()) {
                 $function = $this->name . '_submit';
                 if (function_exists($function)) {
                     // Call the user defined function for processing a submit
@@ -550,7 +586,6 @@ class Form {
 
         if ($this->ajaxpost) {
             $result .= '<script language="javascript" type="text/javascript">';
-            //$result .= $this->validate_js();
             $result .= $this->submit_js();
             $result .=  "</script>\n";
         }
@@ -570,6 +605,7 @@ class Form {
         if (!function_exists($function)) {
             @include_once('form/elements/' . $element['type'] . '.php');
         }
+        // @todo for consistency, reverse parameter order - always a Form object first
         if (function_exists($function)) {
             return $function($element, $this);
         }
@@ -675,7 +711,7 @@ class Form {
                                 throw new FormException('No such form rule "' . $rule . '"');
                             }
                         }
-                        if ($error = $function($values[$element['name']], $element, $data)) {
+                        if ($error = $function($this, $values[$element['name']], $element, $data)) {
                             $this->set_error($element['name'], $error);
                         }
                     }
@@ -706,6 +742,7 @@ EOF;
             if ($element['type'] != 'markup') {
                 $function = 'form_get_value_js_' . $element['type'];
                 if (function_exists($function)) {
+                    // @todo reverse parameter order for consistency, Form first
                     $result .= $function($element, $this);
                 }
                 else {
@@ -754,6 +791,12 @@ EOF;
 
         if (!empty($this->ajaxsuccessfunction)) {
             $result .= "            {$this->ajaxsuccessfunction}();\n";
+        }
+
+        foreach ($this->get_elements() as $element) {
+            if ($element['type'] != 'markup') {
+                $result .= "            {$this->name}_remove_error('{$element['name']}');\n";
+            }
         }
 
         $result .= <<<EOF
@@ -958,6 +1001,25 @@ EOF;
     }
 
     /**
+     * Return an internationalised string based on the passed input key
+     *
+     * Returns english by default.
+     *
+     * @param string $key The language key to look up
+     * @return string     The internationalised string
+     */
+    public function i18n($key) {
+        $function = 'form_' . $key . '_i18n';
+        if (function_exists($function)) {
+            return $function($this->language);
+        }
+        if (isset($this->language_strings[$this->language][$key])) {
+            return $this->language_strings[$this->language][$key];
+        }
+        return '[[' . $key . ']]';
+    }
+
+    /**
      * Returns elements with errors on them
      *
      * @return array An array of elements with errors on them, the empty array
@@ -1048,6 +1110,7 @@ function form_render_element($element, Form $form) {
 
     $element['id']    = Form::make_id($element);
     $element['class'] = Form::make_class($element);
+    // @todo reverse order of parameters for consistency, a Form object first
     $builtelement = $function($element, $form);
 
     // Prepare the prefix and suffix

@@ -1,5 +1,5 @@
 {include file='header.tpl'}
-<table>
+<table cellspacing="0" cellpadding="1" id="installer">
     <tr>
         <th>{str section=admin tag=component}</th>
         <th>{str section=admin tag=fromversion}</th>
@@ -23,5 +23,5 @@
     </tr>
 {/if}
 </table>
-<div id="finished" style="display: none;">All done! <a href="{$WWWROOT}">Continue</a> (FIXME: displays on errors)</div>
-{include file='footer.tpl'}
+<div id="finished" style="visibility: hidden;">{str section=admin tag=successfullyinstalled} <a href="{$WWWROOT}">{str section=admin tag=continue}</a></div>
+{include file='admin/upgradefooter.tpl'}

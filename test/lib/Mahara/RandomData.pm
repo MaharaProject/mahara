@@ -47,7 +47,7 @@ sub pretend {
 sub insert_random_users {
     my ($self, $count) = @_;
 
-    my $prefix = $self->{config}{dbprefix};
+    my $prefix = $self->{config}->get('dbprefix');
 
     # get a list of existing usernames
     my $existing_users = $self->{dbh}->selectall_hashref('SELECT id, username FROM ' . $prefix . 'usr', 'username');

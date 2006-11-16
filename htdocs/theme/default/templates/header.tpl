@@ -26,7 +26,7 @@
             <a href="{$WWWROOT}?logout">Logout</a>
     {if $USER->admin}
         {if $ADMIN}
-            <a href="{$WWWROOT}/">Return to Site</a>
+            <a href="{$WWWROOT}">Return to Site</a>
         {else}
             <a href="{$WWWROOT}admin/">Site Administration</a>
         {/if}

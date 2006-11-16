@@ -166,12 +166,40 @@ class ArtefactTypeProfile extends ArtefactType {
         );
     }
 
+    public static function get_public_fields() {
+        return array();
+    }
+
     public static function has_config() {
         return true;
     }
 
     public static function get_config_options() {
-        return array(); // @todo  
+        $mandatory = self::get_mandatory_fields();
+        $public = self::get_public_fields();
+
+        $form = array(
+            'name'       => 'profileprefs',
+            'method'     => 'post', 
+            'ajaxpost'   => true,
+            'plugintype' => 'artefact',
+            'pluginname' => 'internal',
+            'elements'   => array()
+        );
+
+        foreach (array_keys(self::get_all_fields()) as $field) {
+            $form['elements'][$field . 'mandatory'] = array(
+                'defaultvalue' => (array_key_exists($field, $mandatory)) ? 'checked' : '',
+                'title'        => get_string($field, 'artefact.internal'),
+                'type'         => 'checkbox',
+            );
+            $form['elements'][$field . 'public'] = array(
+                'defaultvalue' => (in_array($field, $public)) ? 'checked' : '',
+                'title'        => get_string($field, 'artefact.internal'),
+                'type'         => 'checkbox',
+
+            );
+        }
     }
 }
 

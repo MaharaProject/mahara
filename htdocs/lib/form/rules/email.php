@@ -32,13 +32,14 @@ defined('INTERNAL') || die();
  * Currently, the check is [anything]@[anything]. Someone is welcome to write
  * something better, this was made just for testing.
  *
- * @param string $address The e-mail address to check
+ * @param Form $form      The form the rule is being applied to
+ * @param string $value   The e-mail address to check
  * @return string         The error message, if there is something wrong with
  *                        the address.
  */
-function form_rule_email($address) {
-    if (!preg_match('/^(.*)@(.*)\.(.*)$/', $address)) {
-        return get_string('E-mail address is invalid');
+function form_rule_email(Form $form, $value) {
+    if (!preg_match('/^(.*)@(.*)\.(.*)$/', $value)) {
+        return $form->i18n('email');
     }
 }
 
