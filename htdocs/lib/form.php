@@ -241,6 +241,16 @@ class Form {
     private $iscancellable = true;
 
     /**
+     * name of validate function
+     */ 
+    private $validatefunction = '';
+
+    /**
+     * name of submit function
+     */
+    private $submitfunction = '';
+
+    /**
      * Processes the form. Called by the {@link form} function. It simply
      * builds the form (processing it if it has been submitted), and returns
      * the HTML to display the form
@@ -278,7 +288,9 @@ class Form {
             'language'  => 'en',
             'validate'  => true,
             'submit'    => true,
-            'elements'  => array()
+            'elements'  => array(),
+            'submitfunction' => '',
+            'validatefunction' => '',
         );
         $data = array_merge($formdefaults, $data);
 
@@ -294,6 +306,20 @@ class Form {
         $this->onsubmit  = $data['onsubmit'];
         $this->autofocus = $data['autofocus'];
         $this->language  = $data['language'];
+        
+        if ($data['submitfunction']) {
+            $this->submitfunction = $data['submitfunction'];
+        }
+        else {
+            $this->submitfunction = $this->name . '_submit';
+        }
+
+        if ($data['validatefunction']) {
+            $this->validatefunction = $data['validatefunction'];
+        }
+        else {
+            $this->validatefunction = $this->name . '_submit';
+        }
 
         if ($data['ajaxpost']) {
             $this->ajaxpost = true;
@@ -433,15 +459,15 @@ class Form {
             // Perform general validation first
             $this->validate($values);
             // Then user specific validation if a function is available for that
-            $function = $this->name . '_validate';
-            if (function_exists($function)) {
+            if (function_exists($this->validatefunction)) {
+                $function = $this->validatefunction;
                 $function($this, $values);
             }
 
             // Submit the form if things went OK
             if ($this->submit && !$this->has_errors()) {
-                $function = $this->name . '_submit';
-                if (function_exists($function)) {
+                if (function_exists($this->submitfunction)) {
+                    $function = $this->submitfunction;
                     // Call the user defined function for processing a submit
                     // This function should really redirect/exit after it has
                     // finished processing the form.
