@@ -295,7 +295,7 @@ foreach ($menulist as &$menu) {
                   'name' => get_string($menu,'admin'));
 }
 
-$style = '<style type="text/css">.invisible{display:none;}</style>';
+$style = '<style type="text/css">.invisible{display:none;} table.menueditor{width:750px;}</style>';
 $smarty = smarty(array(),array($style));
 $smarty->assign('INLINEJAVASCRIPT',$ijs);
 $smarty->assign('EDIT',get_string('edit') . ':');

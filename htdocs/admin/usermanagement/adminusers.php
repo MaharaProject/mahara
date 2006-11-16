@@ -58,12 +58,13 @@ $form = array(
 
 function adminusers_submit($values) {
     global $SESSION;
+    $table = get_config('dbprefix') . 'usr';
     
     db_begin();
-    execute_sql('UPDATE usr
+    execute_sql('UPDATE ' . $table . '
         SET admin = 0
         WHERE admin = 1');
-    execute_sql('UPDATE usr
+    execute_sql('UPDATE ' . $table . '
         SET admin = 1
         WHERE id IN (' . join(',', $values['users']) . ')');
     db_commit();

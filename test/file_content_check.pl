@@ -130,6 +130,8 @@ sub process {
     while ( $file_data =~ m{ get_string\( ['"](.*?)['"] \s* (?: , \s* ['"](.*?)['"] )? .*? \)* }xmg ) {
         my ( $tag, $section ) = ( $1, $2 );
 
+        next if ( $tag =~ m{ \$ }xms or ( defined $section and $section =~ m{ \$ }xms ) );
+
         $section ||= 'mahara';
 
         unless ( exists $language_strings->{$section}{$tag} ) {

@@ -55,12 +55,12 @@ if ($SESSION->is_logged_in()) {
 // registered, show them a screen telling them this.
 if (!empty($_SESSION['registered'])) {
     unset($_SESSION['registered']);
-    die_info(get_string('registeredok'));
+    die_info(get_string('registeredok', 'auth.internal'));
 }
 
 if (isset($_GET['key'])) {
     if (!$registration = get_record('usr_registration', 'key', $_GET['key'])) {
-        die_info(get_string('registrationnosuchkey'));
+        die_info(get_string('registrationnosuchkey', 'auth.internal'));
     }
 
     // This should show mandatory profile fields, and the optional profile icon thing.
@@ -151,8 +151,8 @@ else {
 
 $elements['tandc'] = array(
     'type' => 'radio',
-    'title' => get_string('iagreetothetermsandconditions'),
-    'description' => get_string('youmustagreetothetermsandconditions'),
+    'title' => get_string('iagreetothetermsandconditions', 'auth.internal'),
+    'description' => get_string('youmustagreetothetermsandconditions', 'auth.internal'),
     'options' => array(
         'yes' => get_string('yes'),
         'no'  => get_string('no')
@@ -185,14 +185,14 @@ $form = array(
  */
 function register_validate(Form $form, $values) {
     $institution = $values['institution'];
-    safe_require('auth', 'internal', 'lib.php', 'require_once');
+    safe_require('auth', 'internal');
 
     if (!$form->get_error('username') && !AuthInternal::is_username_valid($values['username'])) {
-        $form->set_error('username', get_string('usernameinvalidform'));
+        $form->set_error('username', get_string('usernameinvalidform', 'auth.internal'));
     }
 
     if (!$form->get_error('username') && record_exists('usr', 'username', $values['username'])) {
-        $form->set_error('username', get_string('usernamealreadytaken'));
+        $form->set_error('username', get_string('usernamealreadytaken', 'auth.internal'));
     }
 
     password_validate($form, $values, (object)$values);
@@ -200,23 +200,23 @@ function register_validate(Form $form, $values) {
     // First name and last name must contain at least one non whitespace
     // character, so that there's something to read
     if (!$form->get_error('firstname') && !preg_match('/\S/', $values['firstname'])) {
-        $form->set_error('firstname', get_string('thisfieldisrequired'));
+        $form->set_error('firstname', $form->i18n('required'));
     }
 
     if (!$form->get_error('lastname') && !preg_match('/\S/', $values['lastname'])) {
-        $form->set_error('lastname', get_string('thisfieldisrequired'));
+        $form->set_error('lastname', $form->i18n('required'));
     }
 
     // The e-mail address cannot already be in the system
     if (!$form->get_error('email')
         && (record_exists('usr', 'email', $values['email'])
         || record_exists('usr_registration', 'email', $values['email']))) {
-        $form->set_error('email', get_string('emailalreadytaken'));
+        $form->set_error('email', get_string('emailalreadytaken', 'auth.internal'));
     }
     
     // If the user hasn't agreed to the terms and conditions, don't bother
     if ($values['tandc'] != 'yes') {
-        $form->set_error('tandc', get_string('youmustagreetotheterms'));
+        $form->set_error('tandc', get_string('youmaynotregisterwithouttandc', 'auth.internal'));
     }
 }
 
@@ -226,7 +226,7 @@ function register_submit($values) {
     // store password encrypted
     // don't die_info, since reloading the page shows the login form.
     // instead, redirect to some other page that says this
-    safe_require('auth', 'internal', 'lib.php', 'require_once');
+    safe_require('auth', 'internal');
     $values['salt']     = substr(md5(rand(1000000, 9999999)), 2, 8);
     $values['password'] = AuthInternal::encrypt_password($values['password1'], $values['salt']);
     $values['key']   = get_random_key();
@@ -236,15 +236,15 @@ function register_submit($values) {
 
         $user =(object) $values;
         email_user($user, null,
-            get_string('registeredemailsubject', 'mahara', get_config('sitename')),
-            get_string('registeredemailmessagetext', 'mahara', $values['key']),
-            get_string('registeredemailmessagehtml', 'mahara', $values['key'], $values['key']));
+            get_string('registeredemailsubject', 'auth.internal', get_config('sitename')),
+            get_string('registeredemailmessagetext', 'auth.internal', $values['key']),
+            get_string('registeredemailmessagehtml', 'auth.internal', $values['key'], $values['key']));
     }
     catch (EmailException $e) {
-        die_info(get_string('registrationunsuccessful'));
+        die_info(get_string('registrationunsuccessful', 'auth.internal'));
     }
     catch (SQLException $e) {
-        die_info(get_string('registrationunsuccessful'));
+        die_info(get_string('registrationunsuccessful', 'auth.internal'));
     }
 
     // Add a marker in the session to say that the user has registered

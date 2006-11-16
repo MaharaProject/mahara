@@ -94,7 +94,7 @@ function uploadcsv_validate(Form $form, $values) {
     }
 
     if ($values['file']['size'] == 0) {
-        $form->set_error('file', get_string('thisfieldisrequired', 'admin'));
+        $form->set_error('file', $form->i18n('required'));
         return;
     }
 
@@ -124,7 +124,7 @@ function uploadcsv_validate(Form $form, $values) {
             return;
         }
         if (record_exists('usr', 'username', $username)) {
-            $form->set_error('file', get_string('uploadcsverroruseralreadyexists', 'admin', $i));
+            $form->set_error('file', get_string('uploadcsverroruseralreadyexists', 'admin', $i, $username));
             return;
         }
 

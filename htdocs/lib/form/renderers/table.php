@@ -85,13 +85,13 @@ function form_renderer_table($builtelement, $rawelement) {
     // on the form itself (without the user having to hover over contextual help 
     if (!empty($rawelement['description'])) {
         $result .= "\t<tr>\n\t\t<td colspan=\"2\" class=\"description\">";
-        $result .= hsc($rawelement['description']);
+        $result .= $rawelement['description'];
         $result .= "</td>\n\t</tr>\n";
     }
 
     if (!empty($rawelement['error'])) {
         $result .= "\t<tr>\n\t\t<td colspan=\"2\" class=\"errmsg\">";
-        $result .= hsc($rawelement['error']);
+        $result .= $rawelement['error'];
     }
     $result .= "</td>\n\t</tr>\n";
 

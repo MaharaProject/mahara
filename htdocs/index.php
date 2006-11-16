@@ -49,7 +49,7 @@ if (!$SESSION->is_logged_in()) {
                     'login_username' => array(
                         'type'        => 'text',
                         'title'       => get_string('username'),
-                        'description' => get_string('usernamedesc'),
+                        'description' => get_string('usernamedescription'),
                         'help'        => get_string('usernamehelp'),
                         'rules' => array(
                             'required'    => true
@@ -58,7 +58,7 @@ if (!$SESSION->is_logged_in()) {
                     'login_password' => array(
                         'type'        => 'password',
                         'title'       => get_string('password'),
-                        'description' => get_string('passworddesc'),
+                        'description' => get_string('passworddescription'),
                         'help'        => get_string('passwordhelp'),
                         'value'       => '',
                         'rules' => array(
