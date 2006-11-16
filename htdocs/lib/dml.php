@@ -405,7 +405,9 @@ function recordset_to_assoc($rs) {
 }
 
 /**
- * Get a number of records as an associative array of objects.
+ * Get a number of records as an associative array of objects. (WARNING: this
+ * does not return an array, it returns an associative array keyed by the first
+ * column in the result set)
  *
  * If the query succeeds and returns at least one record, the
  * return value is an array of objects, one object for each
