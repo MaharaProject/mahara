@@ -104,14 +104,15 @@ $form = array(
 function forgotpass_validate(Form $form, $values) {
     // The e-mail address cannot already be in the system
     if (!$form->get_error('email') && !($user = get_record('usr', 'email', $values['email']))) {
-        $form->set_error('email', get_string('emailaddressinvalid'));
+        $form->set_error('email', get_string('forgotpassnosuchemailaddress'));
+        return;
     }
     
     $authtype = auth_get_authtype_for_institution($user->institution);
     safe_require('auth', $authtype, 'lib.php', 'require_once');
     $authclass = 'Auth' . ucfirst($authtype);
     if (!method_exists($authclass, 'change_password')) {
-        die_info(get_string('youwannabutyoucantchangepassword'));
+        die_info(get_string('cantchangepassword'));
     }
 }
 
@@ -120,7 +121,7 @@ function forgotpass_submit($values) {
 
     try {
         if (!$user = get_record('usr', 'email', $values['email'])) {
-            die_info(get_string('emailaddressinvalid'));
+            die_info(get_string('forgotpassnosuchemailaddress'));
         }
 
 
@@ -137,10 +138,10 @@ function forgotpass_submit($values) {
         insert_record('usr_password_request', $pwrequest);
     }
     catch (SQLException $e) {
-        die_info(get_string('forgotpasswordemailsendunsuccessful'));
+        die_info(get_string('forgotpassemailsendunsuccessful'));
     }
     catch (EmailException $e) {
-        die_info(get_string('forgotpasswordemailsendunsuccessful'));
+        die_info(get_string('forgotpassemailsendunsuccessful'));
     }
 
     // Add a marker in the session to say that the user has registered
@@ -170,7 +171,7 @@ function forgotpasschange_submit($values) {
 
     $authtype  = auth_get_authtype_for_institution($user->institution);
     $authclass = 'Auth' . ucfirst($authtype);
-    safe_require('auth', $authtype, 'lib.php', 'require_once');
+    safe_require('auth', $authtype);
     log_debug($values);
 
     if ($password = call_static_method($authclass, 'change_password', $user->username, $values['password1'])) {

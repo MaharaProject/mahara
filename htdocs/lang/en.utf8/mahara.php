@@ -40,28 +40,31 @@ $string['accountsuspended'] = 'Your account has been suspeneded as of %s. The re
 $string['changepassword'] = 'Change Password';
 $string['changepasswordinfo'] = 'You are required to change your password before you can proceed.';
 $string['confirmpassword'] = 'Confirm password';
+$string['cookiesnotenabled'] = 'Your browser does not have cookies enabled, or is blocking cookies from this site. Mahara requires cookies to be enabled before you can log in';
+$string['institution'] = 'Institution';
+$string['institutiondescription'] = 'Your institution';
 $string['loggedoutok'] = 'You have been logged out successfully';
 $string['login'] = 'Log In';
 $string['loginfailed'] = 'You have not provided the correct credentials to log in. Please check your username and password are correct.';
 $string['loginto'] = 'Log in to %s';
 $string['newpassword'] = 'New Password';
 $string['password'] = 'Password';
-$string['passworddesc'] = 'Your password';
+$string['passworddescription'] = 'Your password';
+$string['passwordhelp'] = 'The password you use to access the system';
 $string['passwordnotchanged'] = 'You did not change your password, please choose a new password';
 $string['passwordsaved'] = 'Your new password has been saved';
 $string['passwordsdonotmatch'] = 'The passwords do not match';
 $string['passwordtooeasy'] = 'Your password is too easy! Please choose a harder password';
+$string['register'] = 'Register';
 $string['sessiontimedout'] = 'Your session has timed out, please enter your login details to continue';
 $string['sessiontimedoutpublic'] = 'Your session has timed out. You may <a href="?login">log in</a> to continue browsing';
 $string['username'] = 'Username';
-$string['usernamedesc'] = 'Your username';
+$string['usernamedescription'] = 'Your username';
 $string['usernamehelp'] = 'The username you have been given to access this system.';
 $string['yournewpassword'] = 'Your new password';
 $string['yournewpasswordagain'] = 'Your new password again';
 
-// Registration
-$string['usernamedescription'] = 'Your username';
-$string['passworddescription'] = 'Your password';
+// This stuff is used by registration but might also be used by profile - if a string here isn't it should be moved to auth/internal/lang
 $string['password2description'] = 'Your password again';
 $string['firstname'] = 'First name';
 $string['firstnamedescription'] = 'Your first name';
@@ -69,25 +72,9 @@ $string['lastname'] = 'Last name';
 $string['lastnamedescription'] = 'Your last name';
 $string['emailaddress'] = 'Email address';
 $string['emailaddressdescription'] = 'Your email address';
-$string['iagreetothetermsandconditions'] = 'I agree to the terms and conditions';
-$string['youmustagreetothetermsandconditions'] = 'You must agree to the terms and conditions';
-$string['register'] = 'Register';
-$string['registeredemailsubject'] = 'You have registered at %s';
-$string['registeredemailmessagetext'] = 'Congratulations!
-
-You have successfully registered an account! Please follow this link to
-complete the signup process:
-
-' . get_config('wwwroot') . 'register.php?key=%s';
-$string['registeredemailmessagehtml'] = '<p>Congratulations!</p>
-<p>You have successfully registered an account! Please follow this link
-to complete the signup process:</p>
-<p><a href="' . get_config('wwwroot') . 'register.php?key=%s">'
-. get_config('wwwroot') . 'register.php?key=%s</a></p>';
-$string['registeredok'] = '<p>You have successfully registered. Please check your e-mail account for instructions on how to activate your account</p>';
-$string['registrationnosuchkey'] = 'Sorry, there does not seem to be a registration with this key. Perhaps you waited longer than 24 hours to complete your registration? Otherwise, it might be our fault.';
 
 // Forgot password
+$string['cantchangepassword'] = 'Sorry, you are unable to change your password through this interface - please use your institution\'s interface instead';
 $string['forgotpassword'] = 'Forgotten your password?';
 $string['pwchangerequestsent'] = 'You should receive an e-mail shortly with a link you can use to change the password for your account';
 $string['forgotpassemailsubject'] = 'Change password request for %s';
@@ -124,6 +111,10 @@ $string['forgotpassemailmessagehtml'] = '<p>Dear %s,</p>
 <p>Regards, %s Site Administrator</p>
 
 <p><a href="' . get_config('wwwroot') . 'forgotpass.php?key=%s">' . get_config('wwwroot') . 'forgotpass.php?key=%s</a></p>';
+$string['forgotpassemailsendunsuccessful'] = 'Sorry, it appears that the e-mail could not be sent successfully. This is our fault, please try again shortly';
+$string['forgotpassnosuchemailaddress'] = 'Sorry, this e-mail address does not appear to have an account here';
+$string['nosuchpasswordrequest'] = 'No such password request';
+$string['passwordchangedok'] = 'Your password was successfully changed';
 
 // Expiry times
 $string['noenddate'] = 'No end date';

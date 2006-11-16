@@ -131,21 +131,27 @@ $string['uploadcsverrorinvalidpassword'] = 'Error on line %s of your file: The p
 $string['uploadcsverrorinvalidusername'] = 'Error on line %s of your file: The username for this user is not in correct form';
 $string['uploadcsverrorincorrectfieldcount'] = 'Line %s of the file does not have the correct number of fields';
 $string['uploadcsverrormandatoryfieldnotspecified'] = 'Line %s of the file does not have the required "%s" field';
+$string['uploadcsverroruseralreadyexists'] = 'Line %s of the file specifies the username "%s" that already exists';
 $string['uploadcsvfile'] = 'Upload CSV File';
 $string['uploadcsvfiledescription'] = 'You may use this facility to upload new users via a <acronym title="Comma Separated Values">CSV</acronym> file. Each record in the file must have a username, e-mail address and password.';
 
 // Admin Users
 $string['adminusers'] = 'Admin Users';
 $string['adminusersdescription'] = 'Here you may choose which users are administrators. Admin users are listed in the right box, and potential administrators are on the left.';
+$string['adminusersupdated'] = 'Admin users updated';
 
 // Staff Users
 $string['staffusers'] = 'Staff Users';
 $string['staffusersdescription'] = 'Here you may choose which users are staff users. Staff users are listed in the right box, and potential staff users are on the left.';
+$string['staffusersupdated'] = 'Staff users updated';
 
 // Admin Notifications
 $string['adminnotifications'] = 'Admin Notifications';
 
 // Suspended Users
 $string['suspendedusers'] = 'Suspended Users';
+
+// Authentication
+$string['authconfigoptionssaved'] = 'Auth configuration has been saved';
 
 ?>

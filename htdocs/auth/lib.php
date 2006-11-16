@@ -465,7 +465,7 @@ function auth_get_login_form() {
                 'login_username' => array(
                     'type'        => 'text',
                     'title'       => get_string('username'),
-                    'description' => get_string('usernamedesc'),
+                    'description' => get_string('usernamedescription'),
                     'help'        => get_string('usernamehelp'),
                     'rules' => array(
                         'required'    => true
@@ -474,7 +474,7 @@ function auth_get_login_form() {
                 'login_password' => array(
                     'type'        => 'password',
                     'title'       => get_string('password'),
-                    'description' => get_string('passworddesc'),
+                    'description' => get_string('passworddescription'),
                     'help'        => get_string('passwordhelp'),
                     'value'       => '',
                     'rules' => array(
@@ -683,7 +683,7 @@ function auth_submit($values) {
         throw new Exception('Could not update the configuration options for the auth method');
     }
     $db->CompleteTrans();
-    $SESSION->add_ok_msg(get_string('authconfigurationoptionssaved') . ' ' . get_config_plugin('auth', $values['method'], $key));
+    $SESSION->add_ok_msg(get_string('authconfigoptionssaved', 'admin'));
 }
 
 ?>

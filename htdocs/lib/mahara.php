@@ -625,14 +625,14 @@ function safe_require($plugintype, $pluginname, $filename='lib.php', $function='
  * @return array of names
  */
 function site_content_pages() {
-    return array('about','home','loggedouthome','privacy','termsandconditions','uploadcopyright');
+    return array('about', 'home', 'loggedouthome', 'privacy', 'termsandconditions', 'uploadcopyright');
 }
 
 function get_site_page_content($pagename) {
-    if ($pagedata = @get_record('site_content','name',$pagename)) {
+    if ($pagedata = @get_record('site_content', 'name', $pagename)) {
         return $pagedata->content;
     }
-    return get_string('sitecontentnotfound','mahara',get_string($pagename));
+    return get_string('sitecontentnotfound', 'mahara', get_string($pagename));
 }
 
 /**
@@ -1186,9 +1186,9 @@ function get_random_key() {
 function password_validate(Form $form, $values, $user) {
     $authtype  = auth_get_authtype_for_institution($user->institution);
     $authclass = 'Auth' . ucfirst($authtype);
-    safe_require('auth', $authtype, 'lib.php', 'require_once');
+    safe_require('auth', $authtype);
     if (!$form->get_error('password1') && !call_static_method($authclass, 'is_password_valid', ($values['password1']))) {
-        $form->set_error('password1', get_string('passwordinvalidform'));
+        $form->set_error('password1', get_string('passwordinvalidform', "auth.$authtype"));
     }
 
     $suckypasswords = array(
