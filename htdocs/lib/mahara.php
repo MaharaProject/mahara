@@ -642,7 +642,7 @@ function get_site_page_content($pagename) {
 function plugin_types() {
     static $pluginstocheck;
     if (empty($pluginstocheck)) {
-        $pluginstocheck = array('artefact', 'auth', 'notification');
+        $pluginstocheck = array('artefact', 'auth', 'notification', 'search');
     }
     return $pluginstocheck;
 }

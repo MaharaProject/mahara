@@ -86,6 +86,10 @@ $string['linkedto']      = 'Linked to';
 $string['editmenus']     = 'Edit menus';
 $string['menuitemsaved'] = 'Menu item saved';
 $string['savingmenuitem'] = 'Saving menu item';
+$string['menuitemsloaded'] = 'Menu items loaded';
+$string['deletingmenuitem'] = 'Deleting menu item';
+$string['menuitemdeleted'] = 'Menu item deleted';
+$string['loadingmenuitems'] = 'Loading menu items';
 $string['loggedinmenu']  = 'Logged in menu';
 $string['loggedoutmenu'] = 'Logged out menu';
 

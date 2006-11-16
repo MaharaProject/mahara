@@ -17,24 +17,16 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage admin
- * @author     Richard Mansfield <richard.mansfield@catalyst.net.nz>
+ * @subpackage search-internal
+ * @author     Martyn Smith <martyn@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
-define('INTERNAL', 1);
-define('ADMIN', 1);
-require(dirname(dirname(__FILE__)) . '/init.php');
+defined('INTERNAL') || die();
 
-$itemid = param_variable('itemid');
-$result = array();
-
-if (!delete_records('site_menu','id',$itemid)) {
-    json_reply('local', get_string('deletefailed','admin'));
-}
-
-json_reply(false,get_string('menuitemdeleted','admin'));
+$config->version = 2006111600;
+$config->release = '0.1';
 
 ?>
