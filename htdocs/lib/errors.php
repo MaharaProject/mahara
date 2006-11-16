@@ -381,7 +381,10 @@ function exception (Exception $e) {
     // rather than by switch on class name
     if (function_exists('get_string')) {
         $outputmessage = get_string('unrecoverableerror', 'error');
-        $outputtitle = get_string('unrecoverableerrortitle', 'error');
+        if (!function_exists('get_config') || !$sitename = @get_config('sitename')) {
+            $sitename = 'Mahara';
+        }
+        $outputtitle = get_string('unrecoverableerrortitle', 'error', $sitename);
     }
     else {
         // sensible english defaults
