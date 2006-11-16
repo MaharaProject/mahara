@@ -217,7 +217,7 @@ function auth_setup () {
                 $SESSION->add_err_msg(get_string('accessforbiddentoadminsection'));
                 redirect(get_config('wwwroot'));
             }
-            else {
+            elseif (!$SESSION->get('admin')) {
                 // The user never was an admin
                 $SESSION->add_err_msg(get_string('accessforbiddentoadminsection'));
                 redirect(get_config('wwwroot'));
