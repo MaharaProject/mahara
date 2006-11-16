@@ -24,9 +24,9 @@
  *
  */
 
-define('INTERNAL',1);
-define('ADMIN',1);
-define('MENUITEM','adminhome');
+define('INTERNAL', 1);
+define('ADMIN', 1);
+define('MENUITEM', 'adminhome');
 
 require(dirname(dirname(__FILE__)).'/init.php');
 require(get_config('libroot') . 'upgrade.php');
