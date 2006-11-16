@@ -43,7 +43,7 @@ else if ($type == 'externallink') {
     $data->url = $linkedto;
 }
 else { // Bad menu item type
-    json_reply('local',get_string('badmenuitemtype'));
+    json_reply('local',get_string('badmenuitemtype','admin'));
 }
 $data->title = $name;
 
@@ -62,7 +62,7 @@ if ($itemid == 'new') {
         insert_record('site_menu', $data);
     }
     catch (Exception $e) {
-        json_reply('local',get_string('savefailed'));
+        json_reply('local',get_string('savefailed','admin'));
     }
 }
 else {
@@ -71,7 +71,7 @@ else {
         update_record('site_menu', $data, 'id');
     }
     catch (Exception $e) {
-        json_reply('local',get_string('savefailed'));
+        json_reply('local',get_string('savefailed','admin'));
     }
 }
 
