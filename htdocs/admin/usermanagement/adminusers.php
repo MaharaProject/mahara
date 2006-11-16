@@ -61,8 +61,12 @@ function adminusers_submit($values) {
     $table = get_config('dbprefix') . 'usr';
     
     db_begin();
-    execute_sql('UPDATE ' . $table . ' SET admin = 0 WHERE admin = 1');
-    execute_sql('UPDATE ' . $table . ' SET admin = 1 WHERE id IN (' . join(',', $values['users']) . ')');
+    execute_sql('UPDATE ' . $table . '
+        SET admin = 0
+        WHERE admin = 1');
+    execute_sql('UPDATE ' . $table . '
+        SET admin = 1
+        WHERE id IN (' . join(',', $values['users']) . ')');
     db_commit();
     $SESSION->add_ok_msg(get_string('adminusersupdated', 'admin'));
     redirect(get_config('wwwroot') . 'admin/usermanagement/adminusers.php');
