@@ -138,7 +138,8 @@ $string['add']           = 'Add';
 $string['delete']        = 'Delete';
 $string['edit']          = 'Edit';
 
-
+// Site content pages
+$string['sitecontentnotfound'] = '%s text not available';
 
 // Contact us form
 $string['name']                     = 'Name';
@@ -150,6 +151,7 @@ $string['nositecontactaddress']     = 'Site contact email address not set';
 $string['nosendernamefound']        = 'No sender name was submitted';
 $string['emailnotsent']             = 'Failed to send contact email. Error message: "%s"';
 $string['contactinformationsent']   = 'Your contact information has been sent';
+$string['contactaddress']           = 'Contact address';
 
 // mahara.js
 $string['namedfieldempty'] = 'The required field "%s" is empty';

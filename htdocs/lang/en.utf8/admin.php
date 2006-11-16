@@ -77,27 +77,32 @@ $string['viruscheckingdescription'] = 'If checked, virus checking will be enable
 
 // Admin menu editor
 //$string['menueditor']    = 'Menu editor';
-$string['adminfile']     = 'Admin file';
-$string['externallink']  = 'External link';
-$string['type']          = 'Type';
-$string['name']          = 'Name';
-$string['noadminfiles']  = 'No admin files';
-$string['linkedto']      = 'Linked to';
-$string['editmenus']     = 'Edit menus';
-$string['menuitemsaved'] = 'Menu item saved';
-$string['savingmenuitem'] = 'Saving menu item';
-$string['menuitemsloaded'] = 'Menu items loaded';
-$string['deletingmenuitem'] = 'Deleting menu item';
-$string['menuitemdeleted'] = 'Menu item deleted';
-$string['loadingmenuitems'] = 'Loading menu items';
-$string['loggedinmenu']  = 'Logged in menu';
-$string['loggedoutmenu'] = 'Logged out menu';
+$string['adminfile']           = 'Admin file';
+$string['badmenuitemtype']     = 'Unknown menu item type';
+$string['externallink']        = 'External link';
+$string['type']                = 'Type';
+$string['name']                = 'Name';
+$string['noadminfiles']        = 'No admin files';
+$string['linkedto']            = 'Linked to';
+$string['editmenus']           = 'Edit menus';
+$string['menuitemsaved']       = 'Menu item saved';
+$string['savingmenuitem']      = 'Saving menu item';
+$string['menuitemsloaded']     = 'Menu items loaded';
+$string['deletingmenuitem']    = 'Deleting menu item';
+$string['deletefailed']        = 'Failed deleting menu item';
+$string['menuitemdeleted']     = 'Menu item deleted';
+$string['loadingmenuitems']    = 'Loading menu items';
+$string['loadmenuitemsfailed'] = 'Failed to load menu items';
+$string['loggedinmenu']        = 'Logged in menu';
+$string['loggedoutmenu']       = 'Logged out menu';
 
 // Site content
 $string['about']               = 'About';
 $string['discardpageedits']    = 'Discard your changes to this page?';
 $string['editsitecontent']     = 'Edit site content';
 $string['home']                = 'Home';
+$string['loadingpagecontent']  = 'Loading site page content';
+$string['loadsitepagefailed']  = 'Failed to load site page';
 $string['loggedouthome']       = 'Logged out Home';
 $string['pagecontents']        = 'Text to appear on the page';
 $string['pagename']            = 'Page name';
@@ -105,7 +110,8 @@ $string['pagesaved']           = 'Page saved';
 $string['pagetext']            = 'Page text';
 $string['privacy']             = 'Privacy statement';
 $string['savechanges']         = 'Save changes';
-$string['sitecontentnotfound'] = '%s text not available';
+$string['savefailed']          = 'Save failed';
+$string['sitepageloaded']      = 'Site page loaded';
 $string['termsandconditions']  = 'Terms and conditions';
 $string['uploadcopyright']     = 'Upload copyright statement';
 
