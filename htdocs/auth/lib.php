@@ -217,6 +217,11 @@ function auth_setup () {
                 $SESSION->add_err_msg(get_string('accessforbiddentoadminsection'));
                 redirect(get_config('wwwroot'));
             }
+            else {
+                // The user never was an admin
+                $SESSION->add_err_msg(get_string('accessforbiddentoadminsection'));
+                redirect(get_config('wwwroot'));
+            }
         }
         $USER = $SESSION->renew();
         auth_check_password_change();
@@ -298,7 +303,7 @@ function auth_check_password_change() {
     $authtype  = auth_get_authtype_for_institution($USER->institution);
     $authclass = 'Auth' . ucfirst($authtype);
     $url       = '';
-    safe_require('auth', $authtype, 'lib.php', 'require_once');
+    safe_require('auth', $authtype);
     
     // @todo auth preference for a password change screen for all auth methods other than internal
     if (
@@ -367,7 +372,7 @@ function change_password_validate(Form $form, $values) {
     $authtype  = auth_get_authtype_for_institution($USER->institution);
     $authclass = 'Auth' . ucfirst($authtype);
     $authlang  = 'auth.' . $authtype;
-    safe_require('auth', $authtype, 'lib.php', 'require_once');
+    safe_require('auth', $authtype);
 
     // @todo this could be done by a custom form rule... 'password' => $user
     password_validate($form, $values, $USER);
@@ -582,7 +587,7 @@ function login_submit($values) {
     $institution = (isset($values['login_institution'])) ? $values['login_institution'] : 'mahara';
             
     $authtype = auth_get_authtype_for_institution($institution);
-    safe_require('auth', $authtype, 'lib.php', 'require_once');
+    safe_require('auth', $authtype);
     $authclass = 'Auth' . ucfirst($authtype);
 
     try {
