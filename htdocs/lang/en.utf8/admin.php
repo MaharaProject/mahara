@@ -38,6 +38,7 @@ $string['release'] = 'Release %s (%s)';
 $string['component'] = 'Component or plugin';
 $string['continue'] = 'Continue';
 $string['coredata'] = 'core data';
+$string['coredatasuccess'] = 'Successfully installed core data';
 $string['fromversion'] = 'From version';
 $string['installsuccess'] = 'Successfully installed version ';
 $string['toversion'] =  'To version';

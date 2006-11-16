@@ -47,6 +47,7 @@ $loadingstring = get_string('upgradeloading', 'admin');
 $installsuccessstring = get_string('installsuccess', 'admin');
 $successstring = get_string('upgradesuccess', 'admin');
 $failurestring = get_string('upgradefailure', 'admin');
+$coresuccess   = get_string('coredatasuccess', 'admin');
 
 // Check if Mahara is being installed. An extra hook is required to insert core
 // data if so.
@@ -59,7 +60,7 @@ if (!empty($upgrades['core']->install)) {
                     
                     d.addCallbacks(function (data) {
                         if ( data.success ) {
-                            var message = 'Successfully installed core data';
+                            var message = '{$coresuccess}';
                             $('coredata').innerHTML = '<img src="{$successicon}" alt=":)" />  ' + message;
                             $('finished').style.visibility = 'visible';
                         }
