@@ -547,6 +547,20 @@ function json_reply($type, $message) {
     exit;
 }
 
+function _param_retrieve($name) {
+    // if it's not set and we have a default
+    if (!isset($_REQUEST[$name]) && func_num_args() == 2) {
+        $php_work_around = func_get_arg(1);
+        return array($php_work_around, true);
+    }
+
+    if (!isset($_REQUEST[$name])) {
+        throw new ParameterException("Missing parameter '$name' and no default supplied");
+    }
+
+    return array($_REQUEST[$name], false);
+}
+
 /**
  * This function returns a GET or POST parameter with optional default.  If the
  * default isn't specified and the parameter hasn't been sent, a
@@ -559,17 +573,9 @@ function json_reply($type, $message) {
  *
  */
 function param_variable($name) {
-    // if it's not set and we have a default
-    if (!isset($_REQUEST[$name]) && func_num_args() == 2) {
-        $php_work_around = func_get_arg(1);
-        return $php_work_around;
-    }
-
-    if (!isset($_REQUEST[$name])) {
-        throw new ParameterException("Missing parameter '$name' and no default supplied");
-    }
-
-    return $_REQUEST[$name];
+    $args = func_get_args();
+    list ($value) = call_user_func_array('_param_retrieve', $args);
+    return $value;
 }
 
 /**
@@ -585,12 +591,12 @@ function param_variable($name) {
  *
  */
 function param_integer($name) {
-    if (func_num_args() == 2) {
-        $php_work_around = func_get_arg(1);
-        $value = param_variable($name,$php_work_around);
-    }
-    else {
-        $value = param_variable($name);
+    $args = func_get_args();
+
+    list ($value, $defaultused) = call_user_func_array('_param_retrieve', $args);
+
+    if ($defaultused) {
+        return $value;
     }
 
     if (preg_match('/^\d+$/',$value)) {
@@ -615,12 +621,12 @@ function param_integer($name) {
  *
  */
 function param_alpha($name) {
-    if (func_num_args() == 2) {
-        $php_work_around = func_get_arg(1);
-        $value = param_variable($name,$php_work_around);
-    }
-    else {
-        $value = param_variable($name);
+    $args = func_get_args();
+
+    list ($value, $defaultused) = call_user_func_array('_param_retrieve', $args);
+
+    if ($defaultused) {
+        return $value;
     }
 
     if (preg_match('/^[a-zA-Z]+$/',$value)) {
@@ -646,12 +652,12 @@ function param_alpha($name) {
  *
  */
 function param_integer_list($name) {
-    if (func_num_args() == 2) {
-        $php_work_around = func_get_arg(1);
-        $value = param_variable($name,$php_work_around);
-    }
-    else {
-        $value = param_variable($name);
+    $args = func_get_args();
+
+    list ($value, $defaultused) = call_user_func_array('_param_retrieve', $args);
+
+    if ($defaultused) {
+        return $value;
     }
 
     if ($value == '') {
@@ -674,7 +680,8 @@ function param_integer_list($name) {
  *
  */
 function param_boolean($name) {
-    $value = param_variable($name, false);
+    
+    list ($value) = _param_retrieve($name, false);
 
     if (empty($value) || $value == 'off' || $value == 'no' || $value == 'false') {
         return false;

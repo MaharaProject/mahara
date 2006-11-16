@@ -1,6 +1,6 @@
 {include file="header.tpl"}
 
-<p>Admin menu editor</p>
+<h2>{str section=admin tag=editmenus}</h2>
 
 <div> 
 {$EDIT}

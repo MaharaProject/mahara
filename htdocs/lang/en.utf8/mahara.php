@@ -57,7 +57,19 @@ $string['yournewpassword'] = 'Your new password';
 $string['yournewpasswordagain'] = 'Your new password again';
 
 // Registration
-$string['registeredemailsubject'] = 'You have registered at Mahara';
+$string['usernamedescription'] = 'Your username';
+$string['passworddescription'] = 'Your password';
+$string['password2description'] = 'Your password again';
+$string['firstname'] = 'First name';
+$string['firstnamedescription'] = 'Your first name';
+$string['lastname'] = 'Last name';
+$string['lastnamedescription'] = 'Your last name';
+$string['emailaddress'] = 'Email address';
+$string['emailaddressdescription'] = 'Your email address';
+$string['iagreetothetermsandconditions'] = 'I agree to the terms and conditions';
+$string['youmustagreetothetermsandconditions'] = 'You must agree to the terms and conditions';
+$string['register'] = 'Register';
+$string['registeredemailsubject'] = 'You have registered at %s';
 $string['registeredemailmessagetext'] = 'Congratulations!
 
 You have successfully registered an account! Please follow this link to
@@ -73,11 +85,12 @@ $string['registeredok'] = '<p>You have successfully registered. Please check you
 $string['registrationnosuchkey'] = 'Sorry, there does not seem to be a registration with this key. Perhaps you waited longer than 24 hours to complete your registration? Otherwise, it might be our fault.';
 
 // Forgot password
+$string['forgotpassword'] = 'Forgotten your password?';
 $string['pwchangerequestsent'] = 'You should receive an e-mail shortly with a link you can use to change the password for your account';
-$string['forgotpassemailsubject'] = 'Change password request for Mahara';
-$string['forgotpassemailmessagetext'] = 'Dear $fullname,
+$string['forgotpassemailsubject'] = 'Change password request for %s';
+$string['forgotpassemailmessagetext'] = 'Dear %s,
 
-A request to reset your password has been received for your $sitename account.
+A request to reset your password has been received for your %s account.
 
 Please follow the link below to continue the reset process.
 
@@ -90,12 +103,12 @@ us.
 
 ' . get_config('wwwroot') . 'contact.php
 
-Regards, $sitename Site Administrator
+Regards, %s Site Administrator
 
 ' . get_config('wwwroot') . 'forgotpass.php?key=%s';
-$string['forgotpassemailmessagehtml'] = '<p>Dear $fullname,</p>
+$string['forgotpassemailmessagehtml'] = '<p>Dear %s,</p>
 
-<p>A request to reset your password has been received for your $sitename account.</p>
+<p>A request to reset your password has been received for your %s account.</p>
 
 <p>Please follow the link below to continue the reset process.</p>
 
@@ -105,32 +118,10 @@ $string['forgotpassemailmessagehtml'] = '<p>Dear $fullname,</p>
 
 <p>If you have any questsions regarding the above, please feel free to <a href="' . get_config('wwwroot') . 'contact.php">contact us</a>.</p>
 
-<p>Regards, $sitename Site Administrator</p>
+<p>Regards, %s Site Administrator</p>
 
 <p><a href="' . get_config('wwwroot') . 'forgotpass.php?key=%s">' . get_config('wwwroot') . 'forgotpass.php?key=%s</a></p>';
 
-// Site options
-$string['allowpublicviews'] = 'Allow public views';
-$string['allowpublicviewsdescription'] = 'If set to yes, views are accessable by the public.  If set to no, only logged in users will be able to look at views';
-$string['artefactviewinactivitytime'] = 'Artefact view inactivity time';
-$string['artefactviewinactivitytimedescription'] = 'The time after which an inactive view or artefact will be moved to the InactiveContent area';
-$string['contactaddress'] = 'Contact address';
-$string['contactaddressdescription'] = 'The email address to which messages from the Contact Us form will be sent';
-$string['language'] = 'Language';
-$string['pathtoclam'] = 'Path to clam';
-$string['pathtoclamdescription'] = 'The filesystem path to clamscan or clamdscan';
-$string['sessionlifetime'] = 'Session lifetime';
-$string['sessionlifetimedescription'] = 'Time in minutes after which an inactive logged in user will be automatically logged out';
-$string['setsiteoptionsfailed'] = 'Failed setting the %s option';
-$string['sitelanguagedescription'] = 'The default language for the site';
-$string['sitename'] = 'Site name';
-$string['sitenamedescription'] = 'The overall name of the site';
-$string['siteoptionsset'] = 'Site options have been updated';
-$string['sitethemedescription'] = 'The theme for the site';
-$string['theme'] = 'Theme';
-$string['updatesiteoptions'] = 'Update site options';
-$string['viruschecking'] = 'Virus checking';
-$string['viruscheckingdescription'] = 'If checked, virus checking will be enabled for all uploaded files using ClamAV';
 // Expiry times
 $string['noenddate'] = 'No end date';
 $string['days']      = 'days';
@@ -141,34 +132,11 @@ $string['years']     = 'years';
 $string['no']        = 'no';
 $string['yes']       = 'yes';
 
-// Admin menu editor
-//$string['menueditor']    = 'Menu editor';
-$string['adminfile']     = 'Admin file';
-$string['externallink']  = 'External link';
-$string['type']          = 'Type';
-$string['name']          = 'Name';
-$string['noadminfiles']  = 'No admin files';
-$string['linkedto']      = 'Linked to';
 $string['add']           = 'Add';
 $string['delete']        = 'Delete';
 $string['edit']          = 'Edit';
-$string['loggedinmenu']  = 'Logged in menu';
-$string['loggedoutmenu'] = 'Logged out menu';
-$string['menuitemsaved'] = 'Menu item saved';
-$string['savingmenuitem'] = 'Saving menu item';
 
-// Site content
-$string['about']               = 'About';
-$string['discardpageedits']    = 'Discard your changes to this page?';
-$string['home']                = 'Home';
-$string['loggedouthome']       = 'Logged out Home';
-$string['privacy']             = 'Privacy statement';
-$string['pagecontents']        = 'Text to appear on the page';
-$string['pagename']            = 'Page name';
-$string['pagetext']            = 'Page text';
-$string['sitecontentnotfound'] = '%s text not available';
-$string['termsandconditions']  = 'Terms and conditions';
-$string['uploadcopyright']     = 'Upload copyright statement';
+
 
 // Contact us form
 $string['name']                     = 'Name';
@@ -229,4 +197,9 @@ $string['save'] = 'Save';
 $string['update'] = 'Update';
 
 $string['config'] = 'Config';
+
+$string['notinstallable'] = 'Not installable!';
+$string['installedplugins'] = 'Installed plugins';
+$string['notinstalledplugins'] = 'Not installed plugins';
+$string['plugintype'] = 'Plugin type';
 ?>

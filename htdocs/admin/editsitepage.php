@@ -33,7 +33,7 @@ require_once('form.php');
 $sitepages = get_records('site_content');
 $pageoptions = array();
 foreach ($sitepages as $page) {
-    $pageoptions[$page->name] = get_string($page->name);
+    $pageoptions[$page->name] = get_string($page->name,'admin');
 }
 asort($pageoptions);
 
@@ -46,7 +46,7 @@ $f = array(
     'elements'            => array(
         'pagename' => array(
             'type'    => 'select',
-            'title'   => get_string('pagename'),
+            'title'   => get_string('pagename','admin'),
             'defaultvalue'   => 'home',
             'options' => $pageoptions
         ),
@@ -55,15 +55,15 @@ $f = array(
             'type'        => 'wysiwyg',
             'rows'        => 20,
             'cols'        => 80,
-            'title'       => get_string('pagetext'),
-            'description' => get_string('pagecontents'),
+            'title'       => get_string('pagetext','admin'),
+            'description' => get_string('pagecontents','admin'),
             'rules'       => array(
                 'required' => true
             )
         ),
         'submit' => array(
             'type'  => 'submit',
-            'value' => get_string('savechanges')
+            'value' => get_string('savechanges','admin')
         ),
     )
 );
@@ -81,9 +81,9 @@ function editsitepage_submit($values) {
         update_record('site_content', $data, 'name');
     }
     catch (SQLException $e) {
-        json_reply('local', get_string('savefailed'));
+        json_reply('local', get_string('savefailed','admin'));
     }
-    json_reply(false, get_string('savedsuccessfully'));
+    json_reply(false, get_string('pagesaved','admin'));
 }
 
 if (use_html_editor()) {

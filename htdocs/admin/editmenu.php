@@ -29,25 +29,25 @@ define('ADMIN', 1);
 define('MENUITEM','menueditor');
 require(dirname(dirname(__FILE__)).'/init.php');
 
-$thead = array(get_string('type'),get_string('name'),get_string('linkedto'),'');
+$thead = array(get_string('type','admin'),get_string('name','admin'),get_string('linkedto','admin'),'');
 $ijs = "var thead = TR(null,map(partial(TH,null),['" . implode($thead,"','") . "']));\n";
-$ijs .= "var externallink = '" . get_string('externallink') . "';\n";
-$ijs .= "var adminfile = '" . get_string('adminfile') . "';\n";
+$ijs .= "var externallink = '" . get_string('externallink','admin') . "';\n";
+$ijs .= "var adminfile = '" . get_string('adminfile','admin') . "';\n";
 
 $ijs .= <<< EOJS
 // Request a list of menu items from the server
 function getitems() {
-    logDebug(get_string('loadingmenuitems'));
+    logDebug(get_string('loadingmenuitems','admin'));
     processingStart();
     var d = loadJSONDoc('getmenuitems.json.php',{'public':selectedmenu == 'loggedoutmenu'});
     d.addCallback(function(data) {
         if (!data.error) {
-            logDebug(get_string('loadedmenuitems'));
+            logDebug(get_string('loadedmenuitems','admin'));
             displaymenuitems(data.menuitems);
             processingStop();
         }
         else {
-            displayMessage(get_string('failedloadingmenuitems'),'error');
+            displayMessage(get_string('failedloadingmenuitems','admin'),'error');
             processingStop();
         }
     });
@@ -128,7 +128,7 @@ function editform(item) {
         var adminfiles = getadminfiles();
         if (adminfiles == null) {
             // There are no admin files, we don't need the select or save button
-            linkedto = get_string('noadminfiles');
+            linkedto = get_string('noadminfiles','admin');
             savecancel = [cancel];
         }
         else {
@@ -194,15 +194,15 @@ function edititem(item) {
 // Request deletion of a menu item from the db
 function delitem(itemid) {
     processingStart();
-    logDebug(get_string('deletingmenuitem'));
+    logDebug(get_string('deletingmenuitem','admin'));
     var d = loadJSONDoc('deletemenuitem.json.php',{'itemid':itemid});
     d.addCallback(function(data) {
         if (data.success) {
-            logDebug(get_string('menuitemdeleted'));
+            logDebug(get_string('menuitemdeleted','admin'));
             getitems();
         }
         else {
-            displayMessage(get_string('deletefailed'),'error');
+            displayMessage(get_string('deletefailed','admin'),'error');
         }
         processingStop();
     });
@@ -214,15 +214,15 @@ function saveitem(formid) {
     var name = f.name.value;
     var linkedto = f.linkedto.value;
     if (name == '') {
-        displayMessage(get_string('namedfieldempty',get_string('name')),'error');
+        displayMessage(get_string('namedfieldempty',get_string('name','admin')),'error');
         return false;
     }
     if (linkedto == '') {
-        displayMessage(get_string('namedfieldempty',get_string('linkedto')),'error');
+        displayMessage(get_string('namedfieldempty',get_string('linkedto','admin')),'error');
         return false;
     }
     processingStart();
-    displayMessage(get_string('savingmenuitem'),'info');
+    displayMessage(get_string('savingmenuitem','admin'),'info');
     var data = {'type':f.type[0].checked ? 'externallink' : 'adminfile',
                 'name':name,
                 'linkedto':linkedto,
