@@ -995,7 +995,7 @@ function update_record($table, $dataobject, $where) {
         $count++;
         $whereclause .= $field .' = ? ';
         if ($count < $numddd) {
-            $whereclause .= ', ';
+            $whereclause .= ' AND ';
         }
     }
 
