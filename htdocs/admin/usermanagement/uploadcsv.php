@@ -115,8 +115,8 @@ function uploadcsv_validate(Form $form, $values) {
             return;
         }
         $username = $line[0];
-        $email    = $line[1];
-        $password = $line[2];
+        $password = $line[1];
+        $email    = $line[2];
 
         safe_require('auth', 'internal', 'lib.php', 'require_once');
         if (!AuthInternal::is_username_valid($username)) {
@@ -128,18 +128,25 @@ function uploadcsv_validate(Form $form, $values) {
             return;
         }
 
-        require_once('form/rules/email.php');
-        if (form_rule_email($email) !== null) {
-            $form->set_error('file', get_string('uploadcsverrorinvalidemail', 'admin', $i)); 
-            return;
-        }
-
         // Note: only checks for valid form are done here, none of the checks
         // like whether the password is too easy. The user is going to have to
         // change their password on first login anyway.
         if (!AuthInternal::is_password_valid($password)) {
             $form->set_error('file', get_string('uploadcsverrorinvalidpassword', 'admin', $i));
             return;
+        }
+
+        safe_require('artefact', 'internal');
+        $fieldcounter = 2;
+        foreach (ArtefactTypeProfile::get_mandatory_fields() as $field => $type) {
+            $fieldcounter++;
+            if (!isset($line[$fieldcounter])) {
+                $form->set_error('file', get_string('uploadcsverrormandatoryfieldnotspecified', 'admin', $i, $field));
+                return;
+            }
+
+            // @todo validate the mandatory fields somehow. In theory, this should
+            // just involve calling a method on a class.
         }
 
         // All OK!
@@ -155,16 +162,19 @@ function uploadcsv_submit($values) {
     global $SESSION, $CSVDATA;
     log_info('Inserting users from the CSV file');
     foreach ($CSVDATA as $record) {
-        log_debug('adding user ' . $record->username);
-        // @todo when penny has done the profile field setting stuff...
-        //$user = new StdClass;
-        //$user->username = $record[0];
-        //$user->password = $record[2];
-        //$user->institution = $values['institution'];
-        //$user->passwordchange = 1;
-        //$user->firstname = ???;
-        //$user->lastname = ???;
-        //$user->email    = $record[1];
+        log_debug('adding user ' . $record[0]);
+        $user = new StdClass;
+        $user->username  = $record[0];
+        $user->password  = $record[1];
+        $user->institution = $values['institution'];
+        $user->passwordchange = 1;
+        $id = insert_record('usr', $user, 'id', true);
+
+        $i = 2;
+        safe_require('artefact', 'internal', 'lib.php');
+        foreach (ArtefactTypeProfile::get_mandatory_fields() as $field => $type) {
+            set_profile_field($id, $field, $record[$i++]);
+        }
     }
     log_info('Inserted ' . count($CSVDATA) . ' records');
 

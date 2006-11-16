@@ -30,7 +30,7 @@ defined('INTERNAL') || die();
  * Base search class. Provides a common interface with which searches can be
  * carried out.
  */
-abstract class PluginSearch {
+abstract class PluginSearch extends Plugin {
 
     /**
      * Given a query string and limits, return an array of matching users

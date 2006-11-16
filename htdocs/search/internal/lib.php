@@ -27,7 +27,7 @@
 defined('INTERNAL') || die();
 
 /**
- * The internal authentication method, which authenticates users against the
+ * The internal search plugin which searches against the
  * Mahara database.
  */
 class PluginSearchInternal extends PluginSearch {

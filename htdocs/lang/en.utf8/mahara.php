@@ -35,6 +35,7 @@ $string['nextpage'] = 'Next page';
 $string['prevpage'] = 'Previous page';
 
 // auth
+$string['accessforbiddentoadminsection'] = 'You are forbidden from accessing the administration section';
 $string['accountexpired'] = 'Sorry, your account has expired';
 $string['accountsuspended'] = 'Your account has been suspeneded as of %s. The reason for your suspension is:<blockquote>%s</blockquote>';
 $string['changepassword'] = 'Change Password';
