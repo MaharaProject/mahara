@@ -33,12 +33,12 @@ $pagename = param_alpha('pagename');
 $data['pagename'] = $pagename;
 
 if (!$page = @get_record('site_content','name',$pagename)) {
-    json_reply('local',get_string('failedloadingsitecontent','admin'));
+    json_reply('local',get_string('loadsitepagefailed','admin'));
 }
 
 $data['content'] = $page->content;
 $data['error'] = false;
-$data['message'] = get_string('loadedsitecontent','admin');
+$data['message'] = get_string('sitepageloaded','admin');
 json_headers();
 echo json_encode($data);  
 ?>

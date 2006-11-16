@@ -52,14 +52,14 @@ if ($menuitems) {
             // $r['link'] = $i->url;
         }
         else {
-            json_reply('local',get_string('failedloadingsitemenu','admin'));
+            json_reply('local',get_string('loadmenuitemsfailed','admin'));
         }
         $rows[] = $r;
     }
 }
 $result['menuitems'] = array_values($rows);
 $result['error'] = false;
-$result['message'] = get_string('sitemenuloaded','admin');
+$result['message'] = get_string('menuitemsloaded','admin');
 
 json_headers();
 echo json_encode($result);
