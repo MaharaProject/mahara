@@ -57,14 +57,11 @@ $form = array(
 
 function staffusers_submit($values) {
     global $SESSION;
+    $table = get_config('dbprefix') . 'usr';
     
     db_begin();
-    execute_sql('UPDATE usr
-        SET staff = 0
-        WHERE staff = 1');
-    execute_sql('UPDATE usr
-        SET staff = 1
-        WHERE id IN (' . join(',', $values['users']) . ')');
+    execute_sql('UPDATE ' . $table . ' SET staff = 0 WHERE staff = 1');
+    execute_sql('UPDATE ' . $table . ' SET staff = 1 WHERE id IN (' . join(',', $values['users']) . ')');
     db_commit();
     $SESSION->add_ok_msg(get_string('staffusersupdated', 'admin'));
     redirect(get_config('wwwroot') . 'admin/usermanagement/staffusers.php');
