@@ -94,6 +94,9 @@ class ArtefactTypeProfile extends ArtefactType {
         if (!empty($data['owner'])) {
             if ($a = get_record('artefact', 'artefacttype', $type, 'owner', $data['owner'])) {
                 return parent::__construct($a->id, $a);
+            } 
+            else {
+                $this->owner = $data['owner'];
             }
         } 
         $this->ctime = time();

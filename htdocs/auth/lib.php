@@ -549,7 +549,6 @@ function auth_get_login_form() {
 function get_login_form_js($form) {
     $form = str_replace('/', '\/', str_replace("'", "\'", (str_replace(array("\n", "\t"), '', $form))));
     $strcookiesnotenabled    = get_string('cookiesnotenabled');
-    $strjavascriptnotenabled = get_string('javascriptnotenabled');
     $cookiename = get_config('cookieprefix') . 'ctest';
     return <<<EOF
 <script type="text/javascript">
@@ -557,14 +556,12 @@ var loginbox = $('loginbox');
 document.cookie = '$cookiename=1;expires=0';
 if (document.cookie) {
     loginbox.innerHTML = '$form';
+    document.cookie = '$cookiename=1;expires=1/1/1990 00:00:00';
 }
 else {
-    appendChildNodes(loginbox, P(null, $strcookiesnotenabled));
+    replaceChildNodes(loginbox, P(null, '$strcookiesnotenabled'));
 }
 </script>
-<noscript>
-<p>$strjavascriptnotenabled</p>
-</noscript>
 EOF;
 }
 
@@ -579,14 +576,6 @@ function login_submit($values) {
     global $SESSION, $USER;
 
     log_debug('auth details supplied, attempting to log user in');
-
-    // Check if the cookie set to test cookies is actually set
-    if (!get_cookie('ctest')) {
-        set_cookie('ctest', '', time() - 3600);
-        log_debug('cookie for detecting cookies not set');
-        redirect(get_config('wwwroot'));
-    }
-    set_cookie('ctest', '', time() - 3600);
 
     $username    = $values['login_username'];
     $password    = $values['login_password'];
