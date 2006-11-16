@@ -34,7 +34,7 @@ $result = array();
 try { 
     delete_records('site_menu','id',$itemid);
     $result['success'] = 'ok';
-    $result['message'] = get_string('deletedsuccessfully');
+    $result['message'] = get_string('deletedsuccessfully','admin');
 }
 catch (Exception $e) {
     $result['success'] = 'error';

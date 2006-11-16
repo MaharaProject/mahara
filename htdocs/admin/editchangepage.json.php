@@ -35,11 +35,11 @@ try {
     $page = get_record('site_content','name',$pagename);
     $data['content'] = $page->content;
     $data['error'] = false;
-    $data['message'] = get_string('loadedsitecontent');
+    $data['message'] = get_string('loadedsitecontent','admin');
 }
 catch (Exception $e) {
     $data['error'] = 'local';
-    $data['message'] = get_string('failedloadingsitecontent');
+    $data['message'] = get_string('failedloadingsitecontent','admin');
 }
 
 echo json_encode($data);  

@@ -60,11 +60,11 @@ try {
     }
     $result['menuitems'] = array_values($rows);
     $result['error'] = false;
-    $result['message'] = get_string('sitemenuloaded');
+    $result['message'] = get_string('sitemenuloaded','admin');
 }
 catch (Exception $e) {
     $result['error'] = 'local';
-    $result['message'] = get_string('failedloadingsitemenu');
+    $result['message'] = get_string('failedloadingsitemenu','admin');
 }
 
 echo json_encode($result);
