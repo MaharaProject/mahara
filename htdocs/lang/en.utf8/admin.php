@@ -32,12 +32,18 @@ institution uses another authentication type then they will be listed beside it.
 
 <p>Did you want to <a href="institution.php">change the type of authentication for an institution</a>?</p>';
 $string['authnoconfigurationoptions'] = 'No configuration options are available for this authentication type';
+
+// Installer
 $string['release'] = 'Release %s (%s)';
 $string['component'] = 'Component or plugin';
+$string['continue'] = 'Continue';
+$string['coredata'] = 'core data';
 $string['fromversion'] = 'From version';
+$string['installsuccess'] = 'Successfully installed version ';
 $string['toversion'] =  'To version';
 $string['notinstalled'] = 'Not installed';
 $string['nothingtoupgrade'] = 'Nothing to upgrade';
+$string['successfullyinstalled'] = 'Successfully installed Mahara!';
 $string['upgradeloading'] = 'Loading...';
 $string['upgradesuccess'] = 'Successfully upgraded to version ';
 $string['upgradefailure'] = 'Failed to upgrade!';

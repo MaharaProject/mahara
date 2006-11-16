@@ -87,6 +87,7 @@ if (!empty($upgrade)) {
     try {
         $funname($upgrade);
         $data['success'] = 1;
+        $data['install'] = $upgrade->install;
     } 
     catch (Exception $e) {
         $data['errormessage'] = $e->getMessage();
@@ -98,5 +99,6 @@ else {
     $data['errormessage'] = get_string('nothingtoupgrade','admin');
 }
 
+// @todo json_reply?
 echo json_encode($data);    
 ?>

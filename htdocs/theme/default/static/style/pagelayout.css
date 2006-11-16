@@ -15,3 +15,7 @@ div.content {
     margin-bottom: 10px;
 
 }
+#footer {
+    font-size: smaller;
+    text-align: center;
+}
