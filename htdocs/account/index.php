@@ -102,9 +102,8 @@ $smarty = smarty();
 $smarty->assign('form', form($prefsform));
 $smarty->display('account/index.tpl');
 
-function accountprefs_submit($values) {
+function accountprefs_submit(Form $form, $values) {
     global $SESSION;
-    log_debug($values);
     // use this as looping through values is not safe.
     $expectedprefs = expected_account_preferences(); 
     foreach (array_keys($expectedprefs) as $pref) {
