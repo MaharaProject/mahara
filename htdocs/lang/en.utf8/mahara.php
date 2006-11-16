@@ -132,22 +132,9 @@ $string['years']     = 'years';
 $string['no']        = 'no';
 $string['yes']       = 'yes';
 
-// Admin menu editor
-//$string['menueditor']    = 'Menu editor';
-$string['adminfile']     = 'Admin file';
-$string['externallink']  = 'External link';
-$string['type']          = 'Type';
-$string['name']          = 'Name';
-$string['noadminfiles']  = 'No admin files';
-$string['linkedto']      = 'Linked to';
 $string['add']           = 'Add';
 $string['delete']        = 'Delete';
 $string['edit']          = 'Edit';
-$string['editmenus']     = 'Edit menus';
-$string['loggedinmenu']  = 'Logged in menu';
-$string['loggedoutmenu'] = 'Logged out menu';
-$string['menuitemsaved'] = 'Menu item saved';
-$string['savingmenuitem'] = 'Saving menu item';
 
 // Site content
 $string['about']               = 'About';
