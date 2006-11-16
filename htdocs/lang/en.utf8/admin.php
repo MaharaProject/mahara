@@ -89,6 +89,22 @@ $string['savingmenuitem'] = 'Saving menu item';
 $string['loggedinmenu']  = 'Logged in menu';
 $string['loggedoutmenu'] = 'Logged out menu';
 
+// Site content
+$string['about']               = 'About';
+$string['discardpageedits']    = 'Discard your changes to this page?';
+$string['editsitecontent']     = 'Edit site content';
+$string['home']                = 'Home';
+$string['loggedouthome']       = 'Logged out Home';
+$string['pagecontents']        = 'Text to appear on the page';
+$string['pagename']            = 'Page name';
+$string['pagesaved']           = 'Page saved';
+$string['pagetext']            = 'Page text';
+$string['privacy']             = 'Privacy statement';
+$string['savechanges']         = 'Save changes';
+$string['sitecontentnotfound'] = '%s text not available';
+$string['termsandconditions']  = 'Terms and conditions';
+$string['uploadcopyright']     = 'Upload copyright statement';
+
 // Upload CSV stuff
 $string['csvfile'] = 'CSV File';
 $string['csvfiledescription'] = 'The file containing users to add';

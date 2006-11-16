@@ -136,21 +136,7 @@ $string['add']           = 'Add';
 $string['delete']        = 'Delete';
 $string['edit']          = 'Edit';
 
-// Site content
-$string['about']               = 'About';
-$string['discardpageedits']    = 'Discard your changes to this page?';
-$string['editsitecontent']     = 'Edit site content';
-$string['home']                = 'Home';
-$string['loggedouthome']       = 'Logged out Home';
-$string['privacy']             = 'Privacy statement';
-$string['pagecontents']        = 'Text to appear on the page';
-$string['pagename']            = 'Page name';
-$string['pagesaved']           = 'Page saved';
-$string['pagetext']            = 'Page text';
-$string['savechanges']         = 'Save changes';
-$string['sitecontentnotfound'] = '%s text not available';
-$string['termsandconditions']  = 'Terms and conditions';
-$string['uploadcopyright']     = 'Upload copyright statement';
+
 
 // Contact us form
 $string['name']                     = 'Name';
