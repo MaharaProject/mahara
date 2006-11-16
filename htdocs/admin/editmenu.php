@@ -191,21 +191,32 @@ function edititem(item) {
     menuitem.parentNode.insertBefore(newrow,menuitem);
 }
 
+// Receive standard json error message
+function get_json_status(data) {
+    var errtype = 'global';
+    if (!data.error) { 
+        errtype = 'info';
+    }
+    else if (data.error == 'local') {
+        errtype = 'error';
+    }
+    else {
+        global_error_handler(data);
+    }
+    if (errtype != 'global') {
+        displayMessage(data.message,errtype);
+        getitems();
+        processingStop();
+    }
+}
+
 // Request deletion of a menu item from the db
 function delitem(itemid) {
     processingStart();
+    //displayMessage(get_string('deletingmenuitem','admin'),'info');
     logDebug(get_string('deletingmenuitem','admin'));
     var d = loadJSONDoc('deletemenuitem.json.php',{'itemid':itemid});
-    d.addCallback(function(data) {
-        if (data.success) {
-            logDebug(get_string('menuitemdeleted','admin'));
-            getitems();
-        }
-        else {
-            displayMessage(get_string('deletefailed','admin'),'error');
-        }
-        processingStop();
-    });
+    d.addCallback(get_json_status);
 }
 
 // Send the menu item in the form to the database.
@@ -222,7 +233,8 @@ function saveitem(formid) {
         return false;
     }
     processingStart();
-    displayMessage(get_string('savingmenuitem','admin'),'info');
+    //displayMessage(get_string('savingmenuitem','admin'),'info');
+    logDebug(get_string('savingmenuitem','admin'));
     var data = {'type':f.type[0].checked ? 'externallink' : 'adminfile',
                 'name':name,
                 'linkedto':linkedto,
@@ -234,21 +246,7 @@ function saveitem(formid) {
     var d = sendXMLHttpRequest(req,queryString(data));
     d.addCallback(function (result) {
         var data = evalJSONRequest(result);
-        var errtype = 'global';
-        if (!data.error) { 
-            errtype = 'info';
-        }
-        else if (data.error == 'local') {
-            errtype = 'error';
-        }
-        else {
-            global_error_handler(data);
-        }
-        if (errtype != 'global') {
-            displayMessage(data.message,errtype);
-            getitems();
-            processingStop();
-        }
+        get_json_status(data);
     });
     d.addErrback(function() {
         displayMessage(get_string('unknownerror'),'error');
