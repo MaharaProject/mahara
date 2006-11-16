@@ -1,6 +1,6 @@
 {include file="header.tpl"}
 
-<p>Admin site page editor</p>
+<h2>{str section=admin tag=editsitecontent}</h2>
 
 {$pageeditform}
 

@@ -44,62 +44,62 @@ $siteoptionform = form(array(
     'elements' => array(
         'sitename' => array(
             'type'         => 'text',
-            'title'        => get_string('sitename'),
-            'description'  => get_string('sitenamedescription'),
+            'title'        => get_string('sitename','admin'),
+            'description'  => get_string('sitenamedescription','admin'),
             'defaultvalue' => get_config('sitename'),
         ),
         'language' => array(
             'type'         => 'select',
-            'title'        => get_string('language'),
-            'description'  => get_string('sitelanguagedescription'),
+            'title'        => get_string('language','admin'),
+            'description'  => get_string('sitelanguagedescription','admin'),
             'defaultvalue' => get_config('language'),
             'collapseifoneoption' => true,
             'options'      => $langoptions,
         ),
         'theme' => array(
             'type'         => 'select',
-            'title'        => get_string('theme'),
-            'description'  => get_string('sitethemedescription'),
+            'title'        => get_string('theme','admin'),
+            'description'  => get_string('sitethemedescription','admin'),
             'defaultvalue' => get_config('theme'),
             'collapseifoneoption' => true,
             'options'      => $themeoptions,
         ),
         'viruschecking' => array(
             'type'         => 'checkbox',
-            'title'        => get_string('viruschecking'),
-            'description'  => get_string('viruscheckingdescription'),
+            'title'        => get_string('viruschecking','admin'),
+            'description'  => get_string('viruscheckingdescription','admin'),
             'defaultvalue' => get_config('viruschecking'),
         ),
         'pathtoclam' => array(
             'type'         => 'text',
-            'title'        => get_string('pathtoclam'),
-            'description'  => get_string('pathtoclamdescription'),
+            'title'        => get_string('pathtoclam','admin'),
+            'description'  => get_string('pathtoclamdescription','admin'),
             'defaultvalue' => get_config('pathtoclam'),
         ),
         'sessionlifetime' => array(
             'type'         => 'text',
             'size'         => 4,
-            'title'        => get_string('sessionlifetime'),
-            'description'  => get_string('sessionlifetimedescription'),
+            'title'        => get_string('sessionlifetime','admin'),
+            'description'  => get_string('sessionlifetimedescription','admin'),
             'defaultvalue' => get_config('session_timeout') / 60,
         ),
         'allowpublicviews' => array(
             'type'         => 'select',
-            'title'        => get_string('allowpublicviews'),
-            'description'  => get_string('allowpublicviewsdescription'),
+            'title'        => get_string('allowpublicviews','admin'),
+            'description'  => get_string('allowpublicviewsdescription','admin'),
             'defaultvalue' => get_config('allowpublicviews'),
             'options'      => $yesno,
         ),
         'artefactviewinactivitytime' => array(
             'type'         => 'expiry',
-            'title'        => get_string('artefactviewinactivitytime'),
-            'description'  => get_string('artefactviewinactivitytimedescription'),
+            'title'        => get_string('artefactviewinactivitytime','admin'),
+            'description'  => get_string('artefactviewinactivitytimedescription','admin'),
             'defaultvalue' => get_config('artefactviewinactivitytime'),
         ),
         'contactaddress' => array(
             'type'         => 'text',
-            'title'        => get_string('contactaddress'),
-            'description'  => get_string('contactaddressdescription'),
+            'title'        => get_string('contactaddress','admin'),
+            'description'  => get_string('contactaddressdescription','admin'),
             'defaultvalue' => get_config('contactaddress'),
             'rules'        => array(
                 'email' => true
@@ -107,13 +107,13 @@ $siteoptionform = form(array(
         ),
         'submit' => array(
             'type'  => 'submit',
-            'value' => get_string('updatesiteoptions')
+            'value' => get_string('updatesiteoptions','admin')
         ),
     )
 ));
 
 function siteoptions_fail($field) {
-    json_reply('local', get_string('setsiteoptionsfailed', get_string($field)));
+    json_reply('local', get_string('setsiteoptionsfailed','admin', get_string($field)));
 }
 
 function siteoptions_submit($values) {
@@ -133,7 +133,7 @@ function siteoptions_submit($values) {
     if (!set_config('viruschecking', (int) ($values['viruschecking'] == 'on'))) {
         siteoptions_fail('viruschecking');
     }
-    json_reply(false, get_string('siteoptionsset'));
+    json_reply(false, get_string('siteoptionsset','admin'));
 }
 
 $smarty = smarty(array(),array(),array('siteoptionsset','setsiteoptionsfailed'));
