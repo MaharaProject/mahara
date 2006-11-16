@@ -558,7 +558,7 @@ function get_login_form_js($form) {
     return <<<EOF
 <script type="text/javascript">
 var loginbox = $('loginbox');
-document.cookie = '$cookiename=1;expires=0';
+document.cookie = "$cookiename=1";
 if (document.cookie) {
     loginbox.innerHTML = '$form';
     document.cookie = '$cookiename=1;expires=1/1/1990 00:00:00';
