@@ -57,12 +57,13 @@ $form = array(
 
 function staffusers_submit($values) {
     global $SESSION;
+    $table = get_config('dbprefix') . 'usr';
     
     db_begin();
-    execute_sql('UPDATE usr
+    execute_sql('UPDATE ' . $table . '
         SET staff = 0
         WHERE staff = 1');
-    execute_sql('UPDATE usr
+    execute_sql('UPDATE ' . $table . '
         SET staff = 1
         WHERE id IN (' . join(',', $values['users']) . ')');
     db_commit();
