@@ -196,8 +196,12 @@ class AuthInternal extends Auth {
  */
 class PluginAuthInternal extends Plugin {
 
-    static function has_config() {
+    public static function has_config() {
         return true;
+    }
+
+    public static function get_config_options() {
+        return array();
     }
 }
 

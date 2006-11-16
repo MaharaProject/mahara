@@ -1,6 +1,6 @@
 {include file='header.tpl'}
 
-<h2>Administration</h2>
+<h2>Plugin Administration</h2>
 
 {foreach from=$plugins key='plugintype' item='plugins'}
     <h4>{str tag='plugintype'}: {$plugintype}</h4>
