@@ -19,25 +19,27 @@
     -->
     <TABLE NAME="artefact_internal_profile_email">
         <FIELDS>
-            <FIELD NAME="user" TYPE="int" LENGTH="10" NOTNULL="true" />
+            <FIELD NAME="owner" TYPE="int" LENGTH="10" NOTNULL="true" />
             <FIELD NAME="email" TYPE="text" NOTNULL="true" />
             <FIELD NAME="verified" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
             <FIELD NAME="principal" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
+            <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="false" />
         </FIELDS>
         <KEYS>
-            <KEY NAME="primary" TYPE="primary" FIELDS="user,email" />
-            <KEY NAME="userfk" TYPE="foreign" FIELDS="user" REFTABLE="usr" REFFIELDS="id" />
+            <KEY NAME="primary" TYPE="primary" FIELDS="owner,email" />
+            <KEY NAME="ownerfk" TYPE="foreign" FIELDS="owner" REFTABLE="usr" REFFIELDS="id" />
+            <KEY NAME="artefactfk" TYPE="foreign" FIELDS="artefact" REFTABLE="artefact" REFFIELDS="id" />
         </KEYS>
     </TABLE>
     <TABLE NAME="artefact_internal_profile_icon">
         <FIELDS>
-            <FIELD NAME="user" TYPE="int" LENGTH="10" NOTNULL="true" />
+            <FIELD NAME="owner" TYPE="int" LENGTH="10" NOTNULL="true" />
             <FIELD NAME="filename" TYPE="text" NOTNULL="true" />
             <FIELD NAME="primary" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
         </FIELDS>
         <KEYS>
-            <KEY NAME="primary" TYPE="primary" FIELDS="user,filename" />
-            <KEY NAME="userfk" TYPE="foreign" FIELDS="user" REFTABLE="usr" REFFIELDS="id" />
+            <KEY NAME="primary" TYPE="primary" FIELDS="owner,filename" />
+            <KEY NAME="ownerfk" TYPE="foreign" FIELDS="owner" REFTABLE="usr" REFFIELDS="id" />
         </KEYS>
     </TABLE>
 </TABLES>
