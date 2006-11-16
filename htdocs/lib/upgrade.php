@@ -156,12 +156,8 @@ function check_upgrades($name=null) {
         foreach ((array)$toupgrade[$name] as $key => $value) {
             $upgrade->{$key} = $value;
         }
-        log_debug('thing to upgrade:');
-        log_debug($upgrade);
         return $upgrade;
     }
-    log_debug('stuff to upgrade:');
-    log_debug($toupgrade);
     return $toupgrade;
 }
 
