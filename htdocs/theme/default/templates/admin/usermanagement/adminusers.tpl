@@ -1,6 +1,8 @@
 {include file="header.tpl"}
 
-<h2>AdminUsers</h2>
+<h2>{str tag="adminusers" section="admin"}</h2>
+
+<p>{str tag="adminusersdescription" section="admin"}</p>
 
 {$adminusersform}
 

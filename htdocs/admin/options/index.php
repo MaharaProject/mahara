@@ -136,7 +136,7 @@ function siteoptions_submit($values) {
     json_reply(false, get_string('siteoptionsset','admin'));
 }
 
-$smarty = smarty(array(),array(),array('siteoptionsset','setsiteoptionsfailed'));
+$smarty = smarty();
 $smarty->assign('SITEOPTIONFORM',$siteoptionform);
 $smarty->display('admin/options/index.tpl');
 

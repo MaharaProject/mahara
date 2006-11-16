@@ -27,7 +27,7 @@
 define('INTERNAL', 1);
 define('ADMIN', 1);
 define('MENUITEM', 'usermanagement');
-define('SUBMENUITEM', 'uploadcsv');
+define('SUBMENUITEM', 'addusersbycsv');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('form.php');
 
