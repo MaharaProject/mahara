@@ -27,14 +27,32 @@
 define('INTERNAL', 1);
 define('ADMIN', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+require_once('form.php');
 
 $plugintype = param_alpha('plugintype');
 $pluginname = param_alpha('pluginname');
-$type       = param_alpha('type', null);
 
-if ($plugintype == 'artefact' && empty($type)) {
-    
+safe_require($plugintype, $pluginname);
+if ($plugintype == 'artefact') {
+    $type = param_alpha('type');
+    $classname = generate_artefact_class_name($type);
+}
+else {
+    $type = null;
+    $classname = generate_class_name($plugintype, $pluginname);
 }
 
+if (!call_static_method($classname, 'has_config')) {
+    throw new InvalidArgumentException("$classname doesn't have config options available");
+}
+
+$form = call_static_method($classname, 'get_config_options');
+
+$smarty = smarty();
+//$smarty->assign('form', form($form));
+$smarty->assign('plugintype', $plugintype);
+$smarty->assign('pluginname', $pluginname);
+$smarty->assign('type', $type);
+$smarty->display('admin/plugins/pluginconfig.tpl');
 
 ?>
