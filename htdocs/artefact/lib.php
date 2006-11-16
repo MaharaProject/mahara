@@ -405,13 +405,12 @@ function artefact_check_plugin_sanity($pluginname) {
     $types = call_static_method($classname, 'get_artefact_types');
     foreach ($types as $type) {
         $typeclassname = generate_artefact_class_name($type);
-        try {
+        if (get_config('installed')) {
             if ($taken = get_record_select('artefact_installed_type', 'name = ? AND plugin != ?', 
                                            array($type, $pluginname))) {
                 throw new InstallationException("type $type is already taken by another plugin (" . $taken->plugin . ")");
             }
         }
-        catch (SQLException $e) {} // do nothing, it means we're installing and the table doesn't exist.
         if (!class_exists($typeclassname)) {
             throw new InstallationException("class $typeclassname for type $type in plugin $pluginname was missing");
         }
