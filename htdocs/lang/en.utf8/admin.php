@@ -75,6 +75,20 @@ $string['updatesiteoptions'] = 'Update site options';
 $string['viruschecking'] = 'Virus checking';
 $string['viruscheckingdescription'] = 'If checked, virus checking will be enabled for all uploaded files using ClamAV';
 
+// Admin menu editor
+//$string['menueditor']    = 'Menu editor';
+$string['adminfile']     = 'Admin file';
+$string['externallink']  = 'External link';
+$string['type']          = 'Type';
+$string['name']          = 'Name';
+$string['noadminfiles']  = 'No admin files';
+$string['linkedto']      = 'Linked to';
+$string['editmenus']     = 'Edit menus';
+$string['menuitemsaved'] = 'Menu item saved';
+$string['savingmenuitem'] = 'Saving menu item';
+$string['loggedinmenu']  = 'Logged in menu';
+$string['loggedoutmenu'] = 'Logged out menu';
+
 // Upload CSV stuff
 $string['csvfile'] = 'CSV File';
 $string['csvfiledescription'] = 'The file containing users to add';
