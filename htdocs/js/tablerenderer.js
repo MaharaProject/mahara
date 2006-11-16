@@ -68,7 +68,7 @@ function TableRenderer(target, source, columns, options) {
         }
 
         forEach(self.statevars, function(key) {
-            if (typeof(request_args[key]) == 'undefined') {
+            if (typeof(request_args[key]) == 'undefined' && typeof(self[key]) != 'undefined') {
                 request_args[key] = self[key];
             }
         });
