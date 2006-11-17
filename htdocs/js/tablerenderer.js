@@ -30,7 +30,7 @@ function TableRenderer(target, source, columns, options) {
                 connect(nextPage, 'onclick', function(e) { self.nextPage(); e.stop(); });
                 connect(prevPage, 'onclick', function(e) { self.prevPage(); e.stop(); });
 
-                var tr = TR(null, TD(null, prevPage, ' ', nextPage));
+                var tr = TR(null, TD({'colspan':self.columns.length}, prevPage, ' ', nextPage));
 
                 // replaceChildNodes(ref, tr, ref.childNodes);
                 appendChildNodes(ref, tr);
