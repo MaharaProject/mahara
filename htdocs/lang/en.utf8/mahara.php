@@ -64,14 +64,15 @@ $string['usernamehelp'] = 'The username you have been given to access this syste
 $string['yournewpassword'] = 'Your new password';
 $string['yournewpasswordagain'] = 'Your new password again';
 
-// This stuff is used by registration but might also be used by profile - if a string here isn't it should be moved to auth/internal/lang
-$string['password2description'] = 'Your password again';
+// Misc. register stuff that could be used elsewhere
+$string['emailaddress'] = 'Email address';
+$string['emailaddressdescription'] = 'Your email address';
 $string['firstname'] = 'First name';
 $string['firstnamedescription'] = 'Your first name';
 $string['lastname'] = 'Last name';
 $string['lastnamedescription'] = 'Your last name';
-$string['emailaddress'] = 'Email address';
-$string['emailaddressdescription'] = 'Your email address';
+$string['password2description'] = 'Your password again';
+$string['registerdescription'] = 'Welcome! To use this site you must first register. You must also agree to the <a href="terms.php">terms and conditions</a>. The data we collect here will be stored according to our <a href="privacy.php">privacy statement</a>.';
 
 // Forgot password
 $string['cantchangepassword'] = 'Sorry, you are unable to change your password through this interface - please use your institution\'s interface instead';
