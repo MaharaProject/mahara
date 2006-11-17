@@ -27,7 +27,6 @@
 define('INTERNAL', 1);
 require('init.php');
 
-// strings for firstname etc from  artefact/internal/lang/...
 $query = urlencode(param_variable('query',''));
 
 $javascript = <<<JAVASCRIPT
@@ -35,9 +34,9 @@ var results = new TableRenderer(
     'searchresults',
     'results.json.php?query={$query}',
     [
-        'firstname',
-        'lastname',
-        'preferredname',
+        function(r) { return TD(null,A({'href':'viewuser.php?id=' + r.id},r.firstname)); },
+        function(r) { return TD(null,A({'href':'viewuser.php?id=' + r.id},r.lastname)); },
+        function(r) { return TD(null,A({'href':'viewuser.php?id=' + r.id},r.preferredname)); },
         'email',
     ]
 );
