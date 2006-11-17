@@ -75,14 +75,14 @@ $smarty->assign('prefsdescr', get_string('prefsdescr', 'activity'));
 $smarty->assign('form', form($prefsform));
 $smarty->display('account/activity/preferences/index.tpl');
 
-function activityprefs_submit(Form $form, $values) {
+function activityprefs_submit($values) {
     global $activitytypes, $SESSION;
     
     $userid = $SESSION->get('id');
     foreach ($activitytypes as $type) {
         $SESSION->set_activity_preference($type->name, $values[$type->name]);
     }
-    echo json_encode(array('error' => false, 'message' => get_string('prefssaved', 'account')));
+    json_reply(false, get_string('prefssaved', 'account'));
     exit;
 }
 

@@ -102,14 +102,14 @@ $smarty = smarty();
 $smarty->assign('form', form($prefsform));
 $smarty->display('account/index.tpl');
 
-function accountprefs_submit(Form $form, $values) {
+function accountprefs_submit($values) {
     global $SESSION;
     // use this as looping through values is not safe.
     $expectedprefs = expected_account_preferences(); 
     foreach (array_keys($expectedprefs) as $pref) {
         $SESSION->set_account_preference($pref, $values[$pref]);
     }
-    echo json_encode(array('error' => false, 'message' => get_string('prefssaved', 'account')));
+    json_reply(false, get_string('prefssaved', 'account'));
     exit;
 }
 
