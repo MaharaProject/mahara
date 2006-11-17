@@ -48,11 +48,65 @@ if (!call_static_method($classname, 'has_config')) {
 
 $form = call_static_method($classname, 'get_config_options');
 
+if (isset($form['submitfunction'])) {
+    $submitfunction = $form['submitfunction'];
+}
+if (isset($form['validatefunction'])) {
+    $validatefunction = $form['validatefunction'];
+}
+
+$form['submitfunction'] = 'pluginconfig_submit';
+$form['validatefunction'] = 'pluginconfig_validate';
+$form['elements']['plugintype']  = array(
+    'type' => 'hidden',
+    'value' => $plugintype
+);
+$form['elements']['pluginname'] = array(
+    'type' => 'hidden',
+    'value' => $pluginname
+);
+$form['elements']['type'] = array(
+    'type' => 'hidden',
+    'value' => $type
+);
+
 $smarty = smarty();
-//$smarty->assign('form', form($form));
+$smarty->assign('form', form($form));
 $smarty->assign('plugintype', $plugintype);
 $smarty->assign('pluginname', $pluginname);
 $smarty->assign('type', $type);
 $smarty->display('admin/plugins/pluginconfig.tpl');
 
+
+function pluginconfig_submit($values) {
+    $success = false;
+    global $submitfunction, $plugintype, $pluginname, $classname;
+    if (!empty($submitfunction)) {
+        try {
+            call_static_method($classname, $submitfunction, $values);
+            $success = true;
+        }
+        catch (Exception $e) {
+            $success = false;
+        }
+    }
+    else {
+        // call set_plugin_config and stuffs
+    }
+    if ($success) {
+        json_reply(false, get_string('settingssaved'));
+    }
+    else {
+        json_reply(false, get_string('settingssavefailed'));
+    }
+}
+
+function pluginconfig_validate(Form $form, $values) {
+    global $validatefunction, $plugintype, $pluginname, $classname;
+    if (!empty($validatefunction)) {
+        call_static_method($classname, $validatefunction, $form, $values);
+    }
+    
+
+}
 ?>
