@@ -75,7 +75,7 @@ $smarty->assign('prefsdescr', get_string('prefsdescr', 'activity'));
 $smarty->assign('form', form($prefsform));
 $smarty->display('account/activity/preferences/index.tpl');
 
-function activityprefs_submit($values) {
+function activityprefs_submit(Form $form, $values) {
     global $activitytypes, $SESSION;
     
     $userid = $SESSION->get('id');

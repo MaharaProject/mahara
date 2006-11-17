@@ -29,4 +29,35 @@ defined('INTERNAL') || die();
 $string['myprofile'] = 'My Profile';
 $string['myfiles'] = 'My Files';
 
+$string['mandatory'] = 'Mandatory';
+$string['public'] = 'Public';
+
+
+// profile fields
+$string['firstname'] = 'First Name';
+$string['lastname'] = 'Last Name';
+$string['studentid'] = 'Student ID';
+$string['preferredname'] = 'Preferred Name';
+$string['introduction'] = 'Introduction';
+$string['email'] = 'Email Address (multiple)';
+$string['officialwebsite'] = 'Official Website Address';
+$string['personalwebsite'] = 'Personal Website Address';
+$string['blog'] = 'Blog Address';
+$string['address'] = 'Postal Address';
+$string['town'] = 'Town';
+$string['city'] = 'City/Region';
+$string['country'] = 'Country';
+$string['homenumber'] = 'Home Phone';
+$string['businessnumber'] = 'Business Phone';
+$string['mobilenumber'] = 'Mobile Phone';
+$string['faxnumber'] = 'Fax Number';
+$string['icqnumber'] = 'ICQ Number';
+$string['msnnumber'] = 'MSN Chat';
+$string['aimscreenname'] = 'AIM Screen Name';
+$string['yahoochat'] = 'Yahoo Chat';
+$string['skypeusername'] = 'Skype Username';
+$string['jabberusername'] = 'Jabber Username';
+$string['occupation'] = 'Occupation';
+$string['industry'] = 'Industry';
+
 ?>
