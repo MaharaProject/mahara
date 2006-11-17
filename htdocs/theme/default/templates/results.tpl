@@ -6,10 +6,8 @@
     <table id="searchresults">
         <thead>
             <tr>
-                <th>{str section=artefact.internal tag="firstname"}</th>
-                <th>{str section=artefact.internal tag="lastname"}</th>
-                <th>{str section=artefact.internal tag="preferredname"}</th>
-                <th>{str section=artefact.internal tag="email"}</th>
+                <th>{str section=artefact.internal tag="name"}</th>
+                <th>{str section=artefact.internal tag="institution"}</th>
             </tr>
         </thead>
         <tbody>

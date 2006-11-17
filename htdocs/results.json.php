@@ -41,6 +41,14 @@ $limit = param_integer('limit', 10);
 $offset = param_integer('offset', 0);
 
 $data = search_user($query,$limit,$offset);
+foreach ($data['results'] as &$result) {
+    $result['displayname'] = display_name($result);
+    unset($result['username']);
+    unset($result['preferredname']);
+    unset($result['firstname']);
+    unset($result['lastname']);
+    unset($result['email']);
+}
 $data['data'] = $data['results'];
 unset($data['results']);
 

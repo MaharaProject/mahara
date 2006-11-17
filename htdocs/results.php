@@ -34,10 +34,8 @@ var results = new TableRenderer(
     'searchresults',
     'results.json.php',
     [
-        function(r) { return TD(null,A({'href':'viewuser.php?id=' + r.id},r.firstname)); },
-        function(r) { return TD(null,A({'href':'viewuser.php?id=' + r.id},r.lastname)); },
-        function(r) { return TD(null,A({'href':'viewuser.php?id=' + r.id},r.preferredname)); },
-        'email',
+        function(r) { return TD(null,A({'href':'viewuser.php?id=' + r.id},r.displayname)); },
+        'institution',
     ]
 );
 
