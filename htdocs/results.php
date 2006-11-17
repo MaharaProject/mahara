@@ -27,12 +27,12 @@
 define('INTERNAL', 1);
 require('init.php');
 
-$query = urlencode(param_variable('query',''));
+$query = json_encode(param_variable('query'));
 
 $javascript = <<<JAVASCRIPT
 var results = new TableRenderer(
     'searchresults',
-    'results.json.php?query={$query}',
+    'results.json.php',
     [
         function(r) { return TD(null,A({'href':'viewuser.php?id=' + r.id},r.firstname)); },
         function(r) { return TD(null,A({'href':'viewuser.php?id=' + r.id},r.lastname)); },
@@ -41,6 +41,8 @@ var results = new TableRenderer(
     ]
 );
 
+results.query = {$query};
+results.statevars.push('query');
 results.updateOnLoad();
 
 JAVASCRIPT;
