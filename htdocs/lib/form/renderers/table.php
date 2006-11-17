@@ -92,8 +92,8 @@ function form_renderer_table($builtelement, $rawelement) {
     if (!empty($rawelement['error'])) {
         $result .= "\t<tr>\n\t\t<td colspan=\"2\" class=\"errmsg\">";
         $result .= $rawelement['error'];
+        $result .= "</td>\n\t</tr>\n";
     }
-    $result .= "</td>\n\t</tr>\n";
 
     return $result;
 }
