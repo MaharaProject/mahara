@@ -318,7 +318,7 @@ class Form {
             $this->validatefunction = $data['validatefunction'];
         }
         else {
-            $this->validatefunction = $this->name . '_submit';
+            $this->validatefunction = $this->name . '_validate';
         }
 
         if ($data['ajaxpost']) {
