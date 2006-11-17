@@ -725,6 +725,7 @@ function set_cookie($name, $value='', $expires=0, $path='', $domain='', $secure=
 function getoptions_country() {
     return array(
         'af' => 'Afghanistan',
+        // @todo vvvvvvvv   wtf is that?
         'ax' => '&#x00c5;land Islands',
         'al' => 'Albania',
         'dz' => 'Algeria',
