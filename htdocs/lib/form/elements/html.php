@@ -38,4 +38,10 @@ function form_render_html($element, $form) {
     return $element['value'];
 }
 
+function form_render_html_set_attributes($element) {
+    $element['boilerplate'] = true;
+    return $element;
+}
+    
+    
 ?>
