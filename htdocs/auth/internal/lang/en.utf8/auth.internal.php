@@ -28,6 +28,7 @@ defined('INTERNAL') || die();
 
 $string['internal'] = 'Internal';
 
+$string['completeregistration'] = 'Complete Registration!';
 $string['emailalreadytaken'] = 'This e-mail address has already registered here';
 $string['iagreetothetermsandconditions'] = 'I agree to the terms and conditions';
 $string['passwordinvalidform'] = 'Your password must be at least six characters long and contain at least one digit and two letters';
