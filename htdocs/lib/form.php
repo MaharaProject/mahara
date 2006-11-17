@@ -780,7 +780,7 @@ EOF;
 EOF;
         
         if (!empty($this->ajaxfailurefunction)) {
-            $result .= "            {$this->ajaxfailurefunction}();\n";
+            $result .= "            {$this->ajaxfailurefunction}(data);\n";
         }
         $result .= <<<EOF
         }
@@ -790,7 +790,7 @@ EOF;
 EOF;
 
         if (!empty($this->ajaxsuccessfunction)) {
-            $result .= "            {$this->ajaxsuccessfunction}();\n";
+            $result .= "            {$this->ajaxsuccessfunction}(data);\n";
         }
 
         foreach ($this->get_elements() as $element) {
