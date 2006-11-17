@@ -159,15 +159,42 @@ class ArtefactTypeProfile extends ArtefactType {
     }
 
     public static function get_mandatory_fields() {
+        $m = array();
+        $all = self::get_all_fields();
+        $alwaysm = self::get_always_mandatory_fields();
+        if ($man = get_config_plugin('artefact', 'internal', 'profilemandatory')) {
+            $mandatory = explode(',', $man);
+        }
+        else {
+            $mandatory = array();
+        }
+        foreach ($mandatory as $mf) {
+            $m[$mf] = $all[$mf];
+        }
+        return array_merge($m, $alwaysm);
+    }
+
+    public static function get_always_mandatory_fields() {
         return array(
             'firstname' => 'text', 
             'lastname'  => 'text', 
-            'studentid' => 'text', 
+            'email'     => 'emaillist', 
         );
     }
 
     public static function get_public_fields() {
-        return array();
+        $all = self::get_all_fields();
+        $p = array();
+        if ($pub = get_config_plugin('artefact', 'internal', 'profilepublic')) {
+            $public = explode(',', $pub);
+        }
+        else {
+            $public = array();
+        }
+        foreach ($public as $pf) {
+            $p[$pf] = $all[$pf];
+        }
+        return $p;
     }
 
     public static function has_config() {
@@ -177,29 +204,73 @@ class ArtefactTypeProfile extends ArtefactType {
     public static function get_config_options() {
         $mandatory = self::get_mandatory_fields();
         $public = self::get_public_fields();
-
+        $alwaysmandatory = self::get_always_mandatory_fields();
         $form = array(
             'name'       => 'profileprefs',
             'method'     => 'post', 
             'ajaxpost'   => true,
             'plugintype' => 'artefact',
             'pluginname' => 'internal',
-            'elements'   => array()
+            'renderer'   => 'multicolumntable',
+            'submitfunction' => 'save_config_options',
+            'elements'   => array(
+                'mandatory' =>  array(
+                    'title' => ' ', 
+                    'type'  => 'html',
+                    'class' => 'header',
+                    'value' => get_string('mandatory', 'artefact.internal'),
+                ),
+                'public' => array(
+                    'title' => ' ', 
+                    'class' => 'header',
+                    'type'  => 'html',
+                    'value' => get_string('public', 'artefact.internal'),
+                )
+            ),
         );
 
         foreach (array_keys(self::get_all_fields()) as $field) {
-            $form['elements'][$field . 'mandatory'] = array(
-                'defaultvalue' => (array_key_exists($field, $mandatory)) ? 'checked' : '',
+            $form['elements'][$field . '_mandatory'] = array(
+                'defaultvalue' => ((isset($mandatory[$field])) ? 'checked' : ''),
                 'title'        => get_string($field, 'artefact.internal'),
                 'type'         => 'checkbox',
             );
-            $form['elements'][$field . 'public'] = array(
-                'defaultvalue' => (in_array($field, $public)) ? 'checked' : '',
+            if (isset($alwaysmandatory[$field])) {
+                $form['elements'][$field . '_mandatory']['value'] = 'checked';
+                $form['elements'][$field . '_mandatory']['disabled'] = true;
+            }
+            $form['elements'][$field . '_public'] = array(
+                'defaultvalue' => ((isset($public[$field])) ? 'checked' : ''),
                 'title'        => get_string($field, 'artefact.internal'),
                 'type'         => 'checkbox',
 
             );
         }
+        $form['elements']['submit'] = array(
+            'type' => 'submit',
+            'value' =>get_string('save')
+        );
+        return $form;
+    }
+
+    public function save_config_options($values) {
+        //        log_debug($values);
+        //        log_debug($_POST);
+        $mandatory = '';
+        $public = '';
+        foreach ($values as $field => $value) {
+            if (($value == 'on' || $value == 'checked')
+                && preg_match('/([a-zA-Z]+)_(mandatory|public)/', $field, $matches)) {
+                if (empty($$matches[2])) {
+                    $$matches[2] = $matches[1];
+                } 
+                else {
+                    $$matches[2] .= ',' . $matches[1];
+                }
+            }
+        }
+        set_config_plugin('artefact', 'internal', 'profilepublic', $public);
+        set_config_plugin('artefact', 'internal', 'profilemandatory', $mandatory);
     }
 }
 
