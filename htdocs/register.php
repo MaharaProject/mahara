@@ -58,24 +58,94 @@ if (!empty($_SESSION['registered'])) {
     die_info(get_string('registeredok', 'auth.internal'));
 }
 
-if (isset($_GET['key'])) {
-    if (!$registration = get_record('usr_registration', 'key', $_GET['key'])) {
+// Step three of registration - given a key, fill out mandatory profile fields,
+// optional profile icon, and register the user
+if (isset($_REQUEST['key'])) {
+
+    function register_profile_submit($values) {
+        global $registration, $SESSION;
+
+        // Move the user record to the usr table from the registration table
+        $registrationid = $registration->id;
+        unset($registration->id);
+        $registration->id = insert_record('usr', $registration, 'id', true);
+        delete_records('usr_registration', 'id', $registrationid);
+
+        // Set mandatory profile fields 
+        foreach(ArtefactTypeProfile::get_mandatory_fields() as $field => $type) {
+            // @todo here and above, use the method for getting "always mandatory" fields
+            if (in_array($field, array('firstname', 'lastname', 'email'))) {
+                continue;
+            }
+            set_profile_field($registration->id, $field, $values[$field]);
+        }
+
+        // Log the user in and send them to the homepage
+        $SESSION->login($registration);
+        redirect(get_config('wwwroot'));
+    }
+    
+    function register_profile_validate(Form $form, $values) {
+        foreach(ArtefactTypeProfile::get_mandatory_fields() as $field => $type) {
+            // @todo here and above, use the method for getting "always mandatory" fields
+            if (in_array($field, array('firstname', 'lastname', 'email'))) {
+                continue;
+            }
+            // @todo here, validate the fields using their static validate method
+        }
+    }
+
+
+    if (!$registration = get_record('usr_registration', 'key', $_REQUEST['key'])) {
         die_info(get_string('registrationnosuchkey', 'auth.internal'));
     }
 
-    // This should show mandatory profile fields, and the optional profile icon thing.
-    // But until the database is ready, just do the stuff required to register the user.
+    $elements = array();
+    safe_require('artefact', 'internal');
+    foreach(ArtefactTypeProfile::get_mandatory_fields() as $field => $type) {
+        if (in_array($field, array('firstname', 'lastname', 'email'))) {
+            continue;
+        }
+        $elements[$field] = array(
+            'type'  => $type,
+            'title' => get_string($field, 'artefact.internal'),
+            'rules' => array('required' => true)
+        );
+    }
 
-    // Move the user record to the usr table from the registration table
-    $registrationid = $registration->id;
-    unset($registration->id);
-    insert_record('usr', $registration);
-    delete_records('usr_registration', 'id', $registrationid);
+    // Not until when files infrastructure is in place...
+    //$elements['optionalheader'] = array(
+    //    'value' => '<tr><th colspan="2">Profile Image</th></tr><tr><td colspan="2">You may optionally choose a profile image to uploade</td></tr>'
+    //);
+    //$elements['profileimg'] = array(
+    //    'type' => 'file',
+    //    'title' => 'Profile Image',
+    //);
+    $elements['key'] = array(
+        'type' => 'hidden',
+        'name' => 'key',
+        'value' => $_REQUEST['key']
+    );
+    $elements['submit'] = array(
+        'type' => 'submit',
+        'value' => get_string('completeregistration', 'auth.internal')
+    );
 
-    // Log the user in and send them to the homepage
-    $SESSION->login($registration);
-    redirect(get_config('wwwroot'));
+    $form = array(
+        'name'     => 'register_profile',
+        'method'   => 'post',
+        'action'   => '',
+        'elements' => $elements
+    );
+
+    $smarty = smarty();
+    $smarty->assign('register_profile_form', form($form));
+    $smarty->display('register.tpl');
+    exit;
 }
+
+
+// Default page - show the registration form
 
 $elements = array(
     'username' => array(
@@ -230,6 +300,7 @@ function register_submit($values) {
     $values['salt']     = substr(md5(rand(1000000, 9999999)), 2, 8);
     $values['password'] = AuthInternal::encrypt_password($values['password1'], $values['salt']);
     $values['key']   = get_random_key();
+    // @todo the expiry date should be configurable
     $values['expiry'] = db_format_timestamp(time() + 86400);
     try {
         insert_record('usr_registration', $values);
