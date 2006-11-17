@@ -826,7 +826,7 @@ function admin_nav() {
             'link'     => $wwwroot . 'admin/usermanagement/uploadcsv.php',
             'submenu'  => array(
                 array(
-                    'name' => 'addusersbycsv',
+                    'name' => 'uploadcsv',
                     'section' => 'admin',
                     'link' => $wwwroot . 'admin/usermanagement/uploadcsv.php'
                 ),
