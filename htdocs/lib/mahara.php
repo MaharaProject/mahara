@@ -1263,4 +1263,22 @@ function rebuild_artefact_parent_cache_complete() {
     db_commit();
 }
 
+/**
+ * Configures a default form
+ */
+function form_configure() {
+    global $SESSION;
+    return array(
+        'method' => 'post',
+        'action' => '',
+        'autofocus' => true,
+        'elements' => array(
+            'sesskey' => array(
+                'type' => 'hidden',
+                'value' => $SESSION->get('sesskey')
+            )
+        )
+    );
+}
+
 ?>
