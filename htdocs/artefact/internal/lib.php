@@ -299,63 +299,7 @@ class ArtefactTypeCachedProfileField extends ArtefactTypeProfileField {
 class ArtefactTypeFirstname extends ArtefactTypeCachedProfileField {}
 class ArtefactTypeLastname extends ArtefactTypeCachedProfileField {}
 class ArtefactTypePreferredname extends ArtefactTypeCachedProfileField {}
-class ArtefactTypeEmail extends ArtefactTypeProfileField {
-
-    protected $email_id;
-    protected $verified;
-
-    public function __construct($id=0, $data=null) {
-        $type = $this->get_artefact_type();
-
-        if (!empty($id)) {
-            return parent::__construct($id, $data);
-        }
-
-        if (isset($data['owner']) && isset($data['email'])) {
-            $a = get_record('artefact_internal_profile_email', 'email', $data['email'], 'owner', $data['owner']);
-
-            if (!$a) {
-                throw new ArtefactNotFoundException('Profile Email field for user ' . $data['owner'] . ' email ' . $data['email'] . ' not found');
-            }
-
-            $this->title = $a->email;
-            $this->verified = $a->verified;
-            $this->id = $a->artefact;
-            $this->owner = $a->owner;
-            $this->artefacttype = $type;
-
-            return;
-        }
-
-        return parent::__construct($id, $data);
-    }
-
-    public function commit() {
-        if ($this->verified) {
-            $this->commit_basic();
-        }
-
-        if (empty($this->email_id)) {
-            $this->id = insert_record(
-                'artefact_internal_profile_email',
-                (object) array(
-                    'owner'    => $this->owner,
-                    'email'    => $this->title,
-                    'verified' => $this->verified,
-                )
-            );
-        }
-        else {
-            // update_record('artefact', $fordb, 'id');
-        }
-    }
-
-    public function delete() {
-        if ($this->verified) {
-            $this->delete_basic();
-        }
-    }
-}
+class ArtefactTypeEmail extends ArtefactTypeProfileField {}
 
 class ArtefactTypeStudentid extends ArtefactTypeProfileField {}
 class ArtefactTypeIntroduction extends ArtefactTypeProfileField {}
