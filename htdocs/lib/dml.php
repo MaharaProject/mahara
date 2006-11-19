@@ -1248,4 +1248,18 @@ function db_commit() {
     $db->CompleteTrans();
 }
 
+/**
+ * This function escapes a single value suitable for insertion into an SQL
+ * string
+ *
+ * @param string The value to escape
+ *
+ * @returns string the escaped value
+ */
+function db_quote($value) {
+    global $db;
+
+    return $db->Quote($value);
+}
+
 ?>
