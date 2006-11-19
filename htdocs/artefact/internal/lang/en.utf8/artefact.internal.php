@@ -31,6 +31,7 @@ $string['myfiles'] = 'My Files';
 
 $string['mandatory'] = 'Mandatory';
 $string['public'] = 'Public';
+$string['profileiconsize'] = 'Icon size';
 
 
 // profile fields
