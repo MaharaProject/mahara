@@ -94,7 +94,13 @@ class FormRendererMultiColumnTable {
                     $result .= ' class="' . $rawelement['class'] . '"';
                 }
                 $result .= '>';
+                if (!empty($rawelement['prefix'])) {
+                    $result .= hsc($rawelement['prefix']) . '&nbsp';
+                }
                 $result .= $builtelement;
+                if (!empty($rawelement['suffix'])) {
+                    $result .= '&nbsp;' . hsc($rawelement['suffix']);
+                }
                 // Contextual help
                 if (!empty($rawelement['help'])) {
                     $result .= ' <span class="help"><a href="#" title="' 
