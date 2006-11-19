@@ -202,4 +202,10 @@ $string['plugintype'] = 'Plugin type';
 
 $string['settingssaved'] = 'Settings saved';
 $string['settingssavefailed'] = 'Failed to save settings';
+
+$string['width'] = 'Width';
+$string['height'] = 'Height';
+$string['widthshort'] = 'w';
+$string['heightshort'] = 'h';
+
 ?>

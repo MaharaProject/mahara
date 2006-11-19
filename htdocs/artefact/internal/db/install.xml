@@ -24,6 +24,8 @@
             <FIELD NAME="verified" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
             <FIELD NAME="principal" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
             <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="false" />
+            <FIELD NAME="key" TYPE="char" LENGTH="16" NOTNULL="false"/>
+            <FIELD NAME="expiry" TYPE="datetime" NOTNULL="false"/>
         </FIELDS>
         <KEYS>
             <KEY NAME="primary" TYPE="primary" FIELDS="owner,email" />
