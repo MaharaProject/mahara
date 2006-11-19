@@ -26,8 +26,37 @@
 
 define('INTERNAL', 1);
 require('init.php');
+require_once('form.php');
 
-$query = json_encode(param_variable('query'));
+//@todo: Show 'no results found' for an empty query.
+$query = param_variable('query');
+
+//@todo: Add form with search box 
+$searchform = form(array(
+    'name'                => 'search',
+    'method'              => 'post',
+    'ajaxpost'            => true,
+    'ajaxsuccessfunction' => 'updatesearch()',
+    'action'              => '',
+    'elements'            => array(
+        'query' => array(
+            'type'           => 'text',
+            'title'          => get_string('query'),
+            'description'    => get_string('querydescription'),
+            'defaultvalue'   => $query,
+        ),
+        'submit' => array(
+            'type'  => 'submit',
+            'value' => get_string('search')
+        ),
+    )
+));
+
+function search_submit($values) {
+    json_reply(false,get_string('querysubmitted'));
+}
+
+$equery = json_encode($query);
 
 $javascript = <<<JAVASCRIPT
 var results = new TableRenderer(
@@ -39,7 +68,12 @@ var results = new TableRenderer(
     ]
 );
 
-results.query = {$query};
+function updatesearch() {
+    results.query = $('query').value;
+    results.doupdate();
+}
+
+results.query = {$equery};
 results.statevars.push('query');
 results.updateOnLoad();
 
@@ -47,6 +81,7 @@ JAVASCRIPT;
 
 $smarty = smarty(array('tablerenderer'));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
+$smarty->assign('SEARCHFORM', $searchform);
 $smarty->display('results.tpl');
 
 ?>

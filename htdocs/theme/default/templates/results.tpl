@@ -3,6 +3,9 @@
 {include file="adminmenu.tpl"}
 
 <div class="content">
+    <h2>{str tag="search"}</h2>
+    {$SEARCHFORM}
+    <h2>{str tag="results"}</h2>
     <table id="searchresults">
         <thead>
             <tr>
