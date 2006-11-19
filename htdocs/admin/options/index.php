@@ -38,8 +38,6 @@ $yesno = array(true  => get_string('yes'),
 
 $siteoptionform = form(array(
     'name'     => 'siteoptions',
-    'method'   => 'post',
-    'action'   => '',
     'ajaxpost' => true,
     'elements' => array(
         'sitename' => array(

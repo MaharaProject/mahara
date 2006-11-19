@@ -36,11 +36,8 @@ if (!$SESSION->is_logged_in()) {
     require_once('form.php');
     $loginform = get_login_form_js(form(array(
         'name'     => 'login',
-        'method'   => 'post',
-        'action'   => '',
         'renderer' => 'div',
         'submit'   => false,
-        'autofocus' => true,
         'elements' => array(
             'login' => array(
                 'type'   => 'fieldset',

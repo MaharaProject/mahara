@@ -41,10 +41,8 @@ $getstring = array('discardpageedits' => "'" . get_string('discardpageedits','ad
 
 $f = array(
     'name'                => 'editsitepage',
-    'method'              => 'post',
     'ajaxpost'            => true,
     'ajaxsuccessfunction' => 'contentSaved',
-    'action'              => '',
     'elements'            => array(
         'pagename' => array(
             'type'    => 'select',

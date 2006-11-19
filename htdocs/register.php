@@ -64,11 +64,20 @@ if (isset($_REQUEST['key'])) {
 
     function register_profile_submit($values) {
         global $registration, $SESSION;
+        db_begin();
 
         // Move the user record to the usr table from the registration table
         $registrationid = $registration->id;
         unset($registration->id);
         $registration->id = insert_record('usr', $registration, 'id', true);
+        log_debug($registration);
+
+        // Insert standard stuff as artefacts
+        set_profile_field($registration->id, 'email', $registration->email);
+        set_profile_field($registration->id, 'firstname', $registration->firstname);
+        set_profile_field($registration->id, 'lastname', $registration->lastname);
+
+        // Delete the old registration record
         delete_records('usr_registration', 'id', $registrationid);
 
         // Set mandatory profile fields 
@@ -79,6 +88,8 @@ if (isset($_REQUEST['key'])) {
             }
             set_profile_field($registration->id, $field, $values[$field]);
         }
+
+        db_commit();
 
         // Log the user in and send them to the homepage
         $SESSION->login($registration);
@@ -312,9 +323,11 @@ function register_submit($values) {
             get_string('registeredemailmessagehtml', 'auth.internal', $values['key'], $values['key']));
     }
     catch (EmailException $e) {
+        log_warn($e);
         die_info(get_string('registrationunsuccessful', 'auth.internal'));
     }
     catch (SQLException $e) {
+        log_warn($e);
         die_info(get_string('registrationunsuccessful', 'auth.internal'));
     }
 

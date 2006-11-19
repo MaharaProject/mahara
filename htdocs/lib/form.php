@@ -276,6 +276,17 @@ class Form {
         }
         $this->name = $data['name'];
 
+        // If the form has global configuration, get it now
+        if (function_exists('form_configure')) {
+            $formconfig = form_configure();
+            $defaultelements = (isset($formconfig['elements'])) ? $formconfig['elements'] : array();
+            foreach ($defaultelements as $name => $element) {
+                if (!isset($data['elements'][$name])) {
+                    $data['elements'][$name] = $element;
+                }
+            }
+        }
+
         // Assign defaults for the form
         $formdefaults = array(
             'method'    => 'post',
@@ -292,7 +303,7 @@ class Form {
             'submitfunction' => '',
             'validatefunction' => '',
         );
-        $data = array_merge($formdefaults, $data);
+        $data = array_merge($formdefaults, $formconfig, $data);
 
         // Set the method - only get/post allowed
         $data['method'] = strtolower($data['method']);
@@ -1145,7 +1156,7 @@ function form_render_element($element, Form $form) {
 
     // Remove the 'autofocus' class, because we only want it on the form input
     // itself, not the wrapping HTML
-    $element['class'] = str_replace(' autofocus', '', $element['class']);
+    $element['class'] = preg_replace('/\s?autofocus/', '', $element['class']);
 
     return $prefix . $rendererfunction($builtelement, $element) . $suffix;
 }
