@@ -246,6 +246,35 @@ class ArtefactTypeProfile extends ArtefactType {
 
             );
         }
+
+        $form['elements']['emptyrow'] = array(
+            'title' => '    ',
+            'type' => 'html',
+            'value' => '&nbsp;',
+        );
+        $form['elements']['profileiconwidth'] = array(
+            'type' => 'text',
+            'size' => 4,
+            'suffix' => get_string('widthshort'),
+            'title' => get_string('profileiconsize', 'artefact.internal'),
+            'defaultvalue' => get_config_plugin('artefact', 'internal', 'profileiconwidth'),
+            'rules' => array(
+                'required' => true,
+                'integer'  => true,
+            )
+        );
+        $form['elements']['profileiconheight'] = array(
+            'type' => 'text',
+            'suffix' => get_string('heightshort'),
+            'size' => 4,
+            'title' => get_string('profileiconsize', 'artefact.internal'),
+            'defaultvalue' => get_config_plugin('artefact', 'internal', 'profileiconheight'),
+            'rules' => array(
+                'required' => true,
+                'integer'  => true,
+            )
+        );
+
         $form['elements']['submit'] = array(
             'type' => 'submit',
             'value' =>get_string('save')
@@ -254,8 +283,6 @@ class ArtefactTypeProfile extends ArtefactType {
     }
 
     public function save_config_options($values) {
-        //        log_debug($values);
-        //        log_debug($_POST);
         $mandatory = '';
         $public = '';
         foreach ($values as $field => $value) {
@@ -271,6 +298,8 @@ class ArtefactTypeProfile extends ArtefactType {
         }
         set_config_plugin('artefact', 'internal', 'profilepublic', $public);
         set_config_plugin('artefact', 'internal', 'profilemandatory', $mandatory);
+        set_config_plugin('artefact', 'internal', 'profileiconwidth', $values['profileiconwidth']);
+        set_config_plugin('artefact', 'internal', 'profileiconheight', $values['profileiconheight']);
     }
 }
 
