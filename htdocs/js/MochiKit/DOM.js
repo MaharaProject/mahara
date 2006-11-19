@@ -179,13 +179,13 @@ MochiKit.Base.update(MochiKit.DOM, {
     },
 
     /** @id MochiKit.DOM.formContents  */
-    formContents: function (elem/* = document */) {
+    formContents: function (elem/* = document.body */) {
         var names = [];
         var values = [];
         var m = MochiKit.Base;
         var self = MochiKit.DOM;
         if (typeof(elem) == "undefined" || elem === null) {
-            elem = self._document;
+            elem = self._document.body;
         } else {
             elem = self.getElement(elem);
         }
@@ -203,8 +203,16 @@ MochiKit.Base.update(MochiKit.DOM, {
                     if (elem.type == "select-one") {
                         if (elem.selectedIndex >= 0) {
                             var opt = elem.options[elem.selectedIndex];
+                            var v = opt.value;
+                            if (!v) {
+                                var h = opt.outerHTML;
+                                // internet explorer sure does suck.
+                                if (h && !h.match(/^[^>]+\svalue\s*=/i)) {
+                                    v = opt.text;
+                                }
+                            }
                             names.push(name);
-                            values.push(opt.value);
+                            values.push(v);
                             return null;
                         }
                         // no form elements?
@@ -223,8 +231,16 @@ MochiKit.Base.update(MochiKit.DOM, {
                             if (!opt.selected) { 
                                 continue; 
                             } 
+                            var v = opt.value;
+                            if (!v) {
+                                var h = opt.outerHTML;
+                                // internet explorer sure does suck.
+                                if (h && !h.match(/^[^>]+\svalue\s*=/i)) {
+                                    v = opt.text;
+                                }
+                            }
                             names.push(name); 
-                            values.push(opt.value); 
+                            values.push(v); 
                         }
                         return null;
                     }
