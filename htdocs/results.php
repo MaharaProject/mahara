@@ -70,6 +70,7 @@ var results = new TableRenderer(
 
 function updatesearch() {
     results.query = $('query').value;
+    results.offset = 0;
     results.doupdate();
 }
 
