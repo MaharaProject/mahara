@@ -74,6 +74,7 @@ class Session {
             'email'          => '',
             'accountprefs'   => array(),
             'activityprefs'  => array(),
+            'sesskey'        => ''
         );
         // Resume an existing session if required
         if (isset($_COOKIE['PHPSESSID'])) {
@@ -144,12 +145,13 @@ class Session {
         $_SESSION[$key] = $value;
     }
 
-    function set_account_preference($field, $value) {
+    /** @todo document these next two methods */
+    public function set_account_preference($field, $value) {
         set_account_preference($this->get('id'), $field, $value);
         $_SESSION['accountprefs'][$field] = $value;
     }
 
-    function set_activity_preference($activity, $method) {
+    public function set_activity_preference($activity, $method) {
         set_activity_preference($this->get('id'), $activity, $method);
         $_SESSION['activityprefs'][$activity] = $method;
     }
@@ -171,6 +173,7 @@ class Session {
             $this->set($key, (isset($USER->{$key})) ? $USER->{$key} : $this->defaults[$key]);
         }
         $this->set('logout_time', time() + get_config('session_timeout'));
+        $this->set('sesskey', get_random_key());
         $_SESSION['activityprefs'] = load_activity_preferences($this->get('id'));
         $_SESSION['accountprefs'] = load_account_preferences($this->get('id'));
     }
