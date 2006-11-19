@@ -776,7 +776,7 @@ function {$this->name}_submit() {
 EOF;
         // Get values for each element from the form via the DOM
         foreach ($this->get_elements() as $element) {
-            if ($element['type'] != 'markup') {
+            if ($element['type'] != 'markup' && empty($element['boilerplate'])) {
                 $function = 'form_get_value_js_' . $element['type'];
                 if (function_exists($function)) {
                     // @todo reverse parameter order for consistency, Form first

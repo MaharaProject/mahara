@@ -35,14 +35,21 @@ defined('INTERNAL') || die();
  */
 function form_render_checkbox($element, Form $form) {
     $checked = false;
-    if (!empty($element['value'])) {
-        $checked = true;
+    if ($form->is_submitted()) {
+        if (!empty($element['value'])) {
+            $checked = true;
+        }
+        if ($form->get_value($element)) {
+            $checked = true;
+        }
     }
-    if ($form->get_value($element)) {
-        $checked = true;
-    }
-    else if (!$form->is_submitted() && !empty($element['checked'])) {
-        $checked = true;
+    else {
+        if (!empty($element['value'])) {
+            $checked = true;
+        }
+        else if (!empty($element['defaultvalue'])) {
+            $checked = true;
+        }
     }
 
     return '<input type="checkbox"'
@@ -62,5 +69,12 @@ function form_get_value_js_checkbox($element, Form $form) {
 EOF;
 }
 
+function form_get_value_checkbox($element, Form $form) {
+    $global = ($form->get_method() == 'get') ? $_GET : $_POST;
+    if (isset($global[$element['name']])) {
+        return 'on';
+    }
+    return null;
+}
 
 ?>

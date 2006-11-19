@@ -199,4 +199,7 @@ $string['notinstallable'] = 'Not installable!';
 $string['installedplugins'] = 'Installed plugins';
 $string['notinstalledplugins'] = 'Not installed plugins';
 $string['plugintype'] = 'Plugin type';
+
+$string['settingssaved'] = 'Settings saved';
+$string['settingssavefailed'] = 'Failed to save settings';
 ?>
