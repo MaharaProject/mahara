@@ -209,7 +209,8 @@ class Form {
             'email'     => 'E-mail address is invalid',
             'maxlength' => 'This field must be at most %d characters long',
             'minlength' => 'This field must be at least %d characters long', 
-            'validateoptions' => 'The option "%s" is invalid'
+            'validateoptions' => 'The option "%s" is invalid',
+            'integer'   => 'This field must be an integer',
         )
     );
 
