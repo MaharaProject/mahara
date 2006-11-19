@@ -1158,7 +1158,8 @@ function form_render_element($element, Form $form) {
     // itself, not the wrapping HTML
     $element['class'] = preg_replace('/\s?autofocus/', '', $element['class']);
 
-    return $prefix . $rendererfunction($builtelement, $element) . $suffix;
+    //    return $prefix . $rendererfunction($builtelement, $element) . $suffix;
+    return $rendererfunction($builtelement, $element) ;
 }
 
 ?>
