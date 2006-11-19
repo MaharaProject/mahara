@@ -40,6 +40,7 @@ require_once(dirname(__FILE__) . '/table.php');
 static $formrenderermct;
 
 function form_renderer_multicolumntable_messages_js($id, $submitid) {
+    // @todo this isn't that pretty here :( 
     return form_renderer_table_messages_js($id, $submitid);
 }
 
