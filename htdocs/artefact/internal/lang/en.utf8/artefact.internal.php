@@ -60,4 +60,18 @@ $string['jabberusername'] = 'Jabber Username';
 $string['occupation'] = 'Occupation';
 $string['industry'] = 'Industry';
 
+
+$string['emailvalidation_subject'] = 'Email validation';
+$string['emailvalidation_body'] = <<<EOF
+Hello %s,
+
+blah blah blah blah TODO
+
+validating email address %s
+
+click the link below ...
+
+%s
+EOF;
+
 ?>
