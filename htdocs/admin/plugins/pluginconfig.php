@@ -97,16 +97,15 @@ function pluginconfig_submit($values) {
         json_reply(false, get_string('settingssaved'));
     }
     else {
-        json_reply(false, get_string('settingssavefailed'));
+        json_reply('local', get_string('settingssavefailed'));
     }
 }
 
-function pluginconfig_validate(Form $form, $values) {
+function pluginconfig_validate(PieForm $form, $values) {
     global $validatefunction, $plugintype, $pluginname, $classname;
     if (!empty($validatefunction)) {
         call_static_method($classname, $validatefunction, $form, $values);
     }
     
-
-}
+ }
 ?>
