@@ -5,6 +5,10 @@
 # Re-organised into a module by Nigel McNie <nigel@catalyst.net.nz>
 #
 package Mahara::RandomData;
+
+use strict;
+use warnings;
+
 use Carp;
 use DBI;
 use Data::RandomPerson;
@@ -66,7 +70,7 @@ sub insert_random_users {
         $existing_users->{$userinfo->{username}} = 1;
 
         if ( $self->{verbose} or $self->{pretend} ) {
-            print 'INSERT INTO usr (username,password,institution,firstname,lastname,email) VALUES (';
+            print 'INSERT INTO ' . $prefix . 'usr (username,password,institution,firstname,lastname,email) VALUES (';
             print join(',',$userinfo->{username}, 'password', 'mahara', @{$userinfo}{qw(firstname lastname email)}), ")\n";
         }
         unless ( $self->{pretend} ) {
@@ -85,7 +89,7 @@ sub insert_random_users {
 sub insert_random_groups {
     my ($self, $user, $count) = @_;
 
-    my $prefix = $self->{config}{dbprefix};
+    my $prefix = $self->{config}->get('dbprefix');
 
     my $existing_users = $self->{dbh}->selectall_hashref('SELECT id, username FROM ' . $prefix . 'usr', 'username');
 
@@ -104,9 +108,11 @@ sub insert_random_groups {
     foreach ( 1 .. $count ) { ### [...  ] (%)
         my $groupname = join(' ', $wl->get_words(int(rand(5)) + 1));
         my $groupdescription = join(' ', $wl->get_words(int(rand(50)) + 10));
+        $groupname =~ s/[\x80-\xff]//g;
+        $groupdescription =~ s/[\x80-\xff]//g;
         if ( $self->{pretend} or $self->{verbose} ) {
             print "Creating group '$groupname'\n";
-            print "INSERT INTO usr_group (name,owner,description,ctime,mtime) VALUES (?,?,?,?,?)\n";
+            print "INSERT INTO ${prefix}usr_group (name,owner,description,ctime,mtime) VALUES (?,?,?,?,?)\n";
             my $members = {};
             foreach (1..(int(rand(20)) + 5)) {
                 $members->{((keys %$existing_users)[int(rand(keys %$existing_users))])} = 1;
@@ -115,7 +121,7 @@ sub insert_random_groups {
         }
         unless ( $self->{pretend} ) {
             $self->{dbh}->do(
-                'INSERT INTO usr_group (name,owner,description,ctime,mtime) VALUES (?,?,?,current_timestamp,current_timestamp)',
+                'INSERT INTO ' . $prefix . 'usr_group (name,owner,description,ctime,mtime) VALUES (?,?,?,current_timestamp,current_timestamp)',
                 undef,
                 $groupname,
                 $user_id,
@@ -127,7 +133,7 @@ sub insert_random_groups {
             }
             foreach my $id (keys %$members) {
                 $self->{dbh}->do(
-                    'INSERT INTO ' . $prefix . 'usr_group_member (grp,member,ctime) VALUES (currval(\'usr_group_id_seq\'),?,current_timestamp)',
+                    'INSERT INTO ' . $prefix . 'usr_group_member (grp,member,ctime) VALUES (currval(\'' . $prefix . 'usr_group_id_seq\'),?,current_timestamp)',
                     undef,
                     $id,
                 );
@@ -142,6 +148,8 @@ sub insert_random_groups {
 
 sub insert_random_groups_all_users {
     my ($self, $count) = @_;
+
+    my $prefix = $self->{config}->get('dbprefix');
     
     my $existing_users = $self->{dbh}->selectall_hashref('SELECT id, username FROM ' . $prefix . 'usr', 'username');
 
@@ -153,7 +161,7 @@ sub insert_random_groups_all_users {
 sub insert_random_activity {
     my ($self, $user, $count) = @_;
 
-    my $prefix = $self->{config}{dbprefix};
+    my $prefix = $self->{config}->get('dbprefix');
     my $user_id = $self->{dbh}->selectall_arrayref('SELECT id FROM ' . $prefix . 'usr WHERE username = ?', undef, $user)->[0][0];
 
     unless ( defined $user_id ) {
@@ -167,6 +175,7 @@ sub insert_random_activity {
 
     foreach ( 1 .. $count ) { ### [...  ] (%)
         my $message = join(' ', $wl->get_words(int(rand(3)) + 2));
+        $message =~ s/[\x80-\xff]//g;
         $self->{dbh}->do(
             'INSERT INTO ' . $prefix . 'notification_internal_activity (type, usr, ctime, message, url, read) VALUES (?, ?, current_timestamp, ?, ?, ?)',
             undef,
@@ -178,6 +187,8 @@ sub insert_random_activity {
 
 sub insert_random_activity_all_users {
     my ($self, $count) = @_;
+
+    my $prefix = $self->{config}->get('dbprefix');
     
     my $existing_users = $self->{dbh}->selectall_hashref('SELECT id, username FROM ' . $prefix . 'usr', 'username');
 
