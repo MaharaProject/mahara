@@ -26,6 +26,10 @@
 
 defined('INTERNAL') || die();
 
+$string['changepassworddesc'] = 'If you wish to change your password, please enter the details here';
+$string['changepasswordotherinterface'] = 'You may  <a href="%s">change your password</a> through a different interface</a>';
+$string['oldpasswordincorrect'] = 'This password is not your current password';
+
 $string['friendsnobody'] = 'Nobody may add me as a friend';
 $string['friendsauth'] = 'New friends require my authorisation';
 $string['friendsauto'] = 'New friends are automatically authorised';
