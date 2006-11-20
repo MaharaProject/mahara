@@ -59,6 +59,7 @@ function search_submit($values) {
 }
 
 //@todo: Show 'no results found' for an empty query.
+$noresults = get_string('noresultsfound');
 
 $javascript = <<<JAVASCRIPT
 var results = new TableRenderer(
@@ -78,6 +79,7 @@ function newsearch() {
 }
 
 results.statevars.push('query');
+results.emptycontent = '{$noresults}';
 
 JAVASCRIPT;
 
