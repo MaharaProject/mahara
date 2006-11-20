@@ -40,6 +40,7 @@ require_once(dirname(__FILE__) . '/table.php');
 static $formrenderermct;
 
 function form_renderer_multicolumntable_messages_js($id, $submitid) {
+    // @todo this isn't that pretty here :( 
     return form_renderer_table_messages_js($id, $submitid);
 }
 
@@ -94,7 +95,13 @@ class FormRendererMultiColumnTable {
                     $result .= ' class="' . $rawelement['class'] . '"';
                 }
                 $result .= '>';
+                if (!empty($rawelement['prefix'])) {
+                    $result .= hsc($rawelement['prefix']) . '&nbsp';
+                }
                 $result .= $builtelement;
+                if (!empty($rawelement['suffix'])) {
+                    $result .= '&nbsp;' . hsc($rawelement['suffix']);
+                }
                 // Contextual help
                 if (!empty($rawelement['help'])) {
                     $result .= ' <span class="help"><a href="#" title="' 

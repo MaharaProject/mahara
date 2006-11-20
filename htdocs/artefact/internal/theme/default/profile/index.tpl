@@ -2,7 +2,8 @@
 {include file="adminmenu.tpl"}
 
 <div class="content">
-    Profile page
+    <h2>{str section="artefact.internal" tag="profile"}</h2>
+    {$profileform}
 </div>
 
 {include file="footer.tpl"}

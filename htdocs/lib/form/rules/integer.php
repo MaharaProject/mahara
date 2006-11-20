@@ -17,44 +17,27 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage core
- * @author     Richard Mansfield <richard.mansfield@catalyst.net.nz>
+ * @subpackage form-rule
+ * @author     Penny Leach <penny@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
-define('INTERNAL', 1);
-require('init.php');
-require('searchlib.php');
+defined('INTERNAL') || die();
 
-safe_require('search', 'internal', 'lib.php', 'require_once');
-
-try {
-    $query = param_variable('query');
-}
-catch (ParameterException $e) {
-    json_reply('missingparameter', get_string('missingparameter') . ' \'query\'');
-}
-
-$limit = param_integer('limit', 10);
-$offset = param_integer('offset', 0);
-
-$data = search_user($query,$limit,$offset);
-if (!empty($data['results'])) {
-    foreach ($data['results'] as &$result) {
-        $result['displayname'] = display_name($result);
-        unset($result['username']);
-        unset($result['preferredname']);
-        unset($result['firstname']);
-        unset($result['lastname']);
-        unset($result['email']);
+/**
+ * Returns whether the given field is an integer
+ *
+ * @param Form $form      The form the rule is being applied to
+ * @param string $value   The value to check
+ * @return string         The error message, if there is something wrong with
+ *                        the address.
+ */
+function form_rule_integer(Form $form, $value) {
+    if (!is_numeric($value) || $value != (int)$value) {
+        return $form->i18n('integer');
     }
 }
-$data['data'] = $data['results'];
-unset($data['results']);
-
-json_headers();
-print json_encode($data);
 
 ?>

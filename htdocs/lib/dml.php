@@ -710,6 +710,11 @@ function set_field($table, $newfield, $newvalue, $field1, $value1, $field2=null,
 function set_field_select($table, $newfield, $newvalue, $select, $values) {
     global $db;
 
+    // @todo penny This is an ugly solution, we can talk about it later
+    if (!preg_match('/^\s*where/i', $select)) {
+        $select = ' WHERE ' . $select;
+    }
+
     $values = array_merge(array($newvalue), $values);
     try {
         $stmt = $db->Prepare('UPDATE '. get_config('dbprefix') . $table .' SET '. $newfield  .' = ? ' . $select);
@@ -964,7 +969,7 @@ function update_record($table, $dataobject, $where) {
 
     // Pull out data matching these fields
     foreach ($columns as $column) {
-        if (!in_array($column->name,$wherefields) && isset($data[$column->name]) ) {
+        if (!in_array($column->name,$wherefields) && array_key_exists($column->name, $data) ) {
             $ddd[$column->name] = $data[$column->name];
             // PostgreSQL bytea support
             if (is_postgres() && $column->type == 'bytea') {
@@ -1246,6 +1251,20 @@ function db_commit() {
     }
 
     $db->CompleteTrans();
+}
+
+/**
+ * This function escapes a single value suitable for insertion into an SQL
+ * string
+ *
+ * @param string The value to escape
+ *
+ * @returns string the escaped value
+ */
+function db_quote($value) {
+    global $db;
+
+    return $db->Quote($value);
 }
 
 ?>

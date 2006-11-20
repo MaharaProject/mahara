@@ -132,15 +132,19 @@ abstract class ArtefactType {
                     throw new ArtefactNotFoundException("Artefact with id $id not found");
                 }
             }
-            foreach ((array)$data as $field => $value) {
-                if (property_exists($this, $field)) {
-                    $this->{$field} = $value;
-                }
-            }
         }
         else {
             $this->ctime = time();
         }
+        if (empty($data)) {
+            $data = array();
+        }
+        foreach ((array)$data as $field => $value) {
+            if (property_exists($this, $field)) {
+                $this->{$field} = $value;
+            }
+        }
+
         $this->atime = time();
         $this->artefacttype = $this->get_artefact_type();
     }
