@@ -208,6 +208,8 @@ $string['height'] = 'Height';
 $string['widthshort'] = 'w';
 $string['heightshort'] = 'h';
 
+$string['nohelpfound'] = 'There was no help found for this item';
+
 // Search
 $string['search'] = 'Search';
 $string['query'] = 'Query';
@@ -215,5 +217,4 @@ $string['querydescription'] = 'The words to be searched for';
 $string['results'] = 'Results';
 $string['noresultsfound'] = 'No results found';
 $string['resultsfor'] = 'Results matching "%s"';
-
 ?>
