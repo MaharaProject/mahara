@@ -48,6 +48,7 @@ $string['login'] = 'Log In';
 $string['loginfailed'] = 'You have not provided the correct credentials to log in. Please check your username and password are correct.';
 $string['loginto'] = 'Log in to %s';
 $string['newpassword'] = 'New Password';
+$string['oldpassword'] = 'Old Password';
 $string['password'] = 'Password';
 $string['passworddescription'] = 'Your password';
 $string['passwordhelp'] = 'The password you use to access the system';
