@@ -101,6 +101,11 @@ class FormException extends Exception {}
 class Form {
 
     /**
+     * Data for the form
+     */
+    private $data = array();
+
+    /**
      * Maintains a tab index across all created forms, to make it easy for
      * people to forget about it and have it just work for all of their forms.
      *
@@ -196,7 +201,7 @@ class Form {
      *
      * @var string
      */
-    private $language = 'en';
+    private $language = 'en.utf8';
 
     /**
      * Language strings for rules
@@ -204,7 +209,7 @@ class Form {
      * @var array
      */
     private $language_strings = array(
-        'en' => array(
+        'en.utf8' => array(
             'required'  => 'This field is required',
             'email'     => 'E-mail address is invalid',
             'maxlength' => 'This field must be at most %d characters long',
@@ -296,14 +301,16 @@ class Form {
             'ajaxsuccessfunction' => '',
             'ajaxfailurefunction' => '',
             'autofocus' => false,
-            'language'  => 'en',
+            'language'  => 'en.utf8',
             'validate'  => true,
             'submit'    => true,
             'elements'  => array(),
             'submitfunction' => '',
             'validatefunction' => '',
         );
+
         $data = array_merge($formdefaults, $formconfig, $data);
+        $this->data = $data;
 
         // Set the method - only get/post allowed
         $data['method'] = strtolower($data['method']);
@@ -514,6 +521,19 @@ class Form {
                 exit;
             }
         }
+    }
+
+    /**
+     * Returns a generic property. This can be used to retrieve any property
+     * set in the form data array, so developers can pass in random stuff and
+     * get access to it.
+     *
+     * @param string The key of the property to return
+     * @return mixed
+     */
+    public function get_property($key) {
+        log_debug($this->data);
+        return $this->data[$key];
     }
 
     /**
@@ -1158,7 +1178,7 @@ function form_render_element($element, Form $form) {
     // itself, not the wrapping HTML
     $element['class'] = preg_replace('/\s?autofocus/', '', $element['class']);
 
-    return $prefix . $rendererfunction($builtelement, $element) . $suffix;
+    return $prefix . $rendererfunction($form, $builtelement, $element) . $suffix;
 }
 
 ?>
