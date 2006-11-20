@@ -98,10 +98,12 @@ $elements['submit'] = array(
 );
 
 $profileform = form(array(
-    'name'                => 'profileform',
-    'ajaxpost'            => true,
-    'method'              => 'post',
-    'elements'            => $elements,
+    'name'       => 'profileform',
+    'plugintype' => 'artefact',
+    'pluginname' => 'internal',
+    'ajaxpost'   => true,
+    'method'     => 'post',
+    'elements'   => $elements,
 ));
 
 function profileform_validate(Form $form, $values) {
