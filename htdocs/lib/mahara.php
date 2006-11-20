@@ -1173,11 +1173,11 @@ function get_random_key() {
  *     similar), including being the user's username
  *  - Both values being equal
  *
- * @param Form $form         The form to validate
- * @param array $values      The values passed through
- * @param string $authplugin The authentication plugin that the user uses
+ * @param Pieform $form         The form to validate
+ * @param array $values         The values passed through
+ * @param string $authplugin    The authentication plugin that the user uses
  */
-function password_validate(Form $form, $values, $user) {
+function password_validate(Pieform $form, $values, $user) {
     $authtype  = auth_get_authtype_for_institution($user->institution);
     $authclass = 'Auth' . ucfirst($authtype);
     safe_require('auth', $authtype);

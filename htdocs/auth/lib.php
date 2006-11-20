@@ -308,7 +308,7 @@ function auth_check_password_change() {
             exit;
         }
 
-        require_once('form.php');
+        require_once('pieforms/pieform.php');
         $form = array(
             'name'       => 'change_password',
             'method'     => 'post',
