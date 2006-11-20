@@ -25,6 +25,7 @@
  */
 
 defined('INTERNAL') || die();
+define('ARTEFACT_FORMAT_LISTITEM', 1);
 
 /** 
  * Exception - artefact not found 
