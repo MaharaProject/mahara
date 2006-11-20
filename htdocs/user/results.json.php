@@ -25,7 +25,7 @@
  */
 
 define('INTERNAL', 1);
-require('init.php');
+require(dirname(dirname(__FILE__)).'/init.php');
 require('searchlib.php');
 
 safe_require('search', 'internal', 'lib.php', 'require_once');

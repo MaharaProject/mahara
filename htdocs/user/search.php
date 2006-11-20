@@ -25,19 +25,19 @@
  */
 
 define('INTERNAL', 1);
-require('init.php');
-require_once('form.php');
+require(dirname(dirname(__FILE__)).'/init.php');
+require_once('pieforms/pieform.php');
 
 /* If there is no query posted, the 'results' section of the page will
    stay invisible until a query is submitted. */
 
 $query = @param_variable('query','');
 
-$searchform = form(array(
+$searchform = pieform(array(
     'name'                => 'search',
     'method'              => 'post',
     'ajaxpost'            => true,
-    'ajaxsuccessfunction' => 'newsearch()',
+    'ajaxsuccessfunction' => 'newsearch',
     'action'              => '',
     'elements'            => array(
         'query' => array(
@@ -66,7 +66,7 @@ var results = new TableRenderer(
     'searchresults',
     'results.json.php',
     [
-        function(r) { return TD(null,A({'href':'viewuser.php?id=' + r.id},r.displayname)); },
+        function(r) { return TD(null,A({'href':'view.php?id=' + r.id},r.displayname)); },
         'institution',
     ]
 );
