@@ -37,7 +37,7 @@ if ($install) {
     if (!get_config('installed')) {
         try {
             // Install the default institution
-            // @todo Transaction!!!
+            db_begin();
             $institution = new StdClass;
             $institution->name = 'mahara';
             $institution->displayname = 'No Institution';
@@ -54,9 +54,13 @@ if ($install) {
             $user->firstname = 'Admin';
             $user->lastname = 'User';
             $user->email = 'admin@example.org';
-            insert_record('usr', $user);
+            $user->id = insert_record('usr', $user, 'id', true);
+            set_profile_field($user->id, 'email', $user->email);
+            set_profile_field($user->id, 'firstname', $user->firstname);
+            set_profile_field($user->id, 'lastname', $user->lastname);
 
             set_config('installed', true);
+            db_commit();
         }
         catch (SQLException $e) {
             echo json_encode(array(
