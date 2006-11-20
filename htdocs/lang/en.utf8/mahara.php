@@ -208,4 +208,6 @@ $string['height'] = 'Height';
 $string['widthshort'] = 'w';
 $string['heightshort'] = 'h';
 
+$string['nohelpfound'] = 'There was no help found for this item';
+
 ?>
