@@ -22,10 +22,10 @@ sub new {
     $self->{pretend} = 0;
 
     my $connect_string = 'dbi:Pg:dbname=' . $config->get('dbname');
-    my $host = $config->get('host');
-    $connect_string .= 'host=' . $host if $host and $host =~ /\S/;
-    my $port = $config->get('port');
-    $connect_string .= 'port=' . $port if $port and $port =~ /\S/;
+    my $host = $config->get('dbhost');
+    $connect_string .= ';host=' . $host if $host and $host =~ /\S/;
+    my $port = $config->get('dbport');
+    $connect_string .= ';port=' . $port if $port and $port =~ /\S/;
     $self->{dbh} = DBI->connect($connect_string, $config->get('dbuser'), $config->get('dbpass'), { RaiseError => 1 });
 
     bless $self, $class;
