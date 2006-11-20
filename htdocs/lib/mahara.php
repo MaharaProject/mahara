@@ -956,7 +956,7 @@ function main_nav() {
             ),
             array(
                 'name'    => 'activityprefs',
-                'link'    => $wwwroot . 'account/activity/preferences',
+                'link'    => $wwwroot . 'account/activity/preferences/',
                 'section' => 'mahara',
             ),
             array(

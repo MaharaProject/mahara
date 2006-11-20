@@ -309,9 +309,11 @@ function auth_check_password_change() {
 
         require_once('form.php');
         $form = array(
-            'name'      => 'change_password',
-            'method'    => 'post',
-            'elements'  => array(
+            'name'       => 'change_password',
+            'method'     => 'post',
+            'plugintype' => 'auth',
+            'pluginname' => 'internal',
+            'elements'   => array(
                 'passwords' => array(
                     'type' => 'fieldset',
                     'legend' => get_string('newpassword'),
@@ -523,10 +525,12 @@ function auth_get_login_form() {
     }
 
     $form = array(
-        'name'     => 'login',
-        'method'   => 'post',
-        'action'   => $action,
-        'elements' => $elements,
+        'name'          => 'login',
+        'method'        => 'post',
+        'action'        => $action,
+        'plugintype'    => 'auth',
+        'pluginname'    => 'internal',
+        'elements'      => $elements,
         'iscancellable' => false
     );
 

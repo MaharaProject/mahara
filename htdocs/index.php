@@ -35,10 +35,12 @@ require('init.php');
 if (!$SESSION->is_logged_in()) {
     require_once('form.php');
     $loginform = get_login_form_js(form(array(
-        'name'     => 'login',
-        'renderer' => 'div',
-        'submit'   => false,
-        'elements' => array(
+        'name'       => 'login',
+        'renderer'   => 'div',
+        'submit'     => false,
+        'plugintype' => 'auth',
+        'pluginname' => 'internal',
+        'elements'   => array(
             'login' => array(
                 'type'   => 'fieldset',
                 'legend' => get_string('login'),
