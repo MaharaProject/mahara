@@ -96,7 +96,7 @@ if (isset($_REQUEST['key'])) {
         redirect(get_config('wwwroot'));
     }
     
-    function register_profile_validate(Form $form, $values) {
+    function register_profile_validate(Pieform $form, $values) {
         foreach(ArtefactTypeProfile::get_mandatory_fields() as $field => $type) {
             // @todo here and above, use the method for getting "always mandatory" fields
             if (in_array($field, array('firstname', 'lastname', 'email'))) {
@@ -150,7 +150,7 @@ if (isset($_REQUEST['key'])) {
     );
 
     $smarty = smarty();
-    $smarty->assign('register_profile_form', form($form));
+    $smarty->assign('register_profile_form', pieform($form));
     $smarty->display('register.tpl');
     exit;
 }
@@ -264,7 +264,7 @@ $form = array(
  * and because that only allows authmethods that use 'internal' auth, we
  * can guarantee that the auth method is internal
  */
-function register_validate(Form $form, $values) {
+function register_validate(Pieform $form, $values) {
     $institution = $values['institution'];
     safe_require('auth', 'internal');
 
@@ -342,7 +342,7 @@ function register_cancel_submit() {
 }
 
 $smarty = smarty();
-$smarty->assign('register_form', form($form));
+$smarty->assign('register_form', pieform($form));
 $smarty->display('register.tpl');
 
 ?>

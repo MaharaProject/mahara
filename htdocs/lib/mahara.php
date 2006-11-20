@@ -1260,12 +1260,15 @@ function rebuild_artefact_parent_cache_complete() {
 /**
  * Configures a default form
  */
-function form_configure() {
+function pieform_configure() {
     global $SESSION;
     return array(
         'method' => 'post',
         'action' => '',
         'autofocus' => true,
+        'renderer' => 'maharatable',
+        'preajaxsubmitcallback' => 'processingStart',
+        'postajaxsubmitcallback' => 'processingStop',
         'elements' => array(
             'sesskey' => array(
                 'type' => 'hidden',

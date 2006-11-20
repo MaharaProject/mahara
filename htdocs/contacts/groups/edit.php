@@ -29,7 +29,7 @@ define('MENUITEM', 'mycontacts');
 define('SUBMENUITEM', 'mygroups');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-require_once('form.php');
+require_once('pieforms/pieform.php');
 
 $id = param_integer('id',null);
 
@@ -41,7 +41,7 @@ if (!$group_data) {
 
 $group_members = get_column('usr_group_member', 'member', 'grp', $group_data->id);
 
-$editgroup = form(array(
+$editgroup = pieform(array(
     'name'     => 'editgroup',
     'method'   => 'post',
     'elements' => array(
@@ -75,7 +75,7 @@ $editgroup = form(array(
     ),
 ));
 
-function editgroup_validate(Form $form, $values) {
+function editgroup_validate(Pieform $form, $values) {
     global $USER;
     global $SESSION;
 

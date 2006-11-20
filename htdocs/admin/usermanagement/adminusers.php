@@ -31,7 +31,7 @@ define('ADMIN', 1);
 define('MENUITEM', 'usermanagement');
 define('SUBMENUITEM', 'adminusers');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-require_once('form.php');
+require_once('pieforms/pieform.php');
 $smarty = smarty();
 
 // Get users who are currently administrators
@@ -72,7 +72,7 @@ function adminusers_submit($values) {
     redirect(get_config('wwwroot') . 'admin/usermanagement/adminusers.php');
 }
 
-$smarty->assign('adminusersform', form($form));
+$smarty->assign('adminusersform', pieform($form));
 $smarty->display('admin/usermanagement/adminusers.tpl');
 
 ?>

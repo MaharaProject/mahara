@@ -31,7 +31,7 @@ define('ADMIN', 1);
 define('MENUITEM', 'usermanagement');
 define('SUBMENUITEM', 'staffusers');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-require_once('form.php');
+require_once('pieforms/pieform.php');
 $smarty = smarty();
 
 // Get users who are currently staff
@@ -71,7 +71,7 @@ function staffusers_submit($values) {
     redirect(get_config('wwwroot') . 'admin/usermanagement/staffusers.php');
 }
 
-$smarty->assign('staffusersform', form($form));
+$smarty->assign('staffusersform', pieform($form));
 $smarty->display('admin/usermanagement/staffusers.tpl');
 
 ?>

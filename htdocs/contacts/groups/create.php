@@ -29,9 +29,9 @@ define('MENUITEM', 'mycontacts');
 define('SUBMENUITEM', 'mygroups');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-require_once('form.php');
+require_once('pieforms/pieform.php');
 
-$creategroup = form(array(
+$creategroup = pieform(array(
     'name'     => 'creategroup',
     'method'   => 'post',
     'elements' => array(
@@ -58,7 +58,7 @@ $creategroup = form(array(
     ),
 ));
 
-function creategroup_validate(Form $form, $values) {
+function creategroup_validate(Pieform $form, $values) {
     global $USER;
 
     $gid = get_field('usr_group', 'id', 'owner', $USER->id, 'name', $values['name']);

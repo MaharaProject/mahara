@@ -134,6 +134,7 @@ $string['uploadcsverroruseralreadyexists'] = 'Line %s of the file specifies the 
 $string['uploadcsv'] = 'Add Users by CSV';
 $string['uploadcsvfile'] = 'Upload CSV File';
 $string['uploadcsvfiledescription'] = 'You may use this facility to upload new users via a <acronym title="Comma Separated Values">CSV</acronym> file. Each record in the file must have a username, e-mail address and password.';
+$string['uploadcsvusersaddedsuccessfully'] = 'The users in the file have been added successfully';
 
 // Admin Users
 $string['adminusers'] = 'Admin Users';

@@ -28,7 +28,7 @@ define('INTERNAL',1);
 define('ADMIN', 1);
 define('MENUITEM','pageeditor');
 require(dirname(dirname(__FILE__)).'/init.php');
-require_once('form.php');
+require_once('pieforms/pieform.php');
 
 $sitepages = get_records('site_content');
 $pageoptions = array();
@@ -67,7 +67,7 @@ $f = array(
         ),
     )
 );
-$form = form($f);
+$form = pieform($f);
 
 
 function editsitepage_submit($values) {

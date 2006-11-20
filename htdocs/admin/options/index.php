@@ -29,14 +29,14 @@ define('ADMIN',1);
 define('MENUITEM','siteoptions');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-require_once('form.php');
+require_once('pieforms/pieform.php');
 
 $langoptions = get_languages();
 $themeoptions = get_themes();
 $yesno = array(true  => get_string('yes'),
                false => get_string('no'));
 
-$siteoptionform = form(array(
+$siteoptionform = pieform(array(
     'name'     => 'siteoptions',
     'ajaxpost' => true,
     'elements' => array(

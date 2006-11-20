@@ -74,7 +74,7 @@ if (isset($_GET['key'])) {
     );
 
     $smarty = smarty();
-    $smarty->assign('forgotpasschange_form', form($form));
+    $smarty->assign('forgotpasschange_form', pieform($form));
     $smarty->display('forgotpass.tpl');
     exit;
 }
@@ -101,7 +101,7 @@ $form = array(
     )
 );
 
-function forgotpass_validate(Form $form, $values) {
+function forgotpass_validate(Pieform $form, $values) {
     // The e-mail address cannot already be in the system
     if (!$form->get_error('email') && !($user = get_record('usr', 'email', $values['email']))) {
         $form->set_error('email', get_string('forgotpassnosuchemailaddress'));
@@ -150,7 +150,7 @@ function forgotpass_submit($values) {
     redirect(get_config('wwwroot') . 'forgotpass.php');
 }
 
-function forgotpasschange_validate(Form $form, $values) {
+function forgotpasschange_validate(Pieform $form, $values) {
     if (!$user = get_record('usr', 'id', $values['user'])) {
         throw new Exception('Request to change the password for a user who does not exist');
     }
@@ -197,7 +197,7 @@ function forgotpasschange_submit($values) {
 }
 
 $smarty = smarty();
-$smarty->assign('forgotpass_form', form($form));
+$smarty->assign('forgotpass_form', pieform($form));
 $smarty->display('forgotpass.tpl');
 
 ?>

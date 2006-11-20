@@ -28,7 +28,7 @@ define('INTERNAL', 1);
 define('MENUITEM', 'myprofile');
 
 require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
-require_once('form.php');
+require_once('pieforms/pieform.php');
 safe_require('artefact', 'internal');
 
 $element_list = call_static_method('ArtefactTypeProfile', 'get_all_fields');
@@ -97,7 +97,7 @@ $elements['submit'] = array(
     'value' => get_string('saveprofile','artefact.internal'),
 );
 
-$profileform = form(array(
+$profileform = pieform(array(
     'name'       => 'profileform',
     'plugintype' => 'artefact',
     'pluginname' => 'internal',
@@ -106,7 +106,7 @@ $profileform = form(array(
     'elements'   => $elements,
 ));
 
-function profileform_validate(Form $form, $values) {
+function profileform_validate(Pieform $form, $values) {
     global $profilefields;
 
     if (

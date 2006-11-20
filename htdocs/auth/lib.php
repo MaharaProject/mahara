@@ -98,9 +98,9 @@ abstract class Auth {
      * to specify any validation rules if they do not need to.
      *
      * @param array $values The submitted values for the form
-     * @param Form $form    The form being validated
+     * @param Pieform $form The form being validated
      */
-    public static function validate_configuration_form(Form $form, $values) {
+    public static function validate_configuration_form(Pieform $form, $values) {
     }
 
     /**
@@ -250,8 +250,9 @@ function auth_setup () {
         // Build login form. If the form is submitted it will be handled here,
         // and set $USER for us (this will happen when users hit a page and
         // specify login data immediately
-        require_once('form.php');
-        $form = new Form(auth_get_login_form());
+        //require_once('form.php');
+        require_once('pieforms/pieform.php');
+        $form = new Pieform(auth_get_login_form());
         if ($USER) {
             return $USER;
         }
@@ -344,7 +345,7 @@ function auth_check_password_change() {
         );
 
         $smarty = smarty();
-        $smarty->assign('change_password_form', form($form));
+        $smarty->assign('change_password_form', pieform($form));
         $smarty->display('change_password.tpl');
         exit;
     }
@@ -355,10 +356,10 @@ function auth_check_password_change() {
  *
  * Change password will only be if a URL for it exists, or a function exists.
  *
- * @param Form  $form   The form to check
- * @param array $values The values to check
+ * @param Pieform  $form   The form to check
+ * @param array    $values The values to check
  */
-function change_password_validate(Form $form, $values) {
+function change_password_validate(Pieform $form, $values) {
     global $USER;
 
     // Get the authentication type for the user (based on the institution), and
@@ -418,19 +419,19 @@ function change_password_submit($values) {
  * As this function builds and validates a login form, it is possible that
  * calling this may validate a user to be logged in.
  *
- * @param Form $form If specified, just build this form to get the HTML
- *                   required. Otherwise, this function will build and
- *                   validate the form itself.
+ * @param Pieform $form If specified, just build this form to get the HTML
+ *                      required. Otherwise, this function will build and
+ *                      validate the form itself.
  * @access private
  */
-function auth_draw_login_page($message=null, Form $form=null) {
+function auth_draw_login_page($message=null, Pieform $form=null) {
     global $USER, $SESSION;
     if ($form != null) {
         $loginform = get_login_form_js($form->build());
     }
     else {
         require_once('form.php');
-        $loginform = get_login_form_js(form(auth_get_login_form()));
+        $loginform = get_login_form_js(pieform(auth_get_login_form()));
         /*
          * If $USER is set, the form was submitted even before being built.
          * This happens when a user's session times out and they resend post
@@ -655,11 +656,11 @@ function login_submit($values) {
  * This is for validation of the configuration form that each authentication
  * method exports
  *
- * @param Form  $form   The form to validate
- * @param array $values The values submitted to check
+ * @param Pieform  $form   The form to validate
+ * @param array    $values The values submitted to check
  * @access private
  */
-function auth_validate(Form $form, $values) {
+function auth_validate(Pieform $form, $values) {
     $class = 'Auth' . $values['method'];
     safe_require('auth', $values['method'], 'lib.php', 'require_once');
     call_static_method($class, 'validate_configuration_form', $form, $values);

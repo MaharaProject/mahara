@@ -33,8 +33,9 @@ require('init.php');
 // Check for whether the user is logged in, before processing the page. After
 // this, we can guarantee whether the user is logged in or not for this page.
 if (!$SESSION->is_logged_in()) {
-    require_once('form.php');
-    $loginform = get_login_form_js(form(array(
+    //require_once('form.php');
+    require_once('pieforms/pieform.php');
+    $loginform = get_login_form_js(pieform(array(
         'name'       => 'login',
         'renderer'   => 'div',
         'submit'     => false,

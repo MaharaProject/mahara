@@ -29,7 +29,7 @@ define('MENUITEM', 'account');
 define('SUBMENUITEM', 'accountprefs');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
-require_once('form.php');
+require_once('pieforms/pieform.php');
 
 // load up user preferences
 $prefs = (object)($SESSION->get('accountprefs'));
@@ -138,7 +138,7 @@ $prefsform = array(
 
 
 $smarty = smarty();
-$smarty->assign('form', form($prefsform));
+$smarty->assign('form', pieform($prefsform));
 $smarty->assign('INLINEJAVASCRIPT', "
 function clearPasswords() {
     $('oldpassword').value = '';
@@ -147,7 +147,7 @@ function clearPasswords() {
 }");
 $smarty->display('account/index.tpl');
 
-function accountprefs_validate(Form $form, $values) {
+function accountprefs_validate(Pieform $form, $values) {
     if ($values['oldpassword'] !== '') {
         global $SESSION, $authtype, $authclass;
         if (!call_static_method($authclass, 'authenticate_user_account', $SESSION->get('username'), $values['oldpassword'], $SESSION->get('institution'))) {

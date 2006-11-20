@@ -29,7 +29,7 @@ define('MENUITEM', 'account');
 define('SUBMENUITEM', 'activityprefs');
 
 require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
-require_once('form.php');
+require_once('pieforms/pieform.php');
 
 $activitytypes = get_records('activity_type', 'admin', 0);
 $notifications = plugins_installed('notification');
@@ -72,7 +72,7 @@ $prefsform = array(
 
 $smarty = smarty();
 $smarty->assign('prefsdescr', get_string('prefsdescr', 'activity'));
-$smarty->assign('form', form($prefsform));
+$smarty->assign('form', pieform($prefsform));
 $smarty->display('account/activity/preferences/index.tpl');
 
 function activityprefs_submit($values) {

@@ -29,7 +29,7 @@ define('ADMIN', 1);
 define('MENUITEM', 'usermanagement');
 define('SUBMENUITEM', 'uploadcsv');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-require_once('form.php');
+require_once('pieforms/pieform.php');
 
 $institutions = get_records('institution');
 foreach ($institutions as $name => $data) {
@@ -82,10 +82,10 @@ $form = array(
  * user. The data from a successful parsing is stored in the <var>$CVSDATA</var>
  * array so it can be accessed by the submit function
  *
- * @param Form  $form   The form to validate
- * @param array $values The values submitted
+ * @param Pieform  $form   The form to validate
+ * @param array    $values The values submitted
  */
-function uploadcsv_validate(Form $form, $values) {
+function uploadcsv_validate(Pieform $form, $values) {
     global $CSVDATA;
 
     // Don't even start attempting to parse if there are previous errors
@@ -178,13 +178,13 @@ function uploadcsv_submit($values) {
     }
     log_info('Inserted ' . count($CSVDATA) . ' records');
 
-    $SESSION->add_ok_msg('yo yo users added yo!');
+    $SESSION->add_ok_msg(get_string('uploadcsvusersaddedsuccessfully', 'admin'));
     // @todo support relative URLs here
     redirect(get_config('wwwroot') . 'admin/usermanagement/uploadcsv.php');
 }
 
 $smarty = smarty();
-$smarty->assign('uploadcsvform', form($form));
+$smarty->assign('uploadcsvform', pieform($form));
 $smarty->display('admin/usermanagement/uploadcsv.tpl');
 
 ?>
