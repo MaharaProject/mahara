@@ -106,6 +106,5 @@ function pluginconfig_validate(PieForm $form, $values) {
     if (!empty($validatefunction)) {
         call_static_method($classname, $validatefunction, $form, $values);
     }
-    
- }
+}
 ?>
