@@ -68,42 +68,6 @@ abstract class Auth {
     public static abstract function get_user_info($username);
 
     /**
-     * Returns a hash of information that will be rendered into a form when
-     * configuring authentication.
-     *
-     * This is defined to be empty, so that authentication methods do not have
-     * to specify a form if they do not need to.
-     *
-     * If an authentication method is to return any elements, the return result
-     * <b>must</b> be wrapped in a call to {@link build_form}.
-     *
-     * For example:
-     *
-     * <pre>
-     * $elements = array(
-     *     // ... describe elements here ...
-     * );
-     * return Auth::build_form($elements);
-     * </pre>
-     *
-     * @return array The form for configuring the authentication method
-     */
-    public static function get_configuration_form() {
-    }
-
-    /**
-     * Given a submission from the configuration form, validates it
-     *
-     * This is defined to be empty, so that authentication methods do not have
-     * to specify any validation rules if they do not need to.
-     *
-     * @param array $values The submitted values for the form
-     * @param Pieform $form The form being validated
-     */
-    public static function validate_configuration_form(Pieform $form, $values) {
-    }
-
-    /**
      * Given a password, returns whether it is in a valid format for this
      * authentication method.
      *
