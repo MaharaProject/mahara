@@ -27,7 +27,7 @@
 define('INTERNAL', 1);
 define('ADMIN', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-require_once('form.php');
+require_once('pieforms/pieform.php');
 
 $plugintype = param_alpha('plugintype');
 $pluginname = param_alpha('pluginname');
@@ -71,7 +71,7 @@ $form['elements']['type'] = array(
 );
 
 $smarty = smarty();
-$smarty->assign('form', form($form));
+$smarty->assign('form', pieform($form));
 $smarty->assign('plugintype', $plugintype);
 $smarty->assign('pluginname', $pluginname);
 $smarty->assign('type', $type);
@@ -101,7 +101,7 @@ function pluginconfig_submit($values) {
     }
 }
 
-function pluginconfig_validate(Form $form, $values) {
+function pluginconfig_validate(Pieform $form, $values) {
     global $validatefunction, $plugintype, $pluginname, $classname;
     if (!empty($validatefunction)) {
         call_static_method($classname, $validatefunction, $form, $values);
