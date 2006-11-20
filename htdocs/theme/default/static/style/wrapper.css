@@ -12,6 +12,7 @@
 
 #mainnav li {
     display: inline;
+    padding: 0 .2em;
 }
 
 #mainnav li.selected {
@@ -20,6 +21,7 @@
 
 #subnav li {
     display: inline;
+    padding: 0 .2em;
 }
 
 #subnav li.selected {
