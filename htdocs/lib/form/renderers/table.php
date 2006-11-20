@@ -77,10 +77,10 @@ function form_renderer_table(Form $form, $builtelement, $rawelement) {
 
     // Contextual help
     if (!empty($rawelement['help'])) {
-        $result .= ' <span class="help"><a href="" onclick="contextualHelp(\'' . $form->get_name() . "', '"
-            . $rawelement['name'] . "', '" . $form->get_property('plugintype') . "', '"
-            . $form->get_property('pluginname') . "', '" . $form->get_property('language') . "'); return false;\">"
-            . '?</a></span>';
+        $result .= get_help_icon($form->get_property('plugintype'), 
+                                 $form->get_property('pluginname'), 
+                                 $form->get_name(), $rawelement['name']);
+                                 
     }
 
     $result .= "</td>\n\t</tr>\n";

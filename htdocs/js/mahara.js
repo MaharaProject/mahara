@@ -71,7 +71,7 @@ var ctxHelp = new Array();
 var ctxHelp_selected;
 var container;
 
-function contextualHelp(formName, helpName, pluginType, pluginName, language) {
+function contextualHelp(formName, helpName, pluginType, pluginName, page) {
     var tooltip = $('tooltip');
     log(tooltip);
     log(ctxHelp_selected);
@@ -97,12 +97,26 @@ function contextualHelp(formName, helpName, pluginType, pluginName, language) {
         log('no help for this key yet, getting...');
         ctxHelp[key] = new Object();
         processingStart();
-        var d = loadJSONDoc('../lang/' + language + '/help/' + formName + '.' + helpName + '.html');
+	var url = '../json/help.php?plugintype=' + pluginType + '&pluginname=' + pluginName;
+	if (page) {
+	    url += '&page=' + page;
+	}
+	else {
+	    url += '&form=' + formName + '&element=' + helpName;
+	}
+        var d = loadJSONDoc(url);
         d.addCallbacks(
         function (data) {
-            ctxHelp[key].content = data;
-            container.innerHTML = ctxHelp[key].content;
-            processingStop();
+	    if (data.error) {
+		ctxHelp[key].content = data.message;
+		container.innerHTML = ctxHelp[key].content;
+		processingStop();
+	    } 
+	    else {
+		ctxHelp[key].content = data.content;
+		container.innerHTML = ctxHelp[key].content;
+		processingStop();
+	    }
         },
         function () {
             ctxHelp[key].content = '<p>Sorry, no help for this element could be found</p>';

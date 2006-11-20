@@ -27,8 +27,16 @@
 defined('INTERNAL') || die();
 
 // General form strings
+$string['add']    = 'Add';
 $string['cancel'] = 'Cancel';
+$string['delete'] = 'Delete';
+$string['edit']   = 'Edit';
+$string['save']   = 'Save';
 $string['submit'] = 'Submit';
+$string['update'] = 'Update';
+
+$string['no']     = 'no';
+$string['yes']    = 'yes';
 
 $string['nextpage'] = 'Next page';
 $string['prevpage'] = 'Previous page';
@@ -125,12 +133,6 @@ $string['weeks']     = 'weeks';
 $string['months']    = 'months';
 $string['years']     = 'years';
 // Boolean site option
-$string['no']        = 'no';
-$string['yes']       = 'yes';
-
-$string['add']           = 'Add';
-$string['delete']        = 'Delete';
-$string['edit']          = 'Edit';
 
 // Site content pages
 $string['sitecontentnotfound'] = '%s text not available';
@@ -191,8 +193,6 @@ $string['changepassword'] = 'Change password';
 $string['activity'] = 'Recent activity';
 
 $string['emailname'] = 'Mahara System'; // robot! 
-$string['save'] = 'Save';
-$string['update'] = 'Update';
 
 $string['config'] = 'Config';
 
@@ -209,4 +209,13 @@ $string['height'] = 'Height';
 $string['widthshort'] = 'w';
 $string['heightshort'] = 'h';
 
+$string['nohelpfound'] = 'There was no help found for this item';
+
+// Search
+$string['search'] = 'Search';
+$string['query'] = 'Query';
+$string['querydescription'] = 'The words to be searched for';
+$string['results'] = 'Results';
+$string['noresultsfound'] = 'No results found';
+$string['resultsfor'] = 'Results matching "%s"';
 ?>

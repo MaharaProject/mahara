@@ -29,15 +29,23 @@ require('init.php');
 
 $userid = param_integer('id','');
 
+$profile = array();
 if (!$user = @get_record('usr', 'id', $userid)) {
     $name = get_string('usernotfound');
 }
 else {
     $name = display_name($user);
+    safe_require('artefact', 'internal', 'lib.php');
+    $publicfields = ArtefactTypeProfile::get_public_fields();
+    foreach ($publicfields as $pf => $type) {
+        $profile[$pf]['name'] = $pf;
+        $profile[$pf]['value'] = '[]';
+    }
 }
 
 $smarty = smarty();
 $smarty->assign('NAME',$name);
+$smarty->assign('PROFILE',$profile);
 $smarty->display('viewuser.tpl');
 
 ?>
