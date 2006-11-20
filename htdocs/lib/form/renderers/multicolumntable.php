@@ -104,8 +104,9 @@ class FormRendererMultiColumnTable {
                 }
                 // Contextual help
                 if (!empty($rawelement['help'])) {
-                    $result .= ' <span class="help"><a href="#" title="' 
-                        . hsc($rawelement['help']) . '">?</a></span>';
+                    $result .= get_help_icon($form->get_property('plugintype'), 
+                                             $form->get_property('pluginname'), 
+                                             $form->get_name(), $rawelement['name']);
                 }
                 $result .= "</td>\n\t";
             }
