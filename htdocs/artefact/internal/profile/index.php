@@ -28,9 +28,244 @@ define('INTERNAL', 1);
 define('MENUITEM', 'myprofile');
 
 require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
+require_once('form.php');
+safe_require('artefact', 'internal');
 
+$element_list = call_static_method('ArtefactTypeProfile', 'get_all_fields');
+$element_required = call_static_method('ArtefactTypeProfile', 'get_mandatory_fields');
+
+// load existing profile information
+$profilefields = array();
+$profile_data = get_records_select('artefact', "owner=? AND artefacttype IN (" . join(",",array_map(create_function('$a','return db_quote($a);'),array_keys($element_list))) . ")", array($USER->id));
+
+if ($profile_data) {
+    foreach ($profile_data as $field) {
+        $profilefields[$field->artefacttype] = $field->title;
+    }
+}
+
+$profilefields['email'] = array();
+$profilefields['email']['all'] = get_rows('artefact_internal_profile_email', 'owner', $USER->id);
+$profilefields['email']['validated'] = array();
+$profilefields['email']['unvalidated'] = array();
+if ($profilefields['email']['all']) {
+    foreach ($profilefields['email']['all'] as $email) {
+        if ($email['verified']) {
+            $profilefields['email']['validated'][] = $email['email'];
+        }
+        else {
+            $profilefields['email']['unvalidated'][] = $email['email'];
+        }
+
+        if ($email['principal']) {
+            $profilefields['email']['default'] = $email['email'];
+        }
+    }
+}
+
+// build form elements
+$elements = array();
+foreach ( $element_list as $element => $type ) {
+    $elements[$element] = array(
+        'type'  => $type,
+        'title' => get_string($element, 'artefact.internal'),
+    );
+
+    if ($type == 'wysiwyg') {
+        $elements[$element]['rows'] = 7;
+        $elements[$element]['cols'] = 80;
+    }
+    if ($type == 'textarea') {
+        $elements[$element]['rows'] = 4;
+        $elements[$element]['cols'] = 80;
+    }
+    if ($element == 'country') {
+        $elements[$element]['options'] = getoptions_country();
+    }
+
+    if (isset($profilefields[$element])) {
+        $elements[$element]['defaultvalue'] = $profilefields[$element];
+    }
+
+    if (isset($element_required[$element])) {
+        $elements[$element]['rules']['required'] = true;
+    }
+
+}
+$elements['submit'] = array(
+    'type'  => 'submit',
+    'value' => get_string('saveprofile','artefact.internal'),
+);
+
+$profileform = form(array(
+    'name'                => 'profileform',
+    'ajaxpost'            => true,
+    'method'              => 'post',
+    'elements'            => $elements,
+));
+
+function profileform_validate(Form $form, $values) {
+    global $profilefields;
+
+    if (
+        !isset($values['email']['default'])
+        || !in_array($values['email']['default'], $profilefields['email']['validated'])
+        || !in_array($values['email']['default'], $values['email']['validated'])
+    ) {
+        $form->set_error('email', get_string('primaryemailinvalid'));
+    }
+}
+
+function profileform_submit($values) {
+    global $SESSION;
+    global $USER;
+    global $element_list;
+    global $profilefields;
+
+    db_begin();
+
+    $now = db_format_timestamp(time());
+
+    foreach ($element_list as $element => $type) {
+
+        if ($element == 'email') {
+            if (!isset($values['email']['unvalidated'])) {
+                $values['email']['unvalidated'] = array();
+            }
+            // find new addresses
+            foreach ($values['email']['unvalidated'] as $email) {
+                if (
+                    in_array($email, $profilefields['email']['validated'])
+                    || in_array($email, $profilefields['email']['unvalidated'])
+                ) {
+                    continue;
+                }
+
+                $key = get_random_key();
+                $key_url = get_config('wwwroot') . 'artefact/internal/profile/validate.php?email=' . rawurlencode($email) . '&key=' . $key;
+
+                email_user(
+                    (object)array(
+                        'firstname'     => $USER->firstname,
+                        'lastname'      => $USER->lastname,
+                        'preferredname' => $USER->preferredname,
+                        'email'         => $email,
+                    ),
+                    null,
+                    get_string('emailvalidation_subject', 'artefact.internal'),
+                    get_string('emailvalidation_body', 'artefact.internal', $USER->firstname, $email, $key_url)
+                );
+
+                insert_record(
+                    'artefact_internal_profile_email',
+                    (object) array(
+                        'owner'    => $USER->id,
+                        'email'    => $email,
+                        'verified' => 0,
+                        'key'      => $key,
+                        'expiry'   => db_format_timestamp(time() + 86400),
+                    )
+                );
+            }
+
+            // remove old addresses
+            foreach ($profilefields['email']['validated'] as $email) {
+                if (
+                    in_array($email, $values['email']['validated'])
+                    || in_array($email, $values['email']['unvalidated'])
+                ) {
+                    continue;
+                }
+
+                $artefact_id = get_field('artefact_internal_profile_email', 'artefact', 'email', $email, 'owner', $USER->id);
+
+                delete_records('artefact_internal_profile_email', 'email', $email, 'owner', $USER->id);
+
+                if ($artefact_id) {
+                    global $db;
+
+                    $db->execute('SELECT 12345');
+                    $artefact = new ArtefactTypeEmail($artefact_id);
+                    $artefact->delete();
+                    // this is unset here to force the destructor to run now,
+                    // rather than script exit time where it doesn't like
+                    // throwing exceptions properly
+                    unset($artefact);
+                    $db->execute('SELECT 54321');
+                }
+
+            }
+            foreach ($profilefields['email']['unvalidated'] as $email) {
+                if (
+                    in_array($email, $values['email']['validated'])
+                    || in_array($email, $values['email']['unvalidated'])
+                ) {
+                    continue;
+                }
+
+                delete_records('artefact_internal_profile_email', 'email', $email, 'owner', $USER->id);
+            }
+
+            if ($profilefields['email']['default'] != $values['email']['default']) {
+                update_record(
+                    'artefact_internal_profile_email',
+                    (object)array(
+                        'principal' => 0,
+                    ),
+                    (object)array(
+                        'owner' => $USER->id,
+                        'email' => $profilefields['email']['default'],
+                    )
+                );
+                update_record(
+                    'artefact_internal_profile_email',
+                    (object) array(
+                        'principal' => 1,
+                    ),
+                    (object) array(
+                        'owner' => $USER->id,
+                        'email' => $values['email']['default'],
+                    )
+                );
+                update_record(
+                    'usr',
+                    (object) array(
+                        'email' => $values['email']['default'],
+                    ),
+                    (object) array(
+                        'id' => $USER->id,
+                    )
+                );
+            }
+        }
+        else {
+            $classname = generate_artefact_class_name($element);
+            $profile = new $classname(0, array('owner' => $USER->id));
+            $profile->set('title', $values[$element]);
+            $profile->commit();
+        }
+    }
+
+    try {
+        db_commit();
+    }
+    catch (Exception $e) {
+        json_error(get_string('profilefailedsaved','artefact.internal'));
+    }
+
+    echo json_encode(
+        array(
+            'error' => false,
+            'message' => get_string('profilesaved','artefact.internal'),
+        )
+    );
+
+    exit;
+}
 
 $smarty = smarty();
+
+$smarty->assign('profileform', $profileform);
 
 $smarty->display('artefact:internal:profile/index.tpl');
 
