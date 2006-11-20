@@ -1153,6 +1153,7 @@ EOF;
         if (!preg_match('/^[a-zA-Z][a-zA-Z0-9_]*$/', $name)) {
             throw new PieformException("'$name' is not a valid javascript callback name");
         }
+        return $name;
     }
 
     /**
