@@ -29,6 +29,12 @@ defined('INTERNAL') || die();
 // General form strings
 $string['cancel'] = 'Cancel';
 $string['submit'] = 'Submit';
+$string['add']    = 'Add';
+$string['delete'] = 'Delete';
+$string['edit']   = 'Edit';
+
+$string['no']     = 'no';
+$string['yes']    = 'yes';
 
 $string['nextpage'] = 'Next page';
 $string['prevpage'] = 'Previous page';
@@ -124,12 +130,6 @@ $string['weeks']     = 'weeks';
 $string['months']    = 'months';
 $string['years']     = 'years';
 // Boolean site option
-$string['no']        = 'no';
-$string['yes']       = 'yes';
-
-$string['add']           = 'Add';
-$string['delete']        = 'Delete';
-$string['edit']          = 'Edit';
 
 // Site content pages
 $string['sitecontentnotfound'] = '%s text not available';
@@ -207,5 +207,11 @@ $string['width'] = 'Width';
 $string['height'] = 'Height';
 $string['widthshort'] = 'w';
 $string['heightshort'] = 'h';
+
+// Search
+$string['search'] = 'Search';
+$string['query'] = 'Query';
+$string['results'] = 'Results';
+$string['resultsfor'] = 'Results matching "%s"';
 
 ?>

@@ -28,19 +28,21 @@ define('INTERNAL', 1);
 require('init.php');
 require_once('form.php');
 
-//@todo: Show 'no results found' for an empty query.
-$query = param_variable('query');
+/* If there is no query posted, the 'results' section of the page will
+   stay invisible until a query is submitted. */
 
-//@todo: Add form with search box 
+$query = @param_variable('query','');
+
 $searchform = form(array(
     'name'                => 'search',
     'method'              => 'post',
     'ajaxpost'            => true,
-    'ajaxsuccessfunction' => 'updatesearch()',
+    'ajaxsuccessfunction' => 'newsearch()',
     'action'              => '',
     'elements'            => array(
         'query' => array(
             'type'           => 'text',
+            'id'             => 'query',
             'title'          => get_string('query'),
             'description'    => get_string('querydescription'),
             'defaultvalue'   => $query,
@@ -53,10 +55,10 @@ $searchform = form(array(
 ));
 
 function search_submit($values) {
-    json_reply(false,get_string('querysubmitted'));
+    json_reply(false,'');
 }
 
-$equery = json_encode($query);
+//@todo: Show 'no results found' for an empty query.
 
 $javascript = <<<JAVASCRIPT
 var results = new TableRenderer(
@@ -68,20 +70,28 @@ var results = new TableRenderer(
     ]
 );
 
-function updatesearch() {
+function newsearch() {
+    showElement($('results'));
     results.query = $('query').value;
+    results.offset = 0;
     results.doupdate();
 }
 
-results.query = {$equery};
 results.statevars.push('query');
-results.updateOnLoad();
 
 JAVASCRIPT;
+
+
+if (!empty($query)) {
+    $equery = json_encode($query);
+    $javascript .= 'results.query = ' . $equery . ";\n";
+    $javascript .= "results.updateOnLoad();\n";
+}
 
 $smarty = smarty(array('tablerenderer'));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('SEARCHFORM', $searchform);
+$smarty->assign('QUERYPOSTED', !empty($query));
 $smarty->display('results.tpl');
 
 ?>
