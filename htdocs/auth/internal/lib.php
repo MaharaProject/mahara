@@ -192,7 +192,7 @@ class AuthInternal extends Auth {
 }
 
 /**
- * Plugin configuration class. Nothing special required for this plugin...
+ * Plugin configuration class
  */
 class PluginAuthInternal extends Plugin {
 
