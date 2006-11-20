@@ -139,4 +139,51 @@ sub insert_random_groups {
 
 }
 
+
+sub insert_random_groups_all_users {
+    my ($self, $count) = @_;
+    
+    my $existing_users = $self->{dbh}->selectall_hashref('SELECT id, username FROM ' . $prefix . 'usr', 'username');
+
+    foreach my $user ( keys %{$existing_users} ) {
+        $self->insert_random_groups($user, $count);
+    }
+}
+
+sub insert_random_activity {
+    my ($self, $user, $count) = @_;
+
+    my $prefix = $self->{config}{dbprefix};
+    my $user_id = $self->{dbh}->selectall_arrayref('SELECT id FROM ' . $prefix . 'usr WHERE username = ?', undef, $user)->[0][0];
+
+    unless ( defined $user_id ) {
+        croak qq{User '$user' doesn't exist\n};
+    }
+
+    print qq{Adding activity for '$user' ($user_id)\n};
+    $self->{dbh}->begin_work();
+
+    my $wl = new Data::Random::WordList( wordlist => '/usr/share/dict/words' );
+
+    foreach ( 1 .. $count ) { ### [...  ] (%)
+        my $message = join(' ', $wl->get_words(int(rand(3)) + 2));
+        $self->{dbh}->do(
+            'INSERT INTO ' . $prefix . 'notification_internal_activity (type, usr, ctime, message, url, read) VALUES (?, ?, current_timestamp, ?, ?, ?)',
+            undef,
+            'maharamessage', $user_id, $message, 'http://mahara.org/', int(rand(2)));
+    }
+
+    $self->{dbh}->commit();
+}
+
+sub insert_random_activity_all_users {
+    my ($self, $count) = @_;
+    
+    my $existing_users = $self->{dbh}->selectall_hashref('SELECT id, username FROM ' . $prefix . 'usr', 'username');
+
+    foreach my $user ( keys %{$existing_users} ) {
+        $self->insert_random_activity($user, $count);
+    }
+}
+
 1;

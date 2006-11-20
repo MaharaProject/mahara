@@ -14,8 +14,9 @@ use Mahara::RandomData;
 
 my $args = Getopt::Declare->new(q(
     [strict]
-    -t <type>        	Select type of data (user or group)	[required]
-    -u <user>        	User to create data for (required for type 'group')
+    -t <type>        	Select type of data (user, group, activity)	[required]
+    -u <user>        	User to create data for (required for type 'group' and 'activity')
+    -ua             	Create data for all users (can be used instead of -u)
     -c <configfile>  	What config.php to use (defaults to ../htdocs/config.php)	
     -n <count>       	How many to generate (default 1)	
         { reject $count !~ /^\d+$/; }
@@ -38,9 +39,25 @@ if ( $args->{-t} eq 'user' ) {
 }
 
 if ( $args->{-t} eq 'group' ) {
-    unless ( defined $args->{-u} ) {
-        croak 'Need to specify a user with -u';
+    unless ( defined $args->{-u} or defined $args->{-ua} ) {
+        croak 'Need to specify a user with -u or -ua';
     }
-    $randomdata->insert_random_groups($args->{-u}, $args->{-n});
+    if ( defined $args->{-u} ) {
+        $randomdata->insert_random_groups($args->{-u}, $args->{-n});
+    }
+    else {
+        $randomdata->insert_random_groups_all_users($args->{-n});
+    }
 }
 
+if ( $args->{-t} eq 'activity' ) {
+    unless ( defined $args->{-u} or defined $args->{-ua} ) {
+        croak 'Need to specify a user with -u or -ua';
+    }
+    if ( defined $args->{-u} ) {
+        $randomdata->insert_random_activity($args->{-u}, $args->{-n});
+    }
+    else {
+        $randomdata->insert_random_activity_all_users($args->{-n});
+    }
+}
