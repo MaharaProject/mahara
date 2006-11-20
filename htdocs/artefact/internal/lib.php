@@ -328,7 +328,30 @@ class ArtefactTypeCachedProfileField extends ArtefactTypeProfileField {
 class ArtefactTypeFirstname extends ArtefactTypeCachedProfileField {}
 class ArtefactTypeLastname extends ArtefactTypeCachedProfileField {}
 class ArtefactTypePreferredname extends ArtefactTypeCachedProfileField {}
-class ArtefactTypeEmail extends ArtefactTypeProfileField {}
+class ArtefactTypeEmail extends ArtefactTypeProfileField {
+    public function commit() {
+
+        $this->commit_basic();
+
+        $email_record = get_record('artefact_internal_profile_email', 'owner', $this->owner, 'email', $this->title);
+        // we've created a new artefact that doesn't have a profile email thingy.
+        // we assume that it's a validated email, and set it to primary (if there isn't already one)
+        if(!$email_record) {
+            $principal = get_record('artefact_internal_profile_email', 'owner', $this->owner, 'principal', 1);
+
+            insert_record(
+                'artefact_internal_profile_email',
+                (object) array(
+                    'owner'     => $this->owner,
+                    'email'     => $this->title,
+                    'verified'  => 1,
+                    'principal' => ( $principal ? 0 : 1 ),
+                    'artefact'  => $this->id,
+                )
+            );
+        }
+    }
+}
 
 class ArtefactTypeStudentid extends ArtefactTypeProfileField {}
 class ArtefactTypeIntroduction extends ArtefactTypeProfileField {}
