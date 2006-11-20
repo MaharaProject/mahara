@@ -956,12 +956,7 @@ function main_nav() {
             ),
             array(
                 'name'    => 'activityprefs',
-                'link'    => $wwwroot . 'account/activity/preferences',
-                'section' => 'mahara',
-            ),
-            array(
-                'name'    => 'changepassword',
-                'link'    => $wwwroot . 'account/changepassword',
+                'link'    => $wwwroot . 'account/activity/preferences/',
                 'section' => 'mahara',
             ),
         ),
@@ -1155,7 +1150,6 @@ function get_random_key() {
     for ($i = 0; $i < 16; $i++) {
         $result .= $pool[$i];
     }
-    log_debug($result);
     return $result;
 }
 
