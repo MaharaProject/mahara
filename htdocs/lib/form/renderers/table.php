@@ -29,13 +29,14 @@ defined('INTERNAL') || die();
 /**
  * Renders form elements inside a <table>.
  *
+ * @param Form   $form         The form the element is being built for
  * @param string $builtelement The element, already built
  * @param array  $rawelement   The element in raw form, for looking up
  *                             information about it.
  * @return string              The element rendered inside an appropriate
  *                             container.
  */
-function form_renderer_table($builtelement, $rawelement) {
+function form_renderer_table(Form $form, $builtelement, $rawelement) {
     if ($rawelement['type'] == 'fieldset') {
         // Add table tags to the build element, to preserve HTML compliance
         if (0 === strpos($builtelement, "\n<fieldset>\n<legend>")) {
@@ -76,7 +77,10 @@ function form_renderer_table($builtelement, $rawelement) {
 
     // Contextual help
     if (!empty($rawelement['help'])) {
-        $result .= ' <span class="help"><a href="#" title="' . hsc($rawelement['help']) . '">?</a></span>';
+        $result .= ' <span class="help"><a href="" onclick="contextualHelp(\'' . $form->get_name() . "', '"
+            . $rawelement['name'] . "', '" . $form->get_property('plugintype') . "', '"
+            . $form->get_property('pluginname') . "', '" . $form->get_property('language') . "'); return false;\">"
+            . '?</a></span>';
     }
 
     $result .= "</td>\n\t</tr>\n";
