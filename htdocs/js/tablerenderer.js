@@ -5,6 +5,7 @@ function TableRenderer(target, source, columns, options) {
     this.columns = columns;
     this.paginate = true;
     this.statevars = ['offset','limit'];
+    this.emptycontent = false;  // Something to display when no results are found
 
     addLoadEvent(function() {
         self.table = target;
@@ -35,6 +36,10 @@ function TableRenderer(target, source, columns, options) {
                 // replaceChildNodes(ref, tr, ref.childNodes);
                 appendChildNodes(ref, tr);
             });
+        }
+
+        if (self.emptycontent) {
+            $(self.table).parentNode.insertBefore(DIV(null,self.emptycontent),$(self.table));
         }
     });
 
@@ -89,6 +94,16 @@ function TableRenderer(target, source, columns, options) {
                 self.offset = data.offset;
                 self.count = data.count;
 
+                if (self.emptycontent) {
+                    if (self.count > 0) {
+                        hideElement($(self.table).previousSibling)
+                        showElement(self.table);
+                    }
+                    else {
+                        hideElement(self.table);
+                        showElement($(self.table).previousSibling);
+                    }
+                }
                 self.renderdata(data);
             },
             function (error) {
