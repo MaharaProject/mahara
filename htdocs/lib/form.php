@@ -533,7 +533,6 @@ class Form {
      * @return mixed
      */
     public function get_property($key) {
-        log_debug($this->data);
         return $this->data[$key];
     }
 
