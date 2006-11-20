@@ -38,7 +38,7 @@ $prefsform = array(
     'name'        => 'accountprefs',
     'method'      => 'post',
     'ajaxpost'    => true,
-    'plugintype ' => 'core',
+    'plugintype'  => 'core',
     'pluginname'  => 'account',
     'elements'    => array(
         'friendscontrol' => array(
@@ -53,7 +53,8 @@ $prefsform = array(
             ),
            'rules' => array(
                 'required' => true
-            )
+            ),
+            'help' => true
         ),
         'wysiwyg' => array(
             'type' => 'radio',

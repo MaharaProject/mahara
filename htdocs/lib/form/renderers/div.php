@@ -35,7 +35,7 @@ defined('INTERNAL') || die();
  * @return string              The element rendered inside an appropriate
  *                             container.
  */
-function form_renderer_div($builtelement, $rawelement) {
+function form_renderer_div(Form $form, $builtelement, $rawelement) {
     // Set the class of the enclosing <div> to match that of the element
     $result = '<div';
     if ($rawelement['class']) {
