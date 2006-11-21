@@ -34,20 +34,21 @@ $stopmonitoring = param_integer('stopmonitoring', 0);
 $getartefacts   = param_integer('getartefacts', 0); 
 
 if ($stopmonitoring) {
+    $userid = $SESSION->get('id');
     $count = 0;
     db_begin();
     try {
         foreach ($_GET as $k => $v) {
             if (preg_match('/^stopview\-(\d+)$/',$k,$m)) {
-                // @todo
+                delete_records('usr_watchlist_view', 'usr', $userid, 'view', $m[1]);
                 $count++;
             }
             else if (preg_match('/^stopartefact\-(\d+)$/',$k,$m)) {
-                // @todo
+                delete_records('usr_watchlist_artefact', 'usr', $userid, 'artefact', $m[1]);
                 $count++;
             }
             else if (preg_match('/^stopcommunity\-(\d+)$/',$k,$m)) {
-                // @todo
+                delete_records('usr_watchlist_community', 'usr', $userid, 'community', $m[1]);
                 $count++;
             }
         }

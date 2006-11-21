@@ -57,4 +57,7 @@ $string['communities'] = 'Communities';
 $string['monitored'] = 'Monitored';
 $string['stopmonitoring'] = 'Stop monitoring';
 
+$string['stopmonitoringsuccess'] = 'Stopped monitoring successfully';
+$string['stopmonitoringfailed'] = 'Failed to stop monitoring';
+
 ?>

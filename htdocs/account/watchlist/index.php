@@ -34,6 +34,10 @@ $viewstring = get_string('viewsandartefacts', 'activity');
 $communitystring = get_string('communities', 'activity');
 $monitoredstring = get_string('monitored', 'activity');
 
+$savefailed = get_string('stopmonitoringfailed', 'activity');
+$savesuccess = get_string('stopmonitoringsuccess', 'activity');
+
+
 $javascript = <<<JAVASCRIPT
 var watchlist = new TableRenderer(
     'watchlist',
@@ -59,7 +63,12 @@ var watchlist = new TableRenderer(
             return TD(null,r.name);
         },
         function (r) {
-            return TD(null, INPUT({'type' : 'checkbox', 'class': 'tocheck', 'name': 'view-' + r.id}));
+            if (r.type == 'community') {
+                return TD(null, INPUT({'type' : 'checkbox', 'class': 'tocheck', 'name': 'stopcommunity-' + r.id}));
+            }
+            else {
+                return TD(null, INPUT({'type' : 'checkbox', 'class': 'tocheck', 'name': 'stopview-' + r.id}));
+            }
         }
     ]
 );
@@ -81,6 +90,39 @@ function expand(id) {
 
 }
 
+function stopmonitoring(form) {
+    var c = 'tocheck';
+    var e = getElementsByTagAndClassName(null,'tocheck',form);
+    var pd = {};
+    
+    for (cb in e) {
+        if (e[cb].checked == true) {
+            pd[e[cb].name] = 1;
+        }
+    }
+
+    pd['stopmonitoring'] = 1;
+
+    var d = loadJSONDoc('index.json.php', pd);
+    d.addCallbacks(function (data) {
+        if (data.success) {
+            if (data.count > 0) {
+                $('messagediv').innerHTML = '$savesuccess';
+                watchlist.doupdate();
+            }
+        }
+        if (data.error) {
+            $('messagediv').innerHTML = '$savefailed (' + data.error + ')';
+        }
+    },
+                   function () {
+            $('messagediv').innerHTML = '$savefailed';
+            watchlist.doupdate();
+        }
+    )
+}
+
+
 JAVASCRIPT;
 
 $typechange = 'watchlist.doupdate({\'type\':this.options[this.selectedIndex].value}); changeTitle(this.options[this.selectedIndex].value);';
@@ -90,6 +132,7 @@ $smarty->assign('site_menu', site_menu());
 $smarty->assign('typechange', $typechange);
 $smarty->assign('typestr', get_string('viewsandartefacts', 'activity'));
 $smarty->assign('selectall', 'toggleChecked(\'tocheck\'); return false;');
+$smarty->assign('stopmonitoring', 'stopmonitoring(this); return false;');
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->display('account/watchlist/index.tpl');
 
