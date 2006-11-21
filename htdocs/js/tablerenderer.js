@@ -3,7 +3,11 @@ function TableRenderer(target, source, columns, options) {
     var self = this;
     this.source = source;
     this.columns = columns;
+    this.offset = 0;
+    this.limit = 10;
     this.paginate = true;
+    this.paginate_simple = true;
+    this.paginate_firstlast = true;
     this.statevars = ['offset','limit'];
     this.emptycontent = false;  // Something to display when no results are found
 
@@ -24,24 +28,95 @@ function TableRenderer(target, source, columns, options) {
         }
 
         if (self.paginate) {
+            var page_state = new Object();
+            self.page_state = page_state;
+            page_state.firstButtons = new Array();
+            page_state.prevButtons = new Array();
+            page_state.nextButtons = new Array();
+            page_state.lastButtons = new Array();
+
             forEach([self.thead,self.tfoot], function(ref) {
-                var nextPage = A({'href':''}, get_string('nextpage'));
-                var prevPage = A({'href':''}, get_string('prevpage'));
+                var firstPage = A({'href':''}, get_string('firstpage'));
+                var prevPage  = A({'href':''}, get_string('prevpage'));
+                var nextPage  = A({'href':''}, get_string('nextpage'));
+                var lastPage  = A({'href':''}, get_string('lastpage'));
+                firstPage.style.display = 'none';
+                prevPage.style.display = 'none';
+                nextPage.style.display = 'none';
+                lastPage.style.display = 'none';
+                page_state.nextButtons.push(nextPage);
+                page_state.prevButtons.push(prevPage);
+                page_state.firstButtons.push(firstPage);
+                page_state.lastButtons.push(lastPage);
 
-                connect(nextPage, 'onclick', function(e) { self.nextPage(); e.stop(); });
-                connect(prevPage, 'onclick', function(e) { self.prevPage(); e.stop(); });
+                connect(firstPage, 'onclick', function(e) { self.goFirstPage(); e.stop(); });
+                connect(prevPage, 'onclick', function(e) { self.goPrevPage(); e.stop(); });
+                connect(nextPage, 'onclick', function(e) { self.goNextPage(); e.stop(); });
+                connect(lastPage, 'onclick', function(e) { self.goLastPage(); e.stop(); });
 
-                var tr = TR(null, TD({'colspan':self.columns.length}, prevPage, ' ', nextPage));
+                var elements = new Array();
+
+                if (self.paginate_firstlast) {
+                    elements.push(firstPage);
+                    elements.push(' ');
+                }
+                if (self.paginate_simple) {
+                    elements.push(prevPage);
+                    elements.push(' ');
+                    elements.push(nextPage);
+                }
+                if (self.paginate_firstlast) {
+                    elements.push(' ');
+                    elements.push(lastPage);
+                }
+
+                var tr = TR(null, TD({'colspan':self.columns.length}, DIV({'style': 'width: 100%; margin: auto;'}, elements)));
 
                 // replaceChildNodes(ref, tr, ref.childNodes);
                 appendChildNodes(ref, tr);
             });
+            // debugObject(page_state);
         }
 
         if (self.emptycontent) {
             $(self.table).parentNode.insertBefore(DIV(null,self.emptycontent),$(self.table));
         }
     });
+
+    this.onFirstPage = function () {
+        if (self.offset == 0) {
+            return true;
+        }
+
+        return false;
+    }
+    this.onLastPage = function () {
+        // logDebug('offset=' + self.offset + ', limit=' + self.limit + ', count=' + self.count);
+        if ( self.offset + self.limit >= self.count ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    this.updatePagination = function() {
+        if (self.onFirstPage()) {
+            forEach(self.page_state.firstButtons, function(btn) { btn.style.display = 'none'; });
+            forEach(self.page_state.prevButtons, function(btn) { btn.style.display = 'none'; });
+        }
+        else {
+            forEach(self.page_state.firstButtons, function(btn) { btn.style.display = ''; });
+            forEach(self.page_state.prevButtons, function(btn) { btn.style.display = ''; });
+        }
+        if (self.onLastPage()) {
+            forEach(self.page_state.nextButtons, function(btn) { btn.style.display = 'none'; });
+            forEach(self.page_state.lastButtons, function(btn) { btn.style.display = 'none'; });
+        }
+        else {
+            forEach(self.page_state.nextButtons, function(btn) { btn.style.display = ''; });
+            forEach(self.page_state.lastButtons, function(btn) { btn.style.display = ''; });
+        }
+    };
 
     this.renderdata = function(data) {
         replaceChildNodes(self.tbody);
@@ -94,6 +169,8 @@ function TableRenderer(target, source, columns, options) {
                 self.offset = data.offset;
                 self.count = data.count;
 
+                self.updatePagination();
+
                 if (self.emptycontent) {
                     if (self.count > 0) {
                         hideElement($(self.table).previousSibling)
@@ -115,7 +192,11 @@ function TableRenderer(target, source, columns, options) {
         self.update = callLater(self.delay, partial(self.doupdate, {}));
     };
 
-    this.prevPage = function() {
+    this.goFirstPage = function() {
+        self.doupdate({'offset': 0});
+    };
+
+    this.goPrevPage = function() {
         if ( self.offset > 0 ) {
             if ( self.offset - self.limit < 0 ) {
                 self.doupdate({'offset': 0});
@@ -125,17 +206,21 @@ function TableRenderer(target, source, columns, options) {
             }
         }
         else {
-            logDebug('Already on the first page (' + self.offset + ', ' + self.limit + ', ' + self.count + ')');
+            logWarning('Already on the first page (' + self.offset + ', ' + self.limit + ', ' + self.count + ')');
         }
     };
 
-    this.nextPage = function() {
+    this.goNextPage = function() {
         if ( self.offset + self.limit < self.count ) {
             self.doupdate({'offset': self.offset + self.limit});
         }
         else {
-            logDebug('Already on the last page (' + self.offset + ', ' + self.limit + ', ' + self.count + ')');
+            logWarning('Already on the last page (' + self.offset + ', ' + self.limit + ', ' + self.count + ')');
         }
+    };
+
+    this.goLastPage = function() {
+        self.doupdate({'offset': Math.floor( ( self.count - 1 ) / self.limit) * self.limit});
     };
 
     this.updateOnLoad = function() {
