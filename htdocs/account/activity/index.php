@@ -47,7 +47,7 @@ var activitylist = new TableRenderer(
             return TD(null,r.message);
         },
         'type',
-        'ctime',
+        'date',
         function (r, d) {
             if (r.read == 1) {
                 return TD(null,IMG({'src' : d.star, 'alt' : d.unread}));

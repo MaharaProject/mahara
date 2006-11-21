@@ -23,7 +23,7 @@
             <th>{str section='activity' tag='type'}</th>
             <th>{str section='activity' tag='date'}</th>
             <th>{str section='activity' tag='read'}</th>
-            <th>{str section='activity' tag='markasread'} [<a href="" onClick="{$selectall}">{str section='activity' tag='selectall'}</a>]</th>
+            <th>[<a href="" onClick="{$selectall}">{str section='activity' tag='selectall'}</a>]</th>
             <th></th>
         </tr>
     </thead>
@@ -33,7 +33,7 @@
     <tfoot>
         <tr>
             <td align="right" colspan="4"><div id="messagediv"></div></td>
-            <td align="right"><input type="submit" value="{str tag='update'}" /></td>
+            <td align="right"><input type="submit" value="{str tag='markasread' section='activity'}" /></td>
         </tr>
     </tfoot>
 </table>
