@@ -38,8 +38,10 @@ $string['update'] = 'Update';
 $string['no']     = 'no';
 $string['yes']    = 'yes';
 
-$string['nextpage'] = 'Next page';
-$string['prevpage'] = 'Previous page';
+$string['nextpage']  = 'Next page';
+$string['prevpage']  = 'Previous page';
+$string['firstpage'] = 'First page';
+$string['lastpage']  = 'Last page';
 
 // auth
 $string['accessforbiddentoadminsection'] = 'You are forbidden from accessing the administration section';

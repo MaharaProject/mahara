@@ -143,8 +143,10 @@ function maharajsstrings() {
 
 function tablerendererjsstrings() {
     return array(
+        'firstpage',
         'nextpage',
         'prevpage',
+        'lastpage',
     );
 }
 
