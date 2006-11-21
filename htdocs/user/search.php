@@ -58,7 +58,6 @@ function search_submit($values) {
     json_reply(false,'');
 }
 
-//@todo: Show 'no results found' for an empty query.
 $noresults = get_string('noresultsfound');
 
 $javascript = <<<JAVASCRIPT

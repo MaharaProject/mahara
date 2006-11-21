@@ -79,7 +79,9 @@ function TableRenderer(target, source, columns, options) {
         }
 
         if (self.emptycontent) {
-            $(self.table).parentNode.insertBefore(DIV(null,self.emptycontent),$(self.table));
+            var newelement = DIV(null,self.emptycontent);
+            hideElement(newelement);
+            $(self.table).parentNode.insertBefore(newelement,$(self.table));
         }
     });
 
