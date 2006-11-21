@@ -534,13 +534,12 @@
         </TABLE>
         <TABLE NAME="template_category">
             <FIELDS>
-                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
-                <FIELD NAME="parent" TYPE="int" LENGTH="10" NOTNULL="false" />
-                <FIELD NAME="name" TYPE="text" />
+                <FIELD NAME="name" TYPE="text" NOTNULL="true" />
+                <FIELD NAME="parent" TYPE="text" NOTNULL="false" />
             </FIELDS>
             <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
-                <KEY NAME="parentfk" TYPE="foreign" FIELDS="parent" REFTABLE="template_category" REFFIELDS="id" />
+                <KEY NAME="primary" TYPE="primary" FIELDS="name" />
+                <KEY NAME="parentfk" TYPE="foreign" FIELDS="parent" REFTABLE="template_category" REFFIELDS="name" />
             </KEYS>
         </TABLE>
         <TABLE NAME="template">
@@ -549,7 +548,7 @@
                 <FIELD NAME="name" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="title" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="description" TYPE="text" NOTNULL="false" />
-                <FIELD NAME="category" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="category" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="owner" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
                 <FIELD NAME="mtime" TYPE="datetime" NOTNULL="true" />
@@ -557,7 +556,7 @@
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
                 <KEY NAME="ownerfk" TYPE="foreign" FIELDS="owner" REFTABLE="usr" REFFIELDS="id" />
-                <KEY NAME="categoryfk" TYPE="foreign" FIELDS="category" REFTABLE="template_category" REFFIELDS="id" />
+                <KEY NAME="categoryfk" TYPE="foreign" FIELDS="category" REFTABLE="template_category" REFFIELDS="name" />
             </KEYS>
         </TABLE>
         <TABLE NAME="view">
@@ -753,6 +752,16 @@
                 <SENTENCE TEXT="(callfunction, minute, hour, day, month, dayofweek) 
                          VALUES (rebuild_artefact_parent_cache_complete, '*', '4', '*', '*', '*')" />
             </SENTENCES>
+        </STATEMENT>
+        <STATEMENT NAME="insert template categories" TYPE="insert" TABLE="template_category">
+            <SENTENCES>
+                <SENTENCE TEXT="(name) VALUES ('resume')" />
+                <SENTENCE TEXT="(name) VALUES ('blog')" />
+                <SENTENCE TEXT="(name) VALUES ('gallery')" />
+                <SENTENCE TEXT="(name) VALUES ('academic')" />
+                <SENTENCE TEXT="(name) VALUES ('professionaldevelopment')" />
+                <SENTENCE TEXT="(name) VALUES ('personaldevelopment')" />
+            </SENTANCES>
         </STATEMENT>
     </STATEMENTS>
 </XMLDB>
