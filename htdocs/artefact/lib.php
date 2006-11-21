@@ -27,10 +27,6 @@
 defined('INTERNAL') || die();
 define('ARTEFACT_FORMAT_LISTITEM', 1);
 
-/** 
- * Exception - artefact not found 
- */
-class ArtefactNotFoundException extends Exception {}
 
 /**
  * Base artefact plugin class
@@ -211,7 +207,6 @@ abstract class ArtefactType {
             $this->parentinstance = false;
             if ($parent = $this->get_parent_metadata()) {
                 $classname = generate_artefact_class_name($parent->artefacttype);
-                // @todo this won't work.
                 $this->parentinstance = new $classname($parent->id, $parent);
             }
         }
