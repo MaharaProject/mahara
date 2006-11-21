@@ -191,6 +191,7 @@ $string['membercount']               = 'Member count';
 $string['account'] =  'My account';
 $string['accountprefs'] = 'Account preferences';
 $string['activityprefs'] = 'Activity preferences';
+$string['watchlist'] = 'My watchlist';
 $string['changepassword'] = 'Change password';
 $string['activity'] = 'Recent activity';
 
@@ -210,6 +211,7 @@ $string['width'] = 'Width';
 $string['height'] = 'Height';
 $string['widthshort'] = 'w';
 $string['heightshort'] = 'h';
+$string['filter'] = 'Filter';
 
 $string['nohelpfound'] = 'There was no help found for this item';
 

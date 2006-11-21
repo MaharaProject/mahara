@@ -959,6 +959,11 @@ function main_nav() {
                 'link'    => $wwwroot . 'account/activity/preferences/',
                 'section' => 'mahara',
             ),
+            array(
+                'name'    => 'watchlist',
+                'link'    => $wwwroot . 'account/watchlist/',
+                'section' => 'mahara',
+            ),
         ),
     );
 
@@ -1255,6 +1260,20 @@ function rebuild_artefact_parent_cache_complete() {
         }
     }
     db_commit();
+}
+
+function artefact_instance_from_id($id) {
+    $prefix = get_config('dbprefix');
+    $sql = 'SELECT a.*, i.plugin 
+            FROM ' . $prefix . 'artefact a 
+            JOIN ' . $prefix . 'artefact_installed_type i ON a.artefacttype = i.name
+            WHERE a.id = ?';
+    if (!$data = get_record_sql($sql, array($id))) {
+        throw new ArtefactNotFoundException(get_string('artefactnotfound'));
+    }
+    $classname = generate_artefact_class_name($data->artefacttype);
+    safe_require('artefact', $data->plugin);
+    return new $classname($id, $data);
 }
 
 /**
