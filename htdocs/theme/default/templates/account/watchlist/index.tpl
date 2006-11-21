@@ -19,7 +19,7 @@
         <tr>
             <th></th>
             <th></th>
-            <th>{str section='activity' tag='stopmonitoring'} [<a href="" onClick="{$selectall}">{str section='activity' tag='selectall'}</a>]</th>
+            <th>[<a href="" onClick="{$selectall}">{str section='activity' tag='selectall'}</a>]</th>
         </tr>
     </thead>
     <tbody>
