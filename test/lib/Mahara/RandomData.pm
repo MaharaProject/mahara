@@ -357,18 +357,17 @@ sub insert_random_watchlist {
 
     print qq{Adding views for '$user' ($user_id)\n};
     $self->{dbh}->begin_work();
-
+    $self->{dbh}->do('DELETE FROM ' . $prefix . 'usr_watchlist_view WHERE usr = ?', undef, $user_id);
     $self->{dbh}->do('INSERT INTO ' . $prefix . 'usr_watchlist_view (usr, view, ctime) 
              (SELECT ' . $user_id . ', id, current_timestamp FROM ' . $prefix . 'view  
                  ORDER BY RANDOM() LIMIT ' . (int($count/3)+1) . ')' );
 
-
-
+    $self->{dbh}->do('DELETE FROM ' . $prefix . 'usr_watchlist_community WHERE usr = ?', undef, $user_id);
     $self->{dbh}->do('INSERT INTO ' . $prefix . 'usr_watchlist_community (usr, community, ctime) 
              (SELECT ' . $user_id . ', id, current_timestamp FROM ' . $prefix . 'community  
                  ORDER BY RANDOM() LIMIT ' . (int($count/3)+1) . ')' );
 
-
+    $self->{dbh}->do('DELETE FROM ' . $prefix . 'usr_watchlist_artefact WHERE usr = ?', undef, $user_id);
     $self->{dbh}->do('INSERT INTO ' . $prefix . 'usr_watchlist_artefact (usr, artefact, ctime) 
              (SELECT ' . $user_id . ', id, current_timestamp FROM ' . $prefix . 'artefact
                  ORDER BY RANDOM() LIMIT ' . (int($count/3)+1) . ')' );
