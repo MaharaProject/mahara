@@ -207,3 +207,18 @@ function setCookie( name, value, expires, path, domain, secure )
     ( ( secure ) ? ";secure" : "" );
 }
 
+function toggleChecked(c) {
+    var e = getElementsByTagAndClassName(null,c);
+    if (e) {
+        for (cb in e) {
+	    if (e[cb].checked == true) {
+                e[cb].checked = '';
+            } 
+            else {
+                e[cb].checked = 'checked';
+            }
+        }
+    }
+    return false;
+
+}
