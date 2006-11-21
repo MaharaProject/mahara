@@ -1297,4 +1297,23 @@ function pieform_configure() {
     );
 }
 
+function searchform() {
+    return array(
+        'name'                => 'searchform',
+        'method'              => 'get',
+        'action'              => '',
+        'elements'            => array(
+            'query' => array(
+                'type'           => 'text',
+                'defaultvalue'   => '',
+            ),
+        )
+    );
+}
+
+function searchform_submit($values) {
+    $query = empty($values['query']) ? '' : '?query=' . rawurlencode($values['query']);
+    redirect(get_config('wwwroot') . 'user/search.php' . $query);
+}
+
 ?>

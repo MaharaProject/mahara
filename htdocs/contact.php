@@ -28,7 +28,7 @@ define('INTERNAL', 1);
 define('PUBLIC', 1);
 
 require('init.php');
-require_once('form.php');
+require_once('pieforms/pieform.php');
 
 if ($SESSION->is_logged_in()) {
     $name = display_name($USER);
@@ -39,7 +39,7 @@ else {
     $email = '';
 }
 
-$contactform = form(array(
+$contactform = pieform(array(
     'name'     => 'contactus',
     'method'   => 'post',
     'action'   => '',
@@ -118,6 +118,7 @@ function contactus_submit($values) {
 $smarty = smarty();
 $smarty->assign('page_content', $contactform);
 $smarty->assign('site_menu', site_menu());
+$smarty->assign('searchform', pieform(searchform()));
 $smarty->display('sitepage.tpl');
 
 ?>

@@ -28,10 +28,12 @@ define('INTERNAL', 1);
 define('PUBLIC', 1);
 
 require('init.php');
+require_once('pieforms/pieform.php');
 
 $smarty = smarty();
 $smarty->assign('page_content', get_site_page_content('privacy'));
 $smarty->assign('site_menu', site_menu());
+$smarty->assign('searchform', pieform(searchform()));
 $smarty->display('sitepage.tpl');
 
 ?>
