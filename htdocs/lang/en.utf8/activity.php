@@ -51,5 +51,9 @@ $string['alltypes'] = 'All types';
 $string['markedasread'] = 'Marked your notifications as read';
 $string['failedtomarkasread'] = 'Failed to mark your notifications as read';
 
+$string['stopmonitoring'] = 'Stop monitoring';
+$string['viewsandartefacts'] = 'Views and artefacts';
+$string['communities'] = 'Communities';
+$string['monitored'] = 'Monitored';
 
 ?>
