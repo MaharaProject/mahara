@@ -69,6 +69,7 @@ if (isset($_REQUEST['key'])) {
         // Move the user record to the usr table from the registration table
         $registrationid = $registration->id;
         unset($registration->id);
+        unset($registration->expiry);
         $registration->id = insert_record('usr', $registration, 'id', true);
         log_debug($registration);
 
