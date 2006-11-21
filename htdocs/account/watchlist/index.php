@@ -44,12 +44,12 @@ var watchlist = new TableRenderer(
                 return TD(null, '');
             }
             if (r.expanded) {
-                return TD(null, A({'href': '', 'onClick' : 'collapse(' + r.id | ')'}),
-                          IMG({'src' : d.minusicon, 'alt' : d.minusalt}));
+                return TD(null, A({'href': '', 'onclick': 'collapse(' + r.id + '); return false;'},
+                                  IMG({'src' : d.minusicon, 'alt' : d.minusalt, 'border': 0})));
             }
             else {
-                return TD(null, A({'href': '', 'onClick' : 'collapse(' + r.id | ')'}),
-                          IMG({'src' : d.plusicon, 'alt' : d.plusalt}));
+                return TD(null, A({'href': '', 'onclick': 'expand(' + r.id + '); return false;'},
+                                  IMG({'src' : d.plusicon, 'alt' : d.plusalt, 'border': 0})));
             }
         },
         function(r) { 
@@ -59,7 +59,7 @@ var watchlist = new TableRenderer(
             return TD(null,r.name);
         },
         function (r) {
-            return TD(null, INPUT({'type' : 'checkbox', 'class' : 'viewcheck', 'name' : 'view-' + r.id}));
+            return TD(null, INPUT({'type' : 'checkbox', 'class': 'tocheck', 'name': 'view-' + r.id}));
         }
     ]
 );
@@ -73,6 +73,14 @@ function changeTitle(title) {
     $('typeheader').innerHTML  = '{$monitoredstring} ' + titles[title];
 }
 
+function collapse(id) {
+
+}
+
+function expand(id) {
+
+}
+
 JAVASCRIPT;
 
 $typechange = 'watchlist.doupdate({\'type\':this.options[this.selectedIndex].value}); changeTitle(this.options[this.selectedIndex].value);';
@@ -81,6 +89,7 @@ $smarty = smarty(array('tablerenderer'));
 $smarty->assign('site_menu', site_menu());
 $smarty->assign('typechange', $typechange);
 $smarty->assign('typestr', get_string('viewsandartefacts', 'activity'));
+$smarty->assign('selectall', 'toggleChecked(\'tocheck\'); return false;');
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->display('account/watchlist/index.tpl');
 

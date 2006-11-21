@@ -55,5 +55,6 @@ $string['stopmonitoring'] = 'Stop monitoring';
 $string['viewsandartefacts'] = 'Views and artefacts';
 $string['communities'] = 'Communities';
 $string['monitored'] = 'Monitored';
+$string['stopmonitoring'] = 'Stop monitoring';
 
 ?>

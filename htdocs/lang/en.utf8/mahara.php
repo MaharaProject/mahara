@@ -214,6 +214,8 @@ $string['height'] = 'Height';
 $string['widthshort'] = 'w';
 $string['heightshort'] = 'h';
 $string['filter'] = 'Filter';
+$string['expand'] = 'Expand';
+$string['collapse'] = 'Collapse';
 
 $string['nohelpfound'] = 'There was no help found for this item';
 

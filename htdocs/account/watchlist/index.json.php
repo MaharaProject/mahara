@@ -75,11 +75,12 @@ $prefix = get_config('dbprefix');
 
 if ($type == 'views') {
     $count = count_records('usr_watchlist_view', 'usr', $userid);
-    $sql = 'SELECT v.* 
+    $sql = 'SELECT v.*, v.title AS name 
             FROM ' . $prefix . 'view v
             JOIN ' . $prefix . 'usr_watchlist_view w ON w.view = v.id
-            WHERE w.usr = ?';
-    if ($records = get_rows_sql($sql, array($userid), 'v.mtime DESC', '*', $offset, $limit)) {
+            WHERE w.usr = ?
+            ORDER BY v.mtime DESC';
+    if ($records = get_rows_sql($sql, array($userid), $offset, $limit)) {
         foreach ($records as &$r) {
             // @todo session expandey stuff
         }
@@ -90,14 +91,14 @@ else if ($type == 'communities') {
     $sql = 'SELECT c.* 
             FROM ' . $prefix . 'community c
             JOIN ' . $prefix . 'usr_watchlist_community w ON w.community = c.id 
-            WHERE w.usr = ?';
-    $records = get_rows_sql($sql, array($userid), 'c.mtime DESC', '*', $offset, $limit);
+            WHERE w.usr = ?
+            ORDER BY c.mtime DESC';
+    $records = get_rows_sql($sql, array($userid), $offset, $limit);
 }
 
 if (empty($records)) {
     $records = array();
 }
-
 
 $activity = array(
     'count'     => $count,
@@ -105,8 +106,8 @@ $activity = array(
     'limit'     => $limit,
     'data'      => $records,
     'type'      => $type,
-    'minusicon' => theme_get_image_path('minus.gif'),
-    'plusicon'  => theme_get_image_path('plus.gif'),
+    'minusicon' => theme_get_image_path('minus.png'),
+    'plusicon'  => theme_get_image_path('plus.png'),
     'minusalt'  => get_string('collapse'),
     'plusalt'   => get_string('expand'),
 );

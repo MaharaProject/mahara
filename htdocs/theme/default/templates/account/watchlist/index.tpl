@@ -12,7 +12,7 @@
     <option value="communities">{str section='activity' tag='communities'}</option>
 </select>
 </form>
-<div id="typeheader">{str section='activity' tag='monitored'} {$typestr}</div>
+<p><b><div id="typeheader">{str section='activity' tag='monitored'} {$typestr}</div></b></p>
 <form method="post" onSubmit="{$stopmonitoring}">
 <table id="watchlist">
     <thead>
@@ -28,7 +28,7 @@
     <tfoot>
         <tr>
             <td align="right" colspan="4"><div id="messagediv"></div></td>
-            <td align="right"><input type="submit" value="{str tag='update'}" /></td>
+            <td align="right"><input type="submit" value="{str tag='stopmonitoring' section='activity'}" /></td>
         </tr>
     </tfoot>
 </table>
