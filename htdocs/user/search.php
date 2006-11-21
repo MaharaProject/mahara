@@ -67,7 +67,9 @@ var results = new TableRenderer(
     'results.json.php',
     [
         function(r) { return TD(null,A({'href':'view.php?id=' + r.id},r.displayname)); },
-        'institution',
+        'firstname',
+        'lastname',
+        'email',
     ]
 );
 

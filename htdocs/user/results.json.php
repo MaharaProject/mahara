@@ -46,9 +46,6 @@ if (!empty($data['results'])) {
         $result['displayname'] = display_name($result);
         unset($result['username']);
         unset($result['preferredname']);
-        unset($result['firstname']);
-        unset($result['lastname']);
-        unset($result['email']);
     }
 }
 $data['data'] = $data['results'];
