@@ -197,4 +197,197 @@ sub insert_random_activity_all_users {
     }
 }
 
+sub insert_random_communities {
+   my ($self, $user, $count) = @_;
+
+    my $prefix = $self->{config}->get('dbprefix');
+    my $user_id = $self->{dbh}->selectall_arrayref('SELECT id FROM ' . $prefix . 'usr WHERE username = ?', undef, $user)->[0][0];
+
+    unless ( defined $user_id ) {
+        croak qq{User '$user' doesn't exist\n};
+    }
+
+    print qq{Adding communities for '$user' ($user_id)\n};
+    $self->{dbh}->begin_work();
+
+    my $wl = new Data::Random::WordList( wordlist => '/usr/share/dict/words' );
+
+    foreach ( 1 .. $count ) { ### [...  ] (%)
+        my $cname = join(' ', $wl->get_words(int(rand(5)) + 1));
+        my $cdesc = join(' ', $wl->get_words(int(rand(50)) + 10));
+        $cname =~ s/[\x80-\xff]//g;
+        $cdesc =~ s/[\x80-\xff]//g;
+        $self->{dbh}->do(
+            'INSERT INTO ' . $prefix . 'community (name, description, owner, ctime, mtime) VALUES (?, ?, ?, current_timestamp, current_timestamp)',
+            undef,
+            $cname, $cdesc, $user_id);
+    }
+
+    $self->{dbh}->commit();
+
+}
+
+sub insert_random_communities_all_users {
+    my ($self, $count) = @_;
+
+    my $prefix = $self->{config}->get('dbprefix');
+    
+    my $existing_users = $self->{dbh}->selectall_hashref('SELECT id, username FROM ' . $prefix . 'usr', 'username');
+
+    foreach my $user ( keys %{$existing_users} ) {
+        $self->insert_random_communities($user, $count);
+    }
+}
+
+sub insert_random_artefacts {
+    
+    my ($self, $user, $count) = @_;
+
+    my $prefix = $self->{config}->get('dbprefix');
+    my $user_id = $self->{dbh}->selectall_arrayref('SELECT id FROM ' . $prefix . 'usr WHERE username = ?', undef, $user)->[0][0];
+
+    unless ( defined $user_id ) {
+        croak qq{User '$user' doesn't exist\n};
+    }
+
+    print qq{Adding artefacts for '$user' ($user_id)\n};
+    $self->{dbh}->begin_work();
+
+    my $wl = new Data::Random::WordList( wordlist => '/usr/share/dict/words' );
+
+    my @profilefields = qw(firstname lastname introduction);
+
+    foreach ( 1 .. $count ) { ### [...  ] (%)
+
+        foreach my $field (@profilefields) {
+            my $title = join(' ', $wl->get_words(int(rand(5)) + 1));
+            $title =~ s/[\x80-\xff]//g;
+            $self->{dbh}->do(
+            'INSERT INTO ' . $prefix . 'artefact (artefacttype, owner, title, ctime, mtime, atime) VALUES (?, ?, ?, current_timestamp, current_timestamp, current_timestamp)',
+            undef,
+            $field, $user_id, $title);
+        }
+    }
+
+    $self->{dbh}->commit();
+}
+
+
+sub insert_random_artefacts_all_users {
+    my ($self, $count) = @_;
+
+    my $prefix = $self->{config}->get('dbprefix');
+    
+    my $existing_users = $self->{dbh}->selectall_hashref('SELECT id, username FROM ' . $prefix . 'usr', 'username');
+
+    foreach my $user ( keys %{$existing_users} ) {
+        $self->insert_random_artefacts($user, $count);
+    }
+}
+
+sub insert_random_views {
+    my ($self, $user, $count) = @_;
+
+    my $prefix = $self->{config}->get('dbprefix');
+
+    my $user_id = $self->{dbh}->selectall_arrayref('SELECT id FROM ' . $prefix . 'usr WHERE username = ?', undef, $user)->[0][0];
+
+    unless ( defined $user_id ) {
+        croak qq{User '$user' doesn't exist\n};
+    }
+
+    print qq{Adding views for '$user' ($user_id)\n};
+    $self->{dbh}->begin_work();
+
+    my $wl = new Data::Random::WordList( wordlist => '/usr/share/dict/words' );
+
+    my ($template_id) = $self->{dbh}->selectrow_array('SELECT id FROM ' . $prefix . 'template ORDER BY RANDOM() LIMIT 1');
+    
+    my $title = join(' ', $wl->get_words(int(rand(5)) + 1));
+    my $name = join(' ', $wl->get_words(int(rand(5)) + 1));
+
+    unless ($template_id) {
+        $self->{dbh}->do('INSERT INTO ' . $prefix . 'template (name, title, category, owner, ctime, mtime) 
+                VALUES(?, ?, ?, ?, current_timestamp, current_timestamp)', undef, $name, $title, 'blog', $user_id);
+        $template_id = $self->{dbh}->last_insert_id(undef, undef, $prefix . 'template', undef);
+    }
+
+    foreach ( 1 .. $count ) { ### [...  ] (%)
+
+        my $title = join(' ', $wl->get_words(int(rand(5)) + 1));
+        my $description = join(' ', $wl->get_words(int(rand(5)) + 5));
+        $title =~ s/[\x80-\xff]//g;
+        $description =~ s/[\x80-\xff]//g;
+
+        $self->{dbh}->do('INSERT INTO ' . $prefix . 'view (title, description, owner, template, ctime, mtime, atime)
+             VALUES(?, ?, ?, ?, current_timestamp, current_timestamp, current_timestamp)', undef,
+             $title, $description, $user_id, $template_id);
+        my $view_id = $self->{dbh}->last_insert_id(undef, undef, $prefix . 'view', undef);
+
+        $self->{dbh}->do('INSERT INTO ' . $prefix . 'view_artefact (view, artefact, block, ctime) 
+             (SELECT ' . $view_id . ', id, \'foo\', current_timestamp FROM '. $prefix . 'artefact WHERE owner = ? ORDER BY RANDOM() LIMIT 5)', undef, $user_id);
+	
+    }
+    $self->{dbh}->commit();
+}
+
+sub insert_random_views_all_users {
+    my ($self, $count) = @_;
+
+    my $prefix = $self->{config}->get('dbprefix');
+    
+    my $existing_users = $self->{dbh}->selectall_hashref('SELECT id, username FROM ' . $prefix . 'usr', 'username');
+
+    foreach my $user ( keys %{$existing_users} ) {
+        $self->insert_random_views($user, $count);
+    }
+}
+
+sub insert_random_watchlist {
+    
+    my ($self, $user, $count) = @_;
+
+    my $prefix = $self->{config}->get('dbprefix');
+    
+    my $user_id = $self->{dbh}->selectall_arrayref('SELECT id FROM ' . $prefix . 'usr WHERE username = ?', undef, $user)->[0][0];
+
+    unless ( defined $user_id ) {
+        croak qq{User '$user' doesn't exist\n};
+    }
+
+    print qq{Adding views for '$user' ($user_id)\n};
+    $self->{dbh}->begin_work();
+
+    $self->{dbh}->do('INSERT INTO ' . $prefix . 'usr_watchlist_view (usr, view, ctime) 
+             (SELECT ' . $user_id . ', id, current_timestamp FROM ' . $prefix . 'view  
+                 ORDER BY RANDOM() LIMIT ' . (int($count/3)+1) . ')' );
+
+
+
+    $self->{dbh}->do('INSERT INTO ' . $prefix . 'usr_watchlist_community (usr, community, ctime) 
+             (SELECT ' . $user_id . ', id, current_timestamp FROM ' . $prefix . 'community  
+                 ORDER BY RANDOM() LIMIT ' . (int($count/3)+1) . ')' );
+
+
+    $self->{dbh}->do('INSERT INTO ' . $prefix . 'usr_watchlist_artefact (usr, artefact, ctime) 
+             (SELECT ' . $user_id . ', id, current_timestamp FROM ' . $prefix . 'artefact
+                 ORDER BY RANDOM() LIMIT ' . (int($count/3)+1) . ')' );
+
+
+    $self->{dbh}->commit();
+}
+
+sub insert_random_watchlist_all_users {
+    my ($self, $count) = @_;
+
+    my $prefix = $self->{config}->get('dbprefix');
+    
+    my $existing_users = $self->{dbh}->selectall_hashref('SELECT id, username FROM ' . $prefix . 'usr', 'username');
+
+    foreach my $user ( keys %{$existing_users} ) {
+        $self->insert_random_watchlist($user, $count);
+    }
+}
+
+
 1;
