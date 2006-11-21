@@ -569,6 +569,7 @@
                 <FIELD NAME="template" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
                 <FIELD NAME="mtime" TYPE="datetime" NOTNULL="true" />
+                <FIELD NAME="atime" TYPE="datetime" NOTNULL="true" />
                 <FIELD NAME="submitted" TYPE="int" LENGTH="10" NOTNULL="false" />
                 <FIELD NAME="public" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" />
                 <FIELD NAME="loggedin" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" />
