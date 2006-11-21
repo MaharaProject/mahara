@@ -43,6 +43,8 @@ $string['prevpage']  = 'Previous page';
 $string['firstpage'] = 'First page';
 $string['lastpage']  = 'Last page';
 
+$string['mainmenu'] = 'Main menu';
+
 // auth
 $string['accessforbiddentoadminsection'] = 'You are forbidden from accessing the administration section';
 $string['accountexpired'] = 'Sorry, your account has expired';
@@ -217,9 +219,10 @@ $string['nohelpfound'] = 'There was no help found for this item';
 
 // Search
 $string['search'] = 'Search';
+$string['searchusers'] = 'Search users';
 $string['query'] = 'Query';
 $string['querydescription'] = 'The words to be searched for';
 $string['results'] = 'Results';
 $string['noresultsfound'] = 'No results found';
-$string['resultsfor'] = 'Results matching "%s"';
+
 ?>

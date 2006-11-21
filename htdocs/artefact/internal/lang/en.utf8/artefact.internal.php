@@ -61,6 +61,10 @@ $string['jabberusername'] = 'Jabber Username';
 $string['occupation'] = 'Occupation';
 $string['industry'] = 'Industry';
 
+// Field names for view user display
+$string['principalemailaddress'] = 'Principal email';
+$string['emailaddress'] = 'Alternative email';
+
 
 $string['emailvalidation_subject'] = 'Email validation';
 $string['emailvalidation_body'] = <<<EOF

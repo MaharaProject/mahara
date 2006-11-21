@@ -42,7 +42,7 @@ else {
         if ($field == 'email') {  // There may be multiple email records
             if ($emails = @get_rows('artefact_internal_profile_email', 'owner', $userid)) {
                 foreach ($emails as $email) {
-                    $fieldname = $email['principal'] ? 'defaultemailaddress' : 'emailaddress';
+                    $fieldname = $email['principal'] ? 'principalemailaddress' : 'emailaddress';
                     $profile[] = array('name' => $fieldname, 'value' => $email['email']);
                 }
             }
