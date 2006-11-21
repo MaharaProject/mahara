@@ -59,6 +59,6 @@ else {
 $smarty = smarty();
 $smarty->assign('NAME',$name);
 $smarty->assign('PROFILE',$profile);
-$smarty->display('viewuser.tpl');
+$smarty->display('user/view.tpl');
 
 ?>

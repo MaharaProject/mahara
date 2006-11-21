@@ -94,6 +94,6 @@ $smarty = smarty(array('tablerenderer'));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('SEARCHFORM', $searchform);
 $smarty->assign('QUERYPOSTED', !empty($query));
-$smarty->display('results.tpl');
+$smarty->display('user/search.tpl');
 
 ?>
