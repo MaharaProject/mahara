@@ -113,7 +113,9 @@ class ArtefactTypeProfile extends ArtefactType {
     }
 
     public function render($format, $options) {
-
+        if ($format == ARTEFACT_FORMAT_LISTITEM) {
+            return $this->title;
+        }
     }
 
     public function get_icon() {
@@ -355,13 +357,32 @@ class ArtefactTypeEmail extends ArtefactTypeProfileField {
 
 class ArtefactTypeStudentid extends ArtefactTypeProfileField {}
 class ArtefactTypeIntroduction extends ArtefactTypeProfileField {}
-class ArtefactTypeOfficialwebsite extends ArtefactTypeProfileField {}
-class ArtefactTypePersonalwebsite extends ArtefactTypeProfileField {}
+class ArtefactTypeOfficialwebsite extends ArtefactTypeProfileField {
+    public function render($format, $options) {
+        if ($format == ARTEFACT_FORMAT_LISTITEM) {
+            return make_link($this->title);
+        }
+    }
+}
+class ArtefactTypePersonalwebsite extends ArtefactTypeProfileField {
+    public function render($format, $options) {
+        if ($format == ARTEFACT_FORMAT_LISTITEM) {
+            return make_link($this->title);
+        }
+    }
+}
 class ArtefactTypeBlog extends ArtefactTypeProfileField {}
 class ArtefactTypeAddress extends ArtefactTypeProfileField {}
 class ArtefactTypeTown extends ArtefactTypeProfileField {}
 class ArtefactTypeCity extends ArtefactTypeProfileField {}
-class ArtefactTypeCountry extends ArtefactTypeProfileField {}
+class ArtefactTypeCountry extends ArtefactTypeProfileField {
+    public function render($format, $options) {
+        if ($format == ARTEFACT_FORMAT_LISTITEM) {
+            $countries = getoptions_country();
+            return $countries[$this->title];
+        }
+    }
+}
 class ArtefactTypeHomenumber extends ArtefactTypeProfileField {}
 class ArtefactTypeBusinessnumber extends ArtefactTypeProfileField {}
 class ArtefactTypeMobilenumber extends ArtefactTypeProfileField {}

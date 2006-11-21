@@ -984,4 +984,8 @@ function get_help_icon($plugintype, $pluginname, $form, $element, $page='') {
             . '?</a></span>';
 }
 
+function make_link($url) {
+    return '<a href="' . $url . '">' . $url . '</a>';
+}
+
 ?>

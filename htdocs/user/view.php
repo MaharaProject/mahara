@@ -39,10 +39,20 @@ else {
     $publicfields = call_static_method(generate_artefact_class_name('profile'),'get_public_fields');
     foreach (array_keys($publicfields) as $field) {
         $classname = generate_artefact_class_name($field);
-        $c = new $classname(0, array('owner' => $userid)); // email is different
-        //$c->render(ARTEFACT_FORMAT_LISTITEM);
-        //$profile[$pf]['name'] = $pf;
-        //$profile[$pf]['value'] = '[]';
+        if ($field == 'email') {  // There may be multiple email records
+            if ($emails = @get_rows('artefact_internal_profile_email', 'owner', $userid)) {
+                foreach ($emails as $email) {
+                    $fieldname = $email['principal'] ? 'defaultemailaddress' : 'emailaddress';
+                    $profile[] = array('name' => $fieldname, 'value' => $email['email']);
+                }
+            }
+        }
+        else {
+            $c = new $classname(0, array('owner' => $userid)); // email is different
+            if ($value = $c->render(ARTEFACT_FORMAT_LISTITEM, null)) {
+                $profile[] = array('name' => $field, 'value' => $value);
+            }
+        }
     }
 }
 
