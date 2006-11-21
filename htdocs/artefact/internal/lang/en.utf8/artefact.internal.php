@@ -61,7 +61,8 @@ $string['jabberusername'] = 'Jabber Username';
 $string['occupation'] = 'Occupation';
 $string['industry'] = 'Industry';
 
-// Field names for view user display
+// Field names for view user and search user display
+$string['name'] = 'Name';
 $string['principalemailaddress'] = 'Principal email';
 $string['emailaddress'] = 'Alternative email';
 

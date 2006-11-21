@@ -45,6 +45,9 @@ if (!empty($data['results'])) {
     foreach ($data['results'] as &$result) {
         $result['displayname'] = display_name($result);
         unset($result['username']);
+        unset($result['firstname']);
+        unset($result['lastname']);
+        unset($result['email']);
         unset($result['preferredname']);
     }
 }
