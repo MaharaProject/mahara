@@ -38,8 +38,12 @@ $string['update'] = 'Update';
 $string['no']     = 'no';
 $string['yes']    = 'yes';
 
-$string['nextpage'] = 'Next page';
-$string['prevpage'] = 'Previous page';
+$string['nextpage']  = 'Next page';
+$string['prevpage']  = 'Previous page';
+$string['firstpage'] = 'First page';
+$string['lastpage']  = 'Last page';
+
+$string['mainmenu'] = 'Main menu';
 
 // auth
 $string['accessforbiddentoadminsection'] = 'You are forbidden from accessing the administration section';
@@ -189,6 +193,7 @@ $string['membercount']               = 'Member count';
 $string['account'] =  'My account';
 $string['accountprefs'] = 'Account preferences';
 $string['activityprefs'] = 'Activity preferences';
+$string['watchlist'] = 'My watchlist';
 $string['changepassword'] = 'Change password';
 $string['activity'] = 'Recent activity';
 
@@ -208,14 +213,21 @@ $string['width'] = 'Width';
 $string['height'] = 'Height';
 $string['widthshort'] = 'w';
 $string['heightshort'] = 'h';
+$string['filter'] = 'Filter';
+$string['expand'] = 'Expand';
+$string['collapse'] = 'Collapse';
 
 $string['nohelpfound'] = 'There was no help found for this item';
 
 // Search
 $string['search'] = 'Search';
+$string['searchusers'] = 'Search users';
 $string['query'] = 'Query';
 $string['querydescription'] = 'The words to be searched for';
 $string['results'] = 'Results';
 $string['noresultsfound'] = 'No results found';
-$string['resultsfor'] = 'Results matching "%s"';
+
+// artefact
+$string['artefactnotfound'] = 'Artefact with id %s not found';
+
 ?>

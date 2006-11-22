@@ -58,7 +58,6 @@ function search_submit($values) {
     json_reply(false,'');
 }
 
-//@todo: Show 'no results found' for an empty query.
 $noresults = get_string('noresultsfound');
 
 $javascript = <<<JAVASCRIPT
@@ -66,8 +65,7 @@ var results = new TableRenderer(
     'searchresults',
     'results.json.php',
     [
-        function(r) { return TD(null,A({'href':'view.php?id=' + r.id},r.displayname)); },
-        'institution',
+        function(r) { return TD(null,A({'href':'view.php?id=' + r.id},r.name)); },
     ]
 );
 
@@ -94,6 +92,6 @@ $smarty = smarty(array('tablerenderer'));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('SEARCHFORM', $searchform);
 $smarty->assign('QUERYPOSTED', !empty($query));
-$smarty->display('results.tpl');
+$smarty->display('user/search.tpl');
 
 ?>

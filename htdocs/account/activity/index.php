@@ -47,7 +47,7 @@ var activitylist = new TableRenderer(
             return TD(null,r.message);
         },
         'type',
-        'ctime',
+        'date',
         function (r, d) {
             if (r.read == 1) {
                 return TD(null,IMG({'src' : d.star, 'alt' : d.unread}));
@@ -66,17 +66,6 @@ var activitylist = new TableRenderer(
 activitylist.type = 'all';
 activitylist.statevars.push('type');
 activitylist.updateOnLoad();
-
-function checkall(c) {
-    var e = getElementsByTagAndClassName(null,c);
-    if (e) {
-        for (cb in e) {
-            log(e[cb]);
-            e[cb].checked = 'checked';
-        }
-    }
-    return false;
-}
 
 function markread(form) {
     
@@ -115,7 +104,7 @@ JAVASCRIPT;
 
 $smarty = smarty(array('tablerenderer'));
 $smarty->assign('site_menu', site_menu());
-$smarty->assign('selectall', 'checkall(\'tocheck\'); return false;');
+$smarty->assign('selectall', 'toggleChecked(\'tocheck\'); return false;');
 $smarty->assign('markread', 'markread(this); return false;');
 $smarty->assign('typechange', 'activitylist.doupdate({\'type\':this.options[this.selectedIndex].value});');
 $smarty->assign('types', $types);

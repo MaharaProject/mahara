@@ -25,15 +25,35 @@
  */
 
 define('INTERNAL', 1);
-define('PUBLIC', 1);
 
-require('init.php');
-require_once('pieforms/pieform.php');
+require(dirname(dirname(__FILE__)) . '/init.php');
 
-$smarty = smarty();
-$smarty->assign('page_content', get_site_page_content('privacy'));
-$smarty->assign('site_menu', site_menu());
-$smarty->assign('searchform', pieform(searchform()));
-$smarty->display('sitepage.tpl');
+$view = param_integer('view');
+$artefact = param_integer('artefact', 0);
+
+json_headers();
+
+// @todo permissions check here
+
+if (empty($artefact)) {
+    try {
+        $a = artefact_instance_from_id($artefact);
+        $children = $a->get_children_metadata();
+        json_reply(false, array('data' => $children));
+    }
+    catch (Exception $e) {
+        json_reply(true, $e->getMessage());
+    }
+}
+else {
+    try {
+        $v = new View($view);
+        $artefacts = $v->get_children_metadata();
+        json_reply(false, array('data' => $children));
+    }
+    catch (Exception $e) {
+        json_reply(true, $e->getMessage());
+    }
+}
 
 ?>

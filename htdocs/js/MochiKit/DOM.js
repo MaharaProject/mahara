@@ -53,6 +53,7 @@ MochiKit.DOM.EXPORT = [
     "setNodeAttribute",
     "updateNodeAttributes",
     "appendChildNodes",
+    "appendSiblingNodesAfter",
     "replaceChildNodes",
     "removeElement",
     "swapDOM",
@@ -470,6 +471,36 @@ MochiKit.Base.update(MochiKit.DOM, {
                 // pass
             } else if (typeof(n.nodeType) == 'number') {
                 elem.appendChild(n);
+            } else {
+                nodeStack = concat(n, nodeStack);
+            }
+        }
+        return elem;
+    },
+
+
+    /** @id MochiKit.DOM.appendChildNodes */
+    appendSiblingNodesAfter: function (node/*, nodes...*/) {
+        var elem = node;
+        var self = MochiKit.DOM;
+        if (typeof(node) == 'string') {
+            elem = self.getElement(node);
+        }
+        var nodeStack = [
+            self.coerceToDOM(
+                MochiKit.Base.extend(null, arguments, 1),
+                elem
+            )
+        ];
+	sibling = elem.nextSibling;
+	elem = elem.parentNode;
+        var concat = MochiKit.Base.concat;
+        while (nodeStack.length) {
+            var n = nodeStack.shift();
+            if (typeof(n) == 'undefined' || n === null) {
+                // pass
+            } else if (typeof(n.nodeType) == 'number') {
+                elem.insertBefore(n, sibling);
             } else {
                 nodeStack = concat(n, nodeStack);
             }

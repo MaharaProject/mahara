@@ -27,10 +27,6 @@
 defined('INTERNAL') || die();
 define('ARTEFACT_FORMAT_LISTITEM', 1);
 
-/** 
- * Exception - artefact not found 
- */
-class ArtefactNotFoundException extends Exception {}
 
 /**
  * Base artefact plugin class
@@ -133,6 +129,7 @@ abstract class ArtefactType {
                     throw new ArtefactNotFoundException("Artefact with id $id not found");
                 }
             }
+            $this->id = $id;
         }
         else {
             $this->ctime = time();
@@ -156,6 +153,13 @@ abstract class ArtefactType {
     
     public function get_views_metadata() {
         // @todo
+    }
+
+    public function has_children() {
+        if ($this->get_children_metadata()) {
+            return true;
+        }
+        return false;
     }
 
     /** 
@@ -211,7 +215,6 @@ abstract class ArtefactType {
             $this->parentinstance = false;
             if ($parent = $this->get_parent_metadata()) {
                 $classname = generate_artefact_class_name($parent->artefacttype);
-                // @todo this won't work.
                 $this->parentinstance = new $classname($parent->id, $parent);
             }
         }

@@ -46,7 +46,7 @@ if ($row && $row->expiry > time()) {
         $artefact = new ArtefactTypeEmail();
     }
 
-    $artefact->set('owner', $USER->id);
+    $artefact->set('owner', $row->owner);
     $artefact->set('title', $row->email);
     $artefact->commit();
 

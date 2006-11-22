@@ -14,7 +14,7 @@ use Mahara::RandomData;
 
 my $args = Getopt::Declare->new(q(
     [strict]
-    -t <type>        	Select type of data (user, group, activity)	[required]
+    -t <type>        	Select type of data (user, group, activity, community, artefacts, views, watchlist)  [required]
     -u <user>        	User to create data for (required for type 'group' and 'activity')
     -ua             	Create data for all users (can be used instead of -u)
     -c <configfile>  	What config.php to use (defaults to ../htdocs/config.php)	
@@ -59,5 +59,53 @@ if ( $args->{-t} eq 'activity' ) {
     }
     else {
         $randomdata->insert_random_activity_all_users($args->{-n});
+    }
+}
+
+if ( $args->{-t} eq 'community' ) {
+    unless ( defined $args->{-u} or defined $args->{-ua} ) {
+        croak 'Need to specify a user with -u or -ua';
+    }
+    if ( defined $args->{-u} ) {
+        $randomdata->insert_random_communities($args->{-u}, $args->{-n});
+    }
+    else {
+        $randomdata->insert_random_communities_all_users($args->{-n});
+    }
+}
+
+if ( $args->{-t} eq 'artefacts' ) {
+    unless ( defined $args->{-u} or defined $args->{-ua} ) {
+        croak 'Need to specify a user with -u or -ua';
+    }
+    if ( defined $args->{-u} ) {
+        $randomdata->insert_random_artefacts($args->{-u}, $args->{-n});
+    }
+    else {
+        $randomdata->insert_random_artefacts_all_users($args->{-n});
+    }
+}
+
+if ( $args->{-t} eq 'views' ) {
+    unless ( defined $args->{-u} or defined $args->{-ua} ) {
+        croak 'Need to specify a user with -u or -ua';
+    }
+    if ( defined $args->{-u} ) {
+        $randomdata->insert_random_views($args->{-u}, $args->{-n});
+    }
+    else {
+        $randomdata->insert_random_views_all_users($args->{-n});
+    }
+}
+
+if ( $args->{-t} eq 'watchlist' ) {
+    unless ( defined $args->{-u} or defined $args->{-ua} ) {
+        croak 'Need to specify a user with -u or -ua';
+    }
+    if ( defined $args->{-u} ) {
+        $randomdata->insert_random_watchlist($args->{-u}, $args->{-n});
+    }
+    else {
+        $randomdata->insert_random_watchlist_all_users($args->{-n});
     }
 }

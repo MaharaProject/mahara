@@ -80,7 +80,7 @@ function &smarty($javascript = array(), $headers = array(), $strings = array()) 
     }
     
     // Add the required mochikit and mahara javascript files
-    $javascript[] = $jsroot . 'MochiKit/MochiKit.js';
+    array_unshift($javascript,  $jsroot . 'MochiKit/MochiKit.js');
     $javascript[] = $jsroot . 'mahara.js';
     $javascript[] = $jsroot . 'debug.js';
     foreach (maharajsstrings() as $string) {
@@ -143,8 +143,10 @@ function maharajsstrings() {
 
 function tablerendererjsstrings() {
     return array(
+        'firstpage',
         'nextpage',
         'prevpage',
+        'lastpage',
     );
 }
 
@@ -980,6 +982,10 @@ function get_help_icon($plugintype, $pluginname, $form, $element, $page='') {
             . $element . "', '" . $plugintype . "', '"
             . $pluginname . "', '" . $page . "'); return false;\">"
             . '?</a></span>';
+}
+
+function make_link($url) {
+    return '<a href="' . $url . '">' . $url . '</a>';
 }
 
 ?>

@@ -964,6 +964,11 @@ function main_nav() {
                 'link'    => $wwwroot . 'account/activity/preferences/',
                 'section' => 'mahara',
             ),
+            array(
+                'name'    => 'watchlist',
+                'link'    => $wwwroot . 'account/watchlist/',
+                'section' => 'mahara',
+            ),
         ),
     );
 
@@ -1262,6 +1267,20 @@ function rebuild_artefact_parent_cache_complete() {
     db_commit();
 }
 
+function artefact_instance_from_id($id) {
+    $prefix = get_config('dbprefix');
+    $sql = 'SELECT a.*, i.plugin 
+            FROM ' . $prefix . 'artefact a 
+            JOIN ' . $prefix . 'artefact_installed_type i ON a.artefacttype = i.name
+            WHERE a.id = ?';
+    if (!$data = get_record_sql($sql, array($id))) {
+        throw new ArtefactNotFoundException(get_string('artefactnotfound', 'mahara', $id));
+    }
+    $classname = generate_artefact_class_name($data->artefacttype);
+    safe_require('artefact', $data->plugin);
+    return new $classname($id, $data);
+}
+
 /**
  * Configures a default form
  */
@@ -1279,6 +1298,19 @@ function pieform_configure() {
                 'type' => 'hidden',
                 'value' => $SESSION->get('sesskey')
             )
+        )
+    );
+}
+
+function searchform() {
+    return array(
+        'name'                => 'searchform',
+        'action'              => get_config('wwwroot') . 'user/search.php',
+        'elements'            => array(
+            'query' => array(
+                'type'           => 'text',
+                'defaultvalue'   => '',
+            ),
         )
     );
 }

@@ -5,6 +5,8 @@
 <noscript><p>{str tag="javascriptnotenabled"}</p></noscript>
 </div>
 {$login_form}
+{else}
+{include file="searchbox.tpl"}
 {/if}
 
 {include file="adminmenu.tpl"}

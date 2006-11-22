@@ -458,4 +458,13 @@ class ParameterException extends Exception {}
  */
 class EmailException extends Exception {}
 
+/** 
+ * Exception - artefact not found 
+ */
+class ArtefactNotFoundException extends Exception {}
+
+/**
+ * Exception - view not found
+ */
+class ViewNotFoundException extends Exception {}
 ?>

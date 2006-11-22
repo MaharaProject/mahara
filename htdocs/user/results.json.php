@@ -18,14 +18,15 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Richard Mansfield <richard.mansfield@catalyst.net.nz>
+ * @author     Martyn Smith <martyn@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
 define('INTERNAL', 1);
-require(dirname(dirname(__FILE__)).'/init.php');
+
+require(dirname(dirname(__FILE__)) . '/init.php');
 require('searchlib.php');
 
 safe_require('search', 'internal', 'lib.php', 'require_once');
@@ -40,18 +41,14 @@ catch (ParameterException $e) {
 $limit = param_integer('limit', 10);
 $offset = param_integer('offset', 0);
 
-$data = search_user($query,$limit,$offset);
-if (!empty($data['results'])) {
-    foreach ($data['results'] as &$result) {
-        $result['displayname'] = display_name($result);
-        unset($result['username']);
-        unset($result['preferredname']);
-        unset($result['firstname']);
-        unset($result['lastname']);
-        unset($result['email']);
+$data = search_user($query, $limit, $offset);
+
+if ($data['results']) {
+    foreach ($data['results'] as $key => $value) {
+        $data['data'][$key]['name'] = display_name($value);
+        $data['data'][$key]['id']   = $value['id'];
     }
 }
-$data['data'] = $data['results'];
 unset($data['results']);
 
 json_headers();
