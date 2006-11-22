@@ -319,8 +319,8 @@ sub insert_random_views {
         $title =~ s/[\x80-\xff]//g;
         $description =~ s/[\x80-\xff]//g;
 
-        $self->{dbh}->do('INSERT INTO ' . $prefix . 'view (title, description, owner, template, ctime, mtime, atime)
-             VALUES(?, ?, ?, ?, current_timestamp, current_timestamp, current_timestamp)', undef,
+        $self->{dbh}->do('INSERT INTO ' . $prefix . 'view (title, description, owner, template, startdate, enddate, ctime, mtime, atime)
+             VALUES(?, ?, ?, ?, current_timestamp, current_timestamp, current_timestamp, current_timestamp, current_timestamp)', undef,
              $title, $description, $user_id, $template_id);
         my $view_id = $self->{dbh}->last_insert_id(undef, undef, $prefix . 'view', undef);
 
