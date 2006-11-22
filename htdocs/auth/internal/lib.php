@@ -38,7 +38,8 @@ class AuthInternal extends Auth {
     public static function authenticate_user_account($username, $password, $institution) {
         if (!$user = get_record_sql('SELECT username, password, salt
             FROM ' . get_config('dbprefix') . 'usr
-            WHERE LOWER(username) = ?', strtolower($username))) {
+            WHERE LOWER(username) = ?
+            AND institution = ?', array(strtolower($username), $institution))) {
             throw new AuthUnknownUserException("\"$username\" is not known to AuthInternal");
         }
 
@@ -52,31 +53,6 @@ class AuthInternal extends Auth {
      * method, as by default information is sourced from the database.
      */
     public static function get_user_info($username) {
-    }
-
-    /**
-     * Returns a form that allows an administrator to configure this
-     * authentication method.
-     *
-     * The internal method has no configuration options. This is just
-     * here until I can document it properly.
-     */
-    public static function get_configuration_form() {
-        //return Auth::build_form('internal', array(
-        //    'foo' => array(
-        //        'type' => 'text',
-        //        'title' => 'wtf',
-        //        'description' => 'Testing',
-        //        'help' => 'help',
-        //        'defaultvalue' => get_config_plugin('auth', 'internal', 'foo')
-        //    )
-        //));
-    }
-
-    public static function validate_configuration_form(Form $form, $values) {
-        //if (!$form->get_error('foo') && $values['foo'] != 'bar') {
-        //    $form->set_error('foo', 'WTF man!');
-        //}
     }
 
     /**
@@ -197,7 +173,7 @@ class AuthInternal extends Auth {
 class PluginAuthInternal extends Plugin {
 
     public static function has_config() {
-        return true;
+        return false;
     }
 
     public static function get_config_options() {
