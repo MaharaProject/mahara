@@ -27,7 +27,7 @@ function TableRenderer(target, source, columns, options) {
             appendChildNodes(self.table, self.thead);
         }
         if (!self.tbody) {
-            self.thead = TBODY();
+            self.tbody = TBODY();
             appendChildNodes(self.table, self.tbody);
         }
         if (!self.tfoot) {
