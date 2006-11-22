@@ -68,7 +68,7 @@ class PluginSearchInternal extends PluginSearch {
      */
     public static function search_user($query_string, $limit, $offset = 0) {
         if ( is_postgres() ) {
-            $data = get_rows_sql("
+            $data = get_records_sql_array("
                 SELECT
                     id, username, institution, firstname, lastname, preferredname, email
                 FROM

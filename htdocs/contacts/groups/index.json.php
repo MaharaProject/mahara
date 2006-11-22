@@ -37,7 +37,7 @@ $dbprefix = get_config('dbprefix');
 
 $count = get_field('usr_group', 'COUNT(*)', 'owner', $USER->id);
 
-$data = get_rows_sql(
+$data = get_records_sql_array(
     'SELECT g.id, g.name, COUNT(m.*) AS count FROM ' . $dbprefix . 'usr_group g INNER JOIN ' . $dbprefix . 'usr_group_member m ON m.grp=g.id WHERE g.owner=? GROUP BY 1, 2 ORDER BY g.name',
     array($USER->id),
     $offset,

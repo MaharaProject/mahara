@@ -45,20 +45,20 @@ if ($profile_data) {
 }
 
 $profilefields['email'] = array();
-$profilefields['email']['all'] = get_rows('artefact_internal_profile_email', 'owner', $USER->id);
+$profilefields['email']['all'] = get_records_array('artefact_internal_profile_email', 'owner', $USER->id);
 $profilefields['email']['validated'] = array();
 $profilefields['email']['unvalidated'] = array();
 if ($profilefields['email']['all']) {
     foreach ($profilefields['email']['all'] as $email) {
-        if ($email['verified']) {
-            $profilefields['email']['validated'][] = $email['email'];
+        if ($email->verified) {
+            $profilefields['email']['validated'][] = $email->email;
         }
         else {
-            $profilefields['email']['unvalidated'][] = $email['email'];
+            $profilefields['email']['unvalidated'][] = $email->email;
         }
 
-        if ($email['principal']) {
-            $profilefields['email']['default'] = $email['email'];
+        if ($email->principal) {
+            $profilefields['email']['default'] = $email->email;
         }
     }
 }

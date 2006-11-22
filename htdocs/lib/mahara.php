@@ -898,14 +898,14 @@ function main_nav() {
         ),
     );
 
-    if ($plugins = get_rows('artefact_installed')) {
+    if ($plugins = get_records_array('artefact_installed')) {
         foreach ($plugins as &$plugin) {
-            safe_require('artefact', $plugin['name'], 'lib.php', 'require_once');
-            $plugin_menu = call_static_method(generate_class_name('artefact',$plugin['name']), 'menu_items');
+            safe_require('artefact', $plugin->name, 'lib.php', 'require_once');
+            $plugin_menu = call_static_method(generate_class_name('artefact',$plugin->name), 'menu_items');
 
             foreach ($plugin_menu as &$menu_item) {
-                $menu_item['link'] = $wwwroot . 'artefact/' . $plugin['name'] . '/' . $menu_item['link'];
-                $menu_item['section'] = 'artefact.' . $plugin['name'];
+                $menu_item['link'] = $wwwroot . 'artefact/' . $plugin->name . '/' . $menu_item['link'];
+                $menu_item['section'] = 'artefact.' . $plugin->name;
             }
 
             $menu = array_merge($menu, $plugin_menu);

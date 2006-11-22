@@ -62,7 +62,7 @@ log_debug('---------- cron running ' . $now . ' ----------');
 foreach (plugin_types() as $plugintype) {
 
     // get list of cron jobs to run for this plugin type
-    $jobs = get_rows_select(
+    $jobs = get_records_select_array(
         $plugintype . '_cron',
         'nextrun >= ? AND nextrun < ?',
         array(db_format_timestamp($now - MAXRUNAGE), db_format_timestamp($now)),
@@ -73,17 +73,17 @@ foreach (plugin_types() as $plugintype) {
     if ($jobs) {
         // for each cron entry
         foreach ($jobs as $job) {
-            $classname = generate_class_name($plugintype, $job['plugin']);
+            $classname = generate_class_name($plugintype, $job->plugin);
 
-            log_debug("Running $classname::" . $job['callfunction']);
+            log_debug("Running $classname::" . $job->callfunction);
 
-            safe_require($plugintype, $job['plugin'], 'lib.php', 'require_once');
+            safe_require($plugintype, $job->plugin, 'lib.php', 'require_once');
             call_static_method(
                 $classname,
-                $job['callfunction']
+                $job->callfunction
             );
 
-            $nextrun = cron_next_run_time($now, $job);
+            $nextrun = cron_next_run_time($now, (array)$job);
 
             // update next run time
             set_field(
@@ -99,7 +99,7 @@ foreach (plugin_types() as $plugintype) {
     }
 
     // get a list of cron jobs that should have, but didn't get run
-    $jobs = get_rows_select(
+    $jobs = get_records_select_array(
         $plugintype . '_cron',
         'nextrun < ? OR nextrun IS NULL',
         array(db_format_timestamp($now - MAXRUNAGE)),
@@ -110,11 +110,11 @@ foreach (plugin_types() as $plugintype) {
     if ($jobs) {
         // for each cron entry
         foreach ($jobs as $job) {
-            if ($job['nextrun']) {
-                log_warn('cronjob "' . $job['plugin'] . '.' . $job['callfunction'] . '" didn\'t get run because the nextrun time was too old');
+            if ($job->nextrun) {
+                log_warn('cronjob "' . $job->plugin . '.' . $job->callfunction . '" didn\'t get run because the nextrun time was too old');
             }
             
-            $nextrun = cron_next_run_time($now, $job);
+            $nextrun = cron_next_run_time($now, (array)$job);
 
             // update next run time
             set_field(
@@ -122,43 +122,43 @@ foreach (plugin_types() as $plugintype) {
                 'nextrun',
                 db_format_timestamp($nextrun), 
                 'plugin',
-                $job['plugin'],
+                $job->plugin,
                 'callfunction',
-                $job['callfunction']
+                $job->callfunction
             );
         }
     }
 }
 
 // and now the core ones (much simpler)
-if ($jobs = get_rows_select('cron', 'nextrun >= ? AND nextrun < ?',
+if ($jobs = get_records_select_array('cron', 'nextrun >= ? AND nextrun < ?',
     array(db_format_timestamp($now - MAXRUNAGE), db_format_timestamp($now)))) {
     foreach ($jobs as $job) {
-        log_debug("Running core cron " . $job['callfunction']);
+        log_debug("Running core cron " . $job->callfunction);
 
-        $function = $job['callfunction'];
+        $function = $job->callfunction;
         $function();
         
-        $nextrun = cron_next_run_time($now, $job);
+        $nextrun = cron_next_run_time($now, (array)$job);
         
         // update next run time
-        set_field('cron', 'nextrun', db_format_timestamp($nextrun), 'id', $job['id']);
+        set_field('cron', 'nextrun', db_format_timestamp($nextrun), 'id', $job->id);
     }
 }
 
 // and missed ones...
-if ($jobs = get_rows_select('cron', 'nextrun < ? OR nextrun IS NULL',
+if ($jobs = get_records_select_array('cron', 'nextrun < ? OR nextrun IS NULL',
     array(db_format_timestamp($now - MAXRUNAGE)))) {
     foreach ($jobs as $job) {
-      if ($job['nextrun']) {
-          log_warn('core cronjob "' . $job['callfunction'] 
+      if ($job->nextrun) {
+          log_warn('core cronjob "' . $job->callfunction 
               . '" didn\'t get run because the nextrun time was too old');
       }
       
-      $nextrun = cron_next_run_time($now, $job);
+      $nextrun = cron_next_run_time($now, (array)$job);
       
       // update next run time
-      set_field('cron', 'nextrun', db_format_timestamp($nextrun), 'id', $job['id']);
+      set_field('cron', 'nextrun', db_format_timestamp($nextrun), 'id', $job->id);
     }
 }
 

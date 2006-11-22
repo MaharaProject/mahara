@@ -371,6 +371,7 @@ function recordset_to_array($rs) {
         foreach ($array as &$a) {
             $a = (object)$a;
         }
+        return $array;
     }
     else {
         return false;
@@ -417,7 +418,7 @@ function recordset_to_assoc($rs) {
  * Get a number of records as an associative array of objects. (WARNING: this
  * does not return an array, it returns an associative array keyed by the first
  * column in the result set. As a result, you may lose some rows! Please use
- * {@link get_rows} instead where possible)
+ * {@link get_records_*_array} instead where possible)
  *
  * If the query succeeds and returns at least one record, the
  * return value is an array of objects, one object for each
@@ -487,7 +488,7 @@ function get_records_select_assoc($table, $select='', $values=null, $sort='', $f
 /**
  * Get a number of records as an array of objects.
  *
- * Return value as for {@link get_rows}.
+ * Return value as for {@link get_records_array}.
  *
  * @param string $table the table to query.
  * @param string $select A fragment of SQL to be used in a where clause in the SQL call.
@@ -523,7 +524,7 @@ function get_records_sql_assoc($sql,$values, $limitfrom='', $limitnum='') {
 /**
  * Get a number of records as an array of objects.
  *
- * Return value as for {@link get_rows}
+ * Return value as for {@link get_records_array}
  *
  * @param string $sql the SQL select query to execute.
  * @param array values of placeholders in the SQL

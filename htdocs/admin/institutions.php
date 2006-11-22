@@ -38,8 +38,7 @@ if ($institution || $add) {
 
     if (!$add) {
         $data = get_record('institution', 'name', $institution);
-        $lockedprofilefields = (array) get_rows('institution_locked_profile_field', 'name', $institution);
-        $lockedprofilefields = array_map(create_function('$a', 'return $a[\'profilefield\'];'), $lockedprofilefields);
+        $lockedprofilefields = (array)get_column('institution_locked_profile_field', 'profilefield', 'name', $institution);
     }
     else {
         $data = new StdClass;
