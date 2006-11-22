@@ -238,7 +238,8 @@ class Pieform {
             'maxlength' => 'This field must be at most %d characters long',
             'minlength' => 'This field must be at least %d characters long', 
             'integer'   => 'The field must be an integer',
-            'validateoptions' => 'The option "%s" is invalid'
+            'validateoptions' => 'The option "%s" is invalid',
+            'regex'     => 'This field is not in valid form'
         )
     );
 
@@ -401,8 +402,16 @@ class Pieform {
         // Set some attributes for all elements
         $autofocusadded = false;
         foreach ($this->elements as $name => &$element) {
+            if (!empty($element['ignore'])) {
+                unset($this->elements[$name]);
+                continue;
+            }
+            // The name can be in the element itself. This is compatibility for the perl version
+            if (isset($element['name'])) {
+                $name = $element['name'];
+            }
             if (count($element) == 0) {
-                throw new PieformException('An element in form "' . $this->name . '" has no data');
+                throw new PieformException('An element in form "' . $this->name . '" has no data (' . $name . ')');
             }
             if (!isset($element['type'])) {
                 $element['type'] = 'markup';
@@ -423,6 +432,18 @@ class Pieform {
             }
             if ($element['type'] == 'fieldset') {
                 foreach ($element['elements'] as $subname => &$subelement) {
+                    if (!empty($subelement['ignore'])) {
+                        log_debug('ignoring ' . $subname);
+                        unset($element['elements'][$subname]);
+                        continue;
+                    }
+                    // The name can be in the element itself. This is compatibility for the perl version
+                    if (isset($subelement['name'])) {
+                        $subname = $subelement['name'];
+                    }
+                    if (count($subelement) == 0) {
+                        throw new PieformException('An element in form "' . $this->name . '" has no data (' . $subname . ')');
+                    }
                     if (!isset($subelement['type'])) {
                         $subelement['type'] = 'markup';
                         if (!isset($subelement['value'])) {
@@ -780,7 +801,9 @@ class Pieform {
         $result = array();
         $global = ($this->method == 'get') ? $_GET : $_POST;
         foreach ($this->get_elements() as $element) {
-            $result[$element['name']] = $this->get_value($element);
+            if ($element['type'] != 'markup') {
+                $result[$element['name']] = $this->get_value($element);
+            }
         }
         return $result;
     }
@@ -1135,6 +1158,8 @@ EOF;
 
     /**
      * Hook for giving information back to the developer
+     *
+     * @param string $message The message to give to the developer
      */
     public static function info($message) {
         $function = 'pieform_info';
@@ -1196,7 +1221,6 @@ EOF;
             }
         }
     }
-
 }
 
 
@@ -1213,9 +1237,9 @@ EOF;
  * {@internal This is separate so that child element types can nest other
  * elements inside them (like the fieldset element does for example).}}
  *
- * @param array $element The element to render
+ * @param array    $element The element to render
  * @param Pieform  $form    The form to render the element for
- * @return string        The rendered element
+ * @return string           The rendered element
  */
 function pieform_render_element($element, Pieform $form) {
     // If the element is pure markup, don't pass it to the renderer

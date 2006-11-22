@@ -64,17 +64,18 @@ function pieform_render_expiry($element, Pieform $form) {
         $seconds = null;
     }
 
+    // @todo probably create with an actual input element, as tabindex doesn't work here for one thing
     $numberinput = '<input ';
     if ($form->get_ajaxpost()) {
         $numberinput .= 'onchange="' . $name . '_change()"';
-        $numberinput .= $values['units'] == 'noenddate' ? ' disabled="disabled"' : '';
     }
+    $numberinput .= $values['units'] == 'noenddate' ? ' disabled="disabled"' : '';
     $numberinput .= 'type="text" size="4" ' . 'name="' . $name . '_number" ';
     $numberinput .= 'id="' . $name . '_number" value="' . $values['number'] . "\">\n";
 
     $allunits = get_expiry_units();
 
-    $uselect = '<select ' . ($form->get_ajaxpost() ? 'onchange="' . $name . '_change()" ' : '');
+    $uselect = '<select onchange="' . $name . '_change()" ';
     $uselect .= 'name="' . $name . '_units" id="' . $name . '_units"' .  ">\n";
     foreach ($allunits as $u) {
         $uselect .= "\t<option value=\"$u\"" . (($values['units'] == $u) ? ' selected="selected"' : '') . '>' . $form->i18n($u) . "</option>\n";
@@ -86,10 +87,14 @@ function pieform_render_expiry($element, Pieform $form) {
 
     // Every time one of the two inputs is changed, update the number
     // of seconds in the hidden input.
-    if ($form->get_ajaxpost()) {
-        $script = <<< EOJS
+    $script = <<<EOJS
 <script type="text/javascript" language="javascript">
 function {$name}_change() {
+
+EOJS;
+    /*
+    if ($form->get_ajaxpost()) {
+        $script .= <<<EOJS
     var seconds = null;
     if ($('{$name}_number').value > 0) {
         var mult = $('{$name}_number').value * 60 * 60 * 24;
@@ -106,20 +111,22 @@ function {$name}_change() {
     else {
         seconds = 0;
     }
+    $('{$name}').value = seconds;
+
+EOJS;
+    }
+    */
+
+    $script .= <<<EOJS
     if ($('{$name}_units').value == 'noenddate') {
         $('{$name}_number').disabled = true;
     }
     else {
         $('{$name}_number').disabled = false;
     }
-    $('{$name}').value = seconds;
 }
 </script>
 EOJS;
-    }
-    else {
-        $script = '';
-    }
 
     return $numberinput . $uselect . $hidden . $script;
 }
@@ -165,20 +172,52 @@ function get_expiry_from_seconds($seconds) {
 }
 
 // /** gets the value explicitly from the request */
-// function pieform_get_value_expiry($element, Pieform $form) {
-//     $name = $element['name'];
-//     $global = ($form->get_method() == 'get') ? $_GET : $_POST;
-//     return $global[$name];
-//     //$unit = $global[$name . '_units'];
-//     //if ($unit == 'noenddate') {
-//     //    return null;
-//     //}
-//     //$allunits = get_expiry_units();
-//     //$number = $global[$name . '_number'];
-//     //if (!in_array($unit,$allunits) || $number < 0) {
-//     //    return null;
-//     //}
-//     //return $number * seconds_in($unit);
-// }
+function pieform_get_value_expiry($element, Pieform $form) {
+    $name = $element['name'];
+    $global = ($form->get_method() == 'get') ? $_GET : $_POST;
+    //return $global[$name];
+    $unit = $global[$name . '_units'];
+    if ($unit == 'noenddate') {
+        return null;
+    }
+    $allunits = get_expiry_units();
+    $number = $global[$name . '_number'];
+    if (!in_array($unit,$allunits) || $number < 0) {
+        return null;
+    }
+    return $number * seconds_in($unit);
+}
+
+function pieform_get_value_js_expiry($element, Pieform $form) {
+    $formname = $form->get_name();
+    $name = $element['name'];
+    return <<<EOF
+    var seconds = null;
+    //if ($('{$name}_units').value == 'noenddate') {
+    //    seconds = null;
+    //}
+    //else {
+    //    if ($('{$name}_number').value > 0) {
+    //        var mult = $('{$name}_number').value * 60 * 60 * 24;
+    //        if ($('{$name}_units').value == 'days') {
+    //            seconds = mult;
+    //        } else if ($('{$name}_units').value == 'weeks') {
+    //            seconds = mult * 7;
+    //        } else if ($('{$name}_units').value == 'months') {
+    //            seconds = mult * 30;
+    //        } else if ($('{$name}_units').value == 'years') {
+    //            seconds = mult * 365;
+    //        }
+    //    }
+    //    else {
+    //        seconds = 0;
+    //    }
+    //}
+    //data['{$name}'] = seconds;
+    data['{$name}_number'] = $('{$name}_number').value;
+    data['{$name}_units']  = $('{$name}_units').value;
+
+EOF;
+}
 
 ?>
