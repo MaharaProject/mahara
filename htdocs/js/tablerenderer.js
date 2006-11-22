@@ -1,3 +1,6 @@
+TableRendererPageLoaded = false;
+addLoadEvent(function() { TableRendererPageLoaded = true });
+
 function TableRenderer(target, source, columns, options) {
     // to use on the callbacks
     var self = this;
@@ -12,7 +15,7 @@ function TableRenderer(target, source, columns, options) {
     this.emptycontent = false;  // Something to display when no results are found
     this.rowfunction = function(rowdata, rownumber) { return TR(); }
 
-    addLoadEvent(function() {
+    this.init = function() {
         self.table = target;
 
         self.tbody = getFirstElementByTagAndClassName('tbody', null, self.table);
@@ -88,7 +91,7 @@ function TableRenderer(target, source, columns, options) {
             hideElement(newelement);
             $(self.table).parentNode.insertBefore(newelement,$(self.table));
         }
-    });
+    };
 
     this.onFirstPage = function () {
         if (self.offset == 0) {
@@ -235,5 +238,12 @@ function TableRenderer(target, source, columns, options) {
 
     this.updateOnLoad = function() {
         addLoadEvent(partial(self.doupdate, {}));
+    }
+
+    if ( TableRendererPageLoaded ) {
+        this.init();
+    }
+    else {
+        addLoadEvent(this.init);
     }
 }
