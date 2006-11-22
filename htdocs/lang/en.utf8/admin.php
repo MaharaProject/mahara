@@ -53,6 +53,7 @@ $string['noupgrades'] = 'Nothing to upgrade! You are fully up to date!';
 // Admin navigation menu
 $string['usermanagement'] = 'Manage users';
 $string['siteoptions']    = 'Site options';
+$string['institutions']   = 'Institutions';
 $string['pageeditor']     = 'Site pages';
 $string['menueditor']     = 'Site menu';
 $string['files']          = 'Files';
