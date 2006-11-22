@@ -30,7 +30,7 @@ define('MENUITEM','pageeditor');
 require(dirname(dirname(__FILE__)).'/init.php');
 require_once('pieforms/pieform.php');
 
-$sitepages = get_records('site_content');
+$sitepages = get_records_array('site_content');
 $pageoptions = array();
 foreach ($sitepages as $page) {
     $pageoptions[$page->name] = get_string($page->name,'admin');

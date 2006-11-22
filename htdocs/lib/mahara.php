@@ -357,7 +357,7 @@ function load_config() {
     global $CFG;
     
     try {
-        $dbconfig = get_records('config');
+        $dbconfig = get_records_array('config');
     } 
     catch (SQLException $e) {
         return false;
@@ -654,7 +654,7 @@ function plugin_types() {
  * @param string $plugintype type of plugin
  */
 function plugins_installed($plugintype) {
-    return get_records($plugintype . '_installed');
+    return get_records_array($plugintype . '_installed');
 }
 
 /**
@@ -692,7 +692,7 @@ function handle_event($event) {
     }
     $plugintypes = plugin_types();
     foreach ($plugintypes as $name) {
-        if ($subs = get_records('event_subscription_' . $name, 'event', $event)) {
+        if ($subs = get_records_array('event_subscription_' . $name, 'event', $event)) {
             foreach ($subs as $sub) {
                 $classname = 'Plugin' . ucfirst($name) . ucfirst($sub->plugin);
                 try {
@@ -1002,7 +1002,7 @@ function main_nav() {
 function site_menu() {
     global $SESSION;
     $menu = array();
-    if ($menuitems = @get_records('site_menu','public',(int) !$SESSION->is_logged_in(),'displayorder')) {
+    if ($menuitems = get_records_array('site_menu','public',(int) !$SESSION->is_logged_in(),'displayorder')) {
         foreach ($menuitems as $i) {
             if ($i->url) {
                 $menu[] = array('name' => $i->title,
@@ -1210,7 +1210,7 @@ function password_validate(Pieform $form, $values, $user) {
 function rebuild_artefact_parent_cache_dirty() {
     // this will give us a list of artefacts, as the first returned column
     // is not unqiue, but that's ok, it's what we want.
-    if (!$dirty = get_records('artefact_parent_cache', 'dirty', 1)) {
+    if (!$dirty = get_records_array('artefact_parent_cache', 'dirty', 1)) {
         return;
     }
     db_begin();
@@ -1242,7 +1242,7 @@ function rebuild_artefact_parent_cache_dirty() {
 function rebuild_artefact_parent_cache_complete() {
     db_begin();
     delete_records('artefact_parent_cache');
-    $artefacts = get_records('artefact');
+    $artefacts = get_records_array('artefact');
     foreach ($artefacts as $a) {
         $parentids = array();
         $current = $a->id;

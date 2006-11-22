@@ -30,7 +30,7 @@ define('SUBMENUITEM', 'activity');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
-$types = get_records('activity_type', 'admin', 0);
+$types = get_records_array('activity_type', 'admin', 0);
 
 $readsavefail = get_string('failedtomarkasread', 'activity');
 $readsave = get_string('markedasread', 'activity');

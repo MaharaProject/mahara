@@ -91,7 +91,7 @@ class View {
                     JOIN ' . $prefix . 'artefact a ON va.artefact = a.id
                     JOIN ' . $prefix . 'artefact_installed_type i ON a.artefacttype = i.name
                     WHERE va.view = ?';
-            $this->artefact_metadata = get_records_sql($sql, array($this->id));
+            $this->artefact_metadata = get_records_sql_array($sql, array($this->id));
         }
         return $this->artefact_metadata;
     }
@@ -119,7 +119,7 @@ class View {
                     JOIN ' . $prefix . 'artefact_installed_type i ON a.artefacttype = i.name
                     JOIN ' . $prefix . 'usr_watchlist_artefact wa ON wa.artefact = a.id                    
                     WHERE va.view = ? AND wa.usr = ? AND a.parent IS NULL';
-        return get_records_sql($sql,  array($this->id, $userid));
+        return get_records_sql_array($sql,  array($this->id, $userid));
     }
 
 

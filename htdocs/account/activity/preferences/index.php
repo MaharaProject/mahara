@@ -31,7 +31,7 @@ define('SUBMENUITEM', 'activityprefs');
 require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
 require_once('pieforms/pieform.php');
 
-$activitytypes = get_records('activity_type', 'admin', 0);
+$activitytypes = get_records_array('activity_type', 'admin', 0);
 $notifications = plugins_installed('notification');
 
 $elements = array();

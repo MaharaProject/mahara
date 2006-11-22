@@ -197,7 +197,7 @@ abstract class ArtefactType {
      */
     public function get_children_metadata() {
         if (!isset($this->childrenmetadata)) {
-            $this->childrenmetadata = get_records('artefact', 'parent', $this->id);
+            $this->childrenmetadata = get_records_array('artefact', 'parent', $this->id);
         }
         return $this->childrenmetadata;
     }
@@ -242,7 +242,7 @@ abstract class ArtefactType {
                 JOIN ' . $prefix . 'usr_watchlist_artefact w ON w.artefact = a.id
                 WHERE w.usr = ? AND a.parent = ?';
         
-        return get_records_sql($sql, array($userid, $this->id));
+        return get_records_sql_array($sql, array($userid, $this->id));
     }
 
     /**

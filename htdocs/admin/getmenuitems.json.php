@@ -32,7 +32,7 @@ $public = (int) param_boolean('public');
 
 $result = array();
 
-$menuitems = get_records('site_menu','public',$public,'displayorder');
+$menuitems = get_records_array('site_menu','public',$public,'displayorder');
 // @todo: Get all the filenames of the files referred to in the $menuitems records.
 // (files table doesn't exist yet)
 $rows = array();

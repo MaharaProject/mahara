@@ -31,12 +31,12 @@ define('SUBMENUITEM', 'uploadcsv');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('pieforms/pieform.php');
 
-$institutions = get_records('institution');
+$institutions = get_records_array('institution');
 foreach ($institutions as $name => $data) {
     $options[$name] = $data->displayname;
 }
 
-$institutions = get_records_select('institution', "registerallowed = 1 AND authplugin = 'internal'");
+$institutions = get_records_select_array('institution', "registerallowed = 1 AND authplugin = 'internal'");
 if (count($institutions) > 1) {
     $options = array();
     foreach ($institutions as $institution) {

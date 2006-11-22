@@ -60,7 +60,7 @@ class PluginNotificationEmaildigest extends PluginNotification {
                         ON q.usr = u.id
                 ORDER BY usr,type,q.ctime';
 
-        if ($tosend = get_records_sql($sql, array())) {
+        if ($tosend = get_records_sql_array($sql, array())) {
             foreach ($tosend as $queue) {
                 if (!isset($users[$queue->usr])) {
                     $users[$queue->usr] = new StdClass;

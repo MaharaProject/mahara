@@ -35,7 +35,7 @@ foreach (plugin_types()  as $plugin) {
     $plugins[$plugin] = array();
     $plugins[$plugin]['installed'] = array();
     $plugins[$plugin]['notinstalled'] = array();
-    if ($installed = get_records($plugin . '_installed')) {
+    if ($installed = get_records_array($plugin . '_installed')) {
         foreach ($installed as $i) {
             $plugins[$plugin]['installed'][$i->name] = array();
             if ($plugin == 'artefact') {
