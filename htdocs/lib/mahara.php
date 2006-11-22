@@ -1269,7 +1269,7 @@ function artefact_instance_from_id($id) {
             JOIN ' . $prefix . 'artefact_installed_type i ON a.artefacttype = i.name
             WHERE a.id = ?';
     if (!$data = get_record_sql($sql, array($id))) {
-        throw new ArtefactNotFoundException(get_string('artefactnotfound'));
+        throw new ArtefactNotFoundException(get_string('artefactnotfound', 'mahara', $id));
     }
     $classname = generate_artefact_class_name($data->artefacttype);
     safe_require('artefact', $data->plugin);
