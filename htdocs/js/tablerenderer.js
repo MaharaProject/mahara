@@ -161,12 +161,16 @@ function TableRenderer(target, source, columns, options) {
             }
         });
 
-        self.d = loadJSONDoc(self.source, request_args);
+        var req = getXMLHttpRequest();
+        req.open('post', self.source);
+        req.setRequestHeader('Content-type','application/x-www-form-urlencoded'); 
+        self.d = sendXMLHttpRequest(req,queryString(request_args));
 
         processingStart();
 
         self.d.addCallbacks(
-            function (data) {
+            function (result) {
+                var data = evalJSONRequest(result);
                 processingStop();
                 if ( data.error ) {
                     displayMessage(data.error);
@@ -196,8 +200,6 @@ function TableRenderer(target, source, columns, options) {
                 displayMessage('Error loading data (not valid JSON)');
             }
         );
-
-        self.update = callLater(self.delay, partial(self.doupdate, {}));
     };
 
     this.goFirstPage = function() {
