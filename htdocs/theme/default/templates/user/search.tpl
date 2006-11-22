@@ -14,11 +14,6 @@
 {/if}
         <h2>{str tag="results"}</h2>
         <table id="searchresults">
-            <thead>
-                <tr>
-                    <th>{str section=artefact.internal tag="name"}</th>
-                </tr>
-            </thead>
             <tbody>
             </tbody>
         </table>
