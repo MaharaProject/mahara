@@ -197,7 +197,7 @@ abstract class ArtefactType {
      */
     public function get_children_metadata() {
         if (!isset($this->childrenmetadata)) {
-            $this->childrenmetadata = get_records('artefact', 'parentid', $this->id);
+            $this->childrenmetadata = get_records('artefact', 'parent', $this->id);
         }
         return $this->childrenmetadata;
     }
@@ -231,7 +231,7 @@ abstract class ArtefactType {
      * @return object - db row
      */
     public function get_parent_metadata() {
-        return get_record('artefact','id',$this->parentid);
+        return get_record('artefact','id',$this->parent);
     }
 
     public function get($field) {
