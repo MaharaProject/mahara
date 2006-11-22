@@ -27,19 +27,30 @@
 define('INTERNAL', 1);
 
 require(dirname(dirname(__FILE__)) . '/init.php');
+require('view.php');
 
 $view = param_integer('view');
 $artefact = param_integer('artefact', 0);
+$limit = param_integer('limit', 10);
+$offset = param_integer('offset', 10);
 
 json_headers();
 
 // @todo permissions check here
+$data = array(
+    'count'     => 0,
+    'offset'    => $offset,
+    'limit'     => $limit,
+    'view'      => $view,
+    'artefact'  => $artefact,
+    );
 
-if (empty($artefact)) {
+if (!empty($artefact)) {
     try {
         $a = artefact_instance_from_id($artefact);
         $children = $a->get_children_metadata();
-        json_reply(false, array('data' => $children));
+        $data['data'] = array_values($children);
+        $data['count'] = count($children);
     }
     catch (Exception $e) {
         json_reply(true, $e->getMessage());
@@ -48,12 +59,15 @@ if (empty($artefact)) {
 else {
     try {
         $v = new View($view);
-        $artefacts = $v->get_children_metadata();
-        json_reply(false, array('data' => $children));
+        $artefacts = $v->get_artefact_metadata();
+        $data['data'] = array_values($artefacts);
+        $data['count'] = count($artefacts);
     }
     catch (Exception $e) {
         json_reply(true, $e->getMessage());
     }
 }
+echo json_encode($data);
+exit;
 
 ?>
