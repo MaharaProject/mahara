@@ -576,6 +576,8 @@
                 <FIELD NAME="description" TYPE="text" NOTNULL="false" />
                 <FIELD NAME="owner" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="template" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="startdate" TYPE="datetime" />
+                <FIELD NAME="enddate" TYPE="datetime" />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
                 <FIELD NAME="mtime" TYPE="datetime" NOTNULL="true" />
                 <FIELD NAME="atime" TYPE="datetime" NOTNULL="true" />
