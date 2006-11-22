@@ -33,8 +33,8 @@ require('init.php');
 // Check for whether the user is logged in, before processing the page. After
 // this, we can guarantee whether the user is logged in or not for this page.
 if (!$SESSION->is_logged_in()) {
-    //require_once('form.php');
     require_once('pieforms/pieform.php');
+    $institutions = get_records_menu('institution', '', '', 'name, displayname');
     $loginform = get_login_form_js(pieform(array(
         'name'       => 'login',
         'renderer'   => 'div',
@@ -62,6 +62,16 @@ if (!$SESSION->is_logged_in()) {
                         'rules' => array(
                             'required'    => true
                         )
+                    ),
+                    'login_institution' => array(
+                        'type' => 'select',
+                        'title' => get_string('institution'),
+                        'defaultvalue' => get_cookie('institution'),
+                        'options' => $institutions,
+                        'rules' => array(
+                            'required' => true
+                        ),
+                        'ignore' => count($institutions) == 1
                     )
                 )
             ),
