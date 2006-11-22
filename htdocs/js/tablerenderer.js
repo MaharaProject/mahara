@@ -22,6 +22,10 @@ function TableRenderer(target, source, columns, options) {
             self.thead = THEAD();
             appendChildNodes(self.table, self.thead);
         }
+        if (!self.tbody) {
+            self.thead = TBODY();
+            appendChildNodes(self.table, self.tbody);
+        }
         if (!self.tfoot) {
             self.tfoot = TFOOT();
             appendChildNodes(self.table, self.tfoot);
