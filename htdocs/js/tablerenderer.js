@@ -10,6 +10,7 @@ function TableRenderer(target, source, columns, options) {
     this.paginate_firstlast = true;
     this.statevars = ['offset','limit'];
     this.emptycontent = false;  // Something to display when no results are found
+    this.rowfunction = function(rowdata, rownumber) { return TR(); }
 
     addLoadEvent(function() {
         self.table = target;
@@ -120,9 +121,10 @@ function TableRenderer(target, source, columns, options) {
 
     this.renderdata = function(data) {
         replaceChildNodes(self.tbody);
+        var rownumber = 1;
 
         forEach(data.data, function(row) {
-            var tr = TR();
+            var tr = self.rowfunction(row, rownumber++);
             if ( row._class ) { tr.className = row._class; }
             if ( row._id ) { tr.id = row._id; }
             
