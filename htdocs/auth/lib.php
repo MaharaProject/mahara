@@ -394,7 +394,7 @@ function auth_draw_login_page($message=null, Pieform $form=null) {
         $loginform = get_login_form_js($form->build());
     }
     else {
-        require_once('form.php');
+        require_once('pieforms/pieform.php');
         $loginform = get_login_form_js(pieform(auth_get_login_form()));
         /*
          * If $USER is set, the form was submitted even before being built.
@@ -424,6 +424,7 @@ function auth_draw_login_page($message=null, Pieform $form=null) {
  * @access private
  */
 function auth_get_login_form() {
+    $institutions = get_records_menu('institution', '', '', 'name, displayname');
     $elements = array(
         'login' => array(
             'type'   => 'fieldset',
@@ -447,6 +448,16 @@ function auth_get_login_form() {
                     'rules' => array(
                         'required'    => true
                     )
+                ),
+                'login_institution' => array(
+                    'type' => 'select',
+                    'title' => get_string('institution'),
+                    'defaultvalue' => get_cookie('institution'),
+                    'options' => $institutions,
+                    'rules' => array(
+                        'required' => true
+                    ),
+                    'ignore' => count($institutions) == 1
                 )
             )
         ),
@@ -550,6 +561,8 @@ function login_submit($values) {
 
     try {
         if (call_static_method($authclass, 'authenticate_user_account', $username, $password, $institution)) {
+            // User logged in! Set a cookie to remember their institution
+            set_cookie('institution', $institution);
 
             if (!record_exists('usr', 'username', $username)) {
                 // We don't know about this user. But if the authentication
@@ -611,48 +624,6 @@ function login_submit($values) {
     catch (AuthUnknownUserException $e) {
         $SESSION->add_err_msg(get_string('loginfailed'));
     }
-}
-
-/**
- * Passes the form data through to the validation method of the appropriate
- * authentication plugin, for it to validate if necessary.
- *
- * This is for validation of the configuration form that each authentication
- * method exports
- *
- * @param Pieform  $form   The form to validate
- * @param array    $values The values submitted to check
- * @access private
- */
-function auth_validate(Pieform $form, $values) {
-    $class = 'Auth' . $values['method'];
-    safe_require('auth', $values['method'], 'lib.php', 'require_once');
-    call_static_method($class, 'validate_configuration_form', $form, $values);
-}
-
-/**
- * Handles submission of the configuration form for an authentication method.
- * Sets each configuration value in the database.
- *
- * @param array $values The submitted values, successfully validated
- * @access private
- */
-function auth_submit($values) {
-    global $SESSION, $db;
-    // @todo use db_begin/db_commit
-    $db->StartTrans();
-
-    foreach ($values as $key => $value) {
-        if (!in_array($key, array('submit', 'method'))) {
-            set_config_plugin('auth', $values['method'], $key, $value);
-        }
-    }
-    if ($db->HasFailedTrans()) {
-        $db->CompleteTrans();
-        throw new Exception('Could not update the configuration options for the auth method');
-    }
-    $db->CompleteTrans();
-    $SESSION->add_ok_msg(get_string('authconfigoptionssaved', 'admin'));
 }
 
 ?>
