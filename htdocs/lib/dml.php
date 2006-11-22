@@ -374,14 +374,20 @@ function recordset_to_array($rs) {
     }
 }
 
+
+//
+// Generic data retrieval functions - get_records*
+//
+
 /**
  * Utility function to turn a result set into an associative array of records
  * This method turns a result set into a hash of records (keyed by the first
  * field in the result set)
  *
- * @param object an ADODB RecordSet object.
- * @return mixed mixed an array of objects, or false if the RecordSet was empty.
+ * @param  object An ADODB RecordSet object.
+ * @return mixed  An array of objects, or false if the RecordSet was empty.
  * @throws SQLException
+ * @access private
  */
 function recordset_to_assoc($rs) {
     if ($rs && $rs->RecordCount() > 0) {
@@ -407,7 +413,8 @@ function recordset_to_assoc($rs) {
 /**
  * Get a number of records as an associative array of objects. (WARNING: this
  * does not return an array, it returns an associative array keyed by the first
- * column in the result set)
+ * column in the result set. As a result, you may lose some rows! Please use
+ * {@link get_rows} instead where possible)
  *
  * If the query succeeds and returns at least one record, the
  * return value is an array of objects, one object for each
@@ -527,21 +534,30 @@ function get_rows_sql($sql,$values, $limitfrom='', $limitnum='') {
     return recordset_to_array($rs);
 }
 
+
+//
+// Menu related functions - get_records_*_menu
+//
+
 /**
  * Utility function used by the following 3 methods.
  *
  * @param object an ADODB RecordSet object with two columns.
  * @return mixed an associative array, or false if an error occured or the RecordSet was empty.
+ * @access private
  */
-// NOTE: commented out until  a reason can be found for them
-/*
 function recordset_to_menu($rs) {
     global $CFG;
 
     if ($rs && $rs->RecordCount() > 0) {
         $keys = array_keys($rs->fields);
-        $key0=$keys[0];
-        $key1=$keys[1];
+        $key0 = $keys[0];
+        if (isset($keys[1])) {
+            $key1 = $keys[1];
+        }
+        else {
+            $key1 = $keys[0];
+        }
         while (!$rs->EOF) {
             $menu[$rs->fields[$key0]] = $rs->fields[$key1];
             $rs->MoveNext();
@@ -551,11 +567,11 @@ function recordset_to_menu($rs) {
         return false;
     }
 }
- */
+
 /**
  * Get the first two columns from a number of records as an associative array.
  *
- * Arguments as for @see function get_recordset.
+ * Arguments as for {@link get_recordset}.
  *
  * If no errors occur, and at least one records is found, the return value
  * is an associative whose keys come from the first field of each record,
@@ -569,12 +585,10 @@ function recordset_to_menu($rs) {
  * @param string $fields a comma separated list of fields to return (optional, by default all fields are returned).
  * @return mixed an associative array, or false if no records were found or an error occured.
  */
-/*
 function get_records_menu($table, $field='', $value='', $sort='', $fields='*') {
     $rs = get_recordset($table, $field, $value, $sort, $fields);
     return recordset_to_menu($rs);
 }
-*/
 
 /**
  * Get the first two columns from a number of records as an associative array.
@@ -588,12 +602,10 @@ function get_records_menu($table, $field='', $value='', $sort='', $fields='*') {
  * @param string $fields A comma separated list of fields to be returned from the chosen table.
  * @return mixed an associative array, or false if no records were found or an error occured.
  */
-/*
 function get_records_select_menu($table, $select='', $values=null, $sort='', $fields='*') {
     $rs = get_recordset_select($table, $select, $values, $sort, $fields);
     return recordset_to_menu($rs);
 }
-*/
 
 /**
  * Get the first two columns from a number of records as an associative array.
@@ -604,12 +616,15 @@ function get_records_select_menu($table, $select='', $values=null, $sort='', $fi
  * @param string $sql The SQL string you wish to be executed.
  * @return mixed an associative array, or false if no records were found or an error occured.
  */
-/*
 function get_records_sql_menu($sql,$values=null) {
     $rs = get_recordset_sql($sql,$values);
     return recordset_to_menu($rs);
 }
-*/
+
+
+//
+// Field related data access - get_field*
+//
 
 /**
  * Get a single value from a table row where all the given fields match the given values.
@@ -648,6 +663,11 @@ function get_field_sql($sql, $values=null) {
     }
 }
 
+
+//
+// Column related data access - get_column*
+//
+
 /**
  * Get a single column from a table where all the given fields match the given values.
  *
@@ -681,6 +701,11 @@ function get_column_sql($sql, $values=null) {
 
     return $db->GetCol($sql, $values);
 }
+
+
+//
+// Field related data modification - set_field*
+//
 
 /**
  * Set a single field in every table row where all the given fields match the given values.
@@ -723,9 +748,12 @@ function set_field_select($table, $newfield, $newvalue, $select, $values) {
     catch (ADODB_Exception $e) {
         throw new SQLException($e->getMessage());
     }
-    
-    
 }
+
+
+//
+// Delete based functions - delete_records*
+//
 
 /**
  * Delete the records from a table where all the given fields match the given values.
@@ -1052,8 +1080,6 @@ function where_clause($field1='', $value1='', $field2='', $value2='', $field3=''
  * @param string $field2 the second field to check (optional).
  * @param string $field3 the third field to check (optional).
  * @private
- * @todo nigel test with phpdoc - can these functions be marked as private? Does
- * phpdoc do the right thing?
  */
 function where_clause_prepared($field1='', $field2='', $field3='') {
     $select = '';
@@ -1161,6 +1187,9 @@ function execute_sql_arr($sqlarr, $continue=true, $feedback=true) {
 function db_format_timestamp($ts) {
     global $db;
 
+    if ($ts === null) {
+        return null;
+    }
     return $db->DBTimeStamp($ts);
 }
 
