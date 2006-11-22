@@ -446,7 +446,7 @@ class XMLDBmssql extends XMLDBgenerator {
 
         $tablename = $this->getTableName($xmldb_table);
 
-        if ($constraints = get_records_sql("SELECT o.name, c.text AS description
+        if ($constraints = get_records_sql_array("SELECT o.name, c.text AS description
                                             FROM sysobjects o,
                                                  sysobjects p,
                                                  syscomments c

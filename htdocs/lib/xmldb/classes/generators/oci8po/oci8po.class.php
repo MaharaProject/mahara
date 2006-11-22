@@ -487,7 +487,7 @@ class XMLDBoci8po extends XMLDBgenerator {
 
         $tablename = strtoupper($this->getTableName($xmldb_table));
 
-        if ($constraints = get_records_sql("SELECT lower(c.constraint_name) AS name, c.search_condition AS description
+        if ($constraints = get_records_sql_array("SELECT lower(c.constraint_name) AS name, c.search_condition AS description
                                               FROM user_constraints c
                                              WHERE c.table_name = '{$tablename}'
                                                AND c.constraint_type = 'C'

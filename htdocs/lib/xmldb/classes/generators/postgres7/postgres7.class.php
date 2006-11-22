@@ -432,7 +432,7 @@ class XMLDBpostgres7 extends XMLDBgenerator {
 
         $tablename = $this->getTableName($xmldb_table);
 
-        if ($constraints = get_records_sql("SELECT co.conname AS name, co.consrc AS description
+        if ($constraints = get_records_sql_array("SELECT co.conname AS name, co.consrc AS description
                                               FROM pg_constraint co,
                                                    pg_class cl
                                              WHERE co.conrelid = cl.oid
