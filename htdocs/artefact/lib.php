@@ -202,6 +202,49 @@ abstract class ArtefactType {
         return $this->childrenmetadata;
     }
 
+
+    /** 
+     * This function returns the instances 
+     * of all children of this artefact
+     * If you just want the basic info, 
+     * use {@link get_children_metadata} instead.
+     * 
+     * @param int $userid user to check watchlist for
+     * @return array of instances.
+     */
+
+    public function get_children_instances_watchlist($userid) {
+        $instances = array();
+        if ($children = $this->get_children_metadata_watchlist($userid)) {
+            foreach ($children as $child) {
+                $classname = generate_artefact_class_name($child->artefacttype);
+                $instance = new $classname($child->id, $child);
+                $instances[] = $instance;
+            }
+        }
+        return $instances;
+    }
+
+    /**
+     * This function returns the db rows 
+     * from the artefact table that have this 
+     * artefact as the parent.
+     * If you want instances, use {@link get_children_instances}
+     * but bear in mind this will have a performance impact.
+     * 
+     * @param int $userid user to check watchlist for
+     * @return array
+     */
+    public function get_children_metadata_watchlist($userid) {
+        $prefix = get_config('dbprefix');
+        
+        $sql = 'SELECT a.* FROM ' . $prefix . 'artefact a 
+                JOIN ' . $prefix . 'usr_watchlist_artefact w ON w.artefact = a.id
+                WHERE w.usr = ? AND a.parent = ?';
+        
+        return get_records_sql($sql, array($userid, $this->id));
+    }
+
     /**
      * This function returns the instance relating to the parent
      * of this object, or false if there isn't one.

@@ -33,6 +33,7 @@ $view = param_integer('view');
 $artefact = param_integer('artefact', 0);
 $limit = param_integer('limit', 10);
 $offset = param_integer('offset', 10);
+$watchlist = param_integer('watchlist', 0);
 
 json_headers();
 
@@ -48,7 +49,15 @@ $data = array(
 if (!empty($artefact)) {
     try {
         $a = artefact_instance_from_id($artefact);
-        $children = $a->get_children_metadata();
+        if (!empty($watchlist)) {
+            $children = $a->get_children_metadata_watchlist($USER->id);
+        }
+        else {
+            $children = $a->get_children_metadata();
+        }
+        if (empty($children)) {
+            $children = array();
+        }
         $data['data'] = array_values($children);
         $data['count'] = count($children);
     }
@@ -59,7 +68,15 @@ if (!empty($artefact)) {
 else {
     try {
         $v = new View($view);
-        $artefacts = $v->get_artefact_metadata();
+        if (!empty($watchlist)) {
+            $artefacts = $v->get_artefact_metadata_watchlist($USER->id);
+        }
+        else {
+            $artefacts = $v->get_artefact_metadata();
+        }
+        if (empty($artefacts)) {
+            $artefacts = array();
+        }
         $data['data'] = array_values($artefacts);
         $data['count'] = count($artefacts);
     }
