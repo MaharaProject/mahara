@@ -806,6 +806,11 @@ function admin_nav() {
             ),
         ),
         array(
+            'name'     => 'institutions',
+            'section'  => 'admin',
+            'link'     => $wwwroot . 'admin/institutions.php',
+        ),
+        array(
             'name'     => 'pageeditor',
             'section'  => 'admin',
             'link'     => $wwwroot . 'admin/editsitepage.php',
