@@ -37,6 +37,12 @@ $monitoredstring = get_string('monitored', 'activity');
 $savefailed = get_string('stopmonitoringfailed', 'activity');
 $savesuccess = get_string('stopmonitoringsuccess', 'activity');
 
+$getartefactsjson = get_config('wwwroot') . 'json/getartefacts.php';
+
+$minusicon = theme_get_image_path('minus.png');
+$plusicon  = theme_get_image_path('plus.png');
+$minusalt  = get_string('collapse');
+$plusalt   = get_string('expand');
 
 $javascript = <<<JAVASCRIPT
 var watchlist = new TableRenderer(
@@ -48,19 +54,21 @@ var watchlist = new TableRenderer(
                 return TD(null, '');
             }
             if (r.expanded) {
-                return TD(null, A({'href': '', 'onclick': 'collapse(' + r.id + '); return false;'},
-                                  IMG({'src' : d.minusicon, 'alt' : d.minusalt, 'border': 0})));
+                return TD(null, A({'href': '', 'onclick': 'toggleExpand(' + r.id + ', \'view\'); return false;'},
+                                  IMG({'src' : '{$minusicon}', 'alt' : '{$minusalt}',
+                                           'border': 0, 'id' : 'viewicon-' + r.id})));
             }
             else {
-                return TD(null, A({'href': '', 'onclick': 'expand(' + r.id + '); return false;'},
-                                  IMG({'src' : d.plusicon, 'alt' : d.plusalt, 'border': 0})));
+                return TD(null, A({'href': '', 'onclick': 'toggleExpand(' + r.id + ', \'view\'); return false;'},
+                                  IMG({'src' : '{$plusicon}', 'alt' : '{$plusalt}',
+                                           'border': 0, 'id' : 'viewicon-' + r.id})));
             }
         },
         function(r) { 
             if (r.url) { 
-                return TD(null,A({'href': r.url}, r.name));
+                return TD(null,A({'href': r.url}, r.title));
             } 
-            return TD(null,r.name);
+            return TD(null,r.title);
         },
         function (r) {
             if (r.type == 'community') {
@@ -76,17 +84,86 @@ var watchlist = new TableRenderer(
 watchlist.type = 'views';
 watchlist.statevars.push('type');
 watchlist.updateOnLoad();
+watchlist.rowfunction = function(r, n) { return TR({'id': r.id, 'class': 'view'}); }
 
 function changeTitle(title) {
     var titles = { 'views' : '{$viewstring}', 'communities' : '{$communitystring}' };
     $('typeheader').innerHTML  = '{$monitoredstring} ' + titles[title];
 }
 
-function collapse(id) {
+function toggleExpand(id, type) {
+    if ($(type + 'icon-' + id).src == '{$minusicon}') {
+        $(type + 'icon-' + id).src = '{$plusicon}';
+        $(type + 'icon-' + id).alt = '{$plusalt}';
+        removeElement($(type + 'expanded' + id));
+        return;
+    }
 
+    $(type + 'icon-' + id).src = '{$minusicon}';
+    $(type + 'icon-' + id).alt = '{$minusalt}';
+
+    // the first thing to do is find out if we have children
+    var url = '{$getartefactsjson}';
+    var tablename = type + 'table' + id;
+    var newtable = TABLE({'id': tablename});
+    var newrow   = TR({'class': type, 'id': type + 'expanded' + id}, TD(), TD({'colspan': 2}, newtable));
+    var tr = $(type + 'icon-' + id).parentNode.parentNode.parentNode;
+    appendSiblingNodesAfter(tr, newrow); 
+    var newtablelist = new TableRenderer(
+            tablename, 
+            url,
+            [
+             function(r, d) {
+                 if (r.expanded) {
+                     return TD(null, A({'href': '', 
+                                        'onclick': 'toggleExpand(' + r.id + ', \'artefact\'); return false;'},
+                                       IMG({'src' : '{$minusicon}', 'alt' : '{$minusalt}',
+                                            'border': 0, 'id' : 'artefacticon-' + r.id})));
+                 }
+                 else {
+                     return TD(null, A({'href': '', 
+                                        'onclick': 'toggleExpand(' + r.id + ', \'artefact\'); return false;'},
+                                       IMG({'src' : '{$plusicon}', 'alt' : '{$plusalt}',
+                                            'border': 0, 'id' : 'artefacticon-' + r.id})));
+                 }
+             },
+             function(r) { 
+                 if (r.url) { 
+                     return TD(null,A({'href': r.url}, r.title));
+                 } 
+                 return TD(null,r.title);
+             },
+             function (r) {
+                 return TD(null, INPUT({'type' : 'checkbox', 'class': 'tocheck', 'name': 'stopartefact-' + r.id}));
+             }
+            ]
+        );
+    newtablelist.statevars.push('view');
+    if (type == 'artefact') {
+        newtablelist.statevars.push('artefact');
+        newtablelist.artefact = id;
+        newtablelist.view = findViewId(tr);
+    }
+    else {
+        newtablelist.view = id;
+    }
+    newtablelist.rowfunction = function(r, n) { return TR({'id': r.id, 'class': 'artefact'}); }
+    newtablelist.paginate = false;
+    newtablelist.doupdate();
 }
 
-function expand(id) {
+function findViewId(row) {
+    
+    child = row;
+    while (typeof(child.parentNode) != 'undefined' && child.parentNode != null) {
+        parent = child.parentNode;
+        if (hasElementClass(parent, 'view')) {
+            if (parent.id.search(/viewexpanded(\d+)/) != -1) {
+                return parent.id.replace(/viewexpanded/,'');
+            }
+        }
+        child = parent;
+    }
 
 }
 
