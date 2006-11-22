@@ -358,7 +358,7 @@ class ArtefactTypeEmail extends ArtefactTypeProfileField {
 
 class ArtefactTypeStudentid extends ArtefactTypeProfileField {}
 class ArtefactTypeIntroduction extends ArtefactTypeProfileField {}
-class ArtefactTypeOfficialwebsite extends ArtefactTypeProfileField {
+class ArtefactTypeWebAddress extends ArtefactTypeProfileField {
     public function render($format, $options) {
         if ($format == ARTEFACT_FORMAT_LISTITEM && $this->title) {
             return make_link($this->title);
@@ -366,14 +366,8 @@ class ArtefactTypeOfficialwebsite extends ArtefactTypeProfileField {
         return false;
     }
 }
-class ArtefactTypePersonalwebsite extends ArtefactTypeProfileField {
-    public function render($format, $options) {
-        if ($format == ARTEFACT_FORMAT_LISTITEM && $this->title) {
-            return make_link($this->title);
-        }
-        return false;
-    }
-}
+class ArtefactTypeOfficialwebsite extends ArtefactTypeWebAddress {}
+class ArtefactTypePersonalwebsite extends ArtefactTypeWebAddress {}
 class ArtefactTypeBlog extends ArtefactTypeProfileField {}
 class ArtefactTypeAddress extends ArtefactTypeProfileField {}
 class ArtefactTypeTown extends ArtefactTypeProfileField {}

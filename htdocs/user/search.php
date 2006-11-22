@@ -58,7 +58,6 @@ function search_submit($values) {
     json_reply(false,'');
 }
 
-//@todo: Show 'no results found' for an empty query.
 $noresults = get_string('noresultsfound');
 
 $javascript = <<<JAVASCRIPT
@@ -66,7 +65,7 @@ var results = new TableRenderer(
     'searchresults',
     'results.json.php',
     [
-        function(r) { return TD(null,A({'href':'view.php?id=' + r.id},r.displayname)); },
+        function(r) { return TD(null,A({'href':'view.php?id=' + r.id},r.name)); },
     ]
 );
 

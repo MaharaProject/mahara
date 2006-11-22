@@ -23,6 +23,10 @@ function TableRenderer(target, source, columns, options) {
             self.thead = THEAD();
             appendChildNodes(self.table, self.thead);
         }
+        if (!self.tbody) {
+            self.thead = TBODY();
+            appendChildNodes(self.table, self.tbody);
+        }
         if (!self.tfoot) {
             self.tfoot = TFOOT();
             appendChildNodes(self.table, self.tfoot);
@@ -80,7 +84,9 @@ function TableRenderer(target, source, columns, options) {
         }
 
         if (self.emptycontent) {
-            $(self.table).parentNode.insertBefore(DIV(null,self.emptycontent),$(self.table));
+            var newelement = DIV(null,self.emptycontent);
+            hideElement(newelement);
+            $(self.table).parentNode.insertBefore(newelement,$(self.table));
         }
     });
 

@@ -51,6 +51,7 @@ class View {
                     throw new ViewNotFoundException("View with id $id not found");
                 }
             }    
+            $this->id = $id;
         }
         else {
             $this->ctime = time();
@@ -75,7 +76,7 @@ class View {
                     safe_require('artefact', $instance->plugin);
                     $classname = generate_artefact_class_name($instance->artefacttype);
                     $i = new $classname($instance->id, $instance);
-                    $this->childreninstances[] = $i
+                    $this->childreninstances[] = $i;
                 }
             }
         }
@@ -83,17 +84,25 @@ class View {
     }
 
     public function get_artefact_metadata() {
-        if (!isset($this->artefact_metadata) {
+        if (!isset($this->artefact_metadata)) {
             $prefix = get_config('dbprefix');
             $sql = 'SELECT a.*, i.name
                     FROM ' . $prefix . 'view_artefact va
                     JOIN ' . $prefix . 'artefact a ON va.artefact = a.id
                     JOIN ' . $prefix . 'artefact_installed_type i ON a.artefacttype = i.name
                     WHERE va.view = ?';
-            $this->arefact_metadata = get_records_sql($sql, array($this->id));
+            $this->artefact_metadata = get_records_sql($sql, array($this->id));
         }
         return $this->artefact_metadata;
     }
+    
+    public function has_artefacts() {
+        if ($this->get_artefact_metadata()) {
+            return true;
+        }
+        return false;
+    }
+        
 }
 
 ?>

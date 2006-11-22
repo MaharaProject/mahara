@@ -227,4 +227,7 @@ $string['querydescription'] = 'The words to be searched for';
 $string['results'] = 'Results';
 $string['noresultsfound'] = 'No results found';
 
+// artefact
+$string['artefactnotfound'] = 'Artefact with id %s not found';
+
 ?>

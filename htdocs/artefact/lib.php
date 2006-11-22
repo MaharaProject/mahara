@@ -129,6 +129,7 @@ abstract class ArtefactType {
                     throw new ArtefactNotFoundException("Artefact with id $id not found");
                 }
             }
+            $this->id = $id;
         }
         else {
             $this->ctime = time();
@@ -152,6 +153,13 @@ abstract class ArtefactType {
     
     public function get_views_metadata() {
         // @todo
+    }
+
+    public function has_children() {
+        if ($this->get_children_metadata()) {
+            return true;
+        }
+        return false;
     }
 
     /** 
