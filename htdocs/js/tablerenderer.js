@@ -42,6 +42,7 @@ function TableRenderer(target, source, columns, options) {
             page_state.prevButtons = new Array();
             page_state.nextButtons = new Array();
             page_state.lastButtons = new Array();
+            self.linkspan = self.columns.length > 0 ? self.columns.length : 1;
 
             forEach([self.thead,self.tfoot], function(ref) {
                 var firstPage = A({'href':''}, get_string('firstpage'));
@@ -78,7 +79,7 @@ function TableRenderer(target, source, columns, options) {
                     elements.push(lastPage);
                 }
 
-                var tr = TR(null, TD({'colspan':self.columns.length}, DIV({'style': 'width: 100%; margin: auto;'}, elements)));
+                var tr = TR(null, TD({'colspan':self.linkspan}, DIV({'style': 'width: 100%; margin: auto;'}, elements)));
 
                 // replaceChildNodes(ref, tr, ref.childNodes);
                 appendChildNodes(ref, tr);
