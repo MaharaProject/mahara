@@ -95,6 +95,34 @@ class View {
         }
         return $this->artefact_metadata;
     }
+
+
+    public function get_artefact_instances_watchlist($userid) {
+        $instances = array();
+        if ($artefacts = $this->get_artefact_metadata_watchlist($userid)) {
+            foreach ($artefact as $instance) {
+                safe_require('artefact', $instance->plugin);
+                $classname = generate_artefact_class_name($instance->artefacttype);
+                $i = new $classname($instance->id, $instance);
+                $instances[] = $i;
+            }
+        }
+        return $instances;
+    }
+
+    public function get_artefact_metadata_watchlist($userid) {
+        $prefix = get_config('dbprefix');
+
+        $sql = 'SELECT a.*, i.name
+                    FROM ' . $prefix . 'view_artefact va
+                    JOIN ' . $prefix . 'artefact a ON va.artefact = a.id
+                    JOIN ' . $prefix . 'artefact_installed_type i ON a.artefacttype = i.name
+                    JOIN ' . $prefix . 'usr_watchlist_artefact wa ON wa.artefact = a.id                    
+                    WHERE va.view = ? AND wa.usr = ? AND a.parent IS NULL';
+        return get_records_sql($sql,  array($this->id, $userid));
+    }
+
+
     
     public function has_artefacts() {
         if ($this->get_artefact_metadata()) {
