@@ -433,7 +433,6 @@ class Pieform {
             if ($element['type'] == 'fieldset') {
                 foreach ($element['elements'] as $subname => &$subelement) {
                     if (!empty($subelement['ignore'])) {
-                        log_debug('ignoring ' . $subname);
                         unset($element['elements'][$subname]);
                         continue;
                     }
