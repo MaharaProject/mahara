@@ -1312,7 +1312,8 @@ function pieform_configure() {
 }
 
 function searchform() {
-    return array(
+    require_once('pieforms/pieform.php');
+    return pieform(array(
         'name'                => 'searchform',
         'action'              => get_config('wwwroot') . 'user/search.php',
         'elements'            => array(
@@ -1321,7 +1322,7 @@ function searchform() {
                 'defaultvalue'   => '',
             ),
         )
-    );
+    ));
 }
 
 ?>

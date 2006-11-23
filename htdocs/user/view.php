@@ -57,6 +57,7 @@ else {
 }
 
 $smarty = smarty();
+$smarty->assign('searchform',searchform());
 $smarty->assign('NAME',$name);
 $smarty->assign('PROFILE',$profile);
 $smarty->display('user/view.tpl');
