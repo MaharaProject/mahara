@@ -581,7 +581,7 @@
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
                 <FIELD NAME="mtime" TYPE="datetime" NOTNULL="true" />
                 <FIELD NAME="atime" TYPE="datetime" NOTNULL="true" />
-                <FIELD NAME="submitted" TYPE="int" LENGTH="10" NOTNULL="false" />
+                <FIELD NAME="submittedto" TYPE="int" LENGTH="10" NOTNULL="false" />
                 <FIELD NAME="public" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" />
                 <FIELD NAME="loggedin" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" />
                 <FIELD NAME="friendsonly" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" />
@@ -590,6 +590,7 @@
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
                 <KEY NAME="ownerfk" TYPE="foreign" FIELDS="owner" REFTABLE="usr" REFFIELDS="id" />
                 <KEY NAME="templatefk" TYPE="foreign" FIELDS="template" REFTABLE="template" REFFIELDS="id" />
+                <KEY NAME="submittedtofk" TYPE="foreign" FIELDS="submittedto" REFTABLE="community" REFFIELDS="id" />
             </KEYS>
         </TABLE>
         <TABLE NAME="view_artefact">
