@@ -11,14 +11,16 @@
 {/foreach}
     </tbody></table>
 
-    <table><tbody>
 {foreach from=$PROFILE key=key item=item name=profile}
 {if $smarty.foreach.profile.first}
-    <tr><th>{str section=artefact.internal tag=profile}</th></tr>
+    <h4>{str section=artefact.internal tag=profile}</h4>
+    <table><tbody>
 {/if}
     <tr><td>{str section=artefact.internal tag=$key}</td><td>{$item}</td></tr>
-{/foreach}
+{if $smarty.foreach.profile.last}
     </tbody></table>
+{/if}
+{/foreach}
 
 </div>
 
