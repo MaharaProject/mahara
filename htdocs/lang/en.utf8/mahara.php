@@ -207,6 +207,7 @@ $string['description'] = 'Description';
 $string['editaccess'] = 'Edit Access';
 $string['editview'] = 'Edit View';
 $string['editviewinformation'] = 'Edit View Information';
+$string['myviews'] = 'My Views';
 $string['submitview'] = 'Submit View';
 $string['viewdeleted'] = 'View deleted';
 

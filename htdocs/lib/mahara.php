@@ -945,6 +945,11 @@ function main_nav() {
         ),
     );
     $menu[] = array(
+        'name'    => 'myviews',
+        'link'    => $wwwroot . 'view/',
+        'section' => 'mahara',
+    );
+    $menu[] = array(
         'name'    => 'account',
         'link'    => $wwwroot . 'account/',
         'section' => 'mahara',
