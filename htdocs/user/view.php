@@ -30,11 +30,22 @@ require(dirname(dirname(__FILE__)).'/init.php');
 $userid = param_integer('id','');
 
 $profile = array();
+$userfields = array();
 if (!$user = get_record('usr', 'id', $userid)) {
     $name = get_string('usernotfound');
 }
 else {
     $name = display_name($user);
+
+    // If the logged in user is on staff, get full name, institution, id number, email address
+    if ($USER->get('staff')) {
+        $userfields['fullname'] = $user->firstname . ' ' . $user->lastname;
+        $userfields['institution'] = $user->institution;
+        $userfields['studentid'] = $user->studentid;
+        $userfields['emailaddress'] = $user->email;
+    }
+
+    // Get public profile fields:
     safe_require('artefact', 'internal');
     $publicfields = call_static_method(generate_artefact_class_name('profile'),'get_public_fields');
     foreach (array_keys($publicfields) as $field) {
@@ -43,14 +54,14 @@ else {
             if ($emails = get_records_array('artefact_internal_profile_email', 'owner', $userid)) {
                 foreach ($emails as $email) {
                     $fieldname = $email->principal ? 'principalemailaddress' : 'emailaddress';
-                    $profile[] = array('name' => $fieldname, 'value' => $email->email);
+                    $profile[$fieldname] = $email->email;
                 }
             }
         }
         else {
             $c = new $classname(0, array('owner' => $userid)); // email is different
             if ($value = $c->render(ARTEFACT_FORMAT_LISTITEM, null)) {
-                $profile[] = array('name' => $field, 'value' => $value);
+                $profile[$field] = $value;
             }
         }
     }
@@ -59,6 +70,7 @@ else {
 $smarty = smarty();
 $smarty->assign('searchform',searchform());
 $smarty->assign('NAME',$name);
+$smarty->assign('USERFIELDS',$userfields);
 $smarty->assign('PROFILE',$profile);
 $smarty->display('user/view.tpl');
 
