@@ -39,6 +39,12 @@ $delete      = param_boolean('delete');
 if ($institution || $add) {
 
     if ($delete) {
+        function delete_validate(Pieform $form, $values) {
+            if (get_field('usr', 'COUNT(*)', 'institution', $values['i'])) {
+                throw new Exception('Attempt to delete an institution that has members');
+            }
+        }
+
         function delete_cancel_submit() {
             redirect(get_config('wwwroot') . 'admin/institutions.php');
         }
