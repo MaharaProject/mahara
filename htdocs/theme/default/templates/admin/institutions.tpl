@@ -2,19 +2,24 @@
 
 <h2>AdminInstitutions</h2>
 
+{if $delete_form}
+<h3>{str tag="deleteinstitution" section="admin"}</h3>
+<p>{str tag="deleteinstitutionconfirm" section="admin"}</p>
+{$delete_form}
+{else}
+
 {if $institution_form}
 {if $add}
-<h3>Add Institution</h3>
+<h3>{str tag="addinstitution" section="admin"}</h3>
 {/if}
 {$institution_form}
 {else}
-<p>Here is a list of all installed institutions.</p>
 
 <table>
     <tr>
-        <th>Institution</th>
-        <th>Authentication Method</th>
-        <th>Registration Allowed?</th>
+        <th>{str tag="institution"}</th>
+        <th>{str tag="authplugin" section="admin"}</th>
+        <th>{str tag="registrationallowed" section="admin"}</th>
         <th></th>
     </tr>
     {foreach from=$institutions item=institution}
@@ -25,8 +30,8 @@
         <td>
             <form action="" method="post">
                 <input type="hidden" name="i" value="{$institution->name}">
-                <input type="submit" name="edit" value="Edit">
-                {if $institution->candelete}<input type="submit" name="delete" value="Delete">{/if}
+                <input type="submit" name="edit" value="{str tag="edit"}">
+                {if !$institution->hasmembers && $institution->name != 'mahara'}<input type="submit" name="delete" value="{str tag="delete"}">{/if}
             </form>
         </td>
     </tr>
@@ -34,11 +39,12 @@
     <tr>
         <td colspan="4">
             <form action="" method="post">
-                <input type="submit" name="add" value="Add Institution">
+                <input type="submit" name="add" value="{str tag="addinstitution" section="admin"}">
             </form>
         </td>
     </tr>
 </table>
 {/if}
 
+{/if}
 {include file="footer.tpl"}
