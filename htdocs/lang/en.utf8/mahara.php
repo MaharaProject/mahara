@@ -197,6 +197,18 @@ $string['watchlist'] = 'My watchlist';
 $string['changepassword'] = 'Change password';
 $string['activity'] = 'Recent activity';
 
+// my views
+$string['accessstartdate'] = 'Access start date';
+$string['accessenddate'] = 'Access end date';
+$string['artefacts'] = 'Artefacts';
+$string['createnewview'] = 'Create New View';
+$string['description'] = 'Description';
+$string['editaccess'] = 'Edit Access';
+$string['editview'] = 'Edit View';
+$string['editviewinformation'] = 'Edit View Information';
+$string['viewdeleted'] = 'View deleted';
+$string['deleteviewfailed'] = 'Delete view failed';
+
 $string['emailname'] = 'Mahara System'; // robot! 
 
 $string['config'] = 'Config';

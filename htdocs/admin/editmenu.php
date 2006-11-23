@@ -205,7 +205,7 @@ function edititem(item) {
 
 // Receive standard json error message
 function get_json_status(data) {
-    var errtype = 'global';
+    var errtype = false;
     if (!data.error) { 
         errtype = 'info';
     }
@@ -215,7 +215,7 @@ function get_json_status(data) {
     else {
         global_error_handler(data);
     }
-    if (errtype != 'global') {
+    if (errtype) {
         displayMessage(data.message,errtype);
         getitems();
         processingStop();

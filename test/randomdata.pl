@@ -12,9 +12,11 @@ use Getopt::Declare;
 use Mahara::Config;
 use Mahara::RandomData;
 
+my $types = [qw(user group activity community artefact view watchlist)];
+
 my $args = Getopt::Declare->new(q(
     [strict]
-    -t <type>        	Select type of data (user, group, activity, community, artefacts, views, watchlist)  [required]
+    -t <type>        	Select type of data ) . '(' . join(', ', @{$types}) . ')' . q(  [required]
     -u <user>        	User to create data for (required for type 'group' and 'activity')
     -ua             	Create data for all users (can be used instead of -u)
     -c <configfile>  	What config.php to use (defaults to ../htdocs/config.php)	
@@ -33,6 +35,10 @@ my $config = Mahara::Config->new($args->{-c});
 my $randomdata = Mahara::RandomData->new($config);
 $randomdata->verbose($args->{-v});
 $randomdata->pretend($args->{-p});
+
+unless ( $args->{-t} =~ m{ \A (?: user | group | activity | community | artefact | view | watchlist ) \z }xms ) {
+    croak q{Type must be one of } . join(', ', map { qq{'$_'} } @{$types} );
+}
 
 if ( $args->{-t} eq 'user' ) {
     $randomdata->insert_random_users($args->{-n});
@@ -74,7 +80,7 @@ if ( $args->{-t} eq 'community' ) {
     }
 }
 
-if ( $args->{-t} eq 'artefacts' ) {
+if ( $args->{-t} eq 'artefact' ) {
     unless ( defined $args->{-u} or defined $args->{-ua} ) {
         croak 'Need to specify a user with -u or -ua';
     }
@@ -86,7 +92,7 @@ if ( $args->{-t} eq 'artefacts' ) {
     }
 }
 
-if ( $args->{-t} eq 'views' ) {
+if ( $args->{-t} eq 'view' ) {
     unless ( defined $args->{-u} or defined $args->{-ua} ) {
         croak 'Need to specify a user with -u or -ua';
     }
