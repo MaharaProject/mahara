@@ -26,13 +26,6 @@
 
 defined('INTERNAL') || die();
 
-$string['adminoptionsauthenticationtitle'] = 'AdminOptionsAuthentication';
-$string['adminoptionsauthenticationdescription'] = '<p>List of installed authentication methods. Internal is used by default, if an
-institution uses another authentication type then they will be listed beside it.</p>
-
-<p>Did you want to <a href="institution.php">change the type of authentication for an institution</a>?</p>';
-$string['authnoconfigurationoptions'] = 'No configuration options are available for this authentication type';
-
 // Installer
 $string['release'] = 'Release %s (%s)';
 $string['component'] = 'Component or plugin';
@@ -56,6 +49,7 @@ $string['siteoptions']    = 'Site options';
 $string['institutions']   = 'Institutions';
 $string['pageeditor']     = 'Site pages';
 $string['menueditor']     = 'Site menu';
+$string['adminplugins']   = 'Administer Plugins';
 $string['files']          = 'Files';
 $string['adminhome']      = 'Admin home';
 

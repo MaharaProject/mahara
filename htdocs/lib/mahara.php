@@ -816,6 +816,11 @@ function admin_nav() {
             'link'     => $wwwroot . 'admin/editmenu.php',
         ),
         array(
+            'name'     => 'adminplugins',
+            'section'  => 'admin',
+            'link'     => $wwwroot . 'admin/plugins/',
+        ),
+        array(
             'name'     => 'files',
             'section'  => 'admin',
             'link'     => $wwwroot . 'admin/todo',
