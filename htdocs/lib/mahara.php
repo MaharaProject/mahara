@@ -585,6 +585,10 @@ function validate_username($username) {
  */
 function safe_require($plugintype, $pluginname, $filename='lib.php', $function='require_once', $nonfatal=false) {
 
+    $plugintypes = plugin_types();
+    if (!in_array($plugintype, $plugintypes)) {
+        throw new Exception("\"$plugintype\" is not a valid plugin type");
+    }
     require_once(get_config('docroot') . $plugintype . '/lib.php');
 
     $plugintype = clean_filename($plugintype);

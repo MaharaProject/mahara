@@ -30,8 +30,10 @@ define('INSTALLER', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 require(get_config('libroot') . 'upgrade.php');
 
-$name    = clean_requestdata('name', PARAM_ALPHAEXT, REQUEST_EITHER);
-$install = clean_requestdata('install', PARAM_BOOL, REQUEST_EITHER);
+$install = param_boolean('install');
+if (!$install) {
+    $name    = param_variable('name');
+}
 
 if ($install) {
     if (!get_config('installed')) {
