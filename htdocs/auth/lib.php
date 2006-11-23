@@ -413,7 +413,6 @@ function auth_get_login_form() {
                     'type'        => 'text',
                     'title'       => get_string('username'),
                     'description' => get_string('usernamedescription'),
-                    'help'        => get_string('usernamehelp'),
                     'rules' => array(
                         'required'    => true
                     )
@@ -422,7 +421,6 @@ function auth_get_login_form() {
                     'type'        => 'password',
                     'title'       => get_string('password'),
                     'description' => get_string('passworddescription'),
-                    'help'        => get_string('passwordhelp'),
                     'value'       => '',
                     'rules' => array(
                         'required'    => true
