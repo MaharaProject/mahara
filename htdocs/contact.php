@@ -118,7 +118,7 @@ function contactus_submit($values) {
 $smarty = smarty();
 $smarty->assign('page_content', $contactform);
 $smarty->assign('site_menu', site_menu());
-$smarty->assign('searchform', pieform(searchform()));
+$smarty->assign('searchform', searchform());
 $smarty->display('sitepage.tpl');
 
 ?>

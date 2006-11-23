@@ -28,7 +28,7 @@ define('INTERNAL', 1);
 define('PUBLIC', 1);
 
 require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
-require_once('form.php');
+require_once('pieforms/pieform.php');
 safe_require('artefact', 'internal');
 
 $email = param_variable('email');

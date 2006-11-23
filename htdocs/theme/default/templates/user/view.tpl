@@ -1,5 +1,5 @@
 {include file="header.tpl"}
-
+{include file="searchbox.tpl"}
 {include file="adminmenu.tpl"}
 
 <div class="content">

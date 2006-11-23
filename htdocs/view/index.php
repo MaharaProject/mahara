@@ -26,7 +26,6 @@
 
 define('INTERNAL', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
-require_once('pieforms/pieform.php');
 
 $wwwroot = get_config('wwwroot');
 
@@ -48,7 +47,7 @@ $javascript = <<<JAVASCRIPT
 var viewlist = new TableRenderer(
     'viewlist',
     'myviews.json.php',
-    []
+    [null,null]
 );
 
 viewlist.rowfunction = function(r, n, data) {
@@ -177,7 +176,7 @@ JAVASCRIPT;
 
 $smarty = smarty(array('tablerenderer'));
 $smarty->assign('site_menu', site_menu());
-$smarty->assign('searchform', pieform(searchform()));
+$smarty->assign('searchform', searchform());
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->display('view/index.tpl');
 
