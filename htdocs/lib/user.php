@@ -37,9 +37,9 @@ function load_activity_preferences($userid) {
     if (empty($userid)) {
         throw new InvalidArgumentException("couldn't load activity preferences, no user id specified");
     }
-    if ($prefs = get_rows('usr_activity_preference', 'usr', $userid)) {
+    if ($prefs = get_records_array('usr_activity_preference', 'usr', $userid)) {
         foreach ($prefs as $p) {
-            $prefs[$p['activity']] = $p['method'];
+            $prefs[$p->activity] = $p->method;
         }
     }
     return $prefs;
@@ -60,9 +60,9 @@ function load_account_preferences($userid) {
     if (empty($userid)) {
         throw new InvalidArgumentException("couldn't load account preferences, no user id specified");
     }
-    if ($prefs = get_rows('usr_account_preference', 'usr', $userid)) {
+    if ($prefs = get_records_array('usr_account_preference', 'usr', $userid)) {
         foreach ($prefs as $p) {
-            $prefs[$p['field']] = $p['value'];
+            $prefs[$p->field] = $p->value;
         }
     }
     foreach ($expectedprefs as $field => $default) {

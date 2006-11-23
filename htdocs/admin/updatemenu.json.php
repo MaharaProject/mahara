@@ -51,11 +51,11 @@ if ($itemid == 'new') {
     $data->public = $public;
     // set displayorder to be after all the existing menu items
     try {
-        $displayorders = get_rows('site_menu', 'public', $data->public, '', 'displayorder');
+        $displayorders = get_records_array('site_menu', 'public', $data->public, '', 'displayorder');
         $max = 0;
         if ($displayorders) {
             foreach ($displayorders as $r) {
-                $max = $r['displayorder'] >= $max ? $r['displayorder'] + 1 : $max;
+                $max = $r->displayorder >= $max ? $r->displayorder + 1 : $max;
             }
         }
         $data->displayorder = $max;

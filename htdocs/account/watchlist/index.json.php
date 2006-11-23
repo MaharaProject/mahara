@@ -81,7 +81,7 @@ if ($type == 'views') {
             JOIN ' . $prefix . 'usr_watchlist_view w ON w.view = v.id
             WHERE w.usr = ?
             ORDER BY v.mtime DESC';
-    if ($records = get_rows_sql($sql, array($userid), $offset, $limit)) {
+    if ($records = get_records_sql_array($sql, array($userid), $offset, $limit)) {
         foreach ($records as &$r) {
             // @todo session expandey stuff
         }
@@ -94,7 +94,7 @@ else if ($type == 'communities') {
             JOIN ' . $prefix . 'usr_watchlist_community w ON w.community = c.id 
             WHERE w.usr = ?
             ORDER BY c.mtime DESC';
-    $records = get_rows_sql($sql, array($userid), $offset, $limit);
+    $records = get_records_sql_array($sql, array($userid), $offset, $limit);
 }
 
 if (empty($records)) {

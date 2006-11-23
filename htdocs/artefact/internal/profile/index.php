@@ -36,7 +36,7 @@ $element_required = call_static_method('ArtefactTypeProfile', 'get_mandatory_fie
 
 // load existing profile information
 $profilefields = array();
-$profile_data = get_records_select('artefact', "owner=? AND artefacttype IN (" . join(",",array_map(create_function('$a','return db_quote($a);'),array_keys($element_list))) . ")", array($USER->get('id')));
+$profile_data = get_records_select_array('artefact', "owner=? AND artefacttype IN (" . join(",",array_map(create_function('$a','return db_quote($a);'),array_keys($element_list))) . ")", array($USER->get('id')));
 
 if ($profile_data) {
     foreach ($profile_data as $field) {
@@ -45,20 +45,20 @@ if ($profile_data) {
 }
 
 $profilefields['email'] = array();
-$profilefields['email']['all'] = get_rows('artefact_internal_profile_email', 'owner', $USER->get('id'));
+$profilefields['email']['all'] = get_records_array('artefact_internal_profile_email', 'owner', $USER->get('id'));
 $profilefields['email']['validated'] = array();
 $profilefields['email']['unvalidated'] = array();
 if ($profilefields['email']['all']) {
     foreach ($profilefields['email']['all'] as $email) {
-        if ($email['verified']) {
-            $profilefields['email']['validated'][] = $email['email'];
+        if ($email->verified) {
+            $profilefields['email']['validated'][] = $email->email;
         }
         else {
-            $profilefields['email']['unvalidated'][] = $email['email'];
+            $profilefields['email']['unvalidated'][] = $email->email;
         }
 
-        if ($email['principal']) {
-            $profilefields['email']['default'] = $email['email'];
+        if ($email->principal) {
+            $profilefields['email']['default'] = $email->email;
         }
     }
 }
@@ -184,16 +184,12 @@ function profileform_submit($values) {
                 delete_records('artefact_internal_profile_email', 'email', $email, 'owner', $USER->get('id'));
 
                 if ($artefact_id) {
-                    global $db;
-
-                    $db->execute('SELECT 12345');
                     $artefact = new ArtefactTypeEmail($artefact_id);
                     $artefact->delete();
                     // this is unset here to force the destructor to run now,
                     // rather than script exit time where it doesn't like
                     // throwing exceptions properly
                     unset($artefact);
-                    $db->execute('SELECT 54321');
                 }
 
             }

@@ -109,7 +109,7 @@ function handle_activity($activitytype, $data) {
                                 WHERE pc.activity = ?
                                 AND wv.view = ?
                            ';
-                    $users = get_records_sql($sql, array('watchlist', $data->view));
+                    $users = get_records_sql_array($sql, array('watchlist', $data->view));
                 } 
                 else if ($data->artefact) {
                     $sql = 'SELECT DISTINCT u.*, p.method
@@ -123,7 +123,7 @@ function handle_activity($activitytype, $data) {
                                 WHERE pc.activity = ?
                                 AND (pc.parent = ? OR wa.artefact = ?)
                             ';
-                    $users = get_records_sql($sql, array('watchlist', $data->artefact));
+                    $users = get_records_sql_array($sql, array('watchlist', $data->artefact));
                 }
                 else if ($data->community) {
                     $sql = 'SELECT DISTINCT u.*, p.method 
@@ -135,7 +135,7 @@ function handle_activity($activitytype, $data) {
                                 WHERE pc.activity = ?
                                 AND c.community = ?
                             ';
-                    $users = get_records_sql($sql, array('watchlist', $data->community));
+                    $users = get_records_sql_array($sql, array('watchlist', $data->community));
                 }
                 else {
                     throw new InvalidArgumentException("Invalid watchlist type");
@@ -158,7 +158,7 @@ function handle_activity($activitytype, $data) {
                         ) AS userlist
                             JOIN ' . $prefix . 'usr u ON u.id = userlist.userid
                             JOIN ' . $prefix . 'usr_activity_preference p ON p.usr = u.id';
-                $users = get_records_sql($sql, array($data->owner, $data->owner, $data->owner,  
+                $users = get_records_sql_array($sql, array($data->owner, $data->owner, $data->owner,  
                                                      $data->view, $data->view));
                 break;
         }
@@ -206,6 +206,7 @@ function activity_get_users($activitytype, $userids=null, $userobjs=null, $admin
         $sql .= ' AND u.id IN (' . implode(',',db_array_to_ph($userids)) . ')';
         $values = array_merge($values, $userids);
     }
+    return get_records_sql_array($sql, $values);
 }
 
 

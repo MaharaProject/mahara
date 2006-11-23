@@ -45,8 +45,8 @@ $data = search_user($query, $limit, $offset);
 
 if ($data['results']) {
     foreach ($data['results'] as $key => $value) {
-        $data['data'][$key]['name'] = display_name($value);
-        $data['data'][$key]['id']   = $value['id'];
+        $data['data'][$key]->name = display_name($value);
+        $data['data'][$key]->id   = $value->id;
     }
 }
 unset($data['results']);

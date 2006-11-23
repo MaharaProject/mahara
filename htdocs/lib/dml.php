@@ -180,7 +180,7 @@ function get_record($table, $field1, $value1, $field2=null, $value2=null, $field
  * Get a single record as an object using an SQL statement
  *
  * This function is designed to retrieve ONE record. If your query returns more than one record,
- * an exception is thrown. If you want more than one record, use get_records_sql.
+ * an exception is thrown. If you want more than one record, use get_records_sql_array or get_records_sql_assoc
  *
  * @param string $sql The SQL string you wish to be executed, should normally only return one record.
  * @param bool $expectmultiple If the SQL cannot be written to conviniently return just one record,
@@ -243,7 +243,7 @@ function get_record_select($table, $select='', $values=null, $fields='*') {
  * If $fields is specified, only those fields are returned.
  *
  * This function is internal to datalib, and should NEVER should be called directly
- * from general Moodle scripts.  Use get_record, get_records etc.
+ * from general Moodle scripts.  Use get_record, get_records_* etc.
  *
  * If you only want some of the records, specify $limitfrom and $limitnum.
  * The query will skip the first $limitfrom records (according to the sort
@@ -315,7 +315,7 @@ function get_recordset_select($table, $select='', $values=null, $sort='', $field
 /**
  * Get a number of records as an ADODB RecordSet.  $sql must be a complete SQL query.
  * This function is internal to datalib, and should NEVER should be called directly
- * from general Moodle scripts.  Use get_record, get_records etc.
+ * from general Moodle scripts.  Use get_record, get_records_* etc.
  *
  * The return type is as for @see function get_recordset.
  *
@@ -367,7 +367,11 @@ function get_recordset_sql($sql, $values=null, $limitfrom=null, $limitnum=null) 
  */
 function recordset_to_array($rs) {
     if ($rs && $rs->RecordCount() > 0) {
-        return $rs->GetArray();
+        $array = $rs->GetArray();
+        foreach ($array as &$a) {
+            $a = (object)$a;
+        }
+        return $array;
     }
     else {
         return false;
@@ -414,7 +418,7 @@ function recordset_to_assoc($rs) {
  * Get a number of records as an associative array of objects. (WARNING: this
  * does not return an array, it returns an associative array keyed by the first
  * column in the result set. As a result, you may lose some rows! Please use
- * {@link get_rows} instead where possible)
+ * {@link get_records_*_array} instead where possible)
  *
  * If the query succeeds and returns at least one record, the
  * return value is an array of objects, one object for each
@@ -432,7 +436,7 @@ function recordset_to_assoc($rs) {
  * @return mixed an array of objects, or false if no records were found.
  * @throws SQLException
  */
-function get_records($table, $field='', $value='', $sort='', $fields='*', $limitfrom='', $limitnum='') {
+function get_records_assoc($table, $field='', $value='', $sort='', $fields='*', $limitfrom='', $limitnum='') {
     $rs = get_recordset($table, $field, $value, $sort, $fields, $limitfrom, $limitnum);
     return recordset_to_assoc($rs);
 }
@@ -456,7 +460,7 @@ function get_records($table, $field='', $value='', $sort='', $fields='*', $limit
  * @return mixed an array of objects, or false if no records were found.
  * @throws SQLException
  */
-function get_rows($table, $field='', $value='', $sort='', $fields='*', $limitfrom='', $limitnum='') {
+function get_records_array($table, $field='', $value='', $sort='', $fields='*', $limitfrom='', $limitnum='') {
     $rs = get_recordset($table, $field, $value, $sort, $fields, $limitfrom, $limitnum);
     return recordset_to_array($rs);
 }
@@ -464,7 +468,7 @@ function get_rows($table, $field='', $value='', $sort='', $fields='*', $limitfro
 /**
  * Get a number of records as an associative array of objects.
  *
- * Return value as for @see function get_records.
+ * Return value as for @see function get_records_assoc
  *
  * @param string $table the table to query.
  * @param string $select A fragment of SQL to be used in a where clause in the SQL call.
@@ -476,7 +480,7 @@ function get_rows($table, $field='', $value='', $sort='', $fields='*', $limitfro
  * @return mixed an array of objects, or false if no records were found.
  * @throws SQLException
  */
-function get_records_select($table, $select='', $values=null, $sort='', $fields='*', $limitfrom='', $limitnum='') {
+function get_records_select_assoc($table, $select='', $values=null, $sort='', $fields='*', $limitfrom='', $limitnum='') {
     $rs = get_recordset_select($table, $select, $values, $sort, $fields, $limitfrom, $limitnum);
     return recordset_to_assoc($rs);
 }
@@ -484,7 +488,7 @@ function get_records_select($table, $select='', $values=null, $sort='', $fields=
 /**
  * Get a number of records as an array of objects.
  *
- * Return value as for {@link get_rows}.
+ * Return value as for {@link get_records_array}.
  *
  * @param string $table the table to query.
  * @param string $select A fragment of SQL to be used in a where clause in the SQL call.
@@ -496,7 +500,7 @@ function get_records_select($table, $select='', $values=null, $sort='', $fields=
  * @return mixed an array of objects, or false if no records were found.
  * @throws SQLException
  */
-function get_rows_select($table, $select='', $values=null, $sort='', $fields='*', $limitfrom='', $limitnum='') {
+function get_records_select_array($table, $select='', $values=null, $sort='', $fields='*', $limitfrom='', $limitnum='') {
     $rs = get_recordset_select($table, $select, $values, $sort, $fields, $limitfrom, $limitnum);
     return recordset_to_array($rs);
 }
@@ -504,7 +508,7 @@ function get_rows_select($table, $select='', $values=null, $sort='', $fields='*'
 /**
  * Get a number of records as an associative array of objects.
  *
- * Return value as for @see function get_records.
+ * Return value as for @see function get_records_assoc
  *
  * @param string $sql the SQL select query to execute.
  * @param int $limitfrom return a subset of records, starting at this point (optional, required if $limitnum is set).
@@ -512,7 +516,7 @@ function get_rows_select($table, $select='', $values=null, $sort='', $fields='*'
  * @return mixed an array of objects, or false if no records were found.
  * @throws SQLException
  */
-function get_records_sql($sql,$values, $limitfrom='', $limitnum='') {
+function get_records_sql_assoc($sql,$values, $limitfrom='', $limitnum='') {
     $rs = get_recordset_sql($sql, $values, $limitfrom, $limitnum);
     return recordset_to_assoc($rs);
 }
@@ -520,7 +524,7 @@ function get_records_sql($sql,$values, $limitfrom='', $limitnum='') {
 /**
  * Get a number of records as an array of objects.
  *
- * Return value as for {@link get_rows}
+ * Return value as for {@link get_records_array}
  *
  * @param string $sql the SQL select query to execute.
  * @param array values of placeholders in the SQL
@@ -529,7 +533,7 @@ function get_records_sql($sql,$values, $limitfrom='', $limitnum='') {
  * @return mixed an array of objects, or false if no records were found.
  * @throws SQLException
  */
-function get_rows_sql($sql,$values, $limitfrom='', $limitnum='') {
+function get_records_sql_array($sql,$values, $limitfrom='', $limitnum='') {
     $rs = get_recordset_sql($sql, $values, $limitfrom, $limitnum);
     return recordset_to_array($rs);
 }

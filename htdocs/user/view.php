@@ -30,7 +30,7 @@ require(dirname(dirname(__FILE__)).'/init.php');
 $userid = param_integer('id','');
 
 $profile = array();
-if (!$user = @get_record('usr', 'id', $userid)) {
+if (!$user = get_record('usr', 'id', $userid)) {
     $name = get_string('usernotfound');
 }
 else {
@@ -40,10 +40,10 @@ else {
     foreach (array_keys($publicfields) as $field) {
         $classname = generate_artefact_class_name($field);
         if ($field == 'email') {  // There may be multiple email records
-            if ($emails = @get_rows('artefact_internal_profile_email', 'owner', $userid)) {
+            if ($emails = get_records_array('artefact_internal_profile_email', 'owner', $userid)) {
                 foreach ($emails as $email) {
-                    $fieldname = $email['principal'] ? 'principalemailaddress' : 'emailaddress';
-                    $profile[] = array('name' => $fieldname, 'value' => $email['email']);
+                    $fieldname = $email->principal ? 'principalemailaddress' : 'emailaddress';
+                    $profile[] = array('name' => $fieldname, 'value' => $email->email);
                 }
             }
         }

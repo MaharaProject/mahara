@@ -211,7 +211,7 @@ $elements = array(
     )
 );
 
-$institutions = get_records_select('institution', "registerallowed = 1 AND authplugin = 'internal'");
+$institutions = get_records_select_array('institution', "registerallowed = 1 AND authplugin = 'internal'");
 if (count($institutions) > 1) {
     $options = array();
     foreach ($institutions as $institution) {

@@ -83,6 +83,8 @@ var watchlist = new TableRenderer(
 
 watchlist.type = 'views';
 watchlist.statevars.push('type');
+watchlist.watchlist = 1;
+watchlist.statevars.push('watchlist');
 watchlist.updateOnLoad();
 watchlist.rowfunction = function(r, n) { return TR({'id': r.id, 'class': 'view'}); }
 
@@ -147,6 +149,8 @@ function toggleExpand(id, type) {
     else {
         newtablelist.view = id;
     }
+    newtablelist.watchlist = 1;
+    newtablelist.statevars.push('watchlist');
     newtablelist.rowfunction = function(r, n) { return TR({'id': r.id, 'class': 'artefact'}); }
     newtablelist.paginate = false;
     newtablelist.doupdate();

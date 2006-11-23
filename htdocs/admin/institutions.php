@@ -38,8 +38,7 @@ if ($institution || $add) {
 
     if (!$add) {
         $data = get_record('institution', 'name', $institution);
-        $lockedprofilefields = (array) get_rows('institution_locked_profile_field', 'name', $institution);
-        $lockedprofilefields = array_map(create_function('$a', 'return $a[\'profilefield\'];'), $lockedprofilefields);
+        $lockedprofilefields = (array)get_column('institution_locked_profile_field', 'profilefield', 'name', $institution);
     }
     else {
         $data = new StdClass;
@@ -139,7 +138,7 @@ if ($institution || $add) {
 }
 else {
     // Get a list of institutions
-    $institutions = get_records_sql('SELECT i.name, i.displayname, i.authplugin, i.registerallowed, COUNT(u.*)
+    $institutions = get_records_sql_array('SELECT i.name, i.displayname, i.authplugin, i.registerallowed, COUNT(u.*)
         FROM institution i
         LEFT OUTER JOIN usr u ON (u.institution = i.name)
         GROUP BY 1, 2, 3, 4

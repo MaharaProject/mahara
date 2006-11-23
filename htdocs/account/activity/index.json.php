@@ -64,12 +64,12 @@ $userid = $USER->get('id');
 
 if ($type == 'all') {
     $count = count_records('notification_internal_activity', 'usr', $userid);
-    $records = get_rows('notification_internal_activity', 'usr', $userid,
+    $records = get_records_array('notification_internal_activity', 'usr', $userid,
                            'ctime DESC', '*', $offset, $limit);
 } else {
     $count = count_records_select('notification_internal_activity', 'usr = ? AND type = ?',
                                   array($userid,$type));
-    $records = get_rows_select('notification_internal_activity', 'usr = ? AND type = ?', 
+    $records = get_records_select_array('notification_internal_activity', 'usr = ? AND type = ?', 
                                   array($userid, $type), 
                                   'ctime DESC', '*', $offset, $limit);
 }
@@ -82,8 +82,8 @@ $star = theme_get_image_path('star.png');
 $unread = get_string('unread', 'activity');
 
 foreach ($records as &$r) {
-    $r['date'] = format_date(strtotime($r['ctime']));
-    $r['type'] = get_string('type' . $r['type'], 'activity');
+    $r->date = format_date(strtotime($r->ctime));
+    $r->type = get_string('type' . $r->type, 'activity');
 }
 
 $activity = array(
