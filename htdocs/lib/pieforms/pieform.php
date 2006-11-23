@@ -397,15 +397,28 @@ class Pieform {
         if (!is_array($data['elements']) || count($data['elements']) == 0) {
             throw new PieformException('Forms must have a list of elements');
         }
+
+        // Remove elements to ignore
+        foreach ($data['elements'] as $name => $element) {
+            if (isset($element['type']) && $element['type'] == 'fieldset') {
+                foreach ($element['elements'] as $subname => $subelement) {
+                    if (!empty($subelement['ignore'])) {
+                        unset ($data['elements'][$name]['elements'][$subname]);
+                    }
+                }
+            }
+            else {
+                if (!empty($element['ignore'])) {
+                    unset($data['elements'][$name]);
+                }
+            }
+        }
+
         $this->elements = $data['elements'];
 
         // Set some attributes for all elements
         $autofocusadded = false;
         foreach ($this->elements as $name => &$element) {
-            if (!empty($element['ignore'])) {
-                unset($this->elements[$name]);
-                continue;
-            }
             // The name can be in the element itself. This is compatibility for the perl version
             if (isset($element['name'])) {
                 $name = $element['name'];
@@ -432,10 +445,6 @@ class Pieform {
             }
             if ($element['type'] == 'fieldset') {
                 foreach ($element['elements'] as $subname => &$subelement) {
-                    if (!empty($subelement['ignore'])) {
-                        unset($element['elements'][$subname]);
-                        continue;
-                    }
                     // The name can be in the element itself. This is compatibility for the perl version
                     if (isset($subelement['name'])) {
                         $subname = $subelement['name'];
