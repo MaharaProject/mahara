@@ -255,23 +255,25 @@ class ArtefactTypeProfile extends ArtefactType {
             'type' => 'html',
             'value' => '&nbsp;',
         );
+        $currentwidth = get_config_plugin('artefact', 'internal', 'profileiconwidth');
         $form['elements']['profileiconwidth'] = array(
             'type' => 'text',
             'size' => 4,
             'suffix' => get_string('widthshort'),
             'title' => get_string('profileiconsize', 'artefact.internal'),
-            'defaultvalue' => get_config_plugin('artefact', 'internal', 'profileiconwidth'),
+            'defaultvalue' => ((!empty($currentwidth)) ? $currentwidth : 100),
             'rules' => array(
                 'required' => true,
                 'integer'  => true,
             )
         );
+        $currentheight = get_config_plugin('artefact', 'internal', 'profileiconheight');
         $form['elements']['profileiconheight'] = array(
             'type' => 'text',
             'suffix' => get_string('heightshort'),
             'size' => 4,
             'title' => get_string('profileiconsize', 'artefact.internal'),
-            'defaultvalue' => get_config_plugin('artefact', 'internal', 'profileiconheight'),
+            'defaultvalue' => ((!empty($currentheight)) ? $currentheight : 100),
             'rules' => array(
                 'required' => true,
                 'integer'  => true,
