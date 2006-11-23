@@ -29,7 +29,6 @@ define('ADMIN', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 
 $itemid = param_variable('itemid');
-$result = array();
 
 if (!delete_records('site_menu','id',$itemid)) {
     json_reply('local', get_string('deletefailed','admin'));
