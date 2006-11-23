@@ -105,7 +105,7 @@ try {
     else {                                                     // Use single connection
         $dbconnected = $db->Connect($CFG->dbhost,$CFG->dbuser,$CFG->dbpass,$CFG->dbname);
     }
-    
+
     $db->SetFetchMode(ADODB_FETCH_ASSOC);
     configure_dbconnection();
     ensure_internal_plugins_exist();
@@ -114,11 +114,10 @@ try {
 }
 catch (Exception $e) {
     $errormessage = ob_get_contents();
+    if (!$errormessage) {
+        $errormessage = $e->getMessage();
+    }
     ob_end_clean();
-    // @todo <nigel|penny>: At this point the raw error message can be munged from
-    // $errormessage, while the $e object holds some other information (like backtrace,
-    // which can be parsed with adodb_backtrace($e->gettrace());). At this point a
-    // nice message should be displayed explaining the problem etc. etc.
     throw new Exception($errormessage);
 }
 try {
