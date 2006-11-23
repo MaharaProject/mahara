@@ -211,6 +211,10 @@ $string['myviews'] = 'My Views';
 $string['submitview'] = 'Submit View';
 $string['viewdeleted'] = 'View deleted';
 
+// view user
+$string['fullname'] = 'Full name';
+$string['studentid'] = 'ID number';
+
 $string['emailname'] = 'Mahara System'; // robot! 
 
 $string['config'] = 'Config';
