@@ -47,7 +47,7 @@ function pieform_render_userlist($element, Pieform $form) {
     }
 
     if (is_array($value) && count($value)) {
-        $members = get_records_select_array('usr','id IN (' . join(',',$value) . ')', null, '', 'id,firstname,lastname,preferredname');
+        $members = get_records_select_assoc('usr','id IN (' . join(',',$value) . ')', null, '', 'id,firstname,lastname,preferredname');
 
         foreach($members as &$member) {
             $member = display_name($member);

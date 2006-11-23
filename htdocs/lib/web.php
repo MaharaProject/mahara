@@ -226,12 +226,6 @@ function theme_get_image_path($imagelocation, $pluginlocation='') {
     }
 }
 
-function clean_filename($filename) {
-    //@todo 
-
-    return $filename;
-}
-
 /**
  * This function sends headers suitable for all JSON returning scripts.
  *

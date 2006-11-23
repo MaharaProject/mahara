@@ -41,7 +41,7 @@ if (!session_id()) {
 }
 
 // Logged in people can't register
-if ($SESSION->is_logged_in()) {
+if ($USER->is_logged_in()) {
     redirect(get_config('wwwroot'));
 }
 
@@ -63,7 +63,7 @@ if (!empty($_SESSION['registered'])) {
 if (isset($_REQUEST['key'])) {
 
     function register_profile_submit($values) {
-        global $registration, $SESSION;
+        global $registration, $SESSION, $USER;
         db_begin();
 
         // Move the user record to the usr table from the registration table
@@ -93,7 +93,7 @@ if (isset($_REQUEST['key'])) {
         db_commit();
 
         // Log the user in and send them to the homepage
-        $SESSION->login($registration);
+        $USER->login($registration);
         redirect(get_config('wwwroot'));
     }
     
@@ -277,7 +277,7 @@ function register_validate(Pieform $form, $values) {
         $form->set_error('username', get_string('usernamealreadytaken', 'auth.internal'));
     }
 
-    password_validate($form, $values, (object)$values);
+    password_validate($form, $values, $values['username'], $values['institution']);
 
     // First name and last name must contain at least one non whitespace
     // character, so that there's something to read

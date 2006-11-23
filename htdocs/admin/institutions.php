@@ -33,12 +33,58 @@ $smarty = smarty();
 
 $institution = param_variable('i', '');
 $add         = param_boolean('add');
+$edit        = param_boolean('edit');
+$delete      = param_boolean('delete');
 
 if ($institution || $add) {
 
+    if ($delete) {
+        function delete_validate(Pieform $form, $values) {
+            if (get_field('usr', 'COUNT(*)', 'institution', $values['i'])) {
+                throw new Exception('Attempt to delete an institution that has members');
+            }
+        }
+
+        function delete_cancel_submit() {
+            redirect(get_config('wwwroot') . 'admin/institutions.php');
+        }
+
+        function delete_submit($values) {
+            global $SESSION;
+
+            db_begin();
+            delete_records('institution_locked_profile_field', 'name', $values['i']);
+            delete_records('institution', 'name', $values['i']);
+            db_commit();
+
+            $SESSION->add_ok_msg(get_string('institutiondeletedsuccessfully', 'admin'));
+            redirect(get_config('wwwroot') . 'admin/institutions.php');
+        }
+        $form = array(
+            'name' => 'delete',
+            'elements' => array(
+                'i' => array(
+                    'type' => 'hidden',
+                    'value' => $institution
+                ),
+                'delete' => array(
+                    'type' => 'hidden',
+                    'value' => 1
+                ),
+                'submit' => array(
+                    'type' => 'submitcancel',
+                    'value' => array(get_string('yes'), get_string('no'))
+                )
+            )
+        );
+        $smarty->assign('delete_form', pieform($form));
+        $smarty->display('admin/institutions.tpl');
+        exit;
+    }
+
     if (!$add) {
         $data = get_record('institution', 'name', $institution);
-        $lockedprofilefields = (array)get_column('institution_locked_profile_field', 'profilefield', 'name', $institution);
+        $lockedprofilefields = (array) get_column('institution_locked_profile_field', 'profilefield', 'name', $institution);
     }
     else {
         $data = new StdClass;
@@ -52,76 +98,74 @@ if ($institution || $add) {
     }
     
     safe_require('artefact', 'internal');
-    $elements = array();
-
-    if ($add) {
-        $elements['name'] = array(
+    $elements = array(
+        'name' => array(
             'type' => 'text',
-            'title' => get_string('institutionname'),
+            'title' => get_string('institutionname', 'admin'),
             'rules' => array(
                 'required'  => true,
                 'maxlength' => 255,
                 'regex'     => '/^[a-z]+$/'
+            ),
+            'ignore' => !$add
+        ),
+        'add' => array(
+            'type'   => 'hidden',
+            'value'  => true,
+            'ignore' => !$add
+        ),
+        'i' => array(
+            'type'   => 'hidden',
+            'value'  => $institution,
+            'ignore' => $add
+        ),
+        'displayname' => array(
+            'type' => 'text',
+            'title' => get_string('institutiondisplayname', 'admin'),
+            'defaultvalue' => $data->displayname,
+            'rules' => array(
+                'required'  => true,
+                'maxlength' => 255
             )
-        );
-        $elements['add'] = array(
-            'type'  => 'hidden',
-            'value' => true
-        );
-    }
-    else {
-        $elements['i'] = array(
-            'type'  => 'hidden',
-            'value' => $institution
-        );
-    }
-
-    $elements['displayname'] = array(
-        'type' => 'text',
-        'title' => get_string('institutiondisplayname'),
-        'defaultvalue' => $data->displayname,
-        'rules' => array(
-            'required'  => true,
-            'maxlength' => 255
+        ),
+        'authplugin' => array(
+            'type'    => 'select',
+            'title'   => get_string('authplugin', 'admin'),
+            'options' => get_records_menu('auth_installed', '', '', 'name', 'name, name')
+        ),
+        'registerallowed' => array(
+            'type'         => 'checkbox',
+            'title'        => get_string('registrationallowed', 'admin'),
+            'description'  => get_string('registrationalloweddescription', 'admin'),
+            'checked' => $data->registerallowed
+        ),
+        'defaultaccountlifetime' => array(
+            'type'         => 'expiry',
+            'title'        => get_string('defaultaccountlifetime', 'admin'),
+            'description'  => get_string('defaultaccountlifetimedescription', 'admin'),
+            'defaultvalue' => $data->defaultaccountlifetime
+        ),
+        'defaultaccountinactiveexpire' => array(
+            'type'         => 'expiry',
+            'title'        => get_string('defaultaccountinactiveexpire', 'admin'),
+            'description'  => get_string('defaultaccountinactiveexpiredescription', 'admin'),
+            'defaultvalue' => $data->defaultaccountinactiveexpire
+        ),
+        'defaultaccountinactivewarn' => array(
+            'type' => 'expiry',
+            'title' => get_string('defaultaccountinactivewarn', 'admin'),
+            'description' => get_string('defaultaccountinactivewarndescription', 'admin'),
+            'defaultvalue' => $data->defaultaccountinactivewarn
+        ),
+        'lockedfields' => array(
+            'value' => '<tr><th colspan="2">Locked fields</th></tr>'
         )
-    );
-    $elements['authplugin'] = array(
-        'type'    => 'select',
-        'title'   => get_string('authplugin'),
-        'options' => get_records_menu('auth_installed', '', '', 'name', 'name, name')
-    );
-    $elements['registerallowed'] = array(
-        'type'         => 'checkbox',
-        'title'        => get_string('registrationallowed'),
-        'description'  => get_string('registrationalloweddescription'),
-        'checked' => $data->registerallowed
-    );
-    $elements['defaultaccountlifetime'] = array(
-        'type'         => 'expiry',
-        'title'        => get_string('defaultaccountlifetime'),
-        'description'  => get_string('defaultaccountlifetimedescription'),
-        'defaultvalue' => $data->defaultaccountlifetime
-    );
-    $elements['defaultaccountinactiveexpire'] = array(
-        'type'         => 'expiry',
-        'title'        => get_string('defaultaccountinactiveexpire'),
-        'description'  => get_string('defaultaccountinactiveexpiredescription'),
-        'defaultvalue' => $data->defaultaccountinactiveexpire
-    );
-    $elements['defaultaccountinactivewarn'] = array(
-        'type' => 'expiry',
-        'title' => get_string('defaultaccountinactivewarn'),
-        'description' => get_string('defaultaccountinactivewarndescription'),
-        'defaultvalue' => $data->defaultaccountinactivewarn
-    );
-
-    $elements['lockedfields'] = array(
-        'value' => '<tr><th colspan="2">Locked fields</th></tr>'
     ); 
+
     foreach (ArtefactTypeProfile::get_all_fields() as $field => $type) {
         $elements[$field] = array(
             'type' => 'checkbox',
-            'title' => get_string($field),
+            'title' => get_string($field, 'artefact.internal'),
             'checked' => in_array($field, $lockedprofilefields)
         );
     }
@@ -138,7 +182,7 @@ if ($institution || $add) {
 }
 else {
     // Get a list of institutions
-    $institutions = get_records_sql_array('SELECT i.name, i.displayname, i.authplugin, i.registerallowed, COUNT(u.*)
+    $institutions = get_records_sql_array('SELECT i.name, i.displayname, i.authplugin, i.registerallowed, COUNT(u.*) AS hasmembers
         FROM institution i
         LEFT OUTER JOIN usr u ON (u.institution = i.name)
         GROUP BY 1, 2, 3, 4
@@ -185,7 +229,8 @@ function institution_submit($values) {
     }
     db_commit();
 
-    $SESSION->add_ok_msg(get_string('institutionupdatedsuccessfully'));
+    $message = ($add) ? 'institutionaddedsuccessfully' : 'institutionupdatedsuccessfully';
+    $SESSION->add_ok_msg(get_string($message, 'admin'));
     redirect(get_config('wwwroot') . 'admin/institutions.php');
 }
 

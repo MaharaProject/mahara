@@ -26,13 +26,6 @@
 
 defined('INTERNAL') || die();
 
-$string['adminoptionsauthenticationtitle'] = 'AdminOptionsAuthentication';
-$string['adminoptionsauthenticationdescription'] = '<p>List of installed authentication methods. Internal is used by default, if an
-institution uses another authentication type then they will be listed beside it.</p>
-
-<p>Did you want to <a href="institution.php">change the type of authentication for an institution</a>?</p>';
-$string['authnoconfigurationoptions'] = 'No configuration options are available for this authentication type';
-
 // Installer
 $string['release'] = 'Release %s (%s)';
 $string['component'] = 'Component or plugin';
@@ -56,6 +49,7 @@ $string['siteoptions']    = 'Site options';
 $string['institutions']   = 'Institutions';
 $string['pageeditor']     = 'Site pages';
 $string['menueditor']     = 'Site menu';
+$string['adminplugins']   = 'Administer Plugins';
 $string['files']          = 'Files';
 $string['adminhome']      = 'Admin home';
 
@@ -153,7 +147,23 @@ $string['adminnotifications'] = 'Admin Notifications';
 // Suspended Users
 $string['suspendedusers'] = 'Suspended Users';
 
-// Authentication
-$string['authconfigoptionssaved'] = 'Auth configuration has been saved';
+// Institutions
+$string['addinstitution'] = 'Add Institution';
+$string['authplugin'] = 'Authentication plugin';
+$string['defaultaccountinactiveexpire'] = 'Default account expiry time';
+$string['defaultaccountinactiveexpiredescription'] = 'How long a user account will remain active without the user logging in';
+$string['defaultaccountinactivewarn'] = 'Default account expire warning time';
+$string['defaultaccountinactivewarndescription'] = 'The time before user accounts are to expire at which a warning message will be sent to them';
+$string['defaultaccountlifetime'] = 'Default account lifetime';
+$string['defaultaccountlifetimedescription'] = 'How long accounts will last for by default';
+$string['deleteinstitution'] = 'Delete Institution';
+$string['deleteinstitutionconfirm'] = 'Are you really sure you wish to delete this institution?';
+$string['institutionaddedsuccessfully'] = 'Institution added successfully';
+$string['institutiondeletedsuccessfully'] = 'Institution deleted successfully';
+$string['institutionname'] = 'Institution name';
+$string['institutiondisplayname'] = 'Institution display name';
+$string['institutionupdatedsuccessfully'] = 'Institution updated successfully';
+$string['registrationallowed'] = 'Registration allowed?';
+$string['registrationalloweddescription'] = 'Whether users can register for the system with this institution';
 
 ?>
