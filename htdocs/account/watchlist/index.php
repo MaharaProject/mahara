@@ -110,7 +110,7 @@ function toggleExpand(id, type) {
     var newtable = TABLE({'id': tablename});
     var newrow   = TR({'class': type, 'id': type + 'expanded' + id}, TD(), TD({'colspan': 2}, newtable));
     var tr = $(type + 'icon-' + id).parentNode.parentNode.parentNode;
-    appendSiblingNodesAfter(tr, newrow); 
+    insertSiblingNodesAfter(tr, newrow); 
     var newtablelist = new TableRenderer(
             tablename, 
             url,
