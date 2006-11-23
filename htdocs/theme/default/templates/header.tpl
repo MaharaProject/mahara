@@ -16,15 +16,15 @@
         {/strip}
         <link rel="stylesheet" type="text/css" href="{$THEMEURL}style/style.css">
         <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
-        {if $USER}<noscript><meta http-equiv="refresh" content="0; {$WWWROOT}?logout"></noscript>{/if}
+        {if $LOGGEDIN}<noscript><meta http-equiv="refresh" content="0; {$WWWROOT}?logout"></noscript>{/if}
     </head>
     <body>
         <div id="header">
             <div style="position: absolute; background-color: red; color: white;" id="loading_box"></div>
             <h1><a href="{$WWWROOT}">{$heading|default:"Mahara"|escape}</a></h1>
-{if $USER}
+{if $LOGGEDIN}
             <a href="{$WWWROOT}?logout">Logout</a>
-    {if $USER->admin}
+    {if $USER->get('admin')}
         {if $ADMIN}
             <a href="{$WWWROOT}">Return to Site</a>
         {else}

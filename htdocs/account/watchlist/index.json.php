@@ -34,7 +34,7 @@ $stopmonitoring = param_integer('stopmonitoring', 0);
 $getartefacts   = param_integer('getartefacts', 0); 
 
 if ($stopmonitoring) {
-    $userid = $SESSION->get('id');
+    $userid = $USER->get('id');
     $count = 0;
     db_begin();
     try {
@@ -71,7 +71,7 @@ $type = param_alpha('type', 'views');
 $limit = param_integer('limit', 10);
 $offset = param_integer('offset', 0);
 
-$userid = $SESSION->get('id');
+$userid = $USER->get('id');
 $prefix = get_config('dbprefix');
 
 if ($type == 'views') {

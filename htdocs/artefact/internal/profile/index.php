@@ -36,7 +36,7 @@ $element_required = call_static_method('ArtefactTypeProfile', 'get_mandatory_fie
 
 // load existing profile information
 $profilefields = array();
-$profile_data = get_records_select('artefact', "owner=? AND artefacttype IN (" . join(",",array_map(create_function('$a','return db_quote($a);'),array_keys($element_list))) . ")", array($USER->id));
+$profile_data = get_records_select('artefact', "owner=? AND artefacttype IN (" . join(",",array_map(create_function('$a','return db_quote($a);'),array_keys($element_list))) . ")", array($USER->get('id')));
 
 if ($profile_data) {
     foreach ($profile_data as $field) {
@@ -45,7 +45,7 @@ if ($profile_data) {
 }
 
 $profilefields['email'] = array();
-$profilefields['email']['all'] = get_rows('artefact_internal_profile_email', 'owner', $USER->id);
+$profilefields['email']['all'] = get_rows('artefact_internal_profile_email', 'owner', $USER->get('id'));
 $profilefields['email']['validated'] = array();
 $profilefields['email']['unvalidated'] = array();
 if ($profilefields['email']['all']) {
@@ -148,20 +148,20 @@ function profileform_submit($values) {
 
                 email_user(
                     (object)array(
-                        'firstname'     => $USER->firstname,
-                        'lastname'      => $USER->lastname,
-                        'preferredname' => $USER->preferredname,
+                        'firstname'     => $USER->get('firstname'),
+                        'lastname'      => $USER->get('lastname'),
+                        'preferredname' => $USER->get('preferredname'),
                         'email'         => $email,
                     ),
                     null,
                     get_string('emailvalidation_subject', 'artefact.internal'),
-                    get_string('emailvalidation_body', 'artefact.internal', $USER->firstname, $email, $key_url)
+                    get_string('emailvalidation_body', 'artefact.internal', $USER->get('firstname'), $email, $key_url)
                 );
 
                 insert_record(
                     'artefact_internal_profile_email',
                     (object) array(
-                        'owner'    => $USER->id,
+                        'owner'    => $USER->get('id'),
                         'email'    => $email,
                         'verified' => 0,
                         'key'      => $key,
@@ -179,9 +179,9 @@ function profileform_submit($values) {
                     continue;
                 }
 
-                $artefact_id = get_field('artefact_internal_profile_email', 'artefact', 'email', $email, 'owner', $USER->id);
+                $artefact_id = get_field('artefact_internal_profile_email', 'artefact', 'email', $email, 'owner', $USER->get('id'));
 
-                delete_records('artefact_internal_profile_email', 'email', $email, 'owner', $USER->id);
+                delete_records('artefact_internal_profile_email', 'email', $email, 'owner', $USER->get('id'));
 
                 if ($artefact_id) {
                     global $db;
@@ -205,7 +205,7 @@ function profileform_submit($values) {
                     continue;
                 }
 
-                delete_records('artefact_internal_profile_email', 'email', $email, 'owner', $USER->id);
+                delete_records('artefact_internal_profile_email', 'email', $email, 'owner', $USER->get('id'));
             }
 
             if ($profilefields['email']['default'] != $values['email']['default']) {
@@ -215,7 +215,7 @@ function profileform_submit($values) {
                         'principal' => 0,
                     ),
                     (object)array(
-                        'owner' => $USER->id,
+                        'owner' => $USER->get('id'),
                         'email' => $profilefields['email']['default'],
                     )
                 );
@@ -225,7 +225,7 @@ function profileform_submit($values) {
                         'principal' => 1,
                     ),
                     (object) array(
-                        'owner' => $USER->id,
+                        'owner' => $USER->get('id'),
                         'email' => $values['email']['default'],
                     )
                 );
@@ -235,14 +235,14 @@ function profileform_submit($values) {
                         'email' => $values['email']['default'],
                     ),
                     (object) array(
-                        'id' => $USER->id,
+                        'id' => $USER->get('id'),
                     )
                 );
             }
         }
         else {
             $classname = generate_artefact_class_name($element);
-            $profile = new $classname(0, array('owner' => $USER->id));
+            $profile = new $classname(0, array('owner' => $USER->get('id')));
             $profile->set('title', $values[$element]);
             $profile->commit();
         }

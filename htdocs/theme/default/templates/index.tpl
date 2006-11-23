@@ -1,6 +1,6 @@
 {include file="header.tpl"}
 
-{if !$USER}
+{if !$LOGGEDIN}
 <div class="sidebar" id="loginbox">
 <noscript><p>{str tag="javascriptnotenabled"}</p></noscript>
 </div>

@@ -7,8 +7,8 @@
         <!-- core tables that plugins rely on -->
         <TABLE NAME="config">
             <FIELDS>
-                <FIELD NAME="field" TYPE="char" LENGTH="255" NOTNULL="true" />
-                <FIELD NAME="value" TYPE="text" LENGTH="small" NOTNULL="true" />
+                <FIELD NAME="field" TYPE="char" LENGTH="255" NOTNULL="true"/>
+                <FIELD NAME="value" TYPE="text" LENGTH="small"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="field" />

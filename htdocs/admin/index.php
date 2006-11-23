@@ -37,7 +37,7 @@ $upgrades = check_upgrades();
 
 if (isset($upgrades['core']) && !empty($upgrades['core']->install)) {
     $smarty->assign('installing', true);
-    $smarty->assign('releaseargs', array($upgrades['core']->torelease,$upgrades['core']->to));
+    $smarty->assign('releaseargs', array($upgrades['core']->torelease, $upgrades['core']->to));
     $smarty->display('admin/installgpl.tpl');
     exit;
 }

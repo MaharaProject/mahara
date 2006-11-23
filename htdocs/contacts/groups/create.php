@@ -61,7 +61,7 @@ $creategroup = pieform(array(
 function creategroup_validate(Pieform $form, $values) {
     global $USER;
 
-    $gid = get_field('usr_group', 'id', 'owner', $USER->id, 'name', $values['name']);
+    $gid = get_field('usr_group', 'id', 'owner', $USER->get('id'), 'name', $values['name']);
 
     if($gid) {
         $form->set_error('name', get_string('groupalreadyexists'));
@@ -84,7 +84,7 @@ function creategroup_submit($values) {
         'usr_group',
         (object) array(
             'name'        => $values['name'],
-            'owner'       => $USER->id,
+            'owner'       => $USER->get('id'),
             'description' => $values['description'],
             'ctime' => $now,
             'mtime' => $now,

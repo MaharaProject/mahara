@@ -33,7 +33,7 @@ require_once('pieforms/pieform.php');
 
 $id = param_integer('id',null);
 
-$group_data = get_record('usr_group', 'id', $id, 'owner', $USER->id);
+$group_data = get_record('usr_group', 'id', $id, 'owner', $USER->get('id'));
 if (!$group_data) {
     $SESSION->add_err_msg(get_string('canteditdontown'));
     redirect('./');
@@ -79,14 +79,14 @@ function editgroup_validate(Pieform $form, $values) {
     global $USER;
     global $SESSION;
 
-    $gid = get_field('usr_group', 'id', 'owner', $USER->id, 'name', $values['name']);
+    $gid = get_field('usr_group', 'id', 'owner', $USER->get('id'), 'name', $values['name']);
 
     if ($gid && $gid != $values['id']) {
         $form->set_error('name', get_string('groupalreadyexists'));
     }
 
     // check owner
-    $id = get_field('usr_group', 'id', 'id', $values['id'], 'owner', $USER->id);
+    $id = get_field('usr_group', 'id', 'id', $values['id'], 'owner', $USER->get('id'));
 
     if (!$id) {
         $SESSION->add_err_msg(get_string('canteditdontown'));
@@ -111,7 +111,7 @@ function editgroup_submit($values) {
         (object) array(
             'id'          => $values['id'],
             'name'        => $values['name'],
-            'owner'       => $USER->id,
+            'owner'       => $USER->get('id'),
             'description' => $values['description'],
             'mtime' => $now,
         ),

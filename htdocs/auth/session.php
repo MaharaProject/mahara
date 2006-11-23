@@ -26,12 +26,13 @@
 
 defined('INTERNAL') || die();
 
-
 /**
- * The session class handles user sessions and session messages.
+ * The session class handles session data and messages.
  *
- * This class stores information about the user across page loads,
- * so it only needs to be requested once when a user logs in.
+ * This class stores information across page loads, using only a cookie to
+ * remember the info. User information is stored in the session so it does
+ * not have to be requested each time the page is loaded, however any other
+ * information can also be stored using this class.
  *
  * This class also is smart about giving out sessions - if a visitor
  * has not logged in (e.g. they are a guest, searchbot or a simple
@@ -43,39 +44,9 @@ defined('INTERNAL') || die();
 class Session {
 
     /**
-     * Defaults for user information.
-     *
-     * @var array
-     */
-    private $defaults;
-
-    /**
-     * Sets defaults for the session object (only because PHP5 does not appear
-     * to support private static const arrays), and resumes a session only if
-     * a session already exists.
+     * Resumes an existing session, only if there is one
      */
     public function __construct() {
-        $this->defaults = array(
-            'logout_time'    => 0,
-            'id'             => 0,
-            'username'       => '',
-            'password'       => '',
-            'salt'           => '',
-            'institution'    => 'mahara',
-            'passwordchange' => false,
-            'deleted'        => false,
-            'expiry'         => 0,
-            'lastlogin'      => 0,
-            'staff'          => false,
-            'admin'          => false,
-            'firstname'      => '',
-            'lastname'       => '',
-            'preferredname'  => '',
-            'email'          => '',
-            'accountprefs'   => array(),
-            'activityprefs'  => array(),
-            'sesskey'        => ''
-        );
         // Resume an existing session if required
         if (isset($_COOKIE['PHPSESSID'])) {
             session_start();
@@ -87,44 +58,10 @@ class Session {
      *
      * @param string $key The key to get the value of
      * @return mixed
-     * @throws KeyInvalidException
-     * @todo<nigel>: Given that KeyInvalidException doesn't actually exist,
-     * referring to an incorrect key will be fatal. I'm not going to do anything
-     * about this until more is known about what will be stored in the session.
      */
     public function get($key) {
-        if (!isset($this->defaults[$key])) {
-            throw new KeyInvalidException($key);
-        }
         if (isset($_SESSION[$key])) {
             return $_SESSION[$key];
-        }
-        return $this->defaults[$key];
-    }
-
-    /** 
-     * This function returns a method for a particular
-     * activity type.
-     * or null if it's not set.
-     * 
-     * @param string $key the activity type
-     */
-    public function get_activity_preference($key) {
-        if (isset($_SESSION['activityprefs'][$key])) {
-            return $_SESSION['activityprefs'][$key];
-        }
-        return null;
-    }
-
-    /** 
-     * This function returns a value for a particular
-     * account preference, or null if it's not set.
-     * 
-     * @param string $key the field name
-     */
-    public function get_account_preference($key) {
-        if (isset($_SESSION['accountprefs'][$key])) {
-            return $_SESSION['accountprefs'][$key];
         }
         return null;
     }
@@ -136,83 +73,9 @@ class Session {
      * @param string $value The value to set for the key
      */
     public function set($key, $value) {
-        if (!isset($this->defaults[$key])) {
-            throw new KeyInvalidException($key);
-        }
-        if (!$_SESSION) {
-            $this->create_session();
-        }
+        $this->ensure_session();
         $_SESSION[$key] = $value;
     }
-
-    /** @todo document these next two methods */
-    public function set_account_preference($field, $value) {
-        set_account_preference($this->get('id'), $field, $value);
-        $_SESSION['accountprefs'][$field] = $value;
-    }
-
-    public function set_activity_preference($activity, $method) {
-        set_activity_preference($this->get('id'), $activity, $method);
-        $_SESSION['activityprefs'][$activity] = $method;
-    }
-
-    /**
-     * Logs in the given user.
-     *
-     * The passed object should contain the basic information to persist across
-     * page loads.
-     *
-     * @param object $USER  The user object with properties to persist already
-     *                      set
-     */
-    public function login($USER) {
-        if (empty($_SESSION)) {
-            $this->create_session();
-        }
-        foreach (array_keys($this->defaults) as $key) {
-            $this->set($key, (isset($USER->{$key})) ? $USER->{$key} : $this->defaults[$key]);
-        }
-        $this->set('logout_time', time() + get_config('session_timeout'));
-        $this->set('sesskey', get_random_key());
-        $_SESSION['activityprefs'] = load_activity_preferences($this->get('id'));
-        $_SESSION['accountprefs'] = load_account_preferences($this->get('id'));
-    }
-
-    /**
-     * Assuming that a session is already active for a user, this method
-     * retrieves the information from the session and creates a user object
-     * that the script can use
-     *
-     * @return object
-     */
-    public function renew() {
-        $this->set('logout_time', time() + get_config('session_timeout'));
-        $USER = new StdClass;
-        foreach (array_keys($this->defaults) as $key) {
-            $USER->{$key} = $this->get($key);
-        }
-        return $USER;
-    }
-
-    /**
-     * Logs the current user out
-     */
-    public function logout () {
-        $_SESSION = array(
-            'logout_time' => 0,
-            'messages'    => array()
-        );
-    }
-
-    /**
-     * Determines if the user is currently logged in
-     *
-     * @return boolean
-     */
-    public function is_logged_in() {
-        return ($this->get('logout_time') > 0 ? true : false);
-    }
-
 
     /**
      * Adds a message that indicates something was successful
@@ -221,12 +84,9 @@ class Session {
      * @param boolean $escape Whether to HTML escape the message
      */
     public function add_ok_msg($message, $escape=true) {
-        if (empty($_SESSION)) {
-            $this->create_session();
-        }
+        $this->ensure_session();
         if ($escape) {
-            $message = htmlspecialchars($message, ENT_COMPAT, 'UTF-8');
-            $message = str_replace('  ', '&nbsp; ', $message);
+            $message = self::escape_message($message);
         }
         $_SESSION['messages'][] = array('type' => 'ok', 'msg' => $message);
     }
@@ -238,12 +98,9 @@ class Session {
      * @param boolean $escape Whether to HTML escape the message
      */
     public function add_info_msg($message, $escape=true) {
-        if (empty($_SESSION)) {
-            $this->create_session();
-        }
+        $this->ensure_session();
         if ($escape) {
-            $message = htmlspecialchars($message, ENT_COMPAT, 'UTF-8');
-            $message = str_replace('  ', '&nbsp; ', $message);
+            $message = self::escape_message($message);
         }
         $_SESSION['messages'][] = array('type' => 'info', 'msg' => $message);
     }
@@ -255,12 +112,9 @@ class Session {
      * @param boolean $escape Whether to HTML escape the message
      */
     public function add_err_msg($message, $escape=true) {
-        if (empty($_SESSION)) {
-            $this->create_session();
-        }
+        $this->ensure_session();
         if ($escape) {
-            $message = htmlspecialchars($message, ENT_COMPAT, 'UTF-8');
-            $message = str_replace('  ', '&nbsp; ', $message);
+            $message = self::escape_message($message);
         }
         $_SESSION['messages'][] = array('type' => 'err', 'msg' => $message);
     }
@@ -299,13 +153,27 @@ class Session {
     /**
      * Create a session, by initialising the $_SESSION array.
      */
-    private function create_session() {
-        if (!session_id()) {
-            session_start();
+    private function ensure_session() {
+        if (empty($_SESSION)) {
+            if (!session_id()) {
+                session_start();
+            }
+            $_SESSION = array(
+                'messages' => array()
+            );
         }
-        $_SESSION = array(
-            'messages' => array()
-        );
+    }
+
+    /**
+     * Escape a message for HTML output
+     * 
+     * @param string $message The message to escape
+     * @return string         The message, escaped for output as HTML
+     */
+    private static function escape_message($message) {
+        $message = hsc($message);
+        $message = str_replace('  ', '&nbsp; ', $message);
+        return $message;
     }
 
 }
@@ -319,7 +187,5 @@ function insert_messages() {
     global $SESSION;
     return $SESSION->render_messages();
 }
-
-$SESSION =& new Session;
 
 ?>

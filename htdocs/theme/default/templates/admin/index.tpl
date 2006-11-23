@@ -5,21 +5,15 @@
 <p>Screens here:</p>
 
 <ul>
-    <li><a href="options/">AdminSiteOptions</a>
-    <ul>
-        <li><a href="options/authentication.php">Admin Authentication</a>
-        <ul>
-            <li>AdminAuthenticationOptions</li>
-        </ul></li>
-    </ul>
-    <li><a href="editsitepage.php">EditSitePages</a></li>
-    <li><a href="editmenu.php">EditAdminMenu</a></li>
+    <li><a href="options/">Site Options</a>
+    <li><a href="institutions.php">Institutions</a></li>
+    <li><a href="editsitepage.php">Site Pages</a></li>
+    <li><a href="editmenu.php">Site Menu</a></li>
     <li><a href="plugins">Administer Plugins</a></li>
 </ul>
 
 {if $upgrades}
 <p><a href="upgrade.php">Run upgrade</a></p>
 {/if}
-<p><a href="..">parent</a></p>
 
 {include file='footer.tpl'}

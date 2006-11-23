@@ -495,8 +495,8 @@ function print_object($mixed) {
  */
 function current_language() {
     global $USER, $CFG;
-    if (!empty($USER->lang)) {
-        return $USER->lang;
+    if (null !== ($lang = $USER->get_account_preference('lang'))) {
+        return $lang;
     }
     if (!empty($CFG->lang)) {
         return $CFG->lang;
@@ -797,13 +797,6 @@ function admin_nav() {
             'name'     => 'siteoptions',
             'section'  => 'admin',
             'link'     => $wwwroot . 'admin/options/',
-            'submenu'  => array(
-                array(
-                    'name'     => 'authentication',
-                    'section'  => 'admin',
-                    'link'     => $wwwroot . 'admin/options/authentication.php',
-                ),
-            ),
         ),
         array(
             'name'     => 'institutions',
@@ -1000,9 +993,9 @@ function main_nav() {
  * @return $menu a data structure containing the site menu
  */
 function site_menu() {
-    global $SESSION;
+    global $USER;
     $menu = array();
-    if ($menuitems = @get_records('site_menu','public',(int) !$SESSION->is_logged_in(),'displayorder')) {
+    if ($menuitems = get_records('site_menu', 'public', (int) !$USER->is_logged_in(), 'displayorder')) {
         foreach ($menuitems as $i) {
             if ($i->url) {
                 $menu[] = array('name' => $i->title,
@@ -1102,7 +1095,11 @@ function display_name($user, $userto=null) {
     global $USER;
     
     if (empty($userto)) {
-        $userto = $USER;
+        $userto = new StdClass;
+        $userto->id            = $USER->get('id');
+        $userto->preferredname = $USER->get('preferredname');
+        $userto->firstname     = $USER->get('firstname');
+        $userto->lastname      = $USER->get('lastname');
     }
     if (is_array($user)) {
         $user = (object)$user;
@@ -1188,7 +1185,7 @@ function get_random_key() {
  * @param string $authplugin    The authentication plugin that the user uses
  */
 function password_validate(Pieform $form, $values, $user) {
-    $authtype  = auth_get_authtype_for_institution($user->institution);
+    $authtype  = auth_get_authtype_for_institution($user->get('institution'));
     $authclass = 'Auth' . ucfirst($authtype);
     safe_require('auth', $authtype);
     if (!$form->get_error('password1') && !call_static_method($authclass, 'is_password_valid', ($values['password1']))) {
@@ -1196,7 +1193,7 @@ function password_validate(Pieform $form, $values, $user) {
     }
 
     $suckypasswords = array(
-        'mahara', 'password', $user->username
+        'mahara', 'password', $user->get('username')
     );
     if (!$form->get_error('password1') && in_array($values['password1'], $suckypasswords)) {
         $form->set_error('password1', get_string('passwordtooeasy'));
@@ -1285,7 +1282,7 @@ function artefact_instance_from_id($id) {
  * Configures a default form
  */
 function pieform_configure() {
-    global $SESSION;
+    global $USER;
     return array(
         'method' => 'post',
         'action' => '',
@@ -1296,7 +1293,7 @@ function pieform_configure() {
         'elements' => array(
             'sesskey' => array(
                 'type' => 'hidden',
-                'value' => $SESSION->get('sesskey')
+                'value' => $USER->get('sesskey')
             )
         )
     );

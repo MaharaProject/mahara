@@ -27,6 +27,7 @@
 defined('INTERNAL') || die();
 
 require('session.php');
+require(get_config('docroot') . 'auth/user.php');
 
 /**
  * Unknown user exception
@@ -90,35 +91,6 @@ abstract class Auth {
         return true;
     }
 
-    /**
-     * If a validation form is to be used, the result of 
-     * {@link get_configuration_form} should be passed through this method
-     * before being returned. This method builds the rest of the form.
-     *
-     * @param string $method  The name of the authentication method (for
-     *                        example 'internal'). Lowercase please.
-     * @param array $elements The elements in the form.
-     * @return array          The form definition. <kbd>false</kbd> if there
-     *                        is no form for the authentication method.
-     */
-    protected static final function build_form($method, $elements) {
-        if (count($elements)) {
-            $elements['submit'] = array(
-                'type' => 'submit',
-                'value' => 'Update'
-            );
-            $elements['method'] = array(
-                'type' => 'hidden',
-                'value' => $method 
-            );
-            return array(
-                'name' => 'auth',
-                'elements' => $elements
-            );
-        }
-        return false;
-    }
-
 }
 
 
@@ -139,58 +111,64 @@ abstract class Auth {
  * testing is done to make sure the user has the required permissions to see
  * the page.
  *
- * @return object The $USER object, if the user is logged in and continuing
- *                their session.
  */
 function auth_setup () {
     global $SESSION, $USER;
 
     // If the system is not installed, let the user through in the hope that
     // they can fix this little problem :)
+    log_debug('auth_setup()');
     if (!get_config('installed')) {
-        $SESSION->logout();
+        log_debug('system not installed, letting user through');
+        $USER->logout();
         return;
     }
 
     // Check the time that the session is set to log out. If the user does
     // not have a session, this time will be 0.
-    $sessionlogouttime = $SESSION->get('logout_time');
+    $sessionlogouttime = $USER->get('logout_time');
+    log_debug("logout time: $sessionlogouttime");
     if ($sessionlogouttime && isset($_GET['logout'])) {
-        if (isset($_GET['logout'])) {
-            $SESSION->logout();
-            $SESSION->add_ok_msg(get_string('loggedoutok'));
-            redirect(get_config('wwwroot'));
-        }
+        log_debug("logging user out");
+        $USER->logout();
+        $SESSION->add_ok_msg(get_string('loggedoutok'));
+        redirect(get_config('wwwroot'));
     }
     if ($sessionlogouttime > time()) {
+        log_debug("session still active");
         // The session is still active, so continue it.
         // Make sure that if a user's admin status has changed, they're kicked
         // out of the admin section
         if (defined('ADMIN')) {
-            $userreallyadmin = get_field('usr', 'admin', 'id', $SESSION->get('id'));
-            if (!$SESSION->get('admin') && $userreallyadmin) {
+            $userreallyadmin = get_field('usr', 'admin', 'id', $USER->get('id'));
+            if (!$USER->get('admin') && $userreallyadmin) {
                 // The user has been made into an admin
-                $SESSION->set('admin', 1);
+                log_debug("user has been made an admin");
+                $USER->set('admin', 1);
             }
-            else if ($SESSION->get('admin') && !$userreallyadmin) {
+            else if ($USER->get('admin') && !$userreallyadmin) {
                 // The user's admin rights have been taken away
-                $SESSION->set('admin', 0);
+                log_debug("users admin rights have been revoked!");
+                $USER->set('admin', 0);
                 $SESSION->add_err_msg(get_string('accessforbiddentoadminsection'));
                 redirect(get_config('wwwroot'));
             }
-            elseif (!$SESSION->get('admin')) {
+            elseif (!$USER->get('admin')) {
                 // The user never was an admin
+                log_debug("denying user access to administration");
                 $SESSION->add_err_msg(get_string('accessforbiddentoadminsection'));
                 redirect(get_config('wwwroot'));
             }
         }
-        $USER = $SESSION->renew();
+        log_debug("renewing user's session");
+        $USER->renew();
         auth_check_password_change();
-        return $USER;
+        //return $USER;
     }
     else if ($sessionlogouttime > 0) {
         // The session timed out
-        $SESSION->logout();
+        log_debug('session timed out');
+        $USER->logout();
 
         // If the page the user is viewing is public, inform them that they can
         // log in again
@@ -198,6 +176,7 @@ function auth_setup () {
             // @todo this links to ?login - later it should do magic to make
             // sure that whatever GET string is made it includes the old data
             // correctly
+            log_debug('timed out on public page');
             $SESSION->add_info_msg(get_string('sessiontimedoutpublic'), false);
             return;
         }
@@ -206,23 +185,23 @@ function auth_setup () {
         // The auth_draw_login_page function may authenticate a user if a login
         // request was sent at the same time that the "timed out" message is to
         // be displayed.
-        return $USER;
+        //return $USER;
     }
     else {
         // There is no session, so we check to see if one needs to be started.
-        
+        log_debug('no session');
         // Build login form. If the form is submitted it will be handled here,
         // and set $USER for us (this will happen when users hit a page and
         // specify login data immediately
-        //require_once('form.php');
         require_once('pieforms/pieform.php');
         $form = new Pieform(auth_get_login_form());
-        if ($USER) {
-            return $USER;
+        if ($USER->is_logged_in()) {
+            return;
         }
         
         // Check if the page is public or the site is configured to be public.
         if (defined('PUBLIC') && !isset($_GET['login'])) {
+            log_debug('user viewing public page');
             return;
         }
         
@@ -254,11 +233,11 @@ function auth_get_authtype_for_institution($institution) {
  */
 function auth_check_password_change() {
     global $USER;
-    if (!$USER->passwordchange) {
+    if (!$USER->get('passwordchange')) {
         return;
     }
 
-    $authtype  = auth_get_authtype_for_institution($USER->institution);
+    $authtype  = auth_get_authtype_for_institution($USER->get('institution'));
     $authclass = 'Auth' . ucfirst($authtype);
     $url       = '';
     safe_require('auth', $authtype);
@@ -328,7 +307,7 @@ function change_password_validate(Pieform $form, $values) {
 
     // Get the authentication type for the user (based on the institution), and
     // use the information to validate the password
-    $authtype  = auth_get_authtype_for_institution($USER->institution);
+    $authtype  = auth_get_authtype_for_institution($USER->get('institution'));
     $authclass = 'Auth' . ucfirst($authtype);
     $authlang  = 'auth.' . $authtype;
     safe_require('auth', $authtype);
@@ -338,7 +317,7 @@ function change_password_validate(Pieform $form, $values) {
 
     // The password cannot be the same as the old one
     if (!$form->get_error('password1')
-        && call_static_method($authclass, 'authenticate_user_account', $USER->username, $values['password1'], $USER->institution)) {
+        && call_static_method($authclass, 'authenticate_user_account', $USER->get('username'), $values['password1'], $USER->get('institution'))) {
         $form->set_error('password1', get_string('passwordnotchanged'));
     }
 }
@@ -349,28 +328,28 @@ function change_password_validate(Pieform $form, $values) {
  * @param array $values The submitted form values
  */
 function change_password_submit($values) {
-    global $SESSION;
-    $authtype = auth_get_authtype_for_institution($SESSION->get('institution'));
+    global $USER, $SESSION;
+    $authtype = auth_get_authtype_for_institution($USER->get('institution'));
     $authclass = 'Auth' . ucfirst($authtype);
 
     // This method should exists, because if it did not then the change
     // password form would not have been shown.
-    if ($password = call_static_method($authclass, 'change_password', $SESSION->get('username'), $values['password1'])) {
+    if ($password = call_static_method($authclass, 'change_password', $USER->get('username'), $values['password1'])) {
         $user = new StdClass;
         $user->password = $password;
         $user->passwordchange = 0;
         $where = new StdClass;
-        $where->username = $SESSION->get('username');
+        $where->username = $USER->get('username');
         update_record('usr', $user, $where);
-        $SESSION->set('password', $password);
-        $SESSION->set('passwordchange', 0);
+        $USER->set('password', $password);
+        $USER->set('passwordchange', 0);
         $SESSION->add_ok_msg(get_string('passwordsaved'));
         redirect(get_config('wwwroot'));
         exit;
     }
 
-    throw new Exception('Attempt by "' . $SESSION->get('username') . '@'
-        . $SESSION->get('institution') . 'to change their password failed');
+    throw new Exception('Attempt by "' . $USER->get('username') . '@'
+        . $USER->get('institution') . 'to change their password failed');
 }
 
 /**
@@ -401,7 +380,7 @@ function auth_draw_login_page($message=null, Pieform $form=null) {
          * This happens when a user's session times out and they resend post
          * data. The request should just continue if so.
          */
-        if ($USER) {
+        if ($USER->is_logged_in()) {
             return;
         }
 
@@ -550,6 +529,7 @@ EOF;
  */
 function login_submit($values) {
     global $SESSION, $USER;
+    log_debug('login_submit()');
 
     $username    = $values['login_username'];
     $password    = $values['login_password'];
@@ -563,18 +543,19 @@ function login_submit($values) {
         if (call_static_method($authclass, 'authenticate_user_account', $username, $password, $institution)) {
             // User logged in! Set a cookie to remember their institution
             set_cookie('institution', $institution);
+            log_debug('user authenticated successfully');
 
             if (!record_exists('usr', 'username', $username)) {
                 // We don't know about this user. But if the authentication
                 // method says they're fine, then we must insert data for them
                 // into the usr table.
                 // @todo document what needs to be returned by get_user_info
-                $USER = call_static_method($authclass, 'get_user_info', $username);
-                insert_record('usr', $USER);
+                $userdata = call_static_method($authclass, 'get_user_info', $username);
+                insert_record('usr', $userdata);
             }
             // @todo config form option for this for each external plugin. NOT for internal
             else if (get_config_plugin('auth', $authtype, 'updateuserinfoonlogin')) {
-                $USER = call_static_method($authclass, 'get_user_info', $username);
+                $userdata = call_static_method($authclass, 'get_user_info', $username);
                 $where = new StdClass;
                 $where->username = $username;
                 $where->institution = $institution;
@@ -582,23 +563,22 @@ function login_submit($values) {
                 // that needs to be validated somewhere. Because here we do an insert into the
                 // usr table, that needs to work. and provide enough information for future
                 // authentication attempts
-                update_record('usr', $USER, $where);
+                update_record('usr', $userdata, $where);
             }
             else {
-                $USER = get_record('usr', 'username', $username, null, null, null, null, '*, ' . db_format_tsfield('expiry'));
+                $userdata = get_record('usr', 'username', $username, null, null, null, null, '*, ' . db_format_tsfield('expiry'));
             }
 
             // Only admins in the admin section!
-            if (defined('ADMIN') && !$USER->admin) {
+            if (defined('ADMIN') && !$userdata->admin) {
+                log_debug('user not allowed in admin section');
                 $SESSION->add_err_msg(get_string('accessforbiddentoadminsection'));
                 redirect(get_config('wwwroot'));
             }
 
             // Check if the user's account has expired
-            if ($USER->expiry > 0 && time() > $USER->expiry) {
-                // Trash the $USER object, used for checking if the user is logged in.
-                // Smarty uses it and puts login-only stuff in the output otherwise...
-                $USER = null;
+            // @todo TEST THIS
+            if ($userdata->expiry > 0 && time() > $userdata->expiry) {
                 die_info(get_string('accountexpired'));
             }
 
@@ -606,14 +586,13 @@ function login_submit($values) {
             // Note: only the internal authentication method can say if a user is suspended for now.
             // There are problems with how searching excluding suspended users will work that would
             // need to be resolved before this could be implemented for all methods
-            if ($suspend = get_record('usr_suspension', 'usr', $USER->id)) {
-                $USER = null;
+            // @todo TEST THIS
+            if ($suspend = get_record('usr_suspension', 'usr', $userdata->id)) {
                 die_info(get_string('accountsuspended', 'mahara', $suspend->ctime, $suspend->reason));
             }
 
             // User is allowed to log in
-            $SESSION->login($USER);
-            $USER->logout_time = $SESSION->get('logout_time');
+            $USER->login($userdata);
             auth_check_password_change();
         }
         else {

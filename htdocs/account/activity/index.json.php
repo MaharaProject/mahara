@@ -60,7 +60,7 @@ $type = param_alpha('type', 'all');
 $limit = param_integer('limit', 10);
 $offset = param_integer('offset', 0);
 
-$userid = $SESSION->get('id');
+$userid = $USER->get('id');
 
 if ($type == 'all') {
     $count = count_records('notification_internal_activity', 'usr', $userid);

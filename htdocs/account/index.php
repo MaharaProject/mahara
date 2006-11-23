@@ -32,9 +32,9 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 
 // load up user preferences
-$prefs = (object)($SESSION->get('accountprefs'));
+$prefs = (object)($USER->get('accountprefs'));
 
-$authtype  = auth_get_authtype_for_institution($USER->institution);
+$authtype  = auth_get_authtype_for_institution($USER->get('institution'));
 $authclass = 'Auth' . ucfirst($authtype);
 safe_require('auth', $authtype);
 
@@ -149,15 +149,12 @@ $smarty->display('account/index.tpl');
 
 function accountprefs_validate(Pieform $form, $values) {
     if ($values['oldpassword'] !== '') {
-        global $SESSION, $authtype, $authclass;
-        if (!call_static_method($authclass, 'authenticate_user_account', $SESSION->get('username'), $values['oldpassword'], $SESSION->get('institution'))) {
+        global $USER, $authtype, $authclass;
+        if (!call_static_method($authclass, 'authenticate_user_account', $USER->get('username'), $values['oldpassword'], $USER->get('institution'))) {
             $form->set_error('oldpassword', get_string('oldpasswordincorrect', 'account'));
             return;
         }
-        $user = new StdClass;
-        $user->username    = $SESSION->get('username');
-        $user->institution = $SESSION->get('institution');
-        password_validate($form, $values, $user);
+        password_validate($form, $values, $USER);
     }
     else if ($values['password1'] !== '' || $values['password2'] !== '') {
         $form->set_error('oldpassword', get_string('mustspecifyoldpassword'));
@@ -165,26 +162,26 @@ function accountprefs_validate(Pieform $form, $values) {
 }
 
 function accountprefs_submit($values) {
-    global $SESSION;
+    global $USER;
 
     db_begin();
     if ($values['password1'] !== '') {
         global $authclass;
-        $password = call_static_method($authclass, 'change_password', $SESSION->get('username'), $values['password1']);
+        $password = call_static_method($authclass, 'change_password', $USER->get('username'), $values['password1']);
         $user = new StdClass;
         $user->password = $password;
         $user->passwordchange = 0;
         $where = new StdClass;
-        $where->username = $SESSION->get('username');
+        $where->username = $USER->get('username');
         update_record('usr', $user, $where);
-        $SESSION->set('password', $password);
-        $SESSION->set('passwordchange', 0);
+        $USER->set('password', $password);
+        $USER->set('passwordchange', 0);
     }
 
     // use this as looping through values is not safe.
     $expectedprefs = expected_account_preferences(); 
     foreach (array_keys($expectedprefs) as $pref) {
-        $SESSION->set_account_preference($pref, $values[$pref]);
+        $USER->set_account_preference($pref, $values[$pref]);
     }
 
     db_commit();

@@ -120,7 +120,8 @@ function &smarty($javascript = array(), $headers = array(), $strings = array()) 
         $smarty->assign('ADMIN', true);
     }
 
-    if ($SESSION->is_logged_in()) {
+    $smarty->assign('LOGGEDIN', $USER->is_logged_in());
+    if ($USER->is_logged_in()) {
         $smarty->assign('MAINNAV', main_nav());
     }
 

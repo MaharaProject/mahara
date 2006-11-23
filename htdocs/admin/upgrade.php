@@ -132,6 +132,9 @@ EOJS;
 $smarty->assign('INLINEJAVASCRIPT', $js);
 
 $smarty->assign_by_ref('upgrades', $upgrades);
+if (isset($upgrades['core'])) {
+    $smarty->assign('releaseargs', array($upgrades['core']->torelease, $upgrades['core']->to));
+}
 $smarty->display('admin/upgrade.tpl');
 
 ?>

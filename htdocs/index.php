@@ -33,8 +33,7 @@ require_once('pieforms/pieform.php');
 
 // Check for whether the user is logged in, before processing the page. After
 // this, we can guarantee whether the user is logged in or not for this page.
-if (!$SESSION->is_logged_in()) {
-    require_once('pieforms/pieform.php');
+if (!$USER->is_logged_in()) {
     $institutions = get_records_menu('institution', '', '', 'name, displayname');
     $loginform = get_login_form_js(pieform(array(
         'name'       => 'login',
@@ -94,7 +93,7 @@ else {
 }
 
 $smarty = smarty();
-if (!$SESSION->is_logged_in()) {
+if (!$USER->is_logged_in()) {
     $smarty->assign('login_form', $loginform);
 }
 else {

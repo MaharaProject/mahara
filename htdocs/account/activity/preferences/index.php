@@ -37,7 +37,7 @@ $notifications = plugins_installed('notification');
 $elements = array();
 
 foreach ($activitytypes as $type) {
-    if (!$dv = $SESSION->get_activity_preference($type->name)) {
+    if (!$dv = $USER->get_activity_preference($type->name)) {
         $dv = 'internal';
     }
     $elements[$type->name] = array(
@@ -76,11 +76,11 @@ $smarty->assign('form', pieform($prefsform));
 $smarty->display('account/activity/preferences/index.tpl');
 
 function activityprefs_submit($values) {
-    global $activitytypes, $SESSION;
+    global $activitytypes, $USER;
     
-    $userid = $SESSION->get('id');
+    $userid = $USER->get('id');
     foreach ($activitytypes as $type) {
-        $SESSION->set_activity_preference($type->name, $values[$type->name]);
+        $USER->set_activity_preference($type->name, $values[$type->name]);
     }
     json_reply(false, get_string('prefssaved', 'account'));
     exit;

@@ -143,7 +143,10 @@ header('Content-type: text/html; charset=UTF-8');
 // Only do authentication once we know the page theme, so that the login form
 // can have the correct theming.
 require('auth/lib.php');
-$USER = auth_setup();
+$SESSION = new Session;
+$USER    = new User($SESSION);
+// perhaps later, do this as part of creating a user
+auth_setup();
 
 // check to see if we're installed...
 if (!get_config('installed')

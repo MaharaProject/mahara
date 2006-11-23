@@ -35,11 +35,11 @@ $offset = param_integer('offset', 0);
 
 $dbprefix = get_config('dbprefix');
 
-$count = get_field('usr_group', 'COUNT(*)', 'owner', $USER->id);
+$count = get_field('usr_group', 'COUNT(*)', 'owner', $USER->get('id'));
 
 $data = get_rows_sql(
     'SELECT g.id, g.name, COUNT(m.*) AS count FROM ' . $dbprefix . 'usr_group g INNER JOIN ' . $dbprefix . 'usr_group_member m ON m.grp=g.id WHERE g.owner=? GROUP BY 1, 2 ORDER BY g.name',
-    array($USER->id),
+    array($USER->get('id')),
     $offset,
     $limit
 );
