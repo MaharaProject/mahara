@@ -313,7 +313,7 @@ function change_password_validate(Pieform $form, $values) {
     safe_require('auth', $authtype);
 
     // @todo this could be done by a custom form rule... 'password' => $user
-    password_validate($form, $values, $USER);
+    password_validate($form, $values, $USER->get('username'), $USER->get('institution'));
 
     // The password cannot be the same as the old one
     if (!$form->get_error('password1')

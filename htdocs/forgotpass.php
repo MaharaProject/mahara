@@ -154,7 +154,7 @@ function forgotpasschange_validate(Pieform $form, $values) {
     if (!$user = get_record('usr', 'id', $values['user'])) {
         throw new Exception('Request to change the password for a user who does not exist');
     }
-    password_validate($form, $values, $user);
+    password_validate($form, $values, $user->username, $user->institution);
 }
 
 
@@ -163,7 +163,7 @@ function forgotpasschange_validate(Pieform $form, $values) {
 //   support autofocus => (true|'id'), remove stuff doing autofocus from where it is, focus error fields
 //   commit stuff
 function forgotpasschange_submit($values) {
-    global $SESSION;
+    global $SESSION, $USER;
 
     if (!$user = get_record('usr', 'id', $values['user'])) {
         throw new Exception('Request to change the password for a user who does not exist');
@@ -186,7 +186,7 @@ function forgotpasschange_submit($values) {
         // Remove the password request(s) for the user
         delete_records('usr_password_request', 'usr', $values['user']);
 
-        $SESSION->login($user);
+        $USER->login($user);
         $SESSION->add_ok_msg(get_string('passwordchangedok'));
         redirect(get_config('wwwroot'));
         exit;

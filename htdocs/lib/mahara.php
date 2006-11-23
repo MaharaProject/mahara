@@ -568,15 +568,17 @@ function check_dir_exists($dir, $create=true, $recursive=true) {
  *
  * @todo need such a function for password too.
  */
-function validate_username($username) {
-    return preg_match('/^[a-zA-Z0-9_\.@]+$/', $username);
-}
+//function validate_username($username) {
+//    return preg_match('/^[a-zA-Z0-9_\.@]+$/', $username);
+//}
 
 /**
  * Function to require a plugin file. This is to avoid doing 
  * require and include directly with variables.
+ *
  * This function is the one safe point to require plugin files.
  * so USE it :)
+ *
  * @param string $plugintype the type of plugin (eg artefact)
  * @param string $pluginname the name of the plugin (eg blog)
  * @param string $filename the name of the file to include within the plugin structure
@@ -584,17 +586,13 @@ function validate_username($username) {
  * @param string $nonfatal (optional, defaults to false) just returns false if the file doesn't exist
  */
 function safe_require($plugintype, $pluginname, $filename='lib.php', $function='require_once', $nonfatal=false) {
-
     $plugintypes = plugin_types();
     if (!in_array($plugintype, $plugintypes)) {
         throw new Exception("\"$plugintype\" is not a valid plugin type");
     }
     require_once(get_config('docroot') . $plugintype . '/lib.php');
 
-    $plugintype = clean_filename($plugintype);
-    $pluginname = clean_filename($pluginname);
-
-    if (!in_array($function,array('require','include','require_once','include_once'))) {
+    if (!in_array($function,array('require', 'include', 'require_once', 'include_once'))) {
         if (!empty($nonfatal)) {
             return false;
         }
@@ -1188,8 +1186,8 @@ function get_random_key() {
  * @param array $values         The values passed through
  * @param string $authplugin    The authentication plugin that the user uses
  */
-function password_validate(Pieform $form, $values, $user) {
-    $authtype  = auth_get_authtype_for_institution($user->get('institution'));
+function password_validate(Pieform $form, $values, $username, $institution) {
+    $authtype  = auth_get_authtype_for_institution($institution);
     $authclass = 'Auth' . ucfirst($authtype);
     safe_require('auth', $authtype);
     if (!$form->get_error('password1') && !call_static_method($authclass, 'is_password_valid', ($values['password1']))) {
@@ -1197,7 +1195,7 @@ function password_validate(Pieform $form, $values, $user) {
     }
 
     $suckypasswords = array(
-        'mahara', 'password', $user->get('username')
+        'mahara', 'password', $username
     );
     if (!$form->get_error('password1') && in_array($values['password1'], $suckypasswords)) {
         $form->set_error('password1', get_string('passwordtooeasy'));
