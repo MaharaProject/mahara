@@ -31,7 +31,7 @@ $wwwroot = get_config('wwwroot');
 
 $strings = array('accessstartdate', 'accessenddate', 'artefacts', 'delete', 'description', 
                  'editaccess', 'editview', 'editviewinformation', 
-                 'submitted', 'submitview', 'unknownerror');
+                 'submitted', 'submittedto', 'submitview', 'unknownerror');
 $getstring = array();
 foreach ($strings as $string) {
     $getstring[$string] = "'" . get_string($string) . "'";
@@ -64,8 +64,8 @@ function title(r, c) {
     editaccess.onclick = function () { submitform(r.id, 'editaccess'); };
     var del = INPUT({'type':'button','value':{$getstring['delete']}});
     del.onclick = function () { submitform(r.id, 'delete'); };
-    if (r.submitted) {
-        var assess = {$getstring['submitted']};
+    if (r.submittedto) {
+        var assess = {$getstring['submittedto']} + ': ' + r.submittedto;
     }
     else {
         var assess = assessselect(r.id,c);

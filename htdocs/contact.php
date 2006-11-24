@@ -30,9 +30,9 @@ define('PUBLIC', 1);
 require('init.php');
 require_once('pieforms/pieform.php');
 
-if ($SESSION->is_logged_in()) {
-    $name = display_name($USER);
-    $email = $USER->email;
+if ($USER->is_logged_in()) {
+    $name = display_name($USER->get('id'));
+    $email = $USER->get('email');
 }
 else {
     $name = '';

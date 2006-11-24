@@ -39,12 +39,17 @@ $count = count_records('view', 'owner', $userid);
 
 /* Do this in one query sometime */
 
-$viewdata = get_records_array('view', 'owner', $userid, '', 
-                              'id,title,startdate,enddate,description,submitted', $offset, $limit);
+$prefix = get_config('dbprefix');
+$viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.enddate,v.description,c.name
+        FROM ' . $prefix . 'view v
+        LEFT OUTER JOIN ' . $prefix . 'community c ON v.submittedto = c.id
+        WHERE v.owner = ' . $userid, '');
+
+//'view', 'owner', $userid, '', 
+//                              'id,title,startdate,enddate,description,submittedto', $offset, $limit);
 
 $viewidlist = implode(', ', array_map(create_function('$a', 'return $a->id;'), $viewdata));
 
-$prefix = get_config('dbprefix');
 $artefacts = get_records_sql_array('SELECT va.view, va.artefact, a.title
         FROM ' . $prefix . 'view_artefact va
         JOIN ' . $prefix . 'artefact a ON va.artefact = a.id
@@ -63,7 +68,7 @@ if ($viewdata) {
         $data[$i]['startdate'] = strftime(get_string('strftimedate'),strtotime($viewdata[$i]->startdate));
         $data[$i]['enddate'] = strftime(get_string('strftimedate'),strtotime($viewdata[$i]->enddate));
         $data[$i]['description'] = $viewdata[$i]->description;
-        $data[$i]['submitted'] = $viewdata[$i]->submitted;
+        $data[$i]['submittedto'] = $viewdata[$i]->name;
         $data[$i]['artefacts'] = array();
     }
     // Go through all the artefact records and put them in with the
@@ -80,13 +85,17 @@ if ($viewdata) {
    a tutor member.  This is the list of communities that the user is
    able to submit views to. */
 
-$communitydata = get_column('community_member', 'community', 'member', $userid);
-$communityidlist = implode(', ', $communitydata);
-$tutorcommunitydata = get_records_sql_array('SELECT c.id, c.name
+if ($communitydata = @get_column('community_member', 'community', 'member', $userid)) {
+    $communityidlist = implode(', ', $communitydata);
+    $tutorcommunitydata = get_records_sql_array('SELECT c.id, c.name
        FROM ' . $prefix . 'community c
        JOIN ' . $prefix . 'community_member cm ON c.id = cm.community
        WHERE cm.community IN (' . $communityidlist . ')
        AND cm.tutor = 1', '');
+}
+if (empty($tutorcommunitydata)) {
+    $tutorcommunitydata = array();
+}
 
 $result = array(
     'count'       => $count,
