@@ -86,6 +86,7 @@ $string['lastname'] = 'Last name';
 $string['lastnamedescription'] = 'Your last name';
 $string['password2description'] = 'Your password again';
 $string['registerdescription'] = 'Welcome! To use this site you must first register. You must also agree to the <a href="terms.php">terms and conditions</a>. The data we collect here will be stored according to our <a href="privacy.php">privacy statement</a>.';
+$string['registeringdisallowed'] = 'Sorry, you cannot register for this system at this time';
 
 // Forgot password
 $string['cantchangepassword'] = 'Sorry, you are unable to change your password through this interface - please use your institution\'s interface instead';
