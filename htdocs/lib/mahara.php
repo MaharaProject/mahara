@@ -1107,9 +1107,12 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='')
  * converts a user object to a string representation of the user suitable for
  * the current user (or specified user) to see
  *
+ * Both parameters should be objects containing id, preferredname, firstname,
+ * lastname, admin
+ *
  * @param object the user that you're trying to format to a string
  * @param object the user that is looking at the string representation (if left
- * blank, will default to the currently logged in user)
+ * blank, will default to the currently logged in user).
  *
  * @returns string name to display
  */
@@ -1133,10 +1136,14 @@ function display_name($user, $userto=null) {
     if (!is_object($user)) {
         throw new InvalidArgumentException("Invalid user passed to display_name");
     }
-    
+
     // if they don't have a preferred name set, just return here
     if (empty($user->preferredname)) {
         return $user->firstname . ' ' . $user->lastname;
+    }
+
+    if ($userto->admin) {
+        return $user->preferredname . ' (' . $user->firstname . ' ' . $user->lastname . ')';
     }
 
     $prefix = get_config('dbprefix');
