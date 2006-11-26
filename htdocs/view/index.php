@@ -45,7 +45,7 @@ $javascript = <<<JAVASCRIPT
 var viewlist = new TableRenderer(
     'viewlist',
     'myviews.json.php',
-    [null,null]
+    [undefined,undefined]
 );
 
 viewlist.rowfunction = function(r, n, data) {
