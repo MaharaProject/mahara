@@ -577,14 +577,11 @@
                 <FIELD NAME="owner" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="template" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="startdate" TYPE="datetime" />
-                <FIELD NAME="enddate" TYPE="datetime" />
+                <FIELD NAME="stopdate" TYPE="datetime" />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
                 <FIELD NAME="mtime" TYPE="datetime" NOTNULL="true" />
                 <FIELD NAME="atime" TYPE="datetime" NOTNULL="true" />
                 <FIELD NAME="submitted" TYPE="int" LENGTH="10" NOTNULL="false" />
-                <FIELD NAME="public" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" />
-                <FIELD NAME="loggedin" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" />
-                <FIELD NAME="friendsonly" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
@@ -621,10 +618,25 @@
                 <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id" />
             </KEYS>
         </TABLE>
+        <TABLE NAME="view_access">
+            <FIELDS>
+                <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="accesstype" TYPE="char" LENGTH="16" NOTNULL="true" ENUM="true" ENUMVALUES="'public', 'loggedin', 'friends'" />
+                <FIELD NAME="startdate" TYPE="datetime" NOTNULL="false" />
+                <FIELD NAME="stopdate" TYPE="datetime" NOTNULL="false" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="view,accesstype" />
+                <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
         <TABLE NAME="view_access_community">
             <FIELDS>
                 <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="community" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="tutoronly" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
+                <FIELD NAME="startdate" TYPE="datetime" NOTNULL="false" />
+                <FIELD NAME="stopdate" TYPE="datetime" NOTNULL="false" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="view,community" />
@@ -636,6 +648,8 @@
             <FIELDS>
                 <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="grp" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="startdate" TYPE="datetime" NOTNULL="false" />
+                <FIELD NAME="stopdate" TYPE="datetime" NOTNULL="false" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="view,grp" />
@@ -647,6 +661,8 @@
             <FIELDS>
                 <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="startdate" TYPE="datetime" NOTNULL="false" />
+                <FIELD NAME="stopdate" TYPE="datetime" NOTNULL="false" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="view,usr" />
