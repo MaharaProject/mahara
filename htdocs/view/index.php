@@ -29,7 +29,7 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 
 $wwwroot = get_config('wwwroot');
 
-$strings = array('accessstartdate', 'accessenddate', 'artefacts', 'delete', 'description', 
+$strings = array('accessstartdate', 'accessstopdate', 'artefacts', 'delete', 'description', 
                  'editaccess', 'editview', 'editviewinformation', 'submitted', 
                  'submitview', 'submitviewquestion', 'unknownerror');
 $getstring = array();
@@ -41,8 +41,6 @@ foreach ($strings as $string) {
    five <tr> elements for each item of data coming from the database.
    Maybe I need a repeated-paginated-thing renderer? */
 
-    //var assess = SELECT({'name':'community'});
-
 $javascript = <<<JAVASCRIPT
 var viewlist = new TableRenderer(
     'viewlist',
@@ -51,7 +49,7 @@ var viewlist = new TableRenderer(
 );
 
 viewlist.rowfunction = function(r, n, data) {
-    return map(partial(TR,null),[title(r,data.communities), startdate(r), enddate(r), 
+    return map(partial(TR,null),[title(r,data.communities), startdate(r), stopdate(r), 
                                  description(r), artefacts(r)]);
 }
 
@@ -97,9 +95,9 @@ function startdate(r) {
             TD(r.startdate)];
 }
 
-function enddate(r) {
-    return [TD(null,{$getstring['accessenddate']}),
-            TD(r.enddate)];
+function stopdate(r) {
+    return [TD(null,{$getstring['accessstopdate']}),
+            TD(r.stopdate)];
 }
 
 function description(r) {

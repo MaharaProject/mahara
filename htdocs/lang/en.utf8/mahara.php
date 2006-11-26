@@ -200,7 +200,7 @@ $string['activity'] = 'Recent activity';
 
 // my views
 $string['accessstartdate'] = 'Access start date';
-$string['accessenddate'] = 'Access end date';
+$string['accessstopdate'] = 'Access end date';
 $string['artefacts'] = 'Artefacts';
 $string['createnewview'] = 'Create New View';
 $string['deleteviewfailed'] = 'Delete view failed';

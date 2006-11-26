@@ -40,13 +40,13 @@ $count = count_records('view', 'owner', $userid);
 /* Do this in one query sometime */
 
 $prefix = get_config('dbprefix');
-$viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.enddate,v.description,c.name
+$viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description,c.name
         FROM ' . $prefix . 'view v
         LEFT OUTER JOIN ' . $prefix . 'community c ON v.submittedto = c.id
-        WHERE v.owner = ' . $userid, '');
+        WHERE v.owner = ' . $userid,'');
 
-//'view', 'owner', $userid, '', 
-//                              'id,title,startdate,enddate,description,submittedto', $offset, $limit);
+// . '
+//        ORDER BY v.title', '');
 
 $viewidlist = implode(', ', array_map(create_function('$a', 'return $a->id;'), $viewdata));
 
@@ -66,7 +66,7 @@ if ($viewdata) {
         $data[$i]['id'] = $viewdata[$i]->id;
         $data[$i]['title'] = $viewdata[$i]->title;
         $data[$i]['startdate'] = strftime(get_string('strftimedate'),strtotime($viewdata[$i]->startdate));
-        $data[$i]['enddate'] = strftime(get_string('strftimedate'),strtotime($viewdata[$i]->enddate));
+        $data[$i]['stopdate'] = strftime(get_string('strftimedate'),strtotime($viewdata[$i]->stopdate));
         $data[$i]['description'] = $viewdata[$i]->description;
         $data[$i]['submittedto'] = $viewdata[$i]->name;
         $data[$i]['artefacts'] = array();
