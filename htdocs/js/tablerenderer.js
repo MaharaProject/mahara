@@ -145,6 +145,9 @@ function TableRenderer(target, source, columns, options) {
                 else if ( typeof(column) == 'function' ) {
                     appendChildNodes(tr, column(row,data));
                 }
+                else if ( typeof(column) == 'undefined' ) {
+                    return;
+                }
                 else {
                     logError("Can't deal with column def of type: " + typeof(column));
                 }
