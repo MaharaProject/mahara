@@ -30,8 +30,8 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 $wwwroot = get_config('wwwroot');
 
 $strings = array('accessstartdate', 'accessenddate', 'artefacts', 'delete', 'description', 
-                 'editaccess', 'editview', 'editviewinformation', 
-                 'submitted', 'submittedto', 'submitview', 'unknownerror');
+                 'editaccess', 'editview', 'editviewinformation', 'submitted', 'submittedto',
+                 'submitview', 'submitviewquestion', 'unknownerror');
 $getstring = array();
 foreach ($strings as $string) {
     $getstring[$string] = "'" . get_string($string) . "'";
@@ -55,7 +55,7 @@ viewlist.rowfunction = function(r, n, data) {
                                  description(r), artefacts(r)]);
 }
 
-function title(r, c) {
+function title(r, communities) {
     var editinfo = INPUT({'type':'button','value':{$getstring['editviewinformation']}});
     editinfo.onclick = function () { submitform(r.id, 'editinfo'); };
     var edit = INPUT({'type':'button','value':{$getstring['editview']}});
@@ -65,10 +65,10 @@ function title(r, c) {
     var del = INPUT({'type':'button','value':{$getstring['delete']}});
     del.onclick = function () { submitform(r.id, 'delete'); };
     if (r.submittedto) {
-        var assess = {$getstring['submittedto']} + ': ' + r.submittedto;
+        var assess = {$getstring['submitted']} + ': ' + r.submittedto;
     }
     else {
-        var assess = assessselect(r.id,c);
+        var assess = assessselect(r.id,communities);
     }
     var f = FORM({'id':('form'+r.id),'method':'post','enctype':'multipart/form-data',
                   'encoding':'multipart/form-data','onsubmit':"return formsubmit('"+r.id+"');"},
@@ -79,15 +79,17 @@ function title(r, c) {
 }
 
 function communityoption(community) {
-    return OPTION({'name':'community'+community.id},community.name);
+    return OPTION({'value':community.id},community.name);
 }
 
-function assessselect(viewid, clist) {
-    if (clist.length < 1) {
+function assessselect(viewid, communitylist) {
+    if (communitylist.length < 1) {
         return null;
     }
-    return [SELECT({'name':'community'},map(communityoption, clist)),
-            INPUT({'type':'button','value':{$getstring['submitview']}})];
+    var submitview = INPUT({'type':'button','value':{$getstring['submitview']}});
+    submitview.onclick = function () { submitform(viewid, 'submitview'); };
+    return [SELECT({'name':'community'},map(communityoption, communitylist)), submitview];
+            
 }
 
 function startdate(r) {
@@ -124,6 +126,20 @@ function deleteview(viewid) {
     return false;
 }
 
+function submitview(viewid, communityid) {
+    var answer = confirm({$getstring['submitviewquestion']});
+    if (!answer) {
+        return;
+    }
+    processingStart();
+    var req = getXMLHttpRequest();
+    req.open('POST','submit.json.php');
+    req.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+    var d = sendXMLHttpRequest(req,queryString({'viewid':viewid,'communityid':communityid}));
+    d.addCallbacks(json_success, json_error);
+    return false;
+}
+
 function json_success(result) {
     var data = evalJSONRequest(result);
     var errtype = false;
@@ -153,6 +169,9 @@ function submitform(viewid, action) {
         return deleteview(viewid);
     }
     var form = $('form' + viewid);
+    if (action == 'submitview') {
+        return submitview(viewid, form.community.value);
+    }
     var page = 'index.php';
     if (action == 'editinfo') {
         page = 'editmetadata.php';
