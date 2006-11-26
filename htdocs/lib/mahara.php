@@ -816,6 +816,11 @@ function admin_nav() {
             'link'     => $wwwroot . 'admin/editmenu.php',
         ),
         array(
+            'name'     => 'adminplugins',
+            'section'  => 'admin',
+            'link'     => $wwwroot . 'admin/plugins/',
+        ),
+        array(
             'name'     => 'files',
             'section'  => 'admin',
             'link'     => $wwwroot . 'admin/todo',
@@ -938,6 +943,11 @@ function main_nav() {
                 'section' => 'mahara',
             ),
         ),
+    );
+    $menu[] = array(
+        'name'    => 'myviews',
+        'link'    => $wwwroot . 'view/',
+        'section' => 'mahara',
     );
     $menu[] = array(
         'name'    => 'account',
@@ -1093,6 +1103,16 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='')
                         . "Error from phpmailer was: " . $mail->ErrorInfo );
 }
 
+/**
+ * converts a user object to a string representation of the user suitable for
+ * the current user (or specified user) to see
+ *
+ * @param object the user that you're trying to format to a string
+ * @param object the user that is looking at the string representation (if left
+ * blank, will default to the currently logged in user)
+ *
+ * @returns string name to display
+ */
 function display_name($user, $userto=null) {
     global $USER;
     
@@ -1102,6 +1122,7 @@ function display_name($user, $userto=null) {
         $userto->preferredname = $USER->get('preferredname');
         $userto->firstname     = $USER->get('firstname');
         $userto->lastname      = $USER->get('lastname');
+        $userto->admin         = $USER->get('admin');
     }
     if (is_array($user)) {
         $user = (object)$user;
@@ -1302,7 +1323,8 @@ function pieform_configure() {
 }
 
 function searchform() {
-    return array(
+    require_once('pieforms/pieform.php');
+    return pieform(array(
         'name'                => 'searchform',
         'action'              => get_config('wwwroot') . 'user/search.php',
         'elements'            => array(
@@ -1311,7 +1333,7 @@ function searchform() {
                 'defaultvalue'   => '',
             ),
         )
-    );
+    ));
 }
 
 /**

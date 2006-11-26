@@ -224,11 +224,14 @@ if (count($institutions) > 1) {
         'options' => $options
     );
 }
-else {
+else if ($institutions) {
     $elements['institution'] = array(
         'type' => 'hidden',
         'value' => 'mahara'
     );
+}
+else {
+    die_info(get_string('registeringdisallowed'));
 }
 
 $elements['tandc'] = array(

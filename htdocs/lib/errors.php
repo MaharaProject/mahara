@@ -375,40 +375,47 @@ function error ($code, $message, $file, $line, $vars) {
  * @access private
  */
 function exception (Exception $e) {
+    global $USER;
     // @todo<nigel>: maybe later, rewrite as:
     // if $e not Exception
     //     get language string based on class name
     // rather than by switch on class name
-    if (function_exists('get_string')) {
-        $outputmessage = get_string('unrecoverableerror', 'error');
-        if (!function_exists('get_config') || !$sitename = @get_config('sitename')) {
-            $sitename = 'Mahara';
+    if ($USER) {
+        if (function_exists('get_string')) {
+            $outputmessage = get_string('unrecoverableerror', 'error');
+            if (!function_exists('get_config') || !$sitename = @get_config('sitename')) {
+                $sitename = 'Mahara';
+            }
+            $outputtitle = get_string('unrecoverableerrortitle', 'error', $sitename);
         }
-        $outputtitle = get_string('unrecoverableerrortitle', 'error', $sitename);
+        else {
+            // sensible english defaults
+            $outputmessage = 'A nonrecoverable error occured. '
+                . 'This probably means you have encountered a bug in the system';
+            $outputtitle = 'Mahara - Site Unavailable';
+        }
+        switch (get_class($e)) {
+            case 'ConfigSanityException':
+                $outputmessage = $message = get_string('configsanityexception', 'error', $e->getMessage());
+                break;
+            default:
+                $message = $e->getMessage();
+        }
+
+        log_message($message, LOG_LEVEL_WARN, true, true, $e->getFile(), $e->getLine(), $e->getTrace());
+
+        if (function_exists('smarty')) {
+            $smarty = smarty();
+            $smarty->assign('title', $outputtitle);
+            $smarty->assign('message', $outputmessage);
+            $smarty->display('error.tpl');
+            die();
+        }
     }
     else {
-        // sensible english defaults
-        $outputmessage = 'A nonrecoverable error occured. '
-            . 'This probably means you have encountered a bug in the system';
         $outputtitle = 'Mahara - Site Unavailable';
+        $outputmessage = $e->getMessage();
     }
-    switch (get_class($e)) {
-        case 'ConfigSanityException':
-            $outputmessage = $message = get_string('configsanityexception', 'error', $e->getMessage());
-            break;
-        default:
-            $message = $e->getMessage();
-    }
-
-    log_message($message, LOG_LEVEL_WARN, true, true, $e->getFile(), $e->getLine(), $e->getTrace());
-
-    if (function_exists('smarty')) {
-        $smarty = smarty();
-        $smarty->assign('title', $outputtitle);
-        $smarty->assign('message', $outputmessage);
-        $smarty->display('error.tpl');
-    }
-    else {
     echo <<<EOF
 <html>
 <head>
@@ -431,7 +438,6 @@ $outputmessage
 </body>
 </html>
 EOF;
-    }
     die();
 }
 

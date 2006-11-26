@@ -29,11 +29,11 @@ define('PUBLIC', 1);
 define('MENUITEM', 'home');
 
 require('init.php');
-require_once('pieforms/pieform.php');
 
 // Check for whether the user is logged in, before processing the page. After
 // this, we can guarantee whether the user is logged in or not for this page.
 if (!$USER->is_logged_in()) {
+    require_once('pieforms/pieform.php');
     $institutions = get_records_menu('institution', '', '', 'name, displayname');
     $loginform = get_login_form_js(pieform(array(
         'name'       => 'login',
@@ -97,7 +97,7 @@ if (!$USER->is_logged_in()) {
     $smarty->assign('login_form', $loginform);
 }
 else {
-    $smarty->assign('searchform', pieform(searchform()));
+    $smarty->assign('searchform', searchform());
 }
 $smarty->assign('page_content', get_site_page_content($pagename));
 $smarty->assign('site_menu', site_menu());

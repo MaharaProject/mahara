@@ -53,6 +53,8 @@ $string['failedtomarkasread'] = 'Failed to mark your notifications as read';
 
 $string['stopmonitoring'] = 'Stop monitoring';
 $string['viewsandartefacts'] = 'Views and artefacts';
+$string['views'] = 'Views';
+$string['artefacts'] = 'Artefacts';
 $string['communities'] = 'Communities';
 $string['monitored'] = 'Monitored';
 $string['stopmonitoring'] = 'Stop monitoring';

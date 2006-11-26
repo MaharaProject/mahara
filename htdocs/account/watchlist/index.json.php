@@ -39,15 +39,15 @@ if ($stopmonitoring) {
     db_begin();
     try {
         foreach ($_GET as $k => $v) {
-            if (preg_match('/^stopview\-(\d+)$/',$k,$m)) {
+            if (preg_match('/^stopviews\-(\d+)$/',$k,$m)) {
                 delete_records('usr_watchlist_view', 'usr', $userid, 'view', $m[1]);
                 $count++;
             }
-            else if (preg_match('/^stopartefact\-(\d+)$/',$k,$m)) {
+            else if (preg_match('/^stopartefacts\-(\d+)$/',$k,$m)) {
                 delete_records('usr_watchlist_artefact', 'usr', $userid, 'artefact', $m[1]);
                 $count++;
             }
-            else if (preg_match('/^stopcommunity\-(\d+)$/',$k,$m)) {
+            else if (preg_match('/^stopcommunities\-(\d+)$/',$k,$m)) {
                 delete_records('usr_watchlist_community', 'usr', $userid, 'community', $m[1]);
                 $count++;
             }
@@ -74,6 +74,9 @@ $offset = param_integer('offset', 0);
 $userid = $USER->get('id');
 $prefix = get_config('dbprefix');
 
+$count = 0;
+$records = array();
+
 if ($type == 'views') {
     $count = count_records('usr_watchlist_view', 'usr', $userid);
     $sql = 'SELECT v.*, v.title AS name 
@@ -81,11 +84,7 @@ if ($type == 'views') {
             JOIN ' . $prefix . 'usr_watchlist_view w ON w.view = v.id
             WHERE w.usr = ?
             ORDER BY v.mtime DESC';
-    if ($records = get_records_sql_array($sql, array($userid), $offset, $limit)) {
-        foreach ($records as &$r) {
-            // @todo session expandey stuff
-        }
-    }
+    $records = get_records_sql_array($sql, array($userid), $offset, $limit);
 }
 else if ($type == 'communities') {
     $count = count_records('usr_watchlist_community', 'usr', $userid);
@@ -94,6 +93,15 @@ else if ($type == 'communities') {
             JOIN ' . $prefix . 'usr_watchlist_community w ON w.community = c.id 
             WHERE w.usr = ?
             ORDER BY c.mtime DESC';
+    $records = get_records_sql_array($sql, array($userid), $offset, $limit);
+}
+else if ($type == 'artefacts') {
+    $count = count_records('usr_watchlist_artefact', 'usr', $userid);
+    $sql = 'SELECT a.* , a.title AS name
+            FROM ' . $prefix . 'artefact a
+            JOIN ' . $prefix . 'usr_watchlist_artefact w ON w.artefact = a.id 
+            WHERE w.usr = ?
+            ORDER BY a.mtime DESC';
     $records = get_records_sql_array($sql, array($userid), $offset, $limit);
 }
 
@@ -107,10 +115,6 @@ $activity = array(
     'limit'     => $limit,
     'data'      => $records,
     'type'      => $type,
-    'minusicon' => theme_get_image_path('minus.png'),
-    'plusicon'  => theme_get_image_path('plus.png'),
-    'minusalt'  => get_string('collapse'),
-    'plusalt'   => get_string('expand'),
 );
 
 echo json_encode($activity);
