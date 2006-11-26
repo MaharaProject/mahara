@@ -8,7 +8,8 @@
 <form method="post">
 {str tag='filter'}:
 <select name="type" onChange="{$typechange}">
-    <option value="views">{str section='activity' tag='viewsandartefacts'}</option>
+    <option value="views">{str section='activity' tag='views'}</option>
+    <option value="artefacts">{str section='activity' tag='artefacts'}</option>
     <option value="communities">{str section='activity' tag='communities'}</option>
 </select>
 </form>

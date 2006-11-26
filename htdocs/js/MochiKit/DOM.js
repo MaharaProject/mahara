@@ -110,6 +110,7 @@ MochiKit.DOM.EXPORT = [
     "emitHTML",
     "scrapeText",
     "isParent",
+    "getFirstParentByTagAndClassName",
     "makeClipping",
     "undoClipping",
     "makePositioned",
@@ -122,7 +123,7 @@ MochiKit.DOM.EXPORT_OK = [
 ];
 
 MochiKit.DOM.DEPRECATED = [
-    ['computedStyle', 'MochiKit.Style.computedStyle', '1.4'],
+    ['computedStyle', 'MochiKit.Style.getStyle', '1.4'],
     /** @id MochiKit.DOM.elementDimensions  */
     ['elementDimensions', 'MochiKit.Style.getElementDimensions', '1.4'],
     /** @id MochiKit.DOM.elementPosition  */
@@ -1036,6 +1037,43 @@ MochiKit.Base.update(MochiKit.DOM, {
                 }
             }
         }
+    },
+
+    /** @id MochiKit.DOM.getFirstParentByTagAndClassName */
+    getFirstParentByTagAndClassName: function (elem, tagName, className) {
+        var self = MochiKit.DOM;
+        elem = self.getElement(elem);
+        if (typeof(tagName) == 'undefined' || tagName === null) {
+            tagName = '*';
+        } else {
+            tagName = tagName.toUpperCase();
+        }
+        if (typeof(className) == 'undefined' || className === null) {
+            className = null;
+        }
+
+        var classList = '';
+        var curTagName = '';
+        while (elem && elem.tagName) {
+            elem = elem.parentNode;
+            if (tagName == '*' && className === null) {
+                return elem;
+            }
+            classList = elem.className.split(' ');
+            curTagName = elem.tagName.toUpperCase();
+            if (className === null && tagName == curTagName) {
+                return elem;
+            } else if (className !== null) {
+                for (var i = 0; i < classList.length; i++) {
+                    if (tagName == '*' && classList[i] == className) {
+                        return elem;
+                    } else if (tagName == curTagName && classList[i] == className) {
+                        return elem;
+                    }
+                }
+            }
+        }
+        return elem;
     },
 
     /** @id MochiKit.DOM.isParent */
