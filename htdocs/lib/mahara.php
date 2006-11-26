@@ -1314,4 +1314,195 @@ function searchform() {
     );
 }
 
+/**
+ * Given a view id, and a user id (defaults to currently logged in user if not
+ * specified) will return wether this user is allowed to look at this view.
+ *
+ * @param integer $view_id      View ID to check
+ * @param integer $user_id      User trying to look at the view (defaults to
+ * currently logged in user, or null if user isn't logged in)
+ *
+ * @returns boolean Wether the specified user can look at the specified view.
+ */
+function can_view_view($view_id, $user_id = null) {
+    global $USER;
+    $now = time();
+    $dbnow = db_format_timestamp($now);
+    $prefix = get_config('dbprefix');
+
+    if ($user_id === null) {
+        $user_id = $USER->get('id');
+    }
+
+    $view_data = get_records_sql_array('
+        SELECT
+            v.title,
+            v.owner,
+            ' . db_format_tsfield('v.startdate','startdate') . ',
+            ' . db_format_tsfield('v.stopdate','stopdate') . ',
+            a.accesstype,
+            ' . db_format_tsfield('a.startdate','access_startdate') . ',
+            ' . db_format_tsfield('a.stopdate','access_stopdate') . '
+        FROM
+            ' . $prefix . 'view v
+            LEFT OUTER JOIN ' . $prefix . 'view_access a ON v.id=a.view
+        WHERE v.id=?
+    ', array($view_id));
+
+    if(!$view_data) {
+        throw new ViewNotFoundException("View id=$view_id doesn't exist");
+    }
+
+    $view_record = array( 'access' => array() );
+
+    log_debug('Can you look at this view? (you are user ' . $user_id . ')');
+
+    foreach ( $view_data as $row ) {
+        $view_record['title'] = $row->title;
+        $view_record['owner'] = $row->owner;
+        $view_record['startdate'] = $row->startdate;
+        $view_record['stopdate'] = $row->stopdate;
+
+        if (!isset($row->accesstype)) {
+            continue;
+        }
+        
+        $view_record['access'][$row->accesstype] = array(
+            'startdate' => $row->access_startdate,
+            'stopdate' => $row->access_stopdate,
+        );
+    }
+
+    if ($USER->is_logged_in() && $view_record['owner'] == $user_id) {
+        log_debug('Yes - you own this view');
+        return true;
+    }
+
+    // check public
+    if (
+        isset($view_record['access']['public'])
+        && (    
+            $view_record['access']['public']['startdate'] == null
+            || $view_record['access']['public']['startdate'] < $now
+        )
+        && (
+            $view_record['access']['public']['stopdate'] == null
+            || $view_record['access']['public']['stopdate'] > $now
+        )
+    )
+    {
+
+        log_debug('Yes - View is public');
+        return true;
+    }
+
+    // everything below this point requires that you be logged in
+    if (!$USER->is_logged_in()) {
+        log_debug('No - you are not logged in');
+        return false;
+    }
+
+    // check logged in
+    if (
+        isset($view_record['access']['loggedin'])
+        && (    
+            $view_record['access']['loggedin']['startdate'] == null
+            || $view_record['access']['loggedin']['startdate'] < $now
+        )
+        && (
+            $view_record['access']['loggedin']['stopdate'] == null
+            || $view_record['access']['loggedin']['stopdate'] > $now
+        )
+    )
+    {
+
+        log_debug('Yes - View is available to logged in users');
+        return true;
+    }
+
+    // check friends access
+    if (
+        isset($view_record['access']['friends'])
+        && (    
+            $view_record['access']['friends']['startdate'] == null
+            || $view_record['access']['friends']['startdate'] < $now
+        )
+        && (
+            $view_record['access']['friends']['stopdate'] == null
+            || $view_record['access']['friends']['stopdate'] > $now
+        )
+        && get_field_sql(
+            'SELECT COUNT(*) FROM ' . $prefix . 'usr_friend f WHERE (usr1=? AND usr2=?) OR (usr1=? AND usr2=?)',
+            array( $view_record['owner'], $user_id, $user_id, $view_record['owner'] )
+        )
+    )
+    {
+        log_debug('Yes - View is available to friends of the owner');
+        return true;
+    }
+
+    // check user access
+    if (get_field_sql(
+        'SELECT
+            a.view
+        FROM 
+            ' . $prefix . 'view_access_usr a
+        WHERE
+            a.view=? AND a.usr=?
+            AND a.startdate < ?
+            AND a.stopdate > ?
+        LIMIT 1',
+        array( $view_id, $user_id, $dbnow, $dbnow )
+        )
+    ) {
+        log_debug('Yes - View is available to your user');
+        return true;
+    }
+
+    // check group access
+    if (get_field_sql(
+        'SELECT
+            a.view
+        FROM 
+            ' . $prefix . 'view_access_group a
+            INNER JOIN ' . $prefix . 'usr_group g ON a.grp = g.id
+            INNER JOIN ' . $prefix . 'usr_group_member m ON g.id = m.grp
+        WHERE
+            a.view=? AND m.member=?
+            AND a.startdate < ?
+            AND a.stopdate > ?
+        LIMIT 1',
+        array( $view_id, $user_id, $dbnow, $dbnow )
+        )
+    ) {
+        log_debug('Yes - View is available to one of the owners groups');
+        return true;
+    }
+
+    // check community access
+    if (get_field_sql(
+        'SELECT
+            a.view
+        FROM
+            ' . $prefix . 'view_access_community a
+            INNER JOIN ' . $prefix . 'community c ON a.community = c.id
+            INNER JOIN ' . $prefix . 'community_member m ON c.id=m.community
+        WHERE
+            a.view=? AND m.member=?
+            AND a.startdate < ?
+            AND a.stopdate > ?
+            AND ( a.tutoronly = 0 OR m.tutor = 1 )
+        LIMIT 1',
+        array( $view_id, $user_id, $dbnow, $dbnow )
+        )
+    ) {
+        log_debug('Yes - View is available to a specific community');
+        return true;
+    }
+
+
+    log_debug('No - nothing matched');
+    return false;
+}
+
 ?>
