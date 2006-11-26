@@ -43,10 +43,8 @@ $prefix = get_config('dbprefix');
 $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description,c.name
         FROM ' . $prefix . 'view v
         LEFT OUTER JOIN ' . $prefix . 'community c ON v.submittedto = c.id
-        WHERE v.owner = ' . $userid,'');
-
-// . '
-//        ORDER BY v.title', '');
+        WHERE v.owner = ' . $userid . '
+        ORDER BY v.title', '', $offset, $limit);
 
 $viewidlist = implode(', ', array_map(create_function('$a', 'return $a->id;'), $viewdata));
 
