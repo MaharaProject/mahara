@@ -211,6 +211,7 @@ $string['editviewinformation'] = 'Edit View Information';
 $string['myviews'] = 'My Views';
 $string['submitview'] = 'Submit View';
 $string['viewdeleted'] = 'View deleted';
+$string['viewsubmittedto'] = 'This view has been submitted to %s';
 
 // view user
 $string['fullname'] = 'Full name';

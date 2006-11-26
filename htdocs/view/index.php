@@ -30,7 +30,7 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 $wwwroot = get_config('wwwroot');
 
 $strings = array('accessstartdate', 'accessenddate', 'artefacts', 'delete', 'description', 
-                 'editaccess', 'editview', 'editviewinformation', 'submitted', 'submittedto',
+                 'editaccess', 'editview', 'editviewinformation', 'submitted', 
                  'submitview', 'submitviewquestion', 'unknownerror');
 $getstring = array();
 foreach ($strings as $string) {
@@ -65,7 +65,7 @@ function title(r, communities) {
     var del = INPUT({'type':'button','value':{$getstring['delete']}});
     del.onclick = function () { submitform(r.id, 'delete'); };
     if (r.submittedto) {
-        var assess = {$getstring['submitted']} + ': ' + r.submittedto;
+        var assess = get_string('viewsubmittedto', r.submittedto);
     }
     else {
         var assess = assessselect(r.id,communities);
@@ -193,7 +193,7 @@ viewlist.updateOnLoad();
 
 JAVASCRIPT;
 
-$smarty = smarty(array('tablerenderer'));
+$smarty = smarty(array('tablerenderer'), array(), array('viewsubmittedto'));
 $smarty->assign('site_menu', site_menu());
 $smarty->assign('searchform', searchform());
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
