@@ -17,17 +17,31 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage artefact-internal
- * @author     Penny Leach <penny@catalyst.net.nz>
+ * @subpackage core
+ * @author     Richard Mansfield <richard.mansfield@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
-defined('INTERNAL') || die();
+define('INTERNAL', 1);
+require(dirname(dirname(__FILE__)) . '/init.php');
 
-$config = new StdClass;
-$config->version = 2006112700;
-$config->release = '0.1';
+$viewid = param_integer('id');
+//$userid = $USER->get('id');
+
+$view = get_record('view', 'id', $viewid);
+
+if (can_view_view($viewid)) {
+    $content = 'view template display here';
+}
+
+$smarty = smarty();
+$smarty->clear_assign('MAINNAV');
+$smarty->assign('TITLE', $view->title);
+if (isset($content)) {
+    $smarty->assign('VIEWCONTENT', $content);
+}
+$smarty->display('view/view.tpl');
 
 ?>

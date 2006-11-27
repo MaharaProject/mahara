@@ -63,16 +63,18 @@ function title(r, communities) {
     var del = INPUT({'type':'button','value':{$getstring['delete']}});
     del.onclick = function () { submitform(r.id, 'delete'); };
     if (r.submittedto) {
+        var buttons = [editaccess];
         var assess = get_string('viewsubmittedto', r.submittedto);
     }
     else {
+        var buttons = [editinfo,edit,editaccess,del];
         var assess = assessselect(r.id,communities);
     }
     var f = FORM({'id':('form'+r.id),'method':'post','enctype':'multipart/form-data',
                   'encoding':'multipart/form-data','onsubmit':"return formsubmit('"+r.id+"');"},
-                 DIV(null,[editinfo,edit,editaccess,del]),
+                 DIV(null,buttons),
                  DIV(null,assess));
-    return [TD({'style':'font-size: 110%;'},r.title),
+    return [TD(null,A({'href':'view.php?id='+r.id},r.title)),
             TD(null,f)];
 }
 

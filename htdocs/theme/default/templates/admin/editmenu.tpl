@@ -3,7 +3,7 @@
 <h2>{str section=admin tag=editmenus}</h2>
 
 <div> 
-{$EDIT}
+{str tag=edit}:
 <select id="menuselect" name="menuselect">
 {foreach from=$MENUS item=menu}
     <option value={$menu.value}>{$menu.name}</option>
@@ -11,6 +11,6 @@
 </select>
 </div>
 
-<table id="menuitemlist" class="menueditor"><tbody><tr><td></td></tr></tbody></table>
+<div id="menuitemlist"></div>
 
 {include file="footer.tpl"}

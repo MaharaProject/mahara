@@ -67,17 +67,17 @@ function getitems() {
 // Puts the list of menu items into the empty table.
 function displaymenuitems(itemlist) {
     var rows = map(formatrow,itemlist);
-    var table = $('menuitemlist');
-    var newrow = TR({'id':'additem','style':'background-color: #ddd;'},
-                    TD({'colspan':4},addform()));
-    replaceChildNodes(table,cols(),TBODY(null,[thead,rows,newrow]));
+    var form = FORM({'id':'form','method':'post','enctype':'multipart/form-data',
+                         'encoding':'multipart/form-data'},
+                    TABLE(null,TBODY(null,[thead,rows,addform()])));
+    replaceChildNodes($('menuitemlist'),form);
 }
 
 // Creates one table row
 function formatrow (item) {
     // item has id, type, name, link, linkedto
     var type = eval(item.type);
-    var linkedto = item.link == '' ? item.linkedto : A({'href':item.link},item.linkedto);
+    var linkedto = A({'href':item.linkedto},item.linkedto);
     var del = INPUT({'type':'button','value':{$getstring['delete']}});
     del.onclick = function () { delitem(item.id); };
     var edit = INPUT({'type':'button','value':{$getstring['edit']}});
@@ -90,24 +90,27 @@ function formatrow (item) {
 function addform(type) {
     var item = {'id':'new'};
     item.type = type ? type : 'externallist';
-    return newform(item);
+    return editform(item);
 }
 
 // Creates the contents of a menu item edit form
 // This is formatted as a table within the form (which is within a row of the table).
 function editform(item) {
+    var id = item.id;
     // item has id, type, name, link, linkedto
     // The form has two radio buttons to select the type, external link or admin file
-    var elink = INPUT({'type':'radio','name':'type','value':'externallink'});
-    var afile = INPUT({'type':'radio','name':'type','value':'adminfile'});
+    var elink = INPUT({'type':'radio','name':'type'+id,'value':'externallink'});
+    var afile = INPUT({'type':'radio','name':'type'+id,'value':'adminfile'});
 
     // Either a save, a cancel button, or both.
     var savecancel = [];
-    var save = INPUT({'type':'submit'});
+    var save = INPUT({'type':'button'});
+    save.onclick = function () { saveitem(id); };
 
     // The link field will be a text box or a select in the case of an admin file.
     var linkedto = null;
 
+    var rowtype = 'add';
     if (!item) {
         // This is the 'add' form rather than the edit form
         // Set defaults.
@@ -124,6 +127,7 @@ function editform(item) {
     }
     else { // Editing an existing menu item.
         // The save button says 'update' and there's a cancel button.
+        var rowtype = 'edit';
         setNodeAttribute(save,'value',{$getstring['update']});
         var cancel = INPUT({'type':'button','value':{$getstring['cancel']}});
         cancel.onclick = closeopenedits;
@@ -133,7 +137,7 @@ function editform(item) {
     }
 
     // A text field for the name
-    var name = INPUT({'type':'text','name':'name','value':item.name});
+    var name = INPUT({'type':'text','id':'name'+id,'value':item.name});
 
     if (item.type == 'adminfile') {
         var adminfiles = getadminfiles();
@@ -144,25 +148,26 @@ function editform(item) {
         }
         else {
             // Select the currently selected file.
-            linkedto = INPUT({'type':'select','name':'linkedto'});
+            linkedto = INPUT({'type':'select','id':'linkedto'+id});
         }
         setNodeAttribute(afile,'checked',true);
     }
     else { // type = externallist
-        linkedto = INPUT({'type':'text','name':'linkedto','value':item.linkedto});
+        linkedto = INPUT({'type':'text','id':'linkedto'+id,'value':item.linkedto});
         setNodeAttribute(elink,'checked',true);
     }
     var radios = [DIV(null,elink,{$getstring['externallink']}),
                   DIV(null,afile,{$getstring['adminfile']})];
-    var row = TR(null,map(partial(TD,null),[radios,name,linkedto,savecancel]));
-    return TABLE({'width':'100%'},cols(),TBODY(null,row));
+    var row = TR({'id':'row'+id, 'class':rowtype},
+                 map(partial(TD,null),[radios,name,linkedto,savecancel]));
+    return row;
 }
 
 // Close all open edit forms
 function closeopenedits() {
     var rows = getElementsByTagAndClassName('tr',null,$('menuitemlist'));
     for (var i=0; i<rows.length; i++) {
-        if (hasElementClass(rows[i],'edititem')) {
+        if (hasElementClass(rows[i],'edit')) {
             removeElement(rows[i]);
         }
         else if (hasElementClass(rows[i],'invisible')) {
@@ -179,19 +184,8 @@ function changeeditform(item, type) {
 
 // Change the type of the add form
 function changeaddform(type) {
-    var newrow = TR({'id':'additem','style':'background-color: #ddd;'},
-                    TD({'colspan':4},addform(type)));
-    swapDOM($('additem'),newrow);
-}
-
-// Return a new form element
-function newform(item) {
-    var formid = 'form'+item.id;
-    var f = FORM({'id':formid,'method':'post','enctype':'multipart/form-data',
-                      'encoding':'multipart/form-data','onsubmit':"return saveitem('"+formid+"');"},
-                 editform(item),
-                 INPUT({'type':'hidden','name':'itemid','value':item.id}));
-    return f;
+    var newrow = addform(type);
+    swapDOM($('rownew'),newrow);
 }
 
 // Open a new edit form
@@ -199,7 +193,7 @@ function edititem(item) {
     closeopenedits();
     var menuitem = $('menuitem_'+item.id);
     addElementClass(menuitem,'invisible');
-    var newrow = TR({'class':'edititem','style':'background-color: #ddd;'},TD({'colspan':4},newform(item)));
+    var newrow = editform(item);
     menuitem.parentNode.insertBefore(newrow,menuitem);
 }
 
@@ -231,10 +225,10 @@ function delitem(itemid) {
 }
 
 // Send the menu item in the form to the database.
-function saveitem(formid) {
-    var f = $(formid);
-    var name = f.name.value;
-    var linkedto = f.linkedto.value;
+function saveitem(itemid) {
+    var f = $('form');
+    var name = $('name'+itemid).value;
+    var linkedto = $('linkedto'+itemid).value;
     if (name == '') {
         displayMessage(get_string('namedfieldempty',{$getstring['name']}),'error');
         return false;
@@ -245,10 +239,10 @@ function saveitem(formid) {
     }
     processingStart();
     logDebug({$getstring['savingmenuitem']});
-    var data = {'type':f.type[0].checked ? 'externallink' : 'adminfile',
+    var data = {'type':eval('f.type'+itemid+'[0].checked') ? 'externallink' : 'adminfile',
                 'name':name,
                 'linkedto':linkedto,
-                'itemid':f.itemid.value,
+                'itemid':itemid,
                 'public':selectedmenu == 'loggedoutmenu'};
     var req = getXMLHttpRequest();
     req.open('POST','updatemenu.json.php');
@@ -275,12 +269,6 @@ function changemenu() {
     getitems();
 }
 
-// Set column widths
-function cols () {
-    COL = partial(createDOM,'col');
-    return [COL({'width':"20%"}),COL({'width':"25%"}),COL({'width':"40%"}),COL({'width':"15%"})];
-}
-
 var selectedmenu = 'loggedoutmenu';
 addLoadEvent(function () {
     $('menuselect').value = selectedmenu;
@@ -295,10 +283,9 @@ foreach ($menulist as &$menu) {
                   'name' => get_string($menu,'admin'));
 }
 
-$style = '<style type="text/css">.invisible{display:none;} table.menueditor{width:750px;}</style>';
+$style = '<style type="text/css">.invisible{display:none;}</style>';
 $smarty = smarty(array(),array($style));
 $smarty->assign('INLINEJAVASCRIPT',$ijs);
-$smarty->assign('EDIT',get_string('edit') . ':');
 $smarty->assign('MENUS',$menulist);
 $smarty->display('admin/editmenu.tpl');
 

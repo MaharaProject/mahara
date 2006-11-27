@@ -13,6 +13,7 @@ my $EXCLUDE_FILES = [
     qr{ \A htdocs/lib/adodb                 }xms,
     qr{ \A htdocs/lib/phpmailer             }xms,
     qr{ \A htdocs/lib/xmldb                 }xms,
+    qr{ \A htdocs/lib/pieforms              }xms,
     qr{ \A htdocs/lib/smarty                }xms,
     qr{ \A htdocs/lib/ddl.php               }xms,
     qr{ \A htdocs/lib/dml.php               }xms,
