@@ -51,7 +51,7 @@ function processingStop() {
     $('loading_box').style.display = 'none';
 }
 
-// Function to post some data to a json script.
+// Function to post a data object to a json script.
 function sendjsonrequest(script, data, successcallback, errorcallback) {
     donothing = function () { return; };
     if (typeof(successcallback) != 'function') {
@@ -83,7 +83,7 @@ function sendjsonrequest(script, data, successcallback, errorcallback) {
             processingStop();
         }
     },
-    function (result) {
+    function () {
         displayMessage(get_string('unknownerror'),'error');
         errorcallback();
         processingStop();

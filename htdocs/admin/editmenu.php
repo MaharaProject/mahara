@@ -197,30 +197,10 @@ function edititem(item) {
 }
 
 // Receive standard json error message
-function get_json_status(data) {
-    var errtype = false;
-    if (!data.error) { 
-        errtype = 'info';
-    }
-    else if (data.error == 'local') {
-        errtype = 'error';
-    }
-    else {
-        global_error_handler(data);
-    }
-    if (errtype) {
-        displayMessage(data.message,errtype);
-        getitems();
-        processingStop();
-    }
-}
-
 // Request deletion of a menu item from the db
 function delitem(itemid) {
-    processingStart();
     logDebug({$getstring['deletingmenuitem']});
-    var d = loadJSONDoc('deletemenuitem.json.php',{'itemid':itemid});
-    d.addCallback(get_json_status);
+    sendjsonrequest('deletemenuitem.json.php',{'itemid':itemid}, getitems);
 }
 
 // Send the menu item in the form to the database.
@@ -236,25 +216,13 @@ function saveitem(itemid) {
         displayMessage(get_string('namedfieldempty',{$getstring['linkedto']}),'error');
         return false;
     }
-    processingStart();
     logDebug({$getstring['savingmenuitem']});
     var data = {'type':eval('f.type'+itemid+'[0].checked') ? 'externallink' : 'adminfile',
                 'name':name,
                 'linkedto':linkedto,
                 'itemid':itemid,
                 'public':selectedmenu == 'loggedoutmenu'};
-    var req = getXMLHttpRequest();
-    req.open('POST','updatemenu.json.php');
-    req.setRequestHeader('Content-type','application/x-www-form-urlencoded');
-    var d = sendXMLHttpRequest(req,queryString(data));
-    d.addCallback(function (result) {
-        var data = evalJSONRequest(result);
-        get_json_status(data);
-    });
-    d.addErrback(function() {
-        displayMessage({$getstring['unknownerror']},'error');
-        processingStop();
-    });
+    sendjsonrequest('updatemenu.json.php', data, getitems);
     return false;
 }
 
