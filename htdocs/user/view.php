@@ -106,9 +106,6 @@ if ($communities) {
     }
 }
 
-log_debug($invitelist);
-log_debug($controlledlist);
-
 if ($invitelist || $controlledlist) {
     require_once('pieforms/pieform.php');
 }
