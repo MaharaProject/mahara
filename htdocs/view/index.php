@@ -116,20 +116,11 @@ function artefacts(r) {
             TD(null,UL(null,map(renderartefact,r.artefacts)))];
 }
 
-function sendjsonrequest(script, data) {
-    processingStart();
-    var req = getXMLHttpRequest();
-    req.open('POST', script);
-    req.setRequestHeader('Content-type','application/x-www-form-urlencoded');
-    var d = sendXMLHttpRequest(req,queryString(data));
-    d.addCallbacks(json_success, json_error);
-}
-
 function deleteview(viewid) {
     if (!confirm({$getstring['deleteviewquestion']})) {
         return;
     }
-    sendjsonrequest('delete.json.php', {'viewid':viewid});
+    sendjsonrequest('delete.json.php', {'viewid':viewid}, viewlist.doupdate);
     return false;
 }
 
@@ -137,32 +128,8 @@ function submitview(viewid, communityid) {
     if (!confirm({$getstring['submitviewquestion']})) {
         return;
     }
-    sendjsonrequest('submit.json.php', {'viewid':viewid,'communityid':communityid});
+    sendjsonrequest('submit.json.php', {'viewid':viewid,'communityid':communityid}, viewlist.doupdate);
     return false;
-}
-
-function json_success(result) {
-    var data = evalJSONRequest(result);
-    var errtype = false;
-    if (!data.error) { 
-        errtype = 'info';
-    }
-    else if (data.error == 'local') {
-        errtype = 'error';
-    }
-    else {
-        global_error_handler(data);
-    }
-    if (errtype) {
-        displayMessage(data.message,errtype);
-        viewlist.doupdate();
-        processingStop();
-    }
-}
-
-function json_error(result) {
-    displayMessage({$getstring['unknownerror']},'error');
-    processingStop();
 }
 
 function submitform(viewid, action) {
