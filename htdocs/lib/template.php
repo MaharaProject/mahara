@@ -31,7 +31,7 @@ function template_parse($templatename) {
     $t = array();
     
     $template = template_locate($templatename);
-    $template = $template[0]; // we don't care about css right now
+    $template = $template['fragment']; // we don't care about css or thumbnails right now
 
     $fragment = file_get_contents($template);
 
@@ -89,23 +89,38 @@ function template_parse_block($blockstr) {
 function template_locate($templatename) {
 
     // check dataroot first for custom templates
-    $fragment = 'templates/' . $templatename . '/fragment.template';
-    $css = 'templates/' . $templatename . '/fragment.css';
+    $templatedir = 'templates/' . $templatename . '/';
+    $fragment = $templatedir . 'fragment.template';
+    $css = $templatedir . 'fragment.css';
 
     $template = array();
 
+    $thumbnails = array('jpg', 'jpeg', 'png', 'gif');
+
     if ($path = realpath(get_config('dataroot') . $fragment)) {
-        $template[] = $path;
+        $template['fragment'] = $path;
         if (is_readable(get_config('dataroot') . $css)) {
-            $template[] = $path;
+            $template['css'] = get_config('dataroot') . $css;
+        }
+        foreach ($thumbnails as $t) {
+            if (is_readable(get_config('dataroot') . $templatedir . 'thumbnail.' . $t)) {
+                $template['thumbnail'] = get_config('dataroot') . $templatedir . 'thumbnail.' . $t;
+                break;
+            }
         }
         return $template;
     }
 
     if ($path = realpath(get_config('libroot') . $fragment)) {
-        $template[] = $path;
+        $template['fragment'] = $path;
         if (is_readable(get_config('libroot') . $css)) {
-            $template[] = $path;
+            $template['css'] = get_config('libroot') . $css;
+        }
+        foreach ($thumbnails as $t) {
+            if (is_readable(get_config('libroot') . $templatedir . 'thumbnail.' . $t)) {
+                $template['thumbnail'] = get_config('libroot') . $templatedir . 'thumbnail.' . $t;
+                break;
+            }
         }
         return $template;
     }
