@@ -82,7 +82,7 @@ class Session {
      *
      * @param string $key   The key to set.
      */
-    public function unset($key) {
+    public function clear($key) {
         $this->ensure_session();
         $_SESSION[$key] = null;
     }
