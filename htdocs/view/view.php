@@ -37,7 +37,7 @@ if (can_view_view($viewid)) {
 }
 
 $smarty = smarty();
-$smarty->assign('MAINNAV', null);
+$smarty->clear_assign('MAINNAV');
 $smarty->assign('TITLE', $view->title);
 if (isset($content)) {
     $smarty->assign('VIEWCONTENT', $content);
