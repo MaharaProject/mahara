@@ -58,31 +58,29 @@ function &smarty($javascript = array(), $headers = array(), $strings = array()) 
     // Insert the appropriate javascript tags 
     $jsroot = get_config('wwwroot') . 'js/';
 
-    foreach ($javascript as &$value) {
-        if ($value == 'tinymce') {
-            $value = $jsroot . 'tinymce/tiny_mce.js';
-            $initfile = $jsroot . 'mahara_tinymce_init.html';
-            if (!$headers[] = @file_get_contents($initfile)) {
-                throw new Exception ('tinyMCE not initialised.');
-            }
-        }
-        else if ($value == 'tablerenderer') {
-            $value = $jsroot . 'tablerenderer.js';
-            foreach (tablerendererjsstrings() as $string) {
-                if (!in_array($string, $strings)) {
-                    $strings[] = $string;
-                }
-            }
-        }
-        else {
-            throw new Exception ($value . '.js: unknown');
+    if (in_array('tinymce', $javascript)) {
+        $javascript_array[] = $jsroot . 'tinymce/tiny_mce.js';
+        $value = $jsroot . 'tinymce/tiny_mce.js';
+        $initfile = $jsroot . 'mahara_tinymce_init.html';
+        if (!$headers[] = @file_get_contents($initfile)) {
+            throw new Exception ('tinyMCE not initialised.');
         }
     }
-    
-    // Add the required mochikit and mahara javascript files
-    array_unshift($javascript,  $jsroot . 'MochiKit/MochiKit.js');
-    $javascript[] = $jsroot . 'mahara.js';
-    $javascript[] = $jsroot . 'debug.js';
+
+    $javascript_array[] = $jsroot . 'MochiKit/MochiKit.js';
+
+    if (in_array('tablerenderer', $javascript)) {
+        $javascript_array[] = $jsroot . 'tablerenderer.js';
+        foreach (tablerendererjsstrings() as $string) {
+            if (!in_array($string, $strings)) {
+                $strings[] = $string;
+            }
+        }
+    }
+
+    $javascript_array[] = $jsroot . 'mahara.js';
+    $javascript_array[] = $jsroot . 'debug.js';
+
     foreach (maharajsstrings() as $string) {
         if (!in_array($string, $strings)) {
             $strings[] = $string;
@@ -126,7 +124,7 @@ function &smarty($javascript = array(), $headers = array(), $strings = array()) 
     }
 
     $smarty->assign_by_ref('USER', $USER);
-    $smarty->assign_by_ref('JAVASCRIPT', $javascript);
+    $smarty->assign_by_ref('JAVASCRIPT', $javascript_array);
     $smarty->assign_by_ref('HEADERS', $headers);
 
     return $smarty;
