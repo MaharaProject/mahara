@@ -26,6 +26,7 @@
 
 defined('INTERNAL') || die();
 define('ARTEFACT_FORMAT_LISTITEM', 1);
+define('ARTEFACT_FORMAT_NAME', 2);
 
 
 /**

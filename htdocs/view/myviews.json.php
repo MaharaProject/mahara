@@ -48,7 +48,7 @@ $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.
 
 $viewidlist = implode(', ', array_map(create_function('$a', 'return $a->id;'), $viewdata));
 
-$artefacts = get_records_sql_array('SELECT va.view, va.artefact, a.title
+$artefacts = get_records_sql_array('SELECT va.view, va.artefact, a.title, a.artefacttype
         FROM ' . $prefix . 'view_artefact va
         JOIN ' . $prefix . 'artefact a ON va.artefact = a.id
         WHERE va.view IN (' . $viewidlist . ')', '');
@@ -72,9 +72,14 @@ if ($viewdata) {
     // Go through all the artefact records and put them in with the
     // views they belong to.
     if ($artefacts) {
-        foreach ($artefacts as $artefact) {
-            $data[$index[$artefact->view]]['artefacts'][] = array('id'    => $artefact->artefact,
-                                                                  'title' => $artefact->title);
+        safe_require('artefact', 'internal');
+        foreach ($artefacts as $artefactrec) {
+            // We have to construct the entire artefact object to render the name properly.
+            $classname = generate_artefact_class_name($artefactrec->artefacttype);
+            $artefactobj = new $classname($artefactrec->artefact, array('title' => $artefactrec->title));
+            $artname = $artefactobj->render(ARTEFACT_FORMAT_NAME, null);
+            $data[$index[$artefactrec->view]]['artefacts'][] = array('id'    => $artefactrec->artefact,
+                                                                     'title' => $artname);
         }
     }
 }

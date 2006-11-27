@@ -113,7 +113,7 @@ class ArtefactTypeProfile extends ArtefactType {
     }
 
     public function render($format, $options) {
-        if ($format == ARTEFACT_FORMAT_LISTITEM && $this->title) {
+        if (($format == ARTEFACT_FORMAT_LISTITEM || $format == ARTEFACT_FORMAT_NAME) && $this->title) {
             return $this->title;
         }
         return false;
@@ -365,6 +365,9 @@ class ArtefactTypeWebAddress extends ArtefactTypeProfileField {
         if ($format == ARTEFACT_FORMAT_LISTITEM && $this->title) {
             return make_link($this->title);
         }
+        if ($format == ARTEFACT_FORMAT_NAME && $this->title) {
+            return $this->title;
+        }
         return false;
     }
 }
@@ -376,7 +379,7 @@ class ArtefactTypeTown extends ArtefactTypeProfileField {}
 class ArtefactTypeCity extends ArtefactTypeProfileField {}
 class ArtefactTypeCountry extends ArtefactTypeProfileField {
     public function render($format, $options) {
-        if ($format == ARTEFACT_FORMAT_LISTITEM && $this->title) {
+        if (($format == ARTEFACT_FORMAT_LISTITEM || $format == ARTEFACT_FORMAT_NAME) && $this->title) {
             $countries = getoptions_country();
             return $countries[$this->title];
         }
