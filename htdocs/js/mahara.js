@@ -51,6 +51,45 @@ function processingStop() {
     $('loading_box').style.display = 'none';
 }
 
+// Function to post a data object to a json script.
+function sendjsonrequest(script, data, successcallback, errorcallback) {
+    donothing = function () { return; };
+    if (typeof(successcallback) != 'function') {
+        successcallback = donothing;
+    }
+    if (typeof(errorcallback) != 'function') {
+        errorcallback = donothing;
+    }
+    processingStart();
+    var req = getXMLHttpRequest();
+    req.open('POST', script);
+    req.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+    var d = sendXMLHttpRequest(req,queryString(data));
+    d.addCallbacks(function (result) {
+        var data = evalJSONRequest(result);
+        var errtype = false;
+        if (!data.error) { 
+            errtype = 'info';
+        }
+        else if (data.error == 'local') {
+            errtype = 'error';
+        }
+        else {
+            global_error_handler(data);
+        }
+        if (errtype) {
+            displayMessage(data.message,errtype);
+            successcallback();
+            processingStop();
+        }
+    },
+    function () {
+        displayMessage(get_string('unknownerror'),'error');
+        errorcallback();
+        processingStop();
+    });
+}
+
 // Autofocus the first element with a class of 'autofocus' on page load
 addLoadEvent(function() {
     var element = getFirstElementByTagAndClassName(null, 'autofocus', document.body)
