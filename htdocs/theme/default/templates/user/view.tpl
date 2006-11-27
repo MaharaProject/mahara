@@ -4,6 +4,9 @@
 
 <div class="content">
 
+{$INVITEFORM}
+{$ADDFORM}
+
     <h3>{$NAME}</h3>
     <table><tbody>
 {foreach from=$USERFIELDS key=key item=item}
@@ -11,27 +14,23 @@
 {/foreach}
     </tbody></table>
 
-{foreach from=$PROFILE key=key item=item name=profile}
-{if $smarty.foreach.profile.first}
+{if $PROFILE}
     <h4>{str section=artefact.internal tag=profile}</h4>
     <table><tbody>
-{/if}
+{foreach from=$PROFILE key=key item=item name=profile}
     <tr><td>{str section=artefact.internal tag=$key}</td><td>{$item}</td></tr>
-{if $smarty.foreach.profile.last}
+{/foreach}
     </tbody></table>
 {/if}
-{/foreach}
 
-{foreach from=$VIEWS key=key item=item name=view}
-{if $smarty.foreach.view.first}
+{if $VIEWS}
     <h4>{str section=mahara tag=views}</h4>
     <ul>
-{/if}
+{foreach from=$VIEWS key=key item=item name=view}
     <li><a href="{$WWWROOT}view/view.php?id={$key}">{$item}</a></li>
-{if $smarty.foreach.view.last}
+{/foreach}
     </ul>
 {/if}
-{/foreach}
 
 </div>
 

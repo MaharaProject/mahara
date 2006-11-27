@@ -218,6 +218,8 @@ $string['viewsubmittedto'] = 'This view has been submitted to %s';
 // view user
 $string['fullname'] = 'Full name';
 $string['studentid'] = 'ID number';
+$string['inviteusertojoincommunity'] = 'Invite this user to join a community';
+$string['addusertocommunity'] = 'Add this user to a community';
 
 $string['emailname'] = 'Mahara System'; // robot! 
 

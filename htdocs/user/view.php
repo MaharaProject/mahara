@@ -27,7 +27,10 @@
 define('INTERNAL', 1);
 require(dirname(dirname(__FILE__)).'/init.php');
 
+$loggedinid = $USER->get('id');
 $userid = param_integer('id','');
+
+// Get the user's details
 
 $profile = array();
 $userfields = array();
@@ -77,8 +80,85 @@ else {
     }
 }
 
+
+
+// Get the logged in user's "invite only" communities
+$communities = get_records_select_array('community',
+                                        'owner = ' . $loggedinid . "AND jointype = 'invite'",
+                                        null, 'name', 'id,name');
+if ($communities) {
+    $invitelist = array();
+    foreach ($communities as $community) {
+        $invitelist[$community->id] = $community->name;
+    }
+}
+
+// Get the "controlled membership" communities in which the logged in user is a tutor
+$prefix = get_config('dbprefix');
+$communities = get_records_sql_array('SELECT c.id, c.name
+        FROM ' . $prefix . 'community c
+        JOIN ' . $prefix . 'community_member cm ON c.id = cm.community
+        WHERE cm.member = ' . $loggedinid . " AND cm.tutor = 1 AND c.jointype = 'controlled'",'');
+if ($communities) {
+    $controlledlist = array();
+    foreach ($communities as $community) {
+        $controlledlist[$community->id] = $community->name;
+    }
+}
+
+log_debug($invitelist);
+log_debug($controlledlist);
+
+if ($invitelist || $controlledlist) {
+    require_once('pieforms/pieform.php');
+}
+if ($invitelist) {
+    $inviteform = pieform(array(
+        'name'                => 'invite',
+        'ajaxpost'            => true,
+        'elements'            => array(
+            'community' => array(
+                'type'    => 'select',
+                'title'   => get_string('inviteusertojoincommunity'),
+                'collapseifoneoption' => false,
+                'options' => $invitelist
+            ),
+            'submit' => array(
+                'type'  => 'submit',
+                'value' => get_string('sendinvitation'),
+            ),
+        ),
+    ));
+}
+if ($controlledlist) {
+    $addform = pieform(array(
+        'name'                => 'add',
+        'ajaxpost'            => true,
+        'elements'            => array(
+            'community' => array(
+                'type'    => 'select',
+                'title'   => get_string('addusertocommunity'),
+                'collapseifoneoption' => false,
+                'options' => $controlledlist
+            ),
+            'submit' => array(
+                'type'  => 'submit',
+                'value' => get_string('add'),
+            ),
+        ),
+    ));
+}
+
+
+
 $smarty = smarty();
 $smarty->assign('searchform',searchform());
+if (isset($inviteform)) {
+    $smarty->assign('INVITEFORM',$inviteform);
+}
+if (isset($addform)) {
+    $smarty->assign('ADDFORM',$addform);
+}
 $smarty->assign('NAME',$name);
 $smarty->assign('USERFIELDS',$userfields);
 $smarty->assign('PROFILE',$profile);
