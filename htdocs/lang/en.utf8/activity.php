@@ -46,6 +46,7 @@ $string['unread'] = 'Unread';
 
 $string['markasread'] = 'Mark as read';
 $string['selectall'] = 'Select all';
+$string['recurseall'] = 'Recurse all';
 $string['alltypes'] = 'All types';
 
 $string['markedasread'] = 'Marked your notifications as read';
