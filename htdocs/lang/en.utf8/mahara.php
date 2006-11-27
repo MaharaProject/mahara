@@ -204,6 +204,7 @@ $string['accessstopdate'] = 'Access end date';
 $string['artefacts'] = 'Artefacts';
 $string['createnewview'] = 'Create New View';
 $string['deleteviewfailed'] = 'Delete view failed';
+$string['deleteviewquestion'] = 'Do you really want to delete this view?';
 $string['description'] = 'Description';
 $string['editaccess'] = 'Edit Access';
 $string['editview'] = 'Edit View';

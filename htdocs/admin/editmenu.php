@@ -96,16 +96,15 @@ function addform(type) {
 // Creates the contents of a menu item edit form
 // This is formatted as a table within the form (which is within a row of the table).
 function editform(item) {
-    var id = item.id;
     // item has id, type, name, link, linkedto
     // The form has two radio buttons to select the type, external link or admin file
-    var elink = INPUT({'type':'radio','name':'type'+id,'value':'externallink'});
-    var afile = INPUT({'type':'radio','name':'type'+id,'value':'adminfile'});
+    var elink = INPUT({'type':'radio','name':'type'+item.id,'value':'externallink'});
+    var afile = INPUT({'type':'radio','name':'type'+item.id,'value':'adminfile'});
 
     // Either a save, a cancel button, or both.
     var savecancel = [];
     var save = INPUT({'type':'button'});
-    save.onclick = function () { saveitem(id); };
+    save.onclick = function () { saveitem(item.id); };
 
     // The link field will be a text box or a select in the case of an admin file.
     var linkedto = null;
@@ -137,7 +136,7 @@ function editform(item) {
     }
 
     // A text field for the name
-    var name = INPUT({'type':'text','id':'name'+id,'value':item.name});
+    var name = INPUT({'type':'text','id':'name'+item.id,'value':item.name});
 
     if (item.type == 'adminfile') {
         var adminfiles = getadminfiles();
@@ -148,17 +147,17 @@ function editform(item) {
         }
         else {
             // Select the currently selected file.
-            linkedto = INPUT({'type':'select','id':'linkedto'+id});
+            linkedto = INPUT({'type':'select','id':'linkedto'+item.id});
         }
         setNodeAttribute(afile,'checked',true);
     }
     else { // type = externallist
-        linkedto = INPUT({'type':'text','id':'linkedto'+id,'value':item.linkedto});
+        linkedto = INPUT({'type':'text','id':'linkedto'+item.id,'value':item.linkedto});
         setNodeAttribute(elink,'checked',true);
     }
     var radios = [DIV(null,elink,{$getstring['externallink']}),
                   DIV(null,afile,{$getstring['adminfile']})];
-    var row = TR({'id':'row'+id, 'class':rowtype},
+    var row = TR({'id':'row'+item.id, 'class':rowtype},
                  map(partial(TD,null),[radios,name,linkedto,savecancel]));
     return row;
 }

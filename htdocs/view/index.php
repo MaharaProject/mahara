@@ -29,8 +29,8 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 
 $wwwroot = get_config('wwwroot');
 
-$strings = array('accessstartdate', 'accessstopdate', 'artefacts', 'delete', 'description', 
-                 'editaccess', 'editview', 'editviewinformation', 'submitted', 
+$strings = array('accessstartdate', 'accessstopdate', 'artefacts', 'delete', 'deleteviewquestion',
+                 'description', 'editaccess', 'editview', 'editviewinformation', 'submitted', 
                  'submitview', 'submitviewquestion', 'unknownerror');
 $getstring = array();
 foreach ($strings as $string) {
@@ -116,27 +116,28 @@ function artefacts(r) {
             TD(null,UL(null,map(renderartefact,r.artefacts)))];
 }
 
-function deleteview(viewid) {
+function sendjsonrequest(script, data) {
     processingStart();
     var req = getXMLHttpRequest();
-    req.open('POST','delete.json.php');
+    req.open('POST', script);
     req.setRequestHeader('Content-type','application/x-www-form-urlencoded');
-    var d = sendXMLHttpRequest(req,queryString({'viewid':viewid}));
+    var d = sendXMLHttpRequest(req,queryString(data));
     d.addCallbacks(json_success, json_error);
+}
+
+function deleteview(viewid) {
+    if (!confirm({$getstring['deleteviewquestion']})) {
+        return;
+    }
+    sendjsonrequest('delete.json.php', {'viewid':viewid});
     return false;
 }
 
 function submitview(viewid, communityid) {
-    var answer = confirm({$getstring['submitviewquestion']});
-    if (!answer) {
+    if (!confirm({$getstring['submitviewquestion']})) {
         return;
     }
-    processingStart();
-    var req = getXMLHttpRequest();
-    req.open('POST','submit.json.php');
-    req.setRequestHeader('Content-type','application/x-www-form-urlencoded');
-    var d = sendXMLHttpRequest(req,queryString({'viewid':viewid,'communityid':communityid}));
-    d.addCallbacks(json_success, json_error);
+    sendjsonrequest('submit.json.php', {'viewid':viewid,'communityid':communityid});
     return false;
 }
 
