@@ -72,7 +72,7 @@ function title(r, communities) {
                   'encoding':'multipart/form-data','onsubmit':"return formsubmit('"+r.id+"');"},
                  DIV(null,[editinfo,edit,editaccess,del]),
                  DIV(null,assess));
-    return [TD({'style':'font-size: 110%;'},r.title),
+    return [TD({'style':'font-size: 110%;'},A({'href':'view.php?id='+r.id},r.title)),
             TD(null,f)];
 }
 
