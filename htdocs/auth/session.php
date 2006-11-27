@@ -78,6 +78,16 @@ class Session {
     }
 
     /**
+     * Clears the session property keyed by $key (by setting it to null).
+     *
+     * @param string $key   The key to set.
+     */
+    public function set($key) {
+        $this->ensure_session();
+        $_SESSION[$key] = null;
+    }
+
+    /**
      * Adds a message that indicates something was successful
      *
      * @param string $message The message to add
