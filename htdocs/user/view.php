@@ -65,6 +65,16 @@ else {
             }
         }
     }
+
+    // Get viewable views
+    $views = array();
+    if ($allviews = get_records_array('view', 'owner', $userid)) {
+        foreach ($allviews as $view) {
+            if (can_view_view($view->id)) {
+                $views[$view->id] = $view->title;
+            }
+        }
+    }
 }
 
 $smarty = smarty();
@@ -72,6 +82,7 @@ $smarty->assign('searchform',searchform());
 $smarty->assign('NAME',$name);
 $smarty->assign('USERFIELDS',$userfields);
 $smarty->assign('PROFILE',$profile);
+$smarty->assign('VIEWS',$views);
 $smarty->display('user/view.tpl');
 
 ?>

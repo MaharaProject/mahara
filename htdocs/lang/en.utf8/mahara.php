@@ -212,6 +212,7 @@ $string['myviews'] = 'My Views';
 $string['submitview'] = 'Submit View';
 $string['submitviewquestion'] = 'If you submit this view for assessment, you will not be able to edit the view or any of its associated artefacts until your tutor has finished marking the view.  Are you sure you want to submit this view now?';
 $string['viewdeleted'] = 'View deleted';
+$string['views'] = 'Views';
 $string['viewsubmittedto'] = 'This view has been submitted to %s';
 
 // view user

@@ -22,6 +22,17 @@
 {/if}
 {/foreach}
 
+{foreach from=$VIEWS key=key item=item name=view}
+{if $smarty.foreach.view.first}
+    <h4>{str section=mahara tag=views}</h4>
+    <ul>
+{/if}
+    <li><a href="{$WWWROOT}view/view.php?id={$key}">{$item}</a></li>
+{if $smarty.foreach.view.last}
+    </ul>
+{/if}
+{/foreach}
+
 </div>
 
 {include file="footer.tpl"}
