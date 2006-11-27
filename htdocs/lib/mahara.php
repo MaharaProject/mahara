@@ -1353,7 +1353,7 @@ function searchform() {
  *
  * @returns boolean Wether the specified user can look at the specified view.
  */
-function can_view_view($view_id, $user_id = null) {
+function can_view_view($view_id, $user_id=null) {
     global $USER;
     $now = time();
     $dbnow = db_format_timestamp($now);
@@ -1418,8 +1418,7 @@ function can_view_view($view_id, $user_id = null) {
             $view_record['access']['public']['stopdate'] == null
             || $view_record['access']['public']['stopdate'] > $now
         )
-    )
-    {
+    ) {
 
         log_debug('Yes - View is public');
         return true;
@@ -1442,8 +1441,7 @@ function can_view_view($view_id, $user_id = null) {
             $view_record['access']['loggedin']['stopdate'] == null
             || $view_record['access']['loggedin']['stopdate'] > $now
         )
-    )
-    {
+    ) {
 
         log_debug('Yes - View is available to logged in users');
         return true;
@@ -1464,8 +1462,7 @@ function can_view_view($view_id, $user_id = null) {
             'SELECT COUNT(*) FROM ' . $prefix . 'usr_friend f WHERE (usr1=? AND usr2=?) OR (usr1=? AND usr2=?)',
             array( $view_record['owner'], $user_id, $user_id, $view_record['owner'] )
         )
-    )
-    {
+    ) {
         log_debug('Yes - View is available to friends of the owner');
         return true;
     }
