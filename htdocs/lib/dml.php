@@ -1291,6 +1291,15 @@ function db_commit() {
 }
 
 /**
+ * This function rolls back a smart transaction
+ */
+function db_rollback() {
+    global $db;
+    $db->FailTrans();
+    $db->CompleteTrans();
+}
+
+/**
  * This function escapes a single value suitable for insertion into an SQL
  * string
  *
