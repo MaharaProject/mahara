@@ -798,18 +798,22 @@ function delete_records($table, $field1=null, $value1=null, $field2=null, $value
  * @throws SQLException
  */
 function delete_records_select($table, $select='',$values=null) {
-    global $db;
     if ($select) {
         $select = 'WHERE '.$select;
     }
+    return delete_records_sql('DELETE FROM '. get_config('dbprefix') . $table .' '. $select, $values);
+}
+
+function delete_records_sql($sql, $values=null) {
+    global $db;
 
     try {
         $result = false;
         if (!empty($values) && is_array($values) && count($values) > 0) {
-            $stmt = $db->Prepare('DELETE FROM '. get_config('dbprefix') . $table .' '. $select);
-            $result = $db->Execute($stmt,$values);
+            $stmt = $db->Prepare($sql);
+            $result = $db->Execute($stmt, $values);
         } else {
-            $result = $db->Execute('DELETE FROM '. get_config('dbprefix') . $table .' '. $select);
+            $result = $db->Execute($sql);
         }
     }
     catch (ADODB_Exception $e) {
@@ -1283,6 +1287,15 @@ function db_commit() {
         throw new SQLException('Transaction Failed');
     }
 
+    $db->CompleteTrans();
+}
+
+/**
+ * This function rolls back a smart transaction
+ */
+function db_rollback() {
+    global $db;
+    $db->FailTrans();
     $db->CompleteTrans();
 }
 

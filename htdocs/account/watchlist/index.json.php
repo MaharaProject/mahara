@@ -33,6 +33,8 @@ json_headers();
 $stopmonitoring = param_integer('stopmonitoring', 0);
 $getartefacts   = param_integer('getartefacts', 0); 
 
+$prefix = get_config('dbprefix');
+
 if ($stopmonitoring) {
     $userid = $USER->get('id');
     $count = 0;
@@ -40,10 +42,27 @@ if ($stopmonitoring) {
     try {
         foreach ($_GET as $k => $v) {
             if (preg_match('/^stopviews\-(\d+)$/',$k,$m)) {
+                $recurse = param_boolean($k . '-recurse', null);
+                if (!empty($recurse)) {
+                    $sql = 'DELETE FROM ' . $prefix . 'usr_watchlist_artefact 
+                            WHERE usr = ? AND (artefact IN (
+                                SELECT artefact FROM ' . $prefix . 'artefact_parent_cache WHERE parent IN (
+                                    SELECT artefact FROM ' . $prefix . 'view_artefact WHERE view = ? ) )
+                            OR artefact IN (
+                                SELECT artefact FROM ' . $prefix . 'view_artefact WHERE view = ?))';
+                    delete_records_sql($sql, array($userid, $m[1], $m[1]));
+                }
                 delete_records('usr_watchlist_view', 'usr', $userid, 'view', $m[1]);
                 $count++;
             }
             else if (preg_match('/^stopartefacts\-(\d+)$/',$k,$m)) {
+                $recurse = param_boolean($k . '-recurse', null);
+                if (!empty($recurse)) {
+                    $sql = 'DELETE FROM ' . $prefix . 'usr_watchlist_artefact 
+                            WHERE usr = ? AND artefact IN (
+                                SELECT artefact FROM ' . $prefix . 'artefact_parent_cache WHERE parent = ?)';
+                    delete_records_sql($sql, array($userid, $m[1]));
+                }
                 delete_records('usr_watchlist_artefact', 'usr', $userid, 'artefact', $m[1]);
                 $count++;
             }

@@ -40,6 +40,12 @@ $savesuccess = get_string('stopmonitoringsuccess', 'activity');
 
 $getartefactsjson = get_config('wwwroot') . 'json/getartefacts.php';
 
+
+$recursestr = '[<a href="" onClick="toggleChecked(\'tocheck-r\'); return false;">' 
+    . get_string('recurseall', 'activity')
+    . '</a>]';
+$recursestrjs = str_replace("'", "\'", $recursestr);
+
 $javascript = <<<JAVASCRIPT
 var watchlist = new TableRenderer(
     'watchlist',
@@ -53,6 +59,14 @@ var watchlist = new TableRenderer(
         },
         function (r, d) {
             return TD(null, INPUT({'type' : 'checkbox', 'class': 'tocheck', 'name': 'stop' + d.type + '-' + r.id}));
+        },
+        function (r, d) {
+            if (d.type != 'communities') {
+                return TD(null, INPUT({'type' : 'checkbox', 'class': 'tocheck-r', 'name': 'stop' + d.type + '-' + r.id + '-recurse'}));
+            }
+            else {
+                return '';
+            }
         }
     ]
 );
@@ -70,8 +84,9 @@ function changeTitle(title) {
 }
 
 function stopmonitoring(form) {
-    var c = 'tocheck';
-    var e = getElementsByTagAndClassName(null,'tocheck',form);
+    var e1 = getElementsByTagAndClassName(null,'tocheck',form);
+    var e2 = getElementsByTagAndClassName(null,'tocheck-r',form);
+    var e = concat(e1, e2);
     var pd = {};
     
     for (cb in e) {
@@ -101,16 +116,27 @@ function stopmonitoring(form) {
     )
 }
 
+function typeChange(element) {
+    watchlist.doupdate({'type': element.options[element.selectedIndex].value}); 
+    changeTitle(element.options[element.selectedIndex].value); 
+    $('messagediv').innerHTML = '';
+    if (element.options[element.selectedIndex].value == 'communities') {
+        $('recurseheader').innerHTML = '';
+    }
+    else {
+        $('recurseheader').innerHTML = '{$recursestrjs}';
+    }
+
+}
 
 JAVASCRIPT;
 
-$typechange = 'watchlist.doupdate({\'type\':this.options[this.selectedIndex].value}); changeTitle(this.options[this.selectedIndex].value); $(\'messagediv\').innerHTML = \'\';';
-
 $smarty = smarty(array('tablerenderer'));
 $smarty->assign('site_menu', site_menu());
-$smarty->assign('typechange', $typechange);
+$smarty->assign('typechange', 'typeChange(this);');
 $smarty->assign('typestr', get_string('views', 'activity'));
 $smarty->assign('selectall', 'toggleChecked(\'tocheck\'); return false;');
+$smarty->assign('recursestr', $recursestr);
 $smarty->assign('stopmonitoring', 'stopmonitoring(this); return false;');
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->display('account/watchlist/index.tpl');

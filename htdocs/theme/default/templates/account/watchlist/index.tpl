@@ -19,8 +19,8 @@
     <thead>
         <tr>
             <th></th>
-            <th></th>
             <th>[<a href="" onClick="{$selectall}">{str section='activity' tag='selectall'}</a>]</th>
+            <th id="recurseheader">{$recursestr}</th>
         </tr>
     </thead>
     <tbody>
