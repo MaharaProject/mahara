@@ -38,7 +38,7 @@ class PluginArtefactInternal extends PluginArtefact {
             'email',
             'officialwebsite',
             'personalwebsite',
-            'blog',
+            'blogaddress',
             'address',
             'town',
             'city',
@@ -141,7 +141,7 @@ class ArtefactTypeProfile extends ArtefactType {
             'email'           => 'emaillist',
             'officialwebsite' => 'text',
             'personalwebsite' => 'text',
-            'blog'            => 'text',
+            'blogaddress'     => 'text',
             'address'         => 'textarea',
             'town'            => 'text',
             'city'            => 'text',
@@ -370,7 +370,7 @@ class ArtefactTypeWebAddress extends ArtefactTypeProfileField {
 }
 class ArtefactTypeOfficialwebsite extends ArtefactTypeWebAddress {}
 class ArtefactTypePersonalwebsite extends ArtefactTypeWebAddress {}
-class ArtefactTypeBlog extends ArtefactTypeProfileField {}
+class ArtefactTypeBlogAddress extends ArtefactTypeProfileField {}
 class ArtefactTypeAddress extends ArtefactTypeProfileField {}
 class ArtefactTypeTown extends ArtefactTypeProfileField {}
 class ArtefactTypeCity extends ArtefactTypeProfileField {}
