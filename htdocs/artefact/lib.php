@@ -203,6 +203,23 @@ abstract class ArtefactType {
         return $this->childrenmetadata;
     }
 
+    public static function get_children_info($userid, $artefacttype) {
+        // Given an ID of a user, get its children in a form suitable for the artefact tree
+        $data = get_records_sql_array("SELECT title
+            FROM artefact
+            WHERE
+                owner = ?
+                AND artefacttype = ?
+                AND parent IS NULL
+            ORDER BY title", array($userid, $artefacttype));
+        foreach ($data as $artefact) {
+            $a = new StdClass;
+            $a->title = '';
+            $a->text  = $artefact->title;
+            $artefacts[] = $a;
+        }
+        return $artefacts;
+    }
 
     /** 
      * This function returns the instances 

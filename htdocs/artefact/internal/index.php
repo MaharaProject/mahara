@@ -27,7 +27,7 @@
 define('INTERNAL', 1);
 define('MENUITEM', 'myprofile');
 
-require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
+require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('pieforms/pieform.php');
 safe_require('artefact', 'internal');
 
@@ -144,7 +144,7 @@ function profileform_submit($values) {
                 }
 
                 $key = get_random_key();
-                $key_url = get_config('wwwroot') . 'artefact/internal/profile/validate.php?email=' . rawurlencode($email) . '&key=' . $key;
+                $key_url = get_config('wwwroot') . 'artefact/internal/validate.php?email=' . rawurlencode($email) . '&key=' . $key;
 
                 email_user(
                     (object)array(
@@ -265,6 +265,6 @@ $smarty = smarty();
 
 $smarty->assign('profileform', $profileform);
 
-$smarty->display('artefact:internal:profile/index.tpl');
+$smarty->display('artefact:internal:index.tpl');
 
 ?>

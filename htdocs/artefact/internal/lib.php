@@ -55,9 +55,9 @@ class PluginArtefactInternal extends PluginArtefact {
             'jabberusername',
             'occupation',
             'industry',
-            'file',
-            'folder',
-            'image',
+            //'file',
+            //'folder',
+            //'image',
         );
     }
 
@@ -69,12 +69,8 @@ class PluginArtefactInternal extends PluginArtefact {
         return array(
             array(
                 'name' => 'myprofile',
-                'link' => 'profile/',
-            ),
-            array(
-                'name' => 'myfiles',
-                'link' => 'files/',
-            ),
+                'link' => '',
+            )
         );
     }
 }
@@ -399,6 +395,7 @@ class ArtefactTypeJabberusername extends ArtefactTypeProfileField {}
 class ArtefactTypeOccupation extends ArtefactTypeProfileField {}
 class ArtefactTypeIndustry extends ArtefactTypeProfileField {}
 
+// TODO: these are to be MOVED to a new plugin 'file' (or 'files')
 class ArtefactTypeFolder extends ArtefactType {
     public function commit() {
         $this->commit_basic();

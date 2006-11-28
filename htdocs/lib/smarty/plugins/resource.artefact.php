@@ -7,7 +7,7 @@
  * Author:   Martyn Smith <martyn@catalyst.net.nz>
  * Purpose:  Look up artefact templates for Mahara
  *
- * Examples: $smarty->display ("artefact:internal:profile/index.tpl")
+ * Examples: $smarty->display ("artefact:internal:index.tpl")
  * -------------------------------------------------------------
  */
 

@@ -27,7 +27,7 @@
 define('INTERNAL', 1);
 define('PUBLIC', 1);
 
-require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
+require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('pieforms/pieform.php');
 safe_require('artefact', 'internal');
 
@@ -71,6 +71,6 @@ else {
     $smarty->assign('message', get_string('emailactiviationfailed', 'artefact.internal'));
 }
 
-$smarty->display('artefact:internal:profile/validate.tpl');
+$smarty->display('artefact:internal:validate.tpl');
 
 ?>
