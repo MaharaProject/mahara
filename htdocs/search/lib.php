@@ -35,6 +35,8 @@ abstract class PluginSearch extends Plugin {
     /**
      * Given a query string and limits, return an array of matching users
      *
+     * NOTE: user with ID zero should never be returned
+     *
      * @param string  The query string
      * @param integer How many results to return
      * @param integer What result to start at (0 == first result)
@@ -43,7 +45,7 @@ abstract class PluginSearch extends Plugin {
      *               count   => integer, // total number of results
      *               limit   => integer, // how many results are returned
      *               offset  => integer, // starting from which result
-     *               results => array(   // the result records
+     *               data    => array(   // the result records
 
      *                   array(
      *                       id            => integer,
