@@ -41,7 +41,12 @@ class PluginArtefactFile extends PluginArtefact {
     }
 
     public static function menu_items() {
-        return array();
+        return array(
+            array(
+                'name' => 'myfiles',
+                'link' => '',
+            )
+        );
     }
 }
 
