@@ -44,8 +44,10 @@ class PluginArtefactBlog extends PluginArtefact {
 
     public static function menu_items() {
         return array(
-            'name' => 'myblogs',
-            'link' => 'blogs/',
+            array(
+                'name' => 'myblogs',
+                'link' => 'blogs/',
+            )
         );
     }
 }
