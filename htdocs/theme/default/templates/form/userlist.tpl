@@ -21,7 +21,7 @@
                 });
 
                 replaceChildNodes('{{$name}}_potential');
-                forEach(users.results, function(user) {
+                forEach(users.data, function(user) {
                     if (members[user.id]) {
                         return;
                     }

@@ -1,0 +1,15 @@
+<div class="header">{{block type="title" id="title"}}</div>
+<table>
+     <tr>
+         <td align="left" width="400">{{block id="block1" width="300"}}</td>
+         <td align="left" width="400">{{block id="block2" width="300"}}</td> 
+     </tr>
+     <tr>
+         <td align="right" width="150">{{block type="image" width="150" height="150" type="renderfull" id="block3"}}</td>
+         <td align="left" width="400">{{block id="block4" width="300"}}</td>
+     </tr>
+     <tr>
+         <td align="left" width="400">{{block id="block5" width="300" defaulttype="academicgoals" defaultformat="renderfull"}}</td>
+         <td align="left" width="400">{{block id="block6" width="300"}}</td> 
+     </tr>
+</table>

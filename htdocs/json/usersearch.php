@@ -49,7 +49,7 @@ $offset = param_integer('offset', 0);
 
 $data = search_user($query, $limit, $offset);
 
-foreach ($data['results'] as &$result) {
+foreach ($data['data'] as &$result) {
     $result->name = display_name($result);
 
     unset($result->email);

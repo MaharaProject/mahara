@@ -35,6 +35,8 @@ class PluginSearchInternal extends PluginSearch {
     /**
      * Implement user searching with SQL
      *
+     * NOTE: user with ID zero should never be returned
+     *
      * @param string  The query string
      * @param integer How many results to return
      * @param integer What result to start at (0 == first result)
@@ -43,7 +45,7 @@ class PluginSearchInternal extends PluginSearch {
      *               count   => integer, // total number of results
      *               limit   => integer, // how many results are returned
      *               offset  => integer, // starting from which result
-     *               results => array(   // the result records
+     *               data    => array(   // the result records
      *                   array(
      *                       id            => integer,
      *                       username      => string,
@@ -74,10 +76,13 @@ class PluginSearchInternal extends PluginSearch {
                 FROM
                     " . get_config('dbprefix') . "usr u
                 WHERE
-                    firstname ILIKE '%' || ? || '%' 
-                    OR lastname ILIKE '%' || ? || '%' 
-                    OR preferredname ILIKE '%' || ? || '%' 
-                    OR email ILIKE '%' || ? || '%' 
+                    id <> 0
+                    AND (
+                        firstname ILIKE '%' || ? || '%' 
+                        OR lastname ILIKE '%' || ? || '%' 
+                        OR preferredname ILIKE '%' || ? || '%' 
+                        OR email ILIKE '%' || ? || '%' 
+                    )
                 ",
                 array($query_string, $query_string, $query_string, $query_string),
                 $offset,
@@ -90,10 +95,13 @@ class PluginSearchInternal extends PluginSearch {
                 FROM
                     " . get_config('dbprefix') . "usr u
                 WHERE
-                    firstname ILIKE '%' || ? || '%' 
-                    OR lastname ILIKE '%' || ? || '%' 
-                    OR preferredname ILIKE '%' || ? || '%' 
-                    OR email ILIKE '%' || ? || '%' 
+                    id <> 0
+                    AND (
+                        firstname ILIKE '%' || ? || '%' 
+                        OR lastname ILIKE '%' || ? || '%' 
+                        OR preferredname ILIKE '%' || ? || '%' 
+                        OR email ILIKE '%' || ? || '%' 
+                    )
             ",
                 array($query_string, $query_string, $query_string, $query_string),
                 $offset,
@@ -111,7 +119,7 @@ class PluginSearchInternal extends PluginSearch {
             'count'   => $count,
             'limit'   => $limit,
             'offset'  => $offset,
-            'results' => $data,
+            'data'    => $data,
         );
     }
 }
