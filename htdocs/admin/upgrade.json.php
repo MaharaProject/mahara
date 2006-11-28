@@ -38,31 +38,7 @@ if (!$install) {
 if ($install) {
     if (!get_config('installed')) {
         try {
-            // Install the default institution
-            db_begin();
-            $institution = new StdClass;
-            $institution->name = 'mahara';
-            $institution->displayname = 'No Institution';
-            $institution->authplugin  = 'internal';
-            insert_record('institution', $institution);
-
-            // Insert the root user
-            $user = new StdClass;
-            $user->username = 'root';
-            $user->password = 'mahara';
-            $user->institution = 'mahara';
-            $user->passwordchange = 1;
-            $user->admin = 1;
-            $user->firstname = 'Admin';
-            $user->lastname = 'User';
-            $user->email = 'admin@example.org';
-            $user->id = insert_record('usr', $user, 'id', true);
-            set_profile_field($user->id, 'email', $user->email);
-            set_profile_field($user->id, 'firstname', $user->firstname);
-            set_profile_field($user->id, 'lastname', $user->lastname);
-
-            set_config('installed', true);
-            db_commit();
+            core_install_defaults();
         }
         catch (SQLException $e) {
             echo json_encode(array(

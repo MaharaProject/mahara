@@ -195,6 +195,13 @@ function upgrade_core($upgrade) {
     if (!empty($upgrade->install)) {
         $status = $status && core_postinst();
     }
+    else {
+        // only do this here if we're not installing
+        // otherwise the default system user won't exist yet
+        // and we have to do it in core_install_defaults
+        require('template.php');
+        upgrade_templates();
+    }
     
     $db->CompleteTrans();
 
@@ -365,5 +372,108 @@ function core_postinst() {
     }
     return $status;
 }
+
+
+function core_install_defaults() {
+    // Install the default institution
+    db_begin();
+    $institution = new StdClass;
+    $institution->name = 'mahara';
+    $institution->displayname = 'No Institution';
+    $institution->authplugin  = 'internal';
+    insert_record('institution', $institution);
+    
+    // Insert the root user
+    $user = new StdClass;
+    $user->id = 0;
+    $user->username = 'root';
+    $user->password = '*';
+    $user->salt = '*';
+    $user->institution = 'mahara';
+    $user->firstname = 'System';
+    $user->lastname = 'User';
+    $user->email = 'root@example.org';
+    insert_record('usr', $user);
+
+    // Insert the admin user
+    $user = new StdClass;
+    $user->username = 'admin';
+    $user->password = 'mahara';
+    $user->institution = 'mahara';
+    $user->passwordchange = 1;
+    $user->admin = 1;
+    $user->firstname = 'Admin';
+    $user->lastname = 'User';
+    $user->email = 'admin@example.org';
+    $user->id = insert_record('usr', $user, 'id', true);
+    set_profile_field($user->id, 'email', $user->email);
+    set_profile_field($user->id, 'firstname', $user->firstname);
+    set_profile_field($user->id, 'lastname', $user->lastname);
+    
+    require('template.php');
+    upgrade_templates();
+
+    set_config('installed', true);
+    db_commit();
+}
+
+function upgrade_templates() {
+
+    $dbtemplates = array();
+
+    // check dataroot first, they get precedence.
+    $templates = get_dir_contents(get_config('dataroot') . 'templates/');
+    foreach ($templates as $dir) {
+        $dbtemplates[$dir] = template_parse($dir);
+    }
+
+    // and now system templates
+    $templates = get_dir_contents(get_config('libroot') . 'templates/');
+    foreach ($templates as $dir) {
+        if (array_key_exists($dir, $dbtemplates)) { // dataroot gets preference
+            continue;
+        }
+        $dbtemplates[$dir] = template_parse($dir);
+    }
+
+    foreach ($dbtemplates as $name => $guff) {
+        if (!is_readable($guff['location'] . 'config.php')) {
+            throw new InvalidArgumentException("missing config.php for template $name");
+        }
+        require_once($guff['location'] . 'config.php');
+        $fordb = new StdClass;
+        $fordb->name = $name;
+        $fordb->mtime = db_format_timestamp(time());
+        $fordb->title = $template->title;
+        $fordb->description = $template->description;
+        $fordb->category = $template->category;
+        $fordb->mtime = db_format_timestamp(time());
+        $fordb->cacheddata = serialize($guff['parseddata']);
+        if (isset($template->owner)) {
+            $fordb->owner = $template->owner;
+        }
+        else {
+            $fordb->owner = 0; // root user
+        }
+        if (record_exists('template', 'name', $name)) {
+            update_record('template', $fordb, 'name');
+        }
+        else {
+            $fordb->ctime = $fordb->mtime;
+            insert_record('template', $fordb);
+        }
+    }
+    
+    if (count($dbtemplates) > 0) {
+        set_field_select('template', 'deleted', 1, 
+                         'name NOT IN (' . implode(',', db_array_to_ph(array_keys($dbtemplates))). ')', 
+                         array_keys($dbtemplates));
+    }
+    else {
+        set_field('template', 'deleted', 1);
+    }
+    
+}
+
 
 ?>
