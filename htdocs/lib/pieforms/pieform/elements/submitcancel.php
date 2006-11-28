@@ -42,6 +42,8 @@ function pieform_render_submitcancel($element, Pieform $form) {
 }
 
 function pieform_render_submitcancel_set_attributes($element) {
+    // @todo change to 'submitelement' => true, more generic and can be used
+    // for working out which submit button was pressed
     $element['ajaxmessages'] = true;
     return $element;
 }
