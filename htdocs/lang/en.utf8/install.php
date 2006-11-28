@@ -207,7 +207,9 @@ and Condition to reflect changes to the system and in response to user
 feedback.  As such we suggest you check the Terms and Conditions each
 time you visit this site.  We will however notify users of any major
 changes to the Terms and Conditions via the [eP Site Name] homepage.</p>';
-$string['uploadcopyrightdefaultcontent'] = '<p>Do you promise you\'ve got permission to use the file
-you\'re about to upload?  If infringing stuff gets posted here, it\'s not our fault, it\'s yours.</p>';
+$string['uploadcopyrightdefaultcontent'] = '<p>Yes: The file I am attempting to
+upload is my own or I have express permission to reproduce and/or distribute this
+item.  My use of this file does not breach any of my local Copyright legislation.
+This file also adheres to the Terms and Conditions outlined on this site.</p>';
 
 ?>
