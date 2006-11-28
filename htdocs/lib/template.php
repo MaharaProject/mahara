@@ -95,15 +95,19 @@ function template_locate($templatename, $fetchdb=true) {
 
     $template = array();
 
-    $thumbnails = array('jpg', 'jpeg', 'png', 'gif');
+    $thumbnails = array('jpg'  => 'image/jpeg',
+                        'jpeg' => 'image/jpeg',
+                        'png'  => 'image/png',
+                        'gif'  => 'image/gif');
 
     if ($path = realpath(get_config('dataroot') . $fragment)) {
         $template['fragment'] = $path;
         if (is_readable(get_config('dataroot') . $css)) {
             $template['css'] = get_config('dataroot') . $css;
         }
-        foreach ($thumbnails as $t) {
+        foreach ($thumbnails as $t => $contenttype) {
             if (is_readable(get_config('dataroot') . $templatedir . 'thumbnail.' . $t)) {
+                $template['thumbnailcontenttype'] = $contenttype;
                 $template['thumbnail'] = get_config('dataroot') . $templatedir . 'thumbnail.' . $t;
                 break;
             }
@@ -121,8 +125,9 @@ function template_locate($templatename, $fetchdb=true) {
         if (is_readable(get_config('libroot') . $css)) {
             $template['css'] = get_config('libroot') . $css;
         }
-        foreach ($thumbnails as $t) {
+        foreach ($thumbnails as $t => $contenttype) {
             if (is_readable(get_config('libroot') . $templatedir . 'thumbnail.' . $t)) {
+                $template['thumbnailcontenttype'] = $contenttype;
                 $template['thumbnail'] = get_config('libroot') . $templatedir . 'thumbnail.' . $t;
                 break;
             }
