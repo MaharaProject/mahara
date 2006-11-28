@@ -48,15 +48,11 @@ $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.
 
 if ($viewdata) {
     $viewidlist = implode(', ', array_map(create_function('$a', 'return $a->id;'), $viewdata));
-}
-else {
-    $viewidlist = 'NULL';
-}
-
-$artefacts = get_records_sql_array('SELECT va.view, va.artefact, a.title, a.artefacttype
+    $artefacts = get_records_sql_array('SELECT va.view, va.artefact, a.title, a.artefacttype
         FROM ' . $prefix . 'view_artefact va
         INNER JOIN ' . $prefix . 'artefact a ON va.artefact = a.id
         WHERE va.view IN (' . $viewidlist . ')', '');
+}
 
 $data = array();
 if ($viewdata) {
