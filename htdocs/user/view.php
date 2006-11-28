@@ -106,10 +106,10 @@ if ($communities) {
     }
 }
 
-if ($invitelist || $controlledlist) {
+if (isset($invitelist) || isset($controlledlist)) {
     require_once('pieforms/pieform.php');
 }
-if ($invitelist) {
+if (isset($invitelist)) {
     $inviteform = pieform(array(
         'name'                => 'invite',
         'ajaxpost'            => true,
@@ -127,7 +127,7 @@ if ($invitelist) {
         ),
     ));
 }
-if ($controlledlist) {
+if (isset($controlledlist)) {
     $addform = pieform(array(
         'name'                => 'add',
         'ajaxpost'            => true,
