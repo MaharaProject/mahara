@@ -76,7 +76,7 @@ function editsitepage_submit($values) {
     $data->name    = $values['pagename'];
     $data->content = $values['pagetext'];
     $data->mtime   = db_format_timestamp(time());
-    $data->mauthor = $USER->id;
+    $data->mauthor = $USER->get('id');
     try {
         update_record('site_content', $data, 'name');
     }
