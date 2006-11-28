@@ -99,13 +99,6 @@ addLoadEvent(function() {
     }
 });
 
-// @todo remove this when we migrate to mochikit 1.4
-//if (typeof(getFirstElementByTagAndClassName) == 'undefined') {
-//    function getFirstElementByTagAndClassName(tag, className, parentElement) {
-//        return getElementsByTagAndClassName(tag, className, parentElement)[0];
-//    }
-//}
-
 var ctxHelp = new Array();
 var ctxHelp_selected;
 var container;
