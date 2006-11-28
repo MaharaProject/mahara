@@ -27,8 +27,8 @@
 define('INTERNAL', 1);
 require(dirname(dirname(__FILE__)).'/init.php');
 
-$loggedinid = $USER->get('id');
 $userid = param_integer('id','');
+$loggedinid = $USER->get('id');
 
 // Get the user's details
 
@@ -80,10 +80,11 @@ else {
     }
 }
 
-
 $smarty = smarty();
 
 // Get the logged in user's "invite only" communities
+// @todo: check if user is already a community member.
+
 if ($communities = @get_records_select_array('community',
                                              'owner = ' . $loggedinid . "AND jointype = 'invite'",
                                              null, 'name', 'id,name')) {
@@ -111,8 +112,11 @@ if ($communities = @get_records_select_array('community',
     $smarty->assign('INVITEFORM',$inviteform);
 }
 
-// Get the "controlled membership" communities in which the logged in user is a tutor
 $prefix = get_config('dbprefix');
+
+// Get the "controlled membership" communities in which the logged in user is a tutor
+// @todo: check if user is already a community member.
+
 if ($communities = @get_records_sql_array('SELECT c.id, c.name
         FROM ' . $prefix . 'community c
         JOIN ' . $prefix . 'community_member cm ON c.id = cm.community
@@ -123,7 +127,7 @@ if ($communities = @get_records_sql_array('SELECT c.id, c.name
     }
     require_once('pieforms/pieform.php');
     $addform = pieform(array(
-        'name'                => 'add',
+        'name'                => 'addmember',
         'ajaxpost'            => true,
         'elements'            => array(
             'community' => array(
@@ -131,6 +135,10 @@ if ($communities = @get_records_sql_array('SELECT c.id, c.name
                 'title'   => get_string('addusertocommunity'),
                 'collapseifoneoption' => false,
                 'options' => $controlledlist
+            ),
+            'id' => array(
+                'type'  => 'hidden',
+                'value' => $userid,
             ),
             'submit' => array(
                 'type'  => 'submit',
@@ -140,6 +148,27 @@ if ($communities = @get_records_sql_array('SELECT c.id, c.name
     ));
     $smarty->assign('ADDFORM',$addform);
 }
+
+// Send an invitation to the user to join a community
+function invite_submit() {
+}
+
+// Add the user as a member of a community
+function addmember_submit($values) {
+    $data = new StdClass;
+    $data->community = $values['community'];
+    $data->member    = $values['id'];
+    $data->ctime     = db_format_timestamp(time());
+    $data->tutor     = 0;
+    try {
+        insert_record('community_member', $data, 'community,member');
+    }
+    catch (SQLException $e) {
+        json_reply('local', get_string('adduserfailed'));
+    }
+    json_reply(false, get_string('useradded'));
+}
+
 
 $smarty->assign('searchform',searchform());
 $smarty->assign('NAME',$name);
