@@ -727,7 +727,7 @@ function get_column_sql($sql, $values=null) {
  * @return mixed An ADODB RecordSet object with the results from the SQL call or false.
  * @throws SQLException
  */
-function set_field($table, $newfield, $newvalue, $field1, $value1, $field2=null, $value2=null, $field3=null, $value3=null) {
+function set_field($table, $newfield, $newvalue, $field1=null, $value1=null, $field2=null, $value2=null, $field3=null, $value3=null) {
     global $db;
 
     $select = where_clause_prepared($field1, $field2, $field3);
@@ -740,7 +740,7 @@ function set_field_select($table, $newfield, $newvalue, $select, $values) {
     global $db;
 
     // @todo penny This is an ugly solution, we can talk about it later
-    if (!preg_match('/^\s*where/i', $select)) {
+    if (!empty($select) && !preg_match('/^\s*where/i', $select)) {
         $select = ' WHERE ' . $select;
     }
 
