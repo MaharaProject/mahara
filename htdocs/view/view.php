@@ -28,8 +28,6 @@ define('INTERNAL', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 
 $viewid = param_integer('id');
-//$userid = $USER->get('id');
-
 $view = get_record('view', 'id', $viewid);
 
 if (can_view_view($viewid)) {
