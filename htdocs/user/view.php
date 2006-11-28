@@ -150,7 +150,7 @@ if ($communities = @get_records_sql_array('SELECT c.id, c.name
 }
 
 // Send an invitation to the user to join a community
-function invite_submit() {
+function invite_submit($values) {
 }
 
 // Add the user as a member of a community
