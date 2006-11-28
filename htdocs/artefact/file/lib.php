@@ -29,7 +29,11 @@ defined('INTERNAL') || die();
 class PluginArtefactFile extends PluginArtefact {
 
     public static function get_artefact_types() {
-        return array();
+        return array(
+            'file',
+            'folder',
+            'image',
+        );
     }
 
     public static function get_plugin_name() {
