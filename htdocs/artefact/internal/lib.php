@@ -55,9 +55,6 @@ class PluginArtefactInternal extends PluginArtefact {
             'jabberusername',
             'occupation',
             'industry',
-            //'file',
-            //'folder',
-            //'image',
         );
     }
 
