@@ -26,6 +26,21 @@
 
 defined('INTERNAL') || die();
 
+class PluginArtefactFile extends PluginArtefact {
+
+    public static function get_artefact_types() {
+        return array();
+    }
+
+    public static function get_plugin_name() {
+        return 'file';
+    }
+
+    public static function menu_items() {
+        return array();
+    }
+}
+
 class ArtefactTypeFolder extends ArtefactType {
     public function commit() {
         $this->commit_basic();
