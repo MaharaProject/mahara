@@ -81,35 +81,17 @@ else {
 }
 
 
+$smarty = smarty();
 
 // Get the logged in user's "invite only" communities
-$communities = get_records_select_array('community',
-                                        'owner = ' . $loggedinid . "AND jointype = 'invite'",
-                                        null, 'name', 'id,name');
-if ($communities) {
+if ($communities = @get_records_select_array('community',
+                                             'owner = ' . $loggedinid . "AND jointype = 'invite'",
+                                             null, 'name', 'id,name')) {
     $invitelist = array();
     foreach ($communities as $community) {
         $invitelist[$community->id] = $community->name;
     }
-}
-
-// Get the "controlled membership" communities in which the logged in user is a tutor
-$prefix = get_config('dbprefix');
-$communities = get_records_sql_array('SELECT c.id, c.name
-        FROM ' . $prefix . 'community c
-        JOIN ' . $prefix . 'community_member cm ON c.id = cm.community
-        WHERE cm.member = ' . $loggedinid . " AND cm.tutor = 1 AND c.jointype = 'controlled'",'');
-if ($communities) {
-    $controlledlist = array();
-    foreach ($communities as $community) {
-        $controlledlist[$community->id] = $community->name;
-    }
-}
-
-if (isset($invitelist) || isset($controlledlist)) {
     require_once('pieforms/pieform.php');
-}
-if (isset($invitelist)) {
     $inviteform = pieform(array(
         'name'                => 'invite',
         'ajaxpost'            => true,
@@ -126,8 +108,20 @@ if (isset($invitelist)) {
             ),
         ),
     ));
+    $smarty->assign('INVITEFORM',$inviteform);
 }
-if (isset($controlledlist)) {
+
+// Get the "controlled membership" communities in which the logged in user is a tutor
+$prefix = get_config('dbprefix');
+if ($communities = @get_records_sql_array('SELECT c.id, c.name
+        FROM ' . $prefix . 'community c
+        JOIN ' . $prefix . 'community_member cm ON c.id = cm.community
+        WHERE cm.member = ' . $loggedinid . " AND cm.tutor = 1 AND c.jointype = 'controlled'",'')) {
+    $controlledlist = array();
+    foreach ($communities as $community) {
+        $controlledlist[$community->id] = $community->name;
+    }
+    require_once('pieforms/pieform.php');
     $addform = pieform(array(
         'name'                => 'add',
         'ajaxpost'            => true,
@@ -144,18 +138,10 @@ if (isset($controlledlist)) {
             ),
         ),
     ));
-}
-
-
-
-$smarty = smarty();
-$smarty->assign('searchform',searchform());
-if (isset($inviteform)) {
-    $smarty->assign('INVITEFORM',$inviteform);
-}
-if (isset($addform)) {
     $smarty->assign('ADDFORM',$addform);
 }
+
+$smarty->assign('searchform',searchform());
 $smarty->assign('NAME',$name);
 $smarty->assign('USERFIELDS',$userfields);
 $smarty->assign('PROFILE',$profile);
