@@ -46,12 +46,13 @@ $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.
         WHERE v.owner = ' . $userid . '
         ORDER BY v.title', '', $offset, $limit);
 
-$viewidlist = implode(', ', array_map(create_function('$a', 'return $a->id;'), $viewdata));
-
-$artefacts = get_records_sql_array('SELECT va.view, va.artefact, a.title, a.artefacttype
+if ($viewdata) {
+    $viewidlist = implode(', ', array_map(create_function('$a', 'return $a->id;'), $viewdata));
+    $artefacts = get_records_sql_array('SELECT va.view, va.artefact, a.title, a.artefacttype
         FROM ' . $prefix . 'view_artefact va
-        JOIN ' . $prefix . 'artefact a ON va.artefact = a.id
+        INNER JOIN ' . $prefix . 'artefact a ON va.artefact = a.id
         WHERE va.view IN (' . $viewidlist . ')', '');
+}
 
 $data = array();
 if ($viewdata) {
@@ -80,6 +81,8 @@ if ($viewdata) {
             $artname = $artefactobj->render(ARTEFACT_FORMAT_NAME, null);
             $data[$index[$artefactrec->view]]['artefacts'][] = array('id'    => $artefactrec->artefact,
                                                                      'title' => $artname);
+            //$data[$index[$artefactrec->view]]['artefacts'][] = array('id'    => $artefactrec->artefact,
+            //                                                         'title' => $artifactrec->title);
         }
     }
 }
@@ -88,15 +91,12 @@ if ($viewdata) {
    a tutor member.  This is the list of communities that the user is
    able to submit views to. */
 
-if ($communitydata = @get_column('community_member', 'community', 'member', $userid)) {
-    $communityidlist = implode(', ', $communitydata);
-    $tutorcommunitydata = get_records_sql_array('SELECT c.id, c.name
-       FROM ' . $prefix . 'community c
-       JOIN ' . $prefix . 'community_member cm ON c.id = cm.community
-       WHERE cm.community IN (' . $communityidlist . ')
-       AND cm.tutor = 1', '');
-}
-if (empty($tutorcommunitydata)) {
+if (!$tutorcommunitydata = @get_records_sql_array('SELECT c.id, c.name
+       FROM ' . $prefix . 'community_member u
+       INNER JOIN ' . $prefix . 'community c ON u.community = c.id 
+       INNER JOIN ' . $prefix . 'community_member t ON t.community = c.id 
+       WHERE u.member = ' . $userid . '
+       AND t.tutor = 1;', '')) {
     $tutorcommunitydata = array();
 }
 

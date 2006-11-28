@@ -31,7 +31,7 @@ $wwwroot = get_config('wwwroot');
 
 $strings = array('accessstartdate', 'accessstopdate', 'artefacts', 'delete', 'deleteviewquestion',
                  'description', 'editaccess', 'editview', 'editviewinformation', 'submitted', 
-                 'submitview', 'submitviewquestion', 'unknownerror');
+                 'submitview', 'submitviewquestion');
 $getstring = array();
 foreach ($strings as $string) {
     $getstring[$string] = "'" . get_string($string) . "'";
