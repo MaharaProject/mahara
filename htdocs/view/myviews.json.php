@@ -46,7 +46,12 @@ $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.
         WHERE v.owner = ' . $userid . '
         ORDER BY v.title', '', $offset, $limit);
 
-$viewidlist = implode(', ', array_map(create_function('$a', 'return $a->id;'), $viewdata));
+if ($viewdata) {
+    $viewidlist = implode(', ', array_map(create_function('$a', 'return $a->id;'), $viewdata));
+}
+else {
+    $viewidlist = 'NULL';
+}
 
 $artefacts = get_records_sql_array('SELECT va.view, va.artefact, a.title, a.artefacttype
         FROM ' . $prefix . 'view_artefact va
