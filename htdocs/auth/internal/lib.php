@@ -160,6 +160,12 @@ class AuthInternal extends Auth {
             return $theysent == $wehave;
         }
 
+        if ($salt == '*') {
+            // This is a special salt that means this user simply CAN'T log in.
+            // It is used on the root user (id=0)
+            return false;
+        }
+
         // The main type - a salted sha1
         $sha1sent = self::encrypt_password($theysent, $salt);
         return $sha1sent == $wehave;
