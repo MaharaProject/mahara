@@ -7,12 +7,14 @@
     <TABLE NAME="artefact_file_files">
         <FIELDS>
             <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" />
-            <FIELD NAME="owner" TYPE="int" LENGTH="10" NOTNULL="true" />
+            <FIELD NAME="name" TYPE="text" NOTNULL="true" />
+            <FIELD NAME="type" TYPE="text" NOTNULL="false" />
+            <FIELD NAME="parentfolder" TYPE="int" NOTNULL="false" />
             <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="true" />
         </FIELDS>
         <KEYS>
             <KEY NAME="primary" TYPE="primary" FIELDS="id" />
-            <KEY NAME="ownerfk" TYPE="foreign" FIELDS="owner" REFTABLE="usr" REFFIELDS="id" />
+            <KEY NAME="parentfolderfk" TYPE="foreign" FIELDS="parentfolder" REFTABLE="artefact_file_files" REFFIELDS="id" />
             <KEY NAME="artefactfk" TYPE="foreign" FIELDS="artefact" REFTABLE="artefact" REFFIELDS="id" />
         </KEYS>
     </TABLE>
