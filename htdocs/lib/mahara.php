@@ -121,8 +121,9 @@ function ensure_sanity() {
     }
 
     // @todo the results of these should be checked
-    check_dir_exists(get_config('dataroot').'smarty/compile');
-    check_dir_exists(get_config('dataroot').'smarty/cache');
+    check_dir_exists(get_config('dataroot') . 'smarty/compile');
+    check_dir_exists(get_config('dataroot') . 'smarty/cache');
+    check_dir_exists(get_config('dataroot') . 'templates');
 
 }
 
@@ -1529,6 +1530,18 @@ function can_view_view($view_id, $user_id=null) {
 
     log_debug('No - nothing matched');
     return false;
+}
+
+function get_dir_contents($directory) {
+    $contents = array();
+    $dirhandle = opendir($directory);
+    while (false !== ($dir = readdir($dirhandle))) {
+        if (strpos($dir, '.') === 0) {
+            continue;
+        }
+        $contents[] = $dir;
+    }
+    return $contents;
 }
 
 ?>

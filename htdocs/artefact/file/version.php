@@ -17,41 +17,17 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage core
- * @author     Martyn Smith <martyn@catalyst.net.nz>
+ * @subpackage artefact-file
+ * @author     Penny Leach <penny@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
-define('INTERNAL', 1);
+defined('INTERNAL') || die();
 
-require(dirname(dirname(__FILE__)) . '/init.php');
-require('searchlib.php');
-
-safe_require('search', 'internal', 'lib.php', 'require_once');
-
-try {
-    $query = param_variable('query');
-}
-catch (ParameterException $e) {
-    json_reply('missingparameter', get_string('missingparameter') . ' \'query\'');
-}
-
-$limit = param_integer('limit', 10);
-$offset = param_integer('offset', 0);
-
-$data = search_user($query, $limit, $offset);
-
-if ($data['results']) {
-    foreach ($data['results'] as $key => $value) {
-        $data['data'][$key]->name = display_name($value);
-        $data['data'][$key]->id   = $value->id;
-    }
-}
-unset($data['results']);
-
-json_headers();
-print json_encode($data);
+$config = new StdClass;
+$config->version = 2006112800;
+$config->release = '0.1';
 
 ?>

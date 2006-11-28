@@ -554,7 +554,6 @@
         </TABLE>
         <TABLE NAME="template">
             <FIELDS>
-                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
                 <FIELD NAME="name" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="title" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="description" TYPE="text" NOTNULL="false" />
@@ -562,9 +561,12 @@
                 <FIELD NAME="owner" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
                 <FIELD NAME="mtime" TYPE="datetime" NOTNULL="true" />
+                <FIELD NAME="cacheddata" TYPE="text" NOTNULL="false" />
+                <FIELD NAME="deleted" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
+                <FIELD NAME="thumbnail" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
             </FIELDS>
             <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+                <KEY NAME="primary" TYPE="primary" FIELDS="name" />
                 <KEY NAME="ownerfk" TYPE="foreign" FIELDS="owner" REFTABLE="usr" REFFIELDS="id" />
                 <KEY NAME="categoryfk" TYPE="foreign" FIELDS="category" REFTABLE="template_category" REFFIELDS="name" />
             </KEYS>
@@ -575,7 +577,7 @@
                 <FIELD NAME="title" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="description" TYPE="text" NOTNULL="false" />
                 <FIELD NAME="owner" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="template" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="template" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="startdate" TYPE="datetime" />
                 <FIELD NAME="stopdate" TYPE="datetime" />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
@@ -586,7 +588,7 @@
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
                 <KEY NAME="ownerfk" TYPE="foreign" FIELDS="owner" REFTABLE="usr" REFFIELDS="id" />
-                <KEY NAME="templatefk" TYPE="foreign" FIELDS="template" REFTABLE="template" REFFIELDS="id" />
+                <KEY NAME="templatefk" TYPE="foreign" FIELDS="template" REFTABLE="template" REFFIELDS="name" />
                 <KEY NAME="submittedtofk" TYPE="foreign" FIELDS="submittedto" REFTABLE="community" REFFIELDS="id" />
             </KEYS>
         </TABLE>

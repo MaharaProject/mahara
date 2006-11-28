@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage artefact-blog
- * @author     Alastair Pharo <alastair@catalyst.net.nz>
+ * @subpackage artefact-internal
+ * @author     Penny Leach <penny@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
@@ -26,82 +26,99 @@
 
 defined('INTERNAL') || die();
 
-/** 
- * Users can create blogs and blog posts using this plugin.
- */
-class PluginArtefactBlog extends PluginArtefact {
+class PluginArtefactFile extends PluginArtefact {
 
     public static function get_artefact_types() {
         return array(
-            'blog',
-            'blogpost',
+            'file',
+            'folder',
+            'image',
         );
     }
 
     public static function get_plugin_name() {
-        return 'blog';
+        return 'file';
     }
 
     public static function menu_items() {
         return array(
             array(
-                'name' => 'myblogs',
-                'link' => 'blogs/',
+                'name' => 'myfiles',
+                'link' => '',
             )
         );
     }
 }
 
-/**
- * A Blog artefact is a collection of BlogPost artefacts.
- */
-class ArtefactTypeBlog extends ArtefactType {
-
+class ArtefactTypeFolder extends ArtefactType {
     public function commit() {
+        $this->commit_basic();
     }
-
+    
     public function delete() {
+        $this->delete_basic();
     }
 
     public function render($format, $options) {
+
     }
 
     public function get_icon() {
+
     }
 
     public static function get_render_list() {
-    }
 
-    public static function can_render_to($format) {
     }
+    
+    public static function can_render_to($format) {
+
+    }    
 
     public static function collapse_config() {
+        return 'file';
     }
 }
 
-/**
- * BlogPost artefacts occur within Blog artefacts
- */
-class ArtefactTypeBlogPost extends ArtefactType {
+class ArtefactTypeFile extends ArtefactType {
 
     public function commit() {
+        $this->commit_basic();
     }
-
+    
     public function delete() {
+        $this->delete_basic();
     }
 
     public function render($format, $options) {
+
     }
 
     public function get_icon() {
+
     }
 
     public static function get_render_list() {
-    }
 
+    }
+    
     public static function can_render_to($format) {
+
     }
 
-    public static function collapse_config() {
+    public static function has_config() {
+        return true;
+    }
+
+    public static function get_config_options() {
+        return array(); // @todo  
     }
 }
+class ArtefactTypeImage extends ArtefactTypeFile {
+    
+    public static function collapse_config() {
+        return 'file';
+    }
+}
+
+?>

@@ -17,29 +17,18 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage core
- * @author     Richard Mansfield <richard.mansfield@catalyst.net.nz>
+ * @subpackage core or plugintype/pluginname
+ * @author     Your Name <you@example.org>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
-define('INTERNAL', 1);
-require(dirname(dirname(__FILE__)) . '/init.php');
+defined('INTERNAL') || die();
 
-$viewid = param_integer('id');
-$view = get_record('view', 'id', $viewid);
-
-if (can_view_view($viewid)) {
-    $content = 'view template display here';
-}
-
-$smarty = smarty();
-$smarty->clear_assign('MAINNAV');
-$smarty->assign('TITLE', $view->title);
-if (isset($content)) {
-    $smarty->assign('VIEWCONTENT', $content);
-}
-$smarty->display('view/view.tpl');
+$template = new StdClass;
+$template->title = 'Example template';
+$template->description = 'Very rough proof of concept example template';
+$template->category = 'resume';
 
 ?>

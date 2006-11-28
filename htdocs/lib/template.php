@@ -30,10 +30,9 @@ function template_parse($templatename) {
 
     $t = array();
     
-    $template = template_locate($templatename);
-    $template = $template['fragment']; // we don't care about css or thumbnails right now
-
-    $fragment = file_get_contents($template);
+    $template = template_locate($templatename, false);
+    
+    $fragment = file_get_contents($template['fragment']);
 
     preg_match_all('/(.*?)\{\{(.*?)\}\}/xms', $fragment, $matches, PREG_SET_ORDER);
     
@@ -59,7 +58,8 @@ function template_parse($templatename) {
 
     $t[] = $temp;
 
-    return $t;
+    $template['parseddata'] = $t;
+    return $template;
 }
 
 function template_parse_block($blockstr) {
@@ -86,7 +86,7 @@ function template_parse_block($blockstr) {
         
 }
 
-function template_locate($templatename) {
+function template_locate($templatename, $fetchdb=true) {
 
     // check dataroot first for custom templates
     $templatedir = 'templates/' . $templatename . '/';
@@ -95,19 +95,28 @@ function template_locate($templatename) {
 
     $template = array();
 
-    $thumbnails = array('jpg', 'jpeg', 'png', 'gif');
+    $thumbnails = array('jpg'  => 'image/jpeg',
+                        'jpeg' => 'image/jpeg',
+                        'png'  => 'image/png',
+                        'gif'  => 'image/gif');
 
     if ($path = realpath(get_config('dataroot') . $fragment)) {
         $template['fragment'] = $path;
         if (is_readable(get_config('dataroot') . $css)) {
             $template['css'] = get_config('dataroot') . $css;
         }
-        foreach ($thumbnails as $t) {
+        foreach ($thumbnails as $t => $contenttype) {
             if (is_readable(get_config('dataroot') . $templatedir . 'thumbnail.' . $t)) {
+                $template['thumbnailcontenttype'] = $contenttype;
                 $template['thumbnail'] = get_config('dataroot') . $templatedir . 'thumbnail.' . $t;
                 break;
             }
         }
+        if ($dbstuff = get_record('template', 'name', $templatename)) {
+            $template['cacheddata'] = unserialize($dbstuff->cacheddata);
+            $template['category'] = $dbstuff->category;
+        }
+        $template['location'] = get_config('datarootroot') . 'templates/' . $templatename . '/';
         return $template;
     }
 
@@ -116,12 +125,18 @@ function template_locate($templatename) {
         if (is_readable(get_config('libroot') . $css)) {
             $template['css'] = get_config('libroot') . $css;
         }
-        foreach ($thumbnails as $t) {
+        foreach ($thumbnails as $t => $contenttype) {
             if (is_readable(get_config('libroot') . $templatedir . 'thumbnail.' . $t)) {
+                $template['thumbnailcontenttype'] = $contenttype;
                 $template['thumbnail'] = get_config('libroot') . $templatedir . 'thumbnail.' . $t;
                 break;
             }
         }
+        if ($dbstuff = get_record('template', 'name', $templatename)) {
+            $template['cacheddata'] = unserialize($dbstuff->cacheddata);
+            $template['category'] = $dbstuff->category;
+        }
+        $template['location'] = get_config('libroot') . 'templates/' . $templatename . '/';
         return $template;
     }
 

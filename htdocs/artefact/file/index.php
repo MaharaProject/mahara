@@ -17,29 +17,20 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage core
- * @author     Richard Mansfield <richard.mansfield@catalyst.net.nz>
+ * @subpackage artefact-file
+ * @author     Martyn Smith <martyn@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
 define('INTERNAL', 1);
-require(dirname(dirname(__FILE__)) . '/init.php');
+define('MENUITEM', 'myfiles');
 
-$viewid = param_integer('id');
-$view = get_record('view', 'id', $viewid);
-
-if (can_view_view($viewid)) {
-    $content = 'view template display here';
-}
+require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+safe_require('artefact', 'file');
 
 $smarty = smarty();
-$smarty->clear_assign('MAINNAV');
-$smarty->assign('TITLE', $view->title);
-if (isset($content)) {
-    $smarty->assign('VIEWCONTENT', $content);
-}
-$smarty->display('view/view.tpl');
+$smarty->display('artefact:file:index.tpl');
 
 ?>
