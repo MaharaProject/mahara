@@ -108,9 +108,10 @@ function template_locate($templatename, $fetchdb=true) {
                 break;
             }
         }
-        $dbstuff = get_record('template', 'name', $templatename);
-        $template['cacheddata'] = unserialize($dbstuff->cacheddata);
-        $template['category'] = $dbstuff->category;
+        if ($dbstuff = get_record('template', 'name', $templatename)) {
+            $template['cacheddata'] = unserialize($dbstuff->cacheddata);
+            $template['category'] = $dbstuff->category;
+        }
         $template['location'] = get_config('datarootroot') . 'templates/' . $templatename . '/';
         return $template;
     }
@@ -126,9 +127,10 @@ function template_locate($templatename, $fetchdb=true) {
                 break;
             }
         }
-        $dbstuff = get_record('template', 'name', $templatename);
-        $template['cacheddata'] = unserialize($dbstuff->cacheddata);
-        $template['category'] = $dbstuff->category;
+        if ($dbstuff = get_record('template', 'name', $templatename)) {
+            $template['cacheddata'] = unserialize($dbstuff->cacheddata);
+            $template['category'] = $dbstuff->category;
+        }
         $template['location'] = get_config('libroot') . 'templates/' . $templatename . '/';
         return $template;
     }
