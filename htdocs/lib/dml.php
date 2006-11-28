@@ -644,7 +644,7 @@ function get_records_sql_menu($sql,$values=null) {
  * @return mixed the specified value
  * @throws SQLException
  */
-function get_field($table, $field, $field1, $value1, $field2=null, $value2=null, $field3=null, $value3=null) {
+function get_field($table, $field, $field1=null, $value1=null, $field2=null, $value2=null, $field3=null, $value3=null) {
     $select = where_clause_prepared($field1, $field2, $field3);
     $values = where_values_prepared($value1, $value2, $value3);
     
