@@ -29,19 +29,13 @@ define('INTERNAL', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 require('searchlib.php');
 
-json_headers();
-
 safe_require('search', 'internal', 'lib.php', 'require_once');
 
 try {
     $query = param_variable('query');
 }
 catch (ParameterException $e) {
-    print json_encode(array(
-        'error'   => 'missingparameter',
-        'message' => 'Missing parameter \'query\'',
-    ));
-    exit;
+    json_reply('missingparameter','Missing parameter \'query\'');
 }
 
 $limit = param_integer('limit', 20);
@@ -60,6 +54,9 @@ foreach ($data['data'] as &$result) {
     unset($result->preferredname);
 }
 
+json_headers();
+$data['error'] = false;
+$data['message'] = '';
 print json_encode($data);
 
 ?>

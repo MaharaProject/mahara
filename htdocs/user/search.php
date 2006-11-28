@@ -25,7 +25,7 @@
  */
 
 define('INTERNAL', 1);
-require(dirname(dirname(__FILE__)).'/init.php');
+require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 
 /* If there is no query posted, the 'results' section of the page will
@@ -59,11 +59,12 @@ function search_submit($values) {
 }
 
 $noresults = get_string('noresultsfound');
+$wwwroot = get_config('wwwroot');
 
 $javascript = <<<JAVASCRIPT
 var results = new TableRenderer(
     'searchresults',
-    'results.json.php',
+    '{$wwwroot}json/usersearch.php',
     [
         function(r) { return TD(null,A({'href':'view.php?id=' + r.id},r.name)); },
     ]
