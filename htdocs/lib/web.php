@@ -236,12 +236,20 @@ function json_headers() {
 }
 
 /**
- * This function sends a JSON message.
+ * This function sends a JSON message, and ends the script.
  *
+ * Scripts receiving replies will recieve a JSON array with two fields:
+ *
+ *  - error: True or false depending on whether the request was successful
+ *  - message: JSON data representing a message sent back from the script
+ *
+ * @param boolean $error   Whether the script ended in an error or not
+ * @param string  $message A message to pass back to the user, can be an
+ *                         array of JSON data
  */
-function json_reply($type, $message) {
+function json_reply($error, $message) {
     json_headers();
-    echo json_encode(array('error' => $type, 'message' => $message));
+    echo json_encode(array('error' => $error, 'message' => $message));
     exit;
 }
 
