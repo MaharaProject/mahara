@@ -121,7 +121,10 @@ class ArtefactTypeProfile extends ArtefactType {
     }
     
     public static function can_render_to($format) {
-
+        if ($format == ARTEFACT_FORMAT_LISTITEM || $format == ARTEFACT_FORMAT_NAME) {
+            return isset($this->title);
+        }
+        return false;
     }
 
     public static function get_all_fields() {

@@ -48,6 +48,10 @@ class PluginArtefactFile extends PluginArtefact {
             )
         );
     }
+
+    public static function postinst() {
+    }
+
 }
 
 class ArtefactTypeFolder extends ArtefactType {
