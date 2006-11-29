@@ -188,7 +188,9 @@ function TableRenderer(target, source, columns, options) {
                 self.offset = data.offset;
                 self.count = data.count;
 
-                self.updatePagination();
+                if (self.paginate) {
+                    self.updatePagination();
+                }
 
                 if (self.emptycontent) {
                     if (self.count > 0) {
