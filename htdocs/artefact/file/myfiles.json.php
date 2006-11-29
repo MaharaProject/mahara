@@ -25,39 +25,45 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'myfiles');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-safe_require('artefact', 'file');
+log_debug('myfiles.json.php');
 
-$strings = array('nofilesfound');
-$getstring = array();
-foreach ($strings as $string) {
-    $getstring[$string] = "'" . get_string($string) . "'";
+
+$limit = param_integer('limit', null);
+$offset = param_integer('offset', 0);
+$folder = param_integer('folder', null);
+if ($folder) {
+    $sqlfolder = "'" . $folder . "'";
+}
+else {
+    $sqlfolder = 'NULL';
 }
 
-$javascript = <<<JAVASCRIPT
-var filelist = new TableRenderer(
-    'filelist',
-    'myfiles.json.php',
-    [
-     'id',
-     'name',
-     'type',
-    ]
+$userid = $USER->get('id');
+
+$prefix = get_config('dbprefix');
+$filedata = get_records_sql_array('SELECT f.id, f.type, f.name
+        FROM ' . $prefix . 'artefact_file_files f
+        INNER JOIN ' . $prefix . 'artefact a ON f.artefact = a.id
+        WHERE a.owner = ' . $userid . '
+        AND f.parentfolder = ' . $sqlfolder, '');
+
+if (!$filedata) {
+    $filedata = array();
+}
+
+$result = array(
+    'count'       => count($filedata),
+    'limit'       => $limit,
+    'offset'      => $offset,
+    'data'        => $filedata,
+    'error'       => false,
+    'message'     => get_string('filelistloaded'),
 );
 
-filelist.emptycontent = {$getstring['nofilesfound']};
-filelist.paginate = false;
-filelist.updateOnLoad();
+log_debug($result);
 
-JAVASCRIPT;
-
-
-log_debug('my files index page');
-
-$smarty = smarty(array('tablerenderer'));
-$smarty->assign('INLINEJAVASCRIPT', $javascript);
-
-$smarty->display('artefact:file:index.tpl');
+json_headers();
+print json_encode($result);
 
 ?>
