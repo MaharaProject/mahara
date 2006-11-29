@@ -40,20 +40,29 @@ var filelist = new TableRenderer(
     'filelist',
     'myfiles.json.php',
     [
-     'id',
-     'name',
-     'type',
+     formatname,
+     function (r) { return TD(null, '[' + r.type + ']'); },
     ]
 );
 
+function formatname(r) {
+    if (r.type == 'file') {
+        var cell = r.name;
+    }
+    if (r.type == 'folder') {
+        var link = A({'href':'scuzzbag'},r.name);
+        link.onclick = function () { stop(); filelist.doupdate({'folder':r.id}); return false; };
+        var cell = link;
+    }
+    return TD(null, cell);
+}
+
+filelist.statevars.push('folder');
 filelist.emptycontent = {$getstring['nofilesfound']};
 filelist.paginate = false;
 filelist.updateOnLoad();
 
 JAVASCRIPT;
-
-
-log_debug('my files index page');
 
 $smarty = smarty(array('tablerenderer'));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
