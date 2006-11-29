@@ -559,7 +559,7 @@ class Pieform {
                 $submitted = false;
                 foreach ($this->get_elements() as $element) {
                     // @todo Rename 'ajaxmessages' to 'submitelement'
-                    if ($element['ajaxmessages'] == true && isset($values[$element['name']])) {
+                    if (!empty($element['ajaxmessages']) == true && isset($values[$element['name']])) {
                         $function = "{$this->name}_submit_{$element['name']}";
                         if (function_exists($function)) {
                             $function($values);
