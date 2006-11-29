@@ -556,7 +556,19 @@ class Pieform {
 
             // Submit the form if things went OK
             if ($this->submit && !$this->has_errors()) {
-                if (function_exists($this->submitfunction)) {
+                $submitted = false;
+                foreach ($this->get_elements() as $element) {
+                    // @todo Rename 'ajaxmessages' to 'submitelement'
+                    if ($element['ajaxmessages'] == true && isset($values[$element['name']])) {
+                        $function = "{$this->name}_submit_{$element['name']}";
+                        if (function_exists($function)) {
+                            $function($values);
+                            $submitted = true;
+                            break;
+                        }
+                    }
+                }
+                if (!$submitted && function_exists($this->submitfunction)) {
                     $function = $this->submitfunction;
                     // Call the user defined function for processing a submit
                     // This function should really redirect/exit after it has
@@ -572,7 +584,7 @@ class Pieform {
                     //}
                     //throw new PieformException($message);
                 }
-                else {
+                else if (!$submitted) {
                     throw new PieformException('No function registered to handle form submission for form "' . $this->name . '"');
                 }
             }
