@@ -82,11 +82,11 @@ $m->get($CFG->{url} . 'admin/upgrade.json.php?install=1');
 debug("Logging in...");
 $m->get($CFG->{url} . 'admin/');
 $m->post($CFG->{url} . 'admin/',
-    { login_username => 'root', login_password => 'mahara', 'pieform_login' => ''  }
+    { login_username => 'admin', login_password => 'mahara', 'pieform_login' => ''  }
 );
 
 # Change password
-debug("Changing root password...");
+debug("Changing admin password...");
 $m->submit_form(
     form_name => 'change_password',
     fields => { password1 => $CFG->{password}, password2 => $CFG->{password} }

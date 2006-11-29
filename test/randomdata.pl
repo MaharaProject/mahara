@@ -7,12 +7,13 @@ use FindBin;
 use lib qq{$FindBin::Bin/lib/};
 
 use Carp;
+$Carp::Verbose = 1;
 use Data::Dumper;
 use Getopt::Declare;
 use Mahara::Config;
 use Mahara::RandomData;
 
-my $types = [qw(user group activity community artefact view watchlist)];
+my $types = [qw(user group activity community artefact view watchlist template)];
 
 my $args = Getopt::Declare->new(q(
     [strict]
@@ -36,7 +37,7 @@ my $randomdata = Mahara::RandomData->new($config);
 $randomdata->verbose($args->{-v});
 $randomdata->pretend($args->{-p});
 
-unless ( $args->{-t} =~ m{ \A (?: user | group | activity | community | artefact | view | watchlist ) \z }xms ) {
+unless ( grep { $args->{-t} eq $_ } @{$types} ) {
     croak q{Type must be one of } . join(', ', map { qq{'$_'} } @{$types} );
 }
 
@@ -113,5 +114,17 @@ if ( $args->{-t} eq 'watchlist' ) {
     }
     else {
         $randomdata->insert_random_watchlist_all_users($args->{-n});
+    }
+}
+
+if ( $args->{-t} eq 'template' ) {
+    unless ( defined $args->{-u} or defined $args->{-ua} ) {
+        croak 'Need to specify a user with -u or -ua';
+    }
+    if ( defined $args->{-u} ) {
+        $randomdata->insert_random_template($args->{-u}, $args->{-n});
+    }
+    else {
+        $randomdata->insert_random_template_all_users($args->{-n});
     }
 }

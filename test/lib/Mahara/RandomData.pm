@@ -30,7 +30,8 @@ sub new {
     $connect_string .= ';host=' . $host if $host and $host =~ /\S/;
     my $port = $config->get('dbport');
     $connect_string .= ';port=' . $port if $port and $port =~ /\S/;
-    $self->{dbh} = DBI->connect($connect_string, $config->get('dbuser'), $config->get('dbpass'), { RaiseError => 1 });
+    $self->{dbh} = DBI->connect($connect_string, $config->get('dbuser'), $config->get('dbpass'), { RaiseError => 1, PrintError => 0 });
+    $self->{dbh}->{HandleError} = sub { confess(shift) };
 
     bless $self, $class;
     return $self;
@@ -301,7 +302,7 @@ sub insert_random_views {
 
     my $wl = new Data::Random::WordList( wordlist => '/usr/share/dict/words' );
 
-    my ($template_id) = $self->{dbh}->selectrow_array('SELECT id FROM ' . $prefix . 'template ORDER BY RANDOM() LIMIT 1');
+    my ($template_id) = $self->{dbh}->selectrow_array('SELECT name FROM ' . $prefix . 'template ORDER BY RANDOM() LIMIT 1');
     
     my $title = join(' ', $wl->get_words(int(rand(5)) + 1));
     my $name = join(' ', $wl->get_words(int(rand(5)) + 1));
@@ -309,7 +310,7 @@ sub insert_random_views {
     unless ($template_id) {
         $self->{dbh}->do('INSERT INTO ' . $prefix . 'template (name, title, category, owner, ctime, mtime) 
                 VALUES(?, ?, ?, ?, current_timestamp, current_timestamp)', undef, $name, $title, 'blog', $user_id);
-        $template_id = $self->{dbh}->last_insert_id(undef, undef, $prefix . 'template', undef);
+        $template_id = $name;
     }
 
     foreach ( 1 .. $count ) { ### [...  ] (%)
@@ -387,6 +388,70 @@ sub insert_random_watchlist_all_users {
         $self->insert_random_watchlist($user, $count);
     }
 }
+
+sub insert_random_template {
+    
+    my ($self, $user, $count) = @_;
+
+    my $prefix = $self->{config}->get('dbprefix');
+    
+    my $user_id = $self->{dbh}->selectall_arrayref('SELECT id FROM ' . $prefix . 'usr WHERE username = ?', undef, $user)->[0][0];
+
+    unless ( defined $user_id ) {
+        croak qq{User '$user' doesn't exist\n};
+    }
+
+    my $wl = new Data::Random::WordList( wordlist => '/usr/share/dict/words' );
+
+    my $existing_templates = $self->{dbh}->selectall_hashref('SELECT name FROM ' . $prefix . 'template', 'name');
+
+    $self->{dbh}->begin_work();
+
+    foreach ( 1 .. $count ) { ### [...  ] (%)
+        my $name = $wl->get_words(1)->[0];
+        my $title = join(' ', $wl->get_words(int(rand(5)) + 1));
+        my $description = join(' ', $wl->get_words(int(rand(10)) + 5));
+
+        $name =~ s/[\x80-\xff]//g;
+        $title =~ s/[\x80-\xff]//g;
+        $description =~ s/[\x80-\xff]//g;
+
+        while ( exists $existing_templates->{$name} ) {
+            $name =~ s{ (\d*) \z }{($1 or 0)+1}exms;
+        }
+
+        $existing_templates->{$name} = 1;
+
+        $self->{dbh}->do(q{
+            INSERT INTO } . $prefix . q{template (name, title, description, category, owner, ctime, mtime)
+            VALUES (?, ?, ?, ?, ?, current_timestamp, current_timestamp)},
+            undef,
+            $name,
+            $title,
+            $description,
+            'blog',
+            $user_id
+        );
+
+    }
+
+    $self->{dbh}->commit();
+}
+
+sub insert_random_template_all_users {
+    my ($self, $count) = @_;
+
+    my $prefix = $self->{config}->get('dbprefix');
+    
+    my $existing_users = $self->{dbh}->selectall_hashref('SELECT id, username FROM ' . $prefix . 'usr', 'username');
+
+    foreach my $user ( keys %{$existing_users} ) {
+        $self->insert_random_template($user, $count);
+    }
+}
+
+
+1;
 
 
 1;
