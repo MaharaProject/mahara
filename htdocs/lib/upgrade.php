@@ -449,6 +449,9 @@ function upgrade_templates() {
         $fordb->category = $template->category;
         $fordb->mtime = db_format_timestamp(time());
         $fordb->cacheddata = serialize($guff['parseddata']);
+        if (isset($guff['thumbnail'])) {
+            $fordb->thumbnail = 1;
+        }
         if (isset($template->owner)) {
             $fordb->owner = $template->owner;
         }
