@@ -49,10 +49,10 @@ function TableRenderer(target, source, columns, options) {
                 var prevPage  = A({'href':''}, get_string('prevpage'));
                 var nextPage  = A({'href':''}, get_string('nextpage'));
                 var lastPage  = A({'href':''}, get_string('lastpage'));
-                firstPage.style.display = 'none';
-                prevPage.style.display = 'none';
-                nextPage.style.display = 'none';
-                lastPage.style.display = 'none';
+                firstPage.style.visibility = 'hidden';
+                prevPage.style.visibility = 'hidden';
+                nextPage.style.visibility = 'hidden';
+                lastPage.style.visibility = 'hidden';
                 page_state.nextButtons.push(nextPage);
                 page_state.prevButtons.push(prevPage);
                 page_state.firstButtons.push(firstPage);
@@ -112,20 +112,20 @@ function TableRenderer(target, source, columns, options) {
 
     this.updatePagination = function() {
         if (self.onFirstPage()) {
-            forEach(self.page_state.firstButtons, function(btn) { btn.style.display = 'none'; });
-            forEach(self.page_state.prevButtons, function(btn) { btn.style.display = 'none'; });
+            forEach(self.page_state.firstButtons, function(btn) { btn.style.visibility = 'hidden'; });
+            forEach(self.page_state.prevButtons, function(btn) { btn.style.visibility = 'hidden'; });
         }
         else {
-            forEach(self.page_state.firstButtons, function(btn) { btn.style.display = ''; });
-            forEach(self.page_state.prevButtons, function(btn) { btn.style.display = ''; });
+            forEach(self.page_state.firstButtons, function(btn) { btn.style.visibility = ''; });
+            forEach(self.page_state.prevButtons, function(btn) { btn.style.visibility = ''; });
         }
         if (self.onLastPage()) {
-            forEach(self.page_state.nextButtons, function(btn) { btn.style.display = 'none'; });
-            forEach(self.page_state.lastButtons, function(btn) { btn.style.display = 'none'; });
+            forEach(self.page_state.nextButtons, function(btn) { btn.style.visibility = 'hidden'; });
+            forEach(self.page_state.lastButtons, function(btn) { btn.style.visibility = 'hidden'; });
         }
         else {
-            forEach(self.page_state.nextButtons, function(btn) { btn.style.display = ''; });
-            forEach(self.page_state.lastButtons, function(btn) { btn.style.display = ''; });
+            forEach(self.page_state.nextButtons, function(btn) { btn.style.visibility = ''; });
+            forEach(self.page_state.lastButtons, function(btn) { btn.style.visibility = ''; });
         }
     };
 
