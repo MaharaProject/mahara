@@ -6,15 +6,11 @@
 <TABLES>
     <TABLE NAME="artefact_file_files">
         <FIELDS>
-            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" />
-            <FIELD NAME="name" TYPE="text" NOTNULL="true" />
-            <FIELD NAME="type" TYPE="text" NOTNULL="false" />
-            <FIELD NAME="parentfolder" TYPE="int" NOTNULL="false" />
             <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="true" />
+            <FIELD NAME="name" TYPE="text" NOTNULL="true" />
+            <FIELD NAME="size" TYPE="int" LENGTH="10" NOTNULL="false" />
         </FIELDS>
         <KEYS>
-            <KEY NAME="primary" TYPE="primary" FIELDS="id" />
-            <KEY NAME="parentfolderfk" TYPE="foreign" FIELDS="parentfolder" REFTABLE="artefact_file_files" REFFIELDS="id" />
             <KEY NAME="artefactfk" TYPE="foreign" FIELDS="artefact" REFTABLE="artefact" REFFIELDS="id" />
         </KEYS>
     </TABLE>
