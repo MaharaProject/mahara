@@ -257,4 +257,6 @@ $string['noresultsfound'] = 'No results found';
 // artefact
 $string['artefactnotfound'] = 'Artefact with id %s not found';
 
+$string['belongingto'] = 'Belonging to';
+$string['allusers'] = 'All users';
 ?>
