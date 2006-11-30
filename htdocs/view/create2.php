@@ -31,6 +31,16 @@ require_once('pieforms/pieform.php');
 
 $createid = param_integer('createid');
 $template = param_variable('template', null);
+$action   = param_variable('action', null);
+
+if ($action == 'back' ) {
+    redirect(get_config('wwwroot') . 'view/create1.php?createid=' . $createid);
+}
+
+if ($action == 'cancel' ) {
+    $SESSION->clear('create_' . $createid);
+    redirect(get_config('wwwroot') . 'view/');
+}
 
 if ( $template !== null ) {
     $data = $SESSION->get('create_' . $createid);
@@ -39,7 +49,7 @@ if ( $template !== null ) {
 
     $SESSION->set('create_' . $createid, $data);
 
-    redirect('./create3.php?createid=' . $createid);
+    redirect(get_config('wwwroot') . 'view/create3.php?createid=' . $createid);
 }
 
 define('MENUITEM', 'myviews');
@@ -54,13 +64,7 @@ var templates = new TableRenderer(
     [
         function(r) { return TD(null, H3(null, r.title)); },
         function(r) { return TD(null, IMG({'src': '{$wwwroot}thumb.php?type=template&name=' + r.name})); },
-        function(r) {
-            var sel = BUTTON({'type': 'button'}, '{$selecttemplate}');
-            connect(sel, 'onclick', function () {
-                document.location = 'create2.php?createid={$createid}&template=' + r.name;
-            });
-            return TD(null, sel);
-        }
+        function(r) { return TD(null, BUTTON({'name': 'template', 'type': 'submit', 'value': r.name}, '{$selecttemplate}')); }
     ]
 );
 

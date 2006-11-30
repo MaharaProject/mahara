@@ -86,10 +86,11 @@ $createview1 = pieform(array(
 
 function createview1_cancel_submit() {
     global $createid;
+    global $SESSION;
 
     $SESSION->clear('create_' . $createid);
 
-    redirect('./');
+    redirect(get_config('wwwroot') . 'view/');
 }
 
 function createview1_submit($values) {
@@ -108,7 +109,7 @@ function createview1_submit($values) {
 
     $SESSION->set('create_' . $values['createid'], $data);
 
-    redirect('./create2.php?createid=' . $values['createid']);
+    redirect(get_config('wwwroot') . 'view/create2.php?createid=' . $values['createid']);
 }
 
 $smarty = smarty();
