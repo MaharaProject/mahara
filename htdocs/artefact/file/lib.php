@@ -48,6 +48,10 @@ class PluginArtefactFile extends PluginArtefact {
             )
         );
     }
+    
+    public static function get_toplevel_artefact_types() {
+        return array('file');
+    }
 
     public static function postinst() {
     }

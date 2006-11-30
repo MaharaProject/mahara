@@ -92,7 +92,7 @@ sub insert_random_groups {
 
     my $prefix = $self->{config}->get('dbprefix');
 
-    my $existing_users = $self->{dbh}->selectall_hashref('SELECT id, username FROM ' . $prefix . 'usr', 'username');
+    my $existing_users = $self->{dbh}->selectall_hashref('SELECT id, username FROM ' . $prefix . 'usr WHERE id != 0', 'username');
 
     unless ( exists $existing_users->{$user} ) {
         croak qq{User '$user' doesn't exist\n};
@@ -152,7 +152,7 @@ sub insert_random_groups_all_users {
 
     my $prefix = $self->{config}->get('dbprefix');
     
-    my $existing_users = $self->{dbh}->selectall_hashref('SELECT id, username FROM ' . $prefix . 'usr', 'username');
+    my $existing_users = $self->{dbh}->selectall_hashref('SELECT id, username FROM ' . $prefix . 'usr WHERE id != 0', 'username');
 
     foreach my $user ( keys %{$existing_users} ) {
         $self->insert_random_groups($user, $count);
@@ -191,7 +191,7 @@ sub insert_random_activity_all_users {
 
     my $prefix = $self->{config}->get('dbprefix');
     
-    my $existing_users = $self->{dbh}->selectall_hashref('SELECT id, username FROM ' . $prefix . 'usr', 'username');
+    my $existing_users = $self->{dbh}->selectall_hashref('SELECT id, username FROM ' . $prefix . 'usr WHERE id != 0', 'username');
 
     foreach my $user ( keys %{$existing_users} ) {
         $self->insert_random_activity($user, $count);
@@ -233,7 +233,7 @@ sub insert_random_communities_all_users {
 
     my $prefix = $self->{config}->get('dbprefix');
     
-    my $existing_users = $self->{dbh}->selectall_hashref('SELECT id, username FROM ' . $prefix . 'usr', 'username');
+    my $existing_users = $self->{dbh}->selectall_hashref('SELECT id, username FROM ' . $prefix . 'usr WHERE id != 0', 'username');
 
     foreach my $user ( keys %{$existing_users} ) {
         $self->insert_random_communities($user, $count);
@@ -279,7 +279,7 @@ sub insert_random_artefacts_all_users {
 
     my $prefix = $self->{config}->get('dbprefix');
     
-    my $existing_users = $self->{dbh}->selectall_hashref('SELECT id, username FROM ' . $prefix . 'usr', 'username');
+    my $existing_users = $self->{dbh}->selectall_hashref('SELECT id, username FROM ' . $prefix . 'usr WHERE id != 0', 'username');
 
     foreach my $user ( keys %{$existing_users} ) {
         $self->insert_random_artefacts($user, $count);
@@ -337,7 +337,7 @@ sub insert_random_views_all_users {
 
     my $prefix = $self->{config}->get('dbprefix');
     
-    my $existing_users = $self->{dbh}->selectall_hashref('SELECT id, username FROM ' . $prefix . 'usr', 'username');
+    my $existing_users = $self->{dbh}->selectall_hashref('SELECT id, username FROM ' . $prefix . 'usr WHERE id != 0', 'username');
 
     foreach my $user ( keys %{$existing_users} ) {
         $self->insert_random_views($user, $count);
@@ -382,7 +382,7 @@ sub insert_random_watchlist_all_users {
 
     my $prefix = $self->{config}->get('dbprefix');
     
-    my $existing_users = $self->{dbh}->selectall_hashref('SELECT id, username FROM ' . $prefix . 'usr', 'username');
+    my $existing_users = $self->{dbh}->selectall_hashref('SELECT id, username FROM ' . $prefix . 'usr WHERE id != 0', 'username');
 
     foreach my $user ( keys %{$existing_users} ) {
         $self->insert_random_watchlist($user, $count);
@@ -443,15 +443,145 @@ sub insert_random_template_all_users {
 
     my $prefix = $self->{config}->get('dbprefix');
     
-    my $existing_users = $self->{dbh}->selectall_hashref('SELECT id, username FROM ' . $prefix . 'usr', 'username');
+    my $existing_users = $self->{dbh}->selectall_hashref('SELECT id, username FROM ' . $prefix . 'usr WHERE id != 0', 'username');
 
     foreach my $user ( keys %{$existing_users} ) {
         $self->insert_random_template($user, $count);
     }
 }
 
+sub insert_random_filethings {
+    my ($self, $user, $count, $thing) = @_;
 
-1;
+    my $prefix = $self->{config}->get('dbprefix');
 
+    my $user_id = $self->{dbh}->selectall_arrayref('SELECT id FROM ' . $prefix . 'usr WHERE username = ?', undef, $user)->[0][0];
+
+    unless ( defined $user_id ) {
+        croak qq{User '$user' doesn't exist\n};
+    }
+
+    my $wl = new Data::Random::WordList( wordlist => '/usr/share/dict/words' );
+
+    # The union SELECT NULL is for making sure there is a null entry, which represents the "root" folder
+    my $folder_list = $self->{dbh}->selectall_arrayref('SELECT id FROM ' . $prefix . 'artefact WHERE artefacttype=? AND owner=? UNION SELECT NULL',
+        { Slice => {} },
+        'folder',
+        $user_id);
+    
+    $self->{dbh}->begin_work();
+    for (1..$count) {
+        #if ($count-- == 0) {
+        #    last;
+        #}
+        my $folder = @$folder_list[int(rand(scalar @$folder_list))]->{id};
+        $self->{dbh}->do('INSERT INTO artefact (artefacttype, container, parent, owner, ctime, mtime, atime, title, description)
+            VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, ?, ?)',
+            undef,
+            $thing,
+            ($thing eq 'folder') ? 1 : 0,
+            $folder,
+            $user_id,
+            $wl->get_words(1)->[0] . (($thing eq 'folder') ? '' : (($thing eq 'image') ? '.png' : '.txt')),
+            'description');
+    }
+    $self->{dbh}->commit();
+}
+
+sub insert_random_filethings_all_users {
+    my ($self, $count, $thing) = @_;
+
+    my $prefix = $self->{config}->get('dbprefix');
+    
+    my $existing_users = $self->{dbh}->selectall_hashref('SELECT id, username FROM ' . $prefix . 'usr WHERE id != 0', 'username');
+
+    foreach my $user ( keys %{$existing_users} ) {
+        $self->insert_random_filethings($user, $count, $thing);
+    }
+}
+
+sub insert_random_blogs {
+    my ($self, $user, $count) = @_;
+
+    my $prefix = $self->{config}->get('dbprefix');
+
+    my $user_id = $self->{dbh}->selectall_arrayref('SELECT id FROM ' . $prefix . 'usr WHERE username = ?', undef, $user)->[0][0];
+
+    unless ( defined $user_id ) {
+        croak qq{User '$user' doesn't exist\n};
+    }
+
+    my $wl = new Data::Random::WordList( wordlist => '/usr/share/dict/words' );
+
+    $self->{dbh}->begin_work();
+    for (1..$count) {
+        $self->{dbh}->do('INSERT INTO artefact (artefacttype, container, parent, owner, ctime, mtime, atime, title, description)
+            VALUES (?, 1, NULL, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, ?, ?)',
+            undef,
+            'blog',
+            $user_id,
+            join(' ', $wl->get_words(int(rand(2)) + 1)),
+            join(' ', $wl->get_words(int(rand(10)) + 5)));
+    }
+    $self->{dbh}->commit();
+}
+
+sub insert_random_blogs_all_users {
+    my ($self, $count) = @_;
+
+    my $prefix = $self->{config}->get('dbprefix');
+    
+    my $existing_users = $self->{dbh}->selectall_hashref('SELECT id, username FROM ' . $prefix . 'usr WHERE id != 0', 'username');
+
+    foreach my $user ( keys %{$existing_users} ) {
+        $self->insert_random_blogs($user, $count);
+    }
+}
+
+sub insert_random_blogposts {
+    my ($self, $user, $count) = @_;
+
+    my $prefix = $self->{config}->get('dbprefix');
+
+    my $user_id = $self->{dbh}->selectall_arrayref('SELECT id FROM ' . $prefix . 'usr WHERE username = ?', undef, $user)->[0][0];
+
+    unless ( defined $user_id ) {
+        croak qq{User '$user' doesn't exist\n};
+    }
+
+    my $wl = new Data::Random::WordList( wordlist => '/usr/share/dict/words' );
+
+    my $blog_list = $self->{dbh}->selectall_arrayref('SELECT id FROM ' . $prefix . 'artefact WHERE artefacttype=? AND owner=?',
+        { Slice => {} },
+        'blog',
+        $user_id);
+    
+    $self->{dbh}->begin_work();
+    for (1..$count) {
+        my $blog = @$blog_list[int(rand(scalar @$blog_list))]->{id};
+        $self->{dbh}->do('INSERT INTO artefact (artefacttype, container, parent, owner, ctime, mtime, atime, title, description)
+            VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, ?, ?)',
+            undef,
+            'blogpost',
+            0,
+            $blog,
+            $user_id,
+            join(' ', $wl->get_words(int(rand(4)) + 1)),
+            join(' ', $wl->get_words(int(rand(50)) + 10)));
+    }
+    $self->{dbh}->commit();
+}
+
+sub insert_random_blogposts_all_users {
+    my ($self, $count) = @_;
+
+    my $prefix = $self->{config}->get('dbprefix');
+    
+    my $existing_users = $self->{dbh}->selectall_hashref('SELECT id, username FROM ' . $prefix . 'usr WHERE id != 0', 'username');
+
+    foreach my $user ( keys %{$existing_users} ) {
+        $self->insert_random_blogposts($user, $count);
+    }
+}
 
 1;

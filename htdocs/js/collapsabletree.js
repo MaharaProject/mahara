@@ -53,10 +53,14 @@ function CollapsableTree(data, source) {
                         var ul = self.convertDataToDOM(data.message);
                         appendChildNodes(p, ul);
                         p.child = ul;
-
-                        // Replace the 'expand' link with a 'collapse' one 
-                        replaceChildNodes(p.id + '_toggle', self.getCollapseLink(p));
                     }
+                    else {
+                        var oops = P(null, 'omgwtfnothinghere');
+                        appendChildNodes(p, oops);
+                        p.child = oops;
+                    }
+                    // Replace the 'expand' link with a 'collapse' one 
+                    replaceChildNodes(p.id + '_toggle', self.getCollapseLink(p));
                 }
                 else {
                     alert('did not get data :(');
@@ -137,7 +141,9 @@ function CollapsableTree(data, source) {
                 var title = SPAN(null, i.text);
                 appendChildNodes(item, title);
                 forEach(self.statevars, function(j) {
-                    item.setAttribute(j, i[j]);
+                    if (typeof(data[j]) != 'undefined') {
+                        item.setAttribute(j, i[j]);
+                    }
                 });
             }
 

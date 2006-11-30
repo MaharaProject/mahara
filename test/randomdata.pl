@@ -13,7 +13,7 @@ use Getopt::Declare;
 use Mahara::Config;
 use Mahara::RandomData;
 
-my $types = [qw(user group activity community artefact view watchlist template)];
+my $types = [qw(user group activity community artefact view watchlist template file folder image blog blogpost)];
 
 my $args = Getopt::Declare->new(q(
     [strict]
@@ -126,5 +126,41 @@ if ( $args->{-t} eq 'template' ) {
     }
     else {
         $randomdata->insert_random_template_all_users($args->{-n});
+    }
+}
+
+if ( $args->{-t} eq 'file' or $args->{-t} eq 'folder' or $args->{-t} eq 'image' ) {
+    unless ( defined $args->{-u} or defined $args->{-ua} ) {
+        croak 'Need to specify a user with -u or -ua';
+    }
+    if ( defined $args->{-u} ) {
+        $randomdata->insert_random_filethings($args->{-u}, $args->{-n}, $args->{-t});
+    }
+    else {
+        $randomdata->insert_random_filethings_all_users($args->{-n}, $args->{-t});
+    }
+}
+
+if ( $args->{-t} eq 'blog' ) {
+    unless ( defined $args->{-u} or defined $args->{-ua} ) {
+        croak 'Need to specify a user with -u or -ua';
+    }
+    if ( defined $args->{-u} ) {
+        $randomdata->insert_random_blogs($args->{-u}, $args->{-n}, $args->{-t});
+    }
+    else {
+        $randomdata->insert_random_blogs_all_users($args->{-n}, $args->{-t});
+    }
+}
+
+if ( $args->{-t} eq 'blogpost' ) {
+    unless ( defined $args->{-u} or defined $args->{-ua} ) {
+        croak 'Need to specify a user with -u or -ua';
+    }
+    if ( defined $args->{-u} ) {
+        $randomdata->insert_random_blogposts($args->{-u}, $args->{-n}, $args->{-t});
+    }
+    else {
+        $randomdata->insert_random_blogposts_all_users($args->{-n}, $args->{-t});
     }
 }

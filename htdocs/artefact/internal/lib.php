@@ -70,6 +70,10 @@ class PluginArtefactInternal extends PluginArtefact {
             )
         );
     }
+
+    public static function get_toplevel_artefact_types() {
+        return array('profile');
+    }
 }
 
 class ArtefactTypeProfile extends ArtefactType {
@@ -307,6 +311,38 @@ class ArtefactTypeProfile extends ArtefactType {
 class ArtefactTypeProfileField extends ArtefactTypeProfile {
     public static function collapse_config() {
         return 'profile';
+    }
+
+    /**
+     * This method is optional, and specifies how child data should be formatted
+     * for the artefact tree.
+     *
+     * It should return a StdClass object, with the following fields set:
+     *
+     *  - id
+     *  - title
+     *  - text
+     *  - container
+     *  - parent
+     *
+     *  @param object $data The data to reformat. Contains some fields from the
+     *                      <kbd>artefact</kbd> table, namely title, artefacttype
+     *                      and container
+     *  @return object      The reformatted data
+     */
+    public static function format_child_data($data, $pluginname) {
+        $res = new StdClass;
+        $res->id    = "{$data->artefacttype}_{$data->id}";
+        $res->title = $data->title;
+        if ($data->artefacttype == 'email') {
+            $res->text = get_string('email') . ' - ' . $data->title;
+        }
+        else {
+            $res->text = get_string($data->artefacttype, "artefact.$pluginname");
+        }
+        $res->container = 0;
+        $res->parent    = null;
+        return $res;
     }
 }
 
