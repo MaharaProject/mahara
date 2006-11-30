@@ -485,7 +485,7 @@ sub insert_random_filethings {
             $wl->get_words(1)->[0] . (($thing eq 'folder') ? '' : (($thing eq 'image') ? '.png' : '.txt')),
             'description');
     }
-    my $artefactidlist = $self->{dbh}->selectall_arrayref('SELECT a.id FROM ' . $prefix . 'artefact a LEFT OUTER JOIN '. $prefix . 'artefact_file_files f ON a.id = f.artefact WHERE (a.artefacttype = ? OR a.artefacttype = ? OR a.artefacttype = ?) AND f.name IS NULL', { Slice => {} }, 'file', 'folder', 'image');
+    my $artefactidlist = $self->{dbh}->selectall_arrayref('SELECT a.id,a.artefacttype FROM ' . $prefix . 'artefact a LEFT OUTER JOIN '. $prefix . 'artefact_file_files f ON a.id = f.artefact WHERE (a.artefacttype = ? OR a.artefacttype = ? OR a.artefacttype = ?) AND f.name IS NULL', { Slice => {} }, 'file', 'folder', 'image');
 
     $wl = new Data::Random::WordList( wordlist => '/usr/share/dict/words' );
     foreach my $item (@$artefactidlist) {
@@ -494,7 +494,7 @@ sub insert_random_filethings {
             VALUES (?, ?, ?)', undef,
             $id,
             $wl->get_words(1)->[0],
-            int(rand(1000000)));
+            ($item->{artefacttype} eq 'folder') ? undef : int(rand(1000000)));
     }
 
     $self->{dbh}->commit();
