@@ -57,6 +57,7 @@ $string['institution'] = 'Institution';
 $string['institutiondescription'] = 'Your institution';
 $string['loggedoutok'] = 'You have been logged out successfully';
 $string['login'] = 'Log In';
+$string['logon'] = 'Log On';
 $string['loginfailed'] = 'You have not provided the correct credentials to log in. Please check your username and password are correct.';
 $string['loginto'] = 'Log in to %s';
 $string['newpassword'] = 'New Password';
@@ -91,6 +92,7 @@ $string['registeringdisallowed'] = 'Sorry, you cannot register for this system a
 // Forgot password
 $string['cantchangepassword'] = 'Sorry, you are unable to change your password through this interface - please use your institution\'s interface instead';
 $string['forgotpassword'] = 'Forgotten your password?';
+$string['passwordreminder'] = 'Password Reminder';
 $string['pwchangerequestsent'] = 'You should receive an e-mail shortly with a link you can use to change the password for your account';
 $string['forgotpassemailsubject'] = 'Change password request for %s';
 $string['forgotpassemailmessagetext'] = 'Dear %s,
@@ -127,7 +129,7 @@ $string['forgotpassemailmessagehtml'] = '<p>Dear %s,</p>
 
 <p><a href="' . get_config('wwwroot') . 'forgotpass.php?key=%s">' . get_config('wwwroot') . 'forgotpass.php?key=%s</a></p>';
 $string['forgotpassemailsendunsuccessful'] = 'Sorry, it appears that the e-mail could not be sent successfully. This is our fault, please try again shortly';
-$string['forgotpassnosuchemailaddress'] = 'Sorry, this e-mail address does not appear to have an account here';
+$string['forgotpassnosuchemailaddress'] = 'Invalid email address entered';
 $string['nosuchpasswordrequest'] = 'No such password request';
 $string['passwordchangedok'] = 'Your password was successfully changed';
 

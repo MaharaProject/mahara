@@ -1,5 +1,9 @@
 {include file="header.tpl"}
 
+<div class="sidebar"><a href="{$WWWROOT}forgotpass.php">{str tag=forgotpassword}</a></div>
+
+{include file="adminmenu.tpl"}
+
 <h2>{str tag=register}</h2>
 
 {if $register_form}
