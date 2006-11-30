@@ -52,6 +52,11 @@ abstract class PluginArtefact extends Plugin {
 
 
     /**
+     * Gets a list of top level artefact types, used in the view creation wizard
+     */
+    public static abstract function get_toplevel_artefact_types(); 
+
+    /**
      * This function returns an array of menu items
      * to be displayed
      * Each item should be a StdClass object containing -
@@ -201,24 +206,6 @@ abstract class ArtefactType {
             $this->childrenmetadata = get_records_array('artefact', 'parent', $this->id);
         }
         return $this->childrenmetadata;
-    }
-
-    public static function get_children_info($userid, $artefacttype) {
-        // Given an ID of a user, get its children in a form suitable for the artefact tree
-        $data = get_records_sql_array("SELECT title
-            FROM artefact
-            WHERE
-                owner = ?
-                AND artefacttype = ?
-                AND parent IS NULL
-            ORDER BY title", array($userid, $artefacttype));
-        foreach ($data as $artefact) {
-            $a = new StdClass;
-            $a->title = '';
-            $a->text  = $artefact->title;
-            $artefacts[] = $a;
-        }
-        return $artefacts;
     }
 
     /** 
