@@ -117,7 +117,6 @@ function auth_setup () {
 
     // If the system is not installed, let the user through in the hope that
     // they can fix this little problem :)
-    log_debug('auth_setup()');
     if (!get_config('installed')) {
         log_debug('system not installed, letting user through');
         $USER->logout();
@@ -127,7 +126,6 @@ function auth_setup () {
     // Check the time that the session is set to log out. If the user does
     // not have a session, this time will be 0.
     $sessionlogouttime = $USER->get('logout_time');
-    log_debug("logout time: $sessionlogouttime");
     if ($sessionlogouttime && isset($_GET['logout'])) {
         log_debug("logging user out");
         $USER->logout();
@@ -160,10 +158,8 @@ function auth_setup () {
                 redirect(get_config('wwwroot'));
             }
         }
-        log_debug("renewing user's session");
         $USER->renew();
         auth_check_password_change();
-        //return $USER;
     }
     else if ($sessionlogouttime > 0) {
         // The session timed out

@@ -74,6 +74,10 @@ class PluginArtefactInternal extends PluginArtefact {
     public static function get_toplevel_artefact_types() {
         return array('profile');
     }
+    
+    public static function sort_child_data($a, $b) {
+        return strnatcasecmp($a->text, $b->text);
+    }
 }
 
 class ArtefactTypeProfile extends ArtefactType {
@@ -344,6 +348,7 @@ class ArtefactTypeProfileField extends ArtefactTypeProfile {
         $res->parent    = null;
         return $res;
     }
+
 }
 
 class ArtefactTypeCachedProfileField extends ArtefactTypeProfileField {

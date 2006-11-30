@@ -87,6 +87,10 @@ function &smarty($javascript = array(), $headers = array(), $strings = array()) 
         }
     }
 
+    if (in_array('collapsabletree', $javascript)) {
+        $javascript_array[] = $jsroot . 'collapsabletree.js';
+    }
+
     $javascript_array[] = $jsroot . 'mahara.js';
     $javascript_array[] = $jsroot . 'debug.js';
 

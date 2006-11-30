@@ -37,7 +37,7 @@ switch ($type) {
          $name = param_alpha('name');
          $template = template_locate($name);
          if (isset($template['thumbnail'])) {
-             header("Content-type: " . $thumbnail['thumbnailcontenttype']);
+             header("Content-type: " . $template['thumbnailcontenttype']);
              readfile($template['thumbnail']);
              exit;
          }

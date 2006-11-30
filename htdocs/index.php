@@ -44,11 +44,11 @@ if (!$USER->is_logged_in()) {
         'elements'   => array(
             'login' => array(
                 'type'   => 'fieldset',
-                'legend' => get_string('login'),
+                'legend' => get_string('logon'),
                 'elements' => array(
                     'login_username' => array(
                         'type'        => 'text',
-                        'title'       => get_string('username'),
+                        'title'       => get_string('username') . ':',
                         'description' => get_string('usernamedescription'),
                         'rules' => array(
                             'required'    => true
@@ -56,7 +56,7 @@ if (!$USER->is_logged_in()) {
                     ),
                     'login_password' => array(
                         'type'        => 'password',
-                        'title'       => get_string('password'),
+                        'title'       => get_string('password') . ':',
                         'description' => get_string('passworddescription'),
                         'value'       => '',
                         'rules' => array(
@@ -65,7 +65,7 @@ if (!$USER->is_logged_in()) {
                     ),
                     'login_institution' => array(
                         'type' => 'select',
-                        'title' => get_string('institution'),
+                        'title' => get_string('institution') . ':',
                         'defaultvalue' => get_cookie('institution'),
                         'options' => $institutions,
                         'rules' => array(
@@ -81,8 +81,8 @@ if (!$USER->is_logged_in()) {
                 'value' => get_string('login')
             ),
             'register' => array(
-                'value' => '<div><a href="' . get_config('wwwroot') . 'register.php">' . get_string('register') . '</a> '
-                    . '| <a href="' . get_config('wwwroot') . 'forgotpass.php">' . get_string('forgotpassword') . '</a></div>'
+                'value' => '<div><a href="' . get_config('wwwroot') . 'register.php">' . get_string('register') . '</a>'
+                    . '<br><a href="' . get_config('wwwroot') . 'forgotpass.php">' . get_string('passwordreminder') . '</a></div>'
             )
         )
     )));
