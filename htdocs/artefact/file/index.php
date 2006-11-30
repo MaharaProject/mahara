@@ -36,6 +36,7 @@ foreach ($strings as $string) {
 }
 
 $javascript = <<<JAVASCRIPT
+
 var filelist = new TableRenderer(
     'filelist',
     'myfiles.json.php',
@@ -50,21 +51,57 @@ function formatname(r) {
         var cell = r.name;
     }
     if (r.type == 'folder') {
-        var link = A({'href':'scuzzbag'},r.name);
-        link.onclick = function () { stop(); filelist.doupdate({'folder':r.id}); return false; };
+        paths[cwd + r.name + '/'] = r.id;
+        var link = A({'href':''},r.name);
+        link.onclick = function () {
+            stop();
+            return changedir(cwd + r.name + '/');
+        }
         var cell = link;
     }
     return TD(null, cell);
 }
 
-filelist.statevars.push('folder');
+function changedir(path) {
+    cwd = path;
+    linked_path(path);
+    uploader.updatedestination(paths[path], path);
+    var args = paths[cwd] ? {'folder':paths[cwd]} : null;
+    filelist.doupdate(args);
+    return false;
+}
+
+function linked_path(path) {
+    var dirs = cwd.split('/');
+    var homedir = A({'href':''}, get_string('home'));
+    homedir.onclick = function () { stop(); return changedir('/'); };
+    var sofar = '/';
+    var folders = [homedir];
+    for (i=0; i<dirs.length; i++) {
+        if (dirs[i] != '') {
+            sofar = sofar + dirs[i] + '/';
+            var dir = A({'href':'bar'}, dirs[i]);
+            dir.onclick = function () { stop(); return changedir(sofar);};
+            folders.push(' / ');
+            folders.push(dir);
+        }
+    }
+    replaceChildNodes(filelist.thead,TR(null,TD({'colspan':2},folders)));
+}
+
 filelist.emptycontent = {$getstring['nofilesfound']};
 filelist.paginate = false;
+filelist.statevars.push('folder');
 filelist.updateOnLoad();
+
+paths = {'/':null};
+cwd = '/';
+
+var uploader = new FileUploader('uploader', 'upload.json.php', filelist.doupdate);
 
 JAVASCRIPT;
 
-$smarty = smarty(array('tablerenderer'));
+$smarty = smarty(array('tablerenderer','fileuploader'));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 
 $smarty->display('artefact:file:index.tpl');

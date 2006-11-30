@@ -50,6 +50,7 @@ if (!$filedata) {
     $filedata = array();
 }
 
+
 $result = array(
     'count'       => count($filedata),
     'limit'       => $limit,
@@ -58,8 +59,6 @@ $result = array(
     'error'       => false,
     'message'     => get_string('filelistloaded'),
 );
-
-//log_debug($result);
 
 json_headers();
 print json_encode($result);

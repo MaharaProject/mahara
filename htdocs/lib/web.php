@@ -78,6 +78,15 @@ function &smarty($javascript = array(), $headers = array(), $strings = array()) 
         }
     }
 
+    if (in_array('fileuploader', $javascript)) {
+        $javascript_array[] = $jsroot . 'fileuploader.js';
+        foreach (fileuploaderjsstrings() as $string) {
+            if (!in_array($string, $strings)) {
+                $strings[] = $string;
+            }
+        }
+    }
+
     $javascript_array[] = $jsroot . 'mahara.js';
     $javascript_array[] = $jsroot . 'debug.js';
 
@@ -147,6 +156,10 @@ function tablerendererjsstrings() {
         'prevpage',
         'lastpage',
     );
+}
+
+function fileuploaderjsstrings() {
+    return array();
 }
 
 
