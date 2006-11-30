@@ -50,6 +50,10 @@ class PluginArtefactBlog extends PluginArtefact {
             )
         );
     }
+
+    public static function get_toplevel_artefact_types() {
+        return array('blog');
+    }
 }
 
 /**
