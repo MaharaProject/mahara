@@ -55,6 +55,16 @@ class PluginArtefactFile extends PluginArtefact {
 
     public static function postinst() {
     }
+    
+    public static function sort_child_data($a, $b) {
+        if ($a->container && !$b->container) {
+            return -1;
+        }
+        else if (!$a->container && $b->container) {
+            return 1;
+        }
+        return strnatcasecmp($a->text, $b->text);
+    }
 
 }
 
@@ -86,6 +96,7 @@ class ArtefactTypeFolder extends ArtefactType {
     public static function collapse_config() {
         return 'file';
     }
+    
 }
 
 class ArtefactTypeFile extends ArtefactType {
