@@ -84,7 +84,6 @@ function TableRenderer(target, source, columns, options) {
                 // replaceChildNodes(ref, tr, ref.childNodes);
                 appendChildNodes(ref, tr);
             });
-            // debugObject(page_state);
         }
 
         if (self.emptycontent) {
