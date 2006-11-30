@@ -133,7 +133,6 @@ function auth_setup () {
         redirect(get_config('wwwroot'));
     }
     if ($sessionlogouttime > time()) {
-        log_debug("session still active");
         // The session is still active, so continue it.
         // Make sure that if a user's admin status has changed, they're kicked
         // out of the admin section
