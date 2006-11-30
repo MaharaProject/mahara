@@ -44,7 +44,8 @@ $filedata = get_records_sql_array('SELECT a.id, a.artefacttype, a.mtime, f.name,
         FROM ' . $prefix . 'artefact_file_files f
         INNER JOIN ' . $prefix . 'artefact a ON f.artefact = a.id
         WHERE a.owner = ' . $userid . '
-        AND a.parent' . $infolder, '');
+        AND a.parent' . $infolder . '
+        ORDER BY a.artefacttype DESC, f.name ASC', '');
 
 if (!$filedata) {
     $filedata = array();
@@ -64,7 +65,7 @@ $result = array(
     'message'     => get_string('filelistloaded'),
 );
 
-//log_debug($result);
+log_debug($result);
 
 json_headers();
 print json_encode($result);

@@ -55,7 +55,7 @@ function formatname(r) {
     if (r.artefacttype == 'folder') {
         var dir = cwd + r.name + '/';
         pathids[dir] = r.id;
-        var link = A({'href':'', 'onclick':"return changedir('" + dir.replace("'","\\\'") + "')"},r.name);
+        var link = A({'href':'', 'onclick':"return changedir('" + dir.replace(escre,"\\\'") + "')"},r.name);
         var cell = link;
     }
     return TD(null, cell);
@@ -78,7 +78,7 @@ function linked_path() {
     for (i=0; i<dirs.length; i++) {
         if (dirs[i] != '') {
             sofar = sofar + dirs[i] + '/';
-            var dir = A({'href':'', 'onclick':"return changedir('" + sofar.replace("'","\\\'") + "')"}, dirs[i]);
+            var dir = A({'href':'', 'onclick':"return changedir('" + sofar.replace(escre,"\\\'") + "')"}, dirs[i]);
             folders.push(' / ');
             folders.push(dir);
         }
@@ -92,6 +92,7 @@ filelist.statevars.push('folder');
 
 pathids = {'/':null};
 cwd = '/';
+escre = /\'/g;
 var uploader = new FileUploader('uploader', 'upload.json.php', filelist.doupdate);
 
 addLoadEvent(function () { changedir(cwd); });
