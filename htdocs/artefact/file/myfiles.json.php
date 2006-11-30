@@ -40,7 +40,7 @@ else {
 }
 
 $prefix = get_config('dbprefix');
-$filedata = get_records_sql_array('SELECT a.id, a.artefacttype, a.title, a.mtime, f.name, f.size
+$filedata = get_records_sql_array('SELECT a.id, a.artefacttype, a.mtime, f.name, f.size
         FROM ' . $prefix . 'artefact_file_files f
         INNER JOIN ' . $prefix . 'artefact a ON f.artefact = a.id
         WHERE a.owner = ' . $userid . '
@@ -49,7 +49,11 @@ $filedata = get_records_sql_array('SELECT a.id, a.artefacttype, a.title, a.mtime
 if (!$filedata) {
     $filedata = array();
 }
-
+else {
+    foreach ($filedata as $item) {
+        $item->mtime = strftime(get_string('strftimedatetime'),strtotime($item->mtime));
+    }
+}
 
 $result = array(
     'count'       => count($filedata),

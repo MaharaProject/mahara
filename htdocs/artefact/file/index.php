@@ -53,28 +53,24 @@ function formatname(r) {
         var cell = r.name;
     }
     if (r.artefacttype == 'folder') {
-        paths[cwd + r.name + '/'] = r.id;
-        var link = A({'href':''},r.name);
-        link.onclick = function () {
-            stop();
-            return changedir(cwd + r.name + '/');
-        }
+        var dir = cwd + r.name + '/';
+        pathids[dir] = r.id;
+        var link = A({'href':'', 'onclick':"return changedir('" + dir.replace("'","\\\'") + "')"},r.name);
         var cell = link;
     }
     return TD(null, cell);
 }
 
 function changedir(path) {
-    alert(path);
     cwd = path;
-    linked_path(path);
-    uploader.updatedestination(paths[path], path);
-    var args = paths[cwd] ? {'folder':paths[cwd]} : null;
+    linked_path();
+    uploader.updatedestination(pathids[path], path);
+    var args = path == '/' ? null : {'folder':pathids[path]};
     filelist.doupdate(args);
     return false;
 }
 
-function linked_path(path) {
+function linked_path() {
     var dirs = cwd.split('/');
     var homedir = A({'href':'', 'onclick':"return changedir('/')"}, get_string('home'));
     var sofar = '/';
@@ -82,26 +78,25 @@ function linked_path(path) {
     for (i=0; i<dirs.length; i++) {
         if (dirs[i] != '') {
             sofar = sofar + dirs[i] + '/';
-            var dir = A({'href':'', 'onclick':'return changedir(\'' + sofar + '\')'}, dirs[i]);
+            var dir = A({'href':'', 'onclick':"return changedir('" + sofar.replace("'","\\\'") + "')"}, dirs[i]);
             folders.push(' / ');
             folders.push(dir);
         }
     }
-    replaceChildNodes(filelist.thead,TR(null,TD({'colspan':2},folders)));
+    replaceChildNodes($('foldernav'),folders);
 }
 
 filelist.emptycontent = {$getstring['nofilesfound']};
 filelist.paginate = false;
 filelist.statevars.push('folder');
-filelist.updateOnLoad();
 
-paths = {'/':null};
+pathids = {'/':null};
 cwd = '/';
-
 var uploader = new FileUploader('uploader', 'upload.json.php', filelist.doupdate);
 
-JAVASCRIPT;
+addLoadEvent(function () { changedir(cwd); });
 
+JAVASCRIPT;
 
 $smarty = smarty(array('tablerenderer','fileuploader'));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
