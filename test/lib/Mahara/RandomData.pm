@@ -475,7 +475,7 @@ sub insert_random_filethings {
         #    last;
         #}
         my $folder = @$folder_list[int(rand(scalar @$folder_list))]->{id};
-        $self->{dbh}->do('INSERT INTO artefact (artefacttype, container, parent, owner, ctime, mtime, atime, title, description)
+        $self->{dbh}->do('INSERT INTO ' . $prefix . 'artefact (artefacttype, container, parent, owner, ctime, mtime, atime, title, description)
             VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, ?, ?)',
             undef,
             $thing,
