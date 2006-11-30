@@ -42,7 +42,9 @@ var filelist = new TableRenderer(
     'myfiles.json.php',
     [
      formatname,
-     function (r) { return TD(null, '[' + r.artefacttype + ']'); },
+     'size',
+     'mtime',
+     function () {return TD(null)},
     ]
 );
 
@@ -63,6 +65,7 @@ function formatname(r) {
 }
 
 function changedir(path) {
+    alert(path);
     cwd = path;
     linked_path(path);
     uploader.updatedestination(paths[path], path);
@@ -73,15 +76,13 @@ function changedir(path) {
 
 function linked_path(path) {
     var dirs = cwd.split('/');
-    var homedir = A({'href':''}, get_string('home'));
-    homedir.onclick = function () { stop(); return changedir('/'); };
+    var homedir = A({'href':'', 'onclick':"return changedir('/')"}, get_string('home'));
     var sofar = '/';
     var folders = [homedir];
     for (i=0; i<dirs.length; i++) {
         if (dirs[i] != '') {
             sofar = sofar + dirs[i] + '/';
-            var dir = A({'href':'bar'}, dirs[i]);
-            dir.onclick = function () { stop(); return changedir(sofar);};
+            var dir = A({'href':'', 'onclick':'return changedir(\'' + sofar + '\')'}, dirs[i]);
             folders.push(' / ');
             folders.push(dir);
         }
@@ -100,6 +101,7 @@ cwd = '/';
 var uploader = new FileUploader('uploader', 'upload.json.php', filelist.doupdate);
 
 JAVASCRIPT;
+
 
 $smarty = smarty(array('tablerenderer','fileuploader'));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
