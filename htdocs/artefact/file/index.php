@@ -42,15 +42,15 @@ var filelist = new TableRenderer(
     'myfiles.json.php',
     [
      formatname,
-     function (r) { return TD(null, '[' + r.type + ']'); },
+     function (r) { return TD(null, '[' + r.artefacttype + ']'); },
     ]
 );
 
 function formatname(r) {
-    if (r.type == 'file') {
+    if (r.artefacttype == 'file') {
         var cell = r.name;
     }
-    if (r.type == 'folder') {
+    if (r.artefacttype == 'folder') {
         paths[cwd + r.name + '/'] = r.id;
         var link = A({'href':''},r.name);
         link.onclick = function () {
