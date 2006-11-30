@@ -1,6 +1,6 @@
 {include file="header.tpl"}
 
-<h2>CreateViewStep3</h2>
+<h2>{str tag=createviewstep3}</h2>
 
 <table border="1">
     <tr>

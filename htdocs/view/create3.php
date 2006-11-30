@@ -27,9 +27,18 @@
 define('INTERNAL', 1);
 define('MENUITEM', 'view');
 require(dirname(dirname(__FILE__)) . '/init.php');
-$smarty = smarty(array('collapsabletree'));
 
 $createid = param_integer('createid');
+if (param_boolean('back')) {
+    redirect(get_config('wwwroot') . 'view/create2.php?createid=' . $createid);
+}
+
+if (param_boolean('cancel')) {
+    redirect(get_config('wwwroot') . 'view/');
+}
+
+$smarty = smarty(array('collapsabletree'));
+
 $data = $SESSION->get('create_' . $createid);
 
 // Get the list of root things for the tree
