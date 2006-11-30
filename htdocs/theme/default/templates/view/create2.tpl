@@ -12,11 +12,14 @@
         <option value="{$category|escape}">{str tag="category.$category" section="view"}</option>
 {/foreach}
     </select>
-    <table id="templates">
-    </table>
+    <form name="template_selection" method="post" action="" id="template_selection">
+        <input type="hidden" name="createid" value="{$createid}">
+        <table id="templates">
+        </table>
+        <button name="action" value="back">{str tag=Back}</button>
+        <button name="action" value="cancel">{str tag=Cancel}</button>
+    </form>
 
-    <button type="button" onclick="document.location='create1.php?createid={$createid}';">{str tag=Back}</button>
-    <button type="button" onclick="document.location='./';">{str tag=Cancel}</button>
 </div>
 
 {include file="footer.tpl"}
