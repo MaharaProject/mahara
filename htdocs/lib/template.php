@@ -25,6 +25,8 @@
  */
 
 defined('INTERNAL') || die();
+define('TEMPLATE_RENDER_READONLY', 1);
+define('TEMPLATE_RENDER_EDITMODE', 2);
 
 function template_parse($templatename) {
 
@@ -143,5 +145,24 @@ function template_locate($templatename, $fetchdb=true) {
     throw new InvalidArgumentException("Invalid template name $templatename, couldn't find");
 }
 
+/**
+ * renders a template in either edit mode or read only mode
+ *
+ * @param array $template a parsed template see {@link template_parse}
+ * @param mode either TEMPLATE_RENDER_READONLY or TEMPLATE_RENDER_EDITMODE
+ */
+function template_render($template, $mode) {
+    $td = $template['parseddata'];
+    foreach ($td as $t) {
+        if ($t['type'] == 'html') {
+            echo $t['content'];
+        }
+        else {
+            // @todo call something depending on mode
+            
+        }
+    }
+}
 
 ?>
+
