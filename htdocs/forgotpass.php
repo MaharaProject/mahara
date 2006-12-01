@@ -68,7 +68,7 @@ if (isset($_GET['key'])) {
             ),
             'submit' => array(
                 'type' => 'submit',
-                'value' => get_string('submit')
+                'value' => get_string('change')
             )
         )
     );

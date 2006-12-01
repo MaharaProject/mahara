@@ -34,6 +34,7 @@ $string['edit']   = 'Edit';
 $string['save']   = 'Save';
 $string['submit'] = 'Submit';
 $string['update'] = 'Update';
+$string['change'] = 'Change';
 
 $string['no']     = 'no';
 $string['yes']    = 'yes';
