@@ -31,12 +31,13 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 json_headers();
 
 $stopmonitoring = param_integer('stopmonitoring', 0);
+$userlist       = param_alpha('userlist', null);
 $getartefacts   = param_integer('getartefacts', 0); 
 
 $prefix = get_config('dbprefix');
+$userid = $USER->get('id');
 
 if ($stopmonitoring) {
-    $userid = $USER->get('id');
     $count = 0;
     db_begin();
     try {
@@ -82,11 +83,44 @@ if ($stopmonitoring) {
     echo json_encode($data);
     exit;
 }
+if (!empty($userlist)) {
+    if ($userlist == 'views') {
+        $sql = 'SELECT DISTINCT u.* 
+        FROM ' . $prefix . 'usr u
+        JOIN ' . $prefix . 'view v ON v.owner = u.id 
+        JOIN ' . $prefix . 'usr_watchlist_view w ON w.view = v.id
+        WHERE w.usr = ?';
+        
+        if (!$users = get_records_sql_array($sql, array($userid))) {
+            $users = array();
+        }
+    }
+    else if ($userlist == 'artefacts') {
+        $sql = 'SELECT DISTINCT u.* 
+        FROM ' . $prefix . 'usr u
+        JOIN ' . $prefix . 'artefact a ON a.owner = u.id 
+        JOIN ' . $prefix . 'usr_watchlist_artefact w ON w.artefact = a.id
+        WHERE w.usr = ?';
+        
+        if (!$users = get_records_sql_array($sql, array($userid))) {
+            $users = array();
+        }
+    }
+    else {
+        $users = array();
+    }
 
+    $data = array();
+    foreach ($users as $u) {
+        $data[] = array('id' => $u->id, 'name' => display_name($u, $USER));
+    }
+    json_reply(false, array('users' => $data));
+}
 
-// normal processing
+// normal processing (fetching tablerenderer results)
 
 $type = param_alpha('type', 'views');
+$owner = param_integer('user', null);
 $limit = param_integer('limit', 10);
 $offset = param_integer('offset', 0);
 
@@ -101,9 +135,15 @@ if ($type == 'views') {
     $sql = 'SELECT v.*, v.title AS name 
             FROM ' . $prefix . 'view v
             JOIN ' . $prefix . 'usr_watchlist_view w ON w.view = v.id
-            WHERE w.usr = ?
+            WHERE w.usr = ?';
+    $values = array($userid);
+    if (isset($owner)) {
+        $sql .= ' AND v.owner = ?';
+        $values[] = $owner;
+    }
+    $sql .= '
             ORDER BY v.mtime DESC';
-    $records = get_records_sql_array($sql, array($userid), $offset, $limit);
+    $records = get_records_sql_array($sql, $values, $offset, $limit);
 }
 else if ($type == 'communities') {
     $count = count_records('usr_watchlist_community', 'usr', $userid);
@@ -119,9 +159,15 @@ else if ($type == 'artefacts') {
     $sql = 'SELECT a.* , a.title AS name
             FROM ' . $prefix . 'artefact a
             JOIN ' . $prefix . 'usr_watchlist_artefact w ON w.artefact = a.id 
-            WHERE w.usr = ?
+            WHERE w.usr = ?';
+    $values = array($userid);
+    if (isset($owner)) {
+        $sql .= ' AND a.owner = ?';
+        $values[] = $owner;
+    }
+    $sql .= '
             ORDER BY a.mtime DESC';
-    $records = get_records_sql_array($sql, array($userid), $offset, $limit);
+    $records = get_records_sql_array($sql, $values, $offset, $limit);
 }
 
 if (empty($records)) {
