@@ -27,6 +27,7 @@
 define('INTERNAL', 1);
 define('PUBLIC', 1);
 require('init.php');
+require_once('pieforms/pieform.php');
 
 if (!session_id()) {
     session_start();
@@ -105,6 +106,10 @@ function forgotpass_validate(Pieform $form, $values) {
     // The e-mail address cannot already be in the system
     if (!$form->get_error('email') && !($user = get_record('usr', 'email', $values['email']))) {
         $form->set_error('email', get_string('forgotpassnosuchemailaddress'));
+        return;
+    }
+
+    if ($form->get_error('email')) {
         return;
     }
     
