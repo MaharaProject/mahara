@@ -1295,6 +1295,10 @@ function rebuild_artefact_parent_cache_complete() {
     db_commit();
 }
 
+function artefact_can_render_to($type, $format) {
+    return in_array($format, call_static_method(generate_artefact_class_name($type), 'get_render_list'));
+}
+
 function artefact_instance_from_id($id) {
     $prefix = get_config('dbprefix');
     $sql = 'SELECT a.*, i.plugin 
