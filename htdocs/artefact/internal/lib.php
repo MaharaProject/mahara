@@ -125,16 +125,9 @@ class ArtefactTypeProfile extends ArtefactType {
     }
 
     public static function get_render_list() {
-
+        return array(FORMAT_ARTEFACT_LISTSELF, FORMAT_ARTEFACT_RENDERFULL, FORMAT_ARTEFACT_RENDERMETADATA);
     }
     
-    public static function can_render_to($format) {
-        if ($format == ARTEFACT_FORMAT_LISTITEM || $format == ARTEFACT_FORMAT_NAME) {
-            return isset($this->title);
-        }
-        return false;
-    }
-
     public static function get_all_fields() {
         return array(
             'firstname'       => 'text',

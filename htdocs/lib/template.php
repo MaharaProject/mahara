@@ -28,6 +28,11 @@ defined('INTERNAL') || die();
 define('TEMPLATE_RENDER_READONLY', 1);
 define('TEMPLATE_RENDER_EDITMODE', 2);
 
+define('FORMAT_ARTEFACT_LISTSELF', 'listself');
+define('FORMAT_ARTEFACT_LISTCHILDREN', 'listchildren');
+define('FORMAT_ARTEFACT_RENDERFULL', 'renderfull');
+define('FORMAT_ARTEFACT_RENDERMETADATA', 'rendermetadata');
+
 function template_parse($templatename) {
 
     $t = array();
@@ -84,8 +89,45 @@ function template_parse_block($blockstr) {
     }
     // everything else can theoretically be optional....
 
+    template_validate_block($data, '');
+    template_validate_block($data, 'default');
+
     return $data;
         
+}
+
+function template_validate_block($data, $name='') {
+    
+    $type = isset($data[$name . 'type']) ? $data[$name . 'type'] : '';
+    $format = isset($data[$name . 'format']) ? $data[$name . 'format'] : '';
+    
+    if (!empty($type)) {
+        if (empty($format)) {
+            throw new InvalidArgumentException("Cannot specify type without format");
+        }
+    }
+    
+    if (!empty($format) && $format != 'label') {
+        if (empty($type)) {
+            throw new InvalidArgumentException("Cannot specify format without type");
+        }
+    }
+        
+    if ((empty($format) && empty($type)) || $format == 'label') { // labels are special cases
+        return true;
+    }
+        
+    // figure out what plugin handles this type and validate the class exists.
+    if (!$plugin = get_field('artefact_installed_type', 'plugin', 'name', $type)) {
+        throw new InvalidArgumentException("Type $type is not installed");
+    }
+    
+    safe_require('artefact', $plugin);
+    if (!artefact_can_render_to($type, $format)) {
+        throw new InvalidArgumentException("Type $type can't render to format $format");
+    }
+    
+    // @todo validate resizing stuff
 }
 
 function template_locate($templatename, $fetchdb=true) {

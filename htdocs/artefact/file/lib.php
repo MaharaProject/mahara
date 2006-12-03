@@ -89,10 +89,6 @@ class ArtefactTypeFolder extends ArtefactType {
 
     }
     
-    public static function can_render_to($format) {
-
-    }    
-
     public static function collapse_config() {
         return 'file';
     }
@@ -118,11 +114,7 @@ class ArtefactTypeFile extends ArtefactType {
     }
 
     public static function get_render_list() {
-
-    }
-    
-    public static function can_render_to($format) {
-
+        return array(FORMAT_ARTEFACT_LISTSELF, FORMAT_ARTEFACT_RENDERMETADATA);
     }
 
     public static function has_config() {
@@ -138,6 +130,11 @@ class ArtefactTypeImage extends ArtefactTypeFile {
     public static function collapse_config() {
         return 'file';
     }
+
+    public static function get_render_list() {
+        return array(FORMAT_ARTEFACT_LISTSELF, FORMAT_ARTEFACT_RENDERFULL, FORMAT_ARTEFACT_RENDERMETADATA);
+    }
+
 }
 
 ?>
