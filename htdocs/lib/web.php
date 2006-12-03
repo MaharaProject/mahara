@@ -58,39 +58,29 @@ function &smarty($javascript = array(), $headers = array(), $strings = array()) 
     // Insert the appropriate javascript tags 
     $jsroot = get_config('wwwroot') . 'js/';
 
-    if (in_array('tinymce', $javascript)) {
+    // TinyMCE must be included first for some reason we're not sure about
+    if (($key = array_search('tinymce', $javascript)) !== FALSE) {
         $javascript_array[] = $jsroot . 'tinymce/tiny_mce.js';
-        $value = $jsroot . 'tinymce/tiny_mce.js';
         $initfile = $jsroot . 'mahara_tinymce_init.html';
         if (!$headers[] = @file_get_contents($initfile)) {
             throw new Exception ('tinyMCE not initialised.');
         }
+        unset($javascript[$key]);
     }
 
     $javascript_array[] = $jsroot . 'MochiKit/MochiKit.js';
 
     $jsstrings = jsstrings();
 
-    if (in_array('tablerenderer', $javascript)) {
-        $javascript_array[] = $jsroot . 'tablerenderer.js';
-        foreach ($jsstrings['tablerenderer'] as $string) {
-            if (!in_array($string, $strings)) {
-                $strings[] = $string;
+    foreach ($javascript as $jsfile) {
+        $javascript_array[] = $jsroot . $jsfile . '.js';
+        if ($jsstrings[$jsfile]) {
+            foreach ($jsstrings[$jsfile] as $string) {
+                if (!in_array($string, $strings)) {
+                    $strings[] = $string;
+                }
             }
         }
-    }
-
-    if (in_array('fileuploader', $javascript)) {
-        $javascript_array[] = $jsroot . 'fileuploader.js';
-        foreach ($jsstrings['fileuploader'] as $string) {
-            if (!in_array($string, $strings)) {
-                $strings[] = $string;
-            }
-        }
-    }
-
-    if (in_array('collapsabletree', $javascript)) {
-        $javascript_array[] = $jsroot . 'collapsabletree.js';
     }
 
     $javascript_array[] = $jsroot . 'mahara.js';
