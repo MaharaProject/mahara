@@ -29,7 +29,7 @@ define('MENUITEM', 'myfiles');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('artefact', 'file');
 
-$strings = array('nofilesfound');
+$strings = array('cancel', 'delete', 'description', 'edit', 'editfile', 'editfolder', 'home', 'name', 'nofilesfound', 'savechanges');
 $getstring = array();
 foreach ($strings as $string) {
     $getstring[$string] = "'" . get_string($string) . "'";
@@ -37,71 +37,16 @@ foreach ($strings as $string) {
 
 $javascript = <<<JAVASCRIPT
 
-var filelist = new TableRenderer(
-    'filelist',
-    'myfiles.json.php',
-    [
-     formatname,
-     'size',
-     'mtime',
-     function () {return TD(null)},
-    ]
-);
-
-function formatname(r) {
-    if (r.artefacttype == 'file') {
-        var cell = r.name;
-    }
-    if (r.artefacttype == 'folder') {
-        var dir = cwd + r.name + '/';
-        pathids[dir] = r.id;
-        var link = A({'href':'', 'onclick':"return changedir('" + dir.replace(escre,"\\\'") + "')"},r.name);
-        var cell = link;
-    }
-    return TD(null, cell);
-}
-
-function changedir(path) {
-    cwd = path;
-    linked_path();
-    uploader.updatedestination(pathids[path], path);
-    var args = path == '/' ? null : {'folder':pathids[path]};
-    filelist.doupdate(args);
-    return false;
-}
-
-function linked_path() {
-    var dirs = cwd.split('/');
-    var homedir = A({'href':'', 'onclick':"return changedir('/')"}, get_string('home'));
-    var sofar = '/';
-    var folders = [homedir];
-    for (i=0; i<dirs.length; i++) {
-        if (dirs[i] != '') {
-            sofar = sofar + dirs[i] + '/';
-            var dir = A({'href':'', 'onclick':"return changedir('" + sofar.replace(escre,"\\\'") + "')"}, dirs[i]);
-            folders.push(' / ');
-            folders.push(dir);
-        }
-    }
-    replaceChildNodes($('foldernav'),folders);
-}
-
-filelist.emptycontent = {$getstring['nofilesfound']};
-filelist.paginate = false;
-filelist.statevars.push('folder');
-
-pathids = {'/':null};
-cwd = '/';
-escre = /\'/g;
+var browser = new FileBrowser('filelist');
+alert('browser');
 var uploader = new FileUploader('uploader', 'upload.json.php', filelist.doupdate);
 
-addLoadEvent(function () { changedir(cwd); });
 
 JAVASCRIPT;
 
-$smarty = smarty(array('tablerenderer','fileuploader'));
-$smarty->assign('INLINEJAVASCRIPT', $javascript);
 
+$smarty = smarty(array('tablerenderer', 'artefact/file/js/filebrowser.js', 'fileuploader'));
+$smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->display('artefact:file:index.tpl');
 
 ?>

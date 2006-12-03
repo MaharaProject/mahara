@@ -27,6 +27,8 @@
 define('INTERNAL', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
+//log_debug('myfiles.json.php');
+
 $limit = param_integer('limit', null);
 $offset = param_integer('offset', 0);
 $folder = param_integer('folder', null);
@@ -65,7 +67,7 @@ $result = array(
     'message'     => get_string('filelistloaded'),
 );
 
-log_debug($result);
+//log_debug($result);
 
 json_headers();
 print json_encode($result);

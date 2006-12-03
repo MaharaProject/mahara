@@ -50,13 +50,17 @@ defined('INTERNAL') || die();
  * @param $strings    A list of language strings required by the javascript code.
  * @return Smarty
  */
+
+//smarty(array('js/tablerenderer.js', 'artefact/file/js/filebrowser.js'))
 function &smarty($javascript = array(), $headers = array(), $strings = array()) {
     global $USER, $SESSION;
 
     require_once(get_config('libroot') . 'smarty/Smarty.class.php');
 
+    $wwwroot = get_config('wwwroot');
+
     // Insert the appropriate javascript tags 
-    $jsroot = get_config('wwwroot') . 'js/';
+    $jsroot = $wwwroot . 'js/';
 
     // TinyMCE must be included first for some reason we're not sure about
     if (($key = array_search('tinymce', $javascript)) !== FALSE) {
@@ -73,8 +77,17 @@ function &smarty($javascript = array(), $headers = array(), $strings = array()) 
     $jsstrings = jsstrings();
 
     foreach ($javascript as $jsfile) {
-        $javascript_array[] = $jsroot . $jsfile . '.js';
-        if ($jsstrings[$jsfile]) {
+        // For now, if there's no path in the js file, assume it's in
+        // $jsroot and append '.js' to the name.  Later we may want to
+        // ensure all smarty() calls include the full path to the js
+        // file, with the proper extension.
+        if (strpos($jsfile,'/') === false) {
+            $javascript_array[] = $jsroot . $jsfile . '.js';
+        }
+        else {
+            $javascript_array[] = $jsfile;
+        }
+        if (isset($jsstrings[$jsfile])) {
             foreach ($jsstrings[$jsfile] as $string) {
                 if (!in_array($string, $strings)) {
                     $strings[] = $string;
@@ -111,7 +124,7 @@ function &smarty($javascript = array(), $headers = array(), $strings = array()) 
     $smarty->cache_dir    = get_config('dataroot').'smarty/cache';
 
     $smarty->assign('THEMEURL', get_config('themeurl'));
-    $smarty->assign('WWWROOT', get_config('wwwroot'));
+    $smarty->assign('WWWROOT', $wwwroot);
     $sitename = get_config('sitename');
     $smarty->assign('title', $sitename);
     $smarty->assign('heading', $sitename);

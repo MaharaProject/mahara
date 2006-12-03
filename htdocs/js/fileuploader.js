@@ -1,7 +1,6 @@
-function FileUploader(element, script, callback, foldername, folderid) {
+function FileUploader(element, callback, foldername, folderid) {
     var self = this;
     this.element = element;
-    this.script = script;
     this.foldername = foldername ? foldername : get_string('home');
     this.folderid = folderid;
 
