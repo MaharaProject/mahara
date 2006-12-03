@@ -69,9 +69,11 @@ function &smarty($javascript = array(), $headers = array(), $strings = array()) 
 
     $javascript_array[] = $jsroot . 'MochiKit/MochiKit.js';
 
+    $jsstrings = jsstrings();
+
     if (in_array('tablerenderer', $javascript)) {
         $javascript_array[] = $jsroot . 'tablerenderer.js';
-        foreach (tablerendererjsstrings() as $string) {
+        foreach ($jsstrings['tablerenderer'] as $string) {
             if (!in_array($string, $strings)) {
                 $strings[] = $string;
             }
@@ -80,7 +82,7 @@ function &smarty($javascript = array(), $headers = array(), $strings = array()) 
 
     if (in_array('fileuploader', $javascript)) {
         $javascript_array[] = $jsroot . 'fileuploader.js';
-        foreach (fileuploaderjsstrings() as $string) {
+        foreach ($jsstrings['fileuploader'] as $string) {
             if (!in_array($string, $strings)) {
                 $strings[] = $string;
             }
@@ -94,7 +96,7 @@ function &smarty($javascript = array(), $headers = array(), $strings = array()) 
     $javascript_array[] = $jsroot . 'mahara.js';
     $javascript_array[] = $jsroot . 'debug.js';
 
-    foreach (maharajsstrings() as $string) {
+    foreach ($jsstrings['mahara'] as $string) {
         if (!in_array($string, $strings)) {
             $strings[] = $string;
         }
@@ -143,29 +145,24 @@ function &smarty($javascript = array(), $headers = array(), $strings = array()) 
     return $smarty;
 }
 
-function maharajsstrings() {
+function jsstrings() {
     return array(
-        'namedfieldempty',
-        'processingform',
-        'requiredfieldempty',
-        'unknownerror',
-        'loading',
+        'mahara' => array(
+            'namedfieldempty',
+            'processingform',
+            'requiredfieldempty',
+            'unknownerror',
+            'loading',
+        ),
+        'tablerenderer' => array(
+            'firstpage',
+            'nextpage',
+            'prevpage',
+            'lastpage',
+        ),
+        'fileuploader' => array(),
     );
 }
-
-function tablerendererjsstrings() {
-    return array(
-        'firstpage',
-        'nextpage',
-        'prevpage',
-        'lastpage',
-    );
-}
-
-function fileuploaderjsstrings() {
-    return array();
-}
-
 
 /** 
  * This function sets up and caches info about the current selected theme
