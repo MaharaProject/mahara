@@ -85,7 +85,7 @@ function &smarty($javascript = array(), $headers = array(), $strings = array()) 
             $javascript_array[] = $jsroot . $jsfile . '.js';
         }
         else {
-            $javascript_array[] = $jsfile;
+            $javascript_array[] = $wwwroot . $jsfile;
         }
         if (isset($jsstrings[$jsfile])) {
             foreach ($jsstrings[$jsfile] as $string) {
