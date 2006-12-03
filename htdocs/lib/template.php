@@ -165,4 +165,3 @@ function template_render($template, $mode) {
 }
 
 ?>
-
