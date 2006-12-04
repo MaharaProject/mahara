@@ -195,7 +195,8 @@ $string['membercount']               = 'Member count';
 
 // my account
 $string['account'] =  'My account';
-$string['accountprefs'] = 'Account preferences';
+$string['accountprefs'] = 'Preferences';
+$string['preferences'] = 'Preferences';
 $string['activityprefs'] = 'Activity preferences';
 $string['watchlist'] = 'My watchlist';
 $string['changepassword'] = 'Change password';
