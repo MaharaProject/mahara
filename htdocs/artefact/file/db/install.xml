@@ -7,7 +7,6 @@
     <TABLE NAME="artefact_file_files">
         <FIELDS>
             <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="true" />
-            <FIELD NAME="name" TYPE="text" NOTNULL="true" />
             <FIELD NAME="size" TYPE="int" LENGTH="10" NOTNULL="false" />
         </FIELDS>
         <KEYS>
