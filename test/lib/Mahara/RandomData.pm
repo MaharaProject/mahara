@@ -14,6 +14,7 @@ use DBI;
 use Data::RandomPerson;
 use Data::Random::WordList;
 #use Smart::Comments;
+use Data::Dumper;
 
 sub new {
     my ($class,$config) = @_;
@@ -174,13 +175,16 @@ sub insert_random_activity {
 
     my $wl = new Data::Random::WordList( wordlist => '/usr/share/dict/words' );
 
+    my $messagetypes = $self->{dbh}->selectall_hashref('SELECT name FROM ' . $prefix . 'activity_type', 'name');
+
     foreach ( 1 .. $count ) { ### [...  ] (%)
         my $message = join(' ', $wl->get_words(int(rand(3)) + 2));
+        my $type = (keys %$messagetypes)[int(rand(keys %$messagetypes))];
         $message =~ s/[\x80-\xff]//g;
         $self->{dbh}->do(
             'INSERT INTO ' . $prefix . 'notification_internal_activity (type, usr, ctime, message, url, read) VALUES (?, ?, current_timestamp, ?, ?, ?)',
             undef,
-            'maharamessage', $user_id, $message, 'http://mahara.org/', int(rand(2)));
+            $type, $user_id, $message, 'http://mahara.org/', int(rand(2)));
     }
 
     $self->{dbh}->commit();
