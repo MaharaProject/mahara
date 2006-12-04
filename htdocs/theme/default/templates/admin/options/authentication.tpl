@@ -1,11 +1,16 @@
 {include file="header.tpl"}
 
+<div class="content">
+<div class="box-cnrs"><span class="cnr-tl"><span class="cnr-tr"><span 
+class="cnr-bl"><span class="cnr-br">
+	<div class="maincontent">
+	
 <p><strong>TODO</strong> for this page:
 
 <ul>
     <li>Get a list of installed authentication methods (depends: database)</li>
     <li>For each one, a list of institutions using it (depends: database)</li>
-</ul>
+</ul></p>
 
 <h2>{$title}</h2>
 
@@ -28,7 +33,10 @@
     {/if}
 </table>
 
-
 <p><a href="..">parent</a></p>
+
+	</div>
+</span></span></span></span></div>	
+</div>
 
 {include file="footer.tpl"}

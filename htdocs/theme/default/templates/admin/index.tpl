@@ -1,11 +1,15 @@
 {include file='header.tpl'}
 
+<div class="content">
+<div class="box-cnrs"><span class="cnr-tl"><span class="cnr-tr"><span 
+class="cnr-bl"><span class="cnr-br">
+	<div class="maincontent">
 <h2>Administration</h2>
 
 <p>Screens here:</p>
 
 <ul>
-    <li><a href="options/">Site Options</a>
+    <li><a href="options/">Site Options</a></li>
     <li><a href="institutions.php">Institutions</a></li>
     <li><a href="editsitepage.php">Site Pages</a></li>
     <li><a href="editmenu.php">Site Menu</a></li>
@@ -15,5 +19,9 @@
 {if $upgrades}
 <p><a href="upgrade.php">Run upgrade</a></p>
 {/if}
+
+	</div>
+</span></span></span></span></div>	
+</div>
 
 {include file='footer.tpl'}
