@@ -59,8 +59,8 @@ function FileBrowser(element, changedircallback) {
             rows.push(destinationrow);
         } else {
             rows = [self.editformtitle(get_string('editfolder'))];
-            name = fileinfo.name;
-            description = fileinfo.name;
+            name = fileinfo.title;
+            description = fileinfo.description;
         }
         rows.push(self.textinputrow('name',name));
         rows.push(self.textinputrow('description',description));
@@ -77,9 +77,8 @@ function FileBrowser(element, changedircallback) {
         }
         else {
             editrows = [self.editformtitle(get_string('editfile')),
-                        self.textinputrow('name',fileinfo.name),
-                        self.textinputrow('title',fileinfo.name),
-                        self.textinputrow('description',fileinfo.name)];
+                        self.textinputrow('title',fileinfo.title),
+                        self.textinputrow('description',fileinfo.description)];
         }
         var editid = 'edit_' + elemid;
         var rowid = 'row_'+fileinfo.id;
@@ -96,10 +95,6 @@ function FileBrowser(element, changedircallback) {
                                               FORM({'id':editid+'_form','action':''},edittable,buttons))));
     }
 
-    this.deletefile = function(id) {
-        
-    };
-
     this.showsize = function(bytes) {
         if (bytes < 1024) {
             return bytes + 'b';
@@ -112,13 +107,13 @@ function FileBrowser(element, changedircallback) {
 
     this.formatname = function(r) {
         if (r.artefacttype == 'file') {
-            return TD(null, r.name);
+            return TD(null, r.title);
         }
         if (r.artefacttype == 'folder') {
-            var dir = self.cwd + r.name + '/';
+            var dir = self.cwd + r.title + '/';
             self.pathids[dir] = r.id;
             var link = A({'href':'', 'onclick':"return changedir('" + dir.replace(/\'/g,"\\\'") + "')"},
-                         r.name);
+                         r.title);
             return TD(null, link);
         }
     }
