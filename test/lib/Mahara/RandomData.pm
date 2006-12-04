@@ -487,13 +487,11 @@ sub insert_random_filethings {
     }
     my $artefactidlist = $self->{dbh}->selectall_arrayref('SELECT a.id,a.artefacttype FROM ' . $prefix . 'artefact a LEFT OUTER JOIN '. $prefix . 'artefact_file_files f ON a.id = f.artefact WHERE (a.artefacttype = ? OR a.artefacttype = ? OR a.artefacttype = ?) AND f.name IS NULL', { Slice => {} }, 'file', 'folder', 'image');
 
-    $wl = new Data::Random::WordList( wordlist => '/usr/share/dict/words' );
     foreach my $item (@$artefactidlist) {
         my $id = int($item->{id});
-        $self->{dbh}->do('INSERT INTO ' . $prefix . 'artefact_file_files (artefact, name, size)
+        $self->{dbh}->do('INSERT INTO ' . $prefix . 'artefact_file_files (artefact, size)
             VALUES (?, ?, ?)', undef,
             $id,
-            $wl->get_words(1)->[0],
             ($item->{artefacttype} eq 'folder') ? undef : int(rand(1000000)));
     }
 
