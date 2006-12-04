@@ -39,9 +39,6 @@ $allusersstring = get_string('allusers');
 $savefailed = get_string('stopmonitoringfailed', 'activity');
 $savesuccess = get_string('stopmonitoringsuccess', 'activity');
 
-$getartefactsjson = get_config('wwwroot') . 'json/getartefacts.php';
-
-
 $recursestr = '[<a href="" onClick="toggleChecked(\'tocheck-r\'); return false;">' 
     . get_string('recurseall', 'activity')
     . '</a>]';
