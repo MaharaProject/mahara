@@ -32,12 +32,23 @@ require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
 require_once('pieforms/pieform.php');
 
 $activitytypes = get_records_array('activity_type', 'admin', 0);
+if ($USER->get('admin')) {
+    $admintypes = get_records_array('activity_type', 'admin', 1);
+    $activitytypes[] = (object)array('name' => 'adminmessages');
+}
+
 $notifications = plugins_installed('notification');
 
 $elements = array();
 
 foreach ($activitytypes as $type) {
-    if (!$dv = $USER->get_activity_preference($type->name)) {
+    if ($type->name == 'adminmessages') {
+        $dv = $USER->get_activity_preference('contactus');
+    }
+    else {
+        $dv = $USER->get_activity_preference($type->name);
+    }
+    if (empty($dv)) {
         $dv = 'internal';
     }
     $elements[$type->name] = array(
@@ -76,11 +87,19 @@ $smarty->assign('form', pieform($prefsform));
 $smarty->display('account/activity/preferences/index.tpl');
 
 function activityprefs_submit($values) {
-    global $activitytypes, $USER;
+    global $activitytypes, $admintypes, $USER;
     
     $userid = $USER->get('id');
     foreach ($activitytypes as $type) {
+        if ($type->name == 'adminmessages') {
+            continue;
+        }
         $USER->set_activity_preference($type->name, $values[$type->name]);
+    }
+    if ($USER->get('admin')) {
+        foreach ($admintypes as $type) {
+            $USER->set_activity_preference($type->name, $values['adminmessages']);
+        }
     }
     json_reply(false, get_string('prefssaved', 'account'));
     exit;
