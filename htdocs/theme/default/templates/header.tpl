@@ -19,22 +19,32 @@
         {if $LOGGEDIN}<noscript><meta http-equiv="refresh" content="0; {$WWWROOT}?logout"></noscript>{/if}
     </head>
     <body>
-        <div id="header">
-            <div style="position: absolute; background-color: red; color: white;" id="loading_box"></div>
-            <h1><a href="{$WWWROOT}">{$heading|default:"Mahara"|escape}</a></h1>
+	<div id="container">
+		<div id="topwrapper">
 {if $LOGGEDIN}
-            <a href="{$WWWROOT}?logout">Logout</a>
+			<div id="globalTabs"><ul>
+            <li id="globalnav-logout"><a href="{$WWWROOT}?logout">Logout</a></li>
     {if $USER->get('admin')}
         {if $ADMIN}
-            <a href="{$WWWROOT}">Return to Site</a>
+            <li id="globalnav-returntosite"><a href="{$WWWROOT}">Return to Site</a></li>
         {else}
-            <a href="{$WWWROOT}admin/">Site Administration</a>
+            <li id="globalnav-siteadmin"><a href="{$WWWROOT}admin/">Site Administration</a></li>
         {/if}
     {/if}
+			</ul></div>
 {/if}
-        </div>
+			<div id="header">
+				<div class="cornertopright"><img src="{image_path imagelocation='images/header_corner_topright.gif'}" border="0"></div>
+				<div style="position: absolute; background-color: red; color: white;" id="loading_box"></div>
+				<div class="logo"><a href="{$WWWROOT}"><img src="{image_path imagelocation='images/logo.gif'}" border="0"></a></div>
+				<h1 class="hiddenStructure"><a href="{$WWWROOT}">{$heading|default:"Mahara"|escape}</a></h1>
+				
+			</div>
+		</div>
+		<div id="mainwrapper">
+			<div id="maincontentwrapper">	
 {if $MAINNAV}
-        <ul id="mainnav">
+        <ul id="mainnav"><span class="mainnav-left"><img src="{image_path imagelocation='images/navbg_left.gif'}" border="0"></span><span class="mainnav-right"><img src="{image_path imagelocation='images/navbg_right.gif'}" border="0"></span>
 {foreach from=$MAINNAV item=item}
     {if $item.selected}{assign var=MAINNAVSELECTED value=$item}
             <li class="selected"><a href="{$item.link|escape}">{str section=$item.section tag=$item.name}</a></li>
@@ -56,3 +66,4 @@
     {/if}
 {/if}
         {insert name="messages"}
+		

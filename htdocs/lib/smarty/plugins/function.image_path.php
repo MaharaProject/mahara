@@ -20,10 +20,9 @@
  * @return Internationalized string
  */
 function smarty_function_image_path($params, &$smarty) {
-    static $dictionary;
     
-    if (!isset($theme['pluginlocation'])) {
-        $theme['pluginlocation'] = '';
+    if (!isset($params['pluginlocation'])) {
+        $params['pluginlocation'] = '';
     }
 
     return theme_get_image_path($params['imagelocation'], $params['pluginlocation']);

@@ -3,6 +3,10 @@
 {include file="adminmenu.tpl"}
 
 <div class="content">
+<div class="box-cnrs"><span class="cnr-tl"><span class="cnr-tr"><span 
+class="cnr-bl"><span class="cnr-br">
+	<div class="maincontent">
+	
     <h2>{str tag="createviewstep2"}</h2>
 {literal}
     <select onchange="templates.doupdate({'offset': 0, 'category': this.options[this.selectedIndex].value });">
@@ -20,6 +24,11 @@
         <button name="action" value="cancel">{str tag=Cancel}</button>
     </form>
 
+    <button type="button" onclick="document.location='create1.php?createid={$createid}';">{str tag=Back}</button>
+    <button type="button" onclick="document.location='./';">{str tag=Cancel}</button>
+
+	</div>
+</span></span></span></span></div>	
 </div>
 
 {include file="footer.tpl"}
