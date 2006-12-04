@@ -483,16 +483,18 @@ sub insert_random_filethings {
             $folder,
             $user_id,
             $wl->get_words(1)->[0] . (($thing eq 'folder') ? '' : (($thing eq 'image') ? '.png' : '.txt')),
-            'description');
+            join(' ', $wl->get_words(int(rand(5)) + 1)));
     }
-    my $artefactidlist = $self->{dbh}->selectall_arrayref('SELECT a.id,a.artefacttype FROM ' . $prefix . 'artefact a LEFT OUTER JOIN '. $prefix . 'artefact_file_files f ON a.id = f.artefact WHERE (a.artefacttype = ? OR a.artefacttype = ? OR a.artefacttype = ?) AND f.name IS NULL', { Slice => {} }, 'file', 'folder', 'image');
+
+    # Now insert file sizes into the artefact_file_files table
+    my $artefactidlist = $self->{dbh}->selectall_arrayref('SELECT a.id FROM ' . $prefix . 'artefact a LEFT OUTER JOIN '. $prefix . 'artefact_file_files f ON a.id = f.artefact WHERE (a.artefacttype = ? OR a.artefacttype = ?) AND f.size IS NULL', { Slice => {} }, 'file', 'image');
 
     foreach my $item (@$artefactidlist) {
         my $id = int($item->{id});
         $self->{dbh}->do('INSERT INTO ' . $prefix . 'artefact_file_files (artefact, size)
-            VALUES (?, ?, ?)', undef,
+            VALUES (?, ?)', undef,
             $id,
-            ($item->{artefacttype} eq 'folder') ? undef : int(rand(1000000)));
+            int(rand(5000000)));
     }
 
     $self->{dbh}->commit();
