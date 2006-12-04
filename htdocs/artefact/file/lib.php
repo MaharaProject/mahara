@@ -68,7 +68,8 @@ class PluginArtefactFile extends PluginArtefact {
 
 }
 
-class ArtefactTypeFolder extends ArtefactType {
+class ArtefactTypeFileBase extends ArtefactType {
+
     public function commit() {
         $this->commit_basic();
     }
@@ -78,39 +79,29 @@ class ArtefactTypeFolder extends ArtefactType {
     }
 
     public function render($format, $options) {
-
-    }
-
-    public function get_icon() {
-
+        if ($format == FORMAT_ARTEFACT_LISTSELF) {
+            return $this->title;
+        }
+        return false;
     }
 
     public static function get_render_list() {
-
-    }
-    
-    public static function collapse_config() {
-        return 'file';
-    }
-    
-}
-
-class ArtefactTypeFile extends ArtefactType {
-
-    public function commit() {
-        $this->commit_basic();
-    }
-    
-    public function delete() {
-        $this->delete_basic();
-    }
-
-    public function render($format, $options) {
-
+        return array(FORMAT_ARTEFACT_LISTSELF);
     }
 
     public function get_icon() {
 
+    }
+
+}
+
+class ArtefactTypeFile extends ArtefactTypeFileBase {
+
+    public function render($format, $options) {
+        if ($format == FORMAT_ARTEFACT_LISTSELF && $this->title) {
+            return $this->title;
+        }
+        return false;
     }
 
     public static function get_render_list() {
@@ -121,10 +112,27 @@ class ArtefactTypeFile extends ArtefactType {
         return true;
     }
 
+    public function get_icon() {
+
+    }
+
     public static function get_config_options() {
         return array(); // @todo  
     }
 }
+
+class ArtefactTypeFolder extends ArtefactTypeFileBase {
+
+    public function get_icon() {
+
+    }
+
+    public static function collapse_config() {
+        return 'file';
+    }
+    
+}
+
 class ArtefactTypeImage extends ArtefactTypeFile {
     
     public static function collapse_config() {
