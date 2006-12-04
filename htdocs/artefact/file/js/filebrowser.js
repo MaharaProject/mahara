@@ -33,7 +33,7 @@ function FileBrowser(element, changedircallback) {
         var editb = INPUT({'type':'button', 'value':get_string('edit')});
         editb.onclick = function () { self.openeditform(r); };
         var deleteb = INPUT({'type':'button', 'value':get_string('delete')});
-        deleteb.onclick = function () { self.deletefile(r.id); };
+        deleteb.onclick = function () { sendjsonrequest('delete.json.php', {'id': r.id}, self.refresh); };
         return TD(null, editb, deleteb);
     }
 
@@ -96,16 +96,18 @@ function FileBrowser(element, changedircallback) {
                                               FORM({'id':editid+'_form','action':''},edittable,buttons))));
     }
 
-    this.deletefile = function(id) { alert('delete ' + id); };
+    this.deletefile = function(id) {
+        
+    };
 
     this.showsize = function(bytes) {
         if (bytes < 1024) {
             return bytes + 'b';
         }
         if (bytes < 1048576) {
-            return Math.floor((bytes / 1024) * 10) / 10 + 'k';
+            return Math.floor((bytes / 1024) * 10 + 0.5) / 10 + 'k';
         }
-        return Math.floor((bytes / 1048576) * 10) / 10 + 'M';
+        return Math.floor((bytes / 1048576) * 10 + 0.5) / 10 + 'M';
     }
 
     this.formatname = function(r) {
@@ -122,7 +124,6 @@ function FileBrowser(element, changedircallback) {
     }
 
     this.changedir = function(path) {
-        alert(path + ' ' + self.pathids[path]);
         self.cwd = path;
         self.linked_path();
         self.changedircallback(self.pathids[path], path);

@@ -98,13 +98,13 @@ function template_validate_block($data, $name='') {
     
     if (!empty($type)) {
         if (empty($format)) {
-            throw new InvalidArgumentException("Cannot specify type without format");
+            throw new InvalidArgumentException("Cannot specify {$name}type without ($name}format");
         }
     }
     
     if (!empty($format) && $format != 'label') {
         if (empty($type)) {
-            throw new InvalidArgumentException("Cannot specify format without type");
+            throw new InvalidArgumentException("Cannot specify {$name}format without {$name}type");
         }
     }
         
@@ -114,14 +114,14 @@ function template_validate_block($data, $name='') {
         
     // figure out what plugin handles this type and validate the class exists.
     if (!$plugin = get_field('artefact_installed_type', 'plugin', 'name', $type)) {
-        throw new InvalidArgumentException("Type $type is not installed");
+        throw new InvalidArgumentException("{$name}type $type is not installed");
     }
     
     require_once('artefact.php');
     safe_require('artefact', $plugin);
 
     if (!artefact_can_render_to($type, $format)) {
-        throw new InvalidArgumentException("Type $type can't render to format $format");
+        throw new InvalidArgumentException("{$name}type $type can't render to {$name}format $format");
     }
     
     // @todo validate resizing stuff
