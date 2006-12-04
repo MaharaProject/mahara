@@ -444,25 +444,4 @@ abstract class ArtefactType {
     }
 }
 
-// helper functions for artefacts in general
-
-function artefact_check_plugin_sanity($pluginname) {
-    $classname = generate_class_name('artefact', $pluginname);
-    safe_require('artefact', $pluginname);
-    $types = call_static_method($classname, 'get_artefact_types');
-    foreach ($types as $type) {
-        $typeclassname = generate_artefact_class_name($type);
-        if (get_config('installed')) {
-            if ($taken = get_record_select('artefact_installed_type', 'name = ? AND plugin != ?', 
-                                           array($type, $pluginname))) {
-                throw new InstallationException("type $type is already taken by another plugin (" . $taken->plugin . ")");
-            }
-        }
-        if (!class_exists($typeclassname)) {
-            throw new InstallationException("class $typeclassname for type $type in plugin $pluginname was missing");
-        }
-    }
-}
-
-        
 ?>

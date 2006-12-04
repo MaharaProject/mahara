@@ -93,7 +93,7 @@ function check_upgrades($name=null) {
                 if (!is_dir(get_config('docroot') . $plugin . '/' . $dir)) {
                     continue;
                 }
-                safe_require($plugin, $dir);
+                require_once('artefact.php');
                 $funname = $plugin . '_check_plugin_sanity';
                 if (function_exists($funname)) {
                     try {

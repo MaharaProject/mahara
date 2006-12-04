@@ -708,4 +708,304 @@ function make_link($url) {
     return '<a href="' . $url . '">' . $url . '</a>';
 }
 
+
+/**
+ * Builds the admin navigation menu and returns it as a data structure
+ *
+ * @return $adminnav a data structure containing the admin navigation
+ */
+function admin_nav() {
+    $wwwroot = get_config('wwwroot');
+
+    $menu = array(
+        array(
+            'name'     => 'adminhome',
+            'section'  => 'admin',
+            'link'     => $wwwroot . 'admin/',
+        ),
+        array(
+            'name'     => 'siteoptions',
+            'section'  => 'admin',
+            'link'     => $wwwroot . 'admin/options/',
+        ),
+        array(
+            'name'     => 'institutions',
+            'section'  => 'admin',
+            'link'     => $wwwroot . 'admin/institutions.php',
+        ),
+        array(
+            'name'     => 'pageeditor',
+            'section'  => 'admin',
+            'link'     => $wwwroot . 'admin/editsitepage.php',
+        ),
+        array(
+            'name'     => 'menueditor',
+            'section'  => 'admin',
+            'link'     => $wwwroot . 'admin/editmenu.php',
+        ),
+        array(
+            'name'     => 'adminplugins',
+            'section'  => 'admin',
+            'link'     => $wwwroot . 'admin/plugins/',
+        ),
+        array(
+            'name'     => 'files',
+            'section'  => 'admin',
+            'link'     => $wwwroot . 'admin/todo',
+        ),
+        array(
+            'name'     => 'usermanagement',
+            'section'  => 'admin',
+            'link'     => $wwwroot . 'admin/usermanagement/uploadcsv.php',
+            'submenu'  => array(
+                array(
+                    'name' => 'uploadcsv',
+                    'section' => 'admin',
+                    'link' => $wwwroot . 'admin/usermanagement/uploadcsv.php'
+                ),
+                array(
+                    'name' => 'adminusers',
+                    'section' => 'admin',
+                    'link' => $wwwroot . 'admin/usermanagement/adminusers.php',
+                ),
+                array(
+                    'name' => 'staffusers',
+                    'section' => 'admin',
+                    'link' => $wwwroot . 'admin/usermanagement/staffusers.php'
+                ),
+                array(
+                    'name' => 'adminnotifications',
+                    'section' => 'admin',
+                    'link' => $wwwroot . 'admin/usermanagement/adminnotifications.php'
+                ),
+                array(
+                    'name' => 'suspendedusers',
+                    'section' => 'admin',
+                    'link' => $wwwroot . 'admin/usermanagement/suspendedusers.php'
+                )
+            )
+        ),
+    );
+
+    if (defined('MENUITEM')) {
+        foreach ( $menu as &$item ) {
+            if ($item['name'] == MENUITEM) {
+                $item['selected'] = true;
+                if (defined('SUBMENUITEM') and is_array($item['submenu'])) {
+                    foreach ( $item['submenu'] as &$subitem ) {
+                        if ($subitem['name'] == SUBMENUITEM) {
+                            $subitem['selected'] = true;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return $menu;
+}
+
+/**
+ * Builds the main navigation menu and returns it as a data structure
+ *
+ * @return $mainnav a data structure containing the main navigation
+ * @todo martyn this is probably quite expenvise, perhaps it needs teh caching
+ */
+function main_nav() {
+    $wwwroot = get_config('wwwroot');
+
+    if (defined('ADMIN')) {
+        return admin_nav();
+    }
+
+    $menu = array(
+        array(
+            'name'     => 'home',
+            'section'  => 'mahara',
+            'link'     => $wwwroot,
+        ),
+    );
+
+    if ($plugins = get_records_array('artefact_installed')) {
+        foreach ($plugins as &$plugin) {
+            safe_require('artefact', $plugin->name, 'lib.php', 'require_once');
+            $plugin_menu = call_static_method(generate_class_name('artefact',$plugin->name), 'menu_items');
+
+            foreach ($plugin_menu as &$menu_item) {
+                $menu_item['link'] = $wwwroot . 'artefact/' . $plugin->name . '/' . $menu_item['link'];
+                $menu_item['section'] = 'artefact.' . $plugin->name;
+            }
+
+            $menu = array_merge($menu, $plugin_menu);
+        }
+    }
+
+    $menu[] = array(
+        'name'    => 'mycontacts',
+        'link'    => $wwwroot . 'contacts/',
+        'section' => 'mahara',
+        'submenu' => array(
+            array(
+                'name'    => 'myfriends',
+                'link'    => $wwwroot . 'contacts/',
+                'section' => 'mahara',
+            ),
+            array(
+                'name'    => 'myaddressbook',
+                'link'    => $wwwroot . 'contacts/addressbook/',
+                'section' => 'mahara',
+            ),
+            array(
+                'name'    => 'mycommunities',
+                'link'    => $wwwroot . 'contacts/communities/',
+                'section' => 'mahara',
+            ),
+            array(
+                'name'    => 'myownedcommunities',
+                'link'    => $wwwroot . 'contacts/communities/owned.php',
+                'section' => 'mahara',
+            ),
+            array(
+                'name'    => 'mygroups',
+                'link'    => $wwwroot . 'contacts/groups/',
+                'section' => 'mahara',
+            ),
+        ),
+    );
+    $menu[] = array(
+        'name'    => 'myviews',
+        'link'    => $wwwroot . 'view/',
+        'section' => 'mahara',
+    );
+    $menu[] = array(
+        'name'    => 'account',
+        'link'    => $wwwroot . 'account/',
+        'section' => 'mahara',
+        'submenu' => array(
+            array(
+                'name'    => 'accountprefs',
+                'link'    => $wwwroot . 'account/',
+                'section' => 'mahara',
+            ),
+            array(
+                'name'    => 'activity',
+                'link'    => $wwwroot . 'account/activity/',
+                'section' => 'mahara',
+            ),
+            array(
+                'name'    => 'activityprefs',
+                'link'    => $wwwroot . 'account/activity/preferences/',
+                'section' => 'mahara',
+            ),
+            array(
+                'name'    => 'watchlist',
+                'link'    => $wwwroot . 'account/watchlist/',
+                'section' => 'mahara',
+            ),
+        ),
+    );
+
+
+    if (defined('MENUITEM')) {
+        foreach ( $menu as &$item ) {
+            if ($item['name'] == MENUITEM) {
+                $item['selected'] = true;
+                if (defined('SUBMENUITEM') and is_array($item['submenu'])) {
+                    foreach ( $item['submenu'] as &$subitem ) {
+                        if ($subitem['name'] == SUBMENUITEM) {
+                            $subitem['selected'] = true;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    else {
+        $menu[0]['selected'] = true;
+    }
+
+    return $menu;
+}
+
+/**
+ * Site-level sidebar menu (list of links)
+ * There is no admin files table yet so just get the urls.
+ * @return $menu a data structure containing the site menu
+ */
+function site_menu() {
+    global $USER;
+    $menu = array();
+    if ($menuitems = get_records_array('site_menu','public',(int) !$USER->is_logged_in(),'displayorder')) {
+        foreach ($menuitems as $i) {
+            if ($i->url) {
+                $menu[] = array('name' => $i->title,
+                                'link' => $i->url);
+            }
+        }
+    }
+    return $menu;
+}
+
+
+/**
+ *
+ * Check whether to use the wysiwyg html editor or a plain textarea.
+ * @todo check user setting from db and browser capability
+ *
+ */
+function use_html_editor() {
+    return true;
+}
+
+
+/**
+ * Returns the list of site content pages
+ * @return array of names
+ */
+function site_content_pages() {
+    return array('about', 'home', 'loggedouthome', 'privacy', 'termsandconditions', 'uploadcopyright');
+}
+
+function get_site_page_content($pagename) {
+    if ($pagedata = @get_record('site_content', 'name', $pagename)) {
+        return $pagedata->content;
+    }
+    return get_string('sitecontentnotfound', 'mahara', get_string($pagename));
+}
+
+
+function redirect($location) {
+    if (headers_sent()) {
+        throw new Exception('Headers already sent when redirect() was called');
+    }
+    header('HTTP/1.1 303 See Other');
+    header('Location:' . $location);
+    exit;
+}
+
+/**
+ * Returns a string, HTML escaped
+ *
+ * @param string $text The text to escape
+ * @return string      The text, HTML escaped
+ */
+function hsc ($text) {
+    return htmlspecialchars($text, ENT_COMPAT, 'UTF-8');
+}
+
+function searchform() {
+    require_once('pieforms/pieform.php');
+    return pieform(array(
+        'name'                => 'searchform',
+        'action'              => get_config('wwwroot') . 'user/search.php',
+        'elements'            => array(
+            'query' => array(
+                'type'           => 'text',
+                'defaultvalue'   => '',
+            ),
+        )
+    ));
+}
+
+
 ?>

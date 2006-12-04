@@ -122,7 +122,9 @@ function template_validate_block($data, $name='') {
         throw new InvalidArgumentException("Type $type is not installed");
     }
     
+    require_once('artefact.php');
     safe_require('artefact', $plugin);
+
     if (!artefact_can_render_to($type, $format)) {
         throw new InvalidArgumentException("Type $type can't render to format $format");
     }
