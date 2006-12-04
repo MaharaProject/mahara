@@ -28,11 +28,6 @@ defined('INTERNAL') || die();
 define('TEMPLATE_RENDER_READONLY', 1);
 define('TEMPLATE_RENDER_EDITMODE', 2);
 
-define('FORMAT_ARTEFACT_LISTSELF', 'listself');
-define('FORMAT_ARTEFACT_LISTCHILDREN', 'listchildren');
-define('FORMAT_ARTEFACT_RENDERFULL', 'renderfull');
-define('FORMAT_ARTEFACT_RENDERMETADATA', 'rendermetadata');
-
 function template_parse($templatename) {
 
     $t = array();
@@ -122,7 +117,9 @@ function template_validate_block($data, $name='') {
         throw new InvalidArgumentException("Type $type is not installed");
     }
     
+    require_once('artefact.php');
     safe_require('artefact', $plugin);
+
     if (!artefact_can_render_to($type, $format)) {
         throw new InvalidArgumentException("Type $type can't render to format $format");
     }

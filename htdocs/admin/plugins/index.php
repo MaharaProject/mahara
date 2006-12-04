@@ -76,7 +76,7 @@ foreach (plugin_types()  as $plugin) {
             continue;
         }
         $plugins[$plugin]['notinstalled'][$dir] = array();
-        safe_require($plugin, $dir);
+        require_once('artefact.php');
         $funname = $plugin . '_check_plugin_sanity';
         if (function_exists($funname)) {
             try {

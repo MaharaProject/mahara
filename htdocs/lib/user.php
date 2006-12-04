@@ -168,4 +168,144 @@ function set_profile_field($userid, $field, $value) {
 
 }
 
+/** 
+ * Always use this function for all emails to users
+ * 
+ * @param object $userto user object to send email to. must contain firstname,lastname,preferredname,email
+ * @param object $userfrom user object to send email from. If null, email will come from mahara
+ * @param string $subject email subject
+ * @param string $messagetext text version of email
+ * @param string $messagehtml html version of email (will send both html and text)
+ * @throws EmailException
+ */ 
+function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='') {
+
+    if (empty($userto)) {
+        throw new InvalidArgumentException("empty user given to email_user");
+    }
+    
+    require_once('phpmailer/class.phpmailer.php');
+
+    $mail = new phpmailer();
+
+    $mail->Version = 'Mahara ' . get_config('release'); 
+    $mail->PluginDir = get_config('libroot')  . 'phpmailer/';
+    
+    $mail->CharSet = 'UTF-8';
+
+    $smtphosts = get_config('smtphosts');
+    if ($smtphosts == 'qmail') {
+        // use Qmail system
+        $mail->IsQmail();
+    } 
+    else if (empty($smtphosts)) {
+        // use PHP mail() = sendmail
+        $mail->IsMail();
+    }
+    else {
+        $mail->IsSMTP();
+        // use SMTP directly
+        $mail->Host = get_config('smtphosts');
+        if (get_config('smtpuser')) {
+            // Use SMTP authentication
+            $mail->SMTPAuth = true;
+            $mail->Username = get_config('smtpuser');
+            $mail->Password = get_config('smtppass');
+        }
+    }
+
+    if (empty($userfrom)) {
+        $mail->Sender = get_config('noreplyaddress');
+        $mail->From = $mail->Sender;
+        $mail->FromName = get_string('emailname');
+    }
+    else {
+        $mail->Sender = $userfrom->email;
+        $mail->From = $mail->Sender;
+        $mail->FromName = display_name($userfrom, $userto);
+    }
+           
+    $mail->AddReplyTo($mail->From, $mail->FromName);
+
+    $mail->Subject = substr(stripslashes($subject), 0, 78);
+
+    $usertoname = display_name($userto, $userto);
+    $mail->AddAddress($userto->email, $usertoname );
+
+    $mail->WordWrap = 79;   
+
+    if ($messagehtml) { 
+        $mail->IsHTML(true);
+        $mail->Encoding = 'quoted-printable';
+        $mail->Body    =  $messagehtml;
+        $mail->AltBody =  "\n$messagetext\n";
+    } 
+    else {
+        $mail->IsHTML(false);
+        $mail->Body =  "\n$messagetext\n";
+    }
+
+    if ($mail->Send()) {
+        return true;
+    } 
+    throw new EmailException("Couldn't send email to $usertoname with subject $subject. "
+                        . "Error from phpmailer was: " . $mail->ErrorInfo );
+}
+
+/**
+ * converts a user object to a string representation of the user suitable for
+ * the current user (or specified user) to see
+ *
+ * Both parameters should be objects containing id, preferredname, firstname,
+ * lastname, admin
+ *
+ * @param object the user that you're trying to format to a string
+ * @param object the user that is looking at the string representation (if left
+ * blank, will default to the currently logged in user).
+ *
+ * @returns string name to display
+ */
+function display_name($user, $userto=null) {
+    global $USER;
+    
+    if (empty($userto)) {
+        $userto = new StdClass;
+        $userto->id            = $USER->get('id');
+        $userto->preferredname = $USER->get('preferredname');
+        $userto->firstname     = $USER->get('firstname');
+        $userto->lastname      = $USER->get('lastname');
+        $userto->admin         = $USER->get('admin');
+    }
+    if (is_array($user)) {
+        $user = (object)$user;
+    }
+    else if (is_numeric($user)) {
+        $user = get_record('usr', 'id', $user);
+    }
+    if (!is_object($user)) {
+        throw new InvalidArgumentException("Invalid user passed to display_name");
+    }
+
+    // if they don't have a preferred name set, just return here
+    if (empty($user->preferredname)) {
+        return $user->firstname . ' ' . $user->lastname;
+    }
+
+    if ($userto->admin) {
+        return $user->preferredname . ' (' . $user->firstname . ' ' . $user->lastname . ')';
+    }
+
+    $prefix = get_config('dbprefix');
+    $sql = 'SELECT c1.member
+            FROM ' . $prefix . 'community_member c1 
+            JOIN  ' .$prefix. 'community_member c2
+                ON c1.community = c2.community 
+            WHERE c1.member = ? AND c2.member = ? AND c2.tutor = ?';
+    if (record_exists_sql($sql, array($user->id, $userto->id, 1))) {
+        return $user->preferredname . ' (' . $user->firstname . ' ' . $user->lastname . ')';
+    }
+    return  $user->preferredname;
+}
+
+
 ?>
