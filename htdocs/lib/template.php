@@ -28,11 +28,6 @@ defined('INTERNAL') || die();
 define('TEMPLATE_RENDER_READONLY', 1);
 define('TEMPLATE_RENDER_EDITMODE', 2);
 
-define('FORMAT_ARTEFACT_LISTSELF', 'listself');
-define('FORMAT_ARTEFACT_LISTCHILDREN', 'listchildren');
-define('FORMAT_ARTEFACT_RENDERFULL', 'renderfull');
-define('FORMAT_ARTEFACT_RENDERMETADATA', 'rendermetadata');
-
 function template_parse($templatename) {
 
     $t = array();

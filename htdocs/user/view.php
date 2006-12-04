@@ -63,7 +63,7 @@ else {
         }
         else {
             $c = new $classname(0, array('owner' => $userid)); // email is different
-            if ($value = $c->render(ARTEFACT_FORMAT_LISTITEM, null)) {
+            if ($value = $c->render(FORMAT_ARTEFACT_LISTSELF, array('link' => true))) {
                 $profile[$field] = $value;
             }
         }

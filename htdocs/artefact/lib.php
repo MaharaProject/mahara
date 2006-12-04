@@ -25,7 +25,7 @@
  */
 
 defined('INTERNAL') || die();
-
+require_once('artefact.php');
 
 /**
  * Base artefact plugin class
