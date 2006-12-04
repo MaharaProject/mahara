@@ -2,39 +2,67 @@
 
 <h2>{str tag=createviewstep3}</h2>
 
-<table border="1">
-    <tr>
-        <td><div id="tree">Artefact Tree</div></td>
-        <td>Template
-<form action="" method="post">
-    <input type="submit" name="cancel" value="{str tag=cancel}">
-    <input type="submit" name="back" value="{str tag=back}">
-    <input type="submit" name="submit" value="{str tag=next}">
-</form>
-        </td>
-    </tr>
-</table>
-        
+{literal}
+<style type="text/css">
+</style>
+{/literal}
+<div id="tree">Artefact Tree</div>
+<div id="template">
+    {$template}
+    <form action="" method="post">
+        <input type="submit" name="cancel" value="{str tag=cancel}">
+        <input type="submit" name="back" value="{str tag=back}">
+        <input type="submit" name="submit" value="{str tag=next}">
+    </form>
+</div>
 <script type="text/javascript">
 {$rootinfo}
 
 {literal}
 function treeItemFormat(data, tree) {
     var item = LI({'id': data.id});
+
     if (data.container) {
         var toggleLink = SPAN({'id': data.id + '_toggle'}, tree.getExpandLink(item));
         appendChildNodes(item, toggleLink, ' ');
     }
+
     if (!data.title) {
         data.title = '';
     }
+
     var title = SPAN({title: data.title}, data.text);
+
     appendChildNodes(item, title);
+
     forEach(tree.statevars, function(j) {
         if (typeof(data[j]) != 'undefined') {
             item.setAttribute(j, data[j]);
         }
     });
+
+    addElementClass(title, 'render_children');
+    new Draggable(title, {
+        'starteffect': function (element) {
+            element.oldParentNode  = element.parentNode;
+            element.oldNextSibling = element.nextSibling;
+            appendChildNodes('header', element)
+        },
+        'endeffect': function (element) {
+            if(element.oldNextSibling) {
+                insertSiblingNodesBefore(element.oldNextSibling, element)
+            }
+            else {
+                appendChildNodes(element.oldParentNode, element);
+            }
+        },
+        'reverteffect': function (element, top_offset, left_offset) {
+            return new MochiKit.Visual.Move(element, {x: -left_offset, y: -top_offset, duration: 0.0});
+        },
+        'ghosting': true,
+        'revert': true
+    });
+
     return item;
 }
 
@@ -45,8 +73,11 @@ tree.setFormatCallback(treeItemFormat);
 tree.statevars.push('pluginname');
 tree.statevars.push('parent');
 addLoadEvent(function () {
-    swapDOM('tree', tree.render());
+    appendChildNodes('tree', tree.render());
+    expandDownToViewport('tree', 300);
+    expandDownToViewport('template', getViewportDimensions().w - 350);
 });
+
 {/literal}
 </script>
 
