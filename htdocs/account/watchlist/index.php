@@ -34,12 +34,10 @@ $viewstring = get_string('views', 'activity');
 $communitystring = get_string('communities', 'activity');
 $artefactstring = get_string('artefacts', 'activity');
 $monitoredstring = get_string('monitored', 'activity');
+$allusersstring = get_string('allusers');
 
 $savefailed = get_string('stopmonitoringfailed', 'activity');
 $savesuccess = get_string('stopmonitoringsuccess', 'activity');
-
-$getartefactsjson = get_config('wwwroot') . 'json/getartefacts.php';
-
 
 $recursestr = '[<a href="" onClick="toggleChecked(\'tocheck-r\'); return false;">' 
     . get_string('recurseall', 'activity')
@@ -116,24 +114,71 @@ function stopmonitoring(form) {
     )
 }
 
-function typeChange(element) {
-    watchlist.doupdate({'type': element.options[element.selectedIndex].value}); 
-    changeTitle(element.options[element.selectedIndex].value); 
+function statusChange() {
+    var typevalue = $('type').options[$('type').selectedIndex].value;
+    var uservalue;
+    if ($('user').disabled == true) {
+        uservalue = undefined;
+    } 
+    else {
+        uservalue = getNodeAttribute($('user').options[$('user').selectedIndex], 'value');
+    }
+
+    if (uservalue) {
+        watchlist.doupdate({'type': typevalue, 'user': uservalue});
+    }
+    else {
+        watchlist.doupdate({'type': typevalue});
+    }
+    changeTitle(typevalue); 
     $('messagediv').innerHTML = '';
-    if (element.options[element.selectedIndex].value == 'communities') {
+    if (typevalue == 'communities') {
         $('recurseheader').innerHTML = '';
+        $('user').options.length = 0;
+        $('user').disabled = true;
     }
     else {
         $('recurseheader').innerHTML = '{$recursestrjs}';
+        var pd = {'userlist': typevalue};
+        var d = loadJSONDoc('index.json.php', pd);
+        d.addCallbacks(function (data) {
+            
+            var userSelect = $('user');
+            var newOptions = new Array()
+            var opt = OPTION(null, '{$allusersstring}');
+            if (!uservalue) {
+                opt.selected = true;
+            }
+            newOptions.push(opt);
+            forEach (data.message.users, function (u) {
+                var opt = OPTION({'value': u.id}, u.name);
+                if (uservalue == u.id) {
+                    opt.selected = true;
+                }
+                newOptions.push(opt);
+            });
+            userSelect.disabled = false;
+            replaceChildNodes(userSelect, newOptions);
+        });
     }
-
 }
 
 JAVASCRIPT;
 
+$prefix = get_config('prefix');
+$sql = 'SELECT DISTINCT u.* 
+        FROM ' . $prefix . 'usr u
+        JOIN ' . $prefix . 'view v ON v.owner = u.id 
+        JOIN ' . $prefix . 'usr_watchlist_view w ON w.view = v.id
+        WHERE w.usr = ?';
+
+if (!$viewusers = get_records_sql_array($sql, array($USER->get('id')))) {
+    $viewusers = array();
+}
+
 $smarty = smarty(array('tablerenderer'));
 $smarty->assign('site_menu', site_menu());
-$smarty->assign('typechange', 'typeChange(this);');
+$smarty->assign('viewusers', $viewusers);
 $smarty->assign('typestr', get_string('views', 'activity'));
 $smarty->assign('selectall', 'toggleChecked(\'tocheck\'); return false;');
 $smarty->assign('recursestr', $recursestr);

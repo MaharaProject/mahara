@@ -27,6 +27,8 @@
 define('INTERNAL', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
+//log_debug('myfiles.json.php');
+
 $limit = param_integer('limit', null);
 $offset = param_integer('offset', 0);
 $folder = param_integer('folder', null);
@@ -40,16 +42,21 @@ else {
 }
 
 $prefix = get_config('dbprefix');
-$filedata = get_records_sql_array('SELECT a.id, a.artefacttype, a.title, f.name, f.size
+$filedata = get_records_sql_array('SELECT a.id, a.artefacttype, a.mtime, f.name, f.size
         FROM ' . $prefix . 'artefact_file_files f
         INNER JOIN ' . $prefix . 'artefact a ON f.artefact = a.id
         WHERE a.owner = ' . $userid . '
-        AND a.parent' . $infolder, '');
+        AND a.parent' . $infolder . '
+        ORDER BY a.artefacttype DESC, f.name ASC', '');
 
 if (!$filedata) {
     $filedata = array();
 }
-
+else {
+    foreach ($filedata as $item) {
+        $item->mtime = strftime(get_string('strftimedatetime'),strtotime($item->mtime));
+    }
+}
 
 $result = array(
     'count'       => count($filedata),

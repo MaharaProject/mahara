@@ -25,6 +25,8 @@
  */
 
 defined('INTERNAL') || die();
+define('TEMPLATE_RENDER_READONLY', 1);
+define('TEMPLATE_RENDER_EDITMODE', 2);
 
 function template_parse($templatename) {
 
@@ -82,8 +84,47 @@ function template_parse_block($blockstr) {
     }
     // everything else can theoretically be optional....
 
+    template_validate_block($data, '');
+    template_validate_block($data, 'default');
+
     return $data;
         
+}
+
+function template_validate_block($data, $name='') {
+    
+    $type = isset($data[$name . 'type']) ? $data[$name . 'type'] : '';
+    $format = isset($data[$name . 'format']) ? $data[$name . 'format'] : '';
+    
+    if (!empty($type)) {
+        if (empty($format)) {
+            throw new InvalidArgumentException("Cannot specify {$name}type without ($name}format");
+        }
+    }
+    
+    if (!empty($format) && $format != 'label') {
+        if (empty($type)) {
+            throw new InvalidArgumentException("Cannot specify {$name}format without {$name}type");
+        }
+    }
+        
+    if ((empty($format) && empty($type)) || $format == 'label') { // labels are special cases
+        return true;
+    }
+        
+    // figure out what plugin handles this type and validate the class exists.
+    if (!$plugin = get_field('artefact_installed_type', 'plugin', 'name', $type)) {
+        throw new InvalidArgumentException("{$name}type $type is not installed");
+    }
+    
+    require_once('artefact.php');
+    safe_require('artefact', $plugin);
+
+    if (!artefact_can_render_to($type, $format)) {
+        throw new InvalidArgumentException("{$name}type $type can't render to {$name}format $format");
+    }
+    
+    // @todo validate resizing stuff
 }
 
 function template_locate($templatename, $fetchdb=true) {
@@ -143,5 +184,23 @@ function template_locate($templatename, $fetchdb=true) {
     throw new InvalidArgumentException("Invalid template name $templatename, couldn't find");
 }
 
+/**
+ * renders a template in either edit mode or read only mode
+ *
+ * @param array $template a parsed template see {@link template_parse}
+ * @param mode either TEMPLATE_RENDER_READONLY or TEMPLATE_RENDER_EDITMODE
+ */
+function template_render($template, $mode) {
+    $td = $template['parseddata'];
+    foreach ($td as $t) {
+        if ($t['type'] == 'html') {
+            echo $t['content'];
+        }
+        else {
+            // @todo call something depending on mode
+            
+        }
+    }
+}
 
 ?>

@@ -4,9 +4,15 @@
 <div class="content">
     <h2>{str section="artefact.file" tag="myfiles"}</h2>
     <div id="uploader"></div>
+    <div id="foldernav"></div>
     <table id="filelist">
-        <thead><tr><td></td></tr></thead>
-        <tbody><tr><td></td></tr></tbody>
+        <thead><tr>
+            <th>Name</th>
+            <th>Size</th>
+            <th>Time</th>
+            <th></th>
+        </tr></thead>
+        <tbody><tr><th></th></tr></tbody>
     </table>
 </div>
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * This program is part of Pieforms
+ * This program is part of Mahara
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -16,29 +16,32 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
- * @package    pieform
- * @subpackage rule
- * @author     Nigel McNie <nigel@catalyst.net.nz>
+ * @package    mahara
+ * @subpackage artefact-blog
+ * @author     Alastair Pharo <alastair@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
-/**
- * Returns whether the given field is a valid e-mail address.
- *
- * Currently, the check is [anything]@[anything]. Someone is welcome to write
- * something better, this was made just for testing.
- *
- * @param Pieform $form  The form the rule is being applied to
- * @param string  $value The e-mail address to check
- * @return string        The error message, if there is something wrong with
- *                       the address.
- */
-function pieform_rule_email(Pieform $form, $value) {
-    if (!preg_match('/^[a-z0-9\._%-]+@(?:[a-z0-9-]+\.)+[a-z]{2,4}$/', $value)) {
-        return $form->i18n('email');
-    }
-}
+define('INTERNAL', 1);
+
+require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
+safe_require('artefact', 'blog');
+
+json_headers();
+
+$id = param_integer('id');
+$limit = param_integer('limit', ArtefactTypeBlogPost::pagination);
+$offset = param_integer('offset', 0);
+
+list($count, $data) = ArtefactTypeBlogPost::get_posts($USER, $id, $limit, $offset);
+
+echo json_encode(array(
+    'count' => $count,
+    'limit' => $limit,
+    'offset' => $offset,
+    'data' => $data
+));
 
 ?>

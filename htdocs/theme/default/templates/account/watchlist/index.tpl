@@ -11,10 +11,17 @@ class="cnr-bl"><span class="cnr-br">
 <h2>{str tag="watchlist"}</h2>
 <form method="post">
 {str tag='filter'}:
-<select name="type" onChange="{$typechange}">
+<select id="type" name="type" onChange="statusChange(); return false;">
     <option value="views">{str section='activity' tag='views'}</option>
     <option value="artefacts">{str section='activity' tag='artefacts'}</option>
     <option value="communities">{str section='activity' tag='communities'}</option>
+</select>
+{str tag='belongingto'}:
+<select id="user" name="user" onChange="statusChange(); return false;">
+    <option>{str tag='allusers'}</option>
+{foreach from=$viewusers item='user}
+    <option value="{$user->id}">{display_name user=$user}</option>
+{/foreach}
 </select>
 </form>
 <p><b><div id="typeheader">{str section='activity' tag='monitored'} {$typestr}</div></b></p>

@@ -48,11 +48,13 @@ $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.
 
 if ($viewdata) {
     $viewidlist = implode(', ', array_map(create_function('$a', 'return $a->id;'), $viewdata));
-    $artefacts = get_records_sql_array('SELECT va.view, va.artefact, a.title, a.artefacttype
+    $artefacts = get_records_sql_array('SELECT va.view, va.artefact, a.title, a.artefacttype, t.plugin
         FROM ' . $prefix . 'view_artefact va
         INNER JOIN ' . $prefix . 'artefact a ON va.artefact = a.id
+        INNER JOIN ' . $prefix . 'artefact_installed_type t ON a.artefacttype = t.name
         WHERE va.view IN (' . $viewidlist . ')', '');
 }
+
 
 $data = array();
 if ($viewdata) {
@@ -73,12 +75,12 @@ if ($viewdata) {
     // Go through all the artefact records and put them in with the
     // views they belong to.
     if ($artefacts) {
-        safe_require('artefact', 'internal');
         foreach ($artefacts as $artefactrec) {
+            safe_require('artefact', $artefactrec->plugin);
             // We have to construct the entire artefact object to render the name properly.
             $classname = generate_artefact_class_name($artefactrec->artefacttype);
             $artefactobj = new $classname($artefactrec->artefact, array('title' => $artefactrec->title));
-            $artname = $artefactobj->render(ARTEFACT_FORMAT_NAME, null);
+            $artname = $artefactobj->render(FORMAT_ARTEFACT_LISTSELF, array('link' => false));
             $data[$index[$artefactrec->view]]['artefacts'][] = array('id'    => $artefactrec->artefact,
                                                                      'title' => $artname);
             //$data[$index[$artefactrec->view]]['artefacts'][] = array('id'    => $artefactrec->artefact,
@@ -86,6 +88,7 @@ if ($viewdata) {
         }
     }
 }
+
 
 /* Get a list of communities that the user belongs to which also have
    a tutor member.  This is the list of communities that the user is
@@ -107,6 +110,7 @@ $result = array(
     'data'        => $data,
     'communities' => $tutorcommunitydata,
 );
+
 
 json_headers();
 print json_encode($result);

@@ -25,9 +25,7 @@
  */
 
 defined('INTERNAL') || die();
-define('ARTEFACT_FORMAT_LISTITEM', 1);
-define('ARTEFACT_FORMAT_NAME', 2);
-
+require_once('artefact.php');
 
 /**
  * Base artefact plugin class
@@ -419,13 +417,6 @@ abstract class ArtefactType {
      */
     public static abstract function get_render_list();
 
-    /**
-     * returns boolean for can render to given format
-     * @abstract
-     */
-    public static abstract function can_render_to($format);
-
-
     // ******************** HELPER FUNCTIONS ******************** //
 
     protected function get_artefact_type() {
@@ -453,25 +444,4 @@ abstract class ArtefactType {
     }
 }
 
-// helper functions for artefacts in general
-
-function artefact_check_plugin_sanity($pluginname) {
-    $classname = generate_class_name('artefact', $pluginname);
-    safe_require('artefact', $pluginname);
-    $types = call_static_method($classname, 'get_artefact_types');
-    foreach ($types as $type) {
-        $typeclassname = generate_artefact_class_name($type);
-        if (get_config('installed')) {
-            if ($taken = get_record_select('artefact_installed_type', 'name = ? AND plugin != ?', 
-                                           array($type, $pluginname))) {
-                throw new InstallationException("type $type is already taken by another plugin (" . $taken->plugin . ")");
-            }
-        }
-        if (!class_exists($typeclassname)) {
-            throw new InstallationException("class $typeclassname for type $type in plugin $pluginname was missing");
-        }
-    }
-}
-
-        
 ?>

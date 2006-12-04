@@ -17,36 +17,50 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage artefact-file
- * @author     Richard Mansfield <richard.mansfield@catalyst.net.nz>
+ * @subpackage artefact-blog
+ * @author     Alastair Pharo <alastair@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'myfiles');
-require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-safe_require('artefact', 'file');
+define('MENUITEM', 'myblogs');
 
-$strings = array('cancel', 'delete', 'description', 'edit', 'editfile', 'editfolder', 'home', 'name', 'nofilesfound', 'savechanges');
-$getstring = array();
-foreach ($strings as $string) {
-    $getstring[$string] = "'" . get_string($string) . "'";
-}
+require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
+safe_require('artefact', 'blog');
 
-$javascript = <<<JAVASCRIPT
+$id = param_integer('id');
+$enc_id = json_encode($id);
 
-var browser = new FileBrowser('filelist');
-var uploader = new FileUploader('uploader');
-uploader.uploadcallback = browser.refresh;
-browser.changedircallback = uploader.updatedestination;
+$js = <<<EOJAVASCRIPT
 
-JAVASCRIPT;
+var postlist = new TableRenderer(
+    'postlist',
+    'index.json.php',
+    [undefined]
+);
+
+postlist.rowfunction = function(d, n, gd) {
+    return [
+      TR(null, TD(null, d.title)),
+      TR(null, TD(null, d.description)),
+      TR(null, TD(null, d.ctime))
+    ];
+};
+postlist.statevars.push('id');
+postlist.id = {$enc_id};
+
+postlist.updateOnLoad();
+
+EOJAVASCRIPT;
 
 
-$smarty = smarty(array('tablerenderer', 'artefact/file/js/filebrowser.js', 'fileuploader'));
-$smarty->assign('INLINEJAVASCRIPT', $javascript);
-$smarty->display('artefact:file:index.tpl');
+$blog = new ArtefactTypeBlog($id);
+
+$smarty = smarty(array('tablerenderer'));
+$smarty->assign_by_ref('blog', $blog);
+$smarty->assign_by_ref('INLINEJAVASCRIPT', $js);
+$smarty->display('artefact:blog:view.tpl');
 
 ?>

@@ -5,7 +5,7 @@
 class="cnr-bl"><span class="cnr-br">
 	<div class="maincontent">
 	
-<h2>CreateViewStep3</h2>
+<h2>{str tag=createviewstep3}</h2>
 
 <table border="1">
     <tr>

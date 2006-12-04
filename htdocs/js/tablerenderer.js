@@ -89,7 +89,7 @@ function TableRenderer(target, source, columns, options) {
         if (self.emptycontent) {
             var newelement = DIV(null,self.emptycontent);
             hideElement(newelement);
-            $(self.table).parentNode.insertBefore(newelement,$(self.table));
+            insertSiblingNodesBefore(self.table, newelement);
         }
     };
 
@@ -193,7 +193,7 @@ function TableRenderer(target, source, columns, options) {
 
                 if (self.emptycontent) {
                     if (self.count > 0) {
-                        hideElement($(self.table).previousSibling)
+                        hideElement($(self.table).previousSibling);
                         showElement(self.table);
                     }
                     else {

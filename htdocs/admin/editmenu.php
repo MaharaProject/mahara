@@ -193,7 +193,7 @@ function edititem(item) {
     var menuitem = $('menuitem_'+item.id);
     addElementClass(menuitem,'invisible');
     var newrow = editform(item);
-    menuitem.parentNode.insertBefore(newrow,menuitem);
+    insertSiblingNodesBefore(menuitem, newrow);
 }
 
 // Receive standard json error message

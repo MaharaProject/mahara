@@ -17,36 +17,46 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage artefact-file
- * @author     Richard Mansfield <richard.mansfield@catalyst.net.nz>
+ * @subpackage artefact-blog
+ * @author     Alastair Pharo <alastair@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'myfiles');
-require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-safe_require('artefact', 'file');
+define('MENUITEM', 'myblogs');
 
-$strings = array('cancel', 'delete', 'description', 'edit', 'editfile', 'editfolder', 'home', 'name', 'nofilesfound', 'savechanges');
-$getstring = array();
-foreach ($strings as $string) {
-    $getstring[$string] = "'" . get_string($string) . "'";
-}
+require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
+safe_require('artefact', 'blog');
 
-$javascript = <<<JAVASCRIPT
+// This is the wwwroot.
+$wwwroot = get_config('wwwroot');
 
-var browser = new FileBrowser('filelist');
-var uploader = new FileUploader('uploader');
-uploader.uploadcallback = browser.refresh;
-browser.changedircallback = uploader.updatedestination;
+// This JavaScript creates a table to display the blog entries.
+$js = <<<EOJAVASCRIPT
 
-JAVASCRIPT;
+var bloglist = new TableRenderer(
+    'bloglist',
+    'index.json.php',
+    [
+        function(r) {
+            return TD(
+              null,
+              A({'href':'{$wwwroot}/artefact/blog/view/?id=' + r.id}, r.title)
+            );
+        },
+        'description'
+    ]
+);
 
+bloglist.updateOnLoad();
 
-$smarty = smarty(array('tablerenderer', 'artefact/file/js/filebrowser.js', 'fileuploader'));
-$smarty->assign('INLINEJAVASCRIPT', $javascript);
-$smarty->display('artefact:file:index.tpl');
+EOJAVASCRIPT;
+
+$smarty = smarty(array('tablerenderer'));
+$smarty->assign_by_ref('INLINEJAVASCRIPT', $js);
+$smarty->assign_by_ref('blogs', $blogs);
+$smarty->display('artefact:blog:list.tpl');
 
 ?>
