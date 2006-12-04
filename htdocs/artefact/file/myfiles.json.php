@@ -67,7 +67,7 @@ $result = array(
     'message'     => get_string('filelistloaded'),
 );
 
-//log_debug($result);
+log_debug($result);
 
 json_headers();
 print json_encode($result);

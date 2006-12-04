@@ -38,9 +38,9 @@ foreach ($strings as $string) {
 $javascript = <<<JAVASCRIPT
 
 var browser = new FileBrowser('filelist');
-alert('browser');
-var uploader = new FileUploader('uploader', 'upload.json.php', filelist.doupdate);
-
+var uploader = new FileUploader('uploader');
+uploader.uploadcallback = browser.refresh;
+browser.changedircallback = uploader.updatedestination;
 
 JAVASCRIPT;
 
