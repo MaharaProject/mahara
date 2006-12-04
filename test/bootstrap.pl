@@ -73,7 +73,6 @@ my $components = /var todo = \[(".*",?)+\]/s;
 my @things = split(/","/, substr($1, 1, -1));
 for my $thing (@things) {
     debug("Installing $thing...");
-    # @todo check for errors
     $m->get($CFG->{url} . 'admin/upgrade.json.php?name=' . $thing);
     $json_response = my_jsonToObj($m->content());
     unless ( $json_response->{success} ) {
