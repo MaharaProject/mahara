@@ -86,7 +86,8 @@ class ArtefactTypeFolder extends ArtefactType {
     }
 
     public static function get_render_list() {
-
+        return array(FORMAT_ARTEFACT_LISTSELF, FORMAT_ARTEFACT_LISTCHILDREN,
+                     FORMAT_ARTEFACT_RENDERFULL, FORMAT_ARTEFACT_RENDERMETADATA);
     }
     
     public static function collapse_config() {
