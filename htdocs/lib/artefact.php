@@ -27,6 +27,12 @@
 defined('INTERNAL') || die();
 
 
+define('FORMAT_ARTEFACT_LISTSELF', 'listself');
+define('FORMAT_ARTEFACT_LISTCHILDREN', 'listchildren');
+define('FORMAT_ARTEFACT_RENDERFULL', 'renderfull');
+define('FORMAT_ARTEFACT_RENDERMETADATA', 'rendermetadata');
+
+
 /**
  * Given an artefact plugin name, this function will test if 
  * it's installable or not.  If not, InstallationException will be thrown.
