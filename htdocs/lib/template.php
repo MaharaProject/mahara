@@ -194,18 +194,35 @@ function template_locate($templatename, $fetchdb=true) {
  *
  * @param array $template a parsed template see {@link template_parse}
  * @param mode either TEMPLATE_RENDER_READONLY or TEMPLATE_RENDER_EDITMODE
+ * @param array 
+ *
+ * @returns string the html of the rendered template
  */
-function template_render($template, $mode) {
-    $td = $template['parseddata'];
+function template_render($template, $mode, $data=array()) {
+    if (isset($template['parseddata'])) {
+        $td = $template['parseddata'];
+    }
+    else {
+        $td = $template['cacheddata'];
+    }
+
+    $html = '';
+
     foreach ($td as $t) {
         if ($t['type'] == 'html') {
-            echo $t['content'];
+            $html .= $t['content'];
         }
         else {
-            // @todo call something depending on mode
-            
+            if ($mode == TEMPLATE_RENDER_READONLY) {
+                $html .= '<pre>' . print_r($t, true) . '</pre>';
+            }
+            else {
+                $html .= 'EDITBLOCK HERE';
+            }
         }
     }
+
+    return $html;
 }
 
 ?>
