@@ -114,7 +114,7 @@ class ArtefactTypeProfile extends ArtefactType {
     }
 
     public function render($format, $options) {
-        if (($format == ARTEFACT_FORMAT_LISTITEM || $format == ARTEFACT_FORMAT_NAME) && $this->title) {
+        if ($format == FORMAT_ARTEFACT_LISTSELF && $this->title) {
             return $this->title;
         }
         return false;
@@ -392,10 +392,10 @@ class ArtefactTypeStudentid extends ArtefactTypeProfileField {}
 class ArtefactTypeIntroduction extends ArtefactTypeProfileField {}
 class ArtefactTypeWebAddress extends ArtefactTypeProfileField {
     public function render($format, $options) {
-        if ($format == ARTEFACT_FORMAT_LISTITEM && $this->title) {
-            return make_link($this->title);
-        }
-        if ($format == ARTEFACT_FORMAT_NAME && $this->title) {
+        if ($format == FORMAT_ARTEFACT_LISTSELF && $this->title) {
+            if ($options['link'] == true) {
+                return make_link($this->title);
+            }
             return $this->title;
         }
         return false;
@@ -409,7 +409,7 @@ class ArtefactTypeTown extends ArtefactTypeProfileField {}
 class ArtefactTypeCity extends ArtefactTypeProfileField {}
 class ArtefactTypeCountry extends ArtefactTypeProfileField {
     public function render($format, $options) {
-        if (($format == ARTEFACT_FORMAT_LISTITEM || $format == ARTEFACT_FORMAT_NAME) && $this->title) {
+        if ($format == FORMAT_ARTEFACT_LISTSELF && $this->title) {
             $countries = getoptions_country();
             return $countries[$this->title];
         }
