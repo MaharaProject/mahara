@@ -46,7 +46,7 @@ class PluginArtefactBlog extends PluginArtefact {
         return array(
             array(
                 'name' => 'myblogs',
-                'link' => 'blogs/',
+                'link' => 'list/',
             )
         );
     }
@@ -61,13 +61,35 @@ class PluginArtefactBlog extends PluginArtefact {
  */
 class ArtefactTypeBlog extends ArtefactType {
 
+    /**
+     * This constant gives the per-page pagination for listing blogs.
+     */
+    const pagination = 10;
+    
+
+    /**
+     * Just the basic commit.
+     */
     public function commit() {
+        $this->commit_basic();
     }
 
+    /**
+     * Just the basic delete.  FIXME - needs to delete posts too.
+     */
     public function delete() {
+        $this->delete_basic();
     }
 
+    /** 
+     * FIXME - Not sure about this.  It is copied entirely from
+     * ArtefactTypeProfile
+     */
     public function render($format, $options) {
+        if ($format == ARTEFACT_FORMAT_LISTITEM && $this->title) {
+            return $this->title;
+        }
+        return false;
     }
 
     public function get_icon() {
@@ -76,10 +98,42 @@ class ArtefactTypeBlog extends ArtefactType {
     public static function get_render_list() {
     }
 
-    public static function can_render_to($format) {
+    public static function collapse_config() {
     }
 
-    public static function collapse_config() {
+    /**
+     * This function returns a list of the given user's blogs.
+     *
+     * @param User
+     * @return array (count: integer, data: array)
+     */
+    public static function get_blog_list(User $user, $limit = self::pagination, $offset = 0) {
+        ($result = get_records_sql_array("
+         SELECT id, title, description
+         FROM " . get_config('dbprefix') . "artefact
+         WHERE owner = ?
+          AND artefacttype = 'blog'
+         ORDER BY title
+         LIMIT ? OFFSET ?", array($user->get('id'), $limit, $offset)))
+            || ($result = array());
+
+        $count = (int)get_field('artefact', 'COUNT(*)', 'owner', $user->get('id'), 'artefacttype', 'blog');
+
+        return array($count, $result);
+    }
+
+    /**
+     * This function creates a new blog.
+     *
+     * @param User
+     * @param array
+     */
+    public static function new_blog(User $user, $values) {
+        $artefact = new ArtefactTypeBlog();
+        $artefact->set('title', $values['title']);
+        $artefact->set('description', $values['description']);
+        $artefact->set('owner', $user->get('id'));
+        $artefact->commit();
     }
 }
 
@@ -88,7 +142,14 @@ class ArtefactTypeBlog extends ArtefactType {
  */
 class ArtefactTypeBlogPost extends ArtefactType {
 
+    /**
+     * This gives the number of blog posts to display at a time.
+     */
+    const pagination = 10;
+
+
     public function commit() {
+        $this->commit_basic();
     }
 
     public function delete() {
@@ -103,9 +164,50 @@ class ArtefactTypeBlogPost extends ArtefactType {
     public static function get_render_list() {
     }
 
-    public static function can_render_to($format) {
+    public static function collapse_config() {
     }
 
-    public static function collapse_config() {
+    /**
+     * This function returns a list of the current user's blog posts, for the
+     * given blog.
+     *
+     * @param User
+     * @param integer
+     * @param integer
+     */
+    public static function get_posts(User $user, $id, $limit = self::pagination, $offset = 0) {
+        ($result = get_records_sql_array("
+         SELECT id, title, description, ctime, mtime
+         FROM " . get_config('dbprefix') . "artefact
+         WHERE parent = ?
+          AND artefacttype = 'blogpost'
+          AND owner = ?
+         ORDER BY ctime DESC
+         LIMIT ? OFFSET ?;", array(
+            $id,
+            $user->get('id'),
+            $limit,
+            $offset
+        )))
+            || ($result = array());
+
+        $count = (int)get_field('artefact', 'COUNT(*)', 'owner', $user->get('id'), 'artefacttype', 'blogpost', 'parent', $id);
+
+        return array($count, $result);
+    }
+
+    /**
+     * This function creates a new blog post.
+     *
+     * @param User
+     * @param array
+     */
+    public static function new_post(User $user, array $values) {
+        $artefact = new ArtefactTypeBlogPost();
+        $artefact->set('title', $values['title']);
+        $artefact->set('description', $values['description']);
+        $artefact->set('owner', $user->get('id'));
+        $artefact->set('parent', $values['id']);
+        $artefact->commit();
     }
 }
