@@ -25,8 +25,6 @@
  */
 
 defined('INTERNAL') || die();
-define('ARTEFACT_FORMAT_LISTITEM', 1);
-define('ARTEFACT_FORMAT_NAME', 2);
 
 
 /**
@@ -418,13 +416,6 @@ abstract class ArtefactType {
      * @abstract
      */
     public static abstract function get_render_list();
-
-    /**
-     * returns boolean for can render to given format
-     * @abstract
-     */
-    public static abstract function can_render_to($format);
-
 
     // ******************** HELPER FUNCTIONS ******************** //
 
