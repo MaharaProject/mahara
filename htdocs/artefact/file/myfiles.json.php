@@ -46,8 +46,7 @@ $filedata = get_records_sql_array('SELECT a.id, a.artefacttype, a.mtime, f.size,
         FROM ' . $prefix . 'artefact a
         INNER JOIN ' . $prefix . 'artefact_file_files f ON f.artefact = a.id
         WHERE a.owner = ' . $userid . '
-        AND a.parent' . $infolder . '
-        ORDER BY a.artefacttype DESC', '');
+        AND a.parent' . $infolder, '');
 
 if (!$filedata) {
     $filedata = array();
@@ -57,6 +56,13 @@ else {
         $item->mtime = strftime(get_string('strftimedatetime'),strtotime($item->mtime));
     }
 }
+
+// Sort folders before files; then use nat sort order on title.
+function fileobjcmp ($a, $b) {
+    return strnatcasecmp(($a->artefacttype == 'folder') . $a->title,
+                         ($b->artefacttype == 'folder') . $b->title);
+}
+usort($filedata, "fileobjcmp");
 
 $result = array(
     'count'       => count($filedata),

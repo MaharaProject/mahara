@@ -70,14 +70,6 @@ class PluginArtefactFile extends PluginArtefact {
 
 class ArtefactTypeFileBase extends ArtefactType {
 
-    public function commit() {
-        $this->commit_basic();
-    }
-    
-    public function delete() {
-        $this->delete_basic();
-    }
-
     public function render($format, $options) {
         if ($format == FORMAT_ARTEFACT_LISTSELF) {
             return $this->title;

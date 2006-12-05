@@ -98,6 +98,7 @@ abstract class ArtefactType {
     
     protected $dirty;
     protected $parentdirty;
+    protected $deleted = false;
     protected $id;
     protected $artefacttype;
     protected $owner;
@@ -306,8 +307,15 @@ abstract class ArtefactType {
     /**
      * Artefact destructor. Calls commit and marks the
      * artefact cache as dirty if necessary.
+     *
+     * A special case is when the object has just been deleted.  In this case,
+     * we do nothing.
      */
     public function __destruct() {
+        if ($this->deleted) {
+            return;
+        }
+      
         if (!empty($this->dirty)) {
             $this->commit();
         }
@@ -329,12 +337,11 @@ abstract class ArtefactType {
     }
 
     /** 
-     * As commit is abstract, subclasses
-     * can use this as a helper to update
-     * the contents of the artefact table
+     * This method updates the contents of the artefact table only.  If your
+     * artefact has extra information in other tables, you need to override
+     * this method, and call parent::commit() in your own function.
      */
-    
-    protected function commit_basic() {
+    public function commit() {
         if (empty($this->dirty)) {
             return;
         }
@@ -352,37 +359,43 @@ abstract class ArtefactType {
             update_record('artefact', $fordb, 'id');
         }
         $this->dirty = false;
+        $this->deleted = false;
     }
-
-
-    /**
-     * Saves any changes to the database
-     * for basic commits, use {@link commit_basic}
-     * @abstract
-     */
-    public abstract function commit();
-    
 
     /** 
-     * As delete is abstract, subclasses
-     * can use this to clear out the artefact
-     * table and set the parentdirty flag
+     * This function provides basic delete functionality.  It gets rid of the
+     * artefact's row in the artefact table, and the tables that reference the
+     * artefact table.  It also recursively deletes child artefacts.
+     *
+     * If your artefact has additional data in another table, you should
+     * override this function, but you MUST call parent::delete() after you
+     * have done your own thing.
      */
+    public function delete() {
+        if (empty($this->id)) {
+            return;
+        }
+      
+        // Call delete() on children (if there are any)
+        if ($children = $this->get_children_instances()) {
+            foreach ($children as $child) {
+                $child->delete();
+            }
+        }
 
-    protected function delete_basic() {
+        // Delete any references to this artefact from non-artefact places.
+        delete_records_select('artefact_parent_cache', 'artefact = ? OR parent = ?', array($this->id, $this->id));
+        delete_records('view_artefact', 'artefact', $this->id);
+        delete_records('usr_watchlist_artefact', 'artefact', $this->id);
+      
+        // Delete the record itself.
         delete_records('artefact', 'id', $this->id);
+        
+        // Set flags.
         $this->dirty = false;
         $this->parentdirty = true;
+        $this->deleted = true;
     }
-
-    /**
-     * Deletes current instance
-     * you MUST set $this->parentdirty to true
-     * when delete is called.
-     * for basic delete, use {@link delete_basic}
-     * @abstract
-     */
-    public abstract function delete();
 
     /**
      * render instance to given format
