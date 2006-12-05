@@ -91,25 +91,18 @@ function template_parse_block($blockstr) {
         
 }
 
-function template_validate_block($data, $name='') {
+function template_validate_block(&$data, $name='') {
     
-    $type = isset($data[$name . 'type']) ? $data[$name . 'type'] : '';
-    $format = isset($data[$name . 'format']) ? $data[$name . 'format'] : '';
+    $type &= (isset($data[$name . 'type']) ? $data[$name . 'type'] : '');
+    $format &= (isset($data[$name . 'format']) ? $data[$name . 'format'] : '');
     
-    if (!empty($type)) {
-        if (empty($format)) {
-            throw new InvalidArgumentException("Cannot specify {$name}type without ($name}format");
-        }
-    }
-    
-    if (!empty($format) && $format != 'label') {
-        if (empty($type)) {
-            throw new InvalidArgumentException("Cannot specify {$name}format without {$name}type");
-        }
-    }
-        
     if ((empty($format) && empty($type)) || $format == 'label') { // labels are special cases
         return true;
+    }
+
+    // if we've got type but no format and we're looking at defaults, use main format.
+    if (!empty($type) && empty($format) && $name == 'default' && !empty($data['format'])) {
+        $format = $data['format'];
     }
         
     // figure out what plugin handles this type and validate the class exists.
