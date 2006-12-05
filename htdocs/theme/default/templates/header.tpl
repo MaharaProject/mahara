@@ -16,10 +16,11 @@
         {/strip}
         <link rel="stylesheet" type="text/css" href="{$THEMEURL}style/style.css">
         <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
-        {if $LOGGEDIN}<noscript><meta http-equiv="refresh" content="0; {$WWWROOT}?logout"></noscript>{/if}
     </head>
     <body>
 	<div id="container">
+				<div id="loading_box" style="display:none">
+				</div>
 		<div id="topwrapper">
 {if $LOGGEDIN}
 			<div id="globalTabs"><ul>
@@ -35,7 +36,6 @@
 {/if}
 			<div id="header">
 				<div class="cornertopright"><img src="{image_path imagelocation='images/header_corner_topright.gif'}" border="0"></div>
-				<div style="position: absolute; background-color: red; color: white;" id="loading_box"></div>
 				<div class="logo"><a href="{$WWWROOT}"><img src="{image_path imagelocation='images/logo.gif'}" border="0"></a></div>
 				<h1 class="hiddenStructure"><a href="{$WWWROOT}">{$heading|default:"Mahara"|escape}</a></h1>
 				
@@ -54,7 +54,7 @@
 {/foreach}
         </ul>
     {if $MAINNAVSELECTED.submenu}
-        <ul id="subnav">
+        <ul id="subnav"><span class="subnav-left"><img src="{image_path imagelocation='images/subnavbg_left_arrow.gif'}" border="0"></span><span class="subnav-right"><img src="{image_path imagelocation='images/subnavbg_right.gif'}" border="0"></span>
         {foreach from=$MAINNAVSELECTED.submenu item=item}
         {if $item.selected}{assign var=MAINNAVSELECTED value=$item}
             <li class="selected"><a href="{$item.link|escape}">{str section=$item.section tag=$item.name}</a></li>
@@ -67,3 +67,4 @@
 {/if}
         {insert name="messages"}
 		
+	
