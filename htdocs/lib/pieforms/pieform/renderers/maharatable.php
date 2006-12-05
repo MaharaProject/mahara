@@ -70,7 +70,7 @@ function pieform_renderer_maharatable(Pieform $form, $builtelement, $rawelement)
             $result .= '<label for="' . $rawelement['id'] . '">' . Pieform::hsc($rawelement['title']) . '</label>';
         }
     }
-    $result .= "</th>\n\t\t<td>";
+    $result .= "</th>\n\t</tr>\n\t<tr>\t<td>";
     $result .= $builtelement;
 
     // Contextual help
@@ -85,13 +85,13 @@ function pieform_renderer_maharatable(Pieform $form, $builtelement, $rawelement)
     // Description - optional description of the element, or other note that should be visible
     // on the form itself (without the user having to hover over contextual help 
     if (!empty($rawelement['description'])) {
-        $result .= "\t<tr>\n\t\t<td colspan=\"2\" class=\"description\">";
+        $result .= "\t<tr>\n\t\t<td class=\"description\">";
         $result .= $rawelement['description'];
         $result .= "</td>\n\t</tr>\n";
     }
 
     if (!empty($rawelement['error'])) {
-        $result .= "\t<tr>\n\t\t<td colspan=\"2\" class=\"errmsg\">";
+        $result .= "\t<tr>\n\t\t<td class=\"errmsg\">";
         $result .= $rawelement['error'];
         $result .= "</td>\n\t</tr>\n";
     }
