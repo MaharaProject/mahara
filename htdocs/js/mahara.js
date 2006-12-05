@@ -254,3 +254,15 @@ function toggleChecked(c) {
     return false;
 
 }
+
+function expandDownToViewport(element, width) {
+    var viewport = getViewportDimensions();
+    var position = getElementPosition(element);
+    var newheight = new Dimensions(width, viewport.h - position.y - 2);
+
+    if ($('footer')) {
+        newheight.h -= getElementDimensions('footer').h + 8;
+    }
+
+    setElementDimensions(element, newheight);
+}

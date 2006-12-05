@@ -182,18 +182,89 @@ function template_locate($templatename, $fetchdb=true) {
  *
  * @param array $template a parsed template see {@link template_parse}
  * @param mode either TEMPLATE_RENDER_READONLY or TEMPLATE_RENDER_EDITMODE
+ * @param array 
+ *
+ * @returns string the html of the rendered template
  */
-function template_render($template, $mode) {
-    $td = $template['parseddata'];
+function template_render($template, $mode, $data=array()) {
+    if (isset($template['parseddata'])) {
+        $td = $template['parseddata'];
+    }
+    else {
+        $td = $template['cacheddata'];
+    }
+
+    $droplist = array();
+    $html = '';
+
     foreach ($td as $t) {
         if ($t['type'] == 'html') {
-            echo $t['content'];
+            $html .= $t['content'];
         }
         else {
-            // @todo call something depending on mode
-            
+            if ($mode == TEMPLATE_RENDER_READONLY) {
+                $html .= 'READONLY';
+            }
+            else {
+                $t = $t['data'];
+
+                if ( isset($t['format']) && $t['format'] == 'label' ) {
+                    $html .= '<input type="hidden" id=>';
+                }
+                else {
+                    log_debug($t);
+                    $classes = array('block');
+
+                    #if ( $t['format'] == '
+                    $droplist[$t['id']] = array('render_full');
+
+                    // build opening div tag
+                    if (isset($t['width']) && isset($t['height'])) {
+                        $html .= '<div style="width: ' . $t['width'] . 'px;height: ' . $t['height'] . 'px;"';
+                    }
+                    else {
+                        $html .= '<div';
+                    }
+                    $html .= ' id="' . $t['id'] . '"';
+                    $html .= ' class="' . join(' ',$classes) . '"';
+
+                    $html .= '>';
+
+                    $html .= '<i>' . get_string('empty_block', 'view') . '</i>';
+                    $html .= '</div>';
+                }
+            }
         }
     }
+
+    $droplist = json_encode($droplist);
+    $spinner_url = json_encode(theme_get_image_path('loading.gif'));
+    $wwwroot = get_config('wwwroot');
+
+    $javascript = <<<EOF
+<script type="text/javascript">
+    var droplist = $droplist;
+
+    function blockdrop(element, target) {
+        replaceChildNodes(target, IMG({ src: {$spinner_url} }));
+        var d = loadJSONDoc({$wwwroot});
+    }
+
+    addLoadEvent(function () {
+        for ( id in droplist ) {
+            new Droppable(id, {
+                accept: droplist[id],
+                ondrop: blockdrop,
+                hoverclass: 'block_targetted',
+                activeclass: 'block_potential'
+            });
+        }
+    });
+
+</script>
+EOF;
+
+    return $javascript . $html;
 }
 
 ?>
