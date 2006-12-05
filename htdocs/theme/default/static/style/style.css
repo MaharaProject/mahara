@@ -255,12 +255,7 @@ form {
 	text-transform: capitalize;
 }
 
-<<<<<<< master
-
 #subnav li a,
-=======
-#subnav li a,
->>>>>>> origin
 #subnav li a:link,
 #subnav li a:visited,
 #subnav li a:active {
@@ -270,15 +265,9 @@ form {
 	padding: 0;
 }
 
-<<<<<<< master
-#subnav li a:hover {
-	color: #819f18;
-	text-decoration: underline;
-=======
 #subnav li a:hover{
 	color: #98bf10;
 	text-decoration: none;
->>>>>>> origin
 }
 
 #subnav li {
@@ -587,48 +576,6 @@ th {
     height: 2em;
 }
 
-
-/*
- * MARTYNS CREATEVIEW WIZARD STYLES
- * these can be replaced with something similar that looks less suck
- */
-div#tree, div#template {
-    margin-top: 20px;
-}
-
-div#tree {
-    overflow: auto;
-    float: left;
-    width: 400px;
-    border-right: thin solid #000;
-}
-
-div#template {
-    overflow: auto;
-    float: left;
-    width: 50%;
-}
-
-.render_metadata, .render_full, .render_listitem, .render_children {
-    cursor: move;
-}
-
-div.block {
-    border: 2px solid transparent;
-}
-
-div.block_potential {
-    border: 2px solid #008800;
-}
-
-div.block_targetted {
-    border: 2px solid #00ff00;
-}
-
-/*
- * END MARTYNS STYLES FOR CREATEVIEW WIZARD
- */
-
 #typeheader {
 	color: #819f18;
 	margin: 15px 0 0 0;
@@ -677,4 +624,4 @@ div.block_targetted {
 
 #staffusers table {
 	width: 100%;
-
+}
