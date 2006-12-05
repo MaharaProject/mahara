@@ -73,6 +73,15 @@ function handle_activity($activitytype, $data) {
     if (empty($data->message)) {
         throw new InvalidArgumentException("message was empty for $activitytype!");
     }
+
+    if (is_string($activitytype)) {
+        $activitytype = get_record('activity_type', 'name', $activitytype);
+    }
+    
+    if (!is_object($activitytype)) {
+        throw new InvalidArgumentException("Invalid activitytype $activitytype");
+    }
+
     $users = array();
     $prefix = get_config('dbprefix');
 
@@ -99,43 +108,50 @@ function handle_activity($activitytype, $data) {
                 break;
             // and now the harder ones
             case 'watchlist':
-                if ($data->view) {
-                    $sql = 'SELECT u.*, p.method
+                if (!empty($data->view)) {
+                    $sql = 'SELECT u.*, p.method, ? AS url
                                 FROM ' . $prefix . 'usr_watchlist_view wv
                                 JOIN ' . $prefix . 'usr u
-                                    ON wa.user = u.id
-                                JOIN ' . $prefix . 'usr_preference p
+                                    ON wa.usr = u.id
+                                JOIN ' . $prefix . 'usr_activity_preference p
                                     ON p.usr = u.id
-                                WHERE pc.activity = ?
+                                WHERE p.activity = ?
                                 AND wv.view = ?
                            ';
-                    $users = get_records_sql_array($sql, array('watchlist', $data->view));
+                    $users = get_records_sql_array($sql, 
+                                                   array(get_config('wwwroot') . 'view/view.php?id=' 
+                                                         . $data->view, 'watchlist', $data->view));
                 } 
-                else if ($data->artefact) {
-                    $sql = 'SELECT DISTINCT u.*, p.method
+                else if (!empty($data->artefact)) {
+                    $sql = 'SELECT DISTINCT u.*, p.method, ?||wa.view as url
                                 FROM ' . $prefix . 'usr_watchlist_artefact wa
-                                JOIN ' . $prefix . 'artefact_parent_cache pc
+                                LEFT JOIN ' . $prefix . 'artefact_parent_cache pc
                                     ON (pc.parent = wa.artefact OR pc.artefact = wa.artefact)
                                 JOIN ' . $prefix . 'usr u 
-                                    ON wa.user = u.id
-                                JOIN ' . $prefix . 'usr_preference p
+                                    ON wa.usr = u.id
+                                JOIN ' . $prefix . 'usr_activity_preference p
                                     ON p.usr = u.id
-                                WHERE pc.activity = ?
+                                WHERE p.activity = ?
                                 AND (pc.parent = ? OR wa.artefact = ?)
                             ';
-                    $users = get_records_sql_array($sql, array('watchlist', $data->artefact));
+                    $users = get_records_sql_array($sql, 
+                                                   array(get_config('wwwroot') . 'view/artefact.php?id=' 
+                                                         . $data->artefact . '&view=', 'watchlist', 
+                                                         $data->artefact, $data->artefact));
                 }
-                else if ($data->community) {
-                    $sql = 'SELECT DISTINCT u.*, p.method 
+                else if (!empty($data->community)) {
+                    $sql = 'SELECT DISTINCT u.*, p.method, ? AS url, 
                                 FROM ' . $prefix . 'usr_watchlist_community c
                                 JOIN ' . $prefix . 'usr u
                                     ON c.usr = u.id
-                                JOIN ' . $prefix . 'usr_preference p
+                                JOIN ' . $prefix . 'usr_activity_preference p
                                     ON p.usr = u.id
-                                WHERE pc.activity = ?
+                                WHERE p.activity = ?
                                 AND c.community = ?
                             ';
-                    $users = get_records_sql_array($sql, array('watchlist', $data->community));
+                    $users = get_records_sql_array($sql, 
+                                                   array(getconfig('wwwroot') . 'community/view.php?id='
+                                                         . $data->community, 'watchlist', $data->community));
                 }
                 else {
                     throw new InvalidArgumentException("Invalid watchlist type");
@@ -163,9 +179,15 @@ function handle_activity($activitytype, $data) {
                 break;
         }
     }
+    if (empty($users)) {
+        return;
+    }
     safe_require('notification', 'internal', 'lib.php', 'require_once');
-    $data->type = $activitytype;
+    $data->type = $activitytype->name;
     foreach ($users as $user) {
+        if (!empty($user->url) && empty($data->url)) {
+            $data->url = $user->url;
+        }
         if ($user->method != 'internal') {
             safe_require('notification', $method, 'lib.php', 'require_once');
             call_static_method(generate_class_name('notification', $method), 'notify_user', $user, $data);
