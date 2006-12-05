@@ -32,13 +32,17 @@ $id = param_integer('id');
 $artefact = artefact_instance_from_id($id);
 $renderedartefact = $artefact->render(FORMAT_ARTEFACT_LISTSELF, null);
 
+log_debug($renderedartefact);
+
+if (!$renderedartefact) {
+    json_reply('local', 'artefactnotrendered');
+}
+
 $result = array(
     'data' => $renderedartefact,
     'error' => false,
-    'message' => '',
+    'message' => 'artefactrendered',
 );
-
-log_debug($result);
 
 json_headers();
 print json_encode($result);
