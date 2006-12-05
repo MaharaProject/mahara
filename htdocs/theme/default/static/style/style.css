@@ -3,7 +3,7 @@ body {
 	padding: 0;
 	font-family: Arial, Helvetica, sans-serif;
 	background: url(../images/background.gif) repeat;
-	font-size: 13px;
+	font-size: 12px;
 }
 
 .hiddenStructure {
@@ -23,16 +23,18 @@ a:hover {
 	text-decoration: underline;
 }
 
-h1 {
+h1, h2 {
 	color: #547c22;
-	font-size: 18px;	
+	font-size: 20px;
+	font-weight: normal;	
+	margin: 7px 0 5px -2px;
 }
 
-h2, h3, h4, h5, h6 {
+h3, h4, h5, h6 {
 	color: #819f18;
 	font-weight: bold;	
-	font-size: 16px;	
-	margin: 10px 0 10px 0;
+	font-size: 14px;	
+	margin: 10px 0 10px -2px;
 	text-transform: capitalize;
 }
 
@@ -157,7 +159,7 @@ h2, h3, h4, h5, h6 {
 
 .searchbox {
 	position: absolute;
-	top: 60px;
+	top: 75px;
 	right: 40px;
 	text-align: right;
 	font-size: 12px;
@@ -194,73 +196,100 @@ form {
 
 #mainnav {
 	padding: 8px 0 0 0;
-	margin: 0 0 5px 0;
+	margin: 0 0 0 0;
 	background: url(../images/navbg_spacer.gif) repeat-x;
 	height: 32px;
 	font-size: 12px;
 	font-weight: bold;
 	text-transform: uppercase;
-	color: #FFFFFF;
-	text-align: center;
+	text-align: left;
 }
 
 #mainnav li {
     display: inline;
     padding: 0 0 0 0;
+	 color: #e6c560;
 	 margin: 0 6px 0 6px;
+	text-decoration: none;
 }
 
 #mainnav li.selected {
-    font-weight: bold;
+	 color: #FFFFFF;
 }
 
 #mainnav li a,
 #mainnav li a:link,
 #mainnav li a:visited,
 #mainnav li a:active {
-	color: #FFFFFF;
+	color: #e6c560;
 	text-decoration: none;
 	margin: 7px 0 0 0;
 }
 
 #mainnav li a:hover{
-	color: #e6c560;
-	text-decoration: underline;
+	color: #FFFFFF;
+	text-decoration: none;
 }
+
+.subnav-left {
+	float: left;
+	margin: -6px 0 0 0;
+	padding: 0;
+}
+
+.subnav-right {
+	float: right;
+	margin: -6px 0 0 0;
+	padding: 0;
+}
+
 
 #subnav {
-	padding: 0 0 0 0;
-	margin: 0 0 10px 0;
-	font-size: 13px;
-	color: #5c8727;
-	text-align: center;
+	padding: 6px 0 0 0;
+	margin: 0 0 0 0;
+	font-size: 11px;
+	font-weight: bold;
+	text-align: left;
+	background: url(../images/subnavbg_spacer.gif) repeat-x;
+	height: 25px;
+	text-transform: capitalize;
 }
 
+<<<<<<< master
 
 #subnav li a,
+=======
+#subnav li a,
+>>>>>>> origin
 #subnav li a:link,
 #subnav li a:visited,
 #subnav li a:active {
-	color: #5c8727;
+	color: #FFFFFF;
 	text-decoration: none;
 	margin: 0;
+	padding: 0;
 }
 
+<<<<<<< master
 #subnav li a:hover {
 	color: #819f18;
 	text-decoration: underline;
+=======
+#subnav li a:hover{
+	color: #98bf10;
+	text-decoration: none;
+>>>>>>> origin
 }
 
 #subnav li {
-    display: inline;
-    padding: 0;
-	color: #5c8727;
-	 margin: 0 5px 0 5px;
+   display: inline;
+   padding: 0;
+	margin: 0 5px 0 5px;
 }
 
 #subnav li.selected {
    font-weight: bold;
-	color: #9b8700;
+	color: #98bf10;
 }
 
 /* MAIN NAVIGATION END */
@@ -293,6 +322,9 @@ div.sidebar {
 
 #loginbox fieldset {
 	border: none;
+	padding: 0;
+	margin: 0;
+	width: 200px;
 }
 
 #login legend {
@@ -303,12 +335,12 @@ div.sidebar {
 }
 
 #login #login_username_container {
-	margin: 20px 0 0 -2px;
+	margin: 20px 0 0 0px;
 	padding: 0;
 }
 
 #login #login_password_container {
-	margin: 5px 0 0 -2px;
+	margin: 5px 0 5px 0px;
 	padding: 0;
 }
 
@@ -324,7 +356,11 @@ div.sidebar {
 
 #login #submit_container {
 	font-size: 9px;
-	margin: 5px 5px 0 2px;
+	float: left;
+	margin: 0 10px 5px 0;
+	padding: 0;
+	display: inline;
+
 }
 
 #login a,
@@ -340,6 +376,20 @@ div.sidebar {
 #login a:hover {
 	text-decoration: underline;
 }
+
+#login table {
+	width: 200px;
+	margin: 0 0 0 0;
+	padding: 0;
+}
+
+#login td,
+#login th {
+	margin: 0;
+	padding: 0;
+	display: inline;
+}
+
 
 #sitemenu li {
 	padding: 0px 0px 0px 15px;
@@ -363,6 +413,14 @@ div.content {
 	 background: #FFFFFF;
 }
 
+.maincontent {
+	padding: 5px 15px 10px 15px;
+}
+
+.content textarea {
+	width: 300px;
+}
+
 #messages {
 	color: #547c22;
 }
@@ -380,18 +438,6 @@ div.content {
 	color: #819f18;
 	text-decoration: none;
 	border-bottom: 1px solid #e6c560;
-}
-
-.maincontent {
-	padding: 5px 15px 10px 15px;
-}
-
-.maincontent textarea {
-	width: 350px;
-}
-
-.maincontent #introduction {
-	width: 300px;
 }
 
 .box-cnrs {
@@ -477,27 +523,66 @@ clear: both;
 /* FOOTER ENDS */
 /* CONTENT LAYOUT ENDS */
 
+p {
+	margin: 5px 0 5px 0;
+	padding: 0;
+}
+
 thead {
-	color: #474220;
+	color: #5c8727;
+	background: #e5e8da;
+}
+
+tbody {
+	background: #FFFFFF;
+}
+
+td {
+	padding: 2px;
+	margin: 0;
 }
 
 th {
 	text-align: left;
+	color: #3a5813;
+	vertical-align: top;
+	margin: 0;
+	padding: 5px 5px 0 5px;
 }
-.required label, .required th { color: #81640d; }
-.required td label, .required td { color: #000000; }
-.help { font-size: smaller; vertical-align: super; }
+
+.required label, 
+.required th { 
+	color: #5c8727; 
+}
+
+.required td label, 
+.required td { 
+	color: #000000; 
+}
+
+.help { 
+	font-size: 9px; 
+	vertical-align: super; 
+	text-decoration: none;
+	border: none;
+}
+
 .description { 
 	font-size: 9px; 
 	font-style: italic; 
 	color: #7e7e7e; 
 	padding: 0 0 0 15px;
 }
-.error { color: red; }
-.errmsg { color: red; font-size: smaller; }
-label { 
-	vertical-align: top; 
+
+.error { 
+	color: #cf0000; 
 }
+
+.errmsg { 
+	color: #cf0000; 
+	font-size: 9px; 
+}
+
 #installer tr {
     height: 2em;
 }
@@ -539,3 +624,57 @@ div.block_potential {
 div.block_targetted {
     border: 2px solid #00ff00;
 }
+
+/*
+ * END MARTYNS STYLES FOR CREATEVIEW WIZARD
+ */
+
+#typeheader {
+	color: #819f18;
+	margin: 15px 0 0 0;
+}
+
+#watchlist {
+	width: 100%;
+}
+
+#activitylist {
+	margin: 10px 0 0 0;
+	width: 100%;
+}
+
+#filelist {
+	margin: 10px 0 0 0;
+	width: 100%;
+}
+
+#grouplist {
+	margin: 10px 0 0 0;
+	width: 100%;
+}
+
+#activityprefs {
+	margin: 10px 0 0 0;
+}
+
+#adminstitutionslist {
+	width: 100%;
+}
+
+#loading_box {
+	display: none;
+	position: fixed; 
+	top: 0;
+	left: 0;
+	background-color: #cf0000; 
+	color: white;
+}
+
+#menuitemlist {
+	width: 100%;
+	margin: 10px 0 0 0;
+}
+
+#staffusers table {
+	width: 100%;
+

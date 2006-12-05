@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="lib/db" VERSION="20061127" COMMENT="XMLDB file for Mahara's blog-related tables"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+<TABLES>
+    <!-- This table is supposed to have a 1-1 relation with every row in the
+    artefact table with artefacttype = 'blog'. It contains additional
+    information that isn't in the artefact table. -->
+    <TABLE NAME="artefact_blog_blog">
+        <FIELDS>
+            <FIELD NAME="blog" TYPE="int" LENGTH="10" NOTNULL="true" />
+            <FIELD NAME="commentsallowed" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" UNSIGNED="true" />
+            <FIELD NAME="commentsnotify" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" UNSIGNED="true" />
+        </FIELDS>
+
+        <KEYS>
+            <KEY NAME="blogpk" TYPE="primary" FIELDS="blog" />
+            <KEY NAME="blogfk" TYPE="foreign" FIELDS="blog" REFTABLE="artefact" REFFIELDS="id" />
+        </KEYS>
+    </TABLE>
+
+    <!-- This table is supposed to have a 1-1 relation with every row in the
+    artefact table with artefacttype = 'blogpost'.  It contains additional data
+    that isn't in the artefact table. -->
+    <TABLE NAME="artefact_blog_blogpost">
+        <FIELDS>
+            <FIELD NAME="blogpost" TYPE="int" LENGTH="10" NOTNULL="true" />
+            <FIELD NAME="published" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" UNSIGNED="true" />
+        </FIELDS>
+
+        <KEYS>
+            <KEY NAME="blogpostpk" TYPE="primary" FIELDS="blogpost" />
+            <KEY NAME="blogpostfk" TYPE="foreign" FIELDS="blogpost" REFTABLE="artefact" REFFIELDS="id" />
+        </KEYS>
+    </TABLE>
+
+    <!-- This table relates artefacts of type 'blogpost' to artefacts of type
+    'file'. This is a many-many relation. -->
+    <TABLE NAME="artefact_blog_blogpost_file">
+        <FIELDS>
+            <FIELD NAME="blogpost" TYPE="int" LENGTH="10" NOTNULL="true" />
+            <FIELD NAME="file" TYPE="int" LENGTH="10" NOTNULL="true" />
+        </FIELDS>
+
+        <KEYS>
+            <KEY NAME="blogpost_filepk" TYPE="primary" FIELDS="blogpost,file" />
+            <KEY NAME="blogpostfk" TYPE="foreign" FIELDS="blogpost" REFTABLE="artefact" REFFIELDS="id" />
+            <KEY NAME="filefk" TYPE="foreign" FIELDS="file" REFTABLE="artefact" REFFIELDS="id" />
+        </KEYS>
+    </TABLE>
+</TABLES>
+</XMLDB>

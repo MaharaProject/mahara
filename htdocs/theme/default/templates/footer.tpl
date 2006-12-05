@@ -1,4 +1,4 @@
-        	
+
 			</div>
 			<div id="footer">
 			<div class="footerright"><img src="{image_path imagelocation='images/footer_navbg_right.gif'}" border="0"></div>

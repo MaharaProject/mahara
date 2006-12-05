@@ -27,21 +27,38 @@
 define('INTERNAL', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 
-$viewid = param_integer('viewid');
+log_debug('addwatchlist.json.php');
 
-if (get_field('view', 'owner', 'id', $viewid) != $USER->get('id')) {
-    json_reply('local', get_string('notowner'));
+$id = param_integer('id');
+$type = param_variable('type');
+
+log_debug($id . ' ' . $type);
+
+$data = new StdClass;
+if ($type == 'view') {
+    $data->view = $id;
+}
+else if ($type == 'artefact') {
+    $data->artefact = $id;
+}
+else {
+    json_reply('local', get_string('invalidwatchlistitem'));
 }
 
-delete_records('view_artefact','view',$viewid);
-delete_records('view_content','view',$viewid);
-delete_records('view_access_community','view',$viewid);
-delete_records('view_access_group','view',$viewid);
-delete_records('view_access_usr','view',$viewid);
-if (!delete_records('view','id',$viewid)) {
-    json_reply('local', get_string('deleteviewfailed'));
+$table = 'usr_watchlist_' . $type;
+$data->usr = $USER->get('id');
+$data->ctime = db_format_timestamp(time());
+
+log_debug($data);
+
+if (record_exists($table, 'usr', $data->usr, $type, $id)) {
+    json_reply(false, get_string('itemalreadyinwatchlist'));
 }
 
-json_reply(false,get_string('viewdeleted'));
+if (!insert_record($table, $data)) {
+    json_reply('local', get_string('updatewatchlistfailed'));
+}
+
+json_reply(false,get_string('itemaddedtowatchlist'));
 
 ?>

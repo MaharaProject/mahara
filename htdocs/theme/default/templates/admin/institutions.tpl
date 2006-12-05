@@ -20,14 +20,17 @@ class="cnr-bl"><span class="cnr-br">
 {$institution_form}
 {else}
 
-<table>
+<table id="adminstitutionslist">
+	<thead>
     <tr>
         <th>{str tag="institution"}</th>
         <th>{str tag="authplugin" section="admin"}</th>
         <th>{str tag="registrationallowed" section="admin"}</th>
         <th></th>
     </tr>
+	</thead>
     {foreach from=$institutions item=institution}
+	<tbody>
     <tr>
         <td>{$institution->displayname|escape}</td>
         <td>{$institution->authplugin}</td>
@@ -48,6 +51,7 @@ class="cnr-bl"><span class="cnr-br">
             </form>
         </td>
     </tr>
+	</tbody>
 </table>
 {/if}
 

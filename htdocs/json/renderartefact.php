@@ -26,22 +26,25 @@
 
 define('INTERNAL', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
+require_once('artefact.php');
 
-$viewid = param_integer('viewid');
+$id = param_integer('id');
+$artefact = artefact_instance_from_id($id);
+$renderedartefact = $artefact->render(FORMAT_ARTEFACT_LISTSELF, null);
 
-if (get_field('view', 'owner', 'id', $viewid) != $USER->get('id')) {
-    json_reply('local', get_string('notowner'));
+log_debug($renderedartefact);
+
+if (!$renderedartefact) {
+    json_reply('local', 'artefactnotrendered');
 }
 
-delete_records('view_artefact','view',$viewid);
-delete_records('view_content','view',$viewid);
-delete_records('view_access_community','view',$viewid);
-delete_records('view_access_group','view',$viewid);
-delete_records('view_access_usr','view',$viewid);
-if (!delete_records('view','id',$viewid)) {
-    json_reply('local', get_string('deleteviewfailed'));
-}
+$result = array(
+    'data' => $renderedartefact,
+    'error' => false,
+    'message' => 'artefactrendered',
+);
 
-json_reply(false,get_string('viewdeleted'));
+json_headers();
+print json_encode($result);
 
 ?>

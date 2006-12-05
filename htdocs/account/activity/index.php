@@ -31,6 +31,10 @@ define('SUBMENUITEM', 'activity');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
 $types = get_records_array('activity_type', 'admin', 0);
+if ($USER->get('admin')) {
+    $admintypes = get_records_array('activity_type');
+    $types[] = (object)array('name' => 'adminmessages');
+}
 
 $readsavefail = get_string('failedtomarkasread', 'activity');
 $readsave = get_string('markedasread', 'activity');

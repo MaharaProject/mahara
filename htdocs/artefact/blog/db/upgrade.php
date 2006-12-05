@@ -17,31 +17,28 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage core
- * @author     Richard Mansfield <richard.mansfield@catalyst.net.nz>
+ * @subpackage artefact-internal
+ * @author     Alastair Pharo <alastair@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
-define('INTERNAL', 1);
-require(dirname(dirname(__FILE__)) . '/init.php');
+defined('INTERNAL') || die();
 
-$viewid = param_integer('viewid');
+function xmldb_artefact_blog_upgrade($oldversion=0) {
+    
+    $status = true;
 
-if (get_field('view', 'owner', 'id', $viewid) != $USER->get('id')) {
-    json_reply('local', get_string('notowner'));
+    // There was no database prior to this version.
+    if ($oldversion < 2006120501) {
+        $status = $status && install_from_xmldb_file(
+            get_config('docroot') .
+            'artefact/blog/db/install.xml'
+        );
+    }
+
+    return $status;
 }
-
-delete_records('view_artefact','view',$viewid);
-delete_records('view_content','view',$viewid);
-delete_records('view_access_community','view',$viewid);
-delete_records('view_access_group','view',$viewid);
-delete_records('view_access_usr','view',$viewid);
-if (!delete_records('view','id',$viewid)) {
-    json_reply('local', get_string('deleteviewfailed'));
-}
-
-json_reply(false,get_string('viewdeleted'));
 
 ?>
