@@ -17,50 +17,28 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage artefact-blog
+ * @subpackage artefact-internal
  * @author     Alastair Pharo <alastair@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
-define('INTERNAL', 1);
-define('MENUITEM', 'myblogs');
+defined('INTERNAL') || die();
 
-require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
-safe_require('artefact', 'blog');
+function xmldb_artefact_blog_upgrade($oldversion=0) {
+    
+    $status = true;
 
-$id = param_integer('id');
-$enc_id = json_encode($id);
+    // There was no database prior to this version.
+    if ($oldversion < 2006120501) {
+        $status = $status && install_from_xmldb_file(
+            get_config('docroot') .
+            'artefact/blog/db/install.xml'
+        );
+    }
 
-// This javascript is used to generate a list of blog posts.
-$js = <<<EOJAVASCRIPT
-
-var postlist = new TableRenderer(
-    'postlist',
-    'index.json.php',
-    [undefined]
-);
-
-postlist.rowfunction = function(d, n, gd) {
-    return [
-      TR(null, TD(null, d.title)),
-      TR(null, TD(null, d.description)),
-      TR(null, TD(null, d.ctime))
-    ];
-};
-postlist.statevars.push('id');
-postlist.id = {$enc_id};
-
-postlist.updateOnLoad();
-
-EOJAVASCRIPT;
-
-$blog = new ArtefactTypeBlog($id);
-
-$smarty = smarty(array('tablerenderer'));
-$smarty->assign_by_ref('blog', $blog);
-$smarty->assign_by_ref('INLINEJAVASCRIPT', $js);
-$smarty->display('artefact:blog:view.tpl');
+    return $status;
+}
 
 ?>
