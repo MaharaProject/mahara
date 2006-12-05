@@ -96,23 +96,39 @@ function handle_activity($activitytype, $data) {
                 break;
             case 'usermessage':
                 $users = activity_get_users($activitytype->name, array($data->userto));
+                if (empty($data->url)) {
+                    // @todo when user messaging is implemented, this might change... 
+                    $data->url = get_config('wwwroot') . 'user/view.php?id=' . $data->userfrom;
+                }
                 break;
             case 'feedback':
-                if ($data->view) {
+                if (empty($data->view)) {
+                    throw new IllegalArgumentException("Feedback missing view id");
+                }
+                if (empty($data->artefact)) {
                     $userid = get_field('view', 'owner', 'id', $data->view);
+                    if (empty($data->url)) {
+                        // @todo this might change later
+                        $data->url = get_config('wwwroot') . 'view/view.php?id=' . $data->view;
+                    }
                 } 
                 else if ($data->artefact) {
                     $userid = get_field('artefact', 'owner', 'id', $data->artefact);
+                    if (empty($data->url)) {
+                        // @todo this might change later
+                        $data->url = get_config('wwwroot') . 'view/artefact.php?id=' 
+                            . $data->artefact . '&view=' . $data->view;
+                    }
                 }
                 $users = activity_get_users($activitytype->name, array($userid));
                 break;
             // and now the harder ones
             case 'watchlist':
                 if (!empty($data->view)) {
-                    $sql = 'SELECT u.*, p.method, ? AS url
+                    $sql = 'SELECT u.*, p.method, CAST(? AS TEXT)  AS url
                                 FROM ' . $prefix . 'usr_watchlist_view wv
                                 JOIN ' . $prefix . 'usr u
-                                    ON wa.usr = u.id
+                                    ON wv.usr = u.id
                                 JOIN ' . $prefix . 'usr_activity_preference p
                                     ON p.usr = u.id
                                 WHERE p.activity = ?
@@ -140,7 +156,7 @@ function handle_activity($activitytype, $data) {
                                                          $data->artefact, $data->artefact));
                 }
                 else if (!empty($data->community)) {
-                    $sql = 'SELECT DISTINCT u.*, p.method, ? AS url, 
+                    $sql = 'SELECT DISTINCT u.*, p.method, CAST(? AS TEXT) AS url
                                 FROM ' . $prefix . 'usr_watchlist_community c
                                 JOIN ' . $prefix . 'usr u
                                     ON c.usr = u.id
@@ -150,7 +166,7 @@ function handle_activity($activitytype, $data) {
                                 AND c.community = ?
                             ';
                     $users = get_records_sql_array($sql, 
-                                                   array(getconfig('wwwroot') . 'community/view.php?id='
+                                                   array(get_config('wwwroot') . 'community/view.php?id='
                                                          . $data->community, 'watchlist', $data->community));
                 }
                 else {
@@ -166,7 +182,7 @@ function handle_activity($activitytype, $data) {
                                 WHERE (usr1 = ? OR usr2 = ?)
                             UNION SELECT member AS userid 
                                 FROM ' . $prefix . 'usr_group_member m
-                                JOIN ' . $prefix . 'view_access_group g ON m.group = g.group 
+                                JOIN ' . $prefix . 'view_access_group g ON m.grp = g.grp 
                             WHERE g.view = ?
                             UNION SELECT usr AS userid 
                                   FROM ' . $prefix . 'view_access_usr u 
@@ -177,6 +193,7 @@ function handle_activity($activitytype, $data) {
                 $users = get_records_sql_array($sql, array($data->owner, $data->owner, $data->owner,  
                                                      $data->view, $data->view));
                 break;
+                // @todo more here (admin messages!)
         }
     }
     if (empty($users)) {
