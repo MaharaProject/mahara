@@ -17,7 +17,7 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage core
+ * @subpackage artefact-file
  * @author     Richard Mansfield <richard.mansfield@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
@@ -25,33 +25,40 @@
  */
 
 define('INTERNAL', 1);
-require(dirname(dirname(__FILE__)) . '/init.php');
+require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
-$viewid = param_integer('viewid');
-$artefactid = param_integer('artefactid',null);
-
-$data = new StdClass;
-if ($artefactid) {
-    $data->artefact = $artefactid;
-    $table = 'usr_watchlist_artefact';
-    $artefactfield = 'artefact';
+try {
+    $fileid = param_integer('id');
 }
-else {
-    $table = 'usr_watchlist_view';
-    $artefactfield = null;
-}
-$data->view = $viewid;
-$data->usr = $USER->get('id');
-$data->ctime = db_format_timestamp(time());
-
-if (record_exists($table, 'usr', $data->usr, 'view', $viewid, $artefactfield, $artefactid)) {
-    json_reply(false, get_string('itemalreadyinwatchlist'));
+catch (ParameterException $e) {
+    json_reply('missingparameter',get_string('missingparameter'));
 }
 
-if (!insert_record($table, $data)) {
-    json_reply('local', get_string('updatewatchlistfailed'));
+$prefix = get_config('dbprefix');
+
+$filerecord = get_record_sql('SELECT a.artefacttype, a.owner, f.name
+      FROM ' . $prefix . 'artefact a
+      JOIN ' . $prefix . 'artefact_file_files f ON a.id = f.artefact
+      WHERE a.id = ' . $fileid);
+
+if ($filerecord->owner != $USER->get('id')) {
+    json_reply('local',get_string('notowner'));
 }
 
-json_reply(false,get_string('itemaddedtowatchlist'));
+if (count_records('artefact', 'parent', $fileid) > 0) {
+    json_reply('local', get_string('artefacthaschildren'));
+}
+
+if (!delete_records('artefact_file_files', 'artefact', $fileid)) {
+    json_reply('local', get_string('deletefailed'));
+}
+
+if (!delete_records('artefact', 'id', $fileid)) {
+    json_reply('local', get_string('deletefailed'));
+}
+
+// @todo: Delete the file from the filesystem here
+
+json_reply(false, get_string('filedeleted'));
 
 ?>
