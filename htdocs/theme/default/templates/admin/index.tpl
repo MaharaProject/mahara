@@ -1,11 +1,11 @@
 {include file='header.tpl'}
 
-<h2>Administration</h2>
-
-<p>Screens here:</p>
+<h2>{str tag="administration"}</h2>
 
 <ul>
-    <li><a href="options/">Site Options</a>
+    <li><strong><a href="options/">{str tag="adminsiteoptions" section="admin"}</a></strong><br>
+    {str tag="adminsiteoptionsdescription" section="admin"}</li>
+    <li>AdminSiteEditor - ???</li>
     <li><a href="institutions.php">Institutions</a></li>
     <li><a href="editsitepage.php">Site Pages</a></li>
     <li><a href="editmenu.php">Site Menu</a></li>
