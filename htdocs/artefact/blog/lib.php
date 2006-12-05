@@ -66,19 +66,69 @@ class ArtefactTypeBlog extends ArtefactType {
      */
     const pagination = 10;
     
+    
+    /** 
+     * Whether comments are allowed on this blog or not.
+     */
+    protected $commentsallowed = false;
+
+    /** 
+     * Whether the blog owner will be notified of comments or not.
+     */
+    protected $commentsnotify = false;
+
 
     /**
-     * Just the basic commit.
+     * This function updates or inserts the artefact.  This involves putting
+     * some data in the artefact table (handled by parent::commit()), and then
+     * some data in the artefact_blog_blog table.
      */
     public function commit() {
-        $this->commit_basic();
+        // Just forget the whole thing when we're clean.
+        if (empty($this->dirty)) {
+            return;
+        }
+      
+        // We need to keep track of newness before and after.
+        $new = empty($this->id);
+        
+        // Commit to the artefact table.
+        parent::commit();
+
+        // Reset dirtyness for the time being.
+        $this->dirty = true;
+
+        $data = array(
+            'blog'            => $this->get('id'),
+            'commentsallowed' => ($this->get('commentsallowed') ? 1 : 0),
+            'commentsnotify'  => ($this->get('commentsnotify') ? 1 : 0)
+        );
+
+        if ($new) {
+            insert_record('artefact_blog_blog', $data);
+        }
+        else {
+            update_record('artefact_blog_blog', $data, 'blog');
+        }
+
+        $this->dirty = false;
     }
 
     /**
-     * Just the basic delete.  FIXME - needs to delete posts too.
+     * This function extends ArtefactType::delete() by deleting blog-specific
+     * data.
      */
     public function delete() {
-        $this->delete_basic();
+        if (empty($this->id)) {
+            return;
+        }
+        log_debug('Deleting blog:'.$this->id);
+
+        // Delete the blog-specific data.
+        delete_records('artefact_blog_blog', 'blog', $this->id);
+
+        // Delete the artefact and all children.
+        parent::delete();
     }
 
     /** 
@@ -133,6 +183,8 @@ class ArtefactTypeBlog extends ArtefactType {
         $artefact->set('title', $values['title']);
         $artefact->set('description', $values['description']);
         $artefact->set('owner', $user->get('id'));
+        $artefact->set('commentsallowed', $values['commentsallowed'] ? true : false);
+        $artefact->set('commentsnotify', $values['commentsnotify'] ? true : false);
         $artefact->commit();
     }
 }
@@ -146,13 +198,21 @@ class ArtefactTypeBlogPost extends ArtefactType {
      * This gives the number of blog posts to display at a time.
      */
     const pagination = 10;
+    
 
-
+    /**
+     * Just the basic commit.
+     */
     public function commit() {
         $this->commit_basic();
     }
 
+    /**
+     * @todo
+     */
     public function delete() {
+        log_debug('Deleting blogpost:'.$this->id);
+        $this->delete_basic();
     }
 
     public function render($format, $options) {
@@ -211,3 +271,5 @@ class ArtefactTypeBlogPost extends ArtefactType {
         $artefact->commit();
     }
 }
+
+?>

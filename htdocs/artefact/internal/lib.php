@@ -105,14 +105,6 @@ class ArtefactTypeProfile extends ArtefactType {
         $this->artefacttype = $type;
     }
 
-    public function commit() {
-        $this->commit_basic();
-    }
-    
-    public function delete() {
-        $this->delete_basic();
-    }
-
     public function render($format, $options) {
         if ($format == FORMAT_ARTEFACT_LISTSELF && $this->title) {
             return $this->title;
@@ -347,13 +339,13 @@ class ArtefactTypeProfileField extends ArtefactTypeProfile {
 class ArtefactTypeCachedProfileField extends ArtefactTypeProfileField {
     
     public function commit() {
-        $this->commit_basic();
+        parent::commit();
         $field = $this->get_artefact_type();
         set_field('usr', $field, $this->title, 'id', $this->owner);
     }
 
     public function delete() {
-        $this->delete_basic();
+        parent::delete();
         $field = $this->get_artefact_type();
         set_field('usr', $field, null, 'id', $this->owner);
     }
@@ -366,7 +358,7 @@ class ArtefactTypePreferredname extends ArtefactTypeCachedProfileField {}
 class ArtefactTypeEmail extends ArtefactTypeProfileField {
     public function commit() {
 
-        $this->commit_basic();
+        parent::commit();
 
         $email_record = get_record('artefact_internal_profile_email', 'owner', $this->owner, 'email', $this->title);
         // we've created a new artefact that doesn't have a profile email thingy.
