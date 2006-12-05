@@ -30,13 +30,15 @@ require_once('artefact.php');
 
 $id = param_integer('id');
 $artefact = artefact_instance_from_id($id);
-$renderedartefact = $artefact->render(FORMAT_ARTEFACT_RENDERFULL, null);
+$renderedartefact = $artefact->render(FORMAT_ARTEFACT_LISTSELF, null);
 
 $result = array(
     'data' => $renderedartefact,
     'error' => false,
     'message' => '',
 );
+
+log_debug($result);
 
 json_headers();
 print json_encode($result);
