@@ -84,8 +84,40 @@ function template_parse_block($blockstr) {
     }
     // everything else can theoretically be optional....
 
+    template_validate_block($data, '');
+    template_validate_block($data, 'default');
+
     return $data;
         
+}
+
+function template_validate_block(&$data, $name='') {
+    
+    $type &= (isset($data[$name . 'type']) ? $data[$name . 'type'] : '');
+    $format &= (isset($data[$name . 'format']) ? $data[$name . 'format'] : '');
+    
+    if ((empty($format) && empty($type)) || $format == 'label') { // labels are special cases
+        return true;
+    }
+
+    // if we've got type but no format and we're looking at defaults, use main format.
+    if (!empty($type) && empty($format) && $name == 'default' && !empty($data['format'])) {
+        $format = $data['format'];
+    }
+        
+    // figure out what plugin handles this type and validate the class exists.
+    if (!$plugin = get_field('artefact_installed_type', 'plugin', 'name', $type)) {
+        throw new InvalidArgumentException("{$name}type $type is not installed");
+    }
+    
+    require_once('artefact.php');
+    safe_require('artefact', $plugin);
+
+    if (!artefact_can_render_to($type, $format)) {
+        throw new InvalidArgumentException("{$name}type $type can't render to {$name}format $format");
+    }
+    
+    // @todo validate resizing stuff
 }
 
 function template_locate($templatename, $fetchdb=true) {

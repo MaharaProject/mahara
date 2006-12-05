@@ -14,6 +14,7 @@ use DBI;
 use Data::RandomPerson;
 use Data::Random::WordList;
 #use Smart::Comments;
+use Data::Dumper;
 
 sub new {
     my ($class,$config) = @_;
@@ -174,13 +175,16 @@ sub insert_random_activity {
 
     my $wl = new Data::Random::WordList( wordlist => '/usr/share/dict/words' );
 
+    my $messagetypes = $self->{dbh}->selectall_hashref('SELECT name FROM ' . $prefix . 'activity_type', 'name');
+
     foreach ( 1 .. $count ) { ### [...  ] (%)
         my $message = join(' ', $wl->get_words(int(rand(3)) + 2));
+        my $type = (keys %$messagetypes)[int(rand(keys %$messagetypes))];
         $message =~ s/[\x80-\xff]//g;
         $self->{dbh}->do(
             'INSERT INTO ' . $prefix . 'notification_internal_activity (type, usr, ctime, message, url, read) VALUES (?, ?, current_timestamp, ?, ?, ?)',
             undef,
-            'maharamessage', $user_id, $message, 'http://mahara.org/', int(rand(2)));
+            $type, $user_id, $message, 'http://mahara.org/', int(rand(2)));
     }
 
     $self->{dbh}->commit();
@@ -483,18 +487,18 @@ sub insert_random_filethings {
             $folder,
             $user_id,
             $wl->get_words(1)->[0] . (($thing eq 'folder') ? '' : (($thing eq 'image') ? '.png' : '.txt')),
-            'description');
+            join(' ', $wl->get_words(int(rand(5)) + 1)));
     }
-    my $artefactidlist = $self->{dbh}->selectall_arrayref('SELECT a.id,a.artefacttype FROM ' . $prefix . 'artefact a LEFT OUTER JOIN '. $prefix . 'artefact_file_files f ON a.id = f.artefact WHERE (a.artefacttype = ? OR a.artefacttype = ? OR a.artefacttype = ?) AND f.name IS NULL', { Slice => {} }, 'file', 'folder', 'image');
 
-    $wl = new Data::Random::WordList( wordlist => '/usr/share/dict/words' );
+    # Now insert file sizes into the artefact_file_files table
+    my $artefactidlist = $self->{dbh}->selectall_arrayref('SELECT a.id, a.artefacttype FROM ' . $prefix . 'artefact a LEFT OUTER JOIN '. $prefix . 'artefact_file_files f ON a.id = f.artefact WHERE (a.artefacttype = ? OR a.artefacttype = ? OR a.artefacttype = ?) AND f.artefact IS NULL', { Slice => {} }, 'file', 'folder', 'image');
+
     foreach my $item (@$artefactidlist) {
         my $id = int($item->{id});
-        $self->{dbh}->do('INSERT INTO ' . $prefix . 'artefact_file_files (artefact, name, size)
-            VALUES (?, ?, ?)', undef,
+        $self->{dbh}->do('INSERT INTO ' . $prefix . 'artefact_file_files (artefact, size)
+            VALUES (?, ?)', undef,
             $id,
-            $wl->get_words(1)->[0],
-            ($item->{artefacttype} eq 'folder') ? undef : int(rand(1000000)));
+            $item->{artefacttype} eq 'folder' ? undef : int(rand(5000000)));
     }
 
     $self->{dbh}->commit();

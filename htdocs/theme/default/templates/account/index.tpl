@@ -2,10 +2,18 @@
 
 {include file="adminmenu.tpl"}
 
-<h2>{str tag="account"}</h2>
-
 <div class="content">
+<div class="box-cnrs"><span class="cnr-tl"><span class="cnr-tr"><span 
+class="cnr-bl"><span class="cnr-br">
+	<div class="maincontent">
+
+	<h2>{str tag="preferences"}</h2>
+	
 	{$form}
+
+
+	</div>
+</span></span></span></span></div>	
 </div>
 
 {include file="footer.tpl"}

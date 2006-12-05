@@ -1,5 +1,10 @@
 {include file='header.tpl'}
 
+<div class="content">
+<div class="box-cnrs"><span class="cnr-tl"><span class="cnr-tr"><span 
+class="cnr-bl"><span class="cnr-br">
+	<div class="maincontent">
+	
 <h2>Plugin Administration</h2>
 
 {foreach from=$plugins key='plugintype' item='plugins'}
@@ -29,5 +34,9 @@
 	{/foreach}
     {/if}
 {/foreach}
+
+	</div>
+</span></span></span></span></div>	
+</div>
 
 {include file='footer.tpl'}

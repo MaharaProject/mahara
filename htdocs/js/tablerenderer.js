@@ -193,7 +193,7 @@ function TableRenderer(target, source, columns, options) {
 
                 if (self.emptycontent) {
                     if (self.count > 0) {
-                        hideElement($(self.table).previousSibling)
+                        hideElement($(self.table).previousSibling);
                         showElement(self.table);
                     }
                     else {

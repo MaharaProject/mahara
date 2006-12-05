@@ -49,8 +49,12 @@ var viewlist = new TableRenderer(
 );
 
 viewlist.rowfunction = function(r, n, data) {
-    return map(partial(TR,null),[title(r,data.communities), startdate(r), stopdate(r), 
-                                 description(r), artefacts(r)]);
+    return map(partial(TR,null),[title(r,data.communities), 
+                                 [TD(null,{$getstring['accessstartdate']}),TD(r.startdate)],
+                                 [TD(null,{$getstring['accessstopdate']}),TD(r.stopdate)],
+                                 [TD(null,{$getstring['description']}),TD(r.description)],
+                                 [TD(null,{$getstring['artefacts']}),
+                                  TD(null,UL(null,map(renderartefact,r.artefacts)))]]);
 }
 
 function title(r, communities) {
@@ -92,28 +96,8 @@ function assessselect(viewid, communitylist) {
             
 }
 
-function startdate(r) {
-    return [TD(null,{$getstring['accessstartdate']}),
-            TD(r.startdate)];
-}
-
-function stopdate(r) {
-    return [TD(null,{$getstring['accessstopdate']}),
-            TD(r.stopdate)];
-}
-
-function description(r) {
-    return [TD(null,{$getstring['description']}),
-            TD(r.description)];
-}
-
 function renderartefact(a) {
     return LI(null,A({'href':'{$wwwroot}viewartefact?id='+a.id},a.title));
-}
-
-function artefacts(r) {
-    return [TD(null,{$getstring['artefacts']}),
-            TD(null,UL(null,map(renderartefact,r.artefacts)))];
 }
 
 function deleteview(viewid) {

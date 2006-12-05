@@ -1,9 +1,10 @@
-function FileUploader(element, script, callback, foldername, folderid) {
+
+function FileUploader(element, foldername, folderid, uploadcallback) {
     var self = this;
     this.element = element;
-    this.script = script;
     this.foldername = foldername ? foldername : get_string('home');
     this.folderid = folderid;
+    this.uploadcallback = uploadcallback;
 
     this.init = function() {
         self.nextupload = 1;
@@ -57,10 +58,13 @@ function FileUploader(element, script, callback, foldername, folderid) {
     this.updatedestination = function (folderid, foldername) {
         self.foldername = foldername;
         self.folderid = folderid;
-        $('uploaddest').innerHTML = foldername;
+        if ($('uploaddest')) {
+            $('uploaddest').innerHTML = foldername;
+        }
     }
 
     addLoadEvent(this.init);
+
 
     //var formparams = [INPUT({'type':'hidden','name':'uploaddir','value':self.folder}),
     //                      INPUT({'type':'hidden','name':'uploadnum','value':self.nextupload})];
