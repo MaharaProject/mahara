@@ -29,7 +29,7 @@ define('INTERNAL', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 require('searchlib.php');
 
-safe_require('search', 'internal', 'lib.php', 'require_once');
+safe_require('search', 'internal');
 
 try {
     $query = param_variable('query');
@@ -57,6 +57,6 @@ foreach ($data['data'] as &$result) {
 json_headers();
 $data['error'] = false;
 $data['message'] = '';
-print json_encode($data);
+echo json_encode($data);
 
 ?>
