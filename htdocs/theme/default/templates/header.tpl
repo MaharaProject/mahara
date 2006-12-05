@@ -16,7 +16,6 @@
         {/strip}
         <link rel="stylesheet" type="text/css" href="{$THEMEURL}style/style.css">
         <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
-        {if $LOGGEDIN}<noscript><meta http-equiv="refresh" content="0; {$WWWROOT}?logout"></noscript>{/if}
     </head>
     <body>
         <div id="header">
