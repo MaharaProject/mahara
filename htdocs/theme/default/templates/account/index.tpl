@@ -7,7 +7,7 @@
 class="cnr-bl"><span class="cnr-br">
 	<div class="maincontent">
 
-	<h2>{str tag="account"}</h2>
+	<h2>{str tag="preferences"}</h2>
 	
 	{$form}
 

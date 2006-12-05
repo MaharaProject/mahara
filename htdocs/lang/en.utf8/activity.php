@@ -35,6 +35,7 @@ $string['typecontactus'] = 'Contact us';
 $string['typeobjectionable'] = 'Objectionable content';
 $string['typevirusrepeat'] = 'Virus flat repeat';
 $string['typevirusrelease'] = 'Virus flag release';
+$string['typeadminmessages'] = 'Administration messages';
 
 $string['type'] = 'Activity type';
 $string['attime'] = 'at';

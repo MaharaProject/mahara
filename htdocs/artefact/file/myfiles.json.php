@@ -42,12 +42,12 @@ else {
 }
 
 $prefix = get_config('dbprefix');
-$filedata = get_records_sql_array('SELECT a.id, a.artefacttype, a.mtime, f.name, f.size
-        FROM ' . $prefix . 'artefact_file_files f
-        INNER JOIN ' . $prefix . 'artefact a ON f.artefact = a.id
+$filedata = get_records_sql_array('SELECT a.id, a.artefacttype, a.mtime, f.size, a.title, a.description
+        FROM ' . $prefix . 'artefact a
+        INNER JOIN ' . $prefix . 'artefact_file_files f ON f.artefact = a.id
         WHERE a.owner = ' . $userid . '
         AND a.parent' . $infolder . '
-        ORDER BY a.artefacttype DESC, f.name ASC', '');
+        ORDER BY a.artefacttype DESC', '');
 
 if (!$filedata) {
     $filedata = array();
@@ -67,7 +67,7 @@ $result = array(
     'message'     => get_string('filelistloaded'),
 );
 
-log_debug($result);
+//log_debug($result);
 
 json_headers();
 print json_encode($result);
