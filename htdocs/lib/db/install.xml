@@ -714,12 +714,14 @@
             <FIELDS>
                 <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
             </FIELDS>
             <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="usr,artefact" />
+                <KEY NAME="primary" TYPE="primary" FIELDS="usr,artefact,view" />
                 <KEY NAME="usrfk" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id" />
                 <KEY NAME="artefactfk" TYPE="foreign" FIELDS="artefact" REFTABLE="artefact" REFFIELDS="id" />
+                <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id" />
             </KEYS>
         </TABLE>
         <TABLE NAME="usr_watchlist_view">
