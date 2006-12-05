@@ -27,31 +27,24 @@
 define('INTERNAL', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 
-log_debug('addwatchlist.json.php');
-
-$id = param_integer('id');
-$type = param_variable('type');
-
-log_debug($id . ' ' . $type);
+$viewid = param_integer('viewid');
+$artefactid = param_integer('artefactid',null);
 
 $data = new StdClass;
-if ($type == 'view') {
-    $data->view = $id;
-}
-else if ($type == 'artefact') {
-    $data->artefact = $id;
+if ($artefactid) {
+    $data->artefact = $artefactid;
+    $table = 'usr_watchlist_artefact';
+    $artefactfield = 'artefact';
 }
 else {
-    json_reply('local', get_string('invalidwatchlistitem'));
+    $table = 'usr_watchlist_view';
+    $artefactfield = null;
 }
-
-$table = 'usr_watchlist_' . $type;
+$data->view = $viewid;
 $data->usr = $USER->get('id');
 $data->ctime = db_format_timestamp(time());
 
-log_debug($data);
-
-if (record_exists($table, 'usr', $data->usr, $type, $id)) {
+if (record_exists($table, 'usr', $data->usr, 'view', $viewid, $artefactfield, $artefactid)) {
     json_reply(false, get_string('itemalreadyinwatchlist'));
 }
 
