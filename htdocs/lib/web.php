@@ -1076,10 +1076,15 @@ function searchform() {
     return pieform(array(
         'name'                => 'searchform',
         'action'              => get_config('wwwroot') . 'user/search.php',
+        'renderer'            => 'oneline',
         'elements'            => array(
             'query' => array(
                 'type'           => 'text',
                 'defaultvalue'   => '',
+            ),
+            'submit' => array(
+                'type' => 'image',
+                'src'  => theme_get_image_path('images/btn_search_off.gif')
             )
         )
     ));
