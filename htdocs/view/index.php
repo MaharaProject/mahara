@@ -147,7 +147,6 @@ JAVASCRIPT;
 
 $smarty = smarty(array('tablerenderer'), array(), array('viewsubmittedto'));
 $smarty->assign('site_menu', site_menu());
-$smarty->assign('searchform', searchform());
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->display('view/index.tpl');
 
