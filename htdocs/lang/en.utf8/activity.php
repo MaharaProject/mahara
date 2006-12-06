@@ -66,4 +66,20 @@ $string['stopmonitoringfailed'] = 'Failed to stop monitoring';
 
 $string['newwatchlistmessage'] = 'New activity on your watchlist';
 $string['newviewmessage'] = 'New view you have access to';
+
+$string['newcontactusfrom'] = 'New contact us from';
+$string['newcontactus'] = 'New contact us';
+$string['newfeedbackonview'] = 'New feedback on view';
+$string['newfeedbackonartefact'] = 'New feedback on artefact';
+$string['watchlistmessageview'] = 'Activity on watchlist (view)';
+$string['watchlistmessageartefact'] = 'Activity on watchlist (artefact)';
+$string['watchlistmessagecommunity'] = 'Activity on watchlist (community)';
+$string['newviewmessage'] = 'New view called';
+$string['newviewsubject'] = 'New view';
+
+$string['onview'] = 'on view';
+$string['onartefact'] = 'on artefact';
+$string['oncommunity'] = 'on community';
+$string['ownedby'] = 'owned by';
+
 ?>
