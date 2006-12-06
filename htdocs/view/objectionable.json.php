@@ -17,37 +17,24 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage notification-internal
- * @author     Penny Leach <penny@catalyst.net.nz>
+ * @subpackage core
+ * @author     Richard Mansfield <richard.mansfield@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
-defined('INTERNAL') || die();
+define('INTERNAL', 1);
+require(dirname(dirname(__FILE__)) . '/init.php');
+require_once('activity.php');
 
-class PluginNotificationInternal extends PluginNotification {
+$data = new StdClass;
+$data->view       = param_integer('view');
+$data->artefact   = param_integer('artefact', null);
+$data->message    = param_variable('message');
 
-    public static function notify_user($user, $data) {
-        $toinsert = new StdClass;
-        $toinsert->type = $data->type;
-        $toinsert->usr = $user->id;
-        if (!empty($user->markasread)) {
-            $toinsert->read = 1;
-        } 
-        else {
-            $toinsert->read = 0;
-        }
-        $toinsert->message = $data->message;
-        $toinsert->subject = $data->subject;
-        $toinsert->ctime = db_format_timestamp(time());
+activity_occurred('objectionable', $data);
 
-        if (!empty($data->url)) {
-            $toinsert->url = $data->url;
-        }
-        
-        insert_record('notification_internal_activity', $toinsert);
-    }
-}
+json_reply(false, get_string('reportsent'));
 
 ?>

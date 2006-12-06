@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage notification-internal
- * @author     Penny Leach <penny@catalyst.net.nz>
+ * @subpackage artefact-internal
+ * @author     Alastair Pharo <alastair@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
@@ -26,28 +26,19 @@
 
 defined('INTERNAL') || die();
 
-class PluginNotificationInternal extends PluginNotification {
+function xmldb_artefact_blog_upgrade($oldversion=0) {
+    
+    $status = true;
 
-    public static function notify_user($user, $data) {
-        $toinsert = new StdClass;
-        $toinsert->type = $data->type;
-        $toinsert->usr = $user->id;
-        if (!empty($user->markasread)) {
-            $toinsert->read = 1;
-        } 
-        else {
-            $toinsert->read = 0;
-        }
-        $toinsert->message = $data->message;
-        $toinsert->subject = $data->subject;
-        $toinsert->ctime = db_format_timestamp(time());
-
-        if (!empty($data->url)) {
-            $toinsert->url = $data->url;
-        }
-        
-        insert_record('notification_internal_activity', $toinsert);
+    // There was no database prior to this version.
+    if ($oldversion < 2006120501) {
+        $status = $status && install_from_xmldb_file(
+            get_config('docroot') .
+            'artefact/blog/db/install.xml'
+        );
     }
+
+    return $status;
 }
 
 ?>

@@ -33,6 +33,7 @@ safe_require('artefact', 'blog');
 $id = param_integer('id');
 $enc_id = json_encode($id);
 
+// This javascript is used to generate a list of blog posts.
 $js = <<<EOJAVASCRIPT
 
 var postlist = new TableRenderer(
@@ -54,7 +55,6 @@ postlist.id = {$enc_id};
 postlist.updateOnLoad();
 
 EOJAVASCRIPT;
-
 
 $blog = new ArtefactTypeBlog($id);
 

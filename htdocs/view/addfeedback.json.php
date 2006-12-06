@@ -17,18 +17,37 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage core or plugintype/pluginname
- * @author     Your Name <you@example.org>
+ * @subpackage core
+ * @author     Richard Mansfield <richard.mansfield@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
-defined('INTERNAL') || die();
+define('INTERNAL', 1);
+require(dirname(dirname(__FILE__)) . '/init.php');
 
-$template = new StdClass;
-$template->title = 'Example template';
-$template->description = 'Very rough proof of concept example template';
-$template->category = 'resume';
+$data = new StdClass;
+
+$data->view       = param_integer('view');
+$data->artefact   = param_integer('artefact', null);
+$data->message    = param_variable('message');
+$data->public     = param_boolean('public') ? 1 : 0;
+$data->attachment = param_integer('attachment', null);
+$data->author     = $USER->get('id');
+$data->ctime      = db_format_timestamp(time());
+
+if ($data->artefact) {
+    $table = 'artefact_feedback';
+}
+else {
+    $table = 'view_feedback';
+}
+
+if (!insert_record($table, $data, 'id', true)) {
+    json_reply('local', get_string('addfeedbackfailed'));
+}
+
+json_reply(false,get_string('feedbacksubmitted'));
 
 ?>

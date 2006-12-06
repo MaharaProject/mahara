@@ -8,8 +8,6 @@
 <div class="content">
     <h2>{str section="artefact.blog" tag="newblog"}</h2>
     {$newblogform}
-
-    ADD RADIO BUTTONS
 </div>
 
 {include file="footer.tpl"}

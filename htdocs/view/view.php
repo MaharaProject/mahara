@@ -34,8 +34,112 @@ if (can_view_view($viewid)) {
     $content = 'view template display here';
 }
 
-$smarty = smarty();
-$smarty->clear_assign('MAINNAV');
+$getstring = quotestrings(array('message', 'makepublic', 'placefeedback',
+                                'cancel', 'complaint', 'notifysiteadministrator',
+                                'addtowatchlist', 
+                                'nopublicfeedbackhasbeenplacedonthisview',
+                                'reportobjectionablematerial', 'print'));
+
+$javascript = <<<JAVASCRIPT
+
+var view = {$viewid};
+
+function feedbackform() {
+    if ($('menuform')) {
+        removeElement('menuform');
+    }
+    var form = FORM({'id':'menuform','method':'post'});
+    submitfeedback = function () {
+        // @todo add support for attached files when user is a tutor.
+        sendjsonrequest('addfeedback.json.php',
+            {'view':view, 
+             'message':form.message.value,
+             'public':form.public.checked},
+            function () { 
+                removeElement('menuform');
+                if (form.public.checked) {
+                    feedbacklist.doupdate();
+                }
+            });
+        return false;
+    }
+    appendChildNodes(form, 
+        TABLE({'border':0, 'cellspacing':0},
+        TBODY(null,
+        TR(null, TH(null, LABEL(null, {$getstring['message']}))),
+        TR(null, TD(null, TEXTAREA({'rows':5, 'cols':80, 'name':'message'}))),
+        TR(null, TH(null, LABEL(null, {$getstring['makepublic']}), 
+                    INPUT({'type':'checkbox', 'name':'public'}))),
+        TR(null, TD(null,
+                    INPUT({'type':'button', 'value':{$getstring['placefeedback']},
+                               'onclick':'submitfeedback();'}),
+                    INPUT({'type':'button', 'value':{$getstring['cancel']},
+                               'onclick':"removeElement('menuform');"}))))));
+    appendChildNodes('viewmenu', DIV(null, form));
+    return false;
+}
+
+function objectionform() {
+    if ($('menuform')) {
+        removeElement('menuform');
+    }
+    var form = FORM({'id':'menuform','method':'post'});
+    submitobjection = function () {
+        sendjsonrequest('objectionable.json.php',
+            {'view':view, 'message':form.message.value},
+            function () { removeElement('menuform'); });
+        return false;
+    }
+    appendChildNodes(form, 
+        TABLE({'border':0, 'cellspacing':0},
+        TBODY(null,
+        TR(null, TH(null, LABEL(null, {$getstring['complaint']}))),
+        TR(null, TD(null, TEXTAREA({'rows':5, 'cols':80, 'name':'message'}))),
+        TR(null, TD(null,
+                    INPUT({'type':'button', 'value':{$getstring['notifysiteadministrator']},
+                               'onclick':'submitobjection();'}),
+                    INPUT({'type':'button', 'value':{$getstring['cancel']},
+                               'onclick':"removeElement('menuform');"}))))));
+    appendChildNodes('viewmenu', DIV(null, form));
+    return false;
+}
+
+function view_menu() {
+    var addwatchlist = A({'href':''}, {$getstring['addtowatchlist']});
+    addwatchlist.onclick = function () { 
+        sendjsonrequest('addwatchlist.json.php', {'view':view});
+        return false;
+    }
+
+    appendChildNodes('viewmenu',
+                     A({'href':'', 'onclick':"return feedbackform();"}, {$getstring['placefeedback']}), ' | ',
+                     A({'href':'', 'onclick':'return objectionform();'},
+                       {$getstring['reportobjectionablematerial']}), ' | ',
+                     A({'href':'', 'onclick':'window.print();'}, {$getstring['print']}), ' | ',
+                      addwatchlist);
+}
+
+addLoadEvent(view_menu);
+
+// The list of existing feedback.
+var feedbacklist = new TableRenderer(
+    'feedbacktable',
+    'getfeedback.json.php',
+    ['message', 'name', 'date']
+);
+
+feedbacklist.limit = 10;
+feedbacklist.view = view;
+feedbacklist.statevars.push('view');
+feedbacklist.emptycontent = {$getstring['nopublicfeedbackhasbeenplacedonthisview']};
+feedbacklist.updateOnLoad();
+
+
+JAVASCRIPT;
+
+$smarty = smarty(array('tablerenderer'));
+//$smarty->clear_assign('MAINNAV');
+$smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('TITLE', $view->title);
 if (isset($content)) {
     $smarty->assign('VIEWCONTENT', $content);

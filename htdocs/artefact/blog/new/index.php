@@ -51,7 +51,25 @@ $form = pieform(array(
             'title'       => get_string('blogdesc', 'artefact.blog'),
             'description' => get_string('blogdescdesc', 'artefact.blog'),
             'rules' => array(
-                'required'    => true
+                'required'    => false
+            )
+        ),
+        'commentsallowed' => array(
+            'type'        => 'radio',
+            'title'       => get_string('commentsallowed', 'artefact.blog'),
+            'description' => get_string('commentsalloweddesc', 'artefact.blog'),
+            'options'     => array(
+                0 => get_string('commentsallowedno', 'artefact.blog'),
+                1 => get_string('commentsallowedyes', 'artefact.blog')
+            )
+        ),
+        'commentsnotify' => array(
+            'type'        => 'radio',
+            'title'       => get_string('commentsnotify', 'artefact.blog'),
+            'description' => get_string('commentsnotifydesc', 'artefact.blog'),
+            'options'     => array(
+                0 => get_string('commentsnotifyno', 'artefact.blog'),
+                1 => get_string('commentsnotifyyes', 'artefact.blog')
             )
         ),
         'submit' => array(

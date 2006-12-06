@@ -29,13 +29,10 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 
 $wwwroot = get_config('wwwroot');
 
-$strings = array('accessstartdate', 'accessstopdate', 'artefacts', 'delete', 'deleteviewquestion',
-                 'description', 'editaccess', 'editview', 'editviewinformation', 'submitted', 
-                 'submitview', 'submitviewquestion');
-$getstring = array();
-foreach ($strings as $string) {
-    $getstring[$string] = "'" . get_string($string) . "'";
-}
+$getstring = quotestrings(array('accessstartdate', 'accessstopdate', 'artefacts', 'delete',
+                                'deleteviewquestion', 'description', 'editaccess', 'editview', 
+                                'editviewinformation', 'submitted', 'submitview', 
+                                'submitviewquestion'));
 
 /* This is a slightly dodgy use of the table renderer: I'm outputting
    five <tr> elements for each item of data coming from the database.

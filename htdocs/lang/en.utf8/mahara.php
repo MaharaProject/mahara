@@ -151,11 +151,9 @@ $string['email']                    = 'Email';
 $string['subject']                  = 'Subject';
 $string['message']                  = 'Message';
 $string['submitcontactinformation'] = 'Submit contact information';
-$string['nositecontactaddress']     = 'Site contact email address not set';
 $string['nosendernamefound']        = 'No sender name was submitted';
 $string['emailnotsent']             = 'Failed to send contact email. Error message: "%s"';
 $string['contactinformationsent']   = 'Your contact information has been sent';
-$string['contactaddress']           = 'Contact address';
 
 // mahara.js
 $string['namedfieldempty'] = 'The required field "%s" is empty';
@@ -214,10 +212,12 @@ $string['editaccess'] = 'Edit Access';
 $string['editview'] = 'Edit View';
 $string['editviewinformation'] = 'Edit View Information';
 $string['myviews'] = 'My Views';
+$string['notownerofview'] = 'You are not the owner of this view';
 $string['submitview'] = 'Submit View';
 $string['submitviewquestion'] = 'If you submit this view for assessment, you will not be able to edit the view or any of its associated artefacts until your tutor has finished marking the view.  Are you sure you want to submit this view now?';
 $string['viewdeleted'] = 'View deleted';
 $string['views'] = 'Views';
+$string['viewsubmitted'] = 'View submitted';
 $string['viewsubmittedto'] = 'This view has been submitted to %s';
 
 // view user
@@ -261,4 +261,22 @@ $string['artefactnotfound'] = 'Artefact with id %s not found';
 
 $string['belongingto'] = 'Belonging to';
 $string['allusers'] = 'All users';
+
+// view view
+$string['addfeedbackfailed'] = 'Add feedback failed';
+$string['addtowatchlist'] = 'Add to watchlist';
+$string['complaint'] = 'Complaint';
+$string['date'] = 'Date';
+$string['feedbacksubmitted'] = 'Feedback submitted';
+$string['itemaddedtowatchlist'] = 'This item has been added to your watchlist';
+$string['itemalreadyinwatchlist'] = 'This item is already in your watchlist';
+$string['makepublic'] = 'Make public';
+$string['nopublicfeedbackhasbeenplacedonthisview'] = 'No public feedback has been placed on this view';
+$string['notifysiteadministrator'] = 'Notify site administrator';
+$string['placefeedback'] = 'Place feedback';
+$string['print'] = 'Print';
+$string['reportobjectionablematerial'] = 'Report objectionable material';
+$string['reportsent'] = 'Your report has been sent';
+$string['updatewatchlistfailed'] = 'Update of watchlist failed';
+
 ?>

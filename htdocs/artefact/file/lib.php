@@ -70,14 +70,6 @@ class PluginArtefactFile extends PluginArtefact {
 
 class ArtefactTypeFileBase extends ArtefactType {
 
-    public function commit() {
-        $this->commit_basic();
-    }
-    
-    public function delete() {
-        $this->delete_basic();
-    }
-
     public function render($format, $options) {
         if ($format == FORMAT_ARTEFACT_LISTSELF) {
             return $this->title;
@@ -87,6 +79,10 @@ class ArtefactTypeFileBase extends ArtefactType {
 
     public static function get_render_list() {
         return array(FORMAT_ARTEFACT_LISTSELF);
+    }
+
+    public static function is_0_or_1() {
+        return false;
     }
 
     public function get_icon() {

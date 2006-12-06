@@ -182,9 +182,10 @@ if ($institution || $add) {
 }
 else {
     // Get a list of institutions
+    $prefix = get_config('dbprefix');
     $institutions = get_records_sql_array('SELECT i.name, i.displayname, i.authplugin, i.registerallowed, COUNT(u.*) AS hasmembers
-        FROM institution i
-        LEFT OUTER JOIN usr u ON (u.institution = i.name)
+        FROM ' . $prefix . 'institution i
+        LEFT OUTER JOIN ' . $prefix . 'usr u ON (u.institution = i.name)
         GROUP BY 1, 2, 3, 4
         ORDER BY i.name', array());
     $smarty->assign('institutions', $institutions);

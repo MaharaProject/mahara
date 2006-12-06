@@ -1,0 +1,42 @@
+/*
+ * MARTYNS CREATEVIEW WIZARD STYLES
+ * these can be replaced with something similar that looks less suck
+ */
+div#tree, div#template {
+    margin-top: 20px;
+}
+
+div#tree {
+    overflow: auto;
+    float: left;
+    width: 400px;
+    border: thin dashed red;
+    border-right: thin solid #000;
+}
+
+div#template {
+    overflow: auto;
+    border: thin dashed red;
+    float: left;
+    width: 30%;
+}
+
+.render_metadata, .render_full, .render_listitem, .render_children {
+    cursor: move;
+}
+
+div.block {
+    border: 2px solid transparent;
+}
+
+div.block_potential {
+    border: 2px solid #008800;
+}
+
+div.block_targetted {
+    border: 2px solid #00ff00;
+}
+
+/*
+ * END MARTYNS STYLES FOR CREATEVIEW WIZARD
+ */
