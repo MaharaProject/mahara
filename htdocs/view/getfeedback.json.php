@@ -49,7 +49,8 @@ $count = count_records($table, 'public', 1, 'view', $view, $artefactfield, $arte
 
 $feedback = get_records_sql_array('SELECT author, ctime, message
     FROM ' . $prefix . $table . '
-    WHERE public = 1 AND view = ' . $view . $whereartefact, '', $offset, $limit);
+    WHERE public = 1 AND view = ' . $view . $whereartefact . '
+    ORDER BY id DESC', '', $offset, $limit);
 
 $data = array();
 if ($feedback) {
