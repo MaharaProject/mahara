@@ -13,6 +13,8 @@ class="cnr-bl"><span class="cnr-br">
    {str tag=viewviewnotallowed}
 {/if}
 
+<div id="viewmenu"></div>
+
 	</div>
 </span></span></span></span></div>	
 </div>
