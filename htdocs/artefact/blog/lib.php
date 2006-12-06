@@ -148,6 +148,10 @@ class ArtefactTypeBlog extends ArtefactType {
     public static function get_render_list() {
     }
 
+    public static function is_0_or_1() {
+        return false;
+    }
+
     public static function collapse_config() {
     }
 
@@ -222,6 +226,10 @@ class ArtefactTypeBlogPost extends ArtefactType {
     }
 
     public static function get_render_list() {
+    }
+
+    public static function is_0_or_1() {
+        return false;
     }
 
     public static function collapse_config() {

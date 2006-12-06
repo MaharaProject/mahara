@@ -78,46 +78,98 @@ function template_parse_block($blockstr) {
         $keyvalue = explode('=', $b);
         $data[$keyvalue[0]] = substr($keyvalue[1], 1, -1);
     }
-    
-    if (!isset($data['id']) || empty($data['id'])) {
-        throw new InvalidArgumentException("Invalid block $blockstr. Must have id");
+
+    if (!isset($data['id']) || empty($data['id']) || strpos($data['id'], 'tpl_') !== 0) {
+        throw new InvalidArgumentException("Invalid block section $blockstr - must have an id beginning with tpl_");
     }
-    // everything else can theoretically be optional....
 
-    template_validate_block($data, '');
-    template_validate_block($data, 'default');
+    if (!isset($data['type']) || empty($data['type'])) {
+        throw new InvalidArgumentException("Invalid block section $blockstr - must have a type");
+    }
+    
+    $types = array('artefact', 'label', 'title', 'author', 'description');
+    if (!in_array($data['type'], $types)){
+        throw new InvalidArgumentException("Invalid block section $blockstr (type " . $data['type'] 
+                                           . " not one of " . implode(', ', $types));
+    }
+ 
+    if (!isset($data['tagtype'])) {
+        $data['tagtype'] = 'div';
+    }
 
-    return $data;
+    if ($data['type']  != 'artefact') {
+        // no more validation to do.
+        return $data;
+    }
+
+    if (isset($data['artefacttype'])) {
+        if (!$plugin = get_field('artefact_installed_type', 'plugin', 'name', $data['artefacttype'])) {
+            throw new InvalidArgumentException("artefacttype " . $data['artefacttype'] . " is not installed");
+        }
+     
+        if (isset($data['format'])) { // check the artefacttype can render to this format.
+            safe_require('artefact', $plugin);
+
+            if (!artefact_can_render_to($data['artefacttype'], $data['format'])) {
+                throw new InvalidArgumentException("Artefacttype " . $data['artefacttype'] . " can't render to format "
+                                                   . $format['format']);
+            }
+        }
         
-}
-
-function template_validate_block(&$data, $name='') {
-    
-    $type &= (isset($data[$name . 'type']) ? $data[$name . 'type'] : '');
-    $format &= (isset($data[$name . 'format']) ? $data[$name . 'format'] : '');
-    
-    if ((empty($format) && empty($type)) || $format == 'label') { // labels are special cases
-        return true;
     }
 
-    // if we've got type but no format and we're looking at defaults, use main format.
-    if (!empty($type) && empty($format) && $name == 'default' && !empty($data['format'])) {
-        $format = $data['format'];
+    if (isset($data['plugintype'])) {
+        try {
+            safe_require('artefact', $data['plugintype']);
+        }
+        catch (Exception $e) {
+            throw new InvalidArgumentException("Couldn't find plugin type " . $data['plugintype']);
+        }
     }
+
+    if (isset($data['defaultartefacttype'])) {
+        if (isset($data['artefacttype']) && $data['artefacttype'] != $data['defaultartefacttype']) {
+            throw new InvalidArgumentException("Default artefact type " . $data['defaultartefacttype']
+                                               . " doesn't make sense given artefact type " . $data['artefacttype']);
+        }
+        else if (isset($data['plugintype']) 
+                 && !in_array($data['defaultartefacttype'], 
+                    call_static_method(generate_class_name($data['plugintype']), 'get_artefact_types'))) {
+            throw new InvalidArgumentException("Default artefact type " . $data['defaultartefacttype']
+                                               ." doesn't make sense given plugin type " . $data['plugintype']);
+        }
+        if (!$plugin = get_field('artefact_installed_type', 'plugin', 'name', $data['defaultartefacttype'])) {
+            throw new InvalidArgumentException("Default artefact type  " . $data['defaultartefacttype'] 
+                                               . " is not installed");
+        }
+        // look for a default format...
+        if (!isset($data['defaultformat'])) {
+            if (isset($data['format'])) {
+                $data['defaultformat'] = $data['format'];
+            }
+            else {
+                throw new InvalidArgumentException("Default artefact type " . $data['defaultartefacttype']
+                                                   ." specified but with no format method (couldn't find in either "
+                                                   ." default format, or fallback format field");
+            }
+        }
+        // check the default artefact type can render to the given default format
+        safe_require('artefact', $plugin);
+        if (!artefact_can_render_to($data['defaultartefacttype'], $data['defaultformat'])) {
+            throw new InvalidArgumentException("Default artefact type " . $data['defaultartefacttype'] 
+                                               . " can't render to defaultformat " . $format['defaultformat']);
+        }
         
-    // figure out what plugin handles this type and validate the class exists.
-    if (!$plugin = get_field('artefact_installed_type', 'plugin', 'name', $type)) {
-        throw new InvalidArgumentException("{$name}type $type is not installed");
+        // check this default artefact is a 0 or 1 artefact
+        if (!call_static_method(generate_artefact_class_name($data['defaultartefacttype']), 'is_0_or_1')) {
+            throw new InvalidArgumentException("Default artefact type " . $data['defaultartefacttype']
+                                               ." is not a 0 or 1 type artefact");
+        }
     }
-    
-    require_once('artefact.php');
-    safe_require('artefact', $plugin);
 
-    if (!artefact_can_render_to($type, $format)) {
-        throw new InvalidArgumentException("{$name}type $type can't render to {$name}format $format");
-    }
+    // @todo resizing stuff maybe
     
-    // @todo validate resizing stuff
+    return $data;        
 }
 
 function template_locate($templatename, $fetchdb=true) {
