@@ -59,15 +59,18 @@ if (!empty($upgrades['core']->install)) {
                     $('coredata').innerHTML = '<img src="{$loadingicon}" alt="{$loadingstring}" />';
                     
                     d.addCallbacks(function (data) {
-                        if ( data.success ) {
+                        if ( !data.error ) {
                             var message = '{$coresuccess}';
+                            if (data.message) {
+                                message += ' (' + data.message + ')';
+                            }
                             $('coredata').innerHTML = '<img src="{$successicon}" alt=":)" />  ' + message;
                             $('finished').style.visibility = 'visible';
                         }
                         else {
                             var message = '';
-                            if (data.errormessage) {
-                                message = data.errormessage;
+                            if (data.message) {
+                                message = data.message;
                             } 
                             else {
                                 message = '{$failurestring}';
@@ -99,7 +102,7 @@ $js .= <<< EOJS
                 $(element).innerHTML = '<img src="{$loadingicon}" alt="{$loadingstring}" />';
 
                 d.addCallbacks(function (data) {
-                    if ( data.success ) {
+                    if ( !data.error ) {
                         var message;
                         if (data.install) {
                             message = '{$installsuccessstring}';
@@ -112,8 +115,8 @@ $js .= <<< EOJS
                     }
                     else {
                         var message = '';
-                        if (data.errormessage) {
-                            message = data.errormessage;
+                        if (data.message) {
+                            message = data.message;
                         } 
                         else {
                             message = '{$failurestring}';

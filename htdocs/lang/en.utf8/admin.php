@@ -42,6 +42,7 @@ $string['upgradeloading'] = 'Loading...';
 $string['upgradesuccess'] = 'Successfully upgraded to version ';
 $string['upgradefailure'] = 'Failed to upgrade!';
 $string['noupgrades'] = 'Nothing to upgrade! You are fully up to date!';
+$string['fixtemplatescontinue'] = 'Try fixing this and continuing here (templates were not installed)';
 
 // Admin navigation menu
 $string['usermanagement'] = 'Manage users';
@@ -163,5 +164,6 @@ $string['institutiondisplayname'] = 'Institution display name';
 $string['institutionupdatedsuccessfully'] = 'Institution updated successfully';
 $string['registrationallowed'] = 'Registration allowed?';
 $string['registrationalloweddescription'] = 'Whether users can register for the system with this institution';
+
 
 ?>

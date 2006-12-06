@@ -473,4 +473,9 @@ class ArtefactNotFoundException extends Exception {}
  * Exception - view not found
  */
 class ViewNotFoundException extends Exception {}
+
+/**
+ * Exception - anything to do with template parsing
+ */
+class TemplateParserException extends Exception {}
 ?>
