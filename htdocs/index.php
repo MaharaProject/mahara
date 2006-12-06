@@ -96,9 +96,6 @@ $smarty = smarty();
 if (!$USER->is_logged_in()) {
     $smarty->assign('login_form', $loginform);
 }
-else {
-    $smarty->assign('searchform', searchform());
-}
 $smarty->assign('page_content', get_site_page_content($pagename));
 $smarty->assign('site_menu', site_menu());
 $smarty->display('index.tpl');
