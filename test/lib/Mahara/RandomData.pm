@@ -479,6 +479,8 @@ sub insert_random_filethings {
         #    last;
         #}
         my $folder = @$folder_list[int(rand(scalar @$folder_list))]->{id};
+        my $description = join(' ', $wl->get_words(int(rand(5)) + 1));
+        $description =~ s/[\x80-\xff]//g;
         $self->{dbh}->do('INSERT INTO ' . $prefix . 'artefact (artefacttype, container, parent, owner, ctime, mtime, atime, title, description)
             VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, ?, ?)',
             undef,
@@ -487,7 +489,7 @@ sub insert_random_filethings {
             $folder,
             $user_id,
             $wl->get_words(1)->[0] . (($thing eq 'folder') ? '' : (($thing eq 'image') ? '.png' : '.txt')),
-            join(' ', $wl->get_words(int(rand(5)) + 1)));
+            $description );
     }
 
     # Now insert file sizes into the artefact_file_files table
