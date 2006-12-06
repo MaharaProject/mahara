@@ -16,7 +16,6 @@ class="cnr-bl"><span class="cnr-br">
 <table id="feedbacktable">
     <thead>
         <tr><th colspan=3>{str tag=feedback}</th></tr>
-        <tr><th>{str tag=name}</th><th>{str tag=date}</th><th>{str tag=message}</th></tr>
     </thead>
 </table>
 
