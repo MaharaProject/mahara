@@ -112,7 +112,93 @@ class PluginSearchInternal extends PluginSearch {
         // else if ( is_mysql() ) {
         // }
         else {
-            throw new DatalibException('search_user() is not implemented for your database engine (' . get_config('dbtype') . ')');
+            throw new SQLException('search_user() is not implemented for your database engine (' . get_config('dbtype') . ')');
+        }
+
+        return array(
+            'count'   => $count,
+            'limit'   => $limit,
+            'offset'  => $offset,
+            'data'    => $data,
+        );
+    }
+    
+    /**
+     * Implement group searching with SQL
+     *
+     * @param string  The query string
+     * @param integer How many results to return
+     * @param integer What result to start at (0 == first result)
+     * @return array  A data structure containing results looking like ...
+     *         $results = array(
+     *               count   => integer, // total number of results
+     *               limit   => integer, // how many results are returned
+     *               offset  => integer, // starting from which result
+     *               data    => array(   // the result records
+     *                   array(
+     *                       id            => integer,
+     *                       username      => string,
+     *                       institution   => string,
+     *                       firstname     => string,
+     *                       lastname      => string,
+     *                       preferredname => string,
+     *                       email         => string,
+     *                   ),
+     *                   array(
+     *                       id            => integer,
+     *                       username      => string,
+     *                       institution   => string,
+     *                       firstname     => string,
+     *                       lastname      => string,
+     *                       preferredname => string,
+     *                       email         => string,
+     *                   ),
+     *                   array(...),
+     *               ),
+     *           );
+     */
+    public static function search_group($query_string, $limit, $offset = 0) {
+        global $USER;
+        if ( is_postgres() ) {
+            $data = get_records_sql_array("
+                SELECT
+                    id, name, owner, description, ctime, mtime
+                FROM
+                    " . get_config('dbprefix') . "usr_group u
+                WHERE
+                    owner = ?
+                    AND (
+                        name ILIKE '%' || ? || '%' 
+                        OR description ILIKE '%' || ? || '%' 
+                    )
+                ",
+                array($USER->get('id'), $query_string, $query_string),
+                $offset,
+                $limit
+            );
+
+            $count = get_field_sql("
+                SELECT
+                    COUNT(*)
+                FROM
+                    " . get_config('dbprefix') . "usr_group u
+                WHERE
+                    owner = ?
+                    AND (
+                        name ILIKE '%' || ? || '%' 
+                        OR description ILIKE '%' || ? || '%' 
+                    )
+            ",
+                array($USER->get('id'), $query_string, $query_string),
+                $offset,
+                $limit
+            );
+        }
+        // TODO
+        // else if ( is_mysql() ) {
+        // }
+        else {
+            throw new SQLException('search_group() is not implemented for your database engine (' . get_config('dbtype') . ')');
         }
 
         return array(
