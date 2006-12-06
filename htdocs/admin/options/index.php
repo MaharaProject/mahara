@@ -94,15 +94,6 @@ $siteoptionform = pieform(array(
             'description'  => get_string('artefactviewinactivitytimedescription','admin'),
             'defaultvalue' => get_config('artefactviewinactivitytime'),
         ),
-        'contactaddress' => array(
-            'type'         => 'text',
-            'title'        => get_string('contactaddress','admin'),
-            'description'  => get_string('contactaddressdescription','admin'),
-            'defaultvalue' => get_config('contactaddress'),
-            'rules'        => array(
-                'email' => true
-            )
-        ),
         'submit' => array(
             'type'  => 'submit',
             'value' => get_string('updatesiteoptions','admin')
@@ -116,8 +107,7 @@ function siteoptions_fail($field) {
 
 function siteoptions_submit($values) {
     $fields = array('sitename','language','theme','pathtoclam',
-                    'allowpublicviews','artefactviewinactivitytime',
-                    'contactaddress');
+                    'allowpublicviews','artefactviewinactivitytime');
     foreach ($fields as $field) {
         if (!set_config($field, $values[$field])) {
             siteoptions_fail($field);

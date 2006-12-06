@@ -33,7 +33,7 @@ defined('INTERNAL') || die();
  * @param string $activitytype type of activity
  * @param mixed $data data 
  */
-function activity_occured($activitytype, $data) {
+function activity_occurred($activitytype, $data) {
     if (!$at = get_record('activity_type', 'name', $activitytype)) {
         throw new Exception("Invalid activity type $activitytype");
     }
