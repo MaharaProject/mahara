@@ -27,31 +27,49 @@
 define('INTERNAL', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 
-$view = param_integer('view');
-$artefactid = param_integer('artefactid',null);
+$view     = param_integer('view');
+$artefact = param_integer('artefact', null);
+$limit    = param_integer('limit', 5);
+$offset   = param_integer('offset', 0);
 
-$data = new StdClass;
-if ($artefactid) {
-    $data->artefact = $artefactid;
-    $table = 'usr_watchlist_artefact';
+$prefix = get_config('dbprefix');
+
+if ($artefact) {
+    $table = 'artefact_feedback';
     $artefactfield = 'artefact';
+    $whereartefact = ' AND artefact = ' . $artefact;
 }
 else {
-    $table = 'usr_watchlist_view';
+    $table = 'view_feedback';
     $artefactfield = null;
-}
-$data->view = $view;
-$data->usr = $USER->get('id');
-$data->ctime = db_format_timestamp(time());
-
-if (record_exists($table, 'usr', $data->usr, 'view', $view, $artefactfield, $artefactid)) {
-    json_reply(false, get_string('itemalreadyinwatchlist'));
+    $whereartefact = '';
 }
 
-if (!insert_record($table, $data)) {
-    json_reply('local', get_string('updatewatchlistfailed'));
+$count = count_records($table, 'public', 1, 'view', $view, $artefactfield, $artefact);
+
+$feedback = get_records_sql_array('SELECT author, ctime, message
+    FROM ' . $prefix . $table . '
+    WHERE public = 1 AND view = ' . $view . $whereartefact . '
+    ORDER BY id DESC', '', $offset, $limit);
+
+$data = array();
+if ($feedback) {
+    foreach ($feedback as $record) {
+        $data[] = array('name' => display_name($record->author),
+                        'date' => strftime(get_string('strftimedate'),strtotime($record->ctime)),
+                        'message' => $record->message);
+    }
 }
 
-json_reply(false,get_string('itemaddedtowatchlist'));
+$result = array(
+    'count'       => $count,
+    'limit'       => $limit,
+    'offset'      => $offset,
+    'data'        => $data,
+);
+
+json_headers();
+print json_encode($result);
+
 
 ?>

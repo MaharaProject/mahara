@@ -10,7 +10,8 @@
                 <FIELD NAME="type" TYPE="char" LENGTH="50" NOTNULL="true" />
                 <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
-                <FIELD NAME="message" TYPE="text" NOTNULL="true" />
+                <FIELD NAME="subject" TYPE="text" NOTNULL="false" />
+                <FIELD NAME="message" TYPE="text" NOTNULL="false" />
                 <FIELD NAME="url" TYPE="text" NOTNULL="false" />
                 <FIELD NAME="read" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
             </FIELDS>

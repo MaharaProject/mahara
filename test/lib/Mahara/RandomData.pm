@@ -324,9 +324,9 @@ sub insert_random_views {
         $title =~ s/[\x80-\xff]//g;
         $description =~ s/[\x80-\xff]//g;
 
-        $self->{dbh}->do('INSERT INTO ' . $prefix . 'view (title, description, owner, template, startdate, stopdate, ctime, mtime, atime)
-             VALUES(?, ?, ?, ?, current_timestamp, current_timestamp, current_timestamp, current_timestamp, current_timestamp)', undef,
-             $title, $description, $user_id, $template_id);
+        $self->{dbh}->do('INSERT INTO ' . $prefix . 'view (title, authorformat, description, owner, template, startdate, stopdate, ctime, mtime, atime)
+             VALUES(?, ?, ?, ?, ?, current_timestamp, current_timestamp, current_timestamp, current_timestamp, current_timestamp)', undef,
+             $title, 'firstnamelastname', $description, $user_id, $template_id);
         my $view_id = $self->{dbh}->last_insert_id(undef, undef, $prefix . 'view', undef);
 
         $self->{dbh}->do('INSERT INTO ' . $prefix . 'view_artefact (view, artefact, block, ctime) 
@@ -479,6 +479,8 @@ sub insert_random_filethings {
         #    last;
         #}
         my $folder = @$folder_list[int(rand(scalar @$folder_list))]->{id};
+        my $description = join(' ', $wl->get_words(int(rand(5)) + 1));
+        $description =~ s/[\x80-\xff]//g;
         $self->{dbh}->do('INSERT INTO ' . $prefix . 'artefact (artefacttype, container, parent, owner, ctime, mtime, atime, title, description)
             VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, ?, ?)',
             undef,
@@ -487,7 +489,7 @@ sub insert_random_filethings {
             $folder,
             $user_id,
             $wl->get_words(1)->[0] . (($thing eq 'folder') ? '' : (($thing eq 'image') ? '.png' : '.txt')),
-            join(' ', $wl->get_words(int(rand(5)) + 1)));
+            $description );
     }
 
     # Now insert file sizes into the artefact_file_files table

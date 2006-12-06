@@ -84,33 +84,13 @@ $contactform = pieform(array(
 ));
 
 function contactus_submit($values) {
-    $contactemail = get_config('contactaddress');
-    if (empty($contactemail)) {
-        json_reply('local', get_string('nositecontactaddress'));
-    }
-
-    // email_user requires firstname, lastname to be set, so put something in
-    $to = new StdClass;
-    $to->firstname = get_config('sitename');
-    $to->lastname = get_string('contactaddress');
-    $to->email = $contactemail;
-
-    $fromnames = explode(' ',$values['name']);
-    if (empty($fromnames)) {
-        json_reply('local', get_string('nosendernamefound'));
-    }
-    $from = new StdClass;
-    $from->firstname = $fromnames[0];
-    $from->lastname = count($fromnames) < 2 ? $fromnames[0] : implode(' ',array_slice($fromnames,1));
-    $from->email = $values['email'];
-
-    try {
-        email_user($to,$from,$values['subject'],$values['message']);
-    }
-    catch (Exception $e) {
-        json_reply('local', get_string('emailnotsent', 'mahara', $e->getMessage()));
-    }
-
+    $data = new StdClass;
+    $data->name    = $values['name'];
+    $data->email   = $values['email'];
+    $data->subject = $values['subject'];
+    $data->message = $values['message'];
+    require_once('activity.php');
+    activity_occurred('contactus', $data);
     json_reply(false, get_string('contactinformationsent'));
 }
 

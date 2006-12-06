@@ -81,6 +81,10 @@ class ArtefactTypeFileBase extends ArtefactType {
         return array(FORMAT_ARTEFACT_LISTSELF);
     }
 
+    public static function is_0_or_1() {
+        return false;
+    }
+
     public function get_icon() {
 
     }

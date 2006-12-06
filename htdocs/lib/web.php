@@ -150,6 +150,11 @@ function &smarty($javascript = array(), $headers = array(), $strings = array()) 
     return $smarty;
 }
 
+/** 
+ * Returns the lists of strings used in the .js files
+ * @return array
+ */
+
 function jsstrings() {
     return array(
         'mahara' => array(
@@ -167,6 +172,20 @@ function jsstrings() {
         ),
         'fileuploader' => array(),
     );
+}
+
+/** 
+ * Takes an array of string identifiers and returns an array of the
+ * corresponding strings, quoted for use in inline javascript here
+ * docs.
+ */
+
+function quotestrings($stringids, $section = 'mahara') {
+    $getstring = array();
+    foreach ($stringids as $string) {
+        $getstring[$string] = "'" . get_string($string, $section) . "'";
+    }
+    return $getstring;
 }
 
 /** 
