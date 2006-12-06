@@ -76,7 +76,7 @@ function pieform_renderer_div(Pieform $form, $builtelement, $rawelement) {
     return $result;
 }
 
-function pieform_renderer_table_messages_js($id, $submitid) {
+function pieform_renderer_div_messages_js($id, $submitid) {
     $result = <<<EOF
 // Given a message and form element name, should set an error on the element
 function {$id}_set_error(message, element) {
