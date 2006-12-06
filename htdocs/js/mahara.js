@@ -91,12 +91,17 @@ function sendjsonrequest(script, data, successcallback, errorcallback) {
 }
 
 // Autofocus the first element with a class of 'autofocus' on page load
+// Also, connect input elements with the 'emptyonfocus' class to work properly
 addLoadEvent(function() {
     var element = getFirstElementByTagAndClassName(null, 'autofocus', document.body)
 
     if ( element && typeof(element.focus) == 'function' ) {
         element.focus();
     }
+
+    forEach(getElementsByTagAndClassName('input', 'emptyonfocus'), function(elem) {
+        connect(elem, 'onfocus', function(e) { elem.value = ''; e.stop(); });
+    });
 });
 
 var ctxHelp = new Array();
