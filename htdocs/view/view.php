@@ -37,23 +37,27 @@ if (can_view_view($viewid)) {
 $getstring = quotestrings(array('message', 'makepublic', 'placefeedback',
                                 'cancel', 'complaint', 'notifysiteadministrator',
                                 'addtowatchlist', 'placefeedback',
+                                'nopublicfeedbackhasbeenplacedonthisview',
                                 'reportobjectionablematerial', 'print'));
-
-$wwwroot = get_config('wwwroot');
 
 $javascript = <<<JAVASCRIPT
 
-var viewid = {$viewid};
+var view = {$viewid};
 
 function feedbackform() {
     var form = FORM({'id':'feedback','method':'post'});
     submitfeedback = function () {
         // @todo add support for attached files when user is a tutor.
         sendjsonrequest('addfeedback.json.php',
-            {'view':viewid, 
+            {'view':view, 
              'message':form.message.value,
              'public':form.public.checked},
-            function () { removeElement('feedback'); });
+            function () { 
+                removeElement('feedback');
+                if (form.public.checked) {
+                    feedbacklist.doupdate();
+                }
+            });
         return false;
     }
     appendChildNodes(form, 
@@ -76,7 +80,7 @@ function objectionform() {
     var form = FORM({'id':'objection','method':'post'});
     submitobjection = function () {
         sendjsonrequest('objectionable.json.php',
-            {'view':viewid, 'message':form.message.value},
+            {'view':view, 'message':form.message.value},
             function () { removeElement('objection'); });
         return false;
     }
@@ -94,10 +98,10 @@ function objectionform() {
     return false;
 }
 
-function view_menu(type, id) {
+function view_menu() {
     var addwatchlist = A({'href':''}, {$getstring['addtowatchlist']});
     addwatchlist.onclick = function () { 
-        sendjsonrequest('addwatchlist.json.php', {'viewid':id});
+        sendjsonrequest('addwatchlist.json.php', {'view':view});
         return false;
     }
 
@@ -109,11 +113,26 @@ function view_menu(type, id) {
                       addwatchlist);
 }
 
-addLoadEvent(function () {view_menu('view', {$viewid}); });
+
+
+addLoadEvent(view_menu);
+
+var feedbacklist = new TableRenderer(
+    'feedbacktable',
+    'getfeedback.json.php',
+    ['name', 'date', 'message']
+);
+
+feedbacklist.limit = 5;
+feedbacklist.view = view;
+feedbacklist.statevars.push('view');
+feedbacklist.emptycontent = {$getstring['nopublicfeedbackhasbeenplacedonthisview']};
+feedbacklist.updateOnLoad();
+
 
 JAVASCRIPT;
 
-$smarty = smarty();
+$smarty = smarty(array('tablerenderer'));
 //$smarty->clear_assign('MAINNAV');
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('TITLE', $view->title);

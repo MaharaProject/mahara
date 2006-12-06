@@ -13,6 +13,10 @@ class="cnr-bl"><span class="cnr-br">
    {str tag=viewviewnotallowed}
 {/if}
 
+<table id="feedbacktable">
+    <thead><tr><th>{str tag=name}</th><th>{str tag=date}</th><th>{str tag=message}</th></tr></thead>
+</table>
+
 <div id="viewmenu"></div>
 
 	</div>
