@@ -170,7 +170,6 @@ function addmember_submit($values) {
 }
 
 
-$smarty->assign('searchform',searchform());
 $smarty->assign('NAME',$name);
 $smarty->assign('USERFIELDS',$userfields);
 $smarty->assign('PROFILE',$profile);
