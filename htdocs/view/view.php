@@ -45,7 +45,10 @@ $javascript = <<<JAVASCRIPT
 var view = {$viewid};
 
 function feedbackform() {
-    var form = FORM({'id':'feedback','method':'post'});
+    if ($('menuform')) {
+        removeElement('menuform');
+    }
+    var form = FORM({'id':'menuform','method':'post'});
     submitfeedback = function () {
         // @todo add support for attached files when user is a tutor.
         sendjsonrequest('addfeedback.json.php',
@@ -53,7 +56,7 @@ function feedbackform() {
              'message':form.message.value,
              'public':form.public.checked},
             function () { 
-                removeElement('feedback');
+                removeElement('menuform');
                 if (form.public.checked) {
                     feedbacklist.doupdate();
                 }
@@ -71,17 +74,20 @@ function feedbackform() {
                     INPUT({'type':'button', 'value':{$getstring['placefeedback']},
                                'onclick':'submitfeedback();'}),
                     INPUT({'type':'button', 'value':{$getstring['cancel']},
-                               'onclick':"removeElement('feedback');"}))))));
+                               'onclick':"removeElement('menuform');"}))))));
     appendChildNodes('viewmenu', DIV(null, form));
     return false;
 }
 
 function objectionform() {
-    var form = FORM({'id':'objection','method':'post'});
+    if ($('menuform')) {
+        removeElement('menuform');
+    }
+    var form = FORM({'id':'menuform','method':'post'});
     submitobjection = function () {
         sendjsonrequest('objectionable.json.php',
             {'view':view, 'message':form.message.value},
-            function () { removeElement('objection'); });
+            function () { removeElement('menuform'); });
         return false;
     }
     appendChildNodes(form, 
@@ -93,7 +99,7 @@ function objectionform() {
                     INPUT({'type':'button', 'value':{$getstring['notifysiteadministrator']},
                                'onclick':'submitobjection();'}),
                     INPUT({'type':'button', 'value':{$getstring['cancel']},
-                               'onclick':"removeElement('objection');"}))))));
+                               'onclick':"removeElement('menuform');"}))))));
     appendChildNodes('viewmenu', DIV(null, form));
     return false;
 }
@@ -106,24 +112,23 @@ function view_menu() {
     }
 
     appendChildNodes('viewmenu',
-                     A({'href':'', 'onclick':'return feedbackform();'}, {$getstring['placefeedback']}), ' | ',
+                     A({'href':'', 'onclick':"return feedbackform();"}, {$getstring['placefeedback']}), ' | ',
                      A({'href':'', 'onclick':'return objectionform();'},
                        {$getstring['reportobjectionablematerial']}), ' | ',
                      A({'href':'', 'onclick':'window.print();'}, {$getstring['print']}), ' | ',
                       addwatchlist);
 }
 
-
-
 addLoadEvent(view_menu);
 
+// The list of existing feedback.
 var feedbacklist = new TableRenderer(
     'feedbacktable',
     'getfeedback.json.php',
-    ['name', 'date', 'message']
+    ['message', 'name', 'date']
 );
 
-feedbacklist.limit = 5;
+feedbacklist.limit = 10;
 feedbacklist.view = view;
 feedbacklist.statevars.push('view');
 feedbacklist.emptycontent = {$getstring['nopublicfeedbackhasbeenplacedonthisview']};
