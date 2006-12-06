@@ -5,5 +5,5 @@
     <li><a href="{$item.link|escape}">{$item.name}</a></li>
 {/foreach}
     </ul>
-	<div class="sidebar-botcorners"><img src="{image_path imagelocation='images/sidebox_bot.gif'}" border="0"></div>
+	<div class="loginbox-botcorners"><img src="{image_path imagelocation='images/sidebox_bot.gif'}" border="0"></div>
 </div>
