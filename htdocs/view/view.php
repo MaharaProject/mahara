@@ -36,7 +36,7 @@ if (can_view_view($viewid)) {
 
 $getstring = quotestrings(array('message', 'makepublic', 'placefeedback',
                                 'cancel', 'complaint', 'notifysiteadministrator',
-                                'addtowatchlist', 'placefeedback',
+                                'addtowatchlist', 
                                 'nopublicfeedbackhasbeenplacedonthisview',
                                 'reportobjectionablematerial', 'print'));
 
