@@ -124,9 +124,14 @@ sub debug {
 sub my_jsonToObj {
     my $data = shift;
 
-    $data = eval { jsonToObj($data); };
+    my $obj = eval { jsonToObj($data); };
 
-    croak q{Failed to parse JSON data} unless defined $data;
+    unless ( defined $obj ) {
+        $data =~ s{ < [^>]* > }{}xmgs;
+        $data =~ s{ \r?\n\s*\r?\n\s*\r?\n }{\n\n}xmgs;
+        $data =~ s{ &quot; }{"}xmgs;
+        croak q{Failed to parse JSON data: } . $data;
+    }
 
-    return $data;
+    return $obj;
 }
