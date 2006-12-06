@@ -28,11 +28,11 @@ define('INTERNAL', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 
 $view = param_integer('view');
-$artefactid = param_integer('artefactid',null);
+$artefact = param_integer('artefact',null);
 
 $data = new StdClass;
-if ($artefactid) {
-    $data->artefact = $artefactid;
+if ($artefact) {
+    $data->artefact = $artefact;
     $table = 'usr_watchlist_artefact';
     $artefactfield = 'artefact';
 }
@@ -44,7 +44,7 @@ $data->view = $view;
 $data->usr = $USER->get('id');
 $data->ctime = db_format_timestamp(time());
 
-if (record_exists($table, 'usr', $data->usr, 'view', $view, $artefactfield, $artefactid)) {
+if (record_exists($table, 'usr', $data->usr, 'view', $view, $artefactfield, $artefact)) {
     json_reply(false, get_string('itemalreadyinwatchlist'));
 }
 
