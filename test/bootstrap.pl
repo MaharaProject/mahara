@@ -17,6 +17,7 @@ use Data::Dumper;
 use Getopt::Declare;
 use Mahara::Config;
 use Mahara::RandomData;
+use JSON;
 use WWW::Mechanize;
 
 my $args = Getopt::Declare->new(q(
@@ -40,6 +41,8 @@ croak 'You must insert some users so groups can have members (specify with -nu)'
 croak 'You must specify a user to create the groups for with -u' if (!defined $args->{-u} and $args->{-ng} > 0);
 
 my $randomdata;
+my $json_response;
+
 if ($args->{-nu} or $args->{-ng}) {
     $args->{-mc} ||= qq{$FindBin::Bin/../htdocs/config.php};
     my $config = Mahara::Config->new($args->{-mc});
@@ -70,13 +73,20 @@ my $components = /var todo = \[(".*",?)+\]/s;
 my @things = split(/","/, substr($1, 1, -1));
 for my $thing (@things) {
     debug("Installing $thing...");
-    # @todo check for errors
     $m->get($CFG->{url} . 'admin/upgrade.json.php?name=' . $thing);
+    $json_response = my_jsonToObj($m->content());
+    unless ( $json_response->{success} ) {
+        croak qq{Failed to install $thing} . Dumper($json_response);
+    }
 }
 
 # Request the core data page
 debug("Installing core data...");
 $m->get($CFG->{url} . 'admin/upgrade.json.php?install=1');
+$json_response = my_jsonToObj($m->content());
+unless ( $json_response->{success} ) {
+    croak qq{Failed to install core data:} . Dumper($json_response);
+}
 
 # Install done, now Log in
 debug("Logging in...");
@@ -109,4 +119,14 @@ else {
 
 sub debug {
     print shift() . "\n" if $CFG->{debug};
+}
+
+sub my_jsonToObj {
+    my $data = shift;
+
+    $data = eval { jsonToObj($data); };
+
+    croak q{Failed to parse JSON data} unless defined $data;
+
+    return $data;
 }

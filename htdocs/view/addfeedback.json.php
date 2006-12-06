@@ -27,21 +27,27 @@
 define('INTERNAL', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 
-$viewid = param_integer('viewid');
+$data = new StdClass;
 
-if (get_field('view', 'owner', 'id', $viewid) != $USER->get('id')) {
-    json_reply('local', get_string('notowner'));
+$data->view       = param_integer('view');
+$data->artefact   = param_integer('artefact', null);
+$data->message    = param_variable('message');
+$data->public     = param_boolean('public') ? 1 : 0;
+$data->attachment = param_integer('attachment', null);
+$data->author     = $USER->get('id');
+$data->ctime      = db_format_timestamp(time());
+
+if ($data->artefact) {
+    $table = 'artefact_feedback';
+}
+else {
+    $table = 'view_feedback';
 }
 
-delete_records('view_artefact','view',$viewid);
-delete_records('view_content','view',$viewid);
-delete_records('view_access_community','view',$viewid);
-delete_records('view_access_group','view',$viewid);
-delete_records('view_access_usr','view',$viewid);
-if (!delete_records('view','id',$viewid)) {
-    json_reply('local', get_string('deleteviewfailed'));
+if (!insert_record($table, $data, 'id', true)) {
+    json_reply('local', get_string('addfeedbackfailed'));
 }
 
-json_reply(false,get_string('viewdeleted'));
+json_reply(false,get_string('feedbacksubmitted'));
 
 ?>

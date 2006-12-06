@@ -373,11 +373,11 @@ sub insert_random_watchlist {
                  ORDER BY RANDOM() LIMIT ' . (int($count/3)+1) . ')' );
 
     $self->{dbh}->do('DELETE FROM ' . $prefix . 'usr_watchlist_artefact WHERE usr = ?', undef, $user_id);
-    $self->{dbh}->do('INSERT INTO ' . $prefix . 'usr_watchlist_artefact (usr, artefact, ctime) 
-             (SELECT ' . $user_id . ', id, current_timestamp FROM ' . $prefix . 'artefact
-                 ORDER BY RANDOM() LIMIT ' . (int($count/3)+1) . ')' );
-
-
+    $self->{dbh}->do('INSERT INTO ' . $prefix . 'usr_watchlist_artefact (usr, artefact, view, ctime) 
+             (SELECT DISTINCT usr, id, view, current_timestamp FROM 
+             (SELECT DISTINCT ' . $user_id . ' as usr, a.id, v.view, random() FROM ' . $prefix . 'artefact a
+                 JOIN ' . $prefix . 'view_artefact v ON v.artefact = a.id
+                 ORDER BY RANDOM() LIMIT ' . (int($count/3)+1) . ') mess)' );
     $self->{dbh}->commit();
 }
 
