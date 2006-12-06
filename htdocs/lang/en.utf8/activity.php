@@ -64,4 +64,6 @@ $string['stopmonitoring'] = 'Stop monitoring';
 $string['stopmonitoringsuccess'] = 'Stopped monitoring successfully';
 $string['stopmonitoringfailed'] = 'Failed to stop monitoring';
 
+$string['newwatchlistmessage'] = 'New activity on your watchlist';
+$string['newviewmessage'] = 'New view you have access to';
 ?>

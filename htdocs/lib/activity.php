@@ -60,20 +60,23 @@ function activity_occurred($activitytype, $data) {
  * @param mixed $data must contain message to save.
  * it can also contain url.
  * each activity type has different requirements of $data - 
- * <b>admin types (contactus, objectionable, virusrepeat, virusrelease)</b> don't have any extra requirements
- * <b>maharamessage</b> must contain $users, an array of userids.
- * <b>usermessage</b> must contain $userto, id of recipient user.
- * <b>feedback</b> must contain either $view (id of view) or $artefact (id of artefact)
- * <b>watchlist</b> must contain either $view (id of view) or $artefact (id of artefact) or $community (id of community)
+ * <b>contactus</b> must contain $message, $subject, $fromname, $fromaddress, $userfrom (if a logged in user)
+ * <b>maharamessage</b> must contain $users, an array of userids. $subject and $message (contents of message)
+ * <b>usermessage</b> must contain $userto, id of recipient user, $userfrom, id of user from 
+         and $subject and $message (contents of message)
+ * <b>feedback (artefact)</b> must contain both $artefact (id) and $view (id) and $message and $subject
+ * <b>feedback (view)</b> must contain $view (id) and $message and $subject
+ * <b>watchlist (artefact)</b> must contain $artefact (id of artefact) 
+ *       and should also contain $subject (or a boring default will be used)
+ * <b>watchlist (view) </b> must contain $view (id of view) 
+         and should also contain $subject (or a boring default will be used)
+ * <b>watchlist (community) </b> must contain $community (id of community)
+         and should also contain $subject (or a boring default will be used)
  * <b>newview</b> must contain $owner userid of view owner AND $view (id of new view)
  */
 function handle_activity($activitytype, $data) {
 
     $data = (object)$data;
-    if (empty($data->message)) {
-        throw new InvalidArgumentException("message was empty for $activitytype!");
-    }
-
     if (is_string($activitytype)) {
         $activitytype = get_record('activity_type', 'name', $activitytype);
     }
@@ -87,14 +90,53 @@ function handle_activity($activitytype, $data) {
 
     if (!empty($activitytype->admin)) {
         $users = activity_get_users($activitytype->name, null, null, true);
+        // validation stuff
+        switch ($activitytype->name) {
+            case 'contactus':
+                if (empty($data->message)) {
+                    throw new InvalidArgumentException("Message was empty for activity type contactus");
+                }
+                $data->subject = get_string('newcontactusfrom', 'activity') . $data->fromname 
+                    . '<' . $data->fromemail .'>' . (isset($data->subject) ? ': ' . $data->subject : '');
+                $data->message = $data->subject . "\n\n" . $data->message;
+                $data->subject = get_string('newcontactus', 'activity');
+                if (!empty($data->userfrom)) {
+                    $data->url = get_config('wwwroot') . 'user/view.php?id=' . $data->userfrom;
+                }
+                break;
+            case 'objectionable':
+                break;
+            case 'virusrepeat':
+                break;
+            case 'virusrelease':
+                break;
+        }
     }
     else {
         switch ($activitytype->name) {
             // easy ones first :)
             case 'maharamessage':
+                if (!is_array($data->users) || empty($data->users)) {
+                    throw new InvalidArgumentException("Mahara message activity type expects an array of users");
+                }
+                if (empty($data->subject)) {
+                    throw new InvalidArgumentException("Mahara message activity type expects a subject");
+                }
+                if (empty($data->message)) {
+                    throw new InvalidArgumentException("Mahara message activity type expects a message");
+                }
                 $users = activity_get_users($activitytype->name, $data->users);
                 break;
             case 'usermessage':
+                if (!is_numeric($data->userto) || !is_numeric($data->userfrom)) {
+                    throw new InvalidArgumentException("User message requires userto and userfrom to be set");
+                }
+                if (empty($data->subject)) {
+                    throw new InvalidArgumentException("User message activity type expects a subject");
+                }
+                if (empty($data->message)) {
+                    throw new InvalidArgumentException("User message activity type expects a message");
+                }
                 $users = activity_get_users($activitytype->name, array($data->userto));
                 if (empty($data->url)) {
                     // @todo when user messaging is implemented, this might change... 
@@ -102,22 +144,28 @@ function handle_activity($activitytype, $data) {
                 }
                 break;
             case 'feedback':
+                if (empty($data->subject)) {
+                    throw new InvalidArgumentException("Feedback activity type expects a subject");
+                }
+                if (empty($data->message)) {
+                    throw new InvalidArgumentException("Feedbackactivity type expects a message");
+                }
                 if (empty($data->view)) {
                     throw new IllegalArgumentException("Feedback missing view id");
                 }
-                if (empty($data->artefact)) {
-                    $userid = get_field('view', 'owner', 'id', $data->view);
-                    if (empty($data->url)) {
-                        // @todo this might change later
-                        $data->url = get_config('wwwroot') . 'view/view.php?id=' . $data->view;
-                    }
-                } 
-                else if ($data->artefact) {
+                if (!empty($data->artefact)) { // feedback on artefact
                     $userid = get_field('artefact', 'owner', 'id', $data->artefact);
                     if (empty($data->url)) {
                         // @todo this might change later
                         $data->url = get_config('wwwroot') . 'view/artefact.php?id=' 
                             . $data->artefact . '&view=' . $data->view;
+                    }
+                } 
+                else { // feedback on view.
+                    $userid = get_field('view', 'owner', 'id', $data->view);
+                    if (empty($data->url)) {
+                        // @todo this might change later
+                        $data->url = get_config('wwwroot') . 'view/view.php?id=' . $data->view;
                     }
                 }
                 $users = activity_get_users($activitytype->name, array($userid));
@@ -125,6 +173,13 @@ function handle_activity($activitytype, $data) {
             // and now the harder ones
             case 'watchlist':
                 if (!empty($data->view)) {
+                    $oldsubject = isset($data->subject) ? ': ' . $data->subject : '';
+                    $data->subject = get_string('watchlistmessageview', 'activity');
+                    $viewinfo = get_record_sql('SELECT u.*, v.title FROM ' . $prefix . 'mh_user u
+                                                 JOIN ' . $prefix . 'view v ON v.owner = u.id
+                                                 WHERE v.id = ?', array($data->view));
+                    $data->message = $oldsubject . get_string('onview', 'activity') 
+                        . $viewinfo->title . get_string('ownedby', 'activity');
                     $sql = 'SELECT u.*, p.method, CAST(? AS TEXT)  AS url
                                 FROM ' . $prefix . 'usr_watchlist_view wv
                                 JOIN ' . $prefix . 'usr u
@@ -137,8 +192,18 @@ function handle_activity($activitytype, $data) {
                     $users = get_records_sql_array($sql, 
                                                    array(get_config('wwwroot') . 'view/view.php?id=' 
                                                          . $data->view, 'watchlist', $data->view));
+                    // ick
+                    foreach ($users as $user) {
+                        $user->message = $data->message . display_name($viewinfo, $user);
+                    }
                 } 
                 else if (!empty($data->artefact)) {
+                    $data->subject = get_string('watchlistmessageartefact', 'activity');
+                    $ainfo = get_record_sql('SELECT u.*, a.title FROM ' . $prefix . 'mh_user u
+                                                 JOIN ' . $prefix . 'artefact a  ON a.owner = u.id
+                                                 WHERE a.id = ?', array($data->artefact));
+                    $data->message = get_string('onartefact', 'activity') 
+                        . $ainfo->title . get_string('ownedby', 'activity');
                     $sql = 'SELECT DISTINCT u.*, p.method, ?||wa.view as url
                                 FROM ' . $prefix . 'usr_watchlist_artefact wa
                                 LEFT JOIN ' . $prefix . 'artefact_parent_cache pc
@@ -154,8 +219,16 @@ function handle_activity($activitytype, $data) {
                                                    array(get_config('wwwroot') . 'view/artefact.php?id=' 
                                                          . $data->artefact . '&view=', 'watchlist', 
                                                          $data->artefact, $data->artefact));
+                    // ick
+                    foreach ($users as $user) {
+                        $user->message = $data->message . display_name($ainfo, $user);
+                    }
                 }
                 else if (!empty($data->community)) {
+                    $oldsubject = $data->subject;
+                    $data->subject = get_string('watchlistmessagecommunity', 'activity');
+                    $data->message = $oldsubject . get_string('oncommunity', 'activity') 
+                        . get_field('community', 'name', 'id', $data->community);
                     $sql = 'SELECT DISTINCT u.*, p.method, CAST(? AS TEXT) AS url
                                 FROM ' . $prefix . 'usr_watchlist_community c
                                 JOIN ' . $prefix . 'usr u
@@ -174,6 +247,15 @@ function handle_activity($activitytype, $data) {
                 }
                 break;
             case 'newview':
+                if (!is_numeric($data->owner) || !is_numeric($data->view)) {
+                    throw new InvalidArgumentException("New view activity type requires view and owner to be set");
+                }
+                $viewinfo = get_record_sql('SELECT u.*, v.title FROM ' . $prefix . 'mh_user u
+                                                 JOIN ' . $prefix . 'view v ON v.owner = u.id
+                                                 WHERE v.id = ?', array($data->view));
+                $data->message = get_string('newview', 'activity')
+                    . $viewinfo->title . get_string('ownedby', 'activity');
+                $data->subject = get_string('messagenewview', 'activity');
                 // add users on friendslist, userlist or grouplist...
                 $sql = 'SELECT userid, u.*, p.method
                         FROM (
@@ -192,6 +274,13 @@ function handle_activity($activitytype, $data) {
                             JOIN ' . $prefix . 'usr_activity_preference p ON p.usr = u.id';
                 $users = get_records_sql_array($sql, array($data->owner, $data->owner, $data->owner,  
                                                      $data->view, $data->view));
+                // ick
+                foreach ($users as $user) {
+                    $user->message = $data->message . display_name($viewinfo, $user);
+                }
+                break;
+            case 'contactus':
+                
                 break;
                 // @todo more here (admin messages!)
         }
@@ -202,16 +291,24 @@ function handle_activity($activitytype, $data) {
     safe_require('notification', 'internal', 'lib.php', 'require_once');
     $data->type = $activitytype->name;
     foreach ($users as $user) {
-        if (!empty($user->url) && empty($data->url)) {
-            $data->url = $user->url;
+        $userdata = $data;
+        // some stuff gets overridden by user specific stuff
+        if (!empty($user->url)) {
+            $userdata->url = $user->url;
+        }
+        if (!empty($user->message)) {
+            $userdata->message = $user->message;
+        }
+        if (!empty($user->subject)) {
+            $userdata->subject = $user->subject;
         }
         if ($user->method != 'internal') {
             safe_require('notification', $method, 'lib.php', 'require_once');
-            call_static_method(generate_class_name('notification', $method), 'notify_user', $user, $data);
+            call_static_method(generate_class_name('notification', $method), 'notify_user', $user, $userdata);
             $user->markasread = true; // if we're doing something else, don't generate unread internal ones.
         }
         // always do internal
-        call_static_method('PluginNotificationInternal', 'notify_user', $user, $data);
+        call_static_method('PluginNotificationInternal', 'notify_user', $user, $userdata);
     }
 }
 
