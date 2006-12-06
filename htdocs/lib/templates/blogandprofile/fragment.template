@@ -9,7 +9,7 @@
         <td>
             {{block type="label" id="tpl_blogslabel"}}<br>
 	    {{block type="artefact" id="tpl_blog1" artefacttype="blog"}}<br>
-	    {{block type="artefact" id="tpl_blog1" artefacttype="blog"}}<br>
+	    {{block type="artefact" id="tpl_blog2" artefacttype="blog"}}<br>
        </td>
        <td>
             {{block type="label" id="tpl_profilelabel"}}<br>
