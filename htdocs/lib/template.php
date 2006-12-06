@@ -39,7 +39,7 @@ function template_parse($templatename) {
     preg_match_all('/(.*?)\{\{(.*?)\}\}/xms', $fragment, $matches, PREG_SET_ORDER);
     
     $strlen = 0;
-
+    $blockids = array();
     foreach ($matches as $m) {
         $temp = array('type'    => 'html',
                       'content' => $m[1],
@@ -49,11 +49,17 @@ function template_parse($templatename) {
                       'data'    => template_parse_block($m[2]),
                       );
         $t[] = $temp;
+        $blockids[] = $temp['data']['id'];
 
         $strlen += strlen($m[0]);
            
     }
-   
+
+    if (count($blockids) != count(array_unique($blockids))) {
+        $dups = array_unique(array_diff_assoc($blockids, array_unique($blockids)));
+        throw new InvalidArgumentException("This template ($templatename) has duplicate block ids: " . implode(', ', $dups));
+    }
+
     $temp = array('type'    => 'html',
                   'content' => substr($fragment, $strlen),
                   );

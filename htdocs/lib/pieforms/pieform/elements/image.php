@@ -1,6 +1,6 @@
 <?php
 /**
- * This program is part of Mahara
+ * This program is part of Pieforms
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -16,19 +16,30 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
- * @package    mahara
- * @subpackage core or plugintype/pluginname
- * @author     Your Name <you@example.org>
+ * @package    pieform
+ * @subpackage element
+ * @author     Nigel McNie <nigel@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
-defined('INTERNAL') || die();
+/**
+ * Renders an <input type="image"> button
+ *
+ * @param array    $element The element to render
+ * @param Pieform  $form    The form to render the element for
+ * @return string           The HTML for the element
+ */
+function pieform_render_image($element, Pieform $form) {
+    return '<input type="image" src="' . Pieform::hsc($element['src']) . '"'
+        . Pieform::element_attributes($element)
+        . ' value="' . Pieform::hsc($form->get_value($element)) . '">';
+}
 
-$template = new StdClass;
-$template->title = 'Example template';
-$template->description = 'Very rough proof of concept example template';
-$template->category = 'resume';
+function pieform_render_image_set_attributes($element) {
+    $element['ajaxmessages'] = true;
+    return $element;
+}
 
 ?>

@@ -1,0 +1,11 @@
+.gallery_container {
+	width:100%;
+}
+
+.gallery_container td {
+  	padding:20px;
+}
+
+.gallery_title {
+	padding-bottom:50px;	
+}

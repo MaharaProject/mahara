@@ -45,7 +45,10 @@ function CollapsableTree(data, source) {
                 }
             });
 
-            var d = loadJSONDoc(self.source, request_args);
+            var req = getXMLHttpRequest();
+            req.open('post', self.source);
+            req.setRequestHeader('Content-type','application/x-www-form-urlencoded'); 
+            var d = sendXMLHttpRequest(req,queryString(request_args));
             d.addCallbacks(function (data) {
                 if (!data.error) {
                     if (data.message) {

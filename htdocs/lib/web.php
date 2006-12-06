@@ -145,6 +145,8 @@ function &smarty($javascript = array(), $headers = array(), $strings = array()) 
     $smarty->assign_by_ref('JAVASCRIPT', $javascript_array);
     $smarty->assign_by_ref('HEADERS', $headers);
 
+    $smarty->assign('searchform', searchform());
+
     return $smarty;
 }
 
@@ -736,6 +738,75 @@ function make_link($url) {
 function admin_nav() {
     $wwwroot = get_config('wwwroot');
 
+    //$menu = array(
+    //    array(
+    //        'name'     => 'adminhome',
+    //        'section'  => 'admin',
+    //        'link'     => $wwwroot . 'admin/',
+    //    ),
+    //    array(
+    //        'name'     => 'siteoptions',
+    //        'section'  => 'admin',
+    //        'link'     => $wwwroot . 'admin/options/',
+    //    ),
+    //    array(
+    //        'name'     => 'institutions',
+    //        'section'  => 'admin',
+    //        'link'     => $wwwroot . 'admin/institutions.php',
+    //    ),
+    //    array(
+    //        'name'     => 'pageeditor',
+    //        'section'  => 'admin',
+    //        'link'     => $wwwroot . 'admin/editsitepage.php',
+    //    ),
+    //    array(
+    //        'name'     => 'menueditor',
+    //        'section'  => 'admin',
+    //        'link'     => $wwwroot . 'admin/editmenu.php',
+    //    ),
+    //    array(
+    //        'name'     => 'adminplugins',
+    //        'section'  => 'admin',
+    //        'link'     => $wwwroot . 'admin/plugins/',
+    //    ),
+    //    array(
+    //        'name'     => 'files',
+    //        'section'  => 'admin',
+    //        'link'     => $wwwroot . 'admin/todo',
+    //    ),
+    //    array(
+    //        'name'     => 'usermanagement',
+    //        'section'  => 'admin',
+    //        'link'     => $wwwroot . 'admin/usermanagement/uploadcsv.php',
+    //        'submenu'  => array(
+    //            array(
+    //                'name' => 'uploadcsv',
+    //                'section' => 'admin',
+    //                'link' => $wwwroot . 'admin/usermanagement/uploadcsv.php'
+    //            ),
+    //            array(
+    //                'name' => 'adminusers',
+    //                'section' => 'admin',
+    //                'link' => $wwwroot . 'admin/usermanagement/adminusers.php',
+    //            ),
+    //            array(
+    //                'name' => 'staffusers',
+    //                'section' => 'admin',
+    //                'link' => $wwwroot . 'admin/usermanagement/staffusers.php'
+    //            ),
+    //            array(
+    //                'name' => 'adminnotifications',
+    //                'section' => 'admin',
+    //                'link' => $wwwroot . 'admin/usermanagement/adminnotifications.php'
+    //            ),
+    //            array(
+    //                'name' => 'suspendedusers',
+    //                'section' => 'admin',
+    //                'link' => $wwwroot . 'admin/usermanagement/suspendedusers.php'
+    //            )
+    //        )
+    //    ),
+    //);
     $menu = array(
         array(
             'name'     => 'adminhome',
@@ -743,40 +814,42 @@ function admin_nav() {
             'link'     => $wwwroot . 'admin/',
         ),
         array(
-            'name'     => 'siteoptions',
+            'name'     => 'site',
             'section'  => 'admin',
-            'link'     => $wwwroot . 'admin/options/',
-        ),
-        array(
-            'name'     => 'institutions',
-            'section'  => 'admin',
-            'link'     => $wwwroot . 'admin/institutions.php',
-        ),
-        array(
-            'name'     => 'pageeditor',
-            'section'  => 'admin',
-            'link'     => $wwwroot . 'admin/editsitepage.php',
-        ),
-        array(
-            'name'     => 'menueditor',
-            'section'  => 'admin',
-            'link'     => $wwwroot . 'admin/editmenu.php',
-        ),
-        array(
-            'name'     => 'adminplugins',
-            'section'  => 'admin',
-            'link'     => $wwwroot . 'admin/plugins/',
-        ),
-        array(
-            'name'     => 'files',
-            'section'  => 'admin',
-            'link'     => $wwwroot . 'admin/todo',
-        ),
-        array(
-            'name'     => 'usermanagement',
-            'section'  => 'admin',
-            'link'     => $wwwroot . 'admin/usermanagement/uploadcsv.php',
+            'link'     => $wwwroot . 'admin/site/options.php',
             'submenu'  => array(
+                array(
+                    'name' => 'siteoptions',
+                    'section' => 'admin',
+                    'link' => $wwwroot . 'admin/site/options.php'
+                ),
+                array(
+                    'name'     => 'pageeditor',
+                    'section'  => 'admin',
+                    'link'     => $wwwroot . 'admin/site/editsitepage.php', // @todo rename
+                ),
+                array(
+                    'name'     => 'menueditor',
+                    'section'  => 'admin',
+                    'link'     => $wwwroot . 'admin/site/editmenu.php', // @todo rename
+                ),
+                array(
+                    'name'     => 'files',
+                    'section'  => 'admin',
+                    'link'     => $wwwroot . 'admin/site/files.php'
+                )
+            )
+        ),
+        array(
+            'name'     => 'users',
+            'section'  => 'admin',
+            'link'     => $wwwroot . 'admin/users/',
+            'submenu' => array(
+                array(
+                    'name'     => 'institutions',
+                    'section'  => 'admin',
+                    'link'     => $wwwroot . 'admin/users/institutions.php',
+                ),
                 array(
                     'name' => 'uploadcsv',
                     'section' => 'admin',
@@ -803,6 +876,11 @@ function admin_nav() {
                     'link' => $wwwroot . 'admin/usermanagement/suspendedusers.php'
                 )
             )
+        ),
+        array(
+            'name'     => 'adminplugins',
+            'section'  => 'admin',
+            'link'     => $wwwroot . 'admin/plugins/',
         ),
     );
 
@@ -1017,11 +1095,16 @@ function searchform() {
     return pieform(array(
         'name'                => 'searchform',
         'action'              => get_config('wwwroot') . 'user/search.php',
+        'renderer'            => 'oneline',
         'elements'            => array(
             'query' => array(
                 'type'           => 'text',
                 'defaultvalue'   => '',
             ),
+            'submit' => array(
+                'type' => 'image',
+                'src'  => theme_get_image_path('images/btn_search_off.gif')
+            )
         )
     ));
 }
