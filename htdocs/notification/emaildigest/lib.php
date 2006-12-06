@@ -83,8 +83,13 @@ class PluginNotificationEmaildigest extends PluginNotification {
             $body = get_string('emailbodynoreply', 'notification.emaildigest', $sitename);
             foreach ($user->entries as $entry) {
                 $body .= get_string('type', 'activity') . $entry->nicetype 
-                    . ' ' . get_string('attime', 'activity')  . ' ' . format_date($entry->ctime) . "\n"
-                    . $queue->message;
+                    . ' ' . get_string('attime', 'activity')  . ' ' . format_date($entry->ctime) . "\n";
+                if (!empty($queue->subject)) {
+                    $body .= get_string('subject') . $queue->subject ."\n";
+                }
+                if (!empty($queue->message)) {
+                    $body .= "\n" . $queue->message;
+                }
                 if (!empty($queue->url)) {
                     $body .= "\n" . $queue->url;
                 }
