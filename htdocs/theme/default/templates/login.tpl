@@ -1,6 +1,6 @@
 {include file="header.tpl"}
 
-<div class="sidebar" id="loginbox">
+<div id="loginbox">
 <noscript><p>{str tag="javascriptnotenabled"}</p></noscript>
 
 {$login_form}

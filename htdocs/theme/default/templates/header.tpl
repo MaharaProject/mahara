@@ -36,14 +36,20 @@
 			</ul></div>
 {/if}
 			<div id="header">
-				<div class="cornertopright"><img src="{image_path imagelocation='images/header_corner_topright.gif'}" border="0"></div>
+				<div class="cornertopright"><img src="{image_path imagelocation='images/header_corner_topright.gif'}" border="0"></div>		
+				<div class="searchbox">
+				<table><tr><td>
+				{$searchform}
+				</td></tr>
+				<tr><td>
+				<a href="{$WWWROOT}user/search.php">{str tag=advancedsearch}</a>
+				</tr></td></table>
+				</div>
 				<div class="logo"><a href="{$WWWROOT}"><img src="{image_path imagelocation='images/logo.gif'}" border="0"></a></div>
 				<h1 class="hiddenStructure"><a href="{$WWWROOT}">{$heading|default:"Mahara"|escape}</a></h1>
-				
 			</div>
 		</div>
 		<div id="mainwrapper">
-			<div id="maincontentwrapper">	
 {if $MAINNAV}
         <ul id="mainnav"><span class="mainnav-left"><img src="{image_path imagelocation='images/navbg_left.gif'}" border="0"></span><span class="mainnav-right"><img src="{image_path imagelocation='images/navbg_right.gif'}" border="0"></span>
 {foreach from=$MAINNAV item=item}
@@ -66,6 +72,7 @@
         </ul>
     {/if}
 {/if}
+			<div id="maincontentwrapper">	
         {insert name="messages"}
 		
 	
