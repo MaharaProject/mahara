@@ -26,7 +26,7 @@
 
 define('INTERNAL', 1);
 define('ADMIN', 1);
-require(dirname(dirname(__FILE__)) . '/init.php');
+require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
 $type     = param_alpha('type');        // external list or admin file
 $name     = param_variable('name');

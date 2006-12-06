@@ -18,7 +18,7 @@
  *
  * @package    mahara
  * @subpackage admin
- * @author     Nigel McNie <nigel@catalyst.net.nz>
+ * @author     Richard Mansfield <richard.mansfield@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
@@ -26,11 +26,14 @@
 
 define('INTERNAL', 1);
 define('ADMIN', 1);
-define('MENUITEM', 'usermanagement');
-define('SUBMENUITEM', 'adminnotifications');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
-$smarty = smarty();
-$smarty->display('admin/usermanagement/adminnotifications.tpl');
+$itemid = param_integer('itemid');
+
+if (!delete_records('site_menu','id', $itemid)) {
+    json_reply('local', get_string('deletefailed','admin'));
+}
+
+json_reply(false, get_string('menuitemdeleted','admin'));
 
 ?>

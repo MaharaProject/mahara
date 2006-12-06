@@ -24,10 +24,11 @@
  *
  */
 
-define('INTERNAL',1);
+define('INTERNAL', 1);
 define('ADMIN', 1);
-define('MENUITEM','pageeditor');
-require(dirname(dirname(__FILE__)).'/init.php');
+define('MENUITEM', 'configsite');
+define('SUBMENUITEM', 'pageeditor');
+require(dirname(dirname(dirname(__FILE__))).'/init.php');
 require_once('pieforms/pieform.php');
 
 $sitepages = get_records_array('site_content');

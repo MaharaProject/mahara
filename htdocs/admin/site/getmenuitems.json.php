@@ -26,7 +26,7 @@
 
 define('INTERNAL', 1);
 define('ADMIN', 1);
-require(dirname(dirname(__FILE__)) . '/init.php');
+require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
 $public = (int) param_boolean('public');
 

@@ -18,7 +18,7 @@
  *
  * @package    mahara
  * @subpackage admin
- * @author     Richard Mansfield <richard.mansfield@catalyst.net.nz>
+ * @author     Nigel McNie <nigel@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
@@ -26,19 +26,11 @@
 
 define('INTERNAL', 1);
 define('ADMIN', 1);
-require(dirname(dirname(__FILE__)) . '/init.php');
+define('MENUITEM', 'configusers');
+define('SUBMENUITEM', 'adminnotifications');
+require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
-$pagename = param_alpha('pagename');
+$smarty = smarty();
+$smarty->display('admin/usermanagement/adminnotifications.tpl');
 
-$data['pagename'] = $pagename;
-
-if (!$page = @get_record('site_content','name',$pagename)) {
-    json_reply('local',get_string('loadsitepagefailed','admin'));
-}
-
-$data['content'] = $page->content;
-$data['error'] = false;
-$data['message'] = get_string('sitepageloaded','admin');
-json_headers();
-echo json_encode($data);  
 ?>
