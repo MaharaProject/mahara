@@ -31,19 +31,20 @@ require(get_config('libroot') . 'view.php');
 $viewid = param_integer('view');
 $artefactid = param_integer('artefact', null);
 
+$view = new View($viewid);
 if (!can_view_view($viewid)) {
     throw new AccessDeniedException();
 }
-// if ($artefactid && !artefact_in_view($viewid, $artefactid)) {
-//     throw new AccessDeniedException("Artefact $artefactid not in View $viewid");
-// }
-
-$view = new View($viewid);
-
 if ($artefactid) {
-    // Link parent artefacts back to the view
+    require_once('artefact.php');
+    $artefact = artefact_instance_from_id($artefactid);
+    if (!artefact_in_view($artefactid, $viewid)) {
+        throw new AccessDeniedException("Artefact $artefactid not in View $viewid");
+    }
+    //$content = $artefact->render();
+
+    // Link ancestral artefacts back to the view
     $hierarchy = $view->get_artefact_hierarchy();
-    log_debug($hierarchy);
     $artefact = $hierarchy['refs'][$artefactid];
     $ancestorid = $artefact->parent;
     $links = array();
@@ -54,14 +55,14 @@ if ($artefactid) {
         array_unshift($links, $link);
         $ancestorid = $ancestor->parent;
     }
-    $javascript = 'var artefact = ' . $artefactid . ";\n";
     $title = '<div><a href="view.php?view=' . $viewid . '">' . $view->get('title') . "</a></div>\n";
     $title .= implode(' | ', $links);
     $title .= "<h3>$artefact->title</h3>";
+    $jsartefact = $artefactid;
 }
 else {
-    $javascript = "var artefact = undefined;\n";
     $title = "<h3>" . $view->get('title') . "</h3>\n";
+    $jsartefact = 'undefined';
     $content = $view->render();
 }
 
@@ -70,9 +71,10 @@ $getstring = quotestrings(array('message', 'makepublic', 'placefeedback',
                                 'addtowatchlist', 'nopublicfeedback',
                                 'reportobjectionablematerial', 'print'));
 
-$javascript .= <<<EOF
+$javascript = <<<EOF
 
 var view = {$viewid};
+var artefact = {$jsartefact};
 
 function feedbackform() {
     if ($('menuform')) {
