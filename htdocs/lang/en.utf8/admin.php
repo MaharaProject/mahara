@@ -26,6 +26,8 @@
 
 defined('INTERNAL') || die();
 
+$string['administration'] = 'Administration';
+
 // Installer
 $string['release'] = 'Release %s (%s)';
 $string['component'] = 'Component or plugin';
