@@ -20,17 +20,17 @@
     </head>
     <body>
 	<div id="container">
-				<div id="loading_box" style="display:none">
-				</div>
+		<div id="loading_box" style="display:none">
+		</div>
 		<div id="topwrapper">
 {if $LOGGEDIN}
 			<div id="globalTabs"><ul>
-            <li id="globalnav-logout"><a href="{$WWWROOT}?logout">Logout</a></li>
+            	<li id="globalnav-logout"><a href="{$WWWROOT}?logout">Logout</a></li>
     {if $USER->get('admin')}
         {if $ADMIN}
-            <li id="globalnav-returntosite"><a href="{$WWWROOT}">Return to Site</a></li>
+            	<li id="globalnav-returntosite"><a href="{$WWWROOT}">Return to Site</a></li>
         {else}
-            <li id="globalnav-siteadmin"><a href="{$WWWROOT}admin/">Site Administration</a></li>
+            	<li id="globalnav-siteadmin"><a href="{$WWWROOT}admin/">Site Administration</a></li>
         {/if}
     {/if}
 			</ul></div>
@@ -72,7 +72,7 @@
         </ul>
     {/if}
 {/if}
-		<div id="maincontentwrapper">	
+			<div id="maincontentwrapper">	
         {insert name="messages"}
 		
 	

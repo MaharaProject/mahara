@@ -1,7 +1,7 @@
 
 			</div>
 			<div id="footer">
-			<div class="footerright"><img src="{image_path imagelocation='images/footer_navbg_right.gif'}" border="0"></div>
+				<div class="footerright"><img src="{image_path imagelocation='images/footer_navbg_right.gif'}" border="0"></div>
 				<a href="{$WWWROOT}terms.php">{str tag=termsandconditions}</a> | 
 				<a href="{$WWWROOT}privacy.php">{str tag=privacystatement}</a> | 
 				<a href="{$WWWROOT}about.php">{str tag=about}</a> | 
