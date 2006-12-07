@@ -37,8 +37,9 @@ class="cnr-bl"><span class="cnr-br">
 <p><a href="upgrade.php">Run upgrade</a></p>
 {/if}
 
+			</div>
+		</span></span></span></span></div>	
 	</div>
-</span></span></span></span></div>	
 </div>
-</div>
+
 {include file='footer.tpl'}

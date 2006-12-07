@@ -47,7 +47,10 @@ $form = array(
             'type' => 'userlist',
             'title' => get_string('adminusers', 'admin'),
             'defaultvalue' => $adminusers,
-            'filter' => false
+            'filter' => false,
+            'rules' => array(
+                'required' => true
+            )
         ),
         'submit' => array(
             'type' => 'submit',
@@ -69,7 +72,7 @@ function adminusers_submit($values) {
         WHERE id IN (' . join(',', $values['users']) . ')');
     db_commit();
     $SESSION->add_ok_msg(get_string('adminusersupdated', 'admin'));
-    redirect(get_config('wwwroot') . 'admin/usermanagement/adminusers.php');
+    redirect(get_config('wwwroot') . 'admin/users/admins.php');
 }
 
 $smarty->assign('adminusersform', pieform($form));

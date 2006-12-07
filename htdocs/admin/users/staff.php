@@ -63,9 +63,11 @@ function staffusers_submit($values) {
     execute_sql('UPDATE ' . $table . '
         SET staff = 0
         WHERE staff = 1');
-    execute_sql('UPDATE ' . $table . '
-        SET staff = 1
-        WHERE id IN (' . join(',', $values['users']) . ')');
+    if ($values['users']) {
+        execute_sql('UPDATE ' . $table . '
+            SET staff = 1
+            WHERE id IN (' . join(',', $values['users']) . ')');
+    }
     db_commit();
     $SESSION->add_ok_msg(get_string('staffusersupdated', 'admin'));
     redirect(get_config('wwwroot') . 'admin/users/staff.php');

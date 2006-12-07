@@ -155,7 +155,7 @@ $string['uploadcsvpagedescription'] = 'You may use this facility to upload new u
 $string['uploadcsvusersaddedsuccessfully'] = 'The users in the file have been added successfully';
 
 // Admin Users
-$string['adminuserspagedescription'] = 'Here you can choose which users are administrators for the site. The current administrators are on the right, and potential administrators are on the left.';
+$string['adminuserspagedescription'] = '<p>Here you can choose which users are administrators for the site. The current administrators are on the right, and potential administrators are on the left.</p><p>The system must have at least one administrator, and may have more.</p>';
 $string['adminusersupdated'] = 'Admin users updated';
 
 // Staff Users
