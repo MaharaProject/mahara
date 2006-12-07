@@ -44,6 +44,7 @@ class View {
     protected $template;
     protected $artefact_instances;
     protected $artefact_metadata;
+    protected $artefact_hierarchy;
     protected $contents;
     protected $ownerobj;
 
@@ -104,6 +105,52 @@ class View {
             $this->artefact_metadata = get_records_sql_array($sql, array($this->id));
         }
         return $this->artefact_metadata;
+    }
+
+    public function get_artefact_hierarchy() {
+        if (isset($this->artefact_hierarchy)) {
+            return $this->artefact_hierarchy;
+        }
+
+        if (!$artefacts = $this->get_artefact_metadata()) {
+            return array();
+        }
+
+        $prefix = get_config('dbprefix');
+
+        $sql = 'SELECT ac.*, i.name, va.block, va.format
+                    FROM ' . $prefix . 'view_artefact va
+                    JOIN ' . $prefix . 'artefact a ON va.artefact = a.id
+                    LEFT JOIN ' . $prefix . 'artefact_parent_cache pc ON pc.parent = a.id
+                    LEFT JOIN ' . $prefix . 'artefact ac ON ac.id = pc.artefact
+                    JOIN ' . $prefix . 'artefact_installed_type i ON a.artefacttype = i.name
+                    WHERE va.view = ?';
+
+        $allchildren = get_records_sql_array($sql, array($this->id));
+        
+
+        foreach ($artefacts as $toplevel) {
+            $a = array();
+            $a['artefact'] = $toplevel;
+            $a['children'] = $this->find_artefact_children($toplevel, $allchildren);
+            $this->artefact_hierarchy[$toplevel->id] = $a;
+        }
+        return $this->artefact_hierarchy;
+    }
+
+    public function find_artefact_children($artefact, $allchildren) {
+
+        $children = array();        
+        foreach ($allchildren as $child) {
+            if ($child->parent != $artefact->id) {
+                continue;
+            }
+            $children[$child->id] = array();
+            $children[$child->id]['artefact'] = $child;
+            $children[$child->id]['children'] = $this->find_artefact_children($child, $allchildren);
+        }
+
+        return $children;
     }
 
 
