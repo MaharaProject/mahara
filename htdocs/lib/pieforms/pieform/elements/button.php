@@ -38,7 +38,7 @@ function pieform_render_button($element, Pieform $form) {
         throw new PieformException('Button elements must have a value');
     }
     return '<input type="button"'
-        . Pieform::element_attributes($element)
+        . $form->element_attributes($element)
         . ' value="' . Pieform::hsc($element['value']) . '">';
 }
 

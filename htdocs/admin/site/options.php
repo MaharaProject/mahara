@@ -126,7 +126,7 @@ function siteoptions_submit($values) {
 }
 
 $smarty = smarty();
-$smarty->assign('SITEOPTIONFORM',$siteoptionform);
-$smarty->display('admin/options/index.tpl');
+$smarty->assign('SITEOPTIONFORM', $siteoptionform);
+$smarty->display('admin/site/options.tpl');
 
 ?>

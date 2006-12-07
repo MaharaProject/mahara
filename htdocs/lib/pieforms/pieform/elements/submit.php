@@ -33,7 +33,7 @@
  */
 function pieform_render_submit($element, Pieform $form) {
     return '<input type="submit"'
-        . Pieform::element_attributes($element)
+        . $form->element_attributes($element)
         . ' value="' . Pieform::hsc($form->get_value($element)) . '">';
 }
 

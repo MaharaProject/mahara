@@ -66,7 +66,6 @@ function pieform($data) {
     // 
     //  - more form element types (inc. types like autocomplete and date picker and wyswiyg)
     //  - support processing of data before validation occurs (e.g. trim(), strtoupper())
-    //  - do onsubmit for ajax stuff by mochikit connect()
     //  - Basic validation is possible as there's a callback function for checking,
     //    but some helper functions could be written to make people's job validating
     //    stuff much easier (form_validate_email, form_validate_date etc).
@@ -328,7 +327,6 @@ class Pieform {
         $formdefaults = array(
             'method'    => 'get',
             'action'    => '',
-            'onsubmit'  => '',
             'ajaxpost'  => false,
             'preajaxsubmitcallback'  => '',
             'postajaxsubmitcallback' => '',
@@ -354,7 +352,6 @@ class Pieform {
         $this->action    = $data['action'];
         $this->validate  = $data['validate'];
         $this->submit    = $data['submit'];
-        $this->onsubmit  = $data['onsubmit'];
         $this->autofocus = $data['autofocus'];
         $this->language  = $data['language'];
         
@@ -683,9 +680,6 @@ class Pieform {
         if ($this->fileupload) {
             $result .= ' enctype="multipart/form-data"';
         }
-        if ($this->ajaxpost) {
-            $result .= ' onsubmit="' . $this->name . '_submit(); return false;"';
-        }
         $result .= ">\n";
 
         // @todo masks attempts in pieform_render_element, including the error handling there
@@ -871,7 +865,8 @@ class Pieform {
     private function submit_js() {
         // @todo nigel should disable all buttons on this form while the submit is happening
         $result = <<<EOF
-function {$this->name}_submit() {
+
+connect($('{$this->name}'), 'onsubmit', function (e) {
     // eventually we should check input types for wysiwyg before doing this
     // Also should only save wysiwyg elements in the form, not all of them...
     if (typeof(tinyMCE) != 'undefined') { tinyMCE.triggerSave(); } 
@@ -961,8 +956,8 @@ EOF;
         $result .= <<<EOF
     });
     {$this->name}_message('{$strprocessingform}', 'info');
-    return false;
-}
+    e.stop();
+});
 
 EOF;
 
@@ -1110,12 +1105,15 @@ EOF;
      * @param array $exclude Any attributes to explicitly exclude from adding
      * @return string        The attributes for the element
      */
-    public static function element_attributes($element, $exclude=array()) {
+    public function element_attributes($element, $exclude=array()) {
         static $attributes = array('accesskey', 'class', 'dir', 'id', 'lang', 'name', 'onclick', 'size', 'style', 'tabindex');
         $elementattributes = array_diff($attributes, $exclude);
         $result = '';
         foreach ($elementattributes as $attribute) {
             if (isset($element[$attribute]) && $element[$attribute] !== '') {
+                if ($attribute == 'id') {
+                    $element[$attribute] = $this->name . '_' . $element[$attribute];
+                }
                 $result .= ' ' . $attribute . '="' . self::hsc($element[$attribute]) . '"';
             }
         }

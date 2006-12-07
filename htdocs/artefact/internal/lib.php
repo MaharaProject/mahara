@@ -325,8 +325,9 @@ class ArtefactTypeProfileField extends ArtefactTypeProfile {
      */
     public static function format_child_data($data, $pluginname) {
         $res = new StdClass;
-        $res->id    = "{$data->artefacttype}_{$data->id}";
-        $res->title = $data->title;
+        $res->id         = $data->id;
+        $res->title      = $data->title;
+        $res->isartefact = true;
         if ($data->artefacttype == 'email') {
             $res->text = get_string('email') . ' - ' . $data->title;
         }

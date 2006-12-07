@@ -411,8 +411,14 @@ function core_install_defaults() {
     set_profile_field($user->id, 'lastname', $user->lastname);
     
     require('template.php');
-    upgrade_templates();
-
+    try {
+        upgrade_templates();
+    }
+    catch (TemplateParserException $e) {
+        set_config('installed', true);
+        db_commit();
+        throw $e;
+    }
     set_config('installed', true);
     db_commit();
 }

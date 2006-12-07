@@ -44,7 +44,7 @@ function pieform_render_select($element, Pieform $form) {
     }
 
     $result = '<select'
-        . Pieform::element_attributes($element)
+        . $form->element_attributes($element)
         . (!empty($element['multiple']) ? ' multiple="multiple"' : '')
         . ">\n";
     if (!isset($element['options']) || !is_array($element['options']) || count($element['options']) < 1) {

@@ -35,6 +35,7 @@
  *                              container.
  */
 function pieform_renderer_maharatable(Pieform $form, $builtelement, $rawelement) {
+    $formname = $form->get_name();
     if ($rawelement['type'] == 'fieldset') {
         // Add table tags to the build element, to preserve HTML compliance
         if (0 === strpos($builtelement, "\n<fieldset>\n<legend>")) {
@@ -53,7 +54,7 @@ function pieform_renderer_maharatable(Pieform $form, $builtelement, $rawelement)
     }
     
     $result = "\t<tr";
-    $result .= ' id="' . $rawelement['name'] . '_container"';
+    $result .= ' id="' . $formname . '_' . $rawelement['name'] . '_container"';
     // Set the class of the enclosing <tr> to match that of the element
     if ($rawelement['class']) {
         $result .= ' class="' . $rawelement['class'] . '"';
@@ -67,10 +68,10 @@ function pieform_renderer_maharatable(Pieform $form, $builtelement, $rawelement)
             $result .= Pieform::hsc($rawelement['title']);
         }
         else {
-            $result .= '<label for="' . $rawelement['id'] . '">' . Pieform::hsc($rawelement['title']) . '</label>';
+            $result .= '<label for="' . $formname . '_' . $rawelement['id'] . '">' . Pieform::hsc($rawelement['title']) . '</label>';
         }
     }
-    $result .= "</th>\n\t</tr>\n\t<tr>\t<td>";
+    $result .= "</th>\n\t</tr>\n\t<tr>\n\t\t<td>";
     $result .= $builtelement;
 
     // Contextual help
@@ -112,7 +113,7 @@ function pieform_renderer_maharatable_messages_js($id, $submitid) {
 // Given a message and form element name, should set an error on the element
 function {$id}_set_error(message, element) {
     {$id}_remove_error(element);
-    element += '_container';
+    element = {$id} + element + '_container';
     // @todo set error class on input elements...
     $(element).parentNode.insertBefore(TR({'id': '{$id}_error_' + element}, TD({'colspan': 2, 'class': 'errmsg'}, message)), $(element).nextSibling);
 }
@@ -136,7 +137,7 @@ function {$id}_message(message, type) {
         swapDOM(elem, msg);
     }
     else {
-        appendChildNodes($('{$submitid}_container').parentNode, msg);
+        appendChildNodes($('{$id}_{$submitid}_container').parentNode, msg);
     }
 }
 function {$id}_remove_message() {

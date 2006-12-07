@@ -26,6 +26,8 @@
 
 define('INTERNAL', 1);
 define('ADMIN', 1);
+define('MENUITEM', 'configextensions');
+define('SUBMENUITEM', 'pluginadmin');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require('upgrade.php');
 
@@ -132,6 +134,6 @@ $smarty = smarty();
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('plugins', $plugins);
 $smarty->assign('installlink', 'installplugin');
-$smarty->display('admin/plugins/index.tpl');
+$smarty->display('admin/extensions/plugins.tpl');
 
 ?>

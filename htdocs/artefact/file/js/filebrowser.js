@@ -6,6 +6,7 @@ function FileBrowser(element, changedircallback) {
     this.pathids = {'/':null};
     this.cwd = '/';
     this.changedircallback = changedircallback;
+    this.filenames = {};
 
     this.init = function() {
         self.filelist = new TableRenderer(
@@ -33,7 +34,11 @@ function FileBrowser(element, changedircallback) {
         var editb = INPUT({'type':'button', 'value':get_string('edit')});
         editb.onclick = function () { self.openeditform(r); };
         var deleteb = INPUT({'type':'button', 'value':get_string('delete')});
-        deleteb.onclick = function () { sendjsonrequest('delete.json.php', {'id': r.id}, self.refresh); };
+        deleteb.onclick = function () {
+            if (confirm(get_string(r.artefacttype == 'folder' ? 'deletefolderandcontents?' : 'deletefile?'))) {
+                sendjsonrequest('delete.json.php', {'id': r.id}, self.refresh);
+            }
+        };
         return TD(null, editb, deleteb);
     }
 
@@ -69,30 +74,35 @@ function FileBrowser(element, changedircallback) {
 
     this.openeditform = function(fileinfo) {
         var editrows = [];
-        var elemid = fileinfo.artefacttype + fileinfo.id;
+        var editid = 'edit_' + fileinfo.id;
+        var formid = editid + '_form';
+        var rowid = 'row_' + fileinfo.id;
+        var cancelform = function() {
+            setDisplayForElement(null, rowid);
+            removeElement(editid);
+        };
         var savebutton = INPUT({'type':'button','value':get_string('savechanges')});
-        //savebutton.onclick = function () { updatefilemetadata(elemid) };
+        savebutton.onclick = function () {
+            sendjsonrequest('updatemetadata.json.php', 
+                            {'id':fileinfo.id, 'name':$(formid).name.value,
+                             'description':$(formid).description.value},
+                            function() {cancelform(); self.refresh()});
+        };
         if (fileinfo['artefacttype'] == 'folder') {
             editrows = self.folderformrows(fileinfo);
         }
         else {
             editrows = [self.editformtitle(get_string('editfile')),
-                        self.textinputrow('title',fileinfo.title),
+                        self.textinputrow('name',fileinfo.title),
                         self.textinputrow('description',fileinfo.description)];
         }
-        var editid = 'edit_' + elemid;
-        var rowid = 'row_'+fileinfo.id;
-        var cancelbutton = INPUT({'type':'button', 'value':get_string('cancel')});
-        cancelbutton.onclick = function () {
-            $(rowid).style.visibility = '';
-            removeElement(editid);
-        }
-        var edittable = TABLE({'align':'center'},TBODY(null,editrows));
-        var buttons = [savebutton,cancelbutton];
-        $(rowid).style.visibility = 'hidden';
+        var cancelbutton = INPUT({'type':'button', 'value':get_string('cancel'), 'onclick':cancelform});
+        var buttons = TR(null,TD({'colspan':2},savebutton,cancelbutton));
+        var edittable = TABLE({'align':'center'},TBODY(null,editrows,buttons));
+        hideElement(rowid);
         insertSiblingNodesBefore(rowid, TR({'id':editid},
                                            TD({'colSpan':4},
-                                              FORM({'id':editid+'_form','action':''},edittable,buttons))));
+                                              FORM({'id':formid,'action':''},edittable))));
     }
 
     this.showsize = function(bytes) {
@@ -106,6 +116,7 @@ function FileBrowser(element, changedircallback) {
     }
 
     this.formatname = function(r) {
+        self.filenames[r.title] = true;
         if (r.artefacttype == 'file') {
             return TD(null, r.title);
         }
@@ -118,10 +129,15 @@ function FileBrowser(element, changedircallback) {
         }
     }
 
+    this.fileexists = function (filename) { 
+        return self.filenames[filename] == true;
+    }
+
     this.changedir = function(path) {
         self.cwd = path;
         self.linked_path();
         self.changedircallback(self.pathids[path], path);
+        self.filenames = {};
         var args = path == '/' ? null : {'folder':self.pathids[path]};
         self.filelist.doupdate(args);
         return false;

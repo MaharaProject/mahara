@@ -17,20 +17,34 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage admin
- * @author     Nigel McNie <nigel@catalyst.net.nz>
+ * @subpackage core
+ * @author     Martyn Smith <martyn@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
 define('INTERNAL', 1);
-define('ADMIN', 1);
-define('MENUITEM', 'configusers');
-define('SUBMENUITEM', 'adminnotifications');
-require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+define('PUBLIC', 1);
 
-$smarty = smarty();
-$smarty->display('admin/users/notifications.tpl');
+require(dirname(dirname(__FILE__)) . '/init.php');
+require('template.php');
 
-?>
+$template_name = param_variable('template');
+
+$parsed_template = template_locate($template_name);
+
+if(empty($parsed_template)) {
+    // @todo what exception should be thrown here
+    throw new Exception("Couldn't find template '$template_name'");
+}
+
+if(!isset($parsed_template['css'])) {
+    header('HTTP/1.0 404 Not Found');
+    exit;
+}
+
+// @todo send sensible headers here (allow browser caching, and 304 support)
+
+header('Content-type: text/css');
+echo file_get_contents($parsed_template['css']);

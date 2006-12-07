@@ -38,7 +38,7 @@ function pieform_render_cancel($element, Pieform $form) {
         throw new PieformException('Cancel elements must have a value');
     }
 
-    $attributes = Pieform::element_attributes($element);
+    $attributes = $form->element_attributes($element);
     $attributes = preg_replace('/name="(.*)"/', 'name="cancel_$1"', $attributes);
     $attributes = preg_replace('/id="(.*)"/', 'id="cancel_$1"', $attributes);
     return '<input type="submit"'

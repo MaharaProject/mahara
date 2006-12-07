@@ -26,6 +26,8 @@
 
 define('INTERNAL', 1);
 define('ADMIN', 1);
+define('MENUITEM', 'configextensions');
+define('SUBMENUITEM', 'pluginadmin');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('pieforms/pieform.php');
 
@@ -75,7 +77,7 @@ $smarty->assign('form', pieform($form));
 $smarty->assign('plugintype', $plugintype);
 $smarty->assign('pluginname', $pluginname);
 $smarty->assign('type', $type);
-$smarty->display('admin/plugins/pluginconfig.tpl');
+$smarty->display('admin/extensions/pluginconfig.tpl');
 
 
 function pluginconfig_submit($values) {

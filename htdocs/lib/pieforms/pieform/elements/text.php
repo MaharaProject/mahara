@@ -33,7 +33,7 @@
  */
 function pieform_render_text($element, $form) {
     return '<input type="text"'
-        . Pieform::element_attributes($element)
+        . $form->element_attributes($element)
         . ' value="' . Pieform::hsc($form->get_value($element)) . '">';
 }
 

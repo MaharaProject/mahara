@@ -17,20 +17,33 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage admin
- * @author     Nigel McNie <nigel@catalyst.net.nz>
+ * @subpackage artefact-file
+ * @author     Richard Mansfield <richard.mansfield@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
 define('INTERNAL', 1);
-define('ADMIN', 1);
-define('MENUITEM', 'configusers');
-define('SUBMENUITEM', 'adminnotifications');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+log_debug('updatemetadata');
 
-$smarty = smarty();
-$smarty->display('admin/users/notifications.tpl');
+try {
+    $id = param_integer('id');
+    $name = param_variable('name');
+    $description = param_variable('description');
+}
+catch (ParameterException $e) {
+    json_reply('missingparameter',get_string('missingparameter'));
+}
+
+require_once('artefact.php');
+
+$artefact = artefact_instance_from_id($id);
+$artefact->set('title',$name);
+$artefact->set('description',$description);
+$artefact->commit();
+
+json_reply(false, get_string('changessaved'));
 
 ?>
