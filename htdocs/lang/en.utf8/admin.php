@@ -52,9 +52,13 @@ $string['configusers'] = 'Manage Users';
 
 
 $string['siteoptions']    = 'Site options';
+$string['siteoptionsdescription'] = 'Configure basic site options such as the name, language and theme';
+$string['sitepages']     = 'Site pages';
+$string['sitepagesdescription'] = 'Edit the text of the basic pages';
+$string['sitemenu'] = 'Site menu';
+$string['sitemenudescription'] = 'Manage the links and file that appear in the menus';
+
 $string['institutions']   = 'Institutions';
-$string['pageeditor']     = 'Site pages';
-$string['menueditor']     = 'Site menu';
 $string['adminplugins']   = 'Administer Plugins';
 $string['files']          = 'Files';
 $string['adminhome']      = 'Admin home';
