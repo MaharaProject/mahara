@@ -24,28 +24,29 @@
  *
  */
 
-// NOTE: This script is VERY SIMILAR to the adminusers.php script, a bug fixed
+// NOTE: This script is VERY SIMILAR to the staffusers.php script, a bug fixed
 // here might need to be fixed there too.
 define('INTERNAL', 1);
 define('ADMIN', 1);
-define('MENUITEM', 'usermanagement');
-define('SUBMENUITEM', 'staffusers');
+define('MENUITEM', 'configusers');
+define('SUBMENUITEM', 'adminusers');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('pieforms/pieform.php');
 $smarty = smarty();
 
-// Get users who are currently staff
-$staffusers = get_column('usr', 'id', 'staff', 1);
+// Get users who are currently administrators
+// @todo later, exclude the user with uid 1
+$adminusers = get_column('usr', 'id', 'admin', 1);
 
 $form = array(
-    'name' => 'staffusers',
+    'name' => 'adminusers',
     'method' => 'post',
     'action' => '',
     'elements' => array(
         'users' => array(
             'type' => 'userlist',
-            'title' => get_string('staffusers', 'admin'),
-            'defaultvalue' => $staffusers,
+            'title' => get_string('adminusers', 'admin'),
+            'defaultvalue' => $adminusers,
             'filter' => false
         ),
         'submit' => array(
@@ -55,23 +56,23 @@ $form = array(
     )
 );
 
-function staffusers_submit($values) {
+function adminusers_submit($values) {
     global $SESSION;
     $table = get_config('dbprefix') . 'usr';
     
     db_begin();
     execute_sql('UPDATE ' . $table . '
-        SET staff = 0
-        WHERE staff = 1');
+        SET admin = 0
+        WHERE admin = 1');
     execute_sql('UPDATE ' . $table . '
-        SET staff = 1
+        SET admin = 1
         WHERE id IN (' . join(',', $values['users']) . ')');
     db_commit();
-    $SESSION->add_ok_msg(get_string('staffusersupdated', 'admin'));
-    redirect(get_config('wwwroot') . 'admin/usermanagement/staffusers.php');
+    $SESSION->add_ok_msg(get_string('adminusersupdated', 'admin'));
+    redirect(get_config('wwwroot') . 'admin/usermanagement/adminusers.php');
 }
 
-$smarty->assign('staffusersform', pieform($form));
-$smarty->display('admin/usermanagement/staffusers.tpl');
+$smarty->assign('adminusersform', pieform($form));
+$smarty->display('admin/usermanagement/adminusers.tpl');
 
 ?>

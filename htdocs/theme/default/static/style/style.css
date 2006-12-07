@@ -27,7 +27,7 @@ h1, h2 {
 	color: #547c22;
 	font-size: 20px;
 	font-weight: normal;	
-	margin: 7px 0 5px 0;
+	margin: 5px 0 5px 0;
 	text-transform: capitalize;
 }
 
@@ -41,6 +41,7 @@ h3, h4, h5, h6 {
 
 /* CONTENT LAYOUT BEGIN */
 #container {
+	min-width: 770px;
    width: 90%;
 	margin: 0 auto;
 	padding: 0;
@@ -156,26 +157,50 @@ h3, h4, h5, h6 {
 
 .logo {
 	text-align: left;
-   padding: 10px 10px 10px 10px;
-	margin: 0;
-}
-
-.searchbox {
-	float: right;
-	font-size: 12px;
-	font-weight: bold;
-	color: #547c22;
-	padding: 0;
-	margin: 30px 0 0 0;
-}
-
-.searchbox td {
-	padding: 0;
+    padding: 10px 10px 10px 10px;
 	margin: 0;
 }
 
 form {
    margin: 0;
+}
+
+.searchbox {
+	float: right;
+	font-size: 11px;
+	font-weight: bold;
+	color: #497424;
+	padding: 0;
+	margin: 30px 0 0 0;
+}
+
+
+#searchform #query_container {
+	padding: 0;
+	margin: 0;
+	vertical-align: middle;
+}
+
+#searchform#query_container #query {
+	margin: 0 0 0 0;
+	padding: 0;
+	vertical-align: middle;
+}
+
+#searchform#submit_container {
+	padding: 0 0 0 0;
+	margin: 0 0 0 0;
+	vertical-align: middle;
+}
+#searchform #submit_container #submit {
+	margin:  0 0 0 5px; 
+	text-align: right;
+	padding: 0 0 2px 0;
+	vertical-align: middle;
+}
+ 
+.searchbox td {
+	padding: 0;
 }
 
 /* HEADER END */
@@ -330,18 +355,18 @@ div.sidebar {
 	line-height: 18px;
 }
 
-div.sidebar-botcorners {
+#column-right div.sidebar-botcorners {
     padding: 0 0 0 0;
     margin: 0 0 0 0;
 }
 
 
-div.loginbox-botcorners {
+#column-right div.loginbox-botcorners {
     padding: 0 0 0 0;
     margin: 0 0 0 -10px;
 }
 
-#loginbox {
+#column-right #loginbox {
    width: 228px;
 	background: #FFFFFF url(../images/sidebox_top_headerbg.gif) no-repeat top;
    padding: 10px 0 0 0;
@@ -349,41 +374,41 @@ div.loginbox-botcorners {
 	color: #000000;
 }
 
-#loginbox fieldset {
+#column-right #loginbox fieldset {
 	border: none;
 	padding: 0;
 	margin: 0 0 0 10px;
 	width: 150px;
 }
 
-#login legend {
+#column-right #login legend {
 	color: #FFFFFF;
 	font-weight: bold;
 	margin: 0 0 0 -7px;
 	padding: 0;
 }
 
-#login #login_username_container {
+#column-right #login #login_username_container {
 	margin: 25px 0 0 0;
 	padding: 0;
 }
 
-#login #login_password_container {
+#column-right #login #login_password_container {
 	margin: 5px 0 5px 0;
 	padding: 0;
 }
 
-#login label {
+#column-right #login label {
 	color: #547c22;
 	font-weight: bold;
 }
 
-#login .description {
+#column-right #login .description {
 	font-size: 9px;
 	color: #7e7e7e; 
 }
 
-#login #submit_container {
+#column-right #login #submit_container {
 	font-size: 9px;
 	float: left;
 	margin: 0 0 5px 10px;
@@ -392,32 +417,77 @@ div.loginbox-botcorners {
 
 }
 
-#login a,
-#login a:link,
-#login a:active,
-#login a:visited {
+#column-right #login a,
+#column-right #login a:link,
+#column-right #login a:active,
+#column-right #login a:visited {
 	color: #547c22;
 	font-size: 9px;
 	text-decoration: none;
 	margin: 0 2px 0 2px;
 }
 
-#login a:hover {
+#column-right #login a:hover {
 	text-decoration: underline;
 }
 
-#login table {
-	width: 150px;
-	margin: 0 0 0 0;
-	padding: 0;
+.maincontent #loginbox {
+   padding: 0;
+   margin: 0;
 }
 
-#login td,
-#login th {
+.maincontent #loginbox fieldset {
+	border: none;
+	padding: 0;
+	margin: 0 0 0 10px;
+}
+
+.maincontent #login legend {
+	color: #8ba520;
+	font-weight: bold;
+	margin: 0;
+	padding: 0;
+	display: none;
+}
+
+.maincontent #login #login_username_container,
+.maincontent #login #login_password_container {
 	margin: 0;
 	padding: 0;
 }
 
+.maincontent #login label {
+	color: #8ba520;
+	font-weight: bold;
+	margin: 0;
+	padding: 0;
+}
+
+.maincontent #login .description {
+	font-size: 9px;
+	color: #7e7e7e; 
+	margin: 0;
+	padding: 0;
+}
+
+.maincontent #login #submit_container {
+	font-size: 9px;
+	margin: 0;
+	padding: 0;
+	display: inline;
+}
+
+.maincontent #login #submit {
+	margin: 5px 0 0 12px;
+}
+
+.maincontent #login table,
+.maincontent #login tbody,
+.maincontent #login tr,
+.maincontent #login td {
+	margin: 0;
+	padding: 0;
+}
 
 /* RIGHT SIDE BOX ENDS */
 
@@ -434,7 +504,7 @@ div.loginbox-botcorners {
 }
 
 .content textarea {
-	width: 300px;
+	width: 450px;
 }
 
 #messages {
@@ -447,13 +517,13 @@ div.loginbox-botcorners {
 .content a:visited {
 	color: #547c22;
 	text-decoration: none;
-	border-bottom: 1px dotted #e6c560;
+	border-bottom: 1px dotted #547c22;
 }
 
 .content a:hover {
 	color: #819f18;
 	text-decoration: none;
-	border-bottom: 1px solid #e6c560;
+	border-bottom: 1px solid #819f18;
 }
 
 .box-cnrs {
@@ -469,27 +539,30 @@ div.loginbox-botcorners {
   background: url(../images/content_corner_topleft.gif) top left no-repeat ;
   margin: 0 0 0 0;
   padding: 0;
+  display: block;
+  width: 100%;
 }
 
 .box-cnrs .cnr-tr {
   margin: 0 0 0 0;
   padding: 0;
   background: url(../images/content_corner_topright.gif) top right no-repeat;
+  display: block;
+  width: 100%;
 }
 
 .box-cnrs .cnr-bl {
   margin: 0 0 0 0;
   padding: 0;
   background: url(../images/content_corner_botleft.gif) bottom left no-repeat;
+  display: block;
+  width: 100%;
 }
 
 .box-cnrs .cnr-br {
   margin: 0 0 0 0;
   padding: 6px 0 6px 0;
   background: url(../images/content_corner_botright.gif) bottom right no-repeat;
-}
-
-.box-cnrs span {
   display: block;
   width: 100%;
 }
@@ -556,7 +629,7 @@ div.loginbox-botcorners {
 /* CONTENT LAYOUT ENDS */
 
 p {
-	margin: 5px 0 5px 0;
+	margin: 15px 0 5px 0;
 	padding: 0;
 }
 
@@ -569,7 +642,7 @@ tbody {
 }
 
 td {
-	padding: 5px;
+	padding: 1px;
 	margin: 0;
 }
 
@@ -578,7 +651,7 @@ th {
 	color: #3a5813;
 	vertical-align: top;
 	margin: 0;
-	padding: 5px;
+	padding: 7px 2px 1px 2px;
 }
 
 .required label, 
@@ -660,7 +733,7 @@ acronym {
 	display: none;
 	position: fixed; 
 	top: 0;
-	left: 30px;
+	left: 0;
 	background-color: #819f18; 
 	color: #FFFFFF;
 }
@@ -683,3 +756,55 @@ acronym {
 	width: 100%;
 	margin: 10px 0 0 0;
 }
+
+#bloglist {
+	width: 100%;
+	margin: 10px 0 0 0;
+}
+
+/* FORMS BEGIN */
+
+#profileprefs td {
+	padding: 0 10px;
+	margin: 0;
+}
+
+#profileprefs .header {
+	font-weight: bold;
+	color: #819f18;
+}
+
+#profileform th {
+	padding: 7px 2px 0 15px;
+	margin: 0;
+}
+
+#profileform td {
+	padding: 1px 2px 0 15px;
+	margin: 0;
+}
+
+
+#creategroup table {
+	padding: 0 2px 0 15px;
+	margin: 0;
+}
+
+#creategroup th {
+	padding: 7px 0 0 0px;
+	margin: 0;
+}
+
+#creategroup td {
+	padding: 1px;
+	margin: 0;
+}
+
+#creategroup td label {
+	font-weight: bold;
+	padding: 0 5px 0 0;
+	margin: 0;
+	color: #3a5714;
+}
+
+/* FORMS ENDS */

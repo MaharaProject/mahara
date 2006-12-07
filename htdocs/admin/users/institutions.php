@@ -26,8 +26,9 @@
 
 define('INTERNAL', 1);
 define('ADMIN', 1);
-define('MENUITEM', 'institutions');
-require(dirname(dirname(__FILE__)) . '/init.php');
+define('MENUITEM', 'configusers');
+define('SUBMENUITEM', 'institutions');
+require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('pieforms/pieform.php');
 $smarty = smarty();
 
@@ -176,6 +177,7 @@ if ($institution || $add) {
 
     $smarty->assign('institution_form', pieform(array(
         'name'     => 'institution',
+        'renderer' => 'table',
         'elements' => $elements
     )));
 

@@ -24,10 +24,11 @@
  *
  */
 
-define('INTERNAL',1);
+define('INTERNAL', 1);
 define('ADMIN', 1);
-define('MENUITEM','menueditor');
-require(dirname(dirname(__FILE__)).'/init.php');
+define('MENUITEM', 'configsite');
+define('SUBMENUITEM', 'editmenu');
+require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
 $strings = array('edit','delete','update','cancel','add','name','unknownerror');
 $adminstrings = array('deletefailed','deletingmenuitem','savingmenuitem',

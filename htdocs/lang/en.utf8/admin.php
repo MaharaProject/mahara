@@ -26,6 +26,8 @@
 
 defined('INTERNAL') || die();
 
+$string['administration'] = 'Administration';
+
 // Installer
 $string['release'] = 'Release %s (%s)';
 $string['component'] = 'Component or plugin';
@@ -45,7 +47,10 @@ $string['noupgrades'] = 'Nothing to upgrade! You are fully up to date!';
 $string['fixtemplatescontinue'] = 'Try fixing this and continuing here (templates were not installed)';
 
 // Admin navigation menu
-$string['usermanagement'] = 'Manage users';
+$string['configsite']  = 'Configure Site';
+$string['configusers'] = 'Manage Users';
+
+
 $string['siteoptions']    = 'Site options';
 $string['institutions']   = 'Institutions';
 $string['pageeditor']     = 'Site pages';

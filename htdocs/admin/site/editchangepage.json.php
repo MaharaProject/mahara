@@ -26,14 +26,19 @@
 
 define('INTERNAL', 1);
 define('ADMIN', 1);
-require(dirname(dirname(__FILE__)) . '/init.php');
+require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
-$itemid = param_integer('itemid');
+$pagename = param_alpha('pagename');
 
-if (!delete_records('site_menu','id',$itemid)) {
-    json_reply('local', get_string('deletefailed','admin'));
+$data['pagename'] = $pagename;
+
+if (!$page = @get_record('site_content', 'name', $pagename)) {
+    json_reply('local', get_string('loadsitepagefailed', 'admin'));
 }
 
-json_reply(false,get_string('menuitemdeleted','admin'));
-
+$data['content'] = $page->content;
+$data['error']   = false;
+$data['message'] = get_string('sitepageloaded','admin');
+json_headers();
+echo json_encode($data);  
 ?>
