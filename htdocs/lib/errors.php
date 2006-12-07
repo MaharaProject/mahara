@@ -400,6 +400,7 @@ function exception (Exception $e) {
                 break;
             default:
                 $message = $e->getMessage();
+                $outputmessage .= '<br> ' . $e->getMessage();
         }
 
         log_message($message, LOG_LEVEL_WARN, true, true, $e->getFile(), $e->getLine(), $e->getTrace());
