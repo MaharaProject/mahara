@@ -5,10 +5,9 @@
 </div>
 
 <div id="column-left">
-<div class="content">
-<div class="box-cnrs"><span class="cnr-tl"><span class="cnr-tr"><span 
-class="cnr-bl"><span class="cnr-br">
-	<div class="maincontent">
+	<div class="content">
+		<div class="box-cnrs"><span class="cnr-tl"><span class="cnr-tr"><span class="cnr-bl"><span class="cnr-br">
+			<div class="maincontent">
 	
     <h2>{str tag="createviewstep2"}</h2>
 {literal}
@@ -31,9 +30,10 @@ class="cnr-bl"><span class="cnr-br">
     <button type="button" onclick="document.location='create1.php?createid={$createid}';">{str tag=Back}</button>
     <button type="button" onclick="document.location='./';">{str tag=Cancel}</button>
 
+			</div>
+		</span></span></span></span></div>	
 	</div>
-</span></span></span></span></div>	
 </div>
-</div>
+
 {include file="footer.tpl"}
 
