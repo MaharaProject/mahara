@@ -33,25 +33,27 @@ $artefact = param_integer('artefact',null);
 $data = new StdClass;
 if ($artefact) {
     $data->artefact = $artefact;
-    $table = 'usr_watchlist_artefact';
+    $type = 'artefact';
     $artefactfield = 'artefact';
 }
 else {
-    $table = 'usr_watchlist_view';
+    $type = 'view';
     $artefactfield = null;
 }
+$table = 'usr_watchlist_' . $type;
+
 $data->view = $view;
 $data->usr = $USER->get('id');
 $data->ctime = db_format_timestamp(time());
 
 if (record_exists($table, 'usr', $data->usr, 'view', $view, $artefactfield, $artefact)) {
-    json_reply(false, get_string('itemalreadyinwatchlist'));
+    json_reply(false, get_string('alreadyinwatchlist', 'mahara', get_string($type)));
 }
 
 if (!insert_record($table, $data)) {
     json_reply('local', get_string('updatewatchlistfailed'));
 }
 
-json_reply(false,get_string('itemaddedtowatchlist'));
+json_reply(false,get_string('addedtowatchlist', 'mahara', get_string($type)));
 
 ?>
