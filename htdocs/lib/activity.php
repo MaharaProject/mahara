@@ -123,7 +123,7 @@ function handle_activity($activitytype, $data) {
                         . ' ' . get_string('onview') . $viewtitle;
                 }
                 else {
-                    $data->url = get_config('wwwroot') . 'view/artefact.php?id=' . $data->artefact . '&amp;view=' . $data->view;
+                    $data->url = get_config('wwwroot') . 'view/artefact.php?id=' . $data->artefact . '&view=' . $data->view;
                     if (!$artefacttitle = get_field('artefact', 'title', 'id', $data->artefact)) {
                         throw new InvalidArgumentException("Couldn't find artefact with id " . $data->view);
                     }
@@ -181,11 +181,11 @@ function handle_activity($activitytype, $data) {
                         throw new InvalidArgumentException("Couldn't find artefact with id "  . $data->artefact);
                     }
                     $userid = $artefact->owner;
-                    $data->subject .= $artefact->title;
+                    $data->subject .= ' ' .$artefact->title;
                     if (empty($data->url)) {
                         // @todo this might change later
                         $data->url = get_config('wwwroot') . 'view/artefact.php?id=' 
-                            . $data->artefact . '&amp;view=' . $data->view;
+                            . $data->artefact . '&view=' . $data->view;
                     }
                 } 
                 else { // feedback on view.
@@ -194,7 +194,7 @@ function handle_activity($activitytype, $data) {
                         throw new InvalidArgumentException("Couldn't find view with id " . $data->view);
                     }
                     $userid = $view->owner;
-                    $data->subject .= $view->title;
+                    $data->subject .= ' ' .$view->title;
                     if (empty($data->url)) {
                         // @todo this might change later
                         $data->url = get_config('wwwroot') . 'view/view.php?id=' . $data->view;
@@ -260,7 +260,7 @@ function handle_activity($activitytype, $data) {
                             ';
                     $users = get_records_sql_array($sql, 
                                                    array(get_config('wwwroot') . 'view/artefact.php?id=' 
-                                                         . $data->artefact . '&amp;view=', 'watchlist', 
+                                                         . $data->artefact . '&view=', 'watchlist', 
                                                          $data->artefact, $data->artefact));
                     if (empty($users)) {
                         $users = array();
