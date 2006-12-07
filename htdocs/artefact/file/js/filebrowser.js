@@ -34,7 +34,11 @@ function FileBrowser(element, changedircallback) {
         var editb = INPUT({'type':'button', 'value':get_string('edit')});
         editb.onclick = function () { self.openeditform(r); };
         var deleteb = INPUT({'type':'button', 'value':get_string('delete')});
-        deleteb.onclick = function () { sendjsonrequest('delete.json.php', {'id': r.id}, self.refresh); };
+        deleteb.onclick = function () {
+            if (confirm(get_string(r.artefacttype == 'folder' ? 'deletefolderandcontents?' : 'deletefile?'))) {
+                sendjsonrequest('delete.json.php', {'id': r.id}, self.refresh);
+            }
+        };
         return TD(null, editb, deleteb);
     }
 

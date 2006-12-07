@@ -34,30 +34,10 @@ catch (ParameterException $e) {
     json_reply('missingparameter',get_string('missingparameter'));
 }
 
-$prefix = get_config('dbprefix');
+require_once('artefact.php');
 
-$filerecord = get_record_sql('SELECT a.artefacttype, a.owner, f.name
-      FROM ' . $prefix . 'artefact a
-      JOIN ' . $prefix . 'artefact_file_files f ON a.id = f.artefact
-      WHERE a.id = ' . $fileid);
-
-if ($filerecord->owner != $USER->get('id')) {
-    json_reply('local',get_string('notowner'));
-}
-
-if (count_records('artefact', 'parent', $fileid) > 0) {
-    json_reply('local', get_string('artefacthaschildren'));
-}
-
-if (!delete_records('artefact_file_files', 'artefact', $fileid)) {
-    json_reply('local', get_string('deletefailed'));
-}
-
-if (!delete_records('artefact', 'id', $fileid)) {
-    json_reply('local', get_string('deletefailed'));
-}
-
-// @todo: Delete the file from the filesystem here
+$artefact = artefact_instance_from_id($fileid);
+$artefact->delete();
 
 json_reply(false, get_string('filedeleted'));
 
