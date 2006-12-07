@@ -389,7 +389,7 @@ MochiKit.Visual.tagifyText = function (element, /* optional */tagifyStyle) {
     'position: relative'.
 
     ***/
-    var tagifyStyle = tagifyStyle || 'position:relative';
+    tagifyStyle = tagifyStyle || 'position:relative';
     if (/MSIE/.test(navigator.userAgent)) {
         tagifyStyle += ';zoom:1';
     }
@@ -469,7 +469,7 @@ Transitions: define functions calculating variations depending of a position.
 
 ***/
 
-MochiKit.Visual.Transitions = {}
+MochiKit.Visual.Transitions = {};
 
 /** @id MochiKit.Visual.Transitions.linear */
 MochiKit.Visual.Transitions.linear = function (pos) {
@@ -498,7 +498,7 @@ MochiKit.Visual.Transitions.wobble = function (pos) {
 
 /** @id MochiKit.Visual.Transitions.pulse */
 MochiKit.Visual.Transitions.pulse = function (pos) {
-    return (Math.floor(pos*10) % 2 == 0 ?
+    return (Math.floor(pos*10) % 2 === 0 ?
         (pos*10 - Math.floor(pos*10)) : 1 - (pos*10 - Math.floor(pos*10)));
 };
 
@@ -583,7 +583,7 @@ MochiKit.Base.update(MochiKit.Visual.ScopedQueue.prototype, {
 
     /** @id MochiKit.Visual.ScopedQueue.prototype.startLoop */
     startLoop: function (func, interval) {
-        return setInterval(func, interval)
+        return setInterval(func, interval);
     },
 
     /** @id MochiKit.Visual.ScopedQueue.prototype.remove */
@@ -591,7 +591,7 @@ MochiKit.Base.update(MochiKit.Visual.ScopedQueue.prototype, {
         this.effects = MochiKit.Base.filter(function (e) {
             return e != effect;
         }, this.effects);
-        if (this.effects.length == 0) {
+        if (!this.effects.length) {
             this.stopLoop(this.interval);
             this.interval = null;
         }
@@ -599,7 +599,7 @@ MochiKit.Base.update(MochiKit.Visual.ScopedQueue.prototype, {
 
     /** @id MochiKit.Visual.ScopedQueue.prototype.stopLoop */
     stopLoop: function (interval) {
-        clearInterval(interval)
+        clearInterval(interval);
     },
 
     /** @id MochiKit.Visual.ScopedQueue.prototype.loop */
@@ -745,7 +745,7 @@ MochiKit.Visual.Base.prototype = {
         return '[' + this.__class__.NAME + ', options:' +
                MochiKit.Base.repr(this.options) + ']';
     }
-}
+};
 
     /** @id MochiKit.Visual.Parallel */
 MochiKit.Visual.Parallel = function (effects, options) {
@@ -917,7 +917,7 @@ MochiKit.Base.update(MochiKit.Visual.Scale.prototype, {
 
     ***/
     __init__: function (element, percent, /* optional */options) {
-        this.element = MochiKit.DOM.getElement(element)
+        this.element = MochiKit.DOM.getElement(element);
         options = MochiKit.Base.update({
             scaleX: true,
             scaleY: true,
@@ -1160,6 +1160,94 @@ MochiKit.Base.update(MochiKit.Visual.ScrollTo.prototype, {
     }
 });
 
+MochiKit.Visual.CSS_LENGTH = /^(([\+\-]?[0-9\.]+)(em|ex|px|in|cm|mm|pt|pc|\%))|0$/;
+
+MochiKit.Visual.Morph = function (element, options) {
+    var cls = arguments.callee;
+    if (!(this instanceof cls)) {
+        return new cls(element, options);
+    }
+    this.__init__(element, options);
+};
+
+MochiKit.Visual.Morph.prototype = new MochiKit.Visual.Base();
+
+MochiKit.Base.update(MochiKit.Visual.Morph.prototype, {
+    /***
+
+    Morph effect: make a transformation from current style to the given style,
+    automatically making a transition between the two.
+
+    ***/
+    __init__: function (element, /* optional */options) {
+        this.element = MochiKit.DOM.getElement(element);
+        this.start(options || {});
+    },
+
+    /** @id MochiKit.Visual.Morph.prototype.setup */
+    setup: function () {
+        var b = MochiKit.Base;
+        var style = this.options.style;
+        this.styleStart = {};
+        this.styleEnd = {};
+        this.units = {};
+        var value, unit;
+        for (var s in style) {
+            value = style[s];
+            s = b.camelize(s);
+            if (MochiKit.Visual.CSS_LENGTH.test(value)) {
+                var components = value.match(/^([\+\-]?[0-9\.]+)(.*)$/);
+                value = parseFloat(components[1]);
+                unit = (components.length == 3) ? components[2] : null;
+                this.styleEnd[s] = value;
+                this.units[s] = unit;
+                value = MochiKit.Style.getStyle(this.element, s);
+                components = value.match(/^([\+\-]?[0-9\.]+)(.*)$/);
+                value = parseFloat(components[1]);
+                this.styleStart[s] = value;
+            } else {
+                var c = MochiKit.Color.Color;
+                value = c.fromString(value);
+                if (value) {
+                    this.units[s] = "color";
+                    this.styleEnd[s] = value.toHexString();
+                    value = MochiKit.Style.getStyle(this.element, s);
+                    this.styleStart[s] = c.fromString(value).toHexString();
+
+                    this.styleStart[s] = b.map(b.bind(function (i) {
+                        return parseInt(
+                            this.styleStart[s].slice(i*2 + 1, i*2 + 3), 16);
+                    }, this), [0, 1, 2]);
+                    this.styleEnd[s] = b.map(b.bind(function (i) {
+                        return parseInt(
+                            this.styleEnd[s].slice(i*2 + 1, i*2 + 3), 16);
+                    }, this), [0, 1, 2]);
+                }
+            }
+        }
+    },
+
+    /** @id MochiKit.Visual.Morph.prototype.update */
+    update: function (position) {
+        var value;
+        for (var s in this.styleStart) {
+            if (this.units[s] == "color") {
+                var m = '#';
+                var start = this.styleStart[s];
+                var end = this.styleEnd[s];
+                MochiKit.Base.map(MochiKit.Base.bind(function (i) {
+                    m += MochiKit.Color.toColorPart(Math.round(start[i] +
+                                                    (end[i] - start[i])*position));
+                }, this), [0, 1, 2]);
+                this.element.style[s] = m;
+            } else {
+                value = this.styleStart[s] + Math.round((this.styleEnd[s] - this.styleStart[s]) * position * 1000) / 1000 + this.units[s];
+                this.element.style[s] = value;
+            }
+        }
+    }
+});
+
 /***
 
 Combination effects.
@@ -1238,7 +1326,7 @@ MochiKit.Visual.puff = function (element, /* optional */ options) {
     };
     options = MochiKit.Base.update({
         beforeSetupInternal: function (effect) {
-            MochiKit.Position.absolutize(effect.effects[0].element)
+            MochiKit.Position.absolutize(effect.effects[0].element);
         },
         afterFinishInternal: function (effect) {
             s.hideElement(effect.effects[0].element);
@@ -1318,7 +1406,7 @@ MochiKit.Visual.switchOff = function (element, /* optional */ options) {
     element = d.getElement(element);
     var oldOpacity = MochiKit.Style.getStyle(element, 'opacity');
     var elemClip;
-    var options = MochiKit.Base.update({
+    options = MochiKit.Base.update({
         duration: 0.3,
         scaleFromCenter: true,
         scaleX: false,
@@ -1341,7 +1429,7 @@ MochiKit.Visual.switchOff = function (element, /* optional */ options) {
         from: 0,
         transition: v.Transitions.flicker,
         afterFinishInternal: function (effect) {
-            new v.Scale(effect.element, 1, options)
+            new v.Scale(effect.element, 1, options);
         }
     });
 };
@@ -1457,7 +1545,7 @@ MochiKit.Visual.slideDown = function (element, /* optional */ options) {
         },
         afterUpdateInternal: function (effect) {
             s.setStyle(effect.element.firstChild,
-               {bottom: (effect.dims[0] - effect.element.clientHeight) + 'px'})
+               {bottom: (effect.dims[0] - effect.element.clientHeight) + 'px'});
         },
         afterFinishInternal: function (effect) {
             d.undoClipping(effect.element, elemClip);
@@ -1829,6 +1917,7 @@ MochiKit.Visual.EXPORT = [
     "Scale",
     "Highlight",
     "ScrollTo",
+    "Morph",
     "fade",
     "appear",
     "puff",

@@ -93,6 +93,15 @@ class ArtefactTypeFileBase extends ArtefactType {
         return 'file';
     }
 
+    public function delete() {
+        if (empty($this->id)) {
+            return;
+        }
+        delete_records('artefact_file_files', 'artefact', $this->id);
+        // @todo: Delete the file from the filesystem 
+        parent::delete();
+    }
+
 }
 
 class ArtefactTypeFile extends ArtefactTypeFileBase {
