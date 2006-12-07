@@ -17,36 +17,34 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage artefact-file
- * @author     Richard Mansfield <richard.mansfield@catalyst.net.nz>
+ * @subpackage core
+ * @author     Martyn Smith <martyn@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'myfiles');
-require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-safe_require('artefact', 'file');
+define('PUBLIC', 1);
 
-$strings = array('cancel', 'delete', 'description', 'edit', 'editfile', 'editfolder', 
-                 'home', 'name', 'nofilesfound', 'savechanges');
-$getstring = array();
-foreach ($strings as $string) {
-    $getstring[$string] = "'" . get_string($string) . "'";
+require(dirname(dirname(__FILE__)) . '/init.php');
+require('template.php');
+
+$template_name = param_variable('template');
+
+$parsed_template = template_locate($template_name);
+
+if(empty($parsed_template)) {
+    // @todo what exception should be thrown here
+    throw new Exception("Couldn't find template '$template_name'");
 }
 
-$javascript = <<<JAVASCRIPT
+if(!isset($parsed_template['css'])) {
+    header('HTTP/1.0 404 Not Found');
+    exit;
+}
 
-var browser = new FileBrowser('filelist');
-var uploader = new FileUploader('uploader', null, null, browser.refresh, browser.fileexists);
-browser.changedircallback = uploader.updatedestination;
+// @todo send sensible headers here (allow browser caching, and 304 support)
 
-JAVASCRIPT;
-
-
-$smarty = smarty(array('tablerenderer', 'artefact/file/js/filebrowser.js', 'fileuploader'));
-$smarty->assign('INLINEJAVASCRIPT', $javascript);
-$smarty->display('artefact:file:index.tpl');
-
-?>
+header('Content-type: text/css');
+echo file_get_contents($parsed_template['css']);

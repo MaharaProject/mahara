@@ -37,13 +37,14 @@ if ($parent === null) {
 else {
     $parentcondition = ' = ' . $db->quote($parent);
 }
+$prefix = get_config('dbprefix');
 
 // Get all artefacts we require
 $data = get_records_sql_array("SELECT id, artefacttype, container, title
-    FROM artefact
+    FROM " . $prefix . "artefact
     WHERE artefacttype IN (
         SELECT name
-            FROM artefact_installed_type
+            FROM " . $prefix . "artefact_installed_type
             WHERE plugin = ?
     )
     AND parent $parentcondition
@@ -59,18 +60,21 @@ safe_require('artefact', $pluginname);
 $artefacts = array();
 foreach ($data as $artefact) {
     $classname = 'ArtefactType' . ucfirst($artefact->artefacttype);
+    $a = null;
     if (method_exists($classname, 'format_child_data')) {
-        $artefacts[] = call_static_method($classname, 'format_child_data', $artefact, $pluginname);
+        $a= call_static_method($classname, 'format_child_data', $artefact, $pluginname);
     }
     else {
         $a = new StdClass;
-        $a->id        = "{$artefact->artefacttype}-{$artefact->id}";
-        $a->title     = '';
-        $a->text      = $artefact->title;
-        $a->container = (bool) $artefact->container;
-        $a->parent    = $artefact->id;
-        $artefacts[]  = $a;
+        $a->id         = $artefact->id;
+        $a->isartefact = true;
+        $a->title      = '';
+        $a->text       = $artefact->title;
+        $a->container  = (bool) $artefact->container;
+        $a->parent     = $artefact->id;
     }
+    $a->artefacttype = $artefact->artefacttype;
+    $artefacts[]   = $a;
 }
 
 $classname = generate_class_name('artefact', $pluginname);
@@ -81,13 +85,17 @@ if (method_exists($classname, 'sort_child_data')) {
 // Build the JSON to return
 $items = array();
 foreach ($artefacts as $artefact) {
+    $artefactclass = generate_artefact_class_name($artefact->artefacttype);
     $items[] = array(
         'id'         => $artefact->id,
+        'isartefact' => $artefact->isartefact,
         'container'  => $artefact->container,
         'text'       => $artefact->text,
         'title'      => $artefact->title,
         'pluginname' => $pluginname,
-        'parent'     => $artefact->parent
+        'parent'     => $artefact->parent,
+        'type'       => $artefact->artefacttype,
+        'rendersto'  => call_static_method($artefactclass, 'get_render_list')
     );
 }
 json_reply(false, $items);

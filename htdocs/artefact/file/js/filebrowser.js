@@ -6,6 +6,7 @@ function FileBrowser(element, changedircallback) {
     this.pathids = {'/':null};
     this.cwd = '/';
     this.changedircallback = changedircallback;
+    this.filenames = {};
 
     this.init = function() {
         self.filelist = new TableRenderer(
@@ -106,6 +107,7 @@ function FileBrowser(element, changedircallback) {
     }
 
     this.formatname = function(r) {
+        self.filenames[r.title] = true;
         if (r.artefacttype == 'file') {
             return TD(null, r.title);
         }
@@ -118,10 +120,15 @@ function FileBrowser(element, changedircallback) {
         }
     }
 
+    this.fileexists = function (filename) { 
+        return self.filenames[filename] == true;
+    }
+
     this.changedir = function(path) {
         self.cwd = path;
         self.linked_path();
         self.changedircallback(self.pathids[path], path);
+        self.filenames = {};
         var args = path == '/' ? null : {'folder':self.pathids[path]};
         self.filelist.doupdate(args);
         return false;

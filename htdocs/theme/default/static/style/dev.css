@@ -9,32 +9,35 @@ div#tree, div#template {
 div#tree {
     overflow: auto;
     float: left;
-    width: 400px;
-    border: thin dashed red;
+    width: 250px;
     border-right: thin solid #000;
 }
 
 div#template {
     overflow: auto;
-    border: thin dashed red;
-    float: left;
-    width: 30%;
+    width: auto;
+    margin-left: 10px;
 }
 
 .render_metadata, .render_full, .render_listitem, .render_children {
     cursor: move;
 }
 
-div.block {
+span.block, div.block {
     border: 2px solid transparent;
+    background-color: #c19f88;
 }
 
-div.block_potential {
+span.block_potential, div.block_potential {
     border: 2px solid #008800;
 }
 
-div.block_targetted {
+span.block_targetted, div.block_targetted {
     border: 2px solid #00ff00;
+}
+
+.clickable {
+    cursor: pointer;
 }
 
 /*

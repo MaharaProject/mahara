@@ -1,58 +1,72 @@
 
-function FileUploader(element, foldername, folderid, uploadcallback) {
+function FileUploader(element, foldername, folderid, uploadcallback, fileexists) {
     var self = this;
     this.element = element;
     this.foldername = foldername ? foldername : get_string('home');
     this.folderid = folderid;
     this.uploadcallback = uploadcallback;
 
+    if (typeof(fileexists) == 'function') {
+        this.fileexists = fileexists;
+    }
+    else {
+        this.fileexists = function (filename) { alert(filename); };
+    }
+
     this.init = function() {
         self.nextupload = 1;
 
         // Create the upload form
-        self.uploadform = self.initform();
+        self.form = self.initform();
 
         // Create the button which opens up the upload form
-        var buttontext = self.nextupload == 1 ? get_string('uploadfile') : get_string('uploadanotherfile');
-        var button = INPUT({'type':'button','value':buttontext});
-        button.onclick = function () { 
+        var button = INPUT({'type':'button','value':get_string('uploadfile'), 'onclick':function () { 
             hideElement(self.openbutton);
-            showElement(self.uploadform);
-        };
+            showElement(self.form);
+        }});
         self.openbutton = button;
 
-        appendChildNodes(self.element, self.uploadform, self.openbutton);
+        appendChildNodes(self.element, self.form, self.openbutton);
     }
 
     this.initform = function () {
         var form = FORM({'method':'post', 'id':'uploadform',
                          'enctype':'multipart/form-data', 'encoding':'multipart/form-data',
-                         'action':'upload.php', 'target':'iframe'+self.nextupload});
+                         'action':'upload.php', 'target':''});
+        appendChildNodes(form,
+            TABLE(null,
+            TBODY(null, 
+             TR(null, TH(null, LABEL(null, get_string('destination'))),
+                TD(null, SPAN({'id':'uploaddest'},self.foldername))),
+             TR(null, TH(null, LABEL(null, get_string('file'))),
+                TD(null, INPUT({'type':'file', 'name':'userfile', 'onchange':function () {
+                    var full = self.form.userfile.value;
+                    self.form.title.value = full.substring(full.lastIndexOf('/')+1, full.length);
+                }}))),
+             TR(null, TH(null, LABEL(null, get_string('title'))),
+                TD(null, INPUT({'type':'text', 'name':'title'}))),
+             TR(null, TH(null, LABEL(null, get_string('description'))),
+                TD(null, INPUT({'type':'text', 'name':'description'}))),
+             TR(null,TD({'colspan':2, 'id':'uploadformmessage'})),
+             TR(null,TD({'colspan':2},
+              INPUT({'name':'submit','type':'button','value':get_string('upload'),
+                     'onclick':function () { self.sendform(false)}}),
+              INPUT({'name':'replace','type':'button','value':get_string('replace'),
+                     'onclick':function () { self.sendform(true); }}),
+              INPUT({'type':'button','value':get_string('cancel'),'onclick':function () { 
+                  if ($('uploadformmessage')) {
+                      $('uploadformmessage').innerHTML = '';
+                  }
+                  self.form.userfile.value = '';
+                  self.form.title.value = '';
+                  self.form.description.value = '';
+                  hideElement(self.form);
+                  showElement(self.openbutton);
+              }}))))));
 
-        var rows = map(self.formrow,
-                       [{'text':'destination', 'elem':SPAN({'id':'uploaddest'},self.foldername)},
-                        {'text':'file', 'elem':INPUT({'type':'file','name':'userfile'})},
-                        {'text':'title', 'elem':INPUT({'type':'text','name':'title'})},
-                        {'text':'description', 'elem':INPUT({'type':'text','name':'description'})}]);
-
-        var uploadbutton = INPUT({'type':'button','value':get_string('upload')});
-        uploadbutton.onclick = self.sendform;
-
-        var cancelbutton = INPUT({'type':'button','value':get_string('cancel')});
-        cancelbutton.onclick = function () { 
-            hideElement(self.uploadform);
-            showElement(self.openbutton);
-        };
-
-        appendChildNodes(form, TABLE(null, TBODY(null, rows)), uploadbutton, cancelbutton);
+        hideElement(form.replace);
         hideElement(form);
-
         return form;
-    }
-
-    this.formrow = function (r) {
-        return TR(null, TD(null, get_string(r.text) + ':'),
-                  TD(null, r.elem));
     }
 
     this.updatedestination = function (folderid, foldername) {
@@ -62,6 +76,45 @@ function FileUploader(element, foldername, folderid, uploadcallback) {
             $('uploaddest').innerHTML = foldername;
         }
     }
+
+    this.sendform = function (replace) {
+        var localname = self.form.userfile.value;
+        if (isEmpty(localname)) {
+            $('uploadformmessage').innerHTML = get_string('Filename field is required.');
+            return;
+        }
+        var destname = self.form.title.value;
+        if (isEmpty(destname)) {
+            $('uploadformmessage').innerHTML = get_string('Title field is required.');
+            return;
+        }
+        if (localname.indexOf('/') > -1) { 
+            localname = localname.substring(localname.lastIndexOf('/')+1, localname.length);
+        }
+        if (!replace && self.fileexists(destname)) {
+            $('uploadformmessage').innerHTML = get_string('uploadfileexistsreplacecancel');
+            // Show replace button
+            setDisplayForElement('inline', self.form.replace);
+            return;
+        }
+        $('uploadformmessage').innerHTML = '';
+        hideElement(self.form.replace);
+
+        // Create iframe in which to load the file
+        appendChildNodes(self.element,
+                         createDOM('iframe',{'name':'iframe'+self.nextupload,
+                                             'id':'iframe'+self.nextupload,
+                                             'src':'blank.html','style':'display: none;'},[]));
+        self.form.target = 'iframe' + self.nextupload;
+        //self.form.submit();
+
+        // Display upload status
+        insertSiblingNodesBefore(self.form,
+            DIV({'id':'uploadstatusline'+self.nextupload},
+                get_string('uploading',[localname,self.foldername,destname])));
+        self.nextupload += 1;
+    }
+
 
     addLoadEvent(this.init);
 
