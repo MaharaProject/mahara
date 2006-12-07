@@ -102,7 +102,7 @@ function FileUploader(element, foldername, folderid, uploadcallback) {
         // Display upload status
         insertSiblingNodesBefore(self.form,
             DIV({'id':'uploadstatusline'+self.nextupload},
-                get_string('uploading',[localname,self.form.foldername,destname])));
+                get_string('uploading',[localname,self.foldername,destname])));
         self.nextupload += 1;
     }
 
