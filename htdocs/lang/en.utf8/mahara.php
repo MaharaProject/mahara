@@ -250,7 +250,7 @@ $string['nohelpfound'] = 'There was no help found for this item';
 
 // Search
 $string['search'] = 'Search';
-$string['searchusers'] = 'Search users';
+$string['advancedsearch'] = 'Advanced search';
 $string['query'] = 'Query';
 $string['querydescription'] = 'The words to be searched for';
 $string['results'] = 'Results';
