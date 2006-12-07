@@ -143,16 +143,7 @@ class Session {
         $result = '<div id="messages">';
         if (isset($_SESSION['messages'])) {
             foreach ($_SESSION['messages'] as $data) {
-                if ($data['type'] == 'ok') {
-                    $color = 'green';
-                }
-                elseif ($data['type'] == 'info') {
-                    $color = '#aa6';
-                }
-                else {
-                    $color = 'red';
-                }
-                $result .= '<div style="color:' . $color . ';">' . $data['msg'] . '</div>';
+                $result .= '<div class="' . $data['type'] . '">' . $data['msg'] . '</div>';
             }
             $_SESSION['messages'] = array();
         }
