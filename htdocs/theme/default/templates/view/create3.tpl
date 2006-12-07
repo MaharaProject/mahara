@@ -88,7 +88,7 @@ function treeItemFormat(data, tree) {
 }
 
 // API
-var tree = new CollapsableTree(data, '{$WWWROOT}/json/artefacttree.json.php');
+var tree = new CollapsableTree(data, '{/literal}{$WWWROOT}{literal}/json/artefacttree.json.php');
 tree.setToggleIcons('{/literal}{$plusicon}{literal}', '{/literal}{$minusicon}{literal}');
 tree.setFormatCallback(treeItemFormat);
 tree.statevars.push('pluginname');

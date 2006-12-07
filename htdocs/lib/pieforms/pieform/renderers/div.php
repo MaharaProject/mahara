@@ -35,10 +35,11 @@
  *                             container.
  */
 function pieform_renderer_div(Pieform $form, $builtelement, $rawelement) {
+    $formname = $form->get_name();
     // Set the class of the enclosing <div> to match that of the element
     $result = '<div';
     if (isset($rawelement['name'])) {
-        $result .= ' id="' . $rawelement['name'] . '_container"';
+        $result .= ' id="' . $formname . '_' . $rawelement['name'] . '_container"';
     }
     if ($rawelement['class']) {
         $result .= ' class="' . $rawelement['class'] . '"';
@@ -51,7 +52,7 @@ function pieform_renderer_div(Pieform $form, $builtelement, $rawelement) {
             $result .= Pieform::hsc($rawelement['title']);
         }
         else {
-            $result .= '<label for="' . $rawelement['id'] . '">' . Pieform::hsc($rawelement['title']) . '</label>';
+            $result .= '<label for="' . $formname . '_' . $rawelement['id'] . '">' . Pieform::hsc($rawelement['title']) . '</label>';
         }
     }
 

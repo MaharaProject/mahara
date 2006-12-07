@@ -32,6 +32,7 @@ class View {
     protected $dirty;
     protected $id;
     protected $owner;
+    protected $ownerformat;
     protected $ctime;
     protected $mtime;
     protected $atime;
@@ -43,6 +44,8 @@ class View {
     protected $template;
     protected $artefact_instances;
     protected $artefact_metadata;
+    protected $contents;
+    protected $ownerobj;
 
     public function __construct($id=0, $data=null) {
         if (!empty($id)) {
@@ -68,6 +71,13 @@ class View {
         $this->atime = time();
     }
 
+    public function get($field) {
+        if (!property_exists($this, $field)) {
+            throw new InvalidArgumentException("Field $field wasn't found in class " . get_class($this));
+        }
+        return $this->{$field};
+    }
+
     public function get_artefact_instances() {
         if (!isset($this->artefact_instances)) {
             $this->artefact_instances = false;
@@ -86,7 +96,7 @@ class View {
     public function get_artefact_metadata() {
         if (!isset($this->artefact_metadata)) {
             $prefix = get_config('dbprefix');
-            $sql = 'SELECT a.*, i.name
+            $sql = 'SELECT a.*, i.name, va.block, va.format
                     FROM ' . $prefix . 'view_artefact va
                     JOIN ' . $prefix . 'artefact a ON va.artefact = a.id
                     JOIN ' . $prefix . 'artefact_installed_type i ON a.artefacttype = i.name
@@ -122,7 +132,12 @@ class View {
         return get_records_sql_array($sql,  array($this->id, $userid));
     }
 
-
+    public function get_contents() { // lazy setup.
+        if (!isset($this->contents)) {
+            $this->contents = get_records_array('view_content', 'view', $this->id);
+        }
+        return $this->contents;
+    }
     
     public function has_artefacts() {
         if ($this->get_artefact_metadata()) {
@@ -130,7 +145,47 @@ class View {
         }
         return false;
     }
+
+    public function get_owner_object() {
+        if (!isset($this->ownerobj)) {
+            $this->ownerobj = get_record('usr', 'id', $this->get('owner'));
+        }
+        return $this->ownerobj;
+    }
+
+    public function render() {
+        require_once('template.php');
+
+        $artefacts = $this->get_artefact_metadata();
+        $contents  = $this->get_contents();
+        if (empty($contents)) {
+            $contents = array();
+        }
+        if (empty($artefacts)) {
+            $artefacts = array();
+        }
+
+        $data = array();
+        foreach ($artefacts as $artefact) {
+            $data[$artefact->block] = array(
+                    'id'     => $artefact->id,
+                    'format' => $artefact->format
+            );
+        }
+        foreach ($contents as $content) {
+            $data[$content->id] = array(
+                    'value'  => $content->content,
+             );
+        }
+        $data['title']       = $this->get('title');
+        $data['description'] = $this->get('description');
+        $data['author']      = template_format_owner($this->get('ownerformat'), $this->get_owner_object());
+
+        $template = template_locate($this->get('template'));
         
+        return template_render($template, TEMPLATE_RENDER_READONLY, $data);
+    }
+    
 }
 
 ?>

@@ -27,7 +27,7 @@
 define('INTERNAL', 1);
 define('ADMIN', 1);
 define('MENUITEM', 'configsite');
-define('SUBMENUITEM', 'pageeditor');
+define('SUBMENUITEM', 'sitepages');
 require(dirname(dirname(dirname(__FILE__))).'/init.php');
 require_once('pieforms/pieform.php');
 
@@ -107,7 +107,7 @@ function requestPageText(removeMessage) {
     if (getEditorContent() != originalcontent) {
         var answer = confirm({$getstring['discardpageedits']});
         if (!answer) {
-            $('pagename').value = oldpagename;
+            $('editsitepage_pagename').value = oldpagename;
             return;
         }
     }
@@ -118,13 +118,13 @@ function requestPageText(removeMessage) {
     }
     editsitepage_remove_error('pagetext');
     logDebug(get_string('loadingpagecontent', 'admin'));
-    var d = loadJSONDoc('editchangepage.json.php',{'pagename':$('pagename').value});
+    var d = loadJSONDoc('editchangepage.json.php',{'pagename':$('editsitepage_pagename').value});
     d.addCallback(function(data) {
         if (!data.error) {
             logDebug(get_string('sitepageloaded', 'admin'));
             setEditorContent(data.content);
             originalcontent = getEditorContent();
-            oldpagename = $('pagename').value;
+            oldpagename = $('editsitepage_pagename').value;
         }
         else {
             displayMessage(get_string('loadsitepagefailed', 'admin'));
@@ -149,12 +149,12 @@ function onLoad() {
         getEditorContent = tinyMCE.getContent;
     }
     else {
-        setEditorContent = function (c) { $('pagetext').value = c; };
-        getEditorContent = function () { return $('pagetext').value; };
+        setEditorContent = function (c) { $('editsitepage_pagetext').value = c; };
+        getEditorContent = function () { return $('editsitepage_pagetext').value; };
     }
     originalcontent = getEditorContent();
     requestPageText();
-    connect('pagename', 'onchange', requestPageText);
+    connect('editsitepage_pagename', 'onchange', requestPageText);
 }
 
 addLoadEvent(onLoad);
@@ -163,6 +163,6 @@ EOJS;
 $smarty = smarty($js);
 $smarty->assign('pageeditform', $form);
 $smarty->assign('INLINEJAVASCRIPT', $ijs);
-$smarty->display('admin/editsitepage.tpl');
+$smarty->display('admin/site/pages.tpl');
 
 ?>

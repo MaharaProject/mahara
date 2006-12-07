@@ -31,6 +31,6 @@ define('SUBMENUITEM', 'suspendedusers');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
 $smarty = smarty();
-$smarty->display('admin/usermanagement/suspendedusers.tpl');
+$smarty->display('admin/users/suspended.tpl');
 
 ?>

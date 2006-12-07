@@ -35,6 +35,7 @@
  *                              container.
  */
 function pieform_renderer_table(Pieform $form, $builtelement, $rawelement) {
+    $formname = $form->get_name();
     if ($rawelement['type'] == 'fieldset') {
         // Add table tags to the build element, to preserve HTML compliance
         if (0 === strpos($builtelement, "\n<fieldset>\n<legend>")) {
@@ -53,7 +54,7 @@ function pieform_renderer_table(Pieform $form, $builtelement, $rawelement) {
     }
     
     $result = "\t<tr";
-    $result .= ' id="' . $rawelement['name'] . '_container"';
+    $result .= ' id="' . $formname . '_' . $rawelement['name'] . '_container"';
     // Set the class of the enclosing <tr> to match that of the element
     if ($rawelement['class']) {
         $result .= ' class="' . $rawelement['class'] . '"';
@@ -67,7 +68,7 @@ function pieform_renderer_table(Pieform $form, $builtelement, $rawelement) {
             $result .= Pieform::hsc($rawelement['title']);
         }
         else {
-            $result .= '<label for="' . $rawelement['id'] . '">' . Pieform::hsc($rawelement['title']) . '</label>';
+            $result .= '<label for="' . $formname . '_' . $rawelement['id'] . '">' . Pieform::hsc($rawelement['title']) . '</label>';
         }
     }
     $result .= "</th>\n\t\t<td>";

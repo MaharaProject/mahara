@@ -47,7 +47,7 @@ if ($institution || $add) {
         }
 
         function delete_cancel_submit() {
-            redirect(get_config('wwwroot') . 'admin/institutions.php');
+            redirect(get_config('wwwroot') . 'admin/users/institutions.php');
         }
 
         function delete_submit($values) {
@@ -59,7 +59,7 @@ if ($institution || $add) {
             db_commit();
 
             $SESSION->add_ok_msg(get_string('institutiondeletedsuccessfully', 'admin'));
-            redirect(get_config('wwwroot') . 'admin/institutions.php');
+            redirect(get_config('wwwroot') . 'admin/users/institutions.php');
         }
         $form = array(
             'name' => 'delete',
@@ -79,7 +79,7 @@ if ($institution || $add) {
             )
         );
         $smarty->assign('delete_form', pieform($form));
-        $smarty->display('admin/institutions.tpl');
+        $smarty->display('admin/users/institutions.tpl');
         exit;
     }
 
@@ -234,13 +234,13 @@ function institution_submit($values) {
 
     $message = ($add) ? 'institutionaddedsuccessfully' : 'institutionupdatedsuccessfully';
     $SESSION->add_ok_msg(get_string($message, 'admin'));
-    redirect(get_config('wwwroot') . 'admin/institutions.php');
+    redirect(get_config('wwwroot') . 'admin/users/institutions.php');
 }
 
 function institution_cancel_submit() {
-    redirect(get_config('wwwroot') . 'admin/institutions.php');
+    redirect(get_config('wwwroot') . 'admin/users/institutions.php');
 }
 
-$smarty->display('admin/institutions.tpl');
+$smarty->display('admin/users/institutions.tpl');
 
 ?>

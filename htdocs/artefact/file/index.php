@@ -39,8 +39,7 @@ foreach ($strings as $string) {
 $javascript = <<<JAVASCRIPT
 
 var browser = new FileBrowser('filelist');
-var uploader = new FileUploader('uploader');
-uploader.uploadcallback = browser.refresh;
+var uploader = new FileUploader('uploader', null, null, browser.refresh, browser.fileexists);
 browser.changedircallback = uploader.updatedestination;
 
 JAVASCRIPT;

@@ -25,8 +25,47 @@
  */
 
 defined('INTERNAL') || die();
+
+/**
+ * render templates in readonly mode (used for viewing templates)
+ */
 define('TEMPLATE_RENDER_READONLY', 1);
+ 
+/**
+ * render templates in editmode mode (for view wizard)
+ */
 define('TEMPLATE_RENDER_EDITMODE', 2);
+
+/**
+ * display format for author names in views - firstname
+ */
+define('FORMAT_NAME_FIRSTNAME', 1);
+
+/**
+ * display format for author names in views - lastname
+ */
+define('FORMAT_NAME_LASTNAME', 2);
+
+/**
+ * display format for author names in views - firstname lastname
+ */
+define('FORMAT_NAME_FIRSTNAMELASTNAME', 3);
+
+/**
+ * display format for author names in views - preferred name
+ */
+define('FORMAT_NAME_PREFERREDNAME', 4);
+
+/**
+ * display format for author names in views - student id 
+*/
+define('FORMAT_NAME_STUDENTID', 5);
+
+/**
+ * display format for author names in views - obeys display_name 
+ */
+define('FORMAT_NAME_DISPLAYNAME', 6);
+
 require_once('artefact.php');
 
 function template_parse($templatename) {
@@ -261,86 +300,93 @@ function template_render($template, $mode, $data=array()) {
             $html .= $t['content'];
         }
         else {
-            if ($mode == TEMPLATE_RENDER_READONLY) {
-                $html .= 'READONLY';
+            $t = $t['data'];
+            
+            $attr = array(
+                'id'    => $t['id'],
+                'class' => array('block'),
+            );
+
+            // @todo I don't think we have to have both...
+            if (isset($t['width']) && isset($t['height'])) {
+                $attr['style'][] = 'width: ' . $t['width'] . 'px;height: ' . $t['height'] . 'px;';
+            }
+            
+            $block = '';
+            
+            switch ($t['type']) {
+                case 'label';
+                    if ($mode == TEMPLATE_RENDER_EDITMODE) {
+                        $block .= template_render_label_editmode($t, $data);
+                    }
+                    else {
+                        $block .= $data[$t['id']]['value'];
+                    }
+                    break;
+                case 'title';
+                    if (isset($data['title'])) {
+                        $block .= hsc($data['title']);
+                    }
+                    break;
+                case 'author';
+                    if (isset($data['author'])) {
+                        // @todo get authorformat here
+                        $block .= hsc($data['author']);
+                    }
+                    break;
+                case 'description';
+                    if (isset($data['description'])) {
+                        $block .= hsc($data['description']);
+                    }
+                    break;
+                case 'artefact';
+                    $classes = array('block');
+                    
+                    // @todo, this shouldn't be hardcoded
+                    $droplist[$t['id']] = array('render_full');
+                    
+                    // @todo need to populate with data if it's available
+                    if ( isset($data[$t['id']]) ) {
+                        $artefact = artefact_instance_from_id($data[$t['id']]['id']);
+                        // @todo, custom rendering
+                        $format = FORMAT_ARTEFACT_LISTSELF;
+                        if (isset($data[$t['id']]['format'])) {
+                            $format = $data[$t['id']]['format'];
+                        }
+                        $block .= $artefact->render($format, null);
+                    }
+                    else {
+                        $block .= '<i>' . get_string('empty_block', 'view') . '</i>';
+                    }
+                    
+                    break;
+            }
+
+            // span or div?
+            if (isset($t['tagtype']) && $t['tagtype'] == 'span') {
+                $html .= '<span';
+                $html .= template_render_attributes($attr);
+                $html .= '>';
+                $html .= $block;
+                $html .= '</span>';
             }
             else {
-                $t = $t['data'];
-
-                $attr = array(
-                    'id'    => $t['id'],
-                    'class' => array('block'),
-                );
-
-                if (isset($t['width']) && isset($t['height'])) {
-                    $attr['style'][] = 'width: ' . $t['width'] . 'px;height: ' . $t['height'] . 'px;';
-                }
-
-                $block = '';
-
-                switch ($t['type']) {
-                    case 'label';
-                        $block .= template_render_label($t, $data);
-                        break;
-                    case 'title';
-                        if (isset($data['title'])) {
-                            $block .= hsc($data['title']);
-                        }
-                        break;
-                    case 'author';
-                        if (isset($data['author'])) {
-                            $block .= hsc($data['author']);
-                        }
-                        break;
-                    case 'description';
-                        if (isset($data['description'])) {
-                            $block .= hsc($data['description']);
-                        }
-                        break;
-                    case 'artefact';
-                        $classes = array('block');
-
-                        // @todo, this shouldn't be hardcoded
-                        $droplist[$t['id']] = array('render_full');
-
-                        // @todo need to populate with data if it's available
-                        if ( isset($data[$t['id']]) ) {
-                            $artefact = artefact_instance_from_id($data[$t['id']]['id']);
-                            // @todo, custom rendering
-                            $block .= $artefact->render(FORMAT_ARTEFACT_LISTSELF, null);
-                        }
-                        else {
-                            $block .= '<i>' . get_string('empty_block', 'view') . '</i>';
-                        }
-
-                        break;
-                }
-
-                // span or div?
-                if (isset($t['tagtype']) && $t['tagtype'] == 'span') {
-                    $html .= '<span';
-                    $html .= template_render_attributes($attr);
-                    $html .= '>';
-                    $html .= $block;
-                    $html .= '</span>';
-                }
-                else {
-                    $html .= '<div';
-                    $html .= template_render_attributes($attr);
-                    $html .= '>';
-                    $html .= $block;
-                    $html .= '</div>';
-                }
+                $html .= '<div';
+                $html .= template_render_attributes($attr);
+                $html .= '>';
+                $html .= $block;
+                $html .= '</div>';
             }
         }
     }
-
-    $droplist = json_encode($droplist);
-    $spinner_url = json_encode(theme_get_image_path('loading.gif'));
-    $wwwroot = get_config('wwwroot');
-
-    $json_emptylabel = json_encode(get_string('emptylabel', 'view'));
-    $javascript = <<<EOF
+    $javascript = '';
+    if ($mode == TEMPLATE_RENDER_EDITMODE) {
+        $droplist = json_encode($droplist);
+        $spinner_url = json_encode(theme_get_image_path('loading.gif'));
+        $wwwroot = get_config('wwwroot');
+        
+        $json_emptylabel = json_encode(get_string('emptylabel', 'view'));
+        $javascript = <<<EOF
 <script type="text/javascript">
     var droplist = $droplist;
 
@@ -415,14 +461,14 @@ function template_render($template, $mode, $data=array()) {
 
 </script>
 EOF;
-
+    }
     return $javascript . $html;
 }
 
 /*
  * @todo: some documentation
  */
-function template_render_label($block, $data) {
+function template_render_label_editmode($block, $data) {
     if (isset($data[$block['id']]['value'])) {
         return '<script type="text/javascript">addLoadEvent(function() { $(' . json_encode($block['id']) . ').labelValue = ' . json_encode($data[$block['id']]['value']) . ';});</script><span class="clickable" onclick="setLabel(' . hsc(json_encode($block['id'])) . ');">' . hsc($data[$block['id']]['value']) . '</span>';
     }
@@ -449,6 +495,42 @@ function template_render_attributes($attr) {
     }
 
     return $html;
+}
+
+/**
+ * This function formats a user's name
+ * according to their view preference
+ *
+ * @param constant $format FORMAT_NAME_(FIRSTNAME|FIRSTNAMELASTNAME|LASTNAME|PREFERREDNAME|STUDENTID)
+ * @param object $user must contain those ^^ fields (or id, in which case a db lookup will be done)
+ *
+ * @return string formatted name
+ */
+function template_format_owner($format, $user) {
+    
+    if (is_int($user)) {
+        $user = get_record('usr', 'id', $user);
+    }
+
+    if (!is_object($user)) {
+        return ''; // @todo throw exception?
+    }
+
+    switch ($format) {
+        case FORMAT_NAME_FIRSTNAME:
+            return $user->firstname;
+        case FORMAT_NAME_LASTNAME:
+            return $user->lastname;
+        case FORMAT_NAME_FIRSTNAMELASTNAME:
+            return $user->firstname . ' ' . $user->lastname;
+        case FORMAT_NAME_PREFERREDNAME:
+            return $user->preferredname;
+        case FORMAT_NAME_STUDENTID:
+            return $user->studentid;
+        case FORMAT_NAME_DISPLAYNAME:
+        default:
+            return display_name($user);
+    }
 }
 
 ?>

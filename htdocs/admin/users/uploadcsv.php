@@ -171,7 +171,7 @@ function uploadcsv_submit($values) {
         $id = insert_record('usr', $user, 'id', true);
 
         $i = 2;
-        safe_require('artefact', 'internal', 'lib.php');
+        safe_require('artefact', 'internal');
         foreach (ArtefactTypeProfile::get_mandatory_fields() as $field => $type) {
             set_profile_field($id, $field, $record[$i++]);
         }
@@ -180,11 +180,11 @@ function uploadcsv_submit($values) {
 
     $SESSION->add_ok_msg(get_string('uploadcsvusersaddedsuccessfully', 'admin'));
     // @todo support relative URLs here
-    redirect(get_config('wwwroot') . 'admin/usermanagement/uploadcsv.php');
+    redirect(get_config('wwwroot') . 'admin/users/uploadcsv.php');
 }
 
 $smarty = smarty();
 $smarty->assign('uploadcsvform', pieform($form));
-$smarty->display('admin/usermanagement/uploadcsv.tpl');
+$smarty->display('admin/users/uploadcsv.tpl');
 
 ?>

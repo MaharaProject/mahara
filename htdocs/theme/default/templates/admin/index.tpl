@@ -12,7 +12,7 @@ class="cnr-bl"><span class="cnr-br">
         <li><strong><a href="{$WWWROOT}admin/site/options.php">{str tag=siteoptions section=admin}</a></strong> - {str tag=siteoptionsdescription section=admin}</li>
         <li><strong><a href="{$WWWROOT}admin/site/pages.php">{str tag=sitepages section=admin}</a></strong> - {str tag=sitepagesdescription section=admin}</li>
         <li><strong><a href="{$WWWROOT}admin/site/menu.php">{str tag=sitemenu section=admin}</a></strong> - {str tag=sitemenudescription section=admin}</li>
-        <li><strong><a href="{$WWWROOT}admin/site/files.php">{str tag=files section=admin}</a></strong> - {str tag=filesdescription section=admin}</li>
+        <li><strong><a href="{$WWWROOT}admin/site/files.php">{str tag=adminfiles section=admin}</a></strong> - {str tag=adminfilesdescription section=admin}</li>
     </ul>
     </li>
     <li><h3>{str tag=configusers section=admin}</h3>
@@ -27,8 +27,8 @@ class="cnr-bl"><span class="cnr-br">
     </li>
     <li><h3>{str tag=configextensions section=admin}</h3>
     <ul>
-        <li><strong><a href="{$WWWROOT}admin/extensions/plugins.php">{str tag=configplugins section=admin}</a></strong> - {str tag=configpluginsdescription}</li>
-        <li><strong><a href="{$WWWROOT}admin/extensions/templates.php">{str tag=templates section=admin}</a></strong> - {str tag=templatesdescription}</li>
+        <li><strong><a href="{$WWWROOT}admin/extensions/plugins.php">{str tag=pluginadmin section=admin}</a></strong> - {str tag=pluginadmindescription section=admin}</li>
+        <li><strong><a href="{$WWWROOT}admin/extensions/templates.php">{str tag=templatesadmin section=admin}</a></strong> - {str tag=templatesadmindescription section=admin}</li>
     </ul>
     </li>
 </ul>
