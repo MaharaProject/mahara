@@ -1,12 +1,5 @@
 {include file='header.tpl'}
 
-<<<<<<< master
-=======
-<div id="column-right">
-</div>
-
-<div id="column-left">
->>>>>>> origin
 <div class="content">
 <div class="box-cnrs"><span class="cnr-tl"><span class="cnr-tr"><span 
 class="cnr-bl"><span class="cnr-br">
@@ -32,9 +25,10 @@ class="cnr-bl"><span class="cnr-br">
         <li><strong><a href="{$WWWROOT}admin/users/uploadcsv.php">{str tag=uploadcsv section=admin}</a></strong> - {str tag=uploadcsvdescription section=admin}</li>
     </ul>
     </li>
-    <li><h3>{str tag=configplugins section=admin}</h3>
+    <li><h3>{str tag=configextensions section=admin}</h3>
     <ul>
-        <li><strong><a href="{$WWWROOT}admin/plugins/">{str tag=configplugins section=admin}</a></strong> - {str tag=configpluginsdescription}</li>
+        <li><strong><a href="{$WWWROOT}admin/extensions/plugins.php">{str tag=configplugins section=admin}</a></strong> - {str tag=configpluginsdescription}</li>
+        <li><strong><a href="{$WWWROOT}admin/extensions/templates.php">{str tag=templates section=admin}</a></strong> - {str tag=templatesdescription}</li>
     </ul>
     </li>
 </ul>
