@@ -27,6 +27,7 @@
 defined('INTERNAL') || die();
 define('TEMPLATE_RENDER_READONLY', 1);
 define('TEMPLATE_RENDER_EDITMODE', 2);
+require_once('artefact.php');
 
 function template_parse($templatename) {
 
@@ -266,29 +267,68 @@ function template_render($template, $mode, $data=array()) {
             else {
                 $t = $t['data'];
 
-                if ( isset($t['format']) && $t['format'] == 'label' ) {
-                    $html .= '<input type="hidden" id=>';
+                $attr = array(
+                    'id'    => $t['id'],
+                    'class' => array('block'),
+                );
+
+                if (isset($t['width']) && isset($t['height'])) {
+                    $attr['style'][] = 'width: ' . $t['width'] . 'px;height: ' . $t['height'] . 'px;';
+                }
+
+                $block = '';
+
+                switch ($t['type']) {
+                    case 'label';
+                        $block .= template_render_label($t, $data);
+                        break;
+                    case 'title';
+                        if (isset($data['title'])) {
+                            $block .= hsc($data['title']);
+                        }
+                        break;
+                    case 'author';
+                        if (isset($data['author'])) {
+                            $block .= hsc($data['author']);
+                        }
+                        break;
+                    case 'description';
+                        if (isset($data['description'])) {
+                            $block .= hsc($data['description']);
+                        }
+                        break;
+                    case 'artefact';
+                        $classes = array('block');
+
+                        // @todo, this shouldn't be hardcoded
+                        $droplist[$t['id']] = array('render_full');
+
+                        // @todo need to populate with data if it's available
+                        if ( isset($data[$t['id']]) ) {
+                            $artefact = artefact_instance_from_id($data[$t['id']]['id']);
+                            // @todo, custom rendering
+                            $block .= $artefact->render(FORMAT_ARTEFACT_LISTSELF, null);
+                        }
+                        else {
+                            $block .= '<i>' . get_string('empty_block', 'view') . '</i>';
+                        }
+
+                        break;
+                }
+
+                // span or div?
+                if (isset($t['tagtype']) && $t['tagtype'] == 'span') {
+                    $html .= '<span';
+                    $html .= template_render_attributes($attr);
+                    $html .= '>';
+                    $html .= $block;
+                    $html .= '</span>';
                 }
                 else {
-                    log_debug($t);
-                    $classes = array('block');
-
-                    #if ( $t['format'] == '
-                    $droplist[$t['id']] = array('render_full');
-
-                    // build opening div tag
-                    if (isset($t['width']) && isset($t['height'])) {
-                        $html .= '<div style="width: ' . $t['width'] . 'px;height: ' . $t['height'] . 'px;"';
-                    }
-                    else {
-                        $html .= '<div';
-                    }
-                    $html .= ' id="' . $t['id'] . '"';
-                    $html .= ' class="' . join(' ',$classes) . '"';
-
+                    $html .= '<div';
+                    $html .= template_render_attributes($attr);
                     $html .= '>';
-
-                    $html .= '<i>' . get_string('empty_block', 'view') . '</i>';
+                    $html .= $block;
                     $html .= '</div>';
                 }
             }
@@ -299,13 +339,67 @@ function template_render($template, $mode, $data=array()) {
     $spinner_url = json_encode(theme_get_image_path('loading.gif'));
     $wwwroot = get_config('wwwroot');
 
+    $json_emptylabel = json_encode(get_string('emptylabel', 'view'));
     $javascript = <<<EOF
 <script type="text/javascript">
     var droplist = $droplist;
 
+    function setLabel(element) {
+        var value = '';
+        if ($(element).labelValue) {
+            value = $(element).labelValue;
+        }
+
+        var input = INPUT({'type': 'text', 'id': element + '_labelinput'});
+        input.value = value;
+        replaceChildNodes(element, input);
+        input.focus();
+
+        connect(input, 'onkeypress', function (e) {
+            if (e.key().code == 13) {
+                saveLabel(element);
+                e.stop();
+            }
+            if (e.key().code == 27) {
+                saveLabel(element, true);
+                e.stop();
+            }
+            return false;
+        });
+    }
+
+    function saveLabel(element, revert) {
+        if (!revert) {
+            $(element).labelValue = $(element + '_labelinput').value;
+        }
+
+        if ( $(element).labelValue ) {
+            var label = SPAN({'class': 'clickable'}, $(element).labelValue);
+            connect(label, 'onclick', function () { setLabel(element) });
+            replaceChildNodes(element, label, INPUT({'type': 'hidden', 'name': 'template[' + $(element).id + '][value]', 'value': $(element).labelValue}));
+        }
+        else {
+            var label = createDOM('EM', {'class': 'clickable'}, $json_emptylabel);
+            connect(label, 'onclick', function () { setLabel(element) });
+            replaceChildNodes(element, label);
+        }
+    }
+
     function blockdrop(element, target) {
         replaceChildNodes(target, IMG({ src: {$spinner_url} }));
-        var d = loadJSONDoc({$wwwroot});
+        var d = loadJSONDoc('{$wwwroot}json/renderartefact.php', {'id': element.artefactid} );
+        d.addCallbacks(
+            function (response) {
+                target.innerHTML = response.data;
+                debugObject(target);
+                appendChildNodes(target,
+                    INPUT({'type': 'hidden', 'name': 'template[' + target.id + '][id]', 'value': element.artefactid })
+                );
+            },
+            function (error) {
+                alert('TODO: error');
+            }
+        );
     }
 
     addLoadEvent(function () {
@@ -323,6 +417,38 @@ function template_render($template, $mode, $data=array()) {
 EOF;
 
     return $javascript . $html;
+}
+
+/*
+ * @todo: some documentation
+ */
+function template_render_label($block, $data) {
+    if (isset($data[$block['id']]['value'])) {
+        return '<script type="text/javascript">addLoadEvent(function() { $(' . json_encode($block['id']) . ').labelValue = ' . json_encode($data[$block['id']]['value']) . ';});</script><span class="clickable" onclick="setLabel(' . hsc(json_encode($block['id'])) . ');">' . hsc($data[$block['id']]['value']) . '</span>';
+    }
+    else {
+        return '<em class="clickable" onclick="setLabel(' . hsc(json_encode($block['id'])) . ');">' . get_string('emptylabel', 'view') . '</em>';
+    }
+}
+
+// @todo : some documentation
+function template_render_attributes($attr) {
+    if (!is_array($attr) || count($attr) == 0) {
+        return '';
+    }
+
+    $html = '';
+
+    foreach ( $attr as $key => $value ) {
+        if (is_array($value)) {
+            $html .= ' ' . $key . '="' . join(' ', array_map('hsc', $value)) . '"';
+        }
+        else {
+            $html .= ' ' . $key . '="' . hsc($value) . '"';
+        }
+    }
+
+    return $html;
 }
 
 ?>
