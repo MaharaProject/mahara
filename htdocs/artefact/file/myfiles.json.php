@@ -41,6 +41,8 @@ else {
     $infolder = ' IS NULL';
 }
 
+// todo: do this in the artefact file class.
+
 $prefix = get_config('dbprefix');
 $filedata = get_records_sql_array('SELECT a.id, a.artefacttype, a.mtime, f.size, a.title, a.description
         FROM ' . $prefix . 'artefact a

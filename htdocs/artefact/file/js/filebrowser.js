@@ -74,30 +74,35 @@ function FileBrowser(element, changedircallback) {
 
     this.openeditform = function(fileinfo) {
         var editrows = [];
-        var elemid = fileinfo.artefacttype + fileinfo.id;
+        var editid = 'edit_' + fileinfo.id;
+        var formid = editid + '_form';
+        var rowid = 'row_' + fileinfo.id;
+        var cancelform = function() {
+            setDisplayForElement(null, rowid);
+            removeElement(editid);
+        };
         var savebutton = INPUT({'type':'button','value':get_string('savechanges')});
-        //savebutton.onclick = function () { updatefilemetadata(elemid) };
+        savebutton.onclick = function () {
+            sendjsonrequest('updatemetadata.json.php', 
+                            {'id':fileinfo.id, 'name':$(formid).name.value,
+                             'description':$(formid).description.value},
+                            function() {cancelform(); self.refresh()});
+        };
         if (fileinfo['artefacttype'] == 'folder') {
             editrows = self.folderformrows(fileinfo);
         }
         else {
             editrows = [self.editformtitle(get_string('editfile')),
-                        self.textinputrow('title',fileinfo.title),
+                        self.textinputrow('name',fileinfo.title),
                         self.textinputrow('description',fileinfo.description)];
         }
-        var editid = 'edit_' + elemid;
-        var rowid = 'row_'+fileinfo.id;
-        var cancelbutton = INPUT({'type':'button', 'value':get_string('cancel')});
-        cancelbutton.onclick = function () {
-            setDisplayForElement(null, rowid);
-            removeElement(editid);
-        }
+        var cancelbutton = INPUT({'type':'button', 'value':get_string('cancel'), 'onclick':cancelform});
         var buttons = TR(null,TD({'colspan':2},savebutton,cancelbutton));
         var edittable = TABLE({'align':'center'},TBODY(null,editrows,buttons));
         hideElement(rowid);
         insertSiblingNodesBefore(rowid, TR({'id':editid},
                                            TD({'colSpan':4},
-                                              FORM({'id':editid+'_form','action':''},edittable))));
+                                              FORM({'id':formid,'action':''},edittable))));
     }
 
     this.showsize = function(bytes) {
