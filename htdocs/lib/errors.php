@@ -387,16 +387,26 @@ function exception (Exception $e) {
                 $sitename = 'Mahara';
             }
             $outputtitle = get_string('unrecoverableerrortitle', 'error', $sitename);
+            $parameterexception = get_string('parameterexception', 'error');
+            $accessdeniedexception = get_string('accessdeniedexception', 'error');
         }
         else {
             // sensible english defaults
             $outputmessage = 'A nonrecoverable error occured. '
                 . 'This probably means you have encountered a bug in the system';
             $outputtitle = 'Mahara - Site Unavailable';
+            $parameterexception = 'A required parameter was missing';
+            $accessdeniedexception = 'You do not have access to view this page';
         }
         switch (get_class($e)) {
             case 'ConfigSanityException':
                 $outputmessage = $message = get_string('configsanityexception', 'error', $e->getMessage());
+                break;
+            case 'ParameterException':
+                $outputmessage = $message = $parameterexception . ' ' . $e->getMessage();
+                break;
+            case 'AccessDeniedException':
+                $outputmessage = $message = $accessdeniedexception . ' ' . $e->getMessage();
                 break;
             default:
                 $message = $e->getMessage();
@@ -479,4 +489,9 @@ class ViewNotFoundException extends Exception {}
  * Exception - anything to do with template parsing
  */
 class TemplateParserException extends Exception {}
+
+/**
+ * Exception - Access denied. Throw this if a user is trying to view something they can't
+ */
+class AccessDeniedException extends Exception {}
 ?>

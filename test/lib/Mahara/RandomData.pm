@@ -324,14 +324,14 @@ sub insert_random_views {
         $title =~ s/[\x80-\xff]//g;
         $description =~ s/[\x80-\xff]//g;
 
-        $self->{dbh}->do('INSERT INTO ' . $prefix . 'view (title, authorformat, description, owner, template, startdate, stopdate, ctime, mtime, atime)
+        $self->{dbh}->do('INSERT INTO ' . $prefix . 'view (title, ownerformat, description, owner, template, startdate, stopdate, ctime, mtime, atime)
              VALUES(?, ?, ?, ?, ?, current_timestamp, current_timestamp, current_timestamp, current_timestamp, current_timestamp)', undef,
              $title, 'firstnamelastname', $description, $user_id, $template_id);
         my $view_id = $self->{dbh}->last_insert_id(undef, undef, $prefix . 'view', undef);
 
-        $self->{dbh}->do('INSERT INTO ' . $prefix . 'view_artefact (view, artefact, block, ctime) 
-             (SELECT ' . $view_id . ', id, \'foo\', current_timestamp FROM '. $prefix . 'artefact WHERE owner = ? ORDER BY RANDOM() LIMIT 5)', undef, $user_id);
-	
+        $self->{dbh}->do('INSERT INTO ' . $prefix . 'view_artefact (view, artefact, block, ctime, format) 
+             (SELECT ' . $view_id . ', id, \'foo\', current_timestamp, \'listself\' FROM '. $prefix . 'artefact WHERE owner = ? ORDER BY RANDOM() LIMIT 5)', undef, $user_id);
+
     }
     $self->{dbh}->commit();
 }

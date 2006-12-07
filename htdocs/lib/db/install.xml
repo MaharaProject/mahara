@@ -75,7 +75,7 @@
                 <KEY NAME="institution" TYPE="foreign" FIELDS="institution" REFTABLE="institution" REFFIELDS="name"/>
             </KEYS>
             <INDEXES>
-                <INDEX NAME="usernameuk" UNIQUE="true" FIELDS="LOWER(username)"/>
+                <INDEX NAME="usernameuk" UNIQUE="true" FIELDS="username,institution"/>
             </INDEXES>
         </TABLE>
         <TABLE NAME="event_type">
@@ -575,9 +575,9 @@
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
                 <FIELD NAME="title" TYPE="text" NOTNULL="true" />
-                <FIELD NAME="authorformat" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="description" TYPE="text" NOTNULL="false" />
                 <FIELD NAME="owner" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="ownerformat" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="template" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="startdate" TYPE="datetime" />
                 <FIELD NAME="stopdate" TYPE="datetime" />
@@ -600,6 +600,7 @@
                 <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="block" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
+                <FIELD NAME="format" TYPE="text" NOTNULL="true" />
                 <!--more? -->
             </FIELDS>
             <KEYS>
