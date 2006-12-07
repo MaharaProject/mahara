@@ -64,7 +64,14 @@ var templates = new TableRenderer(
     [
         function(r) { return TD(null, H3(null, r.title)); },
         function(r) { return TD(null, IMG({'src': '{$wwwroot}thumb.php?type=template&name=' + r.name})); },
-        function(r) { return TD(null, BUTTON({'name': 'template', 'type': 'submit', 'value': r.name}, '{$selecttemplate}')); }
+        function(r) {
+            var button = BUTTON({'name': 'template', 'type': 'button'}, '{$selecttemplate}');
+            connect(button, 'onclick', function () {
+                $('template').value = r.name;
+                document.forms.template_selection.submit();
+            });
+            return TD(null,button);
+        }
     ]
 );
 

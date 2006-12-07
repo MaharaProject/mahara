@@ -21,6 +21,7 @@ class="cnr-bl"><span class="cnr-br">
     </select>
     <form name="template_selection" method="post" action="" id="template_selection">
         <input type="hidden" name="createid" value="{$createid}">
+        <input type="hidden" name="template" id="template" value="">
         <table id="templates">
         </table>
         <button name="action" value="back">{str tag=Back}</button>
