@@ -25,7 +25,7 @@ function FileUploader(element, foldername, folderid, uploadcallback) {
     this.initform = function () {
         var form = FORM({'method':'post', 'id':'uploadform',
                          'enctype':'multipart/form-data', 'encoding':'multipart/form-data',
-                         'action':'upload.php', 'target':'iframe'+self.nextupload});
+                         'action':'upload.php', 'target':''});
         appendChildNodes(form,
             TABLE(null,
             TBODY(null, 
@@ -44,6 +44,9 @@ function FileUploader(element, foldername, folderid, uploadcallback) {
               INPUT({'name':'submit','type':'button','value':get_string('upload'),'onclick':self.sendform}),
               INPUT({'name':'replace','type':'button','value':get_string('upload'),'onclick':partial(self.sendform,true)}),
               INPUT({'type':'button','value':get_string('cancel'),'onclick':function () { 
+                  self.form.userfile.value = '';
+                  self.form.title.value = '';
+                  self.form.description.value = '';
                   hideElement(self.form);
                   showElement(self.openbutton);
               }}))),
@@ -67,6 +70,7 @@ function FileUploader(element, foldername, folderid, uploadcallback) {
     }
 
     this.sendform = function (replace) {
+        $('uploadformmessage').innerHTML = '';
         var localname = self.form.userfile.value;
         if (isEmpty(localname)) {
             $('uploadformmessage').innerHTML = get_string('Filename field is required.');
@@ -93,13 +97,12 @@ function FileUploader(element, foldername, folderid, uploadcallback) {
                                              'id':'iframe'+self.nextupload,
                                              'src':'blank.html','style':'display: none;'},[]));
         self.form.target = 'iframe' + self.nextupload;
-        self.form.submit();
+        //self.form.submit();
 
-        // Create button for another upload.
         // Display upload status
         insertSiblingNodesBefore(self.form,
             DIV({'id':'uploadstatusline'+self.nextupload},
-                get_string('Uploading',[localname,self.form.foldername,destname])));
+                get_string('uploading',[localname,self.form.foldername,destname])));
         self.nextupload += 1;
     }
 
