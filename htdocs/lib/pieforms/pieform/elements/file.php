@@ -33,7 +33,7 @@
  */
 function pieform_render_file($element, Pieform $form) {
     return '<input type="file"'
-        . Pieform::element_attributes($element) . '>';
+        . $form->element_attributes($element) . '>';
 }
 
 function pieform_get_value_file($element, Pieform $form) {

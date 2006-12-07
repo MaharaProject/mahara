@@ -33,7 +33,7 @@
  */
 function pieform_render_password($element, Pieform $form) {
     return '<input type="password"'
-        . Pieform::element_attributes($element)
+        . $form->element_attributes($element)
         . ' value="' . Pieform::hsc($form->get_value($element)) . '">';
 }
 

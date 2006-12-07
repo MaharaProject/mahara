@@ -8,11 +8,9 @@
 <div class="box-cnrs"><span class="cnr-tl"><span class="cnr-tr"><span 
 class="cnr-bl"><span class="cnr-br">
 	<div class="maincontent">
-<h2>{str tag="adminusers" section="admin"}</h2>
+<h2>{str tag=suspendedusers section=admin}</h2>
 
-<p>{str tag="adminusersdescription" section="admin"}</p>
-
-{$adminusersform}
+<p>... not until stage three :)</p>
 
 	</div>
 </span></span></span></span></div>	

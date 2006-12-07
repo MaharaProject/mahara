@@ -32,8 +32,6 @@
  * @return string        The HTML for the element
  */
 function pieform_render_hidden($element, Pieform $form) {
-    // @todo use the exclude parameter of element_attributes for this
-    unset($element['tabindex']);
     $value = $form->get_value($element);
     if (is_array($value)) {
         $result = '';
@@ -44,7 +42,7 @@ function pieform_render_hidden($element, Pieform $form) {
         return $result;
     }
     return '<input type="hidden"'
-        . Pieform::element_attributes($element)
+        . $form->element_attributes($element, array('accesskey', 'onclick', 'size', 'style', 'tabindex'))
         . ' value="' . Pieform::hsc($form->get_value($element)) . "\">\n";
 }
 

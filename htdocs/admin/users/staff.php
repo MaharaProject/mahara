@@ -72,6 +72,6 @@ function staffusers_submit($values) {
 }
 
 $smarty->assign('staffusersform', pieform($form));
-$smarty->display('admin/usermanagement/staffusers.tpl');
+$smarty->display('admin/users/staff.tpl');
 
 ?>

@@ -47,21 +47,38 @@ $string['noupgrades'] = 'Nothing to upgrade! You are fully up to date!';
 $string['fixtemplatescontinue'] = 'Try fixing this and continuing here (templates were not installed)';
 
 // Admin navigation menu
+$string['adminhome']      = 'Admin home';
 $string['configsite']  = 'Configure Site';
 $string['configusers'] = 'Manage Users';
+$string['configextensions']   = 'Administer Extensions';
 
-
+// Admin homepage strings
 $string['siteoptions']    = 'Site options';
 $string['siteoptionsdescription'] = 'Configure basic site options such as the name, language and theme';
 $string['sitepages']     = 'Site pages';
 $string['sitepagesdescription'] = 'Edit the text of the basic pages';
 $string['sitemenu'] = 'Site menu';
 $string['sitemenudescription'] = 'Manage the links and file that appear in the menus';
+$string['adminfiles']          = 'Admin Files';
+$string['adminfilesdescription'] = 'Upload and administer files that can be put in the menus (note: not implemented yet)';
 
+$string['suspendedusers'] = 'Suspended Users';
+$string['suspendedusersdescription'] = 'Suspend or unsuspend users from logging in to the site (note: not implemented yet)';
+$string['staffusers'] = 'Staff Users';
+$string['staffusersdescription'] = 'Choose which users can have staff permissions';
+$string['adminusers'] = 'Admin Users';
+$string['adminusersdescription'] = 'Choose which users are administrators for the site';
 $string['institutions']   = 'Institutions';
-$string['adminplugins']   = 'Administer Plugins';
-$string['files']          = 'Files';
-$string['adminhome']      = 'Admin home';
+$string['institutionsdescription'] = 'Install and manage installed institutions';
+$string['adminnotifications'] = 'Admin Notifications';
+$string['adminnotificationsdescription'] = 'Configure how administrators receive system notifications (note: not implemented yet)';
+$string['uploadcsv'] = 'Add Users by CSV';
+$string['uploadcsvdescription'] = 'Upload a CSV file containing new users';
+
+$string['pluginadmin'] = 'Plugin Administration';
+$string['pluginadmindescription'] = 'Install and configure plugins';
+$string['templatesadmin'] = 'Configure View Templates';
+$string['templatesadmindescription'] = 'View installed templates to check their validity';
 
 // Site options
 $string['allowpublicviews'] = 'Allow public views';
@@ -134,26 +151,21 @@ $string['uploadcsverrorinvalidusername'] = 'Error on line %s of your file: The u
 $string['uploadcsverrorincorrectfieldcount'] = 'Line %s of the file does not have the correct number of fields';
 $string['uploadcsverrormandatoryfieldnotspecified'] = 'Line %s of the file does not have the required "%s" field';
 $string['uploadcsverroruseralreadyexists'] = 'Line %s of the file specifies the username "%s" that already exists';
-$string['uploadcsv'] = 'Add Users by CSV';
-$string['uploadcsvfile'] = 'Upload CSV File';
-$string['uploadcsvfiledescription'] = 'You may use this facility to upload new users via a <acronym title="Comma Separated Values">CSV</acronym> file. Each record in the file must have a username, e-mail address and password.';
+$string['uploadcsvpagedescription'] = 'You may use this facility to upload new users via a <acronym title="Comma Separated Values">CSV</acronym> file. Each record in the file must have a username, e-mail address and password.';
 $string['uploadcsvusersaddedsuccessfully'] = 'The users in the file have been added successfully';
 
 // Admin Users
-$string['adminusers'] = 'Admin Users';
-$string['adminusersdescription'] = 'Here you may choose which users are administrators. Admin users are listed in the right box, and potential administrators are on the left.';
+$string['adminuserspagedescription'] = 'Here you can choose which users are administrators for the site. The current administrators are on the right, and potential administrators are on the left.';
 $string['adminusersupdated'] = 'Admin users updated';
 
 // Staff Users
-$string['staffusers'] = 'Staff Users';
-$string['staffusersdescription'] = 'Here you may choose which users are staff users. Staff users are listed in the right box, and potential staff users are on the left.';
+$string['staffuserspagedescription'] = 'Here you can choose which users are staff for the site. The current staff are on the right, and potential staff are on the left.';
+
 $string['staffusersupdated'] = 'Staff users updated';
 
 // Admin Notifications
-$string['adminnotifications'] = 'Admin Notifications';
 
 // Suspended Users
-$string['suspendedusers'] = 'Suspended Users';
 
 // Institutions
 $string['addinstitution'] = 'Add Institution';

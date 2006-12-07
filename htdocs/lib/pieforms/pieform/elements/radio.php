@@ -49,7 +49,7 @@ function pieform_render_radio($element, Pieform $form) {
         $uid = $id . substr(md5(microtime()), 0, 4);
         $element['id'] = $uid;
         $result .= '<input type="radio"'
-            . Pieform::element_attributes($element)
+            . $form->element_attributes($element)
             . ' value="' . Pieform::hsc($value) . '"'
             . (($form_value == $value) ? ' checked="checked"' : '')
             . "> <label for=\"$uid\">" . Pieform::hsc($text) . "</label>$separator";

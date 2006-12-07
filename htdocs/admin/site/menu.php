@@ -252,9 +252,9 @@ foreach ($menulist as &$menu) {
 }
 
 $style = '<style type="text/css">.invisible{display:none;}</style>';
-$smarty = smarty(array(),array($style));
-$smarty->assign('INLINEJAVASCRIPT',$ijs);
-$smarty->assign('MENUS',$menulist);
-$smarty->display('admin/editmenu.tpl');
+$smarty = smarty(array(), array($style));
+$smarty->assign('INLINEJAVASCRIPT', $ijs);
+$smarty->assign('MENUS', $menulist);
+$smarty->display('admin/site/menu.tpl');
 
 ?>

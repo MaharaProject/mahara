@@ -73,6 +73,6 @@ function adminusers_submit($values) {
 }
 
 $smarty->assign('adminusersform', pieform($form));
-$smarty->display('admin/usermanagement/adminusers.tpl');
+$smarty->display('admin/users/admin.tpl');
 
 ?>

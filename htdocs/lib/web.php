@@ -738,75 +738,6 @@ function make_link($url) {
 function admin_nav() {
     $wwwroot = get_config('wwwroot');
 
-    //$menu = array(
-    //    array(
-    //        'name'     => 'adminhome',
-    //        'section'  => 'admin',
-    //        'link'     => $wwwroot . 'admin/',
-    //    ),
-    //    array(
-    //        'name'     => 'siteoptions',
-    //        'section'  => 'admin',
-    //        'link'     => $wwwroot . 'admin/options/',
-    //    ),
-    //    array(
-    //        'name'     => 'institutions',
-    //        'section'  => 'admin',
-    //        'link'     => $wwwroot . 'admin/institutions.php',
-    //    ),
-    //    array(
-    //        'name'     => 'pageeditor',
-    //        'section'  => 'admin',
-    //        'link'     => $wwwroot . 'admin/editsitepage.php',
-    //    ),
-    //    array(
-    //        'name'     => 'menueditor',
-    //        'section'  => 'admin',
-    //        'link'     => $wwwroot . 'admin/editmenu.php',
-    //    ),
-    //    array(
-    //        'name'     => 'adminplugins',
-    //        'section'  => 'admin',
-    //        'link'     => $wwwroot . 'admin/plugins/',
-    //    ),
-    //    array(
-    //        'name'     => 'files',
-    //        'section'  => 'admin',
-    //        'link'     => $wwwroot . 'admin/todo',
-    //    ),
-    //    array(
-    //        'name'     => 'usermanagement',
-    //        'section'  => 'admin',
-    //        'link'     => $wwwroot . 'admin/usermanagement/uploadcsv.php',
-    //        'submenu'  => array(
-    //            array(
-    //                'name' => 'uploadcsv',
-    //                'section' => 'admin',
-    //                'link' => $wwwroot . 'admin/usermanagement/uploadcsv.php'
-    //            ),
-    //            array(
-    //                'name' => 'adminusers',
-    //                'section' => 'admin',
-    //                'link' => $wwwroot . 'admin/usermanagement/adminusers.php',
-    //            ),
-    //            array(
-    //                'name' => 'staffusers',
-    //                'section' => 'admin',
-    //                'link' => $wwwroot . 'admin/usermanagement/staffusers.php'
-    //            ),
-    //            array(
-    //                'name' => 'adminnotifications',
-    //                'section' => 'admin',
-    //                'link' => $wwwroot . 'admin/usermanagement/adminnotifications.php'
-    //            ),
-    //            array(
-    //                'name' => 'suspendedusers',
-    //                'section' => 'admin',
-    //                'link' => $wwwroot . 'admin/usermanagement/suspendedusers.php'
-    //            )
-    //        )
-    //    ),
-    //);
     $menu = array(
         array(
             'name'     => 'adminhome',
@@ -824,17 +755,17 @@ function admin_nav() {
                     'link' => $wwwroot . 'admin/site/options.php'
                 ),
                 array(
-                    'name'    => 'pageeditor',
+                    'name'    => 'sitepages',
                     'section' => 'admin',
                     'link'    => $wwwroot . 'admin/site/pages.php',
                 ),
                 array(
-                    'name'    => 'menueditor',
+                    'name'    => 'sitemenu',
                     'section' => 'admin',
                     'link'    => $wwwroot . 'admin/site/menu.php',
                 ),
                 array(
-                    'name'    => 'files',
+                    'name'    => 'adminfiles',
                     'section' => 'admin',
                     'link'    => $wwwroot . 'admin/site/files.php'
                 )
@@ -878,9 +809,21 @@ function admin_nav() {
             )
         ),
         array(
-            'name'     => 'adminplugins',
+            'name'     => 'configextensions',
             'section'  => 'admin',
-            'link'     => $wwwroot . 'admin/plugins/',
+            'link'     => $wwwroot . 'admin/extensions/plugins.php',
+            'submenu' => array(
+                array(
+                    'name' => 'pluginadmin',
+                    'section' => 'admin',
+                    'link' => $wwwroot . 'admin/extensions/plugins.php'
+                ),
+                array(
+                    'name' => 'templatesadmin',
+                    'section' => 'admin',
+                    'link' => $wwwroot . 'admin/extensions/templates.php'
+                )
+            )
         ),
     );
 

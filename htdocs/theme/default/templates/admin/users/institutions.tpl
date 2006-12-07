@@ -9,7 +9,7 @@
 class="cnr-bl"><span class="cnr-br">
 	<div class="maincontent">
 	
-<h2>AdminInstitutions</h2>
+<h2>{str tag=institutions section=admin}</h2>
 
 {if $delete_form}
 <h3>{str tag="deleteinstitution" section="admin"}</h3>

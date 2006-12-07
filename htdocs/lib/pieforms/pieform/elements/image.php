@@ -33,7 +33,7 @@
  */
 function pieform_render_image($element, Pieform $form) {
     return '<input type="image" src="' . Pieform::hsc($element['src']) . '"'
-        . Pieform::element_attributes($element)
+        . $form->element_attributes($element)
         . ' value="' . Pieform::hsc($form->get_value($element)) . '">';
 }
 

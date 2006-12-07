@@ -31,6 +31,6 @@ define('SUBMENUITEM', 'adminnotifications');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
 $smarty = smarty();
-$smarty->display('admin/usermanagement/adminnotifications.tpl');
+$smarty->display('admin/users/notifications.tpl');
 
 ?>

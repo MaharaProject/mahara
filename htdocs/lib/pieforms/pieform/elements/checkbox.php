@@ -46,7 +46,7 @@ function pieform_render_checkbox($element, Pieform $form) {
     }
 
     return '<input type="checkbox"'
-        . Pieform::element_attributes($element)
+        . $form->element_attributes($element)
         . ($checked ? ' checked="checked"' : '')
         . '>';
 }
