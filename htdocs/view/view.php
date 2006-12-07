@@ -29,6 +29,7 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 
 $viewid = param_integer('view');
 $artefactid = param_integer('artefact', null);
+$ancestors = param_variable('artefactlist', null);
 $view = get_record('view', 'id', $viewid);
 
 if (can_view_view($viewid)) {
@@ -43,11 +44,23 @@ $getstring = quotestrings(array('message', 'makepublic', 'placefeedback',
 if ($artefactid) {
     $javascript = 'var artefact = ' . $artefactid . ";\n";
     $artefact = get_record('artefact', 'id', $artefactid);
-    $title = $artefact->title;
+    $title = '<div><a href="view.php?view=' . $viewid . '">' . $view->title . "</a></div>\n";
+    if ($ancestors) {
+        $alist = explode(',',$ancestors);
+        $links = array();
+        for ($i = 0; $i < count($alist); $i++) {
+            $atitle = get_field('artefact', 'title', 'id', $alist[$i]);
+            $links[] = '<a href="view.php?view=' . $viewid . '&amp;artefact=' . $alist[$i] 
+                . ($i ? '&amp;artefactlist=' . implode(',',array_slice($alist,0,$i)) : '')
+                . '">' . $atitle . "</a>";
+        }
+        $title .= '<div>' . implode(' | ', $links) . "</div>\n";
+    }
+    $title .= "<h3>$artefact->title</h3>";
 }
 else {
     $javascript = "var artefact = undefined;\n";
-    $title = $view->title;
+    $title = "<h3>$view->title</h3>\n";
 }
 
 $javascript .= <<<JAVASCRIPT
@@ -158,7 +171,9 @@ JAVASCRIPT;
 
 $smarty = smarty(array('tablerenderer'));
 //$smarty->clear_assign('MAINNAV');
+
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
+//$smarty->assign('ARTEFACT', '');
 $smarty->assign('TITLE', $title);
 if (isset($content)) {
     $smarty->assign('VIEWCONTENT', $content);
