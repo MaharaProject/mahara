@@ -34,6 +34,7 @@ defined('INTERNAL') || die();
  * @param mixed $data data 
  */
 function activity_occurred($activitytype, $data) {
+    log_debug("activity occurred $activitytype");
     if (!$at = get_record('activity_type', 'name', $activitytype)) {
         throw new Exception("Invalid activity type $activitytype");
     }
@@ -61,7 +62,7 @@ function activity_occurred($activitytype, $data) {
  * it can also contain url.
  * each activity type has different requirements of $data - 
  * <b>contactus</b> must contain $message, $subject (optional), $fromname, $fromaddress, $userfrom (if a logged in user)
- * <b>objectionable</b> must contain $message, 
+ * <b>objectionable</b> must contain $message, $view and $artefact if applicable
  * <b>maharamessage</b> must contain $users, an array of userids. $subject and $message (contents of message)
  * <b>usermessage</b> must contain $userto, id of recipient user, $userfrom, id of user from 
          and $subject and $message (contents of message)
@@ -107,6 +108,28 @@ function handle_activity($activitytype, $data) {
                 }
                 break;
             case 'objectionable':
+                if (empty($data->view)) {
+                    throw new InvalidArgumentException("Objectionable content requires an id of a view");
+                }
+                if (empty($data->message)) {
+                    throw new InvalidArgumentException("Objectionable content requires a message");
+                }
+                if (!$viewtitle = get_field('view', 'title', 'id', $data->view)) {
+                    throw new InvalidArgumentException("Couldn't find view with id " . $data->view);
+                }
+                if (empty($data->artefact)) {
+                    $data->url = get_config('wwwroot') . 'view/view.php?id=' . $data->view;
+                    $data->subject = get_string('objectionablecontentview', 'activity') 
+                        . ' ' . get_string('onview') . $viewtitle;
+                }
+                else {
+                    $data->url = get_config('wwwroot') . 'view/artefact.php?id=' . $data->artefact . '&view=' . $data->view;
+                    if (!$artefacttitle = get_field('artefact', 'title', 'id', $data->artefact)) {
+                        throw new InvalidArgumentException("Couldn't find artefact with id " . $data->view);
+                    }
+                    $data->subject = get_string('objectionablecontentartefact', 'activity') 
+                        . ' '  . get_string('onartefact', 'activity') . ' ' . $artefacttitle;
+                }
                 break;
             case 'virusrepeat':
                 break;
@@ -150,13 +173,15 @@ function handle_activity($activitytype, $data) {
                     throw new InvalidArgumentException("Feedbackactivity type expects a message");
                 }
                 if (empty($data->view)) {
-                    throw new IllegalArgumentException("Feedback missing view id");
+                    throw new InvalidArgumentException("Feedback missing view id");
                 }
                 if (!empty($data->artefact)) { // feedback on artefact
                     $data->subject = get_string('newfeedbackonartefact', 'activity');
-                    $artefact = get_record('artefact', 'id', $data->artefact);
+                    if (!$artefact = get_record('artefact', 'id', $data->artefact)) {
+                        throw new InvalidArgumentException("Couldn't find artefact with id "  . $data->artefact);
+                    }
                     $userid = $artefact->owner;
-                    $data->subject .= $artefact->title;
+                    $data->subject .= ' ' .$artefact->title;
                     if (empty($data->url)) {
                         // @todo this might change later
                         $data->url = get_config('wwwroot') . 'view/artefact.php?id=' 
@@ -165,9 +190,11 @@ function handle_activity($activitytype, $data) {
                 } 
                 else { // feedback on view.
                     $data->subject = get_string('newfeedbackonview', 'activity');
-                    $view = get_record('view', 'id', $data->view);
+                    if (!$view = get_record('view', 'id', $data->view)) {
+                        throw new InvalidArgumentException("Couldn't find view with id " . $data->view);
+                    }
                     $userid = $view->owner;
-                    $data->subject .= $view->title;
+                    $data->subject .= ' ' .$view->title;
                     if (empty($data->url)) {
                         // @todo this might change later
                         $data->url = get_config('wwwroot') . 'view/view.php?id=' . $data->view;
@@ -183,9 +210,11 @@ function handle_activity($activitytype, $data) {
                     }
                     $oldsubject = isset($data->subject) ? $data->subject : '';
                     $data->subject = get_string('watchlistmessageview', 'activity');
-                    $viewinfo = get_record_sql('SELECT u.*, v.title FROM ' . $prefix . 'usr u
-                                                 JOIN ' . $prefix . 'view v ON v.owner = u.id
-                                                 WHERE v.id = ?', array($data->view));
+                    if (!$viewinfo = get_record_sql('SELECT u.*, v.title FROM ' . $prefix . 'usr u
+                                                     JOIN ' . $prefix . 'view v ON v.owner = u.id
+                                                     WHERE v.id = ?', array($data->view))) {
+                        throw new InvalidArgumentException("Couldn't find view with id " . $data->view);
+                    }
                     $data->message = $oldsubject . ' ' . get_string('onview', 'activity') 
                         . ' ' . $viewinfo->title . ' ' . get_string('ownedby', 'activity');
                     $sql = 'SELECT u.*, p.method, CAST(? AS TEXT)  AS url
@@ -211,9 +240,11 @@ function handle_activity($activitytype, $data) {
                 else if (!empty($data->artefact)) {
                     $data->subject = get_string('watchlistmessageartefact', 'activity')
                         . (isset($data->subject) ? ': ' . $data->subject : '');
-                    $ainfo = get_record_sql('SELECT u.*, a.title FROM ' . $prefix . 'usr u
-                                                 JOIN ' . $prefix . 'artefact a  ON a.owner = u.id
-                                                 WHERE a.id = ?', array($data->artefact));
+                    if (!$ainfo = get_record_sql('SELECT u.*, a.title FROM ' . $prefix . 'usr u
+                                                  JOIN ' . $prefix . 'artefact a  ON a.owner = u.id
+                                                  WHERE a.id = ?', array($data->artefact))) {
+                        throw new InvalidArgumentException("Couldn't find artefact with id " . $data->artefact);
+                    }
                     $data->message = get_string('onartefact', 'activity') 
                         . ' ' . $ainfo->title . ' ' . get_string('ownedby', 'activity');
                     $sql = 'SELECT DISTINCT u.*, p.method, ?||wa.view as url
@@ -243,10 +274,12 @@ function handle_activity($activitytype, $data) {
                     if (empty($data->subject)) {
                         throw new InvalidArgumentException("subject must be provided for watchlist community");
                     }
+                    if (!$communityname = get_field('community', 'name', 'id', $data->community)) {
+                        throw new InvalidArgumentException("Couldn't find community with id " . $data->community);
+                    }
                     $oldsubject = $data->subject;
                     $data->subject = get_string('watchlistmessagecommunity', 'activity');
-                    $data->message = $oldsubject . ' ' . get_string('oncommunity', 'activity') 
-                        . get_field('community', 'name', 'id', $data->community);
+                    $data->message = $oldsubject . ' ' . get_string('oncommunity', 'activity') . ' ' . $communityname;
                     $sql = 'SELECT DISTINCT u.*, p.method, CAST(? AS TEXT) AS url
                                 FROM ' . $prefix . 'usr_watchlist_community c
                                 JOIN ' . $prefix . 'usr u
@@ -268,9 +301,11 @@ function handle_activity($activitytype, $data) {
                 if (!is_numeric($data->owner) || !is_numeric($data->view)) {
                     throw new InvalidArgumentException("New view activity type requires view and owner to be set");
                 }
-                $viewinfo = get_record_sql('SELECT u.*, v.title FROM ' . $prefix . 'usr u
+                if (!$viewinfo = get_record_sql('SELECT u.*, v.title FROM ' . $prefix . 'usr u
                                                  JOIN ' . $prefix . 'view v ON v.owner = u.id
-                                                 WHERE v.id = ?', array($data->view));
+                                                 WHERE v.id = ?', array($data->view))) {
+                    throw new InvalidArgumentException("Couldn't find view with id " . $data->view);
+                }
                 $data->message = get_string('newviewmessage', 'activity')
                     . ' ' . $viewinfo->title . ' ' . get_string('ownedby', 'activity');
                 $data->subject = get_string('newviewsubject', 'activity');
