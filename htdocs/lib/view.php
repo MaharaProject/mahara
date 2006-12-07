@@ -116,6 +116,9 @@ class View {
             return array();
         }
 
+        $this->artefact_hierarchy = array('data' => array(),
+                                          'refs' => array());
+
         $prefix = get_config('dbprefix');
 
         $sql = 'SELECT ac.*, i.name, va.block, va.format
@@ -132,13 +135,15 @@ class View {
         foreach ($artefacts as $toplevel) {
             $a = array();
             $a['artefact'] = $toplevel;
-            $a['children'] = $this->find_artefact_children($toplevel, $allchildren);
-            $this->artefact_hierarchy[$toplevel->id] = $a;
+            $a['children'] = $this->find_artefact_children($toplevel, 
+                                  $allchildren, $this->artefact_hierarchy['refs']);
+            $this->artefact_hierarchy['data'][$toplevel->id] = $a;
+            $this->artefact_hierarchy['refs'][$toplevel->id] = $toplevel;
         }
         return $this->artefact_hierarchy;
     }
 
-    public function find_artefact_children($artefact, $allchildren) {
+    public function find_artefact_children($artefact, $allchildren, &$refs) {
 
         $children = array();        
         foreach ($allchildren as $child) {
@@ -147,7 +152,9 @@ class View {
             }
             $children[$child->id] = array();
             $children[$child->id]['artefact'] = $child;
-            $children[$child->id]['children'] = $this->find_artefact_children($child, $allchildren);
+            $refs[$child->id] = $child;
+            $children[$child->id]['children'] = $this->find_artefact_children($child, 
+                                                        $allchildren, $refs);
         }
 
         return $children;
