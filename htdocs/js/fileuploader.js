@@ -40,9 +40,12 @@ function FileUploader(element, foldername, folderid, uploadcallback) {
                 TD(null, INPUT({'type':'text', 'name':'title'}))),
              TR(null, TH(null, LABEL(null, get_string('description'))),
                 TD(null, INPUT({'type':'text', 'name':'description'}))),
+             TR(null,TD({'colspan':2, 'id':'uploadformmessage'})),
              TR(null,TD({'colspan':2},
-              INPUT({'name':'submit','type':'button','value':get_string('upload'),'onclick':self.sendform}),
-              INPUT({'name':'replace','type':'button','value':get_string('upload'),'onclick':partial(self.sendform,true)}),
+              INPUT({'name':'submit','type':'button','value':get_string('upload'),
+                     'onclick':function () { self.sendform(false)}}),
+              INPUT({'name':'replace','type':'button','value':get_string('replace'),
+                     'onclick':function () { self.sendform(true); }}),
               INPUT({'type':'button','value':get_string('cancel'),'onclick':function () { 
                   if ($('uploadformmessage')) {
                       $('uploadformmessage').innerHTML = '';
@@ -52,8 +55,7 @@ function FileUploader(element, foldername, folderid, uploadcallback) {
                   self.form.description.value = '';
                   hideElement(self.form);
                   showElement(self.openbutton);
-              }}))),
-             TR(null,TD({'colspan':2, 'id':'uploadformmessage'})))));
+              }}))))));
 
         hideElement(form.replace);
         hideElement(form);
@@ -73,7 +75,6 @@ function FileUploader(element, foldername, folderid, uploadcallback) {
     }
 
     this.sendform = function (replace) {
-        $('uploadformmessage').innerHTML = '';
         var localname = self.form.userfile.value;
         if (isEmpty(localname)) {
             $('uploadformmessage').innerHTML = get_string('Filename field is required.');
@@ -88,11 +89,13 @@ function FileUploader(element, foldername, folderid, uploadcallback) {
             localname = localname.substring(localname.lastIndexOf('/')+1, localname.length);
         }
         if (!replace && self.fileexists(destname)) {
-            $('uploadformmessage').innerHTML = get_string('uploadfileexistsrenamereplacecancel');
+            $('uploadformmessage').innerHTML = get_string('uploadfileexistsreplacecancel');
             // Show replace button
-            showElement(self.form.replace);
+            setDisplayForElement('inline', self.form.replace);
             return;
         }
+        $('uploadformmessage').innerHTML = '';
+        hideElement(self.form.replace);
 
         // Create iframe in which to load the file
         appendChildNodes(self.element,
