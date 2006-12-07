@@ -118,12 +118,12 @@ function handle_activity($activitytype, $data) {
                     throw new InvalidArgumentException("Couldn't find view with id " . $data->view);
                 }
                 if (empty($data->artefact)) {
-                    $data->url = get_config('wwwroot') . 'view/view.php?id=' . $data->view;
+                    $data->url = get_config('wwwroot') . 'view/view.php?view=' . $data->view;
                     $data->subject = get_string('objectionablecontentview', 'activity') 
                         . ' ' . get_string('onview') . $viewtitle;
                 }
                 else {
-                    $data->url = get_config('wwwroot') . 'view/artefact.php?id=' . $data->artefact . '&view=' . $data->view;
+                    $data->url = get_config('wwwroot') . 'view/view.php?artefact=' . $data->artefact . '&view=' . $data->view;
                     if (!$artefacttitle = get_field('artefact', 'title', 'id', $data->artefact)) {
                         throw new InvalidArgumentException("Couldn't find artefact with id " . $data->view);
                     }
@@ -184,7 +184,7 @@ function handle_activity($activitytype, $data) {
                     $data->subject .= ' ' .$artefact->title;
                     if (empty($data->url)) {
                         // @todo this might change later
-                        $data->url = get_config('wwwroot') . 'view/artefact.php?id=' 
+                        $data->url = get_config('wwwroot') . 'view/view.php?artefact=' 
                             . $data->artefact . '&view=' . $data->view;
                     }
                 } 
@@ -197,7 +197,7 @@ function handle_activity($activitytype, $data) {
                     $data->subject .= ' ' .$view->title;
                     if (empty($data->url)) {
                         // @todo this might change later
-                        $data->url = get_config('wwwroot') . 'view/view.php?id=' . $data->view;
+                        $data->url = get_config('wwwroot') . 'view/view.php?view=' . $data->view;
                     }
                 }
                 $users = activity_get_users($activitytype->name, array($userid));
@@ -227,7 +227,7 @@ function handle_activity($activitytype, $data) {
                                 AND wv.view = ?
                            ';
                     $users = get_records_sql_array($sql, 
-                                                   array(get_config('wwwroot') . 'view/view.php?id=' 
+                                                   array(get_config('wwwroot') . 'view/view.php?view=' 
                                                          . $data->view, 'watchlist', $data->view));
                     if (empty($users)) {
                         $users = array();
@@ -259,7 +259,7 @@ function handle_activity($activitytype, $data) {
                                 AND (pc.parent = ? OR wa.artefact = ?)
                             ';
                     $users = get_records_sql_array($sql, 
-                                                   array(get_config('wwwroot') . 'view/artefact.php?id=' 
+                                                   array(get_config('wwwroot') . 'view/view.php?view=' 
                                                          . $data->artefact . '&view=', 'watchlist', 
                                                          $data->artefact, $data->artefact));
                     if (empty($users)) {
