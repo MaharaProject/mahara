@@ -66,14 +66,15 @@ foreach ($data as $artefact) {
     }
     else {
         $a = new StdClass;
-        $a->id        = "{$artefact->artefacttype}-{$artefact->id}";
-        $a->title     = '';
-        $a->text      = $artefact->title;
-        $a->container = (bool) $artefact->container;
-        $a->parent    = $artefact->id;
+        $a->id         = $artefact->id;
+        $a->isartefact = true;
+        $a->title      = '';
+        $a->text       = $artefact->title;
+        $a->container  = (bool) $artefact->container;
+        $a->parent     = $artefact->id;
     }
     $a->artefacttype = $artefact->artefacttype;
-    $artefacts[]  = $a;
+    $artefacts[]   = $a;
 }
 
 $classname = generate_class_name('artefact', $pluginname);
@@ -87,6 +88,7 @@ foreach ($artefacts as $artefact) {
     $artefactclass = generate_artefact_class_name($artefact->artefacttype);
     $items[] = array(
         'id'         => $artefact->id,
+        'isartefact' => $artefact->isartefact,
         'container'  => $artefact->container,
         'text'       => $artefact->text,
         'title'      => $artefact->title,
