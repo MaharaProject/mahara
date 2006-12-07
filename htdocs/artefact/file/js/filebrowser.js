@@ -85,15 +85,15 @@ function FileBrowser(element, changedircallback) {
         var rowid = 'row_'+fileinfo.id;
         var cancelbutton = INPUT({'type':'button', 'value':get_string('cancel')});
         cancelbutton.onclick = function () {
-            $(rowid).style.visibility = '';
+            setDisplayForElement(null, rowid);
             removeElement(editid);
         }
-        var edittable = TABLE({'align':'center'},TBODY(null,editrows));
-        var buttons = [savebutton,cancelbutton];
-        $(rowid).style.visibility = 'hidden';
+        var buttons = TR(null,TD({'colspan':2},savebutton,cancelbutton));
+        var edittable = TABLE({'align':'center'},TBODY(null,editrows,buttons));
+        hideElement(rowid);
         insertSiblingNodesBefore(rowid, TR({'id':editid},
                                            TD({'colSpan':4},
-                                              FORM({'id':editid+'_form','action':''},edittable,buttons))));
+                                              FORM({'id':editid+'_form','action':''},edittable))));
     }
 
     this.showsize = function(bytes) {
