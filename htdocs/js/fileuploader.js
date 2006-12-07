@@ -44,6 +44,9 @@ function FileUploader(element, foldername, folderid, uploadcallback) {
               INPUT({'name':'submit','type':'button','value':get_string('upload'),'onclick':self.sendform}),
               INPUT({'name':'replace','type':'button','value':get_string('upload'),'onclick':partial(self.sendform,true)}),
               INPUT({'type':'button','value':get_string('cancel'),'onclick':function () { 
+                  if ($('uploadformmessage')) {
+                      $('uploadformmessage').innerHTML = '';
+                  }
                   self.form.userfile.value = '';
                   self.form.title.value = '';
                   self.form.description.value = '';
