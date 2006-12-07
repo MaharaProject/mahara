@@ -1,10 +1,17 @@
 
-function FileUploader(element, foldername, folderid, uploadcallback) {
+function FileUploader(element, foldername, folderid, uploadcallback, fileexists) {
     var self = this;
     this.element = element;
     this.foldername = foldername ? foldername : get_string('home');
     this.folderid = folderid;
     this.uploadcallback = uploadcallback;
+
+    if (typeof(fileexists) == 'function') {
+        this.fileexists = fileexists;
+    }
+    else {
+        this.fileexists = function (filename) { alert(filename); };
+    }
 
     this.init = function() {
         self.nextupload = 1;
@@ -68,10 +75,6 @@ function FileUploader(element, foldername, folderid, uploadcallback) {
         if ($('uploaddest')) {
             $('uploaddest').innerHTML = foldername;
         }
-    }
-
-    this.fileexists = function (filename) {
-        return true;
     }
 
     this.sendform = function (replace) {
