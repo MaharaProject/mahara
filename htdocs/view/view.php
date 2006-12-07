@@ -27,20 +27,30 @@
 define('INTERNAL', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 
-$viewid = param_integer('id');
+$viewid = param_integer('view');
+$artefactid = param_integer('artefact', null);
 $view = get_record('view', 'id', $viewid);
 
 if (can_view_view($viewid)) {
-    $content = 'view template display here';
+    $content = 'template display here';
 }
 
 $getstring = quotestrings(array('message', 'makepublic', 'placefeedback',
                                 'cancel', 'complaint', 'notifysiteadministrator',
-                                'addtowatchlist', 
-                                'nopublicfeedbackhasbeenplacedonthisview',
+                                'addtowatchlist', 'nopublicfeedback',
                                 'reportobjectionablematerial', 'print'));
 
-$javascript = <<<JAVASCRIPT
+if ($artefactid) {
+    $javascript = 'var artefact = ' . $artefactid . ";\n";
+    $artefact = get_record('artefact', 'id', $artefactid);
+    $title = $artefact->title;
+}
+else {
+    $javascript = "var artefact = undefined;\n";
+    $title = $view->title;
+}
+
+$javascript .= <<<JAVASCRIPT
 
 var view = {$viewid};
 
@@ -51,11 +61,13 @@ function feedbackform() {
     var form = FORM({'id':'menuform','method':'post'});
     submitfeedback = function () {
         // @todo add support for attached files when user is a tutor.
-        sendjsonrequest('addfeedback.json.php',
-            {'view':view, 
-             'message':form.message.value,
-             'public':form.public.checked},
-            function () { 
+        var data = {'view':view, 
+                    'message':form.message.value,
+                    'public':form.public.checked};
+        if (artefact) {
+            data.artefact = artefact;
+        }
+        sendjsonrequest('addfeedback.json.php', data, function () { 
                 removeElement('menuform');
                 if (form.public.checked) {
                     feedbacklist.doupdate();
@@ -85,9 +97,11 @@ function objectionform() {
     }
     var form = FORM({'id':'menuform','method':'post'});
     submitobjection = function () {
-        sendjsonrequest('objectionable.json.php',
-            {'view':view, 'message':form.message.value},
-            function () { removeElement('menuform'); });
+        var data = {'view':view, 'message':form.message.value};
+        if (artefact) {
+            data.artefact = artefact;
+        }
+        sendjsonrequest('objectionable.json.php', data, function () { removeElement('menuform'); });
         return false;
     }
     appendChildNodes(form, 
@@ -107,7 +121,11 @@ function objectionform() {
 function view_menu() {
     var addwatchlist = A({'href':''}, {$getstring['addtowatchlist']});
     addwatchlist.onclick = function () { 
-        sendjsonrequest('addwatchlist.json.php', {'view':view});
+        var data = {'view':view};
+        if (artefact) {
+            data.artefact = artefact;
+        }
+        sendjsonrequest('addwatchlist.json.php', data);
         return false;
     }
 
@@ -130,8 +148,9 @@ var feedbacklist = new TableRenderer(
 
 feedbacklist.limit = 10;
 feedbacklist.view = view;
-feedbacklist.statevars.push('view');
-feedbacklist.emptycontent = {$getstring['nopublicfeedbackhasbeenplacedonthisview']};
+feedbacklist.artefact = artefact;
+feedbacklist.statevars.push('view','artefact');
+feedbacklist.emptycontent = {$getstring['nopublicfeedback']};
 feedbacklist.updateOnLoad();
 
 
@@ -140,7 +159,7 @@ JAVASCRIPT;
 $smarty = smarty(array('tablerenderer'));
 //$smarty->clear_assign('MAINNAV');
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
-$smarty->assign('TITLE', $view->title);
+$smarty->assign('TITLE', $title);
 if (isset($content)) {
     $smarty->assign('VIEWCONTENT', $content);
 }

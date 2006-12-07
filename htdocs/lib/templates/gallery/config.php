@@ -17,20 +17,18 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage admin
- * @author     Nigel McNie <nigel@catalyst.net.nz>
+ * @subpackage core
+ * @author     Penny Leach <penny@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
-define('INTERNAL', 1);
-define('ADMIN', 1);
-define('MENUITEM', 'usermanagement');
-define('SUBMENUITEM', 'adminnotifications');
-require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+defined('INTERNAL') || die();
 
-$smarty = smarty();
-$smarty->display('admin/usermanagement/adminnotifications.tpl');
+$template = new StdClass;
+$template->title = 'Image Gallery';
+$template->description = 'This View template will allow you to create a gallery of images from your Files area and provide a description below each picture.  Ideal for displaying art, design and photograhic work.';
+$template->category = 'gallery';
 
 ?>

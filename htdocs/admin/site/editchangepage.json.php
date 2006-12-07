@@ -26,18 +26,18 @@
 
 define('INTERNAL', 1);
 define('ADMIN', 1);
-require(dirname(dirname(__FILE__)) . '/init.php');
+require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
 $pagename = param_alpha('pagename');
 
 $data['pagename'] = $pagename;
 
-if (!$page = @get_record('site_content','name',$pagename)) {
-    json_reply('local',get_string('loadsitepagefailed','admin'));
+if (!$page = @get_record('site_content', 'name', $pagename)) {
+    json_reply('local', get_string('loadsitepagefailed', 'admin'));
 }
 
 $data['content'] = $page->content;
-$data['error'] = false;
+$data['error']   = false;
 $data['message'] = get_string('sitepageloaded','admin');
 json_headers();
 echo json_encode($data);  

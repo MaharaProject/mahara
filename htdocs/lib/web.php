@@ -814,7 +814,7 @@ function admin_nav() {
             'link'     => $wwwroot . 'admin/',
         ),
         array(
-            'name'     => 'site',
+            'name'     => 'configsite',
             'section'  => 'admin',
             'link'     => $wwwroot . 'admin/site/options.php',
             'submenu'  => array(
@@ -824,56 +824,56 @@ function admin_nav() {
                     'link' => $wwwroot . 'admin/site/options.php'
                 ),
                 array(
-                    'name'     => 'pageeditor',
-                    'section'  => 'admin',
-                    'link'     => $wwwroot . 'admin/site/editsitepage.php', // @todo rename
+                    'name'    => 'pageeditor',
+                    'section' => 'admin',
+                    'link'    => $wwwroot . 'admin/site/pages.php',
                 ),
                 array(
-                    'name'     => 'menueditor',
-                    'section'  => 'admin',
-                    'link'     => $wwwroot . 'admin/site/editmenu.php', // @todo rename
+                    'name'    => 'menueditor',
+                    'section' => 'admin',
+                    'link'    => $wwwroot . 'admin/site/menu.php',
                 ),
                 array(
-                    'name'     => 'files',
-                    'section'  => 'admin',
-                    'link'     => $wwwroot . 'admin/site/files.php'
+                    'name'    => 'files',
+                    'section' => 'admin',
+                    'link'    => $wwwroot . 'admin/site/files.php'
                 )
             )
         ),
         array(
-            'name'     => 'users',
+            'name'     => 'configusers',
             'section'  => 'admin',
-            'link'     => $wwwroot . 'admin/users/',
+            'link'     => $wwwroot . 'admin/users/suspended.php',
             'submenu' => array(
                 array(
-                    'name'     => 'institutions',
-                    'section'  => 'admin',
-                    'link'     => $wwwroot . 'admin/users/institutions.php',
+                    'name'    => 'suspendedusers',
+                    'section' => 'admin',
+                    'link'    => $wwwroot . 'admin/users/suspended.php'
                 ),
                 array(
-                    'name' => 'uploadcsv',
+                    'name'    => 'staffusers',
                     'section' => 'admin',
-                    'link' => $wwwroot . 'admin/usermanagement/uploadcsv.php'
+                    'link'    => $wwwroot . 'admin/users/staff.php'
                 ),
                 array(
-                    'name' => 'adminusers',
+                    'name'    => 'adminusers',
                     'section' => 'admin',
-                    'link' => $wwwroot . 'admin/usermanagement/adminusers.php',
+                    'link'    => $wwwroot . 'admin/users/admins.php'
                 ),
                 array(
-                    'name' => 'staffusers',
+                    'name'    => 'adminnotifications',
                     'section' => 'admin',
-                    'link' => $wwwroot . 'admin/usermanagement/staffusers.php'
+                    'link'    => $wwwroot . 'admin/users/notifications.php'
                 ),
                 array(
-                    'name' => 'adminnotifications',
+                    'name'    => 'institutions',
                     'section' => 'admin',
-                    'link' => $wwwroot . 'admin/usermanagement/adminnotifications.php'
+                    'link'    => $wwwroot . 'admin/users/institutions.php'
                 ),
                 array(
-                    'name' => 'suspendedusers',
+                    'name'    => 'uploadcsv',
                     'section' => 'admin',
-                    'link' => $wwwroot . 'admin/usermanagement/suspendedusers.php'
+                    'link'    => $wwwroot . 'admin/users/uploadcsv.php'
                 )
             )
         ),
@@ -1096,10 +1096,12 @@ function searchform() {
         'name'                => 'searchform',
         'action'              => get_config('wwwroot') . 'user/search.php',
         'renderer'            => 'oneline',
+        'autofocus'           => 'false',
         'elements'            => array(
             'query' => array(
                 'type'           => 'text',
-                'defaultvalue'   => '',
+                'defaultvalue'   => 'Search',
+                'class'          => 'emptyonfocus'
             ),
             'submit' => array(
                 'type' => 'image',

@@ -245,7 +245,7 @@ $string['heightshort'] = 'h';
 $string['filter'] = 'Filter';
 $string['expand'] = 'Expand';
 $string['collapse'] = 'Collapse';
-
+$string['more...'] = 'More ...';
 $string['nohelpfound'] = 'There was no help found for this item';
 
 // Search
@@ -271,7 +271,7 @@ $string['feedbacksubmitted'] = 'Feedback submitted';
 $string['itemaddedtowatchlist'] = 'This item has been added to your watchlist';
 $string['itemalreadyinwatchlist'] = 'This item is already in your watchlist';
 $string['makepublic'] = 'Make public';
-$string['nopublicfeedbackhasbeenplacedonthisview'] = 'No public feedback has been placed on this view';
+$string['nopublicfeedback'] = 'No public feedback';
 $string['notifysiteadministrator'] = 'Notify site administrator';
 $string['placefeedback'] = 'Place feedback';
 $string['print'] = 'Print';

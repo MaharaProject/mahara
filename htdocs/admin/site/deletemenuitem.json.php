@@ -26,14 +26,14 @@
 
 define('INTERNAL', 1);
 define('ADMIN', 1);
-require(dirname(dirname(__FILE__)) . '/init.php');
+require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
 $itemid = param_integer('itemid');
 
-if (!delete_records('site_menu','id',$itemid)) {
+if (!delete_records('site_menu','id', $itemid)) {
     json_reply('local', get_string('deletefailed','admin'));
 }
 
-json_reply(false,get_string('menuitemdeleted','admin'));
+json_reply(false, get_string('menuitemdeleted','admin'));
 
 ?>

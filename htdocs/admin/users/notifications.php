@@ -26,11 +26,11 @@
 
 define('INTERNAL', 1);
 define('ADMIN', 1);
-define('MENUITEM', 'usermanagement');
-define('SUBMENUITEM', 'suspendedusers');
+define('MENUITEM', 'configusers');
+define('SUBMENUITEM', 'adminnotifications');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
 $smarty = smarty();
-$smarty->display('admin/usermanagement/suspendedusers.tpl');
+$smarty->display('admin/usermanagement/adminnotifications.tpl');
 
 ?>

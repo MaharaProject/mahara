@@ -29,7 +29,8 @@ define('MENUITEM', 'myfiles');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('artefact', 'file');
 
-$strings = array('cancel', 'delete', 'description', 'edit', 'editfile', 'editfolder', 'home', 'name', 'nofilesfound', 'savechanges');
+$strings = array('cancel', 'delete', 'description', 'edit', 'editfile', 'editfolder', 
+                 'home', 'name', 'nofilesfound', 'savechanges');
 $getstring = array();
 foreach ($strings as $string) {
     $getstring[$string] = "'" . get_string($string) . "'";

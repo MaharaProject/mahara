@@ -438,7 +438,7 @@ function upgrade_templates() {
 
     foreach ($dbtemplates as $name => $guff) {
         if (!is_readable($guff['location'] . 'config.php')) {
-            throw new InvalidArgumentException("missing config.php for template $name");
+            throw new TemplateParserException("missing config.php for template $name");
         }
         require_once($guff['location'] . 'config.php');
         $fordb = new StdClass;
