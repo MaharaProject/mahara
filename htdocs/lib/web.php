@@ -1040,6 +1040,7 @@ function searchform() {
         'action'              => get_config('wwwroot') . 'user/search.php',
         'renderer'            => 'oneline',
         'autofocus'           => 'false',
+        'validate'            => false,
         'elements'            => array(
             'query' => array(
                 'type'           => 'text',
