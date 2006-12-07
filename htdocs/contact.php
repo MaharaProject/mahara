@@ -31,10 +31,12 @@ require('init.php');
 require_once('pieforms/pieform.php');
 
 if ($USER->is_logged_in()) {
-    $name = display_name($USER->get('id'));
+    $userid = $USER->get('id');
+    $name = display_name($userid);
     $email = $USER->get('email');
 }
 else {
+    $userid = null;
     $name = '';
     $email = '';
 }
@@ -76,6 +78,10 @@ $contactform = pieform(array(
                 'required'    => true
             ),
         ),
+        'userid' => array(
+            'type'  => 'hidden',
+            'value' => $userid,
+        ),
         'submit' => array(
             'type'  => 'submit',
             'value' => get_string('submitcontactinformation')
@@ -85,10 +91,13 @@ $contactform = pieform(array(
 
 function contactus_submit($values) {
     $data = new StdClass;
-    $data->name    = $values['name'];
-    $data->email   = $values['email'];
-    $data->subject = $values['subject'];
-    $data->message = $values['message'];
+    $data->fromname    = $values['name'];
+    $data->fromaddress = $values['email'];
+    $data->subject     = $values['subject'];
+    $data->message     = $values['message'];
+    if ($values['userid']) {
+        $data->userfrom = $values['userid'];
+    }
     require_once('activity.php');
     activity_occurred('contactus', $data);
     json_reply(false, get_string('contactinformationsent'));

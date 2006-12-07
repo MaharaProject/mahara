@@ -38,6 +38,7 @@ if ($USER->get('admin')) {
 
 $readsavefail = get_string('failedtomarkasread', 'activity');
 $readsave = get_string('markedasread', 'activity');
+$morestr = get_string('more...');
 
 $javascript = <<<JAVASCRIPT
 var activitylist = new TableRenderer(
@@ -45,10 +46,23 @@ var activitylist = new TableRenderer(
     'index.json.php', 
     [
         function(r) { 
-            if (r.url) { 
-                return TD(null,A({'href': r.url}, r.message));
+            if (r.message) {
+                var messagemore;
+                if (r.url) {
+                    messagemore = [r.message, BR(null), A({'href' : r.url}, '{$morestr}')];
+                }
+                else {
+                    messagemore = r.message;
+                }
+                return TD(null, A({'href': '', 'onclick': 'showHideMessage(' + r.id + '); return false;'}, r.subject),
+                          DIV({'id' : 'message-' + r.id, 'style': 'display:none'}, messagemore));
+            }
+            else if (r.url) { 
+                return TD(null, A({'href': r.url}, r.subject));
             } 
-            return TD(null,r.message);
+            else {
+                return TD(null, r.subject);
+            }
         },
         'type',
         'date',
@@ -102,6 +116,15 @@ function markread(form) {
             activitylist.doupdate();
         }
     )
+}
+
+function showHideMessage(id) {
+    if (getStyle('message-' + id, 'display') == 'none') {
+        showElement('message-' + id);
+    }
+    else {
+        hideElement('message-' + id);
+    }
 }
 
 JAVASCRIPT;

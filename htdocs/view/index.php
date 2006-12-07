@@ -51,7 +51,7 @@ viewlist.rowfunction = function(r, n, data) {
                                  [TD(null,{$getstring['accessstopdate']}),TD(r.stopdate)],
                                  [TD(null,{$getstring['description']}),TD(r.description)],
                                  [TD(null,{$getstring['artefacts']}),
-                                  TD(null,UL(null,map(renderartefact,r.artefacts)))]]);
+                                  TD(null,UL(null,map(partial(renderartefact,r.id),r.artefacts)))]]);
 }
 
 function title(r, communities) {
@@ -75,7 +75,7 @@ function title(r, communities) {
                   'encoding':'multipart/form-data','onsubmit':"return formsubmit('"+r.id+"');"},
                  DIV(null,buttons),
                  DIV(null,assess));
-    return [TD(null,A({'href':'view.php?id='+r.id},r.title)),
+    return [TD(null,A({'href':'view.php?view='+r.id},r.title)),
             TD(null,f)];
 }
 
@@ -93,8 +93,8 @@ function assessselect(viewid, communitylist) {
             
 }
 
-function renderartefact(a) {
-    return LI(null,A({'href':'{$wwwroot}viewartefact?id='+a.id},a.title));
+function renderartefact(viewid,a) {
+    return LI(null,A({'href':'{$wwwroot}view/view.php?view='+viewid+'&artefact='+a.id},a.title));
 }
 
 function deleteview(viewid) {

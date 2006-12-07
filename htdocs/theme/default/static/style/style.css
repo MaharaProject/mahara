@@ -309,27 +309,36 @@ form {
 /* RIGHT SIDE BOX BEGIN */
 div.sidebar {
 	background: #FFFFFF url(../images/sidebox2_top_headerbg.gif) no-repeat top;
-   padding: 10px 0 0 10px;
-   margin: 0 0 5px 0;
+   	padding: 10px 0 0 10px;
+   	margin: 0 0 5px 0;
 	color: #FFFFFF;
 	font-weight: bold;
 }
 
 #sitemenu {
+	margin: 20px 5px 0 0;
+	padding: 0;
 }
 
 #sitemenu li {
-	padding: 0 0 0 0px;
-	margin: 0 10px 0 0px;	 
+	padding: 0 0 0 13px;
+	margin: 0 5px 0 0px;	 
 	color: #000000;
 	font-weight: bold;
 	background: url(../images/icon_arrow.gif) no-repeat left;
 	list-style-type: none;
+	line-height: 18px;
 }
 
 div.sidebar-botcorners {
     padding: 0 0 0 0;
-    margin: 0 0 0 0px;
+    margin: 0 0 0 0;
+}
+
+
+div.loginbox-botcorners {
+    padding: 0 0 0 0;
+    margin: 0 0 0 -10px;
 }
 
 #loginbox {

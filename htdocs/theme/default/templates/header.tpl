@@ -72,7 +72,7 @@
         </ul>
     {/if}
 {/if}
-			<div id="maincontentwrapper">	
+		<div id="maincontentwrapper">	
         {insert name="messages"}
 		
 	

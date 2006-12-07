@@ -75,7 +75,7 @@ for my $thing (@things) {
     debug("Installing $thing...");
     $m->get($CFG->{url} . 'admin/upgrade.json.php?name=' . $thing);
     $json_response = my_jsonToObj($m->content());
-    unless ( $json_response->{success} ) {
+    if ( $json_response->{error} ) {
         croak qq{Failed to install $thing} . Dumper($json_response);
     }
 }
@@ -84,7 +84,7 @@ for my $thing (@things) {
 debug("Installing core data...");
 $m->get($CFG->{url} . 'admin/upgrade.json.php?install=1');
 $json_response = my_jsonToObj($m->content());
-unless ( $json_response->{success} ) {
+if ( $json_response->{error} ) {
     croak qq{Failed to install core data:} . Dumper($json_response);
 }
 
@@ -124,9 +124,14 @@ sub debug {
 sub my_jsonToObj {
     my $data = shift;
 
-    $data = eval { jsonToObj($data); };
+    my $obj = eval { jsonToObj($data); };
 
-    croak q{Failed to parse JSON data} unless defined $data;
+    unless ( defined $obj ) {
+        $data =~ s{ < [^>]* > }{}xmgs;
+        $data =~ s{ \r?\n\s*\r?\n\s*\r?\n }{\n\n}xmgs;
+        $data =~ s{ &quot; }{"}xmgs;
+        croak q{Failed to parse JSON data: } . $data;
+    }
 
-    return $data;
+    return $obj;
 }

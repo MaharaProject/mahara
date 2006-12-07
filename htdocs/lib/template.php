@@ -57,7 +57,7 @@ function template_parse($templatename) {
 
     if (count($blockids) != count(array_unique($blockids))) {
         $dups = array_unique(array_diff_assoc($blockids, array_unique($blockids)));
-        throw new InvalidArgumentException("This template ($templatename) has duplicate block ids: " . implode(', ', $dups));
+        throw new TemplateParserException("This template ($templatename) has duplicate block ids: " . implode(', ', $dups));
     }
 
     $temp = array('type'    => 'html',
@@ -76,7 +76,7 @@ function template_parse_block($blockstr) {
 
     // the first bit should be 'block'
     if ($bits[0] != 'block') {
-        throw new InvalidArgumentException("Invalid block section $blockstr");
+        throw new TemplateParserException("Invalid block section $blockstr");
     }
 
     array_shift($bits);
@@ -86,16 +86,16 @@ function template_parse_block($blockstr) {
     }
 
     if (!isset($data['id']) || empty($data['id']) || strpos($data['id'], 'tpl_') !== 0) {
-        throw new InvalidArgumentException("Invalid block section $blockstr - must have an id beginning with tpl_");
+        throw new TemplateParserException("Invalid block section $blockstr - must have an id beginning with tpl_");
     }
 
     if (!isset($data['type']) || empty($data['type'])) {
-        throw new InvalidArgumentException("Invalid block section $blockstr - must have a type");
+        throw new TemplateParserException("Invalid block section $blockstr - must have a type");
     }
     
     $types = array('artefact', 'label', 'title', 'author', 'description');
     if (!in_array($data['type'], $types)){
-        throw new InvalidArgumentException("Invalid block section $blockstr (type " . $data['type'] 
+        throw new TemplateParserException("Invalid block section $blockstr (type " . $data['type'] 
                                            . " not one of " . implode(', ', $types));
     }
  
@@ -110,14 +110,14 @@ function template_parse_block($blockstr) {
 
     if (isset($data['artefacttype'])) {
         if (!$plugin = get_field('artefact_installed_type', 'plugin', 'name', $data['artefacttype'])) {
-            throw new InvalidArgumentException("artefacttype " . $data['artefacttype'] . " is not installed");
+            throw new TemplateParserException("artefacttype " . $data['artefacttype'] . " is not installed");
         }
      
         if (isset($data['format'])) { // check the artefacttype can render to this format.
             safe_require('artefact', $plugin);
 
             if (!artefact_can_render_to($data['artefacttype'], $data['format'])) {
-                throw new InvalidArgumentException("Artefacttype " . $data['artefacttype'] . " can't render to format "
+                throw new TemplateParserException("Artefacttype " . $data['artefacttype'] . " can't render to format "
                                                    . $format['format']);
             }
         }
@@ -129,23 +129,23 @@ function template_parse_block($blockstr) {
             safe_require('artefact', $data['plugintype']);
         }
         catch (Exception $e) {
-            throw new InvalidArgumentException("Couldn't find plugin type " . $data['plugintype']);
+            throw new TemplateParserException("Couldn't find plugin type " . $data['plugintype']);
         }
     }
 
     if (isset($data['defaultartefacttype'])) {
         if (isset($data['artefacttype']) && $data['artefacttype'] != $data['defaultartefacttype']) {
-            throw new InvalidArgumentException("Default artefact type " . $data['defaultartefacttype']
+            throw new TemplateParserException("Default artefact type " . $data['defaultartefacttype']
                                                . " doesn't make sense given artefact type " . $data['artefacttype']);
         }
         else if (isset($data['plugintype']) 
                  && !in_array($data['defaultartefacttype'], 
                     call_static_method(generate_class_name($data['plugintype']), 'get_artefact_types'))) {
-            throw new InvalidArgumentException("Default artefact type " . $data['defaultartefacttype']
+            throw new TemplateParserException("Default artefact type " . $data['defaultartefacttype']
                                                ." doesn't make sense given plugin type " . $data['plugintype']);
         }
         if (!$plugin = get_field('artefact_installed_type', 'plugin', 'name', $data['defaultartefacttype'])) {
-            throw new InvalidArgumentException("Default artefact type  " . $data['defaultartefacttype'] 
+            throw new TemplateParserException("Default artefact type  " . $data['defaultartefacttype'] 
                                                . " is not installed");
         }
         // look for a default format...
@@ -154,7 +154,7 @@ function template_parse_block($blockstr) {
                 $data['defaultformat'] = $data['format'];
             }
             else {
-                throw new InvalidArgumentException("Default artefact type " . $data['defaultartefacttype']
+                throw new TemplateParserException("Default artefact type " . $data['defaultartefacttype']
                                                    ." specified but with no format method (couldn't find in either "
                                                    ." default format, or fallback format field");
             }
@@ -162,13 +162,13 @@ function template_parse_block($blockstr) {
         // check the default artefact type can render to the given default format
         safe_require('artefact', $plugin);
         if (!artefact_can_render_to($data['defaultartefacttype'], $data['defaultformat'])) {
-            throw new InvalidArgumentException("Default artefact type " . $data['defaultartefacttype'] 
+            throw new TemplateParserException("Default artefact type " . $data['defaultartefacttype'] 
                                                . " can't render to defaultformat " . $format['defaultformat']);
         }
         
         // check this default artefact is a 0 or 1 artefact
         if (!call_static_method(generate_artefact_class_name($data['defaultartefacttype']), 'is_0_or_1')) {
-            throw new InvalidArgumentException("Default artefact type " . $data['defaultartefacttype']
+            throw new TemplateParserException("Default artefact type " . $data['defaultartefacttype']
                                                ." is not a 0 or 1 type artefact");
         }
     }
@@ -232,7 +232,7 @@ function template_locate($templatename, $fetchdb=true) {
         return $template;
     }
 
-    throw new InvalidArgumentException("Invalid template name $templatename, couldn't find");
+    throw new TemplateParserException("Invalid template name $templatename, couldn't find");
 }
 
 /**

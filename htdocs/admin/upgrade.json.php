@@ -36,21 +36,22 @@ if (!$install) {
 }
 
 if ($install) {
+    $message = '';
     if (!get_config('installed')) {
         try {
             core_install_defaults();
         }
         catch (SQLException $e) {
-            echo json_encode(array(
-                'success' => 0,
-                'errormessage' => $e->getMessage()
-            ));
-            exit;
+            json_reply(true, $e->getMessage());
+        }
+        catch (TemplateParserException $e) {
+            // these ones are non fatal... 
+            $message = $e->getMessage() 
+                . ' ' . '<a href="' . get_config('wwwroot') .'admin/templates.php">' 
+                . get_string('fixtemplatescontinue', 'admin') . '</a>';
         }
     }
-
-    echo json_encode(array('success' => 1));
-    exit;
+    json_reply(false, $message);
 }
 
 $upgrade = check_upgrades($name);

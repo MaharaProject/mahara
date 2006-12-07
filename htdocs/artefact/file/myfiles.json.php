@@ -44,9 +44,10 @@ else {
 $prefix = get_config('dbprefix');
 $filedata = get_records_sql_array('SELECT a.id, a.artefacttype, a.mtime, f.size, a.title, a.description
         FROM ' . $prefix . 'artefact a
-        INNER JOIN ' . $prefix . 'artefact_file_files f ON f.artefact = a.id
+        LEFT OUTER JOIN ' . $prefix . 'artefact_file_files f ON f.artefact = a.id
         WHERE a.owner = ' . $userid . '
-        AND a.parent' . $infolder, '');
+        AND a.parent' . $infolder . "
+        AND a.artefacttype IN ('folder','file','image')", '');
 
 if (!$filedata) {
     $filedata = array();

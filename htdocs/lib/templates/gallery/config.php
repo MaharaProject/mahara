@@ -18,40 +18,17 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Richard Mansfield <richard.mansfield@catalyst.net.nz>
+ * @author     Penny Leach <penny@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
-define('INTERNAL', 1);
-require(dirname(dirname(__FILE__)) . '/init.php');
+defined('INTERNAL') || die();
 
-$view = param_integer('view');
-$artefact = param_integer('artefact',null);
-
-$data = new StdClass;
-if ($artefact) {
-    $data->artefact = $artefact;
-    $table = 'usr_watchlist_artefact';
-    $artefactfield = 'artefact';
-}
-else {
-    $table = 'usr_watchlist_view';
-    $artefactfield = null;
-}
-$data->view = $view;
-$data->usr = $USER->get('id');
-$data->ctime = db_format_timestamp(time());
-
-if (record_exists($table, 'usr', $data->usr, 'view', $view, $artefactfield, $artefact)) {
-    json_reply(false, get_string('itemalreadyinwatchlist'));
-}
-
-if (!insert_record($table, $data)) {
-    json_reply('local', get_string('updatewatchlistfailed'));
-}
-
-json_reply(false,get_string('itemaddedtowatchlist'));
+$template = new StdClass;
+$template->title = 'Image Gallery';
+$template->description = 'This View template will allow you to create a gallery of images from your Files area and provide a description below each picture.  Ideal for displaying art, design and photograhic work.';
+$template->category = 'gallery';
 
 ?>
