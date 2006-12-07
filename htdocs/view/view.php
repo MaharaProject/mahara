@@ -30,33 +30,33 @@ require(get_config('libroot') . 'view.php');
 
 $viewid = param_integer('view');
 $artefactid = param_integer('artefact', null);
-$ancestors = param_variable('artefactlist', null);
-$view = new View($viewid);
 
 if (!can_view_view($viewid)) {
     throw new AccessDeniedException();
 }
+// if ($artefactid && !artefact_in_view($viewid, $artefactid)) {
+//     throw new AccessDeniedException("Artefact $artefactid not in View $viewid");
+// }
 
-$getstring = quotestrings(array('message', 'makepublic', 'placefeedback',
-                                'cancel', 'complaint', 'notifysiteadministrator',
-                                'addtowatchlist', 'nopublicfeedback',
-                                'reportobjectionablematerial', 'print'));
+$view = new View($viewid);
 
 if ($artefactid) {
-    $javascript = 'var artefact = ' . $artefactid . ";\n";
-    $artefact = get_record('artefact', 'id', $artefactid);
-    $title = '<div><a href="view.php?view=' . $viewid . '">' . $view->get('title') . "</a></div>\n";
-    if ($ancestors) {
-        $alist = explode(',',$ancestors);
-        $links = array();
-        for ($i = 0; $i < count($alist); $i++) {
-            $atitle = get_field('artefact', 'title', 'id', $alist[$i]);
-            $links[] = '<a href="view.php?view=' . $viewid . '&amp;artefact=' . $alist[$i] 
-                . ($i ? '&amp;artefactlist=' . implode(',',array_slice($alist,0,$i)) : '')
-                . '">' . $atitle . "</a>";
-        }
-        $title .= '<div>' . implode(' | ', $links) . "</div>\n";
+    // Link parent artefacts back to the view
+    $hierarchy = $view->get_artefact_hierarchy();
+    log_debug($hierarchy);
+    $artefact = $hierarchy['refs'][$artefactid];
+    $ancestorid = $artefact->parent;
+    $links = array();
+    while ($ancestorid && isset($hierarchy['refs'][$ancestorid])) {
+        $ancestor = $hierarchy['refs'][$ancestorid];
+        $link = '<a href="view.php?view=' . $viewid . '&amp;artefact=' . $ancestorid . '">' 
+            . $ancestor->title . "</a>\n";
+        array_unshift($links, $link);
+        $ancestorid = $ancestor->parent;
     }
+    $javascript = 'var artefact = ' . $artefactid . ";\n";
+    $title = '<div><a href="view.php?view=' . $viewid . '">' . $view->get('title') . "</a></div>\n";
+    $title .= implode(' | ', $links);
     $title .= "<h3>$artefact->title</h3>";
 }
 else {
@@ -65,7 +65,12 @@ else {
     $content = $view->render();
 }
 
-$javascript .= <<<JAVASCRIPT
+$getstring = quotestrings(array('message', 'makepublic', 'placefeedback',
+                                'cancel', 'complaint', 'notifysiteadministrator',
+                                'addtowatchlist', 'nopublicfeedback',
+                                'reportobjectionablematerial', 'print'));
+
+$javascript .= <<<EOF
 
 var view = {$viewid};
 
@@ -169,7 +174,7 @@ feedbacklist.emptycontent = {$getstring['nopublicfeedback']};
 feedbacklist.updateOnLoad();
 
 
-JAVASCRIPT;
+EOF;
 
 $smarty = smarty(array('tablerenderer'));
 //$smarty->clear_assign('MAINNAV');
