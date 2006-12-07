@@ -64,7 +64,7 @@ define('FORMAT_NAME_STUDENTID', 5);
 /**
  * display format for author names in views - obeys display_name 
  */
-define('FORMAT_NAME_DISPLAYNNAME', 6);
+define('FORMAT_NAME_DISPLAYNAME', 6);
 
 require_once('artefact.php');
 
@@ -318,11 +318,11 @@ function template_render($template, $mode, $data=array()) {
                 case 'label';
                     if ($mode == TEMPLATE_RENDER_EDITMODE) {
                         $block .= template_render_label_editmode($t, $data);
-                        break;
                     }
                     else {
                         $block .= $data[$t['id']]['value'];
                     }
+                    break;
                 case 'title';
                     if (isset($data['title'])) {
                         $block .= hsc($data['title']);

@@ -158,6 +158,12 @@ class View {
 
         $artefacts = $this->get_artefact_metadata();
         $contents  = $this->get_contents();
+        if (empty($contents)) {
+            $contents = array();
+        }
+        if (empty($artefacts)) {
+            $artefacts = array();
+        }
 
         $data = array();
         foreach ($artefacts as $artefact) {
@@ -173,11 +179,11 @@ class View {
         }
         $data['title']       = $this->get('title');
         $data['description'] = $this->get('description');
-        $data['author']      = template_format_owner($this->get('ownerformat', $this->get_owner_object()));
+        $data['author']      = template_format_owner($this->get('ownerformat'), $this->get_owner_object());
 
         $template = template_locate($this->get('template'));
         
-        return template_render($template, $data);
+        return template_render($template, TEMPLATE_RENDER_READONLY, $data);
     }
     
 }
