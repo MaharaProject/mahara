@@ -29,10 +29,11 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('artefact.php');
 
 $id = param_integer('id');
-$artefact = artefact_instance_from_id($id);
-$renderedartefact = $artefact->render(FORMAT_ARTEFACT_LISTSELF, null);
+$format = param_variable('format', FORMAT_ARTEFACT_LISTSELF);
 
-log_debug($renderedartefact);
+$artefact = artefact_instance_from_id($id);
+log_debug('rendering to format: ' . $format);
+$renderedartefact = $artefact->render($format, null);
 
 if (!$renderedartefact) {
     json_reply('local', 'artefactnotrendered');
