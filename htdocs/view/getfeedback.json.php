@@ -71,8 +71,6 @@ if ($feedback) {
     }
 }
 
-log_debug($data);
-
 $result = array(
     'count'       => $count,
     'limit'       => $limit,
