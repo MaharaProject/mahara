@@ -62,7 +62,7 @@ var templates = new TableRenderer(
     'templates',
     'create2.json.php', 
     [
-        function(r) { return TD(null, H3(null, r.title)); },
+        function(r) { return TD(null, H3(null, r.title), P(null, r.description)); },
         function(r) { return TD(null, IMG({'src': '{$wwwroot}thumb.php?type=template&name=' + r.name})); },
         function(r) {
             var button = BUTTON({'name': 'template', 'type': 'button'}, '{$selecttemplate}');
