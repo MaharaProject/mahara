@@ -121,12 +121,12 @@ class Session {
      * @param string $message The message to add
      * @param boolean $escape Whether to HTML escape the message
      */
-    public function add_err_msg($message, $escape=true) {
+    public function add_error_msg($message, $escape=true) {
         $this->ensure_session();
         if ($escape) {
             $message = self::escape_message($message);
         }
-        $_SESSION['messages'][] = array('type' => 'err', 'msg' => $message);
+        $_SESSION['messages'][] = array('type' => 'error', 'msg' => $message);
     }
 
     /**
