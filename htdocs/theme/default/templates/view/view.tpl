@@ -9,8 +9,6 @@ class="cnr-bl"><span class="cnr-br">
 
 {if $VIEWCONTENT}
    {$VIEWCONTENT}
-{else}
-   {str tag=viewviewnotallowed}
 {/if}
 
 <table id="feedbacktable">
