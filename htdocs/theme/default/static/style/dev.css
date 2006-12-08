@@ -36,6 +36,10 @@ span.block_targetted, div.block_targetted {
     border: 2px solid #00ff00;
 }
 
+.moveselected {
+    border: 3px solid #c19f88;
+}
+
 .clickable {
     cursor: pointer;
 }
