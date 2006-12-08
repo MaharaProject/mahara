@@ -74,11 +74,15 @@ class ArtefactTypeFileBase extends ArtefactType {
         if ($format == FORMAT_ARTEFACT_LISTSELF) {
             return $this->title;
         }
-        return false;
+        if ($format == FORMAT_ARTEFACT_RENDERMETADATA) {
+            return '';
+        }
+        //@todo: This should be an invalid render format exception
+        throw new Exception('invalid render format');
     }
 
     public static function get_render_list() {
-        return array(FORMAT_ARTEFACT_LISTSELF);
+        return array(FORMAT_ARTEFACT_LISTSELF, FORMAT_ARTEFACT_RENDERMETADATA);
     }
 
     public static function is_0_or_1() {
@@ -95,7 +99,7 @@ class ArtefactTypeFileBase extends ArtefactType {
 
     public function delete() {
         if (empty($this->id)) {
-            return;
+            return; 
         }
         delete_records('artefact_file_files', 'artefact', $this->id);
         // @todo: Delete the file from the filesystem 
@@ -105,17 +109,6 @@ class ArtefactTypeFileBase extends ArtefactType {
 }
 
 class ArtefactTypeFile extends ArtefactTypeFileBase {
-
-    public function render($format, $options) {
-        if ($format == FORMAT_ARTEFACT_LISTSELF && $this->title) {
-            return $this->title;
-        }
-        return false;
-    }
-
-    public static function get_render_list() {
-        return array(FORMAT_ARTEFACT_LISTSELF, FORMAT_ARTEFACT_RENDERMETADATA);
-    }
 
     public static function has_config() {
         return true;
@@ -131,6 +124,23 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
 }
 
 class ArtefactTypeFolder extends ArtefactTypeFileBase {
+
+    public function render($format, $options) {
+        if ($format == FORMAT_ARTEFACT_LISTSELF) {
+            return $this->title;
+        }
+        if ($format == FORMAT_ARTEFACT_LISTCHILDREN) {
+            return '';
+        }
+        if ($format == FORMAT_ARTEFACT_RENDERMETADATA) {
+            return '';
+        }
+        if ($format == FORMAT_ARTEFACT_RENDERFULL) {
+            return '';
+        }
+        //@todo: This should be an invalid render format exception
+        throw new Exception('invalid render format');
+    }
 
     public function get_icon() {
 
@@ -153,8 +163,23 @@ class ArtefactTypeImage extends ArtefactTypeFile {
         return 'file';
     }
 
+    public function render($format, $options) {
+        if ($format == FORMAT_ARTEFACT_LISTSELF) {
+            return $this->title;
+        }
+        if ($format == FORMAT_ARTEFACT_RENDERMETADATA) {
+            return '';
+        }
+        if ($format == FORMAT_ARTEFACT_RENDERFULL) {
+            return '';
+        }
+        //@todo: This should be an invalid render format exception
+        throw new Exception('invalid render format');
+    }
+
     public static function get_render_list() {
-        return array(FORMAT_ARTEFACT_LISTSELF, FORMAT_ARTEFACT_RENDERFULL, FORMAT_ARTEFACT_RENDERMETADATA);
+        return array(FORMAT_ARTEFACT_LISTSELF, FORMAT_ARTEFACT_RENDERFULL, 
+                     FORMAT_ARTEFACT_RENDERMETADATA);
     }
 
 }
