@@ -91,9 +91,7 @@ function feedbackform() {
         }
         sendjsonrequest('addfeedback.json.php', data, function () { 
                 removeElement('menuform');
-                if (form.public.checked) {
-                    feedbacklist.doupdate();
-                }
+                feedbacklist.doupdate();
             });
         return false;
     }
@@ -165,7 +163,16 @@ addLoadEvent(view_menu);
 var feedbacklist = new TableRenderer(
     'feedbacktable',
     'getfeedback.json.php',
-    ['message', 'name', 'date']
+    ['message',
+     'name',
+     'date', 
+     function (r) {
+         if (r.public == 1) {
+             return;
+         }
+         return TD(null, '(' + get_string('private') + ')');
+     },
+    ]
 );
 
 feedbacklist.limit = 10;
