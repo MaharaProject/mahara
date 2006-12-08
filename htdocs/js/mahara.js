@@ -261,6 +261,10 @@ function toggleChecked(c) {
 }
 
 function expandDownToViewport(element, width) {
+    if (typeof(width) == 'undefined') {
+        width = getElementDimensions(element).w;
+    }
+
     var viewport = getViewportDimensions();
     var position = getElementPosition(element);
     var newheight = new Dimensions(width, viewport.h - position.y - 2);
