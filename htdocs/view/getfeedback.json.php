@@ -35,21 +35,30 @@ $offset   = param_integer('offset', 0);
 $prefix = get_config('dbprefix');
 
 if ($artefact) {
-    $table = 'artefact_feedback';
+    $table = 'artefact';
     $artefactfield = 'artefact';
-    $whereartefact = ' AND artefact = ' . $artefact;
+    $whereartefactclause = ' AND artefact = ' . $artefact;
 }
 else {
-    $table = 'view_feedback';
+    $table = 'view';
     $artefactfield = null;
-    $whereartefact = '';
+    $whereartefactclause = '';
 }
 
-$count = count_records($table, 'public', 1, 'view', $view, $artefactfield, $artefact);
+$owner = get_field($table, 'owner', 'id', $artefact ? $artefact : $view);
+$table .= '_feedback';
+if ($owner == $USER->get('id')) {
+    $count = count_records($table, 'view', $view, $artefactfield, $artefact);
+    $publicclause = '';
+}
+else {
+    $count = count_records($table, 'public', 1, 'view', $view, $artefactfield, $artefact);
+    $publicclause = ' AND public = 1';
+}
 
-$feedback = get_records_sql_array('SELECT author, ctime, message
+$feedback = get_records_sql_array('SELECT author, ctime, message, public
     FROM ' . $prefix . $table . '
-    WHERE public = 1 AND view = ' . $view . $whereartefact . '
+    WHERE view = ' . $view . $whereartefactclause . $publicclause . '
     ORDER BY id DESC', '', $offset, $limit);
 
 $data = array();
@@ -57,7 +66,8 @@ if ($feedback) {
     foreach ($feedback as $record) {
         $data[] = array('name' => display_name($record->author),
                         'date' => strftime(get_string('strftimedate'),strtotime($record->ctime)),
-                        'message' => $record->message);
+                        'message' => $record->message,
+                        'public' => $record->public);
     }
 }
 
