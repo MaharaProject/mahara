@@ -555,15 +555,6 @@ function check_dir_exists($dir, $create=true, $recursive=true) {
 }
 
 /**
- * Checks that a username is in valid form
- *
- * @todo need such a function for password too.
- */
-//function validate_username($username) {
-//    return preg_match('/^[a-zA-Z0-9_\.@]+$/', $username);
-//}
-
-/**
  * Function to require a plugin file. This is to avoid doing 
  * require and include directly with variables.
  *
@@ -691,7 +682,7 @@ function mixed_array_to_field_array($array, $field) {
 
 /** 
  * Adds stuff to the log
- * @todo write this functino
+ * @todo write this function
  *
  * @param string $plugintype plugin type or core
  * @param string $pluginname plugin name or core component (eg 'view')
@@ -820,15 +811,16 @@ function password_validate(Pieform $form, $values, $username, $institution) {
 function pieform_configure() {
     global $USER;
     return array(
-        'method' => 'post',
-        'action' => '',
+        'method'    => 'post',
+        'action'    => '',
         'autofocus' => true,
-        'renderer' => 'maharatable',
-        'preajaxsubmitcallback' => 'processingStart',
+        'renderer'  => 'maharatable',
+        'preajaxsubmitcallback'  => 'processingStart',
         'postajaxsubmitcallback' => 'processingStop',
-        'elements' => array(
+        'configdirs' => get_config('libroot') . 'form/',
+        'elements'   => array(
             'sesskey' => array(
-                'type' => 'hidden',
+                'type'  => 'hidden',
                 'value' => $USER->get('sesskey')
             )
         )
