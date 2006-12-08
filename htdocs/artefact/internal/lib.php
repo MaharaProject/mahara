@@ -109,7 +109,10 @@ class ArtefactTypeProfile extends ArtefactType {
         if ($format == FORMAT_ARTEFACT_LISTSELF && $this->title) {
             return $this->title;
         }
-        return false;
+        if ($format == FORMAT_ARTEFACT_RENDERFULL && $this->title) {
+            return $this->title;
+        }
+        return '';
     }
 
     public function get_icon() {
