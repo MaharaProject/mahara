@@ -32,8 +32,8 @@
  * @return string           The HTML for the element
  */
 function pieform_render_submitcancel($element, Pieform $form) {
-    require_once('submit.php');
-    require_once('cancel.php');
+    $form->include_plugin('element', 'submit');
+    $form->include_plugin('element', 'cancel');
     $submitelement = $element;
     $submitelement['value'] = $element['value'][0];
     $cancelelement = $element;
