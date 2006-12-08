@@ -130,19 +130,19 @@ function log_message ($message, $loglevel, $escape, $backtrace, $file=null, $lin
     }
 
     // Get nice backtrace information if required
-    $backtrace = ($trace) ? $trace : debug_backtrace();
+    $trace = ($trace) ? $trace : debug_backtrace();
     // If the last caller was the 'error' function then it came from a PHP warning
     if (!is_null($file)) {
         $filename = $file;
         $linenum  = $line;
     }
     else {
-        $filename  = $backtrace[1]['file'];
-        $linenum   = $backtrace[1]['line'];
+        $filename  = $trace[1]['file'];
+        $linenum   = $trace[1]['line'];
     }
 
     if (!function_exists('get_config') || get_config('log_backtrace_levels') & $loglevel) {
-        list($textbacktrace, $htmlbacktrace) = log_build_backtrace($backtrace);
+        list($textbacktrace, $htmlbacktrace) = log_build_backtrace($trace);
     }
     else {
         $textbacktrace = $htmlbacktrace = '';
@@ -232,7 +232,7 @@ function log_build_backtrace($backtrace) {
     $calls = array();
 
     // Remove the call to log_message
-    array_shift($backtrace);
+    //array_shift($backtrace);
 
     foreach ($backtrace as $bt) {
         $bt['file']  = (isset($bt['file'])) ? $bt['file'] : 'Unknown';
@@ -381,52 +381,96 @@ function exception (Exception $e) {
     //     get language string based on class name
     // rather than by switch on class name
     if ($USER) {
+        $logged = false;
+        if (!($e instanceof MaharaException) || get_class($e == 'MaharaException')) {
+            log_warn("An exception was thrown of class " . get_class($e) . ". \nTHIS IS BAD "
+                     . "and should be changed to something extending MaharaException.\n" 
+                     . "Original trace follows", true, false);
+            log_message($e->getMessage(), LOG_LEVEL_WARN, true, true, $e->getFile(), $e->getLine(), $e->getTrace());
+            $e = new SystemException($e->getMessage());
+            $e->set_log_off();
+        }
+        
+        $e->handle_exception($logged);
+    }
+}
+
+
+interface MaharaThrowable {
+    
+    public function render_exception();
+    
+}
+
+// Standard exceptions  - top level exception class. 
+// all exceptions should extend one of these three.
+
+/**
+ * Very top of the tree for exceptions in Mahara.
+ * Nothing should extend this directly. 
+ * Contains a few helper functions for all exceptions.
+ */
+class MaharaException extends Exception {
+
+    protected $log = true;
+
+    public function get_string() {
+        $args = func_get_args();
         if (function_exists('get_string')) {
-            $outputmessage = get_string('unrecoverableerror', 'error');
-            if (!function_exists('get_config') || !$sitename = @get_config('sitename')) {
-                $sitename = 'Mahara';
+            $args[0] = strtolower(get_class($this)) . $args[0];
+            $args[1] = 'error';
+            $str = call_user_func_array('get_string', $args);
+            if (strpos($str, '[[') !== 0) {
+                return $str;
             }
-            $outputtitle = get_string('unrecoverableerrortitle', 'error', $sitename);
-            $parameterexception = get_string('parameterexception', 'error');
-            $accessdeniedexception = get_string('accessdeniedexception', 'error');
-        }
-        else {
-            // sensible english defaults
-            $outputmessage = 'A nonrecoverable error occured. '
-                . 'This probably means you have encountered a bug in the system';
-            $outputtitle = 'Mahara - Site Unavailable';
-            $parameterexception = 'A required parameter was missing';
-            $accessdeniedexception = 'You do not have access to view this page';
-        }
-        switch (get_class($e)) {
-            case 'ConfigSanityException':
-                $outputmessage = $message = get_string('configsanityexception', 'error', $e->getMessage());
-                break;
-            case 'ParameterException':
-                $outputmessage = $message = $parameterexception . ' ' . $e->getMessage();
-                break;
-            case 'AccessDeniedException':
-                $outputmessage = $message = $accessdeniedexception . ' ' . $e->getMessage();
-                break;
-            default:
-                $message = $e->getMessage();
-                $outputmessage .= '<br> ' . $e->getMessage();
         }
 
-        log_message($message, LOG_LEVEL_WARN, true, true, $e->getFile(), $e->getLine(), $e->getTrace());
+        $tag = func_get_arg(0);
+        $strings = $this->strings();
+        if (array_key_exists($tag, $strings)) {
+            return $strings[$tag];
+        }
+        
+        return 'An error occured';
+    }
+
+    public function get_sitename() {
+        if (!function_exists('get_config') || !$sitename = @get_config('sitename')) {
+            $sitename = 'Mahara';
+        }
+        return $sitename;
+    }
+
+    public function strings() {
+        return array('title' => $this->get_sitename() . ': Site unavailable');
+    }
+
+    public function set_log() {
+        $this->log = true;
+    }
+
+    public function set_log_off() {
+        $this->log = false;
+    }
+
+    public function render_exception() {
+        return $this->getMessage();
+    }
+
+    public function handle_exception() {
+
+        $outputtitle = $this->get_string('title');
+        $outputmessage = $this->render_exception();
+        $message = strip_tags($outputmessage);
+        $message = htmlspecialchars_decode($message);
 
         if (function_exists('smarty')) {
             $smarty = smarty();
             $smarty->assign('title', $outputtitle);
             $smarty->assign('message', $outputmessage);
             $smarty->display('error.tpl');
-            die();
         }
-    }
-    else {
-        $outputtitle = 'Mahara - Site Unavailable';
-        $outputmessage = $e->getMessage();
-    }
+        else {
     echo <<<EOF
 <html>
 <head>
@@ -449,49 +493,136 @@ $outputmessage
 </body>
 </html>
 EOF;
-    die();
+        }
+        // end of printing stuff to the screen...
+        if (!empty($this->log)) {
+            log_message($message, LOG_LEVEL_WARN, true, true, $this->getFile(), $this->getLine(), $this->getTrace());
+        }
+        die();
+    }
 }
 
 
-// Standard exceptions
+
+
+
+
+/**
+ * SystemException - this is basically a bug in the system.
+ */
+class SystemException extends MaharaException implements MaharaThrowable {
+
+    public function render_exception () {
+        return $this->get_string('message');
+    }
+
+    public function strings() {
+        return array_merge(parent::strings(), 
+                           array('message' => 'A nonrecoverable error occured. '
+                                 . 'This probably means you have encountered a bug in the system'));
+    }
+    
+}
+
+/**
+ * ConfigException - something is misconfigured that's causing a problem.
+ * Generally these will be the fault of admins
+ */
+class ConfigException extends MaharaException  implements MaharaThrowable {
+     
+    public function render_exception () {
+        return $this->getMessage();
+    }
+
+    public function strings() {
+        return array_merge(parent::strings(), 
+                           array('message' => $this->get_sitename() 
+                           . ' is misconfigured and this is causing problems. '
+                           . 'You probably need to contact an administrator to get this fixed.  '
+                           . ' Details, if any, follow'));
+    }
+}
+
+/**
+ * UserException - the user has done something they shouldn't (or tried to)
+ */
+class UserException extends MaharaException  implements MaharaThrowable {
+
+    protected $log = false;
+
+    public function render_exception () {
+        return $this->get_string('message') . '<br><br>' . $this->getMessage();
+    }
+
+    public function strings() {
+        return array_merge(parent::strings(),  
+                           array('message' => 'Something in the way you\'re interacting with ' 
+                                 . $this->get_sitename()
+                                 .' is causing an error.<br>Details if any, follow'));
+    }
+}
+
+    
 
 /** 
  * The configuration that Mahara is trying to be run in is insane
  */
-class ConfigSanityException extends Exception {}
+class ConfigSanityException extends ConfigException {
+    public function strings() {
+        return array_merge(parent::strings(), array('message' => ''));
+    }
+}
 
 /**
  * An SQL related error occured
  */
-class SQLException extends Exception {}
+class SQLException extends SystemException {}
 
 /**
  * An exception generated by invalid GET or POST parameters
  */
-class ParameterException extends Exception {}
+class ParameterException extends UserException {
+    function strings() {
+        return array_merge(parent::strings(), array('message' => 'A required parameter was missing'));
+    }
+}
 
 /**
  * An exception generated when e-mail can't be sent
  */
-class EmailException extends Exception {}
+class EmailException extends SystemException {}
 
 /** 
  * Exception - artefact not found 
  */
-class ArtefactNotFoundException extends Exception {}
+class ArtefactNotFoundException extends UserException {}
 
 /**
  * Exception - view not found
  */
-class ViewNotFoundException extends Exception {}
+class ViewNotFoundException extends UserException {}
+
 
 /**
  * Exception - anything to do with template parsing
  */
-class TemplateParserException extends Exception {}
+class TemplateParserException extends ConfigException {}
 
 /**
  * Exception - Access denied. Throw this if a user is trying to view something they can't
  */
-class AccessDeniedException extends Exception {}
+class AccessDeniedException extends UserException {
+    public function strings() {
+        return array_merge(parent::strings(), 
+                           array('message' => 'You do not have access to view this page',
+                                 'title' => 'Access denied'));
+    }
+
+    public function render_exception() {
+        header("HTTP/1.0 403 Forbidden", true);
+        return parent::render_exception();
+    }
+}
+
+
 ?>

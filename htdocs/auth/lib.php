@@ -32,7 +32,7 @@ require(get_config('docroot') . 'auth/user.php');
 /**
  * Unknown user exception
  */
-class AuthUnknownUserException extends Exception {}
+class AuthUnknownUserException extends UserException {}
 
 /**
  * Base authentication class. Provides a common interface with which

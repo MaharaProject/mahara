@@ -29,7 +29,7 @@ defined('INTERNAL') || die();
 /**
  * Class to use for installation exceptions
  */
-class InstallationException extends Exception {}
+class InstallationException extends SystemException {}
 
 
 /**

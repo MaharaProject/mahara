@@ -26,9 +26,6 @@
 
 defined('INTERNAL') || die();
 
-/** Thrown if the key requested doesn't exist */
-class UserKeyInvalidException extends Exception {}
-
 /**
  * The user class represents a single logged in user in the system. The user
  * has several properties that can be accessed and set, including account
@@ -88,7 +85,7 @@ class User {
      */
     public function get($key) {
         if (!isset($this->defaults[$key])) {
-            throw new UserKeyInvalidException($key);
+            throw new InvalidArgumentException($key);
         }
         if (null !== ($value = $this->SESSION->get("user/$key"))) {
             return $value;
@@ -101,7 +98,7 @@ class User {
      */
     public function set($key, $value) {
         if (!isset($this->defaults[$key])) {
-            throw new UserKeyInvalidException($key);
+            throw new InvalidArgumentException($key);
         }
         $this->SESSION->set("user/$key", $value);
     }
