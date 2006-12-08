@@ -75,7 +75,7 @@ class ArtefactTypeFileBase extends ArtefactType {
             return $this->title;
         }
         if ($format == FORMAT_ARTEFACT_RENDERMETADATA) {
-            return '';
+            return $this->render_metadata($options);
         }
         //@todo: This should be an invalid render format exception
         throw new Exception('invalid render format');
@@ -133,7 +133,7 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
             return '';
         }
         if ($format == FORMAT_ARTEFACT_RENDERMETADATA) {
-            return '';
+            return $this->render_metadata($options);
         }
         if ($format == FORMAT_ARTEFACT_RENDERFULL) {
             return '';
@@ -168,7 +168,7 @@ class ArtefactTypeImage extends ArtefactTypeFile {
             return $this->title;
         }
         if ($format == FORMAT_ARTEFACT_RENDERMETADATA) {
-            return '';
+            return $this->render_metadata($options);
         }
         if ($format == FORMAT_ARTEFACT_RENDERFULL) {
             return '';

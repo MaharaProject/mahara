@@ -405,6 +405,19 @@ abstract class ArtefactType {
     public abstract function render($format, $options);
 
     /**
+     * render instance to given format
+     * @param int $format format type (constant)
+     * @param array $options options for format
+     */
+    public function render_metadata($options) {
+        $html = '<table><tbody>';
+        $html .= '<tr><td>' . get_string('title') . '</td><td>' . $this->title. '</td></tr>';
+        $html .= '<tr><td>' . get_string('owner') . '</td><td>' . display_name($this->owner) . '</td></tr>';
+        $html .= '</tbody></table>';
+        return $html;
+    }
+
+    /**
      * returns path to icon
      * can be called statically but not defined so
      * so that can be either from instance or static.
