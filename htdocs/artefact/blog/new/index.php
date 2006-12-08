@@ -45,7 +45,7 @@ $form = pieform(array(
             )
         ),
         'description' => array(
-            'type'        => 'textarea',
+            'type'        => 'wysiwyg',
             'rows'        => 10,
             'cols'        => 80,
             'title'       => get_string('blogdesc', 'artefact.blog'),
@@ -73,8 +73,11 @@ $form = pieform(array(
             )
         ),
         'submit' => array(
-            'type'  => 'submit',
-            'value' => get_string('newblog', 'artefact.blog')
+            'type'  => 'submitcancel',
+            'value' => array(
+                get_string('createblog', 'artefact.blog'),
+                get_string('cancel', 'artefact.blog')
+            )
         )
     )
 ));
@@ -93,7 +96,14 @@ function newblog_submit($values) {
     global $USER;
 
     ArtefactTypeBlog::new_blog($USER, $values);
-    redirect(get_config('wwwroot') . '/artefact/blog/list/');
+    redirect(get_config('wwwroot') . 'artefact/blog/list/');
+}
+
+/**
+ * This function gets called to cancel a submission.
+ */
+function newblog_cancel_submit() {
+    redirect(get_config('wwwroot') . 'artefact/blog/list/');
 }
 
 ?>

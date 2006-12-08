@@ -25,38 +25,20 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'myblogs');
 
 require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
 safe_require('artefact', 'blog');
 
-// This is the wwwroot.
-$wwwroot = get_config('wwwroot');
+$id = param_integer('id');
 
-// This JavaScript creates a table to display the blog entries.
-$js = <<<EOJAVASCRIPT
+$blogpost = new ArtefactTypeBlogPost($id);
+$success = ($blogpost->get('owner') == $USER->get('id'))
+    && $blogpost->publish();
 
-var bloglist = new TableRenderer(
-    'bloglist',
-    'index.json.php',
-    [
-        function(r) {
-            return TD(
-              null,
-              A({'href':'{$wwwroot}artefact/blog/view/?id=' + r.id}, r.title)
-            );
-        },
-        'description'
-    ]
+echo json_encode(
+    array(
+        'success' => $success
+    )
 );
-
-bloglist.updateOnLoad();
-
-EOJAVASCRIPT;
-
-$smarty = smarty(array('tablerenderer'));
-$smarty->assign_by_ref('INLINEJAVASCRIPT', $js);
-$smarty->assign_by_ref('blogs', $blogs);
-$smarty->display('artefact:blog:list.tpl');
 
 ?>
