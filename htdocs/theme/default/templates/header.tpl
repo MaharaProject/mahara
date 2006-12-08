@@ -37,6 +37,7 @@
 {/if}
 			<div id="header">
 				<div class="cornertopright"><img src="{image_path imagelocation='images/header_corner_topright.gif'}" border="0"></div>		
+                {if !$nosearch}
 				<div class="searchbox">
 				<table><tr><td>
 				{$searchform}
@@ -45,6 +46,7 @@
 				<a href="{$WWWROOT}user/search.php">{str tag=advancedsearch}</a>
 				</tr></td></table>
 				</div>
+                {/if}
 				<div class="logo"><a href="{$WWWROOT}"><img src="{image_path imagelocation='images/logo.gif'}" border="0"></a></div>
 				<h1 class="hiddenStructure"><a href="{$WWWROOT}">{$heading|default:"Mahara"|escape}</a></h1>
 			</div>
