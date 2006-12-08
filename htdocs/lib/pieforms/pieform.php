@@ -871,7 +871,6 @@ class Pieform {
      */
     private function submit_js() {
         // @todo nigel should disable all buttons on this form while the submit is happening
-
         $result = <<<EOF
 
 connect($('{$this->name}'), 'onsubmit', function (e) {
@@ -910,13 +909,6 @@ EOF;
 
         // Add the hidden element for detecting form submission
         $result .= "    data['pieform_{$this->name}'] = '';\n";
-
-
-        //if ($this->ajaxpostcallback) {
-        //    $result .= "    $this->ajaxpostcallback(data);\n}\n";
-        //    return $result;
-        //}
-
 
         $action = ($this->action) ? $this->action : basename($_SERVER['PHP_SELF']);
         $method = ($this->get_method() == 'get') ? 'GET' : 'POST';
