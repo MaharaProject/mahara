@@ -27,7 +27,6 @@
 // @todo this renderer needs to take into account potentially being called more
 // than once in the same PHP script (clobbering of the $formrenderermct variable).
 // Also, not sure what 'static $var' does in global scope...
-require_once(dirname(__FILE__) . '/table.php');
 static $formrenderermct;
 
 /**
@@ -43,6 +42,8 @@ static $formrenderermct;
  */
 function pieform_renderer_multicolumntable(Pieform $form, $builtelement, $rawelement) {
     global $formrenderermct;
+    // Used by the messages javascript function
+    $form->include_plugin('renderer', 'table');
     $formrenderermct->add_element($builtelement, $rawelement);
 }
 

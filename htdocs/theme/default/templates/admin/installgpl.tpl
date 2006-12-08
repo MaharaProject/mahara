@@ -1,4 +1,4 @@
-{include file='header.tpl'}
+{include file='header.tpl' nosearch=true}
 
 <div id="column-right">
 </div>

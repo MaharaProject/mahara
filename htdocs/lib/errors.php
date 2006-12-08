@@ -177,7 +177,7 @@ function log_message ($message, $loglevel, $escape, $backtrace, $file=null, $lin
             $method = 'add_info_msg';
         }
         else {
-            $method = 'add_err_msg';
+            $method = 'add_error_msg';
         }
 
         foreach ($loglines as $line) {

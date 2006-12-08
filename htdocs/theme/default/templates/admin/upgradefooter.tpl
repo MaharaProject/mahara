@@ -1,6 +1,7 @@
 			</div>
 			<div class="footerright"><img src="{image_path imagelocation='images/footer_navbg_right.gif'}" border="0"></div>
-			<div id="footer"><a href="http://mahara.org/">Mahara</a> {if $releaseargs}{str section=admin tag=release args=$releaseargs}{/if}<br>
+			<div id="footer">Hello world</div>
+            <div class="housekeeping"><a href="http://mahara.org/">Mahara</a> {if $releaseargs}{str section=admin tag=release args=$releaseargs}{/if}<br>
 &copy; 2006 onwards, <a href="http://catalyst.net.nz/">Catalyst IT Ltd</a></div>
 		</div>
 		<div id="bottom-corners">
