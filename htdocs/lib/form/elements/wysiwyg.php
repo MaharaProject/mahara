@@ -1,6 +1,6 @@
 <?php
 /**
- * This program is part of Pieforms
+ * This program is part of Mahara
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -16,8 +16,8 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
- * @package    pieform
- * @subpackage element
+ * @package    mahara
+ * @subpackage form
  * @author     Nigel McNie <nigel@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006 Catalyst IT Ltd http://catalyst.net.nz
@@ -25,17 +25,18 @@
  */
 
 /**
- * Renders a textarea, but with extra javascript to turn it into a wysigyw
+ * Renders a textarea, but with extra javascript to turn it into a wysiwyg
  * textarea.
  *
- * Currently this is just a mirror of the textarea element, but it will change
- * a bit later.
- *
- * @param array $element The element to render
- * @param Pieform  $form    The form to render the element for
- * @return string        The HTML for the element
+ * @param array   $element The element to render
+ * @param Pieform $form    The form to render the element for
+ * @return string          The HTML for the element
  */
 function pieform_render_wysiwyg($element, Pieform $form) {
+    global $USER;
+    if ($USER->get_account_preference('wysiwyg')) {
+        $element['class'] = isset($element['class']) && $element['class'] !== '' ? $element['class'] . ' wysiwyg' : 'wysiwyg';
+    }
     $rows = $cols = $style = '';
     if (isset($element['height'])) {
         $style .= 'height:' . $element['height'] . ';';
@@ -72,6 +73,14 @@ function pieform_render_wysiwyg($element, Pieform $form) {
  */
 function pieform_is_empty_wysiwyg($value, $element) {
     return strip_tags($value) === '';
+}
+
+function pieform_get_headdata_wysiwyg() {
+    global $USER;
+    if ($USER->get_account_preference('wysiwyg')) {
+        return array('tinymce');
+    }
+    return array();
 }
 
 ?>
