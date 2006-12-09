@@ -56,20 +56,40 @@ function &smarty($javascript = array(), $headers = array(), $strings = array()) 
     global $USER, $SESSION;
 
     require_once(get_config('libroot') . 'smarty/Smarty.class.php');
-
     $wwwroot = get_config('wwwroot');
+    
+    if (function_exists('pieform_get_headdata')) {
+        $headers = array_merge($headers, pieform_get_headdata());
+    }
 
     // Insert the appropriate javascript tags 
+    $javascript_array = array();
     $jsroot = $wwwroot . 'js/';
 
     // TinyMCE must be included first for some reason we're not sure about
-    if (($key = array_search('tinymce', $javascript)) !== FALSE) {
-        $javascript_array[] = $jsroot . 'tinymce/tiny_mce.js';
-        $initfile = $jsroot . 'mahara_tinymce_init.html';
-        if (!$headers[] = @file_get_contents($initfile)) {
-            throw new Exception ('tinyMCE not initialised.');
+    $checkarray = array(&$javascript, &$headers);
+    foreach ($checkarray as &$check) {
+        if (($key = array_search('tinymce', $check)) !== false) {
+            $javascript_array[] = $jsroot . 'tinymce/tiny_mce.js';
+            $headers[] = <<<EOF
+<script type="text/javascript">
+tinyMCE.init({
+    mode: "textareas",
+    editor_selector: 'wysiwyg',
+    theme: "advanced",
+    plugins: "table,emotions,iespell,inlinepopups",
+    theme_advanced_buttons1 : "bold,italic,underline,strikethrough,separator,forecolor,backcolor,separator,fontselect,fontsizeselect,separator,justifyleft,justifycenter,justifyright,justifyfull",
+    theme_advanced_buttons2 : "link,unlink,separator,tablecontrols,separator,hr,emotions,iespell,cleanup,separator,cut,copy,paste",
+    theme_advanced_buttons3 : "",
+    theme_advanced_toolbar_location : "top",
+    theme_advanced_toolbar_align : "center"
+});
+</script>
+
+EOF;
+            unset($check[$key]);
+            break;
         }
-        unset($javascript[$key]);
     }
 
     $javascript_array[] = $jsroot . 'MochiKit/MochiKit.js';
@@ -109,7 +129,7 @@ function &smarty($javascript = array(), $headers = array(), $strings = array()) 
     foreach ($strings as &$string) {
         $string = '"' . $string . '":"' . addslashes(get_raw_string($string)) . '"';
     }
-    $stringjs = '<script language="javascript" type="text/javascript">';
+    $stringjs = '<script type="text/javascript">';
     $stringjs .= 'var strings={' . implode(',', $strings) . '};';
     $stringjs .= '</script>';
     $headers[] = $stringjs;
