@@ -59,16 +59,22 @@ $createview1 = pieform(array(
             'rules'        => array( 'required' => true ),
         ),
         'startdate'        => array(
-            'type'         => 'date',
+            'type'         => 'calendar',
             'title'        => get_string('startdate'),
             'defaultvalue' => isset($data['startdate']) ? $data['startdate'] : null,
-            'optional'     => true,
+            'caloptions'   => array(
+                'dateStatusFunc' => 'startDateDisallowed',
+                'onSelect'       => 'startSelected'
+            )
         ),
         'stopdate'  => array(
-            'type'         => 'date',
+            'type'         => 'calendar',
             'title'        => get_string('stopdate'),
             'defaultvalue' => isset($data['stopdate']) ? $data['stopdate'] : null,
-            'optional'     => true,
+            'caloptions'   => array(
+                'dateStatusFunc' => 'stopDateDisallowed',
+                'onSelect'       => 'stopSelected'
+            )
         ),
         'description' => array(
             'type'         => 'wysiwyg',
@@ -114,6 +120,60 @@ function createview1_submit($values) {
 
 $smarty = smarty();
 $smarty->assign('createview1', $createview1);
+$smarty->assign('INLINEJAVASCRIPT', <<<EOF
+function startDateDisallowed(date) {
+    var stopDate = $('createview1_stopdate').value;
+    if (stopDate != '') {
+        stopDate = stopDate.replace(/\//g, '-');
+        stopDate = isoDate(stopDate);
+        if (!stopDate) {
+            stopDate = Date();
+        }
+        if (stopDate.getTime() < date.getTime()) {
+            return true;
+        }
+    }
+    
+    return false;
+}
+function stopDateDisallowed(date) {
+    var startDate = $('createview1_startdate').value;
+    if (startDate != '') {
+        startDate = startDate.replace(/\//g, '-');
+        startDate = isoDate(startDate);
+        if (!startDate) {
+            startDate = Date();
+        }
+        if (startDate.getTime() > date.getTime()) {
+            return true;
+        }
+    }
+    
+    return false;
+}
+function startSelected(calendar, date) {
+    if (calendar.dateClicked) {
+        var stopDate = $('createview1_stopdate').value;
+        if (stopDate == '' || stopDateDisallowed(isoDate(stopDate))) {
+            $('createview1_stopdate').value = date;
+        }
+        $('createview1_startdate').value = date;
+        calendar.callCloseHandler();
+    }
+}
+function stopSelected(calendar, date) {
+    if (calendar.dateClicked) {
+        var startDate = $('createview1_startdate').value.replace(/\//g, '-');
+        if (startDate == '' || startDateDisallowed(isoDate(startDate))) {
+            $('createview1_startdate').value = date;
+        }
+        $('createview1_stopdate').value = date;
+        calendar.callCloseHandler();
+    }
+}
+
+EOF
+);
 $smarty->display('view/create1.tpl');
 
 ?>
