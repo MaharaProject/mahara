@@ -1006,18 +1006,6 @@ function site_menu() {
     return $menu;
 }
 
-
-/**
- *
- * Check whether to use the wysiwyg html editor or a plain textarea.
- * @todo check user setting from db and browser capability
- *
- */
-function use_html_editor() {
-    return true;
-}
-
-
 /**
  * Returns the list of site content pages
  * @return array of names
