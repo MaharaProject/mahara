@@ -24,6 +24,8 @@
  *
  */
 
+$GLOBALS['_PIEFORM_REGISTRY'] = array();
+
 /**
  * Builds, validates and processes a form.
  *
@@ -310,6 +312,8 @@ class Pieform {
      * @param array $data The form description hash
      */
     public function __construct($data) {
+        $GLOBALS['_PIEFORM_REGISTRY'][] = $this;
+
         if (!isset($data['name']) || !preg_match('/^[a-z_][a-z0-9_]*$/', $data['name'])) {
             throw new PieformException('Forms must have a name, and that name must be valid (validity test: could you give a PHP function the name?)');
         }
@@ -489,6 +493,16 @@ class Pieform {
 
                     // Let each element set and override attributes if necessary
                     if ($subelement['type'] != 'markup') {
+                        // This function can be defined by the application using Pieforms,
+                        // and applies to all elements of this type
+                        $function = 'pieform_configure_' . $subelement['type'];
+                        if (function_exists($function)) {
+                            $subelement = $function($subelement);
+                        }
+
+                        // This function is defined by the plugin itself, to set fields on
+                        // the element that need to be set but should not be set by the
+                        // application
                         $function = 'pieform_render_' . $subelement['type'] . '_set_attributes';
                         $this->include_plugin('element',  $subelement['type']);
                         if (function_exists($function)) {
@@ -512,10 +526,12 @@ class Pieform {
 
             // Let each element set and override attributes if necessary
             if ($element['type'] != 'markup') {
+                $function = 'pieform_configure_' . $element['type'];
+                if (function_exists($function)) {
+                    $element = $function($element);
+                }
+
                 $function = 'pieform_render_' . $element['type'] . '_set_attributes';
-                // @todo here, all elements are loaded that will be used, so no
-                // need to include files for them later (like in pieform_render_element)
-                // Also, don't use require_once so nicer errors can be thrown
                 $this->include_plugin('element',  $element['type']);
                 if (function_exists($function)) {
                     $element = $function($element);
@@ -1330,6 +1346,21 @@ function pieform_render_element($element, Pieform $form) {
     $element['class'] = preg_replace('/\s?autofocus/', '', $element['class']);
 
     return $rendererfunction($form, $builtelement, $element);
+}
+
+function pieform_get_headdata() {
+    $htmlelements = array();
+    foreach ($GLOBALS['_PIEFORM_REGISTRY'] as $form) {
+        foreach ($form->get_elements() as $element) {
+            $function = 'pieform_get_headdata_' . $element['type'];
+            if (function_exists($function)) {
+                $elems = $function($element);
+                $htmlelements = array_merge($htmlelements, $elems);
+            }
+        }
+    }
+
+    return array_unique($htmlelements);
 }
 
 ?>
