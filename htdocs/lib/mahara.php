@@ -805,6 +805,10 @@ function password_validate(Pieform $form, $values, $username, $institution) {
 }
 
 
+//
+// Pieform related functions
+//
+
 /**
  * Configures a default form
  */
@@ -825,6 +829,13 @@ function pieform_configure() {
             )
         )
     );
+}
+
+function pieform_configure_calendar($element) {
+    $element['jsroot'] = '/js/jscalendar/';
+    $element['themefile'] = get_config('themeurl') . 'style/calendar.css';
+    $element['imagefile'] = get_config('themeurl') . 'calendar.gif';
+    return $element;
 }
 
 /**
