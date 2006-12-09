@@ -2,18 +2,15 @@
 <html>
     <head>
         <title>{$title|default:"Mahara"|escape}</title>
-        {strip}
-            {foreach from=$JAVASCRIPT item=script}
-                <script language="javascript" type="text/javascript" src="{$script}">
-                </script>
-            {/foreach}
-            {if isset($INLINEJAVASCRIPT)}
-               <script language="javascript" type="text/javascript">
-                   {$INLINEJAVASCRIPT}
-               </script>
-            {/if}   
-            {foreach from=$HEADERS item=header}{$header}{/foreach}
-        {/strip}
+{foreach from=$JAVASCRIPT item=script}        <script type="text/javascript" src="{$script}"></script>
+{/foreach}
+{foreach from=$HEADERS item=header}        {$header}
+{/foreach}
+{if isset($INLINEJAVASCRIPT)}
+        <script type="text/javascript">
+{$INLINEJAVASCRIPT}
+        </script>
+{/if}
         <link rel="stylesheet" type="text/css" href="{$THEMEURL}style/style.css">
         <link rel="stylesheet" type="text/css" href="{$THEMEURL}style/dev.css">
         <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
