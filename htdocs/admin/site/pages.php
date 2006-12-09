@@ -87,13 +87,6 @@ function editsitepage_submit($values) {
     json_reply(false, get_string('pagesaved','admin'));
 }
 
-if (use_html_editor()) {
-    $js = array('tinymce');
-}
-else {
-    $js = array();
-}
-
 $ijs = <<< EOJS
 
 // global stuff, set in onLoad().
@@ -119,7 +112,7 @@ function requestPageText(removeMessage) {
     editsitepage_remove_error('pagetext');
     logDebug(get_string('loadingpagecontent', 'admin'));
     var d = loadJSONDoc('editchangepage.json.php',{'pagename':$('editsitepage_pagename').value});
-    d.addCallback(function(data) {
+    d.addCallbacks(function(data) {
         if (!data.error) {
             logDebug(get_string('sitepageloaded', 'admin'));
             setEditorContent(data.content);
@@ -130,6 +123,8 @@ function requestPageText(removeMessage) {
             displayMessage(get_string('loadsitepagefailed', 'admin'));
         }
         processingStop();
+    }, function(err) {
+        log('todo (error occured!)');
     });
 }
 
@@ -160,7 +155,7 @@ function onLoad() {
 addLoadEvent(onLoad);
 EOJS;
 
-$smarty = smarty($js);
+$smarty = smarty();
 $smarty->assign('pageeditform', $form);
 $smarty->assign('INLINEJAVASCRIPT', $ijs);
 $smarty->display('admin/site/pages.tpl');
