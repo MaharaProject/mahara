@@ -2,7 +2,7 @@
 
 body {
 	background-color: #F0F0EE;
-	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-family: Arial, Helvetica, sans-serif;
 	font-size: 11px;
 	scrollbar-3dlight-color: #F0F0EE;
 	scrollbar-arrow-color: #676662;
@@ -16,7 +16,7 @@ body {
 }
 
 td {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-family: Arial, Helvetica, sans-serif;
 	font-size: 11px;
 }
 
@@ -26,7 +26,7 @@ input {
 }
 
 td, input, select, textarea {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-family: Arial, Helvetica, sans-serif;
 	font-size: 10px;
 }
 
@@ -64,7 +64,7 @@ html>body #insert, html>body #cancel {
 .title {
 	font-size: 12px;
 	font-weight: bold;
-	color: #2B6FB6;
+	color: #527442;
 }
 
 table.charmap {
@@ -194,7 +194,7 @@ input.checkbox {
 
 .tabs a {
 	text-decoration: none;
-	font-family: Verdana, Arial;
+	font-family: Arial;
 	font-size: 10px;
 }
 
@@ -233,7 +233,7 @@ input.checkbox {
 
 fieldset {
 	border: 1px solid #919B9C;
-	font-family: Verdana, Arial;
+	font-family: Arial;
 	font-size: 10px;
 	padding: 0;
 	margin: 0;
@@ -241,7 +241,7 @@ fieldset {
 }
 
 legend {
-	color: #2B6FB6;
+	color: #2BB66F;
 	font-weight: bold;
 }
 
@@ -261,7 +261,7 @@ a:link, a:visited {
 }
 
 a:hover {
-	color: #2B6FB6;
+	color: #2BB66F;
 }
 
 #plugintable thead {
@@ -294,7 +294,7 @@ a:hover {
 }
 
 h1, h2, h3, h4 {
-	color: #2B6FB6;
+	color: #2BB66F;
 	margin: 0;
 	padding: 0;
 	padding-top: 5px;

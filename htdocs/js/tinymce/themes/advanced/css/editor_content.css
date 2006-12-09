@@ -2,12 +2,22 @@
 /* You can extend this CSS by adding your own CSS file with the the content_css option */
 
 body, td, pre {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 10px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
 }
-
 body {
 	background-color: #FFFFFF;
+}
+a {
+	color: #547c22 !important;
+	text-decoration: none !important;
+	border-bottom: 1px dotted #547c22;
+}
+
+a:hover {
+	color: #819f18;
+	text-decoration: none;
+	border-bottom: 1px solid #819f18;
 }
 
 .mceVisualAid {
