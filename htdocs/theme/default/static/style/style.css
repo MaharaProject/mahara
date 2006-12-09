@@ -257,7 +257,7 @@ form {
 	margin: 7px 0 0 0;
 }
 
-#mainnav li a:hover{
+#mainnav li a:hover {
 	color: #FFFFFF;
 	text-decoration: none;
 }
@@ -299,7 +299,7 @@ form {
 	padding: 0;
 }
 
-#subnav li a:hover{
+#subnav li a:hover {
 	color: #98bf10;
 	text-decoration: none;
 }
@@ -488,6 +488,9 @@ div.sidebar {
 .content textarea {
 	width: 450px;
 }
+.content textarea.wysiwyg {
+	width: 500px;
+}
 
 #messages {
 	margin: 0 0 5px 5px;
@@ -518,6 +521,9 @@ div.sidebar {
 	color: #819f18;
 	text-decoration: none;
 	border-bottom: 1px solid #819f18;
+}
+.content .mceEditor a {
+    border-bottom: none;
 }
 
 .box-cnrs {
@@ -820,6 +826,12 @@ acronym {
 	padding: 0 5px 0 0;
 	margin: 0;
 	color: #3a5714;
+}
+a.pieform-calendar-toggle {
+    border-width: 0 !important;
+}
+a.pieform-calendar-toggle img {
+    border: none;
 }
 
 /* FORMS ENDS */
