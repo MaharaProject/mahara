@@ -34,9 +34,6 @@ $getstring = quotestrings(array('accessstartdate', 'accessstopdate', 'artefacts'
                                 'editviewinformation', 'submitted', 'submitview', 
                                 'submitviewquestion'));
 
-/* This is a slightly dodgy use of the table renderer: I'm outputting
-   five <tr> elements for each item of data coming from the database.
-   Maybe I need a repeated-paginated-thing renderer? */
 
 $javascript = <<<JAVASCRIPT
 var viewlist = new TableRenderer(
@@ -55,14 +52,14 @@ viewlist.rowfunction = function(r, n, data) {
 }
 
 function title(r, communities) {
-    var editinfo = INPUT({'type':'button','value':{$getstring['editviewinformation']}});
-    editinfo.onclick = function () { submitform(r.id, 'editinfo'); };
-    var edit = INPUT({'type':'button','value':{$getstring['editview']}});
-    edit.onclick = function () { submitform(r.id, 'edit'); };
-    var editaccess = INPUT({'type':'button','value':{$getstring['editaccess']}});
-    editaccess.onclick = function () { submitform(r.id, 'editaccess'); };
-    var del = INPUT({'type':'button','value':{$getstring['delete']}});
-    del.onclick = function () { submitform(r.id, 'delete'); };
+    var editinfo = INPUT({'type':'button','value':{$getstring['editviewinformation']},
+                              'onclick':"submitform(" + r.id + ", 'editinfo')"});
+    var edit = INPUT({'type':'button','value':{$getstring['editview']},
+                          'onclick':"submitform(" + r.id + ", 'edit')"});
+    var editaccess = INPUT({'type':'button','value':{$getstring['editaccess']},
+                                'onclick':"submitform(" + r.id + ", 'editaccess')"});
+    var del = INPUT({'type':'button','value':{$getstring['delete']},
+                         'onclick':"return submitform(" + r.id + ", 'delete');"});
     if (r.submittedto) {
         var buttons = [editaccess];
         var assess = get_string('viewsubmittedto', r.submittedto);
@@ -72,7 +69,7 @@ function title(r, communities) {
         var assess = assessselect(r.id,communities);
     }
     var f = FORM({'id':('form'+r.id),'method':'post','enctype':'multipart/form-data',
-                  'encoding':'multipart/form-data','onsubmit':"return formsubmit('"+r.id+"');"},
+                      'encoding':'multipart/form-data','onclick':"formsubmit(" + r.id + ");"},
                  DIV(null,buttons),
                  DIV(null,assess));
     return [TD(null,A({'href':'view.php?view='+r.id},r.title)),
@@ -97,29 +94,19 @@ function renderartefact(viewid,a) {
     return LI(null,A({'href':'{$wwwroot}view/view.php?view='+viewid+'&artefact='+a.id},a.title));
 }
 
-function deleteview(viewid) {
-    if (!confirm({$getstring['deleteviewquestion']})) {
-        return;
-    }
-    sendjsonrequest('delete.json.php', {'viewid':viewid}, viewlist.doupdate);
-    return false;
-}
-
-function submitview(viewid, communityid) {
-    if (!confirm({$getstring['submitviewquestion']})) {
-        return;
-    }
-    sendjsonrequest('submit.json.php', {'viewid':viewid,'communityid':communityid}, viewlist.doupdate);
-    return false;
-}
-
 function submitform(viewid, action) {
     if (action == 'delete') {
-        return deleteview(viewid);
+        if (confirm({$getstring['deleteviewquestion']})) {
+            sendjsonrequest('delete.json.php', {'viewid':viewid}, viewlist.doupdate);
+        }
+        return false;
     }
     var form = $('form' + viewid);
     if (action == 'submitview') {
-        return submitview(viewid, form.community.value);
+        if (confirm({$getstring['submitviewquestion']})) {
+            sendjsonrequest('submit.json.php', {'viewid':viewid,'communityid':communityid}, viewlist.doupdate);
+        }
+        return false;
     }
     var page = 'index.php';
     if (action == 'editinfo') {
