@@ -76,6 +76,7 @@ function &smarty($javascript = array(), $headers = array(), $strings = array()) 
 tinyMCE.init({
     mode: "textareas",
     editor_selector: 'wysiwyg',
+    button_tile_map: true,
     theme: "advanced",
     plugins: "table,emotions,iespell,inlinepopups",
     theme_advanced_buttons1 : "bold,italic,underline,strikethrough,separator,forecolor,backcolor,separator,fontselect,fontsizeselect,separator,justifyleft,justifycenter,justifyright,justifyfull",
