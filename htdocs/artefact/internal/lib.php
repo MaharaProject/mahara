@@ -106,13 +106,17 @@ class ArtefactTypeProfile extends ArtefactType {
     }
 
     public function render($format, $options) {
-        if ($format == FORMAT_ARTEFACT_LISTSELF && $this->title) {
+        if ($format == FORMAT_ARTEFACT_LISTSELF) {
             return $this->title;
         }
-        if ($format == FORMAT_ARTEFACT_RENDERFULL && $this->title) {
+        if ($format == FORMAT_ARTEFACT_RENDERFULL) {
             return $this->title;
         }
-        return '';
+        if ($format == FORMAT_ARTEFACT_RENDERMETADATA) {
+            return $this->render_metadata($options);
+        }
+        //@todo: This should be an invalid render format exception
+        throw new Exception('Invalid profile artefact render format');
     }
 
     public function get_icon() {
@@ -392,13 +396,17 @@ class ArtefactTypeStudentid extends ArtefactTypeProfileField {}
 class ArtefactTypeIntroduction extends ArtefactTypeProfileField {}
 class ArtefactTypeWebAddress extends ArtefactTypeProfileField {
     public function render($format, $options) {
-        if ($format == FORMAT_ARTEFACT_LISTSELF && $this->title) {
+        if ($format == FORMAT_ARTEFACT_LISTSELF || $format == FORMAT_ARTEFACT_RENDERFULL) {
             if ($options['link'] == true) {
                 return make_link($this->title);
             }
             return $this->title;
         }
-        return false;
+        if ($format == FORMAT_ARTEFACT_RENDERMETADATA) {
+            return $this->render_metadata($options);
+        }
+        //@todo: This should be an invalid render format exception
+        throw new Exception('Invalid profile artefact render format');
     }
 }
 class ArtefactTypeOfficialwebsite extends ArtefactTypeWebAddress {}
@@ -409,11 +417,15 @@ class ArtefactTypeTown extends ArtefactTypeProfileField {}
 class ArtefactTypeCity extends ArtefactTypeProfileField {}
 class ArtefactTypeCountry extends ArtefactTypeProfileField {
     public function render($format, $options) {
-        if ($format == FORMAT_ARTEFACT_LISTSELF && $this->title) {
+        if ($format == FORMAT_ARTEFACT_LISTSELF || $format == FORMAT_ARTEFACT_RENDERFULL) {
             $countries = getoptions_country();
             return $countries[$this->title];
         }
-        return false;
+        if ($format == FORMAT_ARTEFACT_RENDERMETADATA) {
+            return $this->render_metadata($options);
+        }
+        //@todo: This should be an invalid render format exception
+        throw new Exception('Invalid profile artefact render format');
     }
 }
 class ArtefactTypeHomenumber extends ArtefactTypeProfileField {}
