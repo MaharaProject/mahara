@@ -384,7 +384,8 @@ function exception (Exception $e) {
         $logged = false;
         if (!($e instanceof MaharaException) || get_class($e == 'MaharaException')) {
             log_warn("An exception was thrown of class " . get_class($e) . ". \nTHIS IS BAD "
-                     . "and should be changed to something extending MaharaException.\n" 
+                     . "and should be changed to something extending MaharaException,\n" 
+                     . "unless the exception is from a third party library.\n"
                      . "Original trace follows", true, false);
             log_message($e->getMessage(), LOG_LEVEL_WARN, true, true, $e->getFile(), $e->getLine(), $e->getTrace());
             $e = new SystemException($e->getMessage());
