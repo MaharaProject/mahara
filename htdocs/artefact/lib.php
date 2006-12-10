@@ -405,14 +405,19 @@ abstract class ArtefactType {
     public abstract function render($format, $options);
 
     /**
-     * render instance to given format
-     * @param int $format format type (constant)
-     * @param array $options options for format
+     * render instance to metadata format
+     * @param $options 
+     * @todo: get and display artefact size.
      */
     public function render_metadata($options) {
         $html = '<table><tbody>';
-        $html .= '<tr><td>' . get_string('title') . '</td><td>' . $this->title. '</td></tr>';
+        $html .= '<tr><td>' . get_string('title') . '</td><td>' . $this->title . '</td></tr>';
+        $html .= '<tr><td>' . get_string('type') . '</td><td>' . $this->artefacttype . '</td></tr>';
         $html .= '<tr><td>' . get_string('owner') . '</td><td>' . display_name($this->owner) . '</td></tr>';
+        $html .= '<tr><td>' . get_string('created') . '</td><td>' 
+            . strftime(get_string('strftimedate'),strtotime($this->ctime)) . '</td></tr>';
+        $html .= '<tr><td>' . get_string('lastmodified') . '</td><td>' 
+            . strftime(get_string('strftimedate'),strtotime($this->mtime)) . '</td></tr>';
         $html .= '</tbody></table>';
         return $html;
     }
