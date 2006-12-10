@@ -32,9 +32,13 @@ require_once('pieforms/pieform.php');
 safe_require('artefact', 'blog');
 
 $id = param_integer('id');
+$blogpost = new ArtefactTypeBlogPost($id);
+if ($blogpost->get('owner') != $USER->get('id')) {
+    return;
+}
 
 $form = pieform(array(
-    'name' => 'newpost',
+    'name' => 'editpost',
     'method' => 'post',
     'action' => '',
     'elements' => array(
@@ -51,7 +55,8 @@ $form = pieform(array(
             'description' => get_string('posttitledesc', 'artefact.blog'),
             'rules' => array(
                 'required' => true
-            )
+            ),
+            'defaultvalue' => $blogpost->get('title')
         ),
         'description' => array(
             'type' => 'wysiwyg',
@@ -61,28 +66,28 @@ $form = pieform(array(
             'description' => get_string('postbodydesc', 'artefact.blog'),
             'rules' => array(
                 'required' => true
+            ),
+            'defaultvalue' => $blogpost->get('description')
+        ),
+        'thisisdraft' => array(
+            'type' => 'checkbox',
+            'title' => get_string('thisisdraft', 'artefact.blog'),
+            'description' => get_string('thisisdraftdesc', 'artefact.blog'),
+            'checked' => !$blogpost->get('published')
+        ),
+        'submit' => array(
+            'type' => 'submitcancel',
+            'value' => array(
+                get_string('save', 'artefact.blog'),
+                get_string('cancel', 'artefact.blog')
             )
-        ),
-        'saveandpublish' => array(
-            'type' => 'submit',
-            'description' => get_string('createandpublishdesc', 'artefact.blog'),
-            'value' => get_string('saveandpublish', 'artefact.blog')
-        ),
-        'saveasdraft' => array(
-            'type' => 'submit',
-            'description' => get_string('createasdraftdesc', 'artefact.blog'),
-            'value' => get_string('saveasdraft', 'artefact.blog')
-        ),
-        'cancel' => array(
-            'type' => 'cancel',
-            'value' => get_string('cancel', 'artefact.blog')
         )
     )
 ));
 
 $smarty = smarty();
-$smarty->assign_by_ref('newpostform', $form);
-$smarty->display('artefact:blog:newpost.tpl');
+$smarty->assign_by_ref('editpostform', $form);
+$smarty->display('artefact:blog:editpost.tpl');
 exit;
 
 /**
@@ -91,35 +96,26 @@ exit;
  *
  * @param array
  */
-function newpost_submit_saveandpublish(array $values) {
+function editpost_submit(array $values) {
     global $USER;
 
-    $values['published'] = true;
-    $id = ArtefactTypeBlogPost::new_post($USER, $values);
-    redirect(get_config('wwwroot') . 'artefact/blog/view/?id=' . $values['id']);
+    $values['published'] = !$values['thisisdraft'];
+    if (ArtefactTypeBlogPost::edit_post($USER, $values)) {
+        // Redirect to the blog page.
+        $id = get_field('artefact', 'parent', 'id', $values['id']);
+        redirect(get_config('wwwroot') . 'artefact/blog/view/?id=' . $id);
+    }
+
+    redirect(get_config('wwwroot') . 'artefact/blog/list/');
 }
-
-/**
- * This function gets called to create a new blog post and mark it as a draft.
- *
- * @param array
- */
-function newpost_submit_saveasdraft(array $values) {
-    global $USER;
-
-    $values['published'] = false;
-    $id = ArtefactTypeBlogPost::new_post($USER, $values);
-    redirect(get_config('wwwroot') . 'artefact/blog/view/?id=' . $values['id']);
-}
-
 
 /** 
  * This function get called to cancel the form submission. It returns to the
  * blog list.
  */
-function newpost_cancel_cancel() {
+function editpost_cancel_submit() {
     $id = param_integer('id');
     redirect(get_config('wwwroot') . 'artefact/blog/view/?id=' . $id);
 }
-
+ 
 ?>

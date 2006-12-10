@@ -14,7 +14,7 @@
 	<div class="content">
 		<div class="box-cnrs"><span class="cnr-tl"><span class="cnr-tr"><span class="cnr-bl"><span class="cnr-br">
 			<div class="maincontent">
-    		<h2>{str section="artefact.blog" tag="newpost"}</h2>
+    		<h2>{str section="artefact.blog" tag="newblogpost"}</h2>
     		{$newpostform}
 
     		ADD RADIO BUTTONS

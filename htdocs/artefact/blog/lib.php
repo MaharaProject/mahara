@@ -69,14 +69,36 @@ class ArtefactTypeBlog extends ArtefactType {
     
     /** 
      * Whether comments are allowed on this blog or not.
+     *
+     * @var boolean
      */
     protected $commentsallowed = false;
 
     /** 
      * Whether the blog owner will be notified of comments or not.
+     *
+     * @var boolean
      */
     protected $commentsnotify = false;
 
+    /**
+     * We override the constructor to fetch the extra data.
+     *
+     * @param integer
+     * @param object
+     */
+    public function __construct($id = 0, $data = null) {
+        parent::__construct($id, $data);
+
+        if (!$data && $this->id
+            && ($blogdata = get_record('artefact_blog_blog', 'blog', $this->id))) {
+            foreach($blogdata as $name => $value) {
+                if (property_exists($this, $name)) {
+                    $this->$name = $value;
+                }
+            }
+        }
+    }
 
     /**
      * This function updates or inserts the artefact.  This involves putting
@@ -98,7 +120,7 @@ class ArtefactTypeBlog extends ArtefactType {
         // Reset dirtyness for the time being.
         $this->dirty = true;
 
-        $data = array(
+        $data = (object)array(
             'blog'            => $this->get('id'),
             'commentsallowed' => ($this->get('commentsallowed') ? 1 : 0),
             'commentsnotify'  => ($this->get('commentsnotify') ? 1 : 0)
@@ -182,11 +204,35 @@ class ArtefactTypeBlog extends ArtefactType {
      * @param User
      * @param array
      */
-    public static function new_blog(User $user, $values) {
+    public static function new_blog(User $user, array $values) {
         $artefact = new ArtefactTypeBlog();
         $artefact->set('title', $values['title']);
         $artefact->set('description', $values['description']);
         $artefact->set('owner', $user->get('id'));
+        $artefact->set('commentsallowed', $values['commentsallowed'] ? true : false);
+        $artefact->set('commentsnotify', $values['commentsnotify'] ? true : false);
+        $artefact->commit();
+    }
+
+    /**
+     * This function updates an existing blog.
+     *
+     * @param User
+     * @param array
+     */
+    public static function edit_blog(User $user, array $values) {
+        if (empty($values['id']) || !is_numeric($values['id'])) {
+            return;
+        }
+
+        $artefact = new ArtefactTypeBlog($values['id']);
+
+        if ($user->get('id') != $artefact->get('owner')) {
+            return;
+        }
+        
+        $artefact->set('title', $values['title']);
+        $artefact->set('description', $values['description']);
         $artefact->set('commentsallowed', $values['commentsallowed'] ? true : false);
         $artefact->set('commentsnotify', $values['commentsnotify'] ? true : false);
         $artefact->commit();
@@ -202,23 +248,77 @@ class ArtefactTypeBlogPost extends ArtefactType {
      * This gives the number of blog posts to display at a time.
      */
     const pagination = 10;
-    
 
     /**
-     * Just the basic commit.
+     * This defines whether the blogpost is published or not.
+     *
+     * @var boolean
+     */
+    protected $published = false;
+
+    /**
+     * We override the constructor to fetch the extra data.
+     *
+     * @param integer
+     * @param object
+     */
+    public function __construct($id = 0, $data = null) {
+        parent::__construct($id, $data);
+
+        if (!$data && $this->id
+            && ($bpdata = get_record('artefact_blog_blogpost', 'blogpost', $this->id))) {
+            foreach($bpdata as $name => $value) {
+                if (property_exists($this, $name)) {
+                    $this->$name = $value;
+                }
+            }
+        }
+    }
+
+    /**
+     * This function extends ArtefactType::commit() by adding additional data
+     * into the artefact_blog_blogpost table.
      */
     public function commit() {
-        $this->commit_basic();
+        if (empty($this->dirty)) {
+            return;
+        }
+
+        $new = empty($this->id);
+      
+        parent::commit();
+
+        $this->dirty = true;
+
+        $data = (object)array(
+            'blogpost'  => $this->get('id'),
+            'published' => ($this->get('published') ? 1 : 0)
+        );
+
+        if ($new) {
+            insert_record('artefact_blog_blogpost', $data);
+        }
+        else {
+            update_record('artefact_blog_blogpost', $data, 'blogpost');
+        }
+
+        $this->dirty = false;
     }
 
     /**
-     * @todo
+     * This function extends ArtefactType::delete() by also deleting anything
+     * that's in blogpost.
      */
     public function delete() {
-        log_debug('Deleting blogpost:'.$this->id);
-        $this->delete_basic();
-    }
+        if (empty($this->id)) {
+            return;
+        }
 
+        delete_records('artefact_blog_blogpost', 'blogpost', $this->id);
+      
+        parent::delete();
+    }
+    
     public function render($format, $options) {
     }
 
@@ -245,11 +345,13 @@ class ArtefactTypeBlogPost extends ArtefactType {
      */
     public static function get_posts(User $user, $id, $limit = self::pagination, $offset = 0) {
         ($result = get_records_sql_array("
-         SELECT id, title, description, ctime, mtime
-         FROM " . get_config('dbprefix') . "artefact
-         WHERE parent = ?
-          AND artefacttype = 'blogpost'
-          AND owner = ?
+         SELECT a.id, a.title, a.description, a.ctime, a.mtime, bp.published
+         FROM " . get_config('dbprefix') . "artefact a
+          LEFT OUTER JOIN " . get_config('dbprefix') . "artefact_blog_blogpost bp
+           ON a.id = bp.blogpost
+         WHERE a.parent = ?
+          AND a.artefacttype = 'blogpost'
+          AND a.owner = ?
          ORDER BY ctime DESC
          LIMIT ? OFFSET ?;", array(
             $id,
@@ -274,9 +376,53 @@ class ArtefactTypeBlogPost extends ArtefactType {
         $artefact = new ArtefactTypeBlogPost();
         $artefact->set('title', $values['title']);
         $artefact->set('description', $values['description']);
+        $artefact->set('published', $values['published']);
         $artefact->set('owner', $user->get('id'));
         $artefact->set('parent', $values['id']);
         $artefact->commit();
+    }
+
+    /** 
+     * This function updates an existing blog post.
+     *
+     * @param User
+     * @param array
+     */
+    public static function edit_post(User $user, array $values) {
+        $artefact = new ArtefactTypeBlogPost($values['id']);
+        if ($user->get('id') != $artefact->get('owner')) {
+            return false;
+        }
+
+        $artefact->set('title', $values['title']);
+        $artefact->set('description', $values['description']);
+        $artefact->set('published', $values['published']);
+        $artefact->commit();
+        return true;
+    }
+
+    /**
+     * This function publishes the blog post.
+     *
+     * @return boolean
+     */
+    public function publish() {
+        if (!$this->id) {
+            return false;
+        }
+        
+        $data = (object)array(
+            'blogpost'  => $this->id,
+            'published' => 1
+        );
+
+        if (get_field('artefact_blog_blogpost', 'COUNT(*)', 'blogpost', $this->id)) {
+            update_record('artefact_blog_blogpost', $data, 'blogpost');
+        }
+        else {
+            insert_record('artefact_blog_blogpost', $data);
+        }
+        return true;
     }
 }
 

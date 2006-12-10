@@ -15,10 +15,10 @@
 	<div class="content">
 		<div class="box-cnrs"><span class="cnr-tl"><span class="cnr-tr"><span class="cnr-bl"><span class="cnr-br">
 			<div class="maincontent">
-    		<h2>{str section="artefact.blog" tag="blogs"}</h2>
+    		<h2>{str section="artefact.blog" tag="myblogs"}</h2>
 
     			<div class="newblog">
-        		<a href="{$WWWROOT}/artefact/blog/new/">{str section="artefact.blog" tag="newblog"}</a>
+        		<a href="{$WWWROOT}/artefact/blog/new/">{str section="artefact.blog" tag="addblog"}</a>
     			</div>
 
 			<table id="bloglist">
@@ -33,7 +33,7 @@
 			</table>
     
 				<div class="newblog">
-					<a href="{$WWWROOT}/artefact/blog/new/">{str section="artefact.blog" tag="newblog"}</a>
+					<a href="{$WWWROOT}/artefact/blog/new/">{str section="artefact.blog" tag="addblog"}</a>
 				</div>
 			</div>
 		</span></span></span></span></div>
