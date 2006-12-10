@@ -81,6 +81,24 @@ class ArtefactTypeBlog extends ArtefactType {
      */
     protected $commentsnotify = false;
 
+    /**
+     * We override the constructor to fetch the extra data.
+     *
+     * @param integer
+     * @param object
+     */
+    public function __construct($id = 0, $data = null) {
+        parent::__construct($id, $data);
+
+        if (!$data && $this->id
+            && ($blogdata = get_record('artefact_blog_blog', 'blog', $this->id))) {
+            foreach($blogdata as $name => $value) {
+                if (property_exists($this, $name)) {
+                    $this->$name = $value;
+                }
+            }
+        }
+    }
 
     /**
      * This function updates or inserts the artefact.  This involves putting
@@ -208,9 +226,13 @@ class ArtefactTypeBlog extends ArtefactType {
         }
 
         $artefact = new ArtefactTypeBlog($values['id']);
+
+        if ($user->get('id') != $artefact->get('owner')) {
+            return;
+        }
+        
         $artefact->set('title', $values['title']);
         $artefact->set('description', $values['description']);
-        $artefact->set('owner', $user->get('id'));
         $artefact->set('commentsallowed', $values['commentsallowed'] ? true : false);
         $artefact->set('commentsnotify', $values['commentsnotify'] ? true : false);
         $artefact->commit();
