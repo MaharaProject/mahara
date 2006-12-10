@@ -71,10 +71,10 @@ class PluginArtefactFile extends PluginArtefact {
 class ArtefactTypeFileBase extends ArtefactType {
 
     public function render($format, $options) {
-        if ($format == FORMAT_ARTEFACT_LISTSELF) {
+        switch ($format) {
+        case FORMAT_ARTEFACT_LISTSELF:
             return $this->title;
-        }
-        if ($format == FORMAT_ARTEFACT_RENDERMETADATA) {
+        case FORMAT_ARTEFACT_RENDERMETADATA:
             return $this->render_metadata($options);
         }
         //@todo: This should be an invalid render format exception
@@ -126,16 +126,14 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
 class ArtefactTypeFolder extends ArtefactTypeFileBase {
 
     public function render($format, $options) {
-        if ($format == FORMAT_ARTEFACT_LISTSELF) {
+        switch ($format) {
+        case FORMAT_ARTEFACT_LISTSELF:
             return $this->title;
-        }
-        if ($format == FORMAT_ARTEFACT_LISTCHILDREN) {
-            return '';
-        }
-        if ($format == FORMAT_ARTEFACT_RENDERMETADATA) {
+        case FORMAT_ARTEFACT_LISTCHILDREN:
+            return $this->listchildren($options);
+        case FORMAT_ARTEFACT_RENDERMETADATA:
             return $this->render_metadata($options);
-        }
-        if ($format == FORMAT_ARTEFACT_RENDERFULL) {
+        case FORMAT_ARTEFACT_RENDERFULL:
             return '';
         }
         //@todo: This should be an invalid render format exception
@@ -164,14 +162,13 @@ class ArtefactTypeImage extends ArtefactTypeFile {
     }
 
     public function render($format, $options) {
-        if ($format == FORMAT_ARTEFACT_LISTSELF) {
+        switch ($format) {
+        case FORMAT_ARTEFACT_LISTSELF:
             return $this->title;
-        }
-        if ($format == FORMAT_ARTEFACT_RENDERMETADATA) {
+        case FORMAT_ARTEFACT_RENDERMETADATA:
             return $this->render_metadata($options);
-        }
-        if ($format == FORMAT_ARTEFACT_RENDERFULL) {
-            return '';
+        case FORMAT_ARTEFACT_RENDERFULL:
+            return 'image';
         }
         //@todo: This should be an invalid render format exception
         throw new Exception('invalid render format');

@@ -402,7 +402,17 @@ abstract class ArtefactType {
      * @param int $format format type (constant)
      * @param array $options options for format
      */
-    public abstract function render($format, $options);
+    public function render($format, $options) {
+        switch ($format) {
+        case FORMAT_ARTEFACT_LISTSELF:
+            return $this->title;
+        case FORMAT_ARTEFACT_RENDERMETADATA:
+            return $this->render_metadata($options);
+        default:
+            //@todo: This should be an invalid render format exception
+            throw new Exception('invalid render format');
+        }
+    }
 
     /**
      * render instance to metadata format
@@ -415,10 +425,24 @@ abstract class ArtefactType {
         $html .= '<tr><td>' . get_string('type') . '</td><td>' . $this->artefacttype . '</td></tr>';
         $html .= '<tr><td>' . get_string('owner') . '</td><td>' . display_name($this->owner) . '</td></tr>';
         $html .= '<tr><td>' . get_string('created') . '</td><td>' 
-            . strftime(get_string('strftimedate'),strtotime($this->ctime)) . '</td></tr>';
+            . strftime(get_string('strftimedate'), strtotime($this->ctime)) . '</td></tr>';
         $html .= '<tr><td>' . get_string('lastmodified') . '</td><td>' 
-            . strftime(get_string('strftimedate'),strtotime($this->mtime)) . '</td></tr>';
+            . strftime(get_string('strftimedate'), strtotime($this->mtime)) . '</td></tr>';
         $html .= '</tbody></table>';
+        return $html;
+    }
+
+    /**
+     * list artefact children
+     * @param $options 
+     * @todo: use a smarty template.
+     */
+    public function listchildren($options) {
+        $html = '<ul>';
+        foreach ($this->get_children_instances() as $child) {
+            $html .= '<li>' . $child->render(FORMAT_ARTEFACT_LISTSELF, $options) . "</li>\n";
+        }
+        $html .= '</ul>';
         return $html;
     }
 
