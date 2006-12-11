@@ -70,6 +70,20 @@ class PluginArtefactFile extends PluginArtefact {
 
 class ArtefactTypeFileBase extends ArtefactType {
 
+    public function __construct($id = 0, $data = null) {
+        parent::__construct($id, $data);
+
+        // So far the only thing in the artefact_file_files table is the file size
+        if (!$data && $this->id
+            && ($filedata = get_record('artefact_file_files', 'artefact', $this->id))) {
+            foreach($filedata as $name => $value) {
+                if (property_exists($this, $name)) {
+                    $this->$name = $value;
+                }
+            }
+        }
+    }
+
     public static function get_render_list() {
         return array(FORMAT_ARTEFACT_LISTSELF, FORMAT_ARTEFACT_RENDERMETADATA);
     }
@@ -99,6 +113,41 @@ class ArtefactTypeFileBase extends ArtefactType {
 
 class ArtefactTypeFile extends ArtefactTypeFileBase {
 
+    /**
+     * This function updates or inserts the artefact.  This involves putting
+     * some data in the artefact table (handled by parent::commit()), and then
+     * some data in the artefact_file_files table.
+     */
+    public function commit() {
+        // Just forget the whole thing when we're clean.
+        if (empty($this->dirty)) {
+            return;
+        }
+      
+        // We need to keep track of newness before and after.
+        $new = empty($this->id);
+        
+        // Commit to the artefact table.
+        parent::commit();
+
+        // Reset dirtyness for the time being.
+        $this->dirty = true;
+
+        $data = (object)array(
+            'artefact'      => $this->get('id'),
+            'size'          => $this->get('size')
+        );
+
+        if ($new) {
+            insert_record('artefact_file_files', $data);
+        }
+        else {
+            update_record('artefact_file_files', $data, 'artefact');
+        }
+
+        $this->dirty = false;
+    }
+
     public static function has_config() {
         return true;
     }
@@ -117,6 +166,9 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
     public function render($format, $options) {
         if ($format == FORMAT_ARTEFACT_RENDERFULL) {
             return $this->title;
+        }
+        if ($format == FORMAT_ARTEFACT_LISTCHILDREN) {
+            return $this->listchildren();
         }
         return parent::render($format, $options);
     }
