@@ -34,7 +34,7 @@ defined('INTERNAL') || die();
  * The variables that it sets up are:
  *
  * - THEMEURL: The base url for static content
- * - WWWROOT: The base url for the podclass system
+ * - WWWROOT: The base url for the Mahara system
  * - USER: The user object
  * - JAVASCRIPT: A list of javascript files to include in the header.  This
  *   list is passed into this function (see below).

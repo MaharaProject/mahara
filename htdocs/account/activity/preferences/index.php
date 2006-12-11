@@ -76,6 +76,7 @@ $prefsform = array(
     'name'        => 'activityprefs',
     'method'      => 'post',
     'ajaxpost'    => true,
+    'renderer'    => 'table',
     'plugintype ' => 'core',
     'pluginname'  => 'account',
     'elements'    => $elements,

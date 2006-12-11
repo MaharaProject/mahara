@@ -1,4 +1,4 @@
-<div style="float:left;">
+<div id="viewacl_lhs">
     <div id="potentialpresetitems"></div>
     <div>
         {{str tag=search}} <input type="text" name="search" id="search">
@@ -48,15 +48,72 @@ function renderPotentialPresetItem(item) {
 //  | to    v   v   v    |
 function renderAccessListItem(item) {
     var removeButton = BUTTON({'type': 'button'}, '{{str tag=remove}}');
-    var row = DIV(item.name, removeButton);
+    var dateDiv = DIV(null,
+        makeCalendarInput(item, 'start'),
+        makeCalendarLink(item, 'start'),
+        makeCalendarInput(item, 'stop'),
+        makeCalendarLink(item, 'stop')
+    );
+    var row = DIV(null, item.name, removeButton, dateDiv);
 
     connect(removeButton, 'onclick', function() {
         removeElement(row);
     });
     insertSiblingNodesBefore($('accesslistitems').firstChild, row);
+    
+    setupCalendar(item, 'start');
+    setupCalendar(item, 'stop');
 }
 
+function makeCalendarInput(item, type) {
+    return INPUT({
+        'type':'text',
+        'name': item.id + '_' + type + 'date',
+        'id'  : item.id + '_' + type + 'date'
+    });
+}
 
+function makeCalendarLink(item, type) {
+    var link = A({
+        'href'   : '',
+        'id'     : item.id + '_' + type + 'date_btn',
+        'onclick': 'return false;',
+        'class'  : 'pieform-calendar-toggle'},
+        IMG({
+            'src': '{{$THEMEURL}}calendar.gif',
+            'alt': ''})
+    );
+    return link;
+}
+
+function setupCalendar(item, type) {
+    log(type);
+    var dateStatusFunc, selectedFunc;
+    if (type == 'start') {
+        dateStatusFunc = function(date) {
+            startDateDisallowed(date, $(item.id + '_stopdate'));
+        };
+        selectedFunc = function(calendar, date) {
+            startSelected(calendar, date, $(item.id + '_startdate'), $(item.id + '_stopdate'));
+        }
+    }
+    else {
+        dateStatusFunc = function(date) {
+            stopDateDisallowed(date, $(item.id + '_startdate'));
+        };
+        selectedFunc = function(calendar, date) {
+            stopSelected(calendar, date, $(item.id + '_startdate'), $(item.id + '_stopdate'));
+        }
+    }
+    Calendar.setup({
+        "ifFormat"  :"%Y\/%m\/%d",
+        "daFormat"  :"%Y\/%m\/%d",
+        "inputField": item.id + '_' + type + 'date',
+        "button"    : item.id + '_' + type + 'date_btn',
+        "dateStatusFunc" : dateStatusFunc,
+        "onSelect"       : selectedFunc
+    });
+}
 
 // SETUP
 

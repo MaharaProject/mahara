@@ -30,9 +30,9 @@
  * General documentation about the calendar is available at
  * http://www.dynarch.com/demos/jscalendar/doc/html/reference.html
  *
- * @param array    $element The element to render
- * @param Pieform  $form    The form to render the element for
- * @return string           The HTML for the element
+ * @param array   $element The element to render
+ * @param Pieform $form    The form to render the element for
+ * @return string          The HTML for the element
  */
 function pieform_render_calendar($element, Pieform $form) {
     $id = $form->get_name() . '_' . $element['name'];
@@ -59,7 +59,7 @@ function pieform_render_calendar($element, Pieform $form) {
 }
 
 function pieform_render_calendar_set_attributes($element) {
-    //$element['jsroot']   = isset($element['jsroot']) ? $element['jsroot'] : '';
+    $element['jsroot']   = isset($element['jsroot']) ? $element['jsroot'] : '';
     $element['language'] = isset($element['language']) ? $element['language'] : 'en';
     $element['theme']    = isset($element['theme']) ? $element['theme'] : 'calendar-win2k-2';
     $element['caloptions']['ifFormat'] = '%Y/%m/%d';
@@ -92,9 +92,6 @@ function pieform_get_headdata_calendar($element) {
 }
 
 
-// TODO:
-//   - use the get_value function to do strtotime? (possibly, also might need the javascript version for ajax forms)
-//
-//   - WYSIWYG!!
+// TODO: use the get_value function to do strtotime? (possibly, also might need the javascript version for ajax forms)
 
 ?>
