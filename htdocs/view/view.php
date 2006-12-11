@@ -73,8 +73,14 @@ else {
 
 $getstring = quotestrings(array('message', 'makepublic', 'placefeedback',
                                 'cancel', 'complaint', 'notifysiteadministrator',
-                                'addtowatchlist', 'nopublicfeedback',
+                                'nopublicfeedback',
                                 'reportobjectionablematerial', 'print'));
+
+$thing = $artefactid ? 'artefact' : 'view';
+$getstring['addtowatchlist'] = "'" . get_string('addtowatchlist', 'mahara', get_string($thing)) . "'";
+$getstring['addtowatchlistwithchildren'] = "'" . get_string('addtowatchlistwithchildren', 'mahara', get_string($thing)) . "'";
+
+//$getstring['addthingandchildrentowatchlist'] = "'" . get_string('addthingandchildrentowatchlist', 'mahara', $artefactid ? get_string('artefact') : get_string('view')) . "'";
 
 $javascript = <<<EOF
 
@@ -144,9 +150,8 @@ function objectionform() {
 }
 
 function view_menu() {
-    var addwatchlist = A({'href':''}, {$getstring['addtowatchlist']});
-    addwatchlist.onclick = function () { 
-        var data = {'view':view};
+    addtowatchlist = function (recurse) { 
+        var data = {'view':view,'recurse':recurse};
         if (artefact) {
             data.artefact = artefact;
         }
@@ -159,7 +164,11 @@ function view_menu() {
                      A({'href':'', 'onclick':'return objectionform();'},
                        {$getstring['reportobjectionablematerial']}), ' | ',
                      A({'href':'', 'onclick':'window.print();'}, {$getstring['print']}), ' | ',
-                      addwatchlist);
+                     A({'href':'', 'onclick':'return addtowatchlist(false);'},
+                       {$getstring['addtowatchlist']}), ' | ',
+                     A({'href':'', 'onclick':'return addtowatchlist(true);'},
+                       {$getstring['addtowatchlistwithchildren']}));
+
 }
 
 addLoadEvent(view_menu);
