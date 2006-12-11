@@ -80,8 +80,6 @@ $thing = $artefactid ? 'artefact' : 'view';
 $getstring['addtowatchlist'] = "'" . get_string('addtowatchlist', 'mahara', get_string($thing)) . "'";
 $getstring['addtowatchlistwithchildren'] = "'" . get_string('addtowatchlistwithchildren', 'mahara', get_string($thing)) . "'";
 
-//$getstring['addthingandchildrentowatchlist'] = "'" . get_string('addthingandchildrentowatchlist', 'mahara', $artefactid ? get_string('artefact') : get_string('view')) . "'";
-
 $javascript = <<<EOF
 
 var view = {$viewid};
@@ -200,10 +198,7 @@ feedbacklist.updateOnLoad();
 EOF;
 
 $smarty = smarty(array('tablerenderer'));
-//$smarty->clear_assign('MAINNAV');
-
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
-//$smarty->assign('ARTEFACT', '');
 $smarty->assign('TITLE', $title);
 if (isset($content)) {
     $smarty->assign('VIEWCONTENT', $content);
