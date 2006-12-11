@@ -386,6 +386,7 @@ abstract class ArtefactType {
         // Delete any references to this artefact from non-artefact places.
         delete_records_select('artefact_parent_cache', 'artefact = ? OR parent = ?', array($this->id, $this->id));
         delete_records('view_artefact', 'artefact', $this->id);
+        delete_records('artefact_feedback', 'artefact', $this->id);
         delete_records('usr_watchlist_artefact', 'artefact', $this->id);
       
         // Delete the record itself.
