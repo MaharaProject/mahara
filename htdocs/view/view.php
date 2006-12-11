@@ -41,7 +41,12 @@ if ($artefactid) {
     if (!artefact_in_view($artefactid, $viewid)) {
         throw new AccessDeniedException("Artefact $artefactid not in View $viewid");
     }
-    $content = $artefact->render(FORMAT_ARTEFACT_RENDERFULL, null);
+    if (in_array(FORMAT_ARTEFACT_RENDERFULL, $artefact->get_render_list())) {
+        $content = $artefact->render(FORMAT_ARTEFACT_RENDERFULL, null);
+    }
+    else {
+        $content = get_string($artefact->get('artefacttype'));
+    }
 
     // Link ancestral artefacts back to the view
     $hierarchy = $view->get_artefact_hierarchy();
@@ -68,8 +73,12 @@ else {
 
 $getstring = quotestrings(array('message', 'makepublic', 'placefeedback',
                                 'cancel', 'complaint', 'notifysiteadministrator',
-                                'addtowatchlist', 'nopublicfeedback',
+                                'nopublicfeedback',
                                 'reportobjectionablematerial', 'print'));
+
+$thing = $artefactid ? 'artefact' : 'view';
+$getstring['addtowatchlist'] = "'" . get_string('addtowatchlist', 'mahara', get_string($thing)) . "'";
+$getstring['addtowatchlistwithchildren'] = "'" . get_string('addtowatchlistwithchildren', 'mahara', get_string($thing)) . "'";
 
 $javascript = <<<EOF
 
@@ -139,9 +148,8 @@ function objectionform() {
 }
 
 function view_menu() {
-    var addwatchlist = A({'href':''}, {$getstring['addtowatchlist']});
-    addwatchlist.onclick = function () { 
-        var data = {'view':view};
+    addtowatchlist = function (recurse) { 
+        var data = {'view':view,'recurse':recurse};
         if (artefact) {
             data.artefact = artefact;
         }
@@ -154,7 +162,11 @@ function view_menu() {
                      A({'href':'', 'onclick':'return objectionform();'},
                        {$getstring['reportobjectionablematerial']}), ' | ',
                      A({'href':'', 'onclick':'window.print();'}, {$getstring['print']}), ' | ',
-                      addwatchlist);
+                     A({'href':'', 'onclick':'return addtowatchlist(false);'},
+                       {$getstring['addtowatchlist']}), ' | ',
+                     A({'href':'', 'onclick':'return addtowatchlist(true);'},
+                       {$getstring['addtowatchlistwithchildren']}));
+
 }
 
 addLoadEvent(view_menu);
@@ -186,10 +198,7 @@ feedbacklist.updateOnLoad();
 EOF;
 
 $smarty = smarty(array('tablerenderer'));
-//$smarty->clear_assign('MAINNAV');
-
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
-//$smarty->assign('ARTEFACT', '');
 $smarty->assign('TITLE', $title);
 if (isset($content)) {
     $smarty->assign('VIEWCONTENT', $content);

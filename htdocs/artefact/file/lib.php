@@ -70,17 +70,6 @@ class PluginArtefactFile extends PluginArtefact {
 
 class ArtefactTypeFileBase extends ArtefactType {
 
-    public function render($format, $options) {
-        if ($format == FORMAT_ARTEFACT_LISTSELF) {
-            return $this->title;
-        }
-        if ($format == FORMAT_ARTEFACT_RENDERMETADATA) {
-            return $this->render_metadata($options);
-        }
-        //@todo: This should be an invalid render format exception
-        throw new Exception('invalid render format');
-    }
-
     public static function get_render_list() {
         return array(FORMAT_ARTEFACT_LISTSELF, FORMAT_ARTEFACT_RENDERMETADATA);
     }
@@ -126,20 +115,10 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
 class ArtefactTypeFolder extends ArtefactTypeFileBase {
 
     public function render($format, $options) {
-        if ($format == FORMAT_ARTEFACT_LISTSELF) {
+        if ($format == FORMAT_ARTEFACT_RENDERFULL) {
             return $this->title;
         }
-        if ($format == FORMAT_ARTEFACT_LISTCHILDREN) {
-            return '';
-        }
-        if ($format == FORMAT_ARTEFACT_RENDERMETADATA) {
-            return $this->render_metadata($options);
-        }
-        if ($format == FORMAT_ARTEFACT_RENDERFULL) {
-            return '';
-        }
-        //@todo: This should be an invalid render format exception
-        throw new Exception('invalid render format');
+        return parent::render($format, $options);
     }
 
     public function get_icon() {
@@ -164,17 +143,10 @@ class ArtefactTypeImage extends ArtefactTypeFile {
     }
 
     public function render($format, $options) {
-        if ($format == FORMAT_ARTEFACT_LISTSELF) {
-            return $this->title;
-        }
-        if ($format == FORMAT_ARTEFACT_RENDERMETADATA) {
-            return $this->render_metadata($options);
-        }
         if ($format == FORMAT_ARTEFACT_RENDERFULL) {
-            return '';
+            return 'render image ' . $this->title . ' here';
         }
-        //@todo: This should be an invalid render format exception
-        throw new Exception('invalid render format');
+        return parent::render($format, $options);
     }
 
     public static function get_render_list() {

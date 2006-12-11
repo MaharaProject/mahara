@@ -106,17 +106,10 @@ class ArtefactTypeProfile extends ArtefactType {
     }
 
     public function render($format, $options) {
-        if ($format == FORMAT_ARTEFACT_LISTSELF) {
-            return $this->title;
-        }
         if ($format == FORMAT_ARTEFACT_RENDERFULL) {
             return $this->title;
         }
-        if ($format == FORMAT_ARTEFACT_RENDERMETADATA) {
-            return $this->render_metadata($options);
-        }
-        //@todo: This should be an invalid render format exception
-        throw new Exception('Invalid profile artefact render format');
+        return parent::render($format, $options);
     }
 
     public function get_icon() {
@@ -396,17 +389,11 @@ class ArtefactTypeStudentid extends ArtefactTypeProfileField {}
 class ArtefactTypeIntroduction extends ArtefactTypeProfileField {}
 class ArtefactTypeWebAddress extends ArtefactTypeProfileField {
     public function render($format, $options) {
-        if ($format == FORMAT_ARTEFACT_LISTSELF || $format == FORMAT_ARTEFACT_RENDERFULL) {
-            if ($options['link'] == true) {
+        if (($format == FORMAT_ARTEFACT_LISTSELF || $format == FORMAT_ARTEFACT_RENDERFULL)
+            && $options['link'] == true) {
                 return make_link($this->title);
-            }
-            return $this->title;
         }
-        if ($format == FORMAT_ARTEFACT_RENDERMETADATA) {
-            return $this->render_metadata($options);
-        }
-        //@todo: This should be an invalid render format exception
-        throw new Exception('Invalid profile artefact render format');
+        return parent::render($format, $options);
     }
 }
 class ArtefactTypeOfficialwebsite extends ArtefactTypeWebAddress {}
@@ -421,11 +408,7 @@ class ArtefactTypeCountry extends ArtefactTypeProfileField {
             $countries = getoptions_country();
             return $countries[$this->title];
         }
-        if ($format == FORMAT_ARTEFACT_RENDERMETADATA) {
-            return $this->render_metadata($options);
-        }
-        //@todo: This should be an invalid render format exception
-        throw new Exception('Invalid profile artefact render format');
+        return parent::render($format, $options);
     }
 }
 class ArtefactTypeHomenumber extends ArtefactTypeProfileField {}

@@ -386,6 +386,7 @@ abstract class ArtefactType {
         // Delete any references to this artefact from non-artefact places.
         delete_records_select('artefact_parent_cache', 'artefact = ? OR parent = ?', array($this->id, $this->id));
         delete_records('view_artefact', 'artefact', $this->id);
+        delete_records('artefact_feedback', 'artefact', $this->id);
         delete_records('usr_watchlist_artefact', 'artefact', $this->id);
       
         // Delete the record itself.
@@ -402,18 +403,47 @@ abstract class ArtefactType {
      * @param int $format format type (constant)
      * @param array $options options for format
      */
-    public abstract function render($format, $options);
+    public function render($format, $options) {
+        switch ($format) {
+        case FORMAT_ARTEFACT_LISTSELF:
+            return $this->title;
+        case FORMAT_ARTEFACT_RENDERMETADATA:
+            return $this->render_metadata($options);
+        default:
+            //@todo: This should be an invalid render format exception
+            throw new Exception('invalid render format');
+        }
+    }
 
     /**
-     * render instance to given format
-     * @param int $format format type (constant)
-     * @param array $options options for format
+     * render instance to metadata format
+     * @param $options 
+     * @todo: get and display artefact size.
      */
     public function render_metadata($options) {
         $html = '<table><tbody>';
-        $html .= '<tr><td>' . get_string('title') . '</td><td>' . $this->title. '</td></tr>';
+        $html .= '<tr><td>' . get_string('title') . '</td><td>' . $this->title . '</td></tr>';
+        $html .= '<tr><td>' . get_string('type') . '</td><td>' . $this->artefacttype . '</td></tr>';
         $html .= '<tr><td>' . get_string('owner') . '</td><td>' . display_name($this->owner) . '</td></tr>';
+        $html .= '<tr><td>' . get_string('created') . '</td><td>' 
+            . strftime(get_string('strftimedate'), strtotime($this->ctime)) . '</td></tr>';
+        $html .= '<tr><td>' . get_string('lastmodified') . '</td><td>' 
+            . strftime(get_string('strftimedate'), strtotime($this->mtime)) . '</td></tr>';
         $html .= '</tbody></table>';
+        return $html;
+    }
+
+    /**
+     * list artefact children
+     * @param $options 
+     * @todo: use a smarty template.
+     */
+    public function listchildren($options) {
+        $html = '<ul>';
+        foreach ($this->get_children_instances() as $child) {
+            $html .= '<li>' . $child->render(FORMAT_ARTEFACT_LISTSELF, $options) . "</li>\n";
+        }
+        $html .= '</ul>';
         return $html;
     }
 

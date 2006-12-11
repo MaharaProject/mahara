@@ -28,6 +28,7 @@ define('INTERNAL', 1);
 require(dirname(dirname(__FILE__)).'/init.php');
 
 $userid = param_integer('id','');
+global $USER;
 $loggedinid = $USER->get('id');
 
 // Get the user's details
