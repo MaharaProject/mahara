@@ -835,6 +835,7 @@ function pieform_configure_calendar($element) {
     $element['jsroot'] = '/js/jscalendar/';
     $element['themefile'] = get_config('themeurl') . 'style/calendar.css';
     $element['imagefile'] = get_config('themeurl') . 'calendar.gif';
+    $element['language'] = 'en'; // @todo: language file names for the js calendar may need to be changed
     return $element;
 }
 
