@@ -259,7 +259,7 @@ $form = array(
     'name' => 'register',
     'method' => 'post',
     'action' => '',
-    'autofocus' => true,
+    'renderer' => 'table',
     'elements' => $elements
 );
 
