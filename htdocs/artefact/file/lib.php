@@ -168,7 +168,7 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
             return $this->title;
         }
         if ($format == FORMAT_ARTEFACT_LISTCHILDREN) {
-            return $this->listchildren();
+            return $this->listchildren($options);
         }
         return parent::render($format, $options);
     }
