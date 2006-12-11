@@ -307,5 +307,24 @@ function display_name($user, $userto=null) {
     return  $user->preferredname;
 }
 
+/**
+ * Converts a user object to a full name representation, honouring the language
+ * setting.
+ *
+ * Currently a stub, will need to be improved and completed as demand arises.
+ *
+ * @param object $user The user object to make a full name out of. If empty,
+ *                     the global $USER object is used*/
+function full_name($user=null) {
+    global $USER;
+
+    if ($user === null) {
+        $user = new StdClass;
+        $user->firstname = $USER->get('firstname');
+        $user->lastname  = $USER->get('lastname');
+    }
+
+    return $user->firstname . ' ' . $user->lastname;
+}
 
 ?>
