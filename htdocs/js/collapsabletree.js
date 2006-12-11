@@ -49,7 +49,9 @@ function CollapsableTree(data, source) {
             req.open('post', self.source);
             req.setRequestHeader('Content-type','application/x-www-form-urlencoded'); 
             var d = sendXMLHttpRequest(req,queryString(request_args));
-            d.addCallbacks(function (data) {
+            d.addCallbacks(function (response) {
+                var data = evalJSONRequest(response);
+                
                 if (!data.error) {
                     if (data.message) {
                         // Add the new children into the list item that was expanded

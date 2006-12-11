@@ -222,6 +222,7 @@ $string['viewsubmittedto'] = 'This view has been submitted to %s';
 
 // view user
 $string['fullname'] = 'Full name';
+$string['displayname'] = 'Display name';
 $string['studentid'] = 'ID number';
 $string['inviteusertojoincommunity'] = 'Invite this user to join a community';
 $string['addusertocommunity'] = 'Add this user to a community';
@@ -257,7 +258,8 @@ $string['results'] = 'Results';
 $string['noresultsfound'] = 'No results found';
 
 // artefact
-$string['artefact'] = 'Artefact';
+$string['artefact'] = 'artefact';
+$string['Artefact'] = 'Artefact';
 $string['artefactnotfound'] = 'Artefact with id %s not found';
 
 $string['belongingto'] = 'Belonging to';
@@ -266,7 +268,8 @@ $string['allusers'] = 'All users';
 // view view
 $string['addedtowatchlist'] = 'This %s has been added to your watchlist';
 $string['addfeedbackfailed'] = 'Add feedback failed';
-$string['addtowatchlist'] = 'Add to watchlist';
+$string['addtowatchlist'] = 'Add %s to watchlist';
+$string['addtowatchlistwithchildren'] = 'Add %s and children to watchlist';
 $string['alreadyinwatchlist'] = 'This %s is already in your watchlist';
 $string['complaint'] = 'Complaint';
 $string['date'] = 'Date';
@@ -279,6 +282,7 @@ $string['print'] = 'Print';
 $string['reportobjectionablematerial'] = 'Report objectionable material';
 $string['reportsent'] = 'Your report has been sent';
 $string['updatewatchlistfailed'] = 'Update of watchlist failed';
-$string['view'] = 'View';
+$string['view'] = 'view';
+$string['View'] = 'View';
 
 ?>

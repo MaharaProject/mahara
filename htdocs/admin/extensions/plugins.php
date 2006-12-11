@@ -104,12 +104,17 @@ $javascript = <<<JAVASCRIPT
 function installplugin(name) {
     var d = loadJSONDoc('../upgrade.json.php', { 'name': name });
 
-    $(name).innerHTML = '<img src="{$loadingicon}" alt="{$loadingstring}" />';
+    $(name + '.message').innerHTML = '<img src="{$loadingicon}" alt="{$loadingstring}" />';
 
     d.addCallbacks(function (data) {
         if (data.success) {
             var message = '{$successstring}' + data.newversion;
-            $(name).innerHTML = '<img src="{$successicon}" alt=":)" />  ' + message;
+            $(name + '.message').innerHTML = '<img src="{$successicon}" alt=":)" />  ' + message;
+            // move the whole thing into the list of installed plugins 
+            // new parent node
+            var bits = name.split('\.');
+            var newparent = $(bits[0] + '.installed');
+            appendChildNodes(newparent, $(name));
         }
         if (data.error) {
             var message = '';

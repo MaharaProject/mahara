@@ -30,44 +30,60 @@ require(get_config('libroot') . 'view.php');
 
 $viewid = param_integer('view');
 $artefactid = param_integer('artefact', null);
-$ancestors = param_variable('artefactlist', null);
-$view = new View($viewid);
 
+$view = new View($viewid);
 if (!can_view_view($viewid)) {
     throw new AccessDeniedException();
+}
+if ($artefactid) {
+    require_once('artefact.php');
+    $artefact = artefact_instance_from_id($artefactid);
+    if (!artefact_in_view($artefactid, $viewid)) {
+        throw new AccessDeniedException("Artefact $artefactid not in View $viewid");
+    }
+    if (in_array(FORMAT_ARTEFACT_RENDERFULL, $artefact->get_render_list())) {
+        $content = $artefact->render(FORMAT_ARTEFACT_RENDERFULL, null);
+    }
+    else {
+        $content = get_string($artefact->get('artefacttype'));
+    }
+
+    // Link ancestral artefacts back to the view
+    $hierarchy = $view->get_artefact_hierarchy();
+    $artefact = $hierarchy['refs'][$artefactid];
+    $ancestorid = $artefact->parent;
+    $links = array();
+    while ($ancestorid && isset($hierarchy['refs'][$ancestorid])) {
+        $ancestor = $hierarchy['refs'][$ancestorid];
+        $link = '<a href="view.php?view=' . $viewid . '&amp;artefact=' . $ancestorid . '">' 
+            . $ancestor->title . "</a>\n";
+        array_unshift($links, $link);
+        $ancestorid = $ancestor->parent;
+    }
+    $title = '<div><a href="view.php?view=' . $viewid . '">' . $view->get('title') . "</a></div>\n";
+    $title .= implode(' | ', $links);
+    $title .= "<h3>$artefact->title</h3>";
+    $jsartefact = $artefactid;
+}
+else {
+    $title = "<h3>" . $view->get('title') . "</h3>\n";
+    $jsartefact = 'undefined';
+    $content = $view->render();
 }
 
 $getstring = quotestrings(array('message', 'makepublic', 'placefeedback',
                                 'cancel', 'complaint', 'notifysiteadministrator',
-                                'addtowatchlist', 'nopublicfeedback',
+                                'nopublicfeedback',
                                 'reportobjectionablematerial', 'print'));
 
-if ($artefactid) {
-    $javascript = 'var artefact = ' . $artefactid . ";\n";
-    $artefact = get_record('artefact', 'id', $artefactid);
-    $title = '<div><a href="view.php?view=' . $viewid . '">' . $view->get('title') . "</a></div>\n";
-    if ($ancestors) {
-        $alist = explode(',',$ancestors);
-        $links = array();
-        for ($i = 0; $i < count($alist); $i++) {
-            $atitle = get_field('artefact', 'title', 'id', $alist[$i]);
-            $links[] = '<a href="view.php?view=' . $viewid . '&amp;artefact=' . $alist[$i] 
-                . ($i ? '&amp;artefactlist=' . implode(',',array_slice($alist,0,$i)) : '')
-                . '">' . $atitle . "</a>";
-        }
-        $title .= '<div>' . implode(' | ', $links) . "</div>\n";
-    }
-    $title .= "<h3>$artefact->title</h3>";
-}
-else {
-    $javascript = "var artefact = undefined;\n";
-    $title = "<h3>" . $view->get('title') . "</h3>\n";
-    $content = $view->render();
-}
+$thing = $artefactid ? 'artefact' : 'view';
+$getstring['addtowatchlist'] = "'" . get_string('addtowatchlist', 'mahara', get_string($thing)) . "'";
+$getstring['addtowatchlistwithchildren'] = "'" . get_string('addtowatchlistwithchildren', 'mahara', get_string($thing)) . "'";
 
-$javascript .= <<<JAVASCRIPT
+$javascript = <<<EOF
 
 var view = {$viewid};
+var artefact = {$jsartefact};
 
 function feedbackform() {
     if ($('menuform')) {
@@ -84,9 +100,7 @@ function feedbackform() {
         }
         sendjsonrequest('addfeedback.json.php', data, function () { 
                 removeElement('menuform');
-                if (form.public.checked) {
-                    feedbacklist.doupdate();
-                }
+                feedbacklist.doupdate();
             });
         return false;
     }
@@ -134,9 +148,8 @@ function objectionform() {
 }
 
 function view_menu() {
-    var addwatchlist = A({'href':''}, {$getstring['addtowatchlist']});
-    addwatchlist.onclick = function () { 
-        var data = {'view':view};
+    addtowatchlist = function (recurse) { 
+        var data = {'view':view,'recurse':recurse};
         if (artefact) {
             data.artefact = artefact;
         }
@@ -149,7 +162,11 @@ function view_menu() {
                      A({'href':'', 'onclick':'return objectionform();'},
                        {$getstring['reportobjectionablematerial']}), ' | ',
                      A({'href':'', 'onclick':'window.print();'}, {$getstring['print']}), ' | ',
-                      addwatchlist);
+                     A({'href':'', 'onclick':'return addtowatchlist(false);'},
+                       {$getstring['addtowatchlist']}), ' | ',
+                     A({'href':'', 'onclick':'return addtowatchlist(true);'},
+                       {$getstring['addtowatchlistwithchildren']}));
+
 }
 
 addLoadEvent(view_menu);
@@ -158,7 +175,16 @@ addLoadEvent(view_menu);
 var feedbacklist = new TableRenderer(
     'feedbacktable',
     'getfeedback.json.php',
-    ['message', 'name', 'date']
+    ['message',
+     'name',
+     'date', 
+     function (r) {
+         if (r.public == 1) {
+             return;
+         }
+         return TD(null, '(' + get_string('private') + ')');
+     },
+    ]
 );
 
 feedbacklist.limit = 10;
@@ -169,13 +195,10 @@ feedbacklist.emptycontent = {$getstring['nopublicfeedback']};
 feedbacklist.updateOnLoad();
 
 
-JAVASCRIPT;
+EOF;
 
 $smarty = smarty(array('tablerenderer'));
-//$smarty->clear_assign('MAINNAV');
-
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
-//$smarty->assign('ARTEFACT', '');
 $smarty->assign('TITLE', $title);
 if (isset($content)) {
     $smarty->assign('VIEWCONTENT', $content);

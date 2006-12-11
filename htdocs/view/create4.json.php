@@ -48,11 +48,18 @@ switch ($type) {
         $userdata  = get_user_results($query, $limit, $offset);
         $groupdata = get_group_results($query, $limit, $offset);
         $resultdata = array();
+        $i = 0;
         foreach ($userdata['data'] as $result) {
+            $i++;
             $resultdata[] = $result;
         }
-        foreach ($groupdata['data'] as $result) {
-            $resultdata[] = $result;
+        if ($groupdata['data']) {
+            foreach ($groupdata['data'] as $result) {
+                if ($i++ >= $limit) {
+                    break;
+                }
+                $resultdata[] = $result;
+            }
         }
         $data = array(
             'count' => $userdata['count'] + $groupdata['count'],
@@ -88,11 +95,13 @@ function get_user_results($query, $limit, $offset) {
 
 function get_group_results($query, $limit, $offset) {
     $data = search_group($query, $limit, $offset);
-    foreach ($data['data'] as &$result) {
-        unset($result->owner);
-        unset($result->description);
-        unset($result->ctime);
-        unset($result->mtime);
+    if ($data['data']) {
+        foreach ($data['data'] as &$result) {
+            unset($result->owner);
+            unset($result->description);
+            unset($result->ctime);
+            unset($result->mtime);
+        }
     }
 
     return $data;

@@ -43,15 +43,17 @@ $offset = param_integer('offset', 0);
 
 $data = search_user($query, $limit, $offset);
 
-foreach ($data['data'] as &$result) {
-    $result->name = display_name($result);
+if ($data['data']) {
+    foreach ($data['data'] as &$result) {
+        $result->name = display_name($result);
 
-    unset($result->email);
-    unset($result->institution);
-    unset($result->username);
-    unset($result->firstname);
-    unset($result->lastname);
-    unset($result->preferredname);
+        unset($result->email);
+        unset($result->institution);
+        unset($result->username);
+        unset($result->firstname);
+        unset($result->lastname);
+        unset($result->preferredname);
+    }
 }
 
 json_headers();

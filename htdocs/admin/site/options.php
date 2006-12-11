@@ -40,6 +40,7 @@ $yesno = array(true  => get_string('yes'),
 $siteoptionform = pieform(array(
     'name'     => 'siteoptions',
     'ajaxpost' => true,
+    'renderer' => 'table',
     'elements' => array(
         'sitename' => array(
             'type'         => 'text',

@@ -32,7 +32,7 @@ require(get_config('docroot') . 'auth/user.php');
 /**
  * Unknown user exception
  */
-class AuthUnknownUserException extends Exception {}
+class AuthUnknownUserException extends UserException {}
 
 /**
  * Base authentication class. Provides a common interface with which
@@ -147,13 +147,13 @@ function auth_setup () {
                 // The user's admin rights have been taken away
                 log_debug("users admin rights have been revoked!");
                 $USER->set('admin', 0);
-                $SESSION->add_err_msg(get_string('accessforbiddentoadminsection'));
+                $SESSION->add_error_msg(get_string('accessforbiddentoadminsection'));
                 redirect(get_config('wwwroot'));
             }
             elseif (!$USER->get('admin')) {
                 // The user never was an admin
                 log_debug("denying user access to administration");
-                $SESSION->add_err_msg(get_string('accessforbiddentoadminsection'));
+                $SESSION->add_error_msg(get_string('accessforbiddentoadminsection'));
                 redirect(get_config('wwwroot'));
             }
         }
@@ -565,7 +565,7 @@ function login_submit($values) {
             // Only admins in the admin section!
             if (defined('ADMIN') && !$userdata->admin) {
                 log_debug('user not allowed in admin section');
-                $SESSION->add_err_msg(get_string('accessforbiddentoadminsection'));
+                $SESSION->add_error_msg(get_string('accessforbiddentoadminsection'));
                 redirect(get_config('wwwroot'));
             }
 
@@ -590,11 +590,11 @@ function login_submit($values) {
         }
         else {
             // Login attempt failed
-            $SESSION->add_err_msg(get_string('loginfailed'));
+            $SESSION->add_error_msg(get_string('loginfailed'));
         }
     }
     catch (AuthUnknownUserException $e) {
-        $SESSION->add_err_msg(get_string('loginfailed'));
+        $SESSION->add_error_msg(get_string('loginfailed'));
     }
 }
 

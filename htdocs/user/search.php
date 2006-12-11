@@ -28,16 +28,15 @@ define('INTERNAL', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 
-/* If there is no query posted, the 'results' section of the page will
-   stay invisible until a query is submitted. */
+// If there is no query posted, the 'results' section of the page will
+// stay invisible until a query is submitted.
 
 $query = @param_variable('query','');
 
 $searchform = pieform(array(
     'name'                => 'search',
     'method'              => 'post',
-    'ajaxpost'            => true,
-    'ajaxsuccessfunction' => 'newsearch',
+    'validate'            => false,
     'action'              => '',
     'elements'            => array(
         'query' => array(
@@ -54,14 +53,20 @@ $searchform = pieform(array(
     )
 ));
 
+// Empty functions for handling the search form submissions. One is for the
+// form on this page and the other is for the overall search form. They're
+// not actually used, instead the onsubmit event of the form is captured to
+// get the results via the tablerenderer.
 function search_submit($values) {
-    json_reply(false,'');
+}
+
+function searchform_submit($values) {
 }
 
 $noresults = get_string('noresultsfound');
 $wwwroot = get_config('wwwroot');
 
-$javascript = <<<JAVASCRIPT
+$javascript = <<<EOF
 var results = new TableRenderer(
     'searchresults',
     '{$wwwroot}json/usersearch.php',
@@ -69,25 +74,27 @@ var results = new TableRenderer(
         function(r) { return TD(null,A({'href':'view.php?id=' + r.id},r.name)); },
     ]
 );
-
-function newsearch() {
-    showElement($('results'));
-    results.query = $('query').value;
-    results.offset = 0;
-    results.doupdate();
-}
-
 results.statevars.push('query');
 results.emptycontent = '{$noresults}';
 
-JAVASCRIPT;
+addLoadEvent(function() {
+    connect($('search'), 'onsubmit', function (e) {
+        showElement($('results'));
+        results.query = $('search_query').value;
+        results.offset = 0;
+        results.doupdate();
+        e.stop();
+    });
 
 
-if (!empty($query)) {
-    $equery = json_encode($query);
-    $javascript .= 'results.query = ' . $equery . ";\n";
-    $javascript .= "results.updateOnLoad();\n";
+EOF;
+
+if (isset($_REQUEST['query'])) {
+    $javascript .= '    results.query = ' . json_encode($query) . ";\n";
+    $javascript .= "    showElement($('results'));\n";
+    $javascript .= "    results.updateOnLoad();\n";
 }
+$javascript .= "});\n";
 
 $smarty = smarty(array('tablerenderer'));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);

@@ -35,7 +35,7 @@ $id = param_integer('id',null);
 
 $group_data = get_record('usr_group', 'id', $id, 'owner', $USER->get('id'));
 if (!$group_data) {
-    $SESSION->add_err_msg(get_string('canteditdontown'));
+    $SESSION->add_error_msg(get_string('canteditdontown'));
     redirect('./');
 }
 
@@ -89,7 +89,7 @@ function editgroup_validate(Pieform $form, $values) {
     $id = get_field('usr_group', 'id', 'id', $values['id'], 'owner', $USER->get('id'));
 
     if (!$id) {
-        $SESSION->add_err_msg(get_string('canteditdontown'));
+        $SESSION->add_error_msg(get_string('canteditdontown'));
         redirect('./');
     }
 }

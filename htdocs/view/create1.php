@@ -25,8 +25,11 @@
  */
 
 define('INTERNAL', 1);
+define('MENUITEM', 'myviews');
+// define('SUBMENUITEM', 'mygroups');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
+require_once('template.php');
 
 $createid = param_integer('createid', null);
 
@@ -39,10 +42,30 @@ if ($createid === null) {
     $SESSION->set('createid', $createid + 1);
 }
 
-define('MENUITEM', 'myviews');
-// define('SUBMENUITEM', 'mygroups');
 
 $data = $SESSION->get('create_' . $createid);
+
+$tmpuser = new StdClass;
+$tmpuser->firstname = $USER->get('firstname');
+$tmpuser->lastname  = $USER->get('lastname');
+$tmpuser->preferredname = $USER->get('preferredname');
+
+$formatstring = '%s (%s)';
+$ownerformatoptions = array(
+    FORMAT_NAME_FIRSTNAME => sprintf($formatstring, get_string('firstname'), $USER->get('firstname')),
+    FORMAT_NAME_LASTNAME => sprintf($formatstring, get_string('lastname'), $USER->get('lastname')),
+    FORMAT_NAME_FIRSTNAMELASTNAME => sprintf($formatstring, get_string('fullname'), full_name())
+);
+
+$preferredname = $USER->get('preferredname');
+if ($preferredname !== '') {
+    $ownerformatoptions[FORMAT_NAME_PREFERREDNAME] = sprintf($formatstring, get_string('preferredname'), $preferredname);
+}
+$studentid = (string)get_field('artefact', 'title', 'owner', $USER->get('id'), 'artefacttype', 'studentid');
+if ($studentid !== '') {
+    $ownerformatoptions[FORMAT_NAME_STUDENTID] = sprintf($formatstring, get_string('studentid'), $studentid);
+}
+$ownerformatoptions[FORMAT_NAME_DISPLAYNAME] = sprintf($formatstring, get_string('displayname'), display_name($tmpuser));
 
 $createview1 = pieform(array(
     'name'     => 'createview1',
@@ -59,16 +82,22 @@ $createview1 = pieform(array(
             'rules'        => array( 'required' => true ),
         ),
         'startdate'        => array(
-            'type'         => 'date',
+            'type'         => 'calendar',
             'title'        => get_string('startdate'),
             'defaultvalue' => isset($data['startdate']) ? $data['startdate'] : null,
-            'optional'     => true,
+            'caloptions'   => array(
+                'dateStatusFunc' => 'startDateDisallowed',
+                'onSelect'       => 'startSelected'
+            )
         ),
         'stopdate'  => array(
-            'type'         => 'date',
+            'type'         => 'calendar',
             'title'        => get_string('stopdate'),
             'defaultvalue' => isset($data['stopdate']) ? $data['stopdate'] : null,
-            'optional'     => true,
+            'caloptions'   => array(
+                'dateStatusFunc' => 'stopDateDisallowed',
+                'onSelect'       => 'stopSelected'
+            )
         ),
         'description' => array(
             'type'         => 'wysiwyg',
@@ -76,6 +105,14 @@ $createview1 = pieform(array(
             'rows'         => 10,
             'cols'         => 80,
             'defaultvalue' => isset($data['description']) ? $data['description'] : null,
+        ),
+        'ownerformat' => array(
+            'type'         => 'select',
+            'title'        => get_string('ownerformat'),
+            'description'  => get_string('ownerformatdescription'),
+            'options'      => $ownerformatoptions,
+            'defaultvalue' => isset($data['ownerformat']) ? $data['ownerformat'] : FORMAT_NAME_DISPLAYNAME,
+            'rules'        => array('required' => true)
         ),
         'submit'   => array(
             'type'  => 'submitcancel',
@@ -106,6 +143,7 @@ function createview1_submit($values) {
     $data['description'] = $values['description'];
     $data['startdate']   = $values['startdate'];
     $data['stopdate']    = $values['stopdate'];
+    $data['ownerformat'] = $values['ownerformat'];
 
     $SESSION->set('create_' . $values['createid'], $data);
 
@@ -114,6 +152,60 @@ function createview1_submit($values) {
 
 $smarty = smarty();
 $smarty->assign('createview1', $createview1);
+$smarty->assign('INLINEJAVASCRIPT', <<<EOF
+function startDateDisallowed(date) {
+    var stopDate = $('createview1_stopdate').value;
+    if (stopDate != '') {
+        stopDate = stopDate.replace(/\//g, '-');
+        stopDate = isoDate(stopDate);
+        if (!stopDate) {
+            stopDate = Date();
+        }
+        if (stopDate.getTime() < date.getTime()) {
+            return true;
+        }
+    }
+    
+    return false;
+}
+function stopDateDisallowed(date) {
+    var startDate = $('createview1_startdate').value;
+    if (startDate != '') {
+        startDate = startDate.replace(/\//g, '-');
+        startDate = isoDate(startDate);
+        if (!startDate) {
+            startDate = Date();
+        }
+        if (startDate.getTime() > date.getTime()) {
+            return true;
+        }
+    }
+    
+    return false;
+}
+function startSelected(calendar, date) {
+    if (calendar.dateClicked) {
+        var stopDate = $('createview1_stopdate').value;
+        if (stopDate == '' || stopDateDisallowed(isoDate(stopDate))) {
+            $('createview1_stopdate').value = date;
+        }
+        $('createview1_startdate').value = date;
+        calendar.callCloseHandler();
+    }
+}
+function stopSelected(calendar, date) {
+    if (calendar.dateClicked) {
+        var startDate = $('createview1_startdate').value.replace(/\//g, '-');
+        if (startDate == '' || startDateDisallowed(isoDate(startDate))) {
+            $('createview1_startdate').value = date;
+        }
+        $('createview1_stopdate').value = date;
+        calendar.callCloseHandler();
+    }
+}
+
+EOF
+);
 $smarty->display('view/create1.tpl');
 
 ?>

@@ -87,13 +87,6 @@ function editsitepage_submit($values) {
     json_reply(false, get_string('pagesaved','admin'));
 }
 
-if (use_html_editor()) {
-    $js = array('tinymce');
-}
-else {
-    $js = array();
-}
-
 $ijs = <<< EOJS
 
 // global stuff, set in onLoad().
@@ -119,7 +112,7 @@ function requestPageText(removeMessage) {
     editsitepage_remove_error('pagetext');
     logDebug(get_string('loadingpagecontent', 'admin'));
     var d = loadJSONDoc('editchangepage.json.php',{'pagename':$('editsitepage_pagename').value});
-    d.addCallback(function(data) {
+    d.addCallbacks(function(data) {
         if (!data.error) {
             logDebug(get_string('sitepageloaded', 'admin'));
             setEditorContent(data.content);
@@ -130,6 +123,8 @@ function requestPageText(removeMessage) {
             displayMessage(get_string('loadsitepagefailed', 'admin'));
         }
         processingStop();
+    }, function(err) {
+        log('todo (error occured!)');
     });
 }
 
@@ -143,8 +138,26 @@ function contentSaved () {
 function onLoad() {
     if (typeof(tinyMCE) != 'undefined') {
         setEditorContent = function (c) {
-            tinyMCE.setContent(c);
+            //var i = tinyMCE.selectedInstance;
+            tinyMCE.removeMCEControl('mce_editor_0');
+            //tinyMCE.execCommand('mceRemoveControl', true, 'editsitepage_pagetext');
+            tinyMCE.idCounter = 0;
+            $('editsitepage_pagetext').value = c;
+            tinyMCE.execCommand('mceAddControl', true, 'editsitepage_pagetext');
             tinyMCE.execCommand('mceFocus',false,'mce_editor_0');
+            //tinyMCE.updateContent('editsitepage_pagetext');
+            //tinyMCE.setContent(c);
+            //tinyMCE.execCommand('mceStartTyping');
+            //tinyMCE.execCommand('mceCleanup');
+            //window.setTimeout('tinyMCE.triggerNodeChange();', 1);
+            //tinyMCE.execCommand('mceReplaceContent',false,c);
+            //i.contentWindow.focus();
+            //tinyMCE.execCommand('mceFocus',false,'mce_editor_0');
+            //tinyMCE.execInstanceCommand('mce_editor_0', 'mceResetDesignMode', false);
+            //tinyMCE.triggerNodeChange();
+            //tinyMCE.repaint();
+            //tinyMCE.setContent(c);
+            //tinyMCE.execCommand('mceFocus',false,'mce_editor_0');
         }
         getEditorContent = tinyMCE.getContent;
     }
@@ -155,12 +168,20 @@ function onLoad() {
     originalcontent = getEditorContent();
     requestPageText();
     connect('editsitepage_pagename', 'onchange', requestPageText);
+
+
+    connect('editsitepage_pagename', 'onkeydown', function(e) {
+        if (e.key().code == 9 && !e.modifier().shift) {
+            tinyMCE.execCommand('mceFocus',false,'mce_editor_0');
+            e.stop();
+        }
+    });
 }
 
 addLoadEvent(onLoad);
 EOJS;
 
-$smarty = smarty($js);
+$smarty = smarty();
 $smarty->assign('pageeditform', $form);
 $smarty->assign('INLINEJAVASCRIPT', $ijs);
 $smarty->display('admin/site/pages.tpl');

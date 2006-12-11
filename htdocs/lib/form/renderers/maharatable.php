@@ -53,16 +53,17 @@ function pieform_renderer_maharatable(Pieform $form, $builtelement, $rawelement)
         return $result;
     }
     
-    $result = "\t<tr";
-    $result .= ' id="' . $formname . '_' . $rawelement['name'] . '_container"';
-    // Set the class of the enclosing <tr> to match that of the element
-    if ($rawelement['class']) {
-        $result .= ' class="' . $rawelement['class'] . '"';
-    }
-    $result .= ">\n\t\t";
-
-    $result .= '<th>';
+    $result = '';
     if (isset($rawelement['title']) && $rawelement['title'] !== '') {
+        $result .= "\t<tr";
+        $result .= ' id="' . $formname . '_' . $rawelement['name'] . '_header"';
+        // Set the class of the enclosing <tr> to match that of the element
+        if ($rawelement['class']) {
+            $result .= ' class="' . $rawelement['class'] . '"';
+        }
+        $result .= ">\n\t\t";
+
+        $result .= '<th>';
         if (!empty($rawelement['nolabel'])) {
             // Don't bother with a label for the element
             $result .= Pieform::hsc($rawelement['title']);
@@ -70,8 +71,9 @@ function pieform_renderer_maharatable(Pieform $form, $builtelement, $rawelement)
         else {
             $result .= '<label for="' . $formname . '_' . $rawelement['id'] . '">' . Pieform::hsc($rawelement['title']) . '</label>';
         }
+        $result .= "</th>\n\t</tr>\n";
     }
-    $result .= "</th>\n\t</tr>\n\t<tr>\n\t\t<td>";
+    $result .= "\t<tr id=\"{$formname}_{$rawelement['name']}_container\">\n\t\t<td>";
     $result .= $builtelement;
 
     // Contextual help
@@ -108,40 +110,40 @@ function pieform_renderer_maharatable_footer() {
     return "</tbody></table>\n";
 }
 
+
+// @todo table renderer - probably doesn't need the remove_error function for the same reason that
+// this one doesn't (all errors are removed on form submit). Also should set classes on elements.
 function pieform_renderer_maharatable_messages_js($id, $submitid) {
     $result = <<<EOF
 // Given a message and form element name, should set an error on the element
 function {$id}_set_error(message, element) {
-    {$id}_remove_error(element);
-    element = {$id} + element + '_container';
-    // @todo set error class on input elements...
-    $(element).parentNode.insertBefore(TR({'id': '{$id}_error_' + element}, TD({'colspan': 2, 'class': 'errmsg'}, message)), $(element).nextSibling);
-}
-// Given a form element name, should remove an error associated with it
-function {$id}_remove_error(element) {
-    element += '_container';
-    var elem = $('{$id}_error_' + element);
-    if (elem) {
-        removeElement(elem);
-    }
+    element = '{$id}_' + element + '_container';
+    var container = getFirstElementByTagAndClassName('TD', null, $(element));
+    addElementClass(container, 'error');
+    addElementClass(container.firstChild, 'error');
+    insertSiblingNodesAfter($(element), TR({'id': '{$id}_error_' + element}, TD({'class': 'errmsg'}, message)));
 }
 function {$id}_remove_all_errors() {
     forEach(getElementsByTagAndClassName('TD', 'errmsg', $('$id')), function(item) {
         removeElement(item.parentNode);
     });
+    forEach(getElementsByTagAndClassName('TD', 'error', $('$id')), function(item) {
+        removeElementClass(item, 'error');
+        removeElementClass(item.firstChild, 'error');
+    });
 }
 function {$id}_message(message, type) {
-    var elem = $('{$id}_message');
-    var msg  = TR({'id': '{$id}_message'}, TD({'colspan': 2, 'class': type}, message));
+    var elem = $('{$id}_pieform_message');
+    var msg  = TR({'id': '{$id}_pieform_message'}, TD({'class': type}, message));
     if (elem) {
         swapDOM(elem, msg);
     }
     else {
-        appendChildNodes($('{$id}_{$submitid}_container').parentNode, msg);
+        insertSiblingNodesAfter($('{$id}_{$submitid}_container'), msg);
     }
 }
 function {$id}_remove_message() {
-    var elem = $('{$id}_message');
+    var elem = $('{$id}_pieform_message');
     if (elem) {
         removeElement(elem);
     }

@@ -31,35 +31,14 @@ require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
 safe_require('artefact', 'blog');
 
 $id = param_integer('id');
-$enc_id = json_encode($id);
+$blog = new ArtefactTypeBlog($id);
 
 // This javascript is used to generate a list of blog posts.
-$js = <<<EOJAVASCRIPT
-
-var postlist = new TableRenderer(
-    'postlist',
-    'index.json.php',
-    [undefined]
-);
-
-postlist.rowfunction = function(d, n, gd) {
-    return [
-      TR(null, TD(null, d.title)),
-      TR(null, TD(null, d.description)),
-      TR(null, TD(null, d.ctime))
-    ];
-};
-postlist.statevars.push('id');
-postlist.id = {$enc_id};
-
-postlist.updateOnLoad();
-
-EOJAVASCRIPT;
-
-$blog = new ArtefactTypeBlog($id);
+$js = require('indexjs.php'); 
 
 $smarty = smarty(array('tablerenderer'));
 $smarty->assign_by_ref('blog', $blog);
+$smarty->assign_by_ref('editform', $form);
 $smarty->assign_by_ref('INLINEJAVASCRIPT', $js);
 $smarty->display('artefact:blog:view.tpl');
 

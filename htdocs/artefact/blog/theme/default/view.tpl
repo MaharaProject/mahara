@@ -14,11 +14,15 @@
 	<div class="content">
 		<div class="box-cnrs"><span class="cnr-tl"><span class="cnr-tr"><span class="cnr-bl"><span class="cnr-br">
 			<div class="maincontent">
-			<h2>{$blog->get('title')}</h2>
+			<h2>{str section="artefact.blog" tag="viewblog"} - {$blog->get('title')|escape}</h2>
 			
 			<div id="myblogs">
+                                <div>
+                                    <a href="{$WWWROOT}artefact/blog/settings/?id={$blog->get('id')}">{str section="artefact.blog" tag="settings"}</a>
+                                </div>
+
 				<div class="newpost">
-					<a href="{$WWWROOT}/artefact/blog/newpost/?id={$blog->get('id')}">{str section="artefact.blog" tag="newpost"}</a>
+					<a href="{$WWWROOT}/artefact/blog/newpost/?id={$blog->get('id')}">{str section="artefact.blog" tag="addpost"}</a>
 				</div>
 		
 			<table id="postlist">
@@ -29,7 +33,7 @@
 			</table>
 				
 				<div class="newpost">
-					<a href="{$WWWROOT}/artefact/blog/newpost/?id={$blog->get('id')}">{str section="artefact.blog" tag="newpost"}</a>
+					<a href="{$WWWROOT}/artefact/blog/newpost/?id={$blog->get('id')}">{str section="artefact.blog" tag="addpost"}</a>
 				</div>
 				
 			</div>

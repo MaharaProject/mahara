@@ -42,7 +42,7 @@ function pieform_render_date($element, Pieform $form) {
 
     // Year
     $value = pieform_render_select_get_value('year', $element['minyear'], $element['maxyear'],  $element, $form);
-    $year = '<select name="' . $name . '_year" id="' . $name . '_year"' . (isset($element['optional']) && !isset($element['defaultvalue']) ? 'disabled ' : '') . ">\n";
+    $year = '<select name="' . $name . '_year" id="' . $name . '_year"' . (isset($element['optional']) && !isset($element['defaultvalue']) ? ' disabled="disabled"' : '') . ">\n";
     for ($i = $element['minyear']; $i <= $element['maxyear']; $i++) {
         $year .= "\t<option value=\"$i\"" . (($value == $i) ? ' selected="selected"' : '') . ">$i</option>\n";
     }
@@ -50,7 +50,7 @@ function pieform_render_date($element, Pieform $form) {
 
     // Month
     $value = pieform_render_select_get_value('month', 1, 12, $element, $form);
-    $month = '<select name="' . $name . '_month" id="' . $name . '_month"' . (isset($element['optional']) && !isset($element['defaultvalue']) ? 'disabled ' : '') . ">\n";
+    $month = '<select name="' . $name . '_month" id="' . $name . '_month"' . (isset($element['optional']) && !isset($element['defaultvalue']) ? ' disabled="disabled"' : '') . ">\n";
     for ($i = 1; $i <= 12; $i++) {
         $month .= "\t<option value=\"$i\"" . (($value == $i) ? ' selected="selected"' : '') . '>' . date('M', strtotime("2000-$i-01")) . "</option>\n";
     }
@@ -58,7 +58,7 @@ function pieform_render_date($element, Pieform $form) {
 
     // Day
     $value = pieform_render_select_get_value('day', 1, 31, $element, $form);
-    $day = '<select name="' . $name . '_day" id="' . $name . '_day"' . (isset($element['optional']) && !isset($element['defaultvalue']) ? 'disabled ' : '') . ">\n";
+    $day = '<select name="' . $name . '_day" id="' . $name . '_day"' . (isset($element['optional']) && !isset($element['defaultvalue']) ? ' disabled="disabled"' : '') . ">\n";
     for ($i = 1; $i <= 31; $i++) {
         $day .= "\t<option value=\"$i\"" . (($value == $i) ? ' selected="selected"' : '') . ">$i</option>\n";
     }
@@ -84,7 +84,9 @@ function pieform_render_date($element, Pieform $form) {
             }
         </script>
 EOF;
-        
+        // @todo this needs cleaning up, namely:
+        //   - get_string is a mahara-ism
+        //   - 'optional' => true should be 'required' => false shouldn't it?
         $optional .= ' ' . get_string('or') . ' <input type="checkbox" ' . ( isset($element['defaultvalue']) ? '' : 'checked ') . 'name="' . $name . '_optional" id="' . $name . '_optional" onchange="' . $name . '_toggle(this)">';
         $optional .= ' <label for="' . $name . '_optional">' . get_string('notspecified');
 

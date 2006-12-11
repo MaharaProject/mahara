@@ -88,7 +88,7 @@ if (isset($parsed_template['css'])) {
     $headers[] = '<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'view/template.css.php?template=' . $data['template'] . '">';
 }
 
-$smarty = smarty(array('collapsabletree'), $headers);
+$smarty = smarty(array('collapsabletree', 'move'), $headers);
 $smarty->assign('rootinfo', $rootinfo);
 $smarty->assign('plusicon', theme_get_image_path('plus.png'));
 $smarty->assign('minusicon', theme_get_image_path('minus.png'));

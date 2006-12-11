@@ -178,11 +178,18 @@ function template_parse_block($blockstr) {
             throw new TemplateParserException("Default artefact type " . $data['defaultartefacttype']
                                                . " doesn't make sense given artefact type " . $data['artefacttype']);
         }
-        else if (isset($data['plugintype']) 
-                 && !in_array($data['defaultartefacttype'], 
-                    call_static_method(generate_class_name($data['plugintype']), 'get_artefact_types'))) {
-            throw new TemplateParserException("Default artefact type " . $data['defaultartefacttype']
-                                               ." doesn't make sense given plugin type " . $data['plugintype']);
+        else if (
+            isset($data['plugintype']) 
+            && !in_array(
+                $data['defaultartefacttype'], 
+                call_static_method(generate_class_name('artefact', $data['plugintype']), 'get_artefact_types')
+            )
+        ) {
+            throw new TemplateParserException(
+                "Default artefact type " . $data['defaultartefacttype'] ." doesn't make sense given plugin type " . $data['plugintype']
+                . '. Default artefact type should be one of: '
+                . join(', ', call_static_method(generate_class_name('artefact', $data['plugintype']), 'get_artefact_types'))
+            );
         }
         if (!$plugin = get_field('artefact_installed_type', 'plugin', 'name', $data['defaultartefacttype'])) {
             throw new TemplateParserException("Default artefact type  " . $data['defaultartefacttype'] 
@@ -307,7 +314,6 @@ function template_render($template, $mode, $data=array()) {
                 'class' => array('block'),
             );
 
-            // @todo I don't think we have to have both...
             if (isset($t['width']) && isset($t['height'])) {
                 $attr['style'][] = 'width: ' . $t['width'] . 'px;height: ' . $t['height'] . 'px;';
             }
@@ -342,14 +348,17 @@ function template_render($template, $mode, $data=array()) {
                 case 'artefact';
                     $classes = array('block');
                     
-                    // @todo, this shouldn't be hardcoded
-                    $droplist[$t['id']] = array('render_full');
+                    $droplist[$t['id']] = array(
+                        'artefacttype' => isset($t['artefacttype']) ? $t['artefacttype'] : null,
+                        'plugintype'   => isset($t['plugintype'])   ? $t['plugintype'] : null,
+                        'format'       => isset($t['format'])       ? $t['format'] : null,
+                    );
                     
-                    // @todo need to populate with data if it's available
                     if ( isset($data[$t['id']]) ) {
                         $artefact = artefact_instance_from_id($data[$t['id']]['id']);
-                        // @todo, custom rendering
+
                         $format = FORMAT_ARTEFACT_LISTSELF;
+
                         if (isset($data[$t['id']]['format'])) {
                             $format = $data[$t['id']]['format'];
                         }
@@ -431,30 +440,65 @@ function template_render($template, $mode, $data=array()) {
         }
     }
 
-    function blockdrop(element, target) {
-        replaceChildNodes(target, IMG({ src: {$spinner_url} }));
-        var d = loadJSONDoc('{$wwwroot}json/renderartefact.php', {'id': element.artefactid} );
-        d.addCallbacks(
-            function (response) {
-                target.innerHTML = response.data;
-                debugObject(target);
-                appendChildNodes(target,
-                    INPUT({'type': 'hidden', 'name': 'template[' + target.id + '][id]', 'value': element.artefactid })
-                );
-            },
-            function (error) {
-                alert('TODO: error');
-            }
-        );
+    function blockdrop(element, target, format) {
+        var srcData = element.moveSource.acceptData;
+        var dstData = target.moveTarget.acceptData;
+
+        if ( dstData.format ) {
+            format = dstData.format;
+        }
+
+        if ( srcData.rendersto.length == 1 ) {
+            format = srcData.rendersto[0];
+        }
+
+        if (format) {
+            replaceChildNodes(target, IMG({ src: {$spinner_url} }));
+            var d = loadJSONDoc('{$wwwroot}json/renderartefact.php', {'id': element.artefactid, 'format': format} );
+            d.addCallbacks(
+                function (response) {
+                    target.innerHTML = response.data;
+                    appendChildNodes(target,
+                        INPUT({'type': 'hidden', 'name': 'template[' + target.id + '][id]', 'value': element.artefactid }),
+                        INPUT({'type': 'hidden', 'name': 'template[' + target.id + '][format]', 'value': format })
+                    );
+                },
+                function (error) {
+                    alert('TODO: error');
+                }
+            );
+        }
+        else {
+            formatlist = [];
+            forEach (srcData.rendersto, function (fmt) {
+                var li = LI({'class': 'clickable'}, get_string('format.' + fmt))
+                connect(li, 'onclick', function() { blockdrop(element,target,fmt); });
+                formatlist.push(li);
+            });
+            // need to pick a format
+            replaceChildNodes(target, P(null,get_string('chooseformat')), UL(null, formatlist));
+        }
     }
 
     addLoadEvent(function () {
         for ( id in droplist ) {
-            new Droppable(id, {
-                accept: droplist[id],
+            new MoveTarget(id, {
                 ondrop: blockdrop,
-                hoverclass: 'block_targetted',
-                activeclass: 'block_potential'
+                hoverClass: 'block_targetted',
+                activeClass: 'block_potential',
+                acceptData: droplist[id],
+                acceptFunction: function (src, dst) {
+                    if (dst.plugintype && dst.plugintype != src.plugin) {
+                        return false;
+                    }
+                    if (dst.artefacttype && dst.artefacttype != src.type) {
+                        return false;
+                    }
+                    if (dst.format && !some(src.rendersto, function (rtype) { return dst.format == rtype; })) {
+                        return false;
+                    }
+                    return true;
+                }
             });
         }
     });

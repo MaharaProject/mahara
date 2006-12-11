@@ -24,6 +24,8 @@
  *
  */
 
+$GLOBALS['_PIEFORM_REGISTRY'] = array();
+
 /**
  * Builds, validates and processes a form.
  *
@@ -72,7 +74,6 @@ function pieform($data) {
     //  - Collapsible js for fieldsets
     //  - Grippie for textareas
     //  - javascript validation
-    //  - handle multiple submit buttons
     //  - handle multipage forms?
     //  - handle a tabbed interface type of form?
     //  
@@ -203,6 +204,13 @@ class Pieform {
     private $tabindex = 1;
 
     /**
+     * Directories to look for elements, renderers and rules
+     *
+     * @var array
+     */
+    private $configdirs = array();
+
+    /**
      * Whether to autofocus fields in this form, and if so, optionally which
      * field to focus.
      *
@@ -304,6 +312,8 @@ class Pieform {
      * @param array $data The form description hash
      */
     public function __construct($data) {
+        $GLOBALS['_PIEFORM_REGISTRY'][] = $this;
+
         if (!isset($data['name']) || !preg_match('/^[a-z_][a-z0-9_]*$/', $data['name'])) {
             throw new PieformException('Forms must have a name, and that name must be valid (validity test: could you give a PHP function the name?)');
         }
@@ -332,11 +342,12 @@ class Pieform {
             'postajaxsubmitcallback' => '',
             'ajaxsuccessfunction'    => '',
             'ajaxfailurefunction'    => '',
-            'autofocus' => false,
-            'language'  => 'en.utf8',
-            'validate'  => true,
-            'submit'    => true,
-            'elements'  => array(),
+            'configdirs' => array(),
+            'autofocus'  => false,
+            'language'   => 'en.utf8',
+            'validate'   => true,
+            'submit'     => true,
+            'elements'   => array(),
             'submitfunction' => '',
             'validatefunction' => '',
         );
@@ -348,12 +359,15 @@ class Pieform {
         if ($data['method'] != 'post') {
             $data['method'] = 'get';
         }
-        $this->method    = $data['method'];
-        $this->action    = $data['action'];
-        $this->validate  = $data['validate'];
-        $this->submit    = $data['submit'];
-        $this->autofocus = $data['autofocus'];
-        $this->language  = $data['language'];
+        $this->method     = $data['method'];
+        $this->action     = $data['action'];
+        $this->validate   = $data['validate'];
+        $this->submit     = $data['submit'];
+        $this->configdirs = array_map(
+            create_function('$a', 'return substr($a, -1) == "/" ? substr($a, 0, -1) : $a;'),
+            (array) $data['configdirs']);
+        $this->autofocus  = $data['autofocus'];
+        $this->language   = $data['language'];
         
         if ($data['submitfunction']) {
             $this->submitfunction = $data['submitfunction'];
@@ -479,8 +493,18 @@ class Pieform {
 
                     // Let each element set and override attributes if necessary
                     if ($subelement['type'] != 'markup') {
+                        // This function can be defined by the application using Pieforms,
+                        // and applies to all elements of this type
+                        $function = 'pieform_configure_' . $subelement['type'];
+                        if (function_exists($function)) {
+                            $subelement = $function($subelement);
+                        }
+
+                        // This function is defined by the plugin itself, to set fields on
+                        // the element that need to be set but should not be set by the
+                        // application
                         $function = 'pieform_render_' . $subelement['type'] . '_set_attributes';
-                        require_once('pieform/elements/' . $subelement['type'] . '.php');
+                        $this->include_plugin('element',  $subelement['type']);
                         if (function_exists($function)) {
                             $subelement = $function($subelement);
                         }
@@ -502,11 +526,13 @@ class Pieform {
 
             // Let each element set and override attributes if necessary
             if ($element['type'] != 'markup') {
+                $function = 'pieform_configure_' . $element['type'];
+                if (function_exists($function)) {
+                    $element = $function($element);
+                }
+
                 $function = 'pieform_render_' . $element['type'] . '_set_attributes';
-                // @todo here, all elements are loaded that will be used, so no
-                // need to include files for them later (like in pieform_render_element)
-                // Also, don't use require_once so nicer errors can be thrown
-                require_once('pieform/elements/' . $element['type'] . '.php');
+                $this->include_plugin('element',  $element['type']);
                 if (function_exists($function)) {
                     $element = $function($element);
                 }
@@ -556,7 +582,7 @@ class Pieform {
                 $submitted = false;
                 foreach ($this->get_elements() as $element) {
                     // @todo Rename 'ajaxmessages' to 'submitelement'
-                    if (!empty($element['ajaxmessages']) == true && isset($values[$element['name']])) {
+                    if (!empty($element['ajaxmessages']) == true && isset($global[$element['name']])) {
                         $function = "{$this->name}_submit_{$element['name']}";
                         if (function_exists($function)) {
                             $function($values);
@@ -683,7 +709,7 @@ class Pieform {
         $result .= ">\n";
 
         // @todo masks attempts in pieform_render_element, including the error handling there
-        @include_once('pieform/renderers/' . $this->renderer . '.php');
+        $this->include_plugin('renderer',  $this->renderer);
         
         // Form header
         $function = 'pieform_renderer_' . $this->renderer . '_header';
@@ -705,7 +731,7 @@ class Pieform {
         }
 
         // Hidden elements
-        require_once('pieform/elements/hidden.php');
+        $this->include_plugin('element', 'hidden');
         foreach ($this->get_elements() as $element) {
             if ($element['type'] == 'hidden') {
                 $result .= pieform_render_hidden($element, $this);
@@ -737,9 +763,6 @@ class Pieform {
      */
     public function get_value($element) {
         $function = 'pieform_get_value_' . $element['type'];
-        if (!function_exists($function)) {
-            @include_once('pieform/elements/' . $element['type'] . '.php');
-        }
         // @todo for consistency, reverse parameter order - always a Form object first
         if (function_exists($function)) {
             return $function($element, $this);
@@ -843,7 +866,7 @@ class Pieform {
                         // Get the rule
                         $function = 'pieform_rule_' . $rule;
                         if (!function_exists($function)) {
-                            @include_once('pieform/rules/' . $rule . '.php');
+                            $this->include_plugin('rule', $rule);
                             if (!function_exists($function)) {
                                 throw new PieformException('No such form rule "' . $rule . '"');
                             }
@@ -963,7 +986,7 @@ EOF;
 
         $js_messages_function = 'pieform_renderer_' . $this->renderer . '_messages_js';
         if (!function_exists($js_messages_function)) {
-            @include_once('pieform/renderers/' . $this->renderer . '.php');
+            $this->include_plugin('renderer', $this->renderer);
             if (!function_exists($js_messages_function)) {
                 throw new PieformException('No renderer message function "' . $js_messages_function . '"');
             }
@@ -1146,6 +1169,37 @@ EOF;
     }
 
     /**
+     * Includes a plugin file, checking any configured plugin directories.
+     *
+     * @param string $type The type of plugin to include: 'element', 'renderer' or 'rule'
+     * @param string $name The name of the plugin to include
+     * @throws PieformException If the given type or plugin could not be found
+     */
+    public function include_plugin($type, $name) {
+        if (!in_array($type, array('element', 'renderer', 'rule'))) {
+            throw new PieformException("The type \"$type\" is not allowed for an include plugin");
+        }
+
+        // Check the configured include paths if they are specified
+        foreach ($this->configdirs as $directory) {
+            $file = "$directory/{$type}s/$name.php";
+            if (is_readable($file)) {
+                include_once($file);
+                return;
+            }
+        }
+
+        // Check the default include path
+        $file = dirname(__FILE__) . "/pieform/{$type}s/{$name}.php";
+        if (is_readable($file)) {
+            include_once($file);
+            return;
+        }
+
+        throw new PieformException("Could not find $type \"$name\"");
+    }
+
+    /**
      * Return an internationalised string based on the passed input key
      *
      * Returns english by default.
@@ -1272,7 +1326,7 @@ function pieform_render_element($element, Pieform $form) {
     if ($renderer = $form->get_renderer()) {
         $rendererfunction = 'pieform_renderer_' . $renderer;
         if (!function_exists($rendererfunction)) {
-            include('pieform/renderers/' . $renderer . '.php');
+            $form->include_plugin('pieform/renderers/' . $renderer . '.php');
             if (!function_exists($rendererfunction)) {
                 throw new PieformException('No such form renderer: "' . $renderer . '"');
             }
@@ -1292,6 +1346,21 @@ function pieform_render_element($element, Pieform $form) {
     $element['class'] = preg_replace('/\s?autofocus/', '', $element['class']);
 
     return $rendererfunction($form, $builtelement, $element);
+}
+
+function pieform_get_headdata() {
+    $htmlelements = array();
+    foreach ($GLOBALS['_PIEFORM_REGISTRY'] as $form) {
+        foreach ($form->get_elements() as $element) {
+            $function = 'pieform_get_headdata_' . $element['type'];
+            if (function_exists($function)) {
+                $elems = $function($element);
+                $htmlelements = array_merge($htmlelements, $elems);
+            }
+        }
+    }
+
+    return array_unique($htmlelements);
 }
 
 ?>

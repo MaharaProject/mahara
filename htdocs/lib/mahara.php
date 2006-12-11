@@ -555,15 +555,6 @@ function check_dir_exists($dir, $create=true, $recursive=true) {
 }
 
 /**
- * Checks that a username is in valid form
- *
- * @todo need such a function for password too.
- */
-//function validate_username($username) {
-//    return preg_match('/^[a-zA-Z0-9_\.@]+$/', $username);
-//}
-
-/**
  * Function to require a plugin file. This is to avoid doing 
  * require and include directly with variables.
  *
@@ -691,7 +682,7 @@ function mixed_array_to_field_array($array, $field) {
 
 /** 
  * Adds stuff to the log
- * @todo write this functino
+ * @todo write this function
  *
  * @param string $plugintype plugin type or core
  * @param string $pluginname plugin name or core component (eg 'view')
@@ -814,25 +805,38 @@ function password_validate(Pieform $form, $values, $username, $institution) {
 }
 
 
+//
+// Pieform related functions
+//
+
 /**
  * Configures a default form
  */
 function pieform_configure() {
     global $USER;
     return array(
-        'method' => 'post',
-        'action' => '',
+        'method'    => 'post',
+        'action'    => '',
         'autofocus' => true,
-        'renderer' => 'maharatable',
-        'preajaxsubmitcallback' => 'processingStart',
+        'renderer'  => 'maharatable',
+        'preajaxsubmitcallback'  => 'processingStart',
         'postajaxsubmitcallback' => 'processingStop',
-        'elements' => array(
+        'configdirs' => get_config('libroot') . 'form/',
+        'elements'   => array(
             'sesskey' => array(
-                'type' => 'hidden',
+                'type'  => 'hidden',
                 'value' => $USER->get('sesskey')
             )
         )
     );
+}
+
+function pieform_configure_calendar($element) {
+    $element['jsroot'] = '/js/jscalendar/';
+    $element['themefile'] = get_config('themeurl') . 'style/calendar.css';
+    $element['imagefile'] = get_config('themeurl') . 'calendar.gif';
+    $element['language'] = 'en'; // @todo: language file names for the js calendar may need to be changed
+    return $element;
 }
 
 /**
@@ -1021,6 +1025,19 @@ function can_view_view($view_id, $user_id=null) {
 
     log_debug('No - nothing matched');
     return false;
+}
+
+function artefact_in_view($artefact, $view) {
+    $prefix = get_config('dbprefix');
+    $sql = 'SELECT a.id 
+            FROM mh_view_artefact a WHERE view = ? AND artefact = ?
+            UNION
+            SELECT c.parent 
+            FROM mh_view_artefact top JOIN mh_artefact_parent_cache c
+              ON c.parent = top.artefact 
+            WHERE top.view = ? AND c.artefact = ?';
+
+    return record_exists_sql($sql, array($view, $artefact, $view, $artefact));
 }
 
 function get_dir_contents($directory) {

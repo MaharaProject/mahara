@@ -43,7 +43,7 @@ var bloglist = new TableRenderer(
         function(r) {
             return TD(
               null,
-              A({'href':'{$wwwroot}/artefact/blog/view/?id=' + r.id}, r.title)
+              A({'href':'{$wwwroot}artefact/blog/view/?id=' + r.id}, r.title)
             );
         },
         'description'

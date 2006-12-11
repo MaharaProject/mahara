@@ -2,18 +2,15 @@
 <html>
     <head>
         <title>{$title|default:"Mahara"|escape}</title>
-        {strip}
-            {foreach from=$JAVASCRIPT item=script}
-                <script language="javascript" type="text/javascript" src="{$script}">
-                </script>
-            {/foreach}
-            {if isset($INLINEJAVASCRIPT)}
-               <script language="javascript" type="text/javascript">
-                   {$INLINEJAVASCRIPT}
-               </script>
-            {/if}   
-            {foreach from=$HEADERS item=header}{$header}{/foreach}
-        {/strip}
+{foreach from=$JAVASCRIPT item=script}        <script type="text/javascript" src="{$script}"></script>
+{/foreach}
+{foreach from=$HEADERS item=header}        {$header}
+{/foreach}
+{if isset($INLINEJAVASCRIPT)}
+        <script type="text/javascript">
+{$INLINEJAVASCRIPT}
+        </script>
+{/if}
         <link rel="stylesheet" type="text/css" href="{$THEMEURL}style/style.css">
         <link rel="stylesheet" type="text/css" href="{$THEMEURL}style/dev.css">
         <link rel="stylesheet" type="text/css" href="{$THEMEURL}style/print.css" media="print">
@@ -38,6 +35,7 @@
 {/if}
 			<div id="header">
 				<div class="cornertopright"><img src="{image_path imagelocation='images/header_corner_topright.gif'}" border="0" alt=""></div>		
+                {if !$nosearch}
 				<div class="searchbox">
 				<table cellpadding="0" cellspacing="0"><tr><td>
 				{$searchform}
@@ -47,6 +45,7 @@
 				</td></tr></table>
 				</div>
 				<div class="logo"><a href="{$WWWROOT}"><img src="{image_path imagelocation='images/logo.gif'}" border="0" alt=""></a></div>
+                {/if}
 				<h1 class="hiddenStructure"><a href="{$WWWROOT}">{$heading|default:"Mahara"|escape}</a></h1>
 			</div>
 		</div>

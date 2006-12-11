@@ -54,7 +54,7 @@ $form = pieform(array(
             )
         ),
         'description' => array(
-            'type' => 'textarea',
+            'type' => 'wysiwyg',
             'rows' => 5,
             'cols' => 80,
             'title' => get_string('postbody', 'artefact.blog'),
@@ -63,28 +63,63 @@ $form = pieform(array(
                 'required' => true
             )
         ),
-        'submit' => array(
+        'saveandpublish' => array(
             'type' => 'submit',
-            'value' => get_string('newpost', 'artefact.blog')
+            'description' => get_string('createandpublishdesc', 'artefact.blog'),
+            'value' => get_string('saveandpublish', 'artefact.blog')
+        ),
+        'saveasdraft' => array(
+            'type' => 'submit',
+            'description' => get_string('createasdraftdesc', 'artefact.blog'),
+            'value' => get_string('saveasdraft', 'artefact.blog')
+        ),
+        'cancel' => array(
+            'type' => 'cancel',
+            'value' => get_string('cancel', 'artefact.blog')
         )
     )
 ));
 
-$smarty =& smarty();
+$smarty = smarty();
 $smarty->assign_by_ref('newpostform', $form);
 $smarty->display('artefact:blog:newpost.tpl');
 exit;
 
 /**
- * This function gets called to create a new blog post.
+ * This function gets called to create a new blog post, and publish it
+ * simultaneously.
  *
  * @param array
  */
-function newpost_submit(array $values) {
+function newpost_submit_saveandpublish(array $values) {
     global $USER;
 
-    ArtefactTypeBlogPost::new_post($USER, $values);
-    redirect(get_config('wwwroot') . '/artefact/blog/view/?id=' . $values['id']);
+    $values['published'] = true;
+    $id = ArtefactTypeBlogPost::new_post($USER, $values);
+    redirect(get_config('wwwroot') . 'artefact/blog/view/?id=' . $values['id']);
+}
+
+/**
+ * This function gets called to create a new blog post and mark it as a draft.
+ *
+ * @param array
+ */
+function newpost_submit_saveasdraft(array $values) {
+    global $USER;
+
+    $values['published'] = false;
+    $id = ArtefactTypeBlogPost::new_post($USER, $values);
+    redirect(get_config('wwwroot') . 'artefact/blog/view/?id=' . $values['id']);
+}
+
+
+/** 
+ * This function get called to cancel the form submission. It returns to the
+ * blog list.
+ */
+function newpost_cancel_cancel() {
+    $id = param_integer('id');
+    redirect(get_config('wwwroot') . 'artefact/blog/view/?id=' . $id);
 }
 
 ?>
