@@ -16,7 +16,8 @@
 			<div class="maincontent">
 			<h2>{$blog->get('title')}</h2>
 			
-				<div>
+			<div id="myblogs">
+				<div class="newpost">
 					<a href="{$WWWROOT}/artefact/blog/newpost/?id={$blog->get('id')}">{str section="artefact.blog" tag="newpost"}</a>
 				</div>
 		
@@ -27,9 +28,12 @@
 				</tbody>
 			</table>
 				
-				<div>
+				<div class="newpost">
 					<a href="{$WWWROOT}/artefact/blog/newpost/?id={$blog->get('id')}">{str section="artefact.blog" tag="newpost"}</a>
 				</div>
+				
+			</div>
+				
 			</div>
 		</span></span></span></span></div>
 	</div>

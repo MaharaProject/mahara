@@ -10,6 +10,7 @@
 			<div class="maincontent">
 	
 			<h2>{str tag="watchlist"}</h2>
+			<div id="mywatchlist">
 			<form method="post">
 			{str tag='filter'}:
 			<select id="type" name="type" onChange="statusChange(); return false;">
@@ -46,6 +47,7 @@
 				</tfoot>
 			</table>
 			</form>
+			</div>
 			
 			</div>
 		</span></span></span></span></div>	

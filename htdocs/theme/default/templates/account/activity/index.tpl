@@ -10,6 +10,8 @@
 			<div class="maincontent">
 	
 			<h2>{str tag="activity"}</h2>
+			
+			<div id="recentactivity">
 			<form method="post">
 			{str section='activity' tag='type'}:
 			<select name="type" onChange="{$typechange}">
@@ -44,6 +46,7 @@
 				</tfoot>
 			</table>
 			</form>
+			</div>
 			
 			</div>
 		</span></span></span></span></div>	

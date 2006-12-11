@@ -16,7 +16,8 @@
 		<div class="box-cnrs"><span class="cnr-tl"><span class="cnr-tr"><span class="cnr-bl"><span class="cnr-br">
 			<div class="maincontent">
     		<h2>{str section="artefact.blog" tag="blogs"}</h2>
-
+			
+			<div id="myblogs">
     			<div class="newblog">
         		<a href="{$WWWROOT}/artefact/blog/new/">{str section="artefact.blog" tag="newblog"}</a>
     			</div>
@@ -35,6 +36,9 @@
 				<div class="newblog">
 					<a href="{$WWWROOT}/artefact/blog/new/">{str section="artefact.blog" tag="newblog"}</a>
 				</div>
+				
+			</div>
+				
 			</div>
 		</span></span></span></span></div>
 	</div>

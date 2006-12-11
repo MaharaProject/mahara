@@ -9,7 +9,7 @@
 			<div class="maincontent">
     		<h2>{str tag="mygroups"}</h2>
 
-    		<a href="create.php">{str tag="creategroup"}</a>
+    		<div id="mygroups"><a href="create.php" id="addnewgroup">{str tag="creategroup"}</a>
 
 			<table id="grouplist">
 				<thead>
@@ -21,7 +21,8 @@
 				<tbody>
 				</tbody>
 			</table>
-
+			</div>
+			
 			</div>
 		</span></span></span></span></div>	
 	</div>
