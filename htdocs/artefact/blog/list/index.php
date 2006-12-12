@@ -46,7 +46,11 @@ var bloglist = new TableRenderer(
               A({'href':'{$wwwroot}artefact/blog/view/?id=' + r.id}, r.title)
             );
         },
-        'description'
+        function(r) {
+            var td = TD();
+            td.innerHTML = r.description;
+            return td;
+        }
     ]
 );
 

@@ -98,6 +98,9 @@ postlist.rowfunction = function(d, n, gd) {
         { 'type' : 'button' },
         {$enc_delete}
     );
+
+    var desctd = TD();
+    desctd.innerHTML = d.description;
   
     var rows = [
         TR(
@@ -112,7 +115,7 @@ postlist.rowfunction = function(d, n, gd) {
                 del
             )
         ),
-        TR(null, TD(null, d.description)),
+        TR(null, desctd),
         TR(null, TD(null, d.ctime)),
     ];
 

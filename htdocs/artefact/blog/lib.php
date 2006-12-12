@@ -154,7 +154,7 @@ class ArtefactTypeBlog extends ArtefactType {
     }
 
     /** 
-     * 
+     * This function adds the ability to render a blog as a list of posts 
      */
     public function render($format, $options) {
         switch ($format) {
@@ -181,6 +181,13 @@ class ArtefactTypeBlog extends ArtefactType {
     }
 
     public static function get_render_list() {
+        return array_merge(
+            array(
+                FORMAT_ARTEFACT_LISTCHILDREN,
+                FORMAT_ARTEFACT_RENDERFULL
+            ),
+            parent::get_render_list()
+        );
     }
 
     public static function is_0_or_1() {
@@ -332,6 +339,20 @@ class ArtefactTypeBlogPost extends ArtefactType {
     }
     
     public function render($format, $options) {
+        switch ($format) {
+            case FORMAT_ARTEFACT_LISTSELF:
+                $smarty = smarty();
+                $smarty->assign('arefact', $this);
+                return $smarty->fetch('artefact:blog:render/blogpost_listself.tpl');
+
+            case FORMAT_ARTEFACT_RENDERFULL:
+                $smarty = smarty();
+                $smarty->assign('arefact', $this);
+                return $smarty->fetch('artefact:blog:render/blogpost_renderfull.tpl');
+                
+            default:
+                return parent::render($format, $options);
+        }
     }
 
     public function get_icon() {
