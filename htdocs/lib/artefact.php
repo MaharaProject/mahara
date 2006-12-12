@@ -132,7 +132,58 @@ function artefact_instance_from_id($id) {
     safe_require('artefact', $data->plugin);
     return new $classname($id, $data);
 }
+
+/**
+ * This function will return an instance of any "0 or 1" artefact. That is any
+ * artefact that each user will have at most one instance of (e.g. profile
+ * fields).
+ *
+ * @param string Is the type of artefact to return
+ * @param string The user_id who owns the fetched artefact. (defaults to the
+ * current user)
+ *
+ * @returns ArtefactType Instance of the artefact.
+ */
+function artefact_instance_from_type($artefact_type, $user_id=null) {
+    global $USER;
+    $prefix = get_config('dbprefix');
+
+    if ($user_id === null) {
+        $user_id = $USER->get('id');
+    }
+
+    if (!call_static_method(generate_artefact_class_name($artefact_type), 'is_0_or_1')) {
+        throw new ArtefactNotFoundException("This artefact type is not a '0 or 1' artefact type");
+    }
+
+    // email is special (as in the user can have more than one of them, but
+    // it's treated as a 0 or 1 artefact and the primary is returned
+    if ($artefact_type == 'email') {
+        $id = get_field('artefact_internal_profile_email', 'artefact', 'owner', $user_id, 'principal', 1);
+
+        if (!$id) {
+            throw new ArtefactNotFoundException("Artefact of type '${artefact_type}' doesn't exist");
+        }
+
+        $classname = generate_artefact_class_name($artefact_type);
+        safe_require('artefact', 'internal');
+        return new $classname($id);
+    }
+    else {
+        $sql = 'SELECT a.*, i.plugin 
+                FROM ' . $prefix . 'artefact a 
+                JOIN ' . $prefix . 'artefact_installed_type i ON a.artefacttype = i.name
+                WHERE a.artefacttype = ? AND a.owner = ?';
+        if (!$data = get_record_sql($sql, array($artefact_type, $user_id))) {
+            throw new ArtefactNotFoundException("Artefact of type '${artefact_type}' doesn't exist");
+        }
+
+        $classname = generate_artefact_class_name($artefact_type);
+        safe_require('artefact', $data->plugin);
+        return new $classname($data->id, $data);
+    }
+
+    throw new ArtefactNotFoundException("Artefact of type '${artefact_type}' doesn't exist");
+}
         
-
-
 ?>
