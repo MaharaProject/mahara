@@ -94,13 +94,16 @@ function createview4_submit($values) {
             insert_record('view_content', $viewcontent);
         }
         else if ($blockdata['type'] == 'artefact') {
-            $viewartefact           = new StdClass;
-            $viewartefact->view     = $viewid;
-            $viewartefact->artefact = $blockdata['id'];
-            $viewartefact->block    = $block;
-            $viewartefact->ctime    = $time;
-            $viewartefact->format   = $blockdata['format'];
-            insert_record('view_artefact', $viewartefact);
+            $blockdata['id'] = (array)$blockdata['id'];
+            foreach ($blockdata['id'] as $id) {
+                $viewartefact           = new StdClass;
+                $viewartefact->view     = $viewid;
+                $viewartefact->artefact = $id;
+                $viewartefact->block    = $block;
+                $viewartefact->ctime    = $time;
+                $viewartefact->format   = $blockdata['format'];
+                insert_record('view_artefact', $viewartefact);
+            }
         }
         else {
             throw new OMGWTFException();
