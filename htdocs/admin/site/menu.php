@@ -156,8 +156,8 @@ function editform(item) {
         linkedto = INPUT({'type':'text','id':'linkedto'+item.id,'value':item.linkedto});
         setNodeAttribute(elink,'checked',true);
     }
-    var radios = [DIV(null,elink,{$getstring['externallink']}),
-                  DIV(null,afile,{$getstring['adminfile']})];
+    var radios = [DIV(null, LABEL(null,elink,{$getstring['externallink']})),
+                  DIV(null, LABEL(null,afile,{$getstring['adminfile']}))];
     var row = TR({'id':'row'+item.id, 'class':rowtype},
                  map(partial(TD,null),[radios,name,linkedto,savecancel]));
     return row;
