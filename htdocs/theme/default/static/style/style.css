@@ -165,6 +165,13 @@ form {
    margin: 0;
 }
 
+input, select, textarea {
+	border: 1px solid #b0bf64;
+}
+input[type="submit"], input[type="button"] {
+    border: 2px outset #ccc;
+}
+
 
 /* REQUIRED INPUT BOX HIGHLIGHTS BEGINS */
 #register #register_username,
