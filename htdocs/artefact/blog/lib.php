@@ -154,14 +154,27 @@ class ArtefactTypeBlog extends ArtefactType {
     }
 
     /** 
-     * FIXME - Not sure about this.  It is copied entirely from
-     * ArtefactTypeProfile
+     * 
      */
     public function render($format, $options) {
-        if ($format == ARTEFACT_FORMAT_LISTITEM && $this->title) {
-            return $this->title;
+        switch ($format) {
+            case FORMAT_ARTEFACT_LISTCHILDREN:
+                $smarty = smarty();
+                $smarty->assign('arefact', $this);
+                $smarty->assign('children', $this->get_children_instances());
+                $smarty->assign_by_ref('options', $options);
+                return $smarty->fetch('artefact:blog:render/blog_listchildren.tpl');
+
+            case FORMAT_ARTEFACT_RENDERFULL:
+                $smarty = smarty();
+                $smarty->assign('arefact', $this);
+                $smarty->assign('children', $this->get_children_instances());
+                $smarty->assign_by_ref('options', $options);
+                return $smarty->fetch('artefact:blog:render/blog_renderfull.tpl');
+                
+            default:
+                return parent::render($format, $options);
         }
-        return false;
     }
 
     public function get_icon() {
@@ -226,7 +239,6 @@ class ArtefactTypeBlog extends ArtefactType {
         }
 
         $artefact = new ArtefactTypeBlog($values['id']);
-
         if ($user->get('id') != $artefact->get('owner')) {
             return;
         }
