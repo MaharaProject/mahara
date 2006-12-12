@@ -66,6 +66,7 @@ class PluginArtefactFile extends PluginArtefact {
         return strnatcasecmp($a->text, $b->text);
     }
 
+
 }
 
 class ArtefactTypeFileBase extends ArtefactType {
@@ -105,8 +106,43 @@ class ArtefactTypeFileBase extends ArtefactType {
             return; 
         }
         delete_records('artefact_file_files', 'artefact', $this->id);
-        // @todo: Delete the file from the filesystem 
         parent::delete();
+    }
+
+    public static function get_my_files_data($parentfolderid, $userid) {
+
+        if ($parentfolderid) {
+            $foldersql = ' = ' . $parentfolderid;
+        }
+        else {
+            $foldersql = ' IS NULL';
+        }
+        $filetypesql = "('" . join("','", PluginArtefactFile::get_artefact_types()) . "')";
+        $prefix = get_config('dbprefix');
+        $filedata = get_records_sql_array('SELECT a.id, a.artefacttype, a.mtime, f.size, a.title, a.description
+            FROM ' . $prefix . 'artefact a
+            LEFT OUTER JOIN ' . $prefix . 'artefact_file_files f ON f.artefact = a.id
+            WHERE a.owner = ' . $userid . '
+            AND a.parent' . $foldersql . "
+            AND a.artefacttype IN " . $filetypesql, '');
+
+        if (!$filedata) {
+            $filedata = array();
+        }
+        else {
+            foreach ($filedata as $item) {
+                $item->mtime = strftime(get_string('strftimedatetime'),strtotime($item->mtime));
+                // Add url for files here.
+            }
+        }
+
+        // Sort folders before files; then use nat sort order on title.
+        function fileobjcmp ($a, $b) {
+            return strnatcasecmp(($a->artefacttype == 'folder') . $a->title,
+                                 ($b->artefacttype == 'folder') . $b->title);
+        }
+        usort($filedata, "fileobjcmp");
+        return $filedata;
     }
 
 }
@@ -146,6 +182,54 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         }
 
         $this->dirty = false;
+    }
+
+    // Where to store files under dataroot in the filesystem
+    static $artefactfileroot = 'artefact/file/';
+    // Number of subdirectories to create under $artefactfileroot
+    static $artefactfilesubdirs = 256;
+
+    private static function get_file_directory($id) {
+        return self::$artefactfileroot . $id % self::$artefactfilesubdirs;
+    }
+
+    public function get_url() {
+        return get_config('dataroot') . get_file_directory($this->id) . $this->id;
+    }
+
+    /**
+     * Processes a newly uploaded file, copies it to disk, and associates it with
+     * the artefact object.
+     * Takes the name of a file input.
+     * Returns a boolean indicating success or failure.
+     */
+    public function save_uploaded_file($inputname) {
+        require_once('uploadmanager.php');
+        $um = new upload_manager('userfile');
+        if (!$um->preprocess_file()) {
+            return false;
+        }
+        $this->size = $um->file['size'];
+        $this->mtime = $this->ctime;
+        $this->dirty = true;
+        if (empty($this->id)) {
+            $this->commit();
+        }
+        // Save the file using its id as the filename, and use its id modulo
+        // the number of subdirectories as the directory name.
+        if (!$um->save_file(self::get_file_directory($this->id) , $this->id)) {
+            $this->delete();
+            return false;
+        }
+        return true;
+    }
+    
+    public function delete() {
+        if (empty($this->id)) {
+            return; 
+        }
+        unlink(get_config('dataroot') . '/' . self::get_file_directory($this->id) . '/' . $this->id);
+        parent::delete();
     }
 
     public static function has_config() {
