@@ -34,38 +34,8 @@ $offset = param_integer('offset', 0);
 $folder = param_integer('folder', null);
 $userid = $USER->get('id');
 
-if ($folder) {
-    $infolder = ' = ' . $folder;
-}
-else {
-    $infolder = ' IS NULL';
-}
-
-// todo: do this in the artefact file class.
-
-$prefix = get_config('dbprefix');
-$filedata = get_records_sql_array('SELECT a.id, a.artefacttype, a.mtime, f.size, a.title, a.description
-        FROM ' . $prefix . 'artefact a
-        LEFT OUTER JOIN ' . $prefix . 'artefact_file_files f ON f.artefact = a.id
-        WHERE a.owner = ' . $userid . '
-        AND a.parent' . $infolder . "
-        AND a.artefacttype IN ('folder','file','image')", '');
-
-if (!$filedata) {
-    $filedata = array();
-}
-else {
-    foreach ($filedata as $item) {
-        $item->mtime = strftime(get_string('strftimedatetime'),strtotime($item->mtime));
-    }
-}
-
-// Sort folders before files; then use nat sort order on title.
-function fileobjcmp ($a, $b) {
-    return strnatcasecmp(($a->artefacttype == 'folder') . $a->title,
-                         ($b->artefacttype == 'folder') . $b->title);
-}
-usort($filedata, "fileobjcmp");
+safe_require('artefact', 'file');
+$filedata = ArtefactTypeFileBase::get_my_files_data($folder, $userid);
 
 $result = array(
     'count'       => count($filedata),

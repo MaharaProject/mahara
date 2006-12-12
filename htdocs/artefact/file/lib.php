@@ -109,6 +109,42 @@ class ArtefactTypeFileBase extends ArtefactType {
         parent::delete();
     }
 
+    public static function get_my_files_data($parentfolderid, $userid) {
+
+        if ($parentfolderid) {
+            $foldersql = ' = ' . $parentfolderid;
+        }
+        else {
+            $foldersql = ' IS NULL';
+        }
+        $filetypesql = "('" . join("','", PluginArtefactFile::get_artefact_types()) . "')";
+        $prefix = get_config('dbprefix');
+        $filedata = get_records_sql_array('SELECT a.id, a.artefacttype, a.mtime, f.size, a.title, a.description
+            FROM ' . $prefix . 'artefact a
+            LEFT OUTER JOIN ' . $prefix . 'artefact_file_files f ON f.artefact = a.id
+            WHERE a.owner = ' . $userid . '
+            AND a.parent' . $foldersql . "
+            AND a.artefacttype IN " . $filetypesql, '');
+
+        if (!$filedata) {
+            $filedata = array();
+        }
+        else {
+            foreach ($filedata as $item) {
+                $item->mtime = strftime(get_string('strftimedatetime'),strtotime($item->mtime));
+                // Add url for files here.
+            }
+        }
+
+        // Sort folders before files; then use nat sort order on title.
+        function fileobjcmp ($a, $b) {
+            return strnatcasecmp(($a->artefacttype == 'folder') . $a->title,
+                                 ($b->artefacttype == 'folder') . $b->title);
+        }
+        usort($filedata, "fileobjcmp");
+        return $filedata;
+    }
+
 }
 
 class ArtefactTypeFile extends ArtefactTypeFileBase {
@@ -155,6 +191,10 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
 
     private static function get_file_directory($id) {
         return self::$artefactfileroot . $id % self::$artefactfilesubdirs;
+    }
+
+    public function get_url() {
+        return get_config('dataroot') . get_file_directory($this->id) . $this->id;
     }
 
     /**
