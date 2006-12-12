@@ -1030,10 +1030,10 @@ function can_view_view($view_id, $user_id=null) {
 function artefact_in_view($artefact, $view) {
     $prefix = get_config('dbprefix');
     $sql = 'SELECT a.id 
-            FROM mh_view_artefact a WHERE view = ? AND artefact = ?
+            FROM ' . $prefix . 'view_artefact a WHERE view = ? AND artefact = ?
             UNION
             SELECT c.parent 
-            FROM mh_view_artefact top JOIN mh_artefact_parent_cache c
+            FROM ' . $prefix . 'view_artefact top JOIN ' . $prefix . 'artefact_parent_cache c
               ON c.parent = top.artefact 
             WHERE top.view = ? AND c.artefact = ?';
 
