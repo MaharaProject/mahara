@@ -129,17 +129,17 @@ function {$id}_remove_all_errors() {
     });
 }
 function {$id}_message(message, type) {
-    var elem = $('{$id}_message');
-    var msg  = TR({'id': '{$id}_message'}, TD({'colspan': 2, 'class': type}, message));
+    var elem = $('{$id}_pieform_message');
+    var msg  = TR({'id': '{$id}_pieform_message'}, TD({'colspan': 2, 'class': type}, message));
     if (elem) {
         swapDOM(elem, msg);
     }
     else {
-        appendChildNodes($('{$submitid}_container').parentNode, msg);
+        appendChildNodes($('{$id}_{$submitid}_container').parentNode, msg);
     }
 }
 function {$id}_remove_message() {
-    var elem = $('{$id}_message');
+    var elem = $('{$id}_pieform_message');
     if (elem) {
         removeElement(elem);
     }
