@@ -62,13 +62,14 @@ function pieform_render_expiry($element, Pieform $form) {
     }
 
     // @todo probably create with an actual input element, as tabindex doesn't work here for one thing
+    // Same with the select. And do the events using mochikit signal instead of dom events
     $numberinput = '<input';
     $numberinput .= $values['units'] == 'noenddate' ? ' disabled="disabled"' : '';
     $numberinput .= ' type="text" size="4" name="' . $name . '_number"';
-    $numberinput .= ' id="' . $name . '_number" value="' . $values['number'] . "\">\n";
+    $numberinput .= ' id="' . $name . '_number" value="' . $values['number'] . '" tabindex="' . $element['tabindex'] . "\">\n";
 
     $uselect = '<select onchange="' . $name . '_change()" ';
-    $uselect .= 'name="' . $name . '_units" id="' . $name . '_units"' .  ">\n";
+    $uselect .= 'name="' . $name . '_units" id="' . $name . '_units"' . ' tabindex="' . $element['tabindex'] . "\">\n";
     foreach (pieform_render_expire_get_expiry_units() as $u) {
         $uselect .= "\t<option value=\"$u\"" . (($values['units'] == $u) ? ' selected="selected"' : '') . '>' . $form->i18n($u) . "</option>\n";
     }
