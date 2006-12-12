@@ -30,6 +30,7 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 require_once('pieforms/pieform/elements/calendar.php');
 $smarty = smarty(array(), pieform_get_headdata_calendar(pieform_configure_calendar(array())));
+$createid = param_integer('createid', null);
 
 $form = array(
     'name' => 'createview4',
@@ -59,6 +60,64 @@ $form = array(
     )
 );
 
+
+function createview4_submit($values) {
+    global $SESSION, $USER, $createid;
+    log_debug($values);
+    $data = $SESSION->get('create_' . $createid);
+    log_debug($data);
+
+
+    db_begin();
+    $time = db_format_timestamp(time());
+
+    $view = new StdClass;
+    $view->title = $data['title'];
+    $view->description = $data['description'];
+    $view->owner = $USER->get('id');
+    $view->ownerformat = $data['ownerformat'];
+    $view->template = $data['template'];
+    $view->startdate = db_format_timestamp($data['startdate']);
+    $view->stopdate = db_format_timestamp($data['stopdate']);
+    $view->ctime = $view->mtime = $view->atime = $time;
+    log_debug($view);
+    $viewid = insert_record('view', $view, 'id', true);
+    log_debug('inserted view as id ' . $viewid);
+
+    foreach ($data['artefacts'] as $block => $blockdata) {
+        if ($blockdata['type'] == 'label') {
+            $viewcontent          = new StdClass;
+            $viewcontent->view    = $viewid;
+            $viewcontent->content = $blockdata['value'];
+            $viewcontent->block   = $block;
+            $viewcontent->ctime   = $time;
+            insert_record('view_content', $viewcontent);
+        }
+        else if ($blockdata['type'] == 'artefact') {
+            $viewartefact           = new StdClass;
+            $viewartefact->view     = $viewid;
+            $viewartefact->artefact = $blockdata['id'];
+            $viewartefact->block    = $block;
+            $viewartefact->ctime    = $time;
+            $viewartefact->format   = $blockdata['format'];
+            insert_record('view_artefact', $viewartefact);
+        }
+        else {
+            throw new OMGWTFException();
+        }
+    }
+
+    // @todo view access
+    //
+
+    db_commit();
+    $SESSION->add_ok_msg(get_string('viewcreatedsuccessfully'));
+    redirect(get_config('wwwroot') . 'view/');
+}
+
+function createview4_cancel() {
+    redirect(get_config('wwwroot') . 'view/');
+}
 
 $smarty->assign('createview4form', pieform($form));
 $smarty->display('view/create4.tpl');
