@@ -311,7 +311,7 @@ function template_render($template, $mode, $data=array()) {
             
             $attr = array(
                 'id'    => $t['id'],
-                'class' => array('block'),
+                'class' => array(),
             );
 
             if (isset($t['width']) && isset($t['height'])) {
@@ -323,6 +323,7 @@ function template_render($template, $mode, $data=array()) {
             switch ($t['type']) {
                 case 'label';
                     if ($mode == TEMPLATE_RENDER_EDITMODE) {
+                        $attr['class'][] = 'block';
                         $block .= template_render_label_editmode($t, $data);
                     }
                     else {
@@ -342,12 +343,12 @@ function template_render($template, $mode, $data=array()) {
                     break;
                 case 'description';
                     if (isset($data['description'])) {
-                        $block .= hsc($data['description']);
+                        $block .= $data['description'];
                     }
                     break;
                 case 'artefact';
-                    $classes = array('block');
-                    
+                    $attr['class'][] = 'block';
+
                     $droplist[$t['id']] = array(
                         'artefacttype' => isset($t['artefacttype']) ? $t['artefacttype'] : null,
                         'plugintype'   => isset($t['plugintype'])   ? $t['plugintype'] : null,
@@ -363,9 +364,29 @@ function template_render($template, $mode, $data=array()) {
                             $format = $data[$t['id']]['format'];
                         }
                         $block .= $artefact->render($format, null);
+                        $block .= '<input type="hidden" name="template[' . $t['id'] . '][id]" value="' . hsc($data[$t['id']]['id']) . '">';
+                        $block .= '<input type="hidden" name="template[' . $t['id'] . '][format]" value="' . hsc($format) . '">';
+                    }
+                    else if ( isset($t['defaultartefacttype']) ) {
+                        $artefact = null;
+
+                        try {
+                            $artefact = artefact_instance_from_type($t['defaultartefacttype']);
+                        }
+                        catch (ArtefactNotFoundException $e) {
+                        }
+
+                        if ($artefact === null) {
+                            $block .= template_render_empty_artefact_block();
+                        }
+                        else {
+                            $block .= $artefact->render($t['defaultformat'], null);
+                            $block .= '<input type="hidden" name="template[' . $t['id'] . '][id]" value="' . hsc($artefact->get('id')) . '">';
+                            $block .= '<input type="hidden" name="template[' . $t['id'] . '][format]" value="' . hsc($t['defaultformat']) . '">';
+                        }
                     }
                     else {
-                        $block .= '<i>' . get_string('empty_block', 'view') . '</i>';
+                        $block .= template_render_empty_artefact_block();
                     }
                     
                     break;
@@ -514,7 +535,8 @@ EOF;
  */
 function template_render_label_editmode($block, $data) {
     if (isset($data[$block['id']]['value'])) {
-        return '<script type="text/javascript">addLoadEvent(function() { $(' . json_encode($block['id']) . ').labelValue = ' . json_encode($data[$block['id']]['value']) . ';});</script><span class="clickable" onclick="setLabel(' . hsc(json_encode($block['id'])) . ');">' . hsc($data[$block['id']]['value']) . '</span>';
+        return '<script type="text/javascript">addLoadEvent(function() { $(' . json_encode($block['id']) . ').labelValue = ' . json_encode($data[$block['id']]['value']) . ';});</script><span class="clickable" onclick="setLabel(' . hsc(json_encode($block['id'])) . ');">' . hsc($data[$block['id']]['value']) . '</span>'
+        . '<input type="hidden" name="template[' . $block['id'] . '][value]" value="' . hsc($data[$block['id']]['value']) . '">';
     }
     else {
         return '<em class="clickable" onclick="setLabel(' . hsc(json_encode($block['id'])) . ');">' . get_string('emptylabel', 'view') . '</em>';
@@ -530,10 +552,10 @@ function template_render_attributes($attr) {
     $html = '';
 
     foreach ( $attr as $key => $value ) {
-        if (is_array($value)) {
+        if (is_array($value) && count($value) > 0) {
             $html .= ' ' . $key . '="' . join(' ', array_map('hsc', $value)) . '"';
         }
-        else {
+        else if (!is_array($value)) {
             $html .= ' ' . $key . '="' . hsc($value) . '"';
         }
     }
@@ -575,6 +597,10 @@ function template_format_owner($format, $user) {
         default:
             return display_name($user);
     }
+}
+
+function template_render_empty_artefact_block() {
+    return '<i>' . get_string('empty_block', 'view') . '</i>';
 }
 
 ?>
