@@ -420,7 +420,7 @@ abstract class ArtefactType {
      * @param $options 
      * @todo: get and display artefact size.
      */
-    public function render_metadata($options) {
+    protected function render_metadata($options) {
         $html = '<table><tbody>';
         $html .= '<tr><td>' . get_string('title') . '</td><td>' . $this->title . '</td></tr>';
         $html .= '<tr><td>' . get_string('type') . '</td><td>' . $this->artefacttype . '</td></tr>';
@@ -438,7 +438,7 @@ abstract class ArtefactType {
      * @param $options 
      * @todo: use a smarty template.
      */
-    public function listchildren($options) {
+    protected function listchildren($options) {
         $html = '<ul>';
         foreach ($this->get_children_instances() as $child) {
             $html .= '<li>' . $child->render(FORMAT_ARTEFACT_LISTSELF, $options) . "</li>\n";
