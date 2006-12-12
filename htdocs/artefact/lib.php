@@ -471,7 +471,12 @@ abstract class ArtefactType {
      * returns array of formats can render to (constants)
      * @abstract
      */
-    public static abstract function get_render_list();
+    public static function get_render_list() {
+        return array(
+            FORMAT_ARTEFACT_LISTSELF,
+            FORMAT_ARTEFACT_RENDERMETADATA
+        );
+    }
 
     /**
      * whether a user will have exactly 0 or 1 of this artefact type
