@@ -32,13 +32,44 @@ require_once('template.php');
 $createid = param_integer('createid');
 $data = $SESSION->get('create_' . $createid);
 $artefacts = param_variable('template', array());
+$parsed_template = template_locate($data['template']);
+
+function validate_artefacts(&$artefacts) {
+    global $parsed_template;
+
+    if (isset($parsed_template['parseddata'])) {
+        $template_data = $parsed_template['parseddata'];
+    }
+    else {
+        $template_data = $parsed_template['cacheddata'];
+    }
+
+    $template_fields = array();
+
+    foreach ($template_data as $block) {
+        if ($block['type'] == 'block') {
+            $template_fields[$block['data']['id']] = $block['data'];
+        }
+    }
+
+    foreach ($artefacts as $block => &$data) {
+        if (!isset($template_fields[$block])) {
+            unset($artefacts[$block]);
+            next;
+        }
+        // @todo martyn more validation ;)
+
+        $data['type'] = $template_fields[$block]['type'];
+    }
+}
 
 if(!isset($data['artefacts'])) {
     $data['artefacts'] = array();
 };
 
+
 if (param_boolean('submit')) {
-    // @todo validation of artefacts
+    validate_artefacts($artefacts);
 
     $data['artefacts'] = $artefacts;
 
@@ -49,7 +80,7 @@ if (param_boolean('submit')) {
 }
 
 if (param_boolean('back')) {
-    // @todo validation of artefacts
+    validate_artefacts($artefacts);
 
     $data['artefacts'] = $artefacts;
 
@@ -80,7 +111,6 @@ foreach (plugins_installed('artefact') as $artefacttype) {
 }
 $rootinfo = substr($rootinfo, 0, -1) . '];';
 
-$parsed_template = template_locate($data['template']);
 $template = template_render($parsed_template, TEMPLATE_RENDER_EDITMODE, array_merge($data, $data['artefacts']));
 
 $headers = array();
