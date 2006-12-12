@@ -62,9 +62,9 @@ function pieform_render_calendar_set_attributes($element) {
     $element['jsroot']   = isset($element['jsroot']) ? $element['jsroot'] : '';
     $element['language'] = isset($element['language']) ? $element['language'] : 'en';
     $element['theme']    = isset($element['theme']) ? $element['theme'] : 'calendar-win2k-2';
-    $element['caloptions']['ifFormat'] = '%Y/%m/%d';
-    $element['caloptions']['daFormat'] = '%Y/%m/%d';
-    $element['rules']['regex'] = '#^(\d{4}/\d{2}/\d{2})?$#';
+    $element['caloptions']['ifFormat'] = isset($element['caloptions']['ifFormat']) ? $element['caloptions']['ifFormat'] : '%Y/%m/%d';
+    $element['caloptions']['daFormat'] = isset($element['caloptions']['daFormat']) ? $element['caloptions']['daFormat'] : '%Y/%m/%d';
+    $element['rules']['regex'] = isset($element['rules']['regex']) ? $element['rules']['regex'] : '#^((\d{4}/\d{2}/\d{2})( \d{2}:\d{2})?)?$#';
     return $element;
 }
 
