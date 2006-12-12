@@ -87,7 +87,9 @@ $createview1 = pieform(array(
             'defaultvalue' => isset($data['startdate']) ? $data['startdate'] : null,
             'caloptions'   => array(
                 'dateStatusFunc' => 'startDateDisallowed',
-                'onSelect'       => 'startSelected'
+                'onSelect'       => 'startSelected',
+                'showsTime'      => true,
+                'ifFormat'       => '%Y/%m/%d %H:%M'
             )
         ),
         'stopdate'  => array(
@@ -96,7 +98,9 @@ $createview1 = pieform(array(
             'defaultvalue' => isset($data['stopdate']) ? $data['stopdate'] : null,
             'caloptions'   => array(
                 'dateStatusFunc' => 'stopDateDisallowed',
-                'onSelect'       => 'stopSelected'
+                'onSelect'       => 'stopSelected',
+                'showsTime'      => true,
+                'ifFormat'       => '%Y/%m/%d %H:%M'
             )
         ),
         'description' => array(
@@ -156,7 +160,7 @@ $smarty->assign('INLINEJAVASCRIPT', <<<EOF
 function startDateDisallowed(date) {
     var stopDate = $('createview1_stopdate').value;
     if (stopDate != '') {
-        stopDate = stopDate.replace(/\//g, '-');
+        stopDate = stopDate.substr(0, 10).replace(/\//g, '-');
         stopDate = isoDate(stopDate);
         if (!stopDate) {
             stopDate = Date();
@@ -171,7 +175,7 @@ function startDateDisallowed(date) {
 function stopDateDisallowed(date) {
     var startDate = $('createview1_startdate').value;
     if (startDate != '') {
-        startDate = startDate.replace(/\//g, '-');
+        startDate = startDate.substr(0, 10).replace(/\//g, '-');
         startDate = isoDate(startDate);
         if (!startDate) {
             startDate = Date();
