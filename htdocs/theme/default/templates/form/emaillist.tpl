@@ -103,9 +103,9 @@
 <div id="{{$name}}_list">
 {{foreach from=$validated item=email}}
     <div class="validated">
-        <input{{if $email == $default}} checked{{/if}} type="radio" name="{{$name}}_selected" value="{{$email|escape}}">
+        <label><input{{if $email == $default}} checked{{/if}} type="radio" name="{{$name}}_selected" value="{{$email|escape}}">
         <input type="hidden" name="{{$name}}_valid[]" value="{{$email|escape}}">
-        {{$email|escape}}
+        {{$email|escape}}</label>
         <a href="" onclick="{{$name}}_remove(this); return false;">[x]</a>
     </div>
 {{/foreach}}
