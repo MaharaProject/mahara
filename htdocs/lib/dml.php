@@ -1195,7 +1195,7 @@ function execute_sql_arr($sqlarr, $continue=true, $feedback=true) {
 function db_format_timestamp($ts) {
     global $db;
 
-    if ($ts === null) {
+    if ($ts === null || $ts === '') {
         return null;
     }
     return $db->DBTimeStamp($ts);
@@ -1263,6 +1263,10 @@ function db_array_to_ph($array) {
     return array_pad(array(), count($array), '?');
 }
 
+// This is used by the SQLException, to detect if there is a transaction when
+// an error occurs, so it can roll the transaction back
+$GLOBALS['_TRANSACTION_STARTED'] = false;
+
 /**
  * This function starts a smart transaction
  * 
@@ -1270,6 +1274,7 @@ function db_array_to_ph($array) {
 function db_begin() {
     global $db;
 
+    $GLOBALS['_TRANSACTION_STARTED'] = true;
     $db->StartTrans();
 }
 
@@ -1281,6 +1286,7 @@ function db_begin() {
  */
 function db_commit() {
     global $db;
+    $GLOBALS['_TRANSACTION_STARTED'] = false;
 
     if ($db->HasFailedTrans()) {
         $db->CompleteTrans();
@@ -1295,6 +1301,7 @@ function db_commit() {
  */
 function db_rollback() {
     global $db;
+    $GLOBALS['_TRANSACTION_STARTED'] = false;
     $db->FailTrans();
     $db->CompleteTrans();
 }
