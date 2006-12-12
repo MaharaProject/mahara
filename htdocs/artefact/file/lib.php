@@ -66,6 +66,7 @@ class PluginArtefactFile extends PluginArtefact {
         return strnatcasecmp($a->text, $b->text);
     }
 
+
 }
 
 class ArtefactTypeFileBase extends ArtefactType {
@@ -105,7 +106,6 @@ class ArtefactTypeFileBase extends ArtefactType {
             return; 
         }
         delete_records('artefact_file_files', 'artefact', $this->id);
-        // @todo: Delete the file from the filesystem 
         parent::delete();
     }
 
@@ -146,6 +146,50 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         }
 
         $this->dirty = false;
+    }
+
+    // Where to store files under dataroot in the filesystem
+    static $artefactfileroot = 'artefact/file/';
+    // Number of subdirectories to create under $artefactfileroot
+    static $artefactfilesubdirs = 256;
+
+    private static function get_file_directory($id) {
+        return self::$artefactfileroot . $id % self::$artefactfilesubdirs;
+    }
+
+    /**
+     * Processes a newly uploaded file, copies it to disk, and associates it with
+     * the artefact object.
+     * Takes the name of a file input.
+     * Returns a boolean indicating success or failure.
+     */
+    public function save_uploaded_file($inputname) {
+        require_once('uploadmanager.php');
+        $um = new upload_manager('userfile');
+        if (!$um->preprocess_file()) {
+            return false;
+        }
+        $this->size = $um->file['size'];
+        $this->mtime = $this->ctime;
+        $this->dirty = true;
+        if (empty($this->id)) {
+            $this->commit();
+        }
+        // Save the file using its id as the filename, and use its id modulo
+        // the number of subdirectories as the directory name.
+        if (!$um->save_file(self::get_file_directory($this->id) , $this->id)) {
+            $this->delete();
+            return false;
+        }
+        return true;
+    }
+    
+    public function delete() {
+        if (empty($this->id)) {
+            return; 
+        }
+        unlink(get_config('dataroot') . '/' . self::get_file_directory($this->id) . '/' . $this->id);
+        parent::delete();
     }
 
     public static function has_config() {
