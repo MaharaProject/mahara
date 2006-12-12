@@ -193,8 +193,8 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         return self::$artefactfileroot . $id % self::$artefactfilesubdirs;
     }
 
-    public function get_url() {
-        return get_config('dataroot') . get_file_directory($this->id) . $this->id;
+    public function get_path() {
+        return get_config('dataroot') . self::get_file_directory($this->id) . '/' .  $this->id;
     }
 
     /**
@@ -228,7 +228,8 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         if (empty($this->id)) {
             return; 
         }
-        unlink(get_config('dataroot') . '/' . self::get_file_directory($this->id) . '/' . $this->id);
+        unlink($this->get_path());
+        //unlink(get_config('dataroot') . '/' . self::get_file_directory($this->id) . '/' . $this->id);
         parent::delete();
     }
 
