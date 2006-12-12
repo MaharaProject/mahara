@@ -382,7 +382,7 @@ function exception (Exception $e) {
     // rather than by switch on class name
     if ($USER) {
         $logged = false;
-        if (!($e instanceof MaharaException) || get_class($e == 'MaharaException')) {
+        if (!($e instanceof MaharaException) || get_class($e) == 'MaharaException') {
             log_warn("An exception was thrown of class " . get_class($e) . ". \nTHIS IS BAD "
                      . "and should be changed to something extending MaharaException,\n" 
                      . "unless the exception is from a third party library.\n"
@@ -547,7 +547,7 @@ class ConfigException extends MaharaException  implements MaharaThrowable {
 /**
  * UserException - the user has done something they shouldn't (or tried to)
  */
-class UserException extends MaharaException  implements MaharaThrowable {
+class UserException extends MaharaException implements MaharaThrowable {
 
     protected $log = false;
 
