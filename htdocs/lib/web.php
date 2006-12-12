@@ -852,7 +852,7 @@ function admin_nav() {
         foreach ( $menu as &$item ) {
             if ($item['name'] == MENUITEM) {
                 $item['selected'] = true;
-                if (defined('SUBMENUITEM') and is_array($item['submenu'])) {
+                if (defined('SUBMENUITEM') && is_array($item['submenu'])) {
                     foreach ( $item['submenu'] as &$subitem ) {
                         if ($subitem['name'] == SUBMENUITEM) {
                             $subitem['selected'] = true;
