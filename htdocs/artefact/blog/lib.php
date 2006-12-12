@@ -359,6 +359,13 @@ class ArtefactTypeBlogPost extends ArtefactType {
     }
 
     public static function get_render_list() {
+        return array_merge(
+            array(
+                FORMAT_ARTEFACT_LISTSELF,
+                FORMAT_ARTEFACT_RENDERFULL
+            ),
+            parent::get_render_list()
+        );
     }
 
     public static function is_0_or_1() {
