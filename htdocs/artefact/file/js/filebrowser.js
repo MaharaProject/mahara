@@ -5,7 +5,12 @@ function FileBrowser(element, changedircallback) {
     this.element = element;
     this.pathids = {'/':null};
     this.cwd = '/';
-    this.changedircallback = changedircallback;
+    if (typeof(changedircallback) == 'function') {
+        this.changedircallback = changedircallback;
+    }
+    else {
+        this.changedircallback = function () {};
+    }
     this.filenames = {};
 
     this.init = function() {
@@ -24,7 +29,7 @@ function FileBrowser(element, changedircallback) {
         self.filelist.statevars.push('folder');
         self.filelist.rowfunction = function (r) { return TR({'id':'row_' + r.id}); };
         self.filelist.init();
-        changedir = self.changedir;
+        changedir = self.changedir; // Ick; needs to be set globally for some links to work
         self.changedir(self.cwd);
     }
 
