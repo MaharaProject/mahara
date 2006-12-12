@@ -127,7 +127,7 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page) {
     else if (ctxHelp[key]) {
         log('reloaded help from cache');
         ctxHelp_selected = key;
-        contextualHelpOpen(helpName, ctxHelp[key].content);
+        contextualHelpOpen(formName + '_' + helpName, ctxHelp[key].content);
         return;
     }
     else {
@@ -162,7 +162,7 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page) {
         });
     }
 
-    contextualHelpOpen(helpName, 'spinner');
+    contextualHelpOpen(formName + '_' + helpName, 'spinner');
     ctxHelp[key] = {
         'content': ''
     };
