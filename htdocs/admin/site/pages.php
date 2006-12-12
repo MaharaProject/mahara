@@ -109,7 +109,7 @@ function requestPageText(removeMessage) {
     if (removeMessage) {
         editsitepage_remove_message();
     }
-    editsitepage_remove_error('pagetext');
+    editsitepage_remove_all_errors();
     logDebug(get_string('loadingpagecontent', 'admin'));
     var d = loadJSONDoc('editchangepage.json.php',{'pagename':$('editsitepage_pagename').value});
     d.addCallbacks(function(data) {
