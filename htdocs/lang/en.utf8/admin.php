@@ -41,10 +41,11 @@ $string['notinstalled'] = 'Not installed';
 $string['nothingtoupgrade'] = 'Nothing to upgrade';
 $string['successfullyinstalled'] = 'Successfully installed Mahara!';
 $string['upgradeloading'] = 'Loading...';
-$string['upgradesuccess'] = 'Successfully upgraded to version ';
+$string['upgradesuccess'] = 'Successfully upgraded';
+$string['upgradesuccesstoversion'] = 'Successfully upgraded to version ';
 $string['upgradefailure'] = 'Failed to upgrade!';
 $string['noupgrades'] = 'Nothing to upgrade! You are fully up to date!';
-$string['fixtemplatescontinue'] = 'Try fixing this and continuing here (templates were not installed)';
+$string['fixtemplatescontinue'] = 'Some view templates failed to install.  Continue here for more information and a fix.';
 
 // Admin navigation menu
 $string['adminhome']      = 'Admin home';
@@ -187,4 +188,11 @@ $string['registrationallowed'] = 'Registration allowed?';
 $string['registrationalloweddescription'] = 'Whether users can register for the system with this institution';
 
 
+// general stuff
+$string['notificationssaved'] = 'Notification settings saved';
+
+$string['installed'] = 'Installed';
+$string['errors'] = 'Errors';
+$string['install'] = 'Install';
+$string['reinstall'] = 'Reinstall';
 ?>

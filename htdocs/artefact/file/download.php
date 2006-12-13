@@ -25,30 +25,14 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'myfiles');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('artefact', 'file');
+require_once('artefact.php');
 
-$strings = array('cancel', 'delete', 'description', 'edit', 'editfile', 'editfolder', 
-                 'home', 'name', 'nofilesfound', 'savechanges');
-$getstring = array();
-foreach ($strings as $string) {
-    $getstring[$string] = "'" . get_string($string) . "'";
-}
-
-$javascript = <<<JAVASCRIPT
-
-var browser = new FileBrowser('filelist');
-var uploader = new FileUploader('uploader', null, null, browser.refresh, browser.fileexists);
-browser.changedircallback = uploader.updatedestination;
-
-JAVASCRIPT;
-
-
-$smarty = smarty(array('tablerenderer', 
-                       'artefact/file/js/filebrowser.js', 
-                       'artefact/file/js/uploader.js'));
-$smarty->assign('INLINEJAVASCRIPT', $javascript);
-$smarty->display('artefact:file:index.tpl');
+$fileid = param_integer('file');
+$file = artefact_instance_from_id($fileid);
+$path = $file->get_path();
+$title = $file->get('title');
+serve_file($path, $title);
 
 ?>

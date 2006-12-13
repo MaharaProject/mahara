@@ -1,5 +1,5 @@
-
 function FileUploader(element, foldername, folderid, uploadcallback, fileexists) {
+
     var self = this;
     this.element = element;
     this.foldername = foldername ? foldername : get_string('home');
@@ -29,6 +29,16 @@ function FileUploader(element, foldername, folderid, uploadcallback, fileexists)
         appendChildNodes(self.element, self.form, self.openbutton);
     }
 
+    this.filepart = function (path) {
+        if (path.indexOf('/') > -1) { 
+            var separator = '/';
+        }
+        else {
+            var separator = '\\';
+        }
+        return path.substring(path.lastIndexOf(separator)+1, path.length);
+    }
+
     this.initform = function () {
         var form = FORM({'method':'post', 'id':'uploadform',
                          'enctype':'multipart/form-data', 'encoding':'multipart/form-data',
@@ -40,8 +50,7 @@ function FileUploader(element, foldername, folderid, uploadcallback, fileexists)
                 TD(null, SPAN({'id':'uploaddest'},self.foldername))),
              TR(null, TH(null, LABEL(null, get_string('file'))),
                 TD(null, INPUT({'type':'file', 'name':'userfile', 'onchange':function () {
-                    var full = self.form.userfile.value;
-                    self.form.title.value = full.substring(full.lastIndexOf('/')+1, full.length);
+                    self.form.title.value = self.filepart(self.form.userfile.value);
                 }}))),
              TR(null, TH(null, LABEL(null, get_string('title'))),
                 TD(null, INPUT({'type':'text', 'name':'title'}))),
@@ -49,7 +58,7 @@ function FileUploader(element, foldername, folderid, uploadcallback, fileexists)
                 TD(null, INPUT({'type':'text', 'name':'description'}))),
              TR(null,TD({'colspan':2, 'id':'uploadformmessage'})),
              TR(null,TD({'colspan':2},
-              INPUT({'name':'submit','type':'button','value':get_string('upload'),
+              INPUT({'name':'upload','type':'button','value':get_string('upload'),
                      'onclick':function () { self.sendform(false)}}),
               INPUT({'name':'replace','type':'button','value':get_string('replace'),
                      'onclick':function () { self.sendform(true); }}),
@@ -77,21 +86,19 @@ function FileUploader(element, foldername, folderid, uploadcallback, fileexists)
         }
     }
 
-    this.sendform = function (replace) {
+    this.sendform = function (replacefile) {
         var localname = self.form.userfile.value;
         if (isEmpty(localname)) {
-            $('uploadformmessage').innerHTML = get_string('Filename field is required.');
+            $('uploadformmessage').innerHTML = get_string('filenamefieldisrequired');
             return;
         }
         var destname = self.form.title.value;
         if (isEmpty(destname)) {
-            $('uploadformmessage').innerHTML = get_string('Title field is required.');
+            $('uploadformmessage').innerHTML = get_string('titlefieldisrequired');
             return;
         }
-        if (localname.indexOf('/') > -1) { 
-            localname = localname.substring(localname.lastIndexOf('/')+1, localname.length);
-        }
-        if (!replace && self.fileexists(destname)) {
+        localname = self.filepart(localname);
+        if (!replacefile && self.fileexists(destname)) {
             $('uploadformmessage').innerHTML = get_string('uploadfileexistsreplacecancel');
             // Show replace button
             setDisplayForElement('inline', self.form.replace);
@@ -104,9 +111,19 @@ function FileUploader(element, foldername, folderid, uploadcallback, fileexists)
         appendChildNodes(self.element,
                          createDOM('iframe',{'name':'iframe'+self.nextupload,
                                              'id':'iframe'+self.nextupload,
-                                             'src':'blank.html','style':'display: none;'},[]));
-        self.form.target = 'iframe' + self.nextupload;
-        //self.form.submit();
+                                             'src':'blank.html',
+                                             'style':'display: none;'}));
+        setNodeAttribute(self.form, 'target', 'iframe' + self.nextupload);
+        var collideaction = replacefile ? 'replace' : 'fail';
+        appendChildNodes(self.form, 
+                         INPUT({'type':'hidden', 'name':'collideaction', 'value':collideaction}),
+                         INPUT({'type':'hidden', 'name':'uploadnumber', 'value':self.nextupload}));
+        if (self.folderid) {
+            appendChildNodes(self.form, 
+                             INPUT({'type':'hidden', 'name':'parentfolder', 'value':self.folderid}));
+        }
+
+        self.form.submit();
 
         // Display upload status
         insertSiblingNodesBefore(self.form,
@@ -115,17 +132,16 @@ function FileUploader(element, foldername, folderid, uploadcallback, fileexists)
         self.nextupload += 1;
     }
 
+    this.getresult = function(data) {
+        if (!data.error) {
+            message = get_string('Upload complete');
+        }
+        else {
+            message = get_string('Upload failed');
+        }
+        $('uploadstatusline'+data.uploadnumber).innerHTML = message;
+        this.uploadcallback();
+    }
 
     addLoadEvent(this.init);
-
-
-    //var formparams = [INPUT({'type':'hidden','name':'uploaddir','value':self.folder}),
-    //                      INPUT({'type':'hidden','name':'uploadnum','value':self.nextupload})];
-
-    //var messageline = DIV({'id':'uploadmessage','class':'uploadmessage'});
-
-    //var extrabuttons = DIV({'id':'extrabuttons'});
-    //var buttonline = DIV({'id':'buttonline'},uploadbutton,cancelbutton);
-
-
 }

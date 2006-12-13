@@ -45,7 +45,7 @@ $failureicon = theme_get_image_path('failure.gif');
 
 $loadingstring = get_string('upgradeloading', 'admin');
 $installsuccessstring = get_string('installsuccess', 'admin');
-$successstring = get_string('upgradesuccess', 'admin');
+$successstring = get_string('upgradesuccesstoversion', 'admin');
 $failurestring = get_string('upgradefailure', 'admin');
 $coresuccess   = get_string('coredatasuccess', 'admin');
 

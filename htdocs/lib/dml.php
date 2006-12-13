@@ -350,9 +350,7 @@ function get_recordset_sql($sql, $values=null, $limitfrom=null, $limitnum=null) 
         }
     }
     catch (ADODB_Exception $e) {
-        $message = 'Failed to get a recordset: ' . $e->getMessage() . "Command was: $sql";
-        log_debug($message);
-        throw new SQLException($message);
+        throw new SQLException(create_sql_exception_message($e, $sql, $values));
     }
  
    return $rs;
@@ -703,7 +701,12 @@ function get_column($table, $field, $field1=null, $value1=null, $field2=null, $v
 function get_column_sql($sql, $values=null) {
     global $db;
 
-    return $db->GetCol($sql, $values);
+    try {
+        return $db->GetCol($sql, $values);
+    }
+    catch (ADODB_Exception $e) {
+        throw new SQLException(create_sql_exception_message($e, $sql, $values));
+    }
 }
 
 
@@ -745,12 +748,13 @@ function set_field_select($table, $newfield, $newvalue, $select, $values) {
     }
 
     $values = array_merge(array($newvalue), $values);
+    $sql = 'UPDATE '. get_config('dbprefix') . $table .' SET '. $newfield  .' = ? ' . $select;
     try {
-        $stmt = $db->Prepare('UPDATE '. get_config('dbprefix') . $table .' SET '. $newfield  .' = ? ' . $select);
+        $stmt = $db->Prepare($sql);
         return $db->Execute($stmt, $values);
     }
     catch (ADODB_Exception $e) {
-        throw new SQLException($e->getMessage());
+        throw new SQLException(create_sql_exception_message($e, $sql, $values));
     }
 }
 
@@ -779,12 +783,13 @@ function delete_records($table, $field1=null, $value1=null, $field2=null, $value
     $select = where_clause_prepared($field1, $field2, $field3);
     $values = where_values_prepared($value1, $value2, $value3);
 
+    $sql = 'DELETE FROM '. get_config('dbprefix') . $table . ' ' . $select;
     try {
-        $stmt = $db->Prepare('DELETE FROM '. get_config('dbprefix') . $table . ' ' . $select);
+        $stmt = $db->Prepare($sql);
         return $db->Execute($stmt,$values);
     }
     catch (ADODB_Exception $e) {
-        throw new SQLException($e->getMessage());
+        throw new SQLException(create_sql_exception_message($e, $sql, $values));
     }
 }
 
@@ -817,7 +822,7 @@ function delete_records_sql($sql, $values=null) {
         }
     }
     catch (ADODB_Exception $e) {
-        throw new SQLException($e->getMessage());
+        throw new SQLException(create_sql_exception_message($e, $sql, $values));
     }
     return $result;
 }
@@ -895,7 +900,7 @@ function insert_record($table, $dataobject, $primarykey=false, $returnpk=false) 
         $rs = $db->Execute($stmt,$ddd);
     }
     catch (ADODB_Exception $e) {
-        throw new SQLException($e->getMessage());
+        throw new SQLException(create_sql_exception_message($e, $insertSQL, $ddd));
     }
 
     // If a return ID is not needed then just return true now
@@ -925,7 +930,8 @@ function insert_record($table, $dataobject, $primarykey=false, $returnpk=false) 
             throw new SQLException('WTF: somehow got more than one record when searching for a primary key');
         }
         catch (ADODB_Exception $e) {
-            throw new SQLException($e->getMessage());
+            throw new SQLException("Trying to get pk from oid failed: " 
+                                   . $e->getMessage() . " sql was $oidsql");
         }
     }
 
@@ -953,8 +959,7 @@ function update_record($table, $dataobject, $where) {
 
     if (empty($where) && !isset($dataobject->id) ) { 
         // nothing to put in the where clause and we don't want to update everything
-        // @todo please make a proper message here.
-        throw new SQLException('reeeeowwww! hhhssssssss');
+        throw new SQLException('update_record called with no where clause');
     }
 
     $wherefields = array();
@@ -1040,13 +1045,14 @@ function update_record($table, $dataobject, $where) {
         }
     }
 
+    $sql = 'UPDATE '. get_config('dbprefix') . $table .' SET '. $update .' WHERE ' . $whereclause;
     try { 
-        $stmt = $db->Prepare('UPDATE '. get_config('dbprefix') . $table .' SET '. $update .' WHERE ' . $whereclause);
+        $stmt = $db->Prepare($sql);
         $rs = $db->Execute($stmt,array_merge($values, $wherevalues));
         return true;
     }
     catch (ADODB_Exception $e) {
-        throw new SQLException($e->getMessage());
+        throw new SQLException(create_sql_exception_message($e, $sql, $wherevalues));
     }
 }
 
@@ -1318,6 +1324,14 @@ function db_quote($value) {
     global $db;
 
     return $db->Quote($value);
+}
+
+function create_sql_exception_message($e, $sql, $values) {
+    $message = 'Failed to get a recordset: ' . $e->getMessage() . "Command was: $sql";
+    if (is_array($values) && count($values) > 0) {
+        $message .= ' and values was (' . implode(',', $values) . ')';
+    }
+    return $message;
 }
 
 ?>

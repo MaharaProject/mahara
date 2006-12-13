@@ -356,16 +356,23 @@ function template_render($template, $mode, $data=array()) {
                     );
                     
                     if ( isset($data[$t['id']]) ) {
-                        $artefact = artefact_instance_from_id($data[$t['id']]['id']);
-
                         $format = FORMAT_ARTEFACT_LISTSELF;
 
                         if (isset($data[$t['id']]['format'])) {
                             $format = $data[$t['id']]['format'];
                         }
-                        $block .= $artefact->render($format, null);
-                        $block .= '<input type="hidden" name="template[' . $t['id'] . '][id]" value="' . hsc($data[$t['id']]['id']) . '">';
-                        $block .= '<input type="hidden" name="template[' . $t['id'] . '][format]" value="' . hsc($format) . '">';
+
+                        if ($format == FORMAT_ARTEFACT_LISTSELF) {
+                            $droplist[$t['id']]['oldformat'] = $droplist[$t['id']]['format'];
+                            $droplist[$t['id']]['format'] = FORMAT_ARTEFACT_LISTSELF;
+                        }
+
+                        $block .= template_render_artefact_block($t['id'], $data[$t['id']]['id'], $format);
+
+                        // $artefact = artefact_instance_from_id($data[$t['id']]['id']);
+                        // $block .= $artefact->render($format, null);
+                        // $block .= '<input type="hidden" name="template[' . $t['id'] . '][id]" value="' . hsc($data[$t['id']]['id']) . '">';
+                        // $block .= '<input type="hidden" name="template[' . $t['id'] . '][format]" value="' . hsc($format) . '">';
                     }
                     else if ( isset($t['defaultartefacttype']) ) {
                         $artefact = null;
@@ -380,9 +387,10 @@ function template_render($template, $mode, $data=array()) {
                             $block .= template_render_empty_artefact_block();
                         }
                         else {
-                            $block .= $artefact->render($t['defaultformat'], null);
-                            $block .= '<input type="hidden" name="template[' . $t['id'] . '][id]" value="' . hsc($artefact->get('id')) . '">';
-                            $block .= '<input type="hidden" name="template[' . $t['id'] . '][format]" value="' . hsc($t['defaultformat']) . '">';
+                            $block .= template_render_artefact_block($t['id'], $artefact, $t['defaultformat']);
+                            // $block .= $artefact->render($t['defaultformat'], null);
+                            // $block .= '<input type="hidden" name="template[' . $t['id'] . '][id]" value="' . hsc($artefact->get('id')) . '">';
+                            // $block .= '<input type="hidden" name="template[' . $t['id'] . '][format]" value="' . hsc($t['defaultformat']) . '">';
                         }
                     }
                     else {
@@ -461,6 +469,17 @@ function template_render($template, $mode, $data=array()) {
         }
     }
 
+    function removeListItem(x) {
+        var ul = x.parentNode.parentNode;
+        if (ul.childNodes.length == 1) {
+            ul.parentNode.moveTarget.acceptData.format = ul.parentNode.moveTarget.acceptData.oldformat;
+            replaceChildNodes(ul.parentNode, SPAN({ 'class': 'empty_block' }, get_string('empty_block')));
+        }
+        else {
+            removeElement(x.parentNode);
+        }
+    }
+
     function blockdrop(element, target, format) {
         var srcData = element.moveSource.acceptData;
         var dstData = target.moveTarget.acceptData;
@@ -474,13 +493,31 @@ function template_render($template, $mode, $data=array()) {
         }
 
         if (format) {
-            replaceChildNodes(target, IMG({ src: {$spinner_url} }));
+            var real_target = target;
+
+            if (format == 'listself') {
+                if(target.childNodes[0].nodeName != 'UL') {
+                    real_target = LI();
+                    replaceChildNodes(target, UL(null, real_target));
+                    dstData.oldformat = dstData.format;
+                    dstData.format = ['listself'];
+                }
+                else {
+                    real_target = LI();
+                    appendChildNodes(target.childNodes[0], real_target);
+                }
+            }
+
+            replaceChildNodes(real_target, IMG({ src: {$spinner_url} }));
             var d = loadJSONDoc('{$wwwroot}json/renderartefact.php', {'id': element.artefactid, 'format': format} );
             d.addCallbacks(
                 function (response) {
-                    target.innerHTML = response.data;
-                    appendChildNodes(target,
-                        INPUT({'type': 'hidden', 'name': 'template[' + target.id + '][id]', 'value': element.artefactid }),
+                    real_target.innerHTML = response.data;
+                    if(format == 'listself') {
+                        appendChildNodes(real_target, A({ href: '', onclick: 'removeListItem(this); return false;' }, '[x]'));
+                    }
+                    appendChildNodes(real_target,
+                        INPUT({'type': 'hidden', 'name': 'template[' + target.id + '][id][]', 'value': element.artefactid }),
                         INPUT({'type': 'hidden', 'name': 'template[' + target.id + '][format]', 'value': format })
                     );
                 },
@@ -600,7 +637,52 @@ function template_format_owner($format, $user) {
 }
 
 function template_render_empty_artefact_block() {
-    return '<i>' . get_string('empty_block', 'view') . '</i>';
+    return '<span class="empty_block">' . get_string('empty_block', 'view') . '</span>';
+}
+
+/**
+ * This function renders an artefact block
+ *
+ * @param string name of the block
+ * @param mixed the artefact(s) to render (can either be an ArtefactType
+ * object, an integer artefact id, or an array of artefact ids)
+ * @param string format to render the artefact(s) to
+ *
+ * @return string html rendered data
+ */
+function template_render_artefact_block($blockname, $artefact, $format) {
+    $block = '';
+
+    if ($artefact instanceof ArtefactType) {
+        $block .= $artefact->render($format, null);
+        $block .= '<input type="hidden" name="template[' . $blockname . '][id]" value="' . hsc($artefact->get('id')) . '">';
+        $block .= '<input type="hidden" name="template[' . $blockname . '][format]" value="' . hsc($format) . '">';
+    }
+    else if ($format == FORMAT_ARTEFACT_LISTSELF && is_array($artefact)) {
+        $block .= '<ul>';
+        foreach ($artefact as $id) {
+            $block .= '<li>';
+            $instance = artefact_instance_from_id($id);
+            $block .= $instance->render($format, null);
+            $block .= '<a href="" onclick="removeListItem(this);return false;">[x]</a>';
+            $block .= '<input type="hidden" name="template[' . $blockname . '][id][]" value="' . hsc($instance->get('id')) . '">';
+            $block .= '<input type="hidden" name="template[' . $blockname . '][format]" value="' . hsc($format) . '">';
+            $block .= '</li>';
+        }
+        $block .= '</ul>';
+    }
+    else {
+        if (is_array($artefact)) {
+            $artefact = $artefact[0];
+        }
+
+        $artefact = artefact_instance_from_id($artefact);
+        $block .= $artefact->render($format, null);
+        $block .= '<input type="hidden" name="template[' . $blockname . '][id]" value="' . hsc($artefact->get('id')) . '">';
+        $block .= '<input type="hidden" name="template[' . $blockname . '][format]" value="' . hsc($format) . '">';
+    }
+
+    return $block;
 }
 
 ?>

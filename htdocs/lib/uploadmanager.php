@@ -95,10 +95,7 @@ class upload_manager {
             throw new Exception('Unable to create upload directory');
         }
 
-        if (file_exists($destination . '/' . $newname)) {
-            if (!$this->handlecollisions) {
-                return false;
-            }
+        if (file_exists($destination . '/' . $newname) && $this->handlecollisions) {
             $newname = $this->rename_duplicate_file($destination, $newname);
         }
 
