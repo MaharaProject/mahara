@@ -5,8 +5,7 @@
         <select name="type" id="type">
             <option value="group">{{str tag=mygroups}}</option>
             <option value="community">{{str tag=communities}}</option>
-            <option value="user">{{str tag=users}}</option>
-            <option value="all" selected="selected">{{str tag=all}}</option>
+            <option value="user" selected="selected">{{str tag=users}}</option>
         </select>
         <button id="dosearch" type="button">{{str tag=go}}</button>
         <table id="results">
@@ -25,6 +24,8 @@
 
 <script type="text/javascript" src="/js/tablerenderer.js"></script>
 <script type="text/javascript">
+var count = 0;
+
 // Utility functions
 
 // Given a row, render it on the left hand side
@@ -42,10 +43,6 @@ function renderPotentialPresetItem(item) {
 }
 
 // Given a row, render it on the right hand side
-// The RHS looks like:
-//  [ name     ][ button ]
-//  | from  v   v   v    |
-//  | to    v   v   v    |
 function renderAccessListItem(item) {
     var removeButton = BUTTON({'type': 'button'}, '{{str tag=remove}}');
     var dateDiv = DIV(null,
@@ -54,7 +51,20 @@ function renderAccessListItem(item) {
         makeCalendarInput(item, 'stop'),
         makeCalendarLink(item, 'stop')
     );
-    var row = DIV(null, item.name, removeButton, dateDiv);
+    var row = DIV(null,
+        item.name,
+        removeButton,
+        dateDiv,
+        INPUT({
+            'type': 'hidden',
+            'name': 'accesslist[' + count + '][type]',
+            'value': item.type
+        }),
+        INPUT({
+            'type': 'hidden',
+            'name': 'accesslist[' + count + '][id]',
+            'value': item.id})
+    );
 
     connect(removeButton, 'onclick', function() {
         removeElement(row);
@@ -63,21 +73,23 @@ function renderAccessListItem(item) {
     
     setupCalendar(item, 'start');
     setupCalendar(item, 'stop');
+    count++;
 }
 
 function makeCalendarInput(item, type) {
     return INPUT({
         'type':'text',
-        'name': item.id + '_' + type + 'date',
-        'id'  : item.id + '_' + type + 'date'
+        'name': 'accesslist[' + count + '][' + type + 'date]',
+        'id'  :  type + 'date_' + count,
+        'value': typeof(item[type + 'date']) != 'undefined' ? item[type + 'date'] : ''
     });
 }
 
 function makeCalendarLink(item, type) {
     var link = A({
         'href'   : '',
-        'id'     : item.id + '_' + type + 'date_btn',
-        'onclick': 'return false;',
+        'id'     : type + 'date_' + count + '_btn',
+        'onclick': 'return false;', // @todo do with mochikit connect
         'class'  : 'pieform-calendar-toggle'},
         IMG({
             'src': '{{$THEMEURL}}calendar.gif',
@@ -87,37 +99,38 @@ function makeCalendarLink(item, type) {
 }
 
 function setupCalendar(item, type) {
-    log(type);
+    //log(type);
     var dateStatusFunc, selectedFunc;
-    if (type == 'start') {
-        dateStatusFunc = function(date) {
-            startDateDisallowed(date, $(item.id + '_stopdate'));
-        };
-        selectedFunc = function(calendar, date) {
-            startSelected(calendar, date, $(item.id + '_startdate'), $(item.id + '_stopdate'));
-        }
-    }
-    else {
-        dateStatusFunc = function(date) {
-            stopDateDisallowed(date, $(item.id + '_startdate'));
-        };
-        selectedFunc = function(calendar, date) {
-            stopSelected(calendar, date, $(item.id + '_startdate'), $(item.id + '_stopdate'));
-        }
-    }
+    //if (type == 'start') {
+    //    dateStatusFunc = function(date) {
+    //        startDateDisallowed(date, $(item.id + '_stopdate'));
+    //    };
+    //    selectedFunc = function(calendar, date) {
+    //        startSelected(calendar, date, $(item.id + '_startdate'), $(item.id + '_stopdate'));
+    //    }
+    //}
+    //else {
+    //    dateStatusFunc = function(date) {
+    //        stopDateDisallowed(date, $(item.id + '_startdate'));
+    //    };
+    //    selectedFunc = function(calendar, date) {
+    //        stopSelected(calendar, date, $(item.id + '_startdate'), $(item.id + '_stopdate'));
+    //    }
+    //}
     Calendar.setup({
-        "ifFormat"  :"%Y\/%m\/%d",
-        "daFormat"  :"%Y\/%m\/%d",
-        "inputField": item.id + '_' + type + 'date',
-        "button"    : item.id + '_' + type + 'date_btn',
-        "dateStatusFunc" : dateStatusFunc,
-        "onSelect"       : selectedFunc
+        "ifFormat"  :"%Y\/%m\/%d %H:%M",
+        "daFormat"  :"%Y\/%m\/%d %H:%M",
+        "inputField": type + 'date_' + count,
+        "button"    : type + 'date_' + count + '_btn',
+        //"dateStatusFunc" : dateStatusFunc,
+        //"onSelect"       : selectedFunc
+        "showTimes" : true
     });
 }
 
 // SETUP
 
-// Left top: public, any, friends
+// Left top: public, loggedin, friends
 var potentialPresets = {{$potentialpresets}};
 forEach(potentialPresets, function(preset) {
     renderPotentialPresetItem(preset);
@@ -133,10 +146,11 @@ var searchTable = new TableRenderer(
 );
 searchTable.statevars.push('type');
 searchTable.statevars.push('query');
-searchTable.type = 'all';
+searchTable.type = 'user';
 searchTable.query = '';
 searchTable.rowfunction = function(rowdata, rownumber, globaldata) {
     var addButton = BUTTON({'type': 'button'}, '{{str tag=add}}');
+    rowdata.type = searchTable.type;
     connect(addButton, 'onclick', function() {
         appendChildNodes('accesslist', renderAccessListItem(rowdata));
     });
