@@ -73,7 +73,8 @@ class ArtefactTypeFileBase extends ArtefactType {
 
     public function __construct($id = 0, $data = null) {
         parent::__construct($id, $data);
-
+        $this->mtime = time();
+        
         // So far the only thing in the artefact_file_files table is the file size
         if (!$data && $this->id
             && ($filedata = get_record('artefact_file_files', 'artefact', $this->id))) {
@@ -109,6 +110,18 @@ class ArtefactTypeFileBase extends ArtefactType {
         parent::delete();
     }
 
+    // Check if something exists in the db with a given title, owner, parent folder
+    public static function exists_in_db($title, $owner, $folder) {
+        $prefix = get_config('dbprefix');
+        $parentsql = empty($folder) ? 'parent IS NULL' : 'parent = ' . $folder;
+        $filetypesql = "('" . join("','", PluginArtefactFile::get_artefact_types()) . "')";
+        return get_field_sql('SELECT id FROM ' . $prefix . 'artefact
+            WHERE owner = ' . $owner . '
+            AND title = ?
+            AND ' . $parentsql . '
+            AND artefacttype IN ' . $filetypesql, array($title));
+    }
+
     public static function get_my_files_data($parentfolderid, $userid) {
 
         if ($parentfolderid) {
@@ -132,7 +145,6 @@ class ArtefactTypeFileBase extends ArtefactType {
         else {
             foreach ($filedata as $item) {
                 $item->mtime = strftime(get_string('strftimedatetime'),strtotime($item->mtime));
-                // Add url for files here.
             }
         }
 
@@ -186,6 +198,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
 
     // Where to store files under dataroot in the filesystem
     static $artefactfileroot = 'artefact/file/';
+
     // Number of subdirectories to create under $artefactfileroot
     static $artefactfilesubdirs = 256;
 
@@ -196,6 +209,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
     public function get_path() {
         return get_config('dataroot') . self::get_file_directory($this->id) . '/' .  $this->id;
     }
+
 
     /**
      * Processes a newly uploaded file, copies it to disk, and associates it with
@@ -210,11 +224,8 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             return false;
         }
         $this->size = $um->file['size'];
-        $this->mtime = $this->ctime;
         $this->dirty = true;
-        if (empty($this->id)) {
-            $this->commit();
-        }
+        $this->commit();
         // Save the file using its id as the filename, and use its id modulo
         // the number of subdirectories as the directory name.
         if (!$um->save_file(self::get_file_directory($this->id) , $this->id)) {
@@ -229,7 +240,6 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             return; 
         }
         unlink($this->get_path());
-        //unlink(get_config('dataroot') . '/' . self::get_file_directory($this->id) . '/' . $this->id);
         parent::delete();
     }
 
