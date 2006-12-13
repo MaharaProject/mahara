@@ -44,30 +44,6 @@ switch ($type) {
     case 'group':
         $data = get_group_results($query, $limit, $offset);
         break;
-    case 'all':
-        $userdata  = get_user_results($query, $limit, $offset);
-        $groupdata = get_group_results($query, $limit, $offset);
-        $resultdata = array();
-        $i = 0;
-        foreach ($userdata['data'] as $result) {
-            $i++;
-            $resultdata[] = $result;
-        }
-        if ($groupdata['data']) {
-            foreach ($groupdata['data'] as $result) {
-                if ($i++ >= $limit) {
-                    break;
-                }
-                $resultdata[] = $result;
-            }
-        }
-        $data = array(
-            'count' => $userdata['count'] + $groupdata['count'],
-            'limit' => $limit,
-            'offset' => $offset,
-            'data' => $resultdata
-        );
-        break;
 }
 
 json_headers();
