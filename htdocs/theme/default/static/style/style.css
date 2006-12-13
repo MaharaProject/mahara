@@ -42,136 +42,9 @@ h5, h6 {
     font-size: 13px;
 }
 
-.center {
-    text-align: center;
-}
-
-/* CONTENT LAYOUT BEGIN */
-#container {
-	min-width: 770px;
-   width: 90%;
-	margin: 0 auto;
-	padding: 0;
-}
-
-/* HEADER BEGIN */
-#topwrapper {
-	padding: 0;
-	margin: 15px 0 0 0;
-}
-
-#header {
-	padding: 0;
-    margin: 0;
-	background: #FFFFFF url(../images/header_corner_topleft.gif) no-repeat top left;
-}
-
-.cornertopright {
-	float: right;
-	margin: 0;
-	padding: 0;
-}
-
-#topwrapper ul,
-#topwrapper li {
-  	padding: 0px;
-    margin: 0px;
-	text-align: right;
-    display: inline;
-}
-
-/* GLOBAL NAVIGATION TABS BEGIN */
-#globalTabs {
-	text-align: right;
-  	padding: 0;
-    margin: 0 10px 5px 0;
-}
-
-#topwrapper #globalTabs #globalnav-logout a {
-	width: 89px;
-	height: 24px;
-  	padding: 5px 25px 6px 25px;
-  	margin: 0;
-  	background: url(../images/globalnav_logout_off.gif) no-repeat center;
-  	text-decoration: none;
-	font-size: 12px;
-	font-weight: bold;
-	color: #FFFFFF;
-}
-
-#topwrapper #globalTabs #globalnav-logout a:hover {
-  	background: url(../images/globalnav_logout_on.gif) no-repeat center;
-  	text-decoration: none;
-}
-
-#topwrapper #globalTabs #globalnav-logout.selected a,
-#topwrapper #globalTabs #globalnav-logout.selected a:link,
-#topwrapper #globalTabs #globalnav-logout.selected a:active,
-#topwrapper #globalTabs #globalnav-logout.selected a:visited {
-  	background: url(images/../images/globalnav_logout_on.gif) no-repeat center;
-  	text-decoration: none;
-}
-
-#topwrapper #globalTabs #globalnav-returntosite a {
-	width: 150px;
-  	padding: 5px 36px 6px 37px;
-  	margin: 0;
-  	background: url(../images/globalnav_siteadmin_off.gif) no-repeat center;
-  	text-decoration: none;
-	font-size: 12px;
-	font-weight: bold;
-	color: #FFFFFF;
-}
-
-#topwrapper #globalTabs #globalnav-returntosite a:hover {
-  	background: url(../images/globalnav_siteadmin_on.gif) no-repeat center;
-  	text-decoration: none;
-}
-
-#topwrapper #globalTabs #globalnav-returntosite.selected a,
-#topwrapper #globalTabs #globalnav-returntosite.selected a:link,
-#topwrapper #globalTabs #globalnav-returntosite.selected a:active,
-#topwrapper #globalTabs #globalnav-returntosite.selected a:visited {
-  	background: url(images/../images/globalnav_siteadmin_on.gif) no-repeat center;
-  	text-decoration: none;
-}
-
-#topwrapper #globalTabs #globalnav-siteadmin a {
-	width: 150px;
-  	padding: 5px 21px 6px 21px;
-  	margin: 0;
-  	background: url(../images/globalnav_siteadmin_off.gif) no-repeat center;
-  	text-decoration: none;
-	font-size: 12px;
-	font-weight: bold;
-	color: #FFFFFF;
-}
-
-#topwrapper #globalTabs #globalnav-siteadmin a:hover {
-  	background: url(../images/globalnav_siteadmin_on.gif) no-repeat center;
-  	text-decoration: none;
-}
-
-#topwrapper #globalTabs #globalnav-siteadmin.selected a,
-#topwrapper #globalTabs #globalnav-siteadmin.selected a:link,
-#topwrapper #globalTabs #globalnav-siteadmin.selected a:active,
-#topwrapper #globalTabs #globalnav-siteadmin.selected a:visited {
-  	background: url(images/../images/globalnav_siteadmin_on.gif) no-repeat center;
-  	text-decoration: none;
-}
-
-/* GLOBAL NAVIGATION TABS END */
-
-.logo {
-	text-align: left;
-    padding: 10px 10px 10px 10px;
-	margin: 0;
-}
-
 form {
    margin: 0;
 }
-
 input, select, textarea {
 	border: 1px solid #b0bf64;
 }
@@ -182,111 +55,115 @@ input[type="checkbox"] {
     display: none;
 }
 
-
-/* REQUIRED INPUT BOX HIGHLIGHTS BEGINS */
-#register #register_username,
-#register #register_password1,
-#register #register_password2,
-#register #register_firstname,
-#register #register_lastname,
-#register #register_email {
-	border: 1px solid #b0bf64;
-	padding: 2px;
+.center {
+    text-align: center;
 }
 
-#profileform #profileform_firstname,
-#profileform #profileform_lastname {
-	border: 1px solid #b0bf64;
-	padding: 2px;
+.fl {
+    float: left;
+}
+.fr {
+    float: right;
 }
 
-#newpost #newpost_title,
-#newpost #newpost_description {
-	border: 1px solid #b0bf64;
-	padding: 2px;
+/* CONTENT LAYOUT BEGIN */
+#container {
+	min-width: 770px;
+    width: 90%;
+	margin: 0 auto;
 }
 
-#newblog #newblog_title {
-	border: 1px solid #b0bf64;
-	padding: 2px;
+/* HEADER BEGIN */
+#topwrapper {
+	margin-top: 15px;
 }
 
-#contactus #contactus_email,
-#contactus #contactus_name,
-#contactus #contactus_message {
-	border: 1px solid #b0bf64;
-	padding: 2px;
+#header {
+	background: #FFFFFF url(../images/header_corner_topleft.gif) no-repeat top left;
 }
 
-#creategroup #creategroup_name {
-	border: 1px solid #b0bf64;
-	padding: 2px;
+#topwrapper ul,
+#topwrapper li {
+  	padding: 0;
+    margin: 0;
+	text-align: right;
+    display: inline;
 }
 
-#editgroup #editgroup_name {
-	border: 1px solid #b0bf64;
-	padding: 2px;
+/* GLOBAL NAVIGATION TABS BEGIN */
+#globalTabs {
+	text-align: right;
+    margin: 0 10px 5px 0;
+}
+#globalTabs a {
+    font-weight: bold;
+    color: #FFF;
+}
+#globalTabs a:hover {
+    text-decoration: none;
 }
 
-/* REQUIRED INPUT BOX HIGHLIGHTS ENDS */
+#globalnav-logout a {
+  	padding: 5px 25px 6px 25px;
+  	background: url(../images/globalnav_logout_off.gif) no-repeat center;
+}
+
+#globalnav-logout a:hover {
+  	background: url(../images/globalnav_logout_on.gif) no-repeat center;
+}
+
+#globalnav-returntosite a {
+  	padding: 5px 36px 6px 37px;
+  	background: url(../images/globalnav_siteadmin_off.gif) no-repeat center;
+}
+
+#globalnav-returntosite a:hover {
+  	background: url(../images/globalnav_siteadmin_on.gif) no-repeat center;
+}
+
+#globalnav-siteadmin a {
+  	padding: 5px 21px 6px 21px;
+  	background: url(../images/globalnav_siteadmin_off.gif) no-repeat center;
+}
+
+#globalnav-siteadmin a:hover {
+  	background: url(../images/globalnav_siteadmin_on.gif) no-repeat center;
+}
+/* GLOBAL NAVIGATION TABS END */
+
+#logo {
+    padding: 10px;
+}
 
 .searchbox {
-	float: right;
 	font-size: 11px;
 	font-weight: bold;
 	color: #497424;
-	padding: 0;
 	margin: 40px 0 0 0;
 }
 
-.searchbox #searchform_submit {
+#searchform_submit {
 	border: none;
-}
-
-#searchform #query_container {
-	padding: 0;
-	margin: 0;
-	vertical-align: middle;
-}
-
-#searchform #query_container #query {
-	margin: 0;
-	padding: 0;
-	vertical-align: middle;
-}
-
-#searchform #submit_container {
-	padding: 0 0 0 0;
-	margin: 0 0 0 0;
-	vertical-align: middle;
-}
-
-#searchform #submit_container #searchform_submit {
-	margin:  0 0 0 5px; 
+	margin-left: 5px; 
+	padding-bottom: 2px;
 	text-align: right;
-	padding: 0 0 2px 0;
 	vertical-align: middle;
-	border: none;
 }
 
-#searchform #query_container input {
+#searchform_query_container, #searchform_submit_container {
+	vertical-align: middle;
+}
+
+#searchform_query_container input {
 	border: 1px solid #b0bf64;
 	padding: 4px;
 	color: #777777;
 	width: 183px;
 }
- 
-.searchbox table,
-.searchbox tr,
-.searchbox td {
-	padding: 0;
-	margin: 0;
-}
 
 .searchbox .advancedsearch {
 	font-size: 9px;
-	padding: 0 0 0 5px;
-	margin: 0;
+	padding-left: 5px;
 }
 
 /* HEADER END */
@@ -294,33 +171,18 @@ input[type="checkbox"] {
 
 /* MAIN COLUMNS BEGIN */
 #mainwrapper {
-	padding: 5px 5px 5px 5px;
-	margin: 0;
+	padding: 5px;
 	background-color: #d4d1c0;
 }
 
 /* MAIN NAVIGATION BEGIN */
-.mainnav-left {
-	float: left;
-	margin: -8px 0 0 0;
-	padding: 0;
-}
-
-.mainnav-right {
-	float: right;
-	margin: -8px 0 0 0;
-	padding: 0;
-}
-
 #mainnav {
-	padding: 8px 0 0 0;
-	margin: 0 0 0 0;
+	padding-top: 8px;
+	margin: 0;
 	background: url(../images/navbg_spacer.gif) repeat-x;
 	height: 32px;
-	font-size: 12px;
 	font-weight: bold;
 	text-transform: uppercase;
-	text-align: left;
 }
 
 #mainnav li {
@@ -331,43 +193,28 @@ input[type="checkbox"] {
 	text-decoration: none;
 }
 
-#mainnav li.selected {
-	color: #FFFFFF;
-}
-
 #mainnav li a,
 #mainnav li a:link,
 #mainnav li a:visited,
 #mainnav li a:active {
 	color: #e6c560;
-	text-decoration: none;
-	margin: 7px 0 0 0;
+	margin-top: 7px;
 }
 
 #mainnav li a:hover {
-	color: #FFFFFF;
+	color: #FFF;
 	text-decoration: none;
 }
 
+#mainnav li.selected a {
+	color: #FFF;
+}
 /* MAIN NAVIGATION ENDS */
 
 /* SUB NAVIGATION BEGINS */
-.subnav-left {
-	float: left;
-	margin: -6px 0 0 0;
-	padding: 0;
-}
-
-.subnav-right {
-	float: right;
-	margin: -6px 0 0 0;
-	padding: 0;
-}
-
-
 #subnav {
-	padding: 6px 0 0 0;
-	margin: -3px 0 0 0;
+	padding-top: 6px;
+	margin: 0;
 	font-size: 11px;
 	font-weight: bold;
 	text-align: left;
@@ -380,10 +227,7 @@ input[type="checkbox"] {
 #subnav li a:link,
 #subnav li a:visited,
 #subnav li a:active {
-	color: #FFFFFF;
-	text-decoration: none;
-	margin: 0;
-	padding: 0;
+	color: #FFF;
 }
 
 #subnav li a:hover {
@@ -394,31 +238,21 @@ input[type="checkbox"] {
 #subnav li {
     display: inline;
     padding: 0;
-	margin: 0 5px 0 5px;
+	margin: 0 5px;
 }
 
-#subnav li.selected {
-    font-weight: bold;
+#subnav li.selected a {
 	color: #98bf10;
 }
-/* SUB NAVIGATION BEGINS */
-
-
-#maincontentwrapper {
-	margin: 0 0 0 0;
-	padding: 0;
-}
+/* SUB NAVIGATION ENDS */
 
 #column-left {
-    margin:0 235px 0 0;
-    padding:0;
-	background-color: #FFFFFF;
+    margin-right: 235px;
+	background-color: #FFF;
 }
 
-#column-left-full {
-    margin:0 0 0 0;
-    padding:0;
-	background-color: #FFFFFF;
+#column-full {
+	background-color: #FFF;
 }
 
 #column-right {
@@ -428,41 +262,34 @@ input[type="checkbox"] {
 
 /* RIGHT SIDE BOX BEGIN */
 div.sidebar {
-	background: #FFFFFF url(../images/sidebox2_top_headerbg.gif) no-repeat top;
+	background: #FFF url(../images/sidebox2_top_headerbg.gif) no-repeat top;
    	padding: 10px 0 0 10px;
-   	margin: 0 0 10px 0;
-	color: #FFFFFF;
+   	margin-bottom: 10px;
+	color: #FFF;
 	font-weight: bold;
 }
 
-#column-right div.sidebar-botcorners {
-    padding: 0 0 0 0;
-    margin: 0 0 0 0;
-}
-
-#column-right .sidebarforgotpassword {
+.sidebarforgotpassword {
 	padding: 10px 5px 5px 10px;
-	margin: 0 0 0 0;
 	background: #FFFFFF url(../images/sidebox_topwhite.gif) no-repeat top;
 }
 
-#column-right div.sidebarforgotpassword-botcorners {
-    padding: 0 0 0 0;
-    margin: 0 0 7px 0;
+#column-right .sidebarforgotpassword-botcorners {
+    margin-bottom: 7px;
 }
 
-#column-right .sidebarforgotpassword a,
-#column-right .sidebarforgotpassword a:link,
-#column-right .sidebarforgotpassword a:active,
-#column-right .sidebarforgotpassword a:visited {
+.sidebarforgotpassword a,
+.sidebarforgotpassword a:link,
+.sidebarforgotpassword a:active,
+.sidebarforgotpassword a:visited {
 	background: url(../images/icon_question.gif) no-repeat left;
-	padding: 0 0 0 17px;
+	padding-left: 17px;
 	color: #547c22;
 	text-decoration: none;
 	font-weight: bold;
 }
 
-#column-right .sidebarforgotpassword a:hover {
+.sidebarforgotpassword a:hover {
 	color: #819f18;
 	text-decoration: underline;
 }
@@ -491,17 +318,16 @@ div.sidebar {
 
 
 /* LOGIN FOR COLUMN RIGHT ONLY BEGINS */
-#column-right div.loginbox-botcorners {
-    padding: 0 0 0 0;
-    margin: 0 0 0 -10px;
+.loginbox-botcorners {
+    margin-left: -10px;
 }
 
 #column-right #loginbox {
     width: 228px;
-	background: #FFFFFF url(../images/sidebox_top_headerbg.gif) no-repeat top;
-    padding: 10px 0 0 0;
-    margin: 0 0 10px 0;
-	color: #000000;
+	background: #FFF url(../images/sidebox_top_headerbg.gif) no-repeat top;
+    padding-top: 10px;
+    margin-bottom: 10px;
+	color: #000;
 }
 
 #column-right #loginbox fieldset {
@@ -512,19 +338,18 @@ div.sidebar {
 }
 
 #column-right #login legend {
-	color: #FFFFFF;
+	color: #FFF;
 	font-weight: bold;
 	margin: 0 0 0 -7px;
 	padding: 0;
 }
 
-#column-right #login #login_login_username_container {
-	margin: 25px 0 0 0;
-	padding: 0;
+#column-right #login_login_username_container {
+	margin-top: 25px;
 }
 
-#column-right #login #login_login_password_container {
-	margin: 5px 0 5px 0;
+#column-right #login_login_password_container {
+	margin: 5px 0;
 	padding: 0;
 }
 
@@ -538,7 +363,7 @@ div.sidebar {
 	color: #7e7e7e; 
 }
 
-#column-right #login #login_submit_container {
+#column-right #login_submit_container {
 	font-size: 9px;
 	float: left;
 	margin: 0 0 5px 10px;
@@ -546,8 +371,8 @@ div.sidebar {
 	display: inline;
 }
 
-#column-right #login #login_login_username_container input,
-#column-right #login #login_login_password_container input {
+#column-right #login_login_username_container input,
+#column-right #login_login_password_container input {
 	border: 1px solid #5c8727;
 	padding: 2px;
 	width: 200px;
@@ -560,22 +385,20 @@ div.sidebar {
 	color: #547c22;
 	font-size: 9px;
 	text-decoration: none;
-	margin: 0 2px 0 2px;
+	margin: 0 2px;
 }
 
 #column-right #login a:hover {
 	text-decoration: underline;
 }
-/* LOGIN FOR COLUMN RIGHT ONLY BEGINS */
-
-
+/* LOGIN FOR COLUMN RIGHT ONLY ENDS */
 /* RIGHT SIDE BOX ENDS */
 
 /* MAIN CONTENT BEGIN */
 .content { 
 	padding: 0;
-	margin: 0 0 10px 0;
-	background-color: #FFFFFF;
+	margin-bottom: 10px0;
+	background-color: #FFF;
 }
 
 * html .content {
@@ -601,7 +424,7 @@ div.sidebar {
 }
 
 #messages .error,
-#messages .err {
+/*#messages .err*/ {
 	color: #dd0221;
 	background: #ffd3d9 url(../images/icon_problem.gif) no-repeat left;
 	padding: 0 0 0 17px;
@@ -613,10 +436,7 @@ div.sidebar {
 	padding: 0 0 0 17px;
 }
 
-#accountprefs_message {
-	margin: 10px 0 0 0;
-}
-
+/* NOTE: these next two rules should be merged */
 #addnewgroup {
 	background: url(../images/icon_add.gif) no-repeat top left;
 	padding: 0 0 0 17px;
@@ -656,41 +476,34 @@ div.sidebar {
     height: 6px;
 } 
 
+/** @todo convert the elements themselves to be divs, then the display and width rules won't be needed */
 .box-cnrs .cnr-tl {
   	background: url(../images/content_corner_topleft.gif) top left no-repeat ;
-  	margin: 0 0 0 0;
-  	padding: 0;
   	display: block;
   	width: 100%;
 }
 
 .box-cnrs .cnr-tr {
-  	margin: 0 0 0 0;
-  	padding: 0;
   	background: url(../images/content_corner_topright.gif) top right no-repeat;
   	display: block;
   	width: 100%;
 }
 
 .box-cnrs .cnr-bl {
-  	margin: 0 0 0 0;
-  	padding: 0;
   	background: url(../images/content_corner_botleft.gif) bottom left no-repeat;
   	display: block;
   	width: 100%;
 }
 
 .box-cnrs .cnr-br {
-  	margin: 0 0 0 0;
-  	padding: 6px 0 6px 0;
+  	padding: 6px 0;
   	background: url(../images/content_corner_botright.gif) bottom right no-repeat;
   	display: block;
   	width: 100%;
 }
 
 .maincontent {
-  	padding: 5px 15px 10px 15px; 
-  	margin: 0;
+  	padding: 5px 15px 10px; 
 }
 
 .maincontent ul {
@@ -707,14 +520,13 @@ div.sidebar {
 
 /* LOGIN FOR COLUMN LEFT BEGINS */
 .maincontent #loginbox {
-   	padding: 0;
-   	margin: 10px 0 0 0;
+   	margin-top: 10px;
 }
 
 .maincontent #loginbox fieldset {
 	border: none;
 	padding: 0;
-	margin: 0 0 0 10px;
+	margin-left: 10px;
 }
 
 .maincontent #login legend {
@@ -723,42 +535,25 @@ div.sidebar {
 	display: none;
 }
 
-.maincontent #login #login_login_username_container,
-.maincontent #login #login_login_password_container {
-	margin: 0;
-	padding: 0;
-}
-
 .maincontent #login th {
-	margin: 0 0 0 0;
-	padding: 10px 0 0 0;
+	margin: 0;
+	padding-top: 10px;
 }
 
 .maincontent #login .description {
 	font-size: 9px;
 	color: #7e7e7e; 
-	margin: 0;
-	padding: 0;
 }
 
-.maincontent #login #login_submit_container {
+.maincontent #login_submit_container {
 	font-size: 9px;
-	margin: 0;
-	padding: 0;
 	display: inline;
 }
 
-.maincontent #login #login_submit {
+.maincontent #login_submit {
 	margin: 10px 0 0 12px;
 }
 
-.maincontent #login table,
-.maincontent #login tbody,
-.maincontent #login tr,
-.maincontent #login td {
-	margin: 0;
-	padding: 0;
-}
 /* LOGIN FOR COLUMN LEFT ENDS */
 
 p {
@@ -774,14 +569,14 @@ thead th {
 }
 
 tbody {
-	color: #000000;
-	padding: 2px 4px 2px 4px;
+	color: #000;
+	padding: 2px 4px;
 	margin: 0;
 }
 
 td {
 	padding: 0;
-	margins: 0;
+	margin: 0;
 }
 
 th {
@@ -789,7 +584,7 @@ th {
 	color: #3a5813;
 	vertical-align: top;
 	margin: 0;
-	padding: 2px 4px 2px 4px;
+	padding: 2px 4px;
 }
 
 .required label, 
@@ -819,7 +614,7 @@ acronym {
 	font-size: 9px; 
 	font-style: italic; 
 	color: #7e7e7e; 
-	padding: 0 0 5px 0;
+	padding-bottom: 5px;
 }
 
 .error { 
@@ -838,17 +633,24 @@ acronym {
 
 /* LISTS AND TABLE STYLES BEGINS */
 
-#search td.description,
-#register td.description,
-#forgotpass td.description,
-#views,
-#editsitepage td.description,
-#uploadcsv td.description,
+td.description,
 #template_selection #templates {
 	margin: 0;
 	padding: 0;
 }
 
+/*
+ *
+ * Just about every rule below this point needs to be audited properly
+ * A lot of them can be removed with generic form styling (widths, margins and padding, colours)
+ *
+ *
+ *
+ *
+ *
+ *
+ */
+/** This needs to be done better */
 #activitylist,
 #adminstitutionslist,
 #menuitemlist table,
@@ -864,6 +666,7 @@ acronym {
 	padding: 0;
 }
 
+/** Ditto here */
 #contactus th,
 #staffusers th,
 #adminusers th,
@@ -969,6 +772,7 @@ acronym {
 	top: 0;
 	left: 0;
 	color: #d4d1c0;
+    background-color: #4c7c2c;
 }
 
 #menuitemlist th {
@@ -1122,16 +926,12 @@ a.pieform-calendar-toggle img {
 }
 
 #footer a {
-	color: #FFFFFF;
+	color: #FFF;
 	text-decoration: underline;
-	/*margin: 0 5px;*/
-	padding: 0;
-	border: 0;
 }
 
 #footer a:hover {
 	color: #e6c560;
-	text-decoration: underline;
 }
 
 #bottom-corners {
