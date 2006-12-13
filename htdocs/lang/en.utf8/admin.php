@@ -186,5 +186,5 @@ $string['institutionupdatedsuccessfully'] = 'Institution updated successfully';
 $string['registrationallowed'] = 'Registration allowed?';
 $string['registrationalloweddescription'] = 'Whether users can register for the system with this institution';
 
-
+$string['notificationssaved'] = 'Notification settings saved';
 ?>
