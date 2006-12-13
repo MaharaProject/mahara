@@ -92,9 +92,15 @@ function FileBrowser(element, changedircallback) {
         return rows;
     }
 
-    this.savemetadata = function (fileid, formid) {
-        if (isEmpty($(formid).name.value)) {
+    this.savemetadata = function (fileid, formid, replacefile) {
+        var name = $(formid).name.value;
+        if (isEmpty(name)) {
             $(formid + 'message').innerHTML = get_string('namefieldisrequired');
+            return;
+        }
+        if (!replacefile && self.fileexists(name)) {
+            $(formid+'message').innerHTML = get_string('fileexistsoverwritecancel');
+            setDisplayForElement('inline', $(formid).replace);
             return;
         }
         sendjsonrequest('updatemetadata.json.php', 
@@ -113,7 +119,10 @@ function FileBrowser(element, changedircallback) {
             removeElement(editid);
         };
         var savebutton = INPUT({'type':'button','value':get_string('savechanges')});
-        savebutton.onclick = function () { self.savemetadata(fileinfo.id, formid); };
+        savebutton.onclick = function () { self.savemetadata(fileinfo.id, formid, false); };
+        var replacebutton = INPUT({'type':'button', 'value':get_string('overwrite'),
+                                   'name':'replace', 'style':'display: none;'});
+        replacebutton.onclick = function () { self.savemetadata(fileinfo.id, formid, true); };
         if (fileinfo['artefacttype'] == 'folder') {
             editrows = self.folderformrows(fileinfo);
         }
@@ -137,12 +146,20 @@ function FileBrowser(element, changedircallback) {
         var form = FORM({'method':'post', 'id':formid});
         var cancelbutton = INPUT({'type':'button','value':get_string('cancel'), 'onclick':function () {
             setDisplayForElement(null, self.createfolderbutton);
+            hideElement($(formid).replace);
+            $(formid).name.value = '';
+            $(formid).description.value = '';
+            $(formid+'message').innerHTML = '';
             hideElement(formid);
         }});
         var createbutton = INPUT({'type':'button','value':get_string('create'),'onclick':function () {
-            self.savemetadata(null, formid);
+            self.savemetadata(null, formid, false);
         }});
-        var buttons = TR(null,TD({'colspan':2},createbutton,cancelbutton));
+        var replacebutton = INPUT({'type':'button', 'value':get_string('overwrite'),
+                                   'name':'replace', 'style':'display: none;', 'onclick':function() {
+            self.savemetadata(null, formid, true);
+        }});
+        var buttons = TR(null,TD({'colspan':2},createbutton,replacebutton,cancelbutton));
         appendChildNodes(form, TABLE(null,
                                      TBODY(null, self.folderformrows(null), 
                                            TR(null,TD({'colspan':2},SPAN({'id':formid+'message'}))),
