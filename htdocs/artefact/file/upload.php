@@ -51,8 +51,9 @@ $result->uploadnumber = $uploadnumber;
 $f = new ArtefactTypeFile(0, $data);
 if ($oldid = ArtefactTypeFileBase::exists_in_db($data->title, $data->owner, $parentfolder)) {
     if ($collideaction == 'replace') {
-        $prev = new ArtefactTypeFile($oldid, null);
-        $prev->delete();
+        require_once('artefact.php');
+        $obj = artefact_instance_from_id($oldid);
+        $obj->delete();
     }
     else {
         $result->error = 'fileexists';
