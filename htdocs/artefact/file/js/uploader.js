@@ -29,6 +29,16 @@ function FileUploader(element, foldername, folderid, uploadcallback, fileexists)
         appendChildNodes(self.element, self.form, self.openbutton);
     }
 
+    this.filepart = function (path) {
+        if (path.indexOf('/') > -1) { 
+            var separator = '/';
+        }
+        else {
+            var separator = '\\';
+        }
+        return path.substring(path.lastIndexOf(separator)+1, path.length);
+    }
+
     this.initform = function () {
         var form = FORM({'method':'post', 'id':'uploadform',
                          'enctype':'multipart/form-data', 'encoding':'multipart/form-data',
@@ -40,8 +50,7 @@ function FileUploader(element, foldername, folderid, uploadcallback, fileexists)
                 TD(null, SPAN({'id':'uploaddest'},self.foldername))),
              TR(null, TH(null, LABEL(null, get_string('file'))),
                 TD(null, INPUT({'type':'file', 'name':'userfile', 'onchange':function () {
-                    var full = self.form.userfile.value;
-                    self.form.title.value = full.substring(full.lastIndexOf('/')+1, full.length);
+                    self.form.title.value = self.filepart(self.form.userfile.value);
                 }}))),
              TR(null, TH(null, LABEL(null, get_string('title'))),
                 TD(null, INPUT({'type':'text', 'name':'title'}))),
@@ -88,9 +97,7 @@ function FileUploader(element, foldername, folderid, uploadcallback, fileexists)
             $('uploadformmessage').innerHTML = get_string('titlefieldisrequired');
             return;
         }
-        if (localname.indexOf('/') > -1) { 
-            localname = localname.substring(localname.lastIndexOf('/')+1, localname.length);
-        }
+        localname = self.filepart(localname);
         if (!replacefile && self.fileexists(destname)) {
             $('uploadformmessage').innerHTML = get_string('uploadfileexistsreplacecancel');
             // Show replace button
@@ -108,9 +115,13 @@ function FileUploader(element, foldername, folderid, uploadcallback, fileexists)
                                              'style':'display: none;'}));
         setNodeAttribute(self.form, 'target', 'iframe' + self.nextupload);
         var collideaction = replacefile ? 'replace' : 'fail';
-        appendChildNodes(self.form, INPUT({'type':'hidden', 'name':'collideaction', 'value':collideaction}),
-                         INPUT({'type':'hidden', 'name':'parentfolder', 'value':self.folderid}),
+        appendChildNodes(self.form, 
+                         INPUT({'type':'hidden', 'name':'collideaction', 'value':collideaction}),
                          INPUT({'type':'hidden', 'name':'uploadnumber', 'value':self.nextupload}));
+        if (self.folderid) {
+            appendChildNodes(self.form, 
+                             INPUT({'type':'hidden', 'name':'parentfolder', 'value':self.folderid}));
+        }
 
         self.form.submit();
 
