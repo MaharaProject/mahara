@@ -30,6 +30,8 @@ $string['administration'] = 'Administration';
 
 // Installer
 $string['release'] = 'Release %s (%s)';
+$string['copyright'] = 'Copyright &copy; 2006 onwards, Catalyst IT Ltd';
+$string['agreelicense'] = 'I agree';
 $string['component'] = 'Component or plugin';
 $string['continue'] = 'Continue';
 $string['coredata'] = 'core data';

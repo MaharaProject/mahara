@@ -1,6 +1,6 @@
-{include file='header.tpl'}
+{include file='header.tpl' nosearch='true'}
 
-<div id="column-left-full">
+<div id="column-full">
 	<div class="content">
 		<div class="box-cnrs"><span class="cnr-tl"><span class="cnr-tr"><span class="cnr-bl"><span class="cnr-br">
 			<div class="maincontent">

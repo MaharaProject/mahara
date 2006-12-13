@@ -31,41 +31,41 @@ require_once('pieforms/pieform.php');
 require_once('pieforms/pieform/elements/calendar.php');
 $smarty = smarty(array(), pieform_get_headdata_calendar(pieform_configure_calendar(array())));
 $createid = param_integer('createid', null);
+$data = $SESSION->get('create_' . $createid);
 
+
+log_debug($data);
 $form = array(
     'name' => 'createview4',
     'elements' => array(
-        'acl' => array(
-            'type' => 'viewacl',
-            //'defaultvalue' => array(
-            //    // make something up
-            //    array(
-            //        'type'  => 'public',
-            //        'id'    => null,
-            //        'start' => null,
-            //        'end'   => null
-            //    ),
-            //    array(
-            //        'type' => 'user',
-            //        'id' => 1,
-            //        'start' => null,
-            //        'end' => null
-            //    )
-            //)
+        'accesslist' => array(
+            'type'         => 'viewacl',
+            'defaultvalue' => isset($data['accesslist']) ? $data['accesslist'] : null
         ),
         'submit' => array(
-            'type' => 'submitcancel',
-            'value' => array(get_string('createview'), get_string('cancel'))
+            'type' => 'cancelbackcreate',
+            'value' => array(get_string('cancel'), get_string('back'), get_string('createview'))
         )
     )
 );
 
+function createview4_submit_cancel() {
+    redirect(get_config('wwwroot') . 'view/');
+}
 
 function createview4_submit($values) {
-    global $SESSION, $USER, $createid;
+    global $SESSION, $USER, $createid, $data;
     log_debug($values);
-    $data = $SESSION->get('create_' . $createid);
     log_debug($data);
+
+
+    if (param_boolean('back')) {
+        $data['accesslist'] = array_values($values['accesslist']);
+        log_debug($data);
+        $SESSION->set('create_' . $createid, $data);
+        redirect(get_config('wwwroot') . 'view/create3.php?createid=' . $createid);
+    }
+
 
 
     db_begin();
@@ -110,9 +110,33 @@ function createview4_submit($values) {
         }
     }
 
-    // @todo view access
-    //
-
+    // View access
+    foreach ($values['accesslist'] as $item) {
+        $accessrecord = new StdClass;
+        $accessrecord->view = $viewid;
+        $accessrecord->startdate = db_format_timestamp($item['startdate']);
+        $accessrecord->stopdate  = db_format_timestamp($item['stopdate']);
+        switch ($item['type']) {
+            case 'public':
+            case 'loggedin':
+            case 'friends':
+                $accessrecord->accesstype = $item['type'];
+                insert_record('view_access', $accessrecord);
+                break;
+            case 'user':
+                $accessrecord->usr = $item['id'];
+                insert_record('view_access_usr', $accessrecord);
+                break;
+            case 'group':
+                $accessrecord->grp = $item['id'];
+                insert_record('view_access_group', $accessrecord);
+                break;
+            case 'community':
+                $accessrecord->community = $item['id'];
+                insert_record('view_access_community', $accessrecord);
+                break;
+        }
+    }
     db_commit();
     $SESSION->add_ok_msg(get_string('viewcreatedsuccessfully'));
     redirect(get_config('wwwroot') . 'view/');

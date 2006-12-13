@@ -43,10 +43,11 @@ function pieform_renderer_oneline_footer() {
  *                             container.
  */
 function pieform_renderer_oneline(Pieform $form, $builtelement, $rawelement) {
+    $formname = $form->get_name();
     // Set the class of the enclosing <div> to match that of the element
     $result = '<span';
     if (isset($rawelement['name'])) {
-        $result .= ' id="' . $rawelement['name'] . '_container"';
+        $result .= ' id="' . $formname . '_' . $rawelement['name'] . '_container"';
     }
     if ($rawelement['class']) {
         $result .= ' class="' . $rawelement['class'] . '"';
