@@ -39,15 +39,14 @@ if ($install) {
     $message = '';
     if (!get_config('installed')) {
         try {
-            core_install_defaults();
+            $exceptions = core_install_defaults();
         }
         catch (SQLException $e) {
             json_reply(true, $e->getMessage());
         }
-        catch (TemplateParserException $e) {
+        if (is_array($exceptions) && count($exceptions) > 0) {
             // these ones are non fatal... 
-            $message = $e->getMessage() 
-                . ' ' . '<a href="' . get_config('wwwroot') .'admin/templates.php">' 
+            $message = '<a href="' . get_config('wwwroot') .'admin/extensions/templates.php">' 
                 . get_string('fixtemplatescontinue', 'admin') . '</a>';
         }
     }

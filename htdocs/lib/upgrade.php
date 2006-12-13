@@ -411,26 +411,29 @@ function core_install_defaults() {
     set_profile_field($user->id, 'lastname', $user->lastname);
     
     require('template.php');
-    try {
-        upgrade_templates();
-    }
-    catch (TemplateParserException $e) {
-        set_config('installed', true);
-        db_commit();
-        throw $e;
-    }
+    $exceptions = upgrade_templates(true);
     set_config('installed', true);
     db_commit();
+    return $exceptions;
 }
 
-function upgrade_templates() {
+function upgrade_templates($continue=false) {
 
+    $exceptions = array();
     $dbtemplates = array();
 
     // check dataroot first, they get precedence.
     $templates = get_dir_contents(get_config('dataroot') . 'templates/');
     foreach ($templates as $dir) {
-        $dbtemplates[$dir] = template_parse($dir);
+        try {
+            $dbtemplates[$dir] = template_parse($dir);
+        }
+        catch (TemplateParserException $e) {
+            if (empty($continue)) {
+                throw $e;
+            }
+            $exceptions[] = $e;
+        }
     }
 
     // and now system templates
@@ -439,12 +442,25 @@ function upgrade_templates() {
         if (array_key_exists($dir, $dbtemplates)) { // dataroot gets preference
             continue;
         }
-        $dbtemplates[$dir] = template_parse($dir);
+        try {
+            $dbtemplates[$dir] = template_parse($dir);
+        }
+        catch (TemplateParserException $e) {
+            if (empty($continue)) {
+                throw $e;
+            }
+            $exceptions[] = $e;
+        }
     }
 
     foreach ($dbtemplates as $name => $guff) {
         if (!is_readable($guff['location'] . 'config.php')) {
-            throw new TemplateParserException("missing config.php for template $name");
+            $e = new TemplateParserException("missing config.php for template $name");
+            if (empty($continue)) {
+                throw $e;
+            }
+            $exceptions[] = $e;
+            continue;
         }
         require_once($guff['location'] . 'config.php');
         $fordb = new StdClass;
@@ -481,7 +497,7 @@ function upgrade_templates() {
     else {
         set_field('template', 'deleted', 1);
     }
-    
+    return $exceptions;
 }
 
 
