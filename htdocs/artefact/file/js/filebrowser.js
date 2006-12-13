@@ -122,9 +122,6 @@ function FileBrowser(element, changedircallback) {
 
     this.formatname = function(r) {
         self.filenames[r.title] = true;
-        if (r.artefacttype == 'file') {
-            return TD(null, r.title);
-        }
         if (r.artefacttype == 'folder') {
             var dir = self.cwd + r.title + '/';
             self.pathids[dir] = r.id;
@@ -132,6 +129,7 @@ function FileBrowser(element, changedircallback) {
                          r.title);
             return TD(null, link);
         }
+        return TD(null, A({'href':'download.php?file=' + r.id}, r.title));
     }
 
     this.fileexists = function (filename) { 
