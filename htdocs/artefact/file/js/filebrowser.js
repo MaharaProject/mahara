@@ -77,19 +77,30 @@ function FileBrowser(element, changedircallback) {
     }
 
     this.folderformrows = function(fileinfo) {
-        var name = '';
-        var description = '';
         if (fileinfo == null) {
+            var name = '';
+            var description = '';
             var rows = [self.editformtitle(get_string('createfolder'))];
-            rows.push(self.destinationrow());
+            rows.push(self.destinationrow()); 
         } else {
             var rows = [self.editformtitle(get_string('editfolder'))];
-            name = fileinfo.title;
-            description = fileinfo.description;
+            var name = fileinfo.title;
+            var description = fileinfo.description;
         }
         rows.push(self.textinputrow('name',name));
         rows.push(self.textinputrow('description',description));
         return rows;
+    }
+
+    this.savemetadata = function (fileid, formid) {
+        if (isEmpty($(formid).name.value)) {
+            $(formid + 'message').innerHTML = get_string('namefieldisrequired');
+            return;
+        }
+        sendjsonrequest('updatemetadata.json.php', 
+                        {'id':fileid, 'name':$(formid).name.value,
+                         'description':$(formid).description.value},
+                        self.refresh);
     }
 
     this.openeditform = function(fileinfo) {
@@ -102,12 +113,7 @@ function FileBrowser(element, changedircallback) {
             removeElement(editid);
         };
         var savebutton = INPUT({'type':'button','value':get_string('savechanges')});
-        savebutton.onclick = function () {
-            sendjsonrequest('updatemetadata.json.php', 
-                            {'id':fileinfo.id, 'name':$(formid).name.value,
-                             'description':$(formid).description.value},
-                            self.refresh);
-        };
+        savebutton.onclick = function () { self.savemetadata(fileinfo.id, formid); };
         if (fileinfo['artefacttype'] == 'folder') {
             editrows = self.folderformrows(fileinfo);
         }
@@ -116,6 +122,7 @@ function FileBrowser(element, changedircallback) {
                         self.textinputrow('name',fileinfo.title),
                         self.textinputrow('description',fileinfo.description)];
         }
+        editrows.push(TR(null,TD({'colspan':2},SPAN({'id':formid+'message'}))));
         var cancelbutton = INPUT({'type':'button', 'value':get_string('cancel'), 'onclick':cancelform});
         var buttons = TR(null,TD({'colspan':2},savebutton,cancelbutton));
         var edittable = TABLE({'align':'center'},TBODY(null,editrows,buttons));
@@ -126,15 +133,20 @@ function FileBrowser(element, changedircallback) {
     }
 
     this.initcreatefolderform = function () {
-        var form = FORM({'method':'post', 'id':'createfolderform'});
+        var formid = 'createfolderform';
+        var form = FORM({'method':'post', 'id':formid});
         var cancelbutton = INPUT({'type':'button','value':get_string('cancel'), 'onclick':function () {
             setDisplayForElement(null, self.createfolderbutton);
-            hideElement('createfolderform');
+            hideElement(formid);
         }});
-        var createbutton = INPUT({'type':'button','value':get_string('create'),'onclick':function () {}});
+        var createbutton = INPUT({'type':'button','value':get_string('create'),'onclick':function () {
+            self.savemetadata(null, formid);
+        }});
         var buttons = TR(null,TD({'colspan':2},createbutton,cancelbutton));
         appendChildNodes(form, TABLE(null,
-                                     TBODY(null, self.folderformrows(null), buttons)));
+                                     TBODY(null, self.folderformrows(null), 
+                                           TR(null,TD({'colspan':2},SPAN({'id':formid+'message'}))),
+                                           buttons)));
         hideElement(form);
         return form;
     };
