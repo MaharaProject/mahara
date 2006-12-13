@@ -70,6 +70,7 @@ $ownerformatoptions[FORMAT_NAME_DISPLAYNAME] = sprintf($formatstring, get_string
 $createview1 = pieform(array(
     'name'     => 'createview1',
     'method'   => 'post',
+    'autofocus' => 'title',
     'elements' => array(
         'createid' => array(
             'type'  => 'hidden',
@@ -190,7 +191,7 @@ function stopDateDisallowed(date) {
 function startSelected(calendar, date) {
     if (calendar.dateClicked) {
         var stopDate = $('createview1_stopdate').value;
-        if (stopDate == '' || stopDateDisallowed(isoDate(stopDate))) {
+        if (stopDate != '' && stopDateDisallowed(isoDate(stopDate))) {
             $('createview1_stopdate').value = date;
         }
         $('createview1_startdate').value = date;
@@ -200,7 +201,7 @@ function startSelected(calendar, date) {
 function stopSelected(calendar, date) {
     if (calendar.dateClicked) {
         var startDate = $('createview1_startdate').value.replace(/\//g, '-');
-        if (startDate == '' || startDateDisallowed(isoDate(startDate))) {
+        if (startDate != '' && startDateDisallowed(isoDate(startDate))) {
             $('createview1_startdate').value = date;
         }
         $('createview1_stopdate').value = date;
