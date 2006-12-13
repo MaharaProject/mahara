@@ -45,7 +45,9 @@ browser.changedircallback = uploader.updatedestination;
 JAVASCRIPT;
 
 
-$smarty = smarty(array('tablerenderer', 'artefact/file/js/filebrowser.js', 'fileuploader'));
+$smarty = smarty(array('tablerenderer', 
+                       'artefact/file/js/filebrowser.js', 
+                       'artefact/file/js/uploader.js'));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->display('artefact:file:index.tpl');
 
