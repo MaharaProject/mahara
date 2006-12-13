@@ -1098,9 +1098,9 @@ a.pieform-calendar-toggle img {
 #footer {
     clear: both;
 	height: 25px;
-	margin: 0 0 0 0;
-	padding: 9px 0 0 5px;
-    font-size: 11px;
+	margin: 0;
+	padding: 7px 0 0 5px;
+    font-size: 13px;
 	color: #FFFFFF;
     text-align: center;
 	background: #474220 url(../images/footer_navbg_left.gif) no-repeat left;
