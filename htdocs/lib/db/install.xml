@@ -663,7 +663,6 @@
                 <FIELD NAME="stopdate" TYPE="datetime" NOTNULL="false" />
             </FIELDS>
             <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="view,accesstype" />
                 <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id" />
             </KEYS>
         </TABLE>
@@ -676,7 +675,6 @@
                 <FIELD NAME="stopdate" TYPE="datetime" NOTNULL="false" />
             </FIELDS>
             <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="view,community" />
                 <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id" />
                 <KEY NAME="communityfk" TYPE="foreign" FIELDS="community" REFTABLE="community" REFFIELDS="id" />
             </KEYS>
@@ -689,7 +687,6 @@
                 <FIELD NAME="stopdate" TYPE="datetime" NOTNULL="false" />
             </FIELDS>
             <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="view,grp" />
                 <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id" />
                 <KEY NAME="grpfk" TYPE="foreign" FIELDS="grp" REFTABLE="usr_group" REFFIELDS="id" />
             </KEYS>
@@ -702,7 +699,6 @@
                 <FIELD NAME="stopdate" TYPE="datetime" NOTNULL="false" />
             </FIELDS>
             <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="view,usr" />
                 <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id" />
                 <KEY NAME="usrfk" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id" />
             </KEYS>
