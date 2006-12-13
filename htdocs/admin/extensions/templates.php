@@ -69,7 +69,7 @@ $failurestring = get_string('upgradefailure', 'admin');
 $javascript = <<<JAVASCRIPT
 
 function installtemplate(name) {
-    var d = loadJSONDoc('../templateinstall.json.php', { 'name': name });
+    var d = loadJSONDoc('templateinstall.json.php', { 'name': name });
 
     $(name + '.message').innerHTML = '<img src="{$loadingicon}" alt="{$loadingstring}" />';
 
