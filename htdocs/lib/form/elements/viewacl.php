@@ -40,7 +40,7 @@ function pieform_render_viewacl($element, Pieform $form) {
     $value = $form->get_value($element);
 
     // Look for the presets and split them into two groups
-    $presets = array('public', 'any', 'friends');
+    $presets = array('public', 'loggedin', 'friends');
     if ($value) {
         foreach ($value as &$item) {
             if (in_array($item['type'], $presets)) {
