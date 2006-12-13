@@ -344,9 +344,11 @@ class ArtefactTypeProfileField extends ArtefactTypeProfile {
 class ArtefactTypeCachedProfileField extends ArtefactTypeProfileField {
     
     public function commit() {
+        global $USER;
         parent::commit();
         $field = $this->get_artefact_type();
         set_field('usr', $field, $this->title, 'id', $this->owner);
+        $USER->set($field, $this->title);
     }
 
     public function delete() {
