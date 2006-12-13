@@ -65,10 +65,13 @@ var templates = new TableRenderer(
         function(r) { return TD(null, H3(null, r.title), P(null, r.description)); },
         function(r) { return TD(null, IMG({'src': '{$wwwroot}thumb.php?type=template&name=' + r.name})); },
         function(r) {
-            var button = BUTTON({'name': 'template', 'type': 'button'}, '{$selecttemplate}');
+            var button = BUTTON({'type': 'button'}, '{$selecttemplate}');
             connect(button, 'onclick', function () {
                 $('template').value = r.name;
+                logDebug(r.name);
+                logDebug($('template').value);
                 document.forms.template_selection.submit();
+                return false;
             });
             return TD(null,button);
         }

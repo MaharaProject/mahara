@@ -473,7 +473,7 @@ function template_render($template, $mode, $data=array()) {
         var ul = x.parentNode.parentNode;
         if (ul.childNodes.length == 1) {
             ul.parentNode.moveTarget.acceptData.format = ul.parentNode.moveTarget.acceptData.oldformat;
-            replaceChildNodes(ul.parentNode, SPAN({ class: 'empty_block' }, get_string('empty_block')));
+            replaceChildNodes(ul.parentNode, SPAN({ 'class': 'empty_block' }, get_string('empty_block')));
         }
         else {
             removeElement(x.parentNode);
