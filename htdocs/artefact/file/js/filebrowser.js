@@ -19,8 +19,11 @@ function FileBrowser(element, changedircallback) {
             'myfiles.json.php',
             [
                 self.formatname,
+                'description',
                 function (r) { return TD(null, (r.artefacttype != 'folder') ? self.showsize(r.size) : null); },
                 'mtime',
+                // @todo this function should be changed for when we
+                // are using the browser to attach files
                 self.editdelete
             ]
         );
@@ -34,7 +37,7 @@ function FileBrowser(element, changedircallback) {
     }
 
     this.refresh = function () { self.changedir(self.cwd); };
-
+    
     this.editdelete = function(r) {
         var editb = INPUT({'type':'button', 'value':get_string('edit')});
         editb.onclick = function () { self.openeditform(r); };
@@ -91,7 +94,7 @@ function FileBrowser(element, changedircallback) {
             sendjsonrequest('updatemetadata.json.php', 
                             {'id':fileinfo.id, 'name':$(formid).name.value,
                              'description':$(formid).description.value},
-                            function() {cancelform(); self.refresh()});
+                            self.refresh);
         };
         if (fileinfo['artefacttype'] == 'folder') {
             editrows = self.folderformrows(fileinfo);
@@ -106,7 +109,7 @@ function FileBrowser(element, changedircallback) {
         var edittable = TABLE({'align':'center'},TBODY(null,editrows,buttons));
         hideElement(rowid);
         insertSiblingNodesBefore(rowid, TR({'id':editid},
-                                           TD({'colSpan':4},
+                                           TD({'colSpan':5},
                                               FORM({'id':formid,'action':''},edittable))));
     }
 

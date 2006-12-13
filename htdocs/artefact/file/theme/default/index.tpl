@@ -14,9 +14,10 @@
 				<div id="foldernav"></div>
 			<table id="filelist">
 				<thead><tr>
-					<th>Name</th>
-					<th>Size</th>
-					<th>Time</th>
+					<th>{str tag=name}</th>
+					<th>{str tag=description}</th>
+					<th>{str tag=size}</th>
+					<th>{str tag=date}</th>
 					<th></th>
 				</tr></thead>
 				<tbody><tr><th></th></tr></tbody>
