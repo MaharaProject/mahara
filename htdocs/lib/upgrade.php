@@ -195,13 +195,6 @@ function upgrade_core($upgrade) {
     if (!empty($upgrade->install)) {
         $status = $status && core_postinst();
     }
-    else {
-        // only do this here if we're not installing
-        // otherwise the default system user won't exist yet
-        // and we have to do it in core_install_defaults
-        require('template.php');
-        upgrade_templates();
-    }
     
     $db->CompleteTrans();
 
@@ -411,26 +404,29 @@ function core_install_defaults() {
     set_profile_field($user->id, 'lastname', $user->lastname);
     
     require('template.php');
-    try {
-        upgrade_templates();
-    }
-    catch (TemplateParserException $e) {
-        set_config('installed', true);
-        db_commit();
-        throw $e;
-    }
+    $exceptions = upgrade_templates(true);
     set_config('installed', true);
     db_commit();
+    return $exceptions;
 }
 
-function upgrade_templates() {
+function upgrade_templates($continue=false) {
 
+    $exceptions = array();
     $dbtemplates = array();
 
     // check dataroot first, they get precedence.
     $templates = get_dir_contents(get_config('dataroot') . 'templates/');
     foreach ($templates as $dir) {
-        $dbtemplates[$dir] = template_parse($dir);
+        try {
+            $dbtemplates[$dir] = template_parse($dir);
+        }
+        catch (TemplateParserException $e) {
+            if (empty($continue)) {
+                throw $e;
+            }
+            $exceptions[] = $e;
+        }
     }
 
     // and now system templates
@@ -439,40 +435,31 @@ function upgrade_templates() {
         if (array_key_exists($dir, $dbtemplates)) { // dataroot gets preference
             continue;
         }
-        $dbtemplates[$dir] = template_parse($dir);
+        try {
+            $dbtemplates[$dir] = template_parse($dir);
+        }
+        catch (TemplateParserException $e) {
+            if (empty($continue)) {
+                throw $e;
+            }
+            $exceptions[] = $e;
+        }
     }
 
-    foreach ($dbtemplates as $name => $guff) {
-        if (!is_readable($guff['location'] . 'config.php')) {
-            throw new TemplateParserException("missing config.php for template $name");
+    foreach ($dbtemplates as $name => $data) {
+        try {
+            $ids = upgrade_template($name, $data);
         }
-        require_once($guff['location'] . 'config.php');
-        $fordb = new StdClass;
-        $fordb->name = $name;
-        $fordb->mtime = db_format_timestamp(time());
-        $fordb->title = $template->title;
-        $fordb->description = $template->description;
-        $fordb->category = $template->category;
-        $fordb->mtime = db_format_timestamp(time());
-        $fordb->cacheddata = serialize($guff['parseddata']);
-        if (isset($guff['thumbnail'])) {
-            $fordb->thumbnail = 1;
-        }
-        if (isset($template->owner)) {
-            $fordb->owner = $template->owner;
-        }
-        else {
-            $fordb->owner = 0; // root user
-        }
-        if (record_exists('template', 'name', $name)) {
-            update_record('template', $fordb, 'name');
-        }
-        else {
-            $fordb->ctime = $fordb->mtime;
-            insert_record('template', $fordb);
+        catch (TemplateParserException $e) {
+            if (empty($continue)) {
+                throw $e;
+            }
+            $exceptions[] = $e;
+            unset($dbtemplates[$name]);
+            continue;
         }
     }
-    
+
     if (count($dbtemplates) > 0) {
         set_field_select('template', 'deleted', 1, 
                          'name NOT IN (' . implode(',', db_array_to_ph(array_keys($dbtemplates))). ')', 
@@ -481,7 +468,51 @@ function upgrade_templates() {
     else {
         set_field('template', 'deleted', 1);
     }
-    
+
+
+    return $exceptions;
+}
+
+/**
+ * This function upgrades or installs an individual template.
+ *
+ * @param $name the template name
+ * @param $data what you would get from template_parse 
+ */
+function upgrade_template($name, $data) {
+    if (!is_readable($data['location'] . 'config.php')) {
+        $e = new TemplateParserException("missing config.php for template $name");
+        if (empty($continue)) {
+            throw $e;
+        }
+        $exceptions[] = $e;
+        continue;
+    }
+    require_once($data['location'] . 'config.php');
+    $fordb = new StdClass;
+    $fordb->name = $name;
+    $fordb->mtime = db_format_timestamp(time());
+    $fordb->title = $template->title;
+    $fordb->description = $template->description;
+    $fordb->category = $template->category;
+    $fordb->mtime = db_format_timestamp(time());
+    $fordb->cacheddata = serialize($data['parseddata']);
+    if (isset($data['thumbnail'])) {
+        $fordb->thumbnail = 1;
+    }
+    if (isset($template->owner)) {
+        $fordb->owner = $template->owner;
+    }
+    else {
+        $fordb->owner = 0; // root user
+    }
+    if (record_exists('template', 'name', $name)) {
+        update_record('template', $fordb, 'name');
+    }
+    else {
+        $fordb->ctime = $fordb->mtime;
+        insert_record('template', $fordb);
+    }
 }
 
 

@@ -38,6 +38,7 @@ $string['change'] = 'Change';
 
 $string['no']     = 'no';
 $string['yes']    = 'yes';
+$string['none']   = 'none';
 
 $string['nextpage']  = 'Next page';
 $string['prevpage']  = 'Previous page';

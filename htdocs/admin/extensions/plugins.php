@@ -96,7 +96,7 @@ $successicon = theme_get_image_path('success.gif');
 $failureicon = theme_get_image_path('failure.gif');
 
 $loadingstring = get_string('upgradeloading', 'admin');
-$successstring = get_string('upgradesuccess', 'admin');
+$successstring = get_string('upgradesuccesstoversion', 'admin');
 $failurestring = get_string('upgradefailure', 'admin');
 
 $javascript = <<<JAVASCRIPT
