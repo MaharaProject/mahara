@@ -4,9 +4,10 @@
 	<div class="content">
 		<div class="box-cnrs"><span class="cnr-tl"><span class="cnr-tr"><span class="cnr-bl"><span class="cnr-br">
 			<div class="maincontent">
-	
-			<a href="http://mahara.org">Mahara</a> {str section='admin' tag='release' args=$releaseargs}
-			Copyright &copy; 2006 onwards, Catalyst IT Ltd<br>
+
+			<h3 class="center"><a href="http://mahara.org">Mahara</a> {str section='admin' tag='release' args=$releaseargs} {str tag='copyright' section='admin'}</h3>
+
+            <div style="margin: 0 25% 1em;">
 			<h4>GNU Public License</h4>
 <p>This program is free software; you can redistribute it and/or modify
 under the terms of the <a href="http://www.gnu.org/licenses/gpl.html">GNU General Public License</a>
@@ -23,8 +24,9 @@ License</a> for more details.</p>
 <a href="http://www.gnu.org/licenses/gpl.html">GNU General Public License</a>
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA</p>
+            </div>
 
-			<a href="{$WWWROOT}admin/upgrade.php">Agree</a>
+            <form action="{$WWWROOT}admin/upgrade.php" class="center"><input type="submit" value="{str tag=agreelicense section=admin}" style="font-weight: bold;"></form>
 
 			</div>
 		</span></span></span></span></div>	
