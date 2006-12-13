@@ -75,7 +75,7 @@ function installtemplate(name) {
 
     d.addCallbacks(function (data) {
         if (!data.error) {
-            var message = '{$successstring}' + data.newversion;
+            var message = '{$successstring}';
             $(name + '.message').innerHTML = '<img src="{$successicon}" alt=":)" />  ' + message;
             // move the whole thing into the list of installed plugins 
             // new parent node

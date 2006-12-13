@@ -16,9 +16,13 @@
     <td>{$name}</td>
     <td>{if $template.installed}
         <img id="{$name}.status" alt="{str tag='yes'}" src="{image_path imagelocation='success.gif}" />
+	{if !$template.error}
+            <a href="" onClick="{$installlink}('{$name}'); return false;">{str tag='reinstall' section='admin'}</a> 
+            <span id="{$name}.message"></span>
+ 	{/if}
         {else}
         <img id="{$name}.status" alt="{str tag='yes'}" src="{image_path imagelocation='failure.gif}" />
-             {if !$template.installed}
+             {if !$template.installed && !$template.error}
                  <a href="" onClick="{$installlink}('{$name}'); return false;">{str tag='install' section='admin'}</a> 
                  <span id="{$name}.message"></span>
              {/if}
