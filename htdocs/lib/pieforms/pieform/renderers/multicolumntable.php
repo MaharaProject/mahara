@@ -45,6 +45,7 @@ function pieform_renderer_multicolumntable(Pieform $form, $builtelement, $rawele
     // Used by the messages javascript function
     $form->include_plugin('renderer', 'table');
     $formrenderermct->add_element($builtelement, $rawelement);
+    $formrenderermct->set_form($form);
 }
 
 function pieform_renderer_multicolumntable_messages_js($id, $submitid) {
@@ -64,6 +65,7 @@ function pieform_renderer_multicolumntable_footer() {
 class FormRendererMultiColumnTable {
 
     private $elements = array();
+    private $form;
 
     function add_element($builtelement, $rawelement) {
         if (!array_key_exists($rawelement['title'], $this->elements)) {
@@ -74,6 +76,10 @@ class FormRendererMultiColumnTable {
         }
         $this->elements[$rawelement['title']]['rawelements'][] = $rawelement;
         $this->elements[$rawelement['title']]['builtelements'][] = $builtelement;
+    }
+
+    function set_form(Pieform $form) {
+        $this->form = $form;
     }
 
     function build() {
@@ -96,7 +102,7 @@ class FormRendererMultiColumnTable {
                 $rawelement = $data['rawelements'][$k];
                 $result .= "\t<td";
                 if (isset($rawelement['name'])) {
-                    $result .= " id=\"" . $rawelement['name'] . '_container"';
+                    $result .= " id=\"" . $this->form->get_name() . '_' . $rawelement['name'] . '_container"';
                 }
                 if ($rawelement['class']) {
                     $result .= ' class="' . $rawelement['class'] . '"';
