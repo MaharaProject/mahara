@@ -2,6 +2,11 @@
 <html>
     <head>
         <title>{$title|default:"Mahara"|escape}</title>
+        <script type="text/javascript">
+        var config = {literal}{{/literal}
+            'themeurl': '{$THEMEURL}'
+        {literal}}{/literal};
+        </script>
 {foreach from=$JAVASCRIPT item=script}        <script type="text/javascript" src="{$script}"></script>
 {/foreach}
 {foreach from=$HEADERS item=header}        {$header}
@@ -44,8 +49,8 @@
 				<a href="{$WWWROOT}user/search.php">{str tag=advancedsearch}</a>
 				</td></tr></table>
 				</div>
-				<div class="logo"><a href="{$WWWROOT}"><img src="{image_path imagelocation='images/logo.gif'}" border="0" alt=""></a></div>
                 {/if}
+				<div class="logo"><a href="{$WWWROOT}"><img src="{image_path imagelocation='images/logo.gif'}" border="0" alt=""></a></div>
 				<h1 class="hiddenStructure"><a href="{$WWWROOT}">{$heading|default:"Mahara"|escape}</a></h1>
 			</div>
 		</div>
