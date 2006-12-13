@@ -38,6 +38,13 @@ h3, h4, h5, h6 {
 	margin: 15px 0 0 0;
 	text-transform: capitalize;
 }
+h5, h6 {
+    font-size: 13px;
+}
+
+.center {
+    text-align: center;
+}
 
 /* CONTENT LAYOUT BEGIN */
 #container {
