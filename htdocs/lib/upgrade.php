@@ -446,42 +446,20 @@ function upgrade_templates($continue=false) {
         }
     }
 
-    foreach ($dbtemplates as $name => $guff) {
-        if (!is_readable($guff['location'] . 'config.php')) {
-            $e = new TemplateParserException("missing config.php for template $name");
+    foreach ($dbtemplates as $name => $data) {
+        try {
+            $ids = upgrade_template($name, $data);
+        }
+        catch (TemplateParserException $e) {
             if (empty($continue)) {
                 throw $e;
             }
             $exceptions[] = $e;
+            unset($dbtemplates[$name]);
             continue;
         }
-        require_once($guff['location'] . 'config.php');
-        $fordb = new StdClass;
-        $fordb->name = $name;
-        $fordb->mtime = db_format_timestamp(time());
-        $fordb->title = $template->title;
-        $fordb->description = $template->description;
-        $fordb->category = $template->category;
-        $fordb->mtime = db_format_timestamp(time());
-        $fordb->cacheddata = serialize($guff['parseddata']);
-        if (isset($guff['thumbnail'])) {
-            $fordb->thumbnail = 1;
-        }
-        if (isset($template->owner)) {
-            $fordb->owner = $template->owner;
-        }
-        else {
-            $fordb->owner = 0; // root user
-        }
-        if (record_exists('template', 'name', $name)) {
-            update_record('template', $fordb, 'name');
-        }
-        else {
-            $fordb->ctime = $fordb->mtime;
-            insert_record('template', $fordb);
-        }
     }
-    
+
     if (count($dbtemplates) > 0) {
         set_field_select('template', 'deleted', 1, 
                          'name NOT IN (' . implode(',', db_array_to_ph(array_keys($dbtemplates))). ')', 
@@ -490,7 +468,51 @@ function upgrade_templates($continue=false) {
     else {
         set_field('template', 'deleted', 1);
     }
+
+
     return $exceptions;
+}
+
+/**
+ * This function upgrades or installs an individual template.
+ *
+ * @param $name the template name
+ * @param $data what you would get from template_parse 
+ */
+function upgrade_template($name, $data) {
+    if (!is_readable($data['location'] . 'config.php')) {
+        $e = new TemplateParserException("missing config.php for template $name");
+        if (empty($continue)) {
+            throw $e;
+        }
+        $exceptions[] = $e;
+        continue;
+    }
+    require_once($data['location'] . 'config.php');
+    $fordb = new StdClass;
+    $fordb->name = $name;
+    $fordb->mtime = db_format_timestamp(time());
+    $fordb->title = $template->title;
+    $fordb->description = $template->description;
+    $fordb->category = $template->category;
+    $fordb->mtime = db_format_timestamp(time());
+    $fordb->cacheddata = serialize($data['parseddata']);
+    if (isset($data['thumbnail'])) {
+        $fordb->thumbnail = 1;
+    }
+    if (isset($template->owner)) {
+        $fordb->owner = $template->owner;
+    }
+    else {
+        $fordb->owner = 0; // root user
+    }
+    if (record_exists('template', 'name', $name)) {
+        update_record('template', $fordb, 'name');
+    }
+    else {
+        $fordb->ctime = $fordb->mtime;
+        insert_record('template', $fordb);
+    }
 }
 
 

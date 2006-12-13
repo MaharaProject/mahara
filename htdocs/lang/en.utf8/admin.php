@@ -192,5 +192,5 @@ $string['notificationssaved'] = 'Notification settings saved';
 
 $string['installed'] = 'Installed';
 $string['errors'] = 'Errors';
-
+$string['install'] = 'Install';
 ?>

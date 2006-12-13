@@ -33,7 +33,7 @@
         <ul id="{$plugintype}.notinstalled">
         {foreach from=$notinstalled key='plugin' item='data'}
 	    <li id="{$plugintype}.{$plugin}">{$plugin} {if $data.notinstallable} {str tag='notinstallable'} {$data.notinstallable} 
-                      {else} (<a href="" onClick="{$installlink}('{$plugintype}.{$plugin}'); return false;">install</a>)
+                      {else} (<a href="" onClick="{$installlink}('{$plugintype}.{$plugin}'); return false;">{str tag='install' section='admin'}</a>)
 	              {/if}
             <div id="{$plugintype}.{$plugin}.message"></div>
             </li>
