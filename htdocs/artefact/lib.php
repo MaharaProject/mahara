@@ -469,7 +469,6 @@ abstract class ArtefactType {
 
     /**
      * returns array of formats can render to (constants)
-     * @abstract
      */
     public static function get_render_list() {
         return array(
