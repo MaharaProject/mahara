@@ -14,6 +14,19 @@ function FileBrowser(element, changedircallback) {
     this.filenames = {};
 
     this.init = function() {
+
+        // Create the button which opens up the create folder form
+        var button = INPUT({'type':'button','value':get_string('createfolder'), 'onclick':function () { 
+            hideElement(self.createfolderbutton);
+            showElement(self.createfolderform);
+        }});
+        self.createfolderbutton = button;
+        self.createfolderform = self.initcreatefolderform();
+        insertSiblingNodesBefore(self.element, self.createfolderbutton, self.createfolderform);
+
+        // Folder navigation links
+        insertSiblingNodesBefore(self.element, DIV({'id':'foldernav'}));
+
         self.filelist = new TableRenderer(
             self.element,
             'myfiles.json.php',
@@ -60,18 +73,17 @@ function FileBrowser(element, changedircallback) {
     }
 
     this.destinationrow = function () {
-        return TR(null,TD(null,get_string('destination')), TD(null,cwd));
+        return TR(null,TD(null,get_string('destination')), TD(null, SPAN({'id':'createdest'},self.cwd)));
     }
 
     this.folderformrows = function(fileinfo) {
-        var rows = [];
         var name = '';
         var description = '';
         if (fileinfo == null) {
-            rows = [self.editformtitle(get_string('createfolder'))];
-            rows.push(destinationrow);
+            var rows = [self.editformtitle(get_string('createfolder'))];
+            rows.push(self.destinationrow());
         } else {
-            rows = [self.editformtitle(get_string('editfolder'))];
+            var rows = [self.editformtitle(get_string('editfolder'))];
             name = fileinfo.title;
             description = fileinfo.description;
         }
@@ -113,6 +125,20 @@ function FileBrowser(element, changedircallback) {
                                               FORM({'id':formid,'action':''},edittable))));
     }
 
+    this.initcreatefolderform = function () {
+        var form = FORM({'method':'post', 'id':'createfolderform'});
+        var cancelbutton = INPUT({'type':'button','value':get_string('cancel'), 'onclick':function () {
+            setDisplayForElement(null, self.createfolderbutton);
+            hideElement('createfolderform');
+        }});
+        var createbutton = INPUT({'type':'button','value':get_string('create'),'onclick':function () {}});
+        var buttons = TR(null,TD({'colspan':2},createbutton,cancelbutton));
+        appendChildNodes(form, TABLE(null,
+                                     TBODY(null, self.folderformrows(null), buttons)));
+        hideElement(form);
+        return form;
+    };
+
     this.showsize = function(bytes) {
         if (bytes < 1024) {
             return bytes + 'b';
@@ -139,9 +165,16 @@ function FileBrowser(element, changedircallback) {
         return self.filenames[filename] == true;
     }
 
+    this.updatedestination = function () {
+        if ($('createdest')) {
+            $('createdest').innerHTML = self.cwd;
+        }
+    }
+
     this.changedir = function(path) {
         self.cwd = path;
         self.linked_path();
+        self.updatedestination();
         self.changedircallback(self.pathids[path], path);
         self.filenames = {};
         var args = path == '/' ? null : {'folder':self.pathids[path]};
