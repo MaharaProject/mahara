@@ -43,6 +43,17 @@ function FileUploader(element, foldername, folderid, uploadcallback, fileexists)
         var form = FORM({'method':'post', 'id':'uploadform',
                          'enctype':'multipart/form-data', 'encoding':'multipart/form-data',
                          'action':'upload.php', 'target':''});
+        var cancelform = function () {
+            if ($('uploadformmessage')) {
+                $('uploadformmessage').innerHTML = '';
+            }
+            self.form.userfile.value = '';
+            self.form.title.value = '';
+            self.form.description.value = '';
+            hideElement(self.form.replace);
+            hideElement(self.form);
+            showElement(self.openbutton);
+        };
         appendChildNodes(form,
             TABLE(null,
             TBODY(null, 
@@ -62,16 +73,7 @@ function FileUploader(element, foldername, folderid, uploadcallback, fileexists)
                      'onclick':function () { self.sendform(false)}}),
               INPUT({'name':'replace','type':'button','value':get_string('replace'),
                      'onclick':function () { self.sendform(true); }}),
-              INPUT({'type':'button','value':get_string('cancel'),'onclick':function () { 
-                  if ($('uploadformmessage')) {
-                      $('uploadformmessage').innerHTML = '';
-                  }
-                  self.form.userfile.value = '';
-                  self.form.title.value = '';
-                  self.form.description.value = '';
-                  hideElement(self.form);
-                  showElement(self.openbutton);
-              }}))))));
+              INPUT({'type':'button','value':get_string('cancel'),'onclick':cancelform}))))));
 
         hideElement(form.replace);
         hideElement(form);
