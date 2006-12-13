@@ -1048,7 +1048,7 @@ function searchform() {
         'name'                => 'searchform',
         'action'              => get_config('wwwroot') . 'user/search.php',
         'renderer'            => 'oneline',
-        'autofocus'           => 'false',
+        'autofocus'           => false,
         'validate'            => false,
         'elements'            => array(
             'query' => array(
