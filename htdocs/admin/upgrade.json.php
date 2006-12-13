@@ -44,6 +44,10 @@ if ($install) {
         catch (SQLException $e) {
             json_reply(true, $e->getMessage());
         }
+        catch (TemplateParserException $e) {
+            $message = '<a href="' . get_config('wwwroot') .'admin/extensions/templates.php">' 
+                . get_string('fixtemplatescontinue', 'admin') . '</a>';
+        }
         if (is_array($exceptions) && count($exceptions) > 0) {
             // these ones are non fatal... 
             $message = '<a href="' . get_config('wwwroot') .'admin/extensions/templates.php">' 

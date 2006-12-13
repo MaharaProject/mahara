@@ -195,13 +195,6 @@ function upgrade_core($upgrade) {
     if (!empty($upgrade->install)) {
         $status = $status && core_postinst();
     }
-    else {
-        // only do this here if we're not installing
-        // otherwise the default system user won't exist yet
-        // and we have to do it in core_install_defaults
-        require('template.php');
-        upgrade_templates();
-    }
     
     $db->CompleteTrans();
 
