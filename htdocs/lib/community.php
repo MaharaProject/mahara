@@ -35,10 +35,8 @@ defined('INTERNAL') || die();
  * @param int $userid (optional, will default to logged in user)
  */
 function community_user_can_leave($community, $userid=null) {
-    if (empty($userid)) {
-        global $USER;
-        $userid = $USER->get('id');
-    }
+
+    $userid = optional_userid($userid);
     
     if (is_numeric($community)) {
         if (!$community = get_record('community', 'id', $community)) {
@@ -62,12 +60,80 @@ function community_user_can_leave($community, $userid=null) {
  * @param int $community id of community
  * @param int $user id of user to remove
  */
-function community_remove_user($community, $userid) {
-    
+function community_remove_user($community, $userid) {    
+    db_begin();
     delete_records('community_member', 'community', $community, 'member', $userid);
-
+    delete_records('usr_watchlist_community', 'community', $community, 'usr', $userid);
+    db_commit();
 }
 
+/**
+ * all communities the user is a member of
+ * 
+ * @param int userid (optional, defaults to $USER id) 
+ * @return array of community db rows
+ */
+function get_member_communities($userid=0, $offset=0, $limit=0) {
+
+    $userid = optional_userid($userid);
+    $prefix = get_config('dbprefix');
+
+    return get_records_sql_array('SELECT c.*, cm.ctime, cm.tutor
+              FROM ' . $prefix . 'community c 
+              JOIN ' . $prefix . 'community_member cm ON cm.community = c.id
+              WHERE c.owner != ? AND cm.member = ?', array($userid, $userid), $offset, $limit);
+}
+
+
+/**
+ * all communities the user owns
+ * 
+ * @param int userid (optional, defaults to $USER id) 
+ * @return array of community db rows
+ */
+function get_owned_communities($userid=0) {
+
+    $userid = optional_userid($userid);
+    $prefix = get_config('dbprefix');
+
+    return get_records_sql_array('SELECT c.* FROM ' . $prefix . 'community c 
+             WHERE c.owner = ?', array($userid));
+}
+
+/**
+ * all communities the user has pending invites to
+ * 
+ * @param int userid (optional, defaults to $USER id)
+ * @return array of community db rows
+ */
+function get_invited_communities($userid=0) {
+
+    $userid = optional_userid($userid);
+    $prefix = get_config('dbprefix');
+
+    return get_records_sql_array('SELECT c.*, cmi.ctime, cmi.reason
+             FROM ' . $prefix . 'community c 
+             JOIN ' . $prefix . 'community_member_invite cmi ON cmi.community = c.id
+             WHERE cmi.member = ?)', array($userid));
+}
+
+/**
+ * all communities the user has pending requests for 
+ * 
+ * @param int $userid (optional, defaults to $USER id)
+ * @return array of community db rows
+ */
+
+function get_requested_communities($userid=0) {
+
+    $userid = optional_userid($userid);
+    $prefix = get_config('dbprefix');
+
+    return get_records_sql_array('SELECT c.*, cmr.ctime, cmr.reason 
+              FROM ' . $prefix . 'community c 
+              JOIN ' . $prefix . 'community_member_request cmr ON cmr.community = c.id
+              WHERE cmr.member = ?', array($userid));
+}
 
 
 ?>

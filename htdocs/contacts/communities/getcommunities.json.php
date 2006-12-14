@@ -26,6 +26,7 @@
 
 define('INTERNAL', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+require_once('community.php');
 
 $owned  = param_boolean('owned', 0);
 $limit  = param_integer('limit', 10);
@@ -35,15 +36,8 @@ $prefix = get_config('dbprefix');
 $userid = $USER->get('id');
 
 if (empty($owned)) { // just get communities this user is a member of.
-    $from = 'FROM ' . $prefix . 'community c 
-             WHERE c.owner != ? AND c.id IN 
-                 (SELECT cm.community 
-                  FROM ' . $prefix . 'community_member cm 
-                  WHERE cm.member = ?)';
-    
-    $count = count_records_sql('SELECT COUNT(*) ' . $from, array($userid, $userid));
-    $data  = get_records_sql_array('SELECT c.id,c.jointype,c.name,c.owner ' . $from, 
-                                   array($userid, $userid), $offset, $limit);
+    $data = get_member_communities($userid, $offset, $limit);
+    $count = count_records('community_member', 'member', $userid);
 }
 else {
 
