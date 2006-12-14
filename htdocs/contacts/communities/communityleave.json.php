@@ -24,10 +24,22 @@
  *
  */
 
-defined('INTERNAL') || die();
+define('INTERNAL', 1);
+require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+require_once('community.php');
 
-$config = new StdClass;
-$config->version = 2006121400;
-$config->release = '0.1';
+$leave = param_integer('leave');
+
+if (!$community = get_record('community', 'id', $leave)) {
+    json_reply(true, get_string('invalidcommunity'));
+}
+
+if (!community_user_can_leave($community)) {
+    json_reply(true, get_string('cannotleavecommunity'));
+}
+
+community_remove_user($community->id, $USER->get('id'));
+
+json_reply(false, get_string('leftcommunity'));
 
 ?>

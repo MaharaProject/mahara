@@ -26,8 +26,48 @@
 
 defined('INTERNAL') || die();
 
-$config = new StdClass;
-$config->version = 2006121400;
-$config->release = '0.1';
+
+/**
+ * is a user allowed to leave a community? 
+ * checks if they're the owner and the membership type
+ *
+ * @param object $community (corresponds to db record). if an id is given, record will be fetched.
+ * @param int $userid (optional, will default to logged in user)
+ */
+function community_user_can_leave($community, $userid=null) {
+    if (empty($userid)) {
+        global $USER;
+        $userid = $USER->get('id');
+    }
+    
+    if (is_numeric($community)) {
+        if (!$community = get_record('community', 'id', $community)) {
+            return false;
+        }
+    }
+    
+    if ($community->owner == $userid) {
+        return false;
+    }
+    
+    if ($community->jointype == 'controlled') {
+        return false;
+    }
+    return true;
+}
+
+/**
+ * removes a user from a community
+ *
+ * @param int $community id of community
+ * @param int $user id of user to remove
+ */
+function community_remove_user($community, $userid) {
+    
+    delete_records('community_member', 'community', $community, 'member', $userid);
+
+}
+
+
 
 ?>

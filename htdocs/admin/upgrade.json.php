@@ -72,19 +72,20 @@ if (!empty($upgrade)) {
     }
     try {
         $funname($upgrade);
-        $data['success'] = 1;
-        $data['install'] = $upgrade->install;
+        if (isset($upgrade->install)) {
+            $data['install'] = $upgrade->install;
+        }
+        json_reply(false, $data);
+        exit;
     } 
     catch (Exception $e) {
         $data['errormessage'] = $e->getMessage();
-        $data['success']      = 0;
+        json_reply(true, $data);
+        exit;
     }
 }
 else {
-    $data['success'] = 1;
-    $data['errormessage'] = get_string('nothingtoupgrade','admin');
+    json_reply(false, array('message' => string('nothingtoupgrade','admin')));
+    exit;
 }
-
-// @todo json_reply?
-echo json_encode($data);    
 ?>

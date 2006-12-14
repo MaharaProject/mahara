@@ -9,8 +9,21 @@
 			<div class="maincontent">
 	
 			<h2>{str tag="myownedcommunities"}</h2>
-    		Content from database here
-
+                        <div class="addcommunitylink">
+                           <a href="{$WWWROOT}/contacts/communities/edit.php?new=1">{str tag='addcommunity'}</a>
+                        </div>
+                            <table id="communitylist">
+	                        <thead>
+                                    <tr>
+ 	                                <th>{str tag='name'}</th>
+ 	                                <th>{str tag='communitymemberrequests'}</th>
+ 	                                <td></td>
+                                    <tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                            <div id="messagediv"></div>
 			</div>
 		</span></span></span></span></div>	
 	</div>

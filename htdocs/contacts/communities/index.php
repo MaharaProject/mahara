@@ -18,7 +18,7 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Martyn Smith <martyn@catalyst.net.nz>
+ * @author     Penny Leach <penny@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
@@ -30,8 +30,51 @@ define('SUBMENUITEM', 'mycommunities');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
-$smarty = smarty();
+$viewurl = get_config('wwwroot') . 'contacts/communities/view.php?id=';
+$leftsuccess = get_string('leftcommunity');
+$leftfailed = get_string('leftcommunityfailed');
 
+$javascript = <<<EOF
+var communitylist = new TableRenderer(
+    'communitylist',
+    'getcommunities.json.php',
+    [
+     function (r) {
+         return TD(null, A({'href': '{$viewurl}' + r.id}, r.name));
+     },
+     function (r) {
+         if (r.jointype == 'controlled') {
+             return TD(null);
+         }
+         return TD(null, A({'href': '', 'onclick': 'leaveCommunity(' + r.id + '); return false;'}, '[X]'));
+     }
+     ]
+);
+
+communitylist.updateOnLoad();
+
+function leaveCommunity(id) {
+    var pd = {'leave': id}
+    var d = loadJSONDoc('communityleave.json.php', pd);
+    d.addCallbacks(function (data) {
+        if (!data.error) {
+            $('messagediv').innerHTML = '$leftsuccess';
+            communitylist.doupdate();
+        }
+        if (data.error) {
+            $('messagediv').innerHTML = '$leftfailed (' + data.error + ')';
+        }
+    },
+            function () {
+               $('messagediv').innerHTML = '$leftfailed';
+               watchlist.doupdate();
+            }
+    )
+}
+
+EOF;
+$smarty = smarty(array('tablerenderer'));
+$smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->display('contacts/communities/index.tpl');
 
 ?>

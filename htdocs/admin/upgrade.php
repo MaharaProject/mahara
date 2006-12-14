@@ -104,24 +104,24 @@ $js .= <<< EOJS
                 d.addCallbacks(function (data) {
                     if ( !data.error ) {
                         var message;
-                        if (data.install) {
+                        if (data.message.install) {
                             message = '{$installsuccessstring}';
                         }
                         else {
                             message = '{$successstring}';
                         }
-                        message += data.newversion;
-                        $(data.key).innerHTML = '<img src="{$successicon}" alt=":)" />  ' + message;
+                        message += data.message.newversion;
+                        $(data.message.key).innerHTML = '<img src="{$successicon}" alt=":)" />  ' + message;
                     }
                     else {
                         var message = '';
-                        if (data.message) {
-                            message = data.message;
+                        if (data.message.errormessage) {
+                            message = data.message.errormessage;
                         } 
                         else {
                             message = '{$failurestring}';
                         }
-                        $(data.key).innerHTML = '<img src="{$failureicon}" alt=":(" /> ' + message;
+                        $(data.message.key).innerHTML = '<img src="{$failureicon}" alt=":(" /> ' + message;
                     }
                     processNext();
                 }, function () {
