@@ -24,8 +24,6 @@
         <input type="hidden" name="template" id="template" value="">
         <table id="templates">
         </table>
-        <button name="action" value="back">{str tag=Back}</button>
-        <button name="action" value="cancel">{str tag=Cancel}</button>
     </form>
 
     <button type="button" onclick="document.location='create1.php?createid={$createid}';">{str tag=Back}</button>

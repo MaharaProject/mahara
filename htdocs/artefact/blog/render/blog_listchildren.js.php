@@ -17,44 +17,37 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage core
- * @author     Richard Mansfield <richard.mansfield@catalyst.net.nz>
+ * @subpackage artefact-blog
+ * @author     Alastair Pharo <alastair@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
-define('INTERNAL', 1);
-require(dirname(dirname(__FILE__)) . '/init.php');
-require_once('artefact.php');
+defined('INTERNAL') || die();
 
-$id = param_integer('id');
-$format = param_variable('format', FORMAT_ARTEFACT_LISTSELF);
-$blockid = param_variable('blockid', null);
+$enc_wwwroot = json_encode(get_config('wwwroot'));
+$enc_id = json_encode($this->id);
 
+return <<<EOJAVASCRIPT
 
-$options = array();
-
-if($blockid) {
-    log_debug('using block id: ' . $blockid);
-    $options['blockid'] = $blockid;
-}
-
-
-$artefact = artefact_instance_from_id($id);
-$renderedartefact = $artefact->render($format, $options);
-
-if (!$renderedartefact) {
-    json_reply('local', 'artefactnotrendered');
-}
-
-$result = array(
-    'data' => $renderedartefact,
-    'error' => false,
-    'message' => 'artefactrendered',
+var blog_listchildren{$blockid} = new TableRenderer(
+    'blog_listchildren{$blockid}',
+    {$enc_wwwroot} + 'artefact/blog/render/blog_listchildren.json.php',
+    [
+        function(r) {
+            var td = TD();
+            td.innerHTML = r.content;
+            return td;
+        }
+    ]
 );
 
-json_headers();
-print json_encode($result);
+blog_listchildren{$blockid}.statevars.push('id');
+blog_listchildren{$blockid}.id = {$enc_id};
+
+blog_listchildren{$blockid}.updateOnLoad();
+
+EOJAVASCRIPT;
 
 ?>

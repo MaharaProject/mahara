@@ -153,30 +153,47 @@ class ArtefactTypeBlog extends ArtefactType {
         parent::delete();
     }
 
-    /** 
-     * This function adds the ability to render a blog as a list of posts 
+    /**
+     * This function overrides the default functionality for listing children,
+     * using a smarty template and tablerenderer stuff.
+     *
+     * @param array
+     * @return string
      */
-    public function render($format, $options) {
-        switch ($format) {
-            case FORMAT_ARTEFACT_LISTCHILDREN:
-                $smarty = smarty();
-                $smarty->assign('arefact', $this);
-                $smarty->assign('children', $this->get_children_instances());
-                $smarty->assign_by_ref('options', $options);
-                return $smarty->fetch('artefact:blog:render/blog_listchildren.tpl');
+    protected function listchildren($options) {
+        // This is because if there are multiple blocks on a page, they need separate
+        // js variables.
+        $blockid = isset($options['blockid'])
+            ? $options['blockid']
+            : mt_rand();
 
-            case FORMAT_ARTEFACT_RENDERFULL:
-                $smarty = smarty();
-                $smarty->assign('arefact', $this);
-                $smarty->assign('children', $this->get_children_instances());
-                $smarty->assign_by_ref('options', $options);
-                return $smarty->fetch('artefact:blog:render/blog_renderfull.tpl');
-                
-            default:
-                return parent::render($format, $options);
-        }
+        // This uses the above blockid, so needs to be inlcuded after.
+        $javascript = require(get_config('docroot') . 'artefact/blog/render/blog_listchildren.js.php');
+        
+        $smarty = smarty();
+        $smarty->assign('artefact', $this);
+        $smarty->assign('blockid', $blockid);
+        $smarty->assign_by_ref('options', $options);
+        $smarty->assign_by_ref('javascript', $javascript);
+        return $smarty->fetch('artefact:blog:render/blog_listchildren.tpl');
     }
 
+    /**
+     * This function implements the render_full functionality for blogs.
+     * Rendering full involves rendering blog posts with render_full, and
+     * possibly some other stuff.
+     *
+     * @param array
+     * @return string
+     */
+    function render_full($options) {
+        $smarty = smarty();
+        $smarty->assign('artefact', $this);
+        $smarty->assign('children', $this->get_children_instances());
+        $smarty->assign_by_ref('options', $options);
+        return $smarty->fetch('artefact:blog:render/blog_renderfull.tpl');
+    }
+                
     public function get_icon() {
     }
 
@@ -337,22 +354,29 @@ class ArtefactTypeBlogPost extends ArtefactType {
       
         parent::delete();
     }
-    
-    public function render($format, $options) {
-        switch ($format) {
-            case FORMAT_ARTEFACT_LISTSELF:
-                $smarty = smarty();
-                $smarty->assign('arefact', $this);
-                return $smarty->fetch('artefact:blog:render/blogpost_listself.tpl');
+  
+    /**
+     * This function displays the blogpost in listself mode.  We're overriding the
+     * default, which is to simply display the title, so we can include more
+     * data, and use a smarty template.
+     *
+     * @param array
+     */
+    protected function listself($options) {
+        $smarty = smarty();
+        $smarty->assign('artefact', $this);
+        return $smarty->fetch('artefact:blog:render/blogpost_listself.tpl');
+    }
 
-            case FORMAT_ARTEFACT_RENDERFULL:
-                $smarty = smarty();
-                $smarty->assign('arefact', $this);
-                return $smarty->fetch('artefact:blog:render/blogpost_renderfull.tpl');
-                
-            default:
-                return parent::render($format, $options);
-        }
+    /**
+     * This function displays the blogpost in renderfull mode.
+     *
+     * @param array
+     */
+    protected function render_full($options) {
+        $smarty = smarty();
+        $smarty->assign('artefact', $this);
+        return $smarty->fetch('artefact:blog:render/blogpost_renderfull.tpl');
     }
 
     public function get_icon() {
@@ -404,6 +428,39 @@ class ArtefactTypeBlogPost extends ArtefactType {
         $count = (int)get_field('artefact', 'COUNT(*)', 'owner', $user->get('id'), 'artefacttype', 'blogpost', 'parent', $id);
 
         return array($count, $result);
+    }
+
+    /** 
+     * This function returns a list of rendered blog posts.
+     *
+     * @param integer
+     * @param integer
+     * @param integer
+     * @param integer
+     */
+    public static function render_posts($format, $id, $limit = self::pagination, $offset = 0, $options = null) {
+        $postids = get_records_sql_array("
+         SELECT a.id
+         FROM " . get_config('dbprefix') . "artefact a
+          LEFT OUTER JOIN " . get_config('dbprefix') . "artefact_blog_blogpost bp
+           ON a.id = bp.blogpost
+         WHERE a.parent = ?
+          AND bp.published = 1
+         ORDER BY a.ctime DESC
+         LIMIT ? OFFSET ?;", array($id, $limit, $offset));
+
+        $posts = array();
+        foreach($postids as $postid) {
+            $blogpost = new ArtefactTypeBlogPost($postid->id);
+            $posts[] = array(
+                'id' => $postid->id,
+                'content' => $blogpost->render($format, $options)
+            );
+        }
+
+        $count = (int)get_field('artefact', 'COUNT(*)', 'parent', $id);
+
+        return array($count, $posts);
     }
 
     /**

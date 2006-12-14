@@ -51,9 +51,6 @@ input, select, textarea {
 input[type="submit"], input[type="button"] {
     border: 2px outset #ccc;
 }
-input[type="checkbox"] {
-    display: none;
-}
 
 .center {
     text-align: center;

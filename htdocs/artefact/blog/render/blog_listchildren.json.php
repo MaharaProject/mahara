@@ -17,44 +17,31 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage core
- * @author     Richard Mansfield <richard.mansfield@catalyst.net.nz>
+ * @subpackage artefact-blog
+ * @author     Alastair Pharo <alastair@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
 define('INTERNAL', 1);
-require(dirname(dirname(__FILE__)) . '/init.php');
-require_once('artefact.php');
 
-$id = param_integer('id');
-$format = param_variable('format', FORMAT_ARTEFACT_LISTSELF);
-$blockid = param_variable('blockid', null);
-
-
-$options = array();
-
-if($blockid) {
-    log_debug('using block id: ' . $blockid);
-    $options['blockid'] = $blockid;
-}
-
-
-$artefact = artefact_instance_from_id($id);
-$renderedartefact = $artefact->render($format, $options);
-
-if (!$renderedartefact) {
-    json_reply('local', 'artefactnotrendered');
-}
-
-$result = array(
-    'data' => $renderedartefact,
-    'error' => false,
-    'message' => 'artefactrendered',
-);
+require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
+safe_require('artefact', 'blog');
 
 json_headers();
-print json_encode($result);
+
+$limit = param_integer('limit', ArtefactTypeBlog::pagination);
+$offset = param_integer('offset', 0);
+$id = param_integer('id');
+
+list($count, $data) = ArtefactTypeBlogPost::render_posts(FORMAT_ARTEFACT_LISTSELF, $id, $limit, $offset);
+
+echo json_encode(array(
+    'count' => $count,
+    'limit' => $limit,
+    'offset' => $offset,
+    'data' => $data
+));
 
 ?>

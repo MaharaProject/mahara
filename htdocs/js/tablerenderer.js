@@ -242,7 +242,12 @@ function TableRenderer(target, source, columns, options) {
     };
 
     this.updateOnLoad = function() {
-        addLoadEvent(partial(self.doupdate, {}));
+        if ( TableRendererPageLoaded ) {
+            self.doupdate();
+        }
+        else {
+            addLoadEvent(partial(self.doupdate, {}));
+        }
     }
 
     if ( TableRendererPageLoaded ) {
