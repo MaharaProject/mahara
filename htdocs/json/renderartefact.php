@@ -30,10 +30,19 @@ require_once('artefact.php');
 
 $id = param_integer('id');
 $format = param_variable('format', FORMAT_ARTEFACT_LISTSELF);
+$blockid = param_variable('blockid', null);
+
+
+$options = array();
+
+if($blockid) {
+    log_debug('using block id: ' . $blockid);
+    $options['blockid'] = $blockid;
+}
+
 
 $artefact = artefact_instance_from_id($id);
-log_debug('rendering to format: ' . $format);
-$renderedartefact = $artefact->render($format, null);
+$renderedartefact = $artefact->render($format, $options);
 
 if (!$renderedartefact) {
     json_reply('local', 'artefactnotrendered');
