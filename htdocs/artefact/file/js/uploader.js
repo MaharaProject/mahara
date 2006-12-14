@@ -105,6 +105,7 @@ function FileUploader(element, foldername, folderid, uploadcallback, fileexists)
             $('uploadformmessage').innerHTML = get_string('uploadfileexistsoverwritecancel');
             // Show replace button
             setDisplayForElement('inline', self.form.replace);
+            self.form.title.focus();
             return;
         }
         $('uploadformmessage').innerHTML = '';

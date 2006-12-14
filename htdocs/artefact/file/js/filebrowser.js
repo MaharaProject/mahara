@@ -72,6 +72,7 @@ function FileBrowser(element, changedircallback) {
         if (!replacefile && self.fileexists(name) && name != originalname) {
             $(formid+'message').innerHTML = get_string('fileexistsoverwritecancel');
             setDisplayForElement('inline', $(formid).replace);
+            $(formid).name.focus();
             return;
         }
         $(formid+'message').innerHTML = '';
