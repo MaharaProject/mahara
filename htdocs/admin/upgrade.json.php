@@ -30,6 +30,10 @@ define('INSTALLER', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 require(get_config('libroot') . 'upgrade.php');
 
+$upgrade = check_upgrades($name);
+if (empty($upgrade->disablelogin)) {
+    auth_setup();
+}
 $install = param_boolean('install');
 if (!$install) {
     $name    = param_variable('name');
@@ -57,7 +61,6 @@ if ($install) {
     json_reply(false, $message);
 }
 
-$upgrade = check_upgrades($name);
 $data = array(
     'key'        => $name
 );             

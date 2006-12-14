@@ -45,8 +45,12 @@ function check_upgrades($name=null) {
 
     $toupgrade = array();
     $installing = false;
+    $disablelogin = false;
 
     require('version.php');
+    if (isset($config->disablelogin) && !empty($config->disablelogin)) {
+        $disablelogin = true;
+    }
     // check core first...
     if (empty($name) || $name == 'core') {
         try {
@@ -64,6 +68,10 @@ function check_upgrades($name=null) {
             $installing = true;
         } 
         else if ($config->version > $coreversion) {
+            if (isset($config->minupgradefrom) && $coreversion < $config->minupgradefrom) {
+                throw new SanityException("Must upgrade to $config->minupgradefrom first "
+                                          ." (you have $coreversion)");
+            }
             $core = new StdClass;
             $core->upgrade = true;
             $core->from = $coreversion;
@@ -126,6 +134,9 @@ function check_upgrades($name=null) {
             }
             
             require(get_config('docroot') . $pluginpath . '/version.php');
+            if (isset($config->disablelogin) && !empty($config->disablelogin)) {
+                $disablelogin = true;
+            }
         }
 
         if (empty($pluginversion)) {
@@ -139,6 +150,10 @@ function check_upgrades($name=null) {
             $toupgrade[$pluginkey] = $plugininfo;
         }
         else if ($config->version > $pluginversion) {
+            if (isset($config->minupgradefrom) && $pluginversion < $config->minupgradefrom) {
+                throw new SanityException("Must upgrade to $config->minupgradefrom first "
+                                          ." (you have $pluginversion)");
+            }
             $plugininfo = new StdClass;
             $plugininfo->upgrade = true;
             $plugininfo->from = $pluginversion;
@@ -156,8 +171,10 @@ function check_upgrades($name=null) {
         foreach ((array)$toupgrade[$name] as $key => $value) {
             $upgrade->{$key} = $value;
         }
+        $upgrade->disablelogin = $disablelogin;
         return $upgrade;
     }
+    $toupgrade['disablelogin'] = $disablelogin;
     return $toupgrade;
 }
 
