@@ -103,10 +103,21 @@ function FileBrowser(element, changedircallback) {
             setDisplayForElement('inline', $(formid).replace);
             return;
         }
-        sendjsonrequest('updatemetadata.json.php', 
-                        {'id':fileid, 'name':$(formid).name.value,
-                         'description':$(formid).description.value},
-                        self.refresh);
+        $(formid+'message').innerHTML = '';
+        hideElement($(formid).replace);
+
+        var collideaction = replacefile ? 'replace' : 'fail';
+        var data = {'name':$(formid).name.value, 'collideaction':collideaction,
+                    'description':$(formid).description.value};
+        if (fileid) {
+            var script = 'updatemetadata.json.php';
+            data['id'] = fileid;
+        }
+        else {
+            var script = 'createfolder.json.php';
+            data['parentfolder'] = self.pathids[self.cwd];
+        }
+        sendjsonrequest(script, data, self.refresh);
     }
 
     this.openeditform = function(fileinfo) {
