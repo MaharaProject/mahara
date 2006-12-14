@@ -162,7 +162,6 @@ class User {
      * @param object $userdata Information to persist across page loads
      */
     public function login($userdata) {
-        log_debug($userdata);
         foreach (array_keys($this->defaults) as $key) {
             $this->set($key, (isset($userdata->{$key})) ? $userdata->{$key} : $this->defaults[$key]);
         }
@@ -171,7 +170,6 @@ class User {
         $this->set('sesskey', get_random_key());
         $this->set('activityprefs', load_activity_preferences($this->get('id')));
         $this->set('accountprefs', load_account_preferences($this->get('id')));
-        log_debug($this->get('accountprefs'));
     }
     
     /**
