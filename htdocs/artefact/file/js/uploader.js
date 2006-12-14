@@ -57,6 +57,7 @@ function FileUploader(element, foldername, folderid, uploadcallback, fileexists)
         appendChildNodes(form,
             TABLE(null,
             TBODY(null, 
+                  TR(null, TH({'colSpan':2}, LABEL(null, get_string('uploadfile')))),
              TR(null, TH(null, LABEL(null, get_string('destination'))),
                 TD(null, SPAN({'id':'uploaddest'},self.foldername))),
              TR(null, TH(null, LABEL(null, get_string('file'))),
