@@ -49,25 +49,27 @@ class User {
      */
     public function __construct($SESSION) {
         $this->defaults = array(
-            'logout_time'    => 0,
-            'id'             => 0,
-            'username'       => '',
-            'password'       => '',
-            'salt'           => '',
-            'institution'    => 'mahara',
-            'passwordchange' => false,
-            'deleted'        => false,
-            'expiry'         => 0,
-            'lastlogin'      => 0,
-            'staff'          => false,
-            'admin'          => false,
-            'firstname'      => '',
-            'lastname'       => '',
-            'preferredname'  => '',
-            'email'          => '',
-            'accountprefs'   => array(),
-            'activityprefs'  => array(),
-            'sesskey'        => ''
+            'logout_time'      => 0,
+            'id'               => 0,
+            'username'         => '',
+            'password'         => '',
+            'salt'             => '',
+            'institution'      => 'mahara',
+            'passwordchange'   => false,
+            'deleted'          => false,
+            'expiry'           => 0,
+            'expirymailsent'   => 0,
+            'lastlogin'        => 0,
+            'inactivemailsent' => 0,
+            'staff'            => false,
+            'admin'            => false,
+            'firstname'        => '',
+            'lastname'         => '',
+            'preferredname'    => '',
+            'email'            => '',
+            'accountprefs'     => array(),
+            'activityprefs'    => array(),
+            'sesskey'          => ''
         );
 
         $this->SESSION = $SESSION;
@@ -139,7 +141,6 @@ class User {
         log_debug("set_account_preference($field, $value)");
         set_account_preference($this->get('id'), $field, $value);
         $accountprefs = $this->get('accountprefs');
-        log_debug($accountprefs);
         $accountprefs[$field] = $value;
         $this->set('accountprefs', $accountprefs);
     }
