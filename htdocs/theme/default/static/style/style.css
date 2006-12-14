@@ -420,7 +420,7 @@ div.sidebar {
 	padding: 0 0 0 17px;
 }
 
-#messages .error,
+#messages .error
 /*#messages .err*/ {
 	color: #dd0221;
 	background: #ffd3d9 url(../images/icon_problem.gif) no-repeat left;
