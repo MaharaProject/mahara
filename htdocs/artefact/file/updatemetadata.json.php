@@ -32,6 +32,7 @@ try {
     $id = param_integer('id');
     $name = param_variable('name');
     $description = param_variable('description');
+    $collideaction = param_variable('collideaction', 'fail');
 }
 catch (ParameterException $e) {
     json_reply('missingparameter',get_string('missingparameter'));
