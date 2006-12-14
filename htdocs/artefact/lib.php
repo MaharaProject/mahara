@@ -53,6 +53,18 @@ abstract class PluginArtefact extends Plugin {
      * Gets a list of top level artefact types, used in the view creation wizard
      */
     public static abstract function get_toplevel_artefact_types(); 
+
+    /**
+     * This function returns an array of menu items
+     * to be displayed
+     * Each item should be a StdClass object containing -
+     * - name language pack key
+     * - url relative to wwwroot
+     * @return array
+     */
+    public static function menu_items() {
+        return array();
+    }
 }
 
 /** 
