@@ -108,12 +108,12 @@ function FileBrowser(element, changedircallback) {
                                    'name':'replace', 'style':'display: none;'});
         replacebutton.onclick = function () { self.savemetadata(fileinfo.id, formid, true); };
         var cancelbutton = INPUT({'type':'button', 'value':get_string('cancel'), 'onclick':cancelform});
-        var editformtitle = get_string(fileinfo.artefacttype == 'folder' ? 'editfolder' : 'editform');
+        var editformtitle = get_string(fileinfo.artefacttype == 'folder' ? 'editfolder' : 'editfile');
         var edittable = TABLE({'align':'center'},TBODY(null,
-                         TR(null,TD({'colspan':2},editformtitle)),
-                         TR(null,TD(null,get_string('name')),
+                         TR(null,TH({'colspan':2},LABEL(editformtitle))),
+                         TR(null,TH(null,LABEL(get_string('name'))),
                           TD(null,INPUT({'type':'text','name':'name','value':fileinfo.title,'size':40}))),
-                         TR(null,TD(null,get_string('description')),
+                         TR(null,TH(null,LABEL(get_string('description'))),
                           TD(null,INPUT({'type':'text','name':'description',
                                          'value':fileinfo.description,'size':40}))),
                          TR(null,TD({'colspan':2},SPAN({'id':formid+'message'}))),
@@ -144,12 +144,12 @@ function FileBrowser(element, changedircallback) {
         return FORM({'method':'post', 'id':formid, 'style':'display: none;'},
                 TABLE(null,
                  TBODY(null,
-                  TR(null,TD({'colSpan':2},get_string('createfolder'))),
-                  TR(null,TD(null,get_string('destination')),
+                  TR(null,TH({'colSpan':2},LABEL(null,get_string('createfolder')))),
+                  TR(null,TH(null,LABEL(get_string('destination'))),
                      TD(null, SPAN({'id':'createdest'},self.cwd))),
-                  TR(null,TD(null,get_string('name')),
+                  TR(null,TH(null,LABEL(get_string('name'))),
                      TD(null,INPUT({'type':'text','name':'name','value':'','size':40}))),
-                  TR(null,TD(null,get_string('description')),
+                  TR(null,TH(null,LABEL(get_string('description'))),
                      TD(null,INPUT({'type':'text','name':'description','value':'','size':40}))),
                   TR(null,TD({'colspan':2},SPAN({'id':formid+'message'}))),
                   TR(null,TD({'colspan':2},createbutton,replacebutton,cancelbutton)))));
