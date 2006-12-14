@@ -57,16 +57,17 @@ function FileUploader(element, foldername, folderid, uploadcallback, fileexists)
         appendChildNodes(form,
             TABLE(null,
             TBODY(null, 
+                  TR(null, TH({'colSpan':2}, LABEL(null, get_string('uploadfile')))),
              TR(null, TH(null, LABEL(null, get_string('destination'))),
                 TD(null, SPAN({'id':'uploaddest'},self.foldername))),
              TR(null, TH(null, LABEL(null, get_string('file'))),
-                TD(null, INPUT({'type':'file', 'name':'userfile', 'onchange':function () {
+                TD(null, INPUT({'type':'file','name':'userfile','size':40,'onchange':function () {
                     self.form.title.value = self.filepart(self.form.userfile.value);
                 }}))),
              TR(null, TH(null, LABEL(null, get_string('title'))),
-                TD(null, INPUT({'type':'text', 'name':'title'}))),
+                TD(null, INPUT({'type':'text', 'name':'title', 'size':40}))),
              TR(null, TH(null, LABEL(null, get_string('description'))),
-                TD(null, INPUT({'type':'text', 'name':'description'}))),
+                TD(null, INPUT({'type':'text', 'name':'description', 'size':40}))),
              TR(null,TD({'colspan':2, 'id':'uploadformmessage'})),
              TR(null,TD({'colspan':2},
               INPUT({'name':'upload','type':'button','value':get_string('upload'),
@@ -129,19 +130,22 @@ function FileUploader(element, foldername, folderid, uploadcallback, fileexists)
 
         // Display upload status
         insertSiblingNodesBefore(self.form,
-            DIV({'id':'uploadstatusline'+self.nextupload},
+            DIV({'id':'uploadstatusline'+self.nextupload}, IMG({'src':config.themeurl+'loading.gif'}),
                 get_string('uploading',[localname,self.foldername,destname])));
         self.nextupload += 1;
     }
 
     this.getresult = function(data) {
         if (!data.error) {
-            message = get_string('Upload complete');
+            var image = 'success.gif';
+            var message = get_string('Upload complete');
         }
         else {
-            message = get_string('Upload failed');
+            var image = 'failure.gif';
+            var message = get_string('Upload failed');
         }
-        $('uploadstatusline'+data.uploadnumber).innerHTML = message;
+        replaceChildNodes($('uploadstatusline'+data.uploadnumber), 
+                          IMG({'src':config.themeurl+image}), message);
         this.uploadcallback();
     }
 

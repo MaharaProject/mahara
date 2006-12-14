@@ -1,10 +1,14 @@
 {**
- * This smarty template renders the blog in full.  This is currently a complete
- * list of complete blog posts.
+ * This smarty template renders a list of a blog's children.
  *}
 
-<ul>
-    {foreach from=$children item=child}
-        <li>{$child->render(FORMAT_ARTEFACT_RENDERFULL, $options)}</li>
-    {/foreach}
-</ul>
+<script type="text/javascript">
+  {$javascript}
+</script>
+
+<h2>{$artefact->get('title')|escape}</h2>
+
+<table id="blog_renderfull{$blockid}">
+    <thead></thead>
+    <tbody></tbody>
+</table>

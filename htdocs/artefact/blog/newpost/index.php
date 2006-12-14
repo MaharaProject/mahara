@@ -55,7 +55,7 @@ $form = pieform(array(
         ),
         'description' => array(
             'type' => 'wysiwyg',
-            'rows' => 5,
+            'rows' => 10,
             'cols' => 80,
             'title' => get_string('postbody', 'artefact.blog'),
             'description' => get_string('postbodydesc', 'artefact.blog'),

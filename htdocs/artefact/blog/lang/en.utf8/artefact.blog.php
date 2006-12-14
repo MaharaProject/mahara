@@ -76,4 +76,6 @@ $string['thisisdraft'] = 'This post is a draft';
 $string['thisisdraftdesc'] = 'When your post is a draft, no one except you can see it.';
 $string['save'] = 'Save';
 
+$string['noresults'] = 'No results';
+
 ?>

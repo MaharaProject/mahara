@@ -6,6 +6,8 @@
   {$javascript}
 </script>
 
+<h2>{$artefact->get('title')|escape}</h2>
+
 <table id="blog_listchildren{$blockid}">
     <thead></thead>
     <tbody></tbody>
