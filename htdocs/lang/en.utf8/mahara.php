@@ -286,4 +286,8 @@ $string['updatewatchlistfailed'] = 'Update of watchlist failed';
 $string['view'] = 'view';
 $string['View'] = 'View';
 
+// communities
+$string['communitymemberrequests'] = 'Pending membership requests';
+$string['addcommunity'] = 'Add new community';
+
 ?>

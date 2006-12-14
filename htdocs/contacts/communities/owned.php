@@ -30,7 +30,38 @@ define('SUBMENUITEM', 'myownedcommunities');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
-$smarty = smarty();
+$viewurl = get_config('wwwroot') . 'contacts/communities/view.php?id=';
+$editurl = get_config('wwwroot') . 'contacts/communities/edit.php?id=';
+$editstr = get_string('edit');
+
+$javascript = <<<EOF
+var communitylist = new TableRenderer(
+    'communitylist',
+    'getcommunities.json.php',
+    [
+     function (r) {
+         return TD(null, A({'href': '{$viewurl}' + r.id}, r.name));
+     },
+     function (r) {
+         if (r.requestcount == 0) {
+             return TD(null);
+         }
+         return TD(null, A({'href': '{$editurl}' + r.id + '#pending'}, r.requestcount));
+     },
+     function (r) {
+         return TD(null, A({'href': '{$editurl}' + r.id}, '{$editstr}'));
+     }
+     ]
+);
+
+communitylist.updateOnLoad();
+communitylist.owned = 1;
+communitylist.statevars.push('owned');
+
+EOF;
+
+$smarty = smarty(array('tablerenderer'));
+$smarty->assign('INLINEJAVASCRIPT', $javascript);
 
 $smarty->display('contacts/communities/owned.tpl');
 
