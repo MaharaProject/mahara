@@ -35,7 +35,7 @@ $limit = param_integer('limit', ArtefactTypeBlog::pagination);
 $offset = param_integer('offset', 0);
 $id = param_integer('id');
 
-list($count, $data) = ArtefactTypeBlogPost::render_posts(FORMAT_ARTEFACT_LISTSELF, $id, $limit, $offset);
+list($count, $data) = ArtefactTypeBlogPost::render_posts(FORMAT_ARTEFACT_RENDERFULL, $id, $limit, $offset);
 
 if (!$count) {
     $count = 1;
