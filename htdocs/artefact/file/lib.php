@@ -172,7 +172,7 @@ class ArtefactTypeFileBase extends ArtefactType {
         }
         else {
             foreach ($filedata as $item) {
-                $item->mtime = strftime(get_string('strftimedate'),strtotime($item->mtime));
+                $item->mtime = strftime(get_string('strfdaymonthyearshort'),strtotime($item->mtime));
             }
         }
 

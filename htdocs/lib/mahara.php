@@ -181,7 +181,7 @@ function get_string_location($identifier, $section, $variables, $replacefunc='fo
     $langconfigstrs = array('parentlanguage', 'strftimedate', 'strftimedateshort', 'strftimedatetime',
                             'strftimedaydate', 'strftimedaydatetime', 'strftimedayshort', 'strftimedaytime',
                             'strftimemonthyear', 'strftimerecent', 'strftimerecentfull', 'strftimetime',
-                            'thislanguage');
+                            'strfdaymonthyearshort', 'thislanguage');
 
     if (in_array($identifier, $langconfigstrs)) {
         $section = 'langconfig';
