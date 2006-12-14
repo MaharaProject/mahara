@@ -91,7 +91,9 @@ function assessselect(viewid, communitylist) {
 }
 
 function renderartefact(viewid,a) {
-    return LI(null,A({'href':'{$wwwroot}view/view.php?view='+viewid+'&artefact='+a.id},a.title));
+    var link = A({'href':'{$wwwroot}view/view.php?view='+viewid+'&artefact='+a.id});
+    link.innerHTML = a.title;
+    return LI(null,link);
 }
 
 function submitform(viewid, action) {
