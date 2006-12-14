@@ -54,6 +54,9 @@ function FileBrowser(element, changedircallback) {
     this.editdelete = function(r) {
         var editb = INPUT({'type':'button', 'value':get_string('edit')});
         editb.onclick = function () { self.openeditform(r); };
+        if (r.emptyfolder) {
+            return TD(null, editb);
+        }
         var deleteb = INPUT({'type':'button', 'value':get_string('delete')});
         deleteb.onclick = function () {
             if (confirm(get_string(r.artefacttype == 'folder' ? 'deletefolderandcontents?' : 'deletefile?'))) {

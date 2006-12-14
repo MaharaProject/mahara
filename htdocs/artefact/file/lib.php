@@ -106,6 +106,10 @@ class ArtefactTypeFileBase extends ArtefactType {
 
     public static function get_my_files_data($parentfolderid, $userid) {
 
+        // @todo: add an 'emptyfolder => true' field for empty folders
+
+        // @todo: add an 'attachedtoblogpost => true' field for files attached to blog posts.
+
         if ($parentfolderid) {
             $foldersql = ' = ' . $parentfolderid;
         }
@@ -126,9 +130,10 @@ class ArtefactTypeFileBase extends ArtefactType {
         }
         else {
             foreach ($filedata as $item) {
-                $item->mtime = strftime(get_string('strftimedatetime'),strtotime($item->mtime));
+                $item->mtime = strftime(get_string('strftimedate'),strtotime($item->mtime));
             }
         }
+
 
         // Sort folders before files; then use nat sort order on title.
         function fileobjcmp ($a, $b) {
@@ -233,6 +238,43 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         }
         return true;
     }
+
+    // Deal with this once I know about how the mime type detection will work.
+
+//     public static function construct_from_upload($inputname, $data) {
+//         require_once('uploadmanager.php');
+//         $um = new upload_manager($inputname);
+//         if (!$um->preprocess_file()) {
+//             return false;
+//         }
+//     }
+
+//     /**
+//      * Processes a newly uploaded file, copies it to disk, creates a new artefact object and
+//      * associates the newly uploaded file with it.
+//      * Takes the name of a file input.
+//      * Returns a boolean indicating success or failure.
+//      */
+//     public static function uploaded_file_to_artefact_file($inputname, $data) {
+//         // Get the new file object first, because its id is used to
+//         // determine where the file goes on the filesystem
+//         $f = new ArtefactTypeFile(0, $data);
+//         require_once('uploadmanager.php');
+//         $um = new upload_manager($inputname);
+//         if (!$um->preprocess_file()) {
+//             return false;
+//         }
+//         $this->size = $um->file['size'];
+//         $this->dirty = true;
+//         $this->commit();
+//         // Save the file using its id as the filename, and use its id modulo
+//         // the number of subdirectories as the directory name.
+//         if (!$um->save_file(self::get_file_directory($this->id) , $this->id)) {
+//             $this->delete();
+//             return false;
+//         }
+//         return true;
+//     }
     
     public function delete() {
         if (empty($this->id)) {

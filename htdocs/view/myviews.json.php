@@ -79,12 +79,10 @@ if ($viewdata) {
             safe_require('artefact', $artefactrec->plugin);
             // We have to construct the entire artefact object to render the name properly.
             $classname = generate_artefact_class_name($artefactrec->artefacttype);
-            $artefactobj = new $classname($artefactrec->artefact, array('title' => $artefactrec->title));
+            $artefactobj = new $classname(0, array('title' => $artefactrec->title));
             $artname = $artefactobj->render(FORMAT_ARTEFACT_LISTSELF, array('link' => false));
             $data[$index[$artefactrec->view]]['artefacts'][] = array('id'    => $artefactrec->artefact,
                                                                      'title' => $artname);
-            //$data[$index[$artefactrec->view]]['artefacts'][] = array('id'    => $artefactrec->artefact,
-            //                                                         'title' => $artifactrec->title);
         }
     }
 }

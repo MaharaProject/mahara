@@ -340,4 +340,29 @@ function full_name($user=null) {
     return $user->firstname . ' ' . $user->lastname;
 }
 
+
+/**
+ * helper function to default to currently
+ * logged in user if there isn't an id specified
+ * @throws InvalidArgumentException if there is no user and no $USER
+ */
+function optional_userid($userid) {
+
+    if (!empty($userid)) {
+        return $userid;
+    }
+
+    if (!is_logged_in()) {
+        throw new InvalidArgumentException("optional_userid no userid and no logged in user");
+    }
+    
+    global $USER;
+    return $USER->get('id');
+}
+
+function is_logged_in() {
+    global $USER;
+    return (!empty($USER));
+}
+
 ?>
