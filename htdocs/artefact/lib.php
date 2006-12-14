@@ -497,7 +497,7 @@ abstract class ArtefactType {
      * whether a user will have exactly 0 or 1 of this artefact type
      * @abstract
      */
-    public static abstract function is_0_or_1();
+    public static abstract function is_singular();
 
     // ******************** HELPER FUNCTIONS ******************** //
 
