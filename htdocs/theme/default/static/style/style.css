@@ -626,6 +626,17 @@ acronym {
 #installer tr {
     height: 2em;
 }
+table#installer {
+    margin: 0 auto;
+    width: 90%;
+}
+#installer th {
+    border-bottom: 1px solid #819f18;
+    vertical-align: middle;
+}
+#msgscol {
+    width: 50%;
+}
 
 
 /* LISTS AND TABLE STYLES BEGINS */
@@ -906,7 +917,7 @@ a.pieform-calendar-toggle img {
 #footer {
     clear: both;
 	height: 25px;
-	margin: 0;
+	margin-top: 5px;
 	padding: 7px 0 0 5px;
     font-size: 13px;
 	color: #FFFFFF;
