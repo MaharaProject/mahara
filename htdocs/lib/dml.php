@@ -1141,8 +1141,6 @@ function where_values_prepared($value1=null, $value2=null, $value3=null, $value4
  * @param string $column The name of the field in the table
  * @return string Field type or false if error
  */
-// NOTE: commented out until a good reason is found for it. The implemenation looks shoddy at best anyway...
-/*
 function column_type($table, $column) {
     global $db;
 
@@ -1153,7 +1151,6 @@ function column_type($table, $column) {
     $field = $rs->FetchField(0);
     return $rs->MetaType($field->type);
 }
-*/
 
 /**
  * This function will execute an array of SQL commands, returning

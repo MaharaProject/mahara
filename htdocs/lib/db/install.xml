@@ -374,7 +374,7 @@
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
                 <FIELD NAME="name" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="description" TYPE="text" NOTNULL="false" />
-                <FIELD NAME="jointype" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="anyone" />
+                <FIELD NAME="jointype" TYPE="char" LENGTH="20" NOTNULL="true" ENUM="true" ENUMVALUES="'controlled', 'invite', 'request', 'open'"  DEFAULT="open" />
                 <FIELD NAME="owner" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
                 <FIELD NAME="mtime" TYPE="datetime" NOTNULL="true" />

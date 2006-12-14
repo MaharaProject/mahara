@@ -30,7 +30,16 @@ function xmldb_core_upgrade($oldversion=0) {
 
     $status = true;
 
-    // Upgrades later :)
+    if ($oldversion < 2006121400) {
+
+        set_field('community', 'jointype', 'open', 'jointype', 'anyone');
+        $table = new XMLDBTable('community');
+        $field = new XMLDBField('jointype');
+        $field->setAttributes(XMLDB_TYPE_CHAR, 20, false, true, false, true, 
+                              array('controlled', 'invite', 'request', 'open'), 'open');
+        change_field_default($table, $field);
+        change_field_enum($table, $field);
+    }
 
     return $status;
 

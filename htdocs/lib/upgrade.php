@@ -172,33 +172,28 @@ function upgrade_core($upgrade) {
     global $db;
 
     $location = get_config('libroot') . '/db/';
-    $db->StartTrans();
+
+    db_begin();
 
     if (!empty($upgrade->install)) {
-        $status = install_from_xmldb_file($location . 'install.xml'); 
+        if (!install_from_xmldb_file($location . 'install.xml')) {
+            throw new SQLException("Failed to upgrade core (check logs)");
+        }
     }
     else {
         require_once($location . 'upgrade.php');
-        $status = xmldb_core_upgrade($upgrade->from);
-    }
-    if (!$status) {
-        throw new SQLException("Failed to upgrade core");
+        xmldb_core_upgrade($upgrade->from);
     }
 
-    $status = set_config('version', $upgrade->to);
-    $status = $status && set_config('release', $upgrade->torelease);
-    
-    if ($db->HasFailedTrans()) {
-        $status = false;
-    }
+    set_config('version', $upgrade->to);
+    set_config('release', $upgrade->torelease);
     
     if (!empty($upgrade->install)) {
-        $status = $status && core_postinst();
+        core_postinst();
     }
-    
-    $db->CompleteTrans();
 
-    return $status;
+    db_commit();
+    return true;
 }
 
 /**
