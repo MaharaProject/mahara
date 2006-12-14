@@ -72,6 +72,7 @@ function FileBrowser(element, changedircallback) {
         if (!replacefile && self.fileexists(name) && name != originalname) {
             $(formid+'message').innerHTML = get_string('fileexistsoverwritecancel');
             setDisplayForElement('inline', $(formid).replace);
+            //$(formid).name.value = newfilename(name, this.fileexists); // not a good idea yet.
             $(formid).name.focus();
             return;
         }
@@ -87,9 +88,9 @@ function FileBrowser(element, changedircallback) {
         }
         else {
             var script = 'createfolder.json.php';
-            if (self.cwd != '/') {
-                data['parentfolder'] = self.pathids[self.cwd];
-            }
+        }
+        if (self.cwd != '/') {
+            data['parentfolder'] = self.pathids[self.cwd];
         }
         sendjsonrequest(script, data, self.refresh);
     }
