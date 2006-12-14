@@ -522,7 +522,6 @@ EOF;
  */
 function login_submit($values) {
     global $SESSION, $USER;
-    log_debug('login_submit()');
 
     $username    = $values['login_username'];
     $password    = $values['login_password'];
@@ -536,7 +535,7 @@ function login_submit($values) {
         if (call_static_method($authclass, 'authenticate_user_account', $username, $password, $institution)) {
             // User logged in! Set a cookie to remember their institution
             set_cookie('institution', $institution);
-            log_debug('user authenticated successfully');
+            $oldlastlogin = null;
 
             if (!record_exists('usr', 'username', $username)) {
                 // We don't know about this user. But if the authentication
@@ -544,11 +543,15 @@ function login_submit($values) {
                 // into the usr table.
                 // @todo document what needs to be returned by get_user_info
                 $userdata = call_static_method($authclass, 'get_user_info', $username);
+                $userdata->lastlogin = db_format_timestamp(time());
                 insert_record('usr', $userdata);
             }
             // @todo config form option for this for each external plugin. NOT for internal
             else if (get_config_plugin('auth', $authtype, 'updateuserinfoonlogin')) {
                 $userdata = call_static_method($authclass, 'get_user_info', $username);
+                $oldlastlogin = $userdata->lastlogin;
+                $userdata->lastlogin = db_format_timestamp(time());
+                $userdata->inactivemailsent = 0;
                 $where = new StdClass;
                 $where->username = $username;
                 $where->institution = $institution;
@@ -559,20 +562,30 @@ function login_submit($values) {
                 update_record('usr', $userdata, $where);
             }
             else {
-                $userdata = get_record('usr', 'username', $username, null, null, null, null, '*, ' . db_format_tsfield('expiry'));
+                $userdata = get_record('usr', 'username', $username, null, null, null, null,
+                    '*, ' . db_format_tsfield('expiry') . ', ' . db_format_tsfield('lastlogin'));
+                $oldlastlogin = $userdata->lastlogin;
+                $userdata->lastlogin = time();
+                $userdata->inactivemailsent = 0;
+                set_field('usr', 'lastlogin', db_format_timestamp($userdata->lastlogin), 'username', $username);
+                set_field('usr', 'inactivemailsent', 0, 'username', $username);
             }
 
             // Only admins in the admin section!
             if (defined('ADMIN') && !$userdata->admin) {
-                log_debug('user not allowed in admin section');
                 $SESSION->add_error_msg(get_string('accessforbiddentoadminsection'));
                 redirect(get_config('wwwroot'));
             }
 
             // Check if the user's account has expired
-            // @todo TEST THIS
             if ($userdata->expiry > 0 && time() > $userdata->expiry) {
                 die_info(get_string('accountexpired'));
+            }
+
+            // Check if the user's account has become inactive
+            if ($oldlastlogin > 0
+                && $oldlastlogin + get_field('institution', 'defaultaccountinactiveexpire', 'name', $userdata->institution) < time()) {
+                die_info(get_string('accountinactive'));
             }
 
             // Check if the user's account has been suspended

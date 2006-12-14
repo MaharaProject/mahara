@@ -711,18 +711,43 @@ define('DEBUG_DEVELOPER', 'whocares');
  */
 class Plugin {
     
+    /**
+     * This function returns an array of crons it wants to have run
+     * Each item should be a StdtClass object containing - 
+     * - callfunction (static function on the Plugin Class)
+     * - any or all of minute, hour, day, month, dayofweek 
+     * (will default to * if not supplied)
+     */
     public static function get_cron() {
         return array();
     }
 
+    /** 
+     * This function returns an array of events to subscribe to
+     * by unique name. 
+     * If an event the plugin is trying to subscribe to is unknown by the
+     * core, an exception will be thrown.
+     * @return array
+     */
     public static function get_event_subscriptions() {
         return array();
     }
 
-    public static function postinst() {
+
+    /**
+     * This function will be run after every upgrade to the plugin.
+     * 
+     * @param int $fromversion version upgrading from (or 0 if installing)
+     */
+    public static function postinst($fromversion) {
         return true;
     }
 
+    /**
+     * Whether this plugin has admin plugin config options.
+     * If you return true here, you must supply a valid pieform
+     * in {@link get_config}
+     */
     public static function has_config() {
         return false;
     }

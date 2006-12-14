@@ -71,6 +71,7 @@ if (isset($_REQUEST['key'])) {
         $registrationid = $registration->id;
         unset($registration->id);
         unset($registration->expiry);
+        $registration->expiry = db_format_timestamp(time() + get_field('institution', 'defaultaccountlifetime', 'name', $registration->institution));
         $registration->id = insert_record('usr', $registration, 'id', true);
         log_debug($registration);
 
@@ -109,7 +110,7 @@ if (isset($_REQUEST['key'])) {
     }
 
 
-    if (!$registration = get_record('usr_registration', 'key', $_REQUEST['key'])) {
+    if (!$registration = get_record_select('usr_registration', 'key = ? AND expiry >= ?', array($_REQUEST['key'], db_format_timestamp(time())))) {
         die_info(get_string('registrationnosuchkey', 'auth.internal'));
     }
 

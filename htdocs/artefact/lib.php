@@ -65,29 +65,6 @@ abstract class PluginArtefact extends Plugin {
     public static function menu_items() {
         return array();
     }
-
-    /**
-     * This function returns an array of crons it wants to have run
-     * Each item should be a StdtClass object containing - 
-     * - name (will have artefact.$pluginname added for uniqueness)
-     * - script to hit relative to the documentroot
-     * NOTE THAT each plugin that implements this should ship with a 
-     * .htaccess that denies access to all cron scripts 
-     */
-    public static function get_cron_options() { 
-        return array();
-    }
-
-    /** 
-     * This function returns an array of events to subscribe to
-     * by unique name. 
-     * If an event the plugin is trying to subscribe to is unknown by the
-     * core, an exception will be thrown.
-     * @return array
-     */
-    public static function get_event_subscriptions() {
-        return array();
-    }
 }
 
 /** 

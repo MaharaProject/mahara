@@ -41,6 +41,16 @@ function xmldb_core_upgrade($oldversion=0) {
         change_field_enum($table, $field);
     }
 
+    if ($oldversion < 2006121401) {
+        $table = new XMLDBTable('usr');
+        $field = new XMLDBField('expirymailsent');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, false, true, false, null, null, 0);
+        add_field($table, $field);
+        $field = new XMLDBField('inactivemailsent');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, false, true, false, null, null, 0);
+        add_field($table, $field);
+    }
+
     return $status;
 
 }

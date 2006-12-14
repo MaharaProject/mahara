@@ -376,10 +376,6 @@ function error ($code, $message, $file, $line, $vars) {
  */
 function exception (Exception $e) {
     global $USER;
-    // @todo<nigel>: maybe later, rewrite as:
-    // if $e not Exception
-    //     get language string based on class name
-    // rather than by switch on class name
     if ($USER) {
         $logged = false;
         if (!($e instanceof MaharaException) || get_class($e) == 'MaharaException') {
@@ -393,6 +389,9 @@ function exception (Exception $e) {
         }
         
         $e->handle_exception($logged);
+    }
+    else {
+        log_message($e->getMessage(), LOG_LEVEL_WARN, true, true, $e->getFile(), $e->getLine(), $e->getTrace());
     }
 }
 

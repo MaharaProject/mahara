@@ -1209,7 +1209,8 @@ function db_format_timestamp($ts) {
  * database to return a unix timestamp
  * 
  * @param field the field to apply the function to
- * @param as    what to name the field (optional, defaults to $field)
+ * @param as    what to name the field (optional, defaults to $field). If false,
+ *              no naming is done.
  *
  * @return  timestamp string in database timestamp format
  */
@@ -1222,14 +1223,16 @@ function db_format_tsfield($field, $as = null) {
         $tsfield = "UNIX_TIMESTAMP($field)";
     }
     else {
-        throw new DatalibException('db_format_tsfield() is not implemented for your database engine (' . get_config('dbtype') . ')');
+        throw new SQLException('db_format_tsfield() is not implemented for your database engine (' . get_config('dbtype') . ')');
     }
 
     if ($as === null) {
         $as = $field;
     }
 
-    $tsfield .= " AS $as";
+    if (!empty($as)) {
+        $tsfield .= " AS $as";
+    }
 
     return $tsfield;
 }
