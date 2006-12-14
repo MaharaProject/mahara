@@ -130,19 +130,22 @@ function FileUploader(element, foldername, folderid, uploadcallback, fileexists)
 
         // Display upload status
         insertSiblingNodesBefore(self.form,
-            DIV({'id':'uploadstatusline'+self.nextupload},
+            DIV({'id':'uploadstatusline'+self.nextupload}, IMG({'src':config.themeurl+'loading.gif'}),
                 get_string('uploading',[localname,self.foldername,destname])));
         self.nextupload += 1;
     }
 
     this.getresult = function(data) {
         if (!data.error) {
-            message = get_string('Upload complete');
+            var image = 'success.gif';
+            var message = get_string('Upload complete');
         }
         else {
-            message = get_string('Upload failed');
+            var image = 'failure.gif';
+            var message = get_string('Upload failed');
         }
-        $('uploadstatusline'+data.uploadnumber).innerHTML = message;
+        replaceChildNodes($('uploadstatusline'+data.uploadnumber), 
+                          IMG({'src':config.themeurl+image}), message);
         this.uploadcallback();
     }
 
