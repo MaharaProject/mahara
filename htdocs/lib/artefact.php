@@ -152,8 +152,8 @@ function artefact_instance_from_type($artefact_type, $user_id=null) {
         $user_id = $USER->get('id');
     }
 
-    if (!call_static_method(generate_artefact_class_name($artefact_type), 'is_0_or_1')) {
-        throw new ArtefactNotFoundException("This artefact type is not a '0 or 1' artefact type");
+    if (!call_static_method(generate_artefact_class_name($artefact_type), 'is_singular')) {
+        throw new ArtefactNotFoundException("This artefact type is not a 'singular' artefact type");
     }
 
     // email is special (as in the user can have more than one of them, but
