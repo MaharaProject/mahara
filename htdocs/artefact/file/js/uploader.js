@@ -71,7 +71,7 @@ function FileUploader(element, foldername, folderid, uploadcallback, fileexists)
              TR(null,TD({'colspan':2},
               INPUT({'name':'upload','type':'button','value':get_string('upload'),
                      'onclick':function () { self.sendform(false)}}),
-              INPUT({'name':'replace','type':'button','value':get_string('replace'),
+              INPUT({'name':'replace','type':'button','value':get_string('overwrite'),
                      'onclick':function () { self.sendform(true); }}),
               INPUT({'type':'button','value':get_string('cancel'),'onclick':cancelform}))))));
 
@@ -101,7 +101,7 @@ function FileUploader(element, foldername, folderid, uploadcallback, fileexists)
         }
         localname = self.filepart(localname);
         if (!replacefile && self.fileexists(destname)) {
-            $('uploadformmessage').innerHTML = get_string('uploadfileexistsreplacecancel');
+            $('uploadformmessage').innerHTML = get_string('uploadfileexistsoverwritecancel');
             // Show replace button
             setDisplayForElement('inline', self.form.replace);
             return;
