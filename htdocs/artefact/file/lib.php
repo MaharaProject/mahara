@@ -63,6 +63,48 @@ class PluginArtefactFile extends PluginArtefact {
         return strnatcasecmp($a->text, $b->text);
     }
 
+    public static function jsstrings($type) {
+        static $jsstrings = array(
+            'uploader' => array(
+                'cancel' => 'mahara',
+                'description' => 'artefact.file',
+                'destination' => 'artefact.file',
+                'file' => 'artefact.file',
+                'filenamefieldisrequired' => 'artefact.file',
+                'home' => 'artefact.file',
+                'overwrite' => 'artefact.file',
+                'title' => 'artefact.file',
+                'titlefieldisrequired' => 'artefact.file',
+                'upload' => 'artefact.file',
+                'uploadcomplete' => 'artefact.file',
+                'uploadfailed' => 'artefact.file',
+                'uploadfile' => 'artefact.file',
+                'uploadfileexistsoverwritecancel' => 'artefact.file',
+                'uploading' => 'artefact.file',
+            ),
+            'filebrowser' => array(
+                'cancel' => 'mahara',
+                'create' => 'artefact.file',
+                'createfolder' => 'artefact.file',
+                'delete' => 'mahara',
+                'deletefile?' => 'artefact.file',
+                'deletefolder?' => 'artefact.file',
+                'description' => 'artefact.file',
+                'destination' => 'artefact.file',
+                'edit' => 'mahara',
+                'editfile' => 'artefact.file',
+                'editfolder' => 'artefact.file',
+                'fileexistsoverwritecancel' => 'artefact.file',
+                'home' => 'artefact.file',
+                'name' => 'artefact.file',
+                'namefieldisrequired' => 'artefact.file',
+                'nofilesfound' => 'artefact.file',
+                'overwrite' => 'artefact.file',
+                'savechanges' => 'artefact.file',
+            )
+        );
+        return $jsstrings[$type];
+    }
 
 }
 
