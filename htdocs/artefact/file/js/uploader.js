@@ -60,13 +60,13 @@ function FileUploader(element, foldername, folderid, uploadcallback, fileexists)
              TR(null, TH(null, LABEL(null, get_string('destination'))),
                 TD(null, SPAN({'id':'uploaddest'},self.foldername))),
              TR(null, TH(null, LABEL(null, get_string('file'))),
-                TD(null, INPUT({'type':'file', 'name':'userfile', 'onchange':function () {
+                TD(null, INPUT({'type':'file','name':'userfile','size':40,'onchange':function () {
                     self.form.title.value = self.filepart(self.form.userfile.value);
                 }}))),
              TR(null, TH(null, LABEL(null, get_string('title'))),
-                TD(null, INPUT({'type':'text', 'name':'title'}))),
+                TD(null, INPUT({'type':'text', 'name':'title', 'size':40}))),
              TR(null, TH(null, LABEL(null, get_string('description'))),
-                TD(null, INPUT({'type':'text', 'name':'description'}))),
+                TD(null, INPUT({'type':'text', 'name':'description', 'size':40}))),
              TR(null,TD({'colspan':2, 'id':'uploadformmessage'})),
              TR(null,TD({'colspan':2},
               INPUT({'name':'upload','type':'button','value':get_string('upload'),
