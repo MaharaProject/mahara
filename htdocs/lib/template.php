@@ -368,11 +368,6 @@ function template_render($template, $mode, $data=array()) {
                         }
 
                         $block .= template_render_artefact_block($t['id'], $data[$t['id']]['id'], $format);
-
-                        // $artefact = artefact_instance_from_id($data[$t['id']]['id']);
-                        // $block .= $artefact->render($format, null);
-                        // $block .= '<input type="hidden" name="template[' . $t['id'] . '][id]" value="' . hsc($data[$t['id']]['id']) . '">';
-                        // $block .= '<input type="hidden" name="template[' . $t['id'] . '][format]" value="' . hsc($format) . '">';
                     }
                     else if ( isset($t['defaultartefacttype']) ) {
                         $artefact = null;
@@ -388,9 +383,6 @@ function template_render($template, $mode, $data=array()) {
                         }
                         else {
                             $block .= template_render_artefact_block($t['id'], $artefact, $t['defaultformat']);
-                            // $block .= $artefact->render($t['defaultformat'], null);
-                            // $block .= '<input type="hidden" name="template[' . $t['id'] . '][id]" value="' . hsc($artefact->get('id')) . '">';
-                            // $block .= '<input type="hidden" name="template[' . $t['id'] . '][format]" value="' . hsc($t['defaultformat']) . '">';
                         }
                     }
                     else {
@@ -653,8 +645,12 @@ function template_render_empty_artefact_block() {
 function template_render_artefact_block($blockname, $artefact, $format) {
     $block = '';
 
+    $options = array(
+        'blockid' => $blockname,
+    );
+
     if ($artefact instanceof ArtefactType) {
-        $block .= $artefact->render($format, null);
+        $block .= $artefact->render($format, $options);
         $block .= '<input type="hidden" name="template[' . $blockname . '][id]" value="' . hsc($artefact->get('id')) . '">';
         $block .= '<input type="hidden" name="template[' . $blockname . '][format]" value="' . hsc($format) . '">';
     }
@@ -663,7 +659,7 @@ function template_render_artefact_block($blockname, $artefact, $format) {
         foreach ($artefact as $id) {
             $block .= '<li>';
             $instance = artefact_instance_from_id($id);
-            $block .= $instance->render($format, null);
+            $block .= $instance->render($format, $options);
             $block .= '<a href="" onclick="removeListItem(this);return false;">[x]</a>';
             $block .= '<input type="hidden" name="template[' . $blockname . '][id][]" value="' . hsc($instance->get('id')) . '">';
             $block .= '<input type="hidden" name="template[' . $blockname . '][format]" value="' . hsc($format) . '">';
@@ -677,7 +673,7 @@ function template_render_artefact_block($blockname, $artefact, $format) {
         }
 
         $artefact = artefact_instance_from_id($artefact);
-        $block .= $artefact->render($format, null);
+        $block .= $artefact->render($format, $options);
         $block .= '<input type="hidden" name="template[' . $blockname . '][id]" value="' . hsc($artefact->get('id')) . '">';
         $block .= '<input type="hidden" name="template[' . $blockname . '][format]" value="' . hsc($format) . '">';
     }
