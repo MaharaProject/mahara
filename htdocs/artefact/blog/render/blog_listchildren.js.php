@@ -24,22 +24,30 @@
  *
  */
 
-define('INTERNAL', 1);
-define('MENUITEM', 'myblogs');
+defined('INTERNAL') || die();
 
-require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
-safe_require('artefact', 'blog');
+$enc_wwwroot = json_encode(get_config('wwwroot'));
+$enc_id = json_encode($this->id);
 
-$id = param_integer('id');
-$blog = new ArtefactTypeBlog($id);
+return <<<EOJAVASCRIPT
 
-// This javascript is used to generate a list of blog posts.
-$js = require('index.js.php'); 
+var blog_listchildren{$blockid} = new TableRenderer(
+    'blog_listchildren{$blockid}',
+    {$enc_wwwroot} + 'artefact/blog/render/blog_listchildren.json.php',
+    [
+        function(r) {
+            var td = TD();
+            td.innerHTML = r.content;
+            return td;
+        }
+    ]
+);
 
-$smarty = smarty(array('tablerenderer'));
-$smarty->assign_by_ref('blog', $blog);
-$smarty->assign_by_ref('editform', $form);
-$smarty->assign_by_ref('INLINEJAVASCRIPT', $js);
-$smarty->display('artefact:blog:view.tpl');
+blog_listchildren{$blockid}.statevars.push('id');
+blog_listchildren{$blockid}.id = {$enc_id};
+
+blog_listchildren{$blockid}.updateOnLoad();
+
+EOJAVASCRIPT;
 
 ?>

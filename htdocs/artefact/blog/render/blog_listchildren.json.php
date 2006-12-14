@@ -25,21 +25,23 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'myblogs');
 
 require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
 safe_require('artefact', 'blog');
 
+json_headers();
+
+$limit = param_integer('limit', ArtefactTypeBlog::pagination);
+$offset = param_integer('offset', 0);
 $id = param_integer('id');
-$blog = new ArtefactTypeBlog($id);
 
-// This javascript is used to generate a list of blog posts.
-$js = require('index.js.php'); 
+list($count, $data) = ArtefactTypeBlogPost::render_posts(FORMAT_ARTEFACT_LISTSELF, $id, $limit, $offset);
 
-$smarty = smarty(array('tablerenderer'));
-$smarty->assign_by_ref('blog', $blog);
-$smarty->assign_by_ref('editform', $form);
-$smarty->assign_by_ref('INLINEJAVASCRIPT', $js);
-$smarty->display('artefact:blog:view.tpl');
+echo json_encode(array(
+    'count' => $count,
+    'limit' => $limit,
+    'offset' => $offset,
+    'data' => $data
+));
 
 ?>

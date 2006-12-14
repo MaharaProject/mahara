@@ -3,5 +3,5 @@
  *}
 <div>
   <span>{$artefact->get('title')|escape}</span>
-  <span>{$artefact->get('description')|escape}</span>
+  <span>{$artefact->get('description')}</span>
 </div>

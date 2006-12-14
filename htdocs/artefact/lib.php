@@ -399,16 +399,29 @@ abstract class ArtefactType {
     }
 
     /**
-     * render instance to given format
+     * render instance to given format.  This function simply switches and
+     * calls one of listself(), listchildren(), render_metadata() or
+     * render_full().  If a format it doesn't know about is passed in, it
+     * throws an exception.  You should only need to override this if you have
+     * invented some kind of new format.
+     *
      * @param int $format format type (constant)
      * @param array $options options for format
      */
     public function render($format, $options) {
         switch ($format) {
         case FORMAT_ARTEFACT_LISTSELF:
-            return $this->title;
+            return $this->listself($options);
+            
         case FORMAT_ARTEFACT_RENDERMETADATA:
             return $this->render_metadata($options);
+
+        case FORMAT_ARTEFACT_LISTCHILDREN:
+            return $this->listchildren($options);
+
+        case FORMAT_ARTEFACT_RENDERFULL:
+            return $this->render_full($options);
+            
         default:
             //@todo: This should be an invalid render format exception
             throw new Exception('invalid render format');
@@ -434,17 +447,43 @@ abstract class ArtefactType {
     }
 
     /**
-     * list artefact children
+     * list artefact children.  There's a default for this, but we only use it
+     * if the class thinks it can render FORMAT_ARTEFACT_LISTCHILDREN. 
+     *
      * @param $options 
      * @todo: use a smarty template.
      */
     protected function listchildren($options) {
-        $html = '<ul>';
-        foreach ($this->get_children_instances() as $child) {
-            $html .= '<li>' . $child->render(FORMAT_ARTEFACT_LISTSELF, $options) . "</li>\n";
+        if (in_array(FORMAT_ARTEFACT_LISTCHILDREN, $this->get_render_list())) {
+      
+            $html = '<ul>';
+            foreach ($this->get_children_instances() as $child) {
+                $html .= '<li>' . $child->render(FORMAT_ARTEFACT_LISTSELF, $options) . "</li>\n";
+            }
+            $html .= '</ul>';
+            return $html;
         }
-        $html .= '</ul>';
-        return $html;
+
+        throw new Exception('This artefact cannot render to this format.');
+    }
+
+    /** 
+     * render self
+     * @param array options
+     */
+    protected function listself($options) {
+        return $this->title;
+    }
+
+    /**
+     * render the artefact in full.  This isn't supported by default.  You need
+     * to override this method if your artefact can do this.
+     *
+     * @param array
+     */
+    protected function render_full($options) {
+        // @todo This should be a proper exception of some sort.
+        throw new Exception('This artefact cannot render to this format.');
     }
 
     /**
