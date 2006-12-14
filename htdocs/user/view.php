@@ -26,6 +26,7 @@
 
 define('INTERNAL', 1);
 require(dirname(dirname(__FILE__)).'/init.php');
+require_once('community.php');
 
 $userid = param_integer('id','');
 global $USER;
@@ -82,15 +83,15 @@ else {
 }
 
 $smarty = smarty();
+$userassoccommunities = get_associated_communities($userid);
 
 // Get the logged in user's "invite only" communities
-// @todo: check if user is already a community member.
-
-if ($communities = @get_records_select_array('community',
-                                             'owner = ' . $loggedinid . "AND jointype = 'invite'",
-                                             null, 'name', 'id,name')) {
+if ($communities = get_owned_communities($loggedinid, 'invite')) {
     $invitelist = array();
     foreach ($communities as $community) {
+        if (array_key_exists($community->id, $userassoccommunities)) {
+            continue;
+        }
         $invitelist[$community->id] = $community->name;
     }
     require_once('pieforms/pieform.php');
@@ -116,14 +117,12 @@ if ($communities = @get_records_select_array('community',
 $prefix = get_config('dbprefix');
 
 // Get the "controlled membership" communities in which the logged in user is a tutor
-// @todo: check if user is already a community member.
-
-if ($communities = @get_records_sql_array('SELECT c.id, c.name
-        FROM ' . $prefix . 'community c
-        JOIN ' . $prefix . 'community_member cm ON c.id = cm.community
-        WHERE cm.member = ' . $loggedinid . " AND cm.tutor = 1 AND c.jointype = 'controlled'",'')) {
+if ($communities = get_tutor_communities($loggedinid, 'controlled')) {
     $controlledlist = array();
     foreach ($communities as $community) {
+        if (array_key_exists($community->id, $userassoccommunities)) {
+            continue;
+        }
         $controlledlist[$community->id] = $community->name;
     }
     require_once('pieforms/pieform.php');
@@ -163,6 +162,12 @@ function addmember_submit($values) {
     $data->tutor     = 0;
     try {
         insert_record('community_member', $data, 'community,member');
+        activity_occured('maharamessage', 
+                         array('users'   => array($values['id']), 
+                               'subject' => get_string('addedtocommunitysubject'),
+                               'message' => get_string('addedtocommunitymessage'),
+                               'url'     => get_config('wwwroot') 
+                               . 'contacts/communities/view.php?id=' . $values['community']));
     }
     catch (SQLException $e) {
         json_reply('local', get_string('adduserfailed'));
