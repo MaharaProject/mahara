@@ -92,9 +92,9 @@ foreach (plugin_types() as $plugintype) {
                 'nextrun',
                 db_format_timestamp($nextrun), 
                 'plugin',
-                $job['plugin'],
+                $job->plugin,
                 'callfunction',
-                $job['callfunction']
+                $job->callfunction
             );
         }
     }
