@@ -24,33 +24,32 @@
  *
  */
 
-define('INTERNAL', 1);
+defined('INTERNAL') || die();
 
-require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
-safe_require('artefact', 'blog');
+$enc_wwwroot = json_encode(get_config('wwwroot'));
+$enc_id = json_encode($this->id);
 
-json_headers();
+return <<<EOJAVASCRIPT
 
-$limit = param_integer('limit', ArtefactTypeBlog::pagination);
-$offset = param_integer('offset', 0);
-$id = param_integer('id');
+var blog_renderfull{$blockid} = new TableRenderer(
+    'blog_renderfull{$blockid}',
+    {$enc_wwwroot} + 'artefact/blog/render/blog_renderfull.json.php',
+    [
+        function(r) {
+            var td = TD();
+            td.innerHTML = r.content;
+            return td;
+        }
+    ]
+);
 
-list($count, $data) = ArtefactTypeBlogPost::render_posts(FORMAT_ARTEFACT_LISTSELF, $id, $limit, $offset);
+blog_renderfull{$blockid}.statevars.push('id');
+blog_renderfull{$blockid}.id = {$enc_id};
 
-if (!$count) {
-    $count = 1;
-    $data = array(
-        array(
-            'content' => get_string('noresults', 'artefact.blog')
-        )
-    );
-}
+blog_renderfull{$blockid}.updateOnLoad();
 
-echo json_encode(array(
-    'count' => $count,
-    'limit' => $limit,
-    'offset' => $offset,
-    'data' => $data
-));
+alert('hi');
+
+EOJAVASCRIPT;
 
 ?>

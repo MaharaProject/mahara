@@ -187,10 +187,20 @@ class ArtefactTypeBlog extends ArtefactType {
      * @return string
      */
     function render_full($options) {
+        // This is because if there are multiple blocks on a page, they need separate
+        // js variables.
+        $blockid = isset($options['blockid'])
+            ? $options['blockid']
+            : mt_rand();
+
+        // This uses the above blockid, so needs to be inlcuded after.
+        $javascript = require(get_config('docroot') . 'artefact/blog/render/blog_renderfull.js.php');
+        
         $smarty = smarty();
         $smarty->assign('artefact', $this);
-        $smarty->assign('children', $this->get_children_instances());
+        $smarty->assign('blockid', $blockid);
         $smarty->assign_by_ref('options', $options);
+        $smarty->assign_by_ref('javascript', $javascript);
         return $smarty->fetch('artefact:blog:render/blog_renderfull.tpl');
     }
                 
@@ -439,7 +449,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
      * @param integer
      */
     public static function render_posts($format, $id, $limit = self::pagination, $offset = 0, $options = null) {
-        $postids = get_records_sql_array("
+        ($postids = get_records_sql_array("
          SELECT a.id
          FROM " . get_config('dbprefix') . "artefact a
           LEFT OUTER JOIN " . get_config('dbprefix') . "artefact_blog_blogpost bp
@@ -447,7 +457,8 @@ class ArtefactTypeBlogPost extends ArtefactType {
          WHERE a.parent = ?
           AND bp.published = 1
          ORDER BY a.ctime DESC
-         LIMIT ? OFFSET ?;", array($id, $limit, $offset));
+         LIMIT ? OFFSET ?;", array($id, $limit, $offset)))
+            || ($postids = array());
 
         $posts = array();
         foreach($postids as $postid) {
@@ -458,7 +469,13 @@ class ArtefactTypeBlogPost extends ArtefactType {
             );
         }
 
-        $count = (int)get_field('artefact', 'COUNT(*)', 'parent', $id);
+        $count = (int)get_field_sql("
+         SELECT COUNT(*)
+         FROM " . get_config('dbprefix') . "artefact a
+          LEFT OUTER JOIN " . get_config('dbprefix') . "artefact_blog_blogpost bp
+           ON a.id = bp.blogpost
+         WHERE a.parent = ?
+          AND bp.published = 1", array($id));
 
         return array($count, $posts);
     }
