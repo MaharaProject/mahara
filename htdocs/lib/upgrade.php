@@ -251,7 +251,7 @@ function upgrade_plugin($upgrade) {
     }
 
     // postinst stuff...
-    safe_require($plugintype, $pluginname, 'lib.php');
+    safe_require($plugintype, $pluginname);
     $pcname = generate_class_name($plugintype, $pluginname);
 
     if ($crons = call_static_method($pcname, 'get_cron')) {
