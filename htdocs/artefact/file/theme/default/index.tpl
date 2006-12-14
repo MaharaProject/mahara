@@ -11,7 +11,6 @@
 			<h2>{str section="artefact.file" tag="myfiles"}</h2>
 			<div id="myfiles">
 				<div id="uploader"></div>
-				<div id="foldernav"></div>
 			<table id="filelist">
 				<thead><tr>
 					<th>{str tag=name}</th>

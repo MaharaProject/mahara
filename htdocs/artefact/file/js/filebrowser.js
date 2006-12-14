@@ -14,6 +14,19 @@ function FileBrowser(element, changedircallback) {
     this.filenames = {};
 
     this.init = function() {
+
+        // Create the button which opens up the create folder form
+        var button = INPUT({'type':'button','value':get_string('createfolder'), 'onclick':function () { 
+            hideElement(self.createfolderbutton);
+            showElement(self.createfolderform);
+        }});
+        self.createfolderbutton = button;
+        self.createfolderform = self.initcreatefolderform();
+        insertSiblingNodesBefore(self.element, self.createfolderbutton, self.createfolderform);
+
+        // Folder navigation links
+        insertSiblingNodesBefore(self.element, DIV({'id':'foldernav'}));
+
         self.filelist = new TableRenderer(
             self.element,
             'myfiles.json.php',
@@ -60,24 +73,53 @@ function FileBrowser(element, changedircallback) {
     }
 
     this.destinationrow = function () {
-        return TR(null,TD(null,get_string('destination')), TD(null,cwd));
+        return TR(null,TD(null,get_string('destination')), TD(null, SPAN({'id':'createdest'},self.cwd)));
     }
 
     this.folderformrows = function(fileinfo) {
-        var rows = [];
-        var name = '';
-        var description = '';
         if (fileinfo == null) {
-            rows = [self.editformtitle(get_string('createfolder'))];
-            rows.push(destinationrow);
+            var name = '';
+            var description = '';
+            var rows = [self.editformtitle(get_string('createfolder'))];
+            rows.push(self.destinationrow()); 
         } else {
-            rows = [self.editformtitle(get_string('editfolder'))];
-            name = fileinfo.title;
-            description = fileinfo.description;
+            var rows = [self.editformtitle(get_string('editfolder'))];
+            var name = fileinfo.title;
+            var description = fileinfo.description;
         }
         rows.push(self.textinputrow('name',name));
         rows.push(self.textinputrow('description',description));
         return rows;
+    }
+
+    this.savemetadata = function (fileid, formid, replacefile, originalname) {
+        var name = $(formid).name.value;
+        if (isEmpty(name)) {
+            $(formid + 'message').innerHTML = get_string('namefieldisrequired');
+            return;
+        }
+        if (!replacefile && self.fileexists(name) && name != originalname) {
+            $(formid+'message').innerHTML = get_string('fileexistsoverwritecancel');
+            setDisplayForElement('inline', $(formid).replace);
+            return;
+        }
+        $(formid+'message').innerHTML = '';
+        hideElement($(formid).replace);
+
+        var collideaction = replacefile ? 'replace' : 'fail';
+        var data = {'name':$(formid).name.value, 'collideaction':collideaction,
+                    'description':$(formid).description.value};
+        if (fileid) {
+            var script = 'updatemetadata.json.php';
+            data['id'] = fileid;
+        }
+        else {
+            var script = 'createfolder.json.php';
+            if (self.cwd != '/') {
+                data['parentfolder'] = self.pathids[self.cwd];
+            }
+        }
+        sendjsonrequest(script, data, self.refresh);
     }
 
     this.openeditform = function(fileinfo) {
@@ -90,12 +132,10 @@ function FileBrowser(element, changedircallback) {
             removeElement(editid);
         };
         var savebutton = INPUT({'type':'button','value':get_string('savechanges')});
-        savebutton.onclick = function () {
-            sendjsonrequest('updatemetadata.json.php', 
-                            {'id':fileinfo.id, 'name':$(formid).name.value,
-                             'description':$(formid).description.value},
-                            self.refresh);
-        };
+        savebutton.onclick = function () { self.savemetadata(fileinfo.id, formid, false, fileinfo.title); };
+        var replacebutton = INPUT({'type':'button', 'value':get_string('overwrite'),
+                                   'name':'replace', 'style':'display: none;'});
+        replacebutton.onclick = function () { self.savemetadata(fileinfo.id, formid, true); };
         if (fileinfo['artefacttype'] == 'folder') {
             editrows = self.folderformrows(fileinfo);
         }
@@ -104,14 +144,42 @@ function FileBrowser(element, changedircallback) {
                         self.textinputrow('name',fileinfo.title),
                         self.textinputrow('description',fileinfo.description)];
         }
+        editrows.push(TR(null,TD({'colspan':2},SPAN({'id':formid+'message'}))));
         var cancelbutton = INPUT({'type':'button', 'value':get_string('cancel'), 'onclick':cancelform});
-        var buttons = TR(null,TD({'colspan':2},savebutton,cancelbutton));
+        var buttons = TR(null,TD({'colspan':2}, savebutton, replacebutton, cancelbutton));
         var edittable = TABLE({'align':'center'},TBODY(null,editrows,buttons));
         hideElement(rowid);
         insertSiblingNodesBefore(rowid, TR({'id':editid},
                                            TD({'colSpan':5},
                                               FORM({'id':formid,'action':''},edittable))));
     }
+
+    this.initcreatefolderform = function () {
+        var formid = 'createfolderform';
+        var form = FORM({'method':'post', 'id':formid});
+        var cancelbutton = INPUT({'type':'button','value':get_string('cancel'), 'onclick':function () {
+            setDisplayForElement(null, self.createfolderbutton);
+            hideElement($(formid).replace);
+            $(formid).name.value = '';
+            $(formid).description.value = '';
+            $(formid+'message').innerHTML = '';
+            hideElement(formid);
+        }});
+        var createbutton = INPUT({'type':'button','value':get_string('create'),'onclick':function () {
+            self.savemetadata(null, formid, false);
+        }});
+        var replacebutton = INPUT({'type':'button', 'value':get_string('overwrite'),
+                                   'name':'replace', 'style':'display: none;', 'onclick':function() {
+            self.savemetadata(null, formid, true);
+        }});
+        var buttons = TR(null,TD({'colspan':2},createbutton,replacebutton,cancelbutton));
+        appendChildNodes(form, TABLE(null,
+                                     TBODY(null, self.folderformrows(null), 
+                                           TR(null,TD({'colspan':2},SPAN({'id':formid+'message'}))),
+                                           buttons)));
+        hideElement(form);
+        return form;
+    };
 
     this.showsize = function(bytes) {
         if (bytes < 1024) {
@@ -139,9 +207,16 @@ function FileBrowser(element, changedircallback) {
         return self.filenames[filename] == true;
     }
 
+    this.updatedestination = function () {
+        if ($('createdest')) {
+            $('createdest').innerHTML = self.cwd;
+        }
+    }
+
     this.changedir = function(path) {
         self.cwd = path;
         self.linked_path();
+        self.updatedestination();
         self.changedircallback(self.pathids[path], path);
         self.filenames = {};
         var args = path == '/' ? null : {'folder':self.pathids[path]};

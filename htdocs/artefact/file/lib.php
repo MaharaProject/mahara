@@ -221,7 +221,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
      */
     public function save_uploaded_file($inputname) {
         require_once('uploadmanager.php');
-        $um = new upload_manager('userfile');
+        $um = new upload_manager($inputname);
         if (!$um->preprocess_file()) {
             return false;
         }

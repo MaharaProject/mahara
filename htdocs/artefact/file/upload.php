@@ -48,7 +48,6 @@ $data->locked = 0;
 $result = new StdClass;
 $result->uploadnumber = $uploadnumber;
 
-$f = new ArtefactTypeFile(0, $data);
 if ($oldid = ArtefactTypeFileBase::exists_in_db($data->title, $data->owner, $parentfolder)) {
     if ($collideaction == 'replace') {
         require_once('artefact.php');
@@ -60,6 +59,7 @@ if ($oldid = ArtefactTypeFileBase::exists_in_db($data->title, $data->owner, $par
     }
 }
 if (!isset($result->error)) {
+    $f = new ArtefactTypeFile(0, $data);
     if ($f->save_uploaded_file('userfile')) {
         $result->error = false;
     }

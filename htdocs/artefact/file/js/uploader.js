@@ -43,6 +43,17 @@ function FileUploader(element, foldername, folderid, uploadcallback, fileexists)
         var form = FORM({'method':'post', 'id':'uploadform',
                          'enctype':'multipart/form-data', 'encoding':'multipart/form-data',
                          'action':'upload.php', 'target':''});
+        var cancelform = function () {
+            if ($('uploadformmessage')) {
+                $('uploadformmessage').innerHTML = '';
+            }
+            self.form.userfile.value = '';
+            self.form.title.value = '';
+            self.form.description.value = '';
+            hideElement(self.form.replace);
+            hideElement(self.form);
+            showElement(self.openbutton);
+        };
         appendChildNodes(form,
             TABLE(null,
             TBODY(null, 
@@ -60,18 +71,9 @@ function FileUploader(element, foldername, folderid, uploadcallback, fileexists)
              TR(null,TD({'colspan':2},
               INPUT({'name':'upload','type':'button','value':get_string('upload'),
                      'onclick':function () { self.sendform(false)}}),
-              INPUT({'name':'replace','type':'button','value':get_string('replace'),
+              INPUT({'name':'replace','type':'button','value':get_string('overwrite'),
                      'onclick':function () { self.sendform(true); }}),
-              INPUT({'type':'button','value':get_string('cancel'),'onclick':function () { 
-                  if ($('uploadformmessage')) {
-                      $('uploadformmessage').innerHTML = '';
-                  }
-                  self.form.userfile.value = '';
-                  self.form.title.value = '';
-                  self.form.description.value = '';
-                  hideElement(self.form);
-                  showElement(self.openbutton);
-              }}))))));
+              INPUT({'type':'button','value':get_string('cancel'),'onclick':cancelform}))))));
 
         hideElement(form.replace);
         hideElement(form);
@@ -99,7 +101,7 @@ function FileUploader(element, foldername, folderid, uploadcallback, fileexists)
         }
         localname = self.filepart(localname);
         if (!replacefile && self.fileexists(destname)) {
-            $('uploadformmessage').innerHTML = get_string('uploadfileexistsreplacecancel');
+            $('uploadformmessage').innerHTML = get_string('uploadfileexistsoverwritecancel');
             // Show replace button
             setDisplayForElement('inline', self.form.replace);
             return;
