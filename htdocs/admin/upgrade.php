@@ -37,6 +37,7 @@ $upgrades = check_upgrades();
 if (empty($upgrades['disablelogin'])) {
     auth_setup();
 }
+unset($upgrades['disablelogin']);
 
 if (!$upgrades) {
     die_info(get_string('noupgrades', 'admin'));

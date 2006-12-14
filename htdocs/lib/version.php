@@ -27,7 +27,8 @@
 defined('INTERNAL') || die();
 
 $config = new StdClass;
-$config->version = 2006121500;
+$config->version = 2006121501;
 $config->release = '0.1';
+$config->disablelogin = true;
 
 ?>

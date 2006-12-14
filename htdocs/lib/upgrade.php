@@ -84,6 +84,7 @@ function check_upgrades($name=null) {
 
     // If we were just checking if the core needed to be upgraded, we can stop here
     if ($name == 'core') {
+        $toupgrade['core']->disablelogin = $disablelogin;
         return $toupgrade['core'];
     }
 
