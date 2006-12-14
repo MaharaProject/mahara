@@ -72,6 +72,7 @@ if (isset($_REQUEST['key'])) {
         unset($registration->id);
         unset($registration->expiry);
         $registration->expiry = db_format_timestamp(time() + get_field('institution', 'defaultaccountlifetime', 'name', $registration->institution));
+        $registration->lastlogin = db_format_timestamp(time());
         $registration->id = insert_record('usr', $registration, 'id', true);
         log_debug($registration);
 
