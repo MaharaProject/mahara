@@ -30,7 +30,7 @@ safe_require('artefact', 'file');
 global $USER;
 
 $parentfolder   = param_variable('parentfolder', null); // id of parent artefact
-$title          = param_variable('title');
+$title          = param_variable('name');
 $description    = param_variable('description', null);
 $collideaction  = param_variable('collideaction', 'fail');
 
@@ -44,25 +44,22 @@ $data->owner = $USER->get('id');
 $data->container = 1;
 $data->locked = 0;
 
-$f = new ArtefactTypeFolder(0, $data);
 if ($oldid = ArtefactTypeFileBase::exists_in_db($data->title, $data->owner, $parentfolder)) {
     if ($collideaction == 'replace') {
         require_once('artefact.php');
         $obj = artefact_instance_from_id($oldid);
         $obj->delete();
-        json_reply(false, get_string('foldercreated'));
     }
     else {
         json_reply('local', get_string('fileexists'));
     }
 }
-if (!isset($result->error)) {
-    if ($f->save_uploaded_file('userfile')) {
-        json_reply(false, get_string('foldercreated'));
-    }
-    else {
-        json_reply('local', get_string('errorcreatingfolder'));
-    }
-}
+
+$f = new ArtefactTypeFolder(0, $data);
+$f->set('dirty', true);
+$f->commit();
+
+json_reply(false, get_string('foldercreated'));
+
 
 ?>

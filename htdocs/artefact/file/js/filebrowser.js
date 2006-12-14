@@ -115,7 +115,9 @@ function FileBrowser(element, changedircallback) {
         }
         else {
             var script = 'createfolder.json.php';
-            data['parentfolder'] = self.pathids[self.cwd];
+            if (self.cwd != '/') {
+                data['parentfolder'] = self.pathids[self.cwd];
+            }
         }
         sendjsonrequest(script, data, self.refresh);
     }
