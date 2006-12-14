@@ -336,10 +336,7 @@ function template_render($template, $mode, $data=array()) {
                     }
                     break;
                 case 'author';
-                    if (isset($data['author'])) {
-                        // @todo get authorformat here
-                        $block .= hsc($data['author']);
-                    }
+                        $block .= template_render_author($data['ownerformat']);
                     break;
                 case 'description';
                     if (isset($data['description'])) {
@@ -679,6 +676,30 @@ function template_render_artefact_block($blockname, $artefact, $format) {
     }
 
     return $block;
+}
+
+function template_render_author($format) {
+    global $USER;
+    switch ($format) {
+        case FORMAT_NAME_FIRSTNAME:
+            return hsc($USER->get('firstname'));
+            break;
+        case FORMAT_NAME_LASTNAME:
+            return hsc($USER->get('firstname'));
+            break;
+        case FORMAT_NAME_FIRSTNAMELASTNAME:
+            return hsc(full_name());
+            break;
+        case FORMAT_NAME_PREFERREDNAME:
+            return hsc($USER->get('preferredname'));
+            break;
+        case FORMAT_NAME_STUDENTID:
+            return hsc((string)get_field('artefact', 'title', 'owner', $USER->get('id'), 'artefacttype', 'studentid'));
+            break;
+        default:
+            return hsc(display_name($USER));
+            break;
+    }
 }
 
 ?>
