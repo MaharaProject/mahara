@@ -502,6 +502,9 @@ function template_render($template, $mode, $data=array()) {
             d.addCallbacks(
                 function (response) {
                     real_target.innerHTML = response.data;
+                    forEach(getElementsByTagAndClassName('script', null, real_target), function(script) {
+                        eval(script.innerHTML);
+                    });
                     if(format == 'listself') {
                         appendChildNodes(real_target, A({ href: '', onclick: 'removeListItem(this); return false;' }, '[x]'));
                     }
