@@ -50,6 +50,46 @@ $string['mainmenu'] = 'Main menu';
 // auth
 $string['accessforbiddentoadminsection'] = 'You are forbidden from accessing the administration section';
 $string['accountexpired'] = 'Sorry, your account has expired';
+$string['accountexpirywarning'] = 'Account expiry warning';
+$string['accountexpirywarningtext'] = 'Dear %s,
+
+Your account on %s will expire within %s.
+
+We recommend you save the contents of your portfolio using the Export tool. Instructions on using this feature may be found within the user guide.
+
+If you wish to extend your account access or have any questions regarding the above, please feel free to contact us:
+
+%s
+
+Regards, %s Site Administrator';
+$string['accountexpirywarninghtml'] = '<p>Dear %s,</p>
+    
+<p>Your account on %s will expire within %s.</p>
+
+<p>We recommend you save the contents of your portfolio using the Export tool. Instructions on using this feature may be found within the user guide.</p>
+
+<p>If you wish to extend your account access or have any questions regarding the above, please feel free to <a href="%s">Contact Us</a>.</p>
+
+<p>Regards, %s Site Administrator</p>';
+$string['accountinactivewarning'] = 'Account inactivity warning';
+$string['accountinactivewarningtext'] = 'Dear %s,
+
+Your account on %s will become inactive within %s.
+
+Once inactive, you will not be able to log in until an administrator re-enables your account.
+
+You can prevent your account from becoming inactive by logging in.
+
+Regards, %s Site Administrator';
+$string['accountinactivewarninghtml'] = '<p>Dear %s,</p>
+
+<p>Your account on %s will become inactive within %s.</p>
+
+<p>Once inactive, you will not be able to log in until an administrator re-enables your account.</p>
+
+<p>You can prevent your account from becoming inactive by logging in.</p>
+
+<p>Regards, %s Site Administrator</p>';
 $string['accountsuspended'] = 'Your account has been suspeneded as of %s. The reason for your suspension is:<blockquote>%s</blockquote>';
 $string['changepassword'] = 'Change Password';
 $string['changepasswordinfo'] = 'You are required to change your password before you can proceed.';
