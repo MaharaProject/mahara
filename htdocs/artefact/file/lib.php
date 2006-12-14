@@ -53,9 +53,6 @@ class PluginArtefactFile extends PluginArtefact {
         return array('file');
     }
 
-    public static function postinst() {
-    }
-    
     public static function sort_child_data($a, $b) {
         if ($a->container && !$b->container) {
             return -1;

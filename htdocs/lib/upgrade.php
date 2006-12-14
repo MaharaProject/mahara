@@ -333,8 +333,8 @@ function upgrade_plugin($upgrade) {
                                   array_merge(array($pluginname),$types));
         }
     }
-
-    call_static_method($pcname, 'postinst');
+    
+    call_static_method($pcname, 'postinst', $upgrade->from);
     
     if ($db->HasFailedTrans()) {
         $status = false;
