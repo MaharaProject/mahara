@@ -61,11 +61,11 @@ my $m = WWW::Mechanize->new( autocheck => 1 );
 
 # Check for a mahara install page, and run it if we find it
 $m->get($CFG->{url});
-croak 'This doesn\'t look like a mahara install page!' unless $m->content =~ m{admin/upgrade\.php">Agree</a>};
+croak 'This doesn\'t look like a mahara install page!' unless $m->content =~ m{admin/upgrade\.php" method};
 
 # Agree to license
 debug("Agreeing to license...");
-$m->follow_link( text_regex => qr/Agree/ );
+$m->submit_form( form_number => 1 );
 
 # At this point, need to parse page to get scripts to hit to install stuff
 $_ = $m->content;

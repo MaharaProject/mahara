@@ -60,7 +60,7 @@ function createview4_submit($values) {
 
 
     if (param_boolean('back')) {
-        $data['accesslist'] = array_values($values['accesslist']);
+        $data['accesslist'] = array_values((array)$values['accesslist']);
         log_debug($data);
         $SESSION->set('create_' . $createid, $data);
         redirect(get_config('wwwroot') . 'view/create3.php?createid=' . $createid);
