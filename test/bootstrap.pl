@@ -78,6 +78,9 @@ for my $thing (@things) {
     if ( $json_response->{error} ) {
         croak qq{Failed to install $thing} . Dumper($json_response);
     }
+    if ( defined $json_response->{message} ) {
+        print 'MESSAGE:', $json_response->{message};
+    }
 }
 
 # Request the core data page
@@ -86,6 +89,9 @@ $m->get($CFG->{url} . 'admin/upgrade.json.php?install=1');
 $json_response = my_jsonToObj($m->content());
 if ( $json_response->{error} ) {
     croak qq{Failed to install core data:} . Dumper($json_response);
+}
+if ( defined $json_response->{message} ) {
+    print 'MESSAGE:', $json_response->{message};
 }
 
 # Install done, now Log in
