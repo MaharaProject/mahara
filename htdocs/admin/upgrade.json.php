@@ -33,13 +33,14 @@ require(get_config('libroot') . 'upgrade.php');
 $install = param_boolean('install');
 if (!$install) {
     $name    = param_variable('name');
+    $upgrade = check_upgrades($name);
+    
+    if (empty($upgrade->disablelogin)) {
+        auth_setup();
+    }
 }
 
-$upgrade = check_upgrades($name);
 
-if (empty($upgrade->disablelogin)) {
-    auth_setup();
-}
 
 if ($install) {
     $message = '';

@@ -112,7 +112,7 @@ function template_parse($templatename) {
 
 function template_parse_block($blockstr) {
     $data = array();
-    $bits = explode(' ', $blockstr);
+    $bits = preg_split('/\s+/', $blockstr);
 
     // the first bit should be 'block'
     if ($bits[0] != 'block') {

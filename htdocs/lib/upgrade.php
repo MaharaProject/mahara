@@ -366,7 +366,8 @@ function upgrade_plugin($upgrade) {
         }
     }
     
-    call_static_method($pcname, 'postinst', $upgrade->from);
+    $prevversion = (empty($upgrade->install)) ? $upgrade->from : 0;
+    call_static_method($pcname, 'postinst', $prevversion);
     
     if ($db->HasFailedTrans()) {
         $status = false;
