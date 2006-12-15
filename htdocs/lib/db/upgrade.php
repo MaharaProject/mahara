@@ -60,9 +60,9 @@ function xmldb_core_upgrade($oldversion=0) {
         insert_record('cron', $registrations);
 
         $expiries = new StdClass;
-        $registrations->callfunction = 'auth_handle_account_expiries';
-        $registrations->minute = '10';
-        $registrations->hour = '5';
+        $expiries->callfunction = 'auth_handle_account_expiries';
+        $expiries->minute = '10';
+        $expiries->hour = '5';
         insert_record('cron', $expiries);
     }
 
