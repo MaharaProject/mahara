@@ -31,19 +31,7 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 require_once('template.php');
 
-$createid = param_integer('createid', null);
-
-if ($createid === null) {
-    $createid = $SESSION->get('createid');
-    if (empty($createid)) {
-        $createid = 0;
-    }
-    
-    $SESSION->set('createid', $createid + 1);
-}
-
-
-$data = $SESSION->get('create_' . $createid);
+$view_id = param_integer('viewid');
 
 $formatstring = '%s (%s)';
 $ownerformatoptions = array(
@@ -62,25 +50,38 @@ if ($studentid !== '') {
 }
 $ownerformatoptions[FORMAT_NAME_DISPLAYNAME] = sprintf($formatstring, get_string('displayname'), display_name($USER));
 
+$data = get_record(
+    'view',
+    'id', $view_id,
+    'owner', $USER->get('id'),
+    null,null,
+    'id,title,description,owner,ownerformat,' . db_format_tsfield('startdate') . ',' . db_format_tsfield('stopdate')
+);
+
+if(!$data) {
+    $SESSION->add_error_msg(get_string('canteditdontown', 'view'));
+    redirect(get_config('wwwroot') . 'view/');
+}
+
 $createview1 = pieform(array(
     'name'     => 'createview1',
     'method'   => 'post',
     'autofocus' => 'title',
     'elements' => array(
-        'createid' => array(
-            'type'  => 'hidden',
-            'value' => $createid,
+        'viewid' => array(
+            'type'         => 'hidden',
+            'defaultvalue' => $view_id,
         ),
         'title' => array(
             'type'         => 'text',
             'title'        => get_string('title','view'),
-            'defaultvalue' => isset($data['title']) ? $data['title'] : null,
+            'defaultvalue' => $data->title,
             'rules'        => array( 'required' => true ),
         ),
         'startdate'        => array(
             'type'         => 'calendar',
             'title'        => get_string('startdate','view'),
-            'defaultvalue' => isset($data['startdate']) ? $data['startdate'] : null,
+            'defaultvalue' => $data->startdate,
             'caloptions'   => array(
                 'dateStatusFunc' => 'startDateDisallowed',
                 'onSelect'       => 'startSelected',
@@ -91,7 +92,7 @@ $createview1 = pieform(array(
         'stopdate'  => array(
             'type'         => 'calendar',
             'title'        => get_string('stopdate','view'),
-            'defaultvalue' => isset($data['stopdate']) ? $data['stopdate'] : null,
+            'defaultvalue' => $data->stopdate,
             'caloptions'   => array(
                 'dateStatusFunc' => 'stopDateDisallowed',
                 'onSelect'       => 'stopSelected',
@@ -104,50 +105,43 @@ $createview1 = pieform(array(
             'title'        => get_string('description','view'),
             'rows'         => 10,
             'cols'         => 80,
-            'defaultvalue' => isset($data['description']) ? $data['description'] : null,
+            'defaultvalue' => $data->description,
         ),
         'ownerformat' => array(
             'type'         => 'select',
             'title'        => get_string('ownerformat','view'),
             'description'  => get_string('ownerformatdescription','view'),
             'options'      => $ownerformatoptions,
-            'defaultvalue' => isset($data['ownerformat']) ? $data['ownerformat'] : FORMAT_NAME_DISPLAYNAME,
+            'defaultvalue' => $data->ownerformat,
             'rules'        => array('required' => true)
         ),
         'submit'   => array(
             'type'  => 'submitcancel',
-            'value' => array(get_string('next','view'), get_string('cancel')),
+            'value' => array(get_string('save'), get_string('cancel')),
         ),
     ),
 ));
 
 function createview1_cancel_submit() {
-    global $createid;
-    global $SESSION;
-
-    $SESSION->clear('create_' . $createid);
-
     redirect(get_config('wwwroot') . 'view/');
 }
 
 function createview1_submit($values) {
     global $SESSION;
+    global $view_id;
 
-    $data = $SESSION->get('create_' . $values['createid']);
+    $data = new StdClass;
+    $data->title       = $values['title'];
+    $data->description = $values['description'];
+    $data->startdate   = db_format_timestamp($values['startdate']);
+    $data->stopdate    = db_format_timestamp($values['stopdate']);
+    $data->ownerformat = $values['ownerformat'];
+    $data->mtime       = db_format_timestamp(time());
 
-    if (!is_array($data)) {
-        $data = array();
-    }
+    update_record('view', $data, (object)array( 'id' => $view_id ));
 
-    $data['title']       = $values['title'];
-    $data['description'] = $values['description'];
-    $data['startdate']   = $values['startdate'];
-    $data['stopdate']    = $values['stopdate'];
-    $data['ownerformat'] = $values['ownerformat'];
-
-    $SESSION->set('create_' . $values['createid'], $data);
-
-    redirect(get_config('wwwroot') . 'view/create2.php?createid=' . $values['createid']);
+    $SESSION->add_ok_msg(get_string('viewinformationsaved', 'view'));
+    redirect(get_config('wwwroot') . 'view/');
 }
 
 $smarty = smarty();
@@ -206,6 +200,7 @@ function stopSelected(calendar, date) {
 
 EOF
 );
+$smarty->assign('EDITMODE', true);
 $smarty->display('view/create1.tpl');
 
 ?>

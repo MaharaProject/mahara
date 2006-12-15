@@ -583,8 +583,9 @@ function login_submit($values) {
             }
 
             // Check if the user's account has become inactive
-            if ($oldlastlogin > 0
-                && $oldlastlogin + get_field('institution', 'defaultaccountinactiveexpire', 'name', $userdata->institution) < time()) {
+            $inactivetime = get_field('institution', 'defaultaccountinactiveexpire', 'name', $userdata->institution);
+            if ($inactivetime && $oldlastlogin > 0
+                && $oldlastlogin + $inactivetime < time()) {
                 die_info(get_string('accountinactive'));
             }
 

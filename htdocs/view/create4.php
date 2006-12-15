@@ -44,7 +44,7 @@ $form = array(
         ),
         'submit' => array(
             'type' => 'cancelbackcreate',
-            'value' => array(get_string('cancel'), get_string('back'), get_string('createview'))
+            'value' => array(get_string('cancel'), get_string('back','view'), get_string('createview','view'))
         )
     )
 );
@@ -60,7 +60,7 @@ function createview4_submit($values) {
 
 
     if (param_boolean('back')) {
-        $data['accesslist'] = array_values($values['accesslist']);
+        $data['accesslist'] = array_values((array)$values['accesslist']);
         log_debug($data);
         $SESSION->set('create_' . $createid, $data);
         redirect(get_config('wwwroot') . 'view/create3.php?createid=' . $createid);

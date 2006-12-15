@@ -5,7 +5,11 @@
 		<div class="box-cnrs"><span class="cnr-tl"><span class="cnr-tr"><span class="cnr-bl"><span class="cnr-br">
 			<div class="maincontent">
 	
-<h2>{str tag=createviewstep3}</h2>
+{if $EDITMODE}
+            <h2>{str tag=editview section=view}</h2>
+{else}
+            <h2>{str tag=createviewstep3 section=view}</h2>
+{/if}
 
 {literal}
 <style type="text/css">
@@ -15,9 +19,16 @@
 <div id="template">
     <form action="" method="post">
     {$template}
+{if $EDITMODE}
+        <input type="hidden" name="viewid" value="{$viewid}">
+{/if}
         <input type="submit" name="cancel" value="{str tag=cancel}">
-        <input type="submit" name="back" value="{str tag=back}">
-        <input type="submit" name="submit" value="{str tag=next}">
+{if $EDITMODE}
+        <input type="submit" name="submit" value="{str tag=save}">
+{else}
+        <input type="submit" name="back" value="{str tag=back section=view}">
+        <input type="submit" name="submit" value="{str tag=next section=view}">
+{/if}
     </form>
 </div>
 <script type="text/javascript">

@@ -26,20 +26,21 @@
 
 defined('INTERNAL') || die();
 
-$string['createviewstep1'] = 'Create View - Step 1 of 4';
-$string['editmetadata']    = 'Edit View Information';
-$string['createviewstep2'] = 'Create View - Step 2 of 4';
-$string['createviewstep3'] = 'Create View - Step 3 of 4';
-$string['createviewstep4'] = 'Create View - Step 4 of 4';
-$string['next'] = 'Next';
-$string['back'] = 'Back';
-$string['createview'] = 'Create View';
-$string['title'] = 'View Title';
-$string['description'] = 'View Description';
-$string['startdate'] = 'Access Start Date/Time';
-$string['stopdate'] = 'Access End Date/Time';
-$string['stopdate'] = 'Access End Date/Time';
-$string['ownerformat'] = 'Owner Format';
+$string['createviewstep1']        = 'Create View - Step 1 of 4';
+$string['editmetadata']           = 'Edit View Information';
+$string['createviewstep2']        = 'Create View - Step 2 of 4';
+$string['createviewstep3']        = 'Create View - Step 3 of 4';
+$string['editview']               = 'Edit View';
+$string['createviewstep4']        = 'Create View - Step 4 of 4';
+$string['next']                   = 'Next';
+$string['back']                   = 'Back';
+$string['createview']             = 'Create View';
+$string['title']                  = 'View Title';
+$string['description']            = 'View Description';
+$string['startdate']              = 'Access Start Date/Time';
+$string['stopdate']               = 'Access End Date/Time';
+$string['stopdate']               = 'Access End Date/Time';
+$string['ownerformat']            = 'Owner Format';
 $string['ownerformatdescription'] = 'This field controls what appears in the author field for the template you select in step 2';
 
 $string['category.all']                     = 'All Templates';

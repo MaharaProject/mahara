@@ -654,7 +654,10 @@ function template_render_artefact_block($blockname, $artefact, $format) {
         $block .= '<input type="hidden" name="template[' . $blockname . '][id]" value="' . hsc($artefact->get('id')) . '">';
         $block .= '<input type="hidden" name="template[' . $blockname . '][format]" value="' . hsc($format) . '">';
     }
-    else if ($format == FORMAT_ARTEFACT_LISTSELF && is_array($artefact)) {
+    else if ($format == FORMAT_ARTEFACT_LISTSELF) {
+        if (!is_array($artefact)) {
+            $artefact = array($artefact);
+        }
         $block .= '<ul>';
         foreach ($artefact as $id) {
             $block .= '<li>';

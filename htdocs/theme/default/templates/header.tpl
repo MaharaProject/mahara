@@ -35,6 +35,7 @@
 {else}
                     <li id="globalnav-siteadmin"><a href="{$WWWROOT}admin/">Site Administration</a></li>
 {/if}
+                    <li><a href="" onclick="createLoggingPane(); return false;">Create Logging Pane</a></li>
 {/if}
                 </ul>
             </div>
