@@ -180,7 +180,21 @@ if (isset($parsed_template['css'])) {
     $headers[] = '<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'view/template.css.php?template=' . $data['template'] . '">';
 }
 
-$smarty = smarty(array('collapsabletree', 'move', 'tablerenderer'), $headers);
+$smarty = smarty(
+    array('collapsabletree', 'move', 'tablerenderer'),
+    $headers,
+    array(
+        'view' => array(
+            'chooseformat',
+            'format.listself',
+            'format.listchildren',
+            'format.renderfull',
+            'format.rendermetadata',
+            'empty_block',
+            'empty_label',
+        ),
+    )
+);
 $smarty->assign('rootinfo', $rootinfo);
 $smarty->assign('plusicon', theme_get_image_path('plus.png'));
 $smarty->assign('minusicon', theme_get_image_path('minus.png'));
