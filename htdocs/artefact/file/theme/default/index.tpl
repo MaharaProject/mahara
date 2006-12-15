@@ -13,9 +13,9 @@
 				<div id="uploader"></div>
 			<table id="filelist">
 				<thead><tr>
-					<th>{str tag=name}</th>
-					<th>{str tag=description}</th>
-					<th>{str tag=size}</th>
+					<th>{str tag=name section=artefact.file}</th>
+					<th>{str tag=description section=artefact.file}</th>
+					<th>{str tag=size section=artefact.file}</th>
 					<th>{str tag=date}</th>
 					<th></th>
 				</tr></thead>

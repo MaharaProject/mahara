@@ -29,20 +29,14 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 
 $viewid = param_integer('viewid');
 
-if (get_field('view', 'owner', 'id', $viewid) != $USER->get('id')) {
+require_once('view.php');
+
+$view = new View($viewid, null);
+
+if ($view->get('owner') != $USER->get('id')) {
     json_reply('local', get_string('notowner'));
 }
-
-delete_records('artefact_feedback','view',$viewid);
-delete_records('view_feedback','view',$viewid);
-delete_records('view_artefact','view',$viewid);
-delete_records('view_content','view',$viewid);
-delete_records('view_access_community','view',$viewid);
-delete_records('view_access_group','view',$viewid);
-delete_records('view_access_usr','view',$viewid);
-if (!delete_records('view','id',$viewid)) {
-    json_reply('local', get_string('deleteviewfailed'));
-}
+$view->delete();
 
 json_reply(false,get_string('viewdeleted'));
 
