@@ -139,11 +139,11 @@ function FileUploader(element, foldername, folderid, uploadcallback, fileexists)
     this.getresult = function(data) {
         if (!data.error) {
             var image = 'success.gif';
-            var message = get_string('Upload complete');
+            var message = get_string('uploadcomplete');
         }
         else {
             var image = 'failure.gif';
-            var message = get_string('Upload failed');
+            var message = get_string('uploadfailed');
         }
         replaceChildNodes($('uploadstatusline'+data.uploadnumber), 
                           IMG({'src':config.themeurl+image}), message);
