@@ -26,7 +26,6 @@
 
 defined('INTERNAL') || die();
 
-
 class View {
 
     protected $dirty;
@@ -240,6 +239,20 @@ class View {
         return template_render($template, TEMPLATE_RENDER_READONLY, $data);
     }
     
+    public function delete() {
+        delete_records('artefact_feedback','view',$this->id);
+        delete_records('view_feedback','view',$this->id);
+        delete_records('view_artefact','view',$this->id);
+        delete_records('view_content','view',$this->id);
+        delete_records('view_access','view',$this->id);
+        delete_records('view_access_community','view',$this->id);
+        delete_records('view_access_group','view',$this->id);
+        delete_records('view_access_usr','view',$this->id);
+        delete_records('usr_watchlist_artefact','view',$this->id);
+        delete_records('usr_watchlist_view','view',$this->id);
+        delete_records('view','id',$this->id);
+    }
+
 }
 
 ?>
