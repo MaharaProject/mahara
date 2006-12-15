@@ -90,6 +90,26 @@ function sendjsonrequest(script, data, successcallback, errorcallback) {
     });
 }
 
+// Rename a file by appending numbers
+function newfilename(oldname, fileexistsfunc) {
+    var dotpos = oldname.indexOf('.');
+    if (dotpos == -1) {
+        var begin = oldname;
+        var end = '';
+    }
+    else {
+        var begin = oldname.substring(0, dotpos);
+        var end = oldname.substring(dotpos, oldname.length);
+    }
+    var i = 1;
+    var newname = begin + i + end;
+    while (fileexistsfunc(newname)) {
+        i++;
+        newname = begin + i + end;
+    }
+    return newname;
+}
+
 // Autofocus the first element with a class of 'autofocus' on page load
 // Also, connect input elements with the 'emptyonfocus' class to work properly
 addLoadEvent(function() {

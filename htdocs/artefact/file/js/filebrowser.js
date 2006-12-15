@@ -59,7 +59,7 @@ function FileBrowser(element, changedircallback) {
         }
         var deleteb = INPUT({'type':'button', 'value':get_string('delete')});
         deleteb.onclick = function () {
-            if (confirm(get_string(r.artefacttype == 'folder' ? 'deletefolderandcontents?' : 'deletefile?'))) {
+            if (confirm(get_string(r.artefacttype == 'folder' ? 'deletefolder?' : 'deletefile?'))) {
                 sendjsonrequest('delete.json.php', {'id': r.id}, self.refresh);
             }
         };

@@ -38,6 +38,7 @@ $string['strftimemonthyear'] = '%%B %%Y';
 $string['strftimerecent'] = '%%d %%b, %%H:%%M';
 $string['strftimerecentfull'] = '%%a, %%d %%b %%Y, %%I:%%M %%p';
 $string['strftimetime'] = '%%I:%%M %%p';
+$string['strfdaymonthyearshort'] = '%%d/%%m/%%Y';
 $string['thislanguage'] = 'English';
 
 

@@ -26,9 +26,31 @@
 
 defined('INTERNAL') || die();
 
+$string['deletefile?'] = 'Are you sure you want to delete this file?';
+$string['deletefolderandcontents?'] = 'Are you sure you want to delete this folder and all its contents?';
+$string['description'] = 'Description';
+$string['destination'] = 'Destination';
+$string[''] = '';
+$string[''] = '';
+$string[''] = '';
+$string['editfile'] = 'Edit file';
+$string['editfolder'] = 'Edit folder';
 $string['file'] = 'file';
+$string['File'] = 'File';
+$string['filenamefieldisrequired'] = 'File field is required';
 $string['folder'] = 'folder';
+$string['home'] = 'Home';
 $string['image'] = 'image';
 $string['myfiles'] = 'My Files';
+$string['nofilesfound'] = 'No files found';
+$string['overwrite'] = 'Overwrite';
+$string['title'] = 'Name';
+$string['titlefieldisrequired'] = 'Name field is required';
+$string['upload'] = 'Upload';
+$string['uploadcomplete'] = 'Upload complete';
+$string['uploadfailed'] =  'Upload failed';
+$string['uploadfile'] =  'Upload file';
+$string['uploadfileexistsoverwritecancel'] =  'A file with that name already exists.  You can rename the file you are about to upload, or overwrite the existing file.';
+$string['uploading'] =  'Uploading';
 
 ?>

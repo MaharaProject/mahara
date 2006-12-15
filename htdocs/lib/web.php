@@ -52,7 +52,7 @@ defined('INTERNAL') || die();
  */
 
 //smarty(array('js/tablerenderer.js', 'artefact/file/js/filebrowser.js'))
-function &smarty($javascript = array(), $headers = array(), $strings = array()) {
+function &smarty($javascript = array(), $headers = array(), $pagestrings = array()) {
     global $USER, $SESSION;
 
     require_once(get_config('libroot') . 'smarty/Smarty.class.php');
@@ -95,6 +95,11 @@ EOF;
 
     $javascript_array[] = $jsroot . 'MochiKit/MochiKit.js';
 
+    $strings = array();
+    foreach ($pagestrings as $string => $section) {
+        $strings[$string] = '"' . $string . '":"' . addslashes(get_raw_string($string, $section)) . '"';
+    }
+
     $jsstrings = jsstrings();
 
     foreach ($javascript as $jsfile) {
@@ -102,16 +107,35 @@ EOF;
         // $jsroot and append '.js' to the name.  Later we may want to
         // ensure all smarty() calls include the full path to the js
         // file, with the proper extension.
-        if (strpos($jsfile,'/') === false) {
+        if (strpos($jsfile, '/') === false) {
             $javascript_array[] = $jsroot . $jsfile . '.js';
+            if (isset($jsstrings[$jsfile])) {
+                foreach ($jsstrings[$jsfile] as $string => $section) {
+                    if (!isset($strings[$string])) {
+                        $strings[$string] = '"' . $string . '":"' 
+                            . addslashes(get_raw_string($string, $section)) . '"';
+                    }
+                }
+            }
         }
         else {
+            // A .js file with a fully specified path
             $javascript_array[] = $wwwroot . $jsfile;
-        }
-        if (isset($jsstrings[$jsfile])) {
-            foreach ($jsstrings[$jsfile] as $string) {
-                if (!in_array($string, $strings)) {
-                    $strings[] = $string;
+            // If $jsfile is from a plugin (i.e. plugintype/pluginname/js/foo.js)
+            // Then get js strings from static function jsstrings in plugintype/pluginname/lib.php 
+            $bits = explode('/', $jsfile);
+            if (count($bits) == 4) {
+                safe_require($bits[0], $bits[1]);
+                $pluginclass = generate_class_name($bits[0], $bits[1]);
+                if (is_callable(array($pluginclass, 'jsstrings'))) {
+                    $name = substr($bits[3], 0, strpos($bits[3], '.js'));
+                    $tempstrings = call_static_method($pluginclass, 'jsstrings', $name);
+                    foreach ($tempstrings as $string => $section) {
+                        if (!isset($strings[$string])) {
+                            $strings[$string] = '"' . $string . '":"' 
+                                . addslashes(get_raw_string($string, $section)) . '"';
+                        }
+                    }
                 }
             }
         }
@@ -120,16 +144,12 @@ EOF;
     $javascript_array[] = $jsroot . 'mahara.js';
     $javascript_array[] = $jsroot . 'debug.js';
 
-    foreach ($jsstrings['mahara'] as $string) {
-        if (!in_array($string, $strings)) {
-            $strings[] = $string;
+    foreach ($jsstrings['mahara'] as $string => $section) {
+        if (!isset($strings[$string])) {
+            $strings[$string] = '"' . $string . '":"' . addslashes(get_raw_string($string, $section)) . '"';
         }
     }
 
-    // Add language strings for the javascript
-    foreach ($strings as &$string) {
-        $string = '"' . $string . '":"' . addslashes(get_raw_string($string)) . '"';
-    }
     $stringjs = '<script type="text/javascript">';
     $stringjs .= 'var strings={' . implode(',', $strings) . '};';
     $stringjs .= '</script>';
@@ -179,19 +199,18 @@ EOF;
 function jsstrings() {
     return array(
         'mahara' => array(
-            'namedfieldempty',
-            'processingform',
-            'requiredfieldempty',
-            'unknownerror',
-            'loading',
+            'namedfieldempty' => 'mahara',
+            'processingform' => 'mahara',
+            'requiredfieldempty' => 'mahara',
+            'unknownerror' => 'mahara',
+            'loading' => 'mahara',
         ),
         'tablerenderer' => array(
-            'firstpage',
-            'nextpage',
-            'prevpage',
-            'lastpage',
-        ),
-        'fileuploader' => array(),
+            'firstpage' => 'mahara',
+            'nextpage' => 'mahara',
+            'prevpage' => 'mahara',
+            'lastpage' => 'mahara',
+        )
     );
 }
 
