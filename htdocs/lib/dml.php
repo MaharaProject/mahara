@@ -87,6 +87,27 @@ function record_exists($table, $field1=null, $value1=null, $field2=null, $value2
 }
 
 /**
+ * Test whether any records exists in a table which match a particular WHERE clause.
+ *
+ * This function returns true if at least one record is returned
+ * 
+ * @param string $table The database table to be checked against.
+ * @param string $select A fragment of SQL to be used in a WHERE clause in the SQL call.
+ * @return bool true if a matching record exists, else false.
+ * @throws SQLException
+ */
+function record_exists_select($table, $select='', $values=null) {
+
+    global $CFG;
+
+    if ($select) {
+        $select = 'WHERE '.$select;
+    }
+
+    return record_exists_sql('SELECT * FROM '. $CFG->prefix . $table . ' ' . $select, $values);
+}
+
+/**
  * Test whether a SQL SELECT statement returns any records.
  *
  * This function returns true if at least one record is returned.
