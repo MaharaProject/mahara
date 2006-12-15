@@ -38,7 +38,7 @@ function pieform_render_calendar($element, Pieform $form) {
     $id = $form->get_name() . '_' . $element['name'];
     $result = '<input type="text"'
         . $form->element_attributes($element)
-        . ' value="' . Pieform::hsc($form->get_value($element)) . '">';
+        . ' value="' . ( $form->get_value($element) ? Pieform::hsc(strftime($element['caloptions']['ifFormat'],$form->get_value($element))) : '' ) . '">';
     if (isset($element['imagefile'])) {
         $result .= '<a href="" id="'. $id . '_btn" onclick="return false;" class="pieform-calendar-toggle">'
             . '<img src="' . $element['imagefile'] . '" alt=""></a>';
@@ -64,7 +64,7 @@ function pieform_render_calendar_set_attributes($element) {
     $element['theme']    = isset($element['theme']) ? $element['theme'] : 'calendar-win2k-2';
     $element['caloptions']['ifFormat'] = isset($element['caloptions']['ifFormat']) ? $element['caloptions']['ifFormat'] : '%Y/%m/%d';
     $element['caloptions']['daFormat'] = isset($element['caloptions']['daFormat']) ? $element['caloptions']['daFormat'] : '%Y/%m/%d';
-    $element['rules']['regex'] = isset($element['rules']['regex']) ? $element['rules']['regex'] : '#^((\d{4}/\d{2}/\d{2})( \d{2}:\d{2})?)?$#';
+    #$element['rules']['regex'] = isset($element['rules']['regex']) ? $element['rules']['regex'] : '#^((\d{4}/\d{2}/\d{2})( \d{2}:\d{2})?)?$#';
     return $element;
 }
 
@@ -91,7 +91,36 @@ function pieform_get_headdata_calendar($element) {
     return $result;
 }
 
+function pieform_get_value_calendar($element, Pieform $form) {
+    $name = $element['name'];
 
-// TODO: use the get_value function to do strtotime? (possibly, also might need the javascript version for ajax forms)
+    $global = ($form->get_method() == 'get') ? $_GET : $_POST;
+
+    if (isset($element['value'])) {
+        return $element['value'];
+    }
+
+    if (isset($global[$name])) {
+        if (trim($global[$name]) == '') {
+            return null;
+        }
+
+        $value = strtotime($global[$name]);
+
+        if ($value === false) {
+            $form->set_error($name, 'TODO');
+            return null;
+        }
+        return $value;
+    }
+
+    if (isset($element['defaultvalue'])) {
+        return $element['defaultvalue'];
+    }
+
+    return null;
+}
+
+// TODO: (possibly, also might need the javascript version for ajax forms)
 
 ?>
