@@ -96,8 +96,15 @@ EOF;
     $javascript_array[] = $jsroot . 'MochiKit/MochiKit.js';
 
     $strings = array();
-    foreach ($pagestrings as $string => $section) {
-        $strings[$string] = '"' . $string . '":"' . addslashes(get_raw_string($string, $section)) . '"';
+    foreach ($pagestrings as $k => $v) {
+        if (is_array($v)) {
+            foreach ($v as $tag) {
+                $strings[$tag] = get_raw_string($tag, $k);
+            }
+        }
+        else {
+            $strings[$k] = get_raw_string($k, $v);
+        }
     }
 
     $jsstrings = jsstrings();
@@ -112,8 +119,7 @@ EOF;
             if (isset($jsstrings[$jsfile])) {
                 foreach ($jsstrings[$jsfile] as $string => $section) {
                     if (!isset($strings[$string])) {
-                        $strings[$string] = '"' . $string . '":"' 
-                            . addslashes(get_raw_string($string, $section)) . '"';
+                        $strings[$string] = get_raw_string($string, $section);
                     }
                 }
             }
@@ -132,8 +138,7 @@ EOF;
                     $tempstrings = call_static_method($pluginclass, 'jsstrings', $name);
                     foreach ($tempstrings as $string => $section) {
                         if (!isset($strings[$string])) {
-                            $strings[$string] = '"' . $string . '":"' 
-                                . addslashes(get_raw_string($string, $section)) . '"';
+                            $strings[$string] = get_raw_string($string, $section);
                         }
                     }
                 }
@@ -146,12 +151,12 @@ EOF;
 
     foreach ($jsstrings['mahara'] as $string => $section) {
         if (!isset($strings[$string])) {
-            $strings[$string] = '"' . $string . '":"' . addslashes(get_raw_string($string, $section)) . '"';
+            $strings[$string] = get_raw_string($string, $section);
         }
     }
 
     $stringjs = '<script type="text/javascript">';
-    $stringjs .= 'var strings={' . implode(',', $strings) . '};';
+    $stringjs .= 'var strings = ' . json_encode($strings) . ';';
     $stringjs .= '</script>';
     $headers[] = $stringjs;
 
