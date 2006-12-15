@@ -610,6 +610,10 @@ class ArtefactNotFoundException extends UserException {}
  */
 class ViewNotFoundException extends UserException {}
 
+/**
+ * Exception - user not found
+ */
+class UserNotFoundException extends UserException {}
 
 /**
  * Exception - anything to do with template parsing
