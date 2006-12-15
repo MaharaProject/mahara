@@ -136,11 +136,11 @@ function check_upgrades($name=null) {
                 $pluginversion = $installed->version;
                 $pluginrelease =  $installed->release;
             }
+        }
             
-            require(get_config('docroot') . $pluginpath . '/version.php');
-            if (isset($config->disablelogin) && !empty($config->disablelogin)) {
-                $disablelogin = true;
-            }
+        require(get_config('docroot') . $pluginpath . '/version.php');
+        if (isset($config->disablelogin) && !empty($config->disablelogin)) {
+            $disablelogin = true;
         }
 
         if (empty($pluginversion)) {
