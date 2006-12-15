@@ -26,6 +26,7 @@
 
 defined('INTERNAL') || die();
 
+$string['copyrightnotice'] = 'Copyright notice';
 $string['create'] = 'Create';
 $string['createfolder'] = 'Create folder';
 $string['deletefile?'] = 'Are you sure you want to delete this file?';
@@ -34,27 +35,27 @@ $string['description'] = 'Description';
 $string['destination'] = 'Destination';
 $string['editfile'] = 'Edit file';
 $string['editfolder'] = 'Edit folder';
-$string['file'] = 'file';
-$string['File'] = 'File';
+$string['file'] = 'File';
 $string['fileexistsoverwritecancel'] =  'A file with that name already exists.  You can rename the file you are about to upload, or overwrite the existing file.';
-$string['filenamefieldisrequired'] = 'File field is required';
+$string['filenamefieldisrequired'] = 'The file field is required';
 $string['folder'] = 'folder';
 $string['home'] = 'Home';
 $string['image'] = 'image';
 $string['myfiles'] = 'My Files';
 $string['name'] = 'Name';
-$string['namefieldisrequired'] = 'Name field is required';
+$string['namefieldisrequired'] = 'The name field is required';
 $string['nofilesfound'] = 'No files found';
 $string['overwrite'] = 'Overwrite';
 $string['savechanges'] = 'Save changes';
 $string['size'] = 'Size';
 $string['title'] = 'Name';
-$string['titlefieldisrequired'] = 'Name field is required';
+$string['titlefieldisrequired'] = 'The name field is required';
 $string['upload'] = 'Upload';
 $string['uploadcomplete'] = 'Upload complete';
 $string['uploadfailed'] =  'Upload failed';
 $string['uploadfile'] =  'Upload file';
 $string['uploadfileexistsoverwritecancel'] =  'A file with that name already exists.  You can rename the file you are about to upload, or overwrite the existing file.';
 $string['uploading'] =  'Uploading';
+$string['youmustagreetothecopyrightnotice'] = 'You must agree to the copyright notice';
 
 ?>

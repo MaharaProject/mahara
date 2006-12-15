@@ -67,6 +67,7 @@ class PluginArtefactFile extends PluginArtefact {
         static $jsstrings = array(
             'uploader' => array(
                 'cancel' => 'mahara',
+                'copyrightnotice' => 'artefact.file',
                 'description' => 'artefact.file',
                 'destination' => 'artefact.file',
                 'file' => 'artefact.file',
@@ -81,6 +82,7 @@ class PluginArtefactFile extends PluginArtefact {
                 'uploadfile' => 'artefact.file',
                 'uploadfileexistsoverwritecancel' => 'artefact.file',
                 'uploading' => 'artefact.file',
+                'youmustagreetothecopyrightnotice' => 'artefact.file',
             ),
             'filebrowser' => array(
                 'cancel' => 'mahara',
