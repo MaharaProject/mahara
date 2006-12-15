@@ -181,6 +181,9 @@ function check_upgrades($name=null) {
         return $upgrade;
     }
     $toupgrade['disablelogin'] = $disablelogin;
+    if (count($toupgrade) == 1) {
+        $toupgrade = array();
+    }
     return $toupgrade;
 }
 
