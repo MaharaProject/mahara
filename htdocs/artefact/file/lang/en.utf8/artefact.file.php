@@ -47,6 +47,7 @@ $string['namefieldisrequired'] = 'Name field is required';
 $string['nofilesfound'] = 'No files found';
 $string['overwrite'] = 'Overwrite';
 $string['savechanges'] = 'Save changes';
+$string['size'] = 'Size';
 $string['title'] = 'Name';
 $string['titlefieldisrequired'] = 'Name field is required';
 $string['upload'] = 'Upload';
