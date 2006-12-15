@@ -142,7 +142,7 @@ function set_activity_preference($userid, $activity, $method) {
  * @param string $field preference to get
  */
 function get_account_preference($userid, $field) {
-    if ($pref = record_exists('usr_account_preference', 'usr', $userid, 'field', $field)) {
+    if ($pref = get_record('usr_account_preference', 'usr', $userid, 'field', $field)) {
         return $pref->value;
     }
     $expected = expected_account_preferences();
@@ -360,9 +360,40 @@ function optional_userid($userid) {
     return $USER->get('id');
 }
 
+/**
+ * helper function for testing logins
+ */
 function is_logged_in() {
     global $USER;
     return (!empty($USER));
 }
+
+/**
+ * is there a friend relationship between these two users?
+ *
+ * @param int $userid1 
+ * @param int $userid2
+ */
+
+function is_friend($userid1, $userid2) {
+    return record_exists_select('usr_friend', '(usr1 = ? AND usr2 = ?) OR (usr2 = ? AND usr1 = ?)', 
+                                array($userid1, $userid2, $userid1, $userid2));
+}
+
+/**
+ * has there been a request between these two users?
+ *
+ * @param int $userid1
+ * @param int $userid2
+ */
+function get_friend_request($userid1, $userid2) {
+    return get_record_select('usr_friend_request', '(owner = ? AND requester = ?) OR (requester = ? AND owner = ?)',
+                             array($userid1, $userid2, $userid1, $userid2));
+        
+} 
+
+
+
+
 
 ?>

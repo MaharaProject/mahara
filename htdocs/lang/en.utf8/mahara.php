@@ -348,4 +348,33 @@ $string['addedtocommunitymessage'] = '%s has added you to a community, \'%s\'.  
 $string['adduserfailed'] = 'Failed to add the user';
 $string['useradded'] = 'User added';
 
+// friendslist
+$string['reasonoptional'] = 'Reason (optional)';
+$string['request'] = 'Request';
+
+$string['friendformaddsuccess'] = 'Added %s to your friends list';
+$string['friendformremovesuccess'] = 'Removed %s from your friends list';
+$string['friendformrequestsuccess'] = 'Send a friendship request to %s';
+
+
+$string['addtofriendslist'] = 'Add to friends';
+$string['requestfriendship'] = 'Request friendship';
+
+$string['addedtofriendslistsubject'] = 'New friend';
+$string['addedtofriendslistmessage'] = '%s added you as a friend! This means that %s is also on your friend list now too. '
+    . ' Click on the link below to see their profile page';
+
+$string['requestedfriendslistmessage'] = 'New friend request';
+$string['requestedfriendslistsubject'] = '%s has requested that you add them as a friend.  '
+    .' You can either do this from the link below, or from your friends list page';
+
+$string['requestedfriendslistsubjectreason'] = '%s has requested that you add them as a friend.'
+    .' You can either do this from the link below, or from your friends list page'
+    . 'Their reason was: ';
+
+$string['removedfromfriendslistsubject'] = 'Removed from friends list';
+$string['removedfromfriendslistmessage'] = '%s has removed you from their friends list.';
+$string['removedfromfriendslistmessagereason'] = '%s has removed you from their friends list.  Their reason was: ';
+
+
 ?>

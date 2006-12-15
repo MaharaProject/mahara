@@ -11,6 +11,7 @@
 
 		{$INVITEFORM}
 		{$ADDFORM}
+		{$FRIENDFORM}
 		
 			<h3>{$NAME}</h3>
 			<table><tbody>

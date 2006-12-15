@@ -27,62 +27,63 @@
 define('INTERNAL', 1);
 require(dirname(dirname(__FILE__)).'/init.php');
 require_once('community.php');
+require_once('pieforms/pieform.php');
 
 $userid = param_integer('id','');
-global $USER;
 $loggedinid = $USER->get('id');
+$prefix = get_config('dbprefix');
+$smarty = smarty();
 
 // Get the user's details
 
 $profile = array();
 $userfields = array();
 if (!$user = get_record('usr', 'id', $userid)) {
-    $name = get_string('usernotfound');
+    throw new UserNotFoundException("User with id $userid not found");
 }
-else {
-    $name = display_name($user);
 
-    // If the logged in user is on staff, get full name, institution, id number, email address
-    if ($USER->get('staff')) {
-        $userfields['fullname'] = $user->firstname . ' ' . $user->lastname;
-        $userfields['institution'] = $user->institution;
-        $userfields['studentid'] = $user->studentid;
-        $userfields['emailaddress'] = $user->email;
-    }
+$name = display_name($user);
 
-    // Get public profile fields:
-    safe_require('artefact', 'internal');
-    $publicfields = call_static_method(generate_artefact_class_name('profile'),'get_public_fields');
-    foreach (array_keys($publicfields) as $field) {
-        $classname = generate_artefact_class_name($field);
-        if ($field == 'email') {  // There may be multiple email records
-            if ($emails = get_records_array('artefact_internal_profile_email', 'owner', $userid)) {
-                foreach ($emails as $email) {
-                    $fieldname = $email->principal ? 'principalemailaddress' : 'emailaddress';
-                    $profile[$fieldname] = $email->email;
-                }
-            }
-        }
-        else {
-            $c = new $classname(0, array('owner' => $userid)); // email is different
-            if ($value = $c->render(FORMAT_ARTEFACT_LISTSELF, array('link' => true))) {
-                $profile[$field] = $value;
+// If the logged in user is on staff, get full name, institution, id number, email address
+if ($USER->get('staff')) {
+    $userfields['fullname'] = $user->firstname . ' ' . $user->lastname;
+    $userfields['institution'] = $user->institution;
+    $userfields['studentid'] = $user->studentid;
+    $userfields['emailaddress'] = $user->email;
+}
+
+// Get public profile fields:
+safe_require('artefact', 'internal');
+$publicfields = call_static_method(generate_artefact_class_name('profile'),'get_public_fields');
+foreach (array_keys($publicfields) as $field) {
+    $classname = generate_artefact_class_name($field);
+    if ($field == 'email') {  // There may be multiple email records
+        if ($emails = get_records_array('artefact_internal_profile_email', 'owner', $userid)) {
+            foreach ($emails as $email) {
+                $fieldname = $email->principal ? 'principalemailaddress' : 'emailaddress';
+                $profile[$fieldname] = $email->email;
             }
         }
     }
-
-    // Get viewable views
-    $views = array();
-    if ($allviews = get_records_array('view', 'owner', $userid)) {
-        foreach ($allviews as $view) {
-            if (can_view_view($view->id)) {
-                $views[$view->id] = $view->title;
-            }
+    else {
+        $c = new $classname(0, array('owner' => $userid)); // email is different
+        if ($value = $c->render(FORMAT_ARTEFACT_LISTSELF, array('link' => true))) {
+            $profile[$field] = $value;
         }
     }
 }
 
-$smarty = smarty();
+// Get viewable views
+$views = array();
+if ($allviews = get_records_array('view', 'owner', $userid)) {
+    foreach ($allviews as $view) {
+        if (can_view_view($view->id)) {
+            $views[$view->id] = $view->title;
+        }
+    }
+}
+
+// community stuff
 if (!$userassoccommunities = get_associated_communities($userid)) {
     $userassoccommunities = array();
 }
@@ -97,7 +98,6 @@ if ($communities = get_owned_communities($loggedinid, 'invite')) {
         $invitelist[$community->id] = $community->name;
     }
     if (count($invitelist) > 0) {
-        require_once('pieforms/pieform.php');
         $inviteform = pieform(array(
         'name'                => 'invite',
         'ajaxpost'            => true,
@@ -122,8 +122,6 @@ if ($communities = get_owned_communities($loggedinid, 'invite')) {
     }
 }
 
-$prefix = get_config('dbprefix');
-
 // Get the "controlled membership" communities in which the logged in user is a tutor
 if ($communities = get_tutor_communities($loggedinid, 'controlled')) {
     $controlledlist = array();
@@ -134,7 +132,6 @@ if ($communities = get_tutor_communities($loggedinid, 'controlled')) {
         $controlledlist[$community->id] = $community->name;
     }
     if (count($controlledlist) > 0) {
-        require_once('pieforms/pieform.php');
         $addform = pieform(array(
         'name'                => 'addmember',
         'ajaxpost'            => true,
@@ -158,6 +155,82 @@ if ($communities = get_tutor_communities($loggedinid, 'controlled')) {
     $smarty->assign('ADDFORM',$addform);
     }
 }
+
+// adding this user to the currently logged in user's friends list
+// or removing or approving or rejecting or whatever else we can do.
+$friendform = array(
+    'name'     => 'friend',
+    'ajaxpost' => true,
+    'elements' => array()
+);
+$friendsubmit = '';
+$friendtype = '';
+
+// already a friend ... we can remove.
+if (is_friend($userid, $loggedinid)) {
+    $friendtype = 'remove';
+    $friendsubmit = get_string('removefromfriendslist');
+} 
+// if there's a friends request already
+else if ($request = get_friend_request($userid, $loggedinid)) {
+    if ($request->owner == $userid) {
+        // @todo
+    }
+    else {
+        // @todo approve or reject
+    }
+}
+// check the preference
+else {
+    $friendscontrol = get_account_preference($userid, 'friendscontrol');
+    if ($friendscontrol == 'nobody') {
+        $friendtype = 'remove';
+        $friendsubmit = get_string('removefromfriendslist');
+    } 
+    else if ($friendscontrol == 'auth') {
+        $friendform['elements']['reason'] = array(
+            'type'  => 'textarea',
+            'title' => get_string('requestfriendship'),
+            'cols'  => 10,
+            'rows'  => 4,
+        );
+        $friendsubmit = get_string('request');
+        $friendtype = 'request';
+    } else {
+        $friendsubmit = get_string('addtofriendslist');
+        $friendtype = 'add';
+    }
+}
+
+// if we have a form to display, do it
+if (!empty($friendtype)) {
+    $friendform['elements']['type'] = array(
+        'type'  => 'hidden',
+        'value' => $friendtype,
+    );
+    $friendform['elements']['id'] = array(
+        'type'  => 'hidden',
+        'value' => $userid,
+    );
+    $friendform['elements']['submit'] = array(
+        'type'  => 'submit',
+        'value' => $friendsubmit,
+    );
+    $friendform = pieform($friendform);
+} 
+else {
+    $friendform = '';
+}
+
+$smarty->assign('FRIENDFORM', $friendform);
+$smarty->assign('NAME',$name);
+$smarty->assign('USERFIELDS',$userfields);
+$smarty->assign('PROFILE',$profile);
+$smarty->assign('VIEWS',$views);
+$smarty->display('user/view.tpl');
+
+////////// Functions to process ajax callbacks //////////
+
 
 // Send an invitation to the user to join a community
 function invite_submit($values) {
@@ -212,11 +285,63 @@ function addmember_submit($values) {
     json_reply(false, get_string('useradded'));
 }
 
+// handle the add/remove/approve/reject friend form
+function friend_submit($values) {
+    global $user, $USER;
 
-$smarty->assign('NAME',$name);
-$smarty->assign('USERFIELDS',$userfields);
-$smarty->assign('PROFILE',$profile);
-$smarty->assign('VIEWS',$views);
-$smarty->display('user/view.tpl');
+    $loggedinid = $USER->get('id');
+    $userid = $user->id;
+
+    // friend db record
+    $f = new StdClass;
+    $f->ctime = db_format_timestamp(time());
+    
+    // notification info
+    $n = new StdClass;
+    $n->url = get_config('wwwroot') . 'user/view.php?id=' . $loggedinid;
+    $n->users = array($user->id);
+    $displayname = display_name($USER, $user);
+
+    switch ($values['type']) {
+    case 'add':
+        $f->usr1 = $values['id'];
+        $f->usr2 = $loggedinid;
+        insert_record('usr_friend', $f);
+        $n->subject = get_string('addedtofriendslistsubject');
+        $n->message = get_string('addedtofriendslistmessage', 'mahara', $displayname, $displayname);
+        break;
+    case 'request':
+        $f->owner     = $values['id'];
+        $f->requester = $loggedinid;
+        insert_record('usr_friend_request', $f);
+        $n->subject = get_string('requestedfriendlistsubject');
+        if (isset($values['reason']) && !empty($values['reason'])) {
+            $n->message = get_string('requestedfriendlistmessagereason', 'mahara', $displayname) . $values['reason'];
+        }
+        else {
+            $n->message = get_string('requestedfriendlistmessage', 'mahara', $displayname);
+        }
+        break;
+    case 'remove':
+        delete_records_select('usr_friend', '(usr1 = ? AND usr2 = ?) OR (usr2 = ? AND usr1 = ?)', 
+                                array($userid, $loggedinid, $userid, $loggedinid));
+        $n->subject = get_string('removedfromfriendslistsubject');
+        if (isset($values['reason']) && !empty($values['reason'])) {
+            $n->message = get_string('removedfromfriendslistmessage', 'mahara', $displayname) . $values['reason'];
+        }
+        else {
+            $n->message = get_string('removedfromfriendslistmessage', 'mahara', $displayname);
+        }
+        break;
+    case 'approve':
+     
+        break;
+    case 'reject':
+
+        break;
+    }
+    activity_occurred('maharamessage', $n);
+    json_reply(false, get_string('friendform' . $values['type'] . 'success', 'mahara', display_name($user)));
+}
 
 ?>
