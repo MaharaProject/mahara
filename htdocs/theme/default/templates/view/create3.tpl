@@ -5,7 +5,7 @@
 		<div class="box-cnrs"><span class="cnr-tl"><span class="cnr-tr"><span class="cnr-bl"><span class="cnr-br">
 			<div class="maincontent">
 	
-<h2>{str tag=createviewstep3}</h2>
+<h2>{str tag=createviewstep3 section=view}</h2>
 
 {literal}
 <style type="text/css">
@@ -16,8 +16,8 @@
     <form action="" method="post">
     {$template}
         <input type="submit" name="cancel" value="{str tag=cancel}">
-        <input type="submit" name="back" value="{str tag=back}">
-        <input type="submit" name="submit" value="{str tag=next}">
+        <input type="submit" name="back" value="{str tag=back section=view}">
+        <input type="submit" name="submit" value="{str tag=next section=view}">
     </form>
 </div>
 <script type="text/javascript">

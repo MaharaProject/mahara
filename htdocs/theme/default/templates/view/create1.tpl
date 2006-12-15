@@ -9,7 +9,11 @@
 		<div class="box-cnrs"><span class="cnr-tl"><span class="cnr-tr"><span class="cnr-bl"><span class="cnr-br">
 			<div class="maincontent">
 	
-			<h2>{str tag="createviewstep1"}</h2>
+{if $EDITMODE}
+			<h2>{str tag="editmetadata" section="view"}</h2>
+{else}
+			<h2>{str tag="createviewstep1" section="view"}</h2>
+{/if}
 			{$createview1}
 	
 			</div>

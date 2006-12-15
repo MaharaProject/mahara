@@ -181,7 +181,7 @@ function get_string_location($identifier, $section, $variables, $replacefunc='fo
     $langconfigstrs = array('parentlanguage', 'strftimedate', 'strftimedateshort', 'strftimedatetime',
                             'strftimedaydate', 'strftimedaydatetime', 'strftimedayshort', 'strftimedaytime',
                             'strftimemonthyear', 'strftimerecent', 'strftimerecentfull', 'strftimetime',
-                            'thislanguage');
+                            'strfdaymonthyearshort', 'thislanguage');
 
     if (in_array($identifier, $langconfigstrs)) {
         $section = 'langconfig';
@@ -220,7 +220,7 @@ function get_string_location($identifier, $section, $variables, $replacefunc='fo
     // If the preferred language was English (utf8) we can abort now
     // saving some checks beacuse it's the only "root" lang
     if ($lang == 'en.utf8') {
-        return '[[' . $identifier . ']]';
+        return '[[' . $identifier . '/' . $section . ']]';
     }
 
     // Is a parent language defined?  If so, try to find this string in a parent language file
@@ -249,7 +249,7 @@ function get_string_location($identifier, $section, $variables, $replacefunc='fo
         }
     }
 
-    return '[[' . $identifier . ']]';  // Last resort
+    return '[[' . $identifier . '/' . $section . ']]';  // Last resort
 }
 
 

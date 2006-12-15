@@ -44,7 +44,7 @@ $form = array(
         ),
         'submit' => array(
             'type' => 'cancelbackcreate',
-            'value' => array(get_string('cancel'), get_string('back'), get_string('createview'))
+            'value' => array(get_string('cancel'), get_string('back','view'), get_string('createview','view'))
         )
     )
 );

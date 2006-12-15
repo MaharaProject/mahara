@@ -25,6 +25,7 @@
  */
 
 define('INTERNAL', 1);
+define('MENUITEM', 'myviews');
 require(dirname(dirname(__FILE__)) . '/init.php');
 
 $wwwroot = get_config('wwwroot');
@@ -131,7 +132,7 @@ viewlist.updateOnLoad();
 
 JAVASCRIPT;
 
-$smarty = smarty(array('tablerenderer'), array(), array('viewsubmittedto'));
+$smarty = smarty(array('tablerenderer'), array(), array('viewsubmittedto' => 'mahara'));
 $smarty->assign('site_menu', site_menu());
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->display('view/index.tpl');
