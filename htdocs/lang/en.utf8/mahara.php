@@ -27,15 +27,16 @@
 defined('INTERNAL') || die();
 
 // General form strings
-$string['add']    = 'Add';
-$string['cancel'] = 'Cancel';
-$string['delete'] = 'Delete';
-$string['edit']   = 'Edit';
-$string['save']   = 'Save';
-$string['submit'] = 'Submit';
-$string['update'] = 'Update';
-$string['change'] = 'Change';
-$string['go']     = 'Go';
+$string['add']     = 'Add';
+$string['cancel']  = 'Cancel';
+$string['delete']  = 'Delete';
+$string['edit']    = 'Edit';
+$string['save']    = 'Save';
+$string['submit']  = 'Submit';
+$string['update']  = 'Update';
+$string['change']  = 'Change';
+$string['go']      = 'Go';
+$string['loading'] = 'Loading ...';
 
 $string['no']     = 'no';
 $string['yes']    = 'yes';

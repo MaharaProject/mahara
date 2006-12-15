@@ -59,3 +59,12 @@ $string['empty_block'] = 'Select an artefact from the tree on the left to place 
 $string['viewinformationsaved'] = 'View information saved successfully';
 
 $string['canteditdontown'] = 'You can\'t edit this view because you don\'t own it';
+
+$string['chooseformat'] = 'Select how you would like to display this artefact in this block ...';
+
+$string['format.listself']       = 'List item (you can put multiple artefacts in this block like this)';
+$string['format.listchildren']   = 'List children of this artefact';
+$string['format.renderfull']     = 'Display entire artefact';
+$string['format.rendermetadata'] = 'Display metadata for this artefact';
+
+
