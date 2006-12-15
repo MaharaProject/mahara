@@ -31,6 +31,11 @@ defined('INTERNAL') || die();
  */
 class PluginArtefactBlog extends PluginArtefact {
 
+    /**
+     * This is a postgresql time constant.
+     */
+    const maxpending = '10 minutes';
+
     public static function get_artefact_types() {
         return array(
             'blog',
@@ -53,6 +58,34 @@ class PluginArtefactBlog extends PluginArtefact {
 
     public static function get_toplevel_artefact_types() {
         return array('blog');
+    }
+
+    public static function get_cron() {
+        return array(
+            (object)array(
+                'callfunction' => 'clean_post_files',
+                'minute'       => '1'
+            )
+        );
+    }
+
+    /**
+     * This function cleans out any files that have been uploaded, but which
+     * are not associated with a blog, because of an aborted blog creation.
+     */
+    public static function clean_post_files() {
+        safe_require('artefact', 'file');
+      
+        ($files = get_records_sql_array("
+         SELECT file
+         FROM artefact_blog_blogpost_file_pending
+         WHERE when + ?::INTERVAL < CURRENT_TIMESTAMP", array(self::maxpending)))
+            || ($files = array());
+
+        foreach ($files as $file) {
+            $file_obj = new ArtefactTypeFile($file->file);
+            $file_obj->delete();
+        }
     }
 }
 
