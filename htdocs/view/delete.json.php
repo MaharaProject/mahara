@@ -40,6 +40,7 @@ delete_records('view_content','view',$viewid);
 delete_records('view_access_community','view',$viewid);
 delete_records('view_access_group','view',$viewid);
 delete_records('view_access_usr','view',$viewid);
+delete_records('usr_watchlist_view','view',$viewid);
 if (!delete_records('view','id',$viewid)) {
     json_reply('local', get_string('deleteviewfailed'));
 }
