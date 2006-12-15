@@ -68,14 +68,17 @@ function check_upgrades($name=null) {
             $installing = true;
         } 
         else if ($config->version > $coreversion) {
-            if (isset($config->minupgradefrom) && $coreversion < $config->minupgradefrom) {
-                throw new ConfigSanityException("Must upgrade to $config->minupgradefrom first "
-                                          ." (you have $coreversion)");
+            $corerelease = get_config('release');
+            if (isset($config->minupgradefrom) && isset($config->minupgraderelease) 
+                && $coreversion < $config->minupgradefrom) {
+                throw new ConfigSanityException("Must upgrade to $config->minupgradefrom "
+                                          . "($config->minupgraderelease) first "
+                                          . " (you have $coreversion ($corerelease)");
             }
             $core = new StdClass;
             $core->upgrade = true;
             $core->from = $coreversion;
-            $core->fromrelease = get_config('release');
+            $core->fromrelease = $corerelease;
             $core->to = $config->version;
             $core->torelease = $config->release;
             $toupgrade['core'] = $core;
@@ -151,9 +154,11 @@ function check_upgrades($name=null) {
             $toupgrade[$pluginkey] = $plugininfo;
         }
         else if ($config->version > $pluginversion) {
-            if (isset($config->minupgradefrom) && $pluginversion < $config->minupgradefrom) {
-                throw new ConfigSanityException("Must upgrade to $config->minupgradefrom first "
-                                          ." (you have $pluginversion)");
+            if (isset($config->minupgradefrom) && isset($config->minupgraderelease)
+                && $pluginversion < $config->minupgradefrom) {
+                throw new ConfigSanityException("Must upgrade to $config->minupgradefrom "
+                                          . " ($config->minupgraderelease) first "
+                                          . " (you have $pluginversion ($pluginrelease))");
             }
             $plugininfo = new StdClass;
             $plugininfo->upgrade = true;
