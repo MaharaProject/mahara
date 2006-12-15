@@ -35,6 +35,12 @@ if (!$install) {
     $name    = param_variable('name');
 }
 
+$upgrade = check_upgrades($name);
+
+if (empty($upgrade->disablelogin)) {
+    auth_setup();
+}
+
 if ($install) {
     $message = '';
     if (!get_config('installed')) {
@@ -57,7 +63,6 @@ if ($install) {
     json_reply(false, $message);
 }
 
-$upgrade = check_upgrades($name);
 $data = array(
     'key'        => $name
 );             

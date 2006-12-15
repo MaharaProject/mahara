@@ -89,15 +89,24 @@ function get_member_communities($userid=0, $offset=0, $limit=0) {
  * all communities the user owns
  * 
  * @param int userid (optional, defaults to $USER id) 
+ * @param string $jointype (optional), will filter by jointype.
  * @return array of community db rows
  */
-function get_owned_communities($userid=0) {
+function get_owned_communities($userid=0, $jointype=null) {
 
     $userid = optional_userid($userid);
     $prefix = get_config('dbprefix');
 
-    return get_records_sql_array('SELECT c.* FROM ' . $prefix . 'community c 
-             WHERE c.owner = ?', array($userid));
+    $sql = 'SELECT c.* FROM ' . $prefix . 'community c 
+             WHERE c.owner = ?';
+    $values = array($userid);
+
+    if (!empty($jointype)) {
+        $sql .= ' AND jointype = ?';
+        $values[] = $jointype;
+    }
+       
+    return get_records_sql_array($sql, $values);
 }
 
 /**
@@ -134,6 +143,60 @@ function get_requested_communities($userid=0) {
               JOIN ' . $prefix . 'community_member_request cmr ON cmr.community = c.id
               WHERE cmr.member = ?', array($userid));
 }
+
+/**
+ * all communities this user is associated with at all
+ * either member, invited or requested.
+ * 
+ * @param int $userid (optional, defaults to $USER id)
+ * @return array of community db rows (with type=member|invite|request)
+ */
+
+function get_associated_communities($userid=0) {
+
+    $userid = optional_userid($userid);
+    $prefix = get_config('dbprefix');
+    
+    $sql = "SELECT c.*, a.type FROM " . $prefix . "community c JOIN (
+    SELECT cm.community, 'invite' AS type
+        FROM " . $prefix . "community_member_invite cm WHERE cm.member = ?
+    UNION 
+    SELECT cm.community, 'request' AS type
+        FROM " . $prefix . "community_member_request cm WHERE cm.member = ?
+    UNION 	
+    SELECT cm.community, 'member' AS type
+        FROM " . $prefix . "community_member cm WHERE cm.member = ?
+    ) AS a ON a.community = c.id";
+    
+    return get_records_sql_assoc($sql, array($userid, $userid, $userid));
+}
+
+
+/**
+ * gets communities the user is a tutor in
+ * 
+ * @param int $userid (optional, defaults to $USER id)
+ * @param string $jointype (optional, will filter by jointype
+ */
+function get_tutor_communities($userid=0, $jointype=null) {
+
+    $userid = optional_userid($userid);
+    $prefix = get_config('dbprefix');
+
+    $sql = 'SELECT c.*, cm.ctime
+              FROM ' . $prefix . 'community c 
+              JOIN ' . $prefix . 'community_member cm ON cm.community = c.id
+              WHERE c.owner != ? AND cm.member = ? AND cm.tutor = ? ';
+    $values = array($userid, $userid, 1);
+    
+    if (!empty($jointype)) {
+        $sql .= ' AND c.jointype = ? ';
+        $values[] = $jointype;
+    }
+    return get_records_sql_array($sql, $values);
+}
+
+
 
 
 ?>

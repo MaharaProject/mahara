@@ -213,10 +213,10 @@ function template_parse_block($blockstr) {
                                                . " can't render to defaultformat " . $format['defaultformat']);
         }
         
-        // check this default artefact is a 0 or 1 artefact
-        if (!call_static_method(generate_artefact_class_name($data['defaultartefacttype']), 'is_0_or_1')) {
+        // check this default artefact is a singular artefact
+        if (!call_static_method(generate_artefact_class_name($data['defaultartefacttype']), 'is_singular')) {
             throw new TemplateParserException("Default artefact type " . $data['defaultartefacttype']
-                                               ." is not a 0 or 1 type artefact");
+                                               ." is not a singular type artefact");
         }
     }
 

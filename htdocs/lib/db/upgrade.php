@@ -51,6 +51,21 @@ function xmldb_core_upgrade($oldversion=0) {
         add_field($table, $field);
     }
 
+    // Add cron jobs for authentication cleanup: partial registrations and account expiries
+    if ($oldversion < 2006121500) {
+        $registrations = new StdClass;
+        $registrations->callfunction = 'auth_clean_partial_registrations';
+        $registrations->minute = '0';
+        $registrations->hour = '5';
+        insert_record('cron', $registrations);
+
+        $expiries = new StdClass;
+        $expiries->callfunction = 'auth_handle_account_expiries';
+        $expiries->minute = '10';
+        $expiries->hour = '5';
+        insert_record('cron', $expiries);
+    }
+
     return $status;
 
 }

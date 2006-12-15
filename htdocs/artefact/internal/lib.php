@@ -120,7 +120,7 @@ class ArtefactTypeProfile extends ArtefactType {
         return array(FORMAT_ARTEFACT_LISTSELF, FORMAT_ARTEFACT_RENDERFULL, FORMAT_ARTEFACT_RENDERMETADATA);
     }
 
-    public static function is_0_or_1() {
+    public static function is_singular() {
         return true;
     }
     

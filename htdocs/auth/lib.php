@@ -611,4 +611,71 @@ function login_submit($values) {
     }
 }
 
+/**
+ * Removes registration requests that were not completed in the allowed amount of time
+ */
+function auth_clean_partial_registrations() {
+    $prefix = get_config('dbprefix');
+    delete_records_sql('DELETE FROM ' . $prefix . 'usr_registration
+        WHERE expiry < ?', array(db_format_timestamp(time())));
+}
+
+/**
+ * Sends notification e-mails to users in two situations:
+ *
+ *  - Their account is about to expire. This is controlled by the 'expiry'
+ *    field of the usr table. Once that time has passed, the user may not
+ *    log in.
+ *  - They have not logged in for close to a certain amount of time. If that
+ *    amount of time has passed, the user may not log in.
+ *
+ * The actual prevention of users logging in is handled by the authentication
+ * code. This cron job sends e-mails to notify users that these events will
+ * happen soon.
+ */
+function auth_handle_account_expiries() {
+    // The 'expiry' flag on the usr table
+    $prefix   = get_config('dbprefix');
+    $sitename = get_config('sitename');
+    $wwwroot  = get_config('wwwroot');
+
+    if ($users = get_records_sql_array('SELECT u.id, u.firstname, u.lastname, u.preferredname, u.email, i.defaultaccountinactivewarn AS timeout
+        FROM ' . $prefix . 'usr u, ' . $prefix . 'institution i
+        WHERE u.institution = i.name
+        AND ? - ' . db_format_tsfield('u.expiry', false) . ' < i.defaultaccountinactivewarn
+        AND expirymailsent = 0', array(time()))) {
+        foreach ($users as $user) {
+            // @todo put the proper text in for this warning, and the one below
+            // @todo move these jobs to being in core...
+            $displayname  = display_name($user);
+            $daystoexpire = ceil($user->timeout / 86400) . ' ';
+            $daystoexpire .= ($daystoexpire == 1) ? get_string('day') : get_string('days');
+            email_user($user, null,
+                get_string('accountexpirywarning'),
+                get_string('accountexpirywarningtext', 'mahara', $displayname, $sitename, $daystoexpire, $wwwroot . 'contact.php', $sitename),
+                get_string('accountexpirywarninghtml', 'mahara', $displayname, $sitename, $daystoexpire, $wwwroot . 'contact.php', $sitename)
+            );
+            set_field('usr', 'expirymailsent', 1, 'id', $user->id);
+        }
+    }
+
+    // Inactivity (lastlogin is too old)
+    if ($users = get_records_sql_array('SELECT u.id, u.firstname, u.lastname, u.preferredname, u.email, i.defaultaccountinactivewarn AS timeout
+        FROM ' . $prefix . 'usr u, ' . $prefix . 'institution i
+        WHERE u.institution = i.name
+        AND (? - ' . db_format_tsfield('u.lastlogin', false) . ') > (i.defaultaccountinactiveexpire - i.defaultaccountinactivewarn)
+        AND inactivemailsent = 0', array(time()))) {
+        foreach ($users as $user) {
+            $displayname = display_name($user);
+            $daystoinactive = ceil($user->timeout / 86400) . ' ';
+            $daystoinactive .= ($daystoexpire == 1) ? get_string('day') : get_string('days');
+            email_user($user, null, get_string('accountinactivewarning'),
+                get_string('accountinactivewarningtext', 'mahara', $displayname, $sitename, $daystoinactive, $sitename),
+                get_string('accountinactivewarninghtml', 'mahara', $displayname, $sitename, $daystoinactive, $sitename)
+            );
+            set_field('usr', 'inactivemailsent', 1, 'id', $user->id);
+        }
+    }
+}
+
 ?>

@@ -45,8 +45,12 @@ function check_upgrades($name=null) {
 
     $toupgrade = array();
     $installing = false;
+    $disablelogin = false;
 
     require('version.php');
+    if (isset($config->disablelogin) && !empty($config->disablelogin)) {
+        $disablelogin = true;
+    }
     // check core first...
     if (empty($name) || $name == 'core') {
         try {
@@ -64,10 +68,17 @@ function check_upgrades($name=null) {
             $installing = true;
         } 
         else if ($config->version > $coreversion) {
+            $corerelease = get_config('release');
+            if (isset($config->minupgradefrom) && isset($config->minupgraderelease) 
+                && $coreversion < $config->minupgradefrom) {
+                throw new ConfigSanityException("Must upgrade to $config->minupgradefrom "
+                                          . "($config->minupgraderelease) first "
+                                          . " (you have $coreversion ($corerelease)");
+            }
             $core = new StdClass;
             $core->upgrade = true;
             $core->from = $coreversion;
-            $core->fromrelease = get_config('release');
+            $core->fromrelease = $corerelease;
             $core->to = $config->version;
             $core->torelease = $config->release;
             $toupgrade['core'] = $core;
@@ -76,6 +87,7 @@ function check_upgrades($name=null) {
 
     // If we were just checking if the core needed to be upgraded, we can stop here
     if ($name == 'core') {
+        $toupgrade['core']->disablelogin = $disablelogin;
         return $toupgrade['core'];
     }
 
@@ -126,6 +138,9 @@ function check_upgrades($name=null) {
             }
             
             require(get_config('docroot') . $pluginpath . '/version.php');
+            if (isset($config->disablelogin) && !empty($config->disablelogin)) {
+                $disablelogin = true;
+            }
         }
 
         if (empty($pluginversion)) {
@@ -139,6 +154,12 @@ function check_upgrades($name=null) {
             $toupgrade[$pluginkey] = $plugininfo;
         }
         else if ($config->version > $pluginversion) {
+            if (isset($config->minupgradefrom) && isset($config->minupgraderelease)
+                && $pluginversion < $config->minupgradefrom) {
+                throw new ConfigSanityException("Must upgrade to $config->minupgradefrom "
+                                          . " ($config->minupgraderelease) first "
+                                          . " (you have $pluginversion ($pluginrelease))");
+            }
             $plugininfo = new StdClass;
             $plugininfo->upgrade = true;
             $plugininfo->from = $pluginversion;
@@ -156,7 +177,12 @@ function check_upgrades($name=null) {
         foreach ((array)$toupgrade[$name] as $key => $value) {
             $upgrade->{$key} = $value;
         }
+        $upgrade->disablelogin = $disablelogin;
         return $upgrade;
+    }
+    $toupgrade['disablelogin'] = $disablelogin;
+    if (count($toupgrade) == 1) {
+        $toupgrade = array();
     }
     return $toupgrade;
 }
