@@ -83,7 +83,9 @@ else {
 }
 
 $smarty = smarty();
-$userassoccommunities = get_associated_communities($userid);
+if (!$userassoccommunities = get_associated_communities($userid)) {
+    $userassoccommunities = array();
+}
 
 // Get the logged in user's "invite only" communities
 if ($communities = get_owned_communities($loggedinid, 'invite')) {
@@ -94,8 +96,9 @@ if ($communities = get_owned_communities($loggedinid, 'invite')) {
         }
         $invitelist[$community->id] = $community->name;
     }
-    require_once('pieforms/pieform.php');
-    $inviteform = pieform(array(
+    if (count($invitelist) > 0) {
+        require_once('pieforms/pieform.php');
+        $inviteform = pieform(array(
         'name'                => 'invite',
         'ajaxpost'            => true,
         'elements'            => array(
@@ -105,6 +108,10 @@ if ($communities = get_owned_communities($loggedinid, 'invite')) {
                 'collapseifoneoption' => false,
                 'options' => $invitelist
             ),
+            'id'       => array(
+                'type' => 'hidden',
+                'value' => $userid,
+            ),
             'submit' => array(
                 'type'  => 'submit',
                 'value' => get_string('sendinvitation'),
@@ -112,6 +119,7 @@ if ($communities = get_owned_communities($loggedinid, 'invite')) {
         ),
     ));
     $smarty->assign('INVITEFORM',$inviteform);
+    }
 }
 
 $prefix = get_config('dbprefix');
@@ -125,8 +133,9 @@ if ($communities = get_tutor_communities($loggedinid, 'controlled')) {
         }
         $controlledlist[$community->id] = $community->name;
     }
-    require_once('pieforms/pieform.php');
-    $addform = pieform(array(
+    if (count($controlledlist) > 0) {
+        require_once('pieforms/pieform.php');
+        $addform = pieform(array(
         'name'                => 'addmember',
         'ajaxpost'            => true,
         'elements'            => array(
@@ -147,27 +156,55 @@ if ($communities = get_tutor_communities($loggedinid, 'controlled')) {
         ),
     ));
     $smarty->assign('ADDFORM',$addform);
+    }
 }
 
 // Send an invitation to the user to join a community
 function invite_submit($values) {
-}
-
-// Add the user as a member of a community
-function addmember_submit($values) {
+    global $USER;
+    
     $data = new StdClass;
     $data->community = $values['community'];
     $data->member    = $values['id'];
     $data->ctime     = db_format_timestamp(time());
     $data->tutor     = 0;
+    $ctitle = get_field('community', 'name', 'id', $data->community);
+    $adduser = get_record('usr', 'id', $data->member);
     try {
-        insert_record('community_member', $data, 'community,member');
-        activity_occured('maharamessage', 
-                         array('users'   => array($values['id']), 
-                               'subject' => get_string('addedtocommunitysubject'),
-                               'message' => get_string('addedtocommunitymessage'),
-                               'url'     => get_config('wwwroot') 
-                               . 'contacts/communities/view.php?id=' . $values['community']));
+        insert_record('community_member_invite', $data);
+        activity_occurred('maharamessage', 
+            array('users'   => array($values['id']), 
+                  'subject' => get_string('invitetocommunitysubject'),
+                  'message' => get_string('invitetocommunitymessage', 'mahara', display_name($USER, $adduser), $ctitle),
+                  'url'     => get_config('wwwroot') 
+                  . 'contacts/communities/view.php?id=' . $values['community']));
+    }
+    catch (SQLException $e) {
+        json_reply('local', get_string('inviteuserfailed'));
+    }
+    json_reply(false, get_string('userinvited'));
+}
+
+// Add the user as a member of a community
+function addmember_submit($values) {
+    global $USER;
+
+    $data = new StdClass;
+    $data->community = $values['community'];
+    $data->member    = $values['id'];
+    $data->ctime     = db_format_timestamp(time());
+    $data->tutor     = 0;
+    $ctitle = get_field('community', 'name', 'id', $data->community);
+    $adduser = get_record('usr', 'id', $data->member);
+
+    try {
+        insert_record('community_member', $data);
+        activity_occurred('maharamessage', 
+            array('users'   => array($values['id']), 
+                  'subject' => get_string('addedtocommunitysubject'),
+                  'message' => get_string('addedtocommunitymessage', 'mahara', display_name($USER, $adduser), $ctitle),
+                  'url'     => get_config('wwwroot') 
+                  . 'contacts/communities/view.php?id=' . $values['community']));
     }
     catch (SQLException $e) {
         json_reply('local', get_string('adduserfailed'));
