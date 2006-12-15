@@ -54,12 +54,16 @@ function FileUploader(element, foldername, folderid, uploadcallback, fileexists)
             hideElement(self.form);
             showElement(self.openbutton);
         };
+        var notice = SPAN(null);
+        notice.innerHTML = copyrightnotice;
         appendChildNodes(form,
             TABLE(null,
             TBODY(null, 
                   TR(null, TH({'colSpan':2}, LABEL(null, get_string('uploadfile')))),
              TR(null, TH(null, LABEL(null, get_string('destination'))),
                 TD(null, SPAN({'id':'uploaddest'},self.foldername))),
+             TR(null, TH(null,LABEL(null,get_string('copyrightnotice'))),
+                TD(null,INPUT({'type':'checkbox','name':'notice'}),notice)),
              TR(null, TH(null, LABEL(null, get_string('file'))),
                 TD(null, INPUT({'type':'file','name':'userfile','size':40,'onchange':function () {
                     self.form.title.value = self.filepart(self.form.userfile.value);
@@ -90,6 +94,10 @@ function FileUploader(element, foldername, folderid, uploadcallback, fileexists)
     }
 
     this.sendform = function (replacefile) {
+        if (!self.form.notice.checked) {
+            $('uploadformmessage').innerHTML = get_string('youmustagreetothecopyrightnotice');
+            return;
+        }
         var localname = self.form.userfile.value;
         if (isEmpty(localname)) {
             $('uploadformmessage').innerHTML = get_string('filenamefieldisrequired');
