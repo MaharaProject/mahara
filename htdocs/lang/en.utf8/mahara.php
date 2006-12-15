@@ -27,15 +27,16 @@
 defined('INTERNAL') || die();
 
 // General form strings
-$string['add']    = 'Add';
-$string['cancel'] = 'Cancel';
-$string['delete'] = 'Delete';
-$string['edit']   = 'Edit';
-$string['save']   = 'Save';
-$string['submit'] = 'Submit';
-$string['update'] = 'Update';
-$string['change'] = 'Change';
-$string['go']     = 'Go';
+$string['add']     = 'Add';
+$string['cancel']  = 'Cancel';
+$string['delete']  = 'Delete';
+$string['edit']    = 'Edit';
+$string['save']    = 'Save';
+$string['submit']  = 'Submit';
+$string['update']  = 'Update';
+$string['change']  = 'Change';
+$string['go']      = 'Go';
+$string['loading'] = 'Loading ...';
 
 $string['no']     = 'no';
 $string['yes']    = 'yes';
@@ -337,5 +338,14 @@ $string['View'] = 'View';
 // communities
 $string['communitymemberrequests'] = 'Pending membership requests';
 $string['addcommunity'] = 'Add new community';
+$string['sendinvitation'] = 'Send invite';
+$string['invitetocommunitysubject'] = 'You were invited to join a community';
+$string['invitetocommunitymessage'] = '%s has invited you to join a community, \'%s\'.  Click on the link below for more information.';
+$string['inviteuserfailed'] = 'Failed to invite the user';
+$string['userinvited'] = 'Invite sent';
+$string['addedtocommunitysubject'] = 'You were added to a community';
+$string['addedtocommunitymessage'] = '%s has added you to a community, \'%s\'.  Click on the link below to see the community';
+$string['adduserfailed'] = 'Failed to add the user';
+$string['useradded'] = 'User added';
 
 ?>

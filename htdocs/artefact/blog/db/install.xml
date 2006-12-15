@@ -49,5 +49,25 @@
             <KEY NAME="filefk" TYPE="foreign" FIELDS="file" REFTABLE="artefact" REFFIELDS="id" />
         </KEYS>
     </TABLE>
+
+    <!-- This table keeps track of files that are to be associated with a blog
+    post, but for which the post has not yet been created, or the association
+    has not yet been confirmed.  No file should ever be in both this table and
+    artefact_blog_blogpost_file.
+
+    This table only keeps track of files that are specifically uploaded for a
+    blog post, not ones that have been uploaded already some other way, that
+    the user wants to associate with a blog post. -->
+    <TABLE NAME="artefact_blog_blogpost_file_pending">
+        <FIELDS>
+            <FIELD NAME="file" TYPE="int" LENGTH="10" NOTNULL="true" />
+            <FIELD NAME="when" TYPE="datetime" NOTNULL="true" />
+        </FIELDS>
+
+        <KEYS>
+            <KEY NAME="blogpost_file_pending_pk" TYPE="primary" FIELDS="file" />
+            <KEY NAME="filefk" TYPE="foreign" FIELDS="file" REFTABLE="artefact" REFFIELDS="id" />
+        </KEYS>
+    </TABLE>
 </TABLES>
 </XMLDB>

@@ -29,9 +29,53 @@ define('MENUITEM', 'view');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('template.php');
 
-$createid = param_integer('createid');
-$data = $SESSION->get('create_' . $createid);
+$view_id = param_integer('viewid');
 $artefacts = param_variable('template', array());
+
+$view_data = get_record( 'view', 'id', $view_id, 'owner', $USER->get('id'));
+
+if(!$view_data) {
+    $SESSION->add_error_msg(get_string('canteditdontown', 'view'));
+    redirect(get_config('wwwroot') . 'view/');
+}
+
+$data = array(
+    'template'    => $view_data->template,
+    'title'       => $view_data->title,
+    'description' => $view_data->description,
+    'ownerformat' => $view_data->ownerformat,
+    'artefacts'   => array(),
+);
+
+$view_content = get_records_array('view_content', 'view', $view_id);
+if ($view_content) {
+    foreach ($view_content as &$label) {
+        $data['artefacts'][$label->block] = array(
+            'value' => $label->content,
+        );
+    }
+}
+
+$view_artefact = get_records_array('view_artefact', 'view', $view_id);
+if ($view_artefact) {
+    foreach ($view_artefact as &$artefact) {
+        if (isset($data['artefacts'][$artefact->block])) {
+            if (!is_array($data['artefacts'][$artefact->block]['id'])) {
+                $data['artefacts'][$artefact->block]['id'] = array($data['artefacts'][$artefact->block]['id']);
+            }
+            $data['artefacts'][$artefact->block]['id'][] = $artefact->artefact;
+        }
+        else {
+            $data['artefacts'][$artefact->block] = array(
+                'id'     => $artefact->artefact,
+                'format' => $artefact->format,
+            );
+        }
+    }
+}
+
+// @todo load artefacts
+
 $parsed_template = template_locate($data['template']);
 
 function validate_artefacts(&$artefacts) {
@@ -63,30 +107,48 @@ function validate_artefacts(&$artefacts) {
     }
 }
 
-if(!isset($data['artefacts'])) {
-    $data['artefacts'] = array();
-};
-
-
 if (param_boolean('submit')) {
     validate_artefacts($artefacts);
 
     $data['artefacts'] = $artefacts;
 
-    log_debug($data);
+    db_begin();
 
-    $SESSION->set('create_' . $createid, $data);
-    redirect(get_config('wwwroot') . 'view/create4.php?createid=' . $createid);
-}
+    delete_records('view_content', 'view', $view_id);
+    delete_records('view_artefact', 'view', $view_id);
 
-if (param_boolean('back')) {
-    validate_artefacts($artefacts);
+    $time = db_format_timestamp(time());
 
-    $data['artefacts'] = $artefacts;
+    foreach ($data['artefacts'] as $block => $blockdata) {
+        if ($blockdata['type'] == 'label') {
+            $viewcontent          = new StdClass;
+            $viewcontent->view    = $view_id;
+            $viewcontent->content = $blockdata['value'];
+            $viewcontent->block   = $block;
+            $viewcontent->ctime   = $time;
+            insert_record('view_content', $viewcontent);
+        }
+        else if ($blockdata['type'] == 'artefact') {
+            $blockdata['id'] = (array)$blockdata['id'];
+            foreach ($blockdata['id'] as $id) {
+                $viewartefact           = new StdClass;
+                $viewartefact->view     = $view_id;
+                $viewartefact->artefact = $id;
+                $viewartefact->block    = $block;
+                $viewartefact->ctime    = $time;
+                $viewartefact->format   = $blockdata['format'];
+                insert_record('view_artefact', $viewartefact);
+            }
+        }
+        else {
+            throw new MaharaException('Unknown block data type, this simply should _not_ happen. Perhaps someone changed step3 and forgot to change this?');
+        }
+    }
 
-    $SESSION->set('create_' . $createid, $data);
+    db_commit();
 
-    redirect(get_config('wwwroot') . 'view/create2.php?createid=' . $createid);
+    $SESSION->add_ok_msg(get_string('viewinformationsaved', 'view'));
+    redirect(get_config('wwwroot') . 'view/');
 }
 
 if (param_boolean('cancel')) {
@@ -139,6 +201,8 @@ $smarty->assign('minusicon', theme_get_image_path('minus.png'));
 
 $smarty->assign('template', $template);
 
+$smarty->assign('EDITMODE', true);
+$smarty->assign('viewid', $view_id);
 $smarty->display('view/create3.tpl');
 
 ?>
