@@ -35,6 +35,7 @@ $string['save']   = 'Save';
 $string['submit'] = 'Submit';
 $string['update'] = 'Update';
 $string['change'] = 'Change';
+$string['go']     = 'Go';
 
 $string['no']     = 'no';
 $string['yes']    = 'yes';
@@ -260,6 +261,13 @@ $string['viewdeleted'] = 'View deleted';
 $string['views'] = 'Views';
 $string['viewsubmitted'] = 'View submitted';
 $string['viewsubmittedto'] = 'This view has been submitted to %s';
+
+// access levels
+$string['public'] = 'Public';
+$string['loggedin'] = 'Logged In Users';
+$string['friends'] = 'Friends';
+$string['communities'] = 'Communities';
+$string['users'] = 'Users';
 
 // view user
 $string['fullname'] = 'Full name';

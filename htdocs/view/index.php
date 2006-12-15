@@ -25,6 +25,7 @@
  */
 
 define('INTERNAL', 1);
+define('MENUITEM', 'myviews');
 require(dirname(dirname(__FILE__)) . '/init.php');
 
 $wwwroot = get_config('wwwroot');
