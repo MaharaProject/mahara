@@ -136,9 +136,9 @@ EOF;
                 if (is_callable(array($pluginclass, 'jsstrings'))) {
                     $name = substr($bits[3], 0, strpos($bits[3], '.js'));
                     $tempstrings = call_static_method($pluginclass, 'jsstrings', $name);
-                    foreach ($tempstrings as $string => $section) {
-                        if (!isset($strings[$string])) {
-                            $strings[$string] = get_raw_string($string, $section);
+                    foreach ($tempstrings as $section => $tags) {
+                        foreach ($tags as $tag) {
+                            $strings[$tag] = get_raw_string($tag, $section);
                         }
                     }
                 }
