@@ -106,7 +106,7 @@ function pieform_renderer_table_footer() {
     return "</tbody></table>\n";
 }
 
-function pieform_renderer_table_messages_js($id, $submitid) {
+function pieform_renderer_table_messages_js($id) {
     $result = <<<EOF
 // Given a message and form element name, should set an error on the element
 function {$id}_set_error(message, element) {
@@ -135,7 +135,7 @@ function {$id}_message(message, type) {
         swapDOM(elem, msg);
     }
     else {
-        appendChildNodes($('{$id}_{$submitid}_container').parentNode, msg);
+        appendChildNodes($('{$id}_' + {$id}_btn + '_container').parentNode, msg);
     }
 }
 function {$id}_remove_message() {
