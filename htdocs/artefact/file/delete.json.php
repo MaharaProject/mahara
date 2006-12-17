@@ -39,6 +39,7 @@ require_once('artefact.php');
 $artefact = artefact_instance_from_id($fileid);
 $artefact->delete();
 
-json_reply(false, get_string('filedeleted'));
+json_reply(false, get_string('filethingdeleted', 'artefact.file', 
+                             get_string($artefact->get('artefacttype'), 'artefact.file')));
 
 ?>
