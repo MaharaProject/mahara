@@ -105,7 +105,7 @@ function FileBrowser(element, changedircallback) {
         var formid = editid + '_form';
         var rowid = 'row_' + fileinfo.id;
         var cancelform = function() {
-            setDisplayForElement(null, rowid);
+            setDisplayForElement('', rowid);
             removeElement(editid);
         };
         var savebutton = INPUT({'type':'button','value':get_string('savechanges')});
@@ -133,7 +133,7 @@ function FileBrowser(element, changedircallback) {
     this.initcreatefolderform = function () {
         var formid = 'createfolderform';
         var cancelcreateform = function () {
-            setDisplayForElement(null, self.createfolderbutton);
+            setDisplayForElement('inline', self.createfolderbutton);
             hideElement($(formid).replace);
             $(formid).name.value = '';
             $(formid).description.value = '';
