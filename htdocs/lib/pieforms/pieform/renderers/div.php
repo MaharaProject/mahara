@@ -77,16 +77,18 @@ function pieform_renderer_div(Pieform $form, $builtelement, $rawelement) {
     return $result;
 }
 
-function pieform_renderer_div_messages_js($id, $submitid) {
+
+// @todo needs updating again... need to replace remove_error with remove_all_errors
+function pieform_renderer_div_messages_js($id) {
     $result = <<<EOF
+
 // Given a message and form element name, should set an error on the element
 function {$id}_set_error(message, element) {
     {$id}_remove_error(element);
     element += '_container';
     // @todo set error class on input elements...
-    $(element).parentNode.insertBefore(DIV({'id': '{$id}_error_' + element, 'class': 'errmsg'}, message), $(element).nextSibling);
+   insertSiblingNodesBefore(DIV({'id': '{$id}_error_' + element, 'class': 'errmsg'}, message), $(element));
 }
-// Given a form element name, should remove an error associated with it
 function {$id}_remove_error(element) {
     element += '_container';
     var elem = $('{$id}_error_' + element);
@@ -95,13 +97,13 @@ function {$id}_remove_error(element) {
     }
 }
 function {$id}_message(message, type) {
-    var elem = $('{$id}_message');
-    var msg  = DIV({'id': '{$id}_message', 'class': type}, message);
+    var elem = $('{$id}_pieform_message');
+    var msg  = DIV({'id': '{$id}_pieform_message', 'class': type}, message);
     if (elem) {
         swapDOM(elem, msg);
     }
     else {
-        appendChildNodes($('{$submitid}_container').parentNode, msg);
+        insertSiblingNodesAfter($('{$id}_' + {$id}_btn + '_container'), msg);
     }
 }
 function {$id}_remove_message() {
