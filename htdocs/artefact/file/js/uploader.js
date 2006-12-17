@@ -47,6 +47,7 @@ function FileUploader(element, foldername, folderid, uploadcallback, fileexists)
             if ($('uploadformmessage')) {
                 $('uploadformmessage').innerHTML = '';
             }
+            self.form.notice.checked = '';
             self.form.userfile.value = '';
             self.form.title.value = '';
             self.form.description.value = '';
@@ -75,9 +76,9 @@ function FileUploader(element, foldername, folderid, uploadcallback, fileexists)
              TR(null,TD({'colspan':2, 'id':'uploadformmessage'})),
              TR(null,TD({'colspan':2},
               INPUT({'name':'upload','type':'button','value':get_string('upload'),
-                     'onclick':function () { self.sendform(false)}}),
+                     'onclick':function () { if (self.sendform(false)) { cancelform(); } }}),
               INPUT({'name':'replace','type':'button','value':get_string('overwrite'),
-                     'onclick':function () { self.sendform(true); }}),
+                     'onclick':function () { if (self.sendform(true)) { cancelform(); } }}),
               INPUT({'type':'button','value':get_string('cancel'),'onclick':cancelform}))))));
 
         hideElement(form.replace);
@@ -96,17 +97,17 @@ function FileUploader(element, foldername, folderid, uploadcallback, fileexists)
     this.sendform = function (replacefile) {
         if (!self.form.notice.checked) {
             $('uploadformmessage').innerHTML = get_string('youmustagreetothecopyrightnotice');
-            return;
+            return false;
         }
         var localname = self.form.userfile.value;
         if (isEmpty(localname)) {
             $('uploadformmessage').innerHTML = get_string('filenamefieldisrequired');
-            return;
+            return false;
         }
         var destname = self.form.title.value;
         if (isEmpty(destname)) {
             $('uploadformmessage').innerHTML = get_string('titlefieldisrequired');
-            return;
+            return false;
         }
         localname = self.filepart(localname);
         if (!replacefile && self.fileexists(destname)) {
@@ -114,7 +115,7 @@ function FileUploader(element, foldername, folderid, uploadcallback, fileexists)
             // Show replace button
             setDisplayForElement('inline', self.form.replace);
             self.form.title.focus();
-            return;
+            return false;
         }
         $('uploadformmessage').innerHTML = '';
         hideElement(self.form.replace);
@@ -140,21 +141,20 @@ function FileUploader(element, foldername, folderid, uploadcallback, fileexists)
         // Display upload status
         insertSiblingNodesBefore(self.form,
             DIV({'id':'uploadstatusline'+self.nextupload}, IMG({'src':config.themeurl+'loading.gif'}),
-                get_string('uploading',[localname,self.foldername,destname])));
+                get_string('uploadingfiletofolder',localname,self.foldername)));
         self.nextupload += 1;
+        return true;
     }
 
     this.getresult = function(data) {
         if (!data.error) {
             var image = 'success.gif';
-            var message = get_string('uploadcomplete');
         }
         else {
             var image = 'failure.gif';
-            var message = get_string('uploadfailed');
         }
         replaceChildNodes($('uploadstatusline'+data.uploadnumber), 
-                          IMG({'src':config.themeurl+image}), message);
+                          IMG({'src':config.themeurl+image}), data.message);
         this.uploadcallback();
     }
 
