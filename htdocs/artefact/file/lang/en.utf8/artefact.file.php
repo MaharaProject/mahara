@@ -26,6 +26,7 @@
 
 defined('INTERNAL') || die();
 
+$string['changessaved'] = 'Changes saved';
 $string['copyrightnotice'] = 'Copyright notice';
 $string['create'] = 'Create';
 $string['createfolder'] = 'Create folder';
@@ -36,10 +37,12 @@ $string['destination'] = 'Destination';
 $string['editfile'] = 'Edit file';
 $string['editfolder'] = 'Edit folder';
 $string['file'] = 'File';
+$string['fileexists'] = 'File exists';
 $string['filethingdeleted'] = '%s deleted';
 $string['fileexistsoverwritecancel'] =  'A file with that name already exists.  You can try a different name, or overwrite the existing file.';
 $string['filenamefieldisrequired'] = 'The file field is required';
 $string['folder'] = 'Folder';
+$string['foldercreated'] = 'Folder created';
 $string['home'] = 'Home';
 $string['image'] = 'Image';
 $string['myfiles'] = 'My Files';

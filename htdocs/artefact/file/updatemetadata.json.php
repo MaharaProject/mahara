@@ -30,8 +30,6 @@ safe_require('artefact', 'file');
 require_once('artefact.php');
 global $USER;
 
-log_debug('updatemetadata');
-
 $parentfolder = param_variable('parentfolder', null); // id of parent artefact
 $id = param_integer('id');
 $name = param_variable('name');
@@ -46,7 +44,7 @@ if ($existingid = ArtefactTypeFileBase::exists_in_db($name, $USER->get('id'), $p
         $copy->delete();
     }
     else {
-        json_reply('local', get_string('fileexists'));
+        json_reply('local', get_string('fileexists', 'artefact.file'));
     }
 }
 
@@ -55,6 +53,6 @@ $artefact->set('title',$name);
 $artefact->set('description',$description);
 $artefact->commit();
 
-json_reply(false, get_string('changessaved'));
+json_reply(false, get_string('changessaved', 'artefact.file'));
 
 ?>
