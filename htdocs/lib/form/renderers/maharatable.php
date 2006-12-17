@@ -113,9 +113,9 @@ function pieform_renderer_maharatable_footer() {
 
 // @todo table renderer - probably doesn't need the remove_error function for the same reason that
 // this one doesn't (all errors are removed on form submit). Also should set classes on elements.
-function pieform_renderer_maharatable_messages_js($id, $submitid) {
+function pieform_renderer_maharatable_messages_js($id) {
     $result = <<<EOF
-// Given a message and form element name, should set an error on the element
+
 function {$id}_set_error(message, element) {
     element = '{$id}_' + element + '_container';
     var container = getFirstElementByTagAndClassName('TD', null, $(element));
@@ -139,7 +139,7 @@ function {$id}_message(message, type) {
         swapDOM(elem, msg);
     }
     else {
-        insertSiblingNodesAfter($('{$id}_{$submitid}_container'), msg);
+        insertSiblingNodesAfter($('{$id}_' + {$id}_btn + '_container'), msg);
     }
 }
 function {$id}_remove_message() {
