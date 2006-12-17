@@ -713,7 +713,7 @@ class Plugin {
     
     /**
      * This function returns an array of crons it wants to have run
-     * Each item should be a StdtClass object containing - 
+     * Each item should be a StdClass object containing - 
      * - callfunction (static function on the Plugin Class)
      * - any or all of minute, hour, day, month, dayofweek 
      * (will default to * if not supplied)

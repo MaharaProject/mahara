@@ -71,6 +71,20 @@ class PluginArtefactInternal extends PluginArtefact {
         );
     }
 
+    public static function get_cron() {
+        return array(
+            (object)array(
+                'callfunction' => 'clean_email_validations',
+                'hour'         => '4',
+                'minute'       => '10',
+            ),
+        );
+    }
+
+    public static function clean_email_validations() {
+        delete_records_select('artefact_internal_profile_email', 'verified=0 AND expiry IS NOT NULL AND expiry < ?', array(db_format_timestamp(time())));
+    }
+
     public static function get_toplevel_artefact_types() {
         return array('profile');
     }
