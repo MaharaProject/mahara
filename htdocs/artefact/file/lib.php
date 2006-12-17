@@ -77,11 +77,9 @@ class PluginArtefactFile extends PluginArtefact {
                 'title' => 'artefact.file',
                 'titlefieldisrequired' => 'artefact.file',
                 'upload' => 'artefact.file',
-                'uploadcomplete' => 'artefact.file',
-                'uploadfailed' => 'artefact.file',
                 'uploadfile' => 'artefact.file',
                 'uploadfileexistsoverwritecancel' => 'artefact.file',
-                'uploading' => 'artefact.file',
+                'uploadingfiletofolder' => 'artefact.file',
                 'youmustagreetothecopyrightnotice' => 'artefact.file',
             ),
             'filebrowser' => array(

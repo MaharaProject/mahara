@@ -52,11 +52,11 @@ $string['size'] = 'Size';
 $string['title'] = 'Name';
 $string['titlefieldisrequired'] = 'The name field is required';
 $string['upload'] = 'Upload';
-$string['uploadcomplete'] = 'Upload complete';
-$string['uploadfailed'] =  'Upload failed';
+$string['uploadoffilecomplete'] = 'Upload of %s complete';
+$string['uploadoffilefailed'] =  'Upload of %s failed';
 $string['uploadfile'] =  'Upload file';
 $string['uploadfileexistsoverwritecancel'] =  'A file with that name already exists.  You can rename the file you are about to upload, or overwrite the existing file.';
-$string['uploading'] =  'Uploading';
+$string['uploadingfiletofolder'] =  'Uploading %s to %s';
 $string['youmustagreetothecopyrightnotice'] = 'You must agree to the copyright notice';
 
 ?>

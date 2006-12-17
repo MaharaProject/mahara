@@ -62,9 +62,13 @@ if (!isset($result->error)) {
     $f = new ArtefactTypeFile(0, $data);
     if ($f->save_uploaded_file('userfile')) {
         $result->error = false;
+        $result->message = get_string('uploadoffilecomplete', 'artefact.file', 
+                                      $f->get('title'));
     }
     else {
         $result->error = 'uploadfailed';
+        $result->message = get_string('uploadoffilefailed', 'artefact.file', 
+                                      $f->get('title'));
     }
 }
 
