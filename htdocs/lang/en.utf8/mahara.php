@@ -173,7 +173,7 @@ $string['forgotpassemailmessagehtml'] = '<p>Dear %s,</p>
 
 <p><a href="' . get_config('wwwroot') . 'forgotpass.php?key=%s">' . get_config('wwwroot') . 'forgotpass.php?key=%s</a></p>';
 $string['forgotpassemailsendunsuccessful'] = 'Sorry, it appears that the e-mail could not be sent successfully. This is our fault, please try again shortly';
-$string['forgotpassnosuchemailaddress'] = 'Invalid email address entered';
+$string['forgotpassnosuchemailaddress'] = 'The email address you entered doesn\'t any users for this site';
 $string['nosuchpasswordrequest'] = 'No such password request';
 $string['passwordchangedok'] = 'Your password was successfully changed';
 
