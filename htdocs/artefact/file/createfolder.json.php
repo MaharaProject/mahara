@@ -51,7 +51,7 @@ if ($oldid = ArtefactTypeFileBase::exists_in_db($data->title, $data->owner, $par
         $obj->delete();
     }
     else {
-        json_reply('local', get_string('fileexists'));
+        json_reply('local', get_string('fileexists', 'artefact.file'));
     }
 }
 
@@ -59,7 +59,7 @@ $f = new ArtefactTypeFolder(0, $data);
 $f->set('dirty', true);
 $f->commit();
 
-json_reply(false, get_string('foldercreated'));
+json_reply(false, get_string('foldercreated', 'artefact.file'));
 
 
 ?>

@@ -70,14 +70,14 @@ function FileBrowser(element, changedircallback) {
         var name = $(formid).name.value;
         if (isEmpty(name)) {
             $(formid + 'message').innerHTML = get_string('namefieldisrequired');
-            return;
+            return false;
         }
         if (!replacefile && self.fileexists(name) && name != originalname) {
             $(formid+'message').innerHTML = get_string('fileexistsoverwritecancel');
             setDisplayForElement('inline', $(formid).replace);
             //$(formid).name.value = newfilename(name, this.fileexists); // not a good idea yet.
             $(formid).name.focus();
-            return;
+            return false;
         }
         $(formid+'message').innerHTML = '';
         hideElement($(formid).replace);
@@ -96,6 +96,7 @@ function FileBrowser(element, changedircallback) {
             data['parentfolder'] = self.pathids[self.cwd];
         }
         sendjsonrequest(script, data, self.refresh);
+        return true;
     }
 
     this.openeditform = function(fileinfo) {
@@ -104,7 +105,7 @@ function FileBrowser(element, changedircallback) {
         var formid = editid + '_form';
         var rowid = 'row_' + fileinfo.id;
         var cancelform = function() {
-            setDisplayForElement(null, rowid);
+            setDisplayForElement('', rowid);
             removeElement(editid);
         };
         var savebutton = INPUT({'type':'button','value':get_string('savechanges')});
@@ -131,20 +132,25 @@ function FileBrowser(element, changedircallback) {
 
     this.initcreatefolderform = function () {
         var formid = 'createfolderform';
-        var cancelbutton = INPUT({'type':'button','value':get_string('cancel'), 'onclick':function () {
-            setDisplayForElement(null, self.createfolderbutton);
+        var cancelcreateform = function () {
+            setDisplayForElement('inline', self.createfolderbutton);
             hideElement($(formid).replace);
             $(formid).name.value = '';
             $(formid).description.value = '';
             $(formid+'message').innerHTML = '';
             hideElement(formid);
-        }});
+        };
+        var cancelbutton = INPUT({'type':'button','value':get_string('cancel'), 'onclick':cancelcreateform});
         var createbutton = INPUT({'type':'button','value':get_string('create'),'onclick':function () {
-            self.savemetadata(null, formid, false);
+            if (self.savemetadata(null, formid, false)) {
+                cancelcreateform();
+            }
         }});
         var replacebutton = INPUT({'type':'button', 'value':get_string('overwrite'),
                                    'name':'replace', 'style':'display: none;', 'onclick':function() {
-            self.savemetadata(null, formid, true);
+            if (self.savemetadata(null, formid, true)) {
+                cancelcreateform();
+            }
         }});
         return FORM({'method':'post', 'id':formid, 'style':'display: none;'},
                 TABLE(null,

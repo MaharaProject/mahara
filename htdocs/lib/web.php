@@ -117,9 +117,9 @@ EOF;
         if (strpos($jsfile, '/') === false) {
             $javascript_array[] = $jsroot . $jsfile . '.js';
             if (isset($jsstrings[$jsfile])) {
-                foreach ($jsstrings[$jsfile] as $string => $section) {
-                    if (!isset($strings[$string])) {
-                        $strings[$string] = get_raw_string($string, $section);
+                foreach ($jsstrings[$jsfile] as $section => $tags) {
+                    foreach ($tags as $tag) {
+                        $strings[$tag] = get_raw_string($tag, $section);
                     }
                 }
             }
@@ -136,9 +136,9 @@ EOF;
                 if (is_callable(array($pluginclass, 'jsstrings'))) {
                     $name = substr($bits[3], 0, strpos($bits[3], '.js'));
                     $tempstrings = call_static_method($pluginclass, 'jsstrings', $name);
-                    foreach ($tempstrings as $string => $section) {
-                        if (!isset($strings[$string])) {
-                            $strings[$string] = get_raw_string($string, $section);
+                    foreach ($tempstrings as $section => $tags) {
+                        foreach ($tags as $tag) {
+                            $strings[$tag] = get_raw_string($tag, $section);
                         }
                     }
                 }
@@ -149,9 +149,9 @@ EOF;
     $javascript_array[] = $jsroot . 'mahara.js';
     $javascript_array[] = $jsroot . 'debug.js';
 
-    foreach ($jsstrings['mahara'] as $string => $section) {
-        if (!isset($strings[$string])) {
-            $strings[$string] = get_raw_string($string, $section);
+    foreach ($jsstrings['mahara'] as $section => $tags) {
+        foreach ($tags as $tag) {
+            $strings[$tag] = get_raw_string($tag, $section);
         }
     }
 
@@ -198,23 +198,27 @@ EOF;
 
 /** 
  * Returns the lists of strings used in the .js files
- * @return array
+ * @return array                   
  */
 
 function jsstrings() {
     return array(
-        'mahara' => array(
-            'namedfieldempty' => 'mahara',
-            'processingform' => 'mahara',
-            'requiredfieldempty' => 'mahara',
-            'unknownerror' => 'mahara',
-            'loading' => 'mahara',
+       'mahara' => array(                        // js file
+            'mahara' => array(                   // section
+                'namedfieldempty',               // string name
+                'processingform',
+                'requiredfieldempty',
+                'unknownerror',
+                'loading',
+            ),
         ),
         'tablerenderer' => array(
-            'firstpage' => 'mahara',
-            'nextpage' => 'mahara',
-            'prevpage' => 'mahara',
-            'lastpage' => 'mahara',
+            'mahara' => array(
+                'firstpage',
+                'nextpage',
+                'prevpage',
+                'lastpage',
+            )
         )
     );
 }
