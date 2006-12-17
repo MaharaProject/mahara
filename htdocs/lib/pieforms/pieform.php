@@ -889,6 +889,20 @@ class Pieform {
         // @todo nigel should disable all buttons on this form while the submit is happening
         $result = <<<EOF
 
+var {$this->name}_btn = null;
+// For each submit button, add a waffer thin flag
+addLoadEvent(function () {
+
+EOF;
+        foreach ($this->get_elements() as $element) {
+            if (!empty($element['ajaxmessages'])) {
+                $result .= "    connect($('{$this->name}_{$element['name']}'), 'onclick', function () { {$this->name}_btn = '{$element['name']}'; });\n";
+            }
+        }
+        $result .= <<<EOF
+
+});
+
 connect($('{$this->name}'), 'onsubmit', function (e) {
     // eventually we should check input types for wysiwyg before doing this
     // Also should only save wysiwyg elements in the form, not all of them...
@@ -904,24 +918,23 @@ EOF;
 EOF;
         // Get values for each element from the form via the DOM
         foreach ($this->get_elements() as $element) {
-            if ($element['type'] != 'markup') {
-                $function = 'pieform_get_value_js_' . $element['type'];
-                if (function_exists($function)) {
-                    // @todo reverse parameter order for consistency, PieForm first
-                    $result .= $function($element, $this);
-                }
-                else {
-                    $result .= "    data['" . $element['name'] . "'] = document.forms['$this->name'].elements['{$element['name']}'].value;\n";
-                }
-                if (!empty($element['ajaxmessages'])) {
-                    $messageelement = $element['name'];
+            // Submit elements will be handled later, as there could be more than one
+            if (empty($element['ajaxmessages'])) {
+                if ($element['type'] != 'markup') {
+                    $function = 'pieform_get_value_js_' . $element['type'];
+                    if (function_exists($function)) {
+                        // @todo reverse parameter order for consistency, PieForm first
+                        $result .= $function($element, $this);
+                    }
+                    else {
+                        $result .= "    data['" . $element['name'] . "'] = document.forms['$this->name'].elements['{$element['name']}'].value;\n";
+                    }
                 }
             }
         }
 
-        if (!isset($messageelement)) {
-            throw new PieformException('At least one submit-type element is required for AJAX forms');
-        }
+        // Add only the submit button that was clicked
+        $result .= "    data['{$this->name}_' + {$this->name}_btn] = document.forms['$this->name'].elements['{$this->name}_' + {$this->name}_btn].value;\n";
 
         // Add the hidden element for detecting form submission
         $result .= "    data['pieform_{$this->name}'] = '';\n";
@@ -992,7 +1005,7 @@ EOF;
             }
         }
 
-        return $result . $js_messages_function($this->name, $messageelement);
+        return $result . $js_messages_function($this->name);
     }
 
     /**
