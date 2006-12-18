@@ -679,6 +679,24 @@ class Pieform {
     }
 
     /**
+     * Returns the HTML for the <form...> tag
+     *
+     * @return string
+     */
+    public function get_form_tag() {
+        $result = '<form';
+        foreach (array('name', 'method', 'action') as $attribute) {
+            $result .= ' ' . $attribute . '="' . $this->{$attribute} . '"';
+        }
+        $result .= ' id="' . $this->name . '"';
+        if ($this->fileupload) {
+            $result .= ' enctype="multipart/form-data"';
+        }
+        $result .= '>';
+        return $result;
+    }
+
+    /**
      * Returns whether the form has been submitted
      *
      * @return bool
@@ -695,20 +713,15 @@ class Pieform {
      * the other hand, this means you must be careful about escaping the URL,
      * especially if it has data from an external source in it.
      *
+     * @param boolean Whether to include the <form...></form> tags in the output
      * @return string The form as HTML
      */
-    public function build() {
-        $result = '<form';
-        foreach (array('name', 'method', 'action') as $attribute) {
-            $result .= ' ' . $attribute . '="' . $this->{$attribute} . '"';
+    public function build($outputformtags=true) {
+        $result = '';
+        if ($outputformtags) {
+            $result = $this->get_form_tag() . "\n";
         }
-        $result .= ' id="' . $this->name . '"';
-        if ($this->fileupload) {
-            $result .= ' enctype="multipart/form-data"';
-        }
-        $result .= ">\n";
 
-        // @todo masks attempts in pieform_render_element, including the error handling there
         $this->include_plugin('renderer',  $this->renderer);
         
         // Form header
@@ -743,7 +756,9 @@ class Pieform {
             'value' => ''
         );
         $result .= pieform_render_hidden($element, $this);
-        $result .= "</form>\n";
+        if ($outputformtags) {
+            $result .= "</form>\n";
+        }
 
         if ($this->ajaxpost) {
             $result .= '<script language="javascript" type="text/javascript">';
@@ -768,6 +783,9 @@ class Pieform {
             return $function($element, $this);
         }
         $global = ($this->method == 'get') ? $_GET : $_POST;
+        if (!empty($element['ajaxmessages']) && isset($global[$element['name']])) {
+            return $element['value'];
+        }
         if (isset($element['value'])) {
             return $element['value'];
         }
@@ -934,7 +952,7 @@ EOF;
         }
 
         // Add only the submit button that was clicked
-        $result .= "    data['{$this->name}_' + {$this->name}_btn] = document.forms['$this->name'].elements['{$this->name}_' + {$this->name}_btn].value;\n";
+        $result .= "    data[{$this->name}_btn] = document.forms['$this->name'].elements['{$this->name}_' + {$this->name}_btn].value;\n";
 
         // Add the hidden element for detecting form submission
         $result .= "    data['pieform_{$this->name}'] = '';\n";
