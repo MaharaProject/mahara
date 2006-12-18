@@ -934,7 +934,7 @@ EOF;
         }
 
         // Add only the submit button that was clicked
-        $result .= "    data['{$this->name}_' + {$this->name}_btn] = document.forms['$this->name'].elements['{$this->name}_' + {$this->name}_btn].value;\n";
+        $result .= "    data[{$this->name}_btn] = document.forms['$this->name'].elements['{$this->name}_' + {$this->name}_btn].value;\n";
 
         // Add the hidden element for detecting form submission
         $result .= "    data['pieform_{$this->name}'] = '';\n";
