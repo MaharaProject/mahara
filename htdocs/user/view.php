@@ -27,7 +27,6 @@ define('INTERNAL', 1);
 require(dirname(dirname(__FILE__)).'/init.php');
 require_once('community.php');
 require_once('pieforms/pieform.php');
-log_debug($_POST);
 
 $userid = param_integer('id','');
 $loggedinid = $USER->get('id');
@@ -35,8 +34,16 @@ $prefix = get_config('dbprefix');
 $inlinejs = <<<EOF
     function usercontrol_success(formname) {
         
+        if (formname != 'friend') {
+            var dd = $(formname).elements['community'];
+            removeElement(dd.options[dd.selectedIndex]);
+            if (dd.length > 0) {
+                return true;
+            }
+        }
+        
         var message = $(formname + '_pieform_message').firstChild.innerHTML;
-        swapDOM(formname, SPAN(null, message));
+        swapDOM(formname, P(null, message));
         return true;
     }
 EOF;
@@ -173,7 +180,7 @@ if ($communities = get_tutor_communities($loggedinid, 'controlled')) {
     $inlinejs .= <<<EOF
     
     function add_success(data) {
-        usercontrol_success('add');
+        usercontrol_success('addmember');
     }
 EOF;
     $smarty->assign('ADDFORM',$addform);
@@ -341,8 +348,6 @@ function friend_submit($values) {
 
     $loggedinid = $USER->get('id');
     $userid = $user->id;
-
-    log_debug($values);
 
     // friend db record
     $f = new StdClass;
