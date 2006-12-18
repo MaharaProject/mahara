@@ -48,8 +48,8 @@ function pieform_renderer_multicolumntable(Pieform $form, $builtelement, $rawele
     $formrenderermct->set_form($form);
 }
 
-function pieform_renderer_multicolumntable_messages_js($id, $submitid) {
-    return pieform_renderer_table_messages_js($id, $submitid);
+function pieform_renderer_multicolumntable_messages_js($id) {
+    return pieform_renderer_table_messages_js($id);
 }
 
 function pieform_renderer_multicolumntable_header() {

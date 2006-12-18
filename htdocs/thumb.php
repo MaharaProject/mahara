@@ -32,17 +32,29 @@ require('init.php');
 $type = param_alpha('type');
 
 switch ($type) {
-     case 'template':
-         require_once('template.php');
-         $name = param_alpha('name');
-         $template = template_locate($name);
-         if (isset($template['thumbnail'])) {
-             header("Content-type: " . $template['thumbnailcontenttype']);
-             readfile($template['thumbnail']);
-             exit;
-         }
-         throw new InvalidArgumentException("Couldn't find a template thumbnail for $name");
-     break;
+    case 'template':
+        require_once('template.php');
+        $name = param_alpha('name');
+        $template = template_locate($name);
+        if (isset($template['thumbnail'])) {
+            header("Content-type: " . $template['thumbnailcontenttype']);
+            readfile($template['thumbnail']);
+            exit;
+        }
+
+        header('Content-type: ' . 'image/gif');
+        readfile(theme_get_image_path('images/no_thumbnail.gif'));
+        exit;
+        break;
+
+    case 'user':
+            if (false) { // @todo find their real profile image
+            }
+            else {
+                header('Content-type: ' . 'image/gif');
+                readfile(theme_get_image_path('images/no_userphoto40x40.gif'));
+            }
+        break;
 }
 
 ?>

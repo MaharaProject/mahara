@@ -134,8 +134,8 @@ $smarty = smarty(
     )
 );
 $smarty->assign('rootinfo', $rootinfo);
-$smarty->assign('plusicon', theme_get_image_path('plus.png'));
-$smarty->assign('minusicon', theme_get_image_path('minus.png'));
+$smarty->assign('plusicon', theme_get_image_url('plus.png'));
+$smarty->assign('minusicon', theme_get_image_url('minus.png'));
 
 $smarty->assign('template', $template);
 

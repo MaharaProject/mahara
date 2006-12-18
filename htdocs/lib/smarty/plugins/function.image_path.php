@@ -25,7 +25,7 @@ function smarty_function_image_path($params, &$smarty) {
         $params['pluginlocation'] = '';
     }
 
-    return theme_get_image_path($params['imagelocation'], $params['pluginlocation']);
+    return theme_get_image_url($params['imagelocation'], $params['pluginlocation']);
 }
 
 ?>

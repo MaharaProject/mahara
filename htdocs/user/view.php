@@ -23,7 +23,6 @@
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
-
 define('INTERNAL', 1);
 require(dirname(dirname(__FILE__)).'/init.php');
 require_once('community.php');
@@ -32,6 +31,23 @@ require_once('pieforms/pieform.php');
 $userid = param_integer('id','');
 $loggedinid = $USER->get('id');
 $prefix = get_config('dbprefix');
+$inlinejs = <<<EOF
+    function usercontrol_success(formname) {
+        
+        if (formname != 'friend') {
+            var dd = $(formname).elements['community'];
+            removeElement(dd.options[dd.selectedIndex]);
+            if (dd.length > 0) {
+                return true;
+            }
+        }
+        
+        var message = $(formname + '_pieform_message').firstChild.innerHTML;
+        swapDOM(formname, P(null, message));
+        return true;
+    }
+EOF;
+
 $smarty = smarty();
 
 // Get the user's details
@@ -101,6 +117,7 @@ if ($communities = get_owned_communities($loggedinid, 'invite')) {
         $inviteform = pieform(array(
         'name'                => 'invite',
         'ajaxpost'            => true,
+        'ajaxsuccessfunction' => 'invite_success',
         'elements'            => array(
             'community' => array(
                 'type'    => 'select',
@@ -118,6 +135,13 @@ if ($communities = get_owned_communities($loggedinid, 'invite')) {
             ),
         ),
     ));
+    $inlinejs .= <<<EOF
+    
+    function invite_success(data) {
+        usercontrol_success('invite');
+    }
+EOF;
+
     $smarty->assign('INVITEFORM',$inviteform);
     }
 }
@@ -135,6 +159,7 @@ if ($communities = get_tutor_communities($loggedinid, 'controlled')) {
         $addform = pieform(array(
         'name'                => 'addmember',
         'ajaxpost'            => true,
+        'ajaxsuccessfunction' => 'add_success',
         'elements'            => array(
             'community' => array(
                 'type'    => 'select',
@@ -152,6 +177,12 @@ if ($communities = get_tutor_communities($loggedinid, 'controlled')) {
             ),
         ),
     ));
+    $inlinejs .= <<<EOF
+    
+    function add_success(data) {
+        usercontrol_success('addmember');
+    }
+EOF;
     $smarty->assign('ADDFORM',$addform);
     }
 }
@@ -161,11 +192,12 @@ if ($communities = get_tutor_communities($loggedinid, 'controlled')) {
 $friendform = array(
     'name'     => 'friend',
     'ajaxpost' => true,
-    'elements' => array()
+    'elements' => array(),
+    'ajaxsuccessfunction' => 'friend_success',
 );
 $friendsubmit = '';
 $friendtype = '';
-
+$friendformmessage = '';
 // already a friend ... we can remove.
 if (is_friend($userid, $loggedinid)) {
     $friendtype = 'remove';
@@ -174,10 +206,25 @@ if (is_friend($userid, $loggedinid)) {
 // if there's a friends request already
 else if ($request = get_friend_request($userid, $loggedinid)) {
     if ($request->owner == $userid) {
-        // @todo
+        $friendformmessage = get_string('friendshipalreadyrequested', 'mahara', $name);
     }
     else {
-        // @todo approve or reject
+        $friendform['elements']['requested'] = array(
+            'type' => 'html', 
+            'value' => get_string('friendshipalreadyrequestedowner', 'mahara', $name)
+        );
+        $friendform['elements']['rejectreason'] = array(
+            'type'  => 'textarea',
+            'title' => get_string('rejectfriendshipreason'),
+            'cols'  => 10,
+            'rows'  => 4,                                
+        );    
+        $friendsubmit = get_string('accept');
+        $friendform['elements']['rejectsubmit'] = array(
+            'type'  => 'submit',
+            'value' => get_string('reject'),
+        );
+        $friendtype = 'accept';
     }
 }
 // check the preference
@@ -217,12 +264,22 @@ if (!empty($friendtype)) {
         'value' => $friendsubmit,
     );
     $friendform = pieform($friendform);
+    $inlinejs .= <<<EOF
+    
+    function friend_success(data) {
+        usercontrol_success('friend');
+    }
+EOF;
 } 
 else {
     $friendform = '';
+    if (!empty($friendformmessage)) {
+        $friendform = $friendformmessage;
+    }
 }
 
 $smarty->assign('FRIENDFORM', $friendform);
+$smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 $smarty->assign('NAME',$name);
 $smarty->assign('USERFIELDS',$userfields);
 $smarty->assign('PROFILE',$profile);
@@ -333,11 +390,30 @@ function friend_submit($values) {
             $n->message = get_string('removedfromfriendslistmessage', 'mahara', $displayname);
         }
         break;
-    case 'approve':
-     
-        break;
-    case 'reject':
-
+    case 'accept':
+        if (isset($values['rejectsubmit']) && !empty($values['rejectsubmit'])) {
+            log_debug('reject');
+            delete_records('usr_friend_request', 'owner', $loggedinid, 'requester', $userid);
+            $n->subject = get_string('friendrequestrejectedsubject');
+            if (isset($values['rejectreason']) && !empty($values['rejectreason'])) {
+                $n->message = get_string('friendrequestrejectedmessagereason', 'mahara', $displayname) . $values['rejectreason'];
+            }
+            else {
+                $n->message = get_string('friendrequestrejectedmessage', 'mahara', $displayname);
+            }
+            $values['type'] = 'reject'; // for json reply message
+        } 
+        else {
+            log_debug('accept');
+            db_begin();
+            delete_records('usr_friend_request', 'owner', $loggedinid, 'requester', $userid);
+            $f->usr1 = $userid;
+            $f->usr2 = $loggedinid;
+            insert_record('usr_friend', $f);
+            $n->subject = get_string('friendrequestacceptedsubject');
+            $n->message = get_string('friendrequestacceptedmessage', 'mahara', $displayname, $displayname);
+            db_commit();
+        }
         break;
     }
     activity_occurred('maharamessage', $n);

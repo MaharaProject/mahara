@@ -58,9 +58,9 @@ foreach (array_keys($alltemplates) as $t) {
         $alltemplates[$t]['installed'] = true;
     }
 }
-$loadingicon = theme_get_image_path('loading.gif');
-$successicon = theme_get_image_path('success.gif');
-$failureicon = theme_get_image_path('failure.gif');
+$loadingicon = theme_get_image_url('loading.gif');
+$successicon = theme_get_image_url('success.gif');
+$failureicon = theme_get_image_url('failure.gif');
 
 $loadingstring = get_string('upgradeloading', 'admin');
 $successstring = get_string('upgradesuccess', 'admin');
