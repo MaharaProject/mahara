@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage core
- * @author     Martyn Smith <martyn@catalyst.net.nz>
+ * @subpackage artefact-blog
+ * @author     Richard Mansfield <richard.mansfield@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
@@ -26,42 +26,37 @@
 
 define('INTERNAL', 1);
 
-require(dirname(dirname(__FILE__)) . '/init.php');
-require('searchlib.php');
+require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
-safe_require('search', 'internal');
+safe_require('artefact', 'blog');
 
-try {
-    $query = param_variable('query');
-}
-catch (ParameterException $e) {
-    json_reply('missingparameter','Missing parameter \'query\'');
-}
-
-$limit = param_integer('limit', 20);
+$limit = param_integer('limit', null);
 $offset = param_integer('offset', 0);
-$allfields = param_boolean('allfields');
+$id = param_integer('blogpost', 0);
 
-$data = search_user($query, $limit, $offset);
-
-if ($data['data']) {
-    foreach ($data['data'] as &$result) {
-        $result->name = display_name($result);
-
-        if (!$allfields || !$USER->get('admin')) {
-            unset($result->firstname);
-            unset($result->lastname);
-            unset($result->preferredname);
-            unset($result->email);
-            unset($result->institution);
-            unset($result->username);
-        }
+if ($id) {
+    $blogpost = new ArtefactTypeBlogPost($id);
+    if (!$filelist = $blogpost->get_attached_files()) {
+        $filelist = array();
     }
 }
+else {
+    $filelist = array();
+}
+
+$result = array(
+    'count'       => count($filelist),
+    'limit'       => $limit,
+    'offset'      => $offset,
+    'data'        => $filelist,
+    'error'       => false,
+    'message'     => get_string('attachedfilelistloaded'),
+);
 
 json_headers();
-$data['error'] = false;
-$data['message'] = '';
-echo json_encode($data);
+print json_encode($result);
 
-?>
+
+
+
+

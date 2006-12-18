@@ -974,13 +974,16 @@ function insert_record($table, $dataobject, $primarykey=false, $returnpk=false) 
  * @return bool
  * @throws SQLException
  */
-function update_record($table, $dataobject, $where) {
+function update_record($table, $dataobject, $where=null) {
 
     global $db;
 
-    if (empty($where) && !isset($dataobject->id) ) { 
-        // nothing to put in the where clause and we don't want to update everything
-        throw new SQLException('update_record called with no where clause');
+    if (empty($where)) {
+        $where = 'id';
+        if (!isset($dataobject->id) ) { 
+            // nothing to put in the where clause and we don't want to update everything
+            throw new SQLException('update_record called with no where clause and no ID');
+        }
     }
 
     $wherefields = array();
@@ -1002,7 +1005,6 @@ function update_record($table, $dataobject, $where) {
     }
     else if (is_array($where)) {
         // look for the values in $dataobject and complain bitterly if they're not there
-        // @todo throw hissy fit
         foreach ($where as $field) {
             if (!isset($dataobject->{$field})) {
                 throw new SQLException('Field in where clause not in the update object');
@@ -1030,8 +1032,9 @@ function update_record($table, $dataobject, $where) {
     $data = (array)$dataobject;
 
     // Pull out data matching these fields
+    $ddd = array();
     foreach ($columns as $column) {
-        if (!in_array($column->name,$wherefields) && array_key_exists($column->name, $data) ) {
+        if (!in_array($column->name, $wherefields) && array_key_exists($column->name, $data) ) {
             $ddd[$column->name] = $data[$column->name];
             // PostgreSQL bytea support
             if (is_postgres() && $column->type == 'bytea') {

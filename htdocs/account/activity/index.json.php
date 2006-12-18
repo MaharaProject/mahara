@@ -88,7 +88,7 @@ if (empty($records)) {
     $records = array();
 }
 $data = array();
-$star = theme_get_image_path('star.png');
+$star = theme_get_image_url('star.png');
 $unread = get_string('unread', 'activity');
 
 foreach ($records as &$r) {

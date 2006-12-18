@@ -409,7 +409,7 @@ function template_render($template, $mode, $data=array()) {
     $javascript = '';
     if ($mode == TEMPLATE_RENDER_EDITMODE) {
         $droplist = json_encode($droplist);
-        $spinner_url = json_encode(theme_get_image_path('loading.gif'));
+        $spinner_url = json_encode(theme_get_image_url('loading.gif'));
         $wwwroot = get_config('wwwroot');
         
         $json_emptylabel = json_encode(get_string('emptylabel', 'view'));
