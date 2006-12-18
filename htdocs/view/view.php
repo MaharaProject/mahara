@@ -71,10 +71,10 @@ else {
     $content = $view->render();
 }
 
-$getstring = quotestrings(array('message', 'makepublic', 'placefeedback',
-                                'cancel', 'complaint', 'notifysiteadministrator',
-                                'nopublicfeedback',
-                                'reportobjectionablematerial', 'print'));
+$getstring = quotestrings(array('mahara' => array(
+        'message', 'makepublic', 'placefeedback', 'cancel', 'complaint', 'notifysiteadministrator',
+        'nopublicfeedback', 'reportobjectionablematerial', 'print',
+)));
 
 $thing = $artefactid ? 'artefact' : 'view';
 $getstring['addtowatchlist'] = "'" . get_string('addtowatchlist', 'mahara', get_string($thing)) . "'";

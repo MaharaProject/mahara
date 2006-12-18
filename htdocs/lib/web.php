@@ -229,12 +229,14 @@ function jsstrings() {
  * docs.
  */
 
-function quotestrings($stringids, $section = 'mahara') {
-    $getstring = array();
-    foreach ($stringids as $string) {
-        $getstring[$string] = "'" . get_string($string, $section) . "'";
+function quotestrings($strings) {
+    $qstrings = array();
+    foreach ($strings as $section => $tags) {
+        foreach ($tags as $tag) {
+            $qstrings[$tag] = "'" . get_string($tag, $section) . "'";
+        }
     }
-    return $getstring;
+    return $qstrings;
 }
 
 /** 
