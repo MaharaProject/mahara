@@ -301,6 +301,7 @@ $string['expand'] = 'Expand';
 $string['collapse'] = 'Collapse';
 $string['more...'] = 'More ...';
 $string['nohelpfound'] = 'There was no help found for this item';
+$string['profileimage'] = 'Profile image';
 
 // Search
 $string['search'] = 'Search';
