@@ -75,10 +75,10 @@ class PluginArtefactBlog extends PluginArtefact {
      */
     public static function clean_post_files() {
         safe_require('artefact', 'file');
-      
+
         ($files = get_records_sql_array("
          SELECT file
-         FROM artefact_blog_blogpost_file_pending
+         FROM " . get_config('dbprefix') . "artefact_blog_blogpost_file_pending
          WHERE when + ?::INTERVAL < CURRENT_TIMESTAMP", array(self::maxpending)))
             || ($files = array());
 
@@ -572,6 +572,21 @@ class ArtefactTypeBlogPost extends ArtefactType {
         }
         return true;
     }
+
+    /**
+     * This function returns a list of files attached to a post to use
+     * when displaying or editing a blog post
+     *
+     * @return array
+     */
+    public function get_attached_files() {
+        $prefix = get_config('dbprefix');
+        return get_records_sql_array('SELECT a.id, a.artefacttype, a.title, a.description 
+            FROM ' . $prefix . 'artefact_blog_blogpost_file f
+            INNER JOIN ' . $prefix . 'artefact a ON a.id = f.file
+            WHERE f.blogpost = ' . $this->id, '');
+    }
+    
 }
 
 ?>

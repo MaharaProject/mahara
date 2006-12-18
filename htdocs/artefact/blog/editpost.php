@@ -34,8 +34,8 @@ safe_require('artefact', 'blog');
 // For a new post, the 'blog' parameter will be set to the blog's artefact id.
 // For an existing post, the 'post' parameter will be set to the blogpost's artefact id.
 
-$post = param_integer('post', 0);
-if (!$post) {
+$blogpost = param_integer('blogpost', 0);
+if (!$blogpost) {
     // This is a new post; get a create id so we can attach files to it.
     $createid = $SESSION->get('createid');
     if (empty($createid)) {
@@ -43,23 +43,56 @@ if (!$post) {
     }
     $SESSION->set('createid', $createid + 1);
     $blog = param_integer('blog');
-    $post = '';
+    $blogpost = 0;
     $title = '';
     $description = '';
     $checked = '';
     $pagetitle = 'newblogpost';
 }
 else {
-    $blogpost = new ArtefactTypeBlogPost($post);
-    if ($blogpost->get('owner') != $USER->get('id')) {
+    $blogpostobj = new ArtefactTypeBlogPost($blogpost);
+    if ($blogpostobj->get('owner') != $USER->get('id')) {
         return;
     }
-    $blog = $blogpost->get('parent');
-    $title = $blogpost->get('title');
-    $description = $blogpost->get('description');
-    $checked = !$blogpost->get('published');
+    $blog = $blogpostobj->get('parent');
+    $title = $blogpostobj->get('title');
+    $description = $blogpostobj->get('description');
+    $checked = !$blogpostobj->get('published');
     $pagetitle = 'editblogpost';
 }
+
+$getstring = quotestrings(array(
+    'mahara' => array(
+    ),
+    'artefact.blog' => array(
+        'nofilesattachedtothispost',
+    )));
+
+
+$attachedhtml = '<h3>' . get_string('attachedfiles', 'artefact.blog') . "</h3>\n";
+$attachedhtml .= "<table id='attachedfiles'><tbody><tr><td></td></tr></tbody></table>\n";
+
+//$blogpostjs = $blogpost ? $blogpost : 'null';
+
+$javascript = <<< EOF
+
+var attached = new TableRenderer(
+    'attachedfiles',
+    'attachedfiles.json.php',
+    [
+     'title',
+     'description',
+     function () { return TD(null); }
+    ]
+);
+attached.emptycontent = {$getstring['nofilesattachedtothispost']};
+attached.paginate = false;
+attached.blogpost = {$blogpost};
+attached.statevars.push('blogpost');
+attached.rowfunction = function (r) { return TR({'id':'attached_old_' + r.id}); };
+attached.updateOnLoad();
+
+EOF;
 
 $form = pieform(array(
     'name' => 'editpost',
@@ -72,7 +105,7 @@ $form = pieform(array(
         ),
         'id' => array(
             'type' => 'hidden',
-            'value' => $post,
+            'value' => $blogpost,
         ),
         'title' => array(
             'type' => 'text',
@@ -100,6 +133,10 @@ $form = pieform(array(
             'description' => get_string('thisisdraftdesc', 'artefact.blog'),
             'checked' => $checked
         ),
+        'attachedfiles' => array(
+            'type' => 'html',
+            'value' => $attachedhtml,
+        ),
         'submit' => array(
             'type' => 'submitcancel',
             'value' => array(
@@ -110,15 +147,11 @@ $form = pieform(array(
     )
 ));
 
-$javascript = <<< EOF
-
-EOF;
-
-$smarty = smarty();
+$smarty = smarty(array('tablerenderer'));
+$smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('pagetitle', $pagetitle);
 $smarty->assign_by_ref('editpostform', $form);
 $smarty->display('artefact:blog:editpost.tpl');
-exit;
 
 /**
  * This function gets called to create a new blog post, and publish it

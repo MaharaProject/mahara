@@ -84,7 +84,7 @@ postlist.rowfunction = function(d, n, gd) {
         INPUT(
             {
                 'type'  : 'hidden',
-                'name'  : 'post',
+                'name'  : 'blogpost',
                 'value' : d.id
             }
         ),
