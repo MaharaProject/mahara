@@ -40,6 +40,7 @@ catch (ParameterException $e) {
 
 $limit = param_integer('limit', 20);
 $offset = param_integer('offset', 0);
+$allfields = param_boolean('allfields');
 
 $data = search_user($query, $limit, $offset);
 
@@ -47,12 +48,14 @@ if ($data['data']) {
     foreach ($data['data'] as &$result) {
         $result->name = display_name($result);
 
-        unset($result->email);
-        unset($result->institution);
-        unset($result->username);
-        unset($result->firstname);
-        unset($result->lastname);
-        unset($result->preferredname);
+        if (!$allfields || !$USER->get('admin')) {
+            unset($result->firstname);
+            unset($result->lastname);
+            unset($result->preferredname);
+            unset($result->email);
+            unset($result->institution);
+            unset($result->username);
+        }
     }
 }
 

@@ -16,7 +16,7 @@ function TableRenderer(target, source, columns, options) {
     this.rowfunction = function(rowdata, rownumber, data) { return TR(); }
 
     this.init = function() {
-        self.table = target;
+        self.table = getElement(target);
 
         self.tbody = getFirstElementByTagAndClassName('tbody', null, self.table);
         self.thead = getFirstElementByTagAndClassName('thead', null, self.table);
@@ -24,7 +24,7 @@ function TableRenderer(target, source, columns, options) {
 
         if (!self.thead) {
             self.thead = THEAD();
-            appendChildNodes(self.table, self.thead);
+            insertSiblingNodesBefore(self.table.firstChild || null, self.thead);
         }
         if (!self.tbody) {
             self.tbody = TBODY();
@@ -179,7 +179,7 @@ function TableRenderer(target, source, columns, options) {
                 var data = evalJSONRequest(result);
                 processingStop();
                 if ( data.error ) {
-                    displayMessage(data.error);
+                    displayMessage(data.message || data.error);
                     return;
                 }
 
@@ -193,12 +193,12 @@ function TableRenderer(target, source, columns, options) {
 
                 if (self.emptycontent) {
                     if (self.count > 0) {
-                        hideElement($(self.table).previousSibling);
+                        hideElement(self.table.previousSibling);
                         showElement(self.table);
                     }
                     else {
                         hideElement(self.table);
-                        showElement($(self.table).previousSibling);
+                        showElement(self.table.previousSibling);
                     }
                 }
                 self.renderdata(data);

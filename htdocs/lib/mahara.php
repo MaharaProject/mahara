@@ -645,17 +645,20 @@ function generate_artefact_class_name($type) {
     return 'ArtefactType' . ucfirst($type);
 }
 
-function handle_event($event) {
-    if (!$e = get_record('event_type','name',$event)) {
+/**
+ * Fires an event which can be handled by different parts of the system
+ */
+function handle_event($event, $data) {
+    if (!$e = get_record('event_type', 'name', $event)) {
         throw new Exception("Invalid event");
     }
     $plugintypes = plugin_types();
     foreach ($plugintypes as $name) {
-        if ($subs = get_records_array('event_subscription_' . $name, 'event', $event)) {
+        if ($subs = get_records_array($name . '_event_subscription', 'event', $event)) {
             foreach ($subs as $sub) {
                 $classname = 'Plugin' . ucfirst($name) . ucfirst($sub->plugin);
                 try {
-                    call_static_method($classname, $sub->callfunction);
+                    call_static_method($classname, $sub->callfunction, $event, $data);
                 }
                 catch (Exception $e) {
                     log_warn("Event $event caused an exception from plugin $classname "
