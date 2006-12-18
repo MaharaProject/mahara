@@ -179,7 +179,7 @@ function TableRenderer(target, source, columns, options) {
                 var data = evalJSONRequest(result);
                 processingStop();
                 if ( data.error ) {
-                    displayMessage(data.error);
+                    displayMessage(data.message || data.error);
                     return;
                 }
 

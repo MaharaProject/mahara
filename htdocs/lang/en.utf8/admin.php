@@ -67,8 +67,6 @@ $string['sitemenudescription'] = 'Manage the links and file that appear in the m
 $string['adminfiles']          = 'Admin Files';
 $string['adminfilesdescription'] = 'Upload and administer files that can be put in the menus (note: not implemented yet)';
 
-$string['suspendedusers'] = 'Suspended Users';
-$string['suspendedusersdescription'] = 'Suspend or unsuspend users from logging in to the site (note: not implemented yet)';
 $string['staffusers'] = 'Staff Users';
 $string['staffusersdescription'] = 'Choose which users can have staff permissions';
 $string['adminusers'] = 'Admin Users';
@@ -162,6 +160,7 @@ $string['uploadcsvusersaddedsuccessfully'] = 'The users in the file have been ad
 // Admin Users
 $string['adminuserspagedescription'] = '<p>Here you can choose which users are administrators for the site. The current administrators are on the right, and potential administrators are on the left.</p><p>The system must have at least one administrator, and may have more.</p>';
 $string['adminusersupdated'] = 'Admin users updated';
+$string['usersearch'] = 'User Search';
 
 // Staff Users
 $string['staffuserspagedescription'] = 'Here you can choose which users are staff for the site. The current staff are on the right, and potential staff are on the left.';
@@ -171,6 +170,9 @@ $string['staffusersupdated'] = 'Staff users updated';
 // Admin Notifications
 
 // Suspended Users
+$string['suspenduser'] = 'Suspend User';
+$string['suspendedusers'] = 'Suspended Users';
+$string['suspendedusersdescription'] = 'Suspend or unsuspend users from logging in to the site (note: not implemented yet)';
 
 // Institutions
 $string['addinstitution'] = 'Add Institution';
