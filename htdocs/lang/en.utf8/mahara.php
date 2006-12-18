@@ -47,6 +47,9 @@ $string['prevpage']  = 'Previous page';
 $string['firstpage'] = 'First page';
 $string['lastpage']  = 'Last page';
 
+$string['accept'] = 'Accept';
+$string['reject'] = 'Reject';
+
 $string['mainmenu'] = 'Main menu';
 
 // auth
@@ -354,8 +357,9 @@ $string['request'] = 'Request';
 
 $string['friendformaddsuccess'] = 'Added %s to your friends list';
 $string['friendformremovesuccess'] = 'Removed %s from your friends list';
-$string['friendformrequestsuccess'] = 'Send a friendship request to %s';
-
+$string['friendformrequestsuccess'] = 'Sent a friendship request to %s';
+$string['friendformacceptsuccess'] = 'Accepted friend request';
+$string['friendformrejectsuccess'] = 'Rejected friend request';
 
 $string['addtofriendslist'] = 'Add to friends';
 $string['requestfriendship'] = 'Request friendship';
@@ -372,9 +376,19 @@ $string['requestedfriendslistsubjectreason'] = '%s has requested that you add th
     .' You can either do this from the link below, or from your friends list page'
     . 'Their reason was: ';
 
+$string['removefromfriendslist'] = 'Remove from friends';
 $string['removedfromfriendslistsubject'] = 'Removed from friends list';
 $string['removedfromfriendslistmessage'] = '%s has removed you from their friends list.';
 $string['removedfromfriendslistmessagereason'] = '%s has removed you from their friends list.  Their reason was: ';
 
+$string['friendshipalreadyrequested'] = 'You have requested to be added to %s\'s friends list';
+$string['friendshipalreadyrequestedowner'] = '%s has requested to be added to your friends list';
+$string['rejectfriendshipreason'] = 'Reason for rejecting request';
+
+$string['friendrequestacceptedsubject'] = 'Friend request accepted';
+$string['friendrequestacceptedmessage'] = '%s has accepted your friend request and they have been added to your friends list'; 
+$string['friendrequestrejectedsubject'] = 'Friend request rejected';
+$string['friendrequestrejectedmessage'] = '%s has rejected your friend request.';
+$string['friendrequestrejectedmessagereason'] = '%s has rejected your friend request.  Their reason was: ';
 
 ?>
