@@ -301,12 +301,28 @@ function theme_get_parent($currtheme) {
  * @param $imagelocation path to image relative to theme/$theme/static/
  * @param $pluginlocation path to plugin relative to docroot
  */
-function theme_get_image_path($imagelocation, $pluginlocation='') {
+function theme_get_image_url($imagelocation, $pluginlocation='') {
     $theme = theme_setup();
 
     foreach ($theme->inheritance as $themedir) {
         if (is_readable(get_config('docroot') . $pluginlocation . 'theme/' . $themedir . '/static/' . $imagelocation)) {
             return get_config('wwwroot') . $pluginlocation . 'theme/' . $themedir . '/static/' . $imagelocation;
+        }
+    }
+}
+
+/** 
+ * This function returns the full path to an image
+ * Always use it to get image paths
+ * @param $imagelocation path to image relative to theme/$theme/static/
+ * @param $pluginlocation path to plugin relative to docroot
+ */
+function theme_get_image_path($imagelocation, $pluginlocation='') {
+    $theme = theme_setup();
+
+    foreach ($theme->inheritance as $themedir) {
+        if (is_readable(get_config('docroot') . $pluginlocation . 'theme/' . $themedir . '/static/' . $imagelocation)) {
+            return get_config('docroot') . $pluginlocation . 'theme/' . $themedir . '/static/' . $imagelocation;
         }
     }
 }
@@ -854,7 +870,12 @@ function admin_nav() {
                     'name'    => 'uploadcsv',
                     'section' => 'admin',
                     'link'    => $wwwroot . 'admin/users/uploadcsv.php'
-                )
+                ),
+                array(
+                    'name'    => 'usersearch',
+                    'section' => 'admin',
+                    'link'    => $wwwroot . 'admin/users/search.php'
+                ),
             )
         ),
         array(
@@ -1086,7 +1107,7 @@ function searchform() {
             ),
             'submit' => array(
                 'type' => 'image',
-                'src'  => theme_get_image_path('images/btn_search_off.gif')
+                'src'  => theme_get_image_url('images/btn_search_off.gif')
             )
         )
     ));
