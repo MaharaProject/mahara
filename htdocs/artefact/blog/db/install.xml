@@ -57,7 +57,11 @@
 
     This table only keeps track of files that are specifically uploaded for a
     blog post, not ones that have been uploaded already some other way, that
-    the user wants to associate with a blog post. -->
+    the user wants to associate with a blog post. 
+
+    Hopefully this table is unnecessary; we just store all temporary
+    stuff in the javascript.
+    
     <TABLE NAME="artefact_blog_blogpost_file_pending">
         <FIELDS>
             <FIELD NAME="file" TYPE="int" LENGTH="10" NOTNULL="true" />
@@ -69,5 +73,6 @@
             <KEY NAME="filefk" TYPE="foreign" FIELDS="file" REFTABLE="artefact" REFFIELDS="id" />
         </KEYS>
     </TABLE>
+    -->
 </TABLES>
 </XMLDB>
