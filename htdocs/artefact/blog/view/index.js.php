@@ -79,12 +79,12 @@ postlist.rowfunction = function(d, n, gd) {
     var edit = FORM(
         {
             'method' : 'get',
-            'action' : {$enc_wwwroot} + 'artefact/blog/editpost/'
+            'action' : {$enc_wwwroot} + 'artefact/blog/editpost.php'
         },
         INPUT(
             {
                 'type'  : 'hidden',
-                'name'  : 'id',
+                'name'  : 'post',
                 'value' : d.id
             }
         ),

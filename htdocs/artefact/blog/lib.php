@@ -525,8 +525,9 @@ class ArtefactTypeBlogPost extends ArtefactType {
         $artefact->set('description', $values['description']);
         $artefact->set('published', $values['published']);
         $artefact->set('owner', $user->get('id'));
-        $artefact->set('parent', $values['id']);
+        $artefact->set('parent', $values['parent']);
         $artefact->commit();
+        return true;
     }
 
     /** 
