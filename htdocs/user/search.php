@@ -31,7 +31,7 @@ require_once('pieforms/pieform.php');
 // If there is no query posted, the 'results' section of the page will
 // stay invisible until a query is submitted.
 
-$query = @param_variable('query','');
+$query = param_variable('query','');
 
 $searchform = pieform(array(
     'name'                => 'search',
