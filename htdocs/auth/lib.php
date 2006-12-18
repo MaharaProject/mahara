@@ -577,6 +577,11 @@ function login_submit($values) {
                 redirect(get_config('wwwroot'));
             }
 
+            // Check if the user's account has been deleted
+            if ($userdata->deleted) {
+                die_info(get_string('accountdeleted'));
+            }
+
             // Check if the user's account has expired
             if ($userdata->expiry > 0 && time() > $userdata->expiry) {
                 die_info(get_string('accountexpired'));
@@ -590,12 +595,8 @@ function login_submit($values) {
             }
 
             // Check if the user's account has been suspended
-            // Note: only the internal authentication method can say if a user is suspended for now.
-            // There are problems with how searching excluding suspended users will work that would
-            // need to be resolved before this could be implemented for all methods
-            // @todo TEST THIS
-            if ($suspend = get_record('usr_suspension', 'usr', $userdata->id)) {
-                die_info(get_string('accountsuspended', 'mahara', $suspend->ctime, $suspend->reason));
+            if ($userdata->suspendedcusr) {
+                die_info(get_string('accountsuspended', 'mahara', $userdata->suspendedctime, $userdata->suspendedreason));
             }
 
             // User is allowed to log in
@@ -677,6 +678,22 @@ function auth_handle_account_expiries() {
             set_field('usr', 'inactivemailsent', 1, 'id', $user->id);
         }
     }
+}
+
+
+class PluginAuth extends Plugin {
+
+    public static function get_event_subscriptions() {
+        $activecheck = new StdClass;
+        $activecheck->plugin = 'internal';
+        $activecheck->event = 'suspenduser';
+        $activecheck->callfunction = 'update_active_flag';
+    }
+
+    public static function update_active_flag($event, $userid) {
+        log_debug('update_active_flag: ' . $event . ', ' . $userid);
+    }
+
 }
 
 ?>
