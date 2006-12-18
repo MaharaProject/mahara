@@ -393,7 +393,27 @@ function get_friend_request($userid1, $userid2) {
 } 
 
 
+/**
+ * Suspends a user
+ *
+ * @param int $suspendeduserid  The ID of the user to suspend
+ * @param string $reason        The reason why the user is being suspended
+ * @param int $suspendinguserid The ID of the user who is performing the suspension
+ */
+function suspend_user($suspendeduserid, $reason, $suspendinguserid=null) {
+    if ($suspendinguserid === null) {
+        global $USER;
+        $suspendinguserid = $USER->get('id');
+    }
 
+    $suspendrec = new StdClass;
+    $suspendrec->id              = $suspendeduserid;
+    $suspendrec->suspendedcusr   = $suspendinguserid;
+    $suspendrec->suspendedreason = $reason;
+    $suspendrec->suspendedctime  = db_format_timestamp(time());
+    update_record('usr', $suspendrec, 'id');
 
+    handle_event('suspenduser', $suspendeduserid);
+}
 
 ?>
