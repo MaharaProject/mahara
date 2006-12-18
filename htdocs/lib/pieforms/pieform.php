@@ -783,10 +783,13 @@ class Pieform {
             return $function($element, $this);
         }
         $global = ($this->method == 'get') ? $_GET : $_POST;
-        if (!empty($element['ajaxmessages']) && isset($global[$element['name']])) {
+        // If the element is a submit element and has its value in the request, return it
+        // Otherwise, we don't return the value if the form has been submitted, as they
+        // aren't normally returned using a standard form.
+        if (isset($element['value']) && !empty($element['ajaxmessages']) && isset($global[$element['name']])) {
             return $element['value'];
         }
-        if (isset($element['value'])) {
+        else if (isset($element['value']) && (!$this->is_submitted() || (empty($element['ajaxmessages'])))) {
             return $element['value'];
         }
         else if (isset($global[$element['name']]) && $element['type'] != 'submit') {
