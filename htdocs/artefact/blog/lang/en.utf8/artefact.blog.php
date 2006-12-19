@@ -34,6 +34,7 @@ $string['newblog'] = 'New Blog';
 
 $string['attachedfiles'] = 'Attached files';
 $string['nofilesattachedtothispost'] = 'No attached files';
+$string['blogpost'] = 'post';
 
 $string['blogtitle'] = 'Title';
 $string['blogtitledesc'] = 'e.g., ‘Jill’s Travel Blog’.';

@@ -549,6 +549,20 @@ class ArtefactTypeBlogPost extends ArtefactType {
         return true;
     }
 
+    // Where to store temporary blog post files under dataroot
+    static $blogattachmentroot = 'artefact/blog/uploads/';
+
+    /** 
+     * This function saves an uploaded file to a temporary directory in dataroot
+     *
+     */
+    public static function save_blogpost_attachment($inputname, $dirname, $filename) {
+        require_once('uploadmanager.php');
+        $um = new upload_manager($inputname);
+        return $um->process_file_upload(self::$blogattachmentroot . $dirname, $filename);
+    }
+
+
     /**
      * This function publishes the blog post.
      *
