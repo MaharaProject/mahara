@@ -118,7 +118,6 @@ function auth_setup () {
     // If the system is not installed, let the user through in the hope that
     // they can fix this little problem :)
     if (!get_config('installed')) {
-        log_debug('system not installed, letting user through');
         $USER->logout();
         return;
     }
@@ -127,7 +126,6 @@ function auth_setup () {
     // not have a session, this time will be 0.
     $sessionlogouttime = $USER->get('logout_time');
     if ($sessionlogouttime && isset($_GET['logout'])) {
-        log_debug("logging user out");
         $USER->logout();
         $SESSION->add_ok_msg(get_string('loggedoutok'));
         redirect(get_config('wwwroot'));
@@ -140,19 +138,16 @@ function auth_setup () {
             $userreallyadmin = get_field('usr', 'admin', 'id', $USER->get('id'));
             if (!$USER->get('admin') && $userreallyadmin) {
                 // The user has been made into an admin
-                log_debug("user has been made an admin");
                 $USER->set('admin', 1);
             }
             else if ($USER->get('admin') && !$userreallyadmin) {
                 // The user's admin rights have been taken away
-                log_debug("users admin rights have been revoked!");
                 $USER->set('admin', 0);
                 $SESSION->add_error_msg(get_string('accessforbiddentoadminsection'));
                 redirect(get_config('wwwroot'));
             }
             elseif (!$USER->get('admin')) {
                 // The user never was an admin
-                log_debug("denying user access to administration");
                 $SESSION->add_error_msg(get_string('accessforbiddentoadminsection'));
                 redirect(get_config('wwwroot'));
             }
@@ -162,7 +157,6 @@ function auth_setup () {
     }
     else if ($sessionlogouttime > 0) {
         // The session timed out
-        log_debug('session timed out');
         $USER->logout();
 
         // If the page the user is viewing is public, inform them that they can
@@ -171,7 +165,6 @@ function auth_setup () {
             // @todo this links to ?login - later it should do magic to make
             // sure that whatever GET string is made it includes the old data
             // correctly
-            log_debug('timed out on public page');
             $SESSION->add_info_msg(get_string('sessiontimedoutpublic'), false);
             return;
         }
@@ -184,7 +177,6 @@ function auth_setup () {
     }
     else {
         // There is no session, so we check to see if one needs to be started.
-        log_debug('no session');
         // Build login form. If the form is submitted it will be handled here,
         // and set $USER for us (this will happen when users hit a page and
         // specify login data immediately
@@ -196,7 +188,6 @@ function auth_setup () {
         
         // Check if the page is public or the site is configured to be public.
         if (defined('PUBLIC') && !isset($_GET['login'])) {
-            log_debug('user viewing public page');
             return;
         }
         
@@ -710,27 +701,26 @@ class PluginAuth extends Plugin {
         $activecheck->plugin = 'internal';
         $activecheck->event  = 'suspenduser';
         $activecheck->callfunction = 'update_active_flag';
-        $subscriptions[] = $activacheck;
+        $subscriptions[] = clone $activecheck;
         $activecheck->event = 'unsuspenduser';
-        $subscriptions[] = $activecheck;
+        $subscriptions[] = clone $activecheck;
         $activecheck->event = 'deleteuser';
-        $subscriptions[] = $activecheck;
+        $subscriptions[] = clone $activecheck;
         $activecheck->event = 'undeleteuser';
-        $subscriptions[] = $activecheck;
+        $subscriptions[] = clone $activecheck;
         $activecheck->event = 'expireuser';
-        $subscriptions[] = $activecheck;
+        $subscriptions[] = clone $activecheck;
         $activecheck->event = 'unexpireuser';
-        $subscriptions[] = $activecheck;
+        $subscriptions[] = clone $activecheck;
         $activecheck->event = 'deactivateuser';
-        $subscriptions[] = $activecheck;
+        $subscriptions[] = clone $activecheck;
         $activecheck->event = 'activateuser';
-        $subscriptions[] = $activecheck;
+        $subscriptions[] = clone $activecheck;
 
         return $subscriptions;
     }
 
     public static function update_active_flag($event, $userid) {
-        log_debug('update_active_flag: ' . $event . ', ' . $userid);
         $active = true;
 
         $user = get_user($userid);

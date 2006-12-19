@@ -319,7 +319,7 @@ function upgrade_plugin($upgrade) {
         foreach ($events as $event) {
             $event = (object)$event;
 
-            if (!record_exists('event', 'name', $event->event)) {
+            if (!record_exists('event_type', 'name', $event->event)) {
                 $db->RollbackTrans();
                 throw new InstallationException("event $event->event for $pcname doesn't exist!");
             }
@@ -332,7 +332,7 @@ function upgrade_plugin($upgrade) {
                 throw new InstallationException("event $event->event with function $event->callfunction for $pcname supplied but wasn't callable");
             }
             $exists = false;
-            $table = $plugtype . '_event_subscription';
+            $table = $plugintype . '_event_subscription';
             if (empty($upgrade->install)) {
                 $exists = record_exists($table, 'plugin' , $pluginname, 'event', $event->event());
             }
