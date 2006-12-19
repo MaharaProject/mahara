@@ -69,7 +69,7 @@ function renderAccessListItem(item) {
     connect(removeButton, 'onclick', function() {
         removeElement(row);
     });
-    insertSiblingNodesBefore($('accesslistitems').firstChild, row);
+    insertSiblingNodesAfter($('accesslistitems').lastChild, row);
     
     setupCalendar(item, 'start');
     setupCalendar(item, 'stop');

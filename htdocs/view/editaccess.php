@@ -30,85 +30,77 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 require_once('pieforms/pieform/elements/calendar.php');
 $smarty = smarty(array(), pieform_get_headdata_calendar(pieform_configure_calendar(array())));
-$createid = param_integer('createid', null);
-$data = $SESSION->get('create_' . $createid);
 
+$viewid = param_integer('viewid');
+$prefix = get_config('dbprefix');
 
+if (!$data = get_records_sql_array('SELECT va.accesstype AS type, va.startdate, va.stopdate
+    FROM ' . $prefix . 'view_access va
+    LEFT JOIN ' . $prefix . 'view v ON (va.view = v.id)
+    WHERE va.view = ?
+    AND v.owner = ?
+    ORDER BY va.accesstype', array($viewid, $USER->get('id')))) {
+    $SESSION->add_error_msg(get_string('canteditdontown', 'view'));
+    redirect(get_config('wwwroot') . 'view/');
+}
+
+foreach ($data as &$item) {
+    $item = (array)$item;
+}
 log_debug($data);
+
+// Get access for users, groups and communities
+$extradata = get_records_sql_array("
+    SELECT 'user' AS type, usr AS id, 0 AS tutoronly, startdate, stopdate
+        FROM {$prefix}view_access_usr
+        WHERE view = ?
+UNION
+    SELECT 'group', grp, 0, startdate, stopdate
+        FROM {$prefix}view_access_group
+        WHERE view = ?
+UNION
+    SELECT 'community', community, tutoronly, startdate, stopdate
+        FROM {$prefix}view_access_community
+        WHERE view = ?", array($viewid, $viewid, $viewid));
+if ($extradata) {
+    foreach ($extradata as &$extraitem) {
+        $extraitem = (array)$extraitem;
+    }
+    $data = array_merge($data, $extradata);
+}
+
+
 $form = array(
-    'name' => 'createview4',
+    'name' => 'editviewaccess',
     'elements' => array(
         'accesslist' => array(
             'type'         => 'viewacl',
-            'defaultvalue' => isset($data['accesslist']) ? $data['accesslist'] : null
+            'defaultvalue' => $data
+        ),
+        'viewid' => array(
+            'type' => 'hidden',
+            'value' => $viewid
         ),
         'submit' => array(
-            'type' => 'cancelbackcreate',
-            'value' => array(get_string('cancel'), get_string('back','view'), get_string('createview','view'))
+            'type' => 'submitcancel',
+            'value' => array(get_string('saveaccess'), get_string('cancel'))
         )
     )
 );
 
-function createview4_submit_cancel() {
+function editviewaccess_cancel_submit() {
     redirect(get_config('wwwroot') . 'view/');
 }
 
-function createview4_submit($values) {
-    global $SESSION, $USER, $createid, $data;
-    log_debug($values);
-    log_debug($data);
-
-
-    if (param_boolean('back')) {
-        $data['accesslist'] = array_values((array)$values['accesslist']);
-        log_debug($data);
-        $SESSION->set('create_' . $createid, $data);
-        redirect(get_config('wwwroot') . 'view/create3.php?createid=' . $createid);
-    }
-
-
+function editviewaccess_submit($values) {
+    global $SESSION, $USER, $viewid;
 
     db_begin();
+    delete_records('view_access', 'view', $viewid);
+    delete_records('view_access_usr', 'view', $viewid);
+    delete_records('view_access_group', 'view', $viewid);
+    delete_records('view_access_community', 'view', $viewid);
     $time = db_format_timestamp(time());
-
-    $view = new StdClass;
-    $view->title = $data['title'];
-    $view->description = $data['description'];
-    $view->owner = $USER->get('id');
-    $view->ownerformat = $data['ownerformat'];
-    $view->template = $data['template'];
-    $view->startdate = db_format_timestamp($data['startdate']);
-    $view->stopdate = db_format_timestamp($data['stopdate']);
-    $view->ctime = $view->mtime = $view->atime = $time;
-    log_debug($view);
-    $viewid = insert_record('view', $view, 'id', true);
-    log_debug('inserted view as id ' . $viewid);
-
-    foreach ($data['artefacts'] as $block => $blockdata) {
-        if ($blockdata['type'] == 'label') {
-            $viewcontent          = new StdClass;
-            $viewcontent->view    = $viewid;
-            $viewcontent->content = $blockdata['value'];
-            $viewcontent->block   = $block;
-            $viewcontent->ctime   = $time;
-            insert_record('view_content', $viewcontent);
-        }
-        else if ($blockdata['type'] == 'artefact') {
-            $blockdata['id'] = (array)$blockdata['id'];
-            foreach ($blockdata['id'] as $id) {
-                $viewartefact           = new StdClass;
-                $viewartefact->view     = $viewid;
-                $viewartefact->artefact = $id;
-                $viewartefact->block    = $block;
-                $viewartefact->ctime    = $time;
-                $viewartefact->format   = $blockdata['format'];
-                insert_record('view_artefact', $viewartefact);
-            }
-        }
-        else {
-            throw new OMGWTFException();
-        }
-    }
 
     // View access
     foreach ($values['accesslist'] as $item) {
@@ -138,15 +130,11 @@ function createview4_submit($values) {
         }
     }
     db_commit();
-    $SESSION->add_ok_msg(get_string('viewcreatedsuccessfully'));
+    $SESSION->add_ok_msg(get_string('viewaccesseditedsuccessfully'));
     redirect(get_config('wwwroot') . 'view/');
 }
 
-function createview4_cancel() {
-    redirect(get_config('wwwroot') . 'view/');
-}
-
-$smarty->assign('titlestr', get_string('createviewstep4', 'view'));
+$smarty->assign('titlestr', get_string('editviewaccess', 'view'));
 $smarty->assign('form', pieform($form));
 $smarty->display('view/create4.tpl');
 

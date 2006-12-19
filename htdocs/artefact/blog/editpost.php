@@ -31,16 +31,24 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('pieforms/pieform.php');
 safe_require('artefact', 'blog');
 
-// The createid is used to upload and attach files
+/*
+ * Files uploaded to blog posts will be stored temporarily in the
+ * artefact/blog directory under the dataroot until the blog post is
+ * saved.  This createid is used to ensure that all of these newly
+ * uploaded files get unique filenames.
+ */
 $createid = $SESSION->get('createid');
 if (empty($createid)) {
     $createid = 0;
 }
 $SESSION->set('createid', $createid + 1);
 
-// For a new post, the 'blog' parameter will be set to the blog's artefact id.
-// For an existing post, the 'post' parameter will be set to the blogpost's artefact id.
 
+/* 
+ * For a new post, the 'blog' parameter will be set to the blog's
+ * artefact id.  For an existing post, the 'blogpost' parameter will
+ * be set to the blogpost's artefact id.
+ */
 $blogpost = param_integer('blogpost', 0);
 if (!$blogpost) {
     $blog = param_integer('blog');
@@ -62,10 +70,12 @@ else {
 }
 
 
-// This form just has the main text inputs and no submit button.  The
-// submit and cancel buttons are in their own form at the bottom of
-// the page.
 
+/*
+ * The main form has the text inputs and no submit button.  The submit
+ * and cancel buttons are in their own form at the bottom of the page,
+ * with the file upload form appearing in between.
+ */
 $form = pieform(array(
     'name' => 'editpost',
     'method' => 'post',
@@ -110,8 +120,9 @@ $form = pieform(array(
 
 
 
-// Strings used in the javascript
-
+/*
+ * Strings used in the inline javascript for this page.
+ */
 $getstring = quotestrings(array(
     'mahara' => array(
     ),
@@ -126,20 +137,28 @@ $getstring = quotestrings(array(
         'remove',
     )));
 
-// Insert this automatically sometime.
+
+
+// These variables are needed by file.js.  They should really be set
+// automatically when file.js is included.
 $copyright = get_field('site_content', 'content', 'name', 'uploadcopyright');
 $wwwroot = get_config('wwwroot');
 
 
+
+/*
+ * Javascript specific to this page.  Creates the list of files
+ * attached to the blog post.
+ */
 $javascript = <<< EOF
+
 
 
 // The file uploader uploads files to the list of blog post attachments
 var copyrightnotice = '{$copyright}';
 var uploader = new FileUploader('uploader', 'upload.php', {$getstring['blogpost']}, false, 
-                                attachtopost, fileexists);
+                                attachtopost, fileattached);
 uploader.createid = {$createid};
-
 
 
 
@@ -156,7 +175,6 @@ function browsemyfiles() {
     browser.init();
 }
 addLoadEvent(function () {insertSiblingNodesBefore('filebrowser', browsebutton);});
-
 
 
 
@@ -195,8 +213,16 @@ function checknoattachments() {
 
 
 // Add a newly uploaded file to the attached files list.
+
+// Currently this function does not check whether names of files
+// attached from my files clash with files already in the attached
+// files list.  This should be done here if names of attached files
+// need to be unique.
 function attachtopost(data) {
     var rowid = data.uploadnumber ? 'uploaded:' + data.uploadnumber : 'existing:' + data.id;
+    if (fileattached_id(rowid)) {
+        return;
+    }
     appendChildNodes(attached.tbody,
                      TR({'id':rowid},
                         map(partial(TD,null), 
@@ -214,15 +240,25 @@ function removefrompost(rowid) {
 }
 
 
-
 // Check if there's already a file attached to the post with the given name
-function fileexists(name) {
-    return false;
+function fileattached(filename) {
+    return some(map(function (e) { return e.firstChild; }, attached.tbody.childNodes),
+                function (cell) { return scrapeText(cell) == filename; });
+}
+
+
+// Check if there's already a file attached to the post with the given id
+function fileattached_id(id) {
+    return some(attached.tbody.childNodes, function (r) { return getNodeAttribute(r,'id') == id; });
 }
 
 
 
+// Save the blog post.
+
 EOF;
+
+
 
 $smarty = smarty(array('tablerenderer', 'artefact/file/js/file.js'));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
