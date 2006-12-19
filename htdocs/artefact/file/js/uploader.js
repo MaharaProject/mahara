@@ -138,6 +138,10 @@ function FileUploader(element, uploadscript, foldername, folderid, uploadcallbac
             appendChildNodes(self.form, 
                              INPUT({'type':'hidden', 'name':'parentfolder', 'value':self.folderid}));
         }
+        if (self.createid) {
+            appendChildNodes(self.form, 
+                             INPUT({'type':'hidden', 'name':'createid', 'value':self.createid}));
+        }
 
         self.form.submit();
 

@@ -31,19 +31,19 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('pieforms/pieform.php');
 safe_require('artefact', 'blog');
 
+// The createid is used to upload and attach files
+$createid = $SESSION->get('createid');
+if (empty($createid)) {
+    $createid = 0;
+}
+$SESSION->set('createid', $createid + 1);
+
 // For a new post, the 'blog' parameter will be set to the blog's artefact id.
 // For an existing post, the 'post' parameter will be set to the blogpost's artefact id.
 
 $blogpost = param_integer('blogpost', 0);
 if (!$blogpost) {
-    // This is a new post; get a create id so we can attach files to it.
-    $createid = $SESSION->get('createid');
-    if (empty($createid)) {
-        $createid = 0;
-    }
-    $SESSION->set('createid', $createid + 1);
     $blog = param_integer('blog');
-    $blogpost = 0;
     $title = '';
     $description = '';
     $checked = '';
@@ -61,38 +61,9 @@ else {
     $pagetitle = 'editblogpost';
 }
 
-$getstring = quotestrings(array(
-    'mahara' => array(
-    ),
-    'artefact.blog' => array(
-        'nofilesattachedtothispost',
-    )));
-
-
-$attachedhtml = '<h3>' . get_string('attachedfiles', 'artefact.blog') . "</h3>\n";
-$attachedhtml .= "<table id='attachedfiles'><tbody><tr><td></td></tr></tbody></table>\n";
-
-//$blogpostjs = $blogpost ? $blogpost : 'null';
-
-$javascript = <<< EOF
-
-var attached = new TableRenderer(
-    'attachedfiles',
-    'attachedfiles.json.php',
-    [
-     'title',
-     'description',
-     function () { return TD(null); }
-    ]
-);
-attached.emptycontent = {$getstring['nofilesattachedtothispost']};
-attached.paginate = false;
-attached.blogpost = {$blogpost};
-attached.statevars.push('blogpost');
-attached.rowfunction = function (r) { return TR({'id':'attached_old_' + r.id}); };
-attached.updateOnLoad();
-
-EOF;
+// This form just has the main text inputs and no submit button.  The
+// submit and cancel buttons are in their own form at the bottom of
+// the page.
 
 $form = pieform(array(
     'name' => 'editpost',
@@ -133,24 +104,60 @@ $form = pieform(array(
             'description' => get_string('thisisdraftdesc', 'artefact.blog'),
             'checked' => $checked
         ),
-        'attachedfiles' => array(
-            'type' => 'html',
-            'value' => $attachedhtml,
-        ),
-        'submit' => array(
-            'type' => 'submitcancel',
-            'value' => array(
-                get_string('save', 'artefact.blog'),
-                get_string('cancel', 'artefact.blog')
-            )
-        )
     )
 ));
 
-$smarty = smarty(array('tablerenderer'));
+$getstring = quotestrings(array(
+    'mahara' => array(
+    ),
+    'artefact.blog' => array(
+        'blogpost',
+        'nofilesattachedtothispost',
+    )));
+
+// Insert this automatically sometime.
+$copyright = get_field('site_content', 'content', 'name', 'uploadcopyright');
+
+$javascript = <<< EOF
+
+var copyrightnotice = '{$copyright}';
+var uploader = new FileUploader('uploader', 'upload.php', {$getstring['blogpost']}, false, 
+                                attachtopost, fileexists);
+uploader.createid = {$createid};
+
+var attached = new TableRenderer(
+    'attachedfiles',
+    'attachedfiles.json.php',
+    [
+     'title',
+     'description',
+     function () { return TD(null); }
+    ]
+);
+attached.emptycontent = {$getstring['nofilesattachedtothispost']};
+attached.paginate = false;
+attached.blogpost = {$blogpost};
+attached.statevars.push('blogpost');
+attached.rowfunction = function (r) { return TR({'id':'attached_old_' + r.id}); };
+
+// This function adds a newly uploaded file to the attached files list.
+function attachtopost(data) {
+    return true;
+}
+
+// This function checks if there's a file attached to the post with the given name
+function fileexists(name) {
+    return false;
+}
+
+attached.updateOnLoad();
+
+EOF;
+
+$smarty = smarty(array('tablerenderer', 'artefact/file/js/uploader.js'));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
+$smarty->assign_by_ref('textinputform', $form);
 $smarty->assign('pagetitle', $pagetitle);
-$smarty->assign_by_ref('editpostform', $form);
 $smarty->display('artefact:blog:editpost.tpl');
 
 /**
