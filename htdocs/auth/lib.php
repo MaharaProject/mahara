@@ -641,14 +641,13 @@ function auth_handle_account_expiries() {
     $sitename = get_config('sitename');
     $wwwroot  = get_config('wwwroot');
 
+    // Expiry warning messages
     if ($users = get_records_sql_array('SELECT u.id, u.firstname, u.lastname, u.preferredname, u.email, i.defaultaccountinactivewarn AS timeout
         FROM ' . $prefix . 'usr u, ' . $prefix . 'institution i
         WHERE u.institution = i.name
         AND ? - ' . db_format_tsfield('u.expiry', false) . ' < i.defaultaccountinactivewarn
         AND expirymailsent = 0', array(time()))) {
         foreach ($users as $user) {
-            // @todo put the proper text in for this warning, and the one below
-            // @todo move these jobs to being in core...
             $displayname  = display_name($user);
             $daystoexpire = ceil($user->timeout / 86400) . ' ';
             $daystoexpire .= ($daystoexpire == 1) ? get_string('day') : get_string('days');
@@ -658,6 +657,16 @@ function auth_handle_account_expiries() {
                 get_string('accountexpirywarninghtml', 'mahara', $displayname, $sitename, $daystoexpire, $wwwroot . 'contact.php', $sitename)
             );
             set_field('usr', 'expirymailsent', 1, 'id', $user->id);
+        }
+    }
+
+    // Actual expired users
+    if ($users = get_records_sql_array('SELECT u.id
+        FROM ' . $prefix . 'usr
+        WHERE ' . db_format_tsfield('expiry') . ' < ' . time())) {
+        // Users have expired!
+        foreach ($users as $user) {
+            expire_user($user->id);
         }
     }
 
@@ -678,20 +687,71 @@ function auth_handle_account_expiries() {
             set_field('usr', 'inactivemailsent', 1, 'id', $user->id);
         }
     }
+    
+    // Actual inactive users
+    if ($users = get_records_sql_array('SELECT u.id
+        FROM ' . $prefix . 'usr
+        LEFT JOIN ' . $prefix . 'institution i ON (u.institution = i.name)
+        WHERE ' . db_format_tsfield('lastlogin') . ' < ? - i.defaultaccountinactiveexpire', array(time()))) {
+        // Users have become inactive!
+        foreach ($users as $user) {
+            deactivate_user($user->id);
+        }
+    }
 }
 
 
 class PluginAuth extends Plugin {
 
     public static function get_event_subscriptions() {
+        $subscriptions = array();
+
         $activecheck = new StdClass;
         $activecheck->plugin = 'internal';
-        $activecheck->event = 'suspenduser';
+        $activecheck->event  = 'suspenduser';
         $activecheck->callfunction = 'update_active_flag';
+        $subscriptions[] = $activacheck;
+        $activecheck->event = 'unsuspenduser';
+        $subscriptions[] = $activecheck;
+        $activecheck->event = 'deleteuser';
+        $subscriptions[] = $activecheck;
+        $activecheck->event = 'undeleteuser';
+        $subscriptions[] = $activecheck;
+        $activecheck->event = 'expireuser';
+        $subscriptions[] = $activecheck;
+        $activecheck->event = 'unexpireuser';
+        $subscriptions[] = $activecheck;
+        $activecheck->event = 'deactivateuser';
+        $subscriptions[] = $activecheck;
+        $activecheck->event = 'activateuser';
+        $subscriptions[] = $activecheck;
+
+        return $subscriptions;
     }
 
     public static function update_active_flag($event, $userid) {
         log_debug('update_active_flag: ' . $event . ', ' . $userid);
+        $active = true;
+
+        $user = get_user($userid);
+
+        $inactivetime = get_field('institution', 'defaultaccountinactiveexpire', 'name', $user->institution);
+        if ($user->suspendedcusr) {
+            $active = false;
+        }
+        else if ($user->expiry < time()) {
+            $active = false;
+        }
+        else if ($inactivetime && $user->lastlogin + $inactivetime < time()) {
+            $active = false;
+        }
+        else if ($user->deleted) {
+            $active = false;
+        }
+
+        if ($active != $user->active) {
+            set_field('usr', 'active', (int)$active, 'id', $userid);
+        }
     }
 
 }
