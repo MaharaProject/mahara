@@ -30,10 +30,11 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 
 $wwwroot = get_config('wwwroot');
 
-$getstring = quotestrings(array('accessstartdate', 'accessstopdate', 'artefacts', 'delete',
-                                'deleteviewquestion', 'description', 'editaccess', 'editview', 
-                                'editviewinformation', 'submitted', 'submitview', 
-                                'submitviewquestion'));
+$getstring = quotestrings(array('mahara' => array(
+    'accessstartdate', 'accessstopdate', 'artefacts', 'delete', 'deleteviewquestion', 'description', 
+    'editaccess', 'editview', 'editviewinformation', 'submitted', 'submitview', 'submitviewquestion'
+)));
+
 
 
 $javascript = <<<JAVASCRIPT

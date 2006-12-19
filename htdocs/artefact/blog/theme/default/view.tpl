@@ -22,7 +22,7 @@
                                 </div>
 
 				<div class="newpost">
-					<a href="{$WWWROOT}/artefact/blog/newpost/?id={$blog->get('id')}">{str section="artefact.blog" tag="addpost"}</a>
+					<a href="{$WWWROOT}/artefact/blog/editpost.php?blog={$blog->get('id')}">{str section="artefact.blog" tag="addpost"}</a>
 				</div>
 		
 			<table id="postlist">
@@ -33,7 +33,7 @@
 			</table>
 				
 				<div class="newpost">
-					<a href="{$WWWROOT}/artefact/blog/newpost/?id={$blog->get('id')}">{str section="artefact.blog" tag="addpost"}</a>
+					<a href="{$WWWROOT}/artefact/blog/editpost.php?blog={$blog->get('id')}">{str section="artefact.blog" tag="addpost"}</a>
 				</div>
 				
 			</div>

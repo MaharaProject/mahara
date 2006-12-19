@@ -1,9 +1,10 @@
-function FileUploader(element, foldername, folderid, uploadcallback, fileexists) {
+function FileUploader(element, uploadscript, foldername, folderid, uploadcallback, fileexists) {
 
     var self = this;
     this.element = element;
-    this.foldername = foldername ? foldername : get_string('home');
+    this.uploadscript = uploadscript;
     this.folderid = folderid;
+    this.foldername = foldername ? foldername : get_string('home');
     this.uploadcallback = uploadcallback;
 
     if (typeof(fileexists) == 'function') {
@@ -42,7 +43,7 @@ function FileUploader(element, foldername, folderid, uploadcallback, fileexists)
     this.initform = function () {
         var form = FORM({'method':'post', 'id':'uploadform',
                          'enctype':'multipart/form-data', 'encoding':'multipart/form-data',
-                         'action':'upload.php', 'target':''});
+                         'action':self.uploadscript, 'target':''});
         var cancelform = function () {
             if ($('uploadformmessage')) {
                 $('uploadformmessage').innerHTML = '';
@@ -57,11 +58,12 @@ function FileUploader(element, foldername, folderid, uploadcallback, fileexists)
         };
         var notice = SPAN(null);
         notice.innerHTML = copyrightnotice;
+        var destinationattributes = (self.folderid === false) ? {'style':'display: none;'} : null;
         appendChildNodes(form,
             TABLE(null,
             TBODY(null, 
                   TR(null, TH({'colSpan':2}, LABEL(null, get_string('uploadfile')))),
-             TR(null, TH(null, LABEL(null, get_string('destination'))),
+             TR(destinationattributes, TH(null, LABEL(null, get_string('destination'))),
                 TD(null, SPAN({'id':'uploaddest'},self.foldername))),
              TR(null, TH(null,LABEL(null,get_string('copyrightnotice'))),
                 TD(null,INPUT({'type':'checkbox','name':'notice'}),notice)),
@@ -80,6 +82,7 @@ function FileUploader(element, foldername, folderid, uploadcallback, fileexists)
               INPUT({'name':'replace','type':'button','value':get_string('overwrite'),
                      'onclick':function () { if (self.sendform(true)) { cancelform(); } }}),
               INPUT({'type':'button','value':get_string('cancel'),'onclick':cancelform}))))));
+
 
         hideElement(form.replace);
         hideElement(form);
@@ -155,7 +158,7 @@ function FileUploader(element, foldername, folderid, uploadcallback, fileexists)
         }
         replaceChildNodes($('uploadstatusline'+data.uploadnumber), 
                           IMG({'src':config.themeurl+image}), data.message);
-        this.uploadcallback();
+        this.uploadcallback(data);
     }
 
     addLoadEvent(this.init);

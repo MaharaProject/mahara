@@ -1056,6 +1056,22 @@ function can_view_view($view_id, $user_id=null) {
     return false;
 }
 
+/**
+ * get the views that a user can see belonging
+ * to the given users
+ *
+ * @param array $users users to fetch views owned by
+ * @param int $userlooking (optional, defaults to logged in user)
+ * @param int $limit grab this many views.
+ */
+function get_views($users, $userlooking=null, $limit=5) {
+    $userlooking = optional_userid($userlooking);
+    if (is_int($users)) {
+        $users = array($users);
+    }
+    // @todo martyn
+}
+
 function artefact_in_view($artefact, $view) {
     $prefix = get_config('dbprefix');
     $sql = 'SELECT a.id 

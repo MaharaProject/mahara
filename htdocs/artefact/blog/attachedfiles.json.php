@@ -17,7 +17,7 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage artefact-file
+ * @subpackage artefact-blog
  * @author     Richard Mansfield <richard.mansfield@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
@@ -25,25 +25,38 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'myfiles');
+
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-safe_require('artefact', 'file');
 
-$copyright = get_field('site_content', 'content', 'name', 'uploadcopyright');
+safe_require('artefact', 'blog');
 
-$javascript = <<<JAVASCRIPT
+$limit = param_integer('limit', null);
+$offset = param_integer('offset', 0);
+$id = param_integer('blogpost', 0);
 
-var copyrightnotice = '{$copyright}';
-var browser = new FileBrowser('filelist');
-var uploader = new FileUploader('uploader', 'upload.php', null, null, browser.refresh, browser.fileexists);
-browser.changedircallback = uploader.updatedestination;
+if ($id) {
+    $blogpost = new ArtefactTypeBlogPost($id);
+    if (!$filelist = $blogpost->get_attached_files()) {
+        $filelist = array();
+    }
+}
+else {
+    $filelist = array();
+}
 
-JAVASCRIPT;
+$result = array(
+    'count'       => count($filelist),
+    'limit'       => $limit,
+    'offset'      => $offset,
+    'data'        => $filelist,
+    'error'       => false,
+    'message'     => get_string('attachedfilelistloaded'),
+);
 
-$smarty = smarty(array('tablerenderer', 
-                       'artefact/file/js/filebrowser.js', 
-                       'artefact/file/js/uploader.js'));
-$smarty->assign('INLINEJAVASCRIPT', $javascript);
-$smarty->display('artefact:file:index.tpl');
+json_headers();
+print json_encode($result);
 
-?>
+
+
+
+

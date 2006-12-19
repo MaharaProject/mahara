@@ -72,8 +72,6 @@ if (!isset($result->error)) {
     }
 }
 
-log_debug($result);
-
 $r = json_encode($result);
 
 $frame = <<< EOF
