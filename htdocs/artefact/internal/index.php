@@ -73,11 +73,11 @@ foreach ( $element_list as $element => $type ) {
 
     if ($type == 'wysiwyg') {
         $elements[$element]['rows'] = 7;
-        $elements[$element]['cols'] = 80;
+        $elements[$element]['cols'] = 60;
     }
     if ($type == 'textarea') {
         $elements[$element]['rows'] = 4;
-        $elements[$element]['cols'] = 80;
+        $elements[$element]['cols'] = 60;
     }
     if ($element == 'country') {
         $elements[$element]['options'] = getoptions_country();
