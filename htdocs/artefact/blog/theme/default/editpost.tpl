@@ -17,8 +17,8 @@
       <div class="maincontent">
         <h2>{str section="artefact.blog" tag=$pagetitle}</h2>
         {$textinputform}
-        <h3>{str section=artefact.blog tag=attachedfiles}</h3>
         <div id='uploader'></div>
+        <h3>{str section=artefact.blog tag=attachedfiles}</h3>
         <table id='attachedfiles'><tbody><tr><td></td></tr></tbody></table>
       </div>
       </span></span></span></span>

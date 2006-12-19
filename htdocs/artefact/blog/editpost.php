@@ -61,6 +61,7 @@ else {
     $pagetitle = 'editblogpost';
 }
 
+
 // This form just has the main text inputs and no submit button.  The
 // submit and cancel buttons are in their own form at the bottom of
 // the page.
@@ -107,23 +108,37 @@ $form = pieform(array(
     )
 ));
 
+
+
+// Strings used in the javascript
+
 $getstring = quotestrings(array(
     'mahara' => array(
+        'cancel',
     ),
     'artefact.blog' => array(
         'blogpost',
         'nofilesattachedtothispost',
+        'remove',
     )));
 
 // Insert this automatically sometime.
 $copyright = get_field('site_content', 'content', 'name', 'uploadcopyright');
 
+
+
 $javascript = <<< EOF
+
+
+// The file uploader uploads files to the list of blog post attachments
 
 var copyrightnotice = '{$copyright}';
 var uploader = new FileUploader('uploader', 'upload.php', {$getstring['blogpost']}, false, 
                                 attachtopost, fileexists);
 uploader.createid = {$createid};
+
+
+// List of attachments to the blog post
 
 var attached = new TableRenderer(
     'attachedfiles',
@@ -131,26 +146,59 @@ var attached = new TableRenderer(
     [
      'title',
      'description',
-     function () { return TD(null); }
+     function (r) { 
+         return TD(null, INPUT({'type':'button', 'value':{$getstring['remove']},
+                                'onclick':"removefrompost('attached_old:"+r.id+"')"}));
+     }
     ]
 );
 attached.emptycontent = {$getstring['nofilesattachedtothispost']};
 attached.paginate = false;
 attached.blogpost = {$blogpost};
 attached.statevars.push('blogpost');
-attached.rowfunction = function (r) { return TR({'id':'attached_old_' + r.id}); };
+attached.rowfunction = function (r) { return TR({'id':'attached_old:' + r.id}); };
+attached.updateOnLoad();
 
-// This function adds a newly uploaded file to the attached files list.
-function attachtopost(data) {
-    return true;
+
+// Show/hide the 'no attachments' message if there are no/some attachments
+function checknoattachments() {
+    if (attached.tbody.hasChildNodes()) {
+        hideElement(attached.table.previousSibling);
+        showElement(attached.table);
+    }
+    else {
+        showElement(attached.table.previousSibling);
+        hideElement(attached.table);
+    }
 }
 
-// This function checks if there's a file attached to the post with the given name
+
+// Add a newly uploaded file to the attached files list.
+function attachtopost(data) {
+    appendChildNodes(attached.tbody,
+                     TR({'id':'attached_new:' + data.uploadnumber},
+                        map(partial(TD,null), 
+                            [data.title, data.description,
+                             INPUT({'type':'button', 'value':{$getstring['remove']},
+                                'onclick':"removefrompost('attached_new:"+data.uploadnumber+"')"})])));
+    checknoattachments();
+}
+
+
+// Remove a row from the attached files list.
+function removefrompost(rowid) {
+    removeElement(rowid);
+    checknoattachments();
+}
+
+
+
+// Check if there's already a file attached to the post with the given name
 function fileexists(name) {
     return false;
 }
 
-attached.updateOnLoad();
+
 
 EOF;
 
@@ -159,6 +207,8 @@ $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign_by_ref('textinputform', $form);
 $smarty->assign('pagetitle', $pagetitle);
 $smarty->display('artefact:blog:editpost.tpl');
+
+
 
 /**
  * This function gets called to create a new blog post, and publish it
@@ -178,6 +228,8 @@ function editpost_submit(array $values) {
 
     redirect(get_config('wwwroot') . 'artefact/blog/list/');
 }
+
+
 
 /** 
  * This function get called to cancel the form submission. It returns to the
