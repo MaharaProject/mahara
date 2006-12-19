@@ -358,6 +358,20 @@ function json_reply($error, $message) {
     exit;
 }
 
+/**
+ * This function checks the user's sesskey against one passed in. If the check
+ * fails, a json reply is sent to that effect.
+ */
+function json_check_sesskey() {
+    global $USER;
+
+    $sesskey = param_variable('sesskey', null);
+
+    if ($sesskey === null || $USER->get('sesskey') != $sesskey) {
+        json_reply('invalidsesskey', get_string('invalidsesskey'));
+    }
+}
+
 function _param_retrieve($name) {
     // if it's not set and we have a default
     if (!isset($_REQUEST[$name]) && func_num_args() == 2) {
