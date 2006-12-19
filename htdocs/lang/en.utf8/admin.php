@@ -172,6 +172,8 @@ $string['staffusersupdated'] = 'Staff users updated';
 // Suspended Users
 $string['suspenduser'] = 'Suspend User';
 $string['suspendedusers'] = 'Suspended Users';
+$string['suspensionreason'] = 'Suspension reason';
+$string['errorwhilesuspending'] = 'An error occured while trying to suspend';
 $string['suspendedusersdescription'] = 'Suspend or unsuspend users from logging in to the site (note: not implemented yet)';
 
 // Institutions
