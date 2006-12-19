@@ -114,10 +114,12 @@ $form = pieform(array(
 
 $getstring = quotestrings(array(
     'mahara' => array(
+        'cancel',
     ),
     'artefact.blog' => array(
         'blogpost',
         'nofilesattachedtothispost',
+        'remove',
     )));
 
 // Insert this automatically sometime.
@@ -144,27 +146,49 @@ var attached = new TableRenderer(
     [
      'title',
      'description',
-     function () { return TD(null); }
+     function (r) { 
+         return TD(null, INPUT({'type':'button', 'value':{$getstring['remove']},
+                                'onclick':"removefrompost('attached_old:"+r.id+"')"}));
+     }
     ]
 );
 attached.emptycontent = {$getstring['nofilesattachedtothispost']};
 attached.paginate = false;
 attached.blogpost = {$blogpost};
 attached.statevars.push('blogpost');
-attached.rowfunction = function (r) { return TR({'id':'attached_old_' + r.id}); };
+attached.rowfunction = function (r) { return TR({'id':'attached_old:' + r.id}); };
 attached.updateOnLoad();
 
+
+// Show/hide the 'no attachments' message if there are no/some attachments
+function checknoattachments() {
+    if (attached.tbody.hasChildNodes()) {
+        hideElement(attached.table.previousSibling);
+        showElement(attached.table);
+    }
+    else {
+        showElement(attached.table.previousSibling);
+        hideElement(attached.table);
+    }
+}
 
 
 // Add a newly uploaded file to the attached files list.
 function attachtopost(data) {
-    alert(data.title);
-    alert(attached.tbody);
     appendChildNodes(attached.tbody,
                      TR({'id':'attached_new:' + data.uploadnumber},
-                        map(partial(TD,null), [data.title, data.description])));
-    hideElement(attached.table.previousSibling);
-    showElement(attached.table);
+                        map(partial(TD,null), 
+                            [data.title, data.description,
+                             INPUT({'type':'button', 'value':{$getstring['remove']},
+                                'onclick':"removefrompost('attached_new:"+data.uploadnumber+"')"})])));
+    checknoattachments();
+}
+
+
+// Remove a row from the attached files list.
+function removefrompost(rowid) {
+    removeElement(rowid);
+    checknoattachments();
 }
 
 
