@@ -4,9 +4,9 @@
 	<div class="content">
 		<div class="box-cnrs"><span class="cnr-tl"><span class="cnr-tr"><span class="cnr-bl"><span class="cnr-br">
 			<div class="maincontent">
-			<h2>{str tag=createviewstep4 section="view"}</h2>
+			<h2>{$titlestr}</h2>
 			
-			{$createview4form}
+			{$form}
 			</div>
 		</span></span></span></span></div>	
 	</div>
