@@ -223,7 +223,7 @@ function fileexists(name) {
 
 EOF;
 
-$smarty = smarty(array('tablerenderer', 'artefact/file/js/uploader.js', 'artefact/file/js/filebrowser.js'));
+$smarty = smarty(array('tablerenderer', 'artefact/file/js/file.js'));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign_by_ref('textinputform', $form);
 $smarty->assign('pagetitle', $pagetitle);
