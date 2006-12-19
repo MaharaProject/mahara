@@ -656,6 +656,7 @@ function handle_event($event, $data) {
     foreach ($plugintypes as $name) {
         if ($subs = get_records_array($name . '_event_subscription', 'event', $event)) {
             foreach ($subs as $sub) {
+                safe_require($name, $sub->plugin);
                 $classname = 'Plugin' . ucfirst($name) . ucfirst($sub->plugin);
                 try {
                     call_static_method($classname, $sub->callfunction, $event, $data);
