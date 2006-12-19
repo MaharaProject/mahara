@@ -175,6 +175,8 @@ function uploadcsv_submit($values) {
         foreach (ArtefactTypeProfile::get_mandatory_fields() as $field => $type) {
             set_profile_field($id, $field, $record[$i++]);
         }
+
+        handle_event('createuser', $user);
     }
     log_info('Inserted ' . count($CSVDATA) . ' records');
 

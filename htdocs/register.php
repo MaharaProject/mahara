@@ -96,6 +96,7 @@ if (isset($_REQUEST['key'])) {
         }
 
         db_commit();
+        handle_event('createuser', $registration);
 
         // Log the user in and send them to the homepage
         $USER->login($registration);
