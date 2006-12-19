@@ -62,6 +62,7 @@ if ($studentid !== '') {
 }
 $ownerformatoptions[FORMAT_NAME_DISPLAYNAME] = sprintf($formatstring, get_string('displayname'), display_name($USER));
 
+// @todo need a rule here that prevents stopdate being smaller than startdate
 $createview1 = pieform(array(
     'name'     => 'createview1',
     'method'   => 'post',
@@ -82,8 +83,8 @@ $createview1 = pieform(array(
             'title'        => get_string('startdate','view'),
             'defaultvalue' => isset($data['startdate']) ? $data['startdate'] : null,
             'caloptions'   => array(
-                'dateStatusFunc' => 'startDateDisallowed',
-                'onSelect'       => 'startSelected',
+                //'dateStatusFunc' => 'startDateDisallowed',
+                //'onSelect'       => 'startSelected',
                 'showsTime'      => true,
                 'ifFormat'       => '%Y/%m/%d %H:%M'
             )
@@ -93,8 +94,8 @@ $createview1 = pieform(array(
             'title'        => get_string('stopdate','view'),
             'defaultvalue' => isset($data['stopdate']) ? $data['stopdate'] : null,
             'caloptions'   => array(
-                'dateStatusFunc' => 'stopDateDisallowed',
-                'onSelect'       => 'stopSelected',
+                //'dateStatusFunc' => 'stopDateDisallowed',
+                //'onSelect'       => 'stopSelected',
                 'showsTime'      => true,
                 'ifFormat'       => '%Y/%m/%d %H:%M'
             )
@@ -152,7 +153,10 @@ function createview1_submit($values) {
 
 $smarty = smarty();
 $smarty->assign('createview1', $createview1);
-$smarty->assign('INLINEJAVASCRIPT', <<<EOF
+// NOTE: this javascript shows an idea of how you might make it so that you can't select invalid dates.
+// However, it's broken (try selecting a start date and then an end date). Perhaps it can be improved
+// later...
+/*$smarty->assign('INLINEJAVASCRIPT', <<<EOF
 function startDateDisallowed(date) {
     var stopDate = $('createview1_stopdate').value;
     if (stopDate != '') {
@@ -205,7 +209,7 @@ function stopSelected(calendar, date) {
 }
 
 EOF
-);
+);*/
 $smarty->display('view/create1.tpl');
 
 ?>
