@@ -14,9 +14,12 @@ function FileBrowser(element, source, changedircallback, actionname, actioncallb
 
     if (this.actionname) {
         this.lastcolumnfunc = function(r) {
-            var button = INPUT({'type':'button', 'value':get_string(self.actionname)});
-            button.onclick = function () { self.actioncallback(r) };
-            return TD(null, button);
+            if (r.artefacttype != 'folder') {
+                var button = INPUT({'type':'button', 'value':self.actionname});
+                button.onclick = function () { self.actioncallback(r) };
+                return TD(null, button);
+            }
+            return TD(null);
         }
     }
     else {
@@ -52,8 +55,6 @@ function FileBrowser(element, source, changedircallback, actionname, actioncallb
         // Folder navigation links
         insertSiblingNodesBefore(self.element, DIV({'id':'foldernav'}));
 
-        //self.lastcolumnfunc = self.actionname ? self.getfileinfo : self.editdelete;
-
         self.filelist = new TableRenderer(
             self.element,
             self.source,
@@ -77,7 +78,6 @@ function FileBrowser(element, source, changedircallback, actionname, actioncallb
     }
 
     this.refresh = function () { self.changedir(self.cwd); };
-
 
     this.savemetadata = function (fileid, formid, replacefile, originalname) {
         var name = $(formid).name.value;

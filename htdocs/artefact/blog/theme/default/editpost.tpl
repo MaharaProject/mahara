@@ -18,6 +18,7 @@
         <h2>{str section="artefact.blog" tag=$pagetitle}</h2>
         {$textinputform}
         <div id='uploader'></div>
+        <table id='filebrowser'><tbody><tr><td></td></tr></tbody></table>
         <h3>{str section=artefact.blog tag=attachedfiles}</h3>
         <table id='attachedfiles'><tbody><tr><td></td></tr></tbody></table>
       </div>

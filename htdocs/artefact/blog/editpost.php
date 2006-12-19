@@ -114,32 +114,48 @@ $form = pieform(array(
 
 $getstring = quotestrings(array(
     'mahara' => array(
-        'cancel',
     ),
     'artefact.blog' => array(
+        'attach',
         'blogpost',
+        'browsemyfiles',
         'nofilesattachedtothispost',
         'remove',
     )));
 
 // Insert this automatically sometime.
 $copyright = get_field('site_content', 'content', 'name', 'uploadcopyright');
-
+$wwwroot = get_config('wwwroot');
 
 
 $javascript = <<< EOF
 
 
 // The file uploader uploads files to the list of blog post attachments
-
 var copyrightnotice = '{$copyright}';
 var uploader = new FileUploader('uploader', 'upload.php', {$getstring['blogpost']}, false, 
                                 attachtopost, fileexists);
 uploader.createid = {$createid};
 
 
-// List of attachments to the blog post
 
+
+// File browser instance allows users to attach files from the my files area
+var browser = null;
+var browsebutton = INPUT({'id':'browsebutton', 'type':'button', 'value':{$getstring['browsemyfiles']},
+                          'onclick':browsemyfiles});
+function browsemyfiles() {
+    hideElement('browsebutton');
+    browser = new FileBrowser('filebrowser', '{$wwwroot}artefact/file/myfiles.json.php', 
+                              function () {}, {$getstring['attach']}, attachtopost);
+    browser.init();
+}
+addLoadEvent(function () {insertSiblingNodesBefore('filebrowser', browsebutton);});
+
+
+
+
+// List of attachments to the blog post
 var attached = new TableRenderer(
     'attachedfiles',
     'attachedfiles.json.php',
@@ -202,7 +218,7 @@ function fileexists(name) {
 
 EOF;
 
-$smarty = smarty(array('tablerenderer', 'artefact/file/js/uploader.js'));
+$smarty = smarty(array('tablerenderer', 'artefact/file/js/uploader.js', 'artefact/file/js/filebrowser.js'));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign_by_ref('textinputform', $form);
 $smarty->assign('pagetitle', $pagetitle);

@@ -32,9 +32,11 @@ $string['description'] = 'description';
 $string['addblog'] = 'Add Blog';
 $string['newblog'] = 'New Blog';
 
+$string['attach'] = 'Attach';
 $string['attachedfiles'] = 'Attached files';
 $string['nofilesattachedtothispost'] = 'No attached files';
 $string['blogpost'] = 'post';
+$string['browsemyfiles'] = 'Browse my files';
 $string['remove'] = 'Remove';
 
 $string['blogtitle'] = 'Title';
