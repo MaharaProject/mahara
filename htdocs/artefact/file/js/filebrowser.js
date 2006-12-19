@@ -1,32 +1,58 @@
 var changedir = function () {};
 
-function FileBrowser(element, source, changedircallback) {
+function FileBrowser(element, source, changedircallback, actionname, actioncallback) {
     var self = this;
     this.element = element;
     this.source = source;
     this.pathids = {'/':null};
     this.cwd = '/';
-    if (typeof(changedircallback) == 'function') {
-        this.changedircallback = changedircallback;
+    this.changedircallback = (typeof(changedircallback) == 'function') ? changedircallback : function () {};
+    this.actioncallback = (typeof(actioncallback) == 'function') ? actioncallback : function () {};
+    this.actionname = actionname;
+    this.canmodify = !actionname;
+    this.filenames = {};
+
+    if (this.actionname) {
+        this.lastcolumnfunc = function(r) {
+            var button = INPUT({'type':'button', 'value':get_string(self.actionname)});
+            button.onclick = function () { self.actioncallback(r) };
+            return TD(null, button);
+        }
     }
     else {
-        this.changedircallback = function () {};
+        this.lastcolumnfunc = function (r) {
+            var editb = INPUT({'type':'button', 'value':get_string('edit')});
+            editb.onclick = function () { self.openeditform(r); };
+            if (r.emptyfolder) {
+                return TD(null, editb);
+            }
+            var deleteb = INPUT({'type':'button', 'value':get_string('delete')});
+            deleteb.onclick = function () {
+                if (confirm(get_string(r.artefacttype == 'folder' ? 'deletefolder?' : 'deletefile?'))) {
+                    sendjsonrequest('delete.json.php', {'id': r.id}, self.refresh);
+                }
+            };
+            return TD(null, editb, deleteb);
+        }
     }
-    this.filenames = {};
 
     this.init = function() {
 
-        // Create the button which opens up the create folder form
-        var button = INPUT({'type':'button','value':get_string('createfolder'), 'onclick':function () { 
-            hideElement(self.createfolderbutton);
-            showElement(self.createfolderform);
-        }});
-        self.createfolderbutton = button;
-        self.createfolderform = self.initcreatefolderform();
-        insertSiblingNodesBefore(self.element, self.createfolderbutton, self.createfolderform);
+        if (self.canmodify) {
+            // Create the button which opens up the create folder form
+            var button = INPUT({'type':'button','value':get_string('createfolder'), 'onclick':function () { 
+                hideElement(self.createfolderbutton);
+                showElement(self.createfolderform);
+            }});
+            self.createfolderbutton = button;
+            self.createfolderform = self.initcreatefolderform();
+            insertSiblingNodesBefore(self.element, self.createfolderbutton, self.createfolderform);
+        }
 
         // Folder navigation links
         insertSiblingNodesBefore(self.element, DIV({'id':'foldernav'}));
+
+        //self.lastcolumnfunc = self.actionname ? self.getfileinfo : self.editdelete;
 
         self.filelist = new TableRenderer(
             self.element,
@@ -38,7 +64,7 @@ function FileBrowser(element, source, changedircallback) {
                 'mtime',
                 // @todo this function should be changed for when we
                 // are using the browser to attach files
-                self.editdelete
+                self.lastcolumnfunc
             ]
         );
         self.filelist.emptycontent = get_string('nofilesfound');
@@ -51,21 +77,7 @@ function FileBrowser(element, source, changedircallback) {
     }
 
     this.refresh = function () { self.changedir(self.cwd); };
-    
-    this.editdelete = function(r) {
-        var editb = INPUT({'type':'button', 'value':get_string('edit')});
-        editb.onclick = function () { self.openeditform(r); };
-        if (r.emptyfolder) {
-            return TD(null, editb);
-        }
-        var deleteb = INPUT({'type':'button', 'value':get_string('delete')});
-        deleteb.onclick = function () {
-            if (confirm(get_string(r.artefacttype == 'folder' ? 'deletefolder?' : 'deletefile?'))) {
-                sendjsonrequest('delete.json.php', {'id': r.id}, self.refresh);
-            }
-        };
-        return TD(null, editb, deleteb);
-    }
+
 
     this.savemetadata = function (fileid, formid, replacefile, originalname) {
         var name = $(formid).name.value;
