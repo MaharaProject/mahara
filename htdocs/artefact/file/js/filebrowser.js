@@ -1,8 +1,9 @@
 var changedir = function () {};
 
-function FileBrowser(element, changedircallback) {
+function FileBrowser(element, source, changedircallback) {
     var self = this;
     this.element = element;
+    this.source = source;
     this.pathids = {'/':null};
     this.cwd = '/';
     if (typeof(changedircallback) == 'function') {
@@ -29,7 +30,7 @@ function FileBrowser(element, changedircallback) {
 
         self.filelist = new TableRenderer(
             self.element,
-            'myfiles.json.php',
+            self.source,
             [
                 self.formatname,
                 'description',
