@@ -150,6 +150,7 @@ var browsebutton = INPUT({'id':'browsebutton', 'type':'button', 'value':{$getstr
 function browsemyfiles() {
     hideElement('browsebutton');
     insertSiblingNodesAfter('browsebutton', H3(null, {$getstring['myfiles']}));
+    showElement('filebrowser');
     browser = new FileBrowser('filebrowser', '{$wwwroot}artefact/file/myfiles.json.php', 
                               function () {}, {$getstring['attach']}, attachtopost);
     browser.init();
