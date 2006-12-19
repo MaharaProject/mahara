@@ -146,7 +146,8 @@ function createview4_cancel() {
     redirect(get_config('wwwroot') . 'view/');
 }
 
-$smarty->assign('createview4form', pieform($form));
+$smarty->assign('titlestr', get_string('createviewstep4', 'view'));
+$smarty->assign('form', pieform($form));
 $smarty->display('view/create4.tpl');
 
 ?>
