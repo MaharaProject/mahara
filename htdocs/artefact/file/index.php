@@ -35,7 +35,7 @@ $javascript = <<<JAVASCRIPT
 
 var copyrightnotice = '{$copyright}';
 var browser = new FileBrowser('filelist');
-var uploader = new FileUploader('uploader', null, null, browser.refresh, browser.fileexists);
+var uploader = new FileUploader('uploader', 'upload.php', null, null, browser.refresh, browser.fileexists);
 browser.changedircallback = uploader.updatedestination;
 
 JAVASCRIPT;
