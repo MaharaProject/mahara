@@ -403,12 +403,12 @@ div.sidebar {
 	float: left;
 }
 
-.content textarea {
+/*.content textarea {
 	width: 450px;
 }
 .content textarea.wysiwyg {
 	width: 500px;
-}
+}*/
 
 #messages {
 	margin: 0 3px 3px 3px;
@@ -420,8 +420,7 @@ div.sidebar {
 	padding: 0 0 0 17px;
 }
 
-#messages .error
-/*#messages .err*/ {
+#messages .error {
 	color: #dd0221;
 	background: #ffd3d9 url(../images/icon_problem.gif) no-repeat left;
 	padding: 0 0 0 17px;

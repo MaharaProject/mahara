@@ -536,6 +536,7 @@ function login_submit($values) {
                 $userdata = call_static_method($authclass, 'get_user_info', $username);
                 $userdata->lastlogin = db_format_timestamp(time());
                 insert_record('usr', $userdata);
+                handle_event('createuser', $userdata);
             }
             // @todo config form option for this for each external plugin. NOT for internal
             else if (get_config_plugin('auth', $authtype, 'updateuserinfoonlogin')) {
