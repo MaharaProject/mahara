@@ -53,24 +53,28 @@
         </TABLE>
         <TABLE NAME="usr">
             <FIELDS>
-                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
-                <FIELD NAME="username" TYPE="char" LENGTH="30" NOTNULL="true" />
-                <FIELD NAME="password" TYPE="char" LENGTH="40" NOTNULL="true" />
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+                <FIELD NAME="username" TYPE="char" LENGTH="30" NOTNULL="true"/>
+                <FIELD NAME="password" TYPE="char" LENGTH="40" NOTNULL="true"/>
                 <FIELD NAME="institution" TYPE="char" LENGTH="255" NOTNULL="true" DEFAULT="mahara"/>
-                <FIELD NAME="salt" TYPE="char" LENGTH="8" />
-                <FIELD NAME="passwordchange" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
-                <FIELD NAME="deleted" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
-                <FIELD NAME="expiry" TYPE="datetime" NOTNULL="false" />
+                <FIELD NAME="salt" TYPE="char" LENGTH="8"/>
+                <FIELD NAME="passwordchange" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="active" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="deleted" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="expiry" TYPE="datetime" NOTNULL="false"/>
                 <FIELD NAME="expirymailsent" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
-                <FIELD NAME="lastlogin" TYPE="datetime" NOTNULL="false" />
+                <FIELD NAME="lastlogin" TYPE="datetime" NOTNULL="false"/>
                 <FIELD NAME="inactivemailsent" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
-                <FIELD NAME="staff" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
-                <FIELD NAME="admin" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
-                <FIELD NAME="firstname" TYPE="text" NOTNULL="false" />
-                <FIELD NAME="lastname" TYPE="text" NOTNULL="false" />
-                <FIELD NAME="studentid" TYPE="text" NOTNULL="false" />
-                <FIELD NAME="preferredname" TYPE="text" NOTNULL="false" />
-                <FIELD NAME="email" TYPE="text" NOTNULL="false" />
+                <FIELD NAME="staff" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="admin" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="firstname" TYPE="text" NOTNULL="false"/>
+                <FIELD NAME="lastname" TYPE="text" NOTNULL="false"/>
+                <FIELD NAME="studentid" TYPE="text" NOTNULL="false"/>
+                <FIELD NAME="preferredname" TYPE="text" NOTNULL="false"/>
+                <FIELD NAME="email" TYPE="text" NOTNULL="false"/>
+                <FIELD NAME="suspendctime" TYPE="datetime" NOTNULL="false"/>
+                <FIELD NAME="suspendreason" TYPE="text" NOTNULL="false"/>
+                <FIELD NAME="suspendcusr" TYPE="int" LENGTH="10" NOTNULL="false"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
@@ -531,19 +535,6 @@
                 <KEY NAME="foreign" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id" />
             </KEYS>         
         </TABLE>
-        <TABLE NAME="usr_suspension">
-            <FIELDS>
-                <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
-                <FIELD NAME="reason" TYPE="text" NOTNULL="false" />
-                <FIELD NAME="cusr" TYPE="int" LENGTH="10" NOTNULL="false" />
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="usr,ctime" />
-                <KEY NAME="usrfk" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id" />
-                <KEY NAME="cusrfk" TYPE="foreign" FIELDS="cusr" REFTABLE="usr" REFFIELDS="id" />
-            </KEYS>
-        </TABLE>
         <TABLE NAME="template_category">
             <FIELDS>
                 <FIELD NAME="name" TYPE="text" NOTNULL="true" />
@@ -795,7 +786,13 @@
                 <SENTENCE TEXT="(name) VALUES ('createuser')" />
                 <SENTENCE TEXT="(name) VALUES ('updateuser')" />
                 <SENTENCE TEXT="(name) VALUES ('suspenduser')" />
+                <SENTENCE TEXT="(name) VALUES ('unsuspenduser')" />
                 <SENTENCE TEXT="(name) VALUES ('deleteuser')" />
+                <SENTENCE TEXT="(name) VALUES ('undeleteuser')" />
+                <SENTENCE TEXT="(name) VALUES ('expireuser')" />
+                <SENTENCE TEXT="(name) VALUES ('unexpireuser')" />
+                <SENTENCE TEXT="(name) VALUES ('deactivateuser')" />
+                <SENTENCE TEXT="(name) VALUES ('activateuser')" />
             </SENTENCES>
         </STATEMENT>
         <STATEMENT NAME="insert activity types" TYPE="insert" TABLE="activity_type">

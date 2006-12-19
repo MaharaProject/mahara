@@ -61,20 +61,20 @@ function activity_occurred($activitytype, $data) {
  * @param mixed $data must contain message to save.
  * it can also contain url.
  * each activity type has different requirements of $data - 
- * <b>contactus</b> must contain $message, $subject (optional), $fromname, $fromaddress, $userfrom (if a logged in user)
- * <b>objectionable</b> must contain $message, $view and $artefact if applicable
- * <b>maharamessage</b> must contain $users, an array of userids. $subject and $message (contents of message)
- * <b>usermessage</b> must contain $userto, id of recipient user, $userfrom, id of user from 
-         and $subject and $message (contents of message)
- * <b>feedback (artefact)</b> must contain both $artefact (id) and $view (id) and $message 
- * <b>feedback (view)</b> must contain $view (id) and $message
- * <b>watchlist (artefact)</b> must contain $artefact (id of artefact) 
- *       and should also contain $subject (or a boring default will be used)
- * <b>watchlist (view) </b> must contain $view (id of view) 
-         and should also contain $subject (or a boring default will be used)
- * <b>watchlist (community) </b> must contain $community (id of community)
-         and should also contain $subject (or a boring default will be used)
- * <b>newview</b> must contain $owner userid of view owner AND $view (id of new view)
+ *  - <b>contactus</b> must contain $message, $subject (optional), $fromname, $fromaddress, $userfrom (if a logged in user)
+ *  - <b>objectionable</b> must contain $message, $view and $artefact if applicable
+ *  - <b>maharamessage</b> must contain $users, an array of userids. $subject and $message (contents of message)
+ *  - <b>usermessage</b> must contain $userto, id of recipient user, $userfrom, id of user from 
+    -       and $subject and $message (contents of message)
+ *  - <b>feedback (artefact)</b> must contain both $artefact (id) and $view (id) and $message 
+ *  - <b>feedback (view)</b> must contain $view (id) and $message
+ *  - <b>watchlist (artefact)</b> must contain $artefact (id of artefact) 
+ *  -       and should also contain $subject (or a boring default will be used)
+ *  - <b>watchlist (view) </b> must contain $view (id of view) 
+    -       and should also contain $subject (or a boring default will be used)
+ *  - <b>watchlist (community) </b> must contain $community (id of community)
+    -       and should also contain $subject (or a boring default will be used)
+ *  - <b>newview</b> must contain $owner userid of view owner AND $view (id of new view)
  */
 function handle_activity($activitytype, $data) {
 
