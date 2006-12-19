@@ -34,7 +34,7 @@ $copyright = get_field('site_content', 'content', 'name', 'uploadcopyright');
 $javascript = <<<JAVASCRIPT
 
 var copyrightnotice = '{$copyright}';
-var browser = new FileBrowser('filelist');
+var browser = new FileBrowser('filelist', 'myfiles.json.php');
 var uploader = new FileUploader('uploader', 'upload.php', null, null, browser.refresh, browser.fileexists);
 browser.changedircallback = uploader.updatedestination;
 
