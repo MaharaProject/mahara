@@ -124,6 +124,7 @@ $string['usernamedescription'] = 'Your username';
 $string['usernamehelp'] = 'The username you have been given to access this system.';
 $string['yournewpassword'] = 'Your new password';
 $string['yournewpasswordagain'] = 'Your new password again';
+$string['invalidsesskey'] = 'Invalid session key';
 
 // Misc. register stuff that could be used elsewhere
 $string['emailaddress'] = 'Email address';
@@ -392,4 +393,12 @@ $string['friendrequestrejectedsubject'] = 'Friend request rejected';
 $string['friendrequestrejectedmessage'] = '%s has rejected your friend request.';
 $string['friendrequestrejectedmessagereason'] = '%s has rejected your friend request.  Their reason was: ';
 
+$string['currentfriends'] = 'Friends';
+$string['pendingfriends'] = 'Pending friends';
+
+$string['friendlistfailure'] = 'Failed to modify your friends list';
+
+// general views stuff
+$string['viewavabile'] = 'View available';
+$string['viewsavailable'] = 'Views available';
 ?>
