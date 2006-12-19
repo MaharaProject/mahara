@@ -198,6 +198,9 @@ function FileBrowser(element, source, changedircallback, actionname, actioncallb
                          r.title);
             return TD(null, link);
         }
+        if (self.actionname) {
+            return TD(null, r.title);
+        }
         return TD(null, A({'href':'download.php?file=' + r.id}, r.title));
     }
 

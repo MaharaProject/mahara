@@ -115,6 +115,9 @@ $form = pieform(array(
 $getstring = quotestrings(array(
     'mahara' => array(
     ),
+    'artefact.file' => array(
+        'myfiles',
+    ),
     'artefact.blog' => array(
         'attach',
         'blogpost',
@@ -146,6 +149,7 @@ var browsebutton = INPUT({'id':'browsebutton', 'type':'button', 'value':{$getstr
                           'onclick':browsemyfiles});
 function browsemyfiles() {
     hideElement('browsebutton');
+    insertSiblingNodesAfter('browsebutton', H3(null, {$getstring['myfiles']}));
     browser = new FileBrowser('filebrowser', '{$wwwroot}artefact/file/myfiles.json.php', 
                               function () {}, {$getstring['attach']}, attachtopost);
     browser.init();
@@ -191,12 +195,13 @@ function checknoattachments() {
 
 // Add a newly uploaded file to the attached files list.
 function attachtopost(data) {
+    var rowid = data.uploadnumber ? 'uploaded:' + data.uploadnumber : 'existing:' + data.id;
     appendChildNodes(attached.tbody,
-                     TR({'id':'attached_new:' + data.uploadnumber},
+                     TR({'id':rowid},
                         map(partial(TD,null), 
                             [data.title, data.description,
                              INPUT({'type':'button', 'value':{$getstring['remove']},
-                                'onclick':"removefrompost('attached_new:"+data.uploadnumber+"')"})])));
+                                'onclick':"removefrompost('"+rowid+"')"})])));
     checknoattachments();
 }
 
