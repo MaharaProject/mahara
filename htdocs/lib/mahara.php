@@ -1113,10 +1113,15 @@ function get_views($users, $userlooking=null, $limit=5) {
                 v.id=a.view
                 AND (
                     accesstype IN (\'public\',\'loggedin\')
-                    OR (
-                        accesstype = \'friends\'
-                        AND v.owner IN (' . join(',',array_map('db_quote', array_keys(preg_grep('/^friend$/', $users)))) . ')
-                    )
+            ' . (
+                    count(preg_grep('/^friend$/', $users)) > 0
+                    ?  'OR (
+                            accesstype = \'friends\'
+                            AND v.owner IN (' . join(',',array_map('db_quote', array_keys(preg_grep('/^friend$/', $users)))) . ')
+                        )'
+                    : ''
+                )
+            . '
                 )
         WHERE
             v.owner IN (' . join(',',array_map('db_quote', array_keys($users))) . ')
@@ -1131,7 +1136,42 @@ function get_views($users, $userlooking=null, $limit=5) {
         }
     }
     
-    // repeated
+    if (_get_views_trim_list($list, $users, $limit)) {
+        return $list;
+    }
+
+    if ($results = get_records_sql_array(
+        'SELECT
+            v.*,
+            ' . db_format_tsfield('atime') . ',
+            ' . db_format_tsfield('mtime') . ',
+            ' . db_format_tsfield('ctime') . '
+        FROM 
+            ' . $prefix . 'view v
+            INNER JOIN view_access_usr a ON v.id=a.view AND a.usr=?
+        WHERE
+            v.owner IN (' . join(',',array_map('db_quote', array_keys($users))) . ')
+            AND ( v.startdate IS NULL OR v.startdate < ? )
+            AND ( v.stopdate IS NULL OR v.stopdate < ? )
+        ',
+        array($userlooking, $dbnow, $dbnow)
+        )
+    ) {
+        foreach ($results as &$row) {
+            $list[$row->owner][$row->id] = $row;
+        }
+    }
+
+    log_debug('Users remaing');
+    log_debug($users);
+
+    return $list;
+}
+
+function _get_views_trim_list(&$list, &$users, $limit) {
+    if ($limit === null) {
+        return;
+    }
     foreach ($list as $user_id => &$views) {
         if($limit and count($views) > $limit) {
             $views = array_slice($views, 0, $limit);
@@ -1141,14 +1181,9 @@ function get_views($users, $userlooking=null, $limit=5) {
         }
     }
     if (count($users) == 0) {
-        return $list;
+        return true;
     }
-    // end repeated
-
-    log_debug('Users remaing');
-    log_debug($users);
-
-    return $list;
+    return false;
 }
 
 function artefact_in_view($artefact, $view) {
