@@ -72,9 +72,9 @@
                 <FIELD NAME="studentid" TYPE="text" NOTNULL="false"/>
                 <FIELD NAME="preferredname" TYPE="text" NOTNULL="false"/>
                 <FIELD NAME="email" TYPE="text" NOTNULL="false"/>
-                <FIELD NAME="suspendctime" TYPE="datetime" NOTNULL="false"/>
-                <FIELD NAME="suspendreason" TYPE="text" NOTNULL="false"/>
-                <FIELD NAME="suspendcusr" TYPE="int" LENGTH="10" NOTNULL="false"/>
+                <FIELD NAME="suspendedctime" TYPE="datetime" NOTNULL="false"/>
+                <FIELD NAME="suspendedreason" TYPE="text" NOTNULL="false"/>
+                <FIELD NAME="suspendedcusr" TYPE="int" LENGTH="10" NOTNULL="false"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
