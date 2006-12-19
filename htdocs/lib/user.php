@@ -392,6 +392,26 @@ function get_friend_request($userid1, $userid2) {
         
 } 
 
+/**
+ * Returns an object containing information about a user, including account
+ * and activity preferences
+ *
+ * @param int $userid The ID of the user to retrieve information about
+ * @return object     The user object. Note this is not in the same form as
+ *                    the $USER object used to denote the current user -
+ *                    the object returned by this method is a simple object.
+ */
+function get_user($userid) {
+    if (!$user = get_record('usr', 'id', $userid, null, null, null, null,
+        '*, ' . db_format_tsfield('expiry') . ', ' . db_format_tsfield('lastlogin'))) {
+        throw new InvalidArgumentException('Unknown user ' . $userid);
+    }
+
+    $user->activityprefs = load_activity_preferences($userid);
+    $user->accountprefs  = load_account_preferences($userid);
+    return $user;
+}
+
 
 /**
  * Suspends a user
@@ -412,6 +432,12 @@ function suspend_user($suspendeduserid, $reason, $suspendinguserid=null) {
     $suspendrec->suspendedreason = $reason;
     $suspendrec->suspendedctime  = db_format_timestamp(time());
     update_record('usr', $suspendrec, 'id');
+
+    $message = new StdClass;
+    $message->users = array($suspendeduserid);
+    $message->subject = get_string('youraccounthasbeensuspended');
+    $message->message = get_string('youraccounthasbeensuspendedtext');
+    activity_occurred('maharamessage', $message);
 
     handle_event('suspenduser', $suspendeduserid);
 }
@@ -496,6 +522,104 @@ function friend_submit($values) {
     }
     activity_occurred('maharamessage', $n);
     json_reply(false, get_string('friendform' . $values['type'] . 'success', 'mahara', display_name($user)));
+}
+
+/**
+ * Unsuspends a user
+ *
+ * @param int $userid The ID of the user to unsuspend
+ */
+function unsuspend_user($userid) {
+    $suspendedrec = new StdClass;
+    $suspendedrec->id = $userid;
+    $suspendedrec->suspendedcusr = null;
+    $suspendedrec->suspendedreason = null;
+    $suspendedrec->suspendedctime  = null;
+    update_record('usr', $suspendedrec);
+
+    $message = new StdClass;
+    $message->users = array($userid);
+    $message->subject = get_string('youraccounthasbeenunsuspended');
+    $message->message = get_string('youraccounthasbeenunsuspendedtext');
+    activity_occurred('maharamessage', $message);
+
+    handle_event('unsuspenduser', $userid);
+}
+
+/**
+ * Deletes a user
+ *
+ * @param int $userid The ID of the user to delete
+ */
+function delete_user($userid) {
+    $deleterec = new StdClass;
+    $deleterec->id = $userid;
+    $deleterec->deleted = 1;
+    update_record('usr', $deleterec);
+
+    handle_event('deleteuser', $userid);
+}
+
+/**
+ * Undeletes a user
+ *
+ * @param int $userid The ID of the user to undelete
+ */
+function undelete_user($userid) {
+    $deleterec = new StdClass;
+    $deleterec->id = $userid;
+    $deleterec->deleted = 0;
+    update_record('usr', $deleterec);
+
+    handle_event('undeleteuser', $userid);
+}
+
+/**
+ * Expires a user
+ *
+ * Nothing amazing needs to happen here, but this function is here for
+ * consistency.
+ *
+ * This function is called when a user account is detected to be expired.
+ * It is assumed that the account actually is expired.
+ *
+ * @param int $userid The ID of user to expire
+ */
+function expire_user($userid) {
+    handle_event('expireuser', $userid);
+}
+
+/**
+ * Unexpires a user
+ *
+ * @param int $userid The ID of user to unexpire
+ */
+function unexpire_user($userid) {
+    handle_event('unexpireuser', $userid);
+}
+
+/**
+ * Marks a user as inactive
+ *
+ * Nothing amazing needs to happen here, but this function is here for
+ * consistency.
+ *
+ * This function is called when a user account is detected to be inactive.
+ * It is assumed that the account actually is inactive.
+ *
+ * @param int $userid The ID of user to mark inactive
+ */
+function deactivate_user($userid) {
+    handle_event('deactivateuser', $userid);
+}
+
+/**
+ * Activates a user
+ *
+ * @param int $userid The ID of user to reactivate
+ */
+function activate_user($userid) {
+    handle_event('activateuser', $userid);
 }
 
 ?>

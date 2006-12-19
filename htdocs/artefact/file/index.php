@@ -34,15 +34,14 @@ $copyright = get_field('site_content', 'content', 'name', 'uploadcopyright');
 $javascript = <<<JAVASCRIPT
 
 var copyrightnotice = '{$copyright}';
-var browser = new FileBrowser('filelist');
-var uploader = new FileUploader('uploader', null, null, browser.refresh, browser.fileexists);
+var browser = new FileBrowser('filelist', 'myfiles.json.php');
+var uploader = new FileUploader('uploader', 'upload.php', null, null, browser.refresh, browser.fileexists);
 browser.changedircallback = uploader.updatedestination;
 
 JAVASCRIPT;
 
 $smarty = smarty(array('tablerenderer', 
-                       'artefact/file/js/filebrowser.js', 
-                       'artefact/file/js/uploader.js'));
+                       'artefact/file/js/file.js'));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->display('artefact:file:index.tpl');
 

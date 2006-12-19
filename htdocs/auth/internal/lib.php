@@ -176,7 +176,7 @@ class AuthInternal extends Auth {
 /**
  * Plugin configuration class
  */
-class PluginAuthInternal extends Plugin {
+class PluginAuthInternal extends PluginAuth {
 
     public static function has_config() {
         return false;

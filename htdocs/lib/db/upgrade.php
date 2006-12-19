@@ -66,6 +66,71 @@ function xmldb_core_upgrade($oldversion=0) {
         insert_record('cron', $expiries);
     }
 
+    // Merge the usr_suspension table with the usr table, and add a 'active' column and
+    // various events and fields to do with this column
+    if ($oldversion < 2006121800) {
+        $table = new XMLDBTable('usr_suspension');
+        drop_table($table);
+
+        $table = new XMLDBTable('usr');
+
+        $field = new XMLDBField('suspendedctime');
+        $field->setAttributes(XMLDB_TYPE_DATETIME);
+        add_field($table, $field);
+
+        $field = new XMLDBField('suspendedreason');
+        $field->setAttributes(XMLDB_TYPE_TEXT);
+        add_field($table, $field);
+
+        $field = new XMLDBField('suspendedcusr');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 10, false, false, false);
+        add_field($table, $field);
+
+        $field = new XMLDBField('active');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, false, true, false, null, null, 1);
+        add_field($table, $field);
+        set_field('usr', 'active', 1);
+
+        $key = new XMLDBKey('sus_fk');
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('suspendedcusr'), 'usr', array('id'));
+        add_key($table, $key);
+
+        $event = new StdClass;
+        $event->name = 'unsuspenduser';
+        insert_record('event_type', $event);
+        $event->name = 'undeleteuser';
+        insert_record('event_type', $event);
+        $event->name = 'expireuser';
+        insert_record('event_type', $event);
+        $event->name = 'unexpireuser';
+        insert_record('event_type', $event);
+        $event->name = 'deactivateuser';
+        insert_record('event_type', $event);
+        $event->name = 'activateuser';
+        insert_record('event_type', $event);
+
+        $activecheck = new StdClass;
+        $activecheck->plugin = 'internal';
+        $activecheck->event = 'suspenduser';
+        $activecheck->callfunction = 'update_active_flag';
+        insert_record('auth_event_subscription', $activecheck);
+        $activecheck->event = 'unsuspenduser';
+        insert_record('auth_event_subscription', $activecheck);
+        $activecheck->event = 'deleteuser';
+        insert_record('auth_event_subscription', $activecheck);
+        $activecheck->event = 'undeleteuser';
+        insert_record('auth_event_subscription', $activecheck);
+        $activecheck->event = 'expireuser';
+        insert_record('auth_event_subscription', $activecheck);
+        $activecheck->event = 'unexpireuser';
+        insert_record('auth_event_subscription', $activecheck);
+        $activecheck->event = 'deactivateuser';
+        insert_record('auth_event_subscription', $activecheck);
+        $activecheck->event = 'activateuser';
+        insert_record('auth_event_subscription', $activecheck);
+
+    }
+
     return $status;
 
 }

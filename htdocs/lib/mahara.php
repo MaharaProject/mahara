@@ -656,6 +656,7 @@ function handle_event($event, $data) {
     foreach ($plugintypes as $name) {
         if ($subs = get_records_array($name . '_event_subscription', 'event', $event)) {
             foreach ($subs as $sub) {
+                safe_require($name, $sub->plugin);
                 $classname = 'Plugin' . ucfirst($name) . ucfirst($sub->plugin);
                 try {
                     call_static_method($classname, $sub->callfunction, $event, $data);
@@ -1061,15 +1062,93 @@ function can_view_view($view_id, $user_id=null) {
  *
  * @param array $users users to fetch views owned by
  * @param int $userlooking (optional, defaults to logged in user)
- * @param int $limit grab this many views.
+ * @param int $limit grab this many views. (setting this null means get all)
+ *
+ * @return array Associative array keyed by userid, of arrays of view ids
  */
 function get_views($users, $userlooking=null, $limit=5) {
     $userlooking = optional_userid($userlooking);
     if (is_int($users)) {
         $users = array($users);
     }
-    // @todo martyn
-    return array();
+
+    $list = array();
+
+    if(count($users) == 0) {
+        return $list;
+    }
+
+    $users = array_flip($users);
+
+    $prefix = get_config('dbprefix');
+    $dbnow  = db_format_timestamp(time());
+
+    if ($friends = get_records_sql_array(
+        'SELECT
+            CASE WHEN usr1=? THEN usr2 ELSE usr1 END AS id
+        FROM
+            ' . $prefix . 'usr_friend f
+        WHERE
+            ( usr1=? AND usr2 IN (' . join(',',array_map('db_quote', array_keys($users))) . ') )
+            OR
+            ( usr2=? AND usr1 IN (' . join(',',array_map('db_quote', array_keys($users))) . ') )
+        ',
+        array($userlooking,$userlooking,$userlooking)
+    )) {
+        foreach ( $friends as $user_id ) {
+            $users[$user_id->id] = 'friend';
+        }
+    }
+
+    // public, logged in, or friends' views
+    if ($results = get_records_sql_array(
+        'SELECT
+            v.*,
+            ' . db_format_tsfield('atime') . ',
+            ' . db_format_tsfield('mtime') . ',
+            ' . db_format_tsfield('ctime') . '
+        FROM 
+            ' . $prefix . 'view v
+            INNER JOIN ' . $prefix . 'view_access a ON
+                v.id=a.view
+                AND (
+                    accesstype IN (\'public\',\'loggedin\')
+                    OR (
+                        accesstype = \'friends\'
+                        AND v.owner IN (' . join(',',array_map('db_quote', array_keys(preg_grep('/^friend$/', $users)))) . ')
+                    )
+                )
+        WHERE
+            v.owner IN (' . join(',',array_map('db_quote', array_keys($users))) . ')
+            AND ( v.startdate IS NULL OR v.startdate < ? )
+            AND ( v.stopdate IS NULL OR v.stopdate < ? )
+        ',
+        array( $dbnow, $dbnow )
+        )
+    ) {
+        foreach ($results as &$row) {
+            $list[$row->owner][$row->id] = $row;
+        }
+    }
+    
+    // repeated
+    foreach ($list as $user_id => &$views) {
+        if($limit and count($views) > $limit) {
+            $views = array_slice($views, 0, $limit);
+        }
+        if($limit and count($views) == $limit) {
+            unset($users[$user_id]);
+        }
+    }
+    if (count($users) == 0) {
+        return $list;
+    }
+    // end repeated
+
+    log_debug('Users remaing');
+    log_debug($users);
+
+    return $list;
 }
 
 function artefact_in_view($artefact, $view) {

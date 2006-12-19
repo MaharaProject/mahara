@@ -118,7 +118,6 @@ function auth_setup () {
     // If the system is not installed, let the user through in the hope that
     // they can fix this little problem :)
     if (!get_config('installed')) {
-        log_debug('system not installed, letting user through');
         $USER->logout();
         return;
     }
@@ -127,7 +126,6 @@ function auth_setup () {
     // not have a session, this time will be 0.
     $sessionlogouttime = $USER->get('logout_time');
     if ($sessionlogouttime && isset($_GET['logout'])) {
-        log_debug("logging user out");
         $USER->logout();
         $SESSION->add_ok_msg(get_string('loggedoutok'));
         redirect(get_config('wwwroot'));
@@ -140,19 +138,16 @@ function auth_setup () {
             $userreallyadmin = get_field('usr', 'admin', 'id', $USER->get('id'));
             if (!$USER->get('admin') && $userreallyadmin) {
                 // The user has been made into an admin
-                log_debug("user has been made an admin");
                 $USER->set('admin', 1);
             }
             else if ($USER->get('admin') && !$userreallyadmin) {
                 // The user's admin rights have been taken away
-                log_debug("users admin rights have been revoked!");
                 $USER->set('admin', 0);
                 $SESSION->add_error_msg(get_string('accessforbiddentoadminsection'));
                 redirect(get_config('wwwroot'));
             }
             elseif (!$USER->get('admin')) {
                 // The user never was an admin
-                log_debug("denying user access to administration");
                 $SESSION->add_error_msg(get_string('accessforbiddentoadminsection'));
                 redirect(get_config('wwwroot'));
             }
@@ -162,7 +157,6 @@ function auth_setup () {
     }
     else if ($sessionlogouttime > 0) {
         // The session timed out
-        log_debug('session timed out');
         $USER->logout();
 
         // If the page the user is viewing is public, inform them that they can
@@ -171,7 +165,6 @@ function auth_setup () {
             // @todo this links to ?login - later it should do magic to make
             // sure that whatever GET string is made it includes the old data
             // correctly
-            log_debug('timed out on public page');
             $SESSION->add_info_msg(get_string('sessiontimedoutpublic'), false);
             return;
         }
@@ -184,7 +177,6 @@ function auth_setup () {
     }
     else {
         // There is no session, so we check to see if one needs to be started.
-        log_debug('no session');
         // Build login form. If the form is submitted it will be handled here,
         // and set $USER for us (this will happen when users hit a page and
         // specify login data immediately
@@ -196,7 +188,6 @@ function auth_setup () {
         
         // Check if the page is public or the site is configured to be public.
         if (defined('PUBLIC') && !isset($_GET['login'])) {
-            log_debug('user viewing public page');
             return;
         }
         
@@ -545,6 +536,7 @@ function login_submit($values) {
                 $userdata = call_static_method($authclass, 'get_user_info', $username);
                 $userdata->lastlogin = db_format_timestamp(time());
                 insert_record('usr', $userdata);
+                handle_event('createuser', $userdata);
             }
             // @todo config form option for this for each external plugin. NOT for internal
             else if (get_config_plugin('auth', $authtype, 'updateuserinfoonlogin')) {
@@ -641,14 +633,13 @@ function auth_handle_account_expiries() {
     $sitename = get_config('sitename');
     $wwwroot  = get_config('wwwroot');
 
+    // Expiry warning messages
     if ($users = get_records_sql_array('SELECT u.id, u.firstname, u.lastname, u.preferredname, u.email, i.defaultaccountinactivewarn AS timeout
         FROM ' . $prefix . 'usr u, ' . $prefix . 'institution i
         WHERE u.institution = i.name
         AND ? - ' . db_format_tsfield('u.expiry', false) . ' < i.defaultaccountinactivewarn
         AND expirymailsent = 0', array(time()))) {
         foreach ($users as $user) {
-            // @todo put the proper text in for this warning, and the one below
-            // @todo move these jobs to being in core...
             $displayname  = display_name($user);
             $daystoexpire = ceil($user->timeout / 86400) . ' ';
             $daystoexpire .= ($daystoexpire == 1) ? get_string('day') : get_string('days');
@@ -658,6 +649,16 @@ function auth_handle_account_expiries() {
                 get_string('accountexpirywarninghtml', 'mahara', $displayname, $sitename, $daystoexpire, $wwwroot . 'contact.php', $sitename)
             );
             set_field('usr', 'expirymailsent', 1, 'id', $user->id);
+        }
+    }
+
+    // Actual expired users
+    if ($users = get_records_sql_array('SELECT u.id
+        FROM ' . $prefix . 'usr
+        WHERE ' . db_format_tsfield('expiry') . ' < ' . time())) {
+        // Users have expired!
+        foreach ($users as $user) {
+            expire_user($user->id);
         }
     }
 
@@ -678,20 +679,70 @@ function auth_handle_account_expiries() {
             set_field('usr', 'inactivemailsent', 1, 'id', $user->id);
         }
     }
+    
+    // Actual inactive users
+    if ($users = get_records_sql_array('SELECT u.id
+        FROM ' . $prefix . 'usr
+        LEFT JOIN ' . $prefix . 'institution i ON (u.institution = i.name)
+        WHERE ' . db_format_tsfield('lastlogin') . ' < ? - i.defaultaccountinactiveexpire', array(time()))) {
+        // Users have become inactive!
+        foreach ($users as $user) {
+            deactivate_user($user->id);
+        }
+    }
 }
 
 
 class PluginAuth extends Plugin {
 
     public static function get_event_subscriptions() {
+        $subscriptions = array();
+
         $activecheck = new StdClass;
         $activecheck->plugin = 'internal';
-        $activecheck->event = 'suspenduser';
+        $activecheck->event  = 'suspenduser';
         $activecheck->callfunction = 'update_active_flag';
+        $subscriptions[] = clone $activecheck;
+        $activecheck->event = 'unsuspenduser';
+        $subscriptions[] = clone $activecheck;
+        $activecheck->event = 'deleteuser';
+        $subscriptions[] = clone $activecheck;
+        $activecheck->event = 'undeleteuser';
+        $subscriptions[] = clone $activecheck;
+        $activecheck->event = 'expireuser';
+        $subscriptions[] = clone $activecheck;
+        $activecheck->event = 'unexpireuser';
+        $subscriptions[] = clone $activecheck;
+        $activecheck->event = 'deactivateuser';
+        $subscriptions[] = clone $activecheck;
+        $activecheck->event = 'activateuser';
+        $subscriptions[] = clone $activecheck;
+
+        return $subscriptions;
     }
 
     public static function update_active_flag($event, $userid) {
-        log_debug('update_active_flag: ' . $event . ', ' . $userid);
+        $active = true;
+
+        $user = get_user($userid);
+
+        $inactivetime = get_field('institution', 'defaultaccountinactiveexpire', 'name', $user->institution);
+        if ($user->suspendedcusr) {
+            $active = false;
+        }
+        else if ($user->expiry < time()) {
+            $active = false;
+        }
+        else if ($inactivetime && $user->lastlogin + $inactivetime < time()) {
+            $active = false;
+        }
+        else if ($user->deleted) {
+            $active = false;
+        }
+
+        if ($active != $user->active) {
+            set_field('usr', 'active', (int)$active, 'id', $userid);
+        }
     }
 
 }

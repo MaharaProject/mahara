@@ -31,19 +31,27 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('pieforms/pieform.php');
 safe_require('artefact', 'blog');
 
-// For a new post, the 'blog' parameter will be set to the blog's artefact id.
-// For an existing post, the 'post' parameter will be set to the blogpost's artefact id.
+/*
+ * Files uploaded to blog posts will be stored temporarily in the
+ * artefact/blog directory under the dataroot until the blog post is
+ * saved.  This createid is used to ensure that all of these newly
+ * uploaded files get unique filenames.
+ */
+$createid = $SESSION->get('createid');
+if (empty($createid)) {
+    $createid = 0;
+}
+$SESSION->set('createid', $createid + 1);
 
+
+/* 
+ * For a new post, the 'blog' parameter will be set to the blog's
+ * artefact id.  For an existing post, the 'blogpost' parameter will
+ * be set to the blogpost's artefact id.
+ */
 $blogpost = param_integer('blogpost', 0);
 if (!$blogpost) {
-    // This is a new post; get a create id so we can attach files to it.
-    $createid = $SESSION->get('createid');
-    if (empty($createid)) {
-        $createid = 0;
-    }
-    $SESSION->set('createid', $createid + 1);
     $blog = param_integer('blog');
-    $blogpost = 0;
     $title = '';
     $description = '';
     $checked = '';
@@ -61,39 +69,13 @@ else {
     $pagetitle = 'editblogpost';
 }
 
-$getstring = quotestrings(array(
-    'mahara' => array(
-    ),
-    'artefact.blog' => array(
-        'nofilesattachedtothispost',
-    )));
 
 
-$attachedhtml = '<h3>' . get_string('attachedfiles', 'artefact.blog') . "</h3>\n";
-$attachedhtml .= "<table id='attachedfiles'><tbody><tr><td></td></tr></tbody></table>\n";
-
-//$blogpostjs = $blogpost ? $blogpost : 'null';
-
-$javascript = <<< EOF
-
-var attached = new TableRenderer(
-    'attachedfiles',
-    'attachedfiles.json.php',
-    [
-     'title',
-     'description',
-     function () { return TD(null); }
-    ]
-);
-attached.emptycontent = {$getstring['nofilesattachedtothispost']};
-attached.paginate = false;
-attached.blogpost = {$blogpost};
-attached.statevars.push('blogpost');
-attached.rowfunction = function (r) { return TR({'id':'attached_old_' + r.id}); };
-attached.updateOnLoad();
-
-EOF;
-
+/*
+ * The main form has the text inputs and no submit button.  The submit
+ * and cancel buttons are in their own form at the bottom of the page,
+ * with the file upload form appearing in between.
+ */
 $form = pieform(array(
     'name' => 'editpost',
     'method' => 'post',
@@ -133,25 +115,158 @@ $form = pieform(array(
             'description' => get_string('thisisdraftdesc', 'artefact.blog'),
             'checked' => $checked
         ),
-        'attachedfiles' => array(
-            'type' => 'html',
-            'value' => $attachedhtml,
-        ),
-        'submit' => array(
-            'type' => 'submitcancel',
-            'value' => array(
-                get_string('save', 'artefact.blog'),
-                get_string('cancel', 'artefact.blog')
-            )
-        )
     )
 ));
 
-$smarty = smarty(array('tablerenderer'));
+
+
+/*
+ * Strings used in the inline javascript for this page.
+ */
+$getstring = quotestrings(array(
+    'mahara' => array(
+    ),
+    'artefact.file' => array(
+        'myfiles',
+    ),
+    'artefact.blog' => array(
+        'attach',
+        'blogpost',
+        'browsemyfiles',
+        'nofilesattachedtothispost',
+        'remove',
+    )));
+
+
+
+// These variables are needed by file.js.  They should really be set
+// automatically when file.js is included.
+$copyright = get_field('site_content', 'content', 'name', 'uploadcopyright');
+$wwwroot = get_config('wwwroot');
+
+
+
+/*
+ * Javascript specific to this page.  Creates the list of files
+ * attached to the blog post.
+ */
+$javascript = <<< EOF
+
+
+
+// The file uploader uploads files to the list of blog post attachments
+var copyrightnotice = '{$copyright}';
+var uploader = new FileUploader('uploader', 'upload.php', {$getstring['blogpost']}, false, 
+                                attachtopost, fileattached);
+uploader.createid = {$createid};
+
+
+
+// File browser instance allows users to attach files from the my files area
+var browser = null;
+var browsebutton = INPUT({'id':'browsebutton', 'type':'button', 'value':{$getstring['browsemyfiles']},
+                          'onclick':browsemyfiles});
+function browsemyfiles() {
+    hideElement('browsebutton');
+    insertSiblingNodesAfter('browsebutton', H3(null, {$getstring['myfiles']}));
+    showElement('filebrowser');
+    browser = new FileBrowser('filebrowser', '{$wwwroot}artefact/file/myfiles.json.php', 
+                              function () {}, {$getstring['attach']}, attachtopost);
+    browser.init();
+}
+addLoadEvent(function () {insertSiblingNodesBefore('filebrowser', browsebutton);});
+
+
+
+// List of attachments to the blog post
+var attached = new TableRenderer(
+    'attachedfiles',
+    'attachedfiles.json.php',
+    [
+     'title',
+     'description',
+     function (r) { 
+         return TD(null, INPUT({'type':'button', 'value':{$getstring['remove']},
+                                'onclick':"removefrompost('attached_old:"+r.id+"')"}));
+     }
+    ]
+);
+attached.emptycontent = {$getstring['nofilesattachedtothispost']};
+attached.paginate = false;
+attached.blogpost = {$blogpost};
+attached.statevars.push('blogpost');
+attached.rowfunction = function (r) { return TR({'id':'attached_old:' + r.id}); };
+attached.updateOnLoad();
+
+
+// Show/hide the 'no attachments' message if there are no/some attachments
+function checknoattachments() {
+    if (attached.tbody.hasChildNodes()) {
+        hideElement(attached.table.previousSibling);
+        showElement(attached.table);
+    }
+    else {
+        showElement(attached.table.previousSibling);
+        hideElement(attached.table);
+    }
+}
+
+
+// Add a newly uploaded file to the attached files list.
+
+// Currently this function does not check whether names of files
+// attached from my files clash with files already in the attached
+// files list.  This should be done here if names of attached files
+// need to be unique.
+function attachtopost(data) {
+    var rowid = data.uploadnumber ? 'uploaded:' + data.uploadnumber : 'existing:' + data.id;
+    if (fileattached_id(rowid)) {
+        return;
+    }
+    appendChildNodes(attached.tbody,
+                     TR({'id':rowid},
+                        map(partial(TD,null), 
+                            [data.title, data.description,
+                             INPUT({'type':'button', 'value':{$getstring['remove']},
+                                'onclick':"removefrompost('"+rowid+"')"})])));
+    checknoattachments();
+}
+
+
+// Remove a row from the attached files list.
+function removefrompost(rowid) {
+    removeElement(rowid);
+    checknoattachments();
+}
+
+
+// Check if there's already a file attached to the post with the given name
+function fileattached(filename) {
+    return some(map(function (e) { return e.firstChild; }, attached.tbody.childNodes),
+                function (cell) { return scrapeText(cell) == filename; });
+}
+
+
+// Check if there's already a file attached to the post with the given id
+function fileattached_id(id) {
+    return some(attached.tbody.childNodes, function (r) { return getNodeAttribute(r,'id') == id; });
+}
+
+
+
+// Save the blog post.
+
+EOF;
+
+
+
+$smarty = smarty(array('tablerenderer', 'artefact/file/js/file.js'));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
+$smarty->assign_by_ref('textinputform', $form);
 $smarty->assign('pagetitle', $pagetitle);
-$smarty->assign_by_ref('editpostform', $form);
 $smarty->display('artefact:blog:editpost.tpl');
+
+
 
 /**
  * This function gets called to create a new blog post, and publish it
@@ -171,6 +286,8 @@ function editpost_submit(array $values) {
 
     redirect(get_config('wwwroot') . 'artefact/blog/list/');
 }
+
+
 
 /** 
  * This function get called to cancel the form submission. It returns to the

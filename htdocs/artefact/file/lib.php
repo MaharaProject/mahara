@@ -65,18 +65,32 @@ class PluginArtefactFile extends PluginArtefact {
 
     public static function jsstrings($type) {
         static $jsstrings = array(
-            'uploader' => array(
+            'file' => array(
                 'mahara' => array(
-                    'cancel' => 'mahara',
+                    'cancel',
+                    'delete',
+                    'edit',
                 ),
                 'artefact.file' => array(
                     'copyrightnotice',
+                    'create',
+                    'createfolder',
+                    'deletefile?',
+                    'deletefolder?',
+                    'description',
                     'description',
                     'destination',
+                    'editfile',
+                    'editfolder',
                     'file',
+                    'fileexistsoverwritecancel',
                     'filenamefieldisrequired',
                     'home',
+                    'name',
+                    'namefieldisrequired',
+                    'nofilesfound',
                     'overwrite',
+                    'savechanges',
                     'title',
                     'titlefieldisrequired',
                     'upload',
@@ -86,30 +100,6 @@ class PluginArtefactFile extends PluginArtefact {
                     'youmustagreetothecopyrightnotice',
                 ),
             ),
-            'filebrowser' => array(
-                'mahara' => array(
-                    'cancel',
-                    'delete',
-                    'edit',
-                ),
-                'artefact.file' => array(
-                    'create',
-                    'createfolder',
-                    'deletefile?',
-                    'deletefolder?',
-                    'description',
-                    'destination',
-                    'editfile',
-                    'editfolder',
-                    'fileexistsoverwritecancel',
-                    'home',
-                    'name',
-                    'namefieldisrequired',
-                    'nofilesfound',
-                    'overwrite',
-                    'savechanges',
-                ),
-            )
         );
         return $jsstrings[$type];
     }
