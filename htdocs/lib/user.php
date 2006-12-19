@@ -416,4 +416,86 @@ function suspend_user($suspendeduserid, $reason, $suspendinguserid=null) {
     handle_event('suspenduser', $suspendeduserid);
 }
 
+/**
+ * handle the add/remove/approve/reject friend form
+ * @param array $values from pieforms.
+ */
+function friend_submit($values) {
+    global $user, $USER;
+
+    log_debug($values);
+
+    $loggedinid = $USER->get('id');
+    $userid = $user->id;
+
+    // friend db record
+    $f = new StdClass;
+    $f->ctime = db_format_timestamp(time());
+    
+    // notification info
+    $n = new StdClass;
+    $n->url = get_config('wwwroot') . 'user/view.php?id=' . $loggedinid;
+    $n->users = array($user->id);
+    $displayname = display_name($USER, $user);
+
+    switch ($values['type']) {
+    case 'add':
+        $f->usr1 = $values['id'];
+        $f->usr2 = $loggedinid;
+        insert_record('usr_friend', $f);
+        $n->subject = get_string('addedtofriendslistsubject');
+        $n->message = get_string('addedtofriendslistmessage', 'mahara', $displayname, $displayname);
+        break;
+    case 'request':
+        $f->owner     = $values['id'];
+        $f->requester = $loggedinid;
+        $f->reason    = $values['reason'];
+        insert_record('usr_friend_request', $f);
+        $n->subject = get_string('requestedfriendlistsubject');
+        if (isset($values['reason']) && !empty($values['reason'])) {
+            $n->message = get_string('requestedfriendlistmessagereason', 'mahara', $displayname) . $values['reason'];
+        }
+        else {
+            $n->message = get_string('requestedfriendlistmessage', 'mahara', $displayname);
+        }
+        break;
+    case 'remove':
+        delete_records_select('usr_friend', '(usr1 = ? AND usr2 = ?) OR (usr2 = ? AND usr1 = ?)', 
+                                array($userid, $loggedinid, $userid, $loggedinid));
+        $n->subject = get_string('removedfromfriendslistsubject');
+        if (isset($values['reason']) && !empty($values['reason'])) {
+            $n->message = get_string('removedfromfriendslistmessage', 'mahara', $displayname) . $values['reason'];
+        }
+        else {
+            $n->message = get_string('removedfromfriendslistmessage', 'mahara', $displayname);
+        }
+        break;
+    case 'accept':
+        if (isset($values['rejectsubmit']) && !empty($values['rejectsubmit'])) {
+            delete_records('usr_friend_request', 'owner', $loggedinid, 'requester', $userid);
+            $n->subject = get_string('friendrequestrejectedsubject');
+            if (isset($values['rejectreason']) && !empty($values['rejectreason'])) {
+                $n->message = get_string('friendrequestrejectedmessagereason', 'mahara', $displayname) . $values['rejectreason'];
+            }
+            else {
+                $n->message = get_string('friendrequestrejectedmessage', 'mahara', $displayname);
+            }
+            $values['type'] = 'reject'; // for json reply message
+        } 
+        else {
+            db_begin();
+            delete_records('usr_friend_request', 'owner', $loggedinid, 'requester', $userid);
+            $f->usr1 = $userid;
+            $f->usr2 = $loggedinid;
+            insert_record('usr_friend', $f);
+            $n->subject = get_string('friendrequestacceptedsubject');
+            $n->message = get_string('friendrequestacceptedmessage', 'mahara', $displayname, $displayname);
+            db_commit();
+        }
+        break;
+    }
+    activity_occurred('maharamessage', $n);
+    json_reply(false, get_string('friendform' . $values['type'] . 'success', 'mahara', display_name($user)));
+}
+
 ?>

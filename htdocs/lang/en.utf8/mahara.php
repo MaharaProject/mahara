@@ -392,4 +392,12 @@ $string['friendrequestrejectedsubject'] = 'Friend request rejected';
 $string['friendrequestrejectedmessage'] = '%s has rejected your friend request.';
 $string['friendrequestrejectedmessagereason'] = '%s has rejected your friend request.  Their reason was: ';
 
+$string['currentfriends'] = 'Friends';
+$string['pendingfriends'] = 'Pending friends';
+
+$string['friendlistfailure'] = 'Failed to modify your friends list';
+
+// general views stuff
+$string['viewavabile'] = 'View available';
+$string['viewsavailable'] = 'Views available';
 ?>

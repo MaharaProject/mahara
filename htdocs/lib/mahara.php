@@ -1069,6 +1069,7 @@ function get_views($users, $userlooking=null, $limit=5) {
         $users = array($users);
     }
     // @todo martyn
+    return array();
 }
 
 function artefact_in_view($artefact, $view) {

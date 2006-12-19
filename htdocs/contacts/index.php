@@ -30,9 +30,106 @@ define('SUBMENUITEM', 'myfriends');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
 
+$profileurl = get_config('wwwroot') . 'thumb.php?type=user&id=';
+$viewurl    = get_config('wwwroot') . 'user/view.php?id=';
 
-$smarty = smarty();
+$viewsavailable = get_string('viewsavailable');
+$viewavailable = get_string('viewavailable');
+$remove = get_string('removefromfriendslist');
+$accept = get_string('accept');
+$reject = get_string('reject');
+$friendcontrolfailed = get_string('friendlistfailure');
 
+$inlinejs = <<<EOF
+var friendslist = new TableRenderer(
+    'friendslist',
+    'index.json.php',
+    [
+     function (r) {
+         return TD(null, IMG({'src': '{$profileurl}' + r.id}));
+     },
+     function (r) {
+         return TD(null, A({'href': '{$viewurl}' + r.id}, r.name));
+     },
+     function (r, d) {
+         if (d.pending) {
+             var reason = '';
+             if (r.reason) {
+                 reason = r.reason;
+             }
+             return [ TD(null, reason), 
+                      TD(null, A({'href': '', 'onclick': 'friendControl(\'accept\', ' + r.id + '); return false'}, '{$accept}')),
+                      TD({'id': 'pending-' + r.id}, 
+                         A({'href': '', 'onclick': 'showReject(' + r.id + '); return false'}, '{$reject}')) ];
+            
+         }
+         else {
+             var viewcol;
+             if (typeof(d.views) == 'Array' && d.views[r.id] && d.views[r.id].length > 0) {
+                 var len = d.views[r.id].length;
+                 var views = '';
+                 if (len == 1) {
+                     views = len + ' {$viewavailable}';
+                 }
+                 else {
+                     views = len + ' {$viewsavailable}';
+                 }
+                 viewcol = TD(null, A({'href': '', 'onclick': 'expandViews(' + r.id + ')'}, views));
+             }
+             else {
+                 views = '0 {$viewsavailable}';
+                 viewcol = TD(null, views);
+             }
+             return [ viewcol, TD(null, A({'href': '', 'onclick': 'friendControl(\'remove\', ' + r.id + '); return false;'}, '{$remove}')) ];
+         }
+     }
+    ]
+);                                
+friendslist.pending = 0;
+friendslist.statevars.push('pending');
+friendslist.updateOnLoad();
+
+function friendControl(type, id, reason) {
+    var pd = {'id': id, 'control': 1};
+    if (type == 'reject') {
+        type = 'accept';
+        pd['rejectsubmit'] = 'reject';
+        if (reason) {
+            pd['rejectreason'] = reason;
+        }
+    }
+    pd['type'] = type;
+
+    var d = loadJSONDoc('index.json.php', pd);
+    d.addCallbacks(function (data) {
+        $('messagediv').innerHTML = data.message;
+    },
+                   function () {
+                       $('messagediv').innerHTML = '{$friendcontrolfailed}';
+                }
+    );
+    friendslist.doupdate();
+}
+
+function showReject(id) {
+    if ($('row-reject-' + id)) {
+        removeElement('row-reject-' + id);
+        return;
+    }
+    var tr = TR({'id': 'row-reject-' + id}, 
+                TD(null),
+                TD({'colspan': 3}, 
+                   INPUT({'type': 'text', 'name': 'reject-reason-' + id, 'id': 'reject-reason-' + id}),
+                   INPUT({'type': 'button', 'value': '{$reject}', 
+                          'onclick': 'friendControl(\'reject\', ' + id + ', $(\'reject-reason-' + id + '\').value);'})));
+    insertSiblingNodesAfter($('pending-' + id).parentNode, tr);
+}
+
+EOF;
+
+$smarty = smarty(array('tablerenderer'));
+$smarty->assign('pendingchange', 'friendslist.doupdate({\'pending\':this.options[this.selectedIndex].value});');
+$smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 $smarty->display('contacts/index.tpl');
 
 ?>
