@@ -93,6 +93,7 @@ class PluginArtefactFile extends PluginArtefact {
                     'savechanges',
                     'title',
                     'titlefieldisrequired',
+                    'unlinkthisfilefromblogposts?',
                     'upload',
                     'uploadfile',
                     'uploadfileexistsoverwritecancel',
@@ -146,9 +147,7 @@ class ArtefactTypeFileBase extends ArtefactType {
 
     public static function get_my_files_data($parentfolderid, $userid) {
 
-        // @todo: add an 'emptyfolder => true' field for empty folders
-
-        // @todo: add an 'attachedtoblogpost => true' field for files attached to blog posts.
+        $prefix = get_config('dbprefix');
 
         if ($parentfolderid) {
             $foldersql = ' = ' . $parentfolderid;
@@ -156,13 +155,26 @@ class ArtefactTypeFileBase extends ArtefactType {
         else {
             $foldersql = ' IS NULL';
         }
+        
+        // if blogs are installed then return whether the files are
+        // attached to blog posts
+        if (get_field('artefact_installed', 'active', 'name', 'blog')) {
+            $blogpostsql = ', COUNT (b.*) AS attachcount';
+            $blogpostjoin = 'LEFT OUTER JOIN ' . $prefix . 'artefact_blog_blogpost_file b ON b.file = a.id';
+        }
+        else {
+            $blogpostsql = '';
+            $blogpostjoin = '';
+        }
+
         $filetypesql = "('" . join("','", PluginArtefactFile::get_artefact_types()) . "')";
-        $prefix = get_config('dbprefix');
         $filedata = get_records_sql_array('SELECT
-                a.id, a.artefacttype, a.mtime, f.size, a.title, a.description, COUNT(c.*) AS childcount
+                a.id, a.artefacttype, a.mtime, f.size, a.title, a.description,
+                COUNT(c.*) AS childcount ' . $blogpostsql . '
             FROM ' . $prefix . 'artefact a
                 LEFT OUTER JOIN ' . $prefix . 'artefact_file_files f ON f.artefact = a.id
                 LEFT OUTER JOIN ' . $prefix . 'artefact c ON c.parent = a.id
+                ' . $blogpostjoin . '
             WHERE a.owner = ' . $userid . '
                 AND a.parent' . $foldersql . '
                 AND a.artefacttype IN ' . $filetypesql . '

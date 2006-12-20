@@ -287,9 +287,8 @@ function saveblogpost() {
 }
 
 
-function canceledit() {
-    // This function should possibly delete uploaded files
-    window.location = '{$wwwroot}artefact/blog/view/?id={$blog}';
+function canceledit() {  // Uploaded files will deleted by cron cleanup.
+     window.location = '{$wwwroot}artefact/blog/view/?id={$blog}';
 }
 
 EOF;
