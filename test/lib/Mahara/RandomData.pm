@@ -208,6 +208,8 @@ sub insert_random_communities {
     my $prefix = $self->{config}->get('dbprefix');
     my $user_id = $self->{dbh}->selectall_arrayref('SELECT id FROM ' . $prefix . 'usr WHERE username = ?', undef, $user)->[0][0];
 
+    my $existing_users = $self->{dbh}->selectall_hashref('SELECT id, username FROM ' . $prefix . 'usr WHERE id != 0', 'username');
+
     unless ( defined $user_id ) {
         croak qq{User '$user' doesn't exist\n};
     }
@@ -225,7 +227,20 @@ sub insert_random_communities {
         $self->{dbh}->do(
             'INSERT INTO ' . $prefix . 'community (name, description, owner, ctime, mtime) VALUES (?, ?, ?, current_timestamp, current_timestamp)',
             undef,
-            $cname, $cdesc, $user_id);
+            $cname, $cdesc, $user_id
+        );
+
+        my $members = {};
+        foreach (1..(int(rand(20)) + 5)) {
+            $members->{$existing_users->{((keys %$existing_users)[int(rand(keys %$existing_users))])}{id}} = 1;
+        }
+        foreach my $id (keys %$members) {
+            $self->{dbh}->do(
+                'INSERT INTO ' . $prefix . 'community_member (community,member,ctime) VALUES (currval(\'' . $prefix . 'community_id_seq\'),?,current_timestamp)',
+                undef,
+                $id,
+            );
+        }
     }
 
     $self->{dbh}->commit();
