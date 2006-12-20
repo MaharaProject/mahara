@@ -72,14 +72,14 @@ $_ = $m->content;
 my $components = /var todo = \[(".*",?)+\]/s;
 my @things = split(/","/, substr($1, 1, -1));
 for my $thing (@things) {
-    debug("Installing $thing...");
+    debug("Installing $thing ... ", 1);
     $m->get($CFG->{url} . 'admin/upgrade.json.php?name=' . $thing);
     $json_response = my_jsonToObj($m->content());
     if ( $json_response->{error} ) {
         croak qq{Failed to install $thing} . Dumper($json_response);
     }
     if ( defined $json_response->{message} ) {
-        print 'MESSAGE:', $json_response->{message};
+        debug('MESSAGE:' . $json_response->{message}{newversion});
     }
 }
 
@@ -124,7 +124,12 @@ else {
 }
 
 sub debug {
-    print shift() . "\n" if $CFG->{debug};
+    my ($message, $nonewline) = @_;
+
+    return unless $CFG->{debug};
+
+    print $message;
+    print "\n" unless $nonewline;
 }
 
 sub my_jsonToObj {
