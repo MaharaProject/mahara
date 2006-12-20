@@ -93,8 +93,60 @@ function editviewaccess_cancel_submit() {
 }
 
 function editviewaccess_submit($values) {
-    global $SESSION, $USER, $viewid;
+    global $SESSION, $USER, $viewid, $data;
 
+    // For users who are being removed from having access to this view, they
+    // need to have the view and any attached artefacts removed from their
+    // watchlist.
+    $oldusers = array();
+    foreach ($data as $item) {
+        if ($item['type'] == 'user') {
+            $oldusers[] = $item;
+        }
+    }
+
+    $newusers = array();
+    foreach ($values['accesslist'] as $item) {
+        if ($item['type'] == 'user') {
+            $newusers[] = $item;
+        }
+    }
+
+    $userstodelete = array();
+    foreach ($oldusers as $olduser) {
+        foreach ($newusers as $newuser) {
+            if ($olduser['id'] == $newuser['id']) {
+                continue(2);
+            }
+        }
+        $userstodelete[] = $olduser;
+    }
+
+    if ($userstodelete) {
+        $userids = array();
+        foreach ($userstodelete as $user) {
+            $userids[] = intval($user['id']);
+        }
+        $userids = implode(',', $userids);
+
+        $prefix = get_config('dbprefix');
+        execute_sql('DELETE FROM ' . $prefix . 'usr_watchlist_view
+            WHERE view = ' . $viewid . '
+            AND usr IN (' . $userids . ')');
+        execute_sql('DELETE FROM ' . $prefix . 'usr_watchlist_artefact
+            WHERE view = ' . $viewid . '
+            AND usr IN(' . $userids . ')');
+    }
+
+    // Procedure:
+    // get list of current friends - this is available in global $data
+    // compare with list of new friends
+    // work out which friends are being removed
+    // foreach friend
+    //     // remove record from usr_watchlist_view where usr = ? and view = ?
+    //     // remove records from usr_watchlist_artefact where usr = ? and view = ?
+    // endforeach
+    //
     db_begin();
     delete_records('view_access', 'view', $viewid);
     delete_records('view_access_usr', 'view', $viewid);
