@@ -1135,11 +1135,13 @@ function get_views($users, $userlooking=null, $limit=5) {
             $list[$row->owner][$row->id] = $row;
         }
     }
-    
+
+    // bail if we've filled all users to the limit
     if (_get_views_trim_list($list, $users, $limit)) {
         return $list;
     }
 
+    // check individual user access
     if ($results = get_records_sql_array(
         'SELECT
             v.*,
@@ -1162,8 +1164,68 @@ function get_views($users, $userlooking=null, $limit=5) {
         }
     }
 
-    log_debug('Users remaing');
-    log_debug($users);
+    // bail if we've filled all users to the limit
+    if (_get_views_trim_list($list, $users, $limit)) {
+        return $list;
+    }
+
+    // check group access
+    if ($results = get_records_sql_array(
+        'SELECT
+            v.*,
+            ' . db_format_tsfield('v.atime','atime') . ',
+            ' . db_format_tsfield('v.mtime','mtime') . ',
+            ' . db_format_tsfield('v.ctime','ctime') . '
+        FROM 
+            ' . $prefix . 'view v
+            INNER JOIN view_access_group a ON v.id=a.view
+            INNER JOIN usr_group_member m ON m.grp=a.grp AND m.member=?
+        WHERE
+            v.owner IN (' . join(',',array_map('db_quote', array_keys($users))) . ')
+            AND ( v.startdate IS NULL OR v.startdate < ? )
+            AND ( v.stopdate IS NULL OR v.stopdate < ? )
+        ',
+        array($userlooking, $dbnow, $dbnow)
+        )
+    ) {
+        foreach ($results as &$row) {
+            $list[$row->owner][$row->id] = $row;
+        }
+    }
+
+    // bail if we've filled all users to the limit
+    if (_get_views_trim_list($list, $users, $limit)) {
+        return $list;
+    }
+
+    // check community access
+    if ($results = get_records_sql_array(
+        'SELECT
+            v.*,
+            ' . db_format_tsfield('v.atime','atime') . ',
+            ' . db_format_tsfield('v.mtime','mtime') . ',
+            ' . db_format_tsfield('v.ctime','ctime') . '
+        FROM 
+            ' . $prefix . 'view v
+            INNER JOIN view_access_community a ON v.id=a.view
+            INNER JOIN community_member m ON m.community=a.community AND m.member=?
+        WHERE
+            v.owner IN (' . join(',',array_map('db_quote', array_keys($users))) . ')
+            AND ( v.startdate IS NULL OR v.startdate < ? )
+            AND ( v.stopdate IS NULL OR v.stopdate < ? )
+        ',
+        array($userlooking, $dbnow, $dbnow)
+        )
+    ) {
+        foreach ($results as &$row) {
+            $list[$row->owner][$row->id] = $row;
+        }
+    }
+
+    // bail if we've filled all users to the limit
+    if (_get_views_trim_list($list, $users, $limit)) {
+        return $list;
+    }
 
     return $list;
 }
