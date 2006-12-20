@@ -296,3 +296,8 @@ function expandDownToViewport(element, width) {
     setElementDimensions(element, newheight);
 }
 
+function countKeys(x) {
+    n = 0;
+    for ( i in x ) n++;
+    return n;
+}
