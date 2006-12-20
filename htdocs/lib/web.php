@@ -1088,10 +1088,23 @@ function get_site_page_content($pagename) {
 }
 
 
-function redirect($location) {
+function redirect($location='') {
     if (headers_sent()) {
         throw new Exception('Headers already sent when redirect() was called');
     }
+    $wwwroot = get_config('wwwroot');
+
+    if ($location == '') {
+        $path = $_SERVER['SCRIPT_NAME'];
+        if (substr($path, -9) == 'index.php') {
+            $path = substr($path, 0, -9);
+        }
+        $location = $wwwroot . $path;
+    }
+    else if (substr($location, 0, 4) != 'http') {
+        $location = $wwwroot . $location;
+    }
+
     header('HTTP/1.1 303 See Other');
     header('Location:' . $location);
     exit;
