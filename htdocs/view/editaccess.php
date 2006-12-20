@@ -24,6 +24,11 @@
  *
  */
 
+// @todo Maybe later have a cron job to clean up access to views when the access expires
+// @todo Currently you can add access with start date after end date, this should be restricted
+// @todo Currently you can add multplie access that is exactly the same (e.g. 3x public with no dates)
+//       This might need to be checked for. As it stands that just results in three rows in the database,
+//       which are collapsed when access to the view is edited
 define('INTERNAL', 1);
 define('MENUITEM', 'view');
 require(dirname(dirname(__FILE__)) . '/init.php');
