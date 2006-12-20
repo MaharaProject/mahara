@@ -1150,7 +1150,7 @@ function get_views($users, $userlooking=null, $limit=5) {
             ' . db_format_tsfield('ctime') . '
         FROM 
             ' . $prefix . 'view v
-            INNER JOIN view_access_usr a ON v.id=a.view AND a.usr=?
+            INNER JOIN ' . $prefix . 'view_access_usr a ON v.id=a.view AND a.usr=?
         WHERE
             v.owner IN (' . join(',',array_map('db_quote', array_keys($users))) . ')
             AND ( v.startdate IS NULL OR v.startdate < ? )
