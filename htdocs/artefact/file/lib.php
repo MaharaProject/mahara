@@ -158,12 +158,16 @@ class ArtefactTypeFileBase extends ArtefactType {
         }
         $filetypesql = "('" . join("','", PluginArtefactFile::get_artefact_types()) . "')";
         $prefix = get_config('dbprefix');
-        $filedata = get_records_sql_array('SELECT a.id, a.artefacttype, a.mtime, f.size, a.title, a.description
+        $filedata = get_records_sql_array('SELECT
+                a.id, a.artefacttype, a.mtime, f.size, a.title, a.description, COUNT(c.*) AS childcount
             FROM ' . $prefix . 'artefact a
-            LEFT OUTER JOIN ' . $prefix . 'artefact_file_files f ON f.artefact = a.id
+                LEFT OUTER JOIN ' . $prefix . 'artefact_file_files f ON f.artefact = a.id
+                LEFT OUTER JOIN ' . $prefix . 'artefact c ON c.parent = a.id
             WHERE a.owner = ' . $userid . '
-            AND a.parent' . $foldersql . "
-            AND a.artefacttype IN " . $filetypesql, '');
+                AND a.parent' . $foldersql . '
+                AND a.artefacttype IN ' . $filetypesql . '
+            GROUP BY
+                1, 2, 3, 4, 5, 6;', '');
 
         if (!$filedata) {
             $filedata = array();

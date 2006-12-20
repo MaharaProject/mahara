@@ -32,7 +32,7 @@ function FileBrowser(element, source, changedircallback, actionname, actioncallb
         this.lastcolumnfunc = function (r) {
             var editb = INPUT({'type':'button', 'value':get_string('edit')});
             editb.onclick = function () { self.openeditform(r); };
-            if (r.emptyfolder) {
+            if (r.childcount > 0) {
                 return TD(null, editb);
             }
             var deleteb = INPUT({'type':'button', 'value':get_string('delete')});
