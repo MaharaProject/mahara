@@ -40,8 +40,8 @@ $createid               = param_variable('createid');
 // javascript on the edit blog post page.
 
 safe_require('artefact', 'blog');
-if (ArtefactTypeBlogPost::save_blogpost_attachment('userfile', session_id() . $createid,
-                                                   $result->uploadnumber)) {
+if (ArtefactTypeBlogPost::save_attachment_temporary('userfile', session_id() . $createid,
+                                                    $result->uploadnumber)) {
     $result->error = false;
     $result->message = get_string('uploadoffilecomplete', 'artefact.file', $result->title);
 }

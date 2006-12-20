@@ -37,6 +37,10 @@
           </tr></thead>
           <tbody><tr><td></td></tr></tbody>
         </table>
+        <div>
+          <input type='button' value='{str tag=savepost section=artefact.blog}' onclick="saveblogpost()">
+          <input type='button' value='{str tag=cancel}' onclick="canceledit()">
+        </div>
       </div>
       </span></span></span></span>
     </div>

@@ -556,12 +556,48 @@ class ArtefactTypeBlogPost extends ArtefactType {
      * This function saves an uploaded file to a temporary directory in dataroot
      *
      */
-    public static function save_blogpost_attachment($inputname, $dirname, $filename) {
+    public static function save_attachment_temporary($inputname, $dirname, $filename) {
         require_once('uploadmanager.php');
         $um = new upload_manager($inputname);
         return $um->process_file_upload(self::$blogattachmentroot . $dirname, $filename);
     }
 
+
+    /**
+     * Save a temporary uploaded file to the myfiles area.
+     */
+    public function save_attachment($directory, $filename, $title, $description) {
+        global $USER;
+
+        safe_require('artefact', 'file');
+
+        $data = new StdClass;
+        $data->title = $title;
+        $data->description = $description;
+
+        $f = new ArtefactTypeFile(0, $data);
+        $f->set('owner', $USER->get('id'));
+        $f->set('parent', self::blogfiles_folder_id());
+        if (!$f->save_file(self::$blogattachmentroot . $directory . '/' . $filename)) {
+            $f->delete();
+            return false;
+        }
+
+        $fileid = $f->get('id');
+        $data = new StdClass;
+        $data->blogpost = $this->id;
+        $data->file = $fileid;
+        insert_record('artefact_blog_blogpost_file', $data);
+
+        return $fileid;
+    }
+
+    public static function blogfiles_folder_id() {
+        $name = get_string('blogfilesdirname', 'artefact.blog');
+        $description = get_string('blogfilesdirdescription', 'artefact.blog');
+        safe_require('artefact', 'file');
+        return ArtefactTypeFolder::get_folder_id($name, $description);
+    }
 
     /**
      * This function publishes the blog post.
@@ -600,6 +636,8 @@ class ArtefactTypeBlogPost extends ArtefactType {
             INNER JOIN ' . $prefix . 'artefact a ON a.id = f.file
             WHERE f.blogpost = ' . $this->id, '');
     }
+
+    
     
 }
 

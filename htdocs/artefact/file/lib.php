@@ -201,6 +201,9 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
                 }
             }
         }
+        $this->container = 0;
+        $this->locked = 0;
+
     }
 
     /**
@@ -275,9 +278,37 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         if (!$um->save_file(self::get_file_directory($this->id) , $this->id)) {
             $this->delete();
             return false;
-        }
+        }                                                                                                                                               
         return true;
     }
+
+
+    /**
+     * Moves a file into the myfiles area.
+     * Takes the name of a file outside the myfiles area.
+     * Returns a boolean indicating success or failure.
+     */
+    public function save_file($pathname) {
+        $dataroot = get_config('dataroot');
+        $pathname = $dataroot . $pathname;
+        if (!$size = filesize($pathname)) {
+            $this->delete();
+            return false;
+        }
+        if (empty($this->id)) {
+            $this->commit();
+        }
+        $newdir = $dataroot . self::get_file_directory($this->id);
+        check_dir_exists($newdir);
+        $newname = $newdir . '/' . $this->id;
+        if (!rename($pathname, $newname)) {
+            $this->delete();
+            return false;
+        }
+        $this->set('size',$size);
+        return true;
+    }
+
 
     // Deal with this once I know about how the mime type detection will work.
 
@@ -339,6 +370,14 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
 
 class ArtefactTypeFolder extends ArtefactTypeFileBase {
 
+    public function __construct($id = 0, $data = null) {
+
+        parent::__construct($id, $data);
+
+        $this->container = 1;
+
+    }
+
     public function render($format, $options) {
         if ($format == FORMAT_ARTEFACT_RENDERFULL) {
             return $this->title;
@@ -362,6 +401,31 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
                      FORMAT_ARTEFACT_RENDERFULL, FORMAT_ARTEFACT_RENDERMETADATA);
     }
     
+    public static function get_folder_by_name($name, $parentfolderid=null) {
+        global $USER;
+        $prefix = get_config('dbprefix');
+        $parentclause = $parentfolderid ? 'parent = ' . $parentfolderid : 'parent IS NULL';
+        return get_record_sql('SELECT * FROM ' . $prefix . 'artefact
+           WHERE title = ? AND ' . $parentclause . ' AND owner = ' . $USER->get('id') . "
+           AND artefacttype = 'folder'", array($name));
+    }
+
+    // Get the id of a folder, creating the folder if necessary
+    public static function get_folder_id($name, $description, $parentfolderid=null) {
+        global $USER;
+        if (!$record = self::get_folder_by_name($name, $parentfolderid)) {
+            $data = new StdClass;
+            $data->title = $name;
+            $data->description = $description;
+            $f = new ArtefactTypeFolder(0, $data);
+            $f->set('owner', $USER->get('id'));
+            $f->set('parent', $parentfolderid);
+            $f->commit();
+            return $f->get('id');
+        }
+        return $record->id;
+    }
+
 }
 
 class ArtefactTypeImage extends ArtefactTypeFile {

@@ -38,6 +38,10 @@ $string['nofilesattachedtothispost'] = 'No attached files';
 $string['blogpost'] = 'post';
 $string['browsemyfiles'] = 'Browse my files';
 $string['remove'] = 'Remove';
+$string['savepost'] = 'Save post';
+
+$string['blogfilesdirname'] = 'blogfiles';
+$string['blogfilesdirdescription'] = 'Files uploaded as blog post attachments';
 
 $string['blogtitle'] = 'Title';
 $string['blogtitledesc'] = 'e.g., ‘Jill’s Travel Blog’.';
