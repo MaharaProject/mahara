@@ -129,6 +129,10 @@ class ArtefactTypeFileBase extends ArtefactType {
         if (empty($this->id)) {
             return; 
         }
+        try {
+            delete_records('artefact_blog_blogpost_file', 'file', $this->id);
+        } 
+        catch ( Exception $e ) {}
         delete_records('artefact_file_files', 'artefact', $this->id);
         parent::delete();
     }
