@@ -118,7 +118,7 @@ function profileform_validate(Pieform $form, $values) {
     }
 }
 
-function profileform_submit($values) {
+function profileform_submit($values, Pieform $form) {
     global $SESSION;
     global $USER;
     global $element_list;
@@ -248,17 +248,11 @@ function profileform_submit($values) {
         db_commit();
     }
     catch (Exception $e) {
-        json_error(get_string('profilefailedsaved','artefact.internal'));
+        $form->json_reply(PIEFORM_ERR, get_string('profilefailedsaved','artefact.internal'));
     }
 
-    echo json_encode(
-        array(
-            'error' => false,
-            'message' => get_string('profilesaved','artefact.internal'),
-        )
-    );
+    $form->json_reply(PIEFORM_OK, get_string('profilesaved','artefact.internal'));
 
-    exit;
 }
 
 $smarty = smarty();

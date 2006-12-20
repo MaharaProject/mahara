@@ -100,7 +100,7 @@ $smarty = smarty();
 $smarty->assign('form', pieform($form));
 $smarty->display('admin/users/notifications.tpl');
 
-function adminnotifications_submit($values) {
+function adminnotifications_submit($values, Pieform $form) {
     foreach ($values as $key => $value) {
         if (!preg_match('/^admin\-(\d+)\-([a-z]+)$/', $key, $m)) {
             continue;
@@ -111,8 +111,7 @@ function adminnotifications_submit($values) {
         set_activity_preference($m[1], $m[2], $value);
     }
 
-    json_reply(false, get_string('notificationssaved', 'admin'));
-    exit;
+    $form->json_reply(PIEFORM_OK, get_string('notificationssaved', 'admin'));
 }
 
 ?>

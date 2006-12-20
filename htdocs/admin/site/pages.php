@@ -71,7 +71,7 @@ $f = array(
 $form = pieform($f);
 
 
-function editsitepage_submit($values) {
+function editsitepage_submit($values, Pieform $form) {
     global $USER;
     $data = new StdClass;
     $data->name    = $values['pagename'];
@@ -82,9 +82,9 @@ function editsitepage_submit($values) {
         update_record('site_content', $data, 'name');
     }
     catch (SQLException $e) {
-        json_reply('local', get_string('savefailed','admin'));
+        $form->json_reply(PIEFORM_ERR, get_string('savefailed','admin'));
     }
-    json_reply(false, get_string('pagesaved','admin'));
+    $form->json_reply(PIEFORM_OK, get_string('pagesaved','admin'));
 }
 
 $ijs = <<< EOJS
