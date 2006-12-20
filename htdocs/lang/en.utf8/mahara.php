@@ -399,6 +399,7 @@ $string['pendingfriends'] = 'Pending friends';
 $string['friendlistfailure'] = 'Failed to modify your friends list';
 
 // general views stuff
-$string['viewavabile'] = 'View available';
+$string['viewavailable'] = 'View available';
 $string['viewsavailable'] = 'Views available';
+$string['allviews'] = 'All views';
 ?>
