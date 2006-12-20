@@ -103,11 +103,11 @@ $siteoptionform = pieform(array(
     )
 ));
 
-function siteoptions_fail($field) {
-    json_reply('local', get_string('setsiteoptionsfailed','admin', get_string($field)));
+function siteoptions_fail($field, Pieform $form) {
+    $form->json_reply(PIEFORM_ERR, get_string('siteoptionsfailed','admin', get_string($field)), array($field => get_string($field . 'invalid', 'admin')));
 }
 
-function siteoptions_submit($values) {
+function siteoptions_submit($values, Pieform $form) {
     $fields = array('sitename','language','theme','pathtoclam',
                     'allowpublicviews','artefactviewinactivitytime');
     foreach ($fields as $field) {
@@ -117,13 +117,13 @@ function siteoptions_submit($values) {
     }
     // submitted sessionlifetime is in minutes; db entry session_timeout is in seconds
     if (!set_config('session_timeout', $values['sessionlifetime'] * 60)) {
-        siteoptions_fail('sessionlifetime');
+        siteoptions_fail('sessionlifetime', $form);
     }
     // Submitted value is on/off; database entry should be 1/0
     if (!set_config('viruschecking', (int) ($values['viruschecking'] == 'on'))) {
-        siteoptions_fail('viruschecking');
+        siteoptions_fail('viruschecking', $form);
     }
-    json_reply(false, get_string('siteoptionsset','admin'));
+    $form->json_reply(PIEFORM_OK, get_string('siteoptionsset','admin'));
 }
 
 $smarty = smarty();
