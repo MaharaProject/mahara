@@ -330,8 +330,7 @@ function change_password_submit($values) {
         $USER->set('password', $password);
         $USER->set('passwordchange', 0);
         $SESSION->add_ok_msg(get_string('passwordsaved'));
-        redirect(get_config('wwwroot'));
-        exit;
+        redirect();
     }
 
     throw new Exception('Attempt by "' . $USER->get('username') . '@'
