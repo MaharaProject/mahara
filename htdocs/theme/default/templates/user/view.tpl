@@ -8,11 +8,6 @@
 	<div class="content">
 		<div class="box-cnrs"><span class="cnr-tl"><span class="cnr-tr"><span class="cnr-bl"><span class="cnr-br">
 			<div class="maincontent">
-
-		{$INVITEFORM}
-		{$ADDFORM}
-		{$FRIENDFORM}
-		
 			<h3>{$NAME}</h3>
 			<table><tbody>
 		{foreach from=$USERFIELDS key=key item=item}
@@ -37,7 +32,10 @@
 		{/foreach}
 			</ul>
 		{/if}
-
+                <br>
+		{$INVITEFORM}
+		{$ADDFORM}
+		{$FRIENDFORM}
 			</div>
 		</span></span></span></span></div>	
 	</div>
