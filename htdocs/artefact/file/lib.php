@@ -153,34 +153,24 @@ class ArtefactTypeFileBase extends ArtefactType {
 
         $prefix = get_config('dbprefix');
 
-        if ($parentfolderid) {
-            $foldersql = ' = ' . $parentfolderid;
-        }
-        else {
-            $foldersql = ' IS NULL';
-        }
-        
-        // if blogs are installed then return whether the files are
-        // attached to blog posts
-        if (get_field('artefact_installed', 'active', 'name', 'blog')) {
-            $blogpostsql = ', COUNT (b.*) AS attachcount';
-            $blogpostjoin = 'LEFT OUTER JOIN ' . $prefix . 'artefact_blog_blogpost_file b ON b.file = a.id';
-        }
-        else {
-            $blogpostsql = '';
-            $blogpostjoin = '';
-        }
+        $foldersql = $parentfolderid ? ' = ' . $parentfolderid : ' IS NULL';
+
+        // if blogs are installed then also return the number of blog
+        // posts each file is attached to
+        $bloginstalled = get_field('artefact_installed', 'active', 'name', 'blog');
 
         $filetypesql = "('" . join("','", PluginArtefactFile::get_artefact_types()) . "')";
         $filedata = get_records_sql_array('SELECT
                 a.id, a.artefacttype, a.mtime, f.size, a.title, a.description,
-                COUNT(c.*) AS childcount ' . $blogpostsql . '
+                COUNT(c.*) AS childcount ' 
+                . ($bloginstalled ? ', COUNT (b.*) AS attachcount' : '') . '
             FROM ' . $prefix . 'artefact a
                 LEFT OUTER JOIN ' . $prefix . 'artefact_file_files f ON f.artefact = a.id
-                LEFT OUTER JOIN ' . $prefix . 'artefact c ON c.parent = a.id
-                ' . $blogpostjoin . '
-            WHERE a.owner = ' . $userid . '
-                AND a.parent' . $foldersql . '
+                LEFT OUTER JOIN ' . $prefix . 'artefact c ON c.parent = a.id '
+                . ($bloginstalled ? ('LEFT OUTER JOIN ' . $prefix .
+                                     'artefact_blog_blogpost_file b ON b.file = a.id') : '') . '
+            WHERE a.parent' . $foldersql . '
+                AND a.owner = ' . $userid . '
                 AND a.artefacttype IN ' . $filetypesql . '
             GROUP BY
                 1, 2, 3, 4, 5, 6;', '');
