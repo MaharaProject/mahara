@@ -220,7 +220,7 @@ function checknoattachments() {
 // need to be unique.
 function attachtopost(data) {
     var rowid = data.uploadnumber ? 'uploaded:' + data.uploadnumber : 'artefact:' + data.id;
-    if (fileattached_id(rowid)) {
+    if (fileattached_id(rowid) || data.error) {
         return;
     }
     appendChildNodes(attached.tbody,

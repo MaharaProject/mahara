@@ -60,15 +60,16 @@ if ($oldid = ArtefactTypeFileBase::exists_in_db($data->title, $data->owner, $par
 }
 if (!isset($result->error)) {
     $f = new ArtefactTypeFile(0, $data);
-    if ($f->save_uploaded_file('userfile')) {
+    $errmsg = $f->save_uploaded_file('userfile');
+    if (!$errmsg) {
         $result->error = false;
         $result->message = get_string('uploadoffilecomplete', 'artefact.file', 
                                       $f->get('title'));
     }
     else {
-        $result->error = 'uploadfailed';
+        $result->error = 'local';
         $result->message = get_string('uploadoffilefailed', 'artefact.file', 
-                                      $f->get('title'));
+                                      $f->get('title')) . ': ' . $errmsg;
     }
 }
 

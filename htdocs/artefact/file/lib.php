@@ -287,19 +287,18 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
     public function save_uploaded_file($inputname) {
         require_once('uploadmanager.php');
         $um = new upload_manager($inputname);
-        if (!$um->preprocess_file()) {
-            return false;
+        if ($error = $um->preprocess_file()) {
+            return $error;
         }
         $this->size = $um->file['size'];
         $this->dirty = true;
         $this->commit();
         // Save the file using its id as the filename, and use its id modulo
         // the number of subdirectories as the directory name.
-        if (!$um->save_file(self::get_file_directory($this->id) , $this->id)) {
+        if ($error = $um->save_file(self::get_file_directory($this->id) , $this->id)) {
             $this->delete();
-            return false;
-        }                                                                                                                                               
-        return true;
+        }
+        return $error;
     }
 
 
