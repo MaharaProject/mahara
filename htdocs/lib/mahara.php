@@ -1178,8 +1178,8 @@ function get_views($users, $userlooking=null, $limit=5) {
             ' . db_format_tsfield('v.ctime','ctime') . '
         FROM 
             ' . $prefix . 'view v
-            INNER JOIN view_access_group a ON v.id=a.view
-            INNER JOIN usr_group_member m ON m.grp=a.grp AND m.member=?
+            INNER JOIN ' . $prefix . 'view_access_group a ON v.id=a.view
+            INNER JOIN ' . $prefix . 'usr_group_member m ON m.grp=a.grp AND m.member=?
         WHERE
             v.owner IN (' . join(',',array_map('db_quote', array_keys($users))) . ')
             AND ( v.startdate IS NULL OR v.startdate < ? )
@@ -1207,8 +1207,8 @@ function get_views($users, $userlooking=null, $limit=5) {
             ' . db_format_tsfield('v.ctime','ctime') . '
         FROM 
             ' . $prefix . 'view v
-            INNER JOIN view_access_community a ON v.id=a.view
-            INNER JOIN community_member m ON m.community=a.community AND m.member=?
+            INNER JOIN ' . $prefix . 'view_access_community a ON v.id=a.view
+            INNER JOIN ' . $prefix . 'community_member m ON m.community=a.community AND m.member=?
         WHERE
             v.owner IN (' . join(',',array_map('db_quote', array_keys($users))) . ')
             AND ( v.startdate IS NULL OR v.startdate < ? )
