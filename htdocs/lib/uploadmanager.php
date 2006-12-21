@@ -111,8 +111,9 @@ class upload_manager {
     /**
      * Wrapper function that calls {@link preprocess_files()} and {@link viruscheck_files()} and then {@link save_files()}
      * Modules that require the insert id in the filepath should not use this and call these functions seperately in the required order.
-     * @parameter string $destination Where to save the uploaded files to.
-     * @return boolean
+     * @parameter string $destination Where to save the uploaded file to.
+     * @parameter string $newname What to call the saved file.
+     * @return false for no errors, or a string describing the error.
      */ 
     function process_file_upload($destination, $newname) {
         $error = $this->preprocess_file();
@@ -226,14 +227,15 @@ function clam_scan_file(&$file) {
     case 1:  // bad wicked evil, we have a virus.
         global $USER;
         $userid = $USER->get('id');
-        $username = $USER->get('username') . ' (' . full_name() . ')';
         clam_handle_infected_file($fullpath); 
         // Notify admins if user has uploaded more than 3 infected
         // files in the last month
         if (count_records_sql('SELECT COUNT(*) FROM ' . get_config('dbprefix') . 'usr_infectedupload
             WHERE usr = ? AND time > CURRENT_TIMESTAMP - ?::INTERVAL;', array($userid, '1 month')) >= 2) {
             log_debug('sending virusrepeat notification');
-            $data = (object) array('name' => $username, 'id' => $userid);
+            $data = (object) array('username' => $USER->get('username'),
+                                   'userid' => $userid,
+                                   'fullname' => full_name());
             require_once('activity.php');
             activity_occurred('virusrepeat', $data);
         }

@@ -132,6 +132,9 @@ function handle_activity($activitytype, $data) {
                 }
                 break;
             case 'virusrepeat':
+                $userstring = $data->username . ' (' . $data->fullname . ') (userid:' . $data->userid . ')' ;
+                $data->subject = get_string('virusrepeatsubject', 'mahara', $userstring);
+                $data->message = get_string('virusrepeatmessage');
                 break;
             case 'virusrelease':
                 break;

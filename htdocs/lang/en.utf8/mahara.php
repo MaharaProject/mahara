@@ -411,9 +411,10 @@ $string['clamdeletedfilefailed'] = 'The file could not be deleted';
 $string['clambroken'] = 'Your administrator has enabled virus checking for file uploads but has misconfigured something.  Your file upload was NOT successful. Your administrator has been emailed to notify them so they can fix it.  Maybe try uploading this file later.';
 $string['clamemailsubject'] = '%s :: Clam AV notification';
 $string['clamlost'] = 'Clam AV is configured to run on file upload, but the path supplied to Clam AV, %s, is invalid.';
-$string['virusfounduser'] = 'The file you have uploaded, %s, has been scanned by a virus checker and found to be infected! Your file upload was NOT successful.';
 $string['clamfailed'] = 'Clam AV has failed to run.  The return error message was %s. Here is the output from Clam:';
 $string['clamunknownerror'] = 'There was an unknown error with clam.';
-
+$string['virusfounduser'] = 'The file you have uploaded, %s, has been scanned by a virus checker and found to be infected! Your file upload was NOT successful.';
+$string['virusrepeatsubject'] = 'Warning: %s is a repeat virus uploader.';
+$string['virusrepeatmessage'] = 'The user %s has uploaded multiple files which have been scanned by a virus checker and found to be infected.';
 
 ?>
