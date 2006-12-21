@@ -44,6 +44,9 @@ switch ($type) {
     case 'group':
         $data = get_group_results($query, $limit, $offset);
         break;
+    case 'community':
+        $data = get_community_results($query, $limit, $offset);
+        break;
 }
 
 json_headers();
@@ -82,4 +85,15 @@ function get_group_results($query, $limit, $offset) {
 
     return $data;
 }
+
+function get_community_results($query, $limit, $offset) {
+    $data = search_community($query, $limit, $offset);
+    if ($data['data']) {
+        foreach ($data['data'] as &$result) {
+        }
+    }
+
+    return $data;
+}
+
 ?>
