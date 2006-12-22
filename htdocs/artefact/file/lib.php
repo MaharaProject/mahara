@@ -149,7 +149,7 @@ class ArtefactTypeFileBase extends ArtefactType {
             AND artefacttype IN ' . $filetypesql, array($title));
     }
 
-    public static function get_my_files_data($parentfolderid, $userid) {
+    public static function get_my_files_data($parentfolderid, $userid, $adminfiles=null) {
 
         $prefix = get_config('dbprefix');
 
@@ -157,7 +157,7 @@ class ArtefactTypeFileBase extends ArtefactType {
 
         // if blogs are installed then also return the number of blog
         // posts each file is attached to
-        $bloginstalled = get_field('artefact_installed', 'active', 'name', 'blog');
+        $bloginstalled = !$adminfiles && get_field('artefact_installed', 'active', 'name', 'blog');
 
         $filetypesql = "('" . join("','", PluginArtefactFile::get_artefact_types()) . "')";
         $filedata = get_records_sql_array('SELECT
@@ -170,7 +170,7 @@ class ArtefactTypeFileBase extends ArtefactType {
                 . ($bloginstalled ? ('LEFT OUTER JOIN ' . $prefix .
                                      'artefact_blog_blogpost_file b ON b.file = a.id') : '') . '
             WHERE a.parent' . $foldersql . '
-                AND a.owner = ' . $userid . '
+                AND ' . ($adminfiles ? 'f.adminfile = 1' : ('a.owner = ' . $userid)) . '
                 AND a.artefacttype IN ' . $filetypesql . '
             GROUP BY
                 1, 2, 3, 4, 5, 6;', '');
