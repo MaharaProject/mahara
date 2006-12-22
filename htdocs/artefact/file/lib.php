@@ -170,7 +170,7 @@ class ArtefactTypeFileBase extends ArtefactType {
                 . ($bloginstalled ? ('LEFT OUTER JOIN ' . $prefix .
                                      'artefact_blog_blogpost_file b ON b.file = a.id') : '') . '
             WHERE a.parent' . $foldersql . '
-                AND ' . ($adminfiles ? 'f.adminfile = 1' : ('a.owner = ' . $userid)) . '
+                AND ' . ($adminfiles ? 'f.adminfiles = 1' : ('a.owner = ' . $userid)) . '
                 AND a.artefacttype IN ' . $filetypesql . '
             GROUP BY
                 1, 2, 3, 4, 5, 6;', '');
