@@ -247,11 +247,16 @@ class PluginSearchInternal extends PluginSearch {
                     id, name, description, jointype, owner, ctime, mtime
                 FROM
                     " . get_config('dbprefix') . "community
-                WHERE
+                WHERE (
                     name ILIKE '%' || ? || '%' 
                     OR description ILIKE '%' || ? || '%' 
+                ) AND ( 
+                    owner = ? OR id IN (
+                        SELECT community FROM " . get_config('dbprefix') . "community_member WHERE member = ?
+                    )
+                )
                 ",
-                array($query_string, $query_string),
+                array($query_string, $query_string, $USER->get('id'), $USER->get('id')),
                 $offset,
                 $limit
             );
@@ -261,14 +266,16 @@ class PluginSearchInternal extends PluginSearch {
                     COUNT(*)
                 FROM
                     " . get_config('dbprefix') . "usr_group u
-                WHERE
-                    owner = ?
-                    AND (
-                        name ILIKE '%' || ? || '%' 
-                        OR description ILIKE '%' || ? || '%' 
+                WHERE (
+                    name ILIKE '%' || ? || '%' 
+                    OR description ILIKE '%' || ? || '%' 
+                ) AND ( 
+                    owner = ? OR id IN (
+                        SELECT community FROM " . get_config('dbprefix') . "community_member WHERE member = ?
                     )
+                )
             ",
-                array($query_string, $query_string)
+                array($query_string, $query_string, $USER->get('id'), $USER->get('id'))
             );
         }
         // TODO
