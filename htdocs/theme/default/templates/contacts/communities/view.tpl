@@ -15,6 +15,7 @@
                 {elseif $canrequestjoin} <p><a href="" onClick="return memberControl({$community->id}, 'request');">{str tag='requestjoincommunity'}</a></p>
                 {elseif $canjoin} <p><a href="" onClick="return memberControl({$community->id}, 'join');">{str tag='joincommunity'}</a></p>
                 {elseif $canacceptinvite} <p><a href="" onClick="return memberControl({$community->id}, 'invite');">{str tag='invitedjoincommunity'}</a></p>{/if}
+                <div id="messagediv"></div>
                 {if $member}
                     <div class="communityviews">
                         <h5>{str tag='views'}</h5>
@@ -57,7 +58,6 @@
                              </tbody>
                          </table>
                          <input type="button" value="{str tag='updatemembership'}" onClick="return updateMembership();" />
-                         <div id="messagediv"></div>
                      </div>
                 {/if}
             </div>

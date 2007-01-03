@@ -51,6 +51,7 @@ $releaseviewstr = get_string('releaseview');
 $tutorstr = get_string('tutor');
 $memberstr = get_string('member');
 $removestr = get_string('remove');
+$updatefailedstr = get_string('updatefailed');
 
 $tutor = ($membership < COMMUNITY_MEMBERSHIP_MEMBER);
 $controlled = ($community->jointype == 'controlled');
@@ -71,7 +72,7 @@ viewlist = new TableRenderer(
      },
      function (r,d) {
          if (r.submittedto && {$tutor}) {
-             return TD(null, A({'href': '', 'onclick': 'releaseView(' + r.id + ');'}, '{$releaseviewstr}'));
+             return TD(null, A({'href': '', 'onclick': 'return releaseView(' + r.id + ');'}, '{$releaseviewstr}'));
          }
          return TD(null);
      }
@@ -139,25 +140,32 @@ function memberControl(id, type) {
 }
 
 function releaseView(id) {
+    var pd = {'type': 'release', 'id': '{$community->id}', 'view': id};
+    var d = loadJSONDoc('view.json.php', pd);
+    d.addCallbacks(function (data) {
+        $('messagediv').innerHTML = data.message;
+        viewlist.doupdate();
+    },
+    function () {
+        $('messagediv').innerHTML = '{$updatefailedstr}';
+    });
     return false;
 }
 
 function updateMembership() {
-    var pd = {'type': 'control', 'id': '{$community->id}'};
+    var pd = {'type': 'membercontrol', 'id': '{$community->id}'};
     var e = getElementsByTagAndClassName(null, 'member');
     for (s in e) {
         pd[e[s].name] = e[s].options[e[s].selectedIndex].value;
     }
-    debugObject(pd);    
     var d = loadJSONDoc('view.json.php', pd);
     d.addCallbacks(function (data) {
         $('messagediv').innerHTML = data.message;
         memberlist.doupdate();
     },
-                   function () {
-        $('messagediv').innerHTML = data.message;
-        }
-    )
+    function () {
+        $('messagediv').innerHTML = '{$updatefailedstr}';
+    });
 }
 EOF;
 

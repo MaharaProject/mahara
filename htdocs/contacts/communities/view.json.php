@@ -53,14 +53,20 @@ switch ($type) {
                      AND ( v.stopdate IS NULL OR v.stopdate < ? )
                      AND ( a.startdate IS NULL OR a.startdate < ? )
                      AND ( a.stopdate IS NULL OR a.stopdate < ? )';
+        $values = array($id, $dbnow, $dbnow, $dbnow, $dbnow);
+        if ($submitted) {
+            $where .= ' AND v.submittedto = ?';
+            $values[] = $id;
+        }
+            
         $count = count_records_sql('SELECT COUNT(v.id) FROM  ' . $prefix . 'view_access_community a
-                                   JOIN ' . $prefix . 'view v ON a.view = v.id ' . $where, 
-                                   array($id, $dbnow, $dbnow, $dbnow, $dbnow));
+                                   JOIN ' . $prefix . 'view v ON a.view = v.id ' . $where, $values);
+                                   
         $data = get_records_sql_array('SELECT v.*,u.firstname,u.lastname, u.preferredname,u.id AS usr 
-                                   FROM ' . $prefix . 'view_access_community a JOIN ' . $prefix . 'view v ON a.view = v.id 
+                                   FROM ' . $prefix . 'view_access_community a 
+                                   JOIN ' . $prefix . 'view v ON a.view = v.id 
                                    JOIN ' . $prefix.'usr u ON v.owner = u.id ' . $where, 
-                                      array($id, $dbnow, $dbnow, $dbnow, $dbnow), 
-                                      $offset, $limit);
+                                      $values, $offset, $limit);
         if (empty($data)) {
             $data = array();
         }
@@ -94,7 +100,7 @@ switch ($type) {
             $d->displayname = display_name($d);
         }
         break;
-     case 'control':
+     case 'membercontrol':
          foreach ($_REQUEST as $k => $v) {
              if (preg_match('/member-(\d+)/', $k, $m)) {
                  $user = $m[1];
@@ -134,6 +140,13 @@ switch ($type) {
              }
          }
          json_reply(false, get_string('memberchangesuccess'));
+         break;
+     case 'release':
+         $view = param_integer('view');
+         require_once(get_config('libroot') . 'view.php');
+         $view = new View($view);
+         $view->release($id);
+         json_reply(false, get_string('viewreleasedsuccess'));
          break;
 }
 

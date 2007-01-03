@@ -51,6 +51,7 @@ $string['accept'] = 'Accept';
 $string['reject'] = 'Reject';
 
 $string['mainmenu'] = 'Main menu';
+$string['updatefailed'] = 'Update failed';
 
 // auth
 $string['accessforbiddentoadminsection'] = 'You are forbidden from accessing the administration section';
@@ -363,6 +364,9 @@ $string['remove'] = 'Remove';
 $string['updatemembership'] = 'Update membership';
 $string['memberchangefailed'] = 'Failed to update some membership information';
 $string['memberchangesuccess'] = 'Membership status changed successfully';
+$string['viewreleasedsubject'] = 'Your view has been released';
+$string['viewreleasedmessage'] = 'The view that you submitted to community %s has been released back to you by %s';
+$string['viewreleasedsuccess'] = 'View was released successfully';
 
 // friendslist
 $string['reasonoptional'] = 'Reason (optional)';
