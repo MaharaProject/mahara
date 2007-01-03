@@ -352,6 +352,17 @@ $string['addedtocommunitysubject'] = 'You were added to a community';
 $string['addedtocommunitymessage'] = '%s has added you to a community, \'%s\'.  Click on the link below to see the community';
 $string['adduserfailed'] = 'Failed to add the user';
 $string['useradded'] = 'User added';
+$string['owner'] = 'Owner';
+$string['members'] = 'Members';
+$string['memberrequests'] = 'Membership requests';
+$string['submittedviews'] = 'Submitted views';
+$string['releaseview'] = 'Release view';
+$string['tutor'] = 'Tutor';
+$string['member'] = 'Member';
+$string['remove'] = 'Remove';
+$string['updatemembership'] = 'Update membership';
+$string['memberchangefailed'] = 'Failed to update some membership information';
+$string['memberchangesuccess'] = 'Membership status changed successfully';
 
 // friendslist
 $string['reasonoptional'] = 'Reason (optional)';

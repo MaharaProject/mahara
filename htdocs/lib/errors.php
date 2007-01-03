@@ -616,6 +616,11 @@ class ViewNotFoundException extends UserException {}
 class UserNotFoundException extends UserException {}
 
 /**
+ * Exception - community not found
+ */
+class CommunityNotFoundException extends UserException {}
+
+/**
  * Exception - anything to do with template parsing
  */
 class TemplateParserException extends ConfigException {}
