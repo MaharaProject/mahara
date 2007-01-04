@@ -17,6 +17,8 @@ my $EXCLUDE_FILES = [
     qr{ \A htdocs/lib/smarty                }xms,
     qr{ \A htdocs/lib/ddl.php               }xms,
     qr{ \A htdocs/lib/dml.php               }xms,
+    qr{ \A htdocs/lib/file.php              }xms,
+    qr{ \A htdocs/lib/uploadmanager.php     }xms,
     qr{ \A htdocs/lib/xmlize.php            }xms,
     qr{ \A htdocs/lib/kses.php              }xms,
     qr{ \A htdocs/lib/pear/                 }xms,
