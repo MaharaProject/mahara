@@ -259,4 +259,54 @@ function user_can_access_community($community, $user=null) {
     return COMMUNITY_MEMBERSHIP_MEMBER;
 }
 
+
+/**
+ * helper function to remove a user from a community
+ * also deletes the community from their watchlist, 
+ * and deletes any views they can only access through this community
+ * from their watchlist. 
+ *
+ * @param int $communityid
+ * @param int $userid
+ */
+function community_remove_member($communityid, $userid) {
+
+    $prefix = get_config('dbprefix');
+
+    delete_records('usr_watchlist_community', 'usr', $userid, 'community', $communityid);
+    // get all the views in this user's watchlist associated with this community.
+    $views = get_column_sql('SELECT v.id 
+                             FROM ' . $prefix . 'view v JOIN ' . $prefix . 'usr_watchlist_view va on va.view = v.id
+                             JOIN ' . $prefix . 'view_access_community c ON c.view = v.id');
+    // @todo this is probably a retarded way to do it and should be changed later.
+    foreach ($views as $view) {
+        db_begin();
+        delete_record('usr_watchlist_view', 'view', $view, 'usr', $userid);
+        if (can_view_view($view, $userid)) {
+            db_rollback();
+        }
+        else {
+            db_commit();
+        }
+    }
+    delete_records('community_member', 'member', $userid, 'community', $communityid);
+}
+
+/**
+ * function to add a member to a community
+ * doesn't do any jointype checking, that should be handled by the caller
+ *
+ * @param int $communityid
+ * @param int $userid
+ */
+function community_add_member($communityid, $userid) {
+    $cm = new StdClass;
+    $cm->member = $userid;
+    $cm->community = $communityid;
+    $cm->ctime =  db_format_timestamp(time());
+    $cm->tutor = 0;
+    insert_record('community_member', $cm);
+    
+}
+
 ?>

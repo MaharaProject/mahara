@@ -43,6 +43,8 @@ $data = array();
 if (!$membership = user_can_access_community($id)) {
     community_json_empty();
 }
+$community = get_record('community', 'id', $id);
+
 $prefix = get_config('prefix');
 $dbnow  = db_format_timestamp(time());
 
@@ -90,6 +92,7 @@ switch ($type) {
                 community_json_empty();
             }
             $sql = str_replace('community_member', 'community_member_request', $sql);
+            $sql = str_replace(',c.tutor', ',1 AS request, c.reason', $sql);
             $count = count_records('community_member_request', 'community', $id);
             $data = get_records_sql_array($sql, array($id), $offset, $limit);
         }
@@ -98,45 +101,58 @@ switch ($type) {
         }        
         foreach ($data as $d) {
             $d->displayname = display_name($d);
+            if (!empty($d->tutor) && $membership == COMMUNITY_MEMBERSHIP_MEMBER) {
+                $d->displayname .= ' (' . get_string('tutor') . ')';
+            }
         }
         break;
      case 'membercontrol':
          foreach ($_REQUEST as $k => $v) {
              if (preg_match('/member-(\d+)/', $k, $m)) {
                  $user = $m[1];
-                 log_debug("user $user v $v");
+                 $changed = false;
                  try {
                      switch ($v) {
-                         case 'nonmember':
-                             delete_records('usr_watchlist_community', 'usr', $user, 'community', $id);
-                             // get all the views in this user's watchlist associated with this community.
-                             $views = get_column_sql('SELECT v.id 
-                             FROM ' . $prefix . 'view v JOIN ' . $prefix . 'usr_watchlist_view va on va.view = v.id
-                             JOIN ' . $prefix . 'view_access_community c ON c.view = v.id');
-                             // @todo this is probably a retarded way to do it and should be changed later.
-                             foreach ($views as $view) {
-                                 db_begin();
-                                 delete_record('usr_watchlist_view', 'view', $view, 'usr', $user);
-                                 if (can_view_view($view, $user)) {
-                                     db_rollback();
-                                 }
-                                 else {
-                                     db_commit();
-                                 }
-                             }
-                             delete_records('community_member', 'member', $user, 'community', $id);
+                         case 'remove':
+                             community_remove_user($id, $user);
+                             $changed = true;
                              break;
                          case 'member':
-                             set_field('community_member', 'tutor', 0, 'member', $user, 'community', $id);
-                             break;
                          case 'tutor':
-                             set_field('community_member', 'tutor', 1, 'member', $user, 'community', $id);
+                             if ($cm = get_record('community_member', 'member', $user, 'community', $id)) {
+                                 // already a member so just set the flag
+                                 if ($v == 'member' && $cm->tutor == 1) {
+                                     $changed = true;
+                                     set_field('community_member', 'tutor', 0, 'member', $user, 'community', $id);
+                                 }
+                                 else if ($v == 'tutor' && $cm->tutor == 0) {
+                                     $changed = true;
+                                     set_field('community_member', 'tutor', 1, 'member', $user, 'community', $id);  
+                                 }
+                                 // else not changed.
+                             }
+                             else {
+                                 community_add_member($id, $user);
+                                 delete_records('community_member_request', 'member', $user, 'community', $id);
+                                 $changed = true;
+                                 $v = 'added' . $v; // for the string for notify
+                             }
+                             break;
+                         case 'declinerequest':
+                             delete_records('community_member_request', 'member', $user, 'community', $id);
                              break;
                      }
                  }
                  catch (SQLException $e) {
                      json_reply(true, get_string('memberchangefailed'));
                  }
+                 require_once('activity.php');
+                 activity_occurred('maharamessage', 
+                     array('users' => array($user),
+                           'subject' => get_string('communitymembershipchangesubject', 'mahara', $community->name), 
+                           'message' => get_string('communitymembershipchangemessage' . $v),
+                           'url'     => get_config('wwwroot') . 'contacts/communities/view.php?id=' . $id));
+                                    
              }
          }
          json_reply(false, get_string('memberchangesuccess'));

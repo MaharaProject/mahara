@@ -10,11 +10,14 @@
             <div class="maincontent">
                 <h2>{$community->name}</h2>
                 <p>{str tag='owner'}: {$community->ownername}</p>
+	        {assign var="jointype" value=$community->jointype}
+	        {assign var="joinstr" value=communityjointype$jointype}
+                <p>{str tag=$joinstr}</p>
                 {if $community->description} <p>{$community->description}</p> {/if}
-                {if $canleave} <p><a href="" onClick="return memberControl({$community->id}, 'leave');">{str tag='leavecommunity'}</a></p>
-                {elseif $canrequestjoin} <p><a href="" onClick="return memberControl({$community->id}, 'request');">{str tag='requestjoincommunity'}</a></p>
-                {elseif $canjoin} <p><a href="" onClick="return memberControl({$community->id}, 'join');">{str tag='joincommunity'}</a></p>
-                {elseif $canacceptinvite} <p><a href="" onClick="return memberControl({$community->id}, 'invite');">{str tag='invitedjoincommunity'}</a></p>{/if}
+                {if $canleave} <p><a href="view.php?id={$community->id}&amp;joincontrol=leave">{str tag='leavecommunity'}</a></p>
+                {elseif $canrequestjoin} <p id="joinrequest"><a href="" onClick="return joinRequestControl();">{str tag='requestjoincommunity'}</a></p>
+                {elseif $canjoin} <p><a href="view.php?id={$community->id}&amp;joincontrol=join"">{str tag='joincommunity'}</a></p>
+                {elseif $canacceptinvite} <p>{str tag='communityhaveinvite'} <a href="view.php?id={$community->id}&amp;joincontrol=acceptinvite">{str tag='acceptinvitecommunity'}</a> | <a href="view.php?id={$community->id}&amp;joincontrol=declineinvite">{str tag='declineinvitecommunity'}</a></p>{/if}
                 <div id="messagediv"></div>
                 {if $member}
                     <div class="communityviews">
@@ -42,7 +45,7 @@
                         <h5>{str tag='members'}</h5>
                         {if $tutor}
                             <form>
-                                <select name="pending" onChange="memberlist.pending=this.options[this.selectedIndex].value;memberlist.doupdate();">
+                                <select id="pendingselect" name="pending" onChange="switchPending();">
                                     <option value="0">{str tag='members'}</option>
                                     <option value="1">{str tag='memberrequests'}</option>
                                 </select>
@@ -52,12 +55,15 @@
                              <thead>
                                  <tr>
                                      <th>{str tag='name'}</th>
+                                     <th id="pendingreasonheader">{str tag='reason'}</th>
                                  </tr>
                              </thead>
                              <tbody>
                              </tbody>
                          </table>
-                         <input type="button" value="{str tag='updatemembership'}" onClick="return updateMembership();" />
+	                 {if $tutor}
+                             <input type="button" value="{str tag='updatemembership'}" onClick="return updateMembership();" />
+                         {/if}
                      </div>
                 {/if}
             </div>

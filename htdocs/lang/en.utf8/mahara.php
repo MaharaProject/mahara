@@ -49,9 +49,12 @@ $string['lastpage']  = 'Last page';
 
 $string['accept'] = 'Accept';
 $string['reject'] = 'Reject';
+$string['sendrequest'] = 'Send request';
+$string['reason'] = 'Reason';
 
 $string['mainmenu'] = 'Main menu';
 $string['updatefailed'] = 'Update failed';
+$string['declinerequest'] = 'Decline request';
 
 // auth
 $string['accessforbiddentoadminsection'] = 'You are forbidden from accessing the administration section';
@@ -367,6 +370,36 @@ $string['memberchangesuccess'] = 'Membership status changed successfully';
 $string['viewreleasedsubject'] = 'Your view has been released';
 $string['viewreleasedmessage'] = 'The view that you submitted to community %s has been released back to you by %s';
 $string['viewreleasedsuccess'] = 'View was released successfully';
+$string['communitymembershipchangedsubject'] = 'Community membership: %s';
+$string['communitymembershipchangedmessagetutor'] = 'You have been promoted to a tutor in this community';
+$string['communitymembershipchangedmessagemember'] = 'You have been demoted from a tutor in this community';
+$string['communitymembershipchangedmessageremove'] = 'You have been removed from this community';
+$string['communitymembershipchangedmessagedeclinerequest'] = 'Your request to join this community has been declined';
+$string['communitymembershipchangedmessageaddedtutor'] = 'You have been added as a tutor in this community';
+$string['communitymembershipchangedmessageaddedmember'] = 'You have been added as a member in this community';
+$string['leavecommunity'] = 'Leave this community';
+$string['joincommunity'] = 'Join this community';
+$string['requestjoincommunity'] = 'Request to join this community';
+$string['communityhaveinvite'] = 'You have been invited to join this community';
+$string['communitynotinvited'] = 'You have not been invited to join this community';
+$string['communityinviteaccepted'] = 'Invite accepted successfully! You are now a community member';
+$string['communityinvitedeclined'] = 'Invite declined successfully!';
+$string['acceptinvitecommunity'] = 'Accept';
+$string['declineinvitecommunity'] = 'Decline';
+$string['leftcommunity'] = 'You have now left this community';
+$string['couldnotleavecommunity'] = 'You cannot leave this community';
+$string['joinedcommunity'] = 'You are now a community member';
+$string['couldnotjoincommunity'] = 'You cannot join this community';
+$string['communityrequestsent'] = 'Community membership request sent';
+$string['couldnotrequestcommunity'] = 'Could not send community membership request';
+$string['communityjointypeopen'] = 'Membership to this community is open';
+$string['communityjointypecontrolled'] = 'Membership to this community  is controlled.  You cannot join this community';
+$string['communityjointypeinvite'] = 'Membership to this community is invite only';
+$string['communityjointyperequest'] = 'Membership to this community is by request only';
+$string['communityrequestsubject'] = 'New community membership request';
+$string['communityrequestmessage'] = '%s has sent a membership request to join the community %s';
+$string['communityrequestmessagereason'] = '%s has sent a membership request to join the community %s with the reason %s.';
+
 
 // friendslist
 $string['reasonoptional'] = 'Reason (optional)';
