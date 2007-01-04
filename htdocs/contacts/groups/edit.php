@@ -134,8 +134,7 @@ function editgroup_submit($values) {
     $SESSION->add_ok_msg(get_string('groupsaved'));
 
     db_commit();
-
-    redirect('./');
+    redirect(get_config('wwwroot') . 'contacts/groups');
 }
 
 $smarty = smarty();

@@ -108,7 +108,7 @@ function creategroup_submit($values) {
 
     db_commit();
 
-    redirect('./');
+    redirect(get_config('wwwroot') . 'contacts/groups');
 }
 
 $smarty = smarty();
