@@ -25,7 +25,11 @@
  */
 
 define('INTERNAL', 1);
+define('JSON', 1);
+
 require(dirname(dirname(__FILE__)) . '/init.php');
+
+json_headers();
 
 $pending  = param_boolean('pending', false);
 $limit    = param_integer('limit', 10);

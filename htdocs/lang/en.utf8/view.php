@@ -68,3 +68,4 @@ $string['format.renderfull']     = 'Display entire artefact';
 $string['format.rendermetadata'] = 'Display metadata for this artefact';
 
 
+?>

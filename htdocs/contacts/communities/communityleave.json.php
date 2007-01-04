@@ -25,8 +25,12 @@
  */
 
 define('INTERNAL', 1);
+define('JSON', 1);
+
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('community.php');
+
+json_headers();
 
 $leave = param_integer('leave');
 

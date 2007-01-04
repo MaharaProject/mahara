@@ -18,9 +18,10 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     (copied from Moodle)
+ * @author     Martin Dougiamas <martin@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2001-3001 Martin Dougiamas http://dougiamas.com
+ * @copyright  additional modifications (c) Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 

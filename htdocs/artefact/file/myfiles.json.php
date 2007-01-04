@@ -25,6 +25,8 @@
  */
 
 define('INTERNAL', 1);
+define('JSON', 1);
+
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
 //log_debug('myfiles.json.php');

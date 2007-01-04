@@ -26,10 +26,13 @@
 
 define('INTERNAL', 1);
 define('ADMIN', 1);
+define('JSON', 1);
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once(get_config('libroot') . 'template.php');
 require_once('upgrade.php');
+
+json_headers();
 
 $name = param_alpha('name');
 

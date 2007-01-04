@@ -25,14 +25,13 @@
  */
 
 define('INTERNAL', 1);
+define('JSON', 1);
+
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
-try {
-    $fileid = param_integer('id');
-}
-catch (ParameterException $e) {
-    json_reply('missingparameter',get_string('missingparameter'));
-}
+json_headers();
+
+$fileid = param_integer('id');
 
 require_once('artefact.php');
 

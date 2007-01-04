@@ -25,9 +25,14 @@
  */
 
 define('INTERNAL', 1);
+define('JSON', 1);
+
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('artefact', 'file');
 require_once('artefact.php');
+
+json_headers();
+
 global $USER;
 
 $parentfolder = param_variable('parentfolder', null); // id of parent artefact
