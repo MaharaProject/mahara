@@ -18,7 +18,7 @@
 			<div id="myblogs">
     		<h2>{str section="artefact.blog" tag="myblogs"}</h2>
     			<div class="newblog">
-        		<a href="{$WWWROOT}/artefact/blog/new/">{str section="artefact.blog" tag="addblog"}</a>
+        		<a href="{$WWWROOT}artefact/blog/new/">{str section="artefact.blog" tag="addblog"}</a>
     			</div>
 
 			<table id="bloglist">
