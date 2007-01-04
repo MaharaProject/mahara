@@ -133,7 +133,13 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page) {
     log(tooltip);
     log(ctxHelp_selected);
 
-    var key = pluginType + '/' + pluginName + '/' + helpName;
+    var key;
+    if (page) {
+	key = pluginType + '/' + pluginName + '/' + page;
+    }
+    else {
+	key = pluginType + '/' + pluginName + '/' + helpName;
+    }
     if (typeof(ctxHelp_selected) != 'undefined' && ctxHelp_selected && ctxHelp_selected != key) {
         log('chose another help when one was open');
         contextualHelpClose();
@@ -147,7 +153,12 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page) {
     else if (ctxHelp[key]) {
         log('reloaded help from cache');
         ctxHelp_selected = key;
-        contextualHelpOpen(formName + '_' + helpName, ctxHelp[key].content);
+	if (page) {
+	    contextualHelpOpen(page, ctxHelp[key].content);
+	} 
+	else{
+	    contextualHelpOpen(formName + '_' + helpName, ctxHelp[key].content);
+	}
         return;
     }
     else {
@@ -182,7 +193,12 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page) {
         });
     }
 
-    contextualHelpOpen(formName + '_' + helpName, 'spinner');
+    if (page) {
+	contextualHelpOpen(page, 'spinner');
+    }
+    else {
+	contextualHelpOpen(formName + '_' + helpName, 'spinner');
+    }
     ctxHelp[key] = {
         'content': ''
     };
@@ -203,8 +219,8 @@ function contextualHelpOpen(helpName, content) {
     var help = DIV({'id': 'tooltip'});
     container = DIV({'class':'content'});
     container.innerHTML = content;
-    appendChildNodes(help, container);
 
+    appendChildNodes(help, container);
     appendChildNodes($(helpName + '_container'), help);
 }
 

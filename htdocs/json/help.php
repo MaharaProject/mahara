@@ -25,6 +25,7 @@
  */
 
 define('INTERNAL', 1);
+define('JSON', 1);
 
 require(dirname(dirname(__FILE__)) . '/init.php');
 
@@ -32,7 +33,7 @@ json_headers();
 
 $plugintype = param_alpha('plugintype');
 $pluginname = param_alpha('pluginname');
-$page       = param_alpha('page', null);
+$page       = param_variable('page', null);
 $form       = param_alpha('form', null);
 $element    = param_alpha('element', null);
 
@@ -46,7 +47,8 @@ else {
     $location .= 'lang/';
 }
 if ($page) {
-    $file .= $page . '.html';
+    $page = str_replace('-', '/', $page);
+    $file .= 'pages/' . $page . '.html';
 }
 else if (!empty($form) && !empty($element)) {
     $file .= 'forms/' . $form . '.' . $element . '.html';
@@ -55,6 +57,9 @@ else if (!empty($form) && empty($element)) {
     $file .= 'forms/' . $form . '.html';
 }
 else {
+    if ($page) {
+        json_reply(true, get_string('nohelpfoundpage'));
+    }
     json_reply(true, get_string('nohelpfound'));
 }
 
