@@ -127,6 +127,16 @@ sub process {
         print $directory, $filename, " missing \@copyright (or invalid)\n";
     }
 
+    # check for json stuff
+    if ($filename =~ m{.*\.json\.php}) {
+	if ($file_data !~ m{define\('JSON',\s*1\)} ) {
+	    print $directory, $filename, " appears to be a json script but doesn't define('JSON', 1);\n";
+	}
+	if ($file_data !~ m{json_headers} ) {
+	    print $directory, $filename, " appears to be a json script but doesn't send json_headers(); \n";
+	}
+    }
+
     # check language strings
     while ( $file_data =~ m{ get_string\( ['"](.*?)['"] \s* (?: , \s* ['"](.*?)['"] )? .*? \)* }xmg ) {
         my ( $tag, $section ) = ( $1, $2 );
