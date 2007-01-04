@@ -48,6 +48,15 @@ class PluginNotificationInternal extends PluginNotification {
         
         insert_record('notification_internal_activity', $toinsert);
     }
+    
+    /** 
+     * this method is only implemented in internal & is used for the header
+     */
+
+    public static function unread_count($userid) {
+        return count_records('notification_internal_activity', 'usr', $userid, 'read', 0);
+    }
+
 }
 
 ?>

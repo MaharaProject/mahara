@@ -226,6 +226,9 @@ $string['myaddressbook']      = 'My Addressbook';
 $string['mycommunities']      = 'My Communities';
 $string['myownedcommunities'] = 'My Owned Communities';
 $string['mygroups']           = 'My Groups';
+$string['youareloggedinas']   = 'You are logged in as %s';
+$string['unreadmessages'] = 'unread messages';
+$string['unreadmessage'] = 'unread message';
 
 // mycontacts
 

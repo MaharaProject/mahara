@@ -185,6 +185,7 @@ EOF;
     $smarty->assign('LOGGEDIN', $USER->is_logged_in());
     if ($USER->is_logged_in()) {
         $smarty->assign('MAINNAV', main_nav());
+        $smarty->assign('LOGGEDINSTR', get_loggedin_string());
     }
 
     $smarty->assign_by_ref('USER', $USER);
@@ -210,6 +211,8 @@ function jsstrings() {
                 'requiredfieldempty',
                 'unknownerror',
                 'loading',
+                'unreadmessages',
+                'unreadmessage',
             ),
         ),
         'tablerenderer' => array(
@@ -1140,6 +1143,25 @@ function searchform() {
             )
         )
     ));
+}
+
+function get_loggedin_string() {
+    global $USER;
+    safe_require('notification', 'internal');
+    $count = call_static_method(generate_class_name('notification', 'internal'), 'unread_count', $USER->get('id'));
+    if ($count == 1) {
+        $key = 'unreadmessage';
+    }
+    else {
+        $key = 'unreadmessages';
+    }
+    // these spans are here so that on the ajax page that marks messages as read, the contents can be updated.
+    $str = get_string('youareloggedinas', 'mahara', display_name($USER)) . 
+        ' (<a href="' . get_config('wwwroot') . 'account/activity/">'  . 
+        '<span id="headerunreadmessagecount">' . $count . '</span> ' . 
+        '<span id="headerunreadmessages">' . get_string($key) . '</span></a>)';
+
+    return $str;
 }
 
 
