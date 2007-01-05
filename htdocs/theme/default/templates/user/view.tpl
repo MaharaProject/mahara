@@ -12,15 +12,6 @@
 		{/foreach}
 			</tbody></table>
 		
-		{if $PROFILE}
-			<h4>{str section=artefact.internal tag=profile}</h4>
-			<table><tbody>
-		{foreach from=$PROFILE key=key item=item name=profile}
-			<tr><td>{str section=artefact.internal tag=$key}</td><td>{$item}</td></tr>
-		{/foreach}
-			</tbody></table>
-		{/if}
-		
 		{if $VIEWS}
 			<h4>{str section=mahara tag=views}</h4>
 			<ul>
