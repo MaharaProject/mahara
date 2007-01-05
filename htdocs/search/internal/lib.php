@@ -80,11 +80,12 @@ class PluginSearchInternal extends PluginSearch {
                     AND (
                         firstname ILIKE '%' || ? || '%' 
                         OR lastname ILIKE '%' || ? || '%' 
+                        OR firstname || ' ' || lastname ILIKE '%' || ? || '%' 
                         OR preferredname ILIKE '%' || ? || '%' 
                         OR email ILIKE '%' || ? || '%' 
                     )
                 ",
-                array($query_string, $query_string, $query_string, $query_string),
+                array($query_string, $query_string, $query_string, $query_string, $query_string),
                 $offset,
                 $limit
             );
@@ -99,11 +100,12 @@ class PluginSearchInternal extends PluginSearch {
                     AND (
                         firstname ILIKE '%' || ? || '%' 
                         OR lastname ILIKE '%' || ? || '%' 
+                        OR firstname || ' ' || lastname ILIKE '%' || ? || '%' 
                         OR preferredname ILIKE '%' || ? || '%' 
                         OR email ILIKE '%' || ? || '%' 
                     )
             ",
-                array($query_string, $query_string, $query_string, $query_string)
+                array($query_string, $query_string, $query_string, $query_string, $query_string)
             );
         }
         // TODO
