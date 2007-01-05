@@ -183,10 +183,10 @@ function get_tutor_communities($userid=0, $jointype=null) {
     $userid = optional_userid($userid);
     $prefix = get_config('dbprefix');
 
-    $sql = 'SELECT c.*, cm.ctime
+    $sql = 'SELECT DISTINCT c.*, cm.ctime
               FROM ' . $prefix . 'community c 
-              JOIN ' . $prefix . 'community_member cm ON cm.community = c.id
-              WHERE c.owner != ? AND cm.member = ? AND cm.tutor = ? ';
+              LEFT JOIN ' . $prefix . 'community_member cm ON cm.community = c.id
+              WHERE (cm.member IS NULL AND c.owner = ?) OR (cm.member = ? AND cm.tutor = ?)';
     $values = array($userid, $userid, 1);
     
     if (!empty($jointype)) {
