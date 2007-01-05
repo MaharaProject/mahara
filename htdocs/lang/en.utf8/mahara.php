@@ -38,8 +38,8 @@ $string['change']  = 'Change';
 $string['go']      = 'Go';
 $string['loading'] = 'Loading ...';
 
-$string['no']     = 'no';
-$string['yes']    = 'yes';
+$string['no']     = 'No';
+$string['yes']    = 'Yes';
 $string['none']   = 'none';
 
 $string['nextpage']  = 'Next page';
@@ -114,7 +114,7 @@ $string['loginto'] = 'Log in to %s';
 $string['newpassword'] = 'New Password';
 $string['oldpassword'] = 'Old Password';
 $string['password'] = 'Password';
-$string['passworddescription'] = 'Your password';
+$string['passworddescription'] = '';
 $string['passwordhelp'] = 'The password you use to access the system';
 $string['passwordnotchanged'] = 'You did not change your password, please choose a new password';
 $string['passwordsaved'] = 'Your new password has been saved';
@@ -124,7 +124,7 @@ $string['register'] = 'Register';
 $string['sessiontimedout'] = 'Your session has timed out, please enter your login details to continue';
 $string['sessiontimedoutpublic'] = 'Your session has timed out. You may <a href="?login">log in</a> to continue browsing';
 $string['username'] = 'Username';
-$string['usernamedescription'] = 'Your username';
+$string['usernamedescription'] = ' ';
 $string['usernamehelp'] = 'The username you have been given to access this system.';
 $string['yournewpassword'] = 'Your new password';
 $string['yournewpasswordagain'] = 'Your new password again';
@@ -132,11 +132,11 @@ $string['invalidsesskey'] = 'Invalid session key';
 
 // Misc. register stuff that could be used elsewhere
 $string['emailaddress'] = 'Email address';
-$string['emailaddressdescription'] = 'Your email address';
+$string['emailaddressdescription'] = ' ';
 $string['firstname'] = 'First name';
-$string['firstnamedescription'] = 'Your first name';
+$string['firstnamedescription'] = ' ';
 $string['lastname'] = 'Last name';
-$string['lastnamedescription'] = 'Your last name';
+$string['lastnamedescription'] = ' ';
 $string['password2description'] = 'Your password again';
 $string['registerdescription'] = 'Welcome! To use this site you must first register. You must also agree to the <a href="terms.php">terms and conditions</a>. The data we collect here will be stored according to our <a href="privacy.php">privacy statement</a>.';
 $string['registeringdisallowed'] = 'Sorry, you cannot register for this system at this time';
