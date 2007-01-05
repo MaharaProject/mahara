@@ -29,10 +29,6 @@
 				</tbody>
 			</table>
 				
-				<div class="newpost">
-					<a href="{$WWWROOT}/artefact/blog/editpost.php?blog={$blog->get('id')}">{str section="artefact.blog" tag="addpost"}</a>
-				</div>
-				
 			</div>
 				
 {include file="columnleftend.tpl"}

@@ -12,9 +12,9 @@
 </div>
 
 {include file="columnleftstart.tpl"}
-			<div id="myblogs">
-    		<h2>{str section="artefact.blog" tag="myblogs"}</h2>
-    			<div class="newblog">
+		<div id="myblogs">
+    		        <h2>{str section="artefact.blog" tag="myblogs"}</h2>
+    		        <div class="newblog">
         		<a href="{$WWWROOT}artefact/blog/new/">{str section="artefact.blog" tag="addblog"}</a>
     			</div>
 
@@ -28,11 +28,6 @@
 				<tbody>
 				</tbody>
 			</table>
-    
-				<div class="newblog">
-					<a href="{$WWWROOT}/artefact/blog/new/">{str section="artefact.blog" tag="addblog"}</a>
-				</div>
-				
-			</div>
+                   </div>
 {include file="columnleftend.tpl"}
 {include file="footer.tpl"}
