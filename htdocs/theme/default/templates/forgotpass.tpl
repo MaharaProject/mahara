@@ -4,7 +4,7 @@
 	<div class="content">
 		<div class="box-cnrs"><span class="cnr-tl"><span class="cnr-tr"><span class="cnr-bl"><span class="cnr-br">
 			<div class="maincontent">
-			<h2>ForgotPass</h2>
+			<h2>{str tag='forgotpassword'}</h2>
 	
 			{if $forgotpass_form}
 			<p>You forgot your password! Enter your e-mail address here and we will send you a key you can use to give yourself a new password.</p>
