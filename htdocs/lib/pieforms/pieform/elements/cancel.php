@@ -29,11 +29,11 @@
  * normal submit buttons, only their name is changed (for use by the Pieform
  * class internally).
  *
- * @param array $element    The element to render
  * @param Pieform  $form    The form to render the element for
+ * @param array    $element The element to render
  * @return string           The HTML for the element
  */
-function pieform_render_cancel($element, Pieform $form) {
+function pieform_element_cancel(Pieform $form, $element) {
     if (!isset($element['value'])) {
         throw new PieformException('Cancel elements must have a value');
     }
@@ -46,14 +46,9 @@ function pieform_render_cancel($element, Pieform $form) {
         . ' value="' . Pieform::hsc($element['value']) . '">';
 }
 
-// @todo how to support cancel buttons for ajax post? Possibly do a full post regardless...
-// or allow the user to specify a javascript function to run... it could do document.location=
-// @todo also, cancel buttons don't need to be sent around via js... maybe make this return empty string
-function pieform_get_value_js_cancel($element, Pieform $form) {
-    //$formname = $form->get_name();
-    //$name = $element['name'];
-    //return "    data['{$name}_cancel'] = document.forms['$formname'].elements['{$name}_cancel'].value;\n";
-    return '';
+function pieform_element_cancel_set_attributes($element) {
+    $element['cancelelement'] = true;
+    return $element;
 }
 
 ?>

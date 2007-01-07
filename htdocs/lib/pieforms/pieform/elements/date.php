@@ -27,38 +27,45 @@
 /**
  * Provides a date picker, in the form of three dropdowns.
  *
- * @param array $element The element to render
  * @param Pieform  $form    The form to render the element for
+ * @param array $element The element to render
  * @return string        The HTML for the element
  */
-function pieform_render_date($element, Pieform $form) {
+function pieform_element_date(Pieform $form, $element) {
     $result = '';
-    $name = $element['name'];
+    $name   = $element['name'];
     $element['minyear'] = (isset($element['minyear'])) ? intval($element['minyear']) : 1950;
     $element['maxyear'] = (isset($element['maxyear'])) ? intval($element['maxyear']) : 2050;
-    if (!array_key_exists('defaultvalue', $element)) {
+    if (!isset($element['defaultvalue'])) {
         $element['defaultvalue'] = time();
     }
+    $required = (!empty($element['rules']['required']));
 
     // Year
-    $value = pieform_render_select_get_value('year', $element['minyear'], $element['maxyear'],  $element, $form);
-    $year = '<select name="' . $name . '_year" id="' . $name . '_year"' . (isset($element['optional']) && !isset($element['defaultvalue']) ? ' disabled="disabled"' : '') . ">\n";
+    $value = pieform_element_date_get_timeperiod_value('year', $element['minyear'], $element['maxyear'], $element, $form);
+    $year = '<select name="' . $name . '_year" id="' . $name . '_year"'
+        . (!$required && !isset($element['defaultvalue']) ? ' disabled="disabled"' : '')
+        . ' tabindex="' . $element['tabindex'] . "\">\n";
     for ($i = $element['minyear']; $i <= $element['maxyear']; $i++) {
         $year .= "\t<option value=\"$i\"" . (($value == $i) ? ' selected="selected"' : '') . ">$i</option>\n";
     }
     $year .= "</select>\n";
 
     // Month
-    $value = pieform_render_select_get_value('month', 1, 12, $element, $form);
-    $month = '<select name="' . $name . '_month" id="' . $name . '_month"' . (isset($element['optional']) && !isset($element['defaultvalue']) ? ' disabled="disabled"' : '') . ">\n";
+    $value = pieform_element_date_get_timeperiod_value('month', 1, 12, $element, $form);
+    $month = '<select name="' . $name . '_month" id="' . $name . '_month"'
+        . (!$required && !isset($element['defaultvalue']) ? ' disabled="disabled"' : '')
+        . ' tabindex="' . $element['tabindex'] . "\">\n";
     for ($i = 1; $i <= 12; $i++) {
         $month .= "\t<option value=\"$i\"" . (($value == $i) ? ' selected="selected"' : '') . '>' . date('M', strtotime("2000-$i-01")) . "</option>\n";
     }
     $month .= "</select>\n";
 
     // Day
-    $value = pieform_render_select_get_value('day', 1, 31, $element, $form);
-    $day = '<select name="' . $name . '_day" id="' . $name . '_day"' . (isset($element['optional']) && !isset($element['defaultvalue']) ? ' disabled="disabled"' : '') . ">\n";
+    $value = pieform_element_date_get_timeperiod_value('day', 1, 31, $element, $form);
+    $day = '<select name="' . $name . '_day" id="' . $name . '_day"'
+        . (!$required && !isset($element['defaultvalue']) ? ' disabled="disabled"' : '')
+        . ' tabindex="' . $element['tabindex'] . "\">\n";
     for ($i = 1; $i <= 31; $i++) {
         $day .= "\t<option value=\"$i\"" . (($value == $i) ? ' selected="selected"' : '') . ">$i</option>\n";
     }
@@ -67,7 +74,7 @@ function pieform_render_date($element, Pieform $form) {
     $result = $year . $month . $day;
 
     // Optional control
-    if (isset($element['optional'])) {
+    if (!$required) {
         $optional = <<<EOF
         <script type="text/javascript">
             function {$name}_toggle(x) {
@@ -87,8 +94,11 @@ EOF;
         // @todo this needs cleaning up, namely:
         //   - get_string is a mahara-ism
         //   - 'optional' => true should be 'required' => false shouldn't it?
-        $optional .= ' ' . get_string('or') . ' <input type="checkbox" ' . ( isset($element['defaultvalue']) ? '' : 'checked ') . 'name="' . $name . '_optional" id="' . $name . '_optional" onchange="' . $name . '_toggle(this)">';
-        $optional .= ' <label for="' . $name . '_optional">' . get_string('notspecified');
+        $optional .= ' ' . $form->i18n('element', 'date', 'or', $element) . ' <input type="checkbox" '
+            . (isset($element['defaultvalue']) ? '' : 'checked="checked" ')
+            . 'name="' . $name . '_optional" id="' . $name . '_optional" onchange="' . $name . '_toggle(this)" '
+            . 'tabindex="' . $element['tabindex'] . '">';
+        $optional .= ' <label for="' . $name . '_optional">' . $form->i18n('element', 'date', 'notspecified', $element);
 
         $result .= $optional;
     }
@@ -96,10 +106,16 @@ EOF;
     return $result;
 }
 
-/** gets the value explicitly from the request */
-function pieform_get_value_date($element, Pieform $form) {
+/**
+ * Gets the value of the date element from the request and converts it into a
+ * unix timestamp.
+ *
+ * @param Pieform $form    The form the element is attached to
+ * @param array   $element The element to get the value for
+ */
+function pieform_element_date_get_value(Pieform $form, $element) {
     $name = $element['name'];
-    $global = ($form->get_method() == 'get') ? $_GET : $_POST;
+    $global = ($form->get_property('method') == 'get') ? $_GET : $_POST;
     if ( isset($global[$name . '_day']) && isset($global[$name . '_month']) && isset($global[$name . '_year']) ) {
         $time = mktime(0, 0, 0, $global[$name . '_month'], $global[$name . '_day'], $global[$name . '_year']);
         if (false === $time) {
@@ -111,19 +127,17 @@ function pieform_get_value_date($element, Pieform $form) {
     return null;
 }
 
-function pieform_get_value_js_date($element, Pieform $form) {
-    $formname = $form->get_name();
-    $name = $element['name'];
-    return <<<EOF
-    data['{$name}_year']  = document.forms['$formname'].elements['{$name}_year'].value;
-    data['{$name}_month'] = document.forms['$formname'].elements['{$name}_month'].value;
-    data['{$name}_day']   = document.forms['$formname'].elements['{$name}_day'].value;
-
-EOF;
+function pieform_element_date_i18n() {
+    return array(
+        'en.utf8' => array(
+            'or' => 'or',
+            'notspecified' => 'Not specified'
+        )
+    );
 }
 
 /** helper: used when rendering the element, to get the value for it */
-function pieform_render_select_get_value($timeperiod, $min, $max, $element, Pieform $form) {
+function pieform_element_date_get_timeperiod_value($timeperiod, $min, $max, $element, Pieform $form) {
     static $lookup = array(
         'year' => 0,
         'month' => 1,
@@ -139,7 +153,7 @@ function pieform_render_select_get_value($timeperiod, $min, $max, $element, Pief
         return $value;
     }
 
-    $global = ($form->get_method() == 'get') ? $_GET : $_POST;
+    $global = ($form->get_property('method') == 'get') ? $_GET : $_POST;
     if (isset($global[$element['name'] . '_' . $timeperiod])) {
         $value = $global[$element['name'] . '_' . $timeperiod];
         if ($value < $min || $value > $max) {

@@ -30,15 +30,24 @@
  * Currently, the check is [anything]@[anything]. Someone is welcome to write
  * something better, this was made just for testing.
  *
- * @param Pieform $form  The form the rule is being applied to
- * @param string  $value The e-mail address to check
- * @return string        The error message, if there is something wrong with
- *                       the address.
+ * @param Pieform $form    The form the rule is being applied to
+ * @param string  $value   The e-mail address to check
+ * @param array   $element The element to check
+ * @return string          The error message, if there is something wrong with
+ *                         the address.
  */
-function pieform_rule_email(Pieform $form, $value) {
+function pieform_rule_email(Pieform $form, $value, $element) {
     if (!preg_match('/^[a-z0-9\._%-]+@(?:[a-z0-9-]+\.)+[a-z]{2,4}$/', $value)) {
-        return $form->i18n('email');
+        return $form->i18n('rule', 'email', 'email', $element);
     }
+}
+
+function pieform_rule_email_i18n() {
+    return array(
+        'en.utf8' => array(
+            'email' => 'E-mail address is invalid'
+        )
+    );
 }
 
 ?>

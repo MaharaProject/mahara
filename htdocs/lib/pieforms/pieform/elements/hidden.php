@@ -31,7 +31,7 @@
  * @param Pieform  $form    The form to render the element for
  * @return string        The HTML for the element
  */
-function pieform_render_hidden($element, Pieform $form) {
+function pieform_element_hidden($element, Pieform $form) {
     $value = $form->get_value($element);
     if (is_array($value)) {
         $result = '';

@@ -35,8 +35,16 @@
  */
 function pieform_rule_minlength(Pieform $form, $value, $element, $minlength) {
     if (strlen($value) < $minlength) {
-        return sprintf($form->i18n('minlength'), $minlength);
+        return sprintf($form->i18n('rule', 'minlength', 'minlength', $element), $minlength);
     }
+}
+
+function pieform_i18n_rule_minlength() {
+    return array(
+        'en.utf8' => array(
+            'minlength' => 'This field must be at least %d characters long', 
+        )
+    );
 }
 
 ?>

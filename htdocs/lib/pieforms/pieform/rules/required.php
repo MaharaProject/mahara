@@ -28,25 +28,23 @@
  * Checks whether the field has been specified.
  *
  * @param Pieform $form    The form the rule is being applied to
- * @param string  $field   The field to check
+ * @param string  $value   The value of the field
  * @param array   $element The element to check
  * @param string  $check   Whether to check the element
  * @return string         The error message, if the value is invalid.
  */
 function pieform_rule_required(Pieform $form, $value, $element, $check) {
-    if ($check) {
-        $function = 'form_is_empty_' . $element['type'];
-        if (function_exists($function)) {
-            if ($function($value, $element)) {
-                return $form->i18n('required');
-            }
-            return;
-        }
-
-        if ($value == '') {
-            return $form->i18n('required');
-        }
+    if ($check && $value == '') {
+        return $form->i18n('rule', 'required', 'required', $element);
     }
+}
+
+function pieform_rule_required_i18n() {
+    return array(
+        'en.utf8' => array(
+            'required' => 'This field is required'
+        )
+    );
 }
 
 ?>

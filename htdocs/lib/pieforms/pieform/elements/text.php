@@ -27,11 +27,11 @@
 /**
  * Provides a basic text field input.
  *
- * @param array    $element The element to render
  * @param Pieform  $form    The form to render the element for
+ * @param array    $element The element to render
  * @return string           The HTML for the element
  */
-function pieform_render_text($element, $form) {
+function pieform_element_text(Pieform $form, $element) {
     return '<input type="text"'
         . $form->element_attributes($element)
         . ' value="' . Pieform::hsc($form->get_value($element)) . '">';

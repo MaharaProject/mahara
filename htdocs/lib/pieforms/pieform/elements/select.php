@@ -27,11 +27,11 @@
 /**
  * Renders a dropdown list, including support for multiple choices.
  *
- * @param array    $element The element to render
  * @param Pieform  $form    The form to render the element for
+ * @param array    $element The element to render
  * @return string           The HTML for the element
  */
-function pieform_render_select($element, Pieform $form) {
+function pieform_element_select(Pieform $form, $element) {
     if (!empty($element['multiple'])) {
         $element['name'] .= '[]';
     }
@@ -49,7 +49,7 @@ function pieform_render_select($element, Pieform $form) {
         . ">\n";
     if (!isset($element['options']) || !is_array($element['options']) || count($element['options']) < 1) {
         $result .= "\t<option></option>\n";
-        log_warn('Select elements should have at least one option');
+        Pieform::info('Select elements should have at least one option');
     }
 
     if (empty($element['multiple'])) {
@@ -59,6 +59,7 @@ function pieform_render_select($element, Pieform $form) {
         if (isset($element['value'])) {
             $values = (array) $element['value'];
         }
+        // @todo use $global instead of $_POST
         else if (isset($_POST[$element['name']])) {
             $values = (array) $_POST[$element['name']];
         }
@@ -69,9 +70,11 @@ function pieform_render_select($element, Pieform $form) {
             $values = array();
         }
     }
+    $optionselected = false;
     foreach ($element['options'] as $key => $value) {
         if (in_array($key, $values)) {
             $selected = ' selected="selected"';
+            $optionselected = true;
         }
         else {
             $selected = '';
@@ -79,24 +82,15 @@ function pieform_render_select($element, Pieform $form) {
         $result .= "\t<option value=\"" . Pieform::hsc($key) . "\"$selected>" . Pieform::hsc($value) . "</option>\n";
     }
 
+    if (!$optionselected && $values) {
+        Pieform::info('Invalid value for select "' . $element['name'] .'"');
+    }
+
     $result .= '</select>';
     return $result;
 }
 
-function pieform_get_value_js_select($element, Pieform $form) {
-    $formname = $form->get_name();
-    $name = $element['name'];
-    if ($element['collapseifoneoption']) {
-        return "    data['$name'] = document.forms['$formname'].elements['$name'].value;\n";
-    }
-    return <<<EOF
-    var select = filter(function(option) { return option.selected; }, document.forms['$formname'].elements['$name'].options);
-    data['$name'] = map(function(o) { return o.value; }, select);
-
-EOF;
-}
-
-function pieform_render_select_set_attributes($element) {
+function pieform_element_select_set_attributes($element) {
     $element['collapseifoneoption'] = true;
     $element['rules']['validateoptions'] = true;
     return $element;

@@ -30,23 +30,32 @@
  * General documentation about the calendar is available at
  * http://www.dynarch.com/demos/jscalendar/doc/html/reference.html
  *
- * @param array   $element The element to render
  * @param Pieform $form    The form to render the element for
+ * @param array   $element The element to render
  * @return string          The HTML for the element
  */
-function pieform_render_calendar($element, Pieform $form) {
+function pieform_element_calendar(Pieform $form, $element) {
     $id = $form->get_name() . '_' . $element['name'];
+    $value = $form->get_value($element);
+    if ($value) {
+        $value = Pieform::hsc(strftime($element['caloptions']['ifFormat'], $value));
+    }
+
+    // Build the HTML
     $result = '<input type="text"'
         . $form->element_attributes($element)
-        . ' value="' . ( $form->get_value($element) ? Pieform::hsc(strftime($element['caloptions']['ifFormat'],$form->get_value($element))) : '' ) . '">';
+        . ' value="' . $value . '">';
     if (isset($element['imagefile'])) {
-        $result .= '<a href="" id="'. $id . '_btn" onclick="return false;" class="pieform-calendar-toggle">'
+        $result .= '<a href="" id="'. $id . '_btn" onclick="return false;" class="pieform-calendar-toggle"'
+            . ' tabindex="' . $element['tabindex'] . '">'
             . '<img src="' . $element['imagefile'] . '" alt=""></a>';
     }
     else {
-        $result .= '<input type="button" id="' . $id . '_btn" onclick="return false;" class="pieform-calendar-toggle" value="...">';
+        $result .= '<input type="button" id="' . $id . '_btn" onclick="return false;" class="pieform-calendar-toggle"'
+            . ' value="..." tabindex="' . $element['tabindex'] . '">';
     }
 
+    // Build the configuring javascript
     $options = array_merge($element['caloptions'], array('inputField' => $id, 'button' => $id . '_btn'));
 
     $encodedoptions = json_encode($options);
@@ -55,10 +64,17 @@ function pieform_render_calendar($element, Pieform $form) {
         $encodedoptions = preg_replace('/("' . $function . '"):"([a-zA-Z0-9$]+)"/', '\1:\2', $encodedoptions);
     }
     $result .= '<script type="text/javascript">Calendar.setup(' . $encodedoptions . ');</script>';
+
     return $result;
 }
 
-function pieform_render_calendar_set_attributes($element) {
+/**
+ * Sets default attributes of the calendar element.
+ *
+ * @param array $element The element to configure
+ * @return array         The configured element
+ */
+function pieform_element_calendar_set_attributes($element) {
     $element['jsroot']   = isset($element['jsroot']) ? $element['jsroot'] : '';
     $element['language'] = isset($element['language']) ? $element['language'] : 'en';
     $element['theme']    = isset($element['theme']) ? $element['theme'] : 'calendar-win2k-2';
@@ -67,8 +83,13 @@ function pieform_render_calendar_set_attributes($element) {
     return $element;
 }
 
-/** Returns code to go in <head> for all instances of calendar */
-function pieform_get_headdata_calendar($element) {
+/**
+ * Returns code to go in <head> for the given calendar instance
+ *
+ * @param array $element The element to get <head> code for
+ * @return array         An array of HTML elements to go in the <head>
+ */
+function pieform_element_calendar_get_headdata($element) {
     if (isset($element['themefile'])) {
         $themefile = $element['themefile'];
     }
@@ -90,10 +111,16 @@ function pieform_get_headdata_calendar($element) {
     return $result;
 }
 
-function pieform_get_value_calendar($element, Pieform $form) {
+/**
+ * Retrieves the value of the calendar as a unix timestamp
+ *
+ * @param Pieform $form    The form the element is attached to
+ * @param array   $element The element to get the value for
+ * @return int             The unix timestamp represented by the calendar
+ */
+function pieform_element_calendar_get_value(Pieform $form, $element) {
     $name = $element['name'];
-
-    $global = ($form->get_method() == 'get') ? $_GET : $_POST;
+    $global = ($form->get_property('method') == 'get') ? $_GET : $_POST;
 
     if (isset($element['value'])) {
         return $element['value'];
@@ -107,7 +134,7 @@ function pieform_get_value_calendar($element, Pieform $form) {
         $value = strtotime($global[$name]);
 
         if ($value === false) {
-            $form->set_error($name, 'TODO');
+            $form->set_error($name, 'TODO (error for invalid calendar value)');
             return null;
         }
         return $value;
@@ -119,7 +146,5 @@ function pieform_get_value_calendar($element, Pieform $form) {
 
     return null;
 }
-
-// TODO: (possibly, also might need the javascript version for ajax forms)
 
 ?>

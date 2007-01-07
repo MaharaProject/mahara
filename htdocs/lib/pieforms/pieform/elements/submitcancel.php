@@ -27,23 +27,36 @@
 /**
  * Renders a submit and cancel button
  *
- * @param array    $element The element to render
  * @param Pieform  $form    The form to render the element for
+ * @param array    $element The element to render
  * @return string           The HTML for the element
  */
-function pieform_render_submitcancel($element, Pieform $form) {
+function pieform_element_submitcancel(Pieform $form, $element) {
+    if (!isset($element['value']) || !is_array($element['value']) || count($element['value']) != 2) {
+        throw new PieformException('The submitcancel element "' . $element['name']
+            . '" must have a two element array for its value');
+    }
     $form->include_plugin('element', 'submit');
     $form->include_plugin('element', 'cancel');
     $submitelement = $element;
     $submitelement['value'] = $element['value'][0];
     $cancelelement = $element;
     $cancelelement['value'] = $element['value'][1];
-    return pieform_render_submit($submitelement, $form) . ' ' . pieform_render_cancel($cancelelement, $form);
+    return pieform_element_submit($form, $submitelement) . ' ' . pieform_element_cancel($form, $cancelelement);
 }
 
-function pieform_render_submitcancel_set_attributes($element) {
-    $element['ajaxmessages'] = true;
+function pieform_element_submitcancel_set_attributes($element) {
+    $element['submitelement'] = true;
     return $element;
+}
+
+function pieform_element_submitcancel_get_value(Pieform $form, $element) {
+    if (is_array($element['value'])) {
+        return $element['value'][0];
+    }
+    else {
+        return $element['value'];
+    }
 }
 
 ?>

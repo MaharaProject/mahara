@@ -42,9 +42,17 @@ function pieform_rule_validateoptions(Pieform $form, $field, $element) {
     $allowedvalues = array_keys($element['options']);
     foreach ($field as $key) {
         if (!in_array($key, $allowedvalues)) {
-            return sprintf($form->i18n('validateoptions'), $key);
+            return sprintf($form->i18n('rule', 'validateoptions', 'validateoptions', $element), $key);
         }
     }
+}
+
+function pieform_rule_validateoptions_i18n() {
+    return array(
+        'en.utf8' => array(
+            'validateoptions' => 'The option "%s" is invalid'
+        )
+    );
 }
 
 ?>

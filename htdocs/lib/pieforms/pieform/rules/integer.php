@@ -28,14 +28,23 @@
  * Returns whether the given field is an integer
  *
  * @param Pieform $form      The form the rule is being applied to
- * @param string $value      The value to check
+ * @param string  $value     The value to check
+ * @param array   $element   The element to check
  * @return string            The error message, if there is something wrong with
  *                           the address.
  */
-function pieform_rule_integer(Pieform $form, $value) {
+function pieform_rule_integer(Pieform $form, $value, $element) {
     if (!is_numeric($value) || $value != (int)$value) {
-        return $form->i18n('integer');
+        return $form->i18n('rule', 'integer', 'integer', $element);
     }
+}
+
+function pieform_i18n_rule_integer() {
+    return array(
+        'en.utf8' => array(
+            'integer'   => 'The field must be an integer'
+        )
+    );
 }
 
 ?>

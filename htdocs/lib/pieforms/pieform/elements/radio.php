@@ -31,7 +31,7 @@
  * @param Pieform  $form    The form to render the element for
  * @return string           The HTML for the element
  */
-function pieform_render_radio($element, Pieform $form) {
+function pieform_element_radio(Pieform $form, $element) {
     if (!isset($element['options']) || !is_array($element['options']) || count($element['options']) < 1) {
         throw new PieformException('Radio elements should have at least one option');
     }
@@ -59,25 +59,7 @@ function pieform_render_radio($element, Pieform $form) {
     return $result;
 }
 
-/**
- * radio doesn't need a function to get a value from phpland because it comes
- * through correctly from the request... however in javascript land things are
- * harder.
- *
- * @todo maybe later: make the get_value_js functions return a javascript function,
- * to keep their stuff in its own scope. Maybe. If js scoping rules mean this will help.
- */
-function pieform_get_value_js_radio($element, Pieform $form) {
-    $formname = $form->get_name();
-    $name = $element['name'];
-    return <<<EOF
-    var radio = filter(function(radio) { return radio.checked; }, document.forms['$formname'].elements['$name']);
-    data['$name'] = radio[0].value;
-
-EOF;
-}
-
-function pieform_render_radio_set_attributes($element) {
+function pieform_element_radio_set_attributes($element) {
     $element['nolabel'] = true;
     $element['rules']['validateoptions'] = true;
     return $element;

@@ -29,11 +29,12 @@
  *
  * The element must have the 'value' field set.
  * 
- * @param array $element The element to render
- * @param Pieform  $form The form to render the element for
- * @return string        The HTML for the element
+ * @param Pieform $form    The form to render the element for
+ * @param array   $element The element to render
+ * @return string          The HTML for the element
+ * @todo rename to inputbutton
  */
-function pieform_render_button($element, Pieform $form) {
+function pieform_element_button(Pieform $form, $element) {
     if (!isset($element['value'])) {
         throw new PieformException('Button elements must have a value');
     }

@@ -28,21 +28,49 @@
  * Renders a fieldset. Fieldsets contain other elements, and do not count as a
  * "true" element, in that they do not have a value and cannot be validated.
  *
- * @param array $element The element to render
- * @param Pieform  $form    The form to render the element for
- * @return string        The HTML for the element
+ * @param Pieform $form    The form to render the element for
+ * @param array   $element The element to render
+ * @return string          The HTML for the element
  */
-function pieform_render_fieldset($element, Pieform $form) {
-    $result = "\n<fieldset>\n";
+function pieform_element_fieldset(Pieform $form, $element) {
+    $result = "\n<fieldset";
+    if (!empty($element['collapsable'])) {
+        $classes = array('collapsable');
+        // Work out whether any of the children have errors on them
+        $error = false;
+        foreach ($element['elements'] as $subelement) {
+            if (isset($subelement['error'])) {
+                $error = true;
+                break;
+            }
+        }
+        if (!empty($element['collapsed']) && !$error) {
+            $classes[] = 'collapsed';
+        }
+        $result .= ' class="' . implode(' ', $classes) . '"';
+    }
+    $result .= ">\n";
     if (isset($element['legend'])) {
-        $result .= '<legend>' . Pieform::hsc($element['legend']) . "</legend>\n";
+        $result .= '<legend';
+        if (!empty($element['collapsable'])) {
+            $id = substr(md5(microtime()), 0, 4);
+            $result .= ' id="' . $id . '">';
+            $result .= '<script type="text/javascript">';
+            $result .= "var a = A({'href':'', 'tabindex':{$form->get_property('tabindex')}}, " . json_encode($element['legend']) . "); ";
+            $result .= "connect(a, 'onclick', function(e) { toggleElementClass('collapsed', $('{$id}').parentNode); e.stop(); });";
+            $result .= "replaceChildNodes('{$id}', a);</script>";
+        }
+        else {
+            $result .= '>' . Pieform::hsc($element['legend']);
+        }
+        $result .= "</legend>\n";
     }
 
     foreach ($element['elements'] as $subname => $subelement) {
         if ($subelement['type'] == 'hidden') {
             throw new PieformError("You cannot put hidden elements in fieldsets");
         }
-        $result .= "\t" . pieform_render_element($subelement, $form);
+        $result .= "\t" . pieform_render_element($form, $subelement);
     }
 
     $result .= "</fieldset>\n";

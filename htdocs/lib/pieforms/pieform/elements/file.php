@@ -27,16 +27,16 @@
 /**
  * Renders a basic HTML <input type="file"> element.
  *
- * @param array    $element The element to render
- * @param Pieform  $form    The form to render the element for
+ * @param Pieform $form    The form to render the element for
+ * @param array   $element The element to render
  * @return string           The HTML for the element
  */
-function pieform_render_file($element, Pieform $form) {
+function pieform_element_file(Pieform $form, $element) {
     return '<input type="file"'
         . $form->element_attributes($element) . '>';
 }
 
-function pieform_get_value_file($element, Pieform $form) {
+function pieform_element_file_get_value(Pieform $form, $element) {
     if (isset($_FILES[$element['name']])) {
         if (!$_FILES[$element['name']]['error']) {
             return $_FILES[$element['name']];
@@ -45,15 +45,4 @@ function pieform_get_value_file($element, Pieform $form) {
     }
 }
 
-function pieform_is_empty_file($value, $element) {
-    if (isset($_FILES[$element['name']]) && !$_FILES[$element['name']]['error']) {
-        return false;
-    }
-    return true;
-}
-
-// @todo: provide a mechanism for elements to claim they deal with files.
-// If this is triggered, the forms is forced to POST and the enctype stuff
-// is added.
-// @todo is enctype required for ajax submission of files?
 ?>
