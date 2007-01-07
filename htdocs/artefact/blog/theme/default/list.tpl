@@ -31,10 +31,6 @@
 				<tbody>
 				</tbody>
 			</table>
-    
-            <div class="addicon">
-                <a href="{$WWWROOT}artefact/blog/new/">{str section="artefact.blog" tag="addblog"}</a>
-            </div>
 				
         </div>
         </div>
