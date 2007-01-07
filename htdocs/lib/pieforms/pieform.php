@@ -488,7 +488,8 @@ class Pieform {
                                 $this->json_reply(PIEFORM_CANCEL, $element['goto']);
                             }
                             header('HTTP/1.1 303 See Other');
-                            header('Location:' . $element['goto']); exit;
+                            header('Location:' . $element['goto']);
+                            exit;
                         }
                     }
                 }
@@ -498,11 +499,6 @@ class Pieform {
             $values = $this->get_submitted_values();
             // Perform general validation first
             $this->validate($values);
-            // Then user specific validation if a function is available for that
-            $function = $this->data['validatecallback'];
-            if (is_callable($function)) {
-                call_user_func_array($function, array($this, $values));
-            }
 
             // Submit the form if things went OK
             if ($this->data['submit'] && !$this->has_errors()) {
@@ -804,6 +800,12 @@ class Pieform {
      * @param array $values The submitted values from the form
      */
     private function validate($values) {
+        // Call the overall validation function if it is available
+        if (function_exists('pieform_validate')) {
+            pieform_validate($this, $values);
+        }
+
+        // Perform rule validation
         foreach ($this->get_elements() as $element) {
             if (isset($element['rules']) && is_array($element['rules'])) {
                 foreach ($element['rules'] as $rule => $data) {
@@ -827,6 +829,12 @@ class Pieform {
                     }
                 }
             }
+        }
+
+        // Then user specific validation if a function is available for that
+        $function = $this->data['validatecallback'];
+        if (is_callable($function)) {
+            call_user_func_array($function, array($this, $values));
         }
     }
 

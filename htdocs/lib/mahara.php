@@ -864,6 +864,25 @@ function pieform_configure() {
     );
 }
 
+function pieform_validate(Pieform $form, $values) {
+    global $USER;
+    if (!isset($values['sesskey'])) {
+        throw new UserException('No session key');
+    }
+    if ($USER->get('sesskey') != $values['sesskey']) {
+        throw new UserException('Invalid session key');
+    }
+
+    // Check to make sure the user has not been suspended, so that they cannot
+    // perform any action
+    $record = get_record_sql('SELECT suspendedctime, suspendedreason
+        FROM ' . get_config('dbprefix') . 'usr
+        WHERE id = ?', array($USER->get('id')));
+    if ($record->suspendedctime) {
+        throw new UserException(get_string('accountsuspended', 'mahara', $record->suspendedctime, $record->suspendedreason));
+    }
+}
+
 function pieform_element_calendar_configure($element) {
     $element['jsroot'] = '/js/jscalendar/';
     $element['themefile'] = get_config('themeurl') . 'style/calendar.css';
