@@ -57,8 +57,9 @@ if (isset($form['validatefunction'])) {
     $validatefunction = $form['validatefunction'];
 }
 
-$form['submitfunction'] = 'pluginconfig_submit';
-$form['validatefunction'] = 'pluginconfig_validate';
+$form['jsform'] = true;
+$form['successcallback'] = 'pluginconfig_submit';
+$form['validatecallback'] = 'pluginconfig_validate';
 $form['elements']['plugintype']  = array(
     'type' => 'hidden',
     'value' => $plugintype
@@ -80,7 +81,7 @@ $smarty->assign('type', $type);
 $smarty->display('admin/extensions/pluginconfig.tpl');
 
 
-function pluginconfig_submit($values) {
+function pluginconfig_submit(Pieform $form, $values) {
     $success = false;
     global $submitfunction, $plugintype, $pluginname, $classname;
     if (!empty($submitfunction)) {
@@ -95,11 +96,12 @@ function pluginconfig_submit($values) {
     else {
         // call set_plugin_config and stuffs
     }
+
     if ($success) {
-        json_reply(false, get_string('settingssaved'));
+        $form->json_reply(PIEFORM_OK, get_string('settingssaved'));
     }
     else {
-        json_reply('local', get_string('settingssavefailed'));
+        $form->json_reply(PIEFORM_ERR, array('message' => get_string('settingssavefailed')));
     }
 }
 

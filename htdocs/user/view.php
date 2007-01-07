@@ -116,8 +116,8 @@ if ($communities = get_owned_communities($loggedinid, 'invite')) {
     if (count($invitelist) > 0) {
         $inviteform = pieform(array(
         'name'                => 'invite',
-        'ajaxpost'            => true,
-        'ajaxsuccessfunction' => 'invite_success',
+        'ajaxform'            => true,
+        'ajaxsuccesscallback' => 'invite_success',
         'elements'            => array(
             'community' => array(
                 'type'    => 'select',
@@ -158,8 +158,8 @@ if ($communities = get_tutor_communities($loggedinid, 'controlled')) {
     if (count($controlledlist) > 0) {
         $addform = pieform(array(
         'name'                => 'addmember',
-        'ajaxpost'            => true,
-        'ajaxsuccessfunction' => 'add_success',
+        'ajaxform'            => true,
+        'ajaxsuccesscallback' => 'add_success',
         'elements'            => array(
             'community' => array(
                 'type'    => 'select',
@@ -191,9 +191,9 @@ EOF;
 // or removing or approving or rejecting or whatever else we can do.
 $friendform = array(
     'name'     => 'friend',
-    'ajaxpost' => true,
+    'ajaxform' => true,
     'elements' => array(),
-    'ajaxsuccessfunction' => 'friend_success',
+    'ajaxsuccesscallback' => 'friend_success',
 );
 $friendsubmit = '';
 $friendtype = '';
@@ -291,7 +291,7 @@ $smarty->display('user/view.tpl');
 
 
 // Send an invitation to the user to join a community
-function invite_submit($values) {
+function invite_submit($values, Pieform $form) {
     global $USER;
     
     $data = new StdClass;
@@ -311,13 +311,13 @@ function invite_submit($values) {
                   . 'contacts/communities/view.php?id=' . $values['community']));
     }
     catch (SQLException $e) {
-        json_reply('local', get_string('inviteuserfailed'));
+        $form->json_reply(PIEFORM_ERR, get_string('inviteuserfailed'));
     }
-    json_reply(false, get_string('userinvited'));
+    $form->json_reply(PIEFORM_OK, get_string('userinvited'));
 }
 
 // Add the user as a member of a community
-function addmember_submit($values) {
+function addmember_submit($values, Pieform $form) {
     global $USER;
 
     $data = new StdClass;
@@ -338,9 +338,9 @@ function addmember_submit($values) {
                   . 'contacts/communities/view.php?id=' . $values['community']));
     }
     catch (SQLException $e) {
-        json_reply('local', get_string('adduserfailed'));
+        $form->json_reply(PIEFORM_ERR, get_string('adduserfailed'));
     }
-    json_reply(false, get_string('useradded'));
+    $form->json_reply(PIEFORM_OK, get_string('useradded'));
 }
 
 // friend submit function lives in lib/user.php

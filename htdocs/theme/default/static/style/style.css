@@ -41,15 +41,48 @@ h3, h4, h5, h6 {
 h5, h6 {
     font-size: 13px;
 }
+acronym {
+	color: #474220;
+	border-bottom: 1px dotted #d4d1c0;
+	cursor: help;
+}
 
 form {
    margin: 0;
 }
+/** Note: tables layed out with the 'maharatable' renderer now have class="maharatable",
+ * so they can be styled differently */
+/*form .maharatable th {
+    padding-top: 10px;
+}*/
 input, select, textarea {
 	border: 1px solid #b0bf64;
 }
 input[type="submit"], input[type="button"] {
     border: 2px outset #ccc;
+}
+fieldset {
+    border: 1px solid #b0bf64;
+}
+fieldset.collapsed legend, fieldset.collapsed legend * {
+    display: inline;
+}
+fieldset.collapsed {
+    border-color: #b0bf64 transparent transparent;
+}
+fieldset.collapsed * {
+    display: none;
+}
+legend a:focus {
+    outline: none
+}
+
+.resizable-textarea .grippie {
+    background: #eee url(../images/grippie.png) no-repeat scroll 100%;
+    border: 1px solid #ddd;
+    border-top-width: 0;
+    cursor: s-resize;
+    height: 14px;
 }
 
 .center {
@@ -74,9 +107,11 @@ input[type="submit"], input[type="button"] {
 #topwrapper {
 	margin-top: 15px;
 }
-
 #header {
 	background: #FFFFFF url(../images/header_corner_topleft.gif) no-repeat top left;
+}
+#logo {
+    padding: 10px;
 }
 
 #topwrapper ul,
@@ -128,17 +163,10 @@ input[type="submit"], input[type="button"] {
 }
 /* GLOBAL NAVIGATION TABS END */
 
-#logo {
-    padding: 10px;
-}
-
 .searchbox {
-	font-size: 11px;
-	font-weight: bold;
 	color: #497424;
 	margin: 40px 0 0 0;
 }
-
 #searchform_submit {
 	border: none;
 	margin-left: 5px; 
@@ -146,18 +174,11 @@ input[type="submit"], input[type="button"] {
 	text-align: right;
 	vertical-align: middle;
 }
-
-#searchform_query_container, #searchform_submit_container {
-	vertical-align: middle;
-}
-
 #searchform_query_container input {
-	border: 1px solid #b0bf64;
 	padding: 4px;
 	color: #777777;
 	width: 183px;
 }
-
 .searchbox .advancedsearch {
 	font-size: 9px;
 	padding-left: 5px;
@@ -174,7 +195,7 @@ input[type="submit"], input[type="button"] {
 
 /* MAIN NAVIGATION BEGIN */
 #mainnav {
-	padding-top: 8px;
+	padding: 8px 0 0;
 	margin: 0;
 	background: url(../images/navbg_spacer.gif) repeat-x;
 	height: 32px;
@@ -210,7 +231,7 @@ input[type="submit"], input[type="button"] {
 
 /* SUB NAVIGATION BEGINS */
 #subnav {
-	padding-top: 6px;
+	padding: 6px 0 0;
 	margin: 0;
 	font-size: 11px;
 	font-weight: bold;
@@ -220,10 +241,7 @@ input[type="submit"], input[type="button"] {
 	text-transform: capitalize;
 }
 
-#subnav li a,
-#subnav li a:link,
-#subnav li a:visited,
-#subnav li a:active {
+#subnav li a {
 	color: #FFF;
 }
 
@@ -265,30 +283,23 @@ div.sidebar {
 	color: #FFF;
 	font-weight: bold;
 }
-
 .sidebarforgotpassword {
 	padding: 10px 5px 5px 10px;
 	background: #FFFFFF url(../images/sidebox_topwhite.gif) no-repeat top;
 }
-
-#column-right .sidebarforgotpassword-botcorners {
-    margin-bottom: 7px;
-}
-
-.sidebarforgotpassword a,
-.sidebarforgotpassword a:link,
-.sidebarforgotpassword a:active,
-.sidebarforgotpassword a:visited {
+.sidebarforgotpassword a {
 	background: url(../images/icon_question.gif) no-repeat left;
 	padding-left: 17px;
 	color: #547c22;
 	text-decoration: none;
 	font-weight: bold;
 }
-
 .sidebarforgotpassword a:hover {
 	color: #819f18;
 	text-decoration: underline;
+}
+#column-right .sidebarforgotpassword-botcorners {
+    margin-bottom: 7px;
 }
 
 /* SITE MENU BEGINS */
@@ -375,10 +386,7 @@ div.sidebar {
 	width: 200px;
 }
 
-#column-right #login a,
-#column-right #login a:link,
-#column-right #login a:active,
-#column-right #login a:visited {
+#column-right #login a {
 	color: #547c22;
 	font-size: 9px;
 	text-decoration: none;
@@ -394,7 +402,7 @@ div.sidebar {
 /* MAIN CONTENT BEGIN */
 .content { 
 	padding: 0;
-	margin-bottom: 10px0;
+	margin-bottom: 10px;
 	background-color: #FFF;
 }
 
@@ -403,52 +411,37 @@ div.sidebar {
 	float: left;
 }
 
-/*.content textarea {
-	width: 450px;
-}
-.content textarea.wysiwyg {
-	width: 500px;
-}*/
-
 #messages {
 	margin: 0 3px 3px 3px;
 }
-
 #messages .ok {
 	color: #547c22;
-	background: #d2e29b url(../images/icon_goodtogo.gif) no-repeat left;
-	padding: 0 0 0 17px;
+	background: #d2e29b url(../images/icon_goodtogo.gif) no-repeat 1px;
+	padding: 3px 3px 3px 19px;
+    border: 1px solid #a2e26b;
 }
-
 #messages .error {
 	color: #dd0221;
-	background: #ffd3d9 url(../images/icon_problem.gif) no-repeat left;
-	padding: 0 0 0 17px;
+	background: #ffd3d9 url(../images/icon_problem.gif) no-repeat 1px;
+	padding: 3px 3px 3px 19px;
+    border: 1px solid #ffa3a9;
 }
-
 #messages .info {
 	color: #1666a9;
-	background: #b8c9cf url(../images/icon_question.gif) no-repeat left;
-	padding: 0 0 0 17px;
+	background: #b8c9cf url(../images/icon_question.gif) no-repeat 1px;
+	padding: 3px 3px 3px 19px;
+    border: 1px solid #8899cf;
 }
 
 /* NOTE: these next two rules should be merged */
-#addnewgroup {
+.addicon {
 	background: url(../images/icon_add.gif) no-repeat top left;
-	padding: 0 0 0 17px;
+	padding: 0 3px 3px 19px;
 	border: none;
+    margin: 5px 0;
 }
 
-.newblog,
-.newpost {
-	background: url(../images/icon_add.gif) no-repeat top left;
-	padding: 0 0 0 17px;
-}
-
-.content a,
-.content a:link,
-.content a:active,
-.content a:visited {
+.content a {
 	color: #547c22;
 	text-decoration: none;
 	border-bottom: 1px dotted #547c22;
@@ -557,30 +550,24 @@ p {
 	padding: 0;
 }
 
-thead th {
-	color: #3a5813;
-	background: #e5e8da;
-	margin: 0;
-	padding: 2px 4px 2px 4px;
-}
-
 tbody {
 	color: #000;
 	padding: 2px 4px;
 	margin: 0;
 }
-
 td {
 	padding: 0;
 	margin: 0;
 }
-
 th {
 	text-align: left;
 	color: #3a5813;
 	vertical-align: top;
 	margin: 0;
 	padding: 2px 4px;
+}
+thead th {
+	background-color: #e5e8da;
 }
 
 .required label, 
@@ -593,11 +580,6 @@ th {
 	color: #000000; 
 }
 
-acronym {
-	color: #474220;
-	border-bottom: 1px dotted #d4d1c0;
-	cursor: help;
-}
 
 .help { 
 	font-size: 9px; 
@@ -605,18 +587,15 @@ acronym {
 	text-decoration: none;
 	border: none;
 }
-
 .description { 
 	font-size: 9px; 
 	font-style: italic; 
 	color: #7e7e7e; 
 	padding-bottom: 5px;
 }
-
 .error { 
-	color: #cf0000; 
+    border-color: #ff6666; 
 }
-
 .errmsg { 
 	color: #cf0000; 
 	font-size: 9px; 
@@ -657,15 +636,19 @@ td.description,
  *
  *
  */
-/** This needs to be done better */
+/** This needs to be done better. Namely, all tablerenderer tables should get a class */
 #activitylist,
 #adminstitutionslist,
 #menuitemlist table,
-#bloglist,
-#postlist,
-#filelist {
+/*#bloglist,*/
+/*#postlist,*/
+/*#filelist,*/
+.tablerenderer {
 	margin: 10px 0 0 0;
 	width: 100%;
+}
+.tablerenderer tbody td {
+	padding: 0 5px;
 }
 
 #contactus {
@@ -677,17 +660,19 @@ td.description,
 #contactus th,
 #staffusers th,
 #adminusers th,
-#siteoptions th,
-#editsitepage th,
-#editgroup th {
+/*#siteoptions th,*/
+#editsitepage th/*,*/
+/*#editgroup th */{
 	padding: 10px 0 0 0;
 	margin: 0;
 }
 
+/*
 #siteoptions th {
 	margin: 10px 0 0 0;
 	padding: 12px 0 3px 0;
 }
+    */
 
 #typeheader {
 	color: #819f18;
@@ -706,23 +691,26 @@ td.description,
 	background: #e5e8da;
 }
 
-#grouplist {
+/*#grouplist {
 	margin: 10px 0 0 0;
 	padding: 0;
 	width: 100%;
-}
+}*/
 
 #activityprefs th {
 	padding: 5px 5px 5px 5px;
 }
 
-#grouplist tbody td,
+/*#grouplist tbody td,*/
 #adminstitutionslist tbody td,
-#menuitemlist tbody td,
-#bloglist tbody td{
+#menuitemlist tbody td
+/*#bloglist tbody td*/{
 	padding: 0 5px 0 5px;
 }
 
+/** These ones seem to push some pages down and right just a little bit.
+ * I think these should disappear. If the pages really need to be pushed
+ * down and left, put a style on the maincontent div to make it uniform  */
 #activityprefs, 
 #institution,
 #search,
@@ -731,23 +719,22 @@ td.description,
 #forgotpass,
 #staffusers,
 #adminusers,
-#createview1,
+/*#createview1,*/
 #uploadcsv,
 #newpost,
-#newblog,
-#mygroups,
-#myfiles,
+/*#newblog,*/
+/*#mygroups,*/
+/*#myfiles,*/
 #mywatchlist,
 #recentactivity,
-#myblogs,
+/*#myblogs,*/
 #editmenus,
-#editgroup,
-#createview2 {
+/*#editgroup,*/
+/*#createview2*/ {
 	margin: 10px 0 0 15px;
 }
 
-#institution th,
-#register th {
+#institution th {
 	padding: 10px 0 0 0;
 }
 
@@ -763,9 +750,8 @@ td.description,
 #siteoptions #siteoptions_submit,
 #editsitepage #editsitepage_submit,
 #uploadcsv #uploadcsv_submit,
-#contactus #contactus_submit,
-#profileform_submit,
-#editgroup_submit {
+#contactus #contactus_submit/*,
+#editgroup_submit*/ {
 	margin: 10px 0 0 0;
 }
 
@@ -792,26 +778,30 @@ td.description,
 	font-weight: bold;
 	padding: 0 5px 0 0;
 }
-
+/*
 #viewlist {
 	width: 100%;
 	margin: 2px 0 0 0;
 	padding: 0;
 }
-
+*/
+/*
 #siteoptions td.description {
 	margin: 2px 0 0 0px;
 	padding: 0;
 }
-
+*/
+/*
 #createview1 th {
 	padding: 7px 0 0 0;
 	margin: 0;
 }
-
+*/
+/*
 #siteoptions {
 	margin: 0 0 0 15px;
 }
+*/
 
 #editsitepage {
 	margin: 5px 0 0 15px;
@@ -830,14 +820,9 @@ td.description,
 	margin: 10px 0 0 0;
 }
 
-#template_selection,
-#members_potential {
+#template_selection {
 	margin: 0 0 10px 0;
 	padding: 0;
-}
-
-#profileform_submit {
-	
 }
 
 /* LISTS AND TABLE STYLES ENDS */
@@ -867,41 +852,39 @@ td.description,
 	color: #819f18;
 }
 
-#profileform th {
-	padding: 7px 2px 0 15px;
+
+
+
+.pieform table td {
+    padding-top: 4px;
+}
+.pieform table td.description {
+    padding-top: 1px;
+}
+.maharatable, .pieform table {
+    margin-left: 15px;
+}
+.pieform table.mceEditor {
+    margin-left: 0;
+}
+.pieform table.maharatable th, .pieform table th {
+	padding: 7px 2px 0 0;
 	margin: 0;
 }
-
-#profileform td {
-	padding: 1px 2px 0 15px;
+.pieform table.maharatable td {
+	padding: 1px 2px 0 0;
 	margin: 0;
+}
+.pieform table.maharatable input[type="submit"] {
+    margin-top: 10px;
 }
 
 #profileform #email_list {
 	padding: 0 0 5px 0;
 }
 
-#creategroup {
-	padding: 0 0 0 15px;
-	margin: 0;
-}
 
-#creategroup th {
-	padding: 7px 0 0 0px;
-	margin: 0;
-}
 
-#creategroup td {
-	padding: 1px;
-	margin: 0;
-}
-
-#creategroup td label {
-	font-weight: bold;
-	padding: 0 5px 0 0;
-	margin: 0;
-	color: #3a5714;
-}
 a.pieform-calendar-toggle {
     border-width: 0 !important;
 }

@@ -848,8 +848,12 @@ function pieform_configure() {
         'action'    => '',
         'autofocus' => true,
         'renderer'  => 'maharatable',
-        'preajaxsubmitcallback'  => 'processingStart',
-        'postajaxsubmitcallback' => 'processingStop',
+        'jserrorcallback'       => 'formError',
+        'globaljserrorcallback' => 'formGlobalError',
+        'jssuccesscallback'     => 'formSuccess',
+        'presubmitcallback'     => 'formStartProcessing',
+        'postsubmitcallback'    => 'formStopProcessing',
+        'jserrormessage' => get_string('errorprocessingform'),
         'configdirs' => get_config('libroot') . 'form/',
         'elements'   => array(
             'sesskey' => array(
@@ -860,11 +864,16 @@ function pieform_configure() {
     );
 }
 
-function pieform_configure_calendar($element) {
+function pieform_element_calendar_configure($element) {
     $element['jsroot'] = '/js/jscalendar/';
     $element['themefile'] = get_config('themeurl') . 'style/calendar.css';
     $element['imagefile'] = get_config('themeurl') . 'calendar.gif';
     $element['language'] = 'en'; // @todo: language file names for the js calendar may need to be changed
+    return $element;
+}
+
+function pieform_element_textarea_configure($element) {
+    $element['resizable'] = true;
     return $element;
 }
 

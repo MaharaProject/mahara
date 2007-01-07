@@ -14,17 +14,68 @@ function get_string(s) {
     return str;
 }
 
-function global_error_handler(data) {}
+function globalErrorHandler(data) {
+    if (data.returnCode == 3) {
+        // Logged out!
+    }
+}
 
-// Appends a status message to the end of elemid
+// Form related functions
+var oldValue = null;
+function formStartProcessing(form, btn) {
+    processingStart();
+    var button = $(btn);
+    if (button) {
+        oldValue = button.value;
+        button.value = get_string('processingform') + ' ...';
+        button.disabled = "disabled";
+        button.style.borderWidth = '1px';
+        button.blur();
+    }
+}
+function formStopProcessing(form, btn) {
+    processingStop();
+    var button = $(btn);
+    if (button) {
+        button.value = oldValue;
+        button.disabled = null;
+        button.style.borderWidth = '2px';
+    }
+}
+function formError(form, data) {
+    var errMsg = DIV({'id': 'messages'}, makeMessage(data.message.message, 'error'));
+    swapDOM('messages', errMsg);
+    scrollTo(0, 0);
+}
+function formSuccess(form, data) {
+    var yayMsg = DIV({'id': 'messages'}, makeMessage(data.message, 'ok'));
+    swapDOM('messages', yayMsg);
+    scrollTo(0, 0);
+}
+
+function formGlobalError(form, data) {
+    globalErrorHandler(data);
+}
+// End form related functions
+
+// Message related functions
+function makeMessage(message, type) {
+    var a = A({'href': ''}, '[X]');
+    connect(a, 'onclick', function(e) {
+        removeElement(a.parentNode.parentNode);
+        e.stop();
+    });
+    return DIV({'class': type}, DIV({'class': 'fr'}, a), message);
+}
+
+/* Appends a status message to the end of elemid */
 function displayMessage(message, type) {
     // ensure we have type 'ok', 'error', or 'info' (the default)
     if (!type || (type != 'ok' && type != 'error')) {
         type = 'info';
     }
 
-    var message = DIV({'class':type},message, ' ', A({'style': 'cursor: pointer;', 'onclick':'removeElement(this.parentNode)'},'[X]'));
-
+    var message = makeMessage(message, type);
     appendChildNodes('messages', message);
 
     // callLater(2, function() {
@@ -33,7 +84,7 @@ function displayMessage(message, type) {
     // });
 }
 
-// display a nice little loading notification
+/* Display a nice little loading notification */
 function processingStart(msg) {
     if (!msg) {
         msg = get_string('loading');
@@ -43,13 +94,14 @@ function processingStart(msg) {
         $('loading_box'),
         DIV(msg)
     );
-    $('loading_box').style.display = 'block';
+    showElement('loading_box');
 }
 
-// hide the loading notification
+/* Hide the loading notification */
 function processingStop() {
-    $('loading_box').style.display = 'none';
+    hideElement('loading_box');
 }
+// End message related functions
 
 // Function to post a data object to a json script.
 function sendjsonrequest(script, data, successcallback, errorcallback) {
@@ -75,7 +127,7 @@ function sendjsonrequest(script, data, successcallback, errorcallback) {
             errtype = 'error';
         }
         else {
-            global_error_handler(data);
+            globalErrorHandler(data);
         }
         if (errtype) {
             displayMessage(data.message,errtype);
@@ -84,7 +136,7 @@ function sendjsonrequest(script, data, successcallback, errorcallback) {
         }
     },
     function () {
-        displayMessage(get_string('unknownerror'),'error');
+        displayMessage(get_string('unknownerror'), 'error');
         errorcallback();
         processingStop();
     });
@@ -110,7 +162,7 @@ function newfilename(oldname, fileexistsfunc) {
     return newname;
 }
 
-// Autofocus the first element with a class of 'autofocus' on page load
+// Autofocus the first element with a class of 'autofocus' on page load (@todo: move this to pieforms.js)
 // Also, connect input elements with the 'emptyonfocus' class to work properly
 addLoadEvent(function() {
     var element = getFirstElementByTagAndClassName(null, 'autofocus', document.body)
@@ -121,9 +173,13 @@ addLoadEvent(function() {
 
     forEach(getElementsByTagAndClassName('input', 'emptyonfocus'), function(elem) {
         connect(elem, 'onfocus', function(e) { elem.value = ''; e.stop(); });
+        if (elem.form) {
+            connect(elem.form, 'onsubmit', function(e) { elem.value = ''; });
+        }
     });
 });
 
+// Contextual help
 var ctxHelp = new Array();
 var ctxHelp_selected;
 var container;
@@ -207,30 +263,32 @@ function contextualHelpOpen(helpName, content) {
 
     appendChildNodes($(helpName + '_container'), help);
 }
+// End contextual help
 
-// this function gets the cookie, if it exists
-function getCookie( name ) {
+// Cookie related functions
+/* this function gets the cookie, if it exists */
+function getCookie(name) {
     var start = document.cookie.indexOf( name + "=" );
     var len = start + name.length + 1;
 
     if (
-        ( !start ) &&
-        ( name != document.cookie.substring( 0, name.length ) )
+        (!start) &&
+        (name != document.cookie.substring(0, name.length))
     ) {
         return null;
     }
 
-    if ( start == -1 ) {
+    if (start == -1) {
         return null;
     }
 
     var end = document.cookie.indexOf( ";", len );
 
-    if ( end == -1 ) {
+    if (end == -1) {
         end = document.cookie.length;
     }
 
-    return unescape( document.cookie.substring( len, end ) );
+    return unescape(document.cookie.substring( len, end ));
 }
 
 function clearCookie( name ) {
@@ -250,8 +308,7 @@ function setCookie( name, value, expires, path, domain, secure )
     it for x number of days, to make it for hours, 
     delete * 24, for minutes, delete * 60 * 24
     */
-    if ( expires )
-    {
+    if (expires) {
         expires = expires * 1000;
     }
 
@@ -263,9 +320,10 @@ function setCookie( name, value, expires, path, domain, secure )
     ( ( domain ) ? ";domain=" + domain : "" ) +
     ( ( secure ) ? ";secure" : "" );
 }
+// End cookie related functions
 
 function toggleChecked(c) {
-    var e = getElementsByTagAndClassName(null,c);
+    var e = getElementsByTagAndClassName(null, c);
     if (e) {
         for (cb in e) {
 	    if (e[cb].checked == true) {

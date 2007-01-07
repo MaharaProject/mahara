@@ -44,7 +44,7 @@ $creategroup = pieform(array(
             'type'  => 'wysiwyg',
             'title' => get_string('groupdescription'),
             'rows'  => 10,
-            'cols'  => 80,
+            'cols'  => 70,
         ),
         'members'     => array(
             'type'  => 'userlist',
@@ -69,10 +69,10 @@ function creategroup_validate(Pieform $form, $values) {
 }
 
 function creategroup_cancel_submit() {
-    redirect('./');
+    redirect('contacts/groups/');
 }
 
-function creategroup_submit($values) {
+function creategroup_submit(Pieform $form, $values) {
     global $USER;
     global $SESSION;
 
@@ -108,7 +108,7 @@ function creategroup_submit($values) {
 
     db_commit();
 
-    redirect('./');
+    redirect('contacts/groups/');
 }
 
 $smarty = smarty();

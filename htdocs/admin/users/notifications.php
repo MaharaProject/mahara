@@ -59,8 +59,7 @@ foreach ($methods as $m) {
 
 $form = array(
     'name'       => 'adminnotifications',
-    'method'     => 'post',
-    'ajaxpost'   => true,
+    'jsform'     => true,
     'plugintype' => 'core', 
     'pluginname' => 'admin', 
     'renderer'   => 'multicolumntable',
@@ -100,7 +99,7 @@ $smarty = smarty();
 $smarty->assign('form', pieform($form));
 $smarty->display('admin/users/notifications.tpl');
 
-function adminnotifications_submit($values, Pieform $form) {
+function adminnotifications_submit(Pieform $form, $values) {
     foreach ($values as $key => $value) {
         if (!preg_match('/^admin\-(\d+)\-([a-z]+)$/', $key, $m)) {
             continue;

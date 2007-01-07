@@ -9,9 +9,9 @@
 			<div class="maincontent">
     		<h2>{str tag="mygroups"}</h2>
 
-    		<div id="mygroups"><a href="create.php" id="addnewgroup">{str tag="creategroup"}</a>
+    		<div class="addicon"><a href="create.php">{str tag="creategroup"}</a>
 
-			<table id="grouplist">
+			<table id="grouplist" class="tablerenderer">
 				<thead>
 					<tr>
 						<th>{str tag="groupname"}</th>

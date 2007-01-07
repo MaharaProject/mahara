@@ -16,6 +16,7 @@
 {$INLINEJAVASCRIPT}
         </script>
 {/if}
+        <script type="text/javascript" src="/js/pieforms.js"></script>
         <link rel="stylesheet" type="text/css" href="{$THEMEURL}style/style.css">
         <link rel="stylesheet" type="text/css" href="{$THEMEURL}style/dev.css">
         <link rel="stylesheet" type="text/css" href="{$THEMEURL}style/print.css" media="print">

@@ -40,8 +40,6 @@ $adminusers = get_column('usr', 'id', 'admin', 1);
 
 $form = array(
     'name' => 'adminusers',
-    'method' => 'post',
-    'action' => '',
     'elements' => array(
         'users' => array(
             'type' => 'userlist',
@@ -59,7 +57,7 @@ $form = array(
     )
 );
 
-function adminusers_submit($values) {
+function adminusers_submit(Pieform $form, $values) {
     global $SESSION;
     $table = get_config('dbprefix') . 'usr';
     

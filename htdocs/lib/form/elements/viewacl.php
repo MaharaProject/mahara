@@ -31,7 +31,7 @@
  * @param Pieform  $form    The form to render the element for
  * @return string           The HTML for the element
  */
-function pieform_render_viewacl($element, Pieform $form) {
+function pieform_element_viewacl(Pieform $form, $element) {
     // @todo addressbook stuff...
     $smarty = smarty();
     $smarty->left_delimiter  = '{{';

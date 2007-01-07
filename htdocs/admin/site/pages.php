@@ -42,8 +42,8 @@ $getstring = array('discardpageedits' => "'" . get_string('discardpageedits','ad
 
 $f = array(
     'name'                => 'editsitepage',
-    'ajaxpost'            => true,
-    'ajaxsuccessfunction' => 'contentSaved',
+    'jsform'              => true,
+    'jssuccescallback'    => 'contentSaved',
     'elements'            => array(
         'pagename' => array(
             'type'    => 'select',
@@ -71,7 +71,7 @@ $f = array(
 $form = pieform($f);
 
 
-function editsitepage_submit($values, Pieform $form) {
+function editsitepage_submit(Pieform $form, $values) {
     global $USER;
     $data = new StdClass;
     $data->name    = $values['pagename'];
@@ -106,9 +106,10 @@ function requestPageText(removeMessage) {
     }
 
     processingStart();
-    if (removeMessage) {
-        editsitepage_remove_message();
-    }
+    // @todo something might need to be done here
+    //if (removeMessage) {
+    //    removeElement('messages');
+    //}
     editsitepage_remove_all_errors();
     logDebug(get_string('loadingpagecontent', 'admin'));
     var d = loadJSONDoc('editchangepage.json.php',{'pagename':$('editsitepage_pagename').value});
@@ -129,9 +130,11 @@ function requestPageText(removeMessage) {
 }
 
 // Called from submitForm on successful page save.
-function contentSaved () {  
+function contentSaved (form, data) {  
+    formSuccess(form, data);
     originalcontent = getEditorContent();
-    callLater(2, editsitepage_remove_message);
+    // @todo something might need to be done here
+    //callLater(2, function() { removeElement('messages'); });
     requestPageText(false);
 }
 

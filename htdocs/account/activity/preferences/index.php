@@ -75,7 +75,7 @@ $elements['submit'] = array(
 $prefsform = array(
     'name'        => 'activityprefs',
     'method'      => 'post',
-    'ajaxpost'    => true,
+    'jsform'      => true,
     'renderer'    => 'table',
     'plugintype ' => 'core',
     'pluginname'  => 'account',
@@ -87,7 +87,7 @@ $smarty->assign('prefsdescr', get_string('prefsdescr', 'activity'));
 $smarty->assign('form', pieform($prefsform));
 $smarty->display('account/activity/preferences/index.tpl');
 
-function activityprefs_submit($values, Pieform $form) {
+function activityprefs_submit(Pieform $form, $values) {
     global $activitytypes, $admintypes, $USER;
     
     $userid = $USER->get('id');

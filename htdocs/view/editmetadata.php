@@ -104,7 +104,7 @@ $createview1 = pieform(array(
             'type'         => 'wysiwyg',
             'title'        => get_string('description','view'),
             'rows'         => 10,
-            'cols'         => 80,
+            'cols'         => 70,
             'defaultvalue' => $data->description,
         ),
         'ownerformat' => array(
@@ -123,10 +123,10 @@ $createview1 = pieform(array(
 ));
 
 function createview1_cancel_submit() {
-    redirect(get_config('wwwroot') . 'view/');
+    redirect('view/');
 }
 
-function createview1_submit($values) {
+function createview1_submit(Pieform $form, $values) {
     global $SESSION;
     global $view_id;
 
@@ -141,7 +141,7 @@ function createview1_submit($values) {
     update_record('view', $data, (object)array( 'id' => $view_id ));
 
     $SESSION->add_ok_msg(get_string('viewinformationsaved', 'view'));
-    redirect(get_config('wwwroot') . 'view/');
+    redirect('view/');
 }
 
 $smarty = smarty();

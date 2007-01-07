@@ -101,7 +101,7 @@ $form = pieform(array(
         'description' => array(
             'type' => 'wysiwyg',
             'rows' => 10,
-            'cols' => 80,
+            'cols' => 70,
             'title' => get_string('postbody', 'artefact.blog'),
             'description' => get_string('postbodydesc', 'artefact.blog'),
             'rules' => array(
@@ -113,7 +113,7 @@ $form = pieform(array(
             'type' => 'checkbox',
             'title' => get_string('thisisdraft', 'artefact.blog'),
             'description' => get_string('thisisdraftdesc', 'artefact.blog'),
-            'checked' => $checked
+            'defaultvalue' => $checked
         ),
     )
 ));
@@ -150,7 +150,7 @@ $wwwroot = get_config('wwwroot');
  * Javascript specific to this page.  Creates the list of files
  * attached to the blog post.
  */
-$javascript = <<< EOF
+$javascript = <<<EOF
 
 
 
@@ -274,7 +274,7 @@ $smarty->display('artefact:blog:editpost.tpl');
  *
  * @param array
  */
-function editpost_submit(array $values) {
+function editpost_submit(Pieform $form, array $values) {
     global $USER;
 
     $values['published'] = !$values['thisisdraft'];

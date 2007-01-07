@@ -81,6 +81,8 @@ foreach ( $element_list as $element => $type ) {
     }
     if ($element == 'country') {
         $elements[$element]['options'] = getoptions_country();
+        // @todo configure default country somehow...
+        $elements[$element]['defaultvalue'] = 'nz';
     }
 
     if (isset($profilefields[$element])) {
@@ -101,7 +103,7 @@ $profileform = pieform(array(
     'name'       => 'profileform',
     'plugintype' => 'artefact',
     'pluginname' => 'internal',
-    'ajaxpost'   => true,
+    'jsform'     => true,
     'method'     => 'post',
     'elements'   => $elements,
 ));
@@ -118,7 +120,7 @@ function profileform_validate(Pieform $form, $values) {
     }
 }
 
-function profileform_submit($values, Pieform $form) {
+function profileform_submit(Pieform $form, $values) {
     global $SESSION;
     global $USER;
     global $element_list;

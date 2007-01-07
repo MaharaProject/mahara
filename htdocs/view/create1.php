@@ -104,7 +104,7 @@ $createview1 = pieform(array(
             'type'         => 'wysiwyg',
             'title'        => get_string('description','view'),
             'rows'         => 10,
-            'cols'         => 80,
+            'cols'         => 70,
             'defaultvalue' => isset($data['description']) ? $data['description'] : null,
         ),
         'ownerformat' => array(
@@ -131,7 +131,7 @@ function createview1_cancel_submit() {
     redirect(get_config('wwwroot') . 'view/');
 }
 
-function createview1_submit($values) {
+function createview1_submit(Pieform $form, $values) {
     global $SESSION;
 
     $data = $SESSION->get('create_' . $values['createid']);

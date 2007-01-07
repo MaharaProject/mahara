@@ -129,10 +129,10 @@ $elements['submit'] = array(
 $prefsform = array(
     'name'        => 'accountprefs',
     'method'      => 'post',
-    'ajaxpost'    => true,
+    'jsform'      => true,
     'plugintype'  => 'core',
     'pluginname'  => 'account',
-    'ajaxsuccessfunction' => 'clearPasswords',
+    'jssuccesscallback' => 'clearPasswords',
     'elements'    => $elements
 );
 
@@ -140,7 +140,8 @@ $prefsform = array(
 $smarty = smarty();
 $smarty->assign('form', pieform($prefsform));
 $smarty->assign('INLINEJAVASCRIPT', "
-function clearPasswords() {
+function clearPasswords(form, data) {
+    formSuccess(form, data);
     $('accountprefs_oldpassword').value = '';
     $('accountprefs_password1').value = '';
     $('accountprefs_password2').value = '';
@@ -161,7 +162,7 @@ function accountprefs_validate(Pieform $form, $values) {
     }
 }
 
-function accountprefs_submit($values, Pieform $form) {
+function accountprefs_submit(Pieform $form, $values) {
     global $USER;
 
     db_begin();

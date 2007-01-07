@@ -17,11 +17,11 @@
 			<div class="maincontent">
 			<div id="myblogs">
     		<h2>{str section="artefact.blog" tag="myblogs"}</h2>
-    			<div class="newblog">
-        		<a href="{$WWWROOT}/artefact/blog/new/">{str section="artefact.blog" tag="addblog"}</a>
+    			<div class="addicon">
+        		<a href="{$WWWROOT}artefact/blog/new/">{str section="artefact.blog" tag="addblog"}</a>
     			</div>
 
-			<table id="bloglist">
+			<table id="bloglist" class="tablerenderer">
 				<thead>
 					<tr>
 						<th>{str section="artefact.blog" tag="title"}</th>
@@ -32,8 +32,8 @@
 				</tbody>
 			</table>
     
-				<div class="newblog">
-					<a href="{$WWWROOT}/artefact/blog/new/">{str section="artefact.blog" tag="addblog"}</a>
+				<div class="addicon">
+					<a href="{$WWWROOT}artefact/blog/new/">{str section="artefact.blog" tag="addblog"}</a>
 				</div>
 				
 			</div>

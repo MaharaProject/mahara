@@ -28,11 +28,13 @@
  * Renders a textarea, but with extra javascript to turn it into a wysiwyg
  * textarea.
  *
+ * @todo support resizable.
+ *
  * @param array   $element The element to render
  * @param Pieform $form    The form to render the element for
  * @return string          The HTML for the element
  */
-function pieform_render_wysiwyg($element, Pieform $form) {
+function pieform_element_wysiwyg(Pieform $form, $element) {
     global $USER;
     if ($USER->get_account_preference('wysiwyg')) {
         $element['class'] = isset($element['class']) && $element['class'] !== '' ? $element['class'] . ' wysiwyg' : 'wysiwyg';
@@ -67,15 +69,11 @@ function pieform_render_wysiwyg($element, Pieform $form) {
         . '>' . Pieform::hsc($form->get_value($element)) . '</textarea>';
 }
 
-/**
- * @todo document: basically, the required rule now works better, as stripping
- * tags out takes away a whole bunch of hidden stuff
- */
-function pieform_is_empty_wysiwyg($value, $element) {
+function pieform_element_wysiwyg_rule_required($value, $element) {
     return strip_tags($value) === '';
 }
 
-function pieform_get_headdata_wysiwyg() {
+function pieform_element_wysiwyg_get_headdata() {
     global $USER;
     if ($USER->get_account_preference('wysiwyg')) {
         return array('tinymce');

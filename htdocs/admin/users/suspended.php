@@ -77,7 +77,7 @@ $smarty->assign('buttonform', $form->build(false));
 
 $smarty->display('admin/users/suspended.tpl');
 
-function buttons_submit_unsuspend($values) {
+function buttons_submit_unsuspend(Pieform $form, $values) {
     global $SESSION;
 
     $ids = get_user_ids_from_post();
@@ -86,17 +86,17 @@ function buttons_submit_unsuspend($values) {
     }
 
     $SESSION->add_ok_msg(get_string('usersunsuspendedsuccessfully'));
-    redirect(get_config('wwwroot') . 'admin/users/suspended.php');
+    redirect('admin/users/suspended.php');
 }
 
-function buttons_submit_export($values) {
+function buttons_submit_export(Pieform $form, $values) {
     global $SESSION;
     $ids = get_user_ids_from_post();
     $SESSION->add_info_msg(get_string('exportingnotsupportedyet'));
-    redirect(get_config('wwwroot') . 'admin/users/suspended.php');
+    redirect('admin/users/suspended.php');
 }
 
-function buttons_submit_delete($values) {
+function buttons_submit_delete(Pieform $form, $values) {
     global $SESSION;
 
     $ids = get_user_ids_from_post();
@@ -105,7 +105,7 @@ function buttons_submit_delete($values) {
     }
 
     $SESSION->add_ok_msg(get_string('usersdeletedsuccessfully'));
-    redirect(get_config('wwwroot') . 'admin/users/suspended.php');
+    redirect('admin/users/suspended.php');
 }
 
 function get_user_ids_from_post() {
@@ -119,7 +119,7 @@ function get_user_ids_from_post() {
     if (!$ids) {
         global $SESSION;
         $SESSION->add_info_msg(get_string('nousersselected'));
-        redirect(get_config('wwwroot') . 'admin/users/suspended.php');
+        redirect('admin/users/suspended.php');
     }
 
     return $ids;

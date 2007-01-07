@@ -31,7 +31,7 @@
  * @param Pieform  $form    The form to render the element for
  * @return string           The HTML for the element
  */
-function pieform_render_cancelbackcreate($element, Pieform $form) {
+function pieform_element_cancelbackcreate(Pieform $form, $element) {
     $form->include_plugin('element', 'submit');
     $form->include_plugin('element', 'cancel');
     $cancelelement = $element;
@@ -42,12 +42,12 @@ function pieform_render_cancelbackcreate($element, Pieform $form) {
     $backelement['value'] = $element['value'][1];
     $submitelement = $element;
     $submitelement['value'] = $element['value'][2];
-    return  pieform_render_cancel($cancelelement, $form) . ' ' . pieform_render_submit($backelement, $form)
-        . ' ' . pieform_render_submit($submitelement, $form);
+    return  pieform_element_cancel($form, $cancelelement) . ' ' . pieform_element_submit($form, $backelement)
+        . ' ' . pieform_element_submit($form, $submitelement);
 }
 
-function pieform_render_cancelbacksubmit_set_attributes($element) {
-    $element['ajaxmessages'] = true;
+function pieform_element_cancelbacksubmit_set_attributes($element) {
+    $element['submitelement'] = true;
     return $element;
 }
 

@@ -34,7 +34,7 @@ defined('INTERNAL') || die();
  * @param Pieform  $form    The form to render the element for
  * @return string           The HTML for the element
  */
-function pieform_render_userlist($element, Pieform $form) {
+function pieform_element_userlist(Pieform $form, $element) {
     $smarty = smarty();
 
     $smarty->left_delimiter = '{{';
@@ -65,10 +65,10 @@ function pieform_render_userlist($element, Pieform $form) {
     return $smarty->fetch('form/userlist.tpl');
 }
 
-function pieform_get_value_userlist($element, Pieform $form) {
+function pieform_element_userlist_get_value(Pieform $form, $element) {
     $name = $element['name'];
 
-    $global = ($form->get_method() == 'get') ? $_GET : $_POST;
+    $global = ($form->get_property('method') == 'get') ? $_GET : $_POST;
 
     if (isset($global[$name])) {
         $value = $global[$name];
@@ -87,7 +87,7 @@ function pieform_get_value_userlist($element, Pieform $form) {
     return null;
 }
 
-function form_is_empty_userlist($value, $element) {
+function form_element_userlist_rule_required($value, $element) {
     if (is_array($value) && count($value)) {
         return false;
     }
@@ -95,7 +95,7 @@ function form_is_empty_userlist($value, $element) {
     return true;
 }
 
-function form_render_userlist_set_attributes($element) {
+function form_element_userlist_set_attributes($element) {
     // By default, use the filter select box
     if (!isset($element['filter'])) {
         $element['filter'] = true;

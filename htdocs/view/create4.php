@@ -29,7 +29,7 @@ define('MENUITEM', 'view');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 require_once('pieforms/pieform/elements/calendar.php');
-$smarty = smarty(array(), pieform_get_headdata_calendar(pieform_configure_calendar(array())));
+$smarty = smarty(array(), pieform_element_calendar_get_headdata(pieform_element_calendar_configure(array())));
 $createid = param_integer('createid', null);
 $data = $SESSION->get('create_' . $createid);
 
@@ -50,10 +50,10 @@ $form = array(
 );
 
 function createview4_submit_cancel() {
-    redirect(get_config('wwwroot') . 'view/');
+    redirect('view/');
 }
 
-function createview4_submit($values) {
+function createview4_submit(Pieform $form, $values) {
     global $SESSION, $USER, $createid, $data;
     log_debug($values);
     log_debug($data);

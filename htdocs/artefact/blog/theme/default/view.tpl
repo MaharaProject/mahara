@@ -21,19 +21,19 @@
                                     <a href="{$WWWROOT}artefact/blog/settings/?id={$blog->get('id')}">{str section="artefact.blog" tag="settings"}</a>
                                 </div>
 
-				<div class="newpost">
-					<a href="{$WWWROOT}/artefact/blog/editpost.php?blog={$blog->get('id')}">{str section="artefact.blog" tag="addpost"}</a>
+				<div class="addicon">
+					<a href="{$WWWROOT}artefact/blog/editpost.php?blog={$blog->get('id')}">{str section="artefact.blog" tag="addpost"}</a>
 				</div>
 		
-			<table id="postlist">
+			<table id="postlist" class="tablerenderer">
 				<thead>
 				</thead>
 				<tbody>
 				</tbody>
 			</table>
 				
-				<div class="newpost">
-					<a href="{$WWWROOT}/artefact/blog/editpost.php?blog={$blog->get('id')}">{str section="artefact.blog" tag="addpost"}</a>
+				<div class="addicon">
+					<a href="{$WWWROOT}artefact/blog/editpost.php?blog={$blog->get('id')}">{str section="artefact.blog" tag="addpost"}</a>
 				</div>
 				
 			</div>
