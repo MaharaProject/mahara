@@ -27,8 +27,12 @@
 define('INTERNAL', 1);
 define('ADMIN', 1);
 define('INSTALLER', 1);
+define('JSON', 1);
+
 require(dirname(dirname(__FILE__)) . '/init.php');
 require(get_config('libroot') . 'upgrade.php');
+
+json_headers();
 
 $install = param_boolean('install');
 if (!$install) {

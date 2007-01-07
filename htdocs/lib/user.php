@@ -360,6 +360,37 @@ function optional_userid($userid) {
     return $USER->get('id');
 }
 
+
+
+/**
+ * helper function to default to currently
+ * logged in user if there isn't an id specified
+ * @throws InvalidArgumentException if there is no user and no $USER
+ */
+function optional_userobj($user) {
+
+    if (!empty($user) && is_object($user)) {
+        return $user;
+    }
+
+    if (!empty($user) && is_int($user)) {
+        if ($user = get_record('usr', 'id', $user)) {
+            return $user;
+        }
+        throw new InvalidArgumentException("optional_userobj given id $id no db match found");
+    }
+
+    if (!is_logged_in()) {
+        throw new InvalidArgumentException("optional_userobj no userid and no logged in user");
+    }
+    
+    global $USER;
+    return $USER->to_stdclass();
+}
+
+
+
+
 /**
  * helper function for testing logins
  */

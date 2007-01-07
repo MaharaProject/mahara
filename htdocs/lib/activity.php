@@ -132,6 +132,9 @@ function handle_activity($activitytype, $data) {
                 }
                 break;
             case 'virusrepeat':
+                $userstring = $data->username . ' (' . $data->fullname . ') (userid:' . $data->userid . ')' ;
+                $data->subject = get_string('virusrepeatsubject', 'mahara', $userstring);
+                $data->message = get_string('virusrepeatmessage');
                 break;
             case 'virusrelease':
                 break;
@@ -290,7 +293,7 @@ function handle_activity($activitytype, $data) {
                                 AND c.community = ?
                             ';
                     $users = get_records_sql_array($sql, 
-                                                   array(get_config('wwwroot') . 'community/view.php?id='
+                                                   array(get_config('wwwroot') . 'contacts/communities/view.php?id='
                                                          . $data->community, 'watchlist', $data->community));
                 }
                 else {

@@ -25,7 +25,11 @@
  */
 
 define('INTERNAL', 1);
+define('JSON', 1);
+
 require(dirname(dirname(__FILE__)) . '/init.php');
+
+json_headers();
 
 $pluginname = param_variable('pluginname');
 $parent     = param_integer('parent', null);

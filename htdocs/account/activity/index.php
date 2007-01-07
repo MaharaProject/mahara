@@ -105,6 +105,17 @@ function markread(form) {
             if (data.count > 0) {
                 $('messagediv').innerHTML = '$readsave';
                 activitylist.doupdate();
+                var oldcount = parseInt($('headerunreadmessagecount').innerHTML);
+                var newcount = (oldcount - data.count);
+                var messagenode = $('headerunreadmessages');
+                if (newcount == 1) { // jump through hoops to change between plural and singular
+                    messagenode.innerHTML = get_string('unreadmessage');
+                } 
+                else {
+                    messagenode.innerHTML = get_string('unreadmessages');
+                }
+                $('headerunreadmessagecount').innerHTML = newcount;
+
             }
         }
         if (data.error) {

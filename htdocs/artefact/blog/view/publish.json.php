@@ -25,9 +25,12 @@
  */
 
 define('INTERNAL', 1);
+define('JSON', 1);
 
 require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
 safe_require('artefact', 'blog');
+
+json_headers();
 
 $id = param_integer('id');
 

@@ -25,9 +25,14 @@
  */
 
 define('INTERNAL', 1);
+define('JSON', 1);
+
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('artefact', 'file');
 require_once('artefact.php');
+
+json_headers();
+
 global $USER;
 
 $parentfolder = param_variable('parentfolder', null); // id of parent artefact
@@ -36,15 +41,16 @@ $name = param_variable('name');
 $description = param_variable('description');
 $collideaction = param_variable('collideaction', 'fail');
 
-
 if ($existingid = ArtefactTypeFileBase::exists_in_db($name, $USER->get('id'), $parentfolder)) {
-    log_debug($existingid);
-    if ($collideaction == 'replace') {
-        $copy = artefact_instance_from_id($existingid);
-        $copy->delete();
-    }
-    else {
-        json_reply('local', get_string('fileexists', 'artefact.file'));
+    if ($existingid != $id) {
+        if ($collideaction == 'replace') {
+            log_debug('deleting ' . $existingid);
+            $copy = artefact_instance_from_id($existingid);
+            $copy->delete();
+        }
+        else {
+            json_reply('local', get_string('fileexists', 'artefact.file'));
+        }
     }
 }
 

@@ -54,6 +54,7 @@ $string['savechanges'] = 'Save changes';
 $string['size'] = 'Size';
 $string['title'] = 'Name';
 $string['titlefieldisrequired'] = 'The name field is required';
+$string['unlinkthisfilefromblogposts?'] = 'This file is attached to one or more blog posts.  If you delete the file, it will be removed from these posts.';
 $string['upload'] = 'Upload';
 $string['uploadoffilecomplete'] = 'Upload of %s complete';
 $string['uploadoffilefailed'] =  'Upload of %s failed';

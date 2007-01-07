@@ -235,8 +235,19 @@ sub insert_random_communities {
             $members->{$existing_users->{((keys %$existing_users)[int(rand(keys %$existing_users))])}{id}} = 1;
         }
         foreach my $id (keys %$members) {
+            next if $id == $user_id;
             $self->{dbh}->do(
                 'INSERT INTO ' . $prefix . 'community_member (community,member,ctime) VALUES (currval(\'' . $prefix . 'community_id_seq\'),?,current_timestamp)',
+                undef,
+                $id,
+            );
+            $self->{dbh}->do(
+                'INSERT INTO ' . $prefix . 'community_member_invite (community,member,ctime) VALUES (currval(\'' . $prefix . 'community_id_seq\'),?,current_timestamp)',
+                undef,
+                $id,
+            );
+            $self->{dbh}->do(
+                'INSERT INTO ' . $prefix . 'community_member_request (community,member,ctime) VALUES (currval(\'' . $prefix . 'community_id_seq\'),?,current_timestamp)',
                 undef,
                 $id,
             );

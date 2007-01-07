@@ -30,14 +30,16 @@ define('SUBMENUITEM', 'myfriends');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
 
-$profileurl = get_config('wwwroot') . 'thumb.php?type=user&id=';
-$viewurl    = get_config('wwwroot') . 'user/view.php?id=';
+$wwwroot    = get_config('wwwroot');
+$profileurl = $wwwroot . 'thumb.php?type=user&id=';
+$viewurl    = $wwwroot . 'user/view.php?id=';
 
 $viewsavailable = get_string('viewsavailable');
 $viewavailable = get_string('viewavailable');
 $remove = get_string('removefromfriendslist');
 $accept = get_string('accept');
 $reject = get_string('reject');
+$allviews = get_string('allviews');
 $friendcontrolfailed = get_string('friendlistfailure');
 
 $inlinejs = <<<EOF
@@ -65,8 +67,8 @@ var friendslist = new TableRenderer(
          }
          else {
              var viewcol;
-             if (typeof(d.views) == 'Array' && d.views[r.id] && d.views[r.id].length > 0) {
-                 var len = d.views[r.id].length;
+             if (typeof(d.views) == 'object' && d.views[r.id] && countKeys(d.views[r.id]) > 0) {
+                 var len = countKeys(d.views[r.id]);
                  var views = '';
                  if (len == 1) {
                      views = len + ' {$viewavailable}';
@@ -74,7 +76,10 @@ var friendslist = new TableRenderer(
                  else {
                      views = len + ' {$viewsavailable}';
                  }
-                 viewcol = TD(null, A({'href': '', 'onclick': 'expandViews(' + r.id + ')'}, views));
+                 var theLink = A({'href': ''}, views);
+                 connect(theLink, 'onclick', partial(expandViews, d.views[r.id], r.id));
+                 connect(theLink, 'onclick', function (e) { e.stop(); } );
+                 viewcol = TD({'id': 'friend-' + r.id}, theLink);
              }
              else {
                  views = '0 {$viewsavailable}';
@@ -125,10 +130,32 @@ function showReject(id) {
     insertSiblingNodesAfter($('pending-' + id).parentNode, tr);
 }
 
+function expandViews(views, id) {
+    if ($('row-views-' + id)) {
+        removeElement('row-views-' + id);
+        forEach (views, function (view) {
+            removeElement('row-views-view-' + view.id);
+        });
+        return false;
+    }
+    var ts = [];
+    forEach (views, function(view) {
+        ts.push(TR({'id': 'row-views-view-' + view.id},
+                   TD(null),
+                   TD({'colspan': 3},
+                      A({'href': '{$wwwroot}/view/view.php?view=' + view.id}, view.title))));
+    });
+    ts.push(TR({'id': 'row-views-' + id}, TD(null), 
+               TD({'colspan': 3}, 
+                  A({'href':  '{$wwwroot}/user/view.php?id=' + id}, '{$allviews}'))));
+    insertSiblingNodesAfter($('friend-' + id).parentNode, ts);
+    return false;
+}
+
 EOF;
 
 $smarty = smarty(array('tablerenderer'));
-$smarty->assign('pendingchange', 'friendslist.doupdate({\'pending\':this.options[this.selectedIndex].value});');
+$smarty->assign('pendingchange', '$(\'messagediv\').innerHTML=\'\';friendslist.doupdate({\'pending\':this.options[this.selectedIndex].value});');
 $smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 $smarty->display('contacts/index.tpl');
 

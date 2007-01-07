@@ -183,10 +183,10 @@ function get_tutor_communities($userid=0, $jointype=null) {
     $userid = optional_userid($userid);
     $prefix = get_config('dbprefix');
 
-    $sql = 'SELECT c.*, cm.ctime
+    $sql = 'SELECT DISTINCT c.*, cm.ctime
               FROM ' . $prefix . 'community c 
-              JOIN ' . $prefix . 'community_member cm ON cm.community = c.id
-              WHERE c.owner != ? AND cm.member = ? AND cm.tutor = ? ';
+              LEFT JOIN ' . $prefix . 'community_member cm ON cm.community = c.id
+              WHERE (cm.member IS NULL AND c.owner = ?) OR (cm.member = ? AND cm.tutor = ?)';
     $values = array($userid, $userid, 1);
     
     if (!empty($jointype)) {
@@ -197,6 +197,116 @@ function get_tutor_communities($userid=0, $jointype=null) {
 }
 
 
+// constants for community membership type
+define('COMMUNITY_MEMBERSHIP_ADMIN', 1);
+define('COMMUNITY_MEMBERSHIP_STAFF', 2);
+define('COMMUNITY_MEMBERSHIP_OWNER', 3);
+define('COMMUNITY_MEMBERSHIP_TUTOR', 4);
+define('COMMUNITY_MEMBERSHIP_MEMBER', 5);
 
+
+/**
+ * Can a user access a given community?
+ * 
+ * @param mixed $community id of community or db record (object)
+ * @param mixed $user optional (object or id), defaults to logged in user
+ *
+ * @returns constant access level or FALSE
+ */
+function user_can_access_community($community, $user=null) {
+
+    if (empty($userid)) {
+        global $USER;
+        $user = $USER;
+    }
+    else if (is_int($user)) {
+        $user = get_user($user);
+    }
+    else if (is_object($user) && !$user instanceof User) {
+        $user = get_user($user->get('id'));
+    }
+
+    if (!$user instanceof User) {
+        throw new InvalidArgumentException("not useful user arg given to user_can_access_community: $user");
+    }
+
+    if (is_int($community)) {
+        $community = get_record('community', 'id', $community);
+    }
+
+    if (!is_object($community)) {
+        throw new InvalidArgumentException("not useful community arg given to user_can_access_community: $community");
+    }
+
+    if ($user->get('admin')) {
+        return COMMUNITY_MEMBERSHIP_ADMIN;
+    }
+    if ($user->get('staff')) {
+        return COMMUNITY_MEMBERSHIP_STAFF;
+    }
+    if ($community->owner == $user->get('id')) {
+        return COMMUNITY_MEMBERSHIP_OWNER;
+    }
+
+    if (!$membership = get_record('community_member', 'community', $community->id, 'member', $user->get('id'))) {
+        return false;
+    }
+
+    if ($membership->tutor) {
+        return COMMUNITY_MEMBERSHIP_TUTOR;
+    }
+    
+    return COMMUNITY_MEMBERSHIP_MEMBER;
+}
+
+
+/**
+ * helper function to remove a user from a community
+ * also deletes the community from their watchlist, 
+ * and deletes any views they can only access through this community
+ * from their watchlist. 
+ *
+ * @param int $communityid
+ * @param int $userid
+ */
+function community_remove_member($communityid, $userid) {
+
+    $prefix = get_config('dbprefix');
+
+    delete_records('usr_watchlist_community', 'usr', $userid, 'community', $communityid);
+    // get all the views in this user's watchlist associated with this community.
+    $views = get_column_sql('SELECT v.id 
+                             FROM ' . $prefix . 'view v JOIN ' . $prefix . 'usr_watchlist_view va on va.view = v.id
+                             JOIN ' . $prefix . 'view_access_community c ON c.view = v.id');
+    // @todo this is probably a retarded way to do it and should be changed later.
+    foreach ($views as $view) {
+        db_begin();
+        delete_record('usr_watchlist_view', 'view', $view, 'usr', $userid);
+        if (can_view_view($view, $userid)) {
+            db_rollback();
+        }
+        else {
+            db_commit();
+        }
+    }
+    delete_records('community_member', 'member', $userid, 'community', $communityid);
+}
+
+/**
+ * function to add a member to a community
+ * doesn't do any jointype checking, that should be handled by the caller
+ *
+ * @param int $communityid
+ * @param int $userid
+ */
+function community_add_member($communityid, $userid) {
+    $cm = new StdClass;
+    $cm->member = $userid;
+    $cm->community = $communityid;
+    $cm->ctime =  db_format_timestamp(time());
+    $cm->tutor = 0;
+    insert_record('community_member', $cm);
+    
+}
 
 ?>

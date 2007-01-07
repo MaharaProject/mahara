@@ -92,4 +92,3 @@ $smarty->assign('categories', get_column('template_category','name'));
 $smarty->display('view/create2.tpl');
 
 ?>
-

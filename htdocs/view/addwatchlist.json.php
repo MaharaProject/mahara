@@ -25,7 +25,11 @@
  */
 
 define('INTERNAL', 1);
+define('JSON', 1);
+
 require(dirname(dirname(__FILE__)) . '/init.php');
+
+json_headers();
 
 $view = param_integer('view');
 $artefact = param_integer('artefact',null);

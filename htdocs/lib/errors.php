@@ -460,6 +460,17 @@ class MaharaException extends Exception {
 
     public function handle_exception() {
 
+        if (!empty($this->log)) {
+            log_message($message, LOG_LEVEL_WARN, true, true, $this->getFile(), $this->getLine(), $this->getTrace());
+        }
+
+        if (defined('JSON')) { // behave differently
+            @header('Content-type: text/plain');
+            @header('Pragma: no-cache');
+            echo json_encode(array('error' => true, 'message' => $this->render_exception()));
+            exit;
+        }
+
         $outputtitle = $this->get_string('title');
         $outputmessage = $this->render_exception();
         $message = strip_tags($outputmessage);
@@ -496,9 +507,6 @@ $outputmessage
 EOF;
         }
         // end of printing stuff to the screen...
-        if (!empty($this->log)) {
-            log_message($message, LOG_LEVEL_WARN, true, true, $this->getFile(), $this->getLine(), $this->getTrace());
-        }
         die();
     }
 }
@@ -615,6 +623,11 @@ class ViewNotFoundException extends UserException {}
  * Exception - user not found
  */
 class UserNotFoundException extends UserException {}
+
+/**
+ * Exception - community not found
+ */
+class CommunityNotFoundException extends UserException {}
 
 /**
  * Exception - anything to do with template parsing

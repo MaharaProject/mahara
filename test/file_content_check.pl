@@ -17,6 +17,8 @@ my $EXCLUDE_FILES = [
     qr{ \A htdocs/lib/smarty                }xms,
     qr{ \A htdocs/lib/ddl.php               }xms,
     qr{ \A htdocs/lib/dml.php               }xms,
+    qr{ \A htdocs/lib/file.php              }xms,
+    qr{ \A htdocs/lib/uploadmanager.php     }xms,
     qr{ \A htdocs/lib/xmlize.php            }xms,
     qr{ \A htdocs/lib/kses.php              }xms,
     qr{ \A htdocs/lib/pear/                 }xms,
@@ -113,6 +115,7 @@ sub process {
             $author_data =~ m{ \s* Martyn \s Smith \s <martyn\@catalyst\.net\.nz> \s* }xms
             or $author_data =~ m{ \s* Penny \s Leach \s <penny\@catalyst\.net\.nz> \s* }xms
             or $author_data =~ m{ \s* Nigel \s McNie \s <nigel\@catalyst\.net\.nz> \s* }xms
+            or $author_data =~ m{ \s* Alastair \s Pharo \s <alastair\@catalyst\.net\.nz> \s* }xms
             or $author_data =~ m{ \s* Richard \s Mansfield \s <richard\.mansfield\@catalyst\.net\.nz> \s* }xms
         ) {
             print $directory, $filename, " invalid \@author '$author_data'\n";
@@ -125,6 +128,16 @@ sub process {
     # check copyright
     if ( $file_data !~ m{\@copyright  \(C\) 2006,2007 Catalyst IT Ltd http://catalyst\.net\.nz} ) {
         print $directory, $filename, " missing \@copyright (or invalid)\n";
+    }
+
+    # check for json stuff
+    if ($filename =~ m{.*\.json\.php}) {
+	if ($file_data !~ m{define\('JSON',\s*1\)} ) {
+	    print $directory, $filename, " appears to be a json script but doesn't define('JSON', 1);\n";
+	}
+	if ($file_data !~ m{json_headers} ) {
+	    print $directory, $filename, " appears to be a json script but doesn't send json_headers(); \n";
+	}
     }
 
     # check language strings

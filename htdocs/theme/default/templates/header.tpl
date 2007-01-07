@@ -48,13 +48,16 @@
                     <tr>
                         <td>{$searchform}</td>
                     </tr>
+{*
                     <tr>
                         <td class="advancedsearch"><a href="{$WWWROOT}user/search.php">{str tag=advancedsearch}</a></td>
                     </tr>
+*}
                 </table>
 {/if}
                 <div id="logo"><a href="{$WWWROOT}"><img src="{image_path imagelocation='images/logo.gif'}" border="0" alt=""></a></div>
                 <h1 class="hiddenStructure"><a href="{$WWWROOT}">{$heading|default:"Mahara"|escape}</a></h1>
+                <div id="loggedinstring">{$LOGGEDINSTR}</div>
             </div>
         </div>
         <div id="mainwrapper">

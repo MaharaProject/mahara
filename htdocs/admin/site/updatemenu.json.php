@@ -26,7 +26,11 @@
 
 define('INTERNAL', 1);
 define('ADMIN', 1);
+define('JSON', 1);
+
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+
+json_headers();
 
 $type     = param_alpha('type');        // external list or admin file
 $name     = param_variable('name');

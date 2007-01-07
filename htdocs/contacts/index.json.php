@@ -25,7 +25,11 @@
  */
 
 define('INTERNAL', 1);
+define('JSON', 1);
+
 require(dirname(dirname(__FILE__)) . '/init.php');
+
+json_headers();
 
 $pending  = param_boolean('pending', false);
 $limit    = param_integer('limit', 10);
@@ -62,7 +66,13 @@ if (empty($pending)) {
             WHERE u.id IN (
                 SELECT (CASE WHEN usr1 = ? THEN usr2 ELSE usr1 END) AS userid 
                 FROM ' . $prefix . 'usr_friend WHERE (usr1 = ? OR usr2 = ?))';
-    $data = get_records_sql_array($sql, array($userid, $userid, $userid), $offset, $limit);
+    if (!$data = get_records_sql_assoc($sql, array($userid, $userid, $userid), $offset, $limit)) {
+        $data = array();
+    }
+    if (!$views = get_views(array_keys($data))) {
+        $views = array();
+    }
+    $data = array_values($data);
 }
 else {
     $count = count_records('usr_friend_request' , 'owner', array($userid));
@@ -71,6 +81,7 @@ else {
             JOIN ' . $prefix . 'usr_friend_request fr ON fr.requester = u.id
             WHERE fr.owner = ?';
     $data = get_records_sql_array($sql, array($userid), $offset, $limit);
+    $views = array();
 }
 
 if (empty($data)) {
@@ -81,16 +92,15 @@ foreach ($data as $d) {
     $d->name  = display_name($d);
 }
 
-
 print json_encode(array(
     'count'   => $count,
     'limit'   => $limit,
     'offset'  => $offset,
     'data'    => $data,
     'pending' => $pending,
-    'views'   => get_views(array_keys($data))
+    'views'   => array_map('array_values', $views),
 ));
-
+exit;
 
 
 ?>

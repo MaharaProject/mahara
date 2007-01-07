@@ -28,24 +28,25 @@ defined('INTERNAL') || die();
 
 class View {
 
-    protected $dirty;
-    protected $id;
-    protected $owner;
-    protected $ownerformat;
-    protected $ctime;
-    protected $mtime;
-    protected $atime;
-    protected $submitted;
-    protected $title;
-    protected $description;
-    protected $loggedin;
-    protected $friendsonly;
-    protected $template;
-    protected $artefact_instances;
-    protected $artefact_metadata;
-    protected $artefact_hierarchy;
-    protected $contents;
-    protected $ownerobj;
+    private $dirty;
+    private $deleted;
+    private $id;
+    private $owner;
+    private $ownerformat;
+    private $ctime;
+    private $mtime;
+    private $atime;
+    private $submittedto;
+    private $title;
+    private $description;
+    private $loggedin;
+    private $friendsonly;
+    private $template;
+    private $artefact_instances;
+    private $artefact_metadata;
+    private $artefact_hierarchy;
+    private $contents;
+    private $ownerobj;
 
     public function __construct($id=0, $data=null) {
         if (!empty($id)) {
@@ -76,6 +77,59 @@ class View {
             throw new InvalidArgumentException("Field $field wasn't found in class " . get_class($this));
         }
         return $this->{$field};
+    }
+
+    public function set($field, $value) {
+        if (property_exists($this, $field)) {
+            if ($this->{$field} != $value) {
+                // only set it to dirty if it's changed
+                $this->dirty = true;
+            }
+            $this->{$field} = $value;
+            $this->mtime = time();
+            return true;
+        }
+        throw new InvalidArgumentException("Field $field wasn't found in class " . get_class($this));
+    }
+
+    /**
+     * View destructor. Calls commit if necessary.
+     *
+     * A special case is when the object has just been deleted.  In this case,
+     * we do nothing.
+     */
+    public function __destruct() {
+        if ($this->deleted) {
+            return;
+        }
+      
+        if (!empty($this->dirty)) {
+            return $this->commit();
+        }
+    }
+
+    /** 
+     * This method updates the contents of the view table only.
+     */
+    public function commit() {
+        if (empty($this->dirty)) {
+            return;
+        }
+        $fordb = new StdClass;
+        foreach (get_object_vars($this) as $k => $v) {
+            $fordb->{$k} = $v;
+            if (in_array($k, array('mtime', 'ctime', 'atime')) && !empty($v)) {
+                $fordb->{$k} = db_format_timestamp($v);
+            }
+        }
+        if (empty($this->id)) {
+            $this->id = insert_record('view', $fordb, 'id', true);
+        }
+        else {
+            update_record('view', $fordb, 'id');
+        }
+        $this->dirty = false;
+        $this->deleted = false;
     }
 
     public function get_artefact_instances() {
@@ -251,6 +305,24 @@ class View {
         delete_records('usr_watchlist_artefact','view',$this->id);
         delete_records('usr_watchlist_view','view',$this->id);
         delete_records('view','id',$this->id);
+        $this->deleted = true;
+    }
+
+    public function release($communityid, $releaseuser=null) {
+        if ($this->get('submittedto') != $communityid) {
+            throw new ParameterException("View with id " . $this->get('id') .
+                                         " has not been submitted to community $communityid");
+        }
+        $releaseuser = optional_userobj($releaseuser);
+        $this->set('submittedto', null);
+        $this->commit();
+        require_once('activity.php');
+        activity_occurred('maharamessage', 
+                  array('users'   => array($this->get('owner')),
+                  'subject' => get_string('viewreleasedsubject'),
+                  'message' => get_string('viewreleasedmessage', 'mahara', 
+                       get_field('community', 'name', 'id', $communityid), 
+                       display_name($releaseuser, $this->get_owner_object()))));
     }
 
 }

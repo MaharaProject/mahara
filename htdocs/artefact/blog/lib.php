@@ -31,11 +31,6 @@ defined('INTERNAL') || die();
  */
 class PluginArtefactBlog extends PluginArtefact {
 
-    /**
-     * This is a postgresql time constant.
-     */
-    const maxpending = '10 minutes';
-
     public static function get_artefact_types() {
         return array(
             'blog',
@@ -64,7 +59,8 @@ class PluginArtefactBlog extends PluginArtefact {
         return array(
             (object)array(
                 'callfunction' => 'clean_post_files',
-                'minute'       => '1'
+                'hour'         => '4',
+                'minute'       => '40'
             )
         );
     }
@@ -74,18 +70,36 @@ class PluginArtefactBlog extends PluginArtefact {
      * are not associated with a blog, because of an aborted blog creation.
      */
     public static function clean_post_files() {
-        safe_require('artefact', 'file');
 
-        ($files = get_records_sql_array("
-         SELECT file
-         FROM " . get_config('dbprefix') . "artefact_blog_blogpost_file_pending
-         WHERE when + ?::INTERVAL < CURRENT_TIMESTAMP", array(self::maxpending)))
-            || ($files = array());
-
-        foreach ($files as $file) {
-            $file_obj = new ArtefactTypeFile($file->file);
-            $file_obj->delete();
+        $bloguploadbase = get_config('dataroot') . ArtefactTypeBlogPost::$blogattachmentroot;
+        if (!$basedir = opendir($bloguploadbase)) {
+            throw new Exception('Unable to read blog upload directory '.$bloguploadbase);
         }
+
+        $currenttime = time();
+
+        // Read through all the upload session directories
+        while (false !== ($sessionupload = readdir($basedir))) {
+            if ($sessionupload != "." && $sessionupload != "..") {
+                $sessionupload = $bloguploadbase . $sessionupload;
+                $subdir = opendir($sessionupload);
+
+                // Remove all files older than the session timeout plus two hours.
+                while (false !== ($uploadfile = readdir($subdir))) {
+                    if ($uploadfile != "." && $uploadfile != "..") {
+                        $uploadfile = $sessionupload . '/' . $uploadfile;
+                        if ($currenttime - filemtime($uploadfile) > get_config('session_timeout') + 7200) {
+                            unlink($uploadfile);
+                        }
+                    }
+                }
+
+                closedir($subdir);
+                rmdir($sessionupload);
+            }
+        }
+
+        closedir($basedir);
     }
 }
 
@@ -556,12 +570,48 @@ class ArtefactTypeBlogPost extends ArtefactType {
      * This function saves an uploaded file to a temporary directory in dataroot
      *
      */
-    public static function save_blogpost_attachment($inputname, $dirname, $filename) {
+    public static function save_attachment_temporary($inputname, $dirname, $filename) {
         require_once('uploadmanager.php');
         $um = new upload_manager($inputname);
         return $um->process_file_upload(self::$blogattachmentroot . $dirname, $filename);
     }
 
+
+    /**
+     * Save a temporary uploaded file to the myfiles area.
+     */
+    public function save_attachment($directory, $filename, $title, $description) {
+        global $USER;
+
+        safe_require('artefact', 'file');
+
+        $data = new StdClass;
+        $data->title = $title;
+        $data->description = $description;
+
+        $f = new ArtefactTypeFile(0, $data);
+        $f->set('owner', $USER->get('id'));
+        $f->set('parent', self::blogfiles_folder_id());
+        if (!$f->save_file(self::$blogattachmentroot . $directory . '/' . $filename)) {
+            $f->delete();
+            return false;
+        }
+
+        $fileid = $f->get('id');
+        $data = new StdClass;
+        $data->blogpost = $this->id;
+        $data->file = $fileid;
+        insert_record('artefact_blog_blogpost_file', $data);
+
+        return $fileid;
+    }
+
+    public static function blogfiles_folder_id() {
+        $name = get_string('blogfilesdirname', 'artefact.blog');
+        $description = get_string('blogfilesdirdescription', 'artefact.blog');
+        safe_require('artefact', 'file');
+        return ArtefactTypeFolder::get_folder_id($name, $description);
+    }
 
     /**
      * This function publishes the blog post.
@@ -600,6 +650,8 @@ class ArtefactTypeBlogPost extends ArtefactType {
             INNER JOIN ' . $prefix . 'artefact a ON a.id = f.file
             WHERE f.blogpost = ' . $this->id, '');
     }
+
+    
     
 }
 

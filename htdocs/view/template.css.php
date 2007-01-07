@@ -48,3 +48,5 @@ if(!isset($parsed_template['css'])) {
 
 header('Content-type: text/css');
 echo file_get_contents($parsed_template['css']);
+
+?>

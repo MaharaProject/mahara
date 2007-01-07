@@ -77,14 +77,16 @@ foreach (array_keys($publicfields) as $field) {
         if ($emails = get_records_array('artefact_internal_profile_email', 'owner', $userid)) {
             foreach ($emails as $email) {
                 $fieldname = $email->principal ? 'principalemailaddress' : 'emailaddress';
-                $profile[$fieldname] = $email->email;
+                $userfields[$fieldname] = $email->email;
             }
         }
     }
     else {
-        $c = new $classname(0, array('owner' => $userid)); // email is different
-        if ($value = $c->render(FORMAT_ARTEFACT_LISTSELF, array('link' => true))) {
-            $profile[$field] = $value;
+        if (!array_key_exists($field, $userfields) && !in_array($field, array('firstname', 'lastname'))) {
+            $c = new $classname(0, array('owner' => $userid)); // email is different
+            if ($value = $c->render(FORMAT_ARTEFACT_LISTSELF, array('link' => true))) {
+                $userfields[$field] = $value;
+            }
         }
     }
 }
@@ -283,7 +285,6 @@ $smarty->assign('FRIENDFORM', $friendform);
 $smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 $smarty->assign('NAME',$name);
 $smarty->assign('USERFIELDS',$userfields);
-$smarty->assign('PROFILE',$profile);
 $smarty->assign('VIEWS',$views);
 $smarty->display('user/view.tpl');
 

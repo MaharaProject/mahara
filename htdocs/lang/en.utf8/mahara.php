@@ -39,8 +39,8 @@ $string['go']      = 'Go';
 $string['loading'] = 'Loading ...';
 $string['errorprocessingform'] = 'There was an error with submitting this form. Please check the marked fields and try again.';
 
-$string['no']     = 'no';
-$string['yes']    = 'yes';
+$string['no']     = 'No';
+$string['yes']    = 'Yes';
 $string['none']   = 'none';
 
 $string['nextpage']  = 'Next page';
@@ -50,8 +50,12 @@ $string['lastpage']  = 'Last page';
 
 $string['accept'] = 'Accept';
 $string['reject'] = 'Reject';
+$string['sendrequest'] = 'Send request';
+$string['reason'] = 'Reason';
 
 $string['mainmenu'] = 'Main menu';
+$string['updatefailed'] = 'Update failed';
+$string['declinerequest'] = 'Decline request';
 
 // auth
 $string['accessforbiddentoadminsection'] = 'You are forbidden from accessing the administration section';
@@ -111,7 +115,7 @@ $string['loginto'] = 'Log in to %s';
 $string['newpassword'] = 'New Password';
 $string['oldpassword'] = 'Old Password';
 $string['password'] = 'Password';
-$string['passworddescription'] = 'Your password';
+$string['passworddescription'] = ' ';
 $string['passwordhelp'] = 'The password you use to access the system';
 $string['passwordnotchanged'] = 'You did not change your password, please choose a new password';
 $string['passwordsaved'] = 'Your new password has been saved';
@@ -121,7 +125,7 @@ $string['register'] = 'Register';
 $string['sessiontimedout'] = 'Your session has timed out, please enter your login details to continue';
 $string['sessiontimedoutpublic'] = 'Your session has timed out. You may <a href="?login">log in</a> to continue browsing';
 $string['username'] = 'Username';
-$string['usernamedescription'] = 'Your username';
+$string['usernamedescription'] = ' ';
 $string['usernamehelp'] = 'The username you have been given to access this system.';
 $string['yournewpassword'] = 'Your new password';
 $string['yournewpasswordagain'] = 'Your new password again';
@@ -129,11 +133,11 @@ $string['invalidsesskey'] = 'Invalid session key';
 
 // Misc. register stuff that could be used elsewhere
 $string['emailaddress'] = 'Email address';
-$string['emailaddressdescription'] = 'Your email address';
+$string['emailaddressdescription'] = ' ';
 $string['firstname'] = 'First name';
-$string['firstnamedescription'] = 'Your first name';
+$string['firstnamedescription'] = ' ';
 $string['lastname'] = 'Last name';
-$string['lastnamedescription'] = 'Your last name';
+$string['lastnamedescription'] = ' ';
 $string['password2description'] = 'Your password again';
 $string['registerdescription'] = 'Welcome! To use this site you must first register. You must also agree to the <a href="terms.php">terms and conditions</a>. The data we collect here will be stored according to our <a href="privacy.php">privacy statement</a>.';
 $string['registeringdisallowed'] = 'Sorry, you cannot register for this system at this time';
@@ -223,6 +227,9 @@ $string['myaddressbook']      = 'My Addressbook';
 $string['mycommunities']      = 'My Communities';
 $string['myownedcommunities'] = 'My Owned Communities';
 $string['mygroups']           = 'My Groups';
+$string['youareloggedinas']   = 'You are logged in as %s';
+$string['unreadmessages'] = 'unread messages';
+$string['unreadmessage'] = 'unread message';
 
 // mycontacts
 
@@ -303,6 +310,7 @@ $string['expand'] = 'Expand';
 $string['collapse'] = 'Collapse';
 $string['more...'] = 'More ...';
 $string['nohelpfound'] = 'There was no help found for this item';
+$string['nohelpfound'] = 'There was no help found for this page';
 $string['profileimage'] = 'Profile image';
 
 // Search
@@ -353,6 +361,50 @@ $string['addedtocommunitysubject'] = 'You were added to a community';
 $string['addedtocommunitymessage'] = '%s has added you to a community, \'%s\'.  Click on the link below to see the community';
 $string['adduserfailed'] = 'Failed to add the user';
 $string['useradded'] = 'User added';
+$string['owner'] = 'Owner';
+$string['members'] = 'Members';
+$string['memberrequests'] = 'Membership requests';
+$string['submittedviews'] = 'Submitted views';
+$string['releaseview'] = 'Release view';
+$string['tutor'] = 'Tutor';
+$string['member'] = 'Member';
+$string['remove'] = 'Remove';
+$string['updatemembership'] = 'Update membership';
+$string['memberchangefailed'] = 'Failed to update some membership information';
+$string['memberchangesuccess'] = 'Membership status changed successfully';
+$string['viewreleasedsubject'] = 'Your view has been released';
+$string['viewreleasedmessage'] = 'The view that you submitted to community %s has been released back to you by %s';
+$string['viewreleasedsuccess'] = 'View was released successfully';
+$string['communitymembershipchangedsubject'] = 'Community membership: %s';
+$string['communitymembershipchangedmessagetutor'] = 'You have been promoted to a tutor in this community';
+$string['communitymembershipchangedmessagemember'] = 'You have been demoted from a tutor in this community';
+$string['communitymembershipchangedmessageremove'] = 'You have been removed from this community';
+$string['communitymembershipchangedmessagedeclinerequest'] = 'Your request to join this community has been declined';
+$string['communitymembershipchangedmessageaddedtutor'] = 'You have been added as a tutor in this community';
+$string['communitymembershipchangedmessageaddedmember'] = 'You have been added as a member in this community';
+$string['leavecommunity'] = 'Leave this community';
+$string['joincommunity'] = 'Join this community';
+$string['requestjoincommunity'] = 'Request to join this community';
+$string['communityhaveinvite'] = 'You have been invited to join this community';
+$string['communitynotinvited'] = 'You have not been invited to join this community';
+$string['communityinviteaccepted'] = 'Invite accepted successfully! You are now a community member';
+$string['communityinvitedeclined'] = 'Invite declined successfully!';
+$string['acceptinvitecommunity'] = 'Accept';
+$string['declineinvitecommunity'] = 'Decline';
+$string['leftcommunity'] = 'You have now left this community';
+$string['couldnotleavecommunity'] = 'You cannot leave this community';
+$string['joinedcommunity'] = 'You are now a community member';
+$string['couldnotjoincommunity'] = 'You cannot join this community';
+$string['communityrequestsent'] = 'Community membership request sent';
+$string['couldnotrequestcommunity'] = 'Could not send community membership request';
+$string['communityjointypeopen'] = 'Membership to this community is open';
+$string['communityjointypecontrolled'] = 'Membership to this community  is controlled.  You cannot join this community';
+$string['communityjointypeinvite'] = 'Membership to this community is invite only';
+$string['communityjointyperequest'] = 'Membership to this community is by request only';
+$string['communityrequestsubject'] = 'New community membership request';
+$string['communityrequestmessage'] = '%s has sent a membership request to join the community %s';
+$string['communityrequestmessagereason'] = '%s has sent a membership request to join the community %s with the reason %s.';
+
 
 // friendslist
 $string['reasonoptional'] = 'Reason (optional)';
@@ -400,6 +452,22 @@ $string['pendingfriends'] = 'Pending friends';
 $string['friendlistfailure'] = 'Failed to modify your friends list';
 
 // general views stuff
-$string['viewavabile'] = 'View available';
+$string['viewavailable'] = 'View available';
 $string['viewsavailable'] = 'Views available';
+$string['allviews'] = 'All views';
+
+// Upload manager
+$string['quarantinedirname'] = 'quarantine';
+$string['clammovedfile'] = 'The file has been moved to a quarantine directory.';
+$string['clamdeletedfile'] = 'The file has been deleted';
+$string['clamdeletedfilefailed'] = 'The file could not be deleted';
+$string['clambroken'] = 'Your administrator has enabled virus checking for file uploads but has misconfigured something.  Your file upload was NOT successful. Your administrator has been emailed to notify them so they can fix it.  Maybe try uploading this file later.';
+$string['clamemailsubject'] = '%s :: Clam AV notification';
+$string['clamlost'] = 'Clam AV is configured to run on file upload, but the path supplied to Clam AV, %s, is invalid.';
+$string['clamfailed'] = 'Clam AV has failed to run.  The return error message was %s. Here is the output from Clam:';
+$string['clamunknownerror'] = 'There was an unknown error with clam.';
+$string['virusfounduser'] = 'The file you have uploaded, %s, has been scanned by a virus checker and found to be infected! Your file upload was NOT successful.';
+$string['virusrepeatsubject'] = 'Warning: %s is a repeat virus uploader.';
+$string['virusrepeatmessage'] = 'The user %s has uploaded multiple files which have been scanned by a virus checker and found to be infected.';
+
 ?>

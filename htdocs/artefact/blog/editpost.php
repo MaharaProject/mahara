@@ -187,7 +187,7 @@ var attached = new TableRenderer(
      'description',
      function (r) { 
          return TD(null, INPUT({'type':'button', 'value':{$getstring['remove']},
-                                'onclick':"removefrompost('attached_old:"+r.id+"')"}));
+                                'onclick':"removefrompost('artefact:"+r.id+"')"}));
      }
     ]
 );
@@ -195,7 +195,7 @@ attached.emptycontent = {$getstring['nofilesattachedtothispost']};
 attached.paginate = false;
 attached.blogpost = {$blogpost};
 attached.statevars.push('blogpost');
-attached.rowfunction = function (r) { return TR({'id':'attached_old:' + r.id}); };
+attached.rowfunction = function (r) { return TR({'id':'artefact:' + r.id}); };
 attached.updateOnLoad();
 
 
@@ -219,8 +219,8 @@ function checknoattachments() {
 // files list.  This should be done here if names of attached files
 // need to be unique.
 function attachtopost(data) {
-    var rowid = data.uploadnumber ? 'uploaded:' + data.uploadnumber : 'existing:' + data.id;
-    if (fileattached_id(rowid)) {
+    var rowid = data.uploadnumber ? 'uploaded:' + data.uploadnumber : 'artefact:' + data.id;
+    if (fileattached_id(rowid) || data.error) {
         return;
     }
     appendChildNodes(attached.tbody,
@@ -253,8 +253,43 @@ function fileattached_id(id) {
 }
 
 
-
 // Save the blog post.
+function saveblogpost() {
+    var data = {'title' : $('editpost_title').value,
+                'draft' : $('editpost_thisisdraft').checked,
+                'createid'  : {$createid},
+                'blog'  : {$blog},
+                'blogpost'  : {$blogpost}};
+    // attachments
+    var uploads = [];
+    var artefacts = [];
+    for (var i = 0; i < attached.tbody.childNodes.length; i++) {
+        var idparts = attached.tbody.childNodes[i].id.split(':');
+        if (idparts[0] == 'artefact') {
+            artefacts.push(idparts[1]);
+        }
+        else { // uploaded file
+            var record = {'id':idparts[1],
+                          'title':scrapeText(attached.tbody.childNodes[i].childNodes[0]),
+                          'description':scrapeText(attached.tbody.childNodes[i].childNodes[1])};
+            uploads.push(record);
+        }
+    }
+    data.uploads = serializeJSON(uploads);
+    data.artefacts = serializeJSON(artefacts);
+    // content
+    if (typeof(tinyMCE) != 'undefined') { 
+        tinyMCE.triggerSave();
+    }
+    data.body = $('editpost_description').value;
+    sendjsonrequest('saveblogpost.json.php', data,
+                    function () { window.location = '{$wwwroot}artefact/blog/view/?id={$blog}';});
+}
+
+
+function canceledit() {  // Uploaded files will deleted by cron cleanup.
+     window.location = '{$wwwroot}artefact/blog/view/?id={$blog}';
+}
 
 EOF;
 

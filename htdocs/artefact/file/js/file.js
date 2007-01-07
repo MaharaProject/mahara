@@ -32,13 +32,16 @@ function FileBrowser(element, source, changedircallback, actionname, actioncallb
         this.lastcolumnfunc = function (r) {
             var editb = INPUT({'type':'button', 'value':get_string('edit')});
             editb.onclick = function () { self.openeditform(r); };
-            if (r.emptyfolder) {
+            if (r.childcount > 0) {
                 return TD(null, editb);
             }
             var deleteb = INPUT({'type':'button', 'value':get_string('delete')});
             deleteb.onclick = function () {
                 if (confirm(get_string(r.artefacttype == 'folder' ? 'deletefolder?' : 'deletefile?'))) {
-                    sendjsonrequest('delete.json.php', {'id': r.id}, self.refresh);
+                    if (!r.attachcount || r.attachcount == 0
+                        || confirm(get_string('unlinkthisfilefromblogposts?'))) {
+                        sendjsonrequest('delete.json.php', {'id': r.id}, self.refresh);
+                    }
                 }
             };
             return TD(null, editb, deleteb);
@@ -402,8 +405,9 @@ function FileUploader(element, uploadscript, foldername, folderid, uploadcallbac
 
         // Display upload status
         insertSiblingNodesBefore(self.form,
-            DIV({'id':'uploadstatusline'+self.nextupload}, IMG({'src':config.themeurl+'loading.gif'}),
-                get_string('uploadingfiletofolder',localname,self.foldername)));
+           DIV({'id':'uploadstatusline'+self.nextupload}, 
+               IMG({'src':config.themeurl+'loading.gif'}), ' ', 
+               get_string('uploadingfiletofolder',localname,self.foldername)));
         self.nextupload += 1;
         return true;
     }
@@ -415,8 +419,12 @@ function FileUploader(element, uploadscript, foldername, folderid, uploadcallbac
         else {
             var image = 'failure.gif';
         }
+
         replaceChildNodes($('uploadstatusline'+data.uploadnumber), 
-                          IMG({'src':config.themeurl+image}), data.message);
+                          IMG({'src':config.themeurl+image}), ' ', 
+                          data.message, ' ',
+                          A({'style': 'cursor: pointer;', 
+                             'onclick':'removeElement(this.parentNode)'},'[X]'));
         this.uploadcallback(data);
     }
 

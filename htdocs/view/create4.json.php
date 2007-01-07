@@ -28,9 +28,13 @@
 // be moved elsewhere without harm if necessary (e.g. if the 'viewacl' element
 // was used in more places
 define('INTERNAL', 1);
+define('JSON', 1);
+
 require(dirname(dirname(__FILE__)) . '/init.php');
 require('searchlib.php');
 safe_require('search', 'internal');
+
+json_headers();
 
 $type   = param_variable('type');
 $query  = param_variable('query', '');

@@ -42,6 +42,7 @@ class User {
      * @var array
      */
     private $defaults;
+    private $stdclass;
 
     /**
      * Sets defaults for the user object (only because PHP5 does not appear
@@ -192,7 +193,16 @@ class User {
     public function renew() {
         $this->set('logout_time', time() + get_config('session_timeout'));
     }
-
+    
+    public function to_stdclass() {
+        if (empty($this->stdclass)) {
+            $this->stdclass = new StdClass;
+            foreach (array_keys($this->defaults) as $k) {
+                $this->stdclass->{$k} = $this->get($k);
+            }
+        }
+        return $this->stdclass;
+    }
 
 }
 

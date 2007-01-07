@@ -13,13 +13,13 @@
 
 <div id="column-left">
 	<div class="content">
-		<div class="box-cnrs"><span class="cnr-tl"><span class="cnr-tr"><span class="cnr-bl"><span class="cnr-br">
-			<div class="maincontent">
-			<div id="myblogs">
-    		<h2>{str section="artefact.blog" tag="myblogs"}</h2>
-    			<div class="addicon">
-        		<a href="{$WWWROOT}artefact/blog/new/">{str section="artefact.blog" tag="addblog"}</a>
-    			</div>
+{include file="columnleftstart.tpl"}
+        <div class="maincontent">
+		<div id="myblogs">
+            <h2>{str section="artefact.blog" tag="myblogs"}</h2>
+            <div class="addicon">
+                <a href="{$WWWROOT}artefact/blog/new/">{str section="artefact.blog" tag="addblog"}</a>
+            </div>
 
 			<table id="bloglist" class="tablerenderer">
 				<thead>
@@ -32,14 +32,14 @@
 				</tbody>
 			</table>
     
-				<div class="addicon">
-					<a href="{$WWWROOT}artefact/blog/new/">{str section="artefact.blog" tag="addblog"}</a>
-				</div>
+            <div class="addicon">
+                <a href="{$WWWROOT}artefact/blog/new/">{str section="artefact.blog" tag="addblog"}</a>
+            </div>
 				
-			</div>
+        </div>
+        </div>
+{include file="columnleftend.tpl"}
 				
-			</div>
-		</span></span></span></span></div>
 	</div>
 </div>
 

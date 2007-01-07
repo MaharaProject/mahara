@@ -80,11 +80,12 @@ class PluginSearchInternal extends PluginSearch {
                     AND (
                         firstname ILIKE '%' || ? || '%' 
                         OR lastname ILIKE '%' || ? || '%' 
+                        OR firstname || ' ' || lastname ILIKE '%' || ? || '%' 
                         OR preferredname ILIKE '%' || ? || '%' 
                         OR email ILIKE '%' || ? || '%' 
                     )
                 ",
-                array($query_string, $query_string, $query_string, $query_string),
+                array($query_string, $query_string, $query_string, $query_string, $query_string),
                 $offset,
                 $limit
             );
@@ -99,11 +100,12 @@ class PluginSearchInternal extends PluginSearch {
                     AND (
                         firstname ILIKE '%' || ? || '%' 
                         OR lastname ILIKE '%' || ? || '%' 
+                        OR firstname || ' ' || lastname ILIKE '%' || ? || '%' 
                         OR preferredname ILIKE '%' || ? || '%' 
                         OR email ILIKE '%' || ? || '%' 
                     )
             ",
-                array($query_string, $query_string, $query_string, $query_string)
+                array($query_string, $query_string, $query_string, $query_string, $query_string)
             );
         }
         // TODO
@@ -187,6 +189,7 @@ class PluginSearchInternal extends PluginSearch {
                         OR description ILIKE '%' || ? || '%' 
                     )
             ",
+<<<<<<< master
                 array($USER->get('id'), $query_string, $query_string)
             );
         }
@@ -252,6 +255,77 @@ class PluginSearchInternal extends PluginSearch {
                     OR description ILIKE '%' || ? || '%' 
                 ",
                 array($query_string, $query_string),
+=======
+                array($USER->get('id'), $query_string, $query_string)
+            );
+        }
+        // TODO
+        // else if ( is_mysql() ) {
+        // }
+        else {
+            throw new SQLException('search_group() is not implemented for your database engine (' . get_config('dbtype') . ')');
+        }
+
+        return array(
+            'count'   => $count,
+            'limit'   => $limit,
+            'offset'  => $offset,
+            'data'    => $data,
+        );
+    }
+    
+    /**
+     * Implement community searching with SQL
+     *
+     * @param string  The query string
+     * @param integer How many results to return
+     * @param integer What result to start at (0 == first result)
+     * @return array  A data structure containing results looking like ...
+     *         $results = array(
+     *               count   => integer, // total number of results
+     *               limit   => integer, // how many results are returned
+     *               offset  => integer, // starting from which result
+     *               data    => array(   // the result records
+     *                   array(
+     *                       id            => integer,
+     *                       username      => string,
+     *                       institution   => string,
+     *                       firstname     => string,
+     *                       lastname      => string,
+     *                       preferredname => string,
+     *                       email         => string,
+     *                   ),
+     *                   array(
+     *                       id            => integer,
+     *                       username      => string,
+     *                       institution   => string,
+     *                       firstname     => string,
+     *                       lastname      => string,
+     *                       preferredname => string,
+     *                       email         => string,
+     *                   ),
+     *                   array(...),
+     *               ),
+     *           );
+     */
+    public static function search_community($query_string, $limit, $offset = 0) {
+        global $USER;
+        if ( is_postgres() ) {
+            $data = get_records_sql_array("
+                SELECT
+                    id, name, description, jointype, owner, ctime, mtime
+                FROM
+                    " . get_config('dbprefix') . "community
+                WHERE (
+                    name ILIKE '%' || ? || '%' 
+                    OR description ILIKE '%' || ? || '%' 
+                ) AND ( 
+                    owner = ? OR id IN (
+                        SELECT community FROM " . get_config('dbprefix') . "community_member WHERE member = ?
+                    )
+                )
+                ",
+                array($query_string, $query_string, $USER->get('id'), $USER->get('id')),
                 $offset,
                 $limit
             );
@@ -261,14 +335,16 @@ class PluginSearchInternal extends PluginSearch {
                     COUNT(*)
                 FROM
                     " . get_config('dbprefix') . "usr_group u
-                WHERE
-                    owner = ?
-                    AND (
-                        name ILIKE '%' || ? || '%' 
-                        OR description ILIKE '%' || ? || '%' 
+                WHERE (
+                    name ILIKE '%' || ? || '%' 
+                    OR description ILIKE '%' || ? || '%' 
+                ) AND ( 
+                    owner = ? OR id IN (
+                        SELECT community FROM " . get_config('dbprefix') . "community_member WHERE member = ?
                     )
+                )
             ",
-                array($query_string, $query_string)
+                array($query_string, $query_string, $USER->get('id'), $USER->get('id'))
             );
         }
         // TODO

@@ -171,6 +171,8 @@ EOF;
 
     $smarty->assign('THEMEURL', get_config('themeurl'));
     $smarty->assign('WWWROOT', $wwwroot);
+
+
     $sitename = get_config('sitename');
     $smarty->assign('title', $sitename);
     $smarty->assign('heading', $sitename);
@@ -185,6 +187,7 @@ EOF;
     $smarty->assign('LOGGEDIN', $USER->is_logged_in());
     if ($USER->is_logged_in()) {
         $smarty->assign('MAINNAV', main_nav());
+        $smarty->assign('LOGGEDINSTR', get_loggedin_string());
     }
 
     $smarty->assign_by_ref('USER', $USER);
@@ -192,6 +195,11 @@ EOF;
     $smarty->assign_by_ref('HEADERS', $headers);
 
     $smarty->assign('searchform', searchform());
+
+    if ($help = has_page_help()) {
+        $smarty->assign('PAGEHELPNAME', $help[0]);
+        $smarty->assign('PAGEHELPICON', $help[1]);
+    }
 
     return $smarty;
 }
@@ -210,6 +218,8 @@ function jsstrings() {
                 'requiredfieldempty',
                 'unknownerror',
                 'loading',
+                'unreadmessages',
+                'unreadmessage',
             ),
         ),
         'tablerenderer' => array(
@@ -801,9 +811,9 @@ function getoptions_country() {
 
 function get_help_icon($plugintype, $pluginname, $form, $element, $page='') {
     return ' <span class="help"><a href="" onclick="contextualHelp(\'' . $form . "', '"
-            . $element . "', '" . $plugintype . "', '"
-            . $pluginname . "', '" . $page . "'); return false;\">"
-            . '?</a></span>';
+        . $element . "', '" . $plugintype . "', '"
+        . $pluginname . "', '" . $page . "'); return false;\">"
+        . '?</a></span>';
 }
 
 function make_link($url) {
@@ -1142,5 +1152,146 @@ function searchform() {
     ));
 }
 
+function get_loggedin_string() {
+    global $USER;
+    safe_require('notification', 'internal');
+    $count = call_static_method(generate_class_name('notification', 'internal'), 'unread_count', $USER->get('id'));
+    if ($count == 1) {
+        $key = 'unreadmessage';
+    }
+    else {
+        $key = 'unreadmessages';
+    }
+    // these spans are here so that on the ajax page that marks messages as read, the contents can be updated.
+    $str = get_string('youareloggedinas', 'mahara', display_name($USER)) . 
+        ' (<a href="' . get_config('wwwroot') . 'account/activity/">'  . 
+        '<span id="headerunreadmessagecount">' . $count . '</span> ' . 
+        '<span id="headerunreadmessages">' . get_string($key) . '</span></a>)';
+
+    return $str;
+}
+
+
+/**
+ * Returns the name of the current script, WITH the querystring portion.
+ * this function is necessary because PHP_SELF and REQUEST_URI and SCRIPT_NAME
+ * return different things depending on a lot of things like your OS, Web
+ * server, and the way PHP is compiled (ie. as a CGI, module, ISAPI, etc.)
+ * <b>NOTE:</b> This function returns false if the global variables needed are not set.
+ *
+ * @return string
+ */
+function get_script_path() {
+
+    if (!empty($_SERVER['REQUEST_URI'])) {
+        return $_SERVER['REQUEST_URI'];
+
+    } else if (!empty($_SERVER['PHP_SELF'])) {
+        if (!empty($_SERVER['QUERY_STRING'])) {
+            return $_SERVER['PHP_SELF'] .'?'. $_SERVER['QUERY_STRING'];
+        }
+        return $_SERVER['PHP_SELF'];
+
+    } else if (!empty($_SERVER['SCRIPT_NAME'])) {
+        if (!empty($_SERVER['QUERY_STRING'])) {
+            return $_SERVER['SCRIPT_NAME'] .'?'. $_SERVER['QUERY_STRING'];
+        }
+        return $_SERVER['SCRIPT_NAME'];
+
+    } else if (!empty($_SERVER['URL'])) {     // May help IIS (not well tested)
+        if (!empty($_SERVER['QUERY_STRING'])) {
+            return $_SERVER['URL'] .'?'. $_SERVER['QUERY_STRING'];
+        }
+        return $_SERVER['URL'];
+
+    } else {
+        log_warn('Warning: Could not find any of these web server variables: $REQUEST_URI, $PHP_SELF, $SCRIPT_NAME or $URL');
+        return false;
+    }
+}
+
+/**
+ * Like {@link me()} but returns a full URL
+ * @see me()
+ * @return string
+ */
+function get_full_script_path() {
+
+    global $CFG;
+
+    if (!empty($CFG->wwwroot)) {
+        $url = parse_url($CFG->wwwroot);
+    }
+
+    if (!empty($url['host'])) {
+        $hostname = $url['host'];
+    } else if (!empty($_SERVER['SERVER_NAME'])) {
+        $hostname = $_SERVER['SERVER_NAME'];
+    } else if (!empty($_ENV['SERVER_NAME'])) {
+        $hostname = $_ENV['SERVER_NAME'];
+    } else if (!empty($_SERVER['HTTP_HOST'])) {
+        $hostname = $_SERVER['HTTP_HOST'];
+    } else if (!empty($_ENV['HTTP_HOST'])) {
+        $hostname = $_ENV['HTTP_HOST'];
+    } else {
+        log_warn('Warning: could not find the name of this server!');
+        return false;
+    }
+
+    if (!empty($url['port'])) {
+        $hostname .= ':'.$url['port'];
+    } else if (!empty($_SERVER['SERVER_PORT'])) {
+        if ($_SERVER['SERVER_PORT'] != 80 && $_SERVER['SERVER_PORT'] != 443) {
+            $hostname .= ':'.$_SERVER['SERVER_PORT'];
+        }
+    }
+
+    if (isset($_SERVER['HTTPS'])) {
+        $protocol = ($_SERVER['HTTPS'] == 'on') ? 'https://' : 'http://';
+    } else if (isset($_SERVER['SERVER_PORT'])) { # Apache2 does not export $_SERVER['HTTPS']
+        $protocol = ($_SERVER['SERVER_PORT'] == '443') ? 'https://' : 'http://';
+    } else {
+        $protocol = 'http://';
+    }
+
+    $url_prefix = $protocol.$hostname;
+    return $url_prefix . get_script_path();
+}
+
+function has_page_help() {
+    // the path of the current script (used for page help)
+    $scriptname = substr(get_full_script_path(), strlen(get_config('wwwroot')));
+    if (strpos($scriptname, '.php') != (strlen($scriptname) - 4)) {
+        $scriptname .= 'index.php';
+    }
+    $scriptname = substr($scriptname, 0, -4);
+    
+    $firstdir = $scriptname;
+    if (false !== ($slashpos = strpos($scriptname, '/'))) {
+        $firstdir = substr($scriptname, 0, $slashpos);
+    }
+
+    if (in_array($firstdir, plugin_types())) {
+        $bits = explode('/', $scriptname);
+        log_debug($bits);
+        if (count($bits) > 2) {
+            $plugintype = $bits[0];
+            $pluginname = $bits[1];
+            $pagehelp = get_config('docroot') . $plugintype . '/' . $pluginname . '/lang/en.utf8/help/pages/' . 
+                substr($scriptname, strlen($plugintype . '/' . $pluginname . '/')) . '.html';
+        }
+    }
+    if (empty($plugintype)) {
+        $plugintype = 'core';
+        $pluginname = 'pages';
+        $pagehelp = get_config('docroot') . 'lang/en.utf8/help/pages/' . $scriptname . '.html';
+    }
+
+    if (is_readable($pagehelp)) {
+        $scriptname = str_replace('/', '-', $scriptname);
+        return array($scriptname, get_help_icon($plugintype, $pluginname, '', '', $scriptname));
+    }
+    return false;
+}
 
 ?>
