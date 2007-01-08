@@ -135,4 +135,3 @@ $smarty->assign('editcommunity', $editcommunity);
 $smarty->display('contacts/communities/edit.tpl');
 
 ?>
-

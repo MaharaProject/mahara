@@ -39,7 +39,7 @@ if (!$community = get_record('community', 'id', $leave)) {
 }
 
 if (!community_user_can_leave($community)) {
-    json_reply(true, get_string('cannotleavecommunity'));
+    json_reply(true, get_string('couldnotleavecommunity'));
 }
 
 community_remove_user($community->id, $USER->get('id'));

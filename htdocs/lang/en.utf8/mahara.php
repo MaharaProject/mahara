@@ -264,6 +264,7 @@ $string['deleteviewfailed'] = 'Delete view failed';
 $string['deleteviewquestion'] = 'Do you really want to delete this view?';
 $string['description'] = 'Description';
 $string['editaccess'] = 'Edit Access';
+$string['saveaccess'] = 'Save Access';
 $string['editview'] = 'Edit View';
 $string['editviewinformation'] = 'Edit View Information';
 $string['myviews'] = 'My Views';
@@ -274,6 +275,7 @@ $string['viewdeleted'] = 'View deleted';
 $string['views'] = 'Views';
 $string['viewsubmitted'] = 'View submitted';
 $string['viewsubmittedto'] = 'This view has been submitted to %s';
+$string['viewaccesseditedsuccessfully'] = 'View access saved successfully';
 
 // access levels
 $string['public'] = 'Public';
@@ -363,7 +365,9 @@ $string['adduserfailed'] = 'Failed to add the user';
 $string['useradded'] = 'User added';
 $string['editcommunity'] = 'Edit Community';
 $string['savecommunity'] = 'Save Community';
+$string['communitysaved'] = 'Community Saved Successfully';
 $string['communityname'] = 'Community Name';
+$string['invalidcommunity'] = 'The community doesn\'t exist';
 $string['communitydescription'] = 'Community Description';
 $string['membershiptype'] = 'Community Memberhsip Type';
 $string['membershiptype.controlled'] = 'Controlled Memberhsip';
@@ -389,11 +393,11 @@ $string['memberchangesuccess'] = 'Membership status changed successfully';
 $string['viewreleasedsubject'] = 'Your view has been released';
 $string['viewreleasedmessage'] = 'The view that you submitted to community %s has been released back to you by %s';
 $string['viewreleasedsuccess'] = 'View was released successfully';
-$string['communitymembershipchangedsubject'] = 'Community membership: %s';
-$string['communitymembershipchangedmessagetutor'] = 'You have been promoted to a tutor in this community';
-$string['communitymembershipchangedmessagemember'] = 'You have been demoted from a tutor in this community';
-$string['communitymembershipchangedmessageremove'] = 'You have been removed from this community';
-$string['communitymembershipchangedmessagedeclinerequest'] = 'Your request to join this community has been declined';
+$string['communitymembershipchangesubject'] = 'Community membership: %s';
+$string['communitymembershipchangemessagetutor'] = 'You have been promoted to a tutor in this community';
+$string['communitymembershipchangemessagemember'] = 'You have been demoted from a tutor in this community';
+$string['communitymembershipchangemessageremove'] = 'You have been removed from this community';
+$string['communitymembershipchangemessagedeclinerequest'] = 'Your request to join this community has been declined';
 $string['communitymembershipchangedmessageaddedtutor'] = 'You have been added as a tutor in this community';
 $string['communitymembershipchangedmessageaddedmember'] = 'You have been added as a member in this community';
 $string['leavecommunity'] = 'Leave this community';
@@ -406,6 +410,7 @@ $string['communityinvitedeclined'] = 'Invite declined successfully!';
 $string['acceptinvitecommunity'] = 'Accept';
 $string['declineinvitecommunity'] = 'Decline';
 $string['leftcommunity'] = 'You have now left this community';
+$string['leftcommunityfailed'] = 'Leaving community failed';
 $string['couldnotleavecommunity'] = 'You cannot leave this community';
 $string['joinedcommunity'] = 'You are now a community member';
 $string['couldnotjoincommunity'] = 'You cannot join this community';
@@ -483,5 +488,9 @@ $string['clamunknownerror'] = 'There was an unknown error with clam.';
 $string['virusfounduser'] = 'The file you have uploaded, %s, has been scanned by a virus checker and found to be infected! Your file upload was NOT successful.';
 $string['virusrepeatsubject'] = 'Warning: %s is a repeat virus uploader.';
 $string['virusrepeatmessage'] = 'The user %s has uploaded multiple files which have been scanned by a virus checker and found to be infected.';
+
+$string['youraccounthasbeensuspended'] = 'Your account has been suspended';
+$string['youraccounthasbeensuspendedtext'] = 'Your account has been suspended'; // @todo: more info?
+
 
 ?>

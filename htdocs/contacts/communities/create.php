@@ -121,4 +121,3 @@ $smarty->assign('createcommunity', $createcommunity);
 $smarty->display('contacts/communities/create.tpl');
 
 ?>
-
