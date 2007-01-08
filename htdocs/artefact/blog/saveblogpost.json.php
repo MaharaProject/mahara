@@ -54,7 +54,7 @@ if (!$blogpost) {
     $postobj->set('owner', $userid);
 }
 else if ($postobj->get('owner') != $userid) {
-    json_reply('local', get_string('notowner'));
+    json_reply('local', get_string('youarenottheownerofthisblogpost', 'artefact.blog'));
 }
 $postobj->commit();
 $blogpost = $postobj->get('id');
