@@ -79,10 +79,14 @@ function TableRenderer(target, source, columns, options) {
                     elements.push(lastPage);
                 }
 
-                var tr = TR(null, TD({'colspan':self.linkspan}, DIV({'style': 'width: 100%; margin: auto;'}, elements)));
+                var tr = TR(null, TD({'colspan':self.linkspan}, DIV({'style': 'width: 100%; margin: auto; text-align: center;'}, elements)));
 
-                // replaceChildNodes(ref, tr, ref.childNodes);
-                appendChildNodes(ref, tr);
+                if ( ref.nodeName == 'THEAD' && ref.firstChild ) {
+                    insertSiblingNodesBefore(ref.firstChild, tr);
+                }
+                else {
+                    appendChildNodes(ref, tr);
+                }
             });
         }
 

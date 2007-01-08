@@ -396,7 +396,11 @@ function optional_userobj($user) {
  */
 function is_logged_in() {
     global $USER;
-    return (!empty($USER));
+    if (empty($USER)) {
+        return false;
+    }
+
+    return $USER->is_logged_in();
 }
 
 /**

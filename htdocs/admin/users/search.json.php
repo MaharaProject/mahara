@@ -18,7 +18,7 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Penny Leach <penny@catalyst.net.nz>
+ * @author     Martyn Smith <martyn@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
@@ -28,22 +28,52 @@ define('INTERNAL', 1);
 define('JSON', 1);
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-require_once('community.php');
 
 json_headers();
+json_check_sesskey();
 
-$leave = param_integer('leave');
+$action = param_variable('action');
+$dbprefix = get_config('dbprefix');
 
-if (!$community = get_record('community', 'id', $leave)) {
-    json_reply(true, get_string('invalidcommunity'));
+if ($action == 'suspend') {
+    $id = param_integer('id');
+    $reason = param_variable('reason');
+
+    try {
+        suspend_user($id, $reason);
+    }
+    catch (MaharaException $e) {
+        json_reply('suspendfailed', $e->getMessage());
+    }
+
+    echo json_encode(array('error' => null));
+    exit;
 }
 
-if (!community_user_can_leave($community)) {
-    json_reply(true, get_string('couldnotleavecommunity'));
+if ($action == 'search') {
+    require('searchlib.php');
+    try {
+        $query = param_variable('query');
+    }
+    catch (ParameterException $e) {
+        json_reply('missingparameter','Missing parameter \'query\'');
+    }
+    $limit = param_integer('limit', 20);
+    $offset = param_integer('offset', 0);
+
+    $data = search_user($query, $limit, $offset);
+
+    if ($data['data']) {
+        foreach ($data['data'] as &$result) {
+            $result->name = display_name($result);
+        }
+    }
+
+    json_headers();
+    $data['error'] = false;
+    $data['message'] = '';
+    echo json_encode($data);
+    exit;
 }
-
-community_remove_user($community->id, $USER->get('id'));
-
-json_reply(false, get_string('leftcommunity'));
 
 ?>
