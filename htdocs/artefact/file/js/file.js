@@ -160,6 +160,7 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
         insertSiblingNodesBefore(rowid, TR({'id':editid},
                                            TD({'colSpan':5},
                                               FORM({'id':formid,'action':''},edittable))));
+        keepElementInViewport(editid);
     }
 
     this.initcreatefolderform = function () {
@@ -293,6 +294,7 @@ function FileUploader(element, uploadscript, statevars, foldername, folderid, up
         var button = INPUT({'type':'button','value':get_string('uploadfile'), 'onclick':function () { 
             hideElement(self.openbutton);
             showElement(self.form);
+            keepElementInViewport(self.form);
         }});
         self.openbutton = button;
 
