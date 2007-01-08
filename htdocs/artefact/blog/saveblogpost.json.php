@@ -41,15 +41,6 @@ $uploads    = json_decode(param_variable('uploads'));
 $artefacts  = json_decode(param_variable('artefacts'));
 $body       = param_variable('body');
 
-log_debug($title    );
-log_debug($draft    );
-log_debug($createid );
-log_debug($blog     );
-log_debug($blogpost );
-log_debug($uploads  );
-log_debug($artefacts);
-log_debug($body     );
-
 $userid = $USER->get('id');
 
 safe_require('artefact', 'blog');
@@ -79,7 +70,6 @@ if (!$old = get_column('artefact_blog_blogpost_file', 'file', 'blogpost', $blogp
 
 foreach ($old as $o) {
     if (!in_array($o, $artefacts)) {
-        log_debug('old not in new ' . $o);
         delete_records('artefact_blog_blogpost_file', 'blogpost', $blogpost, 'file', $o);
     }
 }

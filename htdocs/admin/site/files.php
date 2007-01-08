@@ -17,7 +17,7 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage artefact-file
+ * @subpackage admin
  * @author     Richard Mansfield <richard.mansfield@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
@@ -25,33 +25,32 @@
  */
 
 define('INTERNAL', 1);
-define('JSON', 1);
+define('ADMIN', 1);
+define('MENUITEM', 'configsite');
+define('SUBMENUITEM', 'adminfiles');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-
-//log_debug('myfiles.json.php');
-
-$limit = param_integer('limit', null);
-$offset = param_integer('offset', 0);
-$folder = param_integer('folder', null);
-$adminfiles = param_boolean('adminfiles', false);
-$userid = $USER->get('id');
-
 safe_require('artefact', 'file');
-$filedata = ArtefactTypeFileBase::get_my_files_data($folder, $userid, $adminfiles);
 
-$result = array(
-    'count'       => count($filedata),
-    'limit'       => $limit,
-    'offset'      => $offset,
-    'data'        => $filedata,
-    'error'       => false,
-    'message'     => get_string('filelistloaded'),
-);
+$copyright = get_field('site_content', 'content', 'name', 'uploadcopyright');
+$wwwroot = get_config('wwwroot');
 
-//log_debug($result);
+$javascript = <<<JAVASCRIPT
 
-json_headers();
-print json_encode($result);
+var copyrightnotice = '{$copyright}';
+var browser = new FileBrowser('filelist', '{$wwwroot}artefact/file/myfiles.json.php', {'adminfiles':true});
+browser.createfolderscript = '{$wwwroot}artefact/file/createfolder.json.php';
+browser.deletescript = '{$wwwroot}artefact/file/delete.json.php';
+browser.updatemetadatascript = '{$wwwroot}artefact/file/updatemetadata.json.php';
+var uploader = new FileUploader('uploader', '{$wwwroot}artefact/file/upload.php', {'adminfiles':true}, 
+                                null, null, browser.refresh, browser.fileexists);
+browser.changedircallback = uploader.updatedestination;
+
+JAVASCRIPT;
+
+$smarty = smarty(array('tablerenderer', 
+                       'artefact/file/js/file.js'));
+$smarty->assign('INLINEJAVASCRIPT', $javascript);
+$smarty->display('admin/site/files.tpl');
 
 ?>

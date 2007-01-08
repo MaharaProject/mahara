@@ -34,6 +34,7 @@ $title          = param_variable('title');
 $description    = param_variable('description', null);
 $uploadnumber   = param_integer('uploadnumber'); // id of target iframe
 $collideaction  = param_variable('collideaction', 'fail');
+$adminfiles     = param_boolean('adminfiles', false);
 
 $data = new StdClass;
 if ($parentfolder) {
@@ -42,13 +43,14 @@ if ($parentfolder) {
 $data->title = $title;
 $data->description = $description;
 $data->owner = $USER->get('id');
+$data->adminfiles = (int) $adminfiles;
 $data->container = 0;
 $data->locked = 0;
 
 $result = new StdClass;
 $result->uploadnumber = $uploadnumber;
 
-if ($oldid = ArtefactTypeFileBase::exists_in_db($data->title, $data->owner, $parentfolder)) {
+if ($oldid = ArtefactTypeFileBase::file_exists($data->title, $data->owner, $parentfolder, $adminfiles)) {
     if ($collideaction == 'replace') {
         require_once('artefact.php');
         $obj = artefact_instance_from_id($oldid);

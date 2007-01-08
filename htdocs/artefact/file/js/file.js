@@ -6,10 +6,11 @@
 
 var changedir = function () {};
 
-function FileBrowser(element, source, changedircallback, actionname, actioncallback) {
+function FileBrowser(element, source, statevars, changedircallback, actionname, actioncallback) {
     var self = this;
     this.element = element;
     this.source = source;
+    this.statevars = statevars ? statevars : {};
     this.pathids = {'/':null};
     this.cwd = '/';
     this.changedircallback = (typeof(changedircallback) == 'function') ? changedircallback : function () {};
@@ -17,6 +18,9 @@ function FileBrowser(element, source, changedircallback, actionname, actioncallb
     this.actionname = actionname;
     this.canmodify = !actionname;
     this.filenames = {};
+    this.deletescript = 'delete.json.php';
+    this.createfolderscript = 'createfolder.json.php';
+    this.updatemetadatascript = 'updatemetadata.json.php';
 
     if (this.actionname) {
         this.lastcolumnfunc = function(r) {
@@ -40,7 +44,7 @@ function FileBrowser(element, source, changedircallback, actionname, actioncallb
                 if (confirm(get_string(r.artefacttype == 'folder' ? 'deletefolder?' : 'deletefile?'))) {
                     if (!r.attachcount || r.attachcount == 0
                         || confirm(get_string('unlinkthisfilefromblogposts?'))) {
-                        sendjsonrequest('delete.json.php', {'id': r.id}, self.refresh);
+                        sendjsonrequest(self.deletescript, {'id': r.id}, self.refresh);
                     }
                 }
             };
@@ -79,7 +83,10 @@ function FileBrowser(element, source, changedircallback, actionname, actioncallb
         );
         self.filelist.emptycontent = get_string('nofilesfound');
         self.filelist.paginate = false;
-        self.filelist.statevars.push('folder');
+        for (property in self.statevars) {
+            self.filelist[property] = self.statevars[property];
+            self.filelist.statevars.push(property);
+        }
         self.filelist.rowfunction = function (r) { return TR({'id':'row_' + r.id}); };
         self.filelist.init();
         changedir = self.changedir; // Ick; needs to be set globally for some links to work
@@ -105,14 +112,17 @@ function FileBrowser(element, source, changedircallback, actionname, actioncallb
         hideElement($(formid).replace);
 
         var collideaction = replacefile ? 'replace' : 'fail';
-        var data = {'name':$(formid).name.value, 'collideaction':collideaction,
-                    'description':$(formid).description.value};
+        var data = self.statevars;
+        data['name'] = $(formid).name.value;
+        data['collideaction'] = collideaction;
+        data['description'] = $(formid).description.value;
+
         if (fileid) {
-            var script = 'updatemetadata.json.php';
+            var script = self.updatemetadatascript;
             data['id'] = fileid;
         }
         else {
-            var script = 'createfolder.json.php';
+            var script = self.createfolderscript;
         }
         if (self.cwd != '/') {
             data['parentfolder'] = self.pathids[self.cwd];
@@ -256,11 +266,12 @@ function FileBrowser(element, source, changedircallback, actionname, actioncallb
 }
 
 
-function FileUploader(element, uploadscript, foldername, folderid, uploadcallback, fileexists) {
+function FileUploader(element, uploadscript, statevars, foldername, folderid, uploadcallback, fileexists) {
 
     var self = this;
     this.element = element;
     this.uploadscript = uploadscript;
+    this.statevars = statevars ? statevars : {};
     this.folderid = folderid;
     this.foldername = foldername ? foldername : get_string('home');
     this.uploadcallback = uploadcallback;
@@ -388,6 +399,12 @@ function FileUploader(element, uploadscript, foldername, folderid, uploadcallbac
                                              'src':'blank.html',
                                              'style':'display: none;'}));
         setNodeAttribute(self.form, 'target', 'iframe' + self.nextupload);
+
+        for (property in self.statevars) {
+            appendChildNodes(self.form, 
+                             INPUT({'type':'hidden', 'name':property, 'value':self.statevars[property]}));
+        }
+        
         var collideaction = replacefile ? 'replace' : 'fail';
         appendChildNodes(self.form, 
                          INPUT({'type':'hidden', 'name':'collideaction', 'value':collideaction}),

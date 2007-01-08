@@ -591,6 +591,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
 
         $f = new ArtefactTypeFile(0, $data);
         $f->set('owner', $USER->get('id'));
+        $f->set('adminfiles', 0); // No admin blogs yet...
         $f->set('parent', self::blogfiles_folder_id());
         if (!$f->save_file(self::$blogattachmentroot . $directory . '/' . $filename)) {
             $f->delete();
