@@ -1273,7 +1273,6 @@ function has_page_help() {
 
     if (in_array($firstdir, plugin_types())) {
         $bits = explode('/', $scriptname);
-        log_debug($bits);
         if (count($bits) > 2) {
             $plugintype = $bits[0];
             $pluginname = $bits[1];
