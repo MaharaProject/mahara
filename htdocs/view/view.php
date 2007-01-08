@@ -45,7 +45,7 @@ if ($artefactid) {
         $content = $artefact->render(FORMAT_ARTEFACT_RENDERFULL, null);
     }
     else {
-        $content = get_string($artefact->get('artefacttype'));
+        $content = $artefact->render(FORMAT_ARTEFACT_RENDERMETADATA, null);
     }
 
     // Link ancestral artefacts back to the view
