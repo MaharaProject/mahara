@@ -588,23 +588,22 @@ class ArtefactTypeBlogPost extends ArtefactType {
         $data = new StdClass;
         $data->title = $title;
         $data->description = $description;
+        $data->owner = $USER->get('id');
+        $data->adminfiles = 0; // No admin blogs yet...
+        $data->parent = self::blogfiles_folder_id();
+        
+        $path = self::$blogattachmentroot . $directory . '/' . $filename;
 
-        $f = new ArtefactTypeFile(0, $data);
-        $f->set('owner', $USER->get('id'));
-        $f->set('adminfiles', 0); // No admin blogs yet...
-        $f->set('parent', self::blogfiles_folder_id());
-        if (!$f->save_file(self::$blogattachmentroot . $directory . '/' . $filename)) {
-            $f->delete();
+        if (!$fileid = ArtefactTypeFile::save_file($path, $data)) {
             return false;
         }
-
-        $fileid = $f->get('id');
+            
         $data = new StdClass;
         $data->blogpost = $this->id;
         $data->file = $fileid;
         insert_record('artefact_blog_blogpost_file', $data);
 
-        return $fileid;
+        return true;
     }
 
     public static function blogfiles_folder_id() {

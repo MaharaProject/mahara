@@ -282,56 +282,42 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
     }
 
 
-//     public function save_uploaded_file($inputname) {
-//         require_once('uploadmanager.php');
-//         $um = new upload_manager($inputname);
-//         if ($error = $um->preprocess_file()) {
-//             return $error;
-//         }
-//         global $USER;
-//         $this->owner = $USER->get('id');
-//         $this->size = $um->file['size'];
-//         $this->dirty = true;
-//         $this->commit();
-//         // Save the file using its id as the filename, and use its id modulo
-//         // the number of subdirectories as the directory name.
-//         if ($error = $um->save_file(self::get_file_directory($this->id) , $this->id)) {
-//             $this->delete();
-//         }
-//         return $error;
-//     }
-
-
     /**
      * Moves a file into the myfiles area.
      * Takes the name of a file outside the myfiles area.
      * Returns a boolean indicating success or failure.
      */
-    public function save_file($pathname) {
+    public static function save_file($pathname, $data) {
         $dataroot = get_config('dataroot');
         $pathname = $dataroot . $pathname;
         if (!$size = filesize($pathname)) {
-            $this->delete();
             return false;
         }
-        if (empty($this->id)) {
-            $this->commit();
+        //if (is_image($pathname)) {
+        if (false) {
+            $f = new ArtefactTypeImage(0, $data);
         }
-        $newdir = $dataroot . self::get_file_directory($this->id);
+        else {
+            $f = new ArtefactTypeFile(0, $data);
+        }
+        $f->set('size', $size);
+        $f->commit();
+        $id = $f->get('id');
+
+        $newdir = $dataroot . self::get_file_directory($id);
         check_dir_exists($newdir);
-        $newname = $newdir . '/' . $this->id;
+        $newname = $newdir . '/' . $id;
         if (!rename($pathname, $newname)) {
-            $this->delete();
+            $f->delete();
             return false;
         }
-        $this->set('size',$size);
-        return true;
+        return $id;
     }
 
 
     /**
-     * Processes a newly uploaded file, copies it to disk, and associates it with
-     * the artefact object.
+     * Processes a newly uploaded file, copies it to disk, and creates
+     * a new artefact object.
      * Takes the name of a file input.
      * Returns false for no errors, or a string describing the error.
      */
@@ -360,33 +346,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         return $error;
     }
 
-//     /**
-//      * Processes a newly uploaded file, copies it to disk, creates a new artefact object and
-//      * associates the newly uploaded file with it.
-//      * Takes the name of a file input.
-//      * Returns a boolean indicating success or failure.
-//      */
-//     public static function uploaded_file_to_artefact_file($inputname, $data) {
-//         // Get the new file object first, because its id is used to
-//         // determine where the file goes on the filesystem
-//         $f = new ArtefactTypeFile(0, $data);
-//         require_once('uploadmanager.php');
-//         $um = new upload_manager($inputname);
-//         if (!$um->preprocess_file()) {
-//             return false;
-//         }
-//         $this->size = $um->file['size'];
-//         $this->dirty = true;
-//         $this->commit();
-//         // Save the file using its id as the filename, and use its id modulo
-//         // the number of subdirectories as the directory name.
-//         if (!$um->save_file(self::get_file_directory($this->id) , $this->id)) {
-//             $this->delete();
-//             return false;
-//         }
-//         return true;
-//     }
-    
+
     public function delete() {
         if (empty($this->id)) {
             return; 

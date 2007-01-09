@@ -93,6 +93,7 @@ class upload_manager {
     function file_is_image() {
         // For testing only: trust the browser
         return preg_match('/^image\//', $this->file['type']);
+        // Later: call a function in lib/file.php on the file.
     }
 
     /** 

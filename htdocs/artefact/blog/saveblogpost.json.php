@@ -110,6 +110,6 @@ if (!empty($uploads)) {
 
 
 
-json_reply(false, 'foo');
+json_reply(false, get_string('blogpostsaved', 'artefact.blog'));
 
 ?>
