@@ -282,30 +282,24 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
     }
 
 
-    /**
-     * Processes a newly uploaded file, copies it to disk, and associates it with
-     * the artefact object.
-     * Takes the name of a file input.
-     * Returns false for no errors, or a string describing the error.
-     */
-    public function save_uploaded_file($inputname) {
-        require_once('uploadmanager.php');
-        $um = new upload_manager($inputname);
-        if ($error = $um->preprocess_file()) {
-            return $error;
-        }
-        global $USER;
-        $this->owner = $USER->get('id');
-        $this->size = $um->file['size'];
-        $this->dirty = true;
-        $this->commit();
-        // Save the file using its id as the filename, and use its id modulo
-        // the number of subdirectories as the directory name.
-        if ($error = $um->save_file(self::get_file_directory($this->id) , $this->id)) {
-            $this->delete();
-        }
-        return $error;
-    }
+//     public function save_uploaded_file($inputname) {
+//         require_once('uploadmanager.php');
+//         $um = new upload_manager($inputname);
+//         if ($error = $um->preprocess_file()) {
+//             return $error;
+//         }
+//         global $USER;
+//         $this->owner = $USER->get('id');
+//         $this->size = $um->file['size'];
+//         $this->dirty = true;
+//         $this->commit();
+//         // Save the file using its id as the filename, and use its id modulo
+//         // the number of subdirectories as the directory name.
+//         if ($error = $um->save_file(self::get_file_directory($this->id) , $this->id)) {
+//             $this->delete();
+//         }
+//         return $error;
+//     }
 
 
     /**
@@ -335,15 +329,36 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
     }
 
 
-    // Deal with this once I know about how the mime type detection will work.
-
-//     public static function construct_from_upload($inputname, $data) {
-//         require_once('uploadmanager.php');
-//         $um = new upload_manager($inputname);
-//         if (!$um->preprocess_file()) {
-//             return false;
-//         }
-//     }
+    /**
+     * Processes a newly uploaded file, copies it to disk, and associates it with
+     * the artefact object.
+     * Takes the name of a file input.
+     * Returns false for no errors, or a string describing the error.
+     */
+    public static function save_uploaded_file($inputname, $data) {
+        require_once('uploadmanager.php');
+        $um = new upload_manager($inputname);
+        if ($error = $um->preprocess_file()) {
+            return $error;
+        }
+        if ($um->file_is_image()) {
+            $f = new ArtefactTypeImage(0, $data);
+        }
+        else {
+            $f = new ArtefactTypeFile(0, $data);
+        }
+        global $USER;
+        $f->set('owner', $USER->get('id'));
+        $f->set('size', $um->file['size']);
+        $f->commit();
+        $id = $f->get('id');
+        // Save the file using its id as the filename, and use its id modulo
+        // the number of subdirectories as the directory name.
+        if ($error = $um->save_file(self::get_file_directory($id) , $id)) {
+            $f->delete();
+        }
+        return $error;
+    }
 
 //     /**
 //      * Processes a newly uploaded file, copies it to disk, creates a new artefact object and

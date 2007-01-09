@@ -87,6 +87,14 @@ class upload_manager {
         return false; 
     }
 
+    /**
+     * Check if the newly uploaded file is an image.
+     */
+    function file_is_image() {
+        // For testing only: trust the browser
+        return preg_match('/^image\//', $this->file['type']);
+    }
+
     /** 
      * Moves the file to the destination directory.
      *

@@ -50,7 +50,7 @@ $data->locked = 0;
 $result = new StdClass;
 $result->uploadnumber = $uploadnumber;
 
-if ($oldid = ArtefactTypeFileBase::file_exists($data->title, $data->owner, $parentfolder, $adminfiles)) {
+if ($oldid = ArtefactTypeFileBase::file_exists($title, $data->owner, $parentfolder, $adminfiles)) {
     if ($collideaction == 'replace') {
         require_once('artefact.php');
         $obj = artefact_instance_from_id($oldid);
@@ -61,17 +61,14 @@ if ($oldid = ArtefactTypeFileBase::file_exists($data->title, $data->owner, $pare
     }
 }
 if (!isset($result->error)) {
-    $f = new ArtefactTypeFile(0, $data);
-    $errmsg = $f->save_uploaded_file('userfile');
+    $errmsg = ArtefactTypeFile::save_uploaded_file('userfile', $data);
     if (!$errmsg) {
         $result->error = false;
-        $result->message = get_string('uploadoffilecomplete', 'artefact.file', 
-                                      $f->get('title'));
+        $result->message = get_string('uploadoffilecomplete', 'artefact.file', $title);
     }
     else {
         $result->error = 'local';
-        $result->message = get_string('uploadoffilefailed', 'artefact.file', 
-                                      $f->get('title')) . ': ' . $errmsg;
+        $result->message = get_string('uploadoffilefailed', 'artefact.file',  $title) . ': ' . $errmsg;
     }
 }
 
