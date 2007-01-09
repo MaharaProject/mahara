@@ -450,11 +450,11 @@ $string['addedtofriendslistsubject'] = 'New friend';
 $string['addedtofriendslistmessage'] = '%s added you as a friend! This means that %s is also on your friend list now too. '
     . ' Click on the link below to see their profile page';
 
-$string['requestedfriendslistmessage'] = 'New friend request';
-$string['requestedfriendslistsubject'] = '%s has requested that you add them as a friend.  '
+$string['requestedfriendlistsubject'] = 'New friend request';
+$string['requestedfriendlistmessage'] = '%s has requested that you add them as a friend.  '
     .' You can either do this from the link below, or from your friends list page';
 
-$string['requestedfriendslistsubjectreason'] = '%s has requested that you add them as a friend.'
+$string['requestedfriendlistmessagereason'] = '%s has requested that you add them as a friend.'
     .' You can either do this from the link below, or from your friends list page'
     . 'Their reason was: ';
 

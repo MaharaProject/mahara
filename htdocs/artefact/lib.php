@@ -121,6 +121,9 @@ abstract class ArtefactType {
         }
         foreach ((array)$data as $field => $value) {
             if (property_exists($this, $field)) {
+                if (in_array($field, array('atime', 'ctime', 'mtime'))) {
+                    $value = strtotime($value);
+                } 
                 $this->{$field} = $value;
             }
         }
@@ -411,16 +414,17 @@ abstract class ArtefactType {
      * @todo: get and display artefact size.
      */
     protected function render_metadata($options) {
-        $html = '<table><tbody>';
-        $html .= '<tr><td>' . get_string('title') . '</td><td>' . $this->title . '</td></tr>';
-        $html .= '<tr><td>' . get_string('type') . '</td><td>' . $this->artefacttype . '</td></tr>';
-        $html .= '<tr><td>' . get_string('owner') . '</td><td>' . display_name($this->owner) . '</td></tr>';
-        $html .= '<tr><td>' . get_string('created') . '</td><td>' 
-            . strftime(get_string('strftimedate'), strtotime($this->ctime)) . '</td></tr>';
-        $html .= '<tr><td>' . get_string('lastmodified') . '</td><td>' 
-            . strftime(get_string('strftimedate'), strtotime($this->mtime)) . '</td></tr>';
-        $html .= '</tbody></table>';
-        return $html;
+
+        $smarty = smarty();
+
+        $smarty->assign('title', $this->get('title'));
+        $smarty->assign('type', $this->get('artefacttype'));
+        $smarty->assign('owner', display_name(optional_userobj($this->get('owner'))));
+        $smarty->assign('nicectime', format_date($this->get('ctime')));
+        $smarty->assign('nicemtime', format_date($this->get('mtime')));
+
+        return $smarty->fetch('artefact/render_metadata.tpl');
+
     }
 
     /**

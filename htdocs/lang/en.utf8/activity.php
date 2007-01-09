@@ -82,4 +82,7 @@ $string['onartefact'] = 'on artefact';
 $string['oncommunity'] = 'on community';
 $string['ownedby'] = 'owned by';
 
+$string['objectionablecontentview'] = 'Objectionable content';
+$string['objectionablecontentartefact'] = 'Objectionable content';
+
 ?>
