@@ -62,6 +62,8 @@ $string['uploadfileexistsoverwritecancel'] =  'A file with that name already exi
 $string['uploadingfiletofolder'] =  'Uploading %s to %s';
 $string['uploadoffilecomplete'] = 'Upload of %s complete';
 $string['uploadoffilefailed'] =  'Upload of %s failed';
+$string['uploadoffiletofoldercomplete'] = 'Upload of %s to %s complete';
+$string['uploadoffiletofolderfailed'] = 'Upload of %s to %s failed';
 $string['youmustagreetothecopyrightnotice'] = 'You must agree to the copyright notice';
 
 ?>

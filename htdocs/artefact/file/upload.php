@@ -29,12 +29,13 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('artefact', 'file');
 global $USER;
 
-$parentfolder   = param_variable('parentfolder', null); // id of parent artefact
-$title          = param_variable('title');
-$description    = param_variable('description', null);
-$uploadnumber   = param_integer('uploadnumber'); // id of target iframe
-$collideaction  = param_variable('collideaction', 'fail');
-$adminfiles     = param_boolean('adminfiles', false);
+$parentfolder     = param_variable('parentfolder', null);    // id of parent artefact
+$parentfoldername = param_variable('parentfoldername', '');  // path to parent folder
+$title            = param_variable('title');
+$description      = param_variable('description', null);
+$uploadnumber     = param_integer('uploadnumber'); // id of target iframe
+$collideaction    = param_variable('collideaction', 'fail');
+$adminfiles       = param_boolean('adminfiles', false);
 
 $data = new StdClass;
 if ($parentfolder) {
@@ -64,11 +65,24 @@ if (!isset($result->error)) {
     $errmsg = ArtefactTypeFile::save_uploaded_file('userfile', $data);
     if (!$errmsg) {
         $result->error = false;
-        $result->message = get_string('uploadoffilecomplete', 'artefact.file', $title);
+        if ($parentfoldername) {
+            $result->message = get_string('uploadoffiletofoldercomplete', 'artefact.file', 
+                                          $title, $parentfoldername);
+        }
+        else {
+            $result->message = get_string('uploadoffilecomplete', 'artefact.file', $title);
+        }
     }
     else {
         $result->error = 'local';
-        $result->message = get_string('uploadoffilefailed', 'artefact.file',  $title) . ': ' . $errmsg;
+        if ($parentfoldername) {
+            $result->message = get_string('uploadoffiletofolderfailed', 'artefact.file', 
+                                          $title, $parentfoldername);
+        }
+        else {
+            $result->message = get_string('uploadoffilefailed', 'artefact.file',  $title);
+        }
+        $result->message .= ': ' . $errmsg;
     }
 }
 
