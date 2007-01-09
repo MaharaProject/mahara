@@ -92,14 +92,6 @@ foreach ($artefacts as $a) {
 // Add the newly uploaded files to myfiles and then to the blog post.
 
 if (!empty($uploads)) {
-
-    // Create the blogfiles folder if it doesn't exist yet.
-    $blogfilesid = ArtefactTypeBlogPost::blogfiles_folder_id();
-    if (!$blogfilesid) {
-        json_reply('local', get_string('erroraccessingblogfilesfolder', 'artefact.blog'));
-    }
-
-    // Turn all the uploaded files into artefacts.
     foreach ($uploads as $upload) {
         if (!$postobj->save_attachment(session_id() . $createid, $upload->id,
                                        $upload->title, $upload->description)) {
@@ -107,8 +99,6 @@ if (!empty($uploads)) {
         }
     }
 }
-
-
 
 json_reply(false, get_string('blogpostsaved', 'artefact.blog'));
 
