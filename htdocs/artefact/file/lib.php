@@ -246,8 +246,8 @@ class ArtefactTypeFileBase extends ArtefactType {
 
         // Sort folders before files; then use nat sort order on title.
         function fileobjcmp ($a, $b) {
-            return strnatcasecmp(($a->artefacttype == 'folder') . $a->title,
-                                 ($b->artefacttype == 'folder') . $b->title);
+            return strnatcasecmp((int)($a->artefacttype != 'folder') . $a->title,
+                                 (int)($b->artefacttype != 'folder') . $b->title);
         }
         usort($filedata, "fileobjcmp");
         return $filedata;
