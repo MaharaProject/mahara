@@ -50,7 +50,7 @@ $result = array(
     'offset'      => $offset,
     'data'        => $filelist,
     'error'       => false,
-    'message'     => get_string('attachedfilelistloaded'),
+    'message'     => get_string('attachedfilelistloaded', 'artefact.blog'),
 );
 
 json_headers();

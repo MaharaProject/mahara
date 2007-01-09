@@ -104,7 +104,7 @@ $siteoptionform = pieform(array(
 ));
 
 function siteoptions_fail(Pieform $form, $field) {
-    $form->json_reply(PIEFORM_ERR, get_string('siteoptionsfailed','admin', get_string($field)), array($field => get_string($field . 'invalid', 'admin')));
+    $form->json_reply(PIEFORM_ERR, get_string('setsiteoptionsfailed','admin', get_string($field)), array($field => get_string($field . 'invalid', 'admin')));
 }
 
 function siteoptions_submit(Pieform $form, $values) {

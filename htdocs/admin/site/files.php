@@ -17,7 +17,7 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage artefact-file
+ * @subpackage admin
  * @author     Richard Mansfield <richard.mansfield@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
@@ -25,18 +25,25 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'myfiles');
+define('ADMIN', 1);
+define('MENUITEM', 'configsite');
+define('SUBMENUITEM', 'adminfiles');
+
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('artefact', 'file');
 
 $copyright = get_field('site_content', 'content', 'name', 'uploadcopyright');
+$wwwroot = get_config('wwwroot');
 
 $javascript = <<<JAVASCRIPT
 
 var copyrightnotice = '{$copyright}';
-var browser = new FileBrowser('filelist', 'myfiles.json.php');
-var uploader = new FileUploader('uploader', 'upload.php', {}, null, null,
-                                browser.refresh, browser.fileexists);
+var browser = new FileBrowser('filelist', '{$wwwroot}artefact/file/myfiles.json.php', {'adminfiles':true});
+browser.createfolderscript = '{$wwwroot}artefact/file/createfolder.json.php';
+browser.deletescript = '{$wwwroot}artefact/file/delete.json.php';
+browser.updatemetadatascript = '{$wwwroot}artefact/file/updatemetadata.json.php';
+var uploader = new FileUploader('uploader', '{$wwwroot}artefact/file/upload.php', {'adminfiles':true}, 
+                                null, null, browser.refresh, browser.fileexists);
 browser.changedircallback = uploader.updatedestination;
 
 JAVASCRIPT;
@@ -44,6 +51,6 @@ JAVASCRIPT;
 $smarty = smarty(array('tablerenderer', 
                        'artefact/file/js/file.js'));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
-$smarty->display('artefact:file:index.tpl');
+$smarty->display('admin/site/files.tpl');
 
 ?>

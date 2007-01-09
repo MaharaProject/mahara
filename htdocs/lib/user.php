@@ -373,7 +373,7 @@ function optional_userobj($user) {
         return $user;
     }
 
-    if (!empty($user) && is_int($user)) {
+    if (!empty($user) && is_numeric($user)) {
         if ($user = get_record('usr', 'id', $user)) {
             return $user;
         }

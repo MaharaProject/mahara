@@ -109,6 +109,64 @@ class PluginArtefactFile extends PluginArtefact {
 
 class ArtefactTypeFileBase extends ArtefactType {
 
+    protected $adminfiles;
+    protected $size;
+
+    public function __construct($id = 0, $data = null) {
+        parent::__construct($id, $data);
+        
+        if (empty($this->id)) {
+            $this->locked = 0;
+        }
+
+        if ($this->id && ($filedata = get_record('artefact_file_files', 'artefact', $this->id))) {
+            foreach($filedata as $name => $value) {
+                if (property_exists($this, $name)) {
+                    $this->set($name, $value);
+                }
+            }
+        }
+
+    }
+
+    /**
+     * This function updates or inserts the artefact.  This involves putting
+     * some data in the artefact table (handled by parent::commit()), and then
+     * some data in the artefact_file_files table.
+     */
+    public function commit() {
+        // Just forget the whole thing when we're clean.
+        if (empty($this->dirty)) {
+            return;
+        }
+      
+        // We need to keep track of newness before and after.
+        $new = empty($this->id);
+
+        $this->mtime = time();
+
+        // Commit to the artefact table.
+        parent::commit();
+
+        // Reset dirtyness for the time being.
+        $this->dirty = true;
+
+        $data = (object)array(
+            'artefact'      => $this->get('id'),
+            'size'          => $this->get('size'),
+            'adminfiles'    => $this->get('adminfiles')
+        );
+
+        if ($new) {
+            insert_record('artefact_file_files', $data);
+        }
+        else {
+            update_record('artefact_file_files', $data, 'artefact');
+        }
+
+        $this->dirty = false;
+    }
+
     public static function get_render_list() {
         return array(FORMAT_ARTEFACT_LISTSELF, FORMAT_ARTEFACT_RENDERMETADATA);
     }
@@ -137,19 +195,20 @@ class ArtefactTypeFileBase extends ArtefactType {
         parent::delete();
     }
 
-    // Check if something exists in the db with a given title, owner, parent folder
-    public static function exists_in_db($title, $owner, $folder) {
+    // Check if something exists in the db with a given title and parent,
+    // either in adminfiles or with a specific owner.
+    public static function file_exists($title, $owner, $folder, $adminfiles=false) {
         $prefix = get_config('dbprefix');
-        $parentsql = empty($folder) ? 'parent IS NULL' : 'parent = ' . $folder;
         $filetypesql = "('" . join("','", PluginArtefactFile::get_artefact_types()) . "')";
-        return get_field_sql('SELECT id FROM ' . $prefix . 'artefact
-            WHERE owner = ' . $owner . '
-            AND title = ?
-            AND ' . $parentsql . '
-            AND artefacttype IN ' . $filetypesql, array($title));
+        return get_field_sql('SELECT a.id FROM ' . $prefix . 'artefact a
+            LEFT OUTER JOIN ' . $prefix . 'artefact_file_files f ON f.artefact = a.id
+            WHERE ' . ($adminfiles ? 'f.adminfiles = 1' : 'f.adminfiles <> 1 AND a.owner = ' . $owner) . '
+            AND a.title = ?
+            AND a.parent ' . (empty($folder) ? ' IS NULL' : ' = ' . $folder) . '
+            AND a.artefacttype IN ' . $filetypesql, array($title));
     }
 
-    public static function get_my_files_data($parentfolderid, $userid, $adminfiles=null) {
+    public static function get_my_files_data($parentfolderid, $userid, $adminfiles=false) {
 
         $prefix = get_config('dbprefix');
 
@@ -160,7 +219,8 @@ class ArtefactTypeFileBase extends ArtefactType {
         $bloginstalled = !$adminfiles && get_field('artefact_installed', 'active', 'name', 'blog');
 
         $filetypesql = "('" . join("','", PluginArtefactFile::get_artefact_types()) . "')";
-        $filedata = get_records_sql_array('SELECT
+        $filedata = get_records_sql_array('
+            SELECT
                 a.id, a.artefacttype, a.mtime, f.size, a.title, a.description,
                 COUNT(c.*) AS childcount ' 
                 . ($bloginstalled ? ', COUNT (b.*) AS attachcount' : '') . '
@@ -170,7 +230,7 @@ class ArtefactTypeFileBase extends ArtefactType {
                 . ($bloginstalled ? ('LEFT OUTER JOIN ' . $prefix .
                                      'artefact_blog_blogpost_file b ON b.file = a.id') : '') . '
             WHERE a.parent' . $foldersql . '
-                AND ' . ($adminfiles ? 'f.adminfiles = 1' : ('a.owner = ' . $userid)) . '
+                AND ' . ($adminfiles ? 'f.adminfiles = 1' : ('f.adminfiles = 0 AND a.owner = ' . $userid)) . '
                 AND a.artefacttype IN ' . $filetypesql . '
             GROUP BY
                 1, 2, 3, 4, 5, 6;', '');
@@ -183,7 +243,6 @@ class ArtefactTypeFileBase extends ArtefactType {
                 $item->mtime = strftime(get_string('strfdaymonthyearshort'),strtotime($item->mtime));
             }
         }
-
 
         // Sort folders before files; then use nat sort order on title.
         function fileobjcmp ($a, $b) {
@@ -198,65 +257,20 @@ class ArtefactTypeFileBase extends ArtefactType {
 
 class ArtefactTypeFile extends ArtefactTypeFileBase {
 
-    protected $size;
-
     public function __construct($id = 0, $data = null) {
         parent::__construct($id, $data);
         
-        // So far the only thing in the artefact_file_files table is the file size
-        if ($this->id && ($filedata = get_record('artefact_file_files', 'artefact', $this->id))) {
-            foreach($filedata as $name => $value) {
-                if (property_exists($this, $name)) {
-                    $this->set($name, $value);
-                }
-            }
+        if (empty($this->id)) {
+            $this->container = 0;
         }
-        $this->container = 0;
-        $this->locked = 0;
 
     }
 
-    /**
-     * This function updates or inserts the artefact.  This involves putting
-     * some data in the artefact table (handled by parent::commit()), and then
-     * some data in the artefact_file_files table.
-     */
-    public function commit() {
-        // Just forget the whole thing when we're clean.
-        if (empty($this->dirty)) {
-            return;
-        }
-      
-        // We need to keep track of newness before and after.
-        $new = empty($this->id);
-
-        $this->mtime = time();
-
-        // Commit to the artefact table.
-        parent::commit();
-
-        // Reset dirtyness for the time being.
-        $this->dirty = true;
-
-        $data = (object)array(
-            'artefact'      => $this->get('id'),
-            'size'          => $this->get('size')
-        );
-
-        if ($new) {
-            insert_record('artefact_file_files', $data);
-        }
-        else {
-            update_record('artefact_file_files', $data, 'artefact');
-        }
-
-        $this->dirty = false;
-    }
 
     // Where to store files under dataroot in the filesystem
     static $artefactfileroot = 'artefact/file/';
 
-    // Number of subdirectories to create under $artefactfileroot
+    // Number of subdirectories to create under $artefactfileroot (should be configurable).
     static $artefactfilesubdirs = 256;
 
     private static function get_file_directory($id) {
@@ -269,93 +283,70 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
 
 
     /**
-     * Processes a newly uploaded file, copies it to disk, and associates it with
-     * the artefact object.
-     * Takes the name of a file input.
+     * Moves a file into the myfiles area.
+     * Takes the name of a file outside the myfiles area.
      * Returns a boolean indicating success or failure.
      */
-    public function save_uploaded_file($inputname) {
+    public static function save_file($pathname, $data) {
+        $dataroot = get_config('dataroot');
+        $pathname = $dataroot . $pathname;
+        if (!$size = filesize($pathname)) {
+            return false;
+        }
+        //if (is_image($pathname)) {
+        if (false) {
+            $f = new ArtefactTypeImage(0, $data);
+        }
+        else {
+            $f = new ArtefactTypeFile(0, $data);
+        }
+        $f->set('size', $size);
+        $f->commit();
+        $id = $f->get('id');
+
+        $newdir = $dataroot . self::get_file_directory($id);
+        check_dir_exists($newdir);
+        $newname = $newdir . '/' . $id;
+        if (!rename($pathname, $newname)) {
+            $f->delete();
+            return false;
+        }
+        return $id;
+    }
+
+
+    /**
+     * Processes a newly uploaded file, copies it to disk, and creates
+     * a new artefact object.
+     * Takes the name of a file input.
+     * Returns false for no errors, or a string describing the error.
+     */
+    public static function save_uploaded_file($inputname, $data) {
         require_once('uploadmanager.php');
         $um = new upload_manager($inputname);
         if ($error = $um->preprocess_file()) {
             return $error;
         }
-        $this->size = $um->file['size'];
-        $this->dirty = true;
-        $this->commit();
+        if ($um->file_is_image()) {
+            $f = new ArtefactTypeImage(0, $data);
+        }
+        else {
+            $f = new ArtefactTypeFile(0, $data);
+        }
+        global $USER;
+        $f->set('owner', $USER->get('id'));
+        $f->set('size', $um->file['size']);
+        $f->commit();
+        $id = $f->get('id');
         // Save the file using its id as the filename, and use its id modulo
         // the number of subdirectories as the directory name.
-        if ($error = $um->save_file(self::get_file_directory($this->id) , $this->id)) {
-            $this->delete();
+        if ($error = $um->save_file(self::get_file_directory($id) , $id)) {
+            $f->delete();
         }
         return $error;
     }
 
 
-    /**
-     * Moves a file into the myfiles area.
-     * Takes the name of a file outside the myfiles area.
-     * Returns a boolean indicating success or failure.
-     */
-    public function save_file($pathname) {
-        $dataroot = get_config('dataroot');
-        $pathname = $dataroot . $pathname;
-        if (!$size = filesize($pathname)) {
-            $this->delete();
-            return false;
-        }
-        if (empty($this->id)) {
-            $this->commit();
-        }
-        $newdir = $dataroot . self::get_file_directory($this->id);
-        check_dir_exists($newdir);
-        $newname = $newdir . '/' . $this->id;
-        if (!rename($pathname, $newname)) {
-            $this->delete();
-            return false;
-        }
-        $this->set('size',$size);
-        return true;
-    }
-
-
-    // Deal with this once I know about how the mime type detection will work.
-
-//     public static function construct_from_upload($inputname, $data) {
-//         require_once('uploadmanager.php');
-//         $um = new upload_manager($inputname);
-//         if (!$um->preprocess_file()) {
-//             return false;
-//         }
-//     }
-
-//     /**
-//      * Processes a newly uploaded file, copies it to disk, creates a new artefact object and
-//      * associates the newly uploaded file with it.
-//      * Takes the name of a file input.
-//      * Returns a boolean indicating success or failure.
-//      */
-//     public static function uploaded_file_to_artefact_file($inputname, $data) {
-//         // Get the new file object first, because its id is used to
-//         // determine where the file goes on the filesystem
-//         $f = new ArtefactTypeFile(0, $data);
-//         require_once('uploadmanager.php');
-//         $um = new upload_manager($inputname);
-//         if (!$um->preprocess_file()) {
-//             return false;
-//         }
-//         $this->size = $um->file['size'];
-//         $this->dirty = true;
-//         $this->commit();
-//         // Save the file using its id as the filename, and use its id modulo
-//         // the number of subdirectories as the directory name.
-//         if (!$um->save_file(self::get_file_directory($this->id) , $this->id)) {
-//             $this->delete();
-//             return false;
-//         }
-//         return true;
-//     }
-    
     public function delete() {
         if (empty($this->id)) {
             return; 
@@ -383,7 +374,10 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
 
         parent::__construct($id, $data);
 
-        $this->container = 1;
+        if (empty($this->id)) {
+            $this->container = 1;
+            $this->size = null;
+        }
 
     }
 

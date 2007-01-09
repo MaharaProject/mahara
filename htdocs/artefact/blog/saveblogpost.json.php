@@ -41,15 +41,6 @@ $uploads    = json_decode(param_variable('uploads'));
 $artefacts  = json_decode(param_variable('artefacts'));
 $body       = param_variable('body');
 
-log_debug($title    );
-log_debug($draft    );
-log_debug($createid );
-log_debug($blog     );
-log_debug($blogpost );
-log_debug($uploads  );
-log_debug($artefacts);
-log_debug($body     );
-
 $userid = $USER->get('id');
 
 safe_require('artefact', 'blog');
@@ -63,7 +54,7 @@ if (!$blogpost) {
     $postobj->set('owner', $userid);
 }
 else if ($postobj->get('owner') != $userid) {
-    json_reply('local', get_string('notowner'));
+    json_reply('local', get_string('youarenottheownerofthisblogpost', 'artefact.blog'));
 }
 $postobj->commit();
 $blogpost = $postobj->get('id');
@@ -79,7 +70,6 @@ if (!$old = get_column('artefact_blog_blogpost_file', 'file', 'blogpost', $blogp
 
 foreach ($old as $o) {
     if (!in_array($o, $artefacts)) {
-        log_debug('old not in new ' . $o);
         delete_records('artefact_blog_blogpost_file', 'blogpost', $blogpost, 'file', $o);
     }
 }
@@ -102,14 +92,6 @@ foreach ($artefacts as $a) {
 // Add the newly uploaded files to myfiles and then to the blog post.
 
 if (!empty($uploads)) {
-
-    // Create the blogfiles folder if it doesn't exist yet.
-    $blogfilesid = ArtefactTypeBlogPost::blogfiles_folder_id();
-    if (!$blogfilesid) {
-        json_reply('local', get_string('erroraccessingblogfilesfolder', 'artefact.blog'));
-    }
-
-    // Turn all the uploaded files into artefacts.
     foreach ($uploads as $upload) {
         if (!$postobj->save_attachment(session_id() . $createid, $upload->id,
                                        $upload->title, $upload->description)) {
@@ -118,8 +100,6 @@ if (!empty($uploads)) {
     }
 }
 
-
-
-json_reply(false, 'foo');
+json_reply(false, get_string('blogpostsaved', 'artefact.blog'));
 
 ?>
