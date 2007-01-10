@@ -72,6 +72,8 @@ if ($viewdata) {
         $data[$i]['title'] = $viewdata[$i]->title;
         $data[$i]['startdate'] = strftime(get_string('strftimedate'),strtotime($viewdata[$i]->startdate));
         $data[$i]['stopdate'] = strftime(get_string('strftimedate'),strtotime($viewdata[$i]->stopdate));
+        //$data[$i]['startdate'] = format_date(strtotime($viewdata[$i]->startdate), 'strftimedate');
+        //$data[$i]['stopdate'] = format_date(strtotime($viewdata[$i]->stopdate), 'strftimedate');
         $data[$i]['description'] = $viewdata[$i]->description;
         $data[$i]['submittedto'] = $viewdata[$i]->name;
         $data[$i]['artefacts'] = array();
@@ -81,9 +83,11 @@ if ($viewdata) {
     if ($artefacts) {
         foreach ($artefacts as $artefactrec) {
             safe_require('artefact', $artefactrec->plugin);
-            // We have to construct the entire artefact object to render the name properly.
+            // Perhaps I shouldn't have to construct the entire
+            // artefact object to render the name properly.
             $classname = generate_artefact_class_name($artefactrec->artefacttype);
             $artefactobj = new $classname(0, array('title' => $artefactrec->title));
+            $artefactobj->set('dirty', false);
             $artname = $artefactobj->render(FORMAT_ARTEFACT_LISTSELF, array('link' => false));
             $data[$index[$artefactrec->view]]['artefacts'][] = array('id'    => $artefactrec->artefact,
                                                                      'title' => $artname);
