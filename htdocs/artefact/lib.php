@@ -114,7 +114,9 @@ abstract class ArtefactType {
             $this->id = $id;
         }
         else {
-            $this->ctime = time();
+            $this->ctime = $this->mtime = time();
+            $this->dirty = true;
+            exit;
         }
         if (empty($data)) {
             $data = array();
@@ -502,6 +504,13 @@ abstract class ArtefactType {
      * @abstract
      */
     public static abstract function is_singular();
+
+    /**
+     * Whether the 'note' field is for the artefact's private use
+     */
+    public static function is_note_private() {
+        return false;
+    }
 
     // ******************** HELPER FUNCTIONS ******************** //
 

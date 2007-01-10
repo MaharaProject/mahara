@@ -615,6 +615,9 @@ table#installer {
 #msgscol {
     width: 50%;
 }
+.msgscol pre {
+    overflow: auto;
+}
 
 
 /* LISTS AND TABLE STYLES BEGINS */

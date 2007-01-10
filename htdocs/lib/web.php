@@ -79,11 +79,12 @@ tinyMCE.init({
     button_tile_map: true,
     theme: "advanced",
     plugins: "table,emotions,iespell,inlinepopups",
-    theme_advanced_buttons1 : "bold,italic,underline,strikethrough,separator,forecolor,backcolor,separator,fontselect,fontsizeselect,separator,justifyleft,justifycenter,justifyright,justifyfull",
-    theme_advanced_buttons2 : "link,unlink,separator,tablecontrols,separator,hr,emotions,iespell,cleanup,separator,cut,copy,paste",
-    theme_advanced_buttons3 : "",
+    theme_advanced_buttons1 : "bold,italic,underline,strikethrough,separator,forecolor,backcolor,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,hr,emotions,iespell,cleanup,separator,link,unlink",
+    theme_advanced_buttons2 : "tablecontrols,separator,cut,copy,paste",
+    theme_advanced_buttons3 : "fontselect,separator,fontsizeselect,separator,formatselect",
     theme_advanced_toolbar_location : "top",
-    theme_advanced_toolbar_align : "center"
+    theme_advanced_toolbar_align : "center",
+    content_css : config.themeurl + 'style/tinymce.css'
 });
 </script>
 

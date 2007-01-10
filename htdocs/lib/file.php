@@ -487,5 +487,93 @@ function byteserving_send_file($filename, $mimetype, $ranges) {
     }
 }
 
+/**
+ * Given a path under dataroot, an ID and a size, return the path to a file
+ * matching all criteria.
+ *
+ * If the file with the ID exists but not of the correct size, this function
+ * will make a copy that is resized to the correct size.
+ */
+function get_dataroot_image_path($path, $id, $size) {
+    $dataroot = get_config('dataroot');
+    $imagepath = $dataroot . $path;
+
+    if (!is_dir($imagepath) || !is_readable($imagepath)) {
+        log_debug('directory ' . $imagepath . ' is not a directory or is not readable');
+        return false;
+    }
+    $imagepath .= "/$id";
+    log_debug('directory is ' . $imagepath);
+
+    if ($size && !preg_match('/\d+x\d+/', $size)) {
+        log_debug('whoopsie with the size ' . $size);
+        throw new UserException('Invalid size for image specified');
+    }
+
+    // If the image is already available, return the path to it
+    $path = $imagepath . '/' . ($size ? "$size/" : '') . $id;
+    if (is_readable($path)) {
+        log_debug('the image is available at ' . $path);
+        return $path;
+    }
+
+    if ($size) {
+        // Image is not available in this size. If there is a base image for
+        // it, we can make one however.
+        $originalimage = $imagepath . "/$id";
+        if (is_readable($imagepath . "/$id")) {
+            log_debug('creating correct sized image');
+
+            list($width, $height) = explode('x', $size);
+
+            switch (get_mime_type($originalimage)) {
+                case 'jpg':
+                    $ih = imagecreatefromjpeg($
+    $extn = strtolower(substr($filename, -3));
+    switch($extn) {
+    case 'jpg':
+        $old = @ImageCreateFromJPEG($view);
+        break;
+
+    case 'png':
+        $old = @ImageCreateFromPNG($view);
+        break;
+    }
+
+
+    if (empty($old)) {
+    return false;
+    } else {
+        $old_x = ImageSX($old);
+        $old_y = ImageSY($old);
+
+        // make new thumbnail
+        if ($old_y > $old_x) {
+            $new_y = $height;                           // max height of
+thumb
+            $new_x = ($old_x * $new_y)/$old_y;      // retain aspect ratio
+        }
+        else {
+            $new_x = $width;                           // max width of thumb
+            $new_y = ($old_y * $new_x)/$old_x;      // retain aspect ratio
+        }
+        //  $new = ImageCreate($new_x, $new_y);
+        $new = ImageCreateTrueColor($new_x, $new_y);
+        @ImageCopyResized($new, $old, 0, 0, 0, 0, $new_x, $new_y,
+$old_x, $old_y);
+    }
+
+    imageInterlace($new);
+    touch(SGN_DIR_ROOT.$thumbname);
+    $result = ImagePNG($new,SGN_DIR_ROOT.$thumbname);
+    return $thumbname;
+            return '';
+        }
+    }
+
+    // Image not available in any size
+    log_debug('image is not available in any size');
+    return false;
+}
 
 ?>

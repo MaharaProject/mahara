@@ -1,8 +1,8 @@
 /**
- * $Id: editor_plugin_src.js 129 2006-10-23 09:45:17Z spocke $
+ * $Id: editor_plugin_src.js 162 2007-01-03 16:16:52Z spocke $
  *
  * @author Moxiecode
- * @copyright Copyright © 2004-2006, Moxiecode Systems AB, All rights reserved.
+ * @copyright Copyright © 2004-2007, Moxiecode Systems AB, All rights reserved.
  */
 
 /* Import plugin specific language pack */
@@ -99,7 +99,7 @@ var TinyMCE_ContextMenuPlugin = {
 			contextMenu.addItem(tinyMCE.baseURL + "/themes/" + theme + "/images/copy.gif", "$lang_copy_desc", "Copy", "", !sel);
 			contextMenu.addItem(tinyMCE.baseURL + "/themes/" + theme + "/images/paste.gif", "$lang_paste_desc", "Paste", "", false);
 
-			if (sel || (elm ? (elm.nodeName == 'A') || (elm.nodeName == 'IMG') : false)) {
+			if (sel || (elm ? (elm.nodeName == 'A' && tinyMCE.getAttrib(elm, 'name') == '') || (elm.nodeName == 'IMG') : false)) {
 				contextMenu.addSeparator();
 				contextMenu.addItem(tinyMCE.baseURL + "/themes/advanced/images/link.gif", "$lang_link_desc", inst.hasPlugin("advlink") ? "mceAdvLink" : "mceLink");
 				contextMenu.addItem(tinyMCE.baseURL + "/themes/advanced/images/unlink.gif", "$lang_unlink_desc", "unlink", "", (elm ? (elm.nodeName != 'A') && (elm.nodeName != 'IMG') : true));
