@@ -1,9 +1,6 @@
 {include file="header.tpl"}
 
-<div id="column-full">
-	<div class="content">
-		<div class="box-cnrs"><span class="cnr-tl"><span class="cnr-tr"><span class="cnr-bl"><span class="cnr-br">
-			<div class="maincontent">
+{include file="columnfullstart.tpl"}
 	
 {if $EDITMODE}
             <h2>{str tag=editview section=view}</h2>
@@ -20,14 +17,14 @@
     <form action="" method="post">
     {$template}
 {if $EDITMODE}
-        <input type="hidden" name="viewid" value="{$viewid}">
+        <input type="hidden" name="viewid" value="{$viewid}" id="template_viewid">
 {/if}
-        <input type="submit" name="cancel" value="{str tag=cancel}">
+        <input type="submit" name="cancel" value="{str tag=cancel}" id="template_cancel">
 {if $EDITMODE}
-        <input type="submit" name="submit" value="{str tag=save}">
+        <input type="submit" name="submit" value="{str tag=save}" id="template_submit">
 {else}
-        <input type="submit" name="back" value="{str tag=back section=view}">
-        <input type="submit" name="submit" value="{str tag=next section=view}">
+        <input type="submit" name="back" value="{str tag=back section=view}" id="template_back">
+        <input type="submit" name="submit" value="{str tag=next section=view}" id="template_submit">
 {/if}
     </form>
 </div>
@@ -91,8 +88,6 @@ addLoadEvent(function () {
 {/literal}
 </script>
 
-	</div>
-</span></span></span></span></div>	
-</div>
-</div>
+{include file="columnfullend.tpl"}
+
 {include file="footer.tpl"}

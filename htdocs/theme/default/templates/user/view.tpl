@@ -5,34 +5,38 @@
 </div>
 
 {include file="columnleftstart.tpl"}
+			<div id="userview">
 			<h3>{$NAME}</h3>
-			<table><tbody>
+			<table id="userview_profile"><tbody>
 		{foreach from=$USERFIELDS key=key item=item}
-			<tr><td>{str section=mahara tag=$key}</td><td>{$item}</td></tr>
+			<tr><th>{str section=mahara tag=$key}</th><td>{$item}</td></tr>
 		{/foreach}
 			</tbody></table>
 		
 		{if $PROFILE}
 			<h4>{str section=artefact.internal tag=profile}</h4>
-			<table><tbody>
+			<table id="userview_profile"><tbody>
 		{foreach from=$PROFILE key=key item=item name=profile}
-			<tr><td>{str section=artefact.internal tag=$key}</td><td>{$item}</td></tr>
+			<tr><th>{str section=artefact.internal tag=$key}</th><td>{$item}</td></tr>
 		{/foreach}
 			</tbody></table>
 		{/if}
 		
 		{if $VIEWS}
-			<h4>{str section=mahara tag=views}</h4>
-			<ul>
+			<table id="userview_views"><thead><tr><th>
+			{str section=mahara tag=views}
+			</td></tr></thead>
+			<tbody><tr><td><ul>
 		{foreach from=$VIEWS key=key item=item name=view}
 			<li><a href="{$WWWROOT}view/view.php?view={$key}">{$item}</a></li>
 		{/foreach}
-			</ul>
+			</ul></td></tr></tbody></table>
 		{/if}
                 <br>
 		{$INVITEFORM}
 		{$ADDFORM}
 		{$FRIENDFORM}
+		</div>
 {include file="columnleftend.tpl"}
 
 {include file="footer.tpl"}

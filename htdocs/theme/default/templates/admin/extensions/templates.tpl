@@ -1,8 +1,6 @@
 {include file='header.tpl'}
-<div id="column-full">
-	<div class="content">
-		<div class="box-cnrs"><span class="cnr-tl"><span class="cnr-tr"><span class="cnr-bl"><span class="cnr-br">
-			<div class="maincontent">
+{include file="columnfullstart.tpl"}
+
 <h2>{str tag='templatesadmin' section='admin'}</h2>
 <table id="admintemplates">
 <tr>
@@ -17,13 +15,13 @@
     <td>{if $template.installed}
         <img id="{$name}.status" alt="{str tag='yes'}" src="{image_path imagelocation='success.gif}" />
 	{if !$template.error}
-            <a href="" onClick="{$installlink}('{$name}'); return false;">{str tag='reinstall' section='admin'}</a> 
+            <a href="" onClick="{$installlink}('{$name}'); return false;" id="admintemplates_reinstall">{str tag='reinstall' section='admin'}</a> 
             <span id="{$name}.message"></span>
  	{/if}
         {else}
         <img id="{$name}.status" alt="{str tag='yes'}" src="{image_path imagelocation='failure.gif}" />
              {if !$template.installed && !$template.error}
-                 <a href="" onClick="{$installlink}('{$name}'); return false;">{str tag='install' section='admin'}</a> 
+                 <a href="" onClick="{$installlink}('{$name}'); return false;" id="admintemplates_install">{str tag='install' section='admin'}</a> 
                  <span id="{$name}.message"></span>
              {/if}
         {/if}
@@ -32,7 +30,8 @@
 </tr>
 {/foreach}
 </table>
- 	</div>
-</div>
+
+
+{include file="columnfullend.tpl"}
 
 {include file='footer.tpl'}

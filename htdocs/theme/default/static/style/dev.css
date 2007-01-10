@@ -23,26 +23,8 @@ div#template {
     cursor: move;
 }
 
-span.block, div.block {
-    border: 2px solid transparent;
-    background-color: #c19f88;
-}
 
-span.block_potential, div.block_potential {
-    border: 2px solid #008800;
-}
 
-span.block_targetted, div.block_targetted {
-    border: 2px solid #00ff00;
-}
-
-.moveselected {
-    border: 3px solid #c19f88;
-}
-
-.clickable {
-    cursor: pointer;
-}
 
 /*
  * END MARTYNS STYLES FOR CREATEVIEW WIZARD

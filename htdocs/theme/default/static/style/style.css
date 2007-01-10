@@ -17,7 +17,6 @@ a:visited {
 	color: #547c22;
 	text-decoration: none;
 }
-
 a:hover {
 	color: #819f18;
 	text-decoration: underline;
@@ -27,35 +26,153 @@ h1, h2 {
 	color: #547c22;
 	font-size: 20px;
 	font-weight: normal;	
-	margin: 5px 0 5px 0;
+	margin: 0 0 5px 0;
+	padding: 0;
 	text-transform: capitalize;
+	border-bottom: 1px solid #819f18;
 }
-
-h3, h4, h5, h6 {
+h3, h4 {
 	color: #819f18;
 	font-weight: bold;	
-	font-size: 14px;	
+	font-size: 15px;	
 	margin: 15px 0 0 0;
 	text-transform: capitalize;
 }
 h5, h6 {
-    font-size: 13px;
+	color: #5c8727;
+	font-weight: bold;
+	font-size: 18px;
+	margin: 0;
 }
 
 form {
    margin: 0;
 }
-input, select, textarea {
-	border: 1px solid #b0bf64;
+
+input {
+	border: 1px solid #d4d1c0;
+	padding: 1px 2px 1px 2px;
 }
-input[type="submit"], input[type="button"] {
+select {
+	border: 1px solid #d4d1c0;
+	padding: 0;
+}
+input[type="radio"] {
+	border: none;
+}
+
+/*input[type="submit"], input[type="button"] {
     border: 2px outset #ccc;
+}*/
+
+#profileform #profileform_introduction_container table,
+#editsitepage #editsitepage_pagetext_container table,
+.maincontent #editgroup #editgroup_description_container table,
+.maincontent #creategroup #creategroup_description_container table,
+.maincontent #createview1 #createview1_description_container table,
+.maincontent #newblog #newblog_description_container table,
+.maincontent #editblog #editblog_description_container table,
+.maincontent #editpost #editpost_description_container table {
+	border: 1px solid #d4d1c0;
+	margin: 0px;
+}
+
+/* short submit buttons max width 50px */
+#column-right #login_submit,
+.maincontent #login_submit,
+#search #search_submit,
+#createview1_submit,
+#cancel_createview1_submit,
+#createview2_back,
+#createview2_cancel,
+#accountprefs_submit,
+#activityprefs_submit,
+#adminnotifications_submit,
+#admininstitution_edit,
+#admininstitution_delete,
+#institution_submit,
+#cancel_institution_submit,
+#staffusers_submit,
+#adminusers_submit,
+#profileprefs_submit,
+#cancel_newblog_submit,
+#template_viewid,
+#template_cancel,
+#template_submit,
+#template_back,
+#cancel_createview4_submit,
+#createview4_back {
+	background: url(../images/btn_short_off.gif) no-repeat;
+	border: 0;
+	width: 50px;
+	height: 24px;
+	color: #FFFFFF;
+	font-size: 11px;
+	font-weight: bold;
+	margin: 5px 2px 0 0;
+	padding: 0;
+}
+
+/* medium submit buttons max width 100px */
+input[type="submit"], input[type="button"],
+#editsitepage_submit,
+#admininstitution_add,
+#newblog_submit,
+#createview4_submit,
+#invite_submit,
+#friend_submit,
+#watchlist input,
+#activitylist input {
+	background: url(../images/btn_medium_off.gif) no-repeat;
+	border: 0;
+	width: 100px;
+	height: 24px;
+	color: #FFFFFF;
+	font-size: 11px;
+	font-weight: bold;
+	margin: 5px 2px 0 0;
+	padding: 0;
+}
+
+/* long submit buttons max width 200px */
+#profileform_submit,
+#buttons #buttons_unsuspend,
+#buttons #buttons_export,
+#buttons #buttons_delete,
+#uploadcsv_submit,
+#siteoptions_submit,
+#createnew,
+#communitymembers_update,
+#contactus_submit {
+	background: url(../images/btn_long_off.gif) no-repeat;
+	border: 0;
+	width: 200px;
+	height: 24px;
+	color: #FFFFFF;
+	font-size: 11px;
+	font-weight: bold;
+	margin: 5px 2px 0 0;
+	padding: 0;
+}
+
+label {
+	color: #547c22;
+	font-weight: bold;
+	padding: 0;
+	margin: 0;
+}
+.required label, 
+.required th { 
+	color: #819f18; 
+}
+.required td label, 
+.required td { 
+	color: #000000; 
 }
 
 .center {
     text-align: center;
 }
-
 .fl {
     float: left;
 }
@@ -74,11 +191,9 @@ input[type="submit"], input[type="button"] {
 #topwrapper {
 	margin-top: 15px;
 }
-
 #header {
 	background: #FFFFFF url(../images/header_corner_topleft.gif) no-repeat top left;
 }
-
 #topwrapper ul,
 #topwrapper li {
   	padding: 0;
@@ -92,37 +207,43 @@ input[type="submit"], input[type="button"] {
 	text-align: right;
     margin: 0 10px 5px 0;
 }
-#globalTabs a {
+#globalTabs a,
+#globalTabs a:link,
+#globalTabs a:active,
+#globalTabs a:visited {
     font-weight: bold;
     color: #FFF;
 }
 #globalTabs a:hover {
     text-decoration: none;
 }
-
-#globalnav-logout a {
+#globalnav-logout a,
+#globalnav-logout a:link,
+#globalnav-logout a:active,
+#globalnav-logout a:visited {
   	padding: 5px 25px 6px 25px;
   	background: url(../images/globalnav_logout_off.gif) no-repeat center;
 }
-
 #globalnav-logout a:hover {
   	background: url(../images/globalnav_logout_on.gif) no-repeat center;
 }
-
-#globalnav-returntosite a {
+#globalnav-returntosite a,
+#globalnav-returntosite a:link,
+#globalnav-returntosite a:active,
+#globalnav-returntosite a:visited {
   	padding: 5px 36px 6px 37px;
   	background: url(../images/globalnav_siteadmin_off.gif) no-repeat center;
 }
-
 #globalnav-returntosite a:hover {
   	background: url(../images/globalnav_siteadmin_on.gif) no-repeat center;
 }
-
-#globalnav-siteadmin a {
+#globalnav-siteadmin a,
+#globalnav-siteadmin a:link,
+#globalnav-siteadmin a:active,
+#globalnav-siteadmin a:visited {
   	padding: 5px 21px 6px 21px;
   	background: url(../images/globalnav_siteadmin_off.gif) no-repeat center;
 }
-
 #globalnav-siteadmin a:hover {
   	background: url(../images/globalnav_siteadmin_on.gif) no-repeat center;
 }
@@ -132,36 +253,51 @@ input[type="submit"], input[type="button"] {
     padding: 10px;
 }
 
+/* search box in header */
 .searchbox {
 	font-size: 11px;
 	font-weight: bold;
 	color: #497424;
-	margin: 40px 0 0 0;
+	margin: 18px 5px 0 0;
+	text-align: right;
+	padding: 0;
 }
-
 #searchform_submit {
 	border: none;
 	margin-left: 5px; 
-	padding-bottom: 2px;
+	padding-bottom: 5px;
 	text-align: right;
 	vertical-align: middle;
 }
-
 #searchform_query_container, #searchform_submit_container {
 	vertical-align: middle;
 }
-
 #searchform_query_container input {
 	border: 1px solid #b0bf64;
 	padding: 4px;
 	color: #777777;
 	width: 183px;
 }
-
 .searchbox .advancedsearch {
 	font-size: 9px;
-	padding-left: 5px;
+	padding: 0 148px 0 0;
 }
+
+
+/* logged in message in header */
+#loggedinstring {
+	text-align: right;
+	font-size: 9px;
+	padding: 15px 0 0 0px;
+	color: #474220;
+}
+#headerunreadmessagecount {
+	background: url(../images/email-green.gif) no-repeat;
+	padding: 3px 0 5px 18px;
+	margin: 0 0 3px 2px;
+	height: 14px;
+}
+
 
 /* HEADER END */
 
@@ -174,14 +310,20 @@ input[type="submit"], input[type="button"] {
 
 /* MAIN NAVIGATION BEGIN */
 #mainnav {
-	padding-top: 8px;
+	padding: 8px 0 0 5px;
 	margin: 0;
-	background: url(../images/navbg_spacer.gif) repeat-x;
+	background: url(../images/navbg_left.gif) repeat-x;
 	height: 32px;
 	font-weight: bold;
 	text-transform: uppercase;
 }
-
+.mainnavright {
+	float: right;
+	margin: -8px 0 0 0;
+	padding: 0;
+	width: 6px;
+	height: 32px;
+}
 #mainnav li {
     display: inline;
     padding: 0 0 0 0;
@@ -189,69 +331,69 @@ input[type="submit"], input[type="button"] {
 	margin: 0 6px 0 6px;
 	text-decoration: none;
 }
-
 #mainnav li a,
 #mainnav li a:link,
 #mainnav li a:visited,
 #mainnav li a:active {
-	color: #e6c560;
+	color: #e6c55b;
 	margin-top: 7px;
 }
-
 #mainnav li a:hover {
 	color: #FFF;
 	text-decoration: none;
 }
-
 #mainnav li.selected a {
 	color: #FFF;
 }
 /* MAIN NAVIGATION ENDS */
 
+
 /* SUB NAVIGATION BEGINS */
 #subnav {
-	padding-top: 6px;
+	padding: 6px 0 0 20px;
 	margin: 0;
 	font-size: 11px;
 	font-weight: bold;
 	text-align: left;
-	background: url(../images/subnavbg_spacer.gif) repeat-x;
+	background: url(../images/subnavbg_left_arrow.gif) repeat-x;
 	height: 25px;
 	text-transform: capitalize;
 }
-
+.subnavright {
+	float: right;
+	margin: -6px 0 0 0;
+	padding: 0;
+	width: 6px;
+	height: 32px;
+}
 #subnav li a,
 #subnav li a:link,
 #subnav li a:visited,
 #subnav li a:active {
 	color: #FFF;
 }
-
 #subnav li a:hover {
 	color: #98bf10;
 	text-decoration: none;
 }
-
 #subnav li {
     display: inline;
     padding: 0;
 	margin: 0 5px;
 }
-
 #subnav li.selected a {
 	color: #98bf10;
 }
 /* SUB NAVIGATION ENDS */
 
+
 #column-left {
     margin-right: 235px;
 	background-color: #FFF;
 }
-
 #column-full {
 	background-color: #FFF;
 }
-
 #column-right {
     width: 228px;
     float: right;
@@ -266,37 +408,11 @@ div.sidebar {
 	font-weight: bold;
 }
 
-.sidebarforgotpassword {
-	padding: 10px 5px 5px 10px;
-	background: #FFFFFF url(../images/sidebox_topwhite.gif) no-repeat top;
-}
-
-#column-right .sidebarforgotpassword-botcorners {
-    margin-bottom: 7px;
-}
-
-.sidebarforgotpassword a,
-.sidebarforgotpassword a:link,
-.sidebarforgotpassword a:active,
-.sidebarforgotpassword a:visited {
-	background: url(../images/icon_question.gif) no-repeat left;
-	padding-left: 17px;
-	color: #547c22;
-	text-decoration: none;
-	font-weight: bold;
-}
-
-.sidebarforgotpassword a:hover {
-	color: #819f18;
-	text-decoration: underline;
-}
-
 /* SITE MENU BEGINS */
 #sitemenu {
 	margin: 20px 0 0 -10px;
 	padding: 0;
 }
-
 #sitemenu li, #sitemenu li.r0 {
 	padding: 0 5px 0 25px;
 	margin: 0 0 0 0px;	 
@@ -306,11 +422,9 @@ div.sidebar {
 	list-style-type: none;
 	line-height: 20px;
 }
-
 #sitemenu li.r1 {
 	background-color: #e5e8da;
 }
-
 /* SITE MENU ENDS */
 
 
@@ -318,7 +432,6 @@ div.sidebar {
 .loginbox-botcorners {
     margin-left: -10px;
 }
-
 #column-right #loginbox {
     width: 228px;
 	background: #FFF url(../images/sidebox_top_headerbg.gif) no-repeat top;
@@ -326,40 +439,37 @@ div.sidebar {
     margin-bottom: 10px;
 	color: #000;
 }
-
 #column-right #loginbox fieldset {
 	border: none;
 	padding: 0;
 	margin: 0 0 0 10px;
 	width: 150px;
 }
-
 #column-right #login legend {
 	color: #FFF;
 	font-weight: bold;
 	margin: 0 0 0 -7px;
 	padding: 0;
 }
-
 #column-right #login_login_username_container {
 	margin-top: 25px;
 }
-
 #column-right #login_login_password_container {
 	margin: 5px 0;
 	padding: 0;
 }
-
+#column-right #login_login_institution_container {
+	margin: 5px 0 10px 0;
+	padding: 0;
+}
 #column-right #login label {
 	color: #547c22;
 	font-weight: bold;
 }
-
 #column-right #login .description {
 	font-size: 9px;
 	color: #7e7e7e; 
 }
-
 #column-right #login_submit_container {
 	font-size: 9px;
 	float: left;
@@ -367,14 +477,12 @@ div.sidebar {
 	padding: 0;
 	display: inline;
 }
-
 #column-right #login_login_username_container input,
 #column-right #login_login_password_container input {
 	border: 1px solid #5c8727;
 	padding: 2px;
 	width: 200px;
 }
-
 #column-right #login a,
 #column-right #login a:link,
 #column-right #login a:active,
@@ -384,131 +492,117 @@ div.sidebar {
 	text-decoration: none;
 	margin: 0 2px;
 }
-
 #column-right #login a:hover {
 	text-decoration: underline;
+}
+#column-right .sidebarforgotpassword-botcorners {
+    margin-bottom: 7px;
+}
+#column-right .sidebarforgotpassword {
+	padding: 10px 5px 5px 10px;
+	background: #FFFFFF url(../images/sidebox_topwhite.gif) no-repeat top;
+}
+#column-right .sidebarforgotpassword a,
+#column-right .sidebarforgotpassword a:link,
+#column-right .sidebarforgotpassword a:active,
+#column-right .sidebarforgotpassword a:visited {
+	background: url(../images/icon_question.gif) no-repeat left;
+	padding-left: 17px;
+	color: #547c22;
+	text-decoration: none;
+	font-weight: bold;
+}
+#column-right .sidebarforgotpassword a:hover {
+	color: #819f18;
+	text-decoration: underline;
+}
+#column-right #login_submit {
+	background: url(../images/btn_short_off.gif) no-repeat;
+	border: 0;
+	width: 50px;
+	height: 24px;
+	color: #FFFFFF;
+	font-size: 11px;
+	font-weight: bold;
+	margin: 0 2px 0 0;
+	padding: 0;
 }
 /* LOGIN FOR COLUMN RIGHT ONLY ENDS */
 /* RIGHT SIDE BOX ENDS */
 
 /* MAIN CONTENT BEGIN */
 .content { 
-	padding: 0;
-	margin-bottom: 10px;
+	padding: 0 0 0 0;
+	margin: 0 0 10px 0;
 	background-color: #FFF;
 }
-
 * html .content {
     margin: 0 10px 5px 0;
 	float: left;
 }
 
-/*.content textarea {
+.content textarea {
 	width: 450px;
 }
 .content textarea.wysiwyg {
-	width: 500px;
-}*/
+	width: 490px;
+}
 
+
+/* system messages between nav and main content */
 #messages {
 	margin: 0 3px 3px 3px;
 }
-
 #messages .ok {
 	color: #547c22;
 	background: #d2e29b url(../images/icon_goodtogo.gif) no-repeat left;
-	padding: 0 0 0 17px;
+	padding: 3px 3px 3px 17px;
 }
-
 #messages .error {
 	color: #dd0221;
 	background: #ffd3d9 url(../images/icon_problem.gif) no-repeat left;
-	padding: 0 0 0 17px;
+	padding: 3px 3px 3px 17px;
 }
-
 #messages .info {
 	color: #1666a9;
 	background: #b8c9cf url(../images/icon_question.gif) no-repeat left;
-	padding: 0 0 0 17px;
+	padding: 3px 3px 3px 17px;
 }
 
-/* NOTE: these next two rules should be merged */
-#addnewgroup {
-	background: url(../images/icon_add.gif) no-repeat top left;
-	padding: 0 0 0 17px;
-	border: none;
-}
 
-.newblog,
-.newpost {
-	background: url(../images/icon_add.gif) no-repeat top left;
-	padding: 0 0 0 17px;
-}
-
-.content a,
-.content a:link,
-.content a:active,
-.content a:visited {
-	color: #547c22;
-	text-decoration: none;
-	border-bottom: 1px dotted #547c22;
-}
-
-.content a:hover {
-	color: #819f18;
-	text-decoration: none;
-	border-bottom: 1px solid #819f18;
-}
-.content .mceEditor a {
-    border-bottom: none;
-}
-
+/* inner white corners around main content begin */
 .box-cnrs {
     margin: 0;
   	padding: 0;
 }
-
 * html .box-cnrs {
     height: 6px;
+	margin: 0;
+	padding: 0;
 } 
-
-/** @todo convert the elements themselves to be divs, then the display and width rules won't be needed */
 .box-cnrs .cnr-tl {
   	background: url(../images/content_corner_topleft.gif) top left no-repeat ;
-  	display: block;
-  	width: 100%;
 }
-
 .box-cnrs .cnr-tr {
   	background: url(../images/content_corner_topright.gif) top right no-repeat;
-  	display: block;
-  	width: 100%;
 }
-
 .box-cnrs .cnr-bl {
   	background: url(../images/content_corner_botleft.gif) bottom left no-repeat;
-  	display: block;
-  	width: 100%;
 }
-
 .box-cnrs .cnr-br {
-  	padding: 6px 0;
+  	padding: 6px 0 6px 0;
+	width: 100%;
+	display: block;
   	background: url(../images/content_corner_botright.gif) bottom right no-repeat;
-  	display: block;
-  	width: 100%;
 }
+/* inner white corners around main content end */
 
 .maincontent {
-  	padding: 5px 15px 10px; 
+  	padding: 5px 15px 10px 15px; 
 }
-
 .maincontent ul {
 	padding: 0;
 	margin: 0 0 0 17px;
-}
-
-.maincontent li {
-	line-height: 18px;
 }
 
 /* MAIN CONTENT END */
@@ -516,36 +610,31 @@ div.sidebar {
 
 /* LOGIN FOR COLUMN LEFT BEGINS */
 .maincontent #loginbox {
-   	margin-top: 10px;
+   	margin-top: 0px;
+	padding: 0;
 }
-
 .maincontent #loginbox fieldset {
 	border: none;
 	padding: 0;
 	margin-left: 10px;
 }
-
 .maincontent #login legend {
 	margin: 0;
 	padding: 0;
 	display: none;
 }
-
 .maincontent #login th {
 	margin: 0;
 	padding-top: 10px;
 }
-
 .maincontent #login .description {
 	font-size: 9px;
 	color: #7e7e7e; 
 }
-
 .maincontent #login_submit_container {
 	font-size: 9px;
 	display: inline;
 }
-
 .maincontent #login_submit {
 	margin: 10px 0 0 12px;
 }
@@ -557,66 +646,118 @@ p {
 	padding: 0;
 }
 
-thead th {
+.maincontent table {
+	width: 100%;
+	margin: 5px 0 5px 0;
+	border: 1px solid #e5e8da;
+	padding: 0;
+}
+/* No need table border*/
+.maincontent #profileform table,
+.maincontent #createview1 table,
+.maincontent #createview2 table,
+.maincontent #accountprefs table,
+.maincontent #activityprefs table,
+.maincontent #siteoptions table,
+.maincontent #editsitepage table,
+.maincontent #staffusers table,
+.maincontent #adminusers table,
+.maincontent #uploadcsv table,
+.maincontent #search table,
+.maincontent #contactus table,
+.maincontent #loginbox table,
+.maincontent #results table,
+.maincontent #forgotpass table,
+.maincontent #adminnotifications table,
+.maincontent #institution table,
+.maincontent #profileprefs table,
+.maincontent #newblog table,
+.maincontent #template table,
+.maincontent #createview4 table,
+.maincontent #userview table,
+.maincontent #editpost table,
+.maincontent #editblog table,
+.maincontent #editgroup table,
+.maincontent #creategroup table,
+.maincontent #editviewaccess table,
+.maincontent #register table {
+	border: 0px;
+}
+
+.maincontent th {
+	text-align: left;
+	color: #3a5813;
+	margin: 0;
+	padding: 5px 0 0 0;
+}
+.maincontent thead th {
 	color: #3a5813;
 	background: #e5e8da;
 	margin: 0;
 	padding: 2px 4px 2px 4px;
 }
-
-tbody {
-	color: #000;
-	padding: 2px 4px;
+.maincontent td {
+	padding: 3px 5px;
 	margin: 0;
 }
-
-td {
+/* No need padding td */
+.maincontent #profileform td,
+.maincontent #editpost td,
+.maincontent #editblog td,
+.maincontent #creategroup td,
+.maincontent #newblog td,
+.maincontent #editgroup td,
+.maincontent #createview1 td,
+.maincontent #accountprefs td {
 	padding: 0;
 	margin: 0;
 }
 
-th {
-	text-align: left;
-	color: #3a5813;
-	vertical-align: top;
-	margin: 0;
-	padding: 2px 4px;
-}
 
-.required label, 
-.required th { 
-	color: #5c8727; 
+/* Within table Navigation Styles Begin */
+.maincontent thead tr td,
+.maincontent tfoot tr td {
+	text-align: center;
+	background-color: #f2f5e7;
 }
-
-.required td label, 
-.required td { 
-	color: #000000; 
+.maincontent thead tr td a,
+.maincontent thead tr td a:link,
+.maincontent thead tr td a:active,
+.maincontent thead tr td a:visited,
+.maincontent tfoot tr td a,
+.maincontent tfoot tr td a:link,
+.maincontent tfoot tr td a:active,
+.maincontent tfoot tr td a:visited {
+	font-size: 11px;
+	font-weight: bold;
+	color: #819f18;
+	margin: 0 10px;
 }
+.maincontent thead tr td a:hover,
+.maincontent tfoot tr td a:hover {
+	color: #aad21f;
+}
+/* Within Table Navigation Styles End */
 
 acronym {
 	color: #474220;
 	border-bottom: 1px dotted #d4d1c0;
 	cursor: help;
 }
-
 .help { 
 	font-size: 9px; 
 	vertical-align: super; 
 	text-decoration: none;
-	border: none;
 }
-
 .description { 
 	font-size: 9px; 
 	font-style: italic; 
 	color: #7e7e7e; 
 	padding-bottom: 5px;
 }
-
 .error { 
 	color: #cf0000; 
 }
-
 .errmsg { 
 	color: #cf0000; 
 	font-size: 9px; 
@@ -637,141 +778,560 @@ table#installer {
     width: 50%;
 }
 
-
-/* LISTS AND TABLE STYLES BEGINS */
-
-td.description,
-#template_selection #templates {
+#accountprefs table #accountprefs_password2 {
+	margin: 0 0 20px 0;
+}
+#accountprefs table p {
 	margin: 0;
 	padding: 0;
 }
 
-/*
- *
- * Just about every rule below this point needs to be audited properly
- * A lot of them can be removed with generic form styling (widths, margins and padding, colours)
- *
- *
- *
- *
- *
- *
- */
-/** This needs to be done better */
-#activitylist,
-#adminstitutionslist,
-#menuitemlist table,
-#bloglist,
-#postlist,
-#filelist {
-	margin: 10px 0 0 0;
-	width: 100%;
+/* Register styles */
+#register_tandc_container label {
+	font-weight: normal;
 }
 
-#contactus {
-	margin: 5px 0 0 15px;
-	padding: 0;
-}
 
-/** Ditto here */
-#contactus th,
-#staffusers th,
-#adminusers th,
-#siteoptions th,
-#editsitepage th,
-#editgroup th {
-	padding: 10px 0 0 0;
+/* My Profile styles */
+#profileform_email_container a,
+#profileform_email_container a:link,
+#profileform_email_container a:active,
+#profileform_email_container a:visited,
+#profileform_email_container a:hover {
+	margin: 0 0 0 25px;
+	font-size: 11px;
+}
+#profileform_email_container #email_list a,
+#profileform_email_container #email_list a:link,
+#profileform_email_container #email_list a:active,
+#profileform_email_container #email_list a:visited,
+#profileform_email_container #email_list a:hover {
 	margin: 0;
+	font-size: 13px;
 }
-
-#siteoptions th {
-	margin: 10px 0 0 0;
-	padding: 12px 0 3px 0;
-}
-
-#typeheader {
-	color: #819f18;
-	font-size: 14px;
-	padding: 10px 0 0 0;
-	margin: 0;
-}
-
-#watchlist {
-	width: 100%;
-	margin: 0;
-	padding: 0;
-}
-
-#watchlist thead th {
-	background: #e5e8da;
-}
-
-#grouplist {
-	margin: 10px 0 0 0;
-	padding: 0;
-	width: 100%;
-}
-
-#activityprefs th {
-	padding: 5px 5px 5px 5px;
-}
-
-#grouplist tbody td,
-#adminstitutionslist tbody td,
-#menuitemlist tbody td,
-#bloglist tbody td{
-	padding: 0 5px 0 5px;
-}
-
-#activityprefs, 
-#institution,
-#search,
-#results #searchresults,
-#register,
-#forgotpass,
-#staffusers,
-#adminusers,
-#createview1,
-#uploadcsv,
-#newpost,
-#newblog,
-#mygroups,
-#myfiles,
-#mywatchlist,
-#recentactivity,
-#myblogs,
-#editmenus,
-#editgroup,
-#createview2 {
-	margin: 10px 0 0 15px;
-}
-
-#institution th,
-#register th {
-	padding: 10px 0 0 0;
-}
-
-#activityprefs #activityprefs_submit,
-#institution #institution_submit,
-#delete,
-#search #search_submit,
-#register #register_submit,
-#forgotpass th,
-#forgotpass #forgotpass_submit,
-#staffusers #staffusers_submit,
-#adminusers #adminusers_submit,
-#siteoptions #siteoptions_submit,
-#editsitepage #editsitepage_submit,
-#uploadcsv #uploadcsv_submit,
-#contactus #contactus_submit,
-#profileform_submit,
-#editgroup_submit {
-	margin: 10px 0 0 0;
-}
-
-#results {
+#profileform_submit {
 	margin: 15px 0 0 0;
 }
+.maincontent #profileform td {
+	padding: 0;
+	margin: 0;
+}
+.maincontent #email_list .unvalidated {
+	font-size: 9px;
+}
+
+/* My Blogs styles */
+#myblogs .newblog,
+#myblogs .newpost {
+	margin: 10px 0 10px 5px;
+	text-align: right;
+}
+#myblogs .newblog a,
+#myblogs .newblog a:link,
+#myblogs .newblog a:active,
+#myblogs .newblog a:visited,
+#myblogs .newblog a:hover {
+	background: url(../images/btn_add.gif) no-repeat;
+	width: 120px;
+	height: 24px;
+	color: #eef7d4;
+	font-weight: bold;
+	padding: 4px 23px 6px 47px;
+}
+#myblogs .newpost a,
+#myblogs .newpost a:link,
+#myblogs .newpost a:active,
+#myblogs .newpost a:visited,
+#myblogs .newpost a:hover {
+	background: url(../images/btn_add.gif) no-repeat;
+	width: 120px;
+	height: 24px;
+	color: #eef7d4;
+	font-weight: bold;
+	padding: 4px 34px 7px 36px;
+}
+.maincontent #editblog table {
+	padding: 10px 0 0 0;
+	border-top: 1px solid #d4d1c0;
+}
+.maincontent #editblog_commentsnotify_container label,
+.maincontent #editblog_commentsallowed_container label,
+.maincontent #newblog_commentsallowed_container label,
+.maincontent #newblog_commentsnotify_container label {
+	font-weight: normal;
+	color: #000000;
+}
+
+
+/* My Groups styles */
+.maincontent #mygroups #addnewgroupdiv {
+	margin: 10px 0 10px 0;
+	text-align: right;
+}
+.maincontent #mygroups #addnewgroupdiv a,
+.maincontent #mygroups #addnewgroupdiv a:link,
+.maincontent #mygroups #addnewgroupdiv a:active,
+.maincontent #mygroups #addnewgroupdiv a:visited,
+.maincontent #mygroups #addnewgroupdiv a:hover {
+	background: url(../images/btn_add_long.gif) no-repeat;
+	width: 120px;
+	height: 24px;
+	color: #eef7d4;
+	font-weight: bold;
+	padding: 4px 43px 7px 43px;
+}
+.maincontent #creategroup #creategroup_description_header th,
+.maincontent #creategroup #creategroup_members_header th {
+	padding: 15px 0 0 0;
+}
+.maincontent #creategroup table tr td table,
+.maincontent #editgroup table tr td table {
+	margin: 0;
+	padding: 0;
+	background: #e5e8da;
+}
+.maincontent #creategroup table tr td table td,
+.maincontent #editgroup table tr td table td {
+	padding: 0 5px 5px 5px;
+	text-align: center;
+}
+.maincontent #editgroup table tr td table td label {
+	margin: 0 5px 0 0;
+}
+/* My Communities and My Owned Communities styles */
+.maincontent #messagediv {
+	padding: 10px 0 10px 0;
+	color: #e3ac03;
+}
+.maincontent .addcommunitylink {
+	margin: 10px 0 10px 0;
+	text-align: right;
+}
+.maincontent .addcommunitylink a,
+.maincontent .addcommunitylink a:link,
+.maincontent .addcommunitylink a:active,
+.maincontent .addcommunitylink a:visited,
+.maincontent .addcommunitylink a:hover {
+	color: #eef7d4;
+	font-weight: bold;
+	background: url(../images/btn_add_long.gif) no-repeat;
+	width: 170px;
+	height: 24px;
+	padding: 4px 24px 7px 33px;
+}
+.maincontent #memberlist tbody td,
+.maincontent #communitylist tbody td {
+	padding: 2px 5px;
+}
+#userview #userview_profile th {
+	background-color: #e5e8da;
+	padding: 2px 5px;
+}
+#userview #userview_profile td {
+	background-color: #f5f7ee;
+	padding: 2px 5px;
+}
+#userview #userview_views td {
+	background-color: #f5f7ee;
+	padding: 2px 5px;
+}
+#userview p {
+	color: #b68900;
+}
+/* My Views styles */
+#viewlist input {
+	background: url(../images/btn_createview_medium.gif) no-repeat;
+	width: 90px;
+	height: 18px;
+	color: #568023;
+	margin: 3px 1px 3px 1px;
+	padding: 0;
+	font-weight: normal;
+}
+#viewlist tbody tr td {
+	padding: 1px 4px;
+	border: 1px solid #f2f5e7;
+}
+#viewlist tbody a,
+#viewlist tbody a:link,
+#viewlist tbody a:active,
+#viewlist tbody a:visited,
+#viewlist tbody a:hover {
+	font-weight: bold;
+	font-size: 15px;
+}
+#viewlist tbody li a,
+#viewlist tbody li a:link,
+#viewlist tbody li a:active,
+#viewlist tbody li a:visited,
+#viewlist tbody li a:hover {
+	font-weight: normal;
+	font-size: 13px;
+}
+#viewlist tbody ul {
+	padding: 0;
+	margin: 0 0 15px 15px;
+}
+.maincontent #tree {
+	color: #3a5813;
+	font-size: 15px;
+	font-weight: bold;
+}
+.maincontent #tree ul {
+	font-size: 13px;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	color: #5c8727;
+	font-weight: bold;
+}
+.maincontent #tree p {
+	font-size: 11px;
+	font-weight: normal;
+	margin: 0 0 10px 20px; 
+}
+.maincontent #tree ul ul {
+	font-size: 11px;
+	font-weight: normal;
+	margin: 0 0 10px 20px; 
+}
+.maincontent #tree ul ul ul {
+	margin: 0 0 10px 20px; 
+}
+.maincontent #tree a,
+.maincontent #tree a:link,
+.maincontent #tree a:active,
+.maincontent #tree a:visited,
+.maincontent #tree a:hover {
+	padding: 0;
+	margin: 2px 0 0 0;
+}
+.maincontent #template td {
+	vertical-align: top;
+	padding: 0;
+}
+/* spacing for the little 'x' */
+.maincontent #template #tpl_blog1 ul li a,
+.maincontent #template #tpl_blog1 ul li a:link,
+.maincontent #template #tpl_blog1 ul li a:active,
+.maincontent #template #tpl_blog1 ul li a:visited,
+.maincontent #template #tpl_blog1 ul li a:hover,
+.maincontent #template #tpl_blog2 ul li a,
+.maincontent #template #tpl_blog2 ul li a:link,
+.maincontent #template #tpl_blog2 ul li a:active,
+.maincontent #template #tpl_blog2 ul li a:visited,
+.maincontent #template #tpl_blog2 ul li a:hover,
+.maincontent #template #tpl_profile ul li a,
+.maincontent #template #tpl_profile ul li a:link,
+.maincontent #template #tpl_profile ul li a:active,
+.maincontent #template #tpl_profile ul li a:visited,
+.maincontent #template #tpl_profile ul li a:hover {
+	padding: 0 0 0 5px;
+}
+.maincontent #template #tpl_blog1 p,
+.maincontent #template #tpl_blog1 span,
+.maincontent #template #tpl_blog2 p,
+.maincontent #template #tpl_blog2 span,
+.maincontent #template #tpl_profile p,
+.maincontent #template #tpl_profile span,
+.maincontent #template #tpl_files1 p,
+.maincontent #template #tpl_files1 span ,
+.maincontent #template #tpl_files2 p,
+.maincontent #template #tpl_files2 span,
+.maincontent #template #tpl_files3 p,
+.maincontent #template #tpl_files3 span {
+	font-size: 11px;
+	font-style: italic;
+	color: #666666;
+	padding: 0;
+	margin: 0;
+}
+.maincontent #template #tpl_blog1 ul,
+.maincontent #template #tpl_blog2 ul {
+	color: #5c8727;
+}
+.maincontent #template #tpl_blogslabel em,
+.maincontent #template #tpl_profilelabel em,
+.maincontent #template #tpl_fileslabel1 em,
+.maincontent #template #tpl_fileslabel2 em,
+.maincontent #template #tpl_fileslabel3 em,
+.maincontent #template #tpl_freelabel em {
+	font-size: 11px;
+	font-style: italic;
+	color: #5c8727;
+}
+#template .block {
+	background: #eef7d4;
+	padding: 5px;
+	margin: 0;
+}
+span.block, div.block {
+    border: 2px solid transparent;
+    background-color: #a7c07c;
+}
+span.block_potential, div.block_potential {
+    border: 2px solid #e3ac03;
+}
+span.block_targetted, div.block_targetted {
+    border: 2px solid #c2e167;
+}
+.moveselected {
+	background: #eef7d4 url(../images/icon_arrow.gif) no-repeat right; 
+	padding: 0 20px 0 2px;
+}
+.clickable {
+    cursor: pointer;
+}
+
+#template_selection #templates td {
+	padding: 5px;
+	vertical-align: top;
+}
+#template_selection #templates td h3, 
+#template_selection #templates td p {
+	margin: 0;
+}
+#template_selection #templates td {
+	border-bottom: 1px solid #d4d1c0;
+}
+#template_selection #templates button {
+	background: url(../images/btn_130px_off.gif) no-repeat;
+	width: 130px;
+	height: 24px;
+	border: none;
+	font-size: 11px;
+	font-weight: bold;
+	color: #e5e8da;
+}
+
+#viewacl_lhs {
+	margin: 0 53px 0 53px;
+}
+#viewacl_lhs #potentialpresetitems {
+	color: #5c8727;
+	font-weight: bold;
+	padding: 0 0 3px 0;
+	text-align: right;
+	width: 160px;
+	margin: 0 0 0 -53px;
+}
+#editviewaccess #editviewaccess_accesslist_container,
+#createview4 #createview4_accesslist_container {
+	color: #5c8727;
+	font-weight: bold;
+}
+#dosearch {
+	background: url(../images/btn_go.gif) no-repeat;
+	width: 33px;
+	height: 18px;
+	border: none;
+	color: #FFFFFF;
+	font-size: 11px;
+	font-weight: bold;
+	margin: 0;
+	padding: 0;
+}
+#editviewaccess #results,
+#createview4 #results {
+	border: 1px solid #e5e8da;
+	margin: 3px 0 15px 0;
+	font-weight: normal;
+	color: #000000;
+}
+#results button {
+	background: url(../images/btn_short_green.gif) no-repeat;
+	border: 0;
+	width: 33px;
+	height: 18px;
+	color: #FFFFFF;
+	font-size: 9px;
+	margin: 0 0 0 5px;
+	padding: 0;
+} 
+#accesslistitems {
+	background-color: #e5e8da;
+	padding: 5px 7px;
+	color: #000000;
+	margin: 0 0 10px 0px;
+	line-height: 20px;
+	font-weight: normal;
+	font-size: 13px;
+}
+#potentialpresetitems button,
+#accesslistitems button {
+	background: url(../images/btn_createview.gif) no-repeat;
+	border: 0;
+	width: 60px;
+	height: 18px;
+	color: #FFFFFF;
+	font-size: 9px;
+	margin: 2px 2px 2px 5px;
+	padding: 0;
+} 
+#accesslistitems div {
+	margin: 0 0 5px 0;
+}
+#editviewaccess_submit_container #editviewaccess_submit {
+	background: url(../images/btn_long_off.gif) no-repeat;
+	border: 0;
+	width: 200px;
+	height: 24px;
+	color: #FFFFFF;
+	font-size: 9px;
+	margin: 0;
+	padding: 0;
+}
+
+/* My Account styles */
+.maincontent #accountprefs #accountprefs_friendscontrol_container label,
+.maincontent #accountprefs #accountprefs_wysiwyg_container label,
+.maincontent #accountprefs #accountprefs_messages_container label {
+	font-weight: normal;
+	color: #000000;
+}
+.maincontent #accountprefs #accountprefs_submit_container td {
+	padding: 10px 0 0 0;
+}
+.maincontent #activityprefs table {
+	width: 280px;
+	margin: 10px 0 0 15px;
+}
+.maincontent #activityprefs table td {
+	padding: 3px;
+}
+.maincontent #mywatchlist #typeheader {
+	color: #5c8727;
+	font-weight: bold;
+	padding: 15px 0 0 0;
+}
+
+
+/* Configure Site styles */
+.maincontent #siteoptions table td {
+	width: 200px;
+}
+.maincontent #siteoptions table th {
+	padding: 5px 0 5px 0;
+}
+.maincontent #siteoptions table {
+	width: 380px;
+	margin: 10px 0 0 15px;
+}
+.maincontent #siteoptions .description {
+	padding: 0 0 5px 0;
+}
+.maincontent #editsitepage #editsitepage_pagetext_header th {
+	padding: 15px 0 0 0;
+}
+.maincontent #editsitepage #editsitepage_submit {
+	margin: 15px 0 0 0;
+}
+.maincontent #editmenus #menuitemlist table th {
+	background-color: #e5e8da;
+	padding: 3px;
+}
+
+
+/* Manage Users styles */
+.maincontent #staffusers table,
+.maincontent #adminusers table {
+	width: 400px;
+	margin: 0 0 0 15px;
+}
+#adminnotifications .header {
+	font-weight: bold;
+	color: #3a5813;
+	background: #e5e8da;
+	margin: 0;
+	padding: 2px 4px 2px 4px;
+}
+#adminnotifications table td,
+#adminnotifications table th {
+	padding: 5px;
+}
+#admininstitution_edit,
+#admininstitution_delete {
+	background: url(../images/btn_createview.gif) no-repeat;
+	border: 0;
+	width: 60px;
+	height: 18px;
+	color: #FFFFFF;
+	font-size: 9px;
+	margin: 2px 2px 0px 5px;
+	padding: 0;
+} 
+.maincontent #institution table {
+	padding: 5px 0 0 15px;
+	width: 410px;
+}
+.maincontent #institution table td.description {
+	padding: 0 0 10px 0;
+	margin: 0;
+}
+/** need this to indent a list of tick boxes within a form */
+.maincontent #institution #institution_firstname_container th label,
+.maincontent #institution #institution_lastname_container th label,
+.maincontent #institution #institution_studentid_container th label,
+.maincontent #institution #institution_preferredname_container th label,
+.maincontent #institution #institution_introduction_container th label,
+.maincontent #institution #institution_email_container th label,
+.maincontent #institution #institution_officialwebsite_container th label,
+.maincontent #institution #institution_personalwebsite_container th label,
+.maincontent #institution #institution_blogaddress_container th label,
+.maincontent #institution #institution_address_container th label,
+.maincontent #institution #institution_town_container th label,
+.maincontent #institution #institution_city_container th label,
+.maincontent #institution #institution_country_container th label,
+.maincontent #institution #institution_homenumber_container th label,
+.maincontent #institution #institution_businessnumber_container th label,
+.maincontent #institution #institution_mobilenumber_container th label,
+.maincontent #institution #institution_faxnumber_container th label,
+.maincontent #institution #institution_icqnumber_container th label,
+.maincontent #institution #institution_msnnumber_container th label,
+.maincontent #institution #institution_aimscreenname_container th label, 
+.maincontent #institution #institution_yahoochat_container th label,
+.maincontent #institution #institution_skypeusername_container th label,
+.maincontent #institution #institution_jabberusername_container th label,
+.maincontent #institution #institution_occupation_container th label,
+.maincontent #institution #institution_industry_container th label {
+	margin: 0 0 0 15px;
+}
+
+
+
+/* Administer Extensions styles */
+.maincontent #admintemplates tr th {
+	font-weight: bold;
+	color: #3a5813;
+	background: #e5e8da;
+	margin: 0;
+	padding: 2px 4px 2px 4px;
+}
+.maincontent #admintemplates tr td {
+	padding: 3px;
+}
+.maincontent #admintemplates #admintemplates_reinstall {
+	border: 0;
+	color: #e5e8da;
+	font-weight: bold;
+	font-size: 11px;
+	background: url(../images/btn_reinstall.gif) no-repeat;
+	width: 60px;
+	height: 18px;
+	padding: 2px 7px 2px 7px;
+	
+}
+.maincontent #admintemplates #admintemplates_install {
+	border: 0;
+	color: #ffffff;
+	font-weight: bold;
+	font-size: 11px;
+	background: url(../images/btn_install.gif) no-repeat;
+	width: 60px;
+	height: 18px;
+	padding: 2px 14px 2px 14px;
+}
+
 
 #loading_box {
 	display: none; 
@@ -782,126 +1342,6 @@ td.description,
     background-color: #4c7c2c;
 }
 
-#menuitemlist th {
-	background-color: #e5e8da;
-}
-
-#staffusers label,
-#adminusers label {
-	color: #3a5813;
-	font-weight: bold;
-	padding: 0 5px 0 0;
-}
-
-#viewlist {
-	width: 100%;
-	margin: 2px 0 0 0;
-	padding: 0;
-}
-
-#siteoptions td.description {
-	margin: 2px 0 0 0px;
-	padding: 0;
-}
-
-#createview1 th {
-	padding: 7px 0 0 0;
-	margin: 0;
-}
-
-#siteoptions {
-	margin: 0 0 0 15px;
-}
-
-#editsitepage {
-	margin: 5px 0 0 15px;
-}
-
-#editsitepage textarea {
-	width: 510px;
-}
-
-#uploader {
-	margin: 5px 0 5px 0;
-}
-
-#foldernav {
-	font-size: 12px;
-	margin: 10px 0 0 0;
-}
-
-#template_selection,
-#members_potential {
-	margin: 0 0 10px 0;
-	padding: 0;
-}
-
-#profileform_submit {
-	
-}
-
-/* LISTS AND TABLE STYLES ENDS */
-
-/* FORMS BEGIN */
-
-#accountprefs {
-	margin: -10px 0 0 15px;
-}
-
-#accountprefs th {
-	padding: 10px 0 0 0;
-}
-
-#accountprefs #accountprefs_submit {
-	padding: 0;
-	margin: 10px 0 0 0;
-}
-
-#profileprefs td {
-	padding: 0 10px;
-	margin: 0;
-}
-
-#profileprefs .header {
-	font-weight: bold;
-	color: #819f18;
-}
-
-#profileform th {
-	padding: 7px 2px 0 15px;
-	margin: 0;
-}
-
-#profileform td {
-	padding: 1px 2px 0 15px;
-	margin: 0;
-}
-
-#profileform #email_list {
-	padding: 0 0 5px 0;
-}
-
-#creategroup {
-	padding: 0 0 0 15px;
-	margin: 0;
-}
-
-#creategroup th {
-	padding: 7px 0 0 0px;
-	margin: 0;
-}
-
-#creategroup td {
-	padding: 1px;
-	margin: 0;
-}
-
-#creategroup td label {
-	font-weight: bold;
-	padding: 0 5px 0 0;
-	margin: 0;
-	color: #3a5714;
-}
 a.pieform-calendar-toggle {
     border-width: 0 !important;
 }
@@ -909,55 +1349,50 @@ a.pieform-calendar-toggle img {
     border: none;
 }
 
-/* FORMS ENDS */
 
 
 /* FOOTER BEGIN */
 #footer {
     clear: both;
 	height: 25px;
-	margin-top: 5px;
+	margin: 0;
 	padding: 7px 0 0 5px;
     font-size: 13px;
 	color: #FFFFFF;
     text-align: center;
 	background: #474220 url(../images/footer_navbg_left.gif) no-repeat left;
 }
-
 .footerright {
 	float: right;
 	margin: -7px 0 0 0;
 	padding: 0;
 	width: 6px;
-	height: 32px;
 }
-
-#footer a {
-	color: #FFF;
-	text-decoration: underline;
+#footer a,
+#footer a:link,
+#footer a:active,
+#footer a:visited {
+	color: #FFFFFF;
+	text-decoration: none;
 }
-
 #footer a:hover {
 	color: #e6c560;
+	text-decoration: underline;
 }
-
 #bottom-corners {
 	padding: 0;
 	margin: 0 0 0 0;
 }
-
 #bottom-corners .footer-left {
 	float: left;
 	margin: -6px 0 0 0;
 	padding: 0;
 }
-
 #bottom-corners .footer-right {
 	float: right;
 	margin: -6px 0 0 0;
 	padding: 0;
 }
-
 .cornerbotright {
 	float: right;
 }

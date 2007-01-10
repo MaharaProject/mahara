@@ -10,7 +10,7 @@
 	                        <thead>
                                     <tr>
  	                                <th>{str tag='name'}</th>
- 	                                <td></td>
+ 	                                <th>Delete</th>
                                     <tr>
                                 </thead>
                                 <tbody>

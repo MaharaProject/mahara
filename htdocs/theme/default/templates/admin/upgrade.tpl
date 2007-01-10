@@ -1,9 +1,6 @@
 {include file='header.tpl' nosearch='true'}
 
-<div id="column-full">
-	<div class="content">
-		<div class="box-cnrs"><span class="cnr-tl"><span class="cnr-tr"><span class="cnr-bl"><span class="cnr-br">
-			<div class="maincontent">
+{include file="columnfullstart.tpl"}
 	
             <h2 class="center">{str tag=performinginstallsandupgrades section=admin}</h2>
 			<table cellspacing="0" cellpadding="1" id="installer">
@@ -36,9 +33,6 @@
 			</table>
 			<div id="finished" style="visibility: hidden; margin-top: 1em; text-align: center;">{str section=admin tag=successfullyinstalled} <a href="{$WWWROOT}">{str section=admin tag=continue}</a></div>
 
-			</div>
-		</span></span></span></span></div>	
-	</div>
-</div>
+{include file="columnfullend.tpl"}
 
 {include file='admin/upgradefooter.tpl'}

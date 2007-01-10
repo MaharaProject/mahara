@@ -22,7 +22,7 @@
 			{/foreach}
 			</select>
 			</form>
-			<p><b><div id="typeheader">{str section='activity' tag='monitored'} {$typestr}</div></b></p>
+			<div id="typeheader">{str section='activity' tag='monitored'} {$typestr}</div>
 			<form method="post" onSubmit="{$stopmonitoring}">
 			<table id="watchlist">
 				<thead>
@@ -30,6 +30,7 @@
 						<th></th>
 						<th>[<a href="" onClick="{$selectall}">{str section='activity' tag='selectall'}</a>]</th>
 						<th id="recurseheader">{$recursestr}</th>
+						<th colspan="2"></th>
 					</tr>
 				</thead>
 				<tbody>
