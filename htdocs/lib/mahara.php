@@ -848,6 +848,7 @@ function pieform_configure() {
         'action'    => '',
         'autofocus' => true,
         'renderer'  => 'maharatable',
+        'elementclasses' => true,
         'jserrorcallback'       => 'formError',
         'globaljserrorcallback' => 'formGlobalError',
         'jssuccesscallback'     => 'formSuccess',
