@@ -21,6 +21,7 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
     this.deletescript = 'delete.json.php';
     this.createfolderscript = 'createfolder.json.php';
     this.updatemetadatascript = 'updatemetadata.json.php';
+    this.downloadscript = 'download.php';
 
     if (this.actionname) {
         this.lastcolumnfunc = function(r) {
@@ -221,7 +222,7 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
         if (self.actionname) {
             return TD(null, r.title);
         }
-        return TD(null, A({'href':'download.php?file=' + r.id}, r.title));
+        return TD(null, A({'href':self.downloadscript + '?file=' + r.id}, r.title));
     }
 
     this.fileexists = function (filename) { 
