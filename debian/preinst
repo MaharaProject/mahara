@@ -53,6 +53,13 @@ case "$1" in
 
             exit 1
         fi
+
+        db_get mahara/servername
+        if [ -z "$RET" ];then
+            echo "You must specify a servername"
+            db_reset mahara/servername
+            exit 1;
+        fi
     ;;
     upgrade)
     ;;

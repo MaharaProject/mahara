@@ -1,0 +1,5 @@
+/var/log/mahara-cron.log {
+     rotate 12
+     weekly
+     compress
+}
