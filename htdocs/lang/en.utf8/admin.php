@@ -109,6 +109,7 @@ $string['viruscheckingdescription'] = 'If checked, virus checking will be enable
 //$string['menueditor']    = 'Menu editor';
 $string['adminfile']           = 'Admin file';
 $string['adminpublicdirname']  = 'public';  // Name of the directory in which to store public admin files
+$string['adminpublicdirdescription'] = 'Files accessible by logged out users';
 $string['badmenuitemtype']     = 'Unknown menu item type';
 $string['externallink']        = 'External link';
 $string['type']                = 'Type';

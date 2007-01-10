@@ -428,11 +428,13 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
              AND f.adminfiles = 1
              AND a.parent IS NULL', array($name, 'folder'));
         if (!$folderid) {
+            $description = get_string('adminpublicdirdescription', 'admin');
             global $USER;
-            $data = (object) array('title' => $name);
+            $data = (object) array('title' => $name,
+                                   'description' => $description,
+                                   'owner' => $USER->get('id'),
+                                   'adminfiles' => 1);
             $f = new ArtefactTypeFolder(0, $data);
-            $f->set('owner', $USER->get('id'));
-            $f->set('adminfiles', 1);
             $f->commit();
             $folderid = $f->get('id');
         }

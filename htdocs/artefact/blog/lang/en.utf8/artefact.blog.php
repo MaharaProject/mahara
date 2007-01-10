@@ -36,6 +36,7 @@ $string['blogdescdesc'] = 'e.g., ‘Follow Jill on her exciting adventures in Ne
 $string['blogfilesdirdescription'] = 'Files uploaded as blog post attachments';
 $string['blogfilesdirname'] = 'blogfiles';
 $string['blogpost'] = 'blog post';
+$string['blogpostsaved'] = 'Blog post saved';
 $string['blogsettings'] = 'Blog Settings';
 $string['blogtitle'] = 'Title';
 $string['blogtitledesc'] = 'e.g., ‘Jill’s Travel Blog’.';
