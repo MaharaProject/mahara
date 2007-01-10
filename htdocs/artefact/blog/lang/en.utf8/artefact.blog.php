@@ -56,6 +56,7 @@ $string['createblog'] = 'Create Blog';
 $string['delete'] = 'Delete';
 $string['deleteblogpost?'] = 'Are you sure you want to delete this post?';
 $string['description'] = 'description';
+$string['draft'] = 'Draft';
 $string['edit'] = 'Edit';
 $string['editblogpost'] = 'Edit Blog Post';
 $string['erroraccessingblogfilesfolder'] = 'Error accessing blogfiles folder';

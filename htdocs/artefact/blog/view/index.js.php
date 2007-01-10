@@ -30,6 +30,7 @@ $enc_id = json_encode($id);
 
 $enc_wwwroot = json_encode(get_config('wwwroot'));
 
+$enc_draft = json_encode(get_string('draft', 'artefact.blog'));
 $enc_published = json_encode(get_string('published', 'artefact.blog'));
 $enc_publish = json_encode(get_string('publish', 'artefact.blog'));
 $enc_publish_confirm = json_encode(get_string('publishblogpost?', 'artefact.blog'));
@@ -44,17 +45,19 @@ return <<<EOJAVASCRIPT
 var postlist = new TableRenderer(
     'postlist',
     'index.json.php',
-    [undefined, undefined]
+    [undefined, undefined, undefined]
 );
 
 postlist.rowfunction = function(d, n, gd) {
     
+    var status = TD({'id':'poststatus'+d.id});
     var pub;
     if (d.published == 1) {
-      
-        pub = {$enc_published};
+        status.innerHTML = {$enc_published};
+        pub = null;
     }
     else {
+        status.innerHTML = {$enc_draft};
         pub = INPUT(
             { 'type' : 'button' , 'value' : {$enc_publish}}
         );
@@ -67,7 +70,8 @@ postlist.rowfunction = function(d, n, gd) {
             def.addCallbacks(
                 function (response) {
                     if (response.success) {
-                        swapDOM(pub, document.createTextNode({$enc_published}));
+                        $('poststatus'+d.id).innerHTML = {$enc_published};
+                        hideElement(pub);
                     }
                     else {
                         alert({$enc_nopublish});
@@ -111,6 +115,7 @@ postlist.rowfunction = function(d, n, gd) {
         TR(
             null,
             TH(null, d.title),
+            status,
             TD(null, [pub, ' ', edit, ' ', del])
         ),
         TR(null, desctd),
