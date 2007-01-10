@@ -27,7 +27,7 @@
 define('INTERNAL', 1);
 define('ADMIN', 1);
 
-define('MENUITEM', 'confixextensions');
+define('MENUITEM', 'configextensions');
 define('SUBMENUITEM', 'templateadmin');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
