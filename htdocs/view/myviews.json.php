@@ -70,10 +70,8 @@ if ($viewdata) {
         $index[$viewdata[$i]->id] = $i;
         $data[$i]['id'] = $viewdata[$i]->id;
         $data[$i]['title'] = $viewdata[$i]->title;
-        $data[$i]['startdate'] = strftime(get_string('strftimedate'),strtotime($viewdata[$i]->startdate));
-        $data[$i]['stopdate'] = strftime(get_string('strftimedate'),strtotime($viewdata[$i]->stopdate));
-        //$data[$i]['startdate'] = format_date(strtotime($viewdata[$i]->startdate), 'strftimedate');
-        //$data[$i]['stopdate'] = format_date(strtotime($viewdata[$i]->stopdate), 'strftimedate');
+        $data[$i]['startdate'] = format_date(strtotime($viewdata[$i]->startdate), 'strftimedate');
+        $data[$i]['stopdate'] = format_date(strtotime($viewdata[$i]->stopdate), 'strftimedate');
         $data[$i]['description'] = $viewdata[$i]->description;
         $data[$i]['submittedto'] = $viewdata[$i]->name;
         $data[$i]['artefacts'] = array();
