@@ -38,8 +38,6 @@ $offset = param_integer('offset', 0);
 
 list($count, $data) = ArtefactTypeBlogPost::get_posts($USER, $id, $limit, $offset);
 
-log_debug($data);
-
 echo json_encode(array(
     'count' => $count,
     'limit' => $limit,
