@@ -70,6 +70,7 @@ $string['postbodydesc'] = 'This is where your actual post goes.';
 $string['posttitle'] = 'Title';
 $string['posttitledesc'] = 'The title appears above your post.';
 $string['publish'] = 'Publish';
+$string['publishblogpost?'] = 'Are you sure you want to publish this post?';
 $string['published'] = 'Published';
 $string['remove'] = 'Remove';
 $string['save'] = 'Save';

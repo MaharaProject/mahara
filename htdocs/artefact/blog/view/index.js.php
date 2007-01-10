@@ -32,6 +32,7 @@ $enc_wwwroot = json_encode(get_config('wwwroot'));
 
 $enc_published = json_encode(get_string('published', 'artefact.blog'));
 $enc_publish = json_encode(get_string('publish', 'artefact.blog'));
+$enc_publish_confirm = json_encode(get_string('publishblogpost?', 'artefact.blog'));
 $enc_nopublish = json_encode(get_string('nopublish', 'artefact.blog'));
 $enc_error = json_encode(get_string('jsonerror', 'artefact.blog'));
 $enc_edit = json_encode(get_string('edit', 'artefact.blog'));
@@ -59,6 +60,9 @@ postlist.rowfunction = function(d, n, gd) {
         );
 
         connect(pub, 'onclick', function(e) {
+            if (!confirm({$enc_publish_confirm})) {
+                return;
+            }
             var def = loadJSONDoc('publish.json.php', { 'id': d.id });
             def.addCallbacks(
                 function (response) {
