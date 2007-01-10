@@ -27,6 +27,7 @@
         <h3>{str section=artefact.blog tag=attachedfiles}</h3>
         <table id='attachedfiles'>
           <thead><tr>
+            <th></th>
             <th>{str section=artefact.file tag=name}</th>
             <th>{str section=artefact.file tag=description}</th>
             <th></th>
