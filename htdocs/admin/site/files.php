@@ -39,10 +39,6 @@ $javascript = <<<JAVASCRIPT
 
 var copyrightnotice = '{$copyright}';
 var browser = new FileBrowser('filelist', '{$wwwroot}artefact/file/myfiles.json.php', {'adminfiles':true});
-browser.createfolderscript = '{$wwwroot}artefact/file/createfolder.json.php';
-browser.deletescript = '{$wwwroot}artefact/file/delete.json.php';
-browser.updatemetadatascript = '{$wwwroot}artefact/file/updatemetadata.json.php';
-browser.downloadscript = '{$wwwroot}artefact/file/download.php';
 var uploader = new FileUploader('uploader', '{$wwwroot}artefact/file/upload.php', {'adminfiles':true}, 
                                 null, null, browser.refresh, browser.fileexists);
 browser.changedircallback = uploader.updatedestination;

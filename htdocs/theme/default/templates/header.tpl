@@ -4,7 +4,8 @@
         <title>{$title|default:"Mahara"|escape}</title>
         <script type="text/javascript">
         var config = {literal}{{/literal}
-            'themeurl': '{$THEMEURL}'
+            'themeurl': '{$THEMEURL}',
+            'wwwroot': '{$WWWROOT}'
         {literal}}{/literal};
         </script>
 {foreach from=$JAVASCRIPT item=script}        <script type="text/javascript" src="{$script}"></script>
