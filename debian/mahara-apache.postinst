@@ -45,6 +45,7 @@ case "$1" in
         echo "changecom" > $TMP_M4_FILE
         db_get mahara/servername
         echo "define(__SERVERNAME__,${RET})dnl" >> $TMP_M4_FILE
+        echo "define(__APACHELOGDIR__,/var/log/apache)dnl" >> $TMP_M4_FILE
         m4 $TMP_M4_FILE /usr/share/mahara/apache.conf.template > /etc/apache/conf.d/100-mahara
         rm -f $TMP_M4_FILE
 
