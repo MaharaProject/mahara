@@ -183,6 +183,7 @@ var attached = new TableRenderer(
     'attachedfiles',
     'attachedfiles.json.php',
     [
+     function (r) { return TD(null, IMG({'src':config.themeurl + r.artefacttype + '.gif'})); },
      'title',
      'description',
      function (r) { 
@@ -226,7 +227,7 @@ function attachtopost(data) {
     appendChildNodes(attached.tbody,
                      TR({'id':rowid},
                         map(partial(TD,null), 
-                            [data.title, data.description,
+                            [IMG({'src':config.themeurl+'unknown.gif'}), data.title, data.description,
                              INPUT({'type':'button', 'value':{$getstring['remove']},
                                 'onclick':"removefrompost('"+rowid+"')"})])));
     checknoattachments();
@@ -270,8 +271,8 @@ function saveblogpost() {
         }
         else { // uploaded file
             var record = {'id':idparts[1],
-                          'title':scrapeText(attached.tbody.childNodes[i].childNodes[0]),
-                          'description':scrapeText(attached.tbody.childNodes[i].childNodes[1])};
+                          'title':scrapeText(attached.tbody.childNodes[i].childNodes[1]),
+                          'description':scrapeText(attached.tbody.childNodes[i].childNodes[2])};
             uploads.push(record);
         }
     }
