@@ -385,14 +385,8 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
 
     }
 
-    public function render($format, $options) {
-        if ($format == FORMAT_ARTEFACT_RENDERFULL) {
-            return $this->title;
-        }
-        if ($format == FORMAT_ARTEFACT_LISTCHILDREN) {
-            return $this->listchildren($options);
-        }
-        return parent::render($format, $options);
+    public function render_full($options) {
+        return $this->title;
     }
 
     public function get_icon() {
@@ -441,11 +435,9 @@ class ArtefactTypeImage extends ArtefactTypeFile {
         return 'file';
     }
 
-    public function render($format, $options) {
-        if ($format == FORMAT_ARTEFACT_RENDERFULL) {
-            return 'render image ' . $this->title . ' here';
-        }
-        return parent::render($format, $options);
+    public function render_full($options) {
+        // Use thumb.php?
+        return 'render image ' . $this->title . ' here';
     }
 
     public static function get_render_list() {

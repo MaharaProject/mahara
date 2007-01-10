@@ -116,7 +116,6 @@ abstract class ArtefactType {
         else {
             $this->ctime = $this->mtime = time();
             $this->dirty = true;
-            exit;
         }
         if (empty($data)) {
             $data = array();

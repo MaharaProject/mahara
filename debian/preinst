@@ -43,10 +43,14 @@ case "$1" in
             echo " failed"
             echo "You need to ensure that the database exists and is accessible"
             echo ""
-            db_reset mahara/db_host
-            db_reset mahara/db_port
-            db_reset mahara/db_user
-            db_reset mahara/db_name
+
+            for VAR in db_host db_port db_user db_name; do
+                db_get mahara/$VAR
+                TMP="$RET"
+                db_reset mahara/$VAR
+                db_set mahara/$VAR $TMP
+            done
+
             exit 1
         fi
     ;;

@@ -309,7 +309,7 @@ function change_password_validate(Pieform $form, $values) {
  *
  * @param array $values The submitted form values
  */
-function change_password_submit($values) {
+function change_password_submit(Pieform $form, $values) {
     global $USER, $SESSION;
     $authtype = auth_get_authtype_for_institution($USER->get('institution'));
     $authclass = 'Auth' . ucfirst($authtype);

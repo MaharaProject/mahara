@@ -3,8 +3,8 @@
 
         DocumentRoot /var/www/mahara
 
-        CustomLog /var/log/apache2/mahara.access.log full
-        ErrorLog  /var/log/apache2/mahara.error.log
+        CustomLog __APACHELOGDIR__/mahara.access.log full
+        ErrorLog  __APACHELOGDIR__/mahara.error.log
 
         <Directory /var/www/mahara>
             AllowOverride All
