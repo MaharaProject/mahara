@@ -60,7 +60,7 @@ function formGlobalError(form, data) {
 
 // Message related functions
 function makeMessage(message, type) {
-    var a = A({'href': ''}, IMG({'src': config.themeurl + 'icon_close.gif', 'alt': '[X]'}));
+    var a = A({'href': ''}, IMG({'src': config.themeurl + 'images/icon_close.gif', 'alt': '[X]'}));
     connect(a, 'onclick', function(e) {
         removeElement(a.parentNode.parentNode);
         e.stop();
