@@ -175,12 +175,14 @@ $string['staffusersupdated'] = 'Staff users updated';
 $string['deleteusers'] = 'Delete Users';
 $string['exportingnotsupportedyet'] = 'Exporting user profiles is not supported yet';
 $string['exportuserprofiles'] = 'Export User Profiles';
+$string['nousersselected'] = 'No users selected';
 $string['suspenduser'] = 'Suspend User';
 $string['suspendedusers'] = 'Suspended Users';
 $string['suspensionreason'] = 'Suspension reason';
 $string['errorwhilesuspending'] = 'An error occured while trying to suspend';
 $string['suspendedusersdescription'] = 'Suspend or unsuspend users from logging in to the site (note: not implemented yet)';
 $string['unsuspendusers'] = 'Unsuspend Users';
+$string['usersdeletedsuccessfully'] = 'Users deleted successfully';
 $string['usersunsuspendedsuccessfully'] = 'Users unsuspended successfully';
 
 // Institutions

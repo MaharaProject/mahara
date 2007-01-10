@@ -85,14 +85,14 @@ function buttons_submit_unsuspend(Pieform $form, $values) {
         unsuspend_user($userid);
     }
 
-    $SESSION->add_ok_msg(get_string('usersunsuspendedsuccessfully'));
+    $SESSION->add_ok_msg(get_string('usersunsuspendedsuccessfully', 'admin'));
     redirect('admin/users/suspended.php');
 }
 
 function buttons_submit_export(Pieform $form, $values) {
     global $SESSION;
     $ids = get_user_ids_from_post();
-    $SESSION->add_info_msg(get_string('exportingnotsupportedyet'));
+    $SESSION->add_info_msg(get_string('exportingnotsupportedyet', 'admin'));
     redirect('admin/users/suspended.php');
 }
 
@@ -104,7 +104,7 @@ function buttons_submit_delete(Pieform $form, $values) {
         delete_user($userid);
     }
 
-    $SESSION->add_ok_msg(get_string('usersdeletedsuccessfully'));
+    $SESSION->add_ok_msg(get_string('usersdeletedsuccessfully', 'admin'));
     redirect('admin/users/suspended.php');
 }
 
@@ -118,7 +118,7 @@ function get_user_ids_from_post() {
 
     if (!$ids) {
         global $SESSION;
-        $SESSION->add_info_msg(get_string('nousersselected'));
+        $SESSION->add_info_msg(get_string('nousersselected', 'admin'));
         redirect('admin/users/suspended.php');
     }
 

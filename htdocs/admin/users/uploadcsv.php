@@ -70,7 +70,7 @@ $form = array(
         ),
         'submit' => array(
             'type' => 'submit',
-            'value' => get_string('uploadcsvfile', 'admin')
+            'value' => get_string('uploadcsv', 'admin')
         )
     )
 );
