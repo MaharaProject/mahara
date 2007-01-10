@@ -285,7 +285,10 @@ class Pieform {
             'rulei18n'   => array(),
 
             // The tabindex for the form (managed automatically by Pieforms)
-            'tabindex'   => false
+            'tabindex'   => false,
+
+            // Whether to add a class of the type of the element to each element
+            'elementclasses' => false
         );
         $data = array_merge($formdefaults, $formconfig, $data);
         $this->data = $data;
@@ -1049,7 +1052,7 @@ EOF;
      * @param array $element The element to make an ID for
      * @return string        The ID for the element
      */
-    public static function make_id($element) {
+    public function make_id($element) {
         if (isset($element['id'])) {
             return self::hsc($element['id']);
         }
@@ -1071,7 +1074,7 @@ EOF;
      * @param array $element The element to make a class for
      * @return string        The class for an element
      */
-    public static function make_class($element) {
+    public function make_class($element) {
         $classes = array();
         if (isset($element['class'])) {
             $classes[] = $element['class'];
@@ -1081,6 +1084,9 @@ EOF;
         }
         if (!empty($element['error'])) {
             $classes[] = 'error';
+        }
+        if ($this->data['elementclasses']) {
+            $classes[] = $element['type'];
         }
         // Please make sure that 'autofocus' is the last class added in this
         // method. Otherwise, improve the logic for removing 'autofocus' from
@@ -1336,8 +1342,8 @@ function pieform_render_element(Pieform $form, $element) {
         throw new PieformException('No such form renderer function: "' . $rendererfunction . '"');
     }
 
-    $element['id']    = Pieform::make_id($element);
-    $element['class'] = Pieform::make_class($element);
+    $element['id']    = $form->make_id($element);
+    $element['class'] = $form->make_class($element);
     $builtelement = $function($form, $element);
 
     // Remove the 'autofocus' class, because we only want it on the form input
