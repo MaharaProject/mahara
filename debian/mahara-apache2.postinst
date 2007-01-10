@@ -1,0 +1,69 @@
+#!/bin/sh
+# postinst script for mahara-apache2
+#
+# see: dh_installdeb(1)
+
+set -e
+
+# summary of how this script can be called:
+#        * <postinst> `configure' <most-recently-configured-version>
+#        * <old-postinst> `abort-upgrade' <new version>
+#        * <conflictor's-postinst> `abort-remove' `in-favour' <package>
+#          <new-version>
+#        * <postinst> `abort-remove'
+#        * <deconfigured's-postinst> `abort-deconfigure' `in-favour'
+#          <failed-install-package> <version> `removing'
+#          <conflicting-package> <version>
+# for details, see http://www.debian.org/doc/debian-policy/ or
+# the debian-policy package
+
+#DEBHELPER#
+
+. /usr/share/debconf/confmodule
+
+TMP_M4_FILE=/tmp/mahara.postinst.m4.tmp
+
+case "$1" in
+    configure)
+        cp /var/www/mahara/config-dist.php /var/www/mahara/config.php
+
+        # Configure Mahara
+        db_get mahara/db_host
+        set_config dbhost "${RET}"
+        db_get mahara/db_port
+        set_config dbport "${RET}"
+        db_get mahara/db_name
+        set_config dbname "${RET}"
+        db_get mahara/db_user
+        set_config dbuser "${RET}"
+
+        # Set Dataroot
+        chown -R www-data:www-data /var/lib/mahara
+        set_config dataroot /var/lib/mahara
+
+        # Configure apache2
+        echo "changecom" > $TMP_M4_FILE
+        db_get mahara/servername
+        echo "define(__SERVERNAME__,${RET})dnl" >> $TMP_M4_FILE
+        m4 $TMP_M4_FILE /usr/share/mahara/apache.conf.template > /etc/apache2/sites-available/mahara
+        ln -f -s /etc/apache2/sites-available/mahara /etc/apache2/sites-enabled/100-mahara
+        rm -f $TMP_M4_FILE
+
+        restart_apache2;
+        db_get mahara/servername
+        echo ""
+        echo "You can now visit http://${RET} to complete the installation of Mahara"
+        echo ""
+    ;;
+
+    abort-upgrade|abort-remove|abort-deconfigure)
+    ;;
+
+    *)
+        echo "postinst called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+
+db_stop
+exit 0

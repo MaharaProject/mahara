@@ -1,0 +1,18 @@
+#!/bin/sh -e
+
+# Source debconf library.
+. /usr/share/debconf/confmodule
+
+# Decide how important it is for the user to see this message
+PRIORITY=high
+
+db_input $PRIORITY mahara/db_host || true
+db_go
+db_input $PRIORITY mahara/db_port || true
+db_go
+db_input $PRIORITY mahara/db_name || true
+db_go
+db_input $PRIORITY mahara/db_user || true
+db_go
+db_input $PRIORITY mahara/servername || true
+db_go

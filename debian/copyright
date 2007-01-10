@@ -1,0 +1,23 @@
+This package was debianized by Martyn Smith <martyn@catalyst.net.nz> on
+Tue,  9 Jan 2007 10:47:50 +1300.
+
+It was downloaded from http://mahara.eduforge.org
+
+Upstream Authors:
+    Martyn Smith <martyn@catalyst.net.nz>
+    Penny Leach <penny@catalyst.net.nz>
+    Nigel McNie <nigel@catalyst.net.nz>
+    Richard Mansfield <richard.mansfield@catalyst.net.nz>
+    Alastair Pharo <alastair@catalyst.net.nz>
+
+
+Copyright: (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
+
+License:
+
+Mahara is (C) 2006,2007, Catalyst IT Ltd and is licensed under the GPL, see
+`/usr/share/common-licenses/GPL'.
+
+The Debian packaging is (C) 2007, Martyn Smith <martyn@catalyst.net.nz> and
+is licensed under the GPL, see `/usr/share/common-licenses/GPL'.
+

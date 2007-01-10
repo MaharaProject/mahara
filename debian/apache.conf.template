@@ -1,0 +1,17 @@
+<VirtualHost *>
+        ServerName __SERVERNAME__
+
+        DocumentRoot /var/www/mahara
+
+        CustomLog /var/log/apache2/mahara.access.log full
+        ErrorLog  /var/log/apache2/mahara.error.log
+
+        <Directory /var/www/mahara>
+            AllowOverride All
+        </Directory>
+
+        <Location /lib>
+            Deny from all
+        </Location>
+</VirtualHost>
+
