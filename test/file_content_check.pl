@@ -105,21 +105,25 @@ sub process {
         }
     }
     else {
-        print $directory, $filename, " missing \@author\n";
+        print $directory, $filename, " missing \@subpackage\n";
     }
 
     # check author
+    my $author;
     if ( $file_data =~ m{ \@author (.*?) $ }xms ) {
         my $author_data = $1;
-        unless (
-            $author_data =~ m{ \s* Martyn \s Smith \s <martyn\@catalyst\.net\.nz> \s* }xms
-            or $author_data =~ m{ \s* Penny \s Leach \s <penny\@catalyst\.net\.nz> \s* }xms
-            or $author_data =~ m{ \s* Nigel \s McNie \s <nigel\@catalyst\.net\.nz> \s* }xms
-            or $author_data =~ m{ \s* Alastair \s Pharo \s <alastair\@catalyst\.net\.nz> \s* }xms
-            or $author_data =~ m{ \s* Richard \s Mansfield \s <richard\.mansfield\@catalyst\.net\.nz> \s* }xms
-        ) {
-            print $directory, $filename, " invalid \@author '$author_data'\n";
+        my $valid_authors = {
+            Martyn   => qr{ \s* Martyn \s Smith \s <martyn\@catalyst\.net\.nz> \s* }xms,
+            Penny    => qr{ \s* Penny \s Leach \s <penny\@catalyst\.net\.nz> \s* }xms,
+            Nigel    => qr{ \s* Nigel \s McNie \s <nigel\@catalyst\.net\.nz> \s* }xms,
+            Alastair => qr{ \s* Alastair \s Pharo \s <alastair\@catalyst\.net\.nz> \s* }xms,
+            Richard  => qr{ \s* Richard \s Mansfield \s <richard\.mansfield\@catalyst\.net\.nz> \s* }xms,
+        };
+
+        while ( my ($name, $regexp) = each %{$valid_authors} ) {
+            $author = $name if ( $author_data =~ $regexp );
         }
+        print $directory, $filename, " invalid \@author '$author_data'\n" unless defined $author;
     }
     else {
         print $directory, $filename, " missing \@author\n";
@@ -149,7 +153,7 @@ sub process {
         $section ||= 'mahara';
 
         unless ( exists $language_strings->{$section}{$tag} ) {
-            print $directory, $filename, " has call to get_string that doesn't exist: get_string('$tag', '$section')\n";
+            print "($author) ", $directory, $filename, " has call to get_string that doesn't exist: get_string('$tag', '$section')\n";
         }
     }
 }
