@@ -44,7 +44,7 @@
 				<tr>
 					<td colspan="4">
 						<form action="" method="post">
-							<input type="submit" name="add" value="{str tag="addinstitution" section="admin"}" id="admininstitution_add">
+							<input type="submit" class="submit" name="add" value="{str tag="addinstitution" section="admin"}" id="admininstitution_add">
 						</form>
 					</td>
 				</tr>
