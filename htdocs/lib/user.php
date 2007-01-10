@@ -373,7 +373,7 @@ function optional_userobj($user) {
         return $user;
     }
 
-    if (!empty($user) && is_int($user)) {
+    if (!empty($user) && is_numeric($user)) {
         if ($user = get_record('usr', 'id', $user)) {
             return $user;
         }
@@ -396,7 +396,11 @@ function optional_userobj($user) {
  */
 function is_logged_in() {
     global $USER;
-    return (!empty($USER));
+    if (empty($USER)) {
+        return false;
+    }
+
+    return $USER->is_logged_in();
 }
 
 /**

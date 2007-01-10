@@ -268,8 +268,11 @@ $string['editview'] = 'Edit View';
 $string['editviewinformation'] = 'Edit View Information';
 $string['myviews'] = 'My Views';
 $string['notownerofview'] = 'You are not the owner of this view';
+$string['saveaccess'] = 'Save Access';
 $string['submitview'] = 'Submit View';
+$string['submitviewfailed'] = 'Submit view failed';
 $string['submitviewquestion'] = 'If you submit this view for assessment, you will not be able to edit the view or any of its associated artefacts until your tutor has finished marking the view.  Are you sure you want to submit this view now?';
+$string['viewaccesseditedsuccessfully'] = 'View access saved successfully';
 $string['viewdeleted'] = 'View deleted';
 $string['views'] = 'Views';
 $string['viewsubmitted'] = 'View submitted';
@@ -325,6 +328,11 @@ $string['noresultsfound'] = 'No results found';
 $string['artefact'] = 'artefact';
 $string['Artefact'] = 'Artefact';
 $string['artefactnotfound'] = 'Artefact with id %s not found';
+$string['created'] = 'Created';
+$string['lastmodified'] = 'Last modified';
+$string['owner'] = 'Owner';
+$string['title'] = 'Title';
+$string['type'] = 'Type';
 
 $string['belongingto'] = 'Belonging to';
 $string['allusers'] = 'All users';
@@ -343,11 +351,13 @@ $string['nopublicfeedback'] = 'No public feedback';
 $string['notifysiteadministrator'] = 'Notify site administrator';
 $string['placefeedback'] = 'Place feedback';
 $string['print'] = 'Print';
+$string['private'] = 'Private';
 $string['reportobjectionablematerial'] = 'Report objectionable material';
 $string['reportsent'] = 'Your report has been sent';
 $string['updatewatchlistfailed'] = 'Update of watchlist failed';
 $string['view'] = 'view';
 $string['View'] = 'View';
+$string['watchlistupdated'] = 'Your watchlist has been updated';
 
 // communities
 $string['communitymemberrequests'] = 'Pending membership requests';
@@ -361,6 +371,22 @@ $string['addedtocommunitysubject'] = 'You were added to a community';
 $string['addedtocommunitymessage'] = '%s has added you to a community, \'%s\'.  Click on the link below to see the community';
 $string['adduserfailed'] = 'Failed to add the user';
 $string['useradded'] = 'User added';
+$string['editcommunity'] = 'Edit Community';
+$string['savecommunity'] = 'Save Community';
+$string['communitysaved'] = 'Community Saved Successfully';
+$string['communityname'] = 'Community Name';
+$string['invalidcommunity'] = 'The community doesn\'t exist';
+$string['communitydescription'] = 'Community Description';
+$string['membershiptype'] = 'Community Memberhsip Type';
+$string['membershiptype.controlled'] = 'Controlled Memberhsip';
+$string['membershiptype.invite']     = 'Invite Only';
+$string['membershiptype.request']    = 'Request Membership';
+$string['membershiptype.open']       = 'Open Membership';
+$string['pendingmembers']            = 'Pending Members';
+$string['reason']                    = 'Reason';
+$string['approve']                   = 'Approve';
+$string['reject']                    = 'Reject';
+$string['communityalreadyexists']    = 'A Community by this name already exists';
 $string['owner'] = 'Owner';
 $string['members'] = 'Members';
 $string['memberrequests'] = 'Membership requests';
@@ -375,11 +401,11 @@ $string['memberchangesuccess'] = 'Membership status changed successfully';
 $string['viewreleasedsubject'] = 'Your view has been released';
 $string['viewreleasedmessage'] = 'The view that you submitted to community %s has been released back to you by %s';
 $string['viewreleasedsuccess'] = 'View was released successfully';
-$string['communitymembershipchangedsubject'] = 'Community membership: %s';
-$string['communitymembershipchangedmessagetutor'] = 'You have been promoted to a tutor in this community';
-$string['communitymembershipchangedmessagemember'] = 'You have been demoted from a tutor in this community';
-$string['communitymembershipchangedmessageremove'] = 'You have been removed from this community';
-$string['communitymembershipchangedmessagedeclinerequest'] = 'Your request to join this community has been declined';
+$string['communitymembershipchangesubject'] = 'Community membership: %s';
+$string['communitymembershipchangemessagetutor'] = 'You have been promoted to a tutor in this community';
+$string['communitymembershipchangemessagemember'] = 'You have been demoted from a tutor in this community';
+$string['communitymembershipchangemessageremove'] = 'You have been removed from this community';
+$string['communitymembershipchangemessagedeclinerequest'] = 'Your request to join this community has been declined';
 $string['communitymembershipchangedmessageaddedtutor'] = 'You have been added as a tutor in this community';
 $string['communitymembershipchangedmessageaddedmember'] = 'You have been added as a member in this community';
 $string['leavecommunity'] = 'Leave this community';
@@ -392,6 +418,7 @@ $string['communityinvitedeclined'] = 'Invite declined successfully!';
 $string['acceptinvitecommunity'] = 'Accept';
 $string['declineinvitecommunity'] = 'Decline';
 $string['leftcommunity'] = 'You have now left this community';
+$string['leftcommunityfailed'] = 'Leaving community failed';
 $string['couldnotleavecommunity'] = 'You cannot leave this community';
 $string['joinedcommunity'] = 'You are now a community member';
 $string['couldnotjoincommunity'] = 'You cannot join this community';
@@ -423,11 +450,11 @@ $string['addedtofriendslistsubject'] = 'New friend';
 $string['addedtofriendslistmessage'] = '%s added you as a friend! This means that %s is also on your friend list now too. '
     . ' Click on the link below to see their profile page';
 
-$string['requestedfriendslistmessage'] = 'New friend request';
-$string['requestedfriendslistsubject'] = '%s has requested that you add them as a friend.  '
+$string['requestedfriendlistsubject'] = 'New friend request';
+$string['requestedfriendlistmessage'] = '%s has requested that you add them as a friend.  '
     .' You can either do this from the link below, or from your friends list page';
 
-$string['requestedfriendslistsubjectreason'] = '%s has requested that you add them as a friend.'
+$string['requestedfriendlistmessagereason'] = '%s has requested that you add them as a friend.'
     .' You can either do this from the link below, or from your friends list page'
     . 'Their reason was: ';
 
@@ -469,5 +496,9 @@ $string['clamunknownerror'] = 'There was an unknown error with clam.';
 $string['virusfounduser'] = 'The file you have uploaded, %s, has been scanned by a virus checker and found to be infected! Your file upload was NOT successful.';
 $string['virusrepeatsubject'] = 'Warning: %s is a repeat virus uploader.';
 $string['virusrepeatmessage'] = 'The user %s has uploaded multiple files which have been scanned by a virus checker and found to be infected.';
+
+$string['youraccounthasbeensuspended'] = 'Your account has been suspended';
+$string['youraccounthasbeensuspendedtext'] = 'Your account has been suspended'; // @todo: more info?
+
 
 ?>

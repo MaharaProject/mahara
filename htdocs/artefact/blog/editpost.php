@@ -156,7 +156,7 @@ $javascript = <<<EOF
 
 // The file uploader uploads files to the list of blog post attachments
 var copyrightnotice = '{$copyright}';
-var uploader = new FileUploader('uploader', 'upload.php', {$getstring['blogpost']}, false, 
+var uploader = new FileUploader('uploader', 'upload.php', null, {$getstring['blogpost']}, false, 
                                 attachtopost, fileattached);
 uploader.createid = {$createid};
 
@@ -170,7 +170,7 @@ function browsemyfiles() {
     hideElement('browsebutton');
     insertSiblingNodesAfter('browsebutton', H3(null, {$getstring['myfiles']}));
     showElement('filebrowser');
-    browser = new FileBrowser('filebrowser', '{$wwwroot}artefact/file/myfiles.json.php', 
+    browser = new FileBrowser('filebrowser', '{$wwwroot}artefact/file/myfiles.json.php', null, 
                               function () {}, {$getstring['attach']}, attachtopost);
     browser.init();
 }

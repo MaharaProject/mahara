@@ -375,3 +375,12 @@ function countKeys(x) {
     for ( i in x ) n++;
     return n;
 }
+
+function keepElementInViewport(element) {
+    var pixels = getViewportPosition().y + getViewportDimensions().h 
+        - getElementPosition(element).y - getElementDimensions(element).h;
+    if (pixels < 0) {
+        window.scrollBy(0,-pixels);
+    }
+}
+
