@@ -15,6 +15,7 @@
         <div id='uploader'></div>
         <table id='filebrowser' style='display: none;'>
           <thead><tr>
+            <th></th>
             <th>{str section=artefact.file tag=name}</th>
             <th>{str section=artefact.file tag=description}</th>
             <th>{str section=artefact.file tag=size}</th>

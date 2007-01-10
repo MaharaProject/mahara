@@ -18,10 +18,10 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
     this.actionname = actionname;
     this.canmodify = !actionname;
     this.filenames = {};
-    this.deletescript = 'delete.json.php';
-    this.createfolderscript = 'createfolder.json.php';
-    this.updatemetadatascript = 'updatemetadata.json.php';
-    this.downloadscript = 'download.php';
+    this.deletescript = config.wwwroot+'artefact/file/delete.json.php';
+    this.createfolderscript = config.wwwroot+'artefact/file/createfolder.json.php';
+    this.updatemetadatascript = config.wwwroot+'artefact/file/updatemetadata.json.php';
+    this.downloadscript = config.wwwroot+'artefact/file/download.php';
 
     if (this.actionname) {
         this.lastcolumnfunc = function(r) {
@@ -73,6 +73,7 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
             self.element,
             self.source,
             [
+                function (r) { return TD(null, self.icon(r.artefacttype)); },
                 self.formatname,
                 'description',
                 function (r) { return TD(null, (r.artefacttype != 'folder') ? self.showsize(r.size) : null); },
@@ -202,12 +203,16 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
 
     this.showsize = function(bytes) {
         if (bytes < 1024) {
-            return bytes + 'b';
+            return bytes + (bytes > 0 ? 'b' : '');
         }
         if (bytes < 1048576) {
             return Math.floor((bytes / 1024) * 10 + 0.5) / 10 + 'k';
         }
         return Math.floor((bytes / 1048576) * 10 + 0.5) / 10 + 'M';
+    }
+
+    this.icon = function (type) {
+        return IMG({'src':config.themeurl+type+'.gif'});
     }
 
     this.formatname = function(r) {

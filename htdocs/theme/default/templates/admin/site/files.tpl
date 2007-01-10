@@ -10,6 +10,7 @@
 				<div id="uploader"></div>
 			<table id="filelist" class="tablerenderer">
 				<thead><tr>
+					<th></th>
 					<th>{str tag=name section=artefact.file}</th>
 					<th>{str tag=description section=artefact.file}</th>
 					<th>{str tag=size section=artefact.file}</th>
