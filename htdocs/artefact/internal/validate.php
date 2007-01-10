@@ -65,10 +65,10 @@ if ($row && $row->expiry > time()) {
     );
 
     set_cookie('validated_email', $row->email);
-    $smarty->assign('message', get_string('emailactiviationsucceeded', 'artefact.internal'));
+    $smarty->assign('message', get_string('emailactivationsucceeded', 'artefact.internal'));
 }
 else {
-    $smarty->assign('message', get_string('emailactiviationfailed', 'artefact.internal'));
+    $smarty->assign('message', get_string('emailactivationfailed', 'artefact.internal'));
 }
 
 $smarty->display('artefact:internal:validate.tpl');

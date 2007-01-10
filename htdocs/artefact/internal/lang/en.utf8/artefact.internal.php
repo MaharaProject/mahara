@@ -67,6 +67,10 @@ $string['name'] = 'Name';
 $string['principalemailaddress'] = 'Principal email';
 $string['emailaddress'] = 'Alternative email';
 
+$string['saveprofile'] = 'Save Profile';
+$string['profilesaved'] = 'Profile saved successfully';
+$string['profilefailedsaved'] = 'Profile saving failed';
+
 
 $string['emailvalidation_subject'] = 'Email validation';
 $string['emailvalidation_body'] = <<<EOF

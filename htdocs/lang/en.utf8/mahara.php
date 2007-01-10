@@ -125,6 +125,7 @@ $string['register'] = 'Register';
 $string['sessiontimedout'] = 'Your session has timed out, please enter your login details to continue';
 $string['sessiontimedoutpublic'] = 'Your session has timed out. You may <a href="?login">log in</a> to continue browsing';
 $string['username'] = 'Username';
+$string['preferredname'] = 'Preferred Name';
 $string['usernamedescription'] = ' ';
 $string['usernamehelp'] = 'The username you have been given to access this system.';
 $string['yournewpassword'] = 'Your new password';
@@ -315,6 +316,8 @@ $string['more...'] = 'More ...';
 $string['nohelpfound'] = 'There was no help found for this item';
 $string['nohelpfound'] = 'There was no help found for this page';
 $string['profileimage'] = 'Profile image';
+$string['primaryemailinvalid'] = 'Your primary email address is invalid';
+$string['addemail'] = 'Add email address';
 
 // Search
 $string['search'] = 'Search';
