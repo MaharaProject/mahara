@@ -42,7 +42,7 @@ return <<<EOJAVASCRIPT
 var postlist = new TableRenderer(
     'postlist',
     'index.json.php',
-    [undefined]
+    [undefined, undefined]
 );
 
 postlist.rowfunction = function(d, n, gd) {
@@ -53,7 +53,7 @@ postlist.rowfunction = function(d, n, gd) {
         pub = {$enc_published};
     }
     else {
-        pub = BUTTON(
+        pub = INPUT(
             { 'type' : 'button' },
             {$enc_publish}
         );
@@ -79,6 +79,7 @@ postlist.rowfunction = function(d, n, gd) {
     var edit = FORM(
         {
             'method' : 'get',
+            'style' : 'display: inline;',
             'action' : {$enc_wwwroot} + 'artefact/blog/editpost.php'
         },
         INPUT(
@@ -88,35 +89,28 @@ postlist.rowfunction = function(d, n, gd) {
                 'value' : d.id
             }
         ),
-        BUTTON(
-            { 'type' : 'submit' },
-            {$enc_edit}
+        INPUT(
+            { 'type' : 'submit',
+              'value' : {$enc_edit}
+            }
         )
     );
 
-    var del = BUTTON(
-        { 'type' : 'button' },
-        {$enc_delete}
+    var del = INPUT(
+        { 'type' : 'button', 'value': {$enc_delete} }
     );
 
-    var desctd = TD();
+    var desctd = TD({'colSpan':2});
     desctd.innerHTML = d.description;
   
     var rows = [
         TR(
             null,
-            TD(null, d.title),
-            TD(
-                {
-                    'rowspan' : 3
-                },
-                pub,
-                edit,
-                del
-            )
+            TH(null, d.title),
+            TD(null, [pub, ' ', edit, ' ', del])
         ),
         TR(null, desctd),
-        TR(null, TD(null, d.ctime)),
+        TR(null, TD({'colSpan':2}, d.ctime))
     ];
 
     connect(del, 'onclick', function(e) {
