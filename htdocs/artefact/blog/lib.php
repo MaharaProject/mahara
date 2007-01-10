@@ -473,7 +473,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
          WHERE a.parent = ?
           AND a.artefacttype = 'blogpost'
           AND a.owner = ?
-         ORDER BY ctime DESC
+         ORDER BY bp.published ASC, a.ctime DESC
          LIMIT ? OFFSET ?;", array(
             $id,
             $user->get('id'),
