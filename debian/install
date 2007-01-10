@@ -1,0 +1,3 @@
+htdocs/*                         var/www/mahara
+htdocs/.htaccess                 var/www/mahara
+debian/apache.conf.template      usr/share/mahara/

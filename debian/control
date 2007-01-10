@@ -1,0 +1,73 @@
+Source: mahara
+Section: web
+Priority: optional
+Maintainer: Martyn Smith <martyn@catalyst.net.nz>
+Build-Depends: debhelper (>= 5)
+Standards-Version: 3.7.2
+
+Package: mahara-apache
+Architecture: any
+Depends: ${misc:Depends}, apache, libapache-mod-php5, php5-json, php5-pgsql, php5-cli, php5-gd, file
+Conflicts: mahara-apache2
+Recommends: postgresql-8.1
+Pre-Depends: m4, perl, postgresql-client-8.1
+Description: Mahara is an electronic portfolio, weblog, and resume builder
+ Established in 2006, Mahara is the result of a collaborative venture funded by
+ New Zealand's Tertiary Education Commission's e-learning Collaborative
+ Development Fund (eCDF), involving Massey University, Auckland University of
+ Technology, The Open Polytechnic of New Zealand and Victoria University of
+ Wellington.
+ .
+ Once released (Feb 2007) Mahara will be a fully featured electronic portfolio,
+ weblog, resume builder and social networking system, connecting users and
+ creating online communities.
+ .
+ Mahara is designed to provide users with the tools to create a personal and
+ professional learning and development environment.
+ .
+ Meaning `think' or `thought' in Te Reo Maori, the name reflects the project
+ collaborator's dedication to creating a user-centred life long learning and
+ development application as well as the belief that technology solutions cannot
+ be developed outside the considerations of pedagogy and policy.
+ .
+ Mahara is provided freely as Open Source software (under the GNU General Public
+ License). In brief, this means that you are allowed to copy, use and modify
+ Mahara provided you agree to; provide the source code to others; not modify or
+ remove the original license and copyrights, and apply this same license to any
+ derivative work.
+ .
+ For further information please see http://mahara.org
+
+Package: mahara-apache2
+Architecture: any
+Depends: ${misc:Depends}, apache2, libapache2-mod-php5, php5-json, php5-pgsql, php5-cli, php5-gd, file
+Conflicts: mahara-apache
+Recommends: postgresql-8.1
+Pre-Depends: m4, perl, postgresql-client-8.1
+Description: Mahara is an electronic portfolio, weblog, and resume builder
+ Established in 2006, Mahara is the result of a collaborative venture funded by
+ New Zealand's Tertiary Education Commission's e-learning Collaborative
+ Development Fund (eCDF), involving Massey University, Auckland University of
+ Technology, The Open Polytechnic of New Zealand and Victoria University of
+ Wellington.
+ .
+ Once released (Feb 2007) Mahara will be a fully featured electronic portfolio,
+ weblog, resume builder and social networking system, connecting users and
+ creating online communities.
+ .
+ Mahara is designed to provide users with the tools to create a personal and
+ professional learning and development environment.
+ .
+ Meaning `think' or `thought' in Te Reo Maori, the name reflects the project
+ collaborator's dedication to creating a user-centred life long learning and
+ development application as well as the belief that technology solutions cannot
+ be developed outside the considerations of pedagogy and policy.
+ .
+ Mahara is provided freely as Open Source software (under the GNU General Public
+ License). In brief, this means that you are allowed to copy, use and modify
+ Mahara provided you agree to; provide the source code to others; not modify or
+ remove the original license and copyrights, and apply this same license to any
+ derivative work.
+ .
+ For further information please see http://mahara.org
+
