@@ -1078,6 +1078,10 @@ function site_menu() {
                 $menu[] = array('name' => $i->title,
                                 'link' => $i->url);
             }
+            else if ($i->file) {
+                $menu[] = array('name' => $i->title,
+                                'link' => get_config('wwwroot') . 'artefact/file/download.php?file=' . $i->file);
+            }
         }
     }
     return $menu;

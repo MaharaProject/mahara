@@ -30,47 +30,24 @@ define('JSON', 1);
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
-$public = (int) param_boolean('public');
+$public = param_boolean('public');
+
+safe_require('artefact', 'file');
 
 $result = array();
 
-//$menuitems = get_records_array('site_menu','public',$public,'displayorder');
-$prefix = get_config('dbprefix');
-$menuitems = get_records_sql_array('
-   SELECT
-      s.*, a.title AS filename
-   FROM ' . $prefix . 'site_menu s
-      LEFT OUTER JOIN ' . $prefix . 'artefact a ON s.file = a.id
-   WHERE
-      s.public = ' . $public . '
-   ORDER BY s.displayorder', null);
-$rows = array();
-if ($menuitems) {
-    foreach ($menuitems as $i) {
-        $r = array();
-        $r['id'] = $i->id;
-        $r['name'] = $i->title;
-        if (empty($i->url) && !empty($i->file)) {
-            $r['type'] = 'adminfile';
-            $r['linkedto'] = get_config('wwwroot') . 'artefact/file/download.php?file=' . $i->file; 
-            $r['linktext'] = $i->filename; 
-            $r['file'] = $i->file; 
-        }
-        else if (!empty($i->url) && empty($i->file)) {
-            $r['type'] = 'externallink';
-            $r['linkedto'] = $i->url;
-            $r['linktext'] = $i->url; 
-        }
-        else {
-            json_reply('local',get_string('loadmenuitemsfailed','admin'));
-        }
-        $rows[] = $r;
+if ($adminfiles = ArtefactTypeFile::get_admin_files($public)) {
+    foreach ($adminfiles as $adminfile) {
+        $result['adminfiles'][] = array('name' => $adminfile->title,
+                                        'id' => $adminfile->id);
     }
 }
+else {
+    $result['adminfiles'] = null;
+}
 
-$result['menuitems'] = array_values($rows);
 $result['error'] = false;
-$result['message'] = get_string('menuitemsloaded','admin');
+$result['message'] = get_string('adminfilesloaded', 'artefact.file');
 
 json_headers();
 echo json_encode($result);

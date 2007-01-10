@@ -281,8 +281,6 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         return get_config('dataroot') . self::get_file_directory($this->id) . '/' .  $this->id;
     }
 
-
-
     /**
      * Test file type and return a new Image or File.
      */
@@ -295,7 +293,6 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         }
         return new ArtefactTypeFile(0, $data);
     }
-
 
     /**
      * Moves a file into the myfiles area.
@@ -323,7 +320,6 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         return $id;
     }
 
-
     /**
      * Processes a newly uploaded file, copies it to disk, and creates
      * a new artefact object.
@@ -350,6 +346,23 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         return $error;
     }
 
+    public static function get_admin_files($public) {
+        if ($public) {
+            $foldersql = 'parent = ' . ArtefactTypeFolder::admin_public_folder_id();
+        }
+        else {
+            $foldersql = 'parent IS NULL';
+        }
+        $prefix = get_config('dbprefix');
+        return get_records_sql_array('
+            SELECT
+                a.id, a.title
+            FROM ' . $prefix . 'artefact a
+                INNER JOIN ' . $prefix . 'artefact_file_files f ON f.artefact = a.id
+            WHERE a.' . $foldersql . "
+                AND f.adminfiles = 1
+                AND a.artefacttype != 'folder'", null);
+    }
 
     public function delete() {
         if (empty($this->id)) {
@@ -402,6 +415,30 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
                      FORMAT_ARTEFACT_RENDERFULL, FORMAT_ARTEFACT_RENDERMETADATA);
     }
     
+    public static function admin_public_folder_id() {
+        $name = get_string('adminpublicdirname', 'admin');
+        $prefix = get_config('dbprefix');
+        $folderid = get_field_sql('
+           SELECT
+             a.id
+           FROM ' . $prefix . 'artefact a
+             INNER JOIN ' . $prefix . 'artefact_file_files f ON a.id = f.artefact
+           WHERE a.title = ?
+             AND a.artefacttype = ?
+             AND f.adminfiles = 1
+             AND a.parent IS NULL', array($name, 'folder'));
+        if (!$folderid) {
+            global $USER;
+            $data = (object) array('title' => $name);
+            $f = new ArtefactTypeFolder(0, $data);
+            $f->set('owner', $USER->get('id'));
+            $f->set('adminfiles', 1);
+            $f->commit();
+            $folderid = $f->get('id');
+        }
+        return $folderid;
+    }
+
     public static function get_folder_by_name($name, $parentfolderid=null) {
         global $USER;
         $prefix = get_config('dbprefix');
