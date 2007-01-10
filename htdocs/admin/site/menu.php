@@ -33,7 +33,8 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 $strings = array('edit','delete','update','cancel','add','name','unknownerror');
 $adminstrings = array('deletefailed','deletingmenuitem','savingmenuitem',
                       'noadminfiles','loggedinmenu','loggedoutmenu','linkedto','externallink','adminfile',
-                      'loadingmenuitems','menuitemsloaded','failedloadingmenuitems');
+                      'loadingmenuitems','menuitemsloaded','failedloadingadminfiles',
+                      'failedloadingmenuitems');
 foreach ($strings as $string) {
     $getstring[$string] = "'" . get_string($string) . "'";
 }
@@ -49,17 +50,33 @@ $ijs .= "var adminfile = '" . get_string('adminfile','admin') . "';\n";
 $ijs .= <<< EOJS
 // Request a list of menu items from the server
 function getitems() {
-    logDebug({$getstring['loadingmenuitems']});
     processingStart();
     var d = loadJSONDoc('getmenuitems.json.php',{'public':selectedmenu == 'loggedoutmenu'});
     d.addCallback(function(data) {
         if (!data.error) {
-            logDebug({$getstring['menuitemsloaded']});
+            //logDebug({$getstring['menuitemsloaded']});
             displaymenuitems(data.menuitems);
             processingStop();
         }
         else {
             displayMessage({$getstring['failedloadingmenuitems']},'error');
+            processingStop();
+        }
+    });
+}
+
+// Get a list of the available admin files
+function getadminfiles() {
+    processingStart();
+    var d = loadJSONDoc('getadminfiles.json.php',{'public':selectedmenu == 'loggedoutmenu'});
+    d.addCallback(function(data) {
+        if (!data.error) {
+            adminfiles = data.adminfiles;
+            processingStop();
+        }
+        else {
+            displayMessage({$getstring['failedloadingadminfiles']},'error');
+            adminfiles = null;
             processingStop();
         }
     });
@@ -78,7 +95,7 @@ function displaymenuitems(itemlist) {
 function formatrow (item) {
     // item has id, type, name, link, linkedto
     var type = eval(item.type);
-    var linkedto = A({'href':item.linkedto},item.linkedto);
+    var linkedto = A({'href':item.linkedto},item.linktext);
     var del = INPUT({'type':'button','value':{$getstring['delete']}});
     del.onclick = function () { delitem(item.id); };
     var edit = INPUT({'type':'button','value':{$getstring['edit']}});
@@ -140,7 +157,6 @@ function editform(item) {
     var name = INPUT({'type':'text','id':'name'+item.id,'value':item.name});
 
     if (item.type == 'adminfile') {
-        var adminfiles = getadminfiles();
         if (adminfiles == null) {
             // There are no admin files, we don't need the select or save button
             linkedto = {$getstring['noadminfiles']};
@@ -148,7 +164,15 @@ function editform(item) {
         }
         else {
             // Select the currently selected file.
-            linkedto = INPUT({'type':'select','id':'linkedto'+item.id});
+            linkedto = SELECT({'id':'linkedto'+item.id});
+            for (var i = 0; i < adminfiles.length; i++) {
+                if (item.file == adminfiles[i].id) {
+                    appendChildNodes(linkedto, OPTION({'value':adminfiles[i].id, 'selected':true}, adminfiles[i].name));
+                }
+                else {
+                    appendChildNodes(linkedto, OPTION({'value':adminfiles[i].id}, adminfiles[i].name));
+                }
+            }
         }
         setNodeAttribute(afile,'checked',true);
     }
@@ -227,17 +251,14 @@ function saveitem(itemid) {
     return false;
 }
 
-// In phase 1 there are no files in the system
-function getadminfiles() {
-    return null;
-}
-
 function changemenu() {
     selectedmenu = $('menuselect').value;
     getitems();
+    getadminfiles();
 }
 
 var selectedmenu = 'loggedoutmenu';
+var adminfiles = null;
 addLoadEvent(function () {
     $('menuselect').value = selectedmenu;
     $('menuselect').onchange = changemenu;

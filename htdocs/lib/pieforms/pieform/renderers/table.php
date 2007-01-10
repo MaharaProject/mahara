@@ -38,7 +38,7 @@ function pieform_renderer_table(Pieform $form, $builtelement, $rawelement) {
     $formname = $form->get_name();
     if ($rawelement['type'] == 'fieldset') {
         // Add table tags to the build element, to preserve HTML compliance
-        if (0 === strpos($builtelement, "\n<fieldset>\n<legend>")) {
+        if (0 === strpos($builtelement, "\n<fieldset")) {
             $closelegendpos = strpos($builtelement, '</legend>') + 9;
             $builtelement = substr($builtelement, 0, $closelegendpos) . '<table>' . substr($builtelement, $closelegendpos);
         }
@@ -99,52 +99,31 @@ function pieform_renderer_table(Pieform $form, $builtelement, $rawelement) {
 }
 
 function pieform_renderer_table_header() {
-    return "<table cellspacing=\"0\" border=\"0\"><tbody>\n";
+    return "<table cellspacing=\"0\"><tbody>\n";
 }
 
 function pieform_renderer_table_footer() {
     return "</tbody></table>\n";
 }
 
-function pieform_renderer_table_messages_js($id) {
+function pieform_renderer_table_get_js($id) {
     $result = <<<EOF
-// Given a message and form element name, should set an error on the element
 function {$id}_set_error(message, element) {
-    {$id}_remove_error(element);
-    element += '_container';
-    // @todo set error class on input elements...
-    $(element).parentNode.insertBefore(TR({'id': '{$id}_error_' + element}, TD({'colspan': 2, 'class': 'errmsg'}, message)), $(element).nextSibling);
-}
-// Given a form element name, should remove an error associated with it
-function {$id}_remove_error(element) {
-    element += '_container';
-    var elem = $('{$id}_error_' + element);
-    if (elem) {
-        removeElement(elem);
-    }
+    element = $('{$id}_' + element + '_container');
+    var container = getFirstElementByTagAndClassName('TD', null, element);
+    addElementClass(container, 'error');
+    addElementClass(container.firstChild, 'error');
+    insertSiblingNodesAfter(element, TR(null, TD({'colspan': 2, 'class': 'errmsg'}, message)));
 }
 function {$id}_remove_all_errors() {
     forEach(getElementsByTagAndClassName('TD', 'errmsg', $('$id')), function(item) {
         removeElement(item.parentNode);
     });
+    forEach(getElementsByTagAndClassName('TD', 'error', $('$id')), function(item) {
+        removeElementClass(item, 'error');
+        removeElementClass(item.firstChild, 'error');
+    });
 }
-function {$id}_message(message, type) {
-    var elem = $('{$id}_pieform_message');
-    var msg  = TR({'id': '{$id}_pieform_message'}, TD({'colspan': 2, 'class': type}, message));
-    if (elem) {
-        swapDOM(elem, msg);
-    }
-    else {
-        appendChildNodes($('{$id}_' + {$id}_btn + '_container').parentNode, msg);
-    }
-}
-function {$id}_remove_message() {
-    var elem = $('{$id}_pieform_message');
-    if (elem) {
-        removeElement(elem);
-    }
-}
-    
 EOF;
     return $result;
 }

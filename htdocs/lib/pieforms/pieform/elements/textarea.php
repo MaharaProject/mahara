@@ -31,7 +31,7 @@
  * @param Pieform  $form    The form to render the element for
  * @return string           The HTML for the element
  */
-function pieform_render_textarea($element, Pieform $form) {
+function pieform_element_textarea(Pieform $form, $element) {
     $rows = $cols = $style = '';
     if (isset($element['height'])) {
         $style .= 'height:' . $element['height'] . ';';
@@ -41,7 +41,7 @@ function pieform_render_textarea($element, Pieform $form) {
         $rows = $element['rows'];
     }
     else {
-        log_warn('No value for rows or height specified for textarea ' . $element['name']);
+        Pieform::info('No value for rows or height specified for textarea "' . $element['name'] . '"');
     }
 
     if (isset($element['width'])) {
@@ -52,9 +52,13 @@ function pieform_render_textarea($element, Pieform $form) {
         $cols = $element['cols'];
     }
     else {
-        log_warn('No value for cols or width specified for textarea ' . $element['name']);
+        Pieform::info('No value for cols or width specified for textarea "' . $element['name'] . '"');
     }
     $element['style'] = (isset($element['style'])) ? $style . $element['style'] : $style;
+
+    if (!empty($element['resizable'])) {
+        $element['class'] = (isset($element['class']) && $element['class']) ? $element['class'] . ' resizable' : 'resizable';
+    }
     return '<textarea'
         . (($rows) ? ' rows="' . $rows . '"' : '')
         . (($cols) ? ' cols="' . $cols . '"' : '')

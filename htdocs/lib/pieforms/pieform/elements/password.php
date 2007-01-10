@@ -31,14 +31,14 @@
  * @param Pieform  $form    The form to render the element for
  * @return string           The HTML for the element
  */
-function pieform_render_password($element, Pieform $form) {
+function pieform_element_password(Pieform $form, $element) {
     return '<input type="password"'
         . $form->element_attributes($element)
         . ' value="' . Pieform::hsc($form->get_value($element)) . '">';
 }
 
-function pieform_get_value_password($element, Pieform $form) {
-    $global = ($form->get_method() == 'get') ? $_GET : $_POST;
+function pieform_element_password_get_value(Pieform $form, $element) {
+    $global = ($form->get_property('method') == 'get') ? $_GET : $_POST;
     if (isset($global[$element['name']])) {
         return $global[$element['name']];
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * This program is part of Pieforms
+ * This program is part of Mahara
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -16,11 +16,11 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
- * @package    pieform
- * @subpackage element
+ * @package    mahara
+ * @subpackage form-element
  * @author     Nigel McNie <nigel@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -31,7 +31,7 @@
  * @param Pieform  $form    The form to render the element for
  * @return string           The HTML for the element
  */
-function pieform_render_cancelbackcreate($element, Pieform $form) {
+function pieform_element_cancelbackcreate(Pieform $form, $element) {
     $form->include_plugin('element', 'submit');
     $form->include_plugin('element', 'cancel');
     $cancelelement = $element;
@@ -42,12 +42,12 @@ function pieform_render_cancelbackcreate($element, Pieform $form) {
     $backelement['value'] = $element['value'][1];
     $submitelement = $element;
     $submitelement['value'] = $element['value'][2];
-    return  pieform_render_cancel($cancelelement, $form) . ' ' . pieform_render_submit($backelement, $form)
-        . ' ' . pieform_render_submit($submitelement, $form);
+    return  pieform_element_cancel($form, $cancelelement) . ' ' . pieform_element_submit($form, $backelement)
+        . ' ' . pieform_element_submit($form, $submitelement);
 }
 
-function pieform_render_cancelbacksubmit_set_attributes($element) {
-    $element['ajaxmessages'] = true;
+function pieform_element_cancelbacksubmit_set_attributes($element) {
+    $element['submitelement'] = true;
     return $element;
 }
 

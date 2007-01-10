@@ -26,6 +26,7 @@
 
 defined('INTERNAL') || die();
 
+$string['adminfilesloaded'] = 'Admin files loaded';
 $string['changessaved'] = 'Changes saved';
 $string['copyrightnotice'] = 'Copyright notice';
 $string['create'] = 'Create';
@@ -38,9 +39,10 @@ $string['editfile'] = 'Edit file';
 $string['editfolder'] = 'Edit folder';
 $string['file'] = 'File';
 $string['fileexists'] = 'File exists';
-$string['filethingdeleted'] = '%s deleted';
 $string['fileexistsoverwritecancel'] =  'A file with that name already exists.  You can try a different name, or overwrite the existing file.';
+$string['filelistloaded'] = 'File list loaded';
 $string['filenamefieldisrequired'] = 'The file field is required';
+$string['filethingdeleted'] = '%s deleted';
 $string['folder'] = 'Folder';
 $string['foldercreated'] = 'Folder created';
 $string['home'] = 'Home';
@@ -56,11 +58,13 @@ $string['title'] = 'Name';
 $string['titlefieldisrequired'] = 'The name field is required';
 $string['unlinkthisfilefromblogposts?'] = 'This file is attached to one or more blog posts.  If you delete the file, it will be removed from these posts.';
 $string['upload'] = 'Upload';
-$string['uploadoffilecomplete'] = 'Upload of %s complete';
-$string['uploadoffilefailed'] =  'Upload of %s failed';
 $string['uploadfile'] =  'Upload file';
 $string['uploadfileexistsoverwritecancel'] =  'A file with that name already exists.  You can rename the file you are about to upload, or overwrite the existing file.';
 $string['uploadingfiletofolder'] =  'Uploading %s to %s';
+$string['uploadoffilecomplete'] = 'Upload of %s complete';
+$string['uploadoffilefailed'] =  'Upload of %s failed';
+$string['uploadoffiletofoldercomplete'] = 'Upload of %s to %s complete';
+$string['uploadoffiletofolderfailed'] = 'Upload of %s to %s failed';
 $string['youmustagreetothecopyrightnotice'] = 'You must agree to the copyright notice';
 
 ?>

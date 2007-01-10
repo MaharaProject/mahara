@@ -18,7 +18,7 @@
                         <td>{$name}</td>
                         <td>{if $upgrade->install} {str section='admin' tag='notinstalled'} {else} {$upgrade->fromrelease} {/if} </td>
                         <td>{$upgrade->torelease}</td>
-                        <td id="{$name}">&nbsp;</td>
+                        <td id="{$name}" class="msgscol">&nbsp;</td>
                     </tr>
                 {/foreach}
                 {if $install}
@@ -26,7 +26,7 @@
                         <td>{str section=admin tag=coredata}</td>
                         <td></td>
                         <td></td>
-                        <td id="coredata">&nbsp;</td>
+                        <td id="coredata" class="msgscol">&nbsp;</td>
                     </tr>
                 {/if}
                 </tbody>

@@ -26,6 +26,13 @@
 
 $GLOBALS['_PIEFORM_REGISTRY'] = array();
 
+/** The form was processed successfully */
+define('PIEFORM_OK', 0);
+/** The form failed processing/validating */
+define('PIEFORM_ERR', -1);
+/** A cancel button was pressed */
+define('PIEFORM_CANCEL', -2);
+
 /**
  * Builds, validates and processes a form.
  *
@@ -37,22 +44,22 @@ $GLOBALS['_PIEFORM_REGISTRY'] = array();
  * <pre>
  * $form = array(
  *     'name' => 'myform',
- *     'action' => '/myscript.php',
+ *     'action' => 'myscript.php',
  *     'method' => 'post',
  *     'elements' => array(
  *         // definition of elements in the form
  *     )
  * );
  *
- * $smarty->assign('myform', form($form));
+ * $smarty->assign('myform', pieform($form));
  *
- * function myform_validate($form, $values) {
+ * function myform_validate(Pieform $form, $values) {
  *     // perform validation agains form elements here
  *     // some types of validation are conveniently available already as
  *     // as part of the form definition hash
  * }
  *
- * function myform_submit($values) {
+ * function myform_submit(Pieform $form, $values) {
  *     // perform action knowing that the values are valid, e.g. DB insert.
  * }
  * </pre>
@@ -66,22 +73,21 @@ function pieform($data) {
     //
     // @todo stuff to do for forms:
     // 
-    //  - more form element types (inc. types like autocomplete and date picker and wyswiyg)
+    //  - more form element types (inc. types like autocomplete and wyswiyg)
     //  - support processing of data before validation occurs (e.g. trim(), strtoupper())
     //  - Basic validation is possible as there's a callback function for checking,
     //    but some helper functions could be written to make people's job validating
     //    stuff much easier (form_validate_email, form_validate_date etc).
     //  - Collapsible js for fieldsets
     //  - Grippie for textareas
-    //  - javascript validation
     //  - handle multipage forms?
     //  - handle a tabbed interface type of form?
     //  
 }
 
 if (!function_exists('json_encode')) {
+    require_once 'JSON/JSON.php';
     function json_encode($data) {
-        require_once 'JSON/JSON.php';
         $json = new Services_JSON();
         return $json->encode($data);
     }
@@ -96,22 +102,14 @@ class PieformException extends Exception {}
  * Represents an HTML form. Forms created using this class have a lot of the
  * legwork for forms abstracted away.
  *
- * The form API makes it really easy to build complex HTML forms, simply by
+ * Pieforms makes it really easy to build complex HTML forms, simply by
  * building a hash describing your form, and defining one or two callback
  * functions.
  *
- * For more information on how the form API works, please see the documentation
+ * For more information on how Pieforms works, please see the documentation
  * at https://eduforge.org/wiki/wiki/mahara/wiki?pagename=FormAPI
  */
 class Pieform {
-
-    /**
-     * Data for the form
-     *
-     * @var array
-     * @todo move all of the member fields here into this field
-     */
-    private $data = array();
 
     /**
      * Maintains a tab index across all created forms, to make it easy for
@@ -129,131 +127,16 @@ class Pieform {
     private $name = '';
 
     /**
-     * The method that the form will be submitted by. Either 'get' or 'post'.
-     *
-     * @var string
-     */
-    private $method = 'get';
-
-    /**
-     * The URL that the form will be submitted to.
-     *
-     * @var string
-     */
-    private $action = '';
-
-    /**
-     * Whether the form should be validated. Forms that are not validated are
-     * also not submitted. This is useful if you just want to draw a form, and
-     * have no validation rules apply to it.
-     */
-    private $validate = true;
-
-    /**
-     * Whether the form should be checked for submission. Forms can have
-     * validate on and submit off in order to validate submitted data, but to
-     * not bother with the submit.
-     *  
-     * @var bool
-     */
-    private $submit = true;
-
-    /**
-     * Whether to submit the form via ajax
-     *
-     * @todo rename this probably, because AJAX GET is supported too
-     *
-     * @var bool
-     */
-    private $ajaxpost = false;
-
-    /**
-     * A callback to call before submitting the form via AJAX
-     *
-     * @var string
-     */
-    private $preajaxsubmitcallback = '';
-
-    /**
-     * A callback to call after submitting the form via AJAX, regardless of
-     * the result of the submission
-     *
-     * @var string
-     */
-    private $postajaxsubmitcallback = '';
-
-    /**
-     * Name of a javascript function to call on successful ajax submission
-     *
-     * @var string
-     */
-    private $ajaxsuccessfunction = '';
-
-    /**
-     * Name of a javascript function to call on failed ajax submission
-     *
-     * @var string
-     */
-    private $ajaxfailurefunction = '';
-
-    /**
-     * The tab index for this particular form.
-     *
-     * @var int
-     */
-    private $tabindex = 1;
-
-    /**
-     * Directories to look for elements, renderers and rules
+     * Data for the form
      *
      * @var array
      */
-    private $configdirs = array();
-
-    /**
-     * Whether to autofocus fields in this form, and if so, optionally which
-     * field to focus.
-     *
-     * @var mixed
-     */
-    private $autofocus = false;
-
-    /**
-     * The renderer used to build the HTML for the form that each element sits
-     * in. See the form/renderer package to find out the allowed types.
-     *
-     * @var string
-     */
-    private $renderer = 'table';
-
-    /**
-     * The language used for form rule error messages.
-     *
-     * @var string
-     */
-    private $language = 'en.utf8';
-
-    /**
-     * Language strings for rules
-     *
-     * @var array
-     */
-    private $language_strings = array(
-        'en.utf8' => array(
-            'required'  => 'This field is required',
-            'email'     => 'E-mail address is invalid',
-            'maxlength' => 'This field must be at most %d characters long',
-            'minlength' => 'This field must be at least %d characters long', 
-            'integer'   => 'The field must be an integer',
-            'validateoptions' => 'The option "%s" is invalid',
-            'regex'     => 'This field is not in valid form'
-        )
-    );
+    private $data = array();
 
     /**
      * Whether this form includes a file element. If so, the enctype attribute
      * for the form will be specified as "multipart/mixed" as required. This
-     * is auto-detected by the Form class.
+     * is auto-detected by the Pieform class.
      *
      * @var bool
      */
@@ -266,30 +149,6 @@ class Pieform {
      * @var bool
      */
     private $submitted = false;
-
-    /**
-     * Whether the form is cancellable or not - that is, whether sending a
-     * request to cancel the form will be honoured or not. This is useful for
-     * the transient login form, where it must pass on cancel requests from
-     * other forms sometimes.
-     *
-     * @var bool
-     */
-    private $iscancellable = true;
-
-    /**
-     * Name of validate function
-     *
-     * @var string
-     */ 
-    private $validatefunction = '';
-
-    /**
-     * Name of submit function
-     *
-     * @var string
-     */
-    private $submitfunction = '';
 
     /**
      * Processes the form. Called by the {@link pieform} function. It simply
@@ -335,101 +194,154 @@ class Pieform {
 
         // Assign defaults for the form
         $formdefaults = array(
-            'method'    => 'get',
-            'action'    => '',
-            'ajaxpost'  => false,
-            'preajaxsubmitcallback'  => '',
-            'postajaxsubmitcallback' => '',
-            'ajaxsuccessfunction'    => '',
-            'ajaxfailurefunction'    => '',
-            'configdirs' => array(),
+            // The method used to submit the form, should always be 'get' or 'post'
+            'method' => 'get',
+
+            // The form target. The vast majority of the time this should be blank,
+            // as the functions that handle the submit should be in the same script
+            // as the form definition
+            'action' => '',
+
+            // The form elements
+            'elements' => array(),
+
+            // The form renderer (see the pieform/renderers directory)
+            'renderer' => 'table',
+
+            // Whether to validate the form. Non validated forms have none of the
+            // validate, success or error callbacks called on them
+            'validate' => true,
+
+            // Whether to process the submission of this form. The form will still
+            // be validated. Handy if the code handling the submission is elsewhere
+            'submit' => true,
+
+            // The PHP callback called to validate the form. Optional
+            'validatecallback' => '',
+
+            // The PHP callback called to process the submission of the form.
+            // Required, unless a success function is provided for each submit
+            // button in the form
+            'successcallback' => '',
+
+            // The PHP callback called if there is any validation error. Optional
+            'errorcallback' => '',
+
+            // Whether this form should submit to a hidden iframe and use DOM
+            // manipulation to insert error messages (faster than a normal submit,
+            // supported in less browsers. Most modern browsers should be fine)
+            'jsform' => false,
+
+            // The javascript function called before submission of a form
+            // (regardless of whether the form is a jsform)
+            'presubmitcallback' => '',
+
+            // The javascript function called after submission of a form. As non-js
+            // forms will trigger a page load on submit, this has no effect for them. 
+            'postsubmitcallback' => '',
+
+            // The javascript function called if the form submission was successful
+            'jssuccesscallback' => '',
+
+            // The javascript function called if the form submission was unsuccessful
+            'jserrorcallback' => '',
+
+            // The javascript function called if the form submission returned an
+            // unknown error code
+            'globaljserrorcallback' => '',
+
+            // The message to pass back as a reason for the form submission failing
+            // if the form is a jsform. This can be used by your application however
+            // you choose.
+            'jserrormessage' => '',
+
+            // Whether this form can be cancelled, regardless of the presence of
+            // 'cancel' buttons or form inputs mischeviously named as to behave
+            // like cancel buttons
+            'iscancellable' => true,
+
+            // Whether Pieforms should die after calling a submit function. Generally
+            // this is a good idea, as it forces the user to reply to the form
+            // submission. However, there are occasions where you might want to let
+            // it continue, so this behaviour can be turned off
+            'dieaftersubmit' => true,
+
+            // Whether to auto-focus either the first field (if the value is true,
+            // or the named field (if the value is a string) when the form is
+            // displayed. If this has any value other than false and the form has
+            // been submitted with an error, the first field with an error will
+            // be focussed.
             'autofocus'  => false,
+
+            // The directories to search for additional elements, renderers and
+            // rules
+            'configdirs' => array(),
+
+            // The language to use for any form strings, such as those found in
+            // rules.
             'language'   => 'en.utf8',
-            'validate'   => true,
-            'submit'     => true,
-            'elements'   => array(),
-            'submitfunction' => '',
-            'validatefunction' => '',
+
+            // Any overriding language strings for rules
+            'rulei18n'   => array(),
+
+            // The tabindex for the form (managed automatically by Pieforms)
+            'tabindex'   => false
         );
         $data = array_merge($formdefaults, $formconfig, $data);
         $this->data = $data;
 
         // Set the method - only get/post allowed
-        $data['method'] = strtolower($data['method']);
-        if ($data['method'] != 'post') {
-            $data['method'] = 'get';
+        $this->data['method'] = strtolower($data['method']);
+        if ($this->data['method'] != 'post') {
+            $this->data['method'] = 'get';
         }
-        $this->method     = $data['method'];
-        $this->action     = $data['action'];
-        $this->validate   = $data['validate'];
-        $this->submit     = $data['submit'];
-        $this->configdirs = array_map(
+
+        // Make sure that the javascript callbacks are valid
+        if ($this->data['jsform']) {
+            $this->validate_js_callbacks();
+        }
+
+        if (!$this->data['validatecallback']) {
+            $this->data['validatecallback'] = $this->name . '_validate';
+        }
+
+        if (!$this->data['successcallback']) {
+            $this->data['successcallback'] = $this->name . '_submit';
+        }
+
+        $this->data['configdirs'] = array_map(
             create_function('$a', 'return substr($a, -1) == "/" ? substr($a, 0, -1) : $a;'),
-            (array) $data['configdirs']);
-        $this->autofocus  = $data['autofocus'];
-        $this->language   = $data['language'];
-        
-        if ($data['submitfunction']) {
-            $this->submitfunction = $data['submitfunction'];
-        }
-        else {
-            $this->submitfunction = $this->name . '_submit';
+            (array) $this->data['configdirs']);
+
+
+        if (empty($this->data['tabindex'])) {
+            $this->data['tabindex'] = self::$formtabindex++;
         }
 
-        if ($data['validatefunction']) {
-            $this->validatefunction = $data['validatefunction'];
-        }
-        else {
-            $this->validatefunction = $this->name . '_validate';
-        }
-
-        if ($data['ajaxpost']) {
-            $this->ajaxpost = true;
-            $this->preajaxsubmitcallback  = self::validate_js_callback($data['preajaxsubmitcallback']);
-            $this->postajaxsubmitcallback = self::validate_js_callback($data['postajaxsubmitcallback']);
-            // @todo rename to *callback instead of *function for consistency
-            $this->ajaxsuccessfunction    = self::validate_js_callback($data['ajaxsuccessfunction']);
-            $this->ajaxfailurefunction    = self::validate_js_callback($data['ajaxfailurefunction']);
-        }
-
-        if (isset($data['renderer'])) {
-            $this->renderer = $data['renderer'];
-        }
-
-        if (isset($data['tabindex'])) {
-            $this->tabindex = intval($data['tabindex']);
-        }
-        else {
-            $this->tabindex = self::$formtabindex++;
-        }
-
-        $this->iscancellable = (isset($data['iscancellable']) && !$data['iscancellable']) ? false : true;
-
-        if (!is_array($data['elements']) || count($data['elements']) == 0) {
+        if (!is_array($this->data['elements']) || count($this->data['elements']) == 0) {
             throw new PieformException('Forms must have a list of elements');
         }
 
         // Remove elements to ignore
-        foreach ($data['elements'] as $name => $element) {
+        foreach ($this->data['elements'] as $name => $element) {
             if (isset($element['type']) && $element['type'] == 'fieldset') {
                 foreach ($element['elements'] as $subname => $subelement) {
                     if (!empty($subelement['ignore'])) {
-                        unset ($data['elements'][$name]['elements'][$subname]);
+                        unset ($this->data['elements'][$name]['elements'][$subname]);
                     }
                 }
             }
             else {
                 if (!empty($element['ignore'])) {
-                    unset($data['elements'][$name]);
+                    unset($this->data['elements'][$name]);
                 }
             }
         }
 
-        $this->elements = $data['elements'];
-
         // Set some attributes for all elements
         $autofocusadded = false;
-        foreach ($this->elements as $name => &$element) {
+        foreach ($this->data['elements'] as $name => &$element) {
+            // @todo re-check ordering of this section
             // The name can be in the element itself. This is compatibility for the perl version
             if (isset($element['name'])) {
                 $name = $element['name'];
@@ -449,12 +361,13 @@ class Pieform {
             }
             if ($element['type'] == 'file') {
                 $this->fileupload = true;
-                if ($this->method == 'get') {
-                    $this->method = 'post';
+                if ($this->data['method'] == 'get') {
+                    $this->data['method'] = 'post';
                     self::info("Your form '$this->name' had the method 'get' and also a file element - it has been converted to 'post'");
                 }
             }
             if ($element['type'] == 'fieldset') {
+                $this->include_plugin('element', 'fieldset');
                 foreach ($element['elements'] as $subname => &$subelement) {
                     // The name can be in the element itself. This is compatibility for the perl version
                     if (isset($subelement['name'])) {
@@ -470,32 +383,12 @@ class Pieform {
                                 . $name . '" has no value');
                         }
                     }
-                    if (!isset($subelement['title'])) {
-                        $subelement['title'] = '';
-                    }
-                    if ($subelement['type'] == 'file') {
-                        $this->fileupload = true;
-                        if ($this->method == 'get') {
-                            $this->method = 'post';
-                            self::info("Your form '$this->name' had the method 'get' and also a file element - it has been converted to 'post'");
-                        }
-                    }
-                    if (!$autofocusadded && $this->autofocus === true) {
-                        $subelement['autofocus'] = true;
-                        $autofocusadded = true;
-                    }
-                    else if (!empty($this->autofocus) && $this->autofocus !== true
-                        && $subname == $this->autofocus) {
-                        $subelement['autofocus'] = true;
-                    }
-                    $subelement['name'] = $subname;
-                    $subelement['tabindex'] = $this->tabindex;
 
-                    // Let each element set and override attributes if necessary
+                    // Configure some basics for real elements
                     if ($subelement['type'] != 'markup') {
                         // This function can be defined by the application using Pieforms,
                         // and applies to all elements of this type
-                        $function = 'pieform_configure_' . $subelement['type'];
+                        $function = 'pieform_element_' . $subelement['type'] . '_configure';
                         if (function_exists($function)) {
                             $subelement = $function($subelement);
                         }
@@ -503,65 +396,100 @@ class Pieform {
                         // This function is defined by the plugin itself, to set fields on
                         // the element that need to be set but should not be set by the
                         // application
-                        $function = 'pieform_render_' . $subelement['type'] . '_set_attributes';
+                        $function = 'pieform_element_' . $subelement['type'] . '_set_attributes';
                         $this->include_plugin('element',  $subelement['type']);
                         if (function_exists($function)) {
                             $subelement = $function($subelement);
                         }
+
+                        // Add the autofocus flag to the element if required
+                        if (!$autofocusadded && $this->data['autofocus'] === true && empty($element['nofocus'])) {
+                            $subelement['autofocus'] = true;
+                            $autofocusadded = true;
+                        }
+                        else if (!empty($this->data['autofocus']) && $this->data['autofocus'] !== true
+                            && $subname == $this->data['autofocus']) {
+                            $subelement['autofocus'] = true;
+                        }
+
+                        // All elements should have some kind of title
+                        if (!isset($subelement['title'])) {
+                            $subelement['title'] = '';
+                        }
+
+                        // Force the form method to post if there is a file to upload.
+                        if ($subelement['type'] == 'file') {
+                            $this->fileupload = true;
+                            if ($this->data['method'] == 'get') {
+                                $this->data['method'] = 'post';
+                                self::info("Your form '$this->name' had the method 'get' and also a file element - it has been converted to 'post'");
+                            }
+                        }
+
+                        // All elements inherit the form tabindex
+                        $subelement['tabindex'] = $this->data['tabindex'];
                     }
+                    $subelement['name'] = $subname;
+
                 }
             }
             else {
-                if (!$autofocusadded && $this->autofocus === true) {
-                    $element['autofocus'] = true;
-                    $autofocusadded = true;
-                }
-                elseif (!empty($this->autofocus) && $this->autofocus !== true
-                    && $name == $this->autofocus) {
-                    $element['autofocus'] = true;
+                // Let each element set and override attributes if necessary
+                if ($element['type'] != 'markup') {
+                    $function = 'pieform_element_' . $element['type'] . '_configure';
+                    if (function_exists($function)) {
+                        $element = $function($element);
+                    }
+
+                    $function = 'pieform_element_' . $element['type'] . '_set_attributes';
+                    $this->include_plugin('element',  $element['type']);
+                    if (function_exists($function)) {
+                        $element = $function($element);
+                    }
+
+                    // Add the autofocus flag to the element if required
+                    if (!$autofocusadded && $this->data['autofocus'] === true && empty($element['nofocus'])) {
+                        $element['autofocus'] = true;
+                        $autofocusadded = true;
+                    }
+                    elseif (!empty($this->data['autofocus']) && $this->data['autofocus'] !== true
+                        && $name == $this->data['autofocus']) {
+                        $element['autofocus'] = true;
+                    }
+
+                    $element['tabindex'] = $this->data['tabindex'];
                 }
                 $element['name'] = $name;
-                $element['tabindex'] = $this->tabindex;
             }
 
-            // Let each element set and override attributes if necessary
-            if ($element['type'] != 'markup') {
-                $function = 'pieform_configure_' . $element['type'];
-                if (function_exists($function)) {
-                    $element = $function($element);
-                }
-
-                $function = 'pieform_render_' . $element['type'] . '_set_attributes';
-                $this->include_plugin('element',  $element['type']);
-                if (function_exists($function)) {
-                    $element = $function($element);
-                }
-            }
         }
 
         // Check if the form was submitted, and if so, validate and process it
-        $global = ($this->method == 'get') ? $_GET: $_POST;
-        if ($this->validate && isset($global['pieform_' . $this->name] )) {
-            if ($this->submit) {
+        $global = ($this->data['method'] == 'get') ? $_GET: $_POST;
+        if ($this->data['validate'] && isset($global['pieform_' . $this->name] )) {
+            if ($this->data['submit']) {
                 $this->submitted = true;
                 // Check if the form has been cancelled
-                if ($this->iscancellable) {
+                if ($this->data['iscancellable']) {
                     foreach ($global as $key => $value) {
                         if (substr($key, 0, 7) == 'cancel_') {
-                            // Check for and call the cancel function handler
-                            // @todo<nigel>: it might be that this function could be optional
+                            // Check for and call the cancel function handler, if defined
                             $function = $this->name . '_' . $key;
-                            if (!function_exists($function)) {
-                                throw new PieformException('Form "' . $this->name . '" does not have a cancel function handler for "' . substr($key, 7) . '"');
+                            if (function_exists($function)) {
+                                $function($this);
                             }
-                            $function();
+
+                            // Redirect the user to where they should go, if the cancel handler didn't already
                             $element = $this->get_element(substr($key, 7));
                             if (!isset($element['goto'])) {
                                 throw new PieformException('Cancel element "' . $element['name'] . '" has no page to go to');
                             }
-                            // @todo what happens in the case of ajax post?
-                            redirect($element['goto']);
-                            return;
+                            if ($this->data['jsform']) {
+                                $this->json_reply(PIEFORM_CANCEL, $element['goto']);
+                            }
+                            header('HTTP/1.1 303 See Other');
+                            header('Location:' . $element['goto']);
+                            exit;
                         }
                     }
                 }
@@ -571,41 +499,41 @@ class Pieform {
             $values = $this->get_submitted_values();
             // Perform general validation first
             $this->validate($values);
-            // Then user specific validation if a function is available for that
-            if (function_exists($this->validatefunction)) {
-                $function = $this->validatefunction;
-                $function($this, $values);
-            }
 
             // Submit the form if things went OK
-            if ($this->submit && !$this->has_errors()) {
+            if ($this->data['submit'] && !$this->has_errors()) {
                 $submitted = false;
                 foreach ($this->get_elements() as $element) {
-                    // @todo Rename 'ajaxmessages' to 'submitelement'
-                    if (!empty($element['ajaxmessages']) == true && isset($global[$element['name']])) {
+                    if (!empty($element['submitelement']) && isset($global[$element['name']])) {
                         $function = "{$this->name}_submit_{$element['name']}";
                         if (function_exists($function)) {
-                            $function($values);
+                            $function($this, $values);
                             $submitted = true;
                             break;
                         }
                     }
                 }
-                if (!$submitted && function_exists($this->submitfunction)) {
-                    $function = $this->submitfunction;
+                $function = $this->data['successcallback'];
+                if (!$submitted && is_callable($function)) {
                     // Call the user defined function for processing a submit
                     // This function should really redirect/exit after it has
                     // finished processing the form.
                     // @todo maybe it should do just that...
-                    $function($values);
-                    // This will only work if I can make the login_submit function stuff work in login_validate
-                    //if ($this->ajaxpost) {
-                    //    $message = 'Your ' . $this->name . '_submit function should output some json and exit';
-                    //}
-                    //else {
-                    //    $message = 'Your ' . $this->name . '_submit function should redirect when it is finished';
-                    //}
-                    //throw new PieformException($message);
+                    call_user_func_array($function, array($this, $values));
+                    if ($this->data['dieaftersubmit']) {
+                        // This will only work if I can make the login_submit function stuff work in login_validate
+                        if ($this->data['jsform']) {
+                            $message = 'Your ' . $this->name . '_submit function should use $form->json_reply to send a response';
+                        }
+                        else {
+                            $message = 'Your ' . $this->name . '_submit function should redirect or exit when it is done';
+                        }
+                        throw new PieformException($message);
+                    }
+                    else {
+                        // Successful submission, and the user doesn't care about replying, so...
+                        return;
+                    }
                 }
                 else if (!$submitted) {
                     throw new PieformException('No function registered to handle form submission for form "' . $this->name . '"');
@@ -613,19 +541,25 @@ class Pieform {
             }
 
             // Auto focus the first element with an error if required
-            if ($this->autofocus !== false) {
+            if ($this->data['autofocus'] !== false) {
                 $this->auto_focus_first_error();
             }
+
+            // Call the user-defined PHP error function, if it exists
+            $function = $this->data['errorcallback'];
+            if (is_callable($function)) {
+                call_user_func_array($function, array($this));
+            }
             
-            // If the form has been submitted by ajax, return ajax
-            if ($this->ajaxpost) {
+            // If the form has been submitted by javascript, return json
+            if ($this->data['jsform']) {
                 $errors = $this->get_errors();
                 $json = array();
                 foreach ($errors as $element) {
                     $json[$element['name']] = $element['error'];
                 }
-                echo json_encode(array('error' => 'local', 'message' => '@todo allow forms to specify a local error message', 'errors' => $json));
-                exit;
+                $message = $this->get_property('jserrormessage');
+                $this->json_reply(PIEFORM_ERR, array('message' => $message, 'errors' => $json));
             }
         }
     }
@@ -652,30 +586,12 @@ class Pieform {
     }
 
     /**
-     * Returns the form submission method
-     *
-     * @return string
-     */
-    public function get_method() {
-        return $this->method;
-    }
-
-    /**
-     * Is the form being submitted by ajax?
+     * Returns whether the form has been submitted
      *
      * @return bool
      */
-    public function get_ajaxpost() {
-        return $this->ajaxpost;
-    }
-
-    /**
-     * Returns the renderer used on to render the form
-     *
-     * @return string
-     */
-    public function get_renderer() {
-        return $this->renderer;
+    public function is_submitted() {
+        return $this->submitted;
     }
 
     /**
@@ -684,9 +600,9 @@ class Pieform {
      * @return string
      */
     public function get_form_tag() {
-        $result = '<form';
+        $result = '<form class="pieform"';
         foreach (array('name', 'method', 'action') as $attribute) {
-            $result .= ' ' . $attribute . '="' . $this->{$attribute} . '"';
+            $result .= ' ' . $attribute . '="' . $this->data[$attribute] . '"';
         }
         $result .= ' id="' . $this->name . '"';
         if ($this->fileupload) {
@@ -694,15 +610,6 @@ class Pieform {
         }
         $result .= '>';
         return $result;
-    }
-
-    /**
-     * Returns whether the form has been submitted
-     *
-     * @return bool
-     */
-    public function is_submitted() {
-        return $this->submitted;
     }
 
     /**
@@ -722,23 +629,23 @@ class Pieform {
             $result = $this->get_form_tag() . "\n";
         }
 
-        $this->include_plugin('renderer',  $this->renderer);
+        $this->include_plugin('renderer',  $this->data['renderer']);
         
         // Form header
-        $function = 'pieform_renderer_' . $this->renderer . '_header';
+        $function = 'pieform_renderer_' . $this->data['renderer'] . '_header';
         if (function_exists($function)) {
             $result .= $function();
         }
 
         // Render each element
-        foreach ($this->elements as $name => $elem) {
+        foreach ($this->data['elements'] as $name => $elem) {
             if ($elem['type'] != 'hidden') {
-                $result .= pieform_render_element($elem, $this);
+                $result .= pieform_render_element($this, $elem);
             }
         }
 
         // Form footer
-        $function = 'pieform_renderer_' . $this->renderer . '_footer';
+        $function = 'pieform_renderer_' . $this->data['renderer'] . '_footer';
         if (function_exists($function)) {
             $result .= $function();
         }
@@ -747,7 +654,7 @@ class Pieform {
         $this->include_plugin('element', 'hidden');
         foreach ($this->get_elements() as $element) {
             if ($element['type'] == 'hidden') {
-                $result .= pieform_render_hidden($element, $this);
+                $result .= pieform_element_hidden($element, $this);
             }
         }
         $element = array(
@@ -755,15 +662,24 @@ class Pieform {
             'name'  => 'pieform_' . $this->name,
             'value' => ''
         );
-        $result .= pieform_render_hidden($element, $this);
+        $result .= pieform_element_hidden($element, $this);
         if ($outputformtags) {
             $result .= "</form>\n";
         }
 
-        if ($this->ajaxpost) {
-            $result .= '<script language="javascript" type="text/javascript">';
+        if ($this->data['jsform'] || $this->data['presubmitcallback']) {
+            $result .= '<script type="text/javascript">';
+            $result .= "\n" . $this->whichbutton_js();
+        }
+        if ($this->data['jsform']) {
             $result .= $this->submit_js();
-            $result .=  "</script>\n";
+        }
+        else if ($this->data['presubmitcallback']) {
+            $result .= 'connect(\'' . $this->name . '\', \'onsubmit\', '
+                . 'function() { ' . $this->data['presubmitcallback'] . "('{$this->name}', {$this->name}_btn); });";
+        }
+        if ($this->data['jsform'] || $this->data['presubmitcallback']) {
+            $result .=  "\n</script>\n";
         }
 
         return $result;
@@ -777,19 +693,15 @@ class Pieform {
      *                        is available for the element.
      */
     public function get_value($element) {
-        $function = 'pieform_get_value_' . $element['type'];
-        // @todo for consistency, reverse parameter order - always a Form object first
+        $function = 'pieform_element_' . $element['type'] . '_get_value';
         if (function_exists($function)) {
-            return $function($element, $this);
+            return $function($this, $element);
         }
-        $global = ($this->method == 'get') ? $_GET : $_POST;
+        $global = ($this->data['method'] == 'get') ? $_GET : $_POST;
         // If the element is a submit element and has its value in the request, return it
         // Otherwise, we don't return the value if the form has been submitted, as they
         // aren't normally returned using a standard form.
-        if (isset($element['value']) && !empty($element['ajaxmessages']) && isset($global[$element['name']])) {
-            return $element['value'];
-        }
-        else if (isset($element['value']) && (!$this->is_submitted() || (empty($element['ajaxmessages'])))) {
+        if (isset($element['value'])) {
             return $element['value'];
         }
         else if (isset($global[$element['name']]) && $element['type'] != 'submit') {
@@ -810,7 +722,7 @@ class Pieform {
      */ 
     public function get_elements() {
         $elements = array();
-        foreach ($this->elements as $name => $element) {
+        foreach ($this->data['elements'] as $name => $element) {
             if ($element['type'] == 'fieldset') {
                 foreach ($element['elements'] as $subelement) {
                     $elements[] = $subelement;
@@ -844,7 +756,7 @@ class Pieform {
     }
 
     /**
-     * Retrieves submitted values from POST for the elements of this form.
+     * Retrieves submitted values from the request for the elements of this form.
      *
      * This takes into account that some elements may not even have been set,
      * for example if they were check boxes that were not checked upon
@@ -857,10 +769,18 @@ class Pieform {
      */
     private function get_submitted_values() {
         $result = array();
-        $global = ($this->method == 'get') ? $_GET : $_POST;
+        $global = ($this->data['method'] == 'get') ? $_GET : $_POST;
         foreach ($this->get_elements() as $element) {
             if ($element['type'] != 'markup') {
-                $result[$element['name']] = $this->get_value($element);
+                if (
+                    (empty($element['submitelement']) && empty($element['cancelelement'])) ||
+                    (
+                        (!empty($element['submitelement']) || !empty($element['cancelelement']))
+                        && isset($global[$element['name']])
+                    )
+                ) {
+                    $result[$element['name']] = $this->get_value($element);
+                }
             }
         }
         return $result;
@@ -880,16 +800,27 @@ class Pieform {
      * @param array $values The submitted values from the form
      */
     private function validate($values) {
+        // Call the overall validation function if it is available
+        if (function_exists('pieform_validate')) {
+            pieform_validate($this, $values);
+        }
+
+        // Perform rule validation
         foreach ($this->get_elements() as $element) {
             if (isset($element['rules']) && is_array($element['rules'])) {
                 foreach ($element['rules'] as $rule => $data) {
                     if (!$this->get_error($element['name'])) {
-                        // Get the rule
-                        $function = 'pieform_rule_' . $rule;
+                        // See if this element has a function that describes
+                        // how this rule should apply to it
+                        $function = 'pieform_element_' . $element['name'] . '_rule_' . $rule;
                         if (!function_exists($function)) {
-                            $this->include_plugin('rule', $rule);
+                            // Try instead the default rule function
+                            $function = 'pieform_rule_' . $rule;
                             if (!function_exists($function)) {
-                                throw new PieformException('No such form rule "' . $rule . '"');
+                                $this->include_plugin('rule', $rule);
+                                if (!function_exists($function)) {
+                                    throw new PieformException('No such form rule "' . $rule . '"');
+                                }
                             }
                         }
                         if ($error = $function($this, $values[$element['name']], $element, $data)) {
@@ -899,134 +830,155 @@ class Pieform {
                 }
             }
         }
+
+        // Then user specific validation if a function is available for that
+        $function = $this->data['validatecallback'];
+        if (is_callable($function)) {
+            call_user_func_array($function, array($this, $values));
+        }
     }
 
-    /**
-     * Returns a js function to submit an ajax form 
-     * Expects formname_message() to be defined by the renderer,
-     * and formname_validate() to be defined.
-     */
-    private function submit_js() {
-        // @todo nigel should disable all buttons on this form while the submit is happening
-        $result = <<<EOF
+    private function whichbutton_js() {
+        $result = "var {$this->name}_btn = null;\n";
 
-var {$this->name}_btn = null;
-// For each submit button, add a waffer thin flag
-addLoadEvent(function () {
-
-EOF;
+        $connecteventadded = false;
         foreach ($this->get_elements() as $element) {
-            if (!empty($element['ajaxmessages'])) {
-                $result .= "    connect($('{$this->name}_{$element['name']}'), 'onclick', function () { {$this->name}_btn = '{$element['name']}'; });\n";
-            }
-        }
-        $result .= <<<EOF
-
-});
-
-connect($('{$this->name}'), 'onsubmit', function (e) {
-    // eventually we should check input types for wysiwyg before doing this
-    // Also should only save wysiwyg elements in the form, not all of them...
-    if (typeof(tinyMCE) != 'undefined') { tinyMCE.triggerSave(); } 
-
-EOF;
-        if (!empty($this->preajaxsubmitcallback)) {
-            $result .= "    $this->preajaxsubmitcallback();\n";
-        }
-        $result .= <<<EOF
-    var data = {};
-
-EOF;
-        // Get values for each element from the form via the DOM
-        foreach ($this->get_elements() as $element) {
-            // Submit elements will be handled later, as there could be more than one
-            if (empty($element['ajaxmessages'])) {
-                if ($element['type'] != 'markup') {
-                    $function = 'pieform_get_value_js_' . $element['type'];
-                    if (function_exists($function)) {
-                        // @todo reverse parameter order for consistency, PieForm first
-                        $result .= $function($element, $this);
-                    }
-                    else {
-                        $result .= "    data['" . $element['name'] . "'] = document.forms['$this->name'].elements['{$element['name']}'].value;\n";
-                    }
+            if (!empty($element['submitelement'])) {
+                if (!$connecteventadded) {
+                    $result .= "addLoadEvent(function() {\n";
+                    $connecteventadded = true;
                 }
+                if (!empty($element['cancelelement'])) {
+                    $cancelstr = 'cancel_';
+                }
+                else {
+                    $cancelstr = '';
+                }
+                $result .= "    connect($('{$cancelstr}{$this->name}_{$element['name']}'), 'onclick', function() { {$this->name}_btn = '{$cancelstr}{$this->name}_{$element['name']}'; });\n";
             }
         }
+        if ($connecteventadded) {
+            $result .= "});\n";
+        }
 
-        // Add only the submit button that was clicked
-        $result .= "    data[{$this->name}_btn] = document.forms['$this->name'].elements['{$this->name}_' + {$this->name}_btn].value;\n";
+        return $result;
+    }
 
-        // Add the hidden element for detecting form submission
-        $result .= "    data['pieform_{$this->name}'] = '';\n";
+    private function submit_js() {
+        $strprocessingform = get_string('processingform');
 
-        $action = ($this->action) ? $this->action : basename($_SERVER['PHP_SELF']);
-        $method = ($this->get_method() == 'get') ? 'GET' : 'POST';
-        $result .= <<<EOF
-    var req = getXMLHttpRequest();
-    req.open('{$method}', '{$action}');
-    req.setRequestHeader('Content-type','application/x-www-form-urlencoded'); 
-    var d = sendXMLHttpRequest(req,queryString(data));
-    d.addCallbacks(
-    function (result) {
-        {$this->name}_remove_all_errors();
-        var data = evalJSONRequest(result);
-        if (data.error) {
-            {$this->name}_message(data.message, 'error');
-            for (error in data.errors) {
-                {$this->name}_set_error(data.errors[error], error);
-            }
+        $result = <<<EOF
+connect($('{$this->name}'), 'onsubmit', function(e) {
+    if (typeof(tinyMCE) != 'undefined') { tinyMCE.triggerSave(); }
 
 EOF;
-        
-        if (!empty($this->ajaxfailurefunction)) {
-            $result .= "            {$this->ajaxfailurefunction}(data);\n";
+        if (!empty($this->data['presubmitcallback'])) {
+            $result .= "    {$this->data['presubmitcallback']}('{$this->name}', {$this->name}_btn);\n";
         }
         $result .= <<<EOF
+
+    var iframe = $('{$this->name}_iframe');
+    $('{$this->name}').target = '{$this->name}_iframe';
+    if (!iframe) {
+        iframe = createDOM('iframe', {
+            'name': '{$this->name}_iframe',
+            'id'  : '{$this->name}_iframe'
+        });
+        hideElement(iframe);
+        insertSiblingNodesAfter($('{$this->name}'), iframe);
+
+        window.pieformHandler_{$this->name} = function(data) {
+
+EOF;
+        if (isset($this->data['processingstopcallback'])) {
+            $result .= "            {$this->data['processingstopcallback']}('{$this->name}', {$this->name}_btn);\n";
+        }
+
+        $result .= <<<EOF
+            evalJSONRequest(data);
+            if (data.returnCode == 0) {
+                {$this->name}_remove_all_errors();
+                // The request completed successfully
+
+EOF;
+        if (!empty($this->data['jssuccesscallback'])) {
+            $result .= "                {$this->data['jssuccesscallback']}('{$this->name}', data);\n";
+        }
+
+        $result .= <<<EOF
+            }
+            else {
+                if (data.returnCode == -2) {
+                    window.location = data.message;
+                    return;
+                }
+                    
+                {$this->name}_remove_all_errors();
+                if (data.message.errors) {
+                    for (error in data.message.errors) {
+                        {$this->name}_set_error(data.message.errors[error], error);
+                    }
+                    // @todo only output when fieldsets are present
+                    forEach(getElementsByTagAndClassName('fieldset', 'collapsed', '{$this->name}'), function(fieldset) {
+                        if (getFirstElementByTagAndClassName(null, 'error', fieldset)) {
+                            removeElementClass(fieldset, 'collapsed');
+                        }
+                    });
+                }
+
+                if (data.returnCode == -1) {
+
+EOF;
+        if (!empty($this->data['jserrorcallback'])) {
+            $result .= "                    {$this->data['jserrorcallback']}('{$this->name}', data);\n";
+        }
+        $result .= <<<EOF
+                }
+                else {
+
+EOF;
+        if (!empty($this->data['globaljserrorcallback'])) {
+            $result .= "                    {$this->data['globaljserrorcallback']}('{$this->name}', data);\n";
         }
         else {
-            {$this->name}_message(data.message, 'ok');
-
-EOF;
-
-        if (!empty($this->ajaxsuccessfunction)) {
-            $result .= "            {$this->ajaxsuccessfunction}(data);\n";
-        }
-
-        $result .= "            {$this->name}_remove_all_errors();\n";
-        $result .= "        }\n";
-        if (!empty($this->postajaxsubmitcallback)) {
-            $result .= "    $this->postajaxsubmitcallback();\n";
-        }
-
-        $strunknownerror =   $this->i18n('ajaxunknownerror');
-        $strprocessingform = $this->i18n('processingform');
-        $result .= <<<EOF
-    },
-    function() {
-        {$this->name}_message('{$strunknownerror}', 'error');
-
-EOF;
-        if (!empty($this->postajaxsubmitcallback)) {
-            $result .= "        $this->postajaxsubmitcallback();\n";
+            $result .= "                    alert('Developer: got error code ' + data.returnCode
+                    + ', either fix your form to not use this code or define a global js error handler');\n";
         }
         $result .= <<<EOF
-    });
-    {$this->name}_message('{$strprocessingform}', 'info');
-    e.stop();
-});
-
-EOF;
-
-        $js_messages_function = 'pieform_renderer_' . $this->renderer . '_messages_js';
-        if (!function_exists($js_messages_function)) {
-            $this->include_plugin('renderer', $this->renderer);
-            if (!function_exists($js_messages_function)) {
-                throw new PieformException('No renderer message function "' . $js_messages_function . '"');
+                }
             }
+
+EOF;
+        if (!empty($this->data['postsubmitcallback'])) {
+            $result .= "            {$this->data['postsubmitcallback']}('{$this->name}', {$this->name}_btn);\n";
         }
 
-        return $result . $js_messages_function($this->name);
+        $result .= <<<EOF
+            {$this->name}_btn = null;
+        }
+    }
+
+EOF;
+        $result .= "});\n\n";
+        $function = 'pieform_renderer_' . $this->data['renderer'] . '_get_js';
+        if (!function_exists($function)) {
+            throw new PieformException('No renderer message function "' . $function . '"');
+        }
+
+        return $result . $function($this->name);
+    }
+    
+    public function json_reply($returncode, $message=null) {
+        $data = array(
+            'returnCode' => intval($returncode),
+            'message'    => $message
+        );
+        $result = json_encode($data);
+
+        echo <<<EOF
+<html><head><script type="text/javascript">function sendResult() { parent.pieformHandler_{$this->name}($result); }</script></head><body onload="sendResult(); "></body></html>
+EOF;
+        exit;
     }
 
     /**
@@ -1066,7 +1018,7 @@ EOF;
      * @throws PieformException  If the element could not be found
      */
     public function set_error($name, $message) {
-        foreach ($this->elements as &$element) {
+        foreach ($this->data['elements'] as &$element) {
             if ($element['type'] == 'fieldset') {
                 foreach ($element['elements'] as &$subelement) {
                     if ($subelement['name'] == $name) {
@@ -1215,7 +1167,7 @@ EOF;
         }
 
         // Check the configured include paths if they are specified
-        foreach ($this->configdirs as $directory) {
+        foreach ($this->data['configdirs'] as $directory) {
             $file = "$directory/{$type}s/$name.php";
             if (is_readable($file)) {
                 include_once($file);
@@ -1238,17 +1190,37 @@ EOF;
      *
      * Returns english by default.
      *
-     * @param string $key The language key to look up
-     * @return string     The internationalised string
+     * @param string $plugin     The type of plugin (element, renderer, rule)
+     * @param string $pluginname The name of the plugin to get the language
+     *                           strings for
+     * @param string $key        The language key to look up
+     * @param array  $element    The element to get the string for. Elements
+     *                           can specify there own i18n strings for rules
+     * @return string            The internationalised string
      */
-    public function i18n($key) {
-        $function = 'pieform_' . $key . '_i18n';
+    public function i18n($plugin, $pluginname, $key, $element) {
+        if (!in_array($plugin, array('element', 'renderer', 'rule'))) {
+            throw new PieformException("Invalid plugin name '$plugin'");
+        }
+
+        // Check the element itself for the language string
+        if ($plugin == 'rule' && isset($element['rulei18n'][$key])) {
+            return $element['rulei18n'][$key];
+        }
+
+        // Check to see if a default was configured for the form
+        if ($plugin == 'rule' && isset($this->data['rulei18n'][$key])) {
+            return $this->data['rulei18n'][$key];
+        }
+
+        // Fall back to the default string
+        $function = 'pieform_' . $plugin . '_' . $pluginname . '_i18n';
         if (function_exists($function)) {
-            return $function($this->language);
+            $strings = $function();
+            return $strings[$this->data['language']][$key];
         }
-        if (isset($this->language_strings[$this->language][$key])) {
-            return $this->language_strings[$this->language][$key];
-        }
+
+        // We don't recognise this string
         return '[[' . $key . ']]';
     }
 
@@ -1277,14 +1249,17 @@ EOF;
         }
     }
 
-    private static function validate_js_callback($name) {
-        if ($name == '') {
-            return '';
+    /**
+     * Makes sure that the javascript callbacks for this form are valid javascript
+     * function names.
+     */
+    private function validate_js_callbacks() {
+        foreach (array('presubmitcallback', 'postsubmitcallback', 'jssuccesscallback',
+            'jserrorcallback', 'globaljserrorcallback') as $callback) {
+            if ($this->data[$callback] != '' && !preg_match('/^[a-zA-Z][a-zA-Z0-9_]*$/', $this->data[$callback])) {
+                throw new PieformException("'{$this->data[$callback]}' is not a valid javascript callback name for callback '$callback'");
+            }
         }
-        if (!preg_match('/^[a-zA-Z][a-zA-Z0-9_]*$/', $name)) {
-            throw new PieformException("'$name' is not a valid javascript callback name");
-        }
-        return $name;
     }
 
     /**
@@ -1293,7 +1268,7 @@ EOF;
      * @return array An array of elements with errors on them, the empty array
      *               in the result of no errors.
      */
-    private function get_errors() {
+    public function get_errors() {
         $result = array();
         foreach ($this->get_elements() as $element) {
             if (isset($element['error'])) {
@@ -1308,7 +1283,7 @@ EOF;
      * an error on it
      */
     private function auto_focus_first_error() {
-        foreach ($this->elements as &$element) {
+        foreach ($this->data['elements'] as &$element) {
             if ($element['type'] == 'fieldset') {
                 foreach ($element['elements'] as &$subelement) {
                     if (isset($subelement['error'])) {
@@ -1343,37 +1318,27 @@ EOF;
  * {@internal This is separate so that child element types can nest other
  * elements inside them (like the fieldset element does for example).}}
  *
- * @param array    $element The element to render
  * @param Pieform  $form    The form to render the element for
+ * @param array    $element The element to render
  * @return string           The rendered element
  */
-function pieform_render_element($element, Pieform $form) {
+function pieform_render_element(Pieform $form, $element) {
     // If the element is pure markup, don't pass it to the renderer
     if ($element['type'] == 'markup') {
         return $element['value'] . "\n";
     }
 
     // Make sure that the function to render the element type is available
-    $function = 'pieform_render_' . $element['type'];
+    $function = 'pieform_element_' . $element['type'];
 
-    // Work out the renderer function required and make sure it exists
-    if ($renderer = $form->get_renderer()) {
-        $rendererfunction = 'pieform_renderer_' . $renderer;
-        if (!function_exists($rendererfunction)) {
-            $form->include_plugin('pieform/renderers/' . $renderer . '.php');
-            if (!function_exists($rendererfunction)) {
-                throw new PieformException('No such form renderer: "' . $renderer . '"');
-            }
-        }
-    }
-    else {
-        throw new PieformException('No form renderer specified for form "' . $form->get_name() . '"');
+    $rendererfunction = 'pieform_renderer_' . $form->get_property('renderer');
+    if (!function_exists($rendererfunction)) {
+        throw new PieformException('No such form renderer function: "' . $rendererfunction . '"');
     }
 
     $element['id']    = Pieform::make_id($element);
     $element['class'] = Pieform::make_class($element);
-    // @todo reverse order of parameters for consistency, a Form object first
-    $builtelement = $function($element, $form);
+    $builtelement = $function($form, $element);
 
     // Remove the 'autofocus' class, because we only want it on the form input
     // itself, not the wrapping HTML
@@ -1386,7 +1351,7 @@ function pieform_get_headdata() {
     $htmlelements = array();
     foreach ($GLOBALS['_PIEFORM_REGISTRY'] as $form) {
         foreach ($form->get_elements() as $element) {
-            $function = 'pieform_get_headdata_' . $element['type'];
+            $function = 'pieform_element_' . $element['type'] . '_get_headdata';
             if (function_exists($function)) {
                 $elems = $function($element);
                 $htmlelements = array_merge($htmlelements, $elems);

@@ -1,0 +1,47 @@
+#!/usr/bin/make -f
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+# This has to be exported to make some magic below work.
+export DH_OPTIONS
+
+configure: configure-stamp
+configure-stamp:
+	dh_testdir
+	touch configure-stamp
+
+build: configure-stamp
+
+clean:
+	dh_testdir
+	dh_testroot
+	rm -f configure-stamp
+	dh_clean 
+
+binary:
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs 
+	dh_installdocs
+	dh_installdebconf	
+	dh_installcron
+	dh_installlogrotate
+	dh_compress 
+	dh_fixperms
+
+	cat debian/commonfunctions.sh >> debian/mahara-apache2.postinst.debhelper
+	cat debian/commonfunctions.sh >> debian/mahara-apache2.postrm.debhelper
+	cat debian/commonfunctions.sh >> debian/mahara-apache.postinst.debhelper
+	cat debian/commonfunctions.sh >> debian/mahara-apache.postrm.debhelper
+	dh_installdeb
+
+	dh_installdirs
+	dh_install
+
+	dh_gencontrol
+	dh_md5sums
+
+	dh_builddeb
+
+.PHONY: build clean binary install configure

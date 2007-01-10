@@ -30,15 +30,20 @@ define('JSON', 1);
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
-json_headers();
-
 $public = (int) param_boolean('public');
 
 $result = array();
 
-$menuitems = get_records_array('site_menu','public',$public,'displayorder');
-// @todo: Get all the filenames of the files referred to in the $menuitems records.
-// (files table doesn't exist yet)
+//$menuitems = get_records_array('site_menu','public',$public,'displayorder');
+$prefix = get_config('dbprefix');
+$menuitems = get_records_sql_array('
+   SELECT
+      s.*, a.title AS filename
+   FROM ' . $prefix . 'site_menu s
+      LEFT OUTER JOIN ' . $prefix . 'artefact a ON s.file = a.id
+   WHERE
+      s.public = ' . $public . '
+   ORDER BY s.displayorder', null);
 $rows = array();
 if ($menuitems) {
     foreach ($menuitems as $i) {
@@ -47,13 +52,14 @@ if ($menuitems) {
         $r['name'] = $i->title;
         if (empty($i->url) && !empty($i->file)) {
             $r['type'] = 'adminfile';
-            $r['linkedto'] = $i->file; // @todo: substitute the appropriate filename.
-            // $r['link'] = ''; // @todo: provide a link to the file
+            $r['linkedto'] = get_config('wwwroot') . 'artefact/file/download.php?file=' . $i->file; 
+            $r['linktext'] = $i->filename; 
+            $r['file'] = $i->file; 
         }
         else if (!empty($i->url) && empty($i->file)) {
             $r['type'] = 'externallink';
             $r['linkedto'] = $i->url;
-            // $r['link'] = $i->url;
+            $r['linktext'] = $i->url; 
         }
         else {
             json_reply('local',get_string('loadmenuitemsfailed','admin'));
@@ -61,6 +67,7 @@ if ($menuitems) {
         $rows[] = $r;
     }
 }
+
 $result['menuitems'] = array_values($rows);
 $result['error'] = false;
 $result['message'] = get_string('menuitemsloaded','admin');

@@ -56,7 +56,7 @@ $form = pieform(array(
         'description' => array(
             'type' => 'wysiwyg',
             'rows' => 10,
-            'cols' => 80,
+            'cols' => 70,
             'title' => get_string('postbody', 'artefact.blog'),
             'description' => get_string('postbodydesc', 'artefact.blog'),
             'rules' => array(
@@ -91,7 +91,7 @@ exit;
  *
  * @param array
  */
-function newpost_submit_saveandpublish(array $values) {
+function newpost_submit_saveandpublish(Pieform $form, array $values) {
     global $USER;
 
     $values['published'] = true;
@@ -104,7 +104,7 @@ function newpost_submit_saveandpublish(array $values) {
  *
  * @param array
  */
-function newpost_submit_saveasdraft(array $values) {
+function newpost_submit_saveasdraft(Pieform $form, array $values) {
     global $USER;
 
     $values['published'] = false;

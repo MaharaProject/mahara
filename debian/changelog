@@ -1,0 +1,6 @@
+mahara (0.2-1) unstable; urgency=low
+
+  * Initial Debian packaging
+
+ -- Martyn Smith <martyn@catalyst.net.nz>  Tue,  9 Jan 2007 10:47:50 +1300
+

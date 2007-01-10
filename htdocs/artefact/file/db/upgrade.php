@@ -30,6 +30,29 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
     
     $status = true;
 
+    if ($oldversion < 2007010900) {
+        $table = new XMLDBTable('artefact_file_files');
+        $field = new XMLDBField('adminfiles');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, false, true, false, null, null, 0);
+        add_field($table, $field);
+        set_field('artefact_file_files', 'adminfiles', 0);
+
+        // Put all folders into artefact_file_files
+        $prefix = get_config('dbprefix');
+        $folders = get_column_sql("
+            SELECT a.id
+            FROM " . $prefix . "artefact a
+            LEFT OUTER JOIN " . $prefix . "artefact_file_files f ON a.id = f.artefact
+            WHERE a.artefacttype = 'folder' AND f.artefact IS NULL");
+        if ($folders) {
+            foreach ($folders as $folderid) {
+                $data = (object) array('artefact' => $folderid, 'adminfiles' => 0);
+                insert_record('artefact_file_files', $data);
+            }
+        }
+
+    }
+
     return $status;
 }
 

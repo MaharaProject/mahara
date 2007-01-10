@@ -27,21 +27,20 @@
 /**
  * Provides a basic checkbox input.
  *
- * @param array    $element The element to render
  * @param Pieform  $form    The form to render the element for
+ * @param array    $element The element to render
  * @return string           The HTML for the element
  */
-function pieform_render_checkbox($element, Pieform $form) {
+function pieform_element_checkbox(Pieform $form, $element) {
     $checked = false;
-    // @todo use of 'value' and 'checked' here is ambiguous, need to write
-    // test cases and pick just one of them
     if (!empty($element['value'])) {
         $checked = true;
     }
-    if ($form->get_value($element)) {
+    $global = ($form->get_property('method') == 'get') ? $_GET : $_POST;
+    if (isset($global[$element['name']])) {
         $checked = true;
     }
-    else if (!$form->is_submitted() && !empty($element['checked'])) {
+    else if (!$form->is_submitted() && !empty($element['defaultvalue'])) {
         $checked = true;
     }
 
@@ -50,17 +49,5 @@ function pieform_render_checkbox($element, Pieform $form) {
         . ($checked ? ' checked="checked"' : '')
         . '>';
 }
-
-function pieform_get_value_js_checkbox($element, Pieform $form) {
-    $formname = $form->get_name();
-    $name = $element['name'];
-    return <<<EOF
-    if (document.forms['$formname'].elements['$name'].checked) {
-        data['$name'] = 'on';
-    }
-
-EOF;
-}
-
 
 ?>

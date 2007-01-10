@@ -4,6 +4,7 @@
 </div>
 
 {include file="columnleftstart.tpl"}
+                        <h2>{str tag='myviews'}</h2>
     			<div id="views">
         			<div style="text-align:right;">
             		<input type="button" value="{str tag="createnewview"}" onclick="window.location='create1.php';" id="createnew">

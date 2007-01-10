@@ -72,7 +72,7 @@ foreach ( $element_list as $element => $type ) {
     );
 
     if ($type == 'wysiwyg') {
-        $elements[$element]['rows'] = 7;
+        $elements[$element]['rows'] = 10;
         $elements[$element]['cols'] = 60;
     }
     if ($type == 'textarea') {
@@ -81,6 +81,8 @@ foreach ( $element_list as $element => $type ) {
     }
     if ($element == 'country') {
         $elements[$element]['options'] = getoptions_country();
+        // @todo configure default country somehow...
+        $elements[$element]['defaultvalue'] = 'nz';
     }
 
     if (isset($profilefields[$element])) {
@@ -101,7 +103,7 @@ $profileform = pieform(array(
     'name'       => 'profileform',
     'plugintype' => 'artefact',
     'pluginname' => 'internal',
-    'ajaxpost'   => true,
+    'jsform'     => true,
     'method'     => 'post',
     'elements'   => $elements,
 ));
@@ -118,7 +120,7 @@ function profileform_validate(Pieform $form, $values) {
     }
 }
 
-function profileform_submit($values) {
+function profileform_submit(Pieform $form, $values) {
     global $SESSION;
     global $USER;
     global $element_list;
@@ -248,17 +250,11 @@ function profileform_submit($values) {
         db_commit();
     }
     catch (Exception $e) {
-        json_error(get_string('profilefailedsaved','artefact.internal'));
+        $form->json_reply(PIEFORM_ERR, get_string('profilefailedsaved','artefact.internal'));
     }
 
-    echo json_encode(
-        array(
-            'error' => false,
-            'message' => get_string('profilesaved','artefact.internal'),
-        )
-    );
+    $form->json_reply(PIEFORM_OK, get_string('profilesaved','artefact.internal'));
 
-    exit;
 }
 
 $smarty = smarty();

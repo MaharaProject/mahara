@@ -26,67 +26,61 @@
 
 defined('INTERNAL') || die();
 
-$string['myblogs'] = 'My Blogs';
-$string['title'] = 'Title';
-$string['description'] = 'description';
 $string['addblog'] = 'Add Blog';
-$string['newblog'] = 'New Blog';
-
+$string['addpost'] = 'Add Post';
 $string['attach'] = 'Attach';
+$string['attachedfilelistloaded'] = 'Attached file list loaded';
 $string['attachedfiles'] = 'Attached files';
-$string['nofilesattachedtothispost'] = 'No attached files';
-$string['blogpost'] = 'blog post';
-$string['browsemyfiles'] = 'Browse my files';
-$string['remove'] = 'Remove';
-$string['savepost'] = 'Save post';
-
-$string['blogfilesdirname'] = 'blogfiles';
-$string['blogfilesdirdescription'] = 'Files uploaded as blog post attachments';
-
-$string['blogtitle'] = 'Title';
-$string['blogtitledesc'] = 'e.g., ‘Jill’s Travel Blog’.';
 $string['blogdesc'] = 'Description';
 $string['blogdescdesc'] = 'e.g., ‘Follow Jill on her exciting adventures in New Zealand’.';
+$string['blogfilesdirdescription'] = 'Files uploaded as blog post attachments';
+$string['blogfilesdirname'] = 'blogfiles';
+$string['blogpost'] = 'blog post';
+$string['blogpostsaved'] = 'Blog post saved';
+$string['blogsettings'] = 'Blog Settings';
+$string['blogtitle'] = 'Title';
+$string['blogtitledesc'] = 'e.g., ‘Jill’s Travel Blog’.';
+$string['browsemyfiles'] = 'Browse my files';
+$string['cancel'] = 'Cancel';
 $string['commentsallowed'] = 'Comments';
 $string['commentsalloweddesc'] = 'Comments can be made on your blog posts if you turn on this option.';
-$string['commentsallowedyes'] = 'Allow logged in users to comment on this blog';
 $string['commentsallowedno'] = 'Don’t allow comments on this blog';
+$string['commentsallowedyes'] = 'Allow logged in users to comment on this blog';
 $string['commentsnotify'] = 'Comment Notification';
 $string['commentsnotifydesc'] = 'You can optionally receive notification whenever someone adds a comment to one of your blog posts.';
-$string['commentsnotifyyes'] = 'Notify me of comments to this blog';
 $string['commentsnotifyno'] = 'Do not notify me of comments to this blog';
-
+$string['commentsnotifyyes'] = 'Notify me of comments to this blog';
+$string['createandpublishdesc'] = 'This will create the blog post and make it available to others.';
+$string['createasdraftdesc'] = 'This will create the blog post, but it will not become available to others until you choose to publish it.';
 $string['createblog'] = 'Create Blog';
-$string['cancel'] = 'Cancel';
-
-$string['viewblog'] = 'View Blog';
-$string['blogsettings'] = 'Blog Settings';
-$string['settings'] = 'Settings';
-$string['addpost'] = 'Add Post';
+$string['delete'] = 'Delete';
+$string['description'] = 'description';
+$string['edit'] = 'Edit';
+$string['editblogpost'] = 'Edit Blog Post';
+$string['erroraccessingblogfilesfolder'] = 'Error accessing blogfiles folder';
+$string['errorsavingattachments'] = 'An error occurred while saving blog post attachments';
+$string['myblogs'] = 'My Blogs';
+$string['newblog'] = 'New Blog';
 $string['newblogpost'] = 'New Blog Post';
-$string['posttitle'] = 'Title';
-$string['posttitledesc'] = 'The title appears above your post.';
+$string['nofilesattachedtothispost'] = 'No attached files';
+$string['noresults'] = 'No results';
 $string['postbody'] = 'Body';
 $string['postbodydesc'] = 'This is where your actual post goes.';
-$string['saveandpublish'] = 'Save and Publish';
-$string['createandpublishdesc'] = 'This will create the blog post and make it available to others.';
-$string['saveasdraft'] = 'Save as Draft';
-$string['createasdraftdesc'] = 'This will create the blog post, but it will not become available to others until you choose to publish it.';
-
-$string['savesettings'] = 'Save Settings';
-
+$string['posttitle'] = 'Title';
+$string['posttitledesc'] = 'The title appears above your post.';
 $string['publish'] = 'Publish';
 $string['published'] = 'Published';
-
-$string['edit'] = 'Edit';
-$string['delete'] = 'Delete';
-
-$string['editblogpost'] = 'Edit Blog Post';
-
+$string['remove'] = 'Remove';
+$string['save'] = 'Save';
+$string['saveandpublish'] = 'Save and Publish';
+$string['saveasdraft'] = 'Save as Draft';
+$string['savepost'] = 'Save post';
+$string['savesettings'] = 'Save Settings';
+$string['settings'] = 'Settings';
 $string['thisisdraft'] = 'This post is a draft';
 $string['thisisdraftdesc'] = 'When your post is a draft, no one except you can see it.';
-$string['save'] = 'Save';
-
-$string['noresults'] = 'No results';
+$string['title'] = 'Title';
+$string['viewblog'] = 'View Blog';
+$string['youarenottheownerofthisblogpost'] = 'You are not the owner of this blog post';
 
 ?>

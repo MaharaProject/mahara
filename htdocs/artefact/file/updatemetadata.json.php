@@ -40,8 +40,10 @@ $id = param_integer('id');
 $name = param_variable('name');
 $description = param_variable('description');
 $collideaction = param_variable('collideaction', 'fail');
+$adminfiles = param_boolean('adminfiles', false);
+$owner = $USER->get('id');
 
-if ($existingid = ArtefactTypeFileBase::exists_in_db($name, $USER->get('id'), $parentfolder)) {
+if ($existingid = ArtefactTypeFileBase::file_exists($name, $owner, $parentfolder, $adminfiles)) {
     if ($existingid != $id) {
         if ($collideaction == 'replace') {
             log_debug('deleting ' . $existingid);
@@ -55,8 +57,10 @@ if ($existingid = ArtefactTypeFileBase::exists_in_db($name, $USER->get('id'), $p
 }
 
 $artefact = artefact_instance_from_id($id);
-$artefact->set('title',$name);
-$artefact->set('description',$description);
+$artefact->set('title', $name);
+$artefact->set('description', $description);
+$artefact->set('adminfiles', (int) $adminfiles);
+$artefact->set('owner', $owner);
 $artefact->commit();
 
 json_reply(false, get_string('changessaved', 'artefact.file'));

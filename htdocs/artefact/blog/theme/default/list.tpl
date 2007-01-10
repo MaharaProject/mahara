@@ -11,14 +11,17 @@
 {include file="adminmenu.tpl"}
 </div>
 
+<div id="column-left">
+	<div class="content">
 {include file="columnleftstart.tpl"}
-			<div id="myblogs">
-    		<h2>{str section="artefact.blog" tag="myblogs"}</h2>
-    			<div class="newblog">
-        		<a href="{$WWWROOT}artefact/blog/new/">{str section="artefact.blog" tag="addblog"}</a>
-    			</div>
+        <div class="maincontent">
+		<div id="myblogs">
+            <h2>{str section="artefact.blog" tag="myblogs"}</h2>
+            <div class="addicon">
+                <a href="{$WWWROOT}artefact/blog/new/">{str section="artefact.blog" tag="addblog"}</a>
+            </div>
 
-			<table id="bloglist">
+			<table id="bloglist" class="tablerenderer">
 				<thead>
 					<tr>
 						<th>{str section="artefact.blog" tag="title"}</th>
@@ -28,11 +31,12 @@
 				<tbody>
 				</tbody>
 			</table>
-    
-				<div class="newblog">
-					<a href="{$WWWROOT}/artefact/blog/new/">{str section="artefact.blog" tag="addblog"}</a>
-				</div>
 				
-			</div>
+        </div>
+        </div>
 {include file="columnleftend.tpl"}
+				
+	</div>
+</div>
+
 {include file="footer.tpl"}

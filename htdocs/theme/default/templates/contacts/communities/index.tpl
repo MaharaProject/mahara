@@ -6,7 +6,7 @@
 
 {include file="columnleftstart.tpl"}
 			<h2>{str tag="mycommunities"}</h2>
-                            <table id="communitylist">
+                            <table id="communitylist" class="tablerenderer">
 	                        <thead>
                                     <tr>
  	                                <th>{str tag='name'}</th>

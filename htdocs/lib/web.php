@@ -79,11 +79,12 @@ tinyMCE.init({
     button_tile_map: true,
     theme: "advanced",
     plugins: "table,emotions,iespell,inlinepopups",
-    theme_advanced_buttons1 : "bold,italic,underline,strikethrough,separator,forecolor,backcolor,separator,fontselect,fontsizeselect,separator,justifyleft,justifycenter,justifyright,justifyfull",
-    theme_advanced_buttons2 : "link,unlink,separator,tablecontrols,separator,hr,emotions,iespell,cleanup,separator,cut,copy,paste",
-    theme_advanced_buttons3 : "",
+    theme_advanced_buttons1 : "bold,italic,underline,strikethrough,separator,forecolor,backcolor,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,hr,emotions,iespell,cleanup,separator,link,unlink",
+    theme_advanced_buttons2 : "tablecontrols,separator,cut,copy,paste",
+    theme_advanced_buttons3 : "fontselect,separator,fontsizeselect,separator,formatselect",
     theme_advanced_toolbar_location : "top",
-    theme_advanced_toolbar_align : "center"
+    theme_advanced_toolbar_align : "center",
+    content_css : config.themeurl + 'style/tinymce.css'
 });
 </script>
 
@@ -1077,6 +1078,10 @@ function site_menu() {
                 $menu[] = array('name' => $i->title,
                                 'link' => $i->url);
             }
+            else if ($i->file) {
+                $menu[] = array('name' => $i->title,
+                                'link' => get_config('wwwroot') . 'artefact/file/download.php?file=' . $i->file);
+            }
         }
     }
     return $menu;
@@ -1273,7 +1278,6 @@ function has_page_help() {
 
     if (in_array($firstdir, plugin_types())) {
         $bits = explode('/', $scriptname);
-        log_debug($bits);
         if (count($bits) > 2) {
             $plugintype = $bits[0];
             $pluginname = $bits[1];

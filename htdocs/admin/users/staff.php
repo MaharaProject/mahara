@@ -39,8 +39,6 @@ $staffusers = get_column('usr', 'id', 'staff', 1);
 
 $form = array(
     'name' => 'staffusers',
-    'method' => 'post',
-    'action' => '',
     'elements' => array(
         'users' => array(
             'type' => 'userlist',
@@ -55,7 +53,7 @@ $form = array(
     )
 );
 
-function staffusers_submit($values) {
+function staffusers_submit(Pieform $form, $values) {
     global $SESSION;
     $table = get_config('dbprefix') . 'usr';
     

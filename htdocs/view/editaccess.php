@@ -34,7 +34,7 @@ define('MENUITEM', 'view');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 require_once('pieforms/pieform/elements/calendar.php');
-$smarty = smarty(array(), pieform_get_headdata_calendar(pieform_configure_calendar(array())));
+$smarty = smarty(array(), pieform_element_calendar_get_headdata(pieform_element_calendar_configure(array())));
 
 $viewid = param_integer('viewid');
 $prefix = get_config('dbprefix');
@@ -94,10 +94,10 @@ $form = array(
 );
 
 function editviewaccess_cancel_submit() {
-    redirect(get_config('wwwroot') . 'view/');
+    redirect('view/');
 }
 
-function editviewaccess_submit($values) {
+function editviewaccess_submit(Pieform $form, $values) {
     global $SESSION, $USER, $viewid, $data;
 
     // For users who are being removed from having access to this view, they
@@ -188,10 +188,10 @@ function editviewaccess_submit($values) {
     }
     db_commit();
     $SESSION->add_ok_msg(get_string('viewaccesseditedsuccessfully'));
-    redirect(get_config('wwwroot') . 'view/');
+    redirect('view/');
 }
 
-$smarty->assign('titlestr', get_string('editviewaccess', 'view'));
+$smarty->assign('titlestr', get_string('editaccess', 'view'));
 $smarty->assign('form', pieform($form));
 $smarty->display('view/create4.tpl');
 

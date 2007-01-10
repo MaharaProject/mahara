@@ -39,7 +39,7 @@ $yesno = array(true  => get_string('yes'),
 
 $siteoptionform = pieform(array(
     'name'     => 'siteoptions',
-    'ajaxpost' => true,
+    'jsform'   => true,
     'renderer' => 'table',
     'elements' => array(
         'sitename' => array(
@@ -103,27 +103,27 @@ $siteoptionform = pieform(array(
     )
 ));
 
-function siteoptions_fail($field) {
-    json_reply('local', get_string('setsiteoptionsfailed','admin', get_string($field)));
+function siteoptions_fail(Pieform $form, $field) {
+    $form->json_reply(PIEFORM_ERR, get_string('setsiteoptionsfailed','admin', get_string($field)), array($field => get_string($field . 'invalid', 'admin')));
 }
 
-function siteoptions_submit($values) {
+function siteoptions_submit(Pieform $form, $values) {
     $fields = array('sitename','language','theme','pathtoclam',
                     'allowpublicviews','artefactviewinactivitytime');
     foreach ($fields as $field) {
         if (!set_config($field, $values[$field])) {
-            siteoptions_fail($field);
+            siteoptions_fail($form, $field);
         }
     }
     // submitted sessionlifetime is in minutes; db entry session_timeout is in seconds
     if (!set_config('session_timeout', $values['sessionlifetime'] * 60)) {
-        siteoptions_fail('sessionlifetime');
+        siteoptions_fail($form, 'sessionlifetime');
     }
     // Submitted value is on/off; database entry should be 1/0
     if (!set_config('viruschecking', (int) ($values['viruschecking'] == 'on'))) {
-        siteoptions_fail('viruschecking');
+        siteoptions_fail($form, 'viruschecking');
     }
-    json_reply(false, get_string('siteoptionsset','admin'));
+    $form->json_reply(PIEFORM_OK, get_string('siteoptionsset','admin'));
 }
 
 $smarty = smarty();

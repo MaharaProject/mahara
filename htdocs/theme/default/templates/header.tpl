@@ -16,6 +16,7 @@
 {$INLINEJAVASCRIPT}
         </script>
 {/if}
+        <script type="text/javascript" src="/js/pieforms.js"></script>
         <link rel="stylesheet" type="text/css" href="{$THEMEURL}style/style.css">
         <link rel="stylesheet" type="text/css" href="{$THEMEURL}style/dev.css">
         <link rel="stylesheet" type="text/css" href="{$THEMEURL}style/print.css" media="print">
@@ -48,9 +49,11 @@
                     <tr>
                         <td>{$searchform}</td>
                     </tr>
+{*
                     <tr>
                         <td class="advancedsearch"><a href="{$WWWROOT}user/search.php">{str tag=advancedsearch}</a></td>
                     </tr>
+*}
 {/if}
 					<tr>
 						<td><div id="loggedinstring">{$LOGGEDINSTR}</div></td>

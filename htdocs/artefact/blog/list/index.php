@@ -34,7 +34,7 @@ safe_require('artefact', 'blog');
 $wwwroot = get_config('wwwroot');
 
 // This JavaScript creates a table to display the blog entries.
-$js = <<<EOJAVASCRIPT
+$js = <<<EOF
 
 var bloglist = new TableRenderer(
     'bloglist',
@@ -56,7 +56,7 @@ var bloglist = new TableRenderer(
 
 bloglist.updateOnLoad();
 
-EOJAVASCRIPT;
+EOF;
 
 $smarty = smarty(array('tablerenderer'));
 $smarty->assign_by_ref('INLINEJAVASCRIPT', $js);

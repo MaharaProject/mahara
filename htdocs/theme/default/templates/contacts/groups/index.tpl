@@ -6,10 +6,10 @@
     		<h2>{str tag="mygroups"}</h2>
 
     		<div id="mygroups">
-			
+		
 				<div id="addnewgroupdiv"><a href="create.php" id="addnewgroup">{str tag="creategroup"}</a></div>
 
-			<table id="grouplist">
+			<table id="grouplist" class="tablerenderer">
 				<thead>
 					<tr>
 						<th>{str tag="groupname"}</th>

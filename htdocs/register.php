@@ -63,7 +63,7 @@ if (!empty($_SESSION['registered'])) {
 // optional profile icon, and register the user
 if (isset($_REQUEST['key'])) {
 
-    function register_profile_submit($values) {
+    function register_profile_submit(Pieform $form, $values) {
         global $registration, $SESSION, $USER;
         db_begin();
 
@@ -311,7 +311,7 @@ function register_validate(Pieform $form, $values) {
     }
 }
 
-function register_submit($values) {
+function register_submit(Pieform $form, $values) {
     global $SESSION;
 
     // store password encrypted

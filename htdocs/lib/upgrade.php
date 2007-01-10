@@ -310,7 +310,7 @@ function upgrade_plugin($upgrade) {
                 insert_record($table, $cron);
             }
             else {
-                update_record($table, $cron, array('plugin', 'name'));
+                update_record($table, $cron, array('plugin', 'callfunction'));
             }
         }
     }

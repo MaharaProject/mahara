@@ -143,7 +143,11 @@ class Session {
         $result = '<div id="messages">';
         if (isset($_SESSION['messages'])) {
             foreach ($_SESSION['messages'] as $data) {
-                $result .= '<div class="' . $data['type'] . '">' . $data['msg'] . '</div>';
+                // @todo probably should be done with MochiKit.Signal
+                $result .= '<div class="' . $data['type'] . '">';
+                $result .= '<div class="fr"><a href="" onclick="removeElement(this.parentNode.parentNode);return false;">';
+                $result .= '<img src="' . theme_get_image_url('icon_close.gif') . '" alt="[X]"></a></div>';
+                $result .= $data['msg'] . '</div>';
             }
             $_SESSION['messages'] = array();
         }

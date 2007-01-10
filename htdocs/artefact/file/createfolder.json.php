@@ -37,6 +37,7 @@ $parentfolder   = param_variable('parentfolder', null); // id of parent artefact
 $title          = param_variable('name');
 $description    = param_variable('description', null);
 $collideaction  = param_variable('collideaction', 'fail');
+$adminfiles     = param_boolean('adminfiles', false);
 
 $data = new StdClass;
 if ($parentfolder) {
@@ -45,10 +46,9 @@ if ($parentfolder) {
 $data->title = $title;
 $data->description = $description;
 $data->owner = $USER->get('id');
-$data->container = 1;
-$data->locked = 0;
+$data->adminfiles = (int)$adminfiles;
 
-if ($oldid = ArtefactTypeFileBase::exists_in_db($data->title, $data->owner, $parentfolder)) {
+if ($oldid = ArtefactTypeFileBase::file_exists($data->title, $data->owner, $parentfolder, $adminfiles)) {
     if ($collideaction == 'replace') {
         require_once('artefact.php');
         $obj = artefact_instance_from_id($oldid);

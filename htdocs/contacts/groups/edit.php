@@ -36,7 +36,7 @@ $id = param_integer('id',null);
 $group_data = get_record('usr_group', 'id', $id, 'owner', $USER->get('id'));
 if (!$group_data) {
     $SESSION->add_error_msg(get_string('canteditdontown'));
-    redirect('./');
+    redirect('contacts/groups/');
 }
 
 $group_members = get_column('usr_group_member', 'member', 'grp', $group_data->id);
@@ -55,7 +55,7 @@ $editgroup = pieform(array(
             'type'         => 'wysiwyg',
             'title'        => get_string('groupdescription'),
             'rows'         => 10,
-            'cols'         => 80,
+            'cols'         => 70,
             'defaultvalue' => $group_data->description,
         ),
         'members'     => array(
@@ -90,15 +90,15 @@ function editgroup_validate(Pieform $form, $values) {
 
     if (!$id) {
         $SESSION->add_error_msg(get_string('canteditdontown'));
-        redirect('./');
+        redirect('contacts/groups/');
     }
 }
 
 function editgroup_cancel_submit() {
-    redirect('./');
+    redirect('contacts/groups/');
 }
 
-function editgroup_submit($values) {
+function editgroup_submit(Pieform $form, $values) {
     global $USER;
     global $SESSION;
 
@@ -134,7 +134,8 @@ function editgroup_submit($values) {
     $SESSION->add_ok_msg(get_string('groupsaved'));
 
     db_commit();
-    redirect(get_config('wwwroot') . 'contacts/groups');
+
+    redirect('contacts/groups/');
 }
 
 $smarty = smarty();

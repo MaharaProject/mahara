@@ -44,10 +44,16 @@ h5, h6 {
 	font-size: 18px;
 	margin: 0;
 }
+acronym {
+	color: #474220;
+	border-bottom: 1px dotted #d4d1c0;
+	cursor: help;
+}
 
 form {
    margin: 0;
 }
+<<<<<<< master
 
 input {
 	border: 1px solid #d4d1c0;
@@ -59,6 +65,15 @@ select {
 }
 input[type="radio"] {
 	border: none;
+=======
+/** Note: tables layed out with the 'maharatable' renderer now have class="maharatable",
+ * so they can be styled differently */
+/*form .maharatable th {
+    padding-top: 10px;
+}*/
+input, select, textarea {
+	border: 1px solid #b0bf64;
+>>>>>>> origin
 }
 
 /*input[type="submit"], input[type="button"] {
@@ -169,6 +184,29 @@ label {
 .required td { 
 	color: #000000; 
 }
+fieldset {
+    border: 1px solid #b0bf64;
+}
+fieldset.collapsed legend, fieldset.collapsed legend * {
+    display: inline;
+}
+fieldset.collapsed {
+    border-color: #b0bf64 transparent transparent;
+}
+fieldset.collapsed * {
+    display: none;
+}
+legend a:focus {
+    outline: none
+}
+
+.resizable-textarea .grippie {
+    background: #eee url(../images/grippie.png) no-repeat scroll 100%;
+    border: 1px solid #ddd;
+    border-top-width: 0;
+    cursor: s-resize;
+    height: 14px;
+}
 
 .center {
     text-align: center;
@@ -194,6 +232,13 @@ label {
 #header {
 	background: #FFFFFF url(../images/header_corner_topleft.gif) no-repeat top left;
 }
+<<<<<<< master
+=======
+#logo {
+    padding: 10px;
+}
+
+>>>>>>> origin
 #topwrapper ul,
 #topwrapper li {
   	padding: 0;
@@ -249,14 +294,15 @@ label {
 }
 /* GLOBAL NAVIGATION TABS END */
 
+<<<<<<< master
 #logo {
     padding: 10px;
 }
 
 /* search box in header */
+=======
+>>>>>>> origin
 .searchbox {
-	font-size: 11px;
-	font-weight: bold;
 	color: #497424;
 	margin: 18px 5px 0 0;
 	text-align: right;
@@ -269,15 +315,18 @@ label {
 	text-align: right;
 	vertical-align: middle;
 }
+<<<<<<< master
 #searchform_query_container, #searchform_submit_container {
 	vertical-align: middle;
 }
+=======
+>>>>>>> origin
 #searchform_query_container input {
-	border: 1px solid #b0bf64;
 	padding: 4px;
 	color: #777777;
 	width: 183px;
 }
+<<<<<<< master
 .searchbox .advancedsearch {
 	font-size: 9px;
 	padding: 0 148px 0 0;
@@ -287,6 +336,9 @@ label {
 /* logged in message in header */
 #loggedinstring {
 	text-align: right;
+=======
+.searchbox .advancedsearch {
+>>>>>>> origin
 	font-size: 9px;
 	padding: 15px 0 0 0px;
 	color: #474220;
@@ -310,7 +362,11 @@ label {
 
 /* MAIN NAVIGATION BEGIN */
 #mainnav {
+<<<<<<< master
 	padding: 8px 0 0 5px;
+=======
+	padding: 8px 0 0;
+>>>>>>> origin
 	margin: 0;
 	background: url(../images/navbg_left.gif) repeat-x;
 	height: 32px;
@@ -350,7 +406,11 @@ label {
 
 /* SUB NAVIGATION BEGINS */
 #subnav {
+<<<<<<< master
 	padding: 6px 0 0 20px;
+=======
+	padding: 6px 0 0;
+>>>>>>> origin
 	margin: 0;
 	font-size: 11px;
 	font-weight: bold;
@@ -359,6 +419,7 @@ label {
 	height: 25px;
 	text-transform: capitalize;
 }
+<<<<<<< master
 .subnavright {
 	float: right;
 	margin: -6px 0 0 0;
@@ -370,6 +431,10 @@ label {
 #subnav li a:link,
 #subnav li a:visited,
 #subnav li a:active {
+=======
+
+#subnav li a {
+>>>>>>> origin
 	color: #FFF;
 }
 #subnav li a:hover {
@@ -407,7 +472,29 @@ div.sidebar {
 	color: #FFF;
 	font-weight: bold;
 }
+<<<<<<< master
 
+=======
+.sidebarforgotpassword {
+	padding: 10px 5px 5px 10px;
+	background: #FFFFFF url(../images/sidebox_topwhite.gif) no-repeat top;
+}
+.sidebarforgotpassword a {
+	background: url(../images/icon_question.gif) no-repeat left;
+	padding-left: 17px;
+	color: #547c22;
+	text-decoration: none;
+	font-weight: bold;
+}
+.sidebarforgotpassword a:hover {
+	color: #819f18;
+	text-decoration: underline;
+}
+#column-right .sidebarforgotpassword-botcorners {
+    margin-bottom: 7px;
+}
+
+>>>>>>> origin
 /* SITE MENU BEGINS */
 #sitemenu {
 	margin: 20px 0 0 -10px;
@@ -483,10 +570,15 @@ div.sidebar {
 	padding: 2px;
 	width: 200px;
 }
+<<<<<<< master
 #column-right #login a,
 #column-right #login a:link,
 #column-right #login a:active,
 #column-right #login a:visited {
+=======
+
+#column-right #login a {
+>>>>>>> origin
 	color: #547c22;
 	font-size: 9px;
 	text-decoration: none;
@@ -541,6 +633,7 @@ div.sidebar {
 	float: left;
 }
 
+<<<<<<< master
 .content textarea {
 	width: 450px;
 }
@@ -550,25 +643,70 @@ div.sidebar {
 
 
 /* system messages between nav and main content */
+=======
+>>>>>>> origin
 #messages {
 	margin: 0 3px 3px 3px;
 }
 #messages .ok {
 	color: #547c22;
+<<<<<<< master
 	background: #d2e29b url(../images/icon_goodtogo.gif) no-repeat left;
 	padding: 3px 3px 3px 17px;
+=======
+	background: #d2e29b url(../images/icon_goodtogo.gif) no-repeat 1px;
+	padding: 3px 3px 3px 19px;
+    border: 1px solid #a2e26b;
+>>>>>>> origin
 }
 #messages .error {
 	color: #dd0221;
+<<<<<<< master
 	background: #ffd3d9 url(../images/icon_problem.gif) no-repeat left;
 	padding: 3px 3px 3px 17px;
+=======
+	background: #ffd3d9 url(../images/icon_problem.gif) no-repeat 1px;
+	padding: 3px 3px 3px 19px;
+    border: 1px solid #ffa3a9;
+>>>>>>> origin
 }
 #messages .info {
 	color: #1666a9;
+<<<<<<< master
 	background: #b8c9cf url(../images/icon_question.gif) no-repeat left;
 	padding: 3px 3px 3px 17px;
+=======
+	background: #b8c9cf url(../images/icon_question.gif) no-repeat 1px;
+	padding: 3px 3px 3px 19px;
+    border: 1px solid #8899cf;
+>>>>>>> origin
 }
 
+<<<<<<< master
+=======
+/* NOTE: these next two rules should be merged */
+.addicon {
+	background: url(../images/icon_add.gif) no-repeat top left;
+	padding: 0 3px 3px 19px;
+	border: none;
+    margin: 5px 0;
+}
+
+.content a {
+	color: #547c22;
+	text-decoration: none;
+	border-bottom: 1px dotted #547c22;
+}
+
+.content a:hover {
+	color: #819f18;
+	text-decoration: none;
+	border-bottom: 1px solid #819f18;
+}
+.content .mceEditor a {
+    border-bottom: none;
+}
+>>>>>>> origin
 
 /* inner white corners around main content begin */
 .box-cnrs {
@@ -646,6 +784,7 @@ p {
 	padding: 0;
 }
 
+<<<<<<< master
 .maincontent table {
 	width: 100%;
 	margin: 5px 0 5px 0;
@@ -698,8 +837,14 @@ p {
 }
 .maincontent td {
 	padding: 3px 5px;
+=======
+tbody {
+	color: #000;
+	padding: 2px 4px;
+>>>>>>> origin
 	margin: 0;
 }
+<<<<<<< master
 /* No need padding td */
 .maincontent #profileform td,
 .maincontent #editpost td,
@@ -709,10 +854,26 @@ p {
 .maincontent #editgroup td,
 .maincontent #createview1 td,
 .maincontent #accountprefs td {
+=======
+td {
+>>>>>>> origin
 	padding: 0;
 	margin: 0;
 }
+<<<<<<< master
 
+=======
+th {
+	text-align: left;
+	color: #3a5813;
+	vertical-align: top;
+	margin: 0;
+	padding: 2px 4px;
+}
+thead th {
+	background-color: #e5e8da;
+}
+>>>>>>> origin
 
 /* Within table Navigation Styles Begin */
 .maincontent thead tr td,
@@ -739,11 +900,15 @@ p {
 }
 /* Within Table Navigation Styles End */
 
+<<<<<<< master
 acronym {
 	color: #474220;
 	border-bottom: 1px dotted #d4d1c0;
 	cursor: help;
 }
+=======
+
+>>>>>>> origin
 .help { 
 	font-size: 9px; 
 	vertical-align: super; 
@@ -756,7 +921,7 @@ acronym {
 	padding-bottom: 5px;
 }
 .error { 
-	color: #cf0000; 
+    border-color: #ff6666; 
 }
 .errmsg { 
 	color: #cf0000; 
@@ -777,6 +942,9 @@ table#installer {
 #msgscol {
     width: 50%;
 }
+.msgscol pre {
+    overflow: auto;
+}
 
 #accountprefs table #accountprefs_password2 {
 	margin: 0 0 20px 0;
@@ -786,9 +954,36 @@ table#installer {
 	padding: 0;
 }
 
+<<<<<<< master
 /* Register styles */
 #register_tandc_container label {
 	font-weight: normal;
+=======
+/*
+ *
+ * Just about every rule below this point needs to be audited properly
+ * A lot of them can be removed with generic form styling (widths, margins and padding, colours)
+ *
+ *
+ *
+ *
+ *
+ *
+ */
+/** This needs to be done better. Namely, all tablerenderer tables should get a class */
+#activitylist,
+#adminstitutionslist,
+#menuitemlist table,
+/*#bloglist,*/
+/*#postlist,*/
+/*#filelist,*/
+.tablerenderer {
+	margin: 10px 0 0 0;
+	width: 100%;
+>>>>>>> origin
+}
+.tablerenderer tbody td {
+	padding: 0 5px;
 }
 
 
@@ -820,6 +1015,7 @@ table#installer {
 	font-size: 9px;
 }
 
+<<<<<<< master
 /* My Blogs styles */
 #myblogs .newblog,
 #myblogs .newpost {
@@ -851,6 +1047,15 @@ table#installer {
 	padding: 4px 34px 7px 36px;
 }
 .maincontent #editblog table {
+=======
+/** Ditto here */
+#contactus th,
+#staffusers th,
+#adminusers th,
+/*#siteoptions th,*/
+#editsitepage th/*,*/
+/*#editgroup th */{
+>>>>>>> origin
 	padding: 10px 0 0 0;
 	border-top: 1px solid #d4d1c0;
 }
@@ -862,6 +1067,7 @@ table#installer {
 	color: #000000;
 }
 
+<<<<<<< master
 
 /* My Groups styles */
 .maincontent #mygroups #addnewgroupdiv {
@@ -879,10 +1085,26 @@ table#installer {
 	color: #eef7d4;
 	font-weight: bold;
 	padding: 4px 43px 7px 43px;
+=======
+/*
+#siteoptions th {
+	margin: 10px 0 0 0;
+	padding: 12px 0 3px 0;
+>>>>>>> origin
 }
+<<<<<<< master
 .maincontent #creategroup #creategroup_description_header th,
 .maincontent #creategroup #creategroup_members_header th {
 	padding: 15px 0 0 0;
+=======
+    */
+
+#typeheader {
+	color: #819f18;
+	font-size: 14px;
+	padding: 10px 0 0 0;
+	margin: 0;
+>>>>>>> origin
 }
 .maincontent #creategroup table tr td table,
 .maincontent #editgroup table tr td table {
@@ -890,6 +1112,7 @@ table#installer {
 	padding: 0;
 	background: #e5e8da;
 }
+<<<<<<< master
 .maincontent #creategroup table tr td table td,
 .maincontent #editgroup table tr td table td {
 	padding: 0 5px 5px 5px;
@@ -906,7 +1129,19 @@ table#installer {
 .maincontent .addcommunitylink {
 	margin: 10px 0 10px 0;
 	text-align: right;
+=======
+
+/*#grouplist {
+	margin: 10px 0 0 0;
+	padding: 0;
+	width: 100%;
+}*/
+
+#activityprefs th {
+	padding: 5px 5px 5px 5px;
+>>>>>>> origin
 }
+<<<<<<< master
 .maincontent .addcommunitylink a,
 .maincontent .addcommunitylink a:link,
 .maincontent .addcommunitylink a:active,
@@ -922,11 +1157,52 @@ table#installer {
 .maincontent #memberlist tbody td,
 .maincontent #communitylist tbody td {
 	padding: 2px 5px;
+=======
+
+/*#grouplist tbody td,*/
+#adminstitutionslist tbody td,
+#menuitemlist tbody td
+/*#bloglist tbody td*/{
+	padding: 0 5px 0 5px;
 }
+
+/** These ones seem to push some pages down and right just a little bit.
+ * I think these should disappear. If the pages really need to be pushed
+ * down and left, put a style on the maincontent div to make it uniform  */
+#activityprefs, 
+#institution,
+#search,
+#results #searchresults,
+#register,
+#forgotpass,
+#staffusers,
+#adminusers,
+/*#createview1,*/
+#uploadcsv,
+#newpost,
+/*#newblog,*/
+/*#mygroups,*/
+/*#myfiles,*/
+#mywatchlist,
+#recentactivity,
+/*#myblogs,*/
+#editmenus,
+/*#editgroup,*/
+/*#createview2*/ {
+	margin: 10px 0 0 15px;
+>>>>>>> origin
+}
+<<<<<<< master
 #userview #userview_profile th {
 	background-color: #e5e8da;
 	padding: 2px 5px;
+=======
+
+#institution th {
+	padding: 10px 0 0 0;
+>>>>>>> origin
 }
+<<<<<<< master
 #userview #userview_profile td {
 	background-color: #f5f7ee;
 	padding: 2px 5px;
@@ -959,6 +1235,24 @@ table#installer {
 #viewlist tbody a:hover {
 	font-weight: bold;
 	font-size: 15px;
+=======
+
+#activityprefs #activityprefs_submit,
+#institution #institution_submit,
+#delete,
+#search #search_submit,
+#register #register_submit,
+#forgotpass th,
+#forgotpass #forgotpass_submit,
+#staffusers #staffusers_submit,
+#adminusers #adminusers_submit,
+#siteoptions #siteoptions_submit,
+#editsitepage #editsitepage_submit,
+#uploadcsv #uploadcsv_submit,
+#contactus #contactus_submit/*,
+#editgroup_submit*/ {
+	margin: 10px 0 0 0;
+>>>>>>> origin
 }
 #viewlist tbody li a,
 #viewlist tbody li a:link,
@@ -985,6 +1279,7 @@ table#installer {
 	color: #5c8727;
 	font-weight: bold;
 }
+<<<<<<< master
 .maincontent #tree p {
 	font-size: 11px;
 	font-weight: normal;
@@ -1004,12 +1299,18 @@ table#installer {
 .maincontent #tree a:visited,
 .maincontent #tree a:hover {
 	padding: 0;
+=======
+/*
+#viewlist {
+	width: 100%;
+>>>>>>> origin
 	margin: 2px 0 0 0;
 }
 .maincontent #template td {
 	vertical-align: top;
 	padding: 0;
 }
+<<<<<<< master
 /* spacing for the little 'x' */
 .maincontent #template #tpl_blog1 ul li a,
 .maincontent #template #tpl_blog1 ul li a:link,
@@ -1043,6 +1344,12 @@ table#installer {
 	font-size: 11px;
 	font-style: italic;
 	color: #666666;
+=======
+*/
+/*
+#siteoptions td.description {
+	margin: 2px 0 0 0px;
+>>>>>>> origin
 	padding: 0;
 	margin: 0;
 }
@@ -1082,6 +1389,7 @@ span.block_targetted, div.block_targetted {
 .clickable {
     cursor: pointer;
 }
+<<<<<<< master
 
 #template_selection #templates td {
 	padding: 5px;
@@ -1089,8 +1397,15 @@ span.block_targetted, div.block_targetted {
 }
 #template_selection #templates td h3, 
 #template_selection #templates td p {
+=======
+*/
+/*
+#createview1 th {
+	padding: 7px 0 0 0;
+>>>>>>> origin
 	margin: 0;
 }
+<<<<<<< master
 #template_selection #templates td {
 	border-bottom: 1px solid #d4d1c0;
 }
@@ -1106,7 +1421,14 @@ span.block_targetted, div.block_targetted {
 
 #viewacl_lhs {
 	margin: 0 53px 0 53px;
+=======
+*/
+/*
+#siteoptions {
+	margin: 0 0 0 15px;
+>>>>>>> origin
 }
+<<<<<<< master
 #viewacl_lhs #potentialpresetitems {
 	color: #5c8727;
 	font-weight: bold;
@@ -1114,6 +1436,12 @@ span.block_targetted, div.block_targetted {
 	text-align: right;
 	width: 160px;
 	margin: 0 0 0 -53px;
+=======
+*/
+
+#editsitepage {
+	margin: 5px 0 0 15px;
+>>>>>>> origin
 }
 #editviewaccess #editviewaccess_accesslist_container,
 #createview4 #createview4_accesslist_container {
@@ -1157,6 +1485,7 @@ span.block_targetted, div.block_targetted {
 	font-weight: normal;
 	font-size: 13px;
 }
+<<<<<<< master
 #potentialpresetitems button,
 #accesslistitems button {
 	background: url(../images/btn_createview.gif) no-repeat;
@@ -1166,11 +1495,17 @@ span.block_targetted, div.block_targetted {
 	color: #FFFFFF;
 	font-size: 9px;
 	margin: 2px 2px 2px 5px;
+=======
+
+#template_selection {
+	margin: 0 0 10px 0;
+>>>>>>> origin
 	padding: 0;
 } 
 #accesslistitems div {
 	margin: 0 0 5px 0;
 }
+<<<<<<< master
 #editviewaccess_submit_container #editviewaccess_submit {
 	background: url(../images/btn_long_off.gif) no-repeat;
 	border: 0;
@@ -1188,6 +1523,15 @@ span.block_targetted, div.block_targetted {
 .maincontent #accountprefs #accountprefs_messages_container label {
 	font-weight: normal;
 	color: #000000;
+=======
+
+/* LISTS AND TABLE STYLES ENDS */
+
+/* FORMS BEGIN */
+
+#accountprefs {
+	margin: -10px 0 0 15px;
+>>>>>>> origin
 }
 .maincontent #accountprefs #accountprefs_submit_container td {
 	padding: 10px 0 0 0;
@@ -1205,6 +1549,7 @@ span.block_targetted, div.block_targetted {
 	padding: 15px 0 0 0;
 }
 
+<<<<<<< master
 
 /* Configure Site styles */
 .maincontent #siteoptions table td {
@@ -1212,12 +1557,46 @@ span.block_targetted, div.block_targetted {
 }
 .maincontent #siteoptions table th {
 	padding: 5px 0 5px 0;
+=======
+
+
+
+.pieform table td {
+    padding-top: 4px;
 }
+.pieform table td.description {
+    padding-top: 1px;
+}
+.maharatable, .pieform table {
+    margin-left: 15px;
+}
+.pieform table.mceEditor {
+    margin-left: 0;
+}
+.pieform table.maharatable th, .pieform table th {
+	padding: 7px 2px 0 0;
+	margin: 0;
+>>>>>>> origin
+}
+<<<<<<< master
 .maincontent #siteoptions table {
 	width: 380px;
 	margin: 10px 0 0 15px;
+=======
+.pieform table.maharatable td {
+	padding: 1px 2px 0 0;
+	margin: 0;
+>>>>>>> origin
 }
+<<<<<<< master
 .maincontent #siteoptions .description {
+=======
+.pieform table.maharatable input[type="submit"] {
+    margin-top: 10px;
+}
+
+#profileform #email_list {
+>>>>>>> origin
 	padding: 0 0 5px 0;
 }
 .maincontent #editsitepage #editsitepage_pagetext_header th {
@@ -1232,6 +1611,7 @@ span.block_targetted, div.block_targetted {
 }
 
 
+<<<<<<< master
 /* Manage Users styles */
 .maincontent #staffusers table,
 .maincontent #adminusers table {
@@ -1298,7 +1678,11 @@ span.block_targetted, div.block_targetted {
 }
 
 
+=======
 
+>>>>>>> origin
+
+<<<<<<< master
 /* Administer Extensions styles */
 .maincontent #admintemplates tr th {
 	font-weight: bold;
@@ -1342,6 +1726,8 @@ span.block_targetted, div.block_targetted {
     background-color: #4c7c2c;
 }
 
+=======
+>>>>>>> origin
 a.pieform-calendar-toggle {
     border-width: 0 !important;
 }

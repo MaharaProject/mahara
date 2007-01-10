@@ -42,7 +42,7 @@
 
         {{$name}}_newrefinput.focus();
 
-        connect({{$name}}_newrefinput, 'onblur', function() {
+        connect({{$name}}_newrefinput, 'onblur', function(k) {
             removeElement({{$name}}_newrefinput);
             removeElement({{$name}}_newref);
             appendChildNodes('{{$name}}_list', DIV({'class': 'unvalidated'},

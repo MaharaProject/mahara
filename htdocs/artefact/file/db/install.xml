@@ -8,6 +8,7 @@
         <FIELDS>
             <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="true" />
             <FIELD NAME="size" TYPE="int" LENGTH="10" NOTNULL="false" />
+            <FIELD NAME="adminfiles" TYPE="int" LENGTH="1" NOTNULL="true" />
         </FIELDS>
         <KEYS>
             <KEY NAME="artefactfk" TYPE="foreign" FIELDS="artefact" REFTABLE="artefact" REFFIELDS="id" />

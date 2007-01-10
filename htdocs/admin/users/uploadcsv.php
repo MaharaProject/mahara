@@ -58,8 +58,6 @@ else {
 
 $form = array(
     'name' => 'uploadcsv',
-    'method' => 'post',
-    'action' => '',
     'elements' => array(
         'institution' => $institutionelement,
         'file' => array(
@@ -72,7 +70,7 @@ $form = array(
         ),
         'submit' => array(
             'type' => 'submit',
-            'value' => get_string('uploadcsvfile', 'admin')
+            'value' => get_string('uploadcsv', 'admin')
         )
     )
 );
@@ -158,7 +156,7 @@ function uploadcsv_validate(Pieform $form, $values) {
  * Add the users to the system. Make sure that they have to change their
  * password on next login also.
  */
-function uploadcsv_submit($values) {
+function uploadcsv_submit(Pieform $form, $values) {
     global $SESSION, $CSVDATA;
     log_info('Inserting users from the CSV file');
     foreach ($CSVDATA as $record) {
@@ -181,8 +179,7 @@ function uploadcsv_submit($values) {
     log_info('Inserted ' . count($CSVDATA) . ' records');
 
     $SESSION->add_ok_msg(get_string('uploadcsvusersaddedsuccessfully', 'admin'));
-    // @todo support relative URLs here
-    redirect(get_config('wwwroot') . 'admin/users/uploadcsv.php');
+    redirect('admin/users/uploadcsv.php');
 }
 
 $smarty = smarty();

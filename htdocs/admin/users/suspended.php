@@ -58,17 +58,17 @@ $form = new Pieform(array(
         'unsuspend' => array(
             'type' => 'submit',
             'name' => 'unsuspend',
-            'value' => get_string('unsuspendusers')
+            'value' => get_string('unsuspendusers', 'admin')
         ),
         'export' => array(
             'type' => 'submit',
             'name' => 'export',
-            'value' => get_string('exportuserprofiles')
+            'value' => get_string('exportuserprofiles', 'admin')
         ),
         'delete' => array(
             'type' => 'submit',
             'name' => 'delete',
-            'value' => get_string('deleteusers')
+            'value' => get_string('deleteusers', 'admin')
         )
     )
 ));
@@ -77,7 +77,7 @@ $smarty->assign('buttonform', $form->build(false));
 
 $smarty->display('admin/users/suspended.tpl');
 
-function buttons_submit_unsuspend($values) {
+function buttons_submit_unsuspend(Pieform $form, $values) {
     global $SESSION;
 
     $ids = get_user_ids_from_post();
@@ -85,18 +85,18 @@ function buttons_submit_unsuspend($values) {
         unsuspend_user($userid);
     }
 
-    $SESSION->add_ok_msg(get_string('usersunsuspendedsuccessfully'));
-    redirect(get_config('wwwroot') . 'admin/users/suspended.php');
+    $SESSION->add_ok_msg(get_string('usersunsuspendedsuccessfully', 'admin'));
+    redirect('admin/users/suspended.php');
 }
 
-function buttons_submit_export($values) {
+function buttons_submit_export(Pieform $form, $values) {
     global $SESSION;
     $ids = get_user_ids_from_post();
-    $SESSION->add_info_msg(get_string('exportingnotsupportedyet'));
-    redirect(get_config('wwwroot') . 'admin/users/suspended.php');
+    $SESSION->add_info_msg(get_string('exportingnotsupportedyet', 'admin'));
+    redirect('admin/users/suspended.php');
 }
 
-function buttons_submit_delete($values) {
+function buttons_submit_delete(Pieform $form, $values) {
     global $SESSION;
 
     $ids = get_user_ids_from_post();
@@ -104,8 +104,8 @@ function buttons_submit_delete($values) {
         delete_user($userid);
     }
 
-    $SESSION->add_ok_msg(get_string('usersdeletedsuccessfully'));
-    redirect(get_config('wwwroot') . 'admin/users/suspended.php');
+    $SESSION->add_ok_msg(get_string('usersdeletedsuccessfully', 'admin'));
+    redirect('admin/users/suspended.php');
 }
 
 function get_user_ids_from_post() {
@@ -118,8 +118,8 @@ function get_user_ids_from_post() {
 
     if (!$ids) {
         global $SESSION;
-        $SESSION->add_info_msg(get_string('nousersselected'));
-        redirect(get_config('wwwroot') . 'admin/users/suspended.php');
+        $SESSION->add_info_msg(get_string('nousersselected', 'admin'));
+        redirect('admin/users/suspended.php');
     }
 
     return $ids;

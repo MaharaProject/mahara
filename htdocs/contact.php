@@ -45,7 +45,7 @@ $contactform = pieform(array(
     'name'     => 'contactus',
     'method'   => 'post',
     'action'   => '',
-    'ajaxpost' => true,
+    'jsform' => true,
     'elements' => array(
         'name' => array(
             'type'  => 'text',
@@ -89,7 +89,7 @@ $contactform = pieform(array(
     )
 ));
 
-function contactus_submit($values) {
+function contactus_submit(Pieform $form, $values) {
     $data = new StdClass;
     $data->fromname    = $values['name'];
     $data->fromaddress = $values['email'];
@@ -100,7 +100,7 @@ function contactus_submit($values) {
     }
     require_once('activity.php');
     activity_occurred('contactus', $data);
-    json_reply(false, get_string('contactinformationsent'));
+    $form->json_reply(PIEFORM_OK, get_string('contactinformationsent'));
 }
 
 

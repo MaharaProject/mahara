@@ -36,8 +36,16 @@
  */
 function pieform_rule_regex(Pieform $form, $value, $element, $regex) {
     if (!preg_match($regex, $value)) {
-        return $form->i18n('regex');
+        return $form->i18n('rule', 'regex', 'regex', $element);
     }
+}
+
+function pieform_i18n_rule_regex() {
+    return array(
+        'en.utf8' => array(
+            'regex' => 'This field is not in valid form'
+        )
+    );
 }
 
 ?>

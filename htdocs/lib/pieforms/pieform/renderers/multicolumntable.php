@@ -42,14 +42,45 @@ static $formrenderermct;
  */
 function pieform_renderer_multicolumntable(Pieform $form, $builtelement, $rawelement) {
     global $formrenderermct;
-    // Used by the messages javascript function
-    $form->include_plugin('renderer', 'table');
     $formrenderermct->add_element($builtelement, $rawelement);
     $formrenderermct->set_form($form);
 }
 
-function pieform_renderer_multicolumntable_messages_js($id) {
-    return pieform_renderer_table_messages_js($id);
+function pieform_renderer_multicolumntable_get_js($id) {
+    return <<<EOF
+function {$id}_set_error (message, element) {
+    element = '{$id}_' + element;
+    var parentRow = $(element + '_container').parentNode;
+    var nextRow = parentRow.nextSibling;
+    if (!(nextRow && hasElementClass(nextRow, 'errorRow'))) {
+        var errorRow = TR({'class': 'errorRow'});
+        log(parentRow.cells.length);
+        for (var i = 0; i < parentRow.cells.length; i++) {
+            var attrs = null;
+            if (parentRow.cells[i].id) {
+                attrs = {
+                    'id': parentRow.cells[i].id.replace(/_container$/, '_error'),
+                    'class': 'error'
+                };
+            }
+            appendChildNodes(errorRow, TD(attrs));
+        }
+        insertSiblingNodesAfter($(element + '_container').parentNode, errorRow);
+    }
+
+    appendChildNodes(element + '_error', message);
+    addElementClass(element, 'error');
+    addElementClass( element + '_container', 'error');
+}
+function {$id}_remove_all_errors() {
+    forEach(getElementsByTagAndClassName('TR', 'errorRow', '{$id}'), function(row) {
+        removeElement(row);
+    });
+    forEach(getElementsByTagAndClassName(null, 'error', '{$id}'), function(item) {
+        removeElementClass(item, 'error');
+    });
+}
+EOF;
 }
 
 function pieform_renderer_multicolumntable_header() {
@@ -68,6 +99,9 @@ class FormRendererMultiColumnTable {
     private $form;
 
     function add_element($builtelement, $rawelement) {
+        if ($rawelement['type'] == 'fieldset') {
+            throw new PieformException('The multicolumntable renderer does not support fieldsets');
+        }
         if (!array_key_exists($rawelement['title'], $this->elements)) {
             $this->elements[$rawelement['title']] = array();
             $this->elements[$rawelement['title']]['rawelements'] = array();
@@ -83,6 +117,11 @@ class FormRendererMultiColumnTable {
     }
 
     function build() {
+        // Find out the maximum number of columns
+        $columns = 0;
+        foreach ($this->elements as $data) {
+            $columns = max($columns, count($data['builtelements']));
+        }
         $result = "<table cellspacing=\"0\" border=\"0\"><tbody>\n";
         foreach ($this->elements as $title => $data) {
             $result .= "\t<tr";
@@ -119,6 +158,9 @@ class FormRendererMultiColumnTable {
                 $result .= "</td>\n\t";
 
                 // @todo description...
+            }
+            for ($i = count($data['builtelements']); $i < $columns; $i++) {
+                $result .= "\t<td></td>\n\t";
             }
             $result .= "</tr>\n";
         }

@@ -80,7 +80,7 @@
         $('{{$name}}').value=members.join(',');
     };
 </script>
-<table>
+<table cellspacing="0">
     <tr>
         {{if $filter}}
         <td colspan="3">

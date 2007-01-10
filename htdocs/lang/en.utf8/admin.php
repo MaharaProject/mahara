@@ -108,6 +108,8 @@ $string['viruscheckingdescription'] = 'If checked, virus checking will be enable
 // Admin menu editor
 //$string['menueditor']    = 'Menu editor';
 $string['adminfile']           = 'Admin file';
+$string['adminpublicdirname']  = 'public';  // Name of the directory in which to store public admin files
+$string['adminpublicdirdescription'] = 'Files accessible by logged out users';
 $string['badmenuitemtype']     = 'Unknown menu item type';
 $string['externallink']        = 'External link';
 $string['type']                = 'Type';
@@ -170,11 +172,18 @@ $string['staffusersupdated'] = 'Staff users updated';
 // Admin Notifications
 
 // Suspended Users
+$string['deleteusers'] = 'Delete Users';
+$string['exportingnotsupportedyet'] = 'Exporting user profiles is not supported yet';
+$string['exportuserprofiles'] = 'Export User Profiles';
+$string['nousersselected'] = 'No users selected';
 $string['suspenduser'] = 'Suspend User';
 $string['suspendedusers'] = 'Suspended Users';
 $string['suspensionreason'] = 'Suspension reason';
 $string['errorwhilesuspending'] = 'An error occured while trying to suspend';
 $string['suspendedusersdescription'] = 'Suspend or unsuspend users from logging in to the site (note: not implemented yet)';
+$string['unsuspendusers'] = 'Unsuspend Users';
+$string['usersdeletedsuccessfully'] = 'Users deleted successfully';
+$string['usersunsuspendedsuccessfully'] = 'Users unsuspended successfully';
 
 // Institutions
 $string['addinstitution'] = 'Add Institution';

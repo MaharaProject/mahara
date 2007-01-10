@@ -27,18 +27,18 @@
 /**
  * Renders a submit button
  *
- * @param array    $element The element to render
  * @param Pieform  $form    The form to render the element for
+ * @param array    $element The element to render
  * @return string           The HTML for the element
  */
-function pieform_render_submit($element, Pieform $form) {
+function pieform_element_submit(Pieform $form, $element) {
     return '<input type="submit"'
         . $form->element_attributes($element)
         . ' value="' . Pieform::hsc($form->get_value($element)) . '">';
 }
 
-function pieform_render_submit_set_attributes($element) {
-    $element['ajaxmessages'] = true;
+function pieform_element_submit_set_attributes($element) {
+    $element['submitelement'] = true;
     return $element;
 }
 

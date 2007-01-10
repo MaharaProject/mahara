@@ -77,14 +77,16 @@ foreach (array_keys($publicfields) as $field) {
         if ($emails = get_records_array('artefact_internal_profile_email', 'owner', $userid)) {
             foreach ($emails as $email) {
                 $fieldname = $email->principal ? 'principalemailaddress' : 'emailaddress';
-                $profile[$fieldname] = $email->email;
+                $userfields[$fieldname] = $email->email;
             }
         }
     }
     else {
-        $c = new $classname(0, array('owner' => $userid)); // email is different
-        if ($value = $c->render(FORMAT_ARTEFACT_LISTSELF, array('link' => true))) {
-            $profile[$field] = $value;
+        if (!array_key_exists($field, $userfields) && !in_array($field, array('firstname', 'lastname'))) {
+            $c = new $classname(0, array('owner' => $userid)); // email is different
+            if ($value = $c->render(FORMAT_ARTEFACT_LISTSELF, array('link' => true))) {
+                $userfields[$field] = $value;
+            }
         }
     }
 }
@@ -116,8 +118,8 @@ if ($communities = get_owned_communities($loggedinid, 'invite')) {
     if (count($invitelist) > 0) {
         $inviteform = pieform(array(
         'name'                => 'invite',
-        'ajaxpost'            => true,
-        'ajaxsuccessfunction' => 'invite_success',
+        'ajaxform'            => true,
+        'ajaxsuccesscallback' => 'invite_success',
         'elements'            => array(
             'community' => array(
                 'type'    => 'select',
@@ -158,8 +160,8 @@ if ($communities = get_tutor_communities($loggedinid, 'controlled')) {
     if (count($controlledlist) > 0) {
         $addform = pieform(array(
         'name'                => 'addmember',
-        'ajaxpost'            => true,
-        'ajaxsuccessfunction' => 'add_success',
+        'ajaxform'            => true,
+        'ajaxsuccesscallback' => 'add_success',
         'elements'            => array(
             'community' => array(
                 'type'    => 'select',
@@ -191,9 +193,9 @@ EOF;
 // or removing or approving or rejecting or whatever else we can do.
 $friendform = array(
     'name'     => 'friend',
-    'ajaxpost' => true,
+    'ajaxform' => true,
     'elements' => array(),
-    'ajaxsuccessfunction' => 'friend_success',
+    'ajaxsuccesscallback' => 'friend_success',
 );
 $friendsubmit = '';
 $friendtype = '';
@@ -283,7 +285,6 @@ $smarty->assign('FRIENDFORM', $friendform);
 $smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 $smarty->assign('NAME',$name);
 $smarty->assign('USERFIELDS',$userfields);
-$smarty->assign('PROFILE',$profile);
 $smarty->assign('VIEWS',$views);
 $smarty->display('user/view.tpl');
 
@@ -291,7 +292,7 @@ $smarty->display('user/view.tpl');
 
 
 // Send an invitation to the user to join a community
-function invite_submit($values) {
+function invite_submit($values, Pieform $form) {
     global $USER;
     
     $data = new StdClass;
@@ -311,13 +312,13 @@ function invite_submit($values) {
                   . 'contacts/communities/view.php?id=' . $values['community']));
     }
     catch (SQLException $e) {
-        json_reply('local', get_string('inviteuserfailed'));
+        $form->json_reply(PIEFORM_ERR, get_string('inviteuserfailed'));
     }
-    json_reply(false, get_string('userinvited'));
+    $form->json_reply(PIEFORM_OK, get_string('userinvited'));
 }
 
 // Add the user as a member of a community
-function addmember_submit($values) {
+function addmember_submit($values, Pieform $form) {
     global $USER;
 
     $data = new StdClass;
@@ -338,9 +339,9 @@ function addmember_submit($values) {
                   . 'contacts/communities/view.php?id=' . $values['community']));
     }
     catch (SQLException $e) {
-        json_reply('local', get_string('adduserfailed'));
+        $form->json_reply(PIEFORM_ERR, get_string('adduserfailed'));
     }
-    json_reply(false, get_string('useradded'));
+    $form->json_reply(PIEFORM_OK, get_string('useradded'));
 }
 
 // friend submit function lives in lib/user.php

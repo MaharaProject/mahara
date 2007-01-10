@@ -32,6 +32,7 @@ $string['createviewstep2']        = 'Create View - Step 2 of 4';
 $string['createviewstep3']        = 'Create View - Step 3 of 4';
 $string['editview']               = 'Edit View';
 $string['createviewstep4']        = 'Create View - Step 4 of 4';
+$string['editaccess']             = 'Edit View Access';
 $string['next']                   = 'Next';
 $string['back']                   = 'Back';
 $string['createview']             = 'Create View';
@@ -66,6 +67,8 @@ $string['format.listself']       = 'List item (you can put multiple artefacts in
 $string['format.listchildren']   = 'List children of this artefact';
 $string['format.renderfull']     = 'Display entire artefact';
 $string['format.rendermetadata'] = 'Display metadata for this artefact';
+
+$string['viewcreatedsuccessfully'] = 'View created successfully';
 
 
 ?>

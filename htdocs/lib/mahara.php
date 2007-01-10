@@ -848,8 +848,12 @@ function pieform_configure() {
         'action'    => '',
         'autofocus' => true,
         'renderer'  => 'maharatable',
-        'preajaxsubmitcallback'  => 'processingStart',
-        'postajaxsubmitcallback' => 'processingStop',
+        'jserrorcallback'       => 'formError',
+        'globaljserrorcallback' => 'formGlobalError',
+        'jssuccesscallback'     => 'formSuccess',
+        'presubmitcallback'     => 'formStartProcessing',
+        'postsubmitcallback'    => 'formStopProcessing',
+        'jserrormessage' => get_string('errorprocessingform'),
         'configdirs' => get_config('libroot') . 'form/',
         'elements'   => array(
             'sesskey' => array(
@@ -860,11 +864,35 @@ function pieform_configure() {
     );
 }
 
-function pieform_configure_calendar($element) {
+function pieform_validate(Pieform $form, $values) {
+    global $USER;
+    if (!isset($values['sesskey'])) {
+        throw new UserException('No session key');
+    }
+    if ($USER->get('sesskey') != $values['sesskey']) {
+        throw new UserException('Invalid session key');
+    }
+
+    // Check to make sure the user has not been suspended, so that they cannot
+    // perform any action
+    $record = get_record_sql('SELECT suspendedctime, suspendedreason
+        FROM ' . get_config('dbprefix') . 'usr
+        WHERE id = ?', array($USER->get('id')));
+    if ($record->suspendedctime) {
+        throw new UserException(get_string('accountsuspended', 'mahara', $record->suspendedctime, $record->suspendedreason));
+    }
+}
+
+function pieform_element_calendar_configure($element) {
     $element['jsroot'] = '/js/jscalendar/';
     $element['themefile'] = get_config('themeurl') . 'style/calendar.css';
     $element['imagefile'] = get_config('themeurl') . 'calendar.gif';
     $element['language'] = 'en'; // @todo: language file names for the js calendar may need to be changed
+    return $element;
+}
+
+function pieform_element_textarea_configure($element) {
+    $element['resizable'] = true;
     return $element;
 }
 

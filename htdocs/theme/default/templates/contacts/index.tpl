@@ -12,7 +12,7 @@
                                 </select>
                             </form>
                             <div id="messagediv"></div>
-                            <table id="friendslist">
+                            <table id="friendslist" class="tablerenderer">
 	                        <thead>
                                     <tr>
  	                                <td></td>

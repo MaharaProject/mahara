@@ -1,20 +1,17 @@
-{* 
-
-  This template displays the settings for a user's blog.
-
- *}{include file="header.tpl"}
+{include file="header.tpl"}
 <div id="column-right">
 {include file="adminmenu.tpl"}
 </div>
+
 {include file="columnleftstart.tpl"}
+            <div class="maincontent">
+                <h2>{str section="artefact.blog" tag="blogsettings"}</h2>
 
-<div class="content">
-    <h2>{str section="artefact.blog" tag="blogsettings"}</h2>
+                <div>
+                    <a href="{$WWWROOT}artefact/blog/view/?id={$blog->get('id')}">{str section="artefact.blog" tag="viewblog"}</a>
+                </div>
 
-    <div>
-        <a href="{$WWWROOT}artefact/blog/view/?id={$blog->get('id')}">{str section="artefact.blog" tag="viewblog"}</a>
-    </div>
-
+                {$editform}
     {$editform}
 </div>
 

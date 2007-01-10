@@ -33,7 +33,7 @@ defined('INTERNAL') || die();
  * @param Pieform  $form    The form to render the element for
  * @return string           The HTML for the element
  */
-function pieform_render_emaillist($element, Pieform $form) {
+function pieform_element_emaillist(Pieform $form, $element) {
     $smarty = smarty();
 
     $smarty->left_delimiter = '{{';
@@ -67,10 +67,10 @@ function pieform_render_emaillist($element, Pieform $form) {
     return $smarty->fetch('form/emaillist.tpl');
 }
 
-function pieform_get_value_emaillist($element, Pieform $form) {
+function pieform_element_emaillist_get_value(Pieform $form, $element) {
     $name = $element['name'];
 
-    $global = ($form->get_method() == 'get') ? $_GET : $_POST;
+    $global = ($form->get_property('method') == 'get') ? $_GET : $_POST;
 
     if (!isset($global[$name . '_valid']) || !is_array($global[$name . '_valid'])) {
         return null;
@@ -86,58 +86,6 @@ function pieform_get_value_emaillist($element, Pieform $form) {
     }
 
     return $value;
-}
-
-function pieform_get_value_js_emaillist($element, Pieform $form) {
-    $formname = $form->get_name();
-    $name = $element['name'];
-    return <<<EOF
-    var valid_list = document.forms['$formname'].elements['{$name}_valid\[\]'];
-    var invalid_list = document.forms['$formname'].elements['{$name}_invalid\[\]'];
-
-    data['{$name}_valid\[\]'] = new Array();
-    data['{$name}_invalid\[\]'] = new Array();
-
-    if (valid_list) {
-        if (valid_list.length) {
-            for (var i = 0; i < valid_list.length; i++) {
-                if (valid_list[i].value) {
-                    data['{$name}_valid\[\]'].push(valid_list[i].value);
-                }
-            }
-        }
-        else {
-            data['{$name}_valid\[\]'].push(valid_list.value);
-        }
-    }
-
-    if (invalid_list) {
-        if (invalid_list.length) {
-            for (var i = 0; i < invalid_list.length; i++) {
-                if (invalid_list[i].value) {
-                    data['{$name}_invalid\[\]'].push(invalid_list[i].value);
-                }
-            }
-        }
-        else {
-            data['{$name}_invalid\[\]'].push(invalid_list.value);
-        }
-    }
-
-    var emailselected = document.forms['$formname'].elements['${name}_selected'];
-
-    if ( emailselected ) {
-        if (!emailselected.length) {
-            emailselected = [emailselected];
-        }
-        emailselected = filter(function(elem) { return elem.checked; }, emailselected);
-
-        if (emailselected && emailselected[0]) {
-            data['{$name}_selected'] = emailselected[0].value;
-        }
-    }
-
-EOF;
 }
 
 ?>

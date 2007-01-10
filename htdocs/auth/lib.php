@@ -170,10 +170,6 @@ function auth_setup () {
         }
 
         auth_draw_login_page(get_string('sessiontimedout'));
-        // The auth_draw_login_page function may authenticate a user if a login
-        // request was sent at the same time that the "timed out" message is to
-        // be displayed.
-        //return $USER;
     }
     else {
         // There is no session, so we check to see if one needs to be started.
@@ -313,7 +309,7 @@ function change_password_validate(Pieform $form, $values) {
  *
  * @param array $values The submitted form values
  */
-function change_password_submit($values) {
+function change_password_submit(Pieform $form, $values) {
     global $USER, $SESSION;
     $authtype = auth_get_authtype_for_institution($USER->get('institution'));
     $authclass = 'Auth' . ucfirst($authtype);
@@ -463,13 +459,14 @@ function auth_get_login_form() {
     }
 
     $form = array(
-        'name'          => 'login',
-        'method'        => 'post',
-        'action'        => $action,
-        'plugintype'    => 'auth',
-        'pluginname'    => 'internal',
-        'elements'      => $elements,
-        'iscancellable' => false
+        'name'           => 'login',
+        'method'         => 'post',
+        'action'         => $action,
+        'plugintype'     => 'auth',
+        'pluginname'     => 'internal',
+        'elements'       => $elements,
+        'dieaftersubmit' => false,
+        'iscancellable'  => false
     );
 
     return $form;
@@ -480,8 +477,8 @@ function auth_get_login_form() {
  * javascript is used to detect whether cookies are enabled, and not show the
  * login form if they are not.
  *
- * @param string $form A rendered login form
- * @return string      The form with extra javascript added for cookie detection
+ * @param string  $form A rendered login form
+ * @return string The form with extra javascript added for cookie detection
  * @private
  */
 function get_login_form_js($form) {
@@ -510,7 +507,7 @@ EOF;
  * @param array $values The submitted values
  * @access private
  */
-function login_submit($values) {
+function login_submit(Pieform $form, $values) {
     global $SESSION, $USER;
 
     $username    = $values['login_username'];

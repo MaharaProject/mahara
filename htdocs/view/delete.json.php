@@ -38,7 +38,7 @@ require_once('view.php');
 $view = new View($viewid, null);
 
 if ($view->get('owner') != $USER->get('id')) {
-    json_reply('local', get_string('notowner'));
+    json_reply('local', get_string('notownerofview'));
 }
 $view->delete();
 

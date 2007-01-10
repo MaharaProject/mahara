@@ -32,17 +32,14 @@
  * @param Pieform  $form    The form to render the element for
  * @return string           The HTML for the element
  */
-function pieform_render_html($element, Pieform $form) {
+function pieform_element_html(Pieform $form, $element) {
     return $element['value'];
 }
 
-function pieform_render_html_set_attributes($element) {
+function pieform_element_html_set_attributes($element) {
     $element['nolabel'] = true;
+    $element['nofocus'] = true;
     return $element;
-}
-
-function pieform_get_value_js_html() {
-    return '';
 }
 
 ?>

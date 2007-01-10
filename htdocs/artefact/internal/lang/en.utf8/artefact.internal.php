@@ -67,18 +67,23 @@ $string['name'] = 'Name';
 $string['principalemailaddress'] = 'Principal email';
 $string['emailaddress'] = 'Alternative email';
 
+$string['saveprofile'] = 'Save Profile';
+$string['profilesaved'] = 'Profile saved successfully';
+$string['profilefailedsaved'] = 'Profile saving failed';
+
 
 $string['emailvalidation_subject'] = 'Email validation';
 $string['emailvalidation_body'] = <<<EOF
 Hello %s,
 
-blah blah blah blah TODO
-
-validating email address %s
-
-click the link below ...
+The email address %s has been added to your user account in Mahara. Please
+visit the link below to activate this address.
 
 %s
 EOF;
+
+$string['emailactivation'] = 'Email Activation';
+$string['emailactivationsucceeded'] = 'Email Activation Successful';
+$string['emailactivationfailed'] = 'Email Activation Failed';
 
 ?>

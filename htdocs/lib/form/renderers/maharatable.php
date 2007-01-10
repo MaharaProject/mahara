@@ -1,6 +1,6 @@
 <?php
 /**
- * This program is part of Pieforms
+ * This program is part of Mahara
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -16,11 +16,11 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
- * @package    pieform
- * @subpackage renderer
+ * @package    mahara
+ * @subpackage form-renderer
  * @author     Nigel McNie <nigel@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -103,7 +103,7 @@ function pieform_renderer_maharatable(Pieform $form, $builtelement, $rawelement)
 }
 
 function pieform_renderer_maharatable_header() {
-    return "<table cellspacing=\"0\" border=\"0\"><tbody>\n";
+    return "<table cellspacing=\"0\" border=\"0\" class=\"maharatable\"><tbody>\n";
 }
 
 function pieform_renderer_maharatable_footer() {
@@ -113,9 +113,8 @@ function pieform_renderer_maharatable_footer() {
 
 // @todo table renderer - probably doesn't need the remove_error function for the same reason that
 // this one doesn't (all errors are removed on form submit). Also should set classes on elements.
-function pieform_renderer_maharatable_messages_js($id) {
+function pieform_renderer_maharatable_get_js($id) {
     $result = <<<EOF
-
 function {$id}_set_error(message, element) {
     element = '{$id}_' + element + '_container';
     var container = getFirstElementByTagAndClassName('TD', null, $(element));
@@ -132,23 +131,6 @@ function {$id}_remove_all_errors() {
         removeElementClass(item.firstChild, 'error');
     });
 }
-function {$id}_message(message, type) {
-    var elem = $('{$id}_pieform_message');
-    var msg  = TR({'id': '{$id}_pieform_message'}, TD({'class': type}, message));
-    if (elem) {
-        swapDOM(elem, msg);
-    }
-    else {
-        insertSiblingNodesAfter($('{$id}_' + {$id}_btn + '_container'), msg);
-    }
-}
-function {$id}_remove_message() {
-    var elem = $('{$id}_pieform_message');
-    if (elem) {
-        removeElement(elem);
-    }
-}
-    
 EOF;
     return $result;
 }

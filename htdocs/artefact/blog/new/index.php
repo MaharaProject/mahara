@@ -47,7 +47,7 @@ $form = pieform(array(
         'description' => array(
             'type'        => 'wysiwyg',
             'rows'        => 10,
-            'cols'        => 80,
+            'cols'        => 70,
             'title'       => get_string('blogdesc', 'artefact.blog'),
             'description' => get_string('blogdescdesc', 'artefact.blog'),
             'rules' => array(
@@ -92,7 +92,7 @@ exit;
  *
  * @param array
  */
-function newblog_submit($values) {
+function newblog_submit(Pieform $form, $values) {
     global $USER;
 
     ArtefactTypeBlog::new_blog($USER, $values);
