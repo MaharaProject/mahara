@@ -89,7 +89,8 @@ if (!empty($upgrade)) {
         exit;
     } 
     catch (Exception $e) {
-        $data['errormessage'] = $e->getMessage();
+        list($texttrace, $htmltrace) = log_build_backtrace($e->getTrace());
+        $data['errormessage'] = $e->getMessage() . '<br>' . $htmltrace;
         json_reply(true, $data);
         exit;
     }

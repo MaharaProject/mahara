@@ -28,6 +28,7 @@ define('INTERNAL', 1);
 define('PUBLIC', 1);
 
 require('init.php');
+require_once('file.php');
 
 $type = param_alpha('type');
 
@@ -47,13 +48,25 @@ switch ($type) {
         exit;
         break;
 
-    case 'user':
-            if (false) { // @todo find their real profile image
+    case 'profileicon':
+        $id = param_integer('id');
+        $size = param_variable('size', '');
+        if ($size && !preg_match('/\d+x\d+/', $size)) {
+            throw new UserException('Invalid size for image specified');
+        }
+
+        log_debug('looking for image for user, id = ' . $id . ' and size = ' . $size);
+
+        if ($path = get_dataroot_image_path('artefact/internal/profileicons', $id, $size)) {
+            $type = get_mime_type($path);
+            if ($type) {
+                header('Content-type: ' . $type);
+                readfile($path);
+                exit;
             }
-            else {
-                header('Content-type: ' . 'image/gif');
-                readfile(theme_get_image_path('images/no_userphoto40x40.gif'));
-            }
+        }
+        header('Content-type: ' . 'image/gif');
+        readfile(theme_get_image_path('images/no_userphoto40x40.gif'));
         break;
 }
 

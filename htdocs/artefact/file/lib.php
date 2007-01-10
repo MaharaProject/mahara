@@ -246,8 +246,8 @@ class ArtefactTypeFileBase extends ArtefactType {
 
         // Sort folders before files; then use nat sort order on title.
         function fileobjcmp ($a, $b) {
-            return strnatcasecmp(($a->artefacttype == 'folder') . $a->title,
-                                 ($b->artefacttype == 'folder') . $b->title);
+            return strnatcasecmp((int)($a->artefacttype != 'folder') . $a->title,
+                                 (int)($b->artefacttype != 'folder') . $b->title);
         }
         usort($filedata, "fileobjcmp");
         return $filedata;
@@ -282,6 +282,21 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
     }
 
 
+
+    /**
+     * Test file type and return a new Image or File.
+     */
+    public static function new_file($path, $data) {
+        //require_once('file.php');
+        //$type = get_mime_type($path);
+        $type = 'foo';
+        if (ArtefactTypeImage::is_image_mime_type($type)) {
+            return new ArtefactTypeImage(0, $data);
+        }
+        return new ArtefactTypeFile(0, $data);
+    }
+
+
     /**
      * Moves a file into the myfiles area.
      * Takes the name of a file outside the myfiles area.
@@ -293,13 +308,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         if (!$size = filesize($pathname)) {
             return false;
         }
-        //if (is_image($pathname)) {
-        if (false) {
-            $f = new ArtefactTypeImage(0, $data);
-        }
-        else {
-            $f = new ArtefactTypeFile(0, $data);
-        }
+        $f = self::new_file($pathname, $data);
         $f->set('size', $size);
         $f->commit();
         $id = $f->get('id');
@@ -327,12 +336,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         if ($error = $um->preprocess_file()) {
             return $error;
         }
-        if ($um->file_is_image()) {
-            $f = new ArtefactTypeImage(0, $data);
-        }
-        else {
-            $f = new ArtefactTypeFile(0, $data);
-        }
+        $f = self::new_file($um->file['tmp_name'], $data);
         global $USER;
         $f->set('owner', $USER->get('id'));
         $f->set('size', $um->file['size']);
@@ -447,6 +451,10 @@ class ArtefactTypeImage extends ArtefactTypeFile {
     public static function get_render_list() {
         return array(FORMAT_ARTEFACT_LISTSELF, FORMAT_ARTEFACT_RENDERFULL, 
                      FORMAT_ARTEFACT_RENDERMETADATA);
+    }
+
+    public static function is_image_mime_type($type) {
+        return in_array($type, array('image/jpeg', 'image/jpg', 'image/gif', 'image/png'));
     }
 
 }

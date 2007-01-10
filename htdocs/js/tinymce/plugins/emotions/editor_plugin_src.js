@@ -1,8 +1,8 @@
 /**
- * $Id: editor_plugin_src.js 126 2006-10-22 16:19:55Z spocke $
+ * $Id: editor_plugin_src.js 163 2007-01-03 16:31:00Z spocke $
  *
  * @author Moxiecode
- * @copyright Copyright © 2004-2006, Moxiecode Systems AB, All rights reserved.
+ * @copyright Copyright © 2004-2007, Moxiecode Systems AB, All rights reserved.
  */
 
 /* Import plugin specific language pack */
@@ -42,7 +42,7 @@ var TinyMCE_EmotionsPlugin = {
 				var template = new Array();
 
 				template['file'] = '../../plugins/emotions/emotions.htm'; // Relative to theme
-				template['width'] = 160;
+				template['width'] = 250;
 				template['height'] = 160;
 
 				// Language specific width and height addons

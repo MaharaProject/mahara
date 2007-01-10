@@ -409,6 +409,7 @@ function FileUploader(element, uploadscript, statevars, foldername, folderid, up
         
         var collideaction = replacefile ? 'replace' : 'fail';
         appendChildNodes(self.form, 
+                         INPUT({'type':'hidden', 'name':'parentfoldername', 'value':self.foldername}),
                          INPUT({'type':'hidden', 'name':'collideaction', 'value':collideaction}),
                          INPUT({'type':'hidden', 'name':'uploadnumber', 'value':self.nextupload}));
         if (self.folderid) {

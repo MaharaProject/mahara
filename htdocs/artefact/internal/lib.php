@@ -55,6 +55,7 @@ class PluginArtefactInternal extends PluginArtefact {
             'jabberusername',
             'occupation',
             'industry',
+            'profileicon'
         );
     }
 
@@ -117,6 +118,18 @@ class ArtefactTypeProfile extends ArtefactType {
         $this->ctime = time();
         $this->atime = time();
         $this->artefacttype = $type;
+        if (empty($id)) {
+            $this->dirty = true;
+            $this->ctime = $this->mtime = time();
+            if (empty($data)) {
+                $data = array();
+            }
+            foreach ((array)$data as $field => $value) {
+                if (property_exists($this, $field)) {
+                    $this->{$field} = $value;
+                }
+            }
+        }
     }
 
     public function render($format, $options) {
@@ -439,6 +452,12 @@ class ArtefactTypeSkypeusername extends ArtefactTypeProfileField {}
 class ArtefactTypeJabberusername extends ArtefactTypeProfileField {}
 class ArtefactTypeOccupation extends ArtefactTypeProfileField {}
 class ArtefactTypeIndustry extends ArtefactTypeProfileField {}
+
+class ArtefactTypeProfileIcon extends ArtefactTypeProfileField {
+    public static function is_note_private() {
+        return true;
+    }
+}
 
 
 ?>
