@@ -36,6 +36,7 @@ $enc_nopublish = json_encode(get_string('nopublish', 'artefact.blog'));
 $enc_error = json_encode(get_string('jsonerror', 'artefact.blog'));
 $enc_edit = json_encode(get_string('edit', 'artefact.blog'));
 $enc_delete = json_encode(get_string('delete', 'artefact.blog'));
+$enc_delete_confirm = json_encode(get_string('deleteblogpost?', 'artefact.blog'));
 
 return <<<EOJAVASCRIPT
 
@@ -100,7 +101,7 @@ postlist.rowfunction = function(d, n, gd) {
         { 'type' : 'button', 'value': {$enc_delete} }
     );
 
-    var desctd = TD({'colSpan':2});
+    var desctd = TD({'colSpan':3});
     desctd.innerHTML = d.description;
   
     var rows = [
@@ -110,10 +111,13 @@ postlist.rowfunction = function(d, n, gd) {
             TD(null, [pub, ' ', edit, ' ', del])
         ),
         TR(null, desctd),
-        TR(null, TD({'colSpan':2}, d.ctime))
+        TR(null, TD(null, d.ctime))
     ];
 
     connect(del, 'onclick', function(e) {
+        if (!confirm({$enc_delete_confirm})) {
+            return;
+        }
         var def = loadJSONDoc('delete.json.php', { 'id' : d.id });
         def.addCallbacks(
             function (response) {
