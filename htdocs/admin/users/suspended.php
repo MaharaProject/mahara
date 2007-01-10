@@ -58,17 +58,17 @@ $form = new Pieform(array(
         'unsuspend' => array(
             'type' => 'submit',
             'name' => 'unsuspend',
-            'value' => get_string('unsuspendusers')
+            'value' => get_string('unsuspendusers', 'admin')
         ),
         'export' => array(
             'type' => 'submit',
             'name' => 'export',
-            'value' => get_string('exportuserprofiles')
+            'value' => get_string('exportuserprofiles', 'admin')
         ),
         'delete' => array(
             'type' => 'submit',
             'name' => 'delete',
-            'value' => get_string('deleteusers')
+            'value' => get_string('deleteusers', 'admin')
         )
     )
 ));

@@ -69,7 +69,7 @@ $data = array();
 if ($feedback) {
     foreach ($feedback as $record) {
         $data[] = array('name' => display_name($record->author),
-                        'date' => strftime(get_string('strftimedate'),strtotime($record->ctime)),
+                        'date' => format_date(strtotime($record->ctime), 'strftimedate'),
                         'message' => $record->message,
                         'public' => $record->public);
     }
