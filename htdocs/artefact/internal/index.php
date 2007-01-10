@@ -72,7 +72,7 @@ foreach ( $element_list as $element => $type ) {
     );
 
     if ($type == 'wysiwyg') {
-        $elements[$element]['rows'] = 7;
+        $elements[$element]['rows'] = 10;
         $elements[$element]['cols'] = 60;
     }
     if ($type == 'textarea') {
