@@ -149,6 +149,7 @@ sub process {
         my ( $tag, $section ) = ( $1, $2 );
 
         next if ( $tag =~ m{ \$ }xms or ( defined $section and $section =~ m{ \$ }xms ) );
+        next if ( defined $section and $section =~ m{ \.$ }xms );
 
         $section ||= 'mahara';
 
