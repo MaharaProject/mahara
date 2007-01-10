@@ -1,4 +1,5 @@
 /var/log/mahara-cron.log {
+     create 644 www-data www-data
      rotate 12
      weekly
      compress

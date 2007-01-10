@@ -41,6 +41,10 @@ case "$1" in
         chown -R www-data:www-data /var/lib/mahara
         set_config dataroot /var/lib/mahara
 
+        # Touch cron log
+        touch /var/log/mahara-cron.log
+        chown www-data:www-data /var/log/mahara-cron.log
+
         # Configure apache2
         echo "changecom" > $TMP_M4_FILE
         db_get mahara/servername
