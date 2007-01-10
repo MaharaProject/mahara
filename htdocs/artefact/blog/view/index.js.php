@@ -55,8 +55,7 @@ postlist.rowfunction = function(d, n, gd) {
     }
     else {
         pub = INPUT(
-            { 'type' : 'button' },
-            {$enc_publish}
+            { 'type' : 'button' , 'value' : {$enc_publish}}
         );
 
         connect(pub, 'onclick', function(e) {
