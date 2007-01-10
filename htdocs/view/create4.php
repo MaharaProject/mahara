@@ -138,7 +138,7 @@ function createview4_submit(Pieform $form, $values) {
         }
     }
     db_commit();
-    $SESSION->add_ok_msg(get_string('viewcreatedsuccessfully'));
+    $SESSION->add_ok_msg(get_string('viewcreatedsuccessfully', 'view'));
     redirect(get_config('wwwroot') . 'view/');
 }
 

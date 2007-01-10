@@ -59,6 +59,7 @@ $string['declinerequest'] = 'Decline request';
 
 // auth
 $string['accessforbiddentoadminsection'] = 'You are forbidden from accessing the administration section';
+$string['accountdeleted'] = 'Sorry, your account has been deletd';
 $string['accountexpired'] = 'Sorry, your account has expired';
 $string['accountexpirywarning'] = 'Account expiry warning';
 $string['accountexpirywarningtext'] = 'Dear %s,
@@ -81,6 +82,7 @@ $string['accountexpirywarninghtml'] = '<p>Dear %s,</p>
 <p>If you wish to extend your account access or have any questions regarding the above, please feel free to <a href="%s">Contact Us</a>.</p>
 
 <p>Regards, %s Site Administrator</p>';
+$string['accountinactive'] = 'Sorry, your account is currently inactive';
 $string['accountinactivewarning'] = 'Account inactivity warning';
 $string['accountinactivewarningtext'] = 'Dear %s,
 
@@ -189,6 +191,7 @@ $string['passwordchangedok'] = 'Your password was successfully changed';
 
 // Expiry times
 $string['noenddate'] = 'No end date';
+$string['day']       = 'day';
 $string['days']      = 'days';
 $string['weeks']     = 'weeks';
 $string['months']    = 'months';
