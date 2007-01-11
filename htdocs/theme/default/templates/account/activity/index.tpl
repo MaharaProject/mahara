@@ -34,7 +34,7 @@
 				</tbody>
 				<tfoot>
 					<tr>
-						<td colspan="5" class="markasread"><div id="messagediv"></div><input class="submit" type="submit" value="{str tag='markasread' section='activity'}" /></td>
+						<td colspan="5" class="markasreadtd"><div id="messagediv"></div><div class="markasread"><input class="submit" type="submit" value="{str tag='markasread' section='activity'}" /></div></td>
 					</tr>
 				</tfoot>
 			</table>

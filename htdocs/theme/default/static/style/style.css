@@ -149,7 +149,8 @@ input.button {
 #siteoptions_submit,
 #createnew,
 #communitymembers_update,
-#contactus_submit {
+#contactus_submit,
+#change_password_submit {
 	background: url(../images/btn_long_off.gif) no-repeat;
 	border: 0;
 	width: 200px;
@@ -184,6 +185,10 @@ label {
 }
 .fr {
     float: right;
+}
+.s {
+	font-size: 11px;
+	font-weight: normal;
 }
 
 /* CONTENT LAYOUT BEGIN */
@@ -573,10 +578,11 @@ div.sidebar {
 
 /* system messages in main content */
 .maincontent #messagediv {
-	padding: 3px 3px 3px 3px;
+	padding: 10px 3px 10px 3px;
 	color: #e3ac03;
 	text-align: left;
 	float: left;
+	font-style: italic;
 }
 
 /* inner white corners around main content begin */
@@ -658,8 +664,8 @@ div.sidebar {
 .maincontent #login_submit {
 	margin: 5px 0 0 12px;
 }
-
 /* LOGIN FOR COLUMN LEFT ENDS */
+
 
 p {
 	margin: 15px 0 5px 0;
@@ -702,7 +708,8 @@ p {
 .maincontent #editviewaccess table,
 .maincontent #register table,
 .maincontent #editcommunity table,
-.maincontent #createcommunity table {
+.maincontent #createcommunity table,
+#change_password table {
 	border: 0px;
 }
 
@@ -721,6 +728,12 @@ p {
 .maincontent td {
 	padding: 3px 5px;
 	margin: 0;
+}
+.maincontent tbody .r0 {
+	background-color: #FFFFFF;
+}
+.maincontent tbody .r1 {
+	background-color: #f4f7e8;
 }
 /* No need padding td */
 .maincontent #editpost td,
@@ -850,11 +863,11 @@ table#installer {
 	margin: 10px 0 10px 5px;
 	text-align: right;
 }
-#myblogs .newblog a,
-#myblogs .newblog a:link,
-#myblogs .newblog a:active,
-#myblogs .newblog a:visited,
-#myblogs .newblog a:hover {
+#myblogs .addicon a,
+#myblogs .addicon a:link,
+#myblogs .addicon a:active,
+#myblogs .addicon a:visited,
+#myblogs .addicon a:hover {
 	background: url(../images/btn_add.gif) no-repeat;
 	width: 120px;
 	height: 24px;
@@ -922,6 +935,8 @@ table#installer {
 .maincontent #editgroup table tr td table td label {
 	margin: 0 5px 0 0;
 }
+
+
 /* My Communities and My Owned Communities styles */
 .maincontent .addcommunitylink {
 	margin: 10px 0 10px 0;
@@ -1205,11 +1220,6 @@ span.block_targetted, div.block_targetted {
 	margin: 0;
 	padding: 0;
 }
-#activitylist .markasread,
-#watchlist .stopmonitoring {
-	text-align: right;
-	background: none;
-}
 
 /* My Account styles */
 .maincontent #accountprefs #accountprefs_friendscontrol_container label,
@@ -1228,11 +1238,36 @@ span.block_targetted, div.block_targetted {
 .maincontent #activityprefs table td {
 	padding: 3px;
 }
+.maincontent #activitylist tbody tr td {
+	vertical-align: top;
+	font-size: 11px;
+}
+.maincontent #activitylist tbody tr td a {
+	font-weight: bold;
+}
 .maincontent #mywatchlist #typeheader {
 	color: #5c8727;
 	font-weight: bold;
 	padding: 15px 0 0 0;
 }
+#activitylist .markasreadtd,
+#watchlist .stopmonitoringtd {
+	text-align: right;
+	background: none;
+	background-color: #e5e8da;
+}
+#activitylist .markasread,
+#watchlist .stopmonitoring {
+	float: right;
+	padding: 0;
+	margin: 0;
+}
+.maincontent #activitylist tbody tr td .s {
+	font-size: 11px;
+	font-weight: normal;
+}
+
+
 /* Configure Site styles */
 .maincontent #siteoptions table td {
 	width: 200px;
