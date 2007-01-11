@@ -285,9 +285,8 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
      * Test file type and return a new Image or File.
      */
     public static function new_file($path, $data) {
-        //require_once('file.php');
-        //$type = get_mime_type($path);
-        $type = 'foo';
+        require_once('file.php');
+        $type = get_mime_type($path);
         if (ArtefactTypeImage::is_image_mime_type($type)) {
             return new ArtefactTypeImage(0, $data);
         }
@@ -502,7 +501,8 @@ class ArtefactTypeImage extends ArtefactTypeFile {
     }
 
     public static function is_image_mime_type($type) {
-        return in_array($type, array('image/jpeg', 'image/jpg', 'image/gif', 'image/png'));
+        require_once('file.php');
+        return is_image_mime_type($type);
     }
 
 }
