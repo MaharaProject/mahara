@@ -28,7 +28,7 @@
 				</thead>
 				{foreach from=$institutions item=institution}
 				<tbody>
-				<tr>
+				<tr class="{cycle values=r1,r0}">
 					<td>{$institution->displayname|escape}</td>
 					<td>{$institution->authplugin}</td>
 					<td>{if $institution->authplugin == 'internal'}{if $institution->registerallowed}{str tag="yes"}{else}{str tag="no"}{/if}{else}-{/if}</td>

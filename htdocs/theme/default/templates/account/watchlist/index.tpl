@@ -37,8 +37,7 @@
 				</tbody>
 				<tfoot>
 					<tr>
-						<td align="right" colspan="2"><div id="messagediv"></div></td>
-						<td align="right"><input type="submit" class="submit" value="{str tag='stopmonitoring' section='activity'}" /></td>
+						<td colspan="3" class="stopmonitoring"><div id="messagediv"></div><input type="submit" class="submit" value="{str tag='stopmonitoring' section='activity'}" /></td>
 					</tr>
 				</tfoot>
 			</table>

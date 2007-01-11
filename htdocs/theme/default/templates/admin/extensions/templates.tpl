@@ -10,7 +10,7 @@
 </tr>
 
 {foreach from=$templates item='template' key='name'}
-<tr>
+<tr class="{cycle values=r1,r0}">
     <td>{$name}</td>
     <td>{if $template.installed}
         <img id="{$name}.status" alt="{str tag='yes'}" src="{image_path imagelocation='success.gif}" />

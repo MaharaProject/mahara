@@ -49,7 +49,7 @@ var activitylist = new TableRenderer(
             if (r.message) {
                 var messagemore;
                 if (r.url) {
-                    messagemore = [r.message, BR(null), A({'href' : r.url}, '{$morestr}')];
+                    messagemore = [r.message, BR(null), A({'href' : r.url, 'class': 's'}, '{$morestr}')];
                 }
                 else {
                     messagemore = r.message;
@@ -68,15 +68,11 @@ var activitylist = new TableRenderer(
         'date',
         function (r, d) {
             if (r.read == 1) {
-                return TD(null,IMG({'src' : d.star, 'alt' : d.unread}));
+                return TD({'class': 'center'},IMG({'src' : d.star, 'alt' : d.unread}));
             }
-            return TD(null);
-        },
-        function (r) {
-            if (r.read == 0) {
-                return TD(null, INPUT({'type' : 'checkbox', 'class' : 'tocheck', 'name' : 'unread-' + r.id}));
+            else {
+                return TD({'class': 'center'}, INPUT({'type' : 'checkbox', 'class' : 'tocheck', 'name' : 'unread-' + r.id}));
             }
-            return TD(null);
         }
     ]
 );

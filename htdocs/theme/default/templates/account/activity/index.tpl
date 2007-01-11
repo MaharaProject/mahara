@@ -23,11 +23,10 @@
 			<table id="activitylist">
 				<thead>
 					<tr>
+						<th>{str section='activity' tag='subject'}</th>
 						<th>{str section='activity' tag='type'}</th>
 						<th>{str section='activity' tag='date'}</th>
-						<th>{str section='activity' tag='read'}</th>
-						<th>[<a href="" onClick="{$selectall}">{str section='activity' tag='selectall'}</a>]</th>
-						<th></th>
+						<th>{str section='activity' tag='read'}<br><a href="" onclick="{$selectall}" class="s">{str section='activity' tag='selectall'}</a></th>
 					</tr>
 				</thead>
 				<tbody>

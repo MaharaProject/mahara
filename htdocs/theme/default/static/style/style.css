@@ -571,6 +571,14 @@ div.sidebar {
 	border: none;
 }
 
+/* system messages in main content */
+.maincontent #messagediv {
+	padding: 3px 3px 3px 3px;
+	color: #e3ac03;
+	text-align: left;
+	float: left;
+}
+
 /* inner white corners around main content begin */
 .box-cnrs {
     margin: 0;
@@ -616,13 +624,15 @@ div.sidebar {
 
 /* LOGIN FOR COLUMN LEFT BEGINS */
 .maincontent #loginbox {
-   	margin-top: 0px;
+   	margin-top: 10px;
 	padding: 0;
+	border: 1px solid #d4d1c0;
 }
 .maincontent #loginbox fieldset {
 	border: none;
-	padding: 0;
-	margin-left: 10px;
+	padding: 0 5px 0 5px;
+	margin: 0 5px 0 5px;
+	background-color: #eef4da;
 }
 .maincontent #login legend {
 	margin: 0;
@@ -631,7 +641,11 @@ div.sidebar {
 }
 .maincontent #login th {
 	margin: 0;
-	padding-top: 10px;
+	padding: 0;
+}
+.maincontent #login td {
+   	margin: 0;
+	padding: 0;
 }
 .maincontent #login .description {
 	font-size: 9px;
@@ -642,7 +656,7 @@ div.sidebar {
 	display: inline;
 }
 .maincontent #login_submit {
-	margin: 10px 0 0 12px;
+	margin: 5px 0 0 12px;
 }
 
 /* LOGIN FOR COLUMN LEFT ENDS */
@@ -727,7 +741,8 @@ p {
 .maincontent thead tr td,
 .maincontent tfoot tr td {
 	text-align: center;
-	background: #c7cdb3 url(../images/tablenavbg.gif) no-repeat;
+	background: #c7cdb3 url(../images/tablenavbg.gif) repeat-x;
+	height: 15px;
 }
 .maincontent thead tr td a,
 .maincontent thead tr td a:link,
@@ -739,12 +754,12 @@ p {
 .maincontent tfoot tr td a:visited {
 	font-size: 11px;
 	font-weight: bold;
-	color: #547c22;
+	color: #5c8727;
 	margin: 0 10px;
 }
 .maincontent thead tr td a:hover,
 .maincontent tfoot tr td a:hover {
-	color: #819f18;
+	color: #4c7c10;
 }
 /* Within Table Navigation Styles End */
 
@@ -908,10 +923,6 @@ table#installer {
 	margin: 0 5px 0 0;
 }
 /* My Communities and My Owned Communities styles */
-.maincontent #messagediv {
-	padding: 10px 0 10px 0;
-	color: #e3ac03;
-}
 .maincontent .addcommunitylink {
 	margin: 10px 0 10px 0;
 	text-align: right;
@@ -1194,9 +1205,10 @@ span.block_targetted, div.block_targetted {
 	margin: 0;
 	padding: 0;
 }
-#activitylist .markasread {
+#activitylist .markasread,
+#watchlist .stopmonitoring {
 	text-align: right;
-	background-color: #e5e8da;
+	background: none;
 }
 
 /* My Account styles */

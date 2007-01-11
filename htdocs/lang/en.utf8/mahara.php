@@ -133,7 +133,9 @@ $string['usernamehelp'] = 'The username you have been given to access this syste
 $string['yournewpassword'] = 'Your new password';
 $string['yournewpasswordagain'] = 'Your new password again';
 $string['invalidsesskey'] = 'Invalid session key';
+$string['cantremovedefaultemail'] = 'You cannot remove your primary email address';
 $string['mustspecifyoldpassword'] = 'You must specify your old password';
+
 // Misc. register stuff that could be used elsewhere
 $string['emailaddress'] = 'Email address';
 $string['emailaddressdescription'] = ' ';
