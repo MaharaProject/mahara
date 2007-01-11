@@ -36,6 +36,7 @@ $enc_publish = json_encode(get_string('publish', 'artefact.blog'));
 $enc_publish_confirm = json_encode(get_string('publishblogpost?', 'artefact.blog'));
 $enc_nopublish = json_encode(get_string('publishfailed', 'artefact.blog'));
 $enc_edit = json_encode(get_string('edit', 'artefact.blog'));
+$enc_error = json_encode(get_string('unknownerror'));
 $enc_files = json_encode(get_string('attachedfiles', 'artefact.blog'));
 $enc_delete = json_encode(get_string('delete', 'artefact.blog'));
 $enc_delete_confirm = json_encode(get_string('deleteblogpost?', 'artefact.blog'));
