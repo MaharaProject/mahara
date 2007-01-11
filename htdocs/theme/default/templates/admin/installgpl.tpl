@@ -23,7 +23,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA</p>
             </div>
 
-            <form action="{$WWWROOT}admin/upgrade.php" method="post" class="center"><input type="submit" value="{str tag=agreelicense section=admin}" style="font-weight: bold;"></form>
+            <form action="{$WWWROOT}admin/upgrade.php" method="post" class="center"><input type="submit" class="submit" value="{str tag=agreelicense section=admin}" style="font-weight: bold;"></form>
 
 {include file="columnfullend.tpl"}
 

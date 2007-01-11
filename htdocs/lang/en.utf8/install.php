@@ -43,7 +43,7 @@ $string['aboutdefaultcontent'] = '<p>Established in 2006, Mahara is the result o
 <p>Please feel free to <a href="contact.php">Contact Us</a> if you have any questions regarding Mahara.</p>
 
 <p><a href="http://mahara.org">http://mahara.org</a></p>';
-$string['homedefaultcontent'] = '<p>Welcome to Mahara</p>
+$string['homedefaultcontent'] = '<h2>Welcome to Mahara</h2>
 
 <p>Mahara is a fully featured electronic portfolio, weblog, resume builder and social networking system, connecting users and creating online communities.  Mahara provides you with the tools to set up a personal learning and development environment.</p>
 
