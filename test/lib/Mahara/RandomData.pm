@@ -526,10 +526,10 @@ sub insert_random_filethings {
 
     foreach my $item (@$artefactidlist) {
         my $id = int($item->{id});
-        $self->{dbh}->do('INSERT INTO ' . $prefix . 'artefact_file_files (artefact, size)
-            VALUES (?, ?)', undef,
+        $self->{dbh}->do('INSERT INTO ' . $prefix . 'artefact_file_files (artefact, size, adminfiles)
+            VALUES (?, ?, ?)', undef,
             $id,
-            $item->{artefacttype} eq 'folder' ? undef : int(rand(5000000)));
+            $item->{artefacttype} eq 'folder' ? undef : int(rand(5000000)), 0);
     }
 
     $self->{dbh}->commit();
