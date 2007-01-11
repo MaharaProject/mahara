@@ -351,6 +351,7 @@ $string['addtowatchlistwithchildren'] = 'Add %s and children to watchlist';
 $string['alreadyinwatchlist'] = 'This %s is already in your watchlist';
 $string['complaint'] = 'Complaint';
 $string['date'] = 'Date';
+$string['feedback'] = 'Feedback';
 $string['feedbacksubmitted'] = 'Feedback submitted';
 $string['makepublic'] = 'Make public';
 $string['nopublicfeedback'] = 'No public feedback';
