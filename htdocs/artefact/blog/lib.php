@@ -465,10 +465,11 @@ class ArtefactTypeBlogPost extends ArtefactType {
      * @param integer
      */
     public static function get_posts(User $user, $id, $limit = self::pagination, $offset = 0) {
-        ($result = get_records_sql_array("
+        $prefix = get_config('dbprefix');
+        ($result = get_records_sql_assoc("
          SELECT a.id, a.title, a.description, a.ctime, a.mtime, bp.published
-         FROM " . get_config('dbprefix') . "artefact a
-          LEFT OUTER JOIN " . get_config('dbprefix') . "artefact_blog_blogpost bp
+         FROM " . $prefix . "artefact a
+          LEFT OUTER JOIN " . $prefix . "artefact_blog_blogpost bp
            ON a.id = bp.blogpost
          WHERE a.parent = ?
           AND a.artefacttype = 'blogpost'
@@ -482,9 +483,26 @@ class ArtefactTypeBlogPost extends ArtefactType {
         )))
             || ($result = array());
 
-        $count = (int)get_field('artefact', 'COUNT(*)', 'owner', $user->get('id'), 'artefacttype', 'blogpost', 'parent', $id);
+        $count = (int)get_field('artefact', 'COUNT(*)', 'owner', $user->get('id'), 
+                                'artefacttype', 'blogpost', 'parent', $id);
 
-        return array($count, $result);
+        // Get the attached files.
+        if ($count > 0) {
+            $idlist = implode(', ', array_map(create_function('$a', 'return $a->id;'), $result));
+            $files = get_records_sql_array('
+               SELECT
+                  bf.blogpost, bf.file, a.artefacttype, a.title, a.description
+               FROM ' . $prefix . 'artefact_blog_blogpost_file bf
+                  INNER JOIN ' . $prefix . 'artefact a ON bf.file = a.id
+               WHERE bf.blogpost IN (' . $idlist . ')', '');
+            if ($files) {
+                foreach ($files as $file) {
+                    $result[$file->blogpost]->files[] = $file;
+                }
+            }
+        }
+
+        return array($count, array_values($result));
     }
 
     /** 

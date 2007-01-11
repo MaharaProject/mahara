@@ -37,6 +37,7 @@ $enc_publish_confirm = json_encode(get_string('publishblogpost?', 'artefact.blog
 $enc_nopublish = json_encode(get_string('nopublish', 'artefact.blog'));
 $enc_error = json_encode(get_string('jsonerror', 'artefact.blog'));
 $enc_edit = json_encode(get_string('edit', 'artefact.blog'));
+$enc_files = json_encode(get_string('attachedfiles', 'artefact.blog'));
 $enc_delete = json_encode(get_string('delete', 'artefact.blog'));
 $enc_delete_confirm = json_encode(get_string('deleteblogpost?', 'artefact.blog'));
 
@@ -118,9 +119,26 @@ postlist.rowfunction = function(d, n, gd) {
             status,
             TD(null, [pub, ' ', edit, ' ', del])
         ),
-        TR(null, desctd),
-        TR(null, TD(null, d.ctime))
+        TR(null, desctd)
     ];
+
+    if (d.files) {
+        var filerows = [TR(null, TD({'colSpan':3}, {$enc_files}))];
+        for (var i = 0; i < d.files.length; i++) {
+            filerows.push(TR(null, 
+                             TD(null, IMG({'src':config.themeurl + d.files[i].artefacttype + '.gif'})),
+                             TD(null, d.files[i].title),
+                             TD(null, d.files[i].description)));
+        }
+        rows.push(TR(null, TD({'colSpan':3}, 
+                              TABLE(null, 
+                                    createDOM('col', {'width':'5%'}),
+                                    createDOM('col', {'width':'40%'}),
+                                    createDOM('col', {'width':'55%'}),
+                                    TBODY(null, filerows)))));
+    }
+
+    rows.push(TR(null, TD(null, d.ctime)));
 
     connect(del, 'onclick', function(e) {
         if (!confirm({$enc_delete_confirm})) {
