@@ -535,71 +535,55 @@ function get_dataroot_image_path($path, $id, $size) {
         log_debug('the image is available at ' . $path);
         return $path;
     }
-/*
+
     if ($size) {
         // Image is not available in this size. If there is a base image for
         // it, we can make one however.
         $originalimage = $imagepath . "/$id";
-        if (is_readable($imagepath . "/$id")) {
+        if (is_readable($originalimage)) {
             log_debug('creating correct sized image');
 
             list($width, $height) = explode('x', $size);
 
             switch (get_mime_type($originalimage)) {
-                case 'jpg':
-                    $ih = imagecreatefromjpeg($originalimage);
+                case 'image/jpeg':
+                    $oldih = imagecreatefromjpeg($originalimage);
                     break;
-                case 'png':
-                    $ih = imagecreatefrompng($originalimage);
+                case 'image/png':
+                    $oldih = imagecreatefrompng($originalimage);
                     break;
-                case 'gif':
-                    $ih = imagecreatefromgif($originalimage);
+                case 'image/gif':
+                    $oldih = imagecreatefromgif($originalimage);
                     break;
+                default:
+                    log_debug('file is NOT of valid type');
+                    return false;
+            }
+            log_debug('file is of valid type');
+
+            if (!$oldih) {
+                return false;
             }
 
-            if (!$ih) {
+            $oldx = imagesx($oldih);
+            $oldy = imagesy($oldih);
 
-    switch($extn) {
-    case 'jpg':
-        $old = @ImageCreateFromJPEG($view);
-        break;
+            if ($oldy > $oldx) {
+                $newy = $height;
+                $newx = ($oldx * $newy) / $oldy;
+            }
+            else {
+                $newx = $width;
+                $newy = ($oldx * $newx) / $oldx;
+            }
 
-    case 'png':
-        $old = @ImageCreateFromPNG($view);
-        break;
-    }
-
-
-    if (empty($old)) {
-    return false;
-    } else {
-        $old_x = ImageSX($old);
-        $old_y = ImageSY($old);
-
-        // make new thumbnail
-        if ($old_y > $old_x) {
-            $new_y = $height;                           // max height of
-thumb
-            $new_x = ($old_x * $new_y)/$old_y;      // retain aspect ratio
-        }
-        else {
-            $new_x = $width;                           // max width of thumb
-            $new_y = ($old_y * $new_x)/$old_x;      // retain aspect ratio
-        }
-        //  $new = ImageCreate($new_x, $new_y);
-        $new = ImageCreateTrueColor($new_x, $new_y);
-        @ImageCopyResized($new, $old, 0, 0, 0, 0, $new_x, $new_y,
-$old_x, $old_y);
-    }
-
-    imageInterlace($new);
-    touch(SGN_DIR_ROOT.$thumbname);
-    $result = ImagePNG($new,SGN_DIR_ROOT.$thumbname);
-    return $thumbname;
-            return '';
+            $newih = imagecreatetruecolor($newx, $newy);
+            imagecopyresized($newih, $oldih, 0, 0, 0, 0, $newx, $newy, $oldx, $oldy);
+            imageinterlace($newih);
+            $result = imagepng($newih, $path);
+            return $path;
         }
     }
- */
 
     // Image not available in any size
     log_debug('image is not available in any size');
