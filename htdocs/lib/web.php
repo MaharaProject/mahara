@@ -1114,7 +1114,7 @@ function redirect($location='') {
         if (substr($path, -9) == 'index.php') {
             $path = substr($path, 0, -9);
         }
-        $location = $wwwroot . $path;
+        $location = substr($wwwroot, 0, -1) . $path;
     }
     else if (substr($location, 0, 4) != 'http') {
         $location = $wwwroot . $location;
