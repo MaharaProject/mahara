@@ -516,7 +516,7 @@ function get_dataroot_image_path($path, $id, $size) {
         log_debug('the image is available at ' . $path);
         return $path;
     }
-
+/*
     if ($size) {
         // Image is not available in this size. If there is a base image for
         // it, we can make one however.
@@ -528,8 +528,18 @@ function get_dataroot_image_path($path, $id, $size) {
 
             switch (get_mime_type($originalimage)) {
                 case 'jpg':
-                    $ih = imagecreatefromjpeg($
-    $extn = strtolower(substr($filename, -3));
+                    $ih = imagecreatefromjpeg($originalimage);
+                    break;
+                case 'png':
+                    $ih = imagecreatefrompng($originalimage);
+                    break;
+                case 'gif':
+                    $ih = imagecreatefromgif($originalimage);
+                    break;
+            }
+
+            if (!$ih) {
+
     switch($extn) {
     case 'jpg':
         $old = @ImageCreateFromJPEG($view);
@@ -570,6 +580,7 @@ $old_x, $old_y);
             return '';
         }
     }
+ */
 
     // Image not available in any size
     log_debug('image is not available in any size');
