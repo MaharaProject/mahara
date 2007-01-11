@@ -34,12 +34,12 @@ $enc_draft = json_encode(get_string('draft', 'artefact.blog'));
 $enc_published = json_encode(get_string('published', 'artefact.blog'));
 $enc_publish = json_encode(get_string('publish', 'artefact.blog'));
 $enc_publish_confirm = json_encode(get_string('publishblogpost?', 'artefact.blog'));
-$enc_nopublish = json_encode(get_string('nopublish', 'artefact.blog'));
-$enc_error = json_encode(get_string('jsonerror', 'artefact.blog'));
+$enc_nopublish = json_encode(get_string('publishfailed', 'artefact.blog'));
 $enc_edit = json_encode(get_string('edit', 'artefact.blog'));
 $enc_files = json_encode(get_string('attachedfiles', 'artefact.blog'));
 $enc_delete = json_encode(get_string('delete', 'artefact.blog'));
 $enc_delete_confirm = json_encode(get_string('deleteblogpost?', 'artefact.blog'));
+$enc_postedon = json_encode(get_string('postedon', 'artefact.blog'));
 
 return <<<EOJAVASCRIPT
 
@@ -140,7 +140,7 @@ postlist.rowfunction = function(d, n, gd) {
                                     TBODY(null, filerows)))));
     }
 
-    rows.push(TR(null, TD(null, d.ctime)));
+    rows.push(TR(null, TD(null, {$enc_postedon}, ' ', d.ctime)));
 
     connect(del, 'onclick', function(e) {
         if (!confirm({$enc_delete_confirm})) {
