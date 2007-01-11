@@ -51,7 +51,7 @@ var postlist = new TableRenderer(
 
 postlist.rowfunction = function(d, n, gd) {
     
-    var status = TD({'id':'poststatus'+d.id});
+    var status = TH({'id':'poststatus'+d.id});
     var pub;
     if (d.published == 1) {
         status.innerHTML = {$enc_published};
@@ -117,7 +117,7 @@ postlist.rowfunction = function(d, n, gd) {
             null,
             TH(null, d.title),
             status,
-            TD(null, [pub, ' ', edit, ' ', del])
+            TH(null, [pub, ' ', edit, ' ', del])
         ),
         TR(null, desctd)
     ];
