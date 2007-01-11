@@ -23,7 +23,6 @@
 			<table id="activitylist">
 				<thead>
 					<tr>
-						<th></th>
 						<th>{str section='activity' tag='type'}</th>
 						<th>{str section='activity' tag='date'}</th>
 						<th>{str section='activity' tag='read'}</th>
@@ -36,8 +35,7 @@
 				</tbody>
 				<tfoot>
 					<tr>
-						<td align="right" colspan="4"><div id="messagediv"></div></td>
-						<td align="right"><input type="submit" value="{str tag='markasread' section='activity'}" /></td>
+						<td colspan="5" class="markasread"><div id="messagediv"></div><input class="submit" type="submit" value="{str tag='markasread' section='activity'}" /></td>
 					</tr>
 				</tfoot>
 			</table>

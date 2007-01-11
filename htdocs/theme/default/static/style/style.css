@@ -49,21 +49,32 @@ form {
    margin: 0;
 }
 
-input {
+input.text, input.password, textarea {
 	border: 1px solid #d4d1c0;
 	padding: 1px 2px 1px 2px;
+}
+input.radio, input.checkbox {
+	border: none;
 }
 select {
 	border: 1px solid #d4d1c0;
 	padding: 0;
 }
-input[type="radio"] {
-	border: none;
+div.grippie {
+	border-color: #d4d1c0;
+	border-style: solid;
+	border-width: 0pt 1px 1px;
+	background: #eeeeee url(../images/grippie.png) no-repeat scroll 100% 50%;
+	cursor: s-resize;
+	height: 14px;
 }
 
-/*input[type="submit"], input[type="button"] {
-    border: 2px outset #ccc;
-}*/
+/* td for grippie to work */
+.maincontent #profileform #profileform_address_container td,
+.maincontent #contactus #contactus_message_container td {
+	padding: 0;
+	margin: 0;
+}
 
 #profileform #profileform_introduction_container table,
 #editsitepage #editsitepage_pagetext_container table,
@@ -72,7 +83,9 @@ input[type="radio"] {
 .maincontent #createview1 #createview1_description_container table,
 .maincontent #newblog #newblog_description_container table,
 .maincontent #editblog #editblog_description_container table,
-.maincontent #editpost #editpost_description_container table {
+.maincontent #editpost #editpost_description_container table,
+.maincontent #editcommunity #editcommunity_description_container table,
+.maincontent #createcommunity #createcommunity_description_container table {
 	border: 1px solid #d4d1c0;
 	margin: 0px;
 }
@@ -114,15 +127,9 @@ input[type="radio"] {
 }
 
 /* medium submit buttons max width 100px */
-input[type="submit"], input[type="button"],
-#editsitepage_submit,
-#admininstitution_add,
-#newblog_submit,
-#createview4_submit,
-#invite_submit,
-#friend_submit,
-#watchlist input,
-#activitylist input {
+input.submitcancel,
+input.submit, 
+input.button {
 	background: url(../images/btn_medium_off.gif) no-repeat;
 	border: 0;
 	width: 100px;
@@ -135,7 +142,6 @@ input[type="submit"], input[type="button"],
 }
 
 /* long submit buttons max width 200px */
-#profileform_submit,
 #buttons #buttons_unsuspend,
 #buttons #buttons_export,
 #buttons #buttons_delete,
@@ -278,7 +284,7 @@ label {
 	color: #777777;
 	width: 183px;
 }
-.searchbox .advancedsearch {
+.advancedsearch {
 	font-size: 9px;
 	padding: 0 148px 0 0;
 }
@@ -541,13 +547,6 @@ div.sidebar {
 	float: left;
 }
 
-.content textarea {
-	width: 450px;
-}
-.content textarea.wysiwyg {
-	width: 490px;
-}
-
 
 /* system messages between nav and main content */
 #messages {
@@ -568,26 +567,33 @@ div.sidebar {
 	background: #b8c9cf url(../images/icon_question.gif) no-repeat left;
 	padding: 3px 3px 3px 17px;
 }
-
+#messages img {
+	border: none;
+}
 
 /* inner white corners around main content begin */
 .box-cnrs {
     margin: 0;
   	padding: 0;
+	width: 100%;
 }
 * html .box-cnrs {
     height: 6px;
 	margin: 0;
 	padding: 0;
+	width: 100%;
 } 
 .box-cnrs .cnr-tl {
   	background: url(../images/content_corner_topleft.gif) top left no-repeat ;
+	width: 100%;
 }
 .box-cnrs .cnr-tr {
   	background: url(../images/content_corner_topright.gif) top right no-repeat;
+	width: 100%;
 }
 .box-cnrs .cnr-bl {
   	background: url(../images/content_corner_botleft.gif) bottom left no-repeat;
+	width: 100%;
 }
 .box-cnrs .cnr-br {
   	padding: 6px 0 6px 0;
@@ -680,7 +686,9 @@ p {
 .maincontent #editgroup table,
 .maincontent #creategroup table,
 .maincontent #editviewaccess table,
-.maincontent #register table {
+.maincontent #register table,
+.maincontent #editcommunity table,
+.maincontent #createcommunity table {
 	border: 0px;
 }
 
@@ -701,24 +709,25 @@ p {
 	margin: 0;
 }
 /* No need padding td */
-.maincontent #profileform td,
 .maincontent #editpost td,
 .maincontent #editblog td,
 .maincontent #creategroup td,
 .maincontent #newblog td,
 .maincontent #editgroup td,
 .maincontent #createview1 td,
-.maincontent #accountprefs td {
+.maincontent #accountprefs td,
+.maincontent #editcommunity td,
+.maincontent #createcommunity td,
+.maincontent #profileform td,
+.maincontent #contactus td {
 	padding: 0;
 	margin: 0;
 }
-
-
 /* Within table Navigation Styles Begin */
 .maincontent thead tr td,
 .maincontent tfoot tr td {
 	text-align: center;
-	background-color: #f2f5e7;
+	background: #c7cdb3 url(../images/tablenavbg.gif) no-repeat;
 }
 .maincontent thead tr td a,
 .maincontent thead tr td a:link,
@@ -730,12 +739,12 @@ p {
 .maincontent tfoot tr td a:visited {
 	font-size: 11px;
 	font-weight: bold;
-	color: #819f18;
+	color: #547c22;
 	margin: 0 10px;
 }
 .maincontent thead tr td a:hover,
 .maincontent tfoot tr td a:hover {
-	color: #aad21f;
+	color: #819f18;
 }
 /* Within Table Navigation Styles End */
 
@@ -938,6 +947,8 @@ table#installer {
 #userview p {
 	color: #b68900;
 }
+
+
 /* My Views styles */
 #viewlist input {
 	background: url(../images/btn_createview_medium.gif) no-repeat;
@@ -947,6 +958,8 @@ table#installer {
 	margin: 3px 1px 3px 1px;
 	padding: 0;
 	font-weight: normal;
+	font-size: 11px;
+	border: none;
 }
 #viewlist tbody tr td {
 	padding: 1px 4px;
@@ -1181,6 +1194,10 @@ span.block_targetted, div.block_targetted {
 	margin: 0;
 	padding: 0;
 }
+#activitylist .markasread {
+	text-align: right;
+	background-color: #e5e8da;
+}
 
 /* My Account styles */
 .maincontent #accountprefs #accountprefs_friendscontrol_container label,
@@ -1204,8 +1221,6 @@ span.block_targetted, div.block_targetted {
 	font-weight: bold;
 	padding: 15px 0 0 0;
 }
-
-
 /* Configure Site styles */
 .maincontent #siteoptions table td {
 	width: 200px;
