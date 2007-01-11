@@ -493,7 +493,7 @@ function get_mime_type($file) {
     case 'win' :
         throw new SystemException('retrieving filetype not supported in windows');
     default : 
-        list($output,) = split(';', system(get_config('pathtofile') . ' -ib ' . escapeshellarg($file)));
+        list($output,) = split(';', exec(get_config('pathtofile') . ' -ib ' . escapeshellarg($file)));
     }
     return $output;
 
