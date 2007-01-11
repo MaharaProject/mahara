@@ -92,7 +92,7 @@ function uploadcsv_validate(Pieform $form, $values) {
     }
 
     if ($values['file']['size'] == 0) {
-        $form->set_error('file', $form->i18n('required'));
+        $form->set_error('file', $form->i18n('rule', 'required', 'required', array()));
         return;
     }
 
@@ -101,22 +101,19 @@ function uploadcsv_validate(Pieform $form, $values) {
 
     $institution = $values['institution'];
 
-    log_debug($values);
     $conf = File_CSV::discoverFormat($values['file']['tmp_name']);
-    log_debug($conf);
     $i = 0;
     while ($line = @File_CSV::readQuoted($values['file']['tmp_name'], $conf)) {
-        log_debug($line);
         $i++;
-        if (count($line) < 3) {
+        if (count($line) < 5) {
             $form->set_error('file', get_string('uploadcsverrorincorrectfieldcount', 'admin', $i));
             return;
         }
-        $username = $line[0];
-        $password = $line[1];
-        $email    = $line[2];
+        $username  = $line[0];
+        $password  = $line[1];
+        $email     = $line[4];
 
-        safe_require('auth', 'internal', 'lib.php', 'require_once');
+        safe_require('auth', 'internal');
         if (!AuthInternal::is_username_valid($username)) {
             $form->set_error('file', get_string('uploadcsverrorinvalidusername', 'admin', $i));
             return;
@@ -137,7 +134,6 @@ function uploadcsv_validate(Pieform $form, $values) {
         safe_require('artefact', 'internal');
         $fieldcounter = 2;
         foreach (ArtefactTypeProfile::get_mandatory_fields() as $field => $type) {
-            $fieldcounter++;
             if (!isset($line[$fieldcounter])) {
                 $form->set_error('file', get_string('uploadcsverrormandatoryfieldnotspecified', 'admin', $i, $field));
                 return;
@@ -145,6 +141,7 @@ function uploadcsv_validate(Pieform $form, $values) {
 
             // @todo validate the mandatory fields somehow. In theory, this should
             // just involve calling a method on a class.
+            $fieldcounter++;
         }
 
         // All OK!

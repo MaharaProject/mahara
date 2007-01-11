@@ -48,8 +48,6 @@ blog_renderfull{$blockid}.id = {$enc_id};
 
 blog_renderfull{$blockid}.updateOnLoad();
 
-alert('hi');
-
 EOJAVASCRIPT;
 
 ?>

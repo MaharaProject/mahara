@@ -11,10 +11,7 @@
 {include file="adminmenu.tpl"}
 </div>
 
-<div id="column-left">
-	<div class="content">
 {include file="columnleftstart.tpl"}
-        <div class="maincontent">
 		<div id="myblogs">
             <h2>{str section="artefact.blog" tag="myblogs"}</h2>
             <div class="addicon">
@@ -33,10 +30,6 @@
 			</table>
 				
         </div>
-        </div>
 {include file="columnleftend.tpl"}
-				
-	</div>
-</div>
-
+		
 {include file="footer.tpl"}

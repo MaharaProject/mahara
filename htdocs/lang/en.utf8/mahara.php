@@ -134,6 +134,7 @@ $string['yournewpassword'] = 'Your new password';
 $string['yournewpasswordagain'] = 'Your new password again';
 $string['invalidsesskey'] = 'Invalid session key';
 $string['cantremovedefaultemail'] = 'You cannot remove your primary email address';
+$string['mustspecifyoldpassword'] = 'You must specify your old password';
 
 // Misc. register stuff that could be used elsewhere
 $string['emailaddress'] = 'Email address';
@@ -318,7 +319,7 @@ $string['expand'] = 'Expand';
 $string['collapse'] = 'Collapse';
 $string['more...'] = 'More ...';
 $string['nohelpfound'] = 'There was no help found for this item';
-$string['nohelpfound'] = 'There was no help found for this page';
+$string['nohelpfoundpage'] = 'There was no help found for this page';
 $string['profileimage'] = 'Profile image';
 $string['primaryemailinvalid'] = 'Your primary email address is invalid';
 $string['addemail'] = 'Add email address';
@@ -352,6 +353,7 @@ $string['addtowatchlistwithchildren'] = 'Add %s and children to watchlist';
 $string['alreadyinwatchlist'] = 'This %s is already in your watchlist';
 $string['complaint'] = 'Complaint';
 $string['date'] = 'Date';
+$string['feedback'] = 'Feedback';
 $string['feedbacksubmitted'] = 'Feedback submitted';
 $string['makepublic'] = 'Make public';
 $string['nopublicfeedback'] = 'No public feedback';

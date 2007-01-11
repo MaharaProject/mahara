@@ -36,6 +36,8 @@ case "$1" in
         set_config dbname "${RET}"
         db_get mahara/db_user
         set_config dbuser "${RET}"
+        db_get mahara/servername
+        set_config wwwroot "http://${RET}/"
 
         # Set Dataroot
         chown -R www-data:www-data /var/lib/mahara

@@ -7,7 +7,7 @@ Standards-Version: 3.7.2
 
 Package: mahara-apache
 Architecture: any
-Depends: ${misc:Depends}, apache, libapache-mod-php5, php5-json, php5-pgsql, php5-cli, php5-gd, file, cron
+Depends: ${misc:Depends}, apache, libapache-mod-php5, php5-json | libapache-mod-php5 (>= 5.2), php5-pgsql, php5-cli, php5-gd, file, cron
 Conflicts: mahara-apache2
 Recommends: postgresql-8.1
 Pre-Depends: m4, perl, postgresql-client-8.1
@@ -40,7 +40,7 @@ Description: Mahara is an electronic portfolio, weblog, and resume builder
 
 Package: mahara-apache2
 Architecture: any
-Depends: ${misc:Depends}, apache2, libapache2-mod-php5, php5-json, php5-pgsql, php5-cli, php5-gd, file, cron
+Depends: ${misc:Depends}, apache, libapache2-mod-php5, php5-json | libapache2-mod-php5 (>= 5.2), php5-pgsql, php5-cli, php5-gd, file, cron
 Conflicts: mahara-apache
 Recommends: postgresql-8.1
 Pre-Depends: m4, perl, postgresql-client-8.1
