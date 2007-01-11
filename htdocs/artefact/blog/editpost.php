@@ -245,7 +245,7 @@ function removefrompost(rowid) {
 
 // Check if there's already a file attached to the post with the given name
 function fileattached(filename) {
-    return some(map(function (e) { return e.firstChild; }, attached.tbody.childNodes),
+    return some(map(function (e) { return e.childNodes[1]; }, attached.tbody.childNodes),
                 function (cell) { return scrapeText(cell) == filename; });
 }
 
