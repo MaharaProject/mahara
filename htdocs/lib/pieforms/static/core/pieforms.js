@@ -60,7 +60,7 @@ function TextArea(element) {
     this.grippie.dimensions = getElementDimensions(this.grippie);
 
     // Set wrapper and textarea dimensions
-    setElementDimensions(this.wrapper, {'h': this.dimensions.h + this.grippie.dimensions.h + 1});
+    setElementDimensions(this.wrapper, {'h': this.dimensions.h + this.grippie.dimensions.h + 1, 'w': this.dimensions.w});
     setStyle(this.element, {
         'margin-bottom': '0',
         'width': '100%',
@@ -82,7 +82,6 @@ function TextArea(element) {
         this.grippie.style.width = '100%';
         this.grippie.style.paddingLeft = '2px';
         setStyle(this.grippie, {
-            'width': '100%',
             'padding-left': '2px'
         });
     }
