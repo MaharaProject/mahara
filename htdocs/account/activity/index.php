@@ -49,7 +49,7 @@ var activitylist = new TableRenderer(
             if (r.message) {
                 var messagemore;
                 if (r.url) {
-                    messagemore = [r.message, BR(null), A({'href' : r.url}, '{$morestr}')];
+                    messagemore = [r.message, BR(null), A({'href' : r.url, 'class': 's'}, '{$morestr}')];
                 }
                 else {
                     messagemore = r.message;

@@ -26,7 +26,7 @@
 						<th>{str section='activity' tag='subject'}</th>
 						<th>{str section='activity' tag='type'}</th>
 						<th>{str section='activity' tag='date'}</th>
-						<th>{str section='activity' tag='read'}<br><a href="" onclick="{$selectall}" style="font-size: smaller;">{str section='activity' tag='selectall'}</a></th>
+						<th>{str section='activity' tag='read'}<br><a href="" onclick="{$selectall}" class="s">{str section='activity' tag='selectall'}</a></th>
 					</tr>
 				</thead>
 				<tbody>
