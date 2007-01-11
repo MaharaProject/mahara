@@ -398,8 +398,25 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
 
     }
 
+    public function folder_contents() {
+        return get_records_array('artefact', 'parent', $this->get('id'));
+    }
+
     public function render_full($options) {
-        return $this->title;
+        $smarty = smarty();
+        $smarty->assign('artefact', $this);
+        if ($children = $this->folder_contents()) {
+            $smarty->assign('children', $children);
+        }
+        return $smarty->fetch('artefact:file:folder_renderfull.tpl');
+    }
+
+    public function listchildren($options) {
+        $smarty = smarty();
+        if ($children = $this->folder_contents()) {
+            $smarty->assign('children', $children);
+        }
+        return $smarty->fetch('artefact:file:folder_listchildren.tpl');
     }
 
     public function get_icon() {
