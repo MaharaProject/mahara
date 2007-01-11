@@ -68,6 +68,7 @@ $string['nofilesattachedtothispost'] = 'No attached files';
 $string['noresults'] = 'No results';
 $string['postbody'] = 'Body';
 $string['postbodydesc'] = 'This is where your actual post goes.';
+$string['postedon'] = 'Posted on';
 $string['posttitle'] = 'Title';
 $string['posttitledesc'] = 'The title appears above your post.';
 $string['publish'] = 'Publish';
