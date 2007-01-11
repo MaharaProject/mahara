@@ -500,6 +500,12 @@ function get_mime_type($file) {
 }
 
 
+
+function is_image_mime_type($type) {
+    return in_array($type, array('image/jpeg', 'image/jpg', 'image/gif', 'image/png'));
+}
+
+
 /**
  * Given a path under dataroot, an ID and a size, return the path to a file
  * matching all criteria.
