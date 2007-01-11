@@ -164,8 +164,8 @@ uploader.createid = {$createid};
 
 // File browser instance allows users to attach files from the my files area
 var browser = null;
-var browsebutton = INPUT({'id':'browsebutton', 'type':'button', 'value':{$getstring['browsemyfiles']},
-                          'onclick':browsemyfiles});
+var browsebutton = INPUT({'id':'browsebutton', 'type':'button', 'class':'button', 
+                          'value':{$getstring['browsemyfiles']}, 'onclick':browsemyfiles});
 function browsemyfiles() {
     hideElement('browsebutton');
     insertSiblingNodesAfter('browsebutton', H3(null, {$getstring['myfiles']}));
@@ -187,7 +187,8 @@ var attached = new TableRenderer(
      'title',
      'description',
      function (r) { 
-         return TD(null, INPUT({'type':'button', 'value':{$getstring['remove']},
+         return TD(null, INPUT({'type':'button', 'class':'button',
+                                'value':{$getstring['remove']},
                                 'onclick':"removefrompost('artefact:"+r.id+"')"}));
      }
     ]
@@ -228,8 +229,9 @@ function attachtopost(data) {
                      TR({'id':rowid},
                         map(partial(TD,null), 
                             [IMG({'src':config.themeurl+'unknown.gif'}), data.title, data.description,
-                             INPUT({'type':'button', 'value':{$getstring['remove']},
-                                'onclick':"removefrompost('"+rowid+"')"})])));
+                             INPUT({'type':'button', 'class':'button',
+                                    'value':{$getstring['remove']},
+                                    'onclick':"removefrompost('"+rowid+"')"})])));
     checknoattachments();
 }
 

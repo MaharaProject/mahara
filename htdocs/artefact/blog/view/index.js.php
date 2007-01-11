@@ -62,7 +62,7 @@ postlist.rowfunction = function(d, n, gd) {
     else {
         status.innerHTML = {$enc_draft};
         pub = INPUT(
-            { 'type' : 'button' , 'value' : {$enc_publish}}
+            { 'type' : 'button' , 'class' : 'button', 'value' : {$enc_publish}}
         );
 
         connect(pub, 'onclick', function(e) {
@@ -101,14 +101,14 @@ postlist.rowfunction = function(d, n, gd) {
             }
         ),
         INPUT(
-            { 'type' : 'submit',
+            { 'type' : 'submit', 'class' : 'submit',
               'value' : {$enc_edit}
             }
         )
     );
 
     var del = INPUT(
-        { 'type' : 'button', 'value': {$enc_delete} }
+        { 'type' : 'button', 'class' : 'button', 'value': {$enc_delete} }
     );
 
     var desctd = TD({'colSpan':3});
