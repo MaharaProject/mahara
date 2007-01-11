@@ -790,6 +790,7 @@
             <SENTENCES>
                 <SENTENCE TEXT="(field, value) VALUES ('session_timeout', 1800)" />
                 <SENTENCE TEXT="(field, value) VALUES ('sitename', 'Mahara')" />
+                <SENTENCE TEXT="(field, value) VALUES ('pathtofile', '/usr/bin/file')" />
             </SENTENCES>
         </STATEMENT>
         <STATEMENT NAME="insert event types" TYPE="insert" TABLE="event_type">
