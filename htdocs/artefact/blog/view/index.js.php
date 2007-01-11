@@ -48,6 +48,7 @@ var postlist = new TableRenderer(
     'index.json.php',
     [undefined, undefined, undefined]
 );
+postlist.limit = 10;
 
 postlist.rowfunction = function(d, n, gd) {
     
