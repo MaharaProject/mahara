@@ -433,6 +433,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
     protected function render_full($options) {
         $smarty = smarty();
         $smarty->assign('artefact', $this);
+        $smarty->assign('creationtime', format_date($this->ctime));
         return $smarty->fetch('artefact:blog:render/blogpost_renderfull.tpl');
     }
 
@@ -487,7 +488,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
                                 'artefacttype', 'blogpost', 'parent', $id);
 
         // Get the attached files.
-        if ($count > 0) {
+        if (count($result) > 0) {
             $idlist = implode(', ', array_map(create_function('$a', 'return $a->id;'), $result));
             $files = get_records_sql_array('
                SELECT
