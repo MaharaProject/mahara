@@ -26,7 +26,7 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
     if (this.actionname) {
         this.lastcolumnfunc = function(r) {
             if (r.artefacttype != 'folder') {
-                var button = INPUT({'type':'button', 'value':self.actionname});
+                var button = INPUT({'type':'button', 'class':'button', 'value':self.actionname});
                 button.onclick = function () { self.actioncallback(r) };
                 return TD(null, button);
             }
@@ -35,12 +35,12 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
     }
     else {
         this.lastcolumnfunc = function (r) {
-            var editb = INPUT({'type':'button', 'value':get_string('edit')});
+            var editb = INPUT({'type':'button', 'class':'button', 'value':get_string('edit')});
             editb.onclick = function () { self.openeditform(r); };
             if (r.childcount > 0) {
                 return TD(null, editb);
             }
-            var deleteb = INPUT({'type':'button', 'value':get_string('delete')});
+            var deleteb = INPUT({'type':'button', 'class':'button', 'value':get_string('delete')});
             deleteb.onclick = function () {
                 if (confirm(get_string(r.artefacttype == 'folder' ? 'deletefolder?' : 'deletefile?'))) {
                     if (!r.attachcount || r.attachcount == 0
@@ -57,7 +57,8 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
 
         if (self.canmodify) {
             // Create the button which opens up the create folder form
-            var button = INPUT({'type':'button','value':get_string('createfolder'), 'onclick':function () { 
+            var button = INPUT({'type':'button', 'class':'button',
+                                'value':get_string('createfolder'), 'onclick':function () { 
                 hideElement(self.createfolderbutton);
                 showElement(self.createfolderform);
             }});
@@ -142,12 +143,13 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
             setDisplayForElement('', rowid);
             removeElement(editid);
         };
-        var savebutton = INPUT({'type':'button','value':get_string('savechanges')});
+        var savebutton = INPUT({'type':'button', 'class':'button', 'value':get_string('savechanges')});
         savebutton.onclick = function () { self.savemetadata(fileinfo.id, formid, false, fileinfo.title); };
-        var replacebutton = INPUT({'type':'button', 'value':get_string('overwrite'),
+        var replacebutton = INPUT({'type':'button', 'class':'button', 'value':get_string('overwrite'),
                                    'name':'replace', 'style':'display: none;'});
         replacebutton.onclick = function () { self.savemetadata(fileinfo.id, formid, true); };
-        var cancelbutton = INPUT({'type':'button', 'value':get_string('cancel'), 'onclick':cancelform});
+        var cancelbutton = INPUT({'type':'button', 'class':'button', 
+                                  'value':get_string('cancel'), 'onclick':cancelform});
         var editformtitle = get_string(fileinfo.artefacttype == 'folder' ? 'editfolder' : 'editfile');
         var edittable = TABLE({'align':'center'},TBODY(null,
                          TR(null,TH({'colspan':2},LABEL(editformtitle))),
@@ -160,7 +162,7 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
                          TR(null,TD({'colspan':2}, savebutton, replacebutton, cancelbutton))));
         hideElement(rowid);
         insertSiblingNodesBefore(rowid, TR({'id':editid},
-                                           TD({'colSpan':5},
+                                           TD({'colSpan':6},
                                               FORM({'id':formid,'action':''},edittable))));
         keepElementInViewport(editid);
     }
@@ -175,14 +177,17 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
             $(formid+'message').innerHTML = '';
             hideElement(formid);
         };
-        var cancelbutton = INPUT({'type':'button','value':get_string('cancel'), 'onclick':cancelcreateform});
-        var createbutton = INPUT({'type':'button','value':get_string('create'),'onclick':function () {
+        var cancelbutton = INPUT({'type':'button','class':'button',
+                                  'value':get_string('cancel'), 'onclick':cancelcreateform});
+        var createbutton = INPUT({'type':'button','class':'button',
+                                  'value':get_string('create'),'onclick':function () {
             if (self.savemetadata(null, formid, false)) {
                 cancelcreateform();
             }
         }});
-        var replacebutton = INPUT({'type':'button', 'value':get_string('overwrite'),
-                                   'name':'replace', 'style':'display: none;', 'onclick':function() {
+        var replacebutton = INPUT({'type':'button', 'class':'button',
+                                   'value':get_string('overwrite'), 'name':'replace', 
+                                   'style':'display: none;', 'onclick':function() {
             if (self.savemetadata(null, formid, true)) {
                 cancelcreateform();
             }
@@ -297,7 +302,8 @@ function FileUploader(element, uploadscript, statevars, foldername, folderid, up
         self.form = self.initform();
 
         // Create the button which opens up the upload form
-        var button = INPUT({'type':'button','value':get_string('uploadfile'), 'onclick':function () { 
+        var button = INPUT({'type':'button', 'class':'button',
+                            'value':get_string('uploadfile'), 'onclick':function () { 
             hideElement(self.openbutton);
             showElement(self.form);
             keepElementInViewport(self.form);
@@ -354,11 +360,14 @@ function FileUploader(element, uploadscript, statevars, foldername, folderid, up
                 TD(null, INPUT({'type':'text', 'name':'description', 'size':40}))),
              TR(null,TD({'colspan':2, 'id':'uploadformmessage'})),
              TR(null,TD({'colspan':2},
-              INPUT({'name':'upload','type':'button','value':get_string('upload'),
+              INPUT({'name':'upload','type':'button','class':'button',
+                     'value':get_string('upload'),
                      'onclick':function () { if (self.sendform(false)) { cancelform(); } }}),
-              INPUT({'name':'replace','type':'button','value':get_string('overwrite'),
+              INPUT({'name':'replace','type':'button','class':'button',
+                     'value':get_string('overwrite'),
                      'onclick':function () { if (self.sendform(true)) { cancelform(); } }}),
-              INPUT({'type':'button','value':get_string('cancel'),'onclick':cancelform}))))));
+              INPUT({'type':'button','class':'button','value':get_string('cancel'),
+                     'onclick':cancelform}))))));
 
 
         hideElement(form.replace);
