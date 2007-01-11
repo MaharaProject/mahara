@@ -68,10 +68,10 @@ var activitylist = new TableRenderer(
         'date',
         function (r, d) {
             if (r.read == 1) {
-                return TD({'style': 'text-align: center;'},IMG({'src' : d.star, 'alt' : d.unread}));
+                return TD({'class': 'center'},IMG({'src' : d.star, 'alt' : d.unread}));
             }
             else {
-                return TD({'style': 'text-align: center;'}, INPUT({'type' : 'checkbox', 'class' : 'tocheck', 'name' : 'unread-' + r.id}));
+                return TD({'class': 'center'}, INPUT({'type' : 'checkbox', 'class' : 'tocheck', 'name' : 'unread-' + r.id}));
             }
         }
     ]
