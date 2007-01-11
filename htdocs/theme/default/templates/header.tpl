@@ -4,7 +4,8 @@
         <title>{$title|default:"Mahara"|escape}</title>
         <script type="text/javascript">
         var config = {literal}{{/literal}
-            'themeurl': '{$THEMEURL}'
+            'themeurl': '{$THEMEURL}',
+            'wwwroot': '{$WWWROOT}'
         {literal}}{/literal};
         </script>
 {foreach from=$JAVASCRIPT item=script}        <script type="text/javascript" src="{$script}"></script>
@@ -43,28 +44,30 @@
 {/if}
             <div id="header">
                 <div class="fr"><img src="{image_path imagelocation='images/header_corner_topright.gif'}" border="0" alt=""></div>		
-{if !$nosearch}
+
                 <table cellspacing="0" class="searchbox fr">
+{if !$nosearch}
                     <tr>
                         <td>{$searchform}</td>
                     </tr>
-{*
                     <tr>
                         <td class="advancedsearch"><a href="{$WWWROOT}user/search.php">{str tag=advancedsearch}</a></td>
                     </tr>
-*}
-                </table>
 {/if}
+					<tr>
+						<td><div id="loggedinstring">{$LOGGEDINSTR}</div></td>
+					</tr>	
+                </table>
+
+                
                 <div id="logo"><a href="{$WWWROOT}"><img src="{image_path imagelocation='images/logo.gif'}" border="0" alt=""></a></div>
                 <h1 class="hiddenStructure"><a href="{$WWWROOT}">{$heading|default:"Mahara"|escape}</a></h1>
-                <div id="loggedinstring">{$LOGGEDINSTR}</div>
             </div>
         </div>
         <div id="mainwrapper">
 {if $MAINNAV}
-            <div class="fl"><img src="{image_path imagelocation='images/navbg_left.gif'}" border="0" alt=""></div>
-            <div class="fr"><img src="{image_path imagelocation='images/navbg_right.gif'}" border="0" alt=""></div>
-            <ul id="mainnav">
+            
+            <ul id="mainnav"><div class="mainnavright"><img src="{image_path imagelocation='images/navbg_right.gif'}" border="0" alt=""></div>
 {foreach from=$MAINNAV item=item}
 {if $item.selected}{assign var=MAINNAVSELECTED value=$item}
                 <li class="selected"><a href="{$item.link|escape}">{str section=$item.section tag=$item.name}</a></li>
@@ -74,9 +77,8 @@
 {/foreach}
             </ul>
 {if $MAINNAVSELECTED.submenu}
-            <div class="fl"><img src="{image_path imagelocation='images/subnavbg_left_arrow.gif'}" border="0" alt=""></div>
-            <div class="fr"><img src="{image_path imagelocation='images/subnavbg_right.gif'}" border="0" alt=""></div>
-            <ul id="subnav">
+            
+            <ul id="subnav"><div class="subnavright"><img src="{image_path imagelocation='images/subnavbg_right.gif'}" border="0" alt=""></div>
 {foreach from=$MAINNAVSELECTED.submenu item=item}
                 <li{if $item.selected} class="selected"{/if}><a href="{$item.link|escape}">{str section=$item.section tag=$item.name}</a></li>
 {/foreach}

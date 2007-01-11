@@ -21,8 +21,8 @@
         </table>
     </form>
 
-    <button type="button" onclick="document.location='create1.php?createid={$createid}';">{str tag="back" section="view"}</button>
-    <button type="button" onclick="document.location='./';">{str tag="cancel"}</button>
+    <button type="button" onclick="document.location='create1.php?createid={$createid}';" id="createview2_back">{str tag="back" section="view"}</button>
+    <button type="button" onclick="document.location='./';" id="createview2_cancel">{str tag="cancel"}</button>
 
 				</div>
 {include file="columnleftend.tpl"}

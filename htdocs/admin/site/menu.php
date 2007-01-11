@@ -27,7 +27,7 @@
 define('INTERNAL', 1);
 define('ADMIN', 1);
 define('MENUITEM', 'configsite');
-define('SUBMENUITEM', 'editmenu');
+define('SUBMENUITEM', 'sitemenu');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
 $strings = array('edit','delete','update','cancel','add','name','unknownerror');

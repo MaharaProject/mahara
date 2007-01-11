@@ -13,7 +13,7 @@
                                     <tr>
  	                                <th>{str tag='name'}</th>
  	                                <th>{str tag='communitymemberrequests'}</th>
- 	                                <td></td>
+ 	                                <th></th>
                                     <tr>
                                 </thead>
                                 <tbody>

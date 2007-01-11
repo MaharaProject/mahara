@@ -88,34 +88,36 @@ $string['privacydefaultcontent'] = '<h3>Introduction</h3>
 <h3>Contact</h3>
 
 <p>If you have any questions regarding this Statement or believe we have not adhered to the above criteria, please <a href="contact.php">Contact Us</a> and we will use all reasonable efforts to remedy the issue.</p>';
-$string['termsandconditionsdefaultcontent'] = '<p>Terms and Conditions</p>
+$string['termsandconditionsdefaultcontent'] = '<h2>Terms and Conditions</h2>
 
-<p>By using [eP Site Name] you are agreeing to the Terms and Conditions given below.</p>
+<p>By using [Mahara] you are agreeing to the Terms and Conditions given below.</p>
 
-<p>Our obligations</p>
+<h3>Our obligations</h3>
 
-<p>The [eP Site Name] Site Administrators will undertake all reasonable steps to provide all users with a safe , secure and operational electronic portfolio system.  If at any time you feel your rights as a user have not been upheld or you have any questions regarding the below, please <a href="contact.php">Contact Us</a> immediately.</p>
+<p>The [Mahara] Site Administrators will undertake all reasonable steps to provide all users with a safe , secure and operational electronic portfolio system.  If at any time you feel your rights as a user have not been upheld or you have any questions regarding the below, please <a href="contact.php">Contact Us</a> immediately.</p>
 
-<p>[eP Site Name] will occasionally be unavailable for short periods of time as we release new system features.  We will endeavour to provide at least 3 working days notice of any scheduled outage.</p>
+<p>[Mahara] will occasionally be unavailable for short periods of time as we release new system features.  We will endeavour to provide at least 3 working days notice of any scheduled outage.</p>
 
-<p>You are encouraged to report objectionable material or inappropriate behaviour to the Site Administrator | <a href="contact.php">Contact Us</a> immediately.  We will ensure the matter is investigated in a timely manner.</p>
+<p>You are encouraged to report objectionable material or inappropriate behaviour to the <a href="contact.php">Site Administrator</a> immediately.  We will ensure the matter is investigated in a timely manner.</p>
 
-<p>Site Administrators may access your portfolio and its contents at anytime, however they will avoid doing so unless specifically required to support your use of <eP SiteName> or as per these Terms and Conditions.</p>
+<p>Site Administrators may access your portfolio and its contents at anytime, however they will avoid doing so unless specifically required to support your use of [Mahara] or as per these Terms and Conditions.</p>
 
-<p>Your obligations</p>
+<h3>Your obligations</h3>
+
 <p> The <a href="privacy.php">Privacy Statement</a> should be considered an extension of these Terms and Conditions and be read by all users.</p>
 
-<p>Your [eP Site Name] account will expire after a given period of time or after given period of inactivity, as set by the Site Administrator. You will receive an email reminder shortly before your account is due to expire and we suggest you save your portfolio to your personal computer at this time, so that you may reuse it in the future.</p>
+<p>Your [Mahara] account will expire after a given period of time or after given period of inactivity, as set by the Site Administrator. You will receive an email reminder shortly before your account is due to expire and we suggest you save your portfolio to your personal computer at this time, so that you may reuse it in the future.</p>
 
-<p>All files and content you upload to [eP Site Name] are subject to New Zealand Copyright legislation.  You are responsible for ensuring you have appropriate permission to reproduce and publish any work that is not your own.  Incidents of plagiarism will be dealt with in accordance to your educational institution\'s policy.</p>
+<p>All files and content you upload to [Mahara] are subject to New Zealand Copyright legislation.  You are responsible for ensuring you have appropriate permission to reproduce and publish any work that is not your own.  Incidents of plagiarism will be dealt with in accordance to your educational institution\'s policy.</p>
 
-<p>You must not use your portfolio to store or display offensive material.  If the Site Administrator receives report of any objectionable material within your portfolio, your account will be suspended and your access to [eP Site Name] frozen pending an investigation in accordance to the Student Conduct Policy or equivalent of your educational institution.  Where no Conduct Policy exists the matter will be referred to an appropriate staff member of your institution or organisation.</p>
+<p>You must not use your portfolio to store or display offensive material.  If the Site Administrator receives report of any objectionable material within your portfolio, your account will be suspended and your access to [Mahara] frozen pending an investigation in accordance to the Student Conduct Policy or equivalent of your educational institution.  Where no Conduct Policy exists the matter will be referred to an appropriate staff member of your institution or organisation.</p>
 
-<p>If the Site Administrator receives report of any inappropriate behaviour on your part, where it relates to [eP Site Name], your account will be suspended and your access to [eP Site Name] frozen pending an investigation in accordance to the Student Conduct Policy or equivalent of your educational institution.  Where no Conduct Policy exists the matter will be referred to an appropriate staff member of your institution or organisation.</p>
+<p>If the Site Administrator receives report of any inappropriate behaviour on your part, where it relates to [Mahara], your account will be suspended and your access to [Mahara] frozen pending an investigation in accordance to the Student Conduct Policy or equivalent of your educational institution.  Where no Conduct Policy exists the matter will be referred to an appropriate staff member of your institution or organisation.</p>
 
 <p>Inappropriate behaviour includes misuse of the objectionable material reporting system, intentionally attempting to load files with virus content, placing objectionable or excessive feedback or comments on any other users portfolio and any other behaviour deemed to be nuisance or offensive by the Site Administrator.</p>
 
-<p>Any unsolicited contact you receive as a result of personal information you have publicly released via your portfolio is your responsibility, however any misconduct in behaviour from users of the system should be reported to the Site Administrator | <a href="contact.php">Contact Us</a> immediately.  We may occasionally make minor adjustments to our Terms and Condition to reflect changes to the system and in response to user feedback.  As such we suggest you check the Terms and Conditions each time you visit this site.  We will however notify users of any major changes to the Terms and Conditions via the [eP Site Name] homepage.</p>';
+<p>Any unsolicited contact you receive as a result of personal information you have publicly released via your portfolio is your responsibility, however any misconduct in behaviour from users of the system should be reported to the <a href="contact.php">Site Administrator</a> immediately.  We may occasionally make minor adjustments to our Terms and Condition to reflect changes to the system and in response to user feedback.  As such we suggest you check the Terms and Conditions each time you visit this site.  We will however notify users of any major changes to the Terms and Conditions via the [Mahara] homepage.</p>';
+
 $string['uploadcopyrightdefaultcontent'] = 'Yes: The file I am attempting to upload is my own or I have express permission to reproduce and/or distribute this item.  My use of this file does not breach any of my local Copyright legislation. This file also adheres to the Terms and Conditions outlined on this site.';
 
 ?>

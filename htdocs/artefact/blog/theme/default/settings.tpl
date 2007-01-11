@@ -10,9 +10,7 @@
                 <div>
                     <a href="{$WWWROOT}artefact/blog/view/?id={$blog->get('id')}">{str section="artefact.blog" tag="viewblog"}</a>
                 </div>
-
-                {$editform}
-    {$editform}
+            {$editform}
 </div>
 
 {include file="columnleftend.tpl"}

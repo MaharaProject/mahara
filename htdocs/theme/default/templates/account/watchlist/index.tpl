@@ -22,9 +22,9 @@
 			{/foreach}
 			</select>
 			</form>
-			<p><b><div id="typeheader">{str section='activity' tag='monitored'} {$typestr}</div></b></p>
+			<div id="typeheader">{str section='activity' tag='monitored'} {$typestr}</div>
 			<form method="post" onSubmit="{$stopmonitoring}">
-			<table id="watchlist">
+			<table id="watchlist" class="tablerenderer">
 				<thead>
 					<tr>
 						<th></th>
@@ -37,8 +37,8 @@
 				</tbody>
 				<tfoot>
 					<tr>
-						<td align="right" colspan="4"><div id="messagediv"></div></td>
-						<td align="right"><input type="submit" value="{str tag='stopmonitoring' section='activity'}" /></td>
+						<td align="right" colspan="2"><div id="messagediv"></div></td>
+						<td align="right"><input type="submit" class="submit" value="{str tag='stopmonitoring' section='activity'}" /></td>
 					</tr>
 				</tfoot>
 			</table>

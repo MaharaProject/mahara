@@ -1,9 +1,6 @@
 {include file='header.tpl' nosearch=true}
 
-<div id="column-full">
-	<div class="content">
-		<div class="box-cnrs"><span class="cnr-tl"><span class="cnr-tr"><span class="cnr-bl"><span class="cnr-br">
-			<div class="maincontent">
+{include file="columnfullstart.tpl"}
 
 			<h3 class="center"><a href="http://mahara.org">Mahara</a> {str section='admin' tag='release' args=$releaseargs} {str tag='copyright' section='admin'}</h3>
 
@@ -28,9 +25,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA</p>
 
             <form action="{$WWWROOT}admin/upgrade.php" method="post" class="center"><input type="submit" value="{str tag=agreelicense section=admin}" style="font-weight: bold;"></form>
 
-			</div>
-		</span></span></span></span></div>	
-	</div>
-</div>
+{include file="columnfullend.tpl"}
 
 {include file='admin/upgradefooter.tpl'}
