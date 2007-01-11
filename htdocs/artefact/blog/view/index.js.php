@@ -30,40 +30,49 @@ $enc_id = json_encode($id);
 
 $enc_wwwroot = json_encode(get_config('wwwroot'));
 
+$enc_draft = json_encode(get_string('draft', 'artefact.blog'));
 $enc_published = json_encode(get_string('published', 'artefact.blog'));
 $enc_publish = json_encode(get_string('publish', 'artefact.blog'));
+$enc_publish_confirm = json_encode(get_string('publishblogpost?', 'artefact.blog'));
 $enc_nopublish = json_encode(get_string('nopublish', 'artefact.blog'));
 $enc_error = json_encode(get_string('jsonerror', 'artefact.blog'));
 $enc_edit = json_encode(get_string('edit', 'artefact.blog'));
+$enc_files = json_encode(get_string('attachedfiles', 'artefact.blog'));
 $enc_delete = json_encode(get_string('delete', 'artefact.blog'));
+$enc_delete_confirm = json_encode(get_string('deleteblogpost?', 'artefact.blog'));
 
 return <<<EOJAVASCRIPT
 
 var postlist = new TableRenderer(
     'postlist',
     'index.json.php',
-    [undefined]
+    [undefined, undefined, undefined]
 );
 
 postlist.rowfunction = function(d, n, gd) {
     
+    var status = TH({'id':'poststatus'+d.id});
     var pub;
     if (d.published == 1) {
-      
-        pub = {$enc_published};
+        status.innerHTML = {$enc_published};
+        pub = null;
     }
     else {
-        pub = BUTTON(
-            { 'type' : 'button' },
-            {$enc_publish}
+        status.innerHTML = {$enc_draft};
+        pub = INPUT(
+            { 'type' : 'button' , 'value' : {$enc_publish}}
         );
 
         connect(pub, 'onclick', function(e) {
+            if (!confirm({$enc_publish_confirm})) {
+                return;
+            }
             var def = loadJSONDoc('publish.json.php', { 'id': d.id });
             def.addCallbacks(
                 function (response) {
                     if (response.success) {
-                        swapDOM(pub, document.createTextNode({$enc_published}));
+                        $('poststatus'+d.id).innerHTML = {$enc_published};
+                        hideElement(pub);
                     }
                     else {
                         alert({$enc_nopublish});
@@ -79,6 +88,7 @@ postlist.rowfunction = function(d, n, gd) {
     var edit = FORM(
         {
             'method' : 'get',
+            'style' : 'display: inline;',
             'action' : {$enc_wwwroot} + 'artefact/blog/editpost.php'
         },
         INPUT(
@@ -88,38 +98,52 @@ postlist.rowfunction = function(d, n, gd) {
                 'value' : d.id
             }
         ),
-        BUTTON(
-            { 'type' : 'submit' },
-            {$enc_edit}
+        INPUT(
+            { 'type' : 'submit',
+              'value' : {$enc_edit}
+            }
         )
     );
 
-    var del = BUTTON(
-        { 'type' : 'button' },
-        {$enc_delete}
+    var del = INPUT(
+        { 'type' : 'button', 'value': {$enc_delete} }
     );
 
-    var desctd = TD();
+    var desctd = TD({'colSpan':3});
     desctd.innerHTML = d.description;
   
     var rows = [
         TR(
             null,
-            TD(null, d.title),
-            TD(
-                {
-                    'rowspan' : 3
-                },
-                pub,
-                edit,
-                del
-            )
+            TH(null, d.title),
+            status,
+            TH(null, [pub, ' ', edit, ' ', del])
         ),
-        TR(null, desctd),
-        TR(null, TD(null, d.ctime)),
+        TR(null, desctd)
     ];
 
+    if (d.files) {
+        var filerows = [TR(null, TD({'colSpan':3}, {$enc_files}))];
+        for (var i = 0; i < d.files.length; i++) {
+            filerows.push(TR(null, 
+                             TD(null, IMG({'src':config.themeurl + d.files[i].artefacttype + '.gif'})),
+                             TD(null, d.files[i].title),
+                             TD(null, d.files[i].description)));
+        }
+        rows.push(TR(null, TD({'colSpan':3}, 
+                              TABLE(null, 
+                                    createDOM('col', {'width':'5%'}),
+                                    createDOM('col', {'width':'40%'}),
+                                    createDOM('col', {'width':'55%'}),
+                                    TBODY(null, filerows)))));
+    }
+
+    rows.push(TR(null, TD(null, d.ctime)));
+
     connect(del, 'onclick', function(e) {
+        if (!confirm({$enc_delete_confirm})) {
+            return;
+        }
         var def = loadJSONDoc('delete.json.php', { 'id' : d.id });
         def.addCallbacks(
             function (response) {
