@@ -24,13 +24,12 @@
 			</form>
 			<div id="typeheader">{str section='activity' tag='monitored'} {$typestr}</div>
 			<form method="post" onSubmit="{$stopmonitoring}">
-			<table id="watchlist">
+			<table id="watchlist" class="tablerenderer">
 				<thead>
 					<tr>
 						<th></th>
 						<th>[<a href="" onClick="{$selectall}">{str section='activity' tag='selectall'}</a>]</th>
 						<th id="recurseheader">{$recursestr}</th>
-						<th colspan="2"></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -38,8 +37,8 @@
 				</tbody>
 				<tfoot>
 					<tr>
-						<td align="right" colspan="4"><div id="messagediv"></div></td>
-						<td align="right"><input type="submit" value="{str tag='stopmonitoring' section='activity'}" /></td>
+						<td align="right" colspan="2"><div id="messagediv"></div></td>
+						<td align="right"><input type="submit" class="submit" value="{str tag='stopmonitoring' section='activity'}" /></td>
 					</tr>
 				</tfoot>
 			</table>
