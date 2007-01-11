@@ -399,7 +399,10 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
     }
 
     public function render_full($options) {
-        return $this->title;
+        $smarty = smarty();
+        $smarty->assign('artefact', $this);
+        $smarty->assign('children', $this->render(FORMAT_ARTEFACT_LISTCHILDREN, $options));
+        return $smarty->fetch('artefact:file:folder_renderfull.tpl');
     }
 
     public function get_icon() {
