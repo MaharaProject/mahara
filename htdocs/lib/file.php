@@ -487,6 +487,19 @@ function byteserving_send_file($filename, $mimetype, $ranges) {
     }
 }
 
+
+function get_mime_type($file) {
+    switch (strtolower(PHP_OS)) {
+    case 'win' :
+        throw new SystemException('retrieving filetype not supported in windows');
+    default : 
+        list($output,) = split(';', system(get_config('pathtofile') . ' -ib ' . escapeshellarg($file)));
+    }
+    return $output;
+
+}
+
+
 /**
  * Given a path under dataroot, an ID and a size, return the path to a file
  * matching all criteria.
