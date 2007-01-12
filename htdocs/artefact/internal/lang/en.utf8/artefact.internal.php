@@ -40,7 +40,7 @@ $string['lastname'] = 'Last Name';
 $string['studentid'] = 'Student ID';
 $string['preferredname'] = 'Preferred Name';
 $string['introduction'] = 'Introduction';
-$string['email'] = 'Email Address (multiple)';
+$string['email'] = 'Email Address (multiple allowed)';
 $string['officialwebsite'] = 'Official Website Address';
 $string['personalwebsite'] = 'Personal Website Address';
 $string['blogaddress'] = 'Blog Address';
@@ -64,7 +64,7 @@ $string['industry'] = 'Industry';
 // Field names for view user and search user display
 $string['profile'] = 'Profile';
 $string['name'] = 'Name';
-$string['principalemailaddress'] = 'Principal email';
+$string['principalemailaddress'] = 'Primary email';
 $string['emailaddress'] = 'Alternative email';
 
 $string['saveprofile'] = 'Save Profile';
