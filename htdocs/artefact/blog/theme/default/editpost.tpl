@@ -13,7 +13,7 @@
         <h2>{str section="artefact.blog" tag=$pagetitle}</h2>
         {$textinputform}
         <div id='uploader'></div>
-        <table id='filebrowser' style='display: none;'>
+        <table id='filebrowser' style='display: none;' class='tablerenderer'>
           <thead><tr>
             <th></th>
             <th>{str section=artefact.file tag=name}</th>
@@ -25,7 +25,7 @@
           <tbody><tr><td></td></tr></tbody>
         </table>
         <h3>{str section=artefact.blog tag=attachedfiles}</h3>
-        <table id='attachedfiles'>
+        <table id='attachedfiles' class='tablerenderer'>
           <thead><tr>
             <th></th>
             <th>{str section=artefact.file tag=name}</th>
