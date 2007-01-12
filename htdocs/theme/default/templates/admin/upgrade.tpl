@@ -14,7 +14,7 @@
                 </thead>
                 <tbody>
                 {foreach from=$upgrades key=name item=upgrade}
-                    <tr>
+                    <tr class="{cycle name=rows values=r1,r0}">
                         <td>{$name}</td>
                         <td>{if $upgrade->install} {str section='admin' tag='notinstalled'} {else} {$upgrade->fromrelease} {/if} </td>
                         <td>{$upgrade->torelease}</td>
@@ -22,7 +22,7 @@
                     </tr>
                 {/foreach}
                 {if $install}
-                    <tr>
+                    <tr class="{cycle name=rows values=r1,r0}">
                         <td>{str section=admin tag=coredata}</td>
                         <td></td>
                         <td></td>
