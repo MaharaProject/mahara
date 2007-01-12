@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * This program is part of Mahara
  *
@@ -28,7 +28,7 @@ defined('INTERNAL') || die();
 
 $string['myblogs'] = 'My Blogs';
 $string['title'] = 'Title';
-$string['description'] = 'description';
+$string['description'] = 'Description';
 $string['addblog'] = 'Add Blog';
 $string['newblog'] = 'New Blog';
 
@@ -44,15 +44,15 @@ $string['blogfilesdirname'] = 'blogfiles';
 $string['blogfilesdirdescription'] = 'Files uploaded as blog post attachments';
 
 $string['blogtitle'] = 'Title';
-$string['blogtitledesc'] = 'e.g., ‘Jill’s Travel Blog’.';
+$string['blogtitledesc'] = 'e.g., ‘Jill’s Nursing Practicum Journal’.';
 $string['blogdesc'] = 'Description';
-$string['blogdescdesc'] = 'e.g., ‘Follow Jill on her exciting adventures in New Zealand’.';
+$string['blogdescdesc'] = 'e.g., ‘A record of Jill's experiences and reflections’.';
 $string['commentsallowed'] = 'Comments';
-$string['commentsalloweddesc'] = 'Comments can be made on your blog posts if you turn on this option.';
+$string['commentsalloweddesc'] = ' ';
 $string['commentsallowedyes'] = 'Allow logged in users to comment on this blog';
-$string['commentsallowedno'] = 'Don’t allow comments on this blog';
+$string['commentsallowedno'] = 'Do not allow comments on this blog';
 $string['commentsnotify'] = 'Comment Notification';
-$string['commentsnotifydesc'] = 'You can optionally receive notification whenever someone adds a comment to one of your blog posts.';
+$string['commentsnotifydesc'] = ' ';
 $string['commentsnotifyyes'] = 'Notify me of comments to this blog';
 $string['commentsnotifyno'] = 'Do not notify me of comments to this blog';
 
@@ -67,7 +67,7 @@ $string['newblogpost'] = 'New Blog Post';
 $string['posttitle'] = 'Title';
 $string['posttitledesc'] = 'The title appears above your post.';
 $string['postbody'] = 'Body';
-$string['postbodydesc'] = 'This is where your actual post goes.';
+$string['postbodydesc'] = ' ';
 $string['saveandpublish'] = 'Save and Publish';
 $string['createandpublishdesc'] = 'This will create the blog post and make it available to others.';
 $string['saveasdraft'] = 'Save as Draft';

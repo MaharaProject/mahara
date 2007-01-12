@@ -28,25 +28,25 @@ defined('INTERNAL') || die();
 
 $string['changepassworddesc'] = 'If you wish to change your password, please enter the details here';
 $string['changepasswordotherinterface'] = 'You may  <a href="%s">change your password</a> through a different interface</a>';
-$string['oldpasswordincorrect'] = 'This password is not your current password';
+$string['oldpasswordincorrect'] = 'This is not your current password';
 
 $string['friendsnobody'] = 'Nobody may add me as a friend';
 $string['friendsauth'] = 'New friends require my authorisation';
 $string['friendsauto'] = 'New friends are automatically authorised';
 $string['friendsdescr'] = 'Friends control';
 
-$string['wysiwygdescr'] = 'Rich text editor';
+$string['wysiwygdescr'] = 'HTML editor';
 $string['on'] = 'On';
 $string['off'] = 'Off';
 
 $string['messagesdescr'] = 'Messages from other users';
-$string['messagesnobody'] = 'Allow no-one to message me';
-$string['messagesfriends'] = 'Allow people on my friends list to message me';
-$string['messagesallow'] = 'Allow anyone to message me';
+$string['messagesnobody'] = 'Do not allow anyone to send me messages';
+$string['messagesfriends'] = 'Allow people on my Friends list to send me messages';
+$string['messagesallow'] = 'Allow anyone to send me messages';
 
 $string['language'] = 'Language';
 
 $string['prefssaved']  = 'Preferences saved';
-$string['prefsnotsaved'] = 'Failed to save your preferences!';
+$string['prefsnotsaved'] = 'Failed to save your Preferences!';
 
 ?>

@@ -40,7 +40,7 @@ $string['description']            = 'View Description';
 $string['startdate']              = 'Access Start Date/Time';
 $string['stopdate']               = 'Access End Date/Time';
 $string['stopdate']               = 'Access End Date/Time';
-$string['ownerformat']            = 'Owner Format';
+$string['ownerformat']            = 'Name display format';
 $string['ownerformatdescription'] = 'This field controls what appears in the author field for the template you select in step 2';
 
 $string['category.all']                     = 'All Templates';
@@ -63,9 +63,9 @@ $string['canteditdontown'] = 'You can\'t edit this view because you don\'t own i
 $string['chooseformat'] = 'Select how you would like to display this artefact in this block ...';
 
 $string['format.listself']       = 'List item (you can put multiple artefacts in this block like this)';
-$string['format.listchildren']   = 'List children of this artefact';
+$string['format.listchildren']   = 'List children of this Artefact';
 $string['format.renderfull']     = 'Display entire artefact';
-$string['format.rendermetadata'] = 'Display metadata for this artefact';
+$string['format.rendermetadata'] = 'Display metadata for this Artefact';
 
 
 ?>
