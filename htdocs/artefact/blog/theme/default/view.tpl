@@ -14,21 +14,21 @@
 			<h2>{str section="artefact.blog" tag="viewblog"} - {$blog->get('title')|escape}</h2>
 			
 			<div id="myblogs">
-                                <div>
-                                    <a href="{$WWWROOT}artefact/blog/settings/?id={$blog->get('id')}">{str section="artefact.blog" tag="settings"}</a>
-                                </div>
+                    <div class="blogsettings">
+								<div class="addicon">
+									<a href="{$WWWROOT}artefact/blog/editpost.php?blog={$blog->get('id')}">{str section="artefact.blog" tag="addpost"}</a>
+								</div>
+                         <a href="{$WWWROOT}artefact/blog/settings/?id={$blog->get('id')}">{str section="artefact.blog" tag="settings"}</a>
+                    </div>
 
-				<div class="addicon">
-					<a href="{$WWWROOT}artefact/blog/editpost.php?blog={$blog->get('id')}">{str section="artefact.blog" tag="addpost"}</a>
-				</div>
 		
-			<table id="postlist" class="tablerenderer">
-				<tbody>
-                                  <tr><td></td><td></td><td></td></tr>
-				</tbody>
-			</table>
-				
-			</div>
+				<div><table id="postlist" class="tablerenderer">
+					<tbody>
+									  <tr><td></td><td></td><td></td></tr>
+					</tbody>
+				</table></div>
+					
+				</div>
 				
 {include file="columnleftend.tpl"}
 {include file="footer.tpl"}

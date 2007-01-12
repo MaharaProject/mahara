@@ -6,7 +6,8 @@
 
 {include file="columnleftstart.tpl"}
                 <h2>{$community->name}</h2>
-                <p>{str tag='owner'}: {$community->ownername}</p>
+                
+				<p>{str tag='owner'}: {$community->ownername}</p>
 	        {assign var="jointype" value=$community->jointype}
 	        {assign var="joinstr" value=communityjointype$jointype}
                 <p>{str tag=$joinstr}</p>

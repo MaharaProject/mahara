@@ -581,8 +581,11 @@ div.sidebar {
 	padding: 10px 3px 10px 3px;
 	color: #e3ac03;
 	text-align: left;
-	float: left;
+	float: none;
 	font-style: italic;
+}
+.maincontent # #messagediv {
+	float: left;
 }
 
 /* inner white corners around main content begin */
@@ -765,10 +768,10 @@ p {
 .maincontent tfoot tr td a:link,
 .maincontent tfoot tr td a:active,
 .maincontent tfoot tr td a:visited {
-	font-size: 11px;
 	font-weight: bold;
 	color: #5c8727;
 	margin: 0 10px;
+	font-size: 11px;
 }
 .maincontent thead tr td a:hover,
 .maincontent tfoot tr td a:hover {
@@ -788,7 +791,6 @@ acronym {
 }
 .description { 
 	font-size: 9px; 
-	font-style: italic; 
 	color: #7e7e7e; 
 	padding-bottom: 5px;
 }
@@ -836,7 +838,6 @@ table#installer {
 #profileform_email_container a:visited,
 #profileform_email_container a:hover {
 	margin: 0 0 0 25px;
-	font-size: 11px;
 }
 #profileform_email_container #email_list a,
 #profileform_email_container #email_list a:link,
@@ -858,22 +859,69 @@ table#installer {
 }
 
 /* My Blogs styles */
-#myblogs .newblog,
-#myblogs .newpost {
-	margin: 10px 0 10px 5px;
+#myblogs .blogsettings .addicon {
+	margin: 0px 0 5px 0;
 	text-align: right;
+	float: right;
+}
+#myblogs .addicon {
+	margin: 10px 0 5px 0;
+	text-align: right;
+}
+#myblogs .newpost {
+	margin: 0px 0 5px 0;
+	text-align: right;
+	float: right;
+}
+#myblogs .blogsettings {
+	margin: 10px 0 5px 0;
 }
 #myblogs .addicon a,
 #myblogs .addicon a:link,
 #myblogs .addicon a:active,
 #myblogs .addicon a:visited,
-#myblogs .addicon a:hover {
+#myblogs .addicon a:hover,
+#myblogs .blogsettings .addicon a,
+#myblogs .blogsettings .addicon a:link,
+#myblogs .blogsettings .addicon a:active,
+#myblogs .blogsettings .addicon a:visited,
+#myblogs .blogsettings .addicon a:hover { 
 	background: url(../images/btn_add.gif) no-repeat;
 	width: 120px;
 	height: 24px;
 	color: #eef7d4;
 	font-weight: bold;
 	padding: 4px 23px 6px 47px;
+}
+#myblogs .blogsettings a,
+#myblogs .blogsettings a:link,
+#myblogs .blogsettings a:active,
+#myblogs .blogsettings a:visited,
+#myblogs .blogsettings a:hover {
+	background: url(../images/btn_medium_off.gif) no-repeat;
+	width: 100px;
+	height: 24px;
+	color: #eef7d4;
+	font-weight: bold;
+	padding: 4px 26px 6px 27px;
+}
+.maincontent .viewblogbtn {
+	margin: 10px 0 10px 0;
+}
+.maincontent .viewblogbtn a,
+.maincontent .viewblogbtn a:link,
+.maincontent .viewblogbtn a:active,
+.maincontent .viewblogbtn a:visited,
+.maincontent .viewblogbtn a:hover {
+	background: url(../images/btn_medium_off.gif) no-repeat;
+	border: 0;
+	width: 100px;
+	height: 24px;
+	color: #FFFFFF;
+	font-size: 11px;
+	font-weight: bold;
+	margin: 0;
+	padding: 5px 25px 5px 25px;
 }
 #myblogs .newpost a,
 #myblogs .newpost a:link,
@@ -887,10 +935,6 @@ table#installer {
 	font-weight: bold;
 	padding: 4px 34px 7px 36px;
 }
-.maincontent #editblog table {
-	padding: 10px 0 0 0;
-	border-top: 1px solid #d4d1c0;
-}
 .maincontent #editblog_commentsnotify_container label,
 .maincontent #editblog_commentsallowed_container label,
 .maincontent #newblog_commentsallowed_container label,
@@ -898,7 +942,77 @@ table#installer {
 	font-weight: normal;
 	color: #000000;
 }
+.maincontent #postlist tbody tr th {
+	padding: 2px 5px;
+	background-color: #e5e8da;
+}
+.maincontent #postlist table {
+	border: none;
+	background-color: #f3f5e9;
+}
+.maincontent #postlist th input {
+	background: url(../images/btn_short_short.gif) no-repeat;
+	width: 50px;
+	height: 18px;
+	padding: 0;
+	margin: 1px;
+}
 
+
+/* My Files styles */
+#foldernav {
+	font-weight: bold;
+	margin: 15px 0 0 3px;
+	padding: 3px 0 0 25px;
+	font-size: 15px;
+	background: url(../images/foldernav.gif) no-repeat;
+}
+.maincontent #myfiles #filelist tbody tr td,
+#uploader th {
+	vertical-align: top;
+}
+.maincontent #myfiles #filelist tbody tr td a,
+.maincontent #filebrowser tbody tr td a {
+	font-weight: bold;
+}
+.maincontent #filebrowser input /*,
+.maincontent #myfiles #filelist input*/ {
+	background: url(../images/btn_short_short.gif) no-repeat;
+	width: 50px;
+	height: 18px;
+	padding: 0;
+	margin: 1px;
+	border: none;
+}
+#uploader #uploadform table {
+	padding: 5px 10px;
+	background-color: #f4f8e7;
+	border: 0;
+}
+.maincontent #myfiles #createfolderform table {
+	padding: 5px 10px;
+	background-color: #e3ecc2;
+	border: 0;
+}
+#uploadformmessage,
+#createfolderformmessage {
+	padding: 3px 0 0 0;
+	color: #dd0221;
+	text-align: left;
+}
+#uploadform input.text,
+#createfolderform input.text {
+	border: 1px solid #d4d1c0;
+	padding: 1px 2px 1px 2px;
+}
+.maincontent #filelist table {
+	border: none;
+	padding: 5px 10px;
+	background-color: #e3ecc2;
+}
+.maincontent #filelist table td {
+	padding: 0;
+}
 
 /* My Groups styles */
 .maincontent #mygroups #addnewgroupdiv {
