@@ -90,7 +90,9 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
             self.filelist[property] = self.statevars[property];
             self.filelist.statevars.push(property);
         }
-        self.filelist.rowfunction = function (r) { return TR({'id':'row_' + r.id}); };
+        self.filelist.rowfunction = function (r, n) {
+            return TR({'class': 'r' + (n%2),'id':'row_' + r.id});
+        };
         self.filelist.init();
         changedir = self.changedir; // Ick; needs to be set globally for some links to work
         self.changedir(self.cwd);
@@ -217,7 +219,7 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
     }
 
     this.icon = function (type) {
-        return IMG({'src':config.themeurl+type+'.gif'});
+        return IMG({'src':config.themeurl+'images/'+type+'.gif'});
     }
 
     this.formatname = function(r) {
