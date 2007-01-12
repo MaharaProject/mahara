@@ -74,7 +74,7 @@ watchlist.statevars.push('type');
 watchlist.watchlist = 1;
 watchlist.statevars.push('watchlist');
 watchlist.updateOnLoad();
-watchlist.rowfunction = function(r, n) { return TR({'id': r.id, 'class': 'view'}); }
+watchlist.rowfunction = function(r, n) { return TR({'id': r.id, 'class': 'view r' + (n % 2)}); }
 
 function changeTitle(title) {
     var titles = { 'views': '{$viewstring}', 'communities': '{$communitystring}', 'artefacts': '{$artefactstring}' };

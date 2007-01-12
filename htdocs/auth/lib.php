@@ -240,26 +240,20 @@ function auth_check_password_change() {
             'plugintype' => 'auth',
             'pluginname' => 'internal',
             'elements'   => array(
-                'passwords' => array(
-                    'type' => 'fieldset',
-                    'legend' => get_string('newpassword'),
-                    'elements' => array(
-                        'password1' => array(
-                            'type'        => 'password',
-                            'title'       => get_string('newpassword') . ':',
-                            'description' => get_string('yournewpassword'),
-                            'rules'       => array(
-                                'required' => true
-                            )
-                        ),
-                        'password2' => array(
-                            'type'        => 'password',
-                            'title'       => get_string('confirmpassword') . ':',
-                            'description' => get_string('yournewpasswordagain'),
-                            'rules'       => array(
-                                'required' => true
-                            )
-                        )
+                'password1' => array(
+                    'type'        => 'password',
+                    'title'       => get_string('newpassword') . ':',
+                    'description' => get_string('yournewpassword'),
+                    'rules'       => array(
+                        'required' => true
+                    )
+                ),
+                'password2' => array(
+                    'type'        => 'password',
+                    'title'       => get_string('confirmpassword') . ':',
+                    'description' => get_string('yournewpasswordagain'),
+                    'rules'       => array(
+                        'required' => true
                     )
                 ),
                 'submit' => array(

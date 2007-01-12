@@ -146,6 +146,11 @@ function xmldb_core_upgrade($oldversion=0) {
         $status = $status && create_table($table);
     }
 
+    if ($oldversion < 2007011200) {
+        // Add path to file to the config table
+        set_config('pathtofile', '/usr/bin/file');
+    }
+
     return $status;
 
 }

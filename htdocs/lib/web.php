@@ -811,10 +811,12 @@ function getoptions_country() {
  */
 
 function get_help_icon($plugintype, $pluginname, $form, $element, $page='') {
-    return ' <span class="help"><a href="" onclick="contextualHelp(\'' . $form . "', '"
-        . $element . "', '" . $plugintype . "', '"
-        . $pluginname . "', '" . $page . "'); return false;\">"
-        . '?</a></span>';
+    return ' <span class="help"><a href="" onclick="' . 
+        hsc(
+            'contextualHelp(' . json_encode($form) . ',' . 
+            json_encode($element) . ',' . json_encode($plugintype) . ',' . 
+            json_encode($pluginname) . ',' . json_encode($page) . '); return false;'
+        ) . '">?</a></span>';
 }
 
 function make_link($url) {
@@ -1114,7 +1116,7 @@ function redirect($location='') {
         if (substr($path, -9) == 'index.php') {
             $path = substr($path, 0, -9);
         }
-        $location = $wwwroot . $path;
+        $location = substr($wwwroot, 0, -1) . $path;
     }
     else if (substr($location, 0, 4) != 'http') {
         $location = $wwwroot . $location;

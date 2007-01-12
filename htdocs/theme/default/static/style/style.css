@@ -149,7 +149,8 @@ input.button {
 #siteoptions_submit,
 #createnew,
 #communitymembers_update,
-#contactus_submit {
+#contactus_submit,
+#change_password_submit {
 	background: url(../images/btn_long_off.gif) no-repeat;
 	border: 0;
 	width: 200px;
@@ -184,6 +185,10 @@ label {
 }
 .fr {
     float: right;
+}
+.s {
+	font-size: 11px;
+	font-weight: normal;
 }
 
 /* CONTENT LAYOUT BEGIN */
@@ -571,6 +576,18 @@ div.sidebar {
 	border: none;
 }
 
+/* system messages in main content */
+.maincontent #messagediv {
+	padding: 10px 3px 10px 3px;
+	color: #e3ac03;
+	text-align: left;
+	float: none;
+	font-style: italic;
+}
+.maincontent # #messagediv {
+	float: left;
+}
+
 /* inner white corners around main content begin */
 .box-cnrs {
     margin: 0;
@@ -616,13 +633,15 @@ div.sidebar {
 
 /* LOGIN FOR COLUMN LEFT BEGINS */
 .maincontent #loginbox {
-   	margin-top: 0px;
+   	margin-top: 10px;
 	padding: 0;
+	border: 1px solid #d4d1c0;
 }
 .maincontent #loginbox fieldset {
 	border: none;
-	padding: 0;
-	margin-left: 10px;
+	padding: 0 5px 0 5px;
+	margin: 0 5px 0 5px;
+	background-color: #eef4da;
 }
 .maincontent #login legend {
 	margin: 0;
@@ -631,7 +650,11 @@ div.sidebar {
 }
 .maincontent #login th {
 	margin: 0;
-	padding-top: 10px;
+	padding: 0;
+}
+.maincontent #login td {
+   	margin: 0;
+	padding: 0;
 }
 .maincontent #login .description {
 	font-size: 9px;
@@ -642,10 +665,10 @@ div.sidebar {
 	display: inline;
 }
 .maincontent #login_submit {
-	margin: 10px 0 0 12px;
+	margin: 5px 0 0 12px;
 }
-
 /* LOGIN FOR COLUMN LEFT ENDS */
+
 
 p {
 	margin: 15px 0 5px 0;
@@ -688,7 +711,8 @@ p {
 .maincontent #editviewaccess table,
 .maincontent #register table,
 .maincontent #editcommunity table,
-.maincontent #createcommunity table {
+.maincontent #createcommunity table,
+#change_password table {
 	border: 0px;
 }
 
@@ -707,6 +731,12 @@ p {
 .maincontent td {
 	padding: 3px 5px;
 	margin: 0;
+}
+.maincontent tbody .r0 {
+	background-color: #FFFFFF;
+}
+.maincontent tbody .r1 {
+	background-color: #f4f7e8;
 }
 /* No need padding td */
 .maincontent #editpost td,
@@ -727,7 +757,8 @@ p {
 .maincontent thead tr td,
 .maincontent tfoot tr td {
 	text-align: center;
-	background: #c7cdb3 url(../images/tablenavbg.gif) no-repeat;
+	background: #c7cdb3 url(../images/tablenavbg.gif) repeat-x;
+	height: 15px;
 }
 .maincontent thead tr td a,
 .maincontent thead tr td a:link,
@@ -737,14 +768,14 @@ p {
 .maincontent tfoot tr td a:link,
 .maincontent tfoot tr td a:active,
 .maincontent tfoot tr td a:visited {
-	font-size: 11px;
 	font-weight: bold;
-	color: #547c22;
+	color: #5c8727;
 	margin: 0 10px;
+	font-size: 11px;
 }
 .maincontent thead tr td a:hover,
 .maincontent tfoot tr td a:hover {
-	color: #819f18;
+	color: #4c7c10;
 }
 /* Within Table Navigation Styles End */
 
@@ -760,7 +791,6 @@ acronym {
 }
 .description { 
 	font-size: 9px; 
-	font-style: italic; 
 	color: #7e7e7e; 
 	padding-bottom: 5px;
 }
@@ -808,7 +838,6 @@ table#installer {
 #profileform_email_container a:visited,
 #profileform_email_container a:hover {
 	margin: 0 0 0 25px;
-	font-size: 11px;
 }
 #profileform_email_container #email_list a,
 #profileform_email_container #email_list a:link,
@@ -830,22 +859,69 @@ table#installer {
 }
 
 /* My Blogs styles */
-#myblogs .newblog,
-#myblogs .newpost {
-	margin: 10px 0 10px 5px;
+#myblogs .blogsettings .addicon {
+	margin: 0px 0 5px 0;
+	text-align: right;
+	float: right;
+}
+#myblogs .addicon {
+	margin: 10px 0 5px 0;
 	text-align: right;
 }
-#myblogs .newblog a,
-#myblogs .newblog a:link,
-#myblogs .newblog a:active,
-#myblogs .newblog a:visited,
-#myblogs .newblog a:hover {
+#myblogs .newpost {
+	margin: 0px 0 5px 0;
+	text-align: right;
+	float: right;
+}
+#myblogs .blogsettings {
+	margin: 10px 0 5px 0;
+}
+#myblogs .addicon a,
+#myblogs .addicon a:link,
+#myblogs .addicon a:active,
+#myblogs .addicon a:visited,
+#myblogs .addicon a:hover,
+#myblogs .blogsettings .addicon a,
+#myblogs .blogsettings .addicon a:link,
+#myblogs .blogsettings .addicon a:active,
+#myblogs .blogsettings .addicon a:visited,
+#myblogs .blogsettings .addicon a:hover { 
 	background: url(../images/btn_add.gif) no-repeat;
 	width: 120px;
 	height: 24px;
 	color: #eef7d4;
 	font-weight: bold;
 	padding: 4px 23px 6px 47px;
+}
+#myblogs .blogsettings a,
+#myblogs .blogsettings a:link,
+#myblogs .blogsettings a:active,
+#myblogs .blogsettings a:visited,
+#myblogs .blogsettings a:hover {
+	background: url(../images/btn_medium_off.gif) no-repeat;
+	width: 100px;
+	height: 24px;
+	color: #eef7d4;
+	font-weight: bold;
+	padding: 4px 26px 6px 27px;
+}
+.maincontent .viewblogbtn {
+	margin: 10px 0 10px 0;
+}
+.maincontent .viewblogbtn a,
+.maincontent .viewblogbtn a:link,
+.maincontent .viewblogbtn a:active,
+.maincontent .viewblogbtn a:visited,
+.maincontent .viewblogbtn a:hover {
+	background: url(../images/btn_medium_off.gif) no-repeat;
+	border: 0;
+	width: 100px;
+	height: 24px;
+	color: #FFFFFF;
+	font-size: 11px;
+	font-weight: bold;
+	margin: 0;
+	padding: 5px 25px 5px 25px;
 }
 #myblogs .newpost a,
 #myblogs .newpost a:link,
@@ -859,10 +935,6 @@ table#installer {
 	font-weight: bold;
 	padding: 4px 34px 7px 36px;
 }
-.maincontent #editblog table {
-	padding: 10px 0 0 0;
-	border-top: 1px solid #d4d1c0;
-}
 .maincontent #editblog_commentsnotify_container label,
 .maincontent #editblog_commentsallowed_container label,
 .maincontent #newblog_commentsallowed_container label,
@@ -870,7 +942,77 @@ table#installer {
 	font-weight: normal;
 	color: #000000;
 }
+.maincontent #postlist tbody tr th {
+	padding: 2px 5px;
+	background-color: #e5e8da;
+}
+.maincontent #postlist table {
+	border: none;
+	background-color: #f3f5e9;
+}
+.maincontent #postlist th input {
+	background: url(../images/btn_short_short.gif) no-repeat;
+	width: 50px;
+	height: 18px;
+	padding: 0;
+	margin: 1px;
+}
 
+
+/* My Files styles */
+#foldernav {
+	font-weight: bold;
+	margin: 15px 0 0 3px;
+	padding: 3px 0 0 25px;
+	font-size: 15px;
+	background: url(../images/foldernav.gif) no-repeat;
+}
+.maincontent #myfiles #filelist tbody tr td,
+#uploader th {
+	vertical-align: top;
+}
+.maincontent #myfiles #filelist tbody tr td a,
+.maincontent #filebrowser tbody tr td a {
+	font-weight: bold;
+}
+.maincontent #filebrowser input /*,
+.maincontent #myfiles #filelist input*/ {
+	background: url(../images/btn_short_short.gif) no-repeat;
+	width: 50px;
+	height: 18px;
+	padding: 0;
+	margin: 1px;
+	border: none;
+}
+#uploader #uploadform table {
+	padding: 5px 10px;
+	background-color: #f4f8e7;
+	border: 0;
+}
+.maincontent #myfiles #createfolderform table {
+	padding: 5px 10px;
+	background-color: #e3ecc2;
+	border: 0;
+}
+#uploadformmessage,
+#createfolderformmessage {
+	padding: 3px 0 0 0;
+	color: #dd0221;
+	text-align: left;
+}
+#uploadform input.text,
+#createfolderform input.text {
+	border: 1px solid #d4d1c0;
+	padding: 1px 2px 1px 2px;
+}
+.maincontent #filelist table {
+	border: none;
+	padding: 5px 10px;
+	background-color: #e3ecc2;
+}
+.maincontent #filelist table td {
+	padding: 0;
+}
 
 /* My Groups styles */
 .maincontent #mygroups #addnewgroupdiv {
@@ -907,11 +1049,9 @@ table#installer {
 .maincontent #editgroup table tr td table td label {
 	margin: 0 5px 0 0;
 }
+
+
 /* My Communities and My Owned Communities styles */
-.maincontent #messagediv {
-	padding: 10px 0 10px 0;
-	color: #e3ac03;
-}
 .maincontent .addcommunitylink {
 	margin: 10px 0 10px 0;
 	text-align: right;
@@ -1194,10 +1334,6 @@ span.block_targetted, div.block_targetted {
 	margin: 0;
 	padding: 0;
 }
-#activitylist .markasread {
-	text-align: right;
-	background-color: #e5e8da;
-}
 
 /* My Account styles */
 .maincontent #accountprefs #accountprefs_friendscontrol_container label,
@@ -1216,11 +1352,36 @@ span.block_targetted, div.block_targetted {
 .maincontent #activityprefs table td {
 	padding: 3px;
 }
+.maincontent #activitylist tbody tr td {
+	vertical-align: top;
+	font-size: 11px;
+}
+.maincontent #activitylist tbody tr td a {
+	font-weight: bold;
+}
 .maincontent #mywatchlist #typeheader {
 	color: #5c8727;
 	font-weight: bold;
 	padding: 15px 0 0 0;
 }
+#activitylist .markasreadtd,
+#watchlist .stopmonitoringtd {
+	text-align: right;
+	background: none;
+	background-color: #e5e8da;
+}
+#activitylist .markasread,
+#watchlist .stopmonitoring {
+	float: right;
+	padding: 0;
+	margin: 0;
+}
+.maincontent #activitylist tbody tr td .s {
+	font-size: 11px;
+	font-weight: normal;
+}
+
+
 /* Configure Site styles */
 .maincontent #siteoptions table td {
 	width: 200px;

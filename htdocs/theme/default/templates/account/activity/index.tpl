@@ -23,11 +23,10 @@
 			<table id="activitylist">
 				<thead>
 					<tr>
+						<th>{str section='activity' tag='subject'}</th>
 						<th>{str section='activity' tag='type'}</th>
 						<th>{str section='activity' tag='date'}</th>
-						<th>{str section='activity' tag='read'}</th>
-						<th>[<a href="" onClick="{$selectall}">{str section='activity' tag='selectall'}</a>]</th>
-						<th></th>
+						<th>{str section='activity' tag='read'}<br><a href="" onclick="{$selectall}" class="s">{str section='activity' tag='selectall'}</a></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -35,7 +34,7 @@
 				</tbody>
 				<tfoot>
 					<tr>
-						<td colspan="5" class="markasread"><div id="messagediv"></div><input class="submit" type="submit" value="{str tag='markasread' section='activity'}" /></td>
+						<td colspan="5" class="markasreadtd"><div class="markasread"><input class="submit" type="submit" value="{str tag='markasread' section='activity'}" /></div><div id="messagediv"></div></td>
 					</tr>
 				</tfoot>
 			</table>

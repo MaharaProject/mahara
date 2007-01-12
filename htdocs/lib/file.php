@@ -487,6 +487,25 @@ function byteserving_send_file($filename, $mimetype, $ranges) {
     }
 }
 
+
+function get_mime_type($file) {
+    switch (strtolower(PHP_OS)) {
+    case 'win' :
+        throw new SystemException('retrieving filetype not supported in windows');
+    default : 
+        list($output,) = split(';', exec(get_config('pathtofile') . ' -ib ' . escapeshellarg($file)));
+    }
+    return $output;
+
+}
+
+
+
+function is_image_mime_type($type) {
+    return in_array($type, array('image/jpeg', 'image/jpg', 'image/gif', 'image/png'));
+}
+
+
 /**
  * Given a path under dataroot, an ID and a size, return the path to a file
  * matching all criteria.
@@ -502,7 +521,7 @@ function get_dataroot_image_path($path, $id, $size) {
         log_debug('directory ' . $imagepath . ' is not a directory or is not readable');
         return false;
     }
-    $imagepath .= "/$id";
+    //$imagepath .= "/$id";
     log_debug('directory is ' . $imagepath);
 
     if ($size && !preg_match('/\d+x\d+/', $size)) {
@@ -511,7 +530,7 @@ function get_dataroot_image_path($path, $id, $size) {
     }
 
     // If the image is already available, return the path to it
-    $path = $imagepath . '/' . ($size ? "$size/" : '') . $id;
+    $path = $imagepath . '/' . ($size ? "$size/" : '') . ($id % 256) . "/$id";
     if (is_readable($path)) {
         log_debug('the image is available at ' . $path);
         return $path;
@@ -520,54 +539,53 @@ function get_dataroot_image_path($path, $id, $size) {
     if ($size) {
         // Image is not available in this size. If there is a base image for
         // it, we can make one however.
-        $originalimage = $imagepath . "/$id";
-        if (is_readable($imagepath . "/$id")) {
+        $originalimage = $imagepath . '/' . ($id % 256) . "/$id";
+        log_debug('original image = ' . $originalimage);
+        if (is_readable($originalimage)) {
             log_debug('creating correct sized image');
 
             list($width, $height) = explode('x', $size);
 
             switch (get_mime_type($originalimage)) {
-                case 'jpg':
-                    $ih = imagecreatefromjpeg($
-    $extn = strtolower(substr($filename, -3));
-    switch($extn) {
-    case 'jpg':
-        $old = @ImageCreateFromJPEG($view);
-        break;
+                case 'image/jpeg':
+                    $oldih = imagecreatefromjpeg($originalimage);
+                    break;
+                case 'image/png':
+                    $oldih = imagecreatefrompng($originalimage);
+                    break;
+                case 'image/gif':
+                    $oldih = imagecreatefromgif($originalimage);
+                    break;
+                default:
+                    log_debug('file is NOT of valid type');
+                    return false;
+            }
+            log_debug('file is of valid type');
 
-    case 'png':
-        $old = @ImageCreateFromPNG($view);
-        break;
-    }
+            if (!$oldih) {
+                return false;
+            }
 
+            $oldx = imagesx($oldih);
+            $oldy = imagesy($oldih);
 
-    if (empty($old)) {
-    return false;
-    } else {
-        $old_x = ImageSX($old);
-        $old_y = ImageSY($old);
+            if ($oldy > $oldx) {
+                $newy = $height;
+                $newx = ($oldx * $newy) / $oldy;
+            }
+            else {
+                $newx = $width;
+                $newy = ($oldx * $newx) / $oldx;
+            }
 
-        // make new thumbnail
-        if ($old_y > $old_x) {
-            $new_y = $height;                           // max height of
-thumb
-            $new_x = ($old_x * $new_y)/$old_y;      // retain aspect ratio
-        }
-        else {
-            $new_x = $width;                           // max width of thumb
-            $new_y = ($old_y * $new_x)/$old_x;      // retain aspect ratio
-        }
-        //  $new = ImageCreate($new_x, $new_y);
-        $new = ImageCreateTrueColor($new_x, $new_y);
-        @ImageCopyResized($new, $old, 0, 0, 0, 0, $new_x, $new_y,
-$old_x, $old_y);
-    }
-
-    imageInterlace($new);
-    touch(SGN_DIR_ROOT.$thumbname);
-    $result = ImagePNG($new,SGN_DIR_ROOT.$thumbname);
-    return $thumbname;
-            return '';
+            $newih = imagecreatetruecolor($newx, $newy);
+            imagecopyresized($newih, $oldih, 0, 0, 0, 0, $newx, $newy, $oldx, $oldy);
+            imageinterlace($newih);
+            $newpath = $imagepath . "/$size/" . ($id % 256);
+            check_dir_exists($newpath);
+            $newpath .= "/$id";
+            $result = imagepng($newih, $newpath);
+            return $newpath;
         }
     }
 

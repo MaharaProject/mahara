@@ -27,7 +27,7 @@
 defined('INTERNAL') || die();
 
 $string['typemaharamessage'] = 'System message';
-$string['typeusermessage'] = 'Message from user';
+$string['typeusermessage'] = 'Message from other users';
 $string['typefeedback'] = 'Feedback';
 $string['typewatchlist'] = 'Watchlist';
 $string['typenewview'] = 'New view';
@@ -39,8 +39,9 @@ $string['typeadminmessages'] = 'Administration messages';
 
 $string['type'] = 'Activity type';
 $string['attime'] = 'at';
-$string['prefsdescr'] = 'For options other than Activity log, notifications will still go into the Activity log, but will be automatically marked as read';
+$string['prefsdescr'] = 'If you select either of the email options,notifications will still be entered in the Activity log, but they will be automatically marked as read';
 
+$string['subject'] = 'Subject';
 $string['date'] = 'Date';
 $string['read'] = 'Read';
 $string['unread'] = 'Unread';
@@ -54,7 +55,7 @@ $string['markedasread'] = 'Marked your notifications as read';
 $string['failedtomarkasread'] = 'Failed to mark your notifications as read';
 
 $string['stopmonitoring'] = 'Stop monitoring';
-$string['viewsandartefacts'] = 'Views and artefacts';
+$string['viewsandartefacts'] = 'Views and Artefacts';
 $string['views'] = 'Views';
 $string['artefacts'] = 'Artefacts';
 $string['communities'] = 'Communities';
@@ -71,15 +72,15 @@ $string['newcontactusfrom'] = 'New contact us from';
 $string['newcontactus'] = 'New contact us';
 $string['newfeedbackonview'] = 'New feedback on view';
 $string['newfeedbackonartefact'] = 'New feedback on artefact';
-$string['watchlistmessageview'] = 'Activity on watchlist (view)';
-$string['watchlistmessageartefact'] = 'Activity on watchlist (artefact)';
-$string['watchlistmessagecommunity'] = 'Activity on watchlist (community)';
+$string['watchlistmessageview'] = 'Activity on watchlist (View)';
+$string['watchlistmessageartefact'] = 'Activity on watchlist (Artefact)';
+$string['watchlistmessagecommunity'] = 'Activity on watchlist (Community)';
 $string['newviewmessage'] = 'New view called';
 $string['newviewsubject'] = 'New view';
 
-$string['onview'] = 'on view';
-$string['onartefact'] = 'on artefact';
-$string['oncommunity'] = 'on community';
+$string['onview'] = 'on View';
+$string['onartefact'] = 'on Artefact';
+$string['oncommunity'] = 'on Community';
 $string['ownedby'] = 'owned by';
 
 $string['objectionablecontentview'] = 'Objectionable content';

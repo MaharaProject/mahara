@@ -64,6 +64,12 @@ $siteoptionform = pieform(array(
             'collapseifoneoption' => true,
             'options'      => $themeoptions,
         ),
+        'pathtofile' => array(
+            'type'         => 'text',
+            'title'        => get_string('pathtofile','admin'),
+            'description'  => get_string('pathtofiledescription','admin'),
+            'defaultvalue' => get_config('pathtofile'),
+        ),
         'viruschecking' => array(
             'type'         => 'checkbox',
             'title'        => get_string('viruschecking','admin'),
@@ -108,7 +114,7 @@ function siteoptions_fail(Pieform $form, $field) {
 }
 
 function siteoptions_submit(Pieform $form, $values) {
-    $fields = array('sitename','language','theme','pathtoclam',
+    $fields = array('sitename','language','theme','pathtofile', 'pathtoclam',
                     'allowpublicviews','artefactviewinactivitytime');
     foreach ($fields as $field) {
         if (!set_config($field, $values[$field])) {

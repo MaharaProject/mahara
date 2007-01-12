@@ -178,13 +178,16 @@ sub insert_random_activity {
     my $messagetypes = $self->{dbh}->selectall_hashref('SELECT name FROM ' . $prefix . 'activity_type', 'name');
 
     foreach ( 1 .. $count ) { ### [...  ] (%)
-        my $message = join(' ', $wl->get_words(int(rand(3)) + 2));
+        my $message = join(' ', $wl->get_words(int(rand(7)) + 2));
+        my $subject = join(' ', $wl->get_words(int(rand(3)) + 2));
         my $type = (keys %$messagetypes)[int(rand(keys %$messagetypes))];
         $message =~ s/[\x80-\xff]//g;
+        $subject =~ s/[\x80-\xff]//g;
         $self->{dbh}->do(
-            'INSERT INTO ' . $prefix . 'notification_internal_activity (type, usr, ctime, message, url, read) VALUES (?, ?, current_timestamp, ?, ?, ?)',
+            'INSERT INTO ' . $prefix . 'notification_internal_activity (type, usr, ctime, subject, message, url, read)
+            VALUES (?, ?, current_timestamp, ?, ?, ?, ?)',
             undef,
-            $type, $user_id, $message, 'http://mahara.org/', int(rand(2)));
+            $type, $user_id, $subject, $message, 'http://mahara.org/', int(rand(2)));
     }
 
     $self->{dbh}->commit();
@@ -523,10 +526,10 @@ sub insert_random_filethings {
 
     foreach my $item (@$artefactidlist) {
         my $id = int($item->{id});
-        $self->{dbh}->do('INSERT INTO ' . $prefix . 'artefact_file_files (artefact, size)
-            VALUES (?, ?)', undef,
+        $self->{dbh}->do('INSERT INTO ' . $prefix . 'artefact_file_files (artefact, size, adminfiles)
+            VALUES (?, ?, ?)', undef,
             $id,
-            $item->{artefacttype} eq 'folder' ? undef : int(rand(5000000)));
+            $item->{artefacttype} eq 'folder' ? undef : int(rand(5000000)), 0);
     }
 
     $self->{dbh}->commit();

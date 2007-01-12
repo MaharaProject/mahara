@@ -13,7 +13,7 @@ function TableRenderer(target, source, columns, options) {
     this.paginate_firstlast = true;
     this.statevars = ['offset','limit'];
     this.emptycontent = false;  // Something to display when no results are found
-    this.rowfunction = function(rowdata, rownumber, data) { return TR(); }
+    this.rowfunction = function(rowdata, rownumber, data) { return TR({'class': 'r' + (rownumber % 2)}); }
 
     this.init = function() {
         self.table = getElement(target);

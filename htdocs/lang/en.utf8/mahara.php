@@ -133,7 +133,9 @@ $string['usernamehelp'] = 'The username you have been given to access this syste
 $string['yournewpassword'] = 'Your new password';
 $string['yournewpasswordagain'] = 'Your new password again';
 $string['invalidsesskey'] = 'Invalid session key';
+$string['cantremovedefaultemail'] = 'You cannot remove your primary email address';
 $string['mustspecifyoldpassword'] = 'You must specify your old password';
+
 // Misc. register stuff that could be used elsewhere
 $string['emailaddress'] = 'Email address';
 $string['emailaddressdescription'] = ' ';
@@ -500,6 +502,7 @@ $string['clamemailsubject'] = '%s :: Clam AV notification';
 $string['clamlost'] = 'Clam AV is configured to run on file upload, but the path supplied to Clam AV, %s, is invalid.';
 $string['clamfailed'] = 'Clam AV has failed to run.  The return error message was %s. Here is the output from Clam:';
 $string['clamunknownerror'] = 'There was an unknown error with clam.';
+$string['filenotimage'] = 'The file you uploaded is not valid image. It must be a PNG, JPEG or GIF file.';
 $string['virusfounduser'] = 'The file you have uploaded, %s, has been scanned by a virus checker and found to be infected! Your file upload was NOT successful.';
 $string['virusrepeatsubject'] = 'Warning: %s is a repeat virus uploader.';
 $string['virusrepeatmessage'] = 'The user %s has uploaded multiple files which have been scanned by a virus checker and found to be infected.';

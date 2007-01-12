@@ -28,6 +28,7 @@ defined('INTERNAL') || die();
 
 $string['adminfilesloaded'] = 'Admin files loaded';
 $string['changessaved'] = 'Changes saved';
+$string['contents'] = 'Contents';
 $string['copyrightnotice'] = 'Copyright notice';
 $string['create'] = 'Create';
 $string['createfolder'] = 'Create folder';

@@ -285,9 +285,8 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
      * Test file type and return a new Image or File.
      */
     public static function new_file($path, $data) {
-        //require_once('file.php');
-        //$type = get_mime_type($path);
-        $type = 'foo';
+        require_once('file.php');
+        $type = get_mime_type($path);
         if (ArtefactTypeImage::is_image_mime_type($type)) {
             return new ArtefactTypeImage(0, $data);
         }
@@ -398,8 +397,25 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
 
     }
 
+    public function folder_contents() {
+        return get_records_array('artefact', 'parent', $this->get('id'));
+    }
+
     public function render_full($options) {
-        return $this->title;
+        $smarty = smarty();
+        $smarty->assign('artefact', $this);
+        if ($children = $this->folder_contents()) {
+            $smarty->assign('children', $children);
+        }
+        return $smarty->fetch('artefact:file:folder_renderfull.tpl');
+    }
+
+    public function listchildren($options) {
+        $smarty = smarty();
+        if ($children = $this->folder_contents()) {
+            $smarty->assign('children', $children);
+        }
+        return $smarty->fetch('artefact:file:folder_listchildren.tpl');
     }
 
     public function get_icon() {
@@ -485,7 +501,8 @@ class ArtefactTypeImage extends ArtefactTypeFile {
     }
 
     public static function is_image_mime_type($type) {
-        return in_array($type, array('image/jpeg', 'image/jpg', 'image/gif', 'image/png'));
+        require_once('file.php');
+        return is_image_mime_type($type);
     }
 
 }
