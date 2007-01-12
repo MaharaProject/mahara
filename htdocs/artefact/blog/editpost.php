@@ -197,7 +197,8 @@ attached.emptycontent = {$getstring['nofilesattachedtothispost']};
 attached.paginate = false;
 attached.blogpost = {$blogpost};
 attached.statevars.push('blogpost');
-attached.rowfunction = function (r) { return TR({'id':'artefact:' + r.id}); };
+attached.rowfunction = function (r, n) { return TR({'id':'artefact:' + r.id,
+                                                    'class':'r'+(n%2)}); };
 attached.updateOnLoad();
 
 

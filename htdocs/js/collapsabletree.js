@@ -40,7 +40,7 @@ function CollapsableTree(data, source) {
 
             var request_args = {};
             forEach(self.statevars, function(key) {
-                if (p.hasAttribute(key)) {
+                if (p.getAttribute(key)) {
                     request_args[key] = p.getAttribute(key);
                 }
             });

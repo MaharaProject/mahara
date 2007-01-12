@@ -110,11 +110,12 @@ function feedbackform() {
         TR(null, TH(null, LABEL(null, {$getstring['message']}))),
         TR(null, TD(null, TEXTAREA({'rows':5, 'cols':80, 'name':'message'}))),
         TR(null, TH(null, LABEL(null, {$getstring['makepublic']}), 
-                    INPUT({'type':'checkbox', 'name':'public'}))),
+                    INPUT({'type':'checkbox', 'class':'checkbox', 'name':'public'}))),
         TR(null, TD(null,
-                    INPUT({'type':'button', 'value':{$getstring['placefeedback']},
+                    INPUT({'type':'button', 'class':'button', 
+                               'value':{$getstring['placefeedback']},
                                'onclick':'submitfeedback();'}),
-                    INPUT({'type':'button', 'value':{$getstring['cancel']},
+                    INPUT({'type':'button', 'class':'button', 'value':{$getstring['cancel']},
                                'onclick':"removeElement('menuform');"}))))));
     appendChildNodes('viewmenu', DIV(null, form));
     return false;
@@ -139,9 +140,10 @@ function objectionform() {
         TR(null, TH(null, LABEL(null, {$getstring['complaint']}))),
         TR(null, TD(null, TEXTAREA({'rows':5, 'cols':80, 'name':'message'}))),
         TR(null, TD(null,
-                    INPUT({'type':'button', 'value':{$getstring['notifysiteadministrator']},
+                    INPUT({'type':'button', 'class':'button', 
+                               'value':{$getstring['notifysiteadministrator']},
                                'onclick':'submitobjection();'}),
-                    INPUT({'type':'button', 'value':{$getstring['cancel']},
+                    INPUT({'type':'button', 'class':'button', 'value':{$getstring['cancel']},
                                'onclick':"removeElement('menuform');"}))))));
     appendChildNodes('viewmenu', DIV(null, form));
     return false;

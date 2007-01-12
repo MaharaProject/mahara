@@ -51,6 +51,11 @@ if (!is_readable($CFG->docroot . 'config.php')) {
 require('config.php');
 $CFG = (object)array_merge((array)$cfg, (array)$CFG);
 
+// Fix up paths in $CFG
+foreach (array('docroot', 'dataroot') as $path) {
+    $CFG->{$path} = (substr($CFG->{$path}, -1) != DIRECTORY_SEPARATOR) ? $CFG->{$path} . DIRECTORY_SEPARATOR : $CFG->{$path} . "/";
+}
+
 // xmldb stuff
 $CFG->xmldbdisablenextprevchecking = true;
 $CFG->xmldbdisablecommentchecking = true;
@@ -109,10 +114,8 @@ catch (SQLException $e) {
     }
 }
 
-// Fix up paths in $CFG
-foreach (array('docroot', 'dataroot') as $path) {
-    $CFG->{$path} = realpath((substr($CFG->{$path}, -1) != DIRECTORY_SEPARATOR) ? $CFG->{$path} . DIRECTORY_SEPARATOR : $CFG->{$path}) . "/";
-}
+// Make sure wwwroot is set and available, either in the database or int the
+// config file. Cron requires it for some purposes.
 if (!isset($CFG->wwwroot) && isset($_SERVER['HTTP_HOST'])) {
     $proto = (isset($_SERVER['HTTPS'])) ? 'https://' : 'http://';
     $host  =  (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : $_SERVER['HTTP_HOST'];

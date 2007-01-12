@@ -179,107 +179,87 @@ addLoadEvent(function() {
     });
 });
 
-// Contextual help
-var ctxHelp = new Array();
-var ctxHelp_selected;
-var container;
+// Contextual Help
+contextualHelpCache       = new Object();
+contextualHelpSelected    = null;
+contextualHelpContainer   = null;
+contextualHelpDeferrable  = null;
 
 function contextualHelp(formName, helpName, pluginType, pluginName, page) {
-    var tooltip = $('tooltip');
-    log(tooltip);
-    log(ctxHelp_selected);
-
     var key;
-    if (page) {
-	key = pluginType + '/' + pluginName + '/' + page;
-    }
-    else {
-	key = pluginType + '/' + pluginName + '/' + helpName;
-    }
-    if (typeof(ctxHelp_selected) != 'undefined' && ctxHelp_selected && ctxHelp_selected != key) {
-        log('chose another help when one was open');
-        contextualHelpClose();
-    }
-
-    if (ctxHelp[key] && tooltip) {
-        log('have help for this key, and it is already open');
-        contextualHelpClose();
-        return;
-    }
-    else if (ctxHelp[key]) {
-        log('reloaded help from cache');
-        ctxHelp_selected = key;
-	if (page) {
-	    contextualHelpOpen(page, ctxHelp[key].content);
-	} 
-	else{
-	    contextualHelpOpen(formName + '_' + helpName, ctxHelp[key].content);
-	}
-        return;
-    }
-    else {
-        log('no help for this key yet, getting...');
-        ctxHelp[key] = new Object();
-        processingStart();
-	var url = '../json/help.php?plugintype=' + pluginType + '&pluginname=' + pluginName;
-	if (page) {
-	    url += '&page=' + page;
-	}
-	else {
-	    url += '&form=' + formName + '&element=' + helpName;
-	}
-        var d = loadJSONDoc(url);
-        d.addCallbacks(
-        function (data) {
-	    if (data.error) {
-		ctxHelp[key].content = data.message;
-		container.innerHTML = ctxHelp[key].content;
-		processingStop();
-	    } 
-	    else {
-		ctxHelp[key].content = data.content;
-		container.innerHTML = ctxHelp[key].content;
-		processingStop();
-	    }
-        },
-        function () {
-            ctxHelp[key].content = '<p>Sorry, no help for this element could be found</p>';
-            container.innerHTML = ctxHelp[key].content;
-            processingStop();
-        });
-    }
-
-    if (page) {
-	contextualHelpOpen(page, 'spinner');
-    }
-    else {
-	contextualHelpOpen(formName + '_' + helpName, 'spinner');
-    }
-    ctxHelp[key] = {
-        'content': ''
+    var target = $(formName + '_' + helpName + '_container');
+    var url = '../json/help.php';
+    var url_params = {
+        'plugintype': pluginType,
+        'pluginname': pluginName
     };
-    ctxHelp_selected = key;
-}
 
-function contextualHelpClose() {
-    var tooltip = $('tooltip');
-    if ( ctxHelp_selected && tooltip) {
-        tooltip.style.display = 'none';
-        removeElement(tooltip);
-        //ctxHelp[ctxHelp_selected].visible = 0;
-        ctxHelp_selected = null;
+    // deduce the key
+    if (page) {
+        key = pluginType + '/' + pluginName + '/' + page;
+        url_params.page = page;
+    }
+    else {
+        key = pluginType + '/' + pluginName + '/' + helpName;
+        url_params.form = formName;
+        url_params.element = helpName;
+    }
+
+    // close existing contextual help
+    if (contextualHelpSelected) {
+        removeElement(contextualHelpContainer);
+
+        contextualHelpContainer = null;
+        if (key == contextualHelpSelected) {
+            // we're closing an already open one by clicking on the ? again
+            contextualHelpSelected = null;
+            return;
+        } else {
+            // we're closing a DIFFERENT one that's already open (we want to
+            // continue and open the new one)
+            contextualHelpSelected = null;
+        }
+    }
+
+    // create and display the container
+    contextualHelpContainer = TD(
+        {'class': 'contextualHelp'},
+        'spinner'
+    );
+    appendChildNodes(target, contextualHelpContainer);
+    contextualHelpSelected = key;
+
+    // load the content
+    if (contextualHelpCache[key]) {
+        contextualHelpContainer.innerHTML = contextualHelpCache[key];
+    }
+    else {
+        if (contextualHelpDeferrable && contextualHelpDeferrable.cancel) {
+            contextualHelpDeferrable.cancel();
+        }
+
+        processingStart();
+        contextualHelpDeferrable = loadJSONDoc(url, url_params);
+        contextualHelpDeferrable.addCallbacks(
+            function (data) {
+                if (data.error) {
+                    contextualHelpCache[key] = data.message;
+                    replaceChildNodes(contextualHelpContainer, data.message);
+                }
+                else {
+                    contextualHelpCache[key] = data.content;
+                    contextualHelpContainer.innerHTML = contextualHelpCache[key];
+                }
+                processingStop();
+            },
+            function (error) {
+                contextualHelpCache[key] = get_string('couldnotgethelp');
+                contextualHelpContainer.innerHTML = contextualHelpCache[key];
+                processingStop();
+            }
+        );
     }
 }
-
-function contextualHelpOpen(helpName, content) {
-    var help = DIV({'id': 'tooltip'});
-    container = DIV({'class':'content'});
-    container.innerHTML = content;
-
-    appendChildNodes(help, container);
-    appendChildNodes($(helpName + '_container'), help);
-}
-// End contextual help
 
 // Cookie related functions
 /* this function gets the cookie, if it exists */
