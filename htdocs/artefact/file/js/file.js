@@ -354,9 +354,9 @@ function FileUploader(element, uploadscript, statevars, foldername, folderid, up
              TR(destinationattributes, TH(null, LABEL(null, get_string('destination'))),
                 TD(null, SPAN({'id':'uploaddest'},self.foldername))),
              TR(null, TH(null,LABEL(null,get_string('copyrightnotice'))),
-                TD(null,INPUT({'type':'checkbox','name':'notice'}),notice)),
+                TD(null,INPUT({'type':'checkbox','class':'checkbox','name':'notice'}),notice)),
              TR(null, TH(null, LABEL(null, get_string('file'))),
-                TD(null, INPUT({'type':'file','name':'userfile','size':40,'onchange':function () {
+                TD(null, INPUT({'type':'file','class':'file','name':'userfile','size':40,'onchange':function () {
                     self.form.title.value = self.filepart(self.form.userfile.value);
                 }}))),
              TR(null, TH(null, LABEL(null, get_string('title'))),

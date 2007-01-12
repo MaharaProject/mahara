@@ -54,13 +54,14 @@ viewlist.rowfunction = function(r, n, data) {
 }
 
 function title(r, communities) {
-    var editinfo = INPUT({'type':'button','value':{$getstring['editviewinformation']},
+    var editinfo = INPUT({'type':'button','class':'button',
+                              'value':{$getstring['editviewinformation']},
                               'onclick':"submitform(" + r.id + ", 'editinfo')"});
-    var edit = INPUT({'type':'button','value':{$getstring['editview']},
+    var edit = INPUT({'type':'button','class':'button','value':{$getstring['editview']},
                           'onclick':"submitform(" + r.id + ", 'edit')"});
-    var editaccess = INPUT({'type':'button','value':{$getstring['editaccess']},
+    var editaccess = INPUT({'type':'button','class':'button','value':{$getstring['editaccess']},
                                 'onclick':"submitform(" + r.id + ", 'editaccess')"});
-    var del = INPUT({'type':'button','value':{$getstring['delete']},
+    var del = INPUT({'type':'button','class':'button','value':{$getstring['delete']},
                          'onclick':"return submitform(" + r.id + ", 'delete');"});
     if (r.submittedto) {
         var buttons = [editaccess];
@@ -86,9 +87,11 @@ function assessselect(viewid, communitylist) {
     if (communitylist.length < 1) {
         return null;
     }
-    var submitview = INPUT({'type':'button','value':{$getstring['submitview']}});
+    var submitview = INPUT({'type':'button','class':'button',
+                            'value':{$getstring['submitview']}});
     submitview.onclick = function () { submitform(viewid, 'submitview'); };
-    return [SELECT({'name':'community'},map(communityoption, communitylist)), submitview];
+    return [SELECT({'name':'community','class':'select'},
+                   map(communityoption, communitylist)), submitview];
             
 }
 

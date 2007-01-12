@@ -96,9 +96,9 @@ function formatrow (item) {
     // item has id, type, name, link, linkedto
     var type = eval(item.type);
     var linkedto = A({'href':item.linkedto},item.linktext);
-    var del = INPUT({'type':'button','value':{$getstring['delete']}});
+    var del = INPUT({'type':'button','class':'button','value':{$getstring['delete']}});
     del.onclick = function () { delitem(item.id); };
-    var edit = INPUT({'type':'button','value':{$getstring['edit']}});
+    var edit = INPUT({'type':'button','class':'button','value':{$getstring['edit']}});
     edit.onclick = function () { edititem(item); };
     var cells = map(partial(TD,null),[type,item.name,linkedto,[del,edit]]);
     return TR({'id':'menuitem_'+item.id},cells);
@@ -116,12 +116,12 @@ function addform(type) {
 function editform(item) {
     // item has id, type, name, link, linkedto
     // The form has two radio buttons to select the type, external link or admin file
-    var elink = INPUT({'type':'radio','name':'type'+item.id,'value':'externallink'});
-    var afile = INPUT({'type':'radio','name':'type'+item.id,'value':'adminfile'});
+    var elink = INPUT({'type':'radio','class':'radio','name':'type'+item.id,'value':'externallink'});
+    var afile = INPUT({'type':'radio','class':'radio','name':'type'+item.id,'value':'adminfile'});
 
     // Either a save, a cancel button, or both.
     var savecancel = [];
-    var save = INPUT({'type':'button'});
+    var save = INPUT({'type':'button','class':'button'});
     save.onclick = function () { saveitem(item.id); };
 
     // The link field will be a text box or a select in the case of an admin file.
@@ -146,7 +146,7 @@ function editform(item) {
         // The save button says 'update' and there's a cancel button.
         var rowtype = 'edit';
         setNodeAttribute(save,'value',{$getstring['update']});
-        var cancel = INPUT({'type':'button','value':{$getstring['cancel']}});
+        var cancel = INPUT({'type':'button','class':'button','value':{$getstring['cancel']}});
         cancel.onclick = closeopenedits;
         savecancel = [save,cancel];
         elink.onclick = function () { changeeditform(item,'externallink'); };
@@ -154,7 +154,7 @@ function editform(item) {
     }
 
     // A text field for the name
-    var name = INPUT({'type':'text','id':'name'+item.id,'value':item.name});
+    var name = INPUT({'type':'text','class':'text','id':'name'+item.id,'value':item.name});
 
     if (item.type == 'adminfile') {
         if (adminfiles == null) {
@@ -177,7 +177,8 @@ function editform(item) {
         setNodeAttribute(afile,'checked',true);
     }
     else { // type = externallist
-        linkedto = INPUT({'type':'text','id':'linkedto'+item.id,'value':item.linkedto});
+        linkedto = INPUT({'type':'text','class':'text','id':'linkedto'+item.id,
+                          'value':item.linkedto});
         setNodeAttribute(elink,'checked',true);
     }
     var radios = [DIV(null, LABEL(null,elink,{$getstring['externallink']})),
