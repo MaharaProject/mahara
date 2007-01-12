@@ -61,16 +61,16 @@ $string['configextensions']   = 'Administer Extensions';
 $string['siteoptions']    = 'Site options';
 $string['siteoptionsdescription'] = 'Configure basic site options such as the name, language and theme';
 $string['sitepages']     = 'Site pages';
-$string['sitepagesdescription'] = 'Edit the text of the basic pages';
+$string['sitepagesdescription'] = 'Edit the core site content';
 $string['sitemenu'] = 'Site menu';
-$string['sitemenudescription'] = 'Manage the links and file that appear in the menus';
+$string['sitemenudescription'] = 'Manage the links and files within the Main Menus';
 $string['adminfiles']          = 'Admin Files';
 $string['adminfilesdescription'] = 'Upload and administer files that can be put in the menus (note: not implemented yet)';
 
 $string['staffusers'] = 'Staff Users';
-$string['staffusersdescription'] = 'Choose which users can have staff permissions';
+$string['staffusersdescription'] = 'Assign users Staff permissions';
 $string['adminusers'] = 'Admin Users';
-$string['adminusersdescription'] = 'Choose which users are administrators for the site';
+$string['adminusersdescription'] = 'Assign Site Administrator access rights';
 $string['institutions']   = 'Institutions';
 $string['institutionsdescription'] = 'Install and manage installed institutions';
 $string['adminnotifications'] = 'Admin Notifications';
@@ -85,7 +85,7 @@ $string['templatesadmindescription'] = 'View installed templates to check their 
 
 // Site options
 $string['allowpublicviews'] = 'Allow public views';
-$string['allowpublicviewsdescription'] = 'If set to yes, views are accessable by the public.  If set to no, only logged in users will be able to look at views';
+$string['allowpublicviewsdescription'] = 'If set to yes, users will be able to create Views that are accessable to the public rather than only to logged in users';
 $string['artefactviewinactivitytime'] = 'Artefact view inactivity time';
 $string['artefactviewinactivitytimedescription'] = 'The time after which an inactive view or artefact will be moved to the InactiveContent area';
 $string['language'] = 'Language';
@@ -98,10 +98,10 @@ $string['sessionlifetimedescription'] = 'Time in minutes after which an inactive
 $string['setsiteoptionsfailed'] = 'Failed setting the %s option';
 $string['sitelanguagedescription'] = 'The default language for the site';
 $string['sitename'] = 'Site name';
-$string['sitenamedescription'] = 'The overall name of the site';
+$string['sitenamedescription'] = ' ';
 $string['siteoptions'] = 'Site options';
 $string['siteoptionsset'] = 'Site options have been updated';
-$string['sitethemedescription'] = 'The theme for the site';
+$string['sitethemedescription'] = ' ';
 $string['theme'] = 'Theme';
 $string['updatesiteoptions'] = 'Update site options';
 $string['viruschecking'] = 'Virus checking';
@@ -116,7 +116,7 @@ $string['badmenuitemtype']     = 'Unknown menu item type';
 $string['externallink']        = 'External link';
 $string['type']                = 'Type';
 $string['name']                = 'Name';
-$string['noadminfiles']        = 'No admin files';
+$string['noadminfiles']        = 'No admin files available';
 $string['linkedto']            = 'Linked to';
 $string['editmenus']           = 'Edit menus';
 $string['menuitemsaved']       = 'Menu item saved';
@@ -128,7 +128,7 @@ $string['menuitemdeleted']     = 'Menu item deleted';
 $string['loadingmenuitems']    = 'Loading menu items';
 $string['loadmenuitemsfailed'] = 'Failed to load menu items';
 $string['loggedinmenu']        = 'Logged in menu';
-$string['loggedoutmenu']       = 'Logged out menu';
+$string['loggedoutmenu']       = 'Public menu';
 
 // Site content
 $string['about']               = 'About';
@@ -137,17 +137,17 @@ $string['editsitecontent']     = 'Edit site content';
 $string['home']                = 'Home';
 $string['loadingpagecontent']  = 'Loading site page content';
 $string['loadsitepagefailed']  = 'Failed to load site page';
-$string['loggedouthome']       = 'Logged out Home';
-$string['pagecontents']        = 'Text to appear on the page';
+$string['loggedouthome']       = 'Logged out home';
+$string['pagecontents']        = ' ';
 $string['pagename']            = 'Page name';
 $string['pagesaved']           = 'Page saved';
 $string['pagetext']            = 'Page text';
-$string['privacy']             = 'Privacy statement';
+$string['privacy']             = 'Privacy Statement';
 $string['savechanges']         = 'Save changes';
 $string['savefailed']          = 'Save failed';
 $string['sitepageloaded']      = 'Site page loaded';
-$string['termsandconditions']  = 'Terms and conditions';
-$string['uploadcopyright']     = 'Upload copyright statement';
+$string['termsandconditions']  = 'Terms and Conditions';
+$string['uploadcopyright']     = 'Upload Copyright Statement';
 
 // Upload CSV
 $string['csvfile'] = 'CSV File';
@@ -162,7 +162,7 @@ $string['uploadcsvpagedescription'] = 'You may use this facility to upload new u
 $string['uploadcsvusersaddedsuccessfully'] = 'The users in the file have been added successfully';
 
 // Admin Users
-$string['adminuserspagedescription'] = '<p>Here you can choose which users are administrators for the site. The current administrators are on the right, and potential administrators are on the left.</p><p>The system must have at least one administrator, and may have more.</p>';
+$string['adminuserspagedescription'] = '<p>Here you can choose which users are administrators for the site. The current administrators are listed on the right, and potential administrators are on the left.</p><p>The system must have at least one administrator.</p>';
 $string['adminusersupdated'] = 'Admin users updated';
 $string['usersearch'] = 'User Search';
 
@@ -182,7 +182,7 @@ $string['suspenduser'] = 'Suspend User';
 $string['suspendedusers'] = 'Suspended Users';
 $string['suspensionreason'] = 'Suspension reason';
 $string['errorwhilesuspending'] = 'An error occured while trying to suspend';
-$string['suspendedusersdescription'] = 'Suspend or unsuspend users from logging in to the site (note: not implemented yet)';
+$string['suspendedusersdescription'] = 'Suspend or reactivate users from using the site (note: not implemented yet)';
 $string['unsuspendusers'] = 'Unsuspend Users';
 $string['usersdeletedsuccessfully'] = 'Users deleted successfully';
 $string['usersunsuspendedsuccessfully'] = 'Users unsuspended successfully';
