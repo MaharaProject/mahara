@@ -219,7 +219,7 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
     }
 
     this.icon = function (type) {
-        return IMG({'src':config.themeurl+type+'.gif'});
+        return IMG({'src':config.themeurl+'images/'+type+'.gif'});
     }
 
     this.formatname = function(r) {
