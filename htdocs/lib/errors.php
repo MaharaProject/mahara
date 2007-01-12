@@ -378,7 +378,6 @@ function error ($code, $message, $file, $line, $vars) {
 function exception (Exception $e) {
     global $USER;
     if ($USER) {
-        $logged = false;
         if (!($e instanceof MaharaException) || get_class($e) == 'MaharaException') {
             log_warn("An exception was thrown of class " . get_class($e) . ". \nTHIS IS BAD "
                      . "and should be changed to something extending MaharaException,\n" 
@@ -388,12 +387,8 @@ function exception (Exception $e) {
             $e = new SystemException($e->getMessage());
             $e->set_log_off();
         }
-        
-        $e->handle_exception($logged);
     }
-    else {
-        log_message($e->getMessage(), LOG_LEVEL_WARN, true, true, $e->getFile(), $e->getLine(), $e->getTrace());
-    }
+    $e->handle_exception();
 }
 
 
@@ -461,7 +456,7 @@ class MaharaException extends Exception {
     public function handle_exception() {
 
         if (!empty($this->log)) {
-            log_message($message, LOG_LEVEL_WARN, true, true, $this->getFile(), $this->getLine(), $this->getTrace());
+            log_message($this->getMessage(), LOG_LEVEL_WARN, true, true, $this->getFile(), $this->getLine(), $this->getTrace());
         }
 
         if (defined('JSON')) { // behave differently
@@ -488,6 +483,31 @@ class MaharaException extends Exception {
 <head>
     <title>$outputtitle</title>
     <style type="text/css">
+        html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            width: 600px;
+            margin: 100px auto;
+            font-size: 12px;
+        }
+        h1 {
+            color: #547c22;
+            font-size: 20px;
+            font-weight: normal;	
+            margin: 0 0 5px 0;
+            padding: 0;
+            text-transform: capitalize;
+            border-bottom: 1px solid #819f18;
+            text-align: center;
+        }
+        #message {
+            width: 90%;
+            margin: 0 auto;
+            text-align: justify;
+        }
         #reason {
             margin: 0 3em;
         }
@@ -500,8 +520,7 @@ EOF;
     }
     echo <<<EOF
 <h1>$outputtitle</h1>
-$outputmessage
-<hr>
+<div id="message">$outputmessage</div>
 </body>
 </html>
 EOF;
