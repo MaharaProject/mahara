@@ -127,7 +127,7 @@ postlist.rowfunction = function(d, n, gd) {
     if (d.files) {
         var filerows = [TR(null, TD({'colSpan':3}, {$enc_files}))];
         for (var i = 0; i < d.files.length; i++) {
-            filerows.push(TR(null, 
+            filerows.push(TR({'class':'r'+((i+1)%2)}, 
                              TD(null, IMG({'src':config.themeurl + d.files[i].artefacttype + '.gif'})),
                              TD(null, A({'href':config.wwwroot+'artefact/file/download.php?file='+d.files[i].file},
                                         d.files[i].title)),
@@ -141,7 +141,7 @@ postlist.rowfunction = function(d, n, gd) {
                                     TBODY(null, filerows)))));
     }
 
-    rows.push(TR(null, TD(null, {$enc_postedon}, ' ', d.ctime)));
+    rows.push(TR(null, TD({'colSpan':2}, {$enc_postedon}, ' ', d.ctime)));
 
     connect(del, 'onclick', function(e) {
         if (!confirm({$enc_delete_confirm})) {
