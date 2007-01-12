@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * This program is part of Mahara
  *
@@ -32,19 +32,19 @@ $string['attach'] = 'Attach';
 $string['attachedfilelistloaded'] = 'Attached file list loaded';
 $string['attachedfiles'] = 'Attached files';
 $string['blogdesc'] = 'Description';
-$string['blogdescdesc'] = 'e.g., ‘Follow Jill on her exciting adventures in New Zealand’.';
+$string['blogdescdesc'] = 'e.g., ‘A record of Jill\'s experiences and reflections’.';
 $string['blogfilesdirdescription'] = 'Files uploaded as blog post attachments';
 $string['blogfilesdirname'] = 'blogfiles';
 $string['blogpost'] = 'blog post';
 $string['blogpostsaved'] = 'Blog post saved';
 $string['blogsettings'] = 'Blog Settings';
 $string['blogtitle'] = 'Title';
-$string['blogtitledesc'] = 'e.g., ‘Jill’s Travel Blog’.';
+$string['blogtitledesc'] = 'e.g., ‘Jill’s Nursing Practicum Journal’.';
 $string['browsemyfiles'] = 'Browse my files';
 $string['cancel'] = 'Cancel';
 $string['commentsallowed'] = 'Comments';
-$string['commentsalloweddesc'] = 'Comments can be made on your blog posts if you turn on this option.';
-$string['commentsallowedno'] = 'Don’t allow comments on this blog';
+$string['commentsalloweddesc'] = ' ';
+$string['commentsallowedno'] = 'Do not allow comments on this blog';
 $string['commentsallowedyes'] = 'Allow logged in users to comment on this blog';
 $string['commentsnotify'] = 'Comment Notification';
 $string['commentsnotifydesc'] = 'You can optionally receive notification whenever someone adds a comment to one of your blog posts.';
@@ -55,7 +55,7 @@ $string['createasdraftdesc'] = 'This will create the blog post, but it will not 
 $string['createblog'] = 'Create Blog';
 $string['delete'] = 'Delete';
 $string['deleteblogpost?'] = 'Are you sure you want to delete this post?';
-$string['description'] = 'description';
+$string['description'] = 'Description';
 $string['draft'] = 'Draft';
 $string['edit'] = 'Edit';
 $string['editblogpost'] = 'Edit Blog Post';
@@ -67,7 +67,7 @@ $string['newblogpost'] = 'New Blog Post';
 $string['nofilesattachedtothispost'] = 'No attached files';
 $string['noresults'] = 'No results';
 $string['postbody'] = 'Body';
-$string['postbodydesc'] = 'This is where your actual post goes.';
+$string['postbodydesc'] = ' ';
 $string['postedon'] = 'Posted on';
 $string['posttitle'] = 'Title';
 $string['posttitledesc'] = 'The title appears above your post.';

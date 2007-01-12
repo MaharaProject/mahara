@@ -26,7 +26,7 @@
 
 defined('INTERNAL') || die();
 
-$string['aboutdefaultcontent'] = '<p>Established in 2006, Mahara is the result of a collaborative venture funded by New Zealand\'s Ministry of Education\'s e-learning Collaborative Development Fund (eCDF), involving Massey University, Auckland University of Technology, The Open Polytechnic of New Zealand and Victoria University of Wellington.</p>
+$string['aboutdefaultcontent'] = '<p>Established in 2006, Mahara is the result of a collaborative venture funded by New Zealand\'s Tertiary Education Commission\'s e-learning Collaborative Development Fund (eCDF), involving Massey University, Auckland University of Technology, The Open Polytechnic of New Zealand and Victoria University of Wellington.</p>
 
 <p>Mahara is a fully featured electronic portfolio, weblog, resume builder and social networking system, connecting users and creating online communities. Mahara is designed to provide users with the tools to create a personal and professional learning and development environment.</p>
 
