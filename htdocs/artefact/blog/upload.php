@@ -40,17 +40,18 @@ $createid               = param_variable('createid');
 // javascript on the edit blog post page.
 
 safe_require('artefact', 'blog');
-$errormessage = ArtefactTypeBlogPost::save_attachment_temporary('userfile', session_id() . $createid,
-                                                                $result->uploadnumber);
+$attach = ArtefactTypeBlogPost::save_attachment_temporary('userfile', session_id() . $createid,
+                                                          $result->uploadnumber);
 
-if (!$errormessage) {
+if (!$attach->error) {
     $result->error = false;
+    $result->artefacttype = $attach->type;
     $result->message = get_string('uploadoffilecomplete', 'artefact.file', $result->title);
 }
 else {
     $result->error = 'local';
     $result->message = get_string('uploadoffilefailed', 'artefact.file', $result->title)
-        . ': ' . $errormessage;
+        . ': ' . $attach->error;
 }
 
 $r = json_encode($result);
