@@ -592,7 +592,13 @@ class ArtefactTypeBlogPost extends ArtefactType {
     public static function save_attachment_temporary($inputname, $dirname, $filename) {
         require_once('uploadmanager.php');
         $um = new upload_manager($inputname);
-        return $um->process_file_upload(self::$blogattachmentroot . $dirname, $filename);
+        $result = new StdClass;
+        $tempdir = self::$blogattachmentroot . $dirname;
+        $result->error = $um->process_file_upload($tempdir, $filename);
+        $tempfile = $tempdir . '/' . $filename;
+        safe_require('artefact', 'file');
+        $result->type = ArtefactTypeFile::detect_artefact_type($tempfile);
+        return $result;
     }
 
 

@@ -183,7 +183,7 @@ var attached = new TableRenderer(
     'attachedfiles',
     'attachedfiles.json.php',
     [
-     function (r) { return TD(null, IMG({'src':config.themeurl + r.artefacttype + '.gif'})); },
+     function (r) { return TD(null, IMG({'src':config.themeurl + 'images/' + r.artefacttype + '.gif'})); },
      'title',
      'description',
      function (r) { 
@@ -229,7 +229,8 @@ function attachtopost(data) {
     appendChildNodes(attached.tbody,
                      TR({'id':rowid},
                         map(partial(TD,null), 
-                            [IMG({'src':config.themeurl+'unknown.gif'}), data.title, data.description,
+                            [IMG({'src':config.themeurl+'images/'+data.artefacttype+'.gif'}), 
+                             data.title, data.description,
                              INPUT({'type':'button', 'class':'button',
                                     'value':{$getstring['remove']},
                                     'onclick':"removefrompost('"+rowid+"')"})])));
