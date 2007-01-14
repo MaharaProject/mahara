@@ -521,7 +521,7 @@ function get_dataroot_image_path($path, $id, $size) {
         log_debug('directory ' . $imagepath . ' is not a directory or is not readable');
         return false;
     }
-    $imagepath .= "/$id";
+    //$imagepath .= "/$id";
     log_debug('directory is ' . $imagepath);
 
     if ($size && !preg_match('/\d+x\d+/', $size)) {
@@ -530,7 +530,7 @@ function get_dataroot_image_path($path, $id, $size) {
     }
 
     // If the image is already available, return the path to it
-    $path = $imagepath . '/' . ($size ? "$size/" : '') . $id;
+    $path = $imagepath . '/' . ($size ? "$size/" : '') . ($id % 256) . "/$id";
     if (is_readable($path)) {
         log_debug('the image is available at ' . $path);
         return $path;
@@ -539,7 +539,8 @@ function get_dataroot_image_path($path, $id, $size) {
     if ($size) {
         // Image is not available in this size. If there is a base image for
         // it, we can make one however.
-        $originalimage = $imagepath . "/$id";
+        $originalimage = $imagepath . '/' . ($id % 256) . "/$id";
+        log_debug('original image = ' . $originalimage);
         if (is_readable($originalimage)) {
             log_debug('creating correct sized image');
 
@@ -580,8 +581,11 @@ function get_dataroot_image_path($path, $id, $size) {
             $newih = imagecreatetruecolor($newx, $newy);
             imagecopyresized($newih, $oldih, 0, 0, 0, 0, $newx, $newy, $oldx, $oldy);
             imageinterlace($newih);
-            $result = imagepng($newih, $path);
-            return $path;
+            $newpath = $imagepath . "/$size/" . ($id % 256);
+            check_dir_exists($newpath);
+            $newpath .= "/$id";
+            $result = imagepng($newih, $newpath);
+            return $newpath;
         }
     }
 
