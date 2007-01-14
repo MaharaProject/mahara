@@ -53,7 +53,7 @@ $CFG = (object)array_merge((array)$cfg, (array)$CFG);
 
 // Fix up paths in $CFG
 foreach (array('docroot', 'dataroot') as $path) {
-    $CFG->{$path} = (substr($CFG->{$path}, -1) != DIRECTORY_SEPARATOR) ? $CFG->{$path} . DIRECTORY_SEPARATOR : $CFG->{$path} . "/";
+    $CFG->{$path} = (substr($CFG->{$path}, -1) != DIRECTORY_SEPARATOR) ? $CFG->{$path} . DIRECTORY_SEPARATOR : $CFG->{$path};
 }
 
 // xmldb stuff
