@@ -69,7 +69,7 @@ function renderAccessListItem(item) {
     connect(removeButton, 'onclick', function() {
         removeElement(row);
     });
-    insertSiblingNodesAfter($('accesslistitems').lastChild, row);
+    appendChildNodes('accesslistitems', row);
     
     setupCalendar(item, 'start');
     setupCalendar(item, 'stop');
@@ -81,7 +81,7 @@ function makeCalendarInput(item, type) {
         'type':'text',
         'name': 'accesslist[' + count + '][' + type + 'date]',
         'id'  :  type + 'date_' + count,
-        'value': typeof(item[type + 'date']) != 'undefined' ? item[type + 'date'] : ''
+        'value': item[type + 'date'] ? item[type + 'date'] : ''
     });
 }
 
@@ -117,6 +117,10 @@ function setupCalendar(item, type) {
     //        stopSelected(calendar, date, $(item.id + '_startdate'), $(item.id + '_stopdate'));
     //    }
     //}
+    if (!$(type + 'date_' + count)) {
+        logWarn('Couldn\'t find element: ' + type + 'date_' + count);
+        return;
+    }
     Calendar.setup({
         "ifFormat"  :"%Y\/%m\/%d %H:%M",
         "daFormat"  :"%Y\/%m\/%d %H:%M",
@@ -167,12 +171,15 @@ function search(e) {
 
 
 // Right hand side
-var accesslist = {{$accesslist}};
-if (accesslist) {
-    forEach(accesslist, function(item) {
-        renderAccessListItem(item);
-    });
-}
+addLoadEvent(function () {
+    var accesslist = {{$accesslist}};
+    if (accesslist) {
+        forEach(accesslist, function(item) {
+            debugObject(item);
+            renderAccessListItem(item);
+        });
+    }
+});
 
 addLoadEvent(function() {
     // Populate the "potential access" things (public|loggedin|allfreidns)
