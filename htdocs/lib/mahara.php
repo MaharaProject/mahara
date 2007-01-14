@@ -768,6 +768,9 @@ class Plugin {
  */
 
 function format_date($date, $formatkey='strftimedatetime') {
+    if (empty($date)) {
+        return get_string('strftimenotspecified');
+    }
     return strftime(get_string($formatkey), $date);
 }
 

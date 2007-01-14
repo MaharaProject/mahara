@@ -57,6 +57,8 @@ $string['mainmenu'] = 'Main menu';
 $string['updatefailed'] = 'Update failed';
 $string['declinerequest'] = 'Decline request';
 
+$string['strftimenotspecified']  = 'Not specified';
+
 // auth
 $string['accessforbiddentoadminsection'] = 'You are forbidden from accessing the administration section';
 $string['accountdeleted'] = 'Sorry, your account has been deletd';
