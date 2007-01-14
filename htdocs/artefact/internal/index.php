@@ -129,6 +129,7 @@ function profileform_submit(Pieform $form, $values) {
     db_begin();
 
     $now = db_format_timestamp(time());
+    $email_errors = array();
 
     foreach ($element_list as $element => $type) {
 
@@ -148,17 +149,22 @@ function profileform_submit(Pieform $form, $values) {
                 $key = get_random_key();
                 $key_url = get_config('wwwroot') . 'artefact/internal/validate.php?email=' . rawurlencode($email) . '&key=' . $key;
 
-                email_user(
-                    (object)array(
-                        'firstname'     => $USER->get('firstname'),
-                        'lastname'      => $USER->get('lastname'),
-                        'preferredname' => $USER->get('preferredname'),
-                        'email'         => $email,
-                    ),
-                    null,
-                    get_string('emailvalidation_subject', 'artefact.internal'),
-                    get_string('emailvalidation_body', 'artefact.internal', $USER->get('firstname'), $email, $key_url)
-                );
+                try {
+                    email_user(
+                        (object)array(
+                            'firstname'     => $USER->get('firstname'),
+                            'lastname'      => $USER->get('lastname'),
+                            'preferredname' => $USER->get('preferredname'),
+                            'email'         => $email,
+                        ),
+                        null,
+                        get_string('emailvalidation_subject', 'artefact.internal'),
+                        get_string('emailvalidation_body', 'artefact.internal', $USER->get('firstname'), $email, $key_url)
+                    );
+                }
+                catch (EmailException $e) {
+                    $email_errors[] = $email;
+                }
 
                 insert_record(
                     'artefact_internal_profile_email',
@@ -251,6 +257,10 @@ function profileform_submit(Pieform $form, $values) {
     }
     catch (Exception $e) {
         $form->json_reply(PIEFORM_ERR, get_string('profilefailedsaved','artefact.internal'));
+    }
+
+    if (count($email_errors)) {
+        $form->json_reply(PIEFORM_ERR, array('message' => get_string('emailingfailed', 'artefact.internal', join(', ', $email_errors))));
     }
 
     $form->json_reply(PIEFORM_OK, get_string('profilesaved','artefact.internal'));
