@@ -35,6 +35,7 @@
           </tr></thead>
           <tbody><tr><td></td></tr></tbody>
         </table>
+        {$draftform}
         <div>
           <input type='button' class='button' value='{str tag=savepost section=artefact.blog}' onclick="saveblogpost()">
           <input type='button' class='button' value='{str tag=cancel}' onclick="canceledit()">

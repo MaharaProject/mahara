@@ -76,7 +76,7 @@ else {
  * and cancel buttons are in their own form at the bottom of the page,
  * with the file upload form appearing in between.
  */
-$form = pieform(array(
+$textinputform = pieform(array(
     'name' => 'editpost',
     'method' => 'post',
     'action' => '',
@@ -108,12 +108,6 @@ $form = pieform(array(
                 'required' => true
             ),
             'defaultvalue' => $description
-        ),
-        'thisisdraft' => array(
-            'type' => 'checkbox',
-            'title' => get_string('thisisdraft', 'artefact.blog'),
-            'description' => get_string('thisisdraftdesc', 'artefact.blog'),
-            'defaultvalue' => $checked
         ),
     )
 ));
@@ -261,7 +255,7 @@ function fileattached_id(id) {
 // Save the blog post.
 function saveblogpost() {
     var data = {'title' : $('editpost_title').value,
-                'draft' : $('editpost_thisisdraft').checked,
+                'draft' : $('draftpost_thisisdraft').checked,
                 'createid'  : {$createid},
                 'blog'  : {$blog},
                 'blogpost'  : {$blogpost}};
@@ -332,10 +326,28 @@ tinyMCE.init({
 </script>
 EOF;
 
+
+$draftform = pieform(array(
+    'name' => 'draftpost',
+    'method' => 'post',
+    'action' => '',
+    'elements' => array(
+        'thisisdraft' => array(
+            'type' => 'checkbox',
+            'title' => get_string('thisisdraft', 'artefact.blog'),
+            'description' => get_string('thisisdraftdesc', 'artefact.blog'),
+            'defaultvalue' => $checked
+        ),
+    )
+));
+
+
+
 $smarty = smarty(array('tablerenderer', 'artefact/file/js/file.js'), 
                  array(), array(), array('tinymceinit' => $tinymceinit));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
-$smarty->assign_by_ref('textinputform', $form);
+$smarty->assign_by_ref('textinputform', $textinputform);
+$smarty->assign_by_ref('draftform', $draftform);
 $smarty->assign('pagetitle', $pagetitle);
 $smarty->display('artefact:blog:editpost.tpl');
 
