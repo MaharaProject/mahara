@@ -172,9 +172,9 @@ addLoadEvent(function() {
     }
 
     forEach(getElementsByTagAndClassName('input', 'emptyonfocus'), function(elem) {
-        connect(elem, 'onfocus', function(e) { elem.value = ''; e.stop(); });
+        elem.emptyonfocusSignal = connect(elem, 'onfocus', function(e) { elem.value = ''; e.stop(); if (elem.emptyonfocusSignal) { disconnect(elem.emptyonfocusSignal); } if (elem.emptyonfocusSignalForm) { disconnect(elem.emptyonfocusSignalForm); }  });
         if (elem.form) {
-            connect(elem.form, 'onsubmit', function(e) { elem.value = ''; });
+            elem.emptyonfocusSignalForm = connect(elem.form, 'onsubmit', function(e) { elem.value = ''; if (elem.emptyonfocusSignal) { disconnect(elem.emptyonfocusSignal); } if (elem.emptyonfocusSignalForm) { disconnect(elem.emptyonfocusSignalForm); } });
         }
     });
 });
