@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * This program is part of Mahara
  *

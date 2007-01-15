@@ -281,6 +281,14 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         return get_config('dataroot') . self::get_file_directory($this->id) . '/' .  $this->id;
     }
 
+    public static function detect_artefact_type($file) {
+        require_once('file.php');
+        if (ArtefactTypeImage::is_image_mime_type(get_mime_type(get_config('dataroot') . $file))) {
+            return 'image';
+        }
+        return 'file';
+    }
+
     /**
      * Test file type and return a new Image or File.
      */
