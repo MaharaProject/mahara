@@ -229,13 +229,7 @@ class ArtefactTypeProfile extends ArtefactType {
         $public = self::get_public_fields();
         $alwaysmandatory = self::get_always_mandatory_fields();
         $form = array(
-            'name'       => 'profileprefs',
-            'method'     => 'post', 
-            'ajaxpost'   => true,
-            'plugintype' => 'artefact',
-            'pluginname' => 'internal',
             'renderer'   => 'multicolumntable',
-            'submitfunction' => 'save_config_options',
             'elements'   => array(
                 'mandatory' =>  array(
                     'title' => ' ', 
@@ -300,10 +294,6 @@ class ArtefactTypeProfile extends ArtefactType {
             )
         );
 
-        $form['elements']['submit'] = array(
-            'type' => 'submit',
-            'value' =>get_string('save')
-        );
         return $form;
     }
 
