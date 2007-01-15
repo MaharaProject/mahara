@@ -86,7 +86,7 @@
 
         swapDOM(
             div,
-            DIV({'class': 'validated'},
+            LABEL(null,
                 INPUT({'type': 'radio',  'name': '{{$name}}_selected', 'value': email}),
                 INPUT({'type': 'hidden', 'name': '{{$name}}_valid[]' , 'value': email}),
                 ' ' + email,
