@@ -52,7 +52,7 @@ defined('INTERNAL') || die();
  */
 
 //smarty(array('js/tablerenderer.js', 'artefact/file/js/filebrowser.js'))
-function &smarty($javascript = array(), $headers = array(), $pagestrings = array()) {
+function &smarty($javascript = array(), $headers = array(), $pagestrings = array(), $extraconfig = array()) {
     global $USER, $SESSION;
 
     require_once(get_config('libroot') . 'smarty/Smarty.class.php');
@@ -71,7 +71,10 @@ function &smarty($javascript = array(), $headers = array(), $pagestrings = array
     foreach ($checkarray as &$check) {
         if (($key = array_search('tinymce', $check)) !== false) {
             $javascript_array[] = $jsroot . 'tinymce/tiny_mce.js';
-            $headers[] = <<<EOF
+            if (isset($extraconfig['tinymceinit'])) {
+                $headers[] = $extraconfig['tinymceinit'];
+            } else {
+                $headers[] = <<<EOF
 <script type="text/javascript">
 tinyMCE.init({
     mode: "textareas",
@@ -89,6 +92,7 @@ tinyMCE.init({
 </script>
 
 EOF;
+            }
             unset($check[$key]);
             break;
         }

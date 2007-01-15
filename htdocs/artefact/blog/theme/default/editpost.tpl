@@ -12,6 +12,7 @@
 {include file="columnleftstart.tpl"}
         <h2>{str section="artefact.blog" tag=$pagetitle}</h2>
         {$textinputform}
+        <div id='insertimage'></div>
         <div id='uploader'></div>
         <table id='filebrowser' style='display: none;' class='tablerenderer'>
           <thead><tr>

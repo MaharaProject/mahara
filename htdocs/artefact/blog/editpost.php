@@ -296,11 +296,44 @@ function canceledit() {  // Uploaded files will deleted by cron cleanup.
      window.location = '{$wwwroot}artefact/blog/view/?id={$blog}';
 }
 
+
+// Override the image button on the tinyMCE editor:
+function blogpostExecCommandHandler(editor_id, elm, command, user_interface, value) {
+    var linkElm, imageElm, inst;
+    switch (command) {
+    case "mceImage":
+        //a = getSelectedImgAttributes(editor_id);
+        //alert('foo');
+        $('insertimage').innerHTML = "<p>You clicked the image button.</p>";
+        return true;
+    }
+    return false;
+}
+
+
 EOF;
 
+$tinymceinit = <<<EOF
+<script type="text/javascript">
+tinyMCE.init({
+    mode: "textareas",
+    editor_selector: 'wysiwyg',
+    button_tile_map: true,
+    theme: "advanced",
+    plugins: "table,emotions,iespell,inlinepopups",
+    theme_advanced_buttons1 : "bold,italic,underline,strikethrough,separator,forecolor,backcolor,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,hr,emotions,iespell,cleanup,separator,link,unlink,image",
+    theme_advanced_buttons2 : "tablecontrols,separator,cut,copy,paste",
+    theme_advanced_buttons3 : "fontselect,separator,fontsizeselect,separator,formatselect",
+    theme_advanced_toolbar_location : "top",
+    theme_advanced_toolbar_align : "center",
+    content_css : config.themeurl + 'style/tinymce.css',
+    execcommand_callback : "blogpostExecCommandHandler"
+});
+</script>
+EOF;
 
-
-$smarty = smarty(array('tablerenderer', 'artefact/file/js/file.js'));
+$smarty = smarty(array('tablerenderer', 'artefact/file/js/file.js'), 
+                 array(), array(), array('tinymceinit' => $tinymceinit));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign_by_ref('textinputform', $form);
 $smarty->assign('pagetitle', $pagetitle);
