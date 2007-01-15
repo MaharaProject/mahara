@@ -371,6 +371,7 @@ $string['View'] = 'View';
 $string['watchlistupdated'] = 'Your watchlist has been updated';
 
 // communities
+$string['createcommunity'] = 'Create Community';
 $string['communitymemberrequests'] = 'Pending membership requests';
 $string['addcommunity'] = 'Add new community';
 $string['sendinvitation'] = 'Send invite';

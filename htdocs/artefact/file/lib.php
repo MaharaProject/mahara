@@ -388,7 +388,23 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
     }
 
     public static function get_config_options() {
-        return array(); // @todo  
+        $defaultquota = get_config_plugin('artefact', 'file', 'defaultquota');
+        if (empty($defaultquota)) {
+            $defaultquota = 1024 * 1024 * 10;
+        }
+        return array(
+            'elements' => array(
+                'defaultquota' => array(
+                    'title'        => get_string('defaultquota', 'artefact.file'), 
+                    'type'         => 'bytes',
+                    'defaultvalue' => $defaultquota,
+                ),
+            ),
+        );
+    }
+
+    public static function save_config_options($values) {
+        set_config_plugin('artefact', 'file', 'defaultquota', $values['defaultquota']);
     }
 }
 

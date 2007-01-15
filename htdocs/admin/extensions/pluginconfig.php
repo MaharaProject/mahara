@@ -50,13 +50,10 @@ if (!call_static_method($classname, 'has_config')) {
 
 $form = call_static_method($classname, 'get_config_options');
 
-if (isset($form['submitfunction'])) {
-    $submitfunction = $form['submitfunction'];
-}
-if (isset($form['validatefunction'])) {
-    $validatefunction = $form['validatefunction'];
-}
-
+$form['plugintype'] = $plugintype;
+$form['pluginname'] = $pluginname;
+$form['name'] = 'pluginconfig';
+$form['pluginconfigform'] = true;
 $form['jsform'] = true;
 $form['successcallback'] = 'pluginconfig_submit';
 $form['validatecallback'] = 'pluginconfig_validate';
@@ -72,6 +69,10 @@ $form['elements']['type'] = array(
     'type' => 'hidden',
     'value' => $type
 );
+$form['elements']['save'] = array(
+    'type'  => 'submit',
+    'value' => get_string('save'),
+);
 
 $smarty = smarty();
 $smarty->assign('form', pieform($form));
@@ -83,18 +84,14 @@ $smarty->display('admin/extensions/pluginconfig.tpl');
 
 function pluginconfig_submit(Pieform $form, $values) {
     $success = false;
-    global $submitfunction, $plugintype, $pluginname, $classname;
-    if (!empty($submitfunction)) {
-        try {
-            call_static_method($classname, $submitfunction, $values);
-            $success = true;
-        }
-        catch (Exception $e) {
-            $success = false;
-        }
+    global $plugintype, $pluginname, $classname;
+
+    try {
+        call_static_method($classname, 'save_config_options', $values);
+        $success = true;
     }
-    else {
-        // call set_plugin_config and stuffs
+    catch (Exception $e) {
+        $success = false;
     }
 
     if ($success) {
@@ -106,9 +103,10 @@ function pluginconfig_submit(Pieform $form, $values) {
 }
 
 function pluginconfig_validate(PieForm $form, $values) {
-    global $validatefunction, $plugintype, $pluginname, $classname;
-    if (!empty($validatefunction)) {
-        call_static_method($classname, $validatefunction, $form, $values);
+    global $plugintype, $pluginname, $classname;
+
+    if (method_exists($classname, 'validate_config_options')) {
+        call_static_method($classname, 'validate_config_options', $form, $values);
     }
 }
 ?>
