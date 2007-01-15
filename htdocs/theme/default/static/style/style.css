@@ -756,7 +756,7 @@ p {
 .maincontent thead tr td,
 .maincontent tfoot tr td {
 	text-align: center;
-	background: #c7cdb3 url(../images/tablenavbg.gif) repeat-x;
+	background: #a6aa99 url(../images/tablenavbg.gif) repeat-x;
 	height: 15px;
 }
 .maincontent thead tr td a,
@@ -788,8 +788,7 @@ acronym {
 	vertical-align: super; 
 	text-decoration: none;
 }
-.description,
-.emptycontainer { 
+.description { 
 	font-size: 9px; 
 	color: #7e7e7e; 
 	padding-bottom: 5px;
@@ -981,6 +980,7 @@ table#installer {
 	margin: 1px;
 }
 
+
 /* My Files styles */
 #foldernav {
 	font-weight: bold;
@@ -1005,19 +1005,25 @@ table#installer {
 	margin: 1px;
 	border: none;
 }
+.maincontent #uploader #uploadform table th,
+.maincontent #uploader #uploadform table td,
+.maincontent #myfiles #createfolderform table th,
+.maincontent #myfiles #createfolderform table td,
+.maincontent #filelist table th,
+.maincontent #filelist table td {
+	padding: 2px 5px;
+}
 .maincontent #uploader #uploadform table {
 	background-color: #f4f8e7;
 	border: 0;
 }
-.maincontent #uploader #uploadform table th,
-.maincontent #uploader #uploadform table td,
-.maincontent #myfiles #createfolderform table th,
-.maincontent #myfiles #createfolderform table td {
-	padding: 5px 10px;
-}
 .maincontent #myfiles #createfolderform table {
 	background-color: #e3ecc2;
 	border: 0;
+}
+.maincontent #filelist table {
+	border: none;
+	background-color: #e3ecc2;
 }
 #uploadformmessage,
 #createfolderformmessage {
@@ -1029,14 +1035,6 @@ table#installer {
 #createfolderform input.text {
 	border: 1px solid #d4d1c0;
 	padding: 1px 2px 1px 2px;
-}
-.maincontent #filelist table {
-	border: none;
-	padding: 5px 10px;
-	background-color: #e3ecc2;
-}
-.maincontent #filelist table td {
-	padding: 0;
 }
 
 /* My Groups styles */
@@ -1057,8 +1055,14 @@ table#installer {
 	padding: 4px 43px 7px 43px;
 }
 .maincontent #creategroup #creategroup_description_header th,
-.maincontent #creategroup #creategroup_members_header th {
+.maincontent #creategroup #creategroup_members_header th,
+.maincontent #editgroup #editgroup_description_header th,
+.maincontent #editgroup #editgroup_members_header th {
 	padding: 15px 0 0 0;
+}
+.maincontent #creategroup #creategroup_members_container table,
+.maincontent #editgroup #editgroup_members_container table {
+	width: 495px;
 }
 .maincontent #creategroup table tr td table,
 .maincontent #editgroup table tr td table {
@@ -1071,7 +1075,8 @@ table#installer {
 	padding: 0 5px 5px 5px;
 	text-align: center;
 }
-.maincontent #editgroup table tr td table td label {
+.maincontent #creategroup table table label,
+.maincontent #editgroup table table label {
 	margin: 0 5px 0 0;
 }
 
@@ -1160,10 +1165,6 @@ table#installer {
 	padding: 5px;
 	margin: 0;
 }
-.maincontent #tree ul li {
-	line-height: 20px;
-	padding: 0;
-}
 .maincontent #tree ul {
 	font-size: 13px;
 	list-style: none;
@@ -1172,22 +1173,27 @@ table#installer {
 	color: #5c8727;
 	font-weight: bold;
 }
-.maincontent #tree p {
-	font-size: 11px;
-	font-weight: normal;
-	margin: 0 0 10px 20px; 
+.maincontent #tree ul li {
+	line-height: 20px;
+	padding: 0;
 }
 .maincontent #tree ul ul {
 	font-size: 11px;
 	font-weight: normal;
 	margin: 0 0 10px 20px;
 }
+.maincontent #tree p {
+	font-size: 11px;
+	font-weight: normal;
+	margin: 0 0 10px 20px; 
+}
 .maincontent #template {
 	margin: 0;
 	padding: 0 0 0 5px;
+	font-size: 11px;
 }
 .maincontent #template td {
-	vertical-align: top;
+	vertical-align: text-top;
 	padding: 0;
 }
 /* spacing for the little 'x' */
@@ -1201,47 +1207,35 @@ table#installer {
 .maincontent #template p {
 	padding: 0;
 	margin: 0;
+	font-size: 11px;
 }
 .maincontent #template ul {
 	margin: 0;
 }
 .maincontent #template ul li {
-	background: url(../images/icon_arrow_short.gif) no-repeat left;
-	padding: 0 0 0 10px;
+	padding: 2px;
 	list-style: none;
 }
 .maincontent #template .clickable {
 	color: #5c8727;
-	background: url(../images/icon_arrow_short.gif) no-repeat left;
-	padding: 0 0 0 10px;
+	background: url(../images/icon_arrow_short.gif) no-repeat left top;
+	padding: 0 0 0 12px;
 	margin: 0;
 	list-style: none;
-}
-/*.maincontent #template p,
-.maincontent #template span {
 	font-size: 11px;
-	font-style: italic;
-	color: #666666;
-	padding: 0;
-	margin: 0;
 }
-.maincontent #template #tpl_blog1 ul,
-.maincontent #template #tpl_blog2 ul {
-	color: #5c8727;
-}*/
-.maincontent #template em {
+.maincontent #template em.clickable {
 	font-size: 11px;
-	font-style: italic;
 	color: #5c8727;
-	display: inline;
+	font-style: normal;
 }
-#template .block {
+.maincontent #template .block {
 	background: #eef7d4;
-	padding: 5px;
+	padding: 3px;
 	margin: 0;
 }
 span.block, div.block {
-    border: 2px solid transparent;
+    border: none;
     background-color: #a7c07c;
 }
 span.block_potential, div.block_potential {
@@ -1250,7 +1244,6 @@ span.block_potential, div.block_potential {
 span.block_targetted, div.block_targetted {
     border: 2px solid #c2e167;
 }
-
 .moveselected {
 	background: #eef7d4 url(../images/icon_arrow.gif) no-repeat right; 
 	padding: 0 12px 0 0;
@@ -1258,17 +1251,27 @@ span.block_targetted, div.block_targetted {
 .clickable {
     cursor: pointer;
 }
-
+.empty_block {  
+	color: #7e7e7e; 
+	padding-bottom: 5px;
+}
+#template .block table {
+	background-color: #FFFFFF;
+	border: 1px solid #d4d1c0;
+}
+#template .block table tbody td {
+	padding: 2px 5px;
+}
 #template_selection #templates td {
 	padding: 5px;
 	vertical-align: top;
 }
+#template_selection #templates {
+	border: 1px solid #d4d1c0;
+}
 #template_selection #templates td h3, 
 #template_selection #templates td p {
 	margin: 0;
-}
-#template_selection #templates td {
-	border-bottom: 1px solid #d4d1c0;
 }
 #template_selection #templates button {
 	background: url(../images/btn_130px_off.gif) no-repeat;
@@ -1283,8 +1286,7 @@ span.block_targetted, div.block_targetted {
 #viewacl_lhs {
 	margin: 0 0 0 50px;
 	float: left;
-	border-right: 1px solid #9d9d9d;
-	padding: 5px;
+	padding: 5px 15px 5px 5px;
 }
 #viewacl_lhs #potentialpresetitems {
 	color: #5c8727;
@@ -1292,22 +1294,21 @@ span.block_targetted, div.block_targetted {
 	padding: 0 0 3px 0;
 	text-align: right;
 	width: 132px;
-	margin: 0 0 0 -51px;
+	margin: 0 0 0 -50px;
 }
-#editviewaccess #editviewaccess_accesslist_container,
+
 #createview4 #createview4_accesslist_container {
 	color: #5c8727;
 	font-weight: bold;
 	width: 750px;
 }
 #dosearch {
-	background: url(../images/btn_go.gif) no-repeat;
+	background: url(../images/btn_short_green.gif) no-repeat;
 	width: 33px;
 	height: 18px;
 	border: none;
 	color: #eef7d4;
 	font-size: 11px;
-	font-weight: bold;
 	margin: 0 0 0 2px;
 	padding: 0;
 }
@@ -1330,7 +1331,6 @@ span.block_targetted, div.block_targetted {
 	padding: 0;
 } 
 #accesslistitems {
-	float: right;
 	padding: 5px;
 }
 #accesslistitems div {
@@ -1340,11 +1340,11 @@ span.block_targetted, div.block_targetted {
 	margin: 0 0 5px 0;
 	line-height: 20px;
 	font-weight: normal;
-	font-size: 13px;
 	width: 230px;
 }
 #accesslistitems div div {
 	background: none;
+	width: 220px;
 }
 #potentialpresetitems button {
 	background: url(../images/btn_short_green.gif) no-repeat;
@@ -1363,7 +1363,7 @@ span.block_targetted, div.block_targetted {
 	height: 18px;
 	color: #eef7d4;
 	font-size: 9px;
-	margin: 2px 2px 2px 5px;
+	margin: 0 0 0 5px;
 	padding: 0;
 } 
 
@@ -1497,27 +1497,19 @@ span.block_targetted, div.block_targetted {
 /* Manage Users styles */
 .maincontent #staffusers table,
 .maincontent #adminusers table {
-	width: 450px;
+	width: 495px;
 }
 .maincontent #staffusers table td,
 .maincontent #adminusers table td {
 	padding: 0;
 	margin: 0;
-	align: center;
 }
 .maincontent #staffusers #staffusers_users_container table td,
 .maincontent #adminusers #adminusers_users_container table td {
 	margin: 0;
 	background-color: #f4f7e8;
-	align: center;
-	padding: 2px 5px;
-}
-.maincontent #staffusers #staffusers_users_container input.button {
-	background: url(../images/btn_short_green.gif) no-repeat;
-	width: 33px;
-	height: 18px;
-	padding: 0;
-	margin: 0 2px 0 0;
+	text-align: center;
+	padding: 3px 5px;
 }
 .maincontent #staffusers table td label,
 .maincontent #adminusers table td label {
@@ -1543,8 +1535,9 @@ span.block_targetted, div.block_targetted {
 	height: 18px;
 	color: #eef7d4;
 	font-size: 9px;
-	margin: 2px 2px 0px 5px;
+	margin: 0 3px 0 0;
 	padding: 0;
+	font-weight: normal;
 } 
 .maincontent #institution table {
 	padding: 5px 0 0 15px;
