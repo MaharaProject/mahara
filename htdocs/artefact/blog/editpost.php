@@ -217,10 +217,14 @@ attached.updateOnLoad();
 
 
 // Show/hide the 'no attachments' message if there are no/some attachments
-function checknoattachments() {
+function redrawAttachList() {
     if (attached.tbody.hasChildNodes()) {
         hideElement(attached.table.previousSibling);
         showElement(attached.table);
+        // Make sure row classes alternate 'r1', 'r0', 'r1', etc.
+        for (var i = 0; i < attached.tbody.childNodes.length; i++) {
+            setElementClass(attached.tbody.childNodes[i], 'r'+(i+1)%2);
+        }
     }
     else {
         showElement(attached.table.previousSibling);
@@ -249,14 +253,14 @@ function attachtopost(data) {
                              INPUT({'type':'button', 'class':'button',
                                     'value':{$getstring['remove']},
                                     'onclick':"removefrompost('"+rowid+"')"})])));
-    checknoattachments();
+    redrawAttachList();
 }
 
 
 // Remove a row from the attached files list.
 function removefrompost(rowid) {
     removeElement(rowid);
-    checknoattachments();
+    redrawAttachList();
 }
 
 
