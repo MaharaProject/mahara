@@ -3,7 +3,10 @@
 {include file="columnfullstart.tpl"}
 <h2>{str tag="administration" section=admin}</h2>
 
-<ul>
+<div id="adminhome">
+{if $upgrades}
+<p id="runupgrade"><a href="upgrade.php">Run upgrade</a></p>
+{/if}<ul>
     <li><h3>{str tag=configsite section=admin}</h3>
     <ul>
         <li><strong><a href="{$WWWROOT}admin/site/options.php">{str tag=siteoptions section=admin}</a></strong> - {str tag=siteoptionsdescription section=admin}</li>
@@ -28,11 +31,8 @@
         <li><strong><a href="{$WWWROOT}admin/extensions/templates.php">{str tag=templatesadmin section=admin}</a></strong> - {str tag=templatesadmindescription section=admin}</li>
     </ul>
     </li>
-</ul>
+</ul></div>
 
-{if $upgrades}
-<p><a href="upgrade.php">Run upgrade</a></p>
-{/if}
 
 {include file="columnfullend.tpl"}
 
