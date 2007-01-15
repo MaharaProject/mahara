@@ -3,6 +3,7 @@
 {include file="columnfullstart.tpl"}
 
 <h2>{str tag='pluginadmin' section='admin'}</h2>
+<div id="adminplugin">
 <ul class="adminpluginstypes">
 {foreach from=$plugins key='plugintype' item='plugins'}
     <li><h4>{str tag='plugintype'}: {$plugintype}</h4></li>
@@ -41,7 +42,7 @@
     </ul>
 {/foreach}
 </ul>
-
+</div>
 {include file="columnfullend.tpl"}
 
 {include file='footer.tpl'}

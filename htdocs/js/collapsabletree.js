@@ -60,7 +60,7 @@ function CollapsableTree(data, source) {
                         p.child = ul;
                     }
                     else {
-                        var oops = P(null, 'omgwtfnothinghere');
+                        var oops = P({'class': 'emptycontainer'}, get_string('nochildren'));
                         appendChildNodes(p, oops);
                         p.child = oops;
                     }

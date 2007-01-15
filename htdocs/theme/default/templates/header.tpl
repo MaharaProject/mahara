@@ -46,7 +46,7 @@
                 <div class="fr"><img src="{image_path imagelocation='images/header_corner_topright.gif'}" border="0" alt=""></div>		
 
                 <table cellspacing="0" class="searchbox fr">
-{if !$nosearch}
+{if !$nosearch && $LOGGEDIN}
                     <tr>
                         <td>{$searchform}</td>
                     </tr>

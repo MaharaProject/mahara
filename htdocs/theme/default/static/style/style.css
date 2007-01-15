@@ -1,3 +1,4 @@
+
 body {
 	margin: 0;
 	padding: 0 0 10px 0;
@@ -49,7 +50,7 @@ form {
    margin: 0;
 }
 
-input.text, input.password, textarea {
+input.text, input.password, textarea, input {
 	border: 1px solid #d4d1c0;
 	padding: 1px 2px 1px 2px;
 }
@@ -119,7 +120,7 @@ div.grippie {
 	border: 0;
 	width: 50px;
 	height: 24px;
-	color: #FFFFFF;
+	color: #eef7d4;
 	font-size: 11px;
 	font-weight: bold;
 	margin: 5px 2px 0 0;
@@ -129,12 +130,13 @@ div.grippie {
 /* medium submit buttons max width 100px */
 input.submitcancel,
 input.submit, 
-input.button {
+input.button,
+#createview4_submit {
 	background: url(../images/btn_medium_off.gif) no-repeat;
 	border: 0;
 	width: 100px;
 	height: 24px;
-	color: #FFFFFF;
+	color: #eef7d4;
 	font-size: 11px;
 	font-weight: bold;
 	margin: 5px 2px 0 0;
@@ -144,7 +146,6 @@ input.button {
 /* long submit buttons max width 200px */
 #buttons #buttons_unsuspend,
 #buttons #buttons_export,
-#buttons #buttons_delete,
 #uploadcsv_submit,
 #siteoptions_submit,
 #createnew,
@@ -155,7 +156,7 @@ input.button {
 	border: 0;
 	width: 200px;
 	height: 24px;
-	color: #FFFFFF;
+	color: #eef7d4;
 	font-size: 11px;
 	font-weight: bold;
 	margin: 5px 2px 0 0;
@@ -463,7 +464,7 @@ div.sidebar {
 	padding: 0;
 }
 #column-right #login_login_username_container {
-	margin-top: 25px;
+	padding-top: 25px;
 }
 #column-right #login_login_password_container {
 	margin: 5px 0;
@@ -518,7 +519,7 @@ div.sidebar {
 #column-right .sidebarforgotpassword a:active,
 #column-right .sidebarforgotpassword a:visited {
 	background: url(../images/icon_question.gif) no-repeat left;
-	padding-left: 17px;
+	padding-left: 20px;
 	color: #547c22;
 	text-decoration: none;
 	font-weight: bold;
@@ -532,7 +533,7 @@ div.sidebar {
 	border: 0;
 	width: 50px;
 	height: 24px;
-	color: #FFFFFF;
+	color: #eef7d4
 	font-size: 11px;
 	font-weight: bold;
 	margin: 0 2px 0 0;
@@ -695,9 +696,7 @@ p {
 .maincontent #search table,
 .maincontent #contactus table,
 .maincontent #loginbox table,
-.maincontent #results table,
 .maincontent #forgotpass table,
-.maincontent #adminnotifications table,
 .maincontent #institution table,
 .maincontent #profileprefs table,
 .maincontent #newblog table,
@@ -757,7 +756,7 @@ p {
 .maincontent thead tr td,
 .maincontent tfoot tr td {
 	text-align: center;
-	background: #c7cdb3 url(../images/tablenavbg.gif) repeat-x;
+	background: #a6aa99 url(../images/tablenavbg.gif) repeat-x;
 	height: 15px;
 }
 .maincontent thead tr td a,
@@ -825,10 +824,22 @@ table#installer {
 	padding: 0;
 }
 
+#view #publicfeedback {
+	margin: 10px 0 0 0;
+}
+#view #viewmenu {
+	margin: 10px 0 0 0;
+}
+
+
 /* Register styles */
 #register_tandc_container label {
 	font-weight: normal;
 }
+#register_tandc_container th {
+	vertical-align: text-top;
+}
+#register
 
 
 /* My Profile styles */
@@ -865,8 +876,9 @@ table#installer {
 	float: right;
 }
 #myblogs .addicon {
-	margin: 10px 0 5px 0;
+	margin: 5px 0 5px 0;
 	text-align: right;
+	padding: 5px 0;
 }
 #myblogs .newpost {
 	margin: 0px 0 5px 0;
@@ -874,7 +886,7 @@ table#installer {
 	float: right;
 }
 #myblogs .blogsettings {
-	margin: 10px 0 5px 0;
+	margin: 10px 0 10px 0;
 }
 #myblogs .addicon a,
 #myblogs .addicon a:link,
@@ -891,7 +903,7 @@ table#installer {
 	height: 24px;
 	color: #eef7d4;
 	font-weight: bold;
-	padding: 4px 23px 6px 47px;
+	padding: 5px 23px 4px 47px;
 }
 #myblogs .blogsettings a,
 #myblogs .blogsettings a:link,
@@ -917,7 +929,7 @@ table#installer {
 	border: 0;
 	width: 100px;
 	height: 24px;
-	color: #FFFFFF;
+	color: #eef7d4;
 	font-size: 11px;
 	font-weight: bold;
 	margin: 0;
@@ -955,6 +967,16 @@ table#installer {
 	width: 50px;
 	height: 18px;
 	padding: 0;
+	font-weight: normal;
+	margin: 1px;
+}
+#attachedfiles tbody input,
+#filebrowser tbody input {
+	background: url(../images/btn_short_short.gif) no-repeat;
+	width: 50px;
+	height: 18px;
+	padding: 0;
+	font-weight: normal;
 	margin: 1px;
 }
 
@@ -967,16 +989,15 @@ table#installer {
 	font-size: 15px;
 	background: url(../images/foldernav.gif) no-repeat;
 }
-.maincontent #myfiles #filelist tbody tr td,
+.maincontent #myfiles #filelist td,
 #uploader th {
 	vertical-align: top;
 }
-.maincontent #myfiles #filelist tbody tr td a,
-.maincontent #filebrowser tbody tr td a {
+.maincontent #myfiles #filelist td a,
+.maincontent #filebrowser td a {
 	font-weight: bold;
 }
-.maincontent #filebrowser input /*,
-.maincontent #myfiles #filelist input*/ {
+.maincontent #filebrowser input {
 	background: url(../images/btn_short_short.gif) no-repeat;
 	width: 50px;
 	height: 18px;
@@ -984,15 +1005,25 @@ table#installer {
 	margin: 1px;
 	border: none;
 }
-#uploader #uploadform table {
-	padding: 5px 10px;
+.maincontent #uploader #uploadform table th,
+.maincontent #uploader #uploadform table td,
+.maincontent #myfiles #createfolderform table th,
+.maincontent #myfiles #createfolderform table td,
+.maincontent #filelist table th,
+.maincontent #filelist table td {
+	padding: 2px 5px;
+}
+.maincontent #uploader #uploadform table {
 	background-color: #f4f8e7;
 	border: 0;
 }
 .maincontent #myfiles #createfolderform table {
-	padding: 5px 10px;
 	background-color: #e3ecc2;
 	border: 0;
+}
+.maincontent #filelist table {
+	border: none;
+	background-color: #e3ecc2;
 }
 #uploadformmessage,
 #createfolderformmessage {
@@ -1004,14 +1035,6 @@ table#installer {
 #createfolderform input.text {
 	border: 1px solid #d4d1c0;
 	padding: 1px 2px 1px 2px;
-}
-.maincontent #filelist table {
-	border: none;
-	padding: 5px 10px;
-	background-color: #e3ecc2;
-}
-.maincontent #filelist table td {
-	padding: 0;
 }
 
 /* My Groups styles */
@@ -1032,8 +1055,14 @@ table#installer {
 	padding: 4px 43px 7px 43px;
 }
 .maincontent #creategroup #creategroup_description_header th,
-.maincontent #creategroup #creategroup_members_header th {
+.maincontent #creategroup #creategroup_members_header th,
+.maincontent #editgroup #editgroup_description_header th,
+.maincontent #editgroup #editgroup_members_header th {
 	padding: 15px 0 0 0;
+}
+.maincontent #creategroup #creategroup_members_container table,
+.maincontent #editgroup #editgroup_members_container table {
+	width: 495px;
 }
 .maincontent #creategroup table tr td table,
 .maincontent #editgroup table tr td table {
@@ -1046,7 +1075,8 @@ table#installer {
 	padding: 0 5px 5px 5px;
 	text-align: center;
 }
-.maincontent #editgroup table tr td table td label {
+.maincontent #creategroup table table label,
+.maincontent #editgroup table table label {
 	margin: 0 5px 0 0;
 }
 
@@ -1094,7 +1124,7 @@ table#installer {
 	background: url(../images/btn_createview_medium.gif) no-repeat;
 	width: 90px;
 	height: 18px;
-	color: #568023;
+	color: #eef7d4;
 	margin: 3px 1px 3px 1px;
 	padding: 0;
 	font-weight: normal;
@@ -1103,7 +1133,8 @@ table#installer {
 }
 #viewlist tbody tr td {
 	padding: 1px 4px;
-	border: 1px solid #f2f5e7;
+	background: #f2f5e7;
+	vertical-align: text-top;
 }
 #viewlist tbody a,
 #viewlist tbody a:link,
@@ -1126,9 +1157,13 @@ table#installer {
 	margin: 0 0 15px 15px;
 }
 .maincontent #tree {
-	color: #3a5813;
+	color: #819f18;
 	font-size: 15px;
 	font-weight: bold;
+	border-right: 1px solid #9d9d9d;
+	overflow: auto;
+	padding: 5px;
+	margin: 0;
 }
 .maincontent #tree ul {
 	font-size: 13px;
@@ -1138,88 +1173,69 @@ table#installer {
 	color: #5c8727;
 	font-weight: bold;
 }
+.maincontent #tree ul li {
+	line-height: 20px;
+	padding: 0;
+}
+.maincontent #tree ul ul {
+	font-size: 11px;
+	font-weight: normal;
+	margin: 0 0 10px 20px;
+}
 .maincontent #tree p {
 	font-size: 11px;
 	font-weight: normal;
 	margin: 0 0 10px 20px; 
 }
-.maincontent #tree ul ul {
+.maincontent #template {
+	margin: 0;
+	padding: 0 0 0 5px;
 	font-size: 11px;
-	font-weight: normal;
-	margin: 0 0 10px 20px; 
-}
-.maincontent #tree ul ul ul {
-	margin: 0 0 10px 20px; 
-}
-.maincontent #tree a,
-.maincontent #tree a:link,
-.maincontent #tree a:active,
-.maincontent #tree a:visited,
-.maincontent #tree a:hover {
-	padding: 0;
-	margin: 2px 0 0 0;
 }
 .maincontent #template td {
-	vertical-align: top;
+	vertical-align: text-top;
 	padding: 0;
 }
 /* spacing for the little 'x' */
-.maincontent #template #tpl_blog1 ul li a,
-.maincontent #template #tpl_blog1 ul li a:link,
-.maincontent #template #tpl_blog1 ul li a:active,
-.maincontent #template #tpl_blog1 ul li a:visited,
-.maincontent #template #tpl_blog1 ul li a:hover,
-.maincontent #template #tpl_blog2 ul li a,
-.maincontent #template #tpl_blog2 ul li a:link,
-.maincontent #template #tpl_blog2 ul li a:active,
-.maincontent #template #tpl_blog2 ul li a:visited,
-.maincontent #template #tpl_blog2 ul li a:hover,
-.maincontent #template #tpl_profile ul li a,
-.maincontent #template #tpl_profile ul li a:link,
-.maincontent #template #tpl_profile ul li a:active,
-.maincontent #template #tpl_profile ul li a:visited,
-.maincontent #template #tpl_profile ul li a:hover {
+.maincontent #template ul li a,
+.maincontent #template ul li a:link,
+.maincontent #template ul li a:active,
+.maincontent #template ul li a:visited,
+.maincontent #template ul li a:hover {
 	padding: 0 0 0 5px;
 }
-.maincontent #template #tpl_blog1 p,
-.maincontent #template #tpl_blog1 span,
-.maincontent #template #tpl_blog2 p,
-.maincontent #template #tpl_blog2 span,
-.maincontent #template #tpl_profile p,
-.maincontent #template #tpl_profile span,
-.maincontent #template #tpl_files1 p,
-.maincontent #template #tpl_files1 span ,
-.maincontent #template #tpl_files2 p,
-.maincontent #template #tpl_files2 span,
-.maincontent #template #tpl_files3 p,
-.maincontent #template #tpl_files3 span {
-	font-size: 11px;
-	font-style: italic;
-	color: #666666;
+.maincontent #template p {
 	padding: 0;
 	margin: 0;
-}
-.maincontent #template #tpl_blog1 ul,
-.maincontent #template #tpl_blog2 ul {
-	color: #5c8727;
-}
-.maincontent #template #tpl_blogslabel em,
-.maincontent #template #tpl_profilelabel em,
-.maincontent #template #tpl_fileslabel1 em,
-.maincontent #template #tpl_fileslabel2 em,
-.maincontent #template #tpl_fileslabel3 em,
-.maincontent #template #tpl_freelabel em {
 	font-size: 11px;
-	font-style: italic;
-	color: #5c8727;
 }
-#template .block {
+.maincontent #template ul {
+	margin: 0;
+}
+.maincontent #template ul li {
+	padding: 2px;
+	list-style: none;
+}
+.maincontent #template .clickable {
+	color: #5c8727;
+	background: url(../images/icon_arrow_short.gif) no-repeat left top;
+	padding: 0 0 0 12px;
+	margin: 0;
+	list-style: none;
+	font-size: 11px;
+}
+.maincontent #template em.clickable {
+	font-size: 11px;
+	color: #5c8727;
+	font-style: normal;
+}
+.maincontent #template .block {
 	background: #eef7d4;
-	padding: 5px;
+	padding: 3px;
 	margin: 0;
 }
 span.block, div.block {
-    border: 2px solid transparent;
+    border: none;
     background-color: #a7c07c;
 }
 span.block_potential, div.block_potential {
@@ -1230,22 +1246,32 @@ span.block_targetted, div.block_targetted {
 }
 .moveselected {
 	background: #eef7d4 url(../images/icon_arrow.gif) no-repeat right; 
-	padding: 0 20px 0 2px;
+	padding: 0 12px 0 0;
 }
 .clickable {
     cursor: pointer;
 }
-
+.empty_block {  
+	color: #7e7e7e; 
+	padding-bottom: 5px;
+}
+#template .block table {
+	background-color: #FFFFFF;
+	border: 1px solid #d4d1c0;
+}
+#template .block table tbody td {
+	padding: 2px 5px;
+}
 #template_selection #templates td {
 	padding: 5px;
 	vertical-align: top;
 }
+#template_selection #templates {
+	border: 1px solid #d4d1c0;
+}
 #template_selection #templates td h3, 
 #template_selection #templates td p {
 	margin: 0;
-}
-#template_selection #templates td {
-	border-bottom: 1px solid #d4d1c0;
 }
 #template_selection #templates button {
 	background: url(../images/btn_130px_off.gif) no-repeat;
@@ -1258,30 +1284,32 @@ span.block_targetted, div.block_targetted {
 }
 
 #viewacl_lhs {
-	margin: 0 53px 0 53px;
+	margin: 0 0 0 50px;
+	float: left;
+	padding: 5px 15px 5px 5px;
 }
 #viewacl_lhs #potentialpresetitems {
 	color: #5c8727;
 	font-weight: bold;
 	padding: 0 0 3px 0;
 	text-align: right;
-	width: 160px;
-	margin: 0 0 0 -53px;
+	width: 132px;
+	margin: 0 0 0 -50px;
 }
-#editviewaccess #editviewaccess_accesslist_container,
+
 #createview4 #createview4_accesslist_container {
 	color: #5c8727;
 	font-weight: bold;
+	width: 750px;
 }
 #dosearch {
-	background: url(../images/btn_go.gif) no-repeat;
+	background: url(../images/btn_short_green.gif) no-repeat;
 	width: 33px;
 	height: 18px;
 	border: none;
-	color: #FFFFFF;
+	color: #eef7d4;
 	font-size: 11px;
-	font-weight: bold;
-	margin: 0;
+	margin: 0 0 0 2px;
 	padding: 0;
 }
 #editviewaccess #results,
@@ -1290,50 +1318,54 @@ span.block_targetted, div.block_targetted {
 	margin: 3px 0 15px 0;
 	font-weight: normal;
 	color: #000000;
+	width: 405px;
 }
 #results button {
 	background: url(../images/btn_short_green.gif) no-repeat;
 	border: 0;
 	width: 33px;
 	height: 18px;
-	color: #FFFFFF;
+	color: #eef7d4;
 	font-size: 9px;
 	margin: 0 0 0 5px;
 	padding: 0;
 } 
 #accesslistitems {
+	padding: 5px;
+}
+#accesslistitems div {
 	background-color: #e5e8da;
-	padding: 5px 7px;
+	padding: 5px 7px 1px 7px;
 	color: #000000;
-	margin: 0 0 10px 0px;
+	margin: 0 0 5px 0;
 	line-height: 20px;
 	font-weight: normal;
-	font-size: 13px;
+	width: 230px;
 }
-#potentialpresetitems button,
-#accesslistitems button {
-	background: url(../images/btn_createview.gif) no-repeat;
+#accesslistitems div div {
+	background: none;
+	width: 220px;
+}
+#potentialpresetitems button {
+	background: url(../images/btn_short_green.gif) no-repeat;
 	border: 0;
-	width: 60px;
+	width: 33px;
 	height: 18px;
-	color: #FFFFFF;
+	color: #eef7d4;
 	font-size: 9px;
 	margin: 2px 2px 2px 5px;
 	padding: 0;
 } 
-#accesslistitems div {
-	margin: 0 0 5px 0;
-}
-#editviewaccess_submit_container #editviewaccess_submit {
-	background: url(../images/btn_long_off.gif) no-repeat;
+#accesslistitems button {
+	background: url(../images/btn_short_short.gif) no-repeat;
 	border: 0;
-	width: 200px;
-	height: 24px;
-	color: #FFFFFF;
+	width: 50px;
+	height: 18px;
+	color: #eef7d4;
 	font-size: 9px;
-	margin: 0;
+	margin: 0 0 0 5px;
 	padding: 0;
-}
+} 
 
 /* My Account styles */
 .maincontent #accountprefs #accountprefs_friendscontrol_container label,
@@ -1341,6 +1373,16 @@ span.block_targetted, div.block_targetted {
 .maincontent #accountprefs #accountprefs_messages_container label {
 	font-weight: normal;
 	color: #000000;
+}
+.maincontent #accountprefs #accountprefs_friendscontrol_container .contextualHelp {
+	padding: 0 3px;
+	margin: 0;
+	vertical-align: bottom;
+}
+.maincontent #accountprefs #accountprefs_friendscontrol_container .contextualHelp p {
+	padding: 3px;
+	margin: 0;
+	background-color: #f4f7e8;
 }
 .maincontent #accountprefs #accountprefs_submit_container td {
 	padding: 10px 0 0 0;
@@ -1382,6 +1424,30 @@ span.block_targetted, div.block_targetted {
 }
 
 
+/* Administration Home styles */
+#adminhome ul {
+	margin: 0;
+	list-style: none;
+}
+#adminhome ul ul li {
+	background: url(../images/icon_arrow.gif) no-repeat left;
+	padding: 0 0 0 25px;
+}
+#runupgrade {
+	align: right;
+	padding: 10px;
+	background-color: #f4f7e8;
+	border: 1px solid #e5e8da;
+}
+#runupgrade a {
+	color: #eef7d4;
+	font-weight: bold;
+	background: url(../images/btn_upgrade.gif) no-repeat;
+	width: 130px;
+	height: 24px;
+	padding: 4px 24px 7px 30px;
+}
+
 /* Configure Site styles */
 .maincontent #siteoptions table td {
 	width: 200px;
@@ -1406,39 +1472,76 @@ span.block_targetted, div.block_targetted {
 	background-color: #e5e8da;
 	padding: 3px;
 }
-
+#menuitemlist td input.button {
+	background: url(../images/btn_short_short.gif) no-repeat;
+	width: 50px;
+	height: 18px;
+	padding: 0;
+	margin: 1px;
+}
+#filelist tbody input.button {
+	background: url(../images/btn_short_short.gif) no-repeat;
+	width: 50px;
+	height: 18px;
+	padding: 0;
+	margin: 1px;
+}
+#filelist tbody tbody input.button {
+	background: url(../images/btn_createview_medium.gif) no-repeat;
+	width: 90px;
+	height: 18px;
+	padding: 0;
+	margin: 0 2px 0 0;
+}
 
 /* Manage Users styles */
 .maincontent #staffusers table,
 .maincontent #adminusers table {
-	width: 400px;
-	margin: 0 0 0 15px;
+	width: 495px;
+}
+.maincontent #staffusers table td,
+.maincontent #adminusers table td {
+	padding: 0;
+	margin: 0;
+}
+.maincontent #staffusers #staffusers_users_container table td,
+.maincontent #adminusers #adminusers_users_container table td {
+	margin: 0;
+	background-color: #f4f7e8;
+	text-align: center;
+	padding: 3px 5px;
+}
+.maincontent #staffusers table td label,
+.maincontent #adminusers table td label {
+	margin: 0 3px 0 0;
+}
+#adminnotifications table {
+	padding: 2px;
 }
 #adminnotifications .header {
 	font-weight: bold;
 	color: #3a5813;
 	background: #e5e8da;
-	margin: 0;
-	padding: 2px 4px 2px 4px;
 }
-#adminnotifications table td,
-#adminnotifications table th {
-	padding: 5px;
+#adminnotifications th {
+	padding: 0 0 0 5px;
 }
+
 #admininstitution_edit,
 #admininstitution_delete {
-	background: url(../images/btn_createview.gif) no-repeat;
+	background: url(../images/btn_short_short.gif) no-repeat;
 	border: 0;
-	width: 60px;
+	width: 50px;
 	height: 18px;
-	color: #FFFFFF;
+	color: #eef7d4;
 	font-size: 9px;
-	margin: 2px 2px 0px 5px;
+	margin: 0 3px 0 0;
 	padding: 0;
+	font-weight: normal;
 } 
 .maincontent #institution table {
 	padding: 5px 0 0 15px;
-	width: 410px;
+	width: 450px;
 }
 .maincontent #institution table td.description {
 	padding: 0 0 10px 0;
@@ -1473,6 +1576,16 @@ span.block_targetted, div.block_targetted {
 	margin: 0 0 0 15px;
 }
 
+.maincontent #searchform input.button {
+	background: url(../images/btn_short_green.gif) no-repeat;
+	border: 0;
+	width: 33px;
+	height: 18px;
+	color: #eef7d4;
+	font-size: 9px;
+	margin: 2px 2px 0px 5px;
+	padding: 0;
+}
 
 
 /* Administer Extensions styles */
@@ -1499,7 +1612,7 @@ span.block_targetted, div.block_targetted {
 }
 .maincontent #admintemplates #admintemplates_install {
 	border: 0;
-	color: #ffffff;
+	color: #eef7d4;
 	font-weight: bold;
 	font-size: 11px;
 	background: url(../images/btn_install.gif) no-repeat;
@@ -1507,7 +1620,6 @@ span.block_targetted, div.block_targetted {
 	height: 18px;
 	padding: 2px 14px 2px 14px;
 }
-
 
 #loading_box {
 	display: none; 

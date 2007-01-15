@@ -121,7 +121,7 @@ function forgotpass_validate(Pieform $form, $values) {
     }
 }
 
-function forgotpass_submit($values) {
+function forgotpass_submit(Pieform $form, $values) {
     global $SESSION;
 
     try {
@@ -167,7 +167,7 @@ function forgotpasschange_validate(Pieform $form, $values) {
 //   password_validate to maharalib, use it in places specified, test with a drop/create run
 //   support autofocus => (true|'id'), remove stuff doing autofocus from where it is, focus error fields
 //   commit stuff
-function forgotpasschange_submit($values) {
+function forgotpasschange_submit(Pieform $form, $values) {
     global $SESSION, $USER;
 
     if (!$user = get_record('usr', 'id', $values['user'])) {

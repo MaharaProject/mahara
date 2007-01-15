@@ -1,8 +1,8 @@
 <div class="sidebar">
 {str tag="mainmenu"}
-{if $site_menu}
+{if $SITEMENU}
     <ul id="sitemenu">
-{foreach from=$site_menu item=item}
+{foreach from=$SITEMENU item=item}
     	<li class="{cycle values=r0,r1}"><a href="{$item.link|escape}">{$item.name}</a></li>
 {/foreach}
     </ul>

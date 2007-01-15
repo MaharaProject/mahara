@@ -72,6 +72,10 @@
                 <FIELD NAME="studentid" TYPE="text" NOTNULL="false"/>
                 <FIELD NAME="preferredname" TYPE="text" NOTNULL="false"/>
                 <FIELD NAME="email" TYPE="text" NOTNULL="false"/>
+                <!-- This field should be foreign keyed to the artefact table, however the
+                artefact table already has a key to this table, and XMLDB isn't smart enough
+                to create the tables first, then the keys. -->
+                <FIELD NAME="profileicon" TYPE="int" LENGTH="10" NOTNULL="false"/>
                 <FIELD NAME="suspendedctime" TYPE="datetime" NOTNULL="false"/>
                 <FIELD NAME="suspendedreason" TYPE="text" NOTNULL="false"/>
                 <FIELD NAME="suspendedcusr" TYPE="int" LENGTH="10" NOTNULL="false"/>

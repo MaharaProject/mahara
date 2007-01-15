@@ -81,9 +81,9 @@ tinyMCE.init({
     editor_selector: 'wysiwyg',
     button_tile_map: true,
     theme: "advanced",
-    plugins: "table,emotions,iespell,inlinepopups",
-    theme_advanced_buttons1 : "bold,italic,underline,strikethrough,separator,forecolor,backcolor,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,hr,emotions,iespell,cleanup,separator,link,unlink",
-    theme_advanced_buttons2 : "tablecontrols,separator,cut,copy,paste",
+    plugins: "table,emotions,iespell,inlinepopups,paste",
+    theme_advanced_buttons1 : "bold,italic,underline,strikethrough,separator,forecolor,backcolor,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,hr,emotions,iespell,cleanup,separator,link,unlink,separator,code",
+    theme_advanced_buttons2 : "tablecontrols,separator,cut,copy,paste,pasteword",
     theme_advanced_buttons3 : "fontselect,separator,fontsizeselect,separator,formatselect",
     theme_advanced_toolbar_location : "top",
     theme_advanced_toolbar_align : "center",
@@ -174,6 +174,9 @@ EOF;
     $smarty->compile_dir  = get_config('dataroot').'smarty/compile';
     $smarty->cache_dir    = get_config('dataroot').'smarty/cache';
 
+    if (get_config('installed')) {
+        $smarty->assign('SITEMENU', site_menu());
+    }
     $smarty->assign('THEMEURL', get_config('themeurl'));
     $smarty->assign('WWWROOT', $wwwroot);
 
@@ -234,7 +237,12 @@ function jsstrings() {
                 'prevpage',
                 'lastpage',
             )
-        )
+        ),
+        'collapsabletree' => array(
+            'view' => array(
+                'nochildren',
+            ),
+        ),
     );
 }
 

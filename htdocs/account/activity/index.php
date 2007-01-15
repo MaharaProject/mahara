@@ -137,7 +137,6 @@ function showHideMessage(id) {
 JAVASCRIPT;
 
 $smarty = smarty(array('tablerenderer'));
-$smarty->assign('site_menu', site_menu());
 $smarty->assign('selectall', 'toggleChecked(\'tocheck\'); return false;');
 $smarty->assign('markread', 'markread(this); return false;');
 $smarty->assign('typechange', 'activitylist.doupdate({\'type\':this.options[this.selectedIndex].value});');

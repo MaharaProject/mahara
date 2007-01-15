@@ -371,6 +371,7 @@ $string['View'] = 'View';
 $string['watchlistupdated'] = 'Your watchlist has been updated';
 
 // communities
+$string['createcommunity'] = 'Create Community';
 $string['communitymemberrequests'] = 'Pending membership requests';
 $string['addcommunity'] = 'Add new community';
 $string['sendinvitation'] = 'Send invite';
@@ -389,7 +390,7 @@ $string['communityname'] = 'Community Name';
 $string['invalidcommunity'] = 'The community doesn\'t exist';
 $string['communitydescription'] = 'Community Description';
 $string['membershiptype'] = 'Community Memberhsip Type';
-$string['membershiptype.controlled'] = 'Controlled Memberhsip';
+$string['membershiptype.controlled'] = 'Controlled Membership';
 $string['membershiptype.invite']     = 'Invite Only';
 $string['membershiptype.request']    = 'Request Membership';
 $string['membershiptype.open']       = 'Open Membership';

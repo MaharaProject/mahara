@@ -5,17 +5,7 @@
     addLoadEvent(function() {
         connect('{{$name}}_list', 'onkeypress', function (k) {
             if (k.key().code == 13 && {{$name}}_newref) {
-                removeElement({{$name}}_newrefinput);
-                removeElement({{$name}}_newref);
-                appendChildNodes('{{$name}}_list', DIV({'class': 'unvalidated'},
-                    INPUT({'type': 'hidden', 'name': '{{$name}}_invalid[]'       , 'value': {{$name}}_newrefinput.value}),
-                    ' ',
-                    {{$name}}_newrefinput.value,
-                    A({'href': '', 'onclick': '{{$name}}_remove(this); return false'}, '[x]'),
-                    ' a validation email will be sent when you save your profile'
-                ));
-                {{$name}}_newrefinput = null;
-                {{$name}}_newref = null;
+                {{$name}}_addedemail();
                 k.stop();
             }
 
@@ -30,6 +20,23 @@
         });
     });
 
+    function {{$name}}_addedemail() {
+        removeElement({{$name}}_newrefinput);
+        removeElement({{$name}}_newref);
+        var newEmail = {{$name}}_newrefinput.value;
+        if (typeof(newEmail) == 'string' && newEmail.length > 0) {
+            appendChildNodes('{{$name}}_list', DIV({'class': 'unvalidated'},
+                INPUT({'type': 'hidden', 'name': '{{$name}}_invalid[]'       , 'value': {{$name}}_newrefinput.value}),
+                ' ',
+                {{$name}}_newrefinput.value,
+                A({'href': '', 'onclick': '{{$name}}_remove(this); return false'}, '[x]'),
+                ' a validation email will be sent when you save your profile'
+            ));
+        }
+        {{$name}}_newrefinput = null;
+        {{$name}}_newref = null;
+    }
+
     function {{$name}}_new() {
         if ( {{$name}}_newref ) {
             return false;
@@ -43,17 +50,7 @@
         {{$name}}_newrefinput.focus();
 
         connect({{$name}}_newrefinput, 'onblur', function(k) {
-            removeElement({{$name}}_newrefinput);
-            removeElement({{$name}}_newref);
-            appendChildNodes('{{$name}}_list', DIV({'class': 'unvalidated'},
-                INPUT({'type': 'hidden', 'name': '{{$name}}_invalid[]'       , 'value': {{$name}}_newrefinput.value}),
-                ' ',
-                {{$name}}_newrefinput.value,
-                A({'href': '', 'onclick': '{{$name}}_remove(this); return false'}, '[x]'),
-                ' a validation email will be sent when you save your profile'
-            ));
-            {{$name}}_newrefinput = null;
-            {{$name}}_newref = null;
+            {{$name}}_addedemail();
             k.stop();
         });
     }
@@ -89,7 +86,7 @@
 
         swapDOM(
             div,
-            DIV({'class': 'validated'},
+            LABEL(null,
                 INPUT({'type': 'radio',  'name': '{{$name}}_selected', 'value': email}),
                 INPUT({'type': 'hidden', 'name': '{{$name}}_valid[]' , 'value': email}),
                 ' ' + email,

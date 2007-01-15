@@ -31,7 +31,6 @@ require('init.php');
 
 $smarty = smarty();
 $smarty->assign('page_content', get_site_page_content('termsandconditions'));
-$smarty->assign('site_menu', site_menu());
 $smarty->assign('searchform', searchform());
 $smarty->display('sitepage.tpl');
 

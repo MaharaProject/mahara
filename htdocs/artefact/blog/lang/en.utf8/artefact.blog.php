@@ -26,6 +26,7 @@
 
 defined('INTERNAL') || die();
 
+$string['blog'] = 'Blog';
 $string['addblog'] = 'Add Blog';
 $string['addpost'] = 'Add Post';
 $string['alignment'] = 'Alignment';
@@ -95,6 +96,7 @@ $string['title'] = 'Title';
 $string['verticalspace'] = 'Vertical space';
 $string['viewblog'] = 'View Blog';
 $string['youarenottheownerofthisblogpost'] = 'You are not the owner of this blog post';
+$string['cannotdeleteblogpost'] = 'An error occured removing this blog post.';
 
 $string['baseline'] = 'Baseline';
 $string['top'] = 'Top';

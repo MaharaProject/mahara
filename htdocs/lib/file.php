@@ -488,23 +488,37 @@ function byteserving_send_file($filename, $mimetype, $ranges) {
 }
 
 
+/**
+ * Given a file path, retrieves the mime type of the file.
+ *
+ * This is only implemented for non-windows based operating systems. Mahara
+ * does not support windows at this time.
+ *
+ * @param string $file The file to check
+ * @return string      The mimetype of the file
+ */
 function get_mime_type($file) {
     switch (strtolower(PHP_OS)) {
-    case 'win' :
-        throw new SystemException('retrieving filetype not supported in windows');
-    default : 
-        list($output,) = split(';', exec(get_config('pathtofile') . ' -ib ' . escapeshellarg($file)));
-    }
+        case 'win' :
+            throw new SystemException('retrieving filetype not supported in windows');
+        default : 
+            list($output,) = split(';', exec(get_config('pathtofile') . ' -ib ' . escapeshellarg($file)));
+        }
     return $output;
-
 }
 
-
-
+/**
+ * Given a mimetype (perhaps returned by {@link get_mime_type}, returns whether
+ * Mahara thinks it is a valid image file.
+ *
+ * Not all image types are valid for Mahara. Mahara supports JPEG, PNG and GIF.
+ *
+ * @param string $type The mimetype to check
+ * @return boolean     Whether the type is a valid image type for Mahara
+ */
 function is_image_mime_type($type) {
     return in_array($type, array('image/jpeg', 'image/jpg', 'image/gif', 'image/png'));
 }
-
 
 /**
  * Given a path under dataroot, an ID and a size, return the path to a file
@@ -518,21 +532,17 @@ function get_dataroot_image_path($path, $id, $size) {
     $imagepath = $dataroot . $path;
 
     if (!is_dir($imagepath) || !is_readable($imagepath)) {
-        log_debug('directory ' . $imagepath . ' is not a directory or is not readable');
         return false;
     }
     //$imagepath .= "/$id";
-    log_debug('directory is ' . $imagepath);
 
     if ($size && !preg_match('/\d+x\d+/', $size)) {
-        log_debug('whoopsie with the size ' . $size);
         throw new UserException('Invalid size for image specified');
     }
 
     // If the image is already available, return the path to it
     $path = $imagepath . '/' . ($size ? "$size/" : '') . ($id % 256) . "/$id";
     if (is_readable($path)) {
-        log_debug('the image is available at ' . $path);
         return $path;
     }
 
@@ -540,14 +550,13 @@ function get_dataroot_image_path($path, $id, $size) {
         // Image is not available in this size. If there is a base image for
         // it, we can make one however.
         $originalimage = $imagepath . '/' . ($id % 256) . "/$id";
-        log_debug('original image = ' . $originalimage);
         if (is_readable($originalimage)) {
-            log_debug('creating correct sized image');
 
             list($width, $height) = explode('x', $size);
 
             switch (get_mime_type($originalimage)) {
                 case 'image/jpeg':
+                case 'image/jpg':
                     $oldih = imagecreatefromjpeg($originalimage);
                     break;
                 case 'image/png':
@@ -557,10 +566,8 @@ function get_dataroot_image_path($path, $id, $size) {
                     $oldih = imagecreatefromgif($originalimage);
                     break;
                 default:
-                    log_debug('file is NOT of valid type');
                     return false;
             }
-            log_debug('file is of valid type');
 
             if (!$oldih) {
                 return false;
@@ -590,8 +597,51 @@ function get_dataroot_image_path($path, $id, $size) {
     }
 
     // Image not available in any size
-    log_debug('image is not available in any size');
     return false;
+}
+
+/**
+ * Deletes an image, including all resized versions of it, from dataroot.
+ *
+ * This function does not delete anything from anywhere else - it is your
+ * responsibility to delete any database records.
+ *
+ * @param string $path The path in dataroot of the base directory where the
+ *                     image resides.
+ * @param int $id      The id of the image to delete.
+ * @return boolean     Whether the image was deleted successfully.
+ */
+function delete_image($path, $id) {
+    // Check that the image exists.
+    $dataroot = get_config('dataroot');
+    $imagepath = $dataroot . $path;
+
+    if (!is_dir($imagepath) || !is_readable($imagepath)) {
+        return false;
+    }
+
+    $originalimage = $imagepath . '/' . ($id % 256) . "/$id";
+    if (!is_readable($originalimage)) {
+        return false;
+    }
+
+    unlink($originalimage);
+
+    // Check the size subdirectories
+    $dh = opendir($imagepath);
+    while (false !== ($file = readdir($dh))) {
+        $path = $imagepath . '/' . $file;
+        if (!preg_match('/\d+x\d+/', $file) || !is_dir($path)) {
+            continue;
+        }
+
+        $image = $path . '/' . ($id % 256) . '/' . $id;
+        if (is_readable($image)) {
+            unlink($image);
+        }
+    }
+
+    return true;
 }
 
 ?>
