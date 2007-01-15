@@ -124,11 +124,30 @@ $getstring = quotestrings(array(
         'myfiles',
     ),
     'artefact.blog' => array(
+        'baseline',
+        'top',
+        'middle',
+        'bottom',
+        'texttop',
+        'absolutemiddle',
+        'absolutebottom',
+        'left',
+        'right',
+        'alignment',
         'attach',
         'blogpost',
+        'border',
         'browsemyfiles',
+        'cancel',
+        'dimensions',
+        'horizontalspace',
+        'insert',
+        'insertimage',
+        'name',
         'nofilesattachedtothispost',
         'remove',
+        'verticalspace',
+        'noimageshavebeenattachedtothispost',
     )));
 
 
@@ -177,7 +196,8 @@ var attached = new TableRenderer(
     'attachedfiles',
     'attachedfiles.json.php',
     [
-     function (r) { return TD(null, IMG({'src':config.themeurl + 'images/' + r.artefacttype + '.gif'})); },
+     function (r) { return TD(null, IMG({'src':config.themeurl + 'images/' + r.artefacttype + '.gif',
+                                         'alt':r.artefacttype})); },
      'title',
      'description',
      function (r) { 
@@ -223,7 +243,8 @@ function attachtopost(data) {
     appendChildNodes(attached.tbody,
                      TR({'id':rowid},
                         map(partial(TD,null), 
-                            [IMG({'src':config.themeurl+'images/'+data.artefacttype+'.gif'}), 
+                            [IMG({'src':config.themeurl+'images/'+data.artefacttype+'.gif',
+                                  'alt':data.artefacttype}), 
                              data.title, data.description,
                              INPUT({'type':'button', 'class':'button',
                                     'value':{$getstring['remove']},
@@ -280,6 +301,7 @@ function saveblogpost() {
     if (typeof(tinyMCE) != 'undefined') { 
         tinyMCE.triggerSave();
     }
+
     data.body = $('editpost_description').value;
     sendjsonrequest('saveblogpost.json.php', data,
                     function () { window.location = '{$wwwroot}artefact/blog/view/?id={$blog}';});
@@ -291,14 +313,245 @@ function canceledit() {  // Uploaded files will deleted by cron cleanup.
 }
 
 
-// Override the image button on the tinyMCE editor:
+
+
+// Override the image button on the tinyMCE editor.  Rather than the
+// normal image popup, open up a form below the blogpost body form
+// which allows the user to select an image from the list of image
+// files attached to the post.
+
+// The contents of this function is stolen straight out of the tinyMCE
+// code in tinymce/themes/advanced/editor_template_src.js
+function getSelectedImgAttributes (editorid) {
+    var src = "", alt = "", border = "", hspace = "", vspace = "", width = "", height = "", align = "";
+    var title = "", onmouseover = "", onmouseout = "", action = "insert";
+    var img = tinyMCE.imgElement;
+    var inst = tinyMCE.getInstanceById(editorid);
+
+    if (tinyMCE.selectedElement != null && tinyMCE.selectedElement.nodeName.toLowerCase() == "img") {
+        img = tinyMCE.selectedElement;
+        tinyMCE.imgElement = img;
+    }
+
+    if (img) {
+        // Is it a internal MCE visual aid image, then skip this one.
+        if (tinyMCE.getAttrib(img, 'name').indexOf('mce_') == 0)
+            return true;
+
+        src = tinyMCE.getAttrib(img, 'src');
+        alt = tinyMCE.getAttrib(img, 'alt');
+
+        // Try polling out the title
+        if (alt == "")
+            alt = tinyMCE.getAttrib(img, 'title');
+
+        // Fix width/height attributes if the styles is specified
+        if (tinyMCE.isGecko) {
+            var w = img.style.width;
+            if (w != null && w != "")
+                img.setAttribute("width", w);
+
+            var h = img.style.height;
+            if (h != null && h != "")
+                img.setAttribute("height", h);
+        }
+
+        border = tinyMCE.getAttrib(img, 'border');
+        hspace = tinyMCE.getAttrib(img, 'hspace');
+        vspace = tinyMCE.getAttrib(img, 'vspace');
+        width = tinyMCE.getAttrib(img, 'width');
+        height = tinyMCE.getAttrib(img, 'height');
+        align = tinyMCE.getAttrib(img, 'align');
+        onmouseover = tinyMCE.getAttrib(img, 'onmouseover');
+        onmouseout = tinyMCE.getAttrib(img, 'onmouseout');
+        title = tinyMCE.getAttrib(img, 'title');
+
+        // Is realy specified?
+        if (tinyMCE.isMSIE) {
+            width = img.attributes['width'].specified ? width : "";
+            height = img.attributes['height'].specified ? height : "";
+        }
+
+        src = eval(tinyMCE.settings['urlconverter_callback'] + "(src, img, true);");
+
+        // Use mce_src if defined
+        mceRealSrc = tinyMCE.getAttrib(img, 'mce_src');
+        if (mceRealSrc != "") {
+            src = mceRealSrc;
+
+            if (tinyMCE.getParam('convert_urls'))
+                src = eval(tinyMCE.settings['urlconverter_callback'] + "(src, img, true);");
+        }
+
+        action = "update";
+    }
+    return {'src' : src, 'alt' : alt, 'border' : border, 'hspace' : hspace, 'vspace' : vspace, 
+            'width' : width, 'height' : height, 'align' : align, 'title' : title, 
+            'onmouseover' : onmouseover, 'onmouseout' : onmouseout, 'action' : action};
+}
+
+
+
+// Get all the files in the attached files list that have been
+// recognised as images.
+function attachedImageList() {
+    // All the rows in the attached files list:
+    var attachrows = getElementsByTagAndClassName('tbody', null, 'attachedfiles')[0].childNodes;
+    // Go through the rows, and for all the rows where the first cell
+    // contains an 'image' image, return the row id (id attribute) and
+    // the filename (contents of the second cell)
+    return map(function(r) { return {'id':r.id, 'name':scrapeText(r.childNodes[1])}; },
+               filter(function(r) { return r.firstChild.firstChild.alt == 'image'; }, attachrows));
+}
+
+
+function insertImage() {
+    var form = $('insertimageform');
+    var alt = form.imgid.value;
+    var src = imageSrcFromId(alt);
+    var border = form.border.value;
+    var vspace = form.vspace.value;
+    var hspace = form.hspace.value;
+    var height = form.height.value;
+    var width = form.width.value;
+    var align = form.align.value;
+    tinyMCE.themes['advanced']._insertImage(src, alt, border, hspace, vspace, 
+                                            width, height, align, '', '', '');
+    replaceChildNodes('insertimage', null);
+}
+
+
+function resetImageData() {
+	var form = $('insertimageform');
+	form.width.value = form.height.value = "";	
+}
+
+
+var preloadImage = new Image();
+
+
+function updateImageData() {
+	var form = $('insertimageform');
+	if (form.width.value == "") {
+	    form.width.value = preloadImage.width;
+    }
+	if (form.height.value == "") {
+	    form.height.value = preloadImage.height;
+    }
+}
+
+
+function imageSrcFromId(imageid) {
+    var idparts = imageid.split(':');
+    if (idparts[0] == 'artefact') {
+        return config.wwwroot + 'artefact/file/download.php?file=' + idparts[1];
+    }
+    if (idparts[0] == 'uploaded') {
+        return config.wwwroot + 'artefact/blog/downloadtemp.php?uploadnumber=' + idparts[1] + 
+            '&createid=' + {$createid};
+    }
+    return '';
+}
+
+
+function getImageData(imageid) {
+	preloadImage = new Image();
+    preloadImage.onload = updateImageData;
+    preloadImage.onerror = function () {
+        var form = $('insertimageform');
+        form.width.value = form.height.value = "";
+    };
+    var imgsrc = imageSrcFromId(imageid);
+    $('insertimageform').imgsrc.value = imgsrc;
+    $('insertimageform').imgid.value = imageid;
+	preloadImage.src = imgsrc;
+}
+
+
+function imageSelector(imageid) {
+    var imagefiles = attachedImageList();
+    if (imagefiles.length == 0) {
+        return SPAN({'id':'imageselector'}, {$getstring['noimageshavebeenattachedtothispost']});
+    }
+    else {
+        var sel = SELECT({'class':'select', 'id':'imageselector'});
+        appendChildNodes(sel, OPTION({'value':''}, '--'));
+        for (var i = 0; i < imagefiles.length; i++) {
+            if (imageid == imagefiles[i].id) {
+                appendChildNodes(sel, OPTION({'value':imagefiles[i].id, 'selected':true}, 
+                                             imagefiles[i].name));
+            }
+            else {
+                appendChildNodes(sel, OPTION({'value':imagefiles[i].id}, imagefiles[i].name));
+            }
+        }
+        sel.onchange = function () { 
+            resetImageData();
+            getImageData(sel.value);
+        };
+        return sel;
+    }
+}
+
+
+
+function alignSelector(align) {
+    var sel = SELECT({'name':'align', 'class':'select'});
+    var options = {'' : '--',
+                   'baseline': {$getstring['baseline']},
+                   'top': {$getstring['top']},
+                   'middle': {$getstring['middle']},
+                   'bottom': {$getstring['bottom']},
+                   'texttop': {$getstring['texttop']},
+                   'absmiddle': {$getstring['absolutemiddle']},
+                   'absbottom': {$getstring['absolutebottom']},
+                   'left': {$getstring['left']},
+                   'right': {$getstring['right']}};
+    for (option in options) {
+        if (align == option) {
+            appendChildNodes(sel, OPTION({'value':option, 'selected':true}, options[option]));
+        }
+        else {
+            appendChildNodes(sel, OPTION({'value':option}, options[option]));
+        }
+    }
+    return sel;
+}
+
+
+
 function blogpostExecCommandHandler(editor_id, elm, command, user_interface, value) {
     var linkElm, imageElm, inst;
     switch (command) {
     case "mceImage":
-        //a = getSelectedImgAttributes(editor_id);
-        //alert('foo');
-        $('insertimage').innerHTML = "<p>You clicked the image button.</p>";
+        a = getSelectedImgAttributes(editor_id);
+        var tbody = TBODY(null,
+          TR(null, TH({'colSpan':2}, LABEL(null,{$getstring['insertimage']}))),
+          TR(null, TH(null, LABEL(null,{$getstring['name']})),
+             TD(null, imageSelector(a.alt))),
+          TR(null, TH(null, LABEL(null,{$getstring['alignment']})),
+             TD(null, alignSelector(a.align))),
+          TR(null, TH(null, LABEL(null,{$getstring['dimensions']})),
+             TD(null,INPUT({'type':'text', 'class':'text', 'name':'width', 'size':3, 'value':a.width}),
+                ' x ', INPUT({'type':'text', 'class':'text', 'name':'height', 'size':3, 'value':a.height}))),
+          TR(null, TH(null, LABEL(null,{$getstring['border']})),
+             TD(null,INPUT({'type':'text', 'class':'text', 'name':'border', 'size':3, 'value':a.border}))),
+          TR(null, TH(null, LABEL(null,{$getstring['verticalspace']})),
+             TD(null,INPUT({'type':'text', 'class':'text', 'name':'vspace', 'size':3, 'value':a.vspace}))),
+          TR(null, TH(null, LABEL(null,{$getstring['horizontalspace']})),
+             TD(null,INPUT({'type':'text', 'class':'text', 'name':'hspace', 'size':3, 'value':a.hspace}))));
+
+        var imageform = FORM({'id':'insertimageform'},
+                             INPUT({'type':'hidden', 'name':'imgsrc', 'value':''}),
+                             INPUT({'type':'hidden', 'name':'imgid', 'value':a.alt}),
+                             TABLE(null,tbody));
+        appendChildNodes(tbody, TR(null,TD({'colSpan':2},
+                         INPUT({'type':'button', 'class':'button', 'value':{$getstring['insert']},
+                                'onclick':function () { insertImage(); }}),
+                         INPUT({'type':'button', 'class':'button', 'value':{$getstring['cancel']},
+                                'onclick':function () { replaceChildNodes('insertimage', null); }}))));
+        replaceChildNodes('insertimage', imageform);
+
         return true;
     }
     return false;
@@ -306,6 +559,10 @@ function blogpostExecCommandHandler(editor_id, elm, command, user_interface, val
 
 
 EOF;
+
+
+// Override the default Mahara tinyMCE.init();  Add an image button and
+// the execcommand_callback.
 
 $tinymceinit = <<<EOF
 <script type="text/javascript">

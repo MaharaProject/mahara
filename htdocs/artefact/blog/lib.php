@@ -585,6 +585,13 @@ class ArtefactTypeBlogPost extends ArtefactType {
     // Where to store temporary blog post files under dataroot
     static $blogattachmentroot = 'artefact/blog/uploads/';
 
+
+    public static function get_temp_file_path($createid, $uploadnumber) {
+        return get_config('dataroot') . self::$blogattachmentroot 
+            . session_id() . $createid . '/' . $uploadnumber;
+    }
+
+
     /** 
      * This function saves an uploaded file to a temporary directory in dataroot
      *
@@ -635,7 +642,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
         $data->file = $fileid;
         insert_record('artefact_blog_blogpost_file', $data);
 
-        return true;
+        return $fileid;
     }
 
     public static function blogfiles_folder_id() {
