@@ -177,7 +177,6 @@ if (!$viewusers = get_records_sql_array($sql, array($USER->get('id')))) {
 }
 
 $smarty = smarty(array('tablerenderer'));
-$smarty->assign('site_menu', site_menu());
 $smarty->assign('viewusers', $viewusers);
 $smarty->assign('typestr', get_string('views', 'activity'));
 $smarty->assign('selectall', 'toggleChecked(\'tocheck\'); return false;');
