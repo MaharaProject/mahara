@@ -518,21 +518,17 @@ function get_dataroot_image_path($path, $id, $size) {
     $imagepath = $dataroot . $path;
 
     if (!is_dir($imagepath) || !is_readable($imagepath)) {
-        log_debug('directory ' . $imagepath . ' is not a directory or is not readable');
         return false;
     }
     //$imagepath .= "/$id";
-    log_debug('directory is ' . $imagepath);
 
     if ($size && !preg_match('/\d+x\d+/', $size)) {
-        log_debug('whoopsie with the size ' . $size);
         throw new UserException('Invalid size for image specified');
     }
 
     // If the image is already available, return the path to it
     $path = $imagepath . '/' . ($size ? "$size/" : '') . ($id % 256) . "/$id";
     if (is_readable($path)) {
-        log_debug('the image is available at ' . $path);
         return $path;
     }
 
@@ -540,9 +536,7 @@ function get_dataroot_image_path($path, $id, $size) {
         // Image is not available in this size. If there is a base image for
         // it, we can make one however.
         $originalimage = $imagepath . '/' . ($id % 256) . "/$id";
-        log_debug('original image = ' . $originalimage);
         if (is_readable($originalimage)) {
-            log_debug('creating correct sized image');
 
             list($width, $height) = explode('x', $size);
 
@@ -557,10 +551,8 @@ function get_dataroot_image_path($path, $id, $size) {
                     $oldih = imagecreatefromgif($originalimage);
                     break;
                 default:
-                    log_debug('file is NOT of valid type');
                     return false;
             }
-            log_debug('file is of valid type');
 
             if (!$oldih) {
                 return false;
@@ -590,7 +582,6 @@ function get_dataroot_image_path($path, $id, $size) {
     }
 
     // Image not available in any size
-    log_debug('image is not available in any size');
     return false;
 }
 

@@ -121,7 +121,7 @@ function forgotpass_validate(Pieform $form, $values) {
     }
 }
 
-function forgotpass_submit($values) {
+function forgotpass_submit(Pieform $form, $values) {
     global $SESSION;
 
     try {
