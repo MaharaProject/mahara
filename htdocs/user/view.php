@@ -32,7 +32,7 @@ $userid = param_integer('id','');
 $loggedinid = $USER->get('id');
 $prefix = get_config('dbprefix');
 $inlinejs = <<<EOF
-    function usercontrol_success(formname) {
+    function usercontrol_success(formname, data) {
         
         if (formname != 'friend') {
             var dd = $(formname).elements['community'];
@@ -42,8 +42,7 @@ $inlinejs = <<<EOF
             }
         }
         
-        var message = $(formname + '_pieform_message').firstChild.innerHTML;
-        swapDOM(formname, P(null, message));
+        swapDOM(formname, P(null, data.message));
         return true;
     }
 EOF;
@@ -62,9 +61,9 @@ $name = display_name($user);
 
 // If the logged in user is on staff, get full name, institution, id number, email address
 if ($USER->get('staff')) {
-    $userfields['fullname'] = $user->firstname . ' ' . $user->lastname;
-    $userfields['institution'] = $user->institution;
-    $userfields['studentid'] = $user->studentid;
+    $userfields['fullname']     = $user->firstname . ' ' . $user->lastname;
+    $userfields['institution']  = $user->institution;
+    $userfields['studentid']    = $user->studentid;
     $userfields['emailaddress'] = $user->email;
 }
 
@@ -117,18 +116,18 @@ if ($communities = get_owned_communities($loggedinid, 'invite')) {
     }
     if (count($invitelist) > 0) {
         $inviteform = pieform(array(
-        'name'                => 'invite',
-        'ajaxform'            => true,
-        'ajaxsuccesscallback' => 'invite_success',
-        'elements'            => array(
+        'name'              => 'invite',
+        'jsform'            => true,
+        'jssuccesscallback' => 'usercontrol_success',
+        'elements'          => array(
             'community' => array(
                 'type'    => 'select',
                 'title'   => get_string('inviteusertojoincommunity'),
                 'collapseifoneoption' => false,
                 'options' => $invitelist
             ),
-            'id'       => array(
-                'type' => 'hidden',
+            'id' => array(
+                'type'  => 'hidden',
                 'value' => $userid,
             ),
             'submit' => array(
@@ -137,12 +136,6 @@ if ($communities = get_owned_communities($loggedinid, 'invite')) {
             ),
         ),
     ));
-    $inlinejs .= <<<EOF
-    
-    function invite_success(data) {
-        usercontrol_success('invite');
-    }
-EOF;
 
     $smarty->assign('INVITEFORM',$inviteform);
     }
@@ -193,9 +186,9 @@ EOF;
 // or removing or approving or rejecting or whatever else we can do.
 $friendform = array(
     'name'     => 'friend',
-    'ajaxform' => true,
+    'jsform'   => true,
     'elements' => array(),
-    'ajaxsuccesscallback' => 'friend_success',
+    'jssuccesscallback' => 'usercontrol_success',
 );
 $friendsubmit = '';
 $friendtype = '';
@@ -240,7 +233,7 @@ else {
         $friendform['elements']['reason'] = array(
             'type'  => 'textarea',
             'title' => get_string('requestfriendship'),
-            'cols'  => 10,
+            'cols'  => 40,
             'rows'  => 4,
         );
         $friendsubmit = get_string('request');
@@ -267,12 +260,6 @@ if (!empty($friendtype)) {
     );
     // friend submit function lives in lib/user.php
     $friendform = pieform($friendform);
-    $inlinejs .= <<<EOF
-    
-    function friend_success(data) {
-        usercontrol_success('friend');
-    }
-EOF;
 } 
 else {
     $friendform = '';
@@ -292,7 +279,7 @@ $smarty->display('user/view.tpl');
 
 
 // Send an invitation to the user to join a community
-function invite_submit($values, Pieform $form) {
+function invite_submit(Pieform $form, $values) {
     global $USER;
     
     $data = new StdClass;
@@ -318,7 +305,7 @@ function invite_submit($values, Pieform $form) {
 }
 
 // Add the user as a member of a community
-function addmember_submit($values, Pieform $form) {
+function addmember_submit(Pieform $form, $values) {
     global $USER;
 
     $data = new StdClass;
