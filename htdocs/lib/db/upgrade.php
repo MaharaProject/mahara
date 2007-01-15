@@ -151,6 +151,14 @@ function xmldb_core_upgrade($oldversion=0) {
         set_config('pathtofile', '/usr/bin/file');
     }
 
+    if ($oldversion < 2007011500) {
+        // Add the 'profileicon' field to the usr table
+        $table = new XMLDBTable('usr');
+        $field = new XMLDBField('profileicon');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 10, false, false, false);
+        add_field($table, $field);
+    }
+
     return $status;
 
 }

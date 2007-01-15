@@ -68,6 +68,7 @@ class User {
             'lastname'         => '',
             'preferredname'    => '',
             'email'            => '',
+            'profileicon'      => '',
             'accountprefs'     => array(),
             'activityprefs'    => array(),
             'sesskey'          => ''
