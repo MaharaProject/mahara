@@ -55,8 +55,6 @@ switch ($type) {
             throw new UserException('Invalid size for image specified');
         }
 
-        log_debug('looking for image for user, id = ' . $id . ' and size = ' . $size);
-
         if ($path = get_dataroot_image_path('artefact/internal/profileicons', $id, $size)) {
             $type = get_mime_type($path);
             if ($type) {
