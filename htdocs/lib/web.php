@@ -231,7 +231,12 @@ function jsstrings() {
                 'prevpage',
                 'lastpage',
             )
-        )
+        ),
+        'collapsabletree' => array(
+            'view' => array(
+                'nochildren',
+            ),
+        ),
     );
 }
 
