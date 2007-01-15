@@ -407,6 +407,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
             return;
         }
 
+        delete_records('artefact_blog_blogpost_file', 'blogpost', $this->id);
         delete_records('artefact_blog_blogpost', 'blogpost', $this->id);
       
         parent::delete();
