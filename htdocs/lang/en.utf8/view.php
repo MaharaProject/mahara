@@ -43,6 +43,7 @@ $string['stopdate']               = 'Access End Date/Time';
 $string['stopdate']               = 'Access End Date/Time';
 $string['ownerformat']            = 'Name display format';
 $string['ownerformatdescription'] = 'This field controls what appears in the author field for the template you select in step 2';
+$string['nochildren']             = 'no artefacts';
 
 $string['category.all']                     = 'All Templates';
 $string['category.resume']                  = 'Resume Templates';

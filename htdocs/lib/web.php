@@ -170,6 +170,7 @@ EOF;
     $smarty->compile_dir  = get_config('dataroot').'smarty/compile';
     $smarty->cache_dir    = get_config('dataroot').'smarty/cache';
 
+    $smarty->assign('SITEMENU', site_menu());
     $smarty->assign('THEMEURL', get_config('themeurl'));
     $smarty->assign('WWWROOT', $wwwroot);
 
@@ -230,7 +231,12 @@ function jsstrings() {
                 'prevpage',
                 'lastpage',
             )
-        )
+        ),
+        'collapsabletree' => array(
+            'view' => array(
+                'nochildren',
+            ),
+        ),
     );
 }
 

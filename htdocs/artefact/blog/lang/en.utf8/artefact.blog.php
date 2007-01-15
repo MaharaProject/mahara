@@ -87,5 +87,6 @@ $string['thisisdraftdesc'] = 'When your post is a draft, no one except you can s
 $string['title'] = 'Title';
 $string['viewblog'] = 'View Blog';
 $string['youarenottheownerofthisblogpost'] = 'You are not the owner of this blog post';
+$string['cannotdeleteblogpost'] = 'An error occured removing this blog post.';
 
 ?>

@@ -41,6 +41,7 @@ $enc_files = json_encode(get_string('attachedfiles', 'artefact.blog'));
 $enc_delete = json_encode(get_string('delete', 'artefact.blog'));
 $enc_delete_confirm = json_encode(get_string('deleteblogpost?', 'artefact.blog'));
 $enc_postedon = json_encode(get_string('postedon', 'artefact.blog'));
+$enc_cannotdeleteblogpost = json_encode(get_string('cannotdeleteblogpost', 'artefact.blog'));
 
 return <<<EOJAVASCRIPT
 
@@ -156,7 +157,7 @@ postlist.rowfunction = function(d, n, gd) {
                     }
                 }
                 else {
-                    alert('yay');
+                    displayMessage({$enc_cannotdeleteblogpost}, 'error');
                 }
             },
             function (error) {
