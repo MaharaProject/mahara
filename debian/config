@@ -16,3 +16,5 @@ db_input $PRIORITY mahara/db_user || true
 db_go
 db_input $PRIORITY mahara/servername || true
 db_go
+db_input $PRIORITY mahara/smtphosts || true
+db_go

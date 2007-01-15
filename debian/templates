@@ -32,3 +32,12 @@ Description: Server name:
  .
  Note that this is just the domain name, so for "http://my.site.com" you only
  need to enter "my.site.com"
+
+Template: mahara/smtphosts
+Type: string
+Default:
+Description: SMTP Hosts:
+ Comma separated list of SMTP servers to use to send mail
+ .
+ If you leave this blank, the system mailer will be used. Generally, this will
+ work fine
