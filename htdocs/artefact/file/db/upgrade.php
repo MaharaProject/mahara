@@ -50,7 +50,6 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
                 insert_record('artefact_file_files', $data);
             }
         }
-
     }
 
     return $status;
