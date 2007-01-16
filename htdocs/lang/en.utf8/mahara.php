@@ -53,6 +53,10 @@ $string['reject'] = 'Reject';
 $string['sendrequest'] = 'Send request';
 $string['reason'] = 'Reason';
 
+// Quota strings
+$string['quota'] = 'Quota';
+$string['quotausage'] = 'You have used %s of your %s quota.';
+
 $string['mainmenu'] = 'Main menu';
 $string['updatefailed'] = 'Update failed';
 $string['declinerequest'] = 'Decline request';

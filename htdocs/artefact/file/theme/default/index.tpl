@@ -1,6 +1,7 @@
 {include file="header.tpl"}
 
 <div id="column-right">
+{include file="quota.tpl"}
 {include file="adminmenu.tpl"}
 </div>
 
