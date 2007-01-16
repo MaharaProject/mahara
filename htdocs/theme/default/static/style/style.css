@@ -419,6 +419,15 @@ div.sidebar {
 	color: #FFF;
 	font-weight: bold;
 }
+div.sidebar_1 {
+    background-image: url(../images/sidebox1_top_headerbg.gif);
+}
+div.sidebar_2 {
+    background-image: url(../images/sidebox2_top_headerbg.gif);
+}
+div.sidebar_3 {
+    background-image: url(../images/sidebox3_top_headerbg.gif);
+}
 
 /* SITE MENU BEGINS */
 #sitemenu {
