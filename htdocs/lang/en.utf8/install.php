@@ -48,7 +48,7 @@ $string['homedefaultcontent'] = '<h2>Welcome to Mahara</h2>
 <p>Mahara is a fully featured electronic portfolio, weblog, resume builder and social networking system, connecting users and creating online communities.  Mahara provides you with the tools to set up a personal learning and development environment.</p>
 
 <p>For more information you can read <a href="about.php">About</a> Mahara or alternatively please feel free to <a href="contact.php">Contact Us</a>.</p>';
-$string['loggedouthomedefaultcontent'] = '<p>Welcome to Mahara</p>
+$string['loggedouthomedefaultcontent'] = '<h2>Welcome to Mahara</h2>
 
 <p>Mahara is a fully featured electronic portfolio, weblog, resume builder and social networking system, connecting users and creating online communities.  Mahara provides you with the tools to set up a personal learning and development environment.</p>
 
