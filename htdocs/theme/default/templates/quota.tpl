@@ -8,7 +8,7 @@
         {$QUOTA_MESSAGE}
     </p>
     <p class="center">
-        {$QUOTA_PERCENTAGE}%
+        <span id="quota_percentage">{$QUOTA_PERCENTAGE}</span>%
     </p>
 	<div class="loginbox-botcorners"><img src="{image_path imagelocation='images/sidebox_bot.gif'}" border="0" alt=""></div>
 </div>
