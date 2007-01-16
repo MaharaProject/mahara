@@ -815,7 +815,7 @@ class Pieform {
                     if (!$this->get_error($element['name'])) {
                         // See if this element has a function that describes
                         // how this rule should apply to it
-                        $function = 'pieform_element_' . $element['name'] . '_rule_' . $rule;
+                        $function = 'pieform_element_' . $element['type'] . '_rule_' . $rule;
                         if (!function_exists($function)) {
                             // Try instead the default rule function
                             $function = 'pieform_rule_' . $rule;

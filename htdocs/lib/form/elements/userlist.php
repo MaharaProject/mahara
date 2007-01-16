@@ -87,15 +87,15 @@ function pieform_element_userlist_get_value(Pieform $form, $element) {
     return null;
 }
 
-function form_element_userlist_rule_required($value, $element) {
+function pieform_element_userlist_rule_required(Pieform $form, $value, $element) {
     if (is_array($value) && count($value)) {
-        return false;
+        return null;
     }
 
-    return true;
+    return $form->i18n('rule', 'required', 'required', $element);
 }
 
-function form_element_userlist_set_attributes($element) {
+function pieform_element_userlist_set_attributes($element) {
     // By default, use the filter select box
     if (!isset($element['filter'])) {
         $element['filter'] = true;
