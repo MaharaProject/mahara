@@ -45,7 +45,7 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
                 if (confirm(get_string(r.artefacttype == 'folder' ? 'deletefolder?' : 'deletefile?'))) {
                     if (!r.attachcount || r.attachcount == 0
                         || confirm(get_string('unlinkthisfilefromblogposts?'))) {
-                        sendjsonrequest(self.deletescript, {'id': r.id}, self.refresh);
+                        sendjsonrequest(self.deletescript, {'id': r.id}, self.deleted);
                     }
                 }
             };
@@ -97,6 +97,11 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
         changedir = self.changedir; // Ick; needs to be set globally for some links to work
         self.changedir(self.cwd);
     }
+
+    this.deleted = function (data) {
+        quotaUpdate(data.quotaused, data.quota);
+        self.refresh();
+    };
 
     this.refresh = function () { self.changedir(self.cwd); };
 
@@ -460,6 +465,7 @@ function FileUploader(element, uploadscript, statevars, foldername, folderid, up
             var image = 'failure.gif';
         }
 
+        quotaUpdate(data.quotaused, data.quota);
         replaceChildNodes($('uploadstatusline'+data.uploadnumber), 
                           IMG({'src':config.themeurl+image}), ' ', 
                           data.message, ' ',

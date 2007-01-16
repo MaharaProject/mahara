@@ -57,7 +57,7 @@ $string['reason'] = 'Reason';
 
 // Quota strings
 $string['quota'] = 'Quota';
-$string['quotausage'] = 'You have used %s of your %s quota.';
+$string['quotausage'] = 'You have used <span id="quota_used">%s</span> of your <span id="quota_total">%s</span> quota.';
 
 $string['mainmenu'] = 'Main menu';
 $string['updatefailed'] = 'Update failed';

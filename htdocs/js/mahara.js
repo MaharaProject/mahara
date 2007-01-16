@@ -130,8 +130,15 @@ function sendjsonrequest(script, data, successcallback, errorcallback) {
             globalErrorHandler(data);
         }
         if (errtype) {
-            displayMessage(data.message,errtype);
-            successcallback();
+            if (typeof(data.message) == 'string') {
+                displayMessage(data.message,errtype);
+                successcallback();
+            }
+            else if (typeof(data.message == 'object') && data.message.message
+                     && typeof(data.message.message == 'string')) {
+                displayMessage(data.message.message,errtype);
+                successcallback(data.message);
+            }
             processingStop();
         }
     },
@@ -364,6 +371,49 @@ function keepElementInViewport(element) {
     }
 }
 
-function quotaUpdate() {
-    // @todo <martyn>: feeeeeed me
+function quotaUpdate(quotaused, quota) {
+    if (! $('quota_percentage') ) {
+        return;
+    }
+
+    var update = function(data) {
+        if ( data.quota >= 1048576 ) {
+            data.quota_display = roundToFixed(data.quota / 1048576, 1) + 'MB';
+            data.quotaused_display = roundToFixed(data.quotaused / 1048576, 1) + 'MB';
+        }
+        else if (data.quota >= 1024 ) {
+            data.quota_display = roundToFixed(data.quota / 1024, 1) + 'KB';
+            data.quotaused_display = roundToFixed(data.quotaused / 1024, 1) + 'KB';
+        }
+        else {
+            data.quota_display = data.quota + ' bytes';
+            data.quotaused_display = data.quotaused + ' bytes';
+        }
+
+        $('quota_used').innerHTML = data.quotaused_display;
+        $('quota_total').innerHTML = data.quota_display;
+        $('quota_percentage').innerHTML = roundToFixed(data.quotaused / data.quota * 100, 0);
+    }
+
+    if (quotaused && quota) {
+        var data = { 'quotaused': quotaused, 'quota': quota };
+        update(data);
+    }
+    else {
+        var req = getXMLHttpRequest();
+        req.open('post', config.wwwroot + 'json/quota.php');
+        req.setRequestHeader('Content-type','application/x-www-form-urlencoded'); 
+        var d = sendXMLHttpRequest(req);
+        processingStart();
+        d.addCallbacks(
+            function (data) {
+                processingStop();
+                data = evalJSONRequest(data);
+                update(data);
+            },
+            function (error) {
+                processingStop();
+            }
+        );
+    }
 }

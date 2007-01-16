@@ -17,33 +17,24 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage artefact-file
- * @author     Richard Mansfield <richard.mansfield@catalyst.net.nz>
+ * @subpackage core
+ * @author     Martyn Smith <martyn@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
 define('INTERNAL', 1);
-define('JSON', 1);
+require(dirname(dirname(__FILE__)) . '/init.php');
 
-require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+$result = array();
+
+if ($USER->is_logged_in()) {
+    $result['quota']     = $USER->get('quota');
+    $result['quotaused'] = $USER->get('quotaused');
+}
 
 json_headers();
-
-$fileid = param_integer('id');
-
-require_once('artefact.php');
-
-$artefact = artefact_instance_from_id($fileid);
-$artefact->delete();
-
-global $USER;
-
-json_reply(false, array('message' => get_string('filethingdeleted', 'artefact.file', 
-                                                get_string($artefact->get('artefacttype'),
-                                                           'artefact.file')),
-                        'quotaused' => $USER->get('quotaused'),
-                        'quota' => $USER->get('quota')));
+print json_encode($result);
 
 ?>

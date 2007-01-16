@@ -86,6 +86,9 @@ if (!isset($result->error)) {
     }
 }
 
+$result->quota = $USER->get('quota');
+$result->quotaused = $USER->get('quotaused');
+
 $r = json_encode($result);
 
 $frame = <<< EOF
