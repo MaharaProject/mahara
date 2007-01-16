@@ -643,7 +643,7 @@ function auth_handle_account_expiries() {
     }
 
     // Actual expired users
-    if ($users = get_records_sql_array('SELECT u.id
+    if ($users = get_records_sql_array('SELECT id
         FROM ' . $prefix . 'usr
         WHERE ' . db_format_tsfield('expiry', false) . ' < ?', array(time()))) {
         // Users have expired!
