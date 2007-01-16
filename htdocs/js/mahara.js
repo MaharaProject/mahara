@@ -364,3 +364,6 @@ function keepElementInViewport(element) {
     }
 }
 
+function quotaUpdate() {
+    // @todo <martyn>: feeeeeed me
+}
