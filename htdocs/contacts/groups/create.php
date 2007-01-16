@@ -47,9 +47,10 @@ $creategroup = pieform(array(
             'cols'  => 70,
         ),
         'members'     => array(
-            'type'  => 'userlist',
-            'title' => get_string('groupmembers'),
-            'rules' => array( 'required' => true ),
+            'type'   => 'userlist',
+            'title'  => get_string('groupmembers'),
+            'rules'  => array( 'required' => true ),
+            'filter' => false,
         ),
         'submit'   => array(
             'type'  => 'submitcancel',

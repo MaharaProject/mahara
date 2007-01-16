@@ -64,6 +64,8 @@ class User {
             'inactivemailsent' => 0,
             'staff'            => false,
             'admin'            => false,
+            'quota'            => 0,
+            'quotaused'        => 0,
             'firstname'        => '',
             'lastname'         => '',
             'preferredname'    => '',
@@ -104,6 +106,10 @@ class User {
         if (!isset($this->defaults[$key])) {
             throw new InvalidArgumentException($key);
         }
+        // @todo: Martyn Only for external calls??
+        //if ($key == 'quotaused') {
+        //    throw new InvalidArgumentException('quotaused should be set via the quota_* methods');
+        //}
         $this->SESSION->set("user/$key", $value);
     }
 
@@ -205,6 +211,37 @@ class User {
         return $this->stdclass;
     }
 
+    public function quota_add($bytes) {
+        if (!is_numeric($bytes) || $bytes < 0) {
+            throw new InvalidArgumentException('parameter must be a positive integer to add to the quota');
+        }
+        if (!$this->quota_allowed($bytes)) {
+            throw new QuotaExceededException('Adding ' . $bytes . ' bytes would exceed the user\'s quota');
+        }
+        $newquota = $this->get('quotaused') + $bytes;
+        $this->SESSION->set("user/quotaused", $newquota);
+        update_record('usr', array('quotaused' => $newquota), array('id' => $this->get('id')));
+    }
+
+    public function quota_remove($bytes) {
+        if (!is_numeric($bytes) || $bytes < 0) {
+            throw new InvalidArgumentException('parameter must be a positive integer to remove from the quota');
+        }
+        $newquota = $this->get('quotaused') - $bytes;
+        if ($newquota < 0) {
+            $newquota = 0;
+        }
+        $this->SESSION->set("user/quotaused", $newquota);
+        update_record('usr', array('quotaused' => $newquota), array('id' => $this->get('id')));
+    }
+
+    public function quota_allowed($bytes) {
+        if ($this->get('quotaused') + $bytes > $this->get('quota')) {
+            return false;
+        }
+
+        return true;
+    }
 }
 
 
