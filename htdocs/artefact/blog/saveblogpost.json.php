@@ -91,13 +91,33 @@ foreach ($artefacts as $a) {
 
 // Add the newly uploaded files to myfiles and then to the blog post.
 
+$uploadartefact = array();
+
 if (!empty($uploads)) {
     foreach ($uploads as $upload) {
-        if (!$postobj->save_attachment(session_id() . $createid, $upload->id,
-                                       $upload->title, $upload->description)) {
+        if (!$fileid = $postobj->save_attachment(session_id() . $createid, $upload->id,
+                                                 $upload->title, $upload->description)) {
             json_reply('local', get_string('errorsavingattachments', 'artefact.blog'));
+            // Things could be in a bad state.
         }
+        $uploadartefact[$upload->id] = $fileid;
     }
+}
+
+// <img> tags in the body of the post may refer to newly uploaded
+// files.  Because these files have been moved to permanent locations,
+// we need to go through the body of the post and change the 'src' and
+// 'alt' attributes of all images that refer to uploaded files.
+if (!empty($uploadartefact)) {
+    foreach ($uploadartefact as $k => $v) {
+        $regexps = array('/\/artefact\/blog\/downloadtemp.php\?uploadnumber=' . $k .'&amp;createid=\d+/',
+                         '/alt="uploaded:' . $k . '"/');
+        $subs = array('/artefact/file/download.php?file=' . $v,
+                      'alt="artefact:' . $v . '"');
+        $body = preg_replace($regexps, $subs, $body);
+    }
+    $postobj->set('description', $body);
+    $postobj->commit();
 }
 
 json_reply(false, get_string('blogpostsaved', 'artefact.blog'));
