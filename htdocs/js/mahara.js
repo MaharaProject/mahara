@@ -400,6 +400,20 @@ function quotaUpdate(quotaused, quota) {
         update(data);
     }
     else {
-        // doajax
+        var req = getXMLHttpRequest();
+        req.open('post', config.wwwroot + 'json/quota.php');
+        req.setRequestHeader('Content-type','application/x-www-form-urlencoded'); 
+        var d = sendXMLHttpRequest(req);
+        processingStart();
+        d.addCallbacks(
+            function (data) {
+                processingStop();
+                data = evalJSONRequest(data);
+                update(data);
+            },
+            function (error) {
+                processingStop();
+            }
+        );
     }
 }
