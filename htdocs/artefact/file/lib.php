@@ -355,16 +355,23 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         if ($error = $um->preprocess_file()) {
             return $error;
         }
-        $f = self::new_file($um->file['tmp_name'], $data);
+        $size = $um->file['size'];
         global $USER;
+        if (!$USER->quota_allowed($size) && !$data->adminfiles) {
+            return get_string('uploadexceedsquota');
+        }
+        $f = self::new_file($um->file['tmp_name'], $data);
         $f->set('owner', $USER->get('id'));
-        $f->set('size', $um->file['size']);
+        $f->set('size', $size);
         $f->commit();
         $id = $f->get('id');
         // Save the file using its id as the filename, and use its id modulo
         // the number of subdirectories as the directory name.
         if ($error = $um->save_file(self::get_file_directory($id) , $id)) {
             $f->delete();
+        }
+        else {
+            $USER->quota_add($size);
         }
         return $error;
     }
@@ -391,7 +398,16 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         if (empty($this->id)) {
             return; 
         }
-        unlink($this->get_path());
+        $file = $this->get_path();
+        if (is_file($file)) {
+            $size = filesize($file);
+            unlink($file);
+            global $USER;
+            // Deleting other users' files won't lower their quotas yet...
+            if (!$this->adminfiles && $USER->get('id') == $this->get('owner')) {
+                $USER->quota_remove($size);  
+            }
+        }
         parent::delete();
     }
 
