@@ -130,8 +130,15 @@ function sendjsonrequest(script, data, successcallback, errorcallback) {
             globalErrorHandler(data);
         }
         if (errtype) {
-            displayMessage(data.message,errtype);
-            successcallback();
+            if (typeof(data.message) == 'string') {
+                displayMessage(data.message,errtype);
+                successcallback();
+            }
+            else if (typeof(data.message == 'object') && data.message.message
+                     && typeof(data.message.message == 'string')) {
+                displayMessage(data.message.message,errtype);
+                successcallback(data.message);
+            }
             processingStop();
         }
     },

@@ -38,7 +38,12 @@ require_once('artefact.php');
 $artefact = artefact_instance_from_id($fileid);
 $artefact->delete();
 
-json_reply(false, get_string('filethingdeleted', 'artefact.file', 
-                             get_string($artefact->get('artefacttype'), 'artefact.file')));
+global $USER;
+
+json_reply(false, array('message' => get_string('filethingdeleted', 'artefact.file', 
+                                                get_string($artefact->get('artefacttype'),
+                                                           'artefact.file')),
+                        'quotaused' => $USER->get('quotaused'),
+                        'quota' => $USER->get('quota')));
 
 ?>
