@@ -399,12 +399,14 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             return; 
         }
         $file = $this->get_path();
-        $size = filesize($file);
-        unlink($file);
-        global $USER;
-        // Deleting other users' files won't lower their quotas yet...
-        if ($size && !$this->adminfiles && $USER->get('id') == $this->get('owner')) {
-            $USER->quota_remove($size);  
+        if (is_file($file)) {
+            $size = filesize($file);
+            unlink($file);
+            global $USER;
+            // Deleting other users' files won't lower their quotas yet...
+            if (!$this->adminfiles && $USER->get('id') == $this->get('owner')) {
+                $USER->quota_remove($size);  
+            }
         }
         parent::delete();
     }
