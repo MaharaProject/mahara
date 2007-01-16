@@ -118,6 +118,7 @@ if (!empty($uploadartefact)) {
         $body = preg_replace($regexps, $subs, $body);
     }
     if ($body != $originalbody) {
+        $postobj = new ArtefactTypeBlogPost($blogpost, null);
         $postobj->set('description', $body);
         $postobj->commit();
     }
