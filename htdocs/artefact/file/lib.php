@@ -48,6 +48,22 @@ class PluginArtefactFile extends PluginArtefact {
             )
         );
     }
+
+    public static function get_event_subscriptions() {
+        $subscriptions = array(
+            (object)array(
+                'plugin'       => 'file',
+                'event'        => 'createuser',
+                'callfunction' => 'newuser',
+            ),
+        );
+
+        return $subscriptions;
+    }
+
+    public static function newuser($event, $user) {
+        update_record('usr', array('quotaused' => 0, 'quota' => get_config_plugin('defaultquota')), array('id' => $user->id));
+    }
     
     public static function get_toplevel_artefact_types() {
         return array('file');

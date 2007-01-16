@@ -12,6 +12,7 @@
 {include file="columnleftstart.tpl"}
         <h2>{str section="artefact.blog" tag=$pagetitle}</h2>
         {$textinputform}
+        <div id='insertimage'></div>
         <div id='uploader'></div>
         <table id='filebrowser' style='display: none;' class='tablerenderer'>
           <thead><tr>
@@ -34,6 +35,7 @@
           </tr></thead>
           <tbody><tr><td></td></tr></tbody>
         </table>
+        {$draftform}
         <div>
           <input type='button' class='button' value='{str tag=savepost section=artefact.blog}' onclick="saveblogpost()">
           <input type='button' class='button' value='{str tag=cancel}' onclick="canceledit()">

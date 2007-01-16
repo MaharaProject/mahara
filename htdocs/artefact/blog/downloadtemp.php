@@ -18,16 +18,21 @@
  *
  * @package    mahara
  * @subpackage artefact-file
- * @author     Penny Leach <penny@catalyst.net.nz>
+ * @author     Richard Mansfield <richard.mansfield@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
-defined('INTERNAL') || die();
+define('INTERNAL', 1);
+require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
-$config = new StdClass;
-$config->version = 2007011603;
-$config->release = '0.1';
+$uploadnumber = param_integer('uploadnumber');
+$createid     = param_variable('createid');
+
+safe_require('artefact', 'blog');
+$path = ArtefactTypeBlogPost::get_temp_file_path($createid, $uploadnumber);
+log_debug($path);
+serve_file($path, '');
 
 ?>

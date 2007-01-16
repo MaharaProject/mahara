@@ -31,7 +31,7 @@ define('SUBMENUITEM', 'sitemenu');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
 $strings = array('edit','delete','update','cancel','add','name','unknownerror');
-$adminstrings = array('deletefailed','deletingmenuitem','savingmenuitem',
+$adminstrings = array('confirmdeletemenuitem', 'deletefailed','deletingmenuitem','savingmenuitem',
                       'noadminfiles','loggedinmenu','loggedoutmenu','linkedto','externallink','adminfile',
                       'loadingmenuitems','menuitemsloaded','failedloadingadminfiles',
                       'failedloadingmenuitems');
@@ -225,8 +225,9 @@ function edititem(item) {
 // Receive standard json error message
 // Request deletion of a menu item from the db
 function delitem(itemid) {
-    logDebug({$getstring['deletingmenuitem']});
-    sendjsonrequest('deletemenuitem.json.php',{'itemid':itemid}, getitems);
+    if (confirm({$getstring['confirmdeletemenuitem']})) {
+        sendjsonrequest('deletemenuitem.json.php',{'itemid':itemid}, getitems);
+    }
 }
 
 // Send the menu item in the form to the database.

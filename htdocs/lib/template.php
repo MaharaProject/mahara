@@ -376,33 +376,48 @@ function template_render($template, $mode, $data=array()) {
                         }
 
                         if ($artefact === null) {
-                            $block .= template_render_empty_artefact_block();
+                            if ($mode == TEMPLATE_RENDER_EDITMODE) {	
+        	                $block .= template_render_empty_artefact_block();
+                            }
+	                    else {
+        	                $block .= '';
+                            }
                         }
                         else {
                             $block .= template_render_artefact_block($t['id'], $artefact, $t['defaultformat']);
                         }
                     }
                     else {
-                        $block .= template_render_empty_artefact_block();
+                        if ($mode == TEMPLATE_RENDER_EDITMODE) {	
+                            $block .= template_render_empty_artefact_block();
+                        }
+                        else {
+                            $block .= '';
+                        }
                     }
                     
                     break;
             }
 
-            // span or div?
-            if (isset($t['tagtype']) && $t['tagtype'] == 'span') {
-                $html .= '<span';
-                $html .= template_render_attributes($attr);
-                $html .= '>';
-                $html .= $block;
-                $html .= '</span>';
-            }
-            else {
-                $html .= '<div';
-                $html .= template_render_attributes($attr);
-                $html .= '>';
-                $html .= $block;
-                $html .= '</div>';
+            if (empty($block) && $mode == TEMPLATE_RENDER_READONLY) {
+                $html .= '';
+            }		
+            else{
+                // span or div?
+                if (isset($t['tagtype']) && $t['tagtype'] == 'span') {
+                    $html .= '<span';
+                    $html .= template_render_attributes($attr);
+                    $html .= '>';
+                    $html .= $block;
+                    $html .= '</span>';
+                }
+                else {
+                    $html .= '<div';
+                    $html .= template_render_attributes($attr);
+                    $html .= '>';
+                    $html .= $block;
+                    $html .= '</div>';
+                }
             }
         }
     }

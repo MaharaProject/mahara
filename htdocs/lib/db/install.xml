@@ -79,6 +79,8 @@
                 <FIELD NAME="suspendedctime" TYPE="datetime" NOTNULL="false"/>
                 <FIELD NAME="suspendedreason" TYPE="text" NOTNULL="false"/>
                 <FIELD NAME="suspendedcusr" TYPE="int" LENGTH="10" NOTNULL="false"/>
+                <FIELD NAME="quota" TYPE="int" LENGTH="10" NOTNULL="false"/>
+                <FIELD NAME="quotaused" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />

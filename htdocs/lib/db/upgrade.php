@@ -159,6 +159,19 @@ function xmldb_core_upgrade($oldversion=0) {
         add_field($table, $field);
     }
 
+    if ($oldversion < 2007011600) {
+        // Add the 'quota' and 'quotaused' fields to the usr table
+        $table = new XMLDBTable('usr');
+        $field = new XMLDBField('quota');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 10, false, false, false);
+        add_field($table, $field);
+        $field = new XMLDBField('quotaused');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 10, false, true, null, null, null, 0);
+        add_field($table, $field);
+
+        execute_sql('UPDATE ' . get_config('dbprefix') . 'usr SET quota=10485760');
+    }
+
     return $status;
 
 }
