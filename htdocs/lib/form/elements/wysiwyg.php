@@ -69,7 +69,7 @@ function pieform_element_wysiwyg(Pieform $form, $element) {
         . '>' . Pieform::hsc($form->get_value($element)) . '</textarea>';
 }
 
-function pieform_element_wysiwyg_rule_required($value, $element) {
+function pieform_element_wysiwyg_rule_required(Pieform $form, $value, $element) {
     return strip_tags($value) === '';
 }
 
