@@ -649,6 +649,11 @@ class UserNotFoundException extends UserException {}
 class CommunityNotFoundException extends UserException {}
 
 /**
+ * Exception - fired when something happens that would make the user exceed their quota
+ */
+class QuotaExceededException extends UserException {}
+
+/**
  * Exception - anything to do with template parsing
  */
 class TemplateParserException extends ConfigException {}
