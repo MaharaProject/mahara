@@ -109,6 +109,7 @@ if (!empty($uploads)) {
 // we need to go through the body of the post and change the 'src' and
 // 'alt' attributes of all images that refer to uploaded files.
 if (!empty($uploadartefact)) {
+    $originalbody = $body;
     foreach ($uploadartefact as $k => $v) {
         $regexps = array('/\/artefact\/blog\/downloadtemp.php\?uploadnumber=' . $k .'&amp;createid=\d+/',
                          '/alt="uploaded:' . $k . '"/');
@@ -116,8 +117,10 @@ if (!empty($uploadartefact)) {
                       'alt="artefact:' . $v . '"');
         $body = preg_replace($regexps, $subs, $body);
     }
-    $postobj->set('description', $body);
-    $postobj->commit();
+    if ($body != $originalbody) {
+        $postobj->set('description', $body);
+        $postobj->commit();
+    }
 }
 
 json_reply(false, get_string('blogpostsaved', 'artefact.blog'));
