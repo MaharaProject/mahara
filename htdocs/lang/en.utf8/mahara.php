@@ -36,6 +36,8 @@ $string['submit']  = 'Submit';
 $string['update']  = 'Update';
 $string['change']  = 'Change';
 $string['go']      = 'Go';
+$string['default'] = 'Default';
+$string['upload']  = 'Upload';
 $string['loading'] = 'Loading ...';
 $string['errorprocessingform'] = 'There was an error with submitting this form. Please check the marked fields and try again.';
 
