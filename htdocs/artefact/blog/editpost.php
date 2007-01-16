@@ -56,6 +56,7 @@ if (!$blogpost) {
     $description = '';
     $checked = '';
     $pagetitle = 'newblogpost';
+    $focuselement = 'title';
 }
 else {
     $blogpostobj = new ArtefactTypeBlogPost($blogpost);
@@ -67,6 +68,7 @@ else {
     $description = $blogpostobj->get('description');
     $checked = !$blogpostobj->get('published');
     $pagetitle = 'editblogpost';
+    $focuselement = 'description'; // Doesn't seem to work with tinyMCE.
 }
 
 
@@ -80,6 +82,7 @@ $textinputform = pieform(array(
     'name' => 'editpost',
     'method' => 'post',
     'action' => '',
+    'autofocus' => $focuselement,
     'elements' => array(
         'parent' => array(
             'type' => 'hidden',
