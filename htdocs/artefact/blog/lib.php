@@ -593,6 +593,14 @@ class ArtefactTypeBlogPost extends ArtefactType {
     }
 
 
+    /**
+     * Returns the size of a temporary attachment
+     */
+    public static function temp_attachment_size($createid, $uploadnumber) {
+        return filesize(self::get_temp_file_path($createid, $uploadnumber));
+    }
+
+
     /** 
      * This function saves an uploaded file to a temporary directory in dataroot
      *

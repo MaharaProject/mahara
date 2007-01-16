@@ -323,6 +323,9 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
      * Returns a boolean indicating success or failure.
      */
     public static function save_file($pathname, $data) {
+        // This is only used when blog posts are saved: Files which
+        // have been uploaded to the post are moved to a permanent
+        // location in the files area using this function. 
         $dataroot = get_config('dataroot');
         $pathname = $dataroot . $pathname;
         if (!$size = filesize($pathname)) {
@@ -340,6 +343,8 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             $f->delete();
             return false;
         }
+        global $USER;
+        $USER->quota_add($size);
         return $id;
     }
 

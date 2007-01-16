@@ -311,8 +311,11 @@ function saveblogpost() {
     }
 
     data.body = $('editpost_description').value;
-    sendjsonrequest('saveblogpost.json.php', data,
-                    function () { window.location = '{$wwwroot}artefact/blog/view/?id={$blog}';});
+    sendjsonrequest('saveblogpost.json.php', data, function (result) { 
+        if (!result.error) {
+            window.location = '{$wwwroot}artefact/blog/view/?id={$blog}';
+        }
+    });
 }
 
 

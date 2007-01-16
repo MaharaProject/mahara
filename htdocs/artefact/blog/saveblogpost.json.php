@@ -45,6 +45,20 @@ $userid = $USER->get('id');
 
 safe_require('artefact', 'blog');
 
+
+// Check whether the sum of the sizes of the newly uploaded files
+// would exceed the user's quota.
+if (!empty($uploads)) {
+    $uploadsize = 0;
+    foreach ($uploads as $upload) {
+        $uploadsize += ArtefactTypeBlogPost::temp_attachment_size($createid, $upload->id);
+    }
+    if (!$USER->quota_allowed($uploadsize)) {
+        json_reply('local', get_string('newattachmentsexceedquota', 'artefact.blog'));
+    }
+}
+
+
 $postobj = new ArtefactTypeBlogPost($blogpost, null);
 $postobj->set('title', $title);
 $postobj->set('description', $body);
