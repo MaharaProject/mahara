@@ -428,6 +428,17 @@ div.sidebar_2 {
 div.sidebar_3 {
     background-image: url(../images/sidebox3_top_headerbg.gif);
 }
+div.sidebar h3 {
+    padding: 0;
+    margin: 1px 0 25px 0;
+    font-size: 12px;
+    color: #ffffff;
+}
+
+div.sidebar p {
+    color: #000000;
+}
+
 
 /* SITE MENU BEGINS */
 #sitemenu {
