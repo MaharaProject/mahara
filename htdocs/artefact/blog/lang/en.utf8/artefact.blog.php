@@ -70,6 +70,7 @@ $string['insert'] = 'Insert';
 $string['insertimage'] = 'Insert image';
 $string['myblogs'] = 'My Blogs';
 $string['name'] = 'Name';
+$string['newattachmentsexceedquota'] = 'The total size of the new files that you have uploaded to this post would exceed your quota.  You may be able to save the post if you remove some of the attachments you have just added.';
 $string['newblog'] = 'New Blog';
 $string['newblogpost'] = 'New Blog Post';
 $string['nofilesattachedtothispost'] = 'No attached files';
