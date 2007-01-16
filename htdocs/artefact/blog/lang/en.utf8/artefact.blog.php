@@ -93,6 +93,7 @@ $string['settings'] = 'Settings';
 $string['thisisdraft'] = 'This post is a draft';
 $string['thisisdraftdesc'] = 'When your post is a draft, no one except you can see it.';
 $string['title'] = 'Title';
+$string['update'] = 'Update';
 $string['verticalspace'] = 'Vertical space';
 $string['viewblog'] = 'View Blog';
 $string['youarenottheownerofthisblogpost'] = 'You are not the owner of this blog post';
