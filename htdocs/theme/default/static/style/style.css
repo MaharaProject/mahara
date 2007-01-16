@@ -169,6 +169,13 @@ label {
 	padding: 0;
 	margin: 0;
 }
+.leftrightlink {
+    margin-top: .5em;
+}
+.leftrightlink a {
+	font-weight: bold;
+	color: #819f18; 
+}
 .required label, 
 .required th { 
 	color: #819f18; 
