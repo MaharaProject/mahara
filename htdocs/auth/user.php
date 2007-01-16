@@ -106,9 +106,10 @@ class User {
         if (!isset($this->defaults[$key])) {
             throw new InvalidArgumentException($key);
         }
-        if ($key == 'quotaused') {
-            throw new InvalidArgumentException('quotaused should be set via the quota_* methods');
-        }
+        // @todo: Martyn Only for external calls??
+        //if ($key == 'quotaused') {
+        //    throw new InvalidArgumentException('quotaused should be set via the quota_* methods');
+        //}
         $this->SESSION->set("user/$key", $value);
     }
 
