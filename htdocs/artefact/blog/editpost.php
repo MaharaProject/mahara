@@ -424,8 +424,8 @@ function attachedImageList() {
 
 function insertImage() {
     var form = $('insertimageform');
-    var alt = form.imgid.value;
-    var src = imageSrcFromId(alt);
+    var alt = scrapeText(form.imageselector.options[form.imageselector.selectedIndex]);
+    var src = imageSrcFromId(form.imgid.value);
     var border = form.border.value;
     var vspace = form.vspace.value;
     var hspace = form.hspace.value;
@@ -485,7 +485,22 @@ function getImageData(imageid) {
 }
 
 
-function imageSelector(imageid) {
+function imageIdFromSrc(src) {
+    var artefactstring = 'download.php?file=';
+    var ind = src.indexOf(artefactstring);
+    if (ind != -1) {
+        return 'artefact:' + src.substring(ind+artefactstring.length, src.length);
+    }
+    var uploadstring = 'downloadtemp.php?uploadnumber=';
+    ind = src.indexOf(uploadstring);
+    if (ind != -1) {
+        return 'uploaded:' + src.substring(ind+uploadstring.length, src.length).split('&')[0];
+    }
+    return '';
+}
+
+function imageSelector(src) {
+    var imageid = imageIdFromSrc(src);
     var imagefiles = attachedImageList();
     if (imagefiles.length == 0) {
         return SPAN({'id':'imageselector'}, {$getstring['noimageshavebeenattachedtothispost']});
@@ -502,8 +517,9 @@ function imageSelector(imageid) {
                 appendChildNodes(sel, OPTION({'value':imagefiles[i].id}, imagefiles[i].name));
             }
         }
-        sel.onchange = function () { 
+        sel.onchange = function () {
             resetImageData();
+            $('insertimageform').imgid.value = sel.value;
             getImageData(sel.value);
         };
         return sel;
@@ -545,7 +561,7 @@ function blogpostExecCommandHandler(editor_id, elm, command, user_interface, val
         var tbody = TBODY(null,
           TR(null, TH({'colSpan':2}, LABEL(null,{$getstring['insertimage']}))),
           TR(null, TH(null, LABEL(null,{$getstring['name']})),
-             TD(null, imageSelector(a.alt))),
+             TD(null, imageSelector(a.src))),
           TR(null, TH(null, LABEL(null,{$getstring['alignment']})),
              TD(null, alignSelector(a.align))),
           TR(null, TH(null, LABEL(null,{$getstring['dimensions']})),
@@ -559,8 +575,8 @@ function blogpostExecCommandHandler(editor_id, elm, command, user_interface, val
              TD(null,INPUT({'type':'text', 'class':'text', 'name':'hspace', 'size':3, 'value':a.hspace}))));
 
         var imageform = FORM({'id':'insertimageform'},
-                             INPUT({'type':'hidden', 'name':'imgsrc', 'value':''}),
-                             INPUT({'type':'hidden', 'name':'imgid', 'value':a.alt}),
+                             INPUT({'type':'hidden', 'name':'imgsrc', 'value':a.src}),
+                             INPUT({'type':'hidden', 'name':'imgid', 'value':imageIdFromSrc(a.src)}),
                              TABLE(null,tbody));
         appendChildNodes(tbody, TR(null,TD({'colSpan':2},
                          INPUT({'type':'button', 'class':'button', 
