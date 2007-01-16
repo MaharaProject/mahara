@@ -90,8 +90,16 @@ $string['emailingfailed'] = 'Profile saved, but emails were not sent to: %s';
 
 // Profile icons
 $string['editprofile']  = 'Back to Edit Profile';
+$string['editprofileicons'] = 'Edit Profile Icons';
 $string['profileicons'] = 'Profile Icons';
 $string['default'] = 'Default';
 $string['profileicon'] = 'Profile Icon';
+$string['noimagesfound'] = 'No images found';
+$string['uploadedprofileiconsuccessfully'] = 'Uploaded new profile icon successfully';
+$string['profileiconsetdefaultnotvalid'] = 'Could not set the default profile icon, the choice was not valid';
+$string['profileiconsdefaultsetsuccessfully'] = 'Default profile icon set successfully';
+$string['profileiconsdeletedsuccessfully'] = 'Profile icon(s) deleted successfully';
+$string['profileiconsnoneselected'] = 'No profile icons were selected to be deleted';
+$string['onlyfiveprofileicons'] = 'You may upload only five profile icons';
 
 ?>
