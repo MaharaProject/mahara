@@ -392,7 +392,7 @@ function quotaUpdate(quotaused, quota) {
 
         $('quota_used').innerHTML = data.quotaused_display;
         $('quota_total').innerHTML = data.quota_display;
-        $('quota_percentage').innerHTML = roundToFixed(data.quotaused / data.quota * 100, 0);
+        $('quota_percentage').innerHTML = roundToFixed(data.quotaused / data.quota * 100, 0) + '%';
     }
 
     if (quotaused && quota) {
