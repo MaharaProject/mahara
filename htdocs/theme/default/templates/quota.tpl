@@ -4,10 +4,10 @@
 {if $SIDEBAR_SEQUENCE > 3}{assign var=SIDEBAR_SEQUENCE value=3}{/if}
 <div class="sidebar sidebar_{$SIDEBAR_SEQUENCE}">
     <h3>{str tag="quota"}</h3>
-    <p>
+    <p id="quota_message">
         {$QUOTA_MESSAGE}
     </p>
-    <p class="center">
+    <p id="quota_bar">
         <span id="quota_percentage">{$QUOTA_PERCENTAGE}</span>%
     </p>
 	<div class="loginbox-botcorners"><img src="{image_path imagelocation='images/sidebox_bot.gif'}" border="0" alt=""></div>
