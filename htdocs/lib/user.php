@@ -481,7 +481,7 @@ function suspend_user($suspendeduserid, $reason, $suspendinguserid=null) {
  * handle the add/remove/approve/reject friend form
  * @param array $values from pieforms.
  */
-function friend_submit(Pieform $form, $values) {
+function friend_submit($form, $values) {
     global $user, $USER;
 
     log_debug($values);
@@ -556,7 +556,13 @@ function friend_submit(Pieform $form, $values) {
         break;
     }
     activity_occurred('maharamessage', $n);
-    $form->json_reply(PIEFORM_OK, get_string('friendform' . $values['type'] . 'success', 'mahara', display_name($user)));
+
+    if ($form instanceof Pieform) {
+        $form->json_reply(PIEFORM_OK, get_string('friendform' . $values['type'] . 'success', 'mahara', display_name($user)));
+    }
+    else {
+        json_reply(false, get_string('friendform' . $values['type'] . 'success', 'mahara', display_name($user)));
+    }
 }
 
 /**

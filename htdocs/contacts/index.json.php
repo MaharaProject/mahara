@@ -53,7 +53,7 @@ if ($control) {
         json_reply(true, $e->getMessage());
     }
     $user = get_record('usr', 'id', $values['id']);
-    friend_submit($values);
+    friend_submit(null, $values);
     exit;
 }
 
