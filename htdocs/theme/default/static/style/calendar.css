@@ -17,7 +17,7 @@ div.calendar { position: relative; }
   text-align: center;    /* They are the navigation buttons */
   padding: 2px;          /* Make the buttons seem like they're pressing */
   background-color: #5c8727;
-  color: #FFFFFF;
+  color: #FFF;
 }
 
 .calendar .nav {
@@ -101,7 +101,7 @@ div.calendar { position: relative; }
 
 .calendar tbody td.selected { /* Cell showing today date */
   font-weight: bold;
-  border: 1px solid #FFFFFF;
+  border: 1px solid #FFF;
   padding: 1px 3px 1px 1px;
   background: #e6c55b;
   color: #3a5813;
@@ -170,7 +170,7 @@ div.calendar { position: relative; }
 }
 
 .calendar .combo .hilite {
-  background: #FFFFFF;
+  background: #FFF;
 }
 
 .calendar .combo .active {
@@ -192,7 +192,7 @@ div.calendar { position: relative; }
 .calendar td.time .ampm {
   padding: 0px 3px 0px 4px;
   font-weight: bold;
-  background-color: #ffffff;
+  background-color: #fff;
   color: #030;
 }
 
