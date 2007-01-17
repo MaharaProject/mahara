@@ -79,6 +79,7 @@ $string['noresults'] = 'No results';
 $string['postbody'] = 'Body';
 $string['postbodydesc'] = ' ';
 $string['postedon'] = 'Posted on';
+$string['postedbyon'] = 'Posted by %s on %s';
 $string['posttitle'] = 'Title';
 $string['posttitledesc'] = 'The title appears above your post.';
 $string['posts'] = 'posts';
