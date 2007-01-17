@@ -463,7 +463,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
     protected function get_metadata() {
         $data = parent::get_metadata();
         $data['size'] = array('name' => get_string('size', 'artefact.file'),
-                              'value' => $this->size);
+                              'value' => $this->get('size'));
         $url = get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->get('id');
         $data['download'] = array('name' => get_string('download', 'artefact.file'),
                                   'value' => make_link($url));
@@ -483,6 +483,10 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
             $this->size = null;
         }
 
+    }
+
+    public function count_children() {
+        return count_records('artefact', 'parent', $this->get('id'));
     }
 
     public function folder_contents() {
@@ -568,6 +572,13 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
             return $f->get('id');
         }
         return $record->id;
+    }
+
+    protected function get_metadata() {
+        $data = parent::get_metadata();
+        $data['size'] = array('name' => get_string('size', 'artefact.file'),
+                              'value' => $this->count_children());
+        return $data;
     }
 
 }
