@@ -27,8 +27,8 @@
 define('INTERNAL', 1);
 define('MENUITEM', 'mycontacts');
 define('SUBMENUITEM', 'mygroups');
-
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+define('TITLE', get_string('mygroups'));
 
 $javascript = <<<JAVASCRIPT
 var grouplist = new TableRenderer(

@@ -27,9 +27,9 @@
 define('INTERNAL', 1);
 define('MENUITEM', 'mycontacts');
 define('SUBMENUITEM', 'mygroups');
-
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('pieforms/pieform.php');
+define('TITLE', get_string('editgroup'));
 
 $id = param_integer('id',null);
 
