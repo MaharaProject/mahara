@@ -26,6 +26,7 @@
 
 define('INTERNAL', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
+define('TITLE', get_string('createviewstep2', 'view'));
 require_once('template.php');
 require_once('pieforms/pieform.php');
 

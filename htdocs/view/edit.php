@@ -27,6 +27,7 @@
 define('INTERNAL', 1);
 define('MENUITEM', 'view');
 require(dirname(dirname(__FILE__)) . '/init.php');
+define('TITLE', get_string('editview', 'view'));
 require_once('template.php');
 
 $view_id = param_integer('viewid');

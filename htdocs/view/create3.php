@@ -18,7 +18,7 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Nigel McNie <nigel@catalyst.net.nz>
+ * @author     Martyn Smith <martyn@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
@@ -27,6 +27,7 @@
 define('INTERNAL', 1);
 define('MENUITEM', 'view');
 require(dirname(dirname(__FILE__)) . '/init.php');
+define('TITLE', get_string('createviewstep3', 'view'));
 require_once('template.php');
 
 $createid = param_integer('createid');
