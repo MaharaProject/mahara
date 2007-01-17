@@ -409,6 +409,21 @@ abstract class ArtefactType {
         }
     }
 
+    
+    protected function get_metadata() {
+        $data = array('title'        => $this->get('title'),
+                      'type'         => get_string($this->get('artefacttype')),
+                      'owner'        => display_name(optional_userobj($this->get('owner'))),
+                      'created'      => format_date($this->get('ctime')),
+                      'lastmodified' => format_date($this->get('mtime')));
+        foreach ($data as $key => $value) {
+            $data[$key] = array('name' => get_string($key),
+                                'value' => $value);
+        }
+        return $data;
+    }
+
+
     /**
      * render instance to metadata format
      * @param $options 
@@ -419,7 +434,7 @@ abstract class ArtefactType {
         $smarty = smarty();
 
         $smarty->assign('title', $this->get('title'));
-        $smarty->assign('type', $this->get('artefacttype'));
+        $smarty->assign('type', get_string($this->get('artefacttype')));
         $smarty->assign('owner', display_name(optional_userobj($this->get('owner'))));
         $smarty->assign('nicectime', format_date($this->get('ctime')));
         $smarty->assign('nicemtime', format_date($this->get('mtime')));
