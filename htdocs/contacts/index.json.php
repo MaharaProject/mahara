@@ -31,10 +31,10 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 
 json_headers();
 
-$pending  = param_boolean('pending', false);
+$pending  = param_boolean('pending');
 $limit    = param_integer('limit', 10);
 $offset   = param_integer('offset', 0);
-$control  = param_boolean('control', false);
+$control  = param_boolean('control');
 
 $prefix = get_config('dbprefix');
 $userid = $USER->get('id');
