@@ -150,13 +150,13 @@ $string['firstname'] = 'First name';
 $string['firstnamedescription'] = ' ';
 $string['lastname'] = 'Last name';
 $string['lastnamedescription'] = ' ';
-$string['password2description'] = 'Your password again';
 $string['registerdescription'] = 'Welcome! To use this site you must first register. You must also agree to the <a href="terms.php">terms and conditions</a>. The data we collect here will be stored according to our <a href="privacy.php">privacy statement</a>.';
 $string['registeringdisallowed'] = 'Sorry, you cannot register for this system at this time';
 
 // Forgot password
 $string['cantchangepassword'] = 'Sorry, you are unable to change your password through this interface - please use your institution\'s interface instead';
 $string['forgotpassword'] = 'Forgotten your password?';
+$string['forgotpasswordtext'] = 'Forgot your password? Enter your e-mail address here and we will send you a key you can use to give yourself a new password.';
 $string['passwordreminder'] = 'Password Reminder';
 $string['pwchangerequestsent'] = 'You should receive an e-mail shortly with a link you can use to change the password for your account';
 $string['forgotpassemailsubject'] = 'Change password request for %s';
@@ -195,6 +195,7 @@ $string['forgotpassemailmessagehtml'] = '<p>Dear %s,</p>
 <p><a href="' . get_config('wwwroot') . 'forgotpass.php?key=%s">' . get_config('wwwroot') . 'forgotpass.php?key=%s</a></p>';
 $string['forgotpassemailsendunsuccessful'] = 'Sorry, it appears that the e-mail could not be sent successfully. This is our fault, please try again shortly';
 $string['forgotpassnosuchemailaddress'] = 'The email address you entered doesn\'t match any users for this site';
+$string['forgotpasswordenternew'] = 'Please enter your new password to continue';
 $string['nosuchpasswordrequest'] = 'No such password request';
 $string['passwordchangedok'] = 'Your password was successfully changed';
 

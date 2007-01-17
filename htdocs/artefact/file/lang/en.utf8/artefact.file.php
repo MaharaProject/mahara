@@ -27,6 +27,7 @@
 defined('INTERNAL') || die();
 
 $string['adminfilesloaded'] = 'Admin files loaded';
+$string['bytes'] = 'bytes';
 $string['changessaved'] = 'Changes saved';
 $string['contents'] = 'Contents';
 $string['copyrightnotice'] = 'Copyright notice';
@@ -39,7 +40,9 @@ $string['destination'] = 'Destination';
 $string['download'] = 'Download';
 $string['editfile'] = 'Edit file';
 $string['editfolder'] = 'Edit folder';
+$string['emptyfolder'] = 'Empty folder';
 $string['file'] = 'File';
+$string['files'] = 'files';
 $string['fileexists'] = 'File exists';
 $string['fileexistsoverwritecancel'] =  'A file with that name already exists.  You can try a different name, or overwrite the existing file.';
 $string['filelistloaded'] = 'File list loaded';

@@ -96,14 +96,14 @@ function newblog_submit(Pieform $form, $values) {
     global $USER;
 
     ArtefactTypeBlog::new_blog($USER, $values);
-    redirect(get_config('wwwroot') . 'artefact/blog/list/');
+    redirect('artefact/blog/');
 }
 
 /**
  * This function gets called to cancel a submission.
  */
 function newblog_cancel_submit() {
-    redirect(get_config('wwwroot') . 'artefact/blog/list/');
+    redirect('artefact/blog/');
 }
 
 ?>

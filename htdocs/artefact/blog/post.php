@@ -657,10 +657,10 @@ function editpost_submit(Pieform $form, array $values) {
     if ((!empty($values['id']) && ArtefactTypeBlogPost::edit_post($USER, $values))
         || (empty($values['id']) && ArtefactTypeBlogPost::new_post($USER, $values))) {
         // Redirect to the blog page.
-        redirect(get_config('wwwroot') . 'artefact/blog/view/?id=' . $values['parent']);
+        redirect('artefact/blog/view/?id=' . $values['parent']);
     }
 
-    redirect(get_config('wwwroot') . 'artefact/blog/list/');
+    redirect('artefact/blog/');
 }
 
 
@@ -671,7 +671,7 @@ function editpost_submit(Pieform $form, array $values) {
  */
 function editpost_cancel_submit() {
     $blog = param_integer('parent');
-    redirect(get_config('wwwroot') . 'artefact/blog/view/?id=' . $blog);
+    redirect('artefact/blog/view/?id=' . $blog);
 }
  
 ?>

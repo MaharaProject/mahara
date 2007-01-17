@@ -979,7 +979,7 @@ function main_nav() {
 
     if ($plugins = get_records_array('artefact_installed')) {
         foreach ($plugins as &$plugin) {
-            safe_require('artefact', $plugin->name, 'lib.php', 'require_once');
+            safe_require('artefact', $plugin->name);
             $plugin_menu = call_static_method(generate_class_name('artefact',$plugin->name), 'menu_items');
 
             foreach ($plugin_menu as &$menu_item) {

@@ -16,7 +16,7 @@
 			<div id="myblogs">
                     <div class="blogsettings">
 								<div class="addicon">
-									<a href="{$WWWROOT}artefact/blog/editpost.php?blog={$blog->get('id')}">{str section="artefact.blog" tag="addpost"}</a>
+									<a href="{$WWWROOT}artefact/blog/post.php?blog={$blog->get('id')}">{str section="artefact.blog" tag="addpost"}</a>
 								</div>
                          <a href="{$WWWROOT}artefact/blog/settings/?id={$blog->get('id')}">{str section="artefact.blog" tag="settings"}</a>
                     </div>

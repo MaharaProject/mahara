@@ -199,6 +199,14 @@ label {
 	font-size: 11px;
 	font-weight: normal;
 }
+.message {
+	padding: 10px;
+	background-color: #f4f7e8;
+	border: 1px solid #e5e8da;
+    color: #547722;
+    font-weight: bold;
+    text-align: center;
+}
 
 /* CONTENT LAYOUT BEGIN */
 #container {
@@ -1530,7 +1538,6 @@ span.block_targetted, div.block_targetted {
 	padding: 0 0 0 25px;
 }
 #runupgrade {
-	align: right;
 	padding: 10px;
 	background-color: #f4f7e8;
 	border: 1px solid #e5e8da;

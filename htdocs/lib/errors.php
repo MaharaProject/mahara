@@ -310,7 +310,6 @@ function log_build_backtrace($backtrace) {
  */
 function die_info($message) {
     $smarty = smarty();
-    $message .= '<p><a href="#" onclick="history.go(-1)">back</a></p>';
     $smarty->assign('message', $message);
     $smarty->assign('type', 'info');
     $smarty->display('message.tpl');

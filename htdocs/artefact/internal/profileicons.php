@@ -25,7 +25,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'profile');
+define('MENUITEM', 'myprofile');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 $smarty = smarty(array('tablerenderer'));
 
