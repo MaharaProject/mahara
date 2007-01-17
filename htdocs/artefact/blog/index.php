@@ -26,8 +26,8 @@
 
 define('INTERNAL', 1);
 define('MENUITEM', 'myblogs');
-
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+define('TITLE', get_string('myblogs','artefact.blog'));
 safe_require('artefact', 'blog');
 
 // This is the wwwroot.
