@@ -191,7 +191,6 @@ class ArtefactTypeBlog extends ArtefactType {
         if (empty($this->id)) {
             return;
         }
-        log_debug('Deleting blog:'.$this->id);
 
         // Delete the blog-specific data.
         delete_records('artefact_blog_blog', 'blog', $this->id);
@@ -216,7 +215,7 @@ class ArtefactTypeBlog extends ArtefactType {
 
         // This uses the above blockid, so needs to be inlcuded after.
         $javascript = require(get_config('docroot') . 'artefact/blog/render/blog_listchildren.js.php');
-        
+
         $smarty = smarty();
         $smarty->assign('artefact', $this);
         $smarty->assign('blockid', $blockid);
@@ -576,7 +575,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
      * @param integer
      * @param integer
      */
-    public static function render_posts($format, $id, $limit = self::pagination, $offset = 0, $options = null) {
+    public static function render_posts($format, $options, $id, $limit = self::pagination, $offset = 0) {
         ($postids = get_records_sql_array("
          SELECT a.id
          FROM " . get_config('dbprefix') . "artefact a
@@ -593,7 +592,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
             $blogpost = new ArtefactTypeBlogPost($postid->id);
             $posts[] = array(
                 'id' => $postid->id,
-                'content' => $blogpost->render($format, $options)
+                'content' => $blogpost->render($format, (array) $options)
             );
         }
 
