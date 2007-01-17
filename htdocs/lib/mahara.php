@@ -1093,6 +1093,12 @@ function can_view_view($view_id, $user_id=null) {
         return true;
     }
 
+    // check admin
+    if (get_field('usr', 'admin', 'id', $user_id)) {
+        log_debug('Yes - You are a site administrator');
+        return true;
+    }
+
 
     log_debug('No - nothing matched');
     return false;
