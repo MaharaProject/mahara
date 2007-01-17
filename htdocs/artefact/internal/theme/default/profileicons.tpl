@@ -30,6 +30,9 @@
             <input type="hidden" name="pieform_settings" value="">
             </form>
 
+            <h3>{str tag="uploadprofileicon" section="artefact.internal"}</h3>
+            <p>{str tag="profileiconsiconsizenotice" section="artefact.internal"}</p>
+
             {$uploadform}
 
 {include file="columnleftend.tpl"}
