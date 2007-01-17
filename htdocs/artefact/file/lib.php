@@ -513,27 +513,24 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
 
     }
 
-    public function count_children() {
-        return count_records('artefact', 'parent', $this->get('id'));
-    }
-
     public function folder_contents() {
-        if ($children = get_records_array('artefact', 'parent', $this->get('id'))) {
-            return $children;
-        }
-        return array();
+        return get_records_array('artefact', 'parent', $this->get('id'));
     }
 
     public function render_full($options) {
         $smarty = smarty();
         $smarty->assign('artefact', $this);
-        $smarty->assign('children', $this->folder_contents());
+        if ($children = $this->folder_contents()) {
+            $smarty->assign('children', $children);
+        }
         return $smarty->fetch('artefact:file:folder_renderfull.tpl');
     }
 
     public function listchildren($options) {
         $smarty = smarty();
-        $smarty->assign('children', $this->folder_contents());
+        if ($children = $this->folder_contents()) {
+            $smarty->assign('children', $children);
+        }
         return $smarty->fetch('artefact:file:folder_listchildren.tpl');
     }
 
