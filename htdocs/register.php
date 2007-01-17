@@ -28,6 +28,7 @@ define('INTERNAL', 1);
 define('PUBLIC', 1);
 define('MENUITEM', 'home');
 require('init.php');
+define('TITLE', get_string('register'));
 
 /*
  * This page handles three different tasks:

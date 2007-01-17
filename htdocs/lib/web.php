@@ -180,6 +180,13 @@ EOF;
     $smarty->assign('THEMEURL', get_config('themeurl'));
     $smarty->assign('WWWROOT', $wwwroot);
 
+    if (defined('TITLE')) {
+        $smarty->assign('PAGETITLE', TITLE . ' - ' . get_config('sitename'));
+    }
+    else {
+        $smarty->assign('PAGETITLE', get_config('sitename'));
+    }
+
 
     $sitename = get_config('sitename');
     $smarty->assign('title', $sitename);
