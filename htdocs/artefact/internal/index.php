@@ -26,8 +26,8 @@
 
 define('INTERNAL', 1);
 define('MENUITEM', 'myprofile');
-
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+define('TITLE', get_string('profile','artefact.internal'));
 require_once('pieforms/pieform.php');
 safe_require('artefact', 'internal');
 

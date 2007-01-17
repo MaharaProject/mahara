@@ -27,8 +27,8 @@
 define('INTERNAL', 1);
 define('MENUITEM', 'mycontacts');
 define('SUBMENUITEM', 'myownedcommunities');
-
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+define('TITLE', get_string('myownedcommunities'));
 
 $viewurl = get_config('wwwroot') . 'contacts/communities/view.php?id=';
 $editurl = get_config('wwwroot') . 'contacts/communities/edit.php?id=';

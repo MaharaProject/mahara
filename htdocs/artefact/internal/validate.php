@@ -26,10 +26,10 @@
 
 define('INTERNAL', 1);
 define('PUBLIC', 1);
-
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('pieforms/pieform.php');
 safe_require('artefact', 'internal');
+define('TITLE', get_string('emailactivation','artefact.internal'));
 
 $email = param_variable('email');
 $key   = param_variable('key');
