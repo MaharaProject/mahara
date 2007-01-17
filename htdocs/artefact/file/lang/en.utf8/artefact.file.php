@@ -36,6 +36,7 @@ $string['deletefile?'] = 'Are you sure you want to delete this file?';
 $string['deletefolder?'] = 'Are you sure you want to delete this folder?';
 $string['description'] = 'Description';
 $string['destination'] = 'Destination';
+$string['download'] = 'Download';
 $string['editfile'] = 'Edit file';
 $string['editfolder'] = 'Edit folder';
 $string['file'] = 'File';

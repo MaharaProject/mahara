@@ -464,6 +464,9 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         $data = parent::get_metadata();
         $data['size'] = array('name' => get_string('size', 'artefact.file'),
                               'value' => $this->size);
+        $url = get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->get('id');
+        $data['download'] = array('name' => get_string('download', 'artefact.file'),
+                                  'value' => make_link($url));
         return $data;
     }
 
