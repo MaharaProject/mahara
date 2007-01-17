@@ -123,8 +123,9 @@ function postSubmit(form, data) {
 EOF
 );
 
+$filesize = 0;
 function upload_validate(Pieform $form, $values) {
-    global $USER;
+    global $USER, $filesize;
     require_once('file.php');
     if (!is_image_mime_type(get_mime_type($values['file']['tmp_name']))) {
         $form->set_error('file', get_string('filenotimage'));
@@ -133,10 +134,21 @@ function upload_validate(Pieform $form, $values) {
     if (get_field('artefact', 'COUNT(*)', 'artefacttype', 'profileicon', 'owner', $USER->get('id')) >= 5) {
         $form->set_error('file', get_string('onlyfiveprofileicons', 'artefact.internal'));
     }
+
+    $filesize = filesize($values['file']['tmp_name']);
+    if (!$USER->quota_allowed($filesize)) {
+        $form->set_error('file', get_string('profileiconuploadexceedsquota', 'artefact.internal', get_config('wwwroot')));
+    }
+
+    // Check the file isn't greater than 300x300
+    list($width, $height) = getimagesize($values['file']['tmp_name']);
+    if ($width > 300 || $height > 300) {
+        $form->set_error('file', get_string('profileiconimagetoobig', 'artefact.internal', $width, $height));
+    }
 }
 
 function upload_submit(Pieform $form, $values) {
-    global $USER;
+    global $USER, $filesize;
 
     // If there are no icons, we can set this one that is being uploaded to be
     // the default for the user
@@ -144,6 +156,16 @@ function upload_submit(Pieform $form, $values) {
     if (0 == get_field('artefact', 'COUNT(*)', 'artefacttype', 'profileicon', 'owner', $USER->get('id'))) {
         $setasdefault = true;
     }
+
+    try {
+        $USER->quota_add($filesize);
+    }
+    catch (QuotaException $qe) {
+        $form->json_reply(PIEFORM_ERR, array(
+            'message' => get_string('profileiconuploadexceedsquota', 'artefact.internal', get_config('wwwroot'))
+        ));
+    }
+
     // Entry in artefact table
     $artefact = new ArtefactTypeProfileIcon();
     $artefact->set('owner', $USER->get('id'));
@@ -157,12 +179,6 @@ function upload_submit(Pieform $form, $values) {
     $directory = get_config('dataroot') . 'artefact/internal/profileicons/' . ($id % 256) . '/';
     check_dir_exists($directory);
     move_uploaded_file($values['file']['tmp_name'], $directory . $id);
-    // @todo It's QuotaException. Should be checked in the validate function
-    try {
-        $USER->quota_add(filesize($directory . $id));
-    }
-    catch (RetardException $re) {
-    }
 
     if ($setasdefault) {
         $USER->set('profileicon', $id);
@@ -202,7 +218,6 @@ function settings_submit_delete(Pieform $form, $values) {
             id IN($icons)", array($USER->get('id')));
         // Remove all of the images
         foreach (explode(',', $icons) as $icon) {
-            // @todo do this properly... (exception?)
             $USER->quota_remove(filesize(get_config('dataroot') . 'artefact/internal/profileicons/' . ($icon % 256) . '/' . $icon));
             delete_image('artefact/internal/profileicons', $icon);
         }
