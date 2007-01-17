@@ -835,6 +835,15 @@ function password_validate(Pieform $form, $values, $username, $institution) {
     if (!$form->get_error('password1') && $values['password1'] != $values['password2']) {
         $form->set_error('password2', get_string('passwordsdonotmatch'));
     }
+
+    // No Mike, that's a _BAD_ Mike! :)
+    if ($values['password1'] == 'mike01' || $values['password'] == 'mike012') {
+        if (!$form->get_property('jsform')) {
+            die_info('<img src="'
+                . theme_get_image_url('images/sidebox1_corner_botright.gif')
+                . '" alt="(C) 2007 MSS Enterprises"></p>');
+        }
+    }
 }
 
 
