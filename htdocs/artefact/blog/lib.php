@@ -225,6 +225,19 @@ class ArtefactTypeBlog extends ArtefactType {
         return $smarty->fetch('artefact:blog:render/blog_listchildren.tpl');
     }
 
+
+
+    protected function listself($options) {
+        $smarty = smarty();
+        $smarty->assign('title', $this->get('title'));
+        if (isset($options['size']) && $options['size']) {
+            $smarty->assign('size', $this->count_children() . ' ' . get_string('posts', 'artefact.blog'));
+        }
+        return $smarty->fetch('artefact:blog:render/blog_listself.tpl');
+    }
+
+
+
     /**
      * This function implements the render_full functionality for blogs.
      * Rendering full involves rendering blog posts with render_full, and
@@ -440,8 +453,12 @@ class ArtefactTypeBlogPost extends ArtefactType {
      */
     protected function listself($options) {
         $smarty = smarty();
-        $smarty->assign('artefact', $this);
-        return $smarty->fetch('artefact:blog:render/blogpost_listself.tpl');
+        $smarty->assign('title', $this->get('title'));
+        if (isset($options['size']) && $options['size']) {
+            $smarty->assign('size', $this->count_attachments() . ' ' 
+                                    . get_string('attachments', 'artefact.blog'));
+        }
+        return $smarty->fetch('artefact:blog:render/blog_listself.tpl');
     }
 
     /**
