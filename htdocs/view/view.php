@@ -65,6 +65,7 @@ if ($artefactid) {
 }
 else {
     $navlist = array($view->get('title'));
+    define('TITLE', $view->get('title'));
     $jsartefact = 'undefined';
     $content = $view->render();
 }
