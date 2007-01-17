@@ -552,8 +552,13 @@ class ArtefactTypeImage extends ArtefactTypeFile {
     }
 
     public function render_full($options) {
-        // Use thumb.php?
-        return 'render image ' . $this->title . ' here';
+        $smarty = smarty();
+        $smarty->assign('src', get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->id);
+        $smarty->assign('title', $this->title);
+        $smarty->assign('description', $this->description);
+        $smarty->assign('width', isset($options['width']) ? $options['width'] : '');
+        $smarty->assign('height', isset($options['height']) ? $options['height'] : '');
+        return $smarty->fetch('artefact:file:image_renderfull.tpl');
     }
 
     public static function get_render_list() {

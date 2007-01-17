@@ -115,7 +115,8 @@ div.grippie {
 #template_submit,
 #template_back,
 #cancel_createview4_submit,
-#createview4_back {
+#createview4_back,
+#settings tfoot input {
 	background: url(../images/btn_short_off.gif) no-repeat;
 	border: 0;
 	width: 50px;
@@ -421,7 +422,7 @@ label {
 /* RIGHT SIDE BOX BEGIN */
 div.sidebar {
 	background: #FFF url(../images/sidebox2_top_headerbg.gif) no-repeat top;
-   	padding: 10px 5px 0 10px;
+   	padding: 10px 0 0 10px;
    	margin-bottom: 10px;
 	color: #FFF;
 	font-weight: bold;
@@ -448,16 +449,20 @@ div.sidebar p {
 /* Quota Bar */
 #quota_message {
 	text-align: center;
-	margin: 0 20px;
+	margin: 0 20px 0 15px;
+    padding-bottom: 10px;
 }
-#quota_bar {
+#quota_bar, #quota_bar_100 {
 	background: url(../images/quota_bar_bg.gif) no-repeat;
 	height: 21px;
 	width: 210px;
 	color: #5c8727;
 	padding: 7px 0 0 0;
 	text-align: center;
-	margin: 3px 0;
+	margin: 0px 0;
+}
+#quota_bar_100 {
+	background: url(../images/quota_bar_full.gif) no-repeat;
 }
 #quota_used {
 	color: #819f18;
@@ -465,6 +470,25 @@ div.sidebar p {
 #quota_total {
 	color: #5c8727;
 }
+#quota_bar #quota_percentage {
+    text-align: center;
+    position: relative;
+    z-index: 10;
+}
+#quota_bar_100 #quota_percentage {
+    text-align: center;
+    position: relative;
+    margin: auto;
+    z-index: 10;
+    color: #ffffff;
+}
+#quota_fill {
+    margin: 0px 5px;
+    height: 28px;
+    background-image: url(../images/quota_bar_highlight.gif);
+    position: absolute;
+}
+
 
 /* SITE MENU BEGINS */
 #sitemenu {
@@ -757,6 +781,7 @@ p {
 .maincontent #register table,
 .maincontent #editcommunity table,
 .maincontent #createcommunity table,
+.maincontent #upload table,
 #change_password table {
 	border: 0px;
 }
@@ -914,6 +939,31 @@ table#installer {
 .maincontent #email_list .unvalidated {
 	font-size: 9px;
 }
+.maincontent .leftrightlink {
+	padding: 5px 0 5px 0;
+	margin: -3px 0 0 0;
+}
+.maincontent #editprofileicons {
+	background: url(../images/btn_editprofileicons.gif) no-repeat;
+	width: 170px;
+	height: 24px;
+	color: #eef7d4;
+	font-weight: bold;
+	padding: 5px 20px 6px 45px;
+}
+.maincontent #backtoeditprofile {
+	background: url(../images/btn_editprofileicons.gif) no-repeat;
+	width: 170px;
+	height: 24px;
+	color: #eef7d4;
+	font-weight: bold;
+	padding: 5px 20px 6px 35px;
+}
+.maincontent #upload th,
+.maincontent #upload td {
+	padding: 0 5px;
+}
+
 
 /* My Blogs styles */
 #myblogs .blogsettings .addicon {
