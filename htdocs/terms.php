@@ -26,8 +26,8 @@
 
 define('INTERNAL', 1);
 define('PUBLIC', 1);
-
 require('init.php');
+define('TITLE', get_string('termsandconditions'));
 
 $smarty = smarty();
 $smarty->assign('page_content', get_site_page_content('termsandconditions'));

@@ -28,6 +28,7 @@ define('INTERNAL', 1);
 define('PUBLIC', 1);
 require('init.php');
 require_once('pieforms/pieform.php');
+define('TITLE', get_string('forgotpassword'));
 
 if (!session_id()) {
     session_start();
