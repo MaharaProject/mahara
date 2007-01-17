@@ -92,7 +92,7 @@ postlist.rowfunction = function(d, n, gd) {
         {
             'method' : 'get',
             'style' : 'display: inline;',
-            'action' : {$enc_wwwroot} + 'artefact/blog/editpost.php'
+            'action' : {$enc_wwwroot} + 'artefact/blog/post.php'
         },
         INPUT(
             {

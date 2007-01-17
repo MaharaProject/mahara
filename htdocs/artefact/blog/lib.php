@@ -46,7 +46,7 @@ class PluginArtefactBlog extends PluginArtefact {
         return array(
             array(
                 'name' => 'myblogs',
-                'link' => 'list/',
+                'link' => '',
             )
         );
     }

@@ -25,42 +25,23 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'myblogs');
+define('JSON', 1);
 
-require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
+require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('artefact', 'blog');
 
-// This is the wwwroot.
-$wwwroot = get_config('wwwroot');
+json_headers();
 
-// This JavaScript creates a table to display the blog entries.
-$js = <<<EOF
+$limit = param_integer('limit', ArtefactTypeBlog::pagination);
+$offset = param_integer('offset', 0);
 
-var bloglist = new TableRenderer(
-    'bloglist',
-    'index.json.php',
-    [
-        function(r) {
-            return TD(
-              null,
-              A({'href':'{$wwwroot}artefact/blog/view/?id=' + r.id}, r.title)
-            );
-        },
-        function(r) {
-            var td = TD();
-            td.innerHTML = r.description;
-            return td;
-        }
-    ]
-);
+list($count, $data) = ArtefactTypeBlog::get_blog_list($USER, $limit, $offset);
 
-bloglist.updateOnLoad();
-
-EOF;
-
-$smarty = smarty(array('tablerenderer'));
-$smarty->assign_by_ref('INLINEJAVASCRIPT', $js);
-$smarty->assign_by_ref('blogs', $blogs);
-$smarty->display('artefact:blog:list.tpl');
+echo json_encode(array(
+    'count' => $count,
+    'limit' => $limit,
+    'offset' => $offset,
+    'data' => $data
+));
 
 ?>
