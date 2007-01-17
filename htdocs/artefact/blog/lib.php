@@ -265,7 +265,6 @@ class ArtefactTypeBlog extends ArtefactType {
     protected function render_metadata($options) {
         $smarty = smarty();
         $smarty->assign('PROPERTIES', $this->get_metadata());
-        log_debug($smarty);
         return $smarty->fetch('artefact:blog:render/blog_rendermetadata.tpl');
     }
 
@@ -456,6 +455,32 @@ class ArtefactTypeBlogPost extends ArtefactType {
         $smarty->assign('creationtime', format_date($this->ctime));
         return $smarty->fetch('artefact:blog:render/blogpost_renderfull.tpl');
     }
+
+
+    protected function count_attachments() {
+        return count_records('artefact_blog_blogpost_file', 'blogpost', $this->get('id'));
+    }
+
+
+    protected function get_metadata() {
+        $data = parent::get_metadata();
+        unset($data['description']);
+        unset($data['size']);
+        $data['type']['value'] = get_string($this->get('artefacttype'), 'artefact.blog');
+        $data['attachments'] = array('name' => get_string('attachments', 'artefact.blog'),
+                                     'value' => $this->count_attachments() . ' ' 
+                                               . get_string('files', 'artefact.file'));
+        return $data;
+    }
+
+                
+    protected function render_metadata($options) {
+        $smarty = smarty();
+        $smarty->assign('PROPERTIES', $this->get_metadata());
+        return $smarty->fetch('artefact:blog:render/blog_rendermetadata.tpl');
+    }
+
+
 
     public function get_icon() {
     }

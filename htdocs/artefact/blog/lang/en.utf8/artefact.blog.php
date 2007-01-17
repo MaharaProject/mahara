@@ -33,6 +33,7 @@ $string['alignment'] = 'Alignment';
 $string['attach'] = 'Attach';
 $string['attachedfilelistloaded'] = 'Attached file list loaded';
 $string['attachedfiles'] = 'Attached files';
+$string['attachments'] = 'Attachments';
 $string['blogdesc'] = 'Description';
 $string['blogdescdesc'] = 'e.g., ‘A record of Jill\'s experiences and reflections’.';
 $string['blogfilesdirdescription'] = 'Files uploaded as blog post attachments';
