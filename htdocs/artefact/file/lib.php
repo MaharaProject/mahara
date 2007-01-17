@@ -509,6 +509,15 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
         return $smarty->fetch('artefact:file:folder_listchildren.tpl');
     }
 
+    public function listself($options) {
+        $smarty = smarty();
+        $smarty->assign('title', $this->get('title'));
+        if (isset($options['size']) && $options['size']) {
+            $smarty->assign('size', $this->count_children());
+        }
+        return $smarty->fetch('artefact:file:folder_listself.tpl');
+    }
+
     public function get_icon() {
 
     }
