@@ -390,9 +390,26 @@ function quotaUpdate(quotaused, quota) {
             data.quotaused_display = data.quotaused + ' bytes';
         }
 
+        var percentage = roundToFixed(data.quotaused / data.quota * 100, 0);
+        var ref = $('quota_bar_100') || $('quota_bar');
+
+        if (percentage < 100) {
+            $('quota_fill').style.display = 'block';
+            if (ref.id != 'quota_bar') {
+                swapDOM(ref, P({'id': 'quota_bar'}, SPAN({'id': 'quota_percentage'})));
+            }
+        }
+        else {
+            $('quota_fill').style.display = 'none';
+            if (ref.id != 'quota_bar_100') {
+                swapDOM(ref, P({'id': 'quota_bar_100'}, SPAN({'id': 'quota_percentage'})));
+            }
+        }
+
         $('quota_used').innerHTML = data.quotaused_display;
         $('quota_total').innerHTML = data.quota_display;
-        $('quota_percentage').innerHTML = roundToFixed(data.quotaused / data.quota * 100, 0) + '%';
+        $('quota_percentage').innerHTML = percentage + '%';
+        $('quota_fill').style.width = (percentage * 2) + 'px';
     }
 
     if (quotaused && quota) {
