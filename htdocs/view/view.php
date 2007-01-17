@@ -52,21 +52,19 @@ if ($artefactid) {
     $hierarchy = $view->get_artefact_hierarchy();
     $artefact = $hierarchy['refs'][$artefactid];
     $ancestorid = $artefact->parent;
-    $links = array('<a href="view.php?view=' . $viewid . '">' . $view->get('title') . '</a>');
+    $navlist = array('<a href="view.php?view=' . $viewid . '">' . $view->get('title') . '</a>');
     while ($ancestorid && isset($hierarchy['refs'][$ancestorid])) {
         $ancestor = $hierarchy['refs'][$ancestorid];
         $link = '<a href="view.php?view=' . $viewid . '&amp;artefact=' . $ancestorid . '">' 
             . $ancestor->title . "</a>\n";
-        array_push($links, $link);
+        array_push($navlist, $link);
         $ancestorid = $ancestor->parent;
     }
-    array_push($links, $artefact->title);
-    $title = implode(' - ', $links);
-    //$title .= $artefact->title;
+    array_push($navlist, $artefact->title);
     $jsartefact = $artefactid;
 }
 else {
-    $title = $view->get('title');
+    $navlist = array($view->get('title'));
     $jsartefact = 'undefined';
     $content = $view->render();
 }
@@ -201,7 +199,7 @@ EOF;
 
 $smarty = smarty(array('tablerenderer'));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
-$smarty->assign('TITLE', $title);
+$smarty->assign('VIEWNAV', $navlist);
 if (isset($content)) {
     $smarty->assign('VIEWCONTENT', $content);
 }
