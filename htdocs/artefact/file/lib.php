@@ -460,13 +460,41 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         set_config_plugin('artefact', 'file', 'defaultquota', $values['defaultquota']);
     }
 
+    public function short_size() {
+        $bytes = $this->get('size');
+        if ($bytes < 1024) {
+            return $bytes <= 0 ? '0' : ($bytes . ' ' . get_string('bytes', 'artefact.file'));
+        }
+        if ($bytes < 1048576) {
+            return floor(($bytes / 1024) * 10 + 0.5) / 10 . 'k';
+        }
+        return floor(($bytes / 1048576) * 10 + 0.5) / 10 . 'M';
+    }
+
+    private function file_url() {
+        return get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->get('id');
+    }
+
+    public function listself($options) {
+        $smarty = smarty();
+        if (isset($options['link']) && $options['link']) {
+            $smarty->assign('title', '<a href="' . $this->file_url() . '">' . $this->get('title') . '</a>');
+        }
+        else {
+            $smarty->assign('title', $this->get('title'));
+        }
+        if (isset($options['size']) && $options['size']) {
+            $smarty->assign('size', $this->short_size());
+        }
+        return $smarty->fetch('artefact:file:file_listself.tpl');
+    }
+
     protected function get_metadata() {
         $data = parent::get_metadata();
         $data['size'] = array('name' => get_string('size', 'artefact.file'),
-                              'value' => $this->get('size'));
-        $url = get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->get('id');
+                              'value' => $this->get('size') . ' ' . get_string('bytes', 'artefact.file'));
         $data['download'] = array('name' => get_string('download', 'artefact.file'),
-                                  'value' => make_link($url));
+                                  'value' => make_link($this->file_url()));
         return $data;
     }
 
@@ -513,7 +541,7 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
         $smarty = smarty();
         $smarty->assign('title', $this->get('title'));
         if (isset($options['size']) && $options['size']) {
-            $smarty->assign('size', $this->count_children());
+            $smarty->assign('size', $this->count_children() . ' ' . get_string('files', 'artefact.file'));
         }
         return $smarty->fetch('artefact:file:folder_listself.tpl');
     }
@@ -585,7 +613,7 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
     protected function get_metadata() {
         $data = parent::get_metadata();
         $data['size'] = array('name' => get_string('size', 'artefact.file'),
-                              'value' => $this->count_children());
+                              'value' => $this->count_children() . ' ' . get_string('files', 'artefact.file'));
         return $data;
     }
 
