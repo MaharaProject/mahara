@@ -65,7 +65,7 @@ $string['sitepagesdescription'] = 'Edit the core site content';
 $string['sitemenu'] = 'Site menu';
 $string['sitemenudescription'] = 'Manage the links and files within the Main Menus';
 $string['adminfiles']          = 'Admin Files';
-$string['adminfilesdescription'] = 'Upload and administer files that can be put in the menus (note: not implemented yet)';
+$string['adminfilesdescription'] = 'Upload and administer files that can be put in the menus';
 
 $string['staffusers'] = 'Staff Users';
 $string['staffusersdescription'] = 'Assign users Staff permissions';
@@ -74,7 +74,7 @@ $string['adminusersdescription'] = 'Assign Site Administrator access rights';
 $string['institutions']   = 'Institutions';
 $string['institutionsdescription'] = 'Install and manage installed institutions';
 $string['adminnotifications'] = 'Admin Notifications';
-$string['adminnotificationsdescription'] = 'Configure how administrators receive system notifications (note: not implemented yet)';
+$string['adminnotificationsdescription'] = 'Configure how administrators receive system notifications';
 $string['uploadcsv'] = 'Add Users by CSV';
 $string['uploadcsvdescription'] = 'Upload a CSV file containing new users';
 
@@ -183,7 +183,7 @@ $string['suspenduser'] = 'Suspend User';
 $string['suspendedusers'] = 'Suspended Users';
 $string['suspensionreason'] = 'Suspension reason';
 $string['errorwhilesuspending'] = 'An error occured while trying to suspend';
-$string['suspendedusersdescription'] = 'Suspend or reactivate users from using the site (note: not implemented yet)';
+$string['suspendedusersdescription'] = 'Suspend or reactivate users from using the site';
 $string['unsuspendusers'] = 'Unsuspend Users';
 $string['usersdeletedsuccessfully'] = 'Users deleted successfully';
 $string['usersunsuspendedsuccessfully'] = 'Users unsuspended successfully';
