@@ -468,7 +468,9 @@ class ArtefactTypeBlogPost extends ArtefactType {
     protected function render_full($options) {
         $smarty = smarty();
         $smarty->assign('artefact', $this);
-        $smarty->assign('creationtime', format_date($this->ctime));
+        $smarty->assign('postedbyon', get_string('postedbyon', 'artefact.blog',
+                                                 display_name($this->owner),
+                                                 format_date($this->ctime)));
         return $smarty->fetch('artefact:blog:render/blogpost_renderfull.tpl');
     }
 
