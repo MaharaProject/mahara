@@ -39,6 +39,7 @@ $string['destination'] = 'Destination';
 $string['download'] = 'Download';
 $string['editfile'] = 'Edit file';
 $string['editfolder'] = 'Edit folder';
+$string['emptyfolder'] = 'Empty folder';
 $string['file'] = 'File';
 $string['fileexists'] = 'File exists';
 $string['fileexistsoverwritecancel'] =  'A file with that name already exists.  You can try a different name, or overwrite the existing file.';
