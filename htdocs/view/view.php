@@ -52,17 +52,17 @@ if ($artefactid) {
     $hierarchy = $view->get_artefact_hierarchy();
     $artefact = $hierarchy['refs'][$artefactid];
     $ancestorid = $artefact->parent;
-    $links = array();
+    $links = array('<a href="view.php?view=' . $viewid . '">' . $view->get('title') . '</a>');
     while ($ancestorid && isset($hierarchy['refs'][$ancestorid])) {
         $ancestor = $hierarchy['refs'][$ancestorid];
         $link = '<a href="view.php?view=' . $viewid . '&amp;artefact=' . $ancestorid . '">' 
             . $ancestor->title . "</a>\n";
-        array_unshift($links, $link);
+        array_push($links, $link);
         $ancestorid = $ancestor->parent;
     }
-    $title = '<a href="view.php?view=' . $viewid . '">' . $view->get('title') . '</a>';
-    $title .= implode(' - ', $links);
-    $title .= ' - ' . $artefact->title;
+    array_push($links, $artefact->title);
+    $title = implode(' - ', $links);
+    //$title .= $artefact->title;
     $jsartefact = $artefactid;
 }
 else {
