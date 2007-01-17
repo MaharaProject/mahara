@@ -327,7 +327,9 @@ function template_render($template, $mode, $data=array()) {
                         $block .= template_render_label_editmode($t, $data);
                     }
                     else {
-                        $block .= $data[$t['id']]['value'];
+                        if (isset($data[$t['id']])) {
+                            $block .= $data[$t['id']]['value'];
+                        }
                     }
                     break;
                 case 'title';
@@ -336,7 +338,12 @@ function template_render($template, $mode, $data=array()) {
                     }
                     break;
                 case 'author';
-                        $block .= template_render_author($data['ownerformat']);
+                        if (isset($data['ownerformat'])) {
+                            $block .= template_render_author($data['ownerformat']);
+                        }
+                        else {
+                            $block .= $data['author'];
+                        }
                     break;
                 case 'description';
                     if (isset($data['description'])) {
@@ -376,11 +383,8 @@ function template_render($template, $mode, $data=array()) {
                         }
 
                         if ($artefact === null) {
-                            if ($mode == TEMPLATE_RENDER_EDITMODE) {	
-        	                $block .= template_render_empty_artefact_block();
-                            }
-	                    else {
-        	                $block .= '';
+                            if ($mode == TEMPLATE_RENDER_EDITMODE) {
+                                $block .= template_render_empty_artefact_block();
                             }
                         }
                         else {
@@ -388,21 +392,15 @@ function template_render($template, $mode, $data=array()) {
                         }
                     }
                     else {
-                        if ($mode == TEMPLATE_RENDER_EDITMODE) {	
+                        if ($mode == TEMPLATE_RENDER_EDITMODE) {
                             $block .= template_render_empty_artefact_block();
-                        }
-                        else {
-                            $block .= '';
                         }
                     }
                     
                     break;
             }
 
-            if (empty($block) && $mode == TEMPLATE_RENDER_READONLY) {
-                $html .= '';
-            }		
-            else{
+            if ($mode != TEMPLATE_RENDER_READONLY || !empty($block)) {
                 // span or div?
                 if (isset($t['tagtype']) && $t['tagtype'] == 'span') {
                     $html .= '<span';

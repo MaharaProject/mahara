@@ -280,7 +280,7 @@ class View {
             );
         }
         foreach ($contents as $content) {
-            $data[$content->id] = array(
+            $data[$content->block] = array(
                     'value'  => $content->content,
              );
         }
