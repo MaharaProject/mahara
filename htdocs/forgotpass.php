@@ -97,7 +97,7 @@ $form = array(
         ),
         'submit' => array(
             'type' => 'submit',
-            'value' => get_string('submit')
+            'value' => get_string('change')
         )
     )
 );
@@ -152,7 +152,7 @@ function forgotpass_submit(Pieform $form, $values) {
     // Add a marker in the session to say that the user has registered
     $_SESSION['pwchangerequested'] = true;
 
-    redirect(get_config('wwwroot') . 'forgotpass.php');
+    redirect('forgotpass.php');
 }
 
 function forgotpasschange_validate(Pieform $form, $values) {
