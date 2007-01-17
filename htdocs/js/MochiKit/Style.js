@@ -424,12 +424,25 @@ MochiKit.Base.update(MochiKit.Style, {
 
     __new__: function () {
         var m = MochiKit.Base;
+        var d = MochiKit.DOM;
 
         this.elementPosition = this.getElementPosition;
         this.elementDimensions = this.getElementDimensions;
 
         this.hideElement = m.partial(this.setDisplayForElement, 'none');
-        this.showElement = m.partial(this.setDisplayForElement, 'block');
+        var self = this;
+        this.showElement = function(elem) {
+            elem = d.getElement(elem);
+
+            switch(elem.nodeName) {
+                case 'TABLE':
+                    self.setDisplayForElement('table', elem);
+                    break;
+                default:
+                    self.setDisplayForElement('block', elem);
+                    break;
+            }
+        }
 
         this.EXPORT_TAGS = {
             ':common': this.EXPORT,
