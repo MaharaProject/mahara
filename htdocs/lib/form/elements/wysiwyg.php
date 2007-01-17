@@ -37,7 +37,9 @@
 function pieform_element_wysiwyg(Pieform $form, $element) {
     global $USER;
     if ($USER->get_account_preference('wysiwyg')) {
-        $element['class'] = isset($element['class']) && $element['class'] !== '' ? $element['class'] . ' wysiwyg' : 'wysiwyg';
+        if (!$form->get_property('elementclasses')) {
+            $element['class'] = isset($element['class']) && $element['class'] !== '' ? $element['class'] . ' wysiwyg' : 'wysiwyg';
+        }
     }
     $rows = $cols = $style = '';
     if (isset($element['height'])) {
@@ -75,7 +77,7 @@ function pieform_element_wysiwyg_rule_required(Pieform $form, $value, $element) 
 
 function pieform_element_wysiwyg_get_headdata() {
     global $USER;
-    if ($USER->get_account_preference('wysiwyg')) {
+    if ($USER->get_account_preference('wysiwyg') || defined('PUBLIC')) {
         return array('tinymce');
     }
     return array();
