@@ -141,6 +141,10 @@ abstract class ArtefactType {
         // @todo
     }
 
+    public function count_children() {
+        return count_records('artefact', 'parent', $this->get('id'));
+    }
+
     public function has_children() {
         if ($this->get_children_metadata()) {
             return true;

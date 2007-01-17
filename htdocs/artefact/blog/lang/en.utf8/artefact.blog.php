@@ -80,6 +80,7 @@ $string['postbodydesc'] = ' ';
 $string['postedon'] = 'Posted on';
 $string['posttitle'] = 'Title';
 $string['posttitledesc'] = 'The title appears above your post.';
+$string['posts'] = 'posts';
 $string['publish'] = 'Publish';
 $string['publishfailed'] = 'An error occurred.  Your post was not published';
 $string['publishblogpost?'] = 'Are you sure you want to publish this post?';

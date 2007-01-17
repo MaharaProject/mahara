@@ -347,6 +347,7 @@ $string['artefactnotfound'] = 'Artefact with id %s not found';
 $string['created'] = 'Created';
 $string['lastmodified'] = 'Last modified';
 $string['owner'] = 'Owner';
+$string['size'] = 'Size';
 $string['title'] = 'Title';
 $string['type'] = 'Type';
 

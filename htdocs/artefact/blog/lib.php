@@ -250,6 +250,25 @@ class ArtefactTypeBlog extends ArtefactType {
         $smarty->assign_by_ref('javascript', $javascript);
         return $smarty->fetch('artefact:blog:render/blog_renderfull.tpl');
     }
+
+    protected function get_metadata() {
+        $data = parent::get_metadata();
+        $data['description'] = array('name' => get_string('description'),
+                                     'value' => $this->get('description'));
+        $data['type']['value'] = get_string($this->get('artefacttype'), 'artefact.blog');
+        $data['size'] = array('name' => get_string('size'),
+                              'value' => $this->count_children() . ' ' 
+                                         . get_string('posts', 'artefact.blog'));
+        return $data;
+    }
+
+    protected function render_metadata($options) {
+        $smarty = smarty();
+        $smarty->assign('PROPERTIES', $this->get_metadata());
+        log_debug($smarty);
+        return $smarty->fetch('artefact:blog:render/blog_rendermetadata.tpl');
+    }
+
                 
     public function get_icon() {
     }

@@ -513,10 +513,6 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
 
     }
 
-    public function count_children() {
-        return count_records('artefact', 'parent', $this->get('id'));
-    }
-
     public function folder_contents() {
         if ($children = get_records_array('artefact', 'parent', $this->get('id'))) {
             return $children;
