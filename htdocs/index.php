@@ -44,7 +44,7 @@ if (!$USER->is_logged_in()) {
         'elements'   => array(
             'login' => array(
                 'type'   => 'fieldset',
-                'legend' => get_string('logon'),
+                'legend' => get_string('login'),
                 'elements' => array(
                     'login_username' => array(
                         'type'        => 'text',

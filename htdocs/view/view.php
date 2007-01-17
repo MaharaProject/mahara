@@ -60,13 +60,13 @@ if ($artefactid) {
         array_unshift($links, $link);
         $ancestorid = $ancestor->parent;
     }
-    $title = '<div><a href="view.php?view=' . $viewid . '">' . $view->get('title') . "</a></div>\n";
-    $title .= implode(' | ', $links);
-    $title .= "<h3>$artefact->title</h3>";
+    $title = '<a href="view.php?view=' . $viewid . '">' . $view->get('title') . '</a>';
+    $title .= implode(' - ', $links);
+    $title .= ' - ' . $artefact->title;
     $jsartefact = $artefactid;
 }
 else {
-    $title = "<h3>" . $view->get('title') . "</h3>\n";
+    $title = $view->get('title');
     $jsartefact = 'undefined';
     $content = $view->render();
 }

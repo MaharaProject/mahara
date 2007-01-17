@@ -101,5 +101,9 @@ $string['profileiconsdefaultsetsuccessfully'] = 'Default profile icon set succes
 $string['profileiconsdeletedsuccessfully'] = 'Profile icon(s) deleted successfully';
 $string['profileiconsnoneselected'] = 'No profile icons were selected to be deleted';
 $string['onlyfiveprofileicons'] = 'You may upload only five profile icons';
+$string['profileiconuploadexceedsquota'] = 'Uploading this profile icon would exceed your disk quota. Try deleting some files you have uploaded';
+$string['profileiconimagetoobig'] = 'The image you uploaded was too big (%sx%s pixels). It must not be larger than 300x300 pixels';
+$string['uploadprofileicon'] = 'Upload Profile Icon';
+$string['profileiconsiconsizenotice'] = 'You may upload up to <strong>five</strong> profile icons here, and choose one to be displayed as your icon at any one time. Your icons must not be bigger than 300x300 pixels. As the icons will be resized to several different sizes, mostly around 100x100 pixels or less, try to make sure that the image that you upload is at least 100x100 pixels.';
 
 ?>

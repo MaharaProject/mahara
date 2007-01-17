@@ -24,12 +24,6 @@
  *
  */
 
-// @todo for profile icons:
-//
-// * Make sure that if icon is smaller than the requested size, the smaller one is shown (?)
-// * DoS prevention in thumb.php - only allow multiples of X px between image sizes, up to size X
-// * quotaUpdate() - pass in user values from db for quota
-//
 define('INTERNAL', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
