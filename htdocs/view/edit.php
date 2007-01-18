@@ -147,6 +147,10 @@ if (param_boolean('submit')) {
     }
 
     db_commit();
+    activity_occurred('watchlist', (object) array('view' => $view_id,
+                                                  'subject' => get_string('viewmodified')));
+
+    
 
     $SESSION->add_ok_msg(get_string('viewinformationsaved', 'view'));
     redirect(get_config('wwwroot') . 'view/');
