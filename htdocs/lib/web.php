@@ -1163,7 +1163,7 @@ function searchform() {
     require_once('pieforms/pieform.php');
     return pieform(array(
         'name'                => 'searchform',
-        'action'              => get_config('wwwroot') . 'user/search.php',
+        'action'              => get_config('wwwroot') . 'search.php',
         'renderer'            => 'oneline',
         'autofocus'           => false,
         'validate'            => false,

@@ -75,17 +75,17 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
         foreach ($images as $imageid) {
             $image = artefact_instance_from_id($imageid);
             $path = $image->get_path();
+            $image->set('dirty', false);
             $data = new StdClass;
             $data->artefact = $imageid;
             if (file_exists($path)) {
                 list($data->width, $data->height) = getimagesize($path);
             }
-            else {
+
+            if (empty($data->width) || empty($data->height)) {
                 $data->width = 0;
                 $data->height = 0;
             }
-            $image->set('width', $data->width);
-            $image->set('height', $data->height);
             insert_record('artefact_file_image', $data);
         }
     }
