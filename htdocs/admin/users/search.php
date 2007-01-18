@@ -63,8 +63,8 @@ var results = new TableRenderer(
         },
         function(r) {
             return TD({'style': 'vertical-align: top'},
-                A({'href': '', 'onclick': 'suspendDisplay(this); return false;'}, $str_suspenduser),BR(),
-                A({'href': ''}, 'some other action'),BR()
+                A({'href': '', 'onclick': 'suspendDisplay(this); return false;'}, $str_suspenduser),BR()
+                // A({'href': ''}, 'some other action'),BR()
             );
         }
     ]
