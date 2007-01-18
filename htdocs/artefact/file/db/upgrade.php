@@ -74,9 +74,9 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
         require_once('artefact.php');
         foreach ($images as $imageid) {
             $image = artefact_instance_from_id($imageid);
+            $path = $image->get_path();
             $data = new StdClass;
             $data->artefact = $imageid;
-            $path = $image->get_path();
             if (file_exists($path)) {
                 list($data->width, $data->height) = getimagesize($path);
             }
