@@ -314,8 +314,12 @@ function template_render($template, $mode, $data=array()) {
                 'class' => array(),
             );
 
+            $options = array();
+
             if (isset($t['width']) && isset($t['height'])) {
                 $attr['style'][] = 'width: ' . $t['width'] . 'px;height: ' . $t['height'] . 'px;';
+                $options['width'] = $t['width'];
+                $options['height'] = $t['height'];
             }
             
             $block = '';
@@ -371,7 +375,7 @@ function template_render($template, $mode, $data=array()) {
                             $droplist[$t['id']]['format'] = FORMAT_ARTEFACT_LISTSELF;
                         }
 
-                        $block .= template_render_artefact_block($t['id'], $data[$t['id']]['id'], $format);
+                        $block .= template_render_artefact_block($t['id'], $data[$t['id']]['id'], $format, $options);
                     }
                     else if ( isset($t['defaultartefacttype']) ) {
                         $artefact = null;
@@ -388,7 +392,7 @@ function template_render($template, $mode, $data=array()) {
                             }
                         }
                         else {
-                            $block .= template_render_artefact_block($t['id'], $artefact, $t['defaultformat']);
+                            $block .= template_render_artefact_block($t['id'], $artefact, $t['defaultformat'], $options);
                         }
                     }
                     else {
@@ -655,12 +659,10 @@ function template_render_empty_artefact_block() {
  *
  * @return string html rendered data
  */
-function template_render_artefact_block($blockname, $artefact, $format) {
+function template_render_artefact_block($blockname, $artefact, $format, $options = array()) {
     $block = '';
 
-    $options = array(
-        'blockid' => $blockname,
-    );
+    $options['blockid'] = $blockname;
 
     if ($artefact instanceof ArtefactType) {
         $block .= $artefact->render($format, $options);
