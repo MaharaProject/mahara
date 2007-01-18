@@ -34,7 +34,6 @@ defined('INTERNAL') || die();
  * @param mixed $data data 
  */
 function activity_occurred($activitytype, $data) {
-    log_debug("activity occurred $activitytype");
     if (!$at = get_record('activity_type', 'name', $activitytype)) {
         throw new Exception("Invalid activity type $activitytype");
     }
