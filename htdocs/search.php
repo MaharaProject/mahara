@@ -55,7 +55,6 @@ results.emptycontent = '{$noresults}';
 function doSearch() {
     results.query = $('search_query').value;
     results.type  = $('search_type').options[$('search_type').selectedIndex].value;
-    console.log($('search_type'));
     results.offset = 0;
     results.doupdate();
 }
