@@ -334,7 +334,7 @@ function upgrade_plugin($upgrade) {
             $exists = false;
             $table = $plugintype . '_event_subscription';
             if (empty($upgrade->install)) {
-                $exists = record_exists($table, 'plugin' , $pluginname, 'event', $event->event);
+                $exists = get_record($table, 'plugin' , $pluginname, 'event', $event->event);
             }
             $event->plugin = $pluginname;
             if (empty($exists)) {
