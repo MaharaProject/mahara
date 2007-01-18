@@ -69,7 +69,6 @@ div.grippie {
 	cursor: s-resize;
 	height: 14px;
 }
-
 /* td for grippie to work */
 .maincontent #profileform #profileform_address_container td,
 .maincontent #contactus #contactus_message_container td {
@@ -183,7 +182,7 @@ label {
 }
 .required td label, 
 .required td { 
-	color: #000000; 
+	color: #000; 
 }
 
 .center {
@@ -219,9 +218,23 @@ label {
 #topwrapper {
 	margin-top: 15px;
 }
+
+/* header for mahara (remember to change logo in header.tpl to logo_mahara.gif)*/
 #header {
 	background: #FFFFFF url(../images/header_corner_topleft.gif) no-repeat top left;
 }
+
+/* header for myportfolio (remember to change logo in header.tpl to logo_myportfolio.gif) 
+#header {
+	background: #FFFFFF url(../images/header_myportfolio.gif) no-repeat top left;
+}*/
+
+
+#logo {
+    padding: 10px; 
+}
+
+
 #topwrapper ul,
 #topwrapper li {
   	padding: 0;
@@ -277,9 +290,6 @@ label {
 }
 /* GLOBAL NAVIGATION TABS END */
 
-#logo {
-    padding: 10px;
-}
 
 /* search box in header */
 .searchbox {
@@ -1014,12 +1024,12 @@ table#installer {
 #myblogs .blogsettings a:active,
 #myblogs .blogsettings a:visited,
 #myblogs .blogsettings a:hover {
-	background: url(../images/btn_medium_off.gif) no-repeat;
-	width: 100px;
+	background: url(../images/btn_settings.gif) no-repeat;
+	width: 120px;
 	height: 24px;
 	color: #eef7d4;
 	font-weight: bold;
-	padding: 4px 26px 6px 27px;
+	padding: 4px 27px 6px 47px;
 }
 .maincontent .viewblogbtn {
 	margin: 10px 0 10px 0;
@@ -1029,15 +1039,15 @@ table#installer {
 .maincontent .viewblogbtn a:active,
 .maincontent .viewblogbtn a:visited,
 .maincontent .viewblogbtn a:hover {
-	background: url(../images/btn_medium_off.gif) no-repeat;
+	background: url(../images/btn_view.gif) no-repeat;
 	border: 0;
-	width: 100px;
+	width: 120px;
 	height: 24px;
 	color: #eef7d4;
 	font-size: 11px;
 	font-weight: bold;
 	margin: 0;
-	padding: 5px 25px 5px 25px;
+	padding: 5px 25px 5px 40px;
 }
 #myblogs .newpost a,
 #myblogs .newpost a:link,
@@ -1478,12 +1488,14 @@ span.block_targetted, div.block_targetted {
 	font-weight: normal;
 	color: #000000;
 }
-.maincontent #accountprefs #accountprefs_friendscontrol_container .contextualHelp {
+.contextualHelp {
 	padding: 0 3px;
 	margin: 0;
+	position: absolute;
 	vertical-align: bottom;
+	width: 250px;
 }
-.maincontent #accountprefs #accountprefs_friendscontrol_container .contextualHelp p {
+.contextualHelp p {
 	padding: 3px;
 	margin: 0;
 	background-color: #f4f7e8;
@@ -1704,7 +1716,7 @@ span.block_targetted, div.block_targetted {
 }
 .maincontent #admintemplates #admintemplates_reinstall {
 	border: 0;
-	color: #e5e8da;
+	color: #FFF;
 	font-weight: bold;
 	font-size: 11px;
 	background: url(../images/btn_reinstall.gif) no-repeat;
