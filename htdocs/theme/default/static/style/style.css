@@ -207,6 +207,9 @@ label {
     font-weight: bold;
     text-align: center;
 }
+.message p {
+    margin: 0;
+}
 
 /* CONTENT LAYOUT BEGIN */
 #container {

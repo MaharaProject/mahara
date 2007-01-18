@@ -1,3 +1,9 @@
+mahara (0.3.3-1) unstable; urgency=low
+
+  * Bugfix release
+
+ -- Nigel <nigel@freud.catalyst.net.nz>  Thu, 18 Jan 2007 00:43:36 +1300
+
 mahara (0.3.2-1) unstable; urgency=low
 
   * Bugfix release

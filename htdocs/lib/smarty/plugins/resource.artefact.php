@@ -12,8 +12,6 @@
  */
 
 function smarty_resource_artefact_source ($tpl_name, &$tpl_source, &$smarty_obj) {
-    log_debug("source($tpl_name, $tpl_source, $smarty_obj)");
-
     $name = explode(':', $tpl_name);
 
     $plugin_name = $name[0];
@@ -53,8 +51,6 @@ function smarty_resource_artefact_timestamp($tpl_name, &$tpl_timestamp, &$smarty
 }
 
 function smarty_resource_artefact_secure($tpl_name, &$smarty_obj) {
-  log_debug("secure($tpl_name,$smarty_obj)");
-
   // assume all templates are secure
   return true;
 }
