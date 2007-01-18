@@ -26,7 +26,6 @@
 
 define('INTERNAL', 1);
 define('PUBLIC', 1);
-define('MENUITEM', 'home');
 require('init.php');
 
 /*
@@ -42,8 +41,8 @@ if (!session_id()) {
 }
 
 // Logged in people can't register
-if ($USER->is_logged_in()) {
-    redirect(get_config('wwwroot'));
+if (is_logged_in()) {
+    redirect('/');
 }
 
 // @todo stuff to do for registration:
@@ -59,11 +58,12 @@ if (!empty($_SESSION['registered'])) {
     die_info(get_string('registeredok', 'auth.internal'));
 }
 
+
 // Step three of registration - given a key, fill out mandatory profile fields,
 // optional profile icon, and register the user
 if (isset($_REQUEST['key'])) {
 
-    function register_profile_submit(Pieform $form, $values) {
+    function profileform_submit(Pieform $form, $values) {
         global $registration, $SESSION, $USER;
         db_begin();
 
@@ -76,7 +76,6 @@ if (isset($_REQUEST['key'])) {
         }
         $registration->lastlogin = db_format_timestamp(time());
         $registration->id = insert_record('usr', $registration, 'id', true);
-        log_debug($registration);
 
         // Insert standard stuff as artefacts
         set_profile_field($registration->id, 'email', $registration->email);
@@ -95,15 +94,54 @@ if (isset($_REQUEST['key'])) {
             set_profile_field($registration->id, $field, $values[$field]);
         }
 
+        // Handle the profile image if uploaded
+        if ($values['profileimg'] && $values['profileimg']['error'] == 0 && $values['profileimg']['size'] > 0) {
+            // Entry in artefact table
+            $artefact = new ArtefactTypeProfileIcon();
+            $artefact->set('owner', $registration->id);
+            $artefact->set('title', $values['profileimgtitle']);
+            $artefact->set('note', $values['profileimg']['name']);
+            $artefact->commit();
+
+            $id = $artefact->get('id');
+
+            $filesize = filesize($values['profileimg']['tmp_name']);
+            set_field('usr', 'quotaused', $filesize, 'id', $registration->id);
+            $registration->quotaused = $filesize;
+            $registration->quota = get_config_plugin('artefact', 'file', 'defaultquota');
+            set_field('usr', 'profileicon', $id, 'id', $registration->id);
+            $registration->profileicon = $id;
+
+            // Move the file into the correct place.
+            $directory = get_config('dataroot') . 'artefact/internal/profileicons/' . ($id % 256) . '/';
+            check_dir_exists($directory);
+            move_uploaded_file($values['profileimg']['tmp_name'], $directory . $id);
+        }
+
+
         db_commit();
         handle_event('createuser', $registration);
 
         // Log the user in and send them to the homepage
         $USER->login($registration);
-        redirect(get_config('wwwroot'));
+        redirect('/');
     }
     
-    function register_profile_validate(Pieform $form, $values) {
+    function profileform_validate(Pieform $form, $values) {
+        // Profile icon, if uploaded
+        if ($values['profileimg'] && $values['profileimg']['error'] == 0 && $values['profileimg']['size'] > 0) {
+            require_once('file.php');
+            if (!is_image_mime_type(get_mime_type($values['profileimg']['tmp_name']))) {
+                $form->set_error('profileimg', get_string('filenotimage'));
+            }
+
+            // Check the file isn't greater than 300x300
+            list($width, $height) = getimagesize($values['profileimg']['tmp_name']);
+            if ($width > 300 || $height > 300) {
+                $form->set_error('profileimg', get_string('profileiconimagetoobig', 'artefact.internal', $width, $height));
+            }
+        }
+
         foreach(ArtefactTypeProfile::get_mandatory_fields() as $field => $type) {
             // @todo here and above, use the method for getting "always mandatory" fields
             if (in_array($field, array('firstname', 'lastname', 'email'))) {
@@ -114,31 +152,62 @@ if (isset($_REQUEST['key'])) {
     }
 
 
+    // Begin the registration form buliding
     if (!$registration = get_record_select('usr_registration', 'key = ? AND expiry >= ?', array($_REQUEST['key'], db_format_timestamp(time())))) {
         die_info(get_string('registrationnosuchkey', 'auth.internal'));
     }
 
-    $elements = array();
+    $elements = array(
+        'optionalheader' => array(
+            'type'  => 'html',
+            'value' => get_string('registerstep3fieldsoptional')
+        ),
+        'profileimg' => array(
+            'type' => 'file',
+            'title' => 'Profile Image'
+        ),
+        'profileimgtitle' => array(
+            'type' => 'text',
+            'title' => 'Title'
+        )
+    );
+
+    $mandatoryheaderadded = false;
     safe_require('artefact', 'internal');
     foreach(ArtefactTypeProfile::get_mandatory_fields() as $field => $type) {
         if (in_array($field, array('firstname', 'lastname', 'email'))) {
             continue;
         }
+
+        if (!$mandatoryheaderadded) {
+            $elements['mandatoryheader'] = array(
+                'type'  => 'html',
+                'value' => get_string('registerstep3fieldsmandatory')
+            );
+            $mandatoryheaderadded = true;
+        }
+
         $elements[$field] = array(
             'type'  => $type,
             'title' => get_string($field, 'artefact.internal'),
             'rules' => array('required' => true)
         );
+
+        // @todo ruthlessly stolen from artefact/internal/index.php, could be merged
+        if ($type == 'wysiwyg') {
+            $elements[$field]['rows'] = 10;
+            $elements[$field]['cols'] = 60;
+        }
+        if ($type == 'textarea') {
+            $elements[$field]['rows'] = 4;
+            $elements[$field]['cols'] = 60;
+        }
+        if ($field == 'country') {
+            $elements[$field]['options'] = getoptions_country();
+            $elements[$field]['defaultvalue'] = 'nz';
+        }
     }
 
-    // Not until when files infrastructure is in place...
-    //$elements['optionalheader'] = array(
-    //    'value' => '<tr><th colspan="2">Profile Image</th></tr><tr><td colspan="2">You may optionally choose a profile image to uploade</td></tr>'
-    //);
-    //$elements['profileimg'] = array(
-    //    'type' => 'file',
-    //    'title' => 'Profile Image',
-    //);
     $elements['key'] = array(
         'type' => 'hidden',
         'name' => 'key',
@@ -149,15 +218,15 @@ if (isset($_REQUEST['key'])) {
         'value' => get_string('completeregistration', 'auth.internal')
     );
 
-    $form = array(
-        'name'     => 'register_profile',
+    $form = pieform(array(
+        'name'     => 'profileform',
         'method'   => 'post',
         'action'   => '',
         'elements' => $elements
-    );
+    ));
 
     $smarty = smarty();
-    $smarty->assign('register_profile_form', pieform($form));
+    $smarty->assign('register_profile_form', $form);
     $smarty->display('register.tpl');
     exit;
 }
@@ -169,7 +238,6 @@ $elements = array(
     'username' => array(
         'type' => 'text',
         'title' => get_string('username'),
-        'description' => get_string('usernamedescription'),
         'rules' => array(
             'required' => true
         )
@@ -177,7 +245,6 @@ $elements = array(
     'password1' => array(
         'type' => 'password',
         'title' => get_string('password'),
-        'description' => get_string('passworddescription'),
         'rules' => array(
             'required' => true
         )
@@ -185,7 +252,6 @@ $elements = array(
     'password2' => array(
         'type' => 'password',
         'title' => get_string('confirmpassword'),
-        'description' => get_string('password2description'),
         'rules' => array(
             'required' => true
         )
@@ -193,7 +259,6 @@ $elements = array(
     'firstname' => array(
         'type' => 'text',
         'title' => get_string('firstname'),
-        'description' => get_string('firstnamedescription'),
         'rules' => array(
             'required' => true
         )
@@ -201,7 +266,6 @@ $elements = array(
     'lastname' => array(
         'type' => 'text',
         'title' => get_string('lastname'),
-        'description' => get_string('lastnamedescription'),
         'rules' => array(
             'required' => true
         )
@@ -209,7 +273,6 @@ $elements = array(
     'email' => array(
         'type' => 'text',
         'title' => get_string('emailaddress'),
-        'description' => get_string('emailaddressdescription'),
         'rules' => array(
             'required' => true,
             'email' => true
@@ -329,8 +392,8 @@ function register_submit(Pieform $form, $values) {
         $user =(object) $values;
         email_user($user, null,
             get_string('registeredemailsubject', 'auth.internal', get_config('sitename')),
-            get_string('registeredemailmessagetext', 'auth.internal', $values['key']),
-            get_string('registeredemailmessagehtml', 'auth.internal', $values['key'], $values['key']));
+            get_string('registeredemailmessagetext', 'auth.internal', $values['firstname'], get_config('sitename'), $values['key'], get_config('sitename')),
+            get_string('registeredemailmessagehtml', 'auth.internal', $values['firstname'], get_config('sitename'), $values['key'], $values['key'], get_config('sitename')));
     }
     catch (EmailException $e) {
         log_warn($e);
@@ -344,11 +407,11 @@ function register_submit(Pieform $form, $values) {
     // Add a marker in the session to say that the user has registered
     $_SESSION['registered'] = true;
 
-    redirect(get_config('wwwroot') . 'register.php');
+    redirect('register.php');
 }
 
 function register_cancel_submit() {
-    redirect(get_config('wwwroot'));
+    redirect();
 }
 
 $smarty = smarty();
