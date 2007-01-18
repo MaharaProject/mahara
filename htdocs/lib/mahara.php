@@ -951,7 +951,7 @@ function can_view_view($view_id, $user_id=null) {
 
     $view_record = array( 'access' => array() );
 
-    log_debug('Can you look at this view? (you are user ' . $user_id . ')');
+    log_debug('Can you look at this view? (you are user ' . $user_id . ' trying to look at view ' . $view_id . ')');
 
     foreach ( $view_data as $row ) {
         $view_record['title'] = $row->title;
@@ -1042,8 +1042,8 @@ function can_view_view($view_id, $user_id=null) {
             ' . $prefix . 'view_access_usr a
         WHERE
             a.view=? AND a.usr=?
-            AND a.startdate < ?
-            AND a.stopdate > ?
+            AND ( a.startdate < ? OR a.startdate IS NULL )
+            AND ( a.stopdate > ?  OR a.stopdate  IS NULL )
         LIMIT 1',
         array( $view_id, $user_id, $dbnow, $dbnow )
         )
@@ -1062,8 +1062,8 @@ function can_view_view($view_id, $user_id=null) {
             INNER JOIN ' . $prefix . 'usr_group_member m ON g.id = m.grp
         WHERE
             a.view=? AND m.member=?
-            AND a.startdate < ?
-            AND a.stopdate > ?
+            AND ( a.startdate < ? OR a.startdate IS NULL )
+            AND ( a.stopdate > ?  OR a.stopdate  IS NULL )
         LIMIT 1',
         array( $view_id, $user_id, $dbnow, $dbnow )
         )
@@ -1082,8 +1082,8 @@ function can_view_view($view_id, $user_id=null) {
             INNER JOIN ' . $prefix . 'community_member m ON c.id=m.community
         WHERE
             a.view=? AND m.member=?
-            AND a.startdate < ?
-            AND a.stopdate > ?
+            AND ( a.startdate < ? OR a.startdate IS NULL )
+            AND ( a.stopdate > ?  OR a.stopdate  IS NULL )
             AND ( a.tutoronly = 0 OR m.tutor = 1 )
         LIMIT 1',
         array( $view_id, $user_id, $dbnow, $dbnow )
