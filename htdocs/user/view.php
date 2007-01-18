@@ -68,7 +68,12 @@ if ($USER->get('staff')) {
 
 // Get public profile fields:
 safe_require('artefact', 'internal');
-$publicfields = call_static_method(generate_artefact_class_name('profile'),'get_public_fields');
+if ($USER->get('admin')) {
+    $publicfields = call_static_method(generate_artefact_class_name('profile'),'get_all_fields');
+}
+else {
+    $publicfields = call_static_method(generate_artefact_class_name('profile'),'get_public_fields');
+}
 foreach (array_keys($publicfields) as $field) {
     $classname = generate_artefact_class_name($field);
     if ($field == 'email') {  // There may be multiple email records
@@ -116,16 +121,19 @@ if ($communities = get_owned_communities($loggedinid, 'invite')) {
         $invitelist[$community->id] = $community->name;
     }
     if (count($invitelist) > 0) {
+        $default = array_keys($invitelist);
+        $default = $default[0];
         $inviteform = pieform(array(
         'name'              => 'invite',
         'jsform'            => true,
         'jssuccesscallback' => 'usercontrol_success',
         'elements'          => array(
             'community' => array(
-                'type'    => 'select',
-                'title'   => get_string('inviteusertojoincommunity'),
+                'type'                => 'select',
+                'title'               => get_string('inviteusertojoincommunity'),
                 'collapseifoneoption' => false,
-                'options' => $invitelist
+                'options'             => $invitelist,
+                'defaultvalue'        => $default,
             ),
             'id' => array(
                 'type'  => 'hidden',
@@ -152,6 +160,8 @@ if ($communities = get_tutor_communities($loggedinid, 'controlled')) {
         $controlledlist[$community->id] = $community->name;
     }
     if (count($controlledlist) > 0) {
+        $default = array_keys($controlledlist);
+        $default = $default[0];
         $addform = pieform(array(
         'name'                => 'addmember',
         'ajaxform'            => true,
@@ -161,7 +171,8 @@ if ($communities = get_tutor_communities($loggedinid, 'controlled')) {
                 'type'    => 'select',
                 'title'   => get_string('addusertocommunity'),
                 'collapseifoneoption' => false,
-                'options' => $controlledlist
+                'options' => $controlledlist,
+                'defaultvalue' => $default,
             ),
             'id' => array(
                 'type'  => 'hidden',
