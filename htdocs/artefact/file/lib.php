@@ -713,9 +713,10 @@ class ArtefactTypeImage extends ArtefactTypeFile {
 
     public static function collapse_config() {
         return 'file';
-    }
+   } 
 
     public function render_full($options) {
+        log_debug($options);
         $smarty = smarty();
         $smarty->assign('src', get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->id);
         $smarty->assign('title', $this->title);
