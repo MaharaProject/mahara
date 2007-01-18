@@ -207,7 +207,7 @@ contextualHelpSelected    = null;
 contextualHelpContainer   = null;
 contextualHelpDeferrable  = null;
 
-function contextualHelp(formName, helpName, pluginType, pluginName, page) {
+function contextualHelp(formName, helpName, pluginType, pluginName, page, ref) {
     var key;
     var target = $(formName + '_' + helpName + '_container');
     var url = '../json/help.php';
@@ -244,11 +244,17 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page) {
     }
 
     // create and display the container
-    contextualHelpContainer = TD(
-        {'class': 'contextualHelp'},
+    contextualHelpContainer = DIV({
+            'style': 'position: absolute',
+            'class': 'contextualHelp'
+        },
         'spinner'
     );
-    appendChildNodes(target, contextualHelpContainer);
+    var position = getElementPosition(ref);
+    position.x += 10;
+    position.y -= 10;
+    setElementPosition(contextualHelpContainer, position);
+    appendChildNodes($('header'), contextualHelpContainer);
     contextualHelpSelected = key;
 
     // load the content

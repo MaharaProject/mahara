@@ -834,7 +834,7 @@ function get_help_icon($plugintype, $pluginname, $form, $element, $page='') {
         hsc(
             'contextualHelp(' . json_encode($form) . ',' . 
             json_encode($element) . ',' . json_encode($plugintype) . ',' . 
-            json_encode($pluginname) . ',' . json_encode($page) . '); return false;'
+            json_encode($pluginname) . ',' . json_encode($page) . ',this); return false;'
         ) . '">?</a></span>';
 }
 
