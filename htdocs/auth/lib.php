@@ -672,7 +672,7 @@ function auth_handle_account_expiries() {
     
     // Actual inactive users
     if ($users = get_records_sql_array('SELECT u.id
-        FROM ' . $prefix . 'usr
+        FROM ' . $prefix . 'usr u
         LEFT JOIN ' . $prefix . 'institution i ON (u.institution = i.name)
         WHERE ' . db_format_tsfield('lastlogin', false) . ' < ? - i.defaultaccountinactiveexpire', array(time()))) {
         // Users have become inactive!

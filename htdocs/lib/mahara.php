@@ -777,9 +777,13 @@ function format_date($date, $formatkey='strftimedatetime') {
 /**
  * Returns a random string suitable for registration/change password requests
  *
+ * @param int $length The length of the key to return
  * @return string
  */
-function get_random_key() {
+function get_random_key($length=16) {
+    if ($length < 1) {
+        throw new IllegalArgumentException('Length must be a positive number');
+    }
     $pool = array_merge(
         range('A', 'Z'),
         range('a', 'z'),
@@ -787,7 +791,7 @@ function get_random_key() {
     );
     shuffle($pool);
     $result = '';
-    for ($i = 0; $i < 16; $i++) {
+    for ($i = 0; $i < $length; $i++) {
         $result .= $pool[$i];
     }
     return $result;

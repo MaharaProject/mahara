@@ -316,7 +316,15 @@ $elements['tandc'] = array(
     'rules' => array(
         'required' => true
     ),
-    'separator' => '<br>'
+    'separator' => ' &nbsp; '
+);
+
+$elements['captcha'] = array(
+    'type' => 'html',
+    'title' => get_string('captchatitle'),
+    'value' => '<img src="' . get_config('wwwroot') . 'captcha.php" alt="' . get_string('captchaimage') . '" style="padding: 2px 0;"><br>'
+        . '<input type="text" class="text required" name="captcha" style="width: 137px;" tabindex="3">',
+    'rules' => array('required' => true)
 );
 
 $elements['submit'] = array(
@@ -339,6 +347,7 @@ $form = array(
  * can guarantee that the auth method is internal
  */
 function register_validate(Pieform $form, $values) {
+    global $SESSION;
     $institution = $values['institution'];
     safe_require('auth', 'internal');
 
@@ -372,6 +381,11 @@ function register_validate(Pieform $form, $values) {
     // If the user hasn't agreed to the terms and conditions, don't bother
     if ($values['tandc'] != 'yes') {
         $form->set_error('tandc', get_string('youmaynotregisterwithouttandc', 'auth.internal'));
+    }
+
+    // CAPTCHA image
+    if (!isset($_POST['captcha']) || strtolower($_POST['captcha']) != strtolower($SESSION->get('captcha'))) {
+        $form->set_error('captcha', get_string('captchaincorrect'));
     }
 }
 
