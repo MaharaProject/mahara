@@ -54,6 +54,7 @@ $string['accept'] = 'Accept';
 $string['reject'] = 'Reject';
 $string['sendrequest'] = 'Send request';
 $string['reason'] = 'Reason';
+$string['select'] = 'Select';
 
 // Quota strings
 $string['quota'] = 'Quota';

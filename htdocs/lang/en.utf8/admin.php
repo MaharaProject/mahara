@@ -187,6 +187,7 @@ $string['suspendedusersdescription'] = 'Suspend or reactivate users from using t
 $string['unsuspendusers'] = 'Unsuspend Users';
 $string['usersdeletedsuccessfully'] = 'Users deleted successfully';
 $string['usersunsuspendedsuccessfully'] = 'Users unsuspended successfully';
+$string['suspendingadmin'] = 'Suspending Admin';
 
 // Institutions
 $string['addinstitution'] = 'Add Institution';
