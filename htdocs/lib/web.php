@@ -1131,6 +1131,9 @@ function redirect($location='') {
         $location = substr($wwwroot, 0, -1) . $path;
     }
     else if (substr($location, 0, 4) != 'http') {
+        if (substr($location, 0, 1) == '/') {
+            $location = substr($location, 1);
+        }
         $location = $wwwroot . $location;
     }
 
