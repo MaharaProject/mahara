@@ -8,6 +8,7 @@ use Perl6::Slurp;
 use Text::Diff;
 
 my $EXCLUDE_FILES = [
+    qr{ \A test/                            }xms,
     qr{ \A examples/                        }xms,
     qr{ \A htdocs/tests                     }xms,
     qr{ \A htdocs/lib/adodb                 }xms,
@@ -157,7 +158,10 @@ sub process {
             print "($author) ", $directory, $filename, " has call to get_string that doesn't exist: get_string('$tag', '$section')\n";
         }
     }
-}
 
-print "\n";
+    # check for page titles
+    if ( $file_data =~ m{define.*\(.*INTERNAL.*1.*\)} and $file_data !~ m{define.*\(.*JSON.*1.*\)} and $file_data !~ m{define.*\(.*TITLE.*\)} ) {
+        print "($author) ", $directory, $filename, " is missing page title [ define('TITLE', get_string(...)); ]\n";
+    }
+}
 

@@ -27,8 +27,8 @@
 define('INTERNAL', 1);
 define('MENUITEM', 'mycontacts');
 define('SUBMENUITEM', 'myfriends');
-
 require(dirname(dirname(__FILE__)) . '/init.php');
+define('TITLE', get_string('myfriends'));
 
 $wwwroot    = get_config('wwwroot');
 $profileurl = $wwwroot . 'thumb.php?type=user&id=';

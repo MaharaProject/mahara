@@ -27,6 +27,7 @@
 define('INTERNAL', 1);
 define('PUBLIC', 1);
 require('init.php');
+define('TITLE', get_string('register'));
 
 /*
  * This page handles three different tasks:

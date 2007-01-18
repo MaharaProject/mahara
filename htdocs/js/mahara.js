@@ -28,6 +28,17 @@ function formStartProcessing(form, btn) {
     if (button) {
         oldValue = button.value;
         button.value = get_string('processingform') + ' ...';
+
+        // we add a hidden input field so the "disabled" button still gets to
+        // pass its value through
+        var node = INPUT({
+            'type': 'hidden',
+            'value': button.value,
+            'name': button.name
+        });
+        insertSiblingNodesAfter(button, node);
+
+        button.proxyContainer = node;
         button.disabled = "disabled";
         button.style.borderWidth = '1px';
         button.blur();
@@ -38,6 +49,10 @@ function formStopProcessing(form, btn) {
     var button = $(btn);
     if (button) {
         button.value = oldValue;
+        if(button.proxyContainer) {
+            removeElement(button.proxyContainer);
+            button.proxyContainer = null;
+        }
         button.disabled = null;
         button.style.borderWidth = '2px';
     }
@@ -192,7 +207,7 @@ contextualHelpSelected    = null;
 contextualHelpContainer   = null;
 contextualHelpDeferrable  = null;
 
-function contextualHelp(formName, helpName, pluginType, pluginName, page) {
+function contextualHelp(formName, helpName, pluginType, pluginName, page, ref) {
     var key;
     var target = $(formName + '_' + helpName + '_container');
     var url = '../json/help.php';
@@ -229,11 +244,17 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page) {
     }
 
     // create and display the container
-    contextualHelpContainer = TD(
-        {'class': 'contextualHelp'},
+    contextualHelpContainer = DIV({
+            'style': 'position: absolute',
+            'class': 'contextualHelp'
+        },
         'spinner'
     );
-    appendChildNodes(target, contextualHelpContainer);
+    var position = getElementPosition(ref);
+    position.x += 10;
+    position.y -= 10;
+    setElementPosition(contextualHelpContainer, position);
+    appendChildNodes($('header'), contextualHelpContainer);
     contextualHelpSelected = key;
 
     // load the content

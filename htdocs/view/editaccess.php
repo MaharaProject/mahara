@@ -32,6 +32,7 @@
 define('INTERNAL', 1);
 define('MENUITEM', 'view');
 require(dirname(dirname(__FILE__)) . '/init.php');
+define('TITLE', get_string('editaccess', 'view'));
 require_once('pieforms/pieform.php');
 require_once('pieforms/pieform/elements/calendar.php');
 $smarty = smarty(array(), pieform_element_calendar_get_headdata(pieform_element_calendar_configure(array())));

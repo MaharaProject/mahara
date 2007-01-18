@@ -29,6 +29,7 @@ define('ADMIN', 1);
 define('MENUITEM', 'configusers');
 define('SUBMENUITEM', 'usersearch');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+define('TITLE', get_string('usersearch', 'admin'));
 
 $query = param_variable('query',null);
 
@@ -62,8 +63,8 @@ var results = new TableRenderer(
         },
         function(r) {
             return TD({'style': 'vertical-align: top'},
-                A({'href': '', 'onclick': 'suspendDisplay(this); return false;'}, $str_suspenduser),BR(),
-                A({'href': ''}, 'some other action'),BR()
+                A({'href': '', 'onclick': 'suspendDisplay(this); return false;'}, $str_suspenduser),BR()
+                // A({'href': ''}, 'some other action'),BR()
             );
         }
     ]

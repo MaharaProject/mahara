@@ -27,6 +27,7 @@
 define('INTERNAL', 1);
 define('MENUITEM', 'myviews');
 require(dirname(dirname(__FILE__)) . '/init.php');
+define('TITLE', get_string('myviews'));
 
 $wwwroot = get_config('wwwroot');
 
@@ -45,12 +46,12 @@ var viewlist = new TableRenderer(
 );
 
 viewlist.rowfunction = function(r, n, data) {
-    return map(partial(TR,null),[title(r,data.communities), 
-                                 [TD(null,{$getstring['accessstartdate']}),TD(r.startdate)],
-                                 [TD(null,{$getstring['accessstopdate']}),TD(r.stopdate)],
-                                 [TD(null,{$getstring['description']}),TD(r.description)],
-                                 [TD(null,{$getstring['artefacts']}),
-                                  TD(null,UL(null,map(partial(renderartefact,r.id),r.artefacts)))]]);
+    return map(partial(TR,null), [ title(r,data.communities), 
+                                 [ TD(null,{$getstring['accessstartdate']}),TD(r.startdate)  ],
+                                 [ TD(null,{$getstring['accessstopdate']}), TD(r.stopdate)   ],
+                                 [ TD(null,{$getstring['description']}),    function () { var desc = TD(); desc.innerHTML=r.description; return desc }],
+                                 [ TD(null,{$getstring['artefacts']}),
+                                   TD(null,UL(null,map(partial(renderartefact,r.id),r.artefacts)))]]);
 }
 
 function title(r, communities) {

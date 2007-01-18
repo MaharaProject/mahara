@@ -28,6 +28,7 @@ defined('INTERNAL') || die();
 
 $enc_wwwroot = json_encode(get_config('wwwroot'));
 $enc_id = json_encode($this->id);
+$enc_options = json_encode(json_encode($options));
 
 return <<<EOJAVASCRIPT
 
@@ -45,6 +46,8 @@ var blog_listchildren{$blockid} = new TableRenderer(
 
 blog_listchildren{$blockid}.statevars.push('id');
 blog_listchildren{$blockid}.id = {$enc_id};
+blog_listchildren{$blockid}.statevars.push('options');
+blog_listchildren{$blockid}.options = {$enc_options};
 
 blog_listchildren{$blockid}.updateOnLoad();
 

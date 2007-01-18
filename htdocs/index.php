@@ -27,8 +27,8 @@
 define('INTERNAL', 1);
 define('PUBLIC', 1);
 define('MENUITEM', 'home');
-
 require('init.php');
+define('TITLE', get_string('home'));
 
 // Check for whether the user is logged in, before processing the page. After
 // this, we can guarantee whether the user is logged in or not for this page.

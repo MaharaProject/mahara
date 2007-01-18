@@ -180,6 +180,13 @@ EOF;
     $smarty->assign('THEMEURL', get_config('themeurl'));
     $smarty->assign('WWWROOT', $wwwroot);
 
+    if (defined('TITLE')) {
+        $smarty->assign('PAGETITLE', TITLE . ' - ' . get_config('sitename'));
+    }
+    else {
+        $smarty->assign('PAGETITLE', get_config('sitename'));
+    }
+
 
     $sitename = get_config('sitename');
     $smarty->assign('title', $sitename);
@@ -827,7 +834,7 @@ function get_help_icon($plugintype, $pluginname, $form, $element, $page='') {
         hsc(
             'contextualHelp(' . json_encode($form) . ',' . 
             json_encode($element) . ',' . json_encode($plugintype) . ',' . 
-            json_encode($pluginname) . ',' . json_encode($page) . '); return false;'
+            json_encode($pluginname) . ',' . json_encode($page) . ',this); return false;'
         ) . '">?</a></span>';
 }
 

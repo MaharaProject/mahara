@@ -47,8 +47,6 @@ $inlinejs = <<<EOF
     }
 EOF;
 
-$smarty = smarty();
-
 // Get the user's details
 
 $profile = array();
@@ -58,6 +56,7 @@ if (!$user = get_record('usr', 'id', $userid)) {
 }
 
 $name = display_name($user);
+define('TITLE', $name);
 
 // If the logged in user is on staff, get full name, institution, id number, email address
 if ($USER->get('staff')) {
@@ -104,6 +103,8 @@ if ($allviews = get_records_array('view', 'owner', $userid)) {
 if (!$userassoccommunities = get_associated_communities($userid)) {
     $userassoccommunities = array();
 }
+
+$smarty = smarty();
 
 // Get the logged in user's "invite only" communities
 if ($communities = get_owned_communities($loggedinid, 'invite')) {

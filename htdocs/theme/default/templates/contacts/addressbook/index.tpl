@@ -6,7 +6,7 @@
 
 {include file="columnleftstart.tpl"}
 			<h2>{str tag="myaddressbook"}</h2>
-    		Content from database here
+            Coming soon
 {include file="columnleftend.tpl"}
 
 {include file="footer.tpl"}

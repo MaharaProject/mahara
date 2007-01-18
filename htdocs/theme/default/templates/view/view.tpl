@@ -2,7 +2,14 @@
 
 {include file="columnfullstart.tpl"}
 <div id="view">
-	<h2>{$TITLE}</h2>
+	<h3>
+        {foreach name=viewnav from=$VIEWNAV item=item}
+          {$item}
+          {if !$smarty.foreach.viewnav.last}
+            :
+          {/if}
+        {/foreach}
+        </h3>
 	
 	{if $VIEWCONTENT}
 	   {$VIEWCONTENT}

@@ -191,7 +191,6 @@ class ArtefactTypeBlog extends ArtefactType {
         if (empty($this->id)) {
             return;
         }
-        log_debug('Deleting blog:'.$this->id);
 
         // Delete the blog-specific data.
         delete_records('artefact_blog_blog', 'blog', $this->id);
@@ -216,7 +215,7 @@ class ArtefactTypeBlog extends ArtefactType {
 
         // This uses the above blockid, so needs to be inlcuded after.
         $javascript = require(get_config('docroot') . 'artefact/blog/render/blog_listchildren.js.php');
-        
+
         $smarty = smarty();
         $smarty->assign('artefact', $this);
         $smarty->assign('blockid', $blockid);
@@ -224,6 +223,19 @@ class ArtefactTypeBlog extends ArtefactType {
         $smarty->assign_by_ref('javascript', $javascript);
         return $smarty->fetch('artefact:blog:render/blog_listchildren.tpl');
     }
+
+
+
+    protected function listself($options) {
+        $smarty = smarty();
+        $smarty->assign('title', $this->get('title'));
+        if (isset($options['size']) && $options['size']) {
+            $smarty->assign('size', $this->count_children() . ' ' . get_string('posts', 'artefact.blog'));
+        }
+        return $smarty->fetch('artefact:blog:render/blog_listself.tpl');
+    }
+
+
 
     /**
      * This function implements the render_full functionality for blogs.
@@ -265,7 +277,6 @@ class ArtefactTypeBlog extends ArtefactType {
     protected function render_metadata($options) {
         $smarty = smarty();
         $smarty->assign('PROPERTIES', $this->get_metadata());
-        log_debug($smarty);
         return $smarty->fetch('artefact:blog:render/blog_rendermetadata.tpl');
     }
 
@@ -441,8 +452,12 @@ class ArtefactTypeBlogPost extends ArtefactType {
      */
     protected function listself($options) {
         $smarty = smarty();
-        $smarty->assign('artefact', $this);
-        return $smarty->fetch('artefact:blog:render/blogpost_listself.tpl');
+        $smarty->assign('title', $this->get('title'));
+        if (isset($options['size']) && $options['size']) {
+            $smarty->assign('size', $this->count_attachments() . ' ' 
+                                    . get_string('attachments', 'artefact.blog'));
+        }
+        return $smarty->fetch('artefact:blog:render/blog_listself.tpl');
     }
 
     /**
@@ -453,9 +468,37 @@ class ArtefactTypeBlogPost extends ArtefactType {
     protected function render_full($options) {
         $smarty = smarty();
         $smarty->assign('artefact', $this);
-        $smarty->assign('creationtime', format_date($this->ctime));
+        $smarty->assign('postedbyon', get_string('postedbyon', 'artefact.blog',
+                                                 display_name($this->owner),
+                                                 format_date($this->ctime)));
         return $smarty->fetch('artefact:blog:render/blogpost_renderfull.tpl');
     }
+
+
+    protected function count_attachments() {
+        return count_records('artefact_blog_blogpost_file', 'blogpost', $this->get('id'));
+    }
+
+
+    protected function get_metadata() {
+        $data = parent::get_metadata();
+        unset($data['description']);
+        unset($data['size']);
+        $data['type']['value'] = get_string($this->get('artefacttype'), 'artefact.blog');
+        $data['attachments'] = array('name' => get_string('attachments', 'artefact.blog'),
+                                     'value' => $this->count_attachments() . ' ' 
+                                               . get_string('files', 'artefact.file'));
+        return $data;
+    }
+
+                
+    protected function render_metadata($options) {
+        $smarty = smarty();
+        $smarty->assign('PROPERTIES', $this->get_metadata());
+        return $smarty->fetch('artefact:blog:render/blog_rendermetadata.tpl');
+    }
+
+
 
     public function get_icon() {
     }
@@ -534,7 +577,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
      * @param integer
      * @param integer
      */
-    public static function render_posts($format, $id, $limit = self::pagination, $offset = 0, $options = null) {
+    public static function render_posts($format, $options, $id, $limit = self::pagination, $offset = 0) {
         ($postids = get_records_sql_array("
          SELECT a.id
          FROM " . get_config('dbprefix') . "artefact a
@@ -551,7 +594,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
             $blogpost = new ArtefactTypeBlogPost($postid->id);
             $posts[] = array(
                 'id' => $postid->id,
-                'content' => $blogpost->render($format, $options)
+                'content' => $blogpost->render($format, (array) $options)
             );
         }
 

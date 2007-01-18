@@ -27,6 +27,7 @@
 define('INTERNAL', 1);
 define('MENUITEM', 'myprofile');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+define('TITLE', get_string('profileicons', 'artefact.internal'));
 $smarty = smarty(array('tablerenderer'));
 
 $settingsform = new Pieform(array(
@@ -87,7 +88,7 @@ var table = new TableRenderer(
                 'name': 'd',
                 'value': rowdata.id
             };
-            if (rowdata.default == 't') {
+            if (rowdata['default'] == 't') {
                 options.checked = 'checked';
             }
             return TD({'class': 'center'}, INPUT(options));

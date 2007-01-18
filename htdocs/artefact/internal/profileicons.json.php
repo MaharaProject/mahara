@@ -25,6 +25,7 @@
  */
 
 define('INTERNAL', 1);
+define('JSON', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
 $prefix = get_config('dbprefix');
@@ -35,6 +36,10 @@ $result = get_records_sql_array('SELECT a.id, a.title, a.note, (u.profileicon = 
     WHERE artefacttype = \'profileicon\'
     AND a.owner = ?
     ORDER BY a.id', array($USER->get('id')));
+
+if(!$result) {
+    $result = array();
+}
 
 json_headers();
 $data['error'] = false;

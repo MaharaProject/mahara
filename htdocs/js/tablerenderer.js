@@ -54,6 +54,12 @@ function TableRenderer(target, source, columns, options) {
         }
         if(!self.pager || self.pager.options.lastPage != Math.floor( (count-1) / limit ) + 1 ) {
             if (self.pager) {
+                if (self.headRow) {
+                    removeElement(self.headRow);
+                }
+                if (self.footRow) {
+                    removeElement(self.footRow);
+                }
                 self.pager.removeAllInstances();
             }
             self.pager = new Pager(count, limit, {
@@ -65,16 +71,22 @@ function TableRenderer(target, source, columns, options) {
                 'firstPageString': get_string('firstpage')
             });
 
-            var headRow = TR(null, TD({'colspan': self.linkspan }, self.pager.newDisplayInstance()));
-            var footRow = TR(null, TD({'colspan': self.linkspan }, self.pager.newDisplayInstance()));
+            if (self.pager.options.lastPage == 1) {
+                self.headRow = null;
+                self.footRow = null;
+                return;
+            }
+
+            self.headRow = TR(null, TD({'colspan': self.linkspan }, self.pager.newDisplayInstance()));
+            self.footRow = TR(null, TD({'colspan': self.linkspan }, self.pager.newDisplayInstance()));
 
             if ( self.thead.firstChild ) {
-                insertSiblingNodesBefore(self.thead.firstChild, headRow);
+                insertSiblingNodesBefore(self.thead.firstChild, self.headRow);
             }
             else {
-                appendChildNodes(self.thead, headRow);
+                appendChildNodes(self.thead, self.headRow);
             }
-            appendChildNodes(self.tfoot, footRow);
+            appendChildNodes(self.tfoot, self.footRow);
         }
     }
 

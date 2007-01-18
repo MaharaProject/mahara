@@ -26,7 +26,6 @@
 
 define('INTERNAL', 1);
 define('PUBLIC', 1);
-
 require('init.php');
 require_once('file.php');
 

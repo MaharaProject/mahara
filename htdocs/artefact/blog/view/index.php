@@ -26,8 +26,8 @@
 
 define('INTERNAL', 1);
 define('MENUITEM', 'myblogs');
-
 require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
+define('TITLE', get_string('viewblog','artefact.blog'));
 safe_require('artefact', 'blog');
 
 $id = param_integer('id');

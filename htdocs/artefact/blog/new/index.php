@@ -26,8 +26,8 @@
 
 define('INTERNAL', 1);
 define('MENUITEM', 'myblogs');
-
 require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
+define('TITLE', get_string('newblog','artefact.blog'));
 require_once('pieforms/pieform.php');
 safe_require('artefact', 'blog');
 

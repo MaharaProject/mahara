@@ -28,6 +28,7 @@ define('INTERNAL', 1);
 define('MENUITEM', 'myviews');
 // define('SUBMENUITEM', 'mygroups');
 require(dirname(dirname(__FILE__)) . '/init.php');
+define('TITLE', get_string('createviewstep1', 'view'));
 require_once('pieforms/pieform.php');
 require_once('template.php');
 
