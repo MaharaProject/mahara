@@ -26,6 +26,7 @@
 
 define('INTERNAL', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
+define('TITLE', get_string('search'));
 require_once('pieforms/pieform.php');
 
 // If there is no query posted, the 'results' section of the page will

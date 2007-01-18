@@ -27,8 +27,8 @@
 define('INTERNAL', 1);
 define('MENUITEM', 'mycontacts');
 define('SUBMENUITEM', 'mycommunities');
-
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+define('TITLE', get_string('mycommunities'));
 require_once('community.php');
 
 $id = param_integer('id');

@@ -29,6 +29,7 @@ define('ADMIN', 1);
 define('MENUITEM', 'configusers');
 define('SUBMENUITEM', 'uploadcsv');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+define('TITLE', get_string('uploadcsv', 'admin'));
 require_once('pieforms/pieform.php');
 
 $institutions = get_records_array('institution');

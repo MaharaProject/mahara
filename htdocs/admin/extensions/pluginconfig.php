@@ -29,6 +29,7 @@ define('ADMIN', 1);
 define('MENUITEM', 'configextensions');
 define('SUBMENUITEM', 'pluginadmin');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+define('TITLE', get_string('pluginadmin', 'admin'));
 require_once('pieforms/pieform.php');
 
 $plugintype = param_alpha('plugintype');

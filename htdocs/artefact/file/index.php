@@ -27,6 +27,7 @@
 define('INTERNAL', 1);
 define('MENUITEM', 'myfiles');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+define('TITLE', get_string('myfiles', 'artefact.file'));
 safe_require('artefact', 'file');
 
 $copyright = get_field('site_content', 'content', 'name', 'uploadcopyright');

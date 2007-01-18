@@ -29,6 +29,7 @@ define('ADMIN', 1);
 define('MENUITEM', 'configusers');
 define('SUBMENUITEM', 'suspendedusers');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+define('TITLE', get_string('suspendedusers', 'admin'));
 require_once('pieforms/pieform.php');
 
 $smarty = smarty(array('tablerenderer'));
