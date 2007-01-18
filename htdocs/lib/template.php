@@ -291,7 +291,7 @@ function template_locate($templatename, $fetchdb=true) {
  *
  * @returns string the html of the rendered template
  */
-function template_render($template, $mode, $data=array()) {
+function template_render($template, $mode, $data=array(), $view_id=null) {
     if (isset($template['parseddata'])) {
         $td = $template['parseddata'];
     }
@@ -315,6 +315,10 @@ function template_render($template, $mode, $data=array()) {
             );
 
             $options = array();
+
+            if ($view_id) {
+                $options['viewid'] = $view_id;
+            }
 
             if (isset($t['width']) && isset($t['height'])) {
                 $attr['style'][] = 'width: ' . $t['width'] . 'px;height: ' . $t['height'] . 'px;';
