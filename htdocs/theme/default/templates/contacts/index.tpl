@@ -13,11 +13,12 @@
                             </form>
                             <div id="messagediv"></div>
                             <table id="friendslist" class="tablerenderer">
-	                        <thead>
+                                <thead>
                                     <tr>
- 	                                <td></td>
- 	                                <td></td>
- 	                                <td></td>
+                                        <th>{str tag="profileicon"}</th>
+                                        <th>{str tag="friend"}</th>
+                                        <th>{str tag="views"}</th>
+                                        <th>{str tag="remove"}</th>
                                     <tr>
                                 </thead>
                                 <tbody>

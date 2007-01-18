@@ -281,6 +281,7 @@ else {
 $smarty->assign('FRIENDFORM', $friendform);
 $smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 $smarty->assign('NAME',$name);
+$smarty->assign('USERID', $userid);
 $smarty->assign('USERFIELDS',$userfields);
 $smarty->assign('VIEWS',$views);
 $smarty->display('user/view.tpl');

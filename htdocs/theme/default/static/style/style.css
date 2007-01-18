@@ -195,6 +195,12 @@ tr.required th {
 .fr {
     float: right;
 }
+.cl {
+    clear: left;
+}
+.cr {
+    clear: right;
+}
 .s {
 	font-size: 11px;
 	font-weight: normal;

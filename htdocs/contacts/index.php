@@ -31,7 +31,7 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 define('TITLE', get_string('myfriends'));
 
 $wwwroot    = get_config('wwwroot');
-$profileurl = $wwwroot . 'thumb.php?type=user&id=';
+$profileurl = $wwwroot . 'thumb.php?type=profileicon&size=40x40&id=';
 $viewurl    = $wwwroot . 'user/view.php?id=';
 
 $viewsavailable = get_string('viewsavailable');
