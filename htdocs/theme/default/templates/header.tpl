@@ -51,7 +51,7 @@
                         <td>{$searchform}</td>
                     </tr>
                     <tr>
-                        <td class="advancedsearch"><a href="{$WWWROOT}user/search.php">{str tag=advancedsearch}</a></td>
+                        <td class="advancedsearch"><a href="{$WWWROOT}search.php">{str tag=advancedsearch}</a></td>
                     </tr>
 {/if}
 					<tr>
@@ -60,7 +60,7 @@
                 </table>
 
                 
-                <div id="logo"><a href="{$WWWROOT}"><img src="{image_path imagelocation='images/logo.gif'}" border="0" alt=""></a></div>
+                <div id="logo"><a href="{$WWWROOT}"><img src="{image_path imagelocation='images/logo_mahara.gif'}" border="0" alt=""></a></div>
                 <h1 class="hiddenStructure"><a href="{$WWWROOT}">{$heading|default:"Mahara"|escape}</a></h1>
             </div>
         </div>
