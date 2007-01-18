@@ -25,7 +25,7 @@
  */
 
 define('INTERNAL', 1);
-require(dirname(dirname(__FILE__)) . '/init.php');
+require('init.php');
 define('TITLE', get_string('search'));
 require_once('pieforms/pieform.php');
 
