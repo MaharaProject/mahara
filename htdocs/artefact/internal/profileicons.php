@@ -88,7 +88,7 @@ var table = new TableRenderer(
                 'name': 'd',
                 'value': rowdata.id
             };
-            if (rowdata.default == 't') {
+            if (rowdata['default'] == 't') {
                 options.checked = 'checked';
             }
             return TD({'class': 'center'}, INPUT(options));

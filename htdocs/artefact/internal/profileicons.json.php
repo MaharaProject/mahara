@@ -37,6 +37,10 @@ $result = get_records_sql_array('SELECT a.id, a.title, a.note, (u.profileicon = 
     AND a.owner = ?
     ORDER BY a.id', array($USER->get('id')));
 
+if(!$result) {
+    $result = array();
+}
+
 json_headers();
 $data['error'] = false;
 $data['data'] = $result;
