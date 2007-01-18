@@ -51,7 +51,7 @@
                         <td>{$searchform}</td>
                     </tr>
                     <tr>
-                        <td class="advancedsearch"><a href="{$WWWROOT}user/search.php">{str tag=advancedsearch}</a></td>
+                        <td class="advancedsearch"><a href="{$WWWROOT}search.php">{str tag=advancedsearch}</a></td>
                     </tr>
 {/if}
 					<tr>

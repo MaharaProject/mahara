@@ -777,9 +777,13 @@ function format_date($date, $formatkey='strftimedatetime') {
 /**
  * Returns a random string suitable for registration/change password requests
  *
+ * @param int $length The length of the key to return
  * @return string
  */
-function get_random_key() {
+function get_random_key($length=16) {
+    if ($length < 1) {
+        throw new IllegalArgumentException('Length must be a positive number');
+    }
     $pool = array_merge(
         range('A', 'Z'),
         range('a', 'z'),
@@ -787,7 +791,7 @@ function get_random_key() {
     );
     shuffle($pool);
     $result = '';
-    for ($i = 0; $i < 16; $i++) {
+    for ($i = 0; $i < $length; $i++) {
         $result .= $pool[$i];
     }
     return $result;
@@ -837,7 +841,7 @@ function password_validate(Pieform $form, $values, $username, $institution) {
     }
 
     // No Mike, that's a _BAD_ Mike! :)
-    if ($values['password1'] == 'mike01' || $values['password'] == 'mike012') {
+    if ($values['password1'] == 'mike01' || $values['password1'] == 'mike012') {
         if (!$form->get_property('jsform')) {
             die_info('<img src="'
                 . theme_get_image_url('images/sidebox1_corner_botright.gif')
@@ -889,11 +893,13 @@ function pieform_validate(Pieform $form, $values) {
 
     // Check to make sure the user has not been suspended, so that they cannot
     // perform any action
-    $record = get_record_sql('SELECT suspendedctime, suspendedreason
-        FROM ' . get_config('dbprefix') . 'usr
-        WHERE id = ?', array($USER->get('id')));
-    if ($record->suspendedctime) {
-        throw new UserException(get_string('accountsuspended', 'mahara', $record->suspendedctime, $record->suspendedreason));
+    if ($USER) {
+        $record = get_record_sql('SELECT suspendedctime, suspendedreason
+            FROM ' . get_config('dbprefix') . 'usr
+            WHERE id = ?', array($USER->get('id')));
+        if ($record && $record->suspendedctime) {
+            throw new UserException(get_string('accountsuspended', 'mahara', $record->suspendedctime, $record->suspendedreason));
+        }
     }
 }
 
@@ -1174,7 +1180,7 @@ function get_views($users, $userlooking=null, $limit=5) {
         WHERE
             v.owner IN (' . join(',',array_map('db_quote', array_keys($users))) . ')
             AND ( v.startdate IS NULL OR v.startdate < ? )
-            AND ( v.stopdate IS NULL OR v.stopdate < ? )
+            AND ( v.stopdate IS NULL OR v.stopdate > ? )
         ',
         array( $dbnow, $dbnow )
         )
@@ -1202,7 +1208,7 @@ function get_views($users, $userlooking=null, $limit=5) {
         WHERE
             v.owner IN (' . join(',',array_map('db_quote', array_keys($users))) . ')
             AND ( v.startdate IS NULL OR v.startdate < ? )
-            AND ( v.stopdate IS NULL OR v.stopdate < ? )
+            AND ( v.stopdate IS NULL OR v.stopdate > ? )
         ',
         array($userlooking, $dbnow, $dbnow)
         )
@@ -1231,7 +1237,7 @@ function get_views($users, $userlooking=null, $limit=5) {
         WHERE
             v.owner IN (' . join(',',array_map('db_quote', array_keys($users))) . ')
             AND ( v.startdate IS NULL OR v.startdate < ? )
-            AND ( v.stopdate IS NULL OR v.stopdate < ? )
+            AND ( v.stopdate IS NULL OR v.stopdate > ? )
         ',
         array($userlooking, $dbnow, $dbnow)
         )
@@ -1260,7 +1266,7 @@ function get_views($users, $userlooking=null, $limit=5) {
         WHERE
             v.owner IN (' . join(',',array_map('db_quote', array_keys($users))) . ')
             AND ( v.startdate IS NULL OR v.startdate < ? )
-            AND ( v.stopdate IS NULL OR v.stopdate < ? )
+            AND ( v.stopdate IS NULL OR v.stopdate > ? )
         ',
         array($userlooking, $dbnow, $dbnow)
         )

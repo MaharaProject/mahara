@@ -1138,6 +1138,9 @@ function redirect($location='') {
         $location = substr($wwwroot, 0, -1) . $path;
     }
     else if (substr($location, 0, 4) != 'http') {
+        if (substr($location, 0, 1) == '/') {
+            $location = substr($location, 1);
+        }
         $location = $wwwroot . $location;
     }
 
@@ -1160,7 +1163,7 @@ function searchform() {
     require_once('pieforms/pieform.php');
     return pieform(array(
         'name'                => 'searchform',
-        'action'              => get_config('wwwroot') . 'user/search.php',
+        'action'              => get_config('wwwroot') . 'search.php',
         'renderer'            => 'oneline',
         'autofocus'           => false,
         'validate'            => false,

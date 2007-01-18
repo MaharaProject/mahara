@@ -17,17 +17,37 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage artefact-file
- * @author     Penny Leach <penny@catalyst.net.nz>
+ * @subpackage core
+ * @author     Nigel McNie <nigel@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
-defined('INTERNAL') || die();
+define('INTERNAL', 1);
+define('PUBLIC', 1);
+require('init.php');
 
-$config = new StdClass;
-$config->version = 2007011801;
-$config->release = '0.2';
+// Get 5 random letters.
+$code    = get_random_key(5);
+$angles  = array(40, 0, 340, 20, 310);
+$lefts   = array(30, 50, 70, 95, 110);
+$bottoms = array(24, 20, 28, 34, 33);
+
+$file  = theme_get_image_path('images/captcha.png');
+$img   = imagecreatefrompng($file);
+$black = imagecolorallocate($img, 60, 60, 60);
+$ttf   = theme_get_image_path('captcha.ttf');
+
+$captcha = '';
+
+for ($i = 0; $i < strlen($code); $i++) {
+    imagettftext($img, 18, $angles[$i], $lefts[$i], $bottoms[$i], $black, $ttf, $code{$i});
+    $captcha .= $code{$i};
+}
+
+$SESSION->set('captcha', $captcha);
+header('Content-type: image/png');
+imagepng($img);
 
 ?>

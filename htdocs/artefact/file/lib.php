@@ -61,8 +61,12 @@ class PluginArtefactFile extends PluginArtefact {
         return $subscriptions;
     }
 
+    public static function postinst() {
+        set_config_plugin('artefact', 'file', 'defaultquota', 10485760);
+    }
+
     public static function newuser($event, $user) {
-        update_record('usr', array('quotaused' => 0, 'quota' => get_config_plugin('defaultquota')), array('id' => $user->id));
+        update_record('usr', array('quota' => get_config_plugin('artefact', 'file', 'defaultquota')), array('id' => $user->id));
     }
     
     public static function get_toplevel_artefact_types() {
@@ -331,6 +335,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         require_once('file.php');
         $type = get_mime_type($path);
         if (ArtefactTypeImage::is_image_mime_type($type)) {
+            list($data->width, $data->height) = getimagesize($path);
             return new ArtefactTypeImage(0, $data);
         }
         return new ArtefactTypeFile(0, $data);
@@ -652,18 +657,83 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
 }
 
 class ArtefactTypeImage extends ArtefactTypeFile {
-    
+
+    protected $width;
+    protected $height;
+
+    public function __construct($id = 0, $data = null) {
+        parent::__construct($id, $data);
+
+        if ($this->id && ($filedata = get_record('artefact_file_image', 'artefact', $this->id))) {
+            foreach($filedata as $name => $value) {
+                if (property_exists($this, $name)) {
+                    $this->set($name, $value);
+                }
+            }
+        }
+    }
+
+    /**
+     * This function updates or inserts the artefact.  This involves putting
+     * some data in the artefact table (handled by parent::commit()), and then
+     * some data in the artefact_file_image table.
+     */
+    public function commit() {
+        // Just forget the whole thing when we're clean.
+        if (empty($this->dirty)) {
+            return;
+        }
+      
+        // We need to keep track of newness before and after.
+        $new = empty($this->id);
+
+        $this->mtime = time();
+
+        // Commit to the artefact table.
+        parent::commit();
+
+        // Reset dirtyness for the time being.
+        $this->dirty = true;
+
+        $data = (object)array(
+            'artefact'      => $this->get('id'),
+            'width'         => $this->get('width'),
+            'height'        => $this->get('height')
+        );
+
+        if ($new) {
+            insert_record('artefact_file_image', $data);
+        }
+        else {
+            update_record('artefact_file_image', $data, 'artefact');
+        }
+
+        $this->dirty = false;
+    }
+
     public static function collapse_config() {
         return 'file';
-    }
+   } 
 
     public function render_full($options) {
         $smarty = smarty();
         $smarty->assign('src', get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->id);
         $smarty->assign('title', $this->title);
         $smarty->assign('description', $this->description);
-        $smarty->assign('width', isset($options['width']) ? $options['width'] : '');
-        $smarty->assign('height', isset($options['height']) ? $options['height'] : '');
+        if (isset($options['width'])) {
+            $width = $options['width'];
+        }
+        else {
+            $width = $this->get('width');
+        }
+        $smarty->assign('width', $width ? $width : '');
+        if (isset($options['height'])) {
+            $height = $options['height'];
+        }
+        else {
+            $height = $this->get('height');
+        }
+        $smarty->assign('height', $height ? $height : '');
         return $smarty->fetch('artefact:file:image_renderfull.tpl');
     }
 

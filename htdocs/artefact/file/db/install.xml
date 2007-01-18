@@ -14,5 +14,15 @@
             <KEY NAME="artefactfk" TYPE="foreign" FIELDS="artefact" REFTABLE="artefact" REFFIELDS="id" />
         </KEYS>
     </TABLE>
+    <TABLE NAME="artefact_file_image">
+        <FIELDS>
+            <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="true" />
+            <FIELD NAME="width" TYPE="int" LENGTH="10" NOTNULL="false" />
+            <FIELD NAME="height" TYPE="int" LENGTH="10" NOTNULL="false" />
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="artefactfk" TYPE="foreign" FIELDS="artefact" REFTABLE="artefact" REFFIELDS="id" />
+        </KEYS>
+    </TABLE>
 </TABLES>
 </XMLDB>

@@ -52,6 +52,44 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2007011800) {
+        // Make sure the default quota is set
+        set_config_plugin('artefact', 'file', 'defaultquota', 10485760);
+    }
+
+    if ($oldversion < 2007011801) {
+        // Create image table
+        $table = new XMLDBTable('artefact_file_image');
+
+        $table->addFieldInfo('artefact', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('width', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('height', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null);
+
+        $table->addKeyInfo('artefactfk', XMLDB_KEY_FOREIGN, array('artefact'), 'artefact', array('id'));
+
+        $status = $status && create_table($table);
+
+        $images = get_column('artefact', 'id', 'artefacttype', 'image');
+        log_debug(count($images));
+        require_once('artefact.php');
+        foreach ($images as $imageid) {
+            $image = artefact_instance_from_id($imageid);
+            $path = $image->get_path();
+            $image->set('dirty', false);
+            $data = new StdClass;
+            $data->artefact = $imageid;
+            if (file_exists($path)) {
+                list($data->width, $data->height) = getimagesize($path);
+            }
+
+            if (empty($data->width) || empty($data->height)) {
+                $data->width = 0;
+                $data->height = 0;
+            }
+            insert_record('artefact_file_image', $data);
+        }
+    }
+
     return $status;
 }
 

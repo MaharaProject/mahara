@@ -9,7 +9,7 @@
 			<h3>{$NAME}</h3>
 			<table id="userview_profile"><tbody>
 		{foreach from=$USERFIELDS key=key item=item}
-			<tr><th>{str section=mahara tag=$key}</th><td>{$item}</td></tr>
+			<tr><th>{str section=artefact.internal tag=$key}</th><td>{$item}</td></tr>
 		{/foreach}
 			</tbody></table>
 		{if $VIEWS}

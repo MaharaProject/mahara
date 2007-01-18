@@ -176,8 +176,8 @@ label {
 	font-weight: bold;
 	color: #819f18; 
 }
-.required label, 
-.required th { 
+tr.required label, 
+tr.required th { 
 	color: #819f18; 
 }
 .required td label, 
@@ -205,6 +205,9 @@ label {
     color: #547722;
     font-weight: bold;
     text-align: center;
+}
+.message p {
+    margin: 0;
 }
 
 /* CONTENT LAYOUT BEGIN */

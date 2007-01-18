@@ -334,14 +334,14 @@ function upgrade_plugin($upgrade) {
             $exists = false;
             $table = $plugintype . '_event_subscription';
             if (empty($upgrade->install)) {
-                $exists = record_exists($table, 'plugin' , $pluginname, 'event', $event->event);
+                $exists = get_record($table, 'plugin' , $pluginname, 'event', $event->event);
             }
             $event->plugin = $pluginname;
             if (empty($exists)) {
                 insert_record($table, $event);
             }
             else {
-                update_record($table, $event, array('id', $exists->id));
+                update_record($table, $event, array('id' => $exists->id));
             }
         }
     }
@@ -414,6 +414,7 @@ function core_install_defaults() {
     $user->firstname = 'System';
     $user->lastname = 'User';
     $user->email = 'root@example.org';
+    $user->quota = get_config_plugin('artefact', 'file', 'defaultquota');
     insert_record('usr', $user);
 
     // Insert the admin user
@@ -426,6 +427,7 @@ function core_install_defaults() {
     $user->firstname = 'Admin';
     $user->lastname = 'User';
     $user->email = 'admin@example.org';
+    $user->quota = get_config_plugin('artefact', 'file', 'defaultquota');
     $user->id = insert_record('usr', $user, 'id', true);
     set_profile_field($user->id, 'email', $user->email);
     set_profile_field($user->id, 'firstname', $user->firstname);
