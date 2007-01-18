@@ -224,6 +224,14 @@ class ArtefactTypeFileBase extends ArtefactType {
             AND a.artefacttype IN ' . $filetypesql, array($title));
     }
 
+
+    // Sort folders before files; then use nat sort order.
+    public static function my_files_cmp($a, $b) {
+        return strnatcasecmp((int)($a->artefacttype != 'folder') . $a->title,
+                             (int)($b->artefacttype != 'folder') . $b->title);
+    }
+
+
     public static function get_my_files_data($parentfolderid, $userid, $adminfiles=false) {
 
         $prefix = get_config('dbprefix');
@@ -260,12 +268,7 @@ class ArtefactTypeFileBase extends ArtefactType {
             }
         }
 
-        // Sort folders before files; then use nat sort order on title.
-        function fileobjcmp ($a, $b) {
-            return strnatcasecmp((int)($a->artefacttype != 'folder') . $a->title,
-                                 (int)($b->artefacttype != 'folder') . $b->title);
-        }
-        usort($filedata, "fileobjcmp");
+        usort($filedata, array("ArtefactTypeFileBase", "my_files_cmp"));
         return $filedata;
     }
 
@@ -528,7 +531,14 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
 
     public function listchildren($options) {
         $smarty = smarty();
-        if ($children = $this->folder_contents()) {
+        if ($childrecords = $this->folder_contents()) {
+            usort($childrecords, array("ArtefactTypeFileBase", "my_files_cmp"));
+            $children = array();
+            require_once('artefact.php');
+            foreach ($childrecords as $child) {
+                $c = artefact_instance_from_id($child->id);
+                $children[] = $c->render(FORMAT_ARTEFACT_LISTSELF, $options);
+            }
             $smarty->assign('children', $children);
         }
         return $smarty->fetch('artefact:file:folder_listchildren.tpl');
