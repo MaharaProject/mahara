@@ -81,7 +81,8 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
             if (file_exists($path)) {
                 list($data->width, $data->height) = getimagesize($path);
             }
-            else {
+
+            if (empty($data->width) || empty($data->height)) {
                 $data->width = 0;
                 $data->height = 0;
             }
