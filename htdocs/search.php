@@ -27,80 +27,48 @@
 define('INTERNAL', 1);
 require('init.php');
 define('TITLE', get_string('search'));
-require_once('pieforms/pieform.php');
 
 // If there is no query posted, the 'results' section of the page will
 // stay invisible until a query is submitted.
 
 $query = param_variable('query','');
-
-$searchform = pieform(array(
-    'name'                => 'search',
-    'method'              => 'post',
-    'validate'            => false,
-    'action'              => '',
-    'elements'            => array(
-        'query' => array(
-            'type'           => 'text',
-            'id'             => 'query',
-            'title'          => get_string('query'),
-            'description'    => get_string('querydescription'),
-            'defaultvalue'   => $query,
-        ),
-        'submit' => array(
-            'type'  => 'submit',
-            'value' => get_string('search')
-        ),
-    )
-));
-
-// Empty functions for handling the search form submissions. One is for the
-// form on this page and the other is for the overall search form. They're
-// not actually used, instead the onsubmit event of the form is captured to
-// get the results via the tablerenderer.
-function search_submit($values) {
-}
-
-function searchform_submit($values) {
-}
-
 $noresults = get_string('noresultsfound');
 $wwwroot = get_config('wwwroot');
 
 $javascript = <<<EOF
 var results = new TableRenderer(
     'searchresults',
-    '{$wwwroot}json/usersearch.php',
+    '{$wwwroot}json/search.php',
     [
-        function(r) { return TD(null,A({'href':'view.php?id=' + r.id},r.name)); },
+        function(r) {
+            if ( r.type == 'community' ) {
+                return TD(null,A({'href':'contacts/communities/view.php?id=' + r.id},r.name));
+            }
+            return TD(null,A({'href':'user/view.php?id=' + r.id},r.name));
+        },
     ]
 );
 results.statevars.push('query');
+results.statevars.push('type');
 results.emptycontent = '{$noresults}';
 
-addLoadEvent(function() {
-    connect($('search'), 'onsubmit', function (e) {
-        showElement($('results'));
-        results.query = $('search_query').value;
-        results.offset = 0;
-        results.doupdate();
-        e.stop();
-    });
-
+function doSearch() {
+    results.query = $('search_query').value;
+    results.type  = $('search_type').options[$('search_type').selectedIndex].value;
+    console.log($('search_type'));
+    results.offset = 0;
+    results.doupdate();
+}
 
 EOF;
 
 if (isset($_REQUEST['query'])) {
     $javascript .= '    results.query = ' . json_encode($query) . ";\n";
-    $javascript .= "    showElement($('results'));\n";
     $javascript .= "    results.updateOnLoad();\n";
 }
-$javascript .= "});\n";
 
 $smarty = smarty(array('tablerenderer'));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
-$smarty->assign('SEARCHFORM', $searchform);
-$smarty->assign('QUERYPOSTED', !empty($query));
-$smarty->display('user/search.tpl');
+$smarty->display('search.tpl');
 
 ?>

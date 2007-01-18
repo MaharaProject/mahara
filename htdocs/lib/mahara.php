@@ -1180,7 +1180,7 @@ function get_views($users, $userlooking=null, $limit=5) {
         WHERE
             v.owner IN (' . join(',',array_map('db_quote', array_keys($users))) . ')
             AND ( v.startdate IS NULL OR v.startdate < ? )
-            AND ( v.stopdate IS NULL OR v.stopdate < ? )
+            AND ( v.stopdate IS NULL OR v.stopdate > ? )
         ',
         array( $dbnow, $dbnow )
         )
@@ -1208,7 +1208,7 @@ function get_views($users, $userlooking=null, $limit=5) {
         WHERE
             v.owner IN (' . join(',',array_map('db_quote', array_keys($users))) . ')
             AND ( v.startdate IS NULL OR v.startdate < ? )
-            AND ( v.stopdate IS NULL OR v.stopdate < ? )
+            AND ( v.stopdate IS NULL OR v.stopdate > ? )
         ',
         array($userlooking, $dbnow, $dbnow)
         )
@@ -1237,7 +1237,7 @@ function get_views($users, $userlooking=null, $limit=5) {
         WHERE
             v.owner IN (' . join(',',array_map('db_quote', array_keys($users))) . ')
             AND ( v.startdate IS NULL OR v.startdate < ? )
-            AND ( v.stopdate IS NULL OR v.stopdate < ? )
+            AND ( v.stopdate IS NULL OR v.stopdate > ? )
         ',
         array($userlooking, $dbnow, $dbnow)
         )
@@ -1266,7 +1266,7 @@ function get_views($users, $userlooking=null, $limit=5) {
         WHERE
             v.owner IN (' . join(',',array_map('db_quote', array_keys($users))) . ')
             AND ( v.startdate IS NULL OR v.startdate < ? )
-            AND ( v.stopdate IS NULL OR v.stopdate < ? )
+            AND ( v.stopdate IS NULL OR v.stopdate > ? )
         ',
         array($userlooking, $dbnow, $dbnow)
         )
