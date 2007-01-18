@@ -11,7 +11,7 @@
 			<h2>{str tag=register}</h2>
 			
 			{if $register_form}
-			<p>{str tag=registerdescription}</P>
+			<p>{str tag=registerstep1description}</P>
 			
 			{$register_form}
 			{elseif $register_profile_form}
