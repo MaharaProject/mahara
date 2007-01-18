@@ -85,11 +85,9 @@ foreach (array_keys($publicfields) as $field) {
         }
     }
     else {
-        if (!array_key_exists($field, $userfields) && !in_array($field, array('firstname', 'lastname'))) {
-            $c = new $classname(0, array('owner' => $userid)); // email is different
-            if ($value = $c->render(FORMAT_ARTEFACT_LISTSELF, array('link' => true))) {
-                $userfields[$field] = $value;
-            }
+        $value = get_profile_field($userid, $field);
+        if (!empty($value)) {
+            $userfields[$field] = $value;
         }
     }
 }

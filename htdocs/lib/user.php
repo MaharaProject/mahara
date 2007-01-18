@@ -168,7 +168,25 @@ function set_profile_field($userid, $field, $value) {
     $profile = new $classname(0, array('owner' => $userid));
     $profile->set('title', $value);
     $profile->commit();
+}
 
+/**
+ * Return the value of a profile field for a given user
+ *
+ * @param integer user id to find the profile field for
+ * @param field what profile field you want the value for
+ * @returns string the value of the profile field (null if it doesn't exist)
+ *
+ * @todo, this needs to be better (fix email behaviour)
+ */
+function get_profile_field($userid, $field) {
+    $value = get_field('artefact', 'title', 'owner', $userid, 'artefacttype', $field);
+
+    if ($value) {
+        return $value;
+    }
+
+    return null;
 }
 
 /** 
