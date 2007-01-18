@@ -463,7 +463,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         set_config_plugin('artefact', 'file', 'defaultquota', $values['defaultquota']);
     }
 
-    public function short_size() {
+    public function describe_size() {
         $bytes = $this->get('size');
         if ($bytes < 1024) {
             return $bytes <= 0 ? '0' : ($bytes . ' ' . get_string('bytes', 'artefact.file'));
@@ -487,7 +487,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             $smarty->assign('title', $this->get('title'));
         }
         if (isset($options['size']) && $options['size']) {
-            $smarty->assign('size', $this->short_size());
+            $smarty->assign('size', $this->describe_size());
         }
         return $smarty->fetch('artefact:file:file_listself.tpl');
     }
@@ -523,8 +523,29 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
     public function render_full($options) {
         $smarty = smarty();
         $smarty->assign('artefact', $this);
-        if ($children = $this->folder_contents()) {
-            $smarty->assign('children', $children);
+        if ($options == null) {
+            $options = array();
+        }
+        $smarty->assign('options', array_merge(array('date'=>true, 'icon'=>true), $options));
+        if ($childrecords = $this->folder_contents()) {
+            usort($childrecords, array("ArtefactTypeFileBase", "my_files_cmp"));
+            $children = array();
+            require_once('artefact.php');
+            foreach ($childrecords as &$child) {
+                $c = artefact_instance_from_id($child->id);
+                if (isset($options['link']) && $options['link']) {
+                    $child->title = $c->render(FORMAT_ARTEFACT_LISTSELF, array('link'=>true));
+                }
+                else {
+                    $child->title = $c->render(FORMAT_ARTEFACT_LISTSELF, null);
+                }
+                if (isset($options['size']) && $options['size']) {
+                    $child->size = $c->describe_size();
+                }
+                $child->date = format_date(strtotime($child->mtime), 'strfdaymonthyearshort');
+                $child->iconsrc = get_config('themeurl') . 'images/' . $child->artefacttype . '.gif';
+            }
+            $smarty->assign('children', $childrecords);
         }
         return $smarty->fetch('artefact:file:folder_renderfull.tpl');
     }
@@ -544,11 +565,15 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
         return $smarty->fetch('artefact:file:folder_listchildren.tpl');
     }
 
+    public function describe_size() {
+        return $this->count_children() . ' ' . get_string('files', 'artefact.file');
+    }
+
     public function listself($options) {
         $smarty = smarty();
         $smarty->assign('title', $this->get('title'));
         if (isset($options['size']) && $options['size']) {
-            $smarty->assign('size', $this->count_children() . ' ' . get_string('files', 'artefact.file'));
+            $smarty->assign('size', $this->describe_size());
         }
         return $smarty->fetch('artefact:file:folder_listself.tpl');
     }
