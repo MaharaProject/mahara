@@ -62,12 +62,25 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
         $table = new XMLDBTable('artefact_file_image');
 
         $table->addFieldInfo('artefact', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL);
-        $table->addFieldInfo('width', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null);
+        $table->addFieldInfo('width', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL);
         $table->addFieldInfo('height', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null);
 
         $table->addKeyInfo('artefactfk', XMLDB_KEY_FOREIGN, array('artefact'), 'artefact', array('id'));
 
         $status = $status && create_table($table);
+
+        $images = get_column('artefact', 'id', 'artefacttype', 'image');
+        log_debug(count($images));
+        require_once('artefact.php');
+        foreach ($images as $imageid) {
+            $image = artefact_instance_from_id($imageid);
+            $data = new StdClass;
+            $data->artefact = $imageid;
+            list($data->width, $data->height) = getimagesize($image->get_path());
+            $image->set('width', $data->width);
+            $image->set('height', $data->height);
+            insert_record('artefact_file_image', $data);
+        }
     }
 
     return $status;
