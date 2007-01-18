@@ -57,6 +57,19 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
         set_config_plugin('artefact', 'file', 'defaultquota', 10485760);
     }
 
+    if ($oldversion < 2007011801) {
+        // Create image table
+        $table = new XMLDBTable('artefact_file_image');
+
+        $table->addFieldInfo('artefact', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('width', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null);
+        $table->addFieldInfo('height', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null);
+
+        $table->addKeyInfo('artefactfk', XMLDB_KEY_FOREIGN, array('artefact'), 'artefact', array('id'));
+
+        $status = $status && create_table($table);
+    }
+
     return $status;
 }
 

@@ -341,7 +341,7 @@ function upgrade_plugin($upgrade) {
                 insert_record($table, $event);
             }
             else {
-                update_record($table, $event, array('id', $exists->id));
+                update_record($table, $event, array('id' => $exists->id));
             }
         }
     }

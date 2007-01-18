@@ -335,6 +335,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         require_once('file.php');
         $type = get_mime_type($path);
         if (ArtefactTypeImage::is_image_mime_type($type)) {
+            list($data->width, $data->height) = getimagesize($path);
             return new ArtefactTypeImage(0, $data);
         }
         return new ArtefactTypeFile(0, $data);
@@ -656,12 +657,67 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
 }
 
 class ArtefactTypeImage extends ArtefactTypeFile {
-    
+
+    protected $width;
+    protected $height;
+
+    public function __construct($id = 0, $data = null) {
+        parent::__construct($id, $data);
+
+        if ($this->id && ($filedata = get_record('artefact_file_image', 'artefact', $this->id))) {
+            foreach($filedata as $name => $value) {
+                if (property_exists($this, $name)) {
+                    $this->set($name, $value);
+                }
+            }
+        }
+    }
+
+    /**
+     * This function updates or inserts the artefact.  This involves putting
+     * some data in the artefact table (handled by parent::commit()), and then
+     * some data in the artefact_file_image table.
+     */
+    public function commit() {
+        // Just forget the whole thing when we're clean.
+        if (empty($this->dirty)) {
+            return;
+        }
+      
+        // We need to keep track of newness before and after.
+        $new = empty($this->id);
+
+        $this->mtime = time();
+
+        // Commit to the artefact table.
+        parent::commit();
+
+        // Reset dirtyness for the time being.
+        $this->dirty = true;
+
+        $data = (object)array(
+            'artefact'      => $this->get('id'),
+            'width'         => $this->get('width'),
+            'height'        => $this->get('height')
+        );
+
+        if ($new) {
+            insert_record('artefact_file_image', $data);
+        }
+        else {
+            update_record('artefact_file_image', $data, 'artefact');
+        }
+
+        $this->dirty = false;
+    }
+
     public static function collapse_config() {
         return 'file';
     }
 
     public function render_full($options) {
+        $x = $this->get_path();
+        log_debug();
         $smarty = smarty();
         $smarty->assign('src', get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->id);
         $smarty->assign('title', $this->title);
