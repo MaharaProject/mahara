@@ -731,7 +731,7 @@ class ArtefactTypeImage extends ArtefactTypeFile {
             $width = $options['height'];
         }
         else {
-            $width = $this->get('height');
+            $height = $this->get('height');
         }
         $smarty->assign('height', $height ? $height : '');
         return $smarty->fetch('artefact:file:image_renderfull.tpl');
