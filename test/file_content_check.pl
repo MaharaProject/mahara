@@ -8,6 +8,7 @@ use Perl6::Slurp;
 use Text::Diff;
 
 my $EXCLUDE_FILES = [
+    qr{ \A test/                            }xms,
     qr{ \A examples/                        }xms,
     qr{ \A htdocs/tests                     }xms,
     qr{ \A htdocs/lib/adodb                 }xms,
