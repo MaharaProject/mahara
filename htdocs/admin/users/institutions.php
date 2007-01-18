@@ -139,7 +139,7 @@ if ($institution || $add) {
             'type'         => 'checkbox',
             'title'        => get_string('registrationallowed', 'admin'),
             'description'  => get_string('registrationalloweddescription', 'admin'),
-            'checked' => $data->registerallowed
+            'defaultvalue' => $data->registerallowed,
         ),
         'defaultaccountlifetime' => array(
             'type'         => 'expiry',
