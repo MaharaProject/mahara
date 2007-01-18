@@ -28,6 +28,17 @@ function formStartProcessing(form, btn) {
     if (button) {
         oldValue = button.value;
         button.value = get_string('processingform') + ' ...';
+
+        // we add a hidden input field so the "disabled" button still gets to
+        // pass its value through
+        var node = INPUT({
+            'type': 'hidden',
+            'value': button.value,
+            'name': button.name
+        });
+        insertSiblingNodesAfter(button, node);
+
+        button.proxyContainer = node;
         button.disabled = "disabled";
         button.style.borderWidth = '1px';
         button.blur();
@@ -38,6 +49,10 @@ function formStopProcessing(form, btn) {
     var button = $(btn);
     if (button) {
         button.value = oldValue;
+        if(button.proxyContainer) {
+            removeElement(button.proxyContainer);
+            button.proxyContainer = null;
+        }
         button.disabled = null;
         button.style.borderWidth = '2px';
     }
