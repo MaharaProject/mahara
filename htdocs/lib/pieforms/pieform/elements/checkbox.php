@@ -50,4 +50,26 @@ function pieform_element_checkbox(Pieform $form, $element) {
         . '>';
 }
 
+function pieform_element_checkbox_get_value(Pieform $form, $element) {
+    $name = $element['name'];
+    $global = ($form->get_property('method') == 'get') ? $_GET : $_POST;
+
+    if (isset($element['value'])) {
+        return $element['value'];
+    }
+
+    if ($form->is_submitted()) {
+        if(isset($global[$name])) {
+            return true;
+        }
+        return false;
+    }
+
+    if (isset($element['defaultvalue'])) {
+        return $element['defaultvalue'];
+    }
+
+    return false;
+}
+
 ?>
