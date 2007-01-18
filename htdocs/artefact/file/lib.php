@@ -716,7 +716,6 @@ class ArtefactTypeImage extends ArtefactTypeFile {
    } 
 
     public function render_full($options) {
-        log_debug($options);
         $smarty = smarty();
         $smarty->assign('src', get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->id);
         $smarty->assign('title', $this->title);
@@ -729,7 +728,7 @@ class ArtefactTypeImage extends ArtefactTypeFile {
         }
         $smarty->assign('width', $width ? $width : '');
         if (isset($options['height'])) {
-            $width = $options['height'];
+            $height = $options['height'];
         }
         else {
             $height = $this->get('height');
