@@ -52,6 +52,11 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2007011800) {
+        // Make sure the default quota is set
+        set_config_plugin('artefact', 'file', 'defaultquota', 10485760);
+    }
+
     return $status;
 }
 
