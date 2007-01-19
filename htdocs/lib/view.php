@@ -290,7 +290,7 @@ class View {
 
         $template = template_locate($this->get('template'));
         
-        return template_render($template, TEMPLATE_RENDER_READONLY, $data);
+        return template_render($template, TEMPLATE_RENDER_READONLY, $data, $this->get('id'));
     }
     
     public function delete() {

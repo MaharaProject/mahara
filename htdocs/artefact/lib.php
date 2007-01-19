@@ -343,6 +343,8 @@ abstract class ArtefactType {
         else {
             update_record('artefact', $fordb, 'id');
         }
+        activity_occurred('watchlist', (object) array('artefact' => $this->id,
+                                                      'subject' => get_string('artefactmodified')));
         $this->dirty = false;
         $this->deleted = false;
     }

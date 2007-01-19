@@ -162,8 +162,8 @@ if ($communities = get_tutor_communities($loggedinid, 'controlled')) {
         $default = $default[0];
         $addform = pieform(array(
         'name'                => 'addmember',
-        'ajaxform'            => true,
-        'ajaxsuccesscallback' => 'add_success',
+        'jsform'              => true,
+        'jssuccesscallback'   => 'add_success',
         'elements'            => array(
             'community' => array(
                 'type'    => 'select',
@@ -281,6 +281,7 @@ else {
 $smarty->assign('FRIENDFORM', $friendform);
 $smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 $smarty->assign('NAME',$name);
+$smarty->assign('USERID', $userid);
 $smarty->assign('USERFIELDS',$userfields);
 $smarty->assign('VIEWS',$views);
 $smarty->display('user/view.tpl');

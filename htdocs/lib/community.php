@@ -173,7 +173,7 @@ function get_associated_communities($userid=0) {
 
 
 /**
- * gets communities the user is a tutor in
+ * gets communities the user is a tutor in, or the user owns
  * 
  * @param int $userid (optional, defaults to $USER id)
  * @param string $jointype (optional, will filter by jointype
@@ -186,7 +186,7 @@ function get_tutor_communities($userid=0, $jointype=null) {
     $sql = 'SELECT DISTINCT c.*, cm.ctime
               FROM ' . $prefix . 'community c 
               LEFT JOIN ' . $prefix . 'community_member cm ON cm.community = c.id
-              WHERE (cm.member IS NULL AND c.owner = ?) OR (cm.member = ? AND cm.tutor = ?)';
+              WHERE (c.owner = ? OR (cm.member = ? AND cm.tutor = ?))';
     $values = array($userid, $userid, 1);
     
     if (!empty($jointype)) {
