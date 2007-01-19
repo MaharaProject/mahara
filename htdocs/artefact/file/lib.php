@@ -483,18 +483,8 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         return get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->get('id');
     }
 
-    public function listself($options) {
-        $smarty = smarty();
-        if (isset($options['link']) && $options['link']) {
-            $smarty->assign('title', '<a href="' . $this->file_url() . '">' . $this->get('title') . '</a>');
-        }
-        else {
-            $smarty->assign('title', $this->get('title'));
-        }
-        if (isset($options['size']) && $options['size']) {
-            $smarty->assign('size', $this->describe_size());
-        }
-        return $smarty->fetch('artefact:file:file_listself.tpl');
+    public function linkself() {
+        return '<a href="' . $this->file_url() . '">' . get_string('download', 'artefact.file') . '</a>';
     }
 
     protected function get_metadata() {
@@ -538,15 +528,7 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
             require_once('artefact.php');
             foreach ($childrecords as &$child) {
                 $c = artefact_instance_from_id($child->id);
-                if (isset($options['link']) && $options['link']) {
-                    $child->title = $c->render(FORMAT_ARTEFACT_LISTSELF, array('link'=>true));
-                }
-                else {
-                    $child->title = $c->render(FORMAT_ARTEFACT_LISTSELF, null);
-                }
-                if (isset($options['size']) && $options['size']) {
-                    $child->size = $c->describe_size();
-                }
+                $child->title = $c->render(FORMAT_ARTEFACT_LISTSELF, $options);
                 $child->date = format_date(strtotime($child->mtime), 'strfdaymonthyearshort');
                 $child->iconsrc = get_config('themeurl') . 'images/' . $child->artefacttype . '.gif';
             }
@@ -572,15 +554,6 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
 
     public function describe_size() {
         return $this->count_children() . ' ' . get_string('files', 'artefact.file');
-    }
-
-    public function listself($options) {
-        $smarty = smarty();
-        $smarty->assign('title', $this->get('title'));
-        if (isset($options['size']) && $options['size']) {
-            $smarty->assign('size', $this->describe_size());
-        }
-        return $smarty->fetch('artefact:file:folder_listself.tpl');
     }
 
     public function get_icon() {

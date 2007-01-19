@@ -225,16 +225,9 @@ class ArtefactTypeBlog extends ArtefactType {
     }
 
 
-
-    protected function listself($options) {
-        $smarty = smarty();
-        $smarty->assign('title', $this->get('title'));
-        if (isset($options['size']) && $options['size']) {
-            $smarty->assign('size', $this->count_children() . ' ' . get_string('posts', 'artefact.blog'));
-        }
-        return $smarty->fetch('artefact:blog:render/blog_listself.tpl');
+    public function describe_size() {
+        return $this->count_children() . ' ' . get_string('posts', 'artefact.blog');
     }
-
 
 
     /**
@@ -443,21 +436,8 @@ class ArtefactTypeBlogPost extends ArtefactType {
         parent::delete();
     }
   
-    /**
-     * This function displays the blogpost in listself mode.  We're overriding the
-     * default, which is to simply display the title, so we can include more
-     * data, and use a smarty template.
-     *
-     * @param array
-     */
-    protected function listself($options) {
-        $smarty = smarty();
-        $smarty->assign('title', $this->get('title'));
-        if (isset($options['size']) && $options['size']) {
-            $smarty->assign('size', $this->count_attachments() . ' ' 
-                                    . get_string('attachments', 'artefact.blog'));
-        }
-        return $smarty->fetch('artefact:blog:render/blog_listself.tpl');
+    public function describe_size() {
+        return $this->count_attachments() . ' ' . get_string('attachments', 'artefact.blog');
     }
 
     /**

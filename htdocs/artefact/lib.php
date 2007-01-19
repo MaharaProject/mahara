@@ -475,7 +475,23 @@ abstract class ArtefactType {
      * @param array options
      */
     protected function listself($options) {
-        return $this->title;
+        if (isset($options['viewid'])) {
+            require_once('artefact.php');
+            if (artefact_in_view($id = $this->get('id'), $options['viewid'])) {
+                $title = '<a href="' . get_config('wwwroot') . 'view/view.php?view=' . $options['viewid']
+                    . '&artefact=' . $id . '">' . $this->title . '</a>';
+            }
+        }
+        if (!isset($title)) {
+            $title = $this->title;
+        }
+        if (!empty($options['size']) && method_exists($this, 'describe_size')) {
+            $title .= ' (' . $this->describe_size() . ')';
+        }
+        if (!empty($options['link']) && method_exists($this, 'linkself')) {
+            $title .= ' (' . $this->linkself() . ')';
+        }
+        return $title;
     }
 
     /**
