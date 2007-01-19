@@ -76,11 +76,12 @@ sub insert_random_users {
             print join(',',$userinfo->{username}, 'password', 'mahara', @{$userinfo}{qw(firstname lastname email)}), ")\n";
         }
         unless ( $self->{pretend} ) {
-            $self->{dbh}->do('INSERT INTO ' . $prefix . 'usr (username,password,institution,firstname,lastname,email) VALUES (?,?,?,?,?,?)', undef,
+            $self->{dbh}->do('INSERT INTO ' . $prefix . 'usr (username,password,institution,firstname,lastname,email,quota) VALUES (?,?,?,?,?,?,?)', undef,
                 $userinfo->{username},
                 'password',
                 'mahara',
                 @{$userinfo}{qw(firstname lastname email)},
+                10485760
             );
         }
     }
