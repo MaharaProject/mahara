@@ -141,10 +141,10 @@ function search_group($query_string, $limit, $offset = 0) {
  *               ),
  *           );
  */
-function search_community($query_string, $limit, $offset = 0) {
+function search_community($query_string, $limit, $offset = 0, $all = false) {
     $plugin = get_config('searchplugin');
     safe_require('search', $plugin);
 
-    return call_static_method(generate_class_name('search', $plugin), 'search_community', $query_string, $limit, $offset);
+    return call_static_method(generate_class_name('search', $plugin), 'search_community', $query_string, $limit, $offset, $all);
 }
 ?>
