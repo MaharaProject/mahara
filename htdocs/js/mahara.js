@@ -27,7 +27,7 @@ function formStartProcessing(form, btn) {
     var button = $(btn);
     if (button) {
         oldValue = button.value;
-        button.value = get_string('processingform') + ' ...';
+        button.value = get_string('processing') + ' ...';
 
         // we add a hidden input field so the "disabled" button still gets to
         // pass its value through

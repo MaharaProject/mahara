@@ -391,16 +391,16 @@ function auth_get_login_form() {
             'elements' => array(
                 'login_username' => array(
                     'type'        => 'text',
-                    'title'       => get_string('username'),
-                    'description' => get_string('usernamedescription') . ':',
+                    'title'       => get_string('username') . ':',
+                    'description' => get_string('usernamedescription'),
                     'rules' => array(
                         'required'    => true
                     )
                 ),
                 'login_password' => array(
                     'type'        => 'password',
-                    'title'       => get_string('password'),
-                    'description' => get_string('passworddescription') . ':',
+                    'title'       => get_string('password') . ':',
+                    'description' => get_string('passworddescription'),
                     'value'       => '',
                     'rules' => array(
                         'required'    => true

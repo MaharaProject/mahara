@@ -229,7 +229,7 @@ function jsstrings() {
        'mahara' => array(                        // js file
             'mahara' => array(                   // section
                 'namedfieldempty',               // string name
-                'processingform',
+                'processing',
                 'requiredfieldempty',
                 'unknownerror',
                 'loading',

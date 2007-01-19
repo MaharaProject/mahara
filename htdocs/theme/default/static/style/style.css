@@ -630,7 +630,7 @@ div.sidebar p {
 	border: 0;
 	width: 50px;
 	height: 24px;
-	color: #eef7d4
+	color: #eef7d4;
 	font-size: 11px;
 	font-weight: bold;
 	margin: 0 2px 0 0;
@@ -682,7 +682,7 @@ div.sidebar p {
 	float: none;
 	font-style: italic;
 }
-.maincontent # #messagediv {
+.maincontent messagediv {
 	float: left;
 }
 
