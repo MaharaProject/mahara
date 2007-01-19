@@ -178,7 +178,7 @@ foreach (plugins_installed('artefact') as $artefacttype) {
 }
 $rootinfo = substr($rootinfo, 0, -1) . '];';
 
-$template = template_render($parsed_template, TEMPLATE_RENDER_EDITMODE, array_merge($data, $data['artefacts']));
+$template = template_render($parsed_template, TEMPLATE_RENDER_EDITMODE, array_merge($data, $data['artefacts']), $view_id);
 
 $headers = array();
 if (isset($parsed_template['css'])) {
