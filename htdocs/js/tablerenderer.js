@@ -181,10 +181,10 @@ function TableRenderer(target, source, columns, options) {
                 if (self.emptycontent) {
                     if (self.count > 0) {
                         hideElement(self.table.previousSibling);
-                        showElement(self.table);
+                        self.table.style.display = '';
                     }
                     else {
-                        hideElement(self.table);
+                        self.table.style.display = 'none';
                         showElement(self.table.previousSibling);
                     }
                 }

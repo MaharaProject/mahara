@@ -241,10 +241,10 @@ class PluginSearchInternal extends PluginSearch {
      *               ),
      *           );
      */
-    public static function search_community($query_string, $limit, $offset = 0) {
+    public static function search_community($query_string, $limit, $offset=0, $all=false) {
         global $USER;
         if ( is_postgres() ) {
-            $data = get_records_sql_array("
+            $sql = "
                 SELECT
                     id, name, description, jointype, owner, ctime, mtime
                 FROM
@@ -252,18 +252,20 @@ class PluginSearchInternal extends PluginSearch {
                 WHERE (
                     name ILIKE '%' || ? || '%' 
                     OR description ILIKE '%' || ? || '%' 
-                ) AND ( 
+                )";
+            $values = array($query_string, $query_string);
+            if (!$all) {
+                $sql .=  "AND ( 
                     owner = ? OR id IN (
                         SELECT community FROM " . get_config('dbprefix') . "community_member WHERE member = ?
                     )
-                )
-                ",
-                array($query_string, $query_string, $USER->get('id'), $USER->get('id')),
-                $offset,
-                $limit
-            );
+                )";
+                $values[] = $USER->get('id');
+                $values[] = $USER->get('id');
+            }
+            $data = get_records_sql_array($sql, $values, $offset, $limit);
 
-            $count = get_field_sql("
+            $sql = "
                 SELECT
                     COUNT(*)
                 FROM
@@ -271,14 +273,16 @@ class PluginSearchInternal extends PluginSearch {
                 WHERE (
                     name ILIKE '%' || ? || '%' 
                     OR description ILIKE '%' || ? || '%' 
-                ) AND ( 
-                    owner = ? OR id IN (
-                        SELECT community FROM " . get_config('dbprefix') . "community_member WHERE member = ?
+                )";
+            if (!$all) {
+                $sql .= "AND ( 
+                        owner = ? OR id IN (
+                            SELECT community FROM " . get_config('dbprefix') . "community_member WHERE member = ?
+                        )
                     )
-                )
-            ",
-                array($query_string, $query_string, $USER->get('id'), $USER->get('id'))
-            );
+                ";
+            }
+            $count = get_field_sql($sql, $values);
         }
         // TODO
         // else if ( is_mysql() ) {

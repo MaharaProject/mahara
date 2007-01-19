@@ -107,7 +107,7 @@ if ($institution || $add) {
             'rules' => array(
                 'required'  => true,
                 'maxlength' => 255,
-                'regex'     => '/^[a-z]+$/'
+                'regex'     => '/^[a-zA-Z]+$/'
             ),
             'ignore' => !$add
         ),
@@ -168,7 +168,7 @@ if ($institution || $add) {
         $elements[$field] = array(
             'type' => 'checkbox',
             'title' => get_string($field, 'artefact.internal'),
-            'checked' => in_array($field, $lockedprofilefields)
+            'defaultvalue' => in_array($field, $lockedprofilefields)
         );
     }
     $elements['submit'] = array(
@@ -197,12 +197,11 @@ else {
 function institution_submit(Pieform $form, $values) {
     global $SESSION, $institution, $add;
 
-    log_debug($values);
     db_begin();
     // Update the basic institution record...
     $newinstitution = new StdClass;
     if ($add) {
-        $institution = $newinstitution->name = $values['name'];
+        $institution = $newinstitution->name = strtolower($values['name']);
     }
 
     $newinstitution->displayname                  = $values['displayname'];
@@ -211,7 +210,6 @@ function institution_submit(Pieform $form, $values) {
     $newinstitution->defaultaccountlifetime       = ($values['defaultaccountlifetime']) ? intval($values['defaultaccountlifetime']) : null;
     $newinstitution->defaultaccountinactiveexpire = ($values['defaultaccountinactiveexpire']) ? intval($values['defaultaccountinactiveexpire']) : null;
     $newinstitution->defaultaccountinactivewarn   = ($values['defaultaccountinactivewarn']) ? intval($values['defaultaccountinactivewarn']) : null;
-    log_debug($newinstitution);
 
     if ($add) {
         insert_record('institution', $newinstitution);

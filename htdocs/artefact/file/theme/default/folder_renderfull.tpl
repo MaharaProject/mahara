@@ -14,9 +14,6 @@
         {/if}
         <th>{str tag=name}</th>
         <th>{str tag=description}</th>
-        {if (isset($options.size))}
-        <th>{str tag=size}</th>
-        {/if}
         {if (isset($options.date))}
         <th>{str tag=date}</th>
         {/if}
@@ -30,9 +27,6 @@
         {/if}
         <td>{$child->title}</td>
         <td>{$child->description}</td>
-        {if (isset($options.size))}
-        <td>{$child->size}</td>
-        {/if}
         {if (isset($options.date))}
         <td>{$child->date}</td>
         {/if}
