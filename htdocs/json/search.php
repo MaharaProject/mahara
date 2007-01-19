@@ -46,7 +46,7 @@ $offset = param_integer('offset', 0);
 
 switch($type) {
     case 'community':
-        $data = search_community($query, $limit, $offset);
+        $data = search_community($query, $limit, $offset, true);
         foreach ($data['data'] as &$result) {
             $result->type = 'community';
         }
