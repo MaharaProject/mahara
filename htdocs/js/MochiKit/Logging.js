@@ -204,7 +204,28 @@ MochiKit.Logging.Logger.prototype = {
         this._messages.push(msg);
         this.dispatchListeners(msg);
         if (this.useNativeConsole) {
-            this.logToConsole(msg.level + ": " + msg.info.join(" "));
+            if (typeof(console) == 'object' && console.log) {
+                switch(msg.level) {
+                    case 'DEBUG':
+                        console.debug.apply(console,msg.info);
+                        break;
+                    case 'INFO':
+                        console.info.apply(console,msg.info);
+                        break;
+                    case 'WARNING':
+                        console.warn.apply(console,msg.info);
+                        break;
+                    case 'ERROR':
+                        console.error.apply(console,msg.info);
+                        break;
+                    default:
+                        console.log.apply(console,msg.info);
+                        break;
+                }
+            }
+            else {
+                this.logToConsole(msg.level + ": " + msg.info.join(" "));
+            }
         }
         this.counter += 1;
         while (this.maxSize >= 0 && this._messages.length > this.maxSize) {
