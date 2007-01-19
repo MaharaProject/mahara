@@ -44,7 +44,7 @@ var suspendedlist = new TableRenderer(
         'institution',
         'cusrname',
         'reason',
-        function (rowdata) { return INPUT({'type': 'checkbox', 'name': 'usr_' + rowdata.id}); }
+        function (rowdata) { return TD(null, INPUT({'type': 'checkbox', 'name': 'usr_' + rowdata.id})); }
     ]
 );
 suspendedlist.updateOnLoad();
