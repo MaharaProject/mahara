@@ -112,6 +112,8 @@ $string['accountinactivewarninghtml'] = '<p>Dear %s,</p>
 
 <p>Regards, %s Site Administrator</p>';
 $string['accountsuspended'] = 'Your account has been suspeneded as of %s. The reason for your suspension is:<blockquote>%s</blockquote>';
+$string['youraccounthasbeensuspended'] = 'Your account has been suspeneded';
+$string['youraccounthasbeenunsuspended'] = 'Your account has been unsuspeneded';
 $string['changepassword'] = 'Change Password';
 $string['changepasswordinfo'] = 'You are required to change your password before you can proceed.';
 $string['confirmpassword'] = 'Confirm password';
