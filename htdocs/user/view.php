@@ -36,9 +36,21 @@ $inlinejs = <<<EOF
         
         if (formname != 'friend') {
             var dd = $(formname).elements['community'];
-            removeElement(dd.options[dd.selectedIndex]);
-            if (dd.length > 0) {
+            if (dd.nodeName == 'INPUT') {
+                $(formname).style.display = 'none';
                 return true;
+            }
+            if (dd.nodeName == 'SELECT') {
+                if (dd.options.length == 1) {
+                    $(formname).style.display = 'none';
+                    return true;
+                }
+                else {
+                    removeElement(dd.options[dd.selectedIndex]);
+                    if (dd.length > 0) {
+                        return true;
+                    }
+                }
             }
         }
         
