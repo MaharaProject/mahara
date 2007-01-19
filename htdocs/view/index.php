@@ -112,7 +112,7 @@ function submitform(viewid, action) {
     var form = $('form' + viewid);
     if (action == 'submitview') {
         if (confirm({$getstring['submitviewquestion']})) {
-            sendjsonrequest('submit.json.php', {'viewid':viewid,'communityid':communityid}, viewlist.doupdate);
+            sendjsonrequest('submit.json.php', {'viewid':viewid,'communityid':form.community.options[form.community.selectedIndex].value}, viewlist.doupdate);
         }
         return false;
     }
