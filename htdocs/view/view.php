@@ -41,11 +41,12 @@ if ($artefactid) {
     if (!artefact_in_view($artefactid, $viewid)) {
         throw new AccessDeniedException("Artefact $artefactid not in View $viewid");
     }
+    $options = array('viewid' => $viewid);
     if (in_array(FORMAT_ARTEFACT_RENDERFULL, $artefact->get_render_list())) {
-        $content = $artefact->render(FORMAT_ARTEFACT_RENDERFULL, null);
+        $content = $artefact->render(FORMAT_ARTEFACT_RENDERFULL, $options);
     }
     else {
-        $content = $artefact->render(FORMAT_ARTEFACT_RENDERMETADATA, null);
+        $content = $artefact->render(FORMAT_ARTEFACT_RENDERMETADATA, $options);
     }
 
     // Link ancestral artefacts back to the view

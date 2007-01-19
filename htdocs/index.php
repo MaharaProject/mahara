@@ -35,6 +35,10 @@ define('TITLE', get_string('home'));
 if (!$USER->is_logged_in()) {
     require_once('pieforms/pieform.php');
     $institutions = get_records_menu('institution', '', '', 'name, displayname');
+    $defaultinstitution = get_cookie('institution');
+    if (!$defaultinstitution) {
+        $defaultinstitution = 'mahara';
+    }
     $loginform = get_login_form_js(pieform(array(
         'name'       => 'login',
         'renderer'   => 'div',
@@ -66,7 +70,7 @@ if (!$USER->is_logged_in()) {
                     'login_institution' => array(
                         'type' => 'select',
                         'title' => get_string('institution') . ':',
-                        'defaultvalue' => get_cookie('institution'),
+                        'defaultvalue' => $defaultinstitution,
                         'options' => $institutions,
                         'rules' => array(
                             'required' => true
