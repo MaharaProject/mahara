@@ -50,9 +50,11 @@
                     <tr>
                         <td>{$searchform}</td>
                     </tr>
+                    {*
                     <tr>
                         <td class="advancedsearch"><a href="{$WWWROOT}search.php">{str tag=advancedsearch}</a></td>
                     </tr>
+                    *}
 {/if}
 					<tr>
 						<td><div id="loggedinstring">{$LOGGEDINSTR}</div></td>

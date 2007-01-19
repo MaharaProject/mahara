@@ -112,6 +112,8 @@ $string['accountinactivewarninghtml'] = '<p>Dear %s,</p>
 
 <p>Regards, %s Site Administrator</p>';
 $string['accountsuspended'] = 'Your account has been suspeneded as of %s. The reason for your suspension is:<blockquote>%s</blockquote>';
+$string['youraccounthasbeensuspended'] = 'Your account has been suspeneded';
+$string['youraccounthasbeenunsuspended'] = 'Your account has been unsuspeneded';
 $string['changepassword'] = 'Change Password';
 $string['changepasswordinfo'] = 'You are required to change your password before you can proceed.';
 $string['confirmpassword'] = 'Confirm password';
@@ -226,7 +228,7 @@ $string['contactinformationsent']   = 'Your contact information has been sent';
 
 // mahara.js
 $string['namedfieldempty'] = 'The required field "%s" is empty';
-$string['processingform']     = 'Processing form';
+$string['processing']     = 'Processing';
 $string['requiredfieldempty'] = 'A required field is empty';
 $string['unknownerror']       = 'An unknown error occurred (0x20f91a0)';
 

@@ -32,9 +32,8 @@ require_once('artefact.php');
 $id = param_integer('id');
 $format = param_variable('format', FORMAT_ARTEFACT_LISTSELF);
 $blockid = param_variable('blockid', null);
-
-
-$options = array();
+$options = param_variable('options', array());
+log_debug($options);
 
 if($blockid) {
     log_debug('using block id: ' . $blockid);

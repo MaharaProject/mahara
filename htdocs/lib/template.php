@@ -365,6 +365,7 @@ function template_render($template, $mode, $data=array(), $view_id=null) {
                         'artefacttype' => isset($t['artefacttype']) ? $t['artefacttype'] : null,
                         'plugintype'   => isset($t['plugintype'])   ? $t['plugintype'] : null,
                         'format'       => isset($t['format'])       ? $t['format'] : null,
+                        'options'      => $options,
                     );
                     
                     if ( isset($data[$t['id']]) ) {
@@ -519,7 +520,14 @@ function template_render($template, $mode, $data=array(), $view_id=null) {
             }
 
             replaceChildNodes(real_target, IMG({ src: {$spinner_url} }));
-            var d = loadJSONDoc('{$wwwroot}json/renderartefact.php', {'id': element.artefactid, 'format': format} );
+            var render_options = {
+                'id': element.artefactid,
+                'format': format
+            };
+            for (key in dstData.options) {
+                render_options['options[' + key + ']'] = dstData.options[key];
+            }
+            var d = loadJSONDoc('{$wwwroot}json/renderartefact.php', render_options );
             d.addCallbacks(
                 function (response) {
                     real_target.innerHTML = response.data;
