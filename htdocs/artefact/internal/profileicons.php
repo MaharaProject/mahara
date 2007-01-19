@@ -77,7 +77,7 @@ var table = new TableRenderer(
     'profileicons.json.php',
     [
         function(rowdata) {
-            return TD(null, IMG({'src': '$wwwroot/thumb.php?type=profileicon&size=100x100&id=' + rowdata.id, 'alt': rowdata.note}));
+            return TD(null, IMG({'src': '$wwwroot/thumb.php?type=profileiconbyid&size=100x100&id=' + rowdata.id, 'alt': rowdata.note}));
         },
         function(rowdata) {
             return TD(null, rowdata.title ? rowdata.title : rowdata.note);

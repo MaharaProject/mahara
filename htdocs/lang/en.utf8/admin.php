@@ -166,6 +166,7 @@ $string['uploadcsvusersaddedsuccessfully'] = 'The users in the file have been ad
 $string['adminuserspagedescription'] = '<p>Here you can choose which users are administrators for the site. The current administrators are listed on the right, and potential administrators are on the left.</p><p>The system must have at least one administrator.</p>';
 $string['adminusersupdated'] = 'Admin users updated';
 $string['usersearch'] = 'User Search';
+$string['usersearchdescription'] = 'Search all users and perform administrative actions on them';
 
 // Staff Users
 $string['staffuserspagedescription'] = 'Here you can choose which users are staff for the site. The current staff are on the right, and potential staff are on the left.';

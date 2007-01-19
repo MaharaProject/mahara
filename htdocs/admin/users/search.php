@@ -52,7 +52,7 @@ var results = new TableRenderer(
     'searchresults',
     'search.json.php',
     [
-        function(r) { return TD(null,IMG({'src': '{$wwwroot}thumb.php?type=user&id=' + r.id, 'alt': {$str_profileimage}})); },
+        function(r) { return TD(null,IMG({'src': '{$wwwroot}thumb.php?type=profileicon&size=40x40&id=' + r.id, 'alt': {$str_profileimage}})); },
         function(r) {
             return TD({'style': 'vertical-align: top'},
                 A({'href': '{$wwwroot}user/view.php?id=' + r.id}, r.name),

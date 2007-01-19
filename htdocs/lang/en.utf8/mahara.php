@@ -500,6 +500,9 @@ $string['pendingfriends'] = 'Pending friends';
 
 $string['friendlistfailure'] = 'Failed to modify your friends list';
 
+$string['friend'] = 'Friend';
+$string['profileicon'] = 'Profile Icon';
+
 // general views stuff
 $string['viewavailable'] = 'View available';
 $string['viewsavailable'] = 'Views available';

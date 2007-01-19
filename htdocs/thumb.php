@@ -47,29 +47,39 @@ switch ($type) {
         exit;
         break;
 
+    case 'profileiconbyid':
     case 'profileicon':
         $id = param_integer('id');
-        $size = param_variable('size', '');
-        if ($size && !preg_match('/\d+x\d+/', $size)) {
-            throw new UserException('Invalid size for image specified');
+
+        if ($type == 'profileicon') {
+            // Convert ID of user to the ID of a profileicon
+            $id = get_field('usr', 'profileicon', 'id', $id);
         }
 
-        list($width, $height) = explode('x', $size);
-        if ($width > 300 || $height > 300) {
-            throw new UserException('Requested image size is too big');
-        }
-        if ($width % 5 != 0 || $height % 5 != 0) {
-            throw new UserException('Requested image size must be in multiples of 5 for width and height');
-        }
+        if ($id) {
+            $size = param_variable('size', '');
+            if ($size && !preg_match('/\d+x\d+/', $size)) {
+                throw new UserException('Invalid size for image specified');
+            }
 
-        if ($path = get_dataroot_image_path('artefact/internal/profileicons', $id, $size)) {
-            $type = get_mime_type($path);
-            if ($type) {
-                header('Content-type: ' . $type);
-                readfile($path);
-                exit;
+            list($width, $height) = explode('x', $size);
+            if ($width > 300 || $height > 300) {
+                throw new UserException('Requested image size is too big');
+            }
+            if ($width % 5 != 0 || $height % 5 != 0) {
+                throw new UserException('Requested image size must be in multiples of 5 for width and height');
+            }
+
+            if ($path = get_dataroot_image_path('artefact/internal/profileicons', $id, $size)) {
+                $type = get_mime_type($path);
+                if ($type) {
+                    header('Content-type: ' . $type);
+                    readfile($path);
+                    exit;
+                }
             }
         }
+
         header('Content-type: ' . 'image/gif');
         readfile(theme_get_image_path('images/no_userphoto40x40.gif'));
         break;

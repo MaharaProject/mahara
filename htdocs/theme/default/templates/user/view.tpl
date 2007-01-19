@@ -7,11 +7,19 @@
 {include file="columnleftstart.tpl"}
 			<div id="userview">
 			<h3>{$NAME}</h3>
+            <div></div>
+            <div>
 			<table id="userview_profile"><tbody>
-		{foreach from=$USERFIELDS key=key item=item}
-			<tr><th>{str section=artefact.internal tag=$key}</th><td>{$item}</td></tr>
+		{foreach from=$USERFIELDS name=userfields key=key item=item}
+			<tr>{if $smarty.foreach.userfields.first}
+                <td style="width: 100px;" rowspan="{$smarty.foreach.userfields.total+1}">
+                    <img src="{$WWWROOT}thumb.php?type=profileicon&size=100x100&id={$USERID}" alt="">
+                </td>{/if}
+                <th>{str section=artefact.internal tag=$key}</th><td>{$item}</td>
+            </tr>
 		{/foreach}
 			</tbody></table>
+            </div>
 		{if $VIEWS}
 			<table id="userview_views"><thead><tr><th>
 			{str section=mahara tag=views}
