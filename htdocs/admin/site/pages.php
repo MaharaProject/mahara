@@ -43,7 +43,7 @@ $getstring = array('discardpageedits' => "'" . get_string('discardpageedits','ad
 $f = array(
     'name'                => 'editsitepage',
     'jsform'              => true,
-    'jssuccescallback'    => 'contentSaved',
+    'jssuccesscallback'    => 'contentSaved',
     'elements'            => array(
         'pagename' => array(
             'type'    => 'select',
@@ -90,26 +90,19 @@ function editsitepage_submit(Pieform $form, $values) {
 $ijs = <<< EOJS
 
 // global stuff, set in onLoad().
-setEditorContent = function () {};
-getEditorContent = function () {};
 var oldpagename = '';
 var originalcontent = '';
 
-function requestPageText(removeMessage) {
+function requestPageText() {
     // Allow the user to abort change if changes have been made in the editor.
     if (getEditorContent() != originalcontent) {
-        var answer = confirm({$getstring['discardpageedits']});
-        if (!answer) {
+        if (!confirm({$getstring['discardpageedits']})) {
             $('editsitepage_pagename').value = oldpagename;
             return;
         }
     }
 
     processingStart();
-    // @todo something might need to be done here
-    //if (removeMessage) {
-    //    removeElement('messages');
-    //}
     editsitepage_remove_all_errors();
     logDebug(get_string('loadingpagecontent', 'admin'));
     var d = loadJSONDoc('editchangepage.json.php',{'pagename':$('editsitepage_pagename').value});
@@ -117,7 +110,7 @@ function requestPageText(removeMessage) {
         if (!data.error) {
             logDebug(get_string('sitepageloaded', 'admin'));
             setEditorContent(data.content);
-            originalcontent = getEditorContent();
+            originalcontent = data.content;
             oldpagename = $('editsitepage_pagename').value;
         }
         else {
@@ -125,42 +118,33 @@ function requestPageText(removeMessage) {
         }
         processingStop();
     }, function(err) {
-        log('todo (error occured!)');
+        displayMessage('todo (error occured!)');
+        processingStop();
     });
 }
 
 // Called from submitForm on successful page save.
 function contentSaved (form, data) {  
     formSuccess(form, data);
-    originalcontent = getEditorContent();
     // @todo something might need to be done here
     //callLater(2, function() { removeElement('messages'); });
-    requestPageText(false);
+    originalcontent = getEditorContent();
 }
 
 function onLoad() {
     if (typeof(tinyMCE) != 'undefined') {
         setEditorContent = function (c) {
-            //var i = tinyMCE.selectedInstance;
-            tinyMCE.removeMCEControl('mce_editor_0');
-            //tinyMCE.execCommand('mceRemoveControl', true, 'editsitepage_pagetext');
-            tinyMCE.idCounter = 0;
-            $('editsitepage_pagetext').value = c;
-            tinyMCE.execCommand('mceAddControl', true, 'editsitepage_pagetext');
-            tinyMCE.execCommand('mceFocus',false,'mce_editor_0');
-            //tinyMCE.updateContent('editsitepage_pagetext');
-            //tinyMCE.setContent(c);
-            //tinyMCE.execCommand('mceStartTyping');
-            //tinyMCE.execCommand('mceCleanup');
-            //window.setTimeout('tinyMCE.triggerNodeChange();', 1);
-            //tinyMCE.execCommand('mceReplaceContent',false,c);
-            //i.contentWindow.focus();
-            //tinyMCE.execCommand('mceFocus',false,'mce_editor_0');
-            //tinyMCE.execInstanceCommand('mce_editor_0', 'mceResetDesignMode', false);
-            //tinyMCE.triggerNodeChange();
-            //tinyMCE.repaint();
-            //tinyMCE.setContent(c);
-            //tinyMCE.execCommand('mceFocus',false,'mce_editor_0');
+            if (navigator.userAgent.indexOf('Firefox/') != -1) {
+                // Firefox won't let you use the delete key unless you
+                // put this stuff in:
+                tinyMCE.removeMCEControl('mce_editor_0');
+                tinyMCE.idCounter = 0;
+                $('editsitepage_pagetext').value = c;
+                tinyMCE.execCommand('mceAddControl', true, 'editsitepage_pagetext');
+            } else {
+                tinyMCE.setContent(c);
+            }
+            tinyMCE.execCommand('mceFocus', false, 'mce_editor_0');
         }
         getEditorContent = tinyMCE.getContent;
     }
@@ -168,10 +152,12 @@ function onLoad() {
         setEditorContent = function (c) { $('editsitepage_pagetext').value = c; };
         getEditorContent = function () { return $('editsitepage_pagetext').value; };
     }
-    originalcontent = getEditorContent();
-    requestPageText();
+    // IE seems to need this but I don't know why.
+    callLater(0.001,function() {
+        originalcontent = getEditorContent();
+        requestPageText();
+    });
     connect('editsitepage_pagename', 'onchange', requestPageText);
-
 
     connect('editsitepage_pagename', 'onkeydown', function(e) {
         if (e.key().code == 9 && !e.modifier().shift) {

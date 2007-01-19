@@ -30,8 +30,6 @@ define('JSON', 1);
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
-json_headers();
-
 $pagename = param_alpha('pagename');
 
 $data['pagename'] = $pagename;
