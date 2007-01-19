@@ -107,7 +107,7 @@ if ($institution || $add) {
             'rules' => array(
                 'required'  => true,
                 'maxlength' => 255,
-                'regex'     => '/^[a-z]+$/'
+                'regex'     => '/^[a-zA-Z]+$/'
             ),
             'ignore' => !$add
         ),
@@ -201,7 +201,7 @@ function institution_submit(Pieform $form, $values) {
     // Update the basic institution record...
     $newinstitution = new StdClass;
     if ($add) {
-        $institution = $newinstitution->name = $values['name'];
+        $institution = $newinstitution->name = strtolower($values['name']);
     }
 
     $newinstitution->displayname                  = $values['displayname'];
