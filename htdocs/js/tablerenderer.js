@@ -62,14 +62,14 @@ function TableRenderer(target, source, columns, options) {
                 }
                 self.pager.removeAllInstances();
             }
-            self.pager = new Pager(count, limit, {
-                'currentPage': Math.floor(offset / limit) + 1,
-                'pageChangeCallback': self.pageChange,
-                'previousPageString': get_string('prevpage'),
-                'nextPageString': get_string('nextpage'),
-                'lastPageString': get_string('lastpage'),
-                'firstPageString': get_string('firstpage')
-            });
+            self.pager = new Pager(count, limit,
+                update(
+                    null,
+                    self.defaultPagerOptions,
+                    self.pagerOptions,
+                    { 'currentPage': Math.floor(offset / limit) + 1 }
+                )
+            );
 
             if (self.pager.options.lastPage == 1) {
                 self.headRow = null;
@@ -91,7 +91,6 @@ function TableRenderer(target, source, columns, options) {
     }
 
     this.pageChange = function(n) {
-        logDebug('Page Changed to: ' + n);
         self.doupdate({
             'offset': ( n - 1 ) * self.limit
         });
@@ -236,6 +235,15 @@ function TableRenderer(target, source, columns, options) {
             addLoadEvent(partial(self.doupdate, {}));
         }
     }
+
+    this.defaultPagerOptions = {
+        'pageChangeCallback': self.pageChange,
+        'previousPageString': get_string('prevpage'),
+        'nextPageString': get_string('nextpage'),
+        'lastPageString': get_string('lastpage'),
+        'firstPageString': get_string('firstpage')
+    };
+    this.pagerOptions = {};
 
     if ( TableRendererPageLoaded ) {
         this.init();
