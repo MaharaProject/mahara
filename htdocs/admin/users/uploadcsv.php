@@ -46,8 +46,9 @@ if (count($institutions) > 1) {
     $institutionelement = array(
         'type' => 'select',
         'title' => get_string('institution'),
-        'description' => get_string('institutiondescription'),
-        'options' => $options
+        'description' => get_string('uploadcsvinstitution', 'admin'),
+        'options' => $options,
+        'defaultvalue' => 'mahara'
     );
 }
 else {
