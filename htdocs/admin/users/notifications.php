@@ -68,6 +68,12 @@ $form = array(
 );
 
 // build up the header
+$form['elements']['headerprofileicon'] = array(
+    'title' => ' ',
+    'type' => 'html',
+    'class' => 'header',
+    'value' => get_string('profileicon')
+);
 foreach ($types as $type) {
     $form['elements']['header' . $type->name] = array(
         'title' => ' ', 
@@ -78,8 +84,15 @@ foreach ($types as $type) {
 }
 
 foreach ($users as $id => $user) {
+    $form['elements']['profileicon-' . $id] = array(
+        'key' => $id,
+        'type' => 'html',
+        'title'   => full_name($user['user']),
+        'value' =>  '<img src="' . get_config('wwwroot') . 'thumb.php?type=profileicon&size=40x40&id=' . $id . '" alt="">'
+    );
     foreach ($types as $type) {
         $form['elements']['admin-' . $id . '-' . $type->name] = array(
+            'key'     => $id,
             'title'   => full_name($user['user']),
             'type'    => 'select',
             'options' => $options,
