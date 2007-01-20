@@ -19,12 +19,12 @@
 {if $EDITMODE}
         <input type="hidden" name="viewid" value="{$viewid}" id="template_viewid">
 {/if}
-        <input type="submit" name="cancel" value="{str tag=cancel}" id="template_cancel">
+        <input type="submit" class="submit" name="cancel" value="{str tag=cancel}" id="template_cancel">
 {if $EDITMODE}
-        <input type="submit" name="submit" value="{str tag=save}" id="template_submit">
+        <input type="submit" class="submit" name="submit" value="{str tag=save}" id="template_submit">
 {else}
-        <input type="submit" name="back" value="{str tag=back section=view}" id="template_back">
-        <input type="submit" name="submit" value="{str tag=next section=view}" id="template_submit">
+        <input type="submit" class="submit" name="back" value="{str tag=back section=view}" id="template_back">
+        <input type="submit" class="submit" name="submit" value="{str tag=next section=view}" id="template_submit">
 {/if}
     </form>
 </div>
