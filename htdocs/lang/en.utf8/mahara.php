@@ -119,7 +119,6 @@ $string['changepasswordinfo'] = 'You are required to change your password before
 $string['confirmpassword'] = 'Confirm password';
 $string['cookiesnotenabled'] = 'Your browser does not have cookies enabled, or is blocking cookies from this site. Mahara requires cookies to be enabled before you can log in';
 $string['institution'] = 'Institution';
-$string['institutiondescription'] = 'Your institution';
 $string['loggedoutok'] = 'You have been logged out successfully';
 $string['login'] = 'Login';
 $string['loginfailed'] = 'You have not provided the correct credentials to log in. Please check your username and password are correct.';
