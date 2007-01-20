@@ -26,7 +26,7 @@
 
 // @todo Maybe later have a cron job to clean up access to views when the access expires
 // @todo Currently you can add access with start date after end date, this should be restricted
-// @todo Currently you can add multplie access that is exactly the same (e.g. 3x public with no dates)
+// @todo Currently you can add multpile access that is exactly the same (e.g. 3x public with no dates)
 //       This might need to be checked for. As it stands that just results in three rows in the database,
 //       which are collapsed when access to the view is edited
 define('INTERNAL', 1);
@@ -35,7 +35,7 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 define('TITLE', get_string('editaccess', 'view'));
 require_once('pieforms/pieform.php');
 require_once('pieforms/pieform/elements/calendar.php');
-$smarty = smarty(array(), pieform_element_calendar_get_headdata(pieform_element_calendar_configure(array())));
+$smarty = smarty(array('tablerenderer'), pieform_element_calendar_get_headdata(pieform_element_calendar_configure(array())));
 
 $viewid = param_integer('viewid');
 $prefix = get_config('dbprefix');

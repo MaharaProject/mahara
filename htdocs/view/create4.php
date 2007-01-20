@@ -30,7 +30,7 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 define('TITLE', get_string('createviewstep4', 'view'));
 require_once('pieforms/pieform.php');
 require_once('pieforms/pieform/elements/calendar.php');
-$smarty = smarty(array(), pieform_element_calendar_get_headdata(pieform_element_calendar_configure(array())));
+$smarty = smarty(array('tablerenderer'), pieform_element_calendar_get_headdata(pieform_element_calendar_configure(array())));
 $createid = param_integer('createid', null);
 $data = $SESSION->get('create_' . $createid);
 
