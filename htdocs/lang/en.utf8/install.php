@@ -26,7 +26,9 @@
 
 defined('INTERNAL') || die();
 
-$string['aboutdefaultcontent'] = '<p>Established in 2006, Mahara is the result of a collaborative venture funded by New Zealand\'s Tertiary Education Commission\'s e-learning Collaborative Development Fund (eCDF), involving Massey University, Auckland University of Technology, The Open Polytechnic of New Zealand and Victoria University of Wellington.</p>
+$string['aboutdefaultcontent'] = '<h2>About Mahara</h2>
+
+<p>Established in 2006, Mahara is the result of a collaborative venture funded by New Zealand\'s Tertiary Education Commission\'s e-learning Collaborative Development Fund (eCDF), involving Massey University, Auckland University of Technology, The Open Polytechnic of New Zealand and Victoria University of Wellington.</p>
 
 <p>Mahara is a fully featured electronic portfolio, weblog, resume builder and social networking system, connecting users and creating online communities. Mahara is designed to provide users with the tools to create a personal and professional learning and development environment.</p>
 
@@ -53,7 +55,9 @@ $string['loggedouthomedefaultcontent'] = '<h2>Welcome to Mahara</h2>
 <p>Mahara is a fully featured electronic portfolio, weblog, resume builder and social networking system, connecting users and creating online communities.  Mahara provides you with the tools to set up a personal learning and development environment.</p>
 
 <p>For more information you can read <a href="about.php">About</a> Mahara or alternatively please feel free to <a href="contact.php">Contact Us</a>.</p>';
-$string['privacydefaultcontent'] = '<h3>Introduction</h3>
+$string['privacydefaultcontent'] = '<h2>Privacy Statement</h2>
+    
+<h3>Introduction</h3>
 
 <p>We are committed to protecting your privacy and providing users with a safe and functional personal learning and development environment. This Statement of Privacy applies to the Mahara site and governs data collection and usage.</p>
 
