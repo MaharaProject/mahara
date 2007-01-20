@@ -35,21 +35,18 @@
 					<td>
 						<form action="" method="post">
 							<input type="hidden" name="i" value="{$institution->name}">
-							<input type="submit" name="edit" value="{str tag="edit"}" id="admininstitution_edit">
-							{if !$institution->hasmembers && $institution->name != 'mahara'}<input type="submit" name="delete" value="{str tag="delete"}" id="admininstitution_delete">{/if}
+							<input type="submit" class="submit" name="edit" value="{str tag="edit"}" id="admininstitution_edit">
+							{if !$institution->hasmembers && $institution->name != 'mahara'}<input type="submit" class="submit" name="delete" value="{str tag="delete"}" id="admininstitution_delete">{/if}
 						</form>
 					</td>
 				</tr>
 				{/foreach}
 				<tr>
-					<td colspan="4">
-						<form action="" method="post">
-							<input type="submit" class="submit" name="add" value="{str tag="addinstitution" section="admin"}" id="admininstitution_add">
-						</form>
-					</td>
-				</tr>
 				</tbody>
 			</table>
+            <form action="" method="post">
+                <input type="submit" class="submit" name="add" value="{str tag="addinstitution" section="admin"}" id="admininstitution_add">
+            </form>
 			{/if}
 			
 			{/if}
