@@ -152,6 +152,7 @@ $string['uploadcopyright']     = 'Upload Copyright Statement';
 
 // Upload CSV
 $string['csvfile'] = 'CSV File';
+$string['uploadcsvinstitution'] = 'The institution to upload users for';
 $string['csvfiledescription'] = 'The file containing users to add';
 $string['uploadcsverrorinvalidemail'] = 'Error on line %s of your file: The e-mail address for this user is not in correct form';
 $string['uploadcsverrorinvalidpassword'] = 'Error on line %s of your file: The password for this user is not in correct form';
