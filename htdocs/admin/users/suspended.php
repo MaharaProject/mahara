@@ -67,9 +67,10 @@ $form = new Pieform(array(
             'value' => get_string('exportuserprofiles', 'admin')
         ),
         'delete' => array(
-            'type' => 'submit',
-            'name' => 'delete',
-            'value' => get_string('deleteusers', 'admin')
+            'type'    => 'submit',
+            'confirm' => get_string('confirmdeleteusers', 'admin'),
+            'name'    => 'delete',
+            'value'   => get_string('deleteusers', 'admin')
         )
     )
 ));
