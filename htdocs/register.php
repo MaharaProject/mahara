@@ -290,7 +290,6 @@ if (count($institutions) > 1) {
     $elements['institution'] = array(
         'type' => 'select',
         'title' => get_string('institution'),
-        'description' => get_string('institutiondescription'),
         'options' => $options
     );
 }
