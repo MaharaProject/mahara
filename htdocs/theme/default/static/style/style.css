@@ -90,77 +90,30 @@ div.grippie {
 	margin: 0px;
 }
 
-/* short submit buttons max width 50px */
-#column-right #login_submit,
-.maincontent #login_submit,
-#search #search_submit,
-#createview1_submit,
-#cancel_createview1_submit,
-#createview2_back,
-#createview2_cancel,
-#accountprefs_submit,
-#activityprefs_submit,
-#adminnotifications_submit,
-#admininstitution_edit,
-#admininstitution_delete,
-#institution_submit,
-#cancel_institution_submit,
-#staffusers_submit,
-#adminusers_submit,
-#profileprefs_submit,
-#cancel_newblog_submit,
-#template_viewid,
-#template_cancel,
-#template_submit,
-#template_back,
-#cancel_createview4_submit,
-#createview4_back,
-#settings tfoot input {
-	background: url(../images/btn_short_off.gif) no-repeat;
-	border: 0;
-	width: 50px;
-	height: 24px;
+/* Default buttons to the big ones */
+input.submit, input.submitcancel, input.cancelbackcreate, input.button, button {
+    background: #696 url(../images/btn_tall_tile.gif) repeat-x;
+    height: 24px;
+	margin: 5px 2px 0 0;
+    padding: 0 1px;
 	color: #eef7d4;
 	font-size: 11px;
 	font-weight: bold;
-	margin: 5px 2px 0 0;
-	padding: 0;
+    border: 1px solid #696;
 }
-
-/* medium submit buttons max width 100px */
-input.submitcancel,
-input.submit, 
-input.button,
-#createview4_submit {
-	background: url(../images/btn_medium_off.gif) no-repeat;
-	border: 0;
-	width: 100px;
-	height: 24px;
-	color: #eef7d4;
-	font-size: 11px;
-	font-weight: bold;
-	margin: 5px 2px 0 0;
-	padding: 0;
+/* Ones inside tables should be smaller... */
+.maincontent table input.button, .maincontent table input.submit, .maincontent table button {
+    background-image: url(../images/btn_short_tile.gif);
+    height: 18px;
+    margin: 1px;
+    font-weight: normal;
 }
-
-/* long submit buttons max width 200px */
-#buttons #buttons_unsuspend,
-#buttons #buttons_export,
-#uploadcsv_submit,
-#siteoptions_submit,
-#createnew,
-#communitymembers_update,
-#contactus_submit,
-#change_password_submit {
-	background: url(../images/btn_long_off.gif) no-repeat;
-	border: 0;
-	width: 200px;
-	height: 24px;
-	color: #eef7d4;
-	font-size: 11px;
-	font-weight: bold;
+/* Unless they're submit buttons inside forms */
+.maincontent .pieform table input.submit {
+    background: #696 url(../images/btn_tall_tile.gif) repeat-x;/* !important;*/
+    height: 24px;
 	margin: 5px 2px 0 0;
-	padding: 0;
+    font-weight: bold;
 }
 
 label {
@@ -187,6 +140,9 @@ tr.required th {
 
 .center {
     text-align: center;
+}
+.right {
+    text-align: right;
 }
 .fl {
     float: left;
@@ -1026,7 +982,7 @@ table#installer {
 	height: 24px;
 	color: #eef7d4;
 	font-weight: bold;
-	padding: 5px 23px 4px 47px;
+	padding: 6px 23px 4px 47px;
 }
 #myblogs .blogsettings a,
 #myblogs .blogsettings a:link,
@@ -1085,24 +1041,6 @@ table#installer {
 	border: none;
 	background-color: #f3f5e9;
 }
-.maincontent #postlist th input {
-	background: url(../images/btn_short_short.gif) no-repeat;
-	width: 50px;
-	height: 18px;
-	padding: 0;
-	font-weight: normal;
-	margin: 1px;
-}
-#attachedfiles tbody input,
-#filebrowser tbody input {
-	background: url(../images/btn_short_short.gif) no-repeat;
-	width: 50px;
-	height: 18px;
-	padding: 0;
-	font-weight: normal;
-	margin: 1px;
-}
-
 
 /* My Files styles */
 #foldernav {
@@ -1112,7 +1050,6 @@ table#installer {
 	font-size: 15px;
 	background: url(../images/foldernav.gif) no-repeat;
 }
-.maincontent #myfiles #filelist td,
 #uploader th {
 	vertical-align: top;
 }
@@ -1243,17 +1180,6 @@ table#installer {
 
 
 /* My Views styles */
-#viewlist input {
-	background: url(../images/btn_createview_medium.gif) no-repeat;
-	width: 90px;
-	height: 18px;
-	color: #eef7d4;
-	margin: 3px 1px 3px 1px;
-	padding: 0;
-	font-weight: normal;
-	font-size: 11px;
-	border: none;
-}
 #viewlist tbody tr td {
 	padding: 1px 4px;
 	background: #f2f5e7;
@@ -1396,18 +1322,8 @@ span.block_targetted, div.block_targetted {
 #template_selection #templates td p {
 	margin: 0;
 }
-#template_selection #templates button {
-	background: url(../images/btn_130px_off.gif) no-repeat;
-	width: 130px;
-	height: 24px;
-	border: none;
-	font-size: 11px;
-	font-weight: bold;
-	color: #e5e8da;
-}
 
 #viewacl_lhs {
-	margin: 0 0 0 50px;
 	float: left;
 	padding: 5px 15px 5px 5px;
 }
@@ -1417,23 +1333,12 @@ span.block_targetted, div.block_targetted {
 	padding: 0 0 3px 0;
 	text-align: right;
 	width: 132px;
-	margin: 0 0 0 -50px;
 }
 
 #createview4 #createview4_accesslist_container {
 	color: #5c8727;
 	font-weight: bold;
 	width: 750px;
-}
-#dosearch {
-	background: url(../images/btn_short_green.gif) no-repeat;
-	width: 33px;
-	height: 18px;
-	border: none;
-	color: #eef7d4;
-	font-size: 11px;
-	margin: 0 0 0 2px;
-	padding: 0;
 }
 #editviewaccess #results,
 #createview4 #results {
@@ -1443,20 +1348,11 @@ span.block_targetted, div.block_targetted {
 	color: #000000;
 	width: 405px;
 }
-#results button {
-	background: url(../images/btn_short_green.gif) no-repeat;
-	border: 0;
-	width: 33px;
-	height: 18px;
-	color: #eef7d4;
-	font-size: 9px;
-	margin: 0 0 0 5px;
-	padding: 0;
-} 
 #accesslistitems {
 	padding: 5px;
+    float: right;
 }
-#accesslistitems div {
+#accesslistitems table {
 	background-color: #e5e8da;
 	padding: 5px 7px 1px 7px;
 	color: #000000;
@@ -1469,26 +1365,6 @@ span.block_targetted, div.block_targetted {
 	background: none;
 	width: 220px;
 }
-#potentialpresetitems button {
-	background: url(../images/btn_short_green.gif) no-repeat;
-	border: 0;
-	width: 33px;
-	height: 18px;
-	color: #eef7d4;
-	font-size: 9px;
-	margin: 2px 2px 2px 5px;
-	padding: 0;
-} 
-#accesslistitems button {
-	background: url(../images/btn_short_short.gif) no-repeat;
-	border: 0;
-	width: 50px;
-	height: 18px;
-	color: #eef7d4;
-	font-size: 9px;
-	margin: 0 0 0 5px;
-	padding: 0;
-} 
 
 /* My Account styles */
 .maincontent #accountprefs #accountprefs_friendscontrol_container label,
@@ -1596,27 +1472,6 @@ span.block_targetted, div.block_targetted {
 	background-color: #e5e8da;
 	padding: 3px;
 }
-#menuitemlist td input.button {
-	background: url(../images/btn_short_short.gif) no-repeat;
-	width: 50px;
-	height: 18px;
-	padding: 0;
-	margin: 1px;
-}
-#filelist tbody input.button {
-	background: url(../images/btn_short_short.gif) no-repeat;
-	width: 50px;
-	height: 18px;
-	padding: 0;
-	margin: 1px;
-}
-#filelist tbody tbody input.button {
-	background: url(../images/btn_createview_medium.gif) no-repeat;
-	width: 90px;
-	height: 18px;
-	padding: 0;
-	margin: 0 2px 0 0;
-}
 
 /* Manage Users styles */
 .maincontent #staffusers table,
@@ -1651,18 +1506,6 @@ span.block_targetted, div.block_targetted {
 	padding: 0 0 0 5px;
 }
 
-#admininstitution_edit,
-#admininstitution_delete {
-	background: url(../images/btn_short_short.gif) no-repeat;
-	border: 0;
-	width: 50px;
-	height: 18px;
-	color: #eef7d4;
-	font-size: 9px;
-	margin: 0 3px 0 0;
-	padding: 0;
-	font-weight: normal;
-} 
 .maincontent #institution table {
 	padding: 5px 0 0 15px;
 	width: 450px;
@@ -1752,6 +1595,10 @@ span.block_targetted, div.block_targetted {
 	left: 0;
 	color: #d4d1c0;
     background-color: #4c7c2c;
+}
+/* IE6 doesn't like fixed positioning */
+* html #loading_box {
+    position: absolute;
 }
 
 a.pieform-calendar-toggle {
