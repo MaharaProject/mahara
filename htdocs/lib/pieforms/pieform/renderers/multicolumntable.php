@@ -102,14 +102,18 @@ class FormRendererMultiColumnTable {
         if ($rawelement['type'] == 'fieldset') {
             throw new PieformException('The multicolumntable renderer does not support fieldsets');
         }
-        if (!array_key_exists($rawelement['title'], $this->elements)) {
-            $this->elements[$rawelement['title']] = array();
-            $this->elements[$rawelement['title']]['rawelements'] = array();
-            $this->elements[$rawelement['title']]['builtelements'] = array();
-            $this->elements[$rawelement['title']]['settings'] = $rawelement;
+
+        if (!isset($rawelement['key'])) {
+            $rawelement['key'] = $rawelement['title'];
         }
-        $this->elements[$rawelement['title']]['rawelements'][] = $rawelement;
-        $this->elements[$rawelement['title']]['builtelements'][] = $builtelement;
+        if (!array_key_exists($rawelement['key'], $this->elements)) {
+            $this->elements[$rawelement['key']] = array();
+            $this->elements[$rawelement['key']]['rawelements'] = array();
+            $this->elements[$rawelement['key']]['builtelements'] = array();
+            $this->elements[$rawelement['key']]['settings'] = $rawelement;
+        }
+        $this->elements[$rawelement['key']]['rawelements'][] = $rawelement;
+        $this->elements[$rawelement['key']]['builtelements'][] = $builtelement;
     }
 
     function set_form(Pieform $form) {
