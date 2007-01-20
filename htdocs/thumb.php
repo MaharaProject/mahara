@@ -50,6 +50,7 @@ switch ($type) {
     case 'profileiconbyid':
     case 'profileicon':
         $id = param_integer('id');
+        $size = param_variable('size', '');
 
         if ($type == 'profileicon') {
             // Convert ID of user to the ID of a profileicon
@@ -57,7 +58,6 @@ switch ($type) {
         }
 
         if ($id) {
-            $size = param_variable('size', '');
             if ($size && !preg_match('/\d+x\d+/', $size)) {
                 throw new UserException('Invalid size for image specified');
             }
