@@ -104,7 +104,7 @@ $textinputform = pieform(array(
         ),
         'description' => array(
             'type' => 'wysiwyg',
-            'rows' => 10,
+            'rows' => 20,
             'cols' => 70,
             'title' => get_string('postbody', 'artefact.blog'),
             'description' => get_string('postbodydesc', 'artefact.blog'),
