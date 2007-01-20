@@ -1,6 +1,9 @@
-body, td, pre {
+body, td {
 	font-family: Arial, Helvetica, sans-serif !important;
 	font-size: 12px !important;
+}
+pre {
+    font: 12px monospace !important;
 }
 
 a,
