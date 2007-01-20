@@ -32,6 +32,10 @@
  * @return string           The HTML for the element
  */
 function pieform_element_submit(Pieform $form, $element) {
+    if (isset($element['confirm'])) {
+        $element['onclick'] = 'return confirm(' . json_encode($element['confirm']) . ');';
+    }
+
     return '<input type="submit"'
         . $form->element_attributes($element)
         . ' value="' . Pieform::hsc($form->get_value($element)) . '">';

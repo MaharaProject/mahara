@@ -178,6 +178,7 @@ $string['staffusersupdated'] = 'Staff users updated';
 
 // Suspended Users
 $string['deleteusers'] = 'Delete Users';
+$string['confirmdeleteusers'] = 'Are you sure you want to delete the selected users?';
 $string['exportingnotsupportedyet'] = 'Exporting user profiles is not supported yet';
 $string['exportuserprofiles'] = 'Export User Profiles';
 $string['nousersselected'] = 'No users selected';
