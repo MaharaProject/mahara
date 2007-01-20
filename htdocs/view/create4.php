@@ -35,7 +35,6 @@ $createid = param_integer('createid', null);
 $data = $SESSION->get('create_' . $createid);
 
 
-log_debug($data);
 $form = array(
     'name' => 'createview4',
     'elements' => array(
@@ -56,9 +55,6 @@ function createview4_submit_cancel() {
 
 function createview4_submit(Pieform $form, $values) {
     global $SESSION, $USER, $createid, $data;
-    log_debug($values);
-    log_debug($data);
-
 
     if (param_boolean('back')) {
         $data['accesslist'] = array_values((array)$values['accesslist']);
@@ -112,32 +108,35 @@ function createview4_submit(Pieform $form, $values) {
     }
 
     // View access
-    foreach ($values['accesslist'] as $item) {
-        $accessrecord = new StdClass;
-        $accessrecord->view = $viewid;
-        $accessrecord->startdate = db_format_timestamp($item['startdate']);
-        $accessrecord->stopdate  = db_format_timestamp($item['stopdate']);
-        switch ($item['type']) {
-            case 'public':
-            case 'loggedin':
-            case 'friends':
-                $accessrecord->accesstype = $item['type'];
-                insert_record('view_access', $accessrecord);
-                break;
-            case 'user':
-                $accessrecord->usr = $item['id'];
-                insert_record('view_access_usr', $accessrecord);
-                break;
-            case 'group':
-                $accessrecord->grp = $item['id'];
-                insert_record('view_access_group', $accessrecord);
-                break;
-            case 'community':
-                $accessrecord->community = $item['id'];
-                insert_record('view_access_community', $accessrecord);
-                break;
+    if ($values['accesslist']) {
+        foreach ($values['accesslist'] as $item) {
+            $accessrecord = new StdClass;
+            $accessrecord->view = $viewid;
+            $accessrecord->startdate = db_format_timestamp($item['startdate']);
+            $accessrecord->stopdate  = db_format_timestamp($item['stopdate']);
+            switch ($item['type']) {
+                case 'public':
+                case 'loggedin':
+                case 'friends':
+                    $accessrecord->accesstype = $item['type'];
+                    insert_record('view_access', $accessrecord);
+                    break;
+                case 'user':
+                    $accessrecord->usr = $item['id'];
+                    insert_record('view_access_usr', $accessrecord);
+                    break;
+                case 'group':
+                    $accessrecord->grp = $item['id'];
+                    insert_record('view_access_group', $accessrecord);
+                    break;
+                case 'community':
+                    $accessrecord->community = $item['id'];
+                    insert_record('view_access_community', $accessrecord);
+                    break;
+            }
         }
     }
+
     db_commit();
     $SESSION->add_ok_msg(get_string('viewcreatedsuccessfully', 'view'));
     redirect(get_config('wwwroot') . 'view/');
