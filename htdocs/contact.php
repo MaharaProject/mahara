@@ -28,7 +28,8 @@ define('INTERNAL', 1);
 define('PUBLIC', 1);
 require('init.php');
 require_once('pieforms/pieform.php');
-define('TITLE', get_string('contactus'));
+$contactus = get_string('contactus');
+define('TITLE', $contactus);
 
 if ($USER->is_logged_in()) {
     $userid = $USER->get('id');
@@ -103,9 +104,14 @@ function contactus_submit(Pieform $form, $values) {
     $form->json_reply(PIEFORM_OK, get_string('contactinformationsent'));
 }
 
+$pagecontent = <<<EOF
+<h2>$contactus</h2>
+
+$contactform
+EOF;
 
 $smarty = smarty();
-$smarty->assign('page_content', $contactform);
+$smarty->assign('page_content', $pagecontent);
 $smarty->assign('searchform', searchform());
 $smarty->display('sitepage.tpl');
 
