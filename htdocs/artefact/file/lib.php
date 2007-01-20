@@ -129,7 +129,7 @@ class PluginArtefactFile extends PluginArtefact {
 
 class ArtefactTypeFileBase extends ArtefactType {
 
-    protected $adminfiles;
+    protected $adminfiles = 0;
     protected $size;
 
     public function __construct($id = 0, $data = null) {
