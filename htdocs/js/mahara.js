@@ -40,7 +40,6 @@ function formStartProcessing(form, btn) {
 
         button.proxyContainer = node;
         button.disabled = "disabled";
-        button.style.borderWidth = '1px';
         button.blur();
     }
 }
@@ -54,7 +53,6 @@ function formStopProcessing(form, btn) {
             button.proxyContainer = null;
         }
         button.disabled = null;
-        button.style.borderWidth = '2px';
     }
 }
 function formError(form, data) {
