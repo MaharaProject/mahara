@@ -7,7 +7,7 @@
                         <h2>{str tag='myviews'}</h2>
     			<div id="views">
         			<div style="text-align:right;">
-            		<input type="button" value="{str tag="createnewview"}" onclick="window.location='create1.php';" id="createnew">
+            		<input type="button" class="button" value="{str tag="createnewview"}" onclick="window.location='create1.php';" id="createnew">
         			</div>
 					<table id="viewlist">
 						<tbody>
