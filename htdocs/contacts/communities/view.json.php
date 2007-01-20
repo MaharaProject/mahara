@@ -53,25 +53,40 @@ $dbnow  = db_format_timestamp(time());
 
 switch ($type) {
     case 'views':
-        $where = 'WHERE a.community = ? 
+        $where = 'WHERE v.submittedto = ?';
+        $values = array($id);
+        if (!$submitted) {
+            $where .= 'AND (
+                     a.community = ? 
                      AND ( v.startdate IS NULL OR v.startdate < ? )
-                     AND ( v.stopdate IS NULL OR v.stopdate < ? )
+                     AND ( v.stopdate IS NULL OR v.stopdate > ? )
                      AND ( a.startdate IS NULL OR a.startdate < ? )
-                     AND ( a.stopdate IS NULL OR a.stopdate < ? )';
-        $values = array($id, $dbnow, $dbnow, $dbnow, $dbnow);
-        if ($submitted) {
-            $where .= ' AND v.submittedto = ?';
+                     AND ( a.stopdate IS NULL OR a.stopdate > ? )
+                 )';
             $values[] = $id;
+            $values[] = $dbnow;
+            $values[] = $dbnow;
+            $values[] = $dbnow;
+            $values[] = $dbnow;
         }
-            
-        $count = count_records_sql('SELECT COUNT(v.id) FROM  ' . $prefix . 'view_access_community a
-                                   JOIN ' . $prefix . 'view v ON a.view = v.id ' . $where, $values);
+
+        $count = count_records_sql('
+            SELECT COUNT(v.id)
+            FROM  ' . $prefix . 'view v
+            LEFT OUTER JOIN view_access_community a ON a.view=v.id
+            ' . $where,
+            $values
+        );
                                    
-        $data = get_records_sql_array('SELECT v.*,u.firstname,u.lastname, u.preferredname,u.id AS usr 
-                                   FROM ' . $prefix . 'view_access_community a 
-                                   JOIN ' . $prefix . 'view v ON a.view = v.id 
-                                   JOIN ' . $prefix.'usr u ON v.owner = u.id ' . $where, 
-                                      $values, $offset, $limit);
+        $data = get_records_sql_array('
+            SELECT v.*,u.firstname,u.lastname, u.preferredname,u.id AS usr 
+            FROM ' . $prefix . 'view v
+            LEFT OUTER JOIN ' . $prefix . 'view_access_community a ON a.view=v.id
+            INNER JOIN ' . $prefix.'usr u ON v.owner = u.id ' . $where, 
+            $values,
+            $offset,
+            $limit
+        );
         if (empty($data)) {
             $data = array();
         }
