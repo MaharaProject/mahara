@@ -146,7 +146,7 @@ $javascript = '';
 if ($membership) {
     $javascript .= <<<EOF
 viewlist = new TableRenderer(
-    'viewlist',
+    'community_viewlist',
     'view.json.php',
     [
      function (r) {

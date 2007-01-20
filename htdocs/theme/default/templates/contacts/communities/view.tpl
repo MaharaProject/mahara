@@ -28,7 +28,7 @@
                                 </select>
                             </form>
                         {/if}
-                        <table id="viewlist">
+                        <table id="community_viewlist">
                             <thead>
                                 <tr>
                                     <th>{str tag='name'}</th>

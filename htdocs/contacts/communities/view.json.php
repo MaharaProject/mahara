@@ -56,7 +56,7 @@ switch ($type) {
         $where = 'WHERE v.submittedto = ?';
         $values = array($id);
         if (!$submitted) {
-            $where .= 'AND (
+            $where .= 'OR (
                      a.community = ? 
                      AND ( v.startdate IS NULL OR v.startdate < ? )
                      AND ( v.stopdate IS NULL OR v.stopdate > ? )
