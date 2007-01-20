@@ -40,16 +40,19 @@ $smarty = smarty(array('tablerenderer'), pieform_element_calendar_get_headdata(p
 $viewid = param_integer('viewid');
 $prefix = get_config('dbprefix');
 
-if (!$data = get_records_sql_array('SELECT va.accesstype AS type, va.startdate, va.stopdate
-    FROM ' . $prefix . 'view v
-    LEFT JOIN ' . $prefix . 'view_access va ON (va.view = v.id)
+if (!get_field('view', 'COUNT(*)', 'id', $viewid, 'owner', $USER->get('id'))) {
+    $SESSION->add_error_msg(get_string('canteditdontown', 'view'));
+    redirect('view/');
+}
+$data = get_records_sql_array('SELECT va.accesstype AS type, va.startdate, va.stopdate
+    FROM ' . $prefix . 'view_access va
+    LEFT JOIN ' . $prefix . 'view v ON (va.view = v.id)
     WHERE v.id = ?
     AND v.owner = ?
-    ORDER BY va.accesstype', array($viewid, $USER->get('id')))) {
-    $SESSION->add_error_msg(get_string('canteditdontown', 'view'));
-    redirect(get_config('wwwroot') . 'view/');
+    ORDER BY va.accesstype', array($viewid, $USER->get('id')));
+if (!$data) {
+    $data = array();
 }
-
 foreach ($data as &$item) {
     $item = (array)$item;
 }
