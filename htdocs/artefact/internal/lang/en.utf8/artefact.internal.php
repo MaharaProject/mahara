@@ -37,6 +37,8 @@ $string['profileiconsize'] = 'Icon size';
 // profile fields
 $string['firstname'] = 'First Name';
 $string['lastname'] = 'Last Name';
+$string['fullname'] = 'Full Name';
+$string['institution'] = 'Institution';
 $string['studentid'] = 'Student ID';
 $string['preferredname'] = 'Preferred Name';
 $string['introduction'] = 'Introduction';
