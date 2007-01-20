@@ -132,6 +132,13 @@ class ArtefactTypeProfile extends ArtefactType {
         }
     }
 
+    public function set($field, $value) {
+        if ($field == 'title' && empty($value)) {
+            return $this->delete();
+        }
+        return parent::set($field, $value);
+    }
+
     public function render($format, $options) {
         if ($format == FORMAT_ARTEFACT_RENDERFULL) {
             return $this->title;

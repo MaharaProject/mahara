@@ -360,6 +360,7 @@ abstract class ArtefactType {
      */
     public function delete() {
         if (empty($this->id)) {
+            $this->dirty = false;
             return;
         }
       
