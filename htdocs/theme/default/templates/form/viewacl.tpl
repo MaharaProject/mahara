@@ -11,7 +11,9 @@
         <table id="results">
             <thead>
                 <tr>
+                    <th></th>
                     <th>{{str tag=name}}</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -22,17 +24,15 @@
 <div id="accesslistitems">
 </div>
 
-<script type="text/javascript" src="/js/tablerenderer.js"></script>
 <script type="text/javascript">
 var count = 0;
 
 // Utility functions
 
 // Given a row, render it on the left hand side
-// The LHS looks like: [ name   ][ button ]
 function renderPotentialPresetItem(item) {
     var addButton = BUTTON({'type': 'button'}, '{{str tag=add}}');
-    var row = DIV(null, item.name, addButton);
+    var row = DIV(null, item.name, ' ', addButton);
 
     connect(addButton, 'onclick', function() {
         appendChildNodes('accesslist', renderAccessListItem(item));
@@ -51,19 +51,25 @@ function renderAccessListItem(item) {
         makeCalendarInput(item, 'stop'),
         makeCalendarLink(item, 'stop')
     );
-    var row = DIV(null,
-        item.name,
-        removeButton,
-        dateDiv,
-        INPUT({
-            'type': 'hidden',
-            'name': 'accesslist[' + count + '][type]',
-            'value': item.type
-        }),
-        INPUT({
-            'type': 'hidden',
-            'name': 'accesslist[' + count + '][id]',
-            'value': item.id})
+    var row = TABLE(null,
+        TR(null,
+            TH(null, item.name),
+            TD({'class': 'right'}, removeButton)
+        ),
+        TR(null,
+            TD({'colspan': 2},
+                dateDiv,
+                INPUT({
+                    'type': 'hidden',
+                    'name': 'accesslist[' + count + '][type]',
+                    'value': item.type
+                }),
+                INPUT({
+                    'type': 'hidden',
+                    'name': 'accesslist[' + count + '][id]',
+                    'value': item.id})
+            )
+        )
     );
 
     connect(removeButton, 'onclick', function() {
@@ -145,20 +151,38 @@ var searchTable = new TableRenderer(
     'results',
     'create4.json.php',
     [
-        undefined, undefined
+        undefined, undefined, undefined
     ]
 );
 searchTable.statevars.push('type');
 searchTable.statevars.push('query');
 searchTable.type = 'user';
+searchTable.pagerOptions = {
+    'firstPageString': '\u00AB',
+    'previousPageString': '<',
+    'nextPageString': '>',
+    'lastPageString': '\u00BB',
+    'linkOptions': {
+        'href': '',
+        'style': 'padding-left: 0.5ex; padding-right: 0.5ex;'
+    }
+}
 searchTable.query = '';
 searchTable.rowfunction = function(rowdata, rownumber, globaldata) {
-    var addButton = BUTTON({'type': 'button'}, '{{str tag=add}}');
+    var addButton = BUTTON({'type': 'button', 'class': 'button'}, '{{str tag=add}}');
     rowdata.type = searchTable.type;
     connect(addButton, 'onclick', function() {
         appendChildNodes('accesslist', renderAccessListItem(rowdata));
     });
-    return TR(null, TD(null, rowdata.name, addButton));
+    var profileIcon = null;
+    if (rowdata.type == 'user') {
+        profileIcon = IMG({'src': config.wwwroot + 'thumb.php?type=profileicon&size=40x40&id=' + rowdata.id});
+    }
+    return TR({'class': 'r' + (rownumber%2)},
+        TD({'class': 'c', 'style': 'width:3em'}, addButton),
+        TD(null, rowdata.name),
+        TD({'class': 'c', 'style': 'width:40px'}, profileIcon)
+    );
 }
 searchTable.updateOnLoad();
 
