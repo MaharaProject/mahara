@@ -290,7 +290,11 @@ if (count($institutions) > 1) {
     $elements['institution'] = array(
         'type' => 'select',
         'title' => get_string('institution'),
-        'options' => $options
+        'options' => $options,
+        'defaultvalue' => 'mahara',
+        'rules' => array(
+            'required' => true
+        )
     );
 }
 else if ($institutions) {
