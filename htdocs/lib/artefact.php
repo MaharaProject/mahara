@@ -152,6 +152,8 @@ function artefact_instance_from_type($artefact_type, $user_id=null) {
         $user_id = $USER->get('id');
     }
 
+    safe_require('artefact', get_field('artefact_installed_type', 'plugin', 'name', $artefact_type));
+
     if (!call_static_method(generate_artefact_class_name($artefact_type), 'is_singular')) {
         throw new ArtefactNotFoundException("This artefact type is not a 'singular' artefact type");
     }
