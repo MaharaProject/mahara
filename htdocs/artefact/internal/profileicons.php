@@ -170,7 +170,7 @@ function upload_submit(Pieform $form, $values) {
     // Entry in artefact table
     $artefact = new ArtefactTypeProfileIcon();
     $artefact->set('owner', $USER->get('id'));
-    $artefact->set('title', $values['title']);
+    $artefact->set('title', ($values['title']) ? $values['title'] : $values['file']['name']);
     $artefact->set('note', $values['file']['name']);
     $artefact->commit();
 
