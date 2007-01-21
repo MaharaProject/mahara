@@ -78,7 +78,7 @@ $getstring = quotestrings(array('mahara' => array(
 
 $thing = $artefactid ? 'artefact' : 'view';
 $getstring['addtowatchlist'] = "'" . get_string('addtowatchlist', 'mahara', get_string($thing)) . "'";
-$getstring['addtowatchlistwithchildren'] = "'" . get_string('addtowatchlistwithchildren', 'mahara', get_string($thing)) . "'";
+$getstring['addtowatchlistwithchildren'] = "'" . get_string('addtowatchlistwithchildren', 'mahara', ucfirst(get_string($thing))) . "'";
 
 $javascript = <<<EOF
 
