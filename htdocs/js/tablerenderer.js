@@ -25,7 +25,12 @@ function TableRenderer(target, source, columns, options) {
 
         if (!self.thead) {
             self.thead = THEAD();
-            insertSiblingNodesBefore(self.table.firstChild || null, self.thead);
+            if (self.table.firstChild) {
+                insertSiblingNodesBefore(self.table.firstChild, self.thead);
+            }
+            else {
+                appendChildNodes(self.table, self.thead);
+            }
         }
         if (!self.tbody) {
             self.tbody = TBODY();
