@@ -657,7 +657,7 @@ function handle_event($event, $data) {
     // this is here because the core can't listen to events
     // @todo, this is VERY ugly, and someone should fix it
     if ($event == 'createuser') {
-        activity_set_defaults($event->id);
+        activity_set_defaults($data->id);
     }
 
     $plugintypes = plugin_types();
