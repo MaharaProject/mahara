@@ -950,6 +950,7 @@ function can_view_view($view_id, $user_id=null) {
             ' . db_format_tsfield('v.startdate','startdate') . ',
             ' . db_format_tsfield('v.stopdate','stopdate') . ',
             a.accesstype,
+            v.submittedto,
             ' . db_format_tsfield('a.startdate','access_startdate') . ',
             ' . db_format_tsfield('a.stopdate','access_stopdate') . '
         FROM
@@ -971,6 +972,7 @@ function can_view_view($view_id, $user_id=null) {
         $view_record['owner'] = $row->owner;
         $view_record['startdate'] = $row->startdate;
         $view_record['stopdate'] = $row->stopdate;
+        $view_record['submittedto'] = $row->submittedto;
 
         if (!isset($row->accesstype)) {
             continue;
@@ -984,6 +986,11 @@ function can_view_view($view_id, $user_id=null) {
 
     if ($USER->is_logged_in() && $view_record['owner'] == $user_id) {
         log_debug('Yes - you own this view');
+        return true;
+    }
+
+    if ($view_record['submittedto'] && record_exists('community_member', 'community', $view_record['submittedto'], 'member', $user_id, 'tutor', 1)) {
+        log_debug('Yes - View is submitted for assesment to a community you are a tutor in');
         return true;
     }
 
