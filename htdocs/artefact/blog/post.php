@@ -40,7 +40,7 @@ safe_require('artefact', 'blog');
  */
 $createid = $SESSION->get('createid');
 if (empty($createid)) {
-    $createid = 0;
+    $createid = 1;
 }
 $SESSION->set('createid', $createid + 1);
 
