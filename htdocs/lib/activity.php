@@ -411,9 +411,14 @@ function activity_get_users($activitytype, $userids=null, $userobjs=null, $admin
  * id
  */
 function activity_set_defaults($user_id) {
+    global $USER;
+
+    log_debug($USER);
+    log_debug($user_id);
+
     $activitytypes = get_records_array('activity_type', 'admin', 0);
     foreach ($activitytypes as $type) {
-        $USER->set_activity_preference($type->name, 'internal');
+        log_debug('set ' . $type . ' for ' . $user_id);
     }
     
 }
