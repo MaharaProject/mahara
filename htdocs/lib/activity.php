@@ -38,16 +38,16 @@ function activity_occurred($activitytype, $data) {
         throw new Exception("Invalid activity type $activitytype");
     }
 
-    if (!empty($at->delay)) {
-        $delayed = new StdClass;
-        $delayed->type = $activitytype;
-        $delayed->data = serialize($data);
-        $delayed->ctime = db_format_timestamp(time());
-        insert_record('activity_queue', $delayed);
-    }
-    else {
+    //if (!empty($at->delay)) {
+    //    $delayed = new StdClass;
+    //    $delayed->type = $activitytype;
+    //    $delayed->data = serialize($data);
+    //    $delayed->ctime = db_format_timestamp(time());
+    //    insert_record('activity_queue', $delayed);
+    //}
+    //else {
         handle_activity($at, $data);
-    }
+    //}
 }
 
 /** 
@@ -364,6 +364,7 @@ function handle_activity($activitytype, $data) {
             $user->method = 'internal';
         }
         if ($user->method != 'internal') {
+            $method = $user->method;
             safe_require('notification', $method, 'lib.php', 'require_once');
             call_static_method(generate_class_name('notification', $method), 'notify_user', $user, $userdata);
             $user->markasread = true; // if we're doing something else, don't generate unread internal ones.
