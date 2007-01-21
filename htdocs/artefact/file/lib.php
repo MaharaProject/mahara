@@ -720,6 +720,14 @@ class ArtefactTypeImage extends ArtefactTypeFile {
         return is_image_mime_type($type);
     }
 
+    public function delete() {
+        if (empty($this->id)) {
+            return; 
+        }
+        delete_records('artefact_file_image', 'artefact', $this->id);
+        parent::delete();
+    }
+
 }
 
 ?>
