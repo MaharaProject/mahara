@@ -46,12 +46,6 @@ if (is_logged_in()) {
     redirect('/');
 }
 
-// @todo stuff to do for registration:
-//   - captcha image for step 1
-//   - show mandatory profile fields as configured sitewide. Relies on penny
-//     doing profile database work (internal artefact)
-//   - allow uploading of optional profile icon. requires profile stuffs
-
 // Step two of registration (first as it's the easiest): the user has
 // registered, show them a screen telling them this.
 if (!empty($_SESSION['registered'])) {
@@ -100,7 +94,7 @@ if (isset($_REQUEST['key'])) {
             // Entry in artefact table
             $artefact = new ArtefactTypeProfileIcon();
             $artefact->set('owner', $registration->id);
-            $artefact->set('title', $values['profileimgtitle']);
+            $artefact->set('title', ($values['profileimgtitle']) ? $values['profileimgtitle'] : $values['profileimg']['name']);
             $artefact->set('note', $values['profileimg']['name']);
             $artefact->commit();
 
@@ -325,6 +319,7 @@ $elements['tandc'] = array(
 $elements['captcha'] = array(
     'type' => 'html',
     'title' => get_string('captchatitle'),
+    'description' => get_string('captchadescription'),
     'value' => '<img src="' . get_config('wwwroot') . 'captcha.php" alt="' . get_string('captchaimage') . '" style="padding: 2px 0;"><br>'
         . '<input type="text" class="text required" name="captcha" style="width: 137px;" tabindex="3">',
     'rules' => array('required' => true)
