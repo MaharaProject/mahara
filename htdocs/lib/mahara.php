@@ -653,6 +653,13 @@ function handle_event($event, $data) {
     if (!$e = get_record('event_type', 'name', $event)) {
         throw new Exception("Invalid event");
     }
+
+    // this is here because the core can't listen to events
+    // @todo, this is VERY ugly, and someone should fix it
+    if ($event == 'createuser') {
+        activity_set_defaults($event->id);
+    }
+
     $plugintypes = plugin_types();
     foreach ($plugintypes as $name) {
         if ($subs = get_records_array($name . '_event_subscription', 'event', $event)) {

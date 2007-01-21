@@ -406,5 +406,17 @@ function activity_get_users($activitytype, $userids=null, $userobjs=null, $admin
     return get_records_sql_array($sql, $values);
 }
 
+/**
+ * this function inserts a default set of activity preferences for a given user
+ * id
+ */
+function activity_set_defaults($user_id) {
+    $activitytypes = get_records_array('activity_type', 'admin', 0);
+    foreach ($activitytypes as $type) {
+        $USER->set_activity_preference($type->name, 'internal');
+    }
+    
+}
+
 
 ?>
