@@ -144,6 +144,9 @@ $string['yournewpasswordagain'] = 'Your new password again';
 $string['invalidsesskey'] = 'Invalid session key';
 $string['cantremovedefaultemail'] = 'You cannot remove your primary email address';
 $string['mustspecifyoldpassword'] = 'You must specify your old password';
+$string['captchatitle'] = 'CAPTCHA Image';
+$string['captchadescription'] = 'Enter the characters you see in the picture to the right. Letters are not case sensitive';
+$string['captchaincorrect'] = 'Enter the letters as they are shown in the image';
 
 // Misc. register stuff that could be used elsewhere
 $string['emailaddress'] = 'Email address';
@@ -362,7 +365,7 @@ $string['allusers'] = 'All users';
 $string['addedtowatchlist'] = 'This %s has been added to your watchlist';
 $string['addfeedbackfailed'] = 'Add feedback failed';
 $string['addtowatchlist'] = 'Add %s to watchlist';
-$string['addtowatchlistwithchildren'] = 'Add %s and children to watchlist';
+$string['addtowatchlistwithchildren'] = 'Add entire %s contents to watchlist';
 $string['alreadyinwatchlist'] = 'This %s is already in your watchlist';
 $string['complaint'] = 'Complaint';
 $string['date'] = 'Date';

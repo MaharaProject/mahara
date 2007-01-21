@@ -85,8 +85,8 @@ if (!$USER->is_logged_in()) {
                 'value' => get_string('login')
             ),
             'register' => array(
-                'value' => '<div><a href="' . get_config('wwwroot') . 'register.php">' . get_string('register') . '</a>'
-                    . '<br><a href="' . get_config('wwwroot') . 'forgotpass.php">' . get_string('passwordreminder') . '</a></div>'
+                'value' => '<div><a href="' . get_config('wwwroot') . 'register.php" tabindex="2">' . get_string('register') . '</a>'
+                    . '<br><a href="' . get_config('wwwroot') . 'forgotpass.php" tabindex="2">' . get_string('passwordreminder') . '</a></div>'
             )
         )
     )));

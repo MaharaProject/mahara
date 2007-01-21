@@ -63,8 +63,6 @@ function createview4_submit(Pieform $form, $values) {
         redirect(get_config('wwwroot') . 'view/create3.php?createid=' . $createid);
     }
 
-
-
     db_begin();
     $time = db_format_timestamp(time());
 

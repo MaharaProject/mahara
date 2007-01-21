@@ -52,22 +52,24 @@ function renderAccessListItem(item) {
         makeCalendarLink(item, 'stop')
     );
     var row = TABLE(null,
-        TR(null,
-            TH(null, item.name),
-            TD({'class': 'right'}, removeButton)
-        ),
-        TR(null,
-            TD({'colspan': 2},
-                dateDiv,
-                INPUT({
-                    'type': 'hidden',
-                    'name': 'accesslist[' + count + '][type]',
-                    'value': item.type
-                }),
-                INPUT({
-                    'type': 'hidden',
-                    'name': 'accesslist[' + count + '][id]',
-                    'value': item.id})
+        TBODY(null, 
+            TR(null,
+                TH(null, item.name),
+                TD({'class': 'right'}, removeButton)
+            ),
+            TR(null,
+                TD({'colspan': 2},
+                    dateDiv,
+                    INPUT({
+                        'type': 'hidden',
+                        'name': 'accesslist[' + count + '][type]',
+                        'value': item.type
+                    }),
+                    INPUT({
+                        'type': 'hidden',
+                        'name': 'accesslist[' + count + '][id]',
+                        'value': item.id})
+                )
             )
         )
     );
