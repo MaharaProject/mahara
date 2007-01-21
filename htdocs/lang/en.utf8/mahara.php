@@ -144,6 +144,9 @@ $string['yournewpasswordagain'] = 'Your new password again';
 $string['invalidsesskey'] = 'Invalid session key';
 $string['cantremovedefaultemail'] = 'You cannot remove your primary email address';
 $string['mustspecifyoldpassword'] = 'You must specify your old password';
+$string['captchatitle'] = 'CAPTCHA Image';
+$string['captchadescription'] = 'Enter the characters you see in the picture to the right. Letters are not case sensitive';
+$string['captchaincorrect'] = 'Enter the letters as they are shown in the image';
 
 // Misc. register stuff that could be used elsewhere
 $string['emailaddress'] = 'Email address';
