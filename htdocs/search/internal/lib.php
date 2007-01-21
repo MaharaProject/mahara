@@ -269,7 +269,7 @@ class PluginSearchInternal extends PluginSearch {
                 SELECT
                     COUNT(*)
                 FROM
-                    " . get_config('dbprefix') . "usr_group u
+                    " . get_config('dbprefix') . "community u
                 WHERE (
                     name ILIKE '%' || ? || '%' 
                     OR description ILIKE '%' || ? || '%' 
