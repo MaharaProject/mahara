@@ -434,6 +434,8 @@ function insertImage() {
     var height = form.height.value;
     var width = form.width.value;
     var align = form.align.value;
+    // Insert image doesn't work in IE without first focusing the editor:
+    tinyMCE.execCommand('mceFocus', false, 'mce_editor_0'); 
     tinyMCE.themes['advanced']._insertImage(src, alt, border, hspace, vspace, 
                                             width, height, align, '', '', '');
     replaceChildNodes('insertimage', null);
