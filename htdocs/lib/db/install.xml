@@ -831,12 +831,14 @@
                 <SENTENCE TEXT="(callfunction, minute, hour, day, month, dayofweek) 
                         VALUES ('rebuild_artefact_parent_cache_dirty', '*', '*', '*', '*', '*')" />
                 <SENTENCE TEXT="(callfunction, minute, hour, day, month, dayofweek) 
-                        VALUES ('rebuild_artefact_parent_cache_complete', '*', '4', '*', '*', '*')" />
+                        VALUES ('rebuild_artefact_parent_cache_complete', '0', '4', '*', '*', '*')" />
                 <SENTENCE TEXT="(callfunction, minute, hour, day, month, dayofweek)
                         VALUES ('auth_clean_partial_registrations', '5', '0', '*', '*', '*')"/>
                 <SENTENCE TEXT="(callfunction, minute, hour, day, month, dayofweek)
                         VALUES ('auth_handle_account_expiries', '5', '10', '*', '*', '*')"/>
-            </SENTENCES>
+                <SENTENCE TEXT="(callfunction, minute, hour, day, month, dayofweek)
+                        VALUES ('activity_process_queue', '*/5', '*', '*', '*', '*')"/>
+             </SENTENCES>
         </STATEMENT>
         <STATEMENT NAME="insert template categories" TYPE="insert" TABLE="template_category">
             <SENTENCES>
