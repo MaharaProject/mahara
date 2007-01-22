@@ -172,6 +172,15 @@ function xmldb_core_upgrade($oldversion=0) {
         execute_sql('UPDATE ' . get_config('dbprefix') . 'usr SET quota=10485760');
     }
 
+    if ($oldversion < 2007012300) {
+        // fix up a broken cron entry...
+        set_field('cron', 'minute', '0', 'callfunction', 'rebuild_artefact_parent_cache_complete');
+        $c = new StdClass;
+        $c->callfunction = 'activity_process_queue';
+        $c->minute = '*/5';
+        insert_record('cron', $c);
+    }
+
     return $status;
 
 }

@@ -45,7 +45,9 @@ $form = array(
             'type' => 'userlist',
             'title' => get_string('staffusers', 'admin'),
             'defaultvalue' => $staffusers,
-            'filter' => false
+            'filter' => false,
+            'lefttitle' => get_string('potentialstaff', 'admin'),
+            'righttitle' => get_string('currentstaff', 'admin')
         ),
         'submit' => array(
             'type' => 'submit',
