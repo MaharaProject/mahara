@@ -3,7 +3,7 @@
 {include file="columnfullstart.tpl"}
 			<h2>{str tag="adminusers" section="admin"}</h2>
 
-			<p>{str tag="adminusersdescription" section="admin"}</p>
+			<p>{str tag="adminuserspagedescription" section="admin"}</p>
 
 			{$adminusersform}
 

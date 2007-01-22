@@ -47,6 +47,8 @@ $form = array(
             'title' => get_string('adminusers', 'admin'),
             'defaultvalue' => $adminusers,
             'filter' => false,
+            'lefttitle' => get_string('potentialadmins', 'admin'),
+            'righttitle' => get_string('currentadmins', 'admin'),
             'rules' => array(
                 'required' => true
             )

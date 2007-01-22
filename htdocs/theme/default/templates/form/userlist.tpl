@@ -92,6 +92,13 @@
         </td>
         {{/if}}
     </tr>
+    {{if $lefttitle || $righttitle}}
+    <tr>
+        <th>{{$lefttitle}}</th>
+        <th></th>
+        <th>{{$righttitle}}</th>
+    </tr>
+    {{/if}}
     <tr>
         <td colspan="3" id="{{$name}}_messages">
         </td>
