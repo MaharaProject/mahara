@@ -225,7 +225,8 @@ attached.updateOnLoad();
 function redrawAttachList() {
     if (attached.tbody.hasChildNodes()) {
         hideElement(attached.table.previousSibling);
-        showElement(attached.table);
+        setDisplayForElement('', attached.table);
+        //showElement(attached.table);
         // Make sure row classes alternate 'r1', 'r0', 'r1', etc.
         for (var i = 0; i < attached.tbody.childNodes.length; i++) {
             setElementClass(attached.tbody.childNodes[i], 'r'+(i+1)%2);
