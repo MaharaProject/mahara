@@ -294,6 +294,7 @@ $smarty = smarty(array('tablerenderer'));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('member', $membership);
 $smarty->assign('tutor', $tutor);
+$smarty->assign('controlled', $controlled);
 $smarty->assign('canjoin', $canjoin);
 $smarty->assign('canrequestjoin', $canrequestjoin);
 $smarty->assign('canleave', $canleave);
