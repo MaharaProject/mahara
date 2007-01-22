@@ -37,7 +37,8 @@ $offset = param_integer('offset', 0);
 $id = param_integer('id');
 $options = json_decode(param_variable('options'));
 
-list($count, $data) = ArtefactTypeBlogPost::render_posts(FORMAT_ARTEFACT_RENDERFULL, $options, $id, $limit, $offset);
+list($count, $data) = ArtefactTypeBlogPost::render_posts(FORMAT_ARTEFACT_RENDERFULL, 
+                                                         $options, $id, $limit, $offset);
 
 if (!$count) {
     $count = 1;

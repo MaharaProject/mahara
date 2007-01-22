@@ -20,7 +20,7 @@
                 {if $member}
                     <div class="communityviews">
                         <h5>{str tag='views'}</h5>
-                        {if $tutor}
+                        {if $tutor && $controlled}
                             <form>
                                 <select name="submitted" onChange="viewlist.submitted=this.options[this.selectedIndex].value;viewlist.doupdate();">
                                     <option value="0">{str tag='allviews'}</option>
