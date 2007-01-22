@@ -424,4 +424,12 @@ function activity_set_defaults($user_id) {
 }
 
 
+function activity_process_queue() {
+
+    // stub for cronjob.
+
+
+    
+}
+
 ?>

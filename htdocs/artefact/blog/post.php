@@ -434,6 +434,8 @@ function insertImage() {
     var height = form.height.value;
     var width = form.width.value;
     var align = form.align.value;
+    // Insert image doesn't work in IE without first focusing the editor:
+    tinyMCE.execCommand('mceFocus', false, 'mce_editor_0'); 
     tinyMCE.themes['advanced']._insertImage(src, alt, border, hspace, vspace, 
                                             width, height, align, '', '', '');
     replaceChildNodes('insertimage', null);
@@ -505,7 +507,7 @@ function imageSelector(src) {
     var imageid = imageIdFromSrc(src);
     var imagefiles = attachedImageList();
     if (imagefiles.length == 0) {
-        return SPAN({'id':'imageselector'}, {$getstring['noimageshavebeenattachedtothispost']});
+        return false;
     }
     else {
         var sel = SELECT({'class':'select', 'id':'imageselector'});
@@ -560,10 +562,15 @@ function blogpostExecCommandHandler(editor_id, elm, command, user_interface, val
     switch (command) {
     case "mceImage":
         a = getSelectedImgAttributes(editor_id);
+        var sel = imageSelector(a.src);
+        if (!sel) {
+            alert({$getstring['noimageshavebeenattachedtothispost']});
+            return true;
+        }
         var tbody = TBODY(null,
           TR(null, TH({'colSpan':2}, LABEL(null,{$getstring['insertimage']}))),
           TR(null, TH(null, LABEL(null,{$getstring['name']})),
-             TD(null, imageSelector(a.src))),
+             TD(null, sel)),
           TR(null, TH(null, LABEL(null,{$getstring['alignment']})),
              TD(null, alignSelector(a.align))),
           TR(null, TH(null, LABEL(null,{$getstring['dimensions']})),
