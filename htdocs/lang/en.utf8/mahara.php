@@ -530,6 +530,8 @@ $string['virusrepeatmessage'] = 'The user %s has uploaded multiple files which h
 
 $string['youraccounthasbeensuspended'] = 'Your account has been suspended';
 $string['youraccounthasbeensuspendedtext'] = 'Your account has been suspended'; // @todo: more info?
+$string['youraccounthasbeenunsuspended'] = 'Your account has been unsuspended';
+$string['youraccounthasbeenunsuspendedtext'] = 'Your account has been unsuspended'; // @todo: more info?
 
 
 ?>
