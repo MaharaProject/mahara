@@ -74,6 +74,7 @@ $string['name'] = 'Name';
 $string['newattachmentsexceedquota'] = 'The total size of the new files that you have uploaded to this post would exceed your quota.  You may be able to save the post if you remove some of the attachments you have just added.';
 $string['newblog'] = 'New Blog';
 $string['newblogpost'] = 'New Blog Post';
+$string['noimageshavebeenattachedtothispost'] = 'No images have been attached to this post.  You need to upload or attach an image to the post before you can insert it.';
 $string['nofilesattachedtothispost'] = 'No attached files';
 $string['noresults'] = 'No results';
 $string['postbody'] = 'Body';
