@@ -77,6 +77,8 @@ $string['adminnotifications'] = 'Admin Notifications';
 $string['adminnotificationsdescription'] = 'Configure how administrators receive system notifications';
 $string['uploadcsv'] = 'Add Users by CSV';
 $string['uploadcsvdescription'] = 'Upload a CSV file containing new users';
+$string['usersearch'] = 'User Search';
+$string['usersearchdescription'] = 'Search all users and perform administrative actions on them';
 
 $string['pluginadmin'] = 'Plugin Administration';
 $string['pluginadmindescription'] = 'Install and configure plugins';
@@ -165,13 +167,14 @@ $string['uploadcsvusersaddedsuccessfully'] = 'The users in the file have been ad
 
 // Admin Users
 $string['adminuserspagedescription'] = '<p>Here you can choose which users are administrators for the site. The current administrators are listed on the right, and potential administrators are on the left.</p><p>The system must have at least one administrator.</p>';
+$string['potentialadmins'] = 'Potential Admins';
+$string['currentadmins'] = 'Current Admins';
 $string['adminusersupdated'] = 'Admin users updated';
-$string['usersearch'] = 'User Search';
-$string['usersearchdescription'] = 'Search all users and perform administrative actions on them';
 
 // Staff Users
 $string['staffuserspagedescription'] = 'Here you can choose which users are staff for the site. The current staff are on the right, and potential staff are on the left.';
-
+$string['potentialstaff'] = 'Potential Staff';
+$string['currentstaff'] = 'Current Staff';
 $string['staffusersupdated'] = 'Staff users updated';
 
 // Admin Notifications
@@ -193,6 +196,7 @@ $string['usersunsuspendedsuccessfully'] = 'Users unsuspended successfully';
 $string['suspendingadmin'] = 'Suspending Admin';
 
 // Institutions
+$string['admininstitutions'] = 'Admininster Institutions';
 $string['addinstitution'] = 'Add Institution';
 $string['authplugin'] = 'Authentication plugin';
 $string['defaultaccountinactiveexpire'] = 'Default account inactivity time';

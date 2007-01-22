@@ -27,7 +27,7 @@
 defined('INTERNAL') || die();
 
 $config = new StdClass;
-$config->version = 2007011600;
+$config->version = 2007012300;
 $config->release = '0.4.0';
 $config->minupgradefrom = 2006121501;
 $config->minupgraderelease = '0.1 (build tag BUILD_20061215)';

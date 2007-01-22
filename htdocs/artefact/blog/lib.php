@@ -256,7 +256,7 @@ class ArtefactTypeBlog extends ArtefactType {
         return $smarty->fetch('artefact:blog:render/blog_renderfull.tpl');
     }
 
-    protected function get_metadata() {
+    protected function get_metadata($options = array()) {
         $data = parent::get_metadata();
         $data['description'] = array('name' => get_string('description'),
                                      'value' => $this->get('description'));
@@ -264,12 +264,17 @@ class ArtefactTypeBlog extends ArtefactType {
         $data['size'] = array('name' => get_string('size'),
                               'value' => $this->count_children() . ' ' 
                                          . get_string('posts', 'artefact.blog'));
+
+        if (isset($options['viewid']) && artefact_in_view($id = $this->get('id'), $options['viewid'])) {
+            $data['title']['value'] = '<a href="' . get_config('wwwroot') . 'view/view.php?view=' . $options['viewid'] . '&artefact=' . $id . '">' . $data['title']['value'] . '</a>';
+        }
+
         return $data;
     }
 
     protected function render_metadata($options) {
         $smarty = smarty();
-        $smarty->assign('PROPERTIES', $this->get_metadata());
+        $smarty->assign('PROPERTIES', $this->get_metadata($options));
         return $smarty->fetch('artefact:blog:render/blog_rendermetadata.tpl');
     }
 

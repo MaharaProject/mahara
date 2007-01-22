@@ -2,7 +2,7 @@
 
 {include file="columnfullstart.tpl"}
 	
-			<h2>AdminInstitutions</h2>
+			<h2>{str tag="admininstitutions" section="admin"}</h2>
 			
 			{if $delete_form}
 			<h3>{str tag="deleteinstitution" section="admin"}</h3>

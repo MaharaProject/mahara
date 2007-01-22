@@ -33,7 +33,7 @@ $string['typewatchlist'] = 'Watchlist';
 $string['typenewview'] = 'New view';
 $string['typecontactus'] = 'Contact us';
 $string['typeobjectionable'] = 'Objectionable content';
-$string['typevirusrepeat'] = 'Virus flat repeat';
+$string['typevirusrepeat'] = 'Repeat virus upload';
 $string['typevirusrelease'] = 'Virus flag release';
 $string['typeadminmessages'] = 'Administration messages';
 
