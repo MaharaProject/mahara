@@ -86,10 +86,14 @@
 
         swapDOM(
             div,
-            LABEL(null,
-                INPUT({'type': 'radio',  'name': '{{$name}}_selected', 'value': email}),
-                INPUT({'type': 'hidden', 'name': '{{$name}}_valid[]' , 'value': email}),
-                ' ' + email,
+            DIV(
+                {'class': 'validated'},
+                LABEL(null,
+                    INPUT({'type': 'radio',  'name': '{{$name}}_selected', 'value': email}),
+                    INPUT({'type': 'hidden', 'name': '{{$name}}_valid[]' , 'value': email}),
+                    ' ' + email
+                ),
+                ' ',
                 A({'href': '', 'onclick': '{{$name}}_remove(this); return false'}, '[x]')
             )
         );
