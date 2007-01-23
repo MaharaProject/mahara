@@ -177,15 +177,33 @@ addLoadEvent(view_menu);
 var feedbacklist = new TableRenderer(
     'feedbacktable',
     'getfeedback.json.php',
-    ['message',
-     'name',
-     'date', 
-     function (r) {
-         if (r.public == 1) {
-             return;
-         }
-         return TD(null, '(' + get_string('private') + ')');
-     },
+    [
+        'message',
+        'name',
+        'date', 
+        function (r) {
+            if (r.public == 1) {
+                var makePrivate = null;
+                if (r.ownedbythisuser) {
+                    makePrivate = A({'href': ''}, get_string('makeprivate'));
+                    connect(makePrivate, 'onclick', function (e) {
+                        sendjsonrequest(
+                            'changefeedback.json.php',
+                            r,
+                            function (data) {
+                                if (!data.error) {
+                                    replaceChildNodes(makePrivate.parentNode, '(' + get_string('private') + ')');
+                                }
+                            }
+                        );
+
+                        e.stop();
+                    });
+                }
+                return TD(null, '(' + get_string('public') + ') ', makePrivate);
+            }
+            return TD(null, '(' + get_string('private') + ')');
+        },
     ]
 );
 
@@ -199,7 +217,17 @@ feedbacklist.updateOnLoad();
 
 EOF;
 
-$smarty = smarty(array('tablerenderer'));
+$smarty = smarty(
+    array('tablerenderer'),
+    array(),
+    array(
+        'mahara' => array(
+            'public',
+            'private',
+            'makeprivate',
+        ),
+    )
+);
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('VIEWNAV', $navlist);
 if (isset($content)) {

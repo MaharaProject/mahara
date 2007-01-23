@@ -370,6 +370,7 @@ $string['alreadyinwatchlist'] = 'This %s is already in your watchlist';
 $string['complaint'] = 'Complaint';
 $string['date'] = 'Date';
 $string['feedback'] = 'Feedback';
+$string['feedbackmadeprivate'] = 'Feedback changed to private';
 $string['feedbacksubmitted'] = 'Feedback submitted';
 $string['makepublic'] = 'Make public';
 $string['nopublicfeedback'] = 'No public feedback';
@@ -377,6 +378,7 @@ $string['notifysiteadministrator'] = 'Notify site administrator';
 $string['placefeedback'] = 'Place feedback';
 $string['print'] = 'Print';
 $string['private'] = 'Private';
+$string['makeprivate'] = 'Change to Private';
 $string['reportobjectionablematerial'] = 'Report objectionable material';
 $string['reportsent'] = 'Your report has been sent';
 $string['updatewatchlistfailed'] = 'Update of watchlist failed';
@@ -503,6 +505,7 @@ $string['currentfriends'] = 'Friends';
 $string['pendingfriends'] = 'Pending friends';
 
 $string['friendlistfailure'] = 'Failed to modify your friends list';
+$string['userdoesntwantfriends'] = 'This user doesn\'t want any new friends';
 
 $string['friend'] = 'Friend';
 $string['profileicon'] = 'Profile Icon';
@@ -530,6 +533,8 @@ $string['virusrepeatmessage'] = 'The user %s has uploaded multiple files which h
 
 $string['youraccounthasbeensuspended'] = 'Your account has been suspended';
 $string['youraccounthasbeensuspendedtext'] = 'Your account has been suspended'; // @todo: more info?
+$string['youraccounthasbeenunsuspended'] = 'Your account has been unsuspended';
+$string['youraccounthasbeenunsuspendedtext'] = 'Your account has been unsuspended'; // @todo: more info?
 
 
 ?>

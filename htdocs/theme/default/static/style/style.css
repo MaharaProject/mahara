@@ -25,25 +25,36 @@ a:hover {
 
 h1, h2 {
 	color: #547c22;
-	font-size: 20px;
+	font-size: 22px;
 	font-weight: normal;	
 	margin: 0 0 5px 0;
 	padding: 0;
 	text-transform: capitalize;
 	border-bottom: 1px solid #819f18;
 }
+h2 {
+    font-size: 20px;
+}
+
 h3, h4 {
 	color: #819f18;
 	font-weight: bold;	
-	font-size: 15px;	
-	margin: 15px 0 0 0;
+	font-size: 17px;	
+	margin: 15px 0 0;
 	text-transform: capitalize;
 }
+h4 {
+    font-size: 15px;
+}
+
 h5, h6 {
 	color: #5c8727;
 	font-weight: bold;
-	font-size: 18px;
-	margin: 0;
+	font-size: 14px;
+	margin: 5px 0 0;
+}
+h6 {
+    font-size: 13px;
 }
 
 form {

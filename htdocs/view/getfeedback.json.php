@@ -60,7 +60,7 @@ else {
     $publicclause = ' AND public = 1';
 }
 
-$feedback = get_records_sql_array('SELECT author, ctime, message, public
+$feedback = get_records_sql_array('SELECT id, author, ctime, message, public
     FROM ' . $prefix . $table . '
     WHERE view = ' . $view . $whereartefactclause . $publicclause . '
     ORDER BY id DESC', '', $offset, $limit);
@@ -68,10 +68,15 @@ $feedback = get_records_sql_array('SELECT author, ctime, message, public
 $data = array();
 if ($feedback) {
     foreach ($feedback as $record) {
-        $data[] = array('name' => display_name($record->author),
-                        'date' => format_date(strtotime($record->ctime), 'strftimedate'),
-                        'message' => $record->message,
-                        'public' => $record->public);
+        $data[] = array(
+            'id'              => $record->id,
+            'ownedbythisuser' => ( get_field('view', 'owner', 'id', $view) == $USER->get('id') ? true : false ),
+            'table'           => $table,
+            'name'            => display_name($record->author),
+            'date'            => format_date(strtotime($record->ctime), 'strftimedate'),
+            'message'         => $record->message,
+            'public'          => $record->public
+        );
     }
 }
 

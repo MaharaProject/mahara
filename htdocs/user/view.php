@@ -248,8 +248,8 @@ else if ($request = get_friend_request($userid, $loggedinid)) {
 else {
     $friendscontrol = get_account_preference($userid, 'friendscontrol');
     if ($friendscontrol == 'nobody') {
-        $friendtype = 'remove';
-        $friendsubmit = get_string('removefromfriendslist');
+        $friendtype = '';
+        $friendformmessage = get_string('userdoesntwantfriends');
     } 
     else if ($friendscontrol == 'auth') {
         $friendform['elements']['reason'] = array(

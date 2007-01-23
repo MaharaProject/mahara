@@ -18,18 +18,35 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Penny Leach <penny@catalyst.net.nz>
+ * @author     Martyn Smith <martyn@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
-defined('INTERNAL') || die();
+define('INTERNAL', 1);
+define('JSON', 1);
 
-$config = new StdClass;
-$config->version = 2007012300;
-$config->release = '0.4.1';
-$config->minupgradefrom = 2006121501;
-$config->minupgraderelease = '0.1 (build tag BUILD_20061215)';
+require(dirname(dirname(__FILE__)) . '/init.php');
+
+$feedback_id = param_integer('id');
+$feedback_table = param_variable('table');
+
+if ($feedback_table != 'view_feedback' && $feedback_table != 'artefact_feedback') {
+    json_reply('local', 'Invalid table type');
+}
+
+$view_id = get_field($feedback_table, 'view', 'id', $feedback_id);
+$owner = get_field('view', 'owner', 'id', $view_id);
+
+if ($owner != $USER->get('id')) {
+    json_reply('local', get_string('canteditdontownfeedback', 'view'));
+}
+
+update_record($feedback_table, (object)array('public' => 0, 'id' => $feedback_id));
+
+json_headers();
+
+json_reply(false,get_string('feedbackchangedtoprivate', 'view'));
 
 ?>
