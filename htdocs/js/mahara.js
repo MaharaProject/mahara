@@ -182,6 +182,18 @@ function newfilename(oldname, fileexistsfunc) {
     return newname;
 }
 
+// Return the filename part of a full path
+function basename(path) {
+    if (path.indexOf('/') > -1) { 
+        var separator = '/';
+    }
+    else {
+        var separator = '\\';
+    }
+    return path.substring(path.lastIndexOf(separator)+1, path.length);
+}
+
+
 // Autofocus the first element with a class of 'autofocus' on page load (@todo: move this to pieforms.js)
 // Also, connect input elements with the 'emptyonfocus' class to work properly
 addLoadEvent(function() {

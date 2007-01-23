@@ -69,6 +69,22 @@ else {
     define('TITLE', $view->get('title'));
     $jsartefact = 'undefined';
     $content = $view->render();
+    global $USER;
+    $submittedcommunity = $view->get('submittedto');
+    if ($submittedcommunity 
+        && record_exists('community_member', 
+                         'community', $submittedcommunity,
+                         'member', $USER->get('id'),
+                         'tutor', 1)) {
+        // The user is a tutor of the community that this view has
+        // been submitted to, and is entitled to upload an additional
+        // file when submitting feedback.
+        $tutorfilefeedbackformrow = "TR(null, TH(null, LABEL(null, '" . get_string('attachfile') . "'))),"
+            . "TR(null, TD(null, INPUT({'type':'file', 'name':'attachment'}))),";
+    }
+}
+if (empty($tutorfilefeedbackformrow)) {
+        $tutorfilefeedbackformrow = '';
 }
 
 $getstring = quotestrings(array('mahara' => array(
@@ -79,6 +95,7 @@ $getstring = quotestrings(array('mahara' => array(
 $thing = $artefactid ? 'artefact' : 'view';
 $getstring['addtowatchlist'] = "'" . get_string('addtowatchlist', 'mahara', get_string($thing)) . "'";
 $getstring['addtowatchlistwithchildren'] = "'" . get_string('addtowatchlistwithchildren', 'mahara', ucfirst(get_string($thing))) . "'";
+$getstring['feedbackattachmessage'] = "'(" . get_string('feedbackattachmessage', 'mahara', get_string('feedbackattachdirname')) . ")'";
 
 $javascript = <<<EOF
 
@@ -91,26 +108,37 @@ function feedbackform() {
     }
     var form = FORM({'id':'menuform','method':'post'});
     submitfeedback = function () {
-        // @todo add support for attached files when user is a tutor.
-        var data = {'view':view, 
-                    'message':form.message.value,
-                    'public':form.public.checked};
-        if (artefact) {
-            data.artefact = artefact;
+        if (form.attachment && form.attachment.value) {
+            updateNodeAttributes(form, {'enctype':'multipart/form-data',
+                                        'encoding':'multipart/form-data',
+                                        'action':'feedbackattachment.php', 'target':''});
+            appendChildNodes(form, INPUT({'type':'hidden', 'name':'view', 'value':view}));
+            appendChildNodes(form, INPUT({'type':'hidden', 'name':'filename', 
+                                          'value':basename(form.attachment.value)}));
+            form.submit();
         }
-        sendjsonrequest('addfeedback.json.php', data, function () { 
+        else {
+            var data = {'view':view, 
+                        'message':form.message.value,
+                        'public':form.public.checked};
+            if (artefact) {
+                data.artefact = artefact;
+            }
+            sendjsonrequest('addfeedback.json.php', data, function () { 
                 removeElement('menuform');
                 feedbacklist.doupdate();
             });
-        return false;
+            return false;
+        }
     }
     appendChildNodes(form, 
-        TABLE({'border':0, 'cellspacing':0},
+        TABLE({'border':0, 'cellspacing':0, 'class':'maharatable'},
         TBODY(null,
         TR(null, TH(null, LABEL(null, {$getstring['message']}))),
         TR(null, TD(null, TEXTAREA({'rows':5, 'cols':80, 'name':'message'}))),
         TR(null, TH(null, LABEL(null, {$getstring['makepublic']}), 
                     INPUT({'type':'checkbox', 'class':'checkbox', 'name':'public'}))),
+        {$tutorfilefeedbackformrow}
         TR(null, TD(null,
                     INPUT({'type':'button', 'class':'button', 
                                'value':{$getstring['placefeedback']},
@@ -178,7 +206,12 @@ var feedbacklist = new TableRenderer(
     'feedbacktable',
     'getfeedback.json.php',
     [
-        'message',
+        function (r) {
+            if (r.attachid && r.ownedbythisuser) {
+                return TD(null, r.message, DIV(null, {$getstring['feedbackattachmessage']}));
+            }
+            return TD(null, r.message);
+        },
         'name',
         'date', 
         function (r) {
@@ -204,6 +237,13 @@ var feedbacklist = new TableRenderer(
             }
             return TD(null, '(' + get_string('private') + ')');
         },
+        function (r) {
+            if (r.attachid) {
+                return TD(null, A({'href':config.wwwroot + 'artefact/file/download.php?file=' + r.attachid},
+                                  r.attachtitle));
+            }
+            return TD(null);
+        }
     ]
 );
 

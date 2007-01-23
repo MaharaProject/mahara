@@ -323,16 +323,6 @@ function FileUploader(element, uploadscript, statevars, foldername, folderid, up
         appendChildNodes(self.element, self.form, self.openbutton);
     }
 
-    this.filepart = function (path) {
-        if (path.indexOf('/') > -1) { 
-            var separator = '/';
-        }
-        else {
-            var separator = '\\';
-        }
-        return path.substring(path.lastIndexOf(separator)+1, path.length);
-    }
-
     this.initform = function () {
         var form = FORM({'method':'post', 'id':'uploadform',
                          'enctype':'multipart/form-data', 'encoding':'multipart/form-data',
@@ -362,7 +352,7 @@ function FileUploader(element, uploadscript, statevars, foldername, folderid, up
                 TD(null,INPUT({'type':'checkbox','class':'checkbox','name':'notice'}),notice)),
              TR(null, TH(null, LABEL(null, get_string('file'))),
                 TD(null, INPUT({'type':'file','class':'file','name':'userfile','size':40,'onchange':function () {
-                    self.form.title.value = self.filepart(self.form.userfile.value);
+                    self.form.title.value = basename(self.form.userfile.value);
                 }}))),
              TR(null, TH(null, LABEL(null, get_string('title'))),
                 TD(null, INPUT({'type':'text', 'class':'text', 'name':'title', 'size':40}))),
@@ -408,7 +398,7 @@ function FileUploader(element, uploadscript, statevars, foldername, folderid, up
             $('uploadformmessage').innerHTML = get_string('titlefieldisrequired');
             return false;
         }
-        localname = self.filepart(localname);
+        localname = basename(localname);
         if (!replacefile && self.fileexists(destname)) {
             $('uploadformmessage').innerHTML = get_string('uploadfileexistsoverwritecancel');
             // Show replace button
