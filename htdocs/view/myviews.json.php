@@ -56,7 +56,8 @@ if ($viewdata) {
         FROM ' . $prefix . 'view_artefact va
         INNER JOIN ' . $prefix . 'artefact a ON va.artefact = a.id
         INNER JOIN ' . $prefix . 'artefact_installed_type t ON a.artefacttype = t.name
-        WHERE va.view IN (' . $viewidlist . ')', '');
+        WHERE va.view IN (' . $viewidlist . ')
+        GROUP BY 1, 2, 3, 4, 5', '');
 }
 
 
