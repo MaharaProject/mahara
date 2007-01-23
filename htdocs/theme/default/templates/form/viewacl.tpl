@@ -54,7 +54,7 @@ function renderAccessListItem(item) {
     var row = TABLE(null,
         TBODY(null, 
             TR(null,
-                TH(null, item.name),
+                TH(null, item.name + (item.tutoronly ? ' ' + '{{str tag=tutors}}' : '')),
                 TD({'class': 'right'}, removeButton)
             ),
             TR(null,
@@ -65,10 +65,24 @@ function renderAccessListItem(item) {
                         'name': 'accesslist[' + count + '][type]',
                         'value': item.type
                     }),
+                    (item.id ?
                     INPUT({
                         'type': 'hidden',
                         'name': 'accesslist[' + count + '][id]',
-                        'value': item.id})
+                        'value': item.id
+                    })
+                    :
+                    null
+                    ),
+                    (typeof(item.tutoronly) != 'undefined' ?
+                    INPUT({
+                        'type': 'hidden',
+                        'name': 'accesslist[' + count + '][tutoronly]',
+                        'value': item.tutoronly
+                    })
+                    :
+                    null
+                    )
                 )
             )
         )
@@ -171,19 +185,33 @@ searchTable.pagerOptions = {
 }
 searchTable.query = '';
 searchTable.rowfunction = function(rowdata, rownumber, globaldata) {
-    var addButton = BUTTON({'type': 'button', 'class': 'button'}, '{{str tag=add}}');
     rowdata.type = searchTable.type;
+    var buttonTD = TD({'style': 'white-space:nowrap;'});
+
+    var addButton = BUTTON({'type': 'button', 'class': 'button'}, '{{str tag=add}}');
     connect(addButton, 'onclick', function() {
+        rowdata.tutoronly = 0;
         appendChildNodes('accesslist', renderAccessListItem(rowdata));
     });
-    var profileIcon = null;
+    appendChildNodes(buttonTD, addButton);
+
+    var profileIcon, tutorAddButton = null;
     if (rowdata.type == 'user') {
         profileIcon = IMG({'src': config.wwwroot + 'thumb.php?type=profileicon&size=40x40&id=' + rowdata.id});
     }
-    return TR({'class': 'r' + (rownumber%2)},
-        TD({'class': 'c', 'style': 'width:3em'}, addButton),
-        TD(null, rowdata.name),
-        TD({'class': 'c', 'style': 'width:40px'}, profileIcon)
+    else if (rowdata.type == 'community') {
+        tutorAddButton = BUTTON({'type': 'button', 'class': 'button'}, '{{str tag=addtutors section=view}}');
+        connect(tutorAddButton, 'onclick', function() {
+            rowdata.tutoronly = 1;
+            appendChildNodes('accesslist', renderAccessListItem(rowdata));
+        });
+        appendChildNodes(buttonTD, tutorAddButton);
+    }
+
+    return TR({'class': 'r' + (rownumber % 2)},
+        buttonTD,
+        TD({'class': 'fullwidth'}, rowdata.name),
+        TD({'class': 'center', 'style': 'width:40px'}, profileIcon)
     );
 }
 searchTable.updateOnLoad();
@@ -201,7 +229,7 @@ addLoadEvent(function () {
     var accesslist = {{$accesslist}};
     if (accesslist) {
         forEach(accesslist, function(item) {
-            debugObject(item);
+            log(item);
             renderAccessListItem(item);
         });
     }

@@ -101,7 +101,7 @@ function createview4_submit(Pieform $form, $values) {
             }
         }
         else {
-            throw new OMGWTFException();
+            throw new UserException('Invalid block type');
         }
     }
 
@@ -129,6 +129,7 @@ function createview4_submit(Pieform $form, $values) {
                     break;
                 case 'community':
                     $accessrecord->community = $item['id'];
+                    $accessrecord->tutoronly = $item['tutoronly'];
                     insert_record('view_access_community', $accessrecord);
                     break;
             }
