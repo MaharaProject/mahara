@@ -37,26 +37,29 @@ $limit    = param_integer('limit', 5);
 $offset   = param_integer('offset', 0);
 
 $prefix = get_config('dbprefix');
+$userid = $USER->get('id');
 
 if ($artefact) {
     $owner = get_field('artefact', 'owner', 'id', $artefact);
-    $public = (int) ($owner != $USER->get('id'));
+    $public = (int) ($owner != $userid);
     $feedback = get_records_sql_array('SELECT id, author, ctime, message, public
         FROM ' . $prefix . 'artefact_feedback
-        WHERE view = ' . $view . ' AND artefact = ' . $artefact . ($public ? ' AND public = 1' : '') . '
+        WHERE view = ' . $view . ' AND artefact = ' . $artefact
+                       . ($public ? ' AND (public = 1 OR author = ' . $userid . ')' : '') . '
         ORDER BY id DESC', '', $offset, $limit);
     $count = count_records('artefact_feedback', 'view', $view, 
                            'artefact', $artefact, 'public', $public);
 }
 else {
     $owner = get_field('view', 'owner', 'id', $view);
-    $public = (int) ($owner != $USER->get('id'));
+    $public = (int) ($owner != $userid);
     $feedback = get_records_sql_array('
         SELECT
             f.id, f.author, f.ctime, f.message, f.public, f.attachment, a.title
         FROM ' . $prefix . 'view_feedback f
         LEFT OUTER JOIN ' . $prefix . 'artefact a ON f.attachment = a.id
-        WHERE view = ' . $view . ($public ? ' AND f.public = 1' : '') . '
+        WHERE view = ' . $view 
+                       . ($public ? ' AND (f.public = 1 OR f.author = ' . $userid . ')' : '') . '
         ORDER BY id DESC', '', $offset, $limit);
     $count = count_records('view_feedback', 'view', $view, 'public', $public);
 }
@@ -66,7 +69,7 @@ if ($feedback) {
     foreach ($feedback as $record) {
         $d = array(
             'id'              => $record->id,
-            'ownedbythisuser' => ( get_field('view', 'owner', 'id', $view) == $USER->get('id') ? true : false ),
+            'ownedbythisuser' => ( $owner == $userid ? true : false ),
             'name'            => display_name($record->author),
             'date'            => format_date(strtotime($record->ctime), 'strftimedate'),
             'message'         => $record->message,
