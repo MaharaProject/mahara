@@ -31,6 +31,7 @@ $string['typeusermessage'] = 'Message from other users';
 $string['typefeedback'] = 'Feedback';
 $string['typewatchlist'] = 'Watchlist';
 $string['typenewview'] = 'New view';
+$string['typeviewaccess'] = 'New view access';
 $string['typecontactus'] = 'Contact us';
 $string['typeobjectionable'] = 'Objectionable content';
 $string['typevirusrepeat'] = 'Repeat virus upload';
@@ -66,7 +67,6 @@ $string['stopmonitoringsuccess'] = 'Stopped monitoring successfully';
 $string['stopmonitoringfailed'] = 'Failed to stop monitoring';
 
 $string['newwatchlistmessage'] = 'New activity on your watchlist';
-$string['newviewmessage'] = 'New view you have access to';
 
 $string['newcontactusfrom'] = 'New contact us from';
 $string['newcontactus'] = 'New contact us';
@@ -77,6 +77,9 @@ $string['watchlistmessageartefact'] = 'Activity on watchlist (Artefact)';
 $string['watchlistmessagecommunity'] = 'Activity on watchlist (Community)';
 $string['newviewmessage'] = 'New view called';
 $string['newviewsubject'] = 'New view';
+
+$string['newviewaccessmessage'] = 'You have been added to the access list for the view called';
+$string['newviewaccesssubject'] = 'New view access';
 
 $string['onview'] = 'on View';
 $string['onartefact'] = 'on Artefact';
