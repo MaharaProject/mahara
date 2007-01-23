@@ -74,6 +74,7 @@ UNION
 if ($extradata) {
     foreach ($extradata as &$extraitem) {
         $extraitem = (array)$extraitem;
+        $extraitem['tutoronly'] = (int)$extraitem['tutoronly'];
     }
     $data = array_merge($data, $extradata);
 }
@@ -186,6 +187,7 @@ function editviewaccess_submit(Pieform $form, $values) {
                 break;
             case 'community':
                 $accessrecord->community = $item['id'];
+                $accessrecord->tutoronly = $item['tutoronly'];
                 insert_record('view_access_community', $accessrecord);
                 break;
         }

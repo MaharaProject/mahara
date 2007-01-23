@@ -283,7 +283,8 @@ function joinRequestControl() {
                       INPUT({'type': 'hidden', 'name': 'id', 'value': {$id}}),
                       INPUT({'type': 'hidden', 'name': 'joincontrol', 'value': 'request'}),
                       INPUT({'type': 'text', 'name': 'reason'}),
-                      INPUT({'type': 'submit', 'value': '{$requeststr}'})));
+                      ' ',
+                      INPUT({'type': 'submit', 'class': 'submit', 'value': '{$requeststr}'})));
     insertSiblingNodesAfter('joinrequest', form);
     return false;
 }

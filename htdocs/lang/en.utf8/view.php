@@ -69,6 +69,7 @@ $string['format.listchildren']   = 'List children of this Artefact';
 $string['format.renderfull']     = 'Display entire artefact';
 $string['format.rendermetadata'] = 'Display metadata for this Artefact';
 
+$string['addtutors'] = 'Add Tutors';
 $string['viewcreatedsuccessfully'] = 'View created successfully';
 
 

@@ -155,6 +155,9 @@ tr.required th {
 .right {
     text-align: right;
 }
+.fullwidth {
+    width: 100%;
+}
 .fl {
     float: left;
 }

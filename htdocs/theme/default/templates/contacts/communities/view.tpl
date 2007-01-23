@@ -60,7 +60,7 @@
                              </tbody>
                          </table>
 	                 {if $tutor}
-                             <input type="button" value="{str tag='updatemembership'}" onClick="return updateMembership();" / id="communitymembers_update">
+                             <input type="button" class="button" value="{str tag='updatemembership'}" onClick="return updateMembership();" / id="communitymembers_update">
                          {/if}
                      </div>
                 {/if}
