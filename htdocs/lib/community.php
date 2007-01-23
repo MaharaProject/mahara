@@ -281,7 +281,7 @@ function community_remove_member($communityid, $userid) {
     // @todo this is probably a retarded way to do it and should be changed later.
     foreach ($views as $view) {
         db_begin();
-        delete_record('usr_watchlist_view', 'view', $view, 'usr', $userid);
+        delete_records('usr_watchlist_view', 'view', $view, 'usr', $userid);
         if (can_view_view($view, $userid)) {
             db_rollback();
         }

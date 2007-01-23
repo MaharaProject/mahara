@@ -341,7 +341,7 @@ function display_name($user, $userto=null) {
 /**
  * function to format a users name when there is no user to look at them
  * ie when display_name is not going to work..
- * /
+ */
 function display_default_name($user) {
     if (is_array($user)) {
         $user = (object)$user;

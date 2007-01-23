@@ -435,7 +435,7 @@ function activity_set_defaults($user_id) {
 function activity_process_queue() {
 
     db_begin();
-    if ($toprocess = get_records('activity_queue')) {
+    if ($toprocess = get_records_array('activity_queue')) {
         foreach ($toprocess as $activity) {
             handle_activity($activity->type, unserialize($activity->data));
         }
