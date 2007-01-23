@@ -37,13 +37,8 @@ MochiKit.MochiKit.SUBMODULES = [
     "Format",
     "Async",
     "DOM",
-    "Selector",
     "Style",
-    "LoggingPane",
-    "Color",
-    "Signal",
-    "Position",
-    "Visual"
+    "Signal"
 ];
 
 if (typeof(JSAN) != 'undefined' || typeof(dojo) != 'undefined') {
