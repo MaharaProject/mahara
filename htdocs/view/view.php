@@ -106,7 +106,7 @@ function feedbackform() {
     }
     var form = FORM({'id':'menuform','method':'post'});
     submitfeedback = function () {
-        if (form.attachment.value) {
+        if (form.attachment && form.attachment.value) {
             updateNodeAttributes(form, {'enctype':'multipart/form-data',
                                         'encoding':'multipart/form-data',
                                         'action':'feedbackattachment.php', 'target':''});
