@@ -174,6 +174,8 @@ $javascript = <<<EOF
 
 // The file uploader uploads files to the list of blog post attachments
 var copyrightnotice = '{$copyright}';
+// The fourth parameter below is just a hack so that the user sees
+// "Uploading file to blog post" in the upload status line.
 var uploader = new FileUploader('uploader', 'upload.php', null, {$getstring['blogpost']}, false, 
                                 attachtopost, fileattached);
 uploader.createid = {$createid};
