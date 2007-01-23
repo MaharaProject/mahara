@@ -820,6 +820,7 @@
                 <SENTENCE TEXT="(name, admin, delay) VALUES ('feedback', 0, 0)" />
                 <SENTENCE TEXT="(name, admin, delay) VALUES ('watchlist', 0, 1)" />
                 <SENTENCE TEXT="(name, admin, delay) VALUES ('newview', 0, 1)" />
+                <SENTENCE TEXT="(name, admin, delay) VALUES ('viewaccess', 0, 1)" />
                 <SENTENCE TEXT="(name, admin, delay) VALUES ('contactus', 1, 1)" />
                 <SENTENCE TEXT="(name, admin, delay) VALUES ('objectionable', 1, 1)" />
                 <SENTENCE TEXT="(name, admin, delay) VALUES ('virusrepeat', 1, 1)" />

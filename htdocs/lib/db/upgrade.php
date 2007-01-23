@@ -181,6 +181,14 @@ function xmldb_core_upgrade($oldversion=0) {
         insert_record('cron', $c);
     }
 
+    if ($oldversion < 2007012301) {
+        $at = new StdClass;
+        $at->name = 'viewaccess';
+        $at->admin = 0;
+        $at->delay = 1;
+        insert_record('activity_type', $at);
+    }
+
     return $status;
 
 }

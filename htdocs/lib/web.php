@@ -98,7 +98,7 @@ EOF;
         }
     }
 
-    $javascript_array[] = $jsroot . 'MochiKit/MochiKit.js';
+    $javascript_array[] = $jsroot . 'MochiKit/setup.js';
 
     $strings = array();
     foreach ($pagestrings as $k => $v) {

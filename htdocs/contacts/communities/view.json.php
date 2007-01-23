@@ -182,6 +182,21 @@ switch ($type) {
          $view->release($id);
          json_reply(false, get_string('viewreleasedsuccess'));
          break;
+     case 'watchlist':
+         if (record_exists('usr_watchlist_community', 'usr', $USER->get('id'), 'community', $community->id)) {
+             delete_records('usr_watchlist_community', 'usr', $USER->get('id'), 'community', $community->id);
+             json_reply(false, array('message' => get_string('removedcommunityfromwatchlist', 'activity'), 'member' => 0));
+         }
+         else {
+             $cwl = new StdClass;
+             $cwl->usr = $USER->get('id');
+             $cwl->community = $community->id;
+             $cwl->ctime = db_format_timestamp(time());
+             insert_record('usr_watchlist_community', $cwl);
+             json_reply(false, array('message' => get_string('addedcommunitytowatchlist', 'activity'), 'member' => 1));
+         }
+             
+         break;
 }
 
 if (!$data) {

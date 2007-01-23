@@ -339,6 +339,42 @@ function display_name($user, $userto=null) {
 }
 
 /**
+ * function to format a users name when there is no user to look at them
+ * ie when display_name is not going to work..
+ */
+function display_default_name($user) {
+    if (is_array($user)) {
+        $user = (object)$user;
+    }
+    else if (is_numeric($user)) {
+        $user = get_record('usr', 'id', $user);
+    }
+    if (!is_object($user)) {
+        throw new InvalidArgumentException("Invalid user passed to display_name");
+    }
+
+    if ($user instanceof User) {
+        $userObj = $user;
+        $user = new StdClass;
+        $user->id            = $userObj->get('id');
+        $user->preferredname = $userObj->get('preferredname');
+        $user->firstname     = $userObj->get('firstname');
+        $user->lastname      = $userObj->get('lastname');
+        $user->admin         = $userObj->get('admin');
+    }
+
+    // if they don't have a preferred name set, just return here
+    if (empty($user->preferredname)) {
+        return $user->firstname . ' ' . $user->lastname;
+    }
+    else {
+        return $user->preferedname;
+    }
+}
+
+
+
+/**
  * Converts a user object to a full name representation, honouring the language
  * setting.
  *

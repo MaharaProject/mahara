@@ -304,17 +304,6 @@ abstract class ArtefactType {
         if (!empty($this->dirty)) {
             $this->commit();
         }
-        if (!empty($this->parentdirty)) {
-            if (!empty($this->parent) && !record_exists('artefact_parent_cache', 'artefact', $this->id)) {
-                $apc = new StdClass;
-                $apc->artefact = $this->id;
-                $apc->parent = $this->parent;
-                $apc->dirty  = 1; // set this so the cronjob will pick it up and go set all the other parents.
-                insert_record('artefact_parent_cache', $apc);
-            }
-            set_field_select('artefact_parent_cache', 'dirty', 1,
-                             'artefact = ? OR parent = ?', array($this->id, $this->id));
-        }
     }
     
     public function is_container() {
@@ -339,14 +328,29 @@ abstract class ArtefactType {
         }
         if (empty($this->id)) {
             $this->id = insert_record('artefact', $fordb, 'id', true);
+            if (!empty($this->parent)) {
+                $this->parentdirty = true;
+            }
         }
         else {
             update_record('artefact', $fordb, 'id');
         }
         activity_occurred('watchlist', (object) array('artefact' => $this->id,
                                                       'subject' => get_string('artefactmodified')));
+        if (!empty($this->parentdirty)) {
+            if (!empty($this->parent) && !record_exists('artefact_parent_cache', 'artefact', $this->id)) {
+                $apc = new StdClass;
+                $apc->artefact = $this->id;
+                $apc->parent = $this->parent;
+                $apc->dirty  = 1; // set this so the cronjob will pick it up and go set all the other parents.
+                insert_record('artefact_parent_cache', $apc);
+            }
+            set_field_select('artefact_parent_cache', 'dirty', 1,
+                             'artefact = ? OR parent = ?', array($this->id, $this->id));
+        }
         $this->dirty = false;
         $this->deleted = false;
+        $this->parentdirty = false;
     }
 
     /** 

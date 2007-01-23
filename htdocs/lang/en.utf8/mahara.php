@@ -426,6 +426,7 @@ $string['memberrequests'] = 'Membership requests';
 $string['submittedviews'] = 'Submitted views';
 $string['releaseview'] = 'Release view';
 $string['tutor'] = 'Tutor';
+$string['tutors'] = 'Tutors';
 $string['member'] = 'Member';
 $string['remove'] = 'Remove';
 $string['updatemembership'] = 'Update membership';
