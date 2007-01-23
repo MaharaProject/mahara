@@ -40,24 +40,25 @@ $prefix = get_config('dbprefix');
 
 if ($artefact) {
     $owner = get_field('artefact', 'owner', 'id', $artefact);
-    $publiconly = ($owner != $USER->get('id'));
+    $public = (int) ($owner != $USER->get('id'));
     $feedback = get_records_sql_array('SELECT id, author, ctime, message, public
         FROM ' . $prefix . 'artefact_feedback
-        WHERE view = ' . $view . ' AND artefact = ' . $artefact . ($publiconly ? ' AND public = 1' : '') . '
+        WHERE view = ' . $view . ' AND artefact = ' . $artefact . ($public ? ' AND public = 1' : '') . '
         ORDER BY id DESC', '', $offset, $limit);
-    $count = count_records('artefact_feedback', 'view', $view, 'artefact', $artefact);
+    $count = count_records('artefact_feedback', 'view', $view, 
+                           'artefact', $artefact, 'public', $public);
 }
 else {
     $owner = get_field('view', 'owner', 'id', $view);
-    $publiconly = ($owner != $USER->get('id'));
+    $public = (int) ($owner != $USER->get('id'));
     $feedback = get_records_sql_array('
         SELECT
             f.id, f.author, f.ctime, f.message, f.public, f.attachment, a.title
         FROM ' . $prefix . 'view_feedback f
         LEFT OUTER JOIN ' . $prefix . 'artefact a ON f.attachment = a.id
-        WHERE view = ' . $view . ($publiconly ? ' AND f.public = 1' : '') . '
+        WHERE view = ' . $view . ($public ? ' AND f.public = 1' : '') . '
         ORDER BY id DESC', '', $offset, $limit);
-    $count = count_records('artefact_feedback', 'view', $view);
+    $count = count_records('view_feedback', 'view', $view, 'public', $public);
 }
 
 $data = array();
@@ -78,6 +79,7 @@ if ($feedback) {
         $data[] = $d;
     }
 }
+
 
 $result = array(
     'count'       => $count,
