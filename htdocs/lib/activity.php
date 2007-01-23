@@ -38,16 +38,16 @@ function activity_occurred($activitytype, $data) {
         throw new Exception("Invalid activity type $activitytype");
     }
 
-    //if (!empty($at->delay)) {
-    //    $delayed = new StdClass;
-    //    $delayed->type = $activitytype;
-    //    $delayed->data = serialize($data);
-    //    $delayed->ctime = db_format_timestamp(time());
-    //    insert_record('activity_queue', $delayed);
-    //}
-    //else {
+    if (!empty($at->delay)) {
+        $delayed = new StdClass;
+        $delayed->type = $activitytype;
+        $delayed->data = serialize($data);
+        $delayed->ctime = db_format_timestamp(time());
+        insert_record('activity_queue', $delayed);
+    }
+    else {
         handle_activity($at, $data);
-    //}
+    }
 }
 
 /** 
@@ -74,6 +74,7 @@ function activity_occurred($activitytype, $data) {
  *  - <b>watchlist (community) </b> must contain $community (id of community)
     -       and should also contain $subject (or a boring default will be used)
  *  - <b>newview</b> must contain $owner userid of view owner AND $view (id of new view)
+ *  - <b>viewaccess</b> must contain $owner userid of view owner AND $view (id of view) and $oldusers array of userids before access change was committed.
  */
 function handle_activity($activitytype, $data) {
 
@@ -312,23 +313,7 @@ function handle_activity($activitytype, $data) {
                     . ' ' . $viewinfo->title . ' ' . get_string('ownedby', 'activity');
                 $data->subject = get_string('newviewsubject', 'activity');
                 // add users on friendslist, userlist or grouplist...
-                $sql = 'SELECT userid, u.*, p.method
-                        FROM (
-                            SELECT (CASE WHEN usr1 = ? THEN usr2 ELSE usr1 END) AS userid 
-                                FROM ' . $prefix . 'usr_friend 
-                                WHERE (usr1 = ? OR usr2 = ?)
-                            UNION SELECT member AS userid 
-                                FROM ' . $prefix . 'usr_group_member m
-                                JOIN ' . $prefix . 'view_access_group g ON m.grp = g.grp 
-                            WHERE g.view = ?
-                            UNION SELECT usr AS userid 
-                                  FROM ' . $prefix . 'view_access_usr u 
-                                  WHERE u.view = ?
-                        ) AS userlist
-                            JOIN ' . $prefix . 'usr u ON u.id = userlist.userid
-                            LEFT JOIN ' . $prefix . 'usr_activity_preference p ON p.usr = u.id';
-                $users = get_records_sql_array($sql, array($data->owner, $data->owner, $data->owner,  
-                                                     $data->view, $data->view));
+                $users = activity_get_viewaccess_users($data->view, $data->owner);
                 if (empty($users)) {
                     $users = array();
                 }
@@ -337,6 +322,29 @@ function handle_activity($activitytype, $data) {
                     $user->message = $data->message . ' ' . display_name($viewinfo, $user);
                 }
                 break;
+            case 'viewaccess':
+                if (!is_numeric($data->owner) || !is_numeric($data->view)) {
+                    throw new InvalidArgumentException("view access activity type requires view and owner to be set");
+                }
+                if (!isset($data->oldusers)) {
+                    throw new InvalidArgumentException("view access activity type requires oldusers to be set (even if empty)");
+                }
+                if (!$viewinfo = get_record_sql('SELECT u.*, v.title FROM ' . $prefix . 'usr u
+                                                 JOIN ' . $prefix . 'view v ON v.owner = u.id
+                                                 WHERE v.id = ?', array($data->view))) {
+                    throw new InvalidArgumentException("Couldn't find view with id " . $data->view);
+                }
+                $data->message = get_string('newviewaccessmessage', 'activity')
+                    . ' ' . $viewinfo->title . ' ' . get_string('ownedby', 'activity');
+                $data->subject = get_string('newviewaccesssubject', 'activity');
+                $users = array_diff_key(activity_get_viewaccess_users($data->view, $data->owner), $data->oldusers);
+                if (empty($users)) {
+                    $users = array();
+                }
+                // ick
+                foreach ($users as $user) {
+                    $user->message = $data->message . ' ' . display_name($viewinfo, $user);
+                }
             case 'contactus':
                 
                 break;
@@ -426,10 +434,36 @@ function activity_set_defaults($user_id) {
 
 function activity_process_queue() {
 
-    // stub for cronjob.
+    db_begin();
+    if ($toprocess = get_records('activity_queue')) {
+        foreach ($toprocess as $activity) {
+            handle_activity($activity->type, unserialize($activity->data));
+        }
+        delete_records('activity_queue');
+    }
+    db_commit();
+}
 
+function activity_get_viewaccess_users($view, $owner) {
 
-    
+    $prefix = get_config('dbprefix');
+
+    $sql = 'SELECT userid, u.*, p.method
+                FROM (
+                SELECT (CASE WHEN usr1 = ? THEN usr2 ELSE usr1 END) AS userid 
+                    FROM ' . $prefix . 'usr_friend 
+                        WHERE (usr1 = ? OR usr2 = ?)
+                UNION SELECT member AS userid 
+                    FROM ' . $prefix . 'usr_group_member m
+                    JOIN ' . $prefix . 'view_access_group g ON m.grp = g.grp 
+                        WHERE g.view = ?
+                UNION SELECT usr AS userid 
+                    FROM ' . $prefix . 'view_access_usr u 
+                        WHERE u.view = ?
+                ) AS userlist
+                JOIN ' . $prefix . 'usr u ON u.id = userlist.userid
+                LEFT JOIN ' . $prefix . 'usr_activity_preference p ON p.usr = u.id';
+    return get_records_sql_assoc($sql, array($owner, $owner, $owner, $view, $view));
 }
 
 ?>

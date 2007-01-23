@@ -496,6 +496,10 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         return $data;
     }
 
+    public static function get_render_list() {
+        return array(FORMAT_ARTEFACT_LISTSELF, FORMAT_ARTEFACT_RENDERMETADATA);
+    }
+
 }
 
 class ArtefactTypeFolder extends ArtefactTypeFileBase {

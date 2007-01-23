@@ -114,6 +114,9 @@ if (typeof(JSAN) != 'undefined' || typeof(dojo) != 'undefined') {
             }
         }
         if (base === null) {
+                base = src.substring(0, src.lastIndexOf('setup.js'));
+        }
+        if (base === null) {
             return;
         }
         var modules = MochiKit.MochiKit.SUBMODULES;

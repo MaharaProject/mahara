@@ -455,8 +455,9 @@ class ArtefactTypeBlogPost extends ArtefactType {
         $smarty->assign('artefact', $this);
         $attachments = $this->get_attached_files();
         if ($attachments) {
+            require_once('artefact.php');
             foreach ($attachments as &$attachment) {
-                $f = new ArtefactTypeFile($attachment->id);
+                $f = artefact_instance_from_id($attachment->id);
                 $attachment->content = $f->render(FORMAT_ARTEFACT_LISTSELF, $options);
             }
             $smarty->assign('attachments', $attachments);

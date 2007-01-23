@@ -61,6 +61,8 @@ $string['empty_block'] = 'Select an artefact from the tree on the left to place 
 $string['viewinformationsaved'] = 'View information saved successfully';
 
 $string['canteditdontown'] = 'You can\'t edit this view because you don\'t own it';
+$string['canteditdontownfeedback'] = 'You can\'t edit this feedback because you don\'t own it';
+$string['feedbackchangedtoprivate'] = 'Feedback changed to private';
 
 $string['chooseformat'] = 'Select how you would like to display this artefact in this block ...';
 
