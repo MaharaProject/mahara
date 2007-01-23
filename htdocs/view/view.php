@@ -70,10 +70,12 @@ else {
     $jsartefact = 'undefined';
     $content = $view->render();
     global $USER;
-    if (record_exists('community_member', 
-                      'community', $view->get('submittedto'),
-                      'member', $USER->get('id'),
-                      'tutor', 1)) {
+    $submittedcommunity = $view->get('submittedto');
+    if ($submittedcommunity 
+        && record_exists('community_member', 
+                         'community', $submittedcommunity,
+                         'member', $USER->get('id'),
+                         'tutor', 1)) {
         // The user is a tutor of the community that this view has
         // been submitted to, and is entitled to upload an additional
         // file when submitting feedback.
