@@ -453,6 +453,14 @@ class ArtefactTypeBlogPost extends ArtefactType {
     protected function render_full($options) {
         $smarty = smarty();
         $smarty->assign('artefact', $this);
+        $attachments = $this->get_attached_files();
+        if ($attachments) {
+            foreach ($attachments as &$attachment) {
+                $f = new ArtefactTypeFile($attachment->id);
+                $attachment->content = $f->render(FORMAT_ARTEFACT_LISTSELF, $options);
+            }
+            $smarty->assign('attachments', $attachments);
+        }
         $smarty->assign('postedbyon', get_string('postedbyon', 'artefact.blog',
                                                  display_name($this->owner),
                                                  format_date($this->ctime)));

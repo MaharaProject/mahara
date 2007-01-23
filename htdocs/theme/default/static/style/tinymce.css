@@ -22,19 +22,34 @@ a:hover {
 
 h1, h2 {
 	color: #547c22 !important;
-	font-size: 20px !important;
+	font-size: 22px !important;
 	font-weight: normal !important;	
-	margin: 5px 0 5px 0 !important;
+	margin: 0 0 5px 0 !important;
+	padding: 0 !important;
 	text-transform: capitalize !important;
+	border-bottom: 1px solid #819f18 !important;
+}
+h2 {
+    font-size: 20px !important;
 }
 
-h3, h4, h5, h6 {
+h3, h4 {
 	color: #819f18 !important;
 	font-weight: bold !important;
-    font-size: 14px !important;
-	margin: 15px 0 0 0 !important;
+	font-size: 17px !important;
+	margin: 15px 0 0 !important;
 	text-transform: capitalize !important;
 }
+h4 {
+    font-size: 15px !important;
+}
+
 h5, h6 {
+	color: #5c8727 !important;
+	font-weight: bold !important;
+	font-size: 14px !important;
+	margin: 5px 0 0 !important;
+}
+h6 {
     font-size: 13px !important;
 }
