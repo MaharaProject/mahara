@@ -312,7 +312,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
     // Number of subdirectories to create under $artefactfileroot (should be configurable).
     static $artefactfilesubdirs = 256;
 
-    private static function get_file_directory($id) {
+    public static function get_file_directory($id) {
         return self::$artefactfileroot . $id % self::$artefactfilesubdirs;
     }
 
@@ -405,6 +405,8 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         return $error;
     }
 
+
+
     public static function get_admin_files($public) {
         if ($public) {
             $foldersql = 'parent = ' . ArtefactTypeFolder::admin_public_folder_id();
@@ -428,6 +430,8 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             return; 
         }
         $file = $this->get_path();
+        // Detach this file from any view feedback
+        set_field('view_feedback', 'attachment', null, 'attachment', $this->id);
         if (is_file($file)) {
             $size = filesize($file);
             unlink($file);
@@ -599,24 +603,30 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
         return $folderid;
     }
 
-    public static function get_folder_by_name($name, $parentfolderid=null) {
-        global $USER;
+    public static function get_folder_by_name($name, $parentfolderid=null, $userid=null) {
+        if (empty($userid)) {
+            global $USER;
+            $userid = $USER->get('id');
+        }
         $prefix = get_config('dbprefix');
         $parentclause = $parentfolderid ? 'parent = ' . $parentfolderid : 'parent IS NULL';
         return get_record_sql('SELECT * FROM ' . $prefix . 'artefact
-           WHERE title = ? AND ' . $parentclause . ' AND owner = ' . $USER->get('id') . "
+           WHERE title = ? AND ' . $parentclause . ' AND owner = ' . $userid . "
            AND artefacttype = 'folder'", array($name));
     }
 
     // Get the id of a folder, creating the folder if necessary
-    public static function get_folder_id($name, $description, $parentfolderid=null) {
-        global $USER;
-        if (!$record = self::get_folder_by_name($name, $parentfolderid)) {
+    public static function get_folder_id($name, $description, $parentfolderid=null, $userid=null) {
+        if (empty($userid)) {
+            global $USER;
+            $userid = $USER->get('id');
+        }
+        if (!$record = self::get_folder_by_name($name, $parentfolderid, $userid)) {
             $data = new StdClass;
             $data->title = $name;
             $data->description = $description;
             $f = new ArtefactTypeFolder(0, $data);
-            $f->set('owner', $USER->get('id'));
+            $f->set('owner', $userid);
             $f->set('parent', $parentfolderid);
             $f->commit();
             return $f->get('id');

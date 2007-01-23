@@ -39,44 +39,43 @@ $offset   = param_integer('offset', 0);
 $prefix = get_config('dbprefix');
 
 if ($artefact) {
-    $table = 'artefact';
-    $artefactfield = 'artefact';
-    $whereartefactclause = ' AND artefact = ' . $artefact;
+    $owner = get_field('artefact', 'owner', 'id', $artefact);
+    $publiconly = ($owner != $USER->get('id'));
+    $feedback = get_records_sql_array('SELECT id, author, ctime, message, public
+        FROM ' . $prefix . 'artefact_feedback
+        WHERE view = ' . $view . ' AND artefact = ' . $artefact . ($publiconly ? ' AND public = 1' : '') . '
+        ORDER BY id DESC', '', $offset, $limit);
+    $count = count_records('artefact_feedback', 'view', $view, 'artefact', $artefact);
 }
 else {
-    $table = 'view';
-    $artefactfield = null;
-    $whereartefactclause = '';
+    $owner = get_field('view', 'owner', 'id', $view);
+    $publiconly = ($owner != $USER->get('id'));
+    $feedback = get_records_sql_array('
+        SELECT
+            f.id, f.author, f.ctime, f.message, f.public, f.attachment, a.title
+        FROM ' . $prefix . 'view_feedback f
+        LEFT OUTER JOIN ' . $prefix . 'artefact a ON f.attachment = a.id
+        WHERE view = ' . $view . ($publiconly ? ' AND f.public = 1' : '') . '
+        ORDER BY id DESC', '', $offset, $limit);
+    $count = count_records('artefact_feedback', 'view', $view);
 }
-
-$owner = get_field($table, 'owner', 'id', $artefact ? $artefact : $view);
-$table .= '_feedback';
-if ($owner == $USER->get('id')) {
-    $count = count_records($table, 'view', $view, $artefactfield, $artefact);
-    $publicclause = '';
-}
-else {
-    $count = count_records($table, 'public', 1, 'view', $view, $artefactfield, $artefact);
-    $publicclause = ' AND public = 1';
-}
-
-$feedback = get_records_sql_array('SELECT id, author, ctime, message, public
-    FROM ' . $prefix . $table . '
-    WHERE view = ' . $view . $whereartefactclause . $publicclause . '
-    ORDER BY id DESC', '', $offset, $limit);
 
 $data = array();
 if ($feedback) {
     foreach ($feedback as $record) {
-        $data[] = array(
+        $d = array(
             'id'              => $record->id,
             'ownedbythisuser' => ( get_field('view', 'owner', 'id', $view) == $USER->get('id') ? true : false ),
-            'table'           => $table,
             'name'            => display_name($record->author),
             'date'            => format_date(strtotime($record->ctime), 'strftimedate'),
             'message'         => $record->message,
             'public'          => $record->public
         );
+        if (!empty($record->attachment)) {
+            $d['attachid'] = $record->attachment;
+            $d['attachtitle'] = $record->title;
+        }
+        $data[] = $d;
     }
 }
 
