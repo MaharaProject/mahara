@@ -131,6 +131,8 @@ $declinestr      = get_string('declinerequest');
 $updatefailedstr = get_string('updatefailed');
 $requeststr      = get_string('sendrequest');
 $reasonstr       = get_string('reason');
+$removefromwatchliststr = get_string('removefromwatchlist', 'activity');
+$addtowatchliststr = get_string('addtowatchlist', 'activity');
 
 // all the permissions stuff
 $tutor          = (int)($membership < COMMUNITY_MEMBERSHIP_MEMBER);
@@ -253,6 +255,25 @@ function releaseView(id) {
     return false;
 }
 
+function toggleWatchlist() {
+    var pd = {'type': 'watchlist', 'id': '{$community->id}'};
+    var d = loadJSONDoc('view.json.php', pd);
+    var remove = '{$removefromwatchliststr}';
+    var add = '{$addtowatchliststr}';
+    d.addCallbacks(function (data) {
+        if (!data.error) {
+            if (data.message.member) {
+                $('watchlistcontrolbutton').innerHTML = remove;
+            }
+            else {
+                $('watchlistcontrolbutton').innerHTML = add;
+            }
+            $('messagediv').innerHTML = data.message.message;
+        }
+    });
+    return false;
+}
+
 function updateMembership() {
     var pd = {'type': 'membercontrol', 'id': '{$community->id}'};
     var e = getElementsByTagAndClassName(null, 'member');
@@ -301,6 +322,7 @@ $smarty->assign('canrequestjoin', $canrequestjoin);
 $smarty->assign('canleave', $canleave);
 $smarty->assign('canacceptinvite', $invited);
 $smarty->assign('community', $community);
+$smarty->assign('onwatchlist', record_exists('usr_watchlist_community', 'usr', $USER->get('id'), 'community', $community->id));
 $smarty->display('contacts/communities/view.tpl');
 
 

@@ -290,6 +290,10 @@ function community_remove_member($communityid, $userid) {
         }
     }
     delete_records('community_member', 'member', $userid, 'community', $communityid);
+    $user = optional_userobj($userid);
+    activity_occurred('watchlist', 
+                      array('community' => $communityid, 
+                            'subject' => get_string('removedcommunitymembersubj', 'activity', display_default_name($user))));
 }
 
 /**
@@ -306,7 +310,10 @@ function community_add_member($communityid, $userid) {
     $cm->ctime =  db_format_timestamp(time());
     $cm->tutor = 0;
     insert_record('community_member', $cm);
-    
+    $user = optional_userobj($userid);
+    activity_occurred('watchlist', 
+                      array('community' => $communityid, 
+                            'subject' => get_string('newcommunitymembersubj', 'activity', display_default_name($user))));
 }
 
 ?>

@@ -7,7 +7,7 @@
 {include file="columnleftstart.tpl"}
                 <h2>{$community->name}</h2>
                 
-				<p>{str tag='owner'}: {$community->ownername}</p>
+                <p>{str tag='owner'}: {$community->ownername}</p>
 	        {assign var="jointype" value=$community->jointype}
 	        {assign var="joinstr" value=communityjointype$jointype}
                 <p>{str tag=$joinstr}</p>
@@ -18,6 +18,9 @@
                 {elseif $canacceptinvite} <p>{str tag='communityhaveinvite'} <a href="view.php?id={$community->id}&amp;joincontrol=acceptinvite">{str tag='acceptinvitecommunity'}</a> | <a href="view.php?id={$community->id}&amp;joincontrol=declineinvite">{str tag='declineinvitecommunity'}</a></p>{/if}
                 <div id="messagediv"></div>
                 {if $member}
+                    <div id="communitywatchlistcontrol">
+                    <button type="button" id="watchlistcontrolbutton" class="button" onclick="return toggleWatchlist();">{if $onwatchlist}{str tag="removefromwatchlist" section="activity"}{else}{str tag="addtowatchlist" section="activity"}{/if}</button>
+                    </div>
                     <div class="communityviews">
                         <h5>{str tag='views'}</h5>
                         {if $tutor && $controlled}

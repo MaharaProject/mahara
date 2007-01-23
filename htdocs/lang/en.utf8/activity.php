@@ -89,4 +89,13 @@ $string['ownedby'] = 'owned by';
 $string['objectionablecontentview'] = 'Objectionable content';
 $string['objectionablecontentartefact'] = 'Objectionable content';
 
+$string['newcommunitymembersubj'] = '%s is now a community member!';
+$string['removedcommunitymembersubj'] = '%s is no longer a community member';
+
+$string['addtowatchlist'] = 'Add to watchlist';
+$string['removefromwatchlist'] = 'Remove from watchlist';
+
+$string['removedcommunityfromwatchlist'] = 'The community has been removed from your watchlist';
+$string['addedcommunitytowatchlist'] = 'The community was added to your watchlist';
+
 ?>
