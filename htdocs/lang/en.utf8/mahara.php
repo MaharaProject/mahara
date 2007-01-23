@@ -505,6 +505,7 @@ $string['currentfriends'] = 'Friends';
 $string['pendingfriends'] = 'Pending friends';
 
 $string['friendlistfailure'] = 'Failed to modify your friends list';
+$string['userdoesntwantfriends'] = 'This user doesn\'t want any new friends';
 
 $string['friend'] = 'Friend';
 $string['profileicon'] = 'Profile Icon';
