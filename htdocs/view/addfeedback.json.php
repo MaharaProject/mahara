@@ -52,8 +52,6 @@ if (!insert_record($table, $data, 'id', true)) {
     json_reply('local', get_string('addfeedbackfailed'));
 }
 
-log_debug($data);
-
 require_once('activity.php');
 activity_occurred('feedback', $data);
 
