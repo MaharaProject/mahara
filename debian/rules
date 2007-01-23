@@ -24,7 +24,7 @@ binary:
 	dh_testroot
 	dh_installchangelogs 
 	dh_installdocs
-	dh_installdebconf	
+	dh_installdebconf
 	dh_installcron
 	dh_installlogrotate
 	dh_compress 
@@ -38,6 +38,8 @@ binary:
 
 	dh_installdirs
 	dh_install
+
+	dh_link
 
 	dh_gencontrol
 	dh_md5sums

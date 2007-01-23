@@ -12,7 +12,5 @@ debug: mochikit_packed
 
 mochikit_packed:
 	scripts/pack.sh
-	
-	
 
 .PHONY: build
