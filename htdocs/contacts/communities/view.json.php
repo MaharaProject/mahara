@@ -73,7 +73,7 @@ switch ($type) {
         $count = count_records_sql('
             SELECT COUNT(v.id)
             FROM  ' . $prefix . 'view v
-            LEFT OUTER JOIN view_access_community a ON a.view=v.id
+            LEFT OUTER JOIN ' . $prefix . 'view_access_community a ON a.view=v.id
             ' . $where,
             $values
         );
