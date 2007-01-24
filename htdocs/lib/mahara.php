@@ -919,8 +919,8 @@ function pieform_validate(Pieform $form, $values) {
 
 function pieform_element_calendar_configure($element) {
     $element['jsroot'] = '/js/jscalendar/';
-    $element['themefile'] = get_config('themeurl') . 'style/calendar.css';
-    $element['imagefile'] = get_config('themeurl') . 'calendar.gif';
+    $element['themefile'] = theme_get_url('style/calendar.css');
+    $element['imagefile'] = theme_get_url('calendar.gif');
     $element['language'] = 'en'; // @todo: language file names for the js calendar may need to be changed
     return $element;
 }
