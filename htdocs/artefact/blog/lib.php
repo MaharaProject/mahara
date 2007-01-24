@@ -710,7 +710,10 @@ class ArtefactTypeBlogPost extends ArtefactType {
         $data->blogpost = $this->id;
         $data->file = $fileid;
         insert_record('artefact_blog_blogpost_file', $data);
-
+        $data->artefact = $data->file;
+        $data->parent = $data->blogpost;
+        $data->dirty = true;
+        insert_record('artefact_parent_cache', $data);
         return $fileid;
     }
 

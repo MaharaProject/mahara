@@ -148,6 +148,8 @@ function editviewaccess_submit(Pieform $form, $values) {
             AND usr IN(' . $userids . ')');
     }
 
+    $beforeusers = activity_get_viewaccess_users($viewid, $USER->get('id'));
+
     // Procedure:
     // get list of current friends - this is available in global $data
     // compare with list of new friends
@@ -192,6 +194,13 @@ function editviewaccess_submit(Pieform $form, $values) {
                 break;
         }
     }
+
+    $data = new StdClass;
+    $data->view = $viewid;
+    $data->owner = $USER->get('id');
+    $data->oldusers = $beforeusers;
+    activity_occurred('viewaccess', $data);
+
     db_commit();
     $SESSION->add_ok_msg(get_string('viewaccesseditedsuccessfully'));
     redirect('view/');

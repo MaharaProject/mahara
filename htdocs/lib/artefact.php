@@ -58,9 +58,10 @@ function artefact_check_plugin_sanity($pluginname) {
 function rebuild_artefact_parent_cache_dirty() {
     // this will give us a list of artefacts, as the first returned column
     // is not unqiue, but that's ok, it's what we want.
-    if (!$dirty = get_records_array('artefact_parent_cache', 'dirty', 1)) {
+    if (!$dirty = get_records_array('artefact_parent_cache', 'dirty', 1, '', 'DISTINCT(artefact)')) {
         return;
     }
+    $blogsinstalled = get_field('artefact_installed', 'active', 'name', 'blog');
     db_begin();
     delete_records('artefact_parent_cache', 'dirty', 1);
     foreach ($dirty as $d) {
@@ -74,6 +75,15 @@ function rebuild_artefact_parent_cache_dirty() {
                 break;
             }
             $parentids[] = $parent->parent;
+            // get any blog posts it may be attached to 
+            if ($parent->artefacttype == 'file' && $blogsinstalled
+                && $associated = get_column('artefact_blog_blogpost_file', 'blogpost', 'file', $parent->id)) {
+                foreach ($associated as $a) {
+                    if (!in_array($a, $parentids)) {
+                        $parentids[] = $a;
+                    }
+                }
+            }
             $current = $parent->parent;
         }
         foreach ($parentids as $p) {
@@ -90,26 +100,36 @@ function rebuild_artefact_parent_cache_dirty() {
 function rebuild_artefact_parent_cache_complete() {
     db_begin();
     delete_records('artefact_parent_cache');
-    $artefacts = get_records_array('artefact');
-    foreach ($artefacts as $a) {
-        $parentids = array();
-        $current = $a->id;
-        while (true) {
-            if (!$parent = get_record('artefact', 'id', $current)) {
-                break;
+    if ($artefacts = get_records_array('artefact')) {
+        foreach ($artefacts as $a) {
+            $parentids = array();
+            $current = $a->id;
+            while (true) {
+                if (!$parent = get_record('artefact', 'id', $current)) {
+                    break;
+                }
+                if (!$parent->parent) {
+                    break;
+                }
+                $parentids[] = $parent->parent;
+                // get any blog posts it may be attached to 
+                if ($parent->artefacttype == 'file' && $blogsinstalled
+                    && $associated = get_column('artefact_blog_blogpost_file', 'blogpost', 'file', $parent->id)) {
+                    foreach ($associated as $a) {
+                        if (!in_array($a, $parentids)) {
+                            $parentids[] = $a;
+                        }
+                    }
+                }
+                $current = $parent->parent;
             }
-            if (!$parent->parent) {
-                break;
+            foreach ($parentids as $p) {
+                $apc = new StdClass;
+                $apc->artefact = $a->id;
+                $apc->parent   = $p;
+                $apc->dirty    = 0;
+                insert_record('artefact_parent_cache', $apc);
             }
-            $parentids[] = $parent->parent;
-            $current = $parent->parent;
-        }
-        foreach ($parentids as $p) {
-            $apc = new StdClass;
-            $apc->artefact = $a->id;
-            $apc->parent   = $p;
-            $apc->dirty    = 0;
-            insert_record('artefact_parent_cache', $apc);
         }
     }
     db_commit();

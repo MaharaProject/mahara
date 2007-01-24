@@ -464,6 +464,11 @@ class MaharaException extends Exception {
             echo json_encode(array('error' => true, 'message' => $this->render_exception()));
             exit;
         }
+        
+        if (defined('CRON')) {
+            echo $this->render_exception();
+            exit;
+        }
 
         $outputtitle = $this->get_string('title');
         $outputmessage = $this->render_exception();
@@ -566,7 +571,7 @@ class ConfigException extends MaharaException  implements MaharaThrowable {
                            array('message' => $this->get_sitename() 
                            . ' is misconfigured and this is causing problems. '
                            . 'You probably need to contact an administrator to get this fixed.  '
-                           . ' Details, if any, follow'));
+                           . ' Details, if any, follow:'));
     }
 }
 
@@ -585,7 +590,7 @@ class UserException extends MaharaException implements MaharaThrowable {
         return array_merge(parent::strings(),  
                            array('message' => 'Something in the way you\'re interacting with ' 
                                  . $this->get_sitename()
-                                 .' is causing an error.<br>Details if any, follow'));
+                                 .' is causing an error.<br>Details if any, follow:'));
     }
 }
 

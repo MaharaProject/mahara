@@ -24,8 +24,9 @@
  *
  */
 
-define('INTERNAL',1);
-define('PUBLIC',1);
+define('INTERNAL', 1);
+define('PUBLIC', 1);
+define('CRON', 1);
 
 /**
   * This defines (in seconds) how far PAST the next run time of a cron job

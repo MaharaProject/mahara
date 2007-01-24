@@ -75,9 +75,7 @@ function createview4_submit(Pieform $form, $values) {
     $view->startdate = db_format_timestamp($data['startdate']);
     $view->stopdate = db_format_timestamp($data['stopdate']);
     $view->ctime = $view->mtime = $view->atime = $time;
-    log_debug($view);
     $viewid = insert_record('view', $view, 'id', true);
-    log_debug('inserted view as id ' . $viewid);
 
     foreach ($data['artefacts'] as $block => $blockdata) {
         if ($blockdata['type'] == 'label') {
@@ -135,6 +133,11 @@ function createview4_submit(Pieform $form, $values) {
             }
         }
     }
+
+    $data = new StdClass;
+    $data->owner = $USER->get('id');
+    $data->view = $viewid;
+    activity_occurred('newview', $data);
 
     db_commit();
     $SESSION->add_ok_msg(get_string('viewcreatedsuccessfully', 'view'));

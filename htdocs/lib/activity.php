@@ -76,7 +76,7 @@ function activity_occurred($activitytype, $data) {
  *  - <b>newview</b> must contain $owner userid of view owner AND $view (id of new view)
  *  - <b>viewaccess</b> must contain $owner userid of view owner AND $view (id of view) and $oldusers array of userids before access change was committed.
  */
-function handle_activity($activitytype, $data) {
+function handle_activity($activitytype, $data, $cron=false) {
 
     $data = (object)$data;
     if (is_string($activitytype)) {
@@ -246,7 +246,10 @@ function handle_activity($activitytype, $data) {
                     if (!$ainfo = get_record_sql('SELECT u.*, a.title FROM ' . $prefix . 'usr u
                                                   JOIN ' . $prefix . 'artefact a  ON a.owner = u.id
                                                   WHERE a.id = ?', array($data->artefact))) {
-                        throw new InvalidArgumentException("Couldn't find artefact with id " . $data->artefact);
+                        if (!empty($cron)) { // probably deleted already
+                            return;
+                        }
+                        throw new InvalidArgumentException(get_string('artefactnotfound', 'error', $data->artefact));
                     }
                     $data->message = get_string('onartefact', 'activity') 
                         . ' ' . $ainfo->title . ' ' . get_string('ownedby', 'activity');
@@ -437,7 +440,7 @@ function activity_process_queue() {
     db_begin();
     if ($toprocess = get_records_array('activity_queue')) {
         foreach ($toprocess as $activity) {
-            handle_activity($activity->type, unserialize($activity->data));
+            handle_activity($activity->type, unserialize($activity->data), true);
         }
         delete_records('activity_queue');
     }
@@ -463,7 +466,10 @@ function activity_get_viewaccess_users($view, $owner) {
                 ) AS userlist
                 JOIN ' . $prefix . 'usr u ON u.id = userlist.userid
                 LEFT JOIN ' . $prefix . 'usr_activity_preference p ON p.usr = u.id';
-    return get_records_sql_assoc($sql, array($owner, $owner, $owner, $view, $view));
+    if (!$u = get_records_sql_assoc($sql, array($owner, $owner, $owner, $view, $view))) {
+        $u = array();
+    }
+    return $u;
 }
 
 ?>
