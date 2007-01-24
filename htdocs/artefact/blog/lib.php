@@ -491,10 +491,16 @@ class ArtefactTypeBlogPost extends ArtefactType {
         $data->blogpost = $this->get('id');
         $data->file = $artefactid;
         insert_record('artefact_blog_blogpost_file', $data);
+
+        $data->artefact = $data->file;
+        $data->parent = $data->blogpost;
+        $data->dirty = true;
+        insert_record('artefact_parent_cache', $data);
     }
 
     public function detach_file($artefactid) {
         delete_records('artefact_blog_blogpost_file', 'blogpost', $this->get('id'), 'file', $artefactid);
+        delete_records('artefact_parent_cache', 'parent', $this->get('id'), 'artefact', $artefactid);
     }
 
 
@@ -730,15 +736,8 @@ class ArtefactTypeBlogPost extends ArtefactType {
         if (!$fileid = ArtefactTypeFile::save_file($path, $data)) {
             return false;
         }
-            
-        $data = new StdClass;
-        $data->blogpost = $this->id;
-        $data->file = $fileid;
-        insert_record('artefact_blog_blogpost_file', $data);
-        $data->artefact = $data->file;
-        $data->parent = $data->blogpost;
-        $data->dirty = true;
-        insert_record('artefact_parent_cache', $data);
+
+        $this->attach_file($fileid);
         return $fileid;
     }
 
