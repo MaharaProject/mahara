@@ -153,7 +153,7 @@ function forgotpass_submit(Pieform $form, $values) {
     // Add a marker in the session to say that the user has registered
     $_SESSION['pwchangerequested'] = true;
 
-    redirect('forgotpass.php');
+    redirect('/forgotpass.php');
 }
 
 function forgotpasschange_validate(Pieform $form, $values) {
@@ -194,7 +194,7 @@ function forgotpasschange_submit(Pieform $form, $values) {
 
         $USER->login($user);
         $SESSION->add_ok_msg(get_string('passwordchangedok'));
-        redirect(get_config('wwwroot'));
+        redirect();
         exit;
     }
 

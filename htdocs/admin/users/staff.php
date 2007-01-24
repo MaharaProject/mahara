@@ -71,7 +71,7 @@ function staffusers_submit(Pieform $form, $values) {
     }
     db_commit();
     $SESSION->add_ok_msg(get_string('staffusersupdated', 'admin'));
-    redirect(get_config('wwwroot') . 'admin/users/staff.php');
+    redirect('/admin/users/staff.php');
 }
 
 $smarty->assign('staffusersform', pieform($form));

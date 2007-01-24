@@ -17,7 +17,7 @@
 {$INLINEJAVASCRIPT}
         </script>
 {/if}
-        <script type="text/javascript" src="/js/pieforms.js"></script>
+        <script type="text/javascript" src="{$WWWROOT}js/pieforms.js"></script>
 {foreach from=$STYLESHEETLIST item=cssurl}
         <link rel="stylesheet" type="text/css" href="{$cssurl}">
 {/foreach}

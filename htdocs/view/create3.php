@@ -77,7 +77,7 @@ if (param_boolean('submit')) {
     log_debug($data);
 
     $SESSION->set('create_' . $createid, $data);
-    redirect(get_config('wwwroot') . 'view/create4.php?createid=' . $createid);
+    redirect('/view/create4.php?createid=' . $createid);
 }
 
 if (param_boolean('back')) {
@@ -87,11 +87,11 @@ if (param_boolean('back')) {
 
     $SESSION->set('create_' . $createid, $data);
 
-    redirect(get_config('wwwroot') . 'view/create2.php?createid=' . $createid);
+    redirect('/view/create2.php?createid=' . $createid);
 }
 
 if (param_boolean('cancel')) {
-    redirect(get_config('wwwroot') . 'view/');
+    redirect('/view/');
 }
 
 // Get the list of root things for the tree

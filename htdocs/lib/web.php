@@ -1166,24 +1166,32 @@ function get_site_page_content($pagename) {
 }
 
 
-function redirect($location='') {
+
+/** 
+ * Redirects the browser to a new location. The path to redirect to can take
+ * two forms:
+ *  
+ * - http[something]: will redirect the user to that exact URL
+ * - /[something]: will redirect to WWWROOT/[something]
+ *       
+ * Any other form is illegal and will cause an error.
+ *      
+ * @param string $location The location to redirect the user to. Defaults to
+ *                         the application home page.
+ */     
+function redirect($location='/') {
     if (headers_sent()) {
         throw new Exception('Headers already sent when redirect() was called');
     }
-    $wwwroot = get_config('wwwroot');
 
-    if ($location == '') {
-        $path = $_SERVER['SCRIPT_NAME'];
-        if (substr($path, -9) == 'index.php') {
-            $path = substr($path, 0, -9);
+    if (substr($location, 0, 4) != 'http') {
+        if (substr($location, 0, 1) != '/') {
+            throw new SystemException('redirect() should be called with either'
+                . ' /[something] for local redirects or http[something] for'
+                . ' absolute redirects');
         }
-        $location = substr($wwwroot, 0, -1) . $path;
-    }
-    else if (substr($location, 0, 4) != 'http') {
-        if (substr($location, 0, 1) == '/') {
-            $location = substr($location, 1);
-        }
-        $location = $wwwroot . $location;
+
+        $location = get_config('wwwroot') . substr($location, 1);
     }
 
     header('HTTP/1.1 303 See Other');

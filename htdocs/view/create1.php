@@ -129,7 +129,7 @@ function createview1_cancel_submit() {
 
     $SESSION->clear('create_' . $createid);
 
-    redirect(get_config('wwwroot') . 'view/');
+    redirect('/view/');
 }
 
 function createview1_submit(Pieform $form, $values) {
@@ -149,7 +149,7 @@ function createview1_submit(Pieform $form, $values) {
 
     $SESSION->set('create_' . $values['createid'], $data);
 
-    redirect(get_config('wwwroot') . 'view/create2.php?createid=' . $values['createid']);
+    redirect('/view/create2.php?createid=' . $values['createid']);
 }
 
 $smarty = smarty();

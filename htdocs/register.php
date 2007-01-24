@@ -43,7 +43,7 @@ if (!session_id()) {
 
 // Logged in people can't register
 if (is_logged_in()) {
-    redirect('/');
+    redirect();
 }
 
 // Step two of registration (first as it's the easiest): the user has
@@ -119,7 +119,7 @@ if (isset($_REQUEST['key'])) {
 
         // Log the user in and send them to the homepage
         $USER->login($registration);
-        redirect('/');
+        redirect();
     }
     
     function profileform_validate(Pieform $form, $values) {
@@ -420,7 +420,7 @@ function register_submit(Pieform $form, $values) {
     // Add a marker in the session to say that the user has registered
     $_SESSION['registered'] = true;
 
-    redirect('register.php');
+    redirect('/register.php');
 }
 
 function register_cancel_submit() {

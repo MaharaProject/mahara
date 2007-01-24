@@ -35,12 +35,12 @@ $template = param_variable('template', null);
 $action   = param_variable('action', null);
 
 if ($action == 'back' ) {
-    redirect(get_config('wwwroot') . 'view/create1.php?createid=' . $createid);
+    redirect('/view/create1.php?createid=' . $createid);
 }
 
 if ($action == 'cancel' ) {
     $SESSION->clear('create_' . $createid);
-    redirect(get_config('wwwroot') . 'view/');
+    redirect('/view/');
 }
 
 if ( $template !== null ) {
@@ -50,7 +50,7 @@ if ( $template !== null ) {
 
     $SESSION->set('create_' . $createid, $data);
 
-    redirect(get_config('wwwroot') . 'view/create3.php?createid=' . $createid);
+    redirect('/view/create3.php?createid=' . $createid);
 }
 
 define('MENUITEM', 'myviews');
