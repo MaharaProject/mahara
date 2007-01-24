@@ -84,10 +84,7 @@ class User {
      *
      * @param string $key The key to get the value of
      * @return mixed
-     * @throws KeyInvalidException
-     * @todo<nigel>: Given that KeyInvalidException doesn't actually exist,
-     * referring to an incorrect key will be fatal. I'm not going to do anything
-     * about this until more is known about what will be stored in the session.
+     * @throws InvalidArgumentException
      */
     public function get($key) {
         if (!isset($this->defaults[$key])) {

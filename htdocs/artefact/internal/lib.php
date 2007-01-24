@@ -372,7 +372,9 @@ class ArtefactTypeCachedProfileField extends ArtefactTypeProfileField {
         parent::commit();
         $field = $this->get_artefact_type();
         set_field('usr', $field, $this->title, 'id', $this->owner);
-        $USER->set($field, $this->title);
+        if ($this->owner == $USER->get('id')) {
+            $USER->set($field, $this->title);
+        }
     }
 
     public function delete() {
