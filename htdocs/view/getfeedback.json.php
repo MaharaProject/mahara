@@ -42,16 +42,17 @@ $userid = $USER->get('id');
 if ($artefact) {
     $owner = get_field('artefact', 'owner', 'id', $artefact);
     $public = (int) ($owner != $userid);
+    $table = 'artefact_feedback';
     $count = count_records_sql('
         SELECT
             COUNT(*)
-        FROM ' . $prefix . 'artefact_feedback
+        FROM ' . $prefix . $table . '
         WHERE view = ' . $view . ' AND artefact = ' . $artefact
             . ($public ? ' AND (public = 1 OR author = ' . $userid . ')' : ''));
     $feedback = get_records_sql_array('
         SELECT 
             id, author, ctime, message, public
-        FROM ' . $prefix . 'artefact_feedback
+        FROM ' . $prefix . $table . '
         WHERE view = ' . $view . ' AND artefact = ' . $artefact
             . ($public ? ' AND (public = 1 OR author = ' . $userid . ')' : '') . '
         ORDER BY id DESC', '', $offset, $limit);
@@ -60,16 +61,17 @@ if ($artefact) {
 else {
     $owner = get_field('view', 'owner', 'id', $view);
     $public = ($owner != $userid);
+    $table = 'view_feedback';
     $count = count_records_sql('
         SELECT
             COUNT(*)
-        FROM ' . $prefix . 'view_feedback
+        FROM ' . $prefix . $table . '
         WHERE view = ' . $view 
             . ($public ? ' AND (public = 1 OR author = ' . $userid . ')' : ''));
     $feedback = get_records_sql_array('
         SELECT
             f.id, f.author, f.ctime, f.message, f.public, f.attachment, a.title
-        FROM ' . $prefix . 'view_feedback f
+        FROM ' . $prefix . $table . ' f
         LEFT OUTER JOIN ' . $prefix . 'artefact a ON f.attachment = a.id
         WHERE view = ' . $view 
             . ($public ? ' AND (f.public = 1 OR f.author = ' . $userid . ')' : '') . '
@@ -81,6 +83,7 @@ if ($feedback) {
     foreach ($feedback as $record) {
         $d = array(
             'id'              => $record->id,
+            'table'           => $table,
             'ownedbythisuser' => ( $owner == $userid ? true : false ),
             'name'            => display_name($record->author),
             'date'            => format_date(strtotime($record->ctime), 'strftimedate'),
