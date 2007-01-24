@@ -42,26 +42,38 @@ $userid = $USER->get('id');
 if ($artefact) {
     $owner = get_field('artefact', 'owner', 'id', $artefact);
     $public = (int) ($owner != $userid);
-    $feedback = get_records_sql_array('SELECT id, author, ctime, message, public
+    $count = count_records_sql('
+        SELECT
+            COUNT(*)
         FROM ' . $prefix . 'artefact_feedback
         WHERE view = ' . $view . ' AND artefact = ' . $artefact
-                       . ($public ? ' AND (public = 1 OR author = ' . $userid . ')' : '') . '
+            . ($public ? ' AND (public = 1 OR author = ' . $userid . ')' : ''));
+    $feedback = get_records_sql_array('
+        SELECT 
+            id, author, ctime, message, public
+        FROM ' . $prefix . 'artefact_feedback
+        WHERE view = ' . $view . ' AND artefact = ' . $artefact
+            . ($public ? ' AND (public = 1 OR author = ' . $userid . ')' : '') . '
         ORDER BY id DESC', '', $offset, $limit);
-    $count = count_records('artefact_feedback', 'view', $view, 
-                           'artefact', $artefact, 'public', $public);
+
 }
 else {
     $owner = get_field('view', 'owner', 'id', $view);
-    $public = (int) ($owner != $userid);
+    $public = ($owner != $userid);
+    $count = count_records_sql('
+        SELECT
+            COUNT(*)
+        FROM ' . $prefix . 'view_feedback
+        WHERE view = ' . $view 
+            . ($public ? ' AND (public = 1 OR author = ' . $userid . ')' : ''));
     $feedback = get_records_sql_array('
         SELECT
             f.id, f.author, f.ctime, f.message, f.public, f.attachment, a.title
         FROM ' . $prefix . 'view_feedback f
         LEFT OUTER JOIN ' . $prefix . 'artefact a ON f.attachment = a.id
         WHERE view = ' . $view 
-                       . ($public ? ' AND (f.public = 1 OR f.author = ' . $userid . ')' : '') . '
+            . ($public ? ' AND (f.public = 1 OR f.author = ' . $userid . ')' : '') . '
         ORDER BY id DESC', '', $offset, $limit);
-    $count = count_records('view_feedback', 'view', $view, 'public', $public);
 }
 
 $data = array();
@@ -82,6 +94,7 @@ if ($feedback) {
         $data[] = $d;
     }
 }
+
 
 
 $result = array(
