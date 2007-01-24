@@ -466,7 +466,10 @@ function activity_get_viewaccess_users($view, $owner) {
                 ) AS userlist
                 JOIN ' . $prefix . 'usr u ON u.id = userlist.userid
                 LEFT JOIN ' . $prefix . 'usr_activity_preference p ON p.usr = u.id';
-    return get_records_sql_assoc($sql, array($owner, $owner, $owner, $view, $view)) || array();
+    if (!$u = get_records_sql_assoc($sql, array($owner, $owner, $owner, $view, $view))) {
+        $u = array();
+    }
+    return $u;
 }
 
 ?>
