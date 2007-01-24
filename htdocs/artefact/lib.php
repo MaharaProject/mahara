@@ -108,7 +108,7 @@ abstract class ArtefactType {
         if (!empty($id)) {
             if (empty($data)) {
                 if (!$data = get_record('artefact','id',$id)) {
-                    throw new ArtefactNotFoundException("Artefact with id $id not found");
+                    throw new ArtefactNotFoundException(get_string('artefactnotfound', 'error', $id));
                 }
             }
             $this->id = $id;
