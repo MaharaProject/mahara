@@ -120,7 +120,7 @@ function handle_activity($activitytype, $data, $cron=false) {
                 if (empty($data->artefact)) {
                     $data->url = get_config('wwwroot') . 'view/view.php?view=' . $data->view;
                     $data->subject = get_string('objectionablecontentview', 'activity') 
-                        . ' ' . get_string('onview', 'activity') . $viewtitle;
+                        . ' ' . get_string('onview', 'activity') . ' ' . $viewtitle;
                 }
                 else {
                     $data->url = get_config('wwwroot') . 'view/view.php?artefact=' . $data->artefact . '&view=' . $data->view;
