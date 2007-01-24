@@ -549,7 +549,7 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
                 $c = artefact_instance_from_id($child->id);
                 $child->title = $c->render(FORMAT_ARTEFACT_LISTSELF, $options);
                 $child->date = format_date(strtotime($child->mtime), 'strfdaymonthyearshort');
-                $child->iconsrc = get_config('themeurl') . 'images/' . $child->artefacttype . '.gif';
+                $child->iconsrc = theme_get_url('images/' . $child->artefacttype . '.gif');
             }
             $smarty->assign('children', $childrecords);
         }
