@@ -227,7 +227,7 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
     }
 
     this.icon = function (type) {
-        return IMG({'src':config.themeurl+'images/'+type+'.gif'});
+        return IMG({'src':get_themeurl('images/'+type+'.gif')});
     }
 
     this.formatname = function(r) {
@@ -441,7 +441,7 @@ function FileUploader(element, uploadscript, statevars, foldername, folderid, up
         // Display upload status
         insertSiblingNodesBefore(self.form,
            DIV({'id':'uploadstatusline'+self.nextupload}, 
-               IMG({'src':config.themeurl+'loading.gif'}), ' ', 
+               IMG({'src':get_themeurl('loading.gif')}), ' ', 
                get_string('uploadingfiletofolder',localname,self.foldername)));
         self.nextupload += 1;
         return true;
@@ -457,7 +457,7 @@ function FileUploader(element, uploadscript, statevars, foldername, folderid, up
 
         quotaUpdate(data.quotaused, data.quota);
         replaceChildNodes($('uploadstatusline'+data.uploadnumber), 
-                          IMG({'src':config.themeurl+image}), ' ', 
+                          IMG({'src':get_themeurl(image)}), ' ', 
                           data.message, ' ',
                           A({'style': 'cursor: pointer;', 
                              'onclick':'removeElement(this.parentNode)'},'[X]'));

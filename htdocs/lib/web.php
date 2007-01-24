@@ -57,6 +57,8 @@ function &smarty($javascript = array(), $headers = array(), $pagestrings = array
 
     require_once(get_config('libroot') . 'smarty/Smarty.class.php');
     $wwwroot = get_config('wwwroot');
+
+    $theme_list = array();
     
     if (function_exists('pieform_get_headdata')) {
         $headers = array_merge($headers, pieform_get_headdata());
@@ -74,6 +76,7 @@ function &smarty($javascript = array(), $headers = array(), $pagestrings = array
             if (isset($extraconfig['tinymceinit'])) {
                 $headers[] = $extraconfig['tinymceinit'];
             } else {
+                $content_css = json_encode(theme_get_url('style/tinymce.css'));
                 $headers[] = <<<EOF
 <script type="text/javascript">
 tinyMCE.init({
@@ -87,7 +90,7 @@ tinyMCE.init({
     theme_advanced_buttons3 : "fontselect,separator,fontsizeselect,separator,formatselect",
     theme_advanced_toolbar_location : "top",
     theme_advanced_toolbar_align : "center",
-    content_css : config.themeurl + 'style/tinymce.css'
+    content_css : {$content_css}
 });
 </script>
 
@@ -113,6 +116,7 @@ EOF;
     }
 
     $jsstrings = jsstrings();
+    $themepaths = themepaths();
 
     foreach ($javascript as $jsfile) {
         // For now, if there's no path in the js file, assume it's in
@@ -126,6 +130,11 @@ EOF;
                     foreach ($tags as $tag) {
                         $strings[$tag] = get_raw_string($tag, $section);
                     }
+                }
+            }
+            if (isset($themepaths[$jsfile])) {
+                foreach ($themepaths[$jsfile] as $themepath) {
+                    $theme_list[$themepath] = theme_get_url($themepath);
                 }
             }
         }
@@ -147,6 +156,13 @@ EOF;
                         }
                     }
                 }
+                if (is_callable(array($pluginclass, 'themepaths'))) {
+                    $name = substr($bits[3], 0, strpos($bits[3], '.js'));
+                    $tmpthemepaths = call_static_method($pluginclass, 'themepaths', $name);
+                    foreach ($tmpthemepaths as $themepath) {
+                        $theme_list[$themepath] = theme_get_url($themepath);
+                    }
+                }
             }
         }
     }
@@ -158,6 +174,9 @@ EOF;
         foreach ($tags as $tag) {
             $strings[$tag] = get_raw_string($tag, $section);
         }
+    }
+    foreach ($themepaths['mahara'] as $themepath) {
+        $theme_list[$themepath] = theme_get_url($themepath);
     }
 
     $stringjs = '<script type="text/javascript">';
@@ -180,6 +199,7 @@ EOF;
     $smarty->assign('THEMEURL', get_config('themeurl'));
     $smarty->assign('STYLESHEETLIST', array_reverse(theme_get_url('style/style.css', null, true)));
     $smarty->assign('WWWROOT', $wwwroot);
+    $smarty->assign('THEMELIST', json_encode($theme_list));
 
     if (defined('TITLE')) {
         $smarty->assign('PAGETITLE', TITLE . ' - ' . get_config('sitename'));
@@ -250,6 +270,16 @@ function jsstrings() {
             'view' => array(
                 'nochildren',
             ),
+        ),
+    );
+}
+
+function themepaths() {
+    return array(
+        'mahara' => array(
+            'images/icon_close.gif',
+            'loading.gif',
+            'success.gif',
         ),
     );
 }
