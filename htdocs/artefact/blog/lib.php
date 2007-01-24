@@ -760,7 +760,10 @@ class ArtefactTypeBlogPost extends ArtefactType {
     }
 
     public function public_feedback_allowed() {
-        return parent::get('commentsallowed');
+        // Comments are not allowed on posts when the blog has
+        // commentsallowed set to 0;
+        $parent = get_field('artefact', 'parent', 'id', $this->get('id'));
+        return get_field('artefact_blog_blog', 'commentsallowed', 'blog', $parent);
     }
     
     
