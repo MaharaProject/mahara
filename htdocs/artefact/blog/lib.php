@@ -358,6 +358,10 @@ class ArtefactTypeBlog extends ArtefactType {
         $artefact->set('commentsnotify', $values['commentsnotify'] ? true : false);
         $artefact->commit();
     }
+
+    public function public_feedback_allowed() {
+        return $this->get('commentsallowed');
+    }
 }
 
 /**
@@ -755,6 +759,9 @@ class ArtefactTypeBlogPost extends ArtefactType {
             WHERE f.blogpost = ' . $this->id, '');
     }
 
+    public function public_feedback_allowed() {
+        return parent::get('commentsallowed');
+    }
     
     
 }

@@ -510,6 +510,17 @@ abstract class ArtefactType {
         throw new Exception('This artefact cannot render to this format.');
     }
 
+
+    /**
+     * By default public feedback can be placed on all artefacts.
+     * Artefact types which don't want to allow public feedback should
+     * redefine this function.
+     */
+    public function public_feedback_allowed() {
+        return true;
+    }
+
+
     /**
      * returns path to icon
      * can be called statically but not defined so
