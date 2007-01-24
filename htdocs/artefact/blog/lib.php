@@ -479,6 +479,24 @@ class ArtefactTypeBlogPost extends ArtefactType {
         return $smarty->fetch('artefact:blog:render/blogpost_renderfull.tpl');
     }
 
+    public function attachment_id_list() {
+        if (!$list = get_column('artefact_blog_blogpost_file', 'file', 'blogpost', $this->get('id'))) {
+            $list = array();
+        }
+        return $list;
+    }
+
+    public function attach_file($artefactid) {
+        $data = new StdClass;
+        $data->blogpost = $this->get('id');
+        $data->file = $artefactid;
+        insert_record('artefact_blog_blogpost_file', $data);
+    }
+
+    public function detach_file($artefactid) {
+        delete_records('artefact_blog_blogpost_file', 'blogpost', $this->get('id'), 'file', $artefactid);
+    }
+
 
     protected function count_attachments() {
         return count_records('artefact_blog_blogpost_file', 'blogpost', $this->get('id'));
