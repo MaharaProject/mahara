@@ -249,7 +249,7 @@ function handle_activity($activitytype, $data, $cron=false) {
                         if (!empty($cron)) { // probably deleted already
                             return;
                         }
-                        throw new InvalidArgumentException("Couldn't find artefact with id " . $data->artefact);
+                        throw new InvalidArgumentException(get_string('artefactnotfound', 'error', $data->artefact));
                     }
                     $data->message = get_string('onartefact', 'activity') 
                         . ' ' . $ainfo->title . ' ' . get_string('ownedby', 'activity');
