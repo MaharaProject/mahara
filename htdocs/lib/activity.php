@@ -180,11 +180,15 @@ function handle_activity($activitytype, $data, $cron=false) {
                 }
                 if (!empty($data->artefact)) { // feedback on artefact
                     $data->subject = get_string('newfeedbackonartefact', 'activity');
-                    if (!$artefact = get_record('artefact', 'id', $data->artefact)) {
-                        throw new InvalidArgumentException("Couldn't find artefact with id "  . $data->artefact);
+                    require_once('artefact.php');
+                    $artefact = artefact_instance_from_id($data->artefact);
+                    if ($artefact->feedback_notify_owner()) {
+                        $userid = $artefact->get('owner');
                     }
-                    $userid = $artefact->owner;
-                    $data->subject .= ' ' .$artefact->title;
+                    else {
+                        $userid = null;
+                    }
+                    $data->subject .= ' ' .$artefact->get('title');
                     if (empty($data->url)) {
                         // @todo this might change later
                         $data->url = get_config('wwwroot') . 'view/view.php?artefact=' 
@@ -203,7 +207,12 @@ function handle_activity($activitytype, $data, $cron=false) {
                         $data->url = get_config('wwwroot') . 'view/view.php?view=' . $data->view;
                     }
                 }
-                $users = activity_get_users($activitytype->name, array($userid));
+                if ($userid) {
+                    $users = activity_get_users($activitytype->name, array($userid));
+                } 
+                else {
+                    $users = array();
+                }
                 break;
             // and now the harder ones
             case 'watchlist':
