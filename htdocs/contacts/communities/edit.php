@@ -64,7 +64,7 @@ $editcommunity = pieform(array(
             'type'         => 'wysiwyg',
             'title'        => get_string('communitydescription'),
             'rows'         => 10,
-            'cols'         => 80,
+            'cols'         => 70,
             'defaultvalue' => $community_data->description,
         ),
         'membershiptype' => array(
