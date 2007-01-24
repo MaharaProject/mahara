@@ -38,6 +38,7 @@ if (!can_view_view($viewid)) {
 if ($artefactid) {
     require_once('artefact.php');
     $artefact = artefact_instance_from_id($artefactid);
+    $title = $artefact->get('title');
     if (!artefact_in_view($artefactid, $viewid)) {
         throw new AccessDeniedException("Artefact $artefactid not in View $viewid");
     }
@@ -62,7 +63,8 @@ if ($artefactid) {
         array_push($navlist, $link);
         $ancestorid = $ancestor->parent;
     }
-    array_push($navlist, $artefact->title);
+    //array_push($navlist, $artefact->title);
+    array_push($navlist, $title);
     $jsartefact = $artefactid;
 }
 else {

@@ -112,10 +112,6 @@ function artefact_get_parents_for_cache($artefactid, &$parentids=false) {
         if (!$parent = get_record('artefact', 'id', $current)) {
             break;
         }
-        if (!$parent->parent) {
-            break;
-        }
-        $parentids[$parent->parent]= 1;
         // get any blog posts it may be attached to 
         if ($parent->artefacttype == 'file' && $blogsinstalled
             && $associated = get_column('artefact_blog_blogpost_file', 'blogpost', 'file', $parent->id)) {
@@ -124,6 +120,10 @@ function artefact_get_parents_for_cache($artefactid, &$parentids=false) {
                 artefact_get_parents_for_cache($a, $parentids);
             }
         }
+        if (!$parent->parent) {
+            break;
+        }
+        $parentids[$parent->parent] = 1;
         $current = $parent->parent;
     }
     return $parentids;
