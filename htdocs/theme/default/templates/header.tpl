@@ -18,9 +18,11 @@
         </script>
 {/if}
         <script type="text/javascript" src="/js/pieforms.js"></script>
-        <link rel="stylesheet" type="text/css" href="{$THEMEURL}style/style.css">
-        <link rel="stylesheet" type="text/css" href="{$THEMEURL}style/dev.css">
-        <link rel="stylesheet" type="text/css" href="{$THEMEURL}style/print.css" media="print">
+{foreach from=$STYLESHEETLIST item=cssurl}
+        <link rel="stylesheet" type="text/css" href="{$cssurl}">
+{/foreach}
+        <link rel="stylesheet" type="text/css" href="{theme_path location='style/dev.css'}">
+        <link rel="stylesheet" type="text/css" href="{theme_path location='style/print.css'}" media="print">
         <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
     </head>
     <body>
@@ -43,7 +45,7 @@
             </div>
 {/if}
             <div id="header">
-                <div class="fr"><img src="{image_path imagelocation='images/header_corner_topright.gif'}" border="0" alt=""></div>		
+                <div class="fr"><img src="{theme_path location='images/header_corner_topright.gif'}" border="0" alt=""></div>		
 
                 <table cellspacing="0" class="searchbox fr">
 {if !$nosearch && $LOGGEDIN}
@@ -62,14 +64,14 @@
                 </table>
 
                 
-                <div id="logo"><a href="{$WWWROOT}"><img src="{image_path imagelocation='images/logo_mahara.gif'}" border="0" alt=""></a></div>
+                <div id="logo"><a href="{$WWWROOT}"><img src="{theme_path location='images/logo_mahara.gif'}" border="0" alt=""></a></div>
                 <h1 class="hiddenStructure"><a href="{$WWWROOT}">{$heading|default:"Mahara"|escape}</a></h1>
             </div>
         </div>
         <div id="mainwrapper">
 {if $MAINNAV}
             
-            <ul id="mainnav"><div class="mainnavright"><img src="{image_path imagelocation='images/navbg_right.gif'}" border="0" alt=""></div>
+            <ul id="mainnav"><div class="mainnavright"><img src="{theme_path location='images/navbg_right.gif'}" border="0" alt=""></div>
 {foreach from=$MAINNAV item=item}
 {if $item.selected}{assign var=MAINNAVSELECTED value=$item}
                 <li class="selected"><a href="{$item.link|escape}">{str section=$item.section tag=$item.name}</a></li>
@@ -80,7 +82,7 @@
             </ul>
 {if $MAINNAVSELECTED.submenu}
             
-            <ul id="subnav"><div class="subnavright"><img src="{image_path imagelocation='images/subnavbg_right.gif'}" border="0" alt=""></div>
+            <ul id="subnav"><div class="subnavright"><img src="{theme_path location='images/subnavbg_right.gif'}" border="0" alt=""></div>
 {foreach from=$MAINNAVSELECTED.submenu item=item}
                 <li{if $item.selected} class="selected"{/if}><a href="{$item.link|escape}">{str section=$item.section tag=$item.name}</a></li>
 {/foreach}

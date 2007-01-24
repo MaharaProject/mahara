@@ -44,9 +44,9 @@ if (!$upgrades) {
 }
 
 $js = 'var todo = ' . json_encode(array_keys($upgrades)) . ";\n";
-$loadingicon = theme_get_image_url('loading.gif');
-$successicon = theme_get_image_url('success.gif');
-$failureicon = theme_get_image_url('failure.gif');
+$loadingicon = theme_get_url('loading.gif');
+$successicon = theme_get_url('success.gif');
+$failureicon = theme_get_url('failure.gif');
 
 $loadingstring = get_string('upgradeloading', 'admin');
 $installsuccessstring = get_string('installsuccess', 'admin');

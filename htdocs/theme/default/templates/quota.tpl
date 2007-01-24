@@ -18,6 +18,6 @@
         <span id="quota_percentage">{$QUOTA_PERCENTAGE}%</span>
     </p>
 {/if}
-	<div class="loginbox-botcorners"><img src="{image_path imagelocation='images/sidebox_bot.gif'}" border="0" alt=""></div>
+	<div class="loginbox-botcorners"><img src="{theme_path location='images/sidebox_bot.gif'}" border="0" alt=""></div>
 </div>
 {/if}

@@ -7,7 +7,7 @@
 
 
 /**
- * Smarty {image_path} function plugin
+ * Smarty {theme_path} function plugin
  *
  * Type:     function<br>
  * Name:     str<br>
@@ -19,13 +19,13 @@
  * @param Smarty
  * @return Internationalized string
  */
-function smarty_function_image_path($params, &$smarty) {
+function smarty_function_theme_path($params, &$smarty) {
     
     if (!isset($params['pluginlocation'])) {
         $params['pluginlocation'] = '';
     }
 
-    return theme_get_image_url($params['imagelocation'], $params['pluginlocation']);
+    return theme_get_url($params['location'], $params['pluginlocation']);
 }
 
 ?>

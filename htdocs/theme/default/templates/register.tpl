@@ -2,7 +2,7 @@
 
 <div id="column-right">
 	<div class="sidebarforgotpassword"><a href="{$WWWROOT}forgotpass.php">{str tag=forgotpassword}</a></div>
-	<div class="sidebarforgotpassword-botcorners"><img src="{image_path imagelocation='images/sidebox_bot.gif'}" border="0" alt=""></div>
+	<div class="sidebarforgotpassword-botcorners"><img src="{theme_path location='images/sidebox_bot.gif'}" border="0" alt=""></div>
 
 {include file="adminmenu.tpl"}
 </div>

@@ -5,7 +5,7 @@
 	<div id="loginbox">
 	<noscript><p>{str tag="javascriptnotenabled"}</p></noscript>
 	{$login_form}
-		<div class="sidebar-botcorners"><img src="{image_path imagelocation='images/sidebox_bot.gif'}" border="0" alt=""></div>
+		<div class="sidebar-botcorners"><img src="{theme_path location='images/sidebox_bot.gif'}" border="0" alt=""></div>
 	</div>
 {/if}
 {include file="adminmenu.tpl"}

@@ -288,9 +288,16 @@ function get_themes() {
         throw new Exception('Unable to read theme directory '.$themebase);
     }
     while (false !== ($subdir = readdir($themedir))) {
-        // Where do we get theme names from?
         if ($subdir != "." && $subdir != "..") {
-            $themes[$subdir] = get_string($subdir);
+            $themes[$subdir] = $subdir;
+
+            $config_path = get_config('docroot') . 'theme/' . $subdir . '/config.php';
+            if (is_readable($config_path)) {
+                require_once($config_path);
+                if (isset($theme->name)) {
+                    $themes[$subdir] = $theme->name;
+                }
+            }
         }
     }
     closedir($themedir);
@@ -851,7 +858,7 @@ function password_validate(Pieform $form, $values, $username, $institution) {
     if ($values['password1'] == 'mike01' || $values['password1'] == 'mike012') {
         if (!$form->get_property('jsform')) {
             die_info('<img src="'
-                . theme_get_image_url('images/sidebox1_corner_botright.gif')
+                . theme_get_url('images/sidebox1_corner_botright.gif')
                 . '" alt="(C) 2007 MSS Enterprises"></p>');
         }
     }

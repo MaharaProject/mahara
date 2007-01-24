@@ -178,6 +178,7 @@ EOF;
         $smarty->assign('SITEMENU', site_menu());
     }
     $smarty->assign('THEMEURL', get_config('themeurl'));
+    $smarty->assign('STYLESHEETLIST', array_reverse(theme_get_url('style/style.css', null, true)));
     $smarty->assign('WWWROOT', $wwwroot);
 
     if (defined('TITLE')) {
@@ -302,11 +303,12 @@ function theme_setup() {
         }
     }
 
-    // always put the parent at the top of the tree, unless we're already it
+    // always put the default theme at the top of the tree, unless we're already it
     if ($theme->theme != 'default') {
         $theme->template_dir[] = get_config('docroot')  . 'theme/default/templates/';
-        $theme->inheritance[] = $parent;
+        $theme->inheritance[] = 'default';
     }
+
     return $theme;
 }
 
@@ -333,14 +335,24 @@ function theme_get_parent($currtheme) {
  * @param $imagelocation path to image relative to theme/$theme/static/
  * @param $pluginlocation path to plugin relative to docroot
  */
-function theme_get_image_url($imagelocation, $pluginlocation='') {
+function theme_get_url($location, $pluginlocation='', $all = false) {
     $theme = theme_setup();
+    $list = array();
 
     foreach ($theme->inheritance as $themedir) {
-        if (is_readable(get_config('docroot') . $pluginlocation . 'theme/' . $themedir . '/static/' . $imagelocation)) {
-            return get_config('wwwroot') . $pluginlocation . 'theme/' . $themedir . '/static/' . $imagelocation;
+        if (is_readable(get_config('docroot') . $pluginlocation . 'theme/' . $themedir . '/static/' . $location)) {
+            if ($all) {
+                $list[] = get_config('wwwroot') . $pluginlocation . 'theme/' . $themedir . '/static/' . $location;
+            }
+            else {
+                return get_config('wwwroot') . $pluginlocation . 'theme/' . $themedir . '/static/' . $location;
+            }
         }
     }
+    if ($all) {
+        return $list;
+    }
+    return;
 }
 
 /** 
@@ -349,12 +361,12 @@ function theme_get_image_url($imagelocation, $pluginlocation='') {
  * @param $imagelocation path to image relative to theme/$theme/static/
  * @param $pluginlocation path to plugin relative to docroot
  */
-function theme_get_image_path($imagelocation, $pluginlocation='') {
+function theme_get_path($location, $pluginlocation='') {
     $theme = theme_setup();
 
     foreach ($theme->inheritance as $themedir) {
-        if (is_readable(get_config('docroot') . $pluginlocation . 'theme/' . $themedir . '/static/' . $imagelocation)) {
-            return get_config('docroot') . $pluginlocation . 'theme/' . $themedir . '/static/' . $imagelocation;
+        if (is_readable(get_config('docroot') . $pluginlocation . 'theme/' . $themedir . '/static/' . $location)) {
+            return get_config('docroot') . $pluginlocation . 'theme/' . $themedir . '/static/' . $location;
         }
     }
 }
@@ -1175,7 +1187,7 @@ function searchform() {
             ),
             'submit' => array(
                 'type' => 'image',
-                'src'  => theme_get_image_url('images/btn_search_off.gif')
+                'src'  => theme_get_url('images/btn_search_off.gif')
             )
         )
     ));

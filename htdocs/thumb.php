@@ -43,7 +43,7 @@ switch ($type) {
         }
 
         header('Content-type: ' . 'image/gif');
-        readfile(theme_get_image_path('images/no_thumbnail.gif'));
+        readfile(theme_get_path('images/no_thumbnail.gif'));
         exit;
         break;
 
@@ -81,11 +81,11 @@ switch ($type) {
         }
 
         header('Content-type: ' . 'image/gif');
-        if ($path = theme_get_image_path('images/no_userphoto' . $size . '.gif')) {
+        if ($path = theme_get_path('images/no_userphoto' . $size . '.gif')) {
             readfile($path);
             exit;
         }
-        readfile(theme_get_image_path('images/no_userphoto40x40.gif'));
+        readfile(theme_get_path('images/no_userphoto40x40.gif'));
         break;
 }
 

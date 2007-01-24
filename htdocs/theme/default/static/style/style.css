@@ -201,12 +201,6 @@ tr.required th {
 	background: #FFFFFF url(../images/header_corner_topleft.gif) no-repeat top left;
 }
 
-/* header for myportfolio (remember to change logo in header.tpl to logo_myportfolio.gif) 
-#header {
-	background: #FFFFFF url(../images/header_myportfolio.gif) no-repeat top left;
-}*/
-
-
 #logo {
     padding: 10px; 
 }

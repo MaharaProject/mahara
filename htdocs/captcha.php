@@ -34,10 +34,10 @@ $angles  = array(40, 0, 340, 20, 310);
 $lefts   = array(30, 50, 70, 95, 110);
 $bottoms = array(24, 20, 28, 34, 33);
 
-$file  = theme_get_image_path('images/captcha.png');
+$file  = theme_get_path('images/captcha.png');
 $img   = imagecreatefrompng($file);
 $black = imagecolorallocate($img, 60, 60, 60);
-$ttf   = theme_get_image_path('captcha.ttf');
+$ttf   = theme_get_path('captcha.ttf');
 
 $captcha = '';
 
