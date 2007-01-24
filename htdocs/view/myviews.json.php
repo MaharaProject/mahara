@@ -104,7 +104,8 @@ if (!$tutorcommunitydata = @get_records_sql_array('SELECT c.id, c.name
        INNER JOIN ' . $prefix . 'community c ON u.community = c.id 
        INNER JOIN ' . $prefix . 'community_member t ON t.community = c.id 
        WHERE u.member = ' . $userid . '
-       AND t.tutor = 1;', '')) {
+       AND t.tutor = 1
+       AND t.member != ' . $userid . ';', '')) {
     $tutorcommunitydata = array();
 }
 
