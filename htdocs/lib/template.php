@@ -316,7 +316,7 @@ function template_render($template, $mode, $data=array(), $view_id=null) {
 
             $options = array();
 
-            if ($view_id) {
+            if ($view_id && $mode == TEMPLATE_RENDER_READONLY) {
                 $options['viewid'] = $view_id;
             }
 
@@ -461,6 +461,9 @@ function template_render($template, $mode, $data=array(), $view_id=null) {
             }
             return false;
         });
+        connect(input, 'onblur', function (e) {
+            saveLabel(element);
+        });
     }
 
     function saveLabel(element, revert) {
@@ -543,7 +546,7 @@ function template_render($template, $mode, $data=array(), $view_id=null) {
                     );
                 },
                 function (error) {
-                    alert('TODO: error');
+                    logError(error);
                 }
             );
         }
