@@ -188,10 +188,12 @@ function view_menu() {
     }
 
     appendChildNodes('viewmenu',
-                     A({'href':'', 'onclick':"return feedbackform();"}, {$getstring['placefeedback']}), ' | ',
+                     A({'href':'', 'onclick':"return feedbackform();"}, 
+                       {$getstring['placefeedback']}), ' | ',
                      A({'href':'', 'onclick':'return objectionform();'},
                        {$getstring['reportobjectionablematerial']}), ' | ',
-                     A({'href':'', 'onclick':'window.print();'}, {$getstring['print']}), ' | ',
+                     A({'href':'', 'onclick':'window.print();'}, 
+                       {$getstring['print']}), ' | ',
                      A({'href':'', 'onclick':'return addtowatchlist(false);'},
                        {$getstring['addtowatchlist']}), ' | ',
                      A({'href':'', 'onclick':'return addtowatchlist(true);'},

@@ -464,6 +464,11 @@ class MaharaException extends Exception {
             echo json_encode(array('error' => true, 'message' => $this->render_exception()));
             exit;
         }
+        
+        if (defined('CRON')) {
+            echo $this->render_exception();
+            exit;
+        }
 
         $outputtitle = $this->get_string('title');
         $outputmessage = $this->render_exception();
