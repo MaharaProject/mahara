@@ -93,7 +93,7 @@ $contactform = pieform(array(
 function contactus_submit(Pieform $form, $values) {
     $data = new StdClass;
     $data->fromname    = $values['name'];
-    $data->fromaddress = $values['email'];
+    $data->fromemail   = $values['email'];
     $data->subject     = $values['subject'];
     $data->message     = $values['message'];
     if ($values['userid']) {

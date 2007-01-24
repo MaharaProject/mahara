@@ -100,6 +100,10 @@ if (!insert_record('view_feedback', $data)) {
     $f->delete();
 }
 
+require_once('activity.php');
+activity_occurred('feedback', $data);
+
+
 redirect(get_config('wwwroot') . 'view/view.php?view=' . $viewid);
 
 ?>

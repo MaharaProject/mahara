@@ -4,7 +4,7 @@
         <title>{$PAGETITLE|escape}</title>
         <script type="text/javascript">
         var config = {literal}{{/literal}
-            'themeurl': '{$THEMEURL}',
+            'theme': {$THEMELIST},
             'wwwroot': '{$WWWROOT}'
         {literal}}{/literal};
         </script>

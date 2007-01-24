@@ -368,6 +368,7 @@ $string['addtowatchlist'] = 'Add %s to watchlist';
 $string['addtowatchlistwithchildren'] = 'Add entire %s contents to watchlist';
 $string['alreadyinwatchlist'] = 'This %s is already in your watchlist';
 $string['attachedfileaddedtofolder'] = "The attached file %s has been added to your '%s' folder.";
+$string['attachfile'] = "Attach file";
 $string['complaint'] = 'Complaint';
 $string['date'] = 'Date';
 $string['feedback'] = 'Feedback';

@@ -362,6 +362,13 @@ class ArtefactTypeBlog extends ArtefactType {
     public function public_feedback_allowed() {
         return $this->get('commentsallowed');
     }
+
+
+    public function feedback_notify_owner() {
+        return $this->get('commentsnotify');
+    }
+
+
 }
 
 /**
@@ -767,6 +774,14 @@ class ArtefactTypeBlogPost extends ArtefactType {
         // commentsallowed set to 0;
         $parent = get_field('artefact', 'parent', 'id', $this->get('id'));
         return get_field('artefact_blog_blog', 'commentsallowed', 'blog', $parent);
+    }
+    
+    
+    public function feedback_notify_owner() {
+        // Notify owner of comments on posts when the blog has
+        // commentsnotify set to 1;
+        $parent = get_field('artefact', 'parent', 'id', $this->get('id'));
+        return get_field('artefact_blog_blog', 'commentsnotify', 'blog', $parent);
     }
     
     

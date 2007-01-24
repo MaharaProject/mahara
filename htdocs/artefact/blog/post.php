@@ -203,7 +203,7 @@ var attached = new TableRenderer(
     'attachedfiles',
     'attachedfiles.json.php',
     [
-     function (r) { return TD(null, IMG({'src':config.themeurl + 'images/' + r.artefacttype + '.gif',
+     function (r) { return TD(null, IMG({'src':get_themeurl('images/' + r.artefacttype + '.gif'),
                                          'alt':r.artefacttype})); },
      'title',
      'description',
@@ -255,7 +255,7 @@ function attachtopost(data) {
     appendChildNodes(attached.tbody,
                      TR({'id':rowid},
                         map(partial(TD,null), 
-                            [IMG({'src':config.themeurl+'images/'+data.artefacttype+'.gif',
+                            [IMG({'src':get_themeurl('images/'+data.artefacttype+'.gif'),
                                   'alt':data.artefacttype}), 
                              data.title, data.description,
                              INPUT({'type':'button', 'class':'button',
@@ -609,6 +609,7 @@ EOF;
 // Override the default Mahara tinyMCE.init();  Add an image button and
 // the execcommand_callback.
 
+$content_css = json_encode(theme_get_url('style/tinymce.css'));
 $tinymceinit = <<<EOF
 <script type="text/javascript">
 tinyMCE.init({
@@ -622,7 +623,7 @@ tinyMCE.init({
     theme_advanced_buttons3 : "fontselect,separator,fontsizeselect,separator,formatselect",
     theme_advanced_toolbar_location : "top",
     theme_advanced_toolbar_align : "center",
-    content_css : config.themeurl + 'style/tinymce.css',
+    content_css : {$content_css},
     execcommand_callback : "blogpostExecCommandHandler"
 });
 </script>

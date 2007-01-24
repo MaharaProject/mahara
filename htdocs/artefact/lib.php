@@ -522,6 +522,16 @@ abstract class ArtefactType {
 
 
     /**
+     * By default users are notified of all feedback on artefacts
+     * which they own.  Artefact types which want to allow this
+     * notification to be turned off should redefine this function.
+     */
+    public function feedback_notify_owner() {
+        return true;
+    }
+
+
+    /**
      * returns path to icon
      * can be called statically but not defined so
      * so that can be either from instance or static.
