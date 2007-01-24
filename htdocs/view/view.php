@@ -41,6 +41,7 @@ if ($artefactid) {
     if (!artefact_in_view($artefactid, $viewid)) {
         throw new AccessDeniedException("Artefact $artefactid not in View $viewid");
     }
+    $feedbackisprivate = !$artefact->public_feedback_allowed();
     $options = array('viewid' => $viewid);
     if (in_array(FORMAT_ARTEFACT_RENDERFULL, $artefact->get_render_list())) {
         $content = $artefact->render(FORMAT_ARTEFACT_RENDERFULL, $options);
@@ -88,7 +89,8 @@ if (empty($tutorfilefeedbackformrow)) {
 }
 
 $getstring = quotestrings(array('mahara' => array(
-        'message', 'makepublic', 'placefeedback', 'cancel', 'complaint', 'notifysiteadministrator',
+        'message', 'makepublic', 'placefeedback', 'cancel', 'complaint', 
+        'feedbackonthisartefactwillbeprivate', 'notifysiteadministrator',
         'nopublicfeedback', 'reportobjectionablematerial', 'print',
 )));
 
@@ -96,6 +98,16 @@ $thing = $artefactid ? 'artefact' : 'view';
 $getstring['addtowatchlist'] = "'" . get_string('addtowatchlist', 'mahara', get_string($thing)) . "'";
 $getstring['addtowatchlistwithchildren'] = "'" . get_string('addtowatchlistwithchildren', 'mahara', ucfirst(get_string($thing))) . "'";
 $getstring['feedbackattachmessage'] = "'(" . get_string('feedbackattachmessage', 'mahara', get_string('feedbackattachdirname')) . ")'";
+
+if (!empty($feedbackisprivate)) {
+    $makepublic = "TR(null, INPUT({'type':'hidden','name':'public','value':false}), TD({'colspan':2}, " 
+        . $getstring['feedbackonthisartefactwillbeprivate'] . ")),";
+}
+else {
+    $makepublic = "TR(null, TH(null, LABEL(null, " . $getstring['makepublic'] . " ), " 
+        . "INPUT({'type':'checkbox', 'class':'checkbox', 'name':'public'}))),";
+}
+log_debug($makepublic);
 
 $javascript = <<<EOF
 
@@ -136,8 +148,7 @@ function feedbackform() {
         TBODY(null,
         TR(null, TH(null, LABEL(null, {$getstring['message']}))),
         TR(null, TD(null, TEXTAREA({'rows':5, 'cols':80, 'name':'message'}))),
-        TR(null, TH(null, LABEL(null, {$getstring['makepublic']}), 
-                    INPUT({'type':'checkbox', 'class':'checkbox', 'name':'public'}))),
+        {$makepublic}
         {$tutorfilefeedbackformrow}
         TR(null, TD(null,
                     INPUT({'type':'button', 'class':'button', 
