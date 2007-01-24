@@ -128,11 +128,8 @@ if (!isset($CFG->wwwroot) && isset($_SERVER['HTTP_HOST'])) {
         set_config('wwwroot', $wwwroot);
     }
     catch (Exception $e) {
+        // Just set it directly. The system will most likely not be installed, so we don't care
         $CFG->wwwroot = $wwwroot;
-        // Do nothing. The system will most likely not be installed, so we don't care
-        //if (!defined('INSTALLER')) {
-        //    throw $e;
-        //}
     }
 }
 if (!isset($CFG->noreplyaddress) && isset($_SERVER['HTTP_HOST'])) {
