@@ -384,16 +384,12 @@ function toggleChecked(c) {
 }
 
 function expandDownToViewport(element, width) {
-    if (typeof(width) == 'undefined') {
-        width = getElementDimensions(element).w;
-    }
-
     var viewport = getViewportDimensions();
     var position = getElementPosition(element);
     var newheight = new Dimensions(width, viewport.h - position.y - 2);
 
     if ($('footer')) {
-        newheight.h -= getElementDimensions('footer').h + 8;
+        newheight.h -= getElementDimensions('footer').h + 40;
     }
 
     setElementDimensions(element, newheight);
