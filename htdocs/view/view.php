@@ -107,7 +107,6 @@ else {
     $makepublic = "TR(null, TH(null, LABEL(null, " . $getstring['makepublic'] . " ), " 
         . "INPUT({'type':'checkbox', 'class':'checkbox', 'name':'public'}))),";
 }
-log_debug($makepublic);
 
 $javascript = <<<EOF
 
