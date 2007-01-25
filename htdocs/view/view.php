@@ -71,8 +71,23 @@ if ($artefactid) {
                        . ($i>0 ? '&path=' . join(',', array_slice($artefactids, 0, $i)) : '') . '">' 
                        . $titles[$artefactids[$i]]->title . '</a>');
         }
+        array_push($navlist, $artefact->get('title'));
     }
-    array_push($navlist, $artefact->get('title'));
+    else {
+        $hierarchy = $view->get_artefact_hierarchy();
+        if (!empty($hierarchy['refs'][$artefactid])) {
+            $artefact = $hierarchy['refs'][$artefactid];
+            $ancestorid = $artefact->parent;
+            while ($ancestorid && isset($hierarchy['refs'][$ancestorid])) {
+                $ancestor = $hierarchy['refs'][$ancestorid];
+                $link = '<a href="view.php?view=' . $viewid . '&amp;artefact=' . $ancestorid . '">' 
+                    . $ancestor->title . "</a>\n";
+                array_push($navlist, $link);
+                $ancestorid = $ancestor->parent;
+            }
+        }
+        array_push($navlist, $artefact->title);
+    }
 
     $jsartefact = $artefactid;
 }
