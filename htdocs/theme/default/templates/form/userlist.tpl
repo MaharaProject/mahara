@@ -108,7 +108,7 @@
             <select id="{{$name}}_potential" size="10" multiple="true" style="width: 100%;"><option></option></select>
         </td>
         <td>
-            <button type="button" onClick="{{$name}}_moveopts('potential','members')">--&gt;</button>
+            <button type="button" onClick="{{$name}}_moveopts('potential','members')">--&gt;</button><br>
             <button type="button" onClick="{{$name}}_moveopts('members','potential')">&lt;--</button>
         </td>
         <td style="width: 15em;">

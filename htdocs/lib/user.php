@@ -292,6 +292,7 @@ function display_name($user, $userto=null) {
     if (empty($userto)) {
         $userto = new StdClass;
         $userto->id            = $USER->get('id');
+        $userto->username      = $USER->get('username');
         $userto->preferredname = $USER->get('preferredname');
         $userto->firstname     = $USER->get('firstname');
         $userto->lastname      = $USER->get('lastname');
@@ -311,6 +312,7 @@ function display_name($user, $userto=null) {
         $userObj = $user;
         $user = new StdClass;
         $user->id            = $userObj->get('id');
+        $user->username      = $userObj->get('username');
         $user->preferredname = $userObj->get('preferredname');
         $user->firstname     = $userObj->get('firstname');
         $user->lastname      = $userObj->get('lastname');
@@ -319,11 +321,14 @@ function display_name($user, $userto=null) {
 
     // if they don't have a preferred name set, just return here
     if (empty($user->preferredname)) {
+        if ($userto->admin) {
+            return $user->firstname . ' ' . $user->lastname . ' (' . $user->username . ')';
+        }
         return $user->firstname . ' ' . $user->lastname;
     }
 
     if ($userto->admin) {
-        return $user->preferredname . ' (' . $user->firstname . ' ' . $user->lastname . ')';
+        return $user->preferredname . ' (' . $user->firstname . ' ' . $user->lastname . ' - ' . $user->username . ')';
     }
 
     $prefix = get_config('dbprefix');
