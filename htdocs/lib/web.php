@@ -1233,6 +1233,9 @@ function searchform() {
 
 function get_loggedin_string() {
     global $USER;
+
+    $str = get_string('youareloggedinas', 'mahara', display_name($USER));
+
     safe_require('notification', 'internal');
     $count = call_static_method(generate_class_name('notification', 'internal'), 'unread_count', $USER->get('id'));
     if ($count == 1) {
@@ -1241,11 +1244,14 @@ function get_loggedin_string() {
     else {
         $key = 'unreadmessages';
     }
-    // these spans are here so that on the ajax page that marks messages as read, the contents can be updated.
-    $str = get_string('youareloggedinas', 'mahara', display_name($USER)) . 
-        ' (<a href="' . get_config('wwwroot') . 'account/activity/">'  . 
-        '<span id="headerunreadmessagecount">' . $count . '</span> ' . 
-        '<span id="headerunreadmessages">' . get_string($key) . '</span></a>)';
+
+    if ($count > 0) {
+        // these spans are here so that on the ajax page that marks messages as read, the contents can be updated.
+        $str .=
+            ' (<a href="' . get_config('wwwroot') . 'account/activity/">'  . 
+            '<span id="headerunreadmessagecount">' . $count . '</span> ' . 
+            '<span id="headerunreadmessages">' . get_string($key) . '</span></a>)';
+    }
 
     return $str;
 }

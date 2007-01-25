@@ -33,27 +33,43 @@ json_headers();
 
 $limit = param_integer('limit', 10);
 $offset = param_integer('offset', 0);
+$action = param_variable('action', 'list');
 
 $dbprefix = get_config('dbprefix');
 
-$count = get_field('usr_group', 'COUNT(*)', 'owner', $USER->get('id'));
+if ($action == 'delete') {
+    $id = param_integer('id');
+    // check owner
+    $owner = get_field('usr_group', 'owner', 'id', $id);
+    if ($owner != $USER->get('id')) {
+        json_reply('local', get_string('cantdeletegroupdontown'));
+    }
+    db_begin();
+    delete_records('usr_group_member', 'grp', $id);
+    delete_records('usr_group', 'id', $id);
+    db_commit();
 
-$data = get_records_sql_array(
-    'SELECT g.id, g.name, COUNT(m.*) AS count FROM ' . $dbprefix . 'usr_group g INNER JOIN ' . $dbprefix . 'usr_group_member m ON m.grp=g.id WHERE g.owner=? GROUP BY 1, 2 ORDER BY g.name',
-    array($USER->get('id')),
-    $offset,
-    $limit
-);
-
-if (!$data) {
-    $data = array();
+    json_reply(null, get_string('deletegroupsuccessful'));
 }
+else {
+    $count = get_field('usr_group', 'COUNT(*)', 'owner', $USER->get('id'));
+    $data = get_records_sql_array(
+        'SELECT g.id, g.name, COUNT(m.*) AS count FROM ' . $dbprefix . 'usr_group g INNER JOIN ' . $dbprefix . 'usr_group_member m ON m.grp=g.id WHERE g.owner=? GROUP BY 1, 2 ORDER BY g.name',
+        array($USER->get('id')),
+        $offset,
+        $limit
+    );
 
-print json_encode(array(
-    'count'  => $count,
-    'limit'  => $limit,
-    'offset' => $offset,
-    'data'   => $data,
-));
+    if (!$data) {
+        $data = array();
+    }
+
+    print json_encode(array(
+        'count'  => $count,
+        'limit'  => $limit,
+        'offset' => $offset,
+        'data'   => $data,
+    ));
+}
 
 ?>
