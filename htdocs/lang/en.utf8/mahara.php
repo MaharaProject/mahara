@@ -266,6 +266,9 @@ $string['groupalreadyexists']        = 'A group by this name already exists';
 $string['groupdescription']          = 'Group description';
 $string['editgroup']                 = 'Edit group';
 $string['membercount']               = 'Member count';
+$string['confirmdeletegroup']        = 'Are you sure you want to delete this group?';
+$string['cantdeletegroupdontown']    = 'You can\'t delete this group, you don\'t own it';
+$string['deletegroupsuccessful']     = 'Group successfully deleted';
 
 // my account
 $string['account'] =  'My account';
