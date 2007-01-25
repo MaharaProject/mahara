@@ -213,6 +213,8 @@ class ArtefactTypeBlog extends ArtefactType {
             ? $options['blockid']
             : mt_rand();
 
+        $this->add_to_render_path($options);
+
         // This uses the above blockid, so needs to be inlcuded after.
         $javascript = require(get_config('docroot') . 'artefact/blog/render/blog_listchildren.js.php');
 
@@ -244,6 +246,8 @@ class ArtefactTypeBlog extends ArtefactType {
         $blockid = isset($options['blockid'])
             ? $options['blockid']
             : mt_rand();
+
+        $this->add_to_render_path($options);
 
         // This uses the above blockid, so needs to be inlcuded after.
         $javascript = require(get_config('docroot') . 'artefact/blog/render/blog_renderfull.js.php');
@@ -466,6 +470,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
         $smarty->assign('artefact', $this);
         $attachments = $this->get_attached_files();
         if ($attachments) {
+            $this->add_to_render_path($options);
             require_once('artefact.php');
             foreach ($attachments as &$attachment) {
                 $f = artefact_instance_from_id($attachment->id);

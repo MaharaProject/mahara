@@ -441,7 +441,7 @@ function FileUploader(element, uploadscript, statevars, foldername, folderid, up
         // Display upload status
         insertSiblingNodesBefore(self.form,
            DIV({'id':'uploadstatusline'+self.nextupload}, 
-               IMG({'src':get_themeurl('loading.gif')}), ' ', 
+               IMG({'src':get_themeurl('images/loading.gif')}), ' ', 
                get_string('uploadingfiletofolder',localname,self.foldername)));
         self.nextupload += 1;
         return true;
@@ -449,10 +449,10 @@ function FileUploader(element, uploadscript, statevars, foldername, folderid, up
 
     this.getresult = function(data) {
         if (!data.error) {
-            var image = 'success.gif';
+            var image = 'images/success.gif';
         }
         else {
-            var image = 'failure.gif';
+            var image = 'images/failure.gif';
         }
 
         quotaUpdate(data.quotaused, data.quota);

@@ -30,20 +30,25 @@ require(get_config('libroot') . 'view.php');
 
 $viewid = param_integer('view');
 $artefactid = param_integer('artefact', null);
+$path = param_variable('path', null);
 
 $view = new View($viewid);
 if (!can_view_view($viewid)) {
     throw new AccessDeniedException();
 }
+
 if ($artefactid) {
-    require_once('artefact.php');
-    $artefact = artefact_instance_from_id($artefactid);
-    $title = $artefact->get('title');
+
     if (!artefact_in_view($artefactid, $viewid)) {
         throw new AccessDeniedException("Artefact $artefactid not in View $viewid");
     }
+
+    require_once('artefact.php');
+    $artefact = artefact_instance_from_id($artefactid);
+
     $feedbackisprivate = !$artefact->public_feedback_allowed();
-    $options = array('viewid' => $viewid);
+    $options = array('viewid' => $viewid,
+                     'path' => $path);
     if (in_array(FORMAT_ARTEFACT_RENDERFULL, $artefact->get_render_list())) {
         $content = $artefact->render(FORMAT_ARTEFACT_RENDERFULL, $options);
     }
@@ -51,20 +56,39 @@ if ($artefactid) {
         $content = $artefact->render(FORMAT_ARTEFACT_RENDERMETADATA, $options);
     }
 
-    // Link ancestral artefacts back to the view
-    $hierarchy = $view->get_artefact_hierarchy();
-    $artefact = $hierarchy['refs'][$artefactid];
-    $ancestorid = $artefact->parent;
-    $navlist = array('<a href="view.php?view=' . $viewid . '">' . $view->get('title') . '</a>');
-    while ($ancestorid && isset($hierarchy['refs'][$ancestorid])) {
-        $ancestor = $hierarchy['refs'][$ancestorid];
-        $link = '<a href="view.php?view=' . $viewid . '&amp;artefact=' . $ancestorid . '">' 
-            . $ancestor->title . "</a>\n";
-        array_push($navlist, $link);
-        $ancestorid = $ancestor->parent;
+    $viewhref = 'view.php?view=' . $viewid;
+    $navlist = array('<a href="' . $viewhref .  '">' . $view->get('title') . '</a>');
+    if (!empty($path)) {
+        $titles = get_records_sql_assoc('
+            SELECT id,title FROM ' . get_config('dbprefix') . 'artefact
+            WHERE id IN (' . $path . ')','');
+        $artefactids = split(',', $path);
+        for ($i = 0; $i < count($artefactids); $i++) {
+            if ($artefactid == $artefactid[$i]) {
+                break;
+            }
+            array_push($navlist, '<a href="' . $viewhref . '&artefact=' . $artefactids[$i]
+                       . ($i>0 ? '&path=' . join(',', array_slice($artefactids, 0, $i)) : '') . '">' 
+                       . $titles[$artefactids[$i]]->title . '</a>');
+        }
+        array_push($navlist, $artefact->get('title'));
     }
-    //array_push($navlist, $artefact->title);
-    array_push($navlist, $title);
+    else {
+        $hierarchy = $view->get_artefact_hierarchy();
+        if (!empty($hierarchy['refs'][$artefactid])) {
+            $artefact = $hierarchy['refs'][$artefactid];
+            $ancestorid = $artefact->parent;
+            while ($ancestorid && isset($hierarchy['refs'][$ancestorid])) {
+                $ancestor = $hierarchy['refs'][$ancestorid];
+                $link = '<a href="view.php?view=' . $viewid . '&amp;artefact=' . $ancestorid . '">' 
+                    . $ancestor->title . "</a>\n";
+                array_push($navlist, $link);
+                $ancestorid = $ancestor->parent;
+            }
+        }
+        array_push($navlist, $artefact->title);
+    }
+
     $jsartefact = $artefactid;
 }
 else {
