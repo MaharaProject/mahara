@@ -114,7 +114,7 @@ function makeCalendarLink(item, type) {
         'onclick': 'return false;', // @todo do with mochikit connect
         'class'  : 'pieform-calendar-toggle'},
         IMG({
-            'src': '{{$THEMEURL}}calendar.gif',
+            'src': '{{theme_path location='images/calendar.gif'}}',
             'alt': ''})
     );
     return link;
