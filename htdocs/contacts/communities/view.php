@@ -40,13 +40,15 @@ if (!$community = get_record('community', 'id', $id)) {
 $community->ownername = display_name(get_record('usr', 'id', $community->owner));
 
 $membership = user_can_access_community($id);
+// $membership is a bit string summing all membership types
+$ismember = (bool) ($membership & COMMUNITY_MEMBERSHIP_MEMBER);
 
 if (!empty($joincontrol)) {
     // leave, join, acceptinvite, request
     switch ($joincontrol) {
         case 'leave':
             // make sure they're a member and can leave
-            if ($membership == COMMUNITY_MEMBERSHIP_MEMBER && $community->jointype != 'controlled') {
+            if ($ismember && $community->jointype != 'controlled') {
                 community_remove_member($id, $USER->get('id'));
                 $SESSION->add_ok_msg(get_string('leftcommunity'));
             } 
@@ -55,7 +57,7 @@ if (!empty($joincontrol)) {
             }
             break;
         case 'join':
-            if (empty($membership) && $community->jointype == 'open') {
+            if (!$ismember && $community->jointype == 'open') {
                 community_add_member($id, $USER->get('id'));
                 $SESSION->add_ok_msg(get_string('joinedcommunity'));
             }
@@ -80,7 +82,7 @@ if (!empty($joincontrol)) {
             $SESSION->add_ok_msg($message);
             break;
         case 'request':
-            if (empty($membership) && $community->jointype == 'request' 
+            if (!$ismember && $community->jointype == 'request' 
                 && !record_exists('community_member_request', 'community', $id, 'member', $USER->get('id'))) {
                 $cmr = new StdClass;
                 $cmr->reason = param_variable('reason', null);
@@ -135,14 +137,14 @@ $removefromwatchliststr = get_string('removefromwatchlist', 'activity');
 $addtowatchliststr = get_string('addtowatchlist', 'activity');
 
 // all the permissions stuff
-$tutor          = (int)($membership < COMMUNITY_MEMBERSHIP_MEMBER);
+$tutor          = (int)($membership && ($membership < COMMUNITY_MEMBERSHIP_MEMBER));
 $controlled     = (int)($community->jointype == 'controlled');
-$admin          = (int)($membership == COMMUNITY_MEMBERSHIP_ADMIN);
+$admin          = (int)($membership & COMMUNITY_MEMBERSHIP_ADMIN != 0);
 $canremove      = (int)(($tutor && $controlled) || $admin);
 $canpromote     = (int)$tutor;
-$canleave       = ($membership == COMMUNITY_MEMBERSHIP_MEMBER && $community->jointype != 'controlled');
-$canrequestjoin = (empty($membership) && empty($invited) && empty($requested) && $community->jointype == 'request');
-$canjoin        = (empty($membership) && $community->jointype == 'open');
+$canleave       = ($ismember && $community->jointype != 'controlled');
+$canrequestjoin = (!$ismember && empty($invited) && empty($requested) && $community->jointype == 'request');
+$canjoin        = (!$ismember && $community->jointype == 'open');
 
 $javascript = '';
 if ($membership) {
