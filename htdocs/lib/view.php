@@ -174,16 +174,22 @@ class View {
 
         $prefix = get_config('dbprefix');
 
-        $sql = 'SELECT ac.*, i.name, va.block, va.format
-                    FROM ' . $prefix . 'view_artefact va
-                    JOIN ' . $prefix . 'artefact a ON va.artefact = a.id
-                    LEFT JOIN ' . $prefix . 'artefact_parent_cache pc ON pc.parent = a.id
-                    LEFT JOIN ' . $prefix . 'artefact ac ON ac.id = pc.artefact
-                    JOIN ' . $prefix . 'artefact_installed_type i ON a.artefacttype = i.name
-                    WHERE va.view = ?';
+        $sql = 'SELECT a.*,a.parent,pc.parent,a.artefacttype 
+                    FROM ' . $prefix . 'artefact a 
+                    JOIN (
+                        SELECT apc1.* 
+                        FROM ' . $prefix . 'artefact_parent_cache apc1 
+                        JOIN ' . $prefix . 'artefact_parent_cache apc2 ON apc1.artefact = apc2.artefact 
+                        WHERE apc2.parent IN (
+                            SELECT artefact FROM ' . $prefix . 'view_artefact where view = ?
+                        )
+                    ) pc ON pc.artefact = a.id 
+                UNION SELECT a2.*,a2.parent,null,a2.artefacttype 
+                    FROM ' . $prefix . 'artefact a2 
+                    JOIN ' . $prefix . 'view_artefact va ON va.artefact = a2.id 
+                    WHERE va.id = ?';
 
-        $allchildren = get_records_sql_array($sql, array($this->id));
-        
+        $allchildren = get_records_sql_array($sql, array($this->id, $this->id));        
 
         foreach ($artefacts as $toplevel) {
             $a = array();
