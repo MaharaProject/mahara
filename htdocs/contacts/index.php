@@ -41,6 +41,7 @@ $accept = get_string('accept');
 $reject = get_string('reject');
 $allviews = get_string('allviews');
 $friendcontrolfailed = get_string('friendlistfailure');
+$enc_confirm_remove = json_encode(get_string('confirmremovefriend'));
 
 $inlinejs = <<<EOF
 var friendslist = new TableRenderer(
@@ -96,6 +97,12 @@ friendslist.updateOnLoad();
 
 function friendControl(type, id, reason) {
     var pd = {'id': id, 'control': 1};
+
+    if (type == 'remove' && !confirm({$enc_confirm_remove})) {
+        logDebug(type, id);
+        return false;
+    }
+
     if (type == 'reject') {
         type = 'accept';
         pd['rejectsubmit'] = 'reject';
@@ -106,12 +113,13 @@ function friendControl(type, id, reason) {
     pd['type'] = type;
 
     var d = loadJSONDoc('index.json.php', pd);
-    d.addCallbacks(function (data) {
-        $('messagediv').innerHTML = data.message;
-    },
-                   function () {
-                       $('messagediv').innerHTML = '{$friendcontrolfailed}';
-                }
+    d.addCallbacks(
+        function (data) {
+            $('messagediv').innerHTML = data.message;
+        },
+        function () {
+            $('messagediv').innerHTML = '{$friendcontrolfailed}';
+        }
     );
     friendslist.doupdate();
 }
