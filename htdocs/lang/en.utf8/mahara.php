@@ -495,6 +495,7 @@ $string['requestedfriendlistmessagereason'] = '%s has requested that you add the
     . 'Their reason was: ';
 
 $string['removefromfriendslist'] = 'Remove from friends';
+$string['confirmremovefriend'] = 'Are you sure you want to remove this user from your friends list?';
 $string['removedfromfriendslistsubject'] = 'Removed from friends list';
 $string['removedfromfriendslistmessage'] = '%s has removed you from their friends list.';
 $string['removedfromfriendslistmessagereason'] = '%s has removed you from their friends list.  Their reason was: ';
