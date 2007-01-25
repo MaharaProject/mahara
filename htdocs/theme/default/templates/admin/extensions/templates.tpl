@@ -19,7 +19,7 @@
             <span id="{$name}.message"></span>
  	{/if}
         {else}
-        <img id="{$name}.status" alt="{str tag='yes'}" src="{theme_path location='failure.gif}" />
+        <img id="{$name}.status" alt="{str tag='yes'}" src="{theme_path location='images/failure.gif}" />
              {if !$template.installed && !$template.error}
                  <a href="" onClick="{$installlink}('{$name}'); return false;" id="admintemplates_install">{str tag='install' section='admin'}</a> 
                  <span id="{$name}.message"></span>
