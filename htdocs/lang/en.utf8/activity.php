@@ -75,8 +75,8 @@ $string['newfeedbackonartefact'] = 'New feedback on artefact';
 $string['watchlistmessageview'] = 'Activity on watchlist (View)';
 $string['watchlistmessageartefact'] = 'Activity on watchlist (Artefact)';
 $string['watchlistmessagecommunity'] = 'Activity on watchlist (Community)';
-$string['newviewmessage'] = 'New view called';
-$string['newviewsubject'] = 'New view';
+$string['newviewmessage'] = 'has created a view called "%s" and has granted you access to it.';
+$string['newviewsubject'] = 'New view created';
 
 $string['newviewaccessmessage'] = 'You have been added to the access list for the view called';
 $string['newviewaccesssubject'] = 'New view access';
