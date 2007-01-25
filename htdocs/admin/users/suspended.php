@@ -53,8 +53,9 @@ EOF
 );
 
 $form = new Pieform(array(
-    'name' => 'buttons',
-    'renderer' => 'oneline',
+    'name'      => 'buttons',
+    'renderer'  => 'oneline',
+    'autofocus' => false,
     'elements' => array(
         'unsuspend' => array(
             'type' => 'submit',

@@ -321,9 +321,11 @@ function handle_activity($activitytype, $data, $cron=false) {
                                                  WHERE v.id = ?', array($data->view))) {
                     throw new InvalidArgumentException("Couldn't find view with id " . $data->view);
                 }
-                $data->message = get_string('newviewmessage', 'activity')
-                    . ' ' . $viewinfo->title . ' ' . get_string('ownedby', 'activity');
+
+                $data->message = get_string('newviewmessage', 'activity', $viewinfo->title);
                 $data->subject = get_string('newviewsubject', 'activity');
+                $data->url = get_config('wwwroot') . 'view/view.php?view=' . $data->view;
+
                 // add users on friendslist, userlist or grouplist...
                 $users = activity_get_viewaccess_users($data->view, $data->owner);
                 if (empty($users)) {
@@ -331,8 +333,9 @@ function handle_activity($activitytype, $data, $cron=false) {
                 }
                 // ick
                 foreach ($users as $user) {
-                    $user->message = $data->message . ' ' . display_name($viewinfo, $user);
+                    $user->message = display_name($viewinfo, $user) . ' ' . $data->message;
                 }
+
                 break;
             case 'viewaccess':
                 if (!is_numeric($data->owner) || !is_numeric($data->view)) {
@@ -347,8 +350,9 @@ function handle_activity($activitytype, $data, $cron=false) {
                     throw new InvalidArgumentException("Couldn't find view with id " . $data->view);
                 }
                 $data->message = get_string('newviewaccessmessage', 'activity')
-                    . ' ' . $viewinfo->title . ' ' . get_string('ownedby', 'activity');
+                    . ' "' . $viewinfo->title . '" ' . get_string('ownedby', 'activity');
                 $data->subject = get_string('newviewaccesssubject', 'activity');
+                $data->url = get_config('wwwroot') . 'view/view.php?view=' . $data->view;
                 $users = array_diff_key(activity_get_viewaccess_users($data->view, $data->owner), $data->oldusers);
                 if (empty($users)) {
                     $users = array();

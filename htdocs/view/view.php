@@ -169,7 +169,7 @@ function feedbackform() {
         }
     }
     appendChildNodes(form, 
-        TABLE({'border':0, 'cellspacing':0, 'class':'maharatable'},
+        TABLE(null,
         TBODY(null,
         TR(null, TH(null, LABEL(null, {$getstring['message']}))),
         TR(null, TD(null, TEXTAREA({'rows':5, 'cols':80, 'name':'message'}))),
@@ -182,6 +182,7 @@ function feedbackform() {
                     INPUT({'type':'button', 'class':'button', 'value':{$getstring['cancel']},
                                'onclick':"removeElement('menuform');"}))))));
     appendChildNodes('viewmenu', DIV(null, form));
+    form.message.focus();
     return false;
 }
 
@@ -210,6 +211,7 @@ function objectionform() {
                     INPUT({'type':'button', 'class':'button', 'value':{$getstring['cancel']},
                                'onclick':"removeElement('menuform');"}))))));
     appendChildNodes('viewmenu', DIV(null, form));
+    form.message.focus();
     return false;
 }
 
