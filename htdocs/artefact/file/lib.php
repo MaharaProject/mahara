@@ -542,6 +542,7 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
         }
         $smarty->assign('options', array_merge(array('date'=>true, 'icon'=>true), $options));
         if ($childrecords = $this->folder_contents()) {
+            $this->add_to_render_path($options);
             usort($childrecords, array("ArtefactTypeFileBase", "my_files_cmp"));
             $children = array();
             require_once('artefact.php');
@@ -559,6 +560,7 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
     public function listchildren($options) {
         $smarty = smarty();
         if ($childrecords = $this->folder_contents()) {
+            $this->add_to_render_path($options);
             usort($childrecords, array("ArtefactTypeFileBase", "my_files_cmp"));
             $children = array();
             require_once('artefact.php');
