@@ -48,7 +48,7 @@ if ($institution || $add) {
         }
 
         function delete_cancel_submit() {
-            redirect(get_config('wwwroot') . 'admin/users/institutions.php');
+            redirect('/admin/users/institutions.php');
         }
 
         function delete_submit(Pieform $form, $values) {
@@ -60,7 +60,7 @@ if ($institution || $add) {
             db_commit();
 
             $SESSION->add_ok_msg(get_string('institutiondeletedsuccessfully', 'admin'));
-            redirect('admin/users/institutions.php');
+            redirect('/admin/users/institutions.php');
         }
         $form = array(
             'name' => 'delete',
@@ -233,11 +233,11 @@ function institution_submit(Pieform $form, $values) {
 
     $message = ($add) ? 'institutionaddedsuccessfully' : 'institutionupdatedsuccessfully';
     $SESSION->add_ok_msg(get_string($message, 'admin'));
-    redirect(get_config('wwwroot') . 'admin/users/institutions.php');
+    redirect('/admin/users/institutions.php');
 }
 
 function institution_cancel_submit() {
-    redirect('admin/users/institutions.php');
+    redirect('/admin/users/institutions.php');
 }
 
 $smarty->display('admin/users/institutions.tpl');

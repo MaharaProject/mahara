@@ -178,7 +178,7 @@ function uploadcsv_submit(Pieform $form, $values) {
     log_info('Inserted ' . count($CSVDATA) . ' records');
 
     $SESSION->add_ok_msg(get_string('uploadcsvusersaddedsuccessfully', 'admin'));
-    redirect('admin/users/uploadcsv.php');
+    redirect('/admin/users/uploadcsv.php');
 }
 
 $smarty = smarty();

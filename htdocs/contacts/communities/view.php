@@ -111,7 +111,7 @@ if (!empty($joincontrol)) {
             break;
     }
     // redirect, stuff will have changed
-    redirect(get_config('wwwroot') . 'contacts/communities/view.php?id=' . $id);
+    redirect('/contacts/communities/view.php?id=' . $id);
     exit;
 }
 

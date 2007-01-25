@@ -73,7 +73,7 @@ function adminusers_submit(Pieform $form, $values) {
         WHERE id IN (' . join(',', $values['users']) . ')');
     db_commit();
     $SESSION->add_ok_msg(get_string('adminusersupdated', 'admin'));
-    redirect(get_config('wwwroot') . 'admin/users/admins.php');
+    redirect('/admin/users/admins.php');
 }
 
 $smarty->assign('adminusersform', pieform($form));

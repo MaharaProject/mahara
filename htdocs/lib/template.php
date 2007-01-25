@@ -316,7 +316,7 @@ function template_render($template, $mode, $data=array(), $view_id=null) {
 
             $options = array();
 
-            if ($view_id) {
+            if ($view_id && $mode == TEMPLATE_RENDER_READONLY) {
                 $options['viewid'] = $view_id;
             }
 
@@ -431,7 +431,7 @@ function template_render($template, $mode, $data=array(), $view_id=null) {
     $javascript = '';
     if ($mode == TEMPLATE_RENDER_EDITMODE) {
         $droplist = json_encode($droplist);
-        $spinner_url = json_encode(theme_get_url('loading.gif'));
+        $spinner_url = json_encode(theme_get_url('images/loading.gif'));
         $wwwroot = get_config('wwwroot');
         
         $json_emptylabel = json_encode(get_string('emptylabel', 'view'));
@@ -460,6 +460,9 @@ function template_render($template, $mode, $data=array(), $view_id=null) {
                 e.stop();
             }
             return false;
+        });
+        connect(input, 'onblur', function (e) {
+            saveLabel(element);
         });
     }
 
@@ -543,7 +546,7 @@ function template_render($template, $mode, $data=array(), $view_id=null) {
                     );
                 },
                 function (error) {
-                    alert('TODO: error');
+                    logError(error);
                 }
             );
         }

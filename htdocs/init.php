@@ -172,7 +172,7 @@ if (!get_config('installed')
     && false === strpos($_SERVER['SCRIPT_FILENAME'], 'admin/index.php')
     && false === strpos($_SERVER['SCRIPT_FILENAME'], 'admin/upgrade.php')
     && false === strpos($_SERVER['SCRIPT_FILENAME'], 'admin/upgrade.json.php')) {
-    redirect('admin/');
+    redirect('/admin/');
 }
 
 ?>

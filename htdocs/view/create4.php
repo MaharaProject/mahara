@@ -50,7 +50,7 @@ $form = array(
 );
 
 function createview4_submit_cancel() {
-    redirect('view/');
+    redirect('/view/');
 }
 
 function createview4_submit(Pieform $form, $values) {
@@ -60,7 +60,7 @@ function createview4_submit(Pieform $form, $values) {
         $data['accesslist'] = array_values((array)$values['accesslist']);
         log_debug($data);
         $SESSION->set('create_' . $createid, $data);
-        redirect(get_config('wwwroot') . 'view/create3.php?createid=' . $createid);
+        redirect('/view/create3.php?createid=' . $createid);
     }
 
     db_begin();
@@ -141,11 +141,11 @@ function createview4_submit(Pieform $form, $values) {
 
     db_commit();
     $SESSION->add_ok_msg(get_string('viewcreatedsuccessfully', 'view'));
-    redirect(get_config('wwwroot') . 'view/');
+    redirect('/view/');
 }
 
 function createview4_cancel() {
-    redirect(get_config('wwwroot') . 'view/');
+    redirect('/view/');
 }
 
 $smarty->assign('titlestr', get_string('createviewstep4', 'view'));

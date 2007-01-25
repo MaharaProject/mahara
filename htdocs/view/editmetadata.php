@@ -61,7 +61,7 @@ $data = get_record(
 
 if(!$data) {
     $SESSION->add_error_msg(get_string('canteditdontown', 'view'));
-    redirect(get_config('wwwroot') . 'view/');
+    redirect('/view/');
 }
 
 $createview1 = pieform(array(
@@ -124,7 +124,7 @@ $createview1 = pieform(array(
 ));
 
 function createview1_cancel_submit() {
-    redirect('view/');
+    redirect('/view/');
 }
 
 function createview1_submit(Pieform $form, $values) {
@@ -142,7 +142,7 @@ function createview1_submit(Pieform $form, $values) {
     update_record('view', $data, (object)array( 'id' => $view_id ));
 
     $SESSION->add_ok_msg(get_string('viewinformationsaved', 'view'));
-    redirect('view/');
+    redirect('/view/');
 }
 
 $smarty = smarty();

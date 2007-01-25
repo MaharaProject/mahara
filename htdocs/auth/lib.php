@@ -128,7 +128,7 @@ function auth_setup () {
     if ($sessionlogouttime && isset($_GET['logout'])) {
         $USER->logout();
         $SESSION->add_ok_msg(get_string('loggedoutok'));
-        redirect(get_config('wwwroot'));
+        redirect();
     }
     if ($sessionlogouttime > time()) {
         // The session is still active, so continue it.
@@ -144,12 +144,12 @@ function auth_setup () {
                 // The user's admin rights have been taken away
                 $USER->set('admin', 0);
                 $SESSION->add_error_msg(get_string('accessforbiddentoadminsection'));
-                redirect(get_config('wwwroot'));
+                redirect();
             }
             elseif (!$USER->get('admin')) {
                 // The user never was an admin
                 $SESSION->add_error_msg(get_string('accessforbiddentoadminsection'));
-                redirect(get_config('wwwroot'));
+                redirect();
             }
         }
         $USER->renew();
@@ -561,7 +561,7 @@ function login_submit(Pieform $form, $values) {
             // Only admins in the admin section!
             if (defined('ADMIN') && !$userdata->admin) {
                 $SESSION->add_error_msg(get_string('accessforbiddentoadminsection'));
-                redirect(get_config('wwwroot'));
+                redirect();
             }
 
             // Check if the user's account has been deleted
