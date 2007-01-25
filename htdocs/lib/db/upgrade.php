@@ -189,6 +189,13 @@ function xmldb_core_upgrade($oldversion=0) {
         insert_record('activity_type', $at);
     }
 
+    if ($oldversion < 2007012500) {
+        $table = new XMLDBTable('usr_watchlist_artefact');
+        $field = new XMLDBFIELD('deleted');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, false, true, false, false, false, 0);
+        add_field($table, $field);
+    }
+
     return $status;
 
 }
