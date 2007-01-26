@@ -169,7 +169,7 @@ function feedbackform() {
         }
     }
     appendChildNodes(form, 
-        TABLE(null,
+        TABLE({'border':0, 'cellspacing':0, 'id':'feedback'},
         TBODY(null,
         TR(null, TH(null, LABEL(null, {$getstring['message']}))),
         TR(null, TD(null, TEXTAREA({'rows':5, 'cols':80, 'name':'message'}))),
@@ -200,7 +200,7 @@ function objectionform() {
         return false;
     }
     appendChildNodes(form, 
-        TABLE({'border':0, 'cellspacing':0},
+        TABLE({'border':0, 'cellspacing':0, 'id':'objection'},
         TBODY(null,
         TR(null, TH(null, LABEL(null, {$getstring['complaint']}))),
         TR(null, TD(null, TEXTAREA({'rows':5, 'cols':80, 'name':'message'}))),
