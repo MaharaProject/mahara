@@ -36,7 +36,9 @@ $blog = new ArtefactTypeBlog($id);
 // This javascript is used to generate a list of blog posts.
 $js = require('index.js.php'); 
 
-$smarty = smarty(array('tablerenderer'));
+$images = array('themepaths' => array('images/file.gif', 'images/image.gif'));
+
+$smarty = smarty(array('tablerenderer'), array(), array(), $images);
 $smarty->assign_by_ref('blog', $blog);
 $smarty->assign_by_ref('editform', $form);
 $smarty->assign_by_ref('INLINEJAVASCRIPT', $js);
