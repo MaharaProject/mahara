@@ -169,7 +169,7 @@ function set_profile_field($userid, $field, $value) {
     // specified one
     if ($field == 'email') {
         try {
-            $email = artefact_instance_from_type('email');
+            $email = artefact_instance_from_type('email', $userid);
         }
         catch (ArtefactNotFoundException $e) {
             $email = new ArtefactTypeEmail();
