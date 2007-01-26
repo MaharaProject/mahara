@@ -73,7 +73,7 @@ function title(r, communities) {
         var assess = assessselect(r.id,communities);
     }
     var f = FORM({'id':('form'+r.id),'method':'post','enctype':'multipart/form-data',
-                      'encoding':'multipart/form-data','onclick':"formsubmit(" + r.id + ");"},
+                      'encoding':'multipart/form-data'},
                  DIV(null,buttons),
                  DIV(null,assess));
     return [TD(null,A({'href':'view.php?view='+r.id},r.title)),

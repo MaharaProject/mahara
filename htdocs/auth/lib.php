@@ -629,7 +629,7 @@ function auth_handle_account_expiries() {
     $wwwroot  = get_config('wwwroot');
 
     // Expiry warning messages
-    if ($users = get_records_sql_array('SELECT u.id, u.firstname, u.lastname, u.preferredname, u.email, i.defaultaccountinactivewarn AS timeout
+    if ($users = get_records_sql_array('SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, i.defaultaccountinactivewarn AS timeout
         FROM ' . $prefix . 'usr u, ' . $prefix . 'institution i
         WHERE u.institution = i.name
         AND ? - ' . db_format_tsfield('u.expiry', false) . ' < i.defaultaccountinactivewarn
@@ -658,7 +658,7 @@ function auth_handle_account_expiries() {
     }
 
     // Inactivity (lastlogin is too old)
-    if ($users = get_records_sql_array('SELECT u.id, u.firstname, u.lastname, u.preferredname, u.email, i.defaultaccountinactivewarn AS timeout
+    if ($users = get_records_sql_array('SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, i.defaultaccountinactivewarn AS timeout
         FROM ' . $prefix . 'usr u, ' . $prefix . 'institution i
         WHERE u.institution = i.name
         AND (? - ' . db_format_tsfield('u.lastlogin', false) . ') > (i.defaultaccountinactiveexpire - i.defaultaccountinactivewarn)
