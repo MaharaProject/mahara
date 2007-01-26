@@ -253,13 +253,22 @@ function auth_check_password_change() {
                     'title'       => get_string('confirmpassword') . ':',
                     'description' => get_string('yournewpasswordagain'),
                     'rules'       => array(
-                        'required' => true
-                    )
+                        'required' => true,
+                    ),
+                ),
+                'email' => array(
+                    'type'   => 'text',
+                    'title'  => get_string('principalemailaddress', 'artefact.internal'),
+                    'ignore' => (trim($USER->get('email')) != '' && !preg_match('/@example\.org$/', $USER->get('email'))),
+                    'rules'  => array(
+                        'required' => true,
+                        'email'    => true,
+                    ),
                 ),
                 'submit' => array(
                     'type'  => 'submit',
-                    'value' => get_string('changepassword')
-                )
+                    'value' => get_string('changepassword'),
+                ),
             )
         );
 
@@ -308,7 +317,7 @@ function change_password_submit(Pieform $form, $values) {
     $authtype = auth_get_authtype_for_institution($USER->get('institution'));
     $authclass = 'Auth' . ucfirst($authtype);
 
-    // This method should exists, because if it did not then the change
+    // This method should exist, because if it did not then the change
     // password form would not have been shown.
     if ($password = call_static_method($authclass, 'change_password', $USER->get('username'), $values['password1'])) {
         $user = new StdClass;
@@ -320,6 +329,9 @@ function change_password_submit(Pieform $form, $values) {
         $USER->set('password', $password);
         $USER->set('passwordchange', 0);
         $SESSION->add_ok_msg(get_string('passwordsaved'));
+        if (!empty($values['email'])) {
+            set_profile_field($USER->get('id'), 'email', $values['email']);
+        }
         redirect();
     }
 

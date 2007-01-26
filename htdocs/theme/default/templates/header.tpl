@@ -8,6 +8,7 @@
             'wwwroot': '{$WWWROOT}'
         {literal}}{/literal};
         </script>
+        <script type="text/javascript" src="{$WWWROOT}js/firebug/firebug.js"></script>
 {foreach from=$JAVASCRIPT item=script}        <script type="text/javascript" src="{$script}"></script>
 {/foreach}
 {foreach from=$HEADERS item=header}        {$header}

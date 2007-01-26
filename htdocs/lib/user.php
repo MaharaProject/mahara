@@ -164,10 +164,26 @@ function expected_account_preferences() {
 
 function set_profile_field($userid, $field, $value) {
     safe_require('artefact', 'internal');
-    $classname = generate_artefact_class_name($field);
-    $profile = new $classname(0, array('owner' => $userid));
-    $profile->set('title', $value);
-    $profile->commit();
+
+    // this is a special case that replaces the primary email address with the
+    // specified one
+    if ($field == 'email') {
+        try {
+            $email = artefact_instance_from_type('email');
+        }
+        catch (ArtefactNotFoundException $e) {
+            $email = new ArtefactTypeEmail();
+            $email->set('owner', $userid);
+        }
+        $email->set('title', $value);
+        $email->commit();
+    }
+    else {
+        $classname = generate_artefact_class_name($field);
+        $profile = new $classname(0, array('owner' => $userid));
+        $profile->set('title', $value);
+        $profile->commit();
+    }
 }
 
 /**
@@ -542,8 +558,6 @@ function suspend_user($suspendeduserid, $reason, $suspendinguserid=null) {
  */
 function friend_submit($form, $values) {
     global $user, $USER;
-
-    log_debug($values);
 
     $loggedinid = $USER->get('id');
     $userid = $user->id;
