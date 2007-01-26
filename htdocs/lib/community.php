@@ -200,9 +200,9 @@ function get_tutor_communities($userid=0, $jointype=null) {
 // constants for community membership type
 define('COMMUNITY_MEMBERSHIP_ADMIN', 1);
 define('COMMUNITY_MEMBERSHIP_STAFF', 2);
-define('COMMUNITY_MEMBERSHIP_OWNER', 3);
-define('COMMUNITY_MEMBERSHIP_TUTOR', 4);
-define('COMMUNITY_MEMBERSHIP_MEMBER', 5);
+define('COMMUNITY_MEMBERSHIP_OWNER', 4);
+define('COMMUNITY_MEMBERSHIP_TUTOR', 8);
+define('COMMUNITY_MEMBERSHIP_MEMBER', 16);
 
 
 /**
@@ -238,25 +238,27 @@ function user_can_access_community($community, $user=null) {
         throw new InvalidArgumentException("not useful community arg given to user_can_access_community: $community");
     }
 
+    $membertypes = 0;
+
     if ($user->get('admin')) {
-        return COMMUNITY_MEMBERSHIP_ADMIN;
+        $membertypes = COMMUNITY_MEMBERSHIP_ADMIN;
     }
     if ($user->get('staff')) {
-        return COMMUNITY_MEMBERSHIP_STAFF;
+        $membertypes = $membertypes | COMMUNITY_MEMBERSHIP_STAFF;
     }
     if ($community->owner == $user->get('id')) {
-        return COMMUNITY_MEMBERSHIP_OWNER;
+        $membertypes = $membertypes | COMMUNITY_MEMBERSHIP_OWNER;
     }
 
     if (!$membership = get_record('community_member', 'community', $community->id, 'member', $user->get('id'))) {
-        return false;
+        return $membertypes;
     }
 
     if ($membership->tutor) {
-        return COMMUNITY_MEMBERSHIP_TUTOR;
+        $membertypes = $membertypes | COMMUNITY_MEMBERSHIP_TUTOR;
     }
     
-    return COMMUNITY_MEMBERSHIP_MEMBER;
+    return ($membertypes | COMMUNITY_MEMBERSHIP_MEMBER);
 }
 
 

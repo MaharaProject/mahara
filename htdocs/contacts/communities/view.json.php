@@ -79,7 +79,7 @@ switch ($type) {
         );
                                    
         $data = get_records_sql_array('
-            SELECT v.*,u.firstname,u.lastname, u.preferredname,u.id AS usr 
+            SELECT v.*, u.username, u.firstname, u.lastname, u.preferredname, u.id AS usr 
             FROM ' . $prefix . 'view v
             LEFT OUTER JOIN ' . $prefix . 'view_access_community a ON a.view=v.id
             INNER JOIN ' . $prefix.'usr u ON v.owner = u.id ' . $where, 
@@ -97,7 +97,7 @@ switch ($type) {
         }
         break;
     case 'members':
-        $sql = 'SELECT u.*,c.tutor 
+        $sql = 'SELECT u.*, c.tutor 
                     FROM ' . $prefix . 'usr u JOIN ' . $prefix . 'community_member c
                         ON c.member = u.id 
                     WHERE c.community = ?';

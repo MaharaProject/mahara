@@ -54,7 +54,7 @@ class PluginNotificationEmaildigest extends PluginNotification {
         $users = array();
         $sitename = get_config('sitename');
 
-        $sql = 'SELECT q.id, u.firstname,u.lastname,u.preferredname,u.email,q.*,' . db_format_tsfield('ctime').'
+        $sql = 'SELECT q.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, q.*,' . db_format_tsfield('ctime').'
                 FROM ' . get_config('dbprefix') . 'usr u 
                     JOIN ' . get_config('dbprefix') . 'notification_emaildigest_queue q
                         ON q.usr = u.id
