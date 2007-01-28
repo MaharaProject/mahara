@@ -283,11 +283,17 @@ SELECT DISTINCT u.*, p.method, ?||wa.view AS url
             JOIN ' . $prefix . 'usr_watchlist_view wv
                 ON va.view = wv.view
             WHERE pc.artefact = ? AND wv.recurse = 1
+        UNION SELECT wv.usr AS uid, wv.view AS view
+            FROM ' . $prefix . 'view_artefact va
+            JOIN ' . $prefix . 'usr_watchlist_view wv
+                ON va.view = wv.view
+            WHERE va.artefact = ?
     ) wa ON wa.uid = u.id
     WHERE p.activity = ? OR p.activity IS NULL';
                     $values = array(get_config('wwwroot') . 'view/view.php?artefact=' 
                                     . $data->artefact . '&view=', 
-                                    $data->artefact, $data->artefact, $data->artefact, 
+                                    $data->artefact, $data->artefact, 
+                                    $data->artefact, $data->artefact,
                                     'watchlist');
                     log_debug($sql);
                     log_debug($values);
