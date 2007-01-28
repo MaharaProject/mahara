@@ -44,27 +44,10 @@ if ($stopmonitoring) {
     try {
         foreach ($_GET as $k => $v) {
             if (preg_match('/^stopviews\-(\d+)$/',$k,$m)) {
-                $recurse = param_boolean($k . '-recurse', null);
-                if (!empty($recurse)) {
-                    $sql = 'DELETE FROM ' . $prefix . 'usr_watchlist_artefact 
-                            WHERE usr = ? AND (artefact IN (
-                                SELECT artefact FROM ' . $prefix . 'artefact_parent_cache WHERE parent IN (
-                                    SELECT artefact FROM ' . $prefix . 'view_artefact WHERE view = ? ) )
-                            OR artefact IN (
-                                SELECT artefact FROM ' . $prefix . 'view_artefact WHERE view = ?))';
-                    delete_records_sql($sql, array($userid, $m[1], $m[1]));
-                }
                 delete_records('usr_watchlist_view', 'usr', $userid, 'view', $m[1]);
                 $count++;
             }
             else if (preg_match('/^stopartefacts\-(\d+)$/',$k,$m)) {
-                $recurse = param_boolean($k . '-recurse', null);
-                if (!empty($recurse)) {
-                    $sql = 'DELETE FROM ' . $prefix . 'usr_watchlist_artefact 
-                            WHERE usr = ? AND artefact IN (
-                                SELECT artefact FROM ' . $prefix . 'artefact_parent_cache WHERE parent = ?)';
-                    delete_records_sql($sql, array($userid, $m[1]));
-                }
                 delete_records('usr_watchlist_artefact', 'usr', $userid, 'artefact', $m[1]);
                 $count++;
             }
@@ -133,7 +116,7 @@ $records = array();
 
 if ($type == 'views') {
     $count = count_records('usr_watchlist_view', 'usr', $userid);
-    $sql = 'SELECT v.*, v.title AS name 
+    $sql = 'SELECT v.*, v.title AS name, w.recurse
             FROM ' . $prefix . 'view v
             JOIN ' . $prefix . 'usr_watchlist_view w ON w.view = v.id
             WHERE w.usr = ?';
@@ -157,7 +140,7 @@ else if ($type == 'communities') {
 }
 else if ($type == 'artefacts') {
     $count = count_records('usr_watchlist_artefact', 'usr', $userid);
-    $sql = 'SELECT a.* , a.title AS name
+    $sql = 'SELECT a.* , a.title AS name, w.view, w.recurse
             FROM ' . $prefix . 'artefact a
             JOIN ' . $prefix . 'usr_watchlist_artefact w ON w.artefact = a.id 
             WHERE w.usr = ?';
