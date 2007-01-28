@@ -156,6 +156,7 @@ function profileform_submit(Pieform $form, $values) {
                             'firstname'     => $USER->get('firstname'),
                             'lastname'      => $USER->get('lastname'),
                             'preferredname' => $USER->get('preferredname'),
+                            'admin'         => $USER->get('admin'),
                             'email'         => $email,
                         ),
                         null,

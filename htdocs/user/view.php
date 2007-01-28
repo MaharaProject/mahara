@@ -295,6 +295,9 @@ $smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 $smarty->assign('NAME',$name);
 $smarty->assign('USERID', $userid);
 $smarty->assign('USERFIELDS',$userfields);
+if ($USER->get('admin')) {
+    $smarty->assign('USERCOMMUNITIES',$userassoccommunities);
+}
 $smarty->assign('VIEWS',$views);
 $smarty->display('user/view.tpl');
 

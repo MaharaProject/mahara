@@ -178,6 +178,11 @@ EOF;
     foreach ($themepaths['mahara'] as $themepath) {
         $theme_list[$themepath] = theme_get_url($themepath);
     }
+    if (isset($extraconfig['themepaths']) && is_array($extraconfig['themepaths'])) {
+        foreach ($extraconfig['themepaths'] as $themepath) {
+            $theme_list[$themepath] = theme_get_url($themepath);
+        }
+    }
 
     $stringjs = '<script type="text/javascript">';
     $stringjs .= 'var strings = ' . json_encode($strings) . ';';
