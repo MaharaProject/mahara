@@ -40,6 +40,8 @@ $remove = get_string('removefromfriendslist');
 $accept = get_string('accept');
 $reject = get_string('reject');
 $allviews = get_string('allviews');
+$removeheader = get_string('remove');
+$reasonheader = get_string('reason');
 $friendcontrolfailed = get_string('friendlistfailure');
 $enc_confirm_remove = json_encode(get_string('confirmremovefriend'));
 
@@ -160,10 +162,23 @@ function expandViews(views, id) {
     return false;
 }
 
+function pendingChange() {
+    $('messagediv').innerHTML='';
+    var pending = $('pendingopts').options[$('pendingopts').selectedIndex].value;
+    friendslist.doupdate({'pending': pending});
+    if (pending == 1) {
+        hideElement('viewsheader');
+        $('removeorreason').innerHTML = '{$reasonheader}';
+    }
+    else {
+        showElement('viewsheader');
+        $('removeorreason').innerHTML = '{$removeheader}';
+    }
+}
+
 EOF;
 
 $smarty = smarty(array('tablerenderer'));
-$smarty->assign('pendingchange', '$(\'messagediv\').innerHTML=\'\';friendslist.doupdate({\'pending\':this.options[this.selectedIndex].value});');
 $smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 $smarty->display('contacts/index.tpl');
 
