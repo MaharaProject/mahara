@@ -36,36 +36,38 @@ $artefactstring = get_string('artefacts', 'activity');
 $monitoredstring = get_string('monitored', 'activity');
 $allusersstring = get_string('allusers');
 
+$andchildren = ' * ' . get_string('andchildren', 'activity');
+
 $savefailed = get_string('stopmonitoringfailed', 'activity');
 $savesuccess = get_string('stopmonitoringsuccess', 'activity');
 
-$recursestr = '[<a href="" onClick="toggleChecked(\'tocheck-r\'); return false;">' 
-    . get_string('recurseall', 'activity')
-    . '</a>]';
-$recursestrjs = str_replace("'", "\'", $recursestr);
+$wwwroot = get_config('wwwroot');
 
 $javascript = <<<JAVASCRIPT
 var watchlist = new TableRenderer(
     'watchlist',
     'index.json.php', 
     [
-        function(r) { 
-            if (r.url) { 
-                return TD(null,A({'href': r.url}, r.name));
-            } 
-            return TD(null, r.name);
+        function(r, d) { 
+            var url = '';
+            if (d.type == 'communities') {
+                url = '{$wwwroot}/contacts/communities/view.php?id=' + r.id;
+            }
+            else if (d.type == 'views') {
+                url = '{$wwwroot}/view/view.php?view=' + r.id;
+            }
+            else {
+                url = '{$wwwroot}/view/view.php?view=' + r.view + '&artefact=' + r.id;
+            }
+            var star = '';
+            if (r.recurse) {
+                star = ' *';
+            }
+            return TD(null, A({'href': url}, r.name), star);
         },
         function (r, d) {
             return TD(null, INPUT({'type' : 'checkbox', 'class': 'tocheck', 'name': 'stop' + d.type + '-' + r.id}));
         },
-        function (r, d) {
-            if (d.type != 'communities') {
-                return TD(null, INPUT({'type' : 'checkbox', 'class': 'tocheck-r', 'name': 'stop' + d.type + '-' + r.id + '-recurse'}));
-            }
-            else {
-                return '';
-            }
-        }
     ]
 );
 
@@ -79,6 +81,12 @@ watchlist.rowfunction = function(r, n) { return TR({'id': r.id, 'class': 'view r
 function changeTitle(title) {
     var titles = { 'views': '{$viewstring}', 'communities': '{$communitystring}', 'artefacts': '{$artefactstring}' };
     $('typeheader').innerHTML  = '{$monitoredstring} ' + titles[title];
+    if (title != 'communities') {
+        $('typeandchildren').innerHTML = '{$andchildren}';
+    }
+    else {
+        $('typeandchildren').innerHTML = '';
+    }
 }
 
 function stopmonitoring(form) {
@@ -133,12 +141,10 @@ function statusChange() {
     changeTitle(typevalue); 
     $('messagediv').innerHTML = '';
     if (typevalue == 'communities') {
-        $('recurseheader').innerHTML = '';
         $('user').options.length = 0;
         $('user').disabled = true;
     }
     else {
-        $('recurseheader').innerHTML = '{$recursestrjs}';
         var pd = {'userlist': typevalue};
         var d = loadJSONDoc('index.json.php', pd);
         d.addCallbacks(function (data) {
@@ -180,7 +186,6 @@ $smarty = smarty(array('tablerenderer'));
 $smarty->assign('viewusers', $viewusers);
 $smarty->assign('typestr', get_string('views', 'activity'));
 $smarty->assign('selectall', 'toggleChecked(\'tocheck\'); return false;');
-$smarty->assign('recursestr', $recursestr);
 $smarty->assign('stopmonitoring', 'stopmonitoring(this); return false;');
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->display('account/watchlist/index.tpl');

@@ -262,21 +262,36 @@ function handle_activity($activitytype, $data, $cron=false) {
                     }
                     $data->message = get_string('onartefact', 'activity') 
                         . ' ' . $ainfo->title . ' ' . get_string('ownedby', 'activity');
-                    $sql = 'SELECT DISTINCT u.*, p.method, ?||wa.view as url
-                                FROM ' . $prefix . 'usr_watchlist_artefact wa
-                                LEFT JOIN ' . $prefix . 'artefact_parent_cache pc
-                                    ON (pc.parent = wa.artefact OR pc.artefact = wa.artefact)
-                                JOIN ' . $prefix . 'usr u 
-                                    ON wa.usr = u.id
-                                LEFT JOIN ' . $prefix . 'usr_activity_preference p
-                                    ON p.usr = u.id
-                                WHERE (p.activity = ? OR p.activity IS NULL)
-                                AND (pc.parent = ? OR wa.artefact = ?)
-                            ';
-                    $users = get_records_sql_array($sql, 
-                                                   array(get_config('wwwroot') . 'view/view.php?view=' 
-                                                         . $data->artefact . '&view=', 'watchlist', 
-                                                         $data->artefact, $data->artefact));
+                    $sql = '
+SELECT DISTINCT u.*, p.method, ?||wa.view AS url
+    FROM ' . $prefix . 'usr u
+    LEFT JOIN ' . $prefix . 'usr_activity_preference p
+        ON p.usr = u.id
+    JOIN (
+        SELECT wa.usr AS uid, wa.view AS view
+            FROM ' . $prefix . 'usr_watchlist_artefact wa
+            WHERE wa.artefact = ?
+        UNION SELECT wa.usr AS uid, wa.view AS view
+            FROM ' . $prefix . 'artefact_parent_cache pc
+            JOIN ' . $prefix . 'usr_watchlist_artefact wa
+                ON wa.artefact = pc.parent
+            WHERE pc.artefact = ? AND wa.recurse = 1
+        UNION SELECT wv.usr AS uid, wv.view AS view
+            FROM ' . $prefix . 'artefact_parent_cache pc
+            JOIN ' . $prefix . 'view_artefact va
+                ON va.artefact = pc.parent
+            JOIN ' . $prefix . 'usr_watchlist_view wv
+                ON va.view = wv.view
+            WHERE pc.artefact = ? AND wv.recurse = 1
+    ) wa ON wa.uid = u.id
+    WHERE p.activity = ? OR p.activity IS NULL';
+                    $values = array(get_config('wwwroot') . 'view/view.php?artefact=' 
+                                    . $data->artefact . '&view=', 
+                                    $data->artefact, $data->artefact, $data->artefact, 
+                                    'watchlist');
+                    log_debug($sql);
+                    log_debug($values);
+                    $users = get_records_sql_array($sql, $values);
                     if (empty($users)) {
                         $users = array();
                     }
