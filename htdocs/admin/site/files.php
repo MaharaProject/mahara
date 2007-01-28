@@ -31,6 +31,7 @@ define('SUBMENUITEM', 'adminfiles');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('artefact', 'file');
+define('TITLE', get_string('adminfiles', 'admin'));
 
 $copyright = get_field('site_content', 'content', 'name', 'uploadcopyright');
 $wwwroot = get_config('wwwroot');
