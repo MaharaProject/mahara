@@ -4,8 +4,6 @@
 // the file uploader because they are used slightly differently in the
 // my files screen and the edit blog post screen
 
-var changedir = function () {};
-
 function FileBrowser(element, source, statevars, changedircallback, actionname, actioncallback) {
     var self = this;
     this.element = element;
@@ -13,7 +11,13 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
     this.statevars = statevars ? statevars : {};
     this.pathids = {'/':null};
     this.cwd = '/';
-    this.changedircallback = (typeof(changedircallback) == 'function') ? changedircallback : function () {};
+    this.rootDirectory = {
+        'name': get_string('home'),
+        'parent': null,
+        'children': {},
+        'folderid': 0
+    };
+    this.currentDirectory = this.rootDirectory;
     this.actioncallback = (typeof(actioncallback) == 'function') ? actioncallback : function () {};
     this.actionname = actionname;
     this.canmodify = !actionname;
@@ -94,8 +98,7 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
             return TR({'class': 'r' + (n%2),'id':'row_' + r.id});
         };
         self.filelist.init();
-        changedir = self.changedir; // Ick; needs to be set globally for some links to work
-        self.changedir(self.cwd);
+        self.chdir(self.rootDirectory);
     }
 
     this.deleted = function (data) {
@@ -103,7 +106,7 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
         self.refresh();
     };
 
-    this.refresh = function () { self.changedir(self.cwd); };
+    this.refresh = function () { self.chdir(self.currentDirectory); };
 
     this.savemetadata = function (fileid, formid, replacefile, originalname) {
         var name = $(formid).name.value;
@@ -233,10 +236,22 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
     this.formatname = function(r) {
         self.filenames[r.title] = true;
         if (r.artefacttype == 'folder') {
+            // If we haven't seen this directory before
+            if (!self.currentDirectory.children[r.title]) {
+                self.currentDirectory.children[r.title] = {
+                    'name': r.title,
+                    'parent': self.currentDirectory,
+                    'children': {},
+                    'folderid': r.id
+                }
+            }
             var dir = self.cwd + r.title + '/';
             self.pathids[dir] = r.id;
-            var link = A({'href':'', 'onclick':"return changedir('" + dir.replace(/\'/g,"\\\'") + "')"},
-                         r.title);
+            var link = A({'href':''}, r.title);
+            connect(link, 'onclick', function (e) {
+                self.chdir(self.currentDirectory.children[r.title]);
+                e.stop();
+            });
             return TD(null, link);
         }
         if (self.actionname) {
@@ -249,38 +264,47 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
         return self.filenames[filename] == true;
     }
 
-    this.updatedestination = function () {
-        if ($('createdest')) {
-            $('createdest').innerHTML = self.cwd;
+    this.chdir = function(dirNode) {
+        self.currentDirectory = dirNode;
+        if (typeof(self.changedircallback) == 'function') {
+            self.changedircallback(dirNode.folderid, self.generatePath(dirNode));
         }
-    }
-
-    this.changedir = function(path) {
-        self.cwd = path;
-        self.linked_path();
-        self.updatedestination();
-        self.changedircallback(self.pathids[path], path);
+        self.filelist.doupdate({'folder': dirNode.folderid});
+        self.breadcrumbUpdate();
         self.filenames = {};
-        var args = path == '/' ? null : {'folder':self.pathids[path]};
-        self.filelist.doupdate(args);
-        return false;
     }
 
-    this.linked_path = function() {
-        var dirs = self.cwd.split('/');
-        var homedir = A({'href':'', 'onclick':"return changedir('/')"}, get_string('home'));
-        var sofar = '/';
-        var folders = [homedir];
-        for (i=0; i<dirs.length; i++) {
-            if (dirs[i] != '') {
-                sofar = sofar + dirs[i] + '/';
-                var dir = A({'href':'', 'onclick':"return changedir('" 
-                             + sofar.replace(/\'/g,"\\\'") + "')"}, dirs[i]);
-                folders.push(' / ');
-                folders.push(dir);
-            }
+    this.generatePath = function(dirNode) {
+        var folders = [];
+        while (dirNode.parent) {
+            folders.unshift(dirNode.name);
+
+            dirNode = dirNode.parent;
         }
-        replaceChildNodes($('foldernav'),folders);
+
+        return '/' + folders.join('/');
+    }
+
+    this.breadcrumbUpdate = function() {
+        var folders = [];
+
+        var cwd = self.currentDirectory;
+        while ( cwd ) {
+            var link = A({'href': ''}, cwd.name);
+            connect(link, 'onclick', partial(function (dir, e) {
+                self.chdir(dir);
+                e.stop();
+            }, cwd));
+
+            folders.unshift(link);
+
+            if ( cwd.parent ) {
+                folders.unshift(' / ');
+            }
+            cwd = cwd.parent;
+        }
+
+        replaceChildNodes('foldernav', folders);
     }
 
     addLoadEvent(this.init);
