@@ -58,7 +58,10 @@ if ($oldid = ArtefactTypeFileBase::file_exists($title, $data->owner, $parentfold
         $obj->delete();
     }
     else {
+        // Hopefully this will happen rarely as filename clashes are
+        // detected in the javascript.
         $result->error = 'fileexists';
+        $result->message = get_string('fileexistsonserver', 'artefact.file', $title);
     }
 }
 if (!isset($result->error)) {
