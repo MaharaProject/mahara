@@ -213,6 +213,8 @@ class ArtefactTypeBlog extends ArtefactType {
             ? $options['blockid']
             : mt_rand();
 
+        $this->add_to_render_path($options);
+
         // This uses the above blockid, so needs to be inlcuded after.
         $javascript = require(get_config('docroot') . 'artefact/blog/render/blog_listchildren.js.php');
 
@@ -244,6 +246,8 @@ class ArtefactTypeBlog extends ArtefactType {
         $blockid = isset($options['blockid'])
             ? $options['blockid']
             : mt_rand();
+
+        $this->add_to_render_path($options);
 
         // This uses the above blockid, so needs to be inlcuded after.
         $javascript = require(get_config('docroot') . 'artefact/blog/render/blog_renderfull.js.php');
@@ -362,6 +366,13 @@ class ArtefactTypeBlog extends ArtefactType {
     public function public_feedback_allowed() {
         return $this->get('commentsallowed');
     }
+
+
+    public function feedback_notify_owner() {
+        return $this->get('commentsnotify');
+    }
+
+
 }
 
 /**
@@ -459,6 +470,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
         $smarty->assign('artefact', $this);
         $attachments = $this->get_attached_files();
         if ($attachments) {
+            $this->add_to_render_path($options);
             require_once('artefact.php');
             foreach ($attachments as &$attachment) {
                 $f = artefact_instance_from_id($attachment->id);
@@ -470,6 +482,30 @@ class ArtefactTypeBlogPost extends ArtefactType {
                                                  display_name($this->owner),
                                                  format_date($this->ctime)));
         return $smarty->fetch('artefact:blog:render/blogpost_renderfull.tpl');
+    }
+
+    public function attachment_id_list() {
+        if (!$list = get_column('artefact_blog_blogpost_file', 'file', 'blogpost', $this->get('id'))) {
+            $list = array();
+        }
+        return $list;
+    }
+
+    public function attach_file($artefactid) {
+        $data = new StdClass;
+        $data->blogpost = $this->get('id');
+        $data->file = $artefactid;
+        insert_record('artefact_blog_blogpost_file', $data);
+
+        $data->artefact = $data->file;
+        $data->parent = $data->blogpost;
+        $data->dirty = true;
+        insert_record('artefact_parent_cache', $data);
+    }
+
+    public function detach_file($artefactid) {
+        delete_records('artefact_blog_blogpost_file', 'blogpost', $this->get('id'), 'file', $artefactid);
+        delete_records('artefact_parent_cache', 'parent', $this->get('id'), 'artefact', $artefactid);
     }
 
 
@@ -705,15 +741,8 @@ class ArtefactTypeBlogPost extends ArtefactType {
         if (!$fileid = ArtefactTypeFile::save_file($path, $data)) {
             return false;
         }
-            
-        $data = new StdClass;
-        $data->blogpost = $this->id;
-        $data->file = $fileid;
-        insert_record('artefact_blog_blogpost_file', $data);
-        $data->artefact = $data->file;
-        $data->parent = $data->blogpost;
-        $data->dirty = true;
-        insert_record('artefact_parent_cache', $data);
+
+        $this->attach_file($fileid);
         return $fileid;
     }
 
@@ -767,6 +796,14 @@ class ArtefactTypeBlogPost extends ArtefactType {
         // commentsallowed set to 0;
         $parent = get_field('artefact', 'parent', 'id', $this->get('id'));
         return get_field('artefact_blog_blog', 'commentsallowed', 'blog', $parent);
+    }
+    
+    
+    public function feedback_notify_owner() {
+        // Notify owner of comments on posts when the blog has
+        // commentsnotify set to 1;
+        $parent = get_field('artefact', 'parent', 'id', $this->get('id'));
+        return get_field('artefact_blog_blog', 'commentsnotify', 'blog', $parent);
     }
     
     

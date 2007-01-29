@@ -57,6 +57,8 @@ function &smarty($javascript = array(), $headers = array(), $pagestrings = array
 
     require_once(get_config('libroot') . 'smarty/Smarty.class.php');
     $wwwroot = get_config('wwwroot');
+
+    $theme_list = array();
     
     if (function_exists('pieform_get_headdata')) {
         $headers = array_merge($headers, pieform_get_headdata());
@@ -74,6 +76,7 @@ function &smarty($javascript = array(), $headers = array(), $pagestrings = array
             if (isset($extraconfig['tinymceinit'])) {
                 $headers[] = $extraconfig['tinymceinit'];
             } else {
+                $content_css = json_encode(theme_get_url('style/tinymce.css'));
                 $headers[] = <<<EOF
 <script type="text/javascript">
 tinyMCE.init({
@@ -87,7 +90,7 @@ tinyMCE.init({
     theme_advanced_buttons3 : "fontselect,separator,fontsizeselect,separator,formatselect",
     theme_advanced_toolbar_location : "top",
     theme_advanced_toolbar_align : "center",
-    content_css : config.themeurl + 'style/tinymce.css'
+    content_css : {$content_css}
 });
 </script>
 
@@ -113,6 +116,7 @@ EOF;
     }
 
     $jsstrings = jsstrings();
+    $themepaths = themepaths();
 
     foreach ($javascript as $jsfile) {
         // For now, if there's no path in the js file, assume it's in
@@ -126,6 +130,11 @@ EOF;
                     foreach ($tags as $tag) {
                         $strings[$tag] = get_raw_string($tag, $section);
                     }
+                }
+            }
+            if (isset($themepaths[$jsfile])) {
+                foreach ($themepaths[$jsfile] as $themepath) {
+                    $theme_list[$themepath] = theme_get_url($themepath);
                 }
             }
         }
@@ -147,6 +156,13 @@ EOF;
                         }
                     }
                 }
+                if (is_callable(array($pluginclass, 'themepaths'))) {
+                    $name = substr($bits[3], 0, strpos($bits[3], '.js'));
+                    $tmpthemepaths = call_static_method($pluginclass, 'themepaths', $name);
+                    foreach ($tmpthemepaths as $themepath) {
+                        $theme_list[$themepath] = theme_get_url($themepath);
+                    }
+                }
             }
         }
     }
@@ -157,6 +173,14 @@ EOF;
     foreach ($jsstrings['mahara'] as $section => $tags) {
         foreach ($tags as $tag) {
             $strings[$tag] = get_raw_string($tag, $section);
+        }
+    }
+    foreach ($themepaths['mahara'] as $themepath) {
+        $theme_list[$themepath] = theme_get_url($themepath);
+    }
+    if (isset($extraconfig['themepaths']) && is_array($extraconfig['themepaths'])) {
+        foreach ($extraconfig['themepaths'] as $themepath) {
+            $theme_list[$themepath] = theme_get_url($themepath);
         }
     }
 
@@ -180,6 +204,7 @@ EOF;
     $smarty->assign('THEMEURL', get_config('themeurl'));
     $smarty->assign('STYLESHEETLIST', array_reverse(theme_get_url('style/style.css', null, true)));
     $smarty->assign('WWWROOT', $wwwroot);
+    $smarty->assign('THEMELIST', json_encode($theme_list));
 
     if (defined('TITLE')) {
         $smarty->assign('PAGETITLE', TITLE . ' - ' . get_config('sitename'));
@@ -250,6 +275,16 @@ function jsstrings() {
             'view' => array(
                 'nochildren',
             ),
+        ),
+    );
+}
+
+function themepaths() {
+    return array(
+        'mahara' => array(
+            'images/icon_close.gif',
+            'images/loading.gif',
+            'images/success.gif',
         ),
     );
 }
@@ -1136,24 +1171,32 @@ function get_site_page_content($pagename) {
 }
 
 
-function redirect($location='') {
+
+/** 
+ * Redirects the browser to a new location. The path to redirect to can take
+ * two forms:
+ *  
+ * - http[something]: will redirect the user to that exact URL
+ * - /[something]: will redirect to WWWROOT/[something]
+ *       
+ * Any other form is illegal and will cause an error.
+ *      
+ * @param string $location The location to redirect the user to. Defaults to
+ *                         the application home page.
+ */     
+function redirect($location='/') {
     if (headers_sent()) {
         throw new Exception('Headers already sent when redirect() was called');
     }
-    $wwwroot = get_config('wwwroot');
 
-    if ($location == '') {
-        $path = $_SERVER['SCRIPT_NAME'];
-        if (substr($path, -9) == 'index.php') {
-            $path = substr($path, 0, -9);
+    if (substr($location, 0, 4) != 'http') {
+        if (substr($location, 0, 1) != '/') {
+            throw new SystemException('redirect() should be called with either'
+                . ' /[something] for local redirects or http[something] for'
+                . ' absolute redirects');
         }
-        $location = substr($wwwroot, 0, -1) . $path;
-    }
-    else if (substr($location, 0, 4) != 'http') {
-        if (substr($location, 0, 1) == '/') {
-            $location = substr($location, 1);
-        }
-        $location = $wwwroot . $location;
+
+        $location = get_config('wwwroot') . substr($location, 1);
     }
 
     header('HTTP/1.1 303 See Other');
@@ -1195,6 +1238,9 @@ function searchform() {
 
 function get_loggedin_string() {
     global $USER;
+
+    $str = get_string('youareloggedinas', 'mahara', display_name($USER));
+
     safe_require('notification', 'internal');
     $count = call_static_method(generate_class_name('notification', 'internal'), 'unread_count', $USER->get('id'));
     if ($count == 1) {
@@ -1203,11 +1249,14 @@ function get_loggedin_string() {
     else {
         $key = 'unreadmessages';
     }
-    // these spans are here so that on the ajax page that marks messages as read, the contents can be updated.
-    $str = get_string('youareloggedinas', 'mahara', display_name($USER)) . 
-        ' (<a href="' . get_config('wwwroot') . 'account/activity/">'  . 
-        '<span id="headerunreadmessagecount">' . $count . '</span> ' . 
-        '<span id="headerunreadmessages">' . get_string($key) . '</span></a>)';
+
+    if ($count > 0) {
+        // these spans are here so that on the ajax page that marks messages as read, the contents can be updated.
+        $str .=
+            ' (<a href="' . get_config('wwwroot') . 'account/activity/">'  . 
+            '<span id="headerunreadmessagecount">' . $count . '</span> ' . 
+            '<span id="headerunreadmessages">' . get_string($key) . '</span></a>)';
+    }
 
     return $str;
 }

@@ -15,9 +15,13 @@
                     return;
                 }
 
-                var members = new Array();
+                var members = {};
+                var counter = 0;
                 forEach($('{{$name}}_members').childNodes, function(node) {
-                    members[node.value] = 1;
+                    if (node.nodeName == 'OPTION') {
+                        members[node.value] = 1;
+                        counter++;
+                    }
                 });
 
                 replaceChildNodes('{{$name}}_potential');
@@ -29,7 +33,14 @@
                 });
 
                 if(users.count > users.limit) {
-                    replaceChildNodes('{{$name}}_messages', DIV(null, 'Only showing first ' + users.limit + ' results of ' + users.count));
+                    replaceChildNodes('{{$name}}_messages',
+                        DIV(null,
+                            'Only showing first ',
+                            SPAN({'id': '{{$name}}_userlimit'}, users.limit),
+                            ' results of ',
+                            SPAN({'id': '{{$name}}_usercount'}, users.count - counter)
+                        )
+                    );
                 }
             },
             function (err) {
@@ -70,6 +81,18 @@
             node.selected = false;
         });
 
+        // Update the counters if they are present
+        if ($('{{$name}}_userlimit')) {
+            if (from.id == '{{$name}}_potential') {
+                replaceChildNodes('{{$name}}_userlimit', parseInt($('{{$name}}_userlimit').innerHTML) - list.length);
+                replaceChildNodes('{{$name}}_usercount', parseInt($('{{$name}}_usercount').innerHTML) - list.length);
+            }
+            else {
+                replaceChildNodes('{{$name}}_userlimit', parseInt($('{{$name}}_userlimit').innerHTML) + list.length);
+                replaceChildNodes('{{$name}}_usercount', parseInt($('{{$name}}_usercount').innerHTML) + list.length);
+            }
+        }
+
         var members = new Array();
         forEach($('{{$name}}_members').childNodes, function(node) {
             if (typeof(node) == 'object' && typeof(node.value) == 'string') {
@@ -108,7 +131,7 @@
             <select id="{{$name}}_potential" size="10" multiple="true" style="width: 100%;"><option></option></select>
         </td>
         <td>
-            <button type="button" onClick="{{$name}}_moveopts('potential','members')">--&gt;</button>
+            <button type="button" onClick="{{$name}}_moveopts('potential','members')">--&gt;</button><br>
             <button type="button" onClick="{{$name}}_moveopts('members','potential')">&lt;--</button>
         </td>
         <td style="width: 15em;">

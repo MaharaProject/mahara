@@ -120,7 +120,7 @@ function handle_activity($activitytype, $data, $cron=false) {
                 if (empty($data->artefact)) {
                     $data->url = get_config('wwwroot') . 'view/view.php?view=' . $data->view;
                     $data->subject = get_string('objectionablecontentview', 'activity') 
-                        . ' ' . get_string('onview', 'activity') . $viewtitle;
+                        . ' ' . get_string('onview', 'activity') . ' ' . $viewtitle;
                 }
                 else {
                     $data->url = get_config('wwwroot') . 'view/view.php?artefact=' . $data->artefact . '&view=' . $data->view;
@@ -180,11 +180,15 @@ function handle_activity($activitytype, $data, $cron=false) {
                 }
                 if (!empty($data->artefact)) { // feedback on artefact
                     $data->subject = get_string('newfeedbackonartefact', 'activity');
-                    if (!$artefact = get_record('artefact', 'id', $data->artefact)) {
-                        throw new InvalidArgumentException("Couldn't find artefact with id "  . $data->artefact);
+                    require_once('artefact.php');
+                    $artefact = artefact_instance_from_id($data->artefact);
+                    if ($artefact->feedback_notify_owner()) {
+                        $userid = $artefact->get('owner');
                     }
-                    $userid = $artefact->owner;
-                    $data->subject .= ' ' .$artefact->title;
+                    else {
+                        $userid = null;
+                    }
+                    $data->subject .= ' ' .$artefact->get('title');
                     if (empty($data->url)) {
                         // @todo this might change later
                         $data->url = get_config('wwwroot') . 'view/view.php?artefact=' 
@@ -203,7 +207,12 @@ function handle_activity($activitytype, $data, $cron=false) {
                         $data->url = get_config('wwwroot') . 'view/view.php?view=' . $data->view;
                     }
                 }
-                $users = activity_get_users($activitytype->name, array($userid));
+                if ($userid) {
+                    $users = activity_get_users($activitytype->name, array($userid));
+                } 
+                else {
+                    $users = array();
+                }
                 break;
             // and now the harder ones
             case 'watchlist':
@@ -253,21 +262,45 @@ function handle_activity($activitytype, $data, $cron=false) {
                     }
                     $data->message = get_string('onartefact', 'activity') 
                         . ' ' . $ainfo->title . ' ' . get_string('ownedby', 'activity');
-                    $sql = 'SELECT DISTINCT u.*, p.method, ?||wa.view as url
-                                FROM ' . $prefix . 'usr_watchlist_artefact wa
-                                LEFT JOIN ' . $prefix . 'artefact_parent_cache pc
-                                    ON (pc.parent = wa.artefact OR pc.artefact = wa.artefact)
-                                JOIN ' . $prefix . 'usr u 
-                                    ON wa.usr = u.id
-                                LEFT JOIN ' . $prefix . 'usr_activity_preference p
-                                    ON p.usr = u.id
-                                WHERE (p.activity = ? OR p.activity IS NULL)
-                                AND (pc.parent = ? OR wa.artefact = ?)
-                            ';
-                    $users = get_records_sql_array($sql, 
-                                                   array(get_config('wwwroot') . 'view/view.php?view=' 
-                                                         . $data->artefact . '&view=', 'watchlist', 
-                                                         $data->artefact, $data->artefact));
+/*
+this query selects four different cases 
+1. user is watching the artefact directly
+2. user is watching a parent artefact with recurse = on
+3. user is watching a view with recurse = on; and:
+ a. artefact is directly associated with view
+ b. artefact is a child of an artefact associated with view
+*/
+                    $sql = '
+SELECT DISTINCT u.*, p.method, ?||wa.view AS url
+    FROM ' . $prefix . 'usr u
+    LEFT JOIN ' . $prefix . 'usr_activity_preference p
+        ON p.usr = u.id
+    JOIN (
+        SELECT wa.usr AS uid, wa.view AS view
+            FROM ' . $prefix . 'usr_watchlist_artefact wa
+            WHERE wa.artefact = ?
+        UNION SELECT wa.usr AS uid, wa.view AS view
+            FROM ' . $prefix . 'artefact_parent_cache pc
+            JOIN ' . $prefix . 'usr_watchlist_artefact wa
+                ON wa.artefact = pc.parent
+            WHERE pc.artefact = ? AND wa.recurse = 1
+        UNION SELECT wv.usr AS uid, wv.view AS view
+            FROM ' . $prefix . 'artefact_parent_cache pc
+            JOIN ' . $prefix . 'view_artefact va
+                ON va.artefact = pc.parent
+            JOIN ' . $prefix . 'usr_watchlist_view wv
+                ON va.view = wv.view
+            WHERE (pc.artefact = ? OR va.artefact = ?)AND wv.recurse = 1
+    ) wa ON wa.uid = u.id
+    WHERE p.activity = ? OR p.activity IS NULL';
+                    $values = array(get_config('wwwroot') . 'view/view.php?artefact=' 
+                                    . $data->artefact . '&view=', 
+                                    $data->artefact, $data->artefact, 
+                                    $data->artefact, $data->artefact,
+                                    'watchlist');
+                    log_debug($sql);
+                    log_debug($values);
+                    $users = get_records_sql_array($sql, $values);
                     if (empty($users)) {
                         $users = array();
                     }
@@ -312,9 +345,11 @@ function handle_activity($activitytype, $data, $cron=false) {
                                                  WHERE v.id = ?', array($data->view))) {
                     throw new InvalidArgumentException("Couldn't find view with id " . $data->view);
                 }
-                $data->message = get_string('newviewmessage', 'activity')
-                    . ' ' . $viewinfo->title . ' ' . get_string('ownedby', 'activity');
+
+                $data->message = get_string('newviewmessage', 'activity', $viewinfo->title);
                 $data->subject = get_string('newviewsubject', 'activity');
+                $data->url = get_config('wwwroot') . 'view/view.php?view=' . $data->view;
+
                 // add users on friendslist, userlist or grouplist...
                 $users = activity_get_viewaccess_users($data->view, $data->owner);
                 if (empty($users)) {
@@ -322,8 +357,9 @@ function handle_activity($activitytype, $data, $cron=false) {
                 }
                 // ick
                 foreach ($users as $user) {
-                    $user->message = $data->message . ' ' . display_name($viewinfo, $user);
+                    $user->message = display_name($viewinfo, $user) . ' ' . $data->message;
                 }
+
                 break;
             case 'viewaccess':
                 if (!is_numeric($data->owner) || !is_numeric($data->view)) {
@@ -338,8 +374,9 @@ function handle_activity($activitytype, $data, $cron=false) {
                     throw new InvalidArgumentException("Couldn't find view with id " . $data->view);
                 }
                 $data->message = get_string('newviewaccessmessage', 'activity')
-                    . ' ' . $viewinfo->title . ' ' . get_string('ownedby', 'activity');
+                    . ' "' . $viewinfo->title . '" ' . get_string('ownedby', 'activity');
                 $data->subject = get_string('newviewaccesssubject', 'activity');
+                $data->url = get_config('wwwroot') . 'view/view.php?view=' . $data->view;
                 $users = array_diff_key(activity_get_viewaccess_users($data->view, $data->owner), $data->oldusers);
                 if (empty($users)) {
                     $users = array();

@@ -454,6 +454,17 @@ abstract class ArtefactType {
 
     }
 
+
+    public function add_to_render_path(&$options) {
+        if (empty($options['path'])) {
+            $options['path'] = $this->get('id');
+        }
+        else {
+            $options['path'] .= ',' . $this->get('id');
+        }
+    }
+
+
     /**
      * list artefact children.  There's a default for this, but we only use it
      * if the class thinks it can render FORMAT_ARTEFACT_LISTCHILDREN. 
@@ -484,7 +495,11 @@ abstract class ArtefactType {
             require_once('artefact.php');
             if (artefact_in_view($id = $this->get('id'), $options['viewid'])) {
                 $title = '<a href="' . get_config('wwwroot') . 'view/view.php?view=' . $options['viewid']
-                    . '&artefact=' . $id . '">' . $this->title . '</a>';
+                    . '&artefact=' . $id;
+                if (!empty($options['path'])) {
+                    $title .= '&path=' . $options['path'];
+                }
+                $title .= '">' . $this->title . '</a>';
             }
         }
         if (!isset($title)) {
@@ -517,6 +532,16 @@ abstract class ArtefactType {
      * redefine this function.
      */
     public function public_feedback_allowed() {
+        return true;
+    }
+
+
+    /**
+     * By default users are notified of all feedback on artefacts
+     * which they own.  Artefact types which want to allow this
+     * notification to be turned off should redefine this function.
+     */
+    public function feedback_notify_owner() {
         return true;
     }
 

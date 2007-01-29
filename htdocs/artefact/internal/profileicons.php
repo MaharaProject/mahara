@@ -201,7 +201,7 @@ function settings_submit_default(Pieform $form, $values) {
     $USER->set('profileicon', $default);
     set_field('usr', 'profileicon', $default, 'id', $USER->get('id'));
     $SESSION->add_ok_msg(get_string('profileiconsdefaultsetsuccessfully', 'artefact.internal'));
-    redirect('artefact/internal/profileicons.php');
+    redirect('/artefact/internal/profileicons.php');
 }
 
 function settings_submit_delete(Pieform $form, $values) {
@@ -228,7 +228,7 @@ function settings_submit_delete(Pieform $form, $values) {
         $SESSION->add_info_msg(get_string('profileiconsnoneselected', 'artefact.internal'));
     }
 
-    redirect('artefact/internal/profileicons.php');
+    redirect('/artefact/internal/profileicons.php');
 }
 
 $smarty->assign('uploadform', $uploadform);

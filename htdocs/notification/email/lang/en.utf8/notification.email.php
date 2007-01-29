@@ -30,6 +30,7 @@ $string['emailsubject'] = 'Message from %s: %s';
 $string['emailbodynoreply'] = "This is an auto generated notification from %s. Please do not reply to this message.  Following is the content of your notification\n\n--------------------------------------------------\n\n";
 $string['emailbody'] = "This is an auto generated notification from %s.  Following is the content of your notification\n\n--------------------------------------------------\n\n";
 $string['emailbodyending'] = 'To update your notification preferences, visit %s';
+$string['referurl'] = 'See %s';
 
 $string['name'] = 'Email';
 ?>

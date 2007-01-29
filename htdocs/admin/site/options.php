@@ -31,6 +31,7 @@ define('SUBMENUITEM', 'siteoptions');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('pieforms/pieform.php');
+define('TITLE', get_string('siteoptions', 'admin'));
 
 $langoptions = get_languages();
 $themeoptions = get_themes();

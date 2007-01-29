@@ -164,10 +164,26 @@ function expected_account_preferences() {
 
 function set_profile_field($userid, $field, $value) {
     safe_require('artefact', 'internal');
-    $classname = generate_artefact_class_name($field);
-    $profile = new $classname(0, array('owner' => $userid));
-    $profile->set('title', $value);
-    $profile->commit();
+
+    // this is a special case that replaces the primary email address with the
+    // specified one
+    if ($field == 'email') {
+        try {
+            $email = artefact_instance_from_type('email', $userid);
+        }
+        catch (ArtefactNotFoundException $e) {
+            $email = new ArtefactTypeEmail();
+            $email->set('owner', $userid);
+        }
+        $email->set('title', $value);
+        $email->commit();
+    }
+    else {
+        $classname = generate_artefact_class_name($field);
+        $profile = new $classname(0, array('owner' => $userid));
+        $profile->set('title', $value);
+        $profile->commit();
+    }
 }
 
 /**
@@ -292,6 +308,7 @@ function display_name($user, $userto=null) {
     if (empty($userto)) {
         $userto = new StdClass;
         $userto->id            = $USER->get('id');
+        $userto->username      = $USER->get('username');
         $userto->preferredname = $USER->get('preferredname');
         $userto->firstname     = $USER->get('firstname');
         $userto->lastname      = $USER->get('lastname');
@@ -311,6 +328,7 @@ function display_name($user, $userto=null) {
         $userObj = $user;
         $user = new StdClass;
         $user->id            = $userObj->get('id');
+        $user->username      = $userObj->get('username');
         $user->preferredname = $userObj->get('preferredname');
         $user->firstname     = $userObj->get('firstname');
         $user->lastname      = $userObj->get('lastname');
@@ -319,11 +337,14 @@ function display_name($user, $userto=null) {
 
     // if they don't have a preferred name set, just return here
     if (empty($user->preferredname)) {
+        if ($userto->admin) {
+            return $user->firstname . ' ' . $user->lastname . ' (' . $user->username . ')';
+        }
         return $user->firstname . ' ' . $user->lastname;
     }
 
     if ($userto->admin) {
-        return $user->preferredname . ' (' . $user->firstname . ' ' . $user->lastname . ')';
+        return $user->preferredname . ' (' . $user->firstname . ' ' . $user->lastname . ' - ' . $user->username . ')';
     }
 
     $prefix = get_config('dbprefix');
@@ -537,8 +558,6 @@ function suspend_user($suspendeduserid, $reason, $suspendinguserid=null) {
  */
 function friend_submit($form, $values) {
     global $user, $USER;
-
-    log_debug($values);
 
     $loggedinid = $USER->get('id');
     $userid = $user->id;

@@ -59,6 +59,8 @@ if (!empty($uploads)) {
 }
 
 
+// Get blogpost instance
+
 $postobj = new ArtefactTypeBlogPost($blogpost, null);
 $postobj->set('title', $title);
 $postobj->set('description', $body);
@@ -75,16 +77,17 @@ $blogpost = $postobj->get('id');
 
 
 
+
+
+
 // Delete old attachments in the db that no longer appear in the list
 // of artefacts
 
-if (!$old = get_column('artefact_blog_blogpost_file', 'file', 'blogpost', $blogpost)) {
-    $old = array();
-}
+$old = $postobj->attachment_id_list();
 
 foreach ($old as $o) {
     if (!in_array($o, $artefacts)) {
-        delete_records('artefact_blog_blogpost_file', 'blogpost', $blogpost, 'file', $o);
+        $postobj->detach_file($o);
     }
 }
 
@@ -94,10 +97,7 @@ foreach ($old as $o) {
 
 foreach ($artefacts as $a) {
     if (!in_array($a, $old)) {
-        $data = new StdClass;
-        $data->blogpost = $blogpost;
-        $data->file = $a;
-        insert_record('artefact_blog_blogpost_file', $data);
+        $postobj->attach_file($a);
     }
 }
 

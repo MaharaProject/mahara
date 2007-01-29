@@ -37,7 +37,7 @@ $view_data = get_record( 'view', 'id', $view_id, 'owner', $USER->get('id'));
 
 if(!$view_data) {
     $SESSION->add_error_msg(get_string('canteditdontown', 'view'));
-    redirect(get_config('wwwroot') . 'view/');
+    redirect('/view/');
 }
 
 $data = array(
@@ -153,11 +153,11 @@ if (param_boolean('submit')) {
     
 
     $SESSION->add_ok_msg(get_string('viewinformationsaved', 'view'));
-    redirect(get_config('wwwroot') . 'view/');
+    redirect('/view/');
 }
 
 if (param_boolean('cancel')) {
-    redirect(get_config('wwwroot') . 'view/');
+    redirect('/view/');
 }
 
 // Get the list of root things for the tree
@@ -201,8 +201,8 @@ $smarty = smarty(
     )
 );
 $smarty->assign('rootinfo', $rootinfo);
-$smarty->assign('plusicon', theme_get_url('plus.png'));
-$smarty->assign('minusicon', theme_get_url('minus.png'));
+$smarty->assign('plusicon', theme_get_url('images/plus.png'));
+$smarty->assign('minusicon', theme_get_url('images/minus.png'));
 
 $smarty->assign('template', $template);
 

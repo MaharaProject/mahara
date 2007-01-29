@@ -919,8 +919,8 @@ function pieform_validate(Pieform $form, $values) {
 
 function pieform_element_calendar_configure($element) {
     $element['jsroot'] = '/js/jscalendar/';
-    $element['themefile'] = get_config('themeurl') . 'style/calendar.css';
-    $element['imagefile'] = get_config('themeurl') . 'calendar.gif';
+    $element['themefile'] = theme_get_url('style/calendar.css');
+    $element['imagefile'] = theme_get_url('images/calendar.gif');
     $element['language'] = 'en'; // @todo: language file names for the js calendar may need to be changed
     return $element;
 }
@@ -1346,20 +1346,6 @@ function get_dir_contents($directory) {
         $contents[] = $dir;
     }
     return $contents;
-}
-
-function serve_file($file, $filename) {
-    if (!file_exists($file)) {
-        header('HTTP/1.0 404 Not Found');
-        exit;
-    }
-
-    // Moodle security stuff went here...
-
-    require_once('file.php');
-
-    session_write_close(); // unlock session during fileserving
-    send_file($file, $filename);
 }
 
 ?>

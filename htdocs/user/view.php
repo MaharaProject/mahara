@@ -74,8 +74,8 @@ define('TITLE', $name);
 if ($USER->get('staff')) {
     $userfields['fullname']     = $user->firstname . ' ' . $user->lastname;
     $userfields['institution']  = $user->institution;
-    $userfields['studentid']    = $user->studentid;
-    $userfields['emailaddress'] = $user->email;
+    $userfields['studentid']    = get_profile_field($user->id, 'studentid');
+    $userfields['principalemailaddress'] = $user->email;
 }
 
 // Get public profile fields:
@@ -295,6 +295,9 @@ $smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 $smarty->assign('NAME',$name);
 $smarty->assign('USERID', $userid);
 $smarty->assign('USERFIELDS',$userfields);
+if ($USER->get('admin')) {
+    $smarty->assign('USERCOMMUNITIES',$userassoccommunities);
+}
 $smarty->assign('VIEWS',$views);
 $smarty->display('user/view.tpl');
 

@@ -43,7 +43,7 @@ if (!session_id()) {
 
 // Logged in people can't register
 if (is_logged_in()) {
-    redirect('/');
+    redirect();
 }
 
 // Step two of registration (first as it's the easiest): the user has
@@ -119,7 +119,7 @@ if (isset($_REQUEST['key'])) {
 
         // Log the user in and send them to the homepage
         $USER->login($registration);
-        redirect('/');
+        redirect();
     }
     
     function profileform_validate(Pieform $form, $values) {
@@ -372,7 +372,7 @@ function register_validate(Pieform $form, $values) {
     // The e-mail address cannot already be in the system
     if (!$form->get_error('email')
         && (record_exists('usr', 'email', $values['email'])
-        || record_exists('usr_registration', 'email', $values['email']))) {
+        || record_exists('artefact_internal_profile_email', 'email', $values['email']))) {
         $form->set_error('email', get_string('emailalreadytaken', 'auth.internal'));
     }
     
@@ -403,6 +403,7 @@ function register_submit(Pieform $form, $values) {
         insert_record('usr_registration', $values);
 
         $user =(object) $values;
+        $user->admin = 0;
         email_user($user, null,
             get_string('registeredemailsubject', 'auth.internal', get_config('sitename')),
             get_string('registeredemailmessagetext', 'auth.internal', $values['firstname'], get_config('sitename'), $values['key'], get_config('sitename')),
@@ -420,7 +421,7 @@ function register_submit(Pieform $form, $values) {
     // Add a marker in the session to say that the user has registered
     $_SESSION['registered'] = true;
 
-    redirect('register.php');
+    redirect('/register.php');
 }
 
 function register_cancel_submit() {

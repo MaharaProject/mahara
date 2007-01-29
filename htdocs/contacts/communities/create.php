@@ -82,7 +82,7 @@ function createcommunity_validate(Pieform $form, $values) {
 }
 
 function createcommunity_cancel_submit() {
-    redirect(get_config('wwwroot') . 'contacts/communities/owned.php');
+    redirect('/contacts/communities/owned.php');
 }
 
 function createcommunity_submit(Pieform $form, $values) {
@@ -111,7 +111,7 @@ function createcommunity_submit(Pieform $form, $values) {
 
     db_commit();
 
-    redirect(get_config('wwwroot') . 'contacts/communities/owned.php');
+    redirect('/contacts/communities/owned.php');
 }
 
 $smarty = smarty();

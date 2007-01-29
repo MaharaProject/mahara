@@ -372,7 +372,9 @@ class ArtefactTypeCachedProfileField extends ArtefactTypeProfileField {
         parent::commit();
         $field = $this->get_artefact_type();
         set_field('usr', $field, $this->title, 'id', $this->owner);
-        $USER->set($field, $this->title);
+        if ($this->owner == $USER->get('id')) {
+            $USER->set($field, $this->title);
+        }
     }
 
     public function delete() {
@@ -392,21 +394,38 @@ class ArtefactTypeEmail extends ArtefactTypeProfileField {
         parent::commit();
 
         $email_record = get_record('artefact_internal_profile_email', 'owner', $this->owner, 'email', $this->title);
-        // we've created a new artefact that doesn't have a profile email thingy.
-        // we assume that it's a validated email, and set it to primary (if there isn't already one)
-        if(!$email_record) {
-            $principal = get_record('artefact_internal_profile_email', 'owner', $this->owner, 'principal', 1);
 
-            insert_record(
-                'artefact_internal_profile_email',
-                (object) array(
-                    'owner'     => $this->owner,
-                    'email'     => $this->title,
-                    'verified'  => 1,
-                    'principal' => ( $principal ? 0 : 1 ),
-                    'artefact'  => $this->id,
-                )
-            );
+        if(!$email_record) {
+            if (record_exists('artefact_internal_profile_email', 'owner', $this->owner, 'artefact', $this->id)) {
+                update_record(
+                    'artefact_internal_profile_email',
+                    (object) array(
+                        'email'     => $this->title,
+                        'verified'  => 1,
+                    ),
+                    (object) array(
+                        'owner'     => $this->owner,
+                        'artefact'  => $this->id,
+                    )
+                );
+                if (get_field('artefact_internal_profile_email', 'principal', 'owner', $this->owner, 'artefact', $this->id)) {
+                    update_record('usr', (object) array( 'email' => $this->title, 'id' => $this->owner));
+                }
+            }
+            else {
+                $principal = get_record('artefact_internal_profile_email', 'owner', $this->owner, 'principal', 1);
+
+                insert_record(
+                    'artefact_internal_profile_email',
+                    (object) array(
+                        'owner'     => $this->owner,
+                        'email'     => $this->title,
+                        'verified'  => 1,
+                        'principal' => ( $principal ? 0 : 1 ),
+                        'artefact'  => $this->id,
+                    )
+                );
+            }
         }
     }
 }

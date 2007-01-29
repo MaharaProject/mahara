@@ -47,7 +47,7 @@ $viewdata = get_record_sql('
      INNER JOIN ' . $prefix . 'community c ON v.submittedto = c.id
      WHERE v.id = ' . $viewid, '');
 
-$page = get_config('wwwroot') . 'view/view.php?view=' . $viewid;
+$page = '/view/view.php?view=' . $viewid;
 
 require_once('uploadmanager.php');
 $um = new upload_manager('attachment');
@@ -100,6 +100,10 @@ if (!insert_record('view_feedback', $data)) {
     $f->delete();
 }
 
-redirect(get_config('wwwroot') . 'view/view.php?view=' . $viewid);
+require_once('activity.php');
+activity_occurred('feedback', $data);
+
+
+redirect('/view/view.php?view=' . $viewid);
 
 ?>

@@ -61,7 +61,7 @@ if ($control) {
 // normal processing (getting friends list)
 if (empty($pending)) {
     $count = count_records_select('usr_friend', 'usr1 = ? OR usr2 = ?', array($userid, $userid));
-    $sql = 'SELECT u.id,u.firstname,u.lastname,u.preferredname
+    $sql = 'SELECT u.id,u.username,u.firstname,u.lastname,u.preferredname
             FROM ' . $prefix . 'usr u 
             WHERE u.id IN (
                 SELECT (CASE WHEN usr1 = ? THEN usr2 ELSE usr1 END) AS userid 

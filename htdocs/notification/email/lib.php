@@ -36,7 +36,7 @@ class PluginNotificationEmail extends PluginNotification {
         $fulltype = get_string('type' . $data->type, 'activity');
         $subject = get_string('emailsubject', 'notification.email', $sitename, $fulltype);
         if (!empty($data->subject)) {
-            $subect .= ': ' . $subject;
+            $subject .= ': ' . $subject;
         }
 
         if (!empty($data->userfrom)) {
@@ -50,6 +50,9 @@ class PluginNotificationEmail extends PluginNotification {
             $messagebody = get_string('emailbodynoreply', 'notification.email', $sitename)
                 . get_string('subject') . ': ' . $data->subject . "\n\n"
                 . $data->message;
+        }
+        if (!empty($data->url)) {
+            $messagebody .= "\n\n" . get_string('referurl', 'notification.email', $data->url);
         }
         $prefurl = get_config('wwwroot') . 'account/activity/preferences/';
         $messagebody .=  "\n\n" . get_string('emailbodyending', 'notification.email', $prefurl);

@@ -152,9 +152,11 @@ function profileform_submit(Pieform $form, $values) {
                 try {
                     email_user(
                         (object)array(
+                            'username'      => $USER->get('username'),
                             'firstname'     => $USER->get('firstname'),
                             'lastname'      => $USER->get('lastname'),
                             'preferredname' => $USER->get('preferredname'),
+                            'admin'         => $USER->get('admin'),
                             'email'         => $email,
                         ),
                         null,

@@ -35,6 +35,22 @@ $createid = param_integer('createid', null);
 $data = $SESSION->get('create_' . $createid);
 
 
+if (empty($data['artefacts'])) {
+    $confirmmessage = get_string('reallyaddaccesstoemptyview');
+    $backpage = get_config('wwwroot') . 'view/create3.php?createid=' . $createid;
+    $js = <<<EOF
+addLoadEvent(function() {
+    connect('createview4_submit', 'onclick', function () {
+        var accesslistrows = getElementsByTagAndClassName('tr', null, 'accesslistitems');
+        if (accesslistrows.length > 0 && !confirm('{$confirmmessage}')) {
+            replaceChildNodes('accesslistitems', []);
+        }
+    });
+});
+EOF;
+    $smarty->assign('INLINEJAVASCRIPT', $js);
+}
+
 $form = array(
     'name' => 'createview4',
     'elements' => array(
@@ -50,17 +66,19 @@ $form = array(
 );
 
 function createview4_submit_cancel() {
-    redirect('view/');
+    redirect('/view/');
 }
+
 
 function createview4_submit(Pieform $form, $values) {
     global $SESSION, $USER, $createid, $data;
+    log_debug($values);
 
     if (param_boolean('back')) {
         $data['accesslist'] = array_values((array)$values['accesslist']);
         log_debug($data);
         $SESSION->set('create_' . $createid, $data);
-        redirect(get_config('wwwroot') . 'view/create3.php?createid=' . $createid);
+        redirect('/view/create3.php?createid=' . $createid);
     }
 
     db_begin();
@@ -141,11 +159,11 @@ function createview4_submit(Pieform $form, $values) {
 
     db_commit();
     $SESSION->add_ok_msg(get_string('viewcreatedsuccessfully', 'view'));
-    redirect(get_config('wwwroot') . 'view/');
+    redirect('/view/');
 }
 
 function createview4_cancel() {
-    redirect(get_config('wwwroot') . 'view/');
+    redirect('/view/');
 }
 
 $smarty->assign('titlestr', get_string('createviewstep4', 'view'));

@@ -42,7 +42,7 @@ $prefix = get_config('dbprefix');
 
 if (!get_field('view', 'COUNT(*)', 'id', $viewid, 'owner', $USER->get('id'))) {
     $SESSION->add_error_msg(get_string('canteditdontown', 'view'));
-    redirect('view/');
+    redirect('/view/');
 }
 $data = get_records_sql_array('SELECT va.accesstype AS type, va.startdate, va.stopdate
     FROM ' . $prefix . 'view_access va
@@ -99,7 +99,7 @@ $form = array(
 );
 
 function editviewaccess_cancel_submit() {
-    redirect('view/');
+    redirect('/view/');
 }
 
 function editviewaccess_submit(Pieform $form, $values) {
@@ -203,7 +203,7 @@ function editviewaccess_submit(Pieform $form, $values) {
 
     db_commit();
     $SESSION->add_ok_msg(get_string('viewaccesseditedsuccessfully'));
-    redirect('view/');
+    redirect('/view/');
 }
 
 $smarty->assign('titlestr', get_string('editaccess', 'view'));

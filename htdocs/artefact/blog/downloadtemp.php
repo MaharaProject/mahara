@@ -26,6 +26,7 @@
 
 define('INTERNAL', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+require_once('file.php');
 
 $uploadnumber = param_integer('uploadnumber');
 $createid     = param_variable('createid');

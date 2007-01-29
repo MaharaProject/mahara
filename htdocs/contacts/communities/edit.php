@@ -38,7 +38,7 @@ $community_data = get_record('community', 'id', $id, 'owner', $USER->get('id'));
 
 if (!$community_data) {
     $SESSION->add_error_msg(get_string('canteditdontown'));
-    redirect(get_config('wwwroot') . 'contacts/communities/owned.php');
+    redirect('/contacts/communities/owned.php');
 }
 
 $joinoptions = array(
@@ -64,7 +64,7 @@ $editcommunity = pieform(array(
             'type'         => 'wysiwyg',
             'title'        => get_string('communitydescription'),
             'rows'         => 10,
-            'cols'         => 80,
+            'cols'         => 70,
             'defaultvalue' => $community_data->description,
         ),
         'membershiptype' => array(
@@ -96,7 +96,7 @@ function editcommunity_validate(Pieform $form, $values) {
 }
 
 function editcommunity_cancel_submit() {
-    redirect(get_config('wwwroot') . 'contacts/communities/owned.php');
+    redirect('/contacts/communities/owned.php');
 }
 
 function editcommunity_submit(Pieform $form, $values) {
@@ -125,7 +125,7 @@ function editcommunity_submit(Pieform $form, $values) {
 
     db_commit();
 
-    redirect(get_config('wwwroot') . 'contacts/communities/owned.php');
+    redirect('/contacts/communities/owned.php');
 }
 
 $smarty = smarty();

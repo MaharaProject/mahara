@@ -29,6 +29,7 @@ define('ADMIN', 1);
 define('MENUITEM', 'configsite');
 define('SUBMENUITEM', 'sitemenu');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+define('TITLE', get_string('sitemenu', 'admin'));
 
 $strings = array('edit','delete','update','cancel','add','name','unknownerror');
 $adminstrings = array('confirmdeletemenuitem', 'deletefailed','deletingmenuitem','savingmenuitem',

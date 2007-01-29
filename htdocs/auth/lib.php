@@ -128,7 +128,7 @@ function auth_setup () {
     if ($sessionlogouttime && isset($_GET['logout'])) {
         $USER->logout();
         $SESSION->add_ok_msg(get_string('loggedoutok'));
-        redirect(get_config('wwwroot'));
+        redirect();
     }
     if ($sessionlogouttime > time()) {
         // The session is still active, so continue it.
@@ -144,12 +144,12 @@ function auth_setup () {
                 // The user's admin rights have been taken away
                 $USER->set('admin', 0);
                 $SESSION->add_error_msg(get_string('accessforbiddentoadminsection'));
-                redirect(get_config('wwwroot'));
+                redirect();
             }
             elseif (!$USER->get('admin')) {
                 // The user never was an admin
                 $SESSION->add_error_msg(get_string('accessforbiddentoadminsection'));
-                redirect(get_config('wwwroot'));
+                redirect();
             }
         }
         $USER->renew();
@@ -253,13 +253,22 @@ function auth_check_password_change() {
                     'title'       => get_string('confirmpassword') . ':',
                     'description' => get_string('yournewpasswordagain'),
                     'rules'       => array(
-                        'required' => true
-                    )
+                        'required' => true,
+                    ),
+                ),
+                'email' => array(
+                    'type'   => 'text',
+                    'title'  => get_string('principalemailaddress', 'artefact.internal'),
+                    'ignore' => (trim($USER->get('email')) != '' && !preg_match('/@example\.org$/', $USER->get('email'))),
+                    'rules'  => array(
+                        'required' => true,
+                        'email'    => true,
+                    ),
                 ),
                 'submit' => array(
                     'type'  => 'submit',
-                    'value' => get_string('changepassword')
-                )
+                    'value' => get_string('changepassword'),
+                ),
             )
         );
 
@@ -308,7 +317,7 @@ function change_password_submit(Pieform $form, $values) {
     $authtype = auth_get_authtype_for_institution($USER->get('institution'));
     $authclass = 'Auth' . ucfirst($authtype);
 
-    // This method should exists, because if it did not then the change
+    // This method should exist, because if it did not then the change
     // password form would not have been shown.
     if ($password = call_static_method($authclass, 'change_password', $USER->get('username'), $values['password1'])) {
         $user = new StdClass;
@@ -320,6 +329,9 @@ function change_password_submit(Pieform $form, $values) {
         $USER->set('password', $password);
         $USER->set('passwordchange', 0);
         $SESSION->add_ok_msg(get_string('passwordsaved'));
+        if (!empty($values['email'])) {
+            set_profile_field($USER->get('id'), 'email', $values['email']);
+        }
         redirect();
     }
 
@@ -561,7 +573,7 @@ function login_submit(Pieform $form, $values) {
             // Only admins in the admin section!
             if (defined('ADMIN') && !$userdata->admin) {
                 $SESSION->add_error_msg(get_string('accessforbiddentoadminsection'));
-                redirect(get_config('wwwroot'));
+                redirect();
             }
 
             // Check if the user's account has been deleted
@@ -629,7 +641,7 @@ function auth_handle_account_expiries() {
     $wwwroot  = get_config('wwwroot');
 
     // Expiry warning messages
-    if ($users = get_records_sql_array('SELECT u.id, u.firstname, u.lastname, u.preferredname, u.email, i.defaultaccountinactivewarn AS timeout
+    if ($users = get_records_sql_array('SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, i.defaultaccountinactivewarn AS timeout
         FROM ' . $prefix . 'usr u, ' . $prefix . 'institution i
         WHERE u.institution = i.name
         AND ? - ' . db_format_tsfield('u.expiry', false) . ' < i.defaultaccountinactivewarn
@@ -658,7 +670,7 @@ function auth_handle_account_expiries() {
     }
 
     // Inactivity (lastlogin is too old)
-    if ($users = get_records_sql_array('SELECT u.id, u.firstname, u.lastname, u.preferredname, u.email, i.defaultaccountinactivewarn AS timeout
+    if ($users = get_records_sql_array('SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, i.defaultaccountinactivewarn AS timeout
         FROM ' . $prefix . 'usr u, ' . $prefix . 'institution i
         WHERE u.institution = i.name
         AND (? - ' . db_format_tsfield('u.lastlogin', false) . ') > (i.defaultaccountinactiveexpire - i.defaultaccountinactivewarn)

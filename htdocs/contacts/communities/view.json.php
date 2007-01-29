@@ -79,7 +79,7 @@ switch ($type) {
         );
                                    
         $data = get_records_sql_array('
-            SELECT v.*,u.firstname,u.lastname, u.preferredname,u.id AS usr 
+            SELECT v.*, u.username, u.firstname, u.lastname, u.preferredname, u.id AS usr 
             FROM ' . $prefix . 'view v
             LEFT OUTER JOIN ' . $prefix . 'view_access_community a ON a.view=v.id
             INNER JOIN ' . $prefix.'usr u ON v.owner = u.id ' . $where, 
@@ -97,22 +97,22 @@ switch ($type) {
         }
         break;
     case 'members':
-        $sql = 'SELECT u.*,c.tutor 
-                    FROM ' . $prefix . 'usr u JOIN ' . $prefix . 'community_member c
+        $select = 'SELECT u.*,c.tutor ';
+        $sql = '    FROM ' . $prefix . 'usr u JOIN ' . $prefix . 'community_member c
                         ON c.member = u.id 
                     WHERE c.community = ?';
         if (empty($pending)) { // default behaviour - actual members
             $count = count_records('community_member', 'community', $id);
-            $data = get_records_sql_array($sql, array($id), $offset, $limit);
+            $data = get_records_sql_array($select . $sql, array($id), $offset, $limit);
         }
         else {
             if ($membership == COMMUNITY_MEMBERSHIP_MEMBER) {
                 community_json_empty();
             }
             $sql = str_replace('community_member', 'community_member_request', $sql);
-            $sql = str_replace(',c.tutor', ',1 AS request, c.reason', $sql);
+            $select = 'SELECT u.*, 1 AS request, c.reason';
             $count = count_records('community_member_request', 'community', $id);
-            $data = get_records_sql_array($sql, array($id), $offset, $limit);
+            $data = get_records_sql_array($select . $sql, array($id), $offset, $limit);
         }
         if (empty($data)) {
             $data = array();

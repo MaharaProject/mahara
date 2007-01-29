@@ -70,7 +70,7 @@ function creategroup_validate(Pieform $form, $values) {
 }
 
 function creategroup_cancel_submit() {
-    redirect('contacts/groups/');
+    redirect('/contacts/groups/');
 }
 
 function creategroup_submit(Pieform $form, $values) {
@@ -109,7 +109,7 @@ function creategroup_submit(Pieform $form, $values) {
 
     db_commit();
 
-    redirect('contacts/groups/');
+    redirect('/contacts/groups/');
 }
 
 $smarty = smarty();

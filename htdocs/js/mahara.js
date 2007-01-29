@@ -14,6 +14,17 @@ function get_string(s) {
     return str;
 }
 
+// Expects an image/css path to fetch url for (requires config.theme[] to be
+// set)
+function get_themeurl(s) {
+    // log('get_themeurl(' + s + ')');
+    if (!config || !config.theme || !config.theme[s]) {
+        logError('Location of ' + s + ' is unknown, ensure config.theme is set correctly');
+    }
+
+    return config.theme[s];
+}
+
 function globalErrorHandler(data) {
     if (data.returnCode == 3) {
         // Logged out!
@@ -73,7 +84,7 @@ function formGlobalError(form, data) {
 
 // Message related functions
 function makeMessage(message, type) {
-    var a = A({'href': ''}, IMG({'src': config.themeurl + 'images/icon_close.gif', 'alt': '[X]'}));
+    var a = A({'href': ''}, IMG({'src': get_themeurl('images/icon_close.gif'), 'alt': '[X]'}));
     connect(a, 'onclick', function(e) {
         removeElement(a.parentNode.parentNode);
         e.stop();
@@ -373,16 +384,12 @@ function toggleChecked(c) {
 }
 
 function expandDownToViewport(element, width) {
-    if (typeof(width) == 'undefined') {
-        width = getElementDimensions(element).w;
-    }
-
     var viewport = getViewportDimensions();
     var position = getElementPosition(element);
     var newheight = new Dimensions(width, viewport.h - position.y - 2);
 
     if ($('footer')) {
-        newheight.h -= getElementDimensions('footer').h + 8;
+        newheight.h -= getElementDimensions('footer').h + 40;
     }
 
     setElementDimensions(element, newheight);

@@ -30,6 +30,10 @@ define('SUBMENUITEM', 'mygroups');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('mygroups'));
 
+$enc_edit = json_encode(get_string('edit'));
+$enc_delete = json_encode(get_string('delete'));
+$enc_confirmdelete = json_encode(get_string('confirmdeletegroup'));
+
 $javascript = <<<JAVASCRIPT
 var grouplist = new TableRenderer(
     'grouplist',
@@ -37,7 +41,39 @@ var grouplist = new TableRenderer(
     [
         'name',
         'count',
-        function(r) { return TD(null,A({'href':'edit.php?id=' + r.id}, 'edit')); }
+        function(r) {
+            var editLink = BUTTON({'type': 'button', 'class': 'button'}, {$enc_edit});
+            connect(editLink, 'onclick', function (e) {
+                e.stop();
+                window.location.href = 'edit.php?id=' + r.id;
+            });
+
+            var deleteLink = BUTTON({'type':'button', 'class': 'button'}, {$enc_delete});
+            connect(deleteLink, 'onclick', function (e) {
+                e.stop();
+
+                if (!confirm({$enc_confirmdelete})) {
+                    return;
+                }
+                sendjsonrequest(
+                    'index.json.php',
+                    {
+                        'action': 'delete',
+                        'id': r.id
+                    },
+                    function (data) {
+                        grouplist.doupdate();
+                    }
+                );
+            });
+
+            return TD(
+                null,
+                editLink,
+                ' ',
+                deleteLink
+            )
+        }
     ]
 );
 

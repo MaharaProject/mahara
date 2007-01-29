@@ -266,6 +266,9 @@ $string['groupalreadyexists']        = 'A group by this name already exists';
 $string['groupdescription']          = 'Group description';
 $string['editgroup']                 = 'Edit group';
 $string['membercount']               = 'Member count';
+$string['confirmdeletegroup']        = 'Are you sure you want to delete this group?';
+$string['cantdeletegroupdontown']    = 'You can\'t delete this group, you don\'t own it';
+$string['deletegroupsuccessful']     = 'Group successfully deleted';
 
 // my account
 $string['account'] =  'My account';
@@ -289,6 +292,7 @@ $string['editview'] = 'Edit View';
 $string['editviewinformation'] = 'Edit View Information';
 $string['myviews'] = 'My Views';
 $string['notownerofview'] = 'You are not the owner of this view';
+$string['reallyaddaccesstoemptyview'] = 'Your view contains no artefacts.  Do you really want to give these users access to the view?';
 $string['saveaccess'] = 'Save Access';
 $string['submitview'] = 'Submit View';
 $string['submitviewfailed'] = 'Submit view failed';
@@ -368,6 +372,7 @@ $string['addtowatchlist'] = 'Add %s to watchlist';
 $string['addtowatchlistwithchildren'] = 'Add entire %s contents to watchlist';
 $string['alreadyinwatchlist'] = 'This %s is already in your watchlist';
 $string['attachedfileaddedtofolder'] = "The attached file %s has been added to your '%s' folder.";
+$string['attachfile'] = "Attach file";
 $string['complaint'] = 'Complaint';
 $string['date'] = 'Date';
 $string['feedback'] = 'Feedback';
@@ -494,6 +499,7 @@ $string['requestedfriendlistmessagereason'] = '%s has requested that you add the
     . 'Their reason was: ';
 
 $string['removefromfriendslist'] = 'Remove from friends';
+$string['confirmremovefriend'] = 'Are you sure you want to remove this user from your friends list?';
 $string['removedfromfriendslistsubject'] = 'Removed from friends list';
 $string['removedfromfriendslistmessage'] = '%s has removed you from their friends list.';
 $string['removedfromfriendslistmessagereason'] = '%s has removed you from their friends list.  Their reason was: ';
