@@ -69,44 +69,52 @@ class PluginSearchInternal extends PluginSearch {
      *           );
      */
     public static function search_user($query_string, $limit, $offset = 0) {
+        safe_require('artefact', 'internal');
+        $publicfields = array_keys(ArtefactTypeProfile::get_public_fields());
+        $prefix = get_config('dbprefix');
         if ( is_postgres() ) {
-            $data = get_records_sql_array("
-                SELECT
-                    id, username, institution, firstname, lastname, preferredname, email
-                FROM
-                    " . get_config('dbprefix') . "usr u
-                WHERE
-                    id <> 0
-                    AND (
-                        firstname ILIKE '%' || ? || '%' 
-                        OR lastname ILIKE '%' || ? || '%' 
-                        OR firstname || ' ' || lastname ILIKE '%' || ? || '%' 
-                        OR preferredname ILIKE '%' || ? || '%' 
-                        OR email ILIKE '%' || ? || '%' 
-                    )
-                ",
-                array($query_string, $query_string, $query_string, $query_string, $query_string),
-                $offset,
-                $limit
-            );
+            if (!empty($publicfields)) {
+                $fieldclauses = array();
+                $values = array();
+                foreach ($publicfields as $fieldname) {
+                    array_push($fieldclauses, "(a.artefacttype = ? AND (a.title ILIKE '%' || ? || '%'))");
+                    array_push($values, $fieldname);
+                    array_push($values, $query_string);
+                }
+                $querysql = join(' OR ', $fieldclauses);
+                $data = get_records_sql_array('
+                    SELECT DISTINCT
+                        u.id, u.username, u.institution, u.firstname, 
+                        u.lastname, u.preferredname, u.email
+                    FROM
+                        ' . $prefix . 'usr u 
+                        INNER JOIN ' . $prefix . 'artefact a ON a.owner = u.id
+                    WHERE
+                        u.id <> 0
+                        AND ( ' . $querysql . ')',
+                    $values,
+                    $offset,
+                    $limit
+                );
 
-            $count = get_field_sql("
-                SELECT
-                    COUNT(*)
-                FROM
-                    " . get_config('dbprefix') . "usr u
-                WHERE
-                    id <> 0
-                    AND (
-                        firstname ILIKE '%' || ? || '%' 
-                        OR lastname ILIKE '%' || ? || '%' 
-                        OR firstname || ' ' || lastname ILIKE '%' || ? || '%' 
-                        OR preferredname ILIKE '%' || ? || '%' 
-                        OR email ILIKE '%' || ? || '%' 
-                    )
-            ",
-                array($query_string, $query_string, $query_string, $query_string, $query_string)
-            );
+                $count = get_field_sql('
+                    SELECT 
+                        COUNT(DISTINCT u.id)
+                    FROM
+                        ' . $prefix . 'usr u 
+                        INNER JOIN ' . $prefix . 'artefact a ON a.owner = u.id
+                    WHERE
+                        u.id <> 0
+                        AND ( ' . $querysql . ')',
+                    $values
+                );
+            }
+            else {
+                $data = false;
+                $count = 0;
+            }
+            log_debug($data);
+            log_debug($count);
         }
         // TODO
         // else if ( is_mysql() ) {
