@@ -27,7 +27,6 @@
 define('INTERNAL', 1);
 define('MENUITEM', 'myblogs');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-define('TITLE', get_string('editblogpost','artefact.blog'));
 require_once('pieforms/pieform.php');
 
 safe_require('artefact', 'blog');
@@ -58,6 +57,7 @@ if (!$blogpost) {
     $checked = '';
     $pagetitle = 'newblogpost';
     $focuselement = 'title';
+    define('TITLE', get_string('newblogpost','artefact.blog'));
 }
 else {
     $blogpostobj = new ArtefactTypeBlogPost($blogpost);
@@ -70,6 +70,7 @@ else {
     $checked = !$blogpostobj->get('published');
     $pagetitle = 'editblogpost';
     $focuselement = 'description'; // Doesn't seem to work with tinyMCE.
+    define('TITLE', get_string('editblogpost','artefact.blog'));
 }
 
 
