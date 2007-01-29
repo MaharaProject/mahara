@@ -419,20 +419,21 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
 
 
     public static function get_admin_files($public) {
+        $pubfolder = ArtefactTypeFolder::admin_public_folder_id();
         if ($public) {
-            $foldersql = 'parent = ' . ArtefactTypeFolder::admin_public_folder_id();
+            $foldersql = ' a.parent = ' . $pubfolder;
         }
         else {
-            $foldersql = 'parent IS NULL';
+            $foldersql = ' (a.parent = ' . $pubfolder . ' OR a.parent IS NULL) ';
         }
         $prefix = get_config('dbprefix');
         return get_records_sql_array('
             SELECT
-                a.id, a.title
+                a.id, a.title, a.parent
             FROM ' . $prefix . 'artefact a
                 INNER JOIN ' . $prefix . 'artefact_file_files f ON f.artefact = a.id
-            WHERE a.' . $foldersql . "
-                AND f.adminfiles = 1
+            WHERE f.adminfiles = 1 
+                AND ' . $foldersql . "
                 AND a.artefacttype != 'folder'", null);
     }
 

@@ -132,6 +132,7 @@ $string['loadingmenuitems']    = 'Loading menu items';
 $string['loadmenuitemsfailed'] = 'Failed to load menu items';
 $string['loggedinmenu']        = 'Logged in menu';
 $string['loggedoutmenu']       = 'Public menu';
+$string['public']              = 'public';
 
 // Site content
 $string['about']               = 'About';
