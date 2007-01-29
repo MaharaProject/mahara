@@ -125,9 +125,6 @@ $textinputform = pieform(array(
 $getstring = quotestrings(array(
     'mahara' => array(
     ),
-    'artefact.file' => array(
-        'myfiles',
-    ),
     'artefact.blog' => array(
         'absolutemiddle',
         'absolutebottom',
@@ -137,7 +134,6 @@ $getstring = quotestrings(array(
         'blogpost',
         'border',
         'bottom',
-        'browsemyfiles',
         'cancel',
         'dimensions',
         'horizontalspace',
@@ -183,19 +179,29 @@ uploader.createid = {$createid};
 
 
 
+
 // File browser instance allows users to attach files from the my files area
 var browser = null;
-var browsebutton = INPUT({'id':'browsebutton', 'type':'button', 'class':'button', 
-                          'value':{$getstring['browsemyfiles']}, 'onclick':browsemyfiles});
+
 function browsemyfiles() {
     hideElement('browsebutton');
-    insertSiblingNodesAfter('browsebutton', H3(null, {$getstring['myfiles']}));
-    showElement('filebrowser');
-    browser = new FileBrowser('filebrowser', '{$wwwroot}artefact/file/myfiles.json.php', null, 
-                              function () {}, {$getstring['attach']}, attachtopost);
-    browser.init();
+    showElement('browsemyfiles');
+    if (!elementDimensions('foldernav')) {
+        browser = new FileBrowser('filebrowser', '{$wwwroot}artefact/file/myfiles.json.php', null, 
+                                  function () {}, {$getstring['attach']}, attachtopost);
+        browser.init();
+        insertSiblingNodesBefore('foldernav', 
+                                 INPUT({'type':'button','class':'button','value':{$getstring['cancel']},
+                                        'onclick':function () {
+                                     hideElement('browsemyfiles');
+                                     showElement('browsebutton');
+                                 }}));
+    }
 }
-addLoadEvent(function () {insertSiblingNodesBefore('filebrowser', browsebutton);});
+
+addLoadEvent(function () {connect('browsebutton', 'onclick', browsemyfiles);});
+
+
 
 
 
