@@ -429,7 +429,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         $prefix = get_config('dbprefix');
         return get_records_sql_array('
             SELECT
-                a.id, a.title
+                a.id, a.title, a.parent
             FROM ' . $prefix . 'artefact a
                 INNER JOIN ' . $prefix . 'artefact_file_files f ON f.artefact = a.id
             WHERE f.adminfiles = 1 
