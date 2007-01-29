@@ -282,7 +282,7 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
             dirNode = dirNode.parent;
         }
 
-        return '/' + folders.join('/');
+        return get_string('home') + ' / ' + folders.join(' / ');
     }
 
     this.breadcrumbUpdate = function() {

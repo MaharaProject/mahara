@@ -23,13 +23,13 @@
 			</select>
 			</form>
 			<div id="typeheader">{str section='activity' tag='monitored'} {$typestr}</div>
+	                <div id="typeandchildren">* {str section='activity' tag='andchildren}</div>
 			<form method="post" onSubmit="{$stopmonitoring}">
 			<table id="watchlist" class="tablerenderer">
 				<thead>
 					<tr>
 						<th></th>
 						<th>[<a href="" onClick="{$selectall}">{str section='activity' tag='selectall'}</a>]</th>
-						<th id="recurseheader">{$recursestr}</th>
 					</tr>
 				</thead>
 				<tbody>

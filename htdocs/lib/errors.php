@@ -678,5 +678,22 @@ class AccessDeniedException extends UserException {
     }
 }
 
+/**
+ * Exception - Not found. Throw this if a user is trying to view something
+ * that doesn't exist
+ */
+class NotFoundException extends UserException {
+    public function strings() {
+        return array_merge(parent::strings(), 
+                           array('message' => 'The page you are looking for could not be found',
+                                 'title' => 'Not found'));
+    }
+
+    public function render_exception() {
+        header('HTTP/1.0 404 Not Found', true);
+        return parent::render_exception();
+    }
+}
+
 
 ?>

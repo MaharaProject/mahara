@@ -292,6 +292,7 @@ $string['editview'] = 'Edit View';
 $string['editviewinformation'] = 'Edit View Information';
 $string['myviews'] = 'My Views';
 $string['notownerofview'] = 'You are not the owner of this view';
+$string['reallyaddaccesstoemptyview'] = 'Your view contains no artefacts.  Do you really want to give these users access to the view?';
 $string['saveaccess'] = 'Save Access';
 $string['submitview'] = 'Submit View';
 $string['submitviewfailed'] = 'Submit view failed';

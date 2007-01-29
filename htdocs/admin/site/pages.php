@@ -30,6 +30,7 @@ define('MENUITEM', 'configsite');
 define('SUBMENUITEM', 'sitepages');
 require(dirname(dirname(dirname(__FILE__))).'/init.php');
 require_once('pieforms/pieform.php');
+define('TITLE', get_string('sitepages', 'admin'));
 
 $sitepages = get_records_array('site_content');
 $pageoptions = array();

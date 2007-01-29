@@ -1348,18 +1348,4 @@ function get_dir_contents($directory) {
     return $contents;
 }
 
-function serve_file($file, $filename) {
-    if (!file_exists($file)) {
-        header('HTTP/1.0 404 Not Found');
-        exit;
-    }
-
-    // Moodle security stuff went here...
-
-    require_once('file.php');
-
-    session_write_close(); // unlock session during fileserving
-    send_file($file, $filename);
-}
-
 ?>

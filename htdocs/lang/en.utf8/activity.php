@@ -98,4 +98,6 @@ $string['removefromwatchlist'] = 'Remove from watchlist';
 $string['removedcommunityfromwatchlist'] = 'The community has been removed from your watchlist';
 $string['addedcommunitytowatchlist'] = 'The community was added to your watchlist';
 
+$string['andchildren'] = 'Children are also being monitored'
+
 ?>
