@@ -262,6 +262,14 @@ function handle_activity($activitytype, $data, $cron=false) {
                     }
                     $data->message = get_string('onartefact', 'activity') 
                         . ' ' . $ainfo->title . ' ' . get_string('ownedby', 'activity');
+/*
+this query selects four different cases 
+1. user is watching the artefact directly
+2. user is watching a parent artefact with recurse = on
+3. user is watching a view with recurse = on; and:
+ a. artefact is directly associated with view
+ b. artefact is a child of an artefact associated with view
+*/
                     $sql = '
 SELECT DISTINCT u.*, p.method, ?||wa.view AS url
     FROM ' . $prefix . 'usr u
@@ -282,12 +290,7 @@ SELECT DISTINCT u.*, p.method, ?||wa.view AS url
                 ON va.artefact = pc.parent
             JOIN ' . $prefix . 'usr_watchlist_view wv
                 ON va.view = wv.view
-            WHERE pc.artefact = ? AND wv.recurse = 1
-        UNION SELECT wv.usr AS uid, wv.view AS view
-            FROM ' . $prefix . 'view_artefact va
-            JOIN ' . $prefix . 'usr_watchlist_view wv
-                ON va.view = wv.view
-            WHERE va.artefact = ?
+            WHERE (pc.artefact = ? OR va.artefact = ?)AND wv.recurse = 1
     ) wa ON wa.uid = u.id
     WHERE p.activity = ? OR p.activity IS NULL';
                     $values = array(get_config('wwwroot') . 'view/view.php?artefact=' 

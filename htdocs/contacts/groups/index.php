@@ -42,8 +42,13 @@ var grouplist = new TableRenderer(
         'name',
         'count',
         function(r) {
-            var deleteLink = BUTTON({'type':'button', 'class': 'button'}, {$enc_delete});
+            var editLink = BUTTON({'type': 'button', 'class': 'button'}, {$enc_edit});
+            connect(editLink, 'onclick', function (e) {
+                e.stop();
+                window.location.href = 'edit.php?id=' + r.id;
+            });
 
+            var deleteLink = BUTTON({'type':'button', 'class': 'button'}, {$enc_delete});
             connect(deleteLink, 'onclick', function (e) {
                 e.stop();
 
@@ -64,13 +69,10 @@ var grouplist = new TableRenderer(
 
             return TD(
                 null,
-                FORM(
-                    {'action': 'edit.php?id=' + r.id, 'method': 'post'},
-                    BUTTON({'type': 'submit', 'class': 'button'}, {$enc_edit}),
-                    ' ',
-                    deleteLink
-                )
-            );
+                editLink,
+                ' ',
+                deleteLink
+            )
         }
     ]
 );
