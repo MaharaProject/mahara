@@ -25,14 +25,63 @@
  */
 
 define('INTERNAL', 1);
+define('PUBLIC', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('artefact', 'file');
 require_once('artefact.php');
+require_once('file.php');
 
 $fileid = param_integer('file');
+$viewid = param_integer('view', null);
+
+if ($viewid && $fileid) {
+    if (!artefact_in_view($fileid, $viewid)) {
+        throw new UserException('Artefact ' . $fileid . ' is not in view ' . $viewid);
+    }
+
+    if (!can_view_view($viewid)) {
+        throw new AccessDeniedException();
+    }
+
+    $file = artefact_instance_from_id($fileid);
+    $path = $file->get_path();
+    $title = $file->get('title');
+    serve_file($path, $title);
+}
+
+// We just have a file ID
 $file = artefact_instance_from_id($fileid);
-$path = $file->get_path();
+log_debug('just a file ID - checking permissions');
+
+// If the file is in the public directory, it's fine to serve
+$fileispublic = $file->get('parent') == ArtefactTypeFolder::admin_public_folder_id();
+$fileispublic &= $file->get('adminfiles');
+$fileispublic &= record_exists('site_menu', 'file', $fileid, 'public', 1);
+
+if (!$fileispublic) {
+    log_debug('file is NOT in the public menu');
+    // If the file is in the logged in menu and the user is logged in then
+    // they can view it
+    $fileinloggedinmenu = $file->get('adminfiles');
+    $fileinloggedinmenu &= $file->get('parent') == null;
+    $fileinloggedinmenu &= record_exists('site_menu', 'file', $fileid, 'public', 0);
+    $fileinloggedinmenu &= $USER->is_logged_in();
+
+    if (!$fileinloggedinmenu) {
+        log_debug('file is NOT in logged in menu, or user is not logged in');
+        // Alternatively, if you own the file or you are an admin, it should always work
+        $fileisavailable = $USER->get('admin') || $file->get('owner') == $USER->get('id');
+
+        if (!$fileisavailable) {
+            log_debug('user does NOT own the file, or they are NOT an admin');
+            throw new AccessDeniedException();
+        }
+    }
+}
+
+log_debug('file permissions ok');
+$path  = $file->get_path();
 $title = $file->get('title');
-serve_file($path, $title);
+serve_file($path, $title, array('lifetime' => 0) /* only for debugging */);
 
 ?>
