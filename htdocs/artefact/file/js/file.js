@@ -269,9 +269,9 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
         if (typeof(self.changedircallback) == 'function') {
             self.changedircallback(dirNode.folderid, self.generatePath(dirNode));
         }
+        self.filenames = {};
         self.filelist.doupdate({'folder': dirNode.folderid});
         self.breadcrumbUpdate();
-        self.filenames = {};
     }
 
     this.generatePath = function(dirNode) {
