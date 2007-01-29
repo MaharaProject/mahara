@@ -223,10 +223,10 @@ $string['name']                     = 'Name';
 $string['email']                    = 'Email';
 $string['subject']                  = 'Subject';
 $string['message']                  = 'Message';
-$string['submitcontactinformation'] = 'Submit contact information';
+$string['messagesent']              = 'Your message has been sent';
+$string['sendmessage']              = 'Send message';
 $string['nosendernamefound']        = 'No sender name was submitted';
 $string['emailnotsent']             = 'Failed to send contact email. Error message: "%s"';
-$string['contactinformationsent']   = 'Your contact information has been sent';
 
 // mahara.js
 $string['namedfieldempty'] = 'The required field "%s" is empty';

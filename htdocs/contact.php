@@ -85,7 +85,7 @@ $contactform = pieform(array(
         ),
         'submit' => array(
             'type'  => 'submit',
-            'value' => get_string('submitcontactinformation')
+            'value' => get_string('sendmessage')
         ),
     )
 ));
@@ -101,7 +101,7 @@ function contactus_submit(Pieform $form, $values) {
     }
     require_once('activity.php');
     activity_occurred('contactus', $data);
-    $form->json_reply(PIEFORM_OK, get_string('contactinformationsent'));
+    $form->json_reply(PIEFORM_OK, get_string('messagesent'));
 }
 
 $pagecontent = <<<EOF
