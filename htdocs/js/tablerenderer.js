@@ -177,6 +177,7 @@ function TableRenderer(target, source, columns, options) {
                 self.offset = data.offset;
                 self.count = data.count;
 
+                self.updatecallback(data);
                 if (self.paginate) {
                     if (typeof(self.assertPager) == 'function') {
                         self.assertPager(self.offset, self.limit, self.count);
@@ -193,7 +194,6 @@ function TableRenderer(target, source, columns, options) {
                         showElement(self.table.previousSibling);
                     }
                 }
-                self.updatecallback(data);
                 self.renderdata(data);
             },
             function (error) {

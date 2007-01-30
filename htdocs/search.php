@@ -42,6 +42,7 @@ foreach ($userfields as $k => $v) {
     $userfieldstrings[] = get_string($k, 'artefact.internal');
 }
 $userfields = json_encode(array_keys($userfields));
+$ncols = count($userfieldstrings);
 $userfieldstrings = json_encode($userfieldstrings);
 
 $javascript = <<<EOF
@@ -58,12 +59,14 @@ results.statevars.push('type');
 results.emptycontent = '{$noresults}';
 results.updatecallback = function (d) {
     if (d.type == 'user') {
+        results.linkspan = {$ncols};
         if (!$('userfields')) {
             appendChildNodes(results.thead, TR({'id':'userfields'},
                                                map(partial(TD, null), userfieldstrings)));
         }
     }
     else {
+        results.linkspan = 1;
         removeElement('userfields');
     }
 }
