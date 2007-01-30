@@ -121,151 +121,151 @@ if (!$userassoccommunities = get_associated_communities($userid)) {
 
 $smarty = smarty();
 
-// Get the logged in user's "invite only" communities
-if ($communities = get_owned_communities($loggedinid, 'invite')) {
-    $invitelist = array();
-    foreach ($communities as $community) {
-        if (array_key_exists($community->id, $userassoccommunities)) {
-            continue;
+if ($loggedinid != $userid) {
+    // Get the logged in user's "invite only" communities
+    if ($communities = get_owned_communities($loggedinid, 'invite')) {
+        $invitelist = array();
+        foreach ($communities as $community) {
+            if (array_key_exists($community->id, $userassoccommunities)) {
+                continue;
+            }
+            $invitelist[$community->id] = $community->name;
         }
-        $invitelist[$community->id] = $community->name;
-    }
-    if (count($invitelist) > 0) {
-        $default = array_keys($invitelist);
-        $default = $default[0];
-        $inviteform = pieform(array(
-        'name'              => 'invite',
-        'jsform'            => true,
-        'jssuccesscallback' => 'usercontrol_success',
-        'elements'          => array(
-            'community' => array(
-                'type'                => 'select',
-                'title'               => get_string('inviteusertojoincommunity'),
-                'collapseifoneoption' => false,
-                'options'             => $invitelist,
-                'defaultvalue'        => $default,
-            ),
-            'id' => array(
-                'type'  => 'hidden',
-                'value' => $userid,
-            ),
-            'submit' => array(
-                'type'  => 'submit',
-                'value' => get_string('sendinvitation'),
-            ),
-        ),
-    ));
-
-    $smarty->assign('INVITEFORM',$inviteform);
-    }
-}
-
-// Get the "controlled membership" communities in which the logged in user is a tutor
-if ($communities = get_tutor_communities($loggedinid, 'controlled')) {
-    $controlledlist = array();
-    foreach ($communities as $community) {
-        if (array_key_exists($community->id, $userassoccommunities)) {
-            continue;
+        if (count($invitelist) > 0) {
+            $default = array_keys($invitelist);
+            $default = $default[0];
+            $inviteform = pieform(array(
+                'name'              => 'invite',
+                'jsform'            => true,
+                'jssuccesscallback' => 'usercontrol_success',
+                'elements'          => array(
+                    'community' => array(
+                        'type'                => 'select',
+                        'title'               => get_string('inviteusertojoincommunity'),
+                        'collapseifoneoption' => false,
+                        'options'             => $invitelist,
+                        'defaultvalue'        => $default,
+                    ),
+                    'id' => array(
+                        'type'  => 'hidden',
+                        'value' => $userid,
+                    ),
+                    'submit' => array(
+                        'type'  => 'submit',
+                        'value' => get_string('sendinvitation'),
+                    ),
+                ),
+            ));
+            $smarty->assign('INVITEFORM',$inviteform);
         }
-        $controlledlist[$community->id] = $community->name;
     }
-    if (count($controlledlist) > 0) {
-        $default = array_keys($controlledlist);
-        $default = $default[0];
-        $addform = pieform(array(
-        'name'                => 'addmember',
-        'jsform'              => true,
-        'jssuccesscallback'   => 'add_success',
-        'elements'            => array(
-            'community' => array(
-                'type'    => 'select',
-                'title'   => get_string('addusertocommunity'),
-                'collapseifoneoption' => false,
-                'options' => $controlledlist,
-                'defaultvalue' => $default,
-            ),
-            'id' => array(
-                'type'  => 'hidden',
-                'value' => $userid,
-            ),
-            'submit' => array(
-                'type'  => 'submit',
-                'value' => get_string('add'),
-            ),
-        ),
-    ));
-    $inlinejs .= <<<EOF
+
+    // Get the "controlled membership" communities in which the logged in user is a tutor
+    if ($communities = get_tutor_communities($loggedinid, 'controlled')) {
+        $controlledlist = array();
+        foreach ($communities as $community) {
+            if (array_key_exists($community->id, $userassoccommunities)) {
+                continue;
+            }
+            $controlledlist[$community->id] = $community->name;
+        }
+        if (count($controlledlist) > 0) {
+            $default = array_keys($controlledlist);
+            $default = $default[0];
+            $addform = pieform(array(
+                'name'                => 'addmember',
+                'jsform'              => true,
+                'jssuccesscallback'   => 'add_success',
+                'elements'            => array(
+                    'community' => array(
+                        'type'    => 'select',
+                        'title'   => get_string('addusertocommunity'),
+                        'collapseifoneoption' => false,
+                        'options' => $controlledlist,
+                        'defaultvalue' => $default,
+                    ),
+                    'id' => array(
+                        'type'  => 'hidden',
+                        'value' => $userid,
+                    ),
+                    'submit' => array(
+                        'type'  => 'submit',
+                        'value' => get_string('add'),
+                    ),
+                ),
+           ));
+            $inlinejs .= <<<EOF
     
     function add_success(data) {
         usercontrol_success('addmember');
     }
 EOF;
-    $smarty->assign('ADDFORM',$addform);
+            $smarty->assign('ADDFORM',$addform);
+        } 
     }
-}
 
-// adding this user to the currently logged in user's friends list
-// or removing or approving or rejecting or whatever else we can do.
-$friendform = array(
-    'name'     => 'friend',
-    'jsform'   => true,
-    'elements' => array(),
-    'jssuccesscallback' => 'usercontrol_success',
-);
-$friendsubmit = '';
-$friendtype = '';
-$friendformmessage = '';
-// already a friend ... we can remove.
-if (is_friend($userid, $loggedinid)) {
-    $friendtype = 'remove';
-    $friendsubmit = get_string('removefromfriendslist');
-} 
-// if there's a friends request already
-else if ($request = get_friend_request($userid, $loggedinid)) {
-    if ($request->owner == $userid) {
-        $friendformmessage = get_string('friendshipalreadyrequested', 'mahara', $name);
-    }
-    else {
-        $friendform['elements']['requested'] = array(
-            'type' => 'html', 
-            'value' => get_string('friendshipalreadyrequestedowner', 'mahara', $name)
+    // adding this user to the currently logged in user's friends list
+    // or removing or approving or rejecting or whatever else we can do.
+    $friendform = array(
+        'name'     => 'friend',
+        'jsform'   => true,
+        'elements' => array(),
+        'jssuccesscallback' => 'usercontrol_success',
         );
-        $friendform['elements']['rejectreason'] = array(
-            'type'  => 'textarea',
-            'title' => get_string('rejectfriendshipreason'),
-            'cols'  => 10,
-            'rows'  => 4,                                
-        );    
-        $friendsubmit = get_string('accept');
-        $friendform['elements']['rejectsubmit'] = array(
-            'type'  => 'submit',
-            'value' => get_string('reject'),
-        );
-        $friendtype = 'accept';
-    }
-}
-// check the preference
-else {
-    $friendscontrol = get_account_preference($userid, 'friendscontrol');
-    if ($friendscontrol == 'nobody') {
-        $friendtype = '';
-        $friendformmessage = get_string('userdoesntwantfriends');
+    $friendsubmit = '';
+    $friendtype = '';
+    $friendformmessage = '';
+    // already a friend ... we can remove.
+    if (is_friend($userid, $loggedinid)) {
+        $friendtype = 'remove';
+        $friendsubmit = get_string('removefromfriendslist');
     } 
-    else if ($friendscontrol == 'auth') {
-        $friendform['elements']['reason'] = array(
-            'type'  => 'textarea',
-            'title' => get_string('requestfriendship'),
-            'cols'  => 40,
-            'rows'  => 4,
-        );
-        $friendsubmit = get_string('request');
-        $friendtype = 'request';
-    } else {
-        $friendsubmit = get_string('addtofriendslist');
-        $friendtype = 'add';
+    // if there's a friends request already
+    else if ($request = get_friend_request($userid, $loggedinid)) {
+        if ($request->owner == $userid) {
+            $friendformmessage = get_string('friendshipalreadyrequested', 'mahara', $name);
+        }
+        else {
+            $friendform['elements']['requested'] = array(
+                'type' => 'html', 
+                'value' => get_string('friendshipalreadyrequestedowner', 'mahara', $name)
+            );
+            $friendform['elements']['rejectreason'] = array(
+                'type'  => 'textarea',
+                'title' => get_string('rejectfriendshipreason'),
+                'cols'  => 10,
+                'rows'  => 4,                                
+            );    
+            $friendsubmit = get_string('accept');
+            $friendform['elements']['rejectsubmit'] = array(
+                'type'  => 'submit',
+                'value' => get_string('reject'),
+            );
+            $friendtype = 'accept';
+        }
+    }
+    // check the preference
+    else {
+        $friendscontrol = get_account_preference($userid, 'friendscontrol');
+        if ($friendscontrol == 'nobody') {
+            $friendtype = '';
+            $friendformmessage = get_string('userdoesntwantfriends');
+        } 
+        else if ($friendscontrol == 'auth') {
+            $friendform['elements']['reason'] = array(
+                'type'  => 'textarea',
+                'title' => get_string('requestfriendship'),
+                'cols'  => 40,
+                'rows'  => 4,
+            );
+            $friendsubmit = get_string('request');
+            $friendtype = 'request';
+        } else {
+            $friendsubmit = get_string('addtofriendslist');
+            $friendtype = 'add';
+        }
     }
 }
-
 // if we have a form to display, do it
 if (!empty($friendtype)) {
     $friendform['elements']['type'] = array(

@@ -47,15 +47,13 @@ var activitylist = new TableRenderer(
     [
         function(r) { 
             if (r.message) {
-                var messagemore;
+                var messagemore = DIV({'id' : 'message-' + r.id, 'style': 'display:none'});
+                messagemore.innerHTML = r.message;
                 if (r.url) {
-                    messagemore = [r.message, BR(null), A({'href' : r.url, 'class': 's'}, '{$morestr}')];
-                }
-                else {
-                    messagemore = r.message;
+                    appendChildNodes(messagemore, BR(null), A({'href' : r.url, 'class': 's'}, '{$morestr}'));
                 }
                 return TD(null, A({'href': '', 'onclick': 'showHideMessage(' + r.id + '); return false;'}, r.subject),
-                          DIV({'id' : 'message-' + r.id, 'style': 'display:none'}, messagemore));
+                          messagemore);
             }
             else if (r.url) { 
                 return TD(null, A({'href': r.url}, r.subject));

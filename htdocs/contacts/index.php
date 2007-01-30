@@ -167,11 +167,11 @@ function pendingChange() {
     var pending = $('pendingopts').options[$('pendingopts').selectedIndex].value;
     friendslist.doupdate({'pending': pending});
     if (pending == 1) {
-        hideElement('viewsheader');
+        $('viewsheader').style.display = 'none';
         $('removeorreason').innerHTML = '{$reasonheader}';
     }
     else {
-        showElement('viewsheader');
+        $('viewsheader').style.display = '';
         $('removeorreason').innerHTML = '{$removeheader}';
     }
 }
