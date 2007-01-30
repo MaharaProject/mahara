@@ -75,41 +75,6 @@ class PluginSearchInternal extends PluginSearch {
         if ( is_postgres() ) {
             if (!empty($publicfields)) {
                 $fieldlist = "('" . join("','", $publicfields) . "')";
-                $users = get_records_sql_assoc('
-                    SELECT DISTINCT ON (u.preferredname, u.lastname, u.firstname, u.id)
-                        u.id, u.preferredname, u.lastname, u.firstname, u.username, u.institution
-                    FROM ' . $prefix . 'artefact a
-                        INNER JOIN ' . $prefix .'usr u ON u.id = a.owner
-                    WHERE
-                        u.id <> 0
-                        AND a.artefacttype IN ' . $fieldlist . "
-                        AND (a.title ILIKE '%' || ? || '%')
-                    ORDER BY u.preferredname, u.lastname, u.firstname, u.id",
-                    array($query_string), $offset, $limit);
-                $userlist = '(' . join(',', array_map(create_function('$u','return $u->id;'), $users)) . ')';
-
-                $data = get_records_sql_array('
-                    SELECT 
-                        u.id, a.artefacttype, a.title
-                    FROM
-                        ' . $prefix . 'artefact a
-                        INNER JOIN ' . $prefix . 'usr u ON u.id = a.owner
-                    WHERE
-                        a.artefacttype IN ' . $fieldlist . '
-                        AND u.id IN ' . $userlist . '
-                    ORDER BY u.preferredname, u.lastname, u.firstname, u.id, a.artefacttype',
-                    array());
-
-                if (!empty($data)) {
-                    foreach ($data as $rec) {
-                        if ($rec->artefacttype == 'email') {
-                            $users[$rec->id]->email[] = $rec->title;
-                        }
-                        else {
-                            $users[$rec->id]->{$rec->artefacttype} = $rec->title;
-                        }
-                    }
-                }
 
                 $count = get_field_sql('
                     SELECT 
@@ -120,10 +85,53 @@ class PluginSearchInternal extends PluginSearch {
                         owner <> 0
                         AND artefacttype IN ' . $fieldlist . "
                         AND ( title ILIKE '%' || ? || '%')",
-                    array($query_string)
-                );
-                
-                $data = array_values($users);
+                    array($query_string));
+
+                if ($count > 0) {
+
+                    $users = get_records_sql_assoc('
+                        SELECT DISTINCT ON (u.preferredname, u.lastname, u.firstname, u.id)
+                            u.id, u.preferredname, u.lastname, u.firstname, u.username, u.institution
+                        FROM ' . $prefix . 'artefact a
+                            INNER JOIN ' . $prefix .'usr u ON u.id = a.owner
+                        WHERE
+                            u.id <> 0
+                            AND a.artefacttype IN ' . $fieldlist . "
+                            AND (a.title ILIKE '%' || ? || '%')
+                        ORDER BY u.preferredname, u.lastname, u.firstname, u.id",
+                        array($query_string),
+                        $offset,
+                        $limit);
+
+                    $userlist = '('.join(',', array_map(create_function('$u','return $u->id;'), $users)).')';
+
+                    $data = get_records_sql_array('
+                        SELECT 
+                            u.id, a.artefacttype, a.title
+                        FROM
+                            ' . $prefix . 'artefact a
+                            INNER JOIN ' . $prefix . 'usr u ON u.id = a.owner
+                        WHERE
+                            a.artefacttype IN ' . $fieldlist . '
+                            AND u.id IN ' . $userlist . '
+                        ORDER BY u.preferredname, u.lastname, u.firstname, u.id, a.artefacttype',
+                        array());
+
+                    if (!empty($data)) {
+                        foreach ($data as $rec) {
+                            if ($rec->artefacttype == 'email') {
+                                $users[$rec->id]->email[] = $rec->title;
+                            }
+                            else {
+                                $users[$rec->id]->{$rec->artefacttype} = $rec->title;
+                            }
+                        }
+                        $data = array_values($users);
+                    }
+                }
+                else {
+                    $data = false;
+                }
             }
             else {
                 $data = false;
