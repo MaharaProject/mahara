@@ -92,7 +92,7 @@ class PluginSearchInternal extends PluginSearch {
             if ($count > 0) {
 
                 $users = get_records_sql_assoc('
-                    SELECT DISTINCT ON (u.preferredname, u.lastname, u.firstname, u.id)
+                    SELECT DISTINCT ON (u.firstname, u.lastname, u.id)
                         u.id, u.username, u.institution, u.firstname, u.lastname, u.preferredname
                     FROM ' . $prefix . 'artefact a
                         INNER JOIN ' . $prefix .'usr u ON u.id = a.owner
@@ -100,7 +100,7 @@ class PluginSearchInternal extends PluginSearch {
                         u.id <> 0
                         AND a.artefacttype IN ' . $fieldlist . "
                         AND (a.title ILIKE '%' || ? || '%')
-                    ORDER BY u.preferredname, u.lastname, u.firstname, u.id",
+                    ORDER BY u.firstname, u.lastname, u.id",
                 array($query_string),
                 $offset,
                 $limit);
@@ -116,7 +116,7 @@ class PluginSearchInternal extends PluginSearch {
                     WHERE
                         a.artefacttype IN ' . $fieldlist . '
                         AND u.id IN ' . $userlist . '
-                    ORDER BY u.preferredname, u.lastname, u.firstname, u.id, a.artefacttype',
+                    ORDER BY u.firstname, u.lastname, u.id, a.artefacttype',
                     array());
 
                 if (!empty($data)) {
