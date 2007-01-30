@@ -47,36 +47,15 @@ $offset = param_integer('offset', 0);
 switch($type) {
     case 'community':
         $data = search_community($query, $limit, $offset, true);
-        foreach ($data['data'] as &$result) {
-            $result->type = 'community';
-        }
-        log_debug($data);
+        $data['type'] = 'community';
         break;
     default:
         $data = search_user($query, $limit, $offset);
-        if ($data['data']) {
-            foreach ($data['data'] as &$result) {
-                $result->name = display_name($result);
-                $result->type = 'user';
-                
-                /* if (!$USER->get('admin')) {
-                    unset($result->firstname);
-                    unset($result->lastname);
-                    unset($result->preferredname);
-                    unset($result->email);
-                    unset($result->institution);
-                    unset($result->username);
-                } */
-            }
-        }
-
         safe_require('artefact', 'internal');
         $data['userfields'] = array_keys(ArtefactTypeProfile::get_public_fields());
-
+        $data['type'] = 'user';
         break;
 }
-
-log_debug($data);
 
 json_headers();
 $data['error'] = false;

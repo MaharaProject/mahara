@@ -39,18 +39,34 @@ $javascript = <<<EOF
 var results = new TableRenderer(
     'searchresults',
     '{$wwwroot}json/search.php',
-    [
-        function(r) {
-            if ( r.type == 'community' ) {
-                return TD(null,A({'href':'contacts/communities/view.php?id=' + r.id},r.name));
-            }
-            return TD(null,A({'href':'user/view.php?id=' + r.id},r.name));
-        },
-    ]
+    []
 );
 results.statevars.push('query');
 results.statevars.push('type');
 results.emptycontent = '{$noresults}';
+
+results.rowfunction = function(r,n,d) {
+    if ( d.type == 'community' ) {
+        return TR({'class':'r'+(n%2)},
+                  TD(null,A({'href':'contacts/communities/view.php?id=' + r.id},r.name)));
+    }
+    var row = TR({'class':'r'+(n%2)},TD(null,A({'href':'user/view.php?id=' + r.id},r.name)));
+    for (var i = 0; i < d.userfields.length; i++) {
+        if (r[d.userfields[i]]) {
+            if (d.userfields[i] == 'email') {
+                appendChildNodes(row, TD(null, map(partial(DIV,null), r[d.userfields[i]])));
+            }
+            else {
+                appendChildNodes(row, TD(null, r[d.userfields[i]]));
+            }
+        }
+        else {
+            appendChildNodes(row, TD(null, '-'));
+        }
+    }
+    return row
+}
+
 
 function doSearch() {
     results.query = $('search_query').value;

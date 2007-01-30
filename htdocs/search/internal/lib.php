@@ -93,7 +93,7 @@ class PluginSearchInternal extends PluginSearch {
 
                 $users = get_records_sql_assoc('
                     SELECT DISTINCT ON (u.preferredname, u.lastname, u.firstname, u.id)
-                        u.id, u.preferredname, u.lastname, u.firstname, u.username, u.institution
+                        u.id, u.username, u.institution, u.firstname, u.lastname, u.preferredname
                     FROM ' . $prefix . 'artefact a
                         INNER JOIN ' . $prefix .'usr u ON u.id = a.owner
                     WHERE
@@ -120,6 +120,14 @@ class PluginSearchInternal extends PluginSearch {
                     array());
 
                 if (!empty($data)) {
+                    foreach ($users as &$user) {
+                        $user->name = display_name($user);
+                        unset($user->username);
+                        unset($user->institution);
+                        unset($user->firstname);
+                        unset($user->lastname);
+                        unset($user->preferredname);
+                    }
                     foreach ($data as $rec) {
                         if ($rec->artefacttype == 'email') {
                             $users[$rec->id]->email[] = $rec->title;
