@@ -58,20 +58,25 @@ switch($type) {
             foreach ($data['data'] as &$result) {
                 $result->name = display_name($result);
                 $result->type = 'user';
-
-                if (!$USER->get('admin')) {
+                
+                /* if (!$USER->get('admin')) {
                     unset($result->firstname);
                     unset($result->lastname);
                     unset($result->preferredname);
                     unset($result->email);
                     unset($result->institution);
                     unset($result->username);
-                }
+                } */
             }
         }
+
+        safe_require('artefact', 'internal');
+        $data['userfields'] = array_keys(ArtefactTypeProfile::get_public_fields());
+
         break;
 }
 
+log_debug($data);
 
 json_headers();
 $data['error'] = false;
