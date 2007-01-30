@@ -15,6 +15,7 @@ function TableRenderer(target, source, columns, options) {
     this.statevars = ['offset','limit'];
     this.emptycontent = false;  // Something to display when no results are found
     this.rowfunction = function(rowdata, rownumber, data) { return TR({'class': 'r' + (rownumber % 2)}); }
+    this.updatecallback = function () {};
 
     this.init = function() {
         self.table = getElement(target);
@@ -192,6 +193,7 @@ function TableRenderer(target, source, columns, options) {
                         showElement(self.table.previousSibling);
                     }
                 }
+                self.updatecallback(data);
                 self.renderdata(data);
             },
             function (error) {
