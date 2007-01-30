@@ -74,47 +74,61 @@ class PluginSearchInternal extends PluginSearch {
         $prefix = get_config('dbprefix');
         if ( is_postgres() ) {
             if (!empty($publicfields)) {
-                $fieldclauses = array();
-                $values = array();
-                foreach ($publicfields as $fieldname) {
-                    array_push($fieldclauses, "(a.artefacttype = ? AND (a.title ILIKE '%' || ? || '%'))");
-                    array_push($values, $fieldname);
-                    array_push($values, $query_string);
-                }
-                $querysql = join(' OR ', $fieldclauses);
-                $data = get_records_sql_array('
-                    SELECT DISTINCT
-                        u.id, u.username, u.institution, u.firstname, 
-                        u.lastname, u.preferredname, u.email
-                    FROM
-                        ' . $prefix . 'usr u 
-                        INNER JOIN ' . $prefix . 'artefact a ON a.owner = u.id
+                $fieldlist = "('" . join("','", $publicfields) . "')";
+                $users = get_records_sql_assoc('
+                    SELECT DISTINCT ON (u.preferredname, u.lastname, u.firstname, u.id)
+                        u.id, u.preferredname, u.lastname, u.firstname, u.username, u.institution
+                    FROM ' . $prefix . 'artefact a
+                        INNER JOIN ' . $prefix .'usr u ON u.id = a.owner
                     WHERE
                         u.id <> 0
-                        AND ( ' . $querysql . ')',
-                    $values,
-                    $offset,
-                    $limit
-                );
+                        AND a.artefacttype IN ' . $fieldlist . "
+                        AND (a.title ILIKE '%' || ? || '%')
+                    ORDER BY u.preferredname, u.lastname, u.firstname, u.id",
+                    array($query_string), $offset, $limit);
+                $userlist = '(' . join(',', array_map(create_function('$u','return $u->id;'), $users)) . ')';
+
+                $data = get_records_sql_array('
+                    SELECT 
+                        u.id, a.artefacttype, a.title
+                    FROM
+                        ' . $prefix . 'artefact a
+                        INNER JOIN ' . $prefix . 'usr u ON u.id = a.owner
+                    WHERE
+                        a.artefacttype IN ' . $fieldlist . '
+                        AND u.id IN ' . $userlist . '
+                    ORDER BY u.preferredname, u.lastname, u.firstname, u.id, a.artefacttype',
+                    array());
+
+                if (!empty($data)) {
+                    foreach ($data as $rec) {
+                        if ($rec->artefacttype == 'email') {
+                            $users[$rec->id]->email[] = $rec->title;
+                        }
+                        else {
+                            $users[$rec->id]->{$rec->artefacttype} = $rec->title;
+                        }
+                    }
+                }
 
                 $count = get_field_sql('
                     SELECT 
-                        COUNT(DISTINCT u.id)
+                        COUNT(DISTINCT owner)
                     FROM
-                        ' . $prefix . 'usr u 
-                        INNER JOIN ' . $prefix . 'artefact a ON a.owner = u.id
+                        ' . $prefix . 'artefact
                     WHERE
-                        u.id <> 0
-                        AND ( ' . $querysql . ')',
-                    $values
+                        owner <> 0
+                        AND artefacttype IN ' . $fieldlist . "
+                        AND ( title ILIKE '%' || ? || '%')",
+                    array($query_string)
                 );
+                
+                $data = array_values($users);
             }
             else {
                 $data = false;
                 $count = 0;
             }
-            log_debug($data);
-            log_debug($count);
         }
         // TODO
         // else if ( is_mysql() ) {
