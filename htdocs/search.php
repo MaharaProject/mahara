@@ -87,7 +87,7 @@ results.rowfunction = function(r,n,d) {
             }
         }
         else {
-            appendChildNodes(row, TD(null, '-'));
+            appendChildNodes(row, TD(null));
         }
     }
     return row;
