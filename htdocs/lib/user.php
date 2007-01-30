@@ -389,7 +389,7 @@ function display_default_name($user) {
         return $user->firstname . ' ' . $user->lastname;
     }
     else {
-        return $user->preferedname;
+        return $user->preferredname;
     }
 }
 
