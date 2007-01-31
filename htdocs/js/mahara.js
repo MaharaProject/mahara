@@ -170,6 +170,9 @@ function sendjsonrequest(script, data, rtype, successcallback, errorcallback) {
                 displayMessage(data.message.message, errtype);
                 successcallback(data.message);
             }
+            else { // Don't display a message
+                successcallback(data);
+            }
             processingStop();
         }
     },

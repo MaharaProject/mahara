@@ -33,10 +33,8 @@ $id = param_integer('id');
 $format = param_variable('format', FORMAT_ARTEFACT_LISTSELF);
 $blockid = param_variable('blockid', null);
 $options = param_variable('options', array());
-log_debug($options);
 
 if($blockid) {
-    log_debug('using block id: ' . $blockid);
     $options['blockid'] = $blockid;
 }
 
@@ -51,7 +49,7 @@ if (!$renderedartefact) {
 $result = array(
     'data' => $renderedartefact,
     'error' => false,
-    'message' => 'artefactrendered',
+    'message' => false // No message for successful artefact rendering
 );
 
 json_headers();

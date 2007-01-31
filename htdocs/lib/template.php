@@ -530,9 +530,8 @@ function template_render($template, $mode, $data=array(), $view_id=null) {
             for (key in dstData.options) {
                 render_options['options[' + key + ']'] = dstData.options[key];
             }
-            var d = loadJSONDoc('{$wwwroot}json/renderartefact.php', render_options );
-            d.addCallbacks(
-                function (response) {
+            sendjsonrequest('{$wwwroot}json/renderartefact.php', render_options, 'GET', function (response) {
+                if (!response.error) {
                     real_target.innerHTML = response.data;
                     forEach(getElementsByTagAndClassName('script', null, real_target), function(script) {
                         eval(script.innerHTML);
@@ -541,14 +540,11 @@ function template_render($template, $mode, $data=array(), $view_id=null) {
                         appendChildNodes(real_target, A({ href: '', onclick: 'removeListItem(this); return false;' }, '[x]'));
                     }
                     appendChildNodes(real_target,
-                        INPUT({'type': 'hidden', 'name': 'template[' + target.id + '][id][]', 'value': element.artefactid }),
-                        INPUT({'type': 'hidden', 'name': 'template[' + target.id + '][format]', 'value': format })
-                    );
-                },
-                function (error) {
-                    logError(error);
+                                     INPUT({'type': 'hidden', 'name': 'template[' + target.id + '][id][]', 'value': element.artefactid }),
+                                     INPUT({'type': 'hidden', 'name': 'template[' + target.id + '][format]', 'value': format })
+                                     );
                 }
-            );
+            });
         }
         else {
             formatlist = [];
