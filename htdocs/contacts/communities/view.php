@@ -137,7 +137,7 @@ $removefromwatchliststr = get_string('removefromwatchlist', 'activity');
 $addtowatchliststr = get_string('addtowatchlist', 'activity');
 
 // all the permissions stuff
-$tutor          = (int)($membership && ($membership < COMMUNITY_MEMBERSHIP_MEMBER));
+$tutor          = (int)($membership && ($membership != COMMUNITY_MEMBERSHIP_MEMBER));
 $controlled     = (int)($community->jointype == 'controlled');
 $admin          = (int)($membership & COMMUNITY_MEMBERSHIP_ADMIN != 0);
 $canremove      = (int)(($tutor && $controlled) || $admin);
