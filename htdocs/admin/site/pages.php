@@ -103,25 +103,15 @@ function requestPageText() {
         }
     }
 
-    processingStart();
     editsitepage_remove_all_errors();
-    logDebug(get_string('loadingpagecontent', 'admin'));
-    var d = loadJSONDoc('editchangepage.json.php',{'pagename':$('editsitepage_pagename').value});
-    d.addCallbacks(function(data) {
-        if (!data.error) {
-            logDebug(get_string('sitepageloaded', 'admin'));
-            setEditorContent(data.content);
-            originalcontent = data.content;
-            oldpagename = $('editsitepage_pagename').value;
-        }
-        else {
-            displayMessage(get_string('loadsitepagefailed', 'admin'));
-        }
-        processingStop();
-    }, function(err) {
-        displayMessage('todo (error occured!)');
-        processingStop();
-    });
+    sendjsonrequest('editchangepage.json.php', {'pagename':$('editsitepage_pagename').value}, 'POST',
+                    function(data) {
+                        if (!data.error) {
+                            setEditorContent(data.content);
+                            originalcontent = data.content;
+                            oldpagename = $('editsitepage_pagename').value;
+                        }
+                    });
 }
 
 // Called from submitForm on successful page save.
