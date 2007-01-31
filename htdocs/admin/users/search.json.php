@@ -63,12 +63,6 @@ if ($action == 'search') {
 
     $data = search_user($query, $limit, $offset);
 
-    if ($data['data']) {
-        foreach ($data['data'] as &$result) {
-            $result->name = display_name($result);
-        }
-    }
-
     json_headers();
     $data['error'] = false;
     $data['message'] = '';
