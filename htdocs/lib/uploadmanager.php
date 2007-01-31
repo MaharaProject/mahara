@@ -83,18 +83,22 @@ class upload_manager {
             return get_string('notphpuploadedfile');
         }
 
+        // Check the file type is allowed. If the type cannot be detected,
+        // then the file is ALLOWED through (the type can often not be detected
+        // for MS word documents). Maybe later that can be configurable. If
+        // the path to the file program is empty in the configuration, the file
+        // will not be checked.
         require_once('file.php');
-        if (!$type = get_mime_type($file['tmp_name'])) {
-            return get_string('fileunknowntype');
-        }
-
-        $prefix = get_config('dbprefix');
-        $validtypes = get_column_sql('SELECT mimetype
-            FROM ' . $prefix . 'artefact_file_mime_types m
-            LEFT JOIN ' . $prefix . 'artefact_file_file_types f ON (m.description = f.description)
-            WHERE f.enabled = 1');
-        if (!in_array($type, $validtypes)) {
-            return get_string('filetypenotallowed');
+        $type = get_mime_type($file['tmp_name']);
+        if ($type) {
+            $prefix = get_config('dbprefix');
+            $validtypes = get_column_sql('SELECT mimetype
+                FROM ' . $prefix . 'artefact_file_mime_types m
+                LEFT JOIN ' . $prefix . 'artefact_file_file_types f ON (m.description = f.description)
+                WHERE f.enabled = 1');
+            if (!in_array($type, $validtypes)) {
+                return get_string('filetypenotallowed');
+            }
         }
 
         if (get_config('viruschecking') && ($errormsg = clam_scan_file($file))) {
