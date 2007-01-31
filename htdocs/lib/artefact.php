@@ -40,6 +40,9 @@ define('FORMAT_ARTEFACT_RENDERMETADATA', 'rendermetadata');
 function artefact_check_plugin_sanity($pluginname) {
     $classname = generate_class_name('artefact', $pluginname);
     safe_require('artefact', $pluginname);
+    if (!is_callable(array($classname, 'get_artefact_types'))) {
+        throw new InstallationException("Artefact plugin $classname must implement get_artefact_types and doesn't");
+    }
     $types = call_static_method($classname, 'get_artefact_types');
     foreach ($types as $type) {
         $typeclassname = generate_artefact_class_name($type);

@@ -348,6 +348,9 @@ function upgrade_plugin($upgrade) {
 
      // install artefact types
     if ($plugintype == 'artefact') {
+        if (!is_callable(array($pcname, 'get_artefact_types'))) {
+            throw new InstallationException("Artefact plugin $pcname must implement get_artefact_types and doesn't");
+        }
         $types = call_static_method($pcname, 'get_artefact_types');
         $ph = array();
         if (is_array($types)) {
