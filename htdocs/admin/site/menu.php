@@ -51,19 +51,8 @@ $ijs .= "var adminfile = '" . get_string('adminfile','admin') . "';\n";
 $ijs .= <<< EOJS
 // Request a list of menu items from the server
 function getitems() {
-    processingStart();
-    var d = loadJSONDoc('getmenuitems.json.php',{'public':selectedmenu == 'loggedoutmenu'});
-    d.addCallback(function(data) {
-        if (!data.error) {
-            //logDebug({$getstring['menuitemsloaded']});
-            displaymenuitems(data.menuitems);
-            processingStop();
-        }
-        else {
-            displayMessage({$getstring['failedloadingmenuitems']},'error');
-            processingStop();
-        }
-    });
+    sendjsonrequest('getmenuitems.json.php', {'public':selectedmenu == 'loggedoutmenu'}, 'GET',
+                    function(data) { displaymenuitems(data.menuitems); });
 }
 
 // Get a list of the available admin files
