@@ -140,6 +140,7 @@ function sendjsonrequest(script, data, successcallback, errorcallback) {
     var req = getXMLHttpRequest();
     req.open('POST', script);
     req.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+    data.sesskey = config.sesskey;
     var d = sendXMLHttpRequest(req,queryString(data));
     d.addCallbacks(function (result) {
         var data = evalJSONRequest(result);

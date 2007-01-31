@@ -5,6 +5,7 @@
         <script type="text/javascript">
         var config = {literal}{{/literal}
             'theme': {$THEMELIST},
+            'sesskey' : '{$SESSKEY}',
             'wwwroot': '{$WWWROOT}'
         {literal}}{/literal};
         </script>

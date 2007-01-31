@@ -204,6 +204,7 @@ EOF;
     $smarty->assign('THEMEURL', get_config('themeurl'));
     $smarty->assign('STYLESHEETLIST', array_reverse(theme_get_url('style/style.css', null, true)));
     $smarty->assign('WWWROOT', $wwwroot);
+    $smarty->assign('SESSKEY', $USER->get('sesskey'));
     $smarty->assign('THEMELIST', json_encode($theme_list));
 
     if (defined('TITLE')) {

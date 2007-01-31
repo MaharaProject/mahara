@@ -175,4 +175,7 @@ if (!get_config('installed')
     redirect('/admin/');
 }
 
+if (defined('JSON')) {
+}
+
 ?>
