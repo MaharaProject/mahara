@@ -43,6 +43,7 @@ function pieform_renderer_table(Pieform $form, $builtelement, $rawelement) {
             $builtelement = substr($builtelement, 0, $closelegendpos) . '<table>' . substr($builtelement, $closelegendpos);
         }
         else {
+            // @todo this is broken when no legend is supplied
             $builtelement = substr($builtelement, 0, 11) . '<table>' . substr($builtelement, 11);
         }
         $builtelement = substr($builtelement, 0, -12) . '</table></fieldset>';

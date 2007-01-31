@@ -325,6 +325,17 @@ class Pieform {
             throw new PieformException('Forms must have a list of elements');
         }
 
+        // Rename all the keys to have nice compliant names
+        $elements = array();
+        foreach ($this->data['elements'] as $name => $element) {
+            $newname = preg_replace('/[^a-zA-Z0-9_]/', '_', $name);
+            if (isset($elements[$name])) {
+                throw new PieformException('Element "' . $name . '" has a dangerous name that interferes with another element');
+            }
+            $elements[$newname] = $element;
+        }
+        $this->data['elements'] = $elements;
+
         // Remove elements to ignore
         foreach ($this->data['elements'] as $name => $element) {
             if (isset($element['type']) && $element['type'] == 'fieldset') {

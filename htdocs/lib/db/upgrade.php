@@ -143,7 +143,7 @@ function xmldb_core_upgrade($oldversion=0) {
         $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
         $table->addKeyInfo('usrfk', XMLDB_KEY_FOREIGN, array('usr'), 'usr', array('id'));
 
-        $status = $status && create_table($table);
+        create_table($table);
     }
 
     if ($oldversion < 2007011200) {
@@ -191,7 +191,7 @@ function xmldb_core_upgrade($oldversion=0) {
 
     if ($oldversion < 2007012500) {
         $table = new XMLDBTable('usr_watchlist_artefact');
-        $field = new XMLDBFIELD('deleted');
+        $field = new XMLDBField('deleted');
         $field->setAttributes(XMLDB_TYPE_INTEGER, 1, false, true, false, false, false, 0);
         add_field($table, $field);
     }

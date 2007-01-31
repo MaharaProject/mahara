@@ -34,8 +34,8 @@
  */
 function pieform_element_fieldset(Pieform $form, $element) {
     $result = "\n<fieldset";
-    if (!empty($element['collapsable'])) {
-        $classes = array('collapsable');
+    if (!empty($element['collapsible'])) {
+        $classes = array('collapsible');
         // Work out whether any of the children have errors on them
         $error = false;
         foreach ($element['elements'] as $subelement) {
@@ -52,7 +52,7 @@ function pieform_element_fieldset(Pieform $form, $element) {
     $result .= ">\n";
     if (isset($element['legend'])) {
         $result .= '<legend';
-        if (!empty($element['collapsable'])) {
+        if (!empty($element['collapsible'])) {
             $id = substr(md5(microtime()), 0, 4);
             $result .= ' id="' . $id . '">';
             $result .= '<script type="text/javascript">';
