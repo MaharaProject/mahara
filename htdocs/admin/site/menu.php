@@ -227,7 +227,7 @@ function edititem(item) {
 // Request deletion of a menu item from the db
 function delitem(itemid) {
     if (confirm({$getstring['confirmdeletemenuitem']})) {
-        sendjsonrequest('deletemenuitem.json.php',{'itemid':itemid}, getitems);
+        sendjsonrequest('deletemenuitem.json.php',{'itemid':itemid}, 'POST', getitems);
     }
 }
 
@@ -250,7 +250,7 @@ function saveitem(itemid) {
                 'linkedto':linkedto,
                 'itemid':itemid,
                 'public':selectedmenu == 'loggedoutmenu'};
-    sendjsonrequest('updatemenu.json.php', data, getitems);
+    sendjsonrequest('updatemenu.json.php', data, 'POST', getitems);
     return false;
 }
 

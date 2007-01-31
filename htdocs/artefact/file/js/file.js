@@ -49,7 +49,7 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
                 if (confirm(get_string(r.artefacttype == 'folder' ? 'deletefolder?' : 'deletefile?'))) {
                     if (!r.attachcount || r.attachcount == 0
                         || confirm(get_string('unlinkthisfilefromblogposts?'))) {
-                        sendjsonrequest(self.deletescript, {'id': r.id}, self.deleted);
+                        sendjsonrequest(self.deletescript, {'id': r.id}, 'POST', self.deleted);
                     }
                 }
             };
@@ -140,7 +140,7 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
         if (self.cwd != '/') {
             data['parentfolder'] = self.pathids[self.cwd];
         }
-        sendjsonrequest(script, data, self.refresh);
+        sendjsonrequest(script, data, 'POST', self.refresh);
         return true;
     }
 

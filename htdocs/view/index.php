@@ -105,14 +105,14 @@ function renderartefact(viewid,a) {
 function submitform(viewid, action) {
     if (action == 'delete') {
         if (confirm({$getstring['deleteviewquestion']})) {
-            sendjsonrequest('delete.json.php', {'viewid':viewid}, viewlist.doupdate);
+            sendjsonrequest('delete.json.php', {'viewid':viewid}, 'POST', viewlist.doupdate);
         }
         return false;
     }
     var form = $('form' + viewid);
     if (action == 'submitview') {
         if (confirm({$getstring['submitviewquestion']})) {
-            sendjsonrequest('submit.json.php', {'viewid':viewid,'communityid':form.community.options[form.community.selectedIndex].value}, viewlist.doupdate);
+            sendjsonrequest('submit.json.php', {'viewid':viewid,'communityid':form.community.options[form.community.selectedIndex].value}, 'POST', viewlist.doupdate);
         }
         return false;
     }

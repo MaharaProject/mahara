@@ -61,6 +61,7 @@ var grouplist = new TableRenderer(
                         'action': 'delete',
                         'id': r.id
                     },
+                    'POST',
                     function (data) {
                         grouplist.doupdate();
                     }

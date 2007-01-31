@@ -161,7 +161,7 @@ function feedbackform() {
             if (artefact) {
                 data.artefact = artefact;
             }
-            sendjsonrequest('addfeedback.json.php', data, function () { 
+            sendjsonrequest('addfeedback.json.php', data, 'POST', function () { 
                 removeElement('menuform');
                 feedbacklist.doupdate();
             });
@@ -196,7 +196,7 @@ function objectionform() {
         if (artefact) {
             data.artefact = artefact;
         }
-        sendjsonrequest('objectionable.json.php', data, function () { removeElement('menuform'); });
+        sendjsonrequest('objectionable.json.php', data, 'POST', function () { removeElement('menuform'); });
         return false;
     }
     appendChildNodes(form, 
@@ -263,6 +263,7 @@ var feedbacklist = new TableRenderer(
                         sendjsonrequest(
                             'changefeedback.json.php',
                             r,
+                            'POST',
                             function (data) {
                                 if (!data.error) {
                                     replaceChildNodes(makePrivate.parentNode, '(' + get_string('private') + ')');

@@ -322,7 +322,7 @@ function saveblogpost() {
     }
 
     data.body = $('editpost_description').value;
-    sendjsonrequest('saveblogpost.json.php', data, function (result) { 
+    sendjsonrequest('saveblogpost.json.php', data, 'POST', function (result) { 
         if (result.error) {
             // Error messages should appear near the save button so
             // that users can actually see them.
