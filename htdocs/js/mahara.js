@@ -141,7 +141,7 @@ function sendjsonrequest(script, data, rtype, successcallback, errorcallback) {
     }
     processingStart();
     var req = getXMLHttpRequest();
-    req.open('POST', script);
+    req.open(rtype, script);
     req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     data.sesskey = config.sesskey;
     var d = sendXMLHttpRequest(req, queryString(data));
