@@ -51,8 +51,6 @@ switch($type) {
         break;
     default:
         $data = search_user($query, $limit, $offset);
-        safe_require('artefact', 'internal');
-        $data['userfields'] = array_keys(ArtefactTypeProfile::get_public_fields());
         $data['type'] = 'user';
         break;
 }

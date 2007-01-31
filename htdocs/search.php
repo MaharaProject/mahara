@@ -35,7 +35,20 @@ $query = param_variable('query','');
 $noresults = get_string('noresultsfound');
 $wwwroot = get_config('wwwroot');
 
+safe_require('artefact', 'internal');
+$userfields = ArtefactTypeProfile::get_public_fields();
+$userfieldstrings = array(get_string('name'));
+foreach ($userfields as $k => $v) {
+    $userfieldstrings[] = get_string($k, 'artefact.internal');
+}
+$userfields = json_encode(array_keys($userfields));
+$ncols = count($userfieldstrings);
+$userfieldstrings = json_encode($userfieldstrings);
+
 $javascript = <<<EOF
+var userfields = {$userfields};
+var userfieldstrings = {$userfieldstrings};
+
 var results = new TableRenderer(
     'searchresults',
     '{$wwwroot}json/search.php',
@@ -44,6 +57,19 @@ var results = new TableRenderer(
 results.statevars.push('query');
 results.statevars.push('type');
 results.emptycontent = '{$noresults}';
+results.updatecallback = function (d) {
+    if (d.type == 'user') {
+        results.linkspan = {$ncols};
+        if (!$('userfields')) {
+            appendChildNodes(results.thead, TR({'id':'userfields'},
+                                               map(partial(TD, null), userfieldstrings)));
+        }
+    }
+    else {
+        results.linkspan = 1;
+        removeElement('userfields');
+    }
+}
 
 results.rowfunction = function(r,n,d) {
     if ( d.type == 'community' ) {
@@ -51,20 +77,20 @@ results.rowfunction = function(r,n,d) {
                   TD(null,A({'href':'contacts/communities/view.php?id=' + r.id},r.name)));
     }
     var row = TR({'class':'r'+(n%2)},TD(null,A({'href':'user/view.php?id=' + r.id},r.name)));
-    for (var i = 0; i < d.userfields.length; i++) {
-        if (r[d.userfields[i]]) {
-            if (d.userfields[i] == 'email') {
-                appendChildNodes(row, TD(null, map(partial(DIV,null), r[d.userfields[i]])));
+    for (var i = 0; i < userfields.length; i++) {
+        if (r[userfields[i]]) {
+            if (userfields[i] == 'email') {
+                appendChildNodes(row, TD(null, map(partial(DIV,null), r[userfields[i]])));
             }
             else {
-                appendChildNodes(row, TD(null, r[d.userfields[i]]));
+                appendChildNodes(row, TD(null, r[userfields[i]]));
             }
         }
         else {
-            appendChildNodes(row, TD(null, '-'));
+            appendChildNodes(row, TD(null));
         }
     }
-    return row
+    return row;
 }
 
 

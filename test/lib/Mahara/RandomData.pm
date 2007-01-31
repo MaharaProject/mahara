@@ -83,6 +83,23 @@ sub insert_random_users {
                 @{$userinfo}{qw(firstname lastname email)},
                 10485760
             );
+
+            $self->{dbh}->do('INSERT INTO ' . $prefix . 'artefact (artefacttype,owner,ctime,mtime,atime,title) VALUES (?,currval(\'' . $prefix . 'usr_id_seq\'),current_timestamp,current_timestamp,current_timestamp,?)', undef,
+                'firstname',
+                $userinfo->{firstname}
+            );
+            $self->{dbh}->do('INSERT INTO ' . $prefix . 'artefact (artefacttype,owner,ctime,mtime,atime,title) VALUES (?,currval(\'' . $prefix . 'usr_id_seq\'),current_timestamp,current_timestamp,current_timestamp,?)', undef,
+                'lastname',
+                $userinfo->{lastname}
+            );
+            $self->{dbh}->do('INSERT INTO ' . $prefix . 'artefact (artefacttype,owner,ctime,mtime,atime,title) VALUES (?,currval(\'' . $prefix . 'usr_id_seq\'),current_timestamp,current_timestamp,current_timestamp,?)', undef,
+                'preferredname',
+                $userinfo->{firstname} . ' ' . $userinfo->{lastname}
+            );
+            $self->{dbh}->do('INSERT INTO ' . $prefix . 'artefact (artefacttype,owner,ctime,mtime,atime,title) VALUES (?,currval(\'' . $prefix . 'usr_id_seq\'),current_timestamp,current_timestamp,current_timestamp,?)', undef,
+                'email',
+                $userinfo->{email}
+            );
         }
     }
 
