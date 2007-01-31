@@ -55,21 +55,13 @@ communitylist.updateOnLoad();
 
 function leaveCommunity(id) {
     var pd = {'leave': id}
-    var d = loadJSONDoc('communityleave.json.php', pd);
-    d.addCallbacks(function (data) {
+    sendjsonrequest('communityleave.json.php', pd, 'GET', function (data) {
         if (!data.error) {
-            $('messagediv').innerHTML = '$leftsuccess';
             communitylist.doupdate();
         }
-        if (data.error) {
-            $('messagediv').innerHTML = '$leftfailed (' + data.error + ')';
-        }
-    },
-            function () {
-               $('messagediv').innerHTML = '$leftfailed';
-               watchlist.doupdate();
-            }
-    )
+    }, function () {
+        watchlist.doupdate();
+    });
 }
 
 EOF;

@@ -156,7 +156,6 @@ function expandViews(views, id) {
 }
 
 function pendingChange() {
-    $('messagediv').innerHTML='';
     var pending = $('pendingopts').options[$('pendingopts').selectedIndex].value;
     friendslist.doupdate({'pending': pending});
     if (pending == 1) {

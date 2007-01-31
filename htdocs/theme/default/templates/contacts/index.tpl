@@ -11,7 +11,6 @@
                                     <option value="1">{str tag='pendingfriends'}</option>
                                 </select>
                             </form>
-                            <div id="messagediv"></div>
                             <table id="friendslist" class="tablerenderer">
                                 <thead>
                                     <tr>

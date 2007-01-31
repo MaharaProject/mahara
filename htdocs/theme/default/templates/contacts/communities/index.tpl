@@ -16,7 +16,6 @@
                                 <tbody>
                                 </tbody>
                             </table>
-                            <div id="messagediv"></div>
 {include file="columnleftend.tpl"}
 
 {include file="footer.tpl"}

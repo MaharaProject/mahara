@@ -246,32 +246,24 @@ function switchPending() {
 
 function releaseView(id) {
     var pd = {'type': 'release', 'id': '{$community->id}', 'view': id};
-    var d = loadJSONDoc('view.json.php', pd);
-    d.addCallbacks(function (data) {
-        $('messagediv').innerHTML = data.message;
+    sendjsonrequest('view.json.php', pd, 'GET', function (data) {
         viewlist.doupdate();
-    },
-    function () {
-        $('messagediv').innerHTML = '{$updatefailedstr}';
     });
     return false;
 }
 
 function toggleWatchlist() {
     var pd = {'type': 'watchlist', 'id': '{$community->id}'};
-    var d = loadJSONDoc('view.json.php', pd);
     var remove = '{$removefromwatchliststr}';
     var add = '{$addtowatchliststr}';
-    d.addCallbacks(function (data) {
-        if (!data.error) {
-            if (data.message.member) {
-                $('watchlistcontrolbutton').innerHTML = remove;
-            }
-            else {
-                $('watchlistcontrolbutton').innerHTML = add;
-            }
-            $('messagediv').innerHTML = data.message.message;
+    sendjsonrequest('view.json.php', pd, 'GET', function (data) {
+        if (data.member) {
+            $('watchlistcontrolbutton').innerHTML = remove;
         }
+        else {
+            $('watchlistcontrolbutton').innerHTML = add;
+        }
+
     });
     return false;
 }
@@ -282,16 +274,11 @@ function updateMembership() {
     for (s in e) {
         pd[e[s].name] = e[s].options[e[s].selectedIndex].value;
     }
-    var d = loadJSONDoc('view.json.php', pd);
-    d.addCallbacks(function (data) {
-        $('messagediv').innerHTML = data.message;
+    sendjsonrequest('view.json.php', pd, 'GET', function (data) {
         if (memberlist.pending == 1) {
             memberlist.offset = 0;
         }
         memberlist.doupdate();
-    },
-    function () {
-        $('messagediv').innerHTML = '{$updatefailedstr}';
     });
 }
 EOF;

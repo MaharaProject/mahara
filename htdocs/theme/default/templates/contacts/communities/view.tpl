@@ -16,7 +16,6 @@
                 {elseif $canrequestjoin} <p id="joinrequest"><a href="" onClick="return joinRequestControl();">{str tag='requestjoincommunity'}</a></p>
                 {elseif $canjoin} <p><a href="view.php?id={$community->id}&amp;joincontrol=join"">{str tag='joincommunity'}</a></p>
                 {elseif $canacceptinvite} <p>{str tag='communityhaveinvite'} <a href="view.php?id={$community->id}&amp;joincontrol=acceptinvite">{str tag='acceptinvitecommunity'}</a> | <a href="view.php?id={$community->id}&amp;joincontrol=declineinvite">{str tag='declineinvitecommunity'}</a></p>{/if}
-                <div id="messagediv"></div>
                 {if $member}
                     <div id="communitywatchlistcontrol">
                     <button type="button" id="watchlistcontrolbutton" class="button" onclick="return toggleWatchlist();">{if $onwatchlist}{str tag="removefromwatchlist" section="activity"}{else}{str tag="addtowatchlist" section="activity"}{/if}</button>
