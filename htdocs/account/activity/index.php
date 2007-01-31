@@ -93,11 +93,9 @@ function markread(form) {
 
     pd['markasread'] = 1;
     
-    var d = loadJSONDoc('index.json.php', pd);
-    d.addCallbacks(function (data) {
-        if (data.success) {
+    sendjsonrequest('index.json.php', pd, 'GET', function (data) {
+        if (!data.error) {
             if (data.count > 0) {
-                $('messagediv').innerHTML = '$readsave';
                 activitylist.doupdate();
                 var oldcount = parseInt($('headerunreadmessagecount').innerHTML);
                 var newcount = (oldcount - data.count);
@@ -109,18 +107,11 @@ function markread(form) {
                     messagenode.innerHTML = get_string('unreadmessages');
                 }
                 $('headerunreadmessagecount').innerHTML = newcount;
-
             }
         }
-        if (data.error) {
-            $('messagediv').innerHTML = '$readsavefail(' + data.error + ')';
-        }
-    },
-                   function () {
-            $('messagediv').innerHTML = '$readsavefail';
-            activitylist.doupdate();
-        }
-    )
+    }, function () {
+        activitylist.doupdate();
+    });
 }
 
 function showHideMessage(id) {

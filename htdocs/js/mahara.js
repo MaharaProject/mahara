@@ -165,12 +165,13 @@ function sendjsonrequest(script, data, rtype, successcallback, errorcallback) {
                 displayMessage(data.message, errtype);
                 successcallback(data);
             }
-            else if (typeof(data.message == 'object') && data.message.message
-                     && typeof(data.message.message == 'string')) {
-                displayMessage(data.message.message, errtype);
+            else if (typeof(data.message == 'object')) {
+                if (data.message.message && typeof(data.message.message == 'string')) {
+                    displayMessage(data.message.message, errtype);
+                }
                 successcallback(data.message);
             }
-            else { // Don't display a message
+            else {
                 successcallback(data);
             }
             processingStop();

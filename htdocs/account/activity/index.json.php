@@ -46,13 +46,10 @@ if ($markasread) {
     }
     catch (Exception $e) {
         db_rollback();
-        $data = array('error' => $e->getMessage);
-        echo json_encode($data);
+        json_reply('local', $e->getMessage);
     }
     db_commit();
-    $data = array('success' => 1, 'count' => $count);
-    echo json_encode($data);
-    exit;
+    json_reply(false, array('message' => false, 'count' => $count));
 }
 
 // normal processing
