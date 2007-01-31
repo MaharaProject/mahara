@@ -492,23 +492,32 @@ function byteserving_send_file($filename, $mimetype, $ranges) {
 
 
 /**
- * Given a file path, retrieves the mime type of the file.
+ * Given a file path, retrieves the mime type of the file using the
+ * unix 'file' program.
  *
  * This is only implemented for non-windows based operating systems. Mahara
  * does not support windows at this time.
  *
+ * Sometimes file will be unable to detect the mimetype, in which case
+ * it will return the empty string.
+ *
  * @param string $file The file to check
- * @return string      The mimetype of the file
+ * @return string      The mime type of the file, or false if file is not available.
  */
 function get_mime_type($file) {
     switch (strtolower(PHP_OS)) {
-        case 'win' :
-            throw new SystemException('retrieving filetype not supported in windows');
-        default : 
-            list($output,) = split(';', exec(get_config('pathtofile') . ' -ib ' . escapeshellarg($file)));
+    case 'win' :
+        throw new SystemException('retrieving filetype not supported in windows');
+    default : 
+        $filepath = get_config('pathtofile');
+        if (!empty($filepath)) {
+            list($output,) = split(';', exec($filepath . ' -ib ' . escapeshellarg($file)));
+            return $output;
         }
-    return $output;
+        return false;
+    }
 }
+
 
 /**
  * Given a mimetype (perhaps returned by {@link get_mime_type}, returns whether
