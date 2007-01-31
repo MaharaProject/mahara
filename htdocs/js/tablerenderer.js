@@ -15,6 +15,7 @@ function TableRenderer(target, source, columns, options) {
     this.statevars = ['offset','limit'];
     this.emptycontent = false;  // Something to display when no results are found
     this.rowfunction = function(rowdata, rownumber, data) { return TR({'class': 'r' + (rownumber % 2)}); }
+    this.updatecallback = function () {};
 
     this.init = function() {
         self.table = getElement(target);
@@ -176,6 +177,7 @@ function TableRenderer(target, source, columns, options) {
                 self.offset = data.offset;
                 self.count = data.count;
 
+                self.updatecallback(data);
                 if (self.paginate) {
                     if (typeof(self.assertPager) == 'function') {
                         self.assertPager(self.offset, self.limit, self.count);

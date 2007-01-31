@@ -283,6 +283,7 @@ function themepaths() {
     return array(
         'mahara' => array(
             'images/icon_close.gif',
+            'images/failure.gif',
             'images/loading.gif',
             'images/success.gif',
         ),

@@ -223,10 +223,10 @@ $string['name']                     = 'Name';
 $string['email']                    = 'Email';
 $string['subject']                  = 'Subject';
 $string['message']                  = 'Message';
-$string['submitcontactinformation'] = 'Submit contact information';
+$string['messagesent']              = 'Your message has been sent';
+$string['sendmessage']              = 'Send message';
 $string['nosendernamefound']        = 'No sender name was submitted';
 $string['emailnotsent']             = 'Failed to send contact email. Error message: "%s"';
-$string['contactinformationsent']   = 'Your contact information has been sent';
 
 // mahara.js
 $string['namedfieldempty'] = 'The required field "%s" is empty';
@@ -495,8 +495,8 @@ $string['requestedfriendlistmessage'] = '%s has requested that you add them as a
     .' You can either do this from the link below, or from your friends list page';
 
 $string['requestedfriendlistmessagereason'] = '%s has requested that you add them as a friend.'
-    .' You can either do this from the link below, or from your friends list page'
-    . 'Their reason was: ';
+    . ' You can either do this from the link below, or from your friends list page'
+    . ' Their reason was:<br>';
 
 $string['removefromfriendslist'] = 'Remove from friends';
 $string['confirmremovefriend'] = 'Are you sure you want to remove this user from your friends list?';

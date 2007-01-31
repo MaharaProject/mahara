@@ -46,6 +46,7 @@ $string['emptyfolder'] = 'Empty folder';
 $string['file'] = 'File';
 $string['files'] = 'files';
 $string['fileexists'] = 'File exists';
+$string['fileexistsonserver'] = 'A file with the name %s already exists.';
 $string['fileexistsoverwritecancel'] =  'A file with that name already exists.  You can try a different name, or overwrite the existing file.';
 $string['filelistloaded'] = 'File list loaded';
 $string['filenamefieldisrequired'] = 'The file field is required';

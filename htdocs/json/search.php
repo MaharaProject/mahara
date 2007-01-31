@@ -47,31 +47,13 @@ $offset = param_integer('offset', 0);
 switch($type) {
     case 'community':
         $data = search_community($query, $limit, $offset, true);
-        foreach ($data['data'] as &$result) {
-            $result->type = 'community';
-        }
-        log_debug($data);
+        $data['type'] = 'community';
         break;
     default:
         $data = search_user($query, $limit, $offset);
-        if ($data['data']) {
-            foreach ($data['data'] as &$result) {
-                $result->name = display_name($result);
-                $result->type = 'user';
-
-                if (!$USER->get('admin')) {
-                    unset($result->firstname);
-                    unset($result->lastname);
-                    unset($result->preferredname);
-                    unset($result->email);
-                    unset($result->institution);
-                    unset($result->username);
-                }
-            }
-        }
+        $data['type'] = 'user';
         break;
 }
-
 
 json_headers();
 $data['error'] = false;

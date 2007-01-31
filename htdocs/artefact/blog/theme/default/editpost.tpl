@@ -14,17 +14,21 @@
         {$textinputform}
         <div id='insertimage'></div>
         <div id='uploader'></div>
-        <table id='filebrowser' style='display: none;' class='tablerenderer'>
-          <thead><tr>
-            <th></th>
-            <th>{str section=artefact.file tag=name}</th>
-            <th>{str section=artefact.file tag=description}</th>
-            <th>{str section=artefact.file tag=size}</th>
-            <th>{str section=mahara tag=date}</th>
-            <th></th>
-          </tr></thead>
-          <tbody><tr><td></td></tr></tbody>
-        </table>
+        <input id='browsebutton' type='button' class='button' value='{str tag=browsemyfiles section=artefact.blog}'>
+        <div id='browsemyfiles' style='display: none;'>
+          <h3>{str tag=myfiles section='artefact.file'}</h3>
+          <table id='filebrowser' class='tablerenderer'>
+            <thead><tr>
+              <th></th>
+              <th>{str section=artefact.file tag=name}</th>
+              <th>{str section=artefact.file tag=description}</th>
+              <th>{str section=artefact.file tag=size}</th>
+              <th>{str section=mahara tag=date}</th>
+              <th></th>
+            </tr></thead>
+            <tbody><tr><td></td></tr></tbody>
+          </table>
+        </div>
         <h3>{str section=artefact.blog tag=attachedfiles}</h3>
         <table id='attachedfiles' class='tablerenderer'>
           <thead><tr>
