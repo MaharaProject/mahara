@@ -129,9 +129,6 @@ function processingStop() {
 
 // Function to post a data object to a json script.
 function sendjsonrequest(script, data, rtype, successcallback, errorcallback) {
-    if (!rtype) {
-        rtype = 'POST';
-    }
     donothing = function () { return; };
     if (typeof(successcallback) != 'function') {
         successcallback = donothing;
@@ -140,11 +137,17 @@ function sendjsonrequest(script, data, rtype, successcallback, errorcallback) {
         errorcallback = donothing;
     }
     processingStart();
-    var req = getXMLHttpRequest();
-    req.open(rtype, script);
-    req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     data.sesskey = config.sesskey;
-    var d = sendXMLHttpRequest(req, queryString(data));
+    var req = getXMLHttpRequest();
+    if (rtype = 'GET') {
+        req.open('GET', script + '?' + queryString(data));
+        var d = sendXMLHttpRequest(req);
+    }
+    else {
+        req.open('POST', script);
+        req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        var d = sendXMLHttpRequest(req, queryString(data));
+    }
     d.addCallbacks(function (result) {
         var data = evalJSONRequest(result);
         var errtype = false;

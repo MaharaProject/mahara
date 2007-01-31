@@ -51,14 +51,14 @@ $ijs .= "var adminfile = '" . get_string('adminfile','admin') . "';\n";
 $ijs .= <<< EOJS
 // Request a list of menu items from the server
 function getitems() {
-    sendjsonrequest('getmenuitems.json.php', {'public':selectedmenu == 'loggedoutmenu'}, 'POST',
+    sendjsonrequest('getmenuitems.json.php', {'public':selectedmenu == 'loggedoutmenu'}, 'GET',
                     function(data) { displaymenuitems(data.menuitems); });
 }
 
 // Get a list of the available admin files
 function getadminfiles() {
     sendjsonrequest('getadminfiles.json.php', {'public':selectedmenu == 'loggedoutmenu'}, 
-                    'POST', 
+                    'GET', 
                     function (data) {
                         if (!data.error) {
                             adminfiles = data.adminfiles;
