@@ -94,7 +94,7 @@ if (!empty($userlist)) {
 
     $data = array();
     foreach ($users as $u) {
-        $data[] = array('id' => $u->id, 'name' => display_name($u, $USER));
+        $data[] = array('id' => $u->id, 'name' => display_name($u));
     }
     json_reply(false, array('message' => false, 'users' => $data));
 }
