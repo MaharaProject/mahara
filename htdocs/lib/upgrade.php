@@ -209,7 +209,7 @@ function upgrade_core($upgrade) {
 
     if (!empty($upgrade->install)) {
         if (!install_from_xmldb_file($location . 'install.xml')) {
-            throw new SQLException("Failed to upgrade core (check logs)");
+            throw new SQLException("Failed to upgrade core (check logs for xmldb errors)");
         }
     }
     else {
@@ -266,7 +266,7 @@ function upgrade_plugin($upgrade) {
     }
     if (!$status || $db->HasFailedTrans()) {
         $db->CompleteTrans();
-        throw new SQLException("Failed to upgrade $upgrade->name");
+        throw new SQLException("Failed to upgrade $upgrade->name (check logs for xmldb errors)");
     }
 
     $installed = new StdClass;
@@ -348,6 +348,9 @@ function upgrade_plugin($upgrade) {
 
      // install artefact types
     if ($plugintype == 'artefact') {
+        if (!is_callable(array($pcname, 'get_artefact_types'))) {
+            throw new InstallationException("Artefact plugin $pcname must implement get_artefact_types and doesn't");
+        }
         $types = call_static_method($pcname, 'get_artefact_types');
         $ph = array();
         if (is_array($types)) {
