@@ -108,8 +108,8 @@ function installplugin(name) {
     $(name + '.message').innerHTML = '<img src="{$loadingicon}" alt="{$loadingstring}" />';
 
     d.addCallbacks(function (data) {
-        if (data.success) {
-            var message = '{$successstring}' + data.newversion;
+        if (!data.error) {
+            var message = '{$successstring}' + data.message.newversion;
             $(name + '.message').innerHTML = '<img src="{$successicon}" alt=":)" />  ' + message;
             // move the whole thing into the list of installed plugins 
             // new parent node
@@ -117,10 +117,10 @@ function installplugin(name) {
             var newparent = $(bits[0] + '.installed');
             appendChildNodes(newparent, $(name));
         }
-        if (data.error) {
+        else {
             var message = '';
-            if (data.errormessage) {
-                message = data.errormessage;
+            if (data.message.errormessage) {
+                message = data.message.errormessage;
             } 
             else {
                 message = '{$failurestring}';

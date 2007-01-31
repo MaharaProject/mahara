@@ -209,7 +209,7 @@ function upgrade_core($upgrade) {
 
     if (!empty($upgrade->install)) {
         if (!install_from_xmldb_file($location . 'install.xml')) {
-            throw new SQLException("Failed to upgrade core (check logs)");
+            throw new SQLException("Failed to upgrade core (check logs for xmldb errors)");
         }
     }
     else {
@@ -266,7 +266,7 @@ function upgrade_plugin($upgrade) {
     }
     if (!$status || $db->HasFailedTrans()) {
         $db->CompleteTrans();
-        throw new SQLException("Failed to upgrade $upgrade->name");
+        throw new SQLException("Failed to upgrade $upgrade->name (check logs for xmldb errors)");
     }
 
     $installed = new StdClass;
