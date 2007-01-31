@@ -45,21 +45,6 @@ $allfields = param_boolean('allfields');
 
 $data = search_user($query, $limit, $offset);
 
-if ($data['data']) {
-    foreach ($data['data'] as &$result) {
-        $result->name = display_name($result);
-
-        if (!$allfields || !$USER->get('admin')) {
-            unset($result->firstname);
-            unset($result->lastname);
-            unset($result->preferredname);
-            unset($result->email);
-            unset($result->institution);
-            unset($result->username);
-        }
-    }
-}
-
 json_headers();
 $data['error'] = false;
 $data['message'] = '';
