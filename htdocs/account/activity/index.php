@@ -36,8 +36,6 @@ if ($USER->get('admin')) {
     $types[] = (object)array('name' => 'adminmessages');
 }
 
-$readsavefail = get_string('failedtomarkasread', 'activity');
-$readsave = get_string('markedasread', 'activity');
 $morestr = get_string('more...');
 
 $javascript = <<<JAVASCRIPT

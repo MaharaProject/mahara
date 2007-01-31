@@ -46,10 +46,10 @@ if ($markasread) {
     }
     catch (Exception $e) {
         db_rollback();
-        json_reply('local', $e->getMessage);
+        json_reply('local', get_string('failedtomarkasread', 'activity') . ': ' . $e->getMessage);
     }
     db_commit();
-    json_reply(false, array('message' => false, 'count' => $count));
+    json_reply(false, array('message' => get_string('markedasread', 'activity'), 'count' => $count));
 }
 
 // normal processing
