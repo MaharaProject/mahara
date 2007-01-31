@@ -30,18 +30,18 @@ define('JSON', 1);
 require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
 safe_require('artefact', 'blog');
 
-json_headers();
 
 $id = param_integer('id');
 
 $blogpost = new ArtefactTypeBlogPost($id);
-$success = ($blogpost->get('owner') == $USER->get('id'))
-    && $blogpost->publish();
 
-echo json_encode(
-    array(
-        'success' => $success
-    )
-);
+if ($blogpost->get('owner') != $USER->get('id')) {
+    json_reply('local', get_string('youarenottheownerofthisblogpost', 'artefact.blog'));
+}
+if (!$blogpost->publish()) {
+    json_reply('local', get_string('publishfailed', 'artefact.blog'));
+}
+
+json_reply(false, get_string('blogpostpublished', 'artefact.blog'));
 
 ?>

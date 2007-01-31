@@ -70,21 +70,13 @@ postlist.rowfunction = function(d, n, gd) {
             if (!confirm({$enc_publish_confirm})) {
                 return;
             }
-            var def = loadJSONDoc('publish.json.php', { 'id': d.id });
-            def.addCallbacks(
-                function (response) {
-                    if (response.success) {
-                        $('poststatus'+d.id).innerHTML = {$enc_published};
-                        hideElement(pub);
-                    }
-                    else {
-                        alert({$enc_nopublish});
-                    }
-                },
-                function (error) {
-                    alert({$enc_error});
-                }
-            );
+            sendjsonrequest('publish.json.php', { 'id': d.id }, 'GET', 
+                            function (response) {
+                                if (!response.error) {
+                                    $('poststatus'+d.id).innerHTML = {$enc_published};
+                                    hideElement(pub);
+                                }
+                            });
         });
     }
 
@@ -148,22 +140,13 @@ postlist.rowfunction = function(d, n, gd) {
         if (!confirm({$enc_delete_confirm})) {
             return;
         }
-        var def = loadJSONDoc('delete.json.php', { 'id' : d.id });
-        def.addCallbacks(
-            function (response) {
-                if (response.success) {
-                    for (row in rows) {
-                        rows[row].parentNode.removeChild(rows[row]);
-                    }
+        sendjsonrequest('delete.json.php', { 'id' : d.id }, 'GET', function(response) {
+            if (!response.error) {
+                for (row in rows) {
+                    rows[row].parentNode.removeChild(rows[row]);
                 }
-                else {
-                    displayMessage({$enc_cannotdeleteblogpost}, 'error');
-                }
-            },
-            function (error) {
-                alert('blah');
             }
-        );
+        });
     });
 
     return rows;
