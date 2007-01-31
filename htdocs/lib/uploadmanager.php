@@ -88,9 +88,10 @@ class upload_manager {
             return get_string('fileunknowntype');
         }
 
+        $prefix = get_config('dbprefix');
         $validtypes = get_column_sql('SELECT mimetype
-            FROM mime_types m
-            LEFT JOIN file_types f ON (m.description = f.description)
+            FROM ' . $prefix . 'artefact_file_mime_types m
+            LEFT JOIN ' . $prefix . 'artefact_file_file_types f ON (m.description = f.description)
             WHERE f.enabled = 1');
         if (!in_array($type, $validtypes)) {
             return get_string('filetypenotallowed');

@@ -90,6 +90,31 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2007013100) {
+        // Add new tables for file/mime types
+        $table = new XMLDBTable('artefact_file_file_types');
+
+        $table->addFieldInfo('description', XMLDB_TYPE_TEXT, 128, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('enabled', XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 1);
+
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('description'));
+
+        create_table($table);
+
+        $table = new XMLDBTable('artefact_file_mime_types');
+
+        $table->addFieldInfo('mimetype', XMLDB_TYPE_TEXT, 128, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('description', XMLDB_TYPE_TEXT, 128, null, XMLDB_NOTNULL);
+
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('mimetype'));
+        $table->addKeyInfo('descriptionfk', XMLDB_KEY_FOREIGN, array('description'), 'artefact_file_file_types', array('description'));
+
+        create_table($table);
+
+        safe_require('artefact', 'file');
+        PluginArtefactFile::resync_filetype_list();
+    }
+
     return $status;
 }
 

@@ -24,5 +24,23 @@
             <KEY NAME="artefactfk" TYPE="foreign" FIELDS="artefact" REFTABLE="artefact" REFFIELDS="id" />
         </KEYS>
     </TABLE>
+        <TABLE NAME="artefact_file_file_types">
+            <FIELDS>
+                <FIELD NAME="description" TYPE="text" LENGTH="128" NOTNULL="true"/>
+                <FIELD NAME="enabled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1"/>
+            </FIELD>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="description"/>
+        </TABLE>
+        <TABLE NAME="artefact_file_mime_types">
+            <FIELDS>
+                <FIELD NAME="mimetype" TYPE="text" LENGTH="128" NOTNULL="true"/>
+                <FIELD NAME="description" TYPE="text" LENGTH="128" NOTNULL="true"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="mimetype"/>
+                <KEY NAME="descriptionfk" TYPE="foreign" FIELDS="description" REFTABLE="artefact_file_file_types" REFFIELDS="description"/>
+            </KEY>
+        </TABLE>
 </TABLES>
 </XMLDB>
