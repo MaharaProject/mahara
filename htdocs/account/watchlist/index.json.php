@@ -59,13 +59,11 @@ if ($stopmonitoring) {
     }
     catch (Exception $e) {
         db_rollback();
-        $data = array('error' => $e->getMessage);
-        echo json_encode($data);
+        json_reply('local', get_string('stopmonitoringfailed', 'activity') . ': ' . $e->getMessage);
     }
     db_commit();
-    $data = array('success' => 1, 'count' => $count);
-    echo json_encode($data);
-    exit;
+    $message = $count ? get_string('stopmonitoringsuccess', 'activity') : false;
+    json_reply(false, array('message' => $message, 'count' => $count));
 }
 if (!empty($userlist)) {
     if ($userlist == 'views') {
@@ -98,7 +96,7 @@ if (!empty($userlist)) {
     foreach ($users as $u) {
         $data[] = array('id' => $u->id, 'name' => display_name($u, $USER));
     }
-    json_reply(false, array('users' => $data));
+    json_reply(false, array('message' => false, 'users' => $data));
 }
 
 // normal processing (fetching tablerenderer results)

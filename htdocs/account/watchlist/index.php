@@ -38,9 +38,6 @@ $allusersstring = get_string('allusers');
 
 $andchildren = ' * ' . get_string('andchildren', 'activity');
 
-$savefailed = get_string('stopmonitoringfailed', 'activity');
-$savesuccess = get_string('stopmonitoringsuccess', 'activity');
-
 $wwwroot = get_config('wwwroot');
 
 $javascript = <<<JAVASCRIPT
@@ -103,23 +100,13 @@ function stopmonitoring(form) {
 
     pd['stopmonitoring'] = 1;
 
-    var d = loadJSONDoc('index.json.php', pd);
-    d.addCallbacks(function (data) {
-        if (data.success) {
-            if (data.count > 0) {
-                $('messagediv').innerHTML = '$savesuccess';
-                watchlist.doupdate();
-            }
-        }
-        if (data.error) {
-            $('messagediv').innerHTML = '$savefailed (' + data.error + ')';
-        }
-    },
-                   function () {
-            $('messagediv').innerHTML = '$savefailed';
+    sendjsonrequest('index.json.php', pd, 'GET', function (data) {
+        if (data.count > 0) {
             watchlist.doupdate();
         }
-    )
+    }, function () {
+        watchlist.doupdate();
+    });
 }
 
 function statusChange() {
@@ -146,9 +133,7 @@ function statusChange() {
     }
     else {
         var pd = {'userlist': typevalue};
-        var d = loadJSONDoc('index.json.php', pd);
-        d.addCallbacks(function (data) {
-            
+        sendjsonrequest('index.json.php', pd, 'GET', function (data) {
             var userSelect = $('user');
             var newOptions = new Array()
             var opt = OPTION(null, '{$allusersstring}');
@@ -156,7 +141,7 @@ function statusChange() {
                 opt.selected = true;
             }
             newOptions.push(opt);
-            forEach (data.message.users, function (u) {
+            forEach (data.users, function (u) {
                 var opt = OPTION({'value': u.id}, u.name);
                 if (uservalue == u.id) {
                     opt.selected = true;
