@@ -253,7 +253,14 @@ class ArtefactTypeBlog extends ArtefactType {
         $javascript = require(get_config('docroot') . 'artefact/blog/render/blog_renderfull.js.php');
         
         $smarty = smarty();
-        $smarty->assign('artefact', $this);
+        if (isset($options['viewid'])) {
+            $smarty->assign('artefacttitle', '<a href="' . get_config('wwwroot') . 'view/view.php?view=' 
+                                             . $options['viewid'] . '&artefact=' . $this->get('id')
+                                             . '">' . $this->get('title') . '</a>');
+        }
+        else {
+            $smarty->assign('artefacttitle', $this->get('title'));
+        }
         $smarty->assign('blockid', $blockid);
         $smarty->assign_by_ref('options', $options);
         $smarty->assign_by_ref('javascript', $javascript);
@@ -467,6 +474,14 @@ class ArtefactTypeBlogPost extends ArtefactType {
      */
     protected function render_full($options) {
         $smarty = smarty();
+        if (isset($options['viewid'])) {
+            $smarty->assign('artefacttitle', '<a href="' . get_config('wwwroot') . 'view/view.php?view=' 
+                                             . $options['viewid'] . '&artefact=' . $this->get('id')
+                                             . '">' . $this->get('title') . '</a>');
+        }
+        else {
+            $smarty->assign('artefacttitle', $this->get('title'));
+        }
         $smarty->assign('artefact', $this);
         $attachments = $this->get_attached_files();
         if ($attachments) {

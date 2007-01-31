@@ -2,7 +2,7 @@
  * This template displays a blog post.
  *}
 <div>
-  <h3>{$artefact->get('title')|escape}</h3>
+  <h3>{$artefacttitle}</h3>
   <div>{$artefact->get('description')}</div>
   {if isset($attachments)}
   <table>

@@ -6,7 +6,7 @@
   {$javascript}
 </script>
 
-<h2>{$artefact->get('title')|escape}</h2>
+<h2>{$artefacttitle}</h2>
 
 <table id="blog_renderfull{$blockid}">
     <thead></thead>
