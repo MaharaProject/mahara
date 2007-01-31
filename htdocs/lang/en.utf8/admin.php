@@ -195,6 +195,7 @@ $string['unsuspendusers'] = 'Unsuspend Users';
 $string['usersdeletedsuccessfully'] = 'Users deleted successfully';
 $string['usersunsuspendedsuccessfully'] = 'Users unsuspended successfully';
 $string['suspendingadmin'] = 'Suspending Admin';
+$string['usersuspended'] = 'User suspended';
 
 // Institutions
 $string['admininstitutions'] = 'Admininster Institutions';

@@ -126,25 +126,12 @@ function suspendSave(reason) {
     var data = reason.parentNode.parentNode.previousSibling.data;
     removeElement(reason.parentNode.parentNode);
 
-    var d = loadJSONDoc('search.json.php', {'action': 'suspend', 'reason': susReason, 'id': data.id, 'sesskey': {$str_sesskey}});
-
-    d.addCallbacks(
-        function(response) {
-            if(response.error) {
-                var message = {$str_errorwhilesuspending} + ' "' + data.name + '"';
-                if (response.message) {
-                    message += ': ' + response.message;
-                }
-                displayMessage(message, 'error');
-            }
-            else {
-                displayMessage('User "' + data.name + '" Suspended');
-            }
-        },
-        function(err) {
-            displayMessage({$str_errorwhilesuspending} + ' "' + data.name + '"', 'error');
-        }
-    );
+    sendjsonrequest('search.json.php', {'action': 'suspend', 'reason': susReason, 'id': data.id}, 'GET',
+                    function(response) {
+                        if(!response.error) {
+                            displayMessage('User "' + data.name + '" Suspended');
+                        }
+                    });
 }
 
 function suspendCancel(reason) {
