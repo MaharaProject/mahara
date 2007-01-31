@@ -114,15 +114,8 @@ function friendControl(type, id, reason) {
     }
     pd['type'] = type;
 
-    var d = loadJSONDoc('index.json.php', pd);
-    d.addCallbacks(
-        function (data) {
-            $('messagediv').innerHTML = data.message;
-        },
-        function () {
-            $('messagediv').innerHTML = '{$friendcontrolfailed}';
-        }
-    );
+    sendjsonrequest('index.json.php', pd, 'GET');
+
     friendslist.doupdate();
 }
 
