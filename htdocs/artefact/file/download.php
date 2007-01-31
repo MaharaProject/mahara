@@ -51,7 +51,6 @@ if ($viewid && $fileid) {
 
 // We just have a file ID
 $file = artefact_instance_from_id($fileid);
-log_debug('just a file ID - checking permissions');
 
 // If the file is in the public directory, it's fine to serve
 $fileispublic = $file->get('parent') == ArtefactTypeFolder::admin_public_folder_id();
@@ -59,7 +58,6 @@ $fileispublic &= $file->get('adminfiles');
 $fileispublic &= record_exists('site_menu', 'file', $fileid, 'public', 1);
 
 if (!$fileispublic) {
-    log_debug('file is NOT in the public menu');
     // If the file is in the logged in menu and the user is logged in then
     // they can view it
     $fileinloggedinmenu = $file->get('adminfiles');
@@ -68,18 +66,15 @@ if (!$fileispublic) {
     $fileinloggedinmenu &= $USER->is_logged_in();
 
     if (!$fileinloggedinmenu) {
-        log_debug('file is NOT in logged in menu, or user is not logged in');
         // Alternatively, if you own the file or you are an admin, it should always work
         $fileisavailable = $USER->get('admin') || $file->get('owner') == $USER->get('id');
 
         if (!$fileisavailable) {
-            log_debug('user does NOT own the file, or they are NOT an admin');
             throw new AccessDeniedException();
         }
     }
 }
 
-log_debug('file permissions ok');
 $path  = $file->get_path();
 $title = $file->get('title');
 serve_file($path, $title, array('lifetime' => 0) /* only for debugging */);
