@@ -869,6 +869,36 @@ table#installer {
     width: 50%;
 }
 
+.maincontent fieldset {
+    border: 1px solid #819f18;
+    padding: 0 0 0 1em;
+    width: 100%;
+}
+.maincontent fieldset table {
+    margin: 0;
+}
+.maincontent fieldset.collapsed {
+    height: 1em;
+    border-color: #819f18 transparent transparent;
+}
+.maincontent fieldset.collapsed * {
+    display: none;
+}
+.maincontent fieldset.collapsed legend, .maincontent fieldset.collapsed legend * {
+    display: block;
+}
+.maincontent legend {
+    font-weight: bold;
+	color: #4c7c10;
+}
+.maincontent fieldset legend a {
+    padding-left: 19px;
+    background: url(../images/icon_fieldset_down.gif) 3px center no-repeat;
+}
+.maincontent fieldset.collapsed legend a {
+    background: url(../images/icon_fieldset_left.gif) 3px center no-repeat;
+}
+
 #accountprefs table #accountprefs_password2 {
 	margin: 0 0 20px 0;
 }
@@ -1577,6 +1607,20 @@ span.block_targetted, div.block_targetted {
 	width: 60px;
 	height: 18px;
 	padding: 2px 14px 2px 14px;
+}
+.maincontent #pluginconfig table {
+    padding: 10px;
+    border: 0;
+}
+.maincontent #pluginconfig fieldset table {
+    width: auto;
+}
+.maincontent #pluginconfig table th {
+    width: 25%;
+}
+.maincontent #pluginconfig table p {
+    margin-top: 0;
+    margin-bottom: 1em;
 }
 
 #loading_box {
