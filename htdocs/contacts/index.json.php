@@ -29,7 +29,6 @@ define('JSON', 1);
 
 require(dirname(dirname(__FILE__)) . '/init.php');
 
-json_headers();
 
 $pending  = param_boolean('pending');
 $limit    = param_integer('limit', 10);
@@ -76,7 +75,7 @@ if (empty($pending)) {
 }
 else {
     $count = count_records('usr_friend_request' , 'owner', array($userid));
-    $sql = 'SELECT u.id, u.firstname, u.lastname, u.preferredname, fr.reason
+    $sql = 'SELECT u.id, u.firstname, u.lastname, u.preferredname, u.username, fr.reason
             FROM ' . $prefix . 'usr u 
             JOIN ' . $prefix . 'usr_friend_request fr ON fr.requester = u.id
             WHERE fr.owner = ?';
@@ -92,6 +91,7 @@ foreach ($data as $d) {
     $d->name  = display_name($d);
 }
 
+json_headers();
 print json_encode(array(
     'count'   => $count,
     'limit'   => $limit,
