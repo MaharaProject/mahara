@@ -77,6 +77,6 @@ if (!$fileispublic) {
 
 $path  = $file->get_path();
 $title = $file->get('title');
-serve_file($path, $title, array('lifetime' => 0) /* only for debugging */);
+serve_file($path, $title);
 
 ?>
