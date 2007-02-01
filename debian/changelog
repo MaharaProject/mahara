@@ -1,3 +1,9 @@
+mahara (0.6.0-1) unstable; urgency=low
+
+  * Release to mark stable branch point.
+
+ -- Penny Leach <penny@catalyst.net.nz>  Fri,  2 Feb 2007 11:29:21 +1300
+
 mahara (0.5.1-1) unstable; urgency=low
 
   * Bugfix release
