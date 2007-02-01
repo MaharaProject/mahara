@@ -57,7 +57,7 @@ switch($type) {
 
 json_headers();
 $data['error'] = false;
-$data['message'] = '';
+$data['message'] = false;
 echo json_encode($data);
 
 ?>
