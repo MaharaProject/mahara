@@ -326,6 +326,11 @@ class Pieform {
         }
 
         // Rename all the keys to have nice compliant names
+        // @todo:
+        //   - This isn't done for elements inside fieldsets
+        //   - There's no easy way for other things do do all this preprocessing if they
+        //     need. It should be a method so that other things (like multirecord)
+        //     can use it.
         $elements = array();
         foreach ($this->data['elements'] as $name => $element) {
             $newname = preg_replace('/[^a-zA-Z0-9_]/', '_', $name);
@@ -878,6 +883,12 @@ class Pieform {
         return $result;
     }
 
+    /**
+     * Builds the javascript for submitting the form. Note that the iframe is
+     * not hidden with display: none, as safari/konqueror/ns6 ignore things with
+     * display: none. Positioning it absolute and 'hidden' has the same effect
+     * without the breakage.
+     */
     private function submit_js() {
         $strprocessingform = get_string('processingform');
 
@@ -896,9 +907,9 @@ EOF;
     if (!iframe) {
         iframe = createDOM('iframe', {
             'name': '{$this->name}_iframe',
-            'id'  : '{$this->name}_iframe'
+            'id'  : '{$this->name}_iframe',
+            'style': 'position: absolute; visibility: hidden;'
         });
-        hideElement(iframe);
         insertSiblingNodesAfter($('{$this->name}'), iframe);
 
         window.pieformHandler_{$this->name} = function(data) {
