@@ -128,7 +128,7 @@ function processingStop() {
 // End message related functions
 
 // Function to post a data object to a json script.
-function sendjsonrequest(script, data, rtype, successcallback, errorcallback) {
+function sendjsonrequest(script, data, rtype, successcallback, errorcallback, quiet) {
     donothing = function () { return; };
     if (typeof(successcallback) != 'function') {
         successcallback = donothing;
@@ -162,11 +162,13 @@ function sendjsonrequest(script, data, rtype, successcallback, errorcallback) {
         }
         if (errtype) {
             if (typeof(data.message) == 'string') {
-                displayMessage(data.message, errtype);
+                if (!quiet) {
+                    displayMessage(data.message, errtype);
+                }
                 successcallback(data);
             }
             else if (data.message && typeof(data.message == 'object')) {
-                if (data.message.message && typeof(data.message.message == 'string')) {
+                if (data.message.message && typeof(data.message.message == 'string') && !quiet) {
                     displayMessage(data.message.message, errtype);
                 }
                 successcallback(data.message);
