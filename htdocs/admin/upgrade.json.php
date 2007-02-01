@@ -81,18 +81,21 @@ if (!empty($upgrade)) {
         if (isset($upgrade->install)) {
             $data['install'] = $upgrade->install;
         }
+        $data['error'] = false;
         json_reply(false, $data);
         exit;
     } 
     catch (Exception $e) {
         list($texttrace, $htmltrace) = log_build_backtrace($e->getTrace());
         $data['errormessage'] = $e->getMessage() . '<br>' . $htmltrace;
-        json_reply(true, $data);
+        $data['error'] = true;
+        json_reply('local', $data);
         exit;
     }
 }
 else {
-    json_reply(false, array('message' => string('nothingtoupgrade','admin')));
+    json_reply(false, array('error' => false,
+                            'message' => string('nothingtoupgrade','admin')));
     exit;
 }
 ?>

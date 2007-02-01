@@ -106,36 +106,36 @@ $js .= <<< EOJS
                     return;
                 }
 
-                var d = loadJSONDoc('upgrade.json.php', { 'name': element });
-
                 $(element).innerHTML = '<img src="{$loadingicon}" alt="{$loadingstring}" />';
 
-                d.addCallbacks(function (data) {
+                sendjsonrequest('upgrade.json.php', { 'name': element }, 'GET', function (data) {
                     if ( !data.error ) {
                         var message;
-                        if (data.message.install) {
+                        if (data.install) {
                             message = '{$installsuccessstring}';
                         }
                         else {
                             message = '{$successstring}';
                         }
-                        message += data.message.newversion;
-                        $(data.message.key).innerHTML = '<img src="{$successicon}" alt=":)" />  ' + message;
+                        message += data.newversion;
+                        $(data.key).innerHTML = '<img src="{$successicon}" alt=":)" />  ' + message;
                     }
                     else {
                         var message = '';
-                        if (data.message.errormessage) {
-                            message = data.message.errormessage;
+                        if (data.errormessage) {
+                            message = data.errormessage;
                         } 
                         else {
                             message = '{$failurestring}';
                         }
-                        $(data.message.key).innerHTML = '<img src="{$failureicon}" alt=":(" /> ' + message;
+                        $(data.key).innerHTML = '<img src="{$failureicon}" alt=":(" /> ' + message;
                     }
                     processNext();
-                }, function () {
+                }, 
+                function () {
                     $(element).innerHTML = '<img src="{$failureicon}" alt=":(" /> {$failurestring}';
-                });
+                },
+                true);
             }
 
             addLoadEvent( processNext );

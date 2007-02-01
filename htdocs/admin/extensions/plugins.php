@@ -103,13 +103,11 @@ $failurestring = get_string('upgradefailure', 'admin');
 $javascript = <<<JAVASCRIPT
 
 function installplugin(name) {
-    var d = loadJSONDoc('../upgrade.json.php', { 'name': name });
-
     $(name + '.message').innerHTML = '<img src="{$loadingicon}" alt="{$loadingstring}" />';
 
-    d.addCallbacks(function (data) {
+    sendjsonrequest('../upgrade.json.php', { 'name': name }, 'GET', function (data) {
         if (!data.error) {
-            var message = '{$successstring}' + data.message.newversion;
+            var message = '{$successstring}' + data.newversion;
             $(name + '.message').innerHTML = '<img src="{$successicon}" alt=":)" />  ' + message;
             // move the whole thing into the list of installed plugins 
             // new parent node
@@ -119,8 +117,8 @@ function installplugin(name) {
         }
         else {
             var message = '';
-            if (data.message.errormessage) {
-                message = data.message.errormessage;
+            if (data.errormessage) {
+                message = data.errormessage;
             } 
             else {
                 message = '{$failurestring}';
@@ -128,10 +126,11 @@ function installplugin(name) {
             $(name).innerHTML = '<img src="{$failureicon}" alt=":(" /> ' + message;
         }
     },
-                   function () {
-                       message = '{$failurestring}';
-                       $(name).innerHTML = message;
-                   });
+    function () {
+        message = '{$failurestring}';
+        $(name).innerHTML = message;
+    },
+    true);
 }
 JAVASCRIPT;
 
