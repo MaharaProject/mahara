@@ -43,7 +43,7 @@ $artefact = artefact_instance_from_id($id);
 $renderedartefact = $artefact->render($format, $options);
 
 if (!$renderedartefact) {
-    json_reply('local', 'artefactnotrendered');
+    json_reply('local', get_string('artefactnotrendered'));
 }
 
 $result = array(
