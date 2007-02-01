@@ -69,11 +69,9 @@ $failurestring = get_string('upgradefailure', 'admin');
 $javascript = <<<JAVASCRIPT
 
 function installtemplate(name) {
-    var d = loadJSONDoc('templateinstall.json.php', { 'name': name });
-
     $(name + '.message').innerHTML = '<img src="{$loadingicon}" alt="{$loadingstring}" />';
 
-    d.addCallbacks(function (data) {
+    sendjsonrequest('templateinstall.json.php', { 'name': name }, 'GET', function (data) {
         if (!data.error) {
             var message = '{$successstring}';
             $(name + '.message').innerHTML = '<img src="{$successicon}" alt=":)" />  ' + message;
@@ -92,10 +90,11 @@ function installtemplate(name) {
             $(name).innerHTML = '<img src="{$failureicon}" alt=":(" /> ' + message;
         }
     },
-                   function () {
-                       message = '{$failurestring}';
-                       $(name).innerHTML = message;
-                   });
+    function () {
+        message = '{$failurestring}';
+        $(name).innerHTML = message;
+    },
+    true);
 }
 JAVASCRIPT;
 

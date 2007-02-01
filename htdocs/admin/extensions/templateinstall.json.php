@@ -42,7 +42,7 @@ try {
     json_reply(false);
 }
 catch (TemplateParserException $e) {
-    json_reply(true, $e->getMessage());
+    json_reply('local', $e->getMessage());
 }
 
 
