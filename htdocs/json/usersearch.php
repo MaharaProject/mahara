@@ -47,7 +47,7 @@ $data = search_user($query, $limit, $offset);
 
 json_headers();
 $data['error'] = false;
-$data['message'] = '';
+$data['message'] = false;
 echo json_encode($data);
 
 ?>

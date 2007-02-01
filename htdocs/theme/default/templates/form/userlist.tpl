@@ -2,19 +2,11 @@
     var {{$name}}_d;
 
     var {{$name}}_searchfunc = function (q) {
-        processingStart();
+
         replaceChildNodes('{{$name}}_messages');
-        {{$name}}_d = loadJSONDoc('{{$WWWROOT}}json/usersearch.php', {'query':q, 'limit': 100});
 
-        {{$name}}_d.addCallbacks(
+        sendjsonrequest('{{$WWWROOT}}json/usersearch.php', {'query':q, 'limit': 100}, 'GET', 
             function (users) {
-                processingStop();
-
-                if(users.error) {
-                    displayMessage(users.message,'error');
-                    return;
-                }
-
                 var members = {};
                 var counter = 0;
                 forEach($('{{$name}}_members').childNodes, function(node) {
@@ -42,12 +34,7 @@
                         )
                     );
                 }
-            },
-            function (err) {
-                processingStop();
-                displayMessage(get_string('errorloadingusers'),'error');
-            }
-        );
+            });
     }
 
     addLoadEvent(function () {
