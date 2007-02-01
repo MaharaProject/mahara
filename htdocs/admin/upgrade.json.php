@@ -42,8 +42,6 @@ if (!$install) {
     }
 }
 
-
-
 if ($install) {
     $message = '';
     if (!get_config('installed')) {
@@ -51,7 +49,7 @@ if ($install) {
             $exceptions = core_install_defaults();
         }
         catch (SQLException $e) {
-            json_reply(true, $e->getMessage());
+            json_reply('local', $e->getMessage());
         }
         catch (TemplateParserException $e) {
             $message = '<a href="' . get_config('wwwroot') .'admin/extensions/templates.php">' 

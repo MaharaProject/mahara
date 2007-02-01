@@ -59,32 +59,36 @@ $coresuccess   = get_string('coredatasuccess', 'admin');
 if (!empty($upgrades['core']->install)) {
     $smarty->assign('install', true);
     $installjs =<<< EOJS
-                    var d = loadJSONDoc('upgrade.json.php', { 'install' : 1 });
-                    
                     $('coredata').innerHTML = '<img src="{$loadingicon}" alt="{$loadingstring}" />';
-                    
-                    d.addCallbacks(function (data) {
-                        if ( !data.error ) {
-                            var message = '{$coresuccess}';
-                            if (data.message) {
-                                message += ' (' + data.message + ')';
+
+                    sendjsonrequest(
+                        'upgrade.json.php', 
+                        { 'install' : 1 }, 
+                        'GET',
+                        function (data) {
+                            if ( !data.error ) {
+                                var message = '{$coresuccess}';
+                                if (data.message) {
+                                    message += ' (' + data.message + ')';
+                                }
+                                $('coredata').innerHTML = '<img src="{$successicon}" alt=":)" />  ' + message;
+                                $('finished').style.visibility = 'visible';
                             }
-                            $('coredata').innerHTML = '<img src="{$successicon}" alt=":)" />  ' + message;
-                            $('finished').style.visibility = 'visible';
-                        }
-                        else {
-                            var message = '';
-                            if (data.message) {
-                                message = data.message;
-                            } 
                             else {
-                                message = '{$failurestring}';
+                                var message = '';
+                                if (data.message) {
+                                    message = data.message;
+                                } 
+                                else {
+                                    message = '{$failurestring}';
+                                }
+                                $('coredata').innerHTML = '<img src="{$failureicon}" alt=":(" /> ' + message;
                             }
-                            $('coredata').innerHTML = '<img src="{$failureicon}" alt=":(" /> ' + message;
-                        }
-                    }, function () {
-                        $('coredata').innerHTML = '<img src="{$failureicon}" alt=":(" /> {$failurestring}';
-                    });
+                        },
+                        function () {
+                            $('coredata').innerHTML = '<img src="{$failureicon}" alt=":(" /> {$failurestring}';
+                        },
+                        true); // quiet.
 
 EOJS;
 }
