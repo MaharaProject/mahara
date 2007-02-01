@@ -157,50 +157,30 @@ function TableRenderer(target, source, columns, options) {
             }
         });
 
-        var req = getXMLHttpRequest();
-        req.open('post', self.source);
-        req.setRequestHeader('Content-type','application/x-www-form-urlencoded'); 
-        self.d = sendXMLHttpRequest(req,queryString(request_args));
+        sendjsonrequest(self.source, request_args, 'POST', function (result) {
+            self.limit = data.limit;
+            self.offset = data.offset;
+            self.count = data.count;
 
-        processingStart();
-
-        self.d.addCallbacks(
-            function (result) {
-                var data = evalJSONRequest(result);
-                processingStop();
-                if ( data.error ) {
-                    displayMessage(data.message || data.error);
-                    return;
+            self.updatecallback(data);
+            if (self.paginate) {
+                if (typeof(self.assertPager) == 'function') {
+                    self.assertPager(self.offset, self.limit, self.count);
                 }
-
-                self.limit = data.limit;
-                self.offset = data.offset;
-                self.count = data.count;
-
-                self.updatecallback(data);
-                if (self.paginate) {
-                    if (typeof(self.assertPager) == 'function') {
-                        self.assertPager(self.offset, self.limit, self.count);
-                    }
-                }
-
-                if (self.emptycontent) {
-                    if (self.count > 0) {
-                        hideElement(self.table.previousSibling);
-                        self.table.style.display = '';
-                    }
-                    else {
-                        self.table.style.display = 'none';
-                        showElement(self.table.previousSibling);
-                    }
-                }
-                self.renderdata(data);
-            },
-            function (error) {
-                processingStop();
-                displayMessage('Error loading data (not valid JSON)');
             }
-        );
+
+            if (self.emptycontent) {
+                if (self.count > 0) {
+                    hideElement(self.table.previousSibling);
+                    self.table.style.display = '';
+                }
+                else {
+                    self.table.style.display = 'none';
+                    showElement(self.table.previousSibling);
+                }
+            }
+            self.renderdata(data);
+        });
     };
 
     this.goFirstPage = function() {
