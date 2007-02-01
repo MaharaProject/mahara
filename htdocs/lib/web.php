@@ -1041,6 +1041,13 @@ function main_nav() {
             foreach ($plugin_menu as &$menu_item) {
                 $menu_item['link'] = $wwwroot . 'artefact/' . $plugin->name . '/' . $menu_item['link'];
                 $menu_item['section'] = 'artefact.' . $plugin->name;
+                if (array_key_exists('submenu', $menu_item)) {
+                    foreach ($menu_item['submenu'] as &$submenuitem) {
+                        if (!array_key_exists('section', $submenuitem)) {
+                            $submenuitem['section'] = 'artefact.' . $plugin->name;
+                        }
+                    }
+                }
             }
 
             $menu = array_merge($menu, $plugin_menu);
