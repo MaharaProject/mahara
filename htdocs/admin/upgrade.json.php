@@ -32,8 +32,6 @@ define('JSON', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 require(get_config('libroot') . 'upgrade.php');
 
-json_headers();
-
 $install = param_boolean('install');
 if (!$install) {
     $name    = param_variable('name');
