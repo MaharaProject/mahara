@@ -176,6 +176,11 @@ if (!get_config('installed')
 }
 
 if (defined('JSON')) {
+    $sesskey = param_variable('sesskey', null);
+    global $USER;
+    if ($sesskey === null || $USER->get('sesskey') != $sesskey) {
+        $USER->logout();
+    }
 }
 
 ?>

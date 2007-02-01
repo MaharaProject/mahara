@@ -355,6 +355,7 @@ $string['noresultsfound'] = 'No results found';
 $string['artefact'] = 'artefact';
 $string['Artefact'] = 'Artefact';
 $string['artefactnotfound'] = 'Artefact with id %s not found';
+$string['artefactnotrendered'] = 'Artefact not rendered';
 $string['created'] = 'Created';
 $string['lastmodified'] = 'Last modified';
 $string['owner'] = 'Owner';

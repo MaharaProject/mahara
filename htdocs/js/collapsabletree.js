@@ -45,17 +45,11 @@ function CollapsableTree(data, source) {
                 }
             });
 
-            var req = getXMLHttpRequest();
-            req.open('post', self.source);
-            req.setRequestHeader('Content-type','application/x-www-form-urlencoded'); 
-            var d = sendXMLHttpRequest(req,queryString(request_args));
-            d.addCallbacks(function (response) {
-                var data = evalJSONRequest(response);
-                
+            sendjsonrequest(self.source, request_args, 'POST', function (data) {
                 if (!data.error) {
-                    if (data.message) {
+                    if (data.data) {
                         // Add the new children into the list item that was expanded
-                        var ul = self.convertDataToDOM(data.message);
+                        var ul = self.convertDataToDOM(data.data);
                         appendChildNodes(p, ul);
                         p.child = ul;
                     }
@@ -67,15 +61,6 @@ function CollapsableTree(data, source) {
                     // Replace the 'expand' link with a 'collapse' one 
                     replaceChildNodes(p.id + '_toggle', self.getCollapseLink(p));
                 }
-                else {
-                    alert('did not get data :(');
-                    // @todo insert sad face or something
-                }
-
-                processingStop();
-            }, function () {
-                alert('no data for you!');
-                processingStop();
             });
         }
         else {

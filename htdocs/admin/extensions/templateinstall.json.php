@@ -39,10 +39,10 @@ $name = param_alpha('name');
 try {
     $template = template_parse($name);
     upgrade_template($name, $template);
-    json_reply(false);
+    json_reply(false, '');
 }
 catch (TemplateParserException $e) {
-    json_reply(true, $e->getMessage());
+    json_reply('local', $e->getMessage());
 }
 
 

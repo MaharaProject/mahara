@@ -32,8 +32,6 @@ define('JSON', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 require(get_config('libroot') . 'upgrade.php');
 
-json_headers();
-
 $install = param_boolean('install');
 if (!$install) {
     $name    = param_variable('name');
@@ -44,8 +42,6 @@ if (!$install) {
     }
 }
 
-
-
 if ($install) {
     $message = '';
     if (!get_config('installed')) {
@@ -53,7 +49,7 @@ if ($install) {
             $exceptions = core_install_defaults();
         }
         catch (SQLException $e) {
-            json_reply(true, $e->getMessage());
+            json_reply('local', $e->getMessage());
         }
         catch (TemplateParserException $e) {
             $message = '<a href="' . get_config('wwwroot') .'admin/extensions/templates.php">' 
@@ -85,18 +81,21 @@ if (!empty($upgrade)) {
         if (isset($upgrade->install)) {
             $data['install'] = $upgrade->install;
         }
+        $data['error'] = false;
         json_reply(false, $data);
         exit;
     } 
     catch (Exception $e) {
         list($texttrace, $htmltrace) = log_build_backtrace($e->getTrace());
         $data['errormessage'] = $e->getMessage() . '<br>' . $htmltrace;
-        json_reply(true, $data);
+        $data['error'] = true;
+        json_reply('local', $data);
         exit;
     }
 }
 else {
-    json_reply(false, array('message' => string('nothingtoupgrade','admin')));
+    json_reply(false, array('error' => false,
+                            'message' => string('nothingtoupgrade','admin')));
     exit;
 }
 ?>

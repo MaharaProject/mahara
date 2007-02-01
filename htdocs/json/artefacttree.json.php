@@ -55,7 +55,9 @@ $data = get_records_sql_array("SELECT id, artefacttype, container, title
     AND owner = ?
     ORDER BY title", array($pluginname, $userid));
 if (!$data) {
-    json_reply(false, null);
+    echo json_encode(array('error' => false,
+                           'data' => false));
+    exit;
 }
 
 // Format the data for return. Each artefact type has the opportunity to format
@@ -102,6 +104,7 @@ foreach ($artefacts as $artefact) {
         'rendersto'  => call_static_method($artefactclass, 'get_render_list')
     );
 }
-json_reply(false, $items);
+echo json_encode(array('error' => false,
+                       'data' => $items));
 
 ?>
