@@ -109,6 +109,7 @@ function installplugin(name) {
         if (!data.error) {
             var message = '{$successstring}' + data.newversion;
             $(name + '.message').innerHTML = '<img src="{$successicon}" alt=":)" />  ' + message;
+            $(name + '.install').innerHTML = '';
             // move the whole thing into the list of installed plugins 
             // new parent node
             var bits = name.split('\.');
