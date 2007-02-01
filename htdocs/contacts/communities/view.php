@@ -137,11 +137,16 @@ $removefromwatchliststr = get_string('removefromwatchlist', 'activity');
 $addtowatchliststr = get_string('addtowatchlist', 'activity');
 
 // all the permissions stuff
-$tutor          = (int)($membership && ($membership != COMMUNITY_MEMBERSHIP_MEMBER));
+//$tutor          = (int)($membership && ($membership != COMMUNITY_MEMBERSHIP_MEMBER));
 $controlled     = (int)($community->jointype == 'controlled');
-$admin          = (int)($membership & COMMUNITY_MEMBERSHIP_ADMIN != 0);
-$canremove      = (int)(($tutor && $controlled) || $admin);
-$canpromote     = (int)$tutor;
+$request        = (int)($community->jointype == 'request');
+$tutor          = (int)($membership & COMMUNITY_MEMBERSHIP_TUTOR);
+$admin          = (int)($membership & COMMUNITY_MEMBERSHIP_ADMIN);
+$staff          = (int)($membership & COMMUNITY_MEMBERSHIP_STAFF);
+$owner          = (int)($membership & COMMUNITY_MEMBERSHIP_OWNER);
+$canupdate      = (int)($tutor || $staff || $admin || $owner);
+$canpromote     = (int)($tutor || $staff || $admin);
+$canremove      = (int)(($tutor && $controlled) || $staff || $admin);
 $canleave       = ($ismember && $community->jointype != 'controlled');
 $canrequestjoin = (!$ismember && empty($invited) && empty($requested) && $community->jointype == 'request');
 $canjoin        = (!$ismember && $community->jointype == 'open');
@@ -184,20 +189,15 @@ memberlist = new TableRenderer(
          return TD(null, A({'href': '{$userview}' + r.id}, r.displayname));
      },
 EOF;
-if ($tutor) {
+if ($canupdate) {
     $javascript .= <<<EOF
     'reason',
      function (r) {
          var options = new Array();
-         var tutor = OPTION({'value': 'tutor'}, '{$tutorstr}');
          var member = OPTION({'value': 'member'}, '{$memberstr}');
-         if (r.tutor == 1) {
-             tutor.selected = true;
-         }
-         else if (r.request != 1) {
+         if (r.request != 1) {
              member.selected = true;
          }
-         options.push(tutor);
          options.push(member);
          if (r.request) {
              var nonmember = OPTION({'value': 'declinerequest'}, '{$declinestr}');
@@ -205,7 +205,17 @@ if ($tutor) {
              options.push(nonmember);
          }
 EOF;
-    if (($controlled && $tutor) || $admin) {
+    if ($canpromote) {
+    $javascript .= <<<EOF
+         var tutor = OPTION({'value': 'tutor'}, '{$tutorstr}');
+         if (r.tutor == 1) {
+             member.selected = false;
+             tutor.selected = true;
+         }
+         options.push(tutor);
+EOF;
+    }
+    if ($canremove) {
         $javascript .= <<<EOF
         if (!r.request) {
             var remove = OPTION({'value': 'remove'}, '{$removestr}');
@@ -306,9 +316,12 @@ $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('member', $membership);
 $smarty->assign('tutor', $tutor);
 $smarty->assign('controlled', $controlled);
+$smarty->assign('request', $request);
 $smarty->assign('canjoin', $canjoin);
 $smarty->assign('canrequestjoin', $canrequestjoin);
 $smarty->assign('canleave', $canleave);
+$smarty->assign('canpromote', $canpromote);
+$smarty->assign('canupdate', $canupdate);
 $smarty->assign('canacceptinvite', $invited);
 $smarty->assign('community', $community);
 $smarty->assign('onwatchlist', record_exists('usr_watchlist_community', 'usr', $USER->get('id'), 'community', $community->id));

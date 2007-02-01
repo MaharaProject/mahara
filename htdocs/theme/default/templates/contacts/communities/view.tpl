@@ -43,7 +43,7 @@
                     </div>                   
                     <div class="communitymembers">
                         <h5>{str tag='members'}</h5>
-                        {if $tutor}
+                        {if $canupdate && $request}
                             <form>
                                 <select id="pendingselect" name="pending" onChange="switchPending();">
                                     <option value="0">{str tag='members'}</option>
@@ -61,7 +61,7 @@
                              <tbody>
                              </tbody>
                          </table>
-	                 {if $tutor}
+	                 {if $canupdate}
                              <input type="button" class="button" value="{str tag='updatemembership'}" onClick="return updateMembership();" / id="communitymembers_update">
                          {/if}
                      </div>
