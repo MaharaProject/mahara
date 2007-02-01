@@ -165,7 +165,7 @@ function sendjsonrequest(script, data, rtype, successcallback, errorcallback) {
                 displayMessage(data.message, errtype);
                 successcallback(data);
             }
-            else if (typeof(data.message == 'object')) {
+            else if (data.message && typeof(data.message == 'object')) {
                 if (data.message.message && typeof(data.message.message == 'string')) {
                     displayMessage(data.message.message, errtype);
                 }

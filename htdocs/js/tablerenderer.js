@@ -157,12 +157,12 @@ function TableRenderer(target, source, columns, options) {
             }
         });
 
-        sendjsonrequest(self.source, request_args, 'POST', function (result) {
-            self.limit = data.limit;
-            self.offset = data.offset;
-            self.count = data.count;
+        sendjsonrequest(self.source, request_args, 'POST', function (response) {
+            self.limit = response.limit;
+            self.offset = response.offset;
+            self.count = response.count;
 
-            self.updatecallback(data);
+            self.updatecallback(response);
             if (self.paginate) {
                 if (typeof(self.assertPager) == 'function') {
                     self.assertPager(self.offset, self.limit, self.count);
@@ -179,7 +179,7 @@ function TableRenderer(target, source, columns, options) {
                     showElement(self.table.previousSibling);
                 }
             }
-            self.renderdata(data);
+            self.renderdata(response);
         });
     };
 
