@@ -491,8 +491,10 @@ function activity_get_viewaccess_users($view, $owner) {
     $sql = 'SELECT userid, u.*, p.method
                 FROM (
                 SELECT (CASE WHEN usr1 = ? THEN usr2 ELSE usr1 END) AS userid 
-                    FROM ' . $prefix . 'usr_friend 
-                        WHERE (usr1 = ? OR usr2 = ?)
+                    FROM ' . $prefix . 'usr_friend f
+                    JOIN ' . $prefix . 'view v ON (v.owner = f.usr1 OR v.owner = f.usr2)
+                    JOIN ' . $prefix . 'view_access vu ON vu.view = v.id
+                        WHERE (usr1 = ? OR usr2 = ?) AND vu.accesstype = ? AND v.id = ? 
                 UNION SELECT member AS userid 
                     FROM ' . $prefix . 'usr_group_member m
                     JOIN ' . $prefix . 'view_access_group g ON m.grp = g.grp 
@@ -503,7 +505,7 @@ function activity_get_viewaccess_users($view, $owner) {
                 ) AS userlist
                 JOIN ' . $prefix . 'usr u ON u.id = userlist.userid
                 LEFT JOIN ' . $prefix . 'usr_activity_preference p ON p.usr = u.id';
-    if (!$u = get_records_sql_assoc($sql, array($owner, $owner, $owner, $view, $view))) {
+    if (!$u = get_records_sql_assoc($sql, array($owner, $owner, $owner, 'friends', $view, $view, $view))) {
         $u = array();
     }
     return $u;
