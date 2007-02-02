@@ -54,6 +54,11 @@ $form = pieform(array(
                 'required'    => false
             )
         ),
+        'tags'        => array(
+            'type'        => 'tags',
+            'title'       => get_string('tags'),
+            'description' => get_string('tagsdesc'),
+        ),
         'commentsallowed' => array(
             'type'        => 'radio',
             'title'       => get_string('commentsallowed', 'artefact.blog'),

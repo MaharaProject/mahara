@@ -88,6 +88,7 @@ abstract class ArtefactType {
     protected $title;
     protected $description;
     protected $note;
+    protected $tags = array();
 
     protected $viewsinstances;
     protected $viewsmetadata;
@@ -126,6 +127,14 @@ abstract class ArtefactType {
                     $value = strtotime($value);
                 } 
                 $this->{$field} = $value;
+            }
+        }
+
+        // load tags
+        if ($this->id) {
+            $tags = get_column('artefact_tag', 'tag', 'artefact', $this->id);
+            if (is_array($tags)) {
+                $this->tags = $tags;
             }
         }
 
@@ -335,6 +344,20 @@ abstract class ArtefactType {
         else {
             update_record('artefact', $fordb, 'id');
         }
+
+        delete_records('artefact_tag', 'artefact', $this->id);
+        if (is_array($this->tags)) {
+            foreach ($this->tags as $tag) {
+                insert_record(
+                    'artefact_tag',
+                    (object) array(
+                        'artefact' => $this->id,
+                        'tag'      => $tag,
+                    )
+                );
+            }
+        }
+
         activity_occurred('watchlist', (object) array('artefact' => $this->id,
                                                       'subject' => get_string('artefactmodified')));
         if (!empty($this->parentdirty)) {

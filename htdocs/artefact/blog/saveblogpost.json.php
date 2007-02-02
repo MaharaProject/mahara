@@ -40,6 +40,7 @@ $blogpost   = param_integer('blogpost');
 $uploads    = json_decode(param_variable('uploads'));
 $artefacts  = json_decode(param_variable('artefacts'));
 $body       = param_variable('body');
+$tags       = param_variable('tags');
 
 $userid = $USER->get('id');
 
@@ -64,6 +65,7 @@ if (!empty($uploads)) {
 $postobj = new ArtefactTypeBlogPost($blogpost, null);
 $postobj->set('title', $title);
 $postobj->set('description', $body);
+$postobj->set('tags', preg_split("/\s*,\s*/", trim($tags)));
 $postobj->set('published', !$draft);
 if (!$blogpost) {
     $postobj->set('parent', $blog);

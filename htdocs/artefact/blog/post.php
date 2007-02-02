@@ -55,6 +55,7 @@ if (!$blogpost) {
     $title = '';
     $description = '';
     $checked = '';
+    $tags = array();
     $pagetitle = 'newblogpost';
     $focuselement = 'title';
     define('TITLE', get_string('newblogpost','artefact.blog'));
@@ -67,6 +68,7 @@ else {
     $blog = $blogpostobj->get('parent');
     $title = $blogpostobj->get('title');
     $description = $blogpostobj->get('description');
+    $tags = $blogpostobj->get('tags');
     $checked = !$blogpostobj->get('published');
     $pagetitle = 'editblogpost';
     $focuselement = 'description'; // Doesn't seem to work with tinyMCE.
@@ -113,6 +115,12 @@ $textinputform = pieform(array(
                 'required' => true
             ),
             'defaultvalue' => $description
+        ),
+        'tags'       => array(
+            'defaultvalue' => $tags,
+            'type'         => 'tags',
+            'title'        => get_string('tags'),
+            'description'  => get_string('tagsdesc'),
         ),
     )
 ));
@@ -322,7 +330,8 @@ function saveblogpost() {
     }
 
     data.body = $('editpost_description').value;
-    sendjsonrequest('saveblogpost.json.php', data, 'POST', function (result) { 
+    data.tags = $('editpost_tags').value;
+    sendjsonrequest('saveblogpost.json.php', data, 'POST', function (result) {
         if (result.error) {
             // Error messages should appear near the save button so
             // that users can actually see them.
@@ -673,8 +682,10 @@ function editpost_submit(Pieform $form, array $values) {
     global $USER;
 
     $values['published'] = !$values['thisisdraft'];
-    if ((!empty($values['id']) && ArtefactTypeBlogPost::edit_post($USER, $values))
-        || (empty($values['id']) && ArtefactTypeBlogPost::new_post($USER, $values))) {
+    if (
+        (!empty($values['id']) && ArtefactTypeBlogPost::edit_post($USER, $values))
+        || (empty($values['id']) && ArtefactTypeBlogPost::new_post($USER, $values))
+    ) {
         // Redirect to the blog page.
         redirect('/artefact/blog/view/?id=' . $values['parent']);
     }

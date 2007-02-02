@@ -196,6 +196,24 @@ function xmldb_core_upgrade($oldversion=0) {
         add_field($table, $field);
     }
 
+    if ($oldversion < 2007020300) {
+        // artefact_tag table
+        $table = new XMLDBTable('artefact_tag');
+        $table->addFieldInfo('artefact', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL);
+        $table->addKeyInfo('artefactfk', XMLDB_KEY_FOREIGN, array('artefact'), 'artefact', array('id'));
+        $table->addFieldInfo('tag', XMLDB_TYPE_CHAR, '128', null, XMLDB_NOTNULL);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('artefact', 'tag'));
+        create_table($table);
+
+        // view_tag table
+        $table = new XMLDBTable('view_tag');
+        $table->addFieldInfo('view', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL);
+        $table->addKeyInfo('viewfk', XMLDB_KEY_FOREIGN, array('view'), 'view', array('id'));
+        $table->addFieldInfo('tag', XMLDB_TYPE_CHAR, '128', null, XMLDB_NOTNULL);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('view', 'tag'));
+        create_table($table);
+    }
+
     return $status;
 
 }

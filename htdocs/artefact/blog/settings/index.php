@@ -65,6 +65,12 @@ $form = pieform(array(
             ),
             'defaultvalue'  => $blog->get('description')
         ),
+        'tags'       => array(
+            'defaultvalue' => $blog->get('tags'),
+            'type'         => 'tags',
+            'title'        => get_string('tags'),
+            'description'  => get_string('tagsdesc'),
+        ),
         'commentsallowed' => array(
             'type'          => 'radio',
             'title'         => get_string('commentsallowed', 'artefact.blog'),

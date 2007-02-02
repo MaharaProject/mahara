@@ -29,6 +29,9 @@ function globalErrorHandler(data) {
     if (data.returnCode == 3) {
         // Logged out!
     }
+    else {
+        displayMessage(data.message, 'error');
+    }
 }
 
 // Form related functions

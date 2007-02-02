@@ -344,6 +344,7 @@ class ArtefactTypeBlog extends ArtefactType {
         $artefact->set('owner', $user->get('id'));
         $artefact->set('commentsallowed', $values['commentsallowed'] ? true : false);
         $artefact->set('commentsnotify', $values['commentsnotify'] ? true : false);
+        $artefact->set('tags', $values['tags']);
         $artefact->commit();
     }
 
@@ -367,6 +368,7 @@ class ArtefactTypeBlog extends ArtefactType {
         $artefact->set('description', $values['description']);
         $artefact->set('commentsallowed', $values['commentsallowed'] ? true : false);
         $artefact->set('commentsnotify', $values['commentsnotify'] ? true : false);
+        $artefact->set('tags', $values['tags']);
         $artefact->commit();
     }
 
@@ -690,6 +692,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
         $artefact->set('title', $values['title']);
         $artefact->set('description', $values['description']);
         $artefact->set('published', $values['published']);
+        $artefact->set('tags', $values['tags']);
         $artefact->commit();
         return true;
     }
