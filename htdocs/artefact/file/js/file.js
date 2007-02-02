@@ -129,6 +129,7 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
         data['name'] = $(formid).name.value;
         data['collideaction'] = collideaction;
         data['description'] = $(formid).description.value;
+        data['tags'] = $(formid).tags.value;
 
         if (fileid) {
             var script = self.updatemetadatascript;
@@ -169,6 +170,8 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
                          TR(null,TH(null,LABEL(get_string('description'))),
                           TD(null,INPUT({'type':'text','class':'text','name':'description',
                                          'value':fileinfo.description,'size':40}))),
+                         TR(null, TH(null, LABEL(null, get_string('tags'))),
+                            TD(null, create_tags_control('tags', fileinfo.tags))),
                          TR(null,TD({'colspan':2},SPAN({'id':formid+'message'}))),
                          TR(null,TD({'colspan':2}, savebutton, replacebutton, cancelbutton))));
         hideElement(rowid);
@@ -185,6 +188,7 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
             hideElement($(formid).replace);
             $(formid).name.value = '';
             $(formid).description.value = '';
+            $(formid).tags.value = '';
             $(formid+'message').innerHTML = '';
             hideElement(formid);
         };
@@ -215,6 +219,8 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
                   TR(null,TH(null,LABEL(get_string('description'))),
                      TD(null,INPUT({'type':'text','class':'text','name':'description',
                                     'value':'','size':40}))),
+                  TR(null, TH(null, LABEL(null, get_string('tags'))),
+                     TD(null, create_tags_control('tags'))),
                   TR(null,TD({'colspan':2},SPAN({'id':formid+'message'}))),
                   TR(null,TD({'colspan':2},createbutton,replacebutton,cancelbutton)))));
     };
@@ -359,6 +365,7 @@ function FileUploader(element, uploadscript, statevars, foldername, folderid, up
             self.form.userfile.value = '';
             self.form.title.value = '';
             self.form.description.value = '';
+            self.form.tags.value = '';
             hideElement(self.form.replace);
             hideElement(self.form);
             showElement(self.openbutton);
@@ -382,6 +389,8 @@ function FileUploader(element, uploadscript, statevars, foldername, folderid, up
                 TD(null, INPUT({'type':'text', 'class':'text', 'name':'title', 'size':40}))),
              TR(null, TH(null, LABEL(null, get_string('description'))),
                 TD(null, INPUT({'type':'text', 'class':'text', 'name':'description', 'size':40}))),
+             TR(null, TH(null, LABEL(null, get_string('tags'))),
+                TD(null, create_tags_control('tags'))),
              TR(null,TD({'colspan':2, 'id':'uploadformmessage'})),
              TR(null,TD({'colspan':2},
               INPUT({'name':'upload','type':'button','class':'button',

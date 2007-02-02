@@ -126,6 +126,9 @@ abstract class ArtefactType {
                 if (in_array($field, array('atime', 'ctime', 'mtime'))) {
                     $value = strtotime($value);
                 } 
+                if ($field == 'tags' && !is_array($field)) {
+                    $value = preg_split("/\s*,\s*/", trim($value));
+                }
                 $this->{$field} = $value;
             }
         }
@@ -348,6 +351,9 @@ abstract class ArtefactType {
         delete_records('artefact_tag', 'artefact', $this->id);
         if (is_array($this->tags)) {
             foreach ($this->tags as $tag) {
+                if (empty($tag)) {
+                    continue;
+                }
                 insert_record(
                     'artefact_tag',
                     (object) array(
@@ -403,6 +409,7 @@ abstract class ArtefactType {
         delete_records('view_artefact', 'artefact', $this->id);
         delete_records('artefact_feedback', 'artefact', $this->id);
         delete_records('usr_watchlist_artefact', 'artefact', $this->id);
+        delete_records('artefact_tag', 'artefact', $this->id);
       
         // Delete the record itself.
         delete_records('artefact', 'id', $this->id);

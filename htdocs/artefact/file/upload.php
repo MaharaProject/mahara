@@ -33,6 +33,7 @@ $parentfolder     = param_variable('parentfolder', null);    // id of parent art
 $parentfoldername = param_variable('parentfoldername', '');  // path to parent folder
 $title            = param_variable('title');
 $description      = param_variable('description', null);
+$tags             = param_variable('tags', null);
 $uploadnumber     = param_integer('uploadnumber'); // id of target iframe
 $collideaction    = param_variable('collideaction', 'fail');
 $adminfiles       = param_boolean('adminfiles', false);
@@ -43,6 +44,7 @@ if ($parentfolder) {
 }
 $data->title = $title;
 $data->description = $description;
+$data->tags = $tags;
 $data->owner = $USER->get('id');
 $data->adminfiles = (int) $adminfiles;
 $data->container = 0;

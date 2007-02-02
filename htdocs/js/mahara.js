@@ -425,6 +425,27 @@ function keepElementInViewport(element) {
     }
 }
 
+function create_tags_control(name, value, options) {
+    var elements = [];
+
+    options = update({
+            'size': 40
+        },
+        options
+    );
+
+    if (typeof(value) == 'object') {
+        value = value.join(', ');
+    }
+    if (!value) {
+        value = '';
+    }
+
+    elements.push(INPUT({'name': name, 'size': options.size, 'value': value}));
+
+    return elements;
+}
+
 function quotaUpdate(quotaused, quota) {
     if (! $('quota_percentage') ) {
         return;
@@ -466,7 +487,7 @@ function quotaUpdate(quotaused, quota) {
         $('quota_fill').style.width = (percentage * 2) + 'px';
     }
 
-    if (quotaused && quota) {
+    if ((typeof(quotaused) == 'number' || typeof(quotaused) == 'string') && quota) {
         var data = { 'quotaused': quotaused, 'quota': quota };
         update(data);
     }

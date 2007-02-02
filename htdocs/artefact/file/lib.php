@@ -102,6 +102,7 @@ class PluginArtefactFile extends PluginArtefact {
                     'cancel',
                     'delete',
                     'edit',
+                    'tags',
                 ),
                 'artefact.file' => array(
                     'copyrightnotice',
@@ -373,6 +374,10 @@ class ArtefactTypeFileBase extends ArtefactType {
         else {
             foreach ($filedata as $item) {
                 $item->mtime = format_date(strtotime($item->mtime), 'strfdaymonthyearshort');
+                $item->tags = get_column('artefact_tag', 'tag', 'artefact', $item->id);
+                if (!is_array($item->tags)) {
+                    $item->tags = array();
+                }
             }
         }
 
