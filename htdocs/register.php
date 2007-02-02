@@ -112,7 +112,10 @@ if (isset($_REQUEST['key'])) {
             check_dir_exists($directory);
             move_uploaded_file($values['profileimg']['tmp_name'], $directory . $id);
         }
-
+        else {
+            $registration->quotaused = 0;
+            $registration->quota = get_config_plugin('artefact', 'file', 'defaultquota');
+        }
 
         db_commit();
         handle_event('createuser', $registration);
