@@ -46,7 +46,7 @@ $result = array(
     'offset'      => $offset,
     'data'        => $filedata,
     'error'       => false,
-    'message'     => get_string('filelistloaded', 'artefact.file'),
+    'message'     => false,
 );
 
 //log_debug($result);

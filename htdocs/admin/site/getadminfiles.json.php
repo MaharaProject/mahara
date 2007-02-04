@@ -49,7 +49,7 @@ else {
 }
 
 $result['error'] = false;
-$result['message'] = get_string('adminfilesloaded', 'artefact.file');
+$result['message'] = false;
 
 json_headers();
 echo json_encode($result);
