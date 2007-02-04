@@ -40,7 +40,7 @@ if (!$page = @get_record('site_content', 'name', $pagename)) {
 
 $data['content'] = $page->content;
 $data['error']   = false;
-$data['message'] = get_string('sitepageloaded','admin');
+$data['message'] = false;
 json_headers();
 echo json_encode($data);  
 ?>

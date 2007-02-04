@@ -38,9 +38,16 @@ function pieform_renderer_maharatable(Pieform $form, $builtelement, $rawelement)
     $formname = $form->get_name();
     if ($rawelement['type'] == 'fieldset') {
         // Add table tags to the build element, to preserve HTML compliance
-        if (0 === strpos($builtelement, "\n<fieldset>\n<legend>")) {
-            $closelegendpos = strpos($builtelement, '</legend>') + 9;
-            $builtelement = substr($builtelement, 0, $closelegendpos) . '<table>' . substr($builtelement, $closelegendpos);
+        if (0 === strpos($builtelement, "\n<fieldset")) {
+            $closelegendpos = strpos($builtelement, '</legend>');
+            if ($closelegendpos !== false) {
+                $closelegendpos += 9;
+                $builtelement = substr($builtelement, 0, $closelegendpos) . '<table>' . substr($builtelement, $closelegendpos);
+            }
+            else {
+                $pos = strpos($builtelement, '>') + 1;
+                $builtelement = substr($builtelement, 0, $pos) . '<table>' . substr($builtelement, $pos);
+            }
         }
         else {
             $builtelement = substr($builtelement, 0, 11) . '<table>' . substr($builtelement, 11);

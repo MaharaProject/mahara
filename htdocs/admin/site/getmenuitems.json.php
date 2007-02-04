@@ -70,7 +70,7 @@ if ($menuitems) {
 
 $result['menuitems'] = array_values($rows);
 $result['error'] = false;
-$result['message'] = get_string('menuitemsloaded','admin');
+$result['message'] = false;
 
 json_headers();
 echo json_encode($result);

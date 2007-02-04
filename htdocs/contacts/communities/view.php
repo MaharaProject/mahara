@@ -145,9 +145,9 @@ $admin          = (int)($membership & COMMUNITY_MEMBERSHIP_ADMIN);
 $staff          = (int)($membership & COMMUNITY_MEMBERSHIP_STAFF);
 $owner          = (int)($membership & COMMUNITY_MEMBERSHIP_OWNER);
 $canupdate      = (int)($tutor || $staff || $admin || $owner);
-$canpromote     = (int)($tutor || $staff || $admin);
-$canremove      = (int)(($tutor && $controlled) || $staff || $admin);
-$canleave       = ($ismember && $community->jointype != 'controlled');
+$canpromote     = (int)(($staff || $admin) && $controlled);
+$canremove      = (int)(($tutor && $controlled) || $staff || $admin || $owner);
+$canleave       = ($ismember && !$controlled);
 $canrequestjoin = (!$ismember && empty($invited) && empty($requested) && $community->jointype == 'request');
 $canjoin        = (!$ismember && $community->jointype == 'open');
 
