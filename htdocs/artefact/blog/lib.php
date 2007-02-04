@@ -735,7 +735,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
     /**
      * Save a temporary uploaded file to the myfiles area.
      */
-    public function save_attachment($directory, $filename, $title, $description) {
+    public function save_attachment($directory, $filename, $title, $description, $tags) {
 
         // Create the blogfiles folder if it doesn't exist yet.
         $blogfilesid = self::blogfiles_folder_id();
@@ -750,6 +750,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
         $data = new StdClass;
         $data->title = $title;
         $data->description = $description;
+        $data->tags = $tags;
         $data->owner = $USER->get('id');
         $data->adminfiles = 0; // No admin blogs yet...
         $data->parent = $blogfilesid;
@@ -803,10 +804,16 @@ class ArtefactTypeBlogPost extends ArtefactType {
      */
     public function get_attached_files() {
         $prefix = get_config('dbprefix');
-        return get_records_sql_array('SELECT a.id, a.artefacttype, a.title, a.description 
+        $list = get_records_sql_array('SELECT a.id, a.artefacttype, a.title, a.description 
             FROM ' . $prefix . 'artefact_blog_blogpost_file f
             INNER JOIN ' . $prefix . 'artefact a ON a.id = f.file
             WHERE f.blogpost = ' . $this->id, '');
+
+        // load tags
+        foreach ( $list as &$attachment ) {
+            $attachment->tags = join(', ', get_column('artefact_tag', 'tag', 'artefact', $attachment->id));
+        }
+        return $list;
     }
 
     public function public_feedback_allowed() {

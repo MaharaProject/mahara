@@ -33,6 +33,7 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 $result = new StdClass;
 $result->title          = param_variable('title');
 $result->description    = param_variable('description', null);
+$result->tags           = param_variable('tags', null);
 $result->uploadnumber   = param_integer('uploadnumber'); // id of target iframe
 $createid               = param_variable('createid');
 

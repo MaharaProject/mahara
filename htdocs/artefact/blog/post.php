@@ -222,6 +222,7 @@ var attached = new TableRenderer(
                                          'alt':r.artefacttype})); },
      'title',
      'description',
+     'tags',
      function (r) { 
          return TD(null, INPUT({'type':'button', 'class':'button',
                                 'value':{$getstring['remove']},
@@ -267,15 +268,25 @@ function attachtopost(data) {
     if (fileattached_id(rowid) || data.error) {
         return;
     }
-    appendChildNodes(attached.tbody,
-                     TR({'id':rowid},
-                        map(partial(TD,null), 
-                            [IMG({'src':get_themeurl('images/'+data.artefacttype+'.gif'),
-                                  'alt':data.artefacttype}), 
-                             data.title, data.description,
-                             INPUT({'type':'button', 'class':'button',
-                                    'value':{$getstring['remove']},
-                                    'onclick':"removefrompost('"+rowid+"')"})])));
+    appendChildNodes(
+        attached.tbody,
+        TR(
+            {'id':rowid},
+            map(
+                partial(TD,null), 
+                [
+                    IMG({'src':get_themeurl('images/'+data.artefacttype+'.gif'), 'alt':data.artefacttype}), 
+                    data.title,
+                    data.description,
+                    data.tags,
+                    INPUT(
+                        {'type':'button', 'class':'button', 'value':{$getstring['remove']},
+                        'onclick':"removefrompost('"+rowid+"')"}
+                    )
+                ]
+            )
+        )
+    );
     redrawAttachList();
 }
 
@@ -316,9 +327,12 @@ function saveblogpost() {
             artefacts.push(idparts[1]);
         }
         else { // uploaded file
-            var record = {'id':idparts[1],
-                          'title':scrapeText(attached.tbody.childNodes[i].childNodes[1]),
-                          'description':scrapeText(attached.tbody.childNodes[i].childNodes[2])};
+            var record = {
+                'id':idparts[1],
+                'title':scrapeText(attached.tbody.childNodes[i].childNodes[1]),
+                'description':scrapeText(attached.tbody.childNodes[i].childNodes[2]),
+                'tags':scrapeText(attached.tbody.childNodes[i].childNodes[3])
+            };
             uploads.push(record);
         }
     }

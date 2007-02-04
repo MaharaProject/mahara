@@ -35,6 +35,7 @@
             <th></th>
             <th>{str section=artefact.file tag=name}</th>
             <th>{str section=artefact.file tag=description}</th>
+            <th>{str tag=tags}</th>
             <th></th>
           </tr></thead>
           <tbody><tr><td></td></tr></tbody>
