@@ -832,6 +832,8 @@
                 <SENTENCE TEXT="(name) VALUES ('unexpireuser')" />
                 <SENTENCE TEXT="(name) VALUES ('deactivateuser')" />
                 <SENTENCE TEXT="(name) VALUES ('activateuser')" />
+                <SENTENCE TEXT="(name) VALUES ('saveartefact')" />
+                <SENTENCE TEXT="(name) VALUES ('deleteartefact')" />
             </SENTENCES>
         </STATEMENT>
         <STATEMENT NAME="insert activity types" TYPE="insert" TABLE="activity_type">

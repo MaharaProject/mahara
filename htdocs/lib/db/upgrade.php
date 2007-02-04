@@ -213,6 +213,10 @@ function xmldb_core_upgrade($oldversion=0) {
         $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('view', 'tag'));
         create_table($table);
     }
+    if ($oldversion < 2007020500) {
+        insert_record('event_type', (object)array('name' => 'saveartefact'));
+        insert_record('event_type', (object)array('name' => 'deleteartefact'));
+    }
 
     return $status;
 
