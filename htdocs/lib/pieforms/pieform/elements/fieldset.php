@@ -35,6 +35,9 @@
 function pieform_element_fieldset(Pieform $form, $element) {
     $result = "\n<fieldset";
     if (!empty($element['collapsible'])) {
+        if (!isset($element['legend']) || $element['legend'] === '') {
+            Pieform::info('Collapsible fieldsets should have a legend so they can be toggled');
+        }
         $classes = array('collapsible');
         // Work out whether any of the children have errors on them
         $error = false;

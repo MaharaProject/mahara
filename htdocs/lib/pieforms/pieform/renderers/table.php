@@ -39,11 +39,17 @@ function pieform_renderer_table(Pieform $form, $builtelement, $rawelement) {
     if ($rawelement['type'] == 'fieldset') {
         // Add table tags to the build element, to preserve HTML compliance
         if (0 === strpos($builtelement, "\n<fieldset")) {
-            $closelegendpos = strpos($builtelement, '</legend>') + 9;
-            $builtelement = substr($builtelement, 0, $closelegendpos) . '<table>' . substr($builtelement, $closelegendpos);
+            $closelegendpos = strpos($builtelement, '</legend>');
+            if ($closelegendpos !== false) {
+                $closelegendpos += 9;
+                $builtelement = substr($builtelement, 0, $closelegendpos) . '<table>' . substr($builtelement, $closelegendpos);
+            }
+            else {
+                $pos = strpos($builtelement, '>') + 1;
+                $builtelement = substr($builtelement, 0, $pos) . '<table>' . substr($builtelement, $pos);
+            }
         }
         else {
-            // @todo this is broken when no legend is supplied
             $builtelement = substr($builtelement, 0, 11) . '<table>' . substr($builtelement, 11);
         }
         $builtelement = substr($builtelement, 0, -12) . '</table></fieldset>';
