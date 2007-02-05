@@ -122,28 +122,30 @@ function TableRenderer(target, source, columns, options) {
         replaceChildNodes(self.tbody);
         var rownumber = 1;
 
-        forEach(data.data, function(row) {
-            var tr = self.rowfunction(row, rownumber++, data);
-            if ( row._class ) { tr.className = row._class; }
-            if ( row._id ) { tr.id = row._id; }
-            
-            forEach(self.columns, function (column) {
-                if ( typeof(column) == 'string' ) {
-                    appendChildNodes(tr, TD(null,row[column]));
-                }
-                else if ( typeof(column) == 'function' ) {
-                    appendChildNodes(tr, column(row,data));
-                }
-                else if ( typeof(column) == 'undefined' ) {
-                    return;
-                }
-                else {
-                    logError("Can't deal with column def of type: " + typeof(column));
-                }
-            });
+        if (data.count > 0) {
+            forEach(data.data, function(row) {
+                var tr = self.rowfunction(row, rownumber++, data);
+                if ( row._class ) { tr.className = row._class; }
+                if ( row._id ) { tr.id = row._id; }
+                
+                forEach(self.columns, function (column) {
+                    if ( typeof(column) == 'string' ) {
+                        appendChildNodes(tr, TD(null,row[column]));
+                    }
+                    else if ( typeof(column) == 'function' ) {
+                        appendChildNodes(tr, column(row,data));
+                    }
+                    else if ( typeof(column) == 'undefined' ) {
+                        return;
+                    }
+                    else {
+                        logError("Can't deal with column def of type: " + typeof(column));
+                    }
+                });
 
-            appendChildNodes(self.tbody, tr);
-        });
+                appendChildNodes(self.tbody, tr);
+            });
+        }
     }
 
     this.doupdate = function(request_args) {
@@ -180,7 +182,7 @@ function TableRenderer(target, source, columns, options) {
                 }
             }
             self.renderdata(response);
-        });
+        }, null, true);
     };
 
     this.goFirstPage = function() {
