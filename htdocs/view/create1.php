@@ -108,6 +108,12 @@ $createview1 = pieform(array(
             'cols'         => 70,
             'defaultvalue' => isset($data['description']) ? $data['description'] : null,
         ),
+        'tags'        => array(
+            'type'         => 'tags',
+            'title'        => get_string('tags'),
+            'description'  => get_string('tagsdesc'),
+            'defaultvalue' => isset($data['tags']) ? $data['tags'] : null,
+        ),
         'ownerformat' => array(
             'type'         => 'select',
             'title'        => get_string('ownerformat','view'),
@@ -143,6 +149,7 @@ function createview1_submit(Pieform $form, $values) {
 
     $data['title']       = $values['title'];
     $data['description'] = $values['description'];
+    $data['tags']        = $values['tags'];
     $data['startdate']   = $values['startdate'];
     $data['stopdate']    = $values['stopdate'];
     $data['ownerformat'] = $values['ownerformat'];

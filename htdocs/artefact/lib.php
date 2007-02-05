@@ -366,6 +366,8 @@ abstract class ArtefactType {
 
         activity_occurred('watchlist', (object) array('artefact' => $this->id,
                                                       'subject' => get_string('artefactmodified')));
+        handle_event('saveartefact', $this);
+
         if (!empty($this->parentdirty)) {
             if (!empty($this->parent) && !record_exists('artefact_parent_cache', 'artefact', $this->id)) {
                 $apc = new StdClass;
@@ -414,6 +416,8 @@ abstract class ArtefactType {
         // Delete the record itself.
         delete_records('artefact', 'id', $this->id);
         
+        handle_event('deleteartefact', $this);
+
         // Set flags.
         $this->dirty = false;
         $this->parentdirty = true;
