@@ -36,7 +36,7 @@ class PluginNotificationEmail extends PluginNotification {
         $fulltype = get_string('type' . $data->type, 'activity');
         $subject = get_string('emailsubject', 'notification.email', $sitename, $fulltype);
         if (!empty($data->subject)) {
-            $subject .= ': ' . $subject;
+            $subject .= ': ' . $data->subject;
         }
 
         if (!empty($data->userfrom)) {
