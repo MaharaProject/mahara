@@ -225,6 +225,9 @@ function handle_activity($activitytype, $data, $cron=false) {
                     if (!$viewinfo = get_record_sql('SELECT u.*, v.title FROM ' . $prefix . 'usr u
                                                      JOIN ' . $prefix . 'view v ON v.owner = u.id
                                                      WHERE v.id = ?', array($data->view))) {
+                        if (!empty($cron)) { // probably deleted already
+                            return;
+                        }
                         throw new InvalidArgumentException("Couldn't find view with id " . $data->view);
                     }
                     $data->message = $oldsubject . ' ' . get_string('onview', 'activity') 
@@ -341,6 +344,9 @@ SELECT DISTINCT u.*, p.method, ?||wa.view AS url
                 if (!$viewinfo = get_record_sql('SELECT u.*, v.title FROM ' . $prefix . 'usr u
                                                  JOIN ' . $prefix . 'view v ON v.owner = u.id
                                                  WHERE v.id = ?', array($data->view))) {
+                    if (!empty($cron)) { //probably deleted already
+                        return;
+                    }
                     throw new InvalidArgumentException("Couldn't find view with id " . $data->view);
                 }
 
@@ -369,6 +375,9 @@ SELECT DISTINCT u.*, p.method, ?||wa.view AS url
                 if (!$viewinfo = get_record_sql('SELECT u.*, v.title FROM ' . $prefix . 'usr u
                                                  JOIN ' . $prefix . 'view v ON v.owner = u.id
                                                  WHERE v.id = ?', array($data->view))) {
+                    if (!empty($cron)) { // probably deleted already
+                        return;
+                    }
                     throw new InvalidArgumentException("Couldn't find view with id " . $data->view);
                 }
                 $data->message = get_string('newviewaccessmessage', 'activity')
