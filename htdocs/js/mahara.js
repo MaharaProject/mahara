@@ -444,18 +444,20 @@ function create_tags_control(name, value, options) {
         value = '';
     }
 
-    elements.push(INPUT({'name': name, 'size': options.size, 'value': value}));
+    var tagControl = INPUT({'name': name, 'size': options.size, 'value': value});
+    elements.push(augment_tags_control(tagControl, true));
+    elements.push(tagControl);
 
-    return elements;
+    return DIV(null, elements);
 }
 
 // this function takes an existing input element and augments it
-function augment_tags_control(elem) {
+function augment_tags_control(elem, returnContainer) {
     elem = getElement(elem);
     log('augment_tags_control(', elem, ')');
 
     var tagContainer = DIV();
-    setElementDimensions(tagContainer, {'w': getElementDimensions(elem).w});
+    // setElementDimensions(tagContainer, {'w': getElementDimensions(elem).w});
     var showLink = A({'href':''},get_string('showtags'));
     appendChildNodes(tagContainer, showLink);
 
@@ -485,7 +487,13 @@ function augment_tags_control(elem) {
         });
     });
     
-    insertSiblingNodesBefore(elem, tagContainer);
+    if (typeof(returnContainer) == 'boolean' && returnContainer) {
+        return tagContainer;
+    }
+
+    var newNode = DIV();
+    swapDOM(elem, newNode);
+    appendChildNodes(newNode, tagContainer, elem);
 };
 
 function quotaUpdate(quotaused, quota) {
