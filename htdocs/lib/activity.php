@@ -384,7 +384,7 @@ SELECT DISTINCT u.*, p.method, ?||wa.view AS url
                     . ' "' . $viewinfo->title . '" ' . get_string('ownedby', 'activity');
                 $data->subject = get_string('newviewaccesssubject', 'activity');
                 $data->url = get_config('wwwroot') . 'view/view.php?view=' . $data->view;
-                $users = array_diff_key(activity_get_viewaccess_users($data->view, $data->owner), $data->oldusers, 'viewaccess');
+                $users = array_diff_key(activity_get_viewaccess_users($data->view, $data->owner, 'viewaccess'), $data->oldusers);
                 if (empty($users)) {
                     $users = array();
                 }
