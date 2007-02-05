@@ -91,7 +91,8 @@ $string['emailactivationfailed'] = 'Email Activation Failed';
 $string['emailingfailed'] = 'Profile saved, but emails were not sent to: %s';
 
 // Profile icons
-$string['editprofile']  = 'Back to Edit Profile';
+$string['backtoeditprofile']  = 'Back to Edit Profile';
+$string['editprofile']  = 'Edit Profile';
 $string['editprofileicons'] = 'Edit Profile Icons';
 $string['profileicons'] = 'Profile Icons';
 $string['default'] = 'Default';
