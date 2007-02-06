@@ -225,6 +225,9 @@ function handle_activity($activitytype, $data, $cron=false) {
                     if (!$viewinfo = get_record_sql('SELECT u.*, v.title FROM ' . $prefix . 'usr u
                                                      JOIN ' . $prefix . 'view v ON v.owner = u.id
                                                      WHERE v.id = ?', array($data->view))) {
+                        if (!empty($cron)) { // probably deleted already
+                            return;
+                        }
                         throw new InvalidArgumentException("Couldn't find view with id " . $data->view);
                     }
                     $data->message = $oldsubject . ' ' . get_string('onview', 'activity') 
@@ -298,8 +301,6 @@ SELECT DISTINCT u.*, p.method, ?||wa.view AS url
                                     $data->artefact, $data->artefact, 
                                     $data->artefact, $data->artefact,
                                     'watchlist');
-                    log_debug($sql);
-                    log_debug($values);
                     $users = get_records_sql_array($sql, $values);
                     if (empty($users)) {
                         $users = array();
@@ -343,6 +344,9 @@ SELECT DISTINCT u.*, p.method, ?||wa.view AS url
                 if (!$viewinfo = get_record_sql('SELECT u.*, v.title FROM ' . $prefix . 'usr u
                                                  JOIN ' . $prefix . 'view v ON v.owner = u.id
                                                  WHERE v.id = ?', array($data->view))) {
+                    if (!empty($cron)) { //probably deleted already
+                        return;
+                    }
                     throw new InvalidArgumentException("Couldn't find view with id " . $data->view);
                 }
 
@@ -351,7 +355,7 @@ SELECT DISTINCT u.*, p.method, ?||wa.view AS url
                 $data->url = get_config('wwwroot') . 'view/view.php?view=' . $data->view;
 
                 // add users on friendslist, userlist or grouplist...
-                $users = activity_get_viewaccess_users($data->view, $data->owner);
+                $users = activity_get_viewaccess_users($data->view, $data->owner, 'newview');
                 if (empty($users)) {
                     $users = array();
                 }
@@ -371,13 +375,16 @@ SELECT DISTINCT u.*, p.method, ?||wa.view AS url
                 if (!$viewinfo = get_record_sql('SELECT u.*, v.title FROM ' . $prefix . 'usr u
                                                  JOIN ' . $prefix . 'view v ON v.owner = u.id
                                                  WHERE v.id = ?', array($data->view))) {
+                    if (!empty($cron)) { // probably deleted already
+                        return;
+                    }
                     throw new InvalidArgumentException("Couldn't find view with id " . $data->view);
                 }
                 $data->message = get_string('newviewaccessmessage', 'activity')
                     . ' "' . $viewinfo->title . '" ' . get_string('ownedby', 'activity');
                 $data->subject = get_string('newviewaccesssubject', 'activity');
                 $data->url = get_config('wwwroot') . 'view/view.php?view=' . $data->view;
-                $users = array_diff_key(activity_get_viewaccess_users($data->view, $data->owner), $data->oldusers);
+                $users = array_diff_key(activity_get_viewaccess_users($data->view, $data->owner, 'viewaccess'), $data->oldusers);
                 if (empty($users)) {
                     $users = array();
                 }
@@ -484,7 +491,7 @@ function activity_process_queue() {
     db_commit();
 }
 
-function activity_get_viewaccess_users($view, $owner) {
+function activity_get_viewaccess_users($view, $owner, $type) {
 
     $prefix = get_config('dbprefix');
 
@@ -504,8 +511,10 @@ function activity_get_viewaccess_users($view, $owner) {
                         WHERE u.view = ?
                 ) AS userlist
                 JOIN ' . $prefix . 'usr u ON u.id = userlist.userid
-                LEFT JOIN ' . $prefix . 'usr_activity_preference p ON p.usr = u.id';
-    if (!$u = get_records_sql_assoc($sql, array($owner, $owner, $owner, 'friends', $view, $view, $view))) {
+                LEFT JOIN ' . $prefix . 'usr_activity_preference p ON p.usr = u.id
+            WHERE p.activity = ?';
+    $values = array($owner, $owner, $owner, 'friends', $view, $view, $view, $type);
+    if (!$u = get_records_sql_assoc($sql, $values)) {
         $u = array();
     }
     return $u;
