@@ -70,6 +70,81 @@ abstract class PluginSearch extends Plugin {
      *           );
      */
     public static abstract function search_user($query_string, $limit, $offset = 0);
+
+    /**
+     * Given a query string and limits, return an array of matching groups
+     *
+     * @param string  The query string
+     * @param integer How many results to return
+     * @param integer What result to start at (0 == first result)
+     * @return array  A data structure containing results looking like ...
+     *         $results = array(
+     *               count   => integer, // total number of results
+     *               limit   => integer, // how many results are returned
+     *               offset  => integer, // starting from which result
+     *               data    => array(   // the result records
+     *                   array(
+     *                       id            => integer,
+     *                       username      => string,
+     *                       institution   => string,
+     *                       firstname     => string,
+     *                       lastname      => string,
+     *                       preferredname => string,
+     *                       email         => string,
+     *                   ),
+     *                   array(
+     *                       id            => integer,
+     *                       username      => string,
+     *                       institution   => string,
+     *                       firstname     => string,
+     *                       lastname      => string,
+     *                       preferredname => string,
+     *                       email         => string,
+     *                   ),
+     *                   array(...),
+     *               ),
+     *           );
+     */
+    public static abstract function search_group($query_string, $limit, $offset = 0);
+
+    /**
+     * Implement community searching with SQL
+     *
+     * @param string  The query string
+     * @param integer How many results to return
+     * @param integer What result to start at (0 == first result)
+     * @param boolean Return all matching communities, or just ones this user
+     * is a member of?
+     * @return array  A data structure containing results looking like ...
+     *         $results = array(
+     *               count   => integer, // total number of results
+     *               limit   => integer, // how many results are returned
+     *               offset  => integer, // starting from which result
+     *               data    => array(   // the result records
+     *                   array(
+     *                       id            => integer,
+     *                       name          => string,
+     *                       description   => string,
+     *                       jointype      => string,
+     *                       owner         => string,
+     *                       ctime         => string,
+     *                       mtime         => string,
+     *                   ),
+     *                   array(
+     *                       id            => integer,
+     *                       name          => string,
+     *                       description   => string,
+     *                       jointype      => string,
+     *                       owner         => string,
+     *                       ctime         => string,
+     *                       mtime         => string,
+     *                   ),
+     *                   array(...),
+     *               ),
+     *           );
+     */
+    public static abstract function search_community($query_string, $limit, $offset=0, $all=false);
+
 }
 
 ?>
