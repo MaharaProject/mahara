@@ -46,7 +46,7 @@ var communitylist = new TableRenderer(
          if (r.requestcount == 0) {
              return TD(null);
          }
-         return TD(null, A({'href': '{$editurl}' + r.id + '#pending'}, r.requestcount));
+         return TD(null, A({'href': '{$viewurl}' + r.id + '&pending=1#members'}, r.requestcount));
      },
      function (r) {
          return TD(null, A({'href': '{$editurl}' + r.id}, '{$editstr}'));

@@ -33,6 +33,7 @@ require_once('community.php');
 
 $id = param_integer('id');
 $joincontrol = param_alpha('joincontrol', null);
+$pending = param_integer('pending', 0);
 
 if (!$community = get_record('community', 'id', $id)) {
     throw new CommunityNotFoundException("Couldn't find community with id $id");
@@ -232,8 +233,8 @@ EOF;
 $javascript .= <<<EOF
     ]
 );
-memberlist.type = 'members';
 memberlist.id = $id;
+memberlist.type='members';
 memberlist.pending = 0;
 memberlist.statevars.push('type');
 memberlist.statevars.push('pending');
@@ -242,8 +243,18 @@ memberlist.updateOnLoad();
 
 addLoadEvent(function () { hideElement($('pendingreasonheader')); });
 
-function switchPending() {
-    var pending = $('pendingselect').options[$('pendingselect').selectedIndex].value;
+function switchPending(force) {
+    if (force) {
+        pending = force;
+        var theOption = filter(
+            function (o) { if ( o.value == pending ) return true; return false; },
+            $('pendingselect').options
+        );
+        theOption[0].selected = true;
+    } 
+    else {
+        var pending = $('pendingselect').options[$('pendingselect').selectedIndex].value;
+    }
     if (pending == 0) {
         hideElement($('pendingreasonheader'));
     }
@@ -311,6 +322,11 @@ function joinRequestControl() {
 
 EOF;
 
+if (!empty($pending) && $canupdate && $request) {
+    $javascript .= <<<EOF
+addLoadEvent(function () { switchPending(1) });
+EOF;
+}
 $smarty = smarty(array('tablerenderer'));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('member', $membership);
