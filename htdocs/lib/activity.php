@@ -421,8 +421,14 @@ SELECT DISTINCT u.*, p.method, ?||wa.view AS url
         if ($user->method != 'internal') {
             $method = $user->method;
             safe_require('notification', $method, 'lib.php', 'require_once');
-            call_static_method(generate_class_name('notification', $method), 'notify_user', $user, $userdata);
-            $user->markasread = true; // if we're doing something else, don't generate unread internal ones.
+            try {
+                call_static_method(generate_class_name('notification', $method), 'notify_user', $user, $userdata);
+                $user->markasread = true; // if we're doing something else, don't generate unread internal ones.
+            }
+            catch (Exception $e) {
+                $user->markasread = false; // if we fail (eg email falls over), don't mark it as read...
+                // @todo penny notify them that their notification type failed....
+            }
         }
         // always do internal
         call_static_method('PluginNotificationInternal', 'notify_user', $user, $userdata);
