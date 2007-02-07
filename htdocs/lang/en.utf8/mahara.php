@@ -43,7 +43,7 @@ $string['errorprocessingform'] = 'There was an error with submitting this form. 
 
 $string['no']     = 'No';
 $string['yes']    = 'Yes';
-$string['none']   = 'none';
+$string['none']   = 'None';
 
 $string['nextpage']  = 'Next page';
 $string['prevpage']  = 'Previous page';
