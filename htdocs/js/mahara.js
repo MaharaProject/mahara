@@ -305,26 +305,23 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, ref) {
             contextualHelpDeferrable.cancel();
         }
 
-        processingStart();
-        contextualHelpDeferrable = loadJSONDoc(url, url_params);
-        contextualHelpDeferrable.addCallbacks(
-            function (data) {
-                if (data.error) {
-                    contextualHelpCache[key] = data.message;
-                    replaceChildNodes(contextualHelpContainer, data.message);
-                }
-                else {
-                    contextualHelpCache[key] = data.content;
-                    contextualHelpContainer.innerHTML = contextualHelpCache[key];
-                }
-                processingStop();
-            },
-            function (error) {
-                contextualHelpCache[key] = get_string('couldnotgethelp');
-                contextualHelpContainer.innerHTML = contextualHelpCache[key];
-                processingStop();
+        sendjsonrequest(url, url_params, 'GET', function (data) {
+            if (data.error) {
+                contextualHelpCache[key] = data.message;
+                replaceChildNodes(contextualHelpContainer, data.message);
             }
-        );
+            else {
+                contextualHelpCache[key] = data.content;
+                contextualHelpContainer.innerHTML = contextualHelpCache[key];
+            }
+            processingStop();
+        },
+        function (error) {
+            contextualHelpCache[key] = get_string('couldnotgethelp');
+            contextualHelpContainer.innerHTML = contextualHelpCache[key];
+            processingStop();
+        },
+        true);
     }
 }
 
