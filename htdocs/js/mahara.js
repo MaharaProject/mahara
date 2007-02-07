@@ -132,6 +132,7 @@ function processingStop() {
 
 // Function to post a data object to a json script.
 function sendjsonrequest(script, data, rtype, successcallback, errorcallback, quiet) {
+    log('sendjsonrequest(script=', script, ', data=', data, ', rtype=', rtype, ', success=', successcallback, ', error=', errorcallback, ', quiet=', quiet, ')');
     donothing = function () { return; };
     if (typeof(successcallback) != 'function') {
         successcallback = donothing;
@@ -161,6 +162,7 @@ function sendjsonrequest(script, data, rtype, successcallback, errorcallback, qu
             errtype = 'error';
         }
         else {
+            logWarn('invoking globalErrorHandler(', data, ')');
             globalErrorHandler(data);
         }
         if (errtype) {
@@ -425,6 +427,7 @@ function keepElementInViewport(element) {
     }
 }
 
+// this function creates a pre-augmented tags control
 function create_tags_control(name, value, options) {
     var elements = [];
 
@@ -441,10 +444,57 @@ function create_tags_control(name, value, options) {
         value = '';
     }
 
-    elements.push(INPUT({'name': name, 'size': options.size, 'value': value}));
+    var tagControl = INPUT({'name': name, 'size': options.size, 'value': value});
+    elements.push(augment_tags_control(tagControl, true));
+    elements.push(tagControl);
 
-    return elements;
+    return DIV(null, elements);
 }
+
+// this function takes an existing input element and augments it
+function augment_tags_control(elem, returnContainer) {
+    elem = getElement(elem);
+    log('augment_tags_control(', elem, ')');
+
+    var tagContainer = DIV();
+    // setElementDimensions(tagContainer, {'w': getElementDimensions(elem).w});
+    var showLink = A({'href':''},get_string('showtags'));
+    appendChildNodes(tagContainer, showLink);
+
+    connect(showLink, 'onclick', function (e) {
+        e.stop();
+        replaceChildNodes(tagContainer, get_string('loading') + ' ', IMG({'src':get_themeurl('images/loading.gif')}));
+        sendjsonrequest(config.wwwroot + 'json/taglist.php', {}, 'GET', function (data) {
+            replaceChildNodes(tagContainer);
+            forEach(data, function(tag) {
+                var tagLink = A({'href':''}, tag.tag);
+                connect(tagLink, 'onclick', function(e) {
+                    e.stop();
+
+                    if (some(elem.value.split(/ *, */), function(t) { return t == tag.tag; })) {
+                        return;
+                    }
+
+                    if (elem.value.match(/^ *$/) || elem.value.match(/, *$/)) {
+                        elem.value += tag.tag;
+                    }
+                    else {
+                        elem.value += ', ' + tag.tag;
+                    }
+                });
+                appendChildNodes(tagContainer, tagLink, '\u00A0(', tag.count, '), ');
+            });
+        });
+    });
+    
+    if (typeof(returnContainer) == 'boolean' && returnContainer) {
+        return tagContainer;
+    }
+
+    var newNode = DIV();
+    swapDOM(elem, newNode);
+    appendChildNodes(newNode, tagContainer, elem);
+};
 
 function quotaUpdate(quotaused, quota) {
     if (! $('quota_percentage') ) {

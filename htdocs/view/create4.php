@@ -95,6 +95,10 @@ function createview4_submit(Pieform $form, $values) {
     $view->ctime = $view->mtime = $view->atime = $time;
     $viewid = insert_record('view', $view, 'id', true);
 
+    foreach ($data['tags'] as $tag) {
+        insert_record('view_tag', (object)array('view' => $viewid, 'tag' => $tag));
+    }
+
     foreach ($data['artefacts'] as $block => $blockdata) {
         if ($blockdata['type'] == 'label') {
             $viewcontent          = new StdClass;

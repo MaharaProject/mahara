@@ -1,9 +1,6 @@
 {include file="header.tpl"}
 
-<div id="column-right">
-{include file="adminmenu.tpl"}
-</div>
-{include file="columnleftstart.tpl"}
+{include file="columnfullstart.tpl"}
     		<h2>{str tag="createviewstep2" section="view"}</h2>
 				<div id="createview2">
 {literal}
@@ -25,6 +22,6 @@
     <button type="button" onclick="document.location='./';" id="createview2_cancel">{str tag="cancel"}</button>
 
 				</div>
-{include file="columnleftend.tpl"}
+{include file="columnfullend.tpl"}
 {include file="footer.tpl"}
 

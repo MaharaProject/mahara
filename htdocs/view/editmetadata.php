@@ -108,6 +108,12 @@ $createview1 = pieform(array(
             'cols'         => 70,
             'defaultvalue' => $data->description,
         ),
+        'tags'        => array(
+            'type'         => 'tags',
+            'title'        => get_string('tags'),
+            'description'  => get_string('tagsdesc'),
+            'defaultvalue' => get_column('view_tag', 'tag', 'view', $view_id),
+        ),
         'ownerformat' => array(
             'type'         => 'select',
             'title'        => get_string('ownerformat','view'),
@@ -139,7 +145,14 @@ function createview1_submit(Pieform $form, $values) {
     $data->ownerformat = $values['ownerformat'];
     $data->mtime       = db_format_timestamp(time());
 
+    db_begin();
     update_record('view', $data, (object)array( 'id' => $view_id ));
+    delete_records('view_tag', 'view', $view_id);
+    foreach ($values['tags'] as $tag) {
+        insert_record('view_tag', (object)array( 'view' => $view_id, 'tag' => $tag));
+    }
+
+    db_commit();
 
     $SESSION->add_ok_msg(get_string('viewinformationsaved', 'view'));
     redirect('/view/');

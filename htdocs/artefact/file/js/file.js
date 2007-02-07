@@ -188,7 +188,7 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
             hideElement($(formid).replace);
             $(formid).name.value = '';
             $(formid).description.value = '';
-            $(formid).tags.value = '';
+            swapDOM($(formid).tags.parentNode, create_tags_control('tags'));
             $(formid+'message').innerHTML = '';
             hideElement(formid);
         };
@@ -365,7 +365,7 @@ function FileUploader(element, uploadscript, statevars, foldername, folderid, up
             self.form.userfile.value = '';
             self.form.title.value = '';
             self.form.description.value = '';
-            self.form.tags.value = '';
+            swapDOM(self.form.tags.parentNode, create_tags_control('tags'));
             hideElement(self.form.replace);
             hideElement(self.form);
             showElement(self.openbutton);
