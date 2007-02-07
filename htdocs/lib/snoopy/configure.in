@@ -1,0 +1,5 @@
+AC_INIT(Snoopy.class.inc)
+AM_INIT_AUTOMAKE(Snoopy, 0.94)
+AC_SUBST(VERSION)
+AC_SUBST(PACKAGE)
+AC_OUTPUT(Makefile)
