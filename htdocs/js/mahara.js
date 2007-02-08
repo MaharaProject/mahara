@@ -176,7 +176,7 @@ function sendjsonrequest(script, data, rtype, successcallback, errorcallback, qu
                 if (data.message.message && typeof(data.message.message == 'string') && !quiet) {
                     displayMessage(data.message.message, errtype);
                 }
-                try { successcallback(data); } catch (e) { logError('sendjsonrequest() callback failed: ', data); }
+                try { successcallback(data.message); } catch (e) { logError('sendjsonrequest() callback failed: ', data); }
             }
             else {
                 try { successcallback(data); } catch (e) { logError('sendjsonrequest() callback failed: ', data); }
