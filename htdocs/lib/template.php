@@ -367,7 +367,7 @@ function template_render($template, $mode, $data=array(), $view_id=null) {
                         'format'       => isset($t['format'])       ? $t['format'] : null,
                         'options'      => $options,
                     );
-                    
+
                     if ( isset($data[$t['id']]) ) {
                         $format = FORMAT_ARTEFACT_LISTSELF;
 

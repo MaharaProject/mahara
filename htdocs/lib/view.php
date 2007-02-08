@@ -280,10 +280,8 @@ class View {
 
         $data = array();
         foreach ($artefacts as $artefact) {
-            $data[$artefact->block] = array(
-                    'id'     => $artefact->id,
-                    'format' => $artefact->format
-            );
+            $data[$artefact->block]['format'] = $artefact->format;
+            $data[$artefact->block]['id'][] = $artefact->id;
         }
         foreach ($contents as $content) {
             $data[$content->block] = array(
