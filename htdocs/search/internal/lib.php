@@ -103,9 +103,9 @@ class PluginSearchInternal extends PluginSearch {
             );
 
             if ($count > 0) {
-                $users = get_records_sql_assoc('
+                $data = get_records_sql_array('
                     SELECT DISTINCT ON (u.firstname, u.lastname, u.id)
-                        u.id, u.username, u.institution, u.firstname, u.lastname, u.preferredname
+                        u.id, u.username, u.institution, u.firstname, u.lastname, u.preferredname, u.email
                     FROM ' . $prefix . 'artefact a
                         INNER JOIN ' . $prefix .'usr u ON u.id = a.owner
                     WHERE
@@ -127,42 +127,10 @@ class PluginSearchInternal extends PluginSearch {
                 $offset,
                 $limit);
 
-                $userlist = '('.join(',', array_map(create_function('$u','return $u->id;'), $users)).')';
-                log_debug($userlist);
-
-                $data = get_records_sql_array('
-                    SELECT 
-                        u.id, a.artefacttype, a.title
-                    FROM
-                        ' . $prefix . 'usr u
-                        LEFT JOIN ' . $prefix . 'artefact a ON u.id=a.owner AND a.artefacttype IN ' . $fieldlist . '
-                    WHERE
-                        u.id IN ' . $userlist . '
-                    ORDER BY u.firstname, u.lastname, u.id, a.artefacttype',
-                    array());
-
-                log_debug($data);
-                if (!empty($data)) {
-                    foreach ($users as &$user) {
-                        $user->name = display_name($user);
-                        unset($user->username);
-                        unset($user->institution);
-                        unset($user->firstname);
-                        unset($user->lastname);
-                        unset($user->preferredname);
+                if ($data) {
+                    foreach ($data as &$item) {
+                        $item = (array)$item;
                     }
-                    foreach ($data as $rec) {
-                        if (!isset($rec->artefacttype)) {
-                            continue;
-                        }
-                        if ($rec->artefacttype == 'email') {
-                            $users[$rec->id]->email[] = $rec->title;
-                        }
-                        else {
-                            $users[$rec->id]->{$rec->artefacttype} = $rec->title;
-                        }
-                    }
-                    $data = array_values($users);
                 }
             }
             else {

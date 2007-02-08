@@ -62,10 +62,53 @@ defined('INTERNAL') || die();
  *           );
  */
 function search_user($query_string, $limit, $offset = 0) {
+    $prefix = get_config('dbprefix');
     $plugin = get_config('searchplugin');
     safe_require('search', $plugin);
+    safe_require('artefact', 'internal');
 
-    return call_static_method(generate_class_name('search', $plugin), 'search_user', $query_string, $limit, $offset);
+    $publicfields = array_keys(ArtefactTypeProfile::get_public_fields());
+    if (empty($publicfields)) {
+        $publicfields = array('preferredname');
+    }
+    $fieldlist = "('" . join("','", $publicfields) . "')";
+
+    $results = call_static_method(generate_class_name('search', $plugin), 'search_user', $query_string, $limit, $offset);
+
+    if ($results['count'] > 0) {
+        $userlist = '('.join(',', array_map(create_function('$u','return $u[\'id\'];'), $results['data'])).')';
+
+        $public_fields = get_records_sql_array('
+            SELECT 
+                u.id, a.artefacttype, a.title
+            FROM
+                ' . $prefix . 'usr u
+                LEFT JOIN ' . $prefix . 'artefact a ON u.id=a.owner AND a.artefacttype IN ' . $fieldlist . '
+            WHERE
+                u.id IN ' . $userlist . '
+            ORDER BY u.firstname, u.lastname, u.id, a.artefacttype',
+            array()
+        );
+
+        $public_fields_byuser = array();
+        if (!empty($public_fields)) {
+            foreach ($public_fields as $field) {
+                $public_fields_byuser[$field->id][$field->artefacttype] = $field->title;
+            }
+        }
+        
+        foreach ($results['data'] as &$result) {
+            $result['name'] = display_name($result);
+            if (isset($public_fields_byuser[$result['id']])) {
+                foreach ($public_fields_byuser[$result['id']] as $field => $value) {
+                    $result[$field] = $value;
+                }
+            }
+        }
+
+    }
+
+    return $results;
 }
 
 /**
