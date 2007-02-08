@@ -1192,6 +1192,9 @@ class Snoopy
 	
 	function _prepare_post_body($formvars, $formfiles)
 	{
+        if (is_string($formvars)) {
+            return $formvars;
+        }
 		settype($formvars, "array");
 		settype($formfiles, "array");
 		$postdata = '';
