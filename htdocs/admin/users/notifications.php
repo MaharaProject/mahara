@@ -41,90 +41,30 @@ $sql = 'SELECT u.*, a.activity, a.method
     WHERE u.admin = ?';
 
 $admins  = get_records_sql_array($sql, array(1));
-
+$types   = get_column('activity_type', 'name', 'admin', 1);
+$types   = array_flip($types);
+foreach (array_keys($types) as $k) {
+    $types[$k] = get_string('type' . $k, 'activity');
+}
 $users = array();
 foreach ($admins as $u) {
     if (!array_key_exists($u->id, $users)) {
         $users[$u->id] = array('user' => $u,
                                'methods' => array());
+        foreach (array_keys($types) as $key) {
+            $users[$u->id]['methods'][$key] = '';
+        }
     }
-    $users[$u->id]['methods'][$u->activity] = $u->method;
-}
-
-$types   = get_records_array('activity_type', 'admin', 1);
-$methods = plugins_installed('notification');
-$options = array('none' => ucfirst(get_string('none')));
-foreach ($methods as $m) {
-    $options[$m->name] =  get_string('name', 'notification.' . $m->name);
-}
-
-$form = array(
-    'name'       => 'adminnotifications',
-    'jsform'     => true,
-    'plugintype' => 'core', 
-    'pluginname' => 'admin', 
-    'renderer'   => 'multicolumntable',
-    'elements'   => array()
-);
-
-// build up the header
-$form['elements']['headerprofileicon'] = array(
-    'title' => ' ',
-    'type' => 'html',
-    'class' => 'header',
-    'value' => get_string('profileicon')
-);
-foreach ($types as $type) {
-    $form['elements']['header' . $type->name] = array(
-        'title' => ' ', 
-        'type'  => 'html',
-        'class' => 'header',
-        'value' => get_string('type' . $type->name, 'activity'),
-    );        
-}
-
-foreach ($users as $id => $user) {
-    $form['elements']['profileicon-' . $id] = array(
-        'key' => $id,
-        'type' => 'html',
-        'title'   => full_name($user['user']),
-        'value' =>  '<img src="' . get_config('wwwroot') . 'thumb.php?type=profileicon&size=40x40&id=' . $id . '" alt="">'
-    );
-    foreach ($types as $type) {
-        $form['elements']['admin-' . $id . '-' . $type->name] = array(
-            'key'     => $id,
-            'title'   => full_name($user['user']),
-            'type'    => 'select',
-            'options' => $options,
-            'defaultvalue' => ((array_key_exists($type->name, $user['methods'])) 
-                               ? $user['methods'][$type->name]
-                               : 'none'),
-        );
+    if (!empty($u->method)) {
+        $users[$u->id]['methods'][$u->activity] = get_string('name', 'notification.' . $u->method);
     }
 }
-
-$form['elements']['submit'] = array(
-    'type' => 'submit',
-    'value' =>get_string('save')
-);
 
 
 $smarty = smarty();
-$smarty->assign('form', pieform($form));
+$smarty->assign('users', $users);
+$smarty->assign('types', $types);
 $smarty->display('admin/users/notifications.tpl');
 
-function adminnotifications_submit(Pieform $form, $values) {
-    foreach ($values as $key => $value) {
-        if (!preg_match('/^admin\-(\d+)\-([a-z]+)$/', $key, $m)) {
-            continue;
-        }
-        if ($value == 'none') {
-            $value = null;
-        }
-        set_activity_preference($m[1], $m[2], $value);
-    }
-
-    $form->json_reply(PIEFORM_OK, get_string('notificationssaved', 'admin'));
-}
 
 ?>

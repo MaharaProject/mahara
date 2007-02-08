@@ -34,36 +34,40 @@ require_once('pieforms/pieform.php');
 $activitytypes = get_records_array('activity_type', 'admin', 0);
 if ($USER->get('admin')) {
     $admintypes = get_records_array('activity_type', 'admin', 1);
-    $activitytypes[] = (object)array('name' => 'adminmessages');
+    $activitytypes = array_merge($activitytypes , $admintypes);
 }
 
 $notifications = plugins_installed('notification');
 
 $elements = array();
+$options = array();
+foreach ($notifications as $n) {
+     $options[$n->name] = get_string('name', 'notification.' . $n->name);
+}
 
 foreach ($activitytypes as $type) {
-    if ($type->name == 'adminmessages') {
-        $dv = $USER->get_activity_preference('contactus');
-    }
-    else {
-        $dv = $USER->get_activity_preference($type->name);
-    }
+    $dv = $USER->get_activity_preference($type->name);
     if (empty($dv)) {
-        $dv = 'internal';
+        if (!empty($type->admin)) {
+            $dv = 'none';
+        } else {
+            $dv = 'internal';
+        }
     }
     $elements[$type->name] = array(
         'defaultvalue' => $dv,
         'type' => 'select',
         'title' => get_string('type' . $type->name, 'activity'),
-        'options' => array(),
+        'options' => $options, 
         'rules' => array(
             'required' => true
         )
     );
-
-    foreach ($notifications as $n) {
-         $elements[$type->name]['options'][$n->name] = get_string('name', 'notification.' . $n->name);
+    if (!empty($type->admin)) {
+        $elements[$type->name]['rules']['required'] = false;
+        $elements[$type->name]['options']['none'] = get_string('none');
     }
+
 }
 
 $elements['submit'] = array(
@@ -92,14 +96,11 @@ function activityprefs_submit(Pieform $form, $values) {
     
     $userid = $USER->get('id');
     foreach ($activitytypes as $type) {
-        if ($type->name == 'adminmessages') {
-            continue;
-        }
-        $USER->set_activity_preference($type->name, $values[$type->name]);
-    }
-    if ($USER->get('admin')) {
-        foreach ($admintypes as $type) {
-            $USER->set_activity_preference($type->name, $values['adminmessages']);
+        if ($values[$type->name] == none) {
+            $USER->set_activity_preference($type->name, null);
+        } 
+        else {
+            $USER->set_activity_preference($type->name, $values[$type->name]);
         }
     }
     $form->json_reply(PIEFORM_OK, get_string('prefssaved', 'account'));

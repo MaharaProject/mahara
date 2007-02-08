@@ -42,6 +42,7 @@
                         </table>
                     </div>                   
                     <div class="communitymembers">
+                    <a name="members"></a>
                         <h5>{str tag='members'}</h5>
                         {if $canupdate && $request}
                             <form>

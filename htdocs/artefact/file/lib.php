@@ -874,6 +874,14 @@ class ArtefactTypeImage extends ArtefactTypeFile {
         else {
             $height = $this->get('height');
         }
+        if ((isset($options['width']) || isset($options['height'])) && isset($options['viewid'])) {
+            $url = get_config('wwwroot') . 'view/view.php?artefact=' . $this->get('id')
+                . '&view=' . $options['viewid'];
+            if (isset($options['path'])) {
+                $url .= '&path=' . $options['path'];
+            }
+            $smarty->assign('url', $url);
+        }
         $smarty->assign('height', $height ? $height : '');
         return $smarty->fetch('artefact:file:image_renderfull.tpl');
     }

@@ -128,7 +128,7 @@ function set_activity_preference($userid, $activity, $method) {
         }
         catch (Exception $e) {
             throw new InvalidArgumentException("Failed to insert activity preference "
-                ." $methodfor $activity for user $userid");
+                ." $method for $activity for user $userid");
         }
     }
 }

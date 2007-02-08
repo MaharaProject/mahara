@@ -43,7 +43,7 @@ $string['errorprocessingform'] = 'There was an error with submitting this form. 
 
 $string['no']     = 'No';
 $string['yes']    = 'Yes';
-$string['none']   = 'none';
+$string['none']   = 'None';
 
 $string['nextpage']  = 'Next page';
 $string['prevpage']  = 'Previous page';
@@ -499,8 +499,9 @@ $string['requestedfriendlistmessage'] = '%s has requested that you add them as a
     .' You can either do this from the link below, or from your friends list page';
 
 $string['requestedfriendlistmessagereason'] = '%s has requested that you add them as a friend.'
-    . ' You can either do this from the link below, or from your friends list page'
-    . ' Their reason was:<br>';
+    . ' You can either do this from the link below, or from your friends list page.'
+    . ' Their reason was:
+    ';
 
 $string['removefromfriendslist'] = 'Remove from friends';
 $string['confirmremovefriend'] = 'Are you sure you want to remove this user from your friends list?';
