@@ -1064,11 +1064,13 @@ function main_nav() {
                 'link'    => $wwwroot . 'contacts/',
                 'section' => 'mahara',
             ),
+            /*
             array(
                 'name'    => 'myaddressbook',
                 'link'    => $wwwroot . 'contacts/addressbook/',
                 'section' => 'mahara',
             ),
+            */
             array(
                 'name'    => 'mycommunities',
                 'link'    => $wwwroot . 'contacts/communities/',
