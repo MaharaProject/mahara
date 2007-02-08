@@ -35,7 +35,7 @@ abstract class PluginSearch extends Plugin {
     /**
      * Given a query string and limits, return an array of matching users
      *
-     * NOTE: user with ID zero should never be returned
+     * NOTE: user with ID zero or that are NOT active should never be returned
      *
      * @param string  The query string
      * @param integer How many results to return
@@ -46,7 +46,6 @@ abstract class PluginSearch extends Plugin {
      *               limit   => integer, // how many results are returned
      *               offset  => integer, // starting from which result
      *               data    => array(   // the result records
-
      *                   array(
      *                       id            => integer,
      *                       username      => string,
