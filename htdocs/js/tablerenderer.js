@@ -164,7 +164,13 @@ function TableRenderer(target, source, columns, options) {
             self.offset = response.offset;
             self.count = response.count;
 
-            self.updatecallback(response);
+            try {
+                self.updatecallback(response);
+            }
+            catch (e) {
+                logError('tablerenderer call updatecallback(', response, ') failed.');
+            }
+
             if (self.paginate) {
                 if (typeof(self.assertPager) == 'function') {
                     self.assertPager(self.offset, self.limit, self.count);
@@ -181,7 +187,9 @@ function TableRenderer(target, source, columns, options) {
                     showElement(self.table.previousSibling);
                 }
             }
+
             self.renderdata(response);
+
         }, null, true);
     };
 

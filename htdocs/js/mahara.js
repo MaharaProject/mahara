@@ -162,7 +162,7 @@ function sendjsonrequest(script, data, rtype, successcallback, errorcallback, qu
             errtype = 'error';
         }
         else {
-            logWarn('invoking globalErrorHandler(', data, ')');
+            logWarning('invoking globalErrorHandler(', data, ')');
             globalErrorHandler(data);
         }
         if (errtype) {
@@ -170,17 +170,20 @@ function sendjsonrequest(script, data, rtype, successcallback, errorcallback, qu
                 if (!quiet) {
                     displayMessage(data.message, errtype);
                 }
-                successcallback(data);
+                try { successcallback(data); } catch (e) { logError('sendjsonrequest() callback failed: ', data); }
             }
             else if (data.message && typeof(data.message == 'object')) {
                 if (data.message.message && typeof(data.message.message == 'string') && !quiet) {
                     displayMessage(data.message.message, errtype);
                 }
-                successcallback(data.message);
+                try { successcallback(data); } catch (e) { logError('sendjsonrequest() callback failed: ', data); }
             }
             else {
-                successcallback(data);
+                try { successcallback(data); } catch (e) { logError('sendjsonrequest() callback failed: ', data); }
             }
+            processingStop();
+        }
+        else {
             processingStop();
         }
     },

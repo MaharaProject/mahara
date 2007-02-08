@@ -68,6 +68,9 @@ results.updatecallback = function (d) {
     else {
         results.linkspan = 1;
         removeElement('userfields');
+        if ($('userfields')) {
+            removeElement('userfields');
+        }
     }
 }
 
