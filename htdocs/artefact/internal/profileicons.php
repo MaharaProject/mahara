@@ -52,6 +52,8 @@ $uploadform = pieform(array(
     'jsform' => true,
     'presubmitcallback'  => 'preSubmit',
     'postsubmitcallback' => 'postSubmit',
+    'plugintype' => 'artefact',
+    'pluginname' => 'internal',
     'elements' => array(
         'file' => array(
             'type' => 'file',
@@ -60,7 +62,8 @@ $uploadform = pieform(array(
         ),
         'title' => array(
             'type' => 'text',
-            'title' => get_string('title')
+            'title' => get_string('title'),
+            'help'  => true,
         ),
         'submit' => array(
             'type' => 'submit',
