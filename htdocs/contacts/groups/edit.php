@@ -44,12 +44,15 @@ $group_members = get_column('usr_group_member', 'member', 'grp', $group_data->id
 $editgroup = pieform(array(
     'name'     => 'editgroup',
     'method'   => 'post',
+    'plugintype' => 'core',
+    'pluginname' => 'groups',
     'elements' => array(
         'name' => array(
             'type'         => 'text',
             'title'        => get_string('groupname'),
             'rules'        => array( 'required' => true ),
             'defaultvalue' => $group_data->name,
+            'help'         => true,
         ),
         'description' => array(
             'type'         => 'wysiwyg',
@@ -57,12 +60,14 @@ $editgroup = pieform(array(
             'rows'         => 10,
             'cols'         => 70,
             'defaultvalue' => $group_data->description,
+            'help'         => true,
         ),
         'members'     => array(
             'type'         => 'userlist',
             'title'        => get_string('groupmembers'),
             'rules'        => array( 'required' => true ),
             'defaultvalue' => $group_members,
+            'help'         => true,
         ),
         'id'          => array(
             'type'         => 'hidden',
