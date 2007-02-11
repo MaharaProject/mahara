@@ -53,6 +53,8 @@ if ($USER->get('admin') || $USER->get('staff')) {
 $editcommunity = pieform(array(
     'name'     => 'editcommunity',
     'method'   => 'post',
+    'plugintype' => 'core',
+    'pluginname' => 'communities',
     'elements' => array(
         'name' => array(
             'type'         => 'text',
@@ -72,6 +74,7 @@ $editcommunity = pieform(array(
             'title'        => get_string('membershiptype'),
             'options'      => $joinoptions,
             'defaultvalue' => $community_data->jointype,
+            'help'         => true,
         ),
         'id'          => array(
             'type'         => 'hidden',
