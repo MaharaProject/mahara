@@ -75,7 +75,8 @@ function &smarty($javascript = array(), $headers = array(), $pagestrings = array
             $javascript_array[] = $jsroot . 'tinymce/tiny_mce.js';
             if (isset($extraconfig['tinymceinit'])) {
                 $headers[] = $extraconfig['tinymceinit'];
-            } else {
+            }
+            else {
                 $content_css = json_encode(theme_get_url('style/tinymce.css'));
                 $headers[] = <<<EOF
 <script type="text/javascript">
@@ -1442,5 +1443,129 @@ function has_page_help() {
     }
     return false;
 }
+
+//
+// Cleaning/formatting functions
+//
+function format_whitespace($text) {
+    $text = str_replace("\r\n", "\n", $text);
+    $text = str_replace("\r", "\n", $text);
+    $text = hsc($text);
+    $text = str_replace('  ', ' &nbsp;', $text);
+    $text = str_replace('  ', '&nbsp; ', $text);
+    $text = nl2br($text);
+    return $text;
+}
+
+/**
+ * Given raw text (eg typed in by a user), this function cleans it up
+ * and removes any nasty tags that could mess up pages.
+ *
+ * @param string $text The text to be cleaned
+ * @return string The cleaned up text
+ */
+function clean_text($text) {
+
+    $ALLOWED_TAGS =
+'<p><br><b><i><u><font><table><tbody><span><div><tr><td><th><ol><ul><dl><li><dt><dd><h1><h2><h3><h4><h5><h6><hr><img><a><strong><emphasis><em><sup><sub><address><cite><blockquote><pre><strike><param><acronym><nolink><lang><tex><algebra><math><mi><mn><mo><mtext><mspace><ms><mrow><mfrac><msqrt><mroot><mstyle><merror><mpadded><mphantom><mfenced><msub><msup><msubsup><munder><mover><munderover><mmultiscripts><mtable><mtr><mtd><maligngroup><malignmark><maction><cn><ci><apply><reln><fn><interval><inverse><sep><condition><declare><lambda><compose><ident><quotient><exp><factorial><divide><max><min><minus><plus><power><rem><times><root><gcd><and><or><xor><not><implies><forall><exists><abs><conjugate><eq><neq><gt><lt><geq><leq><ln><log><int><diff><partialdiff><lowlimit><uplimit><bvar><degree><set><list><union><intersect><in><notin><subset><prsubset><notsubset><notprsubset><setdiff><sum><product><limit><tendsto><mean><sdev><variance><median><mode><moment><vector><matrix><matrixrow><determinant><transpose><selector><annotation><semantics><annotation-xml><tt><code>';
+
+    // Fix non standard entity notations
+    $text = preg_replace('/(&#[0-9]+)(;?)/', "\\1;", $text);
+    $text = preg_replace('/(&#x[0-9a-fA-F]+)(;?)/', "\\1;", $text);
+
+    // Remove tags that are not allowed
+    $text = strip_tags($text, $ALLOWED_TAGS);
+
+    // Clean up embedded scripts and , using kses
+    $text = clean_attributes($text);
+
+    // Remove script events
+    $text = eregi_replace("([^a-z])language([[:space:]]*)=", "\\1Xlanguage=", $text);
+    $text = eregi_replace("([^a-z])on([a-z]+)([[:space:]]*)=", "\\1Xon\\2=", $text);
+
+    return $text;
+}
+
+/**
+ * This function takes a string and examines it for HTML tags.
+ * If tags are detected it passes the string to a helper function {@link cleanAttributes2()}
+ *  which checks for attributes and filters them for malicious content
+ *         17/08/2004              ::          Eamon DOT Costello AT dcu DOT ie
+ *
+ * @param string $str The string to be examined for html tags                                                                      
+ * @return string
+ */
+function clean_attributes($str){
+    $result = preg_replace_callback(
+        '%(<[^>]*(>|$)|>)%m', #search for html tags
+        "clean_attributes_2",
+        $str
+    );
+    return $result;
+}
+
+/**
+ * This function takes a string with an html tag and strips out any unallowed
+ * protocols e.g. javascript:
+ * It calls ancillary functions in kses which are prefixed by kses
+ *        17/08/2004              ::          Eamon DOT Costello AT dcu DOT ie
+ *
+ * @param array $htmlArray An array from {@link cleanAttributes()}, containing in its 1st
+ *              element the html to be cleared
+ * @return string
+ */
+function clean_attributes_2($htmlArray) {
+    require_once('kses.php');
+    $ALLOWED_PROTOCOLS = array('http', 'https', 'ftp', 'news', 'mailto', 'rtsp', 'teamspeak', 'gopher', 'mms',
+                               'color', 'callto', 'cursor', 'text-align', 'font-size', 'font-weight', 'font-style',
+                               'border', 'margin', 'padding', 'background');   // CSS as well to get through kses
+
+
+    $htmlTag = $htmlArray[1];
+    if (substr($htmlTag, 0, 1) != '<') {
+        return '&gt;';  //a single character ">" detected
+    }
+    if (!preg_match('%^<\s*(/\s*)?([a-zA-Z0-9]+)([^>]*)>?$%', $htmlTag, $matches)) {
+        return ''; // It's seriously malformed
+    }                                                                                                                                        
+    $slash = trim($matches[1]); //trailing xhtml slash
+    $elem = $matches[2];    //the element name
+    $attrlist = $matches[3]; // the list of attributes as a string
+
+    $attrArray = kses_hair($attrlist, $ALLOWED_PROTOCOLS);
+
+    $attStr = '';
+    foreach ($attrArray as $arreach) {
+        $arreach['name'] = strtolower($arreach['name']);
+        if ($arreach['name'] == 'style') {
+            $value = $arreach['value'];
+            while (true) {
+                $prevvalue = $value;
+                $value = kses_no_null($value);
+                $value = preg_replace("/\/\*.*\*\//Us", '', $value);
+                $value = kses_decode_entities($value);
+                $value = preg_replace('/(&#[0-9]+)(;?)/', "\\1;", $value);
+                $value = preg_replace('/(&#x[0-9a-fA-F]+)(;?)/', "\\1;", $value);
+                if ($value === $prevvalue) {
+                    $arreach['value'] = $value;
+                    break;
+                }
+            }
+            $arreach['value'] = preg_replace("/j\s*a\s*v\s*a\s*s\s*c\s*r\s*i\s*p\s*t/i", "Xjavascript", $arreach['value']);
+            $arreach['value'] = preg_replace("/e\s*x\s*p\s*r\s*e\s*s\s*s\s*i\s*o\s*n/i", "Xexpression", $arreach['value']);
+        }
+        $attStr .=  ' '.$arreach['name'].'="'.$arreach['value'].'" ';
+    }
+
+    // Remove last space from attribute list
+    $attStr = rtrim($attStr);
+
+    $xhtml_slash = '';
+    if (preg_match('%/\s*$%', $attrlist)) {
+        $xhtml_slash = ' /';
+    }
+    return '<'. $slash . $elem . $attStr . $xhtml_slash .'>';
+}
+
 
 ?>
