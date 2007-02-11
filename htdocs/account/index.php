@@ -46,6 +46,7 @@ if (method_exists($authclass, 'change_password')) {
         ),
         'oldpassword' => array( 'type' => 'password',
             'title' => get_string('oldpassword'),
+            'help'  => true,
         ),
         'password1' => array(
             'type' => 'password',
@@ -58,6 +59,7 @@ if (method_exists($authclass, 'change_password')) {
     );
 }
 else if ($url = get_config_plugin('auth', $authtype, 'changepasswordurl')) {
+    // @todo contextual help
     $elements = array(
         'changepasswordotherinterface' => array(
             'value' => '<tr><td colspan="2"><p>' . get_string('changepasswordotherinterface', 'account', $url) . '</p></td></tr>'
@@ -96,7 +98,8 @@ $elements['wysiwyg'] = array(
     ),
    'rules' => array(
         'required' => true
-    )
+    ),
+    'help' => true,
 );
 $elements['messages'] = array(
     'type' => 'radio',
@@ -110,7 +113,8 @@ $elements['messages'] = array(
     ),
    'rules' => array(
        'required' => true
-    )
+    ),
+    'help' => true,
 );
 $elements['lang'] = array(
     'type' => 'select',
@@ -119,7 +123,8 @@ $elements['lang'] = array(
     'options' => get_languages(),
     'rules' => array(
         'required' => true
-    )
+    ),
+    'help' => true,
 );                        
 $elements['submit'] = array(
     'type' => 'submit',
