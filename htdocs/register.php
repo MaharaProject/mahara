@@ -238,14 +238,16 @@ $elements = array(
         'title' => get_string('username'),
         'rules' => array(
             'required' => true
-        )
+        ),
+        'help' => true,
     ),
     'password1' => array(
         'type' => 'password',
         'title' => get_string('password'),
         'rules' => array(
             'required' => true
-        )
+        ),
+        'help' => true,
     ),
     'password2' => array(
         'type' => 'password',
