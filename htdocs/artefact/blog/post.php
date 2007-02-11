@@ -87,6 +87,8 @@ $textinputform = pieform(array(
     'method' => 'post',
     'action' => '',
     'autofocus' => $focuselement,
+    'plugintype' => 'artefact',
+    'pluginname' => 'blog',
     'elements' => array(
         'parent' => array(
             'type' => 'hidden',
@@ -103,7 +105,8 @@ $textinputform = pieform(array(
             'rules' => array(
                 'required' => true
             ),
-            'defaultvalue' => $title
+            'defaultvalue' => $title,
+            'help' => true
         ),
         'description' => array(
             'type' => 'wysiwyg',
@@ -114,7 +117,8 @@ $textinputform = pieform(array(
             'rules' => array(
                 'required' => true
             ),
-            'defaultvalue' => $description
+            'defaultvalue' => $description,
+            'help'        => true,
         ),
         'tags'       => array(
             'defaultvalue' => $tags,
@@ -662,6 +666,8 @@ EOF;
 
 $draftform = pieform(array(
     'name' => 'draftpost',
+    'plugintype' => 'artefact',
+    'pluginname' => 'blog',
     'method' => 'post',
     'action' => '',
     'elements' => array(
@@ -669,7 +675,8 @@ $draftform = pieform(array(
             'type' => 'checkbox',
             'title' => get_string('thisisdraft', 'artefact.blog'),
             'description' => get_string('thisisdraftdesc', 'artefact.blog'),
-            'defaultvalue' => $checked
+            'defaultvalue' => $checked,
+            'help' => true,
         ),
     )
 ));

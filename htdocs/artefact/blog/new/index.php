@@ -35,6 +35,8 @@ $form = pieform(array(
     'name' => 'newblog',
     'method' => 'post',
     'action' => '',
+    'plugintype' => 'artefact',
+    'pluginname' => 'blog',
     'elements' => array(
         'title' => array(
             'type'        => 'text',
@@ -42,7 +44,8 @@ $form = pieform(array(
             'description' => get_string('blogtitledesc', 'artefact.blog'),
             'rules' => array(
                 'required'    => true
-            )
+            ),
+            'help'        => true,
         ),
         'description' => array(
             'type'        => 'wysiwyg',
@@ -52,7 +55,8 @@ $form = pieform(array(
             'description' => get_string('blogdescdesc', 'artefact.blog'),
             'rules' => array(
                 'required'    => false
-            )
+            ),
+            'help'        => true,
         ),
         'tags'        => array(
             'type'        => 'tags',
@@ -66,7 +70,8 @@ $form = pieform(array(
             'options'     => array(
                 0 => get_string('commentsallowedno', 'artefact.blog'),
                 1 => get_string('commentsallowedyes', 'artefact.blog')
-            )
+            ),
+            'help'        => true,
         ),
         'commentsnotify' => array(
             'type'        => 'radio',
@@ -75,7 +80,8 @@ $form = pieform(array(
             'options'     => array(
                 0 => get_string('commentsnotifyno', 'artefact.blog'),
                 1 => get_string('commentsnotifyyes', 'artefact.blog')
-            )
+            ),
+            'help'        => true,
         ),
         'submit' => array(
             'type'  => 'submitcancel',
