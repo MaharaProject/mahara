@@ -262,6 +262,7 @@ function jsstrings() {
                 'loading',
                 'unreadmessages',
                 'unreadmessage',
+                'couldnotgethelp',
             ),
         ),
         'tablerenderer' => array(
@@ -538,6 +539,36 @@ function param_alpha($name) {
     }
 
     throw new ParameterException("Parameter '$name' = '$value' is not an alpha");
+}
+
+/**
+ * This function returns a GET or POST parameter as an alphanumeric string with optional
+ * default.  If the default isn't specified and the parameter hasn't been sent,
+ * a ParameterException exception is thrown. Likewise, if the parameter isn't a
+ * valid alpha string, a ParameterException exception is thrown
+ *
+ * Valid characters are a-z and A-Z and 0-9
+ *
+ * @param string The GET or POST parameter you want returned
+ * @param mixed [optional] the default value for this parameter
+ *
+ * @return string The value of the parameter
+ *
+ */
+function param_alphanum($name) {
+    $args = func_get_args();
+
+    list ($value, $defaultused) = call_user_func_array('_param_retrieve', $args);
+
+    if ($defaultused) {
+        return $value;
+    }
+
+    if (preg_match('/^[a-zA-Z0-9]+$/',$value)) {
+        return $value;
+    }
+
+    throw new ParameterException("Parameter '$name' = '$value' is not an alphanum");
 }
 
 /**
@@ -1359,9 +1390,26 @@ function get_full_script_path() {
     return $url_prefix . get_script_path();
 }
 
+/**
+ * Remove query string from url
+ *
+ * Takes in a URL and returns it without the querystring portion
+ *
+ * @param string $url the url which may have a query string attached
+ * @return string
+ */
+ function strip_querystring($url) {
+
+    if ($commapos = strpos($url, '?')) {
+        return substr($url, 0, $commapos);
+    } else {
+        return $url;
+    }
+}
+
 function has_page_help() {
     // the path of the current script (used for page help)
-    $scriptname = substr(get_full_script_path(), strlen(get_config('wwwroot')));
+    $scriptname = substr(strip_querystring(get_full_script_path()), strlen(get_config('wwwroot')));
     if (strpos($scriptname, '.php') != (strlen($scriptname) - 4)) {
         $scriptname .= 'index.php';
     }
@@ -1377,8 +1425,9 @@ function has_page_help() {
         if (count($bits) > 2) {
             $plugintype = $bits[0];
             $pluginname = $bits[1];
+            $scriptname = substr($scriptname, strlen($plugintype . '/' . $pluginname . '/')); 
             $pagehelp = get_config('docroot') . $plugintype . '/' . $pluginname . '/lang/en.utf8/help/pages/' . 
-                substr($scriptname, strlen($plugintype . '/' . $pluginname . '/')) . '.html';
+                $scriptname . '.html';
         }
     }
     if (empty($plugintype)) {

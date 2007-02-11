@@ -252,7 +252,7 @@ contextualHelpDeferrable  = null;
 function contextualHelp(formName, helpName, pluginType, pluginName, page, ref) {
     var key;
     var target = $(formName + '_' + helpName + '_container');
-    var url = '../json/help.php';
+    var url = config.wwwroot + 'json/help.php';
     var url_params = {
         'plugintype': pluginType,
         'pluginname': pluginName

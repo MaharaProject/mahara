@@ -26,6 +26,7 @@
 
 define('INTERNAL', 1);
 define('JSON', 1);
+define('PUBLIC', 1);
 
 require(dirname(dirname(__FILE__)) . '/init.php');
 
@@ -34,8 +35,8 @@ json_headers();
 $plugintype = param_alpha('plugintype');
 $pluginname = param_alpha('pluginname');
 $page       = param_variable('page', null);
-$form       = param_alpha('form', null);
-$element    = param_alpha('element', null);
+$form       = param_alphanum('form', null);
+$element    = param_alphanum('element', null);
 
 $location = get_config('docroot') ;
 $file = 'help/';
