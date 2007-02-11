@@ -88,7 +88,7 @@ if ($feedback) {
             'name'            => display_name($record->author),
             'date'            => format_date(strtotime($record->ctime), 'strftimedate'),
             'message'         => $record->message,
-            'public'          => $record->public
+            'ispublic'        => $record->public
         );
         if (!empty($record->attachment)) {
             $d['attachid'] = $record->attachment;

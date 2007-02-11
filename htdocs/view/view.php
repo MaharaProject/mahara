@@ -125,13 +125,14 @@ $getstring['addtowatchlist'] = "'" . get_string('addtowatchlist', 'mahara', get_
 $getstring['addtowatchlistwithchildren'] = "'" . get_string('addtowatchlistwithchildren', 'mahara', ucfirst(get_string($thing))) . "'";
 $getstring['feedbackattachmessage'] = "'(" . get_string('feedbackattachmessage', 'mahara', get_string('feedbackattachdirname')) . ")'";
 
+// Safari doesn't seem to like these inputs to be called 'public', so call them 'ispublic' instead.
 if (!empty($feedbackisprivate)) {
-    $makepublic = "TR(null, INPUT({'type':'hidden','name':'public','value':false}), TD({'colspan':2}, " 
+    $makepublic = "TR(null, INPUT({'type':'hidden','name':'ispublic','value':'false'}), TD({'colspan':2}, " 
         . $getstring['feedbackonthisartefactwillbeprivate'] . ")),";
 }
 else {
     $makepublic = "TR(null, TH(null, LABEL(null, " . $getstring['makepublic'] . " ), " 
-        . "INPUT({'type':'checkbox', 'class':'checkbox', 'name':'public'}))),";
+        . "INPUT({'type':'checkbox', 'class':'checkbox', 'name':'ispublic'}))),";
 }
 
 $javascript = <<<EOF
@@ -156,8 +157,8 @@ function feedbackform() {
         }
         else {
             var data = {'view':view, 
-                        'message':form.message.value,
-                        'public':form.public.checked};
+                        'public':form.ispublic.checked,
+                        'message':form.message.value};
             if (artefact) {
                 data.artefact = artefact;
             }
@@ -255,7 +256,7 @@ var feedbacklist = new TableRenderer(
         'name',
         'date', 
         function (r) {
-            if (r.public == 1) {
+            if (r.ispublic == 1) {
                 var makePrivate = null;
                 if (r.ownedbythisuser) {
                     makePrivate = A({'href': ''}, get_string('makeprivate'));
