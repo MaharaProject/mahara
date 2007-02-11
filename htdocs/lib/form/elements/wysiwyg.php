@@ -64,11 +64,25 @@ function pieform_element_wysiwyg(Pieform $form, $element) {
         log_warn('No value for cols or width specified for textarea ' . $element['name']);
     }
     $element['style'] = (isset($element['style'])) ? $style . $element['style'] : $style;
+
+    if ($USER->get_account_preference('wysiwyg')) {
+        $value = Pieform::hsc($form->get_value($element));
+    }
+    else {
+        // Replace <br>s as added by wysiwyg editor or nl2br with a newline
+        $value = preg_replace("#<br />\s#", "\n", $form->get_value($element));
+        // As placed in the value by the wysiwyg editor
+        $value = str_replace('</p><p>', "\n\n", $value);
+        // Find the last </p> and replace with newlines
+        $value = preg_replace('#</p>\s#', "\n", $value);
+        $value = strip_tags($value);
+    }
+
     return '<textarea'
         . (($rows) ? ' rows="' . $rows . '"' : '')
         . (($cols) ? ' cols="' . $cols . '"' : '')
         . $form->element_attributes($element, array('maxlength', 'size'))
-        . '>' . Pieform::hsc($form->get_value($element)) . '</textarea>';
+        . '>' . $value . '</textarea>';
 }
 
 function pieform_element_wysiwyg_rule_required(Pieform $form, $value, $element) {
@@ -81,6 +95,29 @@ function pieform_element_wysiwyg_get_headdata() {
         return array('tinymce');
     }
     return array();
+}
+
+function pieform_element_wysiwyg_get_value(Pieform $form, $element) {
+    global $USER;
+    $global = ($form->get_property('method') == 'get') ? $_GET : $_POST;
+    if (isset($element['value'])) {
+        log_debug('returning value');
+        return $element['value'];
+    }
+    else if (isset($global[$element['name']])) {
+        $value = $global[$element['name']];
+        if (!get_account_preference($USER->get('id'), 'wysiwyg')) {
+            $value = format_whitespace($value);
+        }
+        else {
+            $value = clean_text($value);
+        }
+        return $value;
+    }
+    else if (isset($element['defaultvalue'])) {
+        return $element['defaultvalue'];
+    }
+    return null;
 }
 
 ?>
