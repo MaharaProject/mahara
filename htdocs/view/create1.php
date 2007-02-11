@@ -68,6 +68,8 @@ $createview1 = pieform(array(
     'name'     => 'createview1',
     'method'   => 'post',
     'autofocus' => 'title',
+    'plugintype' => 'core',
+    'pluginname' => 'view',
     'elements' => array(
         'createid' => array(
             'type'  => 'hidden',
@@ -78,6 +80,7 @@ $createview1 = pieform(array(
             'title'        => get_string('title','view'),
             'defaultvalue' => isset($data['title']) ? $data['title'] : null,
             'rules'        => array( 'required' => true ),
+            'help'         => true,
         ),
         'startdate'        => array(
             'type'         => 'calendar',
@@ -88,7 +91,8 @@ $createview1 = pieform(array(
                 //'onSelect'       => 'startSelected',
                 'showsTime'      => true,
                 'ifFormat'       => '%Y/%m/%d %H:%M'
-            )
+            ),
+            'help'         => true,
         ),
         'stopdate'  => array(
             'type'         => 'calendar',
@@ -99,7 +103,8 @@ $createview1 = pieform(array(
                 //'onSelect'       => 'stopSelected',
                 'showsTime'      => true,
                 'ifFormat'       => '%Y/%m/%d %H:%M'
-            )
+            ),
+            'help'         => true,
         ),
         'description' => array(
             'type'         => 'wysiwyg',
@@ -107,6 +112,7 @@ $createview1 = pieform(array(
             'rows'         => 10,
             'cols'         => 70,
             'defaultvalue' => isset($data['description']) ? $data['description'] : null,
+            'help'         => true,
         ),
         'tags'        => array(
             'type'         => 'tags',
@@ -120,7 +126,8 @@ $createview1 = pieform(array(
             'description'  => get_string('ownerformatdescription','view'),
             'options'      => $ownerformatoptions,
             'defaultvalue' => isset($data['ownerformat']) ? $data['ownerformat'] : FORMAT_NAME_DISPLAYNAME,
-            'rules'        => array('required' => true)
+            'rules'        => array('required' => true),
+            'help'         => true,
         ),
         'submit'   => array(
             'type'  => 'submitcancel',
