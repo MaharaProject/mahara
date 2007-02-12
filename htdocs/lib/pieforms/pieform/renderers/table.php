@@ -83,7 +83,13 @@ function pieform_renderer_table(Pieform $form, $builtelement, $rawelement) {
 
     // Contextual help
     if (!empty($rawelement['help'])) {
-        $result .= ' <span class="help"><a href="#" title="' . Pieform::hsc($rawelement['help']) . '">?</a></span>';
+        $function = $form->get_property('helpcallback');
+        if (function_exists($function)) {
+            $result .= $function($form, $rawelement);
+        } 
+        else {
+            $result .= ' <span class="help"><a href="#" title="' . Pieform::hsc($rawelement['help']) . '">?</a></span>';
+        }
     }
 
     $result .= "</td>\n\t</tr>\n";
