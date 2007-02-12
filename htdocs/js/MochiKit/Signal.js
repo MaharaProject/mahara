@@ -508,18 +508,17 @@ MochiKit.Signal._specialKeys = {
 })();
 
 /* Internal object to keep track of created signals. */
-MochiKit.Signal.SignalIdentifier = function (src, sig, listener, isDOM, objOrFunc, funcOrStr, connected) {
-    this.source = src;
-    this.signal = sig;
-    this.listener = listener;
-    this.isDOM = isDOM;
-    this.objOrFunc = objOrFunc;
-    this.funcOrStr = funcOrStr;
-    this.connected = connected;
+MochiKit.Signal.Ident = function (ident) {
+    this.source = ident.source;
+    this.signal = ident.signal;
+    this.listener = ident.listener;
+    this.isDOM = ident.isDOM;
+    this.objOrFunc = ident.objOrFunc;
+    this.funcOrStr = ident.funcOrStr;
+    this.connected = ident.connected;
 };
 
-MochiKit.Signal.SignalIdentifier.prototype = {
-};
+MochiKit.Signal.Ident.prototype = {};
 
 MochiKit.Base.update(MochiKit.Signal, {
 
@@ -540,6 +539,8 @@ MochiKit.Base.update(MochiKit.Signal, {
                 self._disconnect(observers[i]);
             }
         }
+        
+        delete self._observers;
     },
 
     _listener: function (src, sig, func, obj, isDOM) {
@@ -553,7 +554,11 @@ MochiKit.Base.update(MochiKit.Signal, {
             if (sig === 'onload' || sig === 'onunload') {
                 return function (nativeEvent) {
                     obj[func].apply(obj, [new E(src, nativeEvent)]);
-                    MochiKit.Signal.disconnect(src, sig, obj, func);
+                    
+                    var ident = new MochiKit.Signal.Ident({
+                        source: src, signal: sig, objOrFunc: obj, funcOrStr: func});
+                    
+                    MochiKit.Signal._disconnect(ident);
                 };
             } else {
                 return function (nativeEvent) {
@@ -565,6 +570,11 @@ MochiKit.Base.update(MochiKit.Signal, {
                 return function (nativeEvent) {
                     func.apply(obj, [new E(src, nativeEvent)]);
                     MochiKit.Signal.disconnect(src, sig, func);
+                    
+                    var ident = new MochiKit.Signal.Ident({
+                        source: src, signal: sig, objOrFunc: func});
+                    
+                    MochiKit.Signal._disconnect(ident);
                 };
             } else {
                 return function (nativeEvent) {
@@ -661,7 +671,15 @@ MochiKit.Base.update(MochiKit.Signal, {
             src.attachEvent(sig, listener); // useCapture unsupported
         }
 
-        var ident = new MochiKit.Signal.SignalIdentifier(src, sig, listener, isDOM, objOrFunc, funcOrStr, true);
+        var ident = new MochiKit.Signal.Ident({
+            source: src, 
+            signal: sig, 
+            listener: listener, 
+            isDOM: isDOM, 
+            objOrFunc: objOrFunc, 
+            funcOrStr: funcOrStr, 
+            connected: true
+        });
         self._observers.push(ident);
 
         if (!isDOM && typeof(src.__connect__) == 'function') {
