@@ -10,7 +10,7 @@
 {foreach from=$categories item=category}
         <option value="{$category|escape}">{str tag="category.$category" section="view"}</option>
 {/foreach}
-    </select>
+    </select>{contextualhelp plugintype='core' pluginname='view' section='createviewtemplateselect'}
     <form name="template_selection" method="post" action="" id="template_selection">
         <input type="hidden" name="createid" value="{$createid}">
         <input type="hidden" name="template" id="template" value="">

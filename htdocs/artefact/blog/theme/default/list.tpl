@@ -16,7 +16,7 @@
             <h2>{str section="artefact.blog" tag="myblogs"}</h2>
             <div class="addicon">
                 <a href="{$WWWROOT}artefact/blog/new/">{str section="artefact.blog" tag="addblog"}</a>
-            </div>
+            </div>{contextualhelp plugintype='artefact' pluginname='blog' section='addblogbutton'}
 
 			<table id="bloglist" class="tablerenderer">
 				<thead>

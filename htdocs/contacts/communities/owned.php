@@ -33,6 +33,7 @@ define('TITLE', get_string('myownedcommunities'));
 $viewurl = get_config('wwwroot') . 'contacts/communities/view.php?id=';
 $editurl = get_config('wwwroot') . 'contacts/communities/edit.php?id=';
 $editstr = get_string('edit');
+$edithelp = get_help_icon('core', 'communities', null, null, null, 'communityeditlink');
 
 $javascript = <<<EOF
 var communitylist = new TableRenderer(
@@ -49,7 +50,9 @@ var communitylist = new TableRenderer(
          return TD(null, A({'href': '{$viewurl}' + r.id + '&pending=1#members'}, r.requestcount));
      },
      function (r) {
-         return TD(null, A({'href': '{$editurl}' + r.id}, '{$editstr}'));
+         var help = SPAN(null);
+         help.innerHTML = '{$edithelp}';
+         return TD(null, A({'href': '{$editurl}' + r.id}, '{$editstr}'), help);
      }
      ]
 );

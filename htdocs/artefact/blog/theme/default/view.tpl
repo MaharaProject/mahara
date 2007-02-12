@@ -19,7 +19,7 @@
 									<a href="{$WWWROOT}artefact/blog/post.php?blog={$blog->get('id')}">{str section="artefact.blog" tag="addpost"}</a>
 								</div>
                          <a href="{$WWWROOT}artefact/blog/settings/?id={$blog->get('id')}">{str section="artefact.blog" tag="settings"}</a>
-                    </div>
+                    </div>{contextualhelp plugintype='artefact' pluginname='blog' section='blogsettingsbutton'}{contextualhelp plugintype='artefact' pluginname='blog' section='blogaddpostbutton'}
 
 		
 				<div><table id="postlist" class="tablerenderer">
