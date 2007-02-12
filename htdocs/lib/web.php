@@ -461,12 +461,11 @@ function _param_retrieve($name) {
     else if (isset($_GET[$name])) {
         $value = $_GET[$name];
     }
-    if (empty($value) && func_num_args() == 2) {
+    else if (func_num_args() == 2) {
         $php_work_around = func_get_arg(1);
         return array($php_work_around, true);
     }
-
-    if (empty($value)) {
+    else {
         throw new ParameterException("Missing parameter '$name' and no default supplied");
     }
 
