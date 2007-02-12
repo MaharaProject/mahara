@@ -156,12 +156,6 @@ function check_upgrades($name=null) {
         else if ($config->version > $pluginversion) {
             if (isset($config->minupgradefrom) && isset($config->minupgraderelease)
                 && $pluginversion < $config->minupgradefrom) {
-                throw new SanityException("Must upgrade to $config->minupgradefrom "
-                                          . " ($config->minupgraderelease) first "
-                                          . " (you have $pluginversion ($pluginrelease))");
-            }
-            if (isset($config->minupgradefrom) && isset($config->minupgraderelease)
-                && $pluginversion < $config->minupgradefrom) {
                 throw new ConfigSanityException("Must upgrade to $config->minupgradefrom "
                                           . " ($config->minupgraderelease) first "
                                           . " (you have $pluginversion ($pluginrelease))");
