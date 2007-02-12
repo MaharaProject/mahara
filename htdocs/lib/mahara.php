@@ -661,10 +661,18 @@ function handle_event($event, $data) {
         throw new Exception("Invalid event");
     }
 
+    if (is_object($data)) {
+        $data = (array)$data;
+    }
+
+    if (is_numeric($data)) {
+        $data = array('id' => $data);
+    }
+
     // this is here because the core can't listen to events
     // @todo, this is VERY ugly, and someone should fix it
     if ($event == 'createuser') {
-        activity_set_defaults($data->id);
+        activity_set_defaults($data['id']);
     }
 
     $plugintypes = plugin_types();
