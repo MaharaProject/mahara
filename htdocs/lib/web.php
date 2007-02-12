@@ -1454,10 +1454,11 @@ function get_full_script_path() {
 
 function has_page_help() {
     // the path of the current script (used for page help)
-    $scriptname = substr(strip_querystring(get_full_script_path()), strlen(get_config('wwwroot')));
+    $scriptname = substr(urldecode(strip_querystring(get_full_script_path())), strlen(get_config('wwwroot')));
     if (strpos($scriptname, '.php') != (strlen($scriptname) - 4)) {
         $scriptname .= 'index.php';
     }
+
     $scriptname = substr($scriptname, 0, -4);
     
     $firstdir = $scriptname;
