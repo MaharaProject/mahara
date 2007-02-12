@@ -448,9 +448,8 @@ function FileUploader(element, uploadscript, statevars, foldername, folderid, up
 
         // Safari loads the upload page in a new window when the iframe has display set to none.
         if (navigator.userAgent.indexOf('Safari/') != -1) {
-            setDisplayForElement('width: 1px; height: 1px;', 'iframe'+self.nextupload);
+            setNodeAttribute('iframe'+self.nextupload, 'style', 'display: width: 0px; height: 0px; border: 0px;');
         }
-                                             //'style':'width: 1px; height: 1px;'}));
         setNodeAttribute(self.form, 'target', 'iframe' + self.nextupload);
 
         for (property in self.statevars) {
