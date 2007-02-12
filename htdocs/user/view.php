@@ -233,7 +233,7 @@ EOF;
             $friendform['elements']['rejectreason'] = array(
                 'type'  => 'textarea',
                 'title' => get_string('rejectfriendshipreason'),
-                'cols'  => 10,
+                'cols'  => 50,
                 'rows'  => 4,                                
             );    
             $friendsubmit = get_string('accept');
@@ -255,7 +255,7 @@ EOF;
             $friendform['elements']['reason'] = array(
                 'type'  => 'textarea',
                 'title' => get_string('requestfriendship'),
-                'cols'  => 40,
+                'cols'  => 50,
                 'rows'  => 4,
             );
             $friendsubmit = get_string('request');
