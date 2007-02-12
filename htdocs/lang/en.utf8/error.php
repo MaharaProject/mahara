@@ -45,7 +45,12 @@ $string['datarootinsidedocroot'] = 'You have set up your data root to be inside 
 $string['datarootnotwritable'] = 'Your defined data root directory, <tt>%s</tt>, is not writable. This means that neither session data, user files nor anything else that needs to be uploaded can be saved on your server. Please make the directory if it does not exist, or give ownership of the directory to the web server user if it does.';
 $string['couldnotmakedatadirectories'] = 'For some reason some of the core data directories could not be created. This should not happen, as Mahara previously detected that the dataroot directory was writable. Please check the permissions on the dataroot directory.';
 
-$string['dbconnfailed'] = 'Failed to connect to database, error message was %s';
+$string['dbconnfailed'] = '<p>Mahara could not connect to the application database.</p>
+<ul>
+<li>If you are using Mahara, please wait a minute and try again</li>
+<li>If you are the administrator, please check your database settings and make sure your database is available</li>
+</ul>
+<p>The error received was:</p>';
 
 
 // if you change these next two , be sure to change them in libroot/errors.php

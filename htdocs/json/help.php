@@ -26,6 +26,7 @@
 
 define('INTERNAL', 1);
 define('JSON', 1);
+define('PUBLIC', 1);
 
 require(dirname(dirname(__FILE__)) . '/init.php');
 
@@ -33,9 +34,10 @@ json_headers();
 
 $plugintype = param_alpha('plugintype');
 $pluginname = param_alpha('pluginname');
-$page       = param_variable('page', null);
-$form       = param_alpha('form', null);
-$element    = param_alpha('element', null);
+$page       = param_alphanumext('page', null);
+$section    = param_alphanumext('section', null);
+$form       = param_alphanumext('form', null);
+$element    = param_alphanumext('element', null);
 
 $location = get_config('docroot') ;
 $file = 'help/';
@@ -49,6 +51,9 @@ else {
 if ($page) {
     $page = str_replace('-', '/', $page);
     $file .= 'pages/' . $page . '.html';
+}
+else if ($section) {
+    $file .= 'sections/' . $section . '.html';
 }
 else if (!empty($form) && !empty($element)) {
     $file .= 'forms/' . $form . '.' . $element . '.html';

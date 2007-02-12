@@ -27,6 +27,10 @@
 /**
  * Renders a dropdown list, including support for multiple choices.
  *
+ * @todo Currently, putting a junk defaultvalue/value for a multiple select
+ * does not trigger any kind of error, it should perhaps trigger a
+ * Pieform::info
+ *
  * @param Pieform  $form    The form to render the element for
  * @param array    $element The element to render
  * @return string           The HTML for the element
@@ -36,7 +40,13 @@ function pieform_element_select(Pieform $form, $element) {
         $element['name'] .= '[]';
     }
 
-    if (!empty($element['collapseifoneoption']) && count($element['options']) == 1) {
+    $optionsavailable = true;
+    if (!isset($element['options']) || !is_array($element['options']) || count($element['options']) < 1) {
+        $optionsavailable = false;
+        Pieform::info('Select elements should have at least one option');
+    }
+
+    if (!empty($element['collapseifoneoption']) && isset($element['options']) && is_array($element['options']) && count($element['options']) == 1) {
         foreach ($element['options'] as $key => $value) {
             $result = $value . '<input type="hidden" name="' . $element['name'] . '" value="' . $key . '">';
         }
@@ -47,32 +57,22 @@ function pieform_element_select(Pieform $form, $element) {
         . $form->element_attributes($element)
         . (!empty($element['multiple']) ? ' multiple="multiple"' : '')
         . ">\n";
-    if (!isset($element['options']) || !is_array($element['options']) || count($element['options']) < 1) {
-        $result .= "\t<option></option>\n";
-        Pieform::info('Select elements should have at least one option');
+    if (!$optionsavailable) {
+        $result .= "\t<option></option>\n</select>";
+        return $result;
     }
 
-    if (empty($element['multiple'])) {
-        $values = array($form->get_value($element)); 
-    }
-    else {
-        if (isset($element['value'])) {
-            $values = (array) $element['value'];
-        }
-        // @todo use $global instead of $_POST
-        else if (isset($_POST[$element['name']])) {
-            $values = (array) $_POST[$element['name']];
-        }
-        else if (isset($element['defaultvalue'])) {
-            $values = (array) $element['defaultvalue'];
-        }
-        else {
-            $values = array();
-        }
-    }
+    $values = $form->get_value($element); 
     $optionselected = false;
     foreach ($element['options'] as $key => $value) {
-        if (in_array($key, $values)) {
+        // Select the element if it's in the values or if there are no values
+        // and this is the first option
+        if (
+            (!is_array($values) && $key == $values)
+            ||
+            (is_array($values) && 
+                (in_array($key, $values)
+                || (isset($values[0]) && $values[0] === null && !$optionselected)))) {
             $selected = ' selected="selected"';
             $optionselected = true;
         }
@@ -82,7 +82,7 @@ function pieform_element_select(Pieform $form, $element) {
         $result .= "\t<option value=\"" . Pieform::hsc($key) . "\"$selected>" . Pieform::hsc($value) . "</option>\n";
     }
 
-    if (!$optionselected && $values) {
+    if (!$optionselected && !is_array($values) && $values !== null) {
         Pieform::info('Invalid value for select "' . $element['name'] .'"');
     }
 
@@ -94,6 +94,47 @@ function pieform_element_select_set_attributes($element) {
     $element['collapseifoneoption'] = true;
     $element['rules']['validateoptions'] = true;
     return $element;
+}
+
+function pieform_element_select_get_value(Pieform $form, $element) {
+    if (empty($element['multiple'])) {
+        $global = ($form->get_property('method') == 'get') ? $_GET : $_POST;
+        if (isset($element['value'])) {
+            $values = (array) $element['value'];
+        }
+        else if (isset($global[$element['name']])) {
+            $values = (array) $global[$element['name']];
+        }
+        else if (isset($element['defaultvalue'])) {
+            $values = (array) $element['defaultvalue'];
+        }
+        else {
+            $values = array(null);
+        }
+
+        if (count($values) != 1) {
+            Pieform::info('The select element "' . $element['name'] . '" has '
+                . 'more than one value, but has not been declared multiple');
+        }
+        return $values[0];
+    }
+    else {
+        $global = ($form->get_property('method') == 'get') ? $_GET : $_POST;
+        if (isset($element['value'])) {
+            $values = (array) $element['value'];
+        }
+        else if (isset($global[$element['name']])) {
+            $values = (array) $global[$element['name']];
+        }
+        else if (!$form->is_submitted() && isset($element['defaultvalue'])) {
+            $values = (array) $element['defaultvalue'];
+        }
+        else {
+            $values = array();
+        }
+    }
+
+    return $values;
 }
 
 ?>

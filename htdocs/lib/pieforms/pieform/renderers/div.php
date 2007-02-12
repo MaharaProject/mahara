@@ -60,7 +60,13 @@ function pieform_renderer_div(Pieform $form, $builtelement, $rawelement) {
 
     // Contextual help
     if (!empty($rawelement['help'])) {
-        $result .= ' <span class="help"><a href="#" title="' . Pieform::hsc($rawelement['help']) . '">?</a></span>';
+        $function = $form->get_property('helpcallback');
+        if (function_exists($function)) {
+            $result .= $function($form, $rawelement);
+        } 
+        else {
+            $result .= ' <span class="help"><a href="#" title="' . Pieform::hsc($rawelement['help']) . '">?</a></span>';
+        }
     }
 
     // Description - optional description of the element, or other note that should be visible

@@ -141,13 +141,13 @@ $addtowatchliststr = get_string('addtowatchlist', 'activity');
 //$tutor          = (int)($membership && ($membership != COMMUNITY_MEMBERSHIP_MEMBER));
 $controlled     = (int)($community->jointype == 'controlled');
 $request        = (int)($community->jointype == 'request');
-$tutor          = (int)($membership & COMMUNITY_MEMBERSHIP_TUTOR);
-$admin          = (int)($membership & COMMUNITY_MEMBERSHIP_ADMIN);
-$staff          = (int)($membership & COMMUNITY_MEMBERSHIP_STAFF);
-$owner          = (int)($membership & COMMUNITY_MEMBERSHIP_OWNER);
-$canupdate      = (int)($tutor || $staff || $admin || $owner);
-$canpromote     = (int)(($staff || $admin) && $controlled);
-$canremove      = (int)(($tutor && $controlled) || $staff || $admin || $owner);
+$tutor          = (int)(bool)($membership & COMMUNITY_MEMBERSHIP_TUTOR);
+$admin          = (int)(bool)($membership & COMMUNITY_MEMBERSHIP_ADMIN);
+$staff          = (int)(bool)($membership & COMMUNITY_MEMBERSHIP_STAFF);
+$owner          = (int)(bool)($membership & COMMUNITY_MEMBERSHIP_OWNER);
+$canupdate      = (int)(bool)($tutor || $staff || $admin || $owner);
+$canpromote     = (int)(bool)(($staff || $admin) && $controlled);
+$canremove      = (int)(bool)(($tutor && $controlled) || $staff || $admin || $owner);
 $canleave       = ($ismember && !$controlled);
 $canrequestjoin = (!$ismember && empty($invited) && empty($requested) && $community->jointype == 'request');
 $canjoin        = (!$ismember && $community->jointype == 'open');
@@ -155,6 +155,7 @@ $canjoin        = (!$ismember && $community->jointype == 'open');
 $javascript = '';
 if ($membership) {
     $javascript .= <<<EOF
+
 viewlist = new TableRenderer(
     'community_viewlist',
     'view.json.php',
@@ -173,6 +174,7 @@ viewlist = new TableRenderer(
      }
     ]
 );
+
 
 viewlist.type = 'views';
 viewlist.submitted = 0;
@@ -279,12 +281,11 @@ function toggleWatchlist() {
     var add = '{$addtowatchliststr}';
     sendjsonrequest('view.json.php', pd, 'GET', function (data) {
         if (data.member) {
-            $('watchlistcontrolbutton').innerHTML = remove;
+            $('watchlistcontrolbutton').value = remove;
         }
         else {
-            $('watchlistcontrolbutton').innerHTML = add;
+            $('watchlistcontrolbutton').value = add;
         }
-
     });
     return false;
 }

@@ -12,7 +12,9 @@
 	                        <thead>
                                     <tr>
  	                                <th>{str tag='name'}</th>
- 	                                <th>{str tag='communitymemberrequests'}</th>
+ 	                                <th>{str tag='communitymemberrequests'}
+                                        {contextualhelp plugintype='core' pluginname='communities' section='pendingmembershipheader'}
+                                    </th>
  	                                <th></th>
                                     <tr>
                                 </thead>

@@ -53,10 +53,10 @@ if (!empty($_SESSION['registered'])) {
     die_info(get_string('registeredok', 'auth.internal'));
 }
 
-
+$key = param_alphanum('key', null);
 // Step three of registration - given a key, fill out mandatory profile fields,
 // optional profile icon, and register the user
-if (isset($_REQUEST['key'])) {
+if (isset($key)) {
 
     function profileform_submit(Pieform $form, $values) {
         global $registration, $SESSION, $USER;
@@ -151,7 +151,7 @@ if (isset($_REQUEST['key'])) {
 
 
     // Begin the registration form buliding
-    if (!$registration = get_record_select('usr_registration', 'key = ? AND expiry >= ?', array($_REQUEST['key'], db_format_timestamp(time())))) {
+    if (!$registration = get_record_select('usr_registration', 'key = ? AND expiry >= ?', array($key, db_format_timestamp(time())))) {
         die_info(get_string('registrationnosuchkey', 'auth.internal'));
     }
 
@@ -209,7 +209,7 @@ if (isset($_REQUEST['key'])) {
     $elements['key'] = array(
         'type' => 'hidden',
         'name' => 'key',
-        'value' => $_REQUEST['key']
+        'value' => $key
     );
     $elements['submit'] = array(
         'type' => 'submit',
@@ -238,14 +238,16 @@ $elements = array(
         'title' => get_string('username'),
         'rules' => array(
             'required' => true
-        )
+        ),
+        'help' => true,
     ),
     'password1' => array(
         'type' => 'password',
         'title' => get_string('password'),
         'rules' => array(
             'required' => true
-        )
+        ),
+        'help' => true,
     ),
     'password2' => array(
         'type' => 'password',
@@ -336,6 +338,8 @@ $elements['submit'] = array(
 $form = array(
     'name' => 'register',
     'method' => 'post',
+    'plugintype' => 'core',
+    'pluginname' => 'register',
     'action' => '',
     'renderer' => 'table',
     'elements' => $elements

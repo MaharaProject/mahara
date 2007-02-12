@@ -343,6 +343,7 @@ $string['collapse'] = 'Collapse';
 $string['more...'] = 'More ...';
 $string['nohelpfound'] = 'There was no help found for this item';
 $string['nohelpfoundpage'] = 'There was no help found for this page';
+$string['couldnotgethelp'] = 'An error occurred trying to retrive the help page';
 $string['profileimage'] = 'Profile image';
 $string['primaryemailinvalid'] = 'Your primary email address is invalid';
 $string['addemail'] = 'Add email address';

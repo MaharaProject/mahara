@@ -29,7 +29,10 @@
 				<thead>
 					<tr>
 						<th></th>
-						<th>[<a href="" onClick="{$selectall}">{str section='activity' tag='selectall'}</a>]</th>
+						<th>[<a href="" onClick="{$selectall}">{str section='activity' tag='selectall'}</a>]
+                            {contextualhelp plugintype='core' pluginname='activity' section='watchlistselectall'}
+
+                        </th>
 					</tr>
 				</thead>
 				<tbody>

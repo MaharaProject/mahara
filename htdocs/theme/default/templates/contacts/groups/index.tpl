@@ -7,13 +7,13 @@
 
     		<div id="mygroups">
 		
-				<div id="addnewgroupdiv"><a href="create.php" id="addnewgroup">{str tag="creategroup"}</a></div>
+				<div id="addnewgroupdiv"><a href="create.php" id="addnewgroup">{str tag="creategroup"}</a></div>{contextualhelp plugintype='core' pluginname='groups' section='addgroupbutton'}
 
 			<table id="grouplist" class="tablerenderer">
 				<thead>
 					<tr>
 						<th>{str tag="groupname"}</th>
-						<th>{str tag="membercount"}</th>
+						<th>{str tag="membercount"}{contextualhelp plugintype='core' pluginname='groups' section='groupmembercountheader'}</th>
 						<th></th>
 					</tr>
 				</thead>

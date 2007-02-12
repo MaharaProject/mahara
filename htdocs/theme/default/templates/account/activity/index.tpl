@@ -17,7 +17,7 @@
 				{assign var="tag" value=type$tag1}
 				<option value="{$type->name}">{str section='activity' tag=$tag}</option>
 			{/foreach}
-			</select>
+			</select>{contextualhelp plugintype='core' pluginname='activity' section='activitytypeselect'}
 			</form>
 			<form method="post" onSubmit="{$markread}">
 			<table id="activitylist">

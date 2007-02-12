@@ -34,23 +34,28 @@ define('TITLE', get_string('creategroup'));
 $creategroup = pieform(array(
     'name'     => 'creategroup',
     'method'   => 'post',
+    'plugintype' => 'core',
+    'pluginname' => 'groups',
     'elements' => array(
         'name' => array(
             'type'  => 'text',
             'title' => get_string('groupname'),
             'rules' => array( 'required' => true ),
+            'help'  => true,
         ),
         'description' => array(
             'type'  => 'wysiwyg',
             'title' => get_string('groupdescription'),
             'rows'  => 10,
             'cols'  => 70,
+            'help'  => true,
         ),
         'members'     => array(
             'type'   => 'userlist',
             'title'  => get_string('groupmembers'),
             'rules'  => array( 'required' => true ),
             'filter' => false,
+            'help'  => true,
         ),
         'submit'   => array(
             'type'  => 'submitcancel',

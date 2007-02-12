@@ -40,6 +40,12 @@ $blogpost   = param_integer('blogpost');
 $uploads    = json_decode(param_variable('uploads'));
 $artefacts  = json_decode(param_variable('artefacts'));
 $body       = param_variable('body');
+if (!get_account_preference($USER->get('id'), 'wysiwyg')) {
+    $body = format_whitespace($body);
+}
+else {
+    $body = clean_text($body);
+}
 $tags       = param_variable('tags');
 
 $userid = $USER->get('id');

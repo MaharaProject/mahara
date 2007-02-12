@@ -45,6 +45,8 @@ if ($USER->get('admin') || $USER->get('staff')) {
 $createcommunity = pieform(array(
     'name'     => 'createcommunity',
     'method'   => 'post',
+    'plugintype' => 'core',
+    'pluginname' => 'communities',
     'elements' => array(
         'name' => array(
             'type'         => 'text',
@@ -62,6 +64,7 @@ $createcommunity = pieform(array(
             'title'        => get_string('membershiptype'),
             'options'      => $joinoptions,
             'defaultvalue' => 'open',
+            'help'         => true,
         ),
         'submit'   => array(
             'type'  => 'submitcancel',

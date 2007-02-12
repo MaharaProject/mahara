@@ -895,6 +895,7 @@ function pieform_configure() {
         'postsubmitcallback'    => 'formStopProcessing',
         'jserrormessage' => get_string('errorprocessingform'),
         'configdirs' => get_config('libroot') . 'form/',
+        'helpcallback' => 'pieform_get_help',
         'elements'   => array(
             'sesskey' => array(
                 'type'  => 'hidden',

@@ -475,14 +475,14 @@ class MaharaException extends Exception {
         $message = strip_tags($outputmessage);
         $message = htmlspecialchars_decode($message);
 
-        if (function_exists('smarty')) {
+        if (function_exists('smarty') && !$this instanceof ConfigSanityException) {
             $smarty = smarty();
             $smarty->assign('title', $outputtitle);
             $smarty->assign('message', $outputmessage);
             $smarty->display('error.tpl');
         }
         else {
-    echo <<<EOF
+            echo <<<EOF
 <html>
 <head>
     <title>$outputtitle</title>

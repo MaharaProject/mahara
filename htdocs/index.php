@@ -75,8 +75,12 @@ if (!$USER->is_logged_in()) {
                         'rules' => array(
                             'required' => true
                         ),
-                        'ignore' => count($institutions) == 1
-                    )
+                        'ignore' => count($institutions) == 1,
+                        'help' => true,
+                    ),
+                    'chelp' => array(
+                        'value' =>  get_help_icon('core', 'login', null, null, null, 'loginbox'), 
+                    ),
                 )
             ),
 

@@ -103,7 +103,8 @@ catch (Exception $e) {
         $errormessage = $e->getMessage();
     }
     ob_end_clean();
-    throw new Exception($errormessage);
+    $errormessage = get_string('dbconnfailed', 'error') . $errormessage;
+    throw new ConfigSanityException($errormessage);
 }
 try {
     load_config();

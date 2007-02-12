@@ -9,8 +9,6 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
     this.element = element;
     this.source = source;
     this.statevars = statevars ? statevars : {};
-    this.pathids = {'/':null};
-    this.cwd = '/';
     this.rootDirectory = {
         'name': get_string('home'),
         'parent': null,
@@ -138,9 +136,7 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
         else {
             var script = self.createfolderscript;
         }
-        if (self.cwd != '/') {
-            data['parentfolder'] = self.pathids[self.cwd];
-        }
+        data['parentfolder'] = self.currentDirectory.folderid;
         sendjsonrequest(script, data, 'POST', self.refresh);
         return true;
     }
@@ -212,7 +208,7 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
                  TBODY(null,
                   TR(null,TH({'colSpan':2},LABEL(null,get_string('createfolder')))),
                   TR(null,TH(null,LABEL(get_string('destination'))),
-                     TD(null, SPAN({'id':'createdest'},self.cwd))),
+                     TD(null, SPAN({'id':'createdest'},self.generatePath(self.currentDirectory)))),
                   TR(null,TH(null,LABEL(get_string('name'))),
                      TD(null,INPUT({'type':'text','class':'text','name':'name','value':'',
                                     'size':40}))),
@@ -251,8 +247,6 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
                     'folderid': r.id
                 }
             }
-            var dir = self.cwd + r.title + '/';
-            self.pathids[dir] = r.id;
             var link = A({'href':''}, r.title);
             connect(link, 'onclick', function (e) {
                 self.chdir(self.currentDirectory.children[r.title]);
@@ -274,6 +268,9 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
         self.currentDirectory = dirNode;
         if (typeof(self.changedircallback) == 'function') {
             self.changedircallback(dirNode.folderid, self.generatePath(dirNode));
+        }
+        if ($('createdest')) {
+            $('createdest').innerHTML = self.generatePath(dirNode);
         }
         self.filenames = {};
         self.filelist.doupdate({'folder': dirNode.folderid});
@@ -451,9 +448,8 @@ function FileUploader(element, uploadscript, statevars, foldername, folderid, up
 
         // Safari loads the upload page in a new window when the iframe has display set to none.
         if (navigator.userAgent.indexOf('Safari/') != -1) {
-            setDisplayForElement('width: 1px; height: 1px;', 'iframe'+self.nextupload);
+            setNodeAttribute('iframe'+self.nextupload, 'style', 'display: width: 0px; height: 0px; border: 0px;');
         }
-                                             //'style':'width: 1px; height: 1px;'}));
         setNodeAttribute(self.form, 'target', 'iframe' + self.nextupload);
 
         for (property in self.statevars) {

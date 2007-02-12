@@ -890,8 +890,6 @@ class Pieform {
      * without the breakage.
      */
     private function submit_js() {
-        $strprocessingform = get_string('processingform');
-
         $result = <<<EOF
 connect($('{$this->name}'), 'onsubmit', function(e) {
     if (typeof(tinyMCE) != 'undefined') { tinyMCE.triggerSave(); }
