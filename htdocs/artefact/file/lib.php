@@ -67,7 +67,7 @@ class PluginArtefactFile extends PluginArtefact {
     }
 
     public static function newuser($event, $user) {
-        update_record('usr', array('quota' => get_config_plugin('artefact', 'file', 'defaultquota')), array('id' => $user->id));
+        update_record('usr', array('quota' => get_config_plugin('artefact', 'file', 'defaultquota')), array('id' => $user['id']));
     }
     
     public static function get_toplevel_artefact_types() {
