@@ -261,6 +261,8 @@ function profileform_submit(Pieform $form, $values) {
         $form->json_reply(PIEFORM_ERR, get_string('profilefailedsaved','artefact.internal'));
     }
 
+    handle_event('updateuser', $USER->get('id'));
+
     if (count($email_errors)) {
         $form->json_reply(PIEFORM_ERR, array('message' => get_string('emailingfailed', 'artefact.internal', join(', ', $email_errors))));
     }
