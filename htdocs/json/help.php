@@ -34,10 +34,10 @@ json_headers();
 
 $plugintype = param_alpha('plugintype');
 $pluginname = param_alpha('pluginname');
-$page       = param_variable('page', null);
-$section    = param_variable('section', null);
-$form       = param_alphanum('form', null);
-$element    = param_alphanum('element', null);
+$page       = param_alphanumext('page', null);
+$section    = param_alphanumext('section', null);
+$form       = param_alphanumext('form', null);
+$element    = param_alphanumext('element', null);
 
 $location = get_config('docroot') ;
 $file = 'help/';
