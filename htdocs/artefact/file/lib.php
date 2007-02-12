@@ -138,6 +138,28 @@ class PluginArtefactFile extends PluginArtefact {
         return $jsstrings[$type];
     }
 
+    public static function jshelp($type) {
+        static $jshelp = array(
+            'file' => array(
+                'artefact.file' => array(
+                    'cancelfolder',
+                    'cancel',
+                    'createfolder',
+                    'delete',
+                    'description',
+                    'edit',
+                    'folderdescription',
+                    'name',
+                    'notice',
+                    'quota_message',
+                    'title',
+                    'uploadfile',
+                ),
+            ),
+        );
+        return $jshelp[$type];
+    }
+
 
     /**
      * Resyncs the allowed filetypes list with the XML configuration file.

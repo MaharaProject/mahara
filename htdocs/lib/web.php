@@ -148,8 +148,8 @@ EOF;
             if (count($bits) == 4) {
                 safe_require($bits[0], $bits[1]);
                 $pluginclass = generate_class_name($bits[0], $bits[1]);
+                $name = substr($bits[3], 0, strpos($bits[3], '.js'));
                 if (is_callable(array($pluginclass, 'jsstrings'))) {
-                    $name = substr($bits[3], 0, strpos($bits[3], '.js'));
                     $tempstrings = call_static_method($pluginclass, 'jsstrings', $name);
                     foreach ($tempstrings as $section => $tags) {
                         foreach ($tags as $tag) {
@@ -157,8 +157,16 @@ EOF;
                         }
                     }
                 }
+                if (is_callable(array($pluginclass, 'jshelp'))) {
+                    $tempstrings = call_static_method($pluginclass, 'jshelp', $name);
+                    foreach ($tempstrings as $section => $tags) {
+                        foreach ($tags as $tag) {
+                            $strings[$tag . '.help'] = get_help_icon($bits[0], $bits[1], null, null,
+                                                                     null, $tag);
+                        }
+                    }
+                }
                 if (is_callable(array($pluginclass, 'themepaths'))) {
-                    $name = substr($bits[3], 0, strpos($bits[3], '.js'));
                     $tmpthemepaths = call_static_method($pluginclass, 'themepaths', $name);
                     foreach ($tmpthemepaths as $themepath) {
                         $theme_list[$themepath] = theme_get_url($themepath);
