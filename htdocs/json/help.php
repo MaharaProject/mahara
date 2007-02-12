@@ -35,6 +35,7 @@ json_headers();
 $plugintype = param_alpha('plugintype');
 $pluginname = param_alpha('pluginname');
 $page       = param_variable('page', null);
+$section    = param_variable('section', null);
 $form       = param_alphanum('form', null);
 $element    = param_alphanum('element', null);
 
@@ -50,6 +51,9 @@ else {
 if ($page) {
     $page = str_replace('-', '/', $page);
     $file .= 'pages/' . $page . '.html';
+}
+else if ($section) {
+    $file .= 'sections/' . $section . '.html';
 }
 else if (!empty($form) && !empty($element)) {
     $file .= 'forms/' . $form . '.' . $element . '.html';

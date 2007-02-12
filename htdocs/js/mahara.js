@@ -249,7 +249,7 @@ contextualHelpSelected    = null;
 contextualHelpContainer   = null;
 contextualHelpDeferrable  = null;
 
-function contextualHelp(formName, helpName, pluginType, pluginName, page, ref) {
+function contextualHelp(formName, helpName, pluginType, pluginName, page, section, ref) {
     var key;
     var target = $(formName + '_' + helpName + '_container');
     var url = config.wwwroot + 'json/help.php';
@@ -263,6 +263,10 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, ref) {
         key = pluginType + '/' + pluginName + '/' + page;
         url_params.page = page;
     }
+    else if (section) {
+        key = pluginType + '/' + pluginName + '/' + section;
+        url_params.section = section;
+    } 
     else {
         key = pluginType + '/' + pluginName + '/' + helpName;
         url_params.form = formName;
@@ -290,7 +294,7 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, ref) {
             'style': 'position: absolute',
             'class': 'contextualHelp'
         },
-        'spinner'
+        IMG({'src': config.theme['images/loading.gif']})
     );
     var position = getElementPosition(ref);
     position.x += 10;

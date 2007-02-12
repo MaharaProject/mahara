@@ -76,7 +76,10 @@ if (!$USER->is_logged_in()) {
                             'required' => true
                         ),
                         'ignore' => count($institutions) == 1
-                    )
+                    ),
+                    'chelp' => array(
+                        'value' =>  get_help_icon('core', 'login', null, null, null, 'loginbox'), 
+                    ),
                 )
             ),
 

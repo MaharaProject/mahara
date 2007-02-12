@@ -454,17 +454,23 @@ function json_check_sesskey() {
 }
 
 function _param_retrieve($name) {
-    // if it's not set and we have a default
-    if (!isset($_REQUEST[$name]) && func_num_args() == 2) {
+    // prefer post
+    if (isset($_POST[$name])) {
+        $value = $_POST[$name];
+    } 
+    else if (isset($_GET[$name])) {
+        $value = $_GET[$name];
+    }
+    if (empty($value) && func_num_args() == 2) {
         $php_work_around = func_get_arg(1);
         return array($php_work_around, true);
     }
 
-    if (!isset($_REQUEST[$name])) {
+    if (empty($value)) {
         throw new ParameterException("Missing parameter '$name' and no default supplied");
     }
 
-    return array($_REQUEST[$name], false);
+    return array($value, false);
 }
 
 /**
@@ -910,13 +916,21 @@ function getoptions_country() {
  * 
  */
 
-function get_help_icon($plugintype, $pluginname, $form, $element, $page='') {
-    return ' <span class="help"><a href="" onclick="' . 
+function get_help_icon($plugintype, $pluginname, $form, $element, $page='', $section='') {
+    return ' <span class="help"><a href="" onclick="'. 
         hsc(
             'contextualHelp(' . json_encode($form) . ',' . 
             json_encode($element) . ',' . json_encode($plugintype) . ',' . 
-            json_encode($pluginname) . ',' . json_encode($page) . ',this); return false;'
+            json_encode($pluginname) . ',' . json_encode($page) . ',' . 
+            json_encode($section)
+            . ',this); return false;'
         ) . '">?</a></span>';
+}
+
+function pieform_get_help(Pieform $form, $element) {
+    return get_help_icon($form->get_property('plugintype'),
+        $form->get_property('pluginname'),
+        $form->get_name(), $element['name']);
 }
 
 function make_link($url) {
