@@ -18,7 +18,7 @@
                 {elseif $canacceptinvite} <p>{str tag='communityhaveinvite'} <a href="view.php?id={$community->id}&amp;joincontrol=acceptinvite">{str tag='acceptinvitecommunity'}</a> | <a href="view.php?id={$community->id}&amp;joincontrol=declineinvite">{str tag='declineinvitecommunity'}</a></p>{/if}
                 {if $member}
                     <div id="communitywatchlistcontrol">
-                    <button type="button" id="watchlistcontrolbutton" class="button" onclick="return toggleWatchlist();">{if $onwatchlist}{str tag="removefromwatchlist" section="activity"}{else}{str tag="addtowatchlist" section="activity"}{/if}</button>
+                    <input type="button" id="watchlistcontrolbutton" class="button" onclick="return toggleWatchlist();" value="{if $onwatchlist}{str tag=removefromwatchlist section=activity}{else}{str tag=addtowatchlist section=activity}{/if}">
                     </div>
                     <div class="communityviews">
                         <h5>{str tag='views'}</h5>
