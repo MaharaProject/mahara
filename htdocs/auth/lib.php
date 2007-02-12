@@ -728,16 +728,17 @@ class PluginAuth extends Plugin {
         return $subscriptions;
     }
 
-    public static function update_active_flag($event, $userid) {
+    public static function update_active_flag($event, $user) {
         $active = true;
 
-        $user = get_user($userid);
+        // ensure we have everything we need
+        $user = get_user($user['id']);
 
         $inactivetime = get_field('institution', 'defaultaccountinactiveexpire', 'name', $user->institution);
         if ($user->suspendedcusr) {
             $active = false;
         }
-        else if ($user->expiry < time()) {
+        else if ($user->expiry && $user->expiry < time()) {
             $active = false;
         }
         else if ($inactivetime && $user->lastlogin + $inactivetime < time()) {
@@ -748,7 +749,7 @@ class PluginAuth extends Plugin {
         }
 
         if ($active != $user->active) {
-            set_field('usr', 'active', (int)$active, 'id', $userid);
+            set_field('usr', 'active', (int)$active, 'id', $user->id);
         }
     }
 
