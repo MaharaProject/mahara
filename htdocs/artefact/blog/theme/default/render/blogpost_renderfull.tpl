@@ -3,7 +3,7 @@
  *}
 <div>
   <h3>{$artefacttitle}</h3>
-  <div>{$artefact->get('description')}</div>
+  <div>{$artefactdescription}</div>
   {if isset($attachments)}
   <table>
     <tbody>

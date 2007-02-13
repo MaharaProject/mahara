@@ -880,7 +880,11 @@ class ArtefactTypeImage extends ArtefactTypeFile {
 
     public function render_full($options) {
         $smarty = smarty();
-        $smarty->assign('src', get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->id);
+        $src = get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->id;
+        if (isset($options['viewid'])) {
+            $src .= '&amp;view=' . $options['viewid'];
+        }
+        $smarty->assign('src', $src);
         $smarty->assign('title', $this->title);
         $smarty->assign('description', $this->description);
         if (isset($options['width'])) {
