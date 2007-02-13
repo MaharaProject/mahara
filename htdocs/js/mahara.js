@@ -142,16 +142,23 @@ function sendjsonrequest(script, data, rtype, successcallback, errorcallback, qu
     }
     processingStart();
     data.sesskey = config.sesskey;
-    var req = getXMLHttpRequest();
-    if (rtype = 'GET') {
-        req.open('GET', script + '?' + queryString(data));
-        var d = sendXMLHttpRequest(req);
+
+    rtype = rtype.toLowerCase();
+
+    var xhrOptions = { 'method': rtype };
+
+    switch (rtype) {
+        case 'post':
+            xhrOptions.headers = { 'Content-type': 'application/x-www-form-urlencoded' };
+            xhrOptions.sendContent = MochiKit.Base.queryString(data);
+            break;
+        default:
+            xhrOptions.queryString = data;
+            break;
     }
-    else {
-        req.open('POST', script);
-        req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-        var d = sendXMLHttpRequest(req, queryString(data));
-    }
+
+    var d = doXHR(script, xhrOptions);
+
     d.addCallbacks(function (result) {
         var data = evalJSONRequest(result);
         var errtype = false;
@@ -502,6 +509,7 @@ function augment_tags_control(elem, returnContainer) {
 
 function quotaUpdate(quotaused, quota) {
     if (! $('quota_percentage') ) {
+        logWarning('quotaUpdate(', quotaused, quota, ') called but no id="quota_percentage" on page');
         return;
     }
 
@@ -546,20 +554,8 @@ function quotaUpdate(quotaused, quota) {
         update(data);
     }
     else {
-        var req = getXMLHttpRequest();
-        req.open('post', config.wwwroot + 'json/quota.php');
-        req.setRequestHeader('Content-type','application/x-www-form-urlencoded'); 
-        var d = sendXMLHttpRequest(req);
-        processingStart();
-        d.addCallbacks(
-            function (data) {
-                processingStop();
-                data = evalJSONRequest(data);
-                update(data);
-            },
-            function (error) {
-                processingStop();
-            }
-        );
+        sendjsonrequest(config.wwwroot + 'json/quota.php', {}, 'POST', function (data) {
+            update(data);
+        }, null, true);
     }
 }

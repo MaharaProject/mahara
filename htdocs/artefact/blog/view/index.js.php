@@ -43,6 +43,11 @@ $enc_delete_confirm = json_encode(get_string('deleteblogpost?', 'artefact.blog')
 $enc_postedon = json_encode(get_string('postedon', 'artefact.blog'));
 $enc_cannotdeleteblogpost = json_encode(get_string('cannotdeleteblogpost', 'artefact.blog'));
 
+
+$enc_publish_help = json_encode(get_help_icon('artefact', 'blog', null, null, null, 'publish'));
+$enc_edit_help = json_encode(get_help_icon('artefact', 'blog', null, null, null, 'edit'));
+$enc_delete_help = json_encode(get_help_icon('artefact', 'blog', null, null, null, 'delete'));
+
 return <<<EOJAVASCRIPT
 
 var postlist = new TableRenderer(
@@ -56,15 +61,18 @@ postlist.rowfunction = function(d, n, gd) {
     
     var status = TH({'id':'poststatus'+d.id});
     var pub;
+    var pubhelp;
     if (d.published == 1) {
         status.innerHTML = {$enc_published};
         pub = null;
+        pubhelp = null;
     }
     else {
         status.innerHTML = {$enc_draft};
         pub = INPUT(
             { 'type' : 'button' , 'class' : 'button', 'value' : {$enc_publish}}
         );
+        pubhelp = SPAN(null); pubhelp.innerHTML = {$enc_publish_help};
 
         connect(pub, 'onclick', function(e) {
             if (!confirm({$enc_publish_confirm})) {
@@ -75,6 +83,7 @@ postlist.rowfunction = function(d, n, gd) {
                                 if (!response.error) {
                                     $('poststatus'+d.id).innerHTML = {$enc_published};
                                     hideElement(pub);
+                                    hideElement(pubhelp);
                                 }
                             });
         });
@@ -99,10 +108,12 @@ postlist.rowfunction = function(d, n, gd) {
             }
         )
     );
+    var edithelp = SPAN(null); edithelp.innerHTML = {$enc_edit_help};
 
     var del = INPUT(
         { 'type' : 'button', 'class' : 'button', 'value': {$enc_delete} }
     );
+    var delhelp = SPAN(null); delhelp.innerHTML = {$enc_delete_help};
 
     var desctd = TD({'colSpan':3});
     desctd.innerHTML = d.description;
@@ -112,7 +123,7 @@ postlist.rowfunction = function(d, n, gd) {
             null,
             TH(null, d.title),
             status,
-            TH(null, [pub, ' ', edit, ' ', del])
+            TH(null, [pub, pubhelp, ' ', edit, edithelp, ' ', del, delhelp])
         ),
         TR(null, desctd)
     ];
