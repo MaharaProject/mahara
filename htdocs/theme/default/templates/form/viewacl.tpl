@@ -1,3 +1,4 @@
+<input type="hidden" name="accesslist" value="">
 <div id="viewacl_lhs">
     <div id="potentialpresetitems"></div>
     <div>
