@@ -50,11 +50,12 @@ if ($artefactid) {
     $options = array('viewid' => $viewid,
                      'path' => $path);
     if (in_array(FORMAT_ARTEFACT_RENDERFULL, $artefact->get_render_list())) {
-        $content = $artefact->render(FORMAT_ARTEFACT_RENDERFULL, $options);
+        $rendered = $artefact->render(FORMAT_ARTEFACT_RENDERFULL, $options);
     }
     else {
-        $content = $artefact->render(FORMAT_ARTEFACT_RENDERMETADATA, $options);
+        $rendered = $artefact->render(FORMAT_ARTEFACT_RENDERMETADATA, $options);
     }
+    $content = $rendered['html'];
 
     $viewhref = 'view.php?view=' . $viewid;
     $navlist = array('<a href="' . $viewhref .  '">' . $view->get('title') . '</a>');

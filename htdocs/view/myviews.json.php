@@ -87,7 +87,8 @@ if ($viewdata) {
             $classname = generate_artefact_class_name($artefactrec->artefacttype);
             $artefactobj = new $classname(0, array('title' => $artefactrec->title));
             $artefactobj->set('dirty', false);
-            $artname = $artefactobj->render(FORMAT_ARTEFACT_LISTSELF, array('link' => false));
+            $ra = $artefactobj->render(FORMAT_ARTEFACT_LISTSELF, array('link' => false));
+            $artname = $ra['html'];
             $data[$index[$artefactrec->view]]['artefacts'][] = array('id'    => $artefactrec->artefact,
                                                                      'title' => $artname);
         }

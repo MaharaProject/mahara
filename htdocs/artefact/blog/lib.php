@@ -223,7 +223,8 @@ class ArtefactTypeBlog extends ArtefactType {
         $smarty->assign('blockid', $blockid);
         $smarty->assign_by_ref('options', $options);
         $smarty->assign_by_ref('javascript', $javascript);
-        return $smarty->fetch('artefact:blog:render/blog_listchildren.tpl');
+        return array('html' => $smarty->fetch('artefact:blog:render/blog_listchildren.tpl'),
+                     'javascript' => null);
     }
 
 
@@ -264,7 +265,8 @@ class ArtefactTypeBlog extends ArtefactType {
         $smarty->assign('blockid', $blockid);
         $smarty->assign_by_ref('options', $options);
         $smarty->assign_by_ref('javascript', $javascript);
-        return $smarty->fetch('artefact:blog:render/blog_renderfull.tpl');
+        return array('html' => $smarty->fetch('artefact:blog:render/blog_renderfull.tpl'),
+                     'javascript' => null);
     }
 
     protected function get_metadata($options = array()) {
@@ -286,7 +288,8 @@ class ArtefactTypeBlog extends ArtefactType {
     protected function render_metadata($options) {
         $smarty = smarty();
         $smarty->assign('PROPERTIES', $this->get_metadata($options));
-        return $smarty->fetch('artefact:blog:render/blog_rendermetadata.tpl');
+        return array('html' => $smarty->fetch('artefact:blog:render/blog_rendermetadata.tpl'),
+                     'javascript' => null);
     }
 
                 
@@ -498,14 +501,16 @@ class ArtefactTypeBlogPost extends ArtefactType {
             require_once('artefact.php');
             foreach ($attachments as &$attachment) {
                 $f = artefact_instance_from_id($attachment->id);
-                $attachment->content = $f->render(FORMAT_ARTEFACT_LISTSELF, $options);
+                $rf = $f->render(FORMAT_ARTEFACT_LISTSELF, $options);
+                $attachment->content = $rf['html'];
             }
             $smarty->assign('attachments', $attachments);
         }
         $smarty->assign('postedbyon', get_string('postedbyon', 'artefact.blog',
                                                  display_name($this->owner),
                                                  format_date($this->ctime)));
-        return $smarty->fetch('artefact:blog:render/blogpost_renderfull.tpl');
+        return array('html' => $smarty->fetch('artefact:blog:render/blogpost_renderfull.tpl'),
+                     'javascript' => null);
     }
 
     public function attachment_id_list() {
@@ -553,7 +558,8 @@ class ArtefactTypeBlogPost extends ArtefactType {
     protected function render_metadata($options) {
         $smarty = smarty();
         $smarty->assign('PROPERTIES', $this->get_metadata());
-        return $smarty->fetch('artefact:blog:render/blog_rendermetadata.tpl');
+        return array('html' => $smarty->fetch('artefact:blog:render/blog_rendermetadata.tpl'),
+                     'javascript' => null);
     }
 
 
