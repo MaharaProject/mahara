@@ -42,17 +42,17 @@ function pieform_renderer_table(Pieform $form, $builtelement, $rawelement) {
             $closelegendpos = strpos($builtelement, '</legend>');
             if ($closelegendpos !== false) {
                 $closelegendpos += 9;
-                $builtelement = substr($builtelement, 0, $closelegendpos) . '<table>' . substr($builtelement, $closelegendpos);
+                $builtelement = substr($builtelement, 0, $closelegendpos) . '<table><tbody>' . substr($builtelement, $closelegendpos);
             }
             else {
                 $pos = strpos($builtelement, '>') + 1;
-                $builtelement = substr($builtelement, 0, $pos) . '<table>' . substr($builtelement, $pos);
+                $builtelement = substr($builtelement, 0, $pos) . '<table><tbody>' . substr($builtelement, $pos);
             }
         }
         else {
-            $builtelement = substr($builtelement, 0, 11) . '<table>' . substr($builtelement, 11);
+            $builtelement = substr($builtelement, 0, 11) . '<table><tbody>' . substr($builtelement, 11);
         }
-        $builtelement = substr($builtelement, 0, -12) . '</table></fieldset>';
+        $builtelement = substr($builtelement, 0, -12) . '</tbody></table></fieldset>';
 
         $result = "\t<tr>\n\t\t<td colspan=\"2\">";
         $result .= $builtelement;
