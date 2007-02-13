@@ -836,11 +836,6 @@ acronym {
 	border-bottom: 1px dotted #d4d1c0;
 	cursor: help;
 }
-.help { 
-	font-size: 9px; 
-	vertical-align: super; 
-	text-decoration: none;
-}
 .description { 
 	font-size: 9px; 
 	color: #7e7e7e; 
@@ -1225,6 +1220,10 @@ table#installer {
 #viewlist tbody ul {
 	padding: 0;
 	margin: 0 0 15px 15px;
+}
+#viewlist .viewbuttons,
+#viewlist form {
+   display:inline;
 }
 .maincontent #tree {
 	color: #819f18;
@@ -1694,3 +1693,16 @@ a.pieform-calendar-toggle img {
 /* FOOTER ENDS */
 /* CONTENT LAYOUT ENDS */
 
+
+.help {
+	vertical-align: super; 
+	text-decoration: none;
+}
+
+.help a,
+.help a:link,
+.help a:active,
+.help a:visited {
+	font-size: 9px !important;
+    font-weight:normal !important;
+}
