@@ -22,6 +22,7 @@ set -e
 . /usr/share/debconf/confmodule
 
 TMP_M4_FILE=/tmp/mahara.postinst.m4.tmp
+APACHE_CONF_FILE=/etc/apache/conf.d/100-mahara.conf
 
 case "$1" in
     configure)
@@ -56,8 +57,19 @@ case "$1" in
         db_get mahara/servername
         echo "define(__SERVERNAME__,${RET})dnl" >> $TMP_M4_FILE
         echo "define(__APACHELOGDIR__,/var/log/apache)dnl" >> $TMP_M4_FILE
-        m4 $TMP_M4_FILE /usr/share/mahara/apache.conf.template > /etc/apache/conf.d/100-mahara
+        m4 $TMP_M4_FILE /usr/share/mahara/apache.conf.template > $APACHE_CONF_FILE
         rm -f $TMP_M4_FILE
+
+        db_get mahara/serverredirects
+
+        if [ -n "${RET}" ]; then
+            echo '<VirtualHost *>' >> $APACHE_CONF_FILE
+            echo ${RET} | perl -ne '@s = split /\s*,\s*/; print "    ServerName ", shift @s, "\n" if @s; print map { "  ServerAlias $_\n" } @s;' >> $APACHE_CONF_FILE
+            db_get mahara/servername
+            echo "    Redirect Permanent / http://${RET}"
+            echo '</VirtualHost>' >> $APACHE_CONF_FILE
+        fi
+
 
         restart_apache;
         db_get mahara/servername
