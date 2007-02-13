@@ -533,6 +533,9 @@ div.sidebar p {
 	margin: 5px 0 10px 0;
 	padding: 0;
 }
+#column-right #login_login_institution_container select {
+    width: 200px;
+}
 #column-right #login label {
 	color: #547c22;
 	font-weight: bold;
