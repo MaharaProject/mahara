@@ -22,7 +22,7 @@ set -e
 . /usr/share/debconf/confmodule
 
 TMP_M4_FILE=/tmp/mahara.postinst.m4.tmp
-APACHE_CONF_FILE=/etc/apache/conf.d/100-mahara.conf
+APACHE_CONF_FILE=/etc/apache/conf.d/100-mahara
 
 case "$1" in
     configure)
