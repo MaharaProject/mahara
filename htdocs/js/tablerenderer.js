@@ -124,10 +124,12 @@ function TableRenderer(target, source, columns, options) {
 
         if (data.count > 0) {
             forEach(data.data, function(row) {
-                var tr = self.rowfunction(row, ++rownumber, data);
+                rownumber++;
+
+                row._rownumber = rownumber;
+                var tr = self.rowfunction(row, rownumber, data);
                 if ( row._class ) { tr.className = row._class; }
                 if ( row._id ) { tr.id = row._id; }
-                row._rownumber = rownumber;
                 
                 forEach(self.columns, function (column) {
                     if ( typeof(column) == 'string' ) {
