@@ -90,7 +90,7 @@
         $('{{$name}}').value=members.join(',');
     };
 </script>
-<table cellspacing="0">
+<table cellspacing="0" width="100%">
     <tr>
         {{if $filter}}
         <td colspan="3">
@@ -114,14 +114,14 @@
         </td>
     </tr>
     <tr>
-        <td style="width: 15em;">
+        <td style="width: 50%;">
             <select id="{{$name}}_potential" size="10" multiple="true" style="width: 100%;"><option></option></select>
         </td>
         <td>
             <button type="button" onClick="{{$name}}_moveopts('potential','members')">--&gt;</button><br>
             <button type="button" onClick="{{$name}}_moveopts('members','potential')">&lt;--</button>
         </td>
-        <td style="width: 15em;">
+        <td style="width: 50%;">
             <select size="10" multiple="true" id="{{$name}}_members" style="width: 100%;"><option></option>
 {{foreach from=$options key=id item=user}}
                 <option value="{{$id|escape}}">{{$user|escape}}</option>
