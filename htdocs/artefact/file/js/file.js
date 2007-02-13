@@ -354,7 +354,7 @@ function FileUploader(element, uploadscript, statevars, foldername, folderid, up
             showElement(self.form);
             keepElementInViewport(self.form);
         }});
-        var uploadhelp = SPAN(null);
+        var uploadhelp = SPAN({'id':'uploadfilehelp'});
         uploadhelp.innerHTML = get_string('uploadfile.help');
         self.openbutton = SPAN(null, button, uploadhelp);
 

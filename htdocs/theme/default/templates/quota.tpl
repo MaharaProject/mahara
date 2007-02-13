@@ -6,6 +6,7 @@
     <h3>{str tag="quota"}</h3>
     <p id="quota_message">
         {$QUOTA_MESSAGE}
+        {contextualhelp plugintype='artefact' pluginname='file' section='quota_message'}
     </p>
 {if $QUOTA_PERCENTAGE < 100}
     <div id="quota_fill" style="width: {$QUOTA_PERCENTAGE*2}px;">&nbsp;</div>
