@@ -85,7 +85,7 @@ class PluginSearchInternal extends PluginSearch {
                     ' . $prefix . 'usr u
                     LEFT JOIN ' . $prefix . 'artefact a ON u.id=a.owner
                 WHERE
-                    u.id <> 0 AND u.active == 1
+                    u.id <> 0 AND u.active = 1
                     AND ((
                             u.preferredname IS NULL
                             AND (
@@ -109,7 +109,7 @@ class PluginSearchInternal extends PluginSearch {
                     FROM ' . $prefix . 'artefact a
                         INNER JOIN ' . $prefix .'usr u ON u.id = a.owner
                     WHERE
-                        u.id <> 0 AND u.active == 1
+                        u.id <> 0 AND u.active = 1
                         AND ((
                                 u.preferredname IS NULL
                                 AND (
