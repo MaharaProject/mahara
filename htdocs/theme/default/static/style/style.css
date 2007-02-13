@@ -836,11 +836,6 @@ acronym {
 	border-bottom: 1px dotted #d4d1c0;
 	cursor: help;
 }
-.help { 
-	font-size: 9px; 
-	vertical-align: super; 
-	text-decoration: none;
-}
 .description { 
 	font-size: 9px; 
 	color: #7e7e7e; 
@@ -872,20 +867,16 @@ table#installer {
 .maincontent fieldset {
     border: 1px solid #819f18;
     padding: 0 0 0 1em;
-    width: 100%;
 }
 .maincontent fieldset table {
     margin: 0;
 }
 .maincontent fieldset.collapsed {
     height: 1em;
-    border-color: #819f18 transparent transparent;
+    border-color: #819f18 white white;
 }
-.maincontent fieldset.collapsed * {
+.maincontent fieldset.collapsed table {
     display: none;
-}
-.maincontent fieldset.collapsed legend, .maincontent fieldset.collapsed legend * {
-    display: block;
 }
 .maincontent legend {
     font-weight: bold;
@@ -1225,6 +1216,10 @@ table#installer {
 #viewlist tbody ul {
 	padding: 0;
 	margin: 0 0 15px 15px;
+}
+#viewlist .viewbuttons,
+#viewlist form {
+   display:inline;
 }
 .maincontent #tree {
 	color: #819f18;
@@ -1694,3 +1689,16 @@ a.pieform-calendar-toggle img {
 /* FOOTER ENDS */
 /* CONTENT LAYOUT ENDS */
 
+
+.help {
+	vertical-align: super; 
+	text-decoration: none;
+}
+
+.help a,
+.help a:link,
+.help a:active,
+.help a:visited {
+	font-size: 9px !important;
+    font-weight:normal !important;
+}
