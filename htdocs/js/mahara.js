@@ -502,6 +502,7 @@ function augment_tags_control(elem, returnContainer) {
 
 function quotaUpdate(quotaused, quota) {
     if (! $('quota_percentage') ) {
+        logWarning('quotaUpdate(', quotaused, quota, ') called but no id="quota_percentage" on page');
         return;
     }
 
@@ -546,20 +547,8 @@ function quotaUpdate(quotaused, quota) {
         update(data);
     }
     else {
-        var req = getXMLHttpRequest();
-        req.open('post', config.wwwroot + 'json/quota.php');
-        req.setRequestHeader('Content-type','application/x-www-form-urlencoded'); 
-        var d = sendXMLHttpRequest(req);
-        processingStart();
-        d.addCallbacks(
-            function (data) {
-                processingStop();
-                data = evalJSONRequest(data);
-                update(data);
-            },
-            function (error) {
-                processingStop();
-            }
-        );
+        sendjsonrequest(config.wwwroot + 'json/quota.php', {}, 'POST', function (data) {
+            update(data);
+        }, null, true);
     }
 }
