@@ -33,6 +33,16 @@ Description: Server name:
  Note that this is just the domain name, so for "http://my.site.com" you only
  need to enter "my.site.com"
 
+Template: mahara/serverredirects
+Type: string
+Default:
+Description: Server redirects:
+ Comma separated list of domain names that the server should permanently
+ redirect to the server name.
+ .
+ Note that this is just the domain name, so for "http://my.site.com" you only
+ need to enter "my.site.com"
+
 Template: mahara/smtphosts
 Type: string
 Default:
