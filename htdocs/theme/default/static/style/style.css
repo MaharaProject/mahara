@@ -867,20 +867,16 @@ table#installer {
 .maincontent fieldset {
     border: 1px solid #819f18;
     padding: 0 0 0 1em;
-    width: 100%;
 }
 .maincontent fieldset table {
     margin: 0;
 }
 .maincontent fieldset.collapsed {
     height: 1em;
-    border-color: #819f18 transparent transparent;
+    border-color: #819f18 white white;
 }
-.maincontent fieldset.collapsed * {
+.maincontent fieldset.collapsed table {
     display: none;
-}
-.maincontent fieldset.collapsed legend, .maincontent fieldset.collapsed legend * {
-    display: block;
 }
 .maincontent legend {
     font-weight: bold;
