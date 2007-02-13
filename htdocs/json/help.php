@@ -63,9 +63,9 @@ else if (!empty($form) && empty($element)) {
 }
 else {
     if ($page) {
-        json_reply(true, get_string('nohelpfoundpage'));
+        json_reply('local', get_string('nohelpfoundpage'));
     }
-    json_reply(true, get_string('nohelpfound'));
+    json_reply('local', get_string('nohelpfound'));
 }
 
 // now we have to try and locate the help file
@@ -106,7 +106,7 @@ if (empty($data) && empty($trieden)) {
 }
 
 if (empty($data)) {
-    json_reply(true, get_string('nohelpfound'));
+    json_reply('local', get_string('nohelpfound'));
 }
 
 $json = array('error' => false, 'content' => $data);
