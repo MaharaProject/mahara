@@ -36,7 +36,7 @@ $getstring = quotestrings(array('mahara' => array(
     'editaccess', 'editview', 'editviewinformation', 'submitted', 'submitview', 'submitviewquestion'
 )));
 
-
+$editcontrolshelp = get_help_icon('core', 'views', null, null, null, 'vieweditcontrols');
 
 $javascript = <<<JAVASCRIPT
 var viewlist = new TableRenderer(
@@ -74,10 +74,14 @@ function title(r, communities) {
     }
     var f = FORM({'id':('form'+r.id),'method':'post','enctype':'multipart/form-data',
                       'encoding':'multipart/form-data'},
-                 DIV(null,buttons),
-                 DIV(null,assess));
+                 DIV({'class': 'viewbuttons'}, buttons),
+                 DIV({'class': 'viewbuttons'}, assess));
+    var s = SPAN();
+    if (r._rownumber == 1) {
+        s.innerHTML = '{$editcontrolshelp}';
+    }
     return [TD(null,A({'href':'view.php?view='+r.id},r.title)),
-            TD(null,f)];
+            TD(null,f, s)];
 }
 
 function communityoption(community) {

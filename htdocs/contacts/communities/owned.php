@@ -51,7 +51,9 @@ var communitylist = new TableRenderer(
      },
      function (r) {
          var help = SPAN(null);
-         help.innerHTML = '{$edithelp}';
+         if (r._rownumber == 1) {
+             help.innerHTML = '{$edithelp}';
+         }
          return TD(null, A({'href': '{$editurl}' + r.id}, '{$editstr}'), help);
      }
      ]
