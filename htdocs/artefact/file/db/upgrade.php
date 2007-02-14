@@ -115,6 +115,13 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
         PluginArtefactFile::resync_filetype_list();
     }
 
+    if ($oldversion < 2007021400) {
+        $table = new XMLDBTable('artefact_file_files');
+        $field = new XMLDBField('oldextension');
+        $field->setAttributes(XMLDB_TYPE_TEXT);
+        add_field($table, $field);
+    }
+
     return $status;
 }
 
