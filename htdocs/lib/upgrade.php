@@ -388,6 +388,38 @@ function core_postinst() {
             $status = false;
         }
     }
+
+    // Attempt to create session directories
+    $sessionpath = get_config('dataroot') . 'sessions';
+    if (check_dir_exists($sessionpath)) {
+        // Create three levels of directories, named 0-9, a-f
+        $characters = array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f');
+        foreach ($characters as $c1) {
+            if (check_dir_exists("$sessionpath/$c1")) {
+                foreach ($characters as $c2) {
+                    if (check_dir_exists("$sessionpath/$c1/$c2")) {
+                        foreach ($characters as $c3) {
+                            if (!check_dir_exists("$sessionpath/$c1/$c2/$c3")) {
+                                $status = false;
+                                break(3);
+                            }
+                        }
+                    }
+                    else {
+                        $status = false;
+                        break(2);
+                    }
+                }
+            }
+            else {
+                $status = false;
+                break;
+            }
+        }
+    }
+    else {
+        $status = false;
+    }
     return $status;
 }
 
