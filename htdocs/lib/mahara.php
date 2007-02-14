@@ -661,11 +661,13 @@ function handle_event($event, $data) {
         throw new Exception("Invalid event");
     }
 
-    if (is_object($data)) {
+    if ($data instanceof ArtefactType) {
+        // leave it alone
+    }
+    else if (is_object($data)) {
         $data = (array)$data;
     }
-
-    if (is_numeric($data)) {
+    else if (is_numeric($data)) {
         $data = array('id' => $data);
     }
 
