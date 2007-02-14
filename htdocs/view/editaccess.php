@@ -56,7 +56,6 @@ if (!$data) {
 foreach ($data as &$item) {
     $item = (array)$item;
 }
-log_debug($data);
 
 // Get access for users, groups and communities
 $extradata = get_records_sql_array("
@@ -116,9 +115,11 @@ function editviewaccess_submit(Pieform $form, $values) {
     }
 
     $newusers = array();
-    foreach ($values['accesslist'] as $item) {
-        if ($item['type'] == 'user') {
-            $newusers[] = $item;
+    if ($values['accesslist']) {
+        foreach ($values['accesslist'] as $item) {
+            if ($item['type'] == 'user') {
+                $newusers[] = $item;
+            }
         }
     }
 
@@ -167,31 +168,33 @@ function editviewaccess_submit(Pieform $form, $values) {
     $time = db_format_timestamp(time());
 
     // View access
-    foreach ($values['accesslist'] as $item) {
-        $accessrecord = new StdClass;
-        $accessrecord->view = $viewid;
-        $accessrecord->startdate = db_format_timestamp($item['startdate']);
-        $accessrecord->stopdate  = db_format_timestamp($item['stopdate']);
-        switch ($item['type']) {
-            case 'public':
-            case 'loggedin':
-            case 'friends':
-                $accessrecord->accesstype = $item['type'];
-                insert_record('view_access', $accessrecord);
-                break;
-            case 'user':
-                $accessrecord->usr = $item['id'];
-                insert_record('view_access_usr', $accessrecord);
-                break;
-            case 'group':
-                $accessrecord->grp = $item['id'];
-                insert_record('view_access_group', $accessrecord);
-                break;
-            case 'community':
-                $accessrecord->community = $item['id'];
-                $accessrecord->tutoronly = $item['tutoronly'];
-                insert_record('view_access_community', $accessrecord);
-                break;
+    if ($values['accesslist']) {
+        foreach ($values['accesslist'] as $item) {
+            $accessrecord = new StdClass;
+            $accessrecord->view = $viewid;
+            $accessrecord->startdate = db_format_timestamp($item['startdate']);
+            $accessrecord->stopdate  = db_format_timestamp($item['stopdate']);
+            switch ($item['type']) {
+                case 'public':
+                case 'loggedin':
+                case 'friends':
+                    $accessrecord->accesstype = $item['type'];
+                    insert_record('view_access', $accessrecord);
+                    break;
+                case 'user':
+                    $accessrecord->usr = $item['id'];
+                    insert_record('view_access_usr', $accessrecord);
+                    break;
+                case 'group':
+                    $accessrecord->grp = $item['id'];
+                    insert_record('view_access_group', $accessrecord);
+                    break;
+                case 'community':
+                    $accessrecord->community = $item['id'];
+                    $accessrecord->tutoronly = $item['tutoronly'];
+                    insert_record('view_access_community', $accessrecord);
+                    break;
+            }
         }
     }
 

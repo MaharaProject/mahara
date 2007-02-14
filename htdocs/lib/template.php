@@ -533,9 +533,9 @@ function template_render($template, $mode, $data=array(), $view_id=null) {
             sendjsonrequest('{$wwwroot}json/renderartefact.php', render_options, 'GET', function (response) {
                 if (!response.error) {
                     real_target.innerHTML = response.data;
-                    forEach(getElementsByTagAndClassName('script', null, real_target), function(script) {
-                        eval(script.innerHTML);
-                    });
+                    if (response.javascript) {
+                        eval(response.javascript);
+                    }
                     if(format == 'listself') {
                         appendChildNodes(real_target, A({ href: '', onclick: 'removeListItem(this); return false;' }, '[x]'));
                     }
@@ -676,7 +676,11 @@ function template_render_artefact_block($blockname, $artefact, $format, $options
     $options['blockid'] = $blockname;
 
     if ($artefact instanceof ArtefactType) {
-        $block .= $artefact->render($format, $options);
+        $rendered = $artefact->render($format, $options);
+        if (!empty($rendered['javascript'])) {
+            $block .= '<script type="text/javascript">' . $rendered['javascript'] . '</script>';
+        }
+        $block .= $rendered['html'];
         if ($mode == TEMPLATE_RENDER_EDITMODE) {
             $block .= '<input type="hidden" name="template[' . $blockname . '][id]" value="' . hsc($artefact->get('id')) . '">';
             $block .= '<input type="hidden" name="template[' . $blockname . '][format]" value="' . hsc($format) . '">';
@@ -690,7 +694,11 @@ function template_render_artefact_block($blockname, $artefact, $format, $options
         foreach ($artefact as $id) {
             $block .= '<li>';
             $instance = artefact_instance_from_id($id);
-            $block .= $instance->render($format, $options);
+            $rendered = $instance->render($format, $options);
+            if (!empty($rendered['javascript'])) {
+                $block .= '<script type="text/javascript">' . $rendered['javascript'] . '</script>';
+            }
+            $block .= $rendered['html'];
             if ($mode == TEMPLATE_RENDER_EDITMODE) {
                 $block .= '<a href="" onclick="removeListItem(this);return false;">[x]</a>';
                 $block .= '<input type="hidden" name="template[' . $blockname . '][id][]" value="' . hsc($instance->get('id')) . '">';
@@ -706,7 +714,11 @@ function template_render_artefact_block($blockname, $artefact, $format, $options
         }
 
         $artefact = artefact_instance_from_id($artefact);
-        $block .= $artefact->render($format, $options);
+        $rendered = $artefact->render($format, $options);
+        if (!empty($rendered['javascript'])) {
+            $block .= '<script type="text/javascript">' . $rendered['javascript'] . '</script>';
+        }
+        $block .= $rendered['html'];
         if ($mode == TEMPLATE_RENDER_EDITMODE) {
             $block .= '<input type="hidden" name="template[' . $blockname . '][id]" value="' . hsc($artefact->get('id')) . '">';
             $block .= '<input type="hidden" name="template[' . $blockname . '][format]" value="' . hsc($format) . '">';

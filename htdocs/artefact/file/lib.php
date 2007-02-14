@@ -418,7 +418,8 @@ class ArtefactTypeFileBase extends ArtefactType {
     protected function render_metadata($options) {
         $smarty = smarty();
         $smarty->assign('PROPERTIES', $this->get_metadata());
-        return $smarty->fetch('artefact:file:file_render_metadata.tpl');
+        return array('html' => $smarty->fetch('artefact:file:file_render_metadata.tpl'),
+                     'javascript' => null);
     }
 
 
@@ -711,13 +712,15 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
             require_once('artefact.php');
             foreach ($childrecords as &$child) {
                 $c = artefact_instance_from_id($child->id);
-                $child->title = $c->render(FORMAT_ARTEFACT_LISTSELF, $options);
+                $rc = $c->render(FORMAT_ARTEFACT_LISTSELF, $options);
+                $child->title = $rc['html'];
                 $child->date = format_date(strtotime($child->mtime), 'strfdaymonthyearshort');
                 $child->iconsrc = theme_get_url('images/' . $child->artefacttype . '.gif');
             }
             $smarty->assign('children', $childrecords);
         }
-        return $smarty->fetch('artefact:file:folder_renderfull.tpl');
+        return array('html' => $smarty->fetch('artefact:file:folder_renderfull.tpl'),
+                     'javascript' => null);
     }
 
     public function listchildren($options) {
@@ -729,11 +732,13 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
             require_once('artefact.php');
             foreach ($childrecords as $child) {
                 $c = artefact_instance_from_id($child->id);
-                $children[] = $c->render(FORMAT_ARTEFACT_LISTSELF, $options);
+                $rc = $c->render(FORMAT_ARTEFACT_LISTSELF, $options);
+                $children[] = $rc['html'];
             }
             $smarty->assign('children', $children);
         }
-        return $smarty->fetch('artefact:file:folder_listchildren.tpl');
+        return array('html' => $smarty->fetch('artefact:file:folder_listchildren.tpl'),
+                     'javascript' => null);
     }
 
     public function describe_size() {
@@ -909,7 +914,8 @@ class ArtefactTypeImage extends ArtefactTypeFile {
             $smarty->assign('url', $url);
         }
         $smarty->assign('height', $height ? $height : '');
-        return $smarty->fetch('artefact:file:image_renderfull.tpl');
+        return array('html' => $smarty->fetch('artefact:file:image_renderfull.tpl'),
+                     'javascript' => null);
     }
 
     public static function get_render_list() {

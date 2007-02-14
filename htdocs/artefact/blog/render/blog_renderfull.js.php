@@ -38,7 +38,7 @@ var blog_renderfull{$blockid} = new TableRenderer(
     [
         function(r) {
             var td = TD();
-            td.innerHTML = r.content;
+            td.innerHTML = r.content.html;
             return td;
         }
     ]
