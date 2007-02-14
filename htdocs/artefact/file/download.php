@@ -45,7 +45,7 @@ if ($viewid && $fileid) {
 
     $file = artefact_instance_from_id($fileid);
     $path = $file->get_path();
-    $title = $file->get('title');
+    $title = $file->download_title();
     serve_file($path, $title);
 }
 
@@ -76,7 +76,7 @@ if (!$fileispublic) {
 }
 
 $path  = $file->get_path();
-$title = $file->get('title');
+$title = $file->download_title();
 serve_file($path, $title);
 
 ?>

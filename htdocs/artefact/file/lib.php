@@ -258,6 +258,11 @@ class ArtefactTypeFileBase extends ArtefactType {
 
     protected $adminfiles = 0;
     protected $size;
+    // The original filename extension (when the file is first
+    // uploaded) is saved here.  This is used as a workaround for IE's
+    // detecting filetypes by extension: when the file is downloaded,
+    // the extension can be appended to the name if it's not there
+    // already.
     protected $oldextension;
 
     public function __construct($id = 0, $data = null) {
@@ -540,6 +545,17 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         return $error;
     }
 
+
+    // Return the title with the original extension appended to it if
+    // it's not already there.
+    public function download_title() {
+        $extn = $this->get('oldextension');
+        $name = $this->get('title');
+        if (substr($name, -1-strlen($extn)) == '.' . $extn) {
+            return $name;
+        }
+        return $name . (substr($name, -1) == '.' ? '' : '.') . $extn;
+    }
 
 
     public static function get_admin_files($public) {
