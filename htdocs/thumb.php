@@ -62,12 +62,14 @@ switch ($type) {
                 throw new UserException('Invalid size for image specified');
             }
 
-            list($width, $height) = explode('x', $size);
-            if ($width > 300 || $height > 300) {
-                throw new UserException('Requested image size is too big');
-            }
-            if ($width % 5 != 0 || $height % 5 != 0) {
-                throw new UserException('Requested image size must be in multiples of 5 for width and height');
+            if ($size) {
+                list($width, $height) = explode('x', $size);
+                if ($width > 300 || $height > 300) {
+                    throw new UserException('Requested image size is too big');
+                }
+                if ($width % 5 != 0 || $height % 5 != 0) {
+                    throw new UserException('Requested image size must be in multiples of 5 for width and height');
+                }
             }
 
             if ($path = get_dataroot_image_path('artefact/internal/profileicons', $id, $size)) {
