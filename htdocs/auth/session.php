@@ -26,6 +26,38 @@
 
 defined('INTERNAL') || die();
 
+//
+// Set session settings
+//
+session_name('mahara');
+ini_set('session.save_path', '3;' . get_config('dataroot') . 'sessions');
+ini_set('session.gc_divisor', 1000);
+// Session timeout is stored in minutes in the database
+ini_set('session.gc_maxlifetime', get_config('session_timeout') * 60);
+ini_set('session.use_only_cookies', true);
+ini_set('session.cookie_path', get_mahara_install_subdirectory());
+ini_set('session.cookie_httponly', 1);
+
+
+// TEMPORARY: this will be REMOVED after the session path changing
+// has been around for a bit.
+// Attempt to create session directories
+$sessionpath = get_config('dataroot') . 'sessions';
+if (!is_dir("$sessionpath/0")) {
+    // Create three levels of directories, named 0-9, a-f
+    $characters = array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f');
+    foreach ($characters as $c1) {
+        check_dir_exists("$sessionpath/$c1");
+        foreach ($characters as $c2) {
+            check_dir_exists("$sessionpath/$c1/$c2");
+            foreach ($characters as $c3) {
+                check_dir_exists("$sessionpath/$c1/$c2/$c3");
+            }
+        }
+    }
+}
+
+
 /**
  * The session class handles session data and messages.
  *
@@ -48,7 +80,7 @@ class Session {
      */
     public function __construct() {
         // Resume an existing session if required
-        if (isset($_COOKIE['PHPSESSID'])) {
+        if (isset($_COOKIE[session_name()])) {
             session_start();
         }
     }
@@ -161,7 +193,8 @@ class Session {
     private function ensure_session() {
         if (empty($_SESSION)) {
             if (!session_id()) {
-                session_start();
+                //session_start();
+                @session_start();
             }
             $_SESSION = array(
                 'messages' => array()
