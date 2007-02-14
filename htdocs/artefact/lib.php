@@ -484,7 +484,8 @@ abstract class ArtefactType {
         $smarty->assign('nicectime', format_date($this->get('ctime')));
         $smarty->assign('nicemtime', format_date($this->get('mtime')));
 
-        return $smarty->fetch('artefact/render_metadata.tpl');
+        return array('html' => $smarty->fetch('artefact/render_metadata.tpl'),
+                     'javascript' => null);
 
     }
 
@@ -510,11 +511,15 @@ abstract class ArtefactType {
         if (in_array(FORMAT_ARTEFACT_LISTCHILDREN, $this->get_render_list())) {
       
             $html = '<ul>';
+            $js = '';
             foreach ($this->get_children_instances() as $child) {
-                $html .= '<li>' . $child->render(FORMAT_ARTEFACT_LISTSELF, $options) . "</li>\n";
+                $renderedchild = $child->render(FORMAT_ARTEFACT_LISTSELF, $options);
+                $html .= '<li>' . $renderedchild['html'] . "</li>\n";
+                $js .= $renderedchild['javascript'] . "\n";
             }
             $html .= '</ul>';
-            return $html;
+            return array('html' => $html,
+                         'javascript' => $js);
         }
 
         throw new Exception('This artefact cannot render to this format.');
@@ -545,7 +550,8 @@ abstract class ArtefactType {
         if (!empty($options['link']) && method_exists($this, 'linkself')) {
             $title .= ' (' . $this->linkself() . ')';
         }
-        return $title;
+        return array('html' => $title,
+                     'javascript' => null);
     }
 
     /**

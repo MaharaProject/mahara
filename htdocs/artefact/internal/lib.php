@@ -139,11 +139,9 @@ class ArtefactTypeProfile extends ArtefactType {
         return parent::set($field, $value);
     }
 
-    public function render($format, $options) {
-        if ($format == FORMAT_ARTEFACT_RENDERFULL) {
-            return $this->title;
-        }
-        return parent::render($format, $options);
+    public function render_full($options) {
+        return array('html' => $this->title,
+                     'javascript' => null);
     }
 
     public function get_icon() {
@@ -433,12 +431,23 @@ class ArtefactTypeEmail extends ArtefactTypeProfileField {
 class ArtefactTypeStudentid extends ArtefactTypeProfileField {}
 class ArtefactTypeIntroduction extends ArtefactTypeProfileField {}
 class ArtefactTypeWebAddress extends ArtefactTypeProfileField {
-    public function render($format, $options) {
-        if (($format == FORMAT_ARTEFACT_LISTSELF || $format == FORMAT_ARTEFACT_RENDERFULL)
-            && $options['link'] == true) {
-                return make_link($this->title);
+    public function listself($options) {
+        if ($options['link'] == true) {
+            $html = make_link($this->title);
         }
-        return parent::render($format, $options);
+        else {
+            $html = $this->title;
+        }
+        return array('html' => $html, 'javascript' => null);
+    }
+    public function render_full($options) {
+        if ($options['link'] == true) {
+            $html = make_link($this->title);
+        }
+        else {
+            $html = $this->title;
+        }
+        return array('html' => $html, 'javascript' => null);
     }
 }
 class ArtefactTypeOfficialwebsite extends ArtefactTypeWebAddress {}
@@ -448,12 +457,13 @@ class ArtefactTypeAddress extends ArtefactTypeProfileField {}
 class ArtefactTypeTown extends ArtefactTypeProfileField {}
 class ArtefactTypeCity extends ArtefactTypeProfileField {}
 class ArtefactTypeCountry extends ArtefactTypeProfileField {
-    public function render($format, $options) {
-        if ($format == FORMAT_ARTEFACT_LISTSELF || $format == FORMAT_ARTEFACT_RENDERFULL) {
-            $countries = getoptions_country();
-            return $countries[$this->title];
-        }
-        return parent::render($format, $options);
+    public function listself($options) {
+        $countries = getoptions_country();
+        return array('html' => $countries[$this->title], 'javascript' => null);
+    }
+    public function render_full($options) {
+        $countries = getoptions_country();
+        return array('html' => $countries[$this->title], 'javascript' => null);
     }
 }
 class ArtefactTypeHomenumber extends ArtefactTypeProfileField {}
