@@ -483,6 +483,19 @@ class ArtefactTypeProfileIcon extends ArtefactTypeProfileField {
     public static function is_note_private() {
         return true;
     }
+
+    public function render_full($options) {
+        $html = '<img src="' . get_config('wwwroot') . 'thumb.php?type=profileiconbyid&id=' . $this->id . '"'
+            . 'alt="' . hsc($this->title) . '"';
+        if (isset($options['width'])) {
+            $html .= ' width="' . hsc($options['width']) . '"';
+        }
+        if (isset($options['height'])) {
+            $html .= ' height="' . hsc($options['height']) . '"';
+        }
+        $html .= '>';
+        return array('html' => $html, 'javascript' => null);
+    }
 }
 
 
