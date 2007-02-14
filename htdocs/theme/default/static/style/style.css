@@ -972,12 +972,12 @@ table#installer {
 
 
 /* My Blogs styles */
-#myblogs .blogsettings .addicon {
+#myblogs .blogsettingscontainer .addiconcontainer {
 	margin: 0px 0 5px 0;
 	text-align: right;
 	float: right;
 }
-#myblogs .addicon {
+#myblogs .addiconcontainer {
 	margin: 5px 0 5px 0;
 	text-align: right;
 	padding: 5px 0;
@@ -987,7 +987,7 @@ table#installer {
 	text-align: right;
 	float: right;
 }
-#myblogs .blogsettings {
+#myblogs .blogsettingscontainer {
 	margin: 10px 0 10px 0;
 }
 #myblogs .addicon a,
@@ -995,11 +995,11 @@ table#installer {
 #myblogs .addicon a:active,
 #myblogs .addicon a:visited,
 #myblogs .addicon a:hover,
-#myblogs .blogsettings .addicon a,
-#myblogs .blogsettings .addicon a:link,
-#myblogs .blogsettings .addicon a:active,
-#myblogs .blogsettings .addicon a:visited,
-#myblogs .blogsettings .addicon a:hover { 
+#myblogs .blogsettingscontainer .addicon a,
+#myblogs .blogsettingscontainer .addicon a:link,
+#myblogs .blogsettingscontainer .addicon a:active,
+#myblogs .blogsettingscontainer .addicon a:visited,
+#myblogs .blogsettingscontainer .addicon a:hover { 
 	background: url(../images/btn_add.gif) no-repeat;
 	width: 120px;
 	height: 24px;
@@ -1117,11 +1117,11 @@ table#installer {
 	margin: 10px 0 10px 0;
 	text-align: right;
 }
-.maincontent #mygroups #addnewgroupdiv a,
-.maincontent #mygroups #addnewgroupdiv a:link,
-.maincontent #mygroups #addnewgroupdiv a:active,
-.maincontent #mygroups #addnewgroupdiv a:visited,
-.maincontent #mygroups #addnewgroupdiv a:hover {
+.maincontent #mygroups #addnewgroup a,
+.maincontent #mygroups #addnewgroup a:link,
+.maincontent #mygroups #addnewgroup a:active,
+.maincontent #mygroups #addnewgroup a:visited,
+.maincontent #mygroups #addnewgroup a:hover {
 	background: url(../images/btn_add_long.gif) no-repeat;
 	width: 120px;
 	height: 24px;
