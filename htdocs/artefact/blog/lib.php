@@ -222,9 +222,8 @@ class ArtefactTypeBlog extends ArtefactType {
         $smarty->assign('artefact', $this);
         $smarty->assign('blockid', $blockid);
         $smarty->assign_by_ref('options', $options);
-        $smarty->assign_by_ref('javascript', $javascript);
         return array('html' => $smarty->fetch('artefact:blog:render/blog_listchildren.tpl'),
-                     'javascript' => null);
+                     'javascript' => $javascript);
     }
 
 
@@ -264,9 +263,8 @@ class ArtefactTypeBlog extends ArtefactType {
         }
         $smarty->assign('blockid', $blockid);
         $smarty->assign_by_ref('options', $options);
-        $smarty->assign_by_ref('javascript', $javascript);
         return array('html' => $smarty->fetch('artefact:blog:render/blog_renderfull.tpl'),
-                     'javascript' => null);
+                     'javascript' => $javascript);
     }
 
     protected function get_metadata($options = array()) {

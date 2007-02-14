@@ -55,7 +55,11 @@ if ($artefactid) {
     else {
         $rendered = $artefact->render(FORMAT_ARTEFACT_RENDERMETADATA, $options);
     }
-    $content = $rendered['html'];
+    $content = '';
+    if (!empty($rendered['javascript'])) {
+        $content = '<script type="text/javascript">' . $rendered['javascript'] . '</script>';
+    }
+    $content .= $rendered['html'];
 
     $viewhref = 'view.php?view=' . $viewid;
     $navlist = array('<a href="' . $viewhref .  '">' . $view->get('title') . '</a>');

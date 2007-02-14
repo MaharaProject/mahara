@@ -48,6 +48,7 @@ if (!$renderedartefact) {
 
 $result = array(
     'data' => $renderedartefact['html'],
+    'javascript' => $renderedartefact['javascript'],
     'error' => false,
     'message' => false // No message for successful artefact rendering
 );
