@@ -532,7 +532,7 @@ function login_submit(Pieform $form, $values) {
     try {
         if (call_static_method($authclass, 'authenticate_user_account', $username, $password, $institution)) {
             // User logged in! Set a cookie to remember their institution
-            set_cookie('institution', $institution);
+            set_cookie('institution', $institution, 0, get_mahara_install_subdirectory());
             $oldlastlogin = null;
 
             if (!record_exists('usr', 'username', $username)) {
