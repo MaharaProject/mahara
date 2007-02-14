@@ -123,7 +123,8 @@ function ensure_sanity() {
     if (
         !check_dir_exists(get_config('dataroot') . 'smarty/compile') ||
         !check_dir_exists(get_config('dataroot') . 'smarty/cache') ||
-        !check_dir_exists(get_config('dataroot') . 'templates')) {
+        !check_dir_exists(get_config('dataroot') . 'templates') ||
+        !check_dir_exists(get_config('dataroot') . 'sessions')) {
         throw new ConfigSanityException(get_string('couldnotmakedatadirectories', 'error'));
     }
 }
@@ -1357,6 +1358,18 @@ function get_dir_contents($directory) {
         $contents[] = $dir;
     }
     return $contents;
+}
+
+/**
+ * Returns the subdirectory where mahara is installed, normally / but could
+ * be something different on a shared host. Useful for setting cookie paths.
+ *
+ * @return string
+ */
+function get_mahara_install_subdirectory() {
+    $wwwroot = get_config('wwwroot');
+    $wwwroot = preg_replace('#^https?://#', '', $wwwroot);
+    return substr($wwwroot, strpos($wwwroot, '/'));
 }
 
 ?>
