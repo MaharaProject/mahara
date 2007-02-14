@@ -7,7 +7,12 @@
 
     		<div id="mygroups">
 		
-				<div id="addnewgroupdiv"><a href="create.php" id="addnewgroup">{str tag="creategroup"}</a></div>{contextualhelp plugintype='core' pluginname='groups' section='addgroupbutton'}
+				<div id="addnewgroupdiv">
+                                  <span id="addnewgroup">
+                                        <a href="create.php" id="addnewgroup">{str tag="creategroup"}</a>
+                                  </span>
+                                  {contextualhelp plugintype='core' pluginname='groups' section='addgroupbutton'}
+                                </div>
 
 			<table id="grouplist" class="tablerenderer">
 				<thead>

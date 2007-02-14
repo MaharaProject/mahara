@@ -14,12 +14,18 @@
 			<h2>{str section="artefact.blog" tag="viewblog"} - {$blog->get('title')|escape}</h2>
 			
 			<div id="myblogs">
-                    <div class="blogsettings">
-								<div class="addicon">
+                    <div class="blogsettingscontainer">
+								<div class="addiconcontainer">
+                                                                    <span class="addicon">
 									<a href="{$WWWROOT}artefact/blog/post.php?blog={$blog->get('id')}">{str section="artefact.blog" tag="addpost"}</a>
+                                                                    </span>
+                                                                    {contextualhelp plugintype='artefact' pluginname='blog' section='blogaddpostbutton'}
 								</div>
+                      <span class="blogsettings">  
                          <a href="{$WWWROOT}artefact/blog/settings/?id={$blog->get('id')}">{str section="artefact.blog" tag="settings"}</a>
-                    </div>{contextualhelp plugintype='artefact' pluginname='blog' section='blogsettingsbutton'}{contextualhelp plugintype='artefact' pluginname='blog' section='blogaddpostbutton'}
+                      </span>
+                      {contextualhelp plugintype='artefact' pluginname='blog' section='blogsettingsbutton'}
+                    </div>
 
 		
 				<div><table id="postlist" class="tablerenderer">
