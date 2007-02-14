@@ -32,6 +32,48 @@ safe_require('search', 'internal');
  * The Solr search plugin which searches using the Solr search engine (mostly)
  */
 class PluginSearchSolr extends PluginSearchInternal {
+    public static function get_cron() {
+        return array(
+            (object)array(
+                'callfunction' => 'rebuild_all',
+                'hour'         => '4',
+                'minute'       => '25',
+            ),
+        );
+    }
+
+    public static function get_event_subscriptions() {
+        $subscriptions = array(
+            (object)array('plugin' => 'solr', 'event' => 'createuser',     'callfunction' => 'event_reindex_user'   ),
+            (object)array('plugin' => 'solr', 'event' => 'updateuser',     'callfunction' => 'event_reindex_user'   ),
+            (object)array('plugin' => 'solr', 'event' => 'suspenduser',    'callfunction' => 'event_reindex_user'   ),
+            (object)array('plugin' => 'solr', 'event' => 'unsuspenduser',  'callfunction' => 'event_reindex_user'   ),
+            (object)array('plugin' => 'solr', 'event' => 'deleteuser',     'callfunction' => 'event_reindex_user'   ),
+            (object)array('plugin' => 'solr', 'event' => 'undeleteuser',   'callfunction' => 'event_reindex_user'   ),
+            (object)array('plugin' => 'solr', 'event' => 'expireuser',     'callfunction' => 'event_reindex_user'   ),
+            (object)array('plugin' => 'solr', 'event' => 'unexpireuser',   'callfunction' => 'event_reindex_user'   ),
+            (object)array('plugin' => 'solr', 'event' => 'deactivateuser', 'callfunction' => 'event_reindex_user'   ),
+            (object)array('plugin' => 'solr', 'event' => 'activateuser',   'callfunction' => 'event_reindex_user'   ),
+            (object)array('plugin' => 'solr', 'event' => 'saveartefact',   'callfunction' => 'event_saveartefact'   ),
+            (object)array('plugin' => 'solr', 'event' => 'deleteartefact', 'callfunction' => 'event_deleteartefact' ),
+        );
+
+        return $subscriptions;
+    }
+
+    public static function event_reindex_user($event, $user) {
+        self::index_user($user);
+        self::commit();
+    }
+    public static function event_saveartefact($event, $artefact) {
+        self::index_artefact($artefact);
+        self::commit();
+    }
+    public static function event_deleteartefact($event, $artefact) {
+        self::delete_byidtype($artefact->get('id'), 'artefact');
+        self::commit();
+    }
+
     public static function has_config() {
         return true;
     }
@@ -39,10 +81,45 @@ class PluginSearchSolr extends PluginSearchInternal {
     public static function get_config_options() {
         $elements = array();
 
+        $enc_complete = json_encode(get_string('complete'));
+
+        $script = <<<END
+<script type="text/javascript">
+    function solr_reindex(link, type) {
+        var td = link.parentNode;
+        var progress = TD(null, IMG({'src': get_themeurl('images/loading.gif')}));
+        insertSiblingNodesAfter(td, progress);
+
+        sendjsonrequest(config.wwwroot + 'search/solr/reindex.json.php', {'type': type}, 'POST', function (data) {
+            replaceChildNodes(progress, {$enc_complete});
+        });
+    }
+</script>
+END;
+
         $elements['solrurl'] = array(
             'type'         => 'text',
             'title'        => get_string('solrurl', 'search.solr'), 
             'defaultvalue' => get_config_plugin('search', 'solr', 'solrurl'),
+        );
+        $elements['indexcontrol'] = array(
+            'type'     => 'fieldset',
+            'legend'   => get_string('indexcontrol', 'search.solr'),
+            'collapsible' => true,
+            'collapsed' => false,
+            'elements' => array(
+                array(
+                    'type'  => 'html',
+                    'value' => $script,
+                ),
+                array(
+                    'type'  => 'html',
+                    'value' => '<table><tbody>' 
+                    . '<tr><td><a href="" onclick="solr_reindex(this, \'user\'); return false;">' . hsc(get_string('reindexusers','search.solr')) . '</a></td></tr>'
+                    . '<tr><td><a href="" onclick="solr_reindex(this, \'artefact\'); return false;">' . hsc(get_string('reindexartefacts','search.solr')) . '</a></td></tr>'
+                    . '</tbody></table>',
+                ),
+            ),
         );
 
         return array(
@@ -84,11 +161,41 @@ class PluginSearchSolr extends PluginSearchInternal {
         return $results;
     }
 
+    public static function self_search($query_string, $limit, $offset) {
+    }
+
     // This function will rebuild the solr indexes
     public static function rebuild_all() {
         self::rebuild_users();
+        self::rebuild_artefacts();
         self::commit();
         self::optimize();
+    }
+
+    public static function rebuild_artefacts() {
+        log_debug('Starting rebuild_artefacts()');
+
+        self::delete_bytype('artefact');
+
+        $artefacts = get_recordset('artefact', '', '', '', '*,' . db_format_tsfield('ctime') . ',' . db_format_tsfield('mtime'));
+
+        while ($artefact = $artefacts->FetchRow()) {
+            $doc = array(
+                'id'                 => $artefact['id'],
+                'owner'              => $artefact['owner'],
+                'ref_artefacttype'   => $artefact['artefacttype'],
+                'type'               => 'artefact',
+                'title'              => $artefact['title'],
+                'description'        => $artefact['description'],
+                'tags'               => join(', ', get_column('artefact_tag', 'tag', 'artefact', $artefact['id'])),
+                'ctime'              => $artefact['ctime'],
+                'mtime'              => $artefact['mtime'],
+            );
+
+            self::add_document($doc);
+        }
+
+        log_debug('Completed rebuild_artefacts()');
     }
 
     public static function rebuild_users() {
@@ -96,7 +203,7 @@ class PluginSearchSolr extends PluginSearchInternal {
 
         self::delete_bytype('user');
 
-        $users = get_recordset('usr');
+        $users = get_recordset('usr', 'active', '1');
         safe_require('artefact', 'internal');
         $publicfields = array_keys(ArtefactTypeProfile::get_public_fields());
 
@@ -104,24 +211,7 @@ class PluginSearchSolr extends PluginSearchInternal {
             if ($user['id'] == 0) {
                 continue;
             }
-
-            $doc = array(
-                'id'                  => $user['id'],
-                'owner'               => $user['id'],
-                'type'                => 'user',
-                'text_name'           => $user['preferredname'],
-                'store_institution'   => $user['institution'],
-                'store_email'         => $user['email'],
-                'store_username'      => $user['username'],
-                'store_preferredname' => $user['preferredname'],
-                'store_firstname'     => $user['firstname'],
-                'store_lastname'      => $user['lastname'],
-            );
-            if (empty($doc['text_name'])) {
-                $doc['text_name'] = $user['firstname'] . ' ' . $user['lastname'];
-            }
-
-            self::add_document($doc);
+            self::index_user($user);
         }
 
         $users->close();
@@ -129,17 +219,88 @@ class PluginSearchSolr extends PluginSearchInternal {
         log_debug('Completed rebuild_users()');
     }
 
+    private static function index_artefact($artefact) {
+        if (!($artefact instanceof ArtefactType)) {
+            log_warn('artefact event received without ArtefactType object');
+            return;
+        }
+
+        $doc = array(
+            'id'                  => $artefact->get('id'),
+            'owner'               => $artefact->get('owner'),
+            'type'                => 'artefact',
+            'title'               => $artefact->get('title'),
+            'description'         => $artefact->get('description'),
+            'tags'                => join(', ', $artefact->get('tags')),
+            'ctime'               => $artefact->get('ctime'),
+            'mtime'               => $artefact->get('mtime'),
+        );
+
+        self::add_document($doc);
+    }
+
+    private static function index_user($user) {
+        if (!isset($user['id'])) {
+            throw new InvalidArgumentException('Trying to index user with no id');
+        }
+        if (
+            !isset($user['preferredname'])
+            || !isset($user['institution'])
+            || !isset($user['email'])
+            || !isset($user['username'])
+            || !isset($user['preferredname'])
+            || !isset($user['firstname'])
+            || !isset($user['lastname'])
+            || !isset($user['institution'])
+        ) {
+            $user = get_record('usr', 'id', $user['id']);
+            if ($user) {
+                $user = (array)$user;
+            }
+        }
+
+        if (!$user['active']) {
+            self::delete_byidtype($user['id'], 'user');
+            return;
+        }
+        
+        // @todo: need to index public profile fields
+        $doc = array(
+            'id'                  => $user['id'],
+            'owner'               => $user['id'],
+            'type'                => 'user',
+            'index_name'          => $user['preferredname'],
+            'ref_institution'     => $user['institution'],
+            'store_email'         => $user['email'],
+            'store_username'      => $user['username'],
+            'store_preferredname' => $user['preferredname'],
+            'store_firstname'     => $user['firstname'],
+            'store_lastname'      => $user['lastname'],
+        );
+        if (empty($doc['index_name'])) {
+            $doc['index_name'] = $user['firstname'] . ' ' . $user['lastname'];
+        }
+
+        self::add_document($doc);
+    }
+
     public static function commit() {
+        log_debug('Solr commit');
         self::send_update('<commit />');
     }
 
     function optimize() {
+        log_debug('Solr optimize');
         self::send_update('<optimize />');
     }
 
 
     public static function delete_bytype($type) {
-        self::send_update('<delete><query>type:' . htmlentities($type) . '</query></delete');
+        self::send_update('<delete><query>type:' . htmlentities($type) . '</query></delete>');
+    }
+
+    public static function delete_byidtype($id, $type) {
+        self::send_update('<delete><query>id:' . htmlentities($id) . ' AND type:' . htmlentities($type) . '</query></delete>');
     }
 
     /**
@@ -155,6 +316,19 @@ class PluginSearchSolr extends PluginSearchInternal {
 
         if (!$snoopy->submit($url, $message)) {
             throw new Exception('Request to solr failed');
+        }
+
+        $dom = new DOMDocument;
+        if (!@$dom->loadXML($snoopy->results)) {
+            log_warn('PluginSearchSolr::send_update (Failed to parse response)' . $snoopy->results);
+            throw new Exception('Parsing Solr response failed');
+        }
+
+        $root = $dom->getElementsByTagName('result'); // get root node
+        $root = $root->item(0);
+        if ($root->getAttribute('status') != 0) {
+            log_warn('PluginSearchSolr::send_update (Got non-zero return status)' . $snoopy->results);
+            throw new Exception('Solr update failed');
         }
     }
 

@@ -26,4 +26,7 @@
 
 defined('INTERNAL') || die();
 
-$string['solrurl']     = 'Solr URL';
+$string['solrurl']      = 'Solr URL';
+$string['indexcontrol'] = 'Index Control';
+$string['reindexusers'] = 'Re-Index Users';
+$string['reindexartefacts'] = 'Re-Index Artefacts';
