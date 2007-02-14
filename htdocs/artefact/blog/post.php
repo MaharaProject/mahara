@@ -288,6 +288,7 @@ function attachtopost(data) {
     if (fileattached_id(rowid) || data.error) {
         return;
     }
+    var ext = data.oldextension ? data.oldextension : '';
     appendChildNodes(
         attached.tbody,
         TR(
@@ -299,7 +300,8 @@ function attachtopost(data) {
                     data.title,
                     data.description,
                     data.tags,
-                    [INPUT(
+                    [SPAN({'style':'display: none;'}, ext),
+                     INPUT(
                         {'type':'button', 'class':'button', 'value':{$getstring['remove']},
                         'onclick':"removefrompost('"+rowid+"')"}
                         ),
@@ -352,6 +354,7 @@ function saveblogpost() {
                 'id':idparts[1],
                 'title':scrapeText(attached.tbody.childNodes[i].childNodes[1]),
                 'description':scrapeText(attached.tbody.childNodes[i].childNodes[2]),
+                'extn':scrapeText(attached.tbody.childNodes[i].childNodes[4].childNodes[0]),
                 'tags':scrapeText(attached.tbody.childNodes[i].childNodes[3])
             };
             uploads.push(record);

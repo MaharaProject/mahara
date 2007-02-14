@@ -258,6 +258,7 @@ class ArtefactTypeFileBase extends ArtefactType {
 
     protected $adminfiles = 0;
     protected $size;
+    protected $oldextension;
 
     public function __construct($id = 0, $data = null) {
         parent::__construct($id, $data);
@@ -301,7 +302,8 @@ class ArtefactTypeFileBase extends ArtefactType {
         $data = (object)array(
             'artefact'      => $this->get('id'),
             'size'          => $this->get('size'),
-            'adminfiles'    => $this->get('adminfiles')
+            'adminfiles'    => $this->get('adminfiles'),
+            'oldextension'  => $this->get('oldextension')
         );
 
         if ($new) {
@@ -524,6 +526,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         $f = self::new_file($um->file['tmp_name'], $data);
         $f->set('owner', $USER->get('id'));
         $f->set('size', $size);
+        $f->set('oldextension', $um->original_filename_extension());
         $f->commit();
         $id = $f->get('id');
         // Save the file using its id as the filename, and use its id modulo

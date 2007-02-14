@@ -736,6 +736,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
         $result = new StdClass;
         $tempdir = self::$blogattachmentroot . $dirname;
         $result->error = $um->process_file_upload($tempdir, $filename);
+        $result->oldextension = $um->original_filename_extension();
         $tempfile = $tempdir . '/' . $filename;
         safe_require('artefact', 'file');
         $result->type = ArtefactTypeFile::detect_artefact_type($tempfile);
@@ -746,7 +747,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
     /**
      * Save a temporary uploaded file to the myfiles area.
      */
-    public function save_attachment($directory, $filename, $title, $description, $tags) {
+    public function save_attachment($directory, $filename, $title, $description, $oldextension, $tags) {
 
         // Create the blogfiles folder if it doesn't exist yet.
         $blogfilesid = self::blogfiles_folder_id();
@@ -765,6 +766,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
         $data->owner = $USER->get('id');
         $data->adminfiles = 0; // No admin blogs yet...
         $data->parent = $blogfilesid;
+        $data->oldextension = $oldextension;
         
         $path = self::$blogattachmentroot . $directory . '/' . $filename;
 

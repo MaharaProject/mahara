@@ -191,6 +191,16 @@ class upload_manager {
         }
     }
 
+    public function original_filename_extension() {
+        if (isset($this->file)
+            && !empty($this->file['name']) 
+            && preg_match("/\.([^\.]+)$/", $this->file['name'], $m)) {
+            return $m[1];
+        }
+        return null;
+    }
+
+
 }
 
 /**************************************************************************************

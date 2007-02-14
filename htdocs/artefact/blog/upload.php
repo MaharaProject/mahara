@@ -47,6 +47,7 @@ $attach = ArtefactTypeBlogPost::save_attachment_temporary('userfile', session_id
 if (!$attach->error) {
     $result->error = false;
     $result->artefacttype = $attach->type;
+    $result->oldextension = $attach->oldextension;
     $result->message = get_string('uploadoffilecomplete', 'artefact.file', $result->title);
 }
 else {
