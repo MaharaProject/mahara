@@ -39,71 +39,7 @@ $section    = param_alphanumext('section', null);
 $form       = param_alphanumext('form', null);
 $element    = param_alphanumext('element', null);
 
-$location = get_config('docroot') ;
-$file = 'help/';
-
-if ($plugintype != 'core') {
-    $location .= $plugintype . '/' . $pluginname . '/lang/';
-}
-else {
-    $location .= 'lang/';
-}
-if ($page) {
-    $page = str_replace('-', '/', $page);
-    $file .= 'pages/' . $page . '.html';
-}
-else if ($section) {
-    $file .= 'sections/' . $section . '.html';
-}
-else if (!empty($form) && !empty($element)) {
-    $file .= 'forms/' . $form . '.' . $element . '.html';
-}
-else if (!empty($form) && empty($element)) {
-    $file .= 'forms/' . $form . '.html';
-}
-else {
-    if ($page) {
-        json_reply('local', get_string('nohelpfoundpage'));
-    }
-    json_reply('local', get_string('nohelpfound'));
-}
-
-// now we have to try and locate the help file
-$lang = current_language();
-if ($lang == 'en.utf8') {
-    $trieden = true;
-}
-else {
-    $trieden = false;
-}
-
-// try the current language
-$langfile = $location . $lang . '/' . $file;
-if (is_readable($langfile)) {
-    $data = file_get_contents($langfile);
-}
-
-// if it's not found, try the parent language if there is one...
-if (empty($data) && empty($trieden)) {
-    $langfile = $location . $lang . '/langconfig.php';
-    if ($parentlang = get_string_from_file('parentlanguage', $langfile)) {
-        if ($parentlang == 'en.utf8') {
-            $trieden = true;
-        }
-        $langfile = $location . $parentlang . '/' . $file;
-        if (is_readable($langfile)) {
-            $data = file_get_contents($langfile);
-        }
-    }
-}
-
-// if it's STILL not found, and we haven't already tried english ...
-if (empty($data) && empty($trieden)) {
-    $langfile = $location .  'en.utf8/' . $file;
-    if (is_readable($langfile)) {
-        $data = file_get_contents($langfile);
-    }
-}
+$data = get_helpfile($plugintype, $pluginname, $form, $element, $page, $section);
 
 if (empty($data)) {
     json_reply('local', get_string('nohelpfound'));

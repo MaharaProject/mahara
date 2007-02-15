@@ -85,6 +85,10 @@ foreach ( $element_list as $element => $type ) {
         $elements[$element]['defaultvalue'] = 'nz';
     }
 
+    if (get_helpfile_location('artefact', 'internal', 'profileform', $element)) {
+        $elements[$element]['help'] = true;
+    }
+
     if (isset($profilefields[$element])) {
         $elements[$element]['defaultvalue'] = $profilefields[$element];
     }
@@ -270,6 +274,7 @@ function profileform_submit(Pieform $form, $values) {
     $form->json_reply(PIEFORM_OK, get_string('profilesaved','artefact.internal'));
 
 }
+
 
 $smarty = smarty(array(), array(), array(
     'mahara' => array('cantremovedefaultemail'),

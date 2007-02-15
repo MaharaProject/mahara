@@ -157,6 +157,81 @@ function get_string($identifier, $section='mahara') {
     return get_string_location($identifier, $section, $variables);
 }
 
+function get_helpfile($plugintype, $pluginname, $form, $element, $page=null, $section=null) {
+    if ($langfile = get_helpfile_location($plugintype, $pluginname, $form, $element, $page, $section)) {
+        return file_get_contents($langfile);
+    }
+    return false;
+}
+
+function get_helpfile_location($plugintype, $pluginname, $form, $element, $page=null, $section=null) {
+
+    $location = get_config('docroot') ;
+    $file = 'help/';
+
+    if ($plugintype != 'core') {
+        $location .= $plugintype . '/' . $pluginname . '/lang/';
+    }
+    else {
+        $location .= 'lang/';
+    }
+    if ($page) {
+        $page = str_replace('-', '/', $page);
+        $file .= 'pages/' . $page . '.html';
+    }
+    else if ($section) {
+        $file .= 'sections/' . $section . '.html';
+    }
+    else if (!empty($form) && !empty($element)) {
+        $file .= 'forms/' . $form . '.' . $element . '.html';
+    }
+    else if (!empty($form) && empty($element)) {
+        $file .= 'forms/' . $form . '.html';
+    }
+    else {
+        return false;
+    }
+
+    // now we have to try and locate the help file
+    $lang = current_language();
+    if ($lang == 'en.utf8') {
+        $trieden = true;
+    }
+    else {
+        $trieden = false;
+    }
+
+    // try the current language
+    $langfile = $location . $lang . '/' . $file;
+    log_debug($langfile);
+    if (is_readable($langfile)) {
+        return $langfile;
+    }
+
+    // if it's not found, try the parent language if there is one...
+    if (empty($data) && empty($trieden)) {
+        $langfile = $location . $lang . '/langconfig.php';
+        if ($parentlang = get_string_from_file('parentlanguage', $langfile)) {
+            if ($parentlang == 'en.utf8') {
+                $trieden = true;
+            }
+            $langfile = $location . $parentlang . '/' . $file;
+            if (is_readable($langfile)) {
+                return $langfile;
+            }
+        }
+    }
+
+    // if it's STILL not found, and we haven't already tried english ...
+    if (empty($data) && empty($trieden)) {
+        $langfile = $location .  'en.utf8/' . $file;
+        if (is_readable($langfile)) {
+            return $langfile;
+        }
+    }
+    return false;
+}
+
 // get a string without sprintfing it.
 function get_raw_string($identifier, $section='mahara') {
     // For a raw string we don't want to format any arguments using
