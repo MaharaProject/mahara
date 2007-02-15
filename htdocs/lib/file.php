@@ -27,210 +27,7 @@
 
 defined('INTERNAL') || die();
 
-define('BYTESERVING_BOUNDARY', 's1k2o3d4a5k6s7'); //unique string constant
-
-/**
- * @return List of information about file types based on extensions. 
- *   Associative array of extension (lower-case) to associative array
- *   from 'element name' to data. Current element names are 'type' and 'icon'.
- *   Unknown types should use the 'xxx' entry which includes defaults. 
- */
-//function get_mimetypes_array() {
-//    return array (
-//        'xxx'  => array ('type'=>'document/unknown', 'icon'=>'unknown.gif'),
-//        '3gp'  => array ('type'=>'video/quicktime', 'icon'=>'video.gif'),
-//        'ai'   => array ('type'=>'application/postscript', 'icon'=>'image.gif'),
-//        'aif'  => array ('type'=>'audio/x-aiff', 'icon'=>'audio.gif'),
-//        'aiff' => array ('type'=>'audio/x-aiff', 'icon'=>'audio.gif'),
-//        'aifc' => array ('type'=>'audio/x-aiff', 'icon'=>'audio.gif'),
-//        'applescript'  => array ('type'=>'text/plain', 'icon'=>'text.gif'),
-//        'asc'  => array ('type'=>'text/plain', 'icon'=>'text.gif'),
-//        'asm'  => array ('type'=>'text/plain', 'icon'=>'text.gif'),
-//        'au'   => array ('type'=>'audio/au', 'icon'=>'audio.gif'),
-//        'avi'  => array ('type'=>'video/x-ms-wm', 'icon'=>'avi.gif'),
-//        'bmp'  => array ('type'=>'image/bmp', 'icon'=>'image.gif'),
-//        'c'    => array ('type'=>'text/plain', 'icon'=>'text.gif'),
-//        'cct'  => array ('type'=>'shockwave/director', 'icon'=>'flash.gif'),
-//        'cpp'  => array ('type'=>'text/plain', 'icon'=>'text.gif'),
-//        'cs'   => array ('type'=>'application/x-csh', 'icon'=>'text.gif'),
-//        'css'  => array ('type'=>'text/css', 'icon'=>'text.gif'),
-//        'dv'   => array ('type'=>'video/x-dv', 'icon'=>'video.gif'),
-//        'dmg'  => array ('type'=>'application/octet-stream', 'icon'=>'dmg.gif'),
-//        'doc'  => array ('type'=>'application/msword', 'icon'=>'word.gif'),
-//        'dcr'  => array ('type'=>'application/x-director', 'icon'=>'flash.gif'),
-//        'dif'  => array ('type'=>'video/x-dv', 'icon'=>'video.gif'),
-//        'dir'  => array ('type'=>'application/x-director', 'icon'=>'flash.gif'),
-//        'dxr'  => array ('type'=>'application/x-director', 'icon'=>'flash.gif'),
-//        'eps'  => array ('type'=>'application/postscript', 'icon'=>'pdf.gif'),
-//        'gif'  => array ('type'=>'image/gif', 'icon'=>'image.gif'),
-//        'gtar' => array ('type'=>'application/x-gtar', 'icon'=>'zip.gif'),
-//        'tgz'   => array ('type'=>'application/g-zip', 'icon'=>'zip.gif'),
-//        'gz'   => array ('type'=>'application/g-zip', 'icon'=>'zip.gif'),
-//        'gzip' => array ('type'=>'application/g-zip', 'icon'=>'zip.gif'),
-//        'h'    => array ('type'=>'text/plain', 'icon'=>'text.gif'),
-//        'hpp'  => array ('type'=>'text/plain', 'icon'=>'text.gif'),
-//        'hqx'  => array ('type'=>'application/mac-binhex40', 'icon'=>'zip.gif'),
-//        'html' => array ('type'=>'text/html', 'icon'=>'html.gif'),
-//        'htm'  => array ('type'=>'text/html', 'icon'=>'html.gif'),
-//        'java' => array ('type'=>'text/plain', 'icon'=>'text.gif'),
-//        'jcb'  => array ('type'=>'text/xml', 'icon'=>'jcb.gif'),
-//        'jcl'  => array ('type'=>'text/xml', 'icon'=>'jcl.gif'),
-//        'jcw'  => array ('type'=>'text/xml', 'icon'=>'jcw.gif'),
-//        'jmt'  => array ('type'=>'text/xml', 'icon'=>'jmt.gif'),
-//        'jmx'  => array ('type'=>'text/xml', 'icon'=>'jmx.gif'),
-//        'jpe'  => array ('type'=>'image/jpeg', 'icon'=>'image.gif'),
-//        'jpeg' => array ('type'=>'image/jpeg', 'icon'=>'image.gif'),
-//        'jpg'  => array ('type'=>'image/jpeg', 'icon'=>'image.gif'),
-//        'jqz'  => array ('type'=>'text/xml', 'icon'=>'jqz.gif'),
-//        'js'   => array ('type'=>'application/x-javascript', 'icon'=>'text.gif'),
-//        'latex'=> array ('type'=>'application/x-latex', 'icon'=>'text.gif'),
-//        'm'    => array ('type'=>'text/plain', 'icon'=>'text.gif'),
-//        'mov'  => array ('type'=>'video/quicktime', 'icon'=>'video.gif'),
-//        'movie'=> array ('type'=>'video/x-sgi-movie', 'icon'=>'video.gif'),
-//        'm3u'  => array ('type'=>'audio/x-mpegurl', 'icon'=>'audio.gif'),
-//        'mp3'  => array ('type'=>'audio/mp3', 'icon'=>'audio.gif'),
-//        'mp4'  => array ('type'=>'video/mp4', 'icon'=>'video.gif'),
-//        'mpeg' => array ('type'=>'video/mpeg', 'icon'=>'video.gif'),
-//        'mpe'  => array ('type'=>'video/mpeg', 'icon'=>'video.gif'),
-//        'mpg'  => array ('type'=>'video/mpeg', 'icon'=>'video.gif'),
-//
-//        'odt'  => array ('type'=>'application/vnd.oasis.opendocument.text', 'icon'=>'odt.gif'),
-//        'ott'  => array ('type'=>'application/vnd.oasis.opendocument.text-template', 'icon'=>'odt.gif'),
-//        'oth'  => array ('type'=>'application/vnd.oasis.opendocument.text-web', 'icon'=>'odt.gif'),
-//        'odm'  => array ('type'=>'application/vnd.oasis.opendocument.text-master', 'icon'=>'odt.gif'),
-//        'odg'  => array ('type'=>'application/vnd.oasis.opendocument.graphics', 'icon'=>'odt.gif'),
-//        'otg'  => array ('type'=>'application/vnd.oasis.opendocument.graphics-template', 'icon'=>'odt.gif'),
-//        'odp'  => array ('type'=>'application/vnd.oasis.opendocument.presentation', 'icon'=>'odt.gif'),
-//        'otp'  => array ('type'=>'application/vnd.oasis.opendocument.presentation-template', 'icon'=>'odt.gif'),
-//        'ods'  => array ('type'=>'application/vnd.oasis.opendocument.spreadsheet', 'icon'=>'odt.gif'),
-//        'ots'  => array ('type'=>'application/vnd.oasis.opendocument.spreadsheet-template', 'icon'=>'odt.gif'),
-//        'odc'  => array ('type'=>'application/vnd.oasis.opendocument.chart', 'icon'=>'odt.gif'),
-//        'odf'  => array ('type'=>'application/vnd.oasis.opendocument.formula', 'icon'=>'odt.gif'),
-//        'odb'  => array ('type'=>'application/vnd.oasis.opendocument.database', 'icon'=>'odt.gif'),
-//        'odi'  => array ('type'=>'application/vnd.oasis.opendocument.image', 'icon'=>'odt.gif'),
-//
-//        'pct'  => array ('type'=>'image/pict', 'icon'=>'image.gif'),
-//        'pdf'  => array ('type'=>'application/pdf', 'icon'=>'pdf.gif'),
-//        'php'  => array ('type'=>'text/plain', 'icon'=>'text.gif'),
-//        'pic'  => array ('type'=>'image/pict', 'icon'=>'image.gif'),
-//        'pict' => array ('type'=>'image/pict', 'icon'=>'image.gif'),
-//        'png'  => array ('type'=>'image/png', 'icon'=>'image.gif'),
-//        'pps'  => array ('type'=>'application/vnd.ms-powerpoint', 'icon'=>'powerpoint.gif'),
-//        'ppt'  => array ('type'=>'application/vnd.ms-powerpoint', 'icon'=>'powerpoint.gif'),
-//        'ps'   => array ('type'=>'application/postscript', 'icon'=>'pdf.gif'),
-//        'qt'   => array ('type'=>'video/quicktime', 'icon'=>'video.gif'),
-//        'ra'   => array ('type'=>'audio/x-realaudio', 'icon'=>'audio.gif'),
-//        'ram'  => array ('type'=>'audio/x-pn-realaudio', 'icon'=>'audio.gif'),
-//        'rhb'  => array ('type'=>'text/xml', 'icon'=>'xml.gif'),
-//        'rm'   => array ('type'=>'audio/x-pn-realaudio', 'icon'=>'audio.gif'),
-//        'rtf'  => array ('type'=>'text/rtf', 'icon'=>'text.gif'),
-//        'rtx'  => array ('type'=>'text/richtext', 'icon'=>'text.gif'),
-//        'sh'   => array ('type'=>'application/x-sh', 'icon'=>'text.gif'),
-//        'sit'  => array ('type'=>'application/x-stuffit', 'icon'=>'zip.gif'),
-//        'smi'  => array ('type'=>'application/smil', 'icon'=>'text.gif'),
-//        'smil' => array ('type'=>'application/smil', 'icon'=>'text.gif'),
-//        'sqt'  => array ('type'=>'text/xml', 'icon'=>'xml.gif'),
-//        'svg'  => array ('type'=>'image/svg+xml', 'icon'=>'image.gif'),
-//        'svgz' => array ('type'=>'image/svg+xml', 'icon'=>'image.gif'),
-//        'swa'  => array ('type'=>'application/x-director', 'icon'=>'flash.gif'),
-//        'swf'  => array ('type'=>'application/x-shockwave-flash', 'icon'=>'flash.gif'),
-//        'swfl' => array ('type'=>'application/x-shockwave-flash', 'icon'=>'flash.gif'),
-//
-//        'sxw'  => array ('type'=>'application/vnd.sun.xml.writer', 'icon'=>'odt.gif'),
-//        'stw'  => array ('type'=>'application/vnd.sun.xml.writer.template', 'icon'=>'odt.gif'),
-//        'sxc'  => array ('type'=>'application/vnd.sun.xml.calc', 'icon'=>'odt.gif'),
-//        'stc'  => array ('type'=>'application/vnd.sun.xml.calc.template', 'icon'=>'odt.gif'),
-//        'sxd'  => array ('type'=>'application/vnd.sun.xml.draw', 'icon'=>'odt.gif'),
-//        'std'  => array ('type'=>'application/vnd.sun.xml.draw.template', 'icon'=>'odt.gif'),
-//        'sxi'  => array ('type'=>'application/vnd.sun.xml.impress', 'icon'=>'odt.gif'),
-//        'sti'  => array ('type'=>'application/vnd.sun.xml.impress.template', 'icon'=>'odt.gif'),
-//        'sxg'  => array ('type'=>'application/vnd.sun.xml.writer.global', 'icon'=>'odt.gif'),
-//        'sxm'  => array ('type'=>'application/vnd.sun.xml.math', 'icon'=>'odt.gif'),
-//
-//        'tar'  => array ('type'=>'application/x-tar', 'icon'=>'zip.gif'),
-//        'tif'  => array ('type'=>'image/tiff', 'icon'=>'image.gif'),
-//        'tiff' => array ('type'=>'image/tiff', 'icon'=>'image.gif'),
-//        'tex'  => array ('type'=>'application/x-tex', 'icon'=>'text.gif'),
-//        'texi' => array ('type'=>'application/x-texinfo', 'icon'=>'text.gif'),
-//        'texinfo'  => array ('type'=>'application/x-texinfo', 'icon'=>'text.gif'),
-//        'tsv'  => array ('type'=>'text/tab-separated-values', 'icon'=>'text.gif'),
-//        'txt'  => array ('type'=>'text/plain', 'icon'=>'text.gif'),
-//        'wav'  => array ('type'=>'audio/wav', 'icon'=>'audio.gif'),
-//        'wmv'  => array ('type'=>'video/x-ms-wmv', 'icon'=>'avi.gif'),
-//        'asf'  => array ('type'=>'video/x-ms-asf', 'icon'=>'avi.gif'),
-//        'xls'  => array ('type'=>'application/vnd.ms-excel', 'icon'=>'excel.gif'),
-//        'xml'  => array ('type'=>'application/xml', 'icon'=>'xml.gif'),
-//        'xsl'  => array ('type'=>'text/xml', 'icon'=>'xml.gif'),
-//        'zip'  => array ('type'=>'application/zip', 'icon'=>'zip.gif')
-//    );
-//}
-
-/** 
- * Obtains information about a filetype based on its extension. Will
- * use a default if no information is present about that particular
- * extension.
- * @param string $element Desired information (usually 'icon' 
- *   for icon filename or 'type' for MIME type)
- * @param string $filename Filename we're looking up  
- * @return string Requested piece of information from array
- */
-//function mimeinfo($element, $filename) {
-//    static $mimeinfo;
-//    $mimeinfo=get_mimetypes_array();
-//
-//    if (eregi('\.([a-z0-9]+)$', $filename, $match)) {
-//        if (isset($mimeinfo[strtolower($match[1])][$element])) {
-//            return $mimeinfo[strtolower($match[1])][$element];
-//        } else {
-//            return $mimeinfo['xxx'][$element];   // By default
-//        }
-//    } else {
-//        return $mimeinfo['xxx'][$element];   // By default
-//    }
-//}
-
-/** 
- * Obtains information about a filetype based on the MIME type rather than
- * the other way around.
- * @param string $element Desired information (usually 'icon')
- * @param string $mimetype MIME type we're looking up  
- * @return string Requested piece of information from array
- */
-//function mimeinfo_from_type($element, $mimetype) {
-//    static $mimeinfo;
-//    $mimeinfo=get_mimetypes_array();
-//    
-//    foreach($mimeinfo as $values) {
-//        if($values['type']==$mimetype) {
-//            if(isset($values[$element])) {
-//                return $values[$element];
-//            }
-//            break;
-//        }
-//    }
-//    return $mimeinfo['xxx'][$element]; // Default
-//}
-
-/**
- * Obtains descriptions for file types (e.g. 'Microsoft Word document') from the 
- * mimetypes.php language file. 
- * @param string $mimetype MIME type (can be obtained using the mimeinfo function)
- * @param bool $capitalise If true, capitalises first character of result
- * @return string Text description 
- */
-//function get_mimetype_description($mimetype,$capitalise=false) {
-//    $result=get_string($mimetype,'mimetypes');
-//    // Surrounded by square brackets indicates that there isn't a string for that
-//    // (maybe there is a better way to find this out?)
-//    if(strpos($result,'[')===0) {
-//        $result=get_string('document/unknown','mimetypes');
-//    } 
-//    if($capitalise) {
-//        $result=ucfirst($result);
-//    }
-//    return $result;
-//}
-
+define('BYTESERVING_BOUNDARY', 'm1i2k3e40516'); //unique string constant
 
 /**
  * Serves a file from dataroot.
@@ -366,44 +163,6 @@ function serve_file($path, $filename, $options=array()) {
 }
 
 /**
- * Recursively delete the file or folder with path $location. That is, 
- * if it is a file delete it. If it is a folder, delete all its content
- * then delete it. If $location does not exist to start, that is not 
- * considered an error. 
- * 
- * @param $location the path to remove.
- */
-//function fulldelete($location) {
-//    if (is_dir($location)) {
-//        $currdir = opendir($location);
-//        while (false !== ($file = readdir($currdir))) {
-//            if ($file <> ".." && $file <> ".") {
-//                $fullfile = $location."/".$file;
-//                if (is_dir($fullfile)) {
-//                    if (!fulldelete($fullfile)) {
-//                        return false;
-//                    }
-//                } else {
-//                    if (!unlink($fullfile)) {
-//                        return false;
-//                    }
-//                }
-//            }
-//        }
-//        closedir($currdir);
-//        if (! rmdir($location)) {
-//            return false;
-//        }
-//
-//    } else if (file_exists($location)) {
-//        if (!unlink($location)) {
-//            return false;
-//        }
-//    }
-//    return true;
-//}
-
-/**
  * Improves memory consumptions and works around buggy readfile() in PHP 5.0.4 (2MB readfile limit).
  */
 function readfile_chunked($filename, $retbytes=true) {
@@ -523,13 +282,24 @@ function get_mime_type($file) {
  * Given a mimetype (perhaps returned by {@link get_mime_type}, returns whether
  * Mahara thinks it is a valid image file.
  *
- * Not all image types are valid for Mahara. Mahara supports JPEG, PNG and GIF.
+ * Not all image types are valid for Mahara. Mahara supports JPEG, PNG, GIF
+ * and BMP.
  *
  * @param string $type The mimetype to check
  * @return boolean     Whether the type is a valid image type for Mahara
  */
 function is_image_mime_type($type) {
-    return in_array($type, array('image/jpeg', 'image/jpg', 'image/gif', 'image/png'));
+    $supported = array(
+        'image/jpeg', 'image/jpg',
+        'image/gif',
+        'image/png'
+    );
+    if (extension_loaded('imagick')) {
+        $supported = array_merge($supported, array(
+            'image/bmp', 'image/x-bmp', 'image/ms-bmp', 'image/x-ms-bmp'
+        ));
+    }
+    return in_array($type, $supported);
 }
 
 /**
@@ -576,6 +346,22 @@ function get_dataroot_image_path($path, $id, $size) {
                     break;
                 case 'image/gif':
                     $oldih = imagecreatefromgif($originalimage);
+                    break;
+                case 'image/bmp':
+                case 'image/x-bmp':
+                case 'image/ms-bmp':
+                case 'image/x-ms-bmp':
+                    if (!extension_loaded('imagick')) {
+                        return false;
+                    }
+                    // Nightmare...
+                    $oldih = imagick_readimage($originalimage);
+                    imagick_resize($oldih, $width, $height, IMAGICK_FILTER_UNDEFINED, 1);
+                    $newpath = $imagepath . "/$size/" . ($id % 256);
+                    check_dir_exists($newpath);
+                    $newpath .= "/$id";
+                    $result = imagick_writeimage($oldih, $newpath);
+                    return $newpath;
                     break;
                 default:
                     return false;
