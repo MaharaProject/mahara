@@ -411,7 +411,7 @@ tr.required th {
 /* RIGHT SIDE BOX BEGIN */
 div.sidebar {
 	background: #FFF url(../images/sidebox2_top_headerbg.gif) no-repeat top;
-   	padding: 10px 0 0 10px;
+   	padding: 7px 0 0 10px;
    	margin-bottom: 10px;
 	color: #FFF;
 	font-weight: bold;
@@ -503,30 +503,11 @@ div.sidebar p {
 .sidebar-botcorners {
     margin-left: -10px;
 }
-#loginbox .sidebar-botcorners {
-    margin-left: 0;
-}
-#column-right #loginbox {
-    width: 228px;
-	background: #FFF url(../images/sidebox1_top_headerbg.gif) no-repeat top;
-    padding: 10px 0 0 0;
-    margin-bottom: 10px;
-	color: #000;
-}
-#column-right #loginbox fieldset {
-	border: none;
-	padding: 0;
-	margin: 0 0 0 10px;
-	width: 150px;
-}
 #column-right #login legend {
 	color: #FFF;
 	font-weight: bold;
 	margin: 0 0 0 -7px;
 	padding: 0;
-}
-#column-right #login_login_username_container {
-	padding-top: 25px;
 }
 #column-right #login_login_password_container {
 	margin: 5px 0;

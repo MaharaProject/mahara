@@ -498,7 +498,7 @@ function get_login_form_js($form) {
     $cookiename = get_config('cookieprefix') . 'ctest';
     return <<<EOF
 <script type="text/javascript">
-var loginbox = $('loginbox');
+var loginbox = $('loginform_container');
 document.cookie = "$cookiename=1";
 if (document.cookie) {
     loginbox.innerHTML = '$form';
@@ -713,44 +713,34 @@ function auth_generate_login_form() {
         'plugintype' => 'auth',
         'pluginname' => 'internal',
         'elements'   => array(
-            'login' => array(
-                'type'   => 'fieldset',
-                'legend' => get_string('login'),
-                'elements' => array(
-                    'login_username' => array(
-                        'type'        => 'text',
-                        'title'       => get_string('username') . ':',
-                        'description' => get_string('usernamedescription'),
-                        'rules' => array(
-                            'required'    => true
-                        )
-                    ),
-                    'login_password' => array(
-                        'type'        => 'password',
-                        'title'       => get_string('password') . ':',
-                        'description' => get_string('passworddescription'),
-                        'value'       => '',
-                        'rules' => array(
-                            'required'    => true
-                        )
-                    ),
-                    'login_institution' => array(
-                        'type' => 'select',
-                        'title' => get_string('institution') . ':',
-                        'defaultvalue' => $defaultinstitution,
-                        'options' => $institutions,
-                        'rules' => array(
-                            'required' => true
-                        ),
-                        'ignore' => count($institutions) == 1,
-                        'help' => true,
-                    ),
-                    'chelp' => array(
-                        'value' =>  get_help_icon('core', 'login', null, null, null, 'loginbox'), 
-                    ),
+            'login_username' => array(
+                'type'        => 'text',
+                'title'       => get_string('username') . ':',
+                'description' => get_string('usernamedescription'),
+                'rules' => array(
+                    'required'    => true
                 )
             ),
-
+            'login_password' => array(
+                'type'        => 'password',
+                'title'       => get_string('password') . ':',
+                'description' => get_string('passworddescription'),
+                'value'       => '',
+                'rules' => array(
+                    'required'    => true
+                )
+            ),
+            'login_institution' => array(
+                'type' => 'select',
+                'title' => get_string('institution') . ':',
+                'defaultvalue' => $defaultinstitution,
+                'options' => $institutions,
+                'rules' => array(
+                    'required' => true
+                ),
+                'ignore' => count($institutions) == 1,
+                'help' => true,
+            ),
             'submit' => array(
                 'type'  => 'submit',
                 'value' => get_string('login')
