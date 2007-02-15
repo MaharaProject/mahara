@@ -60,6 +60,8 @@ $string['select'] = 'Select';
 $string['tags'] = 'Tags';
 $string['tagsdesc'] = 'Enter comma separated tags for this item';
 
+$string['selfsearch'] = 'Search My Portfolio';
+
 // Quota strings
 $string['quota'] = 'Quota';
 $string['quotausage'] = 'You have used <span id="quota_used">%s</span> of your <span id="quota_total">%s</span> quota.';

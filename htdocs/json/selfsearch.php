@@ -37,21 +37,11 @@ catch (ParameterException $e) {
     json_reply('missingparameter','Missing parameter \'query\'');
 }
 
-$type = param_variable('type', 'user');
-
+$type = param_variable('type', 'all');
 $limit = param_integer('limit', 20);
 $offset = param_integer('offset', 0);
 
-switch($type) {
-    case 'community':
-        $data = search_community($query, $limit, $offset, true);
-        $data['type'] = 'community';
-        break;
-    default:
-        $data = search_user($query, $limit, $offset);
-        $data['type'] = 'user';
-        break;
-}
+$data = search_selfsearch($query, $limit, $offset, $type);
 
 json_headers();
 $data['error'] = false;

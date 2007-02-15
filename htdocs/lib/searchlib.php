@@ -190,4 +190,11 @@ function search_community($query_string, $limit, $offset = 0, $all = false) {
 
     return call_static_method(generate_class_name('search', $plugin), 'search_community', $query_string, $limit, $offset, $all);
 }
+
+function search_selfsearch($query_string, $limit, $offset, $type = 'all') {
+    $plugin = get_config('searchplugin');
+    safe_require('search', $plugin);
+
+    return call_static_method(generate_class_name('search', $plugin), 'self_search', $query_string, $limit, $offset, $type);
+}
 ?>

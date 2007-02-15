@@ -2,6 +2,7 @@
 <html>
     <head>
         <title>{$PAGETITLE|escape}</title>
+        <script type="text/javascript" src="{$WWWROOT}js/firebug/firebug.js"></script>
         <script type="text/javascript">
         var config = {literal}{{/literal}
             'theme': {$THEMELIST},

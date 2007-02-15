@@ -260,7 +260,14 @@ EOF;
         );
     }
 
-    if (!$USER->is_logged_in()) {
+    if ($USER->is_logged_in()) {
+        $SIDEBLOCKS[] = array(
+            'name'   => 'selfsearch',
+            'weight' => 0,
+            'data'   => array(),
+        );
+    }
+    else {
         $SIDEBLOCKS[] = array(
             'name'   => 'login',
             'weight' => -10,
@@ -270,6 +277,7 @@ EOF;
             ),
         );
     }
+
 
     if (isset($extraconfig['sideblocks']) && is_array($extraconfig['sideblocks'])) {
         foreach ($extraconfig['sideblocks'] as $sideblock) {

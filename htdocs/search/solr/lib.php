@@ -62,14 +62,23 @@ class PluginSearchSolr extends PluginSearchInternal {
     }
 
     public static function event_reindex_user($event, $user) {
+        if (get_config('searchplugin') != 'solr') {
+            return;
+        }
         self::index_user($user);
         self::commit();
     }
     public static function event_saveartefact($event, $artefact) {
+        if (get_config('searchplugin') != 'solr') {
+            return;
+        }
         self::index_artefact($artefact);
         self::commit();
     }
     public static function event_deleteartefact($event, $artefact) {
+        if (get_config('searchplugin') != 'solr') {
+            return;
+        }
         self::delete_byidtype($artefact->get('id'), 'artefact');
         self::commit();
     }
@@ -193,10 +202,15 @@ END;
                 $result = $new_result;
             }
         }
+
+        return $results;
     }
 
     // This function will rebuild the solr indexes
     public static function rebuild_all() {
+        if (get_config('searchplugin') != 'solr') {
+            return;
+        }
         self::rebuild_users();
         self::rebuild_artefacts();
         self::commit();
@@ -373,7 +387,7 @@ END;
             if(is_array($value)) {
                 $value = implode('" OR "', $value);
             }
-            array_push($q,$key . ':("' . $value . '")');
+            array_push($q,$key . ':(' . $value . ')');
         }
 
         require_once('snoopy/Snoopy.class.php');
