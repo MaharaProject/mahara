@@ -26,7 +26,6 @@
 
 defined('INTERNAL') || die();
 
-$config->minupradefrom = 0;
 $config->version       = 2007021401;
 $config->release       = '0.1';
 
