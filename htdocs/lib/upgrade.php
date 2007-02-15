@@ -137,7 +137,8 @@ function check_upgrades($name=null) {
                 $pluginrelease =  $installed->release;
             }
         }
-            
+
+        $config = new StdClass;
         require(get_config('docroot') . $pluginpath . '/version.php');
         if (isset($config->disablelogin) && !empty($config->disablelogin)) {
             $disablelogin = true;

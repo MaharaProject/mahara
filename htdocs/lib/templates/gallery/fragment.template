@@ -6,47 +6,31 @@
         </td>
     </tr>
     <tr>
-        <td>
-            {{block type="artefact" id="tpl_image1" artefacttype="image" width="100" height="100" format="renderfull"}}<br>
-            {{block type="label" id="tpl_label1"}}
-        </td>
-        <td>
-            {{block type="artefact" id="tpl_image2" artefacttype="image" width="100" height="100" format="renderfull"}}<br>
-            {{block type="label" id="tpl_label2"}}
-        </td>
-        <td>
-            {{block type="artefact" id="tpl_image3" artefacttype="image" width="100" height="100" format="renderfull"}}<br>
-            {{block type="label" id="tpl_label3"}}
-        </td>
-        <td>
-            {{block type="artefact" id="tpl_image4" artefacttype="image" width="100" height="100" format="renderfull"}}<br>
-            {{block type="label" id="tpl_label4"}}
-        </td>
-        <td>
-            {{block type="artefact" id="tpl_image5" artefacttype="image" width="100" height="100" format="renderfull"}}<br>
-            {{block type="label" id="tpl_label5"}}
-        </td>
+        <td>{{block type="artefact" id="tpl_image1" artefacttype="image" width="100" height="100" format="renderfull"}}</td>
+        <td>{{block type="artefact" id="tpl_image2" artefacttype="image" width="100" height="100" format="renderfull"}}</td>
+        <td>{{block type="artefact" id="tpl_image3" artefacttype="image" width="100" height="100" format="renderfull"}}</td>
+        <td>{{block type="artefact" id="tpl_image4" artefacttype="image" width="100" height="100" format="renderfull"}}</td>
+        <td>{{block type="artefact" id="tpl_image5" artefacttype="image" width="100" height="100" format="renderfull"}}</td>
     </tr>
     <tr>
-        <td>
-            {{block type="artefact" id="tpl_image6" artefacttype="image" width="100" height="100" format="renderfull"}}<br>
-            {{block type="label" id="tpl_label6"}}
-        </td>
-        <td>
-            {{block type="artefact" id="tpl_image7" artefacttype="image" width="100" height="100" format="renderfull"}}<br>
-            {{block type="label" id="tpl_label7"}}
-        </td>
-        <td>
-            {{block type="artefact" id="tpl_image8" artefacttype="image" width="100" height="100" format="renderfull"}}<br>
-            {{block type="label" id="tpl_label8"}}
-        </td>
-        <td>
-            {{block type="artefact" id="tpl_image9" artefacttype="image" width="100" height="100" format="renderfull"}}<br>
-            {{block type="label" id="tpl_label9"}}
-        </td>
-        <td>
-            {{block type="artefact" id="tpl_image10" artefacttype="image" width="100" height="100" format="renderfull"}}<br>
-            {{block type="label" id="tpl_label10"}}
-        </td>
+        <td>{{block type="label" id="tpl_label1"}}</td>
+        <td>{{block type="label" id="tpl_label2"}}</td>
+        <td>{{block type="label" id="tpl_label3"}}</td>
+        <td>{{block type="label" id="tpl_label4"}}</td>
+        <td>{{block type="label" id="tpl_label5"}}</td>
+    </tr>
+    <tr>
+        <td>{{block type="artefact" id="tpl_image6" artefacttype="image" width="100" height="100" format="renderfull"}}</td>
+        <td>{{block type="artefact" id="tpl_image7" artefacttype="image" width="100" height="100" format="renderfull"}}</td>
+        <td>{{block type="artefact" id="tpl_image8" artefacttype="image" width="100" height="100" format="renderfull"}}</td>
+        <td>{{block type="artefact" id="tpl_image9" artefacttype="image" width="100" height="100" format="renderfull"}}</td>
+        <td>{{block type="artefact" id="tpl_image10" artefacttype="image" width="100" height="100" format="renderfull"}}</td>
+    </tr>
+    <tr>
+        <td>{{block type="label" id="tpl_label6"}}</td>
+        <td>{{block type="label" id="tpl_label7"}}</td>
+        <td>{{block type="label" id="tpl_label8"}}</td>
+        <td>{{block type="label" id="tpl_label9"}}</td>
+        <td>{{block type="label" id="tpl_label10"}}</td>
     </tr>
 </table>
