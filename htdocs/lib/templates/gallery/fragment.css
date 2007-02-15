@@ -3,7 +3,11 @@
 }
 
 .gallery_container td {
-  	padding:20px;
+  	padding: 20px;
+}
+.gallery_container td div {
+    padding: 0;
+    margin: 0;
 }
 
 .gallery_title {

@@ -218,6 +218,12 @@ function xmldb_core_upgrade($oldversion=0) {
         insert_record('event_type', (object)array('name' => 'deleteartefact'));
     }
 
+    if ($oldversion < 2007021600) {
+        require_once('template.php');
+        $template = template_parse('gallery');
+        upgrade_template('gallery', $template);
+    }
+
     return $status;
 
 }
