@@ -98,6 +98,16 @@
             <mimetype>image/png</mimetype>
         </mimetypes>
     </filetype>
+    <filetype>
+        <description>bmp</description>
+        <enabled>1</enabled>
+        <mimetypes>
+            <mimetype>image/bmp</mimetype>
+            <mimetype>image/x-bmp</mimetype>
+            <mimetype>image/ms-bmp</mimetype>
+            <mimetype>image/x-ms-bmp</mimetype>
+        </mimetypes>
+    </filetype>
 
     <!-- Movie formats -->
     <filetype>
@@ -156,6 +166,13 @@
         <enabled>1</enabled>
         <mimetypes>
             <mimetype>audio/au</mimetype>
+        </mimetypes>
+    </filetype>
+    <filetype>
+        <description>dss</description>
+        <enabled>1</enabled>
+        <mimetypes>
+            <mimetype>video/unknown</mimetype>
         </mimetypes>
     </filetype>
     <filetype>
