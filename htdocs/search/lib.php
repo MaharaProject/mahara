@@ -161,7 +161,7 @@ abstract class PluginSearch extends Plugin {
      * @param string  Type to search for (either 'all' or one of the types above).
      * 
      */
-    //public static abstract function self_search($query_string, $limit, $offset, $type = 'all');
+    public static abstract function self_search($query_string, $limit, $offset, $type = 'all');
 }
 
 ?>

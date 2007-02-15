@@ -325,6 +325,26 @@ class PluginSearchInternal extends PluginSearch {
             'data'    => $data,
         );
     }
+
+    /**
+     * Given a query string and limits, return an array of matching objects
+     * owned by the current user.  Possible return types are ...
+     *   - artefact
+     *   - view
+     *
+     * Implementations of this search should search across tags for artefacts
+     * and views at a minimum. Ideally the search would also index
+     * title/description and other metadata for these objects.
+     *
+     * @param string  The query string
+     * @param integer How many results to return
+     * @param integer What result to start at (0 == first result)
+     * @param string  Type to search for (either 'all' or one of the types above).
+     * 
+     */
+    public static function self_search($query_string, $limit, $offset, $type = 'all') {
+        throw new Exception('TODO: implement me!');
+    }
 }
 
 ?>
