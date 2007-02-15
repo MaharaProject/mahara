@@ -699,6 +699,72 @@ function auth_handle_account_expiries() {
     }
 }
 
+function auth_generate_login_form() {
+    require_once('pieforms/pieform.php');
+    $institutions = get_records_menu('institution', '', '', 'name, displayname');
+    $defaultinstitution = get_cookie('institution');
+    if (!$defaultinstitution) {
+        $defaultinstitution = 'mahara';
+    }
+    $loginform = get_login_form_js(pieform(array(
+        'name'       => 'login',
+        'renderer'   => 'div',
+        'submit'     => false,
+        'plugintype' => 'auth',
+        'pluginname' => 'internal',
+        'elements'   => array(
+            'login' => array(
+                'type'   => 'fieldset',
+                'legend' => get_string('login'),
+                'elements' => array(
+                    'login_username' => array(
+                        'type'        => 'text',
+                        'title'       => get_string('username') . ':',
+                        'description' => get_string('usernamedescription'),
+                        'rules' => array(
+                            'required'    => true
+                        )
+                    ),
+                    'login_password' => array(
+                        'type'        => 'password',
+                        'title'       => get_string('password') . ':',
+                        'description' => get_string('passworddescription'),
+                        'value'       => '',
+                        'rules' => array(
+                            'required'    => true
+                        )
+                    ),
+                    'login_institution' => array(
+                        'type' => 'select',
+                        'title' => get_string('institution') . ':',
+                        'defaultvalue' => $defaultinstitution,
+                        'options' => $institutions,
+                        'rules' => array(
+                            'required' => true
+                        ),
+                        'ignore' => count($institutions) == 1,
+                        'help' => true,
+                    ),
+                    'chelp' => array(
+                        'value' =>  get_help_icon('core', 'login', null, null, null, 'loginbox'), 
+                    ),
+                )
+            ),
+
+            'submit' => array(
+                'type'  => 'submit',
+                'value' => get_string('login')
+            ),
+            'register' => array(
+                'value' => '<div><a href="' . get_config('wwwroot') . 'register.php" tabindex="2">' . get_string('register') . '</a>'
+                    . '<br><a href="' . get_config('wwwroot') . 'forgotpass.php" tabindex="2">' . get_string('passwordreminder') . '</a></div>'
+            )
+        )
+    )));
+
+    return $loginform;
+}
+
 
 class PluginAuth extends Plugin {
 

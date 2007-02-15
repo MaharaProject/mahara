@@ -54,6 +54,7 @@ defined('INTERNAL') || die();
 //smarty(array('js/tablerenderer.js', 'artefact/file/js/filebrowser.js'))
 function &smarty($javascript = array(), $headers = array(), $pagestrings = array(), $extraconfig = array()) {
     global $USER, $SESSION;
+    $SIDEBLOCKS = array();
 
     require_once(get_config('libroot') . 'smarty/Smarty.class.php');
     $wwwroot = get_config('wwwroot');
@@ -207,9 +208,6 @@ EOF;
     $smarty->compile_dir  = get_config('dataroot').'smarty/compile';
     $smarty->cache_dir    = get_config('dataroot').'smarty/cache';
 
-    if (get_config('installed')) {
-        $smarty->assign('SITEMENU', site_menu());
-    }
     $smarty->assign('THEMEURL', get_config('themeurl'));
     $smarty->assign('STYLESHEETLIST', array_reverse(theme_get_url('style/style.css', null, true)));
     $smarty->assign('WWWROOT', $wwwroot);
@@ -251,6 +249,37 @@ EOF;
         $smarty->assign('PAGEHELPNAME', $help[0]);
         $smarty->assign('PAGEHELPICON', $help[1]);
     }
+
+    // ---------- sideblock stuff ----------
+    if (get_config('installed')) {
+        $smarty->assign('SITEMENU', site_menu());
+        $SIDEBLOCKS[] = array(
+            'name'   => 'mainmenu',
+            'weight' => 10,
+            'data'   => site_menu(),
+        );
+    }
+
+    if (!$USER->is_logged_in()) {
+        $SIDEBLOCKS[] = array(
+            'name'   => 'login',
+            'weight' => -10,
+            'id'     => 'loginbox',
+            'data'   => array(
+                'loginform' => auth_generate_login_form(),
+            ),
+        );
+    }
+
+    if (isset($extraconfig['sideblocks']) && is_array($extraconfig['sideblocks'])) {
+        foreach ($extraconfig['sideblocks'] as $sideblock) {
+            $SIDEBLOCKS[] = $sideblock;
+        }
+    }
+
+    usort($SIDEBLOCKS, create_function('$a,$b', 'if ($a["weight"] == $b["weight"]) return 0; return ($a["weight"] < $b["weight"]) ? -1 : 1;'));
+
+    $smarty->assign('SIDEBLOCKS', $SIDEBLOCKS);
 
     return $smarty;
 }

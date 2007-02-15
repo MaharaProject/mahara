@@ -1,8 +1,6 @@
 {include file="header.tpl"}
+{include file="sidebar.tpl"}
 
-<div id="column-right">
-{include file="adminmenu.tpl"}
-</div>
 {include file="columnleftstart.tpl"}
 			<h2>{str section="artefact.internal" tag="emailactivation"}</h2>
 			<p>

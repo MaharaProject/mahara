@@ -1,9 +1,5 @@
 {include file="header.tpl"}
-
-<div id="column-right">
-{include file="quota.tpl"}
-{include file="adminmenu.tpl"}
-</div>
+{include file="sidebar.tpl"}
 
 {include file="columnleftstart.tpl"}
 			<h2>{str section="artefact.file" tag="myfiles"}</h2>

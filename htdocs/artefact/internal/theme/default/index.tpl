@@ -1,8 +1,6 @@
 {include file="header.tpl"}
+{include file="sidebar.tpl"}
 
-<div id="column-right">
-{include file="adminmenu.tpl"}
-</div>
 {include file="columnleftstart.tpl"}
             
 			<div class="fr leftrightlink"><a href="profileicons.php" id="editprofileicons">{str tag="editprofileicons" section="artefact.internal"} &raquo;</a></div>

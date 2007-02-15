@@ -1,7 +1,5 @@
 {include file="header.tpl"}
-<div id="column-right">
-{include file="adminmenu.tpl"}
-</div>
+{include file="sidebar.tpl"}
 
 <div id="column-left">
 	<div class="content">

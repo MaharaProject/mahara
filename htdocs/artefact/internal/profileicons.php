@@ -28,7 +28,20 @@ define('INTERNAL', 1);
 define('MENUITEM', 'myprofile');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('profileicons', 'artefact.internal'));
-$smarty = smarty(array('tablerenderer'));
+$smarty = smarty(
+    array('tablerenderer'),
+    array(),
+    array(),
+    array(
+        'sideblocks' => array(
+            array(
+                'name'   => 'quota',
+                'weight' => -10,
+                'data'   => array(),
+            ),
+        ),
+    )
+);
 
 $settingsform = new Pieform(array(
     'name'      => 'settings',
