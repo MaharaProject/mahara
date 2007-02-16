@@ -158,6 +158,7 @@ function uploadcsv_validate(Pieform $form, $values) {
 function uploadcsv_submit(Pieform $form, $values) {
     global $SESSION, $CSVDATA;
     log_info('Inserting users from the CSV file');
+    db_begin();
     foreach ($CSVDATA as $record) {
         log_debug('adding user ' . $record[0]);
         $user = new StdClass;
@@ -175,6 +176,7 @@ function uploadcsv_submit(Pieform $form, $values) {
 
         handle_event('createuser', $user);
     }
+    db_commit();
     log_info('Inserted ' . count($CSVDATA) . ' records');
 
     $SESSION->add_ok_msg(get_string('uploadcsvusersaddedsuccessfully', 'admin'));
