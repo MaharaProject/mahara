@@ -3,7 +3,7 @@
 {include file="columnfullstart.tpl"}
 			<h2>{$loginmessage}</h2>
 			
-            <div id="loginbox"><noscript><p>{str tag="javascriptnotenabled"}</p></noscript>
+            <div id="loginform_container"><noscript><p>{str tag="javascriptnotenabled"}</p></noscript>
             {$login_form}
             </div>
 				

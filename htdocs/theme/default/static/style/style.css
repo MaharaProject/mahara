@@ -671,40 +671,37 @@ div.sidebar p {
 
 
 /* LOGIN FOR COLUMN LEFT BEGINS */
-.maincontent #loginbox {
+.maincontent #loginform_container {
    	margin-top: 10px;
-	padding: 0;
-	border: 1px solid #d4d1c0;
+    border: 1px solid #d4d1c0;
 }
-.maincontent #loginbox fieldset {
-	border: none;
-	padding: 0 5px 0 5px;
-	margin: 0 5px 0 5px;
+.maincontent #loginform_container table {
+    border: 0;
+}
+.maincontent #loginform_container td, 
+.maincontent #loginform_container th {
 	background-color: #eef4da;
 }
-.maincontent #login legend {
-	margin: 0;
-	padding: 0;
-	display: none;
+.maincontent #loginform_container {
+	padding: 0 5px 0 5px;
 }
-.maincontent #login th {
+.maincontent #loginform_container th {
 	margin: 0;
-	padding: 0;
+	padding: 2px 0 0 7px;
 }
-.maincontent #login td {
+.maincontent #loginform_container td {
    	margin: 0;
-	padding: 0;
-}
-.maincontent #login .description {
-	font-size: 9px;
-	color: #7e7e7e; 
+	padding: 2px 0 0 7px;
 }
 .maincontent #login_submit_container {
 	font-size: 9px;
 	display: inline;
 }
+.maincontent #login_submit_container td {
+    background-color: white;
+}
 .maincontent #login_submit {
-	margin: 5px 0 0 12px;
+	margin: 5px 0 0 0;
 }
 /* LOGIN FOR COLUMN LEFT ENDS */
 

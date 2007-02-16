@@ -397,40 +397,33 @@ function auth_get_login_form() {
     }
 
     $elements = array(
-        'login' => array(
-            'type'   => 'fieldset',
-            'legend' => get_string('login'),
-            'elements' => array(
-                'login_username' => array(
-                    'type'        => 'text',
-                    'title'       => get_string('username') . ':',
-                    'description' => get_string('usernamedescription'),
-                    'rules' => array(
-                        'required'    => true
-                    )
-                ),
-                'login_password' => array(
-                    'type'        => 'password',
-                    'title'       => get_string('password') . ':',
-                    'description' => get_string('passworddescription'),
-                    'value'       => '',
-                    'rules' => array(
-                        'required'    => true
-                    )
-                ),
-                'login_institution' => array(
-                    'type'         => 'select',
-                    'title'        => get_string('institution'). ':',
-                    'defaultvalue' => $defaultinstitution,
-                    'options'      => $institutions,
-                    'rules' => array(
-                        'required' => true
-                    ),
-                    'ignore' => count($institutions) == 1
-                )
+        'login_username' => array(
+            'type'        => 'text',
+            'title'       => get_string('username') . ':',
+            'description' => get_string('usernamedescription'),
+            'rules' => array(
+                'required'    => true
             )
         ),
-
+        'login_password' => array(
+            'type'        => 'password',
+            'title'       => get_string('password') . ':',
+            'description' => get_string('passworddescription'),
+            'value'       => '',
+            'rules' => array(
+                'required'    => true
+            )
+        ),
+        'login_institution' => array(
+            'type'         => 'select',
+            'title'        => get_string('institution'). ':',
+            'defaultvalue' => $defaultinstitution,
+            'options'      => $institutions,
+            'rules' => array(
+                'required' => true
+            ),
+            'ignore' => count($institutions) == 1
+        ),
         'submit' => array(
             'type'  => 'submit',
             'value' => get_string('login')
@@ -700,6 +693,9 @@ function auth_handle_account_expiries() {
 }
 
 function auth_generate_login_form() {
+    if (!get_config('installed')) {
+        return;
+    }
     require_once('pieforms/pieform.php');
     $institutions = get_records_menu('institution', '', '', 'name, displayname');
     $defaultinstitution = get_cookie('institution');
