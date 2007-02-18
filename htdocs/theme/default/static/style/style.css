@@ -1675,7 +1675,6 @@ a.pieform-calendar-toggle img {
 
 
 .help {
-	vertical-align: super; 
 	text-decoration: none;
 }
 
@@ -1685,4 +1684,10 @@ a.pieform-calendar-toggle img {
 .help a:visited {
 	font-size: 9px !important;
     font-weight:normal !important;
+}
+.help a:focus {
+    outline: none;
+}
+.help img {
+    border: none;
 }

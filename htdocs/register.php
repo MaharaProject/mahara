@@ -290,7 +290,6 @@ if (count($institutions) > 1) {
         'type' => 'select',
         'title' => get_string('institution'),
         'options' => $options,
-        'defaultvalue' => 'mahara',
         'rules' => array(
             'required' => true
         )

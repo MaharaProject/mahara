@@ -998,7 +998,7 @@ function get_help_icon($plugintype, $pluginname, $form, $element, $page='', $sec
             json_encode($pluginname) . ',' . json_encode($page) . ',' . 
             json_encode($section)
             . ',this); return false;'
-        ) . '">?</a></span>';
+        ) . '"><img src="' . theme_get_url('images/icon_help.png') . '" alt="?"></a></span>';
 }
 
 function pieform_get_help(Pieform $form, $element) {
@@ -1498,7 +1498,12 @@ function get_full_script_path() {
 
 function has_page_help() {
     // the path of the current script (used for page help)
-    $scriptname = substr(urldecode(strip_querystring(get_full_script_path())), strlen(get_config('wwwroot')));
+    $path = get_config('wwwroot');
+    $port = (isset($_SERVER['SERVER_PORT'])) ? $_SERVER['SERVER_PORT'] : '';
+    if ($port && substr($path, -strlen($port)) != $port) {
+        $path .= $port;
+    }
+    $scriptname = substr(urldecode(strip_querystring(get_full_script_path())), strlen($path));
     if (strpos($scriptname, '.php') != (strlen($scriptname) - 4)) {
         $scriptname .= 'index.php';
     }
