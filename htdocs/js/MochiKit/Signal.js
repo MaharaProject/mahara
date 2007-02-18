@@ -539,8 +539,6 @@ MochiKit.Base.update(MochiKit.Signal, {
                 self._disconnect(observers[i]);
             }
         }
-        
-        delete self._observers;
     },
 
     _listener: function (src, sig, func, obj, isDOM) {
