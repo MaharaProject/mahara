@@ -187,16 +187,23 @@ END;
      * 
      */
     public static function self_search($query_string, $limit, $offset, $type = 'all') {
+        global $USER;
+
         if ($type != 'artefact' && $type != 'view') {
             $type = 'artefact OR view';
         }
-        $results = self::send_query($query_string, $limit, $offset, array('type' => $type));
+
+        $results = self::send_query($query_string, $limit, $offset, array('type' => $type, 'owner' => $USER->get('id')), '*', true);
+
         if (is_array($results['data'])) {
             foreach ($results['data'] as &$result) {
                 $new_result = array();
                 foreach ($result as $key => &$value) {
-                    if ($key == 'id' || $key == 'title' || $key == 'description' || $key == 'type') {
+                    if ($key == 'id' || $key == 'title' ||$key == 'type' || $key == 'description' || $key == 'summary' || $key == 'tags') {
                         $new_result[$key] = $value;
+                    }
+                    else if ($key == 'ref_artefacttype') {
+                        $new_result['artefacttype'] = $value;
                     }
                 }
                 $result = $new_result;
@@ -231,7 +238,7 @@ END;
                 'ref_artefacttype'   => $artefact['artefacttype'],
                 'type'               => 'artefact',
                 'title'              => $artefact['title'],
-                'description'        => $artefact['description'],
+                'description'        => strip_tags($artefact['description']),
                 'tags'               => join(', ', get_column('artefact_tag', 'tag', 'artefact', $artefact['id'])),
                 'ctime'              => $artefact['ctime'],
                 'mtime'              => $artefact['mtime'],
@@ -377,7 +384,7 @@ END;
         }
     }
 
-    private static function send_query($query, $limit, $offset, $constraints = array(), $fields = '*') {
+    private static function send_query($query, $limit, $offset, $constraints = array(), $fields = '*', $highlight = false) {
         $q = array();
 
         foreach ( $constraints as $key => $value ) {
@@ -402,7 +409,14 @@ END;
             'fl'     => $fields,
             'start'  => $offset,
             'rows'   => $limit,
+            //'indent' => 1,
         );
+
+        if ($highlight) {
+            $data['hl']          = 'true';
+            $data['hl.fl']       = 'title,description,tags';
+            $data['hl.snippets'] = '3';
+        }
 
         $url = get_config_plugin('search', 'solr', 'solrurl') . 'select';
 
@@ -429,6 +443,28 @@ END;
             return $result;
         }
 
+        $summary_info = array();
+
+        if ($highlight) {
+            $hlroot = $dom->getElementsByTagName('lst');
+            foreach ( $hlroot as $node ) {
+                if ($node->getAttribute('name') == 'highlighting') {
+                    $hlroot = $node;
+                    break;
+                }
+            }
+            foreach ( $hlroot->childNodes as $node ) {
+                if( $node->nodeType != XML_ELEMENT_NODE || $node->nodeName != 'lst' ) {
+                    continue;
+                }
+                $idtype = $node->getAttribute('name');
+                $summary_info[$idtype] = '';
+                foreach ( $node->getElementsByTagName('str') as $text ) {
+                    $summary_info[$idtype] .= $text->textContent;
+                }
+            }
+        }
+
         $root = $dom->getElementsByTagName('result'); // get root node
         $root = $root->item(0);
 
@@ -442,7 +478,7 @@ END;
         // loop over results
         foreach ( $root->childNodes as $node ) {
             if( $node->nodeType != XML_ELEMENT_NODE || $node->nodeName != 'doc' ) {
-                log_debug('bad node');
+                log_debug('bad node: ' . $node->nodeName);
                 continue;
             }
             $result = array();
@@ -457,6 +493,14 @@ END;
                     continue;
                 }
                 $result[$field->getAttribute('name')] = $value->wholeText;
+            }
+
+            if (isset($summary_info[$result['idtype']])) {
+                $result['summary'] = $summary_info[$result['idtype']];
+            }
+
+            if (empty($result['summary'])) {
+                $result['summary'] = $result['description'];
             }
 
             $results['data'][] = $result;

@@ -3,10 +3,12 @@
 {include file="columnfullstart.tpl"}
                 <div class="searchform">
                     <h2>{str tag="search"}</h2>
-                    <label>Query: 
-                        <input type="text" name="search_query" id="search_query" value="{$query|escape}">
-                    </label>
-                    <button type="button" onclick="doSearch();">{str tag="go"}</button>
+                    <form method="post" onsubmit="dosearch(); return false;">
+                        <label>Query: 
+                            <input type="text" name="query" id="search_query" value="{$query|escape}">
+                        </label>
+                        <button type="submit" class="button">{str tag="go"}</button>
+                    </form>
 				</div>
 				<div id="selfsearchresults">
                     <h3>{str tag="results"}</h3>

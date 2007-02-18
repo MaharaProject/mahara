@@ -44,14 +44,30 @@ results.statevars.push('query');
 results.statevars.push('type');
 results.emptycontent = {$enc_noresults};
 results.rowfunction = function (r, n, d) {
-    logDebug(r, n, d);
-    return TR(null, TD(null, r.title));
+    var titleElement = H3(null, A({'href': config.wwwroot + 'view/view.php?artefactid=' + r.id}, r.title));
+    var descriptionElement = P(null);
+    descriptionElement.innerHTML = r.summary;
+
+    return TR(null, TD(null,
+        titleElement,
+        descriptionElement
+    ));
 };
+
+function dosearch(e) {
+    results.query = $('search_query').value;
+    results.offset = 0;
+
+    results.doupdate();
+}
 EOF;
 
 if (!empty($query)) {
     $javascript .= 'results.query = ' . json_encode($query) . ";\n";
     $javascript .= "results.updateOnLoad();\n";
+}
+else {
+    $javascript .= 'results.query = \'\';';
 }
 
 $smarty = smarty(array('tablerenderer'));
