@@ -44,7 +44,24 @@ results.statevars.push('query');
 results.statevars.push('type');
 results.emptycontent = {$enc_noresults};
 results.rowfunction = function (r, n, d) {
-    var titleElement = H3(null, A({'href': config.wwwroot + 'view/view.php?artefactid=' + r.id}, r.title));
+
+    var titleElement
+    if (r.links._default) {
+        titleElement = [H3(null, A({'href': r.links._default}, r.title))];
+        delete r.links._default;
+    }
+    else {
+        titleElement = [H3(null, A(null, r.title))];
+    }
+
+    for ( var k in r.links ) {
+        var button = BUTTON(null, k);
+        connect(button, 'onclick', function () {
+            document.location.href = r.links[k];
+        });
+        titleElement.push(button);
+    }
+
     var descriptionElement = P(null);
     descriptionElement.innerHTML = r.summary;
 

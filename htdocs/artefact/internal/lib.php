@@ -321,6 +321,14 @@ class ArtefactTypeProfile extends ArtefactType {
         set_config_plugin('artefact', 'internal', 'profileiconwidth', $values['profileiconwidth']);
         set_config_plugin('artefact', 'internal', 'profileiconheight', $values['profileiconheight']);
     }
+
+    public static function get_links($id) {
+        $wwwroot = get_config('wwwroot');
+
+        return array(
+            '_default' => $wwwroot . 'artefact/internal/',
+        );
+    }
 }
 
 class ArtefactTypeProfileField extends ArtefactTypeProfile {
@@ -495,6 +503,14 @@ class ArtefactTypeProfileIcon extends ArtefactTypeProfileField {
         }
         $html .= '>';
         return array('html' => $html, 'javascript' => null);
+    }
+
+    public static function get_links($id) {
+        $wwwroot = get_config('wwwroot');
+
+        return array(
+            '_default' => $wwwroot . 'artefact/internal/profileicons.php',
+        );
     }
 }
 

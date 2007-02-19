@@ -382,7 +382,14 @@ class ArtefactTypeBlog extends ArtefactType {
         return $this->get('commentsnotify');
     }
 
+    public static function get_links($id) {
+        $wwwroot = get_config('wwwroot');
 
+        return array(
+            '_default'                                  => $wwwroot . 'artefact/blog/view/?id=' . $id,
+            get_string('blogsettings', 'artefact.blog') => $wwwroot . 'artefact/blog/settings/?id=' . $id,
+        );
+    }
 }
 
 /**
@@ -844,7 +851,13 @@ class ArtefactTypeBlogPost extends ArtefactType {
         return get_field('artefact_blog_blog', 'commentsnotify', 'blog', $parent);
     }
     
-    
+    public static function get_links($id) {
+        $wwwroot = get_config('wwwroot');
+
+        return array(
+            '_default'                                  => $wwwroot . 'artefact/blog/post.php?blogpost=' . $id,
+        );
+    }
 }
 
 ?>

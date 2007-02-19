@@ -254,7 +254,7 @@ class PluginArtefactFile extends PluginArtefact {
 
 }
 
-class ArtefactTypeFileBase extends ArtefactType {
+abstract class ArtefactTypeFileBase extends ArtefactType {
 
     protected $adminfiles = 0;
     protected $size;
@@ -428,8 +428,6 @@ class ArtefactTypeFileBase extends ArtefactType {
         return array('html' => $smarty->fetch('artefact:file:file_render_metadata.tpl'),
                      'javascript' => null);
     }
-
-
 
 }
 
@@ -698,6 +696,14 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         return array(FORMAT_ARTEFACT_LISTSELF, FORMAT_ARTEFACT_RENDERMETADATA);
     }
 
+    public static function get_links($id) {
+        $wwwroot = get_config('wwwroot');
+
+        return array(
+            '_default' => $wwwroot . 'artefact/file/download.php?file=' . $id,
+            get_string('folder', 'artefact.file') => $wwwroot . 'artefact/file/?folder=' . $id,
+        );
+    }
 }
 
 class ArtefactTypeFolder extends ArtefactTypeFileBase {
@@ -841,6 +847,13 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
         return $data;
     }
 
+    public static function get_links($id) {
+        $wwwroot = get_config('wwwroot');
+
+        return array(
+            '_default' => $wwwroot . 'artefact/file/?folder=' . $id,
+        );
+    }
 }
 
 class ArtefactTypeImage extends ArtefactTypeFile {

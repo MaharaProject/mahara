@@ -4,7 +4,7 @@
 // the file uploader because they are used slightly differently in the
 // my files screen and the edit blog post screen
 
-function FileBrowser(element, source, statevars, changedircallback, actionname, actioncallback) {
+function FileBrowser(element, source, statevars, changedircallback, actionname, actioncallback, startDirectory) {
     var self = this;
     this.element = element;
     this.source = source;
@@ -24,6 +24,27 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
     this.createfolderscript = config.wwwroot+'artefact/file/createfolder.json.php';
     this.updatemetadatascript = config.wwwroot+'artefact/file/updatemetadata.json.php';
     this.downloadscript = config.wwwroot+'artefact/file/download.php';
+
+    if (typeof(startDirectory) == 'object') {
+        var dirWalk = this.rootDirectory;
+
+        forEach(startDirectory, function(folder) {
+            if (folder.id == 0) {
+                return;
+            }
+            var dirNode = {
+                'folderid': folder.id,
+                'name': folder.name,
+                'children': {},
+                'parent': dirWalk
+            };
+
+            dirWalk.children[folder.name] = dirNode;
+            dirWalk = dirNode;
+        });
+
+        this.currentDirectory = dirWalk;
+    }
 
     if (this.actionname) {
         this.lastcolumnfunc = function(r) {
@@ -102,7 +123,7 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
             return TR({'class': 'r' + (n%2),'id':'row_' + r.id});
         };
         self.filelist.init();
-        self.chdir(self.rootDirectory);
+        self.chdir(self.currentDirectory);
     }
 
     this.deleted = function (data) {

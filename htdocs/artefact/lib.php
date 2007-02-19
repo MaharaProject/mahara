@@ -629,6 +629,15 @@ abstract class ArtefactType {
         return false;
     }
 
+    /**
+     * Returns a list of key => value pairs where the key is either '_default'
+     * or a langauge string, and value is a URL linking to that behaviour for
+     * this artefact type
+     * 
+     * @param integer This is the ID of the artefact being linked to
+     */
+    public static abstract function get_links($id);
+
     // ******************** HELPER FUNCTIONS ******************** //
 
     protected function get_artefact_type() {

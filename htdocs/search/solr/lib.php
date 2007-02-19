@@ -210,6 +210,8 @@ END;
             }
         }
 
+        self::self_search_make_links($results);
+
         return $results;
     }
 
@@ -280,6 +282,7 @@ END;
         $doc = array(
             'id'                  => $artefact->get('id'),
             'owner'               => $artefact->get('owner'),
+            'ref_artefacttype'    => $artefact->get('artefacttype'),
             'type'                => 'artefact',
             'title'               => $artefact->get('title'),
             'description'         => $artefact->get('description'),
@@ -499,7 +502,7 @@ END;
                 $result['summary'] = $summary_info[$result['idtype']];
             }
 
-            if (empty($result['summary'])) {
+            if (empty($result['summary']) && isset($result['description'])) {
                 $result['summary'] = $result['description'];
             }
 
