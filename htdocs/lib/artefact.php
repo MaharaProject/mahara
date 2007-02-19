@@ -119,7 +119,7 @@ function artefact_get_parents_for_cache($artefactid, &$parentids=false) {
             break;
         }
         // get any blog posts it may be attached to 
-        if ($parent->artefacttype == 'file' && $blogsinstalled
+        if (($parent->artefacttype == 'file' || $parent->artefacttype == 'image') && $blogsinstalled
             && $associated = get_column('artefact_blog_blogpost_file', 'blogpost', 'file', $parent->id)) {
             foreach ($associated as $a) {
                 $parentids[$a] = 1;
