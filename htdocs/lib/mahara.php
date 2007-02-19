@@ -1013,7 +1013,9 @@ function pieform_element_calendar_configure($element) {
 }
 
 function pieform_element_textarea_configure($element) {
-    $element['resizable'] = true;
+    if (!array_key_exists('resizable', $element)) {
+        $element['resizable'] = true;
+    }
     return $element;
 }
 
