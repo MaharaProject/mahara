@@ -17,9 +17,8 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage core or plugintype-pluginname
-
- * @author     Your Name <you@example.org>
+ * @subpackage artefact-resume
+ * @author     Penny Leach <penny@catalyst.net.nz> 
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
@@ -68,19 +67,33 @@ $form = array(
     'jsform'      => true,
     'method'      => 'post',
     'elements'    => array(
-        'coverletter' => array(
-            'type'  => 'wysiwyg',
-            'title' => get_string('coverletter', 'artefact.resume'),
-            'cols'  => 70,
-            'rows'  => 10,
-            'defaultvalue' => ((!empty($coverletter)) ? $coverletter->get('title') : null),
+        'coverletterfs' => array(
+            'type' => 'fieldset',
+            'legend' => get_string('coverletter', 'artefact.resume'),
+            'collapsible' => true,
+            'collapsed' => true,
+            'elements' => array(
+                'coverletter' => array(
+                    'type'  => 'wysiwyg',
+                    'cols'  => 70,
+                    'rows'  => 10,
+                    'defaultvalue' => ((!empty($coverletter)) ? $coverletter->get('title') : null),
+                ),
+            )
         ),
-        'interest' => array(
-            'type' => 'wysiwyg',
-            'title' => get_string('interest', 'artefact.resume'),
-            'defaultvalue' => ((!empty($interest)) ? $interest->get('title') : null),
-            'cols'  => 70,
-            'rows'  => 10,
+        'interestsfs' => array(
+            'type' => 'fieldset',
+            'legend' => get_string('interest', 'artefact.resume'),
+            'collapsible' => true,
+            'collapsed' => true,
+            'elements' => array(
+                'interest' => array(
+                    'type' => 'wysiwyg',
+                    'defaultvalue' => ((!empty($interest)) ? $interest->get('title') : null),
+                    'cols'  => 70,
+                    'rows'  => 10,
+                ),
+            ),
         ),
         'contactinformationfs' => array(
             'type' => 'fieldset',
@@ -171,8 +184,28 @@ $form = array(
     )
 );
 $mainform = pieform($form);
-$smarty = smarty();
-$smarty->assign('mainform', $mainform); 
+$smarty = smarty(array('tablerenderer'));
+$smarty->assign('mainform', $mainform);
+$inlinejs .= '';
+foreach (ArtefactTypeResumeComposite::get_composite_artefact_types() as $compositetype) {
+    $inlinejs .= <<<EOF
+var {$compositetype}list = new TableRenderer(
+    '{$compositetype}list',
+    'composite.json.php',
+    [
+EOF;
+    $inlinejs .= call_static_method(generate_artefact_class_name($compositetype, 'get_tablerenderer_js'));
+    $inlinejs .= <<<EOF
+    ]
+);
+{$compositetype}list.type = '{$compositetype}';
+{$compositetype}list.statevars.push('type');
+{$compositetype}list.emptycontent = ' ';
+{$compositetype}list.updateOnLoad();
+
+EOF;
+}
+$smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 $smarty->display('artefact:resume:index.tpl');
 
 function resumemainform_submit(Pieform $form, $values) {
@@ -237,7 +270,7 @@ function resumemainform_submit(Pieform $form, $values) {
     else {
         $message = '';
         foreach (array_keys($errors) as $key) {
-            $message .= get_string('resumesavefailed.' . $key, 'artefact.resume')."\n";
+            $message .= get_string('resumesavefailed', 'artefact.resume')."\n";
         }
         $form->json_reply(PIEFORM_ERR, $message);
     }

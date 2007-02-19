@@ -29,6 +29,32 @@ defined('INTERNAL') || die();
 $string['myresume'] = 'My R&eacute;sum&eacute;';
 $string['mygoals'] = 'My Goals';
 $string['myskills'] = 'My skills';
+$string['coverletter'] = 'Cover Letter';
+$string['interest'] = 'Interests';
+$string['contactinformation'] = 'Contact Information';
+$string['personalinformation'] = 'Personal Information';
+$string['dateofbirth'] = 'Date of birth';
+$string['placeofbirth'] = 'Place of birth';
+$string['citizenship'] = 'Citizenship';
+$string['visastatus'] = 'Visa Status';
+$string['female'] = 'Female';
+$string['male'] = 'Male';
+$string['gender'] = 'Gender';
+$string['maritalstatus'] = 'Marital Status';
+$string['resumesaved'] = 'Resume saved';
+$string['resumesavefailed'] = 'Failed to update your resume';
+$string['educationhistory'] = 'Education History';
+$string['employmenthistory'] = 'Employment History';
+$string['certification'] = 'Certifications, Accreditations, and Awards';
+$string['book'] = 'Books and Publications';
+$string['membership'] = 'Professional Memberships';
+$string['startdate'] = 'Start date';
+$string['enddate'] = 'End date';
+$string['date'] = 'Date';
+$string['position'] = 'Position';
+$string['qualification'] = 'Qualification';
+$string['description'] = 'Description';
+$string['title'] = 'Title';
 
 ?>
 

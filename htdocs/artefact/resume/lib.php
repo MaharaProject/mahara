@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage core or plugintype-pluginname
- * @author     Your Name <you@example.org>
+ * @subpackage artefact-resume
+ * @author     Penny Leach <penny@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
@@ -107,6 +107,14 @@ class ArtefactTypeCoverletter extends ArtefactTypeResume {
             FORMAT_ARTEFACT_RENDERMETADATA,
         );
     }
+
+    public function listself($options) {
+        return array('html' => get_string('coverletter', 'artefact.resume'));
+    }
+
+    public function render_full($options) {
+        return array('html' => $this->title);
+    }
 }
 
 class ArtefactTypeContactinformation extends ArtefactTypeResume {
@@ -117,7 +125,8 @@ class ArtefactTypeContactinformation extends ArtefactTypeResume {
         foreach ($fields as $f) {
             try {
                 $$f = artefact_instance_from_type($f);
-                $smarty->assign($f, $$f->render(FORMAT_ARTEFACT_RENDERFULL, array()));
+                $rendered = $$f->render(FORMAT_ARTEFACT_RENDERFULL, array());
+                $smarty->assign($f, $rendered['html']);
             }
             catch (Exception $e) { }
         }
@@ -167,11 +176,12 @@ class ArtefactTypeContactinformation extends ArtefactTypeResume {
     }
 
     public function listchildren($options) {
-        return $this->get_html(false);
+        return array('html' => $this->get_html(false));
     }
 
     public function render_full($options) {
-        return $this->get_html(false);
+        log_debug( array('html' => $this->get_html(false)));
+        return array('html' => $this->get_html(false));
     }
 }
 
@@ -258,6 +268,33 @@ class ArtefactTypePersonalinformation extends ArtefactTypeResume {
             FORMAT_ARTEFACT_RENDERMETADATA,
         );
     }
+
+    public function listchildren($options) {
+        $html = '';
+        $link = get_config('wwwroot') . 'view/view.php?';
+        if (array_key_exists('viewid', $options)) {
+            $link .= 'view=' . $options['viewid'] . '&artefact=';
+        }
+        else {
+            $link .= 'artefact=';
+        }
+        foreach (array_keys(ArtefactTypePersonalinformation::get_composite_fields()) as $field) {
+            $html .= '<a href="' . $link . $this->id . '">'
+                . get_string($field, 'artefact.resume') . '</a><br>';
+        }
+        return array('html' => $html);
+    }
+
+    public function render_full($options) {
+        $smarty = smarty();
+        $fields = array();
+        foreach (array_keys(ArtefactTypePersonalInformation::get_composite_fields()) as $field) {
+            $fields[get_string($field, 'artefact.resume')] = $this->get_composite($field);
+        }
+        $smarty->assign('fields', $fields);
+        return array('html' => $smarty->fetch('artefact:resume:fragments/personalinformation.tpl'));
+    }
+
 }
 
 class ArtefactTypeInterest extends ArtefactTypeResume {
@@ -273,10 +310,18 @@ class ArtefactTypeInterest extends ArtefactTypeResume {
             FORMAT_ARTEFACT_RENDERMETADATA,
         );
     }
+
+    public function listself($options) {
+        return array('html' => get_string('interest', 'artefact.resume'));
+    }
+
+    public function render_full($options) {
+        return array('html' => $this->title);
+    }
 }
 
 
-class ArtefactTypeResumeComposite extends ArtefactTypeResume {
+abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
 
     public static function get_render_list() {
         return array(
@@ -286,18 +331,73 @@ class ArtefactTypeResumeComposite extends ArtefactTypeResume {
             FORMAT_ARTEFACT_RENDERMETADATA
         );
     }
+
+    public static function get_composite_artefact_types() {
+        return array(
+            'employmenthistory',
+            'educationhistory',
+            'certification',
+            'book',
+            'membership'
+        );
+    }
+
+    public static abstract function get_tablerenderer_js();
 }
 
-class ArtefactTypeEmploymenthistory extends ArtefactTypeResumeComposite { }
+class ArtefactTypeEmploymenthistory extends ArtefactTypeResumeComposite { 
+    public static function get_tablerenderer_js() {
+        $at = get_string('at');
+        return "
+                'startdate',
+                'enddate',
+                function (r) {
+                    return TD(null, r.title + '{$at}' + r.employer);
+                }
+        ";
+    }
+}
 
-class ArtefactTypeEducationhistory extends ArtefactTypeResumeComposite { }
+class ArtefactTypeEducationhistory extends ArtefactTypeResumeComposite {
+    public static function get_tablerenderer_js() {
+        $at = get_string('at');
+        return "
+                'startdate',
+                'enddate',
+                function (r) {
+                    return TD(null, r.qualtype + '{$at}' + r.institution);
+                }
+        ";
+    }
+}
 
-class ArtefactTypeCertification extends ArtefactTypeResumeComposite { }
+class ArtefactTypeCertification extends ArtefactTypeResumeComposite { 
+    public static function get_tablerenderer_js() {
+        return "
+                'date',
+                'description',
+        ";
+    }
+}
 
-class ArtefactTypeBook extends ArtefactTypeResumeComposite { }
+class ArtefactTypeBook extends ArtefactTypeResumeComposite {
+    public static function get_tablerenderer_js() {
+        return "
+                'date',
+                'title', 
+        ";
+    }
+}
 
-class ArtefactTypeMembership extends ArtefactTypeResumeComposite { } 
-
+class ArtefactTypeMembership extends ArtefactTypeResumeComposite { 
+    public static function get_tablerenderer_js() {
+        return "
+                'startdate',
+                'enddate',
+                'title'
+        ";
+    }
+}
 
 
 ?>

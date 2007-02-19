@@ -43,6 +43,7 @@
                 <FIELD NAME="qualtype" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="qualname" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="qualdescription" TYPE="text" NOTNULL="false" />
+                <FIELD NAME="institution" TYPE="text" NOTNULL="true" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
