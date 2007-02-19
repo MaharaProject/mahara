@@ -421,6 +421,10 @@ function core_postinst() {
     else {
         $status = false;
     }
+
+    // Set default search plugin
+    set_config('searchplugin', 'internal');
+
     return $status;
 }
 

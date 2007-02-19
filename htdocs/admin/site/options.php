@@ -31,12 +31,15 @@ define('SUBMENUITEM', 'siteoptions');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('pieforms/pieform.php');
+require_once('searchlib.php');
 define('TITLE', get_string('siteoptions', 'admin'));
 
 $langoptions = get_languages();
 $themeoptions = get_themes();
 $yesno = array(true  => get_string('yes'),
                false => get_string('no'));
+
+$searchpluginoptions = get_search_plugins();
 
 $siteoptionform = pieform(array(
     'name'     => 'siteoptions',
@@ -64,6 +67,14 @@ $siteoptionform = pieform(array(
             'defaultvalue' => get_config('theme'),
             'collapseifoneoption' => true,
             'options'      => $themeoptions,
+        ),
+        'searchplugin' => array(
+            'type'         => 'select',
+            'title'        => get_string('searchplugin','admin'),
+            'description'  => get_string('searchplugindescription','admin'),
+            'defaultvalue' => get_config('searchplugin'),
+            'collapseifoneoption' => true,
+            'options'      => $searchpluginoptions,
         ),
         'pathtofile' => array(
             'type'         => 'text',
@@ -116,7 +127,7 @@ function siteoptions_fail(Pieform $form, $field) {
 
 function siteoptions_submit(Pieform $form, $values) {
     $fields = array('sitename','language','theme','pathtofile', 'pathtoclam',
-                    'allowpublicviews','artefactviewinactivitytime');
+                    'allowpublicviews','artefactviewinactivitytime', 'searchplugin');
     foreach ($fields as $field) {
         if (!set_config($field, $values[$field])) {
             siteoptions_fail($form, $field);

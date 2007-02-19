@@ -26,6 +26,7 @@
 
 defined('INTERNAL') || die();
 
+$config->name          = 'Solr';
 $config->version       = 2007021900;
 $config->release       = '0.2';
 

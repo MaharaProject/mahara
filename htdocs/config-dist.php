@@ -36,9 +36,6 @@ $cfg->dbuser   = 'mahara';
 $cfg->dbpass   = 'mahara';
 $cfg->dbprefix = '';
 
-// search plugin to use (currently only 'internal' exists)
-$cfg->searchplugin = 'internal';
-
 // wwwroot - the web-visible path to your Mahara installation
 // Normally, this is automatically detected - if it doesn't work for you
 // then try specifying it here

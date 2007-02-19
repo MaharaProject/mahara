@@ -197,4 +197,25 @@ function search_selfsearch($query_string, $limit, $offset, $type = 'all') {
 
     return call_static_method(generate_class_name('search', $plugin), 'self_search', $query_string, $limit, $offset, $type);
 }
+
+function get_search_plugins() {
+    $searchpluginoptions = array();
+
+    if ($searchplugins = get_records_array('search_installed')) {
+        foreach ($searchplugins as $plugin) {
+            $searchpluginoptions[$plugin->name] = $plugin->name;
+
+            $config_path = get_config('docroot') . 'search/' . $plugin->name . '/version.php';
+            if (is_readable($config_path)) {
+                $config = new StdClass;
+                require_once($config_path);
+                if (isset($config->name)) {
+                    $searchpluginoptions[$plugin->name] = $config->name;
+                }
+            }
+        }
+    }
+
+    return $searchpluginoptions;
+}
 ?>
