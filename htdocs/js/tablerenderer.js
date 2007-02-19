@@ -13,7 +13,7 @@ function TableRenderer(target, source, columns, options) {
     this.paginate_simple = true;
     this.paginate_firstlast = true;
     this.statevars = ['offset','limit'];
-    this.emptycontent = false;  // Something to display when no results are found
+    this.emptycontent = undefined;  // Something to display when no results are found
     this.rowfunction = function(rowdata, rownumber, data) { return TR({'class': 'r' + (rownumber % 2)}); }
     this.updatecallback = function () {};
 
@@ -47,7 +47,7 @@ function TableRenderer(target, source, columns, options) {
             self.assertPager(self.offset, self.limit, self.count);
         }
 
-        if (self.emptycontent) {
+        if (typeof(self.emptycontent) != 'undefined') {
             var newelement = DIV(null,self.emptycontent);
             hideElement(newelement);
             insertSiblingNodesBefore(self.table, newelement);
@@ -180,7 +180,7 @@ function TableRenderer(target, source, columns, options) {
                 }
             }
 
-            if (self.emptycontent) {
+            if (typeof(self.emptycontent) != 'undefined') {
                 if (self.count > 0) {
                     hideElement(self.table.previousSibling);
                     self.table.style.display = '';
