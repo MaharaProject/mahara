@@ -64,21 +64,21 @@ class PluginSearchSolr extends PluginSearchInternal {
     }
 
     public static function event_reindex_user($event, $user) {
-        if (get_config('searchplugin') != 'solr') {
+        if (!self::config_is_sane) {
             return;
         }
         self::index_user($user);
         self::commit();
     }
     public static function event_saveartefact($event, $artefact) {
-        if (get_config('searchplugin') != 'solr') {
+        if (!self::config_is_sane) {
             return;
         }
         self::index_artefact($artefact);
         self::commit();
     }
     public static function event_deleteartefact($event, $artefact) {
-        if (get_config('searchplugin') != 'solr') {
+        if (!self::config_is_sane) {
             return;
         }
         self::delete_byidtype($artefact->get('id'), 'artefact');
@@ -86,7 +86,7 @@ class PluginSearchSolr extends PluginSearchInternal {
     }
 
     public static function event_saveview($event, $view) {
-        if (get_config('searchplugin') != 'solr') {
+        if (!self::config_is_sane) {
             return;
         }
         self::index_view($view);
@@ -94,7 +94,11 @@ class PluginSearchSolr extends PluginSearchInternal {
     }
 
     public static function event_deleteview($event, $view) {
-        log_debug('event_deleteview()');
+        if (!self::config_is_sane) {
+            return;
+        }
+        self::delete_byidtype($view['id'], 'view');
+        self::commit();
     }
 
     public static function has_config() {
@@ -232,7 +236,7 @@ END;
 
     // This function will rebuild the solr indexes
     public static function rebuild_all() {
-        if (get_config('searchplugin') != 'solr') {
+        if (!self::config_is_sane) {
             return;
         }
         self::rebuild_users();
@@ -600,6 +604,14 @@ END;
         }
 
         self::send_update($dom->saveXML());
+    }
+
+    private static function config_is_sane() {
+        if (get_config('searchplugin') != 'solr') {
+            return false;
+        }
+
+        return true;
     }
 }
 
