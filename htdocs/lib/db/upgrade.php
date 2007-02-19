@@ -224,6 +224,11 @@ function xmldb_core_upgrade($oldversion=0) {
         upgrade_template('gallery', $template);
     }
 
+    if ($oldversion < 2007021900) {
+        insert_record('event_type', (object)array('name' => 'saveview'));
+        insert_record('event_type', (object)array('name' => 'deleteview'));
+    }
+
     return $status;
 
 }
