@@ -830,8 +830,10 @@ class ArtefactTypeBlogPost extends ArtefactType {
             WHERE f.blogpost = ' . $this->id, '');
 
         // load tags
-        foreach ( $list as &$attachment ) {
-            $attachment->tags = join(', ', get_column('artefact_tag', 'tag', 'artefact', $attachment->id));
+        if ($list) {
+            foreach ( $list as &$attachment ) {
+                $attachment->tags = join(', ', get_column('artefact_tag', 'tag', 'artefact', $attachment->id));
+            }
         }
         return $list;
     }
