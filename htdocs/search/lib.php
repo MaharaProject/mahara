@@ -164,17 +164,21 @@ abstract class PluginSearch extends Plugin {
     public static abstract function self_search($query_string, $limit, $offset, $type = 'all');
 
     protected static function self_search_make_links($data) {
+        $wwwroot = get_config('wwwroot');
         if ($data['count']) {
             foreach ($data['data'] as &$result) {
                 switch ($result['type']) {
                     case 'artefact':
-                        if (isset($result['artefacttype'])) {
-                            safe_require('artefact', get_field('artefact_installed_type', 'plugin', 'name', $result['artefacttype']));
-                            $result['links'] = call_static_method(generate_artefact_class_name($result['artefacttype']), 'get_links', $result['id']);
-                        }
-                        else {
-                            log_debug($result);
-                        }
+                        safe_require('artefact', get_field('artefact_installed_type', 'plugin', 'name', $result['artefacttype']));
+                        $result['links'] = call_static_method(generate_artefact_class_name($result['artefacttype']), 'get_links', $result['id']);
+                        break;
+                    case 'view':
+                        $result['links'] = array(
+                            '_default'                        => $wwwroot . 'view/view.php?view=' . $result['id'],
+                            get_string('editviewinformation') => $wwwroot . 'view/editmetadata.php?viewid=' . $result['id'],
+                            get_string('editview')            => $wwwroot . 'view/edit.php?viewid=' . $result['id'],
+                            get_string('editaccess')          => $wwwroot . 'view/editaccess.php?viewid=' . $result['id'],
+                        );
                         break;
                     default:
                         break;

@@ -43,6 +43,11 @@ switch ($type) {
         PluginSearchSolr::commit();
         PluginSearchSolr::optimize();
         break;
+    case 'view':
+        PluginSearchSolr::rebuild_views();
+        PluginSearchSolr::commit();
+        PluginSearchSolr::optimize();
+        break;
     default:
         PluginSearchSolr::rebuild_all();
         break;

@@ -56,9 +56,10 @@ results.rowfunction = function (r, n, d) {
 
     for ( var k in r.links ) {
         var button = BUTTON(null, k);
-        connect(button, 'onclick', function () {
-            document.location.href = r.links[k];
-        });
+        connect(button, 'onclick', partial(
+            function (link) { document.location.href = link },
+            r.links[k]
+        ));
         titleElement.push(button);
     }
 

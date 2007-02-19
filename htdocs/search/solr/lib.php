@@ -56,6 +56,8 @@ class PluginSearchSolr extends PluginSearchInternal {
             (object)array('plugin' => 'solr', 'event' => 'activateuser',   'callfunction' => 'event_reindex_user'   ),
             (object)array('plugin' => 'solr', 'event' => 'saveartefact',   'callfunction' => 'event_saveartefact'   ),
             (object)array('plugin' => 'solr', 'event' => 'deleteartefact', 'callfunction' => 'event_deleteartefact' ),
+            (object)array('plugin' => 'solr', 'event' => 'saveview',       'callfunction' => 'event_saveview'       ),
+            (object)array('plugin' => 'solr', 'event' => 'deleteview',     'callfunction' => 'event_deleteview'     ),
         );
 
         return $subscriptions;
@@ -81,6 +83,18 @@ class PluginSearchSolr extends PluginSearchInternal {
         }
         self::delete_byidtype($artefact->get('id'), 'artefact');
         self::commit();
+    }
+
+    public static function event_saveview($event, $view) {
+        if (get_config('searchplugin') != 'solr') {
+            return;
+        }
+        self::index_view($view);
+        self::commit();
+    }
+
+    public static function event_deleteview($event, $view) {
+        log_debug('event_deleteview()');
     }
 
     public static function has_config() {
@@ -115,7 +129,7 @@ END;
             'type'     => 'fieldset',
             'legend'   => get_string('indexcontrol', 'search.solr'),
             'collapsible' => true,
-            'collapsed' => false,
+            'collapsed' => true,
             'elements' => array(
                 array(
                     'type'  => 'html',
@@ -126,6 +140,7 @@ END;
                     'value' => '<table><tbody>' 
                     . '<tr><td><a href="" onclick="solr_reindex(this, \'user\'); return false;">' . hsc(get_string('reindexusers','search.solr')) . '</a></td></tr>'
                     . '<tr><td><a href="" onclick="solr_reindex(this, \'artefact\'); return false;">' . hsc(get_string('reindexartefacts','search.solr')) . '</a></td></tr>'
+                    . '<tr><td><a href="" onclick="solr_reindex(this, \'view\'); return false;">' . hsc(get_string('reindexviews','search.solr')) . '</a></td></tr>'
                     . '</tbody></table>',
                 ),
             ),
@@ -222,8 +237,34 @@ END;
         }
         self::rebuild_users();
         self::rebuild_artefacts();
+        self::rebuild_views();
         self::commit();
         self::optimize();
+    }
+
+    public static function rebuild_views() {
+        log_debug('Starting rebuild_views()');
+
+        self::delete_bytype('view');
+
+        $views = get_recordset('view', '', '', '', '*,' . db_format_tsfield('ctime') . ',' . db_format_tsfield('mtime'));
+
+        while ($view = $views->FetchRow()) {
+            $doc = array(
+                'id'                 => $view['id'],
+                'owner'              => $view['owner'],
+                'type'               => 'view',
+                'title'              => $view['title'],
+                'description'        => strip_tags($view['description']),
+                'tags'               => join(', ', get_column('view_tag', 'tag', 'view', $view['id'])),
+                'ctime'              => $view['ctime'],
+                'mtime'              => $view['mtime'],
+            );
+
+            self::add_document($doc);
+        }
+
+        log_debug('Completed rebuild_views()');
     }
 
     public static function rebuild_artefacts() {
@@ -289,6 +330,23 @@ END;
             'tags'                => join(', ', $artefact->get('tags')),
             'ctime'               => $artefact->get('ctime'),
             'mtime'               => $artefact->get('mtime'),
+        );
+
+        self::add_document($doc);
+    }
+
+    private static function index_view($view) {
+        $view = (array)get_record('view', 'id', $view['id'], null, null, null, null, '*,' . db_format_tsfield('ctime') . ',' . db_format_tsfield('mtime'));
+
+        $doc = array(
+            'id'                 => $view['id'],
+            'owner'              => $view['owner'],
+            'type'               => 'view',
+            'title'              => $view['title'],
+            'description'        => strip_tags($view['description']),
+            'tags'               => join(', ', get_column('view_tag', 'tag', 'view', $view['id'])),
+            'ctime'              => $view['ctime'],
+            'mtime'              => $view['mtime'],
         );
 
         self::add_document($doc);

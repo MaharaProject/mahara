@@ -26,7 +26,7 @@
 
 defined('INTERNAL') || die();
 
-$config->version       = 2007021401;
-$config->release       = '0.1';
+$config->version       = 2007021900;
+$config->release       = '0.2';
 
 ?>

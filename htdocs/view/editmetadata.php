@@ -154,6 +154,8 @@ function createview1_submit(Pieform $form, $values) {
 
     db_commit();
 
+    handle_event('saveview', $view_id);
+
     $SESSION->add_ok_msg(get_string('viewinformationsaved', 'view'));
     redirect('/view/');
 }
