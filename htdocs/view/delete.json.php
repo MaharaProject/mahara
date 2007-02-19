@@ -42,6 +42,8 @@ if ($view->get('owner') != $USER->get('id')) {
 }
 $view->delete();
 
+handle_event('deleteview', $viewid);
+
 json_reply(false,get_string('viewdeleted'));
 
 ?>

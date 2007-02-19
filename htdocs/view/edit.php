@@ -150,6 +150,8 @@ if (param_boolean('submit')) {
     activity_occurred('watchlist', (object) array('view' => $view_id,
                                                   'subject' => get_string('viewmodified')));
 
+    handle_event('saveview', $view_id);
+
     
 
     $SESSION->add_ok_msg(get_string('viewinformationsaved', 'view'));

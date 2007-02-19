@@ -203,6 +203,7 @@ function editviewaccess_submit(Pieform $form, $values) {
     $data->owner = $USER->get('id');
     $data->oldusers = $beforeusers;
     activity_occurred('viewaccess', $data);
+    handle_event('saveview', $viewid);
 
     db_commit();
     $SESSION->add_ok_msg(get_string('viewaccesseditedsuccessfully'));

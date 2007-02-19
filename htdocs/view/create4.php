@@ -162,6 +162,9 @@ function createview4_submit(Pieform $form, $values) {
     activity_occurred('newview', $data);
 
     db_commit();
+
+    handle_event('saveview', $viewid);
+
     $SESSION->add_ok_msg(get_string('viewcreatedsuccessfully', 'view'));
     redirect('/view/');
 }

@@ -306,6 +306,7 @@ class View {
         delete_records('view_access_community','view',$this->id);
         delete_records('view_access_group','view',$this->id);
         delete_records('view_access_usr','view',$this->id);
+        delete_records('view_tag','view',$this->id);
         delete_records('usr_watchlist_artefact','view',$this->id);
         delete_records('usr_watchlist_view','view',$this->id);
         delete_records('view','id',$this->id);

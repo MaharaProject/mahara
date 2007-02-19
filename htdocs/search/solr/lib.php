@@ -64,21 +64,21 @@ class PluginSearchSolr extends PluginSearchInternal {
     }
 
     public static function event_reindex_user($event, $user) {
-        if (!self::config_is_sane) {
+        if (!self::config_is_sane()) {
             return;
         }
         self::index_user($user);
         self::commit();
     }
     public static function event_saveartefact($event, $artefact) {
-        if (!self::config_is_sane) {
+        if (!self::config_is_sane()) {
             return;
         }
         self::index_artefact($artefact);
         self::commit();
     }
     public static function event_deleteartefact($event, $artefact) {
-        if (!self::config_is_sane) {
+        if (!self::config_is_sane()) {
             return;
         }
         self::delete_byidtype($artefact->get('id'), 'artefact');
@@ -86,7 +86,7 @@ class PluginSearchSolr extends PluginSearchInternal {
     }
 
     public static function event_saveview($event, $view) {
-        if (!self::config_is_sane) {
+        if (!self::config_is_sane()) {
             return;
         }
         self::index_view($view);
@@ -94,7 +94,7 @@ class PluginSearchSolr extends PluginSearchInternal {
     }
 
     public static function event_deleteview($event, $view) {
-        if (!self::config_is_sane) {
+        if (!self::config_is_sane()) {
             return;
         }
         self::delete_byidtype($view['id'], 'view');
@@ -236,7 +236,7 @@ END;
 
     // This function will rebuild the solr indexes
     public static function rebuild_all() {
-        if (!self::config_is_sane) {
+        if (!self::config_is_sane()) {
             return;
         }
         self::rebuild_users();
