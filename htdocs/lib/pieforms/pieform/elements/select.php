@@ -48,6 +48,9 @@ function pieform_element_select(Pieform $form, $element) {
 
     if (!empty($element['collapseifoneoption']) && isset($element['options']) && is_array($element['options']) && count($element['options']) == 1) {
         foreach ($element['options'] as $key => $value) {
+            if (is_array($value)) {
+                $value = $value['value'];
+            }
             $result = $value . '<input type="hidden" name="' . $element['name'] . '" value="' . $key . '">';
         }
         return $result;
@@ -79,7 +82,36 @@ function pieform_element_select(Pieform $form, $element) {
         else {
             $selected = '';
         }
-        $result .= "\t<option value=\"" . Pieform::hsc($key) . "\"$selected>" . Pieform::hsc($value) . "</option>\n";
+
+        // Disable the option if necessary
+        if (is_array($value) && !empty($value['disabled'])) {
+            $disabled = ' disabled="disabled"';
+        }
+        else {
+            $disabled = '';
+        }
+
+        // Add a label if necessary. None of the common browsers actually render
+        // this properly at the moment, but that may change in future.
+        if (is_array($value) && isset($value['label'])) {
+            $label = ' label="' . Pieform::hsc($value['label']) . '"';
+        }
+        else {
+            $label = '';
+        }
+
+        // Get the value to display/put in the value attribute
+        if (is_array($value)) {
+            if (!isset($value['value'])) {
+                Pieform::info('No value set for option "' . $key . '" of select element "' . $element['name'] . '"');
+                $value = '';
+            }
+            else {
+                $value = $value['value'];
+            }
+        }
+
+        $result .= "\t<option value=\"" . Pieform::hsc($key) . "\"{$selected}{$label}{$disabled}>" . Pieform::hsc($value) . "</option>\n";
     }
 
     if (!$optionselected && !is_array($values) && $values !== null) {

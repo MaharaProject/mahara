@@ -70,4 +70,11 @@ function pieform_renderer_oneline(Pieform $form, $builtelement, $rawelement) {
     return $result;
 }
 
+function pieform_renderer_oneline_get_js($id) {
+        return <<<EOF
+function {$id}_remove_all_errors () {}
+function {$id}_set_error () {}
+EOF;
+}
+
 ?>
