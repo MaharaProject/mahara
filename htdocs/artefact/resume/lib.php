@@ -92,6 +92,10 @@ class ArtefactTypeResume extends ArtefactType {
         $a->parent     = $artefact->id;
         return $a;
     }
+
+    public static function get_links($id) {
+        // @todo penny
+    }
 }
 
 class ArtefactTypeCoverletter extends ArtefactTypeResume {
@@ -342,10 +346,65 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
         );
     }
 
+    /**
+    * This function should return a snippet of javascript
+    * to be plugged into a table renderer instantiation
+    * it comprises the cell function definition
+    */
     public static abstract function get_tablerenderer_js();
+
+    /** 
+    * This function should return an array suitable to 
+    * put into the 'elements' part of a pieform array
+    * to generate a form to add an instance
+    */
+    public static abstract function get_addform_elements();
+
+    /**
+    * This function processes the form for the composite
+    * @throws Exception
+    */
+    public static function process_compositeform(Pieform $form, $values) {
+        $a = null;
+        $classname = generate_artefact_class_name($values['compositetype']);
+        if (empty($values['id'])) {
+            $id = 0;
+        }
+        $a = new $classname($id, $values);
+        $a->commit();
+    }
+
+    public function commit() {
+        $table = 'artefact_resume_' . $this->get('artefacttype');
+        log_debug($table);
+        $data = (object)$this;
+        if (empty($this->id)) {
+            db_begin();
+            log_debug('before parent commit');
+            parent::commit();
+            log_debug('after parent commit');
+            $data->artefact = $this->id;
+            insert_record($table, $data);
+            log_debug('after this commit');
+            db_commit();
+            log_debug('after COMMIT;');
+        }
+        else {
+            $data->artefact = $this->id;
+            db_begin();
+            parent::commit();
+            update_record($table, $data, 'artefact');
+            db_commit();
+        }
+    }
 }
 
 class ArtefactTypeEmploymenthistory extends ArtefactTypeResumeComposite { 
+
+    protected $startdate;
+    protected $enddate;
+    protected $employer;
+
     public static function get_tablerenderer_js() {
         $at = get_string('at');
         return "
@@ -356,9 +415,63 @@ class ArtefactTypeEmploymenthistory extends ArtefactTypeResumeComposite {
                 }
         ";
     }
+
+    public static function get_addform_elements() {
+        return array(
+            'startdate' => array(
+                'type' => 'calendar',
+                'caloptions' => array(
+                    'showsTime'      => false,
+                    'ifFormat'       => '%Y/%m/%d'
+                ),
+                'rules' => array(
+                    'required' => true,
+                ),
+                'title' => get_string('startdate', 'artefact.resume'),
+            ),
+            'enddate' => array(
+                'type' => 'calendar', 
+                'caloptions' => array(
+                    'showsTime'     => false,
+                    'ifFormat'      => '%Y/%m/%d',
+                ),
+                'rules' => array(
+                    'required' => true,
+                ),
+                'title' => get_string('enddate', 'artefact.resume'),
+            ),
+            'employer' => array(
+                'type' => 'text',
+                'rules' => array(
+                    'required' => true,
+                ),
+                'title' => get_string('employer', 'artefact.resume'),
+            ),
+            'title' => array(
+                'type' => 'text',
+                'rules' => array(
+                    'required' => true,
+                ),
+                'title' => get_string('jobtitle', 'artefact.resume'),
+            ),
+            'description' => array(
+                'type' => 'textarea',
+                'rows' => 10,
+                'cols' => 50,
+                'resizable' => false,
+                'title' =>  get_string('jobdescription', 'artefact.resume'),
+            ),
+        );
+    }
 }
 
 class ArtefactTypeEducationhistory extends ArtefactTypeResumeComposite {
+
+    protected $startdate;
+    protected $enddate;
+    protected $qualtype;
+    protected $institution;
+
     public static function get_tablerenderer_js() {
         $at = get_string('at');
         return "
@@ -369,33 +482,201 @@ class ArtefactTypeEducationhistory extends ArtefactTypeResumeComposite {
                 }
         ";
     }
+    public static function get_addform_elements() {
+        return array(
+            'startdate' => array(
+                'type' => 'calendar',
+                'caloptions' => array(
+                    'showsTime'      => false,
+                    'ifFormat'       => '%Y/%m/%d'
+                ),
+                'rules' => array(
+                    'required' => true,
+                ),
+                'title' => get_string('startdate', 'artefact.resume'),
+            ),
+            'enddate' => array(
+                'type' => 'calendar', 
+                'caloptions' => array(
+                    'showsTime'     => false,
+                    'ifFormat'      => '%Y/%m/%d',
+                ),
+                'rules' => array(
+                    'required' => true,
+                ),
+                'title' => get_string('enddate', 'artefact.resume'),
+            ),
+            'institution' => array(
+                'type' => 'text',
+                'rules' => array(
+                    'required' => true,
+                ),
+                'title' => get_string('institution', 'artefact.resume'),
+            ),
+            'qualtype' => array(
+                'type' => 'text',
+                'rules' => array(
+                    'required' => true,
+                ),
+                'title' => get_string('qualtype', 'artefact.resume'),
+            ),
+            'title' => array(
+                'type' => 'text',
+                'rules' => array(
+                    'required' => true,
+                ),
+                'title' => get_string('qualname', 'artefact.resume'),
+            ),
+            'description' => array(
+                'type' => 'textarea',
+                'rows' => 10,
+                'cols' => 50,
+                'resizable' => false,
+                'title' => get_string('qualdescription', 'artefact.resume'),
+            ),
+        );
+    }
 }
 
 class ArtefactTypeCertification extends ArtefactTypeResumeComposite { 
+
+    protected $date;
+
     public static function get_tablerenderer_js() {
         return "
                 'date',
                 'description',
         ";
     }
+    public static function get_addform_elements() {
+        return array(
+            'date' => array(
+                'type' => 'calendar',
+                'caloptions' => array(
+                    'showsTime'      => false,
+                    'ifFormat'       => '%Y/%m/%d'
+                ),
+                'rules' => array(
+                    'required' => true,
+                ),
+                'title' => get_string('date', 'artefact.resume'),
+            ),
+            'title' => array(
+                'type' => 'text',
+                'rules' => array(
+                    'required' => true,
+                ),
+                'title' => get_string('title', 'artefact.resume'),
+            ),
+            'description' => array(
+                'type' => 'textarea',
+                'rows' => 10,
+                'cols' => 50,
+                'resizable' => false,
+                'title' => get_string('description'),
+            ),
+        );
+    }
 }
 
 class ArtefactTypeBook extends ArtefactTypeResumeComposite {
+
+    protected $date;
+    protected $contribution;
+
     public static function get_tablerenderer_js() {
         return "
                 'date',
                 'title', 
         ";
     }
+    public static function get_addform_elements() {
+        return array(
+            'date' => array(
+                'type' => 'calendar',
+                'caloptions' => array(
+                    'showsTime'      => false,
+                    'ifFormat'       => '%Y/%m/%d'
+                ),
+                'rules' => array(
+                    'required' => true,
+                ),
+                'title' => get_string('date', 'artefact.resume'),
+            ),
+            'title' => array(
+                'type' => 'text',
+                'rules' => array(
+                    'required' => true,
+                ),
+                'title' => get_string('title', 'artefact.resume'),
+            ),
+            'contribution' => array(
+                'type' => 'text',
+                'rules' => array(
+                    'required' => true,
+                ),
+                'title' => get_string('contribution', 'artefact.resume'),
+            ),
+            'description' => array(
+                'type' => 'textarea',
+                'rows' => 10,
+                'cols' => 50,
+                'resizable' => false,
+            ),
+        );
+    }
 }
 
 class ArtefactTypeMembership extends ArtefactTypeResumeComposite { 
+
+    protected $date;
+
     public static function get_tablerenderer_js() {
         return "
                 'startdate',
                 'enddate',
                 'title'
         ";
+    }
+    public static function get_addform_elements() {
+        return array(
+            'startdate' => array(
+                'type' => 'calendar',
+                'caloptions' => array(
+                    'showsTime'      => false,
+                    'ifFormat'       => '%Y/%m/%d'
+                ),
+                'rules' => array(
+                    'required' => true,
+                ),
+                'title' => get_string('startdate', 'artefact.resume'),
+            ),
+            'enddate' => array(
+                'type' => 'calendar', 
+                'caloptions' => array(
+                    'showsTime'     => false,
+                    'ifFormat'      => '%Y/%m/%d',
+                ),
+                'rules' => array(
+                    'required' => true,
+                ),
+                'title' => get_string('enddate', 'artefact.resume'),
+            ),
+            'title' => array(
+                'type' => 'text',
+                'rules' => array(
+                    'required' => true,
+                ),
+                'title' => get_string('title', 'artefact.resume'),
+            ),
+            'description' => array(
+                'type' => 'textarea',
+                'rows' => 10,
+                'cols' => 50,
+                'resizable' => false,
+                'title' => get_string('description', 'artefact.resume'),
+            ),
+        );
     }
 }
 

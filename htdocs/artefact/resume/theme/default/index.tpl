@@ -1,7 +1,7 @@
 {include file="header.tpl"}
 
 <div id="column-right">
-{include file="adminmenu.tpl"}
+{include file="sidebar.tpl"}
 </div>
 {include file="columnleftstart.tpl"}
 <h3>{str tag='myresume' section='artefact.resume'}</h3>
@@ -16,7 +16,10 @@
         </tr>
     </thead>
 </table>
-<button>{str tag='add'}</button>
+<div>
+    <button id="addemploymenthistorybutton" onclick="toggleCompositeForm('employmenthistory');">{str tag='add'}</button>
+    <div id="employmenthistoryform" class="hiddenStructure">{$compositeforms.employmenthistory}</div>
+</div>
 <h3>{str tag='educationhistory' section='artefact.resume'}</h3>
 <table id="educationhistorylist">
     <thead>
@@ -27,7 +30,10 @@
         </tr>
     </thead>
 </table>
-<button>{str tag='add'}</button>
+<div>
+    <button id="addeducationhistorybutton" onclick="toggleCompositeForm('educationhistory');">{str tag='add'}</button>
+    <div id="educationhistoryform" class="hiddenStructure">{$compositeforms.educationhistory}</div>
+</div>
 <h3>{str tag='certification' section='artefact.resume'}</h3>
 <table id="certificationlist">
     <thead>
@@ -37,7 +43,10 @@
         </tr>
     </thead>
 </table>
-<button>{str tag='add'}</button>
+<div>
+    <button id="addcertificationbutton" onclick="toggleCompositeForm('certification');">{str tag='add'}</button>
+    <div id="certificationform" class="hiddenStructure">{$compositeforms.certification}</div>
+</div>
 <h3>{str tag='book' section='artefact.resume'}</h3>
 <table id="booklist">
     <thead>
@@ -47,7 +56,10 @@
         </tr>
     </thead>
 </table>
-<button>{str tag='add'}</button>
+<div>
+    <button id="addbookbutton" onclick="toggleCompositeForm('book');">{str tag='add'}</button>
+    <div id="bookform" class="hiddenStructure">{$compositeforms.book}</div>
+</div>
 <h3>{str tag='membership' section='artefact.resume'}</h3>
 <table id="membershiplist">
     <thead>
@@ -58,7 +70,10 @@
         </tr>
     </thead>
 </table>
-<button>{str tag='add'}</button>
+<div>
+    <button id="addmembershipbutton" onclick="toggleCompositeForm('membership');">{str tag='add'}</button>
+    <div id="membershipform" class="hiddenStructure">{$compositeforms.membership}</div>
+</div>
 {include file="columnleftend.tpl"}
 
 

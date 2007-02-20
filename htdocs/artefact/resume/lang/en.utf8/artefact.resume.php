@@ -55,6 +55,12 @@ $string['position'] = 'Position';
 $string['qualification'] = 'Qualification';
 $string['description'] = 'Description';
 $string['title'] = 'Title';
-
+$string['employer'] = 'Employer';
+$string['jobtitle'] = 'Job Title';
+$string['jobdescription'] = 'Position Description';
+$string['institution'] = 'Institution';
+$string['qualtype'] = 'Qualification Type';
+$string['qualdescription'] = 'Qualification Description';
+$string['contribution'] = 'Contribution';
 ?>
 

@@ -120,7 +120,7 @@ $form = array(
                         'ifFormat'       => '%Y/%m/%d'
                     ),
                     'defaultvalue' => ((!empty($personalinformation)) 
-                        ? $personalinformation->get_composite('dateofbirth') : null),
+                        ? strtotime($personalinformation->get_composite('dateofbirth')) : null),
                     'title' => get_string('dateofbirth', 'artefact.resume'),
                     'rules' => array(
                         'required' => true,
@@ -183,28 +183,78 @@ $form = array(
         ),
     )
 );
+
+$cancelstr = get_string('cancel');
+$addstr = get_string('add');
+
 $mainform = pieform($form);
 $smarty = smarty(array('tablerenderer'));
+
 $smarty->assign('mainform', $mainform);
-$inlinejs .= '';
+$inlinejs = <<<EOF
+var tableRenderers = {};
+
+EOF;
+$compositeforms = array();
 foreach (ArtefactTypeResumeComposite::get_composite_artefact_types() as $compositetype) {
     $inlinejs .= <<<EOF
-var {$compositetype}list = new TableRenderer(
+tableRenderers.{$compositetype} = new TableRenderer(
     '{$compositetype}list',
     'composite.json.php',
     [
 EOF;
-    $inlinejs .= call_static_method(generate_artefact_class_name($compositetype, 'get_tablerenderer_js'));
+    $inlinejs .= call_static_method(generate_artefact_class_name($compositetype), 'get_tablerenderer_js');
     $inlinejs .= <<<EOF
     ]
 );
-{$compositetype}list.type = '{$compositetype}';
-{$compositetype}list.statevars.push('type');
-{$compositetype}list.emptycontent = ' ';
-{$compositetype}list.updateOnLoad();
+tableRenderers.{$compositetype}.type = '{$compositetype}';
+tableRenderers.{$compositetype}.statevars.push('type');
+tableRenderers.{$compositetype}.emptycontent = '';
+tableRenderers.{$compositetype}.updateOnLoad();
 
 EOF;
+    $elements = call_static_method(generate_artefact_class_name($compositetype), 'get_addform_elements');
+    $elements['submit'] = array(
+        'type' => 'submit',
+        'value' => get_string('save'),
+    );
+    $elements['compositetype'] = array(
+        'type' => 'hidden',
+        'value' => $compositetype,
+    );
+    $cform = array(
+        'name' => 'add' . $compositetype,
+        'plugintype' => 'artefact',
+        'pluginname' => 'resume',
+        'elements' => $elements, 
+        'jsform' => true,
+        'successcallback' => 'compositeform_submit',
+        'jssuccesscallback' => 'compositeSaveCallback',
+    );
+    $compositeforms[$compositetype] = pieform($cform);
+} // end composite loop
+$inlinejs .= <<<EOF
+
+function toggleCompositeForm(type) {
+    var elemName = ''; 
+    elemName = type + 'form';
+    if (hasElementClass(elemName, 'hiddenStructure')) {
+        removeElementClass(elemName, 'hiddenStructure');
+        $('add' + type + 'button').innerHTML = '{$cancelstr}';
+    }
+    else {
+        $('add' + type + 'button').innerHTML = '{$addstr}';
+        addElementClass(elemName, 'hiddenStructure'); 
+    }
 }
+
+function compositeSaveCallback(name, data) {
+   tableRenderers[data.type].doupdate(); 
+   // @todo hide values
+   toggleCompositeForm(data.type);
+}
+EOF;
+$smarty->assign('compositeforms', $compositeforms);
 $smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 $smarty->display('artefact:resume:index.tpl');
 
@@ -274,6 +324,19 @@ function resumemainform_submit(Pieform $form, $values) {
         }
         $form->json_reply(PIEFORM_ERR, $message);
     }
+}
+
+function compositeform_submit(Pieform $form, $values) {
+    global $USER;
+    $values['owner'] = $USER->get('id');
+    try {
+        call_static_method(generate_artefact_class_name($values['compositetype']), 
+            'process_compositeform', $form, $values);
+    }
+    catch (Exception $e) {
+        $form->json_reply(PIEFORM_ERR, $e->getMessage());
+    }
+    $form->json_reply(PIEFORM_OK, get_string('compositesaved.' . $values['compositetype'], 'artefact.resume'));
 }
 
 ?>
