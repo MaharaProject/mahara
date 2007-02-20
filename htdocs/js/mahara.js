@@ -132,7 +132,7 @@ function processingStop() {
 
 // Function to post a data object to a json script.
 function sendjsonrequest(script, data, rtype, successcallback, errorcallback, quiet) {
-    log('sendjsonrequest(script=', script, ', data=', data, ', rtype=', rtype, ', success=', successcallback, ', error=', errorcallback, ', quiet=', quiet, ')');
+    //log('sendjsonrequest(script=', script, ', data=', data, ', rtype=', rtype, ', success=', successcallback, ', error=', errorcallback, ', quiet=', quiet, ')');
     donothing = function () { return; };
     if (typeof(successcallback) != 'function') {
         successcallback = donothing;
@@ -255,6 +255,7 @@ contextualHelpCache       = new Object();
 contextualHelpSelected    = null;
 contextualHelpContainer   = null;
 contextualHelpDeferrable  = null;
+contextualHelpOpened      = false;
 
 function contextualHelp(formName, helpName, pluginType, pluginName, page, section, ref) {
     var key;
@@ -288,31 +289,50 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, sectio
         if (key == contextualHelpSelected) {
             // we're closing an already open one by clicking on the ? again
             contextualHelpSelected = null;
+            contextualHelpOpened = false;
             return;
         } else {
             // we're closing a DIFFERENT one that's already open (we want to
             // continue and open the new one)
             contextualHelpSelected = null;
+            contextualHelpOpened = false;
         }
     }
 
     // create and display the container
     contextualHelpContainer = DIV({
-            'style': 'position: absolute',
+            'style': 'position: absolute; visibility: hidden; z-index: 1000;',
             'class': 'contextualHelp'
         },
         IMG({'src': config.theme['images/loading.gif']})
     );
-    var position = getElementPosition(ref);
-    position.x += 10;
-    position.y -= 10;
-    setElementPosition(contextualHelpContainer, position);
     appendChildNodes($('header'), contextualHelpContainer);
+
+    var position = getElementPosition(ref);
+    var dimensions = getElementDimensions(contextualHelpContainer);
+
+    // Adjust the position. The element is moved towards the centre of the
+    // screen, based on which quadrant of the screen the help icon is in
+    screenDimensions = getViewportDimensions();
+    if (position.x + dimensions.w < screenDimensions.w) {
+        // Left of the screen - there's enough room for it
+        position.x += 10;
+    }
+    else {
+        position.x -= dimensions.w;
+    }
+    position.y -= 10;
+
+    // Once it has been positioned, make it visible
+    setElementPosition(contextualHelpContainer, position);
+    setStyle(contextualHelpContainer, {'visibility': 'visible'});
+
     contextualHelpSelected = key;
 
     // load the content
     if (contextualHelpCache[key]) {
         contextualHelpContainer.innerHTML = contextualHelpCache[key];
+        callLater(0, function() { contextualHelpOpened = true; });
     }
     else {
         if (contextualHelpDeferrable && contextualHelpDeferrable.cancel) {
@@ -328,16 +348,30 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, sectio
                 contextualHelpCache[key] = data.content;
                 contextualHelpContainer.innerHTML = contextualHelpCache[key];
             }
+            contextualHelpOpened = true;
             processingStop();
         },
         function (error) {
             contextualHelpCache[key] = get_string('couldnotgethelp');
             contextualHelpContainer.innerHTML = contextualHelpCache[key];
             processingStop();
+            contextualHelpOpened = true;
         },
         true);
     }
 }
+
+/* Only works in non-ie at the moment. Using 'document' as the element
+   makes IE detect the event, but then makes it so you need to click on
+   the help twice before it opens. */
+connect(window, 'onclick', function(e) {
+    if (contextualHelpOpened) {
+        removeElement(contextualHelpContainer);
+        contextualHelpContainer = null;
+        contextualHelpSelected = null;
+        contextualHelpOpened = false;
+    }
+});
 
 // Cookie related functions
 /* this function gets the cookie, if it exists */

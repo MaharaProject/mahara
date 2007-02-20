@@ -1376,14 +1376,19 @@ span.block_targetted, div.block_targetted {
 .contextualHelp {
 	padding: 0 3px;
 	margin: 0;
-	position: absolute;
-	vertical-align: bottom;
 	width: 250px;
+    max-height: 30%;
+    overflow: auto;
+	background-color: #f4f7e8;
+    border: 1px solid #c4c7b8;
+    cursor: help;
+}
+.contextualHelp h3 {
+    margin-top: 0;
 }
 .contextualHelp p {
 	padding: 3px;
 	margin: 0;
-	background-color: #f4f7e8;
 }
 .maincontent #accountprefs #accountprefs_submit_container td {
 	padding: 10px 0 0 0;
