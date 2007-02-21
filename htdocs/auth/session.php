@@ -37,6 +37,7 @@ ini_set('session.gc_maxlifetime', get_config('session_timeout') * 60);
 ini_set('session.use_only_cookies', true);
 ini_set('session.cookie_path', get_mahara_install_subdirectory());
 ini_set('session.cookie_httponly', 1);
+ini_set('session.hash_bits_per_session', 4);
 
 
 // TEMPORARY: this will be REMOVED after the session path changing
