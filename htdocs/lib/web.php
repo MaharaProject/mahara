@@ -544,7 +544,7 @@ function param_variable($name) {
  * @param string The GET or POST parameter you want returned
  * @param mixed [optional] the default value for this parameter
  *
- * @return string The value of the parameter
+ * @return int The value of the parameter
  *
  */
 function param_integer($name) {
