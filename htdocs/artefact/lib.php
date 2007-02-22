@@ -652,6 +652,10 @@ abstract class ArtefactType {
         return $type;
     }
 
+    public function to_stdclass() {
+       return (object)get_object_vars($this); 
+    }
+
     public static function has_config() {
         return false;
     }
