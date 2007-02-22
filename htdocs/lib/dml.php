@@ -1076,7 +1076,7 @@ function update_record($table, $dataobject, $where=null) {
         return true;
     }
     catch (ADODB_Exception $e) {
-        throw new SQLException(create_sql_exception_message($e, $sql, $wherevalues));
+        throw new SQLException(create_sql_exception_message($e, $sql, array_merge($values, $wherevalues)));
     }
 }
 
