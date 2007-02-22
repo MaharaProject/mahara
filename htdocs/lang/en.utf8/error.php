@@ -64,5 +64,5 @@ $string['viewnotfoundexceptiontitle'] = 'View not found';
 $string['viewnotfoundexceptionmessage'] = 'You tried to access a view that didn\'t exist!';
 
 $string['artefactnotfound'] = "Artefact with id %s not found (maybe it has been deleted already?)";
-
+$string['notartefactowner'] = 'You do not own this artefact';
 ?>

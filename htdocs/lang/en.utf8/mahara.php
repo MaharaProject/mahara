@@ -31,6 +31,7 @@ $string['add']     = 'Add';
 $string['cancel']  = 'Cancel';
 $string['delete']  = 'Delete';
 $string['edit']    = 'Edit';
+$string['editing'] = 'Editing';
 $string['save']    = 'Save';
 $string['submit']  = 'Submit';
 $string['update']  = 'Update';
@@ -45,6 +46,7 @@ $string['errorprocessingform'] = 'There was an error with submitting this form. 
 $string['no']     = 'No';
 $string['yes']    = 'Yes';
 $string['none']   = 'None';
+$string['at'] = 'at';
 
 $string['nextpage']  = 'Next page';
 $string['prevpage']  = 'Previous page';
