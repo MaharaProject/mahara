@@ -68,7 +68,8 @@
          <TABLE NAME="artefact_resume_membership">
             <FIELDS>
                 <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="date" TYPE="datetime" NOTNULL="true" />
+                <FIELD NAME="startdate" TYPE="datetime" NOTNULL="true" />
+                <FIELD NAME="enddate" TYPE="datetime" NOTNULL="false" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="artefact" />

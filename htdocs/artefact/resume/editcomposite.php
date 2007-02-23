@@ -1,0 +1,71 @@
+<?php
+/**
+ * This program is part of Mahara
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ *
+ * @package    mahara
+ * @subpackage artefact-resume
+ * @author     Penny Leach <penny@catalyst.net.nz> 
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
+ * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
+ *
+ */
+
+define('INTERNAL', true);
+define('MENUITEM', 'myresume');
+define('SUBMENUITEM', 'myresume');
+
+require_once(dirname(dirname(dirname(__FILE__))) . '/init.php');
+require_once('pieforms/pieform.php');
+require_once('pieforms/pieform/elements/calendar.php');
+require('artefact.php');
+
+$id = param_integer('id');
+
+$a = artefact_instance_from_id($id);
+$type = $a->get('artefacttype');
+
+if ($a->get('owner') != $USER->get('id')) {
+    throw new AccessDeniedException(get_string('notartefactowner', 'error'));
+}
+
+$elements = call_static_method(generate_artefact_class_name($type), 'get_addform_elements');
+$elements['submit'] = array(
+    'type' => 'submit',
+    'value' => get_string('save'),
+);
+$elements['compositetype'] = array(
+    'type' => 'hidden',
+    'value' => $type,
+);
+$cform = array(
+    'name' => $type,
+    'plugintype' => 'artefact',
+    'pluginname' => 'resume',
+    'elements' => $elements, 
+    'jsform' => true,
+    'successcallback' => 'compositeform_submit',
+);
+
+$a->populate_form($cform);
+$compositeform = pieform($cform);
+
+$smarty = smarty();
+$smarty->assign('compositeform', $compositeform);
+$smarty->assign('composite', $type);
+$smarty->display('artefact:resume:editcomposite.tpl');
+
+?>

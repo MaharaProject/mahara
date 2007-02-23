@@ -26,7 +26,7 @@
 
 defined('INTERNAL') || die();
 
-$string['myresume'] = 'My R&eacute;sum&eacute;';
+$string['myresume'] = 'My Résumé';
 $string['mygoals'] = 'My Goals';
 $string['myskills'] = 'My skills';
 $string['coverletter'] = 'Cover Letter';
@@ -60,7 +60,20 @@ $string['jobtitle'] = 'Job Title';
 $string['jobdescription'] = 'Position Description';
 $string['institution'] = 'Institution';
 $string['qualtype'] = 'Qualification Type';
+$string['qualname'] = 'Qualification Name';
 $string['qualdescription'] = 'Qualification Description';
 $string['contribution'] = 'Contribution';
+$string['compositedeleteconfirm'] = 'Are you sure you want to delete this?';
+$string['compositesaved'] = 'Saved successfully';
+$string['compositedeleted'] = 'Deleted successfully';
+$string['backtoresume'] = 'Back to My Résumé';
+$string['personalgoal'] = 'Personal Goals';
+$string['academicgoal'] = 'Academic Goals';
+$string['careergoal'] = 'Career Goals';
+$string['personalskill'] = 'Personal Skills';
+$string['academicskill'] = 'Academic Skills';
+$string['workskill'] = 'Work Skills';
+$string['goalandskillsaved'] = 'Saved successfully';
+$string['resume'] = 'Résumé';
 ?>
 

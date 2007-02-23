@@ -39,6 +39,12 @@ class PluginArtefactResume extends Plugin {
             'book',
             'membership',
             'interest',
+            'personalgoal',
+            'academicgoal',
+            'careergoal',
+            'personalskill',
+            'academicskill',
+            'workskill'
         );
     }
 
@@ -184,7 +190,6 @@ class ArtefactTypeContactinformation extends ArtefactTypeResume {
     }
 
     public function render_full($options) {
-        log_debug( array('html' => $this->get_html(false)));
         return array('html' => $this->get_html(false));
     }
 }
@@ -367,27 +372,43 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
     public static function process_compositeform(Pieform $form, $values) {
         $a = null;
         $classname = generate_artefact_class_name($values['compositetype']);
-        if (empty($values['id'])) {
-            $id = 0;
+        if (!array_key_exists('id', $values)) {
+            $values['id'] = 0;
         }
-        $a = new $classname($id, $values);
+        global $USER;
+        $values['owner'] = $USER->get('id');
+        unset($values['submit']);
+        unset($values['compositetype']);
+        unset($values['sesskey']);
+        foreach (array('date', 'startdate', 'enddate') as $k) {
+            if (array_key_exists($k, $values)) {
+                $values[$k] = db_format_timestamp($values[$k]);
+            }
+        }
+        if (empty($values['id'])) {
+            $a = new $classname($values['id'], $values);
+        }
+        else {
+            $a = new $classname($values['id']);
+            foreach ($values as $key => $value) {
+                $a->set($key, $value);
+            }
+        }
         $a->commit();
     }
 
     public function commit() {
-        $table = 'artefact_resume_' . $this->get('artefacttype');
-        log_debug($table);
-        $data = (object)$this;
+        if (empty($this->dirty)) {
+            return;
+        }
+        $table = $this->get_other_table_name();
+        $data = $this->to_stdclass();
         if (empty($this->id)) {
             db_begin();
-            log_debug('before parent commit');
             parent::commit();
-            log_debug('after parent commit');
             $data->artefact = $this->id;
             insert_record($table, $data);
-            log_debug('after this commit');
             db_commit();
-            log_debug('after COMMIT;');
         }
         else {
             $data->artefact = $this->id;
@@ -396,6 +417,74 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
             update_record($table, $data, 'artefact');
             db_commit();
         }
+    }
+
+    public function delete() {
+        $table = $this->get_other_table_name();
+        db_begin();
+
+        delete_records($table, 'artefact', $this->id);
+        parent::delete();
+
+        db_commit();
+    }
+
+
+    /**
+    * Takes a pieform that's been set up by all the 
+    * subclass get_addform_elements functions
+    * and puts the default values in (and hidden id field)
+    * ready to be an edit form
+    * 
+    * @param $form pieform structure (before calling pieform() on it
+    * passed by _reference_
+    */
+    public function populate_form(&$form) {
+        foreach ($form['elements'] as $k => $element) {
+            if ($k == 'submit' || $k == 'compositetype') {
+                continue;
+            }
+            if (isset($this->{$k})) {
+                if (in_array($k, array('date', 'startdate', 'enddate'))) {
+                    $form['elements'][$k]['defaultvalue'] = strtotime($this->{$k});
+                }
+                else {
+                    $form['elements'][$k]['defaultvalue'] = $this->{$k};
+                }
+            }
+        }
+        $form['elements']['id'] = array(
+            'type' => 'hidden',
+            'value' => $this->id,
+        );
+    }
+
+
+    /** 
+    * call the parent constructor
+    * and then load up the stuff from the supporting table
+    */
+    public function __construct($id=0, $data=array()) {
+        if (empty($id)) {
+            $data['container'] = 0;
+        }
+        parent::__construct($id, $data);
+        // load up the rest of the stuff from the relevant table.
+        if ($row = get_record($this->get_other_table_name(), 'artefact', $this->id)) {
+            unset($row->artefact);
+            foreach ($row as $key => $value) {
+                if (property_exists($this, $key)) {
+                    $this->{$key} = $value;
+                }
+            }
+        }
+    }
+
+    /** 
+    * returns the name of the supporting table
+    */
+    public function get_other_table_name() {
+        return 'artefact_resume_' . $this->get_artefact_type();
     }
 }
 
@@ -411,8 +500,8 @@ class ArtefactTypeEmploymenthistory extends ArtefactTypeResumeComposite {
                 'startdate',
                 'enddate',
                 function (r) {
-                    return TD(null, r.title + '{$at}' + r.employer);
-                }
+                    return TD(null, r.title + ' {$at} ' + r.employer);
+                },
         ";
     }
 
@@ -434,9 +523,6 @@ class ArtefactTypeEmploymenthistory extends ArtefactTypeResumeComposite {
                 'caloptions' => array(
                     'showsTime'     => false,
                     'ifFormat'      => '%Y/%m/%d',
-                ),
-                'rules' => array(
-                    'required' => true,
                 ),
                 'title' => get_string('enddate', 'artefact.resume'),
             ),
@@ -478,8 +564,8 @@ class ArtefactTypeEducationhistory extends ArtefactTypeResumeComposite {
                 'startdate',
                 'enddate',
                 function (r) {
-                    return TD(null, r.qualtype + '{$at}' + r.institution);
-                }
+                    return TD(null, r.qualtype + ' {$at} ' + r.institution);
+                },
         ";
     }
     public static function get_addform_elements() {
@@ -545,7 +631,7 @@ class ArtefactTypeCertification extends ArtefactTypeResumeComposite {
     public static function get_tablerenderer_js() {
         return "
                 'date',
-                'description',
+                'title',
         ";
     }
     public static function get_addform_elements() {
@@ -622,6 +708,7 @@ class ArtefactTypeBook extends ArtefactTypeResumeComposite {
                 'rows' => 10,
                 'cols' => 50,
                 'resizable' => false,
+                'title' => get_string('description', 'artefact.resume'),
             ),
         );
     }
@@ -629,13 +716,14 @@ class ArtefactTypeBook extends ArtefactTypeResumeComposite {
 
 class ArtefactTypeMembership extends ArtefactTypeResumeComposite { 
 
-    protected $date;
+    protected $startdate;
+    protected $enddate;
 
     public static function get_tablerenderer_js() {
         return "
                 'startdate',
                 'enddate',
-                'title'
+                'title',
         ";
     }
     public static function get_addform_elements() {
@@ -657,9 +745,6 @@ class ArtefactTypeMembership extends ArtefactTypeResumeComposite {
                     'showsTime'     => false,
                     'ifFormat'      => '%Y/%m/%d',
                 ),
-                'rules' => array(
-                    'required' => true,
-                ),
                 'title' => get_string('enddate', 'artefact.resume'),
             ),
             'title' => array(
@@ -680,5 +765,58 @@ class ArtefactTypeMembership extends ArtefactTypeResumeComposite {
     }
 }
 
+class ArtefactTypeResumeGoalAndSkill extends ArtefactTypeResume {
+
+    public static function is_singular() {
+        return true;
+    }
+
+    public static function get_goalandskill_artefact_types() {
+        return array('personalgoal', 'academicgoal', 'careergoal',
+            'personalskill', 'academicskill', 'workskill');
+    }
+
+}
+
+class ArtefactTypePersonalgoal extends ArtefactTypeResumeGoalAndSkill { }
+class ArtefactTypeAcademicgoal extends ArtefactTypeResumeGoalAndSkill { }
+class ArtefactTypeCareergoal extends ArtefactTypeResumeGoalAndSkill { }
+class ArtefactTypePersonalskill extends ArtefactTypeResumeGoalAndSkill { }
+class ArtefactTypeAcademicskill extends ArtefactTypeResumeGoalAndSkill { }
+class ArtefactTypeWorkskill extends ArtefactTypeResumeGoalAndSkill { }
+
+function compositeform_submit(Pieform $form, $values) {
+    try {
+        call_static_method(generate_artefact_class_name($values['compositetype']), 
+            'process_compositeform', $form, $values);
+    }
+    catch (Exception $e) {
+        $form->json_reply(PIEFORM_ERR, $e->getMessage());
+    }
+    $form->json_reply(PIEFORM_OK, get_string('compositesaved', 'artefact.resume'));
+}
+
+function goalandskillform_submit(Pieform $form, $values) {
+    foreach ($values as $key => $value) {
+        if (!in_array($key, ArtefactTypeResumeGoalAndSkill::get_goalandskill_artefact_types())) {
+            continue;
+        }
+        try {
+            $a = artefact_instance_from_type($key);
+            $a->set('description', $value);
+        }
+        catch (Exception $e) {
+            global $USER;
+            $classname = generate_artefact_class_name($key);
+            $a = new $classname(0, array(
+                'owner' => $USER->get('id'),
+                'title' => get_string($key),
+                'description' => $value,
+           )); 
+        }
+        $a->commit();
+    }
+    $form->json_reply(PIEFORM_OK, get_string('goalandskillsaved', 'artefact.resume'));
+}   
 
 ?>

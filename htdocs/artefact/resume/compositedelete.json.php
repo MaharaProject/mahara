@@ -28,39 +28,19 @@ define('INTERNAL', 1);
 define('JSON', 1);
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+require('artefact.php');
 
-$limit = param_integer('limit', 10);
-$offset = param_integer('offset', 0);
-$type = param_alpha('type');
+$id = param_integer('id');
 
-$data = array();
-$count = 0;
+$a = artefact_instance_from_id($id);
 
-$prefix = get_config('dbprefix');
-$othertable = 'artefact_resume_' . $type;
-
-$sql = 'SELECT * 
-    FROM ' . $prefix . 'artefact a 
-    JOIN ' . $prefix . $othertable . ' ar ON ar.artefact = a.id
-    WHERE owner = ? AND artefacttype = ?
-    LIMIT ' . $limit . ' OFFSET ' . $offset;
-if (!$data = get_records_sql_array($sql, array($USER->get('id'), $type))) {
-    $data = array();
+if ($a->get('owner') != $USER->get('id')) {
+    throw new AccessDeniedException(get_string('notartefactowner', 'error'));
 }
-foreach ($data as &$row) {
-    foreach (array('date', 'startdate', 'enddate') as $key) {
-        if (array_key_exists($key, $row)) {
-            $row->{$key} = format_date(strtotime($row->{$key}), 'strftimedate');
-        }
-    }
-}
-$count = count_records('artefact', 'owner', $USER->get('id'), 'artefacttype', $type);
-echo json_encode(array(
-    'data' => $data,
-    'limit' => $limit,
-    'offset' => $offset,
-    'count' => $count,
-    'type' => $type));
+
+$a->delete();
+
+json_reply(null, get_string('compositedeleted', 'artefact.resume'));
 
 ?>
 

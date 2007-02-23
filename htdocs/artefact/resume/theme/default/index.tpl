@@ -13,6 +13,8 @@
             <th>{str tag='startdate' section='artefact.resume'}</th>
             <th>{str tag='enddate' section='artefact.resume'}</th>
             <th>{str tag='position' section='artefact.resume'}</th>
+            <th></th>
+            <th></th>
         </tr>
     </thead>
 </table>
@@ -27,6 +29,8 @@
             <th>{str tag='startdate' section='artefact.resume'}</th>
             <th>{str tag='enddate' section='artefact.resume'}</th>
             <th>{str tag='qualification' section='artefact.resume'}</th>
+            <th></th>
+            <th></th>
         </tr>
     </thead>
 </table>
@@ -39,7 +43,9 @@
     <thead>
         <tr>
             <th>{str tag='date' section='artefact.resume'}</th>
-            <th>{str tag='description' section='artefact.resume'}</th>
+            <th>{str tag='title' section='artefact.resume'}</th>
+            <th></th>
+            <th></th>
         </tr>
     </thead>
 </table>
@@ -53,6 +59,8 @@
         <tr>
             <th>{str tag='date' section='artefact.resume'}</th>
             <th>{str tag='title' section='artefact.resume'}</th>
+            <th></th>
+            <th></th>
         </tr>
     </thead>
 </table>
@@ -67,6 +75,8 @@
             <th>{str tag='startdate' section='artefact.resume'}</th>
             <th>{str tag='enddate' section='artefact.resume'}</th>
             <th>{str tag='title' section='artefact.resume'}</th>
+            <th></th>
+            <th></th>
         </tr>
     </thead>
 </table>
