@@ -32,6 +32,8 @@ safe_require('artefact', 'blog');
 
 // This is the wwwroot.
 $wwwroot = get_config('wwwroot');
+$enc_delete = json_encode(get_string('delete', 'artefact.blog'));
+$enc_confirmdelete = json_encode(get_string('deleteblog?', 'artefact.blog'));
 
 // This JavaScript creates a table to display the blog entries.
 $js = <<<EOF
@@ -50,6 +52,26 @@ var bloglist = new TableRenderer(
             var td = TD();
             td.innerHTML = r.description;
             return td;
+        },
+        function (r) {
+            var deleteButton = BUTTON(null, {$enc_delete});
+            connect(deleteButton, 'onclick', function (e) {
+                if (!confirm({$enc_confirmdelete})) {
+                    return;
+                }
+                sendjsonrequest(
+                    'index.json.php',
+                    {
+                        'action': 'delete',
+                        'id': r.id
+                    },
+                    'POST',
+                    function (data) {
+                        bloglist.doupdate();
+                    }
+                );
+            });
+            return TD(null, deleteButton);
         }
     ]
 );

@@ -23,6 +23,7 @@
 					<tr>
 						<th>{str section="artefact.blog" tag="title"}</th>
 						<th>{str section="artefact.blog" tag="description"}</th>
+                        <th></th>
 					</tr>
 				</thead>
 				<tbody>

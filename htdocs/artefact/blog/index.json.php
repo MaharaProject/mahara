@@ -30,18 +30,33 @@ define('JSON', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('artefact', 'blog');
 
+$action = param_variable('action', 'list');
+$id = param_variable('id', null);
+
 json_headers();
 
-$limit = param_integer('limit', ArtefactTypeBlog::pagination);
-$offset = param_integer('offset', 0);
+if ($action == 'list') {
+    $limit = param_integer('limit', ArtefactTypeBlog::pagination);
+    $offset = param_integer('offset', 0);
 
-list($count, $data) = ArtefactTypeBlog::get_blog_list($USER, $limit, $offset);
+    list($count, $data) = ArtefactTypeBlog::get_blog_list($USER, $limit, $offset);
 
-echo json_encode(array(
-    'count' => $count,
-    'limit' => $limit,
-    'offset' => $offset,
-    'data' => $data
-));
+    echo json_encode(array(
+        'count' => $count,
+        'limit' => $limit,
+        'offset' => $offset,
+        'data' => $data
+    ));
+}
+else if ($action == 'delete') {
+    $blog = artefact_instance_from_id($id);
+    if ($blog instanceof ArtefactTypeBlog && $blog->get('owner') == $USER->get('id')) {
+        $blog->delete();
+    }
+    echo json_encode(array(
+        'error'   => false,
+        'message' => get_string('blogdeleted', 'artefact.blog'),
+    ));
+}
 
 ?>
