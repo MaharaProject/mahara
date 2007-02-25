@@ -335,7 +335,7 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
     public static function get_render_list() {
         return array(
             FORMAT_ARTEFACT_LISTSELF,
-            FORMAT_ARTEFACT_LISTCHILDREN,
+/*            FORMAT_ARTEFACT_LISTCHILDREN, */
             FORMAT_ARTEFACT_RENDERFULL,
             FORMAT_ARTEFACT_RENDERMETADATA
         );
@@ -475,7 +475,26 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
         return 'artefact_resume_' . $this->get_artefact_type();
     }
 
-
+    public function render_full($options) {
+        $smarty = smarty();
+        $type = $this->get('artefacttype'); 
+        $content = array(
+            'html'         => $smarty->fetch('artefact:resume:fragments/' . $type . '.tpl'),
+            'javascript'   => "
+                var {$type}list = new TableRenderer(
+                   '{$type}list',
+                   '" . get_config('wwwroot') . "artefact/resume/composite.json.php',
+                   [ 
+                   " . call_static_method(generate_artefact_class_name($type), 'get_tablerenderer_js') ."
+                   ]
+                );
+                    
+                {$type}list.type = '{$type}';
+                {$type}list.statevars.push('type');
+                {$type}list.updateOnLoad();
+            ");
+        return $content;
+    }
 }
 
 class ArtefactTypeEmploymenthistory extends ArtefactTypeResumeComposite { 
