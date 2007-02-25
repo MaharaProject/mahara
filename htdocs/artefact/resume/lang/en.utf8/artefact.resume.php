@@ -76,4 +76,3 @@ $string['workskill'] = 'Work Skills';
 $string['goalandskillsaved'] = 'Saved successfully';
 $string['resume'] = 'Résumé';
 ?>
-

@@ -217,10 +217,10 @@ function compositeSaveCallback(name, data) {
     $('add' + key).reset();
 }
 
-function deleteComposite(type, id) {
+function deleteComposite(type, id, artefact) {
     if (confirm('{$confirmdelstr}')) {
         sendjsonrequest('compositedelete.json.php',
-            {'id': id},
+            {'id': id, 'artefact': artefact},
             'GET', 
             function(data) {
                 tableRenderers[type].doupdate();
@@ -246,13 +246,13 @@ EOF;
     $inlinejs .= <<<EOF
 
         function (r) {
-            return TD(null, A({'href': 'editcomposite.php?id=' + r.id}, '{$editstr}'));
+            return TD(null, A({'href': 'editcomposite.php?id=' + r.id + '&artefact=' + r.artefact}, '{$editstr}'));
         },
         function (r, d) {
            var link = A({'href': ''}, '{$delstr}');
             connect(link, 'onclick', function (e) {
                 e.stop();
-                return deleteComposite(d.type,r.id);
+                return deleteComposite(d.type, r.id, r.artefact);
             });
             return TD(null, link);
         }

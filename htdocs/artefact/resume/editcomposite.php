@@ -34,8 +34,9 @@ require_once('pieforms/pieform/elements/calendar.php');
 require('artefact.php');
 
 $id = param_integer('id');
+$artefact = param_integer('artefact');
 
-$a = artefact_instance_from_id($id);
+$a = artefact_instance_from_id($artefact);
 $type = $a->get('artefacttype');
 
 if ($a->get('owner') != $USER->get('id')) {
@@ -60,7 +61,7 @@ $cform = array(
     'successcallback' => 'compositeform_submit',
 );
 
-$a->populate_form($cform);
+$a->populate_form($cform, $id, $type);
 $compositeform = pieform($cform);
 
 $smarty = smarty();

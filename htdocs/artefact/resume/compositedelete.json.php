@@ -31,14 +31,24 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require('artefact.php');
 
 $id = param_integer('id');
+$artefact = param_integer('artefact');
 
-$a = artefact_instance_from_id($id);
+
+$a = artefact_instance_from_id($artefact);
 
 if ($a->get('owner') != $USER->get('id')) {
     throw new AccessDeniedException(get_string('notartefactowner', 'error'));
 }
 
-$a->delete();
+delete_records($a->get_other_table_name(), 'id', $id);
+$count = count_records($a->get_other_table_name(), 'artefact', $artefact);
+if (empty($count)) {
+    $a->delete();
+}
+else {
+    $a->set('mtime', time());
+    $a->commit();
+}
 
 json_reply(null, get_string('compositedeleted', 'artefact.resume'));
 

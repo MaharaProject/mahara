@@ -341,6 +341,10 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
         );
     }
 
+    public static function is_singular() {
+        return true;
+    }
+
     public static function get_composite_artefact_types() {
         return array(
             'employmenthistory',
@@ -370,52 +374,37 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
     * @throws Exception
     */
     public static function process_compositeform(Pieform $form, $values) {
-        $a = null;
-        $classname = generate_artefact_class_name($values['compositetype']);
-        if (!array_key_exists('id', $values)) {
-            $values['id'] = 0;
+
+        try {
+            $a = artefact_instance_from_type($values['compositetype']);
+            $a->set('mtime', time());
         }
-        global $USER;
-        $values['owner'] = $USER->get('id');
-        unset($values['submit']);
-        unset($values['compositetype']);
-        unset($values['sesskey']);
+        catch (Exception $e) {
+            global $USER;
+            $classname = generate_artefact_class_name($values['compositetype']);
+            $a = new $classname(0, array(
+                'owner' => $USER->get('id'),
+                'title' => get_string($values['compositetype'], 'artefact.resume'),
+                )
+            );
+        }
+
+        $a->commit();
+
         foreach (array('date', 'startdate', 'enddate') as $k) {
             if (array_key_exists($k, $values)) {
                 $values[$k] = db_format_timestamp($values[$k]);
             }
         }
-        if (empty($values['id'])) {
-            $a = new $classname($values['id'], $values);
-        }
-        else {
-            $a = new $classname($values['id']);
-            foreach ($values as $key => $value) {
-                $a->set($key, $value);
-            }
-        }
-        $a->commit();
-    }
 
-    public function commit() {
-        if (empty($this->dirty)) {
-            return;
-        }
-        $table = $this->get_other_table_name();
-        $data = $this->to_stdclass();
-        if (empty($this->id)) {
-            db_begin();
-            parent::commit();
-            $data->artefact = $this->id;
-            insert_record($table, $data);
-            db_commit();
+        $values['artefact'] = $a->get('id');
+
+        $table = 'artefact_resume_' . $values['compositetype'];
+        if (!empty($values['id'])) {
+            update_record($table, (object)$values, 'id');
         }
         else {
-            $data->artefact = $this->id;
-            db_begin();
-            parent::commit();
-            update_record($table, $data, 'artefact');
-            db_commit();
+            insert_record($table, (object)$values);
         }
     }
 
@@ -439,23 +428,31 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
     * @param $form pieform structure (before calling pieform() on it
     * passed by _reference_
     */
-    public function populate_form(&$form) {
+    public static function populate_form(&$form, $id, $type) {
+        if (!$composite = get_record('artefact_resume_' . $type, 'id', $id)) {
+            throw new InvalidArgumentException("Couldn't find composite of type $type with id $id");
+        }
+        $datetypes = array('date', 'startdate', 'enddate');
         foreach ($form['elements'] as $k => $element) {
             if ($k == 'submit' || $k == 'compositetype') {
                 continue;
             }
-            if (isset($this->{$k})) {
-                if (in_array($k, array('date', 'startdate', 'enddate'))) {
-                    $form['elements'][$k]['defaultvalue'] = strtotime($this->{$k});
+            if (isset($composite->{$k})) {
+                if (in_array($k, $datetypes)) {
+                    $form['elements'][$k]['defaultvalue'] = strtotime($composite->{$k});
                 }
                 else {
-                    $form['elements'][$k]['defaultvalue'] = $this->{$k};
+                    $form['elements'][$k]['defaultvalue'] = $composite->{$k};
                 }
             }
         }
         $form['elements']['id'] = array(
             'type' => 'hidden',
-            'value' => $this->id,
+            'value' => $id,
+        );
+        $form['elements']['artefact'] = array(
+            'type' => 'hidden',
+            'value' => $composite->artefact,
         );
     }
 
@@ -469,16 +466,7 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
             $data['container'] = 0;
         }
         parent::__construct($id, $data);
-        // load up the rest of the stuff from the relevant table.
-        if ($row = get_record($this->get_other_table_name(), 'artefact', $this->id)) {
-            unset($row->artefact);
-            foreach ($row as $key => $value) {
-                if (property_exists($this, $key)) {
-                    $this->{$key} = $value;
-                }
-            }
-        }
-    }
+    }    
 
     /** 
     * returns the name of the supporting table
@@ -486,6 +474,8 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
     public function get_other_table_name() {
         return 'artefact_resume_' . $this->get_artefact_type();
     }
+
+
 }
 
 class ArtefactTypeEmploymenthistory extends ArtefactTypeResumeComposite { 
@@ -500,7 +490,7 @@ class ArtefactTypeEmploymenthistory extends ArtefactTypeResumeComposite {
                 'startdate',
                 'enddate',
                 function (r) {
-                    return TD(null, r.title + ' {$at} ' + r.employer);
+                    return TD(null, r.jobtitle + ' {$at} ' + r.employer);
                 },
         ";
     }
@@ -533,14 +523,14 @@ class ArtefactTypeEmploymenthistory extends ArtefactTypeResumeComposite {
                 ),
                 'title' => get_string('employer', 'artefact.resume'),
             ),
-            'title' => array(
+            'jobtitle' => array(
                 'type' => 'text',
                 'rules' => array(
                     'required' => true,
                 ),
                 'title' => get_string('jobtitle', 'artefact.resume'),
             ),
-            'description' => array(
+            'positiondescription' => array(
                 'type' => 'textarea',
                 'rows' => 10,
                 'cols' => 50,
@@ -606,14 +596,14 @@ class ArtefactTypeEducationhistory extends ArtefactTypeResumeComposite {
                 ),
                 'title' => get_string('qualtype', 'artefact.resume'),
             ),
-            'title' => array(
+            'qualname' => array(
                 'type' => 'text',
                 'rules' => array(
                     'required' => true,
                 ),
                 'title' => get_string('qualname', 'artefact.resume'),
             ),
-            'description' => array(
+            'qualdescription' => array(
                 'type' => 'textarea',
                 'rows' => 10,
                 'cols' => 50,

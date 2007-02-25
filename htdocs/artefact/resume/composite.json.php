@@ -39,10 +39,10 @@ $count = 0;
 $prefix = get_config('dbprefix');
 $othertable = 'artefact_resume_' . $type;
 
-$sql = 'SELECT * 
+$sql = 'SELECT ar.*, a.owner
     FROM ' . $prefix . 'artefact a 
     JOIN ' . $prefix . $othertable . ' ar ON ar.artefact = a.id
-    WHERE owner = ? AND artefacttype = ?
+    WHERE a.owner = ? AND a.artefacttype = ?
     LIMIT ' . $limit . ' OFFSET ' . $offset;
 if (!$data = get_records_sql_array($sql, array($USER->get('id'), $type))) {
     $data = array();
