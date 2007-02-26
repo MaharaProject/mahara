@@ -6,7 +6,8 @@
         var config = {literal}{{/literal}
             'theme': {$THEMELIST},
             'sesskey' : '{$SESSKEY}',
-            'wwwroot': '{$WWWROOT}'
+            'wwwroot': '{$WWWROOT}',
+            'loggedin': {$USER->is_logged_in()|intval}
         {literal}}{/literal};
         </script>
 {foreach from=$JAVASCRIPT item=script}        <script type="text/javascript" src="{$script}"></script>

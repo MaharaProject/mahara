@@ -25,12 +25,13 @@
  */
 
 define('INTERNAL', 1);
+define('PUBLIC', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 require(get_config('libroot') . 'view.php');
 
-$viewid = param_integer('view');
+$viewid     = param_integer('view');
 $artefactid = param_integer('artefact', null);
-$path = param_variable('path', null);
+$path       = param_variable('path', null);
 
 $view = new View($viewid);
 if (!can_view_view($viewid)) {
@@ -231,17 +232,26 @@ function view_menu() {
         return false;
     }
 
+    if (config.loggedin) {
+        appendChildNodes('viewmenu',
+            A({'href':'', 'onclick':"return feedbackform();"}, 
+                {$getstring['placefeedback']}), ' | ',
+            A({'href':'', 'onclick':'return objectionform();'},
+               {$getstring['reportobjectionablematerial']}), ' | '
+        );
+    }
     appendChildNodes('viewmenu',
-                     A({'href':'', 'onclick':"return feedbackform();"}, 
-                       {$getstring['placefeedback']}), ' | ',
-                     A({'href':'', 'onclick':'return objectionform();'},
-                       {$getstring['reportobjectionablematerial']}), ' | ',
-                     A({'href':'', 'onclick':'window.print();'}, 
-                       {$getstring['print']}), ' | ',
-                     A({'href':'', 'onclick':'return addtowatchlist(false);'},
-                       {$getstring['addtowatchlist']}), ' | ',
-                     A({'href':'', 'onclick':'return addtowatchlist(true);'},
-                       {$getstring['addtowatchlistwithchildren']}));
+        A({'href':'', 'onclick':'window.print();return false;'}, 
+            {$getstring['print']})
+    );
+    if (config.loggedin) {
+        appendChildNodes('viewmenu', ' | ',
+            A({'href':'', 'onclick':'return addtowatchlist(false);'},
+                {$getstring['addtowatchlist']}), ' | ',
+            A({'href':'', 'onclick':'return addtowatchlist(true);'},
+               {$getstring['addtowatchlistwithchildren']})
+        );
+     }
 
 }
 

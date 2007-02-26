@@ -25,6 +25,7 @@
  */
 
 define('INTERNAL', 1);
+define('PUBLIC', 1);
 define('JSON', 1);
 
 require(dirname(dirname(__FILE__)) . '/init.php');
@@ -35,6 +36,10 @@ $view     = param_integer('view');
 $artefact = param_integer('artefact', null);
 $limit    = param_integer('limit', 5);
 $offset   = param_integer('offset', 0);
+
+if (!can_view_view($view)) {
+    throw new AccessDeniedException();
+}
 
 $prefix = get_config('dbprefix');
 $userid = $USER->get('id');

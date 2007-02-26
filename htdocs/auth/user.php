@@ -184,6 +184,9 @@ class User {
     public function logout () {
         $this->set('logout_time', 0);
         $this->SESSION->set('messages', array());
+        foreach (array_keys($this->defaults) as $key) {
+            $this->set($key, $this->defaults[$key]);
+        }
     }
 
 

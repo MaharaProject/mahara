@@ -26,16 +26,32 @@
 
 define('INTERNAL', 1);
 define('JSON', 1);
+define('PUBLIC', 1);
 
 require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
 safe_require('artefact', 'blog');
 
 json_headers();
 
-$limit = param_integer('limit', ArtefactTypeBlog::pagination);
-$offset = param_integer('offset', 0);
-$id = param_integer('id');
+$id      = param_integer('id');
+$limit   = param_integer('limit', ArtefactTypeBlog::pagination);
+$offset  = param_integer('offset', 0);
 $options = json_decode(param_variable('options'));
+$viewid  = isset($options->viewid) ? $options->viewid : null;
+
+if ($viewid) {
+   if (!can_view_view($viewid)) {
+        throw new AccessDeniedException();
+   }
+}
+else {
+    if (!$USER->is_logged_in()) {
+        throw new AccessDeniedException();
+    }
+    if (!$viewid && get_field('artefact', 'owner', 'id', $id) != $USER->get('id')) {
+        throw new AccessDeniedException();
+    }
+}
 
 list($count, $data) = ArtefactTypeBlogPost::render_posts(FORMAT_ARTEFACT_RENDERFULL, 
                                                          $options, $id, $limit, $offset);
