@@ -62,6 +62,7 @@ case "$1" in
         fi
     ;;
     upgrade)
+        rm -rf /var/lib/mahara/smarty/compile/*
     ;;
     abort-upgrade)
     ;;
