@@ -157,6 +157,9 @@ END;
     }
 
     public static function save_config_options($values) {
+        if (substr($values['solrurl'], -1) != '/') {
+            $values['solrurl'] .= '/';
+        }
         set_config_plugin('search', 'solr', 'solrurl', $values['solrurl']);
     }
 
