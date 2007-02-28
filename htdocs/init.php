@@ -120,6 +120,10 @@ catch (SQLException $e) {
 if (!isset($CFG->wwwroot) && isset($_SERVER['HTTP_HOST'])) {
     $proto = (isset($_SERVER['HTTPS'])) ? 'https://' : 'http://';
     $host  =  (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : $_SERVER['HTTP_HOST'];
+    if (false !== strpos($host, ',')) {
+        list($host) = explode(',', $host);
+        $host = trim($host);
+    }
     $path  = substr(dirname(__FILE__), strlen($_SERVER['DOCUMENT_ROOT']));
     if ($path) {
         $path .= '/';
@@ -134,10 +138,13 @@ if (!isset($CFG->wwwroot) && isset($_SERVER['HTTP_HOST'])) {
     }
 }
 if (!isset($CFG->noreplyaddress) && isset($_SERVER['HTTP_HOST'])) {
-    $noreplyaddress = 'noreply@' .
-        ((isset($_SERVER['HTTP_X_FORWARDED_HOST'])) 
-         ? $_SERVER['HTTP_X_FORWARDED_HOST'] 
-         : $_SERVER['HTTP_HOST']);
+    $noreplyaddress = 'noreply@';
+    $host  =  (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : $_SERVER['HTTP_HOST'];
+    if (false !== strpos($host, ',')) {
+        list($host) = explode(',', $host);
+        $host = trim($host);
+    }
+    $noreplyaddress .= $host;
     try {
         set_config('noreplyaddress', $noreplyaddress);
     }
