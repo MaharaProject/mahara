@@ -34,6 +34,13 @@ class AuthInternal extends Auth {
 
     /**
      * Attempt to authenticate user
+     *
+     * @param string $username The username to authenticate with
+     * @param string $password The password being used for authentication
+     * @param string $institution The institution the user is logging in for
+     * @return bool            True/False based on whether the user
+     *                         authenticated successfully
+     * @throws AuthUnknownUserException If the user does not exist
      */
     public static function authenticate_user_account($username, $password, $institution) {
         if (!$user = get_record_sql('SELECT username, password, salt
@@ -47,12 +54,44 @@ class AuthInternal extends Auth {
     }
 
     /**
+     * Establishes whether a user exists
+     *
+     * @param string $username The username to check
+     * @return bool            True if the user exists
+     * @throws AuthUnknownUserException If the user does not exist
+     */
+    public static function user_exists($username) {
+        if (record_exists('usr', 'LOWER(username)', strtolower($username))) {
+            return true;
+        }
+        throw new AuthUnknownUserException("\"$username\" is not known to AuthInternal");
+    }
+
+    /**
      * Given a user that we know about, return an array of information about them
      *
-     * NOTE: Does not need to be implemented for the internal authentication
-     * method, as by default information is sourced from the database.
+     * Used when a user who was otherwise unknown authenticates successfully,
+     * or if getting userinfo on each login is enabled for this auth method.
+     *
+     * Does not need to be implemented for the internal authentication method,
+     * because all users are already known about.
      */
     public static function get_user_info($username) {
+    }
+
+    /**
+     * Given a username, returns information about that user from the 'usr'
+     * table.
+     *
+     * @param string $username The name of the user to get information from
+     * @return object          Information about the user
+     */
+    public static function get_user_info_cached($username) {
+        if (!$result = get_record('usr', 'LOWER(username)', strtolower($username), null, null, null, null,
+                    '*, ' . db_format_tsfield('expiry') . ', ' . db_format_tsfield('lastlogin'))) {
+            throw new AuthUnknownUserException("\"$username\" is not known to AuthInternal");
+        }
+        return $result;
     }
 
     /**

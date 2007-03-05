@@ -59,6 +59,14 @@ abstract class Auth {
     public static abstract function authenticate_user_account($username, $password, $institute);
 
     /**
+     * Given a username, returns whether the user exists in the usr table
+     *
+     * @param string $username The username to attempt to identify
+     * @return bool            Whether the username exists
+     */
+    public static abstract function user_exists($username);
+
+    /**
      * Given a username, returns a hash of information about a user.
      *
      * @param string $username The username to look up information for
@@ -67,6 +75,30 @@ abstract class Auth {
      *                                  authentication method
      */
     public static abstract function get_user_info($username);
+
+    /**
+     * Given a username, return information about the user from the database.
+     *
+     * This method is called when the user has been successfully authenticated,
+     * all createuser events have been fired and now we wish to populate the
+     * users session.
+     *
+     * The information retrieved must be all rows in the user table, with the
+     * timestamps formatted as unix timestamps. An example (taken from the
+     * internal authentication mechanism, which allows usernames to be case
+     * insensitive):
+     *
+     * <code>
+     * get_record('usr', 'LOWER(username)', strtolower($username), null, null, null, null,
+     *    '*, ' . db_format_tsfield('expiry') . ', ' . db_format_tsfield('lastlogin'));
+     * </code>
+     *
+     * @param string $username The username to get information for
+     * @return array           Data that can be used to populate the session
+     * @throws AuthUnknownUserException If the user is unknown to the
+     *                                  authentication method
+     */
+    public static abstract function get_user_info_cached($username);
 
     /**
      * Given a password, returns whether it is in a valid format for this
@@ -528,7 +560,7 @@ function login_submit(Pieform $form, $values) {
             set_cookie('institution', $institution, 0, get_mahara_install_subdirectory());
             $oldlastlogin = null;
 
-            if (!record_exists('usr', 'username', $username)) {
+            if (!call_static_method($authclass, 'user_exists', $username)) {
                 // We don't know about this user. But if the authentication
                 // method says they're fine, then we must insert data for them
                 // into the usr table.
@@ -554,8 +586,7 @@ function login_submit(Pieform $form, $values) {
                 update_record('usr', $userdata, $where);
             }
             else {
-                $userdata = get_record('usr', 'username', $username, null, null, null, null,
-                    '*, ' . db_format_tsfield('expiry') . ', ' . db_format_tsfield('lastlogin'));
+                $userdata = call_static_method($authclass, 'get_user_info_cached', $username);
                 $oldlastlogin = $userdata->lastlogin;
                 $userdata->lastlogin = time();
                 $userdata->inactivemailsent = 0;
