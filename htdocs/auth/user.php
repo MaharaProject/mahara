@@ -168,6 +168,7 @@ class User {
      * @param object $userdata Information to persist across page loads
      */
     public function login($userdata) {
+        session_regenerate_id(true);
         foreach (array_keys($this->defaults) as $key) {
             $this->set($key, (isset($userdata->{$key})) ? $userdata->{$key} : $this->defaults[$key]);
         }
