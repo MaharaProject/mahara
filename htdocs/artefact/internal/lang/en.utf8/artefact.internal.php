@@ -87,6 +87,7 @@ EOF;
 $string['emailactivation'] = 'Email Activation';
 $string['emailactivationsucceeded'] = 'Email Activation Successful';
 $string['emailactivationfailed'] = 'Email Activation Failed';
+$string['unvalidatedemailalreadytaken'] = 'The e-mail address you are trying to validate is already taken';
 
 $string['emailingfailed'] = 'Profile saved, but emails were not sent to: %s';
 
