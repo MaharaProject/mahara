@@ -1,15 +1,12 @@
-.gallery_container {
+.maincontent #template .gallery_container {
 	width:100%;
 }
 
-.gallery_container td {
-  	padding: 20px;
-}
-.gallery_container td div {
+.maincontent #template .gallery_container td div {
     padding: 0;
     margin: 0;
 }
 
-.gallery_title {
+.maincontent #template .gallery_title {
 	padding-bottom:50px;	
 }
