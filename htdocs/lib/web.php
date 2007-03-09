@@ -88,7 +88,7 @@ tinyMCE.init({
     theme: "advanced",
     plugins: "table,emotions,iespell,inlinepopups,paste",
     theme_advanced_buttons1 : "bold,italic,underline,strikethrough,separator,forecolor,backcolor,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,hr,emotions,iespell,cleanup,separator,link,unlink,separator,code",
-    theme_advanced_buttons2 : "tablecontrols,separator,cut,copy,paste,pasteword",
+    theme_advanced_buttons2 : "bullist,numlist,separator,tablecontrols,separator,cut,copy,paste,pasteword",
     theme_advanced_buttons3 : "fontselect,separator,fontsizeselect,separator,formatselect",
     theme_advanced_toolbar_location : "top",
     theme_advanced_toolbar_align : "center",

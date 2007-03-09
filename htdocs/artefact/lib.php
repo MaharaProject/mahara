@@ -455,7 +455,7 @@ abstract class ArtefactType {
     }
 
     
-    protected function get_metadata() {
+    protected function get_metadata($options) {
         $data = array('title'        => $this->get('title'),
                       'type'         => get_string($this->get('artefacttype')),
                       'owner'        => display_name(optional_userobj($this->get('owner'))),

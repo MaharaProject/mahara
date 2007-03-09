@@ -163,7 +163,7 @@ function sendjsonrequest(script, data, rtype, successcallback, errorcallback, qu
         var data = evalJSONRequest(result);
         var errtype = false;
         if (!data.error) { 
-            errtype = 'info';
+            errtype = 'ok';
         }
         else if (data.error == 'local') {
             errtype = 'error';

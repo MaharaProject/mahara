@@ -122,6 +122,14 @@ function profileform_validate(Pieform $form, $values) {
     ) {
         $form->set_error('email', get_string('primaryemailinvalid'));
     }
+
+    if (isset($values['email']['unvalidated']) && is_array($values['email']['validated'])) {
+        foreach ($values['email']['unvalidated'] as $email) {
+            if (record_exists('artefact_internal_profile_email', 'email', $email)) {
+                $form->set_error('email', get_string('unvalidatedemailalreadytaken', 'artefact.internal'));
+            }
+        }
+    }
 }
 
 function profileform_submit(Pieform $form, $values) {

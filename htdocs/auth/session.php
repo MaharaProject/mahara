@@ -176,7 +176,6 @@ class Session {
         $result = '<div id="messages">';
         if (isset($_SESSION['messages'])) {
             foreach ($_SESSION['messages'] as $data) {
-                // @todo probably should be done with MochiKit.Signal
                 $result .= '<div class="' . $data['type'] . '">';
                 $result .= '<div class="fr"><a href="" onclick="removeElement(this.parentNode.parentNode);return false;">';
                 $result .= '<img src="' . theme_get_url('images/icon_close.gif') . '" alt="[X]"></a></div>';
@@ -194,7 +193,6 @@ class Session {
     private function ensure_session() {
         if (empty($_SESSION)) {
             if (!session_id()) {
-                //session_start();
                 @session_start();
             }
             $_SESSION = array(

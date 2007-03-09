@@ -267,8 +267,8 @@ class ArtefactTypeBlog extends ArtefactType {
                      'javascript' => $javascript);
     }
 
-    protected function get_metadata($options = array()) {
-        $data = parent::get_metadata();
+    protected function get_metadata($options=array()) {
+        $data = parent::get_metadata($options);
         $data['description'] = array('name' => get_string('description'),
                                      'value' => $this->get('description'));
         $data['type']['value'] = get_string($this->get('artefacttype'), 'artefact.blog');
@@ -548,8 +548,8 @@ class ArtefactTypeBlogPost extends ArtefactType {
     }
 
 
-    protected function get_metadata() {
-        $data = parent::get_metadata();
+    protected function get_metadata($options=array()) {
+        $data = parent::get_metadata($options);
         unset($data['description']);
         unset($data['size']);
         $data['type']['value'] = get_string($this->get('artefacttype'), 'artefact.blog');
@@ -560,9 +560,9 @@ class ArtefactTypeBlogPost extends ArtefactType {
     }
 
                 
-    protected function render_metadata($options) {
+    protected function render_metadata($options=array()) {
         $smarty = smarty();
-        $smarty->assign('PROPERTIES', $this->get_metadata());
+        $smarty->assign('PROPERTIES', $this->get_metadata($options));
         return array('html' => $smarty->fetch('artefact:blog:render/blog_rendermetadata.tpl'),
                      'javascript' => null);
     }

@@ -96,7 +96,7 @@ function activityprefs_submit(Pieform $form, $values) {
     
     $userid = $USER->get('id');
     foreach ($activitytypes as $type) {
-        if ($values[$type->name] == none) {
+        if ($values[$type->name] == 'none') {
             $USER->set_activity_preference($type->name, null);
         } 
         else {

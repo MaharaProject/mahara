@@ -315,6 +315,7 @@ function template_render($template, $mode, $data=array(), $view_id=null) {
             );
 
             $options = array();
+            $options['tagtype'] = $t['tagtype'];
 
             if ($view_id && $mode == TEMPLATE_RENDER_READONLY) {
                 $options['viewid'] = $view_id;
@@ -380,7 +381,7 @@ function template_render($template, $mode, $data=array(), $view_id=null) {
                             $droplist[$t['id']]['format'] = FORMAT_ARTEFACT_LISTSELF;
                         }
 
-                        $block .= template_render_artefact_block($t['id'], $data[$t['id']]['id'], $format, $options, $mode);
+                        $block .= template_render_artefact_block($t['id'], $data[$t['id']]['id'], $format, $options, $mode, isset($t['defaultartefacttype']));
                     }
                     else if ( isset($t['defaultartefacttype']) ) {
                         $artefact = null;
@@ -397,7 +398,7 @@ function template_render($template, $mode, $data=array(), $view_id=null) {
                             }
                         }
                         else {
-                            $block .= template_render_artefact_block($t['id'], $artefact, $t['defaultformat'], $options, $mode);
+                            $block .= template_render_artefact_block($t['id'], $artefact, $t['defaultformat'], $options, $mode, true);
                         }
                     }
                     else {
@@ -494,6 +495,10 @@ function template_render($template, $mode, $data=array(), $view_id=null) {
         }
     }
 
+    function removeBlock(x) {
+        replaceChildNodes(x.parentNode.parentNode, SPAN({'class': 'empty_block' }, get_string('empty_block')));
+    }
+
     function blockdrop(element, target, format) {
         var srcData = element.moveSource.acceptData;
         var dstData = target.moveTarget.acceptData;
@@ -522,7 +527,7 @@ function template_render($template, $mode, $data=array(), $view_id=null) {
                 }
             }
 
-            replaceChildNodes(real_target, IMG({ src: {$spinner_url} }));
+            replaceChildNodes(real_target, IMG({ 'src': {$spinner_url} }));
             var render_options = {
                 'id': element.artefactid,
                 'format': format
@@ -536,13 +541,37 @@ function template_render($template, $mode, $data=array(), $view_id=null) {
                     if (response.javascript) {
                         eval(response.javascript);
                     }
-                    if(format == 'listself') {
-                        appendChildNodes(real_target, A({ href: '', onclick: 'removeListItem(this); return false;' }, '[x]'));
+                    if (format == 'listself') {
+                        appendChildNodes(real_target,
+                            A({'href': '', 'onclick': 'removeListItem(this); return false;' },
+                                IMG({'src': config.theme['images/icon_close.gif'], 'alt': '[x]'})
+                            )
+                        );
+                    }
+                    // Only insert a delete button if there was one originally. Defaults cannot be deleted,
+                    // so things inserted into their spot will also not be deletable
+                    else if (
+                        getFirstElementByTagAndClassName(null, 'delete-button', real_target.parentNode) ||
+                        getFirstElementByTagAndClassName(null, 'empty_block', real_target.parentNode)) {
+                        if (real_target.nodeName == 'SPAN') {
+                            appendChildNodes(real_target, SPAN({'class': 'delete-button'}, ' ',
+                                A({'href': '', 'onclick': 'removeBlock(this); return false;'},
+                                    IMG({'src': config.theme['images/icon_close.gif'], 'alt': '[x]'})
+                                )
+                            ));
+                        }
+                        else {
+                            insertSiblingNodesBefore(real_target.firstChild, DIV({ 'class': 'fr delete-button'},
+                                A({'href': '', 'onclick': 'removeBlock(this); return false;'},
+                                    IMG({'src': config.theme['images/icon_close.gif'], 'alt': '[x]'})
+                                )
+                            ));
+                        }
                     }
                     appendChildNodes(real_target,
-                                     INPUT({'type': 'hidden', 'name': 'template[' + target.id + '][id][]', 'value': element.artefactid }),
-                                     INPUT({'type': 'hidden', 'name': 'template[' + target.id + '][format]', 'value': format })
-                                     );
+                         INPUT({'type': 'hidden', 'name': 'template[' + target.id + '][id][]', 'value': element.artefactid }),
+                         INPUT({'type': 'hidden', 'name': 'template[' + target.id + '][format]', 'value': format })
+                     );
                 }
             });
         }
@@ -555,17 +584,18 @@ function template_render($template, $mode, $data=array(), $view_id=null) {
             });
             // need to pick a format
             replaceChildNodes(target, P(null,get_string('chooseformat')), UL(null, formatlist));
+            addElementClass(target, 'empty_block');
         }
     }
 
     addLoadEvent(function () {
         for ( id in droplist ) {
             new MoveTarget(id, {
-                ondrop: blockdrop,
-                hoverClass: 'block_targetted',
-                activeClass: 'block_potential',
-                acceptData: droplist[id],
-                acceptFunction: function (src, dst) {
+                'ondrop': blockdrop,
+                'hoverClass': 'block_targetted',
+                'activeClass': 'block_potential',
+                'acceptData': droplist[id],
+                'acceptFunction': function (src, dst) {
                     if (dst.plugintype && dst.plugintype != src.plugin) {
                         return false;
                     }
@@ -663,6 +693,9 @@ function template_render_empty_artefact_block() {
 /**
  * This function renders an artefact block
  *
+ * Note: any additions you make here should be duplicated in the javascript
+ * above, which is used when a block is actually placed
+ *
  * @param string name of the block
  * @param mixed the artefact(s) to render (can either be an ArtefactType
  * object, an integer artefact id, or an array of artefact ids)
@@ -670,22 +703,42 @@ function template_render_empty_artefact_block() {
  *
  * @return string html rendered data
  */
-function template_render_artefact_block($blockname, $artefact, $format, $options = array(), $mode) {
+function template_render_artefact_block($blockname, $artefact, $format, $options = array(), $mode, $default=false) {
     $block = '';
 
     $options['blockid'] = $blockname;
 
+    // Artefact is an artefact object
     if ($artefact instanceof ArtefactType) {
+        log_debug($default);
+        log_debug($blockname);
         $rendered = $artefact->render($format, $options);
+
+        // Javascript for the block
         if (!empty($rendered['javascript'])) {
             $block .= '<script type="text/javascript">' . $rendered['javascript'] . '</script>';
         }
+
+        // Add delete button floated right if the element isn't inline
+        if ($mode == TEMPLATE_RENDER_EDITMODE && !$default && $options['tagtype'] != 'span') {
+            $block .= '<div class="fr delete-button"><a href="" onclick="removeBlock(this); return false;"><img src="' . theme_get_url('images/icon_close.gif') . '" alt="[x]"></a></div>';
+        }
+
+        // The actual block
         $block .= $rendered['html'];
+
+        // Add delete button actually just to the right in the document flow if the element is inline
+        if ($mode == TEMPLATE_RENDER_EDITMODE && !$default && $options['tagtype'] == 'span') {
+            $block .= '<span class="delete-button"> <a href="" onclick="removeBlock(this); return false;"><img src="' . theme_get_url('images/icon_close.gif') . '" alt=""></a></span>';
+        }
+
+        // Add hidden fields
         if ($mode == TEMPLATE_RENDER_EDITMODE) {
             $block .= '<input type="hidden" name="template[' . $blockname . '][id]" value="' . hsc($artefact->get('id')) . '">';
             $block .= '<input type="hidden" name="template[' . $blockname . '][format]" value="' . hsc($format) . '">';
         }
     }
+    // An array of artefact IDs, to render as a list
     else if ($format == FORMAT_ARTEFACT_LISTSELF) {
         if (!is_array($artefact)) {
             $artefact = array($artefact);
@@ -700,7 +753,7 @@ function template_render_artefact_block($blockname, $artefact, $format, $options
             }
             $block .= $rendered['html'];
             if ($mode == TEMPLATE_RENDER_EDITMODE) {
-                $block .= '<a href="" onclick="removeListItem(this);return false;">[x]</a>';
+                $block .= '<a href="" onclick="removeListItem(this);return false;"><img src="' . theme_get_url('images/icon_close.gif') . '" alt="[x]"></a>';
                 $block .= '<input type="hidden" name="template[' . $blockname . '][id][]" value="' . hsc($instance->get('id')) . '">';
                 $block .= '<input type="hidden" name="template[' . $blockname . '][format]" value="' . hsc($format) . '">';
             }
@@ -708,6 +761,7 @@ function template_render_artefact_block($blockname, $artefact, $format, $options
         }
         $block .= '</ul>';
     }
+    // A single artefact ID (if not, is coerced into one)
     else {
         if (is_array($artefact)) {
             $artefact = $artefact[0];
@@ -718,7 +772,13 @@ function template_render_artefact_block($blockname, $artefact, $format, $options
         if (!empty($rendered['javascript'])) {
             $block .= '<script type="text/javascript">' . $rendered['javascript'] . '</script>';
         }
+        if ($mode == TEMPLATE_RENDER_EDITMODE && !$default && $options['tagtype'] != 'span') {
+            $block .= '<div class="fr delete-button"><a href="" onclick="removeBlock(this); return false;"><img src="' . theme_get_url('images/icon_close.gif') . '" alt="[x]"></a></div>';
+        }
         $block .= $rendered['html'];
+        if ($mode == TEMPLATE_RENDER_EDITMODE && !$default && $options['tagtype'] == 'span') {
+            $block .= '<span class="delete-button"> <a href="" onclick="removeBlock(this); return false;"><img src="' . theme_get_url('images/icon_close.gif') . '" alt="[x]"></a></span>';
+        }
         if ($mode == TEMPLATE_RENDER_EDITMODE) {
             $block .= '<input type="hidden" name="template[' . $blockname . '][id]" value="' . hsc($artefact->get('id')) . '">';
             $block .= '<input type="hidden" name="template[' . $blockname . '][format]" value="' . hsc($format) . '">';
