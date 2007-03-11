@@ -313,6 +313,7 @@ function display_name($user, $userto=null) {
         $userto->firstname     = $USER->get('firstname');
         $userto->lastname      = $USER->get('lastname');
         $userto->admin         = $USER->get('admin');
+        $userto->staff         = $USER->get('staff');
     }
     if (is_array($user)) {
         $user = (object)$user;
@@ -333,11 +334,12 @@ function display_name($user, $userto=null) {
         $user->firstname     = $userObj->get('firstname');
         $user->lastname      = $userObj->get('lastname');
         $user->admin         = $userObj->get('admin');
+        $user->staff         = $userObj->get('staff');
     }
 
     // if they don't have a preferred name set, just return here
     if (empty($user->preferredname)) {
-        if ($userto->admin) {
+        if ($userto->admin || $userto->staff) {
             return $user->firstname . ' ' . $user->lastname . ' (' . $user->username . ')';
         }
         return $user->firstname . ' ' . $user->lastname;

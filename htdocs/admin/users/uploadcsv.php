@@ -159,18 +159,28 @@ function uploadcsv_submit(Pieform $form, $values) {
     global $SESSION, $CSVDATA;
     log_info('Inserting users from the CSV file');
     db_begin();
+    $mandatoryfields = ArtefactTypeProfile::get_mandatory_fields();
+    $mandatoryfieldkeys = array_keys($mandatoryfields);
     foreach ($CSVDATA as $record) {
         log_debug('adding user ' . $record[0]);
         $user = new StdClass;
         $user->username  = $record[0];
         $user->password  = $record[1];
         $user->institution = $values['institution'];
+        $user->email     = $record[4];
+        $user->studentid = (isset($record[5]) && in_array('studentid', $mandatoryfieldkeys)) ? $record[5] : null;
+        $user->preferredname = (isset($record[6]) && in_array('preferredname', $mandatoryfieldkeys)) ? $record[6] : null;
         $user->passwordchange = 1;
         $id = insert_record('usr', $user, 'id', true);
 
+        // A bit of munging to move fields into the correct order
+        $record[4] = $record[5];
+        $record[5] = $record[6];
+        $record[6] = $user->email;
+
         $i = 2;
         safe_require('artefact', 'internal');
-        foreach (ArtefactTypeProfile::get_mandatory_fields() as $field => $type) {
+        foreach ($mandatoryfieldkeys as $field) {
             set_profile_field($id, $field, $record[$i++]);
         }
 

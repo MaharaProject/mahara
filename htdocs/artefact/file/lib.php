@@ -414,8 +414,8 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         return $filedata;
     }
 
-    protected function get_metadata() {
-        $data = parent::get_metadata();
+    protected function get_metadata($options=array()) {
+        $data = parent::get_metadata($options);
         $data['description'] = array('name' => get_string('description'),
                                      'value' => $this->description);
         $data['type']['value'] = get_string($this->get('artefacttype'), 'artefact.file');
@@ -424,7 +424,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
 
     protected function render_metadata($options) {
         $smarty = smarty();
-        $smarty->assign('PROPERTIES', $this->get_metadata());
+        $smarty->assign('PROPERTIES', $this->get_metadata($options));
         return array('html' => $smarty->fetch('artefact:file:file_render_metadata.tpl'),
                      'javascript' => null);
     }
@@ -675,20 +675,24 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         return floor(($bytes / 1048576) * 10 + 0.5) / 10 . 'M';
     }
 
-    private function file_url() {
-        return get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->get('id');
+    private function file_url($options) {
+        $result = get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->get('id');
+        if (isset($options['viewid'])) {
+            $result .= '&view=' . $options['viewid'];
+        }
+        return $result;
     }
 
     public function linkself() {
         return '<a href="' . $this->file_url() . '">' . get_string('download', 'artefact.file') . '</a>';
     }
 
-    protected function get_metadata() {
-        $data = parent::get_metadata();
+    protected function get_metadata($options=array()) {
+        $data = parent::get_metadata($options);
         $data['size'] = array('name' => get_string('size', 'artefact.file'),
                               'value' => $this->get('size') . ' ' . get_string('bytes', 'artefact.file'));
         $data['download'] = array('name' => get_string('download', 'artefact.file'),
-                                  'value' => make_link($this->file_url()));
+                                  'value' => make_link($this->file_url($options)));
         return $data;
     }
 
@@ -840,8 +844,8 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
         return $record->id;
     }
 
-    protected function get_metadata() {
-        $data = parent::get_metadata();
+    protected function get_metadata($options=array()) {
+        $data = parent::get_metadata($options);
         $data['size'] = array('name' => get_string('size', 'artefact.file'),
                               'value' => $this->count_children() . ' ' . get_string('files', 'artefact.file'));
         return $data;
