@@ -145,6 +145,14 @@ class ArtefactTypeBlog extends ArtefactType {
                 }
             }
         }
+
+        if (empty($this->id)) {
+            $this->container = 1;
+        }
+    }
+
+    public function is_container() {
+        return true;
     }
 
     /**
