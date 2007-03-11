@@ -589,6 +589,9 @@ function template_render($template, $mode, $data=array(), $view_id=null) {
                 formatlist.push(li);
             });
             // need to pick a format
+            if (hasElementClass(target.parentNode.firstChild, 'delete_button')) {
+                removeElement(target.parentNode.firstChild);
+            }
             replaceChildNodes(target, P(null,get_string('chooseformat')), UL(null, formatlist));
             addElementClass(target, 'empty_block');
         }
