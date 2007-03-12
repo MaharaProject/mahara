@@ -31,6 +31,7 @@ require_once('template.php');
 function xmldb_core_upgrade($oldversion=0) {
 
     $status = true;
+    $prefix = get_config('dbprefix');
 
     if ($oldversion < 2006121400) {
 
@@ -171,7 +172,7 @@ function xmldb_core_upgrade($oldversion=0) {
         $field->setAttributes(XMLDB_TYPE_INTEGER, 10, false, true, null, null, null, 0);
         add_field($table, $field);
 
-        execute_sql('UPDATE ' . get_config('dbprefix') . 'usr SET quota=10485760');
+        execute_sql('UPDATE ' . $prefix . 'usr SET quota=10485760');
     }
 
     if ($oldversion < 2007012300) {
@@ -233,6 +234,12 @@ function xmldb_core_upgrade($oldversion=0) {
     if ($oldversion < 2007021902) {
         $template = template_parse('filelist');
         upgrade_template('filelist', $template);
+    }
+
+    if ($oldversion < 2007021903) {
+        execute_sql("UPDATE {$prefix}artefact
+            SET container = 1
+            WHERE artefacttype = 'blog'");
     }
 
     return $status;
