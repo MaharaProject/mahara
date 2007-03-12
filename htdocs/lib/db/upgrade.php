@@ -26,6 +26,8 @@
 
 defined('INTERNAL') || die();
 
+require_once('template.php');
+
 function xmldb_core_upgrade($oldversion=0) {
 
     $status = true;
@@ -219,7 +221,6 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2007021600) {
-        require_once('template.php');
         $template = template_parse('gallery');
         upgrade_template('gallery', $template);
     }
@@ -227,6 +228,11 @@ function xmldb_core_upgrade($oldversion=0) {
     if ($oldversion < 2007021900) {
         insert_record('event_type', (object)array('name' => 'saveview'));
         insert_record('event_type', (object)array('name' => 'deleteview'));
+    }
+
+    if ($oldversion < 2007021902) {
+        $template = template_parse('filelist');
+        upgrade_template('filelist', $template);
     }
 
     return $status;

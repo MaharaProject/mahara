@@ -68,7 +68,7 @@ foreach ($data as $artefact) {
     $classname = 'ArtefactType' . ucfirst($artefact->artefacttype);
     $a = null;
     if (method_exists($classname, 'format_child_data')) {
-        $a= call_static_method($classname, 'format_child_data', $artefact, $pluginname);
+        $a = call_static_method($classname, 'format_child_data', $artefact, $pluginname);
     }
     else {
         $a = new StdClass;

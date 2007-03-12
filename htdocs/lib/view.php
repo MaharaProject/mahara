@@ -205,15 +205,17 @@ class View {
     public function find_artefact_children($artefact, $allchildren, &$refs) {
 
         $children = array();        
-        foreach ($allchildren as $child) {
-            if ($child->parent != $artefact->id) {
-                continue;
+        if ($allchildren) {
+            foreach ($allchildren as $child) {
+                if ($child->parent != $artefact->id) {
+                    continue;
+                }
+                $children[$child->id] = array();
+                $children[$child->id]['artefact'] = $child;
+                $refs[$child->id] = $child;
+                $children[$child->id]['children'] = $this->find_artefact_children($child, 
+                                                            $allchildren, $refs);
             }
-            $children[$child->id] = array();
-            $children[$child->id]['artefact'] = $child;
-            $refs[$child->id] = $child;
-            $children[$child->id]['children'] = $this->find_artefact_children($child, 
-                                                        $allchildren, $refs);
         }
 
         return $children;

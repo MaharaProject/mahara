@@ -8,11 +8,11 @@
     <tr>
         <td>
             {{block type="label" id="tpl_fileslabel1"}}<br>
-	    {{block type="artefact" id="tpl_files1" artefacttype="file" format="listself"}}<br>
+	    {{block type="artefact" id="tpl_files1" plugintype="file" format="listself"}}<br>
             {{block type="label" id="tpl_fileslabel2"}}<br>
-	    {{block type="artefact" id="tpl_files2" artefacttype="file" format="listself"}}<br>
+	    {{block type="artefact" id="tpl_files2" plugintype="file" format="listself"}}<br>
             {{block type="label" id="tpl_fileslabel3"}}<br>
-	    {{block type="artefact" id="tpl_files3" artefacttype="file" format="listself"}}<br>
+	    {{block type="artefact" id="tpl_files3" plugintype="file" format="listself"}}<br>
        </td>
        <td>{{block type="label" id="tpl_freelabel"}}</td>
     </tr>
