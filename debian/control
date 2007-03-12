@@ -6,7 +6,7 @@ Build-Depends: debhelper (>= 5)
 Standards-Version: 3.7.2
 
 Package: mahara-apache
-Architecture: any
+Architecture: all
 Depends: ${misc:Depends}, apache, libapache-mod-php5, php5-json | libapache-mod-php5 (>= 5.2), php5-pgsql, php5-cli, php5-gd, file, cron
 Conflicts: mahara-apache2
 Recommends: postgresql-8.1, clamav, clamav-daemon
@@ -40,7 +40,7 @@ Description: Mahara is an electronic portfolio, weblog, and resume builder
  For further information please see http://mahara.org
 
 Package: mahara-apache2
-Architecture: any
+Architecture: all
 Depends: ${misc:Depends}, apache2, libapache2-mod-php5, php5-json | libapache2-mod-php5 (>= 5.2), php5-pgsql, php5-cli, php5-gd, file, cron
 Conflicts: mahara-apache
 Recommends: postgresql-8.1, clamav, clamav-daemon
