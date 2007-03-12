@@ -39,7 +39,7 @@ function pieform_rule_maxlength(Pieform $form, $value, $element, $maxlength) {
     }
 }
 
-function pieform_i18n_rule_maxlength() {
+function pieform_rule_maxlength_i18n() {
     return array(
         'en.utf8' => array(
             'maxlength' => 'This field must be at most %d characters long'

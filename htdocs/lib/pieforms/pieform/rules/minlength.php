@@ -39,7 +39,7 @@ function pieform_rule_minlength(Pieform $form, $value, $element, $minlength) {
     }
 }
 
-function pieform_i18n_rule_minlength() {
+function pieform_rule_minlength_i18n() {
     return array(
         'en.utf8' => array(
             'minlength' => 'This field must be at least %d characters long', 

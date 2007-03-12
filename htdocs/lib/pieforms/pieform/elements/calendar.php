@@ -134,7 +134,7 @@ function pieform_element_calendar_get_value(Pieform $form, $element) {
         $value = strtotime($global[$name]);
 
         if ($value === false) {
-            $form->set_error($name, 'TODO (error for invalid calendar value)');
+            $form->set_error($name, $form->i18n('element', 'calendar', 'invalidvalue', $element));
             return null;
         }
         return $value;
@@ -145,6 +145,17 @@ function pieform_element_calendar_get_value(Pieform $form, $element) {
     }
 
     return null;
+}
+
+/**
+ * i18n for calendar
+ */
+function pieform_element_calendar_i18n() {
+    return array(
+        'en.utf8' => array(
+            'invalidvalue' => 'Invalid date/time specified'
+        )
+    );
 }
 
 ?>
