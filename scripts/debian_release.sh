@@ -35,9 +35,11 @@ for release in stable unstable; do
     mkdir -p ${REPODIR}/pool/${release}
 done
 
+git-fetch -t
+STABLE_RELEASE="`ls -1 .git/refs/tags | grep 'RELEASE$' | tail -n1`"
+
 pushd ${BUILDDIR}
 
-STABLE_RELEASE="`ls -1 .git/refs/tags | grep 'RELEASE$' | tail -n1`"
 echo "Building ${STABLE_RELEASE} ..."
 # Build Stable
 cg-clone "git+ssh://git.catalyst.net.nz/git/public/mahara.git#${STABLE_RELEASE}"
@@ -96,4 +98,5 @@ done
 
 popd
 
-rsync -PIlvr --delete-after ${REPODIR}/* locke.catalyst.net.nz:/home/ftp/pub/mahara/
+rsync -PIlvr --delete-after --no-p --no-g --chmod=Dg+ws,Fg+w ${REPODIR}/* locke.catalyst.net.nz:/home/ftp/pub/mahara/
+
