@@ -1,5 +1,5 @@
 logs
 htdocs/js/MochiKit/Packed.js
-test/mahara-*.tar.bz2
-test/mahara-*.tar.gz
-test/mahara-*.zip
+mahara-*.tar.bz2
+mahara-*.tar.gz
+mahara-*.zip
