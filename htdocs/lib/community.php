@@ -78,10 +78,12 @@ function get_member_communities($userid=0, $offset=0, $limit=0) {
     $userid = optional_userid($userid);
     $prefix = get_config('dbprefix');
 
-    return get_records_sql_array('SELECT c.*, cm.ctime, cm.tutor
+    return get_records_sql_array('SELECT c.id, c.name, c.description, c.jointype, c.owner, c.ctime, c.mtime, cm.ctime, cm.tutor, COUNT(v.*) AS hasviews
               FROM ' . $prefix . 'community c 
               JOIN ' . $prefix . 'community_member cm ON cm.community = c.id
-              WHERE c.owner != ? AND cm.member = ?', array($userid, $userid), $offset, $limit);
+              LEFT JOIN ' . $prefix . 'view_access_community v ON v.community = c.id
+              WHERE c.owner != ? AND cm.member = ?
+              GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9', array($userid, $userid), $offset, $limit);
 }
 
 
