@@ -45,6 +45,7 @@ if ($action == 'delete') {
         json_reply('local', get_string('cantdeletegroupdontown'));
     }
     db_begin();
+    delete_records('view_access_group', 'grp', $id);
     delete_records('usr_group_member', 'grp', $id);
     delete_records('usr_group', 'id', $id);
     db_commit();
@@ -54,7 +55,7 @@ if ($action == 'delete') {
 else {
     $count = get_field('usr_group', 'COUNT(*)', 'owner', $USER->get('id'));
     $data = get_records_sql_array(
-        'SELECT g.id, g.name, COUNT(m.*) AS count FROM ' . $dbprefix . 'usr_group g INNER JOIN ' . $dbprefix . 'usr_group_member m ON m.grp=g.id WHERE g.owner=? GROUP BY 1, 2 ORDER BY g.name',
+        'SELECT g.id, g.name, COUNT(m.*) AS count, COUNT(v.*) AS hasviews FROM ' . $dbprefix . 'usr_group g INNER JOIN ' . $dbprefix . 'usr_group_member m ON m.grp=g.id LEFT OUTER JOIN ' . $dbprefix . 'view_access_group v ON (v.grp=g.id) WHERE g.owner=? GROUP BY 1, 2 ORDER BY g.name',
         array($USER->get('id')),
         $offset,
         $limit
