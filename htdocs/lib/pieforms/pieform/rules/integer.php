@@ -39,7 +39,7 @@ function pieform_rule_integer(Pieform $form, $value, $element) {
     }
 }
 
-function pieform_i18n_rule_integer() {
+function pieform_rule_integer_i18n() {
     return array(
         'en.utf8' => array(
             'integer'   => 'The field must be an integer'

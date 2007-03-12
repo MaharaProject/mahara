@@ -33,6 +33,7 @@ define('TITLE', get_string('mygroups'));
 $enc_edit = json_encode(get_string('edit'));
 $enc_delete = json_encode(get_string('delete'));
 $enc_confirmdelete = json_encode(get_string('confirmdeletegroup'));
+$enc_confirmdelete_hasviews = json_encode(get_string('confirmdeletegrouphasviews'));
 
 $javascript = <<<JAVASCRIPT
 var grouplist = new TableRenderer(
@@ -52,7 +53,11 @@ var grouplist = new TableRenderer(
             connect(deleteLink, 'onclick', function (e) {
                 e.stop();
 
-                if (!confirm({$enc_confirmdelete})) {
+                var message = (r.hasviews > 0) ?
+                    {$enc_confirmdelete_hasviews} :
+                    {$enc_confirmdelete};
+
+                if (!confirm(message)) {
                     return;
                 }
                 sendjsonrequest(

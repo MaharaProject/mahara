@@ -41,16 +41,21 @@ $userid = $USER->get('id');
 
 if (empty($owned)) { // just get communities this user is a member of.
     $data = get_member_communities($userid, $offset, $limit);
-    $count = count_records('community_member', 'member', $userid);
+    $count = get_record_sql('SELECT COUNT(c.*)
+              FROM ' . $prefix . 'community c 
+              JOIN ' . $prefix . 'community_member cm ON cm.community = c.id
+              WHERE c.owner != ? AND cm.member = ?', array($userid, $userid));
+    $count = $count->count;
 }
 else {
 
     $count = count_records_sql('SELECT COUNT(*) FROM ' . $prefix . 'community c WHERE c.owner = ?',
                                array($userid));
 
-    $datasql = 'SELECT c.id,c.jointype,c.name,c.owner,count(cmr.community) as requestcount
+    $datasql = 'SELECT c.id,c.jointype,c.name,c.owner,count(cmr.community) as requestcount, COUNT(v.*) AS hasviews
                 FROM ' . $prefix . 'community c 
                 LEFT JOIN ' . $prefix . 'community_member_request cmr ON cmr.community = c.id
+                LEFT JOIN ' . $prefix . 'view_access_community v ON v.community = c.id
                 WHERE c.owner = ?
                 GROUP BY c.id,c.jointype,c.name,c.owner';
                 

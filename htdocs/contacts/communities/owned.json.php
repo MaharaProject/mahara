@@ -18,7 +18,7 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Martyn Smith <martyn@catalyst.net.nz>
+ * @author     Nigel McNie <nigel@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
@@ -31,46 +31,25 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
 json_headers();
 
-$limit = param_integer('limit', 10);
-$offset = param_integer('offset', 0);
-$action = param_variable('action', 'list');
-
+$action = param_variable('action');
 $dbprefix = get_config('dbprefix');
 
 if ($action == 'delete') {
     $id = param_integer('id');
     // check owner
-    $owner = get_field('usr_group', 'owner', 'id', $id);
+    $owner = get_field('community', 'owner', 'id', $id);
     if ($owner != $USER->get('id')) {
-        json_reply('local', get_string('cantdeletegroupdontown'));
+        json_reply('local', get_string('cantdeletecommunitydontown'));
     }
     db_begin();
-    delete_records('view_access_group', 'grp', $id);
-    delete_records('usr_group_member', 'grp', $id);
-    delete_records('usr_group', 'id', $id);
+    delete_records('view_access_community', 'community', $id);
+    delete_records('community_member', 'community', $id);
+    delete_records('community', 'id', $id);
     db_commit();
 
-    json_reply(null, get_string('deletegroupsuccessful'));
+    json_reply(null, get_string('deletecommunitysuccessful'));
 }
-else {
-    $count = get_field('usr_group', 'COUNT(*)', 'owner', $USER->get('id'));
-    $data = get_records_sql_array(
-        'SELECT g.id, g.name, COUNT(m.*) AS count, COUNT(v.*) AS hasviews FROM ' . $dbprefix . 'usr_group g INNER JOIN ' . $dbprefix . 'usr_group_member m ON m.grp=g.id LEFT OUTER JOIN ' . $dbprefix . 'view_access_group v ON (v.grp=g.id) WHERE g.owner=? GROUP BY 1, 2 ORDER BY g.name',
-        array($USER->get('id')),
-        $offset,
-        $limit
-    );
 
-    if (!$data) {
-        $data = array();
-    }
-
-    print json_encode(array(
-        'count'  => $count,
-        'limit'  => $limit,
-        'offset' => $offset,
-        'data'   => $data,
-    ));
-}
+json_reply('local', 'Unknown action');
 
 ?>

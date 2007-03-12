@@ -32,8 +32,11 @@ define('TITLE', get_string('myownedcommunities'));
 
 $viewurl = get_config('wwwroot') . 'contacts/communities/view.php?id=';
 $editurl = get_config('wwwroot') . 'contacts/communities/edit.php?id=';
-$editstr = get_string('edit');
+$editstr = json_encode(get_string('edit'));
 $edithelp = get_help_icon('core', 'communities', null, null, null, 'communityeditlink');
+$deletestr = json_encode(get_string('delete'));
+$confirmdelete_hasviews = json_encode(get_string('communityconfirmdeletehasviews'));
+$confirmdelete = json_encode(get_string('communityconfirmdelete'));
 
 $javascript = <<<EOF
 var communitylist = new TableRenderer(
@@ -54,7 +57,38 @@ var communitylist = new TableRenderer(
          if (r._rownumber == 1) {
              help.innerHTML = '{$edithelp}';
          }
-         return TD(null, A({'href': '{$editurl}' + r.id}, '{$editstr}'), help);
+
+        var editButton = BUTTON({'type': 'button', 'class': 'button'}, {$editstr});
+        connect(editButton, 'onclick', function(e) {
+            e.stop();
+            window.location = '{$editurl}' + r.id;
+        });
+
+        var deleteButton = BUTTON({'type':'button', 'class': 'button'}, {$deletestr});
+        connect(deleteButton, 'onclick', function (e) {
+            e.stop();
+
+            var message = (r.hasviews > 0) ?
+                {$confirmdelete_hasviews} :
+                {$confirmdelete};
+
+            if (!confirm(message)) {
+                return;
+            }
+            sendjsonrequest(
+                'owned.json.php',
+                {
+                    'action': 'delete',
+                    'id': r.id
+                },
+                'POST',
+                function (data) {
+                    communitylist.doupdate();
+                }
+            );
+        });
+
+         return TD(null, editButton, help, deleteButton);
      }
      ]
 );
