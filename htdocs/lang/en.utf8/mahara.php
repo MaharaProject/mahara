@@ -263,20 +263,21 @@ $string['unreadmessage'] = 'unread message';
 // mycontacts
 
 // mygroups
-$string['creategroup']               = 'Add new group';
-$string['canteditdontown']           = 'You can\'t edit this group because you don\'t own it';
-$string['groupname']                 = 'Group name';
-$string['groupmembers']              = 'Group members';
-$string['savegroup']                 = 'Save group';
-$string['groupsaved']                = 'Group saved';
-$string['groupcreated']              = 'Group created';
-$string['groupalreadyexists']        = 'A group by this name already exists';
-$string['groupdescription']          = 'Group description';
-$string['editgroup']                 = 'Edit group';
-$string['membercount']               = 'Member count';
-$string['confirmdeletegroup']        = 'Are you sure you want to delete this group?';
-$string['cantdeletegroupdontown']    = 'You can\'t delete this group, you don\'t own it';
-$string['deletegroupsuccessful']     = 'Group successfully deleted';
+$string['creategroup']                = 'Add new group';
+$string['canteditdontown']            = 'You can\'t edit this group because you don\'t own it';
+$string['groupname']                  = 'Group name';
+$string['groupmembers']               = 'Group members';
+$string['savegroup']                  = 'Save group';
+$string['groupsaved']                 = 'Group saved';
+$string['groupcreated']               = 'Group created';
+$string['groupalreadyexists']         = 'A group by this name already exists';
+$string['groupdescription']           = 'Group description';
+$string['editgroup']                  = 'Edit group';
+$string['membercount']                = 'Member count';
+$string['confirmdeletegroup']         = 'Are you sure you want to delete this group?';
+$string['confirmdeletegrouphasviews'] = 'Are you sure you want to delete this group? Some of your views use this group for access control, removing this group would mean that the members of that group would not have access to the views.';
+$string['cantdeletegroupdontown']     = 'You can\'t delete this group, you don\'t own it';
+$string['deletegroupsuccessful']      = 'Group successfully deleted';
 
 // my account
 $string['account'] =  'My account';
@@ -481,6 +482,10 @@ $string['communityjointyperequest'] = 'Membership to this community is by reques
 $string['communityrequestsubject'] = 'New community membership request';
 $string['communityrequestmessage'] = '%s has sent a membership request to join the community %s';
 $string['communityrequestmessagereason'] = '%s has sent a membership request to join the community %s with the reason %s.';
+$string['communityconfirmdelete'] = 'Are you sure you wish to delete this community?';
+$string['communityconfirmdeletehasviews'] = 'Are you sure you wish to delete this community? Some of your views use this community for access control, removing this community would mean that the members of that community would not have access to the views.';
+$string['deletecommunitysuccessful'] = 'Community Deleted Successfully';
+
 
 
 // friendslist
