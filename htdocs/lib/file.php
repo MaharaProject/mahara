@@ -270,7 +270,7 @@ function get_mime_type($file) {
     default : 
         $filepath = get_config('pathtofile');
         if (!empty($filepath)) {
-            list($output,) = split(';', exec($filepath . ' -ib ' . escapeshellarg($file)));
+            list($output,) = preg_split('/[\s;]/', exec($filepath . ' -ib ' . escapeshellarg($file)));
             return $output;
         }
         return false;
