@@ -18,13 +18,15 @@
 
                 var results = [];
 
-                forEach(users.data, function(user) {
-                    if (members[user.id]) {
-                        return;
-                    }
-                    //appendChildNodes('{{$name}}_potential',OPTION({'value':user.id},user.name));
-                    results.push(OPTION({'value':user.id},user.name));
-                });
+                if (users.data) {
+                    forEach(users.data, function(user) {
+                        if (members[user.id]) {
+                            return;
+                        }
+                        //appendChildNodes('{{$name}}_potential',OPTION({'value':user.id},user.name));
+                        results.push(OPTION({'value':user.id},user.name));
+                    });
+                }
 
                 replaceChildNodes('{{$name}}_potential', results);
 
@@ -64,6 +66,11 @@
                 {{$name}}_searchfunc($('{{$name}}_search').value);
                 k.stop();
             }
+        });
+
+        connect('{{$name}}_search_btn', 'onclick', function(e) {
+            {{$name}}_searchfunc($('{{$name}}_search').value);
+            e.stop();
         });
     });
 
@@ -147,7 +154,7 @@
     </tr>
     <tr>
         <td colspan="3">
-            <label for="{{$name}}_search">Search:</label><input id="{{$name}}_search" type="text">
+            <label for="{{$name}}_search">Search:</label><input id="{{$name}}_search" type="text" class="text"> <button id="{{$name}}_search_btn" type="button" class="button">{{str tag="go"}}</button>
         </td>
     </tr>
 </table>
