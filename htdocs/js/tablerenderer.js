@@ -19,6 +19,8 @@ function TableRenderer(target, source, columns, options) {
 
     this.init = function() {
         self.table = getElement(target);
+        self.loadingMessage = DIV({'class': 'tablerenderer-loading'}, IMG({'src': config.theme['images/loading.gif'], 'alt': ''}), ' Loading...');
+        insertSiblingNodesAfter(self.table, self.loadingMessage);
 
         self.tbody = getFirstElementByTagAndClassName('tbody', null, self.table);
         self.thead = getFirstElementByTagAndClassName('thead', null, self.table);
@@ -191,7 +193,14 @@ function TableRenderer(target, source, columns, options) {
                 }
             }
 
+            if (self.loadingMessage) {
+                removeElement(self.loadingMessage);
+                self.loadingMessage = null;
+            }
+
             self.renderdata(response);
+
+            self.table.style.display = 'table';
 
         }, null, true);
     };
