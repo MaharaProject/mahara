@@ -410,6 +410,7 @@ function register_submit(Pieform $form, $values) {
 
         $user =(object) $values;
         $user->admin = 0;
+        $user->staff = 0;
         email_user($user, null,
             get_string('registeredemailsubject', 'auth.internal', get_config('sitename')),
             get_string('registeredemailmessagetext', 'auth.internal', $values['firstname'], get_config('sitename'), $values['key'], get_config('sitename')),
