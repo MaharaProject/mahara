@@ -72,19 +72,14 @@ function rebuild_artefact_parent_cache_dirty() {
     foreach ($dirty as $d) {
         $parentids = array();
         $current = $d->artefact;
+        delete_records('artefact_parent_cache', 'artefact', $current);
         $parentids = array_keys(artefact_get_parents_for_cache($current));
         foreach ($parentids as $p) {
             $apc = new StdClass;
             $apc->artefact = $d->artefact;
             $apc->parent   = $p;
             $apc->dirty    = 0;
-            try {
-                insert_record('artefact_parent_cache', $apc);
-            }
-            catch (SQLException $e) {
-                //@todo duplicate - find out a better way to deal with it
-                // I suspect this is because files can have multiple parents.
-            }   
+            insert_record('artefact_parent_cache', $apc);
         }
     }
     db_commit();
@@ -103,13 +98,7 @@ function rebuild_artefact_parent_cache_complete() {
                 $apc->artefact = $a->id;
                 $apc->parent   = $p;
                 $apc->dirty    = 0;
-                try {
-                    insert_record('artefact_parent_cache', $apc);
-                }
-                catch (SQLException $e) {
-                    //@todo duplicate - find out a better way to deal with it
-                    // I suspect this is because files can have multiple parents.
-                }   
+                insert_record('artefact_parent_cache', $apc);
             }
         }
     }
