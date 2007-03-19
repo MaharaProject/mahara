@@ -1700,13 +1700,6 @@ a.pieform-calendar-toggle img {
     border: none;
 }
 
-/*
-  This style is necessary to hide tablerenderer tables to start with.
-  If you make a new theme based off this one, don't remove this!
-*/
-.tablerenderer {
-    display: none;
-}
 .tablerenderer-loading {
     border: 1px solid #E5E8DA;
     padding: .5em;

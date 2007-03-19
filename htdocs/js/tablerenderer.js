@@ -200,7 +200,7 @@ function TableRenderer(target, source, columns, options) {
 
             self.renderdata(response);
 
-            self.table.style.display = 'table';
+            removeElementClass(self.table, 'hidden');
 
         }, null, true);
     };
