@@ -13,7 +13,7 @@
                                   {contextualhelp plugintype='core' pluginname='groups' section='addgroupbutton'}
                                 </div>
 
-			<table id="grouplist" class="tablerenderer">
+			<table id="grouplist" class="hidden tablerenderer">
 				<thead>
 					<tr>
 						<th>{str tag="groupname"}</th>

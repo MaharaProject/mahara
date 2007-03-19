@@ -6,7 +6,7 @@
                         <div class="addcommunitylink">
                            <a href="{$WWWROOT}/contacts/communities/create.php">{str tag='addcommunity'}</a>
                         </div>
-                            <table id="communitylist" class="tablerenderer">
+                            <table id="communitylist" class="hidden tablerenderer">
 	                        <thead>
                                     <tr>
  	                                <th>{str tag='name'}</th>

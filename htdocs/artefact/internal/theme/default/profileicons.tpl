@@ -7,7 +7,7 @@
 			<h2>{str section="artefact.internal" tag="profileicons"}</h2>
 
             {$settingsformtag}
-            <table id="profileicons" class="tablerenderer">
+            <table id="profileicons" class="hidden tablerenderer">
                 <thead>
                     <th>{str tag="image"}</th>
                     <th>{str tag="title"}</th>

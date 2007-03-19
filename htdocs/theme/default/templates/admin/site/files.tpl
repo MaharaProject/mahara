@@ -5,7 +5,7 @@
 			<h2>{str section="admin" tag="adminfiles"}</h2>
 			<div id="myfiles">
 				<div id="uploader"></div>
-			<table id="filelist" class="tablerenderer">
+			<table id="filelist" class="hidden tablerenderer">
 				<thead><tr>
 					<th></th>
 					<th>{str tag=name section=artefact.file}</th>

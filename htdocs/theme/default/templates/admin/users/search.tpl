@@ -13,7 +13,7 @@
 				</div>
 				<div id="results">
                     <h3>{str tag="results"}</h3>
-                    <table id="searchresults" class="tablerenderer">
+                    <table id="searchresults" class="hidden tablerenderer">
                         <tbody>
                         </tbody>
                     </table>
