@@ -105,7 +105,7 @@ class PluginSearchInternal extends PluginSearch {
             if ($count > 0) {
                 $data = get_records_sql_array('
                     SELECT DISTINCT ON (u.firstname, u.lastname, u.id)
-                        u.id, u.username, u.institution, u.firstname, u.lastname, u.preferredname, u.email
+                        u.id, u.username, u.institution, u.firstname, u.lastname, u.preferredname, u.email, u.staff
                     FROM ' . $prefix . 'artefact a
                         INNER JOIN ' . $prefix .'usr u ON u.id = a.owner
                     WHERE

@@ -203,7 +203,6 @@ function get_helpfile_location($plugintype, $pluginname, $form, $element, $page=
 
     // try the current language
     $langfile = $location . $lang . '/' . $file;
-    log_debug($langfile);
     if (is_readable($langfile)) {
         return $langfile;
     }
