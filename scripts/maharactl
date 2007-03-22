@@ -1,0 +1,66 @@
+#!/usr/bin/env perl
+use warnings;
+use strict;
+use FindBin;
+use lib qq{$FindBin::Bin/lib/};
+
+use Carp;
+$Carp::Verbose = 1;
+use Data::Dumper;
+use Getopt::Declare;
+use Mahara::Config;
+use Mahara::Action;
+
+my $actions = [qw(adduser)];
+
+my $args = Getopt::Declare->new(q(
+    [strict]
+    <action>        	Action to perform ) . '(' . join(', ', @{$actions}) . ')' . q( [required]
+    -c <configfile>  	What config.php to use (defaults to ../htdocs/config.php)	
+    -p                 	Pretend (just print what _would_ happen)
+    -v                 	Verbose (like pretend but print _and_ insert)
+                        
+));
+
+exit unless defined $args;
+
+$args->{-c} ||= qq{$FindBin::Bin/../htdocs/config.php};
+my $config = Mahara::Config->new($args->{-c});
+
+unless ( grep { $args->{'<action>'} eq $_ } @{$actions} ) {
+    croak q{Action must be one of } . join(', ', map { qq{'$_'} } @{$actions} );
+}
+
+my $action = Mahara::Action->new($config);
+
+my $what = $args->{'<action>'};
+if ($what eq 'adduser') {
+    $action->add_user();
+}
+#BEGIN;
+#INSERT INTO usr
+#    (username, password, institution, passwordchange, firstname, lastname, studentid, preferredname, email, quota)
+#    VALUES
+#    ('terryn', 'itpnz2007', 'mahara', 1, 'Neal', 'Terry', NULL, 'Neal', 'terryn@itpnz.ac.nz', 62914560);
+#INSERT INTO artefact
+#    (artefacttype, owner, ctime, mtime, atime, title)
+#    VALUES
+#    ('firstname', (SELECT id FROM usr WHERE username = 'terryn'), CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Neal');
+#INSERT INTO artefact
+#    (artefacttype, owner, ctime, mtime, atime, title)
+#    VALUES
+#    ('lastname', (SELECT id FROM usr WHERE username = 'terryn'), CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Terry');
+#INSERT INTO artefact
+#    (artefacttype, owner, ctime, mtime, atime, title)
+#    VALUES
+#    ('email', (SELECT id FROM usr WHERE username = 'terryn'), CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'terryn@itpnz.ac.nz');
+#INSERT INTO artefact
+#    (artefacttype, owner, ctime, mtime, atime, title)
+#    VALUES
+#    ('preferredname', (SELECT id FROM usr WHERE username = 'terryn'), CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Neal');
+#INSERT INTO artefact_internal_profile_email
+#    (owner, email, verified, principal, artefact)
+#    VALUES
+#    ((SELECT id FROM usr WHERE username = 'terryn'), 'terryn@itpnz.ac.nz', 1, 1, (SELECT id FROM artefact WHERE owner = (SELECT id FROM usr WHERE username = 'terryn') AND title = 'terryn@itpnz.ac.nz'));
+#COMMIT;
+
