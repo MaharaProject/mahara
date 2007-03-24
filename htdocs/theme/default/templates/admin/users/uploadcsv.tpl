@@ -3,7 +3,7 @@
 {include file="columnfullstart.tpl"}
 			<h2>{str tag="uploadcsv" section="admin"}</h2>
 
-			<p>{str tag="uploadcsvdescription" section="admin"}</p>
+            {$uploadcsvpagedescription}
 
 			{$uploadcsvform}
 
