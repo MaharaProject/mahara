@@ -65,7 +65,7 @@ $form = array(
     )
 );
 
-function createview4_submit_cancel() {
+function createview4_cancel_submit() {
     redirect('/view/');
 }
 
