@@ -68,6 +68,7 @@ $editgroup = pieform(array(
             'rules'        => array( 'required' => true ),
             'defaultvalue' => $group_members,
             'help'         => true,
+            'filter'       => false,
         ),
         'id'          => array(
             'type'         => 'hidden',
