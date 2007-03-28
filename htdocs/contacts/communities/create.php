@@ -98,7 +98,7 @@ function createcommunity_submit(Pieform $form, $values) {
 
     $now = db_format_timestamp(time());
 
-    insert_record(
+    $id = insert_record(
         'community',
         (object) array(
             'name'           => $values['name'],
@@ -107,8 +107,24 @@ function createcommunity_submit(Pieform $form, $values) {
             'owner'          => $USER->get('id'),
             'ctime'          => $now,
             'mtime'          => $now,
-        )
+        ),
+        'id',
+        true
     );
+
+    // If the user is a staff member, they should be added as a tutor automatically
+    if ($values['membershiptype'] == 'controlled' && $USER->get('staff')) {
+        log_debug('Adding staff user to community');
+        insert_record(
+            'community_member',
+            (object) array(
+                'community' => $id,
+                'member'    => $USER->get('id'),
+                'ctime'     => $now,
+                'tutor'     => 1
+            )
+        );
+    }
 
     $SESSION->add_ok_msg(get_string('communitysaved'));
 
