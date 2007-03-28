@@ -43,6 +43,8 @@ if ($action == 'delete') {
     }
     db_begin();
     delete_records('view_access_community', 'community', $id);
+    delete_records('community_member_invite', 'community', $id);
+    delete_records('community_member_request', 'community', $id);
     delete_records('community_member', 'community', $id);
     delete_records('community', 'id', $id);
     db_commit();
