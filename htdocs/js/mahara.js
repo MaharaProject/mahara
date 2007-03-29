@@ -177,16 +177,16 @@ function sendjsonrequest(script, data, rtype, successcallback, errorcallback, qu
                 if (!quiet) {
                     displayMessage(data.message, errtype);
                 }
-                try { successcallback(data); } catch (e) { logError('sendjsonrequest() callback failed: ', data); }
+                try { successcallback(data); } catch (e) { logError('sendjsonrequest() callback failed: ', e, data); }
             }
             else if (data.message && typeof(data.message == 'object')) {
                 if (data.message.message && typeof(data.message.message == 'string') && !quiet) {
                     displayMessage(data.message.message, errtype);
                 }
-                try { successcallback(data.message); } catch (e) { logError('sendjsonrequest() callback failed: ', data); }
+                try { successcallback(data.message); } catch (e) { logError('sendjsonrequest() callback failed: ', e, data); }
             }
             else {
-                try { successcallback(data); } catch (e) { logError('sendjsonrequest() callback failed: ', data); }
+                try { successcallback(data); } catch (e) { logError('sendjsonrequest() callback failed: ', e, data); }
             }
             processingStop();
         }
