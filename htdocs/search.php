@@ -62,7 +62,7 @@ results.updatecallback = function (d) {
         results.linkspan = {$ncols};
         if (!$('userfields')) {
             appendChildNodes(results.thead, TR({'id':'userfields'},
-                                               map(partial(TD, null), userfieldstrings)));
+                                               map(partial(TH, null), userfieldstrings)));
         }
     }
     else {
@@ -82,12 +82,7 @@ results.rowfunction = function(r,n,d) {
     var row = TR({'class':'r'+(n%2)},TD(null,A({'href':'user/view.php?id=' + r.id},r.name)));
     for (var i = 0; i < userfields.length; i++) {
         if (r[userfields[i]]) {
-            if (userfields[i] == 'email') {
-                appendChildNodes(row, TD(null, map(partial(DIV,null), r[userfields[i]])));
-            }
-            else {
-                appendChildNodes(row, TD(null, r[userfields[i]]));
-            }
+            appendChildNodes(row, TD(null, r[userfields[i]]));
         }
         else {
             appendChildNodes(row, TD(null));
@@ -106,12 +101,14 @@ function doSearch() {
 
 EOF;
 
+$smarty = smarty(array('tablerenderer'));
+
 if (isset($_REQUEST['query'])) {
     $javascript .= '    results.query = ' . json_encode($query) . ";\n";
     $javascript .= "    results.updateOnLoad();\n";
+    $smarty->assign('search_query_value', $query);
 }
 
-$smarty = smarty(array('tablerenderer'));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->display('search.tpl');
 
