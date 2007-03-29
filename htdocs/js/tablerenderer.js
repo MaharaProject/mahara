@@ -49,9 +49,15 @@ function TableRenderer(target, source, columns, options) {
             self.assertPager(self.offset, self.limit, self.count);
         }
 
-        if (typeof(self.emptycontent) != 'undefined') {
-            self.emptycontent = DIV(null,self.emptycontent);
-            insertSiblingNodesBefore(self.table, self.emptycontent);
+        if (TableRendererPageLoaded) {
+            if (typeof(self.emptycontent) != 'undefined') {
+                self.emptycontent = DIV(null,self.emptycontent);
+                insertSiblingNodesBefore(self.table, self.emptycontent);
+            }
+            if (self.loadingMessage) {
+                removeElement(self.loadingMessage);
+                self.loadingMessage = null;
+            }
         }
     };
 
