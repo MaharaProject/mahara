@@ -350,7 +350,7 @@ abstract class ArtefactType {
 
         delete_records('artefact_tag', 'artefact', $this->id);
         if (is_array($this->tags)) {
-            foreach ($this->tags as $tag) {
+            foreach (array_unique($this->tags) as $tag) {
                 if (empty($tag)) {
                     continue;
                 }
