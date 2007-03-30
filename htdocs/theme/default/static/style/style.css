@@ -354,7 +354,9 @@ tr.required th {
 	color: #FFF;
 	text-decoration: none;
 }
-#mainnav li.selected a {
+#mainnav li.selected a:link,
+#mainnav li.selected a:visited,
+#mainnav li.selected a:active {
 	color: #FFF;
 }
 /* MAIN NAVIGATION ENDS */
@@ -393,7 +395,9 @@ tr.required th {
     padding: 0;
 	margin: 0 5px;
 }
-#subnav li.selected a {
+#subnav li.selected a:link, 
+#subnav li.selected a:visited,
+#subnav li.selected a:active {
 	color: #98bf10;
 }
 /* SUB NAVIGATION ENDS */
