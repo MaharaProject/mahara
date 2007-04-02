@@ -122,36 +122,24 @@ $form = array(
                     'defaultvalue' => ((!empty($personalinformation)) 
                         ? strtotime($personalinformation->get_composite('dateofbirth')) : null),
                     'title' => get_string('dateofbirth', 'artefact.resume'),
-                    'rules' => array(
-                        'required' => true,
-                    ),
                 ),
                 'placeofbirth' => array(
                     'type' => 'text',
                     'defaultvalue' => ((!empty($personalinformation)) 
                         ? $personalinformation->get_composite('placeofbirth') : null),
                     'title' => get_string('placeofbirth', 'artefact.resume'),
-                    'rules' => array(
-                        'required' => true,
-                    ),
                 ),  
                 'citizenship' => array(
                     'type' => 'text',
                     'defaultvalue' => ((!empty($personalinformation))
                         ? $personalinformation->get_composite('citizenship') : null),
                     'title' => get_string('citizenship', 'artefact.resume'),
-                    'rules' => array(
-                        'required' => true,
-                    ),
                 ),
                 'visastatus' => array(
                     'type' => 'text', 
                     'defaultvalue' => ((!empty($personalinformation))
                         ? $personalinformation->get_composite('visastatus') : null),
                     'title' => get_string('visastatus', 'artefact.resume'),
-                    'rules' => array(
-                        'required' => true,
-                    ),
                 ),
                 'gender' => array(
                     'type' => 'radio', 
@@ -162,18 +150,12 @@ $form = array(
                         'male'   => get_string('male', 'artefact.resume'),
                     ),
                     'title' => get_string('gender', 'artefact.resume'),
-                    'rules' => array(
-                        'required' => true,
-                    ),
                 ),
                 'maritalstatus' => array(
                     'type' => 'text',
                     'defaultvalue' => ((!empty($personalinformation))
                         ? $personalinformation->get_composite('maritalstatus') :  null),
                     'title' => get_string('maritalstatus', 'artefact.resume'),
-                    'rules' => array(
-                        'required' => true,
-                    ),
                 ),
             ),
         ),
