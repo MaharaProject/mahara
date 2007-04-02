@@ -25,12 +25,88 @@
  */
 
 function xmlrpc_exception (Exception $e) {
-    if (!($e instanceof XmlrpcServerException) || get_class($e) == 'XmlrpcServerException') {
-        xmlrpc_error('An unexpected error has occurred.', 666);
+    var_dump($e);exit;
+    if (!($e instanceof XmlrpcServerException) || get_class($e) != 'XmlrpcServerException') {
+        xmlrpc_error('An unexpected error has occurred: '.$e->getMessage(), $e->getCode());
         log_message($e->getMessage(), LOG_LEVEL_WARN, true, true, $e->getFile(), $e->getLine(), $e->getTrace());
         die();
     }
     $e->handle_exception();
+}
+
+function get_hostname_from_uri($uri = null) {
+    $count = preg_match("@^(?:http[s]?://)?([A-Z0-9\-\.]+).*@i", $uri, $matches);
+    if ($count > 0) return $matches[1];
+    return false;
+}
+
+function dropslash($wwwroot) {
+    if (substr($wwwroot, -1, 1) == '/') {
+        return substr($wwwroot, 0, -1);
+    }
+    return $wwwroot;
+}
+
+function get_public_key($uri, $application=null) {
+    return '-----BEGIN CERTIFICATE-----
+MIICwjCCAiugAwIBAgIBADANBgkqhkiG9w0BAQQFADCBpjELMAkGA1UEBhMCTlox
+EzARBgNVBAgTCldlbGxpbmd0b24xDzANBgNVBAcTBlRlIEFybzEPMA0GA1UEChMG
+TWFoYXJhMQ8wDQYDVQQLEwZNYWhhcmExIzAhBgNVBAMTGmh0dHA6Ly9tYWhhcmEu
+bWFob29kbGUuY29tMSowKAYJKoZIhvcNAQkBFhtub3JlcGx5QG1haGFyYS5tYWhv
+b2RsZS5jb20wHhcNMDcwMzI5MjE0NTI4WhcNMDcwNDI2MjE0NTI4WjCBpjELMAkG
+A1UEBhMCTloxEzARBgNVBAgTCldlbGxpbmd0b24xDzANBgNVBAcTBlRlIEFybzEP
+MA0GA1UEChMGTWFoYXJhMQ8wDQYDVQQLEwZNYWhhcmExIzAhBgNVBAMTGmh0dHA6
+Ly9tYWhhcmEubWFob29kbGUuY29tMSowKAYJKoZIhvcNAQkBFhtub3JlcGx5QG1h
+aGFyYS5tYWhvb2RsZS5jb20wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBANYR
+k7JNrSqQcSK1hH5cdpJ+MinhhnjcpTu/MXZXhkOejZ4JRdpQqFd9J+JW1MiTDeet
+3l6nuB/Tt87wgf1vKO7WYV/Go/E3AHAp8WqeA+9z070zD+n1/Th5le+76RKNd28N
+C+chgNrvVB4hGgm9rwUsaXHolIx+jm58A+OR7SAbAgMBAAEwDQYJKoZIhvcNAQEE
+BQADgYEAnD2Sj+xAVx7cUtbZD2uCy2X0cfPUI8MxbF3MoUW/8YexAqVBTGnzBHR0
+8lFK4lVupRAxT6tjwSWxWxaBFfUDkGkVPIP28xcpz9/AgYbCbLunZmU/9qBAK/p9
+qQHy3ds1DIOoP02RSOt/zHh6lzmGEy+KzBd/cq7EwtzesrtKZk8=
+-----END CERTIFICATE-----';
+    global $CFG;
+echo 'a';
+    static $keyarray = array();
+    if (isset($keyarray[$uri])) {
+        return $keyarray[$uri];
+    }
+
+    $openssl = OpenSslRepo::singleton();
+
+    if(empty($application)) {
+        $this->application = get_record('application', 'application', 'moodle');
+    }
+echo ' b';
+    $wwwroot = dropslash($CFG->wwwroot);
+echo ' c';
+    $rq = xmlrpc_encode_request('system/keyswap', array($wwwroot, $openssl->certificate), array("encoding" => "utf-8"));
+    $ch = curl_init($uri. $application->xmlrpc_server_url);
+echo ' d';
+    curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Moodle');
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $rq);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: text/xml charset=UTF-8"));
+
+    $res = xmlrpc_decode(curl_exec($ch));
+echo "\nRes:\n$res\n\n";
+    curl_close($ch);
+
+    if (!is_array($res)) { // ! error
+        $keyarray[$uri] = $res;
+        $credentials=array();
+        if (strlen(trim($keyarray[$uri]))) {
+            $credentials = openssl_x509_parse($keyarray[$uri]);
+            $host = $credentials['subject']['CN'];
+            if (strpos($uri, $host) !== false) {
+                mnet_set_public_key($uri, $keyarray[$uri]);
+                return $keyarray[$uri];
+            }
+        }
+    }
+    return false;
 }
 
 /**
@@ -67,7 +143,8 @@ EOF;
  */
 class XmlrpcServerException extends Exception {
     public function handle_exception() {
-        xmlrpc_error($this->message, $this->code);
+        var_dump($this);
+//        xmlrpc_error($this->message, $this->code);
         die();
     }
 }
@@ -100,7 +177,7 @@ class XmlrpcServerException extends Exception {
  * @return string                         An XML-ENC document
  */
 function xmlenc_envelope($message, $remote_certificate) {
-    global $cfg;
+    global $CFG;
 
     // Generate a key resource from the remote_certificate text string
     $publickey = openssl_get_publickey($remote_certificate);
@@ -108,7 +185,6 @@ function xmlenc_envelope($message, $remote_certificate) {
     if ( gettype($publickey) != 'resource' ) {
         // Remote certificate is faulty.
         throw new XmlrpcServerException('Could not generate public key resource from certificate', 1);
-        return false;
     }
 
     // Initialize vars
@@ -146,7 +222,8 @@ function xmlenc_envelope($message, $remote_certificate) {
             </ReferenceList>
             <CarriedKeyName>XMLENC</CarriedKeyName>
         </EncryptedKey>
-        <wwwroot>{$cfg->wwwroot}</wwwroot>
+        <wwwroot>{$CFG->wwwroot}</wwwroot>
+        <X1>$zed</X1>
     </encryptedMessage>
 EOF;
 }
@@ -176,9 +253,13 @@ EOF;
  * @return string                         An XML-DSig document
  */
 function xmldsig_envelope($message) {
-    global $cfg;
+    echo 'Signing: '.$message."\n\n";
+    global $CFG;
+    $openssl = OpenSslRepo::singleton();
+    $wwwroot = dropslash($CFG->wwwroot);
     $digest = sha1($message);
-    $sig = base64_encode($MNET->sign_message($message));
+    echo '$digest: '."\n".$digest."\n";
+    $sig = base64_encode($openssl->sign_message($message));
     $message = base64_encode($message);
     $time = time();
 
@@ -196,23 +277,31 @@ return <<<EOF
             </SignedInfo>
             <SignatureValue>$sig</SignatureValue>
             <KeyInfo>
-                <RetrievalMethod URI="{$CFG->wwwroot}/mnet/publickey.php"/>
+                <RetrievalMethod URI="{$wwwroot}/mnet/publickey.php"/>
             </KeyInfo>
         </Signature>
         <object ID="XMLRPC-MSG">$message</object>
-        <wwwroot>{$cfg->wwwroot}</wwwroot>
+        <wwwroot>{$wwwroot}</wwwroot>
         <timestamp>$time</timestamp>
     </signedMessage>
 EOF;
 
 }
 
+/**
+ * Good candidate to be a singleton
+ */
 class OpenSslRepo {
-    
-    private $keypair     = array();
+
+    private $keypair = array();
+
+    public function sign_message($message) {
+        $signature = '';
+        $bool      = openssl_sign($message, $signature, $this->keypair['privatekey']);
+        return $signature;
+    }
 
     public function openssl_open($data, $key) {
-        $this->populate();
         $payload = '';
         $isOpen = openssl_open($data, $payload, $key, $this->keypair['privatekey']);
 
@@ -242,35 +331,152 @@ class OpenSslRepo {
         }
     }
 
-    private function populate() {
+    public static function singleton() {
+        //single instance
+        static $instance;
+
+        //if we don't have the single instance, create one
+        if(!isset($instance)) {
+            $instance = new OpenSslRepo();
+        }
+        return($instance);
+    }
+
+    /**
+     * This is a singleton - don't try to create an instance by doing:
+     * $openssl = new OpenSslRepo();
+     * Instead, use:
+     * $openssl = OpenSslRepo::singleton();
+     * 
+     */
+    private function __construct() {
         if(empty($this->keypair)) {
+
             $records = get_records_select_menu('config', "field IN ('openssl_keypair', 'openssl_keypair_expires')", 'field', 'field, value');
-            list($this->keypair['certificate'], $this->keypair['keypair_PEM']) = explode('@@@@@@@@', $records['openssl_keypair']);
-            $this->keypair['expires'] = $records['openssl_keypair_expires'];
+            if(empty($records)) {
+                $this->mnet_generate_keypair();
+
+                $newrecord = new stdClass();
+                $newrecord->field = 'openssl_keypair';
+                $newrecord->value = implode('@@@@@@@@', $this->keypair);
+                insert_record('config',$newrecord);
+
+                $newrecord = new stdClass();
+                $newrecord->field = 'openssl_keypair_expires';
+
+                $credentials = openssl_x509_parse($this->keypair['certificate']);
+                $host = $credentials['subject']['CN'];
+                if(is_array($credentials) && isset($credentials['validTo_time_t'])) {
+                    $newrecord->value = $credentials['validTo_time_t'];
+                }
+
+                insert_record('config',$newrecord);
+            } else {
+                list($this->keypair['certificate'], $this->keypair['keypair_PEM']) = explode('@@@@@@@@', $records['openssl_keypair']);
+                $this->keypair['expires'] = $records['openssl_keypair_expires'];
+            }
             $this->keypair['privatekey'] = openssl_pkey_get_private($this->keypair['keypair_PEM']);
             $this->keypair['publickey']  = openssl_pkey_get_public($this->keypair['certificate']);
         }
+        return $this;
     }
 
     public function __get($name) {
+        if('certificate' === $name) return $this->keypair['certificate'];
         return null;
+    }
+
+    /**
+     * Generate public/private keys and store in the config table
+     *
+     * Use the distinguished name provided to create a CSR, and then sign that CSR
+     * with the same credentials. Store the keypair you create in the config table.
+     * If a distinguished name is not provided, create one using the fullname of
+     * 'the course with ID 1' as your organization name, and your hostname (as
+     * detailed in $CFG->wwwroot).
+     *
+     * @param   array  $dn  The distinguished name of the server
+     * @return  string      The signature over that text
+     */
+    private function mnet_generate_keypair() {
+        global $CFG;
+        $host = get_hostname_from_uri($CFG->wwwroot);
+
+        $organization = get_config('sitename');
+        $email        = get_config('noreplyaddress');
+        $country      = get_config('country');
+        $province     = get_config('province');
+        $locality     = get_config('locality');
+
+        //TODO: Create additional fields on site setup and read those from 
+        //      config. Then remove the next 3 linez
+        if(empty($country))  $country  = 'NZ';
+        if(empty($province)) $province = 'Wellington';
+        if(empty($locality)) $locality = 'Te Aro';
+
+        $dn = array(
+           "countryName" => $country,
+           "stateOrProvinceName" => $province,
+           "localityName" => $locality,
+           "organizationName" => $organization,
+           "organizationalUnitName" => 'Mahara',
+           "commonName" => get_config('wwwroot'),
+           "emailAddress" => $email
+        );
+
+        // ensure we remove trailing slashes
+        $dn["commonName"] = preg_replace(':/$:', '', $dn["commonName"]);
+
+        $new_key = openssl_pkey_new();
+        $csr_rsc = openssl_csr_new($dn, $new_key, array('private_key_bits',2048));
+        $selfSignedCert = openssl_csr_sign($csr_rsc, null, $new_key, 28 /*days*/);
+        unset($csr_rsc); // Free up the resource
+
+        // We export our self-signed certificate to a string.
+        openssl_x509_export($selfSignedCert, $this->keypair['certificate']);
+        openssl_x509_free($selfSignedCert);
+
+        // Export your public/private key pair as a PEM encoded string. You
+        // can protect it with an optional passphrase if you wish.
+        $export = openssl_pkey_export($new_key, $this->keypair['keypair_PEM'] /* , $passphrase */);
+        openssl_pkey_free($new_key);
+        unset($new_key); // Free up the resource
+
+        return $this;
     }
 }
 
+/*
+class LocalHost extends Peer {
+    function __construct() {
+        return true;
+    }
+
+    function init() {
+        global $CFG;
+        $exists = parent::init(dropslash($CFG->wwwroot));
+        if($exists) return true;
+
+        return $this->bootstrap(dropslash($CFG->wwwroot), 'mahara');
+
+    }
+}
+*/
+
 class Peer {
 
-    private $wwwroot              = '';
-    private $deleted              = 0;
-    private $ip_address           = '';
-    private $name                 = '';
-    private $public_key           = '';
-    private $public_key_expires   = '';
-    private $portno               = 80;
-    private $last_connect_time    = 0;
-    private $application          = 'moodle';
-    private $application_display  = 'Moodle';
-    private $xmlrpc_server_url    = '/mnet/xmlrpc/server.php';
-    private $error                = array();
+    public $wwwroot              = '';
+    public $deleted              = 0;
+    public $ip_address           = '';
+    public $name                 = '';
+    public $public_key;
+    public $public_key_expires   = '';
+    public $portno               = 80;
+    public $last_connect_time    = 0;
+    public $application          = 'moodle';
+    public $application_display  = 'Moodle';
+    public $xmlrpc_server_url    = '/mnet/xmlrpc/server.php';
+    public $error                = array();
 
     function __construct() {
         return true;
@@ -278,8 +484,9 @@ class Peer {
 
     function init($wwwroot) {
         global $cfg;
+        $wwwroot = dropslash($wwwroot);
         $hostinfo = get_record('host', 'wwwroot', $wwwroot);
-        $hostinfo = get_record_sql('
+        $query = '
                                     SELECT
                                         host.wwwroot,
                                         host.deleted,
@@ -289,18 +496,23 @@ class Peer {
                                         host.public_key_expires,
                                         host.portno,
                                         host.last_connect_time,
-                                        application.application,
-                                        application.application_display,
+                                        application.shortname,
+                                        application.name,
                                         application.xmlrpc_server_url
                                     FROM
                                         '.$cfg->dbprefix.'host,
                                         '.$cfg->dbprefix.'application
                                     WHERE
-                                        host.application_id = application.id');
+                                        host.application = application.shortname AND
+                                        host.wwwroot = ?';
+
+        $hostinfo = get_record_sql($query, $wwwroot);
+
         if ($hostinfo != false) {
             foreach(get_object_vars($hostinfo) as $key => $value) {
                 $this->{$key} = $value;
             }
+            $this->public_key = new PublicKey($this->public_key, $this->wwwroot);
             return true;
         }
         return false;
@@ -310,14 +522,32 @@ class Peer {
         return $this->{$name};
     }
 
+    function delete() {
+        $this->deleted = 1;
+    }
+
+    function commit() {
+        $host = new stdClass();
+        $host->wwwroot              = $this->wwwroot;
+        $host->deleted              = $this->deleted;
+        $host->ip_address           = $this->ip_address;
+        $host->name                 = $this->name;
+        $host->public_key           = $this->public_key->certificate;
+        $host->public_key_expires   = $this->public_key_expires;
+        $host->portno               = $this->portno;
+        $host->last_connect_time    = $this->last_connect_time;
+        $host->application          = $this->application;
+        var_dump($host);
+        return insert_record('host',$host);
+    }
+
     function bootstrap($wwwroot, $application = 'moodle') {
 
-        if (substr($wwwroot, 0, -1) == '/') {
-            $wwwroot = substr($wwwroot, 0, -1);
-        }
+        $wwwroot = dropslash($wwwroot);
 
         if ( ! $this->init($wwwroot) ) {
-            $hostname = mnet_get_hostname_from_uri($wwwroot);
+
+            $hostname = get_hostname_from_uri($wwwroot);
 
             // Get the IP address for that host - if this fails, it will
             // return the hostname string
@@ -341,19 +571,20 @@ class Peer {
                 }
             }
 
+            $this->application = get_field('application', 'name', 'name', $application);
+
+            $this->application = $application;
+
             $this->wwwroot              = $wwwroot;
             $this->ip_address           = $ip_address;
 
-            if(empty($pubkey)) {
-                $this->public_key       = clean_param(mnet_get_public_key($this->wwwroot, $this->application), PARAM_PEM);
-            } else {
-                $this->public_key       = clean_param($pubkey, PARAM_PEM);
-            }
-            $this->public_key_expires   = $this->check_common_name($this->public_key);
+            $this->public_key       = new PublicKey(get_public_key($this->wwwroot, $this->application), $this->wwwroot);
+
+            $this->public_key_expires   = $this->public_key->expires;
             $this->last_connect_time    = 0;
             $this->last_log_id          = 0;
-            if ($this->public_key_expires == false) {
-                $this->public_key == '';
+            if (false == $this->public_key->expires) {
+                $this->public_key == null;
                 return false;
             }
         }
@@ -363,70 +594,31 @@ class Peer {
 }
 
 class PublicKey {
-    
+
     private $credentials = array();
-    
-    function __construct($keystring) {
-        $credentials = openssl_x509_parse($keystring);
-        if ($credentials == false) {
-            $this->error[] = array('code' => 3, 'text' => get_string("nonmatchingcert", 'mnet', array('','')));
+    private $wwwroot     = '';
+    public  $certificate = '';
+
+    function __construct($keystring, $wwwroot) {
+        
+        $this->credentials = openssl_x509_parse($keystring);
+        $this->wwwroot     = dropslash($wwwroot);
+        $this->certificate = $keystring;
+
+        if ($this->credentials == false) {
+            throw new XmlrpcServerException('This is not a valid SSL Certificate', 1);
             return false;
-        } elseif ($credentials['subject']['CN'] != $this->wwwroot) {
-            $a[] = $credentials['subject']['CN'];
-            $a[] = $this->wwwroot;
-            $this->error[] = array('code' => 4, 'text' => get_string("nonmatchingcert", 'mnet', $a));
+        } elseif ($this->credentials['subject']['CN'] != $this->wwwroot) {
+            throw new XmlrpcServerException('This certificate does not match the server it claims to represent: '.$this->credentials['subject']['CN'] .', '. $this->wwwroot, 1);
             return false;
         } else {
-            return $credentials['validTo_time_t'];
+            return $this->credentials;
         }
     }
-}
 
-/**
- * Get the remote machine's SSL Cert
- *
- * @param  string  $uri     The URI of a file on the remote computer, including
- *                          its http:// or https:// prefix
- * @return string           A PEM formatted SSL Certificate.
- */
-function mnet_get_public_key($uri, $application=null) {
-    global $CFG, $MNET;
-    // The key may be cached in the mnet_set_public_key function...
-    // check this first
-    $key = mnet_set_public_key($uri);
-    if ($key != false) {
-        return $key;
+    function __get($name) {
+        if('expires' == $name) return $this->credentials['validTo_time_t'];
+        return $this->{$name};
     }
-
-    if(empty($application)) {
-        $this->application = get_record('application', 'name', 'moodle');
-    }
-
-    $rq = xmlrpc_encode_request('system/keyswap', array($CFG->wwwroot, $MNET->public_key), array("encoding" => "utf-8"));
-    $ch = curl_init($uri. $application->xmlrpc_server_url);
-
-    curl_setopt($ch, CURLOPT_TIMEOUT, 60);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_USERAGENT, 'Moodle');
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $rq);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: text/xml charset=UTF-8"));
-
-    $res = xmlrpc_decode(curl_exec($ch));
-    curl_close($ch);
-
-    if (!is_array($res)) { // ! error
-        $public_certificate = $res;
-        $credentials=array();
-        if (strlen(trim($public_certificate))) {
-            $credentials = openssl_x509_parse($public_certificate);
-            $host = $credentials['subject']['CN'];
-            if (strpos($uri, $host) !== false) {
-                mnet_set_public_key($uri, $public_certificate);
-                return $public_certificate;
-            }
-        }
-    }
-    return false;
 }
 ?>
