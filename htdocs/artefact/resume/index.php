@@ -220,7 +220,7 @@ function deleteComposite(type, id, artefact) {
 
 function editprofilebutton() {
     if (confirm('{$confirmeditprofilestr}')) {
-        document.location='{$wwwroot}artefact/internal';
+        document.location='{$wwwroot}artefact/internal/';
     }
     return false;
 }
