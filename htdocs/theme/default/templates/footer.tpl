@@ -11,6 +11,7 @@
 		<div id="bottom-corners">
 		<div class="footer-left"><img src="{theme_path location='images/footer_corner_botleft.gif'}" border="0" alt=""></div><div class="footer-right"><img src="{theme_path location='images/footer_corner_botright.gif'}" border="0" alt=""></div>
 		</div>
+        {mahara_performance_info}
 	</div>
     </body>
 </html>

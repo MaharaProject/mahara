@@ -48,6 +48,8 @@ if (!is_readable($CFG->docroot . 'config.php')) {
     exit;
 }
 
+init_performance_info();
+
 require('config.php');
 $CFG = (object)array_merge((array)$cfg, (array)$CFG);
 
@@ -189,6 +191,33 @@ if (defined('JSON')) {
     if ($sesskey === null || $USER->get('sesskey') != $sesskey) {
         $USER->logout();
         json_reply('global', get_string('invalidsesskey'));
+    }
+}
+
+/*
+ * Initializes our performance info early.
+ *
+ * Pairs up with get_performance_info() which is actually
+ * in lib/mahara.php. This function is here so that we can 
+ * call it before all the libs are pulled in. 
+ *
+ * @uses $PERF
+ */
+function init_performance_info() {
+
+    global $PERF;
+  
+    $PERF = new StdClass;
+    $PERF->dbqueries = 0;   
+    $PERF->logwrites = 0;
+    if (function_exists('microtime')) {
+        $PERF->starttime = microtime();
+        }
+    if (function_exists('memory_get_usage')) {
+        $PERF->startmemory = memory_get_usage();
+    }
+    if (function_exists('posix_times')) {
+        $PERF->startposixtimes = posix_times();  
     }
 }
 

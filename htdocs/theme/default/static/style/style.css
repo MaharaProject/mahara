@@ -1720,3 +1720,8 @@ a.pieform-calendar-toggle img {
     color: #547C22;
     font-size: 13px;
 }
+.performanceinfo {
+    font-size:9px;
+    text-align:center;
+    margin-top:4px;
+}
