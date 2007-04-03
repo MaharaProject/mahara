@@ -482,6 +482,8 @@ function json_headers() {
 function json_reply($error, $message) {
     json_headers();
     echo json_encode(array('error' => $error, 'message' => $message));
+    log_debug('calling from json_reply');
+    perf_to_log();
     exit;
 }
 

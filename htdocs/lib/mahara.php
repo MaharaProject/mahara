@@ -1514,6 +1514,25 @@ function get_performance_info() {
     return $info;
 }
 
+function perf_to_log($info) {
+    if (!get_config('perftolog')) {
+        return true;
+    }
+
+    if (empty($info)) {
+        $info = get_performance_info();
+    }
+
+    $logstring = 'PERF: ' .  strip_querystring(get_script_path()). ': ';
+    $logstring .= ' memory_total: '.$info['memory_total'].'B (' . display_size($info['memory_total']).') memory_growth: '.$info['memory_growth'].'B ('.display_size($info['memory_growth']).')';
+    $logstring .= ' time: '.$info['realtime'].'s';
+    $logstring .= ' includecount: '.$info['includecount'];
+    $logstring .= ' dbqueries: '.$info['dbreads'] . ' reads, ' . $info['dbwrites'] . ' writes';
+    $logstring .= ' ticks: ' . $info['ticks']  . ' user: ' . $info['utime'] . ' sys: ' . $info['stime'] .' cuser: ' . $info['cutime'] . ' csys: ' . $info['cstime'];
+    $logstring .= ' serverload: ' . $info['serverload'];
+    log_debug($logstring);
+}
+
 /**
  * microtime_diff
  *
