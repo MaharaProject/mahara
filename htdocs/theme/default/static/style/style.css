@@ -945,6 +945,14 @@ table#installer {
 	font-weight: bold;
 	padding: 5px 20px 6px 45px;
 }
+.maincontent #profilegotoresume {
+	background: url(../images/btn_editprofileicons.gif) no-repeat; 
+	width: 170px;
+	height: 24px;
+	color: #eef7d4;
+	font-weight: bold;
+	padding: 5px 20px 6px 35px;
+}
 .maincontent #backtoeditprofile {
 	background: url(../images/btn_editprofileicons.gif) no-repeat;
 	width: 170px;

@@ -171,6 +171,9 @@ $addstr = get_string('add');
 $editstr = get_string('edit');
 $delstr = get_string('delete');
 $confirmdelstr = get_string('compositedeleteconfirm', 'artefact.resume');
+$confirmeditprofilestr = get_string('confirmeditprofile', 'artefact.resume');
+
+$wwwroot = get_config('wwwroot');
 
 $mainform = pieform($form);
 $smarty = smarty(array('tablerenderer'));
@@ -211,6 +214,13 @@ function deleteComposite(type, id, artefact) {
                 // @todo error
             }
         );
+    }
+    return false;
+}
+
+function editprofilebutton() {
+    if (confirm('{$confirmeditprofilestr}')) {
+        document.location='{$wwwroot}artefact/internal';
     }
     return false;
 }
