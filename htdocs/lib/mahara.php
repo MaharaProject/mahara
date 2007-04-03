@@ -1476,8 +1476,13 @@ function get_performance_info() {
     $inc = get_included_files();
     $info['includecount'] = count($inc);
 
-    if (!empty($PERF->dbqueries)) {
-        $info['dbqueries'] = $PERF->dbqueries;
+
+    if (!empty($PERF->dbreads)) {
+        $info['dbreads'] = $PERF->dbreads;
+    }
+
+    if (!empty($PERF->dbwrites)) {
+        $info['dbwrites'] = $PERF->dbwrites;
     }
 
     if (function_exists('posix_times')) {
