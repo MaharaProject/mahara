@@ -164,6 +164,16 @@ if (!get_config('theme')) {
 
 $CFG->themeurl = get_config('wwwroot') . 'theme/' . get_config('theme') . '/static/';
 
+// Make sure the search plugin is configured
+if (!get_config('searchplugin')) {
+    try {
+        set_config('searchplugin', 'internal');
+    }
+    catch (Exception $e) {
+        $CFG->searchplugin = 'internal';
+    }
+}
+
 header('Content-type: text/html; charset=UTF-8');
 
 // Only do authentication once we know the page theme, so that the login form
