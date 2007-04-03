@@ -98,5 +98,7 @@ done
 
 popd
 
+cp debian/index.html ${REPODIR}
+
 rsync -PIlvr --delete-after --no-p --no-g --chmod=Dg+ws,Fg+w ${REPODIR}/* locke.catalyst.net.nz:/home/ftp/pub/mahara/
 
