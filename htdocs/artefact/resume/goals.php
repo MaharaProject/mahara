@@ -58,21 +58,21 @@ $gform = array(
         'personalgoal' => array(
             'type' => 'wysiwyg',
             'rows' => 10,
-            'cols' => 50,
+            'cols' => 70,
             'defaultvalue' => ((!empty($personal)) ? $personal->get('description') : null),
             'title' => get_string('personalgoal', 'artefact.resume'),
         ),
         'academicgoal' => array(
             'type' => 'wysiwyg',
             'rows' => 10,
-            'cols' => 50,
+            'cols' => 70,
             'defaultvalue' => ((!empty($academic)) ? $academic->get('description') : null),
             'title' => get_string('academicgoal', 'artefact.resume'),
         ),
         'careergoal' => array(
             'type' => 'wysiwyg',
             'rows' => 10,
-            'cols' => 50,
+            'cols' => 70,
             'defaultvalue' => ((!empty($career)) ? $career->get('description') : null),
             'title' => get_string('careergoal', 'artefact.resume'),
         ),
@@ -82,8 +82,8 @@ $gform = array(
         ),
     ),
 );
-
+$goalform = pieform($gform);
 $smarty = smarty();
-$smarty->assign('goalform', pieform($gform));
+$smarty->assign('goalform', $goalform);
 $smarty->display('artefact:resume:goals.tpl');
 ?>

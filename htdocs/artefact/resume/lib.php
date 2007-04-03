@@ -219,7 +219,7 @@ class ArtefactTypePersonalinformation extends ArtefactTypeResume {
         // only set it to dirty if it's changed
         $this->dirty = true;
         $this->mtime = time();
-        if ($field == 'dateofbirth') {
+        if ($field == 'dateofbirth' && !empty($value)) {
             $value = db_format_timestamp($value);
         }
         $this->composites[$field] = $value;
@@ -255,12 +255,12 @@ class ArtefactTypePersonalinformation extends ArtefactTypeResume {
 
     public static function get_composite_fields() {
         static $composites = array(
-            'dateofbirth' => '',
-            'placeofbirth' => '', 
-            'citizenship' => '',
-            'visastatus' => '',
-            'gender' => '',
-            'maritalstatus' => '',
+            'dateofbirth' => null,
+            'placeofbirth' => null, 
+            'citizenship' => null,
+            'visastatus' => null,
+            'gender' => null,
+            'maritalstatus' => null,
         );
         return $composites;
     }

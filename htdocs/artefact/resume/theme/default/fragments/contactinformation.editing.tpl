@@ -32,6 +32,6 @@
         <td>{$mobilenumber}</td>
     </tr>
     <tr>
-        <td colspan="2"> <button onClick="document.location='{$WWWROOT}/artefact/internal/';">{str tag='editprofile' section='artefact.internal'}</button></td>
+        <td colspan="2"> <button onClick="return editprofilebutton();">{str tag='editprofile' section='artefact.internal'}</button></td>
     </tr>
 </table>
