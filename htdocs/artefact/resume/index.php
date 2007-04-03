@@ -226,6 +226,8 @@ function editprofilebutton() {
 }
 
 EOF;
+$inlinejs .= ArtefactTypeResumeComposite::get_showhide_composite_js();
+
 $compositeforms = array();
 foreach (ArtefactTypeResumeComposite::get_composite_artefact_types() as $compositetype) {
     $inlinejs .= <<<EOF

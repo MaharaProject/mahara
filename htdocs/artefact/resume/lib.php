@@ -362,6 +362,10 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
     */
     public static abstract function get_tablerenderer_js();
 
+    public static abstract function get_tablerenderer_title_js_string();
+
+    public static abstract function get_tablerenderer_body_js_string();
+
     /** 
     * This function should return an array suitable to 
     * put into the 'elements' part of a pieform array
@@ -480,7 +484,9 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
         $type = $this->get('artefacttype'); 
         $content = array(
             'html'         => $smarty->fetch('artefact:resume:fragments/' . $type . '.tpl'),
-            'javascript'   => "
+            'javascript'   => 
+                $this->get_showhide_composite_js()
+                ."
                 var {$type}list = new TableRenderer(
                    '{$type}list',
                    '" . get_config('wwwroot') . "artefact/resume/composite.json.php',
@@ -495,6 +501,47 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
             ");
         return $content;
     }
+
+    static function get_tablerenderer_title_js($titlestring, $bodystring) {
+        return "
+                function (r, d) {
+                    if (!{$bodystring}) {
+                        return TD(null, {$titlestring});
+                    }
+                    var link = A({'href': ''}, {$titlestring});
+                    connect(link, 'onclick', function (e) {
+                        e.stop();
+                        return showhideComposite(r, {$bodystring});
+                    });
+                    return TD({'id': 'composite-' + r.artefact + '-' + r.id}, link);
+                },
+                ";
+    }
+
+    static function get_showhide_composite_js() {
+        return "
+            function showhideComposite(r, content) {
+                // get the reference for the title we just clicked on
+                var titleTD = $('composite-' + r.artefact + '-' + r.id);
+                var theRow = titleTD.parentNode;
+                var bodyRow = $('composite-body-' + r.artefact +  '-' + r.id);
+                if (bodyRow) {
+                    if (hasElementClass(bodyRow, 'hidden')) {
+                        removeElementClass(bodyRow, 'hidden');
+                    }
+                    else {
+                        addElementClass(bodyRow, 'hidden');
+                    }
+                    return false;
+                }
+                // we have to actually create the dom node too
+                var colspan = theRow.childNodes.length;
+                var newRow = TR({'id': 'composite-body-' + r.artefact + '-' + r.id}, 
+                    TD({'colspan': colspan}, content)); 
+                insertSiblingNodesAfter(theRow, newRow);
+            }
+        ";
+    }
 }
 
 class ArtefactTypeEmploymenthistory extends ArtefactTypeResumeComposite { 
@@ -504,16 +551,25 @@ class ArtefactTypeEmploymenthistory extends ArtefactTypeResumeComposite {
     protected $employer;
 
     public static function get_tablerenderer_js() {
-        $at = get_string('at');
         return "
                 'startdate',
                 'enddate',
-                function (r) {
-                    return TD(null, r.jobtitle + ' {$at} ' + r.employer);
-                },
+                " . ArtefactTypeResumeComposite::get_tablerenderer_title_js(
+                    self::get_tablerenderer_title_js_string(),
+                    self::get_tablerenderer_body_js_string()
+                ) . "
         ";
     }
 
+    public static function get_tablerenderer_title_js_string() {
+        $at = get_string('at');
+        return " r.jobtitle + ' {$at} ' + r.employer";
+    }
+
+    public static function get_tablerenderer_body_js_string() {
+        return " r.positiondescription";
+    }
+    
     public static function get_addform_elements() {
         return array(
             'startdate' => array(
@@ -568,15 +624,26 @@ class ArtefactTypeEducationhistory extends ArtefactTypeResumeComposite {
     protected $institution;
 
     public static function get_tablerenderer_js() {
-        $at = get_string('at');
+
         return "
                 'startdate',
                 'enddate',
-                function (r) {
-                    return TD(null, r.qualtype + ' {$at} ' + r.institution);
-                },
+                " . ArtefactTypeResumeComposite::get_tablerenderer_title_js(
+                    self::get_tablerenderer_title_js_string(),
+                    self::get_tablerenderer_body_js_string()
+                ) . "
         ";
     }
+
+    public static function get_tablerenderer_title_js_string() {
+        $at = get_string('at');
+        return " r.qualname + ' (' + r.qualtype + ') {$at} ' + r.institution";
+    }
+
+    public static function get_tablerenderer_body_js_string() {
+        return " r.qualdescription"; 
+    }
+
     public static function get_addform_elements() {
         return array(
             'startdate' => array(
@@ -640,9 +707,21 @@ class ArtefactTypeCertification extends ArtefactTypeResumeComposite {
     public static function get_tablerenderer_js() {
         return "
                 'date',
-                'title',
+                " . ArtefactTypeResumeComposite::get_tablerenderer_title_js(
+                    self::get_tablerenderer_title_js_string(),
+                    self::get_tablerenderer_body_js_string()
+                ) . "
         ";
     }
+
+    public static function get_tablerenderer_title_js_string() {
+        return "r.title";
+    }
+
+    public static function get_tablerenderer_body_js_string() {
+        return "r.description";
+    }
+
     public static function get_addform_elements() {
         return array(
             'date' => array(
@@ -682,9 +761,21 @@ class ArtefactTypeBook extends ArtefactTypeResumeComposite {
     public static function get_tablerenderer_js() {
         return "
                 'date',
-                'title', 
+                " . ArtefactTypeResumeComposite::get_tablerenderer_title_js(
+                    self::get_tablerenderer_title_js_string(),
+                    self::get_tablerenderer_body_js_string()
+                ) . "
         ";
     }
+
+    public static function get_tablerenderer_title_js_string() {
+        return "r.title + ' (' + r.contribution + ')'";
+    }
+
+    public static function get_tablerenderer_body_js_string() {
+        return "r.description";
+    }
+
     public static function get_addform_elements() {
         return array(
             'date' => array(
@@ -732,9 +823,21 @@ class ArtefactTypeMembership extends ArtefactTypeResumeComposite {
         return "
                 'startdate',
                 'enddate',
-                'title',
+                " . ArtefactTypeResumeComposite::get_tablerenderer_title_js(
+                    self::get_tablerenderer_title_js_string(),
+                    self::get_tablerenderer_body_js_string()
+                ) . "
         ";
     }
+
+    public static function get_tablerenderer_title_js_string() {
+        return "r.title";
+    }
+   
+    public static function get_tablerenderer_body_js_string() {
+        return "r.description";
+    }
+
     public static function get_addform_elements() {
         return array(
             'startdate' => array(
