@@ -48,25 +48,8 @@ function dropslash($wwwroot) {
 }
 
 function get_public_key($uri, $application=null) {
-    return '-----BEGIN CERTIFICATE-----
-MIICwjCCAiugAwIBAgIBADANBgkqhkiG9w0BAQQFADCBpjELMAkGA1UEBhMCTlox
-EzARBgNVBAgTCldlbGxpbmd0b24xDzANBgNVBAcTBlRlIEFybzEPMA0GA1UEChMG
-TWFoYXJhMQ8wDQYDVQQLEwZNYWhhcmExIzAhBgNVBAMTGmh0dHA6Ly9tYWhhcmEu
-bWFob29kbGUuY29tMSowKAYJKoZIhvcNAQkBFhtub3JlcGx5QG1haGFyYS5tYWhv
-b2RsZS5jb20wHhcNMDcwMzI5MjE0NTI4WhcNMDcwNDI2MjE0NTI4WjCBpjELMAkG
-A1UEBhMCTloxEzARBgNVBAgTCldlbGxpbmd0b24xDzANBgNVBAcTBlRlIEFybzEP
-MA0GA1UEChMGTWFoYXJhMQ8wDQYDVQQLEwZNYWhhcmExIzAhBgNVBAMTGmh0dHA6
-Ly9tYWhhcmEubWFob29kbGUuY29tMSowKAYJKoZIhvcNAQkBFhtub3JlcGx5QG1h
-aGFyYS5tYWhvb2RsZS5jb20wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBANYR
-k7JNrSqQcSK1hH5cdpJ+MinhhnjcpTu/MXZXhkOejZ4JRdpQqFd9J+JW1MiTDeet
-3l6nuB/Tt87wgf1vKO7WYV/Go/E3AHAp8WqeA+9z070zD+n1/Th5le+76RKNd28N
-C+chgNrvVB4hGgm9rwUsaXHolIx+jm58A+OR7SAbAgMBAAEwDQYJKoZIhvcNAQEE
-BQADgYEAnD2Sj+xAVx7cUtbZD2uCy2X0cfPUI8MxbF3MoUW/8YexAqVBTGnzBHR0
-8lFK4lVupRAxT6tjwSWxWxaBFfUDkGkVPIP28xcpz9/AgYbCbLunZmU/9qBAK/p9
-qQHy3ds1DIOoP02RSOt/zHh6lzmGEy+KzBd/cq7EwtzesrtKZk8=
------END CERTIFICATE-----';
     global $CFG;
-echo 'a';
+
     static $keyarray = array();
     if (isset($keyarray[$uri])) {
         return $keyarray[$uri];
@@ -77,12 +60,12 @@ echo 'a';
     if(empty($application)) {
         $this->application = get_record('application', 'application', 'moodle');
     }
-echo ' b';
+
     $wwwroot = dropslash($CFG->wwwroot);
-echo ' c';
+
     $rq = xmlrpc_encode_request('system/keyswap', array($wwwroot, $openssl->certificate), array("encoding" => "utf-8"));
     $ch = curl_init($uri. $application->xmlrpc_server_url);
-echo ' d';
+
     curl_setopt($ch, CURLOPT_TIMEOUT, 60);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_POST, true);
@@ -91,7 +74,7 @@ echo ' d';
     curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: text/xml charset=UTF-8"));
 
     $res = xmlrpc_decode(curl_exec($ch));
-echo "\nRes:\n$res\n\n";
+
     curl_close($ch);
 
     if (!is_array($res)) { // ! error
@@ -149,6 +132,63 @@ class XmlrpcServerException extends Exception {
     }
 }
 
+function xmlenc_envelope_strip(&$xml) {
+    $openssl           = OpenSslRepo::singleton();
+    $payload_encrypted = true;
+    $data              = base64_decode($xml->EncryptedData->CipherData->CipherValue);
+    $key               = base64_decode($xml->EncryptedKey->CipherData->CipherValue);
+    $payload           = '';    // Initialize payload var
+    $payload           = $openssl->openssl_open($data, $key);
+    $xml               = parse_payload($payload);
+    return $payload;
+}
+
+function parse_payload($payload) {
+    try {
+        $xml = new SimpleXMLElement($payload);
+        return $xml;
+    } catch (Exception $e) {
+        throw new XmlrpcServerException('Encrypted payload is not a valid XML document', 6002);
+    }
+}
+
+function get_peer($wwwroot) {
+    $wwwroot = (string)$wwwroot;
+    static $peers = array();
+    if(isset($peers[$wwwroot])) return $peers[$wwwroot];
+    $peer = new Peer();
+    if(!$peer->init($wwwroot)) {
+        // Bootstrap unknown hosts?
+        throw new XmlrpcServerException('We don\'t have a record for your webserver in our database', 6003);
+    }
+    $peers[$wwwroot] = $peer;
+    return $peers[$wwwroot];
+    //return $peer;
+}
+
+function xmldsig_envelope_strip(&$xml) {
+    $signature      = base64_decode($xml->Signature->SignatureValue);
+    $payload        = base64_decode($xml->object);
+    $wwwroot        = (string)$xml->wwwroot;
+    $timestamp      = $xml->timestamp;
+    $peer           = get_peer($wwwroot);
+
+    // Does the signature match the data and the public cert?
+    $signature_verified = openssl_verify($payload, $signature, $peer->certificate);
+
+    if ($signature_verified == 1) {
+        // Parse the XML
+        try {
+            $xml = new SimpleXMLElement($payload);
+            return $payload;
+        } catch (Exception $e) {
+            throw new XmlrpcServerException('Signed payload is not a valid XML document', 6007);
+        }
+    } else {
+        throw new XmlrpcServerException('An error occurred while trying to verify your message signature', 6004);
+    }
+}
+
 /**
  * Encrypt a message and return it in an XML-Encrypted document
  *
@@ -195,6 +235,7 @@ function xmlenc_envelope($message, $remote_certificate) {
     $bool = openssl_seal($message, $encryptedstring, $symmetric_keys, array($publickey));
     $message = base64_encode($encryptedstring);
     $symmetrickey = base64_encode(array_pop($symmetric_keys));
+    $zed = 'nothing';
 
     return <<<EOF
 <?xml version="1.0" encoding="iso-8859-1"?>
@@ -253,12 +294,11 @@ EOF;
  * @return string                         An XML-DSig document
  */
 function xmldsig_envelope($message) {
-    echo 'Signing: '.$message."\n\n";
     global $CFG;
     $openssl = OpenSslRepo::singleton();
     $wwwroot = dropslash($CFG->wwwroot);
     $digest = sha1($message);
-    echo '$digest: '."\n".$digest."\n";
+
     $sig = base64_encode($openssl->sign_message($message));
     $message = base64_encode($message);
     $time = time();
@@ -473,13 +513,16 @@ class Peer {
     public $public_key_expires   = '';
     public $portno               = 80;
     public $last_connect_time    = 0;
+    public $we_sso_out           = 0;
+    public $they_sso_in          = 0;
+    public $init                 = false;
     public $application          = 'moodle';
     public $application_display  = 'Moodle';
     public $xmlrpc_server_url    = '/mnet/xmlrpc/server.php';
     public $error                = array();
 
     function __construct() {
-        return true;
+        //return true;
     }
 
     function init($wwwroot) {
@@ -496,6 +539,8 @@ class Peer {
                                         host.public_key_expires,
                                         host.portno,
                                         host.last_connect_time,
+                                        host.we_sso_out,
+                                        host.they_sso_in,
                                         application.shortname,
                                         application.name,
                                         application.xmlrpc_server_url
@@ -513,12 +558,16 @@ class Peer {
                 $this->{$key} = $value;
             }
             $this->public_key = new PublicKey($this->public_key, $this->wwwroot);
+            $this->init = true;
             return true;
         }
         return false;
     }
 
     function __get($name) {
+        if($name == 'certificate') {
+            return $this->public_key->certificate;
+        }
         return $this->{$name};
     }
 
@@ -527,6 +576,7 @@ class Peer {
     }
 
     function commit() {
+        if ($this->init == false) return false;
         $host = new stdClass();
         $host->wwwroot              = $this->wwwroot;
         $host->deleted              = $this->deleted;
@@ -537,6 +587,8 @@ class Peer {
         $host->portno               = $this->portno;
         $host->last_connect_time    = $this->last_connect_time;
         $host->application          = $this->application;
+        $host->we_sso_out           = $this->we_sso_out;
+        $host->they_sso_in          = $this->they_sso_in;
         var_dump($host);
         return insert_record('host',$host);
     }
@@ -595,12 +647,12 @@ class Peer {
 
 class PublicKey {
 
-    private $credentials = array();
-    private $wwwroot     = '';
-    public  $certificate = '';
+    private   $credentials = array();
+    private   $wwwroot     = '';
+    private   $certificate = '';
 
     function __construct($keystring, $wwwroot) {
-        
+
         $this->credentials = openssl_x509_parse($keystring);
         $this->wwwroot     = dropslash($wwwroot);
         $this->certificate = $keystring;
