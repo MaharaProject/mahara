@@ -345,7 +345,7 @@ function display_name($user, $userto=null) {
         return $user->firstname . ' ' . $user->lastname;
     }
 
-    if ($userto->admin || $user->staff) {
+    if ($userto->admin || $userto->staff) {
         return $user->preferredname . ' (' . $user->firstname . ' ' . $user->lastname . ' - ' . $user->username . ')';
     }
 
