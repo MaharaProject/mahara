@@ -77,4 +77,5 @@ $string['goalandskillsaved'] = 'Saved successfully';
 $string['resume'] = 'Résumé';
 $string['confirmeditprofile'] = 'If you continue to edit your profile now, you will lose any unsaved information in this area';
 $string['profilegotoresume'] = 'Edit My Résumé';
+$string['current'] = 'Current';
 ?>

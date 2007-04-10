@@ -671,9 +671,6 @@ class ArtefactTypeEducationhistory extends ArtefactTypeResumeComposite {
                     'showsTime'     => false,
                     'ifFormat'      => '%Y/%m/%d',
                 ),
-                'rules' => array(
-                    'required' => true,
-                ),
                 'title' => get_string('enddate', 'artefact.resume'),
             ),
             'institution' => array(
