@@ -468,6 +468,7 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
     public function __construct($id=0, $data=array()) {
         if (empty($id)) {
             $data['container'] = 0;
+            $data['title'] = get_string($this->get_artefact_type(), 'artefact.resume');
         }
         parent::__construct($id, $data);
     }    
@@ -500,28 +501,6 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
                 {$type}list.updateOnLoad();
             ");
         return $content;
-    }
-
-    protected function get_metadata($options=array()) {
-        $data = parent::get_metadata($options);
-
-        if (isset($options['viewid']) && artefact_in_view($id = $this->get('id'), $options['viewid'])) {
-            $data['title']['value'] = '<a href="' . get_config('wwwroot') . 'view/view.php?view=' . $options['viewid'] . '&artefact=' . $id . '">' . $data['title']['value'] . '</a>';
-        }
-
-        return $data;
-    }
-
-    protected function render_metadata($options) {
-        $smarty = smarty();
-        $data = $this->get_metadata($options);
-        $smarty->assign('title', $data['title']['value']); 
-        $smarty->assign('type', get_string($this->get('artefacttype'), 'artefact.resume'));
-        $smarty->assign('owner', display_name(optional_userobj($this->get('owner'))));
-        $smarty->assign('nicectime', format_date($this->get('ctime')));
-        $smarty->assign('nicemtime', format_date($this->get('mtime')));
-        return array('html' => $smarty->fetch('artefact/render_metadata.tpl'),
-                     'javascript' => null);
     }
 
     static function get_tablerenderer_title_js($titlestring, $bodystring) {
@@ -912,16 +891,28 @@ class ArtefactTypeResumeGoalAndSkill extends ArtefactTypeResume {
 
     public static function get_render_list() {
         return array(
-            FORMAT_ARTEFACT_LISTSELF,
             FORMAT_ARTEFACT_RENDERFULL,
             FORMAT_ARTEFACT_RENDERMETADATA,
         );
     }
 
     public function render_full($options) {
-        return array('html' => $this->get('description'));
+        $smarty = smarty();
+        
+        $smarty->assign('type', get_string($this->get_artefact_type(), 'artefact.resume'));
+        $smarty->assign('content', $this->get('description'));
+
+        return array('html' => $smarty->fetch('artefact:resume:fragments/goalandskillrenderfull.tpl'));
     }
-    
+
+    public function __construct($id=0, $data=array()) {
+        if (empty($id)) {
+            $data['container'] = 0;
+            $data['title'] = get_string($this->get_artefact_type(), 'artefact.resume');
+        }
+        parent::__construct($id, $data);
+    }
+
 }
 
 class ArtefactTypePersonalgoal extends ArtefactTypeResumeGoalAndSkill { }
