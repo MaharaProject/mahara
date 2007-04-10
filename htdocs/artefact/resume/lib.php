@@ -502,6 +502,28 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
         return $content;
     }
 
+    protected function get_metadata($options=array()) {
+        $data = parent::get_metadata($options);
+
+        if (isset($options['viewid']) && artefact_in_view($id = $this->get('id'), $options['viewid'])) {
+            $data['title']['value'] = '<a href="' . get_config('wwwroot') . 'view/view.php?view=' . $options['viewid'] . '&artefact=' . $id . '">' . $data['title']['value'] . '</a>';
+        }
+
+        return $data;
+    }
+
+    protected function render_metadata($options) {
+        $smarty = smarty();
+        $data = $this->get_metadata($options);
+        $smarty->assign('title', $data['title']['value']); 
+        $smarty->assign('type', get_string($this->get('artefacttype'), 'artefact.resume'));
+        $smarty->assign('owner', display_name(optional_userobj($this->get('owner'))));
+        $smarty->assign('nicectime', format_date($this->get('ctime')));
+        $smarty->assign('nicemtime', format_date($this->get('mtime')));
+        return array('html' => $smarty->fetch('artefact/render_metadata.tpl'),
+                     'javascript' => null);
+    }
+
     static function get_tablerenderer_title_js($titlestring, $bodystring) {
         return "
                 function (r, d) {
