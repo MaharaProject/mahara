@@ -910,6 +910,18 @@ class ArtefactTypeResumeGoalAndSkill extends ArtefactTypeResume {
             'personalskill', 'academicskill', 'workskill');
     }
 
+    public static function get_render_list() {
+        return array(
+            FORMAT_ARTEFACT_LISTSELF,
+            FORMAT_ARTEFACT_RENDERFULL,
+            FORMAT_ARTEFACT_RENDERMETADATA,
+        );
+    }
+
+    public function render_full($options) {
+        return array('html' => $this->get('description'));
+    }
+    
 }
 
 class ArtefactTypePersonalgoal extends ArtefactTypeResumeGoalAndSkill { }
