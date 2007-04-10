@@ -132,10 +132,6 @@ class ArtefactTypeCoverletter extends ArtefactTypeResume {
         );
     }
 
-    public function listself($options) {
-        return array('html' => get_string('coverletter', 'artefact.resume'));
-    }
-
     public function render_full($options) {
         return array('html' => $this->title);
     }
@@ -153,10 +149,6 @@ class ArtefactTypeInterest extends ArtefactTypeResume {
             FORMAT_ARTEFACT_RENDERFULL,
             FORMAT_ARTEFACT_RENDERMETADATA,
         );
-    }
-
-    public function listself($options) {
-        return array('html' => get_string('interest', 'artefact.resume'));
     }
 
     public function render_full($options) {
@@ -906,6 +898,7 @@ class ArtefactTypeResumeGoalAndSkill extends ArtefactTypeResume {
 
     public static function get_render_list() {
         return array(
+            FORMAT_ARTEFACT_LISTSELF,
             FORMAT_ARTEFACT_RENDERFULL,
             FORMAT_ARTEFACT_RENDERMETADATA,
         );
