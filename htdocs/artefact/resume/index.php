@@ -77,7 +77,7 @@ $form = array(
                     'type'  => 'wysiwyg',
                     'cols'  => 70,
                     'rows'  => 10,
-                    'defaultvalue' => ((!empty($coverletter)) ? $coverletter->get('title') : null),
+                    'defaultvalue' => ((!empty($coverletter)) ? $coverletter->get('description') : null),
                 ),
             )
         ),
@@ -89,7 +89,7 @@ $form = array(
             'elements' => array(
                 'interest' => array(
                     'type' => 'wysiwyg',
-                    'defaultvalue' => ((!empty($interest)) ? $interest->get('title') : null),
+                    'defaultvalue' => ((!empty($interest)) ? $interest->get('description') : null),
                     'cols'  => 70,
                     'rows'  => 10,
                 ),
@@ -294,19 +294,42 @@ function resumemainform_submit(Pieform $form, $values) {
         if (empty($coverletter) && !empty($values['coverletter'])) {
             $coverletter = new ArtefactTypeCoverletter(0, array( 
                 'owner' => $userid, 
-                'title' => $values['coverletter']
+                'description' => $values['coverletter']
             ));
             $coverletter->commit();
         }
-        else if (!empty($coverletter)) {
+        else if (!empty($coverletter) && !empty($values['coverletter'])) {
             $coverletter->set('description', $values['coverletter']);
             $coverletter->commit();
+        }
+        else if (!empty($coverletter) && empty($values['coverletter'])) {
+            $coverletter->delete();
         }
     }
     catch (Exception $e) {
         $errors['coverletter'] = true;
     }
         
+    try {
+        if (empty($interest) && !empty($values['interest'])) {
+            $interest = new ArtefactTypeInterest(0, array( 
+                'owner' => $userid, 
+                'description' => $values['interest']
+            ));
+            $interest->commit();
+        }
+        else if (!empty($interest) && !empty($values['interest'])) {
+            $interest->set('description', $values['interest']);
+            $interest->commit();
+        }
+        else if (!empty($interest) && empty($values['interest'])) {
+            $interest->delete();
+        }
+    }
+    catch (Exception $e) {
+        $errors['interest'] = true;
+    }   
+
     try {
         if (empty($personalinformation)) {
             $personalinformation = new ArtefactTypePersonalinformation(0, array(
@@ -322,23 +345,6 @@ function resumemainform_submit(Pieform $form, $values) {
     catch (Exception $e) {
         $errors['personalinformation'] = true;
     }
-
-    try {
-        if (empty($interest) && !empty($values['interest'])) {
-            $interest = new ArtefactTypeInterest(0, array( 
-                'owner' => $userid, 
-                'title' => $values['interest']
-            ));
-            $interest->commit();
-        }
-        else if (!empty($interest)) {
-            $interest->set('description', $values['interest']);
-            $interest->commit();
-        }
-    }
-    catch (Exception $e) {
-        $errors['interest'] = true;
-    }   
 
     if (empty($errors)) {
         $form->json_reply(PIEFORM_OK, get_string('resumesaved','artefact.resume'));

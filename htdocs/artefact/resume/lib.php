@@ -83,6 +83,13 @@ class PluginArtefactResume extends Plugin {
 class ArtefactTypeResume extends ArtefactType {
 
     public function get_icon() {}
+
+    public function __construct($id=0, $data=array()) {
+        if (empty($id)) {
+            $data['title'] = get_string($this->get_artefact_type(), 'artefact.resume');
+        }
+        parent::__construct($id, $data);
+    }
     
     public static function is_singular() {
         return false;
@@ -110,6 +117,13 @@ class ArtefactTypeCoverletter extends ArtefactTypeResume {
         return true;
     }
 
+    public function __construct($id=0, $data=array()) {
+        if (empty($id)) {
+            $data['title'] = get_string($this->get_artefact_type(), 'artefact.resume');
+        }
+        parent::__construct($id, $data);
+    }
+
     public static function get_render_list() {
         return array(
             FORMAT_ARTEFACT_LISTSELF,
@@ -120,6 +134,29 @@ class ArtefactTypeCoverletter extends ArtefactTypeResume {
 
     public function listself($options) {
         return array('html' => get_string('coverletter', 'artefact.resume'));
+    }
+
+    public function render_full($options) {
+        return array('html' => $this->title);
+    }
+}
+
+class ArtefactTypeInterest extends ArtefactTypeResume {
+
+    public static function is_singular() {
+        return true;
+    }
+
+    public static function get_render_list() {
+        return array(
+            FORMAT_ARTEFACT_LISTSELF,
+            FORMAT_ARTEFACT_RENDERFULL,
+            FORMAT_ARTEFACT_RENDERMETADATA,
+        );
+    }
+
+    public function listself($options) {
+        return array('html' => get_string('interest', 'artefact.resume'));
     }
 
     public function render_full($options) {
@@ -306,28 +343,6 @@ class ArtefactTypePersonalinformation extends ArtefactTypeResume {
 
 }
 
-class ArtefactTypeInterest extends ArtefactTypeResume {
-
-    public static function is_singular() {
-        return true;
-    }
-
-    public static function get_render_list() {
-        return array(
-            FORMAT_ARTEFACT_LISTSELF,
-            FORMAT_ARTEFACT_RENDERFULL,
-            FORMAT_ARTEFACT_RENDERMETADATA,
-        );
-    }
-
-    public function listself($options) {
-        return array('html' => get_string('interest', 'artefact.resume'));
-    }
-
-    public function render_full($options) {
-        return array('html' => $this->title);
-    }
-}
 
 
 abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
