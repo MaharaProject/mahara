@@ -862,13 +862,15 @@ class Plugin {
  * 
  * @param int $date unix timestamp to format
  * @param string $formatkey language key to fetch the format from
+ * @param string $notspecifiedkey (optional) language key to fetch 'not specified string' from
+ * @param string $notspecifiedsection (optional) language section to fetch 'not specified string' from
  * (see langconfig.php or the top of {@link get_string_location}
  * for supported keys
  */
 
-function format_date($date, $formatkey='strftimedatetime') {
+function format_date($date, $formatkey='strftimedatetime', $notspecifiedkey='strftimenotspecified', $notspecifiedsection='mahara') {
     if (empty($date)) {
-        return get_string('strftimenotspecified');
+        return get_string($notspecifiedkey, $notspecifiedsection);
     }
     return strftime(get_string($formatkey), $date);
 }
