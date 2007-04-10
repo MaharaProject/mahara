@@ -164,6 +164,10 @@ abstract class ArtefactType {
         return false;
     }
 
+    public function get_plugin_name() {
+        return get_field('artefact_installed_type', 'plugin', 'name', $this->get('artefacttype'));
+    }
+
     /** 
      * This function returns the instances 
      * of all children of this artefact
@@ -457,7 +461,7 @@ abstract class ArtefactType {
     
     protected function get_metadata($options) {
         $data = array('title'        => $this->get('title'),
-                      'type'         => get_string($this->get('artefacttype')),
+                      'type'         => get_string($this->get('artefacttype'), 'artefact.' . $this->get_plugin_name()),
                       'owner'        => display_name(optional_userobj($this->get('owner'))),
                       'created'      => format_date($this->get('ctime')),
                       'lastmodified' => format_date($this->get('mtime')));
@@ -478,8 +482,14 @@ abstract class ArtefactType {
 
         $smarty = smarty();
 
-        $smarty->assign('title', $this->get('title'));
-        $smarty->assign('type', get_string($this->get('artefacttype')));
+        if (isset($options['viewid'])) {
+            $smarty->assign('title', '<a href="' . get_config('wwwroot') . 'view/view.php?view=' . $options['viewid'] . '&amp;artefact=' . $this->get('id') . '">'
+                . $this->get('title') . '</a>');
+        } 
+        else {
+            $smarty->assign('title', $this->get('title'));
+        }
+        $smarty->assign('type', get_string($this->get('artefacttype'), 'artefact.' . $this->get_plugin_name()));
         $smarty->assign('owner', display_name(optional_userobj($this->get('owner'))));
         $smarty->assign('nicectime', format_date($this->get('ctime')));
         $smarty->assign('nicemtime', format_date($this->get('mtime')));
