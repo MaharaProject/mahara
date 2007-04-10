@@ -1,5 +1,5 @@
 <h3>{str tag='certification' section='artefact.resume'}</h3>
-<table id="certificationlist">
+<table id="certificationlist" class="tablerenderer hidden">
     <thead>
         <tr>
             <th>{str tag='date' section='artefact.resume'}</th>
