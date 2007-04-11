@@ -381,6 +381,7 @@ function core_postinst() {
     $pages = site_content_pages();
     $now = db_format_timestamp(time());
     foreach ($pages as $name) {
+        $page = new stdClass();
         $page->name = $name;
         $page->ctime = $now;
         $page->mtime = $now;
