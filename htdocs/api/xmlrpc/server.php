@@ -24,7 +24,7 @@
  *
  */
 
-// Errors
+// Errors - grep for source
 // 6000     Initialization failed. Non-recoverable error.
 // 6001     Payload is not a valid XML document
 // 6002     Encrypted payload is not a valid XML document
@@ -40,6 +40,7 @@
 
 define('INTERNAL', 1);
 define('PUBLIC', 1);
+define('XMLRPC', 1);
 require(dirname(__FILE__).'/lib.php');
 
 // Catch anything that goes wrong in init.php
@@ -51,15 +52,10 @@ ob_end_clean();
 
 // Content type for output is never html:
 header('Content-type: text/xml; charset=utf-8');
-//header('Content-type: text/plain; charset=utf-8');
-
+ini_set('display_errors',0);
 if(!empty($errors)) throw new XmlrpcServerException('Initialization failed. Non-recoverable error.', 6000);
 
-set_exception_handler('xmlrpc_exception');
-ini_set('display_errors',0);
-
-error_reporting(E_ALL);
-ini_set('display_errors', true);
+// A singleton provides our site's SSL info
 $openssl = OpenSslRepo::singleton();
 $payload           = $HTTP_RAW_POST_DATA;
 $payload_encrypted = false;
