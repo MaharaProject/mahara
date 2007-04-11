@@ -61,7 +61,7 @@ class AuthInternal extends Auth {
      * @throws AuthUnknownUserException If the user does not exist
      */
     public static function user_exists($username) {
-        if (record_exists('usr', 'LOWER(username)', strtolower($username))) {
+        if (record_exists('usr', 'LOWER(username)', strtolower($username), 'institution', 'mahara')) {
             return true;
         }
         throw new AuthUnknownUserException("\"$username\" is not known to AuthInternal");
