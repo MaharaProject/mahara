@@ -290,6 +290,7 @@ $smarty = smarty(array(), array(), array(
 
 $smarty->assign('profileform', $profileform);
 
+$smarty->assign('resumeinstalled', record_exists('artefact_installed', 'name', 'resume')); 
 $smarty->display('artefact:internal:index.tpl');
 
 ?>

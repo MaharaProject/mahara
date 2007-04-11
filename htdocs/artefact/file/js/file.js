@@ -122,7 +122,6 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
         self.filelist.rowfunction = function (r, n) {
             return TR({'class': 'r' + (n%2),'id':'row_' + r.id});
         };
-        self.filelist.init();
         self.chdir(self.currentDirectory);
     }
 

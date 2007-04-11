@@ -29,7 +29,7 @@ defined('INTERNAL') || die();
 //
 // Set session settings
 //
-session_name('mahara');
+session_name(get_config('cookieprefix') . 'mahara');
 ini_set('session.save_path', '3;' . get_config('dataroot') . 'sessions');
 ini_set('session.gc_divisor', 1000);
 // Session timeout is stored in minutes in the database

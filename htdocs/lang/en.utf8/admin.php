@@ -157,13 +157,26 @@ $string['uploadcopyright']     = 'Upload Copyright Statement';
 $string['csvfile'] = 'CSV File';
 $string['uploadcsvinstitution'] = 'The institution to upload users for';
 $string['csvfiledescription'] = 'The file containing users to add';
+$string['uploadcsverrorinvalidfieldname'] = 'The field name "%s" is invalid';
+$string['uploadcsverrorrequiredfieldnotspecified'] = 'A required field "%s" has not been specified in the format line';
+$string['uploadcsverrornorecords'] = 'The file appears to contain no records (although the header is fine)';
 $string['uploadcsverrorinvalidemail'] = 'Error on line %s of your file: The e-mail address for this user is not in correct form';
+$string['uploadcsverrorincorrectnumberoffields'] = 'Error on line %s of your file: This line does not have the correct number of fields';
 $string['uploadcsverrorinvalidpassword'] = 'Error on line %s of your file: The password for this user is not in correct form';
 $string['uploadcsverrorinvalidusername'] = 'Error on line %s of your file: The username for this user is not in correct form';
-$string['uploadcsverrorincorrectfieldcount'] = 'Line %s of the file does not have the correct number of fields';
 $string['uploadcsverrormandatoryfieldnotspecified'] = 'Line %s of the file does not have the required "%s" field';
 $string['uploadcsverroruseralreadyexists'] = 'Line %s of the file specifies the username "%s" that already exists';
-$string['uploadcsvpagedescription'] = 'You may use this facility to upload new users via a <acronym title="Comma Separated Values">CSV</acronym> file. Each record in the file must have a username, e-mail address and password.';
+$string['uploadcsvpagedescription'] = '<p>You may use this facility to upload new users via a <acronym title="Comma Separated Values">CSV</acronym> file.</p>
+   
+<p>The first row of your CSV file should specify the format of your CSV data. For example, it should look like this:</p>
+
+<pre>username,password,email,firstname,lastname,studentid</pre>
+
+<p>This row must include the <tt>username</tt>, <tt>password</tt>, <tt>email</tt>, <tt>firstname</tt> and <tt>lastname</tt> fields always, and then any fields that are both mandatory and locked for the institution you are uploading the users for. You can <a href="%s">configure the mandatory fields</a> for all institutions, or <a href="%s">configure the locked fields for each institution</a>.</p>
+
+<p>Your CSV file may include any other profile fields as you require. The full list of fields is:</p>
+
+%s';
 $string['uploadcsvusersaddedsuccessfully'] = 'The users in the file have been added successfully';
 
 // Admin Users

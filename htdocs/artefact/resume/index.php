@@ -77,7 +77,7 @@ $form = array(
                     'type'  => 'wysiwyg',
                     'cols'  => 70,
                     'rows'  => 10,
-                    'defaultvalue' => ((!empty($coverletter)) ? $coverletter->get('title') : null),
+                    'defaultvalue' => ((!empty($coverletter)) ? $coverletter->get('description') : null),
                 ),
             )
         ),
@@ -89,7 +89,7 @@ $form = array(
             'elements' => array(
                 'interest' => array(
                     'type' => 'wysiwyg',
-                    'defaultvalue' => ((!empty($interest)) ? $interest->get('title') : null),
+                    'defaultvalue' => ((!empty($interest)) ? $interest->get('description') : null),
                     'cols'  => 70,
                     'rows'  => 10,
                 ),
@@ -122,36 +122,24 @@ $form = array(
                     'defaultvalue' => ((!empty($personalinformation)) 
                         ? strtotime($personalinformation->get_composite('dateofbirth')) : null),
                     'title' => get_string('dateofbirth', 'artefact.resume'),
-                    'rules' => array(
-                        'required' => true,
-                    ),
                 ),
                 'placeofbirth' => array(
                     'type' => 'text',
                     'defaultvalue' => ((!empty($personalinformation)) 
                         ? $personalinformation->get_composite('placeofbirth') : null),
                     'title' => get_string('placeofbirth', 'artefact.resume'),
-                    'rules' => array(
-                        'required' => true,
-                    ),
                 ),  
                 'citizenship' => array(
                     'type' => 'text',
                     'defaultvalue' => ((!empty($personalinformation))
                         ? $personalinformation->get_composite('citizenship') : null),
                     'title' => get_string('citizenship', 'artefact.resume'),
-                    'rules' => array(
-                        'required' => true,
-                    ),
                 ),
                 'visastatus' => array(
                     'type' => 'text', 
                     'defaultvalue' => ((!empty($personalinformation))
                         ? $personalinformation->get_composite('visastatus') : null),
                     'title' => get_string('visastatus', 'artefact.resume'),
-                    'rules' => array(
-                        'required' => true,
-                    ),
                 ),
                 'gender' => array(
                     'type' => 'radio', 
@@ -162,18 +150,12 @@ $form = array(
                         'male'   => get_string('male', 'artefact.resume'),
                     ),
                     'title' => get_string('gender', 'artefact.resume'),
-                    'rules' => array(
-                        'required' => true,
-                    ),
                 ),
                 'maritalstatus' => array(
                     'type' => 'text',
                     'defaultvalue' => ((!empty($personalinformation))
                         ? $personalinformation->get_composite('maritalstatus') :  null),
                     'title' => get_string('maritalstatus', 'artefact.resume'),
-                    'rules' => array(
-                        'required' => true,
-                    ),
                 ),
             ),
         ),
@@ -189,6 +171,9 @@ $addstr = get_string('add');
 $editstr = get_string('edit');
 $delstr = get_string('delete');
 $confirmdelstr = get_string('compositedeleteconfirm', 'artefact.resume');
+$confirmeditprofilestr = get_string('confirmeditprofile', 'artefact.resume');
+
+$wwwroot = get_config('wwwroot');
 
 $mainform = pieform($form);
 $smarty = smarty(array('tablerenderer'));
@@ -233,7 +218,16 @@ function deleteComposite(type, id, artefact) {
     return false;
 }
 
+function editprofilebutton() {
+    if (confirm('{$confirmeditprofilestr}')) {
+        document.location='{$wwwroot}artefact/internal/';
+    }
+    return false;
+}
+
 EOF;
+$inlinejs .= ArtefactTypeResumeComposite::get_showhide_composite_js();
+
 $compositeforms = array();
 foreach (ArtefactTypeResumeComposite::get_composite_artefact_types() as $compositetype) {
     $inlinejs .= <<<EOF
@@ -300,19 +294,42 @@ function resumemainform_submit(Pieform $form, $values) {
         if (empty($coverletter) && !empty($values['coverletter'])) {
             $coverletter = new ArtefactTypeCoverletter(0, array( 
                 'owner' => $userid, 
-                'title' => $values['coverletter']
+                'description' => $values['coverletter']
             ));
             $coverletter->commit();
         }
-        else if (!empty($coverletter)) {
+        else if (!empty($coverletter) && !empty($values['coverletter'])) {
             $coverletter->set('description', $values['coverletter']);
             $coverletter->commit();
+        }
+        else if (!empty($coverletter) && empty($values['coverletter'])) {
+            $coverletter->delete();
         }
     }
     catch (Exception $e) {
         $errors['coverletter'] = true;
     }
         
+    try {
+        if (empty($interest) && !empty($values['interest'])) {
+            $interest = new ArtefactTypeInterest(0, array( 
+                'owner' => $userid, 
+                'description' => $values['interest']
+            ));
+            $interest->commit();
+        }
+        else if (!empty($interest) && !empty($values['interest'])) {
+            $interest->set('description', $values['interest']);
+            $interest->commit();
+        }
+        else if (!empty($interest) && empty($values['interest'])) {
+            $interest->delete();
+        }
+    }
+    catch (Exception $e) {
+        $errors['interest'] = true;
+    }   
+
     try {
         if (empty($personalinformation)) {
             $personalinformation = new ArtefactTypePersonalinformation(0, array(
@@ -328,23 +345,6 @@ function resumemainform_submit(Pieform $form, $values) {
     catch (Exception $e) {
         $errors['personalinformation'] = true;
     }
-
-    try {
-        if (empty($interest) && !empty($values['interest'])) {
-            $interest = new ArtefactTypeInterest(0, array( 
-                'owner' => $userid, 
-                'title' => $values['interest']
-            ));
-            $interest->commit();
-        }
-        else if (!empty($interest)) {
-            $interest->set('description', $values['interest']);
-            $interest->commit();
-        }
-    }
-    catch (Exception $e) {
-        $errors['interest'] = true;
-    }   
 
     if (empty($errors)) {
         $form->json_reply(PIEFORM_OK, get_string('resumesaved','artefact.resume'));

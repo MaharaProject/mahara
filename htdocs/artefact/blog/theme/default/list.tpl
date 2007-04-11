@@ -18,7 +18,7 @@
               </span>
               {contextualhelp plugintype='artefact' pluginname='blog' section='addblogbutton'}
             </div>
-			<table id="bloglist" class="tablerenderer">
+			<table id="bloglist" class="hidden tablerenderer">
 				<thead>
 					<tr>
 						<th>{str section="artefact.blog" tag="title"}</th>

@@ -569,5 +569,9 @@ $string['youraccounthasbeensuspendedtext'] = 'Your account has been suspended'; 
 $string['youraccounthasbeenunsuspended'] = 'Your account has been unsuspended';
 $string['youraccounthasbeenunsuspendedtext'] = 'Your account has been unsuspended'; // @todo: more info?
 
-
+// size of stuff
+$string['sizemb'] = 'MB';
+$string['sizekb'] = 'KB';
+$string['sizegb'] = 'GB';
+$string['sizeb'] = 'b';
 ?>

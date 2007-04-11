@@ -9,7 +9,7 @@
                                     <option value="1">{str tag='pendingfriends'}</option>
                                 </select>
                             </form>
-                            <table id="friendslist" class="tablerenderer">
+                            <table id="friendslist" class="hidden tablerenderer">
                                 <thead>
                                     <tr>
                                         <th>{str tag="profileicon"}</th>

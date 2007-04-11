@@ -70,8 +70,8 @@ $createview1 = pieform(array(
     'autofocus' => 'title',
     'elements' => array(
         'viewid' => array(
-            'type'         => 'hidden',
-            'defaultvalue' => $view_id,
+            'type'  => 'hidden',
+            'value' => $view_id,
         ),
         'title' => array(
             'type'         => 'text',

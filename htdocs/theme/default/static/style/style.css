@@ -7,7 +7,7 @@ body {
 	font-size: 12px;
 }
 
-.hiddenStructure {
+.hiddenStructure, .hidden {
 	display: none;
 }
 
@@ -354,7 +354,9 @@ tr.required th {
 	color: #FFF;
 	text-decoration: none;
 }
-#mainnav li.selected a {
+#mainnav li.selected a:link,
+#mainnav li.selected a:visited,
+#mainnav li.selected a:active {
 	color: #FFF;
 }
 /* MAIN NAVIGATION ENDS */
@@ -393,7 +395,9 @@ tr.required th {
     padding: 0;
 	margin: 0 5px;
 }
-#subnav li.selected a {
+#subnav li.selected a:link, 
+#subnav li.selected a:visited,
+#subnav li.selected a:active {
 	color: #98bf10;
 }
 /* SUB NAVIGATION ENDS */
@@ -940,6 +944,14 @@ table#installer {
 	color: #eef7d4;
 	font-weight: bold;
 	padding: 5px 20px 6px 45px;
+}
+.maincontent #profilegotoresume {
+	background: url(../images/btn_editprofileicons.gif) no-repeat; 
+	width: 170px;
+	height: 24px;
+	color: #eef7d4;
+	font-weight: bold;
+	padding: 5px 20px 6px 35px;
 }
 .maincontent #backtoeditprofile {
 	background: url(../images/btn_editprofileicons.gif) no-repeat;
@@ -1700,13 +1712,6 @@ a.pieform-calendar-toggle img {
     border: none;
 }
 
-/*
-  This style is necessary to hide tablerenderer tables to start with.
-  If you make a new theme based off this one, don't remove this!
-*/
-.tablerenderer {
-    display: none;
-}
 .tablerenderer-loading {
     border: 1px solid #E5E8DA;
     padding: .5em;
@@ -1714,4 +1719,9 @@ a.pieform-calendar-toggle img {
     font-weight: bold;
     color: #547C22;
     font-size: 13px;
+}
+.performanceinfo {
+    font-size:9px;
+    text-align:center;
+    margin-top:4px;
 }

@@ -203,7 +203,6 @@ function get_helpfile_location($plugintype, $pluginname, $form, $element, $page=
 
     // try the current language
     $langfile = $location . $lang . '/' . $file;
-    log_debug($langfile);
     if (is_readable($langfile)) {
         return $langfile;
     }
@@ -863,13 +862,15 @@ class Plugin {
  * 
  * @param int $date unix timestamp to format
  * @param string $formatkey language key to fetch the format from
+ * @param string $notspecifiedkey (optional) language key to fetch 'not specified string' from
+ * @param string $notspecifiedsection (optional) language section to fetch 'not specified string' from
  * (see langconfig.php or the top of {@link get_string_location}
  * for supported keys
  */
 
-function format_date($date, $formatkey='strftimedatetime') {
+function format_date($date, $formatkey='strftimedatetime', $notspecifiedkey='strftimenotspecified', $notspecifiedsection='mahara') {
     if (empty($date)) {
-        return get_string('strftimenotspecified');
+        return get_string($notspecifiedkey, $notspecifiedsection);
     }
     return strftime(get_string($formatkey), $date);
 }
@@ -1449,4 +1450,136 @@ function get_mahara_install_subdirectory() {
     return substr($wwwroot, strpos($wwwroot, '/'));
 }
 
+/**
+ *** get_performance_info() pairs up with init_performance_info()
+ *** loaded in init.php. Returns an array with 'html' and 'txt'
+ *** values ready for use, and each of the individual stats provided
+ *** separately as well.
+ ***
+ **/
+function get_performance_info() {
+
+    if (!get_config('perftofoot') && !get_config('perftolog')) {
+        return array();
+    }
+
+    global $PERF;
+
+    $info = array();
+
+    $info['realtime'] = microtime_diff($PERF->starttime, microtime());
+
+
+    if (function_exists('memory_get_usage')) {
+        $info['memory_total'] = memory_get_usage();
+        $info['memory_growth'] = memory_get_usage() - $PERF->startmemory;
+    }
+
+    $inc = get_included_files();
+    $info['includecount'] = count($inc);
+
+
+    if (!empty($PERF->dbreads)) {
+        $info['dbreads'] = $PERF->dbreads;
+    }
+
+    if (!empty($PERF->dbwrites)) {
+        $info['dbwrites'] = $PERF->dbwrites;
+    }
+
+    if (function_exists('posix_times')) {
+        $ptimes = posix_times();
+        if (is_array($ptimes)) {
+            foreach ($ptimes as $key => $val) {
+                $info[$key] = $ptimes[$key] -  $PERF->startposixtimes[$key];
+            }
+        }
+    }
+
+    // Grab the load average for the last minute
+    // /proc will only work under some linux configurations
+    // while uptime is there under MacOSX/Darwin and other unices
+    if (is_readable('/proc/loadavg') && $loadavg = @file('/proc/loadavg')) {
+        list($server_load) = explode(' ', $loadavg[0]);
+        unset($loadavg);
+    } else if ( function_exists('is_executable') && is_executable('/usr/bin/uptime') && $loadavg = `/usr/bin/uptime` ) {
+        if (preg_match('/load averages?: (\d+[\.,:]\d+)/', $loadavg, $matches)) {
+            $server_load = $matches[1];
+        } else {
+            log_debug('PERF: Could not parse uptime output!');
+        }
+    }
+    if (!empty($server_load)) {
+        $info['serverload'] = $server_load;
+    }
+
+    return $info;
+}
+
+function perf_to_log($info) {
+    if (!get_config('perftolog')) {
+        return true;
+    }
+
+    if (empty($info)) {
+        $info = get_performance_info();
+    }
+
+    $logstring = 'PERF: ' .  strip_querystring(get_script_path()). ': ';
+    $logstring .= ' memory_total: '.$info['memory_total'].'B (' . display_size($info['memory_total']).') memory_growth: '.$info['memory_growth'].'B ('.display_size($info['memory_growth']).')';
+    $logstring .= ' time: '.$info['realtime'].'s';
+    $logstring .= ' includecount: '.$info['includecount'];
+    $logstring .= ' dbqueries: '.$info['dbreads'] . ' reads, ' . $info['dbwrites'] . ' writes';
+    $logstring .= ' ticks: ' . $info['ticks']  . ' user: ' . $info['utime'] . ' sys: ' . $info['stime'] .' cuser: ' . $info['cutime'] . ' csys: ' . $info['cstime'];
+    $logstring .= ' serverload: ' . $info['serverload'];
+    log_debug($logstring);
+}
+
+/**
+ * microtime_diff
+ *
+ * @param string $a ?
+ * @param string $b ?
+ * @return string
+ * @todo Finish documenting this function
+ */
+function microtime_diff($a, $b) {
+    list($a_dec, $a_sec) = explode(' ', $a);
+    list($b_dec, $b_sec) = explode(' ', $b);
+    return $b_sec - $a_sec + $b_dec - $a_dec;
+}
+
+/**
+ * Converts bytes into display form
+ *
+ * @param string $size  ?
+ * @return string
+ * @staticvar string $gb Localized string for size in gigabytes
+ * @staticvar string $mb Localized string for size in megabytes
+ * @staticvar string $kb Localized string for size in kilobytes
+ * @staticvar string $b Localized string for size in bytes
+ * @todo Finish documenting this function. Verify return type.
+ */
+function display_size($size) {
+
+    static $gb, $mb, $kb, $b;
+
+    if (empty($gb)) {
+        $gb = get_string('sizegb');
+        $mb = get_string('sizemb');
+        $kb = get_string('sizekb');
+        $b  = get_string('sizeb');
+    }
+
+    if ($size >= 1073741824) {
+        $size = round($size / 1073741824 * 10) / 10 . $gb;
+    } else if ($size >= 1048576) {
+        $size = round($size / 1048576 * 10) / 10 . $mb;
+    } else if ($size >= 1024) {
+        $size = round($size / 1024 * 10) / 10 . $kb;
+    } else {
+        $size = $size .' '. $b;
+    }
+    return $size;
+}
 ?>

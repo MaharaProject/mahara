@@ -31,7 +31,40 @@ define('SUBMENUITEM', 'uploadcsv');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('uploadcsv', 'admin'));
 require_once('pieforms/pieform.php');
+safe_require('artefact', 'internal');
 
+$FORMAT = array();
+$ALLOWEDKEYS = array(
+    'username',
+    'password',
+    'email',
+    'firstname',
+    'lastname',
+    'preferredname',
+    'studentid',
+    'introduction',
+    'officialwebsite',
+    'personalwebsite',
+    'blogaddress',
+    'address',
+    'town',
+    'city',
+    'country',
+    'homenumber',
+    'businessnumber',
+    'mobilenumber',
+    'faxnumber',
+    'icqnumber',
+    'msnnumber',
+    'aimscreenname',
+    'yahoochat',
+    'skypeusername',
+    'jabberusername',
+    'occupation',
+    'industry',
+);
+
+// Build the form for uploading the CSV data
 $institutions = get_records_array('institution');
 foreach ($institutions as $name => $data) {
     $options[$name] = $data->displayname;
@@ -86,7 +119,7 @@ $form = array(
  * @param array    $values The values submitted
  */
 function uploadcsv_validate(Pieform $form, $values) {
-    global $CSVDATA;
+    global $CSVDATA, $ALLOWEDKEYS, $FORMAT;
 
     // Don't even start attempting to parse if there are previous errors
     if ($form->has_errors()) {
@@ -107,47 +140,84 @@ function uploadcsv_validate(Pieform $form, $values) {
     $i = 0;
     while ($line = @File_CSV::readQuoted($values['file']['tmp_name'], $conf)) {
         $i++;
-        if (count($line) < 5) {
-            $form->set_error('file', get_string('uploadcsverrorincorrectfieldcount', 'admin', $i));
-            return;
-        }
-        $username  = $line[0];
-        $password  = $line[1];
-        $email     = $line[4];
-
-        safe_require('auth', 'internal');
-        if (!AuthInternal::is_username_valid($username)) {
-            $form->set_error('file', get_string('uploadcsverrorinvalidusername', 'admin', $i));
-            return;
-        }
-        if (record_exists('usr', 'username', $username)) {
-            $form->set_error('file', get_string('uploadcsverroruseralreadyexists', 'admin', $i, $username));
+        if (!is_array($line)) {
+            // Note: the CSV parser returns true on some errors and false on
+            // others! Yes that's retarded. No I didn't write it :(
+            $form->set_error('file', get_string('uploadcsverrorincorrectnumberoffields', 'admin', $i));
             return;
         }
 
-        // Note: only checks for valid form are done here, none of the checks
-        // like whether the password is too easy. The user is going to have to
-        // change their password on first login anyway.
-        if (!AuthInternal::is_password_valid($password)) {
-            $form->set_error('file', get_string('uploadcsverrorinvalidpassword', 'admin', $i));
-            return;
-        }
+        // Get the format of the file
+        if ($i == 1) {
+            foreach ($line as $potentialkey) {
+                if (!in_array($potentialkey, $ALLOWEDKEYS)) {
+                    $form->set_error('file', get_string('uploadcsverrorinvalidfieldname', 'admin', $potentialkey));
+                    return;
+                }
+            }
 
-        safe_require('artefact', 'internal');
-        $fieldcounter = 2;
-        foreach (ArtefactTypeProfile::get_mandatory_fields() as $field => $type) {
-            if (!isset($line[$fieldcounter])) {
-                $form->set_error('file', get_string('uploadcsverrormandatoryfieldnotspecified', 'admin', $i, $field));
+            // Now we know all of the field names are valid, we need to make
+            // sure that the required fields are included
+            $mandatoryfields = array(
+                'username',
+                'password'
+            );
+            $mandatoryfields = array_merge($mandatoryfields, array_keys(ArtefactTypeProfile::get_mandatory_fields()));
+            if ($lockedprofilefields = get_column('institution_locked_profile_field', 'profilefield', 'name', $institution)) {
+                $mandatoryfields = array_merge($mandatoryfields, $lockedprofilefields);
+            }
+            
+            // Add in the locked profile fields for this institution
+            foreach ($mandatoryfields as $field) {
+                if (!in_array($field, $line)) {
+                    $form->set_error('file', get_string('uploadcsverrorrequiredfieldnotspecified', 'admin', $field));
+                    return;
+                }
+            }
+
+            // The format line is valid
+            $FORMAT = $line;
+            log_info('FORMAT:');
+            log_info($FORMAT);
+        }
+        else {
+            // We have a line with the correct number of fields, but should validate these fields
+            // Note: This validation should really be methods on each profile class, that way
+            // it can be used in the profile screen as well.
+
+            $formatkeylookup = array_flip($FORMAT);
+            $username = $line[$formatkeylookup['username']];
+            $password = $line[$formatkeylookup['password']];
+            $email    = $line[$formatkeylookup['email']];
+
+            safe_require('auth', 'internal');
+            if (!AuthInternal::is_username_valid($username)) {
+                $form->set_error('file', get_string('uploadcsverrorinvalidusername', 'admin', $i));
+                return;
+            }
+            if (record_exists('usr', 'username', $username)) {
+                $form->set_error('file', get_string('uploadcsverroruseralreadyexists', 'admin', $i, $username));
                 return;
             }
 
-            // @todo validate the mandatory fields somehow. In theory, this should
-            // just involve calling a method on a class.
-            $fieldcounter++;
+            // Note: only checks for valid form are done here, none of the checks
+            // like whether the password is too easy. The user is going to have to
+            // change their password on first login anyway.
+            if (!AuthInternal::is_password_valid($password)) {
+                $form->set_error('file', get_string('uploadcsverrorinvalidpassword', 'admin', $i));
+                return;
+            }
+
+            // All OK!
+            $CSVDATA[] = $line;
         }
 
-        // All OK!
-        $CSVDATA[] = $line;
+    }
+
+    if ($i == 1) {
+        // There was only the title row :(
+        $form->set_error('file', get_string('uploadcsverrornorecords', 'admin'));
+        return;
     }
 }
 
@@ -156,32 +226,33 @@ function uploadcsv_validate(Pieform $form, $values) {
  * password on next login also.
  */
 function uploadcsv_submit(Pieform $form, $values) {
-    global $SESSION, $CSVDATA;
+    global $SESSION, $CSVDATA, $FORMAT;
     log_info('Inserting users from the CSV file');
     db_begin();
-    $mandatoryfields = ArtefactTypeProfile::get_mandatory_fields();
-    $mandatoryfieldkeys = array_keys($mandatoryfields);
+    $formatkeylookup = array_flip($FORMAT);
     foreach ($CSVDATA as $record) {
-        log_debug('adding user ' . $record[0]);
+        log_debug('adding user ' . $record[$formatkeylookup['username']]);
+        log_debug($record);
         $user = new StdClass;
-        $user->username  = $record[0];
-        $user->password  = $record[1];
+        $user->username    = $record[$formatkeylookup['username']];
+        $user->password    = $record[$formatkeylookup['password']];
         $user->institution = $values['institution'];
-        $user->email     = $record[4];
-        $user->studentid = (isset($record[5]) && in_array('studentid', $mandatoryfieldkeys)) ? $record[5] : null;
-        $user->preferredname = (isset($record[6]) && in_array('preferredname', $mandatoryfieldkeys)) ? $record[6] : null;
+        $user->email       = $record[$formatkeylookup['email']];
+        if (isset($formatkeylookup['studentid'])) {
+            $user->studentid = $record[$formatkeylookup['studentid']];
+        }
+        if (isset($formatkeylookup['preferredname'])) {
+            $user->preferredname = $record[$formatkeylookup['preferredname']];
+        }
         $user->passwordchange = 1;
         $id = insert_record('usr', $user, 'id', true);
 
-        // A bit of munging to move fields into the correct order
-        $record[4] = $record[5];
-        $record[5] = $record[6];
-        $record[6] = $user->email;
-
-        $i = 2;
-        safe_require('artefact', 'internal');
-        foreach ($mandatoryfieldkeys as $field) {
-            set_profile_field($id, $field, $record[$i++]);
+        foreach ($FORMAT as $field) {
+            if ($field == 'username' || $field == 'password') {
+                continue;
+            }
+            log_debug("$field  " . $record[$formatkeylookup[$field]]);
+            set_profile_field($id, $field, $record[$formatkeylookup[$field]]);
         }
 
         handle_event('createuser', $user);
@@ -193,7 +264,23 @@ function uploadcsv_submit(Pieform $form, $values) {
     redirect('/admin/users/uploadcsv.php');
 }
 
+// Get a list of all profile fields, to inform the user on what fields they can
+// put in their file.
+$fields = "<ul>\n";
+foreach (array_keys(ArtefactTypeProfile::get_all_fields()) as $type) {
+    if ($type == 'firstname' || $type == 'lastname' || $type == 'email') {
+        continue;
+    }
+    $fields .= '<li>' . hsc($type) . "</li>\n";
+}
+$fields .= "</ul>\n";
+
 $smarty = smarty();
+$smarty->assign('uploadcsvpagedescription', get_string('uploadcsvpagedescription', 'admin',
+    get_config('wwwroot') . 'admin/extensions/pluginconfig.php?plugintype=artefact&pluginname=internal&type=profile',
+    get_config('wwwroot') . 'admin/users/institutions.php',
+    $fields
+));
 $smarty->assign('uploadcsvform', pieform($form));
 $smarty->display('admin/users/uploadcsv.tpl');
 

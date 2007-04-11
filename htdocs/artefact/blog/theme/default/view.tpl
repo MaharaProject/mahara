@@ -26,7 +26,7 @@
                     </div>
 
 		
-				<div><table id="postlist" class="tablerenderer">
+				<div><table id="postlist" class="hidden tablerenderer">
 					<tbody>
 									  <tr><td></td><td></td><td></td></tr>
 					</tbody>

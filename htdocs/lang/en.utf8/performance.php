@@ -17,7 +17,7 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage core
+ * @subpackage lang
  * @author     Penny Leach <penny@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
@@ -26,10 +26,19 @@
 
 defined('INTERNAL') || die();
 
-$config = new StdClass;
-$config->version = 2007021905;
-$config->release = '0.7.0.dev';
-$config->minupgradefrom = 2007011600;
-$config->minupgraderelease = '0.4.0 (build tag BUILD_20070122)';
+$string['memoryused'] = 'Memory';
+$string['timeused'] = 'Execution time';
+$string['seconds'] = 'seconds';
+$string['included'] = 'Included files';
+$string['dbqueries'] = 'DB queries';
+$string['reads'] = 'reads';
+$string['writes'] = 'writes';
+$string['ticks'] = 'ticks';
+$string['sys'] = 'sys';
+$string['user'] = 'user';
+$string['cuser'] = 'cuser';
+$string['csys'] = 'csys';
+$string['serverload'] = 'Server load';
+
 
 ?>

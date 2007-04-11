@@ -76,6 +76,8 @@ results.statevars.push('sesskey');
 results.action = 'search';
 results.sesskey = {$str_sesskey};
 results.emptycontent = {$str_noresults};
+results.query = '';
+results.updateOnLoad();
 
 function doSearch() {
     results.query = $('usersearch').value;

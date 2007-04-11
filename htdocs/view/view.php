@@ -228,7 +228,7 @@ function view_menu() {
         if (artefact) {
             data.artefact = artefact;
         }
-        sendjsonrequest('addwatchlist.json.php', data);
+        sendjsonrequest('addwatchlist.json.php', data, 'POST');
         return false;
     }
 

@@ -32,6 +32,9 @@
  * @return string        The HTML for the element
  */
 function pieform_element_hidden($element, Pieform $form) {
+    if (!isset($element['value'])) {
+        throw new PieformException('The hidden element "' . $element['name'] . '" must have a value set');
+    }
     $value = $form->get_value($element);
     if (is_array($value)) {
         $result = '';
@@ -44,6 +47,14 @@ function pieform_element_hidden($element, Pieform $form) {
     return '<input type="hidden"'
         . $form->element_attributes($element, array('accesskey', 'onclick', 'size', 'style', 'tabindex'))
         . ' value="' . Pieform::hsc($form->get_value($element)) . "\">\n";
+}
+
+/**
+ * Returns the value for a hidden element. Hidden elements only listen to the
+ * 'value' index, and not to GET/POST
+ */
+function pieform_element_hidden_get_value(Pieform $form, $element) {
+    return $element['value'];
 }
 
 ?>

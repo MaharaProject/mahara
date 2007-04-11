@@ -83,6 +83,11 @@ $cfg->log_environ_targets = LOG_TARGET_SCREEN | LOG_TARGET_ERRORLOG;
 // but probably only warnings are useful on a live site.
 $cfg->log_backtrace_levels = LOG_LEVEL_WARN | LOG_LEVEL_ENVIRON;
 
+// capture performance information and print it
+// $cfg->perftofoot = true; // needs a call to mahara_performance_info (smarty callback) - see default theme's footer.tpl
+// $cfg->perftolog = true;
+// if neither are set, performance info wont be captured.
+
 // mail handling
 // if you want mahara to use smtp servers to send mail, enter one or more here
 // blank means mahara will use the default PHP method.

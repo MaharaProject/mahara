@@ -22,7 +22,7 @@
 			<div id="typeheader">{str section='activity' tag='monitored'} {$typestr}</div>
 	                <div id="typeandchildren">* {str section='activity' tag='andchildren}</div>
 			<form method="post" onSubmit="{$stopmonitoring}">
-			<table id="watchlist" class="tablerenderer">
+			<table id="watchlist" class="hidden tablerenderer">
 				<thead>
 					<tr>
 						<th></th>

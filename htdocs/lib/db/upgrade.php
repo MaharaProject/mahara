@@ -242,6 +242,11 @@ function xmldb_core_upgrade($oldversion=0) {
             WHERE artefacttype = 'blog'");
     }
 
+    if ($oldversion < 2007021905) {
+        $template = template_parse('blogandprofile');
+        upgrade_template('blogandprofile', $template);
+    }
+
     return $status;
 
 }

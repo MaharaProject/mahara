@@ -303,13 +303,13 @@ class ArtefactTypeBlog extends ArtefactType {
     }
 
     public static function get_render_list() {
-        return array_merge(
+        return array_values(array_unique(array_merge(
             array(
                 FORMAT_ARTEFACT_LISTCHILDREN,
                 FORMAT_ARTEFACT_RENDERFULL
             ),
             parent::get_render_list()
-        );
+        )));
     }
 
     public static function is_singular() {
@@ -581,13 +581,13 @@ class ArtefactTypeBlogPost extends ArtefactType {
     }
 
     public static function get_render_list() {
-        return array_merge(
+        return array_values(array_unique(array_merge(
             array(
                 FORMAT_ARTEFACT_LISTSELF,
                 FORMAT_ARTEFACT_RENDERFULL
             ),
             parent::get_render_list()
-        );
+        )));
     }
 
     public static function is_singular() {

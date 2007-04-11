@@ -51,6 +51,13 @@ function execute_sql($command) {
 
     try {
         $result = $db->Execute($command);
+        // searching for these rather than just select as subqueries may have select in them.
+        if (preg_match('/(update|insert|delete|alter|create)/i', $command)) {
+            increment_perf_db_writes();
+        }
+        else {
+            increment_perf_db_reads();
+        }
     }
     catch (ADODB_Exception $e) {
         log_debug($e->getMessage() . "Command was: $command");
@@ -365,8 +372,10 @@ function get_recordset_sql($sql, $values=null, $limitfrom=null, $limitnum=null) 
             if (!empty($values) && is_array($values) && count($values) > 0) {
                 $stmt = $db->Prepare($sql);
                 $rs = $db->Execute($stmt, $values);
+                increment_perf_db_reads();
             } else {
                 $rs = $db->Execute($sql);
+                increment_perf_db_reads();
             }
         }
     }
@@ -772,6 +781,7 @@ function set_field_select($table, $newfield, $newvalue, $select, $values) {
     $sql = 'UPDATE '. get_config('dbprefix') . $table .' SET '. $newfield  .' = ? ' . $select;
     try {
         $stmt = $db->Prepare($sql);
+        increment_perf_db_writes();
         return $db->Execute($stmt, $values);
     }
     catch (ADODB_Exception $e) {
@@ -807,6 +817,7 @@ function delete_records($table, $field1=null, $value1=null, $field2=null, $value
     $sql = 'DELETE FROM '. get_config('dbprefix') . $table . ' ' . $select;
     try {
         $stmt = $db->Prepare($sql);
+        increment_perf_db_writes();
         return $db->Execute($stmt,$values);
     }
     catch (ADODB_Exception $e) {
@@ -837,8 +848,10 @@ function delete_records_sql($sql, $values=null) {
         $result = false;
         if (!empty($values) && is_array($values) && count($values) > 0) {
             $stmt = $db->Prepare($sql);
+            increment_perf_db_writes();
             $result = $db->Execute($stmt, $values);
         } else {
+            increment_perf_db_writes();
             $result = $db->Execute($sql);
         }
     }
@@ -918,6 +931,7 @@ function insert_record($table, $dataobject, $primarykey=false, $returnpk=false) 
     // Run the SQL statement
     try {
         $stmt = $db->Prepare($insertSQL);
+        increment_perf_db_writes();
         $rs = $db->Execute($stmt,$ddd);
     }
     catch (ADODB_Exception $e) {
@@ -944,6 +958,7 @@ function insert_record($table, $dataobject, $primarykey=false, $returnpk=false) 
         // try to get the primary key based on id
         try {
             $oidsql = 'SELECT '. $primarykey .' FROM '. get_config('dbprefix') . $table .' WHERE oid = '. $id;
+            increment_perf_db_reads();
             $rs = $db->Execute($oidsql);
             if ($rs->RecordCount() == 1) {
                 return (integer)$rs->fields[0];
@@ -1072,6 +1087,7 @@ function update_record($table, $dataobject, $where=null) {
     $sql = 'UPDATE '. get_config('dbprefix') . $table .' SET '. $update .' WHERE ' . $whereclause;
     try { 
         $stmt = $db->Prepare($sql);
+        increment_perf_db_writes();
         $rs = $db->Execute($stmt,array_merge($values, $wherevalues));
         return true;
     }
@@ -1168,6 +1184,7 @@ function where_values_prepared($value1=null, $value2=null, $value3=null, $value4
 function column_type($table, $column) {
     global $db;
 
+    increment_perf_db_reads();
     if(!$rs = $db->Execute('SELECT ' . $column.' FROM ' . get_config('dbprefix') . $table . ' WHERE 1=2')) {
         return false;
     }
@@ -1269,6 +1286,7 @@ function db_format_tsfield($field, $as = null) {
 function configure_dbconnection() {
     global $db;
 
+    increment_perf_db_writes();
     $db->Execute("SET NAMES 'utf8'");
 
     // more later..
@@ -1358,4 +1376,19 @@ function create_sql_exception_message($e, $sql, $values) {
     return $message;
 }
 
+function increment_perf_db_reads() {
+    if (!get_config('perftolog') && !get_config('perftofoot')) {
+        return true;
+    }
+    global $PERF;
+    $PERF->dbreads++;
+}
+
+function increment_perf_db_writes() {
+    if (!get_config('perftolog') && !get_config('perftofoot')) {
+        return true;
+    }
+    global $PERF;
+    $PERF->dbwrites++;
+}
 ?>
