@@ -1,0 +1,167 @@
+<?php
+/**
+ * This program is part of Mahara
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ *
+ * @package    mahara
+ * @subpackage xmlrpc
+ * @author     Donal McMullan <donal@catalyst.net.nz>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
+ * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
+ *
+ */
+
+class Client {
+
+    private $requesttext      = '';
+    private $signedrequest    = '';
+    private $encryptedrequest = '';
+    private $timeout          = 60;
+    private $params           = array();
+    private $method           = '';
+
+    function __construct() {
+        return true;
+    }
+
+    function set_method($method) {
+        if(is_string($method) && preg_match("@^[A-Za-z0-9]+/[A-Za-z0-9/_-]+(\.php/)?[A-Za-z0-9_-]+$@", $method)) {
+            $this->method = $method;
+        }
+        return $this;
+    }
+
+    function send($wwwroot) {
+        $this->peer     = get_peer($wwwroot);
+        $this->response = '';
+
+        $ch = curl_init( $this->peer->wwwroot . $this->peer->xmlrpc_server_url );
+        $this->requesttext = xmlrpc_encode_request($this->method, $this->params, array("encoding" => "utf-8"));
+        $this->signedrequest = xmldsig_envelope($this->requesttext);
+        $this->encryptedrequest = xmlenc_envelope($this->signedrequest, $this->peer->certificate);
+
+        curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Moodle');
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $this->encryptedrequest);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: text/xml charset=UTF-8"));
+
+        $timestamp_send    = time();
+        $this->rawresponse = curl_exec($ch);
+        $timestamp_receive = time();
+
+        if ($this->rawresponse == false) {
+            throw new Exception('Curl error: '.curl_errno($ch) .':'. curl_error($ch));
+            return false;
+        }
+
+        try {
+            $xml = new SimpleXMLElement($this->rawresponse);
+        } catch (Exception $e) {
+            echo 'a'; exit;
+            throw new Exception('Payload is not a valid XML document', 6001);
+        }
+
+        if($xml->getName() == 'encryptedMessage') {
+            $payload_encrypted = true;
+            $wwwroot           = (string)$xml->wwwroot;
+            $payload           = xmlenc_envelope_strip($xml);
+        }
+
+        if($xml->getName() == 'signedMessage') {
+            $payload_signed = true;
+            $payload        = xmldsig_envelope_strip($xml);
+        }
+
+        if($xml->getName() == 'methodResponse') {
+            $this->response = xmlrpc_decode($payload);
+
+            // Margin of error is the time it took the request to complete.
+            $margin_of_error  = $timestamp_receive - $timestamp_send;
+
+            // Guess the time gap between sending the request and the remote machine
+            // executing the time() function. Marginally better than nothing.
+            $hysteresis       = ($margin_of_error) / 2;
+
+            $remote_timestamp = $sig_parser->remote_timestamp - $hysteresis;
+            $time_offset      = $remote_timestamp - $timestamp_send;
+            if ($time_offset > 0) {
+                throw new MaharaException('Time drift ('.$time_offset.') is too large.');
+            }
+
+            // Clean up so object can be re-used.
+            $this->requesttext      = '';
+            $this->signedrequest    = '';
+            $this->encryptedrequest = '';
+            $this->params           = array();
+            $this->method           = '';
+            return true;
+        } else {
+            throw new MaharaException('Unrecognized XML document form: ' . $payload);
+        }
+    }
+
+    /**
+     * Add a parameter to the array of parameters.
+     *
+     * @param  string  $argument    A transport ID, as defined in lib.php
+     * @param  string  $type        The argument type, can be one of:
+     *                              none
+     *                              empty
+     *                              base64
+     *                              boolean
+     *                              datetime
+     *                              double
+     *                              int
+     *                              string
+     *                              array
+     *                              struct
+     *                              In its weakly-typed wisdom, PHP will (currently)
+     *                              ignore everything except datetime and base64
+     * @return bool                 True on success
+     */
+    function add_param($argument, $type = 'string') {
+
+        $allowed_types = array('none',
+                               'empty',
+                               'base64',
+                               'boolean',
+                               'datetime',
+                               'double',
+                               'int',
+                               'i4',
+                               'string',
+                               'array',
+                               'struct');
+        if (!in_array($type, $allowed_types)) {
+            return false;
+        }
+
+        if ($type != 'datetime' && $type != 'base64') {
+            $this->params[] = $argument;
+            return $this;
+        }
+
+        // Note weirdness - The type of $argument gets changed to an object with
+        // value and type properties.
+        // bool xmlrpc_set_type ( string &value, string type )
+        xmlrpc_set_type($argument, $type);
+        $this->params[] = $argument;
+        return $this;
+    }
+}
+?>
