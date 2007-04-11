@@ -25,13 +25,15 @@
  */
 
 function xmlrpc_exception (Exception $e) {
-    var_dump($e);exit;
-    if (!($e instanceof XmlrpcServerException) || get_class($e) != 'XmlrpcServerException') {
-        xmlrpc_error('An unexpected error has occurred: '.$e->getMessage(), $e->getCode());
-        log_message($e->getMessage(), LOG_LEVEL_WARN, true, true, $e->getFile(), $e->getLine(), $e->getTrace());
-        die();
+    if (($e instanceof XmlrpcServerException) && get_class($e) == 'XmlrpcServerException') {
+        $e->handle_exception();
+        return;
+    } elseif (($e instanceof MaharaException) && get_class($e) == 'MaharaException') {
+        throw new XmlrpcServerException($e->getMessage(), $e->getCode());
+        return;
     }
-    $e->handle_exception();
+    xmlrpc_error('An unexpected error has occurred: '.$e->getMessage(), $e->getCode());
+    log_message($e->getMessage(), LOG_LEVEL_WARN, true, true, $e->getFile(), $e->getLine(), $e->getTrace());
 }
 
 function get_hostname_from_uri($uri = null) {
@@ -121,17 +123,6 @@ function xmlrpc_error($message, $code) {
 EOF;
 }
 
-/**
- * Xmlrpc Server exception - must output nice XML stuff to the client
- */
-class XmlrpcServerException extends Exception {
-    public function handle_exception() {
-        var_dump($this);
-//        xmlrpc_error($this->message, $this->code);
-        die();
-    }
-}
-
 function xmlenc_envelope_strip(&$xml) {
     $openssl           = OpenSslRepo::singleton();
     $payload_encrypted = true;
@@ -148,7 +139,7 @@ function parse_payload($payload) {
         $xml = new SimpleXMLElement($payload);
         return $xml;
     } catch (Exception $e) {
-        throw new XmlrpcServerException('Encrypted payload is not a valid XML document', 6002);
+        throw new MaharaException('Encrypted payload is not a valid XML document', 6002);
     }
 }
 
@@ -159,11 +150,10 @@ function get_peer($wwwroot) {
     $peer = new Peer();
     if(!$peer->init($wwwroot)) {
         // Bootstrap unknown hosts?
-        throw new XmlrpcServerException('We don\'t have a record for your webserver in our database', 6003);
+        throw new MaharaException('We don\'t have a record for your webserver in our database', 6003);
     }
     $peers[$wwwroot] = $peer;
     return $peers[$wwwroot];
-    //return $peer;
 }
 
 function xmldsig_envelope_strip(&$xml) {
@@ -182,10 +172,10 @@ function xmldsig_envelope_strip(&$xml) {
             $xml = new SimpleXMLElement($payload);
             return $payload;
         } catch (Exception $e) {
-            throw new XmlrpcServerException('Signed payload is not a valid XML document', 6007);
+            throw new MaharaException('Signed payload is not a valid XML document', 6007);
         }
     } else {
-        throw new XmlrpcServerException('An error occurred while trying to verify your message signature', 6004);
+        throw new MaharaException('An error occurred while trying to verify your message signature', 6004);
     }
 }
 
@@ -224,7 +214,7 @@ function xmlenc_envelope($message, $remote_certificate) {
 
     if ( gettype($publickey) != 'resource' ) {
         // Remote certificate is faulty.
-        throw new XmlrpcServerException('Could not generate public key resource from certificate', 1);
+        throw new MaharaException('Could not generate public key resource from certificate', 1);
     }
 
     // Initialize vars
@@ -365,7 +355,7 @@ class OpenSslRepo {
                 if ($isOpen) {
                     // It's an older code, sir, but it checks out
                     // We notify the remote host that the key has changed
-                    throw new XmlrpcServerException($this->keypair['certificate'], 7025);
+                    throw new MaharaException($this->keypair['certificate'], 7025);
                 }
             }
         }
@@ -486,23 +476,6 @@ class OpenSslRepo {
     }
 }
 
-/*
-class LocalHost extends Peer {
-    function __construct() {
-        return true;
-    }
-
-    function init() {
-        global $CFG;
-        $exists = parent::init(dropslash($CFG->wwwroot));
-        if($exists) return true;
-
-        return $this->bootstrap(dropslash($CFG->wwwroot), 'mahara');
-
-    }
-}
-*/
-
 class Peer {
 
     public $wwwroot              = '';
@@ -589,7 +562,6 @@ class Peer {
         $host->application          = $this->application;
         $host->we_sso_out           = $this->we_sso_out;
         $host->they_sso_in          = $this->they_sso_in;
-        var_dump($host);
         return insert_record('host',$host);
     }
 
@@ -658,10 +630,10 @@ class PublicKey {
         $this->certificate = $keystring;
 
         if ($this->credentials == false) {
-            throw new XmlrpcServerException('This is not a valid SSL Certificate', 1);
+            throw new MaharaException('This is not a valid SSL Certificate', 1);
             return false;
         } elseif ($this->credentials['subject']['CN'] != $this->wwwroot) {
-            throw new XmlrpcServerException('This certificate does not match the server it claims to represent: '.$this->credentials['subject']['CN'] .', '. $this->wwwroot, 1);
+            throw new MaharaException('This certificate does not match the server it claims to represent: '.$this->credentials['subject']['CN'] .', '. $this->wwwroot, 1);
             return false;
         } else {
             return $this->credentials;
