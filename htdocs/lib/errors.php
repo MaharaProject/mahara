@@ -470,6 +470,11 @@ class MaharaException extends Exception {
             exit;
         }
 
+        if (defined('XMLRPC')) { // it's preferable to throw an XmlrpcServerException
+            echo xmlrpc_error($this->render_exception(), $this->getCode());
+            exit;
+        }
+
         $outputtitle = $this->get_string('title');
         $outputmessage = $this->render_exception();
         $message = strip_tags($outputmessage);
@@ -626,6 +631,11 @@ class ParameterException extends UserException {
         return array_merge(parent::strings(), array('message' => 'A required parameter was missing'));
     }
 }
+
+/**
+ * Xmlrpc Server exception - must output well formed XMLRPC error to the client
+ */
+class XmlrpcServerException extends MaharaException implements MaharaThrowable {}
 
 /**
  * An exception generated when e-mail can't be sent
