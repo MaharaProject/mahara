@@ -178,7 +178,6 @@ function forgotpasschange_submit(Pieform $form, $values) {
     $authtype  = auth_get_authtype_for_institution($user->institution);
     $authclass = 'Auth' . ucfirst($authtype);
     safe_require('auth', $authtype);
-    log_debug($values);
 
     if ($password = call_static_method($authclass, 'change_password', $user->username, $values['password1'])) {
         $userrec = new StdClass;
