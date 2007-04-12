@@ -58,7 +58,7 @@ else {
     $now = time();
 }
 
-log_debug('---------- cron running ' . $now . ' ----------');
+log_debug('---------- cron running ' . date('r', $now) . ' ----------');
 
 // for each plugin type
 foreach (plugin_types() as $plugintype) {
