@@ -1,13 +1,14 @@
-<h3>{str tag='educationhistory' section='artefact.resume'}</h3>
-<table id="educationhistorylist" class="tablerenderer hidden">
+<h3>{str tag='educationhistory' section='artefact.resume'}
+{contextualhelp plugintype='artefact' pluginname='resume' section='addeducationhistory'}</h3>
+<table id="educationhistorylist" class="tablerenderer hidden resumefive">
     <thead>
         <tr>
-            <th>{str tag='startdate' section='artefact.resume'}</th>
-            <th>{str tag='enddate' section='artefact.resume'}</th>
+            <th class="resumedate">{str tag='startdate' section='artefact.resume'}</th>
+            <th class="resumedate">{str tag='enddate' section='artefact.resume'}</th>
             <th>{str tag='qualification' section='artefact.resume'}</th>
             {if $controls}
-            <th></th>
-            <th></th>
+            <th class="resumecontrols"></th>
+            <th class="resumecontrols"></th>
             {/if}
         </tr>
     </thead>
