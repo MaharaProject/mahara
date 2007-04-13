@@ -1,4 +1,5 @@
-<h3>{str tag='educationhistory' section='artefact.resume'}</h3>
+<h3>{str tag='educationhistory' section='artefact.resume'}
+{contextualhelp plugintype='artefact' pluginname='resume' section='addeducationhistory'}</h3>
 <table id="educationhistorylist" class="tablerenderer hidden">
     <thead>
         <tr>

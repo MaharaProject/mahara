@@ -1,4 +1,5 @@
-<h3>{str tag='certification' section='artefact.resume'}</h3>
+<h3>{str tag='certification' section='artefact.resume'}
+{contextualhelp plugintype='artefact' pluginname='resume' section='addcertification'}</h3>
 <table id="certificationlist" class="tablerenderer hidden">
     <thead>
         <tr>
