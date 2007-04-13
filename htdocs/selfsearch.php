@@ -36,7 +36,7 @@ $enc_noresults  = json_encode(get_string('noresultsfound'));
 
 $javascript = <<<EOF
 var results = new TableRenderer(
-    'selfsearchresults',
+    'searchresults',
     $enc_jsonscript,
     []
 );

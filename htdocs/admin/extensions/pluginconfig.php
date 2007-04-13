@@ -41,7 +41,7 @@ if ($plugintype == 'artefact') {
     $classname = generate_artefact_class_name($type);
 }
 else {
-    $type = null;
+    $type = '';
     $classname = generate_class_name($plugintype, $pluginname);
 }
 
