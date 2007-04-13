@@ -210,7 +210,15 @@ EOF;
     $smarty->cache_dir    = get_config('dataroot').'smarty/cache';
 
     $smarty->assign('THEMEURL', get_config('themeurl'));
-    $smarty->assign('STYLESHEETLIST', array_reverse(theme_get_url('style/style.css', null, true)));
+
+    // stylesheet set up - if we're in a plugin also get its stylesheet
+    $stylesheets = array_reverse(theme_get_url('style/style.css', null, true));
+    if (defined('SECTION_PLUGINTYPE') && defined('SECTION_PLUGINNAME') && SECTION_PLUGINTYPE != 'core') {
+        if ($pluginsheets = theme_get_url('style/style.css', SECTION_PLUGINTYPE . '/' . SECTION_PLUGINNAME . '/', true)) {
+            $stylesheets = array_merge($stylesheets, array_reverse($pluginsheets));
+        }
+    }
+    $smarty->assign('STYLESHEETLIST', $stylesheets);
     $smarty->assign('WWWROOT', $wwwroot);
     $smarty->assign('SESSKEY', $USER->get('sesskey'));
     $smarty->assign('THEMELIST', json_encode($theme_list));
