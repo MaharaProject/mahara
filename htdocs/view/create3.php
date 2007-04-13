@@ -74,8 +74,6 @@ if (param_boolean('submit')) {
 
     $data['artefacts'] = $artefacts;
 
-    log_debug($data);
-
     $SESSION->set('create_' . $createid, $data);
     redirect('/view/create4.php?createid=' . $createid);
 }

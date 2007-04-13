@@ -1062,7 +1062,7 @@ function can_view_view($view_id, $user_id=null) {
 
     $view_record = array( 'access' => array() );
 
-    log_debug('Can you look at this view? (you are user ' . $user_id . ' trying to look at view ' . $view_id . ')');
+    //log_debug('Can you look at this view? (you are user ' . $user_id . ' trying to look at view ' . $view_id . ')');
 
     foreach ( $view_data as $row ) {
         $view_record['title'] = $row->title;
@@ -1082,12 +1082,12 @@ function can_view_view($view_id, $user_id=null) {
     }
 
     if ($USER->is_logged_in() && $view_record['owner'] == $user_id) {
-        log_debug('Yes - you own this view');
+        //log_debug('Yes - you own this view');
         return true;
     }
 
     if ($view_record['submittedto'] && record_exists('community_member', 'community', $view_record['submittedto'], 'member', $user_id, 'tutor', 1)) {
-        log_debug('Yes - View is submitted for assesment to a community you are a tutor in');
+        //log_debug('Yes - View is submitted for assesment to a community you are a tutor in');
         return true;
     }
 
@@ -1104,13 +1104,13 @@ function can_view_view($view_id, $user_id=null) {
         )
     ) {
 
-        log_debug('Yes - View is public');
+        //log_debug('Yes - View is public');
         return true;
     }
 
     // everything below this point requires that you be logged in
     if (!$USER->is_logged_in()) {
-        log_debug('No - you are not logged in');
+        //log_debug('No - you are not logged in');
         return false;
     }
 
@@ -1127,7 +1127,7 @@ function can_view_view($view_id, $user_id=null) {
         )
     ) {
 
-        log_debug('Yes - View is available to logged in users');
+        //log_debug('Yes - View is available to logged in users');
         return true;
     }
 
@@ -1147,7 +1147,7 @@ function can_view_view($view_id, $user_id=null) {
             array( $view_record['owner'], $user_id, $user_id, $view_record['owner'] )
         )
     ) {
-        log_debug('Yes - View is available to friends of the owner');
+        //log_debug('Yes - View is available to friends of the owner');
         return true;
     }
 
@@ -1165,7 +1165,7 @@ function can_view_view($view_id, $user_id=null) {
         array( $view_id, $user_id, $dbnow, $dbnow )
         )
     ) {
-        log_debug('Yes - View is available to your user');
+        //log_debug('Yes - View is available to your user');
         return true;
     }
 
@@ -1185,7 +1185,7 @@ function can_view_view($view_id, $user_id=null) {
         array( $view_id, $user_id, $dbnow, $dbnow )
         )
     ) {
-        log_debug('Yes - View is available to one of the owners groups');
+        //log_debug('Yes - View is available to one of the owners groups');
         return true;
     }
 
@@ -1206,18 +1206,18 @@ function can_view_view($view_id, $user_id=null) {
         array( $view_id, $user_id, $dbnow, $dbnow )
         )
     ) {
-        log_debug('Yes - View is available to a specific community');
+        //log_debug('Yes - View is available to a specific community');
         return true;
     }
 
     // check admin
     if (get_field('usr', 'admin', 'id', $user_id)) {
-        log_debug('Yes - You are a site administrator');
+        //log_debug('Yes - You are a site administrator');
         return true;
     }
 
 
-    log_debug('No - nothing matched');
+    //log_debug('No - nothing matched');
     return false;
 }
 

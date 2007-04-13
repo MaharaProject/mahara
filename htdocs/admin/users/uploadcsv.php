@@ -232,7 +232,6 @@ function uploadcsv_submit(Pieform $form, $values) {
     $formatkeylookup = array_flip($FORMAT);
     foreach ($CSVDATA as $record) {
         log_debug('adding user ' . $record[$formatkeylookup['username']]);
-        log_debug($record);
         $user = new StdClass;
         $user->username    = $record[$formatkeylookup['username']];
         $user->password    = $record[$formatkeylookup['password']];
@@ -251,7 +250,6 @@ function uploadcsv_submit(Pieform $form, $values) {
             if ($field == 'username' || $field == 'password') {
                 continue;
             }
-            log_debug("$field  " . $record[$formatkeylookup[$field]]);
             set_profile_field($id, $field, $record[$formatkeylookup[$field]]);
         }
 
