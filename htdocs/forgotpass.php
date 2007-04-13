@@ -26,6 +26,10 @@
 
 define('INTERNAL', 1);
 define('PUBLIC', 1);
+define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'site');
+define('SECTION_PAGE', 'forgotpass');
+
 require('init.php');
 require_once('pieforms/pieform.php');
 define('TITLE', get_string('forgotpassword'));

@@ -483,7 +483,6 @@ function json_headers() {
 function json_reply($error, $message) {
     json_headers();
     echo json_encode(array('error' => $error, 'message' => $message));
-    log_debug('calling from json_reply');
     perf_to_log();
     exit;
 }
@@ -1503,43 +1502,24 @@ function get_full_script_path() {
 }
 
 function has_page_help() {
-    // the path of the current script (used for page help)
-    $path = get_config('wwwroot');
-    $port = (isset($_SERVER['SERVER_PORT'])) ? $_SERVER['SERVER_PORT'] : '';
-    if ($port && substr($path, -strlen($port)) != $port) {
-        $path .= $port;
-    }
-    $scriptname = substr(urldecode(strip_querystring(get_full_script_path())), strlen($path));
-    if (strpos($scriptname, '.php') != (strlen($scriptname) - 4)) {
-        $scriptname .= 'index.php';
+    $pt = defined('SECTION_PLUGINTYPE') ? SECTION_PLUGINTYPE : null;
+    $pn = defined('SECTION_PLUGINNAME') ? SECTION_PLUGINNAME : null;
+    $sp = defined('SECTION_PAGE')       ? SECTION_PAGE       : null;
+
+    if (empty($pt) || ($pt != 'core' && empty($pn))) {
+        // we can't have a plugin type but no plugin name
+        return false;
     }
 
-    $scriptname = substr($scriptname, 0, -4);
-    
-    $firstdir = $scriptname;
-    if (false !== ($slashpos = strpos($scriptname, '/'))) {
-        $firstdir = substr($scriptname, 0, $slashpos);
+    if (in_array($pt, plugin_types())) {
+        $pagehelp = get_config('docroot') . $pt . '/' . $pn . '/lang/en.utf8/help/pages/' . $sp . '.html';
     }
-
-    if (in_array($firstdir, plugin_types())) {
-        $bits = explode('/', $scriptname);
-        if (count($bits) > 2) {
-            $plugintype = $bits[0];
-            $pluginname = $bits[1];
-            $scriptname = substr($scriptname, strlen($plugintype . '/' . $pluginname . '/')); 
-            $pagehelp = get_config('docroot') . $plugintype . '/' . $pluginname . '/lang/en.utf8/help/pages/' . 
-                $scriptname . '.html';
-        }
-    }
-    if (empty($plugintype)) {
-        $plugintype = 'core';
-        $pluginname = 'pages';
-        $pagehelp = get_config('docroot') . 'lang/en.utf8/help/pages/' . $scriptname . '.html';
+    else {
+        $pagehelp = get_config('docroot') . 'lang/en.utf8/help/pages/' . $pn . '/' . $sp . '.html';
     }
 
     if (is_readable($pagehelp)) {
-        $scriptname = str_replace('/', '-', $scriptname);
-        return array($scriptname, get_help_icon($plugintype, $pluginname, '', '', $scriptname));
+        return array($sp, get_help_icon($pt, $pn, '', '', $sp));
     }
     return false;
 }

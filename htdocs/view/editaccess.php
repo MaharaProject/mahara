@@ -31,6 +31,10 @@
 //       which are collapsed when access to the view is edited
 define('INTERNAL', 1);
 define('MENUITEM', 'view');
+define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'view');
+define('SECTION_PAGE', 'editaccess');
+
 require(dirname(dirname(__FILE__)) . '/init.php');
 define('TITLE', get_string('editaccess', 'view'));
 require_once('pieforms/pieform.php');

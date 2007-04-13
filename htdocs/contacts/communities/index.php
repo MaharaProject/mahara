@@ -27,6 +27,10 @@
 define('INTERNAL', 1);
 define('MENUITEM', 'mycontacts');
 define('SUBMENUITEM', 'mycommunities');
+define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'contacts');
+define('SECTION_PAGE', 'communities');
+
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('mycommunities'));
 

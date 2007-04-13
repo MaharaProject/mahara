@@ -27,6 +27,10 @@
 define('INTERNAL', 1);
 define('MENUITEM', 'mycontacts');
 define('SUBMENUITEM', 'myfriends');
+define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'contacts');
+define('SECTION_PAGE', 'friends');
+
 require(dirname(dirname(__FILE__)) . '/init.php');
 define('TITLE', get_string('myfriends'));
 

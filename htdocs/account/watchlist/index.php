@@ -27,6 +27,9 @@
 define('INTERNAL', 1);
 define('MENUITEM', 'account');
 define('SUBMENUITEM', 'watchlist');
+define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'account');
+define('SECTION_PAGE', 'watchlist');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 

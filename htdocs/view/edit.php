@@ -26,6 +26,10 @@
 
 define('INTERNAL', 1);
 define('MENUITEM', 'view');
+define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'view');
+define('SECTION_PAGE', 'edit');
+
 require(dirname(dirname(__FILE__)) . '/init.php');
 define('TITLE', get_string('editview', 'view'));
 require_once('template.php');

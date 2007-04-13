@@ -177,7 +177,7 @@ function get_helpfile_location($plugintype, $pluginname, $form, $element, $page=
     }
     if ($page) {
         $page = str_replace('-', '/', $page);
-        $file .= 'pages/' . $page . '.html';
+        $file .= 'pages/' . $pluginname . '/' . $page . '.html';
     }
     else if ($section) {
         $file .= 'sections/' . $section . '.html';
@@ -1516,7 +1516,7 @@ function get_performance_info() {
     return $info;
 }
 
-function perf_to_log($info) {
+function perf_to_log($info=null) {
     if (!get_config('perftolog')) {
         return true;
     }

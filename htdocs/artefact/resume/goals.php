@@ -27,6 +27,9 @@
 define('INTERNAL', true);
 define('MENUITEM', 'myresume');
 define('SUBMENUITEM', 'mygoals');
+define('SECTION_PLUGINTYPE', 'artefact');
+define('SECTION_PLUGINNAME', 'resume');
+define('SECTION_PAGE', 'goals');
 
 require_once(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('pieforms/pieform.php');
