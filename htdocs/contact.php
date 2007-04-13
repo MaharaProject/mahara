@@ -40,7 +40,7 @@ if ($USER->is_logged_in()) {
     $email = $USER->get('email');
 }
 else {
-    $userid = null;
+    $userid = 0;
     $name = '';
     $email = '';
 }
