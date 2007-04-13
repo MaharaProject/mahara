@@ -307,6 +307,7 @@ function jsstrings() {
                 'requiredfieldempty',
                 'unknownerror',
                 'loading',
+                'showtags',
                 'unreadmessages',
                 'unreadmessage',
                 'couldnotgethelp',
