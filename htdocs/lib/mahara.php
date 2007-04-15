@@ -177,7 +177,12 @@ function get_helpfile_location($plugintype, $pluginname, $form, $element, $page=
     }
     if ($page) {
         $page = str_replace('-', '/', $page);
-        $file .= 'pages/' . $pluginname . '/' . $page . '.html';
+        if ($plugintype != 'core') {
+            $file .=  'pages/' . $page . '.html';
+        }
+        else {
+            $file .= 'pages/' . $pluginname . '/' . $page . '.html';
+        } 
     }
     else if ($section) {
         $file .= 'sections/' . $section . '.html';
