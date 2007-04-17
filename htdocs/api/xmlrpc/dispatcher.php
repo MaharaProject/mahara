@@ -32,6 +32,18 @@ class Dispatcher {
     private $method    = '';
     private $response  = '';
 
+    private $system_methods = array('system/keyswap', 
+                                    'system.listMethods', 
+                                    'system/listMethods', 
+                                    'system.methodSignature', 
+                                    'system/methodSignature', 
+                                    'system.methodHelp', 
+                                    'system/methodHelp', 
+                                    'system.listServices', 
+                                    'system/listServices', 
+                                    'system.keyswap', 
+                                    'system/keyswap');
+
     function __construct($payload) {
         global $CFG;
         $this->payload = $payload;
@@ -47,43 +59,70 @@ class Dispatcher {
             throw new XmlrpcServerException('The function does not exist', 6010);
         }
 
-        // Security: I'm thinking that we should not return separate errors for
-        //           the file not existing, the file not being readable, etc. as
-        //           it might provide an opportunity for outsiders to scan the
-        //           server for random files. So just a single message/code for
-        //           all failures here.
-        if(strpos($this->method, '/') !== false) {
-            $this->callstack  = explode('/', $this->method);
+        // The system methods are treated differently.
+        if (in_array($this->method, $this->system_methods)) {
+
+            $xmlrpcserver = xmlrpc_server_create();
+
+            /*
+            xmlrpc_server_register_method($xmlrpcserver, 'system.listMethods', 'mnet_system');
+            xmlrpc_server_register_method($xmlrpcserver, 'system/listMethods', 'mnet_system');
+
+            xmlrpc_server_register_method($xmlrpcserver, 'system.methodSignature', 'mnet_system');
+            xmlrpc_server_register_method($xmlrpcserver, 'system/methodSignature', 'mnet_system');
+
+            xmlrpc_server_register_method($xmlrpcserver, 'system.methodHelp', 'mnet_system');
+            xmlrpc_server_register_method($xmlrpcserver, 'system/methodHelp', 'mnet_system');
+
+            xmlrpc_server_register_method($xmlrpcserver, 'system.listServices', 'mnet_system');
+            xmlrpc_server_register_method($xmlrpcserver, 'system/listServices', 'mnet_system');
+            */
+
+            xmlrpc_server_register_method($xmlrpcserver, 'system.keyswap', array(&$this, 'keyswap'));
+            xmlrpc_server_register_method($xmlrpcserver, 'system/keyswap', array(&$this, 'keyswap'));
+
         } else {
-            throw new XmlrpcServerException('The function does not exist', 6011);
-        }
 
-        $functionname = array_pop($this->callstack);
-        $filename     = $CFG->docroot . implode('/', $this->callstack);
+            // Security: I'm thinking that we should not return separate errors for
+            //           the file not existing, the file not being readable, etc. as
+            //           it might provide an opportunity for outsiders to scan the
+            //           server for random files. So just a single message/code for
+            //           all failures here.
+            if(strpos($this->method, '/') !== false) {
+                $this->callstack  = explode('/', $this->method);
+            } else {
+                throw new XmlrpcServerException('The function does not exist', 6011);
+            }
 
-        if(!file_exists($filename)) {
-           throw new XmlrpcServerException('The function does not exist', 6011);
-        }
+            $functionname = array_pop($this->callstack);
+            $filename     = $CFG->docroot . implode('/', $this->callstack);
 
-        if(!is_readable($filename)) {
-            throw new XmlrpcServerException('The function does not exist', 6011);
-        }
+            if(!file_exists($filename)) {
+               throw new XmlrpcServerException('The function does not exist', 6011);
+            }
 
-        // Make sure that the fully resolved path really is under docroot
-        $realpath = realpath($filename);
-        if(0 == preg_match("@^{$CFG->docroot}@", $realpath)) {
-            throw new XmlrpcServerException('The function does not exist '.$realpath.' '.$CFG->docroot, 6011);
-        }
+            if(!is_readable($filename)) {
+                throw new XmlrpcServerException('The function does not exist', 6011);
+            }
 
-        // Make sure that the file we are including is called api.php
-        if(0 == preg_match("@api.php$@", $realpath)) {
-            throw new XmlrpcServerException('The function does not exist '.$realpath.' '.$CFG->docroot, 6011);
+            // Make sure that the fully resolved path really is under docroot
+            $realpath = realpath($filename);
+            if(0 == preg_match("@^{$CFG->docroot}@", $realpath)) {
+                throw new XmlrpcServerException('The function does not exist '.$realpath.' '.$CFG->docroot, 6011);
+            }
+
+            // Make sure that the file we are including is called api.php
+            if(0 == preg_match("@api.php$@", $realpath)) {
+                throw new XmlrpcServerException('The function does not exist '.$realpath.' '.$CFG->docroot, 6011);
+            }
+
+            $xmlrpcserver = xmlrpc_server_create();
+
+            include_once($filename);
+
         }
 
         $temp = '';
-        $xmlrpcserver = xmlrpc_server_create();
-
-        include_once($filename);
 
         $this->response = xmlrpc_server_call_method($xmlrpcserver, $payload, $temp, array("encoding" => "utf-8"));
         return $this->response;
@@ -92,6 +131,24 @@ class Dispatcher {
     function __get($name) {
         if ($name == 'response') return $this->response;
         return null;
+    }
+
+    private function keyswap($function, $params) {
+        global $CFG;
+
+        //TODO: Verify params
+        (empty($params[0])) ? $wwwroot = null     : $wwwroot     = $params[0];
+        (empty($params[1])) ? $pubkey = null      : $pubkey      = $params[1];
+        (empty($params[2])) ? $application = null : $application = $params[2];
+
+        $peer = new Peer();
+
+        if ($peer->bootstrap($wwwroot, $pubkey, $application)) {
+            $peer->commit();
+        }
+
+        $openssl = OpenSslRepo::singleton();
+        return $openssl->certificate;
     }
 }
 
