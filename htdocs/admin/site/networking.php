@@ -1,0 +1,95 @@
+<?php
+/**
+ * This program is part of Mahara
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ *
+ * @package    mahara
+ * @subpackage admin
+ * @author     Richard Mansfield <richard.mansfield@catalyst.net.nz>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
+ * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
+ *
+ */
+
+define('INTERNAL', 1);
+define('ADMIN', 1);
+define('MENUITEM', 'configsite');
+define('SUBMENUITEM', 'networking');
+
+require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+require($CFG->docroot .'/api/xmlrpc/lib.php');
+require_once('pieforms/pieform.php');
+require_once('searchlib.php');
+define('TITLE', get_string('networking', 'admin'));
+
+$openssl = OpenSslRepo::singleton();
+
+$yesno = array(true  => get_string('yes'),
+               false => get_string('no'));
+
+$networkingform = pieform(
+    array(
+        'name'     => 'networkingform',
+        'jsform'   => true,
+        'elements' => array(
+            'pubkey' => array(
+                'type'         => 'html',
+                'title'        => get_string('publickey','admin'),
+                'description'  => get_string('publickeydescription', 'admin'),
+                'value'        => '<pre style="font-size: 0.7em">'.$openssl->certificate.'</pre>'
+            ),
+            'expires' => array(
+                'type'         => 'html',
+                'title'        => get_string('publickeyexpires','admin'),
+                'value'        => date("D M j H:i:s T Y", $openssl->expires)
+            ),
+            'enablenetworking' => array(
+                'type'         => 'select',
+                'title'        => get_string('enablenetworking','admin'),
+                'description'  => get_string('enablenetworkingdescription','admin'),
+                'defaultvalue' => get_config('enablenetworking'),
+                'options'      => $yesno,
+            ),
+            'submit' => array(
+                'type'  => 'submit',
+                'value' => get_string('savechanges','admin')
+            )
+        )
+    )
+);
+
+function networkingform_fail(Pieform $form) {
+    $form->json_reply(PIEFORM_ERR, get_string('enablenetworkingfailed','admin'));
+}
+
+function networkingform_submit(Pieform $form, $values) {
+    if (!set_config('enablenetworking', $values['enablenetworking'])) {
+        networkingform_fail($form);
+    }
+
+    if(empty($values['enablenetworking'])) {
+        $reply = get_string('networkingdisabled','admin');
+    } else {
+        $reply = get_string('networkingenabled','admin');
+    }
+    $form->json_reply(PIEFORM_OK, $reply);
+}
+
+$smarty = smarty();
+$smarty->assign('NETWORKINGFORM',   $networkingform);
+
+$smarty->display('admin/networking.tpl');
+?>
