@@ -63,6 +63,7 @@ class Client {
         $timestamp_send    = time();
         $this->rawresponse = curl_exec($ch);
         $timestamp_receive = time();
+        $remote_timestamp  = null;
 
         if ($this->rawresponse == false) {
             throw new Exception('Curl error: '.curl_errno($ch) .':'. curl_error($ch));
@@ -83,8 +84,9 @@ class Client {
         }
 
         if($xml->getName() == 'signedMessage') {
-            $payload_signed = true;
-            $payload        = xmldsig_envelope_strip($xml);
+            $payload_signed   = true;
+            $remote_timestamp = $xml->timestamp;
+            $payload          = xmldsig_envelope_strip($xml);
         }
 
         if($xml->getName() == 'methodResponse') {
@@ -97,10 +99,13 @@ class Client {
             // executing the time() function. Marginally better than nothing.
             $hysteresis       = ($margin_of_error) / 2;
 
-            $remote_timestamp = $sig_parser->remote_timestamp - $hysteresis;
-            $time_offset      = $remote_timestamp - $timestamp_send;
-            if ($time_offset > 0) {
-                throw new MaharaException('Time drift ('.$time_offset.') is too large.');
+            if(!empty($remote_timestamp)) {
+                $remote_timestamp = $remote_timestamp - $hysteresis;
+                $time_offset      = $remote_timestamp - $timestamp_send;
+                // We've set the maximum time drift between servers to 15 seconds
+                if ($time_offset > 15) {
+                    throw new MaharaException('Time drift ('.$margin_of_error.', '.$time_offset.') is too large.');
+                }
             }
 
             // Clean up so object can be re-used.
