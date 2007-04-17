@@ -54,7 +54,7 @@ $networkingform = pieform(
             'expires' => array(
                 'type'         => 'html',
                 'title'        => get_string('publickeyexpires','admin'),
-                'value'        => date("D M j H:i:s T Y", $openssl->expires)
+                'value'        => format_date($openssl->expires)
             ),
             'enablenetworking' => array(
                 'type'         => 'select',
