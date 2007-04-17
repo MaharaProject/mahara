@@ -27,6 +27,9 @@
 define('INTERNAL', 1);
 define('MENUITEM', 'account');
 define('SUBMENUITEM', 'activityprefs');
+define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'account');
+define('SECTION_PAGE', 'activitypreferences');
 
 require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
 require_once('pieforms/pieform.php');

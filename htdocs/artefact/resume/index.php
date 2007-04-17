@@ -27,6 +27,9 @@
 define('INTERNAL', true);
 define('MENUITEM', 'myresume');
 define('SUBMENUITEM', 'myresume');
+define('SECTION_PLUGINTYPE', 'artefact');
+define('SECTION_PLUGINNAME', 'resume');
+define('SECTION_PAGE', 'index');
 
 require_once(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('pieforms/pieform.php');
@@ -78,6 +81,7 @@ $form = array(
                     'cols'  => 70,
                     'rows'  => 10,
                     'defaultvalue' => ((!empty($coverletter)) ? $coverletter->get('description') : null),
+                    'help' => true,
                 ),
             )
         ),
@@ -92,6 +96,7 @@ $form = array(
                     'defaultvalue' => ((!empty($interest)) ? $interest->get('description') : null),
                     'cols'  => 70,
                     'rows'  => 10,
+                    'help'  => true,
                 ),
             ),
         ),
@@ -102,8 +107,9 @@ $form = array(
             'collapsed' => true,
             'elements' => array(
                 'contactinformation' => array(
-                    'type' => 'html',
+                    'type'  => 'html',
                     'value' => $contactinformation->get_html(), 
+                    'help'  => true,
                 ),
             ),
         ),
@@ -122,24 +128,28 @@ $form = array(
                     'defaultvalue' => ((!empty($personalinformation)) 
                         ? strtotime($personalinformation->get_composite('dateofbirth')) : null),
                     'title' => get_string('dateofbirth', 'artefact.resume'),
+                    'help'  => true,
                 ),
                 'placeofbirth' => array(
                     'type' => 'text',
                     'defaultvalue' => ((!empty($personalinformation)) 
                         ? $personalinformation->get_composite('placeofbirth') : null),
                     'title' => get_string('placeofbirth', 'artefact.resume'),
+                    'help'  => true,
                 ),  
                 'citizenship' => array(
                     'type' => 'text',
                     'defaultvalue' => ((!empty($personalinformation))
                         ? $personalinformation->get_composite('citizenship') : null),
                     'title' => get_string('citizenship', 'artefact.resume'),
+                    'help'  => true,
                 ),
                 'visastatus' => array(
                     'type' => 'text', 
                     'defaultvalue' => ((!empty($personalinformation))
                         ? $personalinformation->get_composite('visastatus') : null),
                     'title' => get_string('visastatus', 'artefact.resume'),
+                    'help'  => true,
                 ),
                 'gender' => array(
                     'type' => 'radio', 
@@ -150,12 +160,14 @@ $form = array(
                         'male'   => get_string('male', 'artefact.resume'),
                     ),
                     'title' => get_string('gender', 'artefact.resume'),
+                    'help'  => true,
                 ),
                 'maritalstatus' => array(
                     'type' => 'text',
                     'defaultvalue' => ((!empty($personalinformation))
                         ? $personalinformation->get_composite('maritalstatus') :  null),
                     'title' => get_string('maritalstatus', 'artefact.resume'),
+                    'help'  => true,
                 ),
             ),
         ),

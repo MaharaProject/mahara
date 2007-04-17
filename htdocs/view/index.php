@@ -26,6 +26,11 @@
 
 define('INTERNAL', 1);
 define('MENUITEM', 'myviews');
+
+define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'view');
+define('SECTION_PAGE', 'index');
+
 require(dirname(dirname(__FILE__)) . '/init.php');
 define('TITLE', get_string('myviews'));
 

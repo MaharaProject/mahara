@@ -26,7 +26,10 @@
 
 define('INTERNAL', 1);
 define('MENUITEM', 'myviews');
-// define('SUBMENUITEM', 'mygroups');
+define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'view');
+define('SECTION_PAGE', 'editmetadata');
+
 require(dirname(dirname(__FILE__)) . '/init.php');
 define('TITLE', get_string('editmetadata', 'view'));
 require_once('pieforms/pieform.php');

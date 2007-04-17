@@ -26,6 +26,10 @@
 
 define('INTERNAL', 1);
 define('MENUITEM', 'myblogs');
+define('SECTION_PLUGINTYPE', 'artefact');
+define('SECTION_PLUGINNAME', 'blog');
+define('SECTION_PAGE', 'view');
+
 require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
 define('TITLE', get_string('viewblog','artefact.blog'));
 safe_require('artefact', 'blog');

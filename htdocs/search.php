@@ -26,6 +26,9 @@
 
 define('INTERNAL', 1);
 require('init.php');
+define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'search');
+define('SECTION_PAGE', 'search');
 define('TITLE', get_string('search'));
 
 // If there is no query posted, the 'results' section of the page will

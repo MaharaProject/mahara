@@ -26,6 +26,10 @@
 
 define('INTERNAL', 1);
 define('MENUITEM', 'myprofile');
+define('SECTION_PLUGINTYPE', 'artefact');
+define('SECTION_PLUGINNAME', 'internal');
+define('SECTION_PAGE', 'index');
+
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('profile','artefact.internal'));
 require_once('pieforms/pieform.php');
@@ -164,11 +168,13 @@ function profileform_submit(Pieform $form, $values) {
                 try {
                     email_user(
                         (object)array(
+                            'id'            => $USER->get('id'),
                             'username'      => $USER->get('username'),
                             'firstname'     => $USER->get('firstname'),
                             'lastname'      => $USER->get('lastname'),
                             'preferredname' => $USER->get('preferredname'),
                             'admin'         => $USER->get('admin'),
+                            'staff'         => $USER->get('staff'),
                             'email'         => $email,
                         ),
                         null,

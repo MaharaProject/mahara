@@ -276,7 +276,7 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, sectio
         url_params.section = section;
     } 
     else {
-        key = pluginType + '/' + pluginName + '/' + helpName;
+        key = pluginType + '/' + pluginName + '/' + formName + '/' + helpName;
         url_params.form = formName;
         url_params.element = helpName;
     }

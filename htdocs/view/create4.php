@@ -26,6 +26,10 @@
 
 define('INTERNAL', 1);
 define('MENUITEM', 'view');
+define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'view');
+define('SECTION_PAGE', 'create4');
+
 require(dirname(dirname(__FILE__)) . '/init.php');
 define('TITLE', get_string('createviewstep4', 'view'));
 require_once('pieforms/pieform.php');

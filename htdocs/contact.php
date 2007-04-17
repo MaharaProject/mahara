@@ -26,6 +26,9 @@
 
 define('INTERNAL', 1);
 define('PUBLIC', 1);
+define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'site');
+define('SECTION_PAGE', 'contact');
 require('init.php');
 require_once('pieforms/pieform.php');
 $contactus = get_string('contactus');
@@ -37,7 +40,7 @@ if ($USER->is_logged_in()) {
     $email = $USER->get('email');
 }
 else {
-    $userid = null;
+    $userid = 0;
     $name = '';
     $email = '';
 }

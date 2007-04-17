@@ -1,0 +1,6 @@
+.tablerenderer th.resumecontrols {
+    width:50px; !important;
+}
+
+.tablerenderer th.resumedate {
+    width:100px; !important;

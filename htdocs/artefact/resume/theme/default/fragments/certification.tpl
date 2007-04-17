@@ -1,12 +1,13 @@
-<h3>{str tag='certification' section='artefact.resume'}</h3>
-<table id="certificationlist" class="tablerenderer hidden">
+<h3>{str tag='certification' section='artefact.resume'}
+{contextualhelp plugintype='artefact' pluginname='resume' section='addcertification'}</h3>
+<table id="certificationlist" class="tablerenderer hidden resumefour">
     <thead>
         <tr>
-            <th>{str tag='date' section='artefact.resume'}</th>
+            <th class="resumedate">{str tag='date' section='artefact.resume'}</th>
             <th>{str tag='title' section='artefact.resume'}</th>
             {if $controls}
-            <th></th>
-            <th></th>
+            <th class="resumecontrols"></th>
+            <th class="resumecontrols"></th>
             {/if}
         </tr>
     </thead>

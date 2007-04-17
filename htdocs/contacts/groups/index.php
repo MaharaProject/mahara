@@ -27,6 +27,10 @@
 define('INTERNAL', 1);
 define('MENUITEM', 'mycontacts');
 define('SUBMENUITEM', 'mygroups');
+define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'contacts');
+define('SECTION_PAGE', 'groups');
+
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('mygroups'));
 

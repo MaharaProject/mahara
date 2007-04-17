@@ -41,6 +41,7 @@ $string['default'] = 'Default';
 $string['upload']  = 'Upload';
 $string['complete']  = 'Complete';
 $string['loading'] = 'Loading ...';
+$string['showtags'] = 'Show my tags';
 $string['errorprocessingform'] = 'There was an error with submitting this form. Please check the marked fields and try again.';
 
 $string['no']     = 'No';

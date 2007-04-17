@@ -25,6 +25,10 @@
  */
 
 define('INTERNAL', 1);
+define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'view');
+define('SECTION_PAGE', 'create2');
+
 require(dirname(dirname(__FILE__)) . '/init.php');
 define('TITLE', get_string('createviewstep2', 'view'));
 require_once('template.php');

@@ -26,6 +26,10 @@
 
 define('INTERNAL', 1);
 define('PUBLIC', 1);
+define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'site');
+define('SECTION_PAGE', 'forgotpass');
+
 require('init.php');
 require_once('pieforms/pieform.php');
 define('TITLE', get_string('forgotpassword'));
@@ -178,7 +182,6 @@ function forgotpasschange_submit(Pieform $form, $values) {
     $authtype  = auth_get_authtype_for_institution($user->institution);
     $authclass = 'Auth' . ucfirst($authtype);
     safe_require('auth', $authtype);
-    log_debug($values);
 
     if ($password = call_static_method($authclass, 'change_password', $user->username, $values['password1'])) {
         $userrec = new StdClass;
