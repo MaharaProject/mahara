@@ -478,6 +478,10 @@ class OpenSslRepo {
 
 class Peer {
 
+    const  UNINITIALIZED         = 0;
+    const  INITIALIZED           = 1;
+    const  PERSISTENT            = 2;
+
     public $wwwroot              = '';
     public $deleted              = 0;
     public $ip_address           = '';
@@ -488,7 +492,7 @@ class Peer {
     public $last_connect_time    = 0;
     public $we_sso_out           = 0;
     public $they_sso_in          = 0;
-    public $init                 = false;
+    public $initialized          = self::UNINITIALIZED;
     public $application          = 'moodle';
     public $application_display  = 'Moodle';
     public $xmlrpc_server_url    = '/mnet/xmlrpc/server.php';
@@ -501,7 +505,6 @@ class Peer {
     function init($wwwroot) {
         global $cfg;
         $wwwroot = dropslash($wwwroot);
-        $hostinfo = get_record('host', 'wwwroot', $wwwroot);
         $query = '
                                     SELECT
                                         host.wwwroot,
@@ -531,7 +534,7 @@ class Peer {
                 $this->{$key} = $value;
             }
             $this->public_key = new PublicKey($this->public_key, $this->wwwroot);
-            $this->init = true;
+            $this->initialized = self::PERSISTENT;
             return true;
         }
         return false;
@@ -549,7 +552,7 @@ class Peer {
     }
 
     function commit() {
-        if ($this->init == false) return false;
+        if ($this->initialized == self::UNINITIALIZED) return false;
         $host = new stdClass();
         $host->wwwroot              = $this->wwwroot;
         $host->deleted              = $this->deleted;
@@ -562,10 +565,17 @@ class Peer {
         $host->application          = $this->application;
         $host->we_sso_out           = $this->we_sso_out;
         $host->they_sso_in          = $this->they_sso_in;
-        return insert_record('host',$host);
+        $hostinfo = get_record('host', 'wwwroot', $this->wwwroot);
+
+        if ($this->initialized == self::INITIALIZED) {
+            return insert_record('host',$host);
+        } elseif ($this->initialized == self::PERSISTENT) {
+            return update_record('host',$host,array('wwwroot' => $host->wwwroot));
+        }
+        return false;
     }
 
-    function bootstrap($wwwroot, $application = 'moodle') {
+    function bootstrap($wwwroot, $pubkey, $application = 'moodle') {
 
         $wwwroot = dropslash($wwwroot);
 
@@ -597,16 +607,21 @@ class Peer {
 
             $this->application = get_field('application', 'name', 'name', $application);
 
-            $this->application = $application;
+            if (empty($this->application)) $this->application = 'moodle';
 
             $this->wwwroot              = $wwwroot;
             $this->ip_address           = $ip_address;
 
-            $this->public_key       = new PublicKey(get_public_key($this->wwwroot, $this->application), $this->wwwroot);
+            if(empty($pubkey)) {
+                $this->public_key           = new PublicKey(get_public_key($this->wwwroot, $this->application), $this->wwwroot);
+            } else {
+                $this->public_key           = new PublicKey($pubkey, $this->wwwroot);
+            }
 
             $this->public_key_expires   = $this->public_key->expires;
             $this->last_connect_time    = 0;
             $this->last_log_id          = 0;
+            $this->initialized          = self::INITIALIZED;
             if (false == $this->public_key->expires) {
                 $this->public_key == null;
                 return false;
