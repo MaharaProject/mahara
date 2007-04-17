@@ -1063,6 +1063,11 @@ function admin_nav() {
                     'name'    => 'adminfiles',
                     'section' => 'admin',
                     'link'    => $wwwroot . 'admin/site/files.php'
+                ),
+                array(
+                    'name'    => 'networking',
+                    'section' => 'admin',
+                    'link'    => $wwwroot . 'admin/site/networking.php'
                 )
             )
         ),
