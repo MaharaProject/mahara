@@ -66,6 +66,8 @@ $string['sitemenu'] = 'Site menu';
 $string['sitemenudescription'] = 'Manage the links and files within the Main Menus';
 $string['adminfiles']          = 'Admin Files';
 $string['adminfilesdescription'] = 'Upload and administer files that can be put in the menus';
+$string['networking']          = 'Networking';
+$string['networkingdescription'] = 'Configure networking for Mahara';
 
 $string['staffusers'] = 'Staff Users';
 $string['staffusersdescription'] = 'Assign users Staff permissions';
@@ -108,6 +110,15 @@ $string['theme'] = 'Theme';
 $string['updatesiteoptions'] = 'Update site options';
 $string['viruschecking'] = 'Virus checking';
 $string['viruscheckingdescription'] = 'If checked, virus checking will be enabled for all uploaded files using ClamAV';
+
+// Networking options
+$string['publickey'] = 'Public key';
+$string['publickeydescription'] = 'This public key is automatically generated, and rotated every 28 days.';
+$string['publickeyexpires'] = 'Public key expires';
+$string['enablenetworkingdescription'] = 'Allow your Mahara server to communicate with servers running Moodle and other applications.';
+$string['enablenetworking'] = 'Enable networking';
+$string['networkingenabled'] = 'Networking has been enabled';
+$string['networkingdisabled'] = 'Networking has been disabled';
 
 // Admin menu editor
 //$string['menueditor']    = 'Menu editor';
