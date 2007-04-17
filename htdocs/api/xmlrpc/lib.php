@@ -413,6 +413,7 @@ class OpenSslRepo {
 
     public function __get($name) {
         if('certificate' === $name) return $this->keypair['certificate'];
+        if('expires' === $name)     return $this->keypair['expires'];
         return null;
     }
 
