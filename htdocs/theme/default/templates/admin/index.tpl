@@ -13,6 +13,7 @@
         <li><strong><a href="{$WWWROOT}admin/site/pages.php">{str tag=sitepages section=admin}</a></strong> - {str tag=sitepagesdescription section=admin}</li>
         <li><strong><a href="{$WWWROOT}admin/site/menu.php">{str tag=sitemenu section=admin}</a></strong> - {str tag=sitemenudescription section=admin}</li>
         <li><strong><a href="{$WWWROOT}admin/site/files.php">{str tag=adminfiles section=admin}</a></strong> - {str tag=adminfilesdescription section=admin}</li>
+        <li><strong><a href="{$WWWROOT}admin/site/networking.php">{str tag=networking section=admin}</a></strong> - {str tag=networkingdescription section=admin}</li>
     </ul>
     </li>
     <li><h3>{str tag=configusers section=admin}</h3>
