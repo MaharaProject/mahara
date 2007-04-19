@@ -515,11 +515,19 @@ function activity_get_viewaccess_users($view, $owner, $type) {
                 UNION SELECT usr AS userid 
                     FROM ' . $prefix . 'view_access_usr u 
                         WHERE u.view = ?
+                UNION SELECT m.member 
+                    FROM ' . $prefix . 'community_member m
+                    JOIN ' . $prefix . 'view_access_community c ON c.community = m.community
+                        WHERE c.view = ? AND (c.tutoronly = ? OR m.tutor = ?)
+                UNION SELECT c.owner
+                    FROM ' . $prefix . 'community c
+                    JOIN ' . $prefix . 'view_access_community ac ON ac.community = c.id
+                        WHERE ac.view = ?
                 ) AS userlist
                 JOIN ' . $prefix . 'usr u ON u.id = userlist.userid
                 LEFT JOIN ' . $prefix . 'usr_activity_preference p ON p.usr = u.id
             WHERE p.activity = ?';
-    $values = array($owner, $owner, $owner, 'friends', $view, $view, $view, $type);
+    $values = array($owner, $owner, $owner, 'friends', $view, $view, $view, $view, 0, 1, $view, $type);
     if (!$u = get_records_sql_assoc($sql, $values)) {
         $u = array();
     }
