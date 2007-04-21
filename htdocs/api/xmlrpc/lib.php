@@ -398,6 +398,7 @@ class OpenSslRepo {
                 $host = $credentials['subject']['CN'];
                 if(is_array($credentials) && isset($credentials['validTo_time_t'])) {
                     $newrecord->value = $credentials['validTo_time_t'];
+                    $this->keypair['expires'] = $credentials['validTo_time_t'];
                 }
 
                 insert_record('config',$newrecord);
