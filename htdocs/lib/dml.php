@@ -1267,7 +1267,7 @@ function db_format_timestamp($ts) {
     if ($ts === null || $ts === '') {
         return null;
     }
-    return $db->DBTimeStamp($ts);
+    return $db->BindTimeStamp($ts);
 }
 
 /**
