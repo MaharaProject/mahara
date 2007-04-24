@@ -52,7 +52,7 @@ else {
     $count = count_records_sql('SELECT COUNT(*) FROM ' . $prefix . 'community c WHERE c.owner = ?',
                                array($userid));
 
-    $datasql = 'SELECT c.id,c.jointype,c.name,c.owner,count(cmr.community) as requestcount, COUNT(v.*) AS hasviews
+    $datasql = 'SELECT c.id,c.jointype,c.name,c.owner,count(cmr.community) as requestcount, COUNT(v.view) AS hasviews
                 FROM ' . $prefix . 'community c 
                 LEFT JOIN ' . $prefix . 'community_member_request cmr ON cmr.community = c.id
                 LEFT JOIN ' . $prefix . 'view_access_community v ON v.community = c.id
