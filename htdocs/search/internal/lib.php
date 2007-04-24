@@ -75,11 +75,13 @@ class PluginSearchInternal extends PluginSearch {
             $publicfields = array('preferredname');
         }
         $prefix = get_config('dbprefix');
-        if ( is_postgres() ) {
-            return search_user_pg($query_string, $limit, $offset, $prefix, $publicfields);
-        } else if ( is_mysql() ) {
-            return search_user_my($query_string, $limit, $offset, $prefix, $publicfields);
-        } else {
+        if (is_postgres()) {
+            return self::search_user_pg($query_string, $limit, $offset, $prefix, $publicfields);
+        } 
+        else if (is_mysql()) {
+            return self::search_user_my($query_string, $limit, $offset, $prefix, $publicfields);
+        }
+        else {
             throw new SQLException('search_user() is not implemented for your database engine (' . get_config('dbtype') . ')');
         }
     }
@@ -257,11 +259,13 @@ class PluginSearchInternal extends PluginSearch {
      *           );
      */
     public static function search_group($query_string, $limit, $offset = 0) {
-        if ( is_postgres() ) {
-            return search_group_pg($query_string, $limit, $offset);
-        } else if ( is_mysql() ) {
-            return search_group_my($query_string, $limit, $offset);
-        } else {
+        if (is_postgres()) {
+            return self::search_group_pg($query_string, $limit, $offset);
+        } 
+        else if (is_mysql()) {
+            return self::search_group_my($query_string, $limit, $offset);
+        }
+        else {
             throw new SQLException('search_group() is not implemented for your database engine (' . get_config('dbtype') . ')');
         }
     }
@@ -385,11 +389,13 @@ class PluginSearchInternal extends PluginSearch {
      *           );
      */
     public static function search_community($query_string, $limit, $offset=0, $all=false) {
-        if ( is_postgres() ) {
-            return search_community_pg($query_string, $limit, $offset, $all);
-        } else if ( is_mysql() ) {
-            return search_community_my($query_string, $limit, $offset, $all);
-        } else {
+        if (is_postgres()) {
+            return self::search_community_pg($query_string, $limit, $offset, $all);
+        } 
+        else if (is_mysql()) {
+            return self::search_community_my($query_string, $limit, $offset, $all);
+        } 
+        else {
             throw new SQLException('search_community() is not implemented for your database engine (' . get_config('dbtype') . ')');
         }
     }
