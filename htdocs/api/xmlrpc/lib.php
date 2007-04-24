@@ -60,13 +60,17 @@ function get_public_key($uri, $application=null) {
     $openssl = OpenSslRepo::singleton();
 
     if(empty($application)) {
-        $this->application = get_record('application', 'application', 'moodle');
+        $application = 'moodle';
     }
 
+    $xmlrpcserverurl = get_field('application', 'xmlrpcserverurl', 'shortname', 'moodle');
+    if (empty($xmlrpcserverurl)) {
+        throw new XmlrpcClientException('Unknown application');
+    } 
     $wwwroot = dropslash($CFG->wwwroot);
 
     $rq = xmlrpc_encode_request('system/keyswap', array($wwwroot, $openssl->certificate), array("encoding" => "utf-8"));
-    $ch = curl_init($uri. $application->xmlrpc_server_url);
+    $ch = curl_init($uri. $xmlrpcserverurl);
 
     curl_setopt($ch, CURLOPT_TIMEOUT, 60);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -75,21 +79,27 @@ function get_public_key($uri, $application=null) {
     curl_setopt($ch, CURLOPT_POSTFIELDS, $rq);
     curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: text/xml charset=UTF-8"));
 
-    $res = xmlrpc_decode(curl_exec($ch));
-
+    $raw = curl_exec($ch);
+    if (empty($raw)) {
+        throw new XmlrpcClientException('CURL connection failed');
+    }
+    $res = xmlrpc_decode($raw);
     curl_close($ch);
 
-    if (!is_array($res)) { // ! error
+    // XMLRPC error messages are returned as an array
+    // We are expecting a string
+    if (!is_array($res)) {
         $keyarray[$uri] = $res;
         $credentials=array();
         if (strlen(trim($keyarray[$uri]))) {
             $credentials = openssl_x509_parse($keyarray[$uri]);
             $host = $credentials['subject']['CN'];
             if (strpos($uri, $host) !== false) {
-                mnet_set_public_key($uri, $keyarray[$uri]);
                 return $keyarray[$uri];
             }
         }
+    } else {
+        throw new XmlrpcClientException($res['faultString'], $res['faultCode']);
     }
     return false;
 }
