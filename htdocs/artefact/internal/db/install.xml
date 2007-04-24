@@ -20,7 +20,7 @@
     <TABLE NAME="artefact_internal_profile_email">
         <FIELDS>
             <FIELD NAME="owner" TYPE="int" LENGTH="10" NOTNULL="true" />
-            <FIELD NAME="email" TYPE="text" NOTNULL="true" />
+            <FIELD NAME="email" TYPE="char" LENGTH="255" NOTNULL="true" />
             <FIELD NAME="verified" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
             <FIELD NAME="principal" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
             <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="false" />
@@ -36,7 +36,7 @@
     <TABLE NAME="artefact_internal_profile_icon">
         <FIELDS>
             <FIELD NAME="owner" TYPE="int" LENGTH="10" NOTNULL="true" />
-            <FIELD NAME="filename" TYPE="text" NOTNULL="true" />
+            <FIELD NAME="filename" TYPE="char" LENGTH="255" NOTNULL="true" />
             <FIELD NAME="primary" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
         </FIELDS>
         <KEYS>

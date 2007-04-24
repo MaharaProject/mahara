@@ -27,7 +27,7 @@
     </TABLE>
         <TABLE NAME="artefact_file_file_types">
             <FIELDS>
-                <FIELD NAME="description" TYPE="text" LENGTH="small" NOTNULL="true"/>
+                <FIELD NAME="description" TYPE="char" LENGTH="32" NOTNULL="true"/>
                 <FIELD NAME="enabled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1"/>
             </FIELDS>
             <KEYS>
@@ -36,8 +36,8 @@
         </TABLE>
         <TABLE NAME="artefact_file_mime_types">
             <FIELDS>
-                <FIELD NAME="mimetype" TYPE="text" LENGTH="small" NOTNULL="true"/>
-                <FIELD NAME="description" TYPE="text" LENGTH="small" NOTNULL="true"/>
+                <FIELD NAME="mimetype" TYPE="char" LENGTH="128" NOTNULL="true"/>
+                <FIELD NAME="description" TYPE="char" LENGTH="32" NOTNULL="true"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="mimetype"/>
