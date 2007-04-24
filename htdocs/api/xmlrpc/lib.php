@@ -598,18 +598,18 @@ class Peer {
 
     public $wwwroot              = '';
     public $deleted              = 0;
-    public $ip_address           = '';
+    public $ipaddress            = '';
     public $name                 = '';
-    public $public_key;
-    public $public_key_expires   = '';
+    public $publickey;
+    public $publickeyexpires     = '';
     public $portno               = 80;
-    public $last_connect_time    = 0;
-    public $we_sso_out           = 0;
-    public $they_sso_in          = 0;
+    public $lastconnecttime      = 0;
+    public $wessoout             = 0;
+    public $theyssoin            = 0;
     public $initialized          = self::UNINITIALIZED;
     public $application          = 'moodle';
     public $application_display  = 'Moodle';
-    public $xmlrpc_server_url    = '/mnet/xmlrpc/server.php';
+    public $xmlrpcserverurl      = '/mnet/xmlrpc/server.php';
     public $error                = array();
 
     function __construct() {
@@ -623,17 +623,17 @@ class Peer {
                                     SELECT
                                         host.wwwroot,
                                         host.deleted,
-                                        host.ip_address,
+                                        host.ipaddress,
                                         host.name,
-                                        host.public_key,
-                                        host.public_key_expires,
+                                        host.publickey,
+                                        host.publickeyexpires,
                                         host.portno,
-                                        host.last_connect_time,
-                                        host.we_sso_out,
-                                        host.they_sso_in,
+                                        host.lastconnecttime,
+                                        host.wessoout,
+                                        host.theyssoin,
                                         application.shortname,
                                         application.name,
-                                        application.xmlrpc_server_url
+                                        application.xmlrpcserverurl
                                     FROM
                                         '.$cfg->dbprefix.'host,
                                         '.$cfg->dbprefix.'application
@@ -647,7 +647,7 @@ class Peer {
             foreach(get_object_vars($hostinfo) as $key => $value) {
                 $this->{$key} = $value;
             }
-            $this->public_key = new PublicKey($this->public_key, $this->wwwroot);
+            $this->publickey = new PublicKey($this->publickey, $this->wwwroot);
             $this->initialized = self::PERSISTENT;
             return true;
         }
@@ -656,7 +656,7 @@ class Peer {
 
     function __get($name) {
         if($name == 'certificate') {
-            return $this->public_key->certificate;
+            return $this->publickey->certificate;
         }
         return $this->{$name};
     }
@@ -668,17 +668,17 @@ class Peer {
     function commit() {
         if ($this->initialized == self::UNINITIALIZED) return false;
         $host = new stdClass();
-        $host->wwwroot              = $this->wwwroot;
-        $host->deleted              = $this->deleted;
-        $host->ip_address           = $this->ip_address;
-        $host->name                 = $this->name;
-        $host->public_key           = $this->public_key->certificate;
-        $host->public_key_expires   = $this->public_key_expires;
-        $host->portno               = $this->portno;
-        $host->last_connect_time    = $this->last_connect_time;
-        $host->application          = $this->application;
-        $host->we_sso_out           = $this->we_sso_out;
-        $host->they_sso_in          = $this->they_sso_in;
+        $host->wwwroot          = $this->wwwroot;
+        $host->deleted          = $this->deleted;
+        $host->ipaddress        = $this->ip_address;
+        $host->name             = $this->name;
+        $host->publickey        = $this->publickey->certificate;
+        $host->publickeyexpires = $this->publickeyexpires;
+        $host->portno           = $this->portno;
+        $host->lastconnecttime  = $this->lastconnecttime;
+        $host->application      = $this->application;
+        $host->wessoout         = $this->wessoout;
+        $host->theyssoin        = $this->theyssoin;
         $hostinfo = get_record('host', 'wwwroot', $this->wwwroot);
 
         if ($this->initialized == self::INITIALIZED) {
@@ -724,20 +724,19 @@ class Peer {
             if (empty($this->application)) $this->application = 'moodle';
 
             $this->wwwroot              = $wwwroot;
-            $this->ip_address           = $ip_address;
+            $this->ipaddress           = $ip_address;
 
             if(empty($pubkey)) {
-                $this->public_key           = new PublicKey(get_public_key($this->wwwroot, $this->application), $this->wwwroot);
+                $this->publickey           = new PublicKey(get_public_key($this->wwwroot, $this->application), $this->wwwroot);
             } else {
-                $this->public_key           = new PublicKey($pubkey, $this->wwwroot);
+                $this->publickey           = new PublicKey($pubkey, $this->wwwroot);
             }
 
-            $this->public_key_expires   = $this->public_key->expires;
-            $this->last_connect_time    = 0;
-            $this->last_log_id          = 0;
-            $this->initialized          = self::INITIALIZED;
-            if (false == $this->public_key->expires) {
-                $this->public_key == null;
+            $this->publickeyexpires   = $this->publickey->expires;
+            $this->lastconnecttime    = 0;
+            $this->initialized        = self::INITIALIZED;
+            if (false == $this->publickey->expires) {
+                $this->publickey == null;
                 return false;
             }
         }
