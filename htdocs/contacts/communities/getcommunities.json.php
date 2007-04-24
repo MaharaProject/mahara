@@ -41,7 +41,7 @@ $userid = $USER->get('id');
 
 if (empty($owned)) { // just get communities this user is a member of.
     $data = get_member_communities($userid, $offset, $limit);
-    $count = get_record_sql('SELECT COUNT(c.*)
+    $count = get_record_sql('SELECT COUNT(c.id) AS count
               FROM ' . $prefix . 'community c 
               JOIN ' . $prefix . 'community_member cm ON cm.community = c.id
               WHERE c.owner != ? AND cm.member = ?', array($userid, $userid));
