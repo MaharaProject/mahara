@@ -302,6 +302,7 @@ function xmldsig_envelope($message) {
     $sig = base64_encode($openssl->sign_message($message));
     $message = base64_encode($message);
     $time = time();
+    // TODO: Provide RESTful access to our public key as per KeyInfo element
 
 return <<<EOF
 <?xml version="1.0" encoding="iso-8859-1"?>
@@ -317,7 +318,7 @@ return <<<EOF
             </SignedInfo>
             <SignatureValue>$sig</SignatureValue>
             <KeyInfo>
-                <RetrievalMethod URI="{$wwwroot}/mnet/publickey.php"/>
+                <RetrievalMethod URI="{$wwwroot}/api/xmlrpc/publickey.php"/>
             </KeyInfo>
         </Signature>
         <object ID="XMLRPC-MSG">$message</object>
