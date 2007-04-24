@@ -83,6 +83,7 @@ try {
     ob_start();
     
     $db = &ADONewConnection($CFG->dbtype);
+    $dbgenerator = null;
     if (!empty($CFG->dbport)) {
         $CFG->dbhost .= ':'.$CFG->dbport;
     }
