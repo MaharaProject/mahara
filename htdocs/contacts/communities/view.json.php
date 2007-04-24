@@ -56,7 +56,7 @@ switch ($type) {
         $where = 'WHERE v.submittedto = ?';
         $values = array($id);
         if (!$submitted) {
-            $where .= 'OR (
+            $where .= ' OR (
                      a.community = ? 
                      AND ( v.startdate IS NULL OR v.startdate < ? )
                      AND ( v.stopdate IS NULL OR v.stopdate > ? )
@@ -71,7 +71,7 @@ switch ($type) {
         }
 
         $count = count_records_sql('
-            SELECT COUNT(v.id)
+            SELECT COUNT(id)
             FROM  ' . $prefix . 'view v
             LEFT OUTER JOIN ' . $prefix . 'view_access_community a ON a.view=v.id
             ' . $where,

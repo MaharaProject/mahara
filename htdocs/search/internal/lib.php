@@ -161,7 +161,7 @@ class PluginSearchInternal extends PluginSearch {
 
         $count = get_field_sql('
             SELECT 
-                COUNT(DISTINCT u.id)
+                COUNT(DISTINCT owner)
             FROM
                 ' . $prefix . 'usr u
                 LEFT JOIN ' . $prefix . 'artefact a ON u.id=a.owner
@@ -185,7 +185,7 @@ class PluginSearchInternal extends PluginSearch {
 
         if ($count > 0) {
             $data = get_records_sql_array('
-                SELECT DISTINCT ON (u.firstname, u.lastname, u.id)
+                SELECT DISTINCT
                     u.id, u.username, u.institution, u.firstname, u.lastname, u.preferredname, u.email, u.staff
                 FROM ' . $prefix . 'artefact a
                     INNER JOIN ' . $prefix .'usr u ON u.id = a.owner
