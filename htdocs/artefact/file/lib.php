@@ -173,14 +173,19 @@ class PluginArtefactFile extends PluginArtefact {
         log_info('Beginning resync of filetype list');
 
         $currentlist = get_column('artefact_file_file_types', 'description');
+        foreach ($currentlist as $c) {
+            log_debug("c $c and trimmed is " . trim($c));
+        }
         $newlist     = xmlize(file_get_contents(get_config('docroot') . 'artefact/file/filetypes.xml'));
         $filetypes = $newlist['filetypes']['#']['filetype'];
         $newfiletypes = array();
+        //log_debug($currentlist);
 
         // Step one: if a filetype is in the new list that is not in the current
         // list, add it to the current list.
         foreach ($filetypes as $filetype) {
             $type = $filetype['#']['description'][0]['#'];
+            error_log("looking for $type");
             if (!in_array($type, $currentlist)) {
                 log_debug('Adding filetype: ' . $type);
                 $currentlist[] = $type;

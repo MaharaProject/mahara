@@ -122,6 +122,16 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
         add_field($table, $field);
     }
 
+    if ($oldversion < 2007042500) {
+        // migrate everything we had to change to  make mysql happy
+        $prefix = get_config('dbprefix');
+        execute_sql("ALTER TABLE {$prefix}artefact_file_file_types ALTER COLUMN description TYPE varchar(32)");
+        execute_sql("ALTER TABLE {$prefix}artefact_file_mime_types ALTER COLUMN mimetype TYPE varchar(128)");
+        execute_sql("ALTER TABLE {$prefix}artefact_file_mime_types ALTER COLUMN description TYPE varchar(32)");
+
+    }
+
+    // everything up to here we pre mysql support.
     return $status;
 }
 
