@@ -385,8 +385,8 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         $filedata = get_records_sql_array('
             SELECT
                 a.id, a.artefacttype, a.mtime, f.size, a.title, a.description,
-                COUNT(c.*) AS childcount ' 
-                . ($bloginstalled ? ', COUNT (b.*) AS attachcount' : '') . '
+                COUNT(c.id) AS childcount ' 
+                . ($bloginstalled ? ', COUNT (b.blogpost) AS attachcount' : '') . '
             FROM ' . $prefix . 'artefact a
                 LEFT OUTER JOIN ' . $prefix . 'artefact_file_files f ON f.artefact = a.id
                 LEFT OUTER JOIN ' . $prefix . 'artefact c ON c.parent = a.id '
