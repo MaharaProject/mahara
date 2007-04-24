@@ -64,19 +64,17 @@ class Dispatcher {
 
             $xmlrpcserver = xmlrpc_server_create();
 
-            /*
-            xmlrpc_server_register_method($xmlrpcserver, 'system.listMethods', 'mnet_system');
-            xmlrpc_server_register_method($xmlrpcserver, 'system/listMethods', 'mnet_system');
+            xmlrpc_server_register_method($xmlrpcserver, 'system.listMethods', array(&$this, 'listMethods'));
+            xmlrpc_server_register_method($xmlrpcserver, 'system/listMethods', array(&$this, 'listMethods'));
 
-            xmlrpc_server_register_method($xmlrpcserver, 'system.methodSignature', 'mnet_system');
-            xmlrpc_server_register_method($xmlrpcserver, 'system/methodSignature', 'mnet_system');
+            xmlrpc_server_register_method($xmlrpcserver, 'system.methodSignature', array(&$this, 'methodSignature'));
+            xmlrpc_server_register_method($xmlrpcserver, 'system/methodSignature', array(&$this, 'methodSignature'));
 
-            xmlrpc_server_register_method($xmlrpcserver, 'system.methodHelp', 'mnet_system');
-            xmlrpc_server_register_method($xmlrpcserver, 'system/methodHelp', 'mnet_system');
+            xmlrpc_server_register_method($xmlrpcserver, 'system.methodHelp', array(&$this, 'methodHelp'));
+            xmlrpc_server_register_method($xmlrpcserver, 'system/methodHelp', array(&$this, 'methodHelp'));
 
-            xmlrpc_server_register_method($xmlrpcserver, 'system.listServices', 'mnet_system');
-            xmlrpc_server_register_method($xmlrpcserver, 'system/listServices', 'mnet_system');
-            */
+            xmlrpc_server_register_method($xmlrpcserver, 'system.listServices', array(&$this, 'listServices'));
+            xmlrpc_server_register_method($xmlrpcserver, 'system/listServices', array(&$this, 'listServices'));
 
             xmlrpc_server_register_method($xmlrpcserver, 'system.keyswap', array(&$this, 'keyswap'));
             xmlrpc_server_register_method($xmlrpcserver, 'system/keyswap', array(&$this, 'keyswap'));
