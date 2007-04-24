@@ -336,12 +336,32 @@ class OpenSslRepo {
 
     private $keypair = array();
 
+    /**
+     * Sign a message with our private key so that peers can verify that it came
+     * from us.
+     *
+     * @param  string   $message
+     * @return string
+     * @access public
+     */
     public function sign_message($message) {
         $signature = '';
         $bool      = openssl_sign($message, $signature, $this->keypair['privatekey']);
         return $signature;
     }
 
+    /**
+     * Decrypt some data using our private key and an auxiliary symmetric key. 
+     * The symmetric key encrypted the data, and then was itself encrypted with
+     * our public key.
+     * This is because asymmetric keys can only safely be used to encrypt 
+     * relatively short messages.
+     *
+     * @param string   $data
+     * @param string   $key
+     * @return string
+     * @access public
+     */
     public function openssl_open($data, $key) {
         $payload = '';
         $isOpen = openssl_open($data, $payload, $key, $this->keypair['privatekey']);
@@ -364,6 +384,13 @@ class OpenSslRepo {
         throw new CryptException('Invalid certificate', 7025);
     }
 
+    /**
+     * Singelton function keeps us from generating multiple instances of this
+     * class
+     *
+     * @return object   The class instance
+     * @access public
+     */
     public static function singleton() {
         //single instance
         static $instance;
@@ -391,6 +418,13 @@ class OpenSslRepo {
         return $this;
     }
 
+    /**
+     * Utility function to get old SSL keys from the config table, or create a 
+     * blank record if none exists.
+     *
+     * @return array    Array of keypair hashes
+     * @access private
+     */
     private function get_history() {
         $openssl_history = get_field('config', 'value', 'field', 'openssl_history');
         if(empty($openssl_history)) {
@@ -405,6 +439,14 @@ class OpenSslRepo {
         return $openssl_history;
     }
 
+    /**
+     * Utility function to stash old SSL keys in the config table. It will retain
+     * a max of 'openssl_generations' which is itself a value in config.
+     *
+     * @param  array    Array of keypair hashes
+     * @return bool
+     * @access private
+     */
     private function save_history($openssl_history) {
         $openssl_generations = get_field('config', 'value', 'field', 'openssl_generations');
         if(empty($openssl_generations)) {
@@ -417,12 +459,29 @@ class OpenSslRepo {
         return set_config('openssl_history', serialize($openssl_history));
     }
 
+    /**
+     * The get Overloader will let you pull out the 'certificate' and 'expires'
+     * values
+     *
+     * @param  string    Name of the value you want
+     * @return mixed     The value of the thing you asked for or null (if it 
+     *                   doesn't exist or is private)
+     * @access public
+     */
     public function __get($name) {
         if('certificate' === $name) return $this->keypair['certificate'];
         if('expires' === $name)     return $this->keypair['expires'];
         return null;
     }
 
+    /**
+     * Get the keypair. If it doesn't exist, create it. If it's out of date, 
+     * archive it and create a fresh pair.
+     *
+     * @param  bool      True if you want to force fresh keys to be generated
+     * @return bool     
+     * @access private
+     */
     private function get_keypair($regenerate = null) {
         $this->keypair = array();
         $records       = null;
