@@ -48,7 +48,7 @@ class Client {
         $this->peer     = get_peer($wwwroot);
         $this->response = '';
 
-        $ch = curl_init( $this->peer->wwwroot . $this->peer->xmlrpc_server_url );
+        $ch = curl_init( $this->peer->wwwroot . $this->peer->xmlrpcserverurl );
         $this->requesttext = xmlrpc_encode_request($this->method, $this->params, array("encoding" => "utf-8"));
         $this->signedrequest = xmldsig_envelope($this->requesttext);
         $this->encryptedrequest = xmlenc_envelope($this->signedrequest, $this->peer->certificate);
