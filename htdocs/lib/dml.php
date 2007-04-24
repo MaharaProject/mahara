@@ -1319,7 +1319,7 @@ function configure_dbconnection() {
     $db->Execute("SET NAMES 'utf8'");
 
     if (is_mysql()) {
-        $db->Execute("SET sql_mode='POSTGRESQL'");
+        $db->Execute("SET SQL_MODE='POSTGRESQL'");
     }
 
     // more later..
