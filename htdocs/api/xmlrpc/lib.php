@@ -350,26 +350,18 @@ class OpenSslRepo {
             return $payload;
         } else {
             // Decryption failed... let's try our archived keys
-            $openssl_history = get_field('config', 'value', 'field', 'openssl_history');
-            if(empty($openssl_history)) {
-                $openssl_history = array();
-                $record = new stdClass();
-                $record->field = 'openssl_history';
-                $record->value = serialize($openssl_history);
-                insert_record('config', $record);
-            } else {
-                $openssl_history = unserialize($openssl_history);
-            }
+            $openssl_history = $this->get_history();
             foreach($openssl_history as $keyset) {
                 $keyresource = openssl_pkey_get_private($keyset['keypair_PEM']);
                 $isOpen      = openssl_open($data, $payload, $key, $keyresource);
                 if ($isOpen) {
                     // It's an older code, sir, but it checks out
                     // We notify the remote host that the key has changed
-                    throw new MaharaException($this->keypair['certificate'], 7025);
+                    throw new CryptException($this->keypair['certificate'], 7025);
                 }
             }
         }
+        throw new CryptException('Invalid certificate', 7025);
     }
 
     public static function singleton() {
@@ -392,40 +384,91 @@ class OpenSslRepo {
      */
     private function __construct() {
         if(empty($this->keypair)) {
-
-            $records = get_records_select_menu('config', "field IN ('openssl_keypair', 'openssl_keypair_expires')", 'field', 'field, value');
-            if(empty($records)) {
-                $this->mnet_generate_keypair();
-
-                $newrecord = new stdClass();
-                $newrecord->field = 'openssl_keypair';
-                $newrecord->value = implode('@@@@@@@@', $this->keypair);
-                insert_record('config',$newrecord);
-
-                $newrecord = new stdClass();
-                $newrecord->field = 'openssl_keypair_expires';
-
-                $credentials = openssl_x509_parse($this->keypair['certificate']);
-                $host = $credentials['subject']['CN'];
-                if(is_array($credentials) && isset($credentials['validTo_time_t'])) {
-                    $newrecord->value = $credentials['validTo_time_t'];
-                }
-
-                insert_record('config',$newrecord);
-            } else {
-                list($this->keypair['certificate'], $this->keypair['keypair_PEM']) = explode('@@@@@@@@', $records['openssl_keypair']);
-                $this->keypair['expires'] = $records['openssl_keypair_expires'];
-            }
+            $this->get_keypair();
             $this->keypair['privatekey'] = openssl_pkey_get_private($this->keypair['keypair_PEM']);
             $this->keypair['publickey']  = openssl_pkey_get_public($this->keypair['certificate']);
         }
         return $this;
     }
 
+    private function get_history() {
+        $openssl_history = get_field('config', 'value', 'field', 'openssl_history');
+        if(empty($openssl_history)) {
+            $openssl_history = array();
+            $record = new stdClass();
+            $record->field = 'openssl_history';
+            $record->value = serialize($openssl_history);
+            insert_record('config', $record);
+        } else {
+            $openssl_history = unserialize($openssl_history);
+        }
+        return $openssl_history;
+    }
+
+    private function save_history($openssl_history) {
+        $openssl_generations = get_field('config', 'value', 'field', 'openssl_generations');
+        if(empty($openssl_generations)) {
+            set_config('openssl_generations', 6);
+            $openssl_generations = 6;
+        }
+        if(count($openssl_history) > $openssl_generations) {
+            $openssl_history = array_slice($openssl_history, 0, $openssl_generations);
+        }
+        return set_config('openssl_history', serialize($openssl_history));
+    }
+
     public function __get($name) {
         if('certificate' === $name) return $this->keypair['certificate'];
         if('expires' === $name)     return $this->keypair['expires'];
         return null;
+    }
+
+    private function get_keypair($regenerate = null) {
+        $this->keypair = array();
+        $records       = null;
+        
+        if(empty($regenerate)) {
+            $records = get_records_select_menu('config', "field IN ('openssl_keypair', 'openssl_keypair_expires')", 'field', 'field, value');
+            if(!empty($records)) {
+                list($this->keypair['certificate'], $this->keypair['keypair_PEM']) = explode('@@@@@@@@', $records['openssl_keypair']);
+                $this->keypair['expires'] = $records['openssl_keypair_expires'];
+                if ($this->keypair['expires'] <= time()) {
+                    $openssl_history = $this->get_history();
+                    array_unshift($openssl_history, $this->keypair);
+                    $this->save_history($openssl_history);
+                } else {
+                    return true;
+                }
+            }
+        }
+
+        // Initialize a new set of SSL keys
+        $this->keypair = array();
+        $this->generate_keypair();
+
+        // A record for the keys
+        $keyrecord = new stdClass();
+        $keyrecord->field = 'openssl_keypair';
+        $keyrecord->value = implode('@@@@@@@@', $this->keypair);
+
+        // A convenience record for the keys' expire time (UNIX timestamp)
+        $expiresrecord        = new stdClass();
+        $expiresrecord->field = 'openssl_keypair_expires';
+
+        // Getting the expire timestamp is convoluted, but required:
+        $credentials = openssl_x509_parse($this->keypair['certificate']);
+        if(is_array($credentials) && isset($credentials['validTo_time_t'])) {
+            $expiresrecord->value = $credentials['validTo_time_t'];
+            $this->keypair['expires'] = $credentials['validTo_time_t'];
+        }
+
+        if(empty($records)) {
+                   $result = insert_record('config', $keyrecord);
+            return $result & insert_record('config', $expiresrecord);
+        } else {
+                   $result = update_record('config', $keyrecord,     array('field' => 'openssl_keypair'));
+            return $result & update_record('config', $expiresrecord, array('field' => 'openssl_keypair_expires'));
+        }
     }
 
     /**
@@ -440,7 +483,7 @@ class OpenSslRepo {
      * @param   array  $dn  The distinguished name of the server
      * @return  string      The signature over that text
      */
-    private function mnet_generate_keypair() {
+    private function generate_keypair() {
         global $CFG;
         $host = get_hostname_from_uri($CFG->wwwroot);
 
