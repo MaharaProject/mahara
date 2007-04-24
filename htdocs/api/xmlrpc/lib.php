@@ -758,10 +758,10 @@ class PublicKey {
         $this->certificate = $keystring;
 
         if ($this->credentials == false) {
-            throw new MaharaException('This is not a valid SSL Certificate', 1);
+            throw new CryptException('This is not a valid SSL Certificate: '.$keystring, 1);
             return false;
         } elseif ($this->credentials['subject']['CN'] != $this->wwwroot) {
-            throw new MaharaException('This certificate does not match the server it claims to represent: '.$this->credentials['subject']['CN'] .', '. $this->wwwroot, 1);
+            throw new CryptException('This certificate does not match the server it claims to represent: '.$this->credentials['subject']['CN'] .', '. $this->wwwroot, 1);
             return false;
         } else {
             return $this->credentials;

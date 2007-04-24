@@ -635,7 +635,17 @@ class ParameterException extends UserException {
 /**
  * Xmlrpc Server exception - must output well formed XMLRPC error to the client
  */
-class XmlrpcServerException extends MaharaException implements MaharaThrowable {}
+class XmlrpcServerException extends SystemException {}
+
+/**
+ * Xmlrpc Server exception - must output well formed XMLRPC error to the client
+ */
+class XmlrpcClientException extends SystemException {}
+
+/**
+ * Error with SSL and encryption
+ */
+class CryptException extends SystemException {}
 
 /**
  * An exception generated when e-mail can't be sent
