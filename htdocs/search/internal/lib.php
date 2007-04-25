@@ -257,39 +257,8 @@ class PluginSearchInternal extends PluginSearch {
      *           );
      */
     public static function search_group($query_string, $limit, $offset = 0) {
-        global $USER;
         if ( is_postgres() ) {
-            $data = get_records_sql_array("
-                SELECT
-                    id, name, owner, description, ctime, mtime
-                FROM
-                    " . get_config('dbprefix') . "usr_group u
-                WHERE
-                    owner = ?
-                    AND (
-                        name ILIKE '%' || ? || '%' 
-                        OR description ILIKE '%' || ? || '%' 
-                    )
-                ",
-                array($USER->get('id'), $query_string, $query_string),
-                $offset,
-                $limit
-            );
-
-            $count = get_field_sql("
-                SELECT
-                    COUNT(*)
-                FROM
-                    " . get_config('dbprefix') . "usr_group u
-                WHERE
-                    owner = ?
-                    AND (
-                        name ILIKE '%' || ? || '%' 
-                        OR description ILIKE '%' || ? || '%' 
-                    )
-            ",
-                array($USER->get('id'), $query_string, $query_string)
-            );
+            search_group_pg($query_string, $limit, $offset);
         }
         // TODO
         // else if ( is_mysql() ) {
@@ -297,6 +266,41 @@ class PluginSearchInternal extends PluginSearch {
         else {
             throw new SQLException('search_group() is not implemented for your database engine (' . get_config('dbtype') . ')');
         }
+    }
+
+    public static function search_group_pg($query_string, $limit, $offset) {
+        global $USER;
+        $data = get_records_sql_array("
+            SELECT
+                id, name, owner, description, ctime, mtime
+            FROM
+                " . get_config('dbprefix') . "usr_group u
+            WHERE
+                owner = ?
+                AND (
+                    name ILIKE '%' || ? || '%' 
+                    OR description ILIKE '%' || ? || '%' 
+                )
+            ",
+            array($USER->get('id'), $query_string, $query_string),
+            $offset,
+            $limit
+        );
+
+        $count = get_field_sql("
+            SELECT
+                COUNT(*)
+            FROM
+                " . get_config('dbprefix') . "usr_group u
+            WHERE
+                owner = ?
+                AND (
+                    name ILIKE '%' || ? || '%' 
+                    OR description ILIKE '%' || ? || '%' 
+                )
+        ",
+            array($USER->get('id'), $query_string, $query_string)
+        );
 
         return array(
             'count'   => $count,
