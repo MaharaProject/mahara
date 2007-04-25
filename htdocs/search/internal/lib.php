@@ -259,6 +259,8 @@ class PluginSearchInternal extends PluginSearch {
     public static function search_group($query_string, $limit, $offset = 0) {
         if ( is_postgres() ) {
             return search_group_pg($query_string, $limit, $offset);
+        } else if ( is_mysql() ) {
+            return search_group_my($query_string, $limit, $offset);
         } else {
             throw new SQLException('search_group() is not implemented for your database engine (' . get_config('dbtype') . ')');
         }
@@ -293,6 +295,48 @@ class PluginSearchInternal extends PluginSearch {
                 AND (
                     name ILIKE '%' || ? || '%' 
                     OR description ILIKE '%' || ? || '%' 
+                )
+        ",
+            array($USER->get('id'), $query_string, $query_string)
+        );
+
+        return array(
+            'count'   => $count,
+            'limit'   => $limit,
+            'offset'  => $offset,
+            'data'    => $data,
+        );
+    }
+
+    public static function search_group_my($query_string, $limit, $offset) {
+        global $USER;
+        $data = get_records_sql_array("
+            SELECT
+                id, name, owner, description, ctime, mtime
+            FROM
+                " . get_config('dbprefix') . "usr_group u
+            WHERE
+                owner = ?
+                AND (
+                    name LIKE '%' || ? || '%' 
+                    OR description LIKE '%' || ? || '%' 
+                )
+            ",
+            array($USER->get('id'), $query_string, $query_string),
+            $offset,
+            $limit
+        );
+
+        $count = get_field_sql("
+            SELECT
+                COUNT(*)
+            FROM
+                " . get_config('dbprefix') . "usr_group u
+            WHERE
+                owner = ?
+                AND (
+                    name LIKE '%' || ? || '%' 
+                    OR description LIKE '%' || ? || '%' 
                 )
         ",
             array($USER->get('id'), $query_string, $query_string)
