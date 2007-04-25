@@ -78,7 +78,7 @@ function get_member_communities($userid=0, $offset=0, $limit=0) {
     $userid = optional_userid($userid);
     $prefix = get_config('dbprefix');
 
-    return get_records_sql_array('SELECT c.id, c.name, c.description, c.jointype, c.owner, c.ctime, c.mtime, cm.ctime, cm.tutor, COUNT(v.*) AS hasviews
+    return get_records_sql_array('SELECT c.id, c.name, c.description, c.jointype, c.owner, c.ctime, c.mtime, cm.ctime, cm.tutor, COUNT(v.view) AS hasviews
               FROM ' . $prefix . 'community c 
               JOIN ' . $prefix . 'community_member cm ON cm.community = c.id
               LEFT JOIN ' . $prefix . 'view_access_community v ON v.community = c.id

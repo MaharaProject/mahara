@@ -1203,12 +1203,12 @@ function can_view_view($view_id, $user_id=null) {
             INNER JOIN ' . $prefix . 'community c ON a.community = c.id
             INNER JOIN ' . $prefix . 'community_member m ON c.id=m.community
         WHERE
-            a.view=? AND m.member=?
+            a.view = ? 
             AND ( a.startdate < ? OR a.startdate IS NULL )
             AND ( a.stopdate > ?  OR a.stopdate  IS NULL )
-            AND ( a.tutoronly = 0 OR m.tutor = 1 )
+            AND ( ( m.member = ? AND (a.tutoronly = 0 OR m.tutor = 1 ) ) OR c.owner = ?)
         LIMIT 1',
-        array( $view_id, $user_id, $dbnow, $dbnow )
+        array( $view_id, $dbnow, $dbnow, $user_id, $user_id  )
         )
     ) {
         //log_debug('Yes - View is available to a specific community');

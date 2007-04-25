@@ -875,7 +875,7 @@ function delete_records_sql($sql, $values=null) {
  * @throws SQLException
  */
 function insert_record($table, $dataobject, $primarykey=false, $returnpk=false) {
-    global $db;
+    global $db, $dbgenerator;
     static $table_columns;
     
     // Determine all the fields in the table
@@ -890,7 +890,7 @@ function insert_record($table, $dataobject, $primarykey=false, $returnpk=false) 
     
     if (!empty($primarykey)) {
         unset($dataobject->{$primarykey});
-        if (!empty($returnpk)) {
+        if (!empty($returnpk) && is_postgres()) {
             $pksql = "SELECT NEXTVAL('" . get_config('dbprefix') . "{$table}_{$primarykey}_seq')";
             if ($nextval = (int)get_field_sql($pksql)) {
                 $setfromseq = true;
@@ -919,7 +919,12 @@ function insert_record($table, $dataobject, $primarykey=false, $returnpk=false) 
     $values = '';
     foreach ($ddd as $key => $value) {
         $count++;
-        $fields .= $key;
+        if (in_array($key, $dbgenerator->reserved_words)) {
+            $fields .= '"' . $key . '"';
+        }
+        else {
+            $fields .= $key;
+        }
         $values .= '?';
         if ($count < $numddd) {
             $fields .= ', ';
@@ -1112,6 +1117,16 @@ function update_record($table, $dataobject, $where=null) {
  * @param string $value3 the value field3 must have (requred if field3 is given, else optional).
  */
 function where_clause($field1='', $value1='', $field2='', $value2='', $field3='', $value3='') {
+    global $dbgenerator;
+    if (in_array($field1, $dbgenerator->reserved_words)) {
+        $field1 = '"' . $field1 . '"';
+    }
+    if (in_array($field2, $dbgenerator->reserved_words)) {
+        $field2 = '"' . $field2 . '"';
+    }
+    if (in_array($field3, $dbgenerator->reserved_words)) {
+        $field3 = '"' . $field3 . '"';
+    }
     if ($field1) {
         $select = "WHERE $field1 = '$value1'";
         if ($field2) {
@@ -1136,6 +1151,16 @@ function where_clause($field1='', $value1='', $field2='', $value2='', $field3=''
  * @private
  */
 function where_clause_prepared($field1='', $field2='', $field3='') {
+    global $dbgenerator;
+    if (in_array($field1, $dbgenerator->reserved_words)) {
+        $field1 = '"' . $field1 . '"';
+    }
+    if (in_array($field2, $dbgenerator->reserved_words)) {
+        $field2 = '"' . $field2 . '"';
+    }
+    if (in_array($field3, $dbgenerator->reserved_words)) {
+        $field3 = '"' . $field3 . '"';
+    }
     $select = '';
     if (!empty($field1)) {
         $select = " WHERE $field1 = ? ";
@@ -1242,7 +1267,7 @@ function db_format_timestamp($ts) {
     if ($ts === null || $ts === '') {
         return null;
     }
-    return $db->DBTimeStamp($ts);
+    return $db->BindTimeStamp($ts);
 }
 
 /**
@@ -1285,9 +1310,17 @@ function db_format_tsfield($field, $as = null) {
  */
 function configure_dbconnection() {
     global $db;
+    global $dbgenerator;
+
+    $classname = 'XMLDB' . get_config('dbtype');
+    $dbgenerator = new $classname();
 
     increment_perf_db_writes();
     $db->Execute("SET NAMES 'utf8'");
+
+    if (is_mysql()) {
+        $db->Execute("SET SQL_MODE='POSTGRESQL'");
+    }
 
     // more later..
 }

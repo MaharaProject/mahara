@@ -141,7 +141,8 @@
                 <FIELD NAME="dayofweek" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*" />
             </FIELDS>
             <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="callfunction" />
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+                <KEY NAME="callfunctionuk" TYPE="unique" FIELDS="callfunction" />
             </KEYS>
         </TABLE>
         <TABLE NAME="activity_type">
@@ -425,7 +426,7 @@
         <TABLE NAME="community">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
-                <FIELD NAME="name" TYPE="text" NOTNULL="true" />
+                <FIELD NAME="name" TYPE="char" LENGTH="128" NOTNULL="true" />
                 <FIELD NAME="description" TYPE="text" NOTNULL="false" />
                 <FIELD NAME="jointype" TYPE="char" LENGTH="20" NOTNULL="true" ENUM="true" ENUMVALUES="'controlled', 'invite', 'request', 'open'"  DEFAULT="open" />
                 <FIELD NAME="owner" TYPE="int" LENGTH="10" NOTNULL="true" />
@@ -519,7 +520,7 @@
             <FIELDS>
                 <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="activity" TYPE="char" LENGTH="100" NOTNULL="true" />
-                <FIELD NAME="method" TYPE="text" NOTNULL="true" />
+                <FIELD NAME="method" TYPE="char" LENGTH="255" NOTNULL="true" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="usr,activity" />
@@ -595,8 +596,8 @@
         </TABLE>
         <TABLE NAME="template_category">
             <FIELDS>
-                <FIELD NAME="name" TYPE="text" NOTNULL="true" />
-                <FIELD NAME="parent" TYPE="text" NOTNULL="false" />
+                <FIELD NAME="name" TYPE="char" LENGTh="128" NOTNULL="true" />
+                <FIELD NAME="parent" TYPE="char" LENGTH="128" NOTNULL="false" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="name" />
@@ -605,10 +606,10 @@
         </TABLE>
         <TABLE NAME="template">
             <FIELDS>
-                <FIELD NAME="name" TYPE="text" NOTNULL="true" />
+                <FIELD NAME="name" TYPE="char" LENGTH="128" NOTNULL="true" />
                 <FIELD NAME="title" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="description" TYPE="text" NOTNULL="false" />
-                <FIELD NAME="category" TYPE="text" NOTNULL="true" />
+                <FIELD NAME="category" TYPE="char" LENGTH="128" NOTNULL="true" />
                 <FIELD NAME="owner" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
                 <FIELD NAME="mtime" TYPE="datetime" NOTNULL="true" />
@@ -629,7 +630,7 @@
                 <FIELD NAME="description" TYPE="text" NOTNULL="false" />
                 <FIELD NAME="owner" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="ownerformat" TYPE="text" NOTNULL="true" />
-                <FIELD NAME="template" TYPE="text" NOTNULL="true" />
+                <FIELD NAME="template" TYPE="char" LENGTH="128" NOTNULL="true" />
                 <FIELD NAME="startdate" TYPE="datetime" />
                 <FIELD NAME="stopdate" TYPE="datetime" />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
@@ -719,7 +720,7 @@
         <TABLE NAME="view_access">
             <FIELDS>
                 <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="accesstype" TYPE="char" LENGTH="16" NOTNULL="true" ENUM="true" ENUMVALUES="'public', 'loggedin', 'friends'" />
+                <FIELD NAME="accesstype" TYPE="char" LENGTH="16" NOTNULL="true" ENUM="true" ENUMVALUES="'public', 'loggedin', 'friends'" DEFAULT="public" />
                 <FIELD NAME="startdate" TYPE="datetime" NOTNULL="false" />
                 <FIELD NAME="stopdate" TYPE="datetime" NOTNULL="false" />
             </FIELDS>

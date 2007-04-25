@@ -92,6 +92,7 @@ tinyMCE.init({
     theme_advanced_buttons3 : "fontselect,separator,fontsizeselect,separator,formatselect",
     theme_advanced_toolbar_location : "top",
     theme_advanced_toolbar_align : "center",
+    width: '512',
     content_css : {$content_css}
 });
 </script>
