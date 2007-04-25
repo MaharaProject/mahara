@@ -258,12 +258,8 @@ class PluginSearchInternal extends PluginSearch {
      */
     public static function search_group($query_string, $limit, $offset = 0) {
         if ( is_postgres() ) {
-            search_group_pg($query_string, $limit, $offset);
-        }
-        // TODO
-        // else if ( is_mysql() ) {
-        // }
-        else {
+            return search_group_pg($query_string, $limit, $offset);
+        } else {
             throw new SQLException('search_group() is not implemented for your database engine (' . get_config('dbtype') . ')');
         }
     }
