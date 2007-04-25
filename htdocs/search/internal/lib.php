@@ -385,47 +385,8 @@ class PluginSearchInternal extends PluginSearch {
      *           );
      */
     public static function search_community($query_string, $limit, $offset=0, $all=false) {
-        global $USER;
         if ( is_postgres() ) {
-            $sql = "
-                SELECT
-                    id, name, description, jointype, owner, ctime, mtime
-                FROM
-                    " . get_config('dbprefix') . "community
-                WHERE (
-                    name ILIKE '%' || ? || '%' 
-                    OR description ILIKE '%' || ? || '%' 
-                )";
-            $values = array($query_string, $query_string);
-            if (!$all) {
-                $sql .=  "AND ( 
-                    owner = ? OR id IN (
-                        SELECT community FROM " . get_config('dbprefix') . "community_member WHERE member = ?
-                    )
-                )";
-                $values[] = $USER->get('id');
-                $values[] = $USER->get('id');
-            }
-            $data = get_records_sql_array($sql, $values, $offset, $limit);
-
-            $sql = "
-                SELECT
-                    COUNT(*)
-                FROM
-                    " . get_config('dbprefix') . "community u
-                WHERE (
-                    name ILIKE '%' || ? || '%' 
-                    OR description ILIKE '%' || ? || '%' 
-                )";
-            if (!$all) {
-                $sql .= "AND ( 
-                        owner = ? OR id IN (
-                            SELECT community FROM " . get_config('dbprefix') . "community_member WHERE member = ?
-                        )
-                    )
-                ";
-            }
-            $count = get_field_sql($sql, $values);
+            return search_community_pg($query_string, $limit, $offset, $all);
         }
         // TODO
         // else if ( is_mysql() ) {
@@ -433,6 +394,49 @@ class PluginSearchInternal extends PluginSearch {
         else {
             throw new SQLException('search_community() is not implemented for your database engine (' . get_config('dbtype') . ')');
         }
+    }
+
+    public static function search_community_pg($query_string, $limit, $offset, $all) {
+        global $USER;
+        $sql = "
+            SELECT
+                id, name, description, jointype, owner, ctime, mtime
+            FROM
+                " . get_config('dbprefix') . "community
+            WHERE (
+                name ILIKE '%' || ? || '%' 
+                OR description ILIKE '%' || ? || '%' 
+            )";
+        $values = array($query_string, $query_string);
+        if (!$all) {
+            $sql .=  "AND ( 
+                owner = ? OR id IN (
+                    SELECT community FROM " . get_config('dbprefix') . "community_member WHERE member = ?
+                )
+            )";
+            $values[] = $USER->get('id');
+            $values[] = $USER->get('id');
+        }
+        $data = get_records_sql_array($sql, $values, $offset, $limit);
+
+        $sql = "
+            SELECT
+                COUNT(*)
+            FROM
+                " . get_config('dbprefix') . "community u
+            WHERE (
+                name ILIKE '%' || ? || '%' 
+                OR description ILIKE '%' || ? || '%' 
+            )";
+        if (!$all) {
+            $sql .= "AND ( 
+                    owner = ? OR id IN (
+                        SELECT community FROM " . get_config('dbprefix') . "community_member WHERE member = ?
+                    )
+                )
+            ";
+        }
+        $count = get_field_sql($sql, $values);
 
         return array(
             'count'   => $count,
