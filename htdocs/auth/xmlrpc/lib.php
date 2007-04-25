@@ -26,8 +26,6 @@
 
 defined('INTERNAL') || die();
 
-require_once($CFG->docroot.'/mnet/xmlrpc/client.php');
-
 /**
  * The XMLRPC authentication method, which authenticates users against the
  * ID Provider's XMLRPC service. This is special - it doesn't extend Auth, it's
@@ -335,7 +333,7 @@ class AuthXMLRPC {
 /**
  * Plugin configuration class
  */
-class PluginAuthInternal extends PluginAuth {
+class PluginAuthXMLRPC extends PluginAuth {
 
     public static function has_config() {
         return false;
