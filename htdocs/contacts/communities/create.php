@@ -51,7 +51,7 @@ $createcommunity = pieform(array(
         'name' => array(
             'type'         => 'text',
             'title'        => get_string('communityname'),
-            'rules'        => array( 'required' => true ),
+            'rules'        => array( 'required' => true, 'maxlength' => 128 ),
         ),
         'description' => array(
             'type'         => 'wysiwyg',
@@ -91,8 +91,6 @@ function createcommunity_cancel_submit() {
 function createcommunity_submit(Pieform $form, $values) {
     global $USER;
     global $SESSION;
-
-    log_debug($values);
 
     db_begin();
 

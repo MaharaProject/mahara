@@ -59,7 +59,7 @@ $editcommunity = pieform(array(
         'name' => array(
             'type'         => 'text',
             'title'        => get_string('communityname'),
-            'rules'        => array( 'required' => true ),
+            'rules'        => array( 'required' => true, 'maxlength' => 128 ),
             'defaultvalue' => $community_data->name,
         ),
         'description' => array(
@@ -109,8 +109,6 @@ function editcommunity_submit(Pieform $form, $values) {
     db_begin();
 
     $now = db_format_timestamp(time());
-
-    log_debug($values);
 
     update_record(
         'community',
