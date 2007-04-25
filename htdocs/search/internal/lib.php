@@ -77,6 +77,8 @@ class PluginSearchInternal extends PluginSearch {
         $prefix = get_config('dbprefix');
         if ( is_postgres() ) {
             return search_user_pg($query_string, $limit, $offset, $prefix, $publicfields);
+        } else if ( is_mysql() ) {
+            return search_user_my($query_string, $limit, $offset, $prefix, $publicfields);
         } else {
             throw new SQLException('search_user() is not implemented for your database engine (' . get_config('dbtype') . ')');
         }
@@ -127,6 +129,76 @@ class PluginSearchInternal extends PluginSearch {
                         OR (
                             a.artefacttype IN ' . $fieldlist . '
                             AND ( a.title ILIKE \'%\' || ? || \'%\')
+                        )
+                    )
+                ORDER BY u.firstname, u.lastname, u.id',
+            array($query_string, $query_string, $query_string),
+            $offset,
+            $limit);
+
+            if ($data) {
+                foreach ($data as &$item) {
+                    $item = (array)$item;
+                }
+            }
+        }
+        else {
+            $data = false;
+        }
+
+        return array(
+            'count'   => $count,
+            'limit'   => $limit,
+            'offset'  => $offset,
+            'data'    => $data,
+        );
+    }
+
+    public static function search_user_my($query_string, $limit, $offset, $prefix, $publicfields) {
+        $fieldlist = "('" . join("','", $publicfields) . "')";
+
+        $count = get_field_sql('
+            SELECT 
+                COUNT(DISTINCT u.id)
+            FROM
+                ' . $prefix . 'usr u
+                LEFT JOIN ' . $prefix . 'artefact a ON u.id=a.owner
+            WHERE
+                u.id <> 0 AND u.active = 1
+                AND ((
+                        u.preferredname IS NULL
+                        AND (
+                            u.firstname LIKE \'%\' || ? || \'%\'
+                            OR u.lastname LIKE \'%\' || ? || \'%\'
+                        )
+                    )
+                    OR (
+                        a.artefacttype IN ' . $fieldlist . '
+                        AND ( a.title LIKE \'%\' || ? || \'%\')
+                    )
+                )
+            ',
+            array($query_string, $query_string, $query_string)
+        );
+
+        if ($count > 0) {
+            $data = get_records_sql_array('
+                SELECT DISTINCT ON (u.firstname, u.lastname, u.id)
+                    u.id, u.username, u.institution, u.firstname, u.lastname, u.preferredname, u.email, u.staff
+                FROM ' . $prefix . 'artefact a
+                    INNER JOIN ' . $prefix .'usr u ON u.id = a.owner
+                WHERE
+                    u.id <> 0 AND u.active = 1
+                    AND ((
+                            u.preferredname IS NULL
+                            AND (
+                                u.firstname LIKE \'%\' || ? || \'%\'
+                                OR u.lastname LIKE \'%\' || ? || \'%\'
+                            )
+                        )
+                        OR (
+                            a.artefacttype IN ' . $fieldlist . '
+                            AND ( a.title LIKE \'%\' || ? || \'%\')
                         )
                     )
                 ORDER BY u.firstname, u.lastname, u.id',
