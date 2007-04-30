@@ -42,6 +42,7 @@ if ($action == 'delete') {
         json_reply('local', get_string('cantdeletecommunitydontown'));
     }
     db_begin();
+    delete_records('usr_watchlist_community', 'community', $id);
     delete_records('view_access_community', 'community', $id);
     delete_records('community_member_invite', 'community', $id);
     delete_records('community_member_request', 'community', $id);
