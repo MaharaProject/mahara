@@ -184,6 +184,11 @@ class PluginSearchInternal extends PluginSearch {
         );
 
         if ($count > 0) {
+            // @todo This is quite possibly not correct. See the postgres 
+            // query. It should be DISTINCT ON the fields as specified by the 
+            // postgres query. There is a workaround by using SELECT * followed 
+            // by GROUP BY 1, 2, 3, but it's not really valid SQL. The other 
+            // way is to rewrite the query using a self join on the usr table.
             $data = get_records_sql_array('
                 SELECT DISTINCT
                     u.id, u.username, u.institution, u.firstname, u.lastname, u.preferredname, u.email, u.staff
