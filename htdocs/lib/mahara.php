@@ -446,7 +446,7 @@ function load_config() {
     global $CFG;
     
     try {
-        $dbconfig = get_records_array('config');
+        $dbconfig = get_records_array('config', '', '', '', 'field, value');
     } 
     catch (SQLException $e) {
         return false;
