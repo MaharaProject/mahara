@@ -279,7 +279,7 @@ function template_locate($templatename, $fetchdb=true) {
         return $template;
     }
 
-    throw new TemplateParserException("Invalid template name $templatename, couldn't find");
+    throw new TemplateParserException("Invalid template name $templatename, couldn't find fragment.template");
 }
 
 /**

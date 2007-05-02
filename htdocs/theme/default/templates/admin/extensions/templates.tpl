@@ -13,7 +13,7 @@
 <tr class="{cycle values=r1,r0}">
     <td>{$name}</td>
     <td>{if $template.installed}
-        <img id="{$name}.status" alt="{str tag='yes'}" src="{theme_path location='success.gif}" />
+        <img id="{$name}.status" alt="{str tag='yes'}" src="{theme_path location='images/success.gif}" />
 	{if !$template.error}
             <a href="" onClick="{$installlink}('{$name}'); return false;" id="admintemplates_reinstall">{str tag='reinstall' section='admin'}</a> 
             <span id="{$name}.message"></span>
