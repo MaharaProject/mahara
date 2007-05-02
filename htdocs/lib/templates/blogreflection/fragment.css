@@ -1,0 +1,16 @@
+ .Blog_Reflections_Template {   
+ width:100%;   
+ }   
+ 
+ .Blog_Reflections_Template td {   
+ padding: 20px;   
+ }   
+ .Blog_Reflections_Template td div {   
+ padding: 0;  
+ margin: 0;  
+ }  
+ 
+ .Blog_Reflections_Template title {  
+ padding-bottom:50px;      
+ 
+ }

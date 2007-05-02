@@ -1,0 +1,106 @@
+<table id="test_template">
+  <tbody>
+    <tr>
+      <th>Group Name </th>
+      <td>{{block type="label" id="tpl_label1"}}</td>
+    </tr>
+    <tr>
+      <th width="387">Student Names</th>
+      <td width="816">{{block type="label" id="tpl_label2"}} {{block type="label" id="tpl_label3"}}</td>
+    </tr>
+    <tr>
+      <th>&nbsp;</th>
+      <td>{{block type="label" id="tpl_label4"}} {{block type="label" id="tpl_label5"}}</td>
+    </tr>
+    <tr>
+      <th>&nbsp;</th>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <th colspan="2">Mission and Vision Statement (Concept and Concept Outline) </th>
+    </tr>
+    <tr>
+      <th>&nbsp;</th>
+      <td>{{block type="artefact" id="tpl_blog1"}}</td>
+    </tr>
+    <tr>
+      <th>&nbsp;</th>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <th height="24" colspan="2">Physical Design of the space (explain, using theorists, how you created ambeince and support of holistic learning for each child)</th>
+    </tr>
+    <tr>
+      <th>&nbsp;</th>
+      <td>{{block type="artefact" id="tpl_files1" artefacttype="file"}}</td>
+    </tr>
+    <tr>
+      <th height="24">&nbsp;</th>
+      <td>{{block type="artefact" id="tpl_blog2"}}</td>
+    </tr>
+    <tr>
+      <th colspan="2">&nbsp;</th>
+    </tr>
+    <tr>
+      <th colspan="2"><strong>Schedule or timetable of tasks and events prior to opening </strong></th>
+    </tr>
+    <tr>
+      <th>&nbsp;</th>
+      <td>{{block type="artefact" id="tpl_files2" artefacttype="file"}}</td>
+    </tr>
+    <tr>
+      <th>&nbsp;</th>
+      <td>{{block type="artefact" id="tpl_blog3"}}</td>
+    </tr>
+    <tr>
+      <th>&nbsp;</th>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <th colspan="2"><strong>Curriculum Matrix for first six weeks, specific activities for beginners, intermediates, end-game (provide NZCF AO/level cross-reference) </strong></th>
+    </tr>
+    <tr>
+      <th>&nbsp;</th>
+      <td>{{block type="artefact" id="tpl_files3" artefacttype="file"}}</td>
+    </tr>
+    <tr>
+      <th>&nbsp;</th>
+      <td>{{block type="artefact" id="tpl_blog4"}}</td>
+    </tr>
+    <tr>
+      <th>&nbsp;</th>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <th colspan="2"><p>Yearlong Teaching and Learning Topics plan for beginners, intermediates and end-game. <br />
+      (Justify your choices by citing educationalists, psychologists and other theorists)  </p>        </th>
+    </tr>
+    <tr>
+      <th>&nbsp;</th>
+      <th>&nbsp;</th>
+    </tr>
+    <tr>
+      <th>&nbsp;</th>
+      <td>{{block type="artefact" id="tpl_files4" artefacttype="file"}}</td>
+    </tr>
+    <tr>
+      <th>&nbsp;</th>
+      <td>{{block type="artefact" id="tpl_blog5"}}</td>
+    </tr>
+    <tr>
+      <th>&nbsp;</th>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <th colspan="2"><strong>Priorised table of equipment, materials and supplies </strong></th>
+    </tr>
+    <tr>
+      <th>&nbsp;</th>
+      <td>{{block type="artefact" id="tpl_files5" artefacttype="file"}}</td>
+    </tr>
+    <tr>
+      <th>&nbsp;</th>
+      <td>{{block type="artefact" id="tpl_blog6"}}</td>
+    </tr>
+  </tbody>
+</table>
