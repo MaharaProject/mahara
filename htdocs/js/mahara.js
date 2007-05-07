@@ -257,6 +257,19 @@ contextualHelpContainer   = null;
 contextualHelpDeferrable  = null;
 contextualHelpOpened      = false;
 
+function contextualHelpIcon(formName, helpName, pluginType, pluginName, page, section) {
+    var link = A(
+        {'href': null},
+        IMG({'alt': '?', 'src': get_themeurl('images/icon_help.gif')})
+    );
+    connect(link, 'onclick', function (e) {
+        e.stop();
+        contextualHelp(formName, helpName, pluginType, pluginName, page, section, link);
+    });
+
+    return link;
+}
+
 function contextualHelp(formName, helpName, pluginType, pluginName, page, section, ref) {
     var key;
     var target = $(formName + '_' + helpName + '_container');
