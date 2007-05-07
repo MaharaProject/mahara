@@ -156,8 +156,13 @@ class FormRendererMultiColumnTable {
 
                 // Contextual help
                 if (!empty($rawelement['help'])) {
-                    $result .= ' <span class="help"><a href="#" title="' 
-                        . Pieform::hsc($rawelement['help']) . '">?</a></span>';
+                    $function = $this->form->get_property('helpcallback');
+                    if (function_exists($function)) {
+                        $result .= $function($this->form, $rawelement);
+                    } 
+                    else {
+                        $result .= ' <span class="help"><a href="#" title="' . Pieform::hsc($rawelement['help']) . '">?</a></span>';
+                    }
                 }
                 $result .= "</td>\n\t";
 
