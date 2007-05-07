@@ -28,6 +28,10 @@ define('INTERNAL', 1);
 define('ADMIN', 1);
 define('MENUITEM', 'configsite');
 define('SUBMENUITEM', 'sitepages');
+define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'admin');
+define('SECTION_PAGE', 'sitepages');
+
 require(dirname(dirname(dirname(__FILE__))).'/init.php');
 require_once('pieforms/pieform.php');
 define('TITLE', get_string('sitepages', 'admin'));

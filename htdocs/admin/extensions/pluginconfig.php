@@ -35,6 +35,10 @@ require_once('pieforms/pieform.php');
 $plugintype = param_alpha('plugintype');
 $pluginname = param_alpha('pluginname');
 
+define('SECTION_PLUGINTYPE', $plugintype);
+define('SECTION_PLUGINNAME', $pluginname);
+define('SECTION_PAGE', 'pluginconfig');
+
 safe_require($plugintype, $pluginname);
 if ($plugintype == 'artefact') {
     $type = param_alpha('type');

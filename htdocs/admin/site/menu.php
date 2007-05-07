@@ -28,6 +28,11 @@ define('INTERNAL', 1);
 define('ADMIN', 1);
 define('MENUITEM', 'configsite');
 define('SUBMENUITEM', 'sitemenu');
+define('SUBMENUITEM', 'sitepages');
+define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'admin');
+define('SECTION_PAGE', 'sitemenu');
+
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('sitemenu', 'admin'));
 
@@ -43,6 +48,7 @@ foreach ($adminstrings as $string) {
     $getstring[$string] = "'" . get_string($string,'admin') . "'";
 }
 
+// TODO: this should be using json_encode
 $thead = array(get_string('type','admin'),get_string('name','admin'),get_string('linkedto','admin'),'');
 $ijs = "var thead = TR(null,map(partial(TH,null),['" . implode($thead,"','") . "']));\n";
 $ijs .= "var externallink = '" . get_string('externallink','admin') . "';\n";
@@ -87,7 +93,15 @@ function formatrow (item) {
     del.onclick = function () { delitem(item.id); };
     var edit = INPUT({'type':'button','class':'button','value':{$getstring['edit']}});
     edit.onclick = function () { edititem(item); };
-    var cells = map(partial(TD,null),[type,item.name,linkedto,[del,edit]]);
+    var cells = map(
+        partial(TD,null),
+        [
+            type,
+            item.name,
+            linkedto,
+            [del,edit,contextualHelpIcon(null, null, 'core', 'admin', null, 'adminmenuedit')]
+        ]
+    );
     return TR({'id':'menuitem_'+item.id},cells);
 }
 
@@ -168,8 +182,8 @@ function editform(item) {
                           'value':item.linkedto});
         setNodeAttribute(elink,'checked',true);
     }
-    var radios = [DIV(null, LABEL(null,elink,{$getstring['externallink']})),
-                  DIV(null, LABEL(null,afile,{$getstring['adminfile']}))];
+    var radios = [DIV(null, LABEL(null,elink,{$getstring['externallink']}), contextualHelpIcon(null, null, 'core', 'admin', null, 'adminexternallink')),
+                  DIV(null, LABEL(null,afile,{$getstring['adminfile']}), contextualHelpIcon(null, null, 'core', 'admin', null, 'adminadminfile'))];
     var row = TR({'id':'row'+item.id, 'class':rowtype},
                  map(partial(TD,null),[radios,name,linkedto,savecancel]));
     return row;

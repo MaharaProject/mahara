@@ -30,6 +30,9 @@ define('MENUITEM', 'configextensions');
 define('SUBMENUITEM', 'pluginadmin');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('pluginadmin', 'admin'));
+define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'admin');
+define('SECTION_PAGE', 'plugins');
 require('upgrade.php');
 
 $plugins = array();

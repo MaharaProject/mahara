@@ -30,6 +30,9 @@ define('MENUITEM', 'configusers');
 define('SUBMENUITEM', 'institutions');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('institutions', 'admin'));
+define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'admin');
+define('SECTION_PAGE', 'institutions');
 require_once('pieforms/pieform.php');
 $smarty = smarty();
 
@@ -109,7 +112,8 @@ if ($institution || $add) {
                 'maxlength' => 255,
                 'regex'     => '/^[a-zA-Z]+$/'
             ),
-            'ignore' => !$add
+            'ignore' => !$add,
+            'help'   => true,
         ),
         'add' => array(
             'type'   => 'hidden',
@@ -128,39 +132,47 @@ if ($institution || $add) {
             'rules' => array(
                 'required'  => true,
                 'maxlength' => 255
-            )
+            ),
+            'help'   => true,
         ),
         'authplugin' => array(
             'type'    => 'select',
             'title'   => get_string('authplugin', 'admin'),
-            'options' => get_records_menu('auth_installed', '', '', 'name', 'name, name')
+            'options' => get_records_menu('auth_installed', '', '', 'name', 'name, name'),
+            'help'   => true,
         ),
         'registerallowed' => array(
             'type'         => 'checkbox',
             'title'        => get_string('registrationallowed', 'admin'),
             'description'  => get_string('registrationalloweddescription', 'admin'),
             'defaultvalue' => $data->registerallowed,
+            'help'   => true,
         ),
         'defaultaccountlifetime' => array(
             'type'         => 'expiry',
             'title'        => get_string('defaultaccountlifetime', 'admin'),
             'description'  => get_string('defaultaccountlifetimedescription', 'admin'),
-            'defaultvalue' => $data->defaultaccountlifetime
+            'defaultvalue' => $data->defaultaccountlifetime,
+            'help'   => true,
         ),
         'defaultaccountinactiveexpire' => array(
             'type'         => 'expiry',
             'title'        => get_string('defaultaccountinactiveexpire', 'admin'),
             'description'  => get_string('defaultaccountinactiveexpiredescription', 'admin'),
-            'defaultvalue' => $data->defaultaccountinactiveexpire
+            'defaultvalue' => $data->defaultaccountinactiveexpire,
+            'help'   => true,
         ),
         'defaultaccountinactivewarn' => array(
             'type' => 'expiry',
             'title' => get_string('defaultaccountinactivewarn', 'admin'),
             'description' => get_string('defaultaccountinactivewarndescription', 'admin'),
-            'defaultvalue' => $data->defaultaccountinactivewarn
+            'defaultvalue' => $data->defaultaccountinactivewarn,
+            'help'   => true,
         ),
         'lockedfields' => array(
-            'value' => '<tr><th colspan="2">Locked fields</th></tr>'
+            'value' => '<tr><th colspan="2">Locked fields ' 
+                . get_help_icon('core', 'admin', 'institution', 'lockedfields') 
+                . '</th></tr>'
         )
     ); 
 
@@ -179,6 +191,8 @@ if ($institution || $add) {
     $smarty->assign('institution_form', pieform(array(
         'name'     => 'institution',
         'renderer' => 'table',
+        'plugintype' => 'core',
+        'pluginname' => 'admin',
         'elements' => $elements
     )));
 

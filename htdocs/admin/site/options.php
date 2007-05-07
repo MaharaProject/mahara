@@ -42,15 +42,18 @@ $yesno = array(true  => get_string('yes'),
 $searchpluginoptions = get_search_plugins();
 
 $siteoptionform = pieform(array(
-    'name'     => 'siteoptions',
-    'jsform'   => true,
-    'renderer' => 'table',
-    'elements' => array(
+    'name'       => 'siteoptions',
+    'jsform'     => true,
+    'renderer'   => 'table',
+    'plugintype' => 'core',
+    'pluginname' => 'admin',
+    'elements'   => array(
         'sitename' => array(
             'type'         => 'text',
             'title'        => get_string('sitename','admin'),
             'description'  => get_string('sitenamedescription','admin'),
             'defaultvalue' => get_config('sitename'),
+            'help'         => true,
         ),
         'language' => array(
             'type'         => 'select',
@@ -59,6 +62,7 @@ $siteoptionform = pieform(array(
             'defaultvalue' => get_config('language'),
             'collapseifoneoption' => true,
             'options'      => $langoptions,
+            'help'         => true,
         ),
         'theme' => array(
             'type'         => 'select',
@@ -67,6 +71,7 @@ $siteoptionform = pieform(array(
             'defaultvalue' => get_config('theme'),
             'collapseifoneoption' => true,
             'options'      => $themeoptions,
+            'help'         => true,
         ),
         'searchplugin' => array(
             'type'         => 'select',
@@ -75,24 +80,28 @@ $siteoptionform = pieform(array(
             'defaultvalue' => get_config('searchplugin'),
             'collapseifoneoption' => true,
             'options'      => $searchpluginoptions,
+            'help'         => true,
         ),
         'pathtofile' => array(
             'type'         => 'text',
             'title'        => get_string('pathtofile','admin'),
             'description'  => get_string('pathtofiledescription','admin'),
             'defaultvalue' => get_config('pathtofile'),
+            'help'         => true,
         ),
         'viruschecking' => array(
             'type'         => 'checkbox',
             'title'        => get_string('viruschecking','admin'),
             'description'  => get_string('viruscheckingdescription','admin'),
             'defaultvalue' => get_config('viruschecking'),
+            'help'         => true,
         ),
         'pathtoclam' => array(
             'type'         => 'text',
             'title'        => get_string('pathtoclam','admin'),
             'description'  => get_string('pathtoclamdescription','admin'),
             'defaultvalue' => get_config('pathtoclam'),
+            'help'         => true,
         ),
         'sessionlifetime' => array(
             'type'         => 'text',
@@ -100,6 +109,7 @@ $siteoptionform = pieform(array(
             'title'        => get_string('sessionlifetime','admin'),
             'description'  => get_string('sessionlifetimedescription','admin'),
             'defaultvalue' => get_config('session_timeout') / 60,
+            'help'         => true,
         ),
         'allowpublicviews' => array(
             'type'         => 'select',
@@ -107,12 +117,14 @@ $siteoptionform = pieform(array(
             'description'  => get_string('allowpublicviewsdescription','admin'),
             'defaultvalue' => get_config('allowpublicviews'),
             'options'      => $yesno,
+            'help'         => true,
         ),
         'artefactviewinactivitytime' => array(
             'type'         => 'expiry',
             'title'        => get_string('artefactviewinactivitytime','admin'),
             'description'  => get_string('artefactviewinactivitytimedescription','admin'),
             'defaultvalue' => get_config('artefactviewinactivitytime'),
+            'help'         => true,
         ),
         'submit' => array(
             'type'  => 'submit',

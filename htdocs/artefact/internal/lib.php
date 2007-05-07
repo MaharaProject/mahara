@@ -296,7 +296,8 @@ class ArtefactTypeProfile extends ArtefactType {
             'rules' => array(
                 'required' => true,
                 'integer'  => true,
-            )
+            ),
+            'help' => true,
         );
 
         return $form;
