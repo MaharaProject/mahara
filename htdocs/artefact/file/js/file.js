@@ -232,6 +232,7 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
         var namehelp = SPAN(null); namehelp.innerHTML = get_string('name.help');
         var deschelp = SPAN(null); deschelp.innerHTML = get_string('folderdescription.help');
         var cancelhelp = SPAN(null); cancelhelp.innerHTML = get_string('cancelfolder.help');
+        var tagshelp = SPAN(null); tagshelp.innerHTML = get_string('tags.help');
         return FORM({'method':'post', 'id':formid, 'style':'display: none;'},
                 TABLE(null,
                  TBODY(null,
@@ -245,7 +246,7 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
                      TD(null,INPUT({'type':'text','class':'text','name':'description',
                                     'value':'','size':40}), deschelp)),
                   TR(null, TH(null, LABEL(null, get_string('tags'))),
-                     TD(null, create_tags_control('tags'))),
+                     TD(null, create_tags_control('tags'), tagshelp)),
                   TR(null,TD({'colspan':2},SPAN({'id':formid+'message'}))),
                   TR(null,TD({'colspan':2},createbutton,replacebutton,cancelbutton,cancelhelp)))));
     };
@@ -403,6 +404,7 @@ function FileUploader(element, uploadscript, statevars, foldername, folderid, up
         var titlehelp = SPAN(null); titlehelp.innerHTML = get_string('title.help');
         var deschelp = SPAN(null); deschelp.innerHTML = get_string('description.help');
         var cancelhelp = SPAN(null); cancelhelp.innerHTML = get_string('cancel.help');
+        var tagshelp = SPAN(null); tagshelp.innerHTML = get_string('tags.help');
         var destinationattributes = (self.folderid === false) ? {'style':'display: none;'} : null;
         appendChildNodes(form,
             TABLE(null,
@@ -421,7 +423,7 @@ function FileUploader(element, uploadscript, statevars, foldername, folderid, up
              TR(null, TH(null, LABEL(null, get_string('description'))),
                 TD(null, INPUT({'type':'text', 'class':'text', 'name':'description', 'size':40}), deschelp)),
              TR(null, TH(null, LABEL(null, get_string('tags'))),
-                TD(null, create_tags_control('tags'))),
+                TD(null, create_tags_control('tags'), tagshelp)),
              TR(null,TD({'colspan':2, 'id':'uploadformmessage'})),
              TR(null,TD({'colspan':2},
               INPUT({'name':'upload','type':'button','class':'button',

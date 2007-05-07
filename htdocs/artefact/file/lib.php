@@ -154,6 +154,7 @@ class PluginArtefactFile extends PluginArtefact {
                     'quota_message',
                     'title',
                     'uploadfile',
+                    'tags',
                 ),
             ),
         );
