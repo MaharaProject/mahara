@@ -108,6 +108,8 @@ $string['theme'] = 'Theme';
 $string['updatesiteoptions'] = 'Update site options';
 $string['viruschecking'] = 'Virus checking';
 $string['viruscheckingdescription'] = 'If checked, virus checking will be enabled for all uploaded files using ClamAV';
+$string['searchplugin'] = 'Search plugin';
+$string['searchplugindescription'] = 'Search plugin to use';
 
 // Admin menu editor
 //$string['menueditor']    = 'Menu editor';
