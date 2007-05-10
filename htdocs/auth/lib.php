@@ -381,16 +381,22 @@ function auth_setup () {
 }
 
 /**
- * Given an institution, returns the authentication method used by it.
+ * Given an institution, returns the authentication methods used by it.
  *
- * @return string
+ * @param  string   $institution     Name of the institution
+ * @return array                     Array of auth instance records
  */
-function auth_get_authtype_for_institution($institution) {
+function auth_get_auth_instances_for_institution($institution) {
     static $cache = array();
-    if (isset($cache[$institution])) {
-        return $cache[$institution];
+
+    if (!isset($cache[$institution])) {
+        $cache[$institution] = get_records_array('auth_instance', 'institution', $institution, 'priority, instancename', 'id, instancename, priority, authname');
+        if(empty($cache[$institution])) {
+            return false;
+        }
     }
-    return $cache[$institution] = get_field('institution', 'authplugin', 'name', $institution);
+
+    return $cache[$institution];
 }
 
 /**
