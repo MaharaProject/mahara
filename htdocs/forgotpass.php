@@ -118,10 +118,8 @@ function forgotpass_validate(Pieform $form, $values) {
         return;
     }
     
-    $authtype = auth_get_authtype_for_institution($user->institution);
-    safe_require('auth', $authtype, 'lib.php', 'require_once');
-    $authclass = 'Auth' . ucfirst($authtype);
-    if (!method_exists($authclass, 'change_password')) {
+    $authobj = auth_get_auth_instance($user);
+    if (!method_exists($authobj, 'change_password')) {
         die_info(get_string('cantchangepassword'));
     }
 }
