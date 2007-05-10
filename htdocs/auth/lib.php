@@ -714,6 +714,40 @@ else {
 EOF;
 }
 
+
+/**
+ * Class to build and cache instances of auth objects
+ */
+class AuthFactory {
+
+    static $authcache = array();
+
+    /**
+     * Take an instanceid and create an auth object for that instance. 
+     * 
+     * @param  int      $id     The id of the auth instance
+     * @return mixed            An intialised auth object or false, if the
+     *                          instance doesn't exist (Should never happen)
+     */
+    public static function create($id) {
+
+        if (isset(self::$authcache[$id]) && is_object(self::$authcache[$id])) {
+            return self::$authcache[$id];
+        }
+
+        $authinstance = get_record('auth_instance', 'id', $id, null, null, null, null, 'authname');
+
+        if (!empty($authinstance)) {
+            $authclassname = 'Auth' . ucfirst($authinstance->authname);
+            safe_require('auth', $authinstance->authname);
+            self::$authcache[$id] = new $authclassname($id);
+            return self::$authcache[$id];
+        }
+
+        return false;
+    }
+}
+
 /**
  * Called when the login form is submittd. Validates the user and password, and
  * if they are valid, starts a new session for the user.
