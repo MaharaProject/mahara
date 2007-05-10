@@ -734,103 +734,131 @@ class AuthFactory {
 }
 
 /**
- * Called when the login form is submittd. Validates the user and password, and
+ * Called when the login form is submitted. Validates the user and password, and
  * if they are valid, starts a new session for the user.
  *
- * @param array $values The submitted values
+ * @param object $form   The Pieform form object
+ * @param array  $values The submitted values
  * @access private
  */
 function login_submit(Pieform $form, $values) {
     global $SESSION, $USER;
 
-    $username    = $values['login_username'];
-    $password    = $values['login_password'];
-    $institution = (isset($values['login_institution'])) ? $values['login_institution'] : 'mahara';
-            
-    $authtype = auth_get_authtype_for_institution($institution);
-    safe_require('auth', $authtype);
-    $authclass = 'Auth' . ucfirst($authtype);
+    $username      = $values['login_username'];
+    $password      = $values['login_password'];
+    $institution   = (isset($values['login_institution'])) ? $values['login_institution'] : 'mahara';
+    $authenticated = false;
+    $oldlastlogin  = 0;
 
     try {
-        if (call_static_method($authclass, 'authenticate_user_account', $username, $password, $institution)) {
-            // User logged in! Set a cookie to remember their institution
-            set_cookie('institution', $institution, 0, get_mahara_install_subdirectory());
-            $oldlastlogin = null;
+        //var_dump(array($username, $password, $institution, $_SESSION));
+        $authenticated = $USER->login($username, $password, $institution);
 
-            if (!call_static_method($authclass, 'user_exists', $username)) {
-                // We don't know about this user. But if the authentication
-                // method says they're fine, then we must insert data for them
-                // into the usr table.
-                // @todo document what needs to be returned by get_user_info
-                $userdata = call_static_method($authclass, 'get_user_info', $username);
-                $userdata->lastlogin = db_format_timestamp(time());
-                insert_record('usr', $userdata);
-                handle_event('createuser', $userdata);
-            }
-            // @todo config form option for this for each external plugin. NOT for internal
-            else if (get_config_plugin('auth', $authtype, 'updateuserinfoonlogin')) {
-                $userdata = call_static_method($authclass, 'get_user_info', $username);
-                $oldlastlogin = $userdata->lastlogin;
-                $userdata->lastlogin = db_format_timestamp(time());
-                $userdata->inactivemailsent = 0;
-                $where = new StdClass;
-                $where->username = $username;
-                $where->institution = $institution;
-                // @todo as per the above todo about what needs to be returned by get_user_info,
-                // that needs to be validated somewhere. Because here we do an insert into the
-                // usr table, that needs to work. and provide enough information for future
-                // authentication attempts
-                update_record('usr', $userdata, $where);
-            }
-            else {
-                $userdata = call_static_method($authclass, 'get_user_info_cached', $username);
-                $oldlastlogin = $userdata->lastlogin;
-                $userdata->lastlogin = time();
-                $userdata->inactivemailsent = 0;
-                set_field('usr', 'lastlogin', db_format_timestamp($userdata->lastlogin), 'username', $username);
-                set_field('usr', 'inactivemailsent', 0, 'username', $username);
-            }
-
-            // Only admins in the admin section!
-            if (defined('ADMIN') && !$userdata->admin) {
-                $SESSION->add_error_msg(get_string('accessforbiddentoadminsection'));
-                redirect();
-            }
-
-            // Check if the user's account has been deleted
-            if ($userdata->deleted) {
-                die_info(get_string('accountdeleted'));
-            }
-
-            // Check if the user's account has expired
-            if ($userdata->expiry > 0 && time() > $userdata->expiry) {
-                die_info(get_string('accountexpired'));
-            }
-
-            // Check if the user's account has become inactive
-            $inactivetime = get_field('institution', 'defaultaccountinactiveexpire', 'name', $userdata->institution);
-            if ($inactivetime && $oldlastlogin > 0
-                && $oldlastlogin + $inactivetime < time()) {
-                die_info(get_string('accountinactive'));
-            }
-
-            // Check if the user's account has been suspended
-            if ($userdata->suspendedcusr) {
-                die_info(get_string('accountsuspended', 'mahara', $userdata->suspendedctime, $userdata->suspendedreason));
-            }
-
-            // User is allowed to log in
-            $USER->login($userdata);
-            auth_check_password_change();
-        }
-        else {
-            // Login attempt failed
+        if (empty($authenticated)) {
             $SESSION->add_error_msg(get_string('loginfailed'));
         }
-    }
-    catch (AuthUnknownUserException $e) {
+
+    } catch (AuthUnknownUserException $e) {
+        try {
+            // The user doesn't exist, but maybe the institution wants us to 
+            // create users that don't exist
+            $institution  = get_record('institution', 'name', $institution);
+            if ($institution != false) {
+                if ($institution->updateuserinfoonlogin == 0) {
+                    // Institution does not want us to create unknown users
+                    throw new AuthUnknownUserException("\"$username\" at \"$institution\" is not known");
+                }
+            }
+
+            // Institution says we should create unknown users
+            // Get all the auth options for the institution
+            $authinstances = get_records_array('auth_instance', 'institution', $institution, 'priority, instancename', 'id, instancename, priority, authname');
+
+            $USER->username    = $username;
+            $USER->institution = $institution->name;
+
+            while (list(, $authinstance) = each($authinstances) && false == $authenticated) {
+                // TODO: Test this code with an auth plugin that provides a 
+                // get_user_info method
+                $auth = AuthFactory::create($authinstance->id);
+                if ($auth->authenticate_user_account($USER, $password)) {
+                    $authenticated = true;
+                } else {
+                    continue;
+                }
+
+                $USER->authinstance = $authinstance->id;
+
+                if($auth->authenticate_user_account($username, $password, $institution)) {
+                    $userdata = $auth->get_user_info();
+                    if (
+                         empty($userdata) ||
+                         empty($userdata->firstname) ||
+                         empty($userdata->lastname) ||
+                         empty($userdata->email) 
+                        ) {
+                        throw new AuthUnknownUserException("\"$username\" at \"$institution\" is not known");
+                    } else {
+                        // We have the data - create the user
+                        $USER->expiry    = db_format_timestamp(time() + 86400);
+                        $USER->lastlogin = db_format_timestamp(time());
+                        $USER->firstname = $userdata->firstname;
+                        $USER->lastname  = $userdata->lastname;
+                        $USER->email     = $userdata->email;
+
+                        try {
+                            db_begin();
+                            $USER->commit();
+    
+                            handle_event('createuser', $USER);
+                            db_commit();
+                        } catch (Exception $e) {
+                            db_rollback();
+                            throw $e;
+                        }
+                    }
+                }
+            }
+
+        } catch (AuthUnknownUserException $e) {
+            $SESSION->add_error_msg(get_string('loginfailed'));
+        }
+    } catch (Exception $e) {
+        // Unknown Exception!!!
         $SESSION->add_error_msg(get_string('loginfailed'));
     }
+
+    // Only admins in the admin section!
+    if (defined('ADMIN') && !$USER->admin) {
+        $SESSION->add_error_msg(get_string('accessforbiddentoadminsection'));
+        redirect();
+    }
+
+    // Check if the user's account has been deleted
+    if ($USER->deleted) {
+        die_info(get_string('accountdeleted'));
+    }
+
+    // Check if the user's account has expired
+    if ($USER->expiry > 0 && time() > $USER->expiry) {
+        die_info(get_string('accountexpired'));
+    }
+
+    // Check if the user's account has become inactive
+    $inactivetime = get_field('institution', 'defaultaccountinactiveexpire', 'name', $USER->institution);
+    if ($inactivetime && $oldlastlogin > 0
+        && $oldlastlogin + $inactivetime < time()) {
+        die_info(get_string('accountinactive'));
+    }
+
+    // Check if the user's account has been suspended
+    if ($USER->suspendedcusr) {
+        die_info(get_string('accountsuspended', 'mahara', $USER->suspendedctime, $USER->suspendedreason));
+    }
+
+    // User is allowed to log in
+    //$USER->login($userdata);
+    auth_check_password_change();
 }
 
 /**
