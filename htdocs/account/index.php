@@ -35,14 +35,12 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 
 // load up user preferences
-$prefs = (object)($USER->get('accountprefs'));
+$prefs = (object)($USER->accountprefs);
 
-$authtype  = auth_get_authtype_for_institution($USER->get('institution'));
-$authclass = 'Auth' . ucfirst($authtype);
-safe_require('auth', $authtype);
+$authobj = AuthFactory::create($USER->authinstance);
 
 // @todo auth preference for a password change screen for all auth methods other than internal
-if (method_exists($authclass, 'change_password')) {
+if (method_exists($authobj, 'change_password')) {
     $elements = array(
         'changepassworddesc' => array(
             'value' => '<tr><td colspan="2"><p>' . get_string('changepassworddesc', 'account') . '</p></td></tr>'
@@ -157,13 +155,17 @@ function clearPasswords(form, data) {
 $smarty->display('account/index.tpl');
 
 function accountprefs_validate(Pieform $form, $values) {
+    global $USER;
+
+    $authobj = AuthFactory::create($USER->authinstance);
+
     if ($values['oldpassword'] !== '') {
         global $USER, $authtype, $authclass;
-        if (!call_static_method($authclass, 'authenticate_user_account', $USER->get('username'), $values['oldpassword'], $USER->get('institution'))) {
+        if (!$authobj->authenticate_user_account($USER, $values['oldpassword'])) {
             $form->set_error('oldpassword', get_string('oldpasswordincorrect', 'account'));
             return;
         }
-        password_validate($form, $values, $USER->get('username'), $USER->get('institution'));
+        password_validate($form, $values, $USER->username, $USER->institution);
     }
     else if ($values['password1'] !== '' || $values['password2'] !== '') {
         $form->set_error('oldpassword', get_string('mustspecifyoldpassword'));
@@ -173,18 +175,15 @@ function accountprefs_validate(Pieform $form, $values) {
 function accountprefs_submit(Pieform $form, $values) {
     global $USER;
 
+    $authobj = AuthFactory::create($USER->authinstance);
+
     db_begin();
     if ($values['password1'] !== '') {
         global $authclass;
-        $password = call_static_method($authclass, 'change_password', $USER->get('username'), $values['password1']);
-        $user = new StdClass;
-        $user->password = $password;
-        $user->passwordchange = 0;
-        $where = new StdClass;
-        $where->username = $USER->get('username');
-        update_record('usr', $user, $where);
-        $USER->set('password', $password);
-        $USER->set('passwordchange', 0);
+        $password = $authobj->change_password($USER, $values['password1']);
+        $USER->password = $password;
+        $USER->passwordchange = 0;
+        $USER->commit();
     }
 
     // use this as looping through values is not safe.
