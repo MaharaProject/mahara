@@ -438,7 +438,13 @@ function core_install_defaults() {
     $institution->displayname = 'No Institution';
     $institution->authplugin  = 'internal';
     insert_record('institution', $institution);
-    
+
+    $auth_instance = new StdClass;
+    $auth_instance->instancename  = 'internal';
+    $auth_instance->institution   = 'mahara';
+    $auth_instance->authname      = 'internal';
+    insert_record('auth_instance', $auth_instance);
+ 
     // Insert the root user
     $user = new StdClass;
     $user->id = 0;
