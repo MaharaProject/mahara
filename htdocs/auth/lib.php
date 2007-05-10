@@ -429,19 +429,15 @@ function auth_check_password_change() {
         return;
     }
 
-    $authtype  = auth_get_authtype_for_institution($USER->get('institution'));
-    $authclass = 'Auth' . ucfirst($authtype);
-    $url       = '';
-    safe_require('auth', $authtype);
-    
+    $authobj = AuthFactory::create($USER->authinstance);
+
+    if ($authobj->changepasswordurl) {
+        redirect($authobj->changepasswordurl);
+        exit;
+    }
+
     // @todo auth preference for a password change screen for all auth methods other than internal
-    if (
-        ($url = get_config_plugin('auth', $authtype, 'changepasswordurl'))
-        || (method_exists($authclass, 'change_password'))) {
-        if ($url) {
-            redirect($url);
-            exit;
-        }
+    if (method_exists($authobj, 'change_password')) {
 
         require_once('pieforms/pieform.php');
         $form = array(
