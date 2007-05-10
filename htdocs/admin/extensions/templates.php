@@ -31,6 +31,9 @@ define('MENUITEM', 'configextensions');
 define('SUBMENUITEM', 'templatesadmin');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('templatesadmin', 'admin'));
+define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'admin');
+define('SECTION_PAGE', 'templates');
 require_once(get_config('libroot') . 'template.php');
 
 

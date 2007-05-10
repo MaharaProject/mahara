@@ -30,6 +30,9 @@ define('MENUITEM', 'configusers');
 define('SUBMENUITEM', 'usersearch');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('usersearch', 'admin'));
+define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'admin');
+define('SECTION_PAGE', 'usersearch');
 
 $query = param_variable('query',null);
 

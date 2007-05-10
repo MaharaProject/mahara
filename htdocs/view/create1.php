@@ -123,6 +123,7 @@ $createview1 = pieform(array(
             'title'        => get_string('tags'),
             'description'  => get_string('tagsdesc'),
             'defaultvalue' => isset($data['tags']) ? $data['tags'] : null,
+            'help'        => true,
         ),
         'ownerformat' => array(
             'type'         => 'select',

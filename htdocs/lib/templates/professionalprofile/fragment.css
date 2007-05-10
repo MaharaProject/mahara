@@ -1,0 +1,16 @@
+ .professionalprofile_template {   
+ width:100%;   
+ }   
+ 
+ .professionalprofile_template td {   
+ padding: 20px;   
+ }   
+ .professionalprofile_template td div {   
+ padding: 0;  
+ margin: 0;  
+ }  
+ 
+ .professionalprofile_template title {  
+ padding-bottom:50px;      
+ 
+ }

@@ -32,6 +32,9 @@ define('MENUITEM', 'configusers');
 define('SUBMENUITEM', 'adminusers');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('adminusers', 'admin'));
+define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'admin');
+define('SECTION_PAGE', 'adminusers');
 require_once('pieforms/pieform.php');
 $smarty = smarty();
 

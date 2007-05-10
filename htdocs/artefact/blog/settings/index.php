@@ -70,6 +70,7 @@ $form = pieform(array(
             'type'         => 'tags',
             'title'        => get_string('tags'),
             'description'  => get_string('tagsdesc'),
+            'help' => true,
         ),
         'commentsallowed' => array(
             'type'          => 'radio',

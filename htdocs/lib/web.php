@@ -345,6 +345,7 @@ function themepaths() {
             'images/failure.gif',
             'images/loading.gif',
             'images/success.gif',
+            'images/icon_help.gif',
         ),
     );
 }

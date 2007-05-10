@@ -564,6 +564,9 @@ class ArtefactTypeBlogPost extends ArtefactType {
         $data['attachments'] = array('name' => get_string('attachments', 'artefact.blog'),
                                      'value' => $this->count_attachments() . ' ' 
                                                . get_string('files', 'artefact.file'));
+        if (isset($options['viewid']) && artefact_in_view($id = $this->get('id'), $options['viewid'])) {
+            $data['title']['value'] = '<a href="' . get_config('wwwroot') . 'view/view.php?view=' . $options['viewid'] . '&artefact=' . $id . '">' . $data['title']['value'] . '</a>';
+        }
         return $data;
     }
 

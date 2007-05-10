@@ -37,7 +37,7 @@
  *                         the address.
  */
 function pieform_rule_email(Pieform $form, $value, $element) {
-    if (!preg_match('/^[a-z0-9\._%-]+@(?:[a-z0-9-]+\.)+[a-z]{2,4}$/', $value)) {
+    if (!preg_match('/^[A-Za-z0-9\._%-]+@(?:[A-Za-z0-9-]+\.)+[a-z]{2,4}$/', $value)) {
         return $form->i18n('rule', 'email', 'email', $element);
     }
 }

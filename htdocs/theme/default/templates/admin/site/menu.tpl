@@ -12,6 +12,7 @@
 				<option value={$menu.value}>{$menu.name}</option>
 			{/foreach}
 			</select>
+            {contextualhelp plugintype='core' pluginname='admin' section='adminmenuselect'}
 			
 				<div id="menuitemlist"></div>
 			

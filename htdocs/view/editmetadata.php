@@ -71,6 +71,8 @@ $createview1 = pieform(array(
     'name'     => 'createview1',
     'method'   => 'post',
     'autofocus' => 'title',
+    'plugintype' => 'core',
+    'pluginname' => 'view',
     'elements' => array(
         'viewid' => array(
             'type'  => 'hidden',
@@ -81,6 +83,7 @@ $createview1 = pieform(array(
             'title'        => get_string('title','view'),
             'defaultvalue' => $data->title,
             'rules'        => array( 'required' => true ),
+            'help '        => true,
         ),
         'startdate'        => array(
             'type'         => 'calendar',
@@ -91,7 +94,8 @@ $createview1 = pieform(array(
                 'onSelect'       => 'startSelected',
                 'showsTime'      => true,
                 'ifFormat'       => '%Y/%m/%d %H:%M'
-            )
+            ),
+            'help '        => true,
         ),
         'stopdate'  => array(
             'type'         => 'calendar',
@@ -102,7 +106,8 @@ $createview1 = pieform(array(
                 'onSelect'       => 'stopSelected',
                 'showsTime'      => true,
                 'ifFormat'       => '%Y/%m/%d %H:%M'
-            )
+            ),
+            'help '        => true,
         ),
         'description' => array(
             'type'         => 'wysiwyg',
@@ -110,12 +115,14 @@ $createview1 = pieform(array(
             'rows'         => 10,
             'cols'         => 70,
             'defaultvalue' => $data->description,
+            'help '        => true,
         ),
         'tags'        => array(
             'type'         => 'tags',
             'title'        => get_string('tags'),
             'description'  => get_string('tagsdesc'),
             'defaultvalue' => get_column('view_tag', 'tag', 'view', $view_id),
+            'help'         => true,
         ),
         'ownerformat' => array(
             'type'         => 'select',
@@ -123,7 +130,8 @@ $createview1 = pieform(array(
             'description'  => get_string('ownerformatdescription','view'),
             'options'      => $ownerformatoptions,
             'defaultvalue' => $data->ownerformat,
-            'rules'        => array('required' => true)
+            'rules'        => array('required' => true),
+            'help '        => true,
         ),
         'submit'   => array(
             'type'  => 'submitcancel',
