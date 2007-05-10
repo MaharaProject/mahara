@@ -16,7 +16,7 @@
         </TABLE>
         <TABLE NAME="auth_installed">
             <FIELDS> 
-                <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="name" TYPE="char" LENGTH="100" NOTNULL="true" />
                 <FIELD NAME="version" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="release" TYPE="text" LENGTH="small" NOTNULL="true" />
                 <FIELD NAME="active" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" />
@@ -39,7 +39,6 @@
             <FIELDS>
                 <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true"/>
                 <FIELD NAME="displayname" TYPE="char" LENGTH="255" NOTNULL="true"/>
-                <FIELD NAME="authplugin" TYPE="char" LENGTH="255" NOTNULL="true"/>
                 <FIELD NAME="registerallowed" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1"/>
                 <FIELD NAME="updateuserinfoonlogin" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="0"/>
                 <FIELD NAME="defaultaccountlifetime" TYPE="int" NOTNULL="false"/>
@@ -48,7 +47,20 @@
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="name" />
-                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="authplugin" REFTABLE="auth_installed" REFFIELDS="name" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="auth_instance">
+            <FIELDS> 
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+                <FIELD NAME="instancename" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="priority" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" />
+                <FIELD NAME="institution" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="authname" TYPE="char" LENGTH="255" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+                <KEY NAME="authnamefk" TYPE="foreign" FIELDS="authname" REFTABLE="auth_installed" REFFIELDS="name" />
+                <KEY NAME="institutionfk" TYPE="foreign" FIELDS="institution" REFTABLE="institution" REFFIELDS="name" />
             </KEYS>
         </TABLE>
         <TABLE NAME="institution_locked_profile_field">
@@ -91,6 +103,8 @@
                 <FIELD NAME="suspendedcusr" TYPE="int" LENGTH="10" NOTNULL="false"/>
                 <FIELD NAME="quota" TYPE="int" LENGTH="10" NOTNULL="false"/>
                 <FIELD NAME="quotaused" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" />
+                <FIELD NAME="authinstance" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1" />
+                <FIELD NAME="sessionid" TYPE="char" LENGTH="32" NOTNULL="false" DEFAULT="" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
@@ -177,6 +191,17 @@
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="plugin,field" />
                 <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="auth_installed" REFFIELDS="name" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="auth_instance_config">
+            <FIELDS>
+	            <FIELD NAME="instance" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="field" TYPE="char" LENGTH="100" NOTNULL="true" />
+                <FIELD NAME="value" TYPE="text" LENGTH="small" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="instance,field" />
+                <KEY NAME="instancefk" TYPE="foreign" FIELDS="instance" REFTABLE="auth_instance" REFFIELDS="id" />
             </KEYS>
         </TABLE>
         <TABLE NAME="auth_cron">
