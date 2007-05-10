@@ -180,8 +180,8 @@ header('Content-type: text/html; charset=UTF-8');
 // Only do authentication once we know the page theme, so that the login form
 // can have the correct theming.
 require('auth/lib.php');
-$SESSION = new Session;
-$USER    = new User($SESSION);
+$SESSION = Session::singleton();
+$USER    = new LiveUser();
 // The installer does its own auth_setup checking, because some upgrades may
 // break logging in and so need to allow no logins.
 if (!defined('INSTALLER')) {
