@@ -32,66 +32,32 @@ defined('INTERNAL') || die();
  */
 class AuthInternal extends Auth {
 
+    public function __construct($id = null) {
+        $this->has_config = false;
+        $this->type       = 'internal';
+        if(!empty($id)) {
+            return $this->init($id);
+        }
+        return true;
+    }
+
+    public function init($id) {
+        $this->ready = parent::init($id);
+        return true;
+    }
+
     /**
      * Attempt to authenticate user
      *
-     * @param string $username The username to authenticate with
+     * @param object $user     As returned from the usr table
      * @param string $password The password being used for authentication
-     * @param string $institution The institution the user is logging in for
      * @return bool            True/False based on whether the user
      *                         authenticated successfully
      * @throws AuthUnknownUserException If the user does not exist
      */
-    public static function authenticate_user_account($username, $password, $institution) {
-        if (!$user = get_record_sql('SELECT username, password, salt
-            FROM ' . get_config('dbprefix') . 'usr
-            WHERE LOWER(username) = ?
-            AND institution = ?', array(strtolower($username), $institution))) {
-            throw new AuthUnknownUserException("\"$username\" is not known to AuthInternal");
-        }
-
-        return self::validate_password($password, $user->password, $user->salt);
-    }
-
-    /**
-     * Establishes whether a user exists
-     *
-     * @param string $username The username to check
-     * @return bool            True if the user exists
-     * @throws AuthUnknownUserException If the user does not exist
-     */
-    public static function user_exists($username) {
-        if (record_exists('usr', 'LOWER(username)', strtolower($username), 'institution', 'mahara')) {
-            return true;
-        }
-        throw new AuthUnknownUserException("\"$username\" is not known to AuthInternal");
-    }
-
-    /**
-     * Given a user that we know about, return an array of information about them
-     *
-     * Used when a user who was otherwise unknown authenticates successfully,
-     * or if getting userinfo on each login is enabled for this auth method.
-     *
-     * Does not need to be implemented for the internal authentication method,
-     * because all users are already known about.
-     */
-    public static function get_user_info($username) {
-    }
-
-    /**
-     * Given a username, returns information about that user from the 'usr'
-     * table.
-     *
-     * @param string $username The name of the user to get information from
-     * @return object          Information about the user
-     */
-    public static function get_user_info_cached($username) {
-        if (!$result = get_record('usr', 'LOWER(username)', strtolower($username), null, null, null, null,
-                    '*, ' . db_format_tsfield('expiry') . ', ' . db_format_tsfield('lastlogin'))) {
-            throw new AuthUnknownUserException("\"$username\" is not known to AuthInternal");
-        }
-        return $result;
+    public function authenticate_user_account($user, $password) {
+        $this->must_be_ready();
+        return $this->validate_password($password, $user->password, $user->salt);
     }
 
     /**
@@ -102,7 +68,7 @@ class AuthInternal extends Auth {
      * @param string $password The password to check
      * @return bool            Whether the password is valid
      */
-    public static function is_password_valid($password) {
+    public function is_password_valid($password) {
         if (!preg_match('/^[a-zA-Z0-9 ~!#\$%\^&\*\(\)_\-=\+\,\.<>\/\?;:"\[\]\{\}\\\|`\']{6,}$/', $password)) {
             return false;
         }
@@ -124,18 +90,16 @@ class AuthInternal extends Auth {
      * This method is not strictly part of the authentication API, but if
      * defined allows the method to change a user's password.
      *
-     * @param string $username The user to change the password for
-     * @param string $password The password to set for the user
+     * @param object  $user     The user to change the password for
+     * @param string  $password The password to set for the user
      * @return string The new password, or empty if the password could not be set
      */
-    public static function change_password($username, $password) {
+    public function change_password(User $user, $password) {
+        $this->must_be_ready();
         // Create a salted password and set it for the user
-        $user = new StdClass;
         $user->salt = substr(md5(rand(1000000, 9999999)), 2, 8);
-        $user->password = self::encrypt_password($password, $user->salt);
-        $where = new StdClass;
-        $where->username = $username;
-        update_record('usr', $user, $where);
+        $user->password = $this->encrypt_password($password, $user->salt);
+        $user->commit();
         return $user->password;
     }
 
@@ -152,7 +116,7 @@ class AuthInternal extends Auth {
      * @param string $username The username to check
      * @return bool            Whether the username is valid
      */
-    public static function is_username_valid($username) {
+    public function is_username_valid($username) {
         return preg_match('/^[a-zA-Z0-9\._@]{3,30}$/', $username);
     }
 
@@ -171,7 +135,7 @@ class AuthInternal extends Auth {
     * @param string $salt     The salt to use to encrypt the password
     * @todo salt mandatory
     */
-    public static function encrypt_password($password, $salt='') {
+    public function encrypt_password($password, $salt='') {
         if ($salt == '') {
             $salt = substr(md5(rand(1000000, 9999999)), 2, 8);
         }
@@ -191,7 +155,8 @@ class AuthInternal extends Auth {
      *                         database manually without having to make up and
      *                         encrypt a password using a salt.
      */
-    private static function validate_password($theysent, $wehave, $salt) {
+    private function validate_password($theysent, $wehave, $salt) {
+        $this->must_be_ready();
         if ($salt == null) {
             // This allows "plaintext" passwords, which are eaiser for an admin to
             // create by hacking in the database directly. The application does not
@@ -206,7 +171,7 @@ class AuthInternal extends Auth {
         }
 
         // The main type - a salted sha1
-        $sha1sent = self::encrypt_password($theysent, $salt);
+        $sha1sent = $this->encrypt_password($theysent, $salt);
         return $sha1sent == $wehave;
     }
 
