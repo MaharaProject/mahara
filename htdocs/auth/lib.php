@@ -517,23 +517,15 @@ function change_password_validate(Pieform $form, $values) {
  */
 function change_password_submit(Pieform $form, $values) {
     global $USER, $SESSION;
-    $authtype = auth_get_authtype_for_institution($USER->get('institution'));
-    $authclass = 'Auth' . ucfirst($authtype);
+
+    $authobj = AuthFactory::create($USER->authinstance);
 
     // This method should exist, because if it did not then the change
     // password form would not have been shown.
-    if ($password = call_static_method($authclass, 'change_password', $USER->get('username'), $values['password1'])) {
-        $user = new StdClass;
-        $user->password = $password;
-        $user->passwordchange = 0;
-        $where = new StdClass;
-        $where->username = $USER->get('username');
-        update_record('usr', $user, $where);
-        $USER->set('password', $password);
-        $USER->set('passwordchange', 0);
+    if ($password = $authobj->change_password($USER, $values['password1'])) {
         $SESSION->add_ok_msg(get_string('passwordsaved'));
         if (!empty($values['email'])) {
-            set_profile_field($USER->get('id'), 'email', $values['email']);
+            set_profile_field($USER->id, 'email', $values['email']);
         }
         redirect();
     }
