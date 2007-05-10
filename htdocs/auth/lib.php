@@ -496,19 +496,16 @@ function auth_check_password_change() {
 function change_password_validate(Pieform $form, $values) {
     global $USER;
 
-    // Get the authentication type for the user (based on the institution), and
+    // Get the authentication type for the user, and
     // use the information to validate the password
-    $authtype  = auth_get_authtype_for_institution($USER->get('institution'));
-    $authclass = 'Auth' . ucfirst($authtype);
-    $authlang  = 'auth.' . $authtype;
-    safe_require('auth', $authtype);
+    $authobj = AuthFactory::create($USER->authinstance);
 
     // @todo this could be done by a custom form rule... 'password' => $user
-    password_validate($form, $values, $USER->get('username'), $USER->get('institution'));
+    password_validate_user($form, $values, $USER);
 
     // The password cannot be the same as the old one
     if (!$form->get_error('password1')
-        && call_static_method($authclass, 'authenticate_user_account', $USER->get('username'), $values['password1'], $USER->get('institution'))) {
+        && $authobj->authenticate_user_account($USER, $values['password1'])) {
         $form->set_error('password1', get_string('passwordnotchanged'));
     }
 }
