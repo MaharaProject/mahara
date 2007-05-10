@@ -282,7 +282,8 @@ abstract class Auth {
 /******************************************************************************/
 
 /**
- * Handles authentication by setting up a session for a user if they are logged in.
+ * Handles authentication by setting up a session for a user if they are logged 
+ * in.
  *
  * This function combined with the Session class is smart - if the user is not
  * logged in then they do not get a session, which prevents simple curl hits
@@ -322,14 +323,14 @@ function auth_setup () {
         // Make sure that if a user's admin status has changed, they're kicked
         // out of the admin section
         if (defined('ADMIN')) {
-            $userreallyadmin = get_field('usr', 'admin', 'id', $USER->get('id'));
+            $userreallyadmin = get_field('usr', 'admin', 'id', $USER->id);
             if (!$USER->get('admin') && $userreallyadmin) {
                 // The user has been made into an admin
-                $USER->set('admin', 1);
+                $USER->admin = 1;
             }
             else if ($USER->get('admin') && !$userreallyadmin) {
                 // The user's admin rights have been taken away
-                $USER->set('admin', 0);
+                $USER->admin = 0;
                 $SESSION->add_error_msg(get_string('accessforbiddentoadminsection'));
                 redirect();
             }
