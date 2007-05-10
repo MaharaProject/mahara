@@ -79,11 +79,29 @@ class Session {
     /**
      * Resumes an existing session, only if there is one
      */
-    public function __construct() {
+    private function __construct() {
         // Resume an existing session if required
         if (isset($_COOKIE[session_name()])) {
             session_start();
         }
+    }
+
+    /**
+     * Singelton function keeps us from generating multiple instances of this
+     * class
+     *
+     * @return object   The class instance
+     * @access public
+     */
+    public static function singleton() {
+        //single instance
+        static $instance;
+
+        //if we don't have the single instance, create one
+        if(!isset($instance)) {
+            $instance = new Session();
+        }
+        return($instance);
     }
 
     /**
@@ -199,6 +217,16 @@ class Session {
                 'messages' => array()
             );
         }
+    }
+
+    /**
+     * Find out if the session has been started yet
+     */
+    public function is_live() {
+        if ("" == session_id()) {
+            return false;
+        }
+        return true;
     }
 
     /**
