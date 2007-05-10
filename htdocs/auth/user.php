@@ -25,38 +25,41 @@
  */
 
 defined('INTERNAL') || die();
+$put = array();
+
 
 /**
- * The user class represents a single logged in user in the system. The user
- * has several properties that can be accessed and set, including account
- * and activity preferences.
+ * The user class represents any user in the system.
  *
- * The user class stores this information in the session, so that it does not
- * need to be requested every page load.
  */
 class User {
-    
+
     /**
      * Defaults for user information.
      *
      * @var array
      */
-    private $defaults;
-    private $stdclass;
+    protected $defaults;
+    protected $stdclass;
+    protected $authenticated = false;
+    protected $changed       = false;
+    protected $attributes    = array();
+    protected $SESSION;
 
     /**
      * Sets defaults for the user object (only because PHP5 does not appear
      * to support private static const arrays), and resumes a session
      */
-    public function __construct($SESSION) {
+    public function __construct() {
         $this->defaults = array(
             'logout_time'      => 0,
             'id'               => 0,
             'username'         => '',
             'password'         => '',
-            'salt'             => '',
             'institution'      => 'mahara',
+            'salt'             => '',
             'passwordchange'   => false,
+            'active'           => 1,
             'deleted'          => false,
             'expiry'           => 0,
             'expirymailsent'   => 0,
@@ -64,21 +67,102 @@ class User {
             'inactivemailsent' => 0,
             'staff'            => false,
             'admin'            => false,
-            'quota'            => 0,
-            'quotaused'        => 0,
             'firstname'        => '',
             'lastname'         => '',
+            'studentid'        => '',
             'preferredname'    => '',
             'email'            => '',
-            'profileicon'      => '',
+            'profileicon'      => null,
+            'suspendedctime'   => null,
+            'suspendedreason'  => null,
+            'suspendedcusr'    => null,
+            'quota'            => 0,
+            'quotaused'        => 0,
+            'authinstance'     => 1,
+            'sessionid'        => '', /* The real session ID that PHP knows about */
             'accountprefs'     => array(),
             'activityprefs'    => array(),
             'sesskey'          => ''
         );
+        $this->attributes = array();
+        $this->SESSION = Session::singleton();
 
-        $this->SESSION = $SESSION;
     }
-    
+
+    /**
+     * Take a username, password and institution and try to authenticate the
+     * user
+     *
+     * @param  string $username
+     * @param  string $password
+     * @param  string $institution
+     * @return bool
+     */
+    public function login($username, $password, $institution) {
+        $users = get_records_select_array('usr', 'LOWER(username) = ? AND institution = ?', array($username, $institution), 'authinstance', '*');
+        
+        if ($users == false) {
+            throw new AuthUnknownUserException("\"$username\" at \"$institution\" is not known");
+        }
+
+        foreach($users as $user) {
+            $auth = AuthFactory::create($user->authinstance);
+            if ($auth->authenticate_user_account($user, $password)) {
+                $this->authenticate($user);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * When a user creates a security context by whatever method, we do some 
+     * standard stuff
+     *
+     * @param  object $user     Record from the usr table
+     * @return void
+     */
+    protected function authenticate($user) {
+        $this->authenticated  = true;
+        $this->populate($user);
+        session_regenerate_id(true);
+        $this->sessionid          = session_id();
+        $this->logout_time        = time() + get_config('session_timeout');
+        $this->sesskey            = get_random_key();
+        $this->activityprefs      = load_activity_preferences($user->id);
+        $this->accountprefs       = load_account_preferences($user->id);
+        $this->commit();
+    }
+
+    /**
+     * 
+     */
+    public function retrieve($id) {
+        if (!is_numeric($id) || $id < 0) {
+            throw new InvalidArgumentException('parameter must be a positive integer to create a User object');
+        }
+        
+        $user = get_record('usr', 'id', $id);
+        $this->populate($user);
+        return $this;
+    }
+
+    /**
+     * Take a row object from the usr table and populate this object with the
+     * values
+     *
+     * @param  object $data  The row data
+     */
+    protected function populate($data) {
+        reset($this->defaults);
+        while(list($key, ) = each($this->defaults)) {
+            if (property_exists($data, $key)) {
+                $this->set($key, $data->{$key});
+            }
+        }
+    }
+
     /**
      * Gets the user property keyed by $key.
      *
@@ -87,27 +171,72 @@ class User {
      * @throws InvalidArgumentException
      */
     public function get($key) {
-        if (!isset($this->defaults[$key])) {
+        if (!array_key_exists($key, $this->defaults)) {
             throw new InvalidArgumentException($key);
         }
-        if (null !== ($value = $this->SESSION->get("user/$key"))) {
-            return $value;
+        if (array_key_exists($key, $this->attributes) && null !== $this->attributes[$key]) {
+            return $this->attributes[$key];
         }
         return $this->defaults[$key];
     }
 
     /**
+     * Gets the user property keyed by $key.
+     *
+     * @param string $key The key to get the value of
+     * @return mixed
+     * @throws InvalidArgumentException
+     */
+    public function __get($key) {
+        return $this->get($key);
+    }
+
+    /**
      * Sets the property keyed by $key
      */
-    public function set($key, $value) {
-        if (!isset($this->defaults[$key])) {
+    protected function set($key, $value) {
+
+        if (!array_key_exists($key, $this->defaults)) {
             throw new InvalidArgumentException($key);
         }
-        // @todo: Martyn Only for external calls??
-        //if ($key == 'quotaused') {
-        //    throw new InvalidArgumentException('quotaused should be set via the quota_* methods');
-        //}
-        $this->SESSION->set("user/$key", $value);
+
+        $this->attributes[$key] = $value;
+
+        // For now, these fields are saved to the DB elsewhere
+        if ($key != 'activityprefs' && $key !=  'accountprefs') {
+            $this->changed = true;
+        }
+        return $this;
+    }
+
+    /**
+     * Sets the property keyed by $key
+     */
+    public function __set($key, $value) {
+        if ($key == 'quotaused') {
+            throw new InvalidArgumentException('quotaused should be set via the quota_* methods');
+        }
+
+        if ($key == 'username' && $this->id != 0) {
+            throw new InvalidArgumentException('We cannot change the username of an existing user');
+        }
+
+        $this->set($key, $value);
+    }
+
+    /**
+     * Commit the USR record to the database
+     */
+    public function commit() {
+        if ($this->changed == false) {
+            return;
+        }
+        if (is_numeric($this->id) && 0 < $this->id) {
+            update_record('usr', $this->to_stdclass(), (object)array('id' => $this->id));
+        } else {
+            $this->set('id', insert_record('usr', $this->to_stdclass(), 'id', true));
+        }
+        $this->changed = false;
     }
 
     /** 
@@ -120,7 +249,7 @@ class User {
         $activityprefs = $this->get('activityprefs');
         return isset($activityprefs[$key]) ? $activityprefs[$key] : null;
     }
-    
+
     /** @todo document this method */
     public function set_activity_preference($activity, $method) {
         log_debug("set_activity_preference($activity, $method)");
@@ -140,7 +269,7 @@ class User {
         $accountprefs = $this->get('accountprefs');
         return isset($accountprefs[$key]) ? $accountprefs[$key] : null;
     }
-    
+
     /** @todo document this method */
     public function set_account_preference($field, $value) {
         log_debug("set_account_preference($field, $value)");
@@ -149,7 +278,7 @@ class User {
         $accountprefs[$field] = $value;
         $this->set('accountprefs', $accountprefs);
     }
-    
+
     /**
      * Determines if the user is currently logged in
      *
@@ -158,38 +287,23 @@ class User {
     public function is_logged_in() {
         return ($this->get('logout_time') > 0 ? true : false);
     }
-    
-    /**
-     * Logs in the given user.
-     *
-     * The passed object should contain the basic information to persist across
-     * page loads.
-     *
-     * @param object $userdata Information to persist across page loads
-     */
-    public function login($userdata) {
-        session_regenerate_id(true);
-        foreach (array_keys($this->defaults) as $key) {
-            $this->set($key, (isset($userdata->{$key})) ? $userdata->{$key} : $this->defaults[$key]);
-        }
-        
-        $this->set('logout_time', time() + get_config('session_timeout'));
-        $this->set('sesskey', get_random_key());
-        $this->set('activityprefs', load_activity_preferences($this->get('id')));
-        $this->set('accountprefs', load_account_preferences($this->get('id')));
-    }
-    
+
     /**
      * Logs the current user out
      */
     public function logout () {
+        if ($this->changed == true) {
+            log_debug('Destroying user with un-committed changes');
+        }
         $this->set('logout_time', 0);
-        $this->SESSION->set('messages', array());
+        if ($this->authenticated === true) {
+            $this->SESSION->set('messages', array());
+        }
+        reset($this->defaults);
         foreach (array_keys($this->defaults) as $key) {
             $this->set($key, $this->defaults[$key]);
         }
     }
-
 
     /**
      * Assuming that a session is already active for a user, this method
@@ -201,13 +315,13 @@ class User {
     public function renew() {
         $this->set('logout_time', time() + get_config('session_timeout'));
     }
-    
+
     public function to_stdclass() {
-        if (empty($this->stdclass)) {
-            $this->stdclass = new StdClass;
-            foreach (array_keys($this->defaults) as $k) {
-                $this->stdclass->{$k} = $this->get($k);
-            }
+        $this->stdclass = new StdClass;
+        reset($this->defaults);
+        foreach (array_keys($this->defaults) as $k) {
+            if($k == 'lastlogin' || $k == 'expiry') continue;
+            $this->stdclass->{$k} = $this->get($k);//(is_null($this->get($k))? 'NULL' : $this->get($k));
         }
         return $this->stdclass;
     }
@@ -220,8 +334,8 @@ class User {
             throw new QuotaExceededException('Adding ' . $bytes . ' bytes would exceed the user\'s quota');
         }
         $newquota = $this->get('quotaused') + $bytes;
-        $this->SESSION->set("user/quotaused", $newquota);
-        update_record('usr', array('quotaused' => $newquota), array('id' => $this->get('id')));
+        $this->set("quotaused", $newquota);
+        return $this;
     }
 
     public function quota_remove($bytes) {
@@ -232,8 +346,8 @@ class User {
         if ($newquota < 0) {
             $newquota = 0;
         }
-        $this->SESSION->set("user/quotaused", $newquota);
-        update_record('usr', array('quotaused' => $newquota), array('id' => $this->get('id')));
+        $this->set("quotaused", $newquota);
+        return $this;
     }
 
     public function quota_allowed($bytes) {
@@ -246,4 +360,52 @@ class User {
 }
 
 
+class LiveUser extends User {
+
+    public function __construct() {
+
+        parent::__construct();
+
+        if ($this->SESSION->is_live()) {
+            $this->authenticated  = true;
+            while(list($key,) = each($this->defaults)) {
+                $this->get($key);
+            }
+        }
+    }
+
+    /**
+     * Gets the user property keyed by $key.
+     *
+     * @param string $key The key to get the value of
+     * @return mixed
+     * @throws InvalidArgumentException
+     */
+    public function get($key) {
+        if (!array_key_exists($key, $this->defaults)) {
+            throw new InvalidArgumentException($key);
+        }
+        if (null !== ($value = $this->SESSION->get("user/$key"))) {
+            return $value;
+        }
+        return $this->defaults[$key];
+    }
+
+    /**
+     * Sets the property keyed by $key
+     */
+    protected function set($key, $value) {
+
+        if (!array_key_exists($key, $this->defaults)) {
+            throw new InvalidArgumentException($key);
+        }
+
+        // For now, these fields are saved to the DB elsewhere
+        if ($key != 'activityprefs' && $key !=  'accountprefs') {
+            $this->changed = true;
+        }
+        $this->SESSION->set("user/$key", $value);
+        return $this;
+    }
+}
 ?>
