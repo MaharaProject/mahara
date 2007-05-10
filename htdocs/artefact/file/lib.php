@@ -507,6 +507,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         }
         global $USER;
         $USER->quota_add($size);
+        $USER->commit();
         return $id;
     }
 
@@ -528,7 +529,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             return get_string('uploadexceedsquota');
         }
         $f = self::new_file($um->file['tmp_name'], $data);
-        $f->set('owner', $USER->get('id'));
+        $f->set('owner', $USER->id);
         $f->set('size', $size);
         $f->set('oldextension', $um->original_filename_extension());
         $f->commit();
@@ -540,6 +541,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         }
         else {
             $USER->quota_add($size);
+            $USER->commit();
         }
         return $error;
     }
@@ -588,8 +590,9 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             unlink($file);
             global $USER;
             // Deleting other users' files won't lower their quotas yet...
-            if (!$this->adminfiles && $USER->get('id') == $this->get('owner')) {
-                $USER->quota_remove($size);  
+            if (!$this->adminfiles && $USER->id == $this->get('owner')) {
+                $USER->quota_remove($size);
+                $USER->commit();
             }
         }
         parent::delete();
@@ -805,7 +808,7 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
             global $USER;
             $data = (object) array('title' => $name,
                                    'description' => $description,
-                                   'owner' => $USER->get('id'),
+                                   'owner' => $USER->id,
                                    'adminfiles' => 1);
             $f = new ArtefactTypeFolder(0, $data);
             $f->commit();
@@ -817,7 +820,7 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
     public static function get_folder_by_name($name, $parentfolderid=null, $userid=null) {
         if (empty($userid)) {
             global $USER;
-            $userid = $USER->get('id');
+            $userid = $USER->id;
         }
         $prefix = get_config('dbprefix');
         $parentclause = $parentfolderid ? 'parent = ' . $parentfolderid : 'parent IS NULL';
@@ -830,7 +833,7 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
     public static function get_folder_id($name, $description, $parentfolderid=null, $userid=null) {
         if (empty($userid)) {
             global $USER;
-            $userid = $USER->get('id');
+            $userid = $USER->id;
         }
         if (!$record = self::get_folder_by_name($name, $parentfolderid, $userid)) {
             $data = new StdClass;
