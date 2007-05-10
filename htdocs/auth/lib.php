@@ -1070,6 +1070,60 @@ function password_validate(Pieform $form, $values, $username, $institution) {
     }
 }
 
+/**
+ * Given a form, an array of values with 'password1' and 'password2'
+ * indices and a user, validate that the user can change their password to
+ * the one in $values.
+ *
+ * This provides one place where validation of passwords can be done. This is
+ * used by:
+ *  - registration
+ *  - user forgot password
+ *  - user changing password on their account page
+ *  - user forced to change their password by the <kbd>passwordchange</kbd>
+ *    flag on the <kbd>usr</kbd> table.
+ *
+ * The password is checked for:
+ *  - Being in valid form according to the rules of the authentication method
+ *    for the user
+ *  - Not being an easy password (a blacklist of strings, NOT a length check or
+ *     similar), including being the user's username
+ *  - Both values being equal
+ *
+ * @param Pieform $form         The form to validate
+ * @param array $values         The values passed through
+ * @param string $authplugin    The authentication plugin that the user uses
+ */
+function password_validate_user(Pieform $form, $values, User $user) {
+
+    $authobj = AuthFactory::create($user->authinstance);
+
+    if (!$form->get_error('password1') && !$authobj->is_password_valid($values['password1'])) {
+        $form->set_error('password1', get_string('passwordinvalidform', "auth.$authobj->type"));
+    }
+
+    $suckypasswords = array(
+        'mahara', 'password', $user->username
+    );
+
+    if (!$form->get_error('password1') && in_array($values['password1'], $suckypasswords)) {
+        $form->set_error('password1', get_string('passwordtooeasy'));
+    }
+
+    if (!$form->get_error('password1') && $values['password1'] != $values['password2']) {
+        $form->set_error('password2', get_string('passwordsdonotmatch'));
+    }
+
+    // No Mike, that's a _BAD_ Mike! :)
+    if ($values['password1'] == 'mike01' || $values['password1'] == 'mike012') {
+        if (!$form->get_property('jsform')) {
+            die_info('<img src="'
+                . theme_get_url('images/sidebox1_corner_botright.gif')
+                . '" alt="(C) 2007 MSS Enterprises"></p>');
+        }
+    }
+}
+
 class PluginAuth extends Plugin {
 
     public static function get_event_subscriptions() {
