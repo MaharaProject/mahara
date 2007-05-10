@@ -81,10 +81,10 @@ if ($error = $um->save_file(ArtefactTypeFile::get_file_directory($fileid) , $fil
     redirect($page);
 }
 else {
-    //$USER->quota_add($size);
-    // Just add to the usr table directly.
-    $ownerquotaused = get_field('usr', 'quotaused', 'id', $viewdata->owner);
-    set_field('usr', 'quotaused', $ownerquotaused + $size, 'id', $viewdata->owner);
+    $usr = new User();
+    $usr->retrieve($viewdata->owner)
+        ->quota_add($size)
+        ->commit();
 }
 
 global $USER;
