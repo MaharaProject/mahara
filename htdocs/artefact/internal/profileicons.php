@@ -152,7 +152,7 @@ function upload_validate(Pieform $form, $values) {
         $form->set_error('file', get_string('filenotimage'));
     }
 
-    if (get_field('artefact', 'COUNT(*)', 'artefacttype', 'profileicon', 'owner', $USER->get('id')) >= 5) {
+    if (get_field('artefact', 'COUNT(*)', 'artefacttype', 'profileicon', 'owner', $USER->id) >= 5) {
         $form->set_error('file', get_string('onlyfiveprofileicons', 'artefact.internal'));
     }
 
@@ -174,7 +174,7 @@ function upload_submit(Pieform $form, $values) {
     // If there are no icons, we can set this one that is being uploaded to be
     // the default for the user
     $setasdefault = false;
-    if (0 == get_field('artefact', 'COUNT(*)', 'artefacttype', 'profileicon', 'owner', $USER->get('id'))) {
+    if (0 == get_field('artefact', 'COUNT(*)', 'artefacttype', 'profileicon', 'owner', $USER->id)) {
         $setasdefault = true;
     }
 
@@ -189,7 +189,7 @@ function upload_submit(Pieform $form, $values) {
 
     // Entry in artefact table
     $artefact = new ArtefactTypeProfileIcon();
-    $artefact->set('owner', $USER->get('id'));
+    $artefact->set('owner', $USER->id);
     $artefact->set('title', ($values['title']) ? $values['title'] : $values['file']['name']);
     $artefact->set('note', $values['file']['name']);
     $artefact->commit();
@@ -202,9 +202,10 @@ function upload_submit(Pieform $form, $values) {
     move_uploaded_file($values['file']['tmp_name'], $directory . $id);
 
     if ($setasdefault) {
-        $USER->set('profileicon', $id);
-        set_field('usr', 'profileicon', $id, 'id', $USER->get('id'));
+        $USER->profileicon = $id;
     }
+
+    $USER->commit();
 
     $form->json_reply(PIEFORM_OK, get_string('uploadedprofileiconsuccessfully', 'artefact.internal'));
 }
@@ -214,12 +215,12 @@ function settings_submit_default(Pieform $form, $values) {
 
     $default = param_integer('d');
 
-    if (1 != get_field('artefact', 'COUNT(*)', 'id', $default, 'artefacttype', 'profileicon', 'owner', $USER->get('id'))) {
+    if (1 != get_field('artefact', 'COUNT(*)', 'id', $default, 'artefacttype', 'profileicon', 'owner', $USER->id)) {
         throw new UserException(get_string('profileiconsetdefaultnotvalid', 'artefact.internal'));
     }
 
-    $USER->set('profileicon', $default);
-    set_field('usr', 'profileicon', $default, 'id', $USER->get('id'));
+    $USER->profileicon = $default;
+    $USER->commit();
     $SESSION->add_ok_msg(get_string('profileiconsdefaultsetsuccessfully', 'artefact.internal'));
     redirect('/artefact/internal/profileicons.php');
 }
@@ -236,10 +237,11 @@ function settings_submit_delete(Pieform $form, $values) {
         delete_records_select('artefact', "
             artefacttype = 'profileicon' AND
             owner = ? AND
-            id IN($icons)", array($USER->get('id')));
+            id IN($icons)", array($USER->id));
         // Remove all of the images
         foreach (explode(',', $icons) as $icon) {
             $USER->quota_remove(filesize(get_config('dataroot') . 'artefact/internal/profileicons/' . ($icon % 256) . '/' . $icon));
+            $USER->commit();
             delete_image('artefact/internal/profileicons', $icon);
         }
         $SESSION->add_ok_msg(get_string('profileiconsdeletedsuccessfully', 'artefact.internal'));
