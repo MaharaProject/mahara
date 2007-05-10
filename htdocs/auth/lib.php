@@ -35,6 +35,12 @@ require(get_config('docroot') . 'auth/user.php');
 class AuthUnknownUserException extends UserException {}
 
 /**
+ * We tried to call a method on an auth plugin that hasn't been init'ed 
+ * successfully
+ */
+class UninitialisedAuthException extends SystemException {}
+
+/**
  * Base authentication class. Provides a common interface with which
  * authentication can be carried out for system users.
  *
