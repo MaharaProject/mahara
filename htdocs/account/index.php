@@ -165,7 +165,7 @@ function accountprefs_validate(Pieform $form, $values) {
             $form->set_error('oldpassword', get_string('oldpasswordincorrect', 'account'));
             return;
         }
-        password_validate($form, $values, $USER->username, $USER->institution);
+        password_validate_user($form, $values, $USER);
     }
     else if ($values['password1'] !== '' || $values['password2'] !== '') {
         $form->set_error('oldpassword', get_string('mustspecifyoldpassword'));
