@@ -52,17 +52,147 @@ class UninitialisedAuthException extends SystemException {}
  */
 abstract class Auth {
 
+    protected $instanceid;
+    protected $institution;
+    protected $instancename;
+    protected $priority;
+    protected $authname;
+    protected $config;
+    protected $has_config;
+    protected $type;
+    protected $ready;
+
     /**
-     * Given a username, password and institution, attempts to log the use in.
+     * Given an id, create the auth object and retrieve the config settings
+     * If an instance ID is provided, get all the *instance* config settings
      *
-     * @param string $username  The username to attempt to authenticate
+     * @param  int  $id   The unique ID of the auth instance
+     * @return bool       Whether the create was successful
+     */
+    public function __construct($id = null) {
+        $this->ready = false;
+    }
+
+    /**
+     * Instantiate the plugin by pulling the config data for an instance from
+     * the database
+     *
+     * @param  int  $id   The unique ID of the auth instance
+     * @return bool       Whether the create was successful
+     */
+    public function init($id) {
+        if (!is_numeric($id) || intval($id) != $id) {
+            throw new UserNotFoundException();
+        }
+
+        $instance = get_record('auth_instance', 'id', $id);
+        if (empty($instance)) {
+            throw new UserNotFoundException();
+        }
+
+        $this->instanceid   = $id;
+        $this->institution  = $instance->institution;
+        $this->instancename = $instance->instancename;
+        $this->priority     = $instance->priority;
+        $this->authname     = $instance->authname;
+
+        // Return now if the plugin type doesn't require any config 
+        // (e.g. internal)
+        if ($this->has_config == false) {
+            return true;
+        }
+
+        $records = get_records_array('auth_instance_config', 'instance', $this->instanceid);
+
+        if ($records == false) {
+            return false;
+        }
+
+        foreach($records as $record) {
+            $this->config[$record->field] = $record->value;
+        }
+
+        return true;
+    }
+
+    /**
+     * The __get overloader is invoked when the requested member is private or
+     * protected, or just doesn't exist.
+     * 
+     * @param  string  $name   The name of the value to fetch
+     * @return mixed           The value
+     */
+    public function __get($name) {
+        $approved_members = array('instanceid', 'institution', 'instancename', 'priority', 'authname');
+
+        if (in_array($name, $approved_members)) {
+            return $this->{$name};
+        }
+
+        if (isset($this->config['name'])) {
+            return $this->config['name'];
+        }
+        return null;
+    }
+
+    /**
+     * The __set overloader is invoked when the specified member is private or
+     * protected, or just doesn't exist.
+     * 
+     * @param  string  $name   The name of the value to set
+     * @param  mixed   $value  The value to assign
+     * @return void
+     */
+    public function __set($name, $value) {
+        /*
+        if (property_exists($this, $name)) {
+            $this->{$name} = $value;
+            return;
+        }
+        */
+        throw new SystemException('It\'s forbidden to set values on Auth objects');
+    }
+
+    /**
+     * Check that the plugin has been initialised before we try to use it.
+     * 
+     * @throws UninitialisedAuthException
+     * @return bool 
+     */
+    protected function must_be_ready() {
+        if ($this->ready == false) {
+            throw new UninitialisedAuthException('This Auth plugin has not been initialised');
+        }
+        return true;
+    }
+
+    /**
+     * Fetch the URL that users can visit to change their passwords. This might
+     * be a Moodle installation, for example.
+     * 
+     * @return  mixed   URL to change password or false if there is none
+     */
+    public function changepasswordurl() {
+        $this->must_be_ready();
+        if (empty($this->config['changepasswordurl'])) {
+            return false;
+        }
+        return $this->config['changepasswordurl'];
+    }
+
+    /**
+     * Given a username and password, attempts to log the user in.
+     *
+     * @param object $user      An object with username member (at least)
      * @param string $password  The password to use for the attempt
-     * @param string $institute The institution the user belongs to
      * @return bool             Whether the authentication was successful
      * @throws AuthUnknownUserException  If the user is unknown to the
      *                                   authentication method
      */
-    public static abstract function authenticate_user_account($username, $password, $institute);
+    public function authenticate_user_account($user, $password) {
+        $this->must_be_ready();
+        return false;
+    }
 
     /**
      * Given a username, returns whether the user exists in the usr table
@@ -70,24 +200,31 @@ abstract class Auth {
      * @param string $username The username to attempt to identify
      * @return bool            Whether the username exists
      */
-    public static abstract function user_exists($username);
+    public function user_exists($username) {
+        $this->must_be_ready();
+        if (record_exists('usr', 'LOWER(username)', strtolower($username), 'authinstance', $this->instanceid)) {
+            return true;
+        }
+        throw new AuthUnknownUserException("\"$username\" is not known to Auth");
+    }
 
     /**
-     * Given a username, returns a hash of information about a user.
+     * Given a username, returns a hash of information about a user from the
+     * external data source, e.g. Moodle or Drupal.
      *
      * @param string $username The username to look up information for
      * @return array           The information for the user
      * @throws AuthUnknownUserException If the user is unknown to the
      *                                  authentication method
      */
-    public static abstract function get_user_info($username);
+    public function get_user_info($username) {
+        return false;
+    }
 
     /**
      * Given a username, return information about the user from the database.
-     *
-     * This method is called when the user has been successfully authenticated,
-     * all createuser events have been fired and now we wish to populate the
-     * users session.
+     * This object must_be_ready, which means it will have an authinstanceid. 
+     * This is used to disambiguate between users with the same username.
      *
      * The information retrieved must be all rows in the user table, with the
      * timestamps formatted as unix timestamps. An example (taken from the
@@ -104,7 +241,15 @@ abstract class Auth {
      * @throws AuthUnknownUserException If the user is unknown to the
      *                                  authentication method
      */
-    public static abstract function get_user_info_cached($username);
+    public function get_user_info_cached($username) {
+        $this->must_be_ready();
+        if (!$result = get_record('usr', 'LOWER(username)', strtolower($username), 'authinstance', $this->instanceid,
+                    '*, ' . db_format_tsfield('expiry') . ', ' . db_format_tsfield('lastlogin'))) {
+            throw new AuthUnknownUserException("\"$username\" is not known to AuthInternal");
+        }
+        $cache[$result->username] = $result;
+        return $result;
+    }
 
     /**
      * Given a password, returns whether it is in a valid format for this
@@ -125,12 +270,16 @@ abstract class Auth {
      * @param string $password The password to check
      * @return bool            Whether the username is in valid form.
      */
-    public static function is_password_valid($password) {
+    public function is_password_valid($password) {
         return true;
     }
 
 }
 
+
+/******************************************************************************/
+    // End of Auth base-class
+/******************************************************************************/
 
 /**
  * Handles authentication by setting up a session for a user if they are logged in.
