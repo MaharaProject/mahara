@@ -521,21 +521,22 @@ function set_config($key, $value) {
 function get_config_plugin($plugintype, $pluginname, $key) {
     global $CFG;
 
-    if (array_key_exists('plugin',$CFG)
-        && array_key_exists($plugintype,$CFG->plugin)
-        && array_key_exists($pluginname,$CFG->plugin->{$plugintype})
-        && array_key_exists($key,$CFG->plugin->{$plugintype}->{$pluginname})) {
-        return  $CFG->plugin->{$plugintype}->{$pluginname}->{$key};
-    }
-    
-    // @todo: an optimisation might be to get all fields related to the plugin instead, as
-    // it may be quite likely that if one config item is requested for a plugin another
-    // might be.
-    if (!$value = get_field($plugintype . '_config', 'value', 'plugin', $pluginname, 'field', $key)) {
-        $value = null;
+    // Suppress NOTICE with @ in case $key is not yet cached
+    @$value = $CFG->plugin->{$plugintype}->{$pluginname}->{$key};
+    if(isset($value)) {
+        return $value;
     }
 
-    $CFG->plugin->{$plugintype}->{$pluginname}->{$key} = $value;
+    $records = get_records_array($plugintype . '_config', 'plugin', $pluginname, 'field', 'field, value');
+    if(!empty($records)) {
+        foreach($records as $record) {
+            $CFG->plugin->{$plugintype}->{$pluginname}->{$record->field} = $record->value;
+            if($record->field == $key) {
+                $value = $record->value;
+            }
+        }
+    }
+
     return $value;
 }
 
@@ -558,6 +559,76 @@ function set_config_plugin($plugintype, $pluginname, $key, $value) {
     }
     if ($status) {
         $CFG->plugin->{$plugintype}->{$pluginname}->{$key} = $value;
+        return true;
+    }
+    return false;
+}
+
+/**
+ * This function returns a value for $CFG for a plugin instance
+ * or null if it is not found. Initially this is interesting only 
+ * for multiauth. Note that it may go and look in the database
+ *
+ * @param string $plugintype   E.g. auth
+ * @param string $pluginname   E.g. internal
+ * @param string $pluginid     Instance id
+ * @param string $key          The config setting to look for
+ */
+function get_config_plugin_instance($plugintype, $pluginname, $pluginid, $key) {
+    global $CFG;
+
+    // Must be unlikely to exist as a config option for any plugin
+    $instance = '_i_n_s_t'.$pluginid;
+
+    // Suppress NOTICE with @ in case $key is not yet cached
+    @$value = $CFG->plugin->{$plugintype}->{$pluginname}->{$instance}->{$key};
+    if(isset($value)) {
+        return $value;
+    }
+
+    $records = get_records_array($plugintype . '_instance_config', 'instance', $pluginid, $pluginid, 'field, value');
+    if(!empty($records)) {
+        foreach($records as $record) {
+            $CFG->plugin->{$plugintype}->{$pluginname}->{$instance}->{$record->field} = $record->value;
+            if($record->field == $key) {
+                $value = $record->value;
+            }
+        }
+    }
+
+    return $value;
+}
+
+/**
+ * This function returns a value for $CFG for a plugin instance
+ * or null if it is not found. Initially this is interesting only 
+ * for multiauth. Note that it may go and look in the database
+ *
+ * @param string $plugintype   E.g. auth
+ * @param string $pluginname   E.g. internal
+ * @param string $pluginid     Instance id
+ * @param string $key          The config setting to look for
+ */
+function set_config_plugin_instance($plugintype, $pluginname, $pluginid, $key, $value) {
+    global $CFG;
+    $table = $plugintype . '_instance_config';
+
+    if (false !== get_field($table, 'value', 'instance', $pluginid, 'field', $key)) {
+        if (set_field($table, 'value', $value, 'instance', $pluginid, 'field', $key)) {
+            $status = true;
+        }
+    }
+    else {
+        $pconfig = new StdClass;
+        $pconfig->instance = $pluginid;
+        $pconfig->field  = $key;
+        $pconfig->value  = $value;
+        $status = insert_record($table, $pconfig);
+    }
+    if ($status) {
+        // Must be unlikely to exist as a config option for any plugin
+        $instance = '_i_n_s_t'.$pluginid;
+        $CFG->plugin->{$plugintype}->{$pluginname}->{$instance}->{$key} = $value;
         return true;
     }
     return false;
@@ -721,7 +792,11 @@ function call_static_method($class, $method) {
     $args = func_get_args();
     array_shift($args);
     array_shift($args);
-    return call_user_func_array(array($class, $method), $args);
+    try {
+        return call_user_func_array(array($class, $method), $args);
+    } catch(Exception $e) {
+        throw new Exception("Method not static");
+    }
 }
 
 function generate_class_name() {
