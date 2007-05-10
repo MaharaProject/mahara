@@ -48,8 +48,6 @@ else {
 }
 $tags       = param_variable('tags');
 
-$userid = $USER->get('id');
-
 safe_require('artefact', 'blog');
 
 
@@ -75,9 +73,9 @@ $postobj->set('tags', preg_split("/\s*,\s*/", trim($tags)));
 $postobj->set('published', !$draft);
 if (!$blogpost) {
     $postobj->set('parent', $blog);
-    $postobj->set('owner', $userid);
+    $postobj->set('owner', $USER->id);
 }
-else if ($postobj->get('owner') != $userid) {
+else if ($postobj->get('owner') != $USER->id) {
     json_reply('local', get_string('youarenottheownerofthisblogpost', 'artefact.blog'));
 }
 $postobj->commit();
