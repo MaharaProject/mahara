@@ -380,7 +380,7 @@ class ArtefactTypeCachedProfileField extends ArtefactTypeProfileField {
         $field = $this->get_artefact_type();
         set_field('usr', $field, $this->title, 'id', $this->owner);
         if ($this->owner == $USER->get('id')) {
-            $USER->set($field, $this->title);
+            $USER->{$field} = $this->title;
         }
     }
 
