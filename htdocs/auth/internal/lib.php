@@ -99,6 +99,7 @@ class AuthInternal extends Auth {
         // Create a salted password and set it for the user
         $user->salt = substr(md5(rand(1000000, 9999999)), 2, 8);
         $user->password = $this->encrypt_password($password, $user->salt);
+        $user->passwordchange = 0;
         $user->commit();
         return $user->password;
     }
