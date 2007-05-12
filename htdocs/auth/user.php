@@ -303,6 +303,8 @@ class User {
         foreach (array_keys($this->defaults) as $key) {
             $this->set($key, $this->defaults[$key]);
         }
+        // We don't want to commit the USER object after logout:
+        $this->changed = false;
     }
 
     /**
