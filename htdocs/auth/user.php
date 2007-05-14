@@ -90,52 +90,6 @@ class User {
     }
 
     /**
-     * Take a username, password and institution and try to authenticate the
-     * user
-     *
-     * @param  string $username
-     * @param  string $password
-     * @param  string $institution
-     * @return bool
-     */
-    public function login($username, $password, $institution) {
-        $users = get_records_select_array('usr', 'LOWER(username) = ? AND institution = ?', array($username, $institution), 'authinstance', '*');
-        
-        if ($users == false) {
-            throw new AuthUnknownUserException("\"$username\" at \"$institution\" is not known");
-        }
-
-        foreach($users as $user) {
-            $auth = AuthFactory::create($user->authinstance);
-            if ($auth->authenticate_user_account($user, $password)) {
-                $this->authenticate($user);
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * When a user creates a security context by whatever method, we do some 
-     * standard stuff
-     *
-     * @param  object $user     Record from the usr table
-     * @return void
-     */
-    protected function authenticate($user) {
-        $this->authenticated  = true;
-        $this->populate($user);
-        session_regenerate_id(true);
-        $this->sessionid          = session_id();
-        $this->logout_time        = time() + get_config('session_timeout');
-        $this->sesskey            = get_random_key();
-        $this->activityprefs      = load_activity_preferences($user->id);
-        $this->accountprefs       = load_account_preferences($user->id);
-        $this->commit();
-    }
-
-    /**
      * 
      */
     public function retrieve($id) {
@@ -374,6 +328,52 @@ class LiveUser extends User {
                 $this->get($key);
             }
         }
+    }
+
+    /**
+     * Take a username, password and institution and try to authenticate the
+     * user
+     *
+     * @param  string $username
+     * @param  string $password
+     * @param  string $institution
+     * @return bool
+     */
+    public function login($username, $password, $institution) {
+        $users = get_records_select_array('usr', 'LOWER(username) = ? AND institution = ?', array($username, $institution), 'authinstance', '*');
+        
+        if ($users == false) {
+            throw new AuthUnknownUserException("\"$username\" at \"$institution\" is not known");
+        }
+
+        foreach($users as $user) {
+            $auth = AuthFactory::create($user->authinstance);
+            if ($auth->authenticate_user_account($user, $password)) {
+                $this->authenticate($user);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * When a user creates a security context by whatever method, we do some 
+     * standard stuff
+     *
+     * @param  object $user     Record from the usr table
+     * @return void
+     */
+    protected function authenticate($user) {
+        $this->authenticated  = true;
+        $this->populate($user);
+        session_regenerate_id(true);
+        $this->sessionid          = session_id();
+        $this->logout_time        = time() + get_config('session_timeout');
+        $this->sesskey            = get_random_key();
+        $this->activityprefs      = load_activity_preferences($user->id);
+        $this->accountprefs       = load_account_preferences($user->id);
+        $this->commit();
     }
 
     /**
