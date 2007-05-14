@@ -90,6 +90,7 @@ if ($institution || $add) {
     if (!$add) {
         $data = get_record('institution', 'name', $institution);
         $lockedprofilefields = (array) get_column('institution_locked_profile_field', 'profilefield', 'name', $institution);
+        $authinstances = auth_get_auth_instances_for_institution($institution);
     }
     else {
         $data = new StdClass;
@@ -136,9 +137,9 @@ if ($institution || $add) {
             'help'   => true,
         ),
         'authplugin' => array(
-            'type'    => 'select',
+            'type'    => 'authlist',
             'title'   => get_string('authplugin', 'admin'),
-            'options' => get_records_menu('auth_installed', '', '', 'name', 'name, name'),
+            'options' => $authinstances,
             'help'   => true,
         ),
         'registerallowed' => array(
@@ -187,6 +188,8 @@ if ($institution || $add) {
         'type' => 'submitcancel',
         'value' => array(get_string('submit'), get_string('cancel'))
     );
+
+    $smarty->assign('authinstances_count', count($authinstances));
 
     $smarty->assign('institution_form', pieform(array(
         'name'     => 'institution',
