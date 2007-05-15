@@ -154,7 +154,7 @@ if (isset($key)) {
 
 
     // Begin the registration form buliding
-    if (!$registration = get_record_select('usr_registration', 'key = ? AND expiry >= ?', array($key, db_format_timestamp(time())))) {
+    if (!$registration = get_record_select('usr_registration', '"key" = ? AND expiry >= ?', array($key, db_format_timestamp(time())))) {
         die_info(get_string('registrationnosuchkey', 'auth.internal'));
     }
 
