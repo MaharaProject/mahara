@@ -6,6 +6,8 @@
     CustomLog __APACHELOGDIR__/mahara.access.log full
     ErrorLog  __APACHELOGDIR__/mahara.error.log
 
+    php_value upload_max_filesize 5M
+
     <Directory /var/www/mahara>
         Options -Indexes
         AllowOverride All
