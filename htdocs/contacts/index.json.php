@@ -68,7 +68,7 @@ if (empty($pending)) {
     if (!$data = get_records_sql_assoc($sql, array($userid, $userid, $userid), $offset, $limit)) {
         $data = array();
     }
-    if (!$views = get_views(array_keys($data))) {
+    if (!$views = get_views(array_keys($data), null, null)) {
         $views = array();
     }
     $data = array_values($data);
