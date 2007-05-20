@@ -92,13 +92,20 @@ foreach ($data as $d) {
 }
 
 json_headers();
+$viewcount = array_map('count', $views);
+// since php is so special and inconsistent, we can't use array_map for this because it breaks the top level indexes.
+$cleanviews = array();
+foreach ($views as $userindex => $viewarray) {
+    $cleanviews[$userindex] = array_slice($viewarray, 0, 5);
+}
 print json_encode(array(
     'count'   => $count,
     'limit'   => $limit,
     'offset'  => $offset,
     'data'    => $data,
     'pending' => $pending,
-    'views'   => array_map('array_values', $views),
+    'views' => $cleanviews,
+    'numviews' => $viewcount,
 ));
 exit;
 

@@ -74,8 +74,8 @@ var friendslist = new TableRenderer(
          }
          else {
              var viewcol;
-             if (typeof(d.views) == 'object' && d.views[r.id] && countKeys(d.views[r.id]) > 0) {
-                 var len = countKeys(d.views[r.id]);
+             if (typeof(d.views) == 'object' && d.views[r.id] && d.numviews[r.id] > 0) {
+                 var len = d.numviews[r.id];
                  var views = '';
                  if (len == 1) {
                      views = len + ' {$viewavailable}';
