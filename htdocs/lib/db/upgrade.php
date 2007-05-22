@@ -262,6 +262,13 @@ function xmldb_core_upgrade($oldversion=0) {
         execute_sql("ALTER TABLE {$prefix}view_access ALTER COLUMN accesstype SET DEFAULT 'public'");
     }
 
+    if ($oldversion < 2007051500) {
+        $table = new XMLDBTable('auth_installed');
+        $field = new XMLDBField('requires_config');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, true, true, null, null, null, 0);
+        add_field($table, $field);
+    }
+
     // everything up to here we pre mysql support.
 
     return $status;

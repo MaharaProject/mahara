@@ -20,6 +20,7 @@
                 <FIELD NAME="version" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="release" TYPE="text" LENGTH="small" NOTNULL="true" />
                 <FIELD NAME="active" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" />
+                <FIELD NAME="requires_config" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="name" />
