@@ -48,13 +48,18 @@ function pieform_element_authlist(Pieform $form, $element) {
     if (!isset($value['default'])) {
         $value['default'] = '';
     }
-//var_dump($value['instancelist']);exit;
+
     if (is_array($value) && count($value)) {
+        $smarty->assign('authtypes', $value['authtypes']);
         $smarty->assign('instancelist', $value['instancelist']);
+        $smarty->assign('instancestring', implode(',',$value['instancearray']));
         $smarty->assign('default', $value['default']);
+        $smarty->assign('institution', $value['institution']);
     }
 
     $smarty->assign('name', $element['name']);
+    $smarty->assign('configureanother', get_string('configureanother', 'auth'));
+    $smarty->assign('cannotremove', get_string('cannotremove', 'auth'));
 
     return $smarty->fetch('form/authlist.tpl');
 }
@@ -64,21 +69,25 @@ function pieform_element_authlist_get_value(Pieform $form, $element) {
 
     $global = ($form->get_property('method') == 'get') ? $_GET : $_POST;
 
-    //if (!isset($global[$name . '_valid']) || !is_array($global[$name . '_valid'])) {
-    //    return null;
-    //}
-
     $value = array();
 
+    if (array_key_exists('instancePriority', $global) && !empty($global['instancePriority'])) {
+        $value['instancearray'] = explode(',',$global['instancePriority']);
+    } else {
+        $value['instancearray'] = $element['instancearray'];
+    }
+
+    if (array_key_exists('deleteList', $global) && !empty($global['deleteList'])) {
+        $value['deletearray'] = explode(',',$global['deleteList']);
+    } else {
+        $value['deletearray'] = array();
+    }
+
     $value['instancelist'] = $element['options'];
+    $value['authtypes'] = $element['authtypes'];
+    $value['instancePriority'] = $element['instancestring'];
+    $value['institution'] = $element['institution'];
 
-    //$value['default'] = $global[$name . '_selected'];
-    //$value['validated'] = $global[$name . '_valid'];
-
-    //if (isset($global[$name . '_invalid']) && is_array($global[$name . '_invalid'])) {
-    //    $value['unvalidated'] = $global[$name . '_invalid'];
-    //}
-    //$value['options'] = array();
     return $value;
 }
 
