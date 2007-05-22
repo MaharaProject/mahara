@@ -381,16 +381,41 @@ function auth_setup () {
 }
 
 /**
- * Given an institution, returns the authentication methods used by it.
+ * Given an institution, returns the authentication methods used by it, sorted 
+ * by priority.
  *
  * @param  string   $institution     Name of the institution
  * @return array                     Array of auth instance records
  */
 function auth_get_auth_instances_for_institution($institution) {
+    global $CFG;
     static $cache = array();
 
     if (!isset($cache[$institution])) {
-        $cache[$institution] = get_records_array('auth_instance', 'institution', $institution, 'priority, instancename', 'id, instancename, priority, authname');
+        // Get auth instances in order of priority
+        // DO NOT CHANGE THE SORT ORDER OF THIS RESULT SET
+        // YEAH EINSTEIN - THAT MEANS YOU!!!
+
+        // TODO: work out why this won't accept a placeholder - had to use db_quote
+        $sql ='
+            SELECT DISTINCT
+                i.id,
+                i.instancename,
+                i.priority,
+                i.authname,
+                a.requires_config
+            FROM 
+                '.$CFG->dbprefix.'auth_instance i,
+                '.$CFG->dbprefix.'auth_installed a
+            WHERE 
+                a.name = i.authname AND
+                i.institution = '. db_quote($institution).'
+            ORDER BY
+                i.priority,
+                i.instancename';
+
+        $cache[$institution] = get_records_sql_array($sql, array());
+
         if(empty($cache[$institution])) {
             return false;
         }
