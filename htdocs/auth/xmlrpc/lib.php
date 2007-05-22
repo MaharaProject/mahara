@@ -196,7 +196,6 @@ class AuthXmlrpc extends Auth {
          * Here, we will sift through the data returned by the XMLRPC server
          * and update any userdata properties that have changed
          */
-        $userdata->surname .= 'X';
     }
 
 }
@@ -206,13 +205,183 @@ class AuthXmlrpc extends Auth {
  */
 class PluginAuthXmlrpc extends PluginAuth {
 
+    private static $default_config = array('host'=>'', 'name'=>'', 'shortname'=>'','xmlrpcserverurl'=>'', 'updateuserinfoonlogin'=>'', 'autocreateusers'=>'');
+
     public static function has_config() {
-        return false;
+        return true;
     }
 
-    public static function get_config_options() {
-        return array();
+    public static function get_config_options($institution, $instance = 0) {
+
+        if ($instance > 0) {
+            $current        = get_records_array('auth_instance',        'id',       $instance, 'priority ASC');
+            if($current == false) {
+                throw new Exception(get_string('nodataforinstance', 'auth').$instance);
+            }
+            $default = $current[0];
+            $current_config = get_records_menu('auth_instance_config', 'instance', $instance, '', 'field, value');
+
+            if($current_config == false) {
+                $current_config = array();
+            }
+
+            foreach (self::$default_config as $key => $value) {
+                if(array_key_exists($key, $current_config)) {
+                    self::$default_config[$key] = $current_config[$key];
+                }
+            }
+        } else {
+            $default = new stdClass();
+            $default->instancename = '';
+        }
+
+        $elements['instancename'] = array(
+            'type' => 'text',
+            'title' => get_string('authname','auth'),
+            'rules' => array(
+                'required' => true
+            ),
+            'defaultvalue' => $default->instancename,
+            'help'   => true
+        );
+
+        $elements['instance'] = array(
+            'type' => 'hidden',
+            'value' => $instance
+        );
+
+        $elements['institution'] = array(
+            'type' => 'hidden',
+            'value' => $institution
+        );
+
+        $elements['authname'] = array(
+            'type' => 'hidden',
+            'value' => 'xmlrpc'
+        );
+
+        $elements['host'] = array(
+            'type' => 'text',
+            'title' => get_string('host', 'auth'),
+            'rules' => array(
+                'required' => true
+            ),
+            'defaultvalue' => self::$default_config['host'],
+            'help'   => true
+        );
+
+        $elements['name'] = array(
+            'type' => 'text',
+            'title' => get_string('name', 'auth'),
+            'rules' => array(
+                'required' => true
+            ),
+            'defaultvalue' => self::$default_config['name'],
+            'help'   => true
+        );
+
+        $elements['shortname'] = array(
+            'type' => 'text',
+            'title' => get_string('shortname', 'auth'),
+            'rules' => array(
+                'required' => true
+            ),
+            'defaultvalue' => self::$default_config['shortname'],
+            'help'   => true
+        );
+
+        $elements['xmlrpcserverurl'] = array(
+            'type' => 'text',
+            'title' => get_string('xmlrpcserverurl', 'auth'),
+            'rules' => array(
+                'required' => true
+            ),
+            'defaultvalue' => self::$default_config['xmlrpcserverurl'],
+            'help'   => true
+        );
+
+        $elements['updateuserinfoonlogin'] = array(
+            'type'         => 'checkbox',
+            'title'        => get_string('updateuserinfoonlogin', 'auth'),
+            'defaultvalue' => self::$default_config['updateuserinfoonlogin'],
+            'help'   => true
+        );
+
+        $elements['autocreateusers'] = array(
+            'type'         => 'checkbox',
+            'title'        => get_string('autocreateusers', 'auth'),
+            'defaultvalue' => self::$default_config['autocreateusers'],
+            'help'   => true
+        );
+
+        return array(
+            'elements' => $elements,
+            'renderer' => 'table'
+        );
     }
+
+    public static function save_config_options($values) {
+
+        $authinstance = new stdClass();
+
+        if ($values['instance'] > 0) {
+            $values['create'] = false;
+            $current = get_records_assoc('auth_instance_config', 'instance', $values['instance'], '', 'field, value');
+            $authinstance->id = $values['instance'];
+        } else {
+            $values['create'] = true;
+
+            // Get the auth instance with the highest priority number (which is
+            // the instance with the lowest priority).
+            // TODO: rethink 'priority' as a fieldname... it's backwards!!
+            $lastinstance = get_records_array('auth_instance', 'institution', $values['institution'], 'priority DESC', '*', '0', '1');
+
+            if ($lastinstance == false) {
+                $authinstance->priority = 0;
+            } else {
+                $authinstance->priority = $lastinstance[0]->priority + 1;
+            }
+        }
+
+        $authinstance->instancename = $values['instancename'];
+        $authinstance->institution  = $values['institution'];
+        $authinstance->authname     = $values['authname'];
+
+        if ($values['create']) {
+            $values['instance'] = insert_record('auth_instance', $authinstance, 'id', true);
+        } else {
+            update_record('auth_instance', $authinstance, array('id' => $values['instance']));
+        }
+
+        if (empty($current)) {
+            $current = array();
+        }
+
+        self::$default_config = array(  'host'                  => $values['host'],
+                                        'name'                  => $values['name'],
+                                        'shortname'             => $values['shortname'],
+                                        'xmlrpcserverurl'       => $values['xmlrpcserverurl'],
+                                        'updateuserinfoonlogin' => $values['updateuserinfoonlogin'],
+                                        'autocreateusers'       => $values['autocreateusers']);
+
+        foreach(self::$default_config as $field => $value) {
+            $record = new stdClass();
+            $record->instance = $values['instance'];
+            $record->field    = $field;
+            $record->value    = $value;
+
+            if (empty($value)) {
+                delete_records('auth_instance_config', 'field', $field, 'instance', $values['instance']);
+            } elseif ($values['create'] || !array_key_exists($field, $current)) {
+                insert_record('auth_instance_config', $record);
+            } else {
+                update_record('auth_instance_config', $record, array('instance' => $values['instance'], 'field' => $field));
+            }
+        }
+
+        return $values;
+    }
+
 }
 
 ?>

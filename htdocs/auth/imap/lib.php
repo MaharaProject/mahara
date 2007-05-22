@@ -107,49 +107,101 @@ class AuthImap extends Auth {
  */
 class PluginAuthImap extends PluginAuth {
 
+    private static $default_config = array('host'=>'', 'port'=>'143', 'protocol'=>'/imap','changepasswordurl'=>'');
+
     public static function has_config() {
         return true;
     }
 
-    public static function get_config_options() {
+    public static function get_config_options($institution, $instance = 0) {
         // TODO: put these strings in a lang file
         $options['/imap'] = 'IMAP';
         $options['/imap/ssl'] = 'IMAP/SSL';
         $options['/imap/ssl/novalidate-cert'] = 'IMAP/SSL (self-signed certificate)';
         $options['/imap/tls'] = 'IMAP/TLS';
 
-        $elements['protocol'] = array(
-            'type' => 'select',
-            'title' => get_string('protocol'),
-            'options' => $options,
+        if ($instance > 0) {
+            $current        = get_records_array('auth_instance',        'id',       $instance, 'priority ASC');
+            if($current == false) {
+                throw new Exception('Could not find data for auth instance '.$instance);
+            }
+            $default = $current[0];
+            $current_config = get_records_menu('auth_instance_config', 'instance', $instance, '', 'field, value');
+
+            if($current_config == false) {
+                $current_config = array();
+            }
+
+            foreach (self::$default_config as $key => $value) {
+                if(array_key_exists($key, $current_config)) {
+                    self::$default_config[$key] = $current_config[$key];
+                }
+            }
+        } else {
+            $default = new stdClass();
+            $default->instancename = '';
+        }
+
+        $elements['instancename'] = array(
+            'type' => 'text',
+            'title' => get_string('authname','auth'),
             'rules' => array(
                 'required' => true
-            )
+            ),
+            'defaultvalue' => $default->instancename
+        );
+
+        $elements['instance'] = array(
+            'type' => 'hidden',
+            'value' => $instance
+        );
+
+        $elements['institution'] = array(
+            'type' => 'hidden',
+            'value' => $institution
+        );
+
+        $elements['authname'] = array(
+            'type' => 'hidden',
+            'value' => 'imap'
         );
 
         $elements['host'] = array(
             'type' => 'text',
-            'title' => get_string('host'),
+            'title' => get_string('host', 'auth'),
             'rules' => array(
                 'required' => true
-            )
+            ),
+            'defaultvalue' => self::$default_config['host']
         );
 
         $elements['port'] = array(
             'type' => 'text',
-            'title' => get_string('port'),
+            'title' => get_string('port', 'auth'),
             'rules' => array(
                 'required' => true,
                 'integer' => true
-            )
+            ),
+            'defaultvalue' => self::$default_config['port']
+        );
+
+        $elements['protocol'] = array(
+            'type' => 'select',
+            'title' => get_string('protocol', 'auth'),
+            'options' => $options,
+            'rules' => array(
+                'required' => true
+            ),
+            'defaultvalue' => self::$default_config['protocol']
         );
 
         $elements['changepasswordurl'] = array(
             'type' => 'text',
-            'title' => get_string('changepasswordurl'),
+            'title' => get_string('changepasswordurl', 'auth'),
             'rules' => array(
                 'required' => false
-            )
+            ),
+            'defaultvalue' => self::$default_config['changepasswordurl']
         );
 
         return array(
@@ -158,26 +210,62 @@ class PluginAuthImap extends PluginAuth {
         );
     }
 
-    public function save_config_options($values) {
-        $current = get_records_assoc('auth_instance_config', 'instance', $this->id, '', 'field, value');
+    public static function save_config_options($values) {
+
+        $authinstance = new stdClass();
+
+        if ($values['instance'] > 0) {
+            $values['create'] = false;
+            $current = get_records_assoc('auth_instance_config', 'instance', $values['instance'], '', 'field, value');
+            $authinstance->id = $values['instance'];
+        } else {
+            $values['create'] = true;
+
+            // Get the auth instance with the highest priority number (which is
+            // the instance with the lowest priority).
+            // TODO: rethink 'priority' as a fieldname... it's backwards!!
+            $lastinstance = get_records_array('auth_instance', 'institution', $values['institution'], 'priority DESC', '*', '0', '1');
+
+            if ($lastinstance == false) {
+                $authinstance->priority = 0;
+            } else {
+                $authinstance->priority = $lastinstance[0]->priority + 1;
+            }
+        }
+
+        $authinstance->instancename = $values['instancename'];
+        $authinstance->institution  = $values['institution'];
+        $authinstance->authname     = $values['authname'];
+
+        if ($values['create']) {
+            $values['instance'] = insert_record('auth_instance', $authinstance, 'id', true);
+        } else {
+            update_record('auth_instance', $authinstance, array('id' => $values['instance']));
+        }
 
         if (empty($current)) {
             $current = array();
         }
 
-        foreach($values as $key => $value) {
+        self::$default_config =   array('host'              => $values['host'],
+                                        'port'              => $values['port'],
+                                        'protocol'          => $values['protocol'],
+                                        'changepasswordurl' => $values['changepasswordurl']);
+
+        foreach(self::$default_config as $field => $value) {
             $record = new stdClass();
-            $record->instance = $this->id;
-            $record->field    = $key;
+            $record->instance = $values['instance'];
+            $record->field    = $field;
             $record->value    = $value;
-            if (array_key_exists($key, $current)) {
-                update_record('auth_instance_config', $record, array('instance' => $this->id, 'field' => $key));
-            } else {
+
+            if ($values['create'] || !array_key_exists($field, $current)) {
                 insert_record('auth_instance_config', $record);
+            } else {
+                update_record('auth_instance_config', $record, array('instance' => $values['instance'], 'field' => $field));
             }
         }
 
-        return true;
+        return $values;
     }
 }
 
