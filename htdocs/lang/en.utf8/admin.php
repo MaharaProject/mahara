@@ -227,6 +227,7 @@ $string['usersuspended'] = 'User suspended';
 
 // Institutions
 $string['admininstitutions'] = 'Admininster Institutions';
+$string['adminauthorities'] = 'Admininster Authorities';
 $string['addinstitution'] = 'Add Institution';
 $string['authplugin'] = 'Authentication plugin';
 $string['defaultaccountinactiveexpire'] = 'Default account inactivity time';
