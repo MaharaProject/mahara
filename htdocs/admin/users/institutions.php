@@ -23,7 +23,6 @@
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
-
 define('INTERNAL', 1);
 define('ADMIN', 1);
 define('MENUITEM', 'configusers');
@@ -42,6 +41,11 @@ $edit        = param_boolean('edit');
 $delete      = param_boolean('delete');
 
 if ($institution || $add) {
+
+    $authinstances = auth_get_auth_instances_for_institution($institution);
+    if (false == $authinstances) {
+        $authinstances = array();
+    }
 
     if ($delete) {
         function delete_validate(Pieform $form, $values) {
@@ -90,7 +94,18 @@ if ($institution || $add) {
     if (!$add) {
         $data = get_record('institution', 'name', $institution);
         $lockedprofilefields = (array) get_column('institution_locked_profile_field', 'profilefield', 'name', $institution);
-        $authinstances = auth_get_auth_instances_for_institution($institution);
+        
+        $c = count($authinstances);
+        $instancestring = '';
+        $instancearray = array();
+        // TODO: Find a better way to work around Smarty's minimal looping logic
+        foreach($authinstances as $key => $val) {
+            $authinstances[$key]->index = $key;
+            $authinstances[$key]->total = $c;
+            $instancearray[] = $val->id;
+        }
+
+        $authtypes = auth_get_available_auth_types($institution);
     }
     else {
         $data = new StdClass;
@@ -140,6 +155,10 @@ if ($institution || $add) {
             'type'    => 'authlist',
             'title'   => get_string('authplugin', 'admin'),
             'options' => $authinstances,
+            'authtypes' => $authtypes,
+            'instancearray' => $instancearray,
+            'instancestring' => implode(',',$instancearray),
+            'institution' => $institution,
             'help'   => true,
         ),
         'registerallowed' => array(
@@ -189,7 +208,7 @@ if ($institution || $add) {
         'value' => array(get_string('submit'), get_string('cancel'))
     );
 
-    $smarty->assign('authinstances_count', count($authinstances));
+    $smarty->assign('instancestring', $instancestring);
 
     $smarty->assign('institution_form', pieform(array(
         'name'     => 'institution',
@@ -212,7 +231,7 @@ else {
 }
 
 function institution_submit(Pieform $form, $values) {
-    global $SESSION, $institution, $add;
+    global $SESSION, $institution, $add, $instancearray;
 
     db_begin();
     // Update the basic institution record...
@@ -227,6 +246,32 @@ function institution_submit(Pieform $form, $values) {
     $newinstitution->defaultaccountlifetime       = ($values['defaultaccountlifetime']) ? intval($values['defaultaccountlifetime']) : null;
     $newinstitution->defaultaccountinactiveexpire = ($values['defaultaccountinactiveexpire']) ? intval($values['defaultaccountinactiveexpire']) : null;
     $newinstitution->defaultaccountinactivewarn   = ($values['defaultaccountinactivewarn']) ? intval($values['defaultaccountinactivewarn']) : null;
+
+    $allinstances = array_merge($values['authplugin']['instancearray'], $values['authplugin']['deletearray']);
+
+    if(array_diff($allinstances, $instancearray)) {
+        throw new Exception('Attempt to delete or update another institution\'s auth instance');
+    }
+
+    if(array_diff($instancearray, $allinstances)) {
+        throw new Exception('One of your instances is unaccounted for in this transaction');
+    }
+
+    foreach($values['authplugin']['instancearray'] as $priority => $instanceid) {
+        if(in_array($instanceid, $values['authplugin']['deletearray'])) {
+            // Should never happen:
+            throw new Exception('Attempt to update AND delete an auth instance');
+        }
+        $record = new StdClass;
+        $record->priority = $priority;
+        $record->id = $instanceid;
+        update_record('auth_instance', $record,  array('id' => $instanceid));
+    }
+
+    foreach($values['authplugin']['deletearray'] as $instanceid) {
+        delete_records('auth_instance_config', 'instance', $instanceid);
+        delete_records('auth_instance', 'id', $instanceid);
+    }
 
     if ($add) {
         insert_record('institution', $newinstitution);
