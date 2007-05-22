@@ -425,6 +425,47 @@ function auth_get_auth_instances_for_institution($institution) {
 }
 
 /**
+ * Given an institution, get all the auth types EXCEPT those that are already 
+ * enabled AND do not require configuration.
+ *
+ * @param  string   $institution     Name of the institution
+ * @return array                     Array of auth instance records
+ */
+function auth_get_available_auth_types($institution) {
+    global $CFG;
+    if (!is_string($institution) || strlen($institution) > 255) {
+        return array();
+    }
+
+    // TODO: work out why this won't accept a placeholder - had to use db_quote
+    $sql ='
+        SELECT DISTINCT
+            a.name,
+            a.requires_config
+        FROM 
+            '.$CFG->dbprefix.'auth_installed a
+        LEFT JOIN 
+            '.$CFG->dbprefix.'auth_instance i
+        ON 
+            a.name = i.authname AND
+            i.institution = '. db_quote($institution).'
+        WHERE
+           (a.requires_config = 1 OR
+            i.id IS NULL) AND
+            a.active = 1
+        ORDER BY
+            a.name';          
+
+    $result = get_records_sql_array($sql, array());
+
+    if (empty($result)) {
+        return array();
+    }
+
+    return $result;
+}
+
+/**
  * Given a user, returns the authentication instance used.
  *
  * @param  object   $user            User object with an authinstance member
