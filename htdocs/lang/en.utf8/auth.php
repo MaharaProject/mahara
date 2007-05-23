@@ -1,0 +1,49 @@
+<?php
+/**
+ * This program is part of Mahara
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ *
+ * @package    mahara
+ * @subpackage lang
+ * @author     Nigel McNie <nigel@catalyst.net.nz>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
+ * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
+ *
+ */
+
+defined('INTERNAL') || die();
+
+// IMAP
+$string['host'] = 'Hostname or address';
+
+$string['port'] = 'Port number'; 
+$string['protocol'] = 'Protocol';
+$string['changepasswordurl'] = 'Password-change URL';
+$string['configureanother']  = 'Please configure another plugin before deleting this one.';
+$string['cannotremove']  = "We can't remove this auth plugin, as it's the only \\nplugin that exists for this institution.";
+
+$string['editauthority'] = 'Edit an Authority';
+$string['addauthority']  = 'Add an Authority';
+
+$string['updateuserinfoonlogin'] = 'Update user info on login';
+$string['updateuserinfoonlogindescription'] = 'Retrieve user info from the remote server and update your local user record each time the user logs in.';
+$string['xmlrpcserverurl'] = 'XML-RPC Server URL';
+$string['shortname'] = 'Short name for your app';
+$string['name'] = 'Your app\'s name';
+$string['nodataforinstance'] = 'Could not find data for auth instance ';
+$string['authname'] = 'Authority name';
+$string['autocreateusers'] = 'Auto-create users'; 
+?>
