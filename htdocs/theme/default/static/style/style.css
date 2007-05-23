@@ -764,6 +764,7 @@ p {
 	text-align: left;
 	color: #3a5813;
 	margin: 0;
+	vertical-align: top;
 	padding: 5px 0 0 0;
 }
 .maincontent thead th {
