@@ -1,139 +1,208 @@
 <script type="text/javascript">
-    var {{$name}}_newrefinput = null;
-    var {{$name}}_newref = null;
 
-    addLoadEvent(function() {
-        connect('{{$name}}_list', 'onkeypress', function (k) {
-            if (k.key().code == 13 && {{$name}}_newref) {
-                {{$name}}_addedemail();
-                k.stop();
+    function move_up(id) {
+        instanceArray = document.getElementById('instancePriority').value.split(',');
+        var outputArray = new Array();
+        for(i = instanceArray.length - 1; i >= 0; i--) {
+            if(instanceArray[i] == id) {
+                outputArray[i] = instanceArray[i-1];
+                outputArray[i-1] = instanceArray[i];
+                --i;
+            } else {
+                outputArray[i] = instanceArray[i];
             }
+        }
 
-            // cancel (esc)
-            if (k.key().code == 27 && {{$name}}_newref ) {
-                removeElement({{$name}}_newrefinput);
-                removeElement({{$name}}_newref);
-                {{$name}}_newrefinput = null;
-                {{$name}}_newref = null;
-                k.stop();
+        rebuildInstanceList(outputArray);
+    }
+
+    function move_down(id) {
+        instanceArray = document.getElementById('instancePriority').value.split(',');
+        var outputArray = new Array();
+
+        for(i = 0; i < instanceArray.length; i++) {
+            if(instanceArray[i] == id) {
+                outputArray[i+1] = instanceArray[i];
+                outputArray[i] = instanceArray[i+1];
+                ++i;
+            } else {
+                outputArray[i] = instanceArray[i];
             }
-        });
-    });
-
-    function {{$name}}_addedemail() {
-        removeElement({{$name}}_newrefinput);
-        removeElement({{$name}}_newref);
-        var newEmail = {{$name}}_newrefinput.value;
-        if (typeof(newEmail) == 'string' && newEmail.length > 0) {
-            appendChildNodes('{{$name}}_list', DIV({'class': 'unvalidated'},
-                INPUT({'type': 'hidden', 'name': '{{$name}}_invalid[]'       , 'value': {{$name}}_newrefinput.value}),
-                ' ',
-                {{$name}}_newrefinput.value,
-                A({'href': '', 'onclick': '{{$name}}_remove(this); return false'}, '[x]'),
-                ' a validation email will be sent when you save your profile'
-            ));
-        }
-        {{$name}}_newrefinput = null;
-        {{$name}}_newref = null;
-    }
-
-    function {{$name}}_new() {
-        if ( {{$name}}_newref ) {
-            return false;
         }
 
-        {{$name}}_newrefinput = INPUT({'type': 'text'});
-        {{$name}}_newref = DIV(null,{{$name}}_newrefinput);
-
-        appendChildNodes('{{$name}}_list', {{$name}}_newref);
-
-        {{$name}}_newrefinput.focus();
-
-        connect({{$name}}_newrefinput, 'onblur', function(k) {
-            {{$name}}_addedemail();
-            k.stop();
-        });
+        rebuildInstanceList(outputArray);
     }
 
-    function {{$name}}_remove(x) {
-        var div = x.parentNode;
+    function rebuildInstanceList(outputArray) {
+        var displayArray = new Array();
+        var instanceListDiv = document.getElementById('instanceList');
 
-        var radio = filter(
-                function(elem) { return getNodeAttribute(elem, 'type') == 'radio'; },
-                getElementsByTagAndClassName('input', null, div)
-        );
-
-        if (radio[0] && radio[0].checked) {
-            alert(get_string('cantremovedefaultemail'));
-            return;
+        // Take each auth instance div, remove its span tag (containing arrow links) and clone it
+        // adding the clone to the displayArray list
+        for (i = 0; i < outputArray.length; i++) {
+            var myDiv =  document.getElementById('instanceDiv' + outputArray[i]);
+            emptyThisNode(myDiv.childNodes[3]);
+            displayArray.push(myDiv.cloneNode(true));
         }
 
-        removeElement(x.parentNode);
+        emptyThisNode(instanceListDiv);
+
+        for(i = 0; i < displayArray.length; i++) {
+
+            if(displayArray.length > 1) {
+                if(i == 0) {
+                    displayArray[i].childNodes[3].innerHTML += '<a href="" onclick="move_down('+outputArray[i]+'); return false;">[&darr;]</a>'+"\n";
+                } else if (i + 1 == displayArray.length) {
+                    displayArray[i].childNodes[3].innerHTML += '<a href="" onclick="move_up('+outputArray[i]+'); return false;">[&uarr;]</a>'+"\n";
+                } else {
+                    displayArray[i].childNodes[3].innerHTML += '<a href="" onclick="move_down('+outputArray[i]+'); return false;">[&darr;]</a>'+"\n";
+                    displayArray[i].childNodes[3].innerHTML += '<a href="" onclick="move_up('+outputArray[i]+'); return false;">[&uarr;]</a>'+"\n";
+                }
+                displayArray[i].childNodes[3].innerHTML += '<a href="" onclick="removeAuth('+outputArray[i]+'); return false;">[x]</a>'+"\n";
+            } else {
+                displayArray[i].childNodes[3].innerHTML += '<a href="" title="{{$configureanother}}" onclick="cannotRemove('+outputArray[i]+'); return false;">[x]</a>'+"\n";
+            }
+            instanceListDiv.appendChild(displayArray[i]);
+        }
+        document.getElementById('instancePriority').value = outputArray.join(',');
     }
 
-    function {{$name}}_validated(email) {
-        var email = filter(
-                function(elem) { return getNodeAttribute(elem, 'type') == 'hidden' && elem.value == email ; },
-                getElementsByTagAndClassName('input', null, '{{$name}}_list')
-        )[0];
+    function arrayIze(id) {
+        var thing = document.getElementById(id).value;
+        if(thing == '') {
+            return new Array();
+        }
+        return thing.split(',');
+    }
 
-        if (!email) {
-            return;
+    function removeAuth(id) {
+        instanceArray = arrayIze('instancePriority');
+        deleteArray   = arrayIze('deleteList');
+
+        for(i = 0; i < instanceArray.length; i++) {
+            if(instanceArray[i] == id) {
+                instanceArray.splice(i, 1);
+                deleteArray.push(id);
+                var instanceListDiv = document.getElementById('instanceList');
+                instanceListDiv.removeChild(instanceListDiv.childNodes[i]);
+            }
         }
 
-        var div = email.parentNode;
-        email = email.value;
-
-        swapDOM(
-            div,
-            DIV(
-                {'class': 'validated'},
-                LABEL(null,
-                    INPUT({'type': 'radio',  'name': '{{$name}}_selected', 'value': email}),
-                    INPUT({'type': 'hidden', 'name': '{{$name}}_valid[]' , 'value': email}),
-                    ' ' + email
-                ),
-                ' ',
-                A({'href': '', 'onclick': '{{$name}}_remove(this); return false'}, '[x]')
-            )
-        );
+        document.getElementById('deleteList').value = deleteArray.join(',');
+        rebuildInstanceList(instanceArray);
     }
 
-    function {{$name}}_cookie_check() {
-        var cookie = getCookie('validated_email');
+    function cannotRemove(id) {
+        alert("{{$cannotremove}}");
+    }
 
-        if (cookie) {
-            {{$name}}_validated(cookie);
-            clearCookie('validated_email');
+    function emptyThisNode(node) {
+        while(node.hasChildNodes()) {
+            node.removeChild(node.childNodes[0]);
         }
-
-        callLater(1, {{$name}}_cookie_check);
     }
 
-    addLoadEvent({{$name}}_cookie_check);
+	function requiresConfig(authname) {
+	    var requires_config = new Array();
+		{{section name=mysec3 loop=$authtypes}}
+	    	requires_config['{{$authtypes[mysec3]->name}}'] = {{$authtypes[mysec3]->requires_config}};
+		{{/section}}
+		
+		return requires_config[authname];
+	}
+
+    function addinstance() {
+        var selectedPlugin = document.getElementById('dummySelect').value;
+
+		if (requiresConfig(selectedPlugin) == 1) {
+	        window.open('addauthority.php?add=1&i={{$institution}}&a=' + selectedPlugin, 'addinstance', 'height=400,width=550,screenx=250,screenY=200,scrollbars=1');
+	        return;
+	    }
+
+
+		var authSelect = document.getElementById('dummySelect');
+		for (var i=0; i < authSelect.length; i++) {
+			if (authSelect.options[i].value == selectedPlugin) {
+				authSelect.remove(i);
+			}
+		}
+
+        sendjsonrequest('{{$WWWROOT}}admin/users/addauthority.php', {'i': '{{$institution}}', 'a': selectedPlugin, 'add': 1, 'j': 1 }, 'GET', function (data) { addAuthority(data.id, data.name, data.authname); });
+        return false;
+    }
+
+    function editinstance(id, authname) {
+    	if (requiresConfig(authname)) {
+	        window.open('addauthority.php?id='+id+'&edit=1&i={{$institution}}&a=' + authname, 'editinstance', 'height=400,width=550,screenx=250,screenY=200,scrollbars=1');
+	    } else {
+		    noconfig();
+	    }
+    }
+
+	function addAuthority(id, name, authname) {
+		var newDiv = '<div class="authInstance" id="instanceDiv'+id+'"> '+
+        	'<label class="authLabel"><a href="" onclick="editinstance('+id+',\''+authname+'\'); return false;">'+name+'</a></label> '+
+        	'<span class="authIcons" id="arrows'+id+'"></span> </div>';
+    	document.getElementById('instanceList').innerHTML += newDiv;
+		if(document.getElementById('instancePriority').value.length) {
+	        instanceArray = document.getElementById('instancePriority').value.split(',');
+	    } else {
+		    instanceArray = new Array();
+	    }
+        instanceArray.push(id);
+        rebuildInstanceList(instanceArray);
+	}
+
+	function noconfig() {
+		alert('There are no configuration options associated with this plugin');
+	}
+
 </script>
 <!-- TODO: shouldn't have css inline -->
 <style type="text/css">
-    .unvalidated { color: gray; }
+    .authIcons   { float: right; } 
+    .authLabel   { float: left;  }
+    .authInstance { clear: both; }
+    #dummySelect { margin-top: 5px; }
 </style>
-<div id="{{$name}}_list">
-{{section name=mysec loop=$instancelist}}
-    <div class="validated">
-        <label>
-        <input type="hidden" name="authinstance[]" value="{{$instance->id}}">
-        <a href="" onclick="{{$name}}_edit({{$instance->id}}); return false;">{{$instancelist[mysec]->instancename}}</a></label>&nbsp;&nbsp;
-        {{ if $mysec + 1 < $authinstances_count }}
-        <a href="" onclick="{{$name}}_down({{$instance->id}}); return false;">[&darr;]</a>
-        {{ /if }}
-        {{ if $mysec != 0 }}
-        <a href="" onclick="{{$name}}_up({{$instance->id}}); return false;">[&uarr;]</a>
-        {{ /if }}
-        {{ if $authinstances_count > 0 }}
-        <a href="" onclick="{{$name}}_remove({{$instance->id}}); return false;">[x]</a>
-        {{ else }}
-        <a href="" title="Please configure another plugin before disabling this one." onclick="{{$name}}_cannot_remove({{$instance->id}}); return false;">[x]</a>
-        {{ /if }}
-    </div>
+{{*
+
+IMPORTANT: do not introduce any new whitespace into the instanceList div.
+
+*}}
+<div id="instanceList">{{
+section name=mysec loop=$instancelist
+}}<div class="authInstance" id="instanceDiv{{$instancelist[mysec]->id}}">
+        <label class="authLabel">
+	        {{ if $instancelist[mysec]->requires_config > 0 }}
+            	<a href="" onclick="editinstance({{$instancelist[mysec]->id}},'{{$instancelist[mysec]->authname}}'); return false;">
+            {{ else }}
+            	<a href="" onclick="noconfig(); return false;">
+            {{ /if }}
+			{{$instancelist[mysec]->instancename}}</a>
+        </label>
+        <span class="authIcons" id="arrows{{$instancelist[mysec]->id}}">
+            {{ if $instancelist[mysec]->index + 1 < $instancelist[mysec]->total }}
+            <a href="" onclick="move_down({{$instancelist[mysec]->id}}); return false;">[&darr;]</a>
+            {{ /if }}
+            {{ if $instancelist[mysec]->index != 0 }}
+            <a href="" onclick="move_up({{$instancelist[mysec]->id}}); return false;">[&uarr;]</a>
+            {{ /if }}
+            {{ if $instancelist[mysec]->total > 1 }}
+            <a href="" onclick="removeAuth({{$instancelist[mysec]->id}}); return false;">[x]</a>
+            {{ else }}
+            <a href="" title="Please configure another plugin before deleting this one." onclick="cannotRemove({{$instancelist[mysec]->id}}); return false;">[x]</a>
+            {{ /if }}
+        </span>
+    </div>{{
+    /section
+}}</div>
+<br>
+<select name="dummy" id="dummySelect">
+{{section name=mysec2 loop=$authtypes}}
+    <option>{{$authtypes[mysec2]->name}}</option>
 {{/section}}
-</div>
-<a href="" onclick="{{$name}}_new(); return false;">{{str tag="addemail"}}</a>
+</select>
+<a href="" onclick="addinstance(); return false;">[+]</a>
+<input type="hidden" id="instancePriority" name="instancePriority" value="{{ $instancestring }}" /><br>
+<input type="hidden" id="deleteList" name="deleteList" value="" /><br>
