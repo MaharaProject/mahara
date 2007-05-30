@@ -28,6 +28,7 @@ defined('INTERNAL') || die();
 
 // IMAP
 $string['host'] = 'Hostname or address';
+$string['wwwroot'] = 'WWW root';
 
 $string['port'] = 'Port number'; 
 $string['protocol'] = 'Protocol';
@@ -41,9 +42,15 @@ $string['addauthority']  = 'Add an Authority';
 $string['updateuserinfoonlogin'] = 'Update user info on login';
 $string['updateuserinfoonlogindescription'] = 'Retrieve user info from the remote server and update your local user record each time the user logs in.';
 $string['xmlrpcserverurl'] = 'XML-RPC Server URL';
-$string['shortname'] = 'Short name for your app';
-$string['name'] = 'Your app\'s name';
+$string['ipaddress'] = 'IP Address';
+$string['shortname'] = 'Short name for your site';
+$string['name'] = 'Site name';
 $string['nodataforinstance'] = 'Could not find data for auth instance ';
 $string['authname'] = 'Authority name';
-$string['autocreateusers'] = 'Auto-create users'; 
+$string['autocreateusers'] = 'Auto-create users';
+$string['parent'] = 'Parent authority';
+$string['wessoout'] = 'We SSO out';
+$string['theyssoin'] = 'They SSO in';
+$string['application'] = 'Application';
+$string['cantretrievekey'] = 'An error occurred while retrieving the public key from the remote server.<br>Please ensure that the Application and WWW Root fields are correct.';
 ?>
