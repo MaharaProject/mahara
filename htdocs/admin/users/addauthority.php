@@ -28,7 +28,6 @@ define('ADMIN', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('institutions', 'admin'));
 require_once('pieforms/pieform.php');
-$smarty = smarty();
 
 // CHECK FOR CANCEL BEFORE THE 'REQUIRED' PARAMS:
 $cancel = param_boolean('c');
@@ -89,14 +88,13 @@ if ($institution && $plugin) {
         'goto'  => 'addauthority.php?c=1'
     );
 
+    $smarty = smarty();
     if ($add) {
         $smarty->assign('PAGETITLE', get_string('addauthority', 'auth'));
     } else {
         $smarty->assign('PAGETITLE', get_string('editauthority', 'auth'));
     }
     $smarty->assign('auth_imap_form', pieform($form));
-    $smarty->display('admin/users/addauthority.tpl');
-    exit;
 }
 
 function auth_config_submit(Pieform $form, $values) {
@@ -136,4 +134,5 @@ function execute_javascript_and_close($js='') {
     exit;
 }
 
+$smarty->display('admin/users/addauthority.tpl');
 ?>
