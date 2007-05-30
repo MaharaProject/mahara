@@ -12,7 +12,6 @@
                 outputArray[i] = instanceArray[i];
             }
         }
-
         rebuildInstanceList(outputArray);
     }
 
@@ -29,7 +28,6 @@
                 outputArray[i] = instanceArray[i];
             }
         }
-
         rebuildInstanceList(outputArray);
     }
 
@@ -48,20 +46,15 @@
         emptyThisNode(instanceListDiv);
 
         for(i = 0; i < displayArray.length; i++) {
-
             if(displayArray.length > 1) {
-                if(i == 0) {
+                if (i + 1 != displayArray.length) {
                     displayArray[i].childNodes[3].innerHTML += '<a href="" onclick="move_down('+outputArray[i]+'); return false;">[&darr;]</a>'+"\n";
-                } else if (i + 1 == displayArray.length) {
-                    displayArray[i].childNodes[3].innerHTML += '<a href="" onclick="move_up('+outputArray[i]+'); return false;">[&uarr;]</a>'+"\n";
-                } else {
-                    displayArray[i].childNodes[3].innerHTML += '<a href="" onclick="move_down('+outputArray[i]+'); return false;">[&darr;]</a>'+"\n";
-                    displayArray[i].childNodes[3].innerHTML += '<a href="" onclick="move_up('+outputArray[i]+'); return false;">[&uarr;]</a>'+"\n";
                 }
-                displayArray[i].childNodes[3].innerHTML += '<a href="" onclick="removeAuth('+outputArray[i]+'); return false;">[x]</a>'+"\n";
-            } else {
-                displayArray[i].childNodes[3].innerHTML += '<a href="" title="{{$configureanother}}" onclick="cannotRemove('+outputArray[i]+'); return false;">[x]</a>'+"\n";
+                if(i != 0) {
+                	displayArray[i].childNodes[3].innerHTML += '<a href="" onclick="move_up('+outputArray[i]+'); return false;">[&uarr;]</a>'+"\n";
+                }
             }
+            displayArray[i].childNodes[3].innerHTML += '<a href="" onclick="removeAuth('+outputArray[i]+'); return false;">[x]</a>'+"\n";
             instanceListDiv.appendChild(displayArray[i]);
         }
         document.getElementById('instancePriority').value = outputArray.join(',');
@@ -79,6 +72,11 @@
         instanceArray = arrayIze('instancePriority');
         deleteArray   = arrayIze('deleteList');
 
+        if (instanceArray.length == 1) {
+            alert("{{$cannotremove}}");
+            return false;
+        }
+
         for(i = 0; i < instanceArray.length; i++) {
             if(instanceArray[i] == id) {
                 instanceArray.splice(i, 1);
@@ -92,70 +90,61 @@
         rebuildInstanceList(instanceArray);
     }
 
-    function cannotRemove(id) {
-        alert("{{$cannotremove}}");
-    }
-
     function emptyThisNode(node) {
         while(node.hasChildNodes()) {
             node.removeChild(node.childNodes[0]);
         }
     }
 
-	function requiresConfig(authname) {
-	    var requires_config = new Array();
-		{{section name=mysec3 loop=$authtypes}}
-	    	requires_config['{{$authtypes[mysec3]->name}}'] = {{$authtypes[mysec3]->requires_config}};
-		{{/section}}
-		
-		return requires_config[authname];
-	}
+    function requiresConfig(authname) {
+        var requires_config = new Array();
+        {{section name=mysec3 loop=$authtypes}}
+            requires_config['{{$authtypes[mysec3]->name}}'] = {{$authtypes[mysec3]->requires_config}};
+        {{/section}}
+        
+        return requires_config[authname];
+    }
 
     function addinstance() {
         var selectedPlugin = document.getElementById('dummySelect').value;
 
-		if (requiresConfig(selectedPlugin) == 1) {
-	        window.open('addauthority.php?add=1&i={{$institution}}&a=' + selectedPlugin, 'addinstance', 'height=400,width=550,screenx=250,screenY=200,scrollbars=1');
-	        return;
-	    }
+        if (requiresConfig(selectedPlugin) == 1) {
+            window.open('addauthority.php?add=1&i={{$institution}}&p=' + selectedPlugin, 'addinstance', 'height=520,width=550,screenx=250,screenY=200,scrollbars=1');
+            return;
+        }
 
+        var authSelect = document.getElementById('dummySelect');
+        for (var i=0; i < authSelect.length; i++) {
+            if (authSelect.options[i].value == selectedPlugin) {
+                authSelect.remove(i);
+            }
+        }
 
-		var authSelect = document.getElementById('dummySelect');
-		for (var i=0; i < authSelect.length; i++) {
-			if (authSelect.options[i].value == selectedPlugin) {
-				authSelect.remove(i);
-			}
-		}
-
-        sendjsonrequest('{{$WWWROOT}}admin/users/addauthority.php', {'i': '{{$institution}}', 'a': selectedPlugin, 'add': 1, 'j': 1 }, 'GET', function (data) { addAuthority(data.id, data.name, data.authname); });
+        sendjsonrequest('{{$WWWROOT}}admin/users/addauthority.php', {'i': '{{$institution}}', 'p': selectedPlugin, 'add': 1, 'j': 1 }, 'GET', function (data) { addAuthority(data.id, data.name, data.authname); });
         return false;
     }
 
-    function editinstance(id, authname) {
-    	if (requiresConfig(authname)) {
-	        window.open('addauthority.php?id='+id+'&edit=1&i={{$institution}}&a=' + authname, 'editinstance', 'height=400,width=550,screenx=250,screenY=200,scrollbars=1');
-	    } else {
-		    noconfig();
-	    }
+    function editinstance(id, plugin) {
+        if (requiresConfig(plugin)) {
+            window.open('addauthority.php?id='+id+'&edit=1&i={{$institution}}&p=' + plugin, 'editinstance', 'height=520,width=550,screenx=250,screenY=200,scrollbars=1');
+        } else {
+            alert('There are no configuration options associated with this plugin');
+        }
     }
 
-	function addAuthority(id, name, authname) {
-		var newDiv = '<div class="authInstance" id="instanceDiv'+id+'"> '+
-        	'<label class="authLabel"><a href="" onclick="editinstance('+id+',\''+authname+'\'); return false;">'+name+'</a></label> '+
-        	'<span class="authIcons" id="arrows'+id+'"></span> </div>';
-    	document.getElementById('instanceList').innerHTML += newDiv;
-		if(document.getElementById('instancePriority').value.length) {
-	        instanceArray = document.getElementById('instancePriority').value.split(',');
-	    } else {
-		    instanceArray = new Array();
-	    }
+    function addAuthority(id, name, authname) {
+        var newDiv = '<div class="authInstance" id="instanceDiv'+id+'"> '+
+            '<label class="authLabel"><a href="" onclick="editinstance('+id+',\''+authname+'\'); return false;">'+name+'</a></label> '+
+            '<span class="authIcons" id="arrows'+id+'"></span> </div>';
+        document.getElementById('instanceList').innerHTML += newDiv;
+        if(document.getElementById('instancePriority').value.length) {
+            instanceArray = document.getElementById('instancePriority').value.split(',');
+        } else {
+            instanceArray = new Array();
+        }
         instanceArray.push(id);
         rebuildInstanceList(instanceArray);
-	}
-
-	function noconfig() {
-		alert('There are no configuration options associated with this plugin');
-	}
+    }
 
 </script>
 <!-- TODO: shouldn't have css inline -->
@@ -174,12 +163,8 @@ IMPORTANT: do not introduce any new whitespace into the instanceList div.
 section name=mysec loop=$instancelist
 }}<div class="authInstance" id="instanceDiv{{$instancelist[mysec]->id}}">
         <label class="authLabel">
-	        {{ if $instancelist[mysec]->requires_config > 0 }}
-            	<a href="" onclick="editinstance({{$instancelist[mysec]->id}},'{{$instancelist[mysec]->authname}}'); return false;">
-            {{ else }}
-            	<a href="" onclick="noconfig(); return false;">
-            {{ /if }}
-			{{$instancelist[mysec]->instancename}}</a>
+            <a href="" onclick="editinstance({{$instancelist[mysec]->id}},'{{$instancelist[mysec]->authname}}'); return false;">
+            {{$instancelist[mysec]->instancename}}</a>
         </label>
         <span class="authIcons" id="arrows{{$instancelist[mysec]->id}}">
             {{ if $instancelist[mysec]->index + 1 < $instancelist[mysec]->total }}
@@ -188,11 +173,7 @@ section name=mysec loop=$instancelist
             {{ if $instancelist[mysec]->index != 0 }}
             <a href="" onclick="move_up({{$instancelist[mysec]->id}}); return false;">[&uarr;]</a>
             {{ /if }}
-            {{ if $instancelist[mysec]->total > 1 }}
             <a href="" onclick="removeAuth({{$instancelist[mysec]->id}}); return false;">[x]</a>
-            {{ else }}
-            <a href="" title="Please configure another plugin before deleting this one." onclick="cannotRemove({{$instancelist[mysec]->id}}); return false;">[x]</a>
-            {{ /if }}
         </span>
     </div>{{
     /section
