@@ -393,6 +393,21 @@ class LiveUser extends User {
     }
 
     /**
+     * When a user creates a security context by whatever method, we do some 
+     * standard stuff
+     *
+     * @param  object $user     Record from the usr table
+     * @return void
+     */
+    public function reanimate($id) {
+        if ($user = get_record('usr','id',$id)) {
+            $this->authenticate($user);
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Gets the user property keyed by $key.
      *
      * @param string $key The key to get the value of
