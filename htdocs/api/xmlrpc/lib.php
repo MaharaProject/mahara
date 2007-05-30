@@ -65,7 +65,7 @@ function get_public_key($uri, $application=null) {
         $application = 'moodle';
     }
 
-    $xmlrpcserverurl = get_field('application', 'xmlrpcserverurl', 'shortname', 'moodle');
+    $xmlrpcserverurl = get_field('application', 'xmlrpcserverurl', 'name', $application);
     if (empty($xmlrpcserverurl)) {
         throw new XmlrpcClientException('Unknown application');
     } 
