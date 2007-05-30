@@ -633,6 +633,17 @@ class ParameterException extends UserException {
 }
 
 /**
+ * A function or method has been passed the wrong kind of argument
+ * Unfortunately, broken type-hints cause fatal errors - not exceptions
+ */
+class ParamOutOfRangeException extends SystemException {}
+
+/**
+ * Remote Server exception - something has gone wrong at the remote machine
+ */
+class RemoteServerException extends SystemException {}
+
+/**
  * Xmlrpc Server exception - must output well formed XMLRPC error to the client
  */
 class XmlrpcServerException extends SystemException {}
