@@ -39,18 +39,18 @@ if ($cancel) {
 
 // NOT CANCELLING? OK - OTHER PARAMS THEN:
 $institution = param_variable('i');
-$authority   = param_variable('a');
+$plugin      = param_variable('p');
 $add         = param_boolean('add');
 $edit        = param_boolean('edit');
 $json        = param_boolean('j');
 $instanceid  = param_variable('id', 0);
 
 // IF WE'RE EDITING OR CREATING AN AUTHORITY:
-if ($institution && $authority && ($add || ($edit && $instanceid))) {
-    $authclassname = 'PluginAuth' . ucfirst(strtolower($authority));
-    safe_require('auth', strtolower($authority));
+if ($institution && $plugin && ($add || ($edit && $instanceid))) {
+    $classname = 'PluginAuth' . ucfirst(strtolower($plugin));
+    safe_require('auth', strtolower($plugin));
 
-    $has_config = call_static_method($authclassname, 'has_config');
+    $has_config = call_static_method($classname, 'has_config');
     if (false == $has_config && $add) {
         $authinstance = new stdClass();
 
@@ -65,18 +65,18 @@ if ($institution && $authority && ($add || ($edit && $instanceid))) {
             $authinstance->priority = $lastinstance[0]->priority + 1;
         }
 
-        $authinstance->instancename = $authority;
+        $authinstance->instancename = $plugin;
         $authinstance->institution  = $institution;
-        $authinstance->authname     = $authority;
+        $authinstance->authname     = $plugin;
         $authinstance->id           = insert_record('auth_instance', $authinstance, 'id', true);
         json_reply(false, array('id' => $authinstance->id, 'name' => ucfirst($authinstance->authname), 'authname' => $authinstance->authname));
         exit;
     }
 
-    $form = call_static_method($authclassname, 'get_config_options', $institution, $instanceid);
+    $form = call_static_method($classname, 'get_config_options', $institution, $instanceid);
     $form['name'] = 'auth_config';
     $form['plugintype'] = 'auth';
-    $form['pluginname'] = strtolower($authority);
+    $form['pluginname'] = strtolower($plugin);
 
     $form['elements']['submit'] = array(
         'type' => 'submitcancel',
@@ -95,10 +95,10 @@ if ($institution && $authority && ($add || ($edit && $instanceid))) {
 }
 
 function auth_config_submit(Pieform $form, $values) {
-    $authority = $values['authname'];
-    $authclassname = 'PluginAuth' . ucfirst(strtolower($authority));
-    safe_require('auth', strtolower($authority));
-    $values = call_static_method($authclassname, 'save_config_options', $values);
+    $plugin = $values['authname'];
+    $classname = 'PluginAuth' . ucfirst(strtolower($plugin));
+    safe_require('auth', strtolower($plugin));
+    $values = call_static_method($classname, 'save_config_options', $values);
     if($values['create']) {
         execute_javascript_and_close('window.opener.addAuthority('.$values['instance'].', "'.addslashes($values['instancename']).'", "'.$values['authname'].'");');
     } else {
