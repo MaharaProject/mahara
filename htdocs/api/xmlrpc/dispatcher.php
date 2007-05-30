@@ -121,7 +121,6 @@ class Dispatcher {
         }
 
         $temp = '';
-
         $this->response = xmlrpc_server_call_method($xmlrpcserver, $payload, $temp, array("encoding" => "utf-8"));
         return $this->response;
     }
@@ -131,20 +130,25 @@ class Dispatcher {
         return null;
     }
 
-    private function keyswap($function, $params) {
+    function keyswap($function, $params) {
         global $CFG;
+        require_once($CFG->docroot .'/include/eLearning/peer.php');
 
         //TODO: Verify params
         (empty($params[0])) ? $wwwroot = null     : $wwwroot     = $params[0];
         (empty($params[1])) ? $pubkey = null      : $pubkey      = $params[1];
         (empty($params[2])) ? $application = null : $application = $params[2];
 
-        $peer = new Peer();
-
-        if ($peer->bootstrap($wwwroot, $pubkey, $application)) {
-            $peer->commit();
+        if (get_config('promiscuousmode')) {
+            try {
+                $peer = new Peer();
+                if ($peer->bootstrap($wwwroot, $pubkey, $application)) {
+                    $peer->commit();
+                }
+            } catch (Exception $e) {
+                throw new SystemException($e->getMessage(), $e->getCode());
+            }
         }
-
         $openssl = OpenSslRepo::singleton();
         return $openssl->certificate;
     }
