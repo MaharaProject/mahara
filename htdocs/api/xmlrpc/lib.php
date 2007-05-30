@@ -24,6 +24,8 @@
  *
  */
 
+defined('INTERNAL') || die();
+
 function xmlrpc_exception (Exception $e) {
     if (($e instanceof XmlrpcServerException) && get_class($e) == 'XmlrpcServerException') {
         $e->handle_exception();
@@ -70,7 +72,7 @@ function get_public_key($uri, $application=null) {
     $wwwroot = dropslash($CFG->wwwroot);
 
     $rq = xmlrpc_encode_request('system/keyswap', array($wwwroot, $openssl->certificate), array("encoding" => "utf-8"));
-    $ch = curl_init($uri. $xmlrpcserverurl);
+    $ch = curl_init($uri . $xmlrpcserverurl);
 
     curl_setopt($ch, CURLOPT_TIMEOUT, 60);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -170,7 +172,7 @@ function get_peer($wwwroot) {
     static $peers = array();
     if(isset($peers[$wwwroot])) return $peers[$wwwroot];
     $peer = new Peer();
-    if(!$peer->init($wwwroot)) {
+    if(!$peer->findByWwwroot($wwwroot)) {
         // Bootstrap unknown hosts?
         throw new MaharaException('We don\'t have a record for your webserver in our database', 6003);
     }
@@ -240,6 +242,7 @@ function xmlenc_envelope($message, $remote_certificate) {
     }
 
     // Initialize vars
+    $wwwroot = dropslash($CFG->wwwroot);
     $encryptedstring = '';
     $symmetric_keys = array();
 
@@ -275,7 +278,7 @@ function xmlenc_envelope($message, $remote_certificate) {
             </ReferenceList>
             <CarriedKeyName>XMLENC</CarriedKeyName>
         </EncryptedKey>
-        <wwwroot>{$CFG->wwwroot}</wwwroot>
+        <wwwroot>{$wwwroot}</wwwroot>
         <X1>$zed</X1>
     </encryptedMessage>
 EOF;
