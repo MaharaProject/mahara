@@ -97,6 +97,24 @@ if ($institution && $plugin) {
     $smarty->assign('auth_imap_form', pieform($form));
 }
 
+function auth_config_validate(Pieform $form, $values) {
+    $plugin = $values['authname'];
+    $classname = 'PluginAuth' . ucfirst(strtolower($plugin));
+
+    if (!method_exists($classname, 'validate_config_options')) {
+        return;
+    }
+    safe_require('auth', strtolower($plugin));
+
+    try {
+        $values = call_static_method($classname, 'validate_config_options', $values, $form);
+    } catch (Exception $e) {
+        if (!$form->has_errors()) {
+            $form->set_error('instancename', "An unknown error occurred while processing this form");
+        }
+    }
+}
+
 function auth_config_submit(Pieform $form, $values) {
     $plugin = $values['authname'];
     $classname = 'PluginAuth' . ucfirst(strtolower($plugin));
