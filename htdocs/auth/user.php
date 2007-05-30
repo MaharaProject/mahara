@@ -92,12 +92,16 @@ class User {
     /**
      * 
      */
-    public function retrieve($id) {
+    public function find_by_id($id) {
         if (!is_numeric($id) || $id < 0) {
             throw new InvalidArgumentException('parameter must be a positive integer to create a User object');
         }
-        
-        $user = get_record('usr', 'id', $id);
+
+        $user = get_record('usr', 'id', $id, '*, ' . db_format_tsfield('expiry') . ', ' . db_format_tsfield('lastlogin'). ', ' . db_format_tsfield('suspendedctime'));
+        if (false == $user) {
+            throw new AuthUnknownUserException("User with id \"$id\" is not known");
+        }
+
         $this->populate($user);
         return $this;
     }
