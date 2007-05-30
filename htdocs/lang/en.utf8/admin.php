@@ -123,6 +123,10 @@ $string['enablenetworkingdescription'] = 'Allow your Mahara server to communicat
 $string['enablenetworking'] = 'Enable networking';
 $string['networkingenabled'] = 'Networking has been enabled';
 $string['networkingdisabled'] = 'Networking has been disabled';
+$string['promiscuousmode'] = 'Auto-register all hosts';
+$string['promiscuousmodedisabled'] = 'Networking has been disabled';
+$string['promiscuousmodeenabled'] = 'Networking has been disabled';
+$string['promiscuousmodedescription'] = 'Create an institution record for any host that connects to you, and allow its users to log on to Mahara';
 
 // Admin menu editor
 //$string['menueditor']    = 'Menu editor';
