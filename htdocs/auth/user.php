@@ -58,15 +58,15 @@ class User {
             'password'         => '',
             'institution'      => 'mahara',
             'salt'             => '',
-            'passwordchange'   => false,
+            'passwordchange'   => 0,
             'active'           => 1,
-            'deleted'          => false,
+            'deleted'          => 0,
             'expiry'           => 0,
             'expirymailsent'   => 0,
             'lastlogin'        => 0,
             'inactivemailsent' => 0,
-            'staff'            => false,
-            'admin'            => false,
+            'staff'            => 0,
+            'admin'            => 0,
             'firstname'        => '',
             'lastname'         => '',
             'studentid'        => '',
@@ -189,10 +189,15 @@ class User {
         if ($this->changed == false) {
             return;
         }
+        $record = $this->to_stdclass();
         if (is_numeric($this->id) && 0 < $this->id) {
-            update_record('usr', $this->to_stdclass(), (object)array('id' => $this->id));
+            update_record('usr', $record, array('id' => $this->id));
         } else {
-            $this->set('id', insert_record('usr', $this->to_stdclass(), 'id', true));
+            try {
+                $this->set('id', insert_record('usr', $record, 'id', true));
+            } catch (Exception $e) {
+                // TODO: rethrow error
+            }
         }
         $this->changed = false;
     }
@@ -280,8 +285,11 @@ class User {
         $this->stdclass = new StdClass;
         reset($this->defaults);
         foreach (array_keys($this->defaults) as $k) {
-            if($k == 'lastlogin' || $k == 'expiry') continue;
-            $this->stdclass->{$k} = $this->get($k);//(is_null($this->get($k))? 'NULL' : $this->get($k));
+            if ($k == 'expiry' || $k == 'lastlogin' || $k == 'suspendedctime') {
+                $this->stdclass->{$k} = db_format_timestamp($this->get($k));
+            } else {
+                $this->stdclass->{$k} = $this->get($k);//(is_null($this->get($k))? 'NULL' : $this->get($k));
+            }
         }
         return $this->stdclass;
     }
@@ -372,9 +380,13 @@ class LiveUser extends User {
         $this->authenticated  = true;
         $this->populate($user);
         session_regenerate_id(true);
+        $this->lastlogin          = time();
         $this->sessionid          = session_id();
         $this->logout_time        = time() + get_config('session_timeout');
         $this->sesskey            = get_random_key();
+
+        // We need a user->id before we load_c*_preferences
+        if (empty($user->id)) $this->commit();
         $this->activityprefs      = load_activity_preferences($user->id);
         $this->accountprefs       = load_account_preferences($user->id);
         $this->commit();
