@@ -25,6 +25,8 @@
  */
 
 defined('INTERNAL') || die();
+global $CFG;
+require_once($CFG->docroot .'/auth/lib.php');
 
 /**
  * The internal authentication method, which authenticates users against the
@@ -210,7 +212,7 @@ class PluginAuthImap extends PluginAuth {
         );
     }
 
-    public static function save_config_options($values) {
+    public static function save_config_options($values, $form) {
 
         $authinstance = new stdClass();
 
