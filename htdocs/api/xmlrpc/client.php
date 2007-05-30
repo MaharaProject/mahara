@@ -24,6 +24,9 @@
  *
  */
 
+defined('INTERNAL') || die();
+require_once($CFG->docroot .'/api/xmlrpc/lib.php');
+
 class Client {
 
     private $requesttext      = '';
@@ -47,8 +50,10 @@ class Client {
     function send($wwwroot) {
         $this->peer     = get_peer($wwwroot);
         $this->response = '';
+        $URL = $this->peer->wwwroot . $this->peer->application->xmlrpcserverurl;
 
-        $ch = curl_init( $this->peer->wwwroot . $this->peer->xmlrpcserverurl );
+        $ch = curl_init( $URL );
+
         $this->requesttext = xmlrpc_encode_request($this->method, $this->params, array("encoding" => "utf-8"));
         $this->signedrequest = xmldsig_envelope($this->requesttext);
         $this->encryptedrequest = xmlenc_envelope($this->signedrequest, $this->peer->certificate);
@@ -56,12 +61,13 @@ class Client {
         curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_USERAGENT, 'Moodle');
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mahara');
         curl_setopt($ch, CURLOPT_POSTFIELDS, $this->encryptedrequest);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: text/xml charset=UTF-8"));
 
         $timestamp_send    = time();
         $this->rawresponse = curl_exec($ch);
+
         $timestamp_receive = time();
         $remote_timestamp  = null;
 
@@ -73,7 +79,6 @@ class Client {
         try {
             $xml = new SimpleXMLElement($this->rawresponse);
         } catch (Exception $e) {
-            echo 'a'; exit;
             throw new Exception('Payload is not a valid XML document', 6001);
         }
 
