@@ -46,12 +46,16 @@ $json        = param_boolean('j');
 $instanceid  = param_variable('id', 0);
 
 // IF WE'RE EDITING OR CREATING AN AUTHORITY:
-if ($institution && $plugin && ($add || ($edit && $instanceid))) {
+if ($institution && $plugin) {
     $classname = 'PluginAuth' . ucfirst(strtolower($plugin));
     safe_require('auth', strtolower($plugin));
 
     $has_config = call_static_method($classname, 'has_config');
     if (false == $has_config && $add) {
+
+        // We've been asked to add an instance of an auth plugin that has no
+        // config options. We've been called by an AJAX request, so we just
+        // add the instance and generate an acknowledgement.
         $authinstance = new stdClass();
 
         // Get the auth instance with the highest priority number (which is
@@ -73,7 +77,8 @@ if ($institution && $plugin && ($add || ($edit && $instanceid))) {
         exit;
     }
 
-    $form = call_static_method($classname, 'get_config_options', $institution, $instanceid);
+    $authclass = new $classname();
+    $form = $authclass->get_config_options($institution, $instanceid);
     $form['name'] = 'auth_config';
     $form['plugintype'] = 'auth';
     $form['pluginname'] = strtolower($plugin);
