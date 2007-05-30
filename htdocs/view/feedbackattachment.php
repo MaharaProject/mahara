@@ -82,7 +82,7 @@ if ($error = $um->save_file(ArtefactTypeFile::get_file_directory($fileid) , $fil
 }
 else {
     $usr = new User();
-    $usr->retrieve($viewdata->owner)
+    $usr->find_by_id($viewdata->owner)
         ->quota_add($size)
         ->commit();
 }
