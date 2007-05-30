@@ -55,6 +55,12 @@ header('Content-type: text/xml; charset=utf-8');
 ini_set('display_errors',0);
 if(!empty($errors)) throw new XmlrpcServerException('Initialization failed. Non-recoverable error.', 6000);
 
+// PHP 5.2.2: $HTTP_RAW_POST_DATA not populated bug:
+// http://bugs.php.net/bug.php?id=41293
+if (empty($HTTP_RAW_POST_DATA)) {
+    $HTTP_RAW_POST_DATA = file_get_contents('php://input');
+}
+
 // A singleton provides our site's SSL info
 $openssl = OpenSslRepo::singleton();
 $payload           = $HTTP_RAW_POST_DATA;
