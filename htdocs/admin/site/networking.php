@@ -63,6 +63,13 @@ $networkingform = pieform(
                 'defaultvalue' => get_config('enablenetworking'),
                 'options'      => $yesno,
             ),
+            'promiscuousmode' => array(
+                'type'         => 'select',
+                'title'        => get_string('promiscuousmode','admin'),
+                'description'  => get_string('promiscuousmodedescription','admin'),
+                'defaultvalue' => get_config('promiscuousmode'),
+                'options'      => $yesno,
+            ),
             'submit' => array(
                 'type'  => 'submit',
                 'value' => get_string('savechanges','admin')
@@ -76,15 +83,31 @@ function networkingform_fail(Pieform $form) {
 }
 
 function networkingform_submit(Pieform $form, $values) {
-    if (!set_config('enablenetworking', $values['enablenetworking'])) {
-        networkingform_fail($form);
+
+    if (get_config('enablenetworking') != $values['enablenetworking']) {
+        if (!set_config('enablenetworking', $values['enablenetworking'])) {
+            networkingform_fail($form);
+        } else {
+            if(empty($values['enablenetworking'])) {
+                $reply = get_string('networkingdisabled','admin');
+            } else {
+                $reply = get_string('networkingenabled','admin');
+            }
+        }
     }
 
-    if(empty($values['enablenetworking'])) {
-        $reply = get_string('networkingdisabled','admin');
-    } else {
-        $reply = get_string('networkingenabled','admin');
+    if (get_config('promiscuousmode') != $values['promiscuousmode']) {
+        if (!set_config('promiscuousmode', $values['promiscuousmode'])) {
+            networkingform_fail($form);
+        } else {
+            if(empty($values['promiscuousmode'])) {
+                $reply = get_string('promiscuousmodedisabled','admin');
+            } else {
+                $reply = get_string('promiscuousmodeenabled','admin');
+            }
+        }
     }
+
     $form->json_reply(PIEFORM_OK, $reply);
 }
 
