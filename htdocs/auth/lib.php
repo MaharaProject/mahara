@@ -403,7 +403,8 @@ function auth_get_auth_instances_for_institution($institution) {
                 i.instancename,
                 i.priority,
                 i.authname,
-                a.requires_config
+                a.requires_config,
+                a.requires_parent
             FROM 
                 '.$CFG->dbprefix.'auth_instance i,
                 '.$CFG->dbprefix.'auth_installed a
