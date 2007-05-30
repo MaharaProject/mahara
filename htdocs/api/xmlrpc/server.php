@@ -50,6 +50,13 @@ ob_start();
     $errors = trim(ob_get_contents());
 ob_end_clean();
 
+// If networking is off, return a 404
+$networkenabled = get_config('enablenetworking');
+if (empty($networkenabled)) {
+    header("HTTP/1.0 404 Not Found");
+    exit;
+}
+
 // Content type for output is never html:
 header('Content-type: text/xml; charset=utf-8');
 ini_set('display_errors',0);
