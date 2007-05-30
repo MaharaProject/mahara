@@ -98,13 +98,20 @@ function auth_config_submit(Pieform $form, $values) {
     $plugin = $values['authname'];
     $classname = 'PluginAuth' . ucfirst(strtolower($plugin));
     safe_require('auth', strtolower($plugin));
-    $values = call_static_method($classname, 'save_config_options', $values);
-    if($values['create']) {
-        execute_javascript_and_close('window.opener.addAuthority('.$values['instance'].', "'.addslashes($values['instancename']).'", "'.$values['authname'].'");');
-    } else {
-        execute_javascript_and_close();
+    try {
+        $values = call_static_method($classname, 'save_config_options', $values, $form);
+    } catch (Exception $e) {
+        $form->set_error('instancename', "An unknown error occurred while processing this form");
     }
-    exit;
+
+    if (false == $form->has_errors()) {
+        if(array_key_exists('create', $values) && $values['create']) {
+            execute_javascript_and_close('window.opener.addAuthority('.$values['instance'].', "'.addslashes($values['instancename']).'", "'.$values['authname'].'");');
+        } else {
+            execute_javascript_and_close();
+        }
+        exit;
+    }
 }
 
 // TODO: move to lib if people want this:
