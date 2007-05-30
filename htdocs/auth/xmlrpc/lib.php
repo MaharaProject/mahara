@@ -25,6 +25,11 @@
  */
 
 defined('INTERNAL') || die();
+global $CFG;
+require_once($CFG->docroot .'/auth/lib.php');
+require_once($CFG->docroot .'/include/eLearning/peer.php');
+require_once($CFG->docroot .'/include/eLearning/applicationset.php');
+require_once($CFG->docroot .'/api/xmlrpc/lib.php');
 
 /**
  * The XMLRPC authentication method, which authenticates users against the
@@ -33,6 +38,8 @@ defined('INTERNAL') || die();
  * the user's existing Auth type, whatever that might be; it supplements it.
  */
 class AuthXmlrpc extends Auth {
+
+    public $file = null;
 
     /**
      * Get the party started with an optional id
@@ -44,13 +51,19 @@ class AuthXmlrpc extends Auth {
         $this->has_config = true;
         $this->type                            = 'xmlrpc';
 
-        $this->config['host']                  = '';
+        $this->config['wwwroot']               = '';
+        $this->config['wwwroot_orig']          = '';
         $this->config['shortname']             = '';
         $this->config['name']                  = '';
+        $this->config['portno']                = 80;
         $this->config['xmlrpcserverurl']       = '';
         $this->config['changepasswordurl']     = '';
         $this->config['updateuserinfoonlogin'] = 1;
-
+        $this->config['autocreateusers']       = 0;
+        $this->config['wessoout']              = 1;
+        $this->config['theyssoin']             = 0;
+        $this->config['parent']                = null;
+        $this->file = fopen('/tmp/out.txt', 'w');
         if(!empty($id)) {
             return $this->init($id);
         }
@@ -65,16 +78,21 @@ class AuthXmlrpc extends Auth {
         return $this->ready;
     }
 
+    public function __get($name) {
+        if (array_key_exists($name, $this->config)) {
+            return $this->config[$name];
+        }
+    }
+
     /**
      * Grab a delegate object for auth stuff
      */
     public function request_user_authorise($token, $remotewwwroot) {
         global $CFG, $USER;
-
-        // get_peer will throw exception if server is unrecognised
+        $this->must_be_ready();
         $peer = get_peer($remotewwwroot);
 
-        if($peer->deleted != 0 || $peer->they_sso_in != 1) {
+        if($peer->deleted != 0 || $this->config['theyssoin'] != 1) {
             throw new MaharaException('We don\'t accept SSO connections from '.$peer->name );
         }
 
@@ -86,97 +104,109 @@ class AuthXmlrpc extends Auth {
 
         $remoteuser = (object)$client->response;
 
-        if (empty($remoteuser) or empty($remoteuser['username'])) {
+        if (empty($remoteuser) or !property_exists($remoteuser, 'username')) {
             throw new MaharaException('Unknown error!');
         }
 
         $virgin = false;
 
-        $authtype = auth_get_authtype_for_institution($peer->institution);
-        safe_require('auth', $authtype);
-        $authclass = 'Auth' . ucfirst($authtype);
-
         set_cookie('institution', $peer->institution, 0, get_mahara_install_subdirectory());
         $oldlastlogin = null;
 
-        if (!call_static_method($authclass, 'user_exists', $remoteuser->username)) {
-            $remoteuser->picture;
-            $remoteuser->imagehash;
+        try {
+            $user = $this->user_exists($remoteuser->username);
+        } catch (Exception $e) {
 
-            $remoteuser->institution   = $peer->institution;
-            $remoteuser->preferredname = $remoteuser->firstname;
-            $remoteuser->passwordchange = 0;
-            $remoteuser->active = !(bool)$remoteuser->deleted;
-            $remoteuser->lastlogin = db_format_timestamp(time());
+            if (!empty($this->config['autocreateusers'])) {
+                $user = new User;
 
-            db_begin();
-            $remoteuser->id = insert_record('usr', $remoteuser, 'id', true);
+                $user->username           = $remoteuser->username;
+                $user->institution        = $peer->institution;
+                $user->passwordchange     = 1;
+                $user->active             = 1;
+                $user->deleted            = 0;
 
-            // TODO: fetch image if it has changed
-            //$directory = get_config('dataroot') . 'artefact/internal/profileicons/' . ($id % 256) . '/';
-            //$dirname  = "{$CFG->dataroot}/users/{$localuser->id}";
-            //$filename = "$dirname/f1.jpg";
+                //TODO: import institution's expiry?:
+                //$institution = new Institution($peer->institution);
+                $user->expiry             = 0;
+                $user->expirymailsent     = 0;
+                $user->lastlogin          = time();
 
-            //$localhash = '';
-            //if (file_exists($filename)) {
-            //    $localhash = sha1(file_get_contents($filename));
-            //} elseif (!file_exists($dirname)) {
-            //    mkdir($dirname);
-            //}
+                $user->firstname          = $remoteuser->firstname;
+                $user->lastname           = $remoteuser->lastname;
+                $user->preferredname      = $remoteuser->firstname;
+                $user->email              = $remoteuser->email;
 
-            // fetch image from remote host
-            $client->set_method('auth/mnet/auth.php/fetch_user_image')
-                   ->add_param($remoteuser->username)
-                   ->send($remotewwwroot);
+                //TODO: import institution's per-user-quota?:
+                //$user->quota              = $userrecord->quota;
+                $user->authinstance       = empty($this->parent) ? $this->instanceid : $this->parent;
+                $user->commit();
 
-            //if (strlen($fetchrequest->response['f1']) > 0) {
-            //    $imagecontents = base64_decode($fetchrequest->response['f1']);
-            //    file_put_contents($filename, $imagecontents);
-            //}
-            /*
-            if (strlen($fetchrequest->response['f2']) > 0) {
-                $imagecontents = base64_decode($fetchrequest->response['f2']);
-                file_put_contents($dirname.'/f2.jpg', $imagecontents);
+                /*
+                $client->set_method('auth/mnet/auth.php/fetch_user_image')
+                       ->add_param($user->username)
+                       ->send($remotewwwroot);
+
+                //$imageobject = (object)$client->response;
+
+                if (array_key_exists('f1', $client->response)) {
+                    $imagecontents = base64_decode($client->response['f1']);
+                    file_put_contents($filename, $imagecontents);
+                }
+
+                // fetch image from remote host
+                $fetchrequest = new mnet_xmlrpc_client();
+                $fetchrequest->set_method('auth/mnet/auth.php/fetch_user_image');
+                $fetchrequest->add_param($localuser->username);
+                if ($fetchrequest->send($remotepeer) === true) {
+                    if (strlen($fetchrequest->response['f1']) > 0) {
+                        $imagecontents = base64_decode($fetchrequest->response['f1']);
+                        file_put_contents($filename, $imagecontents);
+                    }
+                    if (strlen($fetchrequest->response['f2']) > 0) {
+                        $imagecontents = base64_decode($fetchrequest->response['f2']);
+                        file_put_contents($dirname.'/f2.jpg', $imagecontents);
+                    }
+                }
+                */
+
+
+                //$user->profileicon        = $userrecord->profileicon;
+            } else {
+                return false;
             }
-            */
-
-            if (strlen($fetchrequest->response['f1']) > 0) {
-                // Entry in artefact table
-                $artefact = new ArtefactTypeProfileIcon();
-                $artefact->set('owner', $remoteuser->id);
-                $artefact->set('title', 'Profile Icon');
-                $artefact->set('note', '');
-                $artefact->commit();
-
-                $id = $artefact->get('id');
-
-
-                // Move the file into the correct place.
-                $directory = get_config('dataroot') . 'artefact/internal/profileicons/' . ($id % 256) . '/';
-                check_dir_exists($directory);
-                $imagecontents = base64_decode($fetchrequest->response['f1']);
-                file_put_contents($directory . $id, $imagecontents);
-
-                $filesize = filesize($directory . $id);
-                set_field('usr', 'quotaused', $filesize, 'id', $remoteuser->id);
-                $remoteuser->quotaused = $filesize;
-                $remoteuser->quota = get_config_plugin('artefact', 'file', 'defaultquota');
-                set_field('usr', 'profileicon', $id, 'id', $remoteuser->id);
-                $remoteuser->profileicon = $id;
-            }
-            else {
-                $remoteuser->quotaused = 0;
-                $remoteuser->quota = get_config_plugin('artefact', 'file', 'defaultquota');
-            }
-            db_commit();
-            handle_event('createuser', $remoteuser);
-
-            // Log the user in and send them to the homepage
-            $USER->login($remoteuser);
-            redirect();
-        } else {
-            $USER->login($remoteuser);
         }
+
+        // We know who our user is now. Bring her back to life.
+        $USER->reanimate($user->id);
+        return true;
+    }
+
+    /**
+     * Given a username, returns whether the user exists in the usr table
+     *
+     * @param string $username The username to attempt to identify
+     * @return bool            Whether the username exists
+     */
+    public function user_exists($username) {
+        $this->must_be_ready();
+        $userrecord = false;
+
+        // The user is likely to be associated with the parent instance
+        if (is_numeric($this->config['parent']) && $this->config['parent'] > 0) {
+            $_instanceid = $this->config['parent'];
+            $userrecord = get_record('usr', 'LOWER(username)', strtolower($username), 'authinstance', $_instanceid);
+        }
+
+        if (empty($userrecord)) {
+            $_instanceid = $this->instanceid;
+            $userrecord = get_record('usr', 'LOWER(username)', strtolower($username), 'authinstance', $_instanceid);
+        }
+
+        if ($userrecord != false) {
+            return $userrecord;
+        }
+        throw new AuthUnknownUserException("\"$username\" is not known to Auth");
     }
 
     /**
@@ -205,7 +235,19 @@ class AuthXmlrpc extends Auth {
  */
 class PluginAuthXmlrpc extends PluginAuth {
 
-    private static $default_config = array('host'=>'', 'name'=>'', 'shortname'=>'','xmlrpcserverurl'=>'', 'updateuserinfoonlogin'=>'', 'autocreateusers'=>'');
+    private static $default_config = array(
+        'instancename'          => '',
+        'wwwroot'               => '',
+        'wwwroot_orig'          => '',
+        'name'                  => '',
+        'appname'               => '',
+        'portno'                => 80,
+        'updateuserinfoonlogin' => 0, 
+        'autocreateusers'       => 0,
+        'wessoout'              => 0,
+        'theyssoin'             => 0,
+        'parent'                => null
+    );
 
     public static function has_config() {
         return true;
@@ -213,26 +255,77 @@ class PluginAuthXmlrpc extends PluginAuth {
 
     public static function get_config_options($institution, $instance = 0) {
 
+        $peer = new Peer();
+
+        // Get a list of applications and make a dropdown from it
+        $applicationset = new ApplicationSet();
+        $apparray = array();
+        foreach ($applicationset as $app) {
+            $apparray[$app->name] = $app->displayname;
+        }
+
+        /**
+         * A parent authority for XML-RPC is the data-source that a remote XML-RPC service
+         * communicates with to authenticate a user, for example, the XML-RPC server that 
+         * we connect to might be authorising users against an LDAP store. If this is the 
+         * case, and we know of the LDAP store, and our users are able to log on to our 
+         * system and be authenticated directly against the LDAP store, then we honor that 
+         * association.
+         * 
+         * In this way, the unique relationship is between the username and the authority,
+         * not the username and the institution. This allows an institution to have a user
+         * 'donal' on server 'LDAP-1' and a different user 'donal' on server 'LDAP-2'.
+         * 
+         * Get a list of auth instances for this institution, and eliminate those that 
+         * would not be valid parents (as they themselves require a parent). These are 
+         * eliminated only to provide a saner interface to the admin user. In theory, it's
+         * ok to chain authorities.
+         */ 
+        $instances = auth_get_auth_instances_for_institution($institution);
+        $options = array('None');
+        if (is_array($instances)) {
+            foreach($instances as $someinstance) {
+                if ($someinstance->requires_parent == 1) {
+                    continue;
+                }
+                $options[$someinstance->id] = $someinstance->instancename;
+            }
+        }
+
+        // Get the current data (if any exists) for this auth instance
         if ($instance > 0) {
-            $current        = get_records_array('auth_instance',        'id',       $instance, 'priority ASC');
-            if($current == false) {
+            $default = get_record('auth_instance', 'id', $instance);
+            if($default == false) {
                 throw new Exception(get_string('nodataforinstance', 'auth').$instance);
             }
-            $default = $current[0];
             $current_config = get_records_menu('auth_instance_config', 'instance', $instance, '', 'field, value');
 
             if($current_config == false) {
-                $current_config = array();
+                throw new Exception('No config data for instance: '.$instance);
             }
 
             foreach (self::$default_config as $key => $value) {
                 if(array_key_exists($key, $current_config)) {
                     self::$default_config[$key] = $current_config[$key];
+
+                    // We can use the wwwroot to create a Peer object
+                    if ('wwwroot' == $key) {
+                        $peer->findByWwwroot($current_config[$key]);
+                        self::$default_config['wwwroot_orig'] = $current_config[$key];
+                    }
+                } elseif (property_exists($default, $key)) {
+                    self::$default_config[$key] = $default->{$key};
                 }
             }
         } else {
-            $default = new stdClass();
-            $default->instancename = '';
+            $max_priority = get_field('auth_instance', 'MAX(priority)', 'institution', $institution);
+            self::$default_config['priority'] = ++$max_priority;
+        }
+
+        if (empty($peer->application->name)) {
+            self::$default_config['appname'] = key(current($applicationset));
+        } else {
+            self::$default_config['appname'] = $peer->application->name;
         }
 
         $elements['instancename'] = array(
@@ -241,7 +334,7 @@ class PluginAuthXmlrpc extends PluginAuth {
             'rules' => array(
                 'required' => true
             ),
-            'defaultvalue' => $default->instancename,
+            'defaultvalue' => self::$default_config['instancename'],
             'help'   => true
         );
 
@@ -255,19 +348,43 @@ class PluginAuthXmlrpc extends PluginAuth {
             'value' => $institution
         );
 
+        $elements['deleted'] = array(
+            'type' => 'hidden',
+            'value' => $peer->deleted
+        );
+
         $elements['authname'] = array(
             'type' => 'hidden',
             'value' => 'xmlrpc'
         );
 
-        $elements['host'] = array(
+        $elements['parent'] = array(
+            'type'                => 'select',
+            'title'               => get_string('parent','auth'),
+            'collapseifoneoption' => false,
+            'options'             => $options,
+            'defaultvalue'        => self::$default_config['parent'],
+            'help'   => true
+        );
+
+        $elements['wwwroot'] = array(
             'type' => 'text',
-            'title' => get_string('host', 'auth'),
+            'title' => get_string('wwwroot', 'auth'),
             'rules' => array(
                 'required' => true
             ),
-            'defaultvalue' => self::$default_config['host'],
+            'defaultvalue' => self::$default_config['wwwroot'],
             'help'   => true
+        );
+
+        $elements['wwwroot_orig'] = array(
+            'type' => 'hidden',
+            'value' => self::$default_config['wwwroot_orig']
+        );
+
+        $elements['oldwwwroot'] = array(
+            'type' => 'hidden',
+            'value' => 'xmlrpc'
         );
 
         $elements['name'] = array(
@@ -276,27 +393,42 @@ class PluginAuthXmlrpc extends PluginAuth {
             'rules' => array(
                 'required' => true
             ),
-            'defaultvalue' => self::$default_config['name'],
+            'defaultvalue' => $peer->name,
             'help'   => true
         );
 
-        $elements['shortname'] = array(
+        $elements['appname'] = array(
+            'type'                => 'select',
+            'title'               => get_string('application','auth'),
+            'collapseifoneoption' => true,
+            'multiple'            => false,
+            'options'             => $apparray,
+            'defaultvalue'        => self::$default_config['appname'],
+            'help'                => true
+        );
+
+        $elements['portno'] = array(
             'type' => 'text',
-            'title' => get_string('shortname', 'auth'),
+            'title' => get_string('port', 'auth'),
             'rules' => array(
-                'required' => true
+                'required' => true,
+                'integer'  => true
             ),
-            'defaultvalue' => self::$default_config['shortname'],
+            'defaultvalue' => $peer->portno,
             'help'   => true
         );
 
-        $elements['xmlrpcserverurl'] = array(
-            'type' => 'text',
-            'title' => get_string('xmlrpcserverurl', 'auth'),
-            'rules' => array(
-                'required' => true
-            ),
-            'defaultvalue' => self::$default_config['xmlrpcserverurl'],
+        $elements['wessoout'] = array(
+            'type'         => 'checkbox',
+            'title'        => get_string('wessoout', 'auth'),
+            'defaultvalue' => self::$default_config['wessoout'],
+            'help'   => true
+        );
+
+        $elements['theyssoin'] = array(
+            'type'         => 'checkbox',
+            'title'        => get_string('theyssoin', 'auth'),
+            'defaultvalue' => self::$default_config['theyssoin'],
             'help'   => true
         );
 
@@ -320,14 +452,32 @@ class PluginAuthXmlrpc extends PluginAuth {
         );
     }
 
-    public static function save_config_options($values) {
+    public static function validate_config_options($values, $form) {
 
         $authinstance = new stdClass();
+        $peer = new Peer();
+
+        if (false == $peer->findByWwwroot($values['wwwroot'])) {
+            try {
+                $peer->bootstrap($values['wwwroot'], null);
+            } catch (RemoteServerException $e) {
+                $form->set_error('wwwroot',get_string('cantretrievekey', 'auth').'<br>'.$e->getMessage());
+                throw new RemoteServerException($e->getMessage(), $e->getCode());
+            }
+        }
+    }
+
+    public static function save_config_options($values, $form) {
+
+        db_begin();
+        $authinstance = new stdClass();
+        $peer = new Peer();
 
         if ($values['instance'] > 0) {
             $values['create'] = false;
             $current = get_records_assoc('auth_instance_config', 'instance', $values['instance'], '', 'field, value');
             $authinstance->id = $values['instance'];
+
         } else {
             $values['create'] = true;
 
@@ -342,6 +492,31 @@ class PluginAuthXmlrpc extends PluginAuth {
                 $authinstance->priority = $lastinstance[0]->priority + 1;
             }
         }
+ 
+        if (false == $peer->findByWwwroot($values['wwwroot'])) {
+            try {
+                $peer->bootstrap($values['wwwroot'], null);
+            } catch (RemoteServerException $e) {
+                $form->set_error('wwwroot',get_string('cantretrievekey', 'auth'));
+                throw new RemoteServerException($e->getMessage(), $e->getCode());
+            }
+        }
+
+        $peer->wwwroot              = $values['wwwroot'];
+        $peer->name                 = $values['name'];
+        $peer->deleted              = $values['deleted'];
+        $peer->portno               = $values['portno'];
+        $peer->appname              = $values['appname'];
+        $peer->institution          = $values['institution'];
+
+        /**
+         * The following properties are not user-updatable
+        $peer->publickey            = $values['publickey'];
+        $peer->publickeyexpires     = $values['publickeyexpires'];
+        $peer->lastconnecttime      = $values['lastconnecttime'];
+         */
+
+        $peer->commit();
 
         $authinstance->instancename = $values['instancename'];
         $authinstance->institution  = $values['institution'];
@@ -357,12 +532,13 @@ class PluginAuthXmlrpc extends PluginAuth {
             $current = array();
         }
 
-        self::$default_config = array(  'host'                  => $values['host'],
-                                        'name'                  => $values['name'],
-                                        'shortname'             => $values['shortname'],
-                                        'xmlrpcserverurl'       => $values['xmlrpcserverurl'],
+        self::$default_config = array(  'wwwroot'               => $values['wwwroot'],
                                         'updateuserinfoonlogin' => $values['updateuserinfoonlogin'],
-                                        'autocreateusers'       => $values['autocreateusers']);
+                                        'autocreateusers'       => $values['autocreateusers'],
+                                        'parent'                => $values['parent'],
+                                        'wessoout'              => $values['wessoout'],
+                                        'theyssoin'             => $values['theyssoin']
+                                        );
 
         foreach(self::$default_config as $field => $value) {
             $record = new stdClass();
@@ -379,6 +555,7 @@ class PluginAuthXmlrpc extends PluginAuth {
             }
         }
 
+        db_commit();
         return $values;
     }
 
