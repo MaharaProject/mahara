@@ -21,6 +21,7 @@
                 <FIELD NAME="release" TYPE="text" LENGTH="small" NOTNULL="true" />
                 <FIELD NAME="active" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" />
                 <FIELD NAME="requires_config" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
+                <FIELD NAME="requires_parent" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="name" />
@@ -28,12 +29,13 @@
         </TABLE>
         <TABLE NAME="application">
             <FIELDS>
-                <FIELD NAME="shortname" TYPE="char" LENGTH="20" NOTNULL="true" />
-                <FIELD NAME="name" TYPE="char" LENGTH="100" NOTNULL="true" />
+                <FIELD NAME="name" TYPE="char" LENGTH="20" NOTNULL="true" />
+                <FIELD NAME="displayname" TYPE="char" LENGTH="100" NOTNULL="true" />
                 <FIELD NAME="xmlrpcserverurl" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="sso_land_url" TYPE="char" LENGTH="255" NOTNULL="true" />
             </FIELDS>
             <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="shortname" />
+                <KEY NAME="primary" TYPE="primary" FIELDS="name" />
             </KEYS>
         </TABLE>
         <TABLE NAME="institution">
@@ -127,21 +129,19 @@
             <FIELDS>
                 <FIELD NAME="wwwroot" TYPE="char" LENGTH="255" NOTNULL="true"  />
                 <FIELD NAME="name" TYPE="char" LENGTH="80" NOTNULL="true" DEFAULT=""  />
+                <FIELD NAME="institution" TYPE="char" LENGTH="255" NOTNULL="true"  />
                 <FIELD NAME="ipaddress" TYPE="char" LENGTH="39" NOTNULL="true" DEFAULT=""  />
-                <FIELD NAME="deleted" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="portno" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="80"  />
+                <FIELD NAME="appname" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT=""  />
                 <FIELD NAME="publickey" TYPE="text" NOTNULL="true" DEFAULT=""  />
                 <FIELD NAME="publickeyexpires" TYPE="int" LENGTH="10" NOTNULL="true"  />
-                <FIELD NAME="portno" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="80"  />
+                <FIELD NAME="deleted" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
                 <FIELD NAME="lastconnecttime" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"  />
-                <FIELD NAME="application" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT=""  />
-                <FIELD NAME="theyssoin" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"  />
-                <FIELD NAME="wessoout" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"  />
-                <FIELD NAME="institution" TYPE="char" LENGTH="255" NOTNULL="true"  />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="wwwroot" />
                 <KEY NAME="institution" TYPE="foreign" FIELDS="institution" REFTABLE="institution" REFFIELDS="name"/>
-                <KEY NAME="application" TYPE="foreign" FIELDS="application" REFTABLE="application" REFFIELDS="shortname"/>
+                <KEY NAME="appname" TYPE="foreign" FIELDS="appname" REFTABLE="application" REFFIELDS="name"/>
             </KEYS>
         </TABLE>
         <TABLE NAME="cron">
@@ -876,6 +876,12 @@
                 <SENTENCE TEXT="(field, value) VALUES ('session_timeout', 1800)" />
                 <SENTENCE TEXT="(field, value) VALUES ('sitename', 'Mahara')" />
                 <SENTENCE TEXT="(field, value) VALUES ('pathtofile', '/usr/bin/file')" />
+            </SENTENCES>
+        </STATEMENT>
+        <STATEMENT NAME="insert application" TYPE="insert" TABLE="application">
+            <SENTENCES>
+                <SENTENCE TEXT="(name, displayname, xmlrpcserverurl) VALUES ('moodle', 'Moodle','/mnet/xmlrpc/server.php')" />
+                <SENTENCE TEXT="(name, displayname, xmlrpcserverurl) VALUES ('mahara', 'Mahara','/api/xmlrpc/server.php')" />
             </SENTENCES>
         </STATEMENT>
         <STATEMENT NAME="insert event types" TYPE="insert" TABLE="event_type">
