@@ -25,6 +25,8 @@
  */
 
 defined('INTERNAL') || die();
+global $CFG;
+require_once($CFG->docroot .'/auth/lib.php');
 
 /**
  * The internal authentication method, which authenticates users against the
