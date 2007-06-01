@@ -880,8 +880,8 @@
         </STATEMENT>
         <STATEMENT NAME="insert application" TYPE="insert" TABLE="application">
             <SENTENCES>
-                <SENTENCE TEXT="(name, displayname, xmlrpcserverurl) VALUES ('moodle', 'Moodle','/mnet/xmlrpc/server.php')" />
-                <SENTENCE TEXT="(name, displayname, xmlrpcserverurl) VALUES ('mahara', 'Mahara','/api/xmlrpc/server.php')" />
+                <SENTENCE TEXT="(name, displayname, xmlrpcserverurl, sso_land_url) VALUES ('moodle', 'Moodle','/mnet/xmlrpc/server.php','/auth/mnet/land.php')" />
+                <SENTENCE TEXT="(name, displayname, xmlrpcserverurl, sso_land_url) VALUES ('mahara', 'Mahara','/api/xmlrpc/server.php','/auth/xmlrpc/land.php')" />
             </SENTENCES>
         </STATEMENT>
         <STATEMENT NAME="insert event types" TYPE="insert" TABLE="event_type">
