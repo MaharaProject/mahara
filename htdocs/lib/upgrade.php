@@ -40,7 +40,7 @@ class InstallationException extends SystemException {}
  * @return array of objects
  */
 function check_upgrades($name=null) {
- 
+
     $pluginstocheck = plugin_types();
 
     $toupgrade = array();
@@ -152,6 +152,12 @@ function check_upgrades($name=null) {
             $plugininfo->install = true;
             $plugininfo->to = $config->version;
             $plugininfo->torelease = $config->release;
+            if (property_exists($config, 'requires_config')) {
+                $plugininfo->requires_config = $config->requires_config;
+            }
+            if (property_exists($config, 'requires_parent')) {
+                $plugininfo->requires_parent = $config->requires_parent;
+            }
             $toupgrade[$pluginkey] = $plugininfo;
         }
         else if ($config->version > $pluginversion) {
@@ -167,6 +173,12 @@ function check_upgrades($name=null) {
             $plugininfo->fromrelease = $pluginrelease;
             $plugininfo->to = $config->version;
             $plugininfo->torelease = $config->release;
+            if (property_exists($config, 'requires_config')) {
+                $plugininfo->requires_config = $config->requires_config;
+            }
+            if (property_exists($config, 'requires_parent')) {
+                $plugininfo->requires_parent = $config->requires_parent;
+            }
             $toupgrade[$pluginkey] = $plugininfo;
         }
     }
@@ -268,6 +280,12 @@ function upgrade_plugin($upgrade) {
     $installed->name = $pluginname;
     $installed->version = $upgrade->to;
     $installed->release = $upgrade->torelease;
+    if (property_exists($upgrade, 'requires_config')) {
+        $installed->requires_config = $upgrade->requires_config;
+    }
+    if (property_exists($upgrade, 'requires_parent')) {
+        $installed->requires_parent = $upgrade->requires_parent;
+    }
     $installtable = $plugintype . '_installed';
 
     if (!empty($upgrade->install)) {
