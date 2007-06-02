@@ -705,7 +705,7 @@ function param_integer_list($name) {
  *
  * @param string The GET or POST parameter you want returned
  *
- * @return string The value of the parameter
+ * @return bool The value of the parameter
  *
  */
 function param_boolean($name) {
