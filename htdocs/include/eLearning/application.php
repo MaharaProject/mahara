@@ -36,7 +36,8 @@ class Application {
     private $oldname;
     private $members = array('name' => '',
                              'displayname' => '',
-                             'xmlrpcserverurl' => ''
+                             'xmlrpcserverurl' => '',
+                             'sso_land_url' => ''
                              );
 
     public function __construct($result = null) {
@@ -72,7 +73,7 @@ class Application {
             $this->members[$name] = $value;
             $this->changed = true;
         }
-        if (!empty($this->members['name']) && !empty($this->members['xmlrpcserverurl'])) {
+        if (!empty($this->members['name']) && !empty($this->members['xmlrpcserverurl']) && !empty($this->members['sso_land_url'])) {
             $this->initialized = self::INITIALIZED;
         }
         return $this;
