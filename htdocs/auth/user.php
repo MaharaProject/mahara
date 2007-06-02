@@ -61,7 +61,7 @@ class User {
             'passwordchange'   => 0,
             'active'           => 1,
             'deleted'          => 0,
-            'expiry'           => 0,
+            'expiry'           => null,
             'expirymailsent'   => 0,
             'lastlogin'        => 0,
             'inactivemailsent' => 0,
