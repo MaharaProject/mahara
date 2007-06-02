@@ -387,9 +387,13 @@ function auth_setup () {
  * @param  string   $institution     Name of the institution
  * @return array                     Array of auth instance records
  */
-function auth_get_auth_instances_for_institution($institution) {
+function auth_get_auth_instances_for_institution($institution=null) {
     global $CFG;
     static $cache = array();
+
+    if(null == $institution) {
+        return array();
+    }
 
     if (!isset($cache[$institution])) {
         // Get auth instances in order of priority
@@ -499,9 +503,9 @@ function auth_get_auth_instances_for_username($institution, $username) {
  * @param  string   $institution     Name of the institution
  * @return array                     Array of auth instance records
  */
-function auth_get_available_auth_types($institution) {
+function auth_get_available_auth_types($institution=null) {
     global $CFG;
-    if (!is_string($institution) || strlen($institution) > 255) {
+    if (!is_null($institution) && (!is_string($institution) || strlen($institution) > 255)) {
         return array();
     }
 
@@ -524,7 +528,11 @@ function auth_get_available_auth_types($institution) {
         ORDER BY
             a.name';          
 
-    $result = get_records_sql_array($sql, array());
+    if (is_null($institution)) {
+        $result = get_records_array('auth_installed', '','','name','name, requires_config');
+    } else {
+        $result = get_records_sql_array($sql, array());
+    }
 
     if (empty($result)) {
         return array();

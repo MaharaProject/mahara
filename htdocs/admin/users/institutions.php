@@ -91,13 +91,14 @@ if ($institution || $add) {
         exit;
     }
 
+    $instancearray = array();
+    $instancestring = '';
+    $c = count($authinstances);
+
     if (!$add) {
         $data = get_record('institution', 'name', $institution);
         $lockedprofilefields = (array) get_column('institution_locked_profile_field', 'profilefield', 'name', $institution);
         
-        $c = count($authinstances);
-        $instancestring = '';
-        $instancearray = array();
         // TODO: Find a better way to work around Smarty's minimal looping logic
         foreach($authinstances as $key => $val) {
             $authinstances[$key]->index = $key;
@@ -116,6 +117,8 @@ if ($institution || $add) {
         $data->defaultaccountinactivewarn = 604800; // 1 week
         $lockedprofilefields = array();
         $smarty->assign('add', true);
+
+        $authtypes = auth_get_available_auth_types();
     }
     
     safe_require('artefact', 'internal');
@@ -276,7 +279,7 @@ function institution_submit(Pieform $form, $values) {
     if ($add) {
         insert_record('institution', $newinstitution);
     }
-    else { 
+    else {
         $where = new StdClass;
         $where->name = $institution;
         update_record('institution', $newinstitution, $where);
@@ -293,9 +296,17 @@ function institution_submit(Pieform $form, $values) {
     }
     db_commit();
 
-    $message = ($add) ? 'institutionaddedsuccessfully' : 'institutionupdatedsuccessfully';
+    if ($add) {
+        $message = 'institutionaddedsuccessfully';
+        $nexturl = '/admin/users/institutions.php?i='.urlencode($institution);
+    }
+    else {
+        $message = 'institutionupdatedsuccessfully';
+        $nexturl = '/admin/users/institutions.php';
+    }
+
     $SESSION->add_ok_msg(get_string($message, 'admin'));
-    redirect('/admin/users/institutions.php');
+    redirect($nexturl);
 }
 
 function institution_cancel_submit() {

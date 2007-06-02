@@ -107,6 +107,11 @@
 
     function addinstance() {
         var selectedPlugin = document.getElementById('dummySelect').value;
+		var institution = '{{$institution}}';
+		if (institution.length == 0) {
+			alert('Please save the institution details before configuring authentication plugins.');
+			return false;
+		}
 
         if (requiresConfig(selectedPlugin) == 1) {
             window.open('addauthority.php?add=1&i={{$institution}}&p=' + selectedPlugin, 'addinstance', 'height=520,width=550,screenx=250,screenY=200,scrollbars=1');
@@ -179,7 +184,7 @@ section name=mysec loop=$instancelist
     /section
 }}</div>
 <br>
-<select name="dummy" id="dummySelect">
+<select name="dummy" id="dummySelect" {{if $institution eq ''}}disabled{{/if}}>
 {{section name=mysec2 loop=$authtypes}}
     <option>{{$authtypes[mysec2]->name}}</option>
 {{/section}}

@@ -63,7 +63,11 @@
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
                 <KEY NAME="authnamefk" TYPE="foreign" FIELDS="authname" REFTABLE="auth_installed" REFFIELDS="name" />
+                <!-- The following foreign-key constraint can't be implemented, as we currently have to be able to create
+                	 the auth instance before we create the institution record. This workflow is probably bogus and should 
+                	 be changed once we're able to do multi-page/tabbed forms.
                 <KEY NAME="institutionfk" TYPE="foreign" FIELDS="institution" REFTABLE="institution" REFFIELDS="name" />
+                -->
             </KEYS>
         </TABLE>
         <TABLE NAME="institution_locked_profile_field">
