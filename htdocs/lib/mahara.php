@@ -1539,6 +1539,9 @@ function get_performance_info() {
     if (!empty($server_load)) {
         $info['serverload'] = $server_load;
     }
+    else {
+        $info['serverload'] = 'unknown';
+    }
 
     return $info;
 }

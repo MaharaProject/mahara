@@ -180,6 +180,7 @@
         <enabled>1</enabled>
         <mimetypes>
             <mimetype>audio/mp3</mimetype>
+            <mimetype>audio/mpeg</mimetype>
         </mimetypes>
     </filetype>
     <filetype>
