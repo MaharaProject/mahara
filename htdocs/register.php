@@ -283,7 +283,16 @@ $elements = array(
     )
 );
 
-$institutions = get_records_select_array('institution', "registerallowed = 1 AND authplugin = 'internal'");
+$sql = 'SELECT
+            i.*
+        FROM
+            '.$CFG->dbprefix.'institution i,
+            '.$CFG->dbprefix.'auth_instance ai
+        WHERE
+            ai.authname = \'internal\' AND
+            ai.institution = i.name';
+$institutions = get_records_sql_array($sql, array());
+
 if (count($institutions) > 1) {
     $options = array();
     foreach ($institutions as $institution) {
