@@ -63,6 +63,7 @@ if (isset($key)) {
 
     function profileform_submit(Pieform $form, $values) {
         global $registration, $SESSION, $USER;
+
         db_begin();
 
         // Move the user record to the usr table from the registration table
@@ -73,12 +74,34 @@ if (isset($key)) {
             $registration->expiry = db_format_timestamp(time() + $expirytime);
         }
         $registration->lastlogin = db_format_timestamp(time());
-        $registration->id = insert_record('usr', $registration, 'id', true);
+
+        $authinstance = get_record('auth_instance', 'institution', $registration->institution, 'authname', 'internal');
+        if (false == $authinstance) {
+            // TODO: Specify exception
+            throw new Exception('No internal auth instance for institution');
+        }
+
+        $user = new User();
+        $user->username         = $registration->username;
+        $user->password         = $registration->password;
+        $user->institution      = $registration->institution;
+        $user->salt             = $registration->salt;
+        $user->passwordchange   = 0;
+        $user->active           = 1;
+        $user->firstname        = $registration->firstname;
+        $user->lastname         = $registration->lastname;
+        $user->authinstance     = $authinstance->id;
+        $user->lastname         = $registration->lastname;
+        $user->firstname        = $registration->firstname;
+        $user->lastname         = $registration->lastname;
+        $user->commit();
+
+        $registration->id = $user->id;
 
         // Insert standard stuff as artefacts
-        set_profile_field($registration->id, 'email', $registration->email);
-        set_profile_field($registration->id, 'firstname', $registration->firstname);
-        set_profile_field($registration->id, 'lastname', $registration->lastname);
+        set_profile_field($user->id, 'email', $registration->email);
+        set_profile_field($user->id, 'firstname', $registration->firstname);
+        set_profile_field($user->id, 'lastname', $registration->lastname);
 
         // Delete the old registration record
         delete_records('usr_registration', 'id', $registrationid);
@@ -89,14 +112,14 @@ if (isset($key)) {
             if (in_array($field, array('firstname', 'lastname', 'email'))) {
                 continue;
             }
-            set_profile_field($registration->id, $field, $values[$field]);
+            set_profile_field($user->id, $field, $values[$field]);
         }
 
         // Handle the profile image if uploaded
         if ($values['profileimg'] && $values['profileimg']['error'] == 0 && $values['profileimg']['size'] > 0) {
             // Entry in artefact table
             $artefact = new ArtefactTypeProfileIcon();
-            $artefact->set('owner', $registration->id);
+            $artefact->set('owner', $user->id);
             $artefact->set('title', ($values['profileimgtitle']) ? $values['profileimgtitle'] : $values['profileimg']['name']);
             $artefact->set('note', $values['profileimg']['name']);
             $artefact->commit();
@@ -104,10 +127,10 @@ if (isset($key)) {
             $id = $artefact->get('id');
 
             $filesize = filesize($values['profileimg']['tmp_name']);
-            set_field('usr', 'quotaused', $filesize, 'id', $registration->id);
+            set_field('usr', 'quotaused', $filesize, 'id', $user->id);
             $registration->quotaused = $filesize;
             $registration->quota = get_config_plugin('artefact', 'file', 'defaultquota');
-            set_field('usr', 'profileicon', $id, 'id', $registration->id);
+            set_field('usr', 'profileicon', $id, 'id', $user->id);
             $registration->profileicon = $id;
 
             // Move the file into the correct place.
@@ -124,10 +147,11 @@ if (isset($key)) {
         handle_event('createuser', $registration);
 
         // Log the user in and send them to the homepage
-        $USER->login($registration);
+        $USER = new LiveUser();
+        $USER->reanimate($user->id, $authinstance->id);
         redirect();
     }
-    
+
     function profileform_validate(Pieform $form, $values) {
         // Profile icon, if uploaded
         if ($values['profileimg'] && $values['profileimg']['error'] == 0 && $values['profileimg']['size'] > 0) {
@@ -293,6 +317,7 @@ $sql = 'SELECT
             ai.institution = i.name';
 $institutions = get_records_sql_array($sql, array());
 
+//$institutions = get_records_select_array('institution', "registerallowed = 1 AND authplugin = 'internal'");
 if (count($institutions) > 1) {
     $options = array();
     foreach ($institutions as $institution) {
