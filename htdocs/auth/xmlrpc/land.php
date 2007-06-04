@@ -38,6 +38,7 @@ foreach($instances as $instance) {
             $auth = new AuthXmlrpc($instance->id);
             $res = $auth->request_user_authorise($token, $remotewwwroot);
         } catch (Exception $e) {
+            continue;
             // we don't care
         }
         if ($res instanceof User) {
