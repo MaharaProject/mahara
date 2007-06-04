@@ -85,6 +85,18 @@ class AuthXmlrpc extends Auth {
     }
 
     /**
+     * The keepalive_client function is tricky to implement in Mahara. Moodle 
+     * accomplishes this simply, because that application already updates the user 
+     * table once for every page view.
+     * I think that we *really* don't want to do that with Mahara. There are heaps of
+     * ways that we could implement this that are not very portable, but for now, it's
+     * best if we leave this on the todo pile. If it becomes crucially important for a 
+     * stakeholder, we can provide some implementation of it.
+     */
+    public static function keepalive_client() {}
+    public static function keepalive_server() {}
+
+    /**
      * Grab a delegate object for auth stuff
      */
     public function request_user_authorise($token, $remotewwwroot) {
