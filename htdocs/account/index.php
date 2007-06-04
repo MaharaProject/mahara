@@ -59,7 +59,7 @@ if (method_exists($authobj, 'change_password')) {
         ),
     );
 }
-else if ($url = get_config_plugin('auth', $authtype, 'changepasswordurl')) {
+else if ($url = get_config_plugin_instance('auth', $USER->authinstance, 'changepasswordurl')) {
     // @todo contextual help
     $elements = array(
         'changepasswordotherinterface' => array(
