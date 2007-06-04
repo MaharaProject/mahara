@@ -263,36 +263,6 @@ class User {
         return ($this->get('logout_time') > 0 ? true : false);
     }
 
-    /**
-     * Logs the current user out
-     */
-    public function logout () {
-        if ($this->changed == true) {
-            log_debug('Destroying user with un-committed changes');
-        }
-        $this->set('logout_time', 0);
-        if ($this->authenticated === true) {
-            $this->SESSION->set('messages', array());
-        }
-        reset($this->defaults);
-        foreach (array_keys($this->defaults) as $key) {
-            $this->set($key, $this->defaults[$key]);
-        }
-        // We don't want to commit the USER object after logout:
-        $this->changed = false;
-    }
-
-    /**
-     * Assuming that a session is already active for a user, this method
-     * retrieves the information from the session and creates a user object
-     * that the script can use
-     *
-     * @return object
-     */
-    public function renew() {
-        $this->set('logout_time', time() + get_config('session_timeout'));
-    }
-
     public function to_stdclass() {
         $this->stdclass = new StdClass;
         reset($this->defaults);
@@ -380,6 +350,36 @@ class LiveUser extends User {
         }
 
         return false;
+    }
+
+    /**
+     * Logs the current user out
+     */
+    public function logout () {
+        if ($this->changed == true) {
+            log_debug('Destroying user with un-committed changes');
+        }
+        $this->set('logout_time', 0);
+        if ($this->authenticated === true) {
+            $this->SESSION->set('messages', array());
+        }
+        reset($this->defaults);
+        foreach (array_keys($this->defaults) as $key) {
+            $this->set($key, $this->defaults[$key]);
+        }
+        // We don't want to commit the USER object after logout:
+        $this->changed = false;
+    }
+
+    /**
+     * Assuming that a session is already active for a user, this method
+     * retrieves the information from the session and creates a user object
+     * that the script can use
+     *
+     * @return object
+     */
+    public function renew() {
+        $this->set('logout_time', time() + get_config('session_timeout'));
     }
 
     /**
