@@ -51,6 +51,191 @@ function dropslash($wwwroot) {
     return $wwwroot;
 }
 
+function generate_token() {
+    return sha1(str_shuffle('' . mt_rand(999999,99999999) . microtime(true)));
+}
+
+function start_jump_session($peer, $instanceid, $wantsurl="") {
+    global $CFG;
+    global $USER;
+
+    $rpc_negotiation_timeout = 15;
+    $providers = get_service_providers($USER->authinstance);
+
+    $approved = false;
+    foreach ($providers as $provider) {
+        if ($provider['wwwroot'] == $peer->wwwroot) {
+            $approved = true;
+            break;
+        }
+    }
+
+    if (false == $approved) {
+        throw new Exception('Host not approved for sso');
+        //TODO: specify exception properly
+    }
+
+    // set up the session
+    $sso_session = get_record('sso_session',
+                              'userid',     $USER->id,
+                              'instanceid', $instanceid,
+                              'useragent',  sha1($_SERVER['HTTP_USER_AGENT']));
+    if ($sso_session == false) {
+        $sso_session = new stdClass();
+        $sso_session->instanceid = $instanceid;
+        $sso_session->userid = $USER->id;
+        $sso_session->username = $USER->username;
+        $sso_session->useragent = sha1($_SERVER['HTTP_USER_AGENT']);
+        $sso_session->token = generate_token();
+        $sso_session->confirmtimeout = time() + $rpc_negotiation_timeout;
+        $sso_session->expires = time() + (integer)ini_get('session.gc_maxlifetime');
+        $sso_session->sessionid = session_id();
+        if (! insert_record('sso_session', $sso_session)) {
+            throw new Exception("database error");
+            //TODO: specify exception
+        }
+    } else {
+        $sso_session->useragent = sha1($_SERVER['HTTP_USER_AGENT']);
+        $sso_session->token = generate_token();
+        $sso_session->confirmtimeout = time() + $rpc_negotiation_timeout;
+        $sso_session->expires = time() + (integer)ini_get('session.gc_maxlifetime');
+        $sso_session->sessionid = session_id();
+        if (false == update_record('sso_session', $sso_session, array('userid' => $USER->id))) {
+            throw new Exception("database error");
+            //TODO: specify exception
+        }
+    }
+
+    $wwwroot = dropslash($CFG->wwwroot);
+
+    // construct the redirection URL
+    $url = "{$peer->wwwroot}{$peer->application->ssolandurl}?token={$sso_session->token}&idp={$wwwroot}&wantsurl={$wantsurl}";
+
+    return $url;
+}
+
+function mnet_server_dummy_method($methodname, $argsarray, $functionname) {
+    return call_user_func_array($functionname, $argsarray);
+}
+
+function user_authorise($token, $useragent) {
+    global $CFG, $USER;
+
+    $sso_session = get_record('sso_session', 'token', $token, 'useragent', $useragent);
+    if (empty($sso_session)) {
+        // TODO: specify this exception
+        throw new Exception('No such session exists');
+    }
+
+    // check session confirm timeout
+    if ($sso_session->expires < time()) {
+        // TODO: specify this exception
+        throw new Exception('This session has timed out');
+    }
+
+    // session okay, try getting the user
+    $user = new User();
+    try {
+        $user->find_by_id($sso_session->userid);
+    } catch (Exception $e) {
+        //TODO: Specify exception properly
+        throw new Exception('Unable to get information for the specified user');
+    }
+
+    require_once($CFG->docroot .'/artefact/lib.php');
+    require_once($CFG->docroot .'/artefact/internal/lib.php');
+
+    $element_list = call_static_method('ArtefactTypeProfile', 'get_all_fields');
+    $element_required = call_static_method('ArtefactTypeProfile', 'get_mandatory_fields');
+
+    // load existing profile information
+    $profilefields = array();
+    $profile_data = get_records_select_assoc('artefact', "owner=? AND artefacttype IN (" . join(",",array_map(create_function('$a','return db_quote($a);'),array_keys($element_list))) . ")", array($USER->get('id')), '','artefacttype, title');
+
+    $email = get_field('artefact_internal_profile_email', 'email', 'owner', $sso_session->userid, 'principal', 1);
+    if(false == $email) {
+        // TODO: specify this exception
+        throw new Exception("No email adress for user");
+    }
+
+    $userdata = array();
+    $userdata['username']                = $user->username;
+    $userdata['email']                   = $user->email;
+    $userdata['auth']                    = 'mnet';
+    $userdata['confirmed']               = 1;
+    $userdata['deleted']                 = 0;
+    $userdata['firstname']               = $user->firstname;
+    $userdata['lastname']                = $user->lastname;
+    $userdata['city']                    = array_key_exists('city', $profile_data) ? $profile_data['city']->title : 'Unknown';
+    $userdata['country']                 = array_key_exists('country', $profile_data) ? $profile_data['country']->title : 'Unknown';
+
+    if (!empty($user->profileicon)) {
+        $imagefile = "{$CFG->dataroot}/users/{$user->profileicon}/$user->profileicon";
+        if (file_exists($imagefile)) {
+            $userdata['imagehash'] = sha1(file_get_contents($imagefile));
+        }
+    }
+
+    get_service_providers($USER->authinstance);
+
+    // Todo: push application name to list of hosts... update Moodle block to display more info, maybe in 'Other' list
+    $userdata['myhosts'] = array();
+    $userdata['myhosts'][] = array('name'=> $SITE->shortname, 'url' => $CFG->wwwroot, 'count' => 0);
+
+    return $userdata;
+}
+
+/**
+ * Given a USER, get all Service Providers for that User, based on child auth
+ * instances of its canonical auth instance
+ */
+function get_service_providers($instance) {
+    global $CFG;
+    static $cache = array();
+
+    if (array_key_exists($instance, $cache)) {
+        return $cache[$instance];
+    }
+
+    $query = '
+        SELECT
+            h.name,
+            a.ssolandurl,
+            h.wwwroot,
+            aic.instance
+        FROM
+            '.$CFG->prefix.'auth_instance_config aic,
+            '.$CFG->prefix.'auth_instance_config aic2,
+            '.$CFG->prefix.'auth_instance_config aic3,
+            '.$CFG->prefix.'host h,
+            '.$CFG->prefix.'application a
+        WHERE
+            aic.value = ?  AND
+            aic.field = \'parent\' AND
+
+            aic.instance = aic2.instance AND
+            aic2.field = \'wwwroot\' AND
+            aic2.value = h.wwwroot AND
+
+            aic.instance = aic3.instance AND
+            aic3.field = \'wessoout\' AND
+            aic3.value = \'1\' AND
+
+            a.name = h.appname';
+    $results = get_records_sql_assoc($query, array('value' => $instance));
+
+    if (false == $results) {
+        $results = array();
+    }
+
+    foreach($results as $key => $result) {
+        $results[$key] = get_object_vars($result);
+    }
+
+    $cache[$instance] = $results;
+    return $cache[$instance];
+}
+
 function get_public_key($uri, $application=null) {
     global $CFG;
 
@@ -168,10 +353,15 @@ function parse_payload($payload) {
 }
 
 function get_peer($wwwroot) {
+    global $CFG;
+
     $wwwroot = (string)$wwwroot;
     static $peers = array();
     if(isset($peers[$wwwroot])) return $peers[$wwwroot];
+
+    require_once($CFG->docroot .'/include/eLearning/peer.php');
     $peer = new Peer();
+
     if(!$peer->findByWwwroot($wwwroot)) {
         // Bootstrap unknown hosts?
         throw new MaharaException('We don\'t have a record for your webserver in our database', 6003);
@@ -181,11 +371,14 @@ function get_peer($wwwroot) {
 }
 
 function xmldsig_envelope_strip(&$xml) {
+    global $CFG;
+
     $signature      = base64_decode($xml->Signature->SignatureValue);
     $payload        = base64_decode($xml->object);
     $wwwroot        = (string)$xml->wwwroot;
     $timestamp      = $xml->timestamp;
     $peer           = get_peer($wwwroot);
+
 
     // Does the signature match the data and the public cert?
     $signature_verified = openssl_verify($payload, $signature, $peer->certificate);
