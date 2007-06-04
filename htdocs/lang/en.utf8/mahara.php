@@ -64,6 +64,7 @@ $string['tags'] = 'Tags';
 $string['tagsdesc'] = 'Enter comma separated tags for this item';
 
 $string['selfsearch'] = 'Search My Portfolio';
+$string['ssopeers'] = 'SSO Peers';
 
 // Quota strings
 $string['quota'] = 'Quota';
