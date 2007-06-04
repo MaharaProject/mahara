@@ -32,7 +32,7 @@
                 <FIELD NAME="name" TYPE="char" LENGTH="20" NOTNULL="true" />
                 <FIELD NAME="displayname" TYPE="char" LENGTH="100" NOTNULL="true" />
                 <FIELD NAME="xmlrpcserverurl" TYPE="char" LENGTH="255" NOTNULL="true" />
-                <FIELD NAME="sso_land_url" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="ssolandurl" TYPE="char" LENGTH="255" NOTNULL="true" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="name" />
@@ -886,8 +886,8 @@
         </STATEMENT>
         <STATEMENT NAME="insert application" TYPE="insert" TABLE="application">
             <SENTENCES>
-                <SENTENCE TEXT="(name, displayname, xmlrpcserverurl, sso_land_url) VALUES ('moodle', 'Moodle','/mnet/xmlrpc/server.php','/auth/mnet/land.php')" />
-                <SENTENCE TEXT="(name, displayname, xmlrpcserverurl, sso_land_url) VALUES ('mahara', 'Mahara','/api/xmlrpc/server.php','/auth/xmlrpc/land.php')" />
+                <SENTENCE TEXT="(name, displayname, xmlrpcserverurl, ssolandurl) VALUES ('moodle', 'Moodle','/mnet/xmlrpc/server.php','/auth/mnet/land.php')" />
+                <SENTENCE TEXT="(name, displayname, xmlrpcserverurl, ssolandurl) VALUES ('mahara', 'Mahara','/api/xmlrpc/server.php','/auth/xmlrpc/land.php')" />
             </SENTENCES>
         </STATEMENT>
         <STATEMENT NAME="insert event types" TYPE="insert" TABLE="event_type">
