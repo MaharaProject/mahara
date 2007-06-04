@@ -574,22 +574,22 @@ function set_config_plugin($plugintype, $pluginname, $key, $value) {
  * @param string $pluginid     Instance id
  * @param string $key          The config setting to look for
  */
-function get_config_plugin_instance($plugintype, $pluginname, $pluginid, $key) {
+function get_config_plugin_instance($plugintype, $pluginid, $key) {
     global $CFG;
 
     // Must be unlikely to exist as a config option for any plugin
     $instance = '_i_n_s_t'.$pluginid;
 
     // Suppress NOTICE with @ in case $key is not yet cached
-    @$value = $CFG->plugin->{$plugintype}->{$pluginname}->{$instance}->{$key};
+    @$value = $CFG->plugin->{$plugintype}->{$instance}->{$key};
     if(isset($value)) {
         return $value;
     }
 
-    $records = get_records_array($plugintype . '_instance_config', 'instance', $pluginid, $pluginid, 'field, value');
+    $records = get_records_array($plugintype . '_instance_config', 'instance', $pluginid, 'field', 'field, value');
     if(!empty($records)) {
         foreach($records as $record) {
-            $CFG->plugin->{$plugintype}->{$pluginname}->{$instance}->{$record->field} = $record->value;
+            $CFG->plugin->{$plugintype}->{$instance}->{$record->field} = $record->value;
             if($record->field == $key) {
                 $value = $record->value;
             }
