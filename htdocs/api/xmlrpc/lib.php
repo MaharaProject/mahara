@@ -77,9 +77,7 @@ function start_jump_session($peer, $instanceid, $wantsurl="") {
 
     // set up the session
     $sso_session = get_record('sso_session',
-                              'userid',     $USER->id,
-                              'instanceid', $instanceid,
-                              'useragent',  sha1($_SERVER['HTTP_USER_AGENT']));
+                              'userid',     $USER->id);
     if ($sso_session == false) {
         $sso_session = new stdClass();
         $sso_session->instanceid = $instanceid;
@@ -97,8 +95,10 @@ function start_jump_session($peer, $instanceid, $wantsurl="") {
     } else {
         $sso_session->useragent = sha1($_SERVER['HTTP_USER_AGENT']);
         $sso_session->token = generate_token();
+        $sso_session->instanceid = $instanceid;
         $sso_session->confirmtimeout = time() + $rpc_negotiation_timeout;
         $sso_session->expires = time() + (integer)ini_get('session.gc_maxlifetime');
+        $sso_session->useragent = sha1($_SERVER['HTTP_USER_AGENT']);
         $sso_session->sessionid = session_id();
         if (false == update_record('sso_session', $sso_session, array('userid' => $USER->id))) {
             throw new Exception("database error");
