@@ -178,7 +178,7 @@ class AuthXmlrpc extends Auth {
         }
 
         // We know who our user is now. Bring her back to life.
-        $USER->reanimate($user->id);
+        $USER->reanimate($user->id, $this->instanceid);
         return true;
     }
 
@@ -403,7 +403,7 @@ class PluginAuthXmlrpc extends PluginAuth {
             'collapseifoneoption' => true,
             'multiple'            => false,
             'options'             => $apparray,
-            'defaultvalue'        => self::$default_config['appname'],
+            'defaultvalue'        => $peer->appname,
             'help'                => true
         );
 
