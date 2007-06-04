@@ -160,7 +160,7 @@ function user_authorise($token, $useragent) {
 
     $userdata = array();
     $userdata['username']                = $user->username;
-    $userdata['email']                   = $user->email;
+    $userdata['email']                   = $email;
     $userdata['auth']                    = 'mnet';
     $userdata['confirmed']               = 1;
     $userdata['deleted']                 = 0;
