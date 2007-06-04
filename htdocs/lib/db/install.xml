@@ -112,10 +112,12 @@
                 <FIELD NAME="quotaused" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" />
                 <FIELD NAME="authinstance" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1" />
                 <FIELD NAME="sessionid" TYPE="char" LENGTH="32" NOTNULL="false" DEFAULT="" />
+                <FIELD NAME="lastauthinstance" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT=NULL />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
                 <KEY NAME="institution" TYPE="foreign" FIELDS="institution" REFTABLE="institution" REFFIELDS="name"/>
+                <KEY NAME="lastauthinstance" TYPE="foreign" FIELDS="lastauthinstance" REFTABLE="auth_instance" REFFIELDS="id" />
             </KEYS>
             <INDEXES>
                 <INDEX NAME="usernameuk" UNIQUE="true" FIELDS="username,institution"/>

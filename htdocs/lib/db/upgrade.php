@@ -276,6 +276,13 @@ function xmldb_core_upgrade($oldversion=0) {
         add_field($table, $field);
     }
 
+    if ($oldversion < 2007060203) {
+        $table = new XMLDBTable('usr');
+        $field = new XMLDBField('lastauthinstance');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, true, null, null, null, null, null);
+        add_field($table, $field);
+    }
+
     // everything up to here we pre mysql support.
 
     return $status;

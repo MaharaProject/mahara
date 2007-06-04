@@ -64,6 +64,7 @@ class User {
             'expiry'           => null,
             'expirymailsent'   => 0,
             'lastlogin'        => 0,
+            'lastauthinstance' => null,
             'inactivemailsent' => 0,
             'staff'            => 0,
             'admin'            => 0,
@@ -361,6 +362,7 @@ class LiveUser extends User {
         foreach($users as $user) {
             $auth = AuthFactory::create($user->authinstance);
             if ($auth->authenticate_user_account($user, $password)) {
+                $user->lastauthinstance = $auth->instanceid;
                 $this->authenticate($user);
                 return true;
             }
@@ -396,11 +398,13 @@ class LiveUser extends User {
      * When a user creates a security context by whatever method, we do some 
      * standard stuff
      *
-     * @param  object $user     Record from the usr table
-     * @return void
+     * @param  int  $user       User ID
+     * @param  int  $instanceid Auth Instance ID
+     * @return bool             True if user with given ID exists
      */
-    public function reanimate($id) {
+    public function reanimate($id, $instanceid) {
         if ($user = get_record('usr','id',$id)) {
+            $user->lastauthinstance = $instanceid;
             $this->authenticate($user);
             return true;
         }
