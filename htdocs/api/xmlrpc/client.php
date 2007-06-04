@@ -68,6 +68,17 @@ class Client {
         $timestamp_send    = time();
         $this->rawresponse = curl_exec($ch);
 
+        $response_code        = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $response_code_prefix = substr($response_code, 0, 1);
+    
+        if ('2' != $response_code_prefix) {
+            if ('4' == $response_code_prefix) {
+                throw new XmlrpcClientException('Client error code: ', $response_code);
+            } elseif('5' == $response_code_prefix) {
+                throw new XmlrpcClientException('An error occurred at the remote server. Code: ', $response_code);
+            }
+        }
+
         $timestamp_receive = time();
         $remote_timestamp  = null;
 
