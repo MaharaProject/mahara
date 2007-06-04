@@ -95,6 +95,15 @@ class Dispatcher {
             $functionname = array_pop($this->callstack);
             $filename     = $CFG->docroot . implode('/', $this->callstack);
 
+            $xmlrpcserver = xmlrpc_server_create();
+            $bool = xmlrpc_server_register_method($xmlrpcserver, $this->method, 'mnet_server_dummy_method');
+            $this->response = xmlrpc_server_call_method($xmlrpcserver, $payload, $functionname, array("encoding" => "utf-8"));
+            $bool = xmlrpc_server_destroy($xmlrpcserver);
+            return $this->response;
+
+            //TODO: resolve method names and re-establish security stuff
+
+            /*
             if(!file_exists($filename)) {
                throw new XmlrpcServerException('The function does not exist', 6011);
             }
@@ -117,7 +126,7 @@ class Dispatcher {
             $xmlrpcserver = xmlrpc_server_create();
 
             include_once($filename);
-
+*/
         }
 
         $temp = '';
