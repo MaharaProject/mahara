@@ -133,7 +133,7 @@ class ArtefactTypeCoverletter extends ArtefactTypeResume {
     }
 
     public function render_full($options) {
-        return array('html' => $this->title);
+        return array('html' => $this->description);
     }
 }
 
@@ -505,6 +505,12 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
                     
                 {$type}list.type = '{$type}';
                 {$type}list.statevars.push('type');
+                " . 
+                (( array_key_exists('viewid', $options)) 
+                    ? "{$type}list.view = " . $options['viewid'] . ";
+                       {$type}list.statevars.push('view');"
+                    : ""
+                ) . "
                 {$type}list.updateOnLoad();
             ");
         return $content;
