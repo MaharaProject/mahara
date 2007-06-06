@@ -1,5 +1,8 @@
 <h3>{str tag='educationhistory' section='artefact.resume'}
-{contextualhelp plugintype='artefact' pluginname='resume' section='addeducationhistory'}</h3>
+{if $controls}
+    {contextualhelp plugintype='artefact' pluginname='resume' section='addeducationhistory'}
+{/if}
+</h3>
 <table id="educationhistorylist" class="tablerenderer hidden resumefive">
     <thead>
         <tr>
