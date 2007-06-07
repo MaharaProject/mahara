@@ -415,7 +415,7 @@ class PluginAuthXmlrpc extends PluginAuth {
             'collapseifoneoption' => true,
             'multiple'            => false,
             'options'             => $apparray,
-            'defaultvalue'        => $peer->appname,
+            'defaultvalue'        => empty($peer->appname)? key($apparray) : $peer->appname,
             'help'                => true
         );
 
