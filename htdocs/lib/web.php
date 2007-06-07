@@ -288,7 +288,7 @@ EOF;
         );
     }
 
-    require_once($CFG->docroot .'/auth/xmlrpc/lib.php');
+    require_once($CFG->docroot .'/api/xmlrpc/lib.php');
     if ($ssopeers = get_service_providers($USER->authinstance)) {
         $SIDEBLOCKS[] = array(
             'name'   => 'ssopeers',
