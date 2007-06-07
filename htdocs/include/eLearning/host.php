@@ -66,7 +66,7 @@ class Host {
 
     function findByWwwroot($wwwroot) {
         global $CFG;
-        if (!is_string($name) || strlen($name) < 1 || strlen($name) > 255) {
+        if (!is_string($wwwroot) || strlen($wwwroot) < 1 || strlen($wwwroot) > 255) {
             throw new SystemException();
         }
 
