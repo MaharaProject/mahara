@@ -72,6 +72,7 @@ class Peer {
         if (!array_key_exists($name, $this->members)) {
             throw new ParamOutOfRangeException(addslashes($name) .' is not a member of Peer.');
         }
+
         if ($value != $this->members[$name]) {
             if ($name == 'appname') {
                 $this->application = Application::findByName($value);
@@ -147,18 +148,21 @@ class Peer {
 
         if ($this->initialized == self::INITIALIZED) {
             $this->initialized = self::PERSISTENT;
-            return insert_record('host',$host);
-        } elseif ($this->initialized == self::PERSISTENT) {
-            try {
-                return update_record('host',$host,array('wwwroot' => $host->wwwroot));
-            } catch (Exception $e) {
-                throw new SQLException();
+            $exists = get_record('host', 'wwwroot', $host->wwwroot);
+            if (false == $exists) {
+                return insert_record('host',$host);
             }
+            return true;
         }
-        return false;
+
+        try {
+            return update_record('host',$host,array('wwwroot' => $host->wwwroot));
+        } catch (Exception $e) {
+            throw new SQLException();
+        }
     }
 
-    public function bootstrap($wwwroot, $pubkey, $appname = 'moodle') {
+    public function bootstrap($wwwroot, $pubkey, $appname = 'moodle', $institution = null) {
         global $CFG;
 
         $wwwroot = dropslash($wwwroot);
@@ -200,16 +204,18 @@ class Peer {
 
             require_once($CFG->docroot .'/include/eLearning/institution.php');
 
-            $institution = new Institution;
-            $iname = preg_replace('/\s+/', '', $this->name);
 
-            if (false == $institution->findByName($iname)) {
+
+            if (null == $institution) {
+                $institution = new Institution;
+                $iname = preg_replace('/\s+/', '', $this->name);
                 $institution->name = preg_replace('/\s+/', '', $this->name);
                 $institution->displayname = $this->name;
                 $institution->commit();
+                $this->institution = $institution->name;
+            } else {
+                $this->institution = $institution;
             }
-
-            $this->institution = $institution->name;
 
             if(empty($pubkey)) {
                 try {

@@ -84,6 +84,8 @@ function networkingform_fail(Pieform $form) {
 
 function networkingform_submit(Pieform $form, $values) {
 
+    $reply = get_string('networkingunchanged','admin');
+
     if (get_config('enablenetworking') != $values['enablenetworking']) {
         if (!set_config('enablenetworking', $values['enablenetworking'])) {
             networkingform_fail($form);

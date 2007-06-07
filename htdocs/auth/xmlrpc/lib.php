@@ -469,14 +469,7 @@ class PluginAuthXmlrpc extends PluginAuth {
         $authinstance = new stdClass();
         $peer = new Peer();
 
-        if (false == $peer->findByWwwroot($values['wwwroot'])) {
-            try {
-                $peer->bootstrap($values['wwwroot'], null);
-            } catch (RemoteServerException $e) {
-                $form->set_error('wwwroot',get_string('cantretrievekey', 'auth').'<br>'.$e->getMessage());
-                throw new RemoteServerException($e->getMessage(), $e->getCode());
-            }
-        }
+        //TODO: test values and set appropriate errors on form
     }
 
     public static function save_config_options($values, $form) {
@@ -507,7 +500,7 @@ class PluginAuthXmlrpc extends PluginAuth {
  
         if (false == $peer->findByWwwroot($values['wwwroot'])) {
             try {
-                $peer->bootstrap($values['wwwroot'], null);
+                $peer->bootstrap($values['wwwroot'], null, $values['appname'], $values['institution']);
             } catch (RemoteServerException $e) {
                 $form->set_error('wwwroot',get_string('cantretrievekey', 'auth'));
                 throw new RemoteServerException($e->getMessage(), $e->getCode());
@@ -529,7 +522,7 @@ class PluginAuthXmlrpc extends PluginAuth {
          */
 
         $peer->commit();
-
+        
         $authinstance->instancename = $values['instancename'];
         $authinstance->institution  = $values['institution'];
         $authinstance->authname     = $values['authname'];
