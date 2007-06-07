@@ -28,6 +28,7 @@ define('INTERNAL', 1);
 define('JSON', 1);
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+safe_require('artefact', 'resume');
 
 $limit = param_integer('limit', 10);
 $offset = param_integer('offset', 0);
@@ -46,6 +47,7 @@ $sql = 'SELECT ar.*, a.owner
     FROM ' . $prefix . 'artefact a 
     JOIN ' . $prefix . $othertable . ' ar ON ar.artefact = a.id
     WHERE a.owner = ? AND a.artefacttype = ?
+    ORDER BY ' . call_static_method(generate_artefact_class_name($type), 'get_order_field') . ' DESC
     LIMIT ' . $limit . ' OFFSET ' . $offset;
 
 if (!empty($view)) { 
