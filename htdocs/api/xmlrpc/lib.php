@@ -193,6 +193,10 @@ function get_service_providers($instance) {
     global $CFG;
     static $cache = array();
 
+    if (defined('INSTALLER')) {
+        return array();
+    }
+
     if (array_key_exists($instance, $cache)) {
         return $cache[$instance];
     }
@@ -222,7 +226,12 @@ function get_service_providers($instance) {
             aic3.value = \'1\' AND
 
             a.name = h.appname';
-    $results = get_records_sql_assoc($query, array('value' => $instance));
+    try {
+        $results = get_records_sql_assoc($query, array('value' => $instance));
+    } catch (SQLException $e) {
+        // Table doesn't exist yet
+        return array();
+    }
 
     if (false == $results) {
         $results = array();
