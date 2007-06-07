@@ -77,6 +77,7 @@ function pieform_element_tags_get_value(Pieform $form, $element) {
     }
 
     $value = preg_split("/\s*,\s*/", trim($global[$name]));
+    $value = array_unique(array_filter($value, create_function('$v', 'return !empty($v);')));
 
     return $value;
 }
