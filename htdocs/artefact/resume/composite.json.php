@@ -27,6 +27,10 @@
 define('INTERNAL', 1);
 define('JSON', 1);
 
+if (isset($_POST['view'])) {
+    define('PUBLIC', 1);
+}
+
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('artefact', 'resume');
 
