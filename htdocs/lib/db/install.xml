@@ -112,7 +112,7 @@
                 <FIELD NAME="quotaused" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" />
                 <FIELD NAME="authinstance" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1" />
                 <FIELD NAME="sessionid" TYPE="char" LENGTH="32" NOTNULL="false" DEFAULT="" />
-                <FIELD NAME="lastauthinstance" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT=NULL />
+                <FIELD NAME="lastauthinstance" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="NULL" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
