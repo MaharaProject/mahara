@@ -121,12 +121,12 @@ $string['publickeydescription'] = 'This public key is automatically generat
 $string['publickeyexpires'] = 'Public key expires';
 $string['enablenetworkingdescription'] = 'Allow your Mahara server to communicate with servers running Moodle and other applications.';
 $string['enablenetworking'] = 'Enable networking';
-$string['networkingenabled'] = 'Networking has been enabled';
-$string['networkingdisabled'] = 'Networking has been disabled';
+$string['networkingenabled'] = 'Networking has been enabled. ';
+$string['networkingdisabled'] = 'Networking has been disabled. ';
 $string['networkingunchanged'] = 'Network settings were not changed';
 $string['promiscuousmode'] = 'Auto-register all hosts';
-$string['promiscuousmodedisabled'] = 'Auto-register has been disabled';
-$string['promiscuousmodeenabled'] = 'Auto-register has been enabled';
+$string['promiscuousmodedisabled'] = 'Auto-register has been disabled. ';
+$string['promiscuousmodeenabled'] = 'Auto-register has been enabled. ';
 $string['promiscuousmodedescription'] = 'Create an institution record for any host that connects to you, and allow its users to log on to Mahara';
 
 // Admin menu editor
