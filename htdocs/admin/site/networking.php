@@ -84,16 +84,16 @@ function networkingform_fail(Pieform $form) {
 
 function networkingform_submit(Pieform $form, $values) {
 
-    $reply = get_string('networkingunchanged','admin');
+    $reply = '';
 
     if (get_config('enablenetworking') != $values['enablenetworking']) {
         if (!set_config('enablenetworking', $values['enablenetworking'])) {
             networkingform_fail($form);
         } else {
             if(empty($values['enablenetworking'])) {
-                $reply = get_string('networkingdisabled','admin');
+                $reply .= get_string('networkingdisabled','admin');
             } else {
-                $reply = get_string('networkingenabled','admin');
+                $reply .= get_string('networkingenabled','admin');
             }
         }
     }
@@ -103,14 +103,14 @@ function networkingform_submit(Pieform $form, $values) {
             networkingform_fail($form);
         } else {
             if(empty($values['promiscuousmode'])) {
-                $reply = get_string('promiscuousmodedisabled','admin');
+                $reply .= get_string('promiscuousmodedisabled','admin');
             } else {
-                $reply = get_string('promiscuousmodeenabled','admin');
+                $reply .= get_string('promiscuousmodeenabled','admin');
             }
         }
     }
 
-    $form->json_reply(PIEFORM_OK, $reply);
+    $form->json_reply(PIEFORM_OK, ($reply == '') ? get_string('networkingunchanged','admin') : $reply);
 }
 
 $smarty = smarty();
