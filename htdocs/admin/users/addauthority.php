@@ -137,7 +137,6 @@ function auth_config_submit(Pieform $form, $values) {
 
 // TODO: move to lib if people want this:
 function execute_javascript_and_close($js='') {
-    echo 'EXECUTE JS AND CLOSE';
     echo '<html>
     <head>
         <title>You may close this window</title>
