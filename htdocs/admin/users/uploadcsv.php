@@ -64,13 +64,53 @@ $ALLOWEDKEYS = array(
     'industry',
 );
 
+/**
+ * TODO: do we want to keep this function? Then it should be in auth/lib.php
+ * Given an institution, returns the authentication methods used by it, sorted 
+ * by priority.
+ *
+ * @param  string   $institution     Name of the institution
+ * @return array                     Array of auth instance records
+ */
+function auth_get_auth_instances() {
+    global $CFG;
+    static $cache = array();
+
+    if(count($cache) > 0) {
+        return $cache;
+    }
+
+    // TODO: work out why this won't accept a placeholder - had to use db_quote
+    $sql ='
+        SELECT DISTINCT
+            i.id,
+            institution.displayname,
+            i.instancename
+        FROM 
+            '.$CFG->dbprefix.'institution,
+            '.$CFG->dbprefix.'auth_instance i
+        WHERE 
+            i.institution = institution.name
+        ORDER BY
+            institution.displayname,
+            i.instancename';
+
+    $cache = get_records_sql_array($sql, array());
+
+    if(empty($cache)) {
+        return array();
+    }
+
+    return $cache;
+}
+
 // Build the form for uploading the CSV data
 $institutions = get_records_array('institution');
 foreach ($institutions as $name => $data) {
     $options[$name] = $data->displayname;
 }
 
-$institutions = get_records_array('institution', 'authplugin', 'internal');
+$institutions = get_records_array('institution');
 if (count($institutions) > 1) {
     $options = array();
     foreach ($institutions as $institution) {
