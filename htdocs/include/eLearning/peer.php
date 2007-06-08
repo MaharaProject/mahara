@@ -73,7 +73,7 @@ class Peer {
             throw new ParamOutOfRangeException(addslashes($name) .' is not a member of Peer.');
         }
 
-        if ($value != $this->members[$name]) {
+        if (is_scalar($value) != is_scalar($this->members[$name]) || $value != $this->members[$name]) {
             if ($name == 'appname') {
                 $this->application = Application::findByName($value);
             } elseif ($name == 'wwwroot') {
