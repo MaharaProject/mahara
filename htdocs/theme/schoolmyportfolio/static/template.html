@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <title></title>
+        <link rel="stylesheet" type="text/css" href="style/style.css">
+        <link rel="stylesheet" type="text/css" href="style/dev.css">
+        <link rel="stylesheet" type="text/css" href="style/print.css" media="print">
+        <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
+    </head>
+	<body>
+	<div id="container">
+        <div id="loading_box" style="display: none;"></div>
+        <div id="topwrapper">
+            <div id="globalTabs">
+                <ul>
+                    <li id="globalnav-logout"><a href="{$WWWROOT}?logout">Logout</a></li>
+                    <li id="globalnav-returntosite"><a href="{$WWWROOT}">Return to Site</a></li>
+                </ul>
+            </div>
+            <div id="header">
+                <div class="fr"><img src="images/header_corner_topright.gif" border="0" alt=""></div>		
+        
+                 <div id="logo"><a href="{$WWWROOT}"><img src="images/logo_mahara.gif" border="0" alt=""></a></div>
+                <h1 class="hiddenStructure"><a href="{$WWWROOT}">{$heading|default:"Mahara"|escape}</a></h1>
+            </div>
+        </div>
+        <div id="mainwrapper">
+            <ul id="mainnav"><div class="mainnavright"><img src="images/navbg_right.gif" border="0" alt=""></div>
+                <li class="selected"><a href="{$item.link|escape}">{str section=$item.section tag=$item.name}</a></li>
+                <li><a href="{$item.link|escape}">{str section=$item.section tag=$item.name}</a></li>
+            </ul>
+            <ul id="subnav"><div class="subnavright"><img src="images/subnavbg_right.gif" border="0" alt=""></div>
+                <li class="selected"><a href="{$item.link|escape}">{str section=$item.section tag=$item.name}</a></li>
+                <li><a href="{$item.link|escape}">{str section=$item.section tag=$item.name}</a></li>
+            </ul>
+            <div id="maincontentwrapper">
+				<div id="column-right">
+					<div id="loginbox">
+						<div class="sidebar-botcorners"><img src="images/sidebox_bot.gif" border="0" alt=""></div>
+					</div>
+					<div class="sidebar sidebar_{$SIDEBAR_SEQUENCE}">
+					<h3>{str tag="mainmenu"}</h3>
+    				<ul id="sitemenu">
+    					<li class="{cycle values=r0,r1}"><a href="{$item.link|escape}">{$item.name}</a></li>
+    				</ul>
+						<div class="loginbox-botcorners"><img src="images/sidebox_bot.gif" border="0" alt=""></div>
+					</div>
+				</div>
+				<div id="column-left">
+    				<div class="content">
+        				<div class="box-cnrs"><div class="cnr-tl"><div class="cnr-tr"><div class="cnr-bl"><div class="cnr-br">
+            				<div class="maincontent">
+                				<div id="{$PAGEHELPNAME}_container" class="pagehelpicon">{$PAGEHELPICON}</div>
+								
+                			</div>
+            			</div></div></div></div></div>
+    				</div>
+				</div>
+			</div>
+			<div id="footer">
+				<div class="footerright"><img src="images/footer_navbg_right.gif" border="0" alt=""></div>
+				<a href="{$WWWROOT}terms.php">{str tag=termsandconditions}</a> | 
+				<a href="{$WWWROOT}privacy.php">{str tag=privacystatement}</a> | 
+				<a href="{$WWWROOT}about.php">{str tag=about}</a> | 
+				<a href="{$WWWROOT}contact.php">{str tag=contactus}</a>
+			</div>
+		</div>
+		<div id="bottom-corners">
+			<div class="footer-left"><img src="images/footer_corner_botleft.gif" border="0" alt=""></div><div class="footer-right"><img src="images/footer_corner_botright.gif" border="0" alt=""></div>
+		</div>
+	</div>
+    </body>
+</html>
+

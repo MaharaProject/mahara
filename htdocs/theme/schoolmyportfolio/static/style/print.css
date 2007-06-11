@@ -1,0 +1,671 @@
+body {
+	margin: 0;
+	padding: 0;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11pt;
+	line-height: 16pt;
+	background-color: #FFFFFF;
+	color: #000000;
+	width: 100%;
+}
+
+.hiddenStructure {
+	display: none;
+}
+
+a,
+a:link,
+a:active,
+a:visited,
+a:hover {
+	color: #000000;
+	text-decoration: none;
+	border-bottom: none;
+}
+
+h1, h2 {
+	color: #000000;
+	font-size: 18pt;
+	font-weight: bold;	
+	margin: 5px 0 5px 0;
+	text-transform: capitalize;
+	border-bottom: 1px solid #000000;
+	page-break-after: avoid; 
+    page-break-inside: avoid;
+}
+
+h3, h4, h5, h6 {
+	color: #000000;
+	font-weight: bold;	
+	font-size: 14pt;	
+	margin: 15px 0 5px 0;
+	text-transform: capitalize;
+	page-break-after: avoid; 
+    page-break-inside: avoid;
+}
+
+/* CONTENT LAYOUT BEGIN */
+#container {
+	margin: 0;
+	padding: 0;
+	background: transparent;
+}
+
+/* HEADER BEGIN */
+#topwrapper,
+#header,
+.cornertopright,
+#topwrapper ul,
+#topwrapper li {
+	display: none;
+}
+
+/* GLOBAL NAVIGATION TABS BEGIN */
+#globalTabs,
+#topwrapper #globalTabs #globalnav-logout a,
+#topwrapper #globalTabs #globalnav-logout a:hover,
+#topwrapper #globalTabs #globalnav-logout.selected a,
+#topwrapper #globalTabs #globalnav-logout.selected a:link,
+#topwrapper #globalTabs #globalnav-logout.selected a:active,
+#topwrapper #globalTabs #globalnav-logout.selected a:visited,
+#topwrapper #globalTabs #globalnav-returntosite a,
+#topwrapper #globalTabs #globalnav-returntosite a:hover,
+#topwrapper #globalTabs #globalnav-returntosite.selected a,
+#topwrapper #globalTabs #globalnav-returntosite.selected a:link,
+#topwrapper #globalTabs #globalnav-returntosite.selected a:active,
+#topwrapper #globalTabs #globalnav-returntosite.selected a:visited,
+#topwrapper #globalTabs #globalnav-siteadmin a,
+#topwrapper #globalTabs #globalnav-siteadmin a:hover,
+#topwrapper #globalTabs #globalnav-siteadmin.selected a,
+#topwrapper #globalTabs #globalnav-siteadmin.selected a:link,
+#topwrapper #globalTabs #globalnav-siteadmin.selected a:active,
+#topwrapper #globalTabs #globalnav-siteadmin.selected a:visited {
+	display: none;
+}
+/* GLOBAL NAVIGATION TABS END */
+
+.logo {
+	display: none;
+}
+
+form {
+   margin: 0;
+}
+
+.searchbox,
+#searchform #query_container,
+#searchform #query_container #query,
+#searchform #submit_container,
+#searchform #submit_container #searchform_submit,
+.searchbox table,
+.searchbox tr,
+.searchbox td {
+	display: none;
+}
+/* HEADER END */
+
+
+/* MAIN COLUMNS BEGIN */
+#mainwrapper {
+	padding: 0;
+	margin: 0;
+	background: transparent;
+}
+
+/* MAIN NAVIGATION BEGIN */
+.mainnav-left,
+.mainnav-right,
+#mainnav,
+#mainnav li,
+#mainnav li.selected,
+#mainnav li a,
+#mainnav li a:link,
+#mainnav li a:visited,
+#mainnav li a:active,
+#mainnav li a:hover{
+	display: none;
+}
+/* MAIN NAVIGATION ENDS */
+
+/* SUB NAVIGATION BEGINS */
+.subnav-left,
+.subnav-right,
+#subnav,
+#subnav li a,
+#subnav li a:link,
+#subnav li a:visited,
+#subnav li a:active,
+#subnav li a:hover,
+#subnav li,
+#subnav li.selected {
+	display: none;
+}
+/* SUB NAVIGATION BEGINS */
+
+#maincontentwrapper,
+#column-left,
+#column-left-full {
+    margin:0;
+    padding:0;
+	background: transparent;
+}
+
+#column-right {
+	display: none;
+}
+
+/* RIGHT SIDE BOX BEGIN */
+div.sidebar,
+#column-right div.sidebar-botcorners,
+#column-right .sidebarforgotpassword,
+#column-right div.sidebarforgotpassword-botcorners,
+#column-right .sidebarforgotpassword a,
+#column-right .sidebarforgotpassword a:link,
+#column-right .sidebarforgotpassword a:active,
+#column-right .sidebarforgotpassword a:visited,
+#column-right .sidebarforgotpassword a:hover {
+	display: none;
+}
+
+/* SITE MENU BEGINS */
+#sitemenu,
+#sitemenu li, #sitemenu li.r0,
+#sitemenu li.r1 {
+	display: none;
+}
+/* SITE MENU ENDS */
+
+
+/* LOGIN FOR COLUMN RIGHT ONLY BEGINS */
+#column-right div.loginbox-botcorners,
+#column-right #loginbox,
+#column-right #loginbox fieldset,
+#column-right #login legend,
+#column-right #login #login_login_username_container,
+#column-right #login #login_login_password_container,
+#column-right #login label,
+#column-right #login .description,
+#column-right #login #login_submit_container,
+#column-right #login a,
+#column-right #login a:link,
+#column-right #login a:active,
+#column-right #login a:visited,
+#column-right #login a:hover {
+	display: none;
+}
+/* LOGIN FOR COLUMN RIGHT ONLY BEGINS */
+
+
+/* RIGHT SIDE BOX ENDS */
+
+/* MAIN CONTENT BEGIN */
+.content { 
+	padding: 0;
+	margin: 0;
+}
+
+* html .content {
+    margin: 0;
+	padding: 0;
+	float: none;
+}
+
+.content textarea {
+	width: 400px;
+}
+
+#messages {
+	margin: 0;
+}
+
+#messages .ok {
+	display: none;
+}
+
+#messages .error,
+#messages .err {
+	display: none;
+}
+
+#messages .info {
+	display: none;
+}
+
+#accountprefs_message {
+	margin: 10px 0 0 0;
+}
+
+.content a,
+.content a:link,
+.content a:active,
+.content a:visited,
+.content a:hover {
+	color: #000000;
+	text-decoration: none;
+	border-bottom: none;
+}
+
+.box-cnrs {
+    margin: 0;
+  	padding: 0;
+}
+
+* html .box-cnrs {
+    height: 6px;
+} 
+
+.box-cnrs .cnr-tl,
+.box-cnrs .cnr-tr,
+.box-cnrs .cnr-bl {
+  	margin: 0;
+  	padding: 0;
+  	display: block;
+  	width: 100%;
+}
+
+.box-cnrs .cnr-br {
+  	margin: 0;
+  	padding: 6px 0 6px 0;
+  	display: block;
+  	width: 100%;
+}
+
+.maincontent {
+  	padding: 0; 
+  	margin: 0;
+}
+
+.maincontent ul {
+	padding: 0;
+	margin: 0 0 0 17px;
+	page-break-before: avoid; 
+}
+
+.maincontent li {
+	line-height: 18pt;
+}
+
+/* MAIN CONTENT END */
+
+
+/* LOGIN FOR COLUMN LEFT BEGINS */
+.maincontent #loginbox {
+   	padding: 0;
+   	margin: 10px 0 0 0;
+}
+
+.maincontent #loginbox fieldset {
+	border: none;
+	padding: 0;
+	margin: 0 0 0 10px;
+}
+
+.maincontent #login legend {
+	margin: 0;
+	padding: 0;
+	display: none;
+}
+
+.maincontent #login #login_login_username_container,
+.maincontent #login #login_login_password_container {
+	margin: 0;
+	padding: 0;
+}
+
+.maincontent #login th {
+	margin: 0 0 0 0;
+	padding: 10px 0 0 0;
+}
+
+.maincontent #login .description {
+	font-size: 9pt;
+	color: #000000; 
+	margin: 0;
+	padding: 0;
+}
+
+.maincontent #login #login_submit_container {
+	font-size: 9pt;
+	margin: 0;
+	padding: 0;
+	display: inline;
+}
+
+.maincontent #login #login_submit {
+	margin: 10px 0 0 12px;
+}
+
+.maincontent #login table,
+.maincontent #login tbody,
+.maincontent #login tr,
+.maincontent #login td {
+	margin: 0;
+	padding: 0;
+}
+/* LOGIN FOR COLUMN LEFT ENDS */
+
+p {
+	margin: 15px 0 5px 0;
+	padding: 0;
+}
+
+thead th {
+	color: #000000;
+	border-bottom: 1px dotted #000000;
+	margin: 0;
+	padding: 2px 4px 2px 4px;
+}
+
+tbody {
+	color: #000000;
+	padding: 2px 4px 2px 4px;
+	margin: 0;
+}
+
+td {
+	padding: 0;
+	margin: 0;
+}
+
+th {
+	text-align: left;
+	color: #000000;
+	vertical-align: top;
+	margin: 0;
+	padding: 2px 4px 2px 4px;
+}
+
+.required label, 
+.required th { 
+	color: #5c8727; 
+}
+
+.required td label, 
+.required td { 
+	color: #000000; 
+}
+
+acronym {
+	color: #000000;
+	text-decoration: underline;
+}
+
+.help { 
+	font-size: 9pt; 
+	vertical-align: super; 
+	text-decoration: none;
+	border: none;
+}
+
+.description { 
+	font-size: 9pt; 
+	font-style: italic; 
+	color: #000000; 
+	padding: 0 0 5px 15px;
+}
+
+.error { 
+	color: #000000; 
+}
+
+.errmsg { 
+	color: #000000; 
+	font-size: 9pt; 
+}
+
+#installer tr {
+    height: 2em;
+}
+
+
+/* LISTS AND TABLE STYLES BEGINS */
+
+#contactus {
+	margin: 5px 0 0 15px;
+	padding: 0;
+}
+
+#editsitepage {
+	margin: 5px 0 0 15px;
+}
+
+.newblog,
+#newblog_submit,
+#views input,
+#createview1 #createview1_submit,
+#siteoptions #siteoptions_submit,
+#editsitepage #editsitepage_submit,
+#staffusers #staffusers_submit,
+#adminusers #adminusers_submit,
+#institution #institution_submit,
+#institution #cancel_institution_submit,
+#uploadcsv #uploadcsv_submit,
+#search #search_submit,
+#createview1 #cancel_createview1_submit,
+#loading_box,
+#activityprefs #activityprefs_submit,
+#activitylist tfoot,
+#watchlist tfoot,
+#adminstitutionslist form,
+#accountprefs #accountprefs_submit,
+#profileform_submit,
+#profileprefs #profileprefs_submit,
+#uploader,
+#foldernav,
+#register #register_submit,
+#register #cancel_register_submit,
+#contactus #contactus_submit,
+#forgotpass #forgotpass_submit {
+	display: none;
+}
+
+#contactus th,
+#staffusers th,
+#adminusers th,
+#siteoptions th,
+#editsitepage th {
+	padding: 10px 0 0 0;
+	margin: 0;
+	color: #000000;
+}
+
+#typeheader {
+	color: #000000;
+	font-size: 14pt;
+	padding: 10px 0 0 0;
+	margin: 0;
+}
+
+#watchlist {
+	width: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+#grouplist {
+	margin: 10px 0 0 0;
+	padding: 0;
+	width: 100%;
+}
+
+#grouplist tbody td,
+#adminstitutionslist tbody td {
+	padding: 0 5px 0 5px;
+}
+
+#activityprefs,
+#staffusers,
+#adminusers,
+#createview1,
+#institution,
+#search,
+#results #searchresults,
+#register,
+#forgotpass,
+#uploadcsv {
+	margin: 10px 0 0 15px;
+}
+
+#activityprefs th,
+#institution th,
+#register th {
+	padding: 10px 0 0 0;
+}
+
+#delete,
+#forgotpass th {
+	margin: 10px 0 0 0;
+}
+
+#adminstitutionslist,
+#menuitemlist table,
+#bloglist,
+#postlist,
+#filelist,
+#activitylist {
+	margin: 10px 0 0 0;
+	width: 100%;
+}
+
+#search td.description,
+#register td.description,
+#forgotpass td.description,
+#views,
+#editsitepage td.description,
+#uploadcsv td.description,
+#template_selection #templates {
+	margin: 0;
+	padding: 0;
+}
+
+#results {
+	margin: 15px 0 0 0;
+}
+
+#menuitemlist th,
+#filelist th,
+#bloglist th,
+#grouplist th,
+#activitylist th,
+#watchlist th,
+#adminstitutionslist th {
+	color: #000000;
+	border-bottom: 1px #000000 solid;
+}
+
+#menuitemlist tbody td,
+#bloglist tbody td{
+	padding: 0 5px 0 5px;
+}
+
+#staffusers label,
+#adminusers label {
+	color: #000000;
+	font-weight: bold;
+	padding: 0 5px 0 0;
+}
+
+#viewlist {
+	width: 100%;
+	margin: 2px 0 0 0;
+	padding: 0;
+}
+
+#createview1 th {
+	padding: 7px 0 0 0;
+	margin: 0;
+}
+
+#siteoptions {
+	margin: 0 0 0 15px;
+}
+
+#siteoptions td.description {
+	margin: 2px 0 0 0px;
+	padding: 0;
+}
+
+#editsitepage textarea {
+	width: 510px;
+}
+
+#template_selection {
+	margin: 0 0 10px 0;
+	padding: 0;
+}
+
+/* LISTS AND TABLE STYLES ENDS */
+
+/* FORMS BEGIN */
+
+#accountprefs {
+	margin: -10px 0 0 15px;
+}
+
+#accountprefs th {
+	padding: 10px 0 0 0;
+}
+
+#profileprefs td {
+	padding: 0 10px;
+	margin: 0;
+	page-break-before: avoid;
+}
+
+#profileprefs .header {
+	font-weight: bold;
+	color: #000000;
+}
+
+#profileform th {
+	padding: 10px 0 0 0;
+	margin: 0;
+	color: #000000; 
+}
+
+#profileform td {
+	padding: 0;
+	margin: 0;
+}
+#profileform #email_list {
+	padding: 0 0 5px 0;
+}
+
+#creategroup {
+	padding: 0 0 0 15px;
+	margin: 0;
+}
+
+#creategroup th {
+	padding: 7px 0 0 0px;
+	margin: 0;
+}
+
+#creategroup td {
+	padding: 1px;
+	margin: 0;
+}
+
+#creategroup td label {
+	font-weight: bold;
+	padding: 0 5px 0 0;
+	margin: 0;
+	color: #000000;
+}
+
+/* FORMS ENDS */
+
+/* FOOTER BEGIN */
+#footer,
+.footerright,
+#footer a,
+#footer a:hover,
+#bottom-corners,
+#bottom-corners .footer-left,
+#bottom-corners .footer-right,
+.cornerbotright {
+	display: none;
+}
+/* FOOTER ENDS */
+/* CONTENT LAYOUT ENDS */
+
