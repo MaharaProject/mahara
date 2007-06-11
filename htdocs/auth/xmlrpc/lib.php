@@ -154,6 +154,10 @@ class AuthXmlrpc extends Auth {
                 $user->authinstance       = empty($this->parent) ? $this->instanceid : $this->parent;
                 $user->commit();
 
+                set_profile_field($user->id, 'firstname', $user->firstname);
+                set_profile_field($user->id, 'lastname', $user->lastname);
+                set_profile_field($user->id, 'email', $user->email);
+
                 /*
                 $client->set_method('auth/mnet/auth.php/fetch_user_image')
                        ->add_param($user->username)
