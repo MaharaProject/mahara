@@ -62,6 +62,8 @@ $ALLOWEDKEYS = array(
     'jabberusername',
     'occupation',
     'industry',
+    'institution',
+    'authinstance'
 );
 
 /**
@@ -84,6 +86,7 @@ function auth_get_auth_instances() {
     $sql ='
         SELECT DISTINCT
             i.id,
+            institution.name,
             institution.displayname,
             i.instancename
         FROM 
@@ -104,37 +107,34 @@ function auth_get_auth_instances() {
     return $cache;
 }
 
-// Build the form for uploading the CSV data
-$institutions = get_records_array('institution');
-foreach ($institutions as $name => $data) {
-    $options[$name] = $data->displayname;
-}
-
-$institutions = get_records_array('institution');
-if (count($institutions) > 1) {
+$authinstances = auth_get_auth_instances();
+if (count($authinstances) > 1) {
     $options = array();
-    foreach ($institutions as $institution) {
-        $options[$institution->name] = $institution->displayname;
+
+    foreach ($authinstances as $authinstance) {
+        $options[$authinstance->id .'_'. $authinstance->name] = $authinstance->displayname. ': '.$authinstance->instancename;
     }
-    $institutionelement = array(
+    $default = key($options);
+
+    $authinstanceelement = array(
         'type' => 'select',
         'title' => get_string('institution'),
         'description' => get_string('uploadcsvinstitution', 'admin'),
         'options' => $options,
-        'defaultvalue' => 'mahara'
+        'defaultvalue' => $default
     );
 }
 else {
-    $institutionelement = array(
+    $authinstanceelement = array(
         'type' => 'hidden',
-        'value' => 'mahara'
+        'value' => '1'
     );
 }
 
 $form = array(
     'name' => 'uploadcsv',
     'elements' => array(
-        'institution' => $institutionelement,
+        'authinstance' => $authinstanceelement,
         'file' => array(
             'type' => 'file',
             'title' => get_string('csvfile', 'admin'),
@@ -174,7 +174,10 @@ function uploadcsv_validate(Pieform $form, $values) {
     require_once('pear/File.php');
     require_once('pear/File/CSV.php');
 
-    $institution = $values['institution'];
+    // Don't be tempted to use 'explode' here. There may be > 1 underscore.
+    $break = strpos($values['authinstance'], '_');
+    $authinstance = substr($values['authinstance'], 0, $break);
+    $institution  = substr($values['authinstance'], $break+1);
 
     $conf = File_CSV::discoverFormat($values['file']['tmp_name']);
     $i = 0;
@@ -230,12 +233,13 @@ function uploadcsv_validate(Pieform $form, $values) {
             $password = $line[$formatkeylookup['password']];
             $email    = $line[$formatkeylookup['email']];
 
-            safe_require('auth', 'internal');
-            if (!AuthInternal::is_username_valid($username)) {
+            $authobj = AuthFactory::create($authinstance);
+
+            if (method_exists($authobj, 'is_username_valid') && !$authobj->is_username_valid($username)) {
                 $form->set_error('file', get_string('uploadcsverrorinvalidusername', 'admin', $i));
                 return;
             }
-            if (record_exists('usr', 'username', $username)) {
+            if (record_exists('usr', 'username', $username, 'authinstance', $authinstance)) {
                 $form->set_error('file', get_string('uploadcsverroruseralreadyexists', 'admin', $i, $username));
                 return;
             }
@@ -243,7 +247,7 @@ function uploadcsv_validate(Pieform $form, $values) {
             // Note: only checks for valid form are done here, none of the checks
             // like whether the password is too easy. The user is going to have to
             // change their password on first login anyway.
-            if (!AuthInternal::is_password_valid($password)) {
+            if (method_exists($authobj, 'is_password_valid') && !$authobj->is_password_valid($password)) {
                 $form->set_error('file', get_string('uploadcsverrorinvalidpassword', 'admin', $i));
                 return;
             }
@@ -270,13 +274,21 @@ function uploadcsv_submit(Pieform $form, $values) {
     log_info('Inserting users from the CSV file');
     db_begin();
     $formatkeylookup = array_flip($FORMAT);
+
+    // Don't be tempted to use 'explode' here. There may be > 1 underscore.
+    $break = strpos($values['authinstance'], '_');
+    $authinstance = substr($values['authinstance'], 0, $break);
+    $institution  = substr($values['authinstance'], $break+1);
+
     foreach ($CSVDATA as $record) {
         log_debug('adding user ' . $record[$formatkeylookup['username']]);
         $user = new StdClass;
-        $user->username    = $record[$formatkeylookup['username']];
-        $user->password    = $record[$formatkeylookup['password']];
-        $user->institution = $values['institution'];
-        $user->email       = $record[$formatkeylookup['email']];
+        $user->institution  = $institution;
+        $user->authinstance = $authinstance;
+        $user->username     = $record[$formatkeylookup['username']];
+        $user->password     = $record[$formatkeylookup['password']];
+        $user->email        = $record[$formatkeylookup['email']];
+
         if (isset($formatkeylookup['studentid'])) {
             $user->studentid = $record[$formatkeylookup['studentid']];
         }
