@@ -118,6 +118,90 @@ function api_dummy_method($methodname, $argsarray, $functionname) {
     return call_user_func_array($functionname, $argsarray);
 }
 
+function fetch_user_image($username) {
+    global $REMOTEWWWROOT, $CFG;
+
+    $institution = get_field('host', 'institution', 'wwwroot', $REMOTEWWWROOT);
+
+    $f = fopen('/tmp/fetchimage.txt','w');
+    fwrite($f, "Starting\n");
+
+    if (false == $institution) {
+        fwrite($f, "No ins\n");
+        // This should never happen, because if we don't know the host we'll
+        // already have exited
+        throw new XmlrpcServerException('Unknown error');
+    }
+
+    $authinstances       = auth_get_auth_instances_for_institution($institution);
+    $candidates          = array();
+
+    $sql = 'SElECT
+                ai.*
+            FROM
+                '.$CFG->dbprefix.'auth_instance ai,
+                '.$CFG->dbprefix.'auth_instance ai2,
+                '.$CFG->dbprefix.'auth_instance_config aic
+            WHERE
+                ai.id = ? AND
+                ai.institution = ? AND
+                ai2.institution = ai.institution AND
+                ai.id = aic.value AND
+                aic.field = \'parent\' AND
+                aic.instance = ai2.id AND
+                ai2.authname = \'xmlrpc\'';
+
+    foreach ($authinstances as $authinstance) {
+        fwrite($f, "{$authinstance->authname}\n");
+        if ($authinstance->authname != 'xmlrpc') {
+            $records = get_records_sql_array($sql, array($authinstance->id, $institution));
+            if (false == $records) {
+                continue;
+            }
+        }
+        try {
+            $user = new User;
+            fwrite($f, "{$authinstance->id}, $username\n");
+            $user->find_by_instanceid_username($authinstance->id, $username);
+            $candidates[$user->id] = $user;
+        } catch (Exception $e) {
+            // we don't care
+            continue;
+        } 
+    }
+
+    if (count($candidates) != 1) {
+        fwrite($f, "".count($candidates)."\n");
+        return false;
+    }
+
+    $user = array_pop($candidates);
+    
+    fwrite($f, "IC: {$user->profileicon}\n");
+    $ic = $user->profileicon;
+    if (!empty($ic)) {
+        $filename = get_config('dataroot') . 'artefact/internal/profileicons/' . ($user->profileicon % 256) . '/'.$user->profileicon;
+        fwrite($f, "FN: $filename\n");
+        $return = array();
+        try {
+            $fi = file_get_contents($filename);
+        } catch (Exception $e) {
+            // meh
+        }
+
+        $return['f1'] = base64_encode($fi);
+
+        require_once('file.php');
+        $im = get_dataroot_image_path('artefact/internal/profileicons' , $user->profileicon, '100x100');
+        fwrite($f, "IM: $im\n");
+        $fi = file_get_contents($im);
+        $return['f2'] = base64_encode($fi);
+        return $return;
+    } else {
+        fwrite($f, "EMPTY\n");
+    }
+}
+
 function user_authorise($token, $useragent) {
     global $CFG, $USER;
 
@@ -169,10 +253,10 @@ function user_authorise($token, $useragent) {
     $userdata['city']                    = array_key_exists('city', $profile_data) ? $profile_data['city']->title : 'Unknown';
     $userdata['country']                 = array_key_exists('country', $profile_data) ? $profile_data['country']->title : 'Unknown';
 
-    if (!empty($user->profileicon)) {
-        $imagefile = "{$CFG->dataroot}/users/{$user->profileicon}/$user->profileicon";
-        if (file_exists($imagefile)) {
-            $userdata['imagehash'] = sha1(file_get_contents($imagefile));
+    if (is_numeric($user->profileicon)) {
+        $filename = get_config('dataroot') . 'artefact/internal/profileicons/' . ($user->profileicon % 256) . '/'.$user->profileicon;
+        if(file_exists($filename) && is_readable($filename)) {
+            $userdata['imagehash'] = sha1_file($filename);
         }
     }
 
