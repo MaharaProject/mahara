@@ -135,7 +135,7 @@
                 <KEY NAME="lastauthinstance" TYPE="foreign" FIELDS="lastauthinstance" REFTABLE="auth_instance" REFFIELDS="id" />
             </KEYS>
             <INDEXES>
-                <INDEX NAME="usernameuk" UNIQUE="true" FIELDS="username,institution"/>
+                <INDEX NAME="usernameuk" UNIQUE="true" FIELDS="username,authinstance"/>
             </INDEXES>
         </TABLE>
         <TABLE NAME="event_type">

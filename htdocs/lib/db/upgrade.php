@@ -283,6 +283,17 @@ function xmldb_core_upgrade($oldversion=0) {
         add_field($table, $field);
     }
 
+    if ($oldversion < 2007061200) {
+        $table = new XMLDBTable('usr');
+        $index = new XMLDBIndex("usernameuk");
+        $index->setAttributes(XMLDB_INDEX_UNIQUE, array('username', 'institution'));
+        drop_index($table, $index);
+
+        $index = new XMLDBIndex("usernameuk");
+        $index->setAttributes(XMLDB_INDEX_UNIQUE, array('username', 'authinstance'));
+        add_index($table, $index);
+    }
+
     // everything up to here we pre mysql support.
 
     return $status;
