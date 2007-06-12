@@ -124,74 +124,164 @@ class AuthXmlrpc extends Auth {
 
         set_cookie('institution', $peer->institution, 0, get_mahara_install_subdirectory());
         $oldlastlogin = null;
+        $create = false;
+        $update = false;
 
+        // Retrieve a $user object. If that fails, create a blank one.
         try {
-            $user = $this->user_exists($remoteuser->username);
+            $user = new User;
+            $user->find_by_instanceid_username($this->instanceid, $remoteuser->username);
+            if ('1' == $this->config['updateuserinfoonlogin']) {
+                $update = true;
+            }
         } catch (Exception $e) {
-
             if (!empty($this->config['autocreateusers'])) {
                 $user = new User;
-
-                $user->username           = $remoteuser->username;
-                $user->institution        = $peer->institution;
-                $user->passwordchange     = 1;
-                $user->active             = 1;
-                $user->deleted            = 0;
-
-                //TODO: import institution's expiry?:
-                //$institution = new Institution($peer->institution);
-                $user->expiry             = 0;
-                $user->expirymailsent     = 0;
-                $user->lastlogin          = time();
-
-                $user->firstname          = $remoteuser->firstname;
-                $user->lastname           = $remoteuser->lastname;
-                $user->preferredname      = $remoteuser->firstname;
-                $user->email              = $remoteuser->email;
-
-                //TODO: import institution's per-user-quota?:
-                //$user->quota              = $userrecord->quota;
-                $user->authinstance       = empty($this->parent) ? $this->instanceid : $this->parent;
-                $user->commit();
-
-                set_profile_field($user->id, 'firstname', $user->firstname);
-                set_profile_field($user->id, 'lastname', $user->lastname);
-                set_profile_field($user->id, 'email', $user->email);
-
-                /*
-                $client->set_method('auth/mnet/auth.php/fetch_user_image')
-                       ->add_param($user->username)
-                       ->send($remotewwwroot);
-
-                //$imageobject = (object)$client->response;
-
-                if (array_key_exists('f1', $client->response)) {
-                    $imagecontents = base64_decode($client->response['f1']);
-                    file_put_contents($filename, $imagecontents);
-                }
-
-                // fetch image from remote host
-                $fetchrequest = new mnet_xmlrpc_client();
-                $fetchrequest->set_method('auth/mnet/auth.php/fetch_user_image');
-                $fetchrequest->add_param($localuser->username);
-                if ($fetchrequest->send($remotepeer) === true) {
-                    if (strlen($fetchrequest->response['f1']) > 0) {
-                        $imagecontents = base64_decode($fetchrequest->response['f1']);
-                        file_put_contents($filename, $imagecontents);
-                    }
-                    if (strlen($fetchrequest->response['f2']) > 0) {
-                        $imagecontents = base64_decode($fetchrequest->response['f2']);
-                        file_put_contents($dirname.'/f2.jpg', $imagecontents);
-                    }
-                }
-                */
-
-
-                //$user->profileicon        = $userrecord->profileicon;
+                $create = true;
             } else {
                 return false;
             }
         }
+
+        /*******************************************/
+
+        if ($create) {
+            $user->username           = $remoteuser->username;
+            $user->institution        = $peer->institution;            
+            $user->passwordchange     = 1;
+            $user->active             = 1;
+            $user->deleted            = 0;
+
+            //TODO: import institution's expiry?:
+            //$institution = new Institution($peer->institution);
+            $user->expiry             = 0;
+            $user->expirymailsent     = 0;
+            $user->lastlogin          = time();
+    
+            $user->firstname          = $remoteuser->firstname;
+            $user->lastname           = $remoteuser->lastname;
+            $user->preferredname      = $remoteuser->firstname;
+            $user->email              = $remoteuser->email;
+
+            //TODO: import institution's per-user-quota?:
+            //$user->quota              = $userrecord->quota;
+            $user->authinstance       = empty($this->parent) ? $this->instanceid : $this->parent;
+            $user->commit();
+
+            set_profile_field($user->id, 'firstname', $user->firstname);
+            set_profile_field($user->id, 'lastname', $user->lastname);
+            set_profile_field($user->id, 'email', $user->email);
+
+        } elseif ($update) {
+
+            if ($user->firstname != $remoteuser->firstname) {
+                $user->firstname = $remoteuser->firstname;
+                set_profile_field($user->id, 'firstname', $user->firstname);
+            }
+
+            if ($user->lastname != $remoteuser->lastname) {
+                $user->lastname = $remoteuser->lastname;
+                set_profile_field($user->id, 'lastname', $user->lastname);
+            }
+
+            if ($user->email != $remoteuser->email) {
+                $user->email = $remoteuser->email;
+                set_profile_field($user->id, 'email', $user->email);
+            }
+
+            $user->preferredname      = $remoteuser->firstname;
+            $user->lastlogin          = time();
+
+            //TODO: import institution's per-user-quota?:
+            //$user->quota              = $userrecord->quota;
+            $user->commit();
+        }
+
+
+        // See if we need to create/update a profile Icon image
+        if ($create || $update) {
+
+            $client->set_method('auth/mnet/auth.php/fetch_user_image')
+                   ->add_param($user->username)
+                   ->send($remotewwwroot);
+
+            $imageobject = (object)$client->response;
+
+            $u = preg_replace('/[^A-Za-z0-9 ]/', '', $user->username);
+            $filename = '/tmp/'.intval($this->instanceid).'_'.$u;
+
+            if (array_key_exists('f1', $client->response)) {
+                $imagecontents = base64_decode($client->response['f1']);
+                file_put_contents($filename, $imagecontents);
+                $imageexists = false;
+                $icons       = false;
+
+                if ($update) {
+                    $newchecksum = md5_file($filename);
+                    $icons = get_records_select_array('artefact', 'artefacttype = \'profileicon\' AND owner = ? ', array($USER->id), '', 'id');
+                    if (false != $icons) {
+                        foreach ($icons as $icon) {
+                            $iconfile = get_config('dataroot') . 'artefact/internal/profileicons/' . ($icon->id % 256) . '/'.$icon->id;
+                            $checksum = md5_file($iconfile);
+                            if ($newchecksum == $checksum) {
+                                $imageexists = true;
+                                unlink($filename);
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (false == $imageexists) {
+                    $filesize = filesize($filename);
+                    if (!$user->quota_allowed($filesize)) {
+                        $error = get_string('profileiconuploadexceedsquota', 'artefact.internal', get_config('wwwroot'));
+                    }
+
+                    require_once('file.php');
+                    $mime = get_mime_type($filename);
+                    if (!is_image_mime_type($mime)) {
+                        $error = get_string('filenotimage');
+                    }
+
+                    list($width, $height) = getimagesize($filename);
+                    if ($width > 300 || $height > 300) {
+                        $error = get_string('profileiconimagetoobig', 'artefact.internal', $width, $height);
+                    }
+
+                    try {
+                        $user->quota_add($filesize);
+                    }
+                    catch (QuotaException $qe) {
+                        $error =  get_string('profileiconuploadexceedsquota', 'artefact.internal', get_config('wwwroot'));
+                    }
+
+                    require_once($CFG->docroot .'/artefact/lib.php');
+                    require_once($CFG->docroot .'/artefact/internal/lib.php');
+
+                    // Entry in artefact table
+                    $artefact = new ArtefactTypeProfileIcon();
+                    $artefact->set('owner', $user->id);
+                    $artefact->set('title', 'Profile Icon');
+                    $artefact->set('note', 'Profile Icon');
+                    $artefact->commit();
+
+                    $id = $artefact->get('id');
+
+                    // Move the file into the correct place.
+                    $directory = get_config('dataroot') . 'artefact/internal/profileicons/' . ($id % 256) . '/';
+                    check_dir_exists($directory);
+                    rename($filename, $directory . $id);
+                    if ($create || empty($icons)) {
+                        $user->profileicon = $id;
+                    }
+                }
+
+                $user->commit();
+            }
+        }
+
+        /*******************************************/
 
         // We know who our user is now. Bring her back to life.
         $USER->reanimate($user->id, $this->instanceid);
