@@ -83,7 +83,7 @@ try {
 // Cascading switch. Kinda.
 if($xml->getName() == 'encryptedMessage') {
     $payload_encrypted = true;
-    $wwwroot           = (string)$xml->wwwroot;
+    $REMOTEWWWROOT     = (string)$xml->wwwroot;
     $payload           = xmlenc_envelope_strip($xml);
 }
 
@@ -107,7 +107,7 @@ if($xml->getName() == 'methodCall') {
     }
 
     if ($payload_encrypted) {
-        $peer     = get_peer($wwwroot);
+        $peer     = get_peer($REMOTEWWWROOT);
         $response = xmlenc_envelope($response, $peer->certificate);
     }
 
