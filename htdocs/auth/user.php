@@ -94,6 +94,8 @@ class User {
      * 
      */
     public function find_by_id($id) {
+        global $CFG;
+
         if (!is_numeric($id) || $id < 0) {
             throw new InvalidArgumentException('parameter must be a positive integer to create a User object');
         }
@@ -112,6 +114,37 @@ class User {
 
         if (false == $user) {
             throw new AuthUnknownUserException("User with id \"$id\" is not known");
+        }
+
+        $this->populate($user);
+        return $this;
+    }
+
+    /**
+     * 
+     */
+    public function find_by_instanceid_username($instanceid, $username) {
+        global $CFG;
+
+        if (!is_numeric($instanceid) || $instanceid < 0) {
+            throw new InvalidArgumentException('parameter must be a positive integer to create a User object');
+        }
+
+        $sql = 'SELECT
+                    *, 
+                    ' . db_format_tsfield('expiry') . ', 
+                    ' . db_format_tsfield('lastlogin') . ', 
+                    ' . db_format_tsfield('suspendedctime') . '
+                FROM
+                    '.$CFG->dbprefix.'usr
+                WHERE
+                    LOWER(username) = ? AND
+                    authinstance = ?';
+
+        $user = get_record_sql($sql, array($username, $instanceid));
+
+        if (false == $user) {
+            throw new AuthUnknownUserException("User with username \"$username\" is not known at auth instance \"$instanceid\"");
         }
 
         $this->populate($user);
