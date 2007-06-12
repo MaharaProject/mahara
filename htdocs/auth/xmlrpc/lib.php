@@ -146,6 +146,7 @@ class AuthXmlrpc extends Auth {
         /*******************************************/
 
         if ($create) {
+
             $user->username           = $remoteuser->username;
             $user->institution        = $peer->institution;            
             $user->passwordchange     = 1;
@@ -165,8 +166,9 @@ class AuthXmlrpc extends Auth {
 
             //TODO: import institution's per-user-quota?:
             //$user->quota              = $userrecord->quota;
-            $user->authinstance       = empty($this->parent) ? $this->instanceid : $this->parent;
+            $user->authinstance       = empty($this->config['parent']) ? $this->instanceid : $this->parent;
             $user->commit();
+
 
             set_profile_field($user->id, 'firstname', $user->firstname);
             set_profile_field($user->id, 'lastname', $user->lastname);
@@ -217,12 +219,12 @@ class AuthXmlrpc extends Auth {
                 $icons       = false;
 
                 if ($update) {
-                    $newchecksum = md5_file($filename);
+                    $newchecksum = sha1_file($filename);
                     $icons = get_records_select_array('artefact', 'artefacttype = \'profileicon\' AND owner = ? ', array($USER->id), '', 'id');
                     if (false != $icons) {
                         foreach ($icons as $icon) {
                             $iconfile = get_config('dataroot') . 'artefact/internal/profileicons/' . ($icon->id % 256) . '/'.$icon->id;
-                            $checksum = md5_file($iconfile);
+                            $checksum = sha1_file($iconfile);
                             if ($newchecksum == $checksum) {
                                 $imageexists = true;
                                 unlink($filename);
