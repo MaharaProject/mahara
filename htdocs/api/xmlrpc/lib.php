@@ -114,7 +114,7 @@ function start_jump_session($peer, $instanceid, $wantsurl="") {
     return $url;
 }
 
-function mnet_server_dummy_method($methodname, $argsarray, $functionname) {
+function api_dummy_method($methodname, $argsarray, $functionname) {
     return call_user_func_array($functionname, $argsarray);
 }
 

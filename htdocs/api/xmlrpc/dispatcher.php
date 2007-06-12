@@ -32,17 +32,24 @@ class Dispatcher {
     private $method    = '';
     private $response  = '';
 
-    private $system_methods = array('system/keyswap', 
-                                    'system.listMethods', 
-                                    'system/listMethods', 
-                                    'system.methodSignature', 
-                                    'system/methodSignature', 
-                                    'system.methodHelp', 
-                                    'system/methodHelp', 
-                                    'system.listServices', 
-                                    'system/listServices', 
-                                    'system.keyswap', 
-                                    'system/keyswap');
+    private $system_methods  = array('system.listMethods'       => 'listMethods', 
+                                     'system/listMethods'       => 'listMethods', 
+                                     'system.methodSignature'   => 'methodSignature', 
+                                     'system/methodSignature'   => 'methodSignature', 
+                                     'system.methodHelp'        => 'methodHelp', 
+                                     'system/methodHelp'        => 'methodHelp', 
+                                     'system.listServices'      => 'listServices', 
+                                     'system/listServices'      => 'listServices', 
+                                     'system.keyswap'           => 'keyswap', 
+                                     'system/keyswap'           => 'keyswap');
+
+    private $user_methods = array(
+        'sso_in' => array(),
+        'sso_out' =>array(
+            'auth/mnet/auth.php/user_authorise' => 'user_authorise',
+            'auth/mnet/auth.php/fetch_user_image' => 'fetch_user_image'
+            )
+    );
 
     function __construct($payload) {
         global $CFG;
@@ -51,7 +58,8 @@ class Dispatcher {
         // xmlrpc_decode_request is defined such that the '$method' string is
         // passed in by reference.
         $this->params  = xmlrpc_decode_request($this->payload, $this->method, 'UTF-8');
-
+        $f = fopen('/tmp/web/FUR'.$this->method, 'w');
+        fwrite($f, "FUR\n");
         // The method name is not allowed to have a dot, except for a single dot
         // which preceeds the php extension. It can have slashes but it cannot
         // begin with a slash. We specifically don't want .. to be possible.
@@ -60,24 +68,10 @@ class Dispatcher {
         }
 
         // The system methods are treated differently.
-        if (in_array($this->method, $this->system_methods)) {
+        if (array_key_exists($this->method, $this->system_methods)) {
 
             $xmlrpcserver = xmlrpc_server_create();
-
-            xmlrpc_server_register_method($xmlrpcserver, 'system.listMethods', array(&$this, 'listMethods'));
-            xmlrpc_server_register_method($xmlrpcserver, 'system/listMethods', array(&$this, 'listMethods'));
-
-            xmlrpc_server_register_method($xmlrpcserver, 'system.methodSignature', array(&$this, 'methodSignature'));
-            xmlrpc_server_register_method($xmlrpcserver, 'system/methodSignature', array(&$this, 'methodSignature'));
-
-            xmlrpc_server_register_method($xmlrpcserver, 'system.methodHelp', array(&$this, 'methodHelp'));
-            xmlrpc_server_register_method($xmlrpcserver, 'system/methodHelp', array(&$this, 'methodHelp'));
-
-            xmlrpc_server_register_method($xmlrpcserver, 'system.listServices', array(&$this, 'listServices'));
-            xmlrpc_server_register_method($xmlrpcserver, 'system/listServices', array(&$this, 'listServices'));
-
-            xmlrpc_server_register_method($xmlrpcserver, 'system.keyswap', array(&$this, 'keyswap'));
-            xmlrpc_server_register_method($xmlrpcserver, 'system/keyswap', array(&$this, 'keyswap'));
+            xmlrpc_server_register_method($xmlrpcserver, $this->method, array(&$this, $this->system_methods[$this->method]));
 
         } else {
 
@@ -85,48 +79,25 @@ class Dispatcher {
             //           the file not existing, the file not being readable, etc. as
             //           it might provide an opportunity for outsiders to scan the
             //           server for random files. So just a single message/code for
-            //           all failures here.
+            //           all failures here kthxbye.
             if(strpos($this->method, '/') !== false) {
                 $this->callstack  = explode('/', $this->method);
             } else {
                 throw new XmlrpcServerException('The function does not exist', 6011);
             }
 
-            $functionname = array_pop($this->callstack);
-            $filename     = $CFG->docroot . implode('/', $this->callstack);
-
-            $xmlrpcserver = xmlrpc_server_create();
-            $bool = xmlrpc_server_register_method($xmlrpcserver, $this->method, 'mnet_server_dummy_method');
-            $this->response = xmlrpc_server_call_method($xmlrpcserver, $payload, $functionname, array("encoding" => "utf-8"));
-            $bool = xmlrpc_server_destroy($xmlrpcserver);
-            return $this->response;
-
-            //TODO: resolve method names and re-establish security stuff
-
-            /*
-            if(!file_exists($filename)) {
-               throw new XmlrpcServerException('The function does not exist', 6011);
+            foreach ($this->user_methods as $container) {
+                if (array_key_exists($this->method, $container)) {
+                    $xmlrpcserver = xmlrpc_server_create();
+                    $bool = xmlrpc_server_register_method($xmlrpcserver, $this->method, 'api_dummy_method');
+                    $this->response = xmlrpc_server_call_method($xmlrpcserver, $payload, $container[$this->method], array("encoding" => "utf-8"));
+                    $bool = xmlrpc_server_destroy($xmlrpcserver);
+                    return $this->response;
+                }
             }
 
-            if(!is_readable($filename)) {
-                throw new XmlrpcServerException('The function does not exist', 6011);
-            }
+            throw new XmlrpcServerException('No such method');
 
-            // Make sure that the fully resolved path really is under docroot
-            $realpath = realpath($filename);
-            if(0 == preg_match("@^{$CFG->docroot}@", $realpath)) {
-                throw new XmlrpcServerException('The function does not exist '.$realpath.' '.$CFG->docroot, 6011);
-            }
-
-            // Make sure that the file we are including is called api.php
-            if(0 == preg_match("@api.php$@", $realpath)) {
-                throw new XmlrpcServerException('The function does not exist '.$realpath.' '.$CFG->docroot, 6011);
-            }
-
-            $xmlrpcserver = xmlrpc_server_create();
-
-            include_once($filename);
-*/
         }
 
         $temp = '';
