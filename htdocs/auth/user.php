@@ -130,6 +130,10 @@ class User {
             throw new InvalidArgumentException('parameter must be a positive integer to create a User object');
         }
 
+        if ($parentid = get_field('auth_instance_config', 'value', 'field', 'parent', 'instance', $instanceid)) {
+            $instanceid = $parentid;
+        }
+
         $sql = 'SELECT
                     *, 
                     ' . db_format_tsfield('expiry') . ', 
@@ -236,12 +240,17 @@ class User {
         }
         $record = $this->to_stdclass();
         if (is_numeric($this->id) && 0 < $this->id) {
-            update_record('usr', $record, array('id' => $this->id));
+            try {
+                update_record('usr', $record, array('id' => $this->id));
+            } catch (Exception $e) {
+                throw $e;
+                //var_dump($e);
+            }
         } else {
             try {
                 $this->set('id', insert_record('usr', $record, 'id', true));
-            } catch (Exception $e) {
-                // TODO: rethrow error
+            } catch (SQLException $e) {
+                throw $e;
             }
         }
         $this->changed = false;
