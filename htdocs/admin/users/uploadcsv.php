@@ -33,6 +33,9 @@ define('TITLE', get_string('uploadcsv', 'admin'));
 require_once('pieforms/pieform.php');
 safe_require('artefact', 'internal');
 
+// Turn on autodetecting of line endings, so mac newlines (\r) will work
+ini_set('auto_detect_line_endings', 1);
+
 $FORMAT = array();
 $ALLOWEDKEYS = array(
     'username',
@@ -138,7 +141,7 @@ function uploadcsv_validate(Pieform $form, $values) {
 
     $conf = File_CSV::discoverFormat($values['file']['tmp_name']);
     $i = 0;
-    while ($line = @File_CSV::readQuoted($values['file']['tmp_name'], $conf)) {
+    while ($line = File_CSV::readQuoted($values['file']['tmp_name'], $conf)) {
         $i++;
         if (!is_array($line)) {
             // Note: the CSV parser returns true on some errors and false on
@@ -218,6 +221,11 @@ function uploadcsv_validate(Pieform $form, $values) {
         // There was only the title row :(
         $form->set_error('file', get_string('uploadcsverrornorecords', 'admin'));
         return;
+    }
+
+    if ($CSVDATA === null) {
+        // Oops! Couldn't get CSV data for some reason
+        $form->set_error('file', get_string('uploadcsverrorunspecifiedproblem', 'admin'));
     }
 }
 
