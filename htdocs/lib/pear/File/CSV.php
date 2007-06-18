@@ -180,59 +180,63 @@ class File_CSV
         $in_quote = false;
         $quote = $conf['quote'];
         $f = $conf['fields'];
-        while (($ch = fgetc($fp)) !== false) {
-            $prev = $c;
-            $c = $ch;
-            // Common case
-            if ($c != $quote && $c != $conf['sep'] && $c != "\n") {
-                $buff .= $c;
-                continue;
-            }
-            if ($c == $quote && $quote &&
-                ($prev == $conf['sep'] || $prev == "\n" || $prev === null))
-            {
-                $in_quote = true;
-            } elseif ($in_quote) {
-                // When ends quote
-                if ($c == $conf['sep'] && $prev == $conf['quote']) {
-                    $in_quote = false;
-                } elseif ($c == "\n") {
-                    $sub = ($prev == "\r") ? 2 : 1;
-                    if ((strlen($buff) >= $sub) &&
-                        ($buff{strlen($buff) - $sub} == $quote))
-                    {
+        while (($line = fgets($fp)) !== false) {
+            $line = preg_replace("/\r$/", "\n", $line);
+            $length = strlen($line);
+            for ($j = 0; $j < strlen($line); $j++) {
+                $prev = $c;
+                $c = substr($line, $j , 1);
+                // Common case
+                if ($c != $quote && $c != $conf['sep'] && $c != "\n") {
+                    $buff .= $c;
+                    continue;
+                }
+                if ($c == $quote && $quote &&
+                    ($prev == $conf['sep'] || $prev == "\n" || $prev === null))
+                {
+                    $in_quote = true;
+                } elseif ($in_quote) {
+                    // When ends quote
+                    if ($c == $conf['sep'] && $prev == $conf['quote']) {
                         $in_quote = false;
+                    } elseif ($c == "\n") {
+                        $sub = ($prev == "\r") ? 2 : 1;
+                        if ((strlen($buff) >= $sub) &&
+                            ($buff{strlen($buff) - $sub} == $quote))
+                        {
+                            $in_quote = false;
+                        }
                     }
                 }
-            }
-            if (!$in_quote && ($c == $conf['sep'] || $c == "\n")) {
-                // More fields than expected
-                if (($c == $conf['sep']) && ((count($ret) + 1) == $f)) {
-                    while ($c != "\n") {
-                        $c = fgetc($fp);
+                if (!$in_quote && ($c == $conf['sep'] || $c == "\n")) {
+                    // More fields than expected
+                    if (($c == $conf['sep']) && ((count($ret) + 1) == $f)) {
+                        while ($c != "\n") {
+                            $c = fgetc($fp);
+                        }
+                        File_CSV::raiseError("Read more fields than the ".
+                                             "expected ".$conf['fields']);
+                        return true;
                     }
-                    File_CSV::raiseError("Read more fields than the ".
-                                         "expected ".$conf['fields']);
-                    return true;
+                    // Less fields than expected
+                    if (($c == "\n") && ($i != $f)) {
+                        File_CSV::raiseError("Read wrong fields number count: '". $i .
+                                             "' expected ".$conf['fields']);
+                        return true;
+                    }
+                    if ($prev == "\r") {
+                        $buff = substr($buff, 0, -1);
+                    }
+                    $ret[] = File_CSV::unquote($buff, $quote);
+                    if (count($ret) == $f) {
+                        return $ret;
+                    }
+                    $buff = '';
+                    $i++;
+                    continue;
                 }
-                // Less fields than expected
-                if (($c == "\n") && ($i != $f)) {
-                    File_CSV::raiseError("Read wrong fields number count: '". $i .
-                                         "' expected ".$conf['fields']);
-                    return true;
-                }
-                if ($prev == "\r") {
-                    $buff = substr($buff, 0, -1);
-                }
-                $ret[] = File_CSV::unquote($buff, $quote);
-                if (count($ret) == $f) {
-                    return $ret;
-                }
-                $buff = '';
-                $i++;
-                continue;
+                $buff .= $c;
             }
-            $buff .= $c;
         }
         return !feof($fp) ? $ret : false;
     }
