@@ -1,0 +1,19 @@
+div#tree, div#template {
+    border: thin dotted red;
+}
+
+div#tree {
+    overflow: auto;
+    float: left;
+    width: 400px;
+}
+
+div#template {
+    overflow: auto;
+    float: left;
+    width: 50%;
+}
+
+.render_metadata, .render_full, .render_listitem, .render_children {
+    cursor: move;
+}

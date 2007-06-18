@@ -1,5 +1,8 @@
 <h3>{str tag='book' section='artefact.resume'}
-{contextualhelp plugintype='artefact' pluginname='resume' section='addbook'}</h3>
+{if $controls}
+    {contextualhelp plugintype='artefact' pluginname='resume' section='addbook'}
+{/if}
+</h3>
 <table id="booklist" class="tablerenderer hidden resumefour">
     <thead>
         <tr>
