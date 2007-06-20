@@ -360,7 +360,7 @@ function quotestrings($strings) {
     $qstrings = array();
     foreach ($strings as $section => $tags) {
         foreach ($tags as $tag) {
-            $qstrings[$tag] = "'" . get_string($tag, $section) . "'";
+            $qstrings[$tag] = json_encode(get_string($tag, $section));
         }
     }
     return $qstrings;
