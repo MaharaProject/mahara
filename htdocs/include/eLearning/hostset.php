@@ -24,6 +24,8 @@
  *
  */
 
+// TODO : lib
+
 defined('INTERNAL') || die();
 global $CFG;
 require_once($CFG->docroot .'/include/eLearning/peer.php');

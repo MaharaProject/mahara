@@ -365,6 +365,7 @@ class PluginAuthXmlrpc extends PluginAuth {
 
         $peer = new Peer();
 
+        // TODO : switch to getrecord
         // Get a list of applications and make a dropdown from it
         $applicationset = new ApplicationSet();
         $apparray = array();

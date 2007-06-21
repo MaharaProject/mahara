@@ -24,7 +24,7 @@
  *
  */
 
-
+// TODO lib 
 class Application {
 
     const   UNINITIALIZED           = 0;
