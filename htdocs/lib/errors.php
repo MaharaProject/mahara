@@ -472,8 +472,6 @@ class MaharaException extends Exception {
 
         $outputtitle = $this->get_string('title');
         $outputmessage = $this->render_exception();
-        $message = strip_tags($outputmessage);
-        $message = htmlspecialchars_decode($message);
 
         if (function_exists('smarty') && !$this instanceof ConfigSanityException) {
             $smarty = smarty();
@@ -482,6 +480,8 @@ class MaharaException extends Exception {
             $smarty->display('error.tpl');
         }
         else {
+            $outputtitle   = hsc($outputtitle);
+            $outputmessage = nl2br(hsc($outputmessage));
             echo <<<EOF
 <html>
 <head>
@@ -519,9 +519,6 @@ class MaharaException extends Exception {
 </head>
 <body>
 EOF;
-    if (function_exists('insert_messages')) {
-        echo insert_messages();
-    }
     echo <<<EOF
 <h1>$outputtitle</h1>
 <div id="message">$outputmessage</div>
@@ -583,14 +580,14 @@ class UserException extends MaharaException implements MaharaThrowable {
     protected $log = false;
 
     public function render_exception() {
-        return $this->get_string('message') . '<br><br>' . $this->getMessage();
+        return $this->get_string('message') . "\n\n" . $this->getMessage();
     }
 
     public function strings() {
         return array_merge(parent::strings(),  
                            array('message' => 'Something in the way you\'re interacting with ' 
                                  . $this->get_sitename()
-                                 .' is causing an error.<br>Details if any, follow:'));
+                                 . " is causing an error.\nDetails if any, follow:"));
     }
 }
 
@@ -623,7 +620,10 @@ class SQLException extends SystemException {
  */
 class ParameterException extends UserException {
     public function strings() {
-        return array_merge(parent::strings(), array('message' => 'A required parameter was missing'));
+        return array_merge(parent::strings(), array(
+            'title'   => 'Mahara: Invalid Parameter',
+            'message' => 'A required parameter is missing or malformed')
+        );
     }
 }
 
