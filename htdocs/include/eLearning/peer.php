@@ -155,11 +155,7 @@ class Peer {
             return true;
         }
 
-        try {
-            return update_record('host',$host,array('wwwroot' => $host->wwwroot));
-        } catch (Exception $e) {
-            throw new SQLException();
-        }
+        return update_record('host',$host,array('wwwroot' => $host->wwwroot));
     }
 
     public function bootstrap($wwwroot, $pubkey, $appname = 'moodle', $institution = null) {
