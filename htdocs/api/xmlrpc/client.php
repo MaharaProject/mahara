@@ -25,7 +25,7 @@
  */
 
 defined('INTERNAL') || die();
-require_once($CFG->docroot .'/api/xmlrpc/lib.php');
+require(get_config('docroot') . 'api/xmlrpc/lib.php');
 
 class Client {
 

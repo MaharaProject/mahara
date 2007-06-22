@@ -18,7 +18,7 @@
  *
  * @package    mahara
  * @subpackage admin
- * @author     Richard Mansfield <richard.mansfield@catalyst.net.nz>
+ * @author     Donal McMullan <richard.mansfield@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
@@ -30,7 +30,7 @@ define('MENUITEM', 'configsite');
 define('SUBMENUITEM', 'networking');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-require($CFG->docroot .'/api/xmlrpc/lib.php');
+require_once(get_config('docroot') . 'api/xmlrpc/lib.php');
 require_once('pieforms/pieform.php');
 require_once('searchlib.php');
 define('TITLE', get_string('networking', 'admin'));

@@ -14,9 +14,9 @@
 define('INTERNAL', 1);
 
 require(dirname(dirname(dirname(__FILE__))).'/init.php');
-require_once($CFG->docroot .'/api/xmlrpc/client.php');
-require_once($CFG->docroot .'/auth/xmlrpc/lib.php');
-require_once($CFG->docroot .'/include/eLearning/institution.php');
+require_once(get_config('docroot') .'api/xmlrpc/client.php');
+require_once(get_config('docroot') .'auth/xmlrpc/lib.php');
+require_once(get_config('docroot') .'include/eLearning/institution.php');
 
 $remotewwwroot = param_variable('wr');
 $instanceid    = param_variable('ins');

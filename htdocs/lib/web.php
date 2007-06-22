@@ -53,7 +53,7 @@ defined('INTERNAL') || die();
 
 //smarty(array('js/tablerenderer.js', 'artefact/file/js/filebrowser.js'))
 function &smarty($javascript = array(), $headers = array(), $pagestrings = array(), $extraconfig = array()) {
-    global $USER, $SESSION, $CFG;
+    global $USER, $SESSION;
     $SIDEBLOCKS = array();
 
     require_once(get_config('libroot') . 'smarty/Smarty.class.php');
@@ -288,7 +288,7 @@ EOF;
         );
     }
 
-    require_once($CFG->docroot .'/api/xmlrpc/lib.php');
+    require_once(get_config('docroot') .'api/xmlrpc/lib.php');
     if ($ssopeers = get_service_providers($USER->authinstance)) {
         $SIDEBLOCKS[] = array(
             'name'   => 'ssopeers',

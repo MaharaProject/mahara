@@ -59,7 +59,7 @@ $limit = param_integer('limit', 10);
 $offset = param_integer('offset', 0);
 
 $userid = $USER->get('id');
-$prefix = get_config('prefix');
+$prefix = get_config('dbprefix');
 
 if ($type == 'all') {
     $count = count_records('notification_internal_activity', 'usr', $userid);

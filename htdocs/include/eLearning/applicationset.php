@@ -25,8 +25,7 @@
  */
 
 defined('INTERNAL') || die();
-global $CFG;
-require_once($CFG->docroot .'/include/eLearning/application.php');
+require_once(get_config('docroot') . 'include/eLearning/application.php');
 
 class ApplicationSet implements Iterator {
 

@@ -159,7 +159,7 @@ function statusChange() {
 
 JAVASCRIPT;
 
-$prefix = get_config('prefix');
+$prefix = get_config('dbprefix');
 $sql = 'SELECT DISTINCT u.* 
         FROM ' . $prefix . 'usr u
         JOIN ' . $prefix . 'view v ON v.owner = u.id 

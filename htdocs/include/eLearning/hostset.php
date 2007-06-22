@@ -27,8 +27,7 @@
 // TODO : lib
 
 defined('INTERNAL') || die();
-global $CFG;
-require_once($CFG->docroot .'/include/eLearning/peer.php');
+require_once(get_config('docroot') .'include/eLearning/peer.php');
 
 class HostSet implements Iterator {
 
@@ -44,12 +43,13 @@ class HostSet implements Iterator {
     }
 
     function findByInstitution($institution) {
-        global $CFG;
+
+        $dbprefix = get_config('dbprefix');
 
         $sql = 'SELECT
                     h.*
                 FROM
-                    '.$CFG->dbprefix.'host h
+                    '.$dbprefix.'host h
                 WHERE
                     h.institution = ?
                 ORDER BY
@@ -65,17 +65,19 @@ class HostSet implements Iterator {
     }
 
     function findByWwwroot($wwwroot) {
-        global $CFG;
+
         $len = strlen($wwwroot);
         if (!is_string($wwwroot) || $len < 1 || $len > 255) {
             throw new ParamOutOfRangeException('WWWROOT: '.addslashes($wwwroot).' is out of range');
         }
 
+        $dbprefix = get_config('dbprefix');
+
         $sql = 'SELECT
                     h2.*
                 FROM
-                    '.$CFG->dbprefix.'host h1,
-                    '.$CFG->dbprefix.'host h2
+                    '.$dbprefix.'host h1,
+                    '.$dbprefix.'host h2
                 WHERE
                     h1.institution = h2.institution AND
                     h1.wwwroot = ?

@@ -94,11 +94,12 @@ class User {
      * 
      */
     public function find_by_id($id) {
-        global $CFG;
 
         if (!is_numeric($id) || $id < 0) {
             throw new InvalidArgumentException('parameter must be a positive integer to create a User object');
         }
+
+        $dbprefix = get_config('dbprefix');
 
         $sql = 'SELECT
                     *, 
@@ -106,7 +107,7 @@ class User {
                     ' . db_format_tsfield('lastlogin') . ', 
                     ' . db_format_tsfield('suspendedctime') . '
                 FROM
-                    '.$CFG->dbprefix.'usr
+                    '.$dbprefix.'usr
                 WHERE
                     id = ?';
 
@@ -124,7 +125,6 @@ class User {
      * 
      */
     public function find_by_instanceid_username($instanceid, $username) {
-        global $CFG;
 
         if (!is_numeric($instanceid) || $instanceid < 0) {
             throw new InvalidArgumentException('parameter must be a positive integer to create a User object');
@@ -134,13 +134,15 @@ class User {
             $instanceid = $parentid;
         }
 
+        $dbprefix = get_config('dbprefix');
+
         $sql = 'SELECT
                     *, 
                     ' . db_format_tsfield('expiry') . ', 
                     ' . db_format_tsfield('lastlogin') . ', 
                     ' . db_format_tsfield('suspendedctime') . '
                 FROM
-                    '.$CFG->dbprefix.'usr
+                    '.$dbprefix.'usr
                 WHERE
                     LOWER(username) = ? AND
                     authinstance = ?';

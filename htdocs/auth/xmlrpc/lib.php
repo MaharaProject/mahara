@@ -25,11 +25,10 @@
  */
 
 defined('INTERNAL') || die();
-global $CFG;
-require_once($CFG->docroot .'/auth/lib.php');
-require_once($CFG->docroot .'/include/eLearning/peer.php');
-require_once($CFG->docroot .'/include/eLearning/applicationset.php');
-require_once($CFG->docroot .'/api/xmlrpc/lib.php');
+require_once(get_config('docroot') . 'auth/lib.php');
+require_once(get_config('docroot') . 'include/eLearning/peer.php');
+require_once(get_config('docroot') . 'include/eLearning/applicationset.php');
+require_once(get_config('docroot') . 'api/xmlrpc/lib.php');
 
 /**
  * The XMLRPC authentication method, which authenticates users against the
@@ -100,7 +99,7 @@ class AuthXmlrpc extends Auth {
      * Grab a delegate object for auth stuff
      */
     public function request_user_authorise($token, $remotewwwroot) {
-        global $CFG, $USER;
+        global $USER;
         $this->must_be_ready();
         $peer = get_peer($remotewwwroot);
 
@@ -258,8 +257,8 @@ class AuthXmlrpc extends Auth {
                         $error =  get_string('profileiconuploadexceedsquota', 'artefact.internal', get_config('wwwroot'));
                     }
 
-                    require_once($CFG->docroot .'/artefact/lib.php');
-                    require_once($CFG->docroot .'/artefact/internal/lib.php');
+                    require_once(get_config('docroot') .'/artefact/lib.php');
+                    require_once(get_config('docroot') .'/artefact/internal/lib.php');
 
                     // Entry in artefact table
                     $artefact = new ArtefactTypeProfileIcon();

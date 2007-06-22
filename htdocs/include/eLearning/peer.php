@@ -49,10 +49,9 @@ class Peer {
                              );
 
     public function __construct($result = null) {
-        global $CFG;
 
         if(null == $result) {
-            require_once($CFG->docroot .'/include/eLearning/application.php');
+            require_once(get_config('docroot') .'include/eLearning/application.php');
             $this->application = new Application();
             return;
         }
@@ -102,7 +101,7 @@ class Peer {
     }
 
     public function findByWwwroot($wwwroot) {
-        global $CFG;
+
         $wwwroot = dropslash($wwwroot);
         $result = get_record('host', 'wwwroot', $wwwroot);
 
@@ -159,7 +158,6 @@ class Peer {
     }
 
     public function bootstrap($wwwroot, $pubkey, $appname = 'moodle', $institution = null) {
-        global $CFG;
 
         $wwwroot = dropslash($wwwroot);
 
@@ -198,9 +196,7 @@ class Peer {
             $this->wwwroot             = $wwwroot;
             $this->ipaddress           = $ipaddress;
 
-            require_once($CFG->docroot .'/include/eLearning/institution.php');
-
-
+            require_once(get_config('docroot') .'include/eLearning/institution.php');
 
             if (null == $institution) {
                 $institution = new Institution;

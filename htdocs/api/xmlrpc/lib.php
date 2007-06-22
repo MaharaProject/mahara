@@ -56,7 +56,6 @@ function generate_token() {
 }
 
 function start_jump_session($peer, $instanceid, $wantsurl="") {
-    global $CFG;
     global $USER;
 
     $rpc_negotiation_timeout = 15;
@@ -106,7 +105,7 @@ function start_jump_session($peer, $instanceid, $wantsurl="") {
         }
     }
 
-    $wwwroot = dropslash($CFG->wwwroot);
+    $wwwroot = dropslash(get_config('wwwroot'));
 
     // construct the redirection URL
     $url = "{$peer->wwwroot}{$peer->application->ssolandurl}?token={$sso_session->token}&idp={$wwwroot}&wantsurl={$wantsurl}";
@@ -119,29 +118,26 @@ function api_dummy_method($methodname, $argsarray, $functionname) {
 }
 
 function fetch_user_image($username) {
-    global $REMOTEWWWROOT, $CFG;
+    global $REMOTEWWWROOT;
 
     $institution = get_field('host', 'institution', 'wwwroot', $REMOTEWWWROOT);
 
-    $f = fopen('/tmp/fetchimage.txt','w');
-    fwrite($f, "Starting\n");
-
     if (false == $institution) {
-        fwrite($f, "No ins\n");
         // This should never happen, because if we don't know the host we'll
         // already have exited
         throw new XmlrpcServerException('Unknown error');
     }
 
-    $authinstances       = auth_get_auth_instances_for_institution($institution);
-    $candidates          = array();
+    $dbprefix      = get_config('dbprefix');
+    $authinstances = auth_get_auth_instances_for_institution($institution);
+    $candidates    = array();
 
     $sql = 'SElECT
                 ai.*
             FROM
-                '.$CFG->dbprefix.'auth_instance ai,
-                '.$CFG->dbprefix.'auth_instance ai2,
-                '.$CFG->dbprefix.'auth_instance_config aic
+                '.$dbprefix.'auth_instance ai,
+                '.$dbprefix.'auth_instance ai2,
+                '.$dbprefix.'auth_instance_config aic
             WHERE
                 ai.id = ? AND
                 ai.institution = ? AND
@@ -152,7 +148,6 @@ function fetch_user_image($username) {
                 ai2.authname = \'xmlrpc\'';
 
     foreach ($authinstances as $authinstance) {
-        fwrite($f, "{$authinstance->authname}\n");
         if ($authinstance->authname != 'xmlrpc') {
             $records = get_records_sql_array($sql, array($authinstance->id, $institution));
             if (false == $records) {
@@ -161,7 +156,6 @@ function fetch_user_image($username) {
         }
         try {
             $user = new User;
-            fwrite($f, "{$authinstance->id}, $username\n");
             $user->find_by_instanceid_username($authinstance->id, $username);
             $candidates[$user->id] = $user;
         } catch (Exception $e) {
@@ -171,17 +165,14 @@ function fetch_user_image($username) {
     }
 
     if (count($candidates) != 1) {
-        fwrite($f, "".count($candidates)."\n");
         return false;
     }
 
     $user = array_pop($candidates);
     
-    fwrite($f, "IC: {$user->profileicon}\n");
     $ic = $user->profileicon;
     if (!empty($ic)) {
         $filename = get_config('dataroot') . 'artefact/internal/profileicons/' . ($user->profileicon % 256) . '/'.$user->profileicon;
-        fwrite($f, "FN: $filename\n");
         $return = array();
         try {
             $fi = file_get_contents($filename);
@@ -193,17 +184,16 @@ function fetch_user_image($username) {
 
         require_once('file.php');
         $im = get_dataroot_image_path('artefact/internal/profileicons' , $user->profileicon, '100x100');
-        fwrite($f, "IM: $im\n");
         $fi = file_get_contents($im);
         $return['f2'] = base64_encode($fi);
         return $return;
     } else {
-        fwrite($f, "EMPTY\n");
+        // no icon
     }
 }
 
 function user_authorise($token, $useragent) {
-    global $CFG, $USER;
+    global $USER;
 
     $sso_session = get_record('sso_session', 'token', $token, 'useragent', $useragent);
     if (empty($sso_session)) {
@@ -226,8 +216,8 @@ function user_authorise($token, $useragent) {
         throw new Exception('Unable to get information for the specified user');
     }
 
-    require_once($CFG->docroot .'/artefact/lib.php');
-    require_once($CFG->docroot .'/artefact/internal/lib.php');
+    require(get_config('docroot') . 'artefact/lib.php');
+    require(get_config('docroot') . 'artefact/internal/lib.php');
 
     $element_list = call_static_method('ArtefactTypeProfile', 'get_all_fields');
     $element_required = call_static_method('ArtefactTypeProfile', 'get_mandatory_fields');
@@ -264,7 +254,7 @@ function user_authorise($token, $useragent) {
 
     // Todo: push application name to list of hosts... update Moodle block to display more info, maybe in 'Other' list
     $userdata['myhosts'] = array();
-    $userdata['myhosts'][] = array('name'=> $SITE->shortname, 'url' => $CFG->wwwroot, 'count' => 0);
+    $userdata['myhosts'][] = array('name'=> $SITE->shortname, 'url' => get_config('wwwroot'), 'count' => 0);
 
     return $userdata;
 }
@@ -274,7 +264,6 @@ function user_authorise($token, $useragent) {
  * instances of its canonical auth instance
  */
 function get_service_providers($instance) {
-    global $CFG;
     static $cache = array();
 
     if (defined('INSTALLER')) {
@@ -285,6 +274,8 @@ function get_service_providers($instance) {
         return $cache[$instance];
     }
 
+    $dbprefix = get_config('dbprefix');
+
     $query = '
         SELECT
             h.name,
@@ -292,11 +283,11 @@ function get_service_providers($instance) {
             h.wwwroot,
             aic.instance
         FROM
-            '.$CFG->prefix.'auth_instance_config aic,
-            '.$CFG->prefix.'auth_instance_config aic2,
-            '.$CFG->prefix.'auth_instance_config aic3,
-            '.$CFG->prefix.'host h,
-            '.$CFG->prefix.'application a
+            '.$dbprefix.'auth_instance_config aic,
+            '.$dbprefix.'auth_instance_config aic2,
+            '.$dbprefix.'auth_instance_config aic3,
+            '.$dbprefix.'host h,
+            '.$dbprefix.'application a
         WHERE
             aic.value = ?  AND
             aic.field = \'parent\' AND
@@ -330,7 +321,6 @@ function get_service_providers($instance) {
 }
 
 function get_public_key($uri, $application=null) {
-    global $CFG;
 
     static $keyarray = array();
     if (isset($keyarray[$uri])) {
@@ -347,7 +337,7 @@ function get_public_key($uri, $application=null) {
     if (empty($xmlrpcserverurl)) {
         throw new XmlrpcClientException('Unknown application');
     } 
-    $wwwroot = dropslash($CFG->wwwroot);
+    $wwwroot = dropslash(get_config('wwwroot'));
 
     $rq = xmlrpc_encode_request('system/keyswap', array($wwwroot, $openssl->certificate), array("encoding" => "utf-8"));
     $ch = curl_init($uri . $xmlrpcserverurl);
@@ -446,13 +436,12 @@ function parse_payload($payload) {
 }
 
 function get_peer($wwwroot) {
-    global $CFG;
 
     $wwwroot = (string)$wwwroot;
     static $peers = array();
     if(isset($peers[$wwwroot])) return $peers[$wwwroot];
 
-    require_once($CFG->docroot .'/include/eLearning/peer.php');
+    require_once(get_config('docroot') . 'include/eLearning/peer.php');
     $peer = new Peer();
 
     if(!$peer->findByWwwroot($wwwroot)) {
@@ -464,7 +453,6 @@ function get_peer($wwwroot) {
 }
 
 function xmldsig_envelope_strip(&$xml) {
-    global $CFG;
 
     $signature      = base64_decode($xml->Signature->SignatureValue);
     $payload        = base64_decode($xml->object);
@@ -517,7 +505,6 @@ function xmldsig_envelope_strip(&$xml) {
  * @return string                         An XML-ENC document
  */
 function xmlenc_envelope($message, $remote_certificate) {
-    global $CFG;
 
     // Generate a key resource from the remote_certificate text string
     $publickey = openssl_get_publickey($remote_certificate);
@@ -528,7 +515,7 @@ function xmlenc_envelope($message, $remote_certificate) {
     }
 
     // Initialize vars
-    $wwwroot = dropslash($CFG->wwwroot);
+    $wwwroot = dropslash(get_config('wwwroot'));
     $encryptedstring = '';
     $symmetric_keys = array();
 
@@ -595,9 +582,9 @@ EOF;
  * @return string                         An XML-DSig document
  */
 function xmldsig_envelope($message) {
-    global $CFG;
+
     $openssl = OpenSslRepo::singleton();
-    $wwwroot = dropslash($CFG->wwwroot);
+    $wwwroot = dropslash(get_config('wwwroot'));
     $digest = sha1($message);
 
     $sig = base64_encode($openssl->sign_message($message));
@@ -844,8 +831,7 @@ class OpenSslRepo {
      * @return  string      The signature over that text
      */
     private function generate_keypair() {
-        global $CFG;
-        $host = get_hostname_from_uri($CFG->wwwroot);
+        $host = get_hostname_from_uri(get_config('wwwroot'));
 
         $organization = get_config('sitename');
         $email        = get_config('noreplyaddress');

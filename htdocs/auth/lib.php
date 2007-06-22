@@ -388,12 +388,13 @@ function auth_setup () {
  * @return array                     Array of auth instance records
  */
 function auth_get_auth_instances_for_institution($institution=null) {
-    global $CFG;
     static $cache = array();
 
     if(null == $institution) {
         return array();
     }
+
+    $dbprefix = get_config('dbprefix');
 
     if (!isset($cache[$institution])) {
         // Get auth instances in order of priority
@@ -410,8 +411,8 @@ function auth_get_auth_instances_for_institution($institution=null) {
                 a.requires_config,
                 a.requires_parent
             FROM 
-                '.$CFG->dbprefix.'auth_instance i,
-                '.$CFG->dbprefix.'auth_installed a
+                '.$dbprefix.'auth_instance i,
+                '.$dbprefix.'auth_installed a
             WHERE 
                 a.name = i.authname AND
                 i.institution = '. db_quote($institution).'
@@ -429,16 +430,26 @@ function auth_get_auth_instances_for_institution($institution=null) {
     return $cache[$institution];
 }
 
+/**
+ * Given a wwwroot, find any auth instances that can come from that host
+ * 
+ * @param   string  wwwroot of the host that is connecting to us
+ * @return  array   array of record objects
+ */
 function auth_get_auth_instances_for_wwwroot($wwwroot) {
-    global $CFG;
+
+    $dbprefix = get_config('dbprefix');
+
+    // TODO: we just need ai.id and ai.authname... rewrite query, or
+    // just drop this function
     $query = "  SELECT
                     ai.*,
                     aic.*,
                     i.*
                 FROM
-                    {$CFG->dbprefix}auth_instance ai, 
-                    {$CFG->dbprefix}auth_instance_config aic,
-                    {$CFG->dbprefix}institution i
+                    {$dbprefix}auth_instance ai, 
+                    {$dbprefix}auth_instance_config aic,
+                    {$dbprefix}institution i
                 WHERE
                     aic.field = 'wwwroot' AND
                     aic.value = ? AND
@@ -456,13 +467,14 @@ function auth_get_auth_instances_for_wwwroot($wwwroot) {
  * @return array                     Array of auth instance records
  */
 function auth_get_auth_instances_for_username($institution, $username) {
-    global $CFG;
     static $cache = array();
 
     if (!isset($cache[$institution][$username])) {
         // Get auth instances in order of priority
         // DO NOT CHANGE THE SORT ORDER OF THIS RESULT SET
         // YEAH EINSTEIN - THAT MEANS YOU!!!
+
+        $dbprefix = get_config('dbprefix');
 
         // TODO: work out why this won't accept a placeholder - had to use db_quote
         $sql ='
@@ -474,9 +486,9 @@ function auth_get_auth_instances_for_username($institution, $username) {
                 a.requires_config,
                 a.requires_parent
             FROM 
-                '.$CFG->dbprefix.'auth_instance i,
-                '.$CFG->dbprefix.'auth_installed a,
-                '.$CFG->dbprefix.'usr u
+                '.$dbprefix.'auth_instance i,
+                '.$dbprefix.'auth_installed a,
+                '.$dbprefix.'usr u
             WHERE 
                 a.name = i.authname AND
                 i.institution = ? AND
@@ -504,10 +516,12 @@ function auth_get_auth_instances_for_username($institution, $username) {
  * @return array                     Array of auth instance records
  */
 function auth_get_available_auth_types($institution=null) {
-    global $CFG;
+
     if (!is_null($institution) && (!is_string($institution) || strlen($institution) > 255)) {
         return array();
     }
+
+    $dbprefix = get_config('dbprefix');
 
     // TODO: work out why this won't accept a placeholder - had to use db_quote
     $sql ='
@@ -515,9 +529,9 @@ function auth_get_available_auth_types($institution=null) {
             a.name,
             a.requires_config
         FROM 
-            '.$CFG->dbprefix.'auth_installed a
+            '.$dbprefix.'auth_installed a
         LEFT JOIN 
-            '.$CFG->dbprefix.'auth_instance i
+            '.$dbprefix.'auth_instance i
         ON 
             a.name = i.authname AND
             i.institution = '. db_quote($institution).'

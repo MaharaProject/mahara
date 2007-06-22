@@ -48,7 +48,7 @@ if (!$membership = user_can_access_community($id)) {
 }
 $community = get_record('community', 'id', $id);
 
-$prefix = get_config('prefix');
+$prefix = get_config('dbprefix');
 $dbnow  = db_format_timestamp(time());
 
 switch ($type) {

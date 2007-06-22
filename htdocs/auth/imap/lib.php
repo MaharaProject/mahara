@@ -25,8 +25,7 @@
  */
 
 defined('INTERNAL') || die();
-global $CFG;
-require_once($CFG->docroot .'/auth/lib.php');
+require_once(get_config('docroot') . 'auth/lib.php');
 
 /**
  * The internal authentication method, which authenticates users against the
@@ -75,7 +74,6 @@ class AuthImap extends Auth {
      */
     public function authenticate_user_account($user, $password) {
         $this->must_be_ready();
-        global $CFG;
 
         if (! function_exists('imap_open')) {
             throw new ConfigException('IMAP is not available in your PHP environment. Check that it is properly installed');

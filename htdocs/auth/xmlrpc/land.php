@@ -19,9 +19,9 @@ define('XMLRPC', 1);
 
 
 require(dirname(dirname(dirname(__FILE__))).'/init.php');
-require_once($CFG->docroot .'/api/xmlrpc/client.php');
-require_once($CFG->docroot .'/auth/xmlrpc/lib.php');
-require_once($CFG->docroot .'/include/eLearning/institution.php');
+require_once(get_config('docroot') .'api/xmlrpc/client.php');
+require_once(get_config('docroot') .'auth/xmlrpc/lib.php');
+require_once(get_config('docroot') .'include/eLearning/institution.php');
 
 $token         = param_variable('token');
 $remotewwwroot = param_variable('idp');
@@ -48,6 +48,6 @@ foreach($instances as $instance) {
 }
 // confirm the MNET session
 // redirect
-redirect($CFG->wwwroot . $wantsurl);
+redirect(get_config('wwwroot') . $wantsurl);
 
 ?>

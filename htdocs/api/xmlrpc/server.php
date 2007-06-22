@@ -46,7 +46,7 @@ require(dirname(__FILE__).'/lib.php');
 // Catch anything that goes wrong in init.php
 ob_start();
     require(dirname(dirname(dirname(__FILE__))).'/init.php');
-    require_once($CFG->docroot .'/api/xmlrpc/dispatcher.php');
+    require_once(get_config('docroot') . 'api/xmlrpc/dispatcher.php');
     $errors = trim(ob_get_contents());
 ob_end_clean();
 

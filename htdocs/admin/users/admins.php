@@ -74,7 +74,7 @@ function adminusers_submit(Pieform $form, $values) {
     execute_sql('UPDATE ' . $table . '
         SET admin = 1
         WHERE id IN (' . join(',', $values['users']) . ')');
-    execute_sql('DELETE FROM ' . get_config('prefix') . 'usr_activity_preference 
+    execute_sql('DELETE FROM ' . get_config('dbprefix') . 'usr_activity_preference 
         WHERE activity IN (SELECT name FROM ' . get_config('dbprefix') . 'activity_type 
             WHERE admin = 1 )
         AND usr NOT IN (' . join(',', $values['users']) . ')');

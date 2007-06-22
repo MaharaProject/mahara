@@ -75,14 +75,14 @@ $ALLOWEDKEYS = array(
  * @return array                     Array of auth instance records
  */
 function auth_get_auth_instances() {
-    global $CFG;
     static $cache = array();
 
     if(count($cache) > 0) {
         return $cache;
     }
 
-    // TODO: work out why this won't accept a placeholder - had to use db_quote
+    $dbprefix = get_config('dbprefix');
+
     $sql ='
         SELECT DISTINCT
             i.id,
@@ -90,8 +90,8 @@ function auth_get_auth_instances() {
             institution.displayname,
             i.instancename
         FROM 
-            '.$CFG->dbprefix.'institution,
-            '.$CFG->dbprefix.'auth_instance i
+            '.$dbprefix.'institution,
+            '.$dbprefix.'auth_instance i
         WHERE 
             i.institution = institution.name
         ORDER BY

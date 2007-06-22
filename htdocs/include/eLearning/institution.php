@@ -27,8 +27,7 @@
 // TODO : lib
 
 defined('INTERNAL') || die();
-global $CFG;
-require($CFG->docroot .'/include/eLearning/hostset.php');
+require(get_config('docroot') .'include/eLearning/hostset.php');
 
 class Institution {
 
@@ -107,7 +106,7 @@ class Institution {
     }
 
     function findByName($name) {
-        global $CFG;
+
         if (!is_string($name) || strlen($name) < 1 || strlen($name) > 255) {
             throw new ParamOutOfRangeException("'name' must be a string.");
         }
@@ -125,8 +124,7 @@ class Institution {
     }
 
     function findByWwwroot($wwwroot) {
-        // TODO : remove CFG
-        global $CFG;
+
         if (!is_string($wwwroot) || strlen($wwwroot) < 1 || strlen($wwwroot) > 255) {
             throw new SystemException();
         }
@@ -201,7 +199,6 @@ class Institution {
     }
 
     function findByHostset(HostSet $hostset) {
-        global $CFG;
 
         // get the first host record:
         $host = reset($hostset);
