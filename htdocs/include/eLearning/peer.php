@@ -51,7 +51,7 @@ class Peer {
     public function __construct($result = null) {
 
         if(null == $result) {
-            require_once(get_config('docroot') .'include/eLearning/application.php');
+            require_once(get_config('libroot') . 'application.php');
             $this->application = new Application();
             return;
         }

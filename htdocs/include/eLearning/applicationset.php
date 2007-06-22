@@ -25,7 +25,7 @@
  */
 
 defined('INTERNAL') || die();
-require_once(get_config('docroot') . 'include/eLearning/application.php');
+require_once(get_config('libroot') . 'application.php');
 
 class ApplicationSet implements Iterator {
 
