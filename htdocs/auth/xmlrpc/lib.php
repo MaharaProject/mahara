@@ -27,7 +27,7 @@
 defined('INTERNAL') || die();
 require_once(get_config('docroot') . 'auth/lib.php');
 require_once(get_config('docroot') . 'include/eLearning/peer.php');
-require_once(get_config('docroot') . 'include/eLearning/applicationset.php');
+require_once(get_config('libroot') . 'applicationset.php');
 require_once(get_config('docroot') . 'api/xmlrpc/lib.php');
 
 /**
