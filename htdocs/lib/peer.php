@@ -196,7 +196,7 @@ class Peer {
             $this->wwwroot             = $wwwroot;
             $this->ipaddress           = $ipaddress;
 
-            require_once(get_config('docroot') .'include/eLearning/institution.php');
+            require_once(get_config('libroot') .'institution.php');
 
             if (null == $institution) {
                 $institution = new Institution;
