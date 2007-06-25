@@ -27,7 +27,7 @@
 // TODO : lib
 
 defined('INTERNAL') || die();
-require_once(get_config('docroot') .'include/eLearning/peer.php');
+require_once(get_config('libroot') .'peer.php');
 
 class HostSet implements Iterator {
 

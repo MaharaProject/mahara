@@ -110,7 +110,7 @@ class Dispatcher {
     }
 
     function keyswap($function, $params) {
-        require_once(get_config('docroot') . 'include/eLearning/peer.php');
+        require_once(get_config('libroot') . 'peer.php');
 
         //TODO: Verify params
         (empty($params[0])) ? $wwwroot = null     : $wwwroot     = $params[0];
