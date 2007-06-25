@@ -838,7 +838,7 @@ function auth_get_login_form() {
  */
 function get_login_form_js($form) {
     $form = str_replace('/', '\/', str_replace("'", "\'", (str_replace(array("\n", "\t"), '', $form))));
-    $strcookiesnotenabled    = get_string('cookiesnotenabled');
+    $strcookiesnotenabled    = json_encode(get_string('cookiesnotenabled'));
     $cookiename = get_config('cookieprefix') . 'ctest';
     return <<<EOF
 <script type="text/javascript">
@@ -849,7 +849,7 @@ if (document.cookie) {
     document.cookie = '$cookiename=1;expires=1/1/1990 00:00:00';
 }
 else {
-    replaceChildNodes(loginbox, P(null, '$strcookiesnotenabled'));
+    replaceChildNodes(loginbox, P(null, $strcookiesnotenabled));
 }
 </script>
 EOF;

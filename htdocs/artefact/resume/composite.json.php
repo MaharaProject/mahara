@@ -27,11 +27,17 @@
 define('INTERNAL', 1);
 define('JSON', 1);
 
+if (isset($_POST['view'])) {
+    define('PUBLIC', 1);
+}
+
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+safe_require('artefact', 'resume');
 
 $limit = param_integer('limit', 10);
 $offset = param_integer('offset', 0);
 $type = param_alpha('type');
+$view = param_integer('view', 0);
 
 $data = array();
 $count = 0;
@@ -39,14 +45,30 @@ $count = 0;
 $prefix = get_config('dbprefix');
 $othertable = 'artefact_resume_' . $type;
 
+$owner = $USER->get('id');
+
 $sql = 'SELECT ar.*, a.owner
     FROM ' . $prefix . 'artefact a 
     JOIN ' . $prefix . $othertable . ' ar ON ar.artefact = a.id
     WHERE a.owner = ? AND a.artefacttype = ?
+    ORDER BY ' . call_static_method(generate_artefact_class_name($type), 'get_order_field') . ' DESC
     LIMIT ' . $limit . ' OFFSET ' . $offset;
-if (!$data = get_records_sql_array($sql, array($USER->get('id'), $type))) {
+
+if (!empty($view)) { 
+    if (!can_view_view($view)) {
+        throw new AccessDeniedException();
+    }
+    require_once('view.php');
+    $v = new View($view);
+    $owner = $v->get('owner');
+}
+
+if (!$data = get_records_sql_array($sql, array($owner, $type))) {
     $data = array();
 }
+
+$count = count_records('artefact', 'owner', $owner, 'artefacttype', $type);
+
 foreach ($data as &$row) {
     foreach (array('date', 'startdate', 'enddate') as $key) {
         if (array_key_exists($key, $row)) {
@@ -54,7 +76,6 @@ foreach ($data as &$row) {
         }
     }
 }
-$count = count_records('artefact', 'owner', $USER->get('id'), 'artefacttype', $type);
 echo json_encode(array(
     'data' => $data,
     'limit' => $limit,

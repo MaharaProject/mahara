@@ -26,7 +26,7 @@
 
 defined('INTERNAL') || die();
 
-$string['myresume'] = 'My Résumé';
+$string['myresume'] = 'My Resumé';
 $string['mygoals'] = 'My Goals';
 $string['myskills'] = 'My skills';
 $string['coverletter'] = 'Cover Letter';
@@ -41,8 +41,8 @@ $string['female'] = 'Female';
 $string['male'] = 'Male';
 $string['gender'] = 'Gender';
 $string['maritalstatus'] = 'Marital Status';
-$string['resumesaved'] = 'Resume saved';
-$string['resumesavefailed'] = 'Failed to update your resume';
+$string['resumesaved'] = 'Resumé saved';
+$string['resumesavefailed'] = 'Failed to update your resumé';
 $string['educationhistory'] = 'Education History';
 $string['employmenthistory'] = 'Employment History';
 $string['certification'] = 'Certifications, Accreditations, and Awards';
@@ -66,7 +66,7 @@ $string['contribution'] = 'Contribution';
 $string['compositedeleteconfirm'] = 'Are you sure you want to delete this?';
 $string['compositesaved'] = 'Saved successfully';
 $string['compositedeleted'] = 'Deleted successfully';
-$string['backtoresume'] = 'Back to My Résumé';
+$string['backtoresume'] = 'Back to My Resumé';
 $string['personalgoal'] = 'Personal Goals';
 $string['academicgoal'] = 'Academic Goals';
 $string['careergoal'] = 'Career Goals';
@@ -74,8 +74,8 @@ $string['personalskill'] = 'Personal Skills';
 $string['academicskill'] = 'Academic Skills';
 $string['workskill'] = 'Work Skills';
 $string['goalandskillsaved'] = 'Saved successfully';
-$string['resume'] = 'Résumé';
+$string['resume'] = 'Resumé';
 $string['confirmeditprofile'] = 'If you continue to edit your profile now, you will lose any unsaved information in this area';
-$string['profilegotoresume'] = 'Edit My Résumé';
+$string['profilegotoresume'] = 'Edit My Resumé';
 $string['current'] = 'Current';
 ?>

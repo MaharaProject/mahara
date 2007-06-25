@@ -368,7 +368,7 @@ function quotestrings($strings) {
     $qstrings = array();
     foreach ($strings as $section => $tags) {
         foreach ($tags as $tag) {
-            $qstrings[$tag] = "'" . get_string($tag, $section) . "'";
+            $qstrings[$tag] = json_encode(get_string($tag, $section));
         }
     }
     return $qstrings;
@@ -580,7 +580,7 @@ function param_integer($name) {
         return (int)$value;
     }
 
-    throw new ParameterException("Parameter '$name' = '$value' is not an integer");
+    throw new ParameterException("The '$name' parameter is not an integer");
 }
 
 /**
@@ -610,7 +610,7 @@ function param_alpha($name) {
         return $value;
     }
 
-    throw new ParameterException("Parameter '$name' = '$value' is not an alpha");
+    throw new ParameterException("The '$name' parameter is not alphabetical only");
 }
 
 /**
@@ -640,7 +640,7 @@ function param_alphanum($name) {
         return $value;
     }
 
-    throw new ParameterException("Parameter '$name' = '$value' is not an alphanum");
+    throw new ParameterException("The '$name' parameter is not alphanumeric only");
 }
 
 /**
@@ -670,7 +670,7 @@ function param_alphanumext($name) {
         return $value;
     }
 
-    throw new ParameterException("Parameter '$name' = '$value' is not an alphanumext");
+    throw new ParameterException("The '$name' parameter contains invalid characters");
 }
 
 /**
@@ -705,7 +705,7 @@ function param_integer_list($name) {
         return array_map('intval', explode(',', $value));
     }
 
-    throw new ParameterException("Parameter '$name' = '$value' is not an integer list");
+    throw new ParameterException("The '$name' parameter is not an integer list");
 }
 
 /**

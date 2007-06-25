@@ -71,7 +71,7 @@ switch ($type) {
         }
 
         $count = count_records_sql('
-            SELECT COUNT(id)
+            SELECT COUNT(DISTINCT id)
             FROM  ' . $prefix . 'view v
             LEFT OUTER JOIN ' . $prefix . 'view_access_community a ON a.view=v.id
             ' . $where,
@@ -79,7 +79,7 @@ switch ($type) {
         );
                                    
         $data = get_records_sql_array('
-            SELECT v.*, u.username, u.firstname, u.lastname, u.preferredname, u.id AS usr 
+            SELECT DISTINCT v.*, u.username, u.firstname, u.lastname, u.preferredname, u.id AS usr 
             FROM ' . $prefix . 'view v
             LEFT OUTER JOIN ' . $prefix . 'view_access_community a ON a.view=v.id
             INNER JOIN ' . $prefix.'usr u ON v.owner = u.id ' . $where, 

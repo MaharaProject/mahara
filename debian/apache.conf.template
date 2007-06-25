@@ -3,7 +3,7 @@
 
     DocumentRoot /var/www/mahara
 
-    CustomLog __APACHELOGDIR__/mahara.access.log full
+    CustomLog __APACHELOGDIR__/mahara.access.log combined
     ErrorLog  __APACHELOGDIR__/mahara.error.log
 
     php_value upload_max_filesize 5M

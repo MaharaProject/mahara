@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use FindBin;
 use File::Find;
-use Perl6::Slurp;
+use File::Slurp qw/slurp/;
 use Text::Diff;
 
 my $EXCLUDE_FILES = [

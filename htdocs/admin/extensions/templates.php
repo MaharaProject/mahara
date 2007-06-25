@@ -90,7 +90,7 @@ function installtemplate(name) {
             else {
                 message = '{$failurestring}';
             }
-            $(name).innerHTML = '<img src="{$failureicon}" alt=":(" /> ' + message;
+            $(name + '.message').innerHTML = '<img src="{$failureicon}" alt=":(" /> ' + message;
         }
     },
     function () {

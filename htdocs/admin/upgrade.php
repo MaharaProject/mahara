@@ -48,18 +48,18 @@ $loadingicon = theme_get_url('images/loading.gif');
 $successicon = theme_get_url('images/success.gif');
 $failureicon = theme_get_url('images/failure.gif');
 
-$loadingstring = get_string('upgradeloading', 'admin');
-$installsuccessstring = get_string('installsuccess', 'admin');
-$successstring = get_string('upgradesuccesstoversion', 'admin');
-$failurestring = get_string('upgradefailure', 'admin');
-$coresuccess   = get_string('coredatasuccess', 'admin');
+$loadingstring = json_encode(get_string('upgradeloading', 'admin'));
+$installsuccessstring = json_encode(get_string('installsuccess', 'admin'));
+$successstring = json_encode(get_string('upgradesuccesstoversion', 'admin'));
+$failurestring = json_encode(get_string('upgradefailure', 'admin'));
+$coresuccess   = json_encode(get_string('coredatasuccess', 'admin'));
 
 // Check if Mahara is being installed. An extra hook is required to insert core
 // data if so.
 if (!empty($upgrades['core']->install)) {
     $smarty->assign('install', true);
     $installjs =<<< EOJS
-                    $('coredata').innerHTML = '<img src="{$loadingicon}" alt="{$loadingstring}" />';
+                    $('coredata').innerHTML = '<img src="{$loadingicon}" alt="' + {$loadingstring} + '" />';
 
                     sendjsonrequest(
                         'upgrade.json.php', 
@@ -67,7 +67,7 @@ if (!empty($upgrades['core']->install)) {
                         'GET',
                         function (data) {
                             if ( !data.error ) {
-                                var message = '{$coresuccess}';
+                                var message = {$coresuccess};
                                 if (data.message) {
                                     message += ' (' + data.message + ')';
                                 }
@@ -80,13 +80,13 @@ if (!empty($upgrades['core']->install)) {
                                     message = data.message;
                                 } 
                                 else {
-                                    message = '{$failurestring}';
+                                    message = {$failurestring};
                                 }
                                 $('coredata').innerHTML = '<img src="{$failureicon}" alt=":(" /> ' + message;
                             }
                         },
                         function () {
-                            $('coredata').innerHTML = '<img src="{$failureicon}" alt=":(" /> {$failurestring}';
+                            $('coredata').innerHTML = '<img src="{$failureicon}" alt=":(" /> ' + {$failurestring};
                         },
                         true); // quiet.
 
@@ -106,16 +106,16 @@ $js .= <<< EOJS
                     return;
                 }
 
-                $(element).innerHTML = '<img src="{$loadingicon}" alt="{$loadingstring}" />';
+                $(element).innerHTML = '<img src="{$loadingicon}" alt="' + {$loadingstring} + '" />';
 
                 sendjsonrequest('upgrade.json.php', { 'name': element }, 'GET', function (data) {
                     if ( !data.error ) {
                         var message;
                         if (data.install) {
-                            message = '{$installsuccessstring}';
+                            message = {$installsuccessstring};
                         }
                         else {
-                            message = '{$successstring}';
+                            message = {$successstring};
                         }
                         message += data.newversion;
                         $(data.key).innerHTML = '<img src="{$successicon}" alt=":)" />  ' + message;
@@ -126,14 +126,14 @@ $js .= <<< EOJS
                             message = data.errormessage;
                         } 
                         else {
-                            message = '{$failurestring}';
+                            message = {$failurestring};
                         }
                         $(data.key).innerHTML = '<img src="{$failureicon}" alt=":(" /> ' + message;
                     }
                     processNext();
                 }, 
                 function () {
-                    $(element).innerHTML = '<img src="{$failureicon}" alt=":(" /> {$failurestring}';
+                    $(element).innerHTML = '<img src="{$failureicon}" alt=":(" /> ' + {$failurestring};
                 },
                 true);
             }

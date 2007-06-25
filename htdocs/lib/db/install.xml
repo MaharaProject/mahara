@@ -959,7 +959,7 @@
                 <SENTENCE TEXT="(name) VALUES ('academic')" />
                 <SENTENCE TEXT="(name) VALUES ('professionaldevelopment')" />
                 <SENTENCE TEXT="(name) VALUES ('personaldevelopment')" />
-            </SENTANCES>
+            </SENTENCES>
         </STATEMENT>
     </STATEMENTS>
 </XMLDB>

@@ -55,11 +55,11 @@ $siteoptionform = pieform(array(
             'defaultvalue' => get_config('sitename'),
             'help'         => true,
         ),
-        'language' => array(
+        'lang' => array(
             'type'         => 'select',
             'title'        => get_string('language','admin'),
             'description'  => get_string('sitelanguagedescription','admin'),
-            'defaultvalue' => get_config('language'),
+            'defaultvalue' => get_config('lang'),
             'collapseifoneoption' => true,
             'options'      => $langoptions,
             'help'         => true,
@@ -138,7 +138,7 @@ function siteoptions_fail(Pieform $form, $field) {
 }
 
 function siteoptions_submit(Pieform $form, $values) {
-    $fields = array('sitename','language','theme','pathtofile', 'pathtoclam',
+    $fields = array('sitename','lang','theme','pathtofile', 'pathtoclam',
                     'allowpublicviews','artefactviewinactivitytime', 'searchplugin');
     foreach ($fields as $field) {
         if (!set_config($field, $values[$field])) {

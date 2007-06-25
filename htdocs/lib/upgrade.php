@@ -210,7 +210,7 @@ function check_upgrades($name=null) {
 function upgrade_core($upgrade) {
     global $db;
 
-    $location = get_config('libroot') . '/db/';
+    $location = get_config('libroot') . 'db/';
 
     db_begin();
 
