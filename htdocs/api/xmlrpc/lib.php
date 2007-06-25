@@ -70,8 +70,9 @@ function start_jump_session($peer, $instanceid, $wantsurl="") {
     }
 
     if (false == $approved) {
-        throw new Exception('Host not approved for sso');
-        //TODO: specify exception properly
+        // This shouldn't happen: the user shouldn't have been presented with 
+        // the link
+        throw new SystemException('Host not approved for sso');
     }
 
     // set up the session
