@@ -27,7 +27,7 @@
 // TODO : lib
 
 defined('INTERNAL') || die();
-require_once(get_config('docroot') .'include/eLearning/hostset.php');
+require_once(get_config('libroot') .'hostset.php');
 
 class Institution {
 

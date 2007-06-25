@@ -24,8 +24,6 @@
  *
  */
 
-// TODO : lib
-
 defined('INTERNAL') || die();
 require_once(get_config('libroot') .'peer.php');
 
