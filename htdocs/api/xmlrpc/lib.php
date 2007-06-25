@@ -89,8 +89,7 @@ function start_jump_session($peer, $instanceid, $wantsurl="") {
         $sso_session->expires = time() + (integer)ini_get('session.gc_maxlifetime');
         $sso_session->sessionid = session_id();
         if (! insert_record('sso_session', $sso_session)) {
-            throw new Exception("database error");
-            //TODO: specify exception
+            throw new SQLException("database error");
         }
     } else {
         $sso_session->useragent = sha1($_SERVER['HTTP_USER_AGENT']);
@@ -101,8 +100,7 @@ function start_jump_session($peer, $instanceid, $wantsurl="") {
         $sso_session->useragent = sha1($_SERVER['HTTP_USER_AGENT']);
         $sso_session->sessionid = session_id();
         if (false == update_record('sso_session', $sso_session, array('userid' => $USER->id))) {
-            throw new Exception("database error");
-            //TODO: specify exception
+            throw new SQLException("database error");
         }
     }
 
@@ -198,14 +196,12 @@ function user_authorise($token, $useragent) {
 
     $sso_session = get_record('sso_session', 'token', $token, 'useragent', $useragent);
     if (empty($sso_session)) {
-        // TODO: specify this exception
-        throw new Exception('No such session exists');
+        throw new XmlrpcServerException('No such session exists');
     }
 
     // check session confirm timeout
     if ($sso_session->expires < time()) {
-        // TODO: specify this exception
-        throw new Exception('This session has timed out');
+        throw new XmlrpcServerException('This session has timed out');
     }
 
     // session okay, try getting the user
@@ -213,8 +209,7 @@ function user_authorise($token, $useragent) {
     try {
         $user->find_by_id($sso_session->userid);
     } catch (Exception $e) {
-        //TODO: Specify exception properly
-        throw new Exception('Unable to get information for the specified user');
+        throw new XmlrpcServerException('Unable to get information for the specified user');
     }
 
     require(get_config('docroot') . 'artefact/lib.php');
@@ -229,8 +224,7 @@ function user_authorise($token, $useragent) {
 
     $email = get_field('artefact_internal_profile_email', 'email', 'owner', $sso_session->userid, 'principal', 1);
     if(false == $email) {
-        // TODO: specify this exception
-        throw new Exception("No email adress for user");
+        throw new XmlrpcServerException("No email adress for user");
     }
 
     $userdata = array();
