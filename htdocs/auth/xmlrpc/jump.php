@@ -22,6 +22,10 @@ $remotewwwroot = param_variable('wr');
 $instanceid    = param_variable('ins');
 $wantsurl      = '';
 
+if (!get_config('enablenetworking')) {
+    throw new XmlrpcClientException('Sorry - networking has been disabled for this Mahara site.');
+}
+
 $peer = new Peer();
 $peer->findByWwwroot($remotewwwroot);
 $url = $remotewwwroot.$peer->application->ssolandurl;
@@ -32,7 +36,7 @@ $approved  = false;
 $url = start_jump_session($peer, $instanceid);
 
 if (empty($url)) {
-    throw new Exception('DEBUG: Jump session was not started correctly or blank URL returned.'); // TODO: errors
+    throw new XmlrpcClientException('DEBUG: Jump session was not started correctly or blank URL returned.'); // TODO: errors
 }
 redirect($url);
 

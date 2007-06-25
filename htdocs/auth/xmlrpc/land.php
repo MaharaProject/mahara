@@ -19,6 +19,17 @@ define('XMLRPC', 1);
 
 
 require(dirname(dirname(dirname(__FILE__))).'/init.php');
+
+// If networking is turned off, it's safer to die immediately
+if (!get_config('enablenetworking')) {
+    $protocol = strtoupper($_SERVER['SERVER_PROTOCOL']);
+    if ($protocol != 'HTTP/1.1') {
+        $protocol = 'HTTP/1.0';
+    }
+    header($protocol.' 403 Forbidden');
+    exit;
+}
+
 require_once(get_config('docroot') .'api/xmlrpc/client.php');
 require_once(get_config('docroot') .'auth/xmlrpc/lib.php');
 require_once(get_config('libroot') .'institution.php');
@@ -26,7 +37,6 @@ require_once(get_config('libroot') .'institution.php');
 $token         = param_variable('token');
 $remotewwwroot = param_variable('idp');
 $wantsurl      = param_variable('wantsurl', '/');
-
 
 $institution = new Institution();
 $institution->findByWwwroot($remotewwwroot);

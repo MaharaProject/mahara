@@ -50,10 +50,14 @@ ob_start();
     $errors = trim(ob_get_contents());
 ob_end_clean();
 
-// If networking is off, return a 404
+// If networking is off, return a '403 Forbidden' response
 $networkenabled = get_config('enablenetworking');
 if (empty($networkenabled)) {
-    header("HTTP/1.0 404 Not Found");
+    $protocol = strtoupper($_SERVER['SERVER_PROTOCOL']);
+    if ($protocol != 'HTTP/1.1') {
+        $protocol = 'HTTP/1.0';
+    }
+    header($protocol.' 403 Forbidden');
     exit;
 }
 

@@ -288,13 +288,15 @@ EOF;
         );
     }
 
-    require_once(get_config('docroot') .'api/xmlrpc/lib.php');
-    if ($ssopeers = get_service_providers($USER->authinstance)) {
-        $SIDEBLOCKS[] = array(
-            'name'   => 'ssopeers',
-            'weight' => 1,
-            'data'   => $ssopeers,
-        );
+    if (get_config('enablenetworking')) {
+        require_once(get_config('docroot') .'api/xmlrpc/lib.php');
+        if ($ssopeers = get_service_providers($USER->authinstance)) {
+            $SIDEBLOCKS[] = array(
+                'name'   => 'ssopeers',
+                'weight' => 1,
+                'data'   => $ssopeers,
+            );
+        }
     }
 
     if (isset($extraconfig['sideblocks']) && is_array($extraconfig['sideblocks'])) {

@@ -649,7 +649,7 @@ class RemoteServerException extends SystemException {}
 class XmlrpcServerException extends SystemException {}
 
 /**
- * Xmlrpc Server exception - must output well formed XMLRPC error to the client
+ * Xmlrpc Client exception - Something has gone wrong in the networking
  */
 class XmlrpcClientException extends SystemException {}
 
