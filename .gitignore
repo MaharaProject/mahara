@@ -1,5 +1,9 @@
 logs
 htdocs/js/MochiKit/Packed.js
+htdocs/.project
+htdocs/.projectOptions
+htdocs/.settings/*
+htdocs/.settings
 mahara-*.tar.bz2
 mahara-*.tar.gz
 mahara-*.zip
