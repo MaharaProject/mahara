@@ -154,7 +154,7 @@ class AuthXmlrpc extends Auth {
 
             //TODO: import institution's expiry?:
             //$institution = new Institution($peer->institution);
-            $user->expiry             = 0;
+            $user->expiry             = null;
             $user->expirymailsent     = 0;
             $user->lastlogin          = time();
     
@@ -219,7 +219,7 @@ class AuthXmlrpc extends Auth {
 
                 if ($update) {
                     $newchecksum = sha1_file($filename);
-                    $icons = get_records_select_array('artefact', 'artefacttype = \'profileicon\' AND owner = ? ', array($USER->id), '', 'id');
+                    $icons = get_records_select_array('artefact', 'artefacttype = \'profileicon\' AND owner = ? ', array($user->id), '', 'id');
                     if (false != $icons) {
                         foreach ($icons as $icon) {
                             $iconfile = get_config('dataroot') . 'artefact/internal/profileicons/' . ($icon->id % 256) . '/'.$icon->id;
