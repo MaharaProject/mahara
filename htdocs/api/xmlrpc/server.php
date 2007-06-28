@@ -37,6 +37,7 @@
 // 6009     Unrecognized XML document form
 // 6010     The function does not exist
 // 6011     The function does not exist
+// 6012     Networking is disabled
 
 define('INTERNAL', 1);
 define('PUBLIC', 1);
@@ -50,12 +51,19 @@ ob_start();
     $errors = trim(ob_get_contents());
 ob_end_clean();
 
+// Do we respond with verbose error messages?
+$networkingdebug = get_config('enablenetworkingdebug');
+
 // If networking is off, return a '403 Forbidden' response
 $networkenabled = get_config('enablenetworking');
 if (empty($networkenabled)) {
     $protocol = strtoupper($_SERVER['SERVER_PROTOCOL']);
     if ($protocol != 'HTTP/1.1') {
         $protocol = 'HTTP/1.0';
+    }
+
+    if ($networkingdebug) {
+        throw new XmlrpcServerException('Networking is disabled.', 6012);
     }
     header($protocol.' 403 Forbidden');
     exit;
@@ -86,13 +94,48 @@ try {
 
 // Cascading switch. Kinda.
 if($xml->getName() == 'encryptedMessage') {
+
+    // The IP address for the hostname supplied by the client.
+    // This hostname can't be trusted.
+    $ipaddress = gethostbyname(get_hostname_from_uri((string)$xml->wwwroot));
+
+    // Check for masquerading
+    if ($ipaddress != $_SERVER['REMOTE_ADDR']) {
+        if ($networkingdebug) {
+            throw new XmlrpcServerException('Your hostname ('.
+            get_hostname_from_uri((string)$xml->wwwroot) .
+            ') resolves to the IP address '.$ipaddress .
+            ' but your IP address is actually '.$_SERVER['REMOTE_ADDR'] , 6012);
+        }
+        header($protocol.' 403 Forbidden');
+        exit;
+    }
+
     $payload_encrypted = true;
     $REMOTEWWWROOT     = (string)$xml->wwwroot;
     $payload           = xmlenc_envelope_strip($xml);
 }
 
 if($xml->getName() == 'signedMessage') {
+
+    // The IP address for the hostname supplied by the client.
+    // This hostname can't be trusted.
+    $ipaddress = gethostbyname(get_hostname_from_uri((string)$xml->wwwroot));
+
+    // Check for masquerading
+    if ($ipaddress != $_SERVER['REMOTE_ADDR']) {
+        if ($networkingdebug) {
+            throw new XmlrpcServerException('Your hostname ('.
+            get_hostname_from_uri((string)$xml->wwwroot) .
+            ') resolves to the IP address '.$ipaddress .
+            ' but your IP address is actually '.$_SERVER['REMOTE_ADDR'] , 6012);
+        }
+        header($protocol.' 403 Forbidden');
+        exit;
+    }
+
     $payload_signed = true;
+    $REMOTEWWWROOT  = (string)$xml->wwwroot;
     $payload        = xmldsig_envelope_strip($xml);
 }
 
@@ -102,7 +145,7 @@ if($xml->getName() == 'methodCall') {
         throw new XmlrpcServerException('Payload is not an XML-RPC document', 6008);
     }
 
-    $Dispatcher = new Dispatcher($payload);
+    $Dispatcher = new Dispatcher($payload, $payload_signed, $payload_encrypted);
 
     if ($payload_signed) {
         $response = xmldsig_envelope($Dispatcher->response);

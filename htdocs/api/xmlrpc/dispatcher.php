@@ -51,14 +51,23 @@ class Dispatcher {
             )
     );
 
-    function __construct($payload) {
+    function __construct($payload, $payload_signed, $payload_encrypted) {
+
+        if ($payload_signed && $payload_encrypted) {
+            // The remote server's credentials checked out.
+	        // You might want to enable some methods for unsigned/unencrypted
+	        // transport
+        } else {
+	        // For now, we throw an exception
+            throw new XmlrpcServerException('The signature on your message was not valid', 6005);
+        }
+
         $this->payload = $payload;
 
         // xmlrpc_decode_request is defined such that the '$method' string is
         // passed in by reference.
         $this->params  = xmlrpc_decode_request($this->payload, $this->method, 'UTF-8');
-        $f = fopen('/tmp/web/FUR'.$this->method, 'w');
-        fwrite($f, "FUR\n");
+
         // The method name is not allowed to have a dot, except for a single dot
         // which preceeds the php extension. It can have slashes but it cannot
         // begin with a slash. We specifically don't want .. to be possible.
