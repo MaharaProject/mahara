@@ -58,7 +58,8 @@ class AuthXmlrpc extends Auth {
         $this->config['xmlrpcserverurl']       = '';
         $this->config['changepasswordurl']     = '';
         $this->config['updateuserinfoonlogin'] = 1;
-        $this->config['autocreateusers']       = 0;
+        $this->config['weautocreateusers']     = 0;
+        $this->config['theyautocreateusers']   = 0;
         $this->config['wessoout']              = 1;
         $this->config['theyssoin']             = 0;
         $this->config['parent']                = null;
@@ -134,7 +135,7 @@ class AuthXmlrpc extends Auth {
                 $update = true;
             }
         } catch (Exception $e) {
-            if (!empty($this->config['autocreateusers'])) {
+            if (!empty($this->config['weautocreateusers'])) {
                 $user = new User;
                 $create = true;
             } else {
@@ -350,7 +351,8 @@ class PluginAuthXmlrpc extends PluginAuth {
         'appname'               => '',
         'portno'                => 80,
         'updateuserinfoonlogin' => 0, 
-        'autocreateusers'       => 0,
+        'weautocreateusers'     => 0,
+        'theyautocreateusers'   => 0,
         'wessoout'              => 0,
         'theyssoin'             => 0,
         'parent'                => null
@@ -547,13 +549,20 @@ class PluginAuthXmlrpc extends PluginAuth {
             'help'   => true
         );
 
-        $elements['autocreateusers'] = array(
+        $elements['weautocreateusers'] = array(
             'type'         => 'checkbox',
-            'title'        => get_string('autocreateusers', 'auth'),
-            'defaultvalue' => self::$default_config['autocreateusers'],
+            'title'        => get_string('weautocreateusers', 'auth'),
+            'defaultvalue' => self::$default_config['weautocreateusers'],
             'help'   => true
         );
 
+        $elements['theyautocreateusers'] = array(
+            'type'         => 'checkbox',
+            'title'        => get_string('theyautocreateusers', 'auth'),
+            'defaultvalue' => self::$default_config['theyautocreateusers'],
+            'help'   => true
+        );
+        
         return array(
             'elements' => $elements,
             'renderer' => 'table'
@@ -635,7 +644,8 @@ class PluginAuthXmlrpc extends PluginAuth {
 
         self::$default_config = array(  'wwwroot'               => $values['wwwroot'],
                                         'updateuserinfoonlogin' => $values['updateuserinfoonlogin'],
-                                        'autocreateusers'       => $values['autocreateusers'],
+                                        'weautocreateusers'     => $values['weautocreateusers'],
+                                        'theyautocreateusers'   => $values['theyautocreateusers'],
                                         'parent'                => $values['parent'],
                                         'wessoout'              => $values['wessoout'],
                                         'theyssoin'             => $values['theyssoin']

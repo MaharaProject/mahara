@@ -284,8 +284,10 @@ function get_service_providers($instance) {
             '.$dbprefix.'host h,
             '.$dbprefix.'application a
         WHERE
-            aic.value = ?  AND
-            aic.field = \'parent\' AND
+          ((aic.value = 1 AND
+			aic.field = \'theyautocreateusers\' ) OR
+           (aic.value = ?  AND
+            aic.field = \'parent\')) AND
 
             aic.instance = aic2.instance AND
             aic2.field = \'wwwroot\' AND
@@ -447,6 +449,9 @@ function get_peer($wwwroot) {
     return $peers[$wwwroot];
 }
 
+/**
+ * Check that the signature has been signed by the remote host.
+ */
 function xmldsig_envelope_strip(&$xml) {
 
     $signature      = base64_decode($xml->Signature->SignatureValue);
@@ -668,7 +673,7 @@ class OpenSslRepo {
     }
 
     /**
-     * Singelton function keeps us from generating multiple instances of this
+     * Singleton function keeps us from generating multiple instances of this
      * class
      *
      * @return object   The class instance
