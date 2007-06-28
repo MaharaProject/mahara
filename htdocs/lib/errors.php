@@ -485,8 +485,8 @@ class MaharaException extends Exception {
             $smarty->display('error.tpl');
         }
         else {
-            $outputtitle   = hsc($outputtitle);
-            $outputmessage = nl2br(hsc($outputmessage));
+            $outputtitle   = htmlspecialchars($outputtitle, ENT_COMPAT, 'UTF-8');
+            $outputmessage = nl2br(htmlspecialchars($outputmessage, ENT_COMPAT, 'UTF-8'));
             echo <<<EOF
 <html>
 <head>
