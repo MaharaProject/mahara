@@ -280,9 +280,9 @@ function xmldb_core_upgrade($oldversion=0) {
         create_table($table);
 
         $table = new XMLDBTable('auth_installed');
-        $field = new XMLDBField('name');
-        $field->setAttributes(XMLDB_TYPE_CHAR, 100, null, true, null, null, null);
-        change_field_precision($table, $field);
+        //$field = new XMLDBField('name');
+        //$field->setAttributes(XMLDB_TYPE_CHAR, 100, null, true, null, null, null);
+        //change_field_precision($table, $field);
         
         $field = new XMLDBField('requires_config');
         $field->setAttributes(XMLDB_TYPE_INTEGER, 1, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, 0);
@@ -362,9 +362,10 @@ function xmldb_core_upgrade($oldversion=0) {
         $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('userid','instanceid'));
         create_table($table);
 
-        $key   = new XMLDBKey("userfk");
-        $key->setAttributes(XMLDB_KEY_FOREIGN, array('userid','username'), 'usr', array('id','username'));
-        add_key($table, $key);
+        //$table = new XMLDBTable('sso_session');
+        //$key   = new XMLDBKey("userfk");
+        //$key->setAttributes(XMLDB_KEY_FOREIGN, array('userid','username'), 'usr', array('id','username'));
+        //add_key($table, $key);
         
         $table = new XMLDBTable('usr');
         $field = new XMLDBField('authinstance');
@@ -389,6 +390,13 @@ function xmldb_core_upgrade($oldversion=0) {
         $key   = new XMLDBKey("lastauthinstancefk");
         $key->setAttributes(XMLDB_KEY_FOREIGN, array('lastauthinstance'), 'auth_instance', array('id'));
         add_key($table, $key);
+
+        $record = new stdClass();
+        $record->instancename='internal';
+        $record->priority='1';
+        $record->institution='mahara';
+        $record->authname='internal';
+//        insert_record('auth_instance',$record);
         
     }
     

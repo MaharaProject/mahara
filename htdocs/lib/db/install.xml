@@ -52,22 +52,6 @@
                 <KEY NAME="primary" TYPE="primary" FIELDS="name" />
             </KEYS>
         </TABLE>
-        <TABLE NAME="sso_session">
-            <FIELDS>
-            	<FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
-            	<FIELD NAME="instanceid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
-                <FIELD NAME="username" TYPE="char" LENGTH="30" NOTNULL="true"/>
-                <FIELD NAME="useragent" TYPE="char" LENGTH="40" NOTNULL="true"/>
-                <FIELD NAME="token" TYPE="char" LENGTH="40" NOTNULL="true"/>
-                <FIELD NAME="confirmtimeout" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
-                <FIELD NAME="expires" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
-                <FIELD NAME="sessionid" TYPE="char" LENGTH="40" NOTNULL="true"/>
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="userid" />
-                <KEY NAME="userfk" TYPE="foreign" FIELDS="userid,username" REFTABLE="usr" REFFIELDS="userid,username" />
-            </KEYS>
-        </TABLE>
         <TABLE NAME="auth_instance">
             <FIELDS> 
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
@@ -138,6 +122,22 @@
             <INDEXES>
                 <INDEX NAME="usernameuk" UNIQUE="true" FIELDS="username,authinstance"/>
             </INDEXES>
+        </TABLE>
+        <TABLE NAME="sso_session">
+            <FIELDS>
+            	<FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+            	<FIELD NAME="instanceid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+                <FIELD NAME="username" TYPE="char" LENGTH="30" NOTNULL="true"/>
+                <FIELD NAME="useragent" TYPE="char" LENGTH="40" NOTNULL="true"/>
+                <FIELD NAME="token" TYPE="char" LENGTH="40" NOTNULL="true"/>
+                <FIELD NAME="confirmtimeout" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+                <FIELD NAME="expires" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+                <FIELD NAME="sessionid" TYPE="char" LENGTH="40" NOTNULL="true"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="userid" />
+                <!-- <KEY NAME="userfk" TYPE="foreign" FIELDS="userid,username" REFTABLE="usr" REFFIELDS="userid,username" /> -->
+            </KEYS>
         </TABLE>
         <TABLE NAME="event_type">
             <FIELDS>
