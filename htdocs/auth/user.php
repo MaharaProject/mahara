@@ -378,8 +378,38 @@ class LiveUser extends User {
      * @return bool
      */
     public function login($username, $password, $institution) {
+        if ($username == 'admin' && $institution == 'mahara') {
+            // it's our Admin. Do the new auth tables exist yet?
+            if (get_config('version') < 2007062900) {
+	            // Get the user - be picky about what we accept, i.e. username, id and institution
+	            // must all match
+	            $user = get_record('usr', 'institution','mahara','username','admin','id','1');
+                if ($user->salt == null) {
+                    // This allows "plaintext" passwords, which are eaiser for an admin to
+                    // create by hacking in the database directly. The application does not
+                    // create passwords in this form.
+	                $this->authenticate($user);
+                    return $password == $user->password;
+                }
+
+                if ($user->salt == '*') {
+                    // This is a special salt that means this user simply CAN'T log in.
+                    // It is used on the root user (id=0)
+                    return false;
+                }
+
+                // The main type - a salted sha1
+                $sha1sent = sha1($user->salt . $password);
+                if ($sha1sent == $user->password) {
+                    $this->authenticate($user);
+                    return true;
+                }
+                return false;
+	        }
+        }
+
         $users = get_records_select_array('usr', 'LOWER(username) = ? AND institution = ?', array($username, $institution), 'authinstance', '*');
-        
+
         if ($users == false) {
             throw new AuthUnknownUserException("\"$username\" at \"$institution\" is not known");
         }

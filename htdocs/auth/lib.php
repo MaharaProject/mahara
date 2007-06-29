@@ -585,6 +585,10 @@ function auth_check_password_change() {
         return;
     }
 
+    if (get_config('version') < 2007062900) {
+        return true;
+    }
+
     $authobj = AuthFactory::create($USER->authinstance);
 
     if ($authobj->changepasswordurl) {
