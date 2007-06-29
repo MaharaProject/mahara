@@ -65,6 +65,7 @@
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="userid" />
+                <KEY NAME="userfk" TYPE="foreign" FIELDS="userid,username" REFTABLE="usr" REFFIELDS="userid,username" />
             </KEYS>
         </TABLE>
         <TABLE NAME="auth_instance">
@@ -132,7 +133,7 @@
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
                 <KEY NAME="institution" TYPE="foreign" FIELDS="institution" REFTABLE="institution" REFFIELDS="name"/>
-                <KEY NAME="lastauthinstance" TYPE="foreign" FIELDS="lastauthinstance" REFTABLE="auth_instance" REFFIELDS="id" />
+                <KEY NAME="lastauthinstancefk" TYPE="foreign" FIELDS="lastauthinstance" REFTABLE="auth_instance" REFFIELDS="id" />
             </KEYS>
             <INDEXES>
                 <INDEX NAME="usernameuk" UNIQUE="true" FIELDS="username,authinstance"/>
@@ -161,8 +162,8 @@
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="wwwroot" />
-                <KEY NAME="institution" TYPE="foreign" FIELDS="institution" REFTABLE="institution" REFFIELDS="name"/>
-                <KEY NAME="appname" TYPE="foreign" FIELDS="appname" REFTABLE="application" REFFIELDS="name"/>
+                <KEY NAME="institutionfk" TYPE="foreign" FIELDS="institution" REFTABLE="institution" REFFIELDS="name"/>
+                <KEY NAME="appnamefk" TYPE="foreign" FIELDS="appname" REFTABLE="application" REFFIELDS="name"/>
             </KEYS>
         </TABLE>
         <TABLE NAME="cron">

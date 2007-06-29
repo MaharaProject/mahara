@@ -262,38 +262,6 @@ function xmldb_core_upgrade($oldversion=0) {
         execute_sql("ALTER TABLE {$prefix}view_access ALTER COLUMN accesstype SET DEFAULT 'public'");
     }
 
-    if ($oldversion < 2007051500) {
-        $table = new XMLDBTable('auth_installed');
-        $field = new XMLDBField('requires_config');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, true, true, null, null, null, 0);
-        add_field($table, $field);
-    }
-
-    if ($oldversion < 2007051500) {
-        $table = new XMLDBTable('auth_installed');
-        $field = new XMLDBField('requires_parent');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, true, true, null, null, null, 0);
-        add_field($table, $field);
-    }
-
-    if ($oldversion < 2007060203) {
-        $table = new XMLDBTable('usr');
-        $field = new XMLDBField('lastauthinstance');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, true, null, null, null, null, null);
-        add_field($table, $field);
-    }
-
-    if ($oldversion < 2007061200) {
-        $table = new XMLDBTable('usr');
-        $index = new XMLDBIndex("usernameuk");
-        $index->setAttributes(XMLDB_INDEX_UNIQUE, array('username', 'institution'));
-        drop_index($table, $index);
-
-        $index = new XMLDBIndex("usernameuk");
-        $index->setAttributes(XMLDB_INDEX_UNIQUE, array('username', 'authinstance'));
-        add_index($table, $index);
-    }
-
     // everything up to here we pre mysql support.
 
     if ($oldversion < 2007062000) {
@@ -301,6 +269,129 @@ function xmldb_core_upgrade($oldversion=0) {
         delete_records('config', 'field', 'language');
     }
 
+    if ($oldversion < 2007062900) {
+        // application table
+        $table = new XMLDBTable('application');
+        $table->addFieldInfo('name', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL);
+        $table->addFieldInfo('displayname', XMLDB_TYPE_CHAR, '100', null, XMLDB_NOTNULL);
+        $table->addFieldInfo('xmlrpcserverurl', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL);
+        $table->addFieldInfo('ssolandurl', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('name'));
+        create_table($table);
+
+        $table = new XMLDBTable('auth_installed');
+        $field = new XMLDBField('name');
+        $field->setAttributes(XMLDB_TYPE_CHAR, 100, null, true, null, null, null);
+        change_field_precision($table, $field);
+        
+        $field = new XMLDBField('requires_config');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, 0);
+        add_field($table, $field);
+
+        $field = new XMLDBField('requires_parent');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, 0);
+        add_field($table, $field);
+
+        $table = new XMLDBTable('auth_instance');
+        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+        $table->addFieldInfo('instancename', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL);
+        $table->addFieldInfo('priority', XMLDB_TYPE_INTEGER, '2', XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('institution', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL);
+        $table->addFieldInfo('authname', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+        create_table($table);
+
+        $key   = new XMLDBKey("authnamefk");
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('authname'), 'auth_installed', array('name'));
+        add_key($table, $key);
+        $key   = new XMLDBKey("institutionfk");
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('institution'), 'institution', array('name'));
+        add_key($table, $key);
+
+        $table = new XMLDBTable('auth_instance_config');
+        $table->addFieldInfo('instance', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('field', XMLDB_TYPE_CHAR, '100', null, XMLDB_NOTNULL);
+        $table->addFieldInfo('value', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('instance','field'));
+        create_table($table);
+
+        $key   = new XMLDBKey("instancefk");
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('instance'), 'auth_instance', array('id'));
+        add_key($table, $key);
+
+        $table = new XMLDBTable('host');
+        $table->addFieldInfo('wwwroot', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL);
+        $table->addFieldInfo('name', XMLDB_TYPE_CHAR, '80', null, XMLDB_NOTNULL);
+        $table->addFieldInfo('institution', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL);
+        $table->addFieldInfo('ipaddress', XMLDB_TYPE_CHAR, '39', null, XMLDB_NOTNULL);
+        $table->addFieldInfo('portno', XMLDB_TYPE_INTEGER, '3', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, 80);
+        $table->addFieldInfo('appname', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL);
+        $table->addFieldInfo('publickey', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('publickeyexpires', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('deleted', XMLDB_TYPE_INTEGER, '1', XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('lastconnecttime', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('wwwroot'));
+        create_table($table);
+
+        $key   = new XMLDBKey("appnamefk");
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('appname'), 'application', array('name'));
+        add_key($table, $key);
+
+        $key   = new XMLDBKey("institutionfk");
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('institution'), 'institution', array('name'));
+        add_key($table, $key);
+
+        $table = new XMLDBTable('institution');
+        $key   = new XMLDBKey("pluginfk");
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('authplugin'), 'auth_installed', array('name'));
+        drop_key($table, $key);
+
+        $field = new XMLDBField('authplugin');
+        $field->setAttributes(XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL, null, null, null, '');
+        drop_field($table, $field);
+
+        $table = new XMLDBTable('sso_session');
+        $table->addFieldInfo('userid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('instanceid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('username', XMLDB_TYPE_CHAR, '30', null, XMLDB_NOTNULL);
+        $table->addFieldInfo('useragent', XMLDB_TYPE_CHAR, '40', null, XMLDB_NOTNULL);
+        $table->addFieldInfo('token', XMLDB_TYPE_CHAR, '40', null, XMLDB_NOTNULL);
+        $table->addFieldInfo('confirmtimeout', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('expires', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('sessionid', XMLDB_TYPE_CHAR, '40', null, XMLDB_NOTNULL);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('userid','instanceid'));
+        create_table($table);
+
+        $key   = new XMLDBKey("userfk");
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('userid','username'), 'usr', array('id','username'));
+        add_key($table, $key);
+        
+        $table = new XMLDBTable('usr');
+        $field = new XMLDBField('authinstance');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, 1);
+        add_field($table, $field);
+        $index = new XMLDBIndex('usernameuk');
+        $index->setAttributes(XMLDB_INDEX_UNIQUE, array('username', 'institution'));
+        drop_index($table, $index);
+
+        $index = new XMLDBIndex("usernameuk");
+        $index->setAttributes(XMLDB_INDEX_UNIQUE, array('username', 'authinstance'));
+        add_index($table, $index);
+
+        $field = new XMLDBField('sessionid');
+        $field->setAttributes(XMLDB_TYPE_CHAR, 32);
+        add_field($table, $field);
+
+        $field = new XMLDBField('lastauthinstance');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED);
+        add_field($table, $field);
+
+        $key   = new XMLDBKey("lastauthinstancefk");
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('lastauthinstance'), 'auth_instance', array('id'));
+        add_key($table, $key);
+        
+    }
+    
     return $status;
 
 }
