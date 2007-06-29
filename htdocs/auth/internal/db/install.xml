@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="lib/db" VERSION="20061127" COMMENT="XMLDB file for Mahara's blog-related tables"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+    <STATEMENTS>
+        <STATEMENT NAME="insert auth_instance" TYPE="insert" TABLE="auth_instance">
+            <SENTENCES>
+                <SENTENCE TEXT="(instancename, priority, institution, authname) VALUES ('internal', 1, 'mahara','internal')" />
+            </SENTENCES>
+	</STATEMENT>
+</XMLDB>
