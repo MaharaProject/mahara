@@ -50,7 +50,7 @@ class Peer {
 
     public function __construct($result = null) {
 
-        if(null == $result) {
+        if (null == $result) {
             require_once(get_config('libroot') . 'application.php');
             $this->application = new Application();
             return;
@@ -209,7 +209,7 @@ class Peer {
                 $this->institution = $institution;
             }
 
-            if(empty($pubkey)) {
+            if (empty($pubkey)) {
                 try {
                     $somekey = get_public_key($this->wwwroot, $this->appname);
                     $this->publickey       = new PublicKey($somekey, $this->wwwroot);

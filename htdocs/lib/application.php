@@ -41,7 +41,7 @@ class Application {
                              );
 
     public function __construct($result = null) {
-        if(null == $result) {
+        if (null == $result) {
             return;
         }
         $this->populate($result);

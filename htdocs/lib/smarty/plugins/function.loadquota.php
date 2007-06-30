@@ -40,7 +40,7 @@ function smarty_function_loadquota($params, &$smarty) {
     }
 
     $smarty->assign('QUOTA_MESSAGE', $quota_message);
-    if($quota == 0) {
+    if ($quota == 0) {
         $smarty->assign('QUOTA_PERCENTAGE', 100);
     } else {
         $smarty->assign('QUOTA_PERCENTAGE', round($quotaused / $quota * 100));

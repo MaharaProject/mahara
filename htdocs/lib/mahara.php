@@ -523,15 +523,15 @@ function get_config_plugin($plugintype, $pluginname, $key) {
 
     // Suppress NOTICE with @ in case $key is not yet cached
     @$value = $CFG->plugin->{$plugintype}->{$pluginname}->{$key};
-    if(isset($value)) {
+    if (isset($value)) {
         return $value;
     }
 
     $records = get_records_array($plugintype . '_config', 'plugin', $pluginname, 'field', 'field, value');
-    if(!empty($records)) {
+    if (!empty($records)) {
         foreach($records as $record) {
             $CFG->plugin->{$plugintype}->{$pluginname}->{$record->field} = $record->value;
-            if($record->field == $key) {
+            if ($record->field == $key) {
                 $value = $record->value;
             }
         }
@@ -582,15 +582,15 @@ function get_config_plugin_instance($plugintype, $pluginid, $key) {
 
     // Suppress NOTICE with @ in case $key is not yet cached
     @$value = $CFG->plugin->{$plugintype}->{$instance}->{$key};
-    if(isset($value)) {
+    if (isset($value)) {
         return $value;
     }
 
     $records = get_records_array($plugintype . '_instance_config', 'instance', $pluginid, 'field', 'field, value');
-    if(!empty($records)) {
+    if (!empty($records)) {
         foreach($records as $record) {
             $CFG->plugin->{$plugintype}->{$instance}->{$record->field} = $record->value;
-            if($record->field == $key) {
+            if ($record->field == $key) {
                 $value = $record->value;
             }
         }
