@@ -392,12 +392,19 @@ function xmldb_core_upgrade($oldversion=0) {
         add_key($table, $key);
 
         $record = new stdClass();
-        $record->instancename='internal';
-        $record->priority='1';
-        $record->institution='mahara';
-        $record->authname='internal';
-//        insert_record('auth_instance',$record);
-        
+
+        $record->name            = 'mahara';
+        $record->displayname     = 'Mahara';
+        $record->xmlrpcserverurl = '/api/xmlrpc/server.php';
+        $record->ssolandurl      = '/auth/xmlrpc/land.php';
+        insert_record('application',$record);
+
+        $record->name            = 'moodle';
+        $record->displayname     = 'Moodle';
+        $record->xmlrpcserverurl = '/mnet/xmlrpc/server.php';
+        $record->ssolandurl      = '/auth/mnet/land.php';
+        insert_record('application',$record);
+
     }
     
     return $status;
