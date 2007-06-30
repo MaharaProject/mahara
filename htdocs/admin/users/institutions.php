@@ -252,16 +252,16 @@ function institution_submit(Pieform $form, $values) {
 
     $allinstances = array_merge($values['authplugin']['instancearray'], $values['authplugin']['deletearray']);
 
-    if(array_diff($allinstances, $instancearray)) {
+    if (array_diff($allinstances, $instancearray)) {
         throw new Exception('Attempt to delete or update another institution\'s auth instance');
     }
 
-    if(array_diff($instancearray, $allinstances)) {
+    if (array_diff($instancearray, $allinstances)) {
         throw new Exception('One of your instances is unaccounted for in this transaction');
     }
 
     foreach($values['authplugin']['instancearray'] as $priority => $instanceid) {
-        if(in_array($instanceid, $values['authplugin']['deletearray'])) {
+        if (in_array($instanceid, $values['authplugin']['deletearray'])) {
             // Should never happen:
             throw new Exception('Attempt to update AND delete an auth instance');
         }

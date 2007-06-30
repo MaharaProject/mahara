@@ -88,7 +88,7 @@ class Dispatcher {
             //           it might provide an opportunity for outsiders to scan the
             //           server for random files. So just a single message/code for
             //           all failures here kthxbye.
-            if(strpos($this->method, '/') !== false) {
+            if (strpos($this->method, '/') !== false) {
                 $this->callstack  = explode('/', $this->method);
             } else {
                 throw new XmlrpcServerException('The function does not exist', 6011);

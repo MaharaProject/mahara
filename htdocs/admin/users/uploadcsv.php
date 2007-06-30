@@ -80,7 +80,7 @@ $ALLOWEDKEYS = array(
 function auth_get_auth_instances() {
     static $cache = array();
 
-    if(count($cache) > 0) {
+    if (count($cache) > 0) {
         return $cache;
     }
 
@@ -103,7 +103,7 @@ function auth_get_auth_instances() {
 
     $cache = get_records_sql_array($sql, array());
 
-    if(empty($cache)) {
+    if (empty($cache)) {
         return array();
     }
 

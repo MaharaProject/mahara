@@ -90,7 +90,7 @@ function networkingform_submit(Pieform $form, $values) {
         if (!set_config('enablenetworking', $values['enablenetworking'])) {
             networkingform_fail($form);
         } else {
-            if(empty($values['enablenetworking'])) {
+            if (empty($values['enablenetworking'])) {
                 $reply .= get_string('networkingdisabled','admin');
             } else {
                 $reply .= get_string('networkingenabled','admin');
@@ -102,7 +102,7 @@ function networkingform_submit(Pieform $form, $values) {
         if (!set_config('promiscuousmode', $values['promiscuousmode'])) {
             networkingform_fail($form);
         } else {
-            if(empty($values['promiscuousmode'])) {
+            if (empty($values['promiscuousmode'])) {
                 $reply .= get_string('promiscuousmodedisabled','admin');
             } else {
                 $reply .= get_string('promiscuousmodeenabled','admin');

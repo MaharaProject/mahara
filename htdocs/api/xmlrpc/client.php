@@ -41,7 +41,7 @@ class Client {
     }
 
     function set_method($method) {
-        if(is_string($method) && preg_match("@^[A-Za-z0-9]+/[A-Za-z0-9/_-]+(\.php/)?[A-Za-z0-9_-]+$@", $method)) {
+        if (is_string($method) && preg_match("@^[A-Za-z0-9]+/[A-Za-z0-9/_-]+(\.php/)?[A-Za-z0-9_-]+$@", $method)) {
             $this->method = $method;
         }
         return $this;
@@ -74,7 +74,7 @@ class Client {
         if ('2' != $response_code_prefix) {
             if ('4' == $response_code_prefix) {
                 throw new XmlrpcClientException('Client error code: ', $response_code);
-            } elseif('5' == $response_code_prefix) {
+            } elseif ('5' == $response_code_prefix) {
                 throw new XmlrpcClientException('An error occurred at the remote server. Code: ', $response_code);
             }
         }
@@ -93,19 +93,19 @@ class Client {
             throw new Exception('Payload is not a valid XML document', 6001);
         }
 
-        if($xml->getName() == 'encryptedMessage') {
+        if ($xml->getName() == 'encryptedMessage') {
             $payload_encrypted = true;
             $wwwroot           = (string)$xml->wwwroot;
             $payload           = xmlenc_envelope_strip($xml);
         }
 
-        if($xml->getName() == 'signedMessage') {
+        if ($xml->getName() == 'signedMessage') {
             $payload_signed   = true;
             $remote_timestamp = $xml->timestamp;
             $payload          = xmldsig_envelope_strip($xml);
         }
 
-        if($xml->getName() == 'methodResponse') {
+        if ($xml->getName() == 'methodResponse') {
             $this->response = xmlrpc_decode($payload);
 
             // Margin of error is the time it took the request to complete.
@@ -115,7 +115,7 @@ class Client {
             // executing the time() function. Marginally better than nothing.
             $hysteresis       = ($margin_of_error) / 2;
 
-            if(!empty($remote_timestamp)) {
+            if (!empty($remote_timestamp)) {
                 $remote_timestamp = $remote_timestamp - $hysteresis;
                 $time_offset      = $remote_timestamp - $timestamp_send;
                 // We've set the maximum time drift between servers to 15 seconds

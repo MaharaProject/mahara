@@ -126,7 +126,7 @@ function auth_config_submit(Pieform $form, $values) {
     }
 
     if (false == $form->has_errors()) {
-        if(array_key_exists('create', $values) && $values['create']) {
+        if (array_key_exists('create', $values) && $values['create']) {
             execute_javascript_and_close('window.opener.addAuthority('.$values['instance'].', "'.addslashes($values['instancename']).'", "'.$values['authname'].'");');
         } else {
             execute_javascript_and_close();

@@ -223,7 +223,7 @@ function user_authorise($token, $useragent) {
     $profile_data = get_records_select_assoc('artefact', "owner=? AND artefacttype IN (" . join(",",array_map(create_function('$a','return db_quote($a);'),array_keys($element_list))) . ")", array($USER->get('id')), '','artefacttype, title');
 
     $email = get_field('artefact_internal_profile_email', 'email', 'owner', $sso_session->userid, 'principal', 1);
-    if(false == $email) {
+    if (false == $email) {
         throw new XmlrpcServerException("No email adress for user");
     }
 
@@ -240,7 +240,7 @@ function user_authorise($token, $useragent) {
 
     if (is_numeric($user->profileicon)) {
         $filename = get_config('dataroot') . 'artefact/internal/profileicons/' . ($user->profileicon % 256) . '/'.$user->profileicon;
-        if(file_exists($filename) && is_readable($filename)) {
+        if (file_exists($filename) && is_readable($filename)) {
             $userdata['imagehash'] = sha1_file($filename);
         }
     }
@@ -326,7 +326,7 @@ function get_public_key($uri, $application=null) {
 
     $openssl = OpenSslRepo::singleton();
 
-    if(empty($application)) {
+    if (empty($application)) {
         $application = 'moodle';
     }
 
@@ -357,7 +357,7 @@ function get_public_key($uri, $application=null) {
     if ('2' != $response_code_prefix) {
         if ('4' == $response_code_prefix) {
             throw new XmlrpcClientException('Client error code: ', $response_code);
-        } elseif('5' == $response_code_prefix) {
+        } elseif ('5' == $response_code_prefix) {
             throw new XmlrpcClientException('An error occurred at the remote server. Code: ', $response_code);
         }
     }
@@ -436,12 +436,12 @@ function get_peer($wwwroot) {
 
     $wwwroot = (string)$wwwroot;
     static $peers = array();
-    if(isset($peers[$wwwroot])) return $peers[$wwwroot];
+    if (isset($peers[$wwwroot])) return $peers[$wwwroot];
 
     require_once(get_config('libroot') . 'peer.php');
     $peer = new Peer();
 
-    if(!$peer->findByWwwroot($wwwroot)) {
+    if (!$peer->findByWwwroot($wwwroot)) {
         // Bootstrap unknown hosts?
         throw new MaharaException('We don\'t have a record for your webserver in our database', 6003);
     }
@@ -684,7 +684,7 @@ class OpenSslRepo {
         static $instance;
 
         //if we don't have the single instance, create one
-        if(!isset($instance)) {
+        if (!isset($instance)) {
             $instance = new OpenSslRepo();
         }
         return($instance);
@@ -698,7 +698,7 @@ class OpenSslRepo {
      * 
      */
     private function __construct() {
-        if(empty($this->keypair)) {
+        if (empty($this->keypair)) {
             $this->get_keypair();
             $this->keypair['privatekey'] = openssl_pkey_get_private($this->keypair['keypair_PEM']);
             $this->keypair['publickey']  = openssl_pkey_get_public($this->keypair['certificate']);
@@ -715,7 +715,7 @@ class OpenSslRepo {
      */
     private function get_history() {
         $openssl_history = get_field('config', 'value', 'field', 'openssl_history');
-        if(empty($openssl_history)) {
+        if (empty($openssl_history)) {
             $openssl_history = array();
             $record = new stdClass();
             $record->field = 'openssl_history';
@@ -737,11 +737,11 @@ class OpenSslRepo {
      */
     private function save_history($openssl_history) {
         $openssl_generations = get_field('config', 'value', 'field', 'openssl_generations');
-        if(empty($openssl_generations)) {
+        if (empty($openssl_generations)) {
             set_config('openssl_generations', 6);
             $openssl_generations = 6;
         }
-        if(count($openssl_history) > $openssl_generations) {
+        if (count($openssl_history) > $openssl_generations) {
             $openssl_history = array_slice($openssl_history, 0, $openssl_generations);
         }
         return set_config('openssl_history', serialize($openssl_history));
@@ -757,8 +757,8 @@ class OpenSslRepo {
      * @access public
      */
     public function __get($name) {
-        if('certificate' === $name) return $this->keypair['certificate'];
-        if('expires' === $name)     return $this->keypair['expires'];
+        if ('certificate' === $name) return $this->keypair['certificate'];
+        if ('expires' === $name)     return $this->keypair['expires'];
         return null;
     }
 
@@ -774,9 +774,9 @@ class OpenSslRepo {
         $this->keypair = array();
         $records       = null;
         
-        if(empty($regenerate)) {
+        if (empty($regenerate)) {
             $records = get_records_select_menu('config', "field IN ('openssl_keypair', 'openssl_keypair_expires')", 'field', 'field, value');
-            if(!empty($records)) {
+            if (!empty($records)) {
                 list($this->keypair['certificate'], $this->keypair['keypair_PEM']) = explode('@@@@@@@@', $records['openssl_keypair']);
                 $this->keypair['expires'] = $records['openssl_keypair_expires'];
                 if ($this->keypair['expires'] <= time()) {
@@ -804,12 +804,12 @@ class OpenSslRepo {
 
         // Getting the expire timestamp is convoluted, but required:
         $credentials = openssl_x509_parse($this->keypair['certificate']);
-        if(is_array($credentials) && isset($credentials['validTo_time_t'])) {
+        if (is_array($credentials) && isset($credentials['validTo_time_t'])) {
             $expiresrecord->value = $credentials['validTo_time_t'];
             $this->keypair['expires'] = $credentials['validTo_time_t'];
         }
 
-        if(empty($records)) {
+        if (empty($records)) {
                    $result = insert_record('config', $keyrecord);
             return $result & insert_record('config', $expiresrecord);
         } else {
@@ -841,9 +841,9 @@ class OpenSslRepo {
 
         //TODO: Create additional fields on site setup and read those from 
         //      config. Then remove the next 3 linez
-        if(empty($country))  $country  = 'NZ';
-        if(empty($province)) $province = 'Wellington';
-        if(empty($locality)) $locality = 'Te Aro';
+        if (empty($country))  $country  = 'NZ';
+        if (empty($province)) $province = 'Wellington';
+        if (empty($locality)) $locality = 'Te Aro';
 
         $dn = array(
            "countryName" => $country,
@@ -901,7 +901,7 @@ class PublicKey {
     }
 
     function __get($name) {
-        if('expires' == $name) return $this->credentials['validTo_time_t'];
+        if ('expires' == $name) return $this->credentials['validTo_time_t'];
         return $this->{$name};
     }
 }
