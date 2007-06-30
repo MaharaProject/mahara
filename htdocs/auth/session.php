@@ -98,7 +98,7 @@ class Session {
         static $instance;
 
         //if we don't have the single instance, create one
-        if(!isset($instance)) {
+        if (!isset($instance)) {
             $instance = new Session();
         }
         return($instance);

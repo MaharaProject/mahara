@@ -42,7 +42,7 @@ class AuthImap extends Auth {
         $this->config['protocol']           = '/imap';
         $this->config['changepasswordurl']  = '';
 
-        if(!empty($id)) {
+        if (!empty($id)) {
             return $this->init($id);
         }
         return true;
@@ -122,18 +122,18 @@ class PluginAuthImap extends PluginAuth {
 
         if ($instance > 0) {
             $current        = get_records_array('auth_instance',        'id',       $instance, 'priority ASC');
-            if($current == false) {
+            if ($current == false) {
                 throw new Exception('Could not find data for auth instance '.$instance);
             }
             $default = $current[0];
             $current_config = get_records_menu('auth_instance_config', 'instance', $instance, '', 'field, value');
 
-            if($current_config == false) {
+            if ($current_config == false) {
                 $current_config = array();
             }
 
             foreach (self::$default_config as $key => $value) {
-                if(array_key_exists($key, $current_config)) {
+                if (array_key_exists($key, $current_config)) {
                     self::$default_config[$key] = $current_config[$key];
                 }
             }

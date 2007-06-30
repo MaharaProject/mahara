@@ -72,7 +72,7 @@ if (empty($networkenabled)) {
 // Content type for output is never html:
 header('Content-type: text/xml; charset=utf-8');
 ini_set('display_errors',0);
-if(!empty($errors)) throw new XmlrpcServerException('Initialization failed. Non-recoverable error.', 6000);
+if (!empty($errors)) throw new XmlrpcServerException('Initialization failed. Non-recoverable error.', 6000);
 
 // PHP 5.2.2: $HTTP_RAW_POST_DATA not populated bug:
 // http://bugs.php.net/bug.php?id=41293
@@ -93,7 +93,7 @@ try {
 }
 
 // Cascading switch. Kinda.
-if($xml->getName() == 'encryptedMessage') {
+if ($xml->getName() == 'encryptedMessage') {
 
     // The IP address for the hostname supplied by the client.
     // This hostname can't be trusted.
@@ -116,7 +116,7 @@ if($xml->getName() == 'encryptedMessage') {
     $payload           = xmlenc_envelope_strip($xml);
 }
 
-if($xml->getName() == 'signedMessage') {
+if ($xml->getName() == 'signedMessage') {
 
     // The IP address for the hostname supplied by the client.
     // This hostname can't be trusted.
@@ -139,9 +139,9 @@ if($xml->getName() == 'signedMessage') {
     $payload        = xmldsig_envelope_strip($xml);
 }
 
-if($xml->getName() == 'methodCall') {
+if ($xml->getName() == 'methodCall') {
     // $payload ?
-    if(empty($xml->methodName)) {
+    if (empty($xml->methodName)) {
         throw new XmlrpcServerException('Payload is not an XML-RPC document', 6008);
     }
 

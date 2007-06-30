@@ -64,7 +64,7 @@ class AuthXmlrpc extends Auth {
         $this->config['theyssoin']             = 0;
         $this->config['parent']                = null;
         $this->file = fopen('/tmp/out.txt', 'w');
-        if(!empty($id)) {
+        if (!empty($id)) {
             return $this->init($id);
         }
         return true;
@@ -104,7 +104,7 @@ class AuthXmlrpc extends Auth {
         $this->must_be_ready();
         $peer = get_peer($remotewwwroot);
 
-        if($peer->deleted != 0 || $this->config['theyssoin'] != 1) {
+        if ($peer->deleted != 0 || $this->config['theyssoin'] != 1) {
             throw new MaharaException('We don\'t accept SSO connections from '.$peer->name );
         }
 
@@ -405,17 +405,17 @@ class PluginAuthXmlrpc extends PluginAuth {
         // Get the current data (if any exists) for this auth instance
         if ($instance > 0) {
             $default = get_record('auth_instance', 'id', $instance);
-            if($default == false) {
+            if ($default == false) {
                 throw new Exception(get_string('nodataforinstance', 'auth').$instance);
             }
             $current_config = get_records_menu('auth_instance_config', 'instance', $instance, '', 'field, value');
 
-            if($current_config == false) {
+            if ($current_config == false) {
                 throw new Exception('No config data for instance: '.$instance);
             }
 
             foreach (self::$default_config as $key => $value) {
-                if(array_key_exists($key, $current_config)) {
+                if (array_key_exists($key, $current_config)) {
                     self::$default_config[$key] = $current_config[$key];
 
                     // We can use the wwwroot to create a Peer object

@@ -36,7 +36,7 @@ class AuthInternal extends Auth {
     public function __construct($id = null) {
         $this->has_config = false;
         $this->type       = 'internal';
-        if(!empty($id)) {
+        if (!empty($id)) {
             return $this->init($id);
         }
         return true;

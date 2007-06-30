@@ -390,7 +390,7 @@ function auth_setup () {
 function auth_get_auth_instances_for_institution($institution=null) {
     static $cache = array();
 
-    if(null == $institution) {
+    if (null == $institution) {
         return array();
     }
 
@@ -422,7 +422,7 @@ function auth_get_auth_instances_for_institution($institution=null) {
 
         $cache[$institution] = get_records_sql_array($sql, array());
 
-        if(empty($cache[$institution])) {
+        if (empty($cache[$institution])) {
             return false;
         }
     }
@@ -500,7 +500,7 @@ function auth_get_auth_instances_for_username($institution, $username) {
 
         $cache[$institution][$username] = get_records_sql_array($sql, array(array('institution' => $institution), array('username' => $username)));
 
-        if(empty($cache[$institution])) {
+        if (empty($cache[$institution])) {
             return false;
         }
     }
@@ -949,7 +949,7 @@ function login_submit(Pieform $form, $values) {
 
                 $USER->authinstance = $authinstance->id;
 
-                if($auth->authenticate_user_account($username, $password, $institution)) {
+                if ($auth->authenticate_user_account($username, $password, $institution)) {
                     $userdata = $auth->get_user_info();
                     if (
                          empty($userdata) ||
