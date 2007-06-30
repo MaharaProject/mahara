@@ -27,20 +27,20 @@
         <link rel="stylesheet" type="text/css" href="{theme_path location='style/dev.css'}">
         <link rel="stylesheet" type="text/css" href="{theme_path location='style/print.css'}" media="print">
         <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
-		<style type="text/css">
-		    {literal}
-		    body { background: white; }
-		    .micro_footer { position: fixed; bottom: 3px; }
-		    {/literal}
-		</style>
+        <style type="text/css">
+            {literal}
+            body { background: white; }
+            .micro_footer { position: fixed; bottom: 3px; }
+            {/literal}
+        </style>
     </head>
     <body>
-	<div id="containerX">
+    <div id="containerX">
         <div id="loading_box" style="display: none;"></div>
         <div id="topwrapperX">
 
             <div id="header">
-                <div class="frX"></div>		
+                <div class="frX"></div>
                 <div id="logo"><a href="{$WWWROOT}"><img src="{theme_path location='images/logo_mahara.gif'}" border="0" alt=""></a></div>
                 <h1 class="hiddenStructure"><a href="{$WWWROOT}">{$heading|default:"Mahara"|escape}</a></h1>
             </div>

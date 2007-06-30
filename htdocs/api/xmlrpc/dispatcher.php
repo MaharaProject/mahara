@@ -55,10 +55,10 @@ class Dispatcher {
 
         if ($payload_signed && $payload_encrypted) {
             // The remote server's credentials checked out.
-	        // You might want to enable some methods for unsigned/unencrypted
-	        // transport
+            // You might want to enable some methods for unsigned/unencrypted
+            // transport
         } else {
-	        // For now, we throw an exception
+            // For now, we throw an exception
             throw new XmlrpcServerException('The signature on your message was not valid', 6005);
         }
 

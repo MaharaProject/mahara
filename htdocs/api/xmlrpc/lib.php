@@ -285,7 +285,7 @@ function get_service_providers($instance) {
             '.$dbprefix.'application a
         WHERE
           ((aic.value = 1 AND
-			aic.field = \'theyautocreateusers\' ) OR
+            aic.field = \'theyautocreateusers\' ) OR
            (aic.value = ?  AND
             aic.field = \'parent\')) AND
 

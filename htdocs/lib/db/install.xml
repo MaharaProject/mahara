@@ -121,8 +121,8 @@
         </TABLE>
         <TABLE NAME="sso_session">
             <FIELDS>
-            	<FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
-            	<FIELD NAME="instanceid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+                <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+                <FIELD NAME="instanceid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
                 <FIELD NAME="username" TYPE="char" LENGTH="30" NOTNULL="true"/>
                 <FIELD NAME="useragent" TYPE="char" LENGTH="40" NOTNULL="true"/>
                 <FIELD NAME="token" TYPE="char" LENGTH="40" NOTNULL="true"/>
@@ -214,7 +214,7 @@
         </TABLE>
         <TABLE NAME="auth_instance_config">
             <FIELDS>
-	            <FIELD NAME="instance" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="instance" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="field" TYPE="char" LENGTH="100" NOTNULL="true" />
                 <FIELD NAME="value" TYPE="text" LENGTH="small" NOTNULL="true" />
             </FIELDS>

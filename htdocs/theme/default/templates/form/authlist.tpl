@@ -51,7 +51,7 @@
                     displayArray[i].childNodes[3].innerHTML += '<a href="" onclick="move_down('+outputArray[i]+'); return false;">[&darr;]</a>'+"\n";
                 }
                 if(i != 0) {
-                	displayArray[i].childNodes[3].innerHTML += '<a href="" onclick="move_up('+outputArray[i]+'); return false;">[&uarr;]</a>'+"\n";
+                    displayArray[i].childNodes[3].innerHTML += '<a href="" onclick="move_up('+outputArray[i]+'); return false;">[&uarr;]</a>'+"\n";
                 }
             }
             displayArray[i].childNodes[3].innerHTML += '<a href="" onclick="removeAuth('+outputArray[i]+'); return false;">[x]</a>'+"\n";
@@ -107,11 +107,11 @@
 
     function addinstance() {
         var selectedPlugin = document.getElementById('dummySelect').value;
-		var institution = '{{$institution}}';
-		if (institution.length == 0) {
-			alert('Please save the institution details before configuring authentication plugins.');
-			return false;
-		}
+        var institution = '{{$institution}}';
+        if (institution.length == 0) {
+            alert('Please save the institution details before configuring authentication plugins.');
+            return false;
+        }
 
         if (requiresConfig(selectedPlugin) == 1) {
             window.open('addauthority.php?add=1&i={{$institution}}&p=' + selectedPlugin, 'addinstance', 'height=520,width=550,screenx=250,screenY=200,scrollbars=1');
