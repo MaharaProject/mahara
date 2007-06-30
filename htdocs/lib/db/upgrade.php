@@ -295,7 +295,7 @@ function xmldb_core_upgrade($oldversion=0) {
         $table = new XMLDBTable('auth_instance');
         $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE);
         $table->addFieldInfo('instancename', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL);
-        $table->addFieldInfo('priority', XMLDB_TYPE_INTEGER, '2', XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('priority', XMLDB_TYPE_INTEGER, '2', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, 0);
         $table->addFieldInfo('institution', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL);
         $table->addFieldInfo('authname', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL);
         $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
@@ -326,10 +326,10 @@ function xmldb_core_upgrade($oldversion=0) {
         $table->addFieldInfo('ipaddress', XMLDB_TYPE_CHAR, '39', null, XMLDB_NOTNULL);
         $table->addFieldInfo('portno', XMLDB_TYPE_INTEGER, '3', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, 80);
         $table->addFieldInfo('appname', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL);
-        $table->addFieldInfo('publickey', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('publickey', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null, null, '');
         $table->addFieldInfo('publickeyexpires', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL);
-        $table->addFieldInfo('deleted', XMLDB_TYPE_INTEGER, '1', XMLDB_UNSIGNED, XMLDB_NOTNULL);
-        $table->addFieldInfo('lastconnecttime', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('deleted', XMLDB_TYPE_INTEGER, '1', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, 0);
+        $table->addFieldInfo('lastconnecttime', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, 0);
         $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('wwwroot'));
         create_table($table);
 
@@ -362,11 +362,6 @@ function xmldb_core_upgrade($oldversion=0) {
         $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('userid','instanceid'));
         create_table($table);
 
-        //$table = new XMLDBTable('sso_session');
-        //$key   = new XMLDBKey("userfk");
-        //$key->setAttributes(XMLDB_KEY_FOREIGN, array('userid','username'), 'usr', array('id','username'));
-        //add_key($table, $key);
-        
         $table = new XMLDBTable('usr');
         $field = new XMLDBField('authinstance');
         $field->setAttributes(XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, 1);
@@ -380,7 +375,7 @@ function xmldb_core_upgrade($oldversion=0) {
         add_index($table, $index);
 
         $field = new XMLDBField('sessionid');
-        $field->setAttributes(XMLDB_TYPE_CHAR, 32);
+        $field->setAttributes(XMLDB_TYPE_CHAR, 32, null, null, null, null, null, '');
         add_field($table, $field);
 
         $field = new XMLDBField('lastauthinstance');

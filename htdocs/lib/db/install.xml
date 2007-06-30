@@ -16,7 +16,7 @@
         </TABLE>
         <TABLE NAME="auth_installed">
             <FIELDS> 
-                <FIELD NAME="name" TYPE="char" LENGTH="100" NOTNULL="true" />
+                <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" />
                 <FIELD NAME="version" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="release" TYPE="text" LENGTH="small" NOTNULL="true" />
                 <FIELD NAME="active" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" />
@@ -63,11 +63,7 @@
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
                 <KEY NAME="authnamefk" TYPE="foreign" FIELDS="authname" REFTABLE="auth_installed" REFFIELDS="name" />
-                <!-- The following foreign-key constraint can't be implemented, as we currently have to be able to create
-                	 the auth instance before we create the institution record. This workflow is probably bogus and should 
-                	 be changed once we're able to do multi-page/tabbed forms.
                 <KEY NAME="institutionfk" TYPE="foreign" FIELDS="institution" REFTABLE="institution" REFFIELDS="name" />
-                -->
             </KEYS>
         </TABLE>
         <TABLE NAME="institution_locked_profile_field">
@@ -112,7 +108,7 @@
                 <FIELD NAME="quotaused" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" />
                 <FIELD NAME="authinstance" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1" />
                 <FIELD NAME="sessionid" TYPE="char" LENGTH="32" NOTNULL="false" DEFAULT="" />
-                <FIELD NAME="lastauthinstance" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="NULL" />
+                <FIELD NAME="lastauthinstance" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="NULL" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
@@ -135,7 +131,7 @@
                 <FIELD NAME="sessionid" TYPE="char" LENGTH="40" NOTNULL="true"/>
             </FIELDS>
             <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="userid" />
+                <KEY NAME="primary" TYPE="primary" FIELDS="userid,instanceid" />
                 <!-- <KEY NAME="userfk" TYPE="foreign" FIELDS="userid,username" REFTABLE="usr" REFFIELDS="userid,username" /> -->
             </KEYS>
         </TABLE>

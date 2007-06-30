@@ -459,10 +459,11 @@ function core_install_defaults() {
 
     $auth_instance = new StdClass;
     $auth_instance->instancename  = 'internal';
+    $auth_instance->priority='1';
     $auth_instance->institution   = 'mahara';
     $auth_instance->authname      = 'internal';
-    insert_record('auth_instance', $auth_instance);
- 
+    $auth_instance->id = insert_record('auth_instance', $auth_instance, 'id', true);
+
     // Insert the root user
     $user = new StdClass;
     $user->id = 0;
@@ -481,6 +482,7 @@ function core_install_defaults() {
     $user->username = 'admin';
     $user->password = 'mahara';
     $user->institution = 'mahara';
+    $user->authinstance = $auth_instance->id;
     $user->passwordchange = 1;
     $user->admin = 1;
     $user->firstname = 'Admin';
