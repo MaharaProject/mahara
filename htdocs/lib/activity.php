@@ -160,7 +160,7 @@ function handle_activity($activitytype, $data, $cron=false) {
                     throw new InvalidArgumentException("User message requires userto and userfrom to be set");
                 }
                 if (empty($data->subject)) {
-                    throw new InvalidArgumentException("User message activity type expects a subject");
+                    $data->subject = get_string('newusermessage', 'mahara', display_name($data->userfrom));
                 }
                 if (empty($data->message)) {
                     throw new InvalidArgumentException("User message activity type expects a message");

@@ -42,6 +42,7 @@
 		{$INVITEFORM}
 		{$ADDFORM}
 		{$FRIENDFORM}
+        {$MESSAGEFORM}
 		</div>
 {include file="columnleftend.tpl"}
 

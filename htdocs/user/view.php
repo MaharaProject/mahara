@@ -32,6 +32,13 @@ $userid = param_integer('id','');
 $loggedinid = $USER->get('id');
 $prefix = get_config('dbprefix');
 $inlinejs = <<<EOF
+
+    function messageform_success(formname, data) {
+        swapDOM(formname, P(null, data.message));
+        return true;
+    }
+
+
     function usercontrol_success(formname, data) {
         
         if (formname != 'friend') {
@@ -66,6 +73,7 @@ $userfields = array();
 if (!$user = get_record('usr', 'id', $userid)) {
     throw new UserNotFoundException("User with id $userid not found");
 }
+$is_friend = is_friend($userid, $loggedinid);
 
 $name = display_name($user);
 define('TITLE', $name);
@@ -216,7 +224,7 @@ EOF;
     $friendtype = '';
     $friendformmessage = '';
     // already a friend ... we can remove.
-    if (is_friend($userid, $loggedinid)) {
+    if ($is_friend) {
         $friendtype = 'remove';
         $friendsubmit = get_string('removefromfriendslist');
     } 
@@ -265,6 +273,30 @@ EOF;
             $friendtype = 'add';
         }
     }
+
+    $messagepref = get_account_preference($userid, 'messages');
+    if (($is_friend && $messagepref == 'friends') || $messagepref == 'allow') {
+        $messageform = array(
+            'name' => 'messageform', 
+            'jsform'   => true,
+            'jssuccesscallback' => 'messageform_success',
+            'elements' => array(
+                'body' => array(
+                    'type'  => 'textarea',
+                    'title' => get_string('messagebody'),
+                    'cols'  => 50,
+                    'rows'  => 4, 
+                    'rules' => array(
+                        'required' => true,
+                    ),    
+                ),
+                'submit' => array(
+                    'type' => 'submit',
+                    'value' => get_string('sendmessage'),
+                ),    
+            ),
+       );     
+    }   
 }
 // if we have a form to display, do it
 if (!empty($friendtype)) {
@@ -290,7 +322,15 @@ else {
     }
 }
 
+if (!empty($messageform)) {
+    $messageform = pieform($messageform);
+}
+else {
+    $messageform = '';
+}    
+
 $smarty->assign('FRIENDFORM', $friendform);
+$smarty->assign('MESSAGEFORM', $messageform);
 $smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 $smarty->assign('NAME',$name);
 $smarty->assign('USERID', $userid);
@@ -356,6 +396,25 @@ function addmember_submit(Pieform $form, $values) {
     }
     $form->json_reply(PIEFORM_OK, get_string('useradded'));
 }
+
+function messageform_submit(Pieform $form, $values) {
+    global $USER, $user;
+
+    try {
+        activity_occurred('usermessage', 
+            array(
+                'userto' => $user->id, 
+                'userfrom' => $USER->id, 
+                'message' => $values['body'],
+            )
+        );    
+        $form->json_reply(PIEFORM_OK, get_string('messagesent'));
+    }
+    catch (InvalidException $_e) {
+        $form->json_reply(PIEFORM_ERR, get_string('messagenotsent'));
+    }
+}    
+    
 
 // friend submit function lives in lib/user.php
 ?>

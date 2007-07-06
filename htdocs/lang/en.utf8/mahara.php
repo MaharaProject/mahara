@@ -538,6 +538,14 @@ $string['pendingfriends'] = 'Pending friends';
 $string['friendlistfailure'] = 'Failed to modify your friends list';
 $string['userdoesntwantfriends'] = 'This user doesn\'t want any new friends';
 
+//messaging between users
+$string['messagebody'] = 'Send message';
+$string['sendmessage'] = 'Send';
+$string['messagesent'] = 'Message sent!';
+$string['messagenotsent'] = 'Failed to send message';
+$string['newusermessage'] = 'New message from %s';
+
+
 $string['friend'] = 'Friend';
 $string['profileicon'] = 'Profile Icon';
 
