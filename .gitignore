@@ -7,3 +7,4 @@ htdocs/.settings
 mahara-*.tar.bz2
 mahara-*.tar.gz
 mahara-*.zip
+*.swp
