@@ -1209,7 +1209,7 @@ function password_validate(Pieform $form, $values, $username, $institution) {
     }
 
     $suckypasswords = array(
-        'mahara', 'password', $username
+        'mahara', 'password', $username, 'abc123'
     );
 
     if (!$form->get_error('password1') && in_array($values['password1'], $suckypasswords)) {
@@ -1221,7 +1221,7 @@ function password_validate(Pieform $form, $values, $username, $institution) {
     }
 
     // No Mike, that's a _BAD_ Mike! :)
-    if ($values['password1'] == 'mike01' || $values['password1'] == 'mike012') {
+    if (substr($values['password1'], 0, 6) == 'mike01') {
         if (!$form->get_property('jsform')) {
             die_info('<img src="'
                 . theme_get_url('images/sidebox1_corner_botright.gif')
@@ -1263,7 +1263,7 @@ function password_validate_user(Pieform $form, $values, User $user) {
     }
 
     $suckypasswords = array(
-        'mahara', 'password', $user->username
+        'mahara', 'password', $user->username, 'abc123'
     );
 
     if (!$form->get_error('password1') && in_array($values['password1'], $suckypasswords)) {
@@ -1275,7 +1275,7 @@ function password_validate_user(Pieform $form, $values, User $user) {
     }
 
     // No Mike, that's a _BAD_ Mike! :)
-    if ($values['password1'] == 'mike01' || $values['password1'] == 'mike012') {
+    if (substr($values['password1'], 0, 6) == 'mike01') {
         if (!$form->get_property('jsform')) {
             die_info('<img src="'
                 . theme_get_url('images/sidebox1_corner_botright.gif')
