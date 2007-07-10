@@ -305,6 +305,7 @@ function uploadcsv_submit(Pieform $form, $values) {
         }
         $user->passwordchange = 1;
         $id = insert_record('usr', $user, 'id', true);
+        $user->id = $id;
 
         foreach ($FORMAT as $field) {
             if ($field == 'username' || $field == 'password') {
