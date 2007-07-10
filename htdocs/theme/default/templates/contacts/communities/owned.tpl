@@ -4,7 +4,9 @@
 {include file="columnleftstart.tpl"}
 			<h2>{str tag="myownedcommunities"}</h2>
                         <div class="addcommunitylink">
-                           <a href="{$WWWROOT}/contacts/communities/create.php">{str tag='addcommunity'}</a>
+                            <span class="addicon">
+                                <a href="{$WWWROOT}/contacts/communities/create.php">{str tag='addcommunity'}</a>
+                            </span>
                         </div>
                             <table id="communitylist" class="hidden tablerenderer">
 	                        <thead>
