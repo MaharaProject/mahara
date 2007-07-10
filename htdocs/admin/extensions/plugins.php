@@ -99,18 +99,18 @@ $loadingicon = theme_get_url('images/loading.gif');
 $successicon = theme_get_url('images/success.gif');
 $failureicon = theme_get_url('images/failure.gif');
 
-$loadingstring = get_string('upgradeloading', 'admin');
-$successstring = get_string('upgradesuccesstoversion', 'admin');
-$failurestring = get_string('upgradefailure', 'admin');
+$loadingstring = json_encode(get_string('upgradeloading', 'admin'));
+$successstring = json_encode(get_string('upgradesuccesstoversion', 'admin'));
+$failurestring = json_encode(get_string('upgradefailure', 'admin'));
 
 $javascript = <<<JAVASCRIPT
 
 function installplugin(name) {
-    $(name + '.message').innerHTML = '<img src="{$loadingicon}" alt="{$loadingstring}" />';
+    $(name + '.message').innerHTML = '<img src="{$loadingicon}" alt=' + {$loadingstring} + '" />';
 
     sendjsonrequest('../upgrade.json.php', { 'name': name }, 'GET', function (data) {
         if (!data.error) {
-            var message = '{$successstring}' + data.newversion;
+            var message = {$successstring} + data.newversion;
             $(name + '.message').innerHTML = '<img src="{$successicon}" alt=":)" />  ' + message;
             $(name + '.install').innerHTML = '';
             // move the whole thing into the list of installed plugins 
@@ -125,13 +125,13 @@ function installplugin(name) {
                 message = data.errormessage;
             } 
             else {
-                message = '{$failurestring}';
+                message = {$failurestring};
             }
             $(name).innerHTML = '<img src="{$failureicon}" alt=":(" /> ' + message;
         }
     },
     function () {
-        message = '{$failurestring}';
+        message = {$failurestring};
         $(name).innerHTML = message;
     },
     true);
