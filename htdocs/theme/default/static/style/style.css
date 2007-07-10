@@ -964,12 +964,12 @@ table#installer {
 #myblogs .blogsettingscontainer {
 	margin: 10px 0 10px 0;
 }
-.addicon, .editicon, .settingsicon, .viewicon {
+.addicon, .editicon, .settingsicon, .viewicon, .upgradeicon {
     height: 24px;
     padding: 5px 0 5px 0;
     background: url(../images/btn_add_left.gif) no-repeat left;
 }
-.addicon a, .editicon a, .settingsicon a, .viewicon a {
+.addicon a, .editicon a, .settingsicon a, .viewicon a, .upgradeicon a {
     background: url(../images/btn_right.gif) no-repeat right !important;
 	color: #eef7d4;
     height: 24px;
@@ -985,6 +985,9 @@ table#installer {
 }
 .viewicon {
     background-image: url(../images/btn_view_left.gif);
+}
+.upgradeicon {
+    background-image: url(../images/btn_upgrade_left.gif);
 }
 .maincontent #editblog_commentsnotify_container label,
 .maincontent #editblog_commentsallowed_container label,
@@ -1376,13 +1379,16 @@ span.block_targetted, div.block_targetted {
 	background-color: #f4f7e8;
 	border: 1px solid #e5e8da;
 }
-#runupgrade a {
-	color: #eef7d4;
-	font-weight: bold;
-	background: url(../images/btn_upgrade.gif) no-repeat;
-	width: 130px;
-	height: 24px;
-	padding: 4px 24px 7px 30px;
+#runupgrade h4 {
+    margin-top: 0;
+    padding-bottom: .5em;
+}
+#runupgrade table {
+    border: none;
+}
+#runupgrade table th {
+    padding: 3px 5px;
+    border-bottom: 1px solid #7C9853;
 }
 
 /* Configure Site styles */
