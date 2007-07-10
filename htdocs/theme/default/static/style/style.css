@@ -939,30 +939,6 @@ table#installer {
 	padding: 5px 0 5px 0;
 	margin: -3px 0 0 0;
 }
-.maincontent #editprofileicons {
-	background: url(../images/btn_editprofileicons.gif) no-repeat;
-	width: 170px;
-	height: 24px;
-	color: #eef7d4;
-	font-weight: bold;
-	padding: 5px 20px 6px 45px;
-}
-.maincontent #profilegotoresume {
-	background: url(../images/btn_editprofileicons.gif) no-repeat; 
-	width: 170px;
-	height: 24px;
-	color: #eef7d4;
-	font-weight: bold;
-	padding: 5px 20px 6px 35px;
-}
-.maincontent #backtoeditprofile {
-	background: url(../images/btn_editprofileicons.gif) no-repeat;
-	width: 170px;
-	height: 24px;
-	color: #eef7d4;
-	font-weight: bold;
-	padding: 5px 20px 6px 35px;
-}
 .maincontent #upload th,
 .maincontent #upload td {
 	padding: 0 5px;
@@ -988,64 +964,27 @@ table#installer {
 #myblogs .blogsettingscontainer {
 	margin: 10px 0 10px 0;
 }
-#myblogs .addicon a,
-#myblogs .addicon a:link,
-#myblogs .addicon a:active,
-#myblogs .addicon a:visited,
-#myblogs .addicon a:hover,
-#myblogs .blogsettingscontainer .addicon a,
-#myblogs .blogsettingscontainer .addicon a:link,
-#myblogs .blogsettingscontainer .addicon a:active,
-#myblogs .blogsettingscontainer .addicon a:visited,
-#myblogs .blogsettingscontainer .addicon a:hover { 
-	background: url(../images/btn_add.gif) no-repeat;
-	width: 120px;
-	height: 24px;
-	color: #eef7d4;
-	font-weight: bold;
-	padding: 6px 23px 4px 47px;
+.addicon, .editicon, .settingsicon, .viewicon {
+    height: 24px;
+    padding: 5px 0 5px 0;
+    background: url(../images/btn_add_left.gif) no-repeat left;
 }
-#myblogs .blogsettings a,
-#myblogs .blogsettings a:link,
-#myblogs .blogsettings a:active,
-#myblogs .blogsettings a:visited,
-#myblogs .blogsettings a:hover {
-	background: url(../images/btn_settings.gif) no-repeat;
-	width: 120px;
-	height: 24px;
+.addicon a, .editicon a, .settingsicon a, .viewicon a {
+    background: url(../images/btn_right.gif) no-repeat right !important;
 	color: #eef7d4;
+    height: 24px;
+    margin-left: 24px;
 	font-weight: bold;
-	padding: 4px 27px 6px 47px;
+    padding: 5px 15px !important;
 }
-.maincontent .viewblogbtn {
-	margin: 10px 0 10px 0;
+.editicon {
+    background-image: url(../images/btn_edit_left.gif);
 }
-.maincontent .viewblogbtn a,
-.maincontent .viewblogbtn a:link,
-.maincontent .viewblogbtn a:active,
-.maincontent .viewblogbtn a:visited,
-.maincontent .viewblogbtn a:hover {
-	background: url(../images/btn_view.gif) no-repeat;
-	border: 0;
-	width: 120px;
-	height: 24px;
-	color: #eef7d4;
-	font-size: 11px;
-	font-weight: bold;
-	margin: 0;
-	padding: 5px 25px 5px 40px;
+.settingsicon {
+    background-image: url(../images/btn_settings_left.gif);
 }
-#myblogs .newpost a,
-#myblogs .newpost a:link,
-#myblogs .newpost a:active,
-#myblogs .newpost a:visited,
-#myblogs .newpost a:hover {
-	background: url(../images/btn_add.gif) no-repeat;
-	width: 120px;
-	height: 24px;
-	color: #eef7d4;
-	font-weight: bold;
-	padding: 4px 34px 7px 36px;
+.viewicon {
+    background-image: url(../images/btn_view_left.gif);
 }
 .maincontent #editblog_commentsnotify_container label,
 .maincontent #editblog_commentsallowed_container label,
@@ -1115,18 +1054,6 @@ table#installer {
 	margin: 10px 0 10px 0;
 	text-align: right;
 }
-.maincontent #mygroups #addnewgroup a,
-.maincontent #mygroups #addnewgroup a:link,
-.maincontent #mygroups #addnewgroup a:active,
-.maincontent #mygroups #addnewgroup a:visited,
-.maincontent #mygroups #addnewgroup a:hover {
-	background: url(../images/btn_add_long.gif) no-repeat;
-	width: 120px;
-	height: 24px;
-	color: #eef7d4;
-	font-weight: bold;
-	padding: 4px 43px 7px 43px;
-}
 .maincontent #creategroup #creategroup_description_header th,
 .maincontent #creategroup #creategroup_members_header th,
 .maincontent #editgroup #editgroup_description_header th,
@@ -1158,18 +1085,6 @@ table#installer {
 .maincontent .addcommunitylink {
 	margin: 10px 0 10px 0;
 	text-align: right;
-}
-.maincontent .addcommunitylink a,
-.maincontent .addcommunitylink a:link,
-.maincontent .addcommunitylink a:active,
-.maincontent .addcommunitylink a:visited,
-.maincontent .addcommunitylink a:hover {
-	color: #eef7d4;
-	font-weight: bold;
-	background: url(../images/btn_add_long.gif) no-repeat;
-	width: 170px;
-	height: 24px;
-	padding: 4px 24px 7px 33px;
 }
 .maincontent #memberlist tbody td,
 .maincontent #communitylist tbody td {
