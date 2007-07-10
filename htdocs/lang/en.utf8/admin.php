@@ -43,13 +43,17 @@ $string['toversion'] =  'To version';
 $string['notinstalled'] = 'Not installed';
 $string['nothingtoupgrade'] = 'Nothing to upgrade';
 $string['performinginstallsandupgrades'] = 'Performing installs and upgrades...';
+$string['runupgrade'] = 'Run upgrade';
 $string['successfullyinstalled'] = 'Successfully installed Mahara!';
+$string['thefollowingupgradesareready'] = 'The following upgrades are ready:';
 $string['upgradeloading'] = 'Loading...';
+$string['upgrades'] = 'Upgrades';
 $string['upgradesuccess'] = 'Successfully upgraded';
 $string['upgradesuccesstoversion'] = 'Successfully upgraded to version ';
 $string['upgradefailure'] = 'Failed to upgrade!';
 $string['noupgrades'] = 'Nothing to upgrade! You are fully up to date!';
 $string['fixtemplatescontinue'] = 'Some view templates failed to install.  Continue here for more information and a fix.';
+$string['youcanupgrade'] = 'You can upgrade Mahara from %s (%s) to %s (%s)!';
 
 // Admin navigation menu
 $string['adminhome']      = 'Admin home';
