@@ -65,18 +65,18 @@ $loadingicon = theme_get_url('images/loading.gif');
 $successicon = theme_get_url('images/success.gif');
 $failureicon = theme_get_url('images/failure.gif');
 
-$loadingstring = get_string('upgradeloading', 'admin');
-$successstring = get_string('upgradesuccess', 'admin');
-$failurestring = get_string('upgradefailure', 'admin');
+$loadingstring = json_encode(get_string('upgradeloading', 'admin'));
+$successstring = json_encode(get_string('upgradesuccess', 'admin'));
+$failurestring = json_encode(get_string('upgradefailure', 'admin'));
 
 $javascript = <<<JAVASCRIPT
 
 function installtemplate(name) {
-    $(name + '.message').innerHTML = '<img src="{$loadingicon}" alt="{$loadingstring}" />';
+    $(name + '.message').innerHTML = '<img src="{$loadingicon}" alt="' + {$loadingstring} + '" />';
 
     sendjsonrequest('templateinstall.json.php', { 'name': name }, 'GET', function (data) {
         if (!data.error) {
-            var message = '{$successstring}';
+            var message = {$successstring};
             $(name + '.message').innerHTML = '<img src="{$successicon}" alt=":)" />  ' + message;
             // move the whole thing into the list of installed plugins 
             // new parent node
@@ -88,13 +88,13 @@ function installtemplate(name) {
                 message = data.message;
             } 
             else {
-                message = '{$failurestring}';
+                message = {$failurestring};
             }
             $(name + '.message').innerHTML = '<img src="{$failureicon}" alt=":(" /> ' + message;
         }
     },
     function () {
-        message = '{$failurestring}';
+        message = {$failurestring};
         $(name).innerHTML = message;
     },
     true);
