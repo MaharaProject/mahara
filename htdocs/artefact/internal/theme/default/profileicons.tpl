@@ -3,7 +3,7 @@
 
 {include file="columnleftstart.tpl"}
 
-            <div class="fr leftrightlink"><a href="{$WWWROOT}artefact/internal/" id="backtoeditprofile">&laquo; {str tag="backtoeditprofile" section="artefact.internal"}</a></div>
+            <div class="fr leftrightlink"><span class="editicon"><a href="{$WWWROOT}artefact/internal/">&laquo; {str tag="backtoeditprofile" section="artefact.internal"}</a></span></div>
 			<h2>{str section="artefact.internal" tag="profileicons"}</h2>
 
             {$settingsformtag}
