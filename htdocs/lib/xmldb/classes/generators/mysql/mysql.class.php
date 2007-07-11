@@ -55,6 +55,8 @@ class XMLDBmysql extends XMLDBGenerator {
 
     var $enum_extra_code = false; //Does the generator need to add extra code to generate code for the enums in the table
 
+    var $table_extra_code = true;
+
     var $add_after_clause = true; // Does the generator need to add the after clause for fields
 
     var $concat_character = null; //Characters to be used as concatenation operator. If not defined
@@ -71,6 +73,7 @@ class XMLDBmysql extends XMLDBGenerator {
     var $rename_key_sql = null; //SQL sentence to rename one key (MySQL doesn't support this!)
                                       //TABLENAME, OLDKEYNAME, NEWKEYNAME are dinamically replaced
 
+    var $foreign_keys = true; // Does the generator build foreign keys
     /**
      * Creates one new XMLDBmysql
      */
@@ -228,6 +231,11 @@ class XMLDBmysql extends XMLDBGenerator {
     function getEnumSQL ($xmldb_field) {
         return 'enum(' . implode(', ', $xmldb_field->getEnumValues()) . ')';
     }
+
+    function getTableExtraSQL($xmldb_table) {
+        return 'TYPE=innodb'; // mahara only ever wants innodb because we want foreign keys!
+    }
+
 
     /**
      * Returns the code (in array) needed to add one comment to the table
