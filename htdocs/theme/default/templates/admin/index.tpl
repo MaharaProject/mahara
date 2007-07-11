@@ -5,7 +5,27 @@
 
 <div id="adminhome">
 {if $upgrades}
-<p id="runupgrade"><a href="upgrade.php">Run upgrade</a></p>
+<h3>{str tag="upgrades" section=admin}</h3>
+<div id="runupgrade">
+<div class="fr"><span class="upgradeicon"><a href="upgrade.php">{str tag=runupgrade section=admin}</a></span></div>
+<h4>{str tag=thefollowingupgradesareready section=admin}</h4>
+<table cellspacing="0">
+    <tr>
+        <th>Plugin</th>
+        <th>From</th>
+        <th>To</th>
+    </tr>
+{foreach from=$upgrades key=key item=upgrade}
+{if $key != 'disablelogin'}
+    <tr>
+        <td><strong>{$key|hsc}</strong></td>
+        <td>{$upgrade->fromrelease} ({$upgrade->from})</td>
+        <td>{$upgrade->torelease} ({$upgrade->to})</td>
+    </tr>
+{/if}
+{/foreach}
+</table>
+</div>
 {/if}<ul>
     <li><h3>{str tag=configsite section=admin}</h3>
     <ul>
