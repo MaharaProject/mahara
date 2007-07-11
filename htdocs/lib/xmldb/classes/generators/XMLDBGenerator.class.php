@@ -227,6 +227,10 @@ class XMLDBgenerator {
         $table = trim($table,',');
         $table .= "\n)";
 
+        if ($this->table_extra_code) {
+            $table .= $this->getTableExtraSQL($xmldb_table);
+        }
+
     /// Add the CREATE TABLE to results
         $results[] = $table;
 
