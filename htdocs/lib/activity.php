@@ -78,6 +78,12 @@ function activity_occurred($activitytype, $data) {
  */
 function handle_activity($activitytype, $data, $cron=false) {
 
+    // mysql compatibility (sigh...)
+    $casturl = 'CAST(? AS TEXT)';
+    if (get_config('dbtype') == 'mysql') {
+        $casturl = 'CAST(? AS CHAR)'; // note, NOT varchar
+    }
+
     $data = (object)$data;
     if (is_string($activitytype)) {
         $activitytype = get_record('activity_type', 'name', $activitytype);
@@ -232,7 +238,7 @@ function handle_activity($activitytype, $data, $cron=false) {
                     }
                     $data->message = $oldsubject . ' ' . get_string('onview', 'activity') 
                         . ' ' . $viewinfo->title . ' ' . get_string('ownedby', 'activity');
-                    $sql = 'SELECT u.*, p.method, CAST(? AS TEXT)  AS url
+                    $sql = 'SELECT u.*, p.method, ' . $casturl . ' AS url
                                 FROM ' . $prefix . 'usr_watchlist_view wv
                                 JOIN ' . $prefix . 'usr u
                                     ON wv.usr = u.id
@@ -320,7 +326,7 @@ SELECT DISTINCT u.*, p.method, ?||wa.view AS url
                     $oldsubject = $data->subject;
                     $data->subject = get_string('watchlistmessagecommunity', 'activity');
                     $data->message = $oldsubject . ' ' . get_string('oncommunity', 'activity') . ' ' . $communityname;
-                    $sql = 'SELECT DISTINCT u.*, p.method, CAST(? AS TEXT) AS url
+                    $sql = 'SELECT DISTINCT u.*, p.method, ' . $casturl . ' AS url
                                 FROM ' . $prefix . 'usr_watchlist_community c
                                 JOIN ' . $prefix . 'usr u
                                     ON c.usr = u.id
