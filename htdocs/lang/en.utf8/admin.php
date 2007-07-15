@@ -120,6 +120,7 @@ $string['searchplugin'] = 'Search plugin';
 $string['searchplugindescription'] = 'Search plugin to use';
 
 // Networking options
+$string['networkingextensionsmissing'] = 'Sorry, you cannot configure Mahara networking because your PHP installation is missing one or more required extensions:';
 $string['publickey'] = 'Public key';
 $string['publickeydescription'] = 'This public key is automatically generated, and rotated every 28 days.';
 $string['publickeyexpires'] = 'Public key expires';
