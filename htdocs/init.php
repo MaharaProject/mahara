@@ -179,7 +179,7 @@ header('Content-type: text/html; charset=UTF-8');
 
 // Only do authentication once we know the page theme, so that the login form
 // can have the correct theming.
-require('auth/lib.php');
+require_once('auth/lib.php');
 $SESSION = Session::singleton();
 $USER    = new LiveUser();
 // The installer does its own auth_setup checking, because some upgrades may
