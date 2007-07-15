@@ -34,7 +34,7 @@ require_once(get_config('docroot') . 'auth/lib.php');
 class AuthInternal extends Auth {
 
     public function __construct($id = null) {
-        $this->has_config = false;
+        $this->has_instance_config = false;
         $this->type       = 'internal';
         if (!empty($id)) {
             return $this->init($id);
@@ -189,6 +189,14 @@ class PluginAuthInternal extends PluginAuth {
     }
 
     public static function get_config_options() {
+        return array();
+    }
+
+    public static function has_instance_config() {
+        return false;
+    }
+
+    public static function get_instance_config_options() {
         return array();
     }
 }

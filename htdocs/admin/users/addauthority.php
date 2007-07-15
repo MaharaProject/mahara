@@ -49,8 +49,8 @@ if ($institution && $plugin) {
     $classname = 'PluginAuth' . ucfirst(strtolower($plugin));
     safe_require('auth', strtolower($plugin));
 
-    $has_config = call_static_method($classname, 'has_config');
-    if (false == $has_config && $add) {
+    $has_instance_config = call_static_method($classname, 'has_instance_config');
+    if (false == $has_instance_config && $add) {
 
         // We've been asked to add an instance of an auth plugin that has no
         // config options. We've been called by an AJAX request, so we just
@@ -77,7 +77,7 @@ if ($institution && $plugin) {
     }
 
     $authclass = new $classname();
-    $form = $authclass->get_config_options($institution, $instanceid);
+    $form = $authclass->get_instance_config_options($institution, $instanceid);
     $form['name'] = 'auth_config';
     $form['plugintype'] = 'auth';
     $form['pluginname'] = strtolower($plugin);

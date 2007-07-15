@@ -58,7 +58,7 @@ abstract class Auth {
     protected $priority;
     protected $authname;
     protected $config;
-    protected $has_config;
+    protected $has_instance_config;
     protected $type;
     protected $ready;
 
@@ -98,7 +98,7 @@ abstract class Auth {
 
         // Return now if the plugin type doesn't require any config 
         // (e.g. internal)
-        if ($this->has_config == false) {
+        if ($this->has_instance_config == false) {
             return true;
         }
 

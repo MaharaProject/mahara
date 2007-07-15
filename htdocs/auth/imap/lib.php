@@ -35,7 +35,7 @@ class AuthImap extends Auth {
 
     public function __construct($id = null) {
         $this->type                         = 'imap';
-        $this->has_config                   = true;
+        $this->has_instance_config                   = true;
 
         $this->config['host']               = '';
         $this->config['port']               = '143';
@@ -110,10 +110,18 @@ class PluginAuthImap extends PluginAuth {
     private static $default_config = array('host'=>'', 'port'=>'143', 'protocol'=>'/imap','changepasswordurl'=>'');
 
     public static function has_config() {
+        return false;
+    }
+
+    public static function get_config_options() {
+        return array();
+    }
+
+    public static function has_instance_config() {
         return true;
     }
 
-    public static function get_config_options($institution, $instance = 0) {
+    public static function get_instance_config_options($institution, $instance = 0) {
         // TODO: put these strings in a lang file
         $options['/imap'] = 'IMAP';
         $options['/imap/ssl'] = 'IMAP/SSL';

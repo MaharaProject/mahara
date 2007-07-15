@@ -47,7 +47,7 @@ class AuthXmlrpc extends Auth {
      */
     public function __construct($id = null) {
 
-        $this->has_config = true;
+        $this->has_instance_config = true;
         $this->type                            = 'xmlrpc';
 
         $this->config['wwwroot']               = '';
@@ -359,10 +359,18 @@ class PluginAuthXmlrpc extends PluginAuth {
     );
 
     public static function has_config() {
+        return false;
+    }
+
+    public static function get_config_options() {
+        return array();
+    }
+
+    public static function has_instance_config() {
         return true;
     }
 
-    public static function get_config_options($institution, $instance = 0) {
+    public static function get_instance_config_options($institution, $instance = 0) {
 
         $peer = new Peer();
 
