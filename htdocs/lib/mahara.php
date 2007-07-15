@@ -55,6 +55,17 @@ function ensure_sanity() {
         throw new ConfigSanityException(get_string('sessionextensionnotloaded', 'error'));
     }
 
+    // Various optional extensions
+    if (!extension_loaded('openssl')) {
+        log_environ(get_string('opensslextensionnotloaded', 'error'));
+    }
+    if (!extension_loaded('curl')) {
+        log_environ(get_string('curlextensionnotloaded', 'error'));
+    }
+    if (!extension_loaded('xmlrpc')) {
+        log_environ(get_string('xmlrpcextensionnotloaded', 'error'));
+    }
+
     // register globals workaround
     if (ini_get_bool('register_globals')) {
         log_environ(get_string('registerglobals', 'error'));
