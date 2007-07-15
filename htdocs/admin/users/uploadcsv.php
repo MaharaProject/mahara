@@ -89,16 +89,16 @@ function auth_get_auth_instances() {
     $sql ='
         SELECT DISTINCT
             i.id,
-            institution.name,
-            institution.displayname,
+            inst.name,
+            inst.displayname,
             i.instancename
         FROM 
-            '.$dbprefix.'institution,
+            '.$dbprefix.'institution inst,
             '.$dbprefix.'auth_instance i
         WHERE 
-            i.institution = institution.name
+            i.institution = inst.name
         ORDER BY
-            institution.displayname,
+            inst.displayname,
             i.instancename';
 
     $cache = get_records_sql_array($sql, array());
@@ -305,6 +305,7 @@ function uploadcsv_submit(Pieform $form, $values) {
         }
         $user->passwordchange = 1;
         $id = insert_record('usr', $user, 'id', true);
+        $user->id = $id;
 
         foreach ($FORMAT as $field) {
             if ($field == 'username' || $field == 'password') {

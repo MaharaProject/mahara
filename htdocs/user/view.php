@@ -275,7 +275,7 @@ EOF;
     }
 
     $messagepref = get_account_preference($userid, 'messages');
-    if (($is_friend && $messagepref == 'friends') || $messagepref == 'allow') {
+    if (($is_friend && $messagepref == 'friends') || $messagepref == 'allow' || $USER->get('admin')) {
         $messageform = array(
             'name' => 'messageform', 
             'jsform'   => true,

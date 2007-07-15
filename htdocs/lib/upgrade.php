@@ -475,7 +475,11 @@ function core_install_defaults() {
     $user->lastname = 'User';
     $user->email = 'root@example.org';
     $user->quota = get_config_plugin('artefact', 'file', 'defaultquota');
-    insert_record('usr', $user);
+    $newid = insert_record('usr', $user);
+
+    if ($newid > 0 && get_config('dbtype') == 'mysql') { // gratuitous mysql workaround
+        set_field('usr', 'id', 0, 'id', $newid);
+    }
 
     // Insert the admin user
     $user = new StdClass;
