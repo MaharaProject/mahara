@@ -35,6 +35,21 @@ require_once('pieforms/pieform.php');
 require_once('searchlib.php');
 define('TITLE', get_string('networking', 'admin'));
 
+$opensslext = extension_loaded('openssl');
+$curlext    = extension_loaded('curl');
+$xmlrpcext  = extension_loaded('xmlrpc');
+
+if (!$opensslext || !$curlext || !$xmlrpcext) {
+    $smarty = smarty();
+    $missingextensions = array();
+    !$opensslext && $missingextensions[] = 'openssl';
+    !$curlext    && $missingextensions[] = 'curl';
+    !$xmlrpcext  && $missingextensions[] = 'xmlrpc';
+    $smarty->assign('missingextensions', $missingextensions);
+    $smarty->display('admin/networking.tpl');
+    exit;
+}
+
 $openssl = OpenSslRepo::singleton();
 
 $yesno = array(true  => get_string('yes'),
