@@ -118,6 +118,10 @@ function log_environ ($message, $escape=true, $backtrace=true) {
  */
 function log_message ($message, $loglevel, $escape, $backtrace, $file=null, $line=null, $trace=null) {
     global $SESSION;
+    if (!$SESSION) {
+        require_once(get_config('docroot') . 'auth/lib.php');
+        $SESSION = Session::singleton();
+    }
     static $loglevelnames = array(
         LOG_LEVEL_ENVIRON => 'environ',
         LOG_LEVEL_DBG     => 'dbg',
