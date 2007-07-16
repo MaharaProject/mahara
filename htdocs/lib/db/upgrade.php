@@ -386,6 +386,10 @@ function xmldb_core_upgrade($oldversion=0) {
         $key->setAttributes(XMLDB_KEY_FOREIGN, array('lastauthinstance'), 'auth_instance', array('id'));
         add_key($table, $key);
 
+        $key   = new XMLDBKey("authinstancefk");
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('authinstance'), 'auth_instance', array('id'));
+        add_key($table, $key);
+
         $record = new stdClass();
 
         $record->name            = 'mahara';
