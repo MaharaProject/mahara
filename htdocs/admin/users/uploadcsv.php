@@ -128,9 +128,13 @@ if (count($authinstances) > 1) {
     );
 }
 else {
+    foreach ($authinstances as $authinstance) {
+        $string = $authinstance->id .'_'. $authinstance->name;
+    }
+
     $authinstanceelement = array(
         'type' => 'hidden',
-        'value' => '1'
+        'value' => $string
     );
 }
 
