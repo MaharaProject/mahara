@@ -45,7 +45,7 @@ results.statevars.push('type');
 results.emptycontent = {$enc_noresults};
 results.rowfunction = function (r, n, d) {
 
-    var titleElement
+    var titleElement;
     if (r.links._default) {
         titleElement = [H3(null, A({'href': r.links._default}, r.title))];
         delete r.links._default;
