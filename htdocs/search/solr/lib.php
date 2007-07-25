@@ -181,7 +181,7 @@ END;
                         continue;
                     }
 
-                    if ($key_parts[0] == 'store') {
+                    if ($key_parts[0] == 'store' || $key == 'ref_institution') {
                         $new_result[$key_parts[1]] = $value;
                     }
                 }
@@ -371,7 +371,6 @@ END;
             || !isset($user['preferredname'])
             || !isset($user['firstname'])
             || !isset($user['lastname'])
-            || !isset($user['institution'])
         ) {
             $user = get_record('usr', 'id', $user['id']);
             if ($user) {
@@ -435,20 +434,20 @@ END;
         $url = get_config_plugin('search', 'solr', 'solrurl') . 'update';
 
         if (!$snoopy->submit($url, $message)) {
-            throw new Exception('Request to solr failed');
+            throw new RemoteServerException('Request to solr failed');
         }
 
         $dom = new DOMDocument;
         if (!@$dom->loadXML($snoopy->results)) {
             log_warn('PluginSearchSolr::send_update (Failed to parse response)' . $snoopy->results);
-            throw new Exception('Parsing Solr response failed');
+            throw new RemoteServerException('Parsing Solr response failed');
         }
 
         $root = $dom->getElementsByTagName('result'); // get root node
         $root = $root->item(0);
-        if ($root->getAttribute('status') != 0) {
+        if (is_null($root) || $root->getAttribute('status') != 0) {
             log_warn('PluginSearchSolr::send_update (Got non-zero return status)' . $snoopy->results);
-            throw new Exception('Solr update failed');
+            throw new RemoteServerException('Solr update failed');
         }
     }
 
