@@ -225,7 +225,7 @@ if ($institution || $add) {
 else {
     // Get a list of institutions
     $prefix = get_config('dbprefix');
-    $institutions = get_records_sql_array('SELECT i.name, i.displayname, i.registerallowed, COUNT(u.*) AS hasmembers
+    $institutions = get_records_sql_array('SELECT i.name, i.displayname, i.registerallowed, COUNT(u.id) AS hasmembers
         FROM ' . $prefix . 'institution i
         LEFT OUTER JOIN ' . $prefix . 'usr u ON (u.institution = i.name)
         GROUP BY 1, 2, 3
