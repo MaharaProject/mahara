@@ -1,0 +1,154 @@
+<?xml version="1.0" ?>
+
+<schema name="Mahara" version="1.1">
+    <types>
+        <fieldtype name="string"  class="solr.StrField"  sortMissingLast="true" omitNorms="true" />
+        <fieldtype name="boolean" class="solr.BoolField" sortMissingLast="true" omitNorms="true" />
+         
+        <fieldtype name="integer" class="solr.IntField"    omitNorms="true" />
+        <fieldtype name="long"    class="solr.LongField"   omitNorms="true" />
+        <fieldtype name="float"   class="solr.FloatField"  omitNorms="true" />
+        <fieldtype name="double"  class="solr.DoubleField" omitNorms="true" />
+
+        <fieldtype name="sint"    class="solr.SortableIntField"    sortMissingLast="true" omitNorms="true" />
+        <fieldtype name="slong"   class="solr.SortableLongField"   sortMissingLast="true" omitNorms="true" />
+        <fieldtype name="sfloat"  class="solr.SortableFloatField"  sortMissingLast="true" omitNorms="true" />
+        <fieldtype name="sdouble" class="solr.SortableDoubleField" sortMissingLast="true" omitNorms="true" />
+
+        <!-- The format for this date field is of the form 1995-12-31T23:59:59Z, and
+             is a more restricted form of the canonical representation of dateTime
+             http://www.w3.org/TR/xmlschema-2/#dateTime    
+             The trailing "Z" designates UTC time and is mandatory.
+             Optional fractional seconds are allowed: 1995-12-31T23:59:59.999Z
+             All other components are mandatory. -->
+        <fieldtype name="date" class="solr.DateField" sortMissingLast="true" omitNorms="true"/>
+
+    <!-- solr.TextField allows the specification of custom text analyzers
+         specified as a tokenizer and a list of token filters. Different
+         analyzers may be specified for indexing and querying.
+
+         The optional positionIncrementGap puts space between multiple fields of
+         this type on the same document, with the purpose of preventing false phrase
+         matching across fields.
+
+         For more info on customizing your analyzer chain, please see...
+      http://wiki.apache.org/solr/AnalyzersTokenizersTokenFilters
+     
+     -->
+
+    <!-- A text field that uses WordDelimiterFilter to enable splitting and matching of
+        words on case-change, alpha numeric boundaries, and non-alphanumeric chars
+        so that a query of "wifi" or "wi fi" could match a document containing "Wi-Fi".
+        Synonyms and stopwords are customized by external files, and stemming is enabled
+        Duplicate tokens at the same position (which may result from Stemmed Synonyms or
+        WordDelim parts) are removed.
+        -->
+    <fieldtype name="text" class="solr.TextField" positionIncrementGap="100">
+      <analyzer type="index">
+          <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+          <!-- in this example, we will only use synonyms at query time
+          <filter class="solr.SynonymFilterFactory" synonyms="index_synonyms.txt" ignoreCase="true" expand="false"/>
+          -->
+          <filter class="solr.StopFilterFactory" ignoreCase="true"/>
+          <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1" catenateWords="1" catenateNumbers="1" catenateAll="0"/>
+          <filter class="solr.LowerCaseFilterFactory"/>
+          <filter class="solr.EnglishPorterFilterFactory" protected="protwords.txt"/>
+          <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
+      </analyzer>
+      <analyzer type="query">
+          <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+          <filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
+          <filter class="solr.StopFilterFactory" ignoreCase="true"/>
+          <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1" catenateWords="0" catenateNumbers="0" catenateAll="0"/>
+          <filter class="solr.LowerCaseFilterFactory"/>
+          <filter class="solr.EnglishPorterFilterFactory" protected="protwords.txt"/>
+          <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
+      </analyzer>
+    </fieldtype>
+
+
+    <!-- Less flexible matching, but less false matches.  Probably not ideal for product names
+         but may be good for SKUs.  Can insert dashes in the wrong place and still match. -->
+    <fieldtype name="textTight" class="solr.TextField" positionIncrementGap="100" >
+      <analyzer>
+        <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+        <filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="false"/>
+        <filter class="solr.StopFilterFactory" ignoreCase="true"/>
+        <filter class="solr.WordDelimiterFilterFactory" generateWordParts="0" generateNumberParts="0" catenateWords="1" catenateNumbers="1" catenateAll="0"/>
+        <filter class="solr.LowerCaseFilterFactory"/>
+        <filter class="solr.EnglishPorterFilterFactory" protected="protwords.txt"/>
+        <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
+      </analyzer>
+    </fieldtype>
+
+ </types>
+
+
+    <fields>
+       <!-- Valid attributes for fields:
+           name: mandatory - the name for the field
+           type: mandatory - the name of a previously defined type from the <types> section
+           indexed: true if this field should be indexed (searchable)
+           stored: true if this field should be retrievable
+           multiValued: true if this field may contain multiple values per document
+           omitNorms: (expert) set to true to omit the norms associated with this field
+                      (this disables length normalization and index-time boosting for the field)
+       -->
+
+       <field name="id"          type="string" indexed="true" stored="true"                     />
+       <field name="owner"       type="string" indexed="true" stored="true"                     />
+       <field name="type"        type="string" indexed="true" stored="true"                     />
+       <field name="idtype"      type="string" indexed="true" stored="true"                     />
+       <field name="title"       type="text"   indexed="true" stored="true"                     />
+       <field name="description" type="text"   indexed="true" stored="true"                     />
+       <field name="tags"        type="text"   indexed="true" stored="true"                     />
+       <field name="ctime"       type="sint"   indexed="true" stored="true"                     />
+       <field name="mtime"       type="sint"   indexed="true" stored="true"                     />
+
+       <field name="text"        type="text"    indexed="true" stored="false" multiValued="true" />
+
+       <dynamicField name="text_*"  type="text"  indexed="true"  stored="true"  />
+       <dynamicField name="ref_*"   type="text"  indexed="true"  stored="true"  />
+       <dynamicField name="store_*" type="text"  indexed="false" stored="true"  />
+       <dynamicField name="index_*" type="text"  indexed="true"  stored="false" />
+
+       <!-- Dynamic field definitions.  If a field name is not found, dynamicFields
+            will be used if the name matches any of the patterns.
+            RESTRICTION: the glob-like pattern in the name attribute must have
+            a "*" only at the start or the end.
+            EXAMPLE:  name="*_i" will match any field ending in _i (like myid_i, z_i)
+            Longer patterns will be matched first.  if equal size patterns
+            both match, the first appearing in the schema will be used.  -->
+       <!-- <dynamicField name="*_i"  type="sint"    indexed="true"  stored="true"/> -->
+       <!-- <dynamicField name="*_l"  type="slong"   indexed="true"  stored="true"/> -->
+       <!-- <dynamicField name="*_b"  type="boolean" indexed="true"  stored="true"/> -->
+       <!-- <dynamicField name="*_f"  type="sfloat"  indexed="true"  stored="true"/> -->
+       <!-- <dynamicField name="*_d"  type="sdouble" indexed="true"  stored="true"/> -->
+       <!-- <dynamicField name="*_dt" type="date"    indexed="true"  stored="true"/> -->
+       <!-- <dynamicField name="*_t"  type="text"    indexed="true"  stored="true"/> -->
+
+       <!-- <dynamicField name="*_t"  type="text"    indexed="true"  stored="true"  /> -->
+       <!-- <dynamicField name="*_s"  type="string"  indexed="true"  stored="true"  /> -->
+       <!-- <dynamicField name="*_d"  type="sint"    indexed="true"  stored="true"  /> -->
+       <!-- <dynamicField name="*_ti" type="text"    indexed="true"  stored="false" /> -->
+       <!-- <dynamicField name="*_m"  type="string"  indexed="false" stored="true"  /> -->
+    </fields>
+
+    <!-- field to use to determine and enforce document uniqueness. -->
+    <uniqueKey>idtype</uniqueKey>
+
+    <!-- field for the QueryParser to use when an explicit fieldname is absent -->
+    <solrQueryParser defaultOperator="AND" />
+    <defaultSearchField>text</defaultSearchField>
+
+    <!-- copyField commands copy one field to another at the time a document
+        is added to the index.  It's used either to index the same field different
+        ways, or to add multiple fields to the same field for easier/faster searching.  -->
+
+    <copyField source="title"       dest="text"/>
+    <copyField source="description" dest="text"/>
+    <copyField source="tags"        dest="text"/>
+    <copyField source="text_*"      dest="text"/>
+    <copyField source="index_*"     dest="text"/>
+
+</schema>
