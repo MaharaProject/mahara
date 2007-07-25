@@ -803,11 +803,7 @@ function call_static_method($class, $method) {
     $args = func_get_args();
     array_shift($args);
     array_shift($args);
-    try {
-        return call_user_func_array(array($class, $method), $args);
-    } catch(Exception $e) {
-        throw new Exception("Method not static");
-    }
+    return call_user_func_array(array($class, $method), $args);
 }
 
 function generate_class_name() {
