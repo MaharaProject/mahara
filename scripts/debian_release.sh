@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 BUILDDIR="/tmp/mahara_release"
 REPODIR="/tmp/mahara_repo"
