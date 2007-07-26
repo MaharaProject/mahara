@@ -526,6 +526,10 @@ class PluginSearchInternal extends PluginSearch {
      */
     public static function self_search($querystring, $limit, $offset, $type = 'all') {
         global $USER;
+        if (trim($querystring) == '') {
+            return false;
+        }
+
         // Tokenise the search
         $querydata = self::search_parse_query($querystring);
 
