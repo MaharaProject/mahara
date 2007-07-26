@@ -255,7 +255,7 @@ function template_locate($templatename, $fetchdb=true) {
             $template['cacheddata'] = unserialize($dbstuff->cacheddata);
             $template['category'] = $dbstuff->category;
         }
-        $template['location'] = get_config('datarootroot') . 'templates/' . $templatename . '/';
+        $template['location'] = get_config('dataroot') . 'templates/' . $templatename . '/';
         return $template;
     }
 
