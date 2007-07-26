@@ -250,6 +250,9 @@ function uploadcsv_validate(Pieform $form, $values) {
                 $form->set_error('file', get_string('uploadcsverroruseralreadyexists', 'admin', $i, $username));
                 return;
             }
+            if (record_exists('usr', 'email', $email)) {
+                $form->set_error('file', get_string('uploadcsverroremailaddresstaken', 'admin', $i, $email));
+            }
 
             // Note: only checks for valid form are done here, none of the checks
             // like whether the password is too easy. The user is going to have to
