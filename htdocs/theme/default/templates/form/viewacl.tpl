@@ -33,7 +33,7 @@ var count = 0;
 // Given a row, render it on the left hand side
 function renderPotentialPresetItem(item) {
     var addButton = BUTTON({'type': 'button'}, '{{str tag=add}}');
-    var row = DIV(null, item.name, ' ', addButton);
+    var row = DIV(null, addButton, ' ', item.name);
 
     connect(addButton, 'onclick', function() {
         appendChildNodes('accesslist', renderAccessListItem(item));
