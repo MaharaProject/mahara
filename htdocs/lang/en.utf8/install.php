@@ -34,7 +34,7 @@ $string['aboutdefaultcontent'] = '<h2>About Mahara</h2>
 
 <p>Meaning `think\' or `thought\' in Te Reo Maori, the name reflects the project collaborator\'s dedication to creating a user-centred life long learning and development application as well as the belief that technology solutions cannot be developed outside the considerations of pedagogy and policy.</p>
 
-<p>Mahara is provided freely as Open Source software (under the GNU Public License). In brief, this means that you are allowed to copy, use and modify Mahara provided you agree to:</p>
+<p>Mahara is provided freely as Open Source software (under the GNU General Public License). In brief, this means that you are allowed to copy, use and modify Mahara provided you agree to:</p>
 
 <ul>
     <li>provide the source code to others; </li>
