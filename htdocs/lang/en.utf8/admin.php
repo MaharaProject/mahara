@@ -192,6 +192,7 @@ $string['uploadcsverrorinvalidpassword'] = 'Error on line %s of your file: The p
 $string['uploadcsverrorinvalidusername'] = 'Error on line %s of your file: The username for this user is not in correct form';
 $string['uploadcsverrormandatoryfieldnotspecified'] = 'Line %s of the file does not have the required "%s" field';
 $string['uploadcsverroruseralreadyexists'] = 'Line %s of the file specifies the username "%s" that already exists';
+$string['uploadcsverroremailaddresstaken'] = 'Line %s of the file specifies the e-mail address "%s" that is already taken by another user';
 $string['uploadcsvpagedescription'] = '<p>You may use this facility to upload new users via a <acronym title="Comma Separated Values">CSV</acronym> file.</p>
    
 <p>The first row of your CSV file should specify the format of your CSV data. For example, it should look like this:</p>
