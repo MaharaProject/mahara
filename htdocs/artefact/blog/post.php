@@ -665,12 +665,14 @@ EOF;
 // the execcommand_callback.
 
 $content_css = json_encode(theme_get_url('style/tinymce.css'));
+$language = substr(get_config('lang'), 0, 2);
 $tinymceinit = <<<EOF
 <script type="text/javascript">
 tinyMCE.init({
     mode: "textareas",
     editor_selector: 'wysiwyg',
     button_tile_map: true,
+    language: '{$language}',
     theme: "advanced",
     plugins: "table,emotions,iespell,inlinepopups",
     theme_advanced_buttons1 : "bold,italic,underline,strikethrough,separator,forecolor,backcolor,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,hr,emotions,iespell,cleanup,separator,link,unlink,image,separator,code",
