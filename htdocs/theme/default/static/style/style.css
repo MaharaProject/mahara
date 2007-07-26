@@ -1171,6 +1171,9 @@ table#installer {
 	font-weight: normal;
 	margin: 0 0 10px 20px; 
 }
+.maincontent #tree ul ul span {
+    cursor: pointer;
+}
 .maincontent #template {
 	margin: 0;
 	padding: 0 0 0 5px;
@@ -1229,8 +1232,9 @@ span.block_targetted, div.block_targetted {
     border: 2px solid #c2e167;
 }
 .moveselected {
-	background: #eef7d4 url(../images/icon_arrow.gif) no-repeat right; 
-	padding: 0 12px 0 0;
+    display: block;
+    background: #eef7d4 url(../images/icon_arrow.gif) no-repeat right; 
+    padding: 0 12px 0 0;
 }
 .clickable {
     cursor: pointer;
