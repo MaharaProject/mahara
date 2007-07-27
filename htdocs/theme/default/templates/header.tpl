@@ -23,7 +23,6 @@
 {foreach from=$STYLESHEETLIST item=cssurl}
         <link rel="stylesheet" type="text/css" href="{$cssurl}">
 {/foreach}
-        <link rel="stylesheet" type="text/css" href="{theme_path location='style/dev.css'}">
         <link rel="stylesheet" type="text/css" href="{theme_path location='style/print.css'}" media="print">
         <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
     </head>

@@ -1148,6 +1148,8 @@ table#installer {
 	overflow: auto;
 	padding: 5px;
 	margin: 0;
+    float: left;
+    width: 22%;
 }
 .maincontent #tree ul {
 	font-size: 13px;
@@ -1170,9 +1172,23 @@ table#installer {
     cursor: pointer;
 }
 .maincontent #template {
-	margin: 0;
+    margin: 0 1% 0 0;
 	padding: 0 0 0 5px;
 	font-size: 11px;
+    overflow: auto;
+    width: 73%;
+}
+/* Ensure the template is on the right in ie6 */
+* html div#template {
+    float: right;
+}
+/* Prevent scrollbar in gecko */
+div#template form {
+    width: 99%;
+}
+/* Prevent Y scrollbar being half obscured in ie6 */
+* html div#template form {
+    width: 95%;
 }
 .maincontent #template td {
 	vertical-align: text-top;
@@ -1240,7 +1256,6 @@ div.move_link {
     padding-left: 0;
 }
 div.moveselected {
-    display: block;
     background: #eef7d4 url(../images/icon_arrow.gif) no-repeat right; 
     padding: 0 12px 0 4px;
 }
