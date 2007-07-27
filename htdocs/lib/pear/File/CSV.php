@@ -174,6 +174,9 @@ class File_CSV
         if (!$fp = File_CSV::getPointer($file, $conf, FILE_MODE_READ)) {
             return false;
         }
+        if (feof($fp)) {
+            return false;
+        }
         $buff = $c = null;
         $ret  = array();
         $i = 1;
@@ -182,6 +185,7 @@ class File_CSV
         $f = $conf['fields'];
         while (($line = fgets($fp)) !== false) {
             $line = preg_replace("/\r$/", "\n", $line);
+            $line = preg_replace("/([^\n])$/", "$1\n", $line);
             $length = strlen($line);
             for ($j = 0; $j < strlen($line); $j++) {
                 $prev = $c;
@@ -238,7 +242,7 @@ class File_CSV
                 $buff .= $c;
             }
         }
-        return !feof($fp) ? $ret : false;
+        return $ret;
     }
 
     /**
