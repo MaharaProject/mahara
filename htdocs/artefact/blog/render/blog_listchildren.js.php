@@ -38,7 +38,12 @@ var blog_listchildren{$blockid} = new TableRenderer(
     [
         function(r) {
             var td = TD();
-            td.innerHTML = r.content.html;
+            if (typeof(r.content.html) != 'undefined') {
+                td.innerHTML = r.content.html;
+            }
+            else {
+                td.innerHTML = r.content;
+            }
             return td;
         }
     ]
