@@ -25,13 +25,18 @@
         removeElement({{$name}}_newref);
         var newEmail = {{$name}}_newrefinput.value;
         if (typeof(newEmail) == 'string' && newEmail.length > 0) {
-            appendChildNodes('{{$name}}_list', DIV({'class': 'unvalidated'},
-                INPUT({'type': 'hidden', 'name': '{{$name}}_invalid[]'       , 'value': {{$name}}_newrefinput.value}),
-                ' ',
-                {{$name}}_newrefinput.value,
-                A({'href': '', 'onclick': '{{$name}}_remove(this); return false'}, '[x]'),
-                ' a validation email will be sent when you save your profile'
-            ));
+            if (newEmail.length > 255) {
+                alert('E-mail addresses cannot be longer that 255 characters');
+            }
+            else {
+                appendChildNodes('{{$name}}_list', DIV({'class': 'unvalidated'},
+                    INPUT({'type': 'hidden', 'name': '{{$name}}_invalid[]'       , 'value': {{$name}}_newrefinput.value}),
+                    ' ',
+                    {{$name}}_newrefinput.value,
+                    A({'href': '', 'onclick': '{{$name}}_remove(this); return false'}, '[x]'),
+                    ' a validation email will be sent when you save your profile'
+                ));
+            }
         }
         {{$name}}_newrefinput = null;
         {{$name}}_newref = null;
