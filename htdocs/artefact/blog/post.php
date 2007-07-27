@@ -337,6 +337,11 @@ function fileattached_id(id) {
 
 // Save the blog post.
 function saveblogpost() {
+    // Hacky inline validation - see bug #380
+    if ($('editpost_title').value == '') {
+        alert('You must specify a title for your post');
+        return false;
+    }
     var data = {'title' : $('editpost_title').value,
                 'draft' : $('draftpost_thisisdraft').checked,
                 'createid'  : {$createid},
@@ -369,6 +374,10 @@ function saveblogpost() {
     }
 
     data.body = $('editpost_description').value;
+    if (data.body == '') {
+        alert('You must specify some content for your post');
+        return false;
+    }
     data.tags = $('editpost_tags').value;
     sendjsonrequest('saveblogpost.json.php', data, 'POST', function (result) {
         if (result.error) {
