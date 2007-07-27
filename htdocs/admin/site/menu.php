@@ -42,17 +42,16 @@ $adminstrings = array('confirmdeletemenuitem', 'deletefailed','deletingmenuitem'
                       'loadingmenuitems','menuitemsloaded','failedloadingadminfiles',
                       'failedloadingmenuitems');
 foreach ($strings as $string) {
-    $getstring[$string] = "'" . get_string($string) . "'";
+    $getstring[$string] = json_encode(get_string($string));
 }
 foreach ($adminstrings as $string) {
-    $getstring[$string] = "'" . get_string($string,'admin') . "'";
+    $getstring[$string] = json_encode(get_string($string, 'admin'));
 }
 
-// TODO: this should be using json_encode
-$thead = array(get_string('type','admin'),get_string('name','admin'),get_string('linkedto','admin'),'');
-$ijs = "var thead = TR(null,map(partial(TH,null),['" . implode($thead,"','") . "']));\n";
-$ijs .= "var externallink = '" . get_string('externallink','admin') . "';\n";
-$ijs .= "var adminfile = '" . get_string('adminfile','admin') . "';\n";
+$thead = array(json_encode(get_string('type', 'admin')), json_encode(get_string('name', 'admin')), json_encode(get_string('linkedto', 'admin')), '""');
+$ijs = "var thead = TR(null,map(partial(TH,null),[" . implode($thead,",") . "]));\n";
+$ijs .= "var externallink = " . json_encode(get_string('externallink', 'admin')) . ";\n";
+$ijs .= "var adminfile = " . json_encode(get_string('adminfile','admin')) . ";\n";
 
 $ijs .= <<< EOJS
 // Request a list of menu items from the server
