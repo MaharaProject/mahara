@@ -1043,7 +1043,7 @@ function pieform_element_calendar_configure($element) {
     $element['jsroot'] = get_config('wwwroot') . 'js/jscalendar/';
     $element['themefile'] = theme_get_url('style/calendar.css');
     $element['imagefile'] = theme_get_url('images/calendar.gif');
-    $language = substr(get_config('lang'), 0, 2);$language = 'de';
+    $language = substr(get_config('lang'), 0, 2);
     $element['language'] = $language;
     return $element;
 }
