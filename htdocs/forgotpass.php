@@ -117,8 +117,8 @@ function forgotpass_validate(Pieform $form, $values) {
     if ($form->get_error('email')) {
         return;
     }
-    
-    $authobj = auth_get_auth_instance($user);
+
+    $authobj = AuthFactory::create($user->authinstance);
     if (!method_exists($authobj, 'change_password')) {
         die_info(get_string('cantchangepassword'));
     }
@@ -173,27 +173,20 @@ function forgotpasschange_validate(Pieform $form, $values) {
 function forgotpasschange_submit(Pieform $form, $values) {
     global $SESSION, $USER;
 
-    if (!$user = get_record('usr', 'id', $values['user'])) {
+    try {
+        $user = new User();
+        $user->find_by_id($values['user']);
+    } catch (AuthUnknownUserException $e) {
         throw new Exception('Request to change the password for a user who does not exist');
     }
 
-    $authtype  = auth_get_authtype_for_institution($user->institution);
-    $authclass = 'Auth' . ucfirst($authtype);
-    safe_require('auth', $authtype);
-
-    if ($password = call_static_method($authclass, 'change_password', $user->username, $values['password1'])) {
-        $userrec = new StdClass;
-        $userrec->password = $password;
-        // @todo at the time of writing, update_record didn't support a null $where clause, even though
-        // it's the default. That should be fixed, so this is easier
-        $where = new StdClass;
-        $where->id = $values['user'];
-        update_record('usr', $userrec, $where);
+    $authobj = AuthFactory::create($user->authinstance);
+    if ($password = $authobj->change_password($user, $values['password1'])) {
 
         // Remove the password request(s) for the user
         delete_records('usr_password_request', 'usr', $values['user']);
 
-        $USER->login($user);
+        $USER->reanimate($user->id, $user->authinstance);
         $SESSION->add_ok_msg(get_string('passwordchangedok'));
         redirect();
         exit;
