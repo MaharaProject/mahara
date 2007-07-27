@@ -199,7 +199,8 @@ function uploadcsv_validate(Pieform $form, $values) {
 
         // Get the format of the file
         if ($i == 1) {
-            foreach ($line as $potentialkey) {
+            foreach ($line as &$potentialkey) {
+                $potentialkey = trim($potentialkey);
                 if (!in_array($potentialkey, $ALLOWEDKEYS)) {
                     $form->set_error('file', get_string('uploadcsverrorinvalidfieldname', 'admin', $potentialkey));
                     return;
