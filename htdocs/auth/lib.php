@@ -556,22 +556,6 @@ function auth_get_available_auth_types($institution=null) {
 }
 
 /**
- * Given a user, returns the authentication instance used.
- *
- * @param  object   $user            User object with an authinstance member
- * @return array                     Array of auth instance records
- */
-function auth_get_auth_instance($user) {
-    static $cache = array();
-
-    if (!isset($cache[$user->id])) {
-        $cache[$user->id] = get_record('auth_instance', 'id', $user->authinstance, null, null, null, null, 'id, instancename, priority, authname');
-    }
-
-    return $cache[$user->id];
-}
-
-/**
  * Checks whether the current user needs to change their password, and handles
  * the password changing if it's required.
  *
