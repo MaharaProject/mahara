@@ -1166,12 +1166,7 @@ table#installer {
 	font-weight: normal;
 	margin: 0 0 10px 20px;
 }
-.maincontent #tree p {
-	font-size: 11px;
-	font-weight: normal;
-	margin: 0 0 10px 20px; 
-}
-.maincontent #tree ul ul span {
+.maincontent #tree ul ul div {
     cursor: pointer;
 }
 .maincontent #template {
@@ -1227,14 +1222,33 @@ span.block, div.block {
 }
 span.block_potential, div.block_potential {
     border: 2px solid #e3ac03;
+    cursor: pointer;
 }
 span.block_targetted, div.block_targetted {
     border: 2px solid #c2e167;
 }
-.moveselected {
+div.toggle_link {
+    float: left;
+    margin-top: 4px;
+    margin-right: 3px;
+}
+div.move_link {
+    display: inline;
+    padding-left: 4px;
+}
+* html div.move_link {
+    padding-left: 0;
+}
+div.moveselected {
     display: block;
     background: #eef7d4 url(../images/icon_arrow.gif) no-repeat right; 
-    padding: 0 12px 0 0;
+    padding: 0 12px 0 4px;
+}
+p.emptycontainer {
+    color: #888;
+    margin: 0 0 0 20px;
+	font-size: 11px;
+	font-weight: normal;
 }
 .clickable {
     cursor: pointer;

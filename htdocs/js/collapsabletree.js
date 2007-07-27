@@ -125,10 +125,10 @@ function CollapsableTree(data, source) {
             else {
                 item = LI({'id': i.id});
                 if (i.container) {
-                    var toggleLink = SPAN({'id': i.id + '_toggle'}, self.getExpandLink(item));
+                    var toggleLink = DIV({'id': i.id + '_toggle'}, self.getExpandLink(item));
                     appendChildNodes(item, toggleLink, ' ');
                 }
-                var title = SPAN(null, i.text);
+                var title = DIV(null, i.text);
                 appendChildNodes(item, title);
                 forEach(self.statevars, function(j) {
                     if (typeof(data[j]) != 'undefined') {

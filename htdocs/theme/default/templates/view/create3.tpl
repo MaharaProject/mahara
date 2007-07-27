@@ -36,7 +36,7 @@ function treeItemFormat(data, tree) {
     var item = LI({'id': 'art_' + data.id});
 
     if (data.container) {
-        var toggleLink = SPAN({'id': 'art_' + data.id + '_toggle'}, tree.getExpandLink(item));
+        var toggleLink = DIV({'id': 'art_' + data.id + '_toggle', 'class' : 'toggle_link'}, tree.getExpandLink(item));
         appendChildNodes(item, toggleLink, ' ');
     }
 
@@ -44,7 +44,7 @@ function treeItemFormat(data, tree) {
         data.title = '';
     }
 
-    var title = SPAN({title: data.title}, data.text);
+    var title = DIV({title: data.title, 'class': 'move_link'}, data.text);
 
     appendChildNodes(item, title);
 
