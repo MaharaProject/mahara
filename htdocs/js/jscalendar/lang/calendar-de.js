@@ -43,6 +43,8 @@ Calendar._SDN = new Array
  "Sa",
  "So");
 
+Calendar._FD = 0;
+
 // full month names
 Calendar._MN = new Array
 ("Januar",
