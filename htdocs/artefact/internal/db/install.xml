@@ -1,47 +1,34 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="lib/db" VERSION="20060926" COMMENT="XMLDB file for core Mahara tables"
+<XMLDB PATH="lib/db" VERSION="20060926" COMMENT="XMLDB file for Internal Artefact Mahara tables"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../lib/xmldb/xmldb.xsd"
 >
 <TABLES>
-    <!-- This isn't required anymore ... I think ...
-    <TABLE NAME="artefact_internal_profile">
-        <FIELDS>
-            <FIELD NAME="owner" TYPE="int" LENGTH="10" NOTNULL="true" />
-            <FIELD NAME="field" TYPE="char" LENGTH="100" NOTNULL="true" />
-            <FIELD NAME="value" TYPE="text" NOTNULL="true" />
-        </FIELDS>
-        <KEYS>
-            <KEY NAME="primary" TYPE="primary" FIELDS="owner,field" />
-            <KEY NAME="ownerfk" TYPE="foreign" FIELDS="owner" REFTABLE="usr" REFFIELDS="id" />
-        </KEYS>
-    </TABLE>
-    -->
     <TABLE NAME="artefact_internal_profile_email">
         <FIELDS>
-            <FIELD NAME="owner" TYPE="int" LENGTH="10" NOTNULL="true" />
-            <FIELD NAME="email" TYPE="char" LENGTH="255" NOTNULL="true" />
-            <FIELD NAME="verified" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
-            <FIELD NAME="principal" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
-            <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="false" />
+            <FIELD NAME="owner" TYPE="int" LENGTH="10" NOTNULL="true"/>
+            <FIELD NAME="email" TYPE="char" LENGTH="255" NOTNULL="true"/>
+            <FIELD NAME="verified" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
+            <FIELD NAME="principal" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
+            <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="false"/>
             <FIELD NAME="key" TYPE="char" LENGTH="16" NOTNULL="false"/>
             <FIELD NAME="expiry" TYPE="datetime" NOTNULL="false"/>
         </FIELDS>
         <KEYS>
-            <KEY NAME="primary" TYPE="primary" FIELDS="owner,email" />
-            <KEY NAME="ownerfk" TYPE="foreign" FIELDS="owner" REFTABLE="usr" REFFIELDS="id" />
-            <KEY NAME="artefactfk" TYPE="foreign" FIELDS="artefact" REFTABLE="artefact" REFFIELDS="id" />
+            <KEY NAME="primary" TYPE="primary" FIELDS="owner,email"/>
+            <KEY NAME="ownerfk" TYPE="foreign" FIELDS="owner" REFTABLE="usr" REFFIELDS="id"/>
+            <KEY NAME="artefactfk" TYPE="foreign" FIELDS="artefact" REFTABLE="artefact" REFFIELDS="id"/>
         </KEYS>
     </TABLE>
     <TABLE NAME="artefact_internal_profile_icon">
         <FIELDS>
-            <FIELD NAME="owner" TYPE="int" LENGTH="10" NOTNULL="true" />
-            <FIELD NAME="filename" TYPE="char" LENGTH="255" NOTNULL="true" />
-            <FIELD NAME="primary" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
+            <FIELD NAME="owner" TYPE="int" LENGTH="10" NOTNULL="true"/>
+            <FIELD NAME="filename" TYPE="char" LENGTH="255" NOTNULL="true"/>
+            <FIELD NAME="primary" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
         </FIELDS>
         <KEYS>
-            <KEY NAME="primary" TYPE="primary" FIELDS="owner,filename" />
-            <KEY NAME="ownerfk" TYPE="foreign" FIELDS="owner" REFTABLE="usr" REFFIELDS="id" />
+            <KEY NAME="primary" TYPE="primary" FIELDS="owner,filename"/>
+            <KEY NAME="ownerfk" TYPE="foreign" FIELDS="owner" REFTABLE="usr" REFFIELDS="id"/>
         </KEYS>
     </TABLE>
 </TABLES>
