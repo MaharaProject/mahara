@@ -260,9 +260,10 @@ function xmldb_core_upgrade($oldversion=0) {
         execute_sql("ALTER TABLE {$prefix}template ALTER COLUMN category TYPE varchar(128)");
         execute_sql("ALTER TABLE {$prefix}view ALTER COLUMN template TYPE varchar(128)");
         execute_sql("ALTER TABLE {$prefix}view_access ALTER COLUMN accesstype SET DEFAULT 'public'");
+        execute_sql("ALTER TABLE {$prefix}usr ALTER COLUMN email TYPE varchar(255)");
     }
 
-    // everything up to here we pre mysql support.
+    // everything up to here was pre mysql support.
 
     if ($oldversion < 2007062000) {
         execute_sql("INSERT INTO {$prefix}config (field, value) VALUES ('lang', (SELECT value FROM {$prefix}config WHERE field = 'language'))");
