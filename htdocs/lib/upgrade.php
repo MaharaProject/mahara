@@ -444,6 +444,8 @@ function core_postinst() {
     // Set default search plugin
     set_config('searchplugin', 'internal');
 
+    set_config('lang', 'en.utf8');
+
     return $status;
 }
 
