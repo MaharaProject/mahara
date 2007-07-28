@@ -11,11 +11,16 @@ function xmldb_auth_internal_upgrade($oldversion=0) {
         $auth_instance->authname='internal';
         $auth_instance->id = insert_record('auth_instance',$auth_instance, 'id', true);
 
-        if (!empty($auth_instance->id)) {
-            return execute_sql("UPDATE {$prefix}usr set authinstance='{$auth_instance->id}'");
+        if (empty($auth_instance->id)) {
+            return false;
         }
 
-        return false;
+        $table = new XMLDBTable('usr');
+        $key   = new XMLDBKey("authinstancefk");
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('authinstance'), 'auth_instance', array('id'));
+        add_key($table, $key);
+
+        return true;
     }
 
     return true;
