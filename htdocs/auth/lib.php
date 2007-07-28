@@ -569,10 +569,6 @@ function auth_check_password_change() {
         return;
     }
 
-    if (get_config('version') < 2007062900) {
-        return true;
-    }
-
     $authobj = AuthFactory::create($USER->authinstance);
 
     if ($authobj->changepasswordurl) {
@@ -902,7 +898,8 @@ function login_submit(Pieform $form, $values) {
             $SESSION->add_error_msg(get_string('loginfailed'));
         }
 
-    } catch (AuthUnknownUserException $e) {
+    }
+    catch (AuthUnknownUserException $e) {
         try {
             // The user doesn't exist, but maybe the institution wants us to 
             // create users that don't exist
@@ -956,7 +953,8 @@ function login_submit(Pieform $form, $values) {
     
                             handle_event('createuser', $USER);
                             db_commit();
-                        } catch (Exception $e) {
+                        }
+                        catch (Exception $e) {
                             db_rollback();
                             throw $e;
                         }
@@ -964,12 +962,10 @@ function login_submit(Pieform $form, $values) {
                 }
             }
 
-        } catch (AuthUnknownUserException $e) {
+        }
+        catch (AuthUnknownUserException $e) {
             $SESSION->add_error_msg(get_string('loginfailed'));
         }
-    } catch (Exception $e) {
-        // Unknown Exception!!!
-        $SESSION->add_error_msg(get_string('loginfailed'));
     }
 
     // Only admins in the admin section!
