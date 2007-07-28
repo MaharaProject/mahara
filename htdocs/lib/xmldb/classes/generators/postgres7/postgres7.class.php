@@ -47,6 +47,8 @@ class XMLDBpostgres7 extends XMLDBgenerator {
 
     var $enum_inline_code = false; //Does the generator need to add inline code in the column definition
 
+    var $table_extra_code = false;
+
     var $rename_index_sql = 'ALTER TABLE OLDINDEXNAME RENAME TO NEWINDEXNAME'; //SQL sentence to rename one index
                                       //TABLENAME, OLDINDEXNAME, NEWINDEXNAME are dinamically replaced
 
