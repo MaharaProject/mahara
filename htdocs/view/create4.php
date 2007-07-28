@@ -76,11 +76,9 @@ function createview4_cancel_submit() {
 
 function createview4_submit(Pieform $form, $values) {
     global $SESSION, $USER, $createid, $data;
-    log_debug($values);
 
     if (param_boolean('back')) {
         $data['accesslist'] = array_values((array)$values['accesslist']);
-        log_debug($data);
         $SESSION->set('create_' . $createid, $data);
         redirect('/view/create3.php?createid=' . $createid);
     }
