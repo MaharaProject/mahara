@@ -266,7 +266,9 @@ function xmldb_core_upgrade($oldversion=0) {
     // everything up to here was pre mysql support.
 
     if ($oldversion < 2007062000) {
-        execute_sql("INSERT INTO {$prefix}config (field, value) VALUES ('lang', (SELECT value FROM {$prefix}config WHERE field = 'language'))");
+        if (!get_record_array('config', 'field', 'lang')) {
+            execute_sql("INSERT INTO {$prefix}config (field, value) VALUES ('lang', (SELECT value FROM {$prefix}config WHERE field = 'language'))");
+        }
         delete_records('config', 'field', 'language');
     }
 
