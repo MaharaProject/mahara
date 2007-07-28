@@ -96,7 +96,7 @@
                 <FIELD NAME="lastname" TYPE="text" NOTNULL="false"/>
                 <FIELD NAME="studentid" TYPE="text" NOTNULL="false"/>
                 <FIELD NAME="preferredname" TYPE="text" NOTNULL="false"/>
-                <FIELD NAME="email" TYPE="text" NOTNULL="false"/>
+                <FIELD NAME="email" TYPE="char" LENGTH="255" NOTNULL="true" />
                 <!-- This field should be foreign keyed to the artefact table, however the
                 artefact table already has a key to this table, and XMLDB isn't smart enough
                 to create the tables first, then the keys. -->
