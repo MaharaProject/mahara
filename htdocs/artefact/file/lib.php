@@ -182,7 +182,6 @@ class PluginArtefactFile extends PluginArtefact {
         // list, add it to the current list.
         foreach ($filetypes as $filetype) {
             $type = $filetype['#']['description'][0]['#'];
-            error_log("looking for $type");
             if (!in_array($type, $currentlist)) {
                 log_debug('Adding filetype: ' . $type);
                 $currentlist[] = $type;
