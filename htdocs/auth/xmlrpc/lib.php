@@ -515,13 +515,22 @@ class PluginAuthXmlrpc extends PluginAuth {
             'help'   => true
         );
 
+        /**
+         * empty($peer->appname) would ALWAYS return true, because the property doesn't really
+         * exist. When we try to get $peer->appname, we're actually calling the peer class's
+         * __get overloader. Unfortunately, the 'empty' function seems to just check for the
+         * existence of the property - it doesn't call the overloader. Bug or feature?
+         */
+	     
+        $tmpappname = $peer->appname;
+
         $elements['appname'] = array(
             'type'                => 'select',
             'title'               => get_string('application','auth'),
             'collapseifoneoption' => true,
             'multiple'            => false,
             'options'             => $apparray,
-            'defaultvalue'        => empty($peer->appname)? key($apparray) : $peer->appname,
+            'defaultvalue'        => empty($tmpappname)? key($apparray) : $tmpappname,
             'help'                => true
         );
 
