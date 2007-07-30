@@ -629,7 +629,7 @@ class PluginAuthXmlrpc extends PluginAuth {
             }
         }
 
-        $peer->wwwroot              = $values['wwwroot'];
+        $peer->wwwroot              = preg_replace("|\/+$|", "", $values['wwwroot']);
         $peer->name                 = $values['name'];
         $peer->deleted              = $values['deleted'];
         $peer->portno               = $values['portno'];
