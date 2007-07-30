@@ -97,7 +97,7 @@ $m->post($CFG->{url} . 'admin/',
 debug("Changing admin password...");
 $m->submit_form(
     form_name => 'change_password',
-    fields => { password1 => $CFG->{password}, password2 => $CFG->{password} }
+    fields => { password1 => $CFG->{password}, password2 => $CFG->{password}, email => $CFG->{email} }
 );
 
 if ($m->content =~ /Your new password has been saved/) {
