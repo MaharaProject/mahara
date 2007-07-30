@@ -257,11 +257,29 @@ $string['myfriends']          = 'My Friends';
 $string['myaddressbook']      = 'My Addressbook';
 $string['mycommunities']      = 'My Communities';
 $string['myownedcommunities'] = 'My Owned Communities';
+$string['mygroups']           = 'My Groups';
 $string['youareloggedinas']   = 'You are logged in as %s';
 $string['unreadmessages'] = 'unread messages';
 $string['unreadmessage'] = 'unread message';
 
 // mycontacts
+
+// mygroups
+$string['creategroup']                = 'Add new group';
+$string['canteditdontown']            = 'You can\'t edit this group because you don\'t own it';
+$string['groupname']                  = 'Group name';
+$string['groupmembers']               = 'Group members';
+$string['savegroup']                  = 'Save group';
+$string['groupsaved']                 = 'Group saved';
+$string['groupcreated']               = 'Group created';
+$string['groupalreadyexists']         = 'A group by this name already exists';
+$string['groupdescription']           = 'Group description';
+$string['editgroup']                  = 'Edit group';
+$string['membercount']                = 'Member count';
+$string['confirmdeletegroup']         = 'Are you sure you want to delete this group?';
+$string['confirmdeletegrouphasviews'] = 'Are you sure you want to delete this group? Some of your views use this group for access control, removing this group would mean that the members of that group would not have access to the views.';
+$string['cantdeletegroupdontown']     = 'You can\'t delete this group, you don\'t own it';
+$string['deletegroupsuccessful']      = 'Group successfully deleted';
 
 // my account
 $string['account'] =  'My account';
@@ -410,7 +428,6 @@ $string['savecommunity'] = 'Save Community';
 $string['communitysaved'] = 'Community Saved Successfully';
 $string['communityname'] = 'Community Name';
 $string['invalidcommunity'] = 'The community doesn\'t exist';
-$string['canteditdontown'] = 'You can\'t edit this community because you don\'t own it';
 $string['communitydescription'] = 'Community Description';
 $string['membershiptype'] = 'Community Membership Type';
 $string['membershiptype.controlled'] = 'Controlled Membership';

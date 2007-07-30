@@ -1204,6 +1204,26 @@ function can_view_view($view_id, $user_id=null) {
         return true;
     }
 
+    // check group access
+    if (get_field_sql(
+        'SELECT
+            a.view
+        FROM 
+            ' . $prefix . 'view_access_group a
+            INNER JOIN ' . $prefix . 'usr_group g ON a.grp = g.id
+            INNER JOIN ' . $prefix . 'usr_group_member m ON g.id = m.grp
+        WHERE
+            a.view=? AND m.member=?
+            AND ( a.startdate < ? OR a.startdate IS NULL )
+            AND ( a.stopdate > ?  OR a.stopdate  IS NULL )
+        LIMIT 1',
+        array( $view_id, $user_id, $dbnow, $dbnow )
+        )
+    ) {
+        //log_debug('Yes - View is available to one of the owners groups');
+        return true;
+    }
+
     // check community access
     if (get_field_sql(
         'SELECT
@@ -1331,6 +1351,35 @@ function get_views($users, $userlooking=null, $limit=5) {
         FROM 
             ' . $prefix . 'view v
             INNER JOIN ' . $prefix . 'view_access_usr a ON v.id=a.view AND a.usr=?
+        WHERE
+            v.owner IN (' . join(',',array_map('db_quote', array_keys($users))) . ')
+            AND ( v.startdate IS NULL OR v.startdate < ? )
+            AND ( v.stopdate IS NULL OR v.stopdate > ? )
+        ',
+        array($userlooking, $dbnow, $dbnow)
+        )
+    ) {
+        foreach ($results as &$row) {
+            $list[$row->owner][$row->id] = $row;
+        }
+    }
+
+    // bail if we've filled all users to the limit
+    if (_get_views_trim_list($list, $users, $limit)) {
+        return $list;
+    }
+
+    // check group access
+    if ($results = get_records_sql_array(
+        'SELECT
+            v.*,
+            ' . db_format_tsfield('v.atime','atime') . ',
+            ' . db_format_tsfield('v.mtime','mtime') . ',
+            ' . db_format_tsfield('v.ctime','ctime') . '
+        FROM 
+            ' . $prefix . 'view v
+            INNER JOIN ' . $prefix . 'view_access_group a ON v.id=a.view
+            INNER JOIN ' . $prefix . 'usr_group_member m ON m.grp=a.grp AND m.member=?
         WHERE
             v.owner IN (' . join(',',array_map('db_quote', array_keys($users))) . ')
             AND ( v.startdate IS NULL OR v.startdate < ? )

@@ -1234,6 +1234,11 @@ function main_nav() {
                 'link'    => $wwwroot . 'contacts/communities/owned.php',
                 'section' => 'mahara',
             ),
+            array(
+                'name'    => 'mygroups',
+                'link'    => $wwwroot . 'contacts/groups/',
+                'section' => 'mahara',
+            ),
         ),
     );
     $menu[] = array(

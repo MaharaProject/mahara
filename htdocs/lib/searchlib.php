@@ -112,6 +112,46 @@ function search_user($query_string, $limit, $offset = 0) {
 }
 
 /**
+ * Given a query string and limits, return an array of matching groups using the
+ * search plugin defined in config.php
+ *
+ * @param string  The query string
+ * @param integer How many results to return
+ * @param integer What result to start at (0 == first result)
+ * @return array  A data structure containing results looking like ...
+ *         $results = array(
+ *               count   => integer, // total number of results
+ *               limit   => integer, // how many results are returned
+ *               offset  => integer, // starting from which result
+ *               results => array(   // the result records
+ *                   array(
+ *                       id            => integer,
+ *                       name          => string,
+ *                       owner         => integer,
+ *                       description   => string,
+ *                       ctime         => string,
+ *                       mtime         => string,
+ *                   ),
+ *                   array(
+ *                       id            => integer,
+ *                       name          => string,
+ *                       owner         => integer,
+ *                       description   => string,
+ *                       ctime         => string,
+ *                       mtime         => string,
+ *                   ),
+ *                   array(...),
+ *               ),
+ *           );
+ */
+function search_group($query_string, $limit, $offset = 0) {
+    $plugin = get_config('searchplugin');
+    safe_require('search', $plugin);
+
+    return call_static_method(generate_class_name('search', $plugin), 'search_group', $query_string, $limit, $offset);
+}
+
+/**
  * Given a query string and limits, return an array of matching communities using the
  * search plugin defined in config.php
  *

@@ -13,12 +13,12 @@ use Getopt::Declare;
 use Mahara::Config;
 use Mahara::RandomData;
 
-my $types = [qw(user activity community artefact view watchlist template file folder image blog blogpost)];
+my $types = [qw(user group activity community artefact view watchlist template file folder image blog blogpost)];
 
 my $args = Getopt::Declare->new(q(
     [strict]
     -t <type>        	Select type of data ) . '(' . join(', ', @{$types}) . ')' . q(  [required]
-    -u <user>        	User to create data for (required for type 'activity')
+    -u <user>        	User to create data for (required for type 'group' and 'activity')
     -ua             	Create data for all users (can be used instead of -u)
     -c <configfile>  	What config.php to use (defaults to ../htdocs/config.php)	
     -n <count>       	How many to generate (default 1)	
@@ -43,6 +43,18 @@ unless ( grep { $args->{-t} eq $_ } @{$types} ) {
 
 if ( $args->{-t} eq 'user' ) {
     $randomdata->insert_random_users($args->{-n});
+}
+
+if ( $args->{-t} eq 'group' ) {
+    unless ( defined $args->{-u} or defined $args->{-ua} ) {
+        croak 'Need to specify a user with -u or -ua';
+    }
+    if ( defined $args->{-u} ) {
+        $randomdata->insert_random_groups($args->{-u}, $args->{-n});
+    }
+    else {
+        $randomdata->insert_random_groups_all_users($args->{-n});
+    }
 }
 
 if ( $args->{-t} eq 'activity' ) {

@@ -145,6 +145,10 @@ function createview4_submit(Pieform $form, $values) {
                     $accessrecord->usr = $item['id'];
                     insert_record('view_access_usr', $accessrecord);
                     break;
+                case 'group':
+                    $accessrecord->grp = $item['id'];
+                    insert_record('view_access_group', $accessrecord);
+                    break;
                 case 'community':
                     $accessrecord->community = $item['id'];
                     $accessrecord->tutoronly = $item['tutoronly'];

@@ -360,7 +360,7 @@ SELECT DISTINCT u.*, p.method, ?||wa.view AS url
                 $data->subject = get_string('newviewsubject', 'activity');
                 $data->url = get_config('wwwroot') . 'view/view.php?view=' . $data->view;
 
-                // add users on friendslist or userlist...
+                // add users on friendslist, userlist or grouplist...
                 $users = activity_get_viewaccess_users($data->view, $data->owner, 'newview');
                 if (empty($users)) {
                     $users = array();
@@ -514,6 +514,10 @@ function activity_get_viewaccess_users($view, $owner, $type) {
                     JOIN ' . $prefix . 'view v ON (v.owner = f.usr1 OR v.owner = f.usr2)
                     JOIN ' . $prefix . 'view_access vu ON vu.view = v.id
                         WHERE (usr1 = ? OR usr2 = ?) AND vu.accesstype = ? AND v.id = ? 
+                UNION SELECT member AS userid 
+                    FROM ' . $prefix . 'usr_group_member m
+                    JOIN ' . $prefix . 'view_access_group g ON m.grp = g.grp 
+                        WHERE g.view = ?
                 UNION SELECT usr AS userid 
                     FROM ' . $prefix . 'view_access_usr u 
                         WHERE u.view = ?
@@ -529,7 +533,7 @@ function activity_get_viewaccess_users($view, $owner, $type) {
                 JOIN ' . $prefix . 'usr u ON u.id = userlist.userid
                 LEFT JOIN ' . $prefix . 'usr_activity_preference p ON p.usr = u.id
             WHERE p.activity = ?';
-    $values = array($owner, $owner, $owner, 'friends', $view, $view, $view, 0, 1, $view, $type);
+    $values = array($owner, $owner, $owner, 'friends', $view, $view, $view, $view, 0, 1, $view, $type);
     if (!$u = get_records_sql_assoc($sql, $values)) {
         $u = array();
     }
