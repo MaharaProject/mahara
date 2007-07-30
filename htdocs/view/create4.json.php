@@ -45,9 +45,6 @@ switch ($type) {
     case 'user':
         $data = get_user_results($query, $limit, $offset);
         break;
-    case 'group':
-        $data = get_group_results($query, $limit, $offset);
-        break;
     case 'community':
         $data = get_community_results($query, $limit, $offset);
         break;
@@ -61,20 +58,6 @@ echo json_encode($data);
 
 function get_user_results($query, $limit, $offset) {
     $data = search_user($query, $limit, $offset);
-    return $data;
-}
-
-function get_group_results($query, $limit, $offset) {
-    $data = search_group($query, $limit, $offset);
-    if ($data['data']) {
-        foreach ($data['data'] as &$result) {
-            unset($result->owner);
-            unset($result->description);
-            unset($result->ctime);
-            unset($result->mtime);
-        }
-    }
-
     return $data;
 }
 

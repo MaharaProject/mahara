@@ -61,19 +61,15 @@ foreach ($data as &$item) {
     $item = (array)$item;
 }
 
-// Get access for users, groups and communities
+// Get access for users and communities
 $extradata = get_records_sql_array("
     SELECT 'user' AS type, usr AS id, 0 AS tutoronly, startdate, stopdate
         FROM {$prefix}view_access_usr
         WHERE view = ?
 UNION
-    SELECT 'group', grp, 0, startdate, stopdate
-        FROM {$prefix}view_access_group
-        WHERE view = ?
-UNION
     SELECT 'community', community, tutoronly, startdate, stopdate
         FROM {$prefix}view_access_community
-        WHERE view = ?", array($viewid, $viewid, $viewid));
+        WHERE view = ?", array($viewid, $viewid));
 if ($extradata) {
     foreach ($extradata as &$extraitem) {
         $extraitem = (array)$extraitem;
@@ -167,7 +163,6 @@ function editviewaccess_submit(Pieform $form, $values) {
     db_begin();
     delete_records('view_access', 'view', $viewid);
     delete_records('view_access_usr', 'view', $viewid);
-    delete_records('view_access_group', 'view', $viewid);
     delete_records('view_access_community', 'view', $viewid);
     $time = db_format_timestamp(time());
 
@@ -188,10 +183,6 @@ function editviewaccess_submit(Pieform $form, $values) {
                 case 'user':
                     $accessrecord->usr = $item['id'];
                     insert_record('view_access_usr', $accessrecord);
-                    break;
-                case 'group':
-                    $accessrecord->grp = $item['id'];
-                    insert_record('view_access_group', $accessrecord);
                     break;
                 case 'community':
                     $accessrecord->community = $item['id'];

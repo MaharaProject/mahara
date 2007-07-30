@@ -90,8 +90,6 @@ div.grippie {
 
 #profileform #profileform_introduction_container table,
 #editsitepage #editsitepage_pagetext_container table,
-.maincontent #editgroup #editgroup_description_container table,
-.maincontent #creategroup #creategroup_description_container table,
 .maincontent #createview1 #createview1_description_container table,
 .maincontent #newblog #newblog_description_container table,
 .maincontent #editblog #editblog_description_container table,
@@ -749,8 +747,6 @@ p {
 .maincontent #editpost table,
 .maincontent #editblog table,
 .maincontent #draftpost table,
-.maincontent #editgroup table,
-.maincontent #creategroup table,
 .maincontent #editviewaccess table,
 .maincontent #register table,
 .maincontent #editcommunity table,
@@ -786,9 +782,7 @@ p {
 /* No need padding td */
 .maincontent #editpost td,
 .maincontent #editblog td,
-.maincontent #creategroup td,
 .maincontent #newblog td,
-.maincontent #editgroup td,
 .maincontent #createview1 td,
 .maincontent #accountprefs td,
 .maincontent #editcommunity td,
@@ -1054,38 +1048,6 @@ table#installer {
 	border: 1px solid #d4d1c0;
 	padding: 1px 2px 1px 2px;
 }
-
-/* My Groups styles */
-.maincontent #mygroups #addnewgroupdiv {
-	margin: 10px 0 10px 0;
-	text-align: right;
-}
-.maincontent #creategroup #creategroup_description_header th,
-.maincontent #creategroup #creategroup_members_header th,
-.maincontent #editgroup #editgroup_description_header th,
-.maincontent #editgroup #editgroup_members_header th {
-	padding: 15px 0 0 0;
-}
-.maincontent #creategroup #creategroup_members_container table,
-.maincontent #editgroup #editgroup_members_container table {
-	width: 495px;
-}
-.maincontent #creategroup table tr td table,
-.maincontent #editgroup table tr td table {
-	margin: 0;
-	padding: 0;
-	background: #e5e8da;
-}
-.maincontent #creategroup table tr td table td,
-.maincontent #editgroup table tr td table td {
-	padding: 0 5px 5px 5px;
-	text-align: center;
-}
-.maincontent #creategroup table table label,
-.maincontent #editgroup table table label {
-	margin: 0 5px 0 0;
-}
-
 
 /* My Communities and My Owned Communities styles */
 .maincontent .addcommunitylink {

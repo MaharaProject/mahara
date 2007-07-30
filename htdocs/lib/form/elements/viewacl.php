@@ -76,9 +76,6 @@ function pieform_render_viewacl_getvaluebytype($type, $id) {
             $user = get_record('usr', 'id', $id);
             return display_name($user);
             break;
-        case 'group':
-            return get_field('usr_group', 'name', 'id', $id);
-            break;
         case 'community':
             return get_field('community', 'name', 'id', $id);
             break;

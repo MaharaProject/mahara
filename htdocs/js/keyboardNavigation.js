@@ -28,9 +28,6 @@ addLoadEvent(function() {
                 case 'f':
                     document.location.href = config.wwwroot + 'artefact/file/';
                     break;
-                case 'g':
-                    document.location.href = config.wwwroot + 'contacts/groups/';
-                    break;
                 case 'c':
                     document.location.href = config.wwwroot + 'contacts/communities/';
                     break;
