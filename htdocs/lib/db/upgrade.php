@@ -405,18 +405,6 @@ function xmldb_core_upgrade($oldversion=0) {
 
     }
     
-    if ($oldversion < 2007072801) {
-        // Remove groups from the system
-        $table = new XMLDBTable('view_access_group');
-        drop_table($table);
-
-        $table = new XMLDBTable('usr_group_member');
-        drop_table($table);
-
-        $table = new XMLDBTable('usr_group');
-        drop_table($table);
-    }
-
     return $status;
 
 }
