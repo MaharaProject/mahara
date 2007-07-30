@@ -53,15 +53,6 @@ class Dispatcher {
 
     function __construct($payload, $payload_signed, $payload_encrypted) {
 
-        if ($payload_signed && $payload_encrypted) {
-            // The remote server's credentials checked out.
-            // You might want to enable some methods for unsigned/unencrypted
-            // transport
-        } else {
-            // For now, we throw an exception
-            throw new XmlrpcServerException('The signature on your message was not valid', 6005);
-        }
-
         $this->payload = $payload;
 
         // xmlrpc_decode_request is defined such that the '$method' string is
@@ -73,6 +64,15 @@ class Dispatcher {
         // begin with a slash. We specifically don't want .. to be possible.
         if (0 == preg_match("@^[A-Za-z0-9]+/[A-Za-z0-9/_-]+(\.php/)?[A-Za-z0-9_-]+$@",$this->method)) {
             throw new XmlrpcServerException('The function does not exist', 6010);
+        }
+
+        if (($payload_signed && $payload_encrypted) || $this->method == 'system/keyswap') {
+            // The remote server's credentials checked out.
+            // You might want to enable some methods for unsigned/unencrypted
+            // transport
+        } else {
+            // For now, we throw an exception
+            throw new XmlrpcServerException('The signature on your message was not valid', 6005);
         }
 
         // The system methods are treated differently.
