@@ -14,7 +14,7 @@ use Carp;
 use Data::Dumper;
 use Getopt::Declare;
 use Mahara::Config;
-use Mahara::RandomData;
+#use Mahara::RandomData;
 use JSON;
 use WWW::Mechanize;
 
@@ -65,7 +65,7 @@ my $components = /var todo = \[(".*",?)+\]/s;
 my @things = split(/","/, substr($1, 1, -1));
 for my $thing (@things) {
     debug("Installing $thing ... ", 1);
-    $m->get($CFG->{url} . 'admin/upgrade.json.php?name=' . $thing);
+    $m->get($CFG->{url} . 'admin/upgrade.json.php?name=' . $thing . '&sesskey=');
     $json_response = my_jsonToObj($m->content());
     if ( $json_response->{error} ) {
         croak qq{Failed to install $thing} . Dumper($json_response);
@@ -77,7 +77,7 @@ for my $thing (@things) {
 
 # Request the core data page
 debug("Installing core data...");
-$m->get($CFG->{url} . 'admin/upgrade.json.php?install=1');
+$m->get($CFG->{url} . 'admin/upgrade.json.php?install=1&sesskey=');
 $json_response = my_jsonToObj($m->content());
 if ( $json_response->{error} ) {
     croak qq{Failed to install core data:} . Dumper($json_response);
