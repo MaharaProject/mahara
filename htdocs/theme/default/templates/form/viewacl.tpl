@@ -4,7 +4,6 @@
     <div>
         {{str tag=search}} <input type="text" name="search" id="search">
         <select name="type" id="type">
-            <option value="group">{{str tag=mygroups}}</option>
             <option value="community">{{str tag=communities}}</option>
             <option value="user" selected="selected">{{str tag=users}}</option>
         </select>
