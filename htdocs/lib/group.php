@@ -68,12 +68,12 @@ function group_remove_user($group, $userid) {
 }
 
 /**
- * all group the user is a member of
+ * all groups the user is a member of
  * 
  * @param int userid (optional, defaults to $USER id) 
  * @return array of group db rows
  */
-function get_member_group($userid=0, $offset=0, $limit=0) {
+function get_member_groups($userid=0, $offset=0, $limit=0) {
 
     $userid = optional_userid($userid);
     $prefix = get_config('dbprefix');
