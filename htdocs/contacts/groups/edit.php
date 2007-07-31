@@ -32,7 +32,6 @@ require_once('pieforms/pieform.php');
 define('TITLE', get_string('editgroup'));
 
 $id = param_integer('id');
-$prefix = get_config('dbprefix');
 
 $group_data = get_record('group', 'id', $id, 'owner', $USER->get('id'));
 

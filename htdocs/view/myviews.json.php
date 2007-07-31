@@ -43,19 +43,18 @@ $count = count_records('view', 'owner', $userid);
 
 /* Do this in one query sometime */
 
-$prefix = get_config('dbprefix');
 $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description,c.name
-        FROM ' . $prefix . 'view v
-        LEFT OUTER JOIN ' . $prefix . 'group g ON v.submittedto = g.id
+        FROM {view} v
+        LEFT OUTER JOIN {group} g ON v.submittedto = g.id
         WHERE v.owner = ' . $userid . '
         ORDER BY v.title', '', $offset, $limit);
 
 if ($viewdata) {
     $viewidlist = implode(', ', array_map(create_function('$a', 'return $a->id;'), $viewdata));
     $artefacts = get_records_sql_array('SELECT va.view, va.artefact, a.title, a.artefacttype, t.plugin
-        FROM ' . $prefix . 'view_artefact va
-        INNER JOIN ' . $prefix . 'artefact a ON va.artefact = a.id
-        INNER JOIN ' . $prefix . 'artefact_installed_type t ON a.artefacttype = t.name
+        FROM {view_artefact} va
+        INNER JOIN {artefact} a ON va.artefact = a.id
+        INNER JOIN {artefact_installed_type} t ON a.artefacttype = t.name
         WHERE va.view IN (' . $viewidlist . ')
         GROUP BY 1, 2, 3, 4, 5', '');
 }
@@ -101,9 +100,9 @@ if ($viewdata) {
    able to submit views to. */
 
 if (!$tutorgroupdata = @get_records_sql_array('SELECT c.id, c.name
-       FROM ' . $prefix . 'group_member u
-       INNER JOIN ' . $prefix . 'group g ON u.group = g.id 
-       INNER JOIN ' . $prefix . 'group_member t ON t.group = g.id 
+       FROM {group_member} u
+       INNER JOIN {group} g ON u.group = g.id 
+       INNER JOIN {group_member} t ON t.group = g.id 
        WHERE u.member = ' . $userid . '
        AND t.tutor = 1
        AND t.member != ' . $userid . ';', '')) {

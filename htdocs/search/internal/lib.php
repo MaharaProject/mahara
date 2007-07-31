@@ -74,27 +74,26 @@ class PluginSearchInternal extends PluginSearch {
         if (empty($publicfields)) {
             $publicfields = array('preferredname');
         }
-        $prefix = get_config('dbprefix');
         if (is_postgres()) {
-            return self::search_user_pg($query_string, $limit, $offset, $prefix, $publicfields);
+            return self::search_user_pg($query_string, $limit, $offset, $publicfields);
         } 
         else if (is_mysql()) {
-            return self::search_user_my($query_string, $limit, $offset, $prefix, $publicfields);
+            return self::search_user_my($query_string, $limit, $offset, $publicfields);
         }
         else {
             throw new SQLException('search_user() is not implemented for your database engine (' . get_config('dbtype') . ')');
         }
     }
 
-    public static function search_user_pg($query_string, $limit, $offset, $prefix, $publicfields) {
+    public static function search_user_pg($query_string, $limit, $offset, $publicfields) {
         $fieldlist = "('" . join("','", $publicfields) . "')";
 
         $count = get_field_sql('
             SELECT 
                 COUNT(DISTINCT u.id)
             FROM
-                ' . $prefix . 'usr u
-                LEFT JOIN ' . $prefix . 'artefact a ON u.id=a.owner
+                {usr} u
+                LEFT JOIN {artefact} a ON u.id=a.owner
             WHERE
                 u.id <> 0 AND u.active = 1
                 AND ((
@@ -117,8 +116,8 @@ class PluginSearchInternal extends PluginSearch {
             $data = get_records_sql_array('
                 SELECT DISTINCT ON (u.firstname, u.lastname, u.id)
                     u.id, u.username, u.institution, u.firstname, u.lastname, u.preferredname, u.email, u.staff
-                FROM ' . $prefix . 'artefact a
-                    INNER JOIN ' . $prefix .'usr u ON u.id = a.owner
+                FROM {artefact} a
+                    INNER JOIN {usr} u ON u.id = a.owner
                 WHERE
                     u.id <> 0 AND u.active = 1
                     AND ((
@@ -156,15 +155,15 @@ class PluginSearchInternal extends PluginSearch {
         );
     }
 
-    public static function search_user_my($query_string, $limit, $offset, $prefix, $publicfields) {
+    public static function search_user_my($query_string, $limit, $offset, $publicfields) {
         $fieldlist = "('" . join("','", $publicfields) . "')";
 
         $count = get_field_sql('
             SELECT 
                 COUNT(DISTINCT owner)
             FROM
-                ' . $prefix . 'usr u
-                LEFT JOIN ' . $prefix . 'artefact a ON u.id=a.owner
+                {usr} u
+                LEFT JOIN {artefact} a ON u.id=a.owner
             WHERE
                 u.id <> 0 AND u.active = 1
                 AND ((
@@ -192,8 +191,8 @@ class PluginSearchInternal extends PluginSearch {
             $data = get_records_sql_array('
                 SELECT DISTINCT
                     u.id, u.username, u.institution, u.firstname, u.lastname, u.preferredname, u.email, u.staff
-                FROM ' . $prefix . 'artefact a
-                    INNER JOIN ' . $prefix .'usr u ON u.id = a.owner
+                FROM {artefact} a
+                    INNER JOIN {usr} u ON u.id = a.owner
                 WHERE
                     u.id <> 0 AND u.active = 1
                     AND ((
@@ -283,18 +282,18 @@ class PluginSearchInternal extends PluginSearch {
             SELECT
                 id, name, description, jointype, owner, ctime, mtime
             FROM
-                " . get_config('dbprefix') . "group
+                {group}
             WHERE (
                 name ILIKE '%' || ? || '%' 
                 OR description ILIKE '%' || ? || '%' 
             )";
         $values = array($query_string, $query_string);
         if (!$all) {
-            $sql .=  "AND ( 
+            $sql .=  'AND ( 
                 owner = ? OR id IN (
-                    SELECT group FROM " . get_config('dbprefix') . "group_member WHERE member = ?
+                    SELECT {group} FROM {group_member} WHERE member = ?
                 )
-            )";
+            )';
             $values[] = $USER->get('id');
             $values[] = $USER->get('id');
         }
@@ -304,7 +303,7 @@ class PluginSearchInternal extends PluginSearch {
             SELECT
                 COUNT(*)
             FROM
-                " . get_config('dbprefix') . "group u
+                {group} u
             WHERE (
                 name ILIKE '%' || ? || '%' 
                 OR description ILIKE '%' || ? || '%' 
@@ -312,7 +311,7 @@ class PluginSearchInternal extends PluginSearch {
         if (!$all) {
             $sql .= "AND ( 
                     owner = ? OR id IN (
-                        SELECT group FROM " . get_config('dbprefix') . "group_member WHERE member = ?
+                        SELECT {group} FROM {group_member} WHERE member = ?
                     )
                 )
             ";
@@ -333,7 +332,7 @@ class PluginSearchInternal extends PluginSearch {
             SELECT
                 id, name, description, jointype, owner, ctime, mtime
             FROM
-                " . get_config('dbprefix') . "group
+                {group}
             WHERE (
                 name LIKE '%' || ? || '%' 
                 OR description LIKE '%' || ? || '%' 
@@ -342,7 +341,7 @@ class PluginSearchInternal extends PluginSearch {
         if (!$all) {
             $sql .=  "AND ( 
                 owner = ? OR id IN (
-                    SELECT group FROM " . get_config('dbprefix') . "group_member WHERE member = ?
+                    SELECT group FROM {group_member} WHERE member = ?
                 )
             )";
             $values[] = $USER->get('id');
@@ -354,7 +353,7 @@ class PluginSearchInternal extends PluginSearch {
             SELECT
                 COUNT(*)
             FROM
-                " . get_config('dbprefix') . "group u
+                {group} u
             WHERE (
                 name LIKE '%' || ? || '%' 
                 OR description LIKE '%' || ? || '%' 
@@ -362,7 +361,7 @@ class PluginSearchInternal extends PluginSearch {
         if (!$all) {
             $sql .= "AND ( 
                     owner = ? OR id IN (
-                        SELECT group FROM " . get_config('dbprefix') . "group_member WHERE member = ?
+                        SELECT group FROM {group_member} WHERE member = ?
                     )
                 )
             ";
@@ -409,7 +408,7 @@ class PluginSearchInternal extends PluginSearch {
             SELECT
                 id, artefacttype, title, description
             FROM
-                " . get_config('dbprefix') . "artefact a
+                {artefact} a
             WHERE
                 owner = ?
             AND ($querydata[0])";
@@ -417,7 +416,7 @@ class PluginSearchInternal extends PluginSearch {
             SELECT
                 COUNT(*)
             FROM
-                " . get_config('dbprefix') . "artefact a
+                {artefact} a
             WHERE
                 owner = ?
             AND ($querydata[0])";

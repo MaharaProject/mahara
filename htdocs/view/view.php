@@ -66,7 +66,7 @@ if ($artefactid) {
     $navlist = array('<a href="' . $viewhref .  '">' . $view->get('title') . '</a>');
     if (!empty($path)) {
         $titles = get_records_sql_assoc('
-            SELECT id,title FROM ' . get_config('dbprefix') . 'artefact
+            SELECT id,title FROM {artefact}
             WHERE id IN (' . $path . ')','');
         $artefactids = split(',', $path);
         for ($i = 0; $i < count($artefactids); $i++) {

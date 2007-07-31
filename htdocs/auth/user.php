@@ -99,15 +99,13 @@ class User {
             throw new InvalidArgumentException('parameter must be a positive integer to create a User object');
         }
 
-        $dbprefix = get_config('dbprefix');
-
         $sql = 'SELECT
                     *, 
                     ' . db_format_tsfield('expiry') . ', 
                     ' . db_format_tsfield('lastlogin') . ', 
                     ' . db_format_tsfield('suspendedctime') . '
                 FROM
-                    '.$dbprefix.'usr
+                    {usr}
                 WHERE
                     id = ?';
 
@@ -134,15 +132,13 @@ class User {
             $instanceid = $parentid;
         }
 
-        $dbprefix = get_config('dbprefix');
-
         $sql = 'SELECT
                     *, 
                     ' . db_format_tsfield('expiry') . ', 
                     ' . db_format_tsfield('lastlogin') . ', 
                     ' . db_format_tsfield('suspendedctime') . '
                 FROM
-                    '.$dbprefix.'usr
+                    {usr}
                 WHERE
                     LOWER(username) = ? AND
                     authinstance = ?';

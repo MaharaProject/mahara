@@ -349,10 +349,9 @@ function display_name($user, $userto=null) {
         return $user->preferredname . ' (' . $user->firstname . ' ' . $user->lastname . ' - ' . $user->username . ')';
     }
 
-    $prefix = get_config('dbprefix');
     $sql = 'SELECT g1.member
-            FROM ' . $prefix . 'group_member g1 
-            JOIN  ' .$prefix. 'group_member g2
+            FROM {group_member} g1 
+            JOIN {group_member} g2
                 ON g1.group = g2.group 
             WHERE g1.member = ? AND g2.member = ? AND g2.tutor = ?';
     if (record_exists_sql($sql, array($user->id, $userto->id, 1))) {

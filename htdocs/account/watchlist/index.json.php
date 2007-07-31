@@ -35,7 +35,6 @@ $stopmonitoring = param_integer('stopmonitoring', 0);
 $userlist       = param_alpha('userlist', null);
 $getartefacts   = param_integer('getartefacts', 0); 
 
-$prefix = get_config('dbprefix');
 $userid = $USER->get('id');
 
 if ($stopmonitoring) {
@@ -68,9 +67,9 @@ if ($stopmonitoring) {
 if (!empty($userlist)) {
     if ($userlist == 'views') {
         $sql = 'SELECT DISTINCT u.* 
-        FROM ' . $prefix . 'usr u
-        JOIN ' . $prefix . 'view v ON v.owner = u.id 
-        JOIN ' . $prefix . 'usr_watchlist_view w ON w.view = v.id
+        FROM {usr} u
+        JOIN {view} v ON v.owner = u.id 
+        JOIN {usr_watchlist_view} w ON w.view = v.id
         WHERE w.usr = ?';
         
         if (!$users = get_records_sql_array($sql, array($userid))) {
@@ -79,9 +78,9 @@ if (!empty($userlist)) {
     }
     else if ($userlist == 'artefacts') {
         $sql = 'SELECT DISTINCT u.* 
-        FROM ' . $prefix . 'usr u
-        JOIN ' . $prefix . 'artefact a ON a.owner = u.id 
-        JOIN ' . $prefix . 'usr_watchlist_artefact w ON w.artefact = a.id
+        FROM {usr} u
+        JOIN {artefact} a ON a.owner = u.id 
+        JOIN {usr_watchlist_artefact} w ON w.artefact = a.id
         WHERE w.usr = ?';
         
         if (!$users = get_records_sql_array($sql, array($userid))) {
@@ -107,7 +106,6 @@ $limit = param_integer('limit', 10);
 $offset = param_integer('offset', 0);
 
 $userid = $USER->get('id');
-$prefix = get_config('dbprefix');
 
 $count = 0;
 $records = array();
@@ -115,8 +113,8 @@ $records = array();
 if ($type == 'views') {
     $count = count_records('usr_watchlist_view', 'usr', $userid);
     $sql = 'SELECT v.*, v.title AS name, w.recurse
-            FROM ' . $prefix . 'view v
-            JOIN ' . $prefix . 'usr_watchlist_view w ON w.view = v.id
+            FROM {view} v
+            JOIN {usr_watchlist_view} w ON w.view = v.id
             WHERE w.usr = ?';
     $values = array($userid);
     if (isset($owner)) {
@@ -129,18 +127,18 @@ if ($type == 'views') {
 }
 else if ($type == 'groups') {
     $count = count_records('usr_watchlist_group', 'usr', $userid);
-    $sql = 'SELECT c.* 
-            FROM ' . $prefix . 'group g
-            JOIN ' . $prefix . 'usr_watchlist_group w ON w.group = g.id 
+    $sql = 'SELECT g.* 
+            FROM {group} g
+            JOIN {usr_watchlist_group} w ON w.group = g.id 
             WHERE w.usr = ?
-            ORDER BY c.mtime DESC';
+            ORDER BY g.mtime DESC';
     $records = get_records_sql_array($sql, array($userid), $offset, $limit);
 }
 else if ($type == 'artefacts') {
     $count = count_records('usr_watchlist_artefact', 'usr', $userid);
     $sql = 'SELECT a.* , a.title AS name, w.view, w.recurse
-            FROM ' . $prefix . 'artefact a
-            JOIN ' . $prefix . 'usr_watchlist_artefact w ON w.artefact = a.id 
+            FROM {artefact} a
+            JOIN {usr_watchlist_artefact} w ON w.artefact = a.id 
             WHERE w.usr = ?';
     $values = array($userid);
     if (isset($owner)) {

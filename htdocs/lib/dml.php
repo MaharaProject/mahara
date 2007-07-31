@@ -28,6 +28,38 @@
 defined('INTERNAL') || die();
 
 /**
+ * Return a table name, properly prefixed and escaped
+ *
+ */
+function db_table_name($name) {
+    return db_quote_identifier(get_config('dbprefix') . $name);
+}
+
+/**
+ * Searches through a query for strings looking like {name}, to replace with 
+ * correctly quoted and prefixed table names
+ *
+ * @param string $sql The SQL to replace the placeholders in
+ * @return string
+ */
+function db_quote_table_placeholders($sql) {
+    return preg_replace_callback('/\{([a-z_]+)\}/', create_function('$matches', 'return db_table_name($matches[1]);'), $sql);
+}
+
+/**
+ * Given a table name or other identifier, return it quoted for the appropriate 
+ * database engine currently being used
+ *
+ * @param string $identifier The identifier to quote
+ * @return string
+ */
+function db_quote_identifier($identifier) {
+    // Currently, postgres and mysql (in postgres compat. mode) both support 
+    // the sql standard "
+    return '"' . $identifier . '"';
+}
+
+/**
  * Execute a given sql command string
  *
  * Completely general function - it just runs some SQL and reports success.
@@ -43,6 +75,8 @@ function execute_sql($command) {
     if (!is_a($db, 'ADOConnection')) {
         throw new SQLException('Database connection is not available ');
     }
+
+    $command = db_quote_table_placeholders($command);
 
     // @todo need to do more research into this flag - what is it for, we
     // probably want to just turn it off because we can catch the exceptions
@@ -90,7 +124,7 @@ function execute_sql($command) {
 function record_exists($table, $field1=null, $value1=null, $field2=null, $value2=null, $field3=null, $value3=null) {
     $select = where_clause_prepared($field1, $field2, $field3);
     $values = where_values_prepared($value1, $value2, $value3);
-    return record_exists_sql('SELECT * FROM ' . get_config('dbprefix') . $table .' '. $select, $values);
+    return record_exists_sql('SELECT * FROM ' . db_table_name($table) .' '. $select, $values);
 }
 
 /**
@@ -111,7 +145,7 @@ function record_exists_select($table, $select='', $values=null) {
         $select = 'WHERE '.$select;
     }
 
-    return record_exists_sql('SELECT * FROM '. $CFG->prefix . $table . ' ' . $select, $values);
+    return record_exists_sql('SELECT * FROM '. db_table_name($table) . ' ' . $select, $values);
 }
 
 /**
@@ -145,7 +179,7 @@ function record_exists_sql($sql, $values=null) {
 function count_records($table, $field1=null, $value1=null, $field2=null, $value2=null, $field3=null, $value3=null) {
     $select = where_clause_prepared($field1, $field2, $field3);
     $values = where_values_prepared($value1, $value2, $value3);
-    return count_records_sql('SELECT COUNT(*) FROM '. get_config('dbprefix') . $table . ' ' . $select, $values);
+    return count_records_sql('SELECT COUNT(*) FROM '. db_table_name($table) . ' ' . $select, $values);
 }
 
 /**
@@ -162,7 +196,7 @@ function count_records_select($table, $select='', $values=null, $countitem='COUN
     if ($select) {
         $select = 'WHERE ' . $select;
     }
-    return count_records_sql('SELECT '. $countitem .' FROM '. get_config('dbprefix') . $table . ' ' . $select, $values);
+    return count_records_sql('SELECT '. $countitem .' FROM '. db_table_name($table) . ' ' . $select, $values);
 }
 
 /**
@@ -201,7 +235,7 @@ function count_records_sql($sql, $values=null) {
 function get_record($table, $field1, $value1, $field2=null, $value2=null, $field3=null, $value3=null, $fields='*') {
     $select = where_clause_prepared($field1, $field2, $field3);
     $values = where_values_prepared($value1, $value2, $value3);
-    return get_record_sql('SELECT ' . $fields . ' FROM ' . get_config('dbprefix') . $table . ' ' . $select, $values);
+    return get_record_sql('SELECT ' . $fields . ' FROM ' . db_table_name($table) . ' ' . $select, $values);
 }
 
 /**
@@ -254,7 +288,7 @@ function get_record_select($table, $select='', $values=null, $fields='*') {
     if ($select) {
         $select = 'WHERE '. $select;
     }
-    return get_record_sql('SELECT '. $fields .' FROM '. get_config('dbprefix') . $table .' '. $select, $values);
+    return get_record_sql('SELECT '. $fields .' FROM ' . db_table_name($table) .' '. $select, $values);
 }
 
 /**
@@ -337,7 +371,7 @@ function get_recordset_select($table, $select='', $values=null, $sort='', $field
         $sort = ' ORDER BY '. $sort;
     }
 
-    return get_recordset_sql('SELECT '. $fields .' FROM '. get_config('dbprefix') . $table . $select . $sort .' '. $limit, $values);
+    return get_recordset_sql('SELECT '. $fields .' FROM '. db_table_name($table) . $select . $sort .' '. $limit, $values);
 }
 
 /**
@@ -360,6 +394,8 @@ function get_recordset_sql($sql, $values=null, $limitfrom=null, $limitnum=null) 
     if (!is_a($db, 'ADOConnection')) {
         throw new SQLException('Database connection is not available ');
     }
+
+    $sql = db_quote_table_placeholders($sql);
 
     try {
         if ($limitfrom || $limitnum) {
@@ -676,7 +712,7 @@ function get_field($table, $field, $field1=null, $value1=null, $field2=null, $va
     $select = where_clause_prepared($field1, $field2, $field3);
     $values = where_values_prepared($value1, $value2, $value3);
     
-    return get_field_sql('SELECT ' . $field . ' FROM ' . get_config('dbprefix') . $table . ' ' . $select, $values);
+    return get_field_sql('SELECT ' . $field . ' FROM ' . db_table_name($table) . ' ' . $select, $values);
 }
 
 /**
@@ -718,7 +754,7 @@ function get_column($table, $field, $field1=null, $value1=null, $field2=null, $v
     $select = where_clause_prepared($field1, $field2, $field3);
     $values = where_values_prepared($value1, $value2, $value3);
     
-    return get_column_sql('SELECT ' . $field . ' FROM ' . get_config('dbprefix') . $table . ' ' . $select, $values);
+    return get_column_sql('SELECT ' . $field . ' FROM ' . db_table_name($table) . ' ' . $select, $values);
 }
 
 /**
@@ -730,6 +766,8 @@ function get_column($table, $field, $field1=null, $value1=null, $field2=null, $v
  */
 function get_column_sql($sql, $values=null) {
     global $db;
+
+    $sql = db_quote_table_placeholders($sql);
 
     try {
         return $db->GetCol($sql, $values);
@@ -777,8 +815,10 @@ function set_field_select($table, $newfield, $newvalue, $select, $values) {
         $select = ' WHERE ' . $select;
     }
 
+    $select = db_quote_table_placeholders($select);
+
     $values = array_merge(array($newvalue), $values);
-    $sql = 'UPDATE '. get_config('dbprefix') . $table .' SET '. $newfield  .' = ? ' . $select;
+    $sql = 'UPDATE '. db_table_name($table) .' SET '. $newfield  .' = ? ' . $select;
     try {
         $stmt = $db->Prepare($sql);
         increment_perf_db_writes();
@@ -814,7 +854,7 @@ function delete_records($table, $field1=null, $value1=null, $field2=null, $value
     $select = where_clause_prepared($field1, $field2, $field3);
     $values = where_values_prepared($value1, $value2, $value3);
 
-    $sql = 'DELETE FROM '. get_config('dbprefix') . $table . ' ' . $select;
+    $sql = 'DELETE FROM '. db_table_name($table) . ' ' . $select;
     try {
         $stmt = $db->Prepare($sql);
         increment_perf_db_writes();
@@ -838,11 +878,18 @@ function delete_records_select($table, $select='',$values=null) {
     if ($select) {
         $select = 'WHERE '.$select;
     }
-    return delete_records_sql('DELETE FROM '. get_config('dbprefix') . $table .' '. $select, $values);
+    return delete_records_sql('DELETE FROM '. db_table_name($table) .' '. $select, $values);
 }
 
+/**
+ * @todo <nigel> This function does nothing delete specific. The functionality 
+ * it has with the $values parameter should be merged with the execute_sql 
+ * function
+ */
 function delete_records_sql($sql, $values=null) {
     global $db;
+
+    $sql = db_quote_table_placeholders($sql);
 
     try {
         $result = false;
@@ -881,7 +928,8 @@ function insert_record($table, $dataobject, $primarykey=false, $returnpk=false) 
     // Determine all the fields in the table
     if (is_array($table_columns) && array_key_exists($table, $table_columns)) {
         $columns = $table_columns[$table];
-    } else {
+    }
+    else {
         if (!$columns = $db->MetaColumns(get_config('dbprefix') . $table)) {
             return false;
         }
@@ -914,7 +962,7 @@ function insert_record($table, $dataobject, $primarykey=false, $returnpk=false) 
     // Construct SQL queries
     $numddd = count($ddd);
     $count = 0;
-    $insertSQL = 'INSERT INTO '. get_config('dbprefix') . $table .' (';
+    $insertSQL = 'INSERT INTO '. db_table_name($table) .' (';
     $fields = '';
     $values = '';
     foreach ($ddd as $key => $value) {
@@ -962,7 +1010,7 @@ function insert_record($table, $dataobject, $primarykey=false, $returnpk=false) 
     if (is_postgres()) {
         // try to get the primary key based on id
         try {
-            $oidsql = 'SELECT '. $primarykey .' FROM '. get_config('dbprefix') . $table .' WHERE oid = '. $id;
+            $oidsql = 'SELECT ' . $primarykey . ' FROM '. db_table_name($table) . ' WHERE oid = ' . $id;
             increment_perf_db_reads();
             $rs = $db->Execute($oidsql);
             if ($rs->RecordCount() == 1) {
@@ -1089,7 +1137,7 @@ function update_record($table, $dataobject, $where=null) {
         }
     }
 
-    $sql = 'UPDATE '. get_config('dbprefix') . $table .' SET '. $update .' WHERE ' . $whereclause;
+    $sql = 'UPDATE '. db_table_name($table) .' SET '. $update .' WHERE ' . $whereclause;
     try { 
         $stmt = $db->Prepare($sql);
         increment_perf_db_writes();
@@ -1210,7 +1258,7 @@ function column_type($table, $column) {
     global $db;
 
     increment_perf_db_reads();
-    if(!$rs = $db->Execute('SELECT ' . $column.' FROM ' . get_config('dbprefix') . $table . ' WHERE 1=2')) {
+    if(!$rs = $db->Execute('SELECT ' . $column.' FROM ' . db_table_name($table) . ' WHERE 1=2')) {
         return false;
     }
 

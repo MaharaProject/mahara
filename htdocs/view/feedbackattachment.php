@@ -39,12 +39,11 @@ $filename = param_variable('filename');
 // fail if the quota is exceeded.
 
 // Group name, view title, feedback number?
-$prefix = get_config('dbprefix');
 $viewdata = get_record_sql('
      SELECT
          v.title, v.owner, c.name
-     FROM ' . $prefix . 'view v
-     INNER JOIN ' . $prefix . 'group g ON v.submittedto = g.id
+     FROM {view} v
+     INNER JOIN {group} g ON v.submittedto = g.id
      WHERE v.id = ' . $viewid, '');
 
 $page = '/view/view.php?view=' . $viewid;

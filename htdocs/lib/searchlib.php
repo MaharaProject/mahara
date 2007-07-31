@@ -62,7 +62,6 @@ defined('INTERNAL') || die();
  *           );
  */
 function search_user($query_string, $limit, $offset = 0) {
-    $prefix = get_config('dbprefix');
     $plugin = get_config('searchplugin');
     safe_require('search', $plugin);
     safe_require('artefact', 'internal');
@@ -82,8 +81,8 @@ function search_user($query_string, $limit, $offset = 0) {
             SELECT 
                 u.id, a.artefacttype, a.title
             FROM
-                ' . $prefix . 'usr u
-                LEFT JOIN ' . $prefix . 'artefact a ON u.id=a.owner AND a.artefacttype IN ' . $fieldlist . '
+                {usr} u
+                LEFT JOIN {artefact} a ON u.id=a.owner AND a.artefacttype IN ' . $fieldlist . '
             WHERE
                 u.id IN ' . $userlist . '
             ORDER BY u.firstname, u.lastname, u.id, a.artefacttype',

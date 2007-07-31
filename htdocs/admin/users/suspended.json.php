@@ -35,16 +35,14 @@ json_headers();
 $limit = param_integer('limit', 10);
 $offset = param_integer('offset', 0);
 
-$dbprefix = get_config('dbprefix');
-
 // NOTE: the check is not done on the 'active' column here, since suspended
 // users are by definition not active. However deleted users are filtered out.
-$count = get_field_sql('SELECT COUNT(*) FROM ' . $dbprefix . 'usr WHERE suspendedcusr IS NOT NULL AND deleted = 0');
+$count = get_field_sql('SELECT COUNT(*) FROM {usr} WHERE suspendedcusr IS NOT NULL AND deleted = 0');
 $data = get_records_sql_array('SELECT u.id, u.firstname, u.lastname, u.studentid, u.suspendedreason AS reason,
     i.displayname AS institution, ua.firstname AS cusrfirstname, ua.lastname AS cusrlastname
-    FROM ' . $dbprefix . 'usr u
-    LEFT JOIN ' . $dbprefix . 'institution i ON (u.institution = i.name)
-    LEFT JOIN ' . $dbprefix . 'usr ua on (ua.id = u.suspendedcusr)
+    FROM {usr} u
+    LEFT JOIN {institution} i ON (u.institution = i.name)
+    LEFT JOIN {usr} ua on (ua.id = u.suspendedcusr)
     WHERE u.suspendedcusr IS NOT NULL
     AND u.deleted = 0
     ORDER BY u.suspendedctime

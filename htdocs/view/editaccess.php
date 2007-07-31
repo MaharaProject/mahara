@@ -42,15 +42,14 @@ require_once('pieforms/pieform/elements/calendar.php');
 $smarty = smarty(array('tablerenderer'), pieform_element_calendar_get_headdata(pieform_element_calendar_configure(array())));
 
 $viewid = param_integer('viewid');
-$prefix = get_config('dbprefix');
 
 if (!get_field('view', 'COUNT(*)', 'id', $viewid, 'owner', $USER->get('id'))) {
     $SESSION->add_error_msg(get_string('canteditdontown', 'view'));
     redirect('/view/');
 }
 $data = get_records_sql_array('SELECT va.accesstype AS type, va.startdate, va.stopdate
-    FROM ' . $prefix . 'view_access va
-    LEFT JOIN ' . $prefix . 'view v ON (va.view = v.id)
+    FROM {view_access} va
+    LEFT JOIN {view} v ON (va.view = v.id)
     WHERE v.id = ?
     AND v.owner = ?
     ORDER BY va.accesstype', array($viewid, $USER->get('id')));
@@ -64,11 +63,11 @@ foreach ($data as &$item) {
 // Get access for users and groups
 $extradata = get_records_sql_array("
     SELECT 'user' AS type, usr AS id, 0 AS tutoronly, startdate, stopdate
-        FROM {$prefix}view_access_usr
+        FROM {view_access_usr}
         WHERE view = ?
 UNION
     SELECT 'group', group, tutoronly, startdate, stopdate
-        FROM {$prefix}view_access_group
+        FROM {view_access_group}
         WHERE view = ?", array($viewid, $viewid));
 if ($extradata) {
     foreach ($extradata as &$extraitem) {
@@ -140,11 +139,10 @@ function editviewaccess_submit(Pieform $form, $values) {
         }
         $userids = implode(',', $userids);
 
-        $prefix = get_config('dbprefix');
-        execute_sql('DELETE FROM ' . $prefix . 'usr_watchlist_view
+        execute_sql('DELETE FROM {usr_watchlist_view}
             WHERE view = ' . $viewid . '
             AND usr IN (' . $userids . ')');
-        execute_sql('DELETE FROM ' . $prefix . 'usr_watchlist_artefact
+        execute_sql('DELETE FROM {usr_watchlist_artefact}
             WHERE view = ' . $viewid . '
             AND usr IN(' . $userids . ')');
     }

@@ -1032,7 +1032,7 @@ function pieform_validate(Pieform $form, $values) {
     // perform any action
     if ($USER) {
         $record = get_record_sql('SELECT suspendedctime, suspendedreason
-            FROM ' . get_config('dbprefix') . 'usr
+            FROM {usr}
             WHERE id = ?', array($USER->get('id')));
         if ($record && $record->suspendedctime) {
             throw new UserException(get_string('accountsuspended', 'mahara', $record->suspendedctime, $record->suspendedreason));
@@ -1070,7 +1070,6 @@ function can_view_view($view_id, $user_id=null) {
     global $USER;
     $now = time();
     $dbnow = db_format_timestamp($now);
-    $prefix = get_config('dbprefix');
 
     if ($user_id === null) {
         $user_id = $USER->get('id');
@@ -1087,8 +1086,8 @@ function can_view_view($view_id, $user_id=null) {
             ' . db_format_tsfield('a.startdate','access_startdate') . ',
             ' . db_format_tsfield('a.stopdate','access_stopdate') . '
         FROM
-            ' . $prefix . 'view v
-            LEFT OUTER JOIN ' . $prefix . 'view_access a ON v.id=a.view
+            {view} v
+            LEFT OUTER JOIN {view_access} a ON v.id=a.view
         WHERE v.id=?
     ', array($view_id));
 
@@ -1179,7 +1178,7 @@ function can_view_view($view_id, $user_id=null) {
             || $view_record['access']['friends']['stopdate'] > $now
         )
         && get_field_sql(
-            'SELECT COUNT(*) FROM ' . $prefix . 'usr_friend f WHERE (usr1=? AND usr2=?) OR (usr1=? AND usr2=?)',
+            'SELECT COUNT(*) FROM {usr_friend} f WHERE (usr1=? AND usr2=?) OR (usr1=? AND usr2=?)',
             array( $view_record['owner'], $user_id, $user_id, $view_record['owner'] )
         )
     ) {
@@ -1192,7 +1191,7 @@ function can_view_view($view_id, $user_id=null) {
         'SELECT
             a.view
         FROM 
-            ' . $prefix . 'view_access_usr a
+            {view_access_usr} a
         WHERE
             a.view=? AND a.usr=?
             AND ( a.startdate < ? OR a.startdate IS NULL )
@@ -1210,9 +1209,9 @@ function can_view_view($view_id, $user_id=null) {
         'SELECT
             a.view
         FROM
-            ' . $prefix . 'view_access_group a
-            INNER JOIN ' . $prefix . 'group g ON a.group = g.id
-            INNER JOIN ' . $prefix . 'group_member m ON g.id=m.group
+            {view_access_group} a
+            INNER JOIN {group} g ON a.group = g.id
+            INNER JOIN {group_member} m ON g.id=m.group
         WHERE
             a.view = ? 
             AND ( a.startdate < ? OR a.startdate IS NULL )
@@ -1261,14 +1260,13 @@ function get_views($users, $userlooking=null, $limit=5) {
 
     $users = array_flip($users);
 
-    $prefix = get_config('dbprefix');
     $dbnow  = db_format_timestamp(time());
 
     if ($friends = get_records_sql_array(
         'SELECT
             CASE WHEN usr1=? THEN usr2 ELSE usr1 END AS id
         FROM
-            ' . $prefix . 'usr_friend f
+            {usr_friend} f
         WHERE
             ( usr1=? AND usr2 IN (' . join(',',array_map('db_quote', array_keys($users))) . ') )
             OR
@@ -1289,8 +1287,8 @@ function get_views($users, $userlooking=null, $limit=5) {
             ' . db_format_tsfield('mtime') . ',
             ' . db_format_tsfield('ctime') . '
         FROM 
-            ' . $prefix . 'view v
-            INNER JOIN ' . $prefix . 'view_access a ON
+            {view} v
+            INNER JOIN {view_access} a ON
                 v.id=a.view
                 AND (
                     accesstype IN (\'public\',\'loggedin\')
@@ -1330,8 +1328,8 @@ function get_views($users, $userlooking=null, $limit=5) {
             ' . db_format_tsfield('mtime') . ',
             ' . db_format_tsfield('ctime') . '
         FROM 
-            ' . $prefix . 'view v
-            INNER JOIN ' . $prefix . 'view_access_usr a ON v.id=a.view AND a.usr=?
+            {view} v
+            INNER JOIN {view_access_usr} a ON v.id=a.view AND a.usr=?
         WHERE
             v.owner IN (' . join(',',array_map('db_quote', array_keys($users))) . ')
             AND ( v.startdate IS NULL OR v.startdate < ? )
@@ -1358,9 +1356,9 @@ function get_views($users, $userlooking=null, $limit=5) {
             ' . db_format_tsfield('v.mtime','mtime') . ',
             ' . db_format_tsfield('v.ctime','ctime') . '
         FROM 
-            ' . $prefix . 'view v
-            INNER JOIN ' . $prefix . 'view_access_group a ON v.id=a.view
-            INNER JOIN ' . $prefix . 'group_member m ON m.group=a.group AND m.member=?
+            {view} v
+            INNER JOIN {view_access_group} a ON v.id=a.view
+            INNER JOIN {group_member} m ON m.group=a.group AND m.member=?
         WHERE
             v.owner IN (' . join(',',array_map('db_quote', array_keys($users))) . ')
             AND ( v.startdate IS NULL OR v.startdate < ? )
@@ -1401,12 +1399,11 @@ function _get_views_trim_list(&$list, &$users, $limit) {
 }
 
 function artefact_in_view($artefact, $view) {
-    $prefix = get_config('dbprefix');
     $sql = 'SELECT a.id 
-            FROM ' . $prefix . 'view_artefact a WHERE view = ? AND artefact = ?
+            FROM {view_artefact} a WHERE view = ? AND artefact = ?
             UNION
             SELECT c.parent 
-            FROM ' . $prefix . 'view_artefact top JOIN ' . $prefix . 'artefact_parent_cache c
+            FROM {view_artefact} top JOIN {artefact_parent_cache} c
               ON c.parent = top.artefact 
             WHERE top.view = ? AND c.artefact = ?';
 

@@ -353,10 +353,9 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
     // Check if something exists in the db with a given title and parent,
     // either in adminfiles or with a specific owner.
     public static function file_exists($title, $owner, $folder, $adminfiles=false) {
-        $prefix = get_config('dbprefix');
         $filetypesql = "('" . join("','", PluginArtefactFile::get_artefact_types()) . "')";
-        return get_field_sql('SELECT a.id FROM ' . $prefix . 'artefact a
-            LEFT OUTER JOIN ' . $prefix . 'artefact_file_files f ON f.artefact = a.id
+        return get_field_sql('SELECT a.id FROM {artefact} a
+            LEFT OUTER JOIN {artefact_file_files} f ON f.artefact = a.id
             WHERE ' . ($adminfiles ? 'f.adminfiles = 1' : 'f.adminfiles <> 1 AND a.owner = ' . $owner) . '
             AND a.title = ?
             AND a.parent ' . (empty($folder) ? ' IS NULL' : ' = ' . $folder) . '
@@ -373,8 +372,6 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
 
     public static function get_my_files_data($parentfolderid, $userid, $adminfiles=false) {
 
-        $prefix = get_config('dbprefix');
-
         $foldersql = $parentfolderid ? ' = ' . $parentfolderid : ' IS NULL';
 
         // if blogs are installed then also return the number of blog
@@ -387,11 +384,11 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
                 a.id, a.artefacttype, a.mtime, f.size, a.title, a.description,
                 COUNT(c.id) AS childcount ' 
                 . ($bloginstalled ? ', COUNT (b.blogpost) AS attachcount' : '') . '
-            FROM ' . $prefix . 'artefact a
-                LEFT OUTER JOIN ' . $prefix . 'artefact_file_files f ON f.artefact = a.id
-                LEFT OUTER JOIN ' . $prefix . 'artefact c ON c.parent = a.id '
-                . ($bloginstalled ? ('LEFT OUTER JOIN ' . $prefix .
-                                     'artefact_blog_blogpost_file b ON b.file = a.id') : '') . '
+            FROM {artefact} a
+                LEFT OUTER JOIN {artefact_file_files} f ON f.artefact = a.id
+                LEFT OUTER JOIN {artefact} c ON c.parent = a.id '
+                . ($bloginstalled ? ('LEFT OUTER JOIN
+                                     {artefact_blog_blogpost_file} b ON b.file = a.id') : '') . '
             WHERE a.parent' . $foldersql . '
                 AND ' . ($adminfiles ? 'f.adminfiles = 1' : ('f.adminfiles = 0 AND a.owner = ' . $userid)) . '
                 AND a.artefacttype IN ' . $filetypesql . '
@@ -567,12 +564,11 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         else {
             $foldersql = ' (a.parent = ' . $pubfolder . ' OR a.parent IS NULL) ';
         }
-        $prefix = get_config('dbprefix');
         return get_records_sql_array('
             SELECT
                 a.id, a.title, a.parent
-            FROM ' . $prefix . 'artefact a
-                INNER JOIN ' . $prefix . 'artefact_file_files f ON f.artefact = a.id
+            FROM {artefact} a
+                INNER JOIN {artefact_file_files} f ON f.artefact = a.id
             WHERE f.adminfiles = 1 
                 AND ' . $foldersql . "
                 AND a.artefacttype != 'folder'", null);
@@ -793,12 +789,11 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
     
     public static function admin_public_folder_id() {
         $name = get_string('adminpublicdirname', 'admin');
-        $prefix = get_config('dbprefix');
         $folderid = get_field_sql('
            SELECT
              a.id
-           FROM ' . $prefix . 'artefact a
-             INNER JOIN ' . $prefix . 'artefact_file_files f ON a.id = f.artefact
+           FROM {artefact} a
+             INNER JOIN {artefact_file_files} f ON a.id = f.artefact
            WHERE a.title = ?
              AND a.artefacttype = ?
              AND f.adminfiles = 1
@@ -822,9 +817,8 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
             global $USER;
             $userid = $USER->id;
         }
-        $prefix = get_config('dbprefix');
         $parentclause = $parentfolderid ? 'parent = ' . $parentfolderid : 'parent IS NULL';
-        return get_record_sql('SELECT * FROM ' . $prefix . 'artefact
+        return get_record_sql('SELECT * FROM {artefact}
            WHERE title = ? AND ' . $parentclause . ' AND owner = ' . $userid . "
            AND artefacttype = 'folder'", array($name));
     }

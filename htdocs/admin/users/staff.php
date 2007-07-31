@@ -61,14 +61,13 @@ $form = array(
 
 function staffusers_submit(Pieform $form, $values) {
     global $SESSION;
-    $table = get_config('dbprefix') . 'usr';
     
     db_begin();
-    execute_sql('UPDATE ' . $table . '
+    execute_sql('UPDATE {usr}
         SET staff = 0
         WHERE staff = 1');
     if ($values['users']) {
-        execute_sql('UPDATE ' . $table . '
+        execute_sql('UPDATE {usr}
             SET staff = 1
             WHERE id IN (' . join(',', $values['users']) . ')');
     }

@@ -30,7 +30,6 @@ require_once('pieforms/pieform.php');
 
 $userid = param_integer('id','');
 $loggedinid = $USER->get('id');
-$prefix = get_config('dbprefix');
 $inlinejs = <<<EOF
 
     function messageform_success(formname, data) {

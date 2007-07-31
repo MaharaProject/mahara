@@ -35,12 +35,11 @@ $public = (int) param_boolean('public');
 $result = array();
 
 //$menuitems = get_records_array('site_menu','public',$public,'displayorder');
-$prefix = get_config('dbprefix');
 $menuitems = get_records_sql_array('
    SELECT
       s.*, a.title AS filename
-   FROM ' . $prefix . 'site_menu s
-      LEFT OUTER JOIN ' . $prefix . 'artefact a ON s.file = a.id
+   FROM {site_menu} s
+      LEFT OUTER JOIN {artefact} a ON s.file = a.id
    WHERE
       s.public = ' . $public . '
    ORDER BY s.displayorder', null);

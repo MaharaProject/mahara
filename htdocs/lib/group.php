@@ -76,12 +76,11 @@ function group_remove_user($group, $userid) {
 function get_member_groups($userid=0, $offset=0, $limit=0) {
 
     $userid = optional_userid($userid);
-    $prefix = get_config('dbprefix');
 
     return get_records_sql_array('SELECT g.id, g.name, g.description, g.jointype, g.owner, g.ctime, g.mtime, gm.ctime, gm.tutor, COUNT(v.view) AS hasviews
-              FROM ' . $prefix . 'group g 
-              JOIN ' . $prefix . 'group_member gm ON gm.group = g.id
-              LEFT JOIN ' . $prefix . 'view_access_group v ON v.group = g.id
+              FROM {group} g 
+              JOIN {group_member} gm ON gm.group = g.id
+              LEFT JOIN {view_access_group} v ON v.group = g.id
               WHERE g.owner != ? AND gm.member = ?
               GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9', array($userid, $userid), $offset, $limit);
 }
@@ -97,9 +96,8 @@ function get_member_groups($userid=0, $offset=0, $limit=0) {
 function get_owned_groups($userid=0, $jointype=null) {
 
     $userid = optional_userid($userid);
-    $prefix = get_config('dbprefix');
 
-    $sql = 'SELECT g.* FROM ' . $prefix . 'group g 
+    $sql = 'SELECT g.* FROM {group} g 
              WHERE g.owner = ?';
     $values = array($userid);
 
@@ -120,11 +118,10 @@ function get_owned_groups($userid=0, $jointype=null) {
 function get_invited_groups($userid=0) {
 
     $userid = optional_userid($userid);
-    $prefix = get_config('dbprefix');
 
     return get_records_sql_array('SELECT g.*, gmi.ctime, gmi.reason
-             FROM ' . $prefix . 'group g 
-             JOIN ' . $prefix . 'group_member_invite gmi ON gmi.group = g.id
+             FROM {group} g 
+             JOIN {group_member_invite} gmi ON gmi.group = g.id
              WHERE gmi.member = ?)', array($userid));
 }
 
@@ -138,11 +135,10 @@ function get_invited_groups($userid=0) {
 function get_requested_group($userid=0) {
 
     $userid = optional_userid($userid);
-    $prefix = get_config('dbprefix');
 
     return get_records_sql_array('SELECT g.*, gmr.ctime, gmr.reason 
-              FROM ' . $prefix . 'group g 
-              JOIN ' . $prefix . 'group_member_request gmr ON gmr.group = c.id
+              FROM {group} g 
+              JOIN {group_member_request} gmr ON gmr.group = c.id
               WHERE gmr.member = ?', array($userid));
 }
 
@@ -157,17 +153,16 @@ function get_requested_group($userid=0) {
 function get_associated_groups($userid=0) {
 
     $userid = optional_userid($userid);
-    $prefix = get_config('dbprefix');
     
-    $sql = "SELECT g.*, a.type FROM " . $prefix . "group g JOIN (
+    $sql = "SELECT g.*, a.type FROM {group} g JOIN (
     SELECT gm.group, 'invite' AS type
-        FROM " . $prefix . "group_member_invite gm WHERE gm.member = ?
+        FROM {group_member_invite} gm WHERE gm.member = ?
     UNION 
     SELECT gm.group, 'request' AS type
-        FROM " . $prefix . "group_member_request gm WHERE gm.member = ?
+        FROM {group_member_request} gm WHERE gm.member = ?
     UNION 	
     SELECT gm.group, 'member' AS type
-        FROM " . $prefix . "group_member gm WHERE gm.member = ?
+        FROM {group_member} gm WHERE gm.member = ?
     ) AS a ON a.group = g.id";
     
     return get_records_sql_assoc($sql, array($userid, $userid, $userid));
@@ -183,11 +178,10 @@ function get_associated_groups($userid=0) {
 function get_tutor_groups($userid=0, $jointype=null) {
 
     $userid = optional_userid($userid);
-    $prefix = get_config('dbprefix');
 
     $sql = 'SELECT DISTINCT g.*, gm.ctime
-              FROM ' . $prefix . 'group g 
-              LEFT JOIN ' . $prefix . 'group_member gm ON gm.group = g.id
+              FROM {group} g 
+              LEFT JOIN {group_member} gm ON gm.group = g.id
               WHERE (g.owner = ? OR (gm.member = ? AND gm.tutor = ?))';
     $values = array($userid, $userid, 1);
     
@@ -275,13 +269,11 @@ function user_can_access_group($group, $user=null) {
  */
 function group_remove_member($groupid, $userid) {
 
-    $prefix = get_config('dbprefix');
-
     delete_records('usr_watchlist_group', 'usr', $userid, 'group', $groupid);
     // get all the views in this user's watchlist associated with this group.
     $views = get_column_sql('SELECT v.id 
-                             FROM ' . $prefix . 'view v JOIN ' . $prefix . 'usr_watchlist_view va on va.view = v.id
-                             JOIN ' . $prefix . 'view_access_group g ON g.view = v.id');
+                             FROM {view} v JOIN {usr_watchlist_view} va on va.view = v.id
+                             JOIN {view_access_group} g ON g.view = v.id');
     // @todo this is probably a retarded way to do it and should be changed later.
     foreach ($views as $view) {
         db_begin();

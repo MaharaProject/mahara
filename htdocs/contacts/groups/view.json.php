@@ -48,7 +48,6 @@ if (!$membership = user_can_access_group($id)) {
 }
 $group = get_record('group', 'id', $id);
 
-$prefix = get_config('dbprefix');
 $dbnow  = db_format_timestamp(time());
 
 switch ($type) {
@@ -72,17 +71,17 @@ switch ($type) {
 
         $count = count_records_sql('
             SELECT COUNT(DISTINCT id)
-            FROM  ' . $prefix . 'view v
-            LEFT OUTER JOIN ' . $prefix . 'view_access_group a ON a.view=v.id
+            FROM  {view} v
+            LEFT OUTER JOIN {view_access_group} a ON a.view=v.id
             ' . $where,
             $values
         );
                                    
         $data = get_records_sql_array('
             SELECT DISTINCT v.*, u.username, u.firstname, u.lastname, u.preferredname, u.id AS usr 
-            FROM ' . $prefix . 'view v
-            LEFT OUTER JOIN ' . $prefix . 'view_access_group a ON a.view=v.id
-            INNER JOIN ' . $prefix.'usr u ON v.owner = u.id ' . $where, 
+            FROM {view} v
+            LEFT OUTER JOIN {view_access_group} a ON a.view=v.id
+            INNER JOIN {usr} u ON v.owner = u.id ' . $where, 
             $values,
             $offset,
             $limit
@@ -98,7 +97,7 @@ switch ($type) {
         break;
     case 'members':
         $select = 'SELECT u.*,g.tutor ';
-        $sql = '    FROM ' . $prefix . 'usr u JOIN ' . $prefix . 'group_member g
+        $sql = '    FROM {usr} u JOIN {group_member} g
                         ON g.member = u.id 
                     WHERE g.group = ?';
         if (empty($pending)) { // default behaviour - actual members

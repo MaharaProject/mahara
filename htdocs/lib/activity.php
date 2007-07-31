@@ -95,7 +95,6 @@ function handle_activity($activitytype, $data, $cron=false) {
     }
 
     $users = array();
-    $prefix = get_config('dbprefix');
 
     if (!empty($activitytype->admin)) {
         $users = activity_get_users($activitytype->name, null, null, true);
@@ -228,8 +227,8 @@ function handle_activity($activitytype, $data, $cron=false) {
                     }
                     $oldsubject = isset($data->subject) ? $data->subject : '';
                     $data->subject = get_string('watchlistmessageview', 'activity');
-                    if (!$viewinfo = get_record_sql('SELECT u.*, v.title FROM ' . $prefix . 'usr u
-                                                     JOIN ' . $prefix . 'view v ON v.owner = u.id
+                    if (!$viewinfo = get_record_sql('SELECT u.*, v.title FROM {usr} u
+                                                     JOIN {view} v ON v.owner = u.id
                                                      WHERE v.id = ?', array($data->view))) {
                         if (!empty($cron)) { // probably deleted already
                             return;
@@ -239,10 +238,10 @@ function handle_activity($activitytype, $data, $cron=false) {
                     $data->message = $oldsubject . ' ' . get_string('onview', 'activity') 
                         . ' ' . $viewinfo->title . ' ' . get_string('ownedby', 'activity');
                     $sql = 'SELECT u.*, p.method, ' . $casturl . ' AS url
-                                FROM ' . $prefix . 'usr_watchlist_view wv
-                                JOIN ' . $prefix . 'usr u
+                                FROM {usr_watchlist_view} wv
+                                JOIN {usr} u
                                     ON wv.usr = u.id
-                                LEFT JOIN ' . $prefix . 'usr_activity_preference p
+                                LEFT JOIN {usr_activity_preference} p
                                     ON p.usr = u.id
                                 WHERE (p.activity = ? OR p.activity IS NULL)
                                 AND wv.view = ?
@@ -261,8 +260,8 @@ function handle_activity($activitytype, $data, $cron=false) {
                 else if (!empty($data->artefact)) {
                     $data->subject = get_string('watchlistmessageartefact', 'activity')
                         . (isset($data->subject) ? ': ' . $data->subject : '');
-                    if (!$ainfo = get_record_sql('SELECT u.*, a.title FROM ' . $prefix . 'usr u
-                                                  JOIN ' . $prefix . 'artefact a  ON a.owner = u.id
+                    if (!$ainfo = get_record_sql('SELECT u.*, a.title FROM {usr} u
+                                                  JOIN {artefact} a  ON a.owner = u.id
                                                   WHERE a.id = ?', array($data->artefact))) {
                         if (!empty($cron)) { // probably deleted already
                             return;
@@ -281,23 +280,23 @@ this query selects four different cases
 */
                     $sql = '
 SELECT DISTINCT u.*, p.method, ?||wa.view AS url
-    FROM ' . $prefix . 'usr u
-    LEFT JOIN ' . $prefix . 'usr_activity_preference p
+    FROM {usr} u
+    LEFT JOIN {usr_activity_preference} p
         ON p.usr = u.id
     JOIN (
         SELECT wa.usr AS uid, wa.view AS view
-            FROM ' . $prefix . 'usr_watchlist_artefact wa
+            FROM {usr_watchlist_artefact} wa
             WHERE wa.artefact = ?
         UNION SELECT wa.usr AS uid, wa.view AS view
-            FROM ' . $prefix . 'artefact_parent_cache pc
-            JOIN ' . $prefix . 'usr_watchlist_artefact wa
+            FROM {artefact_parent_cache} pc
+            JOIN {usr_watchlist_artefact} wa
                 ON wa.artefact = pc.parent
             WHERE pc.artefact = ? AND wa.recurse = 1
         UNION SELECT wv.usr AS uid, wv.view AS view
-            FROM ' . $prefix . 'artefact_parent_cache pc
-            JOIN ' . $prefix . 'view_artefact va
+            FROM {artefact_parent_cache} pc
+            JOIN {view_artefact} va
                 ON va.artefact = pc.parent
-            JOIN ' . $prefix . 'usr_watchlist_view wv
+            JOIN {usr_watchlist_view} wv
                 ON va.view = wv.view
             WHERE (pc.artefact = ? OR va.artefact = ?)AND wv.recurse = 1
     ) wa ON wa.uid = u.id
@@ -327,10 +326,10 @@ SELECT DISTINCT u.*, p.method, ?||wa.view AS url
                     $data->subject = get_string('watchlistmessagegroup', 'activity');
                     $data->message = $oldsubject . ' ' . get_string('ongroup', 'activity') . ' ' . $groupname;
                     $sql = 'SELECT DISTINCT u.*, p.method, ' . $casturl . ' AS url
-                                FROM ' . $prefix . 'usr_watchlist_group g
-                                JOIN ' . $prefix . 'usr u
+                                FROM {usr_watchlist_group} g
+                                JOIN {usr} u
                                     ON g.usr = u.id
-                                LEFT JOIN ' . $prefix . 'usr_activity_preference p
+                                LEFT JOIN {usr_activity_preference} p
                                     ON p.usr = u.id
                                 WHERE (p.activity = ? OR p.activity IS NULL)
                                 AND g.group = ?
@@ -347,8 +346,8 @@ SELECT DISTINCT u.*, p.method, ?||wa.view AS url
                 if (!is_numeric($data->owner) || !is_numeric($data->view)) {
                     throw new InvalidArgumentException("New view activity type requires view and owner to be set");
                 }
-                if (!$viewinfo = get_record_sql('SELECT u.*, v.title FROM ' . $prefix . 'usr u
-                                                 JOIN ' . $prefix . 'view v ON v.owner = u.id
+                if (!$viewinfo = get_record_sql('SELECT u.*, v.title FROM {usr} u
+                                                 JOIN {view} v ON v.owner = u.id
                                                  WHERE v.id = ?', array($data->view))) {
                     if (!empty($cron)) { //probably deleted already
                         return;
@@ -378,8 +377,8 @@ SELECT DISTINCT u.*, p.method, ?||wa.view AS url
                 if (!isset($data->oldusers)) {
                     throw new InvalidArgumentException("view access activity type requires oldusers to be set (even if empty)");
                 }
-                if (!$viewinfo = get_record_sql('SELECT u.*, v.title FROM ' . $prefix . 'usr u
-                                                 JOIN ' . $prefix . 'view v ON v.owner = u.id
+                if (!$viewinfo = get_record_sql('SELECT u.*, v.title FROM {usr} u
+                                                 JOIN {view} v ON v.owner = u.id
                                                  WHERE v.id = ?', array($data->view))) {
                     if (!empty($cron)) { // probably deleted already
                         return;
@@ -455,8 +454,8 @@ SELECT DISTINCT u.*, p.method, ?||wa.view AS url
 function activity_get_users($activitytype, $userids=null, $userobjs=null, $adminonly=false) {
     $values = array($activitytype);
     $sql = 'SELECT u.*, p.method
-                FROM ' . get_config('dbprefix') .'usr u
-                LEFT JOIN ' . get_config('dbprefix') . 'usr_activity_preference p
+                FROM {usr} u
+                LEFT JOIN {usr_activity_preference} p
                     ON p.usr = u.id
                 WHERE (p.activity = ? ' . (empty($adminonly) ? ' OR p.activity IS NULL' : '') . ')';
     if (!empty($adminonly)) {
@@ -505,29 +504,27 @@ function activity_process_queue() {
 
 function activity_get_viewaccess_users($view, $owner, $type) {
 
-    $prefix = get_config('dbprefix');
-
     $sql = 'SELECT userid, u.*, p.method
                 FROM (
                 SELECT (CASE WHEN usr1 = ? THEN usr2 ELSE usr1 END) AS userid 
-                    FROM ' . $prefix . 'usr_friend f
-                    JOIN ' . $prefix . 'view v ON (v.owner = f.usr1 OR v.owner = f.usr2)
-                    JOIN ' . $prefix . 'view_access vu ON vu.view = v.id
+                    FROM {usr_friend} f
+                    JOIN {view} v ON (v.owner = f.usr1 OR v.owner = f.usr2)
+                    JOIN {view_access} vu ON vu.view = v.id
                         WHERE (usr1 = ? OR usr2 = ?) AND vu.accesstype = ? AND v.id = ? 
                 UNION SELECT usr AS userid 
-                    FROM ' . $prefix . 'view_access_usr u 
+                    FROM {view_access_usr} u 
                         WHERE u.view = ?
                 UNION SELECT m.member 
-                    FROM ' . $prefix . 'group_member m
-                    JOIN ' . $prefix . 'view_access_group g ON g.group = m.group
-                        WHERE c.view = ? AND (c.tutoronly = ? OR m.tutor = ?)
-                UNION SELECT c.owner
-                    FROM ' . $prefix . 'group g
-                    JOIN ' . $prefix . 'view_access_group ac ON ac.group = g.id
-                        WHERE ac.view = ?
+                    FROM {group_member} m
+                    JOIN {view_access_group} g ON g.group = m.group
+                        WHERE g.view = ? AND (g.tutoronly = ? OR m.tutor = ?)
+                UNION SELECT g.owner
+                    FROM {group} g
+                    JOIN {view_access_group} ag ON ag.group = g.id
+                        WHERE ag.view = ?
                 ) AS userlist
-                JOIN ' . $prefix . 'usr u ON u.id = userlist.userid
-                LEFT JOIN ' . $prefix . 'usr_activity_preference p ON p.usr = u.id
+                JOIN {usr} u ON u.id = userlist.userid
+                LEFT JOIN {usr_activity_preference} p ON p.usr = u.id
             WHERE p.activity = ?';
     $values = array($owner, $owner, $owner, 'friends', $view, $view, $view, 0, 1, $view, $type);
     if (!$u = get_records_sql_assoc($sql, $values)) {

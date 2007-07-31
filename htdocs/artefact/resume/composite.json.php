@@ -42,14 +42,13 @@ $view = param_integer('view', 0);
 $data = array();
 $count = 0;
 
-$prefix = get_config('dbprefix');
 $othertable = 'artefact_resume_' . $type;
 
 $owner = $USER->get('id');
 
 $sql = 'SELECT ar.*, a.owner
-    FROM ' . $prefix . 'artefact a 
-    JOIN ' . $prefix . $othertable . ' ar ON ar.artefact = a.id
+    FROM {artefact} a 
+    JOIN {' . $othertable . '} ar ON ar.artefact = a.id
     WHERE a.owner = ? AND a.artefacttype = ?
     ORDER BY ' . call_static_method(generate_artefact_class_name($type), 'get_order_field') . ' DESC
     LIMIT ' . $limit . ' OFFSET ' . $offset;

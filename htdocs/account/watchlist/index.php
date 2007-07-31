@@ -159,11 +159,10 @@ function statusChange() {
 
 JAVASCRIPT;
 
-$prefix = get_config('dbprefix');
 $sql = 'SELECT DISTINCT u.* 
-        FROM ' . $prefix . 'usr u
-        JOIN ' . $prefix . 'view v ON v.owner = u.id 
-        JOIN ' . $prefix . 'usr_watchlist_view w ON w.view = v.id
+        FROM {usr} u
+        JOIN {view} v ON v.owner = u.id 
+        JOIN {usr_watchlist_view} w ON w.view = v.id
         WHERE w.usr = ?';
 
 if (!$viewusers = get_records_sql_array($sql, array($USER->get('id')))) {

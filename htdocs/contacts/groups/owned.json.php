@@ -32,7 +32,6 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 json_headers();
 
 $action = param_variable('action');
-$dbprefix = get_config('dbprefix');
 
 if ($action == 'delete') {
     $id = param_integer('id');

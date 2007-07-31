@@ -35,7 +35,6 @@ $limit    = param_integer('limit', 10);
 $offset   = param_integer('offset', 0);
 $control  = param_boolean('control');
 
-$prefix = get_config('dbprefix');
 $userid = $USER->get('id');
 
 
@@ -61,10 +60,10 @@ if ($control) {
 if (empty($pending)) {
     $count = count_records_select('usr_friend', 'usr1 = ? OR usr2 = ?', array($userid, $userid));
     $sql = 'SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, u.staff
-            FROM ' . $prefix . 'usr u 
+            FROM {usr} u 
             WHERE u.id IN (
                 SELECT (CASE WHEN usr1 = ? THEN usr2 ELSE usr1 END) AS userid 
-                FROM ' . $prefix . 'usr_friend WHERE (usr1 = ? OR usr2 = ?))';
+                FROM {usr_friend} WHERE (usr1 = ? OR usr2 = ?))';
     if (!$data = get_records_sql_assoc($sql, array($userid, $userid, $userid), $offset, $limit)) {
         $data = array();
     }
@@ -76,8 +75,8 @@ if (empty($pending)) {
 else {
     $count = count_records('usr_friend_request' , 'owner', array($userid));
     $sql = 'SELECT u.id, u.firstname, u.lastname, u.preferredname, u.username, fr.reason
-            FROM ' . $prefix . 'usr u 
-            JOIN ' . $prefix . 'usr_friend_request fr ON fr.requester = u.id
+            FROM {usr} u 
+            JOIN {usr_friend_request} fr ON fr.requester = u.id
             WHERE fr.owner = ?';
     $data = get_records_sql_array($sql, array($userid), $offset, $limit);
     $views = array();

@@ -31,8 +31,6 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('pieforms/pieform.php');
 define('TITLE', get_string('creategroup'));
 
-$prefix = get_config('dbprefix');
-
 $joinoptions = array(
     'invite'     => get_string('membershiptype.invite'),
     'request'    => get_string('membershiptype.request'),

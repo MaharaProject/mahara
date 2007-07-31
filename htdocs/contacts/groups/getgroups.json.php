@@ -36,26 +36,25 @@ $owned  = param_boolean('owned', 0);
 $limit  = param_integer('limit', 10);
 $offset = param_integer('offset', 0);
 
-$prefix = get_config('dbprefix');
 $userid = $USER->get('id');
 
 if (empty($owned)) { // just get groups this user is a member of.
     $data = get_member_groups($userid, $offset, $limit);
     $count = get_record_sql('SELECT COUNT(distinct g.id) AS count
-              FROM ' . $prefix . 'group g 
-              JOIN ' . $prefix . 'group_member gm ON gm.group = g.id
+              FROM {group} g 
+              JOIN {group_member} gm ON gm.group = g.id
               WHERE g.owner != ? AND gm.member = ?', array($userid, $userid));
     $count = $count->count;
 }
 else {
 
-    $count = count_records_sql('SELECT COUNT(*) FROM ' . $prefix . 'group g WHERE g.owner = ?',
+    $count = count_records_sql('SELECT COUNT(*) FROM {group} g WHERE g.owner = ?',
                                array($userid));
 
     $datasql = 'SELECT g.id,g.jointype,g.name,g.owner,count(distinct gmr.group) as requestcount, COUNT(distinct v.view) AS hasviews
-                FROM ' . $prefix . 'group g 
-                LEFT JOIN ' . $prefix . 'group_member_request gmr ON gmr.group = g.id
-                LEFT JOIN ' . $prefix . 'view_access_group v ON v.group = c.id
+                FROM {group} g 
+                LEFT JOIN {group_member_request} gmr ON gmr.group = g.id
+                LEFT JOIN {view_access_group} v ON v.group = c.id
                 WHERE c.owner = ?
                 GROUP BY c.id,c.jointype,c.name,c.owner';
                 
