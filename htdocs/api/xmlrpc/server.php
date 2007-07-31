@@ -56,11 +56,11 @@ $networkingdebug = get_config('enablenetworkingdebug');
 
 // If networking is off, return a '403 Forbidden' response
 $networkenabled = get_config('enablenetworking');
+$protocol = strtoupper($_SERVER['SERVER_PROTOCOL']);
+if ($protocol != 'HTTP/1.1') {
+    $protocol = 'HTTP/1.0';
+}
 if (empty($networkenabled)) {
-    $protocol = strtoupper($_SERVER['SERVER_PROTOCOL']);
-    if ($protocol != 'HTTP/1.1') {
-        $protocol = 'HTTP/1.0';
-    }
 
     if ($networkingdebug) {
         throw new XmlrpcServerException('Networking is disabled.', 6012);
