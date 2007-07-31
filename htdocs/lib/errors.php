@@ -699,9 +699,9 @@ class ViewNotFoundException extends NotFoundException {}
 class UserNotFoundException extends NotFoundException {}
 
 /**
- * Exception - community not found
+ * Exception - group not found
  */
-class CommunityNotFoundException extends NotFoundException {}
+class GroupNotFoundException extends NotFoundException {}
 
 /**
  * Exception - fired when something happens that would make the user exceed their quota

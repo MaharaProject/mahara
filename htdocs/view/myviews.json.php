@@ -46,7 +46,7 @@ $count = count_records('view', 'owner', $userid);
 $prefix = get_config('dbprefix');
 $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description,c.name
         FROM ' . $prefix . 'view v
-        LEFT OUTER JOIN ' . $prefix . 'community c ON v.submittedto = c.id
+        LEFT OUTER JOIN ' . $prefix . 'group g ON v.submittedto = g.id
         WHERE v.owner = ' . $userid . '
         ORDER BY v.title', '', $offset, $limit);
 
@@ -96,26 +96,26 @@ if ($viewdata) {
 }
 
 
-/* Get a list of communities that the user belongs to which also have
-   a tutor member.  This is the list of communities that the user is
+/* Get a list of groups that the user belongs to which also have
+   a tutor member.  This is the list of groups that the user is
    able to submit views to. */
 
-if (!$tutorcommunitydata = @get_records_sql_array('SELECT c.id, c.name
-       FROM ' . $prefix . 'community_member u
-       INNER JOIN ' . $prefix . 'community c ON u.community = c.id 
-       INNER JOIN ' . $prefix . 'community_member t ON t.community = c.id 
+if (!$tutorgroupdata = @get_records_sql_array('SELECT c.id, c.name
+       FROM ' . $prefix . 'group_member u
+       INNER JOIN ' . $prefix . 'group g ON u.group = g.id 
+       INNER JOIN ' . $prefix . 'group_member t ON t.group = g.id 
        WHERE u.member = ' . $userid . '
        AND t.tutor = 1
        AND t.member != ' . $userid . ';', '')) {
-    $tutorcommunitydata = array();
+    $tutorgroupdata = array();
 }
 
 $result = array(
-    'count'       => $count,
-    'limit'       => $limit,
-    'offset'      => $offset,
-    'data'        => $data,
-    'communities' => $tutorcommunitydata,
+    'count'  => $count,
+    'limit'  => $limit,
+    'offset' => $offset,
+    'data'   => $data,
+    'groups' => $tutorgroupdata,
 );
 
 

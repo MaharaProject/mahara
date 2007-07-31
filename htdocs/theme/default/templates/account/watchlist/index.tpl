@@ -9,7 +9,7 @@
 			<select id="type" name="type" onChange="statusChange(); return false;">
 				<option value="views">{str section='activity' tag='views'}</option>
 				<option value="artefacts">{str section='activity' tag='artefacts'}</option>
-				<option value="communities">{str section='activity' tag='communities'}</option>
+				<option value="groups">{str section='activity' tag='groups'}</option>
 			</select>
 			{str tag='belongingto'}:
 			<select id="user" name="user" onChange="statusChange(); return false;">

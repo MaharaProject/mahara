@@ -71,7 +71,7 @@ function activity_occurred($activitytype, $data) {
  *  -       and should also contain $subject (or a boring default will be used)
  *  - <b>watchlist (view) </b> must contain $view (id of view) 
     -       and should also contain $subject (or a boring default will be used)
- *  - <b>watchlist (community) </b> must contain $community (id of community)
+ *  - <b>watchlist (group) </b> must contain $group (id of group)
     -       and should also contain $subject (or a boring default will be used)
  *  - <b>newview</b> must contain $owner userid of view owner AND $view (id of new view)
  *  - <b>viewaccess</b> must contain $owner userid of view owner AND $view (id of view) and $oldusers array of userids before access change was committed.
@@ -316,28 +316,28 @@ SELECT DISTINCT u.*, p.method, ?||wa.view AS url
                         $user->message = $data->message . ' ' . display_name($ainfo, $user);
                     }
                 }
-                else if (!empty($data->community)) {
+                else if (!empty($data->group)) {
                     if (empty($data->subject)) {
-                        throw new InvalidArgumentException("subject must be provided for watchlist community");
+                        throw new InvalidArgumentException("subject must be provided for watchlist group");
                     }
-                    if (!$communityname = get_field('community', 'name', 'id', $data->community)) {
-                        throw new InvalidArgumentException("Couldn't find community with id " . $data->community);
+                    if (!$groupname = get_field('group', 'name', 'id', $data->group)) {
+                        throw new InvalidArgumentException("Couldn't find group with id " . $data->group);
                     }
                     $oldsubject = $data->subject;
-                    $data->subject = get_string('watchlistmessagecommunity', 'activity');
-                    $data->message = $oldsubject . ' ' . get_string('oncommunity', 'activity') . ' ' . $communityname;
+                    $data->subject = get_string('watchlistmessagegroup', 'activity');
+                    $data->message = $oldsubject . ' ' . get_string('ongroup', 'activity') . ' ' . $groupname;
                     $sql = 'SELECT DISTINCT u.*, p.method, ' . $casturl . ' AS url
-                                FROM ' . $prefix . 'usr_watchlist_community c
+                                FROM ' . $prefix . 'usr_watchlist_group g
                                 JOIN ' . $prefix . 'usr u
-                                    ON c.usr = u.id
+                                    ON g.usr = u.id
                                 LEFT JOIN ' . $prefix . 'usr_activity_preference p
                                     ON p.usr = u.id
                                 WHERE (p.activity = ? OR p.activity IS NULL)
-                                AND c.community = ?
+                                AND g.group = ?
                             ';
                     $users = get_records_sql_array($sql, 
-                                                   array(get_config('wwwroot') . 'contacts/communities/view.php?id='
-                                                         . $data->community, 'watchlist', $data->community));
+                                                   array(get_config('wwwroot') . 'contacts/groups/view.php?id='
+                                                         . $data->group, 'watchlist', $data->group));
                 }
                 else {
                     throw new InvalidArgumentException("Invalid watchlist type");
@@ -518,12 +518,12 @@ function activity_get_viewaccess_users($view, $owner, $type) {
                     FROM ' . $prefix . 'view_access_usr u 
                         WHERE u.view = ?
                 UNION SELECT m.member 
-                    FROM ' . $prefix . 'community_member m
-                    JOIN ' . $prefix . 'view_access_community c ON c.community = m.community
+                    FROM ' . $prefix . 'group_member m
+                    JOIN ' . $prefix . 'view_access_group g ON g.group = m.group
                         WHERE c.view = ? AND (c.tutoronly = ? OR m.tutor = ?)
                 UNION SELECT c.owner
-                    FROM ' . $prefix . 'community c
-                    JOIN ' . $prefix . 'view_access_community ac ON ac.community = c.id
+                    FROM ' . $prefix . 'group g
+                    JOIN ' . $prefix . 'view_access_group ac ON ac.group = g.id
                         WHERE ac.view = ?
                 ) AS userlist
                 JOIN ' . $prefix . 'usr u ON u.id = userlist.userid

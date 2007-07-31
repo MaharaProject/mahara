@@ -71,12 +71,12 @@ abstract class PluginSearch extends Plugin {
     public static abstract function search_user($query_string, $limit, $offset = 0);
 
     /**
-     * Given a query string and limits, return an array of matching communities
+     * Given a query string and limits, return an array of matching groups
      *
      * @param string  The query string
      * @param integer How many results to return
      * @param integer What result to start at (0 == first result)
-     * @param boolean Return all matching communities, or just ones this user
+     * @param boolean Return all matching groups, or just ones this user
      * is a member of?
      * @return array  A data structure containing results looking like ...
      *         $results = array(
@@ -106,14 +106,14 @@ abstract class PluginSearch extends Plugin {
      *               ),
      *           );
      */
-    public static abstract function search_community($query_string, $limit, $offset=0, $all=false);
+    public static abstract function search_group($query_string, $limit, $offset=0, $all=false);
 
     /**
      * Given a query string and limits, return an array of matching objects
      * owned by the current user.  Possible return types are ...
      *   - artefact
      *   - view
-     *   - @todo potentially other types such as community could be searched by this too
+     *   - @todo potentially other types such as group could be searched by this too
      *
      * Implementations of this search should search across tags for artefacts
      * and views at a minimum. Ideally the search would also index

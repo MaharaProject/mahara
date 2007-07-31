@@ -1122,8 +1122,8 @@ function can_view_view($view_id, $user_id=null) {
         return true;
     }
 
-    if ($view_record['submittedto'] && record_exists('community_member', 'community', $view_record['submittedto'], 'member', $user_id, 'tutor', 1)) {
-        //log_debug('Yes - View is submitted for assesment to a community you are a tutor in');
+    if ($view_record['submittedto'] && record_exists('group_member', 'group', $view_record['submittedto'], 'member', $user_id, 'tutor', 1)) {
+        //log_debug('Yes - View is submitted for assesment to a group you are a tutor in');
         return true;
     }
 
@@ -1205,24 +1205,24 @@ function can_view_view($view_id, $user_id=null) {
         return true;
     }
 
-    // check community access
+    // check group access
     if (get_field_sql(
         'SELECT
             a.view
         FROM
-            ' . $prefix . 'view_access_community a
-            INNER JOIN ' . $prefix . 'community c ON a.community = c.id
-            INNER JOIN ' . $prefix . 'community_member m ON c.id=m.community
+            ' . $prefix . 'view_access_group a
+            INNER JOIN ' . $prefix . 'group g ON a.group = g.id
+            INNER JOIN ' . $prefix . 'group_member m ON g.id=m.group
         WHERE
             a.view = ? 
             AND ( a.startdate < ? OR a.startdate IS NULL )
             AND ( a.stopdate > ?  OR a.stopdate  IS NULL )
-            AND ( ( m.member = ? AND (a.tutoronly = 0 OR m.tutor = 1 ) ) OR c.owner = ?)
+            AND ( ( m.member = ? AND (a.tutoronly = 0 OR m.tutor = 1 ) ) OR g.owner = ?)
         LIMIT 1',
         array( $view_id, $dbnow, $dbnow, $user_id, $user_id  )
         )
     ) {
-        //log_debug('Yes - View is available to a specific community');
+        //log_debug('Yes - View is available to a specific group');
         return true;
     }
 
@@ -1350,7 +1350,7 @@ function get_views($users, $userlooking=null, $limit=5) {
         return $list;
     }
 
-    // check community access
+    // check group access
     if ($results = get_records_sql_array(
         'SELECT
             v.*,
@@ -1359,8 +1359,8 @@ function get_views($users, $userlooking=null, $limit=5) {
             ' . db_format_tsfield('v.ctime','ctime') . '
         FROM 
             ' . $prefix . 'view v
-            INNER JOIN ' . $prefix . 'view_access_community a ON v.id=a.view
-            INNER JOIN ' . $prefix . 'community_member m ON m.community=a.community AND m.member=?
+            INNER JOIN ' . $prefix . 'view_access_group a ON v.id=a.view
+            INNER JOIN ' . $prefix . 'group_member m ON m.group=a.group AND m.member=?
         WHERE
             v.owner IN (' . join(',',array_map('db_quote', array_keys($users))) . ')
             AND ( v.startdate IS NULL OR v.startdate < ? )

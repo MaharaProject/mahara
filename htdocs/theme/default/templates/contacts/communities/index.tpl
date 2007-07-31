@@ -2,8 +2,8 @@
 {include file="sidebar.tpl"}
 
 {include file="columnleftstart.tpl"}
-			<h2>{str tag="mycommunities"}</h2>
-                            <table id="communitylist" class="hidden tablerenderer">
+			<h2>{str tag="mygroups"}</h2>
+                            <table id="grouplist" class="hidden tablerenderer">
 	                        <thead>
                                     <tr>
  	                                <th>{str tag='name'}</th>

@@ -112,7 +112,7 @@ function search_user($query_string, $limit, $offset = 0) {
 }
 
 /**
- * Given a query string and limits, return an array of matching communities using the
+ * Given a query string and limits, return an array of matching groups using the
  * search plugin defined in config.php
  *
  * @param string  The query string
@@ -144,11 +144,11 @@ function search_user($query_string, $limit, $offset = 0) {
  *               ),
  *           );
  */
-function search_community($query_string, $limit, $offset = 0, $all = false) {
+function search_group($query_string, $limit, $offset = 0, $all = false) {
     $plugin = get_config('searchplugin');
     safe_require('search', $plugin);
 
-    return call_static_method(generate_class_name('search', $plugin), 'search_community', $query_string, $limit, $offset, $all);
+    return call_static_method(generate_class_name('search', $plugin), 'search_group', $query_string, $limit, $offset, $all);
 }
 
 function search_selfsearch($query_string, $limit, $offset, $type = 'all') {

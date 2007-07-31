@@ -9,7 +9,7 @@
                     </label>
                     <select id="search_type">
                         <option value="user">{str tag=users}</option>
-                        <option value="community">{str tag=communities}</option>
+                        <option value="group">{str tag=groups}</option>
                     </select>
                     <input type="submit" class="submit" value="{str tag='go'}">
                     </form>

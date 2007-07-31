@@ -26,104 +26,104 @@
 
 define('INTERNAL', 1);
 define('MENUITEM', 'mycontacts');
-define('SUBMENUITEM', 'mycommunities');
+define('SUBMENUITEM', 'mygroups');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-define('TITLE', get_string('mycommunities'));
-require_once('community.php');
+define('TITLE', get_string('mygroups'));
+require_once('group.php');
 
 $id = param_integer('id');
 $joincontrol = param_alpha('joincontrol', null);
 $pending = param_integer('pending', 0);
 
-if (!$community = get_record('community', 'id', $id)) {
-    throw new CommunityNotFoundException("Couldn't find community with id $id");
+if (!$group = get_record('group', 'id', $id)) {
+    throw new GroupNotFoundException("Couldn't find group with id $id");
 }
-$community->ownername = display_name(get_record('usr', 'id', $community->owner));
+$group->ownername = display_name(get_record('usr', 'id', $group->owner));
 
-$membership = user_can_access_community($id);
+$membership = user_can_access_group($id);
 // $membership is a bit string summing all membership types
-$ismember = (bool) ($membership & COMMUNITY_MEMBERSHIP_MEMBER);
+$ismember = (bool) ($membership & GROUP_MEMBERSHIP_MEMBER);
 
 if (!empty($joincontrol)) {
     // leave, join, acceptinvite, request
     switch ($joincontrol) {
         case 'leave':
             // make sure they're a member and can leave
-            if ($ismember && $community->jointype != 'controlled') {
-                community_remove_member($id, $USER->get('id'));
-                $SESSION->add_ok_msg(get_string('leftcommunity'));
+            if ($ismember && $group->jointype != 'controlled') {
+                group_remove_member($id, $USER->get('id'));
+                $SESSION->add_ok_msg(get_string('leftgroup'));
             } 
             else {
-                $SESSION->add_error_msg(get_string('couldnotleavecommunity'));
+                $SESSION->add_error_msg(get_string('couldnotleavegroup'));
             }
             break;
         case 'join':
-            if (!$ismember && $community->jointype == 'open') {
-                community_add_member($id, $USER->get('id'));
-                $SESSION->add_ok_msg(get_string('joinedcommunity'));
+            if (!$ismember && $group->jointype == 'open') {
+                group_add_member($id, $USER->get('id'));
+                $SESSION->add_ok_msg(get_string('joinedgroup'));
             }
             else {
-                $SESSION->add_error_msg(get_string('couldnotjoincommunity'));
+                $SESSION->add_error_msg(get_string('couldnotjoingroup'));
             }
             break;
         case 'acceptinvite':
         case 'declineinvite':
-            if (!$request = get_record('community_member_invite', 'member', $USER->get('id'), 'community', $id)) {
-                $SESSION->add_error_msg(get_string('communitynotinvited'));
+            if (!$request = get_record('group_member_invite', 'member', $USER->get('id'), 'group', $id)) {
+                $SESSION->add_error_msg(get_string('groupnotinvited'));
                 break;
             }
             if ($joincontrol == 'acceptinvite') {
-                community_add_member($id, $USER->get('id'));
-                $message = get_string('communityinviteaccepted');
+                group_add_member($id, $USER->get('id'));
+                $message = get_string('groupinviteaccepted');
             }
             else {
-                $message = get_string('communityinvitedeclined');
+                $message = get_string('groupinvitedeclined');
             }
-            delete_records('community_member_invite', 'member', $USER->get('id'), 'community', $id);
+            delete_records('group_member_invite', 'member', $USER->get('id'), 'group', $id);
             $SESSION->add_ok_msg($message);
             break;
         case 'request':
-            if (!$ismember && $community->jointype == 'request' 
-                && !record_exists('community_member_request', 'community', $id, 'member', $USER->get('id'))) {
-                $cmr = new StdClass;
-                $cmr->reason = param_variable('reason', null);
-                $cmr->community = $id;
-                $cmr->member = $USER->get('id');
-                $cmr->ctime = db_format_timestamp(time());
-                $owner = get_record('usr', 'id', $community->owner);
-                insert_record('community_member_request', $cmr);
-                if (empty($cmr->reason)) {
-                    $message = get_string('communityrequestmessage', 'mahara', 
-                                          display_name($USER, $owner), $community->name);
+            if (!$ismember && $group->jointype == 'request' 
+                && !record_exists('group_member_request', 'group', $id, 'member', $USER->get('id'))) {
+                $gmr = new StdClass;
+                $gmr->reason = param_variable('reason', null);
+                $gmr->group = $id;
+                $gmr->member = $USER->get('id');
+                $gmr->ctime = db_format_timestamp(time());
+                $owner = get_record('usr', 'id', $group->owner);
+                insert_record('group_member_request', $gmr);
+                if (empty($gmr->reason)) {
+                    $message = get_string('grouprequestmessage', 'mahara', 
+                                          display_name($USER, $owner), $group->name);
                 } 
                 else {
-                    $message = get_string('communityrequestmessagereason', 'mahara', 
-                                          display_name($USER, $owner), $community->name, $cmr->reason);
+                    $message = get_string('grouprequestmessagereason', 'mahara', 
+                                          display_name($USER, $owner), $group->name, $gmr->reason);
                 }
                 require_once('activity.php');
                 activity_occurred('maharamessage', 
-                    array('users'   => array($community->owner), 
-                          'subject' => get_string('communityrequestsubject'),
+                    array('users'   => array($group->owner), 
+                          'subject' => get_string('grouprequestsubject'),
                           'message' => $message,
-                          'url'     => get_config('wwwroot') . 'contacts/communities/view.php?id=' . $id));
-                $SESSION->add_ok_msg(get_string('communityrequestsent'));
+                          'url'     => get_config('wwwroot') . 'contacts/groups/view.php?id=' . $id));
+                $SESSION->add_ok_msg(get_string('grouprequestsent'));
             }
             else {
-                $SESSION->add_error_msg(get_string('couldnotrequestcommunity'));
+                $SESSION->add_error_msg(get_string('couldnotrequestgroup'));
             }
             break;
     }
     // redirect, stuff will have changed
-    redirect('/contacts/communities/view.php?id=' . $id);
+    redirect('/contacts/groups/view.php?id=' . $id);
     exit;
 }
 
-$invited   = get_record('community_member_invite', 'community', $id, 'member', $USER->get('id'));
-$requested = get_record('community_member_request', 'community', $id, 'member', $USER->get('id'));
+$invited   = get_record('group_member_invite', 'group', $id, 'member', $USER->get('id'));
+$requested = get_record('group_member_request', 'group', $id, 'member', $USER->get('id'));
 
 $userview = get_config('wwwroot') . 'user/view.php?id=';
 $viewview = get_config('wwwroot') . 'view/view.php?view=';
-$commview = get_config('wwwroot') . 'contacts/communities/view.php';
+$commview = get_config('wwwroot') . 'contacts/groups/view.php';
 
 // strings that are used in the js
 $releaseviewstr  = get_string('releaseview');
@@ -138,26 +138,26 @@ $removefromwatchliststr = get_string('removefromwatchlist', 'activity');
 $addtowatchliststr = get_string('addtowatchlist', 'activity');
 
 // all the permissions stuff
-//$tutor          = (int)($membership && ($membership != COMMUNITY_MEMBERSHIP_MEMBER));
-$controlled     = (int)($community->jointype == 'controlled');
-$request        = (int)($community->jointype == 'request');
-$tutor          = (int)(bool)($membership & COMMUNITY_MEMBERSHIP_TUTOR);
-$admin          = (int)(bool)($membership & COMMUNITY_MEMBERSHIP_ADMIN);
-$staff          = (int)(bool)($membership & COMMUNITY_MEMBERSHIP_STAFF);
-$owner          = (int)(bool)($membership & COMMUNITY_MEMBERSHIP_OWNER);
+//$tutor          = (int)($membership && ($membership != GROUP_MEMBERSHIP_MEMBER));
+$controlled     = (int)($group->jointype == 'controlled');
+$request        = (int)($group->jointype == 'request');
+$tutor          = (int)(bool)($membership & GROUP_MEMBERSHIP_TUTOR);
+$admin          = (int)(bool)($membership & GROUP_MEMBERSHIP_ADMIN);
+$staff          = (int)(bool)($membership & GROUP_MEMBERSHIP_STAFF);
+$owner          = (int)(bool)($membership & GROUP_MEMBERSHIP_OWNER);
 $canupdate      = (int)(bool)($tutor || $staff || $admin || $owner);
 $canpromote     = (int)(bool)(($staff || $admin) && $controlled);
 $canremove      = (int)(bool)(($tutor && $controlled) || $staff || $admin || $owner);
 $canleave       = ($ismember && !$controlled);
-$canrequestjoin = (!$ismember && empty($invited) && empty($requested) && $community->jointype == 'request');
-$canjoin        = (!$ismember && $community->jointype == 'open');
+$canrequestjoin = (!$ismember && empty($invited) && empty($requested) && $group->jointype == 'request');
+$canjoin        = (!$ismember && $group->jointype == 'open');
 
 $javascript = '';
 if ($membership) {
     $javascript .= <<<EOF
 
 viewlist = new TableRenderer(
-    'community_viewlist',
+    'group_viewlist',
     'view.json.php',
     [
      function (r) {
@@ -268,7 +268,7 @@ function switchPending(force) {
 }
 
 function releaseView(id) {
-    var pd = {'type': 'release', 'id': '{$community->id}', 'view': id};
+    var pd = {'type': 'release', 'id': '{$group->id}', 'view': id};
     sendjsonrequest('view.json.php', pd, 'GET', function (data) {
         viewlist.doupdate();
     });
@@ -276,7 +276,7 @@ function releaseView(id) {
 }
 
 function toggleWatchlist() {
-    var pd = {'type': 'watchlist', 'id': '{$community->id}'};
+    var pd = {'type': 'watchlist', 'id': '{$group->id}'};
     var remove = '{$removefromwatchliststr}';
     var add = '{$addtowatchliststr}';
     sendjsonrequest('view.json.php', pd, 'GET', function (data) {
@@ -291,7 +291,7 @@ function toggleWatchlist() {
 }
 
 function updateMembership() {
-    var pd = {'type': 'membercontrol', 'id': '{$community->id}'};
+    var pd = {'type': 'membercontrol', 'id': '{$group->id}'};
     var e = getElementsByTagAndClassName(null, 'member');
     for (s in e) {
         pd[e[s].name] = e[s].options[e[s].selectedIndex].value;
@@ -340,9 +340,9 @@ $smarty->assign('canleave', $canleave);
 $smarty->assign('canpromote', $canpromote);
 $smarty->assign('canupdate', $canupdate);
 $smarty->assign('canacceptinvite', $invited);
-$smarty->assign('community', $community);
-$smarty->assign('onwatchlist', record_exists('usr_watchlist_community', 'usr', $USER->get('id'), 'community', $community->id));
-$smarty->display('contacts/communities/view.tpl');
+$smarty->assign('group', $group);
+$smarty->assign('onwatchlist', record_exists('usr_watchlist_group', 'usr', $USER->get('id'), 'group', $group->id));
+$smarty->display('contacts/groups/view.tpl');
 
 
 ?>

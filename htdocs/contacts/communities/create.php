@@ -26,10 +26,10 @@
 
 define('INTERNAL', 1);
 define('MENUITEM', 'mycontacts');
-define('SUBMENUITEM', 'myownedcommunities');
+define('SUBMENUITEM', 'myownedgroups');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('pieforms/pieform.php');
-define('TITLE', get_string('createcommunity'));
+define('TITLE', get_string('creategroup'));
 
 $prefix = get_config('dbprefix');
 
@@ -42,20 +42,20 @@ if ($USER->get('admin') || $USER->get('staff')) {
     $joinoptions['controlled'] = get_string('membershiptype.controlled');
 }
 
-$createcommunity = pieform(array(
-    'name'     => 'createcommunity',
+$creategroup = pieform(array(
+    'name'     => 'creategroup',
     'method'   => 'post',
     'plugintype' => 'core',
-    'pluginname' => 'communities',
+    'pluginname' => 'groups',
     'elements' => array(
         'name' => array(
             'type'         => 'text',
-            'title'        => get_string('communityname'),
+            'title'        => get_string('groups'),
             'rules'        => array( 'required' => true, 'maxlength' => 128 ),
         ),
         'description' => array(
             'type'         => 'wysiwyg',
-            'title'        => get_string('communitydescription'),
+            'title'        => get_string('groupdescription'),
             'rows'         => 10,
             'cols'         => 80,
         ),
@@ -68,27 +68,27 @@ $createcommunity = pieform(array(
         ),
         'submit'   => array(
             'type'  => 'submitcancel',
-            'value' => array(get_string('savecommunity'), get_string('cancel')),
+            'value' => array(get_string('savegroup'), get_string('cancel')),
         ),
     ),
 ));
 
-function createcommunity_validate(Pieform $form, $values) {
+function creategroup_validate(Pieform $form, $values) {
     global $USER;
     global $SESSION;
 
-    $cid = get_field('community', 'id', 'owner', $USER->get('id'), 'name', $values['name']);
+    $cid = get_field('group', 'id', 'owner', $USER->get('id'), 'name', $values['name']);
 
     if ($cid) {
-        $form->set_error('name', get_string('communityalreadyexists'));
+        $form->set_error('name', get_string('groupalreadyexists'));
     }
 }
 
-function createcommunity_cancel_submit() {
-    redirect('/contacts/communities/owned.php');
+function creategroup_cancel_submit() {
+    redirect('/contacts/groups/owned.php');
 }
 
-function createcommunity_submit(Pieform $form, $values) {
+function creategroup_submit(Pieform $form, $values) {
     global $USER;
     global $SESSION;
 
@@ -97,7 +97,7 @@ function createcommunity_submit(Pieform $form, $values) {
     $now = db_format_timestamp(time());
 
     $id = insert_record(
-        'community',
+        'group',
         (object) array(
             'name'           => $values['name'],
             'description'    => $values['description'],
@@ -112,29 +112,29 @@ function createcommunity_submit(Pieform $form, $values) {
 
     // If the user is a staff member, they should be added as a tutor automatically
     if ($values['membershiptype'] == 'controlled' && $USER->get('staff')) {
-        log_debug('Adding staff user to community');
+        log_debug('Adding staff user to group');
         insert_record(
-            'community_member',
+            'group_member',
             (object) array(
-                'community' => $id,
-                'member'    => $USER->get('id'),
-                'ctime'     => $now,
-                'tutor'     => 1
+                'group'  => $id,
+                'member' => $USER->get('id'),
+                'ctime'  => $now,
+                'tutor'  => 1
             )
         );
     }
 
-    $SESSION->add_ok_msg(get_string('communitysaved'));
+    $SESSION->add_ok_msg(get_string('groupsaved'));
 
     db_commit();
 
-    redirect('/contacts/communities/owned.php');
+    redirect('/contacts/groups/owned.php');
 }
 
 $smarty = smarty();
 
-$smarty->assign('createcommunity', $createcommunity);
+$smarty->assign('creategroup', $creategroup);
 
-$smarty->display('contacts/communities/create.tpl');
+$smarty->display('contacts/groups/create.tpl');
 
 ?>

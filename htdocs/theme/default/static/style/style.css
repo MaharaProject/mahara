@@ -94,8 +94,8 @@ div.grippie {
 .maincontent #newblog #newblog_description_container table,
 .maincontent #editblog #editblog_description_container table,
 .maincontent #editpost #editpost_description_container table,
-.maincontent #editcommunity #editcommunity_description_container table,
-.maincontent #createcommunity #createcommunity_description_container table {
+.maincontent #editgroup #editgroup_description_container table,
+.maincontent #creategroup #creategroup_description_container table {
 	border: 1px solid #d4d1c0;
 	margin: 0px;
 }
@@ -749,8 +749,8 @@ p {
 .maincontent #draftpost table,
 .maincontent #editviewaccess table,
 .maincontent #register table,
-.maincontent #editcommunity table,
-.maincontent #createcommunity table,
+.maincontent #editgroup table,
+.maincontent #creategroup table,
 .maincontent #upload table,
 #change_password table {
 	border: 0px;
@@ -785,8 +785,8 @@ p {
 .maincontent #newblog td,
 .maincontent #createview1 td,
 .maincontent #accountprefs td,
-.maincontent #editcommunity td,
-.maincontent #createcommunity td,
+.maincontent #editgroup td,
+.maincontent #creategroup td,
 .maincontent #profileform td,
 .maincontent #contactus td {
 	padding: 0;
@@ -1049,13 +1049,13 @@ table#installer {
 	padding: 1px 2px 1px 2px;
 }
 
-/* My Communities and My Owned Communities styles */
-.maincontent .addcommunitylink {
+/* Groups I'm in and Groups I own styles */
+.maincontent .addgrouplink {
 	margin: 10px 0 10px 0;
 	text-align: right;
 }
 .maincontent #memberlist tbody td,
-.maincontent #communitylist tbody td {
+.maincontent #grouplist tbody td {
 	padding: 2px 5px;
 }
 #userview #userview_profile th {

@@ -38,13 +38,13 @@ $filename = param_variable('filename');
 // will add to the view owner's quota, but saving the file will not
 // fail if the quota is exceeded.
 
-// Community name, view title, feedback number?
+// Group name, view title, feedback number?
 $prefix = get_config('dbprefix');
 $viewdata = get_record_sql('
      SELECT
          v.title, v.owner, c.name
      FROM ' . $prefix . 'view v
-     INNER JOIN ' . $prefix . 'community c ON v.submittedto = c.id
+     INNER JOIN ' . $prefix . 'group g ON v.submittedto = g.id
      WHERE v.id = ' . $viewid, '');
 
 $page = '/view/view.php?view=' . $viewid;
@@ -69,7 +69,7 @@ $data = (object) array('owner' => $viewdata->owner,
                        'parent' => $folderid,
                        'size' => $size,
                        'title' => $filename,
-                       'description' => get_string('feedbackonviewbytutorofcommunity', 'mahara', 
+                       'description' => get_string('feedbackonviewbytutorofgroup', 'mahara', 
                                                    $viewdata->title, display_name($USER), $viewdata->name));
 $f = ArtefactTypeFile::new_file($um->file['tmp_name'], $data);
 $f->commit();

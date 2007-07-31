@@ -305,7 +305,7 @@ class View {
         delete_records('view_artefact','view',$this->id);
         delete_records('view_content','view',$this->id);
         delete_records('view_access','view',$this->id);
-        delete_records('view_access_community','view',$this->id);
+        delete_records('view_access_group','view',$this->id);
         delete_records('view_access_usr','view',$this->id);
         delete_records('view_tag','view',$this->id);
         delete_records('usr_watchlist_artefact','view',$this->id);
@@ -314,10 +314,10 @@ class View {
         $this->deleted = true;
     }
 
-    public function release($communityid, $releaseuser=null) {
-        if ($this->get('submittedto') != $communityid) {
+    public function release($groupid, $releaseuser=null) {
+        if ($this->get('submittedto') != $groupid) {
             throw new ParameterException("View with id " . $this->get('id') .
-                                         " has not been submitted to community $communityid");
+                                         " has not been submitted to group $groupid");
         }
         $releaseuser = optional_userobj($releaseuser);
         $this->set('submittedto', null);
@@ -327,7 +327,7 @@ class View {
                   array('users'   => array($this->get('owner')),
                   'subject' => get_string('viewreleasedsubject'),
                   'message' => get_string('viewreleasedmessage', 'mahara', 
-                       get_field('community', 'name', 'id', $communityid), 
+                       get_field('group', 'name', 'id', $groupid), 
                        display_name($releaseuser, $this->get_owner_object()))));
     }
 

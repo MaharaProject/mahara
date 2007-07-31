@@ -26,22 +26,22 @@
 
 define('INTERNAL', 1);
 define('MENUITEM', 'mycontacts');
-define('SUBMENUITEM', 'mycommunities');
+define('SUBMENUITEM', 'mygroups');
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'contacts');
-define('SECTION_PAGE', 'communities');
+define('SECTION_PAGE', 'groups');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-define('TITLE', get_string('mycommunities'));
+define('TITLE', get_string('mygroups'));
 
-$viewurl = get_config('wwwroot') . 'contacts/communities/view.php?id=';
-$leftsuccess = get_string('leftcommunity');
-$leftfailed = get_string('leftcommunityfailed');
+$viewurl = get_config('wwwroot') . 'contacts/groups/view.php?id=';
+$leftsuccess = get_string('leftgroup');
+$leftfailed = get_string('leftgroupfailed');
 
 $javascript = <<<EOF
-var communitylist = new TableRenderer(
-    'communitylist',
-    'getcommunities.json.php',
+var grouplist = new TableRenderer(
+    'grouplist',
+    'getgroups.json.php',
     [
      function (r) {
          return TD(null, A({'href': '{$viewurl}' + r.id}, r.name));
@@ -50,18 +50,18 @@ var communitylist = new TableRenderer(
          if (r.jointype == 'controlled') {
              return TD(null);
          }
-         return TD(null, A({'href': '', 'onclick': 'leaveCommunity(' + r.id + '); return false;'}, '[X]'));
+         return TD(null, A({'href': '', 'onclick': 'leaveGroup(' + r.id + '); return false;'}, '[X]'));
      }
      ]
 );
 
-communitylist.updateOnLoad();
+grouplist.updateOnLoad();
 
-function leaveCommunity(id) {
+function leaveGroup(id) {
     var pd = {'leave': id}
-    sendjsonrequest('communityleave.json.php', pd, 'GET', function (data) {
+    sendjsonrequest('groupleave.json.php', pd, 'GET', function (data) {
         if (!data.error) {
-            communitylist.doupdate();
+            grouplist.doupdate();
         }
     }, function () {
         watchlist.doupdate();
@@ -71,6 +71,6 @@ function leaveCommunity(id) {
 EOF;
 $smarty = smarty(array('tablerenderer'));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
-$smarty->display('contacts/communities/index.tpl');
+$smarty->display('contacts/groups/index.tpl');
 
 ?>

@@ -51,8 +51,8 @@ if ($stopmonitoring) {
                 delete_records('usr_watchlist_artefact', 'usr', $userid, 'artefact', $m[1]);
                 $count++;
             }
-            else if (preg_match('/^stopcommunities\-(\d+)$/',$k,$m)) {
-                delete_records('usr_watchlist_community', 'usr', $userid, 'community', $m[1]);
+            else if (preg_match('/^stopgroups\-(\d+)$/',$k,$m)) {
+                delete_records('usr_watchlist_group', 'usr', $userid, 'group', $m[1]);
                 $count++;
             }
         }
@@ -127,11 +127,11 @@ if ($type == 'views') {
             ORDER BY v.mtime DESC';
     $records = get_records_sql_array($sql, $values, $offset, $limit);
 }
-else if ($type == 'communities') {
-    $count = count_records('usr_watchlist_community', 'usr', $userid);
+else if ($type == 'groups') {
+    $count = count_records('usr_watchlist_group', 'usr', $userid);
     $sql = 'SELECT c.* 
-            FROM ' . $prefix . 'community c
-            JOIN ' . $prefix . 'usr_watchlist_community w ON w.community = c.id 
+            FROM ' . $prefix . 'group g
+            JOIN ' . $prefix . 'usr_watchlist_group w ON w.group = g.id 
             WHERE w.usr = ?
             ORDER BY c.mtime DESC';
     $records = get_records_sql_array($sql, array($userid), $offset, $limit);

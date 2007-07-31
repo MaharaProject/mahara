@@ -28,79 +28,79 @@ defined('INTERNAL') || die();
 
 
 /**
- * is a user allowed to leave a community? 
+ * is a user allowed to leave a group? 
  * checks if they're the owner and the membership type
  *
- * @param object $community (corresponds to db record). if an id is given, record will be fetched.
+ * @param object $group (corresponds to db record). if an id is given, record will be fetched.
  * @param int $userid (optional, will default to logged in user)
  */
-function community_user_can_leave($community, $userid=null) {
+function group_user_can_leave($group, $userid=null) {
 
     $userid = optional_userid($userid);
     
-    if (is_numeric($community)) {
-        if (!$community = get_record('community', 'id', $community)) {
+    if (is_numeric($group)) {
+        if (!$group = get_record('group', 'id', $group)) {
             return false;
         }
     }
     
-    if ($community->owner == $userid) {
+    if ($group->owner == $userid) {
         return false;
     }
     
-    if ($community->jointype == 'controlled') {
+    if ($group->jointype == 'controlled') {
         return false;
     }
     return true;
 }
 
 /**
- * removes a user from a community
+ * removes a user from a group
  *
- * @param int $community id of community
+ * @param int $group id of group
  * @param int $user id of user to remove
  */
-function community_remove_user($community, $userid) {    
+function group_remove_user($group, $userid) {    
     db_begin();
-    delete_records('community_member', 'community', $community, 'member', $userid);
-    delete_records('usr_watchlist_community', 'community', $community, 'usr', $userid);
+    delete_records('group_member', 'group', $group, 'member', $userid);
+    delete_records('usr_watchlist_group', 'group', $group, 'usr', $userid);
     db_commit();
 }
 
 /**
- * all communities the user is a member of
+ * all group the user is a member of
  * 
  * @param int userid (optional, defaults to $USER id) 
- * @return array of community db rows
+ * @return array of group db rows
  */
-function get_member_communities($userid=0, $offset=0, $limit=0) {
+function get_member_group($userid=0, $offset=0, $limit=0) {
 
     $userid = optional_userid($userid);
     $prefix = get_config('dbprefix');
 
-    return get_records_sql_array('SELECT c.id, c.name, c.description, c.jointype, c.owner, c.ctime, c.mtime, cm.ctime, cm.tutor, COUNT(v.view) AS hasviews
-              FROM ' . $prefix . 'community c 
-              JOIN ' . $prefix . 'community_member cm ON cm.community = c.id
-              LEFT JOIN ' . $prefix . 'view_access_community v ON v.community = c.id
-              WHERE c.owner != ? AND cm.member = ?
+    return get_records_sql_array('SELECT g.id, g.name, g.description, g.jointype, g.owner, g.ctime, g.mtime, gm.ctime, gm.tutor, COUNT(v.view) AS hasviews
+              FROM ' . $prefix . 'group g 
+              JOIN ' . $prefix . 'group_member gm ON gm.group = g.id
+              LEFT JOIN ' . $prefix . 'view_access_group v ON v.group = g.id
+              WHERE g.owner != ? AND gm.member = ?
               GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9', array($userid, $userid), $offset, $limit);
 }
 
 
 /**
- * all communities the user owns
+ * all groups the user owns
  * 
  * @param int userid (optional, defaults to $USER id) 
  * @param string $jointype (optional), will filter by jointype.
- * @return array of community db rows
+ * @return array of group db rows
  */
-function get_owned_communities($userid=0, $jointype=null) {
+function get_owned_groups($userid=0, $jointype=null) {
 
     $userid = optional_userid($userid);
     $prefix = get_config('dbprefix');
 
-    $sql = 'SELECT c.* FROM ' . $prefix . 'community c 
-             WHERE c.owner = ?';
+    $sql = 'SELECT g.* FROM ' . $prefix . 'group g 
+             WHERE g.owner = ?';
     $values = array($userid);
 
     if (!empty($jointype)) {
@@ -112,83 +112,83 @@ function get_owned_communities($userid=0, $jointype=null) {
 }
 
 /**
- * all communities the user has pending invites to
+ * all groups the user has pending invites to
  * 
  * @param int userid (optional, defaults to $USER id)
- * @return array of community db rows
+ * @return array of group db rows
  */
-function get_invited_communities($userid=0) {
+function get_invited_groups($userid=0) {
 
     $userid = optional_userid($userid);
     $prefix = get_config('dbprefix');
 
-    return get_records_sql_array('SELECT c.*, cmi.ctime, cmi.reason
-             FROM ' . $prefix . 'community c 
-             JOIN ' . $prefix . 'community_member_invite cmi ON cmi.community = c.id
-             WHERE cmi.member = ?)', array($userid));
+    return get_records_sql_array('SELECT g.*, gmi.ctime, gmi.reason
+             FROM ' . $prefix . 'group g 
+             JOIN ' . $prefix . 'group_member_invite gmi ON gmi.group = g.id
+             WHERE gmi.member = ?)', array($userid));
 }
 
 /**
- * all communities the user has pending requests for 
+ * all groups the user has pending requests for 
  * 
  * @param int $userid (optional, defaults to $USER id)
- * @return array of community db rows
+ * @return array of group db rows
  */
 
-function get_requested_communities($userid=0) {
+function get_requested_group($userid=0) {
 
     $userid = optional_userid($userid);
     $prefix = get_config('dbprefix');
 
-    return get_records_sql_array('SELECT c.*, cmr.ctime, cmr.reason 
-              FROM ' . $prefix . 'community c 
-              JOIN ' . $prefix . 'community_member_request cmr ON cmr.community = c.id
-              WHERE cmr.member = ?', array($userid));
+    return get_records_sql_array('SELECT g.*, gmr.ctime, gmr.reason 
+              FROM ' . $prefix . 'group g 
+              JOIN ' . $prefix . 'group_member_request gmr ON gmr.group = c.id
+              WHERE gmr.member = ?', array($userid));
 }
 
 /**
- * all communities this user is associated with at all
+ * all groups this user is associated with at all
  * either member, invited or requested.
  * 
  * @param int $userid (optional, defaults to $USER id)
- * @return array of community db rows (with type=member|invite|request)
+ * @return array of group db rows (with type=member|invite|request)
  */
 
-function get_associated_communities($userid=0) {
+function get_associated_groups($userid=0) {
 
     $userid = optional_userid($userid);
     $prefix = get_config('dbprefix');
     
-    $sql = "SELECT c.*, a.type FROM " . $prefix . "community c JOIN (
-    SELECT cm.community, 'invite' AS type
-        FROM " . $prefix . "community_member_invite cm WHERE cm.member = ?
+    $sql = "SELECT g.*, a.type FROM " . $prefix . "group g JOIN (
+    SELECT gm.group, 'invite' AS type
+        FROM " . $prefix . "group_member_invite gm WHERE gm.member = ?
     UNION 
-    SELECT cm.community, 'request' AS type
-        FROM " . $prefix . "community_member_request cm WHERE cm.member = ?
+    SELECT gm.group, 'request' AS type
+        FROM " . $prefix . "group_member_request gm WHERE gm.member = ?
     UNION 	
-    SELECT cm.community, 'member' AS type
-        FROM " . $prefix . "community_member cm WHERE cm.member = ?
-    ) AS a ON a.community = c.id";
+    SELECT gm.group, 'member' AS type
+        FROM " . $prefix . "group_member gm WHERE gm.member = ?
+    ) AS a ON a.group = g.id";
     
     return get_records_sql_assoc($sql, array($userid, $userid, $userid));
 }
 
 
 /**
- * gets communities the user is a tutor in, or the user owns
+ * gets groups the user is a tutor in, or the user owns
  * 
  * @param int $userid (optional, defaults to $USER id)
  * @param string $jointype (optional, will filter by jointype
  */
-function get_tutor_communities($userid=0, $jointype=null) {
+function get_tutor_groups($userid=0, $jointype=null) {
 
     $userid = optional_userid($userid);
     $prefix = get_config('dbprefix');
 
-    $sql = 'SELECT DISTINCT c.*, cm.ctime
-              FROM ' . $prefix . 'community c 
-              LEFT JOIN ' . $prefix . 'community_member cm ON cm.community = c.id
-              WHERE (c.owner = ? OR (cm.member = ? AND cm.tutor = ?))';
+    $sql = 'SELECT DISTINCT g.*, gm.ctime
+              FROM ' . $prefix . 'group g 
+              LEFT JOIN ' . $prefix . 'group_member gm ON gm.group = g.id
+              WHERE (g.owner = ? OR (gm.member = ? AND gm.tutor = ?))';
     $values = array($userid, $userid, 1);
     
     if (!empty($jointype)) {
@@ -199,23 +199,23 @@ function get_tutor_communities($userid=0, $jointype=null) {
 }
 
 
-// constants for community membership type
-define('COMMUNITY_MEMBERSHIP_ADMIN', 1);
-define('COMMUNITY_MEMBERSHIP_STAFF', 2);
-define('COMMUNITY_MEMBERSHIP_OWNER', 4);
-define('COMMUNITY_MEMBERSHIP_TUTOR', 8);
-define('COMMUNITY_MEMBERSHIP_MEMBER', 16);
+// constants for group membership type
+define('GROUP_MEMBERSHIP_ADMIN', 1);
+define('GROUP_MEMBERSHIP_STAFF', 2);
+define('GROUP_MEMBERSHIP_OWNER', 4);
+define('GROUP_MEMBERSHIP_TUTOR', 8);
+define('GROUP_MEMBERSHIP_MEMBER', 16);
 
 
 /**
- * Can a user access a given community?
+ * Can a user access a given group?
  * 
- * @param mixed $community id of community or db record (object)
+ * @param mixed $group id of group or db record (object)
  * @param mixed $user optional (object or id), defaults to logged in user
  *
  * @returns constant access level or FALSE
  */
-function user_can_access_community($community, $user=null) {
+function user_can_access_group($group, $user=null) {
 
     if (empty($userid)) {
         global $USER;
@@ -229,59 +229,59 @@ function user_can_access_community($community, $user=null) {
     }
 
     if (!$user instanceof User) {
-        throw new InvalidArgumentException("not useful user arg given to user_can_access_community: $user");
+        throw new InvalidArgumentException("not useful user arg given to user_can_access_group: $user");
     }
 
-    if (is_int($community)) {
-        $community = get_record('community', 'id', $community);
+    if (is_int($group)) {
+        $group = get_record('group', 'id', $group);
     }
 
-    if (!is_object($community)) {
-        throw new InvalidArgumentException("not useful community arg given to user_can_access_community: $community");
+    if (!is_object($group)) {
+        throw new InvalidArgumentException("not useful group arg given to user_can_access_group: $group");
     }
 
     $membertypes = 0;
 
     if ($user->get('admin')) {
-        $membertypes = COMMUNITY_MEMBERSHIP_ADMIN;
+        $membertypes = GROUP_MEMBERSHIP_ADMIN;
     }
     if ($user->get('staff')) {
-        $membertypes = $membertypes | COMMUNITY_MEMBERSHIP_STAFF;
+        $membertypes = $membertypes | GROUP_MEMBERSHIP_STAFF;
     }
-    if ($community->owner == $user->get('id')) {
-        $membertypes = $membertypes | COMMUNITY_MEMBERSHIP_OWNER;
+    if ($group->owner == $user->get('id')) {
+        $membertypes = $membertypes | GROUP_MEMBERSHIP_OWNER;
     }
 
-    if (!$membership = get_record('community_member', 'community', $community->id, 'member', $user->get('id'))) {
+    if (!$membership = get_record('group_member', 'group', $group->id, 'member', $user->get('id'))) {
         return $membertypes;
     }
 
     if ($membership->tutor) {
-        $membertypes = $membertypes | COMMUNITY_MEMBERSHIP_TUTOR;
+        $membertypes = $membertypes | GROUP_MEMBERSHIP_TUTOR;
     }
     
-    return ($membertypes | COMMUNITY_MEMBERSHIP_MEMBER);
+    return ($membertypes | GROUP_MEMBERSHIP_MEMBER);
 }
 
 
 /**
- * helper function to remove a user from a community
- * also deletes the community from their watchlist, 
- * and deletes any views they can only access through this community
+ * helper function to remove a user from a group
+ * also deletes the group from their watchlist, 
+ * and deletes any views they can only access through this group
  * from their watchlist. 
  *
- * @param int $communityid
+ * @param int $groupid
  * @param int $userid
  */
-function community_remove_member($communityid, $userid) {
+function group_remove_member($groupid, $userid) {
 
     $prefix = get_config('dbprefix');
 
-    delete_records('usr_watchlist_community', 'usr', $userid, 'community', $communityid);
-    // get all the views in this user's watchlist associated with this community.
+    delete_records('usr_watchlist_group', 'usr', $userid, 'group', $groupid);
+    // get all the views in this user's watchlist associated with this group.
     $views = get_column_sql('SELECT v.id 
                              FROM ' . $prefix . 'view v JOIN ' . $prefix . 'usr_watchlist_view va on va.view = v.id
-                             JOIN ' . $prefix . 'view_access_community c ON c.view = v.id');
+                             JOIN ' . $prefix . 'view_access_group g ON g.view = v.id');
     // @todo this is probably a retarded way to do it and should be changed later.
     foreach ($views as $view) {
         db_begin();
@@ -293,31 +293,31 @@ function community_remove_member($communityid, $userid) {
             db_commit();
         }
     }
-    delete_records('community_member', 'member', $userid, 'community', $communityid);
+    delete_records('group_member', 'member', $userid, 'group', $groupid);
     $user = optional_userobj($userid);
     activity_occurred('watchlist', 
-                      array('community' => $communityid, 
-                            'subject' => get_string('removedcommunitymembersubj', 'activity', display_default_name($user))));
+                      array('group' => $groupid, 
+                            'subject' => get_string('removedgroupmembersubj', 'activity', display_default_name($user))));
 }
 
 /**
- * function to add a member to a community
+ * function to add a member to a group
  * doesn't do any jointype checking, that should be handled by the caller
  *
- * @param int $communityid
+ * @param int $groupid
  * @param int $userid
  */
-function community_add_member($communityid, $userid) {
+function group_add_member($groupid, $userid) {
     $cm = new StdClass;
     $cm->member = $userid;
-    $cm->community = $communityid;
+    $cm->group = $groupid;
     $cm->ctime =  db_format_timestamp(time());
     $cm->tutor = 0;
-    insert_record('community_member', $cm);
+    insert_record('group_member', $cm);
     $user = optional_userobj($userid);
     activity_occurred('watchlist', 
-                      array('community' => $communityid, 
-                            'subject' => get_string('newcommunitymembersubj', 'activity', display_default_name($user))));
+                      array('group' => $groupid, 
+                            'subject' => get_string('newgroupmembersubj', 'activity', display_default_name($user))));
 }
 
 ?>

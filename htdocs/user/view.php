@@ -25,7 +25,7 @@
  */
 define('INTERNAL', 1);
 require(dirname(dirname(__FILE__)).'/init.php');
-require_once('community.php');
+require_once('group.php');
 require_once('pieforms/pieform.php');
 
 $userid = param_integer('id','');
@@ -42,7 +42,7 @@ $inlinejs = <<<EOF
     function usercontrol_success(formname, data) {
         
         if (formname != 'friend') {
-            var dd = $(formname).elements['community'];
+            var dd = $(formname).elements['group'];
             if (dd.nodeName == 'INPUT') {
                 $(formname).style.display = 'none';
                 return true;
@@ -122,22 +122,22 @@ if ($allviews = get_records_array('view', 'owner', $userid)) {
     }
 }
 
-// community stuff
-if (!$userassoccommunities = get_associated_communities($userid)) {
-    $userassoccommunities = array();
+// Group stuff
+if (!$userassocgroups = get_associated_groups($userid)) {
+    $userassocgroups = array();
 }
 
 $smarty = smarty();
 
 if ($loggedinid != $userid) {
-    // Get the logged in user's "invite only" communities
-    if ($communities = get_owned_communities($loggedinid, 'invite')) {
+    // Get the logged in user's "invite only" groups
+    if ($groups = get_owned_groups($loggedinid, 'invite')) {
         $invitelist = array();
-        foreach ($communities as $community) {
-            if (array_key_exists($community->id, $userassoccommunities)) {
+        foreach ($groups as $group) {
+            if (array_key_exists($group->id, $userassocgroups)) {
                 continue;
             }
-            $invitelist[$community->id] = $community->name;
+            $invitelist[$groups->id] = $groups->name;
         }
         if (count($invitelist) > 0) {
             $default = array_keys($invitelist);
@@ -147,9 +147,9 @@ if ($loggedinid != $userid) {
                 'jsform'            => true,
                 'jssuccesscallback' => 'usercontrol_success',
                 'elements'          => array(
-                    'community' => array(
+                    'group' => array(
                         'type'                => 'select',
-                        'title'               => get_string('inviteusertojoincommunity'),
+                        'title'               => get_string('inviteusertojoingroup'),
                         'collapseifoneoption' => false,
                         'options'             => $invitelist,
                         'defaultvalue'        => $default,
@@ -168,14 +168,14 @@ if ($loggedinid != $userid) {
         }
     }
 
-    // Get the "controlled membership" communities in which the logged in user is a tutor
-    if ($communities = get_tutor_communities($loggedinid, 'controlled')) {
+    // Get the "controlled membership" groups in which the logged in user is a tutor
+    if ($groups = get_tutor_groups($loggedinid, 'controlled')) {
         $controlledlist = array();
-        foreach ($communities as $community) {
-            if (array_key_exists($community->id, $userassoccommunities)) {
+        foreach ($groups as $group) {
+            if (array_key_exists($group->id, $userassocgroups)) {
                 continue;
             }
-            $controlledlist[$community->id] = $community->name;
+            $controlledlist[$group->id] = $group->name;
         }
         if (count($controlledlist) > 0) {
             $default = array_keys($controlledlist);
@@ -185,9 +185,9 @@ if ($loggedinid != $userid) {
                 'jsform'              => true,
                 'jssuccesscallback'   => 'add_success',
                 'elements'            => array(
-                    'community' => array(
+                    'group' => array(
                         'type'    => 'select',
-                        'title'   => get_string('addusertocommunity'),
+                        'title'   => get_string('addusertogroup'),
                         'collapseifoneoption' => false,
                         'options' => $controlledlist,
                         'defaultvalue' => $default,
@@ -336,7 +336,7 @@ $smarty->assign('NAME',$name);
 $smarty->assign('USERID', $userid);
 $smarty->assign('USERFIELDS',$userfields);
 if ($USER->get('admin')) {
-    $smarty->assign('USERCOMMUNITIES',$userassoccommunities);
+    $smarty->assign('USERGROUPS',$userassocgroups);
 }
 $smarty->assign('VIEWS',$views);
 $smarty->display('user/view.tpl');
@@ -344,25 +344,25 @@ $smarty->display('user/view.tpl');
 ////////// Functions to process ajax callbacks //////////
 
 
-// Send an invitation to the user to join a community
+// Send an invitation to the user to join a group
 function invite_submit(Pieform $form, $values) {
     global $USER;
     
     $data = new StdClass;
-    $data->community = $values['community'];
-    $data->member    = $values['id'];
-    $data->ctime     = db_format_timestamp(time());
-    $data->tutor     = 0;
-    $ctitle = get_field('community', 'name', 'id', $data->community);
+    $data->group = $values['group'];
+    $data->member= $values['id'];
+    $data->ctime = db_format_timestamp(time());
+    $data->tutor = 0;
+    $ctitle = get_field('group', 'name', 'id', $data->group);
     $adduser = get_record('usr', 'id', $data->member);
     try {
-        insert_record('community_member_invite', $data);
+        insert_record('group_member_invite', $data);
         activity_occurred('maharamessage', 
             array('users'   => array($values['id']), 
-                  'subject' => get_string('invitetocommunitysubject'),
-                  'message' => get_string('invitetocommunitymessage', 'mahara', display_name($USER, $adduser), $ctitle),
+                  'subject' => get_string('invitetogroupsubject'),
+                  'message' => get_string('invitetogroupmessage', 'mahara', display_name($USER, $adduser), $ctitle),
                   'url'     => get_config('wwwroot') 
-                  . 'contacts/communities/view.php?id=' . $values['community']));
+                  . 'contacts/groups/view.php?id=' . $values['group']));
     }
     catch (SQLException $e) {
         $form->json_reply(PIEFORM_ERR, get_string('inviteuserfailed'));
@@ -370,26 +370,26 @@ function invite_submit(Pieform $form, $values) {
     $form->json_reply(PIEFORM_OK, get_string('userinvited'));
 }
 
-// Add the user as a member of a community
+// Add the user as a member of a group
 function addmember_submit(Pieform $form, $values) {
     global $USER;
 
     $data = new StdClass;
-    $data->community = $values['community'];
-    $data->member    = $values['id'];
-    $data->ctime     = db_format_timestamp(time());
-    $data->tutor     = 0;
-    $ctitle = get_field('community', 'name', 'id', $data->community);
+    $data->group  = $values['group'];
+    $data->member = $values['id'];
+    $data->ctime  = db_format_timestamp(time());
+    $data->tutor  = 0;
+    $ctitle = get_field('group', 'name', 'id', $data->group);
     $adduser = get_record('usr', 'id', $data->member);
 
     try {
-        insert_record('community_member', $data);
+        insert_record('group_member', $data);
         activity_occurred('maharamessage', 
             array('users'   => array($values['id']), 
-                  'subject' => get_string('addedtocommunitysubject'),
-                  'message' => get_string('addedtocommunitymessage', 'mahara', display_name($USER, $adduser), $ctitle),
+                  'subject' => get_string('addedtogroupsubject'),
+                  'message' => get_string('addedtogroupmessage', 'mahara', display_name($USER, $adduser), $ctitle),
                   'url'     => get_config('wwwroot') 
-                  . 'contacts/communities/view.php?id=' . $values['community']));
+                  . 'contacts/groups/view.php?id=' . $values['group']));
     }
     catch (SQLException $e) {
         $form->json_reply(PIEFORM_ERR, get_string('adduserfailed'));

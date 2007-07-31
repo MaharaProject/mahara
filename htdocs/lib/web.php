@@ -1238,13 +1238,13 @@ function main_nav() {
             ),
             */
             array(
-                'name'    => 'mycommunities',
-                'link'    => $wwwroot . 'contacts/communities/',
+                'name'    => 'mygroups',
+                'link'    => $wwwroot . 'contacts/groups/',
                 'section' => 'mahara',
             ),
             array(
-                'name'    => 'myownedcommunities',
-                'link'    => $wwwroot . 'contacts/communities/owned.php',
+                'name'    => 'myownedgroups',
+                'link'    => $wwwroot . 'contacts/groups/owned.php',
                 'section' => 'mahara',
             ),
         ),

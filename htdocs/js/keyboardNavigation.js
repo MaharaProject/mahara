@@ -28,11 +28,11 @@ addLoadEvent(function() {
                 case 'f':
                     document.location.href = config.wwwroot + 'artefact/file/';
                     break;
-                case 'c':
-                    document.location.href = config.wwwroot + 'contacts/communities/';
+                case 'g':
+                    document.location.href = config.wwwroot + 'contacts/groups/';
                     break;
                 case 'o':
-                    document.location.href = config.wwwroot + 'contacts/communities/owned.php';
+                    document.location.href = config.wwwroot + 'contacts/groups/owned.php';
                     break;
                 case '/':
                     document.searchform.query.focus();

@@ -26,19 +26,19 @@
 
 define('INTERNAL', 1);
 define('MENUITEM', 'mycontacts');
-define('SUBMENUITEM', 'myownedcommunities');
+define('SUBMENUITEM', 'myownedgroups');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('pieforms/pieform.php');
-define('TITLE', get_string('editcommunity'));
+define('TITLE', get_string('editgroup'));
 
 $id = param_integer('id');
 $prefix = get_config('dbprefix');
 
-$community_data = get_record('community', 'id', $id, 'owner', $USER->get('id'));
+$group_data = get_record('group', 'id', $id, 'owner', $USER->get('id'));
 
-if (!$community_data) {
+if (!$group_data) {
     $SESSION->add_error_msg(get_string('canteditdontown'));
-    redirect('/contacts/communities/owned.php');
+    redirect('/contacts/groups/owned.php');
 }
 
 $joinoptions = array(
@@ -50,30 +50,30 @@ if ($USER->get('admin') || $USER->get('staff')) {
     $joinoptions['controlled'] = get_string('membershiptype.controlled');
 }
 
-$editcommunity = pieform(array(
-    'name'     => 'editcommunity',
+$editgroup = pieform(array(
+    'name'     => 'editgroup',
     'method'   => 'post',
     'plugintype' => 'core',
-    'pluginname' => 'communities',
+    'pluginname' => 'groups',
     'elements' => array(
         'name' => array(
             'type'         => 'text',
-            'title'        => get_string('communityname'),
+            'title'        => get_string('groupname'),
             'rules'        => array( 'required' => true, 'maxlength' => 128 ),
-            'defaultvalue' => $community_data->name,
+            'defaultvalue' => $group_data->name,
         ),
         'description' => array(
             'type'         => 'wysiwyg',
-            'title'        => get_string('communitydescription'),
+            'title'        => get_string('groupdescription'),
             'rows'         => 10,
             'cols'         => 70,
-            'defaultvalue' => $community_data->description,
+            'defaultvalue' => $group_data->description,
         ),
         'membershiptype' => array(
             'type'         => 'select',
             'title'        => get_string('membershiptype'),
             'options'      => $joinoptions,
-            'defaultvalue' => $community_data->jointype,
+            'defaultvalue' => $group_data->jointype,
             'help'         => true,
         ),
         'id'          => array(
@@ -82,27 +82,27 @@ $editcommunity = pieform(array(
         ),
         'submit'   => array(
             'type'  => 'submitcancel',
-            'value' => array(get_string('savecommunity'), get_string('cancel')),
+            'value' => array(get_string('savegroup'), get_string('cancel')),
         ),
     ),
 ));
 
-function editcommunity_validate(Pieform $form, $values) {
+function editgroup_validate(Pieform $form, $values) {
     global $USER;
     global $SESSION;
 
-    $cid = get_field('community', 'id', 'owner', $USER->get('id'), 'name', $values['name']);
+    $cid = get_field('group', 'id', 'owner', $USER->get('id'), 'name', $values['name']);
 
     if ($cid && $cid != $values['id']) {
-        $form->set_error('name', get_string('communityalreadyexists'));
+        $form->set_error('name', get_string('groupalreadyexists'));
     }
 }
 
-function editcommunity_cancel_submit() {
-    redirect('/contacts/communities/owned.php');
+function editgroup_cancel_submit() {
+    redirect('/contacts/groups/owned.php');
 }
 
-function editcommunity_submit(Pieform $form, $values) {
+function editgroup_submit(Pieform $form, $values) {
     global $USER;
     global $SESSION;
 
@@ -111,7 +111,7 @@ function editcommunity_submit(Pieform $form, $values) {
     $now = db_format_timestamp(time());
 
     update_record(
-        'community',
+        'group',
         (object) array(
             'id'             => $values['id'],
             'name'           => $values['name'],
@@ -122,17 +122,17 @@ function editcommunity_submit(Pieform $form, $values) {
         'id'
     );
 
-    $SESSION->add_ok_msg(get_string('communitysaved'));
+    $SESSION->add_ok_msg(get_string('groupsaved'));
 
     db_commit();
 
-    redirect('/contacts/communities/owned.php');
+    redirect('/contacts/groups/owned.php');
 }
 
 $smarty = smarty();
 
-$smarty->assign('editcommunity', $editcommunity);
+$smarty->assign('editgroup', $editgroup);
 
-$smarty->display('contacts/communities/edit.tpl');
+$smarty->display('contacts/groups/edit.tpl');
 
 ?>

@@ -28,7 +28,7 @@ define('INTERNAL', 1);
 define('JSON', 1);
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-require_once('community.php');
+require_once('group.php');
 
 json_headers();
 
@@ -39,23 +39,23 @@ $offset = param_integer('offset', 0);
 $prefix = get_config('dbprefix');
 $userid = $USER->get('id');
 
-if (empty($owned)) { // just get communities this user is a member of.
-    $data = get_member_communities($userid, $offset, $limit);
-    $count = get_record_sql('SELECT COUNT(distinct c.id) AS count
-              FROM ' . $prefix . 'community c 
-              JOIN ' . $prefix . 'community_member cm ON cm.community = c.id
-              WHERE c.owner != ? AND cm.member = ?', array($userid, $userid));
+if (empty($owned)) { // just get groups this user is a member of.
+    $data = get_member_groups($userid, $offset, $limit);
+    $count = get_record_sql('SELECT COUNT(distinct g.id) AS count
+              FROM ' . $prefix . 'group g 
+              JOIN ' . $prefix . 'group_member gm ON gm.group = g.id
+              WHERE g.owner != ? AND gm.member = ?', array($userid, $userid));
     $count = $count->count;
 }
 else {
 
-    $count = count_records_sql('SELECT COUNT(*) FROM ' . $prefix . 'community c WHERE c.owner = ?',
+    $count = count_records_sql('SELECT COUNT(*) FROM ' . $prefix . 'group g WHERE g.owner = ?',
                                array($userid));
 
-    $datasql = 'SELECT c.id,c.jointype,c.name,c.owner,count(distinct cmr.community) as requestcount, COUNT(distinct v.view) AS hasviews
-                FROM ' . $prefix . 'community c 
-                LEFT JOIN ' . $prefix . 'community_member_request cmr ON cmr.community = c.id
-                LEFT JOIN ' . $prefix . 'view_access_community v ON v.community = c.id
+    $datasql = 'SELECT g.id,g.jointype,g.name,g.owner,count(distinct gmr.group) as requestcount, COUNT(distinct v.view) AS hasviews
+                FROM ' . $prefix . 'group g 
+                LEFT JOIN ' . $prefix . 'group_member_request gmr ON gmr.group = g.id
+                LEFT JOIN ' . $prefix . 'view_access_group v ON v.group = c.id
                 WHERE c.owner = ?
                 GROUP BY c.id,c.jointype,c.name,c.owner';
                 

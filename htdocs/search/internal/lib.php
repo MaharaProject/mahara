@@ -232,7 +232,7 @@ class PluginSearchInternal extends PluginSearch {
     }
     
     /**
-     * Implement community searching with SQL
+     * Implement group searching with SQL
      *
      * @param string  The query string
      * @param integer How many results to return
@@ -265,25 +265,25 @@ class PluginSearchInternal extends PluginSearch {
      *               ),
      *           );
      */
-    public static function search_community($query_string, $limit, $offset=0, $all=false) {
+    public static function search_group($query_string, $limit, $offset=0, $all=false) {
         if (is_postgres()) {
-            return self::search_community_pg($query_string, $limit, $offset, $all);
+            return self::search_group_pg($query_string, $limit, $offset, $all);
         } 
         else if (is_mysql()) {
-            return self::search_community_my($query_string, $limit, $offset, $all);
+            return self::search_group_my($query_string, $limit, $offset, $all);
         } 
         else {
-            throw new SQLException('search_community() is not implemented for your database engine (' . get_config('dbtype') . ')');
+            throw new SQLException('search_group() is not implemented for your database engine (' . get_config('dbtype') . ')');
         }
     }
 
-    public static function search_community_pg($query_string, $limit, $offset, $all) {
+    public static function search_group_pg($query_string, $limit, $offset, $all) {
         global $USER;
         $sql = "
             SELECT
                 id, name, description, jointype, owner, ctime, mtime
             FROM
-                " . get_config('dbprefix') . "community
+                " . get_config('dbprefix') . "group
             WHERE (
                 name ILIKE '%' || ? || '%' 
                 OR description ILIKE '%' || ? || '%' 
@@ -292,7 +292,7 @@ class PluginSearchInternal extends PluginSearch {
         if (!$all) {
             $sql .=  "AND ( 
                 owner = ? OR id IN (
-                    SELECT community FROM " . get_config('dbprefix') . "community_member WHERE member = ?
+                    SELECT group FROM " . get_config('dbprefix') . "group_member WHERE member = ?
                 )
             )";
             $values[] = $USER->get('id');
@@ -304,7 +304,7 @@ class PluginSearchInternal extends PluginSearch {
             SELECT
                 COUNT(*)
             FROM
-                " . get_config('dbprefix') . "community u
+                " . get_config('dbprefix') . "group u
             WHERE (
                 name ILIKE '%' || ? || '%' 
                 OR description ILIKE '%' || ? || '%' 
@@ -312,7 +312,7 @@ class PluginSearchInternal extends PluginSearch {
         if (!$all) {
             $sql .= "AND ( 
                     owner = ? OR id IN (
-                        SELECT community FROM " . get_config('dbprefix') . "community_member WHERE member = ?
+                        SELECT group FROM " . get_config('dbprefix') . "group_member WHERE member = ?
                     )
                 )
             ";
@@ -327,13 +327,13 @@ class PluginSearchInternal extends PluginSearch {
         );
     }
 
-    public static function search_community_my($query_string, $limit, $offset, $all) {
+    public static function search_group_my($query_string, $limit, $offset, $all) {
         global $USER;
         $sql = "
             SELECT
                 id, name, description, jointype, owner, ctime, mtime
             FROM
-                " . get_config('dbprefix') . "community
+                " . get_config('dbprefix') . "group
             WHERE (
                 name LIKE '%' || ? || '%' 
                 OR description LIKE '%' || ? || '%' 
@@ -342,7 +342,7 @@ class PluginSearchInternal extends PluginSearch {
         if (!$all) {
             $sql .=  "AND ( 
                 owner = ? OR id IN (
-                    SELECT community FROM " . get_config('dbprefix') . "community_member WHERE member = ?
+                    SELECT group FROM " . get_config('dbprefix') . "group_member WHERE member = ?
                 )
             )";
             $values[] = $USER->get('id');
@@ -354,7 +354,7 @@ class PluginSearchInternal extends PluginSearch {
             SELECT
                 COUNT(*)
             FROM
-                " . get_config('dbprefix') . "community u
+                " . get_config('dbprefix') . "group u
             WHERE (
                 name LIKE '%' || ? || '%' 
                 OR description LIKE '%' || ? || '%' 
@@ -362,7 +362,7 @@ class PluginSearchInternal extends PluginSearch {
         if (!$all) {
             $sql .= "AND ( 
                     owner = ? OR id IN (
-                        SELECT community FROM " . get_config('dbprefix') . "community_member WHERE member = ?
+                        SELECT group FROM " . get_config('dbprefix') . "group_member WHERE member = ?
                     )
                 )
             ";

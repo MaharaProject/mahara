@@ -26,26 +26,26 @@
 
 define('INTERNAL', 1);
 define('MENUITEM', 'mycontacts');
-define('SUBMENUITEM', 'myownedcommunities');
+define('SUBMENUITEM', 'myownedgroups');
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'contacts');
-define('SECTION_PAGE', 'ownedcommunities');
+define('SECTION_PAGE', 'ownedgroups');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-define('TITLE', get_string('myownedcommunities'));
+define('TITLE', get_string('myownedgroups'));
 
-$viewurl = get_config('wwwroot') . 'contacts/communities/view.php?id=';
-$editurl = get_config('wwwroot') . 'contacts/communities/edit.php?id=';
+$viewurl = get_config('wwwroot') . 'contacts/groups/view.php?id=';
+$editurl = get_config('wwwroot') . 'contacts/groups/edit.php?id=';
 $editstr = json_encode(get_string('edit'));
-$edithelp = get_help_icon('core', 'communities', null, null, null, 'communityeditlink');
+$edithelp = get_help_icon('core', 'groups', null, null, null, 'groupeditlink');
 $deletestr = json_encode(get_string('delete'));
-$confirmdelete_hasviews = json_encode(get_string('communityconfirmdeletehasviews'));
-$confirmdelete = json_encode(get_string('communityconfirmdelete'));
+$confirmdelete_hasviews = json_encode(get_string('groupconfirmdeletehasviews'));
+$confirmdelete = json_encode(get_string('groupconfirmdelete'));
 
 $javascript = <<<EOF
-var communitylist = new TableRenderer(
-    'communitylist',
-    'getcommunities.json.php',
+var grouplist = new TableRenderer(
+    'grouplist',
+    'getgroups.json.php',
     [
      function (r) {
          return TD(null, A({'href': '{$viewurl}' + r.id}, r.name));
@@ -87,7 +87,7 @@ var communitylist = new TableRenderer(
                 },
                 'POST',
                 function (data) {
-                    communitylist.doupdate();
+                    grouplist.doupdate();
                 }
             );
         });
@@ -97,15 +97,15 @@ var communitylist = new TableRenderer(
      ]
 );
 
-communitylist.updateOnLoad();
-communitylist.owned = 1;
-communitylist.statevars.push('owned');
+grouplist.updateOnLoad();
+grouplist.owned = 1;
+grouplist.statevars.push('owned');
 
 EOF;
 
 $smarty = smarty(array('tablerenderer'));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 
-$smarty->display('contacts/communities/owned.tpl');
+$smarty->display('contacts/groups/owned.tpl');
 
 ?>

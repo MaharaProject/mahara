@@ -59,7 +59,7 @@ $string['stopmonitoring'] = 'Stop monitoring';
 $string['viewsandartefacts'] = 'Views and Artefacts';
 $string['views'] = 'Views';
 $string['artefacts'] = 'Artefacts';
-$string['communities'] = 'Communities';
+$string['groups'] = 'Groups';
 $string['monitored'] = 'Monitored';
 $string['stopmonitoring'] = 'Stop monitoring';
 
@@ -74,7 +74,7 @@ $string['newfeedbackonview'] = 'New feedback on view';
 $string['newfeedbackonartefact'] = 'New feedback on artefact';
 $string['watchlistmessageview'] = 'Activity on watchlist (View)';
 $string['watchlistmessageartefact'] = 'Activity on watchlist (Artefact)';
-$string['watchlistmessagecommunity'] = 'Activity on watchlist (Community)';
+$string['watchlistmessagegroup'] = 'Activity on watchlist (Group)';
 $string['newviewmessage'] = 'has created a view called "%s" and has granted you access to it.';
 $string['newviewsubject'] = 'New view created';
 
@@ -83,20 +83,20 @@ $string['newviewaccesssubject'] = 'New view access';
 
 $string['onview'] = 'on View';
 $string['onartefact'] = 'on Artefact';
-$string['oncommunity'] = 'on Community';
+$string['ongroup'] = 'on Group';
 $string['ownedby'] = 'owned by';
 
 $string['objectionablecontentview'] = 'Objectionable content';
 $string['objectionablecontentartefact'] = 'Objectionable content';
 
-$string['newcommunitymembersubj'] = '%s is now a community member!';
-$string['removedcommunitymembersubj'] = '%s is no longer a community member';
+$string['newgroupmembersubj'] = '%s is now a group member!';
+$string['removedgroupmembersubj'] = '%s is no longer a group member';
 
 $string['addtowatchlist'] = 'Add to watchlist';
 $string['removefromwatchlist'] = 'Remove from watchlist';
 
-$string['removedcommunityfromwatchlist'] = 'The community has been removed from your watchlist';
-$string['addedcommunitytowatchlist'] = 'The community was added to your watchlist';
+$string['removedgroupfromwatchlist'] = 'The group has been removed from your watchlist';
+$string['addedgrouptowatchlist'] = 'The group was added to your watchlist';
 
 $string['andchildren'] = 'Children are also being monitored'
 
