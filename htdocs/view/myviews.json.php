@@ -43,7 +43,7 @@ $count = count_records('view', 'owner', $userid);
 
 /* Do this in one query sometime */
 
-$viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description,c.name
+$viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description,g.name
         FROM {view} v
         LEFT OUTER JOIN {group} g ON v.submittedto = g.id
         WHERE v.owner = ' . $userid . '
@@ -99,7 +99,7 @@ if ($viewdata) {
    a tutor member.  This is the list of groups that the user is
    able to submit views to. */
 
-if (!$tutorgroupdata = @get_records_sql_array('SELECT c.id, c.name
+if (!$tutorgroupdata = @get_records_sql_array('SELECT g.id, g.name
        FROM {group_member} u
        INNER JOIN {group} g ON u.group = g.id 
        INNER JOIN {group_member} t ON t.group = g.id 
