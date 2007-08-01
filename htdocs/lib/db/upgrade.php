@@ -496,6 +496,86 @@ function xmldb_core_upgrade($oldversion=0) {
         drop_table($table);
     }
 
+    if ($oldversion < 2007072802) {
+        // Rename the community tables to group
+        if (is_postgres()) {
+            // Done manually for postgres to ensure all of the indexes and constraints are renamed
+            execute_sql("
+            ALTER TABLE {community} RENAME TO {group};
+            ALTER TABLE {community_id_seq} RENAME TO {group_id_seq};
+            ALTER INDEX {comm_id_pk} RENAME TO {grou_id_pk};
+            ALTER INDEX {comm_nam_uix} RENAME TO {grou_nam_uix};
+            ALTER INDEX {comm_own_ix} RENAME TO {grou_own_ix};
+            ALTER TABLE {group} DROP CONSTRAINT {comm_joi_ck};
+            ALTER TABLE {group} ADD CONSTRAINT {grou_joi_ck} CHECK (jointype::text = 'controlled'::text OR jointype::text = 'invite'::text OR jointype::text = 'request'::text OR jointype::text = 'open'::text);
+            ALTER TABLE {group} DROP CONSTRAINT {comm_own_fk};
+            ALTER TABLE {group} ADD CONSTRAINT {grou_own_fk} FOREIGN KEY (\"owner\") REFERENCES {usr}(id);
+            ");
+             
+            execute_sql("
+            ALTER TABLE {community_member} RENAME TO {group_member};
+            ALTER TABLE {group_member} RENAME community TO \"group\";
+            ALTER INDEX {commmemb_commem_pk} RENAME TO {groumemb_gromem_pk};
+            ALTER INDEX {commmemb_com_ix} RENAME TO {groumemb_gro_ix};
+            ALTER INDEX {commmemb_mem_ix} RENAME TO {groumemb_mem_ix};
+            ALTER TABLE {group_member} DROP CONSTRAINT {commmemb_com_fk};
+            ALTER TABLE {group_member} ADD CONSTRAINT {groumemb_gro_fk}  FOREIGN KEY (\"group\") REFERENCES {group}(id);
+            ALTER TABLE {group_member} DROP CONSTRAINT {commmemb_mem_fk};
+            ALTER TABLE {group_member} ADD CONSTRAINT {groumemb_mem_fk} FOREIGN KEY (\"member\") REFERENCES {usr}(id);
+            ");
+
+            execute_sql("
+            ALTER TABLE {community_member_request} RENAME TO {group_member_request};
+            ALTER TABLE {group_member_request} RENAME community TO \"group\";
+            ALTER INDEX {commmembrequ_commem_pk} RENAME TO {groumembrequ_gromem_pk};
+            ALTER INDEX {commmembrequ_com_ix} RENAME TO {groumembrequ_gro_ix};
+            ALTER INDEX {commmembrequ_mem_ix} RENAME TO {groumembrequ_mem_ix};
+            ALTER TABLE {group_member_request} DROP CONSTRAINT {commmembrequ_com_fk};
+            ALTER TABLE {group_member_request} ADD CONSTRAINT {groumembrequ_gro_fk} FOREIGN KEY (\"group\") REFERENCES {group}(id);
+            ALTER TABLE {group_member_request} DROP CONSTRAINT {commmembrequ_mem_fk};
+            ALTER TABLE {group_member_request} ADD CONSTRAINT {groumembrequ_mem_fk} FOREIGN KEY (member) REFERENCES {usr}(id);
+            ");
+
+            execute_sql("
+            ALTER TABLE {community_member_invite} RENAME TO {group_member_invite};
+            ALTER TABLE {group_member_invite} RENAME community TO \"group\";
+            ALTER INDEX {commmembinvi_commem_pk} RENAME TO {groumembinvi_gromem_pk};
+            ALTER INDEX {commmembinvi_com_ix} RENAME TO {groumembinvi_gro_ix};
+            ALTER INDEX {commmembinvi_mem_ix} RENAME TO {groumembinvi_mem_ix};
+            ALTER TABLE {group_member_invite} DROP CONSTRAINT {commmembinvi_com_fk};
+            ALTER TABLE {group_member_invite} ADD CONSTRAINT {groumembinvi_gro_fk} FOREIGN KEY (\"group\") REFERENCES {group}(id);
+            ALTER TABLE {group_member_invite} DROP CONSTRAINT {commmembinvi_mem_fk};
+            ALTER TABLE {group_member_invite} ADD CONSTRAINT {groumembinvi_mem_fk} FOREIGN KEY (member) REFERENCES {usr}(id);
+            ");
+
+            execute_sql("
+            ALTER TABLE {usr_watchlist_community} RENAME TO {usr_watchlist_group};
+            ALTER TABLE {usr_watchlist_group} RENAME community TO \"group\";
+            ALTER INDEX {usrwatccomm_usrcom_pk} RENAME TO {usrwatcgrou_usrgro_pk};
+            ALTER INDEX {usrwatccomm_com_ix} RENAME TO {usrwatcgrou_gro_ix};
+            ALTER INDEX {usrwatccomm_usr_ix} RENAME TO {usrwatcgrou_usr_ix};
+            ALTER TABLE {usr_watchlist_group} DROP CONSTRAINT {usrwatccomm_com_fk};
+            ALTER TABLE {usr_watchlist_group} ADD CONSTRAINT {usrwatcgrou_com_fk} FOREIGN KEY (\"group\") REFERENCES {group}(id);
+            ALTER TABLE {usr_watchlist_group} DROP CONSTRAINT {usrwatccomm_usr_fk};
+            ALTER TABLE {usr_watchlist_group} ADD CONSTRAINT {usrwatcgrou_usr_fk} FOREIGN KEY (usr) REFERENCES {usr}(id);
+            ");
+
+            execute_sql("
+            ALTER TABLE {view_access_community} RENAME TO {view_access_group};
+            ALTER TABLE {view_access_group} RENAME community TO \"group\";
+            ALTER INDEX {viewaccecomm_com_ix} RENAME TO {viewaccegrou_gro_ix};
+            ALTER INDEX {viewaccecomm_vie_ix} RENAME TO {viewaccegrou_vie_ix};
+            ALTER TABLE {view_access_group} DROP CONSTRAINT {viewaccecomm_com_fk};
+            ALTER TABLE {view_access_group} ADD CONSTRAINT {viewaccegrou_gro_fk} FOREIGN KEY (\"group\") REFERENCES {group}(id);
+            ALTER TABLE {view_access_group} DROP CONSTRAINT {viewaccecomm_vie_fk};
+            ALTER TABLE {view_access_group} ADD CONSTRAINT {viewaccegrou_vie_fk} FOREIGN KEY (\"view\") REFERENCES {view}(id);
+            ");
+        }
+        else {
+            // ???
+        }
+    }
+
     return $status;
 
 }
