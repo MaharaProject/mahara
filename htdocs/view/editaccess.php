@@ -66,8 +66,7 @@ $extradata = get_records_sql_array("
         FROM {view_access_usr}
         WHERE view = ?
 UNION
-    SELECT 'group', group, tutoronly, startdate, stopdate
-        FROM {view_access_group}
+    SELECT 'group', \"group\", tutoronly, startdate, stopdate FROM {view_access_group}
         WHERE view = ?", array($viewid, $viewid));
 if ($extradata) {
     foreach ($extradata as &$extraitem) {
