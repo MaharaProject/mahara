@@ -291,7 +291,7 @@ class PluginSearchInternal extends PluginSearch {
         if (!$all) {
             $sql .=  'AND ( 
                 owner = ? OR id IN (
-                    SELECT {group} FROM {group_member} WHERE member = ?
+                    SELECT "group" FROM {group_member} WHERE member = ?
                 )
             )';
             $values[] = $USER->get('id');
@@ -309,12 +309,12 @@ class PluginSearchInternal extends PluginSearch {
                 OR description ILIKE '%' || ? || '%' 
             )";
         if (!$all) {
-            $sql .= "AND ( 
+            $sql .= 'AND ( 
                     owner = ? OR id IN (
-                        SELECT {group} FROM {group_member} WHERE member = ?
+                        SELECT "group" FROM {group_member} WHERE member = ?
                     )
                 )
-            ";
+            ';
         }
         $count = get_field_sql($sql, $values);
 
