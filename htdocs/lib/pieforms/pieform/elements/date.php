@@ -132,7 +132,11 @@ function pieform_element_date_i18n() {
         'en.utf8' => array(
             'or' => 'or',
             'notspecified' => 'Not specified'
-        )
+        ),
+         'de.utf8' => array(
+            'or' => 'oder',
+            'notspecified' => 'Nicht festgelegt'
+        ),
     );
 }
 

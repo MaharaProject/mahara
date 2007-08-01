@@ -43,7 +43,10 @@ function pieform_rule_required_i18n() {
     return array(
         'en.utf8' => array(
             'required' => 'This field is required'
-        )
+        ),
+         'de.utf8' => array(
+            'required' => 'Das Feld ist erforderlich'
+        ),
     );
 }
 

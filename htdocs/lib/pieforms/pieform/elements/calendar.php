@@ -154,7 +154,10 @@ function pieform_element_calendar_i18n() {
     return array(
         'en.utf8' => array(
             'invalidvalue' => 'Invalid date/time specified'
-        )
+        ),
+         'de.utf8' => array(
+            'invalidvalue' => 'Datum/Zeit sind falsch festgelegt'
+        ),
     );
 }
 
