@@ -54,9 +54,9 @@ else {
     $datasql = 'SELECT g.id,g.jointype,g.name,g.owner,count(distinct gmr.group) as requestcount, COUNT(distinct v.view) AS hasviews
                 FROM {group} g 
                 LEFT JOIN {group_member_request} gmr ON gmr.group = g.id
-                LEFT JOIN {view_access_group} v ON v.group = c.id
-                WHERE c.owner = ?
-                GROUP BY c.id,c.jointype,c.name,c.owner';
+                LEFT JOIN {view_access_group} v ON v.group = g.id
+                WHERE g.owner = ?
+                GROUP BY g.id,g.jointype,g.name,g.owner';
                 
     $data  = get_records_sql_array($datasql,array($userid), $offset, $limit);
 }
