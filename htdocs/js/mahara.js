@@ -256,6 +256,7 @@ contextualHelpSelected    = null;
 contextualHelpContainer   = null;
 contextualHelpDeferrable  = null;
 contextualHelpOpened      = false;
+badIE = false;
 
 function contextualHelpIcon(formName, helpName, pluginType, pluginName, page, section) {
     var link = A(
@@ -329,7 +330,7 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, sectio
     screenDimensions = getViewportDimensions();
     if (position.x + dimensions.w < screenDimensions.w) {
         // Left of the screen - there's enough room for it
-        position.x += 10;
+        position.x += 15;
     }
     else {
         position.x -= dimensions.w;
@@ -344,7 +345,7 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, sectio
 
     // load the content
     if (contextualHelpCache[key]) {
-        contextualHelpContainer.innerHTML = contextualHelpCache[key];
+        contextualHelpContainer.innerHTML = contextualHelpCloseButton() + contextualHelpCache[key];
         callLater(0, function() { contextualHelpOpened = true; });
     }
     else {
@@ -352,6 +353,7 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, sectio
             contextualHelpDeferrable.cancel();
         }
 
+        badIE = true;
         sendjsonrequest(url, url_params, 'GET', function (data) {
             if (data.error) {
                 contextualHelpCache[key] = data.message;
@@ -359,7 +361,7 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, sectio
             }
             else {
                 contextualHelpCache[key] = data.content;
-                contextualHelpContainer.innerHTML = contextualHelpCache[key];
+                contextualHelpContainer.innerHTML =  contextualHelpCloseButton() + contextualHelpCache[key];
             }
             contextualHelpOpened = true;
             processingStop();
@@ -374,16 +376,24 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, sectio
     }
 }
 
+/* The close button is only there for show (which is why there is the 'return
+   false'). The window onclick handler means clicking anywhere closes the help,
+   this is just a visual metaphor */
+function contextualHelpCloseButton() {
+    return '<div class="fr"><a href="" onclick="return false;"><img src="' + config.theme['images/icon_close.gif'] + '" alt="X"></a></div>';
+}
+
 /* Only works in non-ie at the moment. Using 'document' as the element
    makes IE detect the event, but then makes it so you need to click on
    the help twice before it opens. */
-connect(window, 'onclick', function(e) {
-    if (contextualHelpOpened) {
+connect(document, 'onclick', function(e) {
+    if (contextualHelpOpened && !badIE) {
         removeElement(contextualHelpContainer);
         contextualHelpContainer = null;
         contextualHelpSelected = null;
         contextualHelpOpened = false;
     }
+    badIE = false;
 });
 
 // Cookie related functions
