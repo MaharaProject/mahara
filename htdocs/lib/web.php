@@ -1031,7 +1031,7 @@ function getoptions_country() {
 
 function get_help_icon($plugintype, $pluginname, $form, $element, $page='', $section='') {
     // I see no reason why IE has to drag the quality of the interwebs down with it
-    $imageext = (isset($_SERVER['HTTP_USER_AGENT'])) && false !== stripos($_SERVER['HTTP_USER_AGENT'], 'msie') ? 'gif' : 'png';
+    $imageext = (isset($_SERVER['HTTP_USER_AGENT']) && false !== stripos($_SERVER['HTTP_USER_AGENT'], 'msie 6.0')) ? 'gif' : 'png';
     return ' <span class="help"><a href="" onclick="'. 
         hsc(
             'contextualHelp(' . json_encode($form) . ',' . 
