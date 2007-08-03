@@ -43,7 +43,10 @@ function pieform_rule_integer_i18n() {
     return array(
         'en.utf8' => array(
             'integer'   => 'The field must be an integer'
-        )
+        ),
+         'de.utf8' => array(
+            'integer'   => 'Das Feld muss eine Zahl sein'
+        ),
     );
 }
 

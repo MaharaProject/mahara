@@ -998,6 +998,7 @@ function pieform_configure() {
     return array(
         'method'    => 'post',
         'action'    => '',
+        'language'  => get_config('lang'),
         'autofocus' => true,
         'renderer'  => 'maharatable',
         'elementclasses' => true,

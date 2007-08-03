@@ -130,6 +130,13 @@ function pieform_element_expiry_i18n() {
             'months'    => 'Months',
             'years'     => 'Years',
             'noenddate' => 'No end date'
+        ),
+        'de.utf8' => array(
+            'days'      => 'Tage',
+            'weeks'     => 'Wochen',
+            'months'    => 'Monate',
+            'years'     => 'Jahre',
+            'noenddate' => 'kein Endedatum'
         )
     );
 }

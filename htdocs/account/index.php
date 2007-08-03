@@ -72,7 +72,7 @@ else {
 }
 
 $elements['accountoptionsdesc'] = array(
-    'value' => '<tr><td colspan="2"><p>You can set general account options here</p></td></tr>'
+    'value' => '<tr><td colspan="2"><p>' . get_string('accountoptionsdesc', 'account') . '</p></td></tr>'
 );
 $elements['friendscontrol'] = array(
     'type' => 'radio',

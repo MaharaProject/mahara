@@ -46,7 +46,10 @@ function pieform_rule_email_i18n() {
     return array(
         'en.utf8' => array(
             'email' => 'E-mail address is invalid'
-        )
+        ),
+         'de.utf8' => array(
+            'email' => 'Die E-Mail Addresse ist ungültig'
+        ),
     );
 }
 

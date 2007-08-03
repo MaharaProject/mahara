@@ -30,6 +30,7 @@ $string['changepassworddesc'] = 'If you wish to change your password, please ent
 $string['changepasswordotherinterface'] = 'You may  <a href="%s">change your password</a> through a different interface</a>';
 $string['oldpasswordincorrect'] = 'This is not your current password';
 
+$string['accountoptionsdesc'] = 'You can set general account options here';
 $string['friendsnobody'] = 'Nobody may add me as a friend';
 $string['friendsauth'] = 'New friends require my authorisation';
 $string['friendsauto'] = 'New friends are automatically authorised';

@@ -154,7 +154,7 @@
     </tr>
     <tr>
         <td colspan="3">
-            <label for="{{$name}}_search">Search:</label><input id="{{$name}}_search" type="text" class="text"> <button id="{{$name}}_search_btn" type="button" class="button">{{str tag="go"}}</button>
+            <label for="{{$name}}_search">{{str tag='search'}}:</label><input id="{{$name}}_search" type="text" class="text"> <button id="{{$name}}_search_btn" type="button" class="button">{{str tag="go"}}</button>
         </td>
     </tr>
 </table>
