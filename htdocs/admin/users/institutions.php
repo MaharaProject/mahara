@@ -153,17 +153,22 @@ if ($institution || $add) {
                 'maxlength' => 255
             ),
             'help'   => true,
-        ),
-        'authplugin' => array(
-            'type'    => 'authlist',
-            'title'   => get_string('authplugin', 'admin'),
-            'options' => $authinstances,
-            'authtypes' => $authtypes,
-            'instancearray' => $instancearray,
-            'instancestring' => implode(',',$instancearray),
-            'institution' => $institution,
-            'help'   => true,
-        ),
+        ));
+    if (count($authtypes) > 0) {
+        $elements = array_merge($elements, array(
+            'authplugin' => array(
+                'type'    => 'authlist',
+                'title'   => get_string('authplugin', 'admin'),
+                'options' => $authinstances,
+                'authtypes' => $authtypes,
+                'instancearray' => $instancearray,
+                'instancestring' => implode(',',$instancearray),
+                'institution' => $institution,
+                'help'   => true,
+            )
+        ));
+    }
+    $elements = array_merge($elements, array(
         'registerallowed' => array(
             'type'         => 'checkbox',
             'title'        => get_string('registrationallowed', 'admin'),
@@ -197,7 +202,7 @@ if ($institution || $add) {
                 . get_help_icon('core', 'admin', 'institution', 'lockedfields') 
                 . '</th></tr>'
         )
-    ); 
+    ));
 
     foreach (ArtefactTypeProfile::get_all_fields() as $field => $type) {
         $elements[$field] = array(
