@@ -53,5 +53,5 @@ $string['parent'] = 'Parent authority';
 $string['wessoout'] = 'We SSO out';
 $string['theyssoin'] = 'They SSO in';
 $string['application'] = 'Application';
-$string['cantretrievekey'] = 'An error occurred while retrieving the public key from the remote server.<br>Please ensure that the Application and WWW Root fields are correct.';
+$string['cantretrievekey'] = 'An error occurred while retrieving the public key from the remote server.<br>Please ensure that the Application and WWW Root fields are correct, and that networking is enabled on the remote host.';
 ?>
