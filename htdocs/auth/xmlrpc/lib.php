@@ -591,6 +591,14 @@ class PluginAuthXmlrpc extends PluginAuth {
         $authinstance = new stdClass();
         $peer = new Peer();
 
+        if (false == $peer->findByWwwroot($values['wwwroot'])) {
+            try {
+                $peer->bootstrap($values['wwwroot'], null, $values['appname'], $values['institution']);
+            } catch (RemoteServerException $e) {
+                $form->set_error('wwwroot',get_string('cantretrievekey', 'auth'));
+            }
+        }
+
         //TODO: test values and set appropriate errors on form
     }
 

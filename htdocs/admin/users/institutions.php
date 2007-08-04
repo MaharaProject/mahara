@@ -163,6 +163,7 @@ if ($institution || $add) {
             'instancestring' => implode(',',$instancearray),
             'institution' => $institution,
             'help'   => true,
+            'ignore' => count($authtypes) == 0
         ),
         'registerallowed' => array(
             'type'         => 'checkbox',
@@ -197,7 +198,7 @@ if ($institution || $add) {
                 . get_help_icon('core', 'admin', 'institution', 'lockedfields') 
                 . '</th></tr>'
         )
-    ); 
+    );
 
     foreach (ArtefactTypeProfile::get_all_fields() as $field => $type) {
         $elements[$field] = array(

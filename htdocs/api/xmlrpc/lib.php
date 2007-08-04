@@ -235,8 +235,8 @@ function user_authorise($token, $useragent) {
     $userdata['deleted']                 = 0;
     $userdata['firstname']               = $user->firstname;
     $userdata['lastname']                = $user->lastname;
-    $userdata['city']                    = array_key_exists('city', $profile_data) ? $profile_data['city']->title : 'Unknown';
-    $userdata['country']                 = array_key_exists('country', $profile_data) ? $profile_data['country']->title : 'Unknown';
+    $userdata['city']                    = array_key_exists('city', $profile_data) ? $profile_data['city']->title : '';
+    $userdata['country']                 = array_key_exists('country', $profile_data) ? $profile_data['country']->title : '';
 
     if (is_numeric($user->profileicon)) {
         $filename = get_config('dataroot') . 'artefact/internal/profileicons/' . ($user->profileicon % 256) . '/'.$user->profileicon;
