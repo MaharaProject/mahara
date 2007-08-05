@@ -79,7 +79,7 @@ function &smarty($javascript = array(), $headers = array(), $pagestrings = array
             }
             else {
                 $content_css = json_encode(theme_get_url('style/tinymce.css'));
-                $language = substr(get_config('lang'), 0, 2);
+                $language = substr(current_language(), 0, 2);
                 $headers[] = <<<EOF
 <script type="text/javascript">
 tinyMCE.init({

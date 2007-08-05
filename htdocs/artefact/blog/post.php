@@ -674,7 +674,7 @@ EOF;
 // the execcommand_callback.
 
 $content_css = json_encode(theme_get_url('style/tinymce.css'));
-$language = substr(get_config('lang'), 0, 2);
+$language = substr(current_language(), 0, 2);
 $tinymceinit = <<<EOF
 <script type="text/javascript">
 tinyMCE.init({

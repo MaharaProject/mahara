@@ -998,7 +998,7 @@ function pieform_configure() {
     return array(
         'method'    => 'post',
         'action'    => '',
-        'language'  => get_config('lang'),
+        'language'  => current_language(),
         'autofocus' => true,
         'renderer'  => 'maharatable',
         'elementclasses' => true,
@@ -1044,7 +1044,7 @@ function pieform_element_calendar_configure($element) {
     $element['jsroot'] = get_config('wwwroot') . 'js/jscalendar/';
     $element['themefile'] = theme_get_url('style/calendar.css');
     $element['imagefile'] = theme_get_url('images/calendar.gif');
-    $language = substr(get_config('lang'), 0, 2);
+    $language = substr(current_language(), 0, 2);
     $element['language'] = $language;
     return $element;
 }
