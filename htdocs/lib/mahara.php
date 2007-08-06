@@ -376,13 +376,13 @@ function get_themes() {
     $themes = array();
     $themebase = get_config('docroot') . 'theme/';
     if (!$themedir = opendir($themebase)) {
-        throw new Exception('Unable to read theme directory '.$themebase);
+        throw new SystemException('Unable to read theme directory '.$themebase);
     }
     while (false !== ($subdir = readdir($themedir))) {
-        if ($subdir != "." && $subdir != "..") {
+        if ($subdir != "." && $subdir != ".." && is_dir($themebase . $subdir)) {
             $themes[$subdir] = $subdir;
 
-            $config_path = get_config('docroot') . 'theme/' . $subdir . '/config.php';
+            $config_path = $themebase . $subdir . '/config.php';
             if (is_readable($config_path)) {
                 require_once($config_path);
                 if (isset($theme->name)) {
