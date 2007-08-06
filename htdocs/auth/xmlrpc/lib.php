@@ -682,6 +682,10 @@ class PluginAuthXmlrpc extends PluginAuth {
             $record->field    = $field;
             $record->value    = $value;
 
+            if ($field == 'wwwroot') {
+                $record->value    = dropslash($value);
+            }
+
             if (empty($value)) {
                 delete_records('auth_instance_config', 'field', $field, 'instance', $values['instance']);
             } elseif ($values['create'] || !array_key_exists($field, $current)) {
