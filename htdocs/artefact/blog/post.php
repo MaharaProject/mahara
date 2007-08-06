@@ -52,6 +52,12 @@ $SESSION->set('createid', $createid + 1);
 $blogpost = param_integer('blogpost', 0);
 if (!$blogpost) {
     $blog = param_integer('blog');
+    if (!get_record('artefact', 'id', $blog, 'owner', $USER->get('id'))) {
+        // Blog security is also checked closer to when blogs are added, this 
+        // check ensures that malicious users do not even see the screen for 
+        // adding a post to a blog that is not theirs
+        throw new AccessDeniedException(get_string('youarenottheownerofthisblog', 'artefact.blog'));
+    }
     $title = '';
     $description = '';
     $checked = '';
@@ -62,9 +68,6 @@ if (!$blogpost) {
 }
 else {
     $blogpostobj = new ArtefactTypeBlogPost($blogpost);
-    if ($blogpostobj->get('owner') != $USER->get('id')) {
-        return;
-    }
     $blog = $blogpostobj->get('parent');
     $title = $blogpostobj->get('title');
     $description = $blogpostobj->get('description');
@@ -674,7 +677,7 @@ EOF;
 // the execcommand_callback.
 
 $content_css = json_encode(theme_get_url('style/tinymce.css'));
-$language = substr(get_config('lang'), 0, 2);
+$language = substr(current_language(), 0, 2);
 $tinymceinit = <<<EOF
 <script type="text/javascript">
 tinyMCE.init({

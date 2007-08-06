@@ -353,7 +353,7 @@ function get_languages() {
     $langs = array();
     $langbase = get_config('docroot') . 'lang/';
     if (!$langdir = opendir($langbase)) {
-        throw new Exception('Unable to read language directory '.$langbase);
+        throw new SystemException('Unable to read language directory '.$langbase);
     }
     while (false !== ($subdir = readdir($langdir))) {
         $langfile = $langbase . $subdir . '/langconfig.php';
@@ -376,13 +376,13 @@ function get_themes() {
     $themes = array();
     $themebase = get_config('docroot') . 'theme/';
     if (!$themedir = opendir($themebase)) {
-        throw new Exception('Unable to read theme directory '.$themebase);
+        throw new SystemException('Unable to read theme directory '.$themebase);
     }
     while (false !== ($subdir = readdir($themedir))) {
-        if ($subdir != "." && $subdir != "..") {
+        if ($subdir != "." && $subdir != ".." && is_dir($themebase . $subdir)) {
             $themes[$subdir] = $subdir;
 
-            $config_path = get_config('docroot') . 'theme/' . $subdir . '/config.php';
+            $config_path = $themebase . $subdir . '/config.php';
             if (is_readable($config_path)) {
                 require_once($config_path);
                 if (isset($theme->name)) {
@@ -998,7 +998,7 @@ function pieform_configure() {
     return array(
         'method'    => 'post',
         'action'    => '',
-        'language'  => get_config('lang'),
+        'language'  => current_language(),
         'autofocus' => true,
         'renderer'  => 'maharatable',
         'elementclasses' => true,
@@ -1044,7 +1044,7 @@ function pieform_element_calendar_configure($element) {
     $element['jsroot'] = get_config('wwwroot') . 'js/jscalendar/';
     $element['themefile'] = theme_get_url('style/calendar.css');
     $element['imagefile'] = theme_get_url('images/calendar.gif');
-    $language = substr(get_config('lang'), 0, 2);
+    $language = substr(current_language(), 0, 2);
     $element['language'] = $language;
     return $element;
 }

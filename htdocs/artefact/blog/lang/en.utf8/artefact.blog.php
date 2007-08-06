@@ -36,6 +36,7 @@ $string['attachedfiles'] = 'Attached files';
 $string['attachments'] = 'Attachments';
 $string['blogdesc'] = 'Description';
 $string['blogdescdesc'] = 'e.g., ‘A record of Jill\'s experiences and reflections’.';
+$string['blogdoesnotexist'] = 'You are trying to access a blog that does not exist';
 $string['blogfilesdirdescription'] = 'Files uploaded as blog post attachments';
 $string['blogfilesdirname'] = 'blogfiles';
 $string['blogpost'] = 'blog post';
@@ -105,6 +106,7 @@ $string['title'] = 'Title';
 $string['update'] = 'Update';
 $string['verticalspace'] = 'Vertical space';
 $string['viewblog'] = 'View Blog';
+$string['youarenottheownerofthisblog'] = 'You are not the owner of this blog';
 $string['youarenottheownerofthisblogpost'] = 'You are not the owner of this blog post';
 $string['cannotdeleteblogpost'] = 'An error occured removing this blog post.';
 

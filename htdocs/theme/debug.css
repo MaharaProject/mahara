@@ -1,0 +1,9 @@
+/*
+ * debug.css - for developer use
+ *
+ * If you're developing for Mahara, you can put any CSS rules you want to use
+ * for debugging in here.
+ *
+ * This file will only be included if the configuration setting 'developermode'
+ * is enabled. You can enable this in config.php
+ */
