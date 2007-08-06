@@ -135,19 +135,29 @@ class ArtefactTypeBlog extends ArtefactType {
      * @param object
      */
     public function __construct($id = 0, $data = null) {
+        global $USER;
         parent::__construct($id, $data);
 
-        if (!$data && $this->id
-            && ($blogdata = get_record('artefact_blog_blog', 'blog', $this->id))) {
-            foreach($blogdata as $name => $value) {
-                if (property_exists($this, $name)) {
-                    $this->$name = $value;
+        if (!$data) {
+            if ($this->id
+                && ($blogdata = get_record('artefact_blog_blog', 'blog', $this->id))) {
+                foreach($blogdata as $name => $value) {
+                    if (property_exists($this, $name)) {
+                        $this->$name = $value;
+                    }
                 }
+            }
+            else {
+                // This should never happen unless the user is playing around with blog IDs in the location bar or similar
+                throw new ArtefactNotFoundException(get_string('blogdoesnotexist', 'artefact.blog'));
             }
         }
 
         if (empty($this->id)) {
             $this->container = 1;
+        }
+        else if ($this->owner != $USER->get('id')) {
+            throw new AccessDeniedException(get_string('youarenottheownerofthisblogpost', 'artefact.blog'));
         }
     }
 
@@ -424,15 +434,26 @@ class ArtefactTypeBlogPost extends ArtefactType {
      * @param object
      */
     public function __construct($id = 0, $data = null) {
+        global $USER;
         parent::__construct($id, $data);
 
-        if (!$data && $this->id
-            && ($bpdata = get_record('artefact_blog_blogpost', 'blogpost', $this->id))) {
-            foreach($bpdata as $name => $value) {
-                if (property_exists($this, $name)) {
-                    $this->$name = $value;
+        if (!$data) {
+            if ($this->id
+                && ($bpdata = get_record('artefact_blog_blogpost', 'blogpost', $this->id))) {
+                foreach($bpdata as $name => $value) {
+                    if (property_exists($this, $name)) {
+                        $this->$name = $value;
+                    }
                 }
             }
+            else {
+                // This should never happen unless the user is playing around with blog post IDs in the location bar or similar
+                throw new ArtefactNotFoundException(get_string('blogpostdoesnotexist', 'artefact.blog'));
+            }
+        }
+
+        if ($this->owner != $USER->get('id')) {
+            throw new AccessDeniedException(get_string('youarenottheownerofthisblogpost', 'artefact.blog'));
         }
     }
 
