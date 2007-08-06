@@ -60,6 +60,11 @@ $networkingform = pieform(
         'name'     => 'networkingform',
         'jsform'   => true,
         'elements' => array(
+            'wwwroot' => array(
+                'type'         => 'html',
+                'title'        => get_string('wwwroot','admin'),
+                'value'        => get_config('wwwroot')
+            ),
             'pubkey' => array(
                 'type'         => 'html',
                 'title'        => get_string('publickey','admin'),
