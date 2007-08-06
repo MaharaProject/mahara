@@ -1,6 +1,18 @@
+/*
+ * debug.js - for developer use
+ *
+ * If you're developing for Mahara, you can put any javascript you want to use
+ * for debugging in here.
+ *
+ * This file will only be included if the configuration setting 'developermode'
+ * is enabled. You can enable this in config.php
+ */
+
+/*
+ * gives a nice, stable string representation for objects,
+ * ignoring any methods
+ */
 debugObject = function (obj) {
-    // gives a nice, stable string representation for objects,
-    // ignoring any methods
     var keyValuePairs = [];
     for (var k in obj) {
         var v = obj[k];
@@ -17,8 +29,10 @@ debugObject = function (obj) {
     ).join(", ") + "}");
 };
 
+/*
+ * gives a nice, stable string representation for objects
+ */
 debugObjectAll = function (obj) {
-    // gives a nice, stable string representation for objects
     var keyValuePairs = [];
     for (var k in obj) {
         var v = obj[k];
