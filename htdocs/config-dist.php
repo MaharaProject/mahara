@@ -96,4 +96,10 @@ $cfg->log_backtrace_levels = LOG_LEVEL_WARN | LOG_LEVEL_ENVIRON;
 // enter them here
 // $cfg->smtpuser = '';
 // $cfg->smtppass = '';
+
+// xmlrpc
+// if you're running in a configuration where the host contacting you will be
+// using an IP address that is not the same as the IP address that is registered
+// for its host name, then you should change the value below to 'true'.
+$cfg->xmlrpc_allow_masquerading = false;
 ?>

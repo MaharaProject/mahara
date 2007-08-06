@@ -100,7 +100,7 @@ if ($xml->getName() == 'encryptedMessage') {
     $ipaddress = gethostbyname(get_hostname_from_uri((string)$xml->wwwroot));
 
     // Check for masquerading
-    if ($ipaddress != $_SERVER['REMOTE_ADDR']) {
+    if (!get_config('xmlrpc_allow_masquerading') && $ipaddress != $_SERVER['REMOTE_ADDR']) {
         if ($networkingdebug) {
             throw new XmlrpcServerException('Your hostname ('.
             get_hostname_from_uri((string)$xml->wwwroot) .
@@ -123,7 +123,7 @@ if ($xml->getName() == 'signedMessage') {
     $ipaddress = gethostbyname(get_hostname_from_uri((string)$xml->wwwroot));
 
     // Check for masquerading
-    if ($ipaddress != $_SERVER['REMOTE_ADDR']) {
+    if (!get_config('xmlrpc_allow_masquerading') && $ipaddress != $_SERVER['REMOTE_ADDR']) {
         if ($networkingdebug) {
             throw new XmlrpcServerException('Your hostname ('.
             get_hostname_from_uri((string)$xml->wwwroot) .
