@@ -106,7 +106,12 @@ EOF;
         }
     }
 
-    $javascript_array[] = $jsroot . 'MochiKit/setup.js';
+    if (get_config('developermode')) {
+        $javascript_array[] = $jsroot . 'MochiKit/MochiKit.js';
+    }
+    else {
+        $javascript_array[] = $jsroot . 'MochiKit/Packed.js';
+    }
     $javascript_array[] = $jsroot . 'keyboardNavigation.js';
 
     $strings = array();
@@ -182,7 +187,12 @@ EOF;
     }
 
     $javascript_array[] = $jsroot . 'mahara.js';
-    $javascript_array[] = $jsroot . 'debug.js';
+    if (get_config('developermode')) {
+        $javascript_array[] = $jsroot . 'debug.js';
+        if (isset($_SERVER['HTTP_USER_AGENT']) && false === stripos($_SERVER['HTTP_USER_AGENT'], 'gecko')) {
+            $javascript_array[] = $jsroot . 'firebug/firebug.js';
+        }
+    }
 
     foreach ($jsstrings['mahara'] as $section => $tags) {
         foreach ($tags as $tag) {
@@ -220,6 +230,9 @@ EOF;
         if ($pluginsheets = theme_get_url('style/style.css', SECTION_PLUGINTYPE . '/' . SECTION_PLUGINNAME . '/', true)) {
             $stylesheets = array_merge($stylesheets, array_reverse($pluginsheets));
         }
+    }
+    if (get_config('developermode')) {
+        $stylesheets[] = get_config('wwwroot') . 'theme/debug.css';
     }
     $smarty->assign('STYLESHEETLIST', $stylesheets);
     $smarty->assign('WWWROOT', $wwwroot);
