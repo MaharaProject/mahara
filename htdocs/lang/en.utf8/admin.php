@@ -133,6 +133,7 @@ $string['promiscuousmode'] = 'Auto-register all hosts';
 $string['promiscuousmodedisabled'] = 'Auto-register has been disabled. ';
 $string['promiscuousmodeenabled'] = 'Auto-register has been enabled. ';
 $string['promiscuousmodedescription'] = 'Create an institution record for any host that connects to you, and allow its users to log on to Mahara';
+$string['wwwroot'] = 'WWW Root';
 
 // Admin menu editor
 //$string['menueditor']    = 'Menu editor';
