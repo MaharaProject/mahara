@@ -353,7 +353,7 @@ function get_languages() {
     $langs = array();
     $langbase = get_config('docroot') . 'lang/';
     if (!$langdir = opendir($langbase)) {
-        throw new Exception('Unable to read language directory '.$langbase);
+        throw new SystemException('Unable to read language directory '.$langbase);
     }
     while (false !== ($subdir = readdir($langdir))) {
         $langfile = $langbase . $subdir . '/langconfig.php';
