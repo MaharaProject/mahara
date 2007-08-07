@@ -837,6 +837,9 @@ acronym {
 .error { 
 	color: #cf0000; 
 }
+input.error, select.error {
+    border-color: #cf0000;
+}
 .errmsg { 
 	color: #cf0000; 
 	font-size: 9px; 
