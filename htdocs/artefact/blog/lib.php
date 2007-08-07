@@ -139,17 +139,18 @@ class ArtefactTypeBlog extends ArtefactType {
         parent::__construct($id, $data);
 
         if (!$data) {
-            if ($this->id
-                && ($blogdata = get_record('artefact_blog_blog', 'blog', $this->id))) {
-                foreach($blogdata as $name => $value) {
-                    if (property_exists($this, $name)) {
-                        $this->$name = $value;
+            if ($this->id) {
+                if ($blogdata = get_record('artefact_blog_blog', 'blog', $this->id)) {
+                    foreach($blogdata as $name => $value) {
+                        if (property_exists($this, $name)) {
+                            $this->$name = $value;
+                        }
                     }
                 }
-            }
-            else {
-                // This should never happen unless the user is playing around with blog IDs in the location bar or similar
-                throw new ArtefactNotFoundException(get_string('blogdoesnotexist', 'artefact.blog'));
+                else {
+                    // This should never happen unless the user is playing around with blog IDs in the location bar or similar
+                    throw new ArtefactNotFoundException(get_string('blogdoesnotexist', 'artefact.blog'));
+                }
             }
         }
 
@@ -438,21 +439,22 @@ class ArtefactTypeBlogPost extends ArtefactType {
         parent::__construct($id, $data);
 
         if (!$data) {
-            if ($this->id
-                && ($bpdata = get_record('artefact_blog_blogpost', 'blogpost', $this->id))) {
-                foreach($bpdata as $name => $value) {
-                    if (property_exists($this, $name)) {
-                        $this->$name = $value;
+            if ($this->id) {
+                if ($bpdata = get_record('artefact_blog_blogpost', 'blogpost', $this->id)) {
+                    foreach($bpdata as $name => $value) {
+                        if (property_exists($this, $name)) {
+                            $this->$name = $value;
+                        }
                     }
                 }
-            }
-            else {
-                // This should never happen unless the user is playing around with blog post IDs in the location bar or similar
-                throw new ArtefactNotFoundException(get_string('blogpostdoesnotexist', 'artefact.blog'));
+                else {
+                    // This should never happen unless the user is playing around with blog post IDs in the location bar or similar
+                    throw new ArtefactNotFoundException(get_string('blogpostdoesnotexist', 'artefact.blog'));
+                }
             }
         }
 
-        if ($this->owner != $USER->get('id')) {
+        if ($this->id && $this->owner != $USER->get('id')) {
             throw new AccessDeniedException(get_string('youarenottheownerofthisblogpost', 'artefact.blog'));
         }
     }
