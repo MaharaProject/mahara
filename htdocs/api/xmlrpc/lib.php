@@ -39,7 +39,12 @@ function xmlrpc_exception (Exception $e) {
 }
 
 function get_hostname_from_uri($uri = null) {
+    static $cache = array();
+    if (array_key_exists($uri, $cache)) {
+        return $cache[$uri];
+    }
     $count = preg_match("@^(?:http[s]?://)?([A-Z0-9\-\.]+).*@i", $uri, $matches);
+    $cache[$uri] = $matches[1];
     if ($count > 0) return $matches[1];
     return false;
 }
