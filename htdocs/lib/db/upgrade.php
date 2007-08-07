@@ -251,7 +251,7 @@ function xmldb_core_upgrade($oldversion=0) {
         // migrate everything we had to change to  make mysql happy
         execute_sql("ALTER TABLE {$prefix}cron DROP CONSTRAINT {$prefix}cron_cal_pk"); // can't drop primary keys using xmldb...
         execute_sql("ALTER TABLE {$prefix}cron ADD CONSTRAINT {$prefix}cron_id_pk PRIMARY KEY (id)"); // or add them!
-        execute_sql("ALTER TABLE {$prefix}cron ADD CONSTRAINT {$prefix}cron_cal_uix UNIQUE (callfunction)");
+        execute_sql("ALTER TABLE {$prefix}cron ADD CONSTRAINT {$prefix}cron_cal_uk UNIQUE (callfunction)");
         execute_sql("ALTER TABLE {$prefix}community ALTER COLUMN name TYPE varchar (128)");
         execute_sql("ALTER TABLE {$prefix}usr_activity_preference ALTER COLUMN method TYPE varchar(255)");
         execute_sql("ALTER TABLE {$prefix}template_category ALTER COLUMN name TYPE varchar(128)");
