@@ -188,6 +188,8 @@ class AuthXmlrpc extends Auth {
             set_profile_field($user->id, 'lastname', $user->lastname);
             set_profile_field($user->id, 'email', $user->email);
 
+            handle_event('createuser', $user);
+
         } elseif ($update) {
 
             if ($user->firstname != $remoteuser->firstname) {
