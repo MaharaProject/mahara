@@ -117,7 +117,21 @@ class AuthXmlrpc extends Auth {
         $remoteuser = (object)$client->response;
 
         if (empty($remoteuser) or !property_exists($remoteuser, 'username')) {
-            throw new MaharaException('Unknown error!');
+            $errorobject = $remoteuser;
+
+            $errreport = 'Authorisation failure. ';
+            $faultcode = 1;
+
+            if (property_exists($errorobject, 'faultCode')) {
+                $errreport .= "\nCode: ".$errorobject->faultCode;
+                $faultcode  = $errorobject->faultCode;
+            }
+
+            if (property_exists($errorobject, 'faultString')) {
+                $errreport .= "\nMessage: ".$errorobject->faultString;
+            }
+
+            throw new AccessDeniedException($errreport, $faultcode);
         }
 
         $virgin = false;
