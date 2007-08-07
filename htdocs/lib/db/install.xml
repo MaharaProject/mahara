@@ -146,16 +146,16 @@
         </TABLE>
         <TABLE NAME="host">
             <FIELDS>
-                <FIELD NAME="wwwroot" TYPE="char" LENGTH="255" NOTNULL="true"  />
-                <FIELD NAME="name" TYPE="char" LENGTH="80" NOTNULL="true" DEFAULT=""  />
-                <FIELD NAME="institution" TYPE="char" LENGTH="255" NOTNULL="true"  />
-                <FIELD NAME="ipaddress" TYPE="char" LENGTH="39" NOTNULL="true" DEFAULT=""  />
-                <FIELD NAME="portno" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="80"  />
-                <FIELD NAME="appname" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT=""  />
-                <FIELD NAME="publickey" TYPE="text" NOTNULL="true" DEFAULT=""  />
-                <FIELD NAME="publickeyexpires" TYPE="int" LENGTH="10" NOTNULL="true"  />
+                <FIELD NAME="wwwroot" TYPE="char" LENGTH="255" NOTNULL="true"/>
+                <FIELD NAME="name" TYPE="char" LENGTH="80" NOTNULL="true"/>
+                <FIELD NAME="institution" TYPE="char" LENGTH="255" NOTNULL="true"/>
+                <FIELD NAME="ipaddress" TYPE="char" LENGTH="39" NOTNULL="true"/>
+                <FIELD NAME="portno" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="80"/>
+                <FIELD NAME="appname" TYPE="char" LENGTH="20" NOTNULL="true"/>
+                <FIELD NAME="publickey" TYPE="text" NOTNULL="true" DEFAULT=""/>
+                <FIELD NAME="publickeyexpires" TYPE="int" LENGTH="10" NOTNULL="true"/>
                 <FIELD NAME="deleted" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
-                <FIELD NAME="lastconnecttime" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"  />
+                <FIELD NAME="lastconnecttime" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="wwwroot" />
