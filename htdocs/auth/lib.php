@@ -123,7 +123,7 @@ abstract class Auth {
      * @return mixed           The value
      */
     public function __get($name) {
-        $approved_members = array('instanceid', 'institution', 'instancename', 'priority', 'authname');
+        $approved_members = array('instanceid', 'institution', 'instancename', 'priority', 'authname', 'type');
 
         if (in_array($name, $approved_members)) {
             return $this->{$name};
