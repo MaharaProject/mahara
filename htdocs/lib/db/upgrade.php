@@ -404,6 +404,86 @@ function xmldb_core_upgrade($oldversion=0) {
         insert_record('application',$record);
 
     }
+
+    if ($oldversion < 2008080700) {
+        // Drop DEFAULT '' from many columns that should not have had them
+        // *nigel looks angrily at xmldb
+        execute_sql('
+            ALTER TABLE notification_cron ALTER COLUMN plugin DROP DEFAULT;
+            ALTER TABLE notification_cron ALTER COLUMN callfunction DROP DEFAULT;
+            ALTER TABLE view_tag ALTER COLUMN tag DROP DEFAULT;
+            ALTER TABLE site_content ALTER COLUMN name DROP DEFAULT;
+            ALTER TABLE search_installed ALTER COLUMN name DROP DEFAULT;
+            ALTER TABLE usr_registration ALTER COLUMN salt DROP DEFAULT;
+            ALTER TABLE usr_registration ALTER COLUMN "password" DROP DEFAULT;
+            ALTER TABLE usr_registration ALTER COLUMN username DROP DEFAULT;
+            ALTER TABLE usr_registration ALTER COLUMN "key" DROP DEFAULT;
+            ALTER TABLE usr_registration ALTER COLUMN institution DROP DEFAULT;
+            ALTER TABLE auth_config ALTER COLUMN plugin DROP DEFAULT;
+            ALTER TABLE auth_config ALTER COLUMN field DROP DEFAULT;
+            ALTER TABLE artefact_cron ALTER COLUMN plugin DROP DEFAULT;
+            ALTER TABLE artefact_cron ALTER COLUMN callfunction DROP DEFAULT;
+            ALTER TABLE notification_event_subscription ALTER COLUMN plugin DROP DEFAULT;
+            ALTER TABLE notification_event_subscription ALTER COLUMN callfunction DROP DEFAULT;
+            ALTER TABLE notification_event_subscription ALTER COLUMN event DROP DEFAULT;
+            ALTER TABLE notification_internal_activity ALTER COLUMN "type" DROP DEFAULT;
+            ALTER TABLE activity_type ALTER COLUMN name DROP DEFAULT;
+            ALTER TABLE auth_event_subscription ALTER COLUMN plugin DROP DEFAULT;
+            ALTER TABLE auth_event_subscription ALTER COLUMN callfunction DROP DEFAULT;
+            ALTER TABLE auth_event_subscription ALTER COLUMN event DROP DEFAULT;
+            ALTER TABLE search_config ALTER COLUMN plugin DROP DEFAULT;
+            ALTER TABLE search_config ALTER COLUMN field DROP DEFAULT;
+            ALTER TABLE cron ALTER COLUMN callfunction DROP DEFAULT;
+            ALTER TABLE artefact_tag ALTER COLUMN tag DROP DEFAULT;
+            ALTER TABLE artefact_config ALTER COLUMN plugin DROP DEFAULT;
+            ALTER TABLE artefact_config ALTER COLUMN field DROP DEFAULT;
+            ALTER TABLE institution ALTER COLUMN name DROP DEFAULT;
+            ALTER TABLE institution ALTER COLUMN displayname DROP DEFAULT;
+            ALTER TABLE auth_instance_config ALTER COLUMN field DROP DEFAULT;
+            ALTER TABLE notification_installed ALTER COLUMN name DROP DEFAULT;
+            ALTER TABLE auth_installed ALTER COLUMN name DROP DEFAULT;
+            ALTER TABLE artefact ALTER COLUMN artefacttype DROP DEFAULT;
+            ALTER TABLE artefact_installed_type ALTER COLUMN plugin DROP DEFAULT;
+            ALTER TABLE artefact_installed_type ALTER COLUMN name DROP DEFAULT;
+            ALTER TABLE event_type ALTER COLUMN name DROP DEFAULT;
+            ALTER TABLE usr_account_preference ALTER COLUMN field DROP DEFAULT;
+            ALTER TABLE activity_queue ALTER COLUMN "type" DROP DEFAULT;
+            ALTER TABLE notification_config ALTER COLUMN plugin DROP DEFAULT;
+            ALTER TABLE notification_config ALTER COLUMN field DROP DEFAULT;
+            ALTER TABLE artefact_installed ALTER COLUMN name DROP DEFAULT;
+            ALTER TABLE notification_emaildigest_queue ALTER COLUMN "type" DROP DEFAULT;
+            ALTER TABLE sso_session ALTER COLUMN useragent DROP DEFAULT;
+            ALTER TABLE sso_session ALTER COLUMN username DROP DEFAULT;
+            ALTER TABLE sso_session ALTER COLUMN sessionid DROP DEFAULT;
+            ALTER TABLE sso_session ALTER COLUMN token DROP DEFAULT;
+            ALTER TABLE search_event_subscription ALTER COLUMN plugin DROP DEFAULT;
+            ALTER TABLE search_event_subscription ALTER COLUMN callfunction DROP DEFAULT;
+            ALTER TABLE search_event_subscription ALTER COLUMN event DROP DEFAULT;
+            ALTER TABLE usr ALTER COLUMN "password" DROP DEFAULT;
+            ALTER TABLE usr ALTER COLUMN username DROP DEFAULT;
+            ALTER TABLE application ALTER COLUMN xmlrpcserverurl DROP DEFAULT;
+            ALTER TABLE application ALTER COLUMN ssolandurl DROP DEFAULT;
+            ALTER TABLE application ALTER COLUMN name DROP DEFAULT;
+            ALTER TABLE application ALTER COLUMN displayname DROP DEFAULT;
+            ALTER TABLE institution_locked_profile_field ALTER COLUMN name DROP DEFAULT;
+            ALTER TABLE institution_locked_profile_field ALTER COLUMN profilefield DROP DEFAULT;
+            ALTER TABLE usr_password_request ALTER COLUMN "key" DROP DEFAULT;
+            ALTER TABLE search_cron ALTER COLUMN plugin DROP DEFAULT;
+            ALTER TABLE search_cron ALTER COLUMN callfunction DROP DEFAULT;
+            ALTER TABLE auth_instance ALTER COLUMN instancename DROP DEFAULT;
+            ALTER TABLE auth_instance ALTER COLUMN authname DROP DEFAULT;
+            ALTER TABLE auth_instance ALTER COLUMN institution DROP DEFAULT;
+            ALTER TABLE artefact_event_subscription ALTER COLUMN plugin DROP DEFAULT;
+            ALTER TABLE artefact_event_subscription ALTER COLUMN callfunction DROP DEFAULT;
+            ALTER TABLE artefact_event_subscription ALTER COLUMN event DROP DEFAULT;
+            ALTER TABLE host ALTER COLUMN wwwroot DROP DEFAULT;
+            ALTER TABLE host ALTER COLUMN institution DROP DEFAULT;
+            ALTER TABLE usr_activity_preference ALTER COLUMN activity DROP DEFAULT;
+            ALTER TABLE config ALTER COLUMN field DROP DEFAULT;
+            ALTER TABLE auth_cron ALTER COLUMN plugin DROP DEFAULT;
+            ALTER TABLE auth_cron ALTER COLUMN callfunction DROP DEFAULT;
+        ');
+    }
     
     return $status;
 
