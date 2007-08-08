@@ -38,6 +38,7 @@
 // 6010     The function does not exist
 // 6011     The function does not exist
 // 6012     Networking is disabled
+// 6013     Networking is not available at this address. You can access this service at get_config('wwwroot')api/xmlrpc/server.php'
 
 define('INTERNAL', 1);
 define('PUBLIC', 1);
@@ -67,6 +68,10 @@ if (empty($networkenabled)) {
     }
     header($protocol.' 403 Forbidden');
     exit;
+}
+
+if (get_hostname_from_uri($_SERVER['HTTP_HOST']) != get_hostname_from_uri(get_config('wwwroot'))) {
+    throw new XmlrpcServerException('Networking is not available at this address. You can access this service at '.get_config('wwwroot').'api/xmlrpc/server.php', 6013);
 }
 
 // Content type for output is never html:
