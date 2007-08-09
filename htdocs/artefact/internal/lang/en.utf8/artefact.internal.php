@@ -26,7 +26,7 @@
 
 defined('INTERNAL') || die();
 
-$string['myprofile'] = 'My Profile';
+$string['profile'] = 'Profile';
 $string['myfiles'] = 'My Files';
 
 $string['mandatory'] = 'Mandatory';
@@ -64,7 +64,6 @@ $string['occupation'] = 'Occupation';
 $string['industry'] = 'Industry';
 
 // Field names for view user and search user display
-$string['profile'] = 'Profile';
 $string['name'] = 'Name';
 $string['principalemailaddress'] = 'Primary email';
 $string['emailaddress'] = 'Alternative email';
