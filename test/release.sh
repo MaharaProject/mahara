@@ -25,24 +25,18 @@ mkdir ${BUILDDIR}
 pushd ${BUILDDIR}
 
 # Get the stable branch
-cg-clone "http://git.catalyst.net.nz/git/mahara.git#${MAJOR}_STABLE"
+git clone -n "http://git.catalyst.net.nz/mahara.git" mahara
 
 pushd ${BUILDDIR}/mahara
 
 # Switch to the release tag
-cg-switch -r ${MAJOR}.${MINOR}_RELEASE -f master
+git checkout -b "${MAJOR}_STABLE" "origin/${MAJOR}_STABLE"
 
 # Remove git directories
 rm .git -rf
 
 # Pack MochiKit
 scripts/pack.sh
-
-# Fix MochiKit packed link
-pushd ${BUILDDIR}/mahara/htdocs/js/MochiKit
-rm setup.js
-ln -s Packed.js setup.js
-popd
 
 popd
 
