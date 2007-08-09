@@ -26,7 +26,7 @@
 
 defined('INTERNAL') || die();
 
-$string['profile'] = 'Profile';
+$string['myprofile'] = 'My Profile';
 $string['myfiles'] = 'My Files';
 
 $string['mandatory'] = 'Mandatory';
