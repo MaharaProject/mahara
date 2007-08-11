@@ -245,23 +245,21 @@ $string['requiredfieldempty'] = 'A required field is empty';
 $string['unknownerror']       = 'An unknown error occurred (0x20f91a0)';
 
 // menu
-$string['home']       = 'Home';
-$string['mycontacts'] = 'My Contacts';
+$string['home']        = 'Home';
+$string['myportfolio'] = 'My Portfolio';
+$string['settings']    = 'Settings';
+$string['groupsimin']  = 'Groups I\'m In';
+$string['groupsiown']  = 'Groups I Own';
+$string['myfriends']          = 'My Friends';
+$string['youareloggedinas']   = 'You are logged in as %s';
+$string['unreadmessages'] = 'unread messages';
+$string['unreadmessage'] = 'unread message';
 
 // footer
 $string['termsandconditions'] = 'Terms and Conditions';
 $string['privacystatement']   = 'Privacy Statement';
 $string['about']              = 'About';
 $string['contactus']          = 'Contact Us';
-$string['myfriends']          = 'My Friends';
-$string['myaddressbook']      = 'My Addressbook';
-$string['mygroups']           = 'My Groups';
-$string['myownedgroups']      = 'My Owned Groups';
-$string['youareloggedinas']   = 'You are logged in as %s';
-$string['unreadmessages'] = 'unread messages';
-$string['unreadmessage'] = 'unread message';
-
-// mycontacts
 
 // my account
 $string['account'] =  'My account';
@@ -270,7 +268,7 @@ $string['preferences'] = 'Preferences';
 $string['activityprefs'] = 'Activity preferences';
 $string['watchlist'] = 'My watchlist';
 $string['changepassword'] = 'Change password';
-$string['activity'] = 'Recent activity';
+$string['recentactivity'] = 'Recent activity';
 
 // my views
 $string['accessstartdate'] = 'Access start date';

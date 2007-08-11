@@ -27,6 +27,7 @@
 defined('INTERNAL') || die();
 
 $string['blog'] = 'Blog';
+$string['blogs'] = 'Blogs';
 $string['addblog'] = 'Add Blog';
 $string['addpost'] = 'Add Post';
 $string['alignment'] = 'Alignment';

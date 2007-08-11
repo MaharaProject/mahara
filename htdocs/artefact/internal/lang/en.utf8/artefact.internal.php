@@ -91,9 +91,7 @@ $string['unvalidatedemailalreadytaken'] = 'The e-mail address you are trying to 
 $string['emailingfailed'] = 'Profile saved, but emails were not sent to: %s';
 
 // Profile icons
-$string['backtoeditprofile']  = 'Back to Edit Profile';
 $string['editprofile']  = 'Edit Profile';
-$string['editprofileicons'] = 'Edit Profile Icons';
 $string['profileicons'] = 'Profile Icons';
 $string['default'] = 'Default';
 $string['profileicon'] = 'Profile Icon';
