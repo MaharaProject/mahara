@@ -71,13 +71,12 @@
         </div>
         <div id="mainwrapper">
 {if $MAINNAV}
-            
             <ul id="mainnav"><div class="mainnavright"><img src="{theme_path location='images/navbg_right.gif'}" border="0" alt=""></div>
 {foreach from=$MAINNAV item=item}
 {if $item.selected}{assign var=MAINNAVSELECTED value=$item}
-                <li class="selected"><a href="{$item.link|escape}">{str section=$item.section tag=$item.name}</a></li>
+                <li class="selected"><a href="{$WWWROOT}{$item.url|escape}">{$item.title|escape}</a></li>
 {else}
-                <li><a href="{$item.link|escape}">{str section=$item.section tag=$item.name}</a></li>
+                <li><a href="{$WWWROOT}{$item.url|escape}">{$item.title|escape}</a></li>
 {/if}
 {/foreach}
             </ul>
@@ -85,10 +84,10 @@
             
             <ul id="subnav"><div class="subnavright"><img src="{theme_path location='images/subnavbg_right.gif'}" border="0" alt=""></div>
 {foreach from=$MAINNAVSELECTED.submenu item=item}
-                <li{if $item.selected} class="selected"{/if}><a href="{$item.link|escape}">{str section=$item.section tag=$item.name}</a></li>
+                <li{if $item.selected} class="selected"{/if}><a href="{$WWWROOT}{$item.url|escape}">{$item.title|escape}</a></li>
 {/foreach}
             </ul>
 {/if}
-{/if}	
+{/if}
             {insert name="messages"}
             <div id="maincontentwrapper">
