@@ -3,10 +3,6 @@
 
 {include file="columnleftstart.tpl"}
             
-			<div class="fr leftrightlink"><span class="editicon"><a href="profileicons.php">{str tag="editprofileicons" section="artefact.internal"} &raquo;</a></span></div>
-{if $resumeinstalled} 
-            <div class="fr leftrightlink"><span class="editicon"><a href="{$WWWROOT}artefact/resume/">{str tag="profilegotoresume" section="artefact.resume"} &raquo;</a></span></div>
-{/if}
             <div style="position: relative;">
             <div style="position: absolute; top: 3.5em; right: 0;"><img src="{$WWWROOT}thumb.php?type=profileicon&size=100x100&id={$USER->get('id')}" alt=""></div>
             </div>
