@@ -25,8 +25,7 @@
  */
 define('INTERNAL', 1);
 define('ADMIN', 1);
-define('MENUITEM', 'configusers');
-define('SUBMENUITEM', 'institutions');
+define('MENUITEM', 'configusers/institutions');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('institutions', 'admin'));
 define('SECTION_PLUGINTYPE', 'core');

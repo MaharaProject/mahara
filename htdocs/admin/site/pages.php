@@ -26,8 +26,7 @@
 
 define('INTERNAL', 1);
 define('ADMIN', 1);
-define('MENUITEM', 'configsite');
-define('SUBMENUITEM', 'sitepages');
+define('MENUITEM', 'configsite/sitepages');
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'admin');
 define('SECTION_PAGE', 'sitepages');

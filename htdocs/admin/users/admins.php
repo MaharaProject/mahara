@@ -28,8 +28,7 @@
 // here might need to be fixed there too.
 define('INTERNAL', 1);
 define('ADMIN', 1);
-define('MENUITEM', 'configusers');
-define('SUBMENUITEM', 'adminusers');
+define('MENUITEM', 'configusers/adminusers');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('adminusers', 'admin'));
 define('SECTION_PLUGINTYPE', 'core');
