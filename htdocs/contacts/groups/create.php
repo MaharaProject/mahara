@@ -25,8 +25,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'mycontacts');
-define('SUBMENUITEM', 'myownedgroups');
+define('MENUITEM', 'groups/groupsiown');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('pieforms/pieform.php');
 define('TITLE', get_string('creategroup'));

@@ -25,10 +25,9 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'mycontacts');
-define('SUBMENUITEM', 'mygroups');
+define('MENUITEM', 'groups');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-define('TITLE', get_string('mygroups'));
+define('TITLE', get_string('groups'));
 require_once('group.php');
 
 $id = param_integer('id');

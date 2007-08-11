@@ -25,14 +25,13 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'mycontacts');
-define('SUBMENUITEM', 'mygroups');
+define('MENUITEM', 'groups/groupsimin');
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'contacts');
 define('SECTION_PAGE', 'groups');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-define('TITLE', get_string('mygroups'));
+define('TITLE', get_string('groupsimin'));
 
 $viewurl = get_config('wwwroot') . 'contacts/groups/view.php?id=';
 $leftsuccess = get_string('leftgroup');

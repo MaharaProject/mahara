@@ -25,8 +25,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'mycontacts');
-define('SUBMENUITEM', 'myfriends');
+define('MENUITEM', 'groups/myfriends');
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'contacts');
 define('SECTION_PAGE', 'friends');

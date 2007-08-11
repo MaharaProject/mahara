@@ -25,14 +25,13 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'mycontacts');
-define('SUBMENUITEM', 'myownedgroups');
+define('MENUITEM', 'groups/groupsiown');
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'contacts');
 define('SECTION_PAGE', 'ownedgroups');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-define('TITLE', get_string('myownedgroups'));
+define('TITLE', get_string('groupsiown'));
 
 $viewurl = get_config('wwwroot') . 'contacts/groups/view.php?id=';
 $editurl = get_config('wwwroot') . 'contacts/groups/edit.php?id=';
