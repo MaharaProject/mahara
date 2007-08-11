@@ -45,9 +45,11 @@ class PluginArtefactBlog extends PluginArtefact {
     public static function menu_items() {
         return array(
             array(
-                'name' => 'myblogs',
-                'link' => '',
-            )
+                'path'   => 'myportfolio/blogs',
+                'url'    => 'artefact/blog/',
+                'title'  => get_string('blogs', 'artefact.blog'),
+                'weight' => 30,
+            ),
         );
     }
 

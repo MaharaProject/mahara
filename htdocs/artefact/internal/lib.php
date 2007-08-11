@@ -66,9 +66,23 @@ class PluginArtefactInternal extends PluginArtefact {
     public static function menu_items() {
         return array(
             array(
-                'name' => 'myprofile',
-                'link' => '',
-            )
+                'path' => 'profile',
+                'url'  => 'artefact/internal/', // @todo possibly do path aliasing and dispatch?
+                'title' => get_string('profile', 'artefact.internal'),
+                'weight' => 20,
+            ),
+            array(
+                'path' => 'profile/edit',
+                'url' => 'artefact/internal/',
+                'title' => get_string('editprofile', 'artefact.internal'),
+                'weight' => 10,
+            ),
+            array(
+                'path' => 'profile/icons',
+                'url' => 'artefact/internal/profileicons.php',
+                'title' => get_string('profileicons', 'artefact.internal'),
+                'weight' => 11,
+            ),
         );
     }
 
