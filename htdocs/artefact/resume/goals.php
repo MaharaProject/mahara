@@ -25,8 +25,7 @@
  */
 
 define('INTERNAL', true);
-define('MENUITEM', 'myresume');
-define('SUBMENUITEM', 'mygoals');
+define('MENUITEM', 'profile/mygoals');
 define('SECTION_PLUGINTYPE', 'artefact');
 define('SECTION_PLUGINNAME', 'resume');
 define('SECTION_PAGE', 'goals');

@@ -25,8 +25,7 @@
  */
 
 define('INTERNAL', true);
-define('MENUITEM', 'myresume');
-define('SUBMENUITEM', 'myskills');
+define('MENUITEM', 'profile/myskills');
 define('SECTION_PLUGINTYPE', 'artefact');
 define('SECTION_PLUGINNAME', 'resume');
 define('SECTION_PAGE', 'skills');
