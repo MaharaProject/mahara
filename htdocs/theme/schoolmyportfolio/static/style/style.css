@@ -132,13 +132,6 @@ label {
 	padding: 0;
 	margin: 0;
 }
-.leftrightlink {
-    margin-top: .5em;
-}
-.leftrightlink a {
-	font-weight: bold;
-	color: #e66d01; 
-}
 tr.required label, 
 tr.required th { 
 	color: #ca6200; 
@@ -957,10 +950,6 @@ table#installer {
 }
 .maincontent #email_list .unvalidated {
 	font-size: 9px;
-}
-.maincontent .leftrightlink {
-	padding: 5px 0 5px 0;
-	margin: -3px 0 0 0;
 }
 .maincontent #editprofileicons {
 	background: url(../images/btn_editprofileicons.gif) no-repeat;
