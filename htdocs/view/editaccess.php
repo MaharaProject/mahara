@@ -30,7 +30,7 @@
 //       This might need to be checked for. As it stands that just results in three rows in the database,
 //       which are collapsed when access to the view is edited
 define('INTERNAL', 1);
-define('MENUITEM', 'view');
+define('MENUITEM', 'myportfolio/views');
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'view');
 define('SECTION_PAGE', 'editaccess');
