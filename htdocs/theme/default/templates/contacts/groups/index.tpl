@@ -2,7 +2,7 @@
 {include file="sidebar.tpl"}
 
 {include file="columnleftstart.tpl"}
-			<h2>{str tag="mygroups"}</h2>
+			<h2>{str tag="groupsimin"}</h2>
                             <table id="grouplist" class="hidden tablerenderer">
 	                        <thead>
                                     <tr>

@@ -2,7 +2,7 @@
 {include file="sidebar.tpl"}
 
 {include file="columnleftstart.tpl"}
-			<h2>{str tag="myownedgroups"}</h2>
+			<h2>{str tag="groupsiown"}</h2>
                         <div class="addgrouplink">
                             <span class="addicon">
                                 <a href="{$WWWROOT}/contacts/groups/create.php">{str tag='addgroup'}</a>

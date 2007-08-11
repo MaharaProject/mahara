@@ -2,7 +2,7 @@
 {include file="sidebar.tpl"}
 
 {include file="columnleftstart.tpl"}	
-			<h2>{str tag="activity"}</h2>
+			<h2>{str tag="recentactivity"}</h2>
 			
 			<div id="recentactivity">
 			<form method="post">
