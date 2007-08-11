@@ -25,8 +25,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'account');
-define('SUBMENUITEM', 'accountprefs');
+define('MENUITEM', 'settings/preferences');
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'account');
 define('SECTION_PAGE', 'preferences');

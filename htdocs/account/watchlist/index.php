@@ -25,8 +25,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'account');
-define('SUBMENUITEM', 'watchlist');
+define('MENUITEM', 'settings/mywatchlist');
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'account');
 define('SECTION_PAGE', 'watchlist');
