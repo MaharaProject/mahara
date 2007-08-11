@@ -132,13 +132,6 @@ label {
 	padding: 0;
 	margin: 0;
 }
-.leftrightlink {
-    margin-top: .5em;
-}
-.leftrightlink a {
-	font-weight: bold;
-	color: #819f18; 
-}
 tr.required label, 
 tr.required th { 
 	color: #819f18; 
@@ -146,6 +139,19 @@ tr.required th {
 .required td label, 
 .required td { 
 	color: #000; 
+}
+.maincontent table.wysiwyg-wrapper {
+    border: none !important;
+    width: auto !important;
+    margin: 0 !important;
+    border-spacing: 0 !important;
+}
+.maincontent table.wysiwyg-wrapper td {
+    vertical-align: top !important;
+    padding: 0 !important;
+}
+.maincontent table.wysiwyg-wrapper td.helpcontainer {
+    padding-left: 3px !important;
 }
 
 .center {
@@ -382,7 +388,7 @@ tr.required th {
 #subnav li a:link,
 #subnav li a:visited,
 #subnav li a:active {
-	color: #FFF;
+	color: #98bf10;
 }
 #subnav li a:hover {
 	color: #98bf10;
@@ -396,7 +402,7 @@ tr.required th {
 #subnav li.selected a:link, 
 #subnav li.selected a:visited,
 #subnav li.selected a:active {
-	color: #98bf10;
+	color: #FFF;
 }
 /* SUB NAVIGATION ENDS */
 
@@ -931,10 +937,6 @@ table#installer {
 }
 .maincontent #email_list .unvalidated {
 	font-size: 9px;
-}
-.maincontent .leftrightlink {
-	padding: 5px 0 5px 0;
-	margin: -3px 0 0 0;
 }
 .maincontent #upload th,
 .maincontent #upload td {
@@ -1629,6 +1631,11 @@ a.pieform-calendar-toggle img {
 }
 .help img {
     border: none;
+    vertical-align: text-bottom;
+}
+.pagehelpicon {
+    padding-top: .25em;
+    float: right;
 }
 
 .tablerenderer-loading {
