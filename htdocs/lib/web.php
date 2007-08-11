@@ -1054,7 +1054,7 @@ function make_link($url) {
 
 
 /**
- * Builds the admin navigation menu and returns it as a data structure
+ * Returns the entries in the standard admin menu
  *
  * @return $adminnav a data structure containing the admin navigation
  */
@@ -1063,245 +1063,267 @@ function admin_nav() {
 
     $menu = array(
         array(
-            'name'     => 'adminhome',
-            'section'  => 'admin',
-            'link'     => $wwwroot . 'admin/',
+            'path'   => 'admin',
+            'url'    => 'admin/',
+            'title'  => get_string('adminhome', 'admin'),
+            'weight' => 10,
         ),
         array(
-            'name'     => 'configsite',
-            'section'  => 'admin',
-            'link'     => $wwwroot . 'admin/site/options.php',
-            'submenu'  => array(
-                array(
-                    'name' => 'siteoptions',
-                    'section' => 'admin',
-                    'link' => $wwwroot . 'admin/site/options.php'
-                ),
-                array(
-                    'name'    => 'sitepages',
-                    'section' => 'admin',
-                    'link'    => $wwwroot . 'admin/site/pages.php',
-                ),
-                array(
-                    'name'    => 'sitemenu',
-                    'section' => 'admin',
-                    'link'    => $wwwroot . 'admin/site/menu.php',
-                ),
-                array(
-                    'name'    => 'adminfiles',
-                    'section' => 'admin',
-                    'link'    => $wwwroot . 'admin/site/files.php'
-                ),
-                array(
-                    'name'    => 'networking',
-                    'section' => 'admin',
-                    'link'    => $wwwroot . 'admin/site/networking.php'
-                )
-            )
+            'path'   => 'configsite',
+            'url'    => 'admin/site/options.php',
+            'title'  => get_string('configsite', 'admin'),
+            'weight' => 20,
         ),
         array(
-            'name'     => 'configusers',
-            'section'  => 'admin',
-            'link'     => $wwwroot . 'admin/users/suspended.php',
-            'submenu' => array(
-                array(
-                    'name'    => 'suspendedusers',
-                    'section' => 'admin',
-                    'link'    => $wwwroot . 'admin/users/suspended.php'
-                ),
-                array(
-                    'name'    => 'staffusers',
-                    'section' => 'admin',
-                    'link'    => $wwwroot . 'admin/users/staff.php'
-                ),
-                array(
-                    'name'    => 'adminusers',
-                    'section' => 'admin',
-                    'link'    => $wwwroot . 'admin/users/admins.php'
-                ),
-                array(
-                    'name'    => 'adminnotifications',
-                    'section' => 'admin',
-                    'link'    => $wwwroot . 'admin/users/notifications.php'
-                ),
-                array(
-                    'name'    => 'institutions',
-                    'section' => 'admin',
-                    'link'    => $wwwroot . 'admin/users/institutions.php'
-                ),
-                array(
-                    'name'    => 'uploadcsv',
-                    'section' => 'admin',
-                    'link'    => $wwwroot . 'admin/users/uploadcsv.php'
-                ),
-                array(
-                    'name'    => 'usersearch',
-                    'section' => 'admin',
-                    'link'    => $wwwroot . 'admin/users/search.php'
-                ),
-            )
+            'path'   => 'configsite/siteoptions',
+            'url'    => 'admin/site/options.php',
+            'title'  => get_string('siteoptions', 'admin'),
+            'weight' => 10,
         ),
         array(
-            'name'     => 'configextensions',
-            'section'  => 'admin',
-            'link'     => $wwwroot . 'admin/extensions/plugins.php',
-            'submenu' => array(
-                array(
-                    'name' => 'pluginadmin',
-                    'section' => 'admin',
-                    'link' => $wwwroot . 'admin/extensions/plugins.php'
-                ),
-                array(
-                    'name' => 'templatesadmin',
-                    'section' => 'admin',
-                    'link' => $wwwroot . 'admin/extensions/templates.php'
-                )
-            )
+            'path'   => 'configsite/sitepages',
+            'url'    => 'admin/site/pages.php',
+            'title'  => get_string('sitepages', 'admin'),
+            'weight' => 20
+        ),
+        array(
+            'path'   => 'configsite/sitemenu',
+            'url'    => 'admin/site/menu.php',
+            'title'  => get_string('sitemenu', 'admin'),
+            'weight' => 30,
+        ),
+        array(
+            'path'   => 'configsite/adminfiles',
+            'url'    => 'admin/site/files.php',
+            'title'  => get_string('adminfiles', 'admin'),
+            'weight' => 40,
+        ),
+        array(
+            'path'   => 'configsite/networking',
+            'url'    => 'admin/site/networking.php',
+            'title'  => get_string('networking', 'admin'),
+            'weight' => 50,
+        ),
+        array(
+            'path'   => 'configusers',
+            'url'    => 'admin/users/suspended.php',
+            'title'  => get_string('configusers', 'admin'),
+            'weight' => 30,
+        ),
+        array(
+            'path'   => 'configusers/suspendedusers',
+            'url'    => 'admin/users/suspended.php',
+            'title'  => get_string('suspendedusers', 'admin'),
+            'weight' => 10,
+        ),
+        array(
+            'path'   => 'configusers/staffusers',
+            'url'    => 'admin/users/staff.php',
+            'title'  => get_string('staffusers', 'admin'),
+            'weight' => 20,
+        ),
+        array(
+            'path'   => 'configusers/adminusers',
+            'url'    => 'admin/users/admins.php',
+            'title'  => get_string('adminusers', 'admin'),
+            'weight' => 30,
+        ),
+        array(
+            'path'   => 'configusers/adminnotifications',
+            'url'    => 'admin/users/notifications.php',
+            'title'  => get_string('adminnotifications', 'admin'),
+            'weight' => 40,
+        ),
+        array(
+            'path'   => 'configusers/institutions',
+            'url'    => 'admin/users/institutions.php',
+            'title'  => get_string('institutions', 'admin'),
+            'weight' => 50,
+        ),
+        array(
+            'path'   => 'configusers/uploadcsv',
+            'url'    => 'admin/users/uploadcsv.php',
+            'title'  => get_string('uploadcsv', 'admin'),
+            'weight' => 60,
+        ),
+        array(
+            'path'   => 'configusers/usersearch',
+            'url'    => 'admin/users/search.php',
+            'title'  => get_string('usersearch', 'admin'),
+            'weight' => 70,
+        ),
+        array(
+            'path'   => 'configextensions',
+            'url'    => 'admin/extensions/plugins.php',
+            'title'  => get_string('configextensions', 'admin'),
+            'weight' => 40,
+        ),
+        array(
+            'path'   => 'configextensions/pluginadmin',
+            'url'    => 'admin/extensions/plugins.php',
+            'title'  => get_string('pluginadmin', 'admin'),
+            'weight' => 10,
+        ),
+        array(
+            'path'   => 'configextensions/templatesadmin',
+            'url'    => 'admin/extensions/templates.php',
+            'title'  => get_string('templatesadmin', 'admin'),
+            'weight' => 20
         ),
     );
-
-    if (defined('MENUITEM')) {
-        foreach ( $menu as &$item ) {
-            if ($item['name'] == MENUITEM) {
-                $item['selected'] = true;
-                if (defined('SUBMENUITEM') && is_array($item['submenu'])) {
-                    foreach ( $item['submenu'] as &$subitem ) {
-                        if ($subitem['name'] == SUBMENUITEM) {
-                            $subitem['selected'] = true;
-                        }
-                    }
-                }
-            }
-        }
-    }
 
     return $menu;
 }
 
 /**
- * Builds the main navigation menu and returns it as a data structure
- *
- * @return $mainnav a data structure containing the main navigation
- * @todo martyn this is probably quite expenvise, perhaps it needs teh caching
+ * Builds a data structure representing the menu for Mahara.
  */
 function main_nav() {
-    $wwwroot = get_config('wwwroot');
-
     if (defined('ADMIN')) {
-        return admin_nav();
-    }
-
-    $menu = array(
-        array(
-            'name'     => 'home',
-            'section'  => 'mahara',
-            'link'     => $wwwroot,
-        ),
-    );
-
-    if ($plugins = get_records_array('artefact_installed')) {
-        foreach ($plugins as &$plugin) {
-            safe_require('artefact', $plugin->name);
-            $plugin_menu = call_static_method(generate_class_name('artefact',$plugin->name), 'menu_items');
-
-            foreach ($plugin_menu as &$menu_item) {
-                $menu_item['link'] = $wwwroot . 'artefact/' . $plugin->name . '/' . $menu_item['link'];
-                $menu_item['section'] = 'artefact.' . $plugin->name;
-                if (array_key_exists('submenu', $menu_item)) {
-                    foreach ($menu_item['submenu'] as &$submenuitem) {
-                        if (!array_key_exists('section', $submenuitem)) {
-                            $submenuitem['section'] = 'artefact.' . $plugin->name;
-                        }
-                    }
-                }
-            }
-
-            $menu = array_merge($menu, $plugin_menu);
-        }
-    }
-
-    $menu[] = array(
-        'name'    => 'mycontacts',
-        'link'    => $wwwroot . 'contacts/',
-        'section' => 'mahara',
-        'submenu' => array(
-            array(
-                'name'    => 'myfriends',
-                'link'    => $wwwroot . 'contacts/',
-                'section' => 'mahara',
-            ),
-            /*
-            array(
-                'name'    => 'myaddressbook',
-                'link'    => $wwwroot . 'contacts/addressbook/',
-                'section' => 'mahara',
-            ),
-            */
-            array(
-                'name'    => 'mygroups',
-                'link'    => $wwwroot . 'contacts/groups/',
-                'section' => 'mahara',
-            ),
-            array(
-                'name'    => 'myownedgroups',
-                'link'    => $wwwroot . 'contacts/groups/owned.php',
-                'section' => 'mahara',
-            ),
-        ),
-    );
-    $menu[] = array(
-        'name'    => 'myviews',
-        'link'    => $wwwroot . 'view/',
-        'section' => 'mahara',
-    );
-    $menu[] = array(
-        'name'    => 'account',
-        'link'    => $wwwroot . 'account/',
-        'section' => 'mahara',
-        'submenu' => array(
-            array(
-                'name'    => 'accountprefs',
-                'link'    => $wwwroot . 'account/',
-                'section' => 'mahara',
-            ),
-            array(
-                'name'    => 'activity',
-                'link'    => $wwwroot . 'account/activity/',
-                'section' => 'mahara',
-            ),
-            array(
-                'name'    => 'activityprefs',
-                'link'    => $wwwroot . 'account/activity/preferences/',
-                'section' => 'mahara',
-            ),
-            array(
-                'name'    => 'watchlist',
-                'link'    => $wwwroot . 'account/watchlist/',
-                'section' => 'mahara',
-            ),
-        ),
-    );
-
-
-    if (defined('MENUITEM')) {
-        foreach ( $menu as &$item ) {
-            if ($item['name'] == MENUITEM) {
-                $item['selected'] = true;
-                if (defined('SUBMENUITEM') and is_array($item['submenu'])) {
-                    foreach ( $item['submenu'] as &$subitem ) {
-                        if ($subitem['name'] == SUBMENUITEM) {
-                            $subitem['selected'] = true;
-                        }
-                    }
-                }
-            }
-        }
+        $menu = admin_nav();
     }
     else {
-        $menu[0]['selected'] = true;
+        // Build the menu structure for the site
+
+        // The keys of each entry are as follows:
+        //   path: Where the link sits in the menu. E.g. 'myporfolio/myplugin'
+        //   url:  The URL to the page, relative to wwwroot. E.g. 'artefact/myplugin/'
+        //   title: Translated text to use for the text of the link. E.g. get_string('myplugin', 'artefact.myplugin')
+        //   weight: Where in the menu the item should be inserted. Larger number are to the right.
+        $menu = array(
+            array(
+                'path' => '',
+                'url' => '',
+                'title' => get_string('home'),
+                'weight' => 10,
+            ),
+            array(
+                'path' => 'myportfolio',
+                'url' => 'view/',
+                'title' => get_string('myportfolio'),
+                'weight' => 30,
+            ),
+            array(
+                'path' => 'myportfolio/views',
+                'url' => 'view/',
+                'title' => get_string('views'),
+                'weight' => 10
+            ),
+            array(
+                'path' => 'groups',
+                'url' => 'contacts/',
+                'title' => get_string('groups'),
+                'weight' => 40,
+            ),
+            array(
+                'path' => 'groups/myfriends',
+                'url' => 'contacts/',
+                'title' => get_string('myfriends'),
+                'weight' => 10,
+            ),
+            array(
+                'path' => 'groups/groupsimin',
+                'url' => 'contacts/groups/',
+                'title' => get_string('groupsimin'),
+                'weight' => 20,
+            ),
+            array(
+                'path' => 'groups/groupsiown',
+                'url' => 'contacts/groups/owned.php',
+                'title' => get_string('groupsiown'),
+                'weight' => 30,
+            ),
+            array(
+                'path' => 'settings',
+                'url' => 'account/',
+                'title' => get_string('settings'),
+                'weight' => 50
+            ),
+            array(
+                'path' => 'settings/preferences',
+                'url' => 'account/',
+                'title' => get_string('preferences'),
+                'weight' => 10,
+            ),
+            array(
+                'path' => 'settings/recentactivity',
+                'url' => 'account/activity/',
+                'title' => get_string('recentactivity'),
+                'weight' => 20,
+            ),
+            array(
+                'path' => 'settings/activitypreferences',
+                'url' => 'account/activity/preferences/',
+                'title' => get_string('activityprefs'),
+                'weight' => 30,
+            ),
+            array(
+                'path' => 'settings/mywatchlist',
+                'url' => 'account/watchlist/',
+                'title' => get_string('watchlist'),
+                'weight' => 40,
+            ),
+        );
+
+        if ($plugins = get_records_array('artefact_installed', 'active', 1)) {
+            foreach ($plugins as &$plugin) {
+                safe_require('artefact', $plugin->name);
+                $plugin_menu = call_static_method(generate_class_name('artefact',$plugin->name), 'menu_items');
+                $menu = array_merge($menu, $plugin_menu);
+            }
+        }
     }
 
-    return $menu;
+    $menu_structure = find_menu_children($menu, '');
+    return $menu_structure;
+}
+
+/**
+ * Given a menu structure and a path, returns a data structure representing all 
+ * of the child menu items of the path, and removes those items from the menu 
+ * structure
+ *
+ * Used by main_nav()
+ */
+function find_menu_children(&$menu, $path) {
+    $result = array();
+    if (!$menu) {
+        return array();
+    }
+
+    foreach ($menu as $key => $item) {
+        if (
+            defined('MENUITEM') &&
+            ((MENUITEM == '' && $item['path'] == '') ||
+            ($item['path'] != '' && $item['path'] == substr(MENUITEM, 0, strlen($item['path']))))) {
+            $item['selected'] = true;
+        }
+        if (
+            ($path == '' && $item['path'] == '') ||
+            ($item['path'] != '' && substr($item['path'], 0, strlen($path)) == $path && !preg_match('%/%', substr($item['path'], strlen($path) + 1)))) {
+            $result[] = $item;
+            unset($menu[$key]);
+        }
+    }
+
+    if ($menu) {
+        foreach ($result as &$item) {
+            $item['submenu'] = find_menu_children($menu, $item['path']);
+        }
+    }
+
+    uasort($result, 'menu_sort_items');
+
+    return $result;
+}
+
+/**
+ * Comparison function for sorting menu items
+ */
+function menu_sort_items(&$a, &$b) {
+    !isset($a['weight']) && $a['weight'] = 0;
+    !isset($b['weight']) && $b['weight'] = 0;
+    return $a['weight'] > $b['weight'];
 }
 
 /**
