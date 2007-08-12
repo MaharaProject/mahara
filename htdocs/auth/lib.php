@@ -347,6 +347,10 @@ function auth_setup () {
         // The session timed out
         $USER->logout();
 
+        if (defined('JSON')) {
+            json_reply('global', '', 1);
+        }
+
         // If the page the user is viewing is public, inform them that they can
         // log in again
         if (defined('PUBLIC')) {
