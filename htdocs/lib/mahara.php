@@ -1024,7 +1024,7 @@ function pieform_validate(Pieform $form, $values) {
     if (!isset($values['sesskey'])) {
         throw new UserException('No session key');
     }
-    if ($USER && $USER->get('sesskey') != $values['sesskey']) {
+    if ($USER && $USER->is_logged_in() && $USER->get('sesskey') != $values['sesskey']) {
         throw new UserException('Invalid session key');
     }
 
