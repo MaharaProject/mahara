@@ -179,7 +179,7 @@ function sendjsonrequest(script, data, rtype, successcallback, errorcallback, qu
                 }
                 try { successcallback(data); } catch (e) { logError('sendjsonrequest() callback failed: ', e, data); }
             }
-            else if (data.message && typeof(data.message == 'object')) {
+            else if (data.message && typeof(data.message) == 'object') {
                 if (data.message.message && typeof(data.message.message == 'string') && !quiet) {
                     displayMessage(data.message.message, errtype);
                 }
@@ -345,7 +345,7 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, sectio
 
     // load the content
     if (contextualHelpCache[key]) {
-        contextualHelpContainer.innerHTML = contextualHelpCloseButton() + contextualHelpCache[key];
+        buildContextualHelpBox(contextualHelpCache[key]);
         callLater(0, function() { contextualHelpOpened = true; });
     }
     else {
@@ -361,7 +361,7 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, sectio
             }
             else {
                 contextualHelpCache[key] = data.content;
-                contextualHelpContainer.innerHTML =  contextualHelpCloseButton() + contextualHelpCache[key];
+                buildContextualHelpBox(contextualHelpCache[key]);
             }
             contextualHelpOpened = true;
             processingStop();
@@ -376,11 +376,18 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, sectio
     }
 }
 
-/* The close button is only there for show (which is why there is the 'return
-   false'). The window onclick handler means clicking anywhere closes the help,
-   this is just a visual metaphor */
-function contextualHelpCloseButton() {
-    return '<div class="fr"><a href="" onclick="return false;"><img src="' + config.theme['images/icon_close.gif'] + '" alt="X"></a></div>';
+/*
+ * Builds the contents of the box with the currently open contextual help in
+ * it, including the close button and an overlay div to prevent clicking on the
+ * help closing the box
+ */
+function buildContextualHelpBox(content) {
+    var result = '<div class="fr"><a href="" onclick="return false;"><img src="' + config.theme['images/icon_close.gif'] + '" alt="X"></a></div>';
+    result += '<div id="helpstop">';
+    result += content;
+    result += '</div>';
+    contextualHelpContainer.innerHTML = result;
+    connect('helpstop', 'onclick', function(e) { e.stop(); });
 }
 
 /* Only works in non-ie at the moment. Using 'document' as the element
@@ -513,8 +520,9 @@ function create_tags_control(name, value, options) {
     }
 
     var tagControl = INPUT({'name': name, 'size': options.size, 'value': value});
+    var tagshelp = SPAN(null); tagshelp.innerHTML = get_string('tags.help');
     elements.push(augment_tags_control(tagControl, true));
-    elements.push(tagControl);
+    elements.push(TABLE({'class': 'help-wrapper'}, TR(null, TD(null, tagControl), TD({'class': 'helpcontainer'}, tagshelp))));
 
     return DIV(null, elements);
 }
