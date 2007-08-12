@@ -188,7 +188,7 @@ class AuthXmlrpc extends Auth {
             set_profile_field($user->id, 'lastname', $user->lastname);
             set_profile_field($user->id, 'email', $user->email);
 
-            handle_event('createuser', $user);
+            handle_event('createuser', get_object_vars($user));
 
         } elseif ($update) {
 
