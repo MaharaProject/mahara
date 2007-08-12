@@ -516,25 +516,11 @@ function json_headers() {
  * @param string  $message A message to pass back to the user, can be an
  *                         array of JSON data
  */
-function json_reply($error, $message) {
+function json_reply($error, $message, $returncode=0) {
     json_headers();
-    echo json_encode(array('error' => $error, 'message' => $message));
+    echo json_encode(array('error' => $error, 'message' => $message, 'returnCode' => $returncode));
     perf_to_log();
     exit;
-}
-
-/**
- * This function checks the user's sesskey against one passed in. If the check
- * fails, a json reply is sent to that effect.
- */
-function json_check_sesskey() {
-    global $USER;
-
-    $sesskey = param_variable('sesskey', null);
-
-    if ($sesskey === null || $USER->get('sesskey') != $sesskey) {
-        json_reply('invalidsesskey', get_string('invalidsesskey'));
-    }
 }
 
 function _param_retrieve($name) {
