@@ -138,7 +138,7 @@ function get_requested_group($userid=0) {
 
     return get_records_sql_array('SELECT g.*, gmr.ctime, gmr.reason 
               FROM {group} g 
-              JOIN {group_member_request} gmr ON gmr.group = c.id
+              JOIN {group_member_request} gmr ON gmr.group = g.id
               WHERE gmr.member = ?', array($userid));
 }
 
@@ -186,7 +186,7 @@ function get_tutor_groups($userid=0, $jointype=null) {
     $values = array($userid, $userid, 1);
     
     if (!empty($jointype)) {
-        $sql .= ' AND c.jointype = ? ';
+        $sql .= ' AND g.jointype = ? ';
         $values[] = $jointype;
     }
     return get_records_sql_array($sql, $values);
