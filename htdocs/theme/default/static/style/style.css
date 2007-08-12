@@ -140,17 +140,17 @@ tr.required th {
 .required td { 
 	color: #000; 
 }
-.maincontent table.wysiwyg-wrapper {
+.maincontent table.help-wrapper {
     border: none !important;
     width: auto !important;
     margin: 0 !important;
     border-spacing: 0 !important;
 }
-.maincontent table.wysiwyg-wrapper td {
+.maincontent table.help-wrapper td {
     vertical-align: top !important;
     padding: 0 !important;
 }
-.maincontent table.wysiwyg-wrapper td.helpcontainer {
+.maincontent table.help-wrapper td.helpcontainer {
     padding-left: 3px !important;
 }
 
