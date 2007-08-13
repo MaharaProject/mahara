@@ -188,7 +188,15 @@ class AuthXmlrpc extends Auth {
             set_profile_field($user->id, 'lastname', $user->lastname);
             set_profile_field($user->id, 'email', $user->email);
 
-            handle_event('createuser', get_object_vars($user));
+            /*
+             * We need to convert the object to a stdclass with its own
+             * custom method because it uses overloaders in its implementation
+             * and its properties wouldn't be visible to a simple cast operation
+             * like (array)$user
+             */
+            $userobj = $user->to_stdclass();
+            $userarray = (array)$userobj;
+            handle_event('createuser', $userarray);
 
         } elseif ($update) {
 
