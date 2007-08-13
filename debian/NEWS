@@ -3,6 +3,6 @@ mahara (0.9.0~dev) unstable; urgency=low
   * The new networking support in Mahara requires the curl, openssl and xmlrpc
     libs. If they are not installed, you will see environment level errors on each
     screen of your Mahara installation. You can solve this by disabling logging of
-    envionment level errors in config.php, or installing php5-{curl,openssl,xmlrpc}  
+    environment level errors in config.php, or installing php5-{curl,openssl,xmlrpc}  
 
  -- Nigel McNie <nigel@catalyst.net.nz>  Thu,  9 Aug 2007 17:10:06 +1200
