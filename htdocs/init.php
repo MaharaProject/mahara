@@ -133,6 +133,8 @@ if (!isset($CFG->wwwroot) && isset($_SERVER['HTTP_HOST'])) {
             $path = '/' . $path;
         }
         $path .= '/';
+    } else {
+        $path = '/';
     }
     $wwwroot = $proto . $host . $path;
     try {
