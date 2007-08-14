@@ -78,6 +78,9 @@ function pieform_renderer_maharatable(Pieform $form, $builtelement, $rawelement)
         else {
             $result .= '<label for="' . $formname . '_' . $rawelement['id'] . '">' . Pieform::hsc($rawelement['title']) . '</label>';
         }
+        if ($form->get_property('requiredmarker') && !empty($rawelement['rules']['required'])) {
+            $result .= ' <span class="requiredmarker">*</span>';
+        }
         $result .= "</th>\n\t</tr>\n";
     }
     $result .= "\t<tr id=\"{$formname}_{$rawelement['name']}_container\">\n\t\t<td>";
