@@ -285,14 +285,15 @@ EOF;
         );
     }
 
-    if ($USER->is_logged_in()) {
+    if ($USER->is_logged_in() && defined('MENUITEM') && substr(MENUITEM, 0, 11) == 'myportfolio') {
         $SIDEBLOCKS[] = array(
             'name'   => 'selfsearch',
             'weight' => 0,
             'data'   => array(),
         );
     }
-    else {
+   
+   if (!$USER->is_logged_in()) {
         $SIDEBLOCKS[] = array(
             'name'   => 'login',
             'weight' => -10,
