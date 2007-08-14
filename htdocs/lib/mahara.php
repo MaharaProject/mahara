@@ -1001,6 +1001,7 @@ function pieform_configure() {
         'language'  => current_language(),
         'autofocus' => true,
         'renderer'  => 'maharatable',
+        'requiredmarker' => true,
         'elementclasses' => true,
         'jserrorcallback'       => 'formError',
         'globaljserrorcallback' => 'formGlobalError',
