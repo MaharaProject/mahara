@@ -98,7 +98,10 @@ class PluginSearchInternal extends PluginSearch {
             WHERE
                 u.id <> 0 AND u.active = 1
                 AND ((
-                        u.preferredname IS NULL
+                        u.preferredname ILIKE \'%\' || ? || \'%\'
+                    )
+                    OR (
+                        (u.preferredname IS NULL OR u.preferredname = \'\')
                         AND (
                             u.firstname ILIKE \'%\' || ? || \'%\'
                             OR u.lastname ILIKE \'%\' || ? || \'%\'
@@ -110,7 +113,7 @@ class PluginSearchInternal extends PluginSearch {
                     )
                 )
             ',
-            array($query_string, $query_string, $query_string)
+            array($query_string, $query_string, $query_string, $query_string)
         );
 
         if ($count > 0) {
@@ -122,7 +125,10 @@ class PluginSearchInternal extends PluginSearch {
                 WHERE
                     u.id <> 0 AND u.active = 1
                     AND ((
-                            u.preferredname IS NULL
+                            u.preferredname ILIKE \'%\' || ? || \'%\'
+                        )
+                        OR (
+                            (u.preferredname IS NULL OR u.preferredname = \'\')
                             AND (
                                 u.firstname ILIKE \'%\' || ? || \'%\'
                                 OR u.lastname ILIKE \'%\' || ? || \'%\'
@@ -134,7 +140,7 @@ class PluginSearchInternal extends PluginSearch {
                         )
                     )
                 ORDER BY u.firstname, u.lastname, u.id',
-            array($query_string, $query_string, $query_string),
+            array($query_string, $query_string, $query_string, $query_string),
             $offset,
             $limit);
 
