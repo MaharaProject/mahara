@@ -558,7 +558,7 @@ function suspend_user($suspendeduserid, $reason, $suspendinguserid=null) {
  * handle the add/remove/approve/reject friend form
  * @param array $values from pieforms.
  */
-function friend_submit($form, $values) {
+function friend_submit(Pieform $form, $values) {
     global $user, $USER;
 
     $loggedinid = $USER->get('id');
@@ -736,6 +736,38 @@ function deactivate_user($userid) {
  */
 function activate_user($userid) {
     handle_event('activateuser', $userid);
+}
+
+/**
+ * Sends a message from one user to another
+ *
+ * @param object $to User to send the message to
+ * @param string $message The message to send
+ * @param object $from Who to send the message from. If not set, defaults to 
+ * the currently logged in user
+ * @throws AccessDeniedException if the message is not allowed to be sent (as 
+ * configured by the 'to' user's settings)
+ */
+function send_user_message($to, $message, $from=null) {
+    // FIXME: permission checking!
+    if ($from === null) {
+        global $USER;
+        $from = $USER;
+    }
+
+    $messagepref = get_account_preference($to->id, 'messages');
+    if ((is_friend($from->id, $to->id) && $messagepref == 'friends') || $messagepref == 'allow' || $from->get('admin')) {
+        activity_occurred('usermessage', 
+            array(
+                'userto'   => $to->id, 
+                'userfrom' => $from->id, 
+                'message'  => $message,
+            )
+        );
+    }
+    else {
+        throw new AccessDeniedException('Cannot send messages between ' . display_name($from) . ' and ' . display_name($to));
+    }
 }
 
 ?>
