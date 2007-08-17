@@ -400,13 +400,7 @@ function messageform_submit(Pieform $form, $values) {
     global $USER, $user;
 
     try {
-        activity_occurred('usermessage', 
-            array(
-                'userto' => $user->id, 
-                'userfrom' => $USER->id, 
-                'message' => $values['body'],
-            )
-        );    
+        send_user_message($user, $values['body']);
         $form->json_reply(PIEFORM_OK, get_string('messagesent'));
     }
     catch (InvalidException $_e) {
