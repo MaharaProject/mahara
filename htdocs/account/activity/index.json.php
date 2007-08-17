@@ -92,6 +92,7 @@ $unread = get_string('unread', 'activity');
 foreach ($records as &$r) {
     $r->date = format_date(strtotime($r->ctime));
     $r->type = get_string('type' . $r->type, 'activity');
+    $r->message = format_whitespace($r->message);
 }
 
 $activity = array(
