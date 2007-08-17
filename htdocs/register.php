@@ -30,6 +30,7 @@ define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'site');
 define('SECTION_PAGE', 'register');
 require('init.php');
+require_once('pieforms/pieform.php');
 define('TITLE', get_string('register'));
 
 /*
