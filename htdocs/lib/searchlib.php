@@ -93,7 +93,10 @@ function search_user($query_string, $limit, $offset = 0) {
         $public_fields_byuser = array();
         if (!empty($public_fields)) {
             foreach ($public_fields as $field) {
-                $public_fields_byuser[$field->id][$field->artefacttype] = $field->title;
+                // This will be null if the user does not have a field marked public
+                if ($field->artefacttype !== null) {
+                    $public_fields_byuser[$field->id][$field->artefacttype] = $field->title;
+                }
             }
         }
         
