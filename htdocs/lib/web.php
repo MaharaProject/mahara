@@ -1583,6 +1583,18 @@ function format_whitespace($text) {
 }
 
 /**
+ * Returns only the first short snippet of a user's introduction
+ */
+function format_introduction($introduction) {
+    $introduction = strip_tags($introduction);
+    // Note: the lengths are different to prevent chopping off just one or two characters in order to add an ellipsis
+    if (strlen($introduction) < 110) {
+        return $introduction;
+    }
+    return substr($introduction, 0, 100) . '...';
+}
+
+/**
  * Given raw text (eg typed in by a user), this function cleans it up
  * and removes any nasty tags that could mess up pages.
  *
