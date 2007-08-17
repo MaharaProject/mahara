@@ -496,7 +496,7 @@ function xmldb_core_upgrade($oldversion=0) {
         drop_table($table);
     }
 
-    if ($oldversion < 2007072802) {
+    if ($oldversion < 2007081701) {
         // Rename the community tables to group
         if (is_postgres()) {
             // Done manually for postgres to ensure all of the indexes and constraints are renamed
