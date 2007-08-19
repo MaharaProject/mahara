@@ -532,8 +532,6 @@ $string['friend'] = 'Friend';
 $string['profileicon'] = 'Profile Icon';
 
 // general views stuff
-$string['viewavailable'] = 'View available';
-$string['viewsavailable'] = 'Views available';
 $string['allviews'] = 'All views';
 
 // Upload manager
