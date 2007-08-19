@@ -66,4 +66,21 @@ function pieform_element_textarea(Pieform $form, $element) {
         . '>' . Pieform::hsc($form->get_value($element)) . '</textarea>';
 }
 
+function pieform_element_textarea_get_value(Pieform $form, $element) {
+    if (isset($element['value'])) {
+        return $element['value'];
+    }
+
+    $global = ($form->get_property('method') == 'get') ? $_GET : $_POST;
+    if (isset($global[$element['name']])) {
+        return str_replace("\r\n", "\n", $global[$element['name']]);
+    }
+
+    if (isset($element['defaultvalue'])) {
+        return $element['defaultvalue'];
+    }
+
+    return '';
+}
+
 ?>
