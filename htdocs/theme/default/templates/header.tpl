@@ -8,7 +8,8 @@
             'theme': {$THEMELIST},
             'sesskey' : '{$SESSKEY}',
             'wwwroot': '{$WWWROOT}',
-            'loggedin': {$USER->is_logged_in()|intval}
+            'loggedin': {$USER->is_logged_in()|intval},
+            'userid': {$USER->get('id')}
         {literal}}{/literal};
         </script>
 {foreach from=$JAVASCRIPT item=script}        <script type="text/javascript" src="{$script}"></script>
