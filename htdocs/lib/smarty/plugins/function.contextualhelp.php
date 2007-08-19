@@ -20,10 +20,11 @@
  * @return HTML snippet for help icon
  */
 function smarty_function_contextualhelp($params, &$smarty) {
-   
+    $form = (isset($params['form'])) ? $params['form'] : null; 
+    $element = (isset($params['element'])) ? $params['element'] : null;
 
     $ret = call_user_func_array('get_help_icon', array(
-        $params['plugintype'], $params['pluginname'], null, null, null, $params['section']));
+        $params['plugintype'], $params['pluginname'], $form, $element, null, $params['section']));
 
     // If there is an 'assign' parameter, place it into that instead.
     if (!empty($params['assign'])) {
