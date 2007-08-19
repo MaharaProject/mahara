@@ -516,6 +516,8 @@ $string['friendrequestrejectedmessagereason'] = '%s has rejected your friend req
 $string['allfriends']     = 'All Friends';
 $string['currentfriends'] = 'Current Friends';
 $string['pendingfriends'] = 'Pending friends';
+$string['backtofriendslist'] = 'Back to Friends List';
+$string['findnewfriends'] = 'Find New Friends';
 
 $string['friendlistfailure'] = 'Failed to modify your friends list';
 $string['userdoesntwantfriends'] = 'This user doesn\'t want any new friends';
