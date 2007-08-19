@@ -31,7 +31,6 @@ require_once('template.php');
 function xmldb_core_upgrade($oldversion=0) {
 
     $status = true;
-    $prefix = get_config('dbprefix');
 
     if ($oldversion < 2006121400) {
 
@@ -172,7 +171,7 @@ function xmldb_core_upgrade($oldversion=0) {
         $field->setAttributes(XMLDB_TYPE_INTEGER, 10, false, true, null, null, null, 0);
         add_field($table, $field);
 
-        execute_sql('UPDATE ' . $prefix . 'usr SET quota=10485760');
+        execute_sql('UPDATE {usr} SET quota=10485760');
     }
 
     if ($oldversion < 2007012300) {
@@ -237,7 +236,7 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2007021903) {
-        execute_sql("UPDATE {$prefix}artefact
+        execute_sql("UPDATE {artefact}
             SET container = 1
             WHERE artefacttype = 'blog'");
     }
@@ -249,25 +248,25 @@ function xmldb_core_upgrade($oldversion=0) {
 
     if ($oldversion < 2007042500) {
         // migrate everything we had to change to  make mysql happy
-        execute_sql("ALTER TABLE {$prefix}cron DROP CONSTRAINT {$prefix}cron_cal_pk"); // can't drop primary keys using xmldb...
-        execute_sql("ALTER TABLE {$prefix}cron ADD CONSTRAINT {$prefix}cron_id_pk PRIMARY KEY (id)"); // or add them!
-        execute_sql("ALTER TABLE {$prefix}cron ADD CONSTRAINT {$prefix}cron_cal_uix UNIQUE (callfunction)");
-        execute_sql("ALTER TABLE {$prefix}community ALTER COLUMN name TYPE varchar (128)");
-        execute_sql("ALTER TABLE {$prefix}usr_activity_preference ALTER COLUMN method TYPE varchar(255)");
-        execute_sql("ALTER TABLE {$prefix}template_category ALTER COLUMN name TYPE varchar(128)");
-        execute_sql("ALTER TABLE {$prefix}template_category ALTER COLUMN parent TYPE varchar(128)");
-        execute_sql("ALTER TABLE {$prefix}template ALTER COLUMN name TYPE varchar(128)");
-        execute_sql("ALTER TABLE {$prefix}template ALTER COLUMN category TYPE varchar(128)");
-        execute_sql("ALTER TABLE {$prefix}view ALTER COLUMN template TYPE varchar(128)");
-        execute_sql("ALTER TABLE {$prefix}view_access ALTER COLUMN accesstype SET DEFAULT 'public'");
-        execute_sql("ALTER TABLE {$prefix}usr ALTER COLUMN email TYPE varchar(255)");
+        execute_sql("ALTER TABLE {cron} DROP CONSTRAINT {cron_cal_pk}"); // can't drop primary keys using xmldb...
+        execute_sql("ALTER TABLE {cron} ADD CONSTRAINT {cron_id_pk} PRIMARY KEY (id)"); // or add them!
+        execute_sql("ALTER TABLE {cron} ADD CONSTRAINT {cron_cal_uix} UNIQUE (callfunction)");
+        execute_sql("ALTER TABLE {community} ALTER COLUMN name TYPE varchar (128)");
+        execute_sql("ALTER TABLE {usr_activity_preference} ALTER COLUMN method TYPE varchar(255)");
+        execute_sql("ALTER TABLE {template_category} ALTER COLUMN name TYPE varchar(128)");
+        execute_sql("ALTER TABLE {template_category} ALTER COLUMN parent TYPE varchar(128)");
+        execute_sql("ALTER TABLE {template} ALTER COLUMN name TYPE varchar(128)");
+        execute_sql("ALTER TABLE {template} ALTER COLUMN category TYPE varchar(128)");
+        execute_sql("ALTER TABLE {view} ALTER COLUMN template TYPE varchar(128)");
+        execute_sql("ALTER TABLE {view_access} ALTER COLUMN accesstype SET DEFAULT 'public'");
+        execute_sql("ALTER TABLE {usr} ALTER COLUMN email TYPE varchar(255)");
     }
 
     // everything up to here was pre mysql support.
 
     if ($oldversion < 2007062000) {
         if (!get_record('config', 'field', 'lang')) {
-            execute_sql("INSERT INTO {$prefix}config (field, value) VALUES ('lang', (SELECT value FROM {$prefix}config WHERE field = 'language'))");
+            execute_sql("INSERT INTO {config} (field, value) VALUES ('lang', (SELECT value FROM {config} WHERE field = 'language'))");
         }
         delete_records('config', 'field', 'language');
     }
@@ -409,82 +408,174 @@ function xmldb_core_upgrade($oldversion=0) {
         // Drop DEFAULT '' from many columns that should not have had them
         // *nigel looks angrily at xmldb
         execute_sql('
-            ALTER TABLE ' . $prefix . 'notification_cron ALTER COLUMN plugin DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'notification_cron ALTER COLUMN callfunction DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'view_tag ALTER COLUMN tag DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'site_content ALTER COLUMN name DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'search_installed ALTER COLUMN name DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'usr_registration ALTER COLUMN salt DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'usr_registration ALTER COLUMN "password" DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'usr_registration ALTER COLUMN username DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'usr_registration ALTER COLUMN "key" DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'usr_registration ALTER COLUMN institution DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'auth_config ALTER COLUMN plugin DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'auth_config ALTER COLUMN field DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'artefact_cron ALTER COLUMN plugin DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'artefact_cron ALTER COLUMN callfunction DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'notification_event_subscription ALTER COLUMN plugin DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'notification_event_subscription ALTER COLUMN callfunction DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'notification_event_subscription ALTER COLUMN event DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'notification_internal_activity ALTER COLUMN "type" DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'activity_type ALTER COLUMN name DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'auth_event_subscription ALTER COLUMN plugin DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'auth_event_subscription ALTER COLUMN callfunction DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'auth_event_subscription ALTER COLUMN event DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'search_config ALTER COLUMN plugin DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'search_config ALTER COLUMN field DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'cron ALTER COLUMN callfunction DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'artefact_tag ALTER COLUMN tag DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'artefact_config ALTER COLUMN plugin DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'artefact_config ALTER COLUMN field DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'institution ALTER COLUMN name DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'institution ALTER COLUMN displayname DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'auth_instance_config ALTER COLUMN field DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'notification_installed ALTER COLUMN name DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'auth_installed ALTER COLUMN name DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'artefact ALTER COLUMN artefacttype DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'artefact_installed_type ALTER COLUMN plugin DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'artefact_installed_type ALTER COLUMN name DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'event_type ALTER COLUMN name DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'usr_account_preference ALTER COLUMN field DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'activity_queue ALTER COLUMN "type" DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'notification_config ALTER COLUMN plugin DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'notification_config ALTER COLUMN field DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'artefact_installed ALTER COLUMN name DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'notification_emaildigest_queue ALTER COLUMN "type" DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'sso_session ALTER COLUMN useragent DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'sso_session ALTER COLUMN username DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'sso_session ALTER COLUMN sessionid DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'sso_session ALTER COLUMN token DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'search_event_subscription ALTER COLUMN plugin DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'search_event_subscription ALTER COLUMN callfunction DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'search_event_subscription ALTER COLUMN event DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'usr ALTER COLUMN "password" DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'usr ALTER COLUMN username DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'application ALTER COLUMN xmlrpcserverurl DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'application ALTER COLUMN ssolandurl DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'application ALTER COLUMN name DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'application ALTER COLUMN displayname DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'institution_locked_profile_field ALTER COLUMN name DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'institution_locked_profile_field ALTER COLUMN profilefield DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'usr_password_request ALTER COLUMN "key" DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'search_cron ALTER COLUMN plugin DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'search_cron ALTER COLUMN callfunction DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'auth_instance ALTER COLUMN instancename DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'auth_instance ALTER COLUMN authname DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'auth_instance ALTER COLUMN institution DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'artefact_event_subscription ALTER COLUMN plugin DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'artefact_event_subscription ALTER COLUMN callfunction DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'artefact_event_subscription ALTER COLUMN event DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'host ALTER COLUMN wwwroot DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'host ALTER COLUMN institution DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'usr_activity_preference ALTER COLUMN activity DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'config ALTER COLUMN field DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'auth_cron ALTER COLUMN plugin DROP DEFAULT;
-            ALTER TABLE ' . $prefix . 'auth_cron ALTER COLUMN callfunction DROP DEFAULT;
+            ALTER TABLE {notification_cron} ALTER COLUMN plugin DROP DEFAULT;
+            ALTER TABLE {notification_cron} ALTER COLUMN callfunction DROP DEFAULT;
+            ALTER TABLE {view_tag} ALTER COLUMN tag DROP DEFAULT;
+            ALTER TABLE {site_content} ALTER COLUMN name DROP DEFAULT;
+            ALTER TABLE {search_installed} ALTER COLUMN name DROP DEFAULT;
+            ALTER TABLE {usr_registration} ALTER COLUMN salt DROP DEFAULT;
+            ALTER TABLE {usr_registration} ALTER COLUMN "password" DROP DEFAULT;
+            ALTER TABLE {usr_registration} ALTER COLUMN username DROP DEFAULT;
+            ALTER TABLE {usr_registration} ALTER COLUMN "key" DROP DEFAULT;
+            ALTER TABLE {usr_registration} ALTER COLUMN institution DROP DEFAULT;
+            ALTER TABLE {auth_config} ALTER COLUMN plugin DROP DEFAULT;
+            ALTER TABLE {auth_config} ALTER COLUMN field DROP DEFAULT;
+            ALTER TABLE {artefact_cron} ALTER COLUMN plugin DROP DEFAULT;
+            ALTER TABLE {artefact_cron} ALTER COLUMN callfunction DROP DEFAULT;
+            ALTER TABLE {notification_event_subscription} ALTER COLUMN plugin DROP DEFAULT;
+            ALTER TABLE {notification_event_subscription} ALTER COLUMN callfunction DROP DEFAULT;
+            ALTER TABLE {notification_event_subscription} ALTER COLUMN event DROP DEFAULT;
+            ALTER TABLE {notification_internal_activity} ALTER COLUMN "type" DROP DEFAULT;
+            ALTER TABLE {activity_type} ALTER COLUMN name DROP DEFAULT;
+            ALTER TABLE {auth_event_subscription} ALTER COLUMN plugin DROP DEFAULT;
+            ALTER TABLE {auth_event_subscription} ALTER COLUMN callfunction DROP DEFAULT;
+            ALTER TABLE {auth_event_subscription} ALTER COLUMN event DROP DEFAULT;
+            ALTER TABLE {search_config} ALTER COLUMN plugin DROP DEFAULT;
+            ALTER TABLE {search_config} ALTER COLUMN field DROP DEFAULT;
+            ALTER TABLE {cron} ALTER COLUMN callfunction DROP DEFAULT;
+            ALTER TABLE {artefact_tag} ALTER COLUMN tag DROP DEFAULT;
+            ALTER TABLE {artefact_config} ALTER COLUMN plugin DROP DEFAULT;
+            ALTER TABLE {artefact_config} ALTER COLUMN field DROP DEFAULT;
+            ALTER TABLE {institution} ALTER COLUMN name DROP DEFAULT;
+            ALTER TABLE {institution} ALTER COLUMN displayname DROP DEFAULT;
+            ALTER TABLE {auth_instance_config} ALTER COLUMN field DROP DEFAULT;
+            ALTER TABLE {notification_installed} ALTER COLUMN name DROP DEFAULT;
+            ALTER TABLE {auth_installed} ALTER COLUMN name DROP DEFAULT;
+            ALTER TABLE {artefact} ALTER COLUMN artefacttype DROP DEFAULT;
+            ALTER TABLE {artefact_installed_type} ALTER COLUMN plugin DROP DEFAULT;
+            ALTER TABLE {artefact_installed_type} ALTER COLUMN name DROP DEFAULT;
+            ALTER TABLE {event_type} ALTER COLUMN name DROP DEFAULT;
+            ALTER TABLE {usr_account_preference} ALTER COLUMN field DROP DEFAULT;
+            ALTER TABLE {activity_queue} ALTER COLUMN "type" DROP DEFAULT;
+            ALTER TABLE {notification_config} ALTER COLUMN plugin DROP DEFAULT;
+            ALTER TABLE {notification_config} ALTER COLUMN field DROP DEFAULT;
+            ALTER TABLE {artefact_installed} ALTER COLUMN name DROP DEFAULT;
+            ALTER TABLE {notification_emaildigest_queue} ALTER COLUMN "type" DROP DEFAULT;
+            ALTER TABLE {sso_session} ALTER COLUMN useragent DROP DEFAULT;
+            ALTER TABLE {sso_session} ALTER COLUMN username DROP DEFAULT;
+            ALTER TABLE {sso_session} ALTER COLUMN sessionid DROP DEFAULT;
+            ALTER TABLE {sso_session} ALTER COLUMN token DROP DEFAULT;
+            ALTER TABLE {search_event_subscription} ALTER COLUMN plugin DROP DEFAULT;
+            ALTER TABLE {search_event_subscription} ALTER COLUMN callfunction DROP DEFAULT;
+            ALTER TABLE {search_event_subscription} ALTER COLUMN event DROP DEFAULT;
+            ALTER TABLE {usr} ALTER COLUMN "password" DROP DEFAULT;
+            ALTER TABLE {usr} ALTER COLUMN username DROP DEFAULT;
+            ALTER TABLE {application} ALTER COLUMN xmlrpcserverurl DROP DEFAULT;
+            ALTER TABLE {application} ALTER COLUMN ssolandurl DROP DEFAULT;
+            ALTER TABLE {application} ALTER COLUMN name DROP DEFAULT;
+            ALTER TABLE {application} ALTER COLUMN displayname DROP DEFAULT;
+            ALTER TABLE {institution_locked_profile_field} ALTER COLUMN name DROP DEFAULT;
+            ALTER TABLE {institution_locked_profile_field} ALTER COLUMN profilefield DROP DEFAULT;
+            ALTER TABLE {usr_password_request} ALTER COLUMN "key" DROP DEFAULT;
+            ALTER TABLE {search_cron} ALTER COLUMN plugin DROP DEFAULT;
+            ALTER TABLE {search_cron} ALTER COLUMN callfunction DROP DEFAULT;
+            ALTER TABLE {auth_instance} ALTER COLUMN instancename DROP DEFAULT;
+            ALTER TABLE {auth_instance} ALTER COLUMN authname DROP DEFAULT;
+            ALTER TABLE {auth_instance} ALTER COLUMN institution DROP DEFAULT;
+            ALTER TABLE {artefact_event_subscription} ALTER COLUMN plugin DROP DEFAULT;
+            ALTER TABLE {artefact_event_subscription} ALTER COLUMN callfunction DROP DEFAULT;
+            ALTER TABLE {artefact_event_subscription} ALTER COLUMN event DROP DEFAULT;
+            ALTER TABLE {host} ALTER COLUMN wwwroot DROP DEFAULT;
+            ALTER TABLE {host} ALTER COLUMN institution DROP DEFAULT;
+            ALTER TABLE {usr_activity_preference} ALTER COLUMN activity DROP DEFAULT;
+            ALTER TABLE {config} ALTER COLUMN field DROP DEFAULT;
+            ALTER TABLE {auth_cron} ALTER COLUMN plugin DROP DEFAULT;
+            ALTER TABLE {auth_cron} ALTER COLUMN callfunction DROP DEFAULT;
         ');
     }
     
+    if ($oldversion < 2007081700) {
+        // Remove groups from the system
+        $table = new XMLDBTable('view_access_group');
+        drop_table($table);
+
+        $table = new XMLDBTable('usr_group_member');
+        drop_table($table);
+
+        $table = new XMLDBTable('usr_group');
+        drop_table($table);
+    }
+
+    if ($oldversion < 2007081701) {
+        // Rename the community tables to group
+        if (is_postgres()) {
+            // Done manually for postgres to ensure all of the indexes and constraints are renamed
+            execute_sql("
+            ALTER TABLE {community} RENAME TO {group};
+            ALTER TABLE {community_id_seq} RENAME TO {group_id_seq};
+            ALTER INDEX {comm_id_pk} RENAME TO {grou_id_pk};
+            ALTER INDEX {comm_nam_uix} RENAME TO {grou_nam_uix};
+            ALTER INDEX {comm_own_ix} RENAME TO {grou_own_ix};
+            ALTER TABLE {group} DROP CONSTRAINT {comm_joi_ck};
+            ALTER TABLE {group} ADD CONSTRAINT {grou_joi_ck} CHECK (jointype::text = 'controlled'::text OR jointype::text = 'invite'::text OR jointype::text = 'request'::text OR jointype::text = 'open'::text);
+            ALTER TABLE {group} DROP CONSTRAINT {comm_own_fk};
+            ALTER TABLE {group} ADD CONSTRAINT {grou_own_fk} FOREIGN KEY (\"owner\") REFERENCES {usr}(id);
+            ");
+             
+            execute_sql("
+            ALTER TABLE {community_member} RENAME TO {group_member};
+            ALTER TABLE {group_member} RENAME community TO \"group\";
+            ALTER INDEX {commmemb_commem_pk} RENAME TO {groumemb_gromem_pk};
+            ALTER INDEX {commmemb_com_ix} RENAME TO {groumemb_gro_ix};
+            ALTER INDEX {commmemb_mem_ix} RENAME TO {groumemb_mem_ix};
+            ALTER TABLE {group_member} DROP CONSTRAINT {commmemb_com_fk};
+            ALTER TABLE {group_member} ADD CONSTRAINT {groumemb_gro_fk}  FOREIGN KEY (\"group\") REFERENCES {group}(id);
+            ALTER TABLE {group_member} DROP CONSTRAINT {commmemb_mem_fk};
+            ALTER TABLE {group_member} ADD CONSTRAINT {groumemb_mem_fk} FOREIGN KEY (\"member\") REFERENCES {usr}(id);
+            ");
+
+            execute_sql("
+            ALTER TABLE {community_member_request} RENAME TO {group_member_request};
+            ALTER TABLE {group_member_request} RENAME community TO \"group\";
+            ALTER INDEX {commmembrequ_commem_pk} RENAME TO {groumembrequ_gromem_pk};
+            ALTER INDEX {commmembrequ_com_ix} RENAME TO {groumembrequ_gro_ix};
+            ALTER INDEX {commmembrequ_mem_ix} RENAME TO {groumembrequ_mem_ix};
+            ALTER TABLE {group_member_request} DROP CONSTRAINT {commmembrequ_com_fk};
+            ALTER TABLE {group_member_request} ADD CONSTRAINT {groumembrequ_gro_fk} FOREIGN KEY (\"group\") REFERENCES {group}(id);
+            ALTER TABLE {group_member_request} DROP CONSTRAINT {commmembrequ_mem_fk};
+            ALTER TABLE {group_member_request} ADD CONSTRAINT {groumembrequ_mem_fk} FOREIGN KEY (member) REFERENCES {usr}(id);
+            ");
+
+            execute_sql("
+            ALTER TABLE {community_member_invite} RENAME TO {group_member_invite};
+            ALTER TABLE {group_member_invite} RENAME community TO \"group\";
+            ALTER INDEX {commmembinvi_commem_pk} RENAME TO {groumembinvi_gromem_pk};
+            ALTER INDEX {commmembinvi_com_ix} RENAME TO {groumembinvi_gro_ix};
+            ALTER INDEX {commmembinvi_mem_ix} RENAME TO {groumembinvi_mem_ix};
+            ALTER TABLE {group_member_invite} DROP CONSTRAINT {commmembinvi_com_fk};
+            ALTER TABLE {group_member_invite} ADD CONSTRAINT {groumembinvi_gro_fk} FOREIGN KEY (\"group\") REFERENCES {group}(id);
+            ALTER TABLE {group_member_invite} DROP CONSTRAINT {commmembinvi_mem_fk};
+            ALTER TABLE {group_member_invite} ADD CONSTRAINT {groumembinvi_mem_fk} FOREIGN KEY (member) REFERENCES {usr}(id);
+            ");
+
+            execute_sql("
+            ALTER TABLE {usr_watchlist_community} RENAME TO {usr_watchlist_group};
+            ALTER TABLE {usr_watchlist_group} RENAME community TO \"group\";
+            ALTER INDEX {usrwatccomm_usrcom_pk} RENAME TO {usrwatcgrou_usrgro_pk};
+            ALTER INDEX {usrwatccomm_com_ix} RENAME TO {usrwatcgrou_gro_ix};
+            ALTER INDEX {usrwatccomm_usr_ix} RENAME TO {usrwatcgrou_usr_ix};
+            ALTER TABLE {usr_watchlist_group} DROP CONSTRAINT {usrwatccomm_com_fk};
+            ALTER TABLE {usr_watchlist_group} ADD CONSTRAINT {usrwatcgrou_com_fk} FOREIGN KEY (\"group\") REFERENCES {group}(id);
+            ALTER TABLE {usr_watchlist_group} DROP CONSTRAINT {usrwatccomm_usr_fk};
+            ALTER TABLE {usr_watchlist_group} ADD CONSTRAINT {usrwatcgrou_usr_fk} FOREIGN KEY (usr) REFERENCES {usr}(id);
+            ");
+
+            execute_sql("
+            ALTER TABLE {view_access_community} RENAME TO {view_access_group};
+            ALTER TABLE {view_access_group} RENAME community TO \"group\";
+            ALTER INDEX {viewaccecomm_com_ix} RENAME TO {viewaccegrou_gro_ix};
+            ALTER INDEX {viewaccecomm_vie_ix} RENAME TO {viewaccegrou_vie_ix};
+            ALTER TABLE {view_access_group} DROP CONSTRAINT {viewaccecomm_com_fk};
+            ALTER TABLE {view_access_group} ADD CONSTRAINT {viewaccegrou_gro_fk} FOREIGN KEY (\"group\") REFERENCES {group}(id);
+            ALTER TABLE {view_access_group} DROP CONSTRAINT {viewaccecomm_vie_fk};
+            ALTER TABLE {view_access_group} ADD CONSTRAINT {viewaccegrou_vie_fk} FOREIGN KEY (\"view\") REFERENCES {view}(id);
+            ");
+        }
+        else {
+            // ???
+        }
+    }
+
     return $status;
 
 }

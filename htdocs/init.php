@@ -206,7 +206,7 @@ if (defined('JSON')) {
     global $USER;
     if ($sesskey === null || $USER->get('sesskey') != $sesskey) {
         $USER->logout();
-        json_reply('global', get_string('invalidsesskey'));
+        json_reply('global', get_string('invalidsesskey'), 1);
     }
 }
 

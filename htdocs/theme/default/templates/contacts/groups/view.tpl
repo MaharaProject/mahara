@@ -2,22 +2,22 @@
 {include file="sidebar.tpl"}
 
 {include file="columnleftstart.tpl"}
-                <h2>{$community->name}</h2>
+                <h2>{$group->name}</h2>
                 
-                <p>{str tag='owner'}: {$community->ownername}</p>
-	        {assign var="jointype" value=$community->jointype}
-	        {assign var="joinstr" value=communityjointype$jointype}
+                <p>{str tag='owner'}: {$group->ownername}</p>
+	        {assign var="jointype" value=$group->jointype}
+	        {assign var="joinstr" value=groupjointype$jointype}
                 <p>{str tag=$joinstr}</p>
-                {if $community->description} <p>{$community->description}</p> {/if}
-                {if $canleave} <p><a href="view.php?id={$community->id}&amp;joincontrol=leave">{str tag='leavecommunity'}</a></p>
-                {elseif $canrequestjoin} <p id="joinrequest"><a href="" onClick="return joinRequestControl();">{str tag='requestjoincommunity'}</a></p>
-                {elseif $canjoin} <p><a href="view.php?id={$community->id}&amp;joincontrol=join"">{str tag='joincommunity'}</a></p>
-                {elseif $canacceptinvite} <p>{str tag='communityhaveinvite'} <a href="view.php?id={$community->id}&amp;joincontrol=acceptinvite">{str tag='acceptinvitecommunity'}</a> | <a href="view.php?id={$community->id}&amp;joincontrol=declineinvite">{str tag='declineinvitecommunity'}</a></p>{/if}
+                {if $group->description} <p>{$group->description}</p> {/if}
+                {if $canleave} <p><a href="view.php?id={$group->id}&amp;joincontrol=leave">{str tag='leavegroup'}</a></p>
+                {elseif $canrequestjoin} <p id="joinrequest"><a href="" onClick="return joinRequestControl();">{str tag='requestjoingroup'}</a></p>
+                {elseif $canjoin} <p><a href="view.php?id={$group->id}&amp;joincontrol=join"">{str tag='joingroup'}</a></p>
+                {elseif $canacceptinvite} <p>{str tag='grouphaveinvite'} <a href="view.php?id={$group->id}&amp;joincontrol=acceptinvite">{str tag='acceptinvitegroup'}</a> | <a href="view.php?id={$group->id}&amp;joincontrol=declineinvite">{str tag='declineinvitegroup'}</a></p>{/if}
                 {if $member}
-                    <div id="communitywatchlistcontrol">
+                    <div id="groupwatchlistcontrol">
                     <input type="button" id="watchlistcontrolbutton" class="button" onclick="return toggleWatchlist();" value="{if $onwatchlist}{str tag=removefromwatchlist section=activity}{else}{str tag=addtowatchlist section=activity}{/if}">
                     </div>
-                    <div class="communityviews">
+                    <div class="groupviews">
                         <h5>{str tag='views'}</h5>
                         {if $tutor && $controlled}
                             <form>
@@ -27,7 +27,7 @@
                                 </select>
                             </form>
                         {/if}
-                        <table id="community_viewlist">
+                        <table id="group_viewlist">
                             <thead>
                                 <tr>
                                     <th>{str tag='name'}</th>
@@ -38,7 +38,7 @@
                             </tbody>
                         </table>
                     </div>                   
-                    <div class="communitymembers">
+                    <div class="groupmembers">
                     <a name="members"></a>
                         <h5>{str tag='members'}</h5>
                         {if $canupdate && $request}
@@ -60,7 +60,7 @@
                              </tbody>
                          </table>
 	                 {if $canupdate}
-                             <input type="button" class="button" value="{str tag='updatemembership'}" onClick="return updateMembership();" / id="communitymembers_update">
+                             <input type="button" class="button" value="{str tag='updatemembership'}" onClick="return updateMembership();" id="groupmembers_update">
                          {/if}
                      </div>
                 {/if}

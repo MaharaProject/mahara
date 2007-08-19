@@ -25,8 +25,7 @@
  */
 
 define('INTERNAL', true);
-define('MENUITEM', 'myresume');
-define('SUBMENUITEM', 'myresume');
+define('MENUITEM', 'profile/myresume');
 
 require_once(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('pieforms/pieform.php');

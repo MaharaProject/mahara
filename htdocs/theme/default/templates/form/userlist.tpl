@@ -120,7 +120,6 @@
             <select id="{{$name}}_groups">
                 <option value="all">All Users</option>
                 <option value="all">Test Community</option>
-                <option value="all">My Group</option>
             </select>
         </td>
         {{/if}}

@@ -25,7 +25,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'myviews');
+define('MENUITEM', 'myportfolio/views');
 
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'view');
@@ -51,7 +51,7 @@ var viewlist = new TableRenderer(
 );
 
 viewlist.rowfunction = function(r, n, data) {
-    return map(partial(TR,null), [ title(r,data.communities), 
+    return map(partial(TR,null), [ title(r,data.groups), 
                                  [ TD(null,{$getstring['accessstartdate']}),TD(r.startdate)  ],
                                  [ TD(null,{$getstring['accessstopdate']}), TD(r.stopdate)   ],
                                  [ TD(null,{$getstring['description']}),    function () { var desc = TD(); desc.innerHTML=r.description; return desc }],
@@ -59,7 +59,7 @@ viewlist.rowfunction = function(r, n, data) {
                                    TD(null,UL(null,map(partial(renderartefact,r.id),r.artefacts)))]]);
 }
 
-function title(r, communities) {
+function title(r, groups) {
     var editinfo = INPUT({'type':'button','class':'button',
                               'value':{$getstring['editviewinformation']},
                               'onclick':"submitform(" + r.id + ", 'editinfo')"});
@@ -75,7 +75,7 @@ function title(r, communities) {
     }
     else {
         var buttons = [editinfo,edit,editaccess,del];
-        var assess = assessselect(r.id,communities);
+        var assess = assessselect(r.id,groups);
     }
     var f = FORM({'id':('form'+r.id),'method':'post','enctype':'multipart/form-data',
                       'encoding':'multipart/form-data'},
@@ -89,19 +89,19 @@ function title(r, communities) {
             TD(null,f, s)];
 }
 
-function communityoption(community) {
-    return OPTION({'value':community.id},community.name);
+function groupoption(group) {
+    return OPTION({'value':group.id},group.name);
 }
 
-function assessselect(viewid, communitylist) {
-    if (communitylist.length < 1) {
+function assessselect(viewid, grouplist) {
+    if (grouplist.length < 1) {
         return null;
     }
     var submitview = INPUT({'type':'button','class':'button',
                             'value':{$getstring['submitview']}});
     submitview.onclick = function () { submitform(viewid, 'submitview'); };
-    return [SELECT({'name':'community','class':'select'},
-                   map(communityoption, communitylist)), submitview];
+    return [SELECT({'name':'group','class':'select'},
+                   map(groupoption, grouplist)), submitview];
             
 }
 
@@ -121,7 +121,7 @@ function submitform(viewid, action) {
     var form = $('form' + viewid);
     if (action == 'submitview') {
         if (confirm({$getstring['submitviewquestion']})) {
-            sendjsonrequest('submit.json.php', {'viewid':viewid,'communityid':form.community.options[form.community.selectedIndex].value}, 'POST', viewlist.doupdate);
+            sendjsonrequest('submit.json.php', {'viewid':viewid,'groupid':form.group.options[form.group.selectedIndex].value}, 'POST', viewlist.doupdate);
         }
         return false;
     }

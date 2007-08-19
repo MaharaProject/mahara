@@ -241,10 +241,8 @@ abstract class ArtefactType {
      * @return array
      */
     public function get_children_metadata_watchlist($userid) {
-        $prefix = get_config('dbprefix');
-        
-        $sql = 'SELECT a.* FROM ' . $prefix . 'artefact a 
-                JOIN ' . $prefix . 'usr_watchlist_artefact w ON w.artefact = a.id
+        $sql = 'SELECT a.* FROM {artefact} a 
+                JOIN {usr_watchlist_artefact} w ON w.artefact = a.id
                 WHERE w.usr = ? AND a.parent = ?';
         
         return get_records_sql_array($sql, array($userid, $this->id));

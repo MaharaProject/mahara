@@ -26,7 +26,7 @@
 
 define('INTERNAL', 1);
 define('PUBLIC', 1);
-define('MENUITEM', 'home');
+define('MENUITEM', '');
 require('init.php');
 define('TITLE', get_string('home'));
 

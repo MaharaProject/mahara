@@ -25,6 +25,7 @@
  */
 
 define('INTERNAL', 1);
+define('MENUITEM', 'myportfolio/views');
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'view');
 define('SECTION_PAGE', 'create2');
@@ -56,8 +57,6 @@ if ( $template !== null ) {
 
     redirect('/view/create3.php?createid=' . $createid);
 }
-
-define('MENUITEM', 'myviews');
 
 $selecttemplate = get_string('usethistemplate', 'view');
 $wwwroot = get_config('wwwroot');

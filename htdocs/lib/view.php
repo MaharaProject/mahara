@@ -149,11 +149,10 @@ class View {
 
     public function get_artefact_metadata() {
         if (!isset($this->artefact_metadata)) {
-            $prefix = get_config('dbprefix');
             $sql = 'SELECT a.*, i.name, va.block, va.format
-                    FROM ' . $prefix . 'view_artefact va
-                    JOIN ' . $prefix . 'artefact a ON va.artefact = a.id
-                    JOIN ' . $prefix . 'artefact_installed_type i ON a.artefacttype = i.name
+                    FROM {view_artefact} va
+                    JOIN {artefact} a ON va.artefact = a.id
+                    JOIN {artefact_installed_type} i ON a.artefacttype = i.name
                     WHERE va.view = ?';
             $this->artefact_metadata = get_records_sql_array($sql, array($this->id));
         }
@@ -172,21 +171,19 @@ class View {
         $this->artefact_hierarchy = array('data' => array(),
                                           'refs' => array());
 
-        $prefix = get_config('dbprefix');
-
         $sql = 'SELECT a.*,a.parent,pc.parent,a.artefacttype 
-                    FROM ' . $prefix . 'artefact a 
+                    FROM {artefact} a 
                     JOIN (
                         SELECT apc1.* 
-                        FROM ' . $prefix . 'artefact_parent_cache apc1 
-                        JOIN ' . $prefix . 'artefact_parent_cache apc2 ON apc1.artefact = apc2.artefact 
+                        FROM {artefact_parent_cache} apc1 
+                        JOIN {artefact_parent_cache} apc2 ON apc1.artefact = apc2.artefact 
                         WHERE apc2.parent IN (
-                            SELECT artefact FROM ' . $prefix . 'view_artefact where view = ?
+                            SELECT artefact FROM {view_artefact} where view = ?
                         )
                     ) pc ON pc.artefact = a.id 
                 UNION SELECT a2.*,a2.parent,null,a2.artefacttype 
-                    FROM ' . $prefix . 'artefact a2 
-                    JOIN ' . $prefix . 'view_artefact va ON va.artefact = a2.id 
+                    FROM {artefact} a2 
+                    JOIN {view_artefact} va ON va.artefact = a2.id 
                     WHERE va.id = ?';
 
         $allchildren = get_records_sql_array($sql, array($this->id, $this->id));        
@@ -236,13 +233,11 @@ class View {
     }
 
     public function get_artefact_metadata_watchlist($userid) {
-        $prefix = get_config('dbprefix');
-
         $sql = 'SELECT a.*, i.name
-                    FROM ' . $prefix . 'view_artefact va
-                    JOIN ' . $prefix . 'artefact a ON va.artefact = a.id
-                    JOIN ' . $prefix . 'artefact_installed_type i ON a.artefacttype = i.name
-                    JOIN ' . $prefix . 'usr_watchlist_artefact wa ON wa.artefact = a.id                    
+                    FROM {view_artefact} va
+                    JOIN {artefact} a ON va.artefact = a.id
+                    JOIN {artefact_installed_type} i ON a.artefacttype = i.name
+                    JOIN {usr_watchlist_artefact} wa ON wa.artefact = a.id                    
                     WHERE va.view = ? AND wa.usr = ? AND a.parent IS NULL';
         return get_records_sql_array($sql,  array($this->id, $userid));
     }
@@ -305,7 +300,6 @@ class View {
         delete_records('view_artefact','view',$this->id);
         delete_records('view_content','view',$this->id);
         delete_records('view_access','view',$this->id);
-        delete_records('view_access_community','view',$this->id);
         delete_records('view_access_group','view',$this->id);
         delete_records('view_access_usr','view',$this->id);
         delete_records('view_tag','view',$this->id);
@@ -315,10 +309,10 @@ class View {
         $this->deleted = true;
     }
 
-    public function release($communityid, $releaseuser=null) {
-        if ($this->get('submittedto') != $communityid) {
+    public function release($groupid, $releaseuser=null) {
+        if ($this->get('submittedto') != $groupid) {
             throw new ParameterException("View with id " . $this->get('id') .
-                                         " has not been submitted to community $communityid");
+                                         " has not been submitted to group $groupid");
         }
         $releaseuser = optional_userobj($releaseuser);
         $this->set('submittedto', null);
@@ -328,7 +322,7 @@ class View {
                   array('users'   => array($this->get('owner')),
                   'subject' => get_string('viewreleasedsubject'),
                   'message' => get_string('viewreleasedmessage', 'mahara', 
-                       get_field('community', 'name', 'id', $communityid), 
+                       get_field('group', 'name', 'id', $groupid), 
                        display_name($releaseuser, $this->get_owner_object()))));
     }
 

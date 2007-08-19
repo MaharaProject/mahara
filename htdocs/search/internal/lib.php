@@ -74,27 +74,26 @@ class PluginSearchInternal extends PluginSearch {
         if (empty($publicfields)) {
             $publicfields = array('preferredname');
         }
-        $prefix = get_config('dbprefix');
         if (is_postgres()) {
-            return self::search_user_pg($query_string, $limit, $offset, $prefix, $publicfields);
+            return self::search_user_pg($query_string, $limit, $offset, $publicfields);
         } 
         else if (is_mysql()) {
-            return self::search_user_my($query_string, $limit, $offset, $prefix, $publicfields);
+            return self::search_user_my($query_string, $limit, $offset, $publicfields);
         }
         else {
             throw new SQLException('search_user() is not implemented for your database engine (' . get_config('dbtype') . ')');
         }
     }
 
-    public static function search_user_pg($query_string, $limit, $offset, $prefix, $publicfields) {
+    public static function search_user_pg($query_string, $limit, $offset, $publicfields) {
         $fieldlist = "('" . join("','", $publicfields) . "')";
 
         $count = get_field_sql('
             SELECT 
                 COUNT(DISTINCT u.id)
             FROM
-                ' . $prefix . 'usr u
-                LEFT JOIN ' . $prefix . 'artefact a ON u.id=a.owner
+                {usr} u
+                LEFT JOIN {artefact} a ON u.id=a.owner
             WHERE
                 u.id <> 0 AND u.active = 1
                 AND ((
@@ -117,8 +116,8 @@ class PluginSearchInternal extends PluginSearch {
             $data = get_records_sql_array('
                 SELECT DISTINCT ON (u.firstname, u.lastname, u.id)
                     u.id, u.username, u.institution, u.firstname, u.lastname, u.preferredname, u.email, u.staff
-                FROM ' . $prefix . 'artefact a
-                    INNER JOIN ' . $prefix .'usr u ON u.id = a.owner
+                FROM {artefact} a
+                    INNER JOIN {usr} u ON u.id = a.owner
                 WHERE
                     u.id <> 0 AND u.active = 1
                     AND ((
@@ -156,15 +155,15 @@ class PluginSearchInternal extends PluginSearch {
         );
     }
 
-    public static function search_user_my($query_string, $limit, $offset, $prefix, $publicfields) {
+    public static function search_user_my($query_string, $limit, $offset, $publicfields) {
         $fieldlist = "('" . join("','", $publicfields) . "')";
 
         $count = get_field_sql('
             SELECT 
                 COUNT(DISTINCT owner)
             FROM
-                ' . $prefix . 'usr u
-                LEFT JOIN ' . $prefix . 'artefact a ON u.id=a.owner
+                {usr} u
+                LEFT JOIN {artefact} a ON u.id=a.owner
             WHERE
                 u.id <> 0 AND u.active = 1
                 AND ((
@@ -192,8 +191,8 @@ class PluginSearchInternal extends PluginSearch {
             $data = get_records_sql_array('
                 SELECT DISTINCT
                     u.id, u.username, u.institution, u.firstname, u.lastname, u.preferredname, u.email, u.staff
-                FROM ' . $prefix . 'artefact a
-                    INNER JOIN ' . $prefix .'usr u ON u.id = a.owner
+                FROM {artefact} a
+                    INNER JOIN {usr} u ON u.id = a.owner
                 WHERE
                     u.id <> 0 AND u.active = 1
                     AND ((
@@ -244,185 +243,57 @@ class PluginSearchInternal extends PluginSearch {
      *               offset  => integer, // starting from which result
      *               data    => array(   // the result records
      *                   array(
-     *                       id          => integer,
-     *                       name        => string,
-     *                       owner       => integer,
-     *                       description => string,
-     *                       ctime       => string,
-     *                       mtime       => string,
+     *                       id            => integer,
+     *                       name          => string,
+     *                       description   => string,
+     *                       jointype      => string,
+     *                       owner         => string,
+     *                       ctime         => string,
+     *                       mtime         => string,
      *                   ),
      *                   array(
-     *                       id          => integer,
-     *                       name        => string,
-     *                       owner       => integer,
-     *                       description => string,
-     *                       ctime       => string,
-     *                       mtime       => string,
+     *                       id            => integer,
+     *                       name          => string,
+     *                       description   => string,
+     *                       jointype      => string,
+     *                       owner         => string,
+     *                       ctime         => string,
+     *                       mtime         => string,
      *                   ),
      *                   array(...),
      *               ),
      *           );
      */
-    public static function search_group($query_string, $limit, $offset = 0) {
+    public static function search_group($query_string, $limit, $offset=0, $all=false) {
         if (is_postgres()) {
-            return self::search_group_pg($query_string, $limit, $offset);
+            return self::search_group_pg($query_string, $limit, $offset, $all);
         } 
         else if (is_mysql()) {
-            return self::search_group_my($query_string, $limit, $offset);
-        }
+            return self::search_group_my($query_string, $limit, $offset, $all);
+        } 
         else {
             throw new SQLException('search_group() is not implemented for your database engine (' . get_config('dbtype') . ')');
         }
     }
 
-    public static function search_group_pg($query_string, $limit, $offset) {
-        global $USER;
-        $data = get_records_sql_array("
-            SELECT
-                id, name, owner, description, ctime, mtime
-            FROM
-                " . get_config('dbprefix') . "usr_group u
-            WHERE
-                owner = ?
-                AND (
-                    name ILIKE '%' || ? || '%' 
-                    OR description ILIKE '%' || ? || '%' 
-                )
-            ",
-            array($USER->get('id'), $query_string, $query_string),
-            $offset,
-            $limit
-        );
-
-        $count = get_field_sql("
-            SELECT
-                COUNT(*)
-            FROM
-                " . get_config('dbprefix') . "usr_group u
-            WHERE
-                owner = ?
-                AND (
-                    name ILIKE '%' || ? || '%' 
-                    OR description ILIKE '%' || ? || '%' 
-                )
-        ",
-            array($USER->get('id'), $query_string, $query_string)
-        );
-
-        return array(
-            'count'   => $count,
-            'limit'   => $limit,
-            'offset'  => $offset,
-            'data'    => $data,
-        );
-    }
-
-    public static function search_group_my($query_string, $limit, $offset) {
-        global $USER;
-        $data = get_records_sql_array("
-            SELECT
-                id, name, owner, description, ctime, mtime
-            FROM
-                " . get_config('dbprefix') . "usr_group u
-            WHERE
-                owner = ?
-                AND (
-                    name LIKE '%' || ? || '%' 
-                    OR description LIKE '%' || ? || '%' 
-                )
-            ",
-            array($USER->get('id'), $query_string, $query_string),
-            $offset,
-            $limit
-        );
-
-        $count = get_field_sql("
-            SELECT
-                COUNT(*)
-            FROM
-                " . get_config('dbprefix') . "usr_group u
-            WHERE
-                owner = ?
-                AND (
-                    name LIKE '%' || ? || '%' 
-                    OR description LIKE '%' || ? || '%' 
-                )
-        ",
-            array($USER->get('id'), $query_string, $query_string)
-        );
-
-        return array(
-            'count'   => $count,
-            'limit'   => $limit,
-            'offset'  => $offset,
-            'data'    => $data,
-        );
-    }
-    
-    /**
-     * Implement community searching with SQL
-     *
-     * @param string  The query string
-     * @param integer How many results to return
-     * @param integer What result to start at (0 == first result)
-     * @return array  A data structure containing results looking like ...
-     *         $results = array(
-     *               count   => integer, // total number of results
-     *               limit   => integer, // how many results are returned
-     *               offset  => integer, // starting from which result
-     *               data    => array(   // the result records
-     *                   array(
-     *                       id            => integer,
-     *                       name          => string,
-     *                       description   => string,
-     *                       jointype      => string,
-     *                       owner         => string,
-     *                       ctime         => string,
-     *                       mtime         => string,
-     *                   ),
-     *                   array(
-     *                       id            => integer,
-     *                       name          => string,
-     *                       description   => string,
-     *                       jointype      => string,
-     *                       owner         => string,
-     *                       ctime         => string,
-     *                       mtime         => string,
-     *                   ),
-     *                   array(...),
-     *               ),
-     *           );
-     */
-    public static function search_community($query_string, $limit, $offset=0, $all=false) {
-        if (is_postgres()) {
-            return self::search_community_pg($query_string, $limit, $offset, $all);
-        } 
-        else if (is_mysql()) {
-            return self::search_community_my($query_string, $limit, $offset, $all);
-        } 
-        else {
-            throw new SQLException('search_community() is not implemented for your database engine (' . get_config('dbtype') . ')');
-        }
-    }
-
-    public static function search_community_pg($query_string, $limit, $offset, $all) {
+    public static function search_group_pg($query_string, $limit, $offset, $all) {
         global $USER;
         $sql = "
             SELECT
                 id, name, description, jointype, owner, ctime, mtime
             FROM
-                " . get_config('dbprefix') . "community
+                {group}
             WHERE (
                 name ILIKE '%' || ? || '%' 
                 OR description ILIKE '%' || ? || '%' 
             )";
         $values = array($query_string, $query_string);
         if (!$all) {
-            $sql .=  "AND ( 
+            $sql .=  'AND ( 
                 owner = ? OR id IN (
-                    SELECT community FROM " . get_config('dbprefix') . "community_member WHERE member = ?
+                    SELECT "group" FROM {group_member} WHERE member = ?
                 )
-            )";
+            )';
             $values[] = $USER->get('id');
             $values[] = $USER->get('id');
         }
@@ -432,18 +303,18 @@ class PluginSearchInternal extends PluginSearch {
             SELECT
                 COUNT(*)
             FROM
-                " . get_config('dbprefix') . "community u
+                {group} u
             WHERE (
                 name ILIKE '%' || ? || '%' 
                 OR description ILIKE '%' || ? || '%' 
             )";
         if (!$all) {
-            $sql .= "AND ( 
+            $sql .= 'AND ( 
                     owner = ? OR id IN (
-                        SELECT community FROM " . get_config('dbprefix') . "community_member WHERE member = ?
+                        SELECT "group" FROM {group_member} WHERE member = ?
                     )
                 )
-            ";
+            ';
         }
         $count = get_field_sql($sql, $values);
 
@@ -455,13 +326,13 @@ class PluginSearchInternal extends PluginSearch {
         );
     }
 
-    public static function search_community_my($query_string, $limit, $offset, $all) {
+    public static function search_group_my($query_string, $limit, $offset, $all) {
         global $USER;
         $sql = "
             SELECT
                 id, name, description, jointype, owner, ctime, mtime
             FROM
-                " . get_config('dbprefix') . "community
+                {group}
             WHERE (
                 name LIKE '%' || ? || '%' 
                 OR description LIKE '%' || ? || '%' 
@@ -470,7 +341,7 @@ class PluginSearchInternal extends PluginSearch {
         if (!$all) {
             $sql .=  "AND ( 
                 owner = ? OR id IN (
-                    SELECT community FROM " . get_config('dbprefix') . "community_member WHERE member = ?
+                    SELECT group FROM {group_member} WHERE member = ?
                 )
             )";
             $values[] = $USER->get('id');
@@ -482,7 +353,7 @@ class PluginSearchInternal extends PluginSearch {
             SELECT
                 COUNT(*)
             FROM
-                " . get_config('dbprefix') . "community u
+                {group} u
             WHERE (
                 name LIKE '%' || ? || '%' 
                 OR description LIKE '%' || ? || '%' 
@@ -490,7 +361,7 @@ class PluginSearchInternal extends PluginSearch {
         if (!$all) {
             $sql .= "AND ( 
                     owner = ? OR id IN (
-                        SELECT community FROM " . get_config('dbprefix') . "community_member WHERE member = ?
+                        SELECT group FROM {group_member} WHERE member = ?
                     )
                 )
             ";
@@ -537,7 +408,7 @@ class PluginSearchInternal extends PluginSearch {
             SELECT
                 id, artefacttype, title, description
             FROM
-                " . get_config('dbprefix') . "artefact a
+                {artefact} a
             WHERE
                 owner = ?
             AND ($querydata[0])";
@@ -545,7 +416,7 @@ class PluginSearchInternal extends PluginSearch {
             SELECT
                 COUNT(*)
             FROM
-                " . get_config('dbprefix') . "artefact a
+                {artefact} a
             WHERE
                 owner = ?
             AND ($querydata[0])";

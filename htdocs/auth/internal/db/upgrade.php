@@ -2,8 +2,6 @@
 function xmldb_auth_internal_upgrade($oldversion=0) {
     if ($oldversion < 2007062900) {
 
-        $prefix = get_config('dbprefix');
-
         $auth_instance = new stdClass();
         $auth_instance->instancename='internal';
         $auth_instance->priority='1';

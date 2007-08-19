@@ -28,7 +28,7 @@ define('INTERNAL', 1);
 define('JSON', 1);
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-require_once('community.php');
+require_once('group.php');
 
 json_headers();
 
@@ -43,12 +43,11 @@ $offset  = param_integer('offset', 0);
 $count = 0;
 $data = array();
 
-if (!$membership = user_can_access_community($id)) {
-    community_json_empty();
+if (!$membership = user_can_access_group($id)) {
+    group_json_empty();
 }
-$community = get_record('community', 'id', $id);
+$group = get_record('group', 'id', $id);
 
-$prefix = get_config('dbprefix');
 $dbnow  = db_format_timestamp(time());
 
 switch ($type) {
@@ -57,7 +56,7 @@ switch ($type) {
         $values = array($id);
         if (!$submitted) {
             $where .= ' OR (
-                     a.community = ? 
+                     a.group = ? 
                      AND ( v.startdate IS NULL OR v.startdate < ? )
                      AND ( v.stopdate IS NULL OR v.stopdate > ? )
                      AND ( a.startdate IS NULL OR a.startdate < ? )
@@ -72,17 +71,17 @@ switch ($type) {
 
         $count = count_records_sql('
             SELECT COUNT(DISTINCT id)
-            FROM  ' . $prefix . 'view v
-            LEFT OUTER JOIN ' . $prefix . 'view_access_community a ON a.view=v.id
+            FROM  {view} v
+            LEFT OUTER JOIN {view_access_group} a ON a.view=v.id
             ' . $where,
             $values
         );
                                    
         $data = get_records_sql_array('
             SELECT DISTINCT v.*, u.username, u.firstname, u.lastname, u.preferredname, u.id AS usr 
-            FROM ' . $prefix . 'view v
-            LEFT OUTER JOIN ' . $prefix . 'view_access_community a ON a.view=v.id
-            INNER JOIN ' . $prefix.'usr u ON v.owner = u.id ' . $where, 
+            FROM {view} v
+            LEFT OUTER JOIN {view_access_group} a ON a.view=v.id
+            INNER JOIN {usr} u ON v.owner = u.id ' . $where, 
             $values,
             $offset,
             $limit
@@ -97,21 +96,21 @@ switch ($type) {
         }
         break;
     case 'members':
-        $select = 'SELECT u.*,c.tutor ';
-        $sql = '    FROM ' . $prefix . 'usr u JOIN ' . $prefix . 'community_member c
-                        ON c.member = u.id 
-                    WHERE c.community = ?';
+        $select = 'SELECT u.*,g.tutor ';
+        $sql = '    FROM {usr} u JOIN {group_member} g
+                        ON g.member = u.id 
+                    WHERE g.group = ?';
         if (empty($pending)) { // default behaviour - actual members
-            $count = count_records('community_member', 'community', $id);
+            $count = count_records('group_member', 'group', $id);
             $data = get_records_sql_array($select . $sql, array($id), $offset, $limit);
         }
         else {
-            if ($membership == COMMUNITY_MEMBERSHIP_MEMBER) {
-                community_json_empty();
+            if ($membership == GROUP_MEMBERSHIP_MEMBER) {
+                group_json_empty();
             }
-            $sql = str_replace('community_member', 'community_member_request', $sql);
+            $sql = str_replace('group_member', 'group_member_request', $sql);
             $select = 'SELECT u.*, 1 AS request, c.reason';
-            $count = count_records('community_member_request', 'community', $id);
+            $count = count_records('group_member_request', 'group', $id);
             $data = get_records_sql_array($select . $sql, array($id), $offset, $limit);
         }
         if (empty($data)) {
@@ -119,7 +118,7 @@ switch ($type) {
         }        
         foreach ($data as $d) {
             $d->displayname = display_name($d);
-            if (!empty($d->tutor) && $membership == COMMUNITY_MEMBERSHIP_MEMBER) {
+            if (!empty($d->tutor) && $membership == GROUP_MEMBERSHIP_MEMBER) {
                 $d->displayname .= ' (' . get_string('tutor') . ')';
             }
         }
@@ -132,32 +131,32 @@ switch ($type) {
                  try {
                      switch ($v) {
                          case 'remove':
-                             community_remove_user($id, $user);
+                             group_remove_user($id, $user);
                              $changed = true;
                              break;
                          case 'member':
                          case 'tutor':
-                             if ($cm = get_record('community_member', 'member', $user, 'community', $id)) {
+                             if ($cm = get_record('group_member', 'member', $user, 'group', $id)) {
                                  // already a member so just set the flag
                                  if ($v == 'member' && $cm->tutor == 1) {
                                      $changed = true;
-                                     set_field('community_member', 'tutor', 0, 'member', $user, 'community', $id);
+                                     set_field('group_member', 'tutor', 0, 'member', $user, 'group', $id);
                                  }
                                  else if ($v == 'tutor' && $cm->tutor == 0) {
                                      $changed = true;
-                                     set_field('community_member', 'tutor', 1, 'member', $user, 'community', $id);  
+                                     set_field('group_member', 'tutor', 1, 'member', $user, 'group', $id);  
                                  }
                                  // else not changed.
                              }
                              else {
-                                 community_add_member($id, $user);
-                                 delete_records('community_member_request', 'member', $user, 'community', $id);
+                                 group_add_member($id, $user);
+                                 delete_records('group_member_request', 'member', $user, 'group', $id);
                                  $changed = true;
                                  $v = 'added' . $v; // for the string for notify
                              }
                              break;
                          case 'declinerequest':
-                             delete_records('community_member_request', 'member', $user, 'community', $id);
+                             delete_records('group_member_request', 'member', $user, 'group', $id);
                              break;
                      }
                  }
@@ -167,9 +166,9 @@ switch ($type) {
                  require_once('activity.php');
                  activity_occurred('maharamessage', 
                      array('users' => array($user),
-                           'subject' => get_string('communitymembershipchangesubject', 'mahara', $community->name), 
-                           'message' => get_string('communitymembershipchangemessage' . $v),
-                           'url'     => get_config('wwwroot') . 'contacts/communities/view.php?id=' . $id));
+                           'subject' => get_string('groupmembershipchangesubject', 'mahara', $group->name), 
+                           'message' => get_string('groupmembershipchangemessage' . $v),
+                           'url'     => get_config('wwwroot') . 'contacts/groups/view.php?id=' . $id));
                                     
              }
          }
@@ -183,17 +182,17 @@ switch ($type) {
          json_reply(false, get_string('viewreleasedsuccess'));
          break;
      case 'watchlist':
-         if (record_exists('usr_watchlist_community', 'usr', $USER->get('id'), 'community', $community->id)) {
-             delete_records('usr_watchlist_community', 'usr', $USER->get('id'), 'community', $community->id);
-             json_reply(false, array('message' => get_string('removedcommunityfromwatchlist', 'activity'), 'member' => 0));
+         if (record_exists('usr_watchlist_group', 'usr', $USER->get('id'), 'group', $group->id)) {
+             delete_records('usr_watchlist_group', 'usr', $USER->get('id'), 'group', $group->id);
+             json_reply(false, array('message' => get_string('removedgroupfromwatchlist', 'activity'), 'member' => 0));
          }
          else {
-             $cwl = new StdClass;
-             $cwl->usr = $USER->get('id');
-             $cwl->community = $community->id;
-             $cwl->ctime = db_format_timestamp(time());
-             insert_record('usr_watchlist_community', $cwl);
-             json_reply(false, array('message' => get_string('addedcommunitytowatchlist', 'activity'), 'member' => 1));
+             $gwl = new StdClass;
+             $gwl->usr = $USER->get('id');
+             $gwl->group = $group->id;
+             $gwl->ctime = db_format_timestamp(time());
+             insert_record('usr_watchlist_group', $gwl);
+             json_reply(false, array('message' => get_string('addedgrouptowatchlist', 'activity'), 'member' => 1));
          }
              
          break;
@@ -214,7 +213,7 @@ print json_encode(array(
     'submitted' => $submitted)
 );
 
-function community_json_empty() {
+function group_json_empty() {
     global $limit, $offset, $id, $type, $pending, $submitted;
     print json_encode(array(
         'count'     => 0 ,

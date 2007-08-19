@@ -26,8 +26,7 @@
 
 define('INTERNAL', 1);
 define('ADMIN', 1);
-define('MENUITEM', 'configusers');
-define('SUBMENUITEM', 'adminnotifications');
+define('MENUITEM', 'configusers/adminnotifications');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('adminnotifications', 'admin'));
 define('SECTION_PLUGINTYPE', 'core');
@@ -36,11 +35,9 @@ define('SECTION_PAGE', 'notifications');
 
 require_once('pieforms/pieform.php');
 
-$prefix = get_config('dbprefix');
-
 $sql = 'SELECT u.*, a.activity, a.method 
-    FROM ' . $prefix . 'usr u 
-    LEFT JOIN ' . $prefix . 'usr_activity_preference a ON a.usr = u.id
+    FROM {usr} u 
+    LEFT JOIN {usr_activity_preference} a ON a.usr = u.id
     WHERE u.admin = ?';
 
 $admins  = get_records_sql_array($sql, array(1));

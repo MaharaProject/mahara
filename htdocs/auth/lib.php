@@ -347,6 +347,10 @@ function auth_setup () {
         // The session timed out
         $USER->logout();
 
+        if (defined('JSON')) {
+            json_reply('global', '', 1);
+        }
+
         // If the page the user is viewing is public, inform them that they can
         // log in again
         if (defined('PUBLIC')) {
@@ -394,8 +398,6 @@ function auth_get_auth_instances_for_institution($institution=null) {
         return array();
     }
 
-    $dbprefix = get_config('dbprefix');
-
     if (!isset($cache[$institution])) {
         // Get auth instances in order of priority
         // DO NOT CHANGE THE SORT ORDER OF THIS RESULT SET
@@ -411,8 +413,8 @@ function auth_get_auth_instances_for_institution($institution=null) {
                 a.requires_config,
                 a.requires_parent
             FROM 
-                '.$dbprefix.'auth_instance i,
-                '.$dbprefix.'auth_installed a
+                {auth_instance} i,
+                {auth_installed} a
             WHERE 
                 a.name = i.authname AND
                 i.institution = '. db_quote($institution).'
@@ -438,8 +440,6 @@ function auth_get_auth_instances_for_institution($institution=null) {
  */
 function auth_get_auth_instances_for_wwwroot($wwwroot) {
 
-    $dbprefix = get_config('dbprefix');
-
     // TODO: we just need ai.id and ai.authname... rewrite query, or
     // just drop this function
     $query = "  SELECT
@@ -447,9 +447,9 @@ function auth_get_auth_instances_for_wwwroot($wwwroot) {
                     aic.*,
                     i.*
                 FROM
-                    {$dbprefix}auth_instance ai, 
-                    {$dbprefix}auth_instance_config aic,
-                    {$dbprefix}institution i
+                    {auth_instance} ai, 
+                    {auth_instance_config} aic,
+                    {institution} i
                 WHERE
                     aic.field = 'wwwroot' AND
                     aic.value = ? AND
@@ -474,8 +474,6 @@ function auth_get_auth_instances_for_username($institution, $username) {
         // DO NOT CHANGE THE SORT ORDER OF THIS RESULT SET
         // YEAH EINSTEIN - THAT MEANS YOU!!!
 
-        $dbprefix = get_config('dbprefix');
-
         // TODO: work out why this won't accept a placeholder - had to use db_quote
         $sql ='
             SELECT DISTINCT
@@ -486,9 +484,9 @@ function auth_get_auth_instances_for_username($institution, $username) {
                 a.requires_config,
                 a.requires_parent
             FROM 
-                '.$dbprefix.'auth_instance i,
-                '.$dbprefix.'auth_installed a,
-                '.$dbprefix.'usr u
+                {auth_instance} i,
+                {auth_installed} a,
+                {usr} u
             WHERE 
                 a.name = i.authname AND
                 i.institution = ? AND
@@ -521,17 +519,15 @@ function auth_get_available_auth_types($institution=null) {
         return array();
     }
 
-    $dbprefix = get_config('dbprefix');
-
     // TODO: work out why this won't accept a placeholder - had to use db_quote
     $sql ='
         SELECT DISTINCT
             a.name,
             a.requires_config
         FROM 
-            '.$dbprefix.'auth_installed a
+            {auth_installed} a
         LEFT JOIN 
-            '.$dbprefix.'auth_instance i
+            {auth_instance} i
         ON 
             a.name = i.authname AND
             i.institution = '. db_quote($institution).'
@@ -1005,8 +1001,7 @@ function login_submit(Pieform $form, $values) {
  * Removes registration requests that were not completed in the allowed amount of time
  */
 function auth_clean_partial_registrations() {
-    $prefix = get_config('dbprefix');
-    delete_records_sql('DELETE FROM ' . $prefix . 'usr_registration
+    delete_records_sql('DELETE FROM {usr_registration}
         WHERE expiry < ?', array(db_format_timestamp(time())));
 }
 
@@ -1025,13 +1020,12 @@ function auth_clean_partial_registrations() {
  */
 function auth_handle_account_expiries() {
     // The 'expiry' flag on the usr table
-    $prefix   = get_config('dbprefix');
     $sitename = get_config('sitename');
     $wwwroot  = get_config('wwwroot');
 
     // Expiry warning messages
     if ($users = get_records_sql_array('SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, i.defaultaccountinactivewarn AS timeout
-        FROM ' . $prefix . 'usr u, ' . $prefix . 'institution i
+        FROM {usr} u, {institution} i
         WHERE u.institution = i.name
         AND ? - ' . db_format_tsfield('u.expiry', false) . ' < i.defaultaccountinactivewarn
         AND expirymailsent = 0', array(time()))) {
@@ -1050,7 +1044,7 @@ function auth_handle_account_expiries() {
 
     // Actual expired users
     if ($users = get_records_sql_array('SELECT id
-        FROM ' . $prefix . 'usr
+        FROM {usr}
         WHERE ' . db_format_tsfield('expiry', false) . ' < ?', array(time()))) {
         // Users have expired!
         foreach ($users as $user) {
@@ -1060,7 +1054,7 @@ function auth_handle_account_expiries() {
 
     // Inactivity (lastlogin is too old)
     if ($users = get_records_sql_array('SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, i.defaultaccountinactivewarn AS timeout
-        FROM ' . $prefix . 'usr u, ' . $prefix . 'institution i
+        FROM {usr} u, {institution} i
         WHERE u.institution = i.name
         AND (? - ' . db_format_tsfield('u.lastlogin', false) . ') > (i.defaultaccountinactiveexpire - i.defaultaccountinactivewarn)
         AND inactivemailsent = 0', array(time()))) {
@@ -1078,8 +1072,8 @@ function auth_handle_account_expiries() {
     
     // Actual inactive users
     if ($users = get_records_sql_array('SELECT u.id
-        FROM ' . $prefix . 'usr u
-        LEFT JOIN ' . $prefix . 'institution i ON (u.institution = i.name)
+        FROM {usr} u
+        LEFT JOIN {institution} i ON (u.institution = i.name)
         WHERE ' . db_format_tsfield('lastlogin', false) . ' < ? - i.defaultaccountinactiveexpire', array(time()))) {
         // Users have become inactive!
         foreach ($users as $user) {

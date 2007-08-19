@@ -32,9 +32,8 @@ function xmldb_artefact_internal_upgrade($oldversion=0) {
 
     if ($oldversion < 2007042500) {
         // migrate everything we had to change to  make mysql happy
-        $prefix = get_config('dbprefix');
-        execute_sql("ALTER TABLE {$prefix}artefact_internal_profile_email ALTER COLUMN email TYPE varchar(255)");
-        execute_sql("ALTER TABLE {$prefix}artefact_internal_profile_icon ALTER COLUMN filename TYPE varchar(255)");
+        execute_sql("ALTER TABLE {artefact_internal_profile_email} ALTER COLUMN email TYPE varchar(255)");
+        execute_sql("ALTER TABLE {artefact_internal_profile_icon} ALTER COLUMN filename TYPE varchar(255)");
 
     }
 

@@ -26,8 +26,7 @@
 
 define('INTERNAL', 1);
 define('ADMIN', 1);
-define('MENUITEM', 'configusers');
-define('SUBMENUITEM', 'uploadcsv');
+define('MENUITEM', 'configusers/uploadcsv');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('uploadcsv', 'admin'));
 require_once('pieforms/pieform.php');
@@ -84,8 +83,6 @@ function auth_get_auth_instances() {
         return $cache;
     }
 
-    $dbprefix = get_config('dbprefix');
-
     $sql ='
         SELECT DISTINCT
             i.id,
@@ -93,8 +90,8 @@ function auth_get_auth_instances() {
             inst.displayname,
             i.instancename
         FROM 
-            '.$dbprefix.'institution inst,
-            '.$dbprefix.'auth_instance i
+            {institution} inst,
+            {auth_instance} i
         WHERE 
             i.institution = inst.name
         ORDER BY

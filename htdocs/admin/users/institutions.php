@@ -25,8 +25,7 @@
  */
 define('INTERNAL', 1);
 define('ADMIN', 1);
-define('MENUITEM', 'configusers');
-define('SUBMENUITEM', 'institutions');
+define('MENUITEM', 'configusers/institutions');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('institutions', 'admin'));
 define('SECTION_PLUGINTYPE', 'core');
@@ -225,10 +224,9 @@ if ($institution || $add) {
 }
 else {
     // Get a list of institutions
-    $prefix = get_config('dbprefix');
     $institutions = get_records_sql_array('SELECT i.name, i.displayname, i.registerallowed, COUNT(u.id) AS hasmembers
-        FROM ' . $prefix . 'institution i
-        LEFT OUTER JOIN ' . $prefix . 'usr u ON (u.institution = i.name)
+        FROM {institution} i
+        LEFT OUTER JOIN {usr} u ON (u.institution = i.name)
         GROUP BY 1, 2, 3
         ORDER BY i.name', array());
     $smarty->assign('institutions', $institutions);

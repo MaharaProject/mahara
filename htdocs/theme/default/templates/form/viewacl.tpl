@@ -4,8 +4,7 @@
     <div>
         {{str tag=search}} <input type="text" name="search" id="search">
         <select name="type" id="type">
-            <option value="group">{{str tag=mygroups}}</option>
-            <option value="community">{{str tag=communities}}</option>
+            <option value="group">{{str tag=groups}}</option>
             <option value="user" selected="selected">{{str tag=users}}</option>
         </select>
         <button id="dosearch" type="button">{{str tag=go}}</button>
@@ -200,7 +199,7 @@ searchTable.rowfunction = function(rowdata, rownumber, globaldata) {
     if (rowdata.type == 'user') {
         profileIcon = IMG({'src': config.wwwroot + 'thumb.php?type=profileicon&size=40x40&id=' + rowdata.id});
     }
-    else if (rowdata.type == 'community') {
+    else if (rowdata.type == 'group') {
         tutorAddButton = BUTTON({'type': 'button', 'class': 'button'}, '{{str tag=addtutors section=view}}');
         connect(tutorAddButton, 'onclick', function() {
             rowdata.tutoronly = 1;

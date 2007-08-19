@@ -41,7 +41,6 @@ if (!can_view_view($view)) {
     throw new AccessDeniedException();
 }
 
-$prefix = get_config('dbprefix');
 $userid = $USER->get('id');
 
 if ($artefact) {
@@ -51,13 +50,13 @@ if ($artefact) {
     $count = count_records_sql('
         SELECT
             COUNT(*)
-        FROM ' . $prefix . $table . '
+        FROM {artefact_feedback}
         WHERE view = ' . $view . ' AND artefact = ' . $artefact
             . ($public ? ' AND (public = 1 OR author = ' . $userid . ')' : ''));
     $feedback = get_records_sql_array('
         SELECT 
             id, author, ctime, message, public
-        FROM ' . $prefix . $table . '
+        FROM {artefact_feedback}
         WHERE view = ' . $view . ' AND artefact = ' . $artefact
             . ($public ? ' AND (public = 1 OR author = ' . $userid . ')' : '') . '
         ORDER BY id DESC', '', $offset, $limit);
@@ -70,14 +69,14 @@ else {
     $count = count_records_sql('
         SELECT
             COUNT(*)
-        FROM ' . $prefix . $table . '
+        FROM {view_feedback}
         WHERE view = ' . $view 
             . ($public ? ' AND (public = 1 OR author = ' . $userid . ')' : ''));
     $feedback = get_records_sql_array('
         SELECT
             f.id, f.author, f.ctime, f.message, f.public, f.attachment, a.title
-        FROM ' . $prefix . $table . ' f
-        LEFT OUTER JOIN ' . $prefix . 'artefact a ON f.attachment = a.id
+        FROM {view_feedback}
+        LEFT OUTER JOIN {artefact} a ON f.attachment = a.id
         WHERE view = ' . $view 
             . ($public ? ' AND (f.public = 1 OR f.author = ' . $userid . ')' : '') . '
         ORDER BY id DESC', '', $offset, $limit);

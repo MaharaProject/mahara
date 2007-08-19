@@ -132,16 +132,15 @@ function fetch_user_image($username) {
         throw new XmlrpcServerException('Unknown error');
     }
 
-    $dbprefix      = get_config('dbprefix');
     $authinstances = auth_get_auth_instances_for_institution($institution);
     $candidates    = array();
 
     $sql = 'SElECT
                 ai.*
             FROM
-                '.$dbprefix.'auth_instance ai,
-                '.$dbprefix.'auth_instance ai2,
-                '.$dbprefix.'auth_instance_config aic
+                {auth_instance} ai,
+                {auth_instance} ai2,
+                {auth_instance_config} aic
             WHERE
                 ai.id = ? AND
                 ai.institution = ? AND
@@ -274,8 +273,6 @@ function get_service_providers($instance) {
         return $cache[$instance];
     }
 
-    $dbprefix = get_config('dbprefix');
-
     $query = '
         SELECT
             h.name,
@@ -283,11 +280,11 @@ function get_service_providers($instance) {
             h.wwwroot,
             aic.instance
         FROM
-            '.$dbprefix.'auth_instance_config aic,
-            '.$dbprefix.'auth_instance_config aic2,
-            '.$dbprefix.'auth_instance_config aic3,
-            '.$dbprefix.'host h,
-            '.$dbprefix.'application a
+            {auth_instance_config} aic,
+            {auth_instance_config} aic2,
+            {auth_instance_config} aic3,
+            {host} h,
+            {application} a
         WHERE
           ((aic.value = 1 AND
             aic.field = \'theyautocreateusers\' ) OR

@@ -34,7 +34,7 @@ json_headers();
 $data = new StdClass;
 
 $data->id          = param_integer('viewid');
-$data->submittedto = param_integer('communityid');
+$data->submittedto = param_integer('groupid');
 
 if (!update_record('view',$data,'id')) {
     json_reply('local', get_string('submitviewfailed'));

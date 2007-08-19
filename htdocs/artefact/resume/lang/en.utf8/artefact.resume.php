@@ -76,6 +76,5 @@ $string['workskill'] = 'Work Skills';
 $string['goalandskillsaved'] = 'Saved successfully';
 $string['resume'] = 'Resumé';
 $string['confirmeditprofile'] = 'If you continue to edit your profile now, you will lose any unsaved information in this area';
-$string['profilegotoresume'] = 'Edit My Resumé';
 $string['current'] = 'Current';
 ?>

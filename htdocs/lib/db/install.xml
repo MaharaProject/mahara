@@ -524,32 +524,6 @@
             </KEYS>
         </TABLE>
         <!-- user related tables -->
-        <TABLE NAME="usr_group"> 
-            <FIELDS>
-                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
-                <FIELD NAME="name" TYPE="text" NOTNULL="true" />
-                <FIELD NAME="owner" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="description" TYPE="text" NOTNULL="false" />
-                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
-                <FIELD NAME="mtime" TYPE="datetime" NOTNULL="true" />
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
-                <KEY NAME="ownerfk" TYPE="foreign" FIELDS="owner" REFTABLE="usr" REFFIELDS="id" />
-            </KEYS>
-        </TABLE>
-        <TABLE NAME="usr_group_member">
-            <FIELDS>
-                <FIELD NAME="grp" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="member" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="grp,member" />
-                <KEY NAME="grpfk" TYPE="foreign" FIELDS="grp" REFTABLE="usr_group" REFFIELDS="id" />
-                <KEY NAME="memberfk" TYPE="foreign" FIELDS="member" REFTABLE="usr" REFFIELDS="id" />
-            </KEYS>
-        </TABLE>
         <TABLE NAME="usr_account_preference">
             <FIELDS>
                 <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="true" />
@@ -784,18 +758,6 @@
             <KEYS>
                 <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id" />
                 <KEY NAME="groupfk" TYPE="foreign" FIELDS="group" REFTABLE="group" REFFIELDS="id" />
-            </KEYS>
-        </TABLE>
-        <TABLE NAME="view_access_group">
-            <FIELDS>
-                <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="grp" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="startdate" TYPE="datetime" NOTNULL="false" />
-                <FIELD NAME="stopdate" TYPE="datetime" NOTNULL="false" />
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id" />
-                <KEY NAME="grpfk" TYPE="foreign" FIELDS="grp" REFTABLE="usr_group" REFFIELDS="id" />
             </KEYS>
         </TABLE>
         <TABLE NAME="view_access_usr">

@@ -27,13 +27,13 @@
 		{/foreach}
 			</ul></td></tr></tbody></table>
 		{/if}
-		{if $USERCOMMUNITIES}
-			<table id="userview_communities"><thead><tr><th colspan=2>
-			{str section=mahara tag=communities}
+		{if $USERGROUPS}
+			<table id="userview_groups"><thead><tr><th colspan=2>
+			{str section=mahara tag=groups}
 			</td></tr></thead>
 			<tbody>
-		{foreach from=$USERCOMMUNITIES item=item}
-                        <tr><td><a href="{$WWWROOT}contacts/communities/view.php?id={$item->id}">{$item->name}</a></td><td>{$item->type}</td></tr>
+		{foreach from=$USERGROUPS item=item}
+                        <tr><td><a href="{$WWWROOT}contacts/groups/view.php?id={$item->id}">{$item->name}</a></td><td>{$item->type}</td></tr>
 		{/foreach}
 			</tbody></table>
 		{/if}

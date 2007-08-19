@@ -18,81 +18,57 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Martyn Smith <martyn@catalyst.net.nz>
+ * @author     Penny Leach <penny@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'mycontacts');
-define('SUBMENUITEM', 'mygroups');
+define('MENUITEM', 'groups/groupsimin');
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'contacts');
 define('SECTION_PAGE', 'groups');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-define('TITLE', get_string('mygroups'));
+define('TITLE', get_string('groupsimin'));
 
-$enc_edit = json_encode(get_string('edit'));
-$enc_delete = json_encode(get_string('delete'));
-$enc_confirmdelete = json_encode(get_string('confirmdeletegroup'));
-$enc_confirmdelete_hasviews = json_encode(get_string('confirmdeletegrouphasviews'));
+$viewurl = get_config('wwwroot') . 'contacts/groups/view.php?id=';
+$leftsuccess = get_string('leftgroup');
+$leftfailed = get_string('leftgroupfailed');
 
-$javascript = <<<JAVASCRIPT
+$javascript = <<<EOF
 var grouplist = new TableRenderer(
     'grouplist',
-    'index.json.php', 
+    'getgroups.json.php',
     [
-        'name',
-        'count',
-        function(r) {
-            var editLink = BUTTON({'type': 'button', 'class': 'button'}, {$enc_edit});
-            connect(editLink, 'onclick', function (e) {
-                e.stop();
-                window.location.href = 'edit.php?id=' + r.id;
-            });
-
-            var deleteLink = BUTTON({'type':'button', 'class': 'button'}, {$enc_delete});
-            connect(deleteLink, 'onclick', function (e) {
-                e.stop();
-
-                var message = (r.hasviews > 0) ?
-                    {$enc_confirmdelete_hasviews} :
-                    {$enc_confirmdelete};
-
-                if (!confirm(message)) {
-                    return;
-                }
-                sendjsonrequest(
-                    'index.json.php',
-                    {
-                        'action': 'delete',
-                        'id': r.id
-                    },
-                    'POST',
-                    function (data) {
-                        grouplist.doupdate();
-                    }
-                );
-            });
-
-            return TD(
-                null,
-                editLink,
-                ' ',
-                deleteLink
-            )
-        }
-    ]
+     function (r) {
+         return TD(null, A({'href': '{$viewurl}' + r.id}, r.name));
+     },
+     function (r) {
+         if (r.jointype == 'controlled') {
+             return TD(null);
+         }
+         return TD(null, A({'href': '', 'onclick': 'leaveGroup(' + r.id + '); return false;'}, '[X]'));
+     }
+     ]
 );
 
 grouplist.updateOnLoad();
 
-JAVASCRIPT;
+function leaveGroup(id) {
+    var pd = {'leave': id}
+    sendjsonrequest('groupleave.json.php', pd, 'GET', function (data) {
+        if (!data.error) {
+            grouplist.doupdate();
+        }
+    }, function () {
+        watchlist.doupdate();
+    });
+}
 
+EOF;
 $smarty = smarty(array('tablerenderer'));
-
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->display('contacts/groups/index.tpl');
 

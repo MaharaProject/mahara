@@ -77,6 +77,9 @@ function pieform_renderer_table(Pieform $form, $builtelement, $rawelement) {
         else {
             $result .= '<label for="' . $formname . '_' . $rawelement['id'] . '">' . Pieform::hsc($rawelement['title']) . '</label>';
         }
+        if ($form->get_property('requiredmarker') && !empty($rawelement['rules']['required'])) {
+            $result .= ' <span class="requiredmarker">*</span>';
+        }
     }
     $result .= "</th>\n\t\t<td>";
     $result .= $builtelement;

@@ -45,9 +45,9 @@ $limit = param_integer('limit', 20);
 $offset = param_integer('offset', 0);
 
 switch($type) {
-    case 'community':
-        $data = search_community($query, $limit, $offset, true);
-        $data['type'] = 'community';
+    case 'group':
+        $data = search_group($query, $limit, $offset, true);
+        $data['type'] = 'group';
         break;
     default:
         $data = search_user($query, $limit, $offset);

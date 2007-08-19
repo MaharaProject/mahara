@@ -28,8 +28,7 @@
 // here might need to be fixed there too.
 define('INTERNAL', 1);
 define('ADMIN', 1);
-define('MENUITEM', 'configusers');
-define('SUBMENUITEM', 'adminusers');
+define('MENUITEM', 'configusers/adminusers');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('adminusers', 'admin'));
 define('SECTION_PLUGINTYPE', 'core');
@@ -65,18 +64,17 @@ $form = array(
 
 function adminusers_submit(Pieform $form, $values) {
     global $SESSION;
-    $table = get_config('dbprefix') . 'usr';
     
     db_begin();
-    execute_sql('UPDATE ' . $table . '
+    execute_sql('UPDATE {usr}
         SET admin = 0
         WHERE admin = 1');
-    execute_sql('UPDATE ' . $table . '
+    execute_sql('UPDATE {usr}
         SET admin = 1
         WHERE id IN (' . join(',', $values['users']) . ')');
-    execute_sql('DELETE FROM ' . get_config('dbprefix') . 'usr_activity_preference 
-        WHERE activity IN (SELECT name FROM ' . get_config('dbprefix') . 'activity_type 
-            WHERE admin = 1 )
+    execute_sql('DELETE FROM {usr_activity_preference}
+        WHERE activity IN (SELECT name FROM {activity_type}
+            WHERE admin = 1)
         AND usr NOT IN (' . join(',', $values['users']) . ')');
     db_commit();
     $SESSION->add_ok_msg(get_string('adminusersupdated', 'admin'));

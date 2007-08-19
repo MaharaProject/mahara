@@ -90,14 +90,12 @@ div.grippie {
 
 #profileform #profileform_introduction_container table,
 #editsitepage #editsitepage_pagetext_container table,
-.maincontent #editgroup #editgroup_description_container table,
-.maincontent #creategroup #creategroup_description_container table,
 .maincontent #createview1 #createview1_description_container table,
 .maincontent #newblog #newblog_description_container table,
 .maincontent #editblog #editblog_description_container table,
 .maincontent #editpost #editpost_description_container table,
-.maincontent #editcommunity #editcommunity_description_container table,
-.maincontent #createcommunity #createcommunity_description_container table {
+.maincontent #editgroup #editgroup_description_container table,
+.maincontent #creategroup #creategroup_description_container table {
 	border: 1px solid #dedede;
 	margin: 0px;
 }
@@ -133,13 +131,6 @@ label {
 	font-weight: bold;
 	padding: 0;
 	margin: 0;
-}
-.leftrightlink {
-    margin-top: .5em;
-}
-.leftrightlink a {
-	font-weight: bold;
-	color: #e66d01; 
 }
 tr.required label, 
 tr.required th { 
@@ -753,12 +744,10 @@ p {
 .maincontent #editpost table,
 .maincontent #editblog table,
 .maincontent #draftpost table,
-.maincontent #editgroup table,
-.maincontent #creategroup table,
 .maincontent #editviewaccess table,
 .maincontent #register table,
-.maincontent #editcommunity table,
-.maincontent #createcommunity table,
+.maincontent #editgroup table,
+.maincontent #creategroup table,
 .maincontent #upload table,
 #change_password table,
 .maincontent #resumemainform table,
@@ -815,13 +804,11 @@ p {
 /* No need padding td */
 .maincontent #editpost td,
 .maincontent #editblog td,
-.maincontent #creategroup td,
 .maincontent #newblog td,
-.maincontent #editgroup td,
 .maincontent #createview1 td,
 .maincontent #accountprefs td,
-.maincontent #editcommunity td,
-.maincontent #createcommunity td,
+.maincontent #editgroup td,
+.maincontent #creategroup td,
 .maincontent #profileform td,
 .maincontent #contactus td {
 	padding: 0;
@@ -963,10 +950,6 @@ table#installer {
 }
 .maincontent #email_list .unvalidated {
 	font-size: 9px;
-}
-.maincontent .leftrightlink {
-	padding: 5px 0 5px 0;
-	margin: -3px 0 0 0;
 }
 .maincontent #editprofileicons {
 	background: url(../images/btn_editprofileicons.gif) no-repeat;
@@ -1146,61 +1129,16 @@ table#installer {
 	padding: 1px 2px 1px 2px;
 }
 
-/* My Groups styles */
-.maincontent #mygroups #addnewgroupdiv {
+/* Groups I'm In and Groups I Own styles */
+.maincontent .addgrouplink {
 	margin: 10px 0 10px 0;
 	text-align: right;
 }
-.maincontent #mygroups #addnewgroup a,
-.maincontent #mygroups #addnewgroup a:link,
-.maincontent #mygroups #addnewgroup a:active,
-.maincontent #mygroups #addnewgroup a:visited,
-.maincontent #mygroups #addnewgroup a:hover {
-	background: url(../images/btn_add_long.gif) no-repeat;
-	width: 120px;
-	height: 24px;
-	color: #FFFFFF;
-	font-weight: bold;
-	padding: 4px 43px 7px 43px;
-	text-decoration: none;
-}
-.maincontent #creategroup #creategroup_description_header th,
-.maincontent #creategroup #creategroup_members_header th,
-.maincontent #editgroup #editgroup_description_header th,
-.maincontent #editgroup #editgroup_members_header th {
-	padding: 15px 0 0 0;
-}
-.maincontent #creategroup #creategroup_members_container table,
-.maincontent #editgroup #editgroup_members_container table {
-	width: 495px;
-}
-.maincontent #creategroup table tr td table,
-.maincontent #editgroup table tr td table {
-	margin: 0;
-	padding: 0;
-	background: #dedede;
-}
-.maincontent #creategroup table tr td table td,
-.maincontent #editgroup table tr td table td {
-	padding: 0 5px 5px 5px;
-	text-align: center;
-}
-.maincontent #creategroup table table label,
-.maincontent #editgroup table table label {
-	margin: 0 5px 0 0;
-}
-
-
-/* My Communities and My Owned Communities styles */
-.maincontent .addcommunitylink {
-	margin: 10px 0 10px 0;
-	text-align: right;
-}
-.maincontent .addcommunitylink a,
-.maincontent .addcommunitylink a:link,
-.maincontent .addcommunitylink a:active,
-.maincontent .addcommunitylink a:visited,
-.maincontent .addcommunitylink a:hover {
+.maincontent .addgrouplink a,
+.maincontent .addgrouplink a:link,
+.maincontent .addgrouplink a:active,
+.maincontent .addgrouplink a:visited,
+.maincontent .addgrouplink a:hover {
 	color: #FFFFFF;
 	font-weight: bold;
 	background: url(../images/btn_add_long.gif) no-repeat;
@@ -1210,7 +1148,7 @@ table#installer {
 	text-decoration: none;
 }
 .maincontent #memberlist tbody td,
-.maincontent #communitylist tbody td {
+.maincontent #grouplist tbody td {
 	padding: 2px 5px;
 }
 #userview #userview_profile th {

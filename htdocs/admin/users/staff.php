@@ -28,8 +28,7 @@
 // here might need to be fixed there too.
 define('INTERNAL', 1);
 define('ADMIN', 1);
-define('MENUITEM', 'configusers');
-define('SUBMENUITEM', 'staffusers');
+define('MENUITEM', 'configusers/staffusers');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('staffusers', 'admin'));
 define('SECTION_PLUGINTYPE', 'core');
@@ -61,14 +60,13 @@ $form = array(
 
 function staffusers_submit(Pieform $form, $values) {
     global $SESSION;
-    $table = get_config('dbprefix') . 'usr';
     
     db_begin();
-    execute_sql('UPDATE ' . $table . '
+    execute_sql('UPDATE {usr}
         SET staff = 0
         WHERE staff = 1');
     if ($values['users']) {
-        execute_sql('UPDATE ' . $table . '
+        execute_sql('UPDATE {usr}
             SET staff = 1
             WHERE id IN (' . join(',', $values['users']) . ')');
     }

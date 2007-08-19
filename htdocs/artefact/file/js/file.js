@@ -210,7 +210,7 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
             hideElement($(formid).replace);
             $(formid).name.value = '';
             $(formid).description.value = '';
-            swapDOM($(formid).tags.parentNode, create_tags_control('tags'));
+            swapDOM($(formid).tags.parentNode.parentNode.parentNode.parentNode, create_tags_control('tags'));
             $(formid+'message').innerHTML = '';
             hideElement(formid);
         };
@@ -232,7 +232,6 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
         var namehelp = SPAN(null); namehelp.innerHTML = get_string('name.help');
         var deschelp = SPAN(null); deschelp.innerHTML = get_string('folderdescription.help');
         var cancelhelp = SPAN(null); cancelhelp.innerHTML = get_string('cancelfolder.help');
-        var tagshelp = SPAN(null); tagshelp.innerHTML = get_string('tags.help');
         return FORM({'method':'post', 'id':formid, 'style':'display: none;'},
                 TABLE(null,
                  TBODY(null,
@@ -245,8 +244,7 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
                   TR(null,TH(null,LABEL(get_string('description'))),
                      TD(null,INPUT({'type':'text','class':'text','name':'description',
                                     'value':'','size':40}), deschelp)),
-                  TR(null, TH(null, LABEL(null, get_string('tags'))),
-                     TD(null, create_tags_control('tags'), tagshelp)),
+                  TR(null, TH(null, LABEL(null, get_string('tags'))), TD({'colspan':'2'}, create_tags_control('tags'))),
                   TR(null,TD({'colspan':2},SPAN({'id':formid+'message'}))),
                   TR(null,TD({'colspan':2},createbutton,replacebutton,cancelbutton,cancelhelp)))));
     };
@@ -394,7 +392,7 @@ function FileUploader(element, uploadscript, statevars, foldername, folderid, up
             self.form.userfile.value = '';
             self.form.title.value = '';
             self.form.description.value = '';
-            swapDOM(self.form.tags.parentNode, create_tags_control('tags'));
+            swapDOM(self.form.tags.parentNode.parentNode.parentNode.parentNode, create_tags_control('tags'));
             hideElement(self.form.replace);
             hideElement(self.form);
             showElement(self.openbutton);
@@ -404,7 +402,6 @@ function FileUploader(element, uploadscript, statevars, foldername, folderid, up
         var titlehelp = SPAN(null); titlehelp.innerHTML = get_string('title.help');
         var deschelp = SPAN(null); deschelp.innerHTML = get_string('description.help');
         var cancelhelp = SPAN(null); cancelhelp.innerHTML = get_string('cancel.help');
-        var tagshelp = SPAN(null); tagshelp.innerHTML = get_string('tags.help');
         var destinationattributes = (self.folderid === false) ? {'style':'display: none;'} : null;
         appendChildNodes(form,
             TABLE(null,
@@ -423,7 +420,7 @@ function FileUploader(element, uploadscript, statevars, foldername, folderid, up
              TR(null, TH(null, LABEL(null, get_string('description'))),
                 TD(null, INPUT({'type':'text', 'class':'text', 'name':'description', 'size':40}), deschelp)),
              TR(null, TH(null, LABEL(null, get_string('tags'))),
-                TD(null, create_tags_control('tags'), tagshelp)),
+                TD({'colspan': 2}, create_tags_control('tags'))),
              TR(null,TD({'colspan':2, 'id':'uploadformmessage'})),
              TR(null,TD({'colspan':2},
               INPUT({'name':'upload','type':'button','class':'button',

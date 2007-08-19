@@ -25,8 +25,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'account');
-define('SUBMENUITEM', 'watchlist');
+define('MENUITEM', 'settings/mywatchlist');
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'account');
 define('SECTION_PAGE', 'watchlist');
@@ -34,7 +33,7 @@ define('SECTION_PAGE', 'watchlist');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
 $viewstring = get_string('views', 'activity');
-$communitystring = get_string('communities', 'activity');
+$groupstring = get_string('groups', 'activity');
 $artefactstring = get_string('artefacts', 'activity');
 $monitoredstring = get_string('monitored', 'activity');
 $allusersstring = get_string('allusers');
@@ -50,8 +49,8 @@ var watchlist = new TableRenderer(
     [
         function(r, d) { 
             var url = '';
-            if (d.type == 'communities') {
-                url = '{$wwwroot}/contacts/communities/view.php?id=' + r.id;
+            if (d.type == 'groups') {
+                url = '{$wwwroot}/contacts/groups/view.php?id=' + r.id;
             }
             else if (d.type == 'views') {
                 url = '{$wwwroot}/view/view.php?view=' + r.id;
@@ -79,9 +78,9 @@ watchlist.updateOnLoad();
 watchlist.rowfunction = function(r, n) { return TR({'id': r.id, 'class': 'view r' + (n % 2)}); }
 
 function changeTitle(title) {
-    var titles = { 'views': '{$viewstring}', 'communities': '{$communitystring}', 'artefacts': '{$artefactstring}' };
+    var titles = { 'views': '{$viewstring}', 'groups': '{$groupstring}', 'artefacts': '{$artefactstring}' };
     $('typeheader').innerHTML  = '{$monitoredstring} ' + titles[title];
-    if (title != 'communities') {
+    if (title != 'groups') {
         $('typeandchildren').innerHTML = '{$andchildren}';
     }
     else {
@@ -130,7 +129,7 @@ function statusChange() {
     }
     changeTitle(typevalue); 
     $('messagediv').innerHTML = '';
-    if (typevalue == 'communities') {
+    if (typevalue == 'groups') {
         $('user').options.length = 0;
         $('user').disabled = true;
     }
@@ -159,11 +158,10 @@ function statusChange() {
 
 JAVASCRIPT;
 
-$prefix = get_config('dbprefix');
 $sql = 'SELECT DISTINCT u.* 
-        FROM ' . $prefix . 'usr u
-        JOIN ' . $prefix . 'view v ON v.owner = u.id 
-        JOIN ' . $prefix . 'usr_watchlist_view w ON w.view = v.id
+        FROM {usr} u
+        JOIN {view} v ON v.owner = u.id 
+        JOIN {usr_watchlist_view} w ON w.view = v.id
         WHERE w.usr = ?';
 
 if (!$viewusers = get_records_sql_array($sql, array($USER->get('id')))) {

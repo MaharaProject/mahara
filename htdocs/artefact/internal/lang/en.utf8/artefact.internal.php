@@ -26,7 +26,7 @@
 
 defined('INTERNAL') || die();
 
-$string['myprofile'] = 'My Profile';
+$string['profile'] = 'Profile';
 $string['myfiles'] = 'My Files';
 
 $string['mandatory'] = 'Mandatory';
@@ -64,7 +64,6 @@ $string['occupation'] = 'Occupation';
 $string['industry'] = 'Industry';
 
 // Field names for view user and search user display
-$string['profile'] = 'Profile';
 $string['name'] = 'Name';
 $string['principalemailaddress'] = 'Primary email';
 $string['emailaddress'] = 'Alternative email';
@@ -92,9 +91,7 @@ $string['unvalidatedemailalreadytaken'] = 'The e-mail address you are trying to 
 $string['emailingfailed'] = 'Profile saved, but emails were not sent to: %s';
 
 // Profile icons
-$string['backtoeditprofile']  = 'Back to Edit Profile';
 $string['editprofile']  = 'Edit Profile';
-$string['editprofileicons'] = 'Edit Profile Icons';
 $string['profileicons'] = 'Profile Icons';
 $string['default'] = 'Default';
 $string['profileicon'] = 'Profile Icon';
