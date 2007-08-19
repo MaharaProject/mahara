@@ -54,7 +54,6 @@ $form = array(
            'rules' => array(
                 'required' => true
             ),
-            'help' => true
         ),
         'submit' => array(
             'type' => 'submit',
