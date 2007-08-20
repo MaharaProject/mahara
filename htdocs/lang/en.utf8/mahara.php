@@ -234,7 +234,6 @@ $string['email']                    = 'Email';
 $string['subject']                  = 'Subject';
 $string['message']                  = 'Message';
 $string['messagesent']              = 'Your message has been sent';
-$string['sendmessage']              = 'Send message';
 $string['nosendernamefound']        = 'No sender name was submitted';
 $string['emailnotsent']             = 'Failed to send contact email. Error message: "%s"';
 
@@ -518,13 +517,26 @@ $string['currentfriends'] = 'Current Friends';
 $string['pendingfriends'] = 'Pending friends';
 $string['backtofriendslist'] = 'Back to Friends List';
 $string['findnewfriends'] = 'Find New Friends';
+$string['seeallviews']    = 'See all %s views...';
+$string['noviewstosee']   = 'None that you can see :(';
+$string['whymakemeyourfriend'] = 'This is why you should make me your friend:';
+$string['approverequest'] = 'Approve Request!';
+$string['denyrequest']    = 'Deny Request';
+$string['pending']        = 'pending';
+$string['trysearchingforfriends'] = 'Try %ssearching for your friends%s to grow your network!';
+$string['nobodyawaitsfriendapproval'] = 'Nobody is awaiting your approval to become your friend';
+$string['sendfriendrequest'] = 'Send Friend Request!';
+$string['addtomyfriends'] = 'Add to My Friends!';
+$string['friendshiprequested'] = 'Friendship requested!';
+$string['existingfriend'] = 'existing friend';
+$string['nosearchresultsfound'] = 'No search results found :(';
 
 $string['friendlistfailure'] = 'Failed to modify your friends list';
 $string['userdoesntwantfriends'] = 'This user doesn\'t want any new friends';
 
 //messaging between users
 $string['messagebody'] = 'Send message';
-$string['sendmessage'] = 'Send';
+$string['sendmessage'] = 'Send message';
 $string['messagesent'] = 'Message sent!';
 $string['messagenotsent'] = 'Failed to send message';
 $string['newusermessage'] = 'New message from %s';
