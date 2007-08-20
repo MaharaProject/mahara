@@ -42,8 +42,8 @@ function sendFriendRequest(id, link) {
 function friendRequestWithMessage(id, link, type, tableRenderer) {
     // If the reason box is already open for this friend and the disallow link 
     // is clicked again, make it act like a toggle and close the box
-    var currentContainer = $('dc' + id);
-    if (currentContainer && hasElementClass(currentContainer, type + '_container')) {
+    var currentContainer = $('dc' + id + '_' + type);
+    if (currentContainer) {
         toggleElementClass('hidden', currentContainer);
         return false;
     }
@@ -66,14 +66,14 @@ function friendRequestWithMessage(id, link, type, tableRenderer) {
         
     var cancelButton = INPUT({'type': 'submit', 'class': 'submit', 'value': 'Cancel'});
     connect(cancelButton, 'onclick', function(e) {
-        toggleElementClass('hidden', 'dc' + id);
+        toggleElementClass('hidden', 'dc' + id + '_' + type);
         e.stop();
     });
 
     var container = $('friendinfo_' + id);
     appendChildNodes(container,
-        DIV({'id': 'dc' + id, 'class': type + '_container'},
-            TABLE({'style': 'border:0;'},
+        DIV({'id': 'dc' + id + '_' + type},
+            TABLE(null,
                 TR(null,
                     TH(null, type)
                 ),
