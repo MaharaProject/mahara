@@ -576,6 +576,40 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2007082100) {
+        // Fix two mistakes in the 0.8 upgrade:
+        //
+        // 1) Only the internal institituion had an internal auth instance added for it. This should have meant that all users not in the internal institution were locked out, but...
+        // 2) All users were assigned to be in the internal auth instance, regardless of what institution they were in
+
+        $users = get_records_array('usr', '', '', '', 'id, username, institution, authinstance');
+        if ($users) {
+            $authinstances = get_records_assoc('auth_instance', '', '', '', 'institution, id');
+            foreach (array_keys($authinstances) as $key) {
+                $authinstances[$key] = $authinstances[$key]->id;
+            }
+            foreach ($users as $user) {
+                if (!isset($authinstances[$user->institution])) {
+                    // There does not seem to be an authinstance set up for 
+                    // this user's institution. We should fix that now.
+                    $authinstance = (object)array(
+                        'instancename' => 'internal',
+                        'priority'     => 1,
+                        'institution' => $user->institution,
+                        'authname'     => 'internal'
+                    );
+                    
+                    $authinstances[$user->institution] = insert_record('auth_instance', $authinstance, 'id', true);
+                }
+                if ($user->authinstance != $authinstances[$user->institution]) {
+                    // Fix the user's authinstance
+                    $user->authinstance = $authinstances[$user->institution];
+                    update_record('usr', $user, 'id');
+                }
+            }
+        }
+    }
+
     return $status;
 
 }
