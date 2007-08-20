@@ -382,6 +382,7 @@ function jsstrings() {
                 'userdoesntwantfriends',
                 'existingfriend',
                 'nosearchresultsfound',
+                'reason',
             ),
         ),
     );
