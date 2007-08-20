@@ -25,21 +25,28 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'mycontacts');
-define('SUBMENUITEM', 'mygroups');
+define('MENUITEM', 'groups/groupsiown');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('pieforms/pieform.php');
 define('TITLE', get_string('editgroup'));
 
-$id = param_integer('id',null);
+$id = param_integer('id');
 
-$group_data = get_record('usr_group', 'id', $id, 'owner', $USER->get('id'));
+$group_data = get_record('group', 'id', $id, 'owner', $USER->get('id'));
+
 if (!$group_data) {
     $SESSION->add_error_msg(get_string('canteditdontown'));
-    redirect('/contacts/groups/');
+    redirect('/contacts/groups/owned.php');
 }
 
-$group_members = get_column('usr_group_member', 'member', 'grp', $group_data->id);
+$joinoptions = array(
+    'invite'     => get_string('membershiptype.invite'),
+    'request'    => get_string('membershiptype.request'),
+    'open'       => get_string('membershiptype.open'),
+);
+if ($USER->get('admin') || $USER->get('staff')) {
+    $joinoptions['controlled'] = get_string('membershiptype.controlled');
+}
 
 $editgroup = pieform(array(
     'name'     => 'editgroup',
@@ -50,9 +57,8 @@ $editgroup = pieform(array(
         'name' => array(
             'type'         => 'text',
             'title'        => get_string('groupname'),
-            'rules'        => array( 'required' => true ),
+            'rules'        => array( 'required' => true, 'maxlength' => 128 ),
             'defaultvalue' => $group_data->name,
-            'help'         => true,
         ),
         'description' => array(
             'type'         => 'wysiwyg',
@@ -60,15 +66,13 @@ $editgroup = pieform(array(
             'rows'         => 10,
             'cols'         => 70,
             'defaultvalue' => $group_data->description,
-            'help'         => true,
         ),
-        'members'     => array(
-            'type'         => 'userlist',
-            'title'        => get_string('groupmembers'),
-            'rules'        => array( 'required' => true ),
-            'defaultvalue' => $group_members,
+        'membershiptype' => array(
+            'type'         => 'select',
+            'title'        => get_string('membershiptype'),
+            'options'      => $joinoptions,
+            'defaultvalue' => $group_data->jointype,
             'help'         => true,
-            'filter'       => false,
         ),
         'id'          => array(
             'type'         => 'hidden',
@@ -85,23 +89,15 @@ function editgroup_validate(Pieform $form, $values) {
     global $USER;
     global $SESSION;
 
-    $gid = get_field('usr_group', 'id', 'owner', $USER->get('id'), 'name', $values['name']);
+    $cid = get_field('group', 'id', 'owner', $USER->get('id'), 'name', $values['name']);
 
-    if ($gid && $gid != $values['id']) {
+    if ($cid && $cid != $values['id']) {
         $form->set_error('name', get_string('groupalreadyexists'));
-    }
-
-    // check owner
-    $id = get_field('usr_group', 'id', 'id', $values['id'], 'owner', $USER->get('id'));
-
-    if (!$id) {
-        $SESSION->add_error_msg(get_string('canteditdontown'));
-        redirect('/contacts/groups/');
     }
 }
 
 function editgroup_cancel_submit() {
-    redirect('/contacts/groups/');
+    redirect('/contacts/groups/owned.php');
 }
 
 function editgroup_submit(Pieform $form, $values) {
@@ -113,35 +109,22 @@ function editgroup_submit(Pieform $form, $values) {
     $now = db_format_timestamp(time());
 
     update_record(
-        'usr_group',
+        'group',
         (object) array(
-            'id'          => $values['id'],
-            'name'        => $values['name'],
-            'owner'       => $USER->get('id'),
-            'description' => $values['description'],
-            'mtime' => $now,
+            'id'             => $values['id'],
+            'name'           => $values['name'],
+            'description'    => $values['description'],
+            'jointype'       => $values['membershiptype'],
+            'mtime'          => $now,
         ),
         'id'
     );
-
-    delete_records('usr_group_member', 'grp', $values['id']);
-
-    foreach ($values['members'] as $member) {
-        insert_record(
-            'usr_group_member',
-            (object) array(
-                'grp'   => $values['id'],
-                'member'=> $member,
-                'ctime' => $now,
-            )
-        );
-    }
 
     $SESSION->add_ok_msg(get_string('groupsaved'));
 
     db_commit();
 
-    redirect('/contacts/groups/');
+    redirect('/contacts/groups/owned.php');
 }
 
 $smarty = smarty();

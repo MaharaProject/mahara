@@ -38,11 +38,10 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
         set_field('artefact_file_files', 'adminfiles', 0);
 
         // Put all folders into artefact_file_files
-        $prefix = get_config('dbprefix');
         $folders = get_column_sql("
             SELECT a.id
-            FROM " . $prefix . "artefact a
-            LEFT OUTER JOIN " . $prefix . "artefact_file_files f ON a.id = f.artefact
+            FROM {artefact} a
+            LEFT OUTER JOIN {artefact_file_files} f ON a.id = f.artefact
             WHERE a.artefacttype = 'folder' AND f.artefact IS NULL");
         if ($folders) {
             foreach ($folders as $folderid) {
@@ -124,10 +123,9 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
 
     if ($oldversion < 2007042500) {
         // migrate everything we had to change to  make mysql happy
-        $prefix = get_config('dbprefix');
-        execute_sql("ALTER TABLE {$prefix}artefact_file_file_types ALTER COLUMN description TYPE varchar(32)");
-        execute_sql("ALTER TABLE {$prefix}artefact_file_mime_types ALTER COLUMN mimetype TYPE varchar(128)");
-        execute_sql("ALTER TABLE {$prefix}artefact_file_mime_types ALTER COLUMN description TYPE varchar(32)");
+        execute_sql("ALTER TABLE {artefact_file_file_types} ALTER COLUMN description TYPE varchar(32)");
+        execute_sql("ALTER TABLE {artefact_file_mime_types} ALTER COLUMN mimetype TYPE varchar(128)");
+        execute_sql("ALTER TABLE {artefact_file_mime_types} ALTER COLUMN description TYPE varchar(32)");
 
     }
 

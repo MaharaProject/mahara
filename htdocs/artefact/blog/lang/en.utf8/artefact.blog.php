@@ -27,6 +27,7 @@
 defined('INTERNAL') || die();
 
 $string['blog'] = 'Blog';
+$string['blogs'] = 'Blogs';
 $string['addblog'] = 'Add Blog';
 $string['addpost'] = 'Add Post';
 $string['alignment'] = 'Alignment';
@@ -36,6 +37,7 @@ $string['attachedfiles'] = 'Attached files';
 $string['attachments'] = 'Attachments';
 $string['blogdesc'] = 'Description';
 $string['blogdescdesc'] = 'e.g., ‘A record of Jill\'s experiences and reflections’.';
+$string['blogdoesnotexist'] = 'You are trying to access a blog that does not exist';
 $string['blogfilesdirdescription'] = 'Files uploaded as blog post attachments';
 $string['blogfilesdirname'] = 'blogfiles';
 $string['blogpost'] = 'blog post';
@@ -80,7 +82,7 @@ $string['newblog'] = 'New Blog';
 $string['newblogpost'] = 'New Blog Post';
 $string['noimageshavebeenattachedtothispost'] = 'No images have been attached to this post.  You need to upload or attach an image to the post before you can insert it.';
 $string['nofilesattachedtothispost'] = 'No attached files';
-$string['noresults'] = 'No results';
+$string['noresults'] = 'No blog posts found';
 $string['postbody'] = 'Body';
 $string['postbodydesc'] = ' ';
 $string['postedon'] = 'Posted on';
@@ -105,6 +107,7 @@ $string['title'] = 'Title';
 $string['update'] = 'Update';
 $string['verticalspace'] = 'Vertical space';
 $string['viewblog'] = 'View Blog';
+$string['youarenottheownerofthisblog'] = 'You are not the owner of this blog';
 $string['youarenottheownerofthisblogpost'] = 'You are not the owner of this blog post';
 $string['cannotdeleteblogpost'] = 'An error occured removing this blog post.';
 

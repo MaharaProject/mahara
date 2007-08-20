@@ -30,7 +30,6 @@ define('JSON', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
 $action = param_variable('action');
-$dbprefix = get_config('dbprefix');
 
 if ($action == 'suspend') {
     $id = param_integer('id');

@@ -118,7 +118,7 @@ function log_environ ($message, $escape=true, $backtrace=true) {
  */
 function log_message ($message, $loglevel, $escape, $backtrace, $file=null, $line=null, $trace=null) {
     global $SESSION;
-    if (!$SESSION) {
+    if (!$SESSION && function_exists('get_config')) {
         require_once(get_config('docroot') . 'auth/lib.php');
         $SESSION = Session::singleton();
     }
@@ -600,7 +600,23 @@ class UserException extends MaharaException implements MaharaThrowable {
     }
 }
 
-    
+/**
+ * Exception - Not found. Throw this if a user is trying to view something
+ * that doesn't exist
+ */
+class NotFoundException extends UserException {
+    public function strings() {
+        return array_merge(parent::strings(), 
+                           array('message' => 'The page you are looking for could not be found',
+                                 'title' => 'Not Found'));
+    }
+
+    public function render_exception() {
+        header('HTTP/1.0 404 Not Found', true);
+        return parent::render_exception();
+    }
+}
+
 
 /** 
  * The configuration that Mahara is trying to be run in is insane
@@ -670,22 +686,22 @@ class EmailException extends SystemException {}
 /** 
  * Exception - artefact not found 
  */
-class ArtefactNotFoundException extends UserException {}
+class ArtefactNotFoundException extends NotFoundException {}
 
 /**
  * Exception - view not found
  */
-class ViewNotFoundException extends UserException {}
+class ViewNotFoundException extends NotFoundException {}
 
 /**
  * Exception - user not found
  */
-class UserNotFoundException extends UserException {}
+class UserNotFoundException extends NotFoundException {}
 
 /**
- * Exception - community not found
+ * Exception - group not found
  */
-class CommunityNotFoundException extends UserException {}
+class GroupNotFoundException extends NotFoundException {}
 
 /**
  * Exception - fired when something happens that would make the user exceed their quota
@@ -709,23 +725,6 @@ class AccessDeniedException extends UserException {
 
     public function render_exception() {
         header("HTTP/1.0 403 Forbidden", true);
-        return parent::render_exception();
-    }
-}
-
-/**
- * Exception - Not found. Throw this if a user is trying to view something
- * that doesn't exist
- */
-class NotFoundException extends UserException {
-    public function strings() {
-        return array_merge(parent::strings(), 
-                           array('message' => 'The page you are looking for could not be found',
-                                 'title' => 'Not found'));
-    }
-
-    public function render_exception() {
-        header('HTTP/1.0 404 Not Found', true);
         return parent::render_exception();
     }
 }

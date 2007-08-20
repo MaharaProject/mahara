@@ -101,7 +101,6 @@ function pieform_element_wysiwyg_get_value(Pieform $form, $element) {
     global $USER;
     $global = ($form->get_property('method') == 'get') ? $_GET : $_POST;
     if (isset($element['value'])) {
-        log_debug('returning value');
         return $element['value'];
     }
     else if (isset($global[$element['name']])) {

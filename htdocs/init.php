@@ -129,9 +129,14 @@ if (!isset($CFG->wwwroot) && isset($_SERVER['HTTP_HOST'])) {
     }
     $path  = substr(dirname(__FILE__), strlen($_SERVER['DOCUMENT_ROOT']));
     if ($path) {
+        if (substr($path, 0, 1) != '/') {
+            $path = '/' . $path;
+        }
         $path .= '/';
+    } else {
+        $path = '/';
     }
-    $wwwroot = $proto . $host . '/' . $path;
+    $wwwroot = $proto . $host . $path;
     try {
         set_config('wwwroot', $wwwroot);
     }
@@ -201,7 +206,7 @@ if (defined('JSON')) {
     global $USER;
     if ($sesskey === null || $USER->get('sesskey') != $sesskey) {
         $USER->logout();
-        json_reply('global', get_string('invalidsesskey'));
+        json_reply('global', get_string('invalidsesskey'), 1);
     }
 }
 

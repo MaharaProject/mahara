@@ -38,6 +38,7 @@
 // 6010     The function does not exist
 // 6011     The function does not exist
 // 6012     Networking is disabled
+// 6013     Networking is not available at this address. You can access this service at get_config('wwwroot')api/xmlrpc/server.php'
 
 define('INTERNAL', 1);
 define('PUBLIC', 1);
@@ -56,17 +57,21 @@ $networkingdebug = get_config('enablenetworkingdebug');
 
 // If networking is off, return a '403 Forbidden' response
 $networkenabled = get_config('enablenetworking');
+$protocol = strtoupper($_SERVER['SERVER_PROTOCOL']);
+if ($protocol != 'HTTP/1.1') {
+    $protocol = 'HTTP/1.0';
+}
 if (empty($networkenabled)) {
-    $protocol = strtoupper($_SERVER['SERVER_PROTOCOL']);
-    if ($protocol != 'HTTP/1.1') {
-        $protocol = 'HTTP/1.0';
-    }
 
     if ($networkingdebug) {
         throw new XmlrpcServerException('Networking is disabled.', 6012);
     }
     header($protocol.' 403 Forbidden');
     exit;
+}
+
+if (get_hostname_from_uri($_SERVER['HTTP_HOST']) != get_hostname_from_uri(get_config('wwwroot'))) {
+    throw new XmlrpcServerException('Networking is not available at this address. You can access this service at '.get_config('wwwroot').'api/xmlrpc/server.php', 6013);
 }
 
 // Content type for output is never html:
@@ -100,7 +105,7 @@ if ($xml->getName() == 'encryptedMessage') {
     $ipaddress = gethostbyname(get_hostname_from_uri((string)$xml->wwwroot));
 
     // Check for masquerading
-    if ($ipaddress != $_SERVER['REMOTE_ADDR']) {
+    if (!get_config('xmlrpc_allow_masquerading') && $ipaddress != $_SERVER['REMOTE_ADDR']) {
         if ($networkingdebug) {
             throw new XmlrpcServerException('Your hostname ('.
             get_hostname_from_uri((string)$xml->wwwroot) .
@@ -123,7 +128,7 @@ if ($xml->getName() == 'signedMessage') {
     $ipaddress = gethostbyname(get_hostname_from_uri((string)$xml->wwwroot));
 
     // Check for masquerading
-    if ($ipaddress != $_SERVER['REMOTE_ADDR']) {
+    if (!get_config('xmlrpc_allow_masquerading') && $ipaddress != $_SERVER['REMOTE_ADDR']) {
         if ($networkingdebug) {
             throw new XmlrpcServerException('Your hostname ('.
             get_hostname_from_uri((string)$xml->wwwroot) .

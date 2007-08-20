@@ -34,7 +34,7 @@ class XMLDBmysql extends XMLDBGenerator {
 
     var $quote_string = '`';   // String used to quote names
 
-    var $default_for_char = '';      // To define the default to set for NOT NULLs CHARs without default (null=do nothing)
+    var $default_for_char = null;      // To define the default to set for NOT NULLs CHARs without default (null=do nothing)
 
     var $drop_default_clause_required = true; //To specify if the generator must use some DEFAULT clause to drop defaults
     var $drop_default_clause = 'NULL'; //The DEFAULT clause required to drop defaults

@@ -45,9 +45,11 @@ class PluginArtefactBlog extends PluginArtefact {
     public static function menu_items() {
         return array(
             array(
-                'name' => 'myblogs',
-                'link' => '',
-            )
+                'path'   => 'myportfolio/blogs',
+                'url'    => 'artefact/blog/',
+                'title'  => get_string('blogs', 'artefact.blog'),
+                'weight' => 30,
+            ),
         );
     }
 
@@ -135,19 +137,30 @@ class ArtefactTypeBlog extends ArtefactType {
      * @param object
      */
     public function __construct($id = 0, $data = null) {
+        global $USER;
         parent::__construct($id, $data);
 
-        if (!$data && $this->id
-            && ($blogdata = get_record('artefact_blog_blog', 'blog', $this->id))) {
-            foreach($blogdata as $name => $value) {
-                if (property_exists($this, $name)) {
-                    $this->$name = $value;
+        if (!$data) {
+            if ($this->id) {
+                if ($blogdata = get_record('artefact_blog_blog', 'blog', $this->id)) {
+                    foreach($blogdata as $name => $value) {
+                        if (property_exists($this, $name)) {
+                            $this->$name = $value;
+                        }
+                    }
+                }
+                else {
+                    // This should never happen unless the user is playing around with blog IDs in the location bar or similar
+                    throw new ArtefactNotFoundException(get_string('blogdoesnotexist', 'artefact.blog'));
                 }
             }
         }
 
         if (empty($this->id)) {
             $this->container = 1;
+        }
+        else if ($this->owner != $USER->get('id')) {
+            throw new AccessDeniedException(get_string('youarenottheownerofthisblogpost', 'artefact.blog'));
         }
     }
 
@@ -328,7 +341,7 @@ class ArtefactTypeBlog extends ArtefactType {
     public static function get_blog_list(User $user, $limit = self::pagination, $offset = 0) {
         ($result = get_records_sql_array("
          SELECT id, title, description
-         FROM " . get_config('dbprefix') . "artefact
+         FROM {artefact}
          WHERE owner = ?
           AND artefacttype = 'blog'
          ORDER BY title
@@ -424,15 +437,27 @@ class ArtefactTypeBlogPost extends ArtefactType {
      * @param object
      */
     public function __construct($id = 0, $data = null) {
+        global $USER;
         parent::__construct($id, $data);
 
-        if (!$data && $this->id
-            && ($bpdata = get_record('artefact_blog_blogpost', 'blogpost', $this->id))) {
-            foreach($bpdata as $name => $value) {
-                if (property_exists($this, $name)) {
-                    $this->$name = $value;
+        if (!$data) {
+            if ($this->id) {
+                if ($bpdata = get_record('artefact_blog_blogpost', 'blogpost', $this->id)) {
+                    foreach($bpdata as $name => $value) {
+                        if (property_exists($this, $name)) {
+                            $this->$name = $value;
+                        }
+                    }
+                }
+                else {
+                    // This should never happen unless the user is playing around with blog post IDs in the location bar or similar
+                    throw new ArtefactNotFoundException(get_string('blogpostdoesnotexist', 'artefact.blog'));
                 }
             }
+        }
+
+        if ($this->id && $this->owner != $USER->get('id')) {
+            throw new AccessDeniedException(get_string('youarenottheownerofthisblogpost', 'artefact.blog'));
         }
     }
 
@@ -609,11 +634,10 @@ class ArtefactTypeBlogPost extends ArtefactType {
      * @param integer
      */
     public static function get_posts(User $user, $id, $limit = self::pagination, $offset = 0) {
-        $prefix = get_config('dbprefix');
         ($result = get_records_sql_assoc("
          SELECT a.id, a.title, a.description, a.ctime, a.mtime, bp.published
-         FROM " . $prefix . "artefact a
-          LEFT OUTER JOIN " . $prefix . "artefact_blog_blogpost bp
+         FROM {artefact} a
+          LEFT OUTER JOIN {artefact_blog_blogpost} bp
            ON a.id = bp.blogpost
          WHERE a.parent = ?
           AND a.artefacttype = 'blogpost'
@@ -636,8 +660,8 @@ class ArtefactTypeBlogPost extends ArtefactType {
             $files = get_records_sql_array('
                SELECT
                   bf.blogpost, bf.file, a.artefacttype, a.title, a.description
-               FROM ' . $prefix . 'artefact_blog_blogpost_file bf
-                  INNER JOIN ' . $prefix . 'artefact a ON bf.file = a.id
+               FROM {artefact_blog_blogpost_file} bf
+                  INNER JOIN {artefact} a ON bf.file = a.id
                WHERE bf.blogpost IN (' . $idlist . ')', '');
             if ($files) {
                 foreach ($files as $file) {
@@ -660,8 +684,8 @@ class ArtefactTypeBlogPost extends ArtefactType {
     public static function render_posts($format, $options, $id, $limit = self::pagination, $offset = 0) {
         ($postids = get_records_sql_array("
          SELECT a.id
-         FROM " . get_config('dbprefix') . "artefact a
-          LEFT OUTER JOIN " . get_config('dbprefix') . "artefact_blog_blogpost bp
+         FROM {artefact} a
+          LEFT OUTER JOIN {artefact_blog_blogpost} bp
            ON a.id = bp.blogpost
          WHERE a.parent = ?
           AND bp.published = 1
@@ -680,8 +704,8 @@ class ArtefactTypeBlogPost extends ArtefactType {
 
         $count = (int)get_field_sql("
          SELECT COUNT(*)
-         FROM " . get_config('dbprefix') . "artefact a
-          LEFT OUTER JOIN " . get_config('dbprefix') . "artefact_blog_blogpost bp
+         FROM {artefact} a
+          LEFT OUTER JOIN {artefact_blog_blogpost} bp
            ON a.id = bp.blogpost
          WHERE a.parent = ?
           AND bp.published = 1", array($id));
@@ -834,10 +858,9 @@ class ArtefactTypeBlogPost extends ArtefactType {
      * @return array
      */
     public function get_attached_files() {
-        $prefix = get_config('dbprefix');
         $list = get_records_sql_array('SELECT a.id, a.artefacttype, a.title, a.description 
-            FROM ' . $prefix . 'artefact_blog_blogpost_file f
-            INNER JOIN ' . $prefix . 'artefact a ON a.id = f.file
+            FROM {artefact_blog_blogpost_file} f
+            INNER JOIN {artefact} a ON a.id = f.file
             WHERE f.blogpost = ' . $this->id, '');
 
         // load tags

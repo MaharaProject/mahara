@@ -217,6 +217,8 @@ class Peer {
                     $errcode = $e->getCode();
                     if ($errcode == 404) {
                         throw new RemoteServerException('404: Incorrect WWWRoot or Application: file not found.');
+                    } elseif($errcode == 704) {
+                        throw new RemoteServerException('Networking is disabled on the host at '.$this->wwwroot.'.');
                     }
                 } catch (Exception $e) {
                     throw new RemoteServerException('Error retrieving public key ');

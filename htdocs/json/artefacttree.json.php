@@ -41,14 +41,13 @@ if ($parent === null) {
 else {
     $parentcondition = ' = ' . $db->quote($parent);
 }
-$prefix = get_config('dbprefix');
 
 // Get all artefacts we require
 $data = get_records_sql_array("SELECT id, artefacttype, container, title
-    FROM " . $prefix . "artefact
+    FROM {artefact}
     WHERE artefacttype IN (
         SELECT name
-            FROM " . $prefix . "artefact_installed_type
+            FROM {artefact_installed_type}
             WHERE plugin = ?
     )
     AND parent $parentcondition

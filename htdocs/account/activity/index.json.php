@@ -59,7 +59,6 @@ $limit = param_integer('limit', 10);
 $offset = param_integer('offset', 0);
 
 $userid = $USER->get('id');
-$prefix = get_config('dbprefix');
 
 if ($type == 'all') {
     $count = count_records('notification_internal_activity', 'usr', $userid);
@@ -67,10 +66,10 @@ if ($type == 'all') {
                                  'ctime DESC', '*', $offset, $limit);
 } else if ($type == 'adminmessages' && $USER->get('admin')) {
     $count = count_records_select('notification_internal_activity', 'usr = ? AND type IN (
-         SELECT name FROM ' . $prefix . 'activity_type WHERE admin = ?)', 
+         SELECT name FROM {activity_type} WHERE admin = ?)', 
                                   array($userid, 1));
     $records = get_records_select_array('notification_internal_activity', 'usr = ? AND type IN (
-         SELECT name FROM ' . $prefix . 'activity_type WHERE admin = ?)', 
+         SELECT name FROM {activity_type} WHERE admin = ?)', 
                                   array($userid, 1),
                                   'ctime DESC', '*', $offset, $limit);
 }

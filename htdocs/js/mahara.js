@@ -179,7 +179,7 @@ function sendjsonrequest(script, data, rtype, successcallback, errorcallback, qu
                 }
                 try { successcallback(data); } catch (e) { logError('sendjsonrequest() callback failed: ', e, data); }
             }
-            else if (data.message && typeof(data.message == 'object')) {
+            else if (data.message && typeof(data.message) == 'object') {
                 if (data.message.message && typeof(data.message.message == 'string') && !quiet) {
                     displayMessage(data.message.message, errtype);
                 }
@@ -256,6 +256,7 @@ contextualHelpSelected    = null;
 contextualHelpContainer   = null;
 contextualHelpDeferrable  = null;
 contextualHelpOpened      = false;
+badIE = false;
 
 function contextualHelpIcon(formName, helpName, pluginType, pluginName, page, section) {
     var link = A(
@@ -329,7 +330,7 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, sectio
     screenDimensions = getViewportDimensions();
     if (position.x + dimensions.w < screenDimensions.w) {
         // Left of the screen - there's enough room for it
-        position.x += 10;
+        position.x += 15;
     }
     else {
         position.x -= dimensions.w;
@@ -344,7 +345,7 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, sectio
 
     // load the content
     if (contextualHelpCache[key]) {
-        contextualHelpContainer.innerHTML = contextualHelpCache[key];
+        buildContextualHelpBox(contextualHelpCache[key]);
         callLater(0, function() { contextualHelpOpened = true; });
     }
     else {
@@ -352,6 +353,7 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, sectio
             contextualHelpDeferrable.cancel();
         }
 
+        badIE = true;
         sendjsonrequest(url, url_params, 'GET', function (data) {
             if (data.error) {
                 contextualHelpCache[key] = data.message;
@@ -359,7 +361,7 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, sectio
             }
             else {
                 contextualHelpCache[key] = data.content;
-                contextualHelpContainer.innerHTML = contextualHelpCache[key];
+                buildContextualHelpBox(contextualHelpCache[key]);
             }
             contextualHelpOpened = true;
             processingStop();
@@ -374,16 +376,31 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, sectio
     }
 }
 
+/*
+ * Builds the contents of the box with the currently open contextual help in
+ * it, including the close button and an overlay div to prevent clicking on the
+ * help closing the box
+ */
+function buildContextualHelpBox(content) {
+    var result = '<div class="fr"><a href="" onclick="return false;"><img src="' + config.theme['images/icon_close.gif'] + '" alt="X"></a></div>';
+    result += '<div id="helpstop">';
+    result += content;
+    result += '</div>';
+    contextualHelpContainer.innerHTML = result;
+    connect('helpstop', 'onclick', function(e) { e.stop(); });
+}
+
 /* Only works in non-ie at the moment. Using 'document' as the element
    makes IE detect the event, but then makes it so you need to click on
    the help twice before it opens. */
-connect(window, 'onclick', function(e) {
-    if (contextualHelpOpened) {
+connect(document, 'onclick', function(e) {
+    if (contextualHelpOpened && !badIE) {
         removeElement(contextualHelpContainer);
         contextualHelpContainer = null;
         contextualHelpSelected = null;
         contextualHelpOpened = false;
     }
+    badIE = false;
 });
 
 // Cookie related functions
@@ -503,8 +520,9 @@ function create_tags_control(name, value, options) {
     }
 
     var tagControl = INPUT({'name': name, 'size': options.size, 'value': value});
+    var tagshelp = SPAN(null); tagshelp.innerHTML = get_string('tags.help');
     elements.push(augment_tags_control(tagControl, true));
-    elements.push(tagControl);
+    elements.push(TABLE({'class': 'help-wrapper'}, TR(null, TD(null, tagControl), TD({'class': 'helpcontainer'}, tagshelp))));
 
     return DIV(null, elements);
 }

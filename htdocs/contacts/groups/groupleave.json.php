@@ -28,22 +28,22 @@ define('INTERNAL', 1);
 define('JSON', 1);
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-require_once('community.php');
+require_once('group.php');
 
 json_headers();
 
 $leave = param_integer('leave');
 
-if (!$community = get_record('community', 'id', $leave)) {
-    json_reply(true, get_string('invalidcommunity'));
+if (!$group = get_record('group', 'id', $leave)) {
+    json_reply(true, get_string('invalidgroup'));
 }
 
-if (!community_user_can_leave($community)) {
-    json_reply(true, get_string('couldnotleavecommunity'));
+if (!group_user_can_leave($group)) {
+    json_reply(true, get_string('couldnotleavegroup'));
 }
 
-community_remove_user($community->id, $USER->get('id'));
+group_remove_user($group->id, $USER->get('id'));
 
-json_reply(false, get_string('leftcommunity'));
+json_reply(false, get_string('leftgroup'));
 
 ?>

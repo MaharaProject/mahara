@@ -25,11 +25,19 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'mycontacts');
-define('SUBMENUITEM', 'mygroups');
+define('MENUITEM', 'groups/groupsiown');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('pieforms/pieform.php');
 define('TITLE', get_string('creategroup'));
+
+$joinoptions = array(
+    'invite'     => get_string('membershiptype.invite'),
+    'request'    => get_string('membershiptype.request'),
+    'open'       => get_string('membershiptype.open'),
+);
+if ($USER->get('admin') || $USER->get('staff')) {
+    $joinoptions['controlled'] = get_string('membershiptype.controlled');
+}
 
 $creategroup = pieform(array(
     'name'     => 'creategroup',
@@ -38,44 +46,43 @@ $creategroup = pieform(array(
     'pluginname' => 'groups',
     'elements' => array(
         'name' => array(
-            'type'  => 'text',
-            'title' => get_string('groupname'),
-            'rules' => array( 'required' => true ),
-            'help'  => true,
+            'type'         => 'text',
+            'title'        => get_string('groups'),
+            'rules'        => array( 'required' => true, 'maxlength' => 128 ),
         ),
         'description' => array(
-            'type'  => 'wysiwyg',
-            'title' => get_string('groupdescription'),
-            'rows'  => 10,
-            'cols'  => 70,
-            'help'  => true,
+            'type'         => 'wysiwyg',
+            'title'        => get_string('groupdescription'),
+            'rows'         => 10,
+            'cols'         => 80,
         ),
-        'members'     => array(
-            'type'   => 'userlist',
-            'title'  => get_string('groupmembers'),
-            'rules'  => array( 'required' => true ),
-            'filter' => false,
-            'help'  => true,
+        'membershiptype' => array(
+            'type'         => 'select',
+            'title'        => get_string('membershiptype'),
+            'options'      => $joinoptions,
+            'defaultvalue' => 'open',
+            'help'         => true,
         ),
         'submit'   => array(
             'type'  => 'submitcancel',
-            'value' => array(get_string('creategroup'), get_string('cancel')),
+            'value' => array(get_string('savegroup'), get_string('cancel')),
         ),
     ),
 ));
 
 function creategroup_validate(Pieform $form, $values) {
     global $USER;
+    global $SESSION;
 
-    $gid = get_field('usr_group', 'id', 'owner', $USER->get('id'), 'name', $values['name']);
+    $cid = get_field('group', 'id', 'owner', $USER->get('id'), 'name', $values['name']);
 
-    if($gid) {
+    if ($cid) {
         $form->set_error('name', get_string('groupalreadyexists'));
     }
 }
 
 function creategroup_cancel_submit() {
-    redirect('/contacts/groups/');
+    redirect('/contacts/groups/owned.php');
 }
 
 function creategroup_submit(Pieform $form, $values) {
@@ -86,35 +93,39 @@ function creategroup_submit(Pieform $form, $values) {
 
     $now = db_format_timestamp(time());
 
-    $gid = insert_record(
-        'usr_group',
+    $id = insert_record(
+        'group',
         (object) array(
-            'name'        => $values['name'],
-            'owner'       => $USER->get('id'),
-            'description' => $values['description'],
-            'ctime' => $now,
-            'mtime' => $now,
+            'name'           => $values['name'],
+            'description'    => $values['description'],
+            'jointype'       => $values['membershiptype'],
+            'owner'          => $USER->get('id'),
+            'ctime'          => $now,
+            'mtime'          => $now,
         ),
         'id',
         true
     );
 
-    foreach ($values['members'] as $member) {
+    // If the user is a staff member, they should be added as a tutor automatically
+    if ($values['membershiptype'] == 'controlled' && $USER->get('staff')) {
+        log_debug('Adding staff user to group');
         insert_record(
-            'usr_group_member',
+            'group_member',
             (object) array(
-                'grp'   => $gid,
-                'member'=> $member,
-                'ctime' => $now,
+                'group'  => $id,
+                'member' => $USER->get('id'),
+                'ctime'  => $now,
+                'tutor'  => 1
             )
         );
     }
 
-    $SESSION->add_ok_msg(get_string('groupcreated'));
+    $SESSION->add_ok_msg(get_string('groupsaved'));
 
     db_commit();
 
-    redirect('/contacts/groups/');
+    redirect('/contacts/groups/owned.php');
 }
 
 $smarty = smarty();

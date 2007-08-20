@@ -307,12 +307,11 @@ $elements = array(
         )
     )
 );
-$dbprefix = get_config('dbprefix');
 $sql = 'SELECT
             i.*
         FROM
-            '.$dbprefix.'institution i,
-            '.$dbprefix.'auth_instance ai
+            {institution} i,
+            {auth_instance} ai
         WHERE
             ai.authname = \'internal\' AND
             ai.institution = i.name';

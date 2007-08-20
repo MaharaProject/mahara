@@ -42,12 +42,10 @@ class HostSet implements Iterator {
 
     function findByInstitution($institution) {
 
-        $dbprefix = get_config('dbprefix');
-
         $sql = 'SELECT
                     h.*
                 FROM
-                    '.$dbprefix.'host h
+                    {host} h
                 WHERE
                     h.institution = ?
                 ORDER BY
@@ -69,13 +67,11 @@ class HostSet implements Iterator {
             throw new ParamOutOfRangeException('WWWROOT: '.addslashes($wwwroot).' is out of range');
         }
 
-        $dbprefix = get_config('dbprefix');
-
         $sql = 'SELECT
                     h2.*
                 FROM
-                    '.$dbprefix.'host h1,
-                    '.$dbprefix.'host h2
+                    {host} h1,
+                    {host} h2
                 WHERE
                     h1.institution = h2.institution AND
                     h1.wwwroot = ?

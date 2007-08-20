@@ -62,7 +62,6 @@ defined('INTERNAL') || die();
  *           );
  */
 function search_user($query_string, $limit, $offset = 0) {
-    $prefix = get_config('dbprefix');
     $plugin = get_config('searchplugin');
     safe_require('search', $plugin);
     safe_require('artefact', 'internal');
@@ -82,8 +81,8 @@ function search_user($query_string, $limit, $offset = 0) {
             SELECT 
                 u.id, a.artefacttype, a.title
             FROM
-                ' . $prefix . 'usr u
-                LEFT JOIN ' . $prefix . 'artefact a ON u.id=a.owner AND a.artefacttype IN ' . $fieldlist . '
+                {usr} u
+                LEFT JOIN {artefact} a ON u.id=a.owner AND a.artefacttype IN ' . $fieldlist . '
             WHERE
                 u.id IN ' . $userlist . '
             ORDER BY u.firstname, u.lastname, u.id, a.artefacttype',
@@ -147,51 +146,11 @@ function search_user($query_string, $limit, $offset = 0) {
  *               ),
  *           );
  */
-function search_group($query_string, $limit, $offset = 0) {
+function search_group($query_string, $limit, $offset = 0, $all = false) {
     $plugin = get_config('searchplugin');
     safe_require('search', $plugin);
 
-    return call_static_method(generate_class_name('search', $plugin), 'search_group', $query_string, $limit, $offset);
-}
-
-/**
- * Given a query string and limits, return an array of matching communities using the
- * search plugin defined in config.php
- *
- * @param string  The query string
- * @param integer How many results to return
- * @param integer What result to start at (0 == first result)
- * @return array  A data structure containing results looking like ...
- *         $results = array(
- *               count   => integer, // total number of results
- *               limit   => integer, // how many results are returned
- *               offset  => integer, // starting from which result
- *               results => array(   // the result records
- *                   array(
- *                       id            => integer,
- *                       name          => string,
- *                       owner         => integer,
- *                       description   => string,
- *                       ctime         => string,
- *                       mtime         => string,
- *                   ),
- *                   array(
- *                       id            => integer,
- *                       name          => string,
- *                       owner         => integer,
- *                       description   => string,
- *                       ctime         => string,
- *                       mtime         => string,
- *                   ),
- *                   array(...),
- *               ),
- *           );
- */
-function search_community($query_string, $limit, $offset = 0, $all = false) {
-    $plugin = get_config('searchplugin');
-    safe_require('search', $plugin);
-
-    return call_static_method(generate_class_name('search', $plugin), 'search_community', $query_string, $limit, $offset, $all);
+    return call_static_method(generate_class_name('search', $plugin), 'search_group', $query_string, $limit, $offset, $all);
 }
 
 function search_selfsearch($query_string, $limit, $offset, $type = 'all') {

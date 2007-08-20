@@ -35,8 +35,6 @@ $limit = param_integer('limit', 10);
 $offset = param_integer('offset', 0);
 $category = param_variable('category', '');
 
-$dbprefix = get_config('dbprefix');
-
 if (empty($category)) {
     $count = get_field('template', 'COUNT(*)');
     $data = get_records_array('template', 'deleted', '0', 'title', 'name,title,description,category', $offset, $limit);
@@ -45,7 +43,7 @@ else {
     $count = get_field('template', 'COUNT(*)', 'category', $category);
     // $data = get_records_array('template', 'category', $category, 'title', 'name,title,description,category', $offset, $limit);
     // not using get_records_array here because we can't have more than one constraint :(
-    $data = get_records_sql_array('SELECT name,title,description,category FROM ' . get_config('dbprefix') . 'template WHERE category=? AND deleted=0', array($category), $offset, $limit);
+    $data = get_records_sql_array('SELECT name,title,description,category FROM {template} WHERE category=? AND deleted=0', array($category), $offset, $limit);
 
 }
 

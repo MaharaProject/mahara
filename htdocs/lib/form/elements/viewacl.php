@@ -32,7 +32,6 @@
  * @return string           The HTML for the element
  */
 function pieform_element_viewacl(Pieform $form, $element) {
-    // @todo addressbook stuff...
     $smarty = smarty();
     $smarty->left_delimiter  = '{{';
     $smarty->right_delimiter = '}}';
@@ -42,13 +41,18 @@ function pieform_element_viewacl(Pieform $form, $element) {
     // Look for the presets and split them into two groups
     $presets = array('public', 'loggedin', 'friends');
     if ($value) {
-        foreach ($value as &$item) {
-            if (in_array($item['type'], $presets)) {
-                $item['name'] = get_string($item['type']);
-                $item['preset'] = true;
+        foreach ($value as $key => &$item) {
+            if (is_array($item)) {
+                if (in_array($item['type'], $presets)) {
+                    $item['name'] = get_string($item['type']);
+                    $item['preset'] = true;
+                }
+                else {
+                    $item['name'] = pieform_render_viewacl_getvaluebytype($item['type'], $item['id']);
+                }
             }
             else {
-                $item['name'] = pieform_render_viewacl_getvaluebytype($item['type'], $item['id']);
+                unset($value[$key]);
             }
         }
     }
@@ -77,10 +81,7 @@ function pieform_render_viewacl_getvaluebytype($type, $id) {
             return display_name($user);
             break;
         case 'group':
-            return get_field('usr_group', 'name', 'id', $id);
-            break;
-        case 'community':
-            return get_field('community', 'name', 'id', $id);
+            return get_field('group', 'name', 'id', $id);
             break;
     }
     return "$type: $id";

@@ -25,7 +25,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'myprofile');
+define('MENUITEM', 'profile/edit');
 define('SECTION_PLUGINTYPE', 'artefact');
 define('SECTION_PLUGINNAME', 'internal');
 define('SECTION_PAGE', 'index');
@@ -296,7 +296,6 @@ $smarty = smarty(array(), array(), array(
 
 $smarty->assign('profileform', $profileform);
 
-$smarty->assign('resumeinstalled', record_exists('artefact_installed', 'name', 'resume')); 
 $smarty->display('artefact:internal:index.tpl');
 
 ?>

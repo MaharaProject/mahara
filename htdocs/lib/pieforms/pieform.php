@@ -288,7 +288,10 @@ class Pieform {
             'tabindex'   => false,
 
             // Whether to add a class of the type of the element to each element
-            'elementclasses' => false
+            'elementclasses' => false,
+
+            // Whether to add * markers after each required field
+            'requiredmarker' => false,
         );
         $data = array_merge($formdefaults, $formconfig, $data);
         $this->data = $data;

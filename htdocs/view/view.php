@@ -66,7 +66,7 @@ if ($artefactid) {
     $navlist = array('<a href="' . $viewhref .  '">' . $view->get('title') . '</a>');
     if (!empty($path)) {
         $titles = get_records_sql_assoc('
-            SELECT id,title FROM ' . get_config('dbprefix') . 'artefact
+            SELECT id,title FROM {artefact}
             WHERE id IN (' . $path . ')','');
         $artefactids = split(',', $path);
         for ($i = 0; $i < count($artefactids); $i++) {
@@ -103,13 +103,13 @@ else {
     $jsartefact = 'undefined';
     $content = $view->render();
     global $USER;
-    $submittedcommunity = $view->get('submittedto');
-    if ($submittedcommunity 
-        && record_exists('community_member', 
-                         'community', $submittedcommunity,
+    $submittedgroup = $view->get('submittedto');
+    if ($submittedgroup 
+        && record_exists('group_member', 
+                         'group', $submittedgroup,
                          'member', $USER->get('id'),
                          'tutor', 1)) {
-        // The user is a tutor of the community that this view has
+        // The user is a tutor of the group that this view has
         // been submitted to, and is entitled to upload an additional
         // file when submitting feedback.
         $tutorfilefeedbackformrow = "TR(null, TH(null, LABEL(null, '" . get_string('attachfile') . "'))),"

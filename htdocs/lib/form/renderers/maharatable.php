@@ -78,16 +78,33 @@ function pieform_renderer_maharatable(Pieform $form, $builtelement, $rawelement)
         else {
             $result .= '<label for="' . $formname . '_' . $rawelement['id'] . '">' . Pieform::hsc($rawelement['title']) . '</label>';
         }
+        if ($form->get_property('requiredmarker') && !empty($rawelement['rules']['required'])) {
+            $result .= ' <span class="requiredmarker">*</span>';
+        }
         $result .= "</th>\n\t</tr>\n";
     }
     $result .= "\t<tr id=\"{$formname}_{$rawelement['name']}_container\">\n\t\t<td>";
+
+    // Wrap WYSIWYG elements in a table with two cells side by side, one for the element and one for the help icon
+    if (!empty($rawelement['help']) && $rawelement['type'] == 'wysiwyg') {
+        $result .= '<table class="help-wrapper"><tr><td>';
+    }
+
+    // Add the element itself
     $result .= $builtelement;
+
+    if (!empty($rawelement['help']) && $rawelement['type'] == 'wysiwyg') {
+        $result .= '</td><td>';
+    }
 
     // Contextual help
     if (!empty($rawelement['help'])) {
         $result .= get_help_icon($form->get_property('plugintype'), 
                                  $form->get_property('pluginname'), 
                                  $form->get_name(), $rawelement['name']);
+        if ($rawelement['type'] == 'wysiwyg') {
+            $result .= '</td></tr></table>';
+        }
     }
 
     $result .= "</td>\n\t</tr>\n";

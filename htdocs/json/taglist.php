@@ -29,14 +29,12 @@ define('JSON', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 
 if ($USER->is_logged_in()) {
-    $prefix = get_config('dbprefix');
-
     $result = get_records_sql_array("
         SELECT tag, SUM(count) AS count
         FROM (
-            SELECT tag,COUNT(*) AS count FROM {$prefix}artefact_tag t INNER JOIN {$prefix}artefact a ON t.artefact=a.id WHERE a.owner=? GROUP BY 1
+            SELECT tag,COUNT(*) AS count FROM {artefact_tag} t INNER JOIN {artefact} a ON t.artefact=a.id WHERE a.owner=? GROUP BY 1
             UNION ALL
-            SELECT tag,COUNT(*) AS count FROM {$prefix}view_tag t INNER JOIN {$prefix}view v ON t.view=v.id WHERE v.owner=? GROUP BY 1
+            SELECT tag,COUNT(*) AS count FROM {view_tag} t INNER JOIN {view} v ON t.view=v.id WHERE v.owner=? GROUP BY 1
         ) tags
         GROUP BY tag 
         ORDER BY LOWER(tag)

@@ -91,10 +91,9 @@ class upload_manager {
         require_once('file.php');
         $type = get_mime_type($file['tmp_name']);
         if ($type) {
-            $prefix = get_config('dbprefix');
             $validtypes = get_column_sql('SELECT mimetype
-                FROM ' . $prefix . 'artefact_file_mime_types m
-                LEFT JOIN ' . $prefix . 'artefact_file_file_types f ON (m.description = f.description)
+                FROM {artefact_file_mime_types} m
+                LEFT JOIN {artefact_file_file_types} f ON (m.description = f.description)
                 WHERE f.enabled = 1');
             if (!in_array($type, $validtypes)) {
                 return get_string('filetypenotallowed');
@@ -289,7 +288,7 @@ function clam_scan_file(&$file) {
         clam_handle_infected_file($fullpath); 
         // Notify admins if user has uploaded more than 3 infected
         // files in the last month
-        if (count_records_sql('SELECT COUNT(*) FROM ' . get_config('dbprefix') . 'usr_infectedupload
+        if (count_records_sql('SELECT COUNT(*) FROM {usr_infectedupload}
             WHERE usr = ? AND time > CURRENT_TIMESTAMP - ?::INTERVAL;', array($userid, '1 month')) >= 2) {
             log_debug('sending virusrepeat notification');
             $data = (object) array('username' => $USER->get('username'),

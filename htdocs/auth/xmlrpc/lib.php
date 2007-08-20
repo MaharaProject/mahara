@@ -117,7 +117,21 @@ class AuthXmlrpc extends Auth {
         $remoteuser = (object)$client->response;
 
         if (empty($remoteuser) or !property_exists($remoteuser, 'username')) {
-            throw new MaharaException('Unknown error!');
+            $errorobject = $remoteuser;
+
+            $errreport = 'Authorisation failure. ';
+            $faultcode = 1;
+
+            if (property_exists($errorobject, 'faultCode')) {
+                $errreport .= "\nCode: ".$errorobject->faultCode;
+                $faultcode  = $errorobject->faultCode;
+            }
+
+            if (property_exists($errorobject, 'faultString')) {
+                $errreport .= "\nMessage: ".$errorobject->faultString;
+            }
+
+            throw new AccessDeniedException($errreport, $faultcode);
         }
 
         $virgin = false;
@@ -173,6 +187,16 @@ class AuthXmlrpc extends Auth {
             set_profile_field($user->id, 'firstname', $user->firstname);
             set_profile_field($user->id, 'lastname', $user->lastname);
             set_profile_field($user->id, 'email', $user->email);
+
+            /*
+             * We need to convert the object to a stdclass with its own
+             * custom method because it uses overloaders in its implementation
+             * and its properties wouldn't be visible to a simple cast operation
+             * like (array)$user
+             */
+            $userobj = $user->to_stdclass();
+            $userarray = (array)$userobj;
+            handle_event('createuser', $userarray);
 
         } elseif ($update) {
 
@@ -591,6 +615,14 @@ class PluginAuthXmlrpc extends PluginAuth {
         $authinstance = new stdClass();
         $peer = new Peer();
 
+        if (false == $peer->findByWwwroot($values['wwwroot'])) {
+            try {
+                $peer->bootstrap($values['wwwroot'], null, $values['appname'], $values['institution']);
+            } catch (RemoteServerException $e) {
+                $form->set_error('wwwroot',get_string('cantretrievekey', 'auth'));
+            }
+        }
+
         //TODO: test values and set appropriate errors on form
     }
 
@@ -629,7 +661,7 @@ class PluginAuthXmlrpc extends PluginAuth {
             }
         }
 
-        $peer->wwwroot              = $values['wwwroot'];
+        $peer->wwwroot              = preg_replace("|\/+$|", "", $values['wwwroot']);
         $peer->name                 = $values['name'];
         $peer->deleted              = $values['deleted'];
         $peer->portno               = $values['portno'];
@@ -673,6 +705,10 @@ class PluginAuthXmlrpc extends PluginAuth {
             $record->instance = $values['instance'];
             $record->field    = $field;
             $record->value    = $value;
+
+            if ($field == 'wwwroot') {
+                $record->value    = dropslash($value);
+            }
 
             if (empty($value)) {
                 delete_records('auth_instance_config', 'field', $field, 'instance', $values['instance']);

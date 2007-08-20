@@ -35,7 +35,7 @@ class XMLDBpostgres7 extends XMLDBgenerator {
     var $number_type = 'NUMERIC';    // Proper type for NUMBER(x) in this DB
 
     var $unsigned_allowed = false;    // To define in the generator must handle unsigned information
-    var $default_for_char = '';      // To define the default to set for NOT NULLs CHARs without default (null=do nothing)
+    var $default_for_char = null;      // To define the default to set for NOT NULLs CHARs without default (null=do nothing)
 
     var $sequence_extra_code = false; //Does the generator need to add extra code to generate the sequence fields
     var $sequence_name = 'BIGSERIAL'; //Particular name for inline sequences in this generator

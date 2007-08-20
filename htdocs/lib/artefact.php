@@ -141,10 +141,9 @@ function artefact_can_render_to($type, $format) {
 }
 
 function artefact_instance_from_id($id) {
-    $prefix = get_config('dbprefix');
     $sql = 'SELECT a.*, i.plugin 
-            FROM ' . $prefix . 'artefact a 
-            JOIN ' . $prefix . 'artefact_installed_type i ON a.artefacttype = i.name
+            FROM {artefact} a 
+            JOIN {artefact_installed_type} i ON a.artefacttype = i.name
             WHERE a.id = ?';
     if (!$data = get_record_sql($sql, array($id))) {
         throw new ArtefactNotFoundException(get_string('artefactnotfound', 'mahara', $id));
@@ -167,7 +166,6 @@ function artefact_instance_from_id($id) {
  */
 function artefact_instance_from_type($artefact_type, $user_id=null) {
     global $USER;
-    $prefix = get_config('dbprefix');
 
     if ($user_id === null) {
         $user_id = $USER->get('id');
@@ -194,8 +192,8 @@ function artefact_instance_from_type($artefact_type, $user_id=null) {
     }
     else {
         $sql = 'SELECT a.*, i.plugin 
-                FROM ' . $prefix . 'artefact a 
-                JOIN ' . $prefix . 'artefact_installed_type i ON a.artefacttype = i.name
+                FROM {artefact} a 
+                JOIN {artefact_installed_type} i ON a.artefacttype = i.name
                 WHERE a.artefacttype = ? AND a.owner = ?';
         if (!$data = get_record_sql($sql, array($artefact_type, $user_id))) {
             throw new ArtefactNotFoundException("Artefact of type '${artefact_type}' doesn't exist");

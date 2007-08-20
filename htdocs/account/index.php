@@ -25,8 +25,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'account');
-define('SUBMENUITEM', 'accountprefs');
+define('MENUITEM', 'settings/preferences');
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'account');
 define('SECTION_PAGE', 'preferences');
@@ -72,7 +71,7 @@ else {
 }
 
 $elements['accountoptionsdesc'] = array(
-    'value' => '<tr><td colspan="2"><p>You can set general account options here</p></td></tr>'
+    'value' => '<tr><td colspan="2"><p>' . get_string('accountoptionsdesc', 'account') . '</p></td></tr>'
 );
 $elements['friendscontrol'] = array(
     'type' => 'radio',

@@ -55,22 +55,22 @@ class PluginArtefactResume extends Plugin {
     public static function menu_items() {
         return array(
             array(
-                'name' => 'myresume',
-                'link' => '',
-                'submenu' => array(
-                    array(
-                        'name' => 'myresume', 
-                        'link' => 'index.php'
-                    ),
-                    array(
-                        'name' => 'mygoals',
-                        'link' => 'goals.php',
-                    ),
-                    array(
-                        'name' => 'myskills',
-                        'link' => 'skills.php',
-                    ),
-                ),
+                'path' => 'profile/myresume',
+                'title' => get_string('myresume', 'artefact.resume'),
+                'url' => 'artefact/resume/',
+                'weight' => 20,
+            ),
+            array(
+                'path' => 'profile/mygoals',
+                'title' => get_string('mygoals', 'artefact.resume'),
+                'url' => 'artefact/resume/goals.php',
+                'weight' => 21,
+            ),
+            array(
+                'path' => 'profile/myskills',
+                'title' => get_string('myskills', 'artefact.resume'),
+                'url' => 'artefact/resume/skills.php',
+                'weight' => 22,
             )
         );
     }

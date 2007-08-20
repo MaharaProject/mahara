@@ -32,25 +32,24 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 json_headers();
 
 $action = param_variable('action');
-$dbprefix = get_config('dbprefix');
 
 if ($action == 'delete') {
     $id = param_integer('id');
     // check owner
-    $owner = get_field('community', 'owner', 'id', $id);
+    $owner = get_field('group', 'owner', 'id', $id);
     if ($owner != $USER->get('id')) {
-        json_reply('local', get_string('cantdeletecommunitydontown'));
+        json_reply('local', get_string('cantdeletegroupdontown'));
     }
     db_begin();
-    delete_records('usr_watchlist_community', 'community', $id);
-    delete_records('view_access_community', 'community', $id);
-    delete_records('community_member_invite', 'community', $id);
-    delete_records('community_member_request', 'community', $id);
-    delete_records('community_member', 'community', $id);
-    delete_records('community', 'id', $id);
+    delete_records('usr_watchlist_group', 'group', $id);
+    delete_records('view_access_group', 'group', $id);
+    delete_records('group_member_invite', 'group', $id);
+    delete_records('group_member_request', 'group', $id);
+    delete_records('group_member', 'group', $id);
+    delete_records('group', 'id', $id);
     db_commit();
 
-    json_reply(null, get_string('deletecommunitysuccessful'));
+    json_reply(null, get_string('deletegroupsuccessful'));
 }
 
 json_reply('local', 'Unknown action');

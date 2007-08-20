@@ -353,7 +353,7 @@ function get_languages() {
     $langs = array();
     $langbase = get_config('docroot') . 'lang/';
     if (!$langdir = opendir($langbase)) {
-        throw new Exception('Unable to read language directory '.$langbase);
+        throw new SystemException('Unable to read language directory '.$langbase);
     }
     while (false !== ($subdir = readdir($langdir))) {
         $langfile = $langbase . $subdir . '/langconfig.php';
@@ -376,13 +376,13 @@ function get_themes() {
     $themes = array();
     $themebase = get_config('docroot') . 'theme/';
     if (!$themedir = opendir($themebase)) {
-        throw new Exception('Unable to read theme directory '.$themebase);
+        throw new SystemException('Unable to read theme directory '.$themebase);
     }
     while (false !== ($subdir = readdir($themedir))) {
-        if ($subdir != "." && $subdir != "..") {
+        if ($subdir != "." && $subdir != ".." && is_dir($themebase . $subdir)) {
             $themes[$subdir] = $subdir;
 
-            $config_path = get_config('docroot') . 'theme/' . $subdir . '/config.php';
+            $config_path = $themebase . $subdir . '/config.php';
             if (is_readable($config_path)) {
                 require_once($config_path);
                 if (isset($theme->name)) {
@@ -998,8 +998,10 @@ function pieform_configure() {
     return array(
         'method'    => 'post',
         'action'    => '',
+        'language'  => current_language(),
         'autofocus' => true,
         'renderer'  => 'maharatable',
+        'requiredmarker' => true,
         'elementclasses' => true,
         'jserrorcallback'       => 'formError',
         'globaljserrorcallback' => 'formGlobalError',
@@ -1023,7 +1025,7 @@ function pieform_validate(Pieform $form, $values) {
     if (!isset($values['sesskey'])) {
         throw new UserException('No session key');
     }
-    if ($USER && $USER->get('sesskey') != $values['sesskey']) {
+    if ($USER && $USER->is_logged_in() && $USER->get('sesskey') != $values['sesskey']) {
         throw new UserException('Invalid session key');
     }
 
@@ -1031,7 +1033,7 @@ function pieform_validate(Pieform $form, $values) {
     // perform any action
     if ($USER) {
         $record = get_record_sql('SELECT suspendedctime, suspendedreason
-            FROM ' . get_config('dbprefix') . 'usr
+            FROM {usr}
             WHERE id = ?', array($USER->get('id')));
         if ($record && $record->suspendedctime) {
             throw new UserException(get_string('accountsuspended', 'mahara', $record->suspendedctime, $record->suspendedreason));
@@ -1043,7 +1045,7 @@ function pieform_element_calendar_configure($element) {
     $element['jsroot'] = get_config('wwwroot') . 'js/jscalendar/';
     $element['themefile'] = theme_get_url('style/calendar.css');
     $element['imagefile'] = theme_get_url('images/calendar.gif');
-    $language = substr(get_config('lang'), 0, 2);
+    $language = substr(current_language(), 0, 2);
     $element['language'] = $language;
     return $element;
 }
@@ -1069,7 +1071,6 @@ function can_view_view($view_id, $user_id=null) {
     global $USER;
     $now = time();
     $dbnow = db_format_timestamp($now);
-    $prefix = get_config('dbprefix');
 
     if ($user_id === null) {
         $user_id = $USER->get('id');
@@ -1086,8 +1087,8 @@ function can_view_view($view_id, $user_id=null) {
             ' . db_format_tsfield('a.startdate','access_startdate') . ',
             ' . db_format_tsfield('a.stopdate','access_stopdate') . '
         FROM
-            ' . $prefix . 'view v
-            LEFT OUTER JOIN ' . $prefix . 'view_access a ON v.id=a.view
+            {view} v
+            LEFT OUTER JOIN {view_access} a ON v.id=a.view
         WHERE v.id=?
     ', array($view_id));
 
@@ -1121,8 +1122,8 @@ function can_view_view($view_id, $user_id=null) {
         return true;
     }
 
-    if ($view_record['submittedto'] && record_exists('community_member', 'community', $view_record['submittedto'], 'member', $user_id, 'tutor', 1)) {
-        //log_debug('Yes - View is submitted for assesment to a community you are a tutor in');
+    if ($view_record['submittedto'] && record_exists('group_member', 'group', $view_record['submittedto'], 'member', $user_id, 'tutor', 1)) {
+        //log_debug('Yes - View is submitted for assesment to a group you are a tutor in');
         return true;
     }
 
@@ -1178,7 +1179,7 @@ function can_view_view($view_id, $user_id=null) {
             || $view_record['access']['friends']['stopdate'] > $now
         )
         && get_field_sql(
-            'SELECT COUNT(*) FROM ' . $prefix . 'usr_friend f WHERE (usr1=? AND usr2=?) OR (usr1=? AND usr2=?)',
+            'SELECT COUNT(*) FROM {usr_friend} f WHERE (usr1=? AND usr2=?) OR (usr1=? AND usr2=?)',
             array( $view_record['owner'], $user_id, $user_id, $view_record['owner'] )
         )
     ) {
@@ -1191,7 +1192,7 @@ function can_view_view($view_id, $user_id=null) {
         'SELECT
             a.view
         FROM 
-            ' . $prefix . 'view_access_usr a
+            {view_access_usr} a
         WHERE
             a.view=? AND a.usr=?
             AND ( a.startdate < ? OR a.startdate IS NULL )
@@ -1208,40 +1209,20 @@ function can_view_view($view_id, $user_id=null) {
     if (get_field_sql(
         'SELECT
             a.view
-        FROM 
-            ' . $prefix . 'view_access_group a
-            INNER JOIN ' . $prefix . 'usr_group g ON a.grp = g.id
-            INNER JOIN ' . $prefix . 'usr_group_member m ON g.id = m.grp
-        WHERE
-            a.view=? AND m.member=?
-            AND ( a.startdate < ? OR a.startdate IS NULL )
-            AND ( a.stopdate > ?  OR a.stopdate  IS NULL )
-        LIMIT 1',
-        array( $view_id, $user_id, $dbnow, $dbnow )
-        )
-    ) {
-        //log_debug('Yes - View is available to one of the owners groups');
-        return true;
-    }
-
-    // check community access
-    if (get_field_sql(
-        'SELECT
-            a.view
         FROM
-            ' . $prefix . 'view_access_community a
-            INNER JOIN ' . $prefix . 'community c ON a.community = c.id
-            INNER JOIN ' . $prefix . 'community_member m ON c.id=m.community
+            {view_access_group} a
+            INNER JOIN {group} g ON a.group = g.id
+            INNER JOIN {group_member} m ON g.id=m.group
         WHERE
             a.view = ? 
             AND ( a.startdate < ? OR a.startdate IS NULL )
             AND ( a.stopdate > ?  OR a.stopdate  IS NULL )
-            AND ( ( m.member = ? AND (a.tutoronly = 0 OR m.tutor = 1 ) ) OR c.owner = ?)
+            AND ( ( m.member = ? AND (a.tutoronly = 0 OR m.tutor = 1 ) ) OR g.owner = ?)
         LIMIT 1',
         array( $view_id, $dbnow, $dbnow, $user_id, $user_id  )
         )
     ) {
-        //log_debug('Yes - View is available to a specific community');
+        //log_debug('Yes - View is available to a specific group');
         return true;
     }
 
@@ -1280,14 +1261,13 @@ function get_views($users, $userlooking=null, $limit=5) {
 
     $users = array_flip($users);
 
-    $prefix = get_config('dbprefix');
     $dbnow  = db_format_timestamp(time());
 
     if ($friends = get_records_sql_array(
         'SELECT
             CASE WHEN usr1=? THEN usr2 ELSE usr1 END AS id
         FROM
-            ' . $prefix . 'usr_friend f
+            {usr_friend} f
         WHERE
             ( usr1=? AND usr2 IN (' . join(',',array_map('db_quote', array_keys($users))) . ') )
             OR
@@ -1308,8 +1288,8 @@ function get_views($users, $userlooking=null, $limit=5) {
             ' . db_format_tsfield('mtime') . ',
             ' . db_format_tsfield('ctime') . '
         FROM 
-            ' . $prefix . 'view v
-            INNER JOIN ' . $prefix . 'view_access a ON
+            {view} v
+            INNER JOIN {view_access} a ON
                 v.id=a.view
                 AND (
                     accesstype IN (\'public\',\'loggedin\')
@@ -1349,8 +1329,8 @@ function get_views($users, $userlooking=null, $limit=5) {
             ' . db_format_tsfield('mtime') . ',
             ' . db_format_tsfield('ctime') . '
         FROM 
-            ' . $prefix . 'view v
-            INNER JOIN ' . $prefix . 'view_access_usr a ON v.id=a.view AND a.usr=?
+            {view} v
+            INNER JOIN {view_access_usr} a ON v.id=a.view AND a.usr=?
         WHERE
             v.owner IN (' . join(',',array_map('db_quote', array_keys($users))) . ')
             AND ( v.startdate IS NULL OR v.startdate < ? )
@@ -1377,38 +1357,9 @@ function get_views($users, $userlooking=null, $limit=5) {
             ' . db_format_tsfield('v.mtime','mtime') . ',
             ' . db_format_tsfield('v.ctime','ctime') . '
         FROM 
-            ' . $prefix . 'view v
-            INNER JOIN ' . $prefix . 'view_access_group a ON v.id=a.view
-            INNER JOIN ' . $prefix . 'usr_group_member m ON m.grp=a.grp AND m.member=?
-        WHERE
-            v.owner IN (' . join(',',array_map('db_quote', array_keys($users))) . ')
-            AND ( v.startdate IS NULL OR v.startdate < ? )
-            AND ( v.stopdate IS NULL OR v.stopdate > ? )
-        ',
-        array($userlooking, $dbnow, $dbnow)
-        )
-    ) {
-        foreach ($results as &$row) {
-            $list[$row->owner][$row->id] = $row;
-        }
-    }
-
-    // bail if we've filled all users to the limit
-    if (_get_views_trim_list($list, $users, $limit)) {
-        return $list;
-    }
-
-    // check community access
-    if ($results = get_records_sql_array(
-        'SELECT
-            v.*,
-            ' . db_format_tsfield('v.atime','atime') . ',
-            ' . db_format_tsfield('v.mtime','mtime') . ',
-            ' . db_format_tsfield('v.ctime','ctime') . '
-        FROM 
-            ' . $prefix . 'view v
-            INNER JOIN ' . $prefix . 'view_access_community a ON v.id=a.view
-            INNER JOIN ' . $prefix . 'community_member m ON m.community=a.community AND m.member=?
+            {view} v
+            INNER JOIN {view_access_group} a ON v.id=a.view
+            INNER JOIN {group_member} m ON m.group=a.group AND m.member=?
         WHERE
             v.owner IN (' . join(',',array_map('db_quote', array_keys($users))) . ')
             AND ( v.startdate IS NULL OR v.startdate < ? )
@@ -1449,12 +1400,11 @@ function _get_views_trim_list(&$list, &$users, $limit) {
 }
 
 function artefact_in_view($artefact, $view) {
-    $prefix = get_config('dbprefix');
     $sql = 'SELECT a.id 
-            FROM ' . $prefix . 'view_artefact a WHERE view = ? AND artefact = ?
+            FROM {view_artefact} a WHERE view = ? AND artefact = ?
             UNION
             SELECT c.parent 
-            FROM ' . $prefix . 'view_artefact top JOIN ' . $prefix . 'artefact_parent_cache c
+            FROM {view_artefact} top JOIN {artefact_parent_cache} c
               ON c.parent = top.artefact 
             WHERE top.view = ? AND c.artefact = ?';
 

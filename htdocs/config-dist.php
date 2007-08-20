@@ -83,6 +83,20 @@ $cfg->log_environ_targets = LOG_TARGET_SCREEN | LOG_TARGET_ERRORLOG;
 // but probably only warnings are useful on a live site.
 $cfg->log_backtrace_levels = LOG_LEVEL_WARN | LOG_LEVEL_ENVIRON;
 
+// Developer mode
+// When set, the following things (among others) will happen:
+//
+// * 'debug.js' will be included on each page. You can edit this file to add 
+//   debugging javascript at your discretion
+// * 'debug.css' will be included on each page. You can edit this file to add 
+//   debugging CSS at your discretion
+// * firebuglite will be included, if you are not using Firefox
+// * the unpacked version of MochiKit will be used
+//
+// These options are a performance hit otherwise, enable when you are 
+// developing for Mahara
+$cfg->developermode = false;
+
 // capture performance information and print it
 // $cfg->perftofoot = true; // needs a call to mahara_performance_info (smarty callback) - see default theme's footer.tpl
 // $cfg->perftolog = true;
@@ -96,4 +110,10 @@ $cfg->log_backtrace_levels = LOG_LEVEL_WARN | LOG_LEVEL_ENVIRON;
 // enter them here
 // $cfg->smtpuser = '';
 // $cfg->smtppass = '';
+
+// xmlrpc
+// if you're running in a configuration where the host contacting you will be
+// using an IP address that is not the same as the IP address that is registered
+// for its host name, then you should change the value below to 'true'.
+$cfg->xmlrpc_allow_masquerading = false;
 ?>
