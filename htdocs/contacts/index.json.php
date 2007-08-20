@@ -30,7 +30,7 @@ define('JSON', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 
 
-$pending  = param_boolean('pending');
+$filter   = param_integer('filter');
 $limit    = param_integer('limit', 10);
 $offset   = param_integer('offset', 0);
 $control  = param_boolean('control');
@@ -46,67 +46,129 @@ if ($control) {
         $values['id']           = param_integer('id');
         $values['rejectreason'] = param_variable('rejectreason', null);
         $values['rejectsubmit'] = param_alpha('rejectsubmit', null);
+        $values['reason']       = param_variable('reason', null);
     }
     catch (ParameterException $e) {
         json_reply(true, $e->getMessage());
     }
     $user = get_record('usr', 'id', $values['id']);
+
+    if ($values['type'] == 'message') {
+        try {
+            send_user_message($user, param_variable('message'));
+            json_reply(false, get_string('messagesent'));
+        }
+        catch (AccessDeniedException $e) {
+            json_reply(true, get_string('messagenotsent'));
+        }
+        exit;
+    }
+
+    // FIXME: there's no validation here, and possibly none on the user view
+    // page, for people submitting friend requests to users who do not want them. 
+    // See bug #741. Language string not translated so people will not forget 
+    // this
+    if ($values['type'] == 'request' && $values['id'] == $USER->get('id')) {
+        json_reply(true, 'You cannot request a friendship with yourself');
+    }
+
     friend_submit(null, $values);
     exit;
 }
 
 
 // normal processing (getting friends list)
-if (empty($pending)) {
+$data = array();
+if ($filter == 1) {
     $count = count_records_select('usr_friend', 'usr1 = ? OR usr2 = ?', array($userid, $userid));
-    $sql = 'SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, u.staff
+    $sql = 'SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname,
+            (SELECT a.title FROM {artefact} a WHERE a.owner = u.id AND a.artefacttype = \'introduction\') AS introduction,
+            COALESCE((SELECT ap.value FROM {usr_account_preference} ap WHERE ap.usr = u.id AND ap.field = \'messages\'), \'allow\') AS messages
             FROM {usr} u 
             WHERE u.id IN (
                 SELECT (CASE WHEN usr1 = ? THEN usr2 ELSE usr1 END) AS userid 
-                FROM {usr_friend} WHERE (usr1 = ? OR usr2 = ?))';
-    if (!$data = get_records_sql_assoc($sql, array($userid, $userid, $userid), $offset, $limit)) {
-        $data = array();
-    }
-    if (!$views = get_views(array_keys($data), null, null)) {
+                FROM {usr_friend} WHERE (usr1 = ? OR usr2 = ?))
+            ORDER BY u.id';
+    $data = get_records_sql_assoc($sql, array($userid, $userid, $userid), $offset, $limit);
+    if (!$data || !$views = get_views(array_keys($data), null, null)) {
         $views = array();
     }
-    $data = array_values($data);
 }
-else {
-    $count = count_records('usr_friend_request' , 'owner', array($userid));
-    $sql = 'SELECT u.id, u.firstname, u.lastname, u.preferredname, u.username, fr.reason
+else if ($filter == 2) {
+    $count = count_records('usr_friend_request', 'owner', array($userid));
+    $sql = 'SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, fr.reason, 1 AS pending,
+            (SELECT a.title FROM {artefact} a WHERE a.owner = u.id AND a.artefacttype = \'introduction\') AS introduction,
+            COALESCE((SELECT ap.value FROM {usr_account_preference} ap WHERE ap.usr = u.id AND ap.field = \'messages\'), \'allow\') AS messages
             FROM {usr} u 
             JOIN {usr_friend_request} fr ON fr.requester = u.id
-            WHERE fr.owner = ?';
+            WHERE fr.owner = ?
+            ORDER BY u.id';
     $data = get_records_sql_array($sql, array($userid), $offset, $limit);
     $views = array();
 }
-
-if (empty($data)) {
-    $data = array();
+else {
+    $count = count_records_select('usr_friend', 'usr1 = ? OR usr2 = ?', array($userid, $userid))
+           + count_records('usr_friend_request', 'owner', array($userid));
+    $sql = 'SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, NULL as reason, 0 AS pending,
+                (SELECT a.title FROM {artefact} a WHERE a.owner = u.id AND a.artefacttype = \'introduction\') AS introduction,
+                COALESCE((SELECT ap.value FROM {usr_account_preference} ap WHERE ap.usr = u.id AND ap.field = \'messages\'), \'allow\') AS messages
+                FROM {usr} u
+                WHERE u.id IN (
+                    SELECT (CASE WHEN usr1 = ? THEN usr2 ELSE usr1 END) AS userid 
+                    FROM {usr_friend} WHERE (usr1 = ? OR usr2 = ?))
+            UNION
+            SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, fr.reason, 1 AS pending,
+                (SELECT a.title FROM {artefact} a WHERE a.owner = u.id AND a.artefacttype = \'introduction\') AS introduction,
+                COALESCE((SELECT ap.value FROM {usr_account_preference} ap WHERE ap.usr = u.id AND ap.field = \'messages\'), \'allow\') AS messages
+                FROM {usr} u 
+                JOIN {usr_friend_request} fr ON fr.requester = u.id
+                WHERE fr.owner = ?
+            ORDER BY pending DESC, id';
+    $data = get_records_sql_assoc($sql, array($userid, $userid, $userid, $userid));
+    if (!$data || !$views = get_views(array_keys($data), null, null)) {
+        $views = array();
+    }
 }
 
-foreach ($data as $d) {
-    $d->name  = display_name($d);
+if ($data) {
+    $data = array_values($data);
+    foreach ($data as $d) {
+        $d->name  = display_name($d);
+        if (isset($d->introduction)) {
+            $d->introduction = format_introduction($d->introduction);
+        }
+        $d->messages = ($d->messages == 'allow' || is_friend($userid, $d->id) && $d->messages == 'friends' || $USER->get('admin')) ? 1 : 0;
+    }
 }
 
-json_headers();
+
 $viewcount = array_map('count', $views);
 // since php is so special and inconsistent, we can't use array_map for this because it breaks the top level indexes.
 $cleanviews = array();
 foreach ($views as $userindex => $viewarray) {
     $cleanviews[$userindex] = array_slice($viewarray, 0, 5);
+
+    // Don't reveal any more about the view than necessary
+    foreach ($cleanviews as $userviews) {
+        foreach ($userviews as &$view) {
+            foreach (array_keys(get_object_vars($view)) as $key) {
+                if ($key != 'id' && $key != 'title') {
+                    unset($view->$key);
+                }
+            }
+        }
+    }
+
 }
-print json_encode(array(
+
+json_reply(false, array(
     'count'   => $count,
     'limit'   => $limit,
     'offset'  => $offset,
     'data'    => $data,
-    'pending' => $pending,
-    'views' => $cleanviews,
+    'filter'  => $filter,
+    'views'   => $cleanviews,
     'numviews' => $viewcount,
 ));
-exit;
-
 
 ?>
