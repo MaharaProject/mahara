@@ -4,7 +4,8 @@
 {include file="columnleftstart.tpl"}
 	  		<h2>{str tag="myfriends"}</h2>
 
-            <table id="friendslistcontainer">
+            <div id="friendslistcontainer">
+            <table id="friendslistcontrols">
                 <tr>
                     <td>
                         <select id="filter" name="filter" onchange="filterChange();">
@@ -31,5 +32,6 @@
                 <tbody>
                 </tbody>
             </table>
+            </div>
 {include file="columnleftend.tpl"}
 {include file="footer.tpl"}
