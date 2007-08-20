@@ -269,7 +269,6 @@ searchresults.rowfunction = function(r, n, d) {
         introduction = P(null, createDOM('EM', null, '"' + r.introduction + '"'));
     }
 
-    // FIXME: get friend preference so we know whether it's send request or just make this person your friend
     var actionButton = null;
     var tdAttrs = {};
     var suffix = '';
