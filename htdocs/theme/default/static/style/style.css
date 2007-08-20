@@ -1065,6 +1065,10 @@ table#installer {
 #friendslistcontainer p {
     margin: 0;
 }
+#friendslistcontainer table {
+    border: none;
+    padding: 0;
+}
 #friendslistcontainer .pending {
     padding: .5em 0;
 }
