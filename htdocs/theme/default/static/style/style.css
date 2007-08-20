@@ -190,6 +190,9 @@ tr.required th {
 .message p {
     margin: 0;
 }
+.message a {
+    color: #819F18;
+}
 
 /* CONTENT LAYOUT BEGIN */
 #container {
@@ -1049,6 +1052,45 @@ table#installer {
 #createfolderform input.text {
 	border: 1px solid #d4d1c0;
 	padding: 1px 2px 1px 2px;
+}
+
+/* My Friends styles */
+#friendslistcontrols, #friendslistcontrols td {
+    border: none;
+    padding: 0;
+}
+#friendslistcontrols input {
+    margin: 0;
+}
+#friendslistcontainer p {
+    margin: 0;
+}
+#friendslistcontainer .pending {
+    padding: .5em 0;
+}
+#friendslistcontainer div.pending strong {
+    font-weight: bold;
+    color: #547C22;
+}
+#friendslistcontainer .pending {
+    background-color: #f8f8b8;
+}
+#friendslistcontainer .friendinfo {
+    margin: 0 0 0 .5em;
+    border: none;
+}
+#friendslistcontainer .friendinfo th {
+    padding: 0;
+}
+#friendslistcontainer .friendinfo h3 {
+    margin: 0;
+}
+#friendslistcontainer .friendinfo td {
+    vertical-align: top;
+}
+#friendslistcontainer .viewlist {
+    padding: 0;
+    width: 40%;
 }
 
 /* Groups I'm in and Groups I own styles */
