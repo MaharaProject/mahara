@@ -362,6 +362,28 @@ function jsstrings() {
                 'nochildren',
             ),
         ),
+        'friends' => array(
+            'mahara' => array(
+                'confirmremovefriend',
+                'seeallviews',
+                'noviewstosee',
+                'sendmessage',
+                'whymakemeyourfriend',
+                'approverequest',
+                'denyrequest',
+                'pending',
+                'removefromfriendslist',
+                'views',
+                'trysearchingforfriends',
+                'nobodyawaitsfriendapproval',
+                'sendfriendrequest',
+                'addtomyfriends',
+                'friendshiprequested',
+                'userdoesntwantfriends',
+                'existingfriend',
+                'nosearchresultsfound',
+            ),
+        ),
     );
 }
 
