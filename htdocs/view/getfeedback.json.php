@@ -75,7 +75,7 @@ else {
     $feedback = get_records_sql_array('
         SELECT
             f.id, f.author, f.ctime, f.message, f.public, f.attachment, a.title
-        FROM {view_feedback}
+        FROM {view_feedback} f
         LEFT OUTER JOIN {artefact} a ON f.attachment = a.id
         WHERE view = ' . $view 
             . ($public ? ' AND (f.public = 1 OR f.author = ' . $userid . ')' : '') . '
