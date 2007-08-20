@@ -48,7 +48,21 @@ function friendRequestWithMessage(id, link, type, tableRenderer) {
         return false;
     }
 
-    var submitButton = INPUT({'type': 'submit', 'class': 'submit', 'value': type});
+    var title = '';
+    var buttonText = '';
+    if (type == 'message') {
+        title = buttonText = get_string('sendmessage');
+    }
+    else if (type == 'request') {
+        title = get_string('reason');
+        buttonText = get_string('requestfriendship');
+    }
+    else if (type == 'disallow') {
+        title = get_string('reason');
+        buttonText = get_string('denyrequest');
+    }
+
+    var submitButton = INPUT({'type': 'submit', 'class': 'submit', 'value': buttonText});
     connect(submitButton, 'onclick', function(e) {
         var pd;
         if (type == 'disallow') {
@@ -75,7 +89,7 @@ function friendRequestWithMessage(id, link, type, tableRenderer) {
         DIV({'id': 'dc' + id + '_' + type},
             TABLE(null,
                 TR(null,
-                    TH(null, type)
+                    TH(null, title)
                 ),
                 TR(null,
                     TD(null, TEXTAREA({'class': 'textarea fullwidth', 'id': type + '_message_' + id, 'rows': 5, 'cols': 40}))
