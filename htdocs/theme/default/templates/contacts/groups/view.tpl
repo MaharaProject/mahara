@@ -14,9 +14,6 @@
                 {elseif $canjoin} <p><a href="view.php?id={$group->id}&amp;joincontrol=join"">{str tag='joingroup'}</a></p>
                 {elseif $canacceptinvite} <p>{str tag='grouphaveinvite'} <a href="view.php?id={$group->id}&amp;joincontrol=acceptinvite">{str tag='acceptinvitegroup'}</a> | <a href="view.php?id={$group->id}&amp;joincontrol=declineinvite">{str tag='declineinvitegroup'}</a></p>{/if}
                 {if $member}
-                    <div id="groupwatchlistcontrol">
-                    <input type="button" id="watchlistcontrolbutton" class="button" onclick="return toggleWatchlist();" value="{if $onwatchlist}{str tag=removefromwatchlist section=activity}{else}{str tag=addtowatchlist section=activity}{/if}">
-                    </div>
                     <div class="groupviews">
                         <h5>{str tag='views'}</h5>
                         {if $tutor && $controlled}
