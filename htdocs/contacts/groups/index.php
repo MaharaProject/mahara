@@ -62,8 +62,6 @@ function leaveGroup(id) {
         if (!data.error) {
             grouplist.doupdate();
         }
-    }, function () {
-        watchlist.doupdate();
     });
 }
 
