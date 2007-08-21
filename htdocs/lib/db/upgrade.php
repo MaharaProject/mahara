@@ -610,6 +610,20 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2007072803) {
+        // Remove watchlist functionality apart from watching views
+        $table = new XMLDBTable('usr_watchlist_group');
+        drop_table($table);
+
+        $table = new XMLDBTable('usr_watchlist_artefact');
+        drop_table($table);
+
+        $table = new XMLDBTable('usr_watchlist_view');
+        $field = new XMLDBField('recurse');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, false, true, false, null, null, 1);
+        drop_field($table, $field);
+    }
+
     return $status;
 
 }
