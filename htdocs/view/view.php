@@ -38,6 +38,8 @@ if (!can_view_view($viewid)) {
     throw new AccessDeniedException();
 }
 
+$viewbeingwatched = 0;
+
 if ($artefactid) {
 
     if (!artefact_in_view($artefactid, $viewid)) {
@@ -115,6 +117,7 @@ else {
         $tutorfilefeedbackformrow = "TR(null, TH(null, LABEL(null, '" . get_string('attachfile') . "'))),"
             . "TR(null, TD(null, INPUT({'type':'file', 'name':'attachment'}))),";
     }
+    $viewbeingwatched = (int)record_exists('usr_watchlist_view', 'usr', $USER->get('id'), 'view', $viewid);
 }
 if (empty($tutorfilefeedbackformrow)) {
         $tutorfilefeedbackformrow = '';
@@ -126,9 +129,15 @@ $getstring = quotestrings(array('mahara' => array(
         'nopublicfeedback', 'reportobjectionablematerial', 'print',
 )));
 
-$thing = $artefactid ? 'artefact' : 'view';
-$getstring['addtowatchlist'] = "'" . get_string('addtowatchlist', 'mahara', get_string($thing)) . "'";
-$getstring['addtowatchlistwithchildren'] = "'" . get_string('addtowatchlistwithchildren', 'mahara', ucfirst(get_string($thing))) . "'";
+if (!$artefactid) {
+    $getstring['addtowatchlist'] = json_encode(get_string('addtowatchlist'));
+    $getstring['removefromwatchlist'] = json_encode(get_string('removefromwatchlist'));
+}
+else {
+    $getstring['addtowatchlist'] = '""';
+    $getstring['removefromwatchlist'] = '""';
+}
+
 $getstring['feedbackattachmessage'] = "'(" . get_string('feedbackattachmessage', 'mahara', get_string('feedbackattachdirname')) . ")'";
 
 // Safari doesn't seem to like these inputs to be called 'public', so call them 'ispublic' instead.
@@ -223,15 +232,6 @@ function objectionform() {
 }
 
 function view_menu() {
-    addtowatchlist = function (recurse) { 
-        var data = {'view':view,'recurse':recurse};
-        if (artefact) {
-            data.artefact = artefact;
-        }
-        sendjsonrequest('addwatchlist.json.php', data, 'POST');
-        return false;
-    }
-
     if (config.loggedin) {
         appendChildNodes('viewmenu',
             A({'href':'', 'onclick':"return feedbackform();"}, 
@@ -244,13 +244,18 @@ function view_menu() {
         A({'href':'', 'onclick':'window.print();return false;'}, 
             {$getstring['print']})
     );
-    if (config.loggedin) {
-        appendChildNodes('viewmenu', ' | ',
-            A({'href':'', 'onclick':'return addtowatchlist(false);'},
-                {$getstring['addtowatchlist']}), ' | ',
-            A({'href':'', 'onclick':'return addtowatchlist(true);'},
-               {$getstring['addtowatchlistwithchildren']})
-        );
+    if (config.loggedin && !artefact) {
+        var linkTextFlag = {$viewbeingwatched};
+        var linkText = [{$getstring['addtowatchlist']}, {$getstring['removefromwatchlist']}];
+        link = A({'href': ''}, linkText[linkTextFlag]);
+        connect(link, 'onclick', function(e) {
+            var data = {'view': view};
+            sendjsonrequest('togglewatchlist.json.php', data, 'POST', function() {
+                link.innerHTML = linkText[++linkTextFlag % 2];
+            });
+            e.stop();
+        });
+        appendChildNodes('viewmenu', ' | ', link);
      }
 
 }
