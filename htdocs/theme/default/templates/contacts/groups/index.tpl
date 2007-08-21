@@ -7,7 +7,7 @@
 	                        <thead>
                                     <tr>
  	                                <th>{str tag='name'}</th>
- 	                                <th>Delete</th>
+ 	                                <th>{str tag='delete'}</th>
                                     <tr>
                                 </thead>
                                 <tbody>
