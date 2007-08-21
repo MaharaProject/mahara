@@ -1268,12 +1268,6 @@ function main_nav() {
                 'title' => get_string('activityprefs'),
                 'weight' => 30,
             ),
-            array(
-                'path' => 'settings/mywatchlist',
-                'url' => 'account/watchlist/',
-                'title' => get_string('watchlist'),
-                'weight' => 40,
-            ),
         );
 
         if ($plugins = get_records_array('artefact_installed', 'active', 1)) {
