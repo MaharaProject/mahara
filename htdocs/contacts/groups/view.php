@@ -133,8 +133,6 @@ $declinestr      = get_string('declinerequest');
 $updatefailedstr = get_string('updatefailed');
 $requeststr      = get_string('sendrequest');
 $reasonstr       = get_string('reason');
-$removefromwatchliststr = get_string('removefromwatchlist', 'activity');
-$addtowatchliststr = get_string('addtowatchlist', 'activity');
 
 // all the permissions stuff
 //$tutor          = (int)($membership && ($membership != GROUP_MEMBERSHIP_MEMBER));
@@ -274,21 +272,6 @@ function releaseView(id) {
     return false;
 }
 
-function toggleWatchlist() {
-    var pd = {'type': 'watchlist', 'id': '{$group->id}'};
-    var remove = '{$removefromwatchliststr}';
-    var add = '{$addtowatchliststr}';
-    sendjsonrequest('view.json.php', pd, 'GET', function (data) {
-        if (data.member) {
-            $('watchlistcontrolbutton').value = remove;
-        }
-        else {
-            $('watchlistcontrolbutton').value = add;
-        }
-    });
-    return false;
-}
-
 function updateMembership() {
     var pd = {'type': 'membercontrol', 'id': '{$group->id}'};
     var e = getElementsByTagAndClassName(null, 'member');
@@ -340,7 +323,6 @@ $smarty->assign('canpromote', $canpromote);
 $smarty->assign('canupdate', $canupdate);
 $smarty->assign('canacceptinvite', $invited);
 $smarty->assign('group', $group);
-$smarty->assign('onwatchlist', record_exists('usr_watchlist_group', 'usr', $USER->get('id'), 'group', $group->id));
 $smarty->display('contacts/groups/view.tpl');
 
 
