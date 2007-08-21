@@ -445,7 +445,6 @@ acronym {
 #loading_box,
 #activityprefs #activityprefs_submit,
 #activitylist tfoot,
-#watchlist tfoot,
 #adminstitutionslist form,
 #accountprefs #accountprefs_submit,
 #profileform_submit,
@@ -474,12 +473,6 @@ acronym {
 	font-size: 14pt;
 	padding: 10px 0 0 0;
 	margin: 0;
-}
-
-#watchlist {
-	width: 100%;
-	margin: 0;
-	padding: 0;
 }
 
 #adminstitutionslist tbody td {
@@ -539,7 +532,6 @@ acronym {
 #filelist th,
 #bloglist th,
 #activitylist th,
-#watchlist th,
 #adminstitutionslist th {
 	color: #3a5813;
 	border-bottom: 1px #999999 solid;
