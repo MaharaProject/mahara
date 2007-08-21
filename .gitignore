@@ -8,3 +8,13 @@ mahara-*.tar.gz
 mahara-*.zip
 *.swp
 .patches
+/configure-stamp
+/debian/files
+/debian/mahara-apache.postinst.debhelper
+/debian/mahara-apache.postrm.debhelper
+/debian/mahara-apache.substvars
+/debian/mahara-apache
+/debian/mahara-apache2.postinst.debhelper
+/debian/mahara-apache2.postrm.debhelper
+/debian/mahara-apache2.substvars
+/debian/mahara-apache2
