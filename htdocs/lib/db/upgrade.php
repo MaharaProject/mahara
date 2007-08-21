@@ -610,7 +610,7 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
-    if ($oldversion < 2007072803) {
+    if ($oldversion < 2007082200) {
         // Remove watchlist functionality apart from watching views
         $table = new XMLDBTable('usr_watchlist_group');
         drop_table($table);
