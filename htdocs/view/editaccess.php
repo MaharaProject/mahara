@@ -141,9 +141,6 @@ function editviewaccess_submit(Pieform $form, $values) {
         execute_sql('DELETE FROM {usr_watchlist_view}
             WHERE view = ' . $viewid . '
             AND usr IN (' . $userids . ')');
-        execute_sql('DELETE FROM {usr_watchlist_artefact}
-            WHERE view = ' . $viewid . '
-            AND usr IN(' . $userids . ')');
     }
 
     $beforeusers = activity_get_viewaccess_users($viewid, $USER->get('id'), 'viewaccess');
