@@ -383,6 +383,7 @@ function jsstrings() {
                 'existingfriend',
                 'nosearchresultsfound',
                 'reason',
+                'cancel',
             ),
         ),
     );
