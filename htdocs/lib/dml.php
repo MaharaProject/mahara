@@ -818,7 +818,7 @@ function set_field_select($table, $newfield, $newvalue, $select, $values) {
     $select = db_quote_table_placeholders($select);
 
     $values = array_merge(array($newvalue), $values);
-    $sql = 'UPDATE '. db_table_name($table) .' SET '. $newfield  .' = ? ' . $select;
+    $sql = 'UPDATE '. db_table_name($table) .' SET "'. $newfield  .'" = ? ' . $select;
     try {
         $stmt = $db->Prepare($sql);
         increment_perf_db_writes();
@@ -922,7 +922,7 @@ function delete_records_sql($sql, $values=null) {
  * @throws SQLException
  */
 function insert_record($table, $dataobject, $primarykey=false, $returnpk=false) {
-    global $db, $dbgenerator;
+    global $db;
     static $table_columns;
     
     // Determine all the fields in the table
@@ -967,12 +967,7 @@ function insert_record($table, $dataobject, $primarykey=false, $returnpk=false) 
     $values = '';
     foreach ($ddd as $key => $value) {
         $count++;
-        if (in_array($key, $dbgenerator->reserved_words)) {
-            $fields .= '"' . $key . '"';
-        }
-        else {
-            $fields .= $key;
-        }
+        $fields .= '"' . $key . '"';
         $values .= '?';
         if ($count < $numddd) {
             $fields .= ', ';
@@ -1165,22 +1160,12 @@ function update_record($table, $dataobject, $where=null) {
  * @param string $value3 the value field3 must have (requred if field3 is given, else optional).
  */
 function where_clause($field1='', $value1='', $field2='', $value2='', $field3='', $value3='') {
-    global $dbgenerator;
-    if (in_array($field1, $dbgenerator->reserved_words)) {
-        $field1 = '"' . $field1 . '"';
-    }
-    if (in_array($field2, $dbgenerator->reserved_words)) {
-        $field2 = '"' . $field2 . '"';
-    }
-    if (in_array($field3, $dbgenerator->reserved_words)) {
-        $field3 = '"' . $field3 . '"';
-    }
     if ($field1) {
-        $select = "WHERE $field1 = '$value1'";
+        $select = "WHERE \"$field1\" = '$value1'";
         if ($field2) {
-            $select .= " AND $field2 = '$value2'";
+            $select .= " AND \"$field2\" = '$value2'";
             if ($field3) {
-                $select .= " AND $field3 = '$value3'";
+                $select .= " AND \"$field3\" = '$value3'";
             }
         }
     } else {
@@ -1199,23 +1184,13 @@ function where_clause($field1='', $value1='', $field2='', $value2='', $field3=''
  * @private
  */
 function where_clause_prepared($field1='', $field2='', $field3='') {
-    global $dbgenerator;
-    if (in_array($field1, $dbgenerator->reserved_words)) {
-        $field1 = '"' . $field1 . '"';
-    }
-    if (in_array($field2, $dbgenerator->reserved_words)) {
-        $field2 = '"' . $field2 . '"';
-    }
-    if (in_array($field3, $dbgenerator->reserved_words)) {
-        $field3 = '"' . $field3 . '"';
-    }
     $select = '';
     if (!empty($field1)) {
-        $select = " WHERE $field1 = ? ";
+        $select = " WHERE \"$field1\" = ? ";
         if (!empty($field2)) {
-            $select .= " AND $field2 = ? ";
+            $select .= " AND \"$field2\" = ? ";
             if (!empty($field3)) {
-                $select .= " AND $field3 = ? ";
+                $select .= " AND \"$field3\" = ? ";
             }
         }
     } 
