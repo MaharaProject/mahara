@@ -404,7 +404,7 @@ function xmldb_core_upgrade($oldversion=0) {
 
     }
 
-    if ($oldversion < 2008080700) {
+    if ($oldversion < 2007080700) {
         // Drop DEFAULT '' from many columns that should not have had them
         // *nigel looks angrily at xmldb
         execute_sql('
@@ -571,9 +571,6 @@ function xmldb_core_upgrade($oldversion=0) {
             ALTER TABLE {view_access_group} ADD CONSTRAINT {viewaccegrou_vie_fk} FOREIGN KEY (\"view\") REFERENCES {view}(id);
             ");
         }
-        else {
-            // ???
-        }
     }
 
     if ($oldversion < 2007082100) {
@@ -622,6 +619,39 @@ function xmldb_core_upgrade($oldversion=0) {
         $field = new XMLDBField('recurse');
         $field->setAttributes(XMLDB_TYPE_INTEGER, 1, false, true, false, null, null, 1);
         drop_field($table, $field);
+    }
+
+    if ($oldversion < 2007082201) {
+        // Rename the community tables to group - mysql version.
+        // This is really quite hacky. You can't rename columns with a foreign 
+        // key on them, so you have to drop the key, rename the column, re-add 
+        // the key and hope that nobody inserted anything inconsistent in the 
+        // time you were renaming the column
+        if (is_mysql()) {
+            execute_sql("ALTER TABLE {community} RENAME TO {group}");
+
+            execute_sql("ALTER TABLE {community_member} RENAME TO {group_member}");
+            execute_sql("ALTER TABLE {group_member} DROP FOREIGN KEY commmemb_com_fk");
+            execute_sql("ALTER TABLE {group_member} CHANGE community \"group\" BIGINT(10) DEFAULT NULL");
+            execute_sql("ALTER TABLE {group_member} ADD FOREIGN KEY(\"group\") REFERENCES \"group\"(id)");
+
+            execute_sql("ALTER TABLE {community_member_request} RENAME TO {group_member_request}");
+            execute_sql("ALTER TABLE {group_member_request} DROP FOREIGN KEY commmembrequ_com_fk");
+            execute_sql("ALTER TABLE {group_member_request} CHANGE community \"group\" BIGINT(10) DEFAULT NULL");
+            execute_sql("ALTER TABLE {group_member_request} ADD FOREIGN KEY(\"group\") REFERENCES \"group\"(id)");
+
+            execute_sql("ALTER TABLE {community_member_invite} RENAME TO {group_member_invite}");
+            execute_sql("ALTER TABLE {group_member_invite} DROP FOREIGN KEY commmembinvi_com_fk");
+            execute_sql("ALTER TABLE {group_member_invite} CHANGE community \"group\" BIGINT(10) DEFAULT NULL");
+            execute_sql("ALTER TABLE {group_member_invite} ADD FOREIGN KEY(\"group\") REFERENCES \"group\"(id)");
+
+            execute_sql("DROP TABLE {usr_watchlist_community}");
+
+            execute_sql("ALTER TABLE {view_access_community} RENAME TO {view_access_group}");
+            execute_sql("ALTER TABLE {view_access_group} DROP FOREIGN KEY viewaccecomm_com_fk");
+            execute_sql("ALTER TABLE {view_access_group} CHANGE community \"group\" BIGINT(10) DEFAULT NULL");
+            execute_sql("ALTER TABLE {view_access_group} ADD FOREIGN KEY(\"group\") REFERENCES \"group\"(id)");
+        }
     }
 
     return $status;
