@@ -41,7 +41,6 @@ if ($action == 'delete') {
         json_reply('local', get_string('cantdeletegroupdontown'));
     }
     db_begin();
-    delete_records('usr_watchlist_group', 'group', $id);
     delete_records('view_access_group', 'group', $id);
     delete_records('group_member_invite', 'group', $id);
     delete_records('group_member_request', 'group', $id);

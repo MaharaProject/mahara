@@ -72,15 +72,13 @@ $string['newcontactusfrom'] = 'New contact us from';
 $string['newcontactus'] = 'New contact us';
 $string['newfeedbackonview'] = 'New feedback on view';
 $string['newfeedbackonartefact'] = 'New feedback on artefact';
-$string['watchlistmessageview'] = 'Activity on watchlist (View)';
-$string['watchlistmessageartefact'] = 'Activity on watchlist (Artefact)';
-$string['watchlistmessagegroup'] = 'Activity on watchlist (Group)';
 $string['newviewmessage'] = 'has created a view called "%s" and has granted you access to it.';
 $string['newviewsubject'] = 'New view created';
 
 $string['newviewaccessmessage'] = 'You have been added to the access list for the view called';
 $string['newviewaccesssubject'] = 'New view access';
 
+$string['viewmodified'] = 'has changed their view';
 $string['onview'] = 'on View';
 $string['onartefact'] = 'on Artefact';
 $string['ongroup'] = 'on Group';
@@ -94,10 +92,5 @@ $string['removedgroupmembersubj'] = '%s is no longer a group member';
 
 $string['addtowatchlist'] = 'Add to watchlist';
 $string['removefromwatchlist'] = 'Remove from watchlist';
-
-$string['removedgroupfromwatchlist'] = 'The group has been removed from your watchlist';
-$string['addedgrouptowatchlist'] = 'The group was added to your watchlist';
-
-$string['andchildren'] = 'Children are also being monitored'
 
 ?>

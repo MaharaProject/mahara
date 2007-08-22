@@ -29,47 +29,24 @@ define('JSON', 1);
 
 require(dirname(dirname(__FILE__)) . '/init.php');
 
-json_headers();
-
 $view = param_integer('view');
-$artefact = param_integer('artefact',null);
-$recurse = param_boolean('recurse',true);
 
 $data = new StdClass;
-if ($artefact) {
-    $data->artefact = $artefact;
-    $type = 'artefact';
-    $artefactfield = 'artefact';
-    $fields = array('usr', 'view', 'artefact');
-}
-else {
-    $type = 'view';
-    $artefactfield = null;
-    $fields = array('usr', 'view');
-}
-$table = 'usr_watchlist_' . $type;
-
 $data->view = $view;
 $data->usr = $USER->get('id');
 $data->ctime = db_format_timestamp(time());
-$data->recurse = $recurse ? 1 : 0;
 
-$oldrecord = get_record($table, 'usr', $data->usr, 'view', $view, $artefactfield, $artefact);
+if (get_record('usr_watchlist_view', 'usr', $data->usr, 'view', $view)) {
+    if (!delete_records('usr_watchlist_view', 'usr', $data->usr, 'view', $view)) {
+        json_reply('local', get_string('updatewatchlistfailed'));
+    }
+    json_reply(false, get_string('removedfromwatchlist'));
+}
 
-if ($oldrecord) {
-    if ($oldrecord->recurse == $recurse) {
-        json_reply(false, get_string('alreadyinwatchlist', 'mahara', get_string($type)));
-    }
-    if (update_record($table, $data, $fields)) {
-        json_reply(false, get_string('watchlistupdated'));
-    }
+if (!insert_record('usr_watchlist_view', $data)) {
     json_reply('local', get_string('updatewatchlistfailed'));
 }
 
-if (!insert_record($table, $data)) {
-    json_reply('local', get_string('updatewatchlistfailed'));
-}
-
-json_reply(false,get_string('addedtowatchlist', 'mahara', get_string($type)));
+json_reply(false, get_string('addedtowatchlist'));
 
 ?>

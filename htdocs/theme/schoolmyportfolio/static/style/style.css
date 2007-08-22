@@ -1401,19 +1401,12 @@ span.block_targetted, div.block_targetted {
 .maincontent #activitylist tbody tr td a {
 	font-weight: bold;
 }
-.maincontent #mywatchlist #typeheader {
-	color: #cb9300;
-	font-weight: bold;
-	padding: 15px 0 0 0;
-}
-#activitylist .markasreadtd,
-#watchlist .stopmonitoringtd {
+#activitylist .markasreadtd {
 	text-align: right;
 	background: none;
 	background-color: #fffaec;
 }
-#activitylist .markasread,
-#watchlist .stopmonitoring {
+#activitylist .markasread {
 	float: right;
 	padding: 0;
 	margin: 0;

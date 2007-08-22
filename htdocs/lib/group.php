@@ -63,7 +63,6 @@ function group_user_can_leave($group, $userid=null) {
 function group_remove_user($group, $userid) {    
     db_begin();
     delete_records('group_member', 'group', $group, 'member', $userid);
-    delete_records('usr_watchlist_group', 'group', $group, 'usr', $userid);
     db_commit();
 }
 
@@ -260,36 +259,12 @@ function user_can_access_group($group, $user=null) {
 
 /**
  * helper function to remove a user from a group
- * also deletes the group from their watchlist, 
- * and deletes any views they can only access through this group
- * from their watchlist. 
  *
  * @param int $groupid
  * @param int $userid
  */
 function group_remove_member($groupid, $userid) {
-
-    delete_records('usr_watchlist_group', 'usr', $userid, 'group', $groupid);
-    // get all the views in this user's watchlist associated with this group.
-    $views = get_column_sql('SELECT v.id 
-                             FROM {view} v JOIN {usr_watchlist_view} va on va.view = v.id
-                             JOIN {view_access_group} g ON g.view = v.id');
-    // @todo this is probably a retarded way to do it and should be changed later.
-    foreach ($views as $view) {
-        db_begin();
-        delete_records('usr_watchlist_view', 'view', $view, 'usr', $userid);
-        if (can_view_view($view, $userid)) {
-            db_rollback();
-        }
-        else {
-            db_commit();
-        }
-    }
     delete_records('group_member', 'member', $userid, 'group', $groupid);
-    $user = optional_userobj($userid);
-    activity_occurred('watchlist', 
-                      array('group' => $groupid, 
-                            'subject' => get_string('removedgroupmembersubj', 'activity', display_default_name($user))));
 }
 
 /**
@@ -307,9 +282,6 @@ function group_add_member($groupid, $userid) {
     $cm->tutor = 0;
     insert_record('group_member', $cm);
     $user = optional_userobj($userid);
-    activity_occurred('watchlist', 
-                      array('group' => $groupid, 
-                            'subject' => get_string('newgroupmembersubj', 'activity', display_default_name($user))));
 }
 
 ?>

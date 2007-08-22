@@ -265,7 +265,6 @@ $string['account'] =  'My account';
 $string['accountprefs'] = 'Preferences';
 $string['preferences'] = 'Preferences';
 $string['activityprefs'] = 'Activity preferences';
-$string['watchlist'] = 'My watchlist';
 $string['changepassword'] = 'Change password';
 $string['recentactivity'] = 'Recent activity';
 
@@ -358,11 +357,12 @@ $string['belongingto'] = 'Belonging to';
 $string['allusers'] = 'All users';
 
 // view view
-$string['addedtowatchlist'] = 'This %s has been added to your watchlist';
+$string['addedtowatchlist'] = 'This view has been added to your watchlist';
+$string['removedfromwatchlist'] = 'This view has been removed from your watchlist';
 $string['addfeedbackfailed'] = 'Add feedback failed';
-$string['addtowatchlist'] = 'Add %s to watchlist';
-$string['addtowatchlistwithchildren'] = 'Add entire %s contents to watchlist';
-$string['alreadyinwatchlist'] = 'This %s is already in your watchlist';
+$string['addtowatchlist'] = 'Add view to watchlist';
+$string['removefromwatchlist'] = 'Remove view from watchlist';
+$string['alreadyinwatchlist'] = 'This view is already in your watchlist';
 $string['attachedfileaddedtofolder'] = "The attached file %s has been added to your '%s' folder.";
 $string['attachfile'] = "Attach file";
 $string['complaint'] = 'Complaint';

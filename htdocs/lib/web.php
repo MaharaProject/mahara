@@ -383,6 +383,7 @@ function jsstrings() {
                 'existingfriend',
                 'nosearchresultsfound',
                 'reason',
+                'cancel',
             ),
         ),
     );
@@ -1266,12 +1267,6 @@ function main_nav() {
                 'url' => 'account/activity/preferences/',
                 'title' => get_string('activityprefs'),
                 'weight' => 30,
-            ),
-            array(
-                'path' => 'settings/mywatchlist',
-                'url' => 'account/watchlist/',
-                'title' => get_string('watchlist'),
-                'weight' => 40,
             ),
         );
 

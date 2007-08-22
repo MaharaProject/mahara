@@ -460,6 +460,9 @@ function load_config() {
         $dbconfig = get_records_array('config', '', '', '', 'field, value');
     } 
     catch (SQLException $e) {
+        // TODO: better reporting if config could not be obtained? This 
+        // normally happens when the system isn't installed
+        log_info($e->getMessage());
         return false;
     }
     

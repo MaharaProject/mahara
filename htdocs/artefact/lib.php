@@ -208,46 +208,6 @@ abstract class ArtefactType {
         return $this->childrenmetadata;
     }
 
-    /** 
-     * This function returns the instances 
-     * of all children of this artefact
-     * If you just want the basic info, 
-     * use {@link get_children_metadata} instead.
-     * 
-     * @param int $userid user to check watchlist for
-     * @return array of instances.
-     */
-
-    public function get_children_instances_watchlist($userid) {
-        $instances = array();
-        if ($children = $this->get_children_metadata_watchlist($userid)) {
-            foreach ($children as $child) {
-                $classname = generate_artefact_class_name($child->artefacttype);
-                $instance = new $classname($child->id, $child);
-                $instances[] = $instance;
-            }
-        }
-        return $instances;
-    }
-
-    /**
-     * This function returns the db rows 
-     * from the artefact table that have this 
-     * artefact as the parent.
-     * If you want instances, use {@link get_children_instances}
-     * but bear in mind this will have a performance impact.
-     * 
-     * @param int $userid user to check watchlist for
-     * @return array
-     */
-    public function get_children_metadata_watchlist($userid) {
-        $sql = 'SELECT a.* FROM {artefact} a 
-                JOIN {usr_watchlist_artefact} w ON w.artefact = a.id
-                WHERE w.usr = ? AND a.parent = ?';
-        
-        return get_records_sql_array($sql, array($userid, $this->id));
-    }
-
     /**
      * This function returns the instance relating to the parent
      * of this object, or false if there isn't one.
@@ -366,8 +326,6 @@ abstract class ArtefactType {
             }
         }
 
-        activity_occurred('watchlist', (object) array('artefact' => $this->id,
-                                                      'subject' => get_string('artefactmodified')));
         handle_event('saveartefact', $this);
 
         if (!empty($this->parentdirty)) {
@@ -412,7 +370,6 @@ abstract class ArtefactType {
         delete_records_select('artefact_parent_cache', 'artefact = ? OR parent = ?', array($this->id, $this->id));
         delete_records('view_artefact', 'artefact', $this->id);
         delete_records('artefact_feedback', 'artefact', $this->id);
-        delete_records('usr_watchlist_artefact', 'artefact', $this->id);
         delete_records('artefact_tag', 'artefact', $this->id);
       
         // Delete the record itself.

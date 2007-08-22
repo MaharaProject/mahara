@@ -181,21 +181,6 @@ switch ($type) {
          $view->release($id);
          json_reply(false, get_string('viewreleasedsuccess'));
          break;
-     case 'watchlist':
-         if (record_exists('usr_watchlist_group', 'usr', $USER->get('id'), 'group', $group->id)) {
-             delete_records('usr_watchlist_group', 'usr', $USER->get('id'), 'group', $group->id);
-             json_reply(false, array('message' => get_string('removedgroupfromwatchlist', 'activity'), 'member' => 0));
-         }
-         else {
-             $gwl = new StdClass;
-             $gwl->usr = $USER->get('id');
-             $gwl->group = $group->id;
-             $gwl->ctime = db_format_timestamp(time());
-             insert_record('usr_watchlist_group', $gwl);
-             json_reply(false, array('message' => get_string('addedgrouptowatchlist', 'activity'), 'member' => 1));
-         }
-             
-         break;
 }
 
 if (!$data) {

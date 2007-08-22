@@ -78,7 +78,7 @@ function friendRequestWithMessage(id, link, type, tableRenderer) {
         sendjsonrequest('index.json.php', pd, 'POST', function() { tableRenderer.doupdate(); });
     });
         
-    var cancelButton = INPUT({'type': 'submit', 'class': 'submit', 'value': 'Cancel'});
+    var cancelButton = INPUT({'type': 'submit', 'class': 'submit', 'value': get_string('cancel')});
     connect(cancelButton, 'onclick', function(e) {
         toggleElementClass('hidden', 'dc' + id + '_' + type);
         e.stop();

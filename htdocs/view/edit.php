@@ -152,7 +152,7 @@ if (param_boolean('submit')) {
 
     db_commit();
     activity_occurred('watchlist', (object) array('view' => $view_id,
-                                                  'subject' => get_string('viewmodified')));
+                                                  'subject' => get_string('viewmodified', 'activity')));
 
     handle_event('saveview', $view_id);
 

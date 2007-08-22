@@ -219,29 +219,6 @@ class View {
     }
 
 
-    public function get_artefact_instances_watchlist($userid) {
-        $instances = array();
-        if ($artefacts = $this->get_artefact_metadata_watchlist($userid)) {
-            foreach ($artefact as $instance) {
-                safe_require('artefact', $instance->plugin);
-                $classname = generate_artefact_class_name($instance->artefacttype);
-                $i = new $classname($instance->id, $instance);
-                $instances[] = $i;
-            }
-        }
-        return $instances;
-    }
-
-    public function get_artefact_metadata_watchlist($userid) {
-        $sql = 'SELECT a.*, i.name
-                    FROM {view_artefact} va
-                    JOIN {artefact} a ON va.artefact = a.id
-                    JOIN {artefact_installed_type} i ON a.artefacttype = i.name
-                    JOIN {usr_watchlist_artefact} wa ON wa.artefact = a.id                    
-                    WHERE va.view = ? AND wa.usr = ? AND a.parent IS NULL';
-        return get_records_sql_array($sql,  array($this->id, $userid));
-    }
-
     public function get_contents() { // lazy setup.
         if (!isset($this->contents)) {
             $this->contents = get_records_array('view_content', 'view', $this->id);
@@ -303,7 +280,6 @@ class View {
         delete_records('view_access_group','view',$this->id);
         delete_records('view_access_usr','view',$this->id);
         delete_records('view_tag','view',$this->id);
-        delete_records('usr_watchlist_artefact','view',$this->id);
         delete_records('usr_watchlist_view','view',$this->id);
         delete_records('view','id',$this->id);
         $this->deleted = true;
