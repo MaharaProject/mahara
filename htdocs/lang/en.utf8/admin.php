@@ -52,7 +52,6 @@ $string['upgradesuccess'] = 'Successfully upgraded';
 $string['upgradesuccesstoversion'] = 'Successfully upgraded to version ';
 $string['upgradefailure'] = 'Failed to upgrade!';
 $string['noupgrades'] = 'Nothing to upgrade! You are fully up to date!';
-$string['fixtemplatescontinue'] = 'Some view templates failed to install.  Continue here for more information and a fix.';
 $string['youcanupgrade'] = 'You can upgrade Mahara from %s (%s) to %s (%s)!';
 
 // Admin navigation menu
@@ -90,8 +89,6 @@ $string['usersearchdescription'] = 'Search all users and perform administrative 
 
 $string['pluginadmin'] = 'Plugin Administration';
 $string['pluginadmindescription'] = 'Install and configure plugins';
-$string['templatesadmin'] = 'Configure View Templates';
-$string['templatesadmindescription'] = 'View installed templates to check their validity';
 
 // Site options
 $string['allowpublicviews'] = 'Allow public views';

@@ -380,6 +380,8 @@ function upgrade_plugin($upgrade) {
             delete_records_select('artefact_installed_type', $select,
                                   array_merge(array($pluginname),$types));
         }
+
+        //@todo install blocks here too.
     }
     
     $prevversion = (empty($upgrade->install)) ? $upgrade->from : 0;
@@ -500,117 +502,41 @@ function core_install_defaults() {
     set_profile_field($user->id, 'firstname', $user->firstname);
     set_profile_field($user->id, 'lastname', $user->lastname);
     
-    require('template.php');
-    $exceptions = upgrade_templates(true);
     set_config('installed', true);
     db_commit();
-    return $exceptions;
 }
 
-function upgrade_templates($continue=false) {
-
-    $exceptions = array();
-    $dbtemplates = array();
-
-    // check dataroot first, they get precedence.
-    $templates = get_dir_contents(get_config('dataroot') . 'templates/');
-    foreach ($templates as $dir) {
-        try {
-            $dbtemplates[$dir] = template_parse($dir);
-        }
-        catch (TemplateParserException $e) {
-            if (empty($continue)) {
-                throw $e;
+function local_xmldb_contents_sub(&$contents) {
+    $searchstring = '<!-- PLUGIN_TYPE_SUBSTITUTION -->';
+    if (strstr($contents, $searchstring) === 0) {
+        return;
+    }
+    // ok, we're in the main file and we need to install all the plugin tables
+    // get the basic skeleton structure
+    $plugintables = file_get_contents(get_config('docroot') . 'lib/db/plugintables.xml');
+    $tosub = '';
+    foreach (plugin_types() as $plugin) {
+        // any that want their own stuff can put it in docroot/plugintype/lib/db/plugintables.xml - like auth is a bit special
+        $specialcase = get_config('docroot') . $plugin . '/plugintables.xml';
+        if (is_readable($specialcase)) {
+            $tosub .= file_get_contents($specialcase) . "\n";
+        } 
+        else {
+            require_once(get_config('docroot') . $plugin . '/lib.php');
+            if (method_exists(generate_class_name($plugin), 'extra_xmldb_substitution')) {
+                $replaced  = call_static_method(generate_class_name($plugin), 'extra_xmldb_substitution', $plugintables);
             }
-            $exceptions[] = $e;
-        }
-    }
-
-    // and now system templates
-    $templates = get_dir_contents(get_config('libroot') . 'templates/');
-    foreach ($templates as $dir) {
-        if (array_key_exists($dir, $dbtemplates)) { // dataroot gets preference
-            continue;
-        }
-        try {
-            $dbtemplates[$dir] = template_parse($dir);
-        }
-        catch (TemplateParserException $e) {
-            if (empty($continue)) {
-                throw $e;
+            else {
+                $replaced = $plugintables;
             }
-            $exceptions[] = $e;
-        }
-    }
-
-    foreach ($dbtemplates as $name => $data) {
-        try {
-            $ids = upgrade_template($name, $data);
-        }
-        catch (TemplateParserException $e) {
-            if (empty($continue)) {
-                throw $e;
+            $tosub .= str_replace('__PLUGINTYPE__', $plugin, $replaced) . "\n";
+            $extratables = get_config('docroot') . $plugin . '/extratables.xml';
+            if (is_readable($extratables)) {
+                $tosub .= file_get_contents($extratables) . "\n";
             }
-            $exceptions[] = $e;
-            unset($dbtemplates[$name]);
-            continue;
         }
     }
-
-    if (count($dbtemplates) > 0) {
-        set_field_select('template', 'deleted', 1, 
-                         'name NOT IN (' . implode(',', db_array_to_ph(array_keys($dbtemplates))). ')', 
-                         array_keys($dbtemplates));
-    }
-    else {
-        set_field('template', 'deleted', 1);
-    }
-
-
-    return $exceptions;
+    $contents = str_replace($searchstring, $tosub, $contents);
 }
-
-/**
- * This function upgrades or installs an individual template.
- *
- * @param $name the template name
- * @param $data what you would get from template_parse 
- */
-function upgrade_template($name, $data) {
-    if (!is_readable($data['location'] . 'config.php')) {
-        $e = new TemplateParserException("missing config.php for template $name");
-        if (empty($continue)) {
-            throw $e;
-        }
-        $exceptions[] = $e;
-        continue;
-    }
-    require_once($data['location'] . 'config.php');
-    $fordb = new StdClass;
-    $fordb->name = $name;
-    $fordb->mtime = db_format_timestamp(time());
-    $fordb->title = $template->title;
-    $fordb->description = $template->description;
-    $fordb->category = $template->category;
-    $fordb->mtime = db_format_timestamp(time());
-    $fordb->cacheddata = serialize($data['parseddata']);
-    if (isset($data['thumbnail'])) {
-        $fordb->thumbnail = 1;
-    }
-    if (isset($template->owner)) {
-        $fordb->owner = $template->owner;
-    }
-    else {
-        $fordb->owner = 0; // root user
-    }
-    if (record_exists('template', 'name', $name)) {
-        update_record('template', $fordb, 'name');
-    }
-    else {
-        $fordb->ctime = $fordb->mtime;
-        insert_record('template', $fordb);
-    }
-}
-
 
 ?>

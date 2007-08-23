@@ -35,6 +35,10 @@ class PluginArtefactFile extends PluginArtefact {
             'image',
         );
     }
+    
+    public static function get_block_types() {
+        return array();
+    }
 
     public static function get_plugin_name() {
         return 'file';
@@ -72,9 +76,6 @@ class PluginArtefactFile extends PluginArtefact {
         update_record('usr', array('quota' => get_config_plugin('artefact', 'file', 'defaultquota')), array('id' => $user['id']));
     }
     
-    public static function get_toplevel_artefact_types() {
-        return array('file');
-    }
 
     public static function sort_child_data($a, $b) {
         if ($a->container && !$b->container) {

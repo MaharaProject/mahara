@@ -166,23 +166,6 @@ if (param_boolean('cancel')) {
     redirect('/view/');
 }
 
-// Get the list of root things for the tree
-$rootinfo = "var data = [";
-foreach (plugins_installed('artefact') as $artefacttype) {
-    safe_require('artefact', $artefacttype->name);
-    if ($artefacttype->active) {
-        foreach (call_static_method('PluginArtefact' . ucfirst($artefacttype->name), 'get_toplevel_artefact_types') as $type) {
-            $rootinfo .= json_encode(array(
-                'id'         => $artefacttype->name,
-                'isartefact' => false,
-                'container'  => true,
-                'text'       => get_string($type, "artefact.{$artefacttype->name}"),
-                'pluginname' => $artefacttype->name
-            )) . ',';
-        }
-    }
-}
-$rootinfo = substr($rootinfo, 0, -1) . '];';
 
 $template = template_render($parsed_template, TEMPLATE_RENDER_EDITMODE, array_merge($data, $data['artefacts']), $view_id);
 
@@ -206,7 +189,6 @@ $smarty = smarty(
         ),
     )
 );
-$smarty->assign('rootinfo', $rootinfo);
 $smarty->assign('plusicon', theme_get_url('images/plus.png'));
 $smarty->assign('minusicon', theme_get_url('images/minus.png'));
 

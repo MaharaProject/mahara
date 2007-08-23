@@ -47,6 +47,10 @@ class PluginArtefactResume extends Plugin {
             'workskill'
         );
     }
+    
+    public static function get_block_types() {
+        return array('hello');
+    }
 
     public static function get_plugin_name() {
         return 'resume';
@@ -75,9 +79,6 @@ class PluginArtefactResume extends Plugin {
         );
     }
 
-    public static function get_toplevel_artefact_types() {
-        return array('resume'); 
-    }
 }
 
 class ArtefactTypeResume extends ArtefactType {

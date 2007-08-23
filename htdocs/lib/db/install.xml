@@ -14,25 +14,9 @@
                 <KEY NAME="primary" TYPE="primary" FIELDS="field" />
             </KEYS>
         </TABLE>
-        <TABLE NAME="auth_installed">
-            <FIELDS> 
-                <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" />
-                <FIELD NAME="version" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="release" TYPE="text" LENGTH="small" NOTNULL="true" />
-                <FIELD NAME="active" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" />
-                <FIELD NAME="requires_config" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
-                <FIELD NAME="requires_parent" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="name" />
-            </KEYS>
-        </TABLE>
-        <TABLE NAME="application">
+        <TABLE NAME="event_type">
             <FIELDS>
-                <FIELD NAME="name" TYPE="char" LENGTH="20" NOTNULL="true" />
-                <FIELD NAME="displayname" TYPE="char" LENGTH="100" NOTNULL="true" />
-                <FIELD NAME="xmlrpcserverurl" TYPE="char" LENGTH="255" NOTNULL="true" />
-                <FIELD NAME="ssolandurl" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="name" TYPE="char" LENGTH="50" NOTNULL="true" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="name" />
@@ -44,7 +28,7 @@
                 <FIELD NAME="displayname" TYPE="char" LENGTH="255" NOTNULL="true"/>
                 <FIELD NAME="registerallowed" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1"/>
                 <FIELD NAME="updateuserinfoonlogin" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="0"/>
-                <FIELD NAME="defaultaccountlifetime" TYPE="int" NOTNULL="false"/>
+               <FIELD NAME="defaultaccountlifetime" TYPE="int" NOTNULL="false"/>
                 <FIELD NAME="defaultaccountinactiveexpire" TYPE="int" NOTNULL="false"/>
                 <FIELD NAME="defaultaccountinactivewarn" TYPE="int" NOTNULL="false" DEFAULT="604800"/>
             </FIELDS>
@@ -52,18 +36,16 @@
                 <KEY NAME="primary" TYPE="primary" FIELDS="name" />
             </KEYS>
         </TABLE>
-        <TABLE NAME="auth_instance">
-            <FIELDS> 
-                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
-                <FIELD NAME="instancename" TYPE="char" LENGTH="255" NOTNULL="true" />
-                <FIELD NAME="priority" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" />
-                <FIELD NAME="institution" TYPE="char" LENGTH="255" NOTNULL="true" />
-                <FIELD NAME="authname" TYPE="char" LENGTH="255" NOTNULL="true" />
+        <!-- PLUGIN_TYPE_SUBSTITUTION -->
+        <TABLE NAME="application">
+            <FIELDS>
+                <FIELD NAME="name" TYPE="char" LENGTH="20" NOTNULL="true" />
+                <FIELD NAME="displayname" TYPE="char" LENGTH="100" NOTNULL="true" />
+                <FIELD NAME="xmlrpcserverurl" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="ssolandurl" TYPE="char" LENGTH="255" NOTNULL="true" />
             </FIELDS>
             <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
-                <KEY NAME="authnamefk" TYPE="foreign" FIELDS="authname" REFTABLE="auth_installed" REFFIELDS="name" />
-                <KEY NAME="institutionfk" TYPE="foreign" FIELDS="institution" REFTABLE="institution" REFFIELDS="name" />
+                <KEY NAME="primary" TYPE="primary" FIELDS="name" />
             </KEYS>
         </TABLE>
         <TABLE NAME="institution_locked_profile_field">
@@ -136,14 +118,6 @@
                 <!-- <KEY NAME="userfk" TYPE="foreign" FIELDS="userid,username" REFTABLE="usr" REFFIELDS="userid,username" /> -->
             </KEYS>
         </TABLE>
-        <TABLE NAME="event_type">
-            <FIELDS>
-                <FIELD NAME="name" TYPE="char" LENGTH="50" NOTNULL="true" />
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="name" />
-            </KEYS>
-        </TABLE>
         <TABLE NAME="host">
             <FIELDS>
                 <FIELD NAME="wwwroot" TYPE="char" LENGTH="255" NOTNULL="true"/>
@@ -201,229 +175,6 @@
                 <KEY NAME="typefk" TYPE="foreign" FIELDS="type" REFTABLE="activity_type" REFFIELDS="name" />
             </KEYS>
         </TABLE>
-        <!-- auth plugin tables -->
-        <TABLE NAME="auth_config">
-            <FIELDS>
-                <FIELD NAME="plugin" TYPE="char" LENGTH="100" NOTNULL="true" />
-                <FIELD NAME="field" TYPE="char" LENGTH="100" NOTNULL="true" />
-                <FIELD NAME="value" TYPE="text" LENGTH="small" NOTNULL="true" />
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="plugin,field" />
-                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="auth_installed" REFFIELDS="name" />
-            </KEYS>
-        </TABLE>
-        <TABLE NAME="auth_instance_config">
-            <FIELDS>
-                <FIELD NAME="instance" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="field" TYPE="char" LENGTH="100" NOTNULL="true" />
-                <FIELD NAME="value" TYPE="text" LENGTH="small" NOTNULL="true" />
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="instance,field" />
-                <KEY NAME="instancefk" TYPE="foreign" FIELDS="instance" REFTABLE="auth_instance" REFFIELDS="id" />
-            </KEYS>
-        </TABLE>
-        <TABLE NAME="auth_cron">
-            <FIELDS>
-                <FIELD NAME="plugin" TYPE="char" LENGTH="255" NOTNULL="true" />
-                <FIELD NAME="callfunction" TYPE="char" LENGTH="255" NOTNULL="true"  />
-                <FIELD NAME="nextrun" TYPE="datetime" NOTNULL="false"  />
-                <FIELD NAME="minute" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*"  />
-                <FIELD NAME="hour" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*"  />
-                <FIELD NAME="day" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*"  />
-                <FIELD NAME="month" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*"  />
-                <FIELD NAME="dayofweek" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*" />
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="plugin,callfunction" />
-                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="auth_installed" REFFIELDS="name" />
-            </KEYS>
-        </TABLE>
-        <TABLE NAME="auth_event_subscription">
-            <FIELDS>
-                <FIELD NAME="id" TYPE="int" LENGTH="10" SEQUENCE="true"  NOTNULL="true" />
-                <FIELD NAME="plugin" TYPE="char" LENGTH="255" NOTNULL="true" />
-                <FIELD NAME="event" TYPE="char" LENGTH="50" NOTNULL="true" />
-                <FIELD NAME="callfunction" TYPE="char" LENGTH="255" NOTNULL="true" />
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
-                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="auth_installed" REFFIELDS="name" />
-                <KEY NAME="eventfk" TYPE="foreign" FIELDS="event" REFTABLE="event_type" REFFIELDS="name" />
-                <KEY NAME="subscruk" TYPE="unique" FIELDS="plugin,event,callfunction" />
-            </KEYS>
-        </TABLE>
-        <!-- notification plugin tables -->
-        <TABLE NAME="notification_installed">
-            <FIELDS> 
-                <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" />
-                <FIELD NAME="version" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="release" TYPE="text" LENGTH="small" NOTNULL="true" />
-                <FIELD NAME="active" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" />
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="name" />
-            </KEYS>
-        </TABLE>
-        <TABLE NAME="notification_config">
-            <FIELDS>
-                <FIELD NAME="plugin" TYPE="char" LENGTH="100" NOTNULL="true" />
-                <FIELD NAME="field" TYPE="char" LENGTH="100" NOTNULL="true" />
-                <FIELD NAME="value" TYPE="text" LENGTH="small" NOTNULL="true" />
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="plugin,field" />
-                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="notification_installed" REFFIELDS="name" />
-            </KEYS>
-        </TABLE>
-        <TABLE NAME="notification_cron">
-            <FIELDS>
-                <FIELD NAME="plugin" TYPE="char" LENGTH="255" NOTNULL="true" />
-                <FIELD NAME="callfunction" TYPE="char" LENGTH="255" NOTNULL="true"  />
-                <FIELD NAME="nextrun" TYPE="datetime" NOTNULL="false"  />
-                <FIELD NAME="minute" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*"  />
-                <FIELD NAME="hour" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*"  />
-                <FIELD NAME="day" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*"  />
-                <FIELD NAME="month" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*"  />
-                <FIELD NAME="dayofweek" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*" />
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="plugin,callfunction" />
-                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="notification_installed" REFFIELDS="name" />
-            </KEYS>
-        </TABLE>
-        <TABLE NAME="notification_event_subscription">
-            <FIELDS>
-                <FIELD NAME="id" TYPE="int" LENGTH="10" SEQUENCE="true"  NOTNULL="true" />
-                <FIELD NAME="plugin" TYPE="char" LENGTH="255" NOTNULL="true" />
-                <FIELD NAME="event" TYPE="char" LENGTH="50" NOTNULL="true" />
-                <FIELD NAME="callfunction" TYPE="char" LENGTH="255" NOTNULL="true" />
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
-                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="notification_installed" REFFIELDS="name" />
-                <KEY NAME="eventfk" TYPE="foreign" FIELDS="event" REFTABLE="event_type" REFFIELDS="name" />
-                <KEY NAME="subscruk" TYPE="unique" FIELDS="plugin,event,callfunction" />
-            </KEYS>
-        </TABLE>
-        <!-- search plugin tables -->
-        <TABLE NAME="search_installed">
-            <FIELDS>
-                <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" />
-                <FIELD NAME="version" TYPE="int"  LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="release" TYPE="text" LENGTH="small" NOTNULL="true" />
-                <FIELD NAME="active" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" />
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="name" />
-            </KEYS>
-        </TABLE>
-        <TABLE NAME="search_config">
-            <FIELDS>
-                <FIELD NAME="plugin" TYPE="char" LENGTH="100" NOTNULL="true" />
-                <FIELD NAME="field" TYPE="char" LENGTH="100" NOTNULL="true" />
-                <FIELD NAME="value" TYPE="text" LENGTH="small" NOTNULL="true" />
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="plugin,field" />
-                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="search_installed" REFFIELDS="name" />
-            </KEYS>
-        </TABLE>
-        <TABLE NAME="search_cron">
-            <FIELDS>
-                <FIELD NAME="plugin" TYPE="char" LENGTH="255" NOTNULL="true" />
-                <FIELD NAME="callfunction" TYPE="char" LENGTH="255" NOTNULL="true"  />
-                <FIELD NAME="nextrun" TYPE="datetime" NOTNULL="false"  />
-                <FIELD NAME="minute" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*"  />
-                <FIELD NAME="hour" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*"  />
-                <FIELD NAME="day" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*"  />
-                <FIELD NAME="month" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*"  />
-                <FIELD NAME="dayofweek" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*" />
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="plugin,callfunction" />
-                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="search_installed" REFFIELDS="name" />
-            </KEYS>
-        </TABLE>
-        <TABLE NAME="search_event_subscription">
-            <FIELDS>
-                <FIELD NAME="id" TYPE="int" LENGTH="10" SEQUENCE="true"  NOTNULL="true" />
-                <FIELD NAME="plugin" TYPE="char" LENGTH="255" NOTNULL="true" />
-                <FIELD NAME="event" TYPE="char" LENGTH="50" NOTNULL="true" />
-                <FIELD NAME="callfunction" TYPE="char" LENGTH="255" NOTNULL="true" />
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
-                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="search_installed" REFFIELDS="name" />
-                <KEY NAME="eventfk" TYPE="foreign" FIELDS="event" REFTABLE="event_type" REFFIELDS="name" />
-                <KEY NAME="subscruk" TYPE="unique" FIELDS="plugin,event,callfunction" />
-            </KEYS>
-        </TABLE>
-        <!-- artefact plugin tables -->
-        <TABLE NAME="artefact_installed">
-            <FIELDS> 
-                <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" />
-                <FIELD NAME="version" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="release" TYPE="text" LENGTH="small" NOTNULL="true" />
-                <FIELD NAME="active" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" />
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="name" />
-            </KEYS>
-        </TABLE>
-        <TABLE NAME="artefact_installed_type">
-            <FIELDS>
-                <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" />
-                <FIELD NAME="plugin" TYPE="char" LENGTH="255" NOTNULL="true" />
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="name" />
-                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="artefact_installed" REFFIELDS="name" />
-            </KEYS>
-        </TABLE>
-        <TABLE NAME="artefact_config">
-            <FIELDS>
-                <FIELD NAME="plugin" TYPE="char" LENGTH="100" NOTNULL="true" />
-                <FIELD NAME="field" TYPE="char" LENGTH="100" NOTNULL="true" />
-                <FIELD NAME="value" TYPE="text" LENGTH="small" NOTNULL="true" />
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="plugin,field" />
-                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="artefact_installed" REFFIELDS="name" />
-            </KEYS>
-        </TABLE>
-        <TABLE NAME="artefact_cron">
-            <FIELDS>
-                <FIELD NAME="plugin" TYPE="char" LENGTH="255" NOTNULL="true" />
-                <FIELD NAME="callfunction" TYPE="char" LENGTH="255" NOTNULL="true"  />
-                <FIELD NAME="nextrun" TYPE="datetime" NOTNULL="false"  />
-                <FIELD NAME="minute" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*"  />
-                <FIELD NAME="hour" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*"  />
-                <FIELD NAME="day" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*"  />
-                <FIELD NAME="month" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*"  />
-                <FIELD NAME="dayofweek" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*" />
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="plugin,callfunction" />
-                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="artefact_installed" REFFIELDS="name" />
-            </KEYS>
-        </TABLE>
-        <TABLE NAME="artefact_event_subscription">
-            <FIELDS>
-                <FIELD NAME="id" TYPE="int" LENGTH="10" SEQUENCE="true"  NOTNULL="true" />
-                <FIELD NAME="plugin" TYPE="char" LENGTH="255" NOTNULL="true" />
-                <FIELD NAME="event" TYPE="char" LENGTH="50" NOTNULL="true" />
-                <FIELD NAME="callfunction" TYPE="char" LENGTH="255" NOTNULL="true" />
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
-                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="artefact_installed" REFFIELDS="name" />
-                <KEY NAME="eventfk" TYPE="foreign" FIELDS="event" REFTABLE="event_type" REFFIELDS="name" />
-                <KEY NAME="subscruk" TYPE="unique" FIELDS="plugin,event,callfunction" />
-            </KEYS>
-        </TABLE>
-        <!-- end of artefact plugin tables, back to core tables -->
         <TABLE NAME="artefact">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
@@ -613,35 +364,6 @@
                 <KEY NAME="foreign" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id" />
             </KEYS>         
         </TABLE>
-        <TABLE NAME="template_category">
-            <FIELDS>
-                <FIELD NAME="name" TYPE="char" LENGTh="128" NOTNULL="true" />
-                <FIELD NAME="parent" TYPE="char" LENGTH="128" NOTNULL="false" />
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="name" />
-                <KEY NAME="parentfk" TYPE="foreign" FIELDS="parent" REFTABLE="template_category" REFFIELDS="name" />
-            </KEYS>
-        </TABLE>
-        <TABLE NAME="template">
-            <FIELDS>
-                <FIELD NAME="name" TYPE="char" LENGTH="128" NOTNULL="true" />
-                <FIELD NAME="title" TYPE="text" NOTNULL="true" />
-                <FIELD NAME="description" TYPE="text" NOTNULL="false" />
-                <FIELD NAME="category" TYPE="char" LENGTH="128" NOTNULL="true" />
-                <FIELD NAME="owner" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
-                <FIELD NAME="mtime" TYPE="datetime" NOTNULL="true" />
-                <FIELD NAME="cacheddata" TYPE="text" NOTNULL="false" />
-                <FIELD NAME="deleted" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
-                <FIELD NAME="thumbnail" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="name" />
-                <KEY NAME="ownerfk" TYPE="foreign" FIELDS="owner" REFTABLE="usr" REFFIELDS="id" />
-                <KEY NAME="categoryfk" TYPE="foreign" FIELDS="category" REFTABLE="template_category" REFFIELDS="name" />
-            </KEYS>
-        </TABLE>
         <TABLE NAME="view">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
@@ -649,7 +371,6 @@
                 <FIELD NAME="description" TYPE="text" NOTNULL="false" />
                 <FIELD NAME="owner" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="ownerformat" TYPE="text" NOTNULL="true" />
-                <FIELD NAME="template" TYPE="char" LENGTH="128" NOTNULL="true" />
                 <FIELD NAME="startdate" TYPE="datetime" />
                 <FIELD NAME="stopdate" TYPE="datetime" />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
@@ -660,7 +381,6 @@
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
                 <KEY NAME="ownerfk" TYPE="foreign" FIELDS="owner" REFTABLE="usr" REFFIELDS="id" />
-                <KEY NAME="templatefk" TYPE="foreign" FIELDS="template" REFTABLE="template" REFFIELDS="name" />
                 <KEY NAME="submittedtofk" TYPE="foreign" FIELDS="submittedto" REFTABLE="group" REFFIELDS="id" />
             </KEYS>
         </TABLE>
@@ -687,19 +407,6 @@
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
                 <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id" />
                 <KEY NAME="artefactfk" TYPE="foreign" FIELDS="artefact" REFTABLE="artefact" REFFIELDS="id" />
-            </KEYS>
-        </TABLE>
-        <TABLE NAME="view_content">
-            <FIELDS>
-                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
-                <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="content" TYPE="text" NOTNULL="true" />
-                <FIELD NAME="block" TYPE="text" NOTNULL="true" />
-                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
-                <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id" />
             </KEYS>
         </TABLE>
         <TABLE NAME="view_feedback">
@@ -881,16 +588,6 @@
                 <SENTENCE TEXT="(callfunction, minute, hour, day, month, dayofweek)
                         VALUES ('activity_process_queue', '*/5', '*', '*', '*', '*')"/>
              </SENTENCES>
-        </STATEMENT>
-        <STATEMENT NAME="insert template categories" TYPE="insert" TABLE="template_category">
-            <SENTENCES>
-                <SENTENCE TEXT="(name) VALUES ('resume')" />
-                <SENTENCE TEXT="(name) VALUES ('blog')" />
-                <SENTENCE TEXT="(name) VALUES ('gallery')" />
-                <SENTENCE TEXT="(name) VALUES ('academic')" />
-                <SENTENCE TEXT="(name) VALUES ('professionaldevelopment')" />
-                <SENTENCE TEXT="(name) VALUES ('personaldevelopment')" />
-            </SENTENCES>
         </STATEMENT>
     </STATEMENTS>
 </XMLDB>

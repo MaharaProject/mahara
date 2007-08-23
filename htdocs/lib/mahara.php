@@ -757,7 +757,16 @@ function safe_require($plugintype, $pluginname, $filename='lib.php', $function='
         throw new Exception ('invalid require type');
     }
 
-    $fullpath = get_config('docroot') . $plugintype . '/' . $pluginname . '/' . $filename;
+    if ($plugintype == 'blocktype') { // these are a bit of a special case
+        $bits = explode('/', $pluginname);
+        if (count($bits) == 2) {
+           $fullpath = get_config('docroot') . 'artefact/' . $bits[0] . '/blocktype/' . $bits[1] . '/' . $filename;
+        }
+    } 
+    if (empty($fullpath)) {
+        $fullpath = get_config('docroot') . $plugintype . '/' . $pluginname . '/' . $filename;
+    }
+
     if (!$realpath = realpath($fullpath)) {
         if (!empty($nonfatal)) {
             return false;
@@ -786,7 +795,7 @@ function safe_require($plugintype, $pluginname, $filename='lib.php', $function='
 function plugin_types() {
     static $pluginstocheck;
     if (empty($pluginstocheck)) {
-        $pluginstocheck = array('artefact', 'auth', 'notification', 'search');
+        $pluginstocheck = array('artefact', 'auth', 'notification', 'search', 'blocktype');
     }
     return $pluginstocheck;
 }
@@ -819,6 +828,10 @@ function generate_class_name() {
 
 function generate_artefact_class_name($type) {
     return 'ArtefactType' . ucfirst($type);
+}
+
+function generate_blocktype_class_name($type) {
+    return 'BlockType' . ucfirst($type);
 }
 
 /**

@@ -58,6 +58,10 @@ class PluginArtefactInternal extends PluginArtefact {
             'profileicon'
         );
     }
+    
+    public static function get_block_types() {
+        return array();
+    }
 
     public static function get_plugin_name() {
         return 'internal';
@@ -100,10 +104,6 @@ class PluginArtefactInternal extends PluginArtefact {
         delete_records_select('artefact_internal_profile_email', 'verified=0 AND expiry IS NOT NULL AND expiry < ?', array(db_format_timestamp(time())));
     }
 
-    public static function get_toplevel_artefact_types() {
-        return array('profile');
-    }
-    
     public static function sort_child_data($a, $b) {
         return strnatcasecmp($a->text, $b->text);
     }

@@ -828,6 +828,7 @@ $string['country.ye'] = 'Yemen';
 $string['country.zm'] = 'Zambia';
 $string['country.zw'] = 'Zimbabwe';
 
-
+// general stuff that doesn't really fit anywhere else
+$string['system'] = 'System';
 
 ?>

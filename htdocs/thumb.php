@@ -32,21 +32,6 @@ require_once('file.php');
 $type = param_alpha('type');
 
 switch ($type) {
-    case 'template':
-        require_once('template.php');
-        $name = param_alpha('name');
-        $template = template_locate($name);
-        if (isset($template['thumbnail'])) {
-            header("Content-type: " . $template['thumbnailcontenttype']);
-            readfile($template['thumbnail']);
-            exit;
-        }
-
-        header('Content-type: ' . 'image/gif');
-        readfile(theme_get_path('images/no_thumbnail.gif'));
-        exit;
-        break;
-
     case 'profileiconbyid':
     case 'profileicon':
         $id = param_integer('id');

@@ -41,7 +41,6 @@ class View {
     private $description;
     private $loggedin;
     private $friendsonly;
-    private $template;
     private $artefact_instances;
     private $artefact_metadata;
     private $artefact_hierarchy;
@@ -241,34 +240,7 @@ class View {
     }
 
     public function render() {
-        require_once('template.php');
-
-        $artefacts = $this->get_artefact_metadata();
-        $contents  = $this->get_contents();
-        if (empty($contents)) {
-            $contents = array();
-        }
-        if (empty($artefacts)) {
-            $artefacts = array();
-        }
-
-        $data = array();
-        foreach ($artefacts as $artefact) {
-            $data[$artefact->block]['format'] = $artefact->format;
-            $data[$artefact->block]['id'][] = $artefact->id;
-        }
-        foreach ($contents as $content) {
-            $data[$content->block] = array(
-                    'value'  => $content->content,
-             );
-        }
-        $data['title']       = $this->get('title');
-        $data['description'] = $this->get('description');
-        $data['author']      = template_format_owner($this->get('ownerformat'), $this->get_owner_object());
-
-        $template = template_locate($this->get('template'));
-        
-        return template_render($template, TEMPLATE_RENDER_READONLY, $data, $this->get('id'));
+        //@ todo new view rendering system! 
     }
     
     public function delete() {

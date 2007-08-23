@@ -37,6 +37,10 @@ class PluginArtefactBlog extends PluginArtefact {
             'blogpost',
         );
     }
+    
+    public static function get_block_types() {
+        return array();
+    }
 
     public static function get_plugin_name() {
         return 'blog';
@@ -51,10 +55,6 @@ class PluginArtefactBlog extends PluginArtefact {
                 'weight' => 30,
             ),
         );
-    }
-
-    public static function get_toplevel_artefact_types() {
-        return array('blog');
     }
 
     public static function get_cron() {

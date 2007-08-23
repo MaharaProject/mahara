@@ -27,12 +27,6 @@
 defined('INTERNAL') || die();
 
 
-define('FORMAT_ARTEFACT_LISTSELF', 'listself');
-define('FORMAT_ARTEFACT_LISTCHILDREN', 'listchildren');
-define('FORMAT_ARTEFACT_RENDERFULL', 'renderfull');
-define('FORMAT_ARTEFACT_RENDERMETADATA', 'rendermetadata');
-
-
 /**
  * Given an artefact plugin name, this function will test if 
  * it's installable or not.  If not, InstallationException will be thrown.
@@ -41,10 +35,13 @@ function artefact_check_plugin_sanity($pluginname) {
     $classname = generate_class_name('artefact', $pluginname);
     safe_require('artefact', $pluginname);
     if (!class_exists($classname)) {
-        throw new InstallationException("Artefact types must all implement a class.  Missing $classname");
+        throw new InstallationException(get_string('artefacttypeclassmissing', 'error', $classname));
     }
     if (!is_callable(array($classname, 'get_artefact_types'))) {
-        throw new InstallationException("Artefact plugin $classname must implement get_artefact_types and doesn't");
+        throw new InstallationException(get_string('artefactpluginmethodmissing', 'error', $classname, 'get_artefact_types'));
+    }
+    if (!is_callable(array($classname, 'get_block_types'))) {
+        throw new InstallationException(get_string('artefactpluginmethodmissing', 'error', $classname, 'get_block_types'));
     }
     $types = call_static_method($classname, 'get_artefact_types');
     foreach ($types as $type) {
@@ -52,11 +49,31 @@ function artefact_check_plugin_sanity($pluginname) {
         if (get_config('installed')) {
             if ($taken = get_record_select('artefact_installed_type', 'name = ? AND plugin != ?', 
                                            array($type, $pluginname))) {
-                throw new InstallationException("type $type is already taken by another plugin (" . $taken->plugin . ")");
+                throw new InstallationException(get_string('artefacttypenametaken', 'error', $type, $taken->plugin));
             }
         }
         if (!class_exists($typeclassname)) {
-            throw new InstallationException("class $typeclassname for type $type in plugin $pluginname was missing");
+            throw new InstallationException(get_string('pluginclassmissing', 'error', $typeclassname, $type, $plugin));
+        }
+    }
+    $types = call_static_method($classname, 'get_block_types');
+    foreach ($types as $type) {
+        $typeclassname = generate_blocktype_class_name($type);
+        if (get_config('installed')) {
+            if ($taken = get_record_select('blocktype_installed', 'name = ?', array($type))) {
+                throw new InstallationException(get_string('blocktypenametaken', 'error', $type,
+                    ((empty($taken->plugin)) ? $taken->plugin : get_string('system'))));
+            }
+        }
+        // go look for the lib file to include
+        try {
+            safe_require('blocktype', $type);
+        }
+        catch (Exception $_e) {
+            throw new InstallationException(get_string('blocktypelibmissing', 'error', $type, $pluginname));
+        }
+        if (!class_exists($typeclassname)) {
+            throw new InstallationException(get_string('pluginclassmissing', 'error', $typeclassname, $type, $pluginname));
         }
     }
 }
