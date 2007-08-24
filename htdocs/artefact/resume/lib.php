@@ -49,7 +49,7 @@ class PluginArtefactResume extends Plugin {
     }
     
     public static function get_block_types() {
-        return array('hello');
+        return array(); 
     }
 
     public static function get_plugin_name() {
