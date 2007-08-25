@@ -361,7 +361,7 @@ $elements['captcha'] = array(
     'title' => get_string('captchatitle'),
     'description' => get_string('captchadescription'),
     'value' => '<img src="' . get_config('wwwroot') . 'captcha.php" alt="' . get_string('captchaimage') . '" style="padding: 2px 0;"><br>'
-        . '<input type="text" class="text required" name="captcha" style="width: 137px;" tabindex="3">',
+        . '<input type="text" class="text required" name="captcha" style="width: 137px;" tabindex="4">',
     'rules' => array('required' => true)
 );
 
