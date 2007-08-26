@@ -88,14 +88,12 @@ function rebuild_artefact_parent_cache_dirty() {
 function rebuild_artefact_parent_cache_complete() {
     db_begin();
     delete_records('artefact_parent_cache');
-    if ($artefacts = get_records_array('artefact')) {
-        foreach ($artefacts as $a) {
-            $parentids = array();
-            $current = $a->id;
-            $parentids = array_keys(artefact_get_parents_for_cache($current));
+    if ($artefactids = get_column('artefact', 'id')) {
+        foreach ($artefactids as $id) {
+            $parentids = array_keys(artefact_get_parents_for_cache($id));
             foreach ($parentids as $p) {
                 $apc = new StdClass;
-                $apc->artefact = $a->id;
+                $apc->artefact = $id;
                 $apc->parent   = $p;
                 $apc->dirty    = 0;
                 insert_record('artefact_parent_cache', $apc);
