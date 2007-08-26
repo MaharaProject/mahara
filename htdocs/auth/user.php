@@ -372,7 +372,7 @@ class LiveUser extends User {
      * @return bool
      */
     public function login($username, $password, $institution) {
-        $users = get_records_select_array('usr', 'LOWER(username) = ? AND institution = ?', array($username, $institution), 'authinstance', '*');
+        $users = get_records_select_array('usr', 'LOWER(username) = ? AND institution = ?', array(strtolower($username), $institution), 'authinstance', '*');
 
         if ($users == false) {
             throw new AuthUnknownUserException("\"$username\" at \"$institution\" is not known");
