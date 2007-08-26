@@ -336,7 +336,8 @@ function get_dataroot_image_path($path, $id, $size) {
 
             list($width, $height) = explode('x', $size);
 
-            switch (get_mime_type($originalimage)) {
+            $originalmimetype = get_mime_type($originalimage);
+            switch ($originalmimetype) {
                 case 'image/jpeg':
                 case 'image/jpg':
                     $oldih = imagecreatefromjpeg($originalimage);
@@ -384,8 +385,27 @@ function get_dataroot_image_path($path, $id, $size) {
             }
 
             $newih = imagecreatetruecolor($newx, $newy);
-            imagecopyresized($newih, $oldih, 0, 0, 0, 0, $newx, $newy, $oldx, $oldy);
-            imageinterlace($newih);
+
+            if ($originalmimetype == 'image/png' || $originalmimetype == 'image/gif') {
+                // Create a new destination image which is completely 
+                // transparent and turn off alpha blending for it, so that when 
+                // the PNG source file is copied, the alpha channel is retained.
+                // Thanks to http://alexle.net/archives/131
+
+                $background = imagecolorallocate($newih, 0, 0, 0);
+                imagecolortransparent($newih, $background);
+                imagealphablending($newih, false);
+                imagecopyresampled($newih, $oldih, 0, 0, 0, 0, $newx, $newy, $oldx, $oldy);
+                imagesavealpha($newih, true);
+            }
+            else {
+                // imagecopyresized is faster, but results in noticeably worse image quality. 
+                // Given the images are resized only once each time they're 
+                // made, I suggest you just leave the good quality one in place
+                imagecopyresampled($newih, $oldih, 0, 0, 0, 0, $newx, $newy, $oldx, $oldy);
+                //imagecopyresized($newih, $oldih, 0, 0, 0, 0, $newx, $newy, $oldx, $oldy);
+            }
+
             $newpath = $imagepath . "/$size/" . ($id % 256);
             check_dir_exists($newpath);
             $newpath .= "/$id";
