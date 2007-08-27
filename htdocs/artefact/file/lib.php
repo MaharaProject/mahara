@@ -325,10 +325,6 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         $this->dirty = false;
     }
 
-    public static function get_render_list() {
-        return array(FORMAT_ARTEFACT_LISTSELF, FORMAT_ARTEFACT_RENDERMETADATA);
-    }
-
     public static function is_singular() {
         return false;
     }
@@ -414,22 +410,6 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         usort($filedata, array("ArtefactTypeFileBase", "my_files_cmp"));
         return $filedata;
     }
-
-    protected function get_metadata($options=array()) {
-        $data = parent::get_metadata($options);
-        $data['description'] = array('name' => get_string('description'),
-                                     'value' => $this->description);
-        $data['type']['value'] = get_string($this->get('artefacttype'), 'artefact.file');
-        return $data;
-    }
-
-    protected function render_metadata($options) {
-        $smarty = smarty();
-        $smarty->assign('PROPERTIES', $this->get_metadata($options));
-        return array('html' => $smarty->fetch('artefact:file:file_render_metadata.tpl'),
-                     'javascript' => null);
-    }
-
 }
 
 class ArtefactTypeFile extends ArtefactTypeFileBase {
@@ -699,10 +679,6 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         return $data;
     }
 
-    public static function get_render_list() {
-        return array(FORMAT_ARTEFACT_LISTSELF, FORMAT_ARTEFACT_RENDERMETADATA);
-    }
-
     public static function get_links($id) {
         $wwwroot = get_config('wwwroot');
 
@@ -730,49 +706,6 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
         return get_records_array('artefact', 'parent', $this->get('id'));
     }
 
-    public function render_full($options) {
-        $smarty = smarty();
-        $smarty->assign('artefact', $this);
-        if ($options == null) {
-            $options = array();
-        }
-        $smarty->assign('options', array_merge(array('date'=>true, 'icon'=>true), $options));
-        if ($childrecords = $this->folder_contents()) {
-            $this->add_to_render_path($options);
-            usort($childrecords, array("ArtefactTypeFileBase", "my_files_cmp"));
-            $children = array();
-            require_once('artefact.php');
-            foreach ($childrecords as &$child) {
-                $c = artefact_instance_from_id($child->id);
-                $rc = $c->render(FORMAT_ARTEFACT_LISTSELF, $options);
-                $child->title = $rc['html'];
-                $child->date = format_date(strtotime($child->mtime), 'strfdaymonthyearshort');
-                $child->iconsrc = theme_get_url('images/' . $child->artefacttype . '.gif');
-            }
-            $smarty->assign('children', $childrecords);
-        }
-        return array('html' => $smarty->fetch('artefact:file:folder_renderfull.tpl'),
-                     'javascript' => null);
-    }
-
-    public function listchildren($options) {
-        $smarty = smarty();
-        if ($childrecords = $this->folder_contents()) {
-            $this->add_to_render_path($options);
-            usort($childrecords, array("ArtefactTypeFileBase", "my_files_cmp"));
-            $children = array();
-            require_once('artefact.php');
-            foreach ($childrecords as $child) {
-                $c = artefact_instance_from_id($child->id);
-                $rc = $c->render(FORMAT_ARTEFACT_LISTSELF, $options);
-                $children[] = $rc['html'];
-            }
-            $smarty->assign('children', $children);
-        }
-        return array('html' => $smarty->fetch('artefact:file:folder_listchildren.tpl'),
-                     'javascript' => null);
-    }
-
     public function describe_size() {
         return $this->count_children() . ' ' . get_string('files', 'artefact.file');
     }
@@ -783,11 +716,6 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
 
     public static function collapse_config() {
         return 'file';
-    }
-    
-    public static function get_render_list() {
-        return array(FORMAT_ARTEFACT_LISTSELF, FORMAT_ARTEFACT_LISTCHILDREN,
-                     FORMAT_ARTEFACT_RENDERFULL, FORMAT_ARTEFACT_RENDERMETADATA);
     }
     
     public static function admin_public_folder_id() {
@@ -919,46 +847,6 @@ class ArtefactTypeImage extends ArtefactTypeFile {
     public static function collapse_config() {
         return 'file';
    } 
-
-    public function render_full($options) {
-        $smarty = smarty();
-        $src = get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->id;
-        if (isset($options['viewid'])) {
-            $src .= '&amp;view=' . $options['viewid'];
-        }
-        $smarty->assign('src', $src);
-        $smarty->assign('title', $this->title);
-        $smarty->assign('description', $this->description);
-        if (isset($options['width'])) {
-            $width = $options['width'];
-        }
-        else {
-            $width = $this->get('width');
-        }
-        $smarty->assign('width', $width ? $width : '');
-        if (isset($options['height'])) {
-            $height = $options['height'];
-        }
-        else {
-            $height = $this->get('height');
-        }
-        if ((isset($options['width']) || isset($options['height'])) && isset($options['viewid'])) {
-            $url = get_config('wwwroot') . 'view/view.php?artefact=' . $this->get('id')
-                . '&view=' . $options['viewid'];
-            if (isset($options['path'])) {
-                $url .= '&path=' . $options['path'];
-            }
-            $smarty->assign('url', $url);
-        }
-        $smarty->assign('height', $height ? $height : '');
-        return array('html' => $smarty->fetch('artefact:file:image_renderfull.tpl'),
-                     'javascript' => null);
-    }
-
-    public static function get_render_list() {
-        return array(FORMAT_ARTEFACT_LISTSELF, FORMAT_ARTEFACT_RENDERFULL, 
-                     FORMAT_ARTEFACT_RENDERMETADATA);
-    }
 
     public static function is_image_mime_type($type) {
         require_once('file.php');

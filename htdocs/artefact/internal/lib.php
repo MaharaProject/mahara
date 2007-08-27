@@ -153,17 +153,8 @@ class ArtefactTypeProfile extends ArtefactType {
         return parent::set($field, $value);
     }
 
-    public function render_full($options) {
-        return array('html' => $this->title,
-                     'javascript' => null);
-    }
-
     public function get_icon() {
 
-    }
-
-    public static function get_render_list() {
-        return array(FORMAT_ARTEFACT_LISTSELF, FORMAT_ARTEFACT_RENDERFULL, FORMAT_ARTEFACT_RENDERMETADATA);
     }
 
     public static function is_singular() {
@@ -350,40 +341,6 @@ class ArtefactTypeProfileField extends ArtefactTypeProfile {
     public static function collapse_config() {
         return 'profile';
     }
-
-    /**
-     * This method is optional, and specifies how child data should be formatted
-     * for the artefact tree.
-     *
-     * It should return a StdClass object, with the following fields set:
-     *
-     *  - id
-     *  - title
-     *  - text
-     *  - container
-     *  - parent
-     *
-     *  @param object $data The data to reformat. Contains some fields from the
-     *                      <kbd>artefact</kbd> table, namely title, artefacttype
-     *                      and container
-     *  @return object      The reformatted data
-     */
-    public static function format_child_data($data, $pluginname) {
-        $res = new StdClass;
-        $res->id         = $data->id;
-        $res->title      = $data->title;
-        $res->isartefact = true;
-        if ($data->artefacttype == 'email') {
-            $res->text = get_string('email') . ' - ' . $data->title;
-        }
-        else {
-            $res->text = get_string($data->artefacttype, "artefact.$pluginname");
-        }
-        $res->container = 0;
-        $res->parent    = null;
-        return $res;
-    }
-
 }
 
 class ArtefactTypeCachedProfileField extends ArtefactTypeProfileField {
@@ -454,16 +411,8 @@ class ArtefactTypeEmail extends ArtefactTypeProfileField {
 class ArtefactTypeStudentid extends ArtefactTypeProfileField {}
 class ArtefactTypeIntroduction extends ArtefactTypeProfileField {}
 class ArtefactTypeWebAddress extends ArtefactTypeProfileField {
-    public function listself($options) {
-        if ($options['link'] == true) {
-            $html = make_link($this->title);
-        }
-        else {
-            $html = $this->title;
-        }
-        return array('html' => $html, 'javascript' => null);
-    }
-    public function render_full($options) {
+
+    public function render_self($options) {
         if ($options['link'] == true) {
             $html = make_link($this->title);
         }
@@ -480,11 +429,10 @@ class ArtefactTypeAddress extends ArtefactTypeProfileField {}
 class ArtefactTypeTown extends ArtefactTypeProfileField {}
 class ArtefactTypeCity extends ArtefactTypeProfileField {}
 class ArtefactTypeCountry extends ArtefactTypeProfileField {
-    public function listself($options) {
-        return array('html' => get_string("country.{$this->title}"), 'javascript' => null);
-    }
-    public function render_full($options) {
-        return array('html' => get_string("country.{$this->title}"), 'javascript' => null);
+
+    public function render_self($options) {
+          $countries = getoptions_country();
+          return array('html' => $countries[$this->title], 'javascript' => null);
     }
 }
 class ArtefactTypeHomenumber extends ArtefactTypeProfileField {}
@@ -505,7 +453,7 @@ class ArtefactTypeProfileIcon extends ArtefactTypeProfileField {
         return true;
     }
 
-    public function render_full($options) {
+    public function render_self($options) {
         $html = '<img src="' . get_config('wwwroot') . 'thumb.php?type=profileiconbyid&id=' . $this->id . '"'
             . 'alt="' . hsc($this->title) . '"';
         if (isset($options['width'])) {
