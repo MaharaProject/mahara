@@ -1,0 +1,143 @@
+/**
+ * Views stylesheet
+ */
+
+#page {
+    border: 3px solid #ccc;
+}
+
+#top-pane {
+    border-bottom: 3px solid #ccc;
+    background-color: #fffff0;
+}
+
+#category-list {
+    float: left;
+}
+
+#category-list ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    width: 150px;
+}
+#category-list li {
+    padding: .5em;
+    border-bottom: 1px solid #ccc;
+    background-color: #f0f0f0;
+    border-right: 3px solid #ccc;
+}
+#category-list li.current {
+    font-weight: bold;
+    background-color: #fffff0;
+    border-right: none;
+}
+#category-list li.first {
+    border-top: none;
+}
+
+#blocktype-list {
+    overflow: scroll;
+}
+/* don't ask... fixing some wierd firefox problem */
+#blocktype-list * {
+    margin: 0;
+}
+
+#blocktype-list ul {
+    list-style-type: none;
+    /*width: 65em;*/
+}
+#blocktype-list li {
+    float: left;
+    text-align: center;
+    margin: 1em 1em 0;
+}
+#blocktype-list li h3 {
+    font-size: .8em;
+}
+#blocktype-list li p {
+    font-size: .8em;
+}
+#blocktype-footer {
+    clear: left;
+}
+
+/* the div containing all the columns */
+#column-container {
+    width: 100%;
+    margin-top: 1em;
+}
+/* each column div will have a class matching one of these, the number is the number of columns in total, so widths can be made equal */
+.columns1 {
+    width: 100%;
+}
+.columns2 {
+    width: 50%;
+}
+.columns3 {
+    width: 31%;
+}
+
+.column {
+    vertical-align: top;
+    float: left;
+    margin: 0 0 0 2%;
+}
+
+.column-header {
+    width: 100%;
+    position: relative;
+}
+
+/* contains the left-most 'add column' button */
+.add-column-left {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+/* contains all add column buttons in the middle of two columns */
+.add-column-center {
+    position: absolute;
+    top: 0;
+    right: -5em;
+    width: 10em;
+    text-align: center;
+}
+/* contains the right most column */
+.add-column-right {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+/* contains the 'remove column' buttons */
+.remove-column {
+    text-align: center;
+}
+
+/* block instance styles */
+.blockinstance {
+    border: 2px solid #cc9;
+    position: relative;
+    margin-top: 1em;
+}
+.blockinstance-header h4 {
+    margin: 0;
+    padding: .25em;
+    border-bottom: 2px solid #cc9;
+}
+
+.blockinstance-controls {
+    position: absolute;
+    top: .1em;
+    right: .1em;
+}
+.blockinstance-controls input.submit {
+    margin: 0;
+}
+
+#clearer {
+    clear: both;
+}
+
