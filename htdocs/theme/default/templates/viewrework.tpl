@@ -6,23 +6,10 @@
         <div id="page">
             <div id="top-pane">
                 <div id="category-list">
-                    <ul>
-{foreach from=$categories.cats item=category}
-                        <li{if $category.classes} class="{$category.classes}"{/if}><a href="viewrework.php?category={$category.name|escape}">{$category.title|escape}</a></li>
-{/foreach}
-                    </ul>
+                    {$category_list}
                 </div>
                 <div id="blocktype-list">
-                    <ul>
-{foreach from=$blocktypes item=blocktype}
-                        <li>
-                            <img src="{$blocktype.thumbnail_path}" alt="Preview">
-                            <h3>{$blocktype.title|escape}</h3>
-                            <p>{$blocktype.description|escape}</p>
-                            <input type="radio" class="blocktype-radio" name="blocktype" value="blocktype_{$blocktype.id}">
-                        </li>
-{/foreach}
-                    </ul>
+                    {$blocktype_list}
                 </div>
                 <div id="blocktype-footer"></div>
             </div>

@@ -28,6 +28,7 @@ define('INTERNAL', 1);
 define('JSON', 1);
 define('PUBLIC', 1);
 require(dirname(__FILE__) . '/init.php');
+require(dirname(__FILE__) . '/viewlib.php');
 
 $action = param_alphanumext('action');
 
@@ -39,10 +40,6 @@ case 'delete_blockinstance':
 case 'blocktype_list':
     $category = param_alpha('category');
     // TODO:
-    // Put the logic for generating the blocktype list into one function.
-    // Call this function both here, and somewhere so it ends up in the static page
-    // NOTE: if javascript is enabled (e.g. the call comes from json), then things like the radio buttons don't have to be output
-    // Work on this until it works both with javascript enabled and disabled
     //
     // Where I can get to:
     // Static version: Clicking buttons = response, but no action. Category browser works, for hard coded block types
@@ -60,25 +57,7 @@ case 'blocktype_list':
     //
     //
     //
-    // Need to duplicate this smarty logic somewhere
-//                    <ul>
-//{foreach from=$blocktypes item=blocktype}
-//                        <li>
-//                            <img src="{$blocktype.thumbnail_path}" alt="Preview">
-//                            <h3>{$blocktype.title|escape}</h3>
-//                            <p>{$blocktype.description|escape}</p>
-//                            <input type="radio" class="blocktype-radio" name="blocktype" value="blocktype_{$blocktype.id}">
-//                        </li>
-//{/foreach}
-//                    </ul>
-    $data = '<ul>
-        <li>
-            <img src="" alt="Preview">
-            <h3>Test</h3>
-            <p>Description</p>
-            <input type="radio">
-        </li>
-    </ul>';
+    $data = views_build_blocktype_list($category, true);
     json_reply(false, array('message' => false, 'data' => $data));
     break;
 }

@@ -28,88 +28,19 @@ define('INTERNAL', 1);
 define('PUBLIC', 1);
 define('MENUITEM', 'viewrework');
 require('init.php');
+require('viewlib.php');
 define('TITLE', 'Views Rework [DANGER construction site]');
 
-require_once('artefact.php');
-rebuild_artefact_parent_cache_complete();
 $smarty = smarty(array('views'), array('<link rel="stylesheet" href="views.css" type="text/css">'));
 
-// Categories
-$categories = array(
-    'cats' => array(
-        array(
-            'name' => 'aboutme',
-            'title' => 'About Me',
-        ),
-        array(
-            'name' => 'blogs',
-            'title' => 'Blogs',
-        ),
-        array(
-            'name' => 'filesandfolders',
-            'title' => 'Files and Folders',
-        ),
-        array(
-            'name' => 'general',
-            'title' => 'General',
-        ),
-        array(
-            'name' => 'system',
-            'title' => 'System Blocks',
-        ),
-    ),
-    'current' => 'aboutme',
-);
+// FIXME: we can't know the first category is 'aboutme'
+$category = param_alpha('category', 'aboutme');
 
-$flag = false;
-foreach ($categories['cats'] as &$category) {
-    if (!$flag) {
-        $flag = true;
-        $category['classes'] = 'first';
-    }
-    if ($categories['current'] == $category['name']) {
-        $category['classes'] = (isset($category['classes'])) ? $category['classes'] . ' current' : 'current';
-        // certainly done now
-        break;
-    }
-}
+// The list of categories for the tabbed interface
+$smarty->assign('category_list', views_build_category_list($category));
 
-$smarty->assign('categories', $categories);
-
-
-// Block types for the selected category
-$blocktypes = array(
-    array(
-        'id'             => 1,
-        'name'           => 'blocktype1',
-        'title'          => 'Block Type 1',
-        'description'    => 'This is the description for block type 1',
-        'thumbnail_path' => 'theme/default/static/images/no_thumbnail.gif',
-    ),
-    array(
-        'id'             => 2,
-        'name'           => 'blocktype2',
-        'title'          => 'Block Type 2',
-        'description'    => 'This is the description for block type 2',
-        'thumbnail_path' => 'theme/default/static/images/no_thumbnail.gif',
-    ),
-    array(
-        'id'             => 3,
-        'name'           => 'blocktype3',
-        'title'          => 'Block Type 3',
-        'description'    => 'This is the description for block type 3',
-        'thumbnail_path' => 'theme/default/static/images/no_thumbnail.gif',
-    ),
-    array(
-        'id'             => 4,
-        'name'           => 'blocktype4',
-        'title'          => 'Block Type 4',
-        'description'    => 'This is the description for block type 4',
-        'thumbnail_path' => 'theme/default/static/images/no_thumbnail.gif',
-    ),
-);
-
-$smarty->assign('blocktypes', $blocktypes);
+// The list of blocktypes for the default category
+$smarty->assign('blocktype_list', views_build_blocktype_list($category));
 
 
 
