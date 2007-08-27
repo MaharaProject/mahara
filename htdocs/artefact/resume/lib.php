@@ -125,17 +125,6 @@ class ArtefactTypeCoverletter extends ArtefactTypeResume {
         parent::__construct($id, $data);
     }
 
-    public static function get_render_list() {
-        return array(
-            FORMAT_ARTEFACT_LISTSELF,
-            FORMAT_ARTEFACT_RENDERFULL,
-            FORMAT_ARTEFACT_RENDERMETADATA,
-        );
-    }
-
-    public function render_full($options) {
-        return array('html' => $this->description);
-    }
 }
 
 class ArtefactTypeInterest extends ArtefactTypeResume {
@@ -144,17 +133,6 @@ class ArtefactTypeInterest extends ArtefactTypeResume {
         return true;
     }
 
-    public static function get_render_list() {
-        return array(
-            FORMAT_ARTEFACT_LISTSELF,
-            FORMAT_ARTEFACT_RENDERFULL,
-            FORMAT_ARTEFACT_RENDERMETADATA,
-        );
-    }
-
-    public function render_full($options) {
-        return array('html' => $this->title);
-    }
 }
 
 class ArtefactTypeContactinformation extends ArtefactTypeResume {
@@ -206,22 +184,6 @@ class ArtefactTypeContactinformation extends ArtefactTypeResume {
         return $fields;
     }
 
-    public static function get_render_list() {
-        return array(
-            FORMAT_ARTEFACT_LISTSELF,
-            FORMAT_ARTEFACT_LISTCHILDREN,
-            FORMAT_ARTEFACT_RENDERFULL,
-            FORMAT_ARTEFACT_RENDERMETADATA,
-        );
-    }
-
-    public function listchildren($options) {
-        return array('html' => $this->get_html(false));
-    }
-
-    public function render_full($options) {
-        return array('html' => $this->get_html(false));
-    }
 }
 
 class ArtefactTypePersonalinformation extends ArtefactTypeResume {
@@ -299,55 +261,11 @@ class ArtefactTypePersonalinformation extends ArtefactTypeResume {
         return true;
     }
 
-    public static function get_render_list() {
-        return array(
-            FORMAT_ARTEFACT_LISTSELF,
-            FORMAT_ARTEFACT_LISTCHILDREN,
-            FORMAT_ARTEFACT_RENDERFULL,
-            FORMAT_ARTEFACT_RENDERMETADATA,
-        );
-    }
-
-    public function listchildren($options) {
-        $html = '';
-        $link = get_config('wwwroot') . 'view/view.php?';
-        if (array_key_exists('viewid', $options)) {
-            $link .= 'view=' . $options['viewid'] . '&artefact=';
-        }
-        else {
-            $link .= 'artefact=';
-        }
-        foreach (array_keys(ArtefactTypePersonalinformation::get_composite_fields()) as $field) {
-            $html .= '<a href="' . $link . $this->id . '">'
-                . get_string($field, 'artefact.resume') . '</a><br>';
-        }
-        return array('html' => $html);
-    }
-
-    public function render_full($options) {
-        $smarty = smarty();
-        $fields = array();
-        foreach (array_keys(ArtefactTypePersonalInformation::get_composite_fields()) as $field) {
-            $fields[get_string($field, 'artefact.resume')] = $this->get_composite($field);
-        }
-        $smarty->assign('fields', $fields);
-        return array('html' => $smarty->fetch('artefact:resume:fragments/personalinformation.tpl'));
-    }
-
 }
 
 
 
 abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
-
-    public static function get_render_list() {
-        return array(
-            FORMAT_ARTEFACT_LISTSELF,
-/*            FORMAT_ARTEFACT_LISTCHILDREN, */
-            FORMAT_ARTEFACT_RENDERFULL,
-            FORMAT_ARTEFACT_RENDERMETADATA
-        );
-    }
 
     public static function is_singular() {
         return true;
@@ -490,35 +408,6 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
     */
     public function get_other_table_name() {
         return 'artefact_resume_' . $this->get_artefact_type();
-    }
-
-    public function render_full($options) {
-        $smarty = smarty();
-        $type = $this->get('artefacttype'); 
-        $content = array(
-            'html'         => $smarty->fetch('artefact:resume:fragments/' . $type . '.tpl'),
-            'javascript'   => 
-                $this->get_showhide_composite_js()
-                ."
-                var {$type}list = new TableRenderer(
-                   '{$type}list',
-                   '" . get_config('wwwroot') . "artefact/resume/composite.json.php',
-                   [ 
-                   " . call_static_method(generate_artefact_class_name($type), 'get_tablerenderer_js') ."
-                   ]
-                );
-                    
-                {$type}list.type = '{$type}';
-                {$type}list.statevars.push('type');
-                " . 
-                (( array_key_exists('viewid', $options)) 
-                    ? "{$type}list.view = " . $options['viewid'] . ";
-                       {$type}list.statevars.push('view');"
-                    : ""
-                ) . "
-                {$type}list.updateOnLoad();
-            ");
-        return $content;
     }
 
     static function get_tablerenderer_title_js($titlestring, $bodystring) {
@@ -932,31 +821,6 @@ class ArtefactTypeResumeGoalAndSkill extends ArtefactTypeResume {
     public static function get_goalandskill_artefact_types() {
         return array('personalgoal', 'academicgoal', 'careergoal',
             'personalskill', 'academicskill', 'workskill');
-    }
-
-    public static function get_render_list() {
-        return array(
-            FORMAT_ARTEFACT_LISTSELF,
-            FORMAT_ARTEFACT_RENDERFULL,
-            FORMAT_ARTEFACT_RENDERMETADATA,
-        );
-    }
-
-    public function render_full($options) {
-        $smarty = smarty();
-        
-        $smarty->assign('type', get_string($this->get_artefact_type(), 'artefact.resume'));
-        $smarty->assign('content', $this->get('description'));
-
-        return array('html' => $smarty->fetch('artefact:resume:fragments/goalandskillrenderfull.tpl'));
-    }
-
-    public function __construct($id=0, $data=array()) {
-        if (empty($id)) {
-            $data['container'] = 0;
-            $data['title'] = get_string($this->get_artefact_type(), 'artefact.resume');
-        }
-        parent::__construct($id, $data);
     }
 
 }
