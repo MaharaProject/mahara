@@ -291,9 +291,16 @@ function get_string_location($identifier, $section, $variables, $replacefunc='fo
     else {
         $extras = plugin_types(); // more later..
         foreach ($extras as $tocheck) {
-            if (strpos($section,$tocheck . '.') === 0) {
+            if (strpos($section, $tocheck . '.') === 0) {
                 $pluginname = substr($section ,strlen($tocheck) + 1);
-                $locations[] = $docroot . $tocheck . '/' . $pluginname . '/lang/';
+                if ($tocheck == 'blocktype' && 
+                    strpos($pluginname, '/') !== false) { // it belongs to an artefact plugin
+                    $bits = explode('/', $pluginname);
+                    $locations[] = $docroot . 'artefact/ ' . $bits[0] . '/blocktype/' . $bits[1] . '/' . 'lang/';
+                }
+                else {
+                    $locations[] = $docroot . $tocheck . '/' . $pluginname . '/lang/';
+                }
             }
         }
     }

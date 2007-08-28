@@ -93,7 +93,21 @@ function check_upgrades($name=null) {
 
     $plugins = array();
     if (!empty($name)) {
-        $plugins[] = explode('.', $name);
+        try {
+            $bits = explode('.', $name);
+            $pt = $bits[0];
+            $pn = $bits[1];
+            $pp = null;
+            if ($pt == 'blocktype' && strpos($pn, '/') !== false) {
+                $bits = explode('/', $name);
+                $pp = get_config('docroot') . 'artefact/' . $bits[0]  . '/blocktype/' . $bits[1];
+            }
+            validate_plugin($pt, $pn, $pp);
+            $plugins[] = explode('.', $name);
+        }
+        catch (InstallationException $_e) {
+            log_warn("Plugin $plugin $dir is not installable: " . $e->GetMessage());
+        }
     }
     else {
         foreach ($pluginstocheck as $plugin) {
@@ -105,18 +119,30 @@ function check_upgrades($name=null) {
                 if (!is_dir(get_config('docroot') . $plugin . '/' . $dir)) {
                     continue;
                 }
-                require_once('artefact.php');
-                $funname = $plugin . '_check_plugin_sanity';
-                if (function_exists($funname)) {
-                    try {
-                        $funname($dir);
-                    }
-                    catch (InstallationException $e) {
-                        log_warn("Plugin $plugin $dir is not installable: " . $e->GetMessage());
+                try {
+                    validate_plugin($plugin, $dir);
+                    $plugins[] = array($plugin, $dir);
+                }
+                catch (InstallationException $_e) {
+                    log_warn("Plugin $plugin $dir is not installable: " . $e->GetMessage());
+                }
+
+                if ($plugin == 'artefact') { // go check it for blocks as well
+                    $btlocation = get_config('docroot') . $plugin . '/blocktype';
+                    if (!is_dir($btlocation)) {
                         continue;
+                    }   
+                    $btdirhandle = opendir($btlocation);
+                    while (false !== ($btdir = readdir($btdirhandle))) {
+                        if (strpos($btdir, '.') === 0) {
+                            continue;
+                        }
+                        if (!is_dir(get_config('docroot') . $plugin . '/blocktype/' . $btdir)) {
+                            continue;
+                        }
+                        $plugins[] = array('blocktype', $dir . '/' . $btdir);
                     }
                 }
-                $plugins[] = array($plugin, $dir);
             }
         }
     }
@@ -127,7 +153,12 @@ function check_upgrades($name=null) {
         $pluginpath = "$plugin[0]/$plugin[1]";
         $pluginkey  = "$plugin[0].$plugin[1]";
 
-        
+        if ($plugintype == 'blocktype' && strpos($pluginname, '/') !== false) {
+            // sigh.. we're a bit special...
+            $bits = explode('/', $pluginname);
+            $pluginpath = 'artefact/' . $bits[0] . '/blocktype/' . $bits[1];
+        }
+
         // Don't try to get the plugin info if we are installing - it will
         // definitely fail
         $pluginversion = 0;
@@ -539,4 +570,25 @@ function local_xmldb_contents_sub(&$contents) {
     $contents = str_replace($searchstring, $tosub, $contents);
 }
 
+
+/**
+ * validates a plugin for installation
+ * @throws InstallationException
+*/
+function validate_plugin($plugintype, $pluginname, $pluginpath='') {
+
+    if (empty($pluginpath)) {
+        $pluginpath = get_config('docroot') . $plugin . '/';
+    }
+
+    if (!file_exists($pluginpath . '/version.php')) {
+        throw new InstallationException(get_string('versionphpmissing', 'error', $plugintype, $pluginname));
+    }
+    require_once('artefact.php');
+    $funname = $plugintype . '_check_plugin_sanity';
+    if (function_exists($funname)) {
+        $funname($pluginname);
+    }
+    // @TODO more?
+}
 ?>

@@ -53,12 +53,12 @@ function artefact_check_plugin_sanity($pluginname) {
             }
         }
         if (!class_exists($typeclassname)) {
-            throw new InstallationException(get_string('pluginclassmissing', 'error', $typeclassname, $type, $plugin));
+            throw new InstallationException(get_string('classmissing', 'error', $typeclassname, $type, $plugin));
         }
     }
     $types = call_static_method($classname, 'get_block_types');
     foreach ($types as $type) {
-        $typeclassname = generate_blocktype_class_name($type);
+        $pluginclassname = generate_class_name('blocktype', 'image');
         if (get_config('installed')) {
             if ($taken = get_record_select('blocktype_installed', 'name = ?', array($type))) {
                 throw new InstallationException(get_string('blocktypenametaken', 'error', $type,
@@ -67,13 +67,13 @@ function artefact_check_plugin_sanity($pluginname) {
         }
         // go look for the lib file to include
         try {
-            safe_require('blocktype', $type);
+            safe_require('blocktype', $pluginname . '/' . $type);
         }
         catch (Exception $_e) {
             throw new InstallationException(get_string('blocktypelibmissing', 'error', $type, $pluginname));
         }
-        if (!class_exists($typeclassname)) {
-            throw new InstallationException(get_string('pluginclassmissing', 'error', $typeclassname, $type, $pluginname));
+        if (!class_exists($pluginclassname)) {
+            throw new InstallationException(get_string('classmissing', 'error', $pluginclassname, $type, $pluginname));
         }
     }
 }
