@@ -1186,12 +1186,6 @@ function admin_nav() {
             'title'  => get_string('pluginadmin', 'admin'),
             'weight' => 10,
         ),
-        array(
-            'path'   => 'configextensions/templatesadmin',
-            'url'    => 'admin/extensions/templates.php',
-            'title'  => get_string('templatesadmin', 'admin'),
-            'weight' => 20
-        ),
     );
 
     return $menu;
