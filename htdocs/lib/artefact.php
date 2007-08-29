@@ -60,9 +60,11 @@ function artefact_check_plugin_sanity($pluginname) {
     foreach ($types as $type) {
         $pluginclassname = generate_class_name('blocktype', 'image');
         if (get_config('installed')) {
-            if ($taken = get_record_select('blocktype_installed', 'name = ?', array($type))) {
+            if ($taken = get_record_select('blocktype_installed', 
+                'name = ? AND artefactplugin != ? ',
+                array($type, $pluginname))) {
                 throw new InstallationException(get_string('blocktypenametaken', 'error', $type,
-                    ((empty($taken->plugin)) ? $taken->plugin : get_string('system'))));
+                    ((!empty($taken->artefactplugin)) ? $taken->artefactplugin : get_string('system'))));
             }
         }
         // go look for the lib file to include
