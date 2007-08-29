@@ -86,7 +86,7 @@ if (!empty($upgrade)) {
 }
 else {
     json_reply(false, array('error' => false,
-                            'message' => string('nothingtoupgrade','admin')));
+                            'message' => get_string('nothingtoupgrade','admin')));
     exit;
 }
 ?>

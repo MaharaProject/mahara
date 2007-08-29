@@ -36,7 +36,7 @@ abstract class PluginBlocktype extends Plugin {
     public static function extra_xmldb_substitution($xml) {
         return str_replace(
         '<!-- PLUGINTYPE_INSTALLED_EXTRAFIELDS -->', 
-        ' <FIELD NAME="artefactplugin" TYPE="int" LENGTH="10" NOTNULL="false" />',
+        ' <FIELD NAME="artefactplugin" TYPE="char" LENGTH="255" NOTNULL="false" />',
         str_replace(
             '<!-- PLUGINTYPE_INSTALLED_EXTRAKEYS -->', 
             '<KEY NAME="artefactpluginfk" TYPE="foreign" FIELDS="artefactplugin" REFTABLE="artefact_installed" REFFIELDS="name" />',

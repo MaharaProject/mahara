@@ -769,6 +769,13 @@ function safe_require($plugintype, $pluginname, $filename='lib.php', $function='
         if (count($bits) == 2) {
            $fullpath = get_config('docroot') . 'artefact/' . $bits[0] . '/blocktype/' . $bits[1] . '/' . $filename;
         }
+        else {
+            if (get_config('installed')) {
+                if ($artefactplugin = get_field('blocktype_installed', 'artefactplugin', 'name', $pluginname)) {
+                    $fullpath = get_config('docroot') . 'artefact/' . $artefactplugin . '/blocktype/' . $pluginname . '/'. $filename;
+                }
+            }
+        }
     } 
     if (empty($fullpath)) {
         $fullpath = get_config('docroot') . $plugintype . '/' . $pluginname . '/' . $filename;
@@ -802,7 +809,7 @@ function safe_require($plugintype, $pluginname, $filename='lib.php', $function='
 function plugin_types() {
     static $pluginstocheck;
     if (empty($pluginstocheck)) {
-        $pluginstocheck = array('artefact', 'auth', 'notification', 'search', 'blocktype');
+        $pluginstocheck = array('blocktype', 'artefact', 'auth', 'notification', 'search');
     }
     return $pluginstocheck;
 }
