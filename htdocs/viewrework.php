@@ -31,6 +31,8 @@ require('init.php');
 require('viewlib.php');
 define('TITLE', 'Views Rework [DANGER construction site]');
 
+view_process_changes();
+
 $smarty = smarty(array('views'), array('<link rel="stylesheet" href="views.css" type="text/css">'));
 
 // FIXME: we can't know the first category is 'aboutme'

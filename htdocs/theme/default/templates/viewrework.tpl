@@ -3,6 +3,7 @@
 {include file="columnfullstart.tpl"}
 
     <form action="" method="post">
+        <input type="hidden" id="viewid" name="view" value="1">
         <div id="page">
             <div id="top-pane">
                 <div id="category-list">
@@ -17,28 +18,30 @@
             <div id="bottom-pane">
                 <div id="column-container">
 {foreach from=$columns.columns key=colnum item=column}
-                    <div class="column columns{$columns.count}">
+                    <div id="column_{$colnum}" class="column columns{$columns.count}">
                         <div class="column-header">
 {if $colnum == 1}
                             <div class="add-column-left">
-                                <input type="submit" class="submit" name="add_column_before_1" value="Add Column">
+                                <input type="submit" class="submit addcolumn" name="action_add_column_before_1" value="Add Column">
                             </div>
 {/if}
                             <div class="remove-column">
-                                <input type="submit" class="submit" name="remove_column_{$colnum}" value="Remove Column">
+                                <input type="submit" class="submit removecolumn" name="action_remove_column_{$colnum}" value="Remove Column">
                             </div>
 {if $colnum == $columns.count}
                             <div class="add-column-right">
-                                <input type="submit" class="submit" name="add_column_before_{$colnum+1}" value="Add Column">
+                                <input type="submit" class="submit addcolumn" name="action_add_column_before_{$colnum+1}" value="Add Column">
                             </div>
 {else}
                             <div class="add-column-center">
-                                <input type="submit" class="submit" name="add_column_before_{$colnum+1}" value="Add Column">
+                                <input type="submit" class="submit addcolumn" name="action_add_column_before_{$colnum+1}" value="Add Column">
                             </div>
 {/if}
                         </div>
                         <div class="column-content">
-                            <input type="submit" class="submit newblockhere" name="blocktype_add_top_{$colnum}" value="Add new block here">
+                            <div class="add-button">
+                                <input type="submit" class="submit newblockhere" name="action_blocktype_add_top_{$colnum}" value="Add new block here">
+                            </div>
 {foreach from=$column.blockinstances item=blockinstance}
                             <div class="blockinstance" id="blockinstance_{$blockinstance.id}">
                                 <div class="blockinstance-header">
@@ -55,7 +58,9 @@
                                     {$blockinstance.content}
                                 </div>
                             </div>
-                            <input type="submit" class="submit newblockhere" name="blocktype_add_after_{$blockinstance.id}" value="Add new block here">
+                            <div class="add-button">
+                                <input type="submit" class="submit newblockhere" name="action_blocktype_add_after_{$blockinstance.id}" value="Add new block here">
+                            </div>
 {/foreach}
                         </div>
                     </div>

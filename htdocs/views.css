@@ -70,10 +70,10 @@
 }
 /* each column div will have a class matching one of these, the number is the number of columns in total, so widths can be made equal */
 .columns1 {
-    width: 100%;
+    width: 98%;
 }
 .columns2 {
-    width: 50%;
+    width: 48%;
 }
 .columns3 {
     width: 31%;
@@ -82,12 +82,17 @@
 .column {
     vertical-align: top;
     float: left;
-    margin: 0 0 0 2%;
+    margin: 0 1%;
 }
 
+/* An explicit height for when there is one column and no remove button */
 .column-header {
     width: 100%;
     position: relative;
+    height: 30px;
+}
+.add-button {
+    text-align: center;
 }
 
 /* contains the left-most 'add column' button */
@@ -115,6 +120,7 @@
 .remove-column {
     text-align: center;
 }
+
 
 /* block instance styles */
 .blockinstance {
