@@ -228,6 +228,7 @@ function check_upgrades($name=null) {
     if (count($toupgrade) == 1) {
         $toupgrade = array();
     }
+    uksort($toupgrade, 'sort_upgrades');
     return $toupgrade;
 }
 
@@ -490,26 +491,23 @@ function core_postinst() {
     set_config('searchplugin', 'internal');
 
     set_config('lang', 'en.utf8');
-
     return $status;
 }
 
-
-function core_install_defaults() {
-    // Install the default institution
+function core_install_lastcoredata_defaults() {
     db_begin();
-    $institution = new StdClass;
+    $auth_instance = new StdClass;
     $institution->name = 'mahara';
     $institution->displayname = 'No Institution';
     $institution->authplugin  = 'internal';
     insert_record('institution', $institution);
 
-    $auth_instance = new StdClass;
     $auth_instance->instancename  = 'internal';
     $auth_instance->priority='1';
     $auth_instance->institution   = 'mahara';
     $auth_instance->authname      = 'internal';
     $auth_instance->id = insert_record('auth_instance', $auth_instance, 'id', true);
+    $institution = new StdClass;
 
     // Insert the root user
     $user = new StdClass;
@@ -528,7 +526,6 @@ function core_install_defaults() {
         set_field('usr', 'id', 0, 'id', $newid);
     }
 
-    // Insert the admin user
     $user = new StdClass;
     $user->username = 'admin';
     $user->password = 'mahara';
@@ -544,12 +541,108 @@ function core_install_defaults() {
     set_profile_field($user->id, 'email', $user->email);
     set_profile_field($user->id, 'firstname', $user->firstname);
     set_profile_field($user->id, 'lastname', $user->lastname);
-    
     set_config('installed', true);
     db_commit();
 }
 
+function core_install_firstcoredata_defaults() {
+    // Install the default institution
+    db_begin();
+    
+    set_config('session_timeout', 1800);
+    set_config('sitename', 'Mahara');
+    set_config('pathtofile', '/usr/bin/file');
+
+    // install the applications
+    $app = new StdClass;
+    $app->name = 'mahara';
+    $app->displayname = 'Mahara';
+    $app->xmlrpcserverurl = '/api/xmlrpc/server.php';
+    $app->ssolandurl = '/auth/xmlrpc/land.php';
+    insert_record('application', $app);
+
+    $app->name = 'moodle';
+    $app->displayname = 'Moodle';
+    $app->xmlrpcserverurl = '/mnet/xmlrpc/server.php';
+    $app->ssolandurl = '/auth/mnet/land.php';
+    insert_record('application', $app);
+
+    // insert the event types
+    $eventtypes = array(
+        'createuser',
+        'updateuser',
+        'suspenduser',
+        'unsuspenduser',
+        'deleteuser',
+        'undeleteuser',
+        'expireuser',
+        'unexpireuser',
+        'deactivateuser',
+        'activateuser',
+        'saveartefact',
+        'deleteartefact',
+        'saveview',
+        'deleteview',
+    );
+
+    foreach ($eventtypes as $et) {
+        $e = new StdClass;
+        $e->name = $et;
+        insert_record('event_type', $e);
+    }
+
+    // install the activity types
+    $activitytypes = array(
+        array('maharamessage', 0, 0),
+        array('usermessage', 0, 0),
+        array('feedback', 0, 0),
+        array('watchlist', 0, 1),
+        array('newview', 0, 1),
+        array('viewaccess', 0, 1),
+        array('contactus', 1, 1),
+        array('objectionable', 1, 1),
+        array('virusrepeat', 1, 1),
+        array('virusrelease', 1, 1),
+    );
+
+    foreach ($activitytypes as $at) {
+        $a = new StdClass;
+        $a->name = $at[0];
+        $a->admin = $at[1];
+        $a->delay = $at[2];
+        insert_record('activity_type', $a);
+    }
+
+    // install the cronjobs...
+    $cronjobs = array(
+        'rebuild_artefact_parent_cache_dirty'    => array('*', '*', '*', '*', '*'),
+        'rebuild_artefact_parent_cache_complete' => array('0', '4', '*', '*', '*'),
+        'auth_clean_partial_registrations'       => array('5', '0', '*', '*', '*'),
+        'auth_handle_account_expiries'           => array('5', '10', '*', '*', '*'),
+        'activity_process_queue'                 => array('*/5', '*', '*', '*', '*'),
+    );
+    foreach ($cronjobs as $callfunction => $times) {
+        $cron = new StdClass;
+        $cron->callfunction = $callfunction;
+        $cron->minute       = $times[0];
+        $cron->hour         = $times[1];
+        $cron->day          = $times[2];
+        $cron->month        = $times[3];
+        $cron->dayofweek    = $times[4];
+        insert_record('cron', $cron);
+    }
+    
+    // install the blocktype categories
+
+    db_commit();
+}
+
+
+/** 
+* xmldb will pass us the xml file and we can perform any substitution as necessary
+*/ 
 function local_xmldb_contents_sub(&$contents) {
+    // the main install.xml file needs to sub in plugintype tables.
     $searchstring = '<!-- PLUGIN_TYPE_SUBSTITUTION -->';
     if (strstr($contents, $searchstring) === 0) {
         return;
@@ -559,20 +652,30 @@ function local_xmldb_contents_sub(&$contents) {
     $plugintables = file_get_contents(get_config('docroot') . 'lib/db/plugintables.xml');
     $tosub = '';
     foreach (plugin_types() as $plugin) {
-        // any that want their own stuff can put it in docroot/plugintype/lib/db/plugintables.xml - like auth is a bit special
+        // any that want their own stuff can put it in docroot/plugintype/lib/db/plugintables.xml 
+        //- like auth is a bit special
         $specialcase = get_config('docroot') . $plugin . '/plugintables.xml';
         if (is_readable($specialcase)) {
             $tosub .= file_get_contents($specialcase) . "\n";
         } 
         else {
+            $replaced = '';
+            // look for tables to put at the start...
+            $pretables = get_config('docroot') . $plugin . '/beforetables.xml';
+            if (is_readable($pretables)) {
+                $replaced = file_get_contents($pretables) . "\n";
+            }
+
+            // perform any additional once off substitutions
             require_once(get_config('docroot') . $plugin . '/lib.php');
             if (method_exists(generate_class_name($plugin), 'extra_xmldb_substitution')) {
-                $replaced  = call_static_method(generate_class_name($plugin), 'extra_xmldb_substitution', $plugintables);
+                $replaced  .= call_static_method(generate_class_name($plugin), 'extra_xmldb_substitution', $plugintables);
             }
             else {
-                $replaced = $plugintables;
+                $replaced .= $plugintables;
             }
             $tosub .= str_replace('__PLUGINTYPE__', $plugin, $replaced) . "\n";
+            // look for any tables to put at the end..
             $extratables = get_config('docroot') . $plugin . '/extratables.xml';
             if (is_readable($extratables)) {
                 $tosub .= file_get_contents($extratables) . "\n";
@@ -592,7 +695,6 @@ function validate_plugin($plugintype, $pluginname, $pluginpath='') {
     if (empty($pluginpath)) {
         $pluginpath = get_config('docroot') . $plugintype . '/' . $pluginname;
     }
-    error_log("looking for $pluginpath/version.php");
     if (!file_exists($pluginpath . '/version.php')) {
         throw new InstallationException(get_string('versionphpmissing', 'error', $plugintype, $pluginname));
     }
@@ -603,5 +705,31 @@ function validate_plugin($plugintype, $pluginname, $pluginpath='') {
     }
     // @TODO more?
     // validate the plugin class
+}
+
+/*
+* the order things are installed/upgraded in matters
+*/
+
+function sort_upgrades($k1, $k2) {
+    if ($k1 == 'core') {
+        return -1;
+    }
+    else if ($k2 == 'core') {
+        return 1;
+    }
+    else if ($k1 == 'firstcoredata') {
+        return -1;
+    }
+    else if ($k2 == 'firstcoredata') {
+        return 1;
+    }
+    else if ($k1 == 'lastcoredata') {
+        return 1;
+    }
+    else if ($k2 == 'lastcoredata') {
+        return -1;
+    }
+    return 0;
 }
 ?>

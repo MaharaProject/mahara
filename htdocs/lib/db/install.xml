@@ -411,7 +411,7 @@
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
                 <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="block" TYPE="text" NOTNULL="true" />
+                <FIELD NAME="block" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
                 <FIELD NAME="format" TYPE="text" NOTNULL="true" />
             </FIELDS>
@@ -554,65 +554,4 @@
             </KEYS>
         </TABLE>
     </TABLES>
-    <STATEMENTS>
-        <STATEMENT NAME="insert config" TYPE="insert" TABLE="config">
-            <SENTENCES>
-                <SENTENCE TEXT="(field, value) VALUES ('session_timeout', 1800)" />
-                <SENTENCE TEXT="(field, value) VALUES ('sitename', 'Mahara')" />
-                <SENTENCE TEXT="(field, value) VALUES ('pathtofile', '/usr/bin/file')" />
-            </SENTENCES>
-        </STATEMENT>
-        <STATEMENT NAME="insert application" TYPE="insert" TABLE="application">
-            <SENTENCES>
-                <SENTENCE TEXT="(name, displayname, xmlrpcserverurl, ssolandurl) VALUES ('moodle', 'Moodle','/mnet/xmlrpc/server.php','/auth/mnet/land.php')" />
-                <SENTENCE TEXT="(name, displayname, xmlrpcserverurl, ssolandurl) VALUES ('mahara', 'Mahara','/api/xmlrpc/server.php','/auth/xmlrpc/land.php')" />
-            </SENTENCES>
-        </STATEMENT>
-        <STATEMENT NAME="insert event types" TYPE="insert" TABLE="event_type">
-            <SENTENCES>
-                <SENTENCE TEXT="(name) VALUES ('createuser')" />
-                <SENTENCE TEXT="(name) VALUES ('updateuser')" />
-                <SENTENCE TEXT="(name) VALUES ('suspenduser')" />
-                <SENTENCE TEXT="(name) VALUES ('unsuspenduser')" />
-                <SENTENCE TEXT="(name) VALUES ('deleteuser')" />
-                <SENTENCE TEXT="(name) VALUES ('undeleteuser')" />
-                <SENTENCE TEXT="(name) VALUES ('expireuser')" />
-                <SENTENCE TEXT="(name) VALUES ('unexpireuser')" />
-                <SENTENCE TEXT="(name) VALUES ('deactivateuser')" />
-                <SENTENCE TEXT="(name) VALUES ('activateuser')" />
-                <SENTENCE TEXT="(name) VALUES ('saveartefact')" />
-                <SENTENCE TEXT="(name) VALUES ('deleteartefact')" />
-                <SENTENCE TEXT="(name) VALUES ('saveview')" />
-                <SENTENCE TEXT="(name) VALUES ('deleteview')" />
-            </SENTENCES>
-        </STATEMENT>
-        <STATEMENT NAME="insert activity types" TYPE="insert" TABLE="activity_type">
-            <SENTENCES>
-                <SENTENCE TEXT="(name, admin, delay) VALUES ('maharamessage', 0, 0)" />
-                <SENTENCE TEXT="(name, admin, delay) VALUES ('usermessage', 0, 0)" />
-                <SENTENCE TEXT="(name, admin, delay) VALUES ('feedback', 0, 0)" />
-                <SENTENCE TEXT="(name, admin, delay) VALUES ('watchlist', 0, 1)" />
-                <SENTENCE TEXT="(name, admin, delay) VALUES ('newview', 0, 1)" />
-                <SENTENCE TEXT="(name, admin, delay) VALUES ('viewaccess', 0, 1)" />
-                <SENTENCE TEXT="(name, admin, delay) VALUES ('contactus', 1, 1)" />
-                <SENTENCE TEXT="(name, admin, delay) VALUES ('objectionable', 1, 1)" />
-                <SENTENCE TEXT="(name, admin, delay) VALUES ('virusrepeat', 1, 1)" />
-                <SENTENCE TEXT="(name, admin, delay) VALUES ('virusrelease', 1, 1)" />
-            </SENTENCES>
-        </STATEMENT>
-        <STATEMENT NAME="insert core cron jobs" TYPE="insert" TABLE="cron">
-            <SENTENCES>
-                <SENTENCE TEXT="(callfunction, minute, hour, day, month, dayofweek) 
-                        VALUES ('rebuild_artefact_parent_cache_dirty', '*', '*', '*', '*', '*')" />
-                <SENTENCE TEXT="(callfunction, minute, hour, day, month, dayofweek) 
-                        VALUES ('rebuild_artefact_parent_cache_complete', '0', '4', '*', '*', '*')" />
-                <SENTENCE TEXT="(callfunction, minute, hour, day, month, dayofweek)
-                        VALUES ('auth_clean_partial_registrations', '5', '0', '*', '*', '*')"/>
-                <SENTENCE TEXT="(callfunction, minute, hour, day, month, dayofweek)
-                        VALUES ('auth_handle_account_expiries', '5', '10', '*', '*', '*')"/>
-                <SENTENCE TEXT="(callfunction, minute, hour, day, month, dayofweek)
-                        VALUES ('activity_process_queue', '*/5', '*', '*', '*', '*')"/>
-             </SENTENCES>
-        </STATEMENT>
-    </STATEMENTS>
 </XMLDB>

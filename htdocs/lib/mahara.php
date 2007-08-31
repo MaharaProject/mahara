@@ -809,7 +809,7 @@ function safe_require($plugintype, $pluginname, $filename='lib.php', $function='
 function plugin_types() {
     static $pluginstocheck;
     if (empty($pluginstocheck)) {
-        $pluginstocheck = array('blocktype', 'artefact', 'auth', 'notification', 'search');
+        $pluginstocheck = array('artefact', 'auth', 'notification', 'search', 'blocktype');
     }
     return $pluginstocheck;
 }
