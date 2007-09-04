@@ -26,6 +26,8 @@
 
 defined('INTERNAL') || die();
 
+$string['pluginname'] = 'Resumé';
+
 $string['myresume'] = 'My Resumé';
 $string['mygoals'] = 'My Goals';
 $string['myskills'] = 'My skills';

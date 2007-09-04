@@ -26,6 +26,8 @@
 
 defined('INTERNAL') || die();
 
+$string['pluginname'] = 'Files';
+
 $string['adminfilesloaded'] = 'Admin files loaded';
 $string['bytes'] = 'bytes';
 $string['changessaved'] = 'Changes saved';
