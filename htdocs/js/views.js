@@ -36,18 +36,20 @@ function ViewManager() {
         self.rewriteRemoveColumnButtons();
     }
 
-
+    /**
+     * Adds a column to the view
+     */
     this.addColumn = function(id, data) {
-        // Things that need doing
-
         // Get the existing number of columns
         var numColumns = parseInt(getFirstElementByTagAndClassName('div', 'column', 'bottom-pane').getAttribute('class').match(/columns([0-9]+)/)[1]);
 
         // Here we are doing two things:
         // 1) The existing columns that are higher than the one being inserted need to be renumbered
         // 2) All columns need their 'columnsN' class renumbered one higher
+        log('addColumn: numColumns=' + numColumns);
         for (var oldID = numColumns; oldID >= 1; oldID--) {
             var column = $('column_' + oldID);
+            log(column);
             var newID = oldID + 1;
             if (oldID >= id) {
                 $('column_' + oldID).setAttribute('id', 'column_' + newID);
@@ -89,6 +91,9 @@ function ViewManager() {
         // Wire up the new column buttons to be AJAX
         self.rewriteAddColumnButtons('column_' + id);
         self.rewriteRemoveColumnButtons('column_' + id);
+
+        // Ensure the enabled/disabled state of the add/remove buttons is correct
+        self.checkColumnButtonDisabledState();
     }
 
     /**
@@ -145,11 +150,6 @@ function ViewManager() {
             addElementClass(addColumnRightButtonContainer, 'add-column-right');
         }
 
-        // If there used to be two columns (and therefore now there is one), remove the only 'remove column' button left, people can't remove the last column
-        if (numColumns == 2) {
-            removeElement(getFirstElementByTagAndClassName('div', 'remove-column', 'column_1'));
-        }
-
         // Put the block instances that were in the removed column into the other columns
         var i = 1;
         forEach(blockInstances, function(instance) {
@@ -161,6 +161,9 @@ function ViewManager() {
                 i = 1;
             }
         });
+
+        // Ensure the enabled/disabled state of the add/remove buttons is correct
+        self.checkColumnButtonDisabledState();
     }
 
     /**
@@ -263,6 +266,36 @@ function ViewManager() {
                 });
                 e.stop();
             });
+        });
+    }
+    
+    /**
+     * Disables the 'add column' buttons
+     */
+    this.checkColumnButtonDisabledState = function() {
+        // Get the existing number of columns
+        var numColumns = parseInt(getFirstElementByTagAndClassName('div', 'column', 'bottom-pane').getAttribute('class').match(/columns([0-9]+)/)[1]);
+
+        var state = (numColumns == 5);
+        forEach(getElementsByTagAndClassName('input', 'addcolumn', 'bottom-pane'), function(i) {
+            if (state) {
+                setNodeAttribute(i, 'disabled', 'disabled');
+            }
+            else {
+                removeNodeAttribute(i, 'disabled');
+            }
+            //i.setAttribute('disabled', state);
+        });
+
+        var state = (numColumns == 1);
+        forEach(getElementsByTagAndClassName('input', 'removecolumn', 'bottom-pane'), function(i) {
+            //i.setAttribute('disabled', state);
+            if (state) {
+                setNodeAttribute(i, 'disabled', 'disabled');
+            }
+            else {
+                removeNodeAttribute(i, 'disabled');
+            }
         });
     }
 
