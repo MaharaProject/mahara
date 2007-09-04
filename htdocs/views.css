@@ -78,6 +78,12 @@
 .columns3 {
     width: 31%;
 }
+.columns4 {
+    width: 23%;
+}
+.columns5 {
+    width: 18%;
+}
 
 .column {
     vertical-align: top;
