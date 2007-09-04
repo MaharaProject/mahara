@@ -128,7 +128,7 @@ function check_upgrades($name=null) {
                 }
 
                 if ($plugin == 'artefact') { // go check it for blocks as well
-                    $btlocation = get_config('docroot') . $plugin . '/blocktype';
+                    $btlocation = get_config('docroot') . $plugin . '/' . $dir . '/blocktype';
                     if (!is_dir($btlocation)) {
                         continue;
                     }   
@@ -137,7 +137,7 @@ function check_upgrades($name=null) {
                         if (strpos($btdir, '.') === 0) {
                             continue;
                         }
-                        if (!is_dir(get_config('docroot') . $plugin . '/blocktype/' . $btdir)) {
+                        if (!is_dir(get_config('docroot') . $plugin . '/' . $dir . '/blocktype/' . $btdir)) {
                             continue;
                         }
                         $plugins[] = array('blocktype', $dir . '/' . $btdir);
@@ -424,10 +424,17 @@ function upgrade_plugin($upgrade) {
             delete_records_select('artefact_installed_type', $select,
                                   array_merge(array($pluginname),$types));
         }
-
-        //@todo install blocks here too.
+        // install a blocktype category for this plugin
+        if (get_config('installed') && !record_exists('blocktype_category', 'name', $pluginname)) {
+            insert_record('blocktype_category', (object)array('name' => $pluginname));
+        }
     }
     
+    // install blocktype categories.
+    if ($plugintype == 'blocktype' && get_config('installed')) {
+        install_blocktype_categories_for_plugin($pluginname);
+    }
+
     $prevversion = (empty($upgrade->install)) ? $upgrade->from : 0;
     call_static_method($pcname, 'postinst', $prevversion);
     
@@ -435,6 +442,17 @@ function upgrade_plugin($upgrade) {
         $status = false;
     }
     $db->CompleteTrans();
+
+    // we have to do this after committing the current transaction because we call ourselves recursively...
+    if ($plugintype == 'artefact' && get_config('installed')) {
+        // only install associated blocktype plugins if we're not in the process of installing 
+        if ($blocktypes = call_static_method($pcname, 'get_block_types')) {
+            foreach ($blocktypes as $bt) {
+                $upgrade = check_upgrades('blocktype.' . $pluginname . '/' . $bt);
+                upgrade_plugin($upgrade);
+            }
+        }
+    }
     
     return $status;
 
@@ -543,6 +561,13 @@ function core_install_lastcoredata_defaults() {
     set_profile_field($user->id, 'lastname', $user->lastname);
     set_config('installed', true);
     db_commit();
+
+    // if we're installing, set up the block categories here and then poll the plugins.
+    // if we're upgrading this happens somewhere else.  This is because of dependency issues around 
+    // the order of installation stuff.
+
+    install_blocktype_categories();
+
 }
 
 function core_install_firstcoredata_defaults() {
@@ -730,6 +755,62 @@ function sort_upgrades($k1, $k2) {
     else if ($k2 == 'lastcoredata') {
         return -1;
     }
-    return 0;
+    // else obey the order plugin types returns (strip off plugintype. from the start)
+    $weight1 = array_search(substr($k1, 0, strpos($k1, '.')), plugin_types());
+    $weight2 = array_search(substr($k2, 0, strpos($k2, '.')), plugin_types());
+    return ($weight1 > $weight2);
 }
+
+/** core blocktype categories the system exports
+* (eg not tied to artefact plugins)
+*/
+function get_core_blocktype_categories() {
+    return array();
+}
+
+function install_blocktype_categories_for_plugin($blocktype) {
+    safe_require('blocktype', $blocktype);
+    $blocktype = blocktype_namespaced_to_single($blocktype);
+    db_begin();
+    delete_records('blocktype_installed_category', 'blocktype', $blocktype);
+    if ($cats = call_static_method(generate_class_name('blocktype', $blocktype), 'get_categories')) {
+        foreach ($cats as $cat) {
+            insert_record('blocktype_installed_category', (object)array(
+                'blocktype' => $blocktype,
+                'category' => $cat
+            ));
+        }
+    }
+    db_commit();
+}
+
+function install_blocktype_categories() {
+    db_begin();
+
+    if ($artefacts = plugins_installed('artefact')) {
+        $artefacts = array_map(create_function('$a', 'return $a->name;'), $artefacts);
+    }
+    else {
+        $artefacts = array();
+    }
+    $categories = array_merge(get_core_blocktype_categories(), $artefacts);
+    $installedcategories = get_column('blocktype_category', 'name');
+
+    if ($toinstall = array_diff($categories, $installedcategories)) {
+        foreach ($toinstall as $i) {
+            insert_record('blocktype_category', (object)array('name' => $i));
+        }
+    }
+
+    db_commit();
+
+
+    // poll all the installed blocktype plugins and ask them what categories they export
+    if ($blocktypes = plugins_installed('blocktype')) {
+        foreach ($blocktypes as $bt) {
+            install_blocktype_categories_for_plugin(blocktype_single_to_namespaced($bt->name, $bt->artefactplugin));
+        }
+    }
+}
+
 ?>

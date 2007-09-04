@@ -809,6 +809,7 @@ function safe_require($plugintype, $pluginname, $filename='lib.php', $function='
 function plugin_types() {
     static $pluginstocheck;
     if (empty($pluginstocheck)) {
+        // ORDER MATTERS! artefact has to be first!
         $pluginstocheck = array('artefact', 'auth', 'notification', 'search', 'blocktype');
     }
     return $pluginstocheck;
@@ -837,6 +838,9 @@ function call_static_method($class, $method) {
 
 function generate_class_name() {
     $args = func_get_args();
+    if (count($args) == 2 && $args[0] == 'blocktype') {
+        return 'PluginBlockType' . ucfirst(blocktype_namespaced_to_single($args[1]));
+    }
     return 'Plugin' . implode('', array_map('ucfirst', $args));
 }
 
@@ -844,9 +848,20 @@ function generate_artefact_class_name($type) {
     return 'ArtefactType' . ucfirst($type);
 }
 
-function generate_blocktype_class_name($type) {
-    return 'BlockType' . ucfirst($type);
+function blocktype_namespaced_to_single($blocktype) {
+    if (strpos($blocktype, '/') === false) { // system blocktype
+        return $blocktype;
+    }
+    return substr($blocktype, strpos($blocktype, '/') + 1 );
 }
+
+function blocktype_single_to_namespaced($blocktype, $artefact='') {
+    if (empty($artefact)) {
+        return $blocktype;
+    }
+    return $artefact . '/' . $blocktype;
+}
+
 
 /**
  * Fires an event which can be handled by different parts of the system

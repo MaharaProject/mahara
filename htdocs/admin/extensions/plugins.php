@@ -34,7 +34,11 @@ define('SECTION_PLUGINNAME', 'admin');
 define('SECTION_PAGE', 'plugins');
 require('upgrade.php');
 
+// @TODO when artefact plugins get installed, move the not installed blocktypes
+// that get installed into the list of installed blocktype plugins
+
 $plugins = array();
+$plugins['blocktype'] = array();
 
 foreach (plugin_types()  as $plugin) {
     // this has to happen first because of broken artefact/blocktype ordering
@@ -42,12 +46,12 @@ foreach (plugin_types()  as $plugin) {
     $plugins[$plugin]['installed'] = array();
     $plugins[$plugin]['notinstalled'] = array();
 }
-foreach (plugin_types() as $plugin) {
+foreach (array_keys($plugins) as $plugin) {
     if ($installed = get_records_array($plugin . '_installed')) {
         foreach ($installed as $i) {
             $key = $i->name;
-            if ($plugin == 'blocktype' && !empty($i->artefactplugin)) {
-                $key = $i->artefactplugin . '/' . $i->name;
+            if ($plugin == 'blocktype') {
+                $key = blocktype_single_to_namespaced($i->name, $i->artefactplugin);
             }
             $plugins[$plugin]['installed'][$key] = array();
             if ($plugin == 'artefact') {
@@ -78,6 +82,7 @@ foreach (plugin_types() as $plugin) {
     
     $dirhandle = opendir(get_config('docroot') . $plugin);
     while (false !== ($dir = readdir($dirhandle))) {
+        $installed = false; // reinitialise
         if (strpos($dir, '.') === 0) {
             continue;
         }
@@ -87,6 +92,8 @@ foreach (plugin_types() as $plugin) {
         if (array_key_exists($dir, $plugins[$plugin]['installed'])) {
             $installed = true;
         }
+        // if we're already installed keep going
+        // if we're an artefact plugin, we have to check for blocktypes.
         if ($plugin != 'artefact' && empty($installed)) {
             continue;
         }
@@ -115,6 +122,9 @@ foreach (plugin_types() as $plugin) {
                 }
                 if (!array_key_exists($dir . '/' . $btdir, $plugins['blocktype']['installed'])) {
                     try {
+                        if (!array_key_exists($dir, $plugins['artefact']['installed'])) {
+                            throw new InstallationException(get_string('blocktypeprovidedbyartefactnotinstallable', 'error', $dir));
+                        }
                         validate_plugin('blocktype', $dir . '/' . $btdir, 
                             get_config('docroot') . 'artefact/' . $dir . '/blocktype/' . $btdir);
                         $plugins['blocktype']['notinstalled'][$dir . '/' . $btdir] = array();

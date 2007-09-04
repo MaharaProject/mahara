@@ -66,6 +66,7 @@ $string['blocktypelibmissing'] = 'Missing lib.php for block %s in artefact plugi
 $string['blocktypemissingconfigform'] = 'Block type %s must implement config_form';
 $string['blocktypemissingconfigsave'] = 'Block type %s must implement config_save';
 $string['versionphpmissing'] = 'Plugin %s %s is missing version.php!';
+$string['blocktypeprovidedbyartefactnotinstallable'] = 'This will be installed as part of the installation of artefact plugin %s';
 
 // if you change these next two , be sure to change them in libroot/errors.php
 // as they are duplicated there, in the case that get_string was not available.
