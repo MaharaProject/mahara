@@ -56,14 +56,16 @@ case 'blocktype_list':
     // Doing 'add block' for the static version. This involves getting the basic action responder code in place and being as concise as possibly
     // Skip the ajax version of this for now, the configuration thing needs thinking about.
     //
+    // Drag+Drop move blockinstances
+    // Disable 'add column' buttons when there are five columns
     //
-    $data = views_build_blocktype_list($category, true);
+    $data = view_build_blocktype_list($category, true);
     json_reply(false, array('message' => false, 'data' => $data));
     break;
 case 'add_column':
     $column = param_integer('column');
     if (view_add_column($view, $column)) {
-        json_reply(false, false);
+        json_reply(false, array('message' => false, 'data' => view_build_column($view, $column, true)));
     }
     else {
         json_reply(true, 'Failed to add column');
