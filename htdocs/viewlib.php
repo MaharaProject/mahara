@@ -32,6 +32,137 @@
  */
 defined('INTERNAL') || die;
 
+//
+// This is a testing data structure for this library. Certain functions need to 
+// have database calls in them instead. Just look for $COLUMNS in this file.
+//
+$COLUMNS = array(
+    'columns' => array(
+        // First column
+        1 => array(
+            'blockinstances' => array(
+                array(
+                    'id'           => 1,
+                    'title'        => 'Block Instance 1',
+                    'content'      => '
+                    <div class="fl" style="margin-right: 1em;">
+                        <img src="theme/default/static/images/no_userphoto100x100.gif" alt="Profile Image">
+                    </div>
+                    <h4>Nigel McNie</h4>
+                    <ul style="list-style-type: none;">
+                        <li><strong>Personal Website:</strong> <a href="http://nigel.mcnie.name/">nigel.mcnie.name</a></li>
+                        <li><strong>City:</strong> Wellington</li>
+                        <li><strong>Occupation:</strong> Engineer</li>
+                    </ul>
+                    <div style="clear:both;"></div>',
+                    'canmoveleft'  => false,
+                    'canmoveright' => true,
+                    'canmoveup'    => false,
+                    'canmovedown'  => true,
+                ),
+                array(
+                    'id'           => 2,
+                    'title'        => 'Block Instance 2',
+                    'content'      => '
+                    <div class="fl" style="margin-right: 1em;">
+                        <img src="theme/default/static/images/no_userphoto100x100.gif" alt="Profile Image">
+                    </div>
+                    <h4>Nigel McNie</h4>
+                    <ul style="list-style-type: none;">
+                        <li><strong>Personal Website:</strong> <a href="http://nigel.mcnie.name/">nigel.mcnie.name</a></li>
+                        <li><strong>City:</strong> Wellington</li>
+                        <li><strong>Occupation:</strong> Engineer</li>
+                    </ul>
+                    <div style="clear:both;"></div>',
+                    'canmoveleft'  => false,
+                    'canmoveright' => true,
+                    'canmoveup'    => true,
+                    'canmovedown'  => false,
+                ),
+            ),
+        ),
+        // Second column
+        2 => array(
+            'blockinstances' => array(
+                array(
+                    'id'           => 3,
+                    'title'        => 'Block Instance 3',
+                    'content'      => '
+                                        <h4>Recent Blog Posts for \'My Holiday in Scotland\'</h4>
+                                        <ul>
+                                            <li><a href="">Edinburgh is a dangerous place</a></li>
+                                            <li><a href="">I thought I saw Gordon!</a></li>
+                                            <li><a href="">There\'s no monster at Loch Ness</a></li>
+                                            <li><a href="">Synchronicity II</a></li>
+                                            </ul>',
+                    'canmoveleft'  => true,
+                    'canmoveright' => true,
+                    'canmoveup'    => false,
+                    'canmovedown'  => true,
+                ),
+                array(
+                    'id'           => 4,
+                    'title'        => 'Block Instance 4',
+                    'content'      => '
+                                        <h4>Recent Blog Posts for \'My Holiday in Scotland\'</h4>
+                                        <ul>
+                                            <li><a href="">Edinburgh is a dangerous place</a></li>
+                                            <li><a href="">I thought I saw Gordon!</a></li>
+                                            <li><a href="">There\'s no monster at Loch Ness</a></li>
+                                            <li><a href="">Synchronicity II</a></li>
+                                            </ul>',
+                    'canmoveleft'  => true,
+                    'canmoveright' => true,
+                    'canmoveup'    => true,
+                    'canmovedown'  => true,
+                ),
+                array(
+                    'id'           => 5,
+                    'title'        => 'Block Instance 5',
+                    'content'      => '
+                                        <h4>Recent Blog Posts for \'My Holiday in Scotland\'</h4>
+                                        <ul>
+                                            <li><a href="">Edinburgh is a dangerous place</a></li>
+                                            <li><a href="">I thought I saw Gordon!</a></li>
+                                            <li><a href="">There\'s no monster at Loch Ness</a></li>
+                                            <li><a href="">Synchronicity II</a></li>
+                                            </ul>',
+                    'canmoveleft'  => true,
+                    'canmoveright' => true,
+                    'canmoveup'    => true,
+                    'canmovedown'  => false,
+                ),
+            ),
+        ),
+        // Third column
+        3 => array(
+            'blockinstances' => array(
+                array(
+                    'id'           => 6,
+                    'title'        => 'Block Instance 6',
+                    'content'      => 'The time is now <strong>' . date('h:i:s a') . '</strong>',
+                    'canmoveleft'  => true,
+                    'canmoveright' => false,
+                    'canmoveup'    => false,
+                    'canmovedown'  => true,
+                ),
+                array(
+                    'id'           => 7,
+                    'title'        => 'Block Instance 7',
+                    'content'      => 'The date is now <strong>' . date('d/m/Y') . '</strong>',
+                    'canmoveleft'  => true,
+                    'canmoveright' => false,
+                    'canmoveup'    => true,
+                    'canmovedown'  => false,
+                ),
+            ),
+        ),
+    ),
+    'count' => 3
+);
+
+
+
 /**
  * Returns HTML for the category list
  *
@@ -40,7 +171,7 @@ defined('INTERNAL') || die;
  *                           meaning that nothing for the standard HTML version 
  *                           alone should be output
  */
-function views_build_category_list($defaultcategory, $javascript=false) {
+function view_build_category_list($defaultcategory, $javascript=false) {
     // TODO: This data structure needs to be sourced from the database
     $categories = array(
         array(
@@ -96,7 +227,7 @@ function views_build_category_list($defaultcategory, $javascript=false) {
  *                           meaning that nothing for the standard HTML version 
  *                           alone should be output
  */
-function views_build_blocktype_list($category, $javascript=false) {
+function view_build_blocktype_list($category, $javascript=false) {
     // TODO: This data structure needs to be sourced from the database
     $blocktypes = array(
         array(
@@ -151,6 +282,124 @@ EOF;
         $result .= $blocktypehtml;
     }
     $result .= "\n</ul>";
+
+    return $result;
+}
+
+/**
+ * Returns the HTML for the columns of a particular views
+ *
+ * @param int  $view       The view to build the columns for
+ * @param bool $javascript Set to true if the caller is a json script, 
+ *                         meaning that nothing for the standard HTML version 
+ *                         alone should be output
+ */
+function view_build_columns($view, $javascript=false) {
+    global $COLUMNS;
+    $numcols = $COLUMNS['count'];
+
+    $result = '';
+    for ($i = 1; $i <= $numcols; $i++) {
+        $result .= view_build_column($view, $i, $javascript);
+    }
+
+    return $result;
+}
+
+/**
+ * Returns the HTML for a particular view column
+ *
+ * @param int  $view       The view to build the column for
+ * @param int  $column     The column to build
+ * @param bool $javascript Set to true if the caller is a json script, 
+ *                         meaning that nothing for the standard HTML version 
+ *                         alone should be output
+ */
+function view_build_column($view, $column, $javascript=false) {
+    global $COLUMNS;
+    // FIXME: TEMPORARY. Just so if we're adding a new column, we can insert a blank one
+    if ($javascript) {
+        $data = array('blockinstances' => array());
+    }
+    else {
+        $data = $COLUMNS['columns'][$column];
+    }
+
+    $result = '';
+
+    $result = '<div id="column_' . $column . '" class="column columns' . $COLUMNS['count'] . '">
+    <div class="column-header">';
+
+    if ($column == 1) {
+        $result .= '    <div class="add-column-left">
+        <input type="submit" class="submit addcolumn" name="action_add_column_before_1" value="Add Column">
+    </div>';
+    }
+
+    $result .= '    <div class="remove-column">
+        <input type="submit" class="submit removecolumn" name="action_remove_column_' . $column . '" value="Remove Column">
+    </div>';
+
+    if ($column == $COLUMNS['count']) {
+        $result .= '    <div class="add-column-right">
+        <input type="submit" class="submit addcolumn" name="action_add_column_before_' . ($column + 1) . '" value="Add Column">
+    </div>';
+    }
+    else {
+        $result .= '    <div class="add-column-center">
+        <input type="submit" class="submit addcolumn" name="action_add_column_before_' . ($column + 1) . '" value="Add Column">
+    </div>';
+    }
+
+    $result .= '
+    </div>
+    <div class="column-content">';
+    if (!$javascript) {
+        $result .= '        <div class="add-button">
+            <input type="submit" class="submit newblockhere" name="action_blocktype_add_top_' . $column . '" value="Add new block here">
+        </div>';
+    }
+
+    // Blocktype loop here
+    foreach($data['blockinstances'] as $blockinstance) {
+        $result .= '    <div class="blockinstance" id="blockinstance_' . $blockinstance['id'] . '">
+    <div class="blockinstance-header">
+        <h4>' . hsc($blockinstance['title']) . '</h4>
+    </div>
+    <div class="blockinstance-controls">';
+
+        if (!$javascript) {
+            // FIXME loop pls!
+            if ($blockinstance['canmoveleft']) {
+                $result .= '<input type="submit" class="submit movebutton" name="blockinstance_' . $blockinstance['id'] . '_moveleft" value="&larr;">';
+            }
+            if ($blockinstance['canmovedown']) {
+                $result .= '<input type="submit" class="submit movebutton" name="blockinstance_' . $blockinstance['id'] . '_movedown" value="&darr;">';
+            }
+            if ($blockinstance['canmoveup']) {
+                $result .= '<input type="submit" class="submit movebutton" name="blockinstance_' . $blockinstance['id'] . '_moveup" value="&uarr;">';
+            }
+            if ($blockinstance['canmoveright']) {
+                $result .= '<input type="submit" class="submit movebutton" name="blockinstance_' . $blockinstance['id'] . '_moveright" value="&rarr;">';
+            }
+        }
+        $result .= '<input type="submit" class="submit deletebutton" name="blockinstance_' . $blockinstance['id'] .'_delete" value="X">';
+
+        $result .= '        </div>
+        <div class="blockinstance-content">
+            ' . $blockinstance['content'] . '
+        </div>
+    </div>';
+        if (!$javascript) {
+            $result .= '
+    <div class="add-button">
+        <input type="submit" class="submit newblockhere" name="action_blocktype_add_after_' . $blockinstance['id'] . '" value="Add new block here">
+    </div>';
+        }
+    }
+
+    $result .= '    </div>
+</div>';
 
     return $result;
 }
