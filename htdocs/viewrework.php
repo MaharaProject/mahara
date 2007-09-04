@@ -31,6 +31,7 @@ require('init.php');
 require('viewlib.php');
 define('TITLE', 'Views Rework [DANGER construction site]');
 
+$view = param_integer('view');
 view_process_changes();
 
 $smarty = smarty(array('views'), array('<link rel="stylesheet" href="views.css" type="text/css">'));
@@ -39,141 +40,13 @@ $smarty = smarty(array('views'), array('<link rel="stylesheet" href="views.css" 
 $category = param_alpha('category', 'aboutme');
 
 // The list of categories for the tabbed interface
-$smarty->assign('category_list', views_build_category_list($category));
+$smarty->assign('category_list', view_build_category_list($category));
 
 // The list of blocktypes for the default category
-$smarty->assign('blocktype_list', views_build_blocktype_list($category));
+$smarty->assign('blocktype_list', view_build_blocktype_list($category));
 
-
-
-// Column 3 blocks (temporary!)
-$columns = array(
-    'columns' => array(
-        // First column
-        1 => array(
-            'blockinstances' => array(
-                array(
-                    'id'           => 1,
-                    'title'        => 'Block Instance 1',
-                    'content'      => '
-                    <div class="fl" style="margin-right: 1em;">
-                        <img src="theme/default/static/images/no_userphoto100x100.gif" alt="Profile Image">
-                    </div>
-                    <h4>Nigel McNie</h4>
-                    <ul style="list-style-type: none;">
-                        <li><strong>Personal Website:</strong> <a href="http://nigel.mcnie.name/">nigel.mcnie.name</a></li>
-                        <li><strong>City:</strong> Wellington</li>
-                        <li><strong>Occupation:</strong> Engineer</li>
-                    </ul>
-                    <div style="clear:both;"></div>',
-                    'canmoveleft'  => false,
-                    'canmoveright' => true,
-                    'canmoveup'    => false,
-                    'canmovedown'  => true,
-                ),
-                array(
-                    'id'           => 2,
-                    'title'        => 'Block Instance 2',
-                    'content'      => '
-                    <div class="fl" style="margin-right: 1em;">
-                        <img src="theme/default/static/images/no_userphoto100x100.gif" alt="Profile Image">
-                    </div>
-                    <h4>Nigel McNie</h4>
-                    <ul style="list-style-type: none;">
-                        <li><strong>Personal Website:</strong> <a href="http://nigel.mcnie.name/">nigel.mcnie.name</a></li>
-                        <li><strong>City:</strong> Wellington</li>
-                        <li><strong>Occupation:</strong> Engineer</li>
-                    </ul>
-                    <div style="clear:both;"></div>',
-                    'canmoveleft'  => false,
-                    'canmoveright' => true,
-                    'canmoveup'    => true,
-                    'canmovedown'  => false,
-                ),
-            ),
-        ),
-        // Second column
-        2 => array(
-            'blockinstances' => array(
-                array(
-                    'id'           => 3,
-                    'title'        => 'Block Instance 3',
-                    'content'      => '
-                                        <h4>Recent Blog Posts for \'My Holiday in Scotland\'</h4>
-                                        <ul>
-                                            <li><a href="">Edinburgh is a dangerous place</a></li>
-                                            <li><a href="">I thought I saw Gordon!</a></li>
-                                            <li><a href="">There\'s no monster at Loch Ness</a></li>
-                                            <li><a href="">Synchronicity II</a></li>
-                                            </ul>',
-                    'canmoveleft'  => true,
-                    'canmoveright' => true,
-                    'canmoveup'    => false,
-                    'canmovedown'  => true,
-                ),
-                array(
-                    'id'           => 4,
-                    'title'        => 'Block Instance 4',
-                    'content'      => '
-                                        <h4>Recent Blog Posts for \'My Holiday in Scotland\'</h4>
-                                        <ul>
-                                            <li><a href="">Edinburgh is a dangerous place</a></li>
-                                            <li><a href="">I thought I saw Gordon!</a></li>
-                                            <li><a href="">There\'s no monster at Loch Ness</a></li>
-                                            <li><a href="">Synchronicity II</a></li>
-                                            </ul>',
-                    'canmoveleft'  => true,
-                    'canmoveright' => true,
-                    'canmoveup'    => true,
-                    'canmovedown'  => true,
-                ),
-                array(
-                    'id'           => 5,
-                    'title'        => 'Block Instance 5',
-                    'content'      => '
-                                        <h4>Recent Blog Posts for \'My Holiday in Scotland\'</h4>
-                                        <ul>
-                                            <li><a href="">Edinburgh is a dangerous place</a></li>
-                                            <li><a href="">I thought I saw Gordon!</a></li>
-                                            <li><a href="">There\'s no monster at Loch Ness</a></li>
-                                            <li><a href="">Synchronicity II</a></li>
-                                            </ul>',
-                    'canmoveleft'  => true,
-                    'canmoveright' => true,
-                    'canmoveup'    => true,
-                    'canmovedown'  => false,
-                ),
-            ),
-        ),
-        // Third column
-        3 => array(
-            'blockinstances' => array(
-                array(
-                    'id'           => 6,
-                    'title'        => 'Block Instance 6',
-                    'content'      => 'The time is now <strong>' . date('h:i:s a') . '</strong>',
-                    'canmoveleft'  => true,
-                    'canmoveright' => false,
-                    'canmoveup'    => false,
-                    'canmovedown'  => true,
-                ),
-                array(
-                    'id'           => 7,
-                    'title'        => 'Block Instance 7',
-                    'content'      => 'The date is now <strong>' . date('d/m/Y') . '</strong>',
-                    'canmoveleft'  => true,
-                    'canmoveright' => false,
-                    'canmoveup'    => true,
-                    'canmovedown'  => false,
-                ),
-            ),
-        ),
-    ),
-    'count' => 3
-);
-
-$smarty->assign('columns', $columns);
-
+// The HTML for the columns in the view
+$smarty->assign('columns', view_build_columns($view));
 
 $smarty->display('viewrework.tpl');
 
