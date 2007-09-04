@@ -47,17 +47,18 @@ case 'blocktype_list':
     // Dynamic version: Actions = response, but no action performed.
     //
     // What can be done:
-    // Add column: js should make room for it, put in the raw html (note: need to generate column raw html in a function then!)
-    // Remove column: js should destroy the existing column, hopefully moving the blocks to other columns (could be implemented as move move delete?)
+    // [done] Add column: js should make room for it, put in the raw html (note: need to generate column raw html in a function then!)
+    // [done] Remove column: js should destroy the existing column, hopefully moving the blocks to other columns (could be implemented as move move delete?)
     // Moving block instances: js should drag+drop, do ajax stub request. static should send response
     // Add block: js should be done by drag and drop. static should respond
     //
     // Where I'm up to:
-    // Doing 'add block' for the static version. This involves getting the basic action responder code in place and being as concise as possibly
-    // Skip the ajax version of this for now, the configuration thing needs thinking about.
-    //
     // Drag+Drop move blockinstances
-    // Disable 'add column' buttons when there are five columns
+    // ...
+    // Fix up all the stuff that works with javascript to work in the non javascript version
+    // Clean up view_process_changes() and related things
+    // ...
+    // Blocktype adding to view (but only after the change can be reflected in the database!)
     //
     $data = view_build_blocktype_list($category, true);
     json_reply(false, array('message' => false, 'data' => $data));
