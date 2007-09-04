@@ -37,8 +37,58 @@ function ViewManager() {
     }
 
 
-    this.addColumn = function(id) {
-        alert('Adding a column before current column ' + id);
+    this.addColumn = function(id, data) {
+        // Things that need doing
+
+        // Get the existing number of columns
+        var numColumns = parseInt(getFirstElementByTagAndClassName('div', 'column', 'bottom-pane').getAttribute('class').match(/columns([0-9]+)/)[1]);
+
+        // Here we are doing two things:
+        // 1) The existing columns that are higher than the one being inserted need to be renumbered
+        // 2) All columns need their 'columnsN' class renumbered one higher
+        for (var oldID = numColumns; oldID >= 1; oldID--) {
+            var column = $('column_' + oldID);
+            var newID = oldID + 1;
+            if (oldID >= id) {
+                $('column_' + oldID).setAttribute('id', 'column_' + newID);
+
+                // Renumber the add/remove column buttons
+                getFirstElementByTagAndClassName('input', 'addcolumn', 'column_' + newID).setAttribute('name', 'action_add_column_before_' + (newID + 1));
+                getFirstElementByTagAndClassName('input', 'removecolumn', 'column_' + newID).setAttribute('name', 'action_remove_column_' + newID);
+            }
+            removeElementClass(column, 'columns' + numColumns);
+            addElementClass(column, 'columns' + (numColumns + 1));
+        }
+
+        // If the column being added is the very first one, the 'left' add column button needs to be removed
+        if (id == 1) {
+            removeElement(getFirstElementByTagAndClassName('div', 'add-column-left', 'column_2'));
+        }
+
+        // Now we insert the new column into the DOM. Inserting the HTML into a
+        // new element and then into the DOM means we can add the new column
+        // without changing any of the existing DOM tree (and thus destroying
+        // events)
+        var tempDiv = DIV();
+        tempDiv.innerHTML = data.data;
+        if (id == 1) {
+            insertSiblingNodesBefore('column_2', tempDiv.firstChild);
+        }
+        else {
+            insertSiblingNodesAfter('column_' + (id - 1), tempDiv.firstChild);
+        }
+
+        // VERY TEMPORARY
+        // Currently with our hard coded data, the adding of a column doesn't
+        // really happen and so the new column is built thinking there are only
+        // the same number of columns in total as there were before adding a
+        // column. This munges the column class for us
+        removeElementClass('column_' + id, 'columns' + numColumns);
+        addElementClass('column_' + id, 'columns' + (numColumns + 1));
+
+        // Wire up the new column buttons to be AJAX
+        self.rewriteAddColumnButtons('column_' + id);
+        self.rewriteRemoveColumnButtons('column_' + id);
     }
 
     /**
@@ -58,7 +108,7 @@ function ViewManager() {
         // Remove the column itself
         removeElement('column_' + id);
         // Get the existing number of columns
-        var numColumns = getFirstElementByTagAndClassName('div', 'column', 'bottom-pane').getAttribute('class').match(/columns([0-9]+)/)[1];
+        var numColumns = parseInt(getFirstElementByTagAndClassName('div', 'column', 'bottom-pane').getAttribute('class').match(/columns([0-9]+)/)[1]);
 
         forEach(getElementsByTagAndClassName('div', 'columns' + numColumns, 'bottom-pane'), function(i) {
             removeElementClass(i, 'columns' + numColumns);
@@ -154,15 +204,26 @@ function ViewManager() {
 
     /**
      * Rewrites the add column buttons to be AJAX
+     *
+     * If the first parameter is a string/element, only the buttons below that
+     * element will be rewritten
      */
     this.rewriteAddColumnButtons = function() {
-        forEach(getElementsByTagAndClassName('input', 'addcolumn', 'bottom-pane'), function(i) {
+        var parentNode;
+        if (typeof(arguments[0]) != 'undefined') {
+            parentNode = arguments[0];
+        }
+        else {
+            parentNode = 'bottom-pane';
+        }
+
+        forEach(getElementsByTagAndClassName('input', 'addcolumn', parentNode), function(i) {
             connect(i, 'onclick', function(e) {
                 var name = e.src().getAttribute('name');
                 var id   = parseInt(name.substr(-1));
                 sendjsonrequest('viewrework.json.php', {'view': $('viewid').value, 'action': 'add_column', 'column': id}, 'POST', function(data) {
                     if (!data.error) {
-                        self.addColumn(id);
+                        self.addColumn(id, data);
                     }
                     else {
                         // ?
@@ -175,9 +236,20 @@ function ViewManager() {
 
     /**
      * Rewrite the remove column buttons to be AJAX
+     * 
+     * If the first parameter is a string/element, only the buttons below that
+     * element will be rewritten
      */
     this.rewriteRemoveColumnButtons = function() {
-        forEach(getElementsByTagAndClassName('input', 'removecolumn', 'bottom-pane'), function(i) {
+        var parentNode;
+        if (typeof(arguments[0]) != 'undefined') {
+            parentNode = arguments[0];
+        }
+        else {
+            parentNode = 'bottom-pane';
+        }
+
+        forEach(getElementsByTagAndClassName('input', 'removecolumn', parentNode), function(i) {
             connect(i, 'onclick', function(e) {
                 var name = e.src().getAttribute('name');
                 var id   = parseInt(name.substr(-1));
