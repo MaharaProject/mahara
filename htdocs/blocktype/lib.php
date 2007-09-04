@@ -75,6 +75,15 @@ abstract class PluginBlocktype extends Plugin {
     public static function has_config() {
         return false;
     }
+
+    public static function title_from_name($name) {
+        $title = get_string('blocktypecategory.'. $name);
+        if (strpos($title, '[[') !== 0) {
+            return $title;
+        }
+        // else we're an artefact
+        return get_string('pluginname', 'artefact.' . $name);
+    }
 }
 
 class BlockInstance {

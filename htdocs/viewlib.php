@@ -172,28 +172,18 @@ $COLUMNS = array(
  *                           alone should be output
  */
 function view_build_category_list($defaultcategory, $javascript=false) {
-    // TODO: This data structure needs to be sourced from the database
-    $categories = array(
-        array(
-            'name' => 'aboutme',
-            'title' => 'About Me',
+    require_once(get_config('docroot') . '/blocktype/lib.php');
+    $cats = get_records_array('blocktype_category');
+    $categories = array_map(
+        create_function(
+            '$a', 
+            '$a = $a->name;
+            return array(
+                "name" => $a, 
+                "title" => call_static_method("PluginBlockType", "title_from_name", $a),
+            );'
         ),
-        array(
-            'name' => 'blogs',
-            'title' => 'Blogs',
-        ),
-        array(
-            'name' => 'filesandfolders',
-            'title' => 'Files and Folders',
-        ),
-        array(
-            'name' => 'general',
-            'title' => 'General',
-        ),
-        array(
-            'name' => 'system',
-            'title' => 'System Blocks',
-        ),
+        $cats
     );
 
     $result = "<ul>\n";
