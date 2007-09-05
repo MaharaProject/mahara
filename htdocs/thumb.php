@@ -67,12 +67,12 @@ switch ($type) {
             }
         }
 
-        header('Content-type: ' . 'image/gif');
-        if ($path = theme_get_path('images/no_userphoto' . $size . '.gif')) {
+        header('Content-type: ' . 'image/png');
+        if ($path = theme_get_path('images/no_userphoto' . $size . '.png')) {
             readfile($path);
             exit;
         }
-        readfile(theme_get_path('images/no_userphoto40x40.gif'));
+        readfile(theme_get_path('images/no_userphoto40x40.png'));
         break;
 }
 
