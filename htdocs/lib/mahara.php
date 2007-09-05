@@ -296,7 +296,8 @@ function get_string_location($identifier, $section, $variables, $replacefunc='fo
                 if ($tocheck == 'blocktype' && 
                     strpos($pluginname, '/') !== false) { // it belongs to an artefact plugin
                     $bits = explode('/', $pluginname);
-                    $locations[] = $docroot . 'artefact/ ' . $bits[0] . '/blocktype/' . $bits[1] . '/' . 'lang/';
+                    $locations[] = $docroot . 'artefact/' . $bits[0] . '/blocktype/' . $bits[1] . '/lang/';
+                    $section = 'blocktype.' . $bits[1];
                 }
                 else {
                     $locations[] = $docroot . $tocheck . '/' . $pluginname . '/lang/';
