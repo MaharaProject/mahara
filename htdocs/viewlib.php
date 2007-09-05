@@ -219,6 +219,7 @@ function view_build_category_list($defaultcategory, $javascript=false) {
  */
 function view_build_blocktype_list($category, $javascript=false) {
 
+    require_once(get_config('docroot') . 'blocktype/lib.php');
     if (!$blocktypes = PluginBlockType::get_blocktypes_for_category($category)) {
         return '';
     }
