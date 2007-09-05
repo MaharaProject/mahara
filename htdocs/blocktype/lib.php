@@ -140,12 +140,30 @@ class BlockInstance {
         throw new InvalidArgumentException("Field $field wasn't found in class " . get_class($this));
     }
 
-    public function __construct() {
-        // @todo
+    public function __construct($id=0, $data=null) {
+         if (!empty($id)) {
+            if (empty($data)) {
+                if (!$data = get_record('block_instance','id',$id)) {
+                    throw new BlockInstanceNotFoundException(get_string('blockinstancenotfound', 'error', $id));
+                }
+            }
+            $this->id = $id;
+        }
+        else {
+            $this->dirty = true;
+        }
+        if (empty($data)) {
+            $data = array();
+        }
+        foreach ((array)$data as $field => $value) {
+            if (property_exists($this, $field)) {
+                $this->{$field} = $value;
+            }
+        }
     }
 
-    public static function factory($id) {
-        // @todo
+    public function to_stdclass() {
+       return (object)get_object_vars($this); 
     }
 
 }

@@ -689,6 +689,11 @@ class EmailException extends SystemException {}
 class ArtefactNotFoundException extends NotFoundException {}
 
 /**
+ * Exception - block instance not found
+ */
+class BlockInstanceNotFoundException extends NotFoundException {}
+
+/**
  * Exception - view not found
  */
 class ViewNotFoundException extends NotFoundException {}
@@ -707,11 +712,6 @@ class GroupNotFoundException extends NotFoundException {}
  * Exception - fired when something happens that would make the user exceed their quota
  */
 class QuotaExceededException extends UserException {}
-
-/**
- * Exception - anything to do with template parsing
- */
-class TemplateParserException extends ConfigException {}
 
 /**
  * Exception - Access denied. Throw this if a user is trying to view something they can't

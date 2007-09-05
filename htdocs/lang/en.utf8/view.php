@@ -74,5 +74,6 @@ $string['format.rendermetadata'] = 'Display metadata for this Artefact';
 $string['addtutors'] = 'Add Tutors';
 $string['viewcreatedsuccessfully'] = 'View created successfully';
 
+$string['invalidcolumn'] = 'Column %s out of range';
 
 ?>

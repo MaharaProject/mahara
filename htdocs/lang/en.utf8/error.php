@@ -80,4 +80,7 @@ $string['viewnotfoundexceptionmessage'] = 'You tried to access a view that didn\
 
 $string['artefactnotfoundmaybedeleted'] = "Artefact with id %s not found (maybe it has been deleted already?)";
 $string['notartefactowner'] = 'You do not own this artefact';
+
+$string['blockinstancednotfound'] = 'Block instance with id %s not found';
+
 ?>

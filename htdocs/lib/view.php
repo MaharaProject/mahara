@@ -46,6 +46,8 @@ class View {
     private $artefact_hierarchy;
     private $contents;
     private $ownerobj;
+    private $numcolumns;
+    private $columns;
 
     public function __construct($id=0, $data=null) {
         if (!empty($id)) {
@@ -274,6 +276,58 @@ class View {
                        display_name($releaseuser, $this->get_owner_object()))));
     }
 
+    /**
+    * builds up the data structure for  this view
+    * @private
+    * @return void
+    */
+    private function build_column_datastructure() {
+        if (!empty($this->columns)) { // we've already built it up
+            return;
+        }
+
+        $sql = 'SELECT bi.*, vb.id AS vbid, vb.view, vb.block, vb.column, vb.order
+            FROM {view_block} vb 
+            JOIN {block_instance} bi ON vb.block = bi.id
+            WHERE vb.view = ?
+            ORDER BY vb.column, vb.order';
+        if (!$data = get_records_sql_array($sql, array($this->get('id')))) {
+            $data = array();
+        }
+
+        // fill up empty columns array keys
+        for ($i = 1; $i <= $this->get('numcolumns'); $i++) {
+            $this->columns[$i] = array('blockinstances' => array());
+        }
+
+        foreach ($data as $block) {
+            $b = new BlockInstance($block->id, (array)$block);
+            $this->columns[$block->column]['blockinstances'][] = $b->to_stdclass();
+        }
+
+    }
+
+    /*
+    * returns the datastructure for the view's column(s)
+    *
+    * @param int $column optional, defaults to returning all columns
+    * @return mixed array
+    */
+    public function get_column_datastructure($column=0) {
+        // make sure we've already built up the structure
+        $this->build_column_datastructure();
+
+        if (empty($column)) {
+            return $this->columns;
+        }
+
+        if (!array_key_exists($column, $this->columns)) {
+            throw new InvalidArgumentException(get_string('invalidcolumn', 'view', $column));
+        }
+
+
+        return $this->columns[$column];
+    }
 }
 
 ?>
