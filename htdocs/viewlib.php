@@ -180,7 +180,7 @@ function view_build_category_list($defaultcategory, $javascript=false) {
             '$a = $a->name;
             return array(
                 "name" => $a, 
-                "title" => call_static_method("PluginBlockType", "title_from_name", $a),
+                "title" => call_static_method("PluginBlockType", "category_title_from_name", $a),
             );'
         ),
         $cats
@@ -218,37 +218,10 @@ function view_build_category_list($defaultcategory, $javascript=false) {
  *                           alone should be output
  */
 function view_build_blocktype_list($category, $javascript=false) {
-    // TODO: This data structure needs to be sourced from the database
-    $blocktypes = array(
-        array(
-            'id'             => 1,
-            'name'           => 'blocktype1',
-            'title'          => 'Block Type ' . $category,
-            'description'    => 'This is the description for block type 1',
-            'thumbnail_path' => 'theme/default/static/images/no_thumbnail.gif',
-        ),
-        array(
-            'id'             => 2,
-            'name'           => 'blocktype2',
-            'title'          => 'Block Type ' . $category,
-            'description'    => 'This is the description for block type 2',
-            'thumbnail_path' => 'theme/default/static/images/no_thumbnail.gif',
-        ),
-        array(
-            'id'             => 3,
-            'name'           => 'blocktype3',
-            'title'          => 'Block Type ' . $category,
-            'description'    => 'This is the description for block type 3',
-            'thumbnail_path' => 'theme/default/static/images/no_thumbnail.gif',
-        ),
-        array(
-            'id'             => 4,
-            'name'           => 'blocktype4',
-            'title'          => 'Block Type ' . $category,
-            'description'    => 'This is the description for block type 4',
-            'thumbnail_path' => 'theme/default/static/images/no_thumbnail.gif',
-        ),
-    );
+
+    if (!$blocktypes = PluginBlockType::get_blocktypes_for_category($category)) {
+        return '';
+    }
 
     $template =<<<EOF
     <li>
@@ -266,7 +239,7 @@ EOF;
         $blocktypehtml = str_replace('{TITLE}', hsc($blocktype['title']), $blocktypehtml);
         $blocktypehtml = str_replace('{DESCRIPTION}', format_whitespace(hsc($blocktype['description'])), $blocktypehtml);
         $blocktypehtml = str_replace('{THUMBNAIL_PATH}', hsc($blocktype['thumbnail_path']), $blocktypehtml);
-        $radio = ($javascript) ? '' : '<input type="radio" class="blocktype-radio" name="blocktype" value="' . $blocktype['id'] . '">';
+        $radio = ($javascript) ? '' : '<input type="radio" class="blocktype-radio" name="blocktype" value="' . $blocktype['name'] . '">';
         $blocktypehtml = str_replace('{RADIO}', $radio, $blocktypehtml);
 
         $result .= $blocktypehtml;

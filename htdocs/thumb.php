@@ -74,6 +74,22 @@ switch ($type) {
         }
         readfile(theme_get_path('images/no_userphoto40x40.png'));
         break;
+
+    case 'blocktype':
+        $bt = param_alpha('bt'); // blocktype
+        $ap = param_alpha('ap', null); // artefact plugin (optional)
+        
+        $basepath = 'blocktype/' . $bt;
+        if (!empty($ap)) {
+            $basepath = 'artefact/' . $ap . '/' . $basepath;
+        }
+        header('Content-type: image/png');
+        if (is_readable(get_config('docroot') . $basepath . '/thumb.png')) {
+            readfile($path);
+            exit;
+        }
+        readfile(theme_get_path('images/no_thumbnail.png'));
+        break;
 }
 
 ?>

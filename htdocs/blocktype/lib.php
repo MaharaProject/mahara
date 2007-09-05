@@ -76,13 +76,40 @@ abstract class PluginBlocktype extends Plugin {
         return false;
     }
 
-    public static function title_from_name($name) {
+    public static function category_title_from_name($name) {
         $title = get_string('blocktypecategory.'. $name);
         if (strpos($title, '[[') !== 0) {
             return $title;
         }
         // else we're an artefact
         return get_string('pluginname', 'artefact.' . $name);
+    }
+
+    public static function get_blocktypes_for_category($category) {
+
+        $sql = 'SELECT bti.name,bti.artefactplugin 
+            FROM {blocktype_installed} bti 
+            JOIN {blocktype_installed_category} btic ON btic.blocktype = bti.name
+            WHERE btic.category = ?';
+        if (!$bts = get_records_sql_array($sql, array($category))) {
+            return false;
+        }
+
+        $blocktypes = array();
+
+        foreach ($bts as $bt) {
+            $namespaced = blocktype_single_to_namespaced($bt->name, $bt->artefactplugin);
+            safe_require('blocktype', $namespaced); 
+            $temp = array(
+                'name'           => $bt->name,
+                'title'          => call_static_method(generate_class_name('blocktype', $namespaced), 'get_title'),
+                'description'    => call_static_method(generate_class_name('blocktype', $namespaced), 'get_description'),
+                'artefactplugin' => $bt->artefactplugin,
+                'thumbnail_path' => get_config('wwwroot') . 'thumb.php?type=blocktype&bt=' . $bt->name .'&ap=' . $bt->artefactplugin
+            );
+            $blocktypes[] = $temp;
+        }
+        return $blocktypes;
     }
 }
 
