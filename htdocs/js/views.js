@@ -13,6 +13,110 @@ function ViewManager() {
             removeElement(i);
         });
 
+
+        //
+        // Hotzone stuff
+        //
+        // When a blockinstance is being dragged, a number of 'hotzones' are
+        // placed over the blocks, for detecting where the block should be
+        // placed when it is dropped. These extend over the bottom half of a
+        // block and the top half of the one below it, and there is also one
+        // covering the top half of the first block in each column and the
+        // bottom half of the last one.
+        //
+        // The hotzones are placed in their own div in the column container,
+        // and are absolutely positioned relative to the column container in
+        // their correct locations.
+        //
+        // When the dragged block is over one of these hotzones, it triggers a
+        // placeholder div to be put in place the size of the block being
+        // dragged, in the correct location. This gives the appearance of space
+        // opening up for the block where it will be dropped.
+        //
+        // When the block is dropped, it will be moved from its old position in
+        // the DOM to the new one, and the hotzones removed. If the block was
+        // not dropped over a hotzone, it reverts to where it was.
+        //
+        // NOTE: currently only the hotzones are implemented - no drag/drop.
+        // They are placed on page load, instead of when dragging begins, which
+        // means you can't click any links in the block instances, or indeed
+        // initiate drag/drop at all
+        //
+
+        /*
+        // Make the column container a base for the hotzones to be offset from
+        var columnContainer = $('column-container');
+        makePositioned(columnContainer);
+
+        // Make a container for all of the hotzone divs
+        self.hotzoneContainer = DIV();
+        appendChildNodes(columnContainer, self.hotzoneContainer);
+
+        var previousHotzone = null;
+
+        forEach(getElementsByTagAndClassName('div', 'blockinstance', 'bottom-pane'), function(i) {
+            var blockinstancePosition   = elementPosition(i, columnContainer);
+            var blockinstanceDimensions = elementDimensions(i);
+
+            // Work out whether the given blockinstance is at the top of the column
+            if (getFirstElementByTagAndClassName('div', 'blockinstance', getFirstParentByTagAndClassName(i, 'div', 'column-content')) == i) {
+                // Put a hotzone across the top half of the blockinstance
+                var hotzone = self.createHotzone();
+                setElementPosition(hotzone, blockinstancePosition);
+                setElementDimensions(hotzone, {w: blockinstanceDimensions.w, h: blockinstanceDimensions.h / 2});
+
+                previousHotzone = hotzone;
+            }
+
+            // Work out if there is a blockinstance below the current one
+            var nextBlockinstance = i.nextSibling;
+            var nextBlockinstancePosition = null;
+            var nextBlockinstanceDimensions = null;
+            while (nextBlockinstance != null) {
+                if (hasElementClass(nextBlockinstance, 'blockinstance')) {
+                    // If there is one, work out its position and dimensions for later
+                    nextBlockinstancePosition   = elementPosition(nextBlockinstance, columnContainer);
+                    nextBlockinstanceDimensions = elementDimensions(nextBlockinstance);
+                    break;
+                }
+
+                nextBlockinstance = nextBlockinstance.nextSibling;
+            }
+
+            // Work out the position and size of the previous hotzone, for use
+            // in placing the next hotzone
+            var previousHotzonePosition = elementPosition(previousHotzone, columnContainer);
+            var previousHotzoneDimensions = elementDimensions(previousHotzone);
+
+            // If there is a blockinstance below this one, then we put another
+            // hotzone covering half of the current blockinstance and half on
+            // the one below we found. Otherwise, we just cover the bottom half
+            // of this blockinstance, which is the last in the column.
+            if (nextBlockinstance) {
+                var hotzone = self.createHotzone();
+
+                // We need to place a hotzone over the bottom half of the
+                // current block instance, and the top half of the next
+                setElementPosition(hotzone, {x: blockinstancePosition.x, y: previousHotzonePosition.y + previousHotzoneDimensions.h});
+                setElementDimensions(hotzone, {
+                    w: blockinstanceDimensions.w,
+                    h: (nextBlockinstancePosition.y + (nextBlockinstanceDimensions.h / 2)) - (blockinstancePosition.y + (blockinstanceDimensions.h / 2))
+                });
+            }
+            else {
+                var hotzone = self.createHotzone();
+
+                setElementPosition(hotzone, {x: blockinstancePosition.x, y: previousHotzonePosition.y + previousHotzoneDimensions.h});
+                setElementDimensions(hotzone, {
+                    w: blockinstanceDimensions.w,
+                    h: blockinstanceDimensions.h / 2
+                });
+            }
+
+            previousHotzone = hotzone;
+        });
+        */
+
         // Hide controls in each block instance that are not needed
         forEach(getElementsByTagAndClassName('input', 'movebutton', 'bottom-pane'), function(i) {
             removeElement(i);
@@ -34,6 +138,9 @@ function ViewManager() {
 
         // Rewrite the 'remove column' buttons to be ajax
         self.rewriteRemoveColumnButtons();
+
+        // Make the block instances draggable
+        self.makeBlockInstancesDraggable();
     }
 
     /**
@@ -297,6 +404,41 @@ function ViewManager() {
                 removeNodeAttribute(i, 'disabled');
             }
         });
+    }
+
+    /**
+     * Makes block instances draggable
+     */
+    this.makeBlockInstancesDraggable = function() {
+        forEach(getElementsByTagAndClassName('div', 'blockinstance', 'bottom-pane'), function(i) {
+            new Draggable(i, {
+                'handle': 'blockinstance-header',
+                'starteffect': function () {
+                    forEach(getElementsByTagAndClassName('div', 'add-button', 'bottom-pane'), function(i) {
+                        i.style.height = '30px';
+                    });
+                },
+                'revert': true,
+                'reverteffect': function (innerelement, top_offset, left_offset) {
+                    return new MochiKit.Visual.Move(innerelement,
+                        {x: -left_offset, y: -top_offset, duration: 0});
+
+                },
+                'snap': 10,
+            });
+        });
+    }
+
+    /**
+     * Creates a new hotzone and puts it in the DOM, ready for use
+     *
+     * Hotzones are used for the drag and drop stuff, to detect where the
+     * currently dragged block should land
+     */
+    this.createHotzone = function() {
+        var hotzone = DIV({'style': 'outline: 1px solid black; position: absolute;'});
+        appendChildNodes(self.hotzoneContainer, hotzone);
+        return hotzone;
     }
 
     addLoadEvent(self.init);
