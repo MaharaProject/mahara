@@ -46,7 +46,7 @@ $COLUMNS = array(
                     'title'        => 'Block Instance 1',
                     'content'      => '
                     <div class="fl" style="margin-right: 1em;">
-                        <img src="theme/default/static/images/no_userphoto100x100.gif" alt="Profile Image">
+                        <img src="theme/default/static/images/no_userphoto100x100.png" alt="Profile Image">
                     </div>
                     <h4>Nigel McNie</h4>
                     <ul style="list-style-type: none;">
@@ -65,7 +65,7 @@ $COLUMNS = array(
                     'title'        => 'Block Instance 2',
                     'content'      => '
                     <div class="fl" style="margin-right: 1em;">
-                        <img src="theme/default/static/images/no_userphoto100x100.gif" alt="Profile Image">
+                        <img src="theme/default/static/images/no_userphoto100x100.png" alt="Profile Image">
                     </div>
                     <h4>Nigel McNie</h4>
                     <ul style="list-style-type: none;">
