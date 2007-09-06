@@ -138,6 +138,7 @@
     margin: 0;
     padding: .25em;
     border-bottom: 2px solid #cc9;
+    cursor: move;
 }
 
 .blockinstance-controls {
