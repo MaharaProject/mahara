@@ -133,6 +133,7 @@
     border: 2px solid #cc9;
     position: relative;
     margin-top: 1em;
+    background-color: white;
 }
 .blockinstance-header h4 {
     margin: 0;
