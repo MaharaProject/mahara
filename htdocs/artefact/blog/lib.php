@@ -137,7 +137,6 @@ class ArtefactTypeBlog extends ArtefactType {
      * @param object
      */
     public function __construct($id = 0, $data = null) {
-        global $USER;
         parent::__construct($id, $data);
 
         if (!$data) {
@@ -158,9 +157,6 @@ class ArtefactTypeBlog extends ArtefactType {
 
         if (empty($this->id)) {
             $this->container = 1;
-        }
-        else if ($this->owner != $USER->get('id')) {
-            throw new AccessDeniedException(get_string('youarenottheownerofthisblogpost', 'artefact.blog'));
         }
     }
 
@@ -218,6 +214,19 @@ class ArtefactTypeBlog extends ArtefactType {
 
         // Delete the artefact and all children.
         parent::delete();
+    }
+
+    /**
+     * Checks that the person viewing this blog is the owner. If not, throws an 
+     * AccessDeniedException. Used in the blog section to ensure only the 
+     * owners of the blogs can view or change them there. Other people see 
+     * blogs when they are placed in views.
+     */
+    public function check_permission() {
+        global $USER;
+        if ($USER->get('id') != $this->owner) {
+            throw new AccessDeniedException(get_string('youarenottheownerofthisblog', 'artefact.blog'));
+        }
     }
 
     /**
@@ -437,7 +446,6 @@ class ArtefactTypeBlogPost extends ArtefactType {
      * @param object
      */
     public function __construct($id = 0, $data = null) {
-        global $USER;
         parent::__construct($id, $data);
 
         if (!$data) {
@@ -454,10 +462,6 @@ class ArtefactTypeBlogPost extends ArtefactType {
                     throw new ArtefactNotFoundException(get_string('blogpostdoesnotexist', 'artefact.blog'));
                 }
             }
-        }
-
-        if ($this->id && $this->owner != $USER->get('id')) {
-            throw new AccessDeniedException(get_string('youarenottheownerofthisblogpost', 'artefact.blog'));
         }
     }
 
@@ -504,6 +508,19 @@ class ArtefactTypeBlogPost extends ArtefactType {
         delete_records('artefact_blog_blogpost', 'blogpost', $this->id);
       
         parent::delete();
+    }
+
+    /**
+     * Checks that the person viewing this blog is the owner. If not, throws an 
+     * AccessDeniedException. Used in the blog section to ensure only the 
+     * owners of the blogs can view or change them there. Other people see 
+     * blogs when they are placed in views.
+     */
+    public function check_permission() {
+        global $USER;
+        if ($USER->get('id') != $this->owner) {
+            throw new AccessDeniedException(get_string('youarenottheownerofthisblogpost', 'artefact.blog'));
+        }
     }
   
     public function describe_size() {

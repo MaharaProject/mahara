@@ -35,10 +35,7 @@ json_headers();
 $id = param_integer('id');
 
 $blogpost = new ArtefactTypeBlogPost($id);
-if ($blogpost->get('owner') != $USER->get('id')) {
-    json_reply('local', get_string('youarenottheownerofthisblogpost', 'artefact.blog'));
-}
-
+$blogpost->check_permission();
 $blogpost->delete();
 
 json_reply(false, get_string('blogpostdeleted', 'artefact.blog'));

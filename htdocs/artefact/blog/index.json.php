@@ -50,13 +50,13 @@ if ($action == 'list') {
 }
 else if ($action == 'delete') {
     $blog = artefact_instance_from_id($id);
-    if ($blog instanceof ArtefactTypeBlog && $blog->get('owner') == $USER->get('id')) {
+    if ($blog instanceof ArtefactTypeBlog) {
+        $blog->check_permission();
         $blog->delete();
+        json_reply(false, get_string('blogdeleted', 'artefact.blog'));
     }
-    echo json_encode(array(
-        'error'   => false,
-        'message' => get_string('blogdeleted', 'artefact.blog'),
-    ));
+
+    throw new ArtefactNotFoundException(get_string('blogdoesnotexist', 'artefact.blog'));
 }
 
 ?>

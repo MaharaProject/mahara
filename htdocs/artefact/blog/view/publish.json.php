@@ -34,10 +34,8 @@ safe_require('artefact', 'blog');
 $id = param_integer('id');
 
 $blogpost = new ArtefactTypeBlogPost($id);
+$blogpost->check_permission();
 
-if ($blogpost->get('owner') != $USER->get('id')) {
-    json_reply('local', get_string('youarenottheownerofthisblogpost', 'artefact.blog'));
-}
 if (!$blogpost->publish()) {
     json_reply('local', get_string('publishfailed', 'artefact.blog'));
 }

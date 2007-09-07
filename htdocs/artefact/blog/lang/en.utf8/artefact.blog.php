@@ -38,6 +38,7 @@ $string['attachments'] = 'Attachments';
 $string['blogdesc'] = 'Description';
 $string['blogdescdesc'] = 'e.g., ‘A record of Jill\'s experiences and reflections’.';
 $string['blogdoesnotexist'] = 'You are trying to access a blog that does not exist';
+$string['blogpostdoesnotexist'] = 'You are trying to access a blog post that does not exist';
 $string['blogfilesdirdescription'] = 'Files uploaded as blog post attachments';
 $string['blogfilesdirname'] = 'blogfiles';
 $string['blogpost'] = 'blog post';
