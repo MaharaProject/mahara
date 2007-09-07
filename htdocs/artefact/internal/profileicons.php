@@ -90,6 +90,7 @@ $uploadform = pieform(array(
 ));
 
 $strnoimagesfound = json_encode(get_string('noimagesfound', 'artefact.internal'));
+$struploadingfile = json_encode(get_string('uploadingfile', 'artefact.internal'));
 $wwwroot = get_config('wwwroot');
 $smarty->assign('INLINEJAVASCRIPT', <<<EOF
 var table = new TableRenderer(
@@ -123,7 +124,7 @@ table.emptycontent = {$strnoimagesfound};
 table.paginate = false;
 
 var uploadingMessage = TR(null,
-    TD(null, 'uploading file...')
+    TD(null, {$struploadingfile})
 );
 
 function preSubmit(form, data) {
