@@ -29,9 +29,11 @@ define('PUBLIC', 1);
 define('MENUITEM', 'viewrework');
 require('init.php');
 require('viewlib.php');
+require('view.php');
 define('TITLE', 'Views Rework [DANGER construction site]');
 
 $view = param_integer('view');
+$view = new View($view);
 view_process_changes();
 
 $smarty = smarty(array('views'), array('<link rel="stylesheet" href="views.css" type="text/css">'));

@@ -861,6 +861,13 @@ class ArtefactTypeImage extends ArtefactTypeFile {
         parent::delete();
     }
 
+    public function render_self($options) {
+        $src = get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->id;
+        if (isset($options['viewid'])) {
+            $src .= '&amp;view=' . $options['viewid'];
+        }
+        return '<img src="' . $src . '" />'; // more later
+    }
 }
 
 ?>

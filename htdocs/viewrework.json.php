@@ -31,6 +31,7 @@ require(dirname(__FILE__) . '/init.php');
 require(dirname(__FILE__) . '/viewlib.php');
 
 $view   = param_integer('view');
+$view = new View($view);
 $action = param_alphanumext('action');
 
 switch ($action) {
@@ -65,7 +66,7 @@ case 'blocktype_list':
     break;
 case 'add_column':
     $column = param_integer('column');
-    if (view_add_column($view, $column)) {
+    if (view_add_column($view->id, $column)) {
         json_reply(false, array('message' => false, 'data' => view_build_column($view, $column, true)));
     }
     else {
@@ -73,7 +74,7 @@ case 'add_column':
     }
 case 'remove_column':
     $column = param_integer('column');
-    if (view_remove_column($view, $column)) {
+    if (view_remove_column($view->id, $column)) {
         // Just do it - no message
         json_reply(false, false);
     }

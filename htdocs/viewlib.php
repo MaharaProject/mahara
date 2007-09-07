@@ -253,14 +253,14 @@ EOF;
 /**
  * Returns the HTML for the columns of a particular views
  *
- * @param int  $view       The view to build the columns for
+ * @param View $view       The view to build the columns for
  * @param bool $javascript Set to true if the caller is a json script, 
  *                         meaning that nothing for the standard HTML version 
  *                         alone should be output
  */
-function view_build_columns($view, $javascript=false) {
+function view_build_columns(View $view, $javascript=false) {
     global $COLUMNS;
-    $numcols = $COLUMNS['count'];
+    $numcols = $view->get('numcolumns');
 
     $result = '';
     for ($i = 1; $i <= $numcols; $i++) {
@@ -273,25 +273,25 @@ function view_build_columns($view, $javascript=false) {
 /**
  * Returns the HTML for a particular view column
  *
- * @param int  $view       The view to build the column for
+ * @param View $view    The view to build the column for
  * @param int  $column     The column to build
  * @param bool $javascript Set to true if the caller is a json script, 
  *                         meaning that nothing for the standard HTML version 
  *                         alone should be output
  */
-function view_build_column($view, $column, $javascript=false) {
+function view_build_column(View $view, $column, $javascript=false) {
     global $COLUMNS;
     // FIXME: TEMPORARY. Just so if we're adding a new column, we can insert a blank one
     if ($javascript) {
         $data = array('blockinstances' => array());
     }
     else {
-        $data = $COLUMNS['columns'][$column];
+        $data = $view->get_column_datastructure($column);
     }
 
     $result = '';
 
-    $result = '<div id="column_' . $column . '" class="column columns' . $COLUMNS['count'] . '">
+    $result = '<div id="column_' . $column . '" class="column columns' . $view->get('numcolumns') . '">
     <div class="column-header">';
 
     if ($column == 1) {

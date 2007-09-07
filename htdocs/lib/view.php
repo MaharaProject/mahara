@@ -60,6 +60,7 @@ class View {
         }
         else {
             $this->ctime = time();
+            $this->dirty = true;
         }
 
         if (empty($data)) {
@@ -286,11 +287,10 @@ class View {
             return;
         }
 
-        $sql = 'SELECT bi.*, vb.id AS vbid, vb.view, vb.block, vb.column, vb.order
-            FROM {view_block} vb 
-            JOIN {block_instance} bi ON vb.block = bi.id
-            WHERE vb.view = ?
-            ORDER BY vb.column, vb.order';
+        $sql = 'SELECT bi.*
+            FROM {block_instance} bi
+            WHERE bi.view = ?
+            ORDER BY bi.column, bi.order';
         if (!$data = get_records_sql_array($sql, array($this->get('id')))) {
             $data = array();
         }
@@ -302,7 +302,7 @@ class View {
 
         foreach ($data as $block) {
             $b = new BlockInstance($block->id, (array)$block);
-            $this->columns[$block->column]['blockinstances'][] = $b->to_stdclass();
+            $this->columns[$block->column]['blockinstances'][] = (array)$b->to_stdclass();
         }
 
     }

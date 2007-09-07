@@ -467,6 +467,10 @@ abstract class ArtefactType {
      */
     public static abstract function get_links($id);
 
+    // @TODO maybe uncomment this later and implement it everywhere
+    // when we know a bit more about what blocks we want.
+    //public abstract function render_self($options);
+
     // ******************** HELPER FUNCTIONS ******************** //
 
     protected function get_artefact_type() {

@@ -51,6 +51,8 @@ abstract class PluginBlocktype extends Plugin {
 
     public static abstract function get_categories();
 
+    public static abstract function render_instance(BlockInstance $instance);
+
     /**
     * This function must be implemented in the subclass if it has config
     */
@@ -120,25 +122,15 @@ class BlockInstance {
     private $title;
     private $configdata;
     private $dirty;
-
-    public function get($field) {
-        if (!property_exists($this, $field)) {
-            throw new InvalidArgumentException("Field $field wasn't found in class " . get_class($this));
-        }
-        return $this->{$field};
-    }
-
-    public function set($field, $value) {
-        if (property_exists($this, $field)) {
-            if ($this->{$field} != $value) {
-                // only set it to dirty if it's changed
-                $this->dirty = true;
-            }
-            $this->{$field} = $value;
-            return true;
-        }
-        throw new InvalidArgumentException("Field $field wasn't found in class " . get_class($this));
-    }
+    private $view;
+    private $view_obj;
+    private $column;
+    private $order; 
+    private $canmoveleft;
+    private $canmoveright;
+    private $canmoveup;
+    private $canmovedown;
+    private $maxorderincolumn; 
 
     public function __construct($id=0, $data=null) {
          if (!empty($id)) {
@@ -162,8 +154,115 @@ class BlockInstance {
         }
     }
 
+    public function get($field) {
+        if (!property_exists($this, $field)) {
+            throw new InvalidArgumentException("Field $field wasn't found in class " . get_class($this));
+        }
+        if ($field == 'configdata') {
+            // make sure we unserialise it
+            if (!is_array($this->configdata)) {
+                $this->configdata = unserialize($this->configdata);
+            }
+        }
+        if (strpos($field, 'canmove') === 0) {
+            return $this->can_move(substr($field, strlen('canmove'))); // needs to be calculated.
+        }
+        if ($field == 'maxorderincolumn') {
+            // only fetch this when we're asked, it's a db query.
+            if (empty($this->maxorderincolumn)) {
+                $this->maxorderincolumn = get_field(
+                    'block_instance', 
+                    'max("order")', 
+                    'view', $this->view, 'column', $this->column);
+            }
+        }
+        return $this->{$field};
+    }
+
+    public function set($field, $value) {
+        if (property_exists($this, $field)) {
+            if ($field == 'configdata') {
+                throw new InvalidArgumentException(get_string('blockconfigdatacalledfromset', 'error'));
+            }
+            if ($this->{$field} != $value) {
+                // only set it to dirty if it's changed
+                $this->dirty = true;
+            }
+            $this->{$field} = $value;
+            return true;
+        }
+        throw new InvalidArgumentException("Field $field wasn't found in class " . get_class($this));
+    }
+
+    /**
+    * converts this instance to a stdclass object
+    * that can be used in data structures
+    */
     public function to_stdclass() {
-       return (object)get_object_vars($this); 
+        $stdclass = new StdClass;
+        $vars = get_object_vars($this);
+        foreach (array_keys($vars) as $field) {
+            if ($field == 'dirty') {
+                continue;
+            }
+            $stdclass->{$field} = $this->get($field); // do it this way for calculated ones
+        }
+        $stdclass->content = $this->render();
+        return $stdclass;
+    }
+
+    /**
+     * basically just calls the callback function for the blocktype 
+     */
+    public function render() {
+        safe_require('blocktype', $this->get('blocktype'));
+        return call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'render_instance', $this);
+    }
+
+    public function commit() {
+        if (empty($this->dirty)) {
+            return;
+        }
+        $fordb = new StdClass;
+        foreach (get_object_vars($this) as $k => $v) {
+            $fordb->{$k} = $v;
+        }
+        if (empty($this->id)) {
+            $this->id = insert_record('block_instance', $fordb, 'id', true);
+        }
+        else {
+            update_record('block_instance', $fordb, 'id');
+        }
+
+        // @TODO maybe handle_event here.
+
+        $this->dirty = false;
+    }
+
+    /**
+     * @return View the view object this block instance is in
+     */
+    public function get_view() {
+        if (empty($this->view_obj)) {
+            $this->view_obj = new View($this->get('view'));
+        }
+        return $this->view_obj;
+    }
+
+    public function can_move($direction) {
+        switch ($direction) {
+            case 'left':
+                return ($this->column > 1);
+            case 'right':
+                return ($this->column < $this->get_view()->get('numcolumns'));
+            case 'up':
+                return ($this->order > 1);
+                break;
+            case 'down':
+                return ($this->order < $this->get('maxorderincolumn'));
+            default:
+                throw new InvalidArgumentException(get_string('invaliddirection', 'error', $direction));
+        }
     }
 
 }

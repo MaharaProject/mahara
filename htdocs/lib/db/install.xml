@@ -175,18 +175,6 @@
                 <KEY NAME="typefk" TYPE="foreign" FIELDS="type" REFTABLE="activity_type" REFFIELDS="name" />
             </KEYS>
         </TABLE>
-        <TABLE NAME="block_instance">
-            <FIELDS>
-                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
-                <FIELD NAME="blocktype" TYPE="char" LENGTH="255" NOTNULL="true" />
-                <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="true" />
-                <FIELD NAME="configdata" TYPE="text" NOTNULL="false" />
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
-                <KEY NAME="blocktypefk" TYPE="foreign" FIELDS="blocktype" REFTABLE="blocktype_installed" REFFIELDS="name" />
-            </KEYS>
-        </TABLE>
         <TABLE NAME="artefact">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
@@ -389,7 +377,7 @@
                 <FIELD NAME="mtime" TYPE="datetime" NOTNULL="true" />
                 <FIELD NAME="atime" TYPE="datetime" NOTNULL="true" />
                 <FIELD NAME="submittedto" TYPE="int" LENGTH="10" NOTNULL="false" />
-                <FIELD NAME="numcolumns" TYPE="int" LENGTH="2" NOTNULL="false" />
+                <FIELD NAME="numcolumns" TYPE="int" LENGTH="2" NOTNULL="true" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
@@ -407,6 +395,23 @@
                 <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id" />
             </KEYS>
         </TABLE>
+        <TABLE NAME="block_instance">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+                <FIELD NAME="blocktype" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="configdata" TYPE="text" NOTNULL="false" />
+                <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="column" TYPE="int" LENGTH="2" NOTNULL="true" />
+                <FIELD NAME="order" TYPE="int" LENGTH="2" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+                <KEY NAME="blocktypefk" TYPE="foreign" FIELDS="blocktype" REFTABLE="blocktype_installed" REFFIELDS="name" />
+                <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id" />
+                <KEY NAME="viewcolumnorderuk" TYPE="unique" FIELDS="view,column,order" />
+            </KEYS>
+        </TABLE>
         <TABLE NAME="view_artefact">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
@@ -414,28 +419,12 @@
                 <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="block" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
-                <FIELD NAME="format" TYPE="text" NOTNULL="true" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
                 <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id" />
                 <KEY NAME="artefactfk" TYPE="foreign" FIELDS="artefact" REFTABLE="artefact" REFFIELDS="id" />
                 <KEY NAME="blockfk" TYPE="foreign" FIELDS="block" REFTABLE="block_instance" REFFIELDS="id" />
-            </KEYS>
-        </TABLE>
-        <TABLE NAME="view_block">
-            <FIELDS>
-                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
-                <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="block" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="column" TYPE="int" LENGTH="2" NOTNULL="true" />
-                <FIELD NAME="order" TYPE="int" LENGTH="2" NOTNULL="true" />
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
-                <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id" />
-                <KEY NAME="blockfk" TYPE="foreign" FIELDS="block" REFTABLE="block_instance" REFFIELDS="id" />
-                <KEY NAME="columnorderuk" TYPE="unique" FIELDS="column,order" />
             </KEYS>
         </TABLE>
         <TABLE NAME="view_feedback">

@@ -39,6 +39,14 @@ class PluginBlocktypeImage extends PluginBlocktype {
     public static function get_categories() {
         return array('file');
     }
+
+    public static function render_instance(BlockInstance $instance) {
+        require_once(get_config('docroot') . 'lib/artefact.php');
+        $configdata = $instance->get('configdata'); // this will make sure to unserialize it for us
+        $image = artefact_instance_from_id($configdata['artefactid']);
+        return $image->render_self($configdata); // in this case, config data contains width & height
+    }
+
 }
 
 ?>
