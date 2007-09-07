@@ -1425,7 +1425,7 @@ function searchform() {
         'elements'            => array(
             'query' => array(
                 'type'           => 'text',
-                'defaultvalue'   => 'Search',
+                'defaultvalue'   => get_string('search'),
                 'class'          => 'emptyonfocus'
             ),
             'submit' => array(
