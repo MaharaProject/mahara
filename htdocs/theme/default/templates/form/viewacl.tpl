@@ -150,7 +150,7 @@ function setupCalendar(item, type) {
         "button"    : type + 'date_' + count + '_btn',
         //"dateStatusFunc" : dateStatusFunc,
         //"onSelect"       : selectedFunc
-        "showTimes" : true
+        "showsTime" : true
     });
 }
 
