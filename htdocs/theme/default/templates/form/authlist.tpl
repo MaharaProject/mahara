@@ -73,7 +73,7 @@
         deleteArray   = arrayIze('deleteList');
 
         if (instanceArray.length == 1) {
-            alert("{{$cannotremove}}");
+            alert({{$cannotremove}});
             return false;
         }
 
@@ -109,7 +109,7 @@
         var selectedPlugin = document.getElementById('dummySelect').value;
         var institution = '{{$institution}}';
         if (institution.length == 0) {
-            alert('Please save the institution details before configuring authentication plugins.');
+            alert({{$saveinstitutiondetailsfirst}});
             return false;
         }
 

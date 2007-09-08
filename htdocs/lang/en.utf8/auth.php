@@ -33,8 +33,8 @@ $string['wwwroot'] = 'WWW root';
 $string['port'] = 'Port number'; 
 $string['protocol'] = 'Protocol';
 $string['changepasswordurl'] = 'Password-change URL';
-$string['configureanother']  = 'Please configure another plugin before deleting this one.';
 $string['cannotremove']  = "We can't remove this auth plugin, as it's the only \\nplugin that exists for this institution.";
+$string['saveinstitutiondetailsfirst'] = 'Please save the institution details before configuring authentication plugins.';
 
 $string['editauthority'] = 'Edit an Authority';
 $string['addauthority']  = 'Add an Authority';

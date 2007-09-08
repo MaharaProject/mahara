@@ -58,8 +58,8 @@ function pieform_element_authlist(Pieform $form, $element) {
     }
 
     $smarty->assign('name', $element['name']);
-    $smarty->assign('configureanother', get_string('configureanother', 'auth'));
-    $smarty->assign('cannotremove', get_string('cannotremove', 'auth'));
+    $smarty->assign('cannotremove', json_encode(get_string('cannotremove', 'auth')));
+    $smarty->assign('saveinstitutiondetailsfirst', json_encode(get_string('saveinstitutiondetailsfirst', 'auth')));
 
     return $smarty->fetch('form/authlist.tpl');
 }
