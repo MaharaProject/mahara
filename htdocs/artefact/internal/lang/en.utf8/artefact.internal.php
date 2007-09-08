@@ -83,6 +83,7 @@ visit the link below to activate this address.
 %s
 EOF;
 
+$string['validationemailwillbesent'] = 'a validation email will be sent when you save your profile';
 $string['emailactivation'] = 'Email Activation';
 $string['emailactivationsucceeded'] = 'Email Activation Successful';
 $string['emailactivationfailed'] = 'Email Activation Failed';
