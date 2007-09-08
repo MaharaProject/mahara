@@ -64,7 +64,7 @@ function serve_file($path, $filename, $options=array()) {
     session_write_close(); // unlock session during fileserving
 
     $mimetype     = get_mime_type($path);
-    if (!$mimetype || (!is_image_mime_type($mimetype) && false !== strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE'))) {
+    if (!$mimetype || (!is_image_mime_type($mimetype) && (isset($_SERVER['HTTP_USER_AGENT']) && false !== strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE')))) {
         $mimetype = 'application/forcedownload';
     }
     $lastmodified = filemtime($path);
