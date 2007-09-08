@@ -1178,7 +1178,7 @@ function password_validate(Pieform $form, $values, $username, $institution) {
         $authobj = new AuthInternal($authinstances[0]->id);
 
         if (!$form->get_error('password1') && !$authobj->is_password_valid($values['password1'])) {
-            $form->set_error('password1', get_string('passwordinvalidform', "auth.$authtype"));
+            $form->set_error('password1', get_string('passwordinvalidform', "auth.$authobj->type"));
         }
     }
 
