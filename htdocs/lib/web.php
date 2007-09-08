@@ -1268,9 +1268,9 @@ function main_nav() {
                 'weight' => 10,
             ),
             array(
-                'path' => 'settings/recentactivity',
+                'path' => 'settings/notifications',
                 'url' => 'account/activity/',
-                'title' => get_string('recentactivity'),
+                'title' => get_string('notifications'),
                 'weight' => 20,
             ),
             array(

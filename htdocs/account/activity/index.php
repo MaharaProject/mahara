@@ -25,7 +25,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'settings/recentactivity');
+define('MENUITEM', 'settings/notifications');
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'account');
 define('SECTION_PAGE', 'activity');

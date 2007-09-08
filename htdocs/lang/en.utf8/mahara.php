@@ -266,7 +266,7 @@ $string['accountprefs'] = 'Preferences';
 $string['preferences'] = 'Preferences';
 $string['activityprefs'] = 'Activity preferences';
 $string['changepassword'] = 'Change password';
-$string['recentactivity'] = 'Recent activity';
+$string['notifications'] = 'Notifications';
 
 // my views
 $string['accessstartdate'] = 'Access start date';
