@@ -91,8 +91,6 @@ $createview1 = pieform(array(
             'title'        => get_string('startdate','view'),
             'defaultvalue' => isset($data['startdate']) ? $data['startdate'] : null,
             'caloptions'   => array(
-                //'dateStatusFunc' => 'startDateDisallowed',
-                //'onSelect'       => 'startSelected',
                 'showsTime'      => true,
                 'ifFormat'       => '%Y/%m/%d %H:%M'
             ),
@@ -103,8 +101,6 @@ $createview1 = pieform(array(
             'title'        => get_string('stopdate','view'),
             'defaultvalue' => isset($data['stopdate']) ? $data['stopdate'] : null,
             'caloptions'   => array(
-                //'dateStatusFunc' => 'stopDateDisallowed',
-                //'onSelect'       => 'stopSelected',
                 'showsTime'      => true,
                 'ifFormat'       => '%Y/%m/%d %H:%M'
             ),
@@ -150,6 +146,12 @@ function createview1_cancel_submit() {
     redirect('/view/');
 }
 
+function createview1_validate(Pieform $form, $values) {
+    if ($values['startdate'] > $values['stopdate']) {
+        $form->set_error('startdate', get_string('startdatemustbebeforestopdate', 'view'));
+    }
+}
+
 function createview1_submit(Pieform $form, $values) {
     global $SESSION;
 
@@ -173,63 +175,6 @@ function createview1_submit(Pieform $form, $values) {
 
 $smarty = smarty();
 $smarty->assign('createview1', $createview1);
-// NOTE: this javascript shows an idea of how you might make it so that you can't select invalid dates.
-// However, it's broken (try selecting a start date and then an end date). Perhaps it can be improved
-// later...
-/*$smarty->assign('INLINEJAVASCRIPT', <<<EOF
-function startDateDisallowed(date) {
-    var stopDate = $('createview1_stopdate').value;
-    if (stopDate != '') {
-        stopDate = stopDate.substr(0, 10).replace(/\//g, '-');
-        stopDate = isoDate(stopDate);
-        if (!stopDate) {
-            stopDate = Date();
-        }
-        if (stopDate.getTime() < date.getTime()) {
-            return true;
-        }
-    }
-    
-    return false;
-}
-function stopDateDisallowed(date) {
-    var startDate = $('createview1_startdate').value;
-    if (startDate != '') {
-        startDate = startDate.substr(0, 10).replace(/\//g, '-');
-        startDate = isoDate(startDate);
-        if (!startDate) {
-            startDate = Date();
-        }
-        if (startDate.getTime() > date.getTime()) {
-            return true;
-        }
-    }
-    
-    return false;
-}
-function startSelected(calendar, date) {
-    if (calendar.dateClicked) {
-        var stopDate = $('createview1_stopdate').value;
-        if (stopDate != '' && stopDateDisallowed(isoDate(stopDate))) {
-            $('createview1_stopdate').value = date;
-        }
-        $('createview1_startdate').value = date;
-        calendar.callCloseHandler();
-    }
-}
-function stopSelected(calendar, date) {
-    if (calendar.dateClicked) {
-        var startDate = $('createview1_startdate').value.replace(/\//g, '-');
-        if (startDate != '' && startDateDisallowed(isoDate(startDate))) {
-            $('createview1_startdate').value = date;
-        }
-        $('createview1_stopdate').value = date;
-        calendar.callCloseHandler();
-    }
-}
-
-EOF
-);*/
 $smarty->display('view/create1.tpl');
 
 ?>
