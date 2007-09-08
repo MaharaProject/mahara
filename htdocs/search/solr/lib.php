@@ -404,12 +404,10 @@ END;
     }
 
     public static function commit() {
-        log_debug('Solr commit');
         self::send_update('<commit />');
     }
 
     function optimize() {
-        log_debug('Solr optimize');
         self::send_update('<optimize />');
     }
 
