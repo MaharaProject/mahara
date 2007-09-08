@@ -74,7 +74,7 @@ function search_user($query_string, $limit, $offset = 0) {
 
     $results = call_static_method(generate_class_name('search', $plugin), 'search_user', $query_string, $limit, $offset);
 
-    if ($results['count'] > 0) {
+    if ($results['data']) {
         $userlist = '('.join(',', array_map(create_function('$u','return $u[\'id\'];'), $results['data'])).')';
 
         $public_fields = get_records_sql_array('
