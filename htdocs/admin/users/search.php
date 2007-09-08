@@ -131,11 +131,9 @@ function suspendSave(reason) {
     removeElement(reason.parentNode.parentNode);
 
     sendjsonrequest('search.json.php', {'action': 'suspend', 'reason': susReason, 'id': data.id}, 'GET',
-                    function(response) {
-                        if(!response.error) {
-                            displayMessage('User "' + data.name + '" Suspended');
-                        }
-                    });
+        function(response) {
+            results.doupdate();
+        });
 }
 
 function suspendCancel(reason) {
