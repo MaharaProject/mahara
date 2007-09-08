@@ -1,4 +1,5 @@
 #!/bin/sh
+set -e
 
 print_usage() {
     echo "Usage is release.sh major minor"

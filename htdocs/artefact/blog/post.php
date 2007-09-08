@@ -68,6 +68,7 @@ if (!$blogpost) {
 }
 else {
     $blogpostobj = new ArtefactTypeBlogPost($blogpost);
+    $blogpostobj->check_permission();
     $blog = $blogpostobj->get('parent');
     $title = $blogpostobj->get('title');
     $description = $blogpostobj->get('description');

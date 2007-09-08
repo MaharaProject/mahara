@@ -36,6 +36,7 @@ safe_require('artefact', 'blog');
 
 $id = param_integer('id');
 $blog = new ArtefactTypeBlog($id);
+$blog->check_permission();
 
 // This javascript is used to generate a list of blog posts.
 $js = require('index.js.php'); 
