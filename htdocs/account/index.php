@@ -120,7 +120,7 @@ $elements['lang'] = array(
     'type' => 'select',
     'defaultvalue' => $prefs->lang,
     'title' => get_string('language', 'account'),
-    'options' => get_languages(),
+    'options' => array_merge(array('default' => get_string('sitedefault', 'admin')), get_languages()),
     'rules' => array(
         'required' => true
     ),

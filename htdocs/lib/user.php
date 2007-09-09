@@ -158,7 +158,7 @@ function expected_account_preferences() {
     return array('friendscontrol' => 'auth',
                  'wysiwyg'        =>  1,
                  'messages'       => 'allow',
-                 'lang'           => 'en.utf8' // @todo NOTE: should actually be 'site default' when that bug is fixed
+                 'lang'           => 'default',
                  );
 }
 

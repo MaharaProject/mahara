@@ -669,8 +669,11 @@ function print_object($mixed) {
  */
 function current_language() {
     global $USER, $CFG;
-    if ($USER instanceof User && null !== ($lang = $USER->get_account_preference('lang'))) {
-        return $lang;
+    if ($USER instanceof User) {
+        $lang = $USER->get_account_preference('lang');
+        if ($lang !== null && $lang != 'default') {
+            return $lang;
+        }
     }
     if (!empty($CFG->lang)) {
         return $CFG->lang;

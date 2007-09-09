@@ -106,6 +106,7 @@ $string['pathtofiledescription'] = 'Filesystem path to the \'file\' program';
 $string['sessionlifetime'] = 'Session lifetime';
 $string['sessionlifetimedescription'] = 'Time in minutes after which an inactive logged in user will be automatically logged out';
 $string['setsiteoptionsfailed'] = 'Failed setting the %s option';
+$string['sitedefault'] = 'Site Default';
 $string['sitelanguagedescription'] = 'The default language for the site';
 $string['sitename'] = 'Site name';
 $string['sitenamedescription'] = ' ';
