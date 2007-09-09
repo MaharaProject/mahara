@@ -25,13 +25,55 @@ function get_themeurl(s) {
     return config.theme[s];
 }
 
+var save_orig_data = true;
+var orig_caller;
+var orig_arguments;
+var real_sesskey = '';
+
 function globalErrorHandler(data) {
-    if (data.returnCode == 3) {
+    if (data.returnCode == 1) {
         // Logged out!
+        show_login_form();
     }
     else {
         displayMessage(data.message, 'error');
     }
+}
+
+function show_login_form() {
+    var loginForm = DIV({
+        style: 'border: 5px solid green; background-color: #fff; position: absolute; top: 150px; left: 40%; width: 200px; z-index: 1000;text-align: left;',
+        id: 'ajax-login-form'
+    });
+    loginForm.innerHTML = '<form class="pieform" name="login" method="post" action="" id="login" onsubmit="ajaxlogin(this, 42); return false;"><table cellspacing="0" border="0" class="maharatable"><tbody><tr id="login_login_username_header" class="required text"><th><label for="login_login_username">Username:<\/label><\/th><\/tr><tr id="login_login_username_container"><td><input type="text" class="required text autofocus" id="login_login_username" name="login_username" tabindex="2" value=""><\/td><\/tr><tr><td class="description"> <\/td><\/tr><tr id="login_login_password_header" class="required password"><th><label for="login_login_password">Password:<\/label><\/th><\/tr><tr id="login_login_password_container"><td><input type="password" class="required password" id="login_login_password" name="login_password" tabindex="2" value=""><\/td><\/tr><tr><td class="description"> <\/td><\/tr><tr id="login_submit_container"><td><input type="submit" class="submit" id="login_submit" name="submit" tabindex="2" value="Login"><\/td><\/tr><\/tbody><\/table><input type="hidden" name="sesskey" value=""><input type="hidden" name="pieform_login" value=""><\/form><script type="text\/javascript">var login_btn = null;addLoadEvent(function() {    connect($(\'login_submit\'), \'onclick\', function() { login_btn = \'login_submit\'; });});connect(\'login\', \'onsubmit\', function() { formStartProcessing(\'login\', login_btn); });<\/script>';
+    appendChildNodes(document.body, DIV({
+        'style': 'position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.5; background-color: white;',
+        'id': 'overlay'
+    }));
+    appendChildNodes(document.body, loginForm);
+}
+
+function ajaxlogin(form, crap) {
+    save_orig_data = false;
+    sendjsonrequest(
+        config.wwwroot + 'minilogin.php',
+        {'login_username': form.elements['login_username'].value, 'login_password': form.elements['login_password'].value, 'pieform_login': ''},
+        'POST',
+        function(data) {
+            removeElement('ajax-login-form');
+            removeElement('overlay');
+            if (data.message != '') {
+                config.sesskey = data.message;
+                sendjsonrequest.apply(orig_caller, orig_arguments);
+            }
+            else {
+                alert('login attempt FAILED');
+            }
+        },
+        function() {},
+        true
+    );
+    save_orig_data = true;
 }
 
 // Form related functions
@@ -157,6 +199,11 @@ function sendjsonrequest(script, data, rtype, successcallback, errorcallback, qu
             break;
     }
 
+    if (save_orig_data) {
+        orig_caller = this;
+        orig_arguments = arguments;
+    }
+
     var d = doXHR(script, xhrOptions);
 
     d.addCallbacks(function (result) {
@@ -169,7 +216,9 @@ function sendjsonrequest(script, data, rtype, successcallback, errorcallback, qu
             errtype = 'error';
         }
         else {
-            logWarning('invoking globalErrorHandler(', data, ')');
+            logWarning('invoking globalErrorHandler(', data, this, arguments, ')');
+            // Trying something ninja. The call failed, but in the event that the global error
+            // handler can recover, maybe it can be called
             globalErrorHandler(data);
         }
         if (errtype) {
