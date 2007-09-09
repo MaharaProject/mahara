@@ -32,136 +32,6 @@
  */
 defined('INTERNAL') || die;
 
-//
-// This is a testing data structure for this library. Certain functions need to 
-// have database calls in them instead. Just look for $COLUMNS in this file.
-//
-$COLUMNS = array(
-    'columns' => array(
-        // First column
-        1 => array(
-            'blockinstances' => array(
-                array(
-                    'id'           => 1,
-                    'title'        => 'Block Instance 1',
-                    'content'      => '
-                    <div class="fl" style="margin-right: 1em;">
-                        <img src="theme/default/static/images/no_userphoto100x100.png" alt="Profile Image">
-                    </div>
-                    <h4>Nigel McNie</h4>
-                    <ul style="list-style-type: none;">
-                        <li><strong>Personal Website:</strong> <a href="http://nigel.mcnie.name/">nigel.mcnie.name</a></li>
-                        <li><strong>City:</strong> Wellington</li>
-                        <li><strong>Occupation:</strong> Engineer</li>
-                    </ul>
-                    <div style="clear:both;"></div>',
-                    'canmoveleft'  => false,
-                    'canmoveright' => true,
-                    'canmoveup'    => false,
-                    'canmovedown'  => true,
-                ),
-                array(
-                    'id'           => 2,
-                    'title'        => 'Block Instance 2',
-                    'content'      => '
-                    <div class="fl" style="margin-right: 1em;">
-                        <img src="theme/default/static/images/no_userphoto100x100.png" alt="Profile Image">
-                    </div>
-                    <h4>Nigel McNie</h4>
-                    <ul style="list-style-type: none;">
-                        <li><strong>Personal Website:</strong> <a href="http://nigel.mcnie.name/">nigel.mcnie.name</a></li>
-                        <li><strong>City:</strong> Wellington</li>
-                        <li><strong>Occupation:</strong> Engineer</li>
-                    </ul>
-                    <div style="clear:both;"></div>',
-                    'canmoveleft'  => false,
-                    'canmoveright' => true,
-                    'canmoveup'    => true,
-                    'canmovedown'  => false,
-                ),
-            ),
-        ),
-        // Second column
-        2 => array(
-            'blockinstances' => array(
-                array(
-                    'id'           => 3,
-                    'title'        => 'Block Instance 3',
-                    'content'      => '
-                                        <h4>Recent Blog Posts for \'My Holiday in Scotland\'</h4>
-                                        <ul>
-                                            <li><a href="">Edinburgh is a dangerous place</a></li>
-                                            <li><a href="">I thought I saw Gordon!</a></li>
-                                            <li><a href="">There\'s no monster at Loch Ness</a></li>
-                                            <li><a href="">Synchronicity II</a></li>
-                                            </ul>',
-                    'canmoveleft'  => true,
-                    'canmoveright' => true,
-                    'canmoveup'    => false,
-                    'canmovedown'  => true,
-                ),
-                array(
-                    'id'           => 4,
-                    'title'        => 'Block Instance 4',
-                    'content'      => '
-                                        <h4>Recent Blog Posts for \'My Holiday in Scotland\'</h4>
-                                        <ul>
-                                            <li><a href="">Edinburgh is a dangerous place</a></li>
-                                            <li><a href="">I thought I saw Gordon!</a></li>
-                                            <li><a href="">There\'s no monster at Loch Ness</a></li>
-                                            <li><a href="">Synchronicity II</a></li>
-                                            </ul>',
-                    'canmoveleft'  => true,
-                    'canmoveright' => true,
-                    'canmoveup'    => true,
-                    'canmovedown'  => true,
-                ),
-                array(
-                    'id'           => 5,
-                    'title'        => 'Block Instance 5',
-                    'content'      => '
-                                        <h4>Recent Blog Posts for \'My Holiday in Scotland\'</h4>
-                                        <ul>
-                                            <li><a href="">Edinburgh is a dangerous place</a></li>
-                                            <li><a href="">I thought I saw Gordon!</a></li>
-                                            <li><a href="">There\'s no monster at Loch Ness</a></li>
-                                            <li><a href="">Synchronicity II</a></li>
-                                            </ul>',
-                    'canmoveleft'  => true,
-                    'canmoveright' => true,
-                    'canmoveup'    => true,
-                    'canmovedown'  => false,
-                ),
-            ),
-        ),
-        // Third column
-        3 => array(
-            'blockinstances' => array(
-                array(
-                    'id'           => 6,
-                    'title'        => 'Block Instance 6',
-                    'content'      => 'The time is now <strong>' . date('h:i:s a') . '</strong>',
-                    'canmoveleft'  => true,
-                    'canmoveright' => false,
-                    'canmoveup'    => false,
-                    'canmovedown'  => true,
-                ),
-                array(
-                    'id'           => 7,
-                    'title'        => 'Block Instance 7',
-                    'content'      => 'The date is now <strong>' . date('d/m/Y') . '</strong>',
-                    'canmoveleft'  => true,
-                    'canmoveright' => false,
-                    'canmoveup'    => true,
-                    'canmovedown'  => false,
-                ),
-            ),
-        ),
-    ),
-    'count' => 3
-);
-
-
 
 /**
  * Returns HTML for the category list
@@ -259,7 +129,6 @@ EOF;
  *                         alone should be output
  */
 function view_build_columns(View $view, $javascript=false) {
-    global $COLUMNS;
     $numcols = $view->get('numcolumns');
 
     $result = '';
@@ -280,7 +149,6 @@ function view_build_columns(View $view, $javascript=false) {
  *                         alone should be output
  */
 function view_build_column(View $view, $column, $javascript=false) {
-    global $COLUMNS;
     // FIXME: TEMPORARY. Just so if we're adding a new column, we can insert a blank one
     if ($javascript) {
         $data = array('blockinstances' => array());
@@ -304,7 +172,7 @@ function view_build_column(View $view, $column, $javascript=false) {
         <input type="submit" class="submit removecolumn" name="action_remove_column_' . $column . '" value="Remove Column">
     </div>';
 
-    if ($column == $COLUMNS['count']) {
+    if ($column == $view->get('numcolumns')) {
         $result .= '    <div class="add-column-right">
         <input type="submit" class="submit addcolumn" name="action_add_column_before_' . ($column + 1) . '" value="Add Column">
     </div>';
