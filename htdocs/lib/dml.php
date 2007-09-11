@@ -1122,7 +1122,7 @@ function update_record($table, $dataobject, $where=null) {
 
     foreach ($ddd as $key => $value) {
         $count++;
-        $update .= $key .' = ? ';
+        $update .= db_quote_identifier($key) .' = ? ';
         if ($count < $numddd) {
             $update .= ', ';
         }
@@ -1135,7 +1135,7 @@ function update_record($table, $dataobject, $where=null) {
 
     foreach ($wherefields as $field) {
         $count++;
-        $whereclause .= $field .' = ? ';
+        $whereclause .= db_quote_identifier($field) .' = ? ';
         if ($count < $numddd) {
             $whereclause .= ' AND ';
         }
