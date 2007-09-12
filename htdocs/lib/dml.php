@@ -338,7 +338,7 @@ function get_record_select($table, $select='', $values=null, $fields='*') {
 function get_recordset($table, $field='', $value='', $sort='', $fields='*', $limitfrom='', $limitnum='') {
     $values = null;
     if ($field) {
-        $select = "$field = ?";
+        $select = db_quote_identifier($field) . " = ?";
         $values = array($value);
     } else {
         $select = '';
