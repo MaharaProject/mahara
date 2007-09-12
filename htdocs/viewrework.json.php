@@ -67,20 +67,22 @@ case 'blocktype_list':
     break;
 case 'add_column':
     $column = param_integer('column');
-    if (view_add_column($view->get('id'), $column)) {
+    try {
+        $view->addcolumn(array('before' => $column));
         json_reply(false, array('message' => false, 'data' => view_build_column($view, $column, true)));
     }
-    else {
-        json_reply(true, 'Failed to add column');
+    catch (Exception $e) {
+        json_reply(true, 'Failed to add column: ' . $e->getMessage());
     }
 case 'remove_column':
     $column = param_integer('column');
-    if (view_remove_column($view->get('id'), $column)) {
+    try {
+        $view->removecolumn(array('column' => $column));
         // Just do it - no message
         json_reply(false, false);
     }
-    else {
-        json_reply(true, 'Failed to remove column');
+    catch (Exception $e) {
+        json_reply(true, 'Failed to remove column: ' . $e->getMessage());
     }
     break;
 }
