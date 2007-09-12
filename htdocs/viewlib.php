@@ -239,6 +239,9 @@ function view_build_column(View $view, $column, $javascript=false) {
     return $result;
 }
 
+// TODO penny add some documentation about expected formats for each action
+// eg addcolumn_before_int and moveblockinstance_id_int_column_int_order_int
+
 function view_process_changes($ajax=false) {
     global $SESSION;
 

@@ -347,6 +347,8 @@ class View {
     }
 
 
+    // @TODO penny add documentation around all these functions
+    // @TODO penny check for $values options in all of them 
     public function addblocktype($values) {
         if (!array_key_exists('blocktype', $values) || empty($values['blocktype'])) {
             throw new ParameterException(get_string('missingblocktype', 'error'));
