@@ -200,7 +200,7 @@ function ViewManager() {
         forEach(getElementsByTagAndClassName('input', 'deletebutton', 'bottom-pane'), function(i) {
             connect(i, 'onclick', function(e) {
                 var pd = {'view': $('viewid').value, 'change': 1};
-                pd['action_' + e.src().getAttribute('name')] = 1;
+                pd[e.src().getAttribute('name')] = 1;
                 sendjsonrequest('viewrework.json.php', pd, 'POST', function(data) {
                     if (!data.error) {
                         // TODO: not happy with using .parentNode, it's fragile
