@@ -405,7 +405,7 @@ class View {
         require_once(get_config('docroot') . 'blocktype/lib.php');
         $bi = new BlockInstance($values['id']); // get it so we can reshuffle stuff
         db_begin();
-        delete_records('block_instance', 'id', $bi->get('id'));
+        $bi->delete();
         $this->shuffle_column($bi->get('column'), null, $bi->get('order'));
         db_commit();
         $this->dirtycolumns[$bi->get('column')] = 1;

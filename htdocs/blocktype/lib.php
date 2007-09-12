@@ -248,6 +248,18 @@ class BlockInstance {
         }
     }
 
+    public function delete() {
+        if (empty($this->id)) {
+            $this->dirty = false;
+            return;
+        }
+        
+        delete_records('view_artefact', 'block', $this->id);
+        delete_records('block_instance', 'id', $this->id);
+
+        $this->dirty = false;
+    }
+
 }
 
 
