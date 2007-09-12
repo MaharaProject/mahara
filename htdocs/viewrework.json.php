@@ -39,7 +39,7 @@ $action = param_alphanumext('action', '');
 // we actually ned to process stuff
 if ($change) {
     try {
-        $returndata = view_process_changes(true);
+        $returndata = view_process_changes();
         json_reply(false, $returndata);
     }
     catch (Exception $e) {

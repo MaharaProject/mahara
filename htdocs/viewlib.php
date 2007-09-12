@@ -239,16 +239,21 @@ function view_build_column(View $view, $column, $javascript=false) {
     return $result;
 }
 
-// TODO penny add some documentation about expected formats for each action
-// eg addcolumn_before_int and moveblockinstance_id_int_column_int_order_int
 
-function view_process_changes($ajax=false) {
+/**
+ *
+ * process view changes 
+ * this function is used both by the json stuff and by normal posts
+ *
+ */
+function view_process_changes() {
     global $SESSION;
 
     if (!count($_POST)) {
         return;
     }
     $view = param_integer('view');
+    $category = param_alpha('category', null);
     $view = new View($view);
 
     $action = '';
@@ -269,14 +274,14 @@ function view_process_changes($ajax=false) {
         // the view class method is the same as the action,
         // but I've left these here in case any additional
         // parameter handling has to be done.
-        case 'addblocktype':
+        case 'addblocktype': // requires action_addblocktype  (blocktype in separate parameter)
             $values['blocktype'] = param_alpha('blocktype', null);
         break;
-        case 'moveblockinstance':
-        case 'removeblockinstance':
+        case 'moveblockinstance': // requires action_moveblockinstance_id_\d_column_\d_order_\d
+        case 'removeblockinstance': // requires action_removeblockinstance_id_\d
         //case 'configureblockinstance': // later
-        case 'addcolumn':
-        case 'removecolumn':
+        case 'addcolumn': // requires action_addcolumn_before_\d
+        case 'removecolumn': // requires action_removecolumn_column_\d
         break;
         default:
             throw new InvalidArgumentException(get_string('noviewcontrolaction', 'error', $action));
@@ -285,26 +290,28 @@ function view_process_changes($ajax=false) {
     $message = '';
     $success = false;
     try {
-        $values['returndata'] = $ajax;
+        $values['returndata'] = defined('JSON');
         $returndata = $view->$action($values);
         $message = $view->get_viewcontrol_ok_string($action);
         $success = true;
     }
     catch (Exception $e) {
         // if we're in ajax land, just throw it
-        if ($ajax) {
+        // the handler will deal with the message.
+        if (defined('JSON')) {
             throw $e;
         }
         $message = $view->get_viewcontrol_err_string($action) . ': ' . $e->getMessage();
     }
-    if (empty($ajax)) {
+    if (!defined('JSON')) {
+        // set stuff in the session and redirect
         $fun = 'add_ok_msg';
         if (!$success) {
             $fun = 'add_err_msg';
         }
         $SESSION->{$fun}($message);
         // TODO fix this url
-        redirect('/viewrework.php?view=' . $view->get('id') . '&category=file');
+        redirect('/viewrework.php?view=' . $view->get('id') . '&category=' . $category);
     }
     return array('message' => $message, 'data' => $returndata);
 }
