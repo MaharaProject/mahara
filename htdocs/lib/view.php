@@ -330,7 +330,7 @@ class View {
         }
 
         if (!array_key_exists($column, $this->columns)) {
-            throw new ParameterOutOfRangeException(get_string('invalidcolumn', 'view', $column));
+            throw new ParamOutOfRangeException(get_string('invalidcolumn', 'view', $column));
         }
 
 
@@ -437,13 +437,13 @@ class View {
 
     public function removecolumn($values) {
         db_begin();
-        $this->set('numcolumns', $this->get('numcolumns') - 1);
+        $numcolumns = $this->get('numcolumns') - 1;
         $columnmax = array(); // keep track of where we're at in each column
         $currentcol = 1;
         if ($blocks = $this->get_column_datastructure($values['column'])) {
             // we have to rearrange them first
             foreach ($blocks['blockinstances'] as $block) {
-                if ($currentcol > $this->get('numcolumns')) {
+                if ($currentcol > $numcolumns) {
                     $currentcol = 1;
                 }
                 if ($currentcol == $values['column']) {
@@ -461,6 +461,7 @@ class View {
             }
         }
 
+        $this->set('numcolumns', $this->get('numcolumns') - 1);
         // now shift all blocks one left and we're done
         $this->shuffle_helper('column', 'down', '>', $values['column']);
 
