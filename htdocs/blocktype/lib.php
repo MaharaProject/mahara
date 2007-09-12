@@ -191,24 +191,7 @@ class BlockInstance {
             $this->{$field} = $value;
             return true;
         }
-        throw new InvalidArgumentException("Field $field wasn't found in class " . get_class($this));
-    }
-
-    /**
-    * converts this instance to a stdclass object
-    * that can be used in data structures
-    */
-    public function to_stdclass() {
-        $stdclass = new StdClass;
-        $vars = get_object_vars($this);
-        foreach (array_keys($vars) as $field) {
-            if ($field == 'dirty') {
-                continue;
-            }
-            $stdclass->{$field} = $this->get($field); // do it this way for calculated ones
-        }
-        $stdclass->content = $this->render();
-        return $stdclass;
+        throw new ParamOutOfRangeException("Field $field wasn't found in class " . get_class($this));
     }
 
     /**

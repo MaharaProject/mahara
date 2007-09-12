@@ -72,6 +72,8 @@ function view_build_category_list($defaultcategory, $javascript=false) {
         if ($classes) {
             $result .= ' class="' . hsc(implode(' ', $classes)) . '"';
         }
+        // @TODO fix this url (apart from anything else it needs the view id!)
+        // and probably should be in a smarty template
         $result .= '<a href="viewrework.php?category=' . hsc($cat['name']) . '">' . hsc($cat['title']) . "</a></li>\n";
     }
     $result .= "</ul>\n";
@@ -164,22 +166,22 @@ function view_build_column(View $view, $column, $javascript=false) {
 
     if ($column == 1) {
         $result .= '    <div class="add-column-left">
-        <input type="submit" class="submit addcolumn" name="action_add_column_before_1" value="Add Column">
+        <input type="submit" class="submit addcolumn" name="action_addcolumn_before_1" value="Add Column">
     </div>';
     }
 
     $result .= '    <div class="remove-column">
-        <input type="submit" class="submit removecolumn" name="action_remove_column_' . $column . '" value="Remove Column">
+        <input type="submit" class="submit removecolumn" name="action_removecolumn_column_' . $column . '" value="Remove Column">
     </div>';
 
     if ($column == $view->get('numcolumns')) {
         $result .= '    <div class="add-column-right">
-        <input type="submit" class="submit addcolumn" name="action_add_column_before_' . ($column + 1) . '" value="Add Column">
+        <input type="submit" class="submit addcolumn" name="action_addcolumn_before_' . ($column + 1) . '" value="Add Column">
     </div>';
     }
     else {
         $result .= '    <div class="add-column-center">
-        <input type="submit" class="submit addcolumn" name="action_add_column_before_' . ($column + 1) . '" value="Add Column">
+        <input type="submit" class="submit addcolumn" name="action_addcolumn_before_' . ($column + 1) . '" value="Add Column">
     </div>';
     }
 
@@ -188,44 +190,45 @@ function view_build_column(View $view, $column, $javascript=false) {
     <div class="column-content">';
     if (!$javascript) {
         $result .= '        <div class="add-button">
-            <input type="submit" class="submit newblockhere" name="action_blocktype_add_top_' . $column . '" value="Add new block here">
+            <input type="submit" class="submit newblockhere" name="action_addblocktype_column_' . $column . '_order_1" value="Add new block here">
         </div>';
     }
 
     // Blocktype loop here
     foreach($data['blockinstances'] as $blockinstance) {
-        $result .= '    <div class="blockinstance" id="blockinstance_' . $blockinstance['id'] . '">
+        $result .= '    <div class="blockinstance" id="blockinstance_' . $blockinstance->get('id') . '">
     <div class="blockinstance-header">
-        <h4>' . hsc($blockinstance['title']) . '</h4>
+        <h4>' . hsc($blockinstance->get('title')) . '</h4>
     </div>
     <div class="blockinstance-controls">';
 
         if (!$javascript) {
             // FIXME loop pls!
-            if ($blockinstance['canmoveleft']) {
-                $result .= '<input type="submit" class="submit movebutton" name="blockinstance_' . $blockinstance['id'] . '_moveleft" value="&larr;">';
+            $movestart = '<input type="submit" class="submit movebutton" name="action_moveblockinstance_id_' . $blockinstance->get('id');
+            if ($blockinstance->get('canmoveleft')) {
+                $result .= $movestart . '_column_' . ($column - 1) . '_order_' . $blockinstance->get('order') . '" value="&larr;">';
             }
-            if ($blockinstance['canmovedown']) {
-                $result .= '<input type="submit" class="submit movebutton" name="blockinstance_' . $blockinstance['id'] . '_movedown" value="&darr;">';
+            if ($blockinstance->get('canmovedown')) {
+                $result .= $movestart . '_column_' . $column . '_order_' . ($blockinstance->get('order') + 1) . '" value="&darr;">';
             }
-            if ($blockinstance['canmoveup']) {
-                $result .= '<input type="submit" class="submit movebutton" name="blockinstance_' . $blockinstance['id'] . '_moveup" value="&uarr;">';
+            if ($blockinstance->get('canmoveup')) {
+                $result .= $movestart . '_column_' . $column . '_order_' . ($blockinstance->get('order') - 1) . '" value="&uarr;">';
             }
-            if ($blockinstance['canmoveright']) {
-                $result .= '<input type="submit" class="submit movebutton" name="blockinstance_' . $blockinstance['id'] . '_moveright" value="&rarr;">';
+            if ($blockinstance->get('canmoveright')) {
+                $result .= $movestart . '_column_' . ($column + 1) . '_order_' . $blockinstance->get('order') . '" value="&rarr;">';
             }
         }
-        $result .= '<input type="submit" class="submit deletebutton" name="blockinstance_' . $blockinstance['id'] .'_delete" value="X">';
+        $result .= '<input type="submit" class="submit deletebutton" name="action_removeblockinstance_id_' . $blockinstance->get('id') .'" value="X">';
 
         $result .= '        </div>
         <div class="blockinstance-content">
-            ' . $blockinstance['content'] . '
+            ' . $blockinstance->render() . '
         </div>
     </div>';
         if (!$javascript) {
             $result .= '
     <div class="add-button">
-        <input type="submit" class="submit newblockhere" name="action_blocktype_add_after_' . $blockinstance['id'] . '" value="Add new block here">
+        <input type="submit" class="submit newblockhere" name="action_addblocktype_column_' . $column . '_order_' . ($blockinstance->get('order') + 1) . '" value="Add new block here">
     </div>';
         }
     }
@@ -242,8 +245,8 @@ function view_process_changes() {
     if (!count($_POST)) {
         return;
     }
-    log_debug($_POST);
     $view = param_integer('view');
+    $view = new View($view);
 
     $action = '';
     foreach ($_POST as $key => $value) {
@@ -255,106 +258,66 @@ function view_process_changes() {
         }
     }
 
-    $value = view_get_value_for_action($action);
+    $actionstring = $action;
+    $action = substr($action, 0, strpos($action, '_'));
+    $actionstring  = substr($actionstring, strlen($action) + 1);
+    
+    $values = view_get_values_for_action($actionstring);
 
     $result = null;
-    if (starts_with($action, 'blocktype_add_top')) {
-        // Done as "add_top" so that block instances can be added to columns with nothing in them
-        $blocktype = param_integer('blocktype', 0);
-        if (!$blocktype) {
-            $SESSION->add_info_msg('Please select a block type to add first');
-            return;
-        }
-
-        $result = view_blocktype_add_top($view, $blocktype, $value);
-        $okmsg  = 'Added block type successfully';
-        $errmsg = 'Could not add the block to your view';
+    switch ($action) {
+        // the view class method is the same as the action,
+        // but I've left these here in case any additional
+        // parameter handling has to be done.
+        case 'addblocktype':
+            $values['blocktype'] = param_alpha('blocktype', null);
+        break;
+        case 'moveblockinstance':
+        case 'removeblockinstance':
+        //case 'configureblockinstance': // later
+        case 'addcolumn':
+        case 'removecolumn':
+        break;
+        default:
+            throw new InvalidArgumentException(get_string('noviewcontrolaction', 'error', $action));
     }
-    else if (starts_with($action, 'blocktype_add_after')) {
-        $blockinstance = view_get_value_for_action($action);
-        $blocktype = param_integer('blocktype', 0);
-        if (!$blocktype) {
-            $SESSION->add_info_msg('Please select a block type to add first');
-            return;
-        }
-
-        $result = view_blocktype_add_after($view, $blocktype, $value);
-        $okmsg  = 'Added block type successfully';
-        $errmsg = 'Could not add the block to your view';
+    
+    try {
+        $view->$action($values);
+        $SESSION->add_ok_msg($view->get_viewcontrol_ok_string($action));
     }
-    else if (starts_with($action, 'add_column_before')) {
-        $result = false;
-        $okmsg  = '';
-        $errmsg = 'Not implemented yet';
+    catch (Exception $e) {
+        $SESSION->add_error_msg($view->get_viewcontrol_err_string($action) . ': ' . $e->getMessage());
     }
-    else if (starts_with($action, 'remove_column')) {
-        $column = view_get_value_for_action($action);
+    // TODO fix this url
+    redirect('/viewrework.php?view=' . $view->get('id') . '&category=file');
+}
 
-        log_debug("Remove column " . $column);
-        if (view_remove_column($view, $column)) {
-            $SESSION->add_ok_msg('Removed column successfully');
+
+/** 
+ * parses the string and returns a hash of values
+ * @param string $action expects format name_value_name_value
+ *                       where values are all numeric
+ * @return array associative
+*/
+function view_get_values_for_action($action) {
+    $values = array();
+    $bits = explode('_', $action);
+    if ((count($bits) % 2) == 1) {
+        throw new ParamOutOfRangeException(get_string('invalidviewaction', 'error', $action));
+    }
+    $lastkey = null;
+    foreach ($bits as $index => $bit) {
+        if ($index % 2 == 0) { 
+            $lastkey = $bit;
         }
         else {
-            $SESSION->add_ok_msg('Failed to remove column');
+            $values[$lastkey] = $bit;
         }
-        return;
     }
-
-    if (!is_null($result)) {
-        if ($result) {
-            $SESSION->add_ok_msg($okmsg);
-        }
-        else {
-            $SESSION->add_error_msg($errmsg);
-        }
-        redirect('/viewrework.php');
-    }
-
-    throw new UserException('No valid action found');
-}
-
-function starts_with($haystack, $needle) {
-    return substr($haystack, 0, strlen($needle)) == $needle;
-}
-
-function view_get_value_for_action($action) {
-    $value = intval(substr($action, strrpos($action, '_') + 1));
-    if ($value == 0) {
-        throw new UserException('Value for action is not valid');
-    }
-    return $value;
-}
-
-function view_assert_data($data, $key) {
-    if (!isset($data[$key])) {
-        throw new UserException('The value for "' . $key . '" is not available for this action');
-    }
+    return $values;
 }
 
 
-
-function view_blocktype_add_top($view, $blocktype, $column) {
-    // Stub
-    log_debug("Add block type " . $blocktype . ' to the top of column ' . $column);
-    return true;
-}
-
-function view_blocktype_add_after($view, $blocktype, $blockinstance) {
-    // Stub
-    log_debug("Add block type " . $blocktype . ' below blockinstance ' . $blockinstance);
-    return true;
-}
-
-function view_add_column($view, $column) {
-    // Stub
-    log_debug('Adding column before current column ' . $column);
-    return true;
-}
-
-function view_remove_column($view, $column) {
-    // Stub
-    log_debug('Removing column ' . $column . ' from view ' . $view);
-    return true;
-}
 
 ?>

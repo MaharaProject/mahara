@@ -48,6 +48,7 @@ class View {
     private $ownerobj;
     private $numcolumns;
     private $columns;
+    private $dirtycolumns; // for when we change stuff
 
     public function __construct($id=0, $data=null) {
         if (!empty($id)) {
@@ -72,6 +73,8 @@ class View {
             }
         }
         $this->atime = time();
+        $this->columns = array();
+        $this->dirtycolumns = array();
     }
 
     public function get($field) {
@@ -282,8 +285,8 @@ class View {
     * @private
     * @return void
     */
-    private function build_column_datastructure() {
-        if (!empty($this->columns)) { // we've already built it up
+    private function build_column_datastructure($force=false) {
+        if (!empty($this->columns) && empty($force)) { // we've already built it up
             return;
         }
 
@@ -301,8 +304,9 @@ class View {
         }
 
         foreach ($data as $block) {
+            require_once(get_config('docroot') . 'blocktype/lib.php');
             $b = new BlockInstance($block->id, (array)$block);
-            $this->columns[$block->column]['blockinstances'][] = (array)$b->to_stdclass();
+            $this->columns[$block->column]['blockinstances'][] = $b;
         }
 
     }
@@ -315,18 +319,231 @@ class View {
     */
     public function get_column_datastructure($column=0) {
         // make sure we've already built up the structure
-        $this->build_column_datastructure();
+        $force = false;
+        if (array_key_exists($column, $this->dirtycolumns)) {
+            $force = true;
+        }
+        $this->build_column_datastructure($force);
 
         if (empty($column)) {
             return $this->columns;
         }
 
         if (!array_key_exists($column, $this->columns)) {
-            throw new InvalidArgumentException(get_string('invalidcolumn', 'view', $column));
+            throw new ParameterOutOfRangeException(get_string('invalidcolumn', 'view', $column));
         }
 
 
         return $this->columns[$column];
+    }
+
+    // ******** functions to do with the view creation ui ************** //
+    public function get_viewcontrol_ok_string($functionname) {
+        return get_string('success.' . $functionname, 'view');
+    }
+
+    public function get_viewcontrol_err_string($functionname) {
+        return get_string('err.' . $functionname, 'view');
+    }
+
+
+    public function addblocktype($values) {
+        if (!array_key_exists('blocktype', $values) || empty($values['blocktype'])) {
+            throw new ParameterException(get_string('missingblocktype', 'error'));
+        }
+        safe_require('blocktype', $values['blocktype']);
+        $bi = new BlockInstance(0,
+            array(
+                'blocktype'  => $values['blocktype'],
+                'title'      => call_static_method(generate_class_name('blocktype', $values['blocktype']), 'get_title'), 
+                'view'       => $this->get('id'),
+                'column'     => $values['column'],
+                'order'      => $values['order'],
+            )
+        );
+        $this->shuffle_column($values['column'], $values['order']);
+        $bi->commit();
+        $this->dirtycolumns[$values['column']] = 1;
+    }
+
+    public function removeblockinstance($values) {
+        require_once(get_config('docroot') . 'blocktype/lib.php');
+        $bi = new BlockInstance($values['id']); // get it so we can reshuffle stuff
+        db_begin();
+        delete_records('block_instance', 'id', $bi->get('id'));
+        $this->shuffle_column($bi->get('column'), null, $bi->get('order'));
+        db_commit();
+        $this->dirtycolumns[$bi->get('column')] = 1;
+    }
+
+    public function moveblockinstance($values) {
+        require_once(get_config('docroot') . 'blocktype/lib.php');
+        $bi = new BlockInstance($values['id']);
+        db_begin();
+        // moving within the same column
+        if ($bi->get('column') == $values['column']) {
+            if ($values['order'] == $bi->get('order') + 1
+                || $values['order'] == $bi->get('order') -1) {
+                // we're switching two, it's a bit different
+                // set the one we're moving to out of range (to 0)
+                set_field('block_instance', 'order', 0,                 'view', $this->get('id'), 'column', $values['column'], 'order', $values['order']);
+                // set the new order
+                set_field('block_instance', 'order', $values['order'],  'view', $this->get('id'), 'column', $values['column'], 'order', $bi->get('order'));
+                // move the old one back to where the moving one was.
+                set_field('block_instance', 'order', $bi->get('order'), 'view', $this->get('id'), 'column', $values['column'], 'order', 0);
+                // and set it in the object for good measure.
+                $bi->set('order', $values['order']);
+            }
+            else {
+                $this->shuffle_column($bi->get('column'), $values['order'], $bi->get('order'));
+            }
+        } 
+        // moving to another column
+        else {
+            // first figure out if we've asked to add it somewhere sensible
+            // eg if we're moving a low down block into an empty column
+            $newmax = $this->get_current_max_order($values['column']);
+            if ($values['order'] > $newmax+1) {
+                $values['order'] = $newmax+1;
+            }
+            // remove it from the old column
+            $this->shuffle_column($bi->get('column'), null, $bi->get('order'));
+            // and make a hole in the new column
+            $this->shuffle_column($values['column'], $values['order']);
+        }
+        $bi->set('column', $values['column']);
+        $bi->set('order', $values['order']);
+        $bi->commit();
+        $this->dirtycolumns[$bi->get('column')] = 1;
+        $this->dirtycolumns[$values['column']] = 1;
+        db_commit();
+    }
+
+    public function addcolumn($values) {
+        db_begin();
+        $this->set('numcolumns', $this->get('numcolumns') + 1);
+        if ($values['before'] != ($this->get('numcolumns') + 1)) {
+            $this->shuffle_helper('column', 'up', '>=', $values['before']);
+        }
+        $this->commit();
+        // @TODO this could be optimised by actually moving the keys around,
+        // but I don't think there's much point as the objects aren't persistent
+        for ($i = $values['before']; $i <= $this->get('numcolumns'); $i++) {
+            $this->dirtycolumns[$i] = 1;
+        }
+        $this->columns[$this->get('numcolumns')] = null; // set the key 
+        db_commit();
+    }
+
+    public function removecolumn($values) {
+        db_begin();
+        $this->set('numcolumns', $this->get('numcolumns') - 1);
+        $columnmax = array(); // keep track of where we're at in each column
+        $currentcol = 1;
+        if ($blocks = $this->get_column_datastructure($values['column'])) {
+            // we have to rearrange them first
+            foreach ($blocks['blockinstances'] as $block) {
+                if ($currentcol > $this->get('numcolumns')) {
+                    $currentcol = 1;
+                }
+                if ($currentcol == $values['column']) {
+                    $currentcol++; // don't redistrubute blocks here!
+                }
+                if (!array_key_exists($currentcol, $columnmax)) {
+                    $columnmax[$currentcol] = $this->get_current_max_order($currentcol);
+                }
+                $this->shuffle_column($currentcol, $columnmax[$currentcol]+1);
+                $block->set('column', $currentcol);
+                $block->set('order', $columnmax[$currentcol]+1);
+                $block->commit();
+                $columnmax[$currentcol]++;
+                $currentcol++;
+            }
+        }
+
+        // now shift all blocks one left and we're done
+        $this->shuffle_helper('column', 'down', '>', $values['column']);
+
+        $this->commit();
+        db_commit();
+        unset($this->columns); // everything has changed
+    }
+
+    /** 
+     * helper function for re-ordering block instances within a column
+     * @param int $column the column to re-order
+     * @param int $insert the order we need to insert
+     * @param int $remove the order we need to move out of the way
+     */
+    private function shuffle_column($column, $insert=0, $remove=0) {
+        /*
+        inserting something in the middle from somewhere else (insert and remove)
+        we're either reshuffling after a delete, (no insert),
+        inserting something in the middle out of nowhere (no remove)
+        */
+        // inserting and removing
+        if (!empty($remove)) {
+            // move it out of range (set to 0)
+            set_field('block_instance', 'order', 0, 'order', $remove, 'column', $column, 'view', $this->get('id'));
+
+            if (!empty($insert)) {
+                // shuffle everything up
+                $this->shuffle_helper('order', 'up', '>=', $insert, '"column" = ?', array($column)); 
+
+            }
+            // shuffle everything down
+            $this->shuffle_helper('order', 'down', '>', $remove, '"column" = ?', array($column));
+
+            if (!empty($insert)) {
+                // now move it back
+                set_field('block_instance', 'order', $insert, 'view', $this->get('id'), 'column', $column, 'order', 0);
+            }
+        }
+        else if (!empty($insert)) {
+            // shuffle everything up
+            $this->shuffle_helper('order', 'up', '>=', $insert, '"column" = ?', array($column));
+        }
+    }
+
+    private function shuffle_helper($field, $direction, $operator, $value, $extrawhere='', $extravalues='') {
+
+        // doing this with execute_sql rather than set_field and friends because of
+        // adodb retardedly trying to make "order"+1 and friends into a string
+
+        // I couldn't find a way to shift a bunch of rows in step even with set constraints deferred.
+
+        // the two options I found were to move them all out of range (eg start at max +1) and then back again
+        // or move them into negative and back into positive (Grant's suggestion) which I like more.
+
+        if (empty($extrawhere)) {
+            $extrawhere = '';
+        }
+        else {
+            $extrawhere = ' AND ' . $extrawhere;
+        }
+        if (empty($extravalues) || !is_array($extravalues) || count($extravalues) == 0) {
+            $extravalues = array();
+        }
+
+        // first move them one but switch to negtaive
+        $sql = 'UPDATE {block_instance} 
+                    SET "' . $field .'" = (-1 * ("' . $field . '") ' . (($direction == 'up') ? '-' : '+') . ' 1) 
+                    WHERE "view" = ? AND "' . $field . '"' . $operator . ' ? ' . $extrawhere;
+
+        execute_sql($sql, array_merge(array($this->get('id'), $value), $extravalues)); 
+
+        // and now flip to positive again
+        $sql = 'UPDATE {block_instance} 
+                    SET "' . $field . '" = ("' . $field . '" * -1) 
+                WHERE "view" = ? AND "' . $field . '" < 0 ' . $extrawhere;
+
+        execute_sql($sql, array_merge(array($this->get('id')), $extravalues)); 
+
+    }
+
+
+    private function get_current_max_order($column) {
+        return get_field('block_instance', 'max("order")', 'column', $column, 'view', $this->get('id')); 
     }
 }
 

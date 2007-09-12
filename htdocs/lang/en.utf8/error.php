@@ -84,5 +84,7 @@ $string['artefactnotfoundmaybedeleted'] = "Artefact with id %s not found (maybe 
 $string['notartefactowner'] = 'You do not own this artefact';
 
 $string['blockinstancednotfound'] = 'Block instance with id %s not found';
+$string['invalidviewaction'] = 'Invalid view control action: %s';
 
+$string['missingblocktype'] = 'Try selecting a block type to add first';
 ?>
