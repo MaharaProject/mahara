@@ -63,8 +63,8 @@ function ViewManager() {
                 $('column_' + oldID).setAttribute('id', 'column_' + newID);
 
                 // Renumber the add/remove column buttons
-                getFirstElementByTagAndClassName('input', 'addcolumn', 'column_' + newID).setAttribute('name', 'action_add_column_before_' + (newID + 1));
-                getFirstElementByTagAndClassName('input', 'removecolumn', 'column_' + newID).setAttribute('name', 'action_remove_column_' + newID);
+                getFirstElementByTagAndClassName('input', 'addcolumn', 'column_' + newID).setAttribute('name', 'action_addcolumn_before_' + (newID + 1));
+                getFirstElementByTagAndClassName('input', 'removecolumn', 'column_' + newID).setAttribute('name', 'action_removecolumn_id_' + newID);
             }
             removeElementClass(column, 'columns' + numColumns);
             addElementClass(column, 'columns' + (numColumns + 1));
@@ -137,8 +137,8 @@ function ViewManager() {
                 $('column_' + oldID).setAttribute('id', 'column_' + newID);
 
                 // Renumber the add/remove column buttons
-                getFirstElementByTagAndClassName('input', 'addcolumn', 'column_' + newID).setAttribute('name', 'action_add_column_before_' + oldID);
-                getFirstElementByTagAndClassName('input', 'removecolumn', 'column_' + newID).setAttribute('name', 'action_remove_column_' + newID);
+                getFirstElementByTagAndClassName('input', 'addcolumn', 'column_' + newID).setAttribute('name', 'action_addcolumn_before_' + oldID);
+                getFirstElementByTagAndClassName('input', 'removecolumn', 'column_' + newID).setAttribute('name', 'action_removecolumn_id_' + newID);
             }
         }
 
@@ -199,7 +199,9 @@ function ViewManager() {
     this.rewriteDeleteButtons = function() {
         forEach(getElementsByTagAndClassName('input', 'deletebutton', 'bottom-pane'), function(i) {
             connect(i, 'onclick', function(e) {
-                sendjsonrequest('viewrework.json.php', {'view': $('viewid').value, 'action': 'delete_blockinstance', 'data': e.src().getAttribute('name')}, 'POST', function(data) {
+                var pd = {'view': $('viewid').value, 'change': 1};
+                pd['action_' + e.src().getAttribute('name')] = 1;
+                sendjsonrequest('viewrework.json.php', pd, 'POST', function(data) {
                     if (!data.error) {
                         // TODO: not happy with using .parentNode, it's fragile
                         removeElement(i.parentNode.parentNode);
@@ -232,7 +234,9 @@ function ViewManager() {
             connect(i, 'onclick', function(e) {
                 var name = e.src().getAttribute('name');
                 var id   = parseInt(name.substr(-1));
-                sendjsonrequest('viewrework.json.php', {'view': $('viewid').value, 'action': 'add_column', 'column': id}, 'POST', function(data) {
+                var pd   = {'view': $('viewid').value, 'change': 1}
+                pd['action_addcolumn_before_' + id] = 1;
+                sendjsonrequest('viewrework.json.php', pd, 'POST', function(data) {
                     if (!data.error) {
                         self.addColumn(id, data);
                     }
@@ -264,7 +268,9 @@ function ViewManager() {
             connect(i, 'onclick', function(e) {
                 var name = e.src().getAttribute('name');
                 var id   = parseInt(name.substr(-1));
-                sendjsonrequest('viewrework.json.php', {'view': $('viewid').value, 'action': 'remove_column', 'column': id}, 'POST', function(data) {
+                var pd   = {'view': $('viewid').value, 'change': 1}
+                pd['action_removecolumn_column_' + id] = 1;
+                sendjsonrequest('viewrework.json.php', pd, 'POST', function(data) {
                     if (!data.error) {
                         self.removeColumn(id);
                     }

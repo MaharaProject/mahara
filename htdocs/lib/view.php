@@ -433,6 +433,9 @@ class View {
         }
         $this->columns[$this->get('numcolumns')] = null; // set the key 
         db_commit();
+        if ($values['returndata']) {
+            return view_build_column($this, $values['before'], true);
+        }
     }
 
     public function removecolumn($values) {

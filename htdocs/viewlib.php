@@ -239,7 +239,7 @@ function view_build_column(View $view, $column, $javascript=false) {
     return $result;
 }
 
-function view_process_changes() {
+function view_process_changes($ajax=false) {
     global $SESSION;
 
     if (!count($_POST)) {
@@ -252,9 +252,6 @@ function view_process_changes() {
     foreach ($_POST as $key => $value) {
         if (substr($key, 0, 7) == 'action_') {
             $action = substr($key, 7);
-        }
-        else {
-            $data[$key] = $value;
         }
     }
 
@@ -281,16 +278,32 @@ function view_process_changes() {
         default:
             throw new InvalidArgumentException(get_string('noviewcontrolaction', 'error', $action));
     }
-    
+   
+    $message = '';
+    $success = false;
     try {
-        $view->$action($values);
-        $SESSION->add_ok_msg($view->get_viewcontrol_ok_string($action));
+        $values['returndata'] = $ajax;
+        $returndata = $view->$action($values);
+        $message = $view->get_viewcontrol_ok_string($action);
+        $success = true;
     }
     catch (Exception $e) {
-        $SESSION->add_error_msg($view->get_viewcontrol_err_string($action) . ': ' . $e->getMessage());
+        // if we're in ajax land, just throw it
+        if ($ajax) {
+            throw $e;
+        }
+        $message = $view->get_viewcontrol_err_string($action) . ': ' . $e->getMessage();
     }
-    // TODO fix this url
-    redirect('/viewrework.php?view=' . $view->get('id') . '&category=file');
+    if (empty($ajax)) {
+        $fun = 'add_ok_msg';
+        if (!$success) {
+            $fun = 'add_err_msg';
+        }
+        $SESSION->{$fun}($message);
+        // TODO fix this url
+        redirect('/viewrework.php?view=' . $view->get('id') . '&category=file');
+    }
+    return array('message' => $message, 'data' => $returndata);
 }
 
 

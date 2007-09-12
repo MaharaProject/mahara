@@ -33,13 +33,21 @@ require('view.php');
 
 $view   = param_integer('view');
 $view = new View($view);
-$action = param_alphanumext('action');
+$change = param_boolean('change', false);
+$action = param_alphanumext('action', '');
 
+// we actually ned to process stuff
+if ($change) {
+    try {
+        $returndata = view_process_changes(true);
+        json_reply(false, $returndata);
+    }
+    catch (Exception $e) {
+        json_reply(true, $e->getMessage());
+    }
+}
+// else we're just reading data...
 switch ($action) {
-case 'delete_blockinstance':
-    // @todo
-    json_reply(false, false);
-    break;
 case 'blocktype_list':
     $category = param_alpha('category');
     // TODO:
@@ -64,26 +72,6 @@ case 'blocktype_list':
     //
     $data = view_build_blocktype_list($category, true);
     json_reply(false, array('message' => false, 'data' => $data));
-    break;
-case 'add_column':
-    $column = param_integer('column');
-    try {
-        $view->addcolumn(array('before' => $column));
-        json_reply(false, array('message' => false, 'data' => view_build_column($view, $column, true)));
-    }
-    catch (Exception $e) {
-        json_reply(true, 'Failed to add column: ' . $e->getMessage());
-    }
-case 'remove_column':
-    $column = param_integer('column');
-    try {
-        $view->removecolumn(array('column' => $column));
-        // Just do it - no message
-        json_reply(false, false);
-    }
-    catch (Exception $e) {
-        json_reply(true, 'Failed to remove column: ' . $e->getMessage());
-    }
     break;
 }
 
