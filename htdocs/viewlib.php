@@ -292,7 +292,9 @@ function view_process_changes() {
     try {
         $values['returndata'] = defined('JSON');
         $returndata = $view->$action($values);
-        $message = $view->get_viewcontrol_ok_string($action);
+        if (!defined('JSON')) {
+            $message = $view->get_viewcontrol_ok_string($action);
+        }
         $success = true;
     }
     catch (Exception $e) {
