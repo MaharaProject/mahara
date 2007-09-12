@@ -86,5 +86,8 @@ $string['notartefactowner'] = 'You do not own this artefact';
 $string['blockinstancednotfound'] = 'Block instance with id %s not found';
 $string['invalidviewaction'] = 'Invalid view control action: %s';
 
-$string['missingblocktype'] = 'Try selecting a block type to add first';
+$string['missingparamblocktype'] = 'Try selecting a block type to add first';
+$string['missingparamcolumn'] = 'Missing column specification';
+$string['missingparamorder'] = 'Missing order specification';
+$string['missingparamid'] = 'Missing id';
 ?>

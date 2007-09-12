@@ -259,6 +259,7 @@ class View {
         delete_records('view_access_usr','view',$this->id);
         delete_records('view_tag','view',$this->id);
         delete_records('usr_watchlist_view','view',$this->id);
+        delete_records('block_instance', 'view', $this->id);
         delete_records('view','id',$this->id);
         $this->deleted = true;
     }
@@ -282,6 +283,8 @@ class View {
 
     /**
     * builds up the data structure for  this view
+    * @param boolean $force force a re-read from the database
+    *                       use this if a column is dirty
     * @private
     * @return void
     */
@@ -338,20 +341,41 @@ class View {
     }
 
     // ******** functions to do with the view creation ui ************** //
+    
+    /**
+     * small wrapper around get_string to return a success string
+     * for the given view control function
+     * @param string $functionname the functionname that was called
+     */
     public function get_viewcontrol_ok_string($functionname) {
         return get_string('success.' . $functionname, 'view');
     }
 
+    /**
+     * small wrapper around get_string to return an error string
+     * for the given view control function
+     * @param string $functionname the functionname that was called
+     */
     public function get_viewcontrol_err_string($functionname) {
         return get_string('err.' . $functionname, 'view');
     }
 
 
-    // @TODO penny add documentation around all these functions
-    // @TODO penny check for $values options in all of them 
+    /**
+     * adds a block with the given type to a view
+     * 
+     * @param array $values parameters for this function
+     *                      blocktype => string name of blocktype to add
+     *                      column    => int column to add to
+     *                      order     => position in column
+     * 
+     */
     public function addblocktype($values) {
-        if (!array_key_exists('blocktype', $values) || empty($values['blocktype'])) {
-            throw new ParameterException(get_string('missingblocktype', 'error'));
+        $requires = array('blocktype', 'column', 'order');
+        foreach ($requires as $require) {
+            if (!array_key_exists($require, $values) || empty($values[$require])) {
+                throw new ParamOutOfRangeException(get_string('missingparam'. $require, 'error'));
+            }
         }
         safe_require('blocktype', $values['blocktype']);
         $bi = new BlockInstance(0,
@@ -368,7 +392,16 @@ class View {
         $this->dirtycolumns[$values['column']] = 1;
     }
 
+    /** 
+     * deletes a block instance from the view
+     *
+     * @param array $values parameters for this function
+     *                      id => int id of blockinstance to remove
+     */
     public function removeblockinstance($values) {
+        if (!array_key_exists('id', $values) || empty($values['id'])) {
+            throw new ParamOutOfRangeException(get_string('missingparamid', 'error'));
+        }
         require_once(get_config('docroot') . 'blocktype/lib.php');
         $bi = new BlockInstance($values['id']); // get it so we can reshuffle stuff
         db_begin();
@@ -378,7 +411,21 @@ class View {
         $this->dirtycolumns[$bi->get('column')] = 1;
     }
 
+    /**
+    * moves a block instance to a specified location
+    *
+    * @param array $values parameters for this function
+    *                      id     => int of block instance to move
+    *                      column => int column to move to
+    *                      order  => position in new column to insert at
+    */
     public function moveblockinstance($values) {
+        $require = array('id', 'column', 'order');
+        foreach ($require as $require) {
+            if (!array_key_exists($require, $values) || empty($values[$require])) {
+                throw new ParamOutOfRangeException(get_string('missingparam' . $require, 'error'));
+            }
+        }
         require_once(get_config('docroot') . 'blocktype/lib.php');
         $bi = new BlockInstance($values['id']);
         db_begin();
@@ -421,7 +468,20 @@ class View {
         db_commit();
     }
 
+
+    /**
+     * adds a column to a view
+     *
+     * @param array $values parameters for this function
+     *                      before => int column to insert the new column before
+     *                      returndata => boolean whether to return the html 
+     *                                    for the new column or not (ajax requests need this)
+     *
+     */
     public function addcolumn($values) {
+        if (!array_key_exists('before', $values) || empty($values['before'])) {
+            throw new ParamOutOfRangeException(get_string('missingparamcolumn', 'error'));
+        }
         db_begin();
         $this->set('numcolumns', $this->get('numcolumns') + 1);
         if ($values['before'] != ($this->get('numcolumns') + 1)) {
@@ -430,6 +490,7 @@ class View {
         $this->commit();
         // @TODO this could be optimised by actually moving the keys around,
         // but I don't think there's much point as the objects aren't persistent
+        // unless we're in ajax land, in which case it would be an optimisation
         for ($i = $values['before']; $i <= $this->get('numcolumns'); $i++) {
             $this->dirtycolumns[$i] = 1;
         }
@@ -440,7 +501,18 @@ class View {
         }
     }
 
+
+    /**
+     * removes an entire column and redistributes its blocks
+     *
+     * @param array $values parameters for this function
+     *                      column => int column to remove
+     * 
+     */
     public function removecolumn($values) {
+        if (!array_key_exists('column', $values) || empty($values['column'])) {
+            throw new ParamOutOfRangeException(get_string('missingparamcolumn', 'error'));
+        }
         db_begin();
         $numcolumns = $this->get('numcolumns') - 1;
         $columnmax = array(); // keep track of where we're at in each column
@@ -547,7 +619,9 @@ class View {
 
     }
 
-
+    /**
+     * returns the current max block position within a column
+     */
     private function get_current_max_order($column) {
         return get_field('block_instance', 'max("order")', 'column', $column, 'view', $this->get('id')); 
     }
