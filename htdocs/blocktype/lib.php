@@ -266,7 +266,7 @@ class BlockInstance {
         delete_records('block_instance', 'id', $this->id);
 
         $this->dirty = false;
-
+        safe_require('blocktype', $this->get('blocktype'));
         call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'delete_instance', $this);
     }
 
