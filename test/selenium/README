@@ -1,0 +1,57 @@
+Selenium Test Suite for Mahara
+==============================
+
+This directory contains a series of test suites for Mahara, that can be tested
+using selenium [1].
+
+The test suites are arranged into directories. Each directory has an
+'index.html' file that describes the test suite. There are some common tests in
+'shared', and the index.html in this directory is automatically generated from
+generate-testsuite.sh to include the installer test and then all of the test
+suites.
+
+Writing your own Test Suite
+---------------------------
+
+You can make your own test suites if you would like. Just create another
+directory and start adding tests.
+
+You have to create an index.html file that lists what order your tests will be
+run in. Just copy one from another suite directory.
+
+Note that what your test suite does it MUST undo. For example, if you have a
+test that creates a new view, then you must also have another test that
+destroys it. This is so future tests being run in the full test suite can
+depend on Mahara being in a certain state.
+
+In addition, your test suite must assume the system is visited in the logged
+out state. You should use the tests in `shared/` to log a user in and then log
+out again at the end of your test suite.
+
+Also make sure your test does not use any specific URLs (e.g. 'localhost' or
+'mahara-test'). Instead, rely on the path to your file instead - e.g.,
+/theme/default/static/images/filename.png
+
+The 'basic-install' test will install Mahara, then insert some users that your
+tests can depend on existing. Please don't create users in your tests that you
+do not remove.
+
+generate-testsuite.sh
+---------------------
+
+This script searches through all of the test suites and builds a test suite
+that includes them all, with 'basic-install' running first. You can use this
+suite on an empty, uninstalled Mahara in order to give the entire codebase a
+good workout.
+
+TODO
+----
+
+ * Make a test suite that runs basic-install then runs some of the major test
+   suites.
+ * Handle file uploads.
+ * A script to set up selenium core and the appropriate symlink so the tests
+   can be run
+
+
+[1] http://www.openqa.org/selenium/
