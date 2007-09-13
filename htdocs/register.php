@@ -399,7 +399,9 @@ function register_validate(Pieform $form, $values) {
         $form->set_error('username', get_string('usernamealreadytaken', 'auth.internal'));
     }
 
-    password_validate($form, $values, $values['username'], $values['institution']);
+    $user =(object) $values;
+    $user->authinstance = 1; // Internal
+    password_validate($form, $values, $user);
 
     // First name and last name must contain at least one non whitespace
     // character, so that there's something to read
@@ -443,6 +445,9 @@ function register_submit(Pieform $form, $values) {
     $values['expiry'] = db_format_timestamp(time() + 86400);
     try {
         insert_record('usr_registration', $values);
+
+        $f = fopen('/tmp/donal.txt','w');
+        fwrite($f, get_string('registeredemailmessagetext', 'auth.internal', $values['firstname'], get_config('sitename'), $values['key'], get_config('sitename')));
 
         $user =(object) $values;
         $user->admin = 0;

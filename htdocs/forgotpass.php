@@ -159,10 +159,9 @@ function forgotpass_submit(Pieform $form, $values) {
 }
 
 function forgotpasschange_validate(Pieform $form, $values) {
-    if (!$user = get_record('usr', 'id', $values['user'])) {
-        throw new Exception('Request to change the password for a user who does not exist');
-    }
-    password_validate($form, $values, $user->username, $user->institution);
+    $user = new User();
+    $user->find_by_id($values['user']);
+    password_validate_user($form, $values, $user);
 }
 
 
