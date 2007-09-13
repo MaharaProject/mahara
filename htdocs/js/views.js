@@ -335,6 +335,8 @@ function ViewManager() {
                     // Resize the placeholder div
                     // NOTE: negative offsets to account for borders. These might be removed
                     setElementDimensions(self.blockPlaceholder, {w: dimensions.w - 4, h: dimensions.h - 2});
+
+                    setOpacity(i, 0.5);
                 },
                 'revert': true,
                 'reverteffect': function (innerelement, top_offset, left_offset) {
@@ -353,13 +355,14 @@ function ViewManager() {
                     // No longer is there a 'last hotzone' that was being dragged over
                     self.lastHotzone = null;
 
+                    setOpacity(i, 1);
+
                     // Sadly we have to return an effect, because this requires
                     // something cancellable. Would be good to return nothing
                     return new MochiKit.Visual.Move(innerelement,
                         {x: 0, y: 0, duration: 0});
 
-                },
-                'snap': 5,
+                }
             });
         });
     }
@@ -393,10 +396,6 @@ function ViewManager() {
      * When the block is dropped, it will be moved from its old position in
      * the DOM to the new one, and the hotzones removed. If the block was
      * not dropped over a hotzone, it reverts to where it was.
-     *
-     * Currently, drag and drop works, but the server is not informed. Also,
-     * you cannot add blockinstances to empty columns.
-     *
      */
     this.createHotzones = function() {
         // Make a container for all of the hotzone divs
@@ -419,7 +418,7 @@ function ViewManager() {
             // Work out whether the given blockinstance is at the top of the column
             if (getFirstElementByTagAndClassName('div', 'blockinstance', getFirstParentByTagAndClassName(i, 'div', 'column-content')) == i) {
                 // Put a hotzone across the top half of the blockinstance
-                var hotzone = self.createHotzone(i);
+                var hotzone = self.createHotzone(i, insertSiblingNodesBefore);
                 setElementPosition(hotzone, blockinstancePosition);
                 setElementDimensions(hotzone, {w: blockinstanceDimensions.w, h: blockinstanceDimensions.h / 2});
 
@@ -475,7 +474,7 @@ function ViewManager() {
                     element = i;
                     afterCurrentlyMovingBlockinstance = false;
                 }
-                var hotzone = self.createHotzone(element, true);
+                var hotzone = self.createHotzone(element, insertSiblingNodesAfter);
 
                 // We need to place a hotzone over the bottom half of the
                 // current block instance, and the top half of the next
@@ -488,18 +487,36 @@ function ViewManager() {
             else {
                 // We've reached the end of the blockinstances, we place a
                 // hotzone over the end of the column.
-                var hotzone = self.createHotzone(i, true);
+                // FIXME: place it from the bottom half of the last block to the bottom of the page
+                var hotzone = self.createHotzone(i, insertSiblingNodesAfter);
                 var columnContainerPosition   = elementPosition(self.columnContainer);
                 var columnContainerDimensions = elementDimensions(self.columnContainer);
+
+                var viewportDimensions = getViewportDimensions();
 
                 setElementPosition(hotzone, {x: blockinstancePosition.x, y: previousHotzonePosition.y + previousHotzoneDimensions.h});
                 setElementDimensions(hotzone, {
                     w: blockinstanceDimensions.w,
-                    h: columnContainerDimensions.h - (previousHotzonePosition.y + previousHotzoneDimensions.h)
+                    h: viewportDimensions.h /* columnContainerDimensions.h */ - (previousHotzonePosition.y + previousHotzoneDimensions.h) - columnContainerPosition.y - 30
                 });
             }
 
             previousHotzone = hotzone;
+        });
+
+        forEach(getElementsByTagAndClassName('div', 'column', 'column-container'), function(i) {
+            if (!getFirstElementByTagAndClassName('div', 'blockinstance', i)) {
+                // Column with no blockinstances
+                var columnContent = getFirstElementByTagAndClassName('div', 'column-content', i);
+                var hotzone = self.createHotzone(columnContent, appendChildNodes);
+                setElementPosition(hotzone, getElementPosition(columnContent, self.columnContainer));
+                setElementDimensions(hotzone, {
+                    w: getElementDimensions(columnContent).w,
+                    h: getViewportDimensions().h - getElementPosition(i).y - 60 // FIXME: math here is dodgy, unproven
+                });
+
+                previousHotzone = hotzone;
+            }
         });
     }
 
@@ -508,38 +525,57 @@ function ViewManager() {
      *
      * Hotzones are used for the drag and drop stuff, to detect where the
      * currently dragged block should land
+     *
+     * @param node The node to use as a reference for putting the placeholder in
+     * @param function The DOM function to use to insert the placeholder relative to the node
      */
-    this.createHotzone = function(blockinstance) {
+    this.createHotzone = function(node, placementFunction) {
         //var hotzone = DIV({'style': 'outline: 1px solid black; position: absolute;'});
         var hotzone = DIV({'style': 'position: absolute;'});
 
-        var putPlaceholderAfter = false;
-        if (typeof(arguments[1]) != 'undefined' && arguments[1] == true) {
-            putPlaceholderAfter = true;
+        placementFunction = partial(placementFunction, node, self.blockPlaceholder);
+        if (placementFunction == appendChildNodes) {
+            dropFunction = partial(appendChildNodes, node);
+        }
+        else {
+            dropFunction = partial(insertSiblingNodesAfter, self.blockPlaceholder);
         }
 
+        var counter = 0;
         new Droppable(hotzone, {
-            //'accept': ['blockinstance'],
             'onhover': function() {
-                if (self.lastHotzone != hotzone) {
-                    //log('hovering over hotzone for blockinstance', blockinstance.id);
-                    //log('put the placeholder after?', putPlaceholderAfter);
-                    //log((putPlaceholderAfter) ? 'after' : 'before', blockinstance.id);
-                    self.lastHotzone = hotzone;
-
-                    // Put the placeholder div in place.
-                    if (putPlaceholderAfter) {
-                        insertSiblingNodesAfter(blockinstance, self.blockPlaceholder);
-                    }
-                    else {
-                        insertSiblingNodesBefore(blockinstance, self.blockPlaceholder);
+                if (counter++ == 5) {
+                    counter = 0;
+                    if (self.lastHotzone != hotzone) {
+                        self.lastHotzone = hotzone;
+                        // Put the placeholder div in place.
+                        placementFunction();
                     }
                 }
             },
             'ondrop': function(draggable, droppable, e) {
                 e.stop();
-                insertSiblingNodesAfter(self.blockPlaceholder, draggable);
-                // TODO: ajax request to server, informing of the drop
+                dropFunction(draggable);
+
+                // Work out where to send the block to
+                var columnContainer = getFirstParentByTagAndClassName(draggable, 'div', 'column');
+                var column = columnContainer.id.substr(7, 1);
+                var order  = 0;
+                forEach(getFirstElementByTagAndClassName('div', 'column-content', columnContainer).childNodes, function(i) {
+                    if (hasElementClass(i, 'blockinstance')) {
+                        order++;
+                    }
+                    if (i == draggable) {
+                        throw MochiKit.Iter.StopIteration;
+                    }
+                });
+
+                var action = 'action_moveblockinstance_id_' + draggable.id.substr(-1) + '_column_' + column + '_order_' + order;
+                sendjsonrequest('viewrework.json.php', {'view': $('viewid').value, 'action': action}, 'POST', function(data) {
+                    if (data.error) {
+                        // TODO: presumably do something
+                    }
+                });
             }
         });
 
