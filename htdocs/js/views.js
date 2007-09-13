@@ -570,8 +570,9 @@ function ViewManager() {
                     }
                 });
 
-                var action = 'action_moveblockinstance_id_' + draggable.id.substr(-1) + '_column_' + column + '_order_' + order;
-                sendjsonrequest('viewrework.json.php', {'view': $('viewid').value, 'action': action}, 'POST', function(data) {
+                var pd = {'view': $('viewid').value, 'change': 1};
+                pd['action_moveblockinstance_id_' + draggable.id.substr(-1) + '_column_' + column + '_order_' + order] = 1;
+                sendjsonrequest('viewrework.json.php', pd, 'POST', function(data) {
                     if (data.error) {
                         // TODO: presumably do something
                     }
