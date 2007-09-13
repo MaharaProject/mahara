@@ -54,6 +54,14 @@ abstract class PluginBlocktype extends Plugin {
     public static abstract function render_instance(BlockInstance $instance);
 
     /**
+    * subclasses can override this if they need to do something a bit special
+    * eg more than just what the BlockInstance->delete function does.
+    * 
+    * @param BlockInstance $instance
+    */
+    public static function delete_instance(BlockInstance $instance) { }
+
+    /**
     * This function must be implemented in the subclass if it has config
     */
     public static function config_form($id=0) {
@@ -258,6 +266,8 @@ class BlockInstance {
         delete_records('block_instance', 'id', $this->id);
 
         $this->dirty = false;
+
+        call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'delete_instance', $this);
     }
 
 }
