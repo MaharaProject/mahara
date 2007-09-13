@@ -141,7 +141,7 @@ function createview1_cancel_submit() {
 }
 
 function createview1_validate(Pieform $form, $values) {
-    if ($values['startdate'] > $values['stopdate']) {
+    if ($values['startdate'] && $values['stopdate'] && $values['startdate'] > $values['stopdate']) {
         $form->set_error('startdate', get_string('startdatemustbebeforestopdate', 'view'));
     }
 }
