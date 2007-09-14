@@ -184,9 +184,7 @@ function ViewManager() {
                 removeElementClass(getFirstElementByTagAndClassName('li', 'current', 'category-list'), 'current');
                 addElementClass(i.parentNode, 'current');
                 sendjsonrequest('viewrework.json.php', {'view': $('viewid').value, 'action': 'blocktype_list', 'category': queryString['category']}, 'POST', function(data) {
-                    if (!data.error) {
-                        $('blocktype-list').innerHTML = data.data;
-                    }
+                    $('blocktype-list').innerHTML = data.data;
                 });
                 e.stop();
             });
@@ -199,17 +197,13 @@ function ViewManager() {
     this.rewriteDeleteButtons = function() {
         forEach(getElementsByTagAndClassName('input', 'deletebutton', 'bottom-pane'), function(i) {
             connect(i, 'onclick', function(e) {
-                var pd = {'view': $('viewid').value, 'change': 1};
-                pd[e.src().getAttribute('name')] = 1;
-                sendjsonrequest('viewrework.json.php', pd, 'POST', function(data) {
-                    if (!data.error) {
-                        // TODO: not happy with using .parentNode, it's fragile
-                        removeElement(i.parentNode.parentNode);
-                    }
-                    else {
-                        // ?
-                    }
-                });
+                if (confirm(get_string('confirmdeleteblockinstance'))) {
+                    var pd = {'view': $('viewid').value, 'change': 1};
+                    pd[e.src().getAttribute('name')] = 1;
+                    sendjsonrequest('viewrework.json.php', pd, 'POST', function(data) {
+                        removeElement(getFirstParentByTagAndClassName(i, 'div', 'blockinstance'));
+                    });
+                }
                 e.stop();
             });
         });
@@ -237,12 +231,7 @@ function ViewManager() {
                 var pd   = {'view': $('viewid').value, 'change': 1}
                 pd['action_addcolumn_before_' + id] = 1;
                 sendjsonrequest('viewrework.json.php', pd, 'POST', function(data) {
-                    if (!data.error) {
-                        self.addColumn(id, data);
-                    }
-                    else {
-                        // ?
-                    }
+                    self.addColumn(id, data);
                 });
                 e.stop();
             });
@@ -271,12 +260,7 @@ function ViewManager() {
                 var pd   = {'view': $('viewid').value, 'change': 1}
                 pd['action_removecolumn_column_' + id] = 1;
                 sendjsonrequest('viewrework.json.php', pd, 'POST', function(data) {
-                    if (!data.error) {
-                        self.removeColumn(id);
-                    }
-                    else {
-                        // ?
-                    }
+                    self.removeColumn(id);
                 });
                 e.stop();
             });
@@ -572,11 +556,7 @@ function ViewManager() {
 
                 var pd = {'view': $('viewid').value, 'change': 1};
                 pd['action_moveblockinstance_id_' + draggable.id.substr(-1) + '_column_' + column + '_order_' + order] = 1;
-                sendjsonrequest('viewrework.json.php', pd, 'POST', function(data) {
-                    if (data.error) {
-                        // TODO: presumably do something
-                    }
-                });
+                sendjsonrequest('viewrework.json.php', pd, 'POST');
             }
         });
 
