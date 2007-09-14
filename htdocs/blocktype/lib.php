@@ -115,7 +115,7 @@ abstract class PluginBlocktype extends Plugin {
                 'title'          => call_static_method(generate_class_name('blocktype', $namespaced), 'get_title'),
                 'description'    => call_static_method(generate_class_name('blocktype', $namespaced), 'get_description'),
                 'artefactplugin' => $bt->artefactplugin,
-                'thumbnail_path' => get_config('wwwroot') . 'thumb.php?type=blocktype&bt=' . $bt->name .'&ap=' . $bt->artefactplugin
+                'thumbnail_path' => get_config('wwwroot') . 'thumb.php?type=blocktype&bt=' . $bt->name . ((!empty($bt->artefactplugin)) ? '&ap=' . $bt->artefactplugin : ''),
             );
             $blocktypes[] = $temp;
         }
