@@ -387,6 +387,11 @@ function jsstrings() {
                 'cancel',
             ),
         ),
+        'views' => array(
+            'view' => array(
+                'confirmdeleteblockinstance',
+            ),
+        ),
     );
 }
 
