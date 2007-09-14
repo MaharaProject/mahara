@@ -34,6 +34,7 @@ $string['port'] = 'Port number';
 $string['protocol'] = 'Protocol';
 $string['changepasswordurl'] = 'Password-change URL';
 $string['cannotremove']  = "We can't remove this auth plugin, as it's the only \\nplugin that exists for this institution.";
+$string['cannotremoveinuse']  = "We can't remove this auth plugin, as it's being used by some users.\nYou must update their records before you can remove this plugin.";
 $string['saveinstitutiondetailsfirst'] = 'Please save the institution details before configuring authentication plugins.';
 
 $string['editauthority'] = 'Edit an Authority';
