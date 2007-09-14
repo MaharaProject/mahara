@@ -140,6 +140,7 @@
     padding: .25em;
     border-bottom: 2px solid #cc9;
     cursor: move;
+    background-color: #ffd;
 }
 
 .blockinstance-controls {
