@@ -94,7 +94,7 @@ foreach (array_keys($plugins) as $plugin) {
         }
         // if we're already installed keep going
         // if we're an artefact plugin, we have to check for blocktypes.
-        if ($plugin != 'artefact' && empty($installed)) {
+        if ($plugin != 'artefact' && !empty($installed)) {
             continue;
         }
         if (empty($installed)) {
