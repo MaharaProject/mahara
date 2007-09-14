@@ -71,11 +71,19 @@
     function removeAuth(id) {
         instanceArray = arrayIze('instancePriority');
         deleteArray   = arrayIze('deleteList');
+        inuseArray   = arrayIze('institution_inuse');
 
         if (instanceArray.length == 1) {
             alert({{$cannotremove}});
             return false;
         }
+
+		for(i = 0; i < inuseArray.length; i++) {
+			if (id == inuseArray[i]) {
+				alert({{$cannotremoveinuse}});
+				return false;
+			}
+		}
 
         for(i = 0; i < instanceArray.length; i++) {
             if(instanceArray[i] == id) {
