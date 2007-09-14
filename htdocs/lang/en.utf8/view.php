@@ -82,12 +82,13 @@ $string['success.addblocktype'] = 'Added block successfully';
 $string['err.addblocktype'] = 'Could not add the block to your view';
 $string['success.moveblockinstance'] = 'Moved block successfully';
 $string['err.moveblockinstance'] = 'Could not move the block to the specified position';
-$string['success.removeblockinstance'] = 'Deleted block instance successfully';
-$string['err.removeblockinstance'] = 'Could not delete block instance';
+$string['success.removeblockinstance'] = 'Deleted block successfully';
+$string['err.removeblockinstance'] = 'Could not delete block';
 $string['success.addcolumn'] = 'Added column successfully';
 $string['err.addcolumn'] = 'Failed to add new column';
 $string['success.removecolumn'] = 'Deleted column successfully';
 $string['err.removecolumn'] = 'Failed to delete column';
 
+$string['confirmdeleteblockinstance'] = 'Are you sure you wish to delete this block?';
 
 ?>
