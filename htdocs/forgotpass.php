@@ -161,7 +161,7 @@ function forgotpass_submit(Pieform $form, $values) {
 function forgotpasschange_validate(Pieform $form, $values) {
     $user = new User();
     $user->find_by_id($values['user']);
-    password_validate_user($form, $values, $user);
+    password_validate($form, $values, $user);
 }
 
 

@@ -637,7 +637,7 @@ function change_password_validate(Pieform $form, $values) {
     $authobj = AuthFactory::create($USER->authinstance);
 
     // @todo this could be done by a custom form rule... 'password' => $user
-    password_validate_user($form, $values, $USER);
+    password_validate($form, $values, $USER);
 
     // The password cannot be the same as the old one
     if (!$form->get_error('password1')
