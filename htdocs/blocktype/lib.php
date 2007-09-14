@@ -144,6 +144,10 @@ class BlockInstance {
          if (!empty($id)) {
             if (empty($data)) {
                 if (!$data = get_record('block_instance','id',$id)) {
+                    // TODO: 1) doesn't need get string here if this is the 
+                    // only place the exception is used - can be done in the 
+                    // class itself. 2) String needs to be defined, or taken 
+                    // from lang/*/view.php where there is already one for it
                     throw new BlockInstanceNotFoundException(get_string('blockinstancenotfound', 'error', $id));
                 }
             }
