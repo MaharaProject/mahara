@@ -105,6 +105,13 @@ if ($institution || $add) {
             $instancearray[] = $val->id;
         }
 
+        $instancestring = implode(',',$instancearray);
+        $inuserecords = array();
+        $records = get_records_sql_assoc('select authinstance, count(id) from {usr} where authinstance in ('.$instancestring.') group by authinstance');
+        foreach ($records as $record) {
+            $inuserecords[] = $record->authinstance;
+        }
+        $inuse = implode(',',$inuserecords);
         $authtypes = auth_get_available_auth_types($institution);
     }
     else {
@@ -138,6 +145,11 @@ if ($institution || $add) {
             'value'  => true,
             'ignore' => !$add
         ),
+        'inuse' => array(
+            'type'   => 'hidden',
+            'value'  => $inuse,
+            'id'     => 'inuse'
+        ),
         'i' => array(
             'type'   => 'hidden',
             'value'  => $institution,
@@ -159,7 +171,7 @@ if ($institution || $add) {
             'options' => $authinstances,
             'authtypes' => $authtypes,
             'instancearray' => $instancearray,
-            'instancestring' => implode(',',$instancearray),
+            'instancestring' => $instancestring,
             'institution' => $institution,
             'help'   => true,
             'ignore' => count($authtypes) == 0
