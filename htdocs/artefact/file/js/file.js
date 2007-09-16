@@ -24,6 +24,7 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
     this.createfolderscript = config.wwwroot+'artefact/file/createfolder.json.php';
     this.updatemetadatascript = config.wwwroot+'artefact/file/updatemetadata.json.php';
     this.downloadscript = config.wwwroot+'artefact/file/download.php';
+    this.maxnamestrlen = 34;
 
     if (typeof(startDirectory) == 'object') {
         var dirWalk = this.rootDirectory;
@@ -265,6 +266,24 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
 
     this.formatname = function(r) {
         self.filenames[r.title] = true;
+        var parentattribs = {};
+        if (r.title.length > self.maxnamestrlen + 3) {
+            var parts = map(
+                function (s) {
+                    if (s.length > self.maxnamestrlen + 3)
+                        return s.substring(0,self.maxnamestrlen/2) + '...'
+                        + s.substring(s.length-self.maxnamestrlen/2,s.length);
+                    else 
+                        return s;
+                },
+                r.title.split(' '));
+            var displaytitle = parts.join(' ');
+            if (displaytitle != r.title) {
+                parentattribs.title = r.title;
+            }
+        } else {
+            var displaytitle = r.title;
+        }
         if (r.artefacttype == 'folder') {
             // If we haven't seen this directory before
             if (!self.currentDirectory.children[r.title]) {
@@ -275,7 +294,8 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
                     'folderid': r.id
                 }
             }
-            var link = A({'href':''}, r.title);
+            parentattribs.href = '';
+            var link = A(parentattribs, displaytitle);
             connect(link, 'onclick', function (e) {
                 self.chdir(self.currentDirectory.children[r.title]);
                 e.stop();
@@ -283,9 +303,10 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
             return TD(null, link);
         }
         if (self.actionname) {
-            return TD(null, r.title);
+            return TD(parentattribs, displaytitle);
         }
-        return TD(null, A({'href':self.downloadscript + '?file=' + r.id}, r.title));
+        parentattribs.href = self.downloadscript + '?file=' + r.id;
+        return TD(null, A(parentattribs, displaytitle));
     }
 
     this.fileexists = function (filename) { 
