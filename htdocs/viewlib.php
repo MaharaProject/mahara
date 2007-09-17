@@ -219,18 +219,23 @@ function view_build_column(View $view, $column, $javascript=false) {
 function view_process_changes() {
     global $SESSION;
 
-    if (!count($_POST)) {
+    if (!count($_REQUEST)) {
         return;
     }
+
     $view = param_integer('view');
     $category = param_alpha('category', null);
     $view = new View($view);
 
     $action = '';
-    foreach ($_POST as $key => $value) {
+    foreach ($_REQUEST as $key => $value) {
         if (substr($key, 0, 7) == 'action_') {
             $action = substr($key, 7);
         }
+    }
+
+    if (empty($action)) {
+        return;
     }
 
     $actionstring = $action;
@@ -249,6 +254,17 @@ function view_process_changes() {
         break;
         case 'moveblockinstance': // requires action_moveblockinstance_id_\d_column_\d_order_\d
         case 'removeblockinstance': // requires action_removeblockinstance_id_\d
+            if (!defined('JSON')) {
+                if (!$sure = param_boolean('sure')) {
+                    $yeslink = '/viewrework.php?view=1&category=file&action_' . $action . '_' .  $actionstring . '=1&sure=true';
+                    $baselink = '/viewrework.php?view=' . $view->get('id') . '&category=' . $category;
+                    $SESSION->add_info_msg(get_string('confirmdeleteblockinstance', 'view') 
+                        . ' <a href="' . $yeslink . '">' . get_string('yes') . '</a>'
+                        . ' <a href="' . $baselink . '">' . get_string('no') . '</a>', false);
+                    redirect($baselink);
+                    exit;
+                }
+            }
         //case 'configureblockinstance': // later
         case 'addcolumn': // requires action_addcolumn_before_\d
         case 'removecolumn': // requires action_removecolumn_column_\d
