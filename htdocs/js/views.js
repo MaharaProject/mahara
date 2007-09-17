@@ -350,6 +350,8 @@ function ViewManager() {
                 setElementDimensions(self.blockPlaceholder, {w: dimensions.w - 4, h: dimensions.h - 2});
 
                 setOpacity(blockinstance, 0.5);
+
+                self.origCoordinates = self.getBlockinstanceCoordinates(blockinstance);
             },
             'revert': true,
             'reverteffect': function (innerelement, top_offset, left_offset) {
@@ -654,7 +656,16 @@ function ViewManager() {
             dropFunction = partial(insertSiblingNodesAfter, self.blockPlaceholder);
         }
 
-        var counter = 0;
+        self.makeHotzoneDroppable(hotzone, node, placementFunction, dropFunction);
+        appendChildNodes(self.hotzoneContainer, hotzone);
+        return hotzone;
+    }
+
+    /**
+     * Makes a hotzone droppable. In a separate function for scoping purposes
+     */
+    this.makeHotzoneDroppable = function(hotzone, node, placementFunction, dropFunction) {
+        var counter = 5;
         new Droppable(hotzone, {
             'onhover': function() {
                 if (counter++ == 5) {
@@ -681,16 +692,14 @@ function ViewManager() {
                 if (!self.movingBlockType) {
                     // Work out where to send the block to
                     var whereTo = self.getBlockinstanceCoordinates(draggable);
-
-                    var pd = {'view': $('viewid').value, 'change': 1};
-                    pd['action_moveblockinstance_id_' + draggable.id.substr(draggable.id.lastIndexOf('_') + 1) + '_column_' + whereTo['column'] + '_order_' + whereTo['order']] = 1;
-                    sendjsonrequest('viewrework.json.php', pd, 'POST');
+                    if (self.origCoordinates.column != whereTo.column || self.origCoordinates.order != whereTo.order) {
+                        var pd = {'view': $('viewid').value, 'change': 1};
+                        pd['action_moveblockinstance_id_' + draggable.id.substr(draggable.id.lastIndexOf('_') + 1) + '_column_' + whereTo['column'] + '_order_' + whereTo['order']] = 1;
+                        sendjsonrequest('viewrework.json.php', pd, 'POST');
+                    }
                 }
             }
         });
-
-        appendChildNodes(self.hotzoneContainer, hotzone);
-        return hotzone;
     }
 
     /**
@@ -733,6 +742,10 @@ function ViewManager() {
     // The object that is currently being moved by drag and drop - either a
     // block instance or block type
     this.currentlyMovingObject = null;
+
+    // The original (column, order) coordinates of the currently moving
+    // blockinstance
+    this.origCoordinates = null;
 
     // The last hotzone that was hovered over
     this.lastHotzone = null;
