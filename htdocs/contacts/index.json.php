@@ -64,12 +64,13 @@ if ($control) {
         exit;
     }
 
-    // FIXME: there's no validation here, and possibly none on the user view
-    // page, for people submitting friend requests to users who do not want them. 
-    // See bug #741. Language string not translated so people will not forget 
-    // this
-    if ($values['type'] == 'request' && $values['id'] == $USER->get('id')) {
-        json_reply(true, 'You cannot request a friendship with yourself');
+    if ($values['type'] == 'request') {
+        if ($values['id'] == $USER->get('id')) {
+            json_reply(true, get_string('cannotrequestfriendshipwithself'));
+        }
+        if (get_account_preference($values['id'], 'friendscontrol') == 'nobody') {
+            json_reply(true, get_string('userdoesntwantfriends'));
+        }
     }
 
     friend_submit(null, $values);

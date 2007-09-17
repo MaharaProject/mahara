@@ -533,6 +533,7 @@ $string['nosearchresultsfound'] = 'No search results found :(';
 
 $string['friendlistfailure'] = 'Failed to modify your friends list';
 $string['userdoesntwantfriends'] = 'This user doesn\'t want any new friends';
+$string['cannotrequestfriendshipwithself'] = 'You cannot request a friendship with yourself';
 
 //messaging between users
 $string['messagebody'] = 'Send message';
