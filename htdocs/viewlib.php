@@ -252,7 +252,6 @@ function view_process_changes() {
         case 'addblocktype': // requires action_addblocktype  (blocktype in separate parameter)
             $values['blocktype'] = param_alpha('blocktype', null);
         break;
-        case 'moveblockinstance': // requires action_moveblockinstance_id_\d_column_\d_order_\d
         case 'removeblockinstance': // requires action_removeblockinstance_id_\d
             if (!defined('JSON')) {
                 if (!$sure = param_boolean('sure')) {
@@ -266,6 +265,7 @@ function view_process_changes() {
                 }
             }
         //case 'configureblockinstance': // later
+        case 'moveblockinstance': // requires action_moveblockinstance_id_\d_column_\d_order_\d
         case 'addcolumn': // requires action_addcolumn_before_\d
         case 'removecolumn': // requires action_removecolumn_column_\d
         break;
