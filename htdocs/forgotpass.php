@@ -102,7 +102,7 @@ $form = array(
         ),
         'submit' => array(
             'type' => 'submit',
-            'value' => get_string('change')
+            'value' => get_string('send')
         )
     )
 );
