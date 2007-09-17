@@ -31,6 +31,7 @@ $string['internal'] = 'Internal';
 $string['completeregistration'] = 'Complete Registration';
 $string['emailalreadytaken'] = 'This e-mail address has already registered here';
 $string['iagreetothetermsandconditions'] = 'I agree to the Terms and Conditions';
+$string['passwordformdescription'] = 'Your password must be at least six characters long and contain at least one digit and two letters';
 $string['passwordinvalidform'] = 'Your password must be at least six characters long and contain at least one digit and two letters';
 $string['registeredemailsubject'] = 'You have registered at %s';
 $string['registeredemailmessagetext'] = 'Hi %s,
@@ -56,7 +57,7 @@ $string['registrationnosuchkey'] = 'Sorry, there does not seem to be a registrat
 $string['registrationunsuccessful'] = 'Sorry, your registration attempt was unsuccessful. This is our fault, not yours. Please try again later.';
 $string['usernamealreadytaken'] = 'Sorry, this username is already taken';
 $string['usernameinvalidform'] = 'Your username may only include alphanumeric characters, full stops, underscores and @ symbols. Also, it must be between 3 and 30 characters long.';
-$string['youmaynotregisterwithouttandc'] = 'You may not register unless you agree to abide by the Terms and Conditions';
+$string['youmaynotregisterwithouttandc'] = 'You may not register unless you agree to abide by the <a href="terms.php">Terms and Conditions</a>';
 $string['youmustagreetothetermsandconditions'] = 'You must agree to the <a href="terms.php">Terms and Conditions</a>';
 
 ?>
