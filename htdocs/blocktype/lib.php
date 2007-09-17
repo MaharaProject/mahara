@@ -214,44 +214,49 @@ class BlockInstance {
         safe_require('blocktype', $this->get('blocktype'));
         $content = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'render_instance', $this);
 
-        // TODO as a template
-        $result = '';
-        $result .= '    <div class="blockinstance" id="blockinstance_' . $this->get('id') . '">
-    <div class="blockinstance-header">
-        <h4>' . hsc($this->get('title')) . '</h4>
-    </div>
-    <div class="blockinstance-controls">';
-
-        if (!$javascript) {
-            // FIXME loop pls!
-            $movestart = '<input type="submit" class="submit movebutton" name="action_moveblockinstance_id_' . $this->get('id');
+        $movecontrols = array();
+        if (empty($javascript)) {
             if ($this->get('canmoveleft')) {
-                $result .= $movestart . '_column_' . ($this->get('column') - 1) . '_order_' . $this->get('order') . '" value="&larr;">';
+                $movecontrols[] = array(
+                    'column' => $this->get('column') - 1,
+                    'order'  => $this->get('order'),
+                    'arrow'  => '&larr;',
+                );
             }
             if ($this->get('canmovedown')) {
-                $result .= $movestart . '_column_' . $this->get('column') . '_order_' . ($this->get('order') + 1) . '" value="&darr;">';
+                $movecontrols[] = array(
+                    'column' => $this->get('column'),
+                    'order'   => $this->get('order') +1,
+                    'arrow'   => '&darr;',
+                );
             }
             if ($this->get('canmoveup')) {
-                $result .= $movestart . '_column_' . $this->get('column') . '_order_' . ($this->get('order') - 1) . '" value="&uarr;">';
+                $movecontrols[] = array(
+                    'column' => $this->get('column'),
+                    'order'  => $this->get('order') -1,
+                    'arrow'  => '&uarr;',
+                );
             }
             if ($this->get('canmoveright')) {
-                $result .= $movestart . '_column_' . ($this->get('column') + 1) . '_order_' . $this->get('order') . '" value="&rarr;">';
+                $movecontrols[] = array(
+                    'column' => $this->get('column') + 1,
+                    'order'  => $this->get('order'),
+                    'arrow'  => '&rarr;',
+                );
             }
         }
-        $result .= '<input type="submit" class="submit deletebutton" name="action_removeblockinstance_id_' . $this->get('id') .'" value="X">';
+        $smarty = smarty_core();
 
-        $result .= '        </div>
-        <div class="blockinstance-content">
-            ' . $content . '
-        </div>
-    </div>';
-        if (!$javascript) {
-            $result .= '
-    <div class="add-button">
-        <input type="submit" class="submit newblockhere" name="action_addblocktype_column_' . $this->get('column') . '_order_' . ($this->get('order') + 1) . '" value="Add new block here">
-    </div>';
-        }
-        return $result;
+        $smarty->assign('id',     $this->get('id'));
+        $smarty->assign('title',  $this->get('title'));
+        $smarty->assign('column', $this->get('column'));
+        $smarty->assign('order',  $this->get('order'));
+
+        $smarty->assign('movecontrols', $movecontrols);
+        $smarty->assign('content', $content);
+        $smarty->assign('javascript', $javascript);
+
+        return $smarty->fetch('view/blocktypecontainer.tpl');
     }
 
     public function commit() {
