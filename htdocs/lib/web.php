@@ -108,6 +108,10 @@ EOF;
 
     if (get_config('developermode')) {
         $javascript_array[] = $jsroot . 'MochiKit/MochiKit.js';
+        $javascript_array[] = $jsroot . 'MochiKit/Position.js';
+        $javascript_array[] = $jsroot . 'MochiKit/Color.js';
+        $javascript_array[] = $jsroot . 'MochiKit/Visual.js';
+        $javascript_array[] = $jsroot . 'MochiKit/DragAndDrop.js';
     }
     else {
         $javascript_array[] = $jsroot . 'MochiKit/Packed.js';
