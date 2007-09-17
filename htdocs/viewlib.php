@@ -98,10 +98,12 @@ function view_build_blocktype_list($category, $javascript=false) {
 
     $template =<<<EOF
     <li>
-        <img src="{THUMBNAIL_PATH}" alt="Preview">
-        <h3>{TITLE}</h3>
-        <p>{DESCRIPTION}</p>
-        {RADIO}
+        <div class="blocktype">
+            <img src="{THUMBNAIL_PATH}" alt="Preview">
+            <h3>{TITLE}</h3>
+            <p>{DESCRIPTION}</p>
+            {RADIO}
+        </div>
     </li>
 EOF;
 
@@ -196,41 +198,7 @@ function view_build_column(View $view, $column, $javascript=false) {
 
     // Blocktype loop here
     foreach($data['blockinstances'] as $blockinstance) {
-        $result .= '    <div class="blockinstance" id="blockinstance_' . $blockinstance->get('id') . '">
-    <div class="blockinstance-header">
-        <h4>' . hsc($blockinstance->get('title')) . '</h4>
-    </div>
-    <div class="blockinstance-controls">';
-
-        if (!$javascript) {
-            // FIXME loop pls!
-            $movestart = '<input type="submit" class="submit movebutton" name="action_moveblockinstance_id_' . $blockinstance->get('id');
-            if ($blockinstance->get('canmoveleft')) {
-                $result .= $movestart . '_column_' . ($column - 1) . '_order_' . $blockinstance->get('order') . '" value="&larr;">';
-            }
-            if ($blockinstance->get('canmovedown')) {
-                $result .= $movestart . '_column_' . $column . '_order_' . ($blockinstance->get('order') + 1) . '" value="&darr;">';
-            }
-            if ($blockinstance->get('canmoveup')) {
-                $result .= $movestart . '_column_' . $column . '_order_' . ($blockinstance->get('order') - 1) . '" value="&uarr;">';
-            }
-            if ($blockinstance->get('canmoveright')) {
-                $result .= $movestart . '_column_' . ($column + 1) . '_order_' . $blockinstance->get('order') . '" value="&rarr;">';
-            }
-        }
-        $result .= '<input type="submit" class="submit deletebutton" name="action_removeblockinstance_id_' . $blockinstance->get('id') .'" value="X">';
-
-        $result .= '        </div>
-        <div class="blockinstance-content">
-            ' . $blockinstance->render() . '
-        </div>
-    </div>';
-        if (!$javascript) {
-            $result .= '
-    <div class="add-button">
-        <input type="submit" class="submit newblockhere" name="action_addblocktype_column_' . $column . '_order_' . ($blockinstance->get('order') + 1) . '" value="Add new block here">
-    </div>';
-        }
+        $result .= $blockinstance->render();
     }
 
     $result .= '    </div>

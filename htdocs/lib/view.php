@@ -390,6 +390,10 @@ class View {
         $this->shuffle_column($values['column'], $values['order']);
         $bi->commit();
         $this->dirtycolumns[$values['column']] = 1;
+
+        if ($values['returndata']) {
+            return $bi->render(true);
+        }
     }
 
     /** 
