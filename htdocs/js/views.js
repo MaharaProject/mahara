@@ -46,6 +46,7 @@ function ViewManager() {
         // Make the block types draggable
         self.makeBlockTypesDraggable();
 
+        // Make the top pane a dropzone for cancelling adding block types
         var count = 0;
         new Droppable('top-pane', {
             'onhover': function() {
@@ -56,6 +57,9 @@ function ViewManager() {
                 }
             }
         });
+
+        // Add CSS rules
+        self.addCSSRules();
     }
 
     /**
@@ -197,6 +201,7 @@ function ViewManager() {
                 addElementClass(i.parentNode, 'current');
                 sendjsonrequest('viewrework.json.php', {'view': $('viewid').value, 'action': 'blocktype_list', 'category': queryString['category']}, 'POST', function(data) {
                     $('blocktype-list').innerHTML = data.data;
+                    self.makeBlockTypesDraggable();
                 });
                 e.stop();
             });
@@ -392,9 +397,9 @@ function ViewManager() {
             // meaning revert ends up with a horrid flash when the element is
             // moved back into place
             makePositioned(i);
-            var clone = DIV();
+            var clone = DIV({'class': 'blocktype-clone'});
             setStyle(clone, {
-                'outline': '3px dotted #ccc;',
+                //'outline': '3px dotted #ccc;',
                 'position': 'absolute'
             });
             setElementPosition(clone, getElementPosition(i, 'top-pane'));
@@ -732,6 +737,18 @@ function ViewManager() {
         });
 
         return {'column': column, 'order': order};
+    }
+
+    /**
+     * Adds CSS rules that should apply for the javascript only version
+     */
+    this.addCSSRules = function() {
+        var styleNode = createDOM('link', {
+            'rel' : 'stylesheet',
+            'type': 'text/css',
+            'href': 'views-js.css'
+        });
+        appendChildNodes(getFirstElementByTagAndClassName('head'), styleNode);
     }
 
 

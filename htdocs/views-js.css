@@ -1,0 +1,11 @@
+/**
+ * CSS rules that only apply to the JS version of the views interface
+ */
+
+.blocktype, .blocktype-clone {
+    cursor: move;
+}
+
+.blockinstance-header h4 {
+    cursor: move;
+}
