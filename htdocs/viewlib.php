@@ -114,7 +114,9 @@ EOF;
         $blocktypehtml = str_replace('{TITLE}', hsc($blocktype['title']), $blocktypehtml);
         $blocktypehtml = str_replace('{DESCRIPTION}', format_whitespace(hsc($blocktype['description'])), $blocktypehtml);
         $blocktypehtml = str_replace('{THUMBNAIL_PATH}', hsc($blocktype['thumbnail_path']), $blocktypehtml);
-        $radio = ($javascript) ? '' : '<input type="radio" class="blocktype-radio" name="blocktype" value="' . $blocktype['name'] . '">';
+
+        $type = ($javascript) ? 'hidden' : 'radio';
+        $radio = '<input type="' . $type . '" class="blocktype-radio" name="blocktype" value="' . $blocktype['name'] . '">';
         $blocktypehtml = str_replace('{RADIO}', $radio, $blocktypehtml);
 
         $result .= $blocktypehtml;

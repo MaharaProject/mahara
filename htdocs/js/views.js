@@ -25,7 +25,7 @@ function ViewManager() {
 
         // Remove radio buttons for moving block types into place
         forEach(getElementsByTagAndClassName('input', 'blocktype-radio', 'top-pane'), function(i) {
-            removeElement(i);
+            setNodeAttribute(i, 'type', 'hidden');
         });
 
         // Rewrite the links in the category select list to be ajax
@@ -41,7 +41,10 @@ function ViewManager() {
         self.rewriteRemoveColumnButtons();
 
         // Make the block instances draggable
-        self.makeBlockInstancesDraggable();
+        self.makeBlockinstancesDraggable();
+
+        // Make the block types draggable
+        self.makeBlockTypesDraggable();
     }
 
     /**
@@ -54,10 +57,8 @@ function ViewManager() {
         // Here we are doing two things:
         // 1) The existing columns that are higher than the one being inserted need to be renumbered
         // 2) All columns need their 'columnsN' class renumbered one higher
-        log('addColumn: numColumns=' + numColumns);
         for (var oldID = numColumns; oldID >= 1; oldID--) {
             var column = $('column_' + oldID);
-            log(column);
             var newID = oldID + 1;
             if (oldID >= id) {
                 $('column_' + oldID).setAttribute('id', 'column_' + newID);
@@ -196,16 +197,23 @@ function ViewManager() {
      */
     this.rewriteDeleteButtons = function() {
         forEach(getElementsByTagAndClassName('input', 'deletebutton', 'bottom-pane'), function(i) {
-            connect(i, 'onclick', function(e) {
-                if (confirm(get_string('confirmdeleteblockinstance'))) {
-                    var pd = {'view': $('viewid').value, 'change': 1};
-                    pd[e.src().getAttribute('name')] = 1;
-                    sendjsonrequest('viewrework.json.php', pd, 'POST', function(data) {
-                        removeElement(getFirstParentByTagAndClassName(i, 'div', 'blockinstance'));
-                    });
-                }
-                e.stop();
-            });
+            self.rewriteDeleteButton(i);
+        });
+    }
+
+    /**
+     * Rewrites one delete button to be AJAX
+     */
+    this.rewriteDeleteButton = function(button) {
+        connect(button, 'onclick', function(e) {
+            if (confirm(get_string('confirmdeleteblockinstance'))) {
+                var pd = {'view': $('viewid').value, 'change': 1};
+                pd[e.src().getAttribute('name')] = 1;
+                sendjsonrequest('viewrework.json.php', pd, 'POST', function(data) {
+                    removeElement(getFirstParentByTagAndClassName(button, 'div', 'blockinstance'));
+                });
+            }
+            e.stop();
         });
     }
 
@@ -298,48 +306,120 @@ function ViewManager() {
     /**
      * Makes block instances draggable
      */
-    this.makeBlockInstancesDraggable = function() {
+    this.makeBlockinstancesDraggable = function() {
         forEach(getElementsByTagAndClassName('div', 'blockinstance', 'bottom-pane'), function(i) {
-            new Draggable(i, {
-                'handle': 'blockinstance-header',
+            self.makeBlockinstanceDraggable(i);
+        });
+    }
+
+    /**
+     * Make a particular blockinstance draggable
+     */
+    this.makeBlockinstanceDraggable = function(blockinstance) {
+        new Draggable(blockinstance, {
+            'handle': 'blockinstance-header',
+            'starteffect': function () {
+                self.currentlyMovingObject = blockinstance;
+                self.createHotzones();
+
+                // Set the positioning of the blockinstance to 'absolute',
+                // so that it is taken out of the document flow (so the
+                // other blocks can collapse into its space if necessary if
+                // it's dragged around). This changes how the width is
+                // calculated, as the width is 'auto' by default, so we
+                // explicitly set it to have the width it needs.
+                var dimensions = elementDimensions(blockinstance);
+                setElementDimensions(blockinstance, dimensions);
+                setStyle(blockinstance, {
+                    'position': 'absolute'
+                });
+
+                // Resize the placeholder div
+                // NOTE: negative offsets to account for borders. These might be removed
+                setElementDimensions(self.blockPlaceholder, {w: dimensions.w - 4, h: dimensions.h - 2});
+
+                setOpacity(blockinstance, 0.5);
+            },
+            'revert': true,
+            'reverteffect': function (innerelement, top_offset, left_offset) {
+                self.destroyHotzones();
+
+                // We don't need the block placeholder anymore
+                removeElement(self.blockPlaceholder);
+
+                // Revert the 'absolute' positioning of the blockinstance being moved
+                setStyle(self.currentlyMovingObject, {
+                    'top': 0,
+                    'left': 0,
+                    'position': 'relative',
+                    'width': 'auto',
+                    'height': 'auto'
+                });
+
+                // No longer is there a 'last hotzone' that was being dragged over
+                self.lastHotzone = null;
+
+                setOpacity(blockinstance, 1);
+
+                // Sadly we have to return an effect, because this requires
+                // something cancellable. Would be good to return nothing
+                return new MochiKit.Visual.Move(innerelement,
+                    {x: 0, y: 0, duration: 0});
+            }
+        });
+    }
+
+    /**
+     * Makes block types draggable
+     */
+    this.makeBlockTypesDraggable = function() {
+        forEach(getElementsByTagAndClassName('div', 'blocktype', 'blocktype-list'), function(i) {
+            // Overlay a div that is actually the thing that is dragged. This
+            // is done because MochiKit's ghosting actually drags the element,
+            // meaning revert ends up with a horrid flash when the element is
+            // moved back into place
+            makePositioned(i);
+            var clone = DIV();
+            setStyle(clone, {
+                'outline': '3px dotted #ccc;',
+                'position': 'absolute'
+            });
+            setElementPosition(clone, getElementPosition(i));
+            setElementDimensions(clone, getElementDimensions(i));
+            setOpacity(clone, 0.5);
+            insertSiblingNodesAfter(i, clone);
+
+            new Draggable(clone, {
                 'starteffect': function () {
-                    self.currentlyMovingBlockinstance = i;
+                    self.movingBlockType = true;
+
+                    self.currentlyMovingObject = i;
                     self.createHotzones();
 
-                    // Set the positioning of the blockinstance to 'absolute',
-                    // so that it is taken out of the document flow (so the
-                    // other blocks can collapse into its space if necessary if
-                    // it's dragged around). This changes how the width is
-                    // calculated, as the width is 'auto' by default, so we
-                    // explicitly set it to have the width it needs.
-                    var dimensions = elementDimensions(i);
-                    setElementDimensions(i, dimensions);
-                    i.style.position = 'absolute';
-
                     // Resize the placeholder div
-                    // NOTE: negative offsets to account for borders. These might be removed
-                    setElementDimensions(self.blockPlaceholder, {w: dimensions.w - 4, h: dimensions.h - 2});
+                    setStyle(self.blockPlaceholder, {
+                        'width' : '100%',
+                        'height': '50px'
+                    });
 
-                    setOpacity(i, 0.5);
+                    // Make it a ghost. Done when starting the drag because
+                    // some browsers have trouble rendering things right on top
+                    // of one another
+                    appendChildNodes(clone, i.cloneNode(true));
                 },
                 'revert': true,
                 'reverteffect': function (innerelement, top_offset, left_offset) {
+                    // The actual draggable is the clone we were dragging
+                    // around, we can put it back and remove the clone now
+                    replaceChildNodes(clone);
+                    setElementPosition(clone, getElementPosition(i));
+
                     self.destroyHotzones();
-
-                    // We don't need the block placeholder anymore
-                    removeElement(self.blockPlaceholder);
-
-                    // Revert the 'absolute' positioning of the blockinstance being moved
-                    self.currentlyMovingBlockinstance.style.top = 0;
-                    self.currentlyMovingBlockinstance.style.left = 0;
-                    self.currentlyMovingBlockinstance.style.position = 'relative';
-                    self.currentlyMovingBlockinstance.style.width = 'auto';
-                    self.currentlyMovingBlockinstance.style.height = 'auto';
 
                     // No longer is there a 'last hotzone' that was being dragged over
                     self.lastHotzone = null;
 
-                    setOpacity(i, 1);
+                    self.movingBlockType = false;
 
                     // Sadly we have to return an effect, because this requires
                     // something cancellable. Would be good to return nothing
@@ -450,7 +530,7 @@ function ViewManager() {
                 // blockinstance, until we hit the blockinstance being moved,
                 // when we switch to using the next block instance.
                 var element;
-                if (self.currentlyMovingBlockinstance == i || afterCurrentlyMovingBlockinstance) {
+                if (self.currentlyMovingObject == i || afterCurrentlyMovingBlockinstance) {
                     element = nextBlockinstance;
                     afterCurrentlyMovingBlockinstance = true;
                 }
@@ -458,7 +538,7 @@ function ViewManager() {
                     element = i;
                     afterCurrentlyMovingBlockinstance = false;
                 }
-                var hotzone = self.createHotzone(element, insertSiblingNodesAfter);
+                var hotzone = self.createHotzone(element, insertSiblingNodesAfter, true);
 
                 // We need to place a hotzone over the bottom half of the
                 // current block instance, and the top half of the next
@@ -472,7 +552,7 @@ function ViewManager() {
                 // We've reached the end of the blockinstances, we place a
                 // hotzone over the end of the column.
                 // FIXME: place it from the bottom half of the last block to the bottom of the page
-                var hotzone = self.createHotzone(i, insertSiblingNodesAfter);
+                var hotzone = self.createHotzone(i, insertSiblingNodesAfter, true);
                 var columnContainerPosition   = elementPosition(self.columnContainer);
                 var columnContainerDimensions = elementDimensions(self.columnContainer);
 
@@ -492,7 +572,7 @@ function ViewManager() {
             if (!getFirstElementByTagAndClassName('div', 'blockinstance', i)) {
                 // Column with no blockinstances
                 var columnContent = getFirstElementByTagAndClassName('div', 'column-content', i);
-                var hotzone = self.createHotzone(columnContent, appendChildNodes);
+                var hotzone = self.createHotzone(columnContent, appendChildNodes, true);
                 setElementPosition(hotzone, getElementPosition(columnContent, self.columnContainer));
                 setElementDimensions(hotzone, {
                     w: getElementDimensions(columnContent).w,
@@ -517,8 +597,46 @@ function ViewManager() {
         //var hotzone = DIV({'style': 'outline: 1px solid black; position: absolute;'});
         var hotzone = DIV({'style': 'position: absolute;'});
 
+        // Whether to place a newly dropped block type after the element on
+        // whose hotzone it was dropped. True always except at the top of
+        // columns.
+        //
+        // For some reason, using the (supposedly equal) check
+        // placementFunction != insertSiblingNodesBefore cause chaos when you
+        // try and drop just after the start of a column (i.e. order 2) and
+        // then at the very start - it gets dropped at order 2 twice.
+        var placeAfter = arguments[2];
+
         placementFunction = partial(placementFunction, node, self.blockPlaceholder);
-        if (placementFunction == appendChildNodes) {
+        if (self.movingBlockType) {
+            dropFunction = function(draggable, node, placeAfter) {
+                log('after?', placeAfter);
+                var whereTo = self.getBlockinstanceCoordinates(node);
+                if (placeAfter) {
+                    whereTo['order'] += 1;
+                }
+                log(whereTo);
+
+                var pd = {
+                    'view': $('viewid').value,
+                    'change': 1,
+                    'blocktype': getFirstElementByTagAndClassName('input', 'blocktype-radio', self.currentlyMovingObject).value
+                };
+                pd['action_addblocktype_column_' + whereTo['column'] + '_order_' + whereTo['order']] = true;
+                sendjsonrequest('viewrework.json.php', pd, 'POST', function(data) {
+                    var div = DIV();
+                    div.innerHTML = data.data;
+                    var blockinstance = getFirstElementByTagAndClassName('div', 'blockinstance', div);
+                    self.rewriteDeleteButton(getFirstElementByTagAndClassName('input', 'deletebutton', blockinstance));
+                    self.makeBlockinstanceDraggable(blockinstance);
+                    insertSiblingNodesAfter(self.blockPlaceholder, blockinstance);
+                    removeElement(self.blockPlaceholder);
+
+                });
+
+            };
+        }
+        else if (placementFunction == appendChildNodes) {
             dropFunction = partial(appendChildNodes, node);
         }
         else {
@@ -539,24 +657,23 @@ function ViewManager() {
             },
             'ondrop': function(draggable, droppable, e) {
                 e.stop();
-                dropFunction(draggable);
+                // Only pass through the placeAfter parameter when appropriate,
+                // as the dropfunction could be a simple DOM function
+                if (self.movingBlockType) {
+                    dropFunction(draggable, node, placeAfter);
+                }
+                else {
+                    dropFunction(draggable);
+                }
 
-                // Work out where to send the block to
-                var columnContainer = getFirstParentByTagAndClassName(draggable, 'div', 'column');
-                var column = columnContainer.id.substr(7, 1);
-                var order  = 0;
-                forEach(getFirstElementByTagAndClassName('div', 'column-content', columnContainer).childNodes, function(i) {
-                    if (hasElementClass(i, 'blockinstance')) {
-                        order++;
-                    }
-                    if (i == draggable) {
-                        throw MochiKit.Iter.StopIteration;
-                    }
-                });
+                if (!self.movingBlockType) {
+                    // Work out where to send the block to
+                    var whereTo = self.getBlockinstanceCoordinates(draggable);
 
-                var pd = {'view': $('viewid').value, 'change': 1};
-                pd['action_moveblockinstance_id_' + draggable.id.substr(-1) + '_column_' + column + '_order_' + order] = 1;
-                sendjsonrequest('viewrework.json.php', pd, 'POST');
+                    var pd = {'view': $('viewid').value, 'change': 1};
+                    pd['action_moveblockinstance_id_' + draggable.id.substr(draggable.id.lastIndexOf('_') + 1) + '_column_' + whereTo['column'] + '_order_' + whereTo['order']] = 1;
+                    sendjsonrequest('viewrework.json.php', pd, 'POST');
+                }
             }
         });
 
@@ -573,9 +690,37 @@ function ViewManager() {
         removeElement(self.hotzoneContainer);
     }
 
+    /**
+     * Find the co-ordinates of a given block instance
+     *
+     * This returns a {column: x, order: y} hash
+     */
+    this.getBlockinstanceCoordinates = function(blockinstance) {
+        // Work out where to send the block to
+        var columnContainer = getFirstParentByTagAndClassName(blockinstance, 'div', 'column');
+        // TODO assumes id will always be 'column_N', should just look for last chars after the last _
+        var column = columnContainer.id.substr(7, 1);
+        var order  = 0;
+        forEach(getFirstElementByTagAndClassName('div', 'column-content', columnContainer).childNodes, function(i) {
+            if (hasElementClass(i, 'blockinstance')) {
+                order++;
+            }
+            if (i == blockinstance) {
+                throw MochiKit.Iter.StopIteration;
+            }
+        });
 
-    // The block instance that is currently being moved by drag and drop
-    this.currentlyMovingBlockinstance = null;
+        return {'column': column, 'order': order};
+    }
+
+
+    // Whether it is a blocktype that is being added, rather than a
+    // blockinstance being moved
+    this.movingBlockType = false;
+
+    // The object that is currently being moved by drag and drop - either a
+    // block instance or block type
+    this.currentlyMovingObject = null;
 
     // The last hotzone that was hovered over
     this.lastHotzone = null;
