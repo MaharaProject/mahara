@@ -45,6 +45,17 @@ function ViewManager() {
 
         // Make the block types draggable
         self.makeBlockTypesDraggable();
+
+        var count = 0;
+        new Droppable('top-pane', {
+            'onhover': function() {
+                if (count++ == 5) {
+                    count = 0;
+                    // Hide the dropzone
+                    hideElement(self.blockPlaceholder);
+                }
+            }
+        });
     }
 
     /**
@@ -384,7 +395,7 @@ function ViewManager() {
                 'outline': '3px dotted #ccc;',
                 'position': 'absolute'
             });
-            setElementPosition(clone, getElementPosition(i));
+            setElementPosition(clone, getElementPosition(i, 'top-pane'));
             setElementDimensions(clone, getElementDimensions(i));
             setOpacity(clone, 0.5);
             insertSiblingNodesAfter(i, clone);
@@ -412,7 +423,7 @@ function ViewManager() {
                     // The actual draggable is the clone we were dragging
                     // around, we can put it back and remove the clone now
                     replaceChildNodes(clone);
-                    setElementPosition(clone, getElementPosition(i));
+                    setElementPosition(clone, getElementPosition(i, 'top-pane'));
 
                     self.destroyHotzones();
 
@@ -652,6 +663,7 @@ function ViewManager() {
                         self.lastHotzone = hotzone;
                         // Put the placeholder div in place.
                         placementFunction();
+                        showElement(self.blockPlaceholder);
                     }
                 }
             },
