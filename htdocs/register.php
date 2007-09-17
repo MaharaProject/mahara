@@ -272,6 +272,7 @@ $elements = array(
     'password1' => array(
         'type' => 'password',
         'title' => get_string('password'),
+        'description' => get_string('passwordformdescription', 'auth.internal'),
         'rules' => array(
             'required' => true
         ),
@@ -376,6 +377,7 @@ $form = array(
     'plugintype' => 'core',
     'pluginname' => 'register',
     'action' => '',
+    'showdescriptiononerror' => false,
     'renderer' => 'table',
     'elements' => $elements
 );
