@@ -27,6 +27,32 @@
 defined('INTERNAL') || die();
 
 
+function &smarty_core() {
+
+    require_once(get_config('libroot') . 'smarty/Smarty.class.php');
+    $smarty =& new Smarty();
+    
+    $theme = theme_setup();
+    $themepaths = themepaths();
+
+    $smarty->template_dir = $theme->template_dir;
+
+    $smarty->compile_dir  = get_config('dataroot').'smarty/compile';
+    $smarty->cache_dir    = get_config('dataroot').'smarty/cache';
+
+    $smarty->assign('THEMEURL', get_config('themeurl'));
+    $smarty->assign('WWWROOT', get_config('wwwroot'));
+
+    $theme_list = array();
+    foreach ($themepaths['mahara'] as $themepath) {
+        $theme_list[$themepath] = theme_get_url($themepath);
+    }
+    $smarty->assign('THEMELIST', json_encode($theme_list));
+
+    return $smarty;
+}
+
+
 /**
  * This function creates a Smarty object and sets it up for use within our
  * podclass app, setting up some variables.
@@ -56,7 +82,8 @@ function &smarty($javascript = array(), $headers = array(), $pagestrings = array
     global $USER, $SESSION;
     $SIDEBLOCKS = array();
 
-    require_once(get_config('libroot') . 'smarty/Smarty.class.php');
+    $smarty = smarty_core();
+
     $wwwroot = get_config('wwwroot');
 
     $theme_list = array();
@@ -203,9 +230,6 @@ EOF;
             $strings[$tag] = get_raw_string($tag, $section);
         }
     }
-    foreach ($themepaths['mahara'] as $themepath) {
-        $theme_list[$themepath] = theme_get_url($themepath);
-    }
     if (isset($extraconfig['themepaths']) && is_array($extraconfig['themepaths'])) {
         foreach ($extraconfig['themepaths'] as $themepath) {
             $theme_list[$themepath] = theme_get_url($themepath);
@@ -217,16 +241,6 @@ EOF;
     $stringjs .= '</script>';
     $headers[] = $stringjs;
 
-    $smarty =& new Smarty();
-    
-    $theme = theme_setup();
-
-    $smarty->template_dir = $theme->template_dir;
-
-    $smarty->compile_dir  = get_config('dataroot').'smarty/compile';
-    $smarty->cache_dir    = get_config('dataroot').'smarty/cache';
-
-    $smarty->assign('THEMEURL', get_config('themeurl'));
 
     // stylesheet set up - if we're in a plugin also get its stylesheet
     $stylesheets = array_reverse(theme_get_url('style/style.css', null, true));
@@ -238,10 +252,11 @@ EOF;
     if (get_config('developermode')) {
         $stylesheets[] = get_config('wwwroot') . 'theme/debug.css';
     }
+
+    $smarty = smarty_core();
+
     $smarty->assign('STYLESHEETLIST', $stylesheets);
-    $smarty->assign('WWWROOT', $wwwroot);
-    $smarty->assign('SESSKEY', $USER->get('sesskey'));
-    $smarty->assign('THEMELIST', json_encode($theme_list));
+    $smarty->append('THEMELIST', json_encode($theme_list)); // this gets assigned in core, but do it again here in case it's different
 
     if (defined('TITLE')) {
         $smarty->assign('PAGETITLE', TITLE . ' - ' . get_config('sitename'));
@@ -269,6 +284,7 @@ EOF;
     }
 
     $smarty->assign_by_ref('USER', $USER);
+    $smarty->assign('SESSKEY', $USER->get('sesskey'));
     $smarty->assign_by_ref('JAVASCRIPT', $javascript_array);
     $smarty->assign_by_ref('HEADERS', $headers);
 
@@ -400,15 +416,20 @@ function jsstrings() {
 }
 
 function themepaths() {
-    return array(
-        'mahara' => array(
-            'images/icon_close.gif',
-            'images/failure.gif',
-            'images/loading.gif',
-            'images/success.gif',
-            'images/icon_help.gif',
-        ),
-    );
+
+    static $paths;
+    if (empty($paths)) {
+        $paths = array(
+            'mahara' => array(
+                'images/icon_close.gif',
+                'images/failure.gif',
+                'images/loading.gif',
+                'images/success.gif',
+                'images/icon_help.gif',
+            ),
+        );
+    }
+    return $paths;
 }
 
 /** 
