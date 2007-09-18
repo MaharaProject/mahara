@@ -44,7 +44,7 @@ class PluginBlocktypeImage extends PluginBlocktype {
         require_once(get_config('docroot') . 'lib/artefact.php');
         $configdata = $instance->get('configdata'); // this will make sure to unserialize it for us
 //        $image = artefact_instance_from_id($configdata['artefactid']);
-//        return $image->render_self($configdata); // in this case, config data contains width & height
+//        return $image->render_self($configdata); // in this case, config data contains width & height //TODO change this, we have an array now with javascript and html
         return 'whee!';
     }
 
