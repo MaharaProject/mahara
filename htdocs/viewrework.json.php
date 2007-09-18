@@ -75,6 +75,6 @@ case 'blocktype_list':
     break;
 }
 
-json_reply(true, 'Unknown action "' . $action . '"');
+json_reply(true, get_string('noviewcontrolaction', 'error', $action));
 
 ?>

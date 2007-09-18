@@ -91,4 +91,6 @@ $string['err.removecolumn'] = 'Failed to delete column';
 
 $string['confirmdeleteblockinstance'] = 'Are you sure you wish to delete this block?';
 
+$string['addnewblockhere'] = 'Add new block here';
+
 ?>

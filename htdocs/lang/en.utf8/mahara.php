@@ -830,5 +830,6 @@ $string['country.zw'] = 'Zimbabwe';
 
 // general stuff that doesn't really fit anywhere else
 $string['system'] = 'System';
+$string['preview'] = 'Preview';
 
 ?>

@@ -14,6 +14,6 @@
     </div>
     {if !$javascript}
         <div class="add-button">
-            <input type="submit" class="submit newblockhere" name="action_addblocktype_column_{$column}_order_{$order+1}" value="Add new block here">
+            <input type="submit" class="submit newblockhere" name="action_addblocktype_column_{$column}_order_{$order+1}" value="{str tag='addnewblockhere' section='view'}">
         </div>
     {/if}
