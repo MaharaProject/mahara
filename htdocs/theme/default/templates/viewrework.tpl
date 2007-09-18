@@ -15,7 +15,7 @@
                 <div id="blocktype-footer"></div>
             </div>
 
-            <div id="bottom-pane">
+            <div id="bottom-pane" style="display: none;">
                 <div id="column-container">
                     {$columns}
                     <div id="clearer">
@@ -23,6 +23,11 @@
                     </div>
                 </div>
             </div>
+            <script type="text/javascript">
+            {literal}
+            insertSiblingNodesAfter('bottom-pane', DIV({'id': 'views-loading'}, 'Loading...'));
+            {/literal}
+            </script>
         </div>
     </form>
 

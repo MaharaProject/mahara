@@ -60,6 +60,10 @@ function ViewManager() {
 
         // Add CSS rules
         self.addCSSRules();
+
+        // Now we're done, remove the loading message and display the page
+        removeElement('views-loading');
+        showElement('bottom-pane');
     }
 
     /**
@@ -661,7 +665,7 @@ function ViewManager() {
             dropFunction = partial(insertSiblingNodesAfter, self.blockPlaceholder);
         }
 
-        self.makeHotzoneDroppable(hotzone, node, placementFunction, dropFunction);
+        self.makeHotzoneDroppable(hotzone, node, placementFunction, dropFunction, placeAfter);
         appendChildNodes(self.hotzoneContainer, hotzone);
         return hotzone;
     }
@@ -669,7 +673,7 @@ function ViewManager() {
     /**
      * Makes a hotzone droppable. In a separate function for scoping purposes
      */
-    this.makeHotzoneDroppable = function(hotzone, node, placementFunction, dropFunction) {
+    this.makeHotzoneDroppable = function(hotzone, node, placementFunction, dropFunction, placeAfter) {
         var counter = 5;
         new Droppable(hotzone, {
             'onhover': function() {
