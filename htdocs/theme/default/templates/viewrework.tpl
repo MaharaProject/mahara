@@ -15,7 +15,7 @@
                 <div id="blocktype-footer"></div>
             </div>
 
-            <div id="bottom-pane" style="display: none;">
+            <div id="bottom-pane">
                 <div id="column-container">
                     {$columns}
                     <div id="clearer">
