@@ -1044,6 +1044,7 @@ function getoptions_country() {
         create_function('$a', 'return get_string("country.{$a}");'), 
         $countries
     );
+    usort($countries, 'strcoll');
     return $countries;
 }
 
