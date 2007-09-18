@@ -37,11 +37,10 @@ defined('INTERNAL') || die;
  * Returns HTML for the category list
  *
  * @param string $defaultcategory The currently selected category
- * @param bool   $javascript Set to true if the caller is a json script, 
- *                           meaning that nothing for the standard HTML version 
- *                           alone should be output
- */
-function view_build_category_list($defaultcategory, $javascript=false) {
+ * @param View   $view            The view we're currently using
+*/
+
+function view_build_category_list($defaultcategory, View $view) {
     require_once(get_config('docroot') . '/blocktype/lib.php');
     $cats = get_records_array('blocktype_category');
     $categories = array_map(
@@ -56,7 +55,6 @@ function view_build_category_list($defaultcategory, $javascript=false) {
         $cats
     );
 
-    $result = "<ul>\n";
     $flag = false;
     foreach ($categories as &$cat) {
         $classes = '';
@@ -67,18 +65,15 @@ function view_build_category_list($defaultcategory, $javascript=false) {
         if ($defaultcategory == $cat['name']) {
             $classes[] = 'current';
         }
-
-        $result .= '<li';
         if ($classes) {
-            $result .= ' class="' . hsc(implode(' ', $classes)) . '"';
+            $cat['class'] = hsc(implode(' ', $classes)); 
         }
-        // @TODO fix this url (apart from anything else it needs the view id!)
-        // and probably should be in a smarty template
-        $result .= '<a href="viewrework.php?category=' . hsc($cat['name']) . '">' . hsc($cat['title']) . "</a></li>\n";
     }
-    $result .= "</ul>\n";
 
-    return $result;
+    $smarty = smarty_core();
+    $smarty->assign('categories', $categories);
+    $smarty->assign('viewid', $view->get('id'));
+    return $smarty->fetch('view/blocktypecategorylist.tpl');
 }
 
 /**
@@ -96,34 +91,10 @@ function view_build_blocktype_list($category, $javascript=false) {
         return '';
     }
 
-    $template =<<<EOF
-    <li>
-        <div class="blocktype">
-            <img src="{THUMBNAIL_PATH}" alt="Preview">
-            <h3>{TITLE}</h3>
-            <p>{DESCRIPTION}</p>
-            {RADIO}
-        </div>
-    </li>
-EOF;
-
-    $result = '<ul>';
-    foreach ($blocktypes as $blocktype) {
-        $blocktypehtml = $template;
-        //$blocktypehtml = str_replace('{ID}', $blocktype['id'], $blocktypehtml);
-        $blocktypehtml = str_replace('{TITLE}', hsc($blocktype['title']), $blocktypehtml);
-        $blocktypehtml = str_replace('{DESCRIPTION}', format_whitespace(hsc($blocktype['description'])), $blocktypehtml);
-        $blocktypehtml = str_replace('{THUMBNAIL_PATH}', hsc($blocktype['thumbnail_path']), $blocktypehtml);
-
-        $type = ($javascript) ? 'hidden' : 'radio';
-        $radio = '<input type="' . $type . '" class="blocktype-radio" name="blocktype" value="' . $blocktype['name'] . '">';
-        $blocktypehtml = str_replace('{RADIO}', $radio, $blocktypehtml);
-
-        $result .= $blocktypehtml;
-    }
-    $result .= "\n</ul>";
-
-    return $result;
+    $smarty = smarty_core();
+    $smarty->assign_by_ref('blocktypes', $blocktypes);
+    $smarty->assign('javascript', $javascript);
+    return $smarty->fetch('view/blocktypelist.tpl');
 }
 
 /**
@@ -163,50 +134,19 @@ function view_build_column(View $view, $column, $javascript=false) {
         $data = $view->get_column_datastructure($column);
     }
 
-    $result = '';
-
-    $result = '<div id="column_' . $column . '" class="column columns' . $view->get('numcolumns') . '">
-    <div class="column-header">';
-
-    if ($column == 1) {
-        $result .= '    <div class="add-column-left">
-        <input type="submit" class="submit addcolumn" name="action_addcolumn_before_1" value="Add Column">
-    </div>';
-    }
-
-    $result .= '    <div class="remove-column">
-        <input type="submit" class="submit removecolumn" name="action_removecolumn_column_' . $column . '" value="Remove Column">
-    </div>';
-
-    if ($column == $view->get('numcolumns')) {
-        $result .= '    <div class="add-column-right">
-        <input type="submit" class="submit addcolumn" name="action_addcolumn_before_' . ($column + 1) . '" value="Add Column">
-    </div>';
-    }
-    else {
-        $result .= '    <div class="add-column-center">
-        <input type="submit" class="submit addcolumn" name="action_addcolumn_before_' . ($column + 1) . '" value="Add Column">
-    </div>';
-    }
-
-    $result .= '
-    </div>
-    <div class="column-content">';
-    if (!$javascript) {
-        $result .= '        <div class="add-button">
-            <input type="submit" class="submit newblockhere" name="action_addblocktype_column_' . $column . '_order_1" value="Add new block here">
-        </div>';
-    }
-
+    $blockcontent = '';
     // Blocktype loop here
     foreach($data['blockinstances'] as $blockinstance) {
-        $result .= $blockinstance->render();
+        $blockcontent .= $blockinstance->render();
     }
 
-    $result .= '    </div>
-</div>';
+    $smarty = smarty_core();
+    $smarty->assign('javascript',  $javascript);
+    $smarty->assign('column',      $column);
+    $smarty->assign('numcolumns',  $view->get('numcolumns'));
+    $smarty->assign('blockcontent', $blockcontent);
 
-    return $result;
+    return $smarty->fetch('view/column.tpl');
 }
 
 

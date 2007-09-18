@@ -42,7 +42,7 @@ $smarty = smarty(array('views'), array('<link rel="stylesheet" href="views.css" 
 $category = param_alpha('category', 'aboutme');
 
 // The list of categories for the tabbed interface
-$smarty->assign('category_list', view_build_category_list($category));
+$smarty->assign('category_list', view_build_category_list($category, $view));
 
 // The list of blocktypes for the default category
 $smarty->assign('blocktype_list', view_build_blocktype_list($category));
