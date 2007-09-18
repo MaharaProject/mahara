@@ -794,7 +794,7 @@ function getoptions_country() {
     if (!empty($countries)) {
         return $countries;
     }
-    $countries = array(
+    $codes = array(
         'af',
         'ax',
         'al',
@@ -1040,11 +1040,10 @@ function getoptions_country() {
         'zw',
     );
 
-    $countries = array_map(
-        create_function('$a', 'return get_string("country.{$a}");'), 
-        $countries
-    );
-    usort($countries, 'strcoll');
+    foreach ($codes as $c) {
+        $countries[$c] = get_string("country.{$c}");
+    };
+    uasort($countries, 'strcoll');
     return $countries;
 }
 

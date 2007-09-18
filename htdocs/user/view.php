@@ -110,6 +110,9 @@ foreach (array_keys($publicfields) as $field) {
         }
     }
 }
+if (isset($userfields['country'])) {
+    $userfields['country'] = get_string('country.' . $userfields['country']);
+}
 
 // Get viewable views
 $views = array();
