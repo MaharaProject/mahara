@@ -36,6 +36,7 @@ $string['save']    = 'Save';
 $string['submit']  = 'Submit';
 $string['update']  = 'Update';
 $string['change']  = 'Change';
+$string['send']    = 'Send';
 $string['go']      = 'Go';
 $string['default'] = 'Default';
 $string['upload']  = 'Upload';

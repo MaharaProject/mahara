@@ -292,6 +292,10 @@ class Pieform {
 
             // Whether to add * markers after each required field
             'requiredmarker' => false,
+
+            // Whether to show the description as well as the error message 
+            // when displaying errors
+            'showdescriptiononerror' => true,
         );
         $data = array_merge($formdefaults, $formconfig, $data);
         $this->data = $data;

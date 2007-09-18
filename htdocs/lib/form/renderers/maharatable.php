@@ -111,7 +111,7 @@ function pieform_renderer_maharatable(Pieform $form, $builtelement, $rawelement)
 
     // Description - optional description of the element, or other note that should be visible
     // on the form itself (without the user having to hover over contextual help 
-    if (!empty($rawelement['description'])) {
+    if ((!$form->has_errors() || $form->get_property('showdescriptiononerror')) && !empty($rawelement['description'])) {
         $result .= "\t<tr>\n\t\t<td class=\"description\">";
         $result .= $rawelement['description'];
         $result .= "</td>\n\t</tr>\n";
