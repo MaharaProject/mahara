@@ -866,7 +866,10 @@ class ArtefactTypeImage extends ArtefactTypeFile {
         if (isset($options['viewid'])) {
             $src .= '&amp;view=' . $options['viewid'];
         }
-        return '<img src="' . $src . '" />'; // more later
+        // like width & height maybe
+        return array('html' => '<img src="' . $src . '" />', // more later
+                     'javascript' => false);
+
     }
 }
 

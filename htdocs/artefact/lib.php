@@ -471,6 +471,15 @@ abstract class ArtefactType {
     // when we know a bit more about what blocks we want.
     //public abstract function render_self($options);
 
+
+    /**
+    * Returns the printable name of this artefact
+    * (used in lists and such)
+    */
+    public function get_name() {
+        return $this->get('title');
+    }
+
     // ******************** HELPER FUNCTIONS ******************** //
 
     protected function get_artefact_type() {

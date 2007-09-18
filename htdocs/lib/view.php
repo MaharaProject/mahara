@@ -154,7 +154,7 @@ class View {
 
     public function get_artefact_metadata() {
         if (!isset($this->artefact_metadata)) {
-            $sql = 'SELECT a.*, i.name, va.block, va.format
+            $sql = 'SELECT a.*, i.name, va.block
                     FROM {view_artefact} va
                     JOIN {artefact} a ON va.artefact = a.id
                     JOIN {artefact_installed_type} i ON a.artefacttype = i.name

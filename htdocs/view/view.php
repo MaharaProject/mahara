@@ -52,12 +52,8 @@ if ($artefactid) {
     $feedbackisprivate = !$artefact->public_feedback_allowed();
     $options = array('viewid' => $viewid,
                      'path' => $path);
-    if (in_array(FORMAT_ARTEFACT_RENDERFULL, $artefact->get_render_list())) {
-        $rendered = $artefact->render(FORMAT_ARTEFACT_RENDERFULL, $options);
-    }
-    else {
-        $rendered = $artefact->render(FORMAT_ARTEFACT_RENDERMETADATA, $options);
-    }
+
+    $rendered = $artefact->render_self($options);
     $content = '';
     if (!empty($rendered['javascript'])) {
         $content = '<script type="text/javascript">' . $rendered['javascript'] . '</script>';
