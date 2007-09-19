@@ -10,11 +10,11 @@
         </div>
     {if $column == $numcolumns}
         <div class="add-column-right">
-            <input type="submit" class="submit addcolumn" name="action_addcolumn_before_{$column + 1}" value="{str tag='addcolumn' section='view'}">
+            <input type="submit" class="submit addcolumn" name="action_addcolumn_before_{$column+1}" value="{str tag='addcolumn' section='view'}">
         </div>
     {else}
         <div class="add-column-center">
-            <input type="submit" class="submit addcolumn" name="action_addcolumn_before_{$column + 1}" value="{str tag='addcolumn' section='view'}">
+            <input type="submit" class="submit addcolumn" name="action_addcolumn_before_{$column+1}" value="{str tag='addcolumn' section='view'}">
         </div>
     {/if}
     </div>

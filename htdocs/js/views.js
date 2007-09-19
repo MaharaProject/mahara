@@ -95,6 +95,13 @@ function ViewManager() {
             removeElement(getFirstElementByTagAndClassName('div', 'add-column-left', 'column_2'));
         }
 
+        // If we're adding a column to the very right, move the add button between the columns
+        if (id > numColumns) {
+            var rightColumnDiv = getFirstElementByTagAndClassName('div', 'add-column-right', 'column_' + numColumns);
+            removeElementClass(rightColumnDiv, 'add-column-right');
+            addElementClass(rightColumnDiv, 'add-column-center');
+        }
+
         // Now we insert the new column into the DOM. Inserting the HTML into a
         // new element and then into the DOM means we can add the new column
         // without changing any of the existing DOM tree (and thus destroying
@@ -107,14 +114,6 @@ function ViewManager() {
         else {
             insertSiblingNodesAfter('column_' + (id - 1), tempDiv.firstChild);
         }
-
-        // VERY TEMPORARY
-        // Currently with our hard coded data, the adding of a column doesn't
-        // really happen and so the new column is built thinking there are only
-        // the same number of columns in total as there were before adding a
-        // column. This munges the column class for us
-        removeElementClass('column_' + id, 'columns' + numColumns);
-        addElementClass('column_' + id, 'columns' + (numColumns + 1));
 
         // Wire up the new column buttons to be AJAX
         self.rewriteAddColumnButtons('column_' + id);
