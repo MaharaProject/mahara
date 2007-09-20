@@ -9,3 +9,8 @@
 .blockinstance-header h4 {
     cursor: move;
 }
+
+/* This will be hidden until loading is finished */
+#bottom-pane {
+    display: none;
+}

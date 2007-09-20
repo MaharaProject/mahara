@@ -61,9 +61,6 @@ function ViewManager() {
             }
         });
 
-        // Add CSS rules
-        self.addCSSRules();
-
         // Now we're done, remove the loading message and display the page
         removeElement('views-loading');
         showElement('bottom-pane');
@@ -793,3 +790,4 @@ function ViewManager() {
 }
 
 viewManager = new ViewManager();
+viewManager.addCSSRules();
