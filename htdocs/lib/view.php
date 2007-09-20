@@ -723,6 +723,7 @@ class View {
      * @param array $values parameters for this function
      */
     public function configureblockinstance($values) {
+        // TODO is this needed?
         log_debug('configuring block instance');
         log_debug($values);
     }
