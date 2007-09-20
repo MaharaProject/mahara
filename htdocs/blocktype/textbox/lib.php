@@ -41,7 +41,27 @@ class PluginBlocktypeTextbox extends PluginBlocktype {
     }
 
     public static function render_instance(BlockInstance $instance) {
-        return 'hell0r';
+        $configdata = $instance->get('configdata');
+        // TODO if wysiwyg off, then format_whitespace, else cleaning needs to be done
+        return (isset($configdata['text'])) ? format_whitespace($configdata['text']) : '';
+    }
+
+    public static function has_instance_config() {
+        return true;
+    }
+
+    public static function instance_config_form($instance) {
+        log_debug('getting instance config form for ' . $instance->get('id'));
+        $configdata = $instance->get('configdata');
+        return array(
+            'text' => array(
+                'type' => 'wysiwyg',
+                'title' => 'Text',
+                'width' => '100%',
+                'height' => '50px',
+                'defaultvalue' => $configdata['text'],
+            ),
+        );
     }
 
 }
