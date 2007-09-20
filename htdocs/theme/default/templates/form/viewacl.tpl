@@ -165,7 +165,7 @@ forEach(potentialPresets, function(preset) {
 // Left hand side
 var searchTable = new TableRenderer(
     'results',
-    'create4.json.php',
+    'access.json.php',
     [
         undefined, undefined, undefined
     ]

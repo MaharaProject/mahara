@@ -36,6 +36,8 @@ class View {
     private $ctime;
     private $mtime;
     private $atime;
+    private $startdate;
+    private $stopdate;
     private $submittedto;
     private $title;
     private $description;
@@ -44,23 +46,29 @@ class View {
     private $artefact_instances;
     private $artefact_metadata;
     private $artefact_hierarchy;
-    private $contents;
     private $ownerobj;
     private $numcolumns;
     private $columns;
     private $dirtycolumns; // for when we change stuff
+    private $tags;
 
     public function __construct($id=0, $data=null) {
         if (!empty($id)) {
-            if (empty($data)) {
-                if (!$data = get_record('view','id',$id)) {
-                    throw new ViewNotFoundException("View with id $id not found");
-                }
+            $tempdata = get_record('view','id',$id);
+            if (empty($tempdata)) {
+                throw new ViewNotFoundException("View with id $id not found");
             }    
+            if (!empty($data)) {
+                $data = array_merge((array)$tempdata, $data);
+            }
+            else {
+                $data = $tempdata; // use what the database has
+            }
             $this->id = $id;
         }
         else {
             $this->ctime = time();
+            $this->mtime = time();
             $this->dirty = true;
         }
 
@@ -81,6 +89,9 @@ class View {
         if (!property_exists($this, $field)) {
             throw new InvalidArgumentException("Field $field wasn't found in class " . get_class($this));
         }
+        if ($field == 'tags') { // special case
+            return $this->get_tags();
+        }
         return $this->{$field};
     }
 
@@ -95,6 +106,13 @@ class View {
             return true;
         }
         throw new InvalidArgumentException("Field $field wasn't found in class " . get_class($this));
+    }
+
+    public function get_tags() {
+        if (!isset($this->tags)) {
+            $this->tags = get_column('view_tag', 'tag', 'view', $this->get('id'));
+        }
+        return $this->tags;
     }
 
     /**
@@ -127,12 +145,23 @@ class View {
                 $fordb->{$k} = db_format_timestamp($v);
             }
         }
+
+        db_begin();
+
         if (empty($this->id)) {
             $this->id = insert_record('view', $fordb, 'id', true);
         }
         else {
             update_record('view', $fordb, 'id');
         }
+
+        delete_records('view_tag', 'view', $this->get('id'));
+        foreach ($this->get_tags() as $tag) {
+            insert_record('view_tag', (object)array( 'view' => $this->get('id'), 'tag' => $tag));
+        }
+
+        db_commit();
+
         $this->dirty = false;
         $this->deleted = false;
     }
@@ -224,13 +253,6 @@ class View {
     }
 
 
-    public function get_contents() { // lazy setup.
-        if (!isset($this->contents)) {
-            $this->contents = get_records_array('view_content', 'view', $this->id);
-        }
-        return $this->contents;
-    }
-    
     public function has_artefacts() {
         if ($this->get_artefact_metadata()) {
             return true;
@@ -885,5 +907,35 @@ class View {
         return get_field('block_instance', 'max("order")', 'column', $column, 'view', $this->get('id')); 
     }
 }
+
+/**
+ * display format for author names in views - firstname
+ */
+define('FORMAT_NAME_FIRSTNAME', 1);
+
+/**
+ * display format for author names in views - lastname
+ */
+define('FORMAT_NAME_LASTNAME', 2);
+
+/**
+ * display format for author names in views - firstname lastname
+ */
+define('FORMAT_NAME_FIRSTNAMELASTNAME', 3);
+
+/**
+ * display format for author names in views - preferred name
+ */
+define('FORMAT_NAME_PREFERREDNAME', 4);
+
+/**
+ * display format for author names in views - student id
+*/
+define('FORMAT_NAME_STUDENTID', 5);
+
+/**
+ * display format for author names in views - obeys display_name
+ */
+define('FORMAT_NAME_DISPLAYNAME', 6);
 
 ?>

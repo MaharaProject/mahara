@@ -26,13 +26,10 @@
 
 defined('INTERNAL') || die();
 
-$string['createviewstep1']        = 'Create View - Step 1 of 4';
-$string['editmetadata']           = 'Edit View Information';
-$string['createviewstep2']        = 'Create View - Step 2 of 4';
-$string['createviewstep3']        = 'Create View - Step 3 of 4';
+$string['createview']             = 'Create View';
 $string['editview']               = 'Edit View';
-$string['createviewstep4']        = 'Create View - Step 4 of 4';
 $string['editaccess']             = 'Edit View Access';
+$string['editblocks']             = 'Edit blocks';
 $string['next']                   = 'Next';
 $string['back']                   = 'Back';
 $string['createview']             = 'Create View';
@@ -44,16 +41,6 @@ $string['startdatemustbebeforestopdate'] = 'The start date must be before the st
 $string['ownerformat']            = 'Name display format';
 $string['ownerformatdescription'] = 'This field controls what appears in the author field for the template you select in step 2';
 $string['nochildren']             = 'no artefacts';
-
-$string['category.all']                     = 'All Templates';
-$string['category.resume']                  = 'Resume Templates';
-$string['category.blog']                    = 'Blog Templates';
-$string['category.gallery']                 = 'Gallery Templates';
-$string['category.academic']                = 'Academic Templates';
-$string['category.professionaldevelopment'] = 'Professional Development Templates';
-$string['category.personaldevelopment']     = 'Personal Development Templates';
-
-$string['usethistemplate'] = 'Select this template';
 
 $string['emptylabel'] = 'Click here to enter text for this label';
 $string['empty_block'] = 'Select an artefact from the tree on the left to place here';
@@ -73,6 +60,7 @@ $string['format.rendermetadata'] = 'Display metadata for this Artefact';
 
 $string['addtutors'] = 'Add Tutors';
 $string['viewcreatedsuccessfully'] = 'View created successfully';
+$string['viewsavedsuccessfully'] = 'View saved successfully';
 
 $string['invalidcolumn'] = 'Column %s out of range';
 

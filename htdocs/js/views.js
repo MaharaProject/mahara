@@ -196,7 +196,7 @@ function ViewManager() {
                 var queryString = parseQueryString(i.href.substr(i.href.indexOf('?')));
                 removeElementClass(getFirstElementByTagAndClassName('li', 'current', 'category-list'), 'current');
                 addElementClass(i.parentNode, 'current');
-                sendjsonrequest('viewrework.json.php', {'view': $('viewid').value, 'action': 'blocktype_list', 'category': queryString['category']}, 'POST', function(data) {
+                sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', {'id': $('viewid').value, 'action': 'blocktype_list', 'c': queryString['c']}, 'POST', function(data) {
                     $('blocktype-list').innerHTML = data.data;
                     self.makeBlockTypesDraggable();
                 });
@@ -221,9 +221,9 @@ function ViewManager() {
         connect(button, 'onclick', function(e) {
             setNodeAttribute(button, 'disabled', 'disabled');
             if (confirm(get_string('confirmdeleteblockinstance'))) {
-                var pd = {'view': $('viewid').value, 'change': 1};
+                var pd = {'id': $('viewid').value, 'change': 1};
                 pd[e.src().getAttribute('name')] = 1;
-                sendjsonrequest('viewrework.json.php', pd, 'POST', function(data) {
+                sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
                     removeElement(getFirstParentByTagAndClassName(button, 'div', 'blockinstance'));
                     removeNodeAttribute(button, 'disabled');
                 }, function() {
@@ -257,9 +257,9 @@ function ViewManager() {
                 setNodeAttribute(i, 'disabled', 'disabled');
                 var name = e.src().getAttribute('name');
                 var id   = parseInt(name.substr(-1));
-                var pd   = {'view': $('viewid').value, 'change': 1}
+                var pd   = {'id': $('viewid').value, 'change': 1}
                 pd['action_addcolumn_before_' + id] = 1;
-                sendjsonrequest('viewrework.json.php', pd, 'POST', function(data) {
+                sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
                     self.addColumn(id, data);
                     self.checkColumnButtonDisabledState();
                 }, function() {
@@ -290,9 +290,9 @@ function ViewManager() {
                 setNodeAttribute(i, 'disabled', 'disabled');
                 var name = e.src().getAttribute('name');
                 var id   = parseInt(name.substr(-1));
-                var pd   = {'view': $('viewid').value, 'change': 1}
+                var pd   = {'id': $('viewid').value, 'change': 1}
                 pd['action_removecolumn_column_' + id] = 1;
-                sendjsonrequest('viewrework.json.php', pd, 'POST', function(data) {
+                sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
                     self.removeColumn(id);
                     self.checkColumnButtonDisabledState();
                 }, function() {
@@ -648,12 +648,12 @@ function ViewManager() {
                 log(whereTo);
 
                 var pd = {
-                    'view': $('viewid').value,
+                    'id': $('viewid').value,
                     'change': 1,
                     'blocktype': getFirstElementByTagAndClassName('input', 'blocktype-radio', self.currentlyMovingObject).value
                 };
                 pd['action_addblocktype_column_' + whereTo['column'] + '_order_' + whereTo['order']] = true;
-                sendjsonrequest('viewrework.json.php', pd, 'POST', function(data) {
+                sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
                     var div = DIV();
                     div.innerHTML = data.data;
                     var blockinstance = getFirstElementByTagAndClassName('div', 'blockinstance', div);
@@ -710,9 +710,9 @@ function ViewManager() {
                     // Work out where to send the block to
                     var whereTo = self.getBlockinstanceCoordinates(draggable);
                     if (self.origCoordinates.column != whereTo.column || self.origCoordinates.order != whereTo.order) {
-                        var pd = {'view': $('viewid').value, 'change': 1};
+                        var pd = {'id': $('viewid').value, 'change': 1};
                         pd['action_moveblockinstance_id_' + draggable.id.substr(draggable.id.lastIndexOf('_') + 1) + '_column_' + whereTo['column'] + '_order_' + whereTo['order']] = 1;
-                        sendjsonrequest('viewrework.json.php', pd, 'POST');
+                        sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST');
                     }
                 }
             }

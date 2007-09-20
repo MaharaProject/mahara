@@ -127,16 +127,16 @@ function submitform(viewid, action) {
     }
     var page = 'index.php';
     if (action == 'editinfo') {
-        page = 'editmetadata.php';
-    }
-    if (action == 'edit') {
         page = 'edit.php';
     }
+    if (action == 'edit') {
+        page = 'blocks.php';
+    }
     if (action == 'editaccess') {
-        page = 'editaccess.php';
+        page = 'access.php';
     }
     setNodeAttribute(form, 'action', page);
-    appendChildNodes(form, INPUT({'type':'hidden','name':'viewid','value':viewid}));
+    appendChildNodes(form, INPUT({'type':'hidden','name':'id','value':viewid}));
     form.submit();
     return false;
 }

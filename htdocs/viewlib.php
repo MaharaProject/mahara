@@ -163,7 +163,7 @@ function view_process_changes() {
         return;
     }
 
-    $view = param_integer('view');
+    $view = param_integer('id');
     $category = param_alpha('category', null);
     $view = new View($view);
 
