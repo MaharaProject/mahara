@@ -758,7 +758,7 @@ function ViewManager() {
         var styleNode = createDOM('link', {
             'rel' : 'stylesheet',
             'type': 'text/css',
-            'href': 'views-js.css'
+            'href': get_themeurl('style/views-js.css')
         });
         appendChildNodes(getFirstElementByTagAndClassName('head'), styleNode);
     }
