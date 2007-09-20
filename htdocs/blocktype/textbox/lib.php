@@ -42,8 +42,8 @@ class PluginBlocktypeTextbox extends PluginBlocktype {
 
     public static function render_instance(BlockInstance $instance) {
         $configdata = $instance->get('configdata');
-        // TODO if wysiwyg off, then format_whitespace, else cleaning needs to be done
-        return (isset($configdata['text'])) ? format_whitespace($configdata['text']) : '';
+        $text = (isset($configdata['text'])) ? $configdata['text'] : '';
+        return $text;
     }
 
     public static function has_instance_config() {
@@ -51,17 +51,26 @@ class PluginBlocktypeTextbox extends PluginBlocktype {
     }
 
     public static function instance_config_form($instance) {
-        log_debug('getting instance config form for ' . $instance->get('id'));
         $configdata = $instance->get('configdata');
         return array(
             'text' => array(
-                'type' => 'wysiwyg',
-                'title' => 'Text',
-                'width' => '100%',
-                'height' => '50px',
+                'type' => 'tinywysiwyg',
+                'width' => '90%',
+                'height' => '150px',
                 'defaultvalue' => $configdata['text'],
             ),
         );
+    }
+
+    public static function instance_config_save($values) {
+        global $USER;
+        if (!get_account_preference($USER->get('id'), 'wysiwyg')) {
+            $values['text'] = format_whitespace($values['text']);
+        }
+        else {
+            $values['text'] = clean_text($values['text']);
+        }
+        return $values;
     }
 
 }

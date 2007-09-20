@@ -73,23 +73,6 @@ abstract class PluginBlocktype extends Plugin {
      * validation, should they need it
      */
     public static function instance_config_validate(Pieform $form, $values) { }
-      
-    /**
-    * This function must be implemented in the subclass if it has config
-    * $values must contain a hidden 'id' field.
-    */
-    public function instance_config_save(Pieform $form, $values) {
-        $blockinstance_id = $values['blockinstance'];
-
-        // Destroy form values we don't care about
-        unset($values['sesskey']);
-        unset($values['blockinstance']);
-        unset($values['action_configureblockinstance_id_' . $blockinstance_id]);
-
-        set_field('block_instance', 'configdata', serialize($values), 'id', $blockinstance_id);
-        // TODO: fix url
-        redirect('/viewrework.php?view=1&category=file');
-    }
 
     public static function has_config() {
         return false;
@@ -215,6 +198,21 @@ class BlockInstance {
         throw new ParamOutOfRangeException("Field $field wasn't found in class " . get_class($this));
     }
 
+    public function instance_config_store(Pieform $form, $values) {
+        // Destroy form values we don't care about
+        unset($values['sesskey']);
+        unset($values['blockinstance']);
+        unset($values['action_configureblockinstance_id_' . $this->get('id')]);
+
+        if (is_callable(array(generate_class_name('blocktype', $this->get('blocktype')), 'instance_config_save'))) {
+            $values = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'instance_config_save', $values);
+        }
+
+        set_field('block_instance', 'configdata', serialize($values), 'id', $this->get('id'));
+        // TODO: fix url
+        redirect('/viewrework.php?view=1&category=file');
+    }
+
     /**
      * Builds the HTML for the block, inserting the blocktype content at the 
      * appropriate place
@@ -225,7 +223,6 @@ class BlockInstance {
     public function render($configure=false) {
         safe_require('blocktype', $this->get('blocktype'));
         if ($configure) {
-            log_debug('blockinstance being configured is a ' . $this->get('blocktype'));
             $elements = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'instance_config_form', $this);
 
             // Add submit/cancel buttons and helper hidden variable
@@ -233,17 +230,15 @@ class BlockInstance {
                 'type' => 'submitcancel',
                 'value' => array('Save', 'Cancel'),
             );
-            $elements['blockinstance'] = array(
-                'type' => 'hidden',
-                'value' => $this->get('id'),
-            );
 
             $form = array(
                 'name' => 'cb_' . $this->get('id'),
                 'validatecallback' => array(generate_class_name('blocktype', $this->get('blocktype')), 'instance_config_validate'),
-                'successcallback'  => array('PluginBlocktype', 'instance_config_save'),
+                'successcallback'  => array($this, 'instance_config_store'),
                 'elements' => $elements
             );
+
+            require_once('pieforms/pieform.php');
             $pieform = new Pieform($form);
 
             // This is a bit hacky. Because pieforms will take values from 
