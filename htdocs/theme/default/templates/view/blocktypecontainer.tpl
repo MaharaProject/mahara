@@ -6,6 +6,7 @@
         {foreach from=$movecontrols item=item}
             <input type="submit" class="submit movebutton" name="action_moveblockinstance_id_{$id}_column_{$item.column}_order_{$item.order}" value="{$item.arrow}">
         {/foreach}
+        {if $configurable}    <input type="submit" class="submit configurebutton" name="action_configureblockinstance_id_{$id}" value="&bull;">{/if}
             <input type="submit" class="submit deletebutton" name="action_removeblockinstance_id_{$id}" value="X">
         </div>
         <div class="blockinstance-content">
