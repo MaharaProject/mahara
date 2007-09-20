@@ -64,22 +64,31 @@ abstract class PluginBlocktype extends Plugin {
     /**
     * This function must be implemented in the subclass if it has config
     */
-    public static function config_form($id=0) {
-        if ($this->has_config()) {
-            throw new Exception(get_string('blocktypemissingconfigform', 'error', get_class($this)));
-        }
-        return false;
+    public static function instance_config_form(BlockInstance $instance) {
+        throw new SystemException(get_string('blocktypemissingconfigform', 'error', $instance->get('blocktype')));
     }
 
+    /**
+     * Blocktype plugins can implement this to perform custom pieform 
+     * validation, should they need it
+     */
+    public static function instance_config_validate(Pieform $form, $values) { }
+      
     /**
     * This function must be implemented in the subclass if it has config
     * $values must contain a hidden 'id' field.
     */
-    public function config_save(Pieform $form, $values) {
-        if ($this->has_config()) {
-            throw new Exception(get_string('blocktypemissingconfigsave', 'error', get_class($this)));
-        }
-        return false;
+    public function instance_config_save(Pieform $form, $values) {
+        $blockinstance_id = $values['blockinstance'];
+
+        // Destroy form values we don't care about
+        unset($values['sesskey']);
+        unset($values['blockinstance']);
+        unset($values['action_configureblockinstance_id_' . $blockinstance_id]);
+
+        set_field('block_instance', 'configdata', serialize($values), 'id', $blockinstance_id);
+        // TODO: fix url
+        redirect('/viewrework.php?view=1&category=file');
     }
 
     public static function has_config() {
@@ -209,13 +218,51 @@ class BlockInstance {
     /**
      * Builds the HTML for the block, inserting the blocktype content at the 
      * appropriate place
+     *
+     * @param bool $configure Whether to render the block instance in configure 
+     *                        mode
      */
-    public function render($javascript=false) {
+    public function render($configure=false) {
         safe_require('blocktype', $this->get('blocktype'));
-        $content = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'render_instance', $this);
+        if ($configure) {
+            log_debug('blockinstance being configured is a ' . $this->get('blocktype'));
+            $elements = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'instance_config_form', $this);
+
+            // Add submit/cancel buttons and helper hidden variable
+            $elements['action_configureblockinstance_id_' . $this->get('id')] = array(
+                'type' => 'submitcancel',
+                'value' => array('Save', 'Cancel'),
+            );
+            $elements['blockinstance'] = array(
+                'type' => 'hidden',
+                'value' => $this->get('id'),
+            );
+
+            $form = array(
+                'name' => 'cb_' . $this->get('id'),
+                'validatecallback' => array(generate_class_name('blocktype', $this->get('blocktype')), 'instance_config_validate'),
+                'successcallback'  => array('PluginBlocktype', 'instance_config_save'),
+                'elements' => $elements
+            );
+            $pieform = new Pieform($form);
+
+            // This is a bit hacky. Because pieforms will take values from 
+            // $_POST before 'defaultvalue's of form elements, we need to nuke 
+            // all of the post values for the form. The situation where this 
+            // becomes relevant is when someone clicks the configure button for 
+            // one block, then immediately configures another block
+            foreach (array_keys($elements) as $name) {
+                unset($_POST[$name]);
+            }
+
+            $content = $pieform->build(false);
+        }
+        else {
+            $content = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'render_instance', $this);
+        }
 
         $movecontrols = array();
-        if (empty($javascript)) {
+        if (!defined('JSON')) {
             if ($this->get('canmoveleft')) {
                 $movecontrols[] = array(
                     'column' => $this->get('column') - 1,
@@ -253,8 +300,9 @@ class BlockInstance {
         $smarty->assign('order',  $this->get('order'));
 
         $smarty->assign('movecontrols', $movecontrols);
+        $smarty->assign('configurable', call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'has_instance_config'));
         $smarty->assign('content', $content);
-        $smarty->assign('javascript', $javascript);
+        $smarty->assign('javascript', defined('JSON'));
 
         return $smarty->fetch('view/blocktypecontainer.tpl');
     }
