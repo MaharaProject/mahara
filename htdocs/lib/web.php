@@ -99,7 +99,7 @@ function &smarty($javascript = array(), $headers = array(), $pagestrings = array
     // TinyMCE must be included first for some reason we're not sure about
     $checkarray = array(&$javascript, &$headers);
     foreach ($checkarray as &$check) {
-        if (($key = array_search('tinymce', $check)) !== false) {
+        if (($key = array_search('tinymce', $check)) !== false || ($key = array_search('tinytinymce', $check) !== false)) {
             $javascript_array[] = $jsroot . 'tinymce/tiny_mce.js';
             if (isset($extraconfig['tinymceinit'])) {
                 $headers[] = $extraconfig['tinymceinit'];
@@ -107,13 +107,10 @@ function &smarty($javascript = array(), $headers = array(), $pagestrings = array
             else {
                 $content_css = json_encode(theme_get_url('style/tinymce.css'));
                 $language = substr(current_language(), 0, 2);
-                $headers[] = <<<EOF
-<script type="text/javascript">
-tinyMCE.init({
-    mode: "textareas",
+
+                if ($check[$key] == 'tinymce') {
+                    $tinymce_config = <<<EOF
     editor_selector: 'wysiwyg',
-    button_tile_map: true,
-    language: '{$language}',
     theme: "advanced",
     plugins: "table,emotions,iespell,inlinepopups,paste",
     theme_advanced_buttons1 : "bold,italic,underline,strikethrough,separator,forecolor,backcolor,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,hr,emotions,iespell,cleanup,separator,link,unlink,separator,code",
@@ -122,6 +119,27 @@ tinyMCE.init({
     theme_advanced_toolbar_location : "top",
     theme_advanced_toolbar_align : "center",
     width: '512',
+EOF;
+                }
+                else {
+                    $tinymce_config = <<<EOF
+    editor_selector: 'tinywysiwyg',
+    theme: "advanced",
+    theme_advanced_buttons1 : "bold,italic,underline,strikethrough,separator,bullist,numlist,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,hr,emotions,iespell,separator,link,unlink,separator,code",
+    theme_advanced_buttons2 : "",
+    theme_advanced_buttons3 : "",
+    theme_advanced_toolbar_location : "top",
+    theme_advanced_toolbar_align : "center",
+EOF;
+                }
+
+                $headers[] = <<<EOF
+<script type="text/javascript">
+tinyMCE.init({
+    mode: "textareas",
+    button_tile_map: true,
+    {$tinymce_config}
+    language: '{$language}',
     content_css : {$content_css}
 });
 </script>
