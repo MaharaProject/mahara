@@ -840,7 +840,7 @@ function call_static_method($class, $method) {
 function generate_class_name() {
     $args = func_get_args();
     if (count($args) == 2 && $args[0] == 'blocktype') {
-        return 'PluginBlockType' . ucfirst(blocktype_namespaced_to_single($args[1]));
+        return 'PluginBlocktype' . ucfirst(blocktype_namespaced_to_single($args[1]));
     }
     return 'Plugin' . implode('', array_map('ucfirst', $args));
 }
