@@ -80,6 +80,17 @@ function &smarty_core() {
 //smarty(array('js/tablerenderer.js', 'artefact/file/js/filebrowser.js'))
 function &smarty($javascript = array(), $headers = array(), $pagestrings = array(), $extraconfig = array()) {
     global $USER, $SESSION;
+
+    if (!is_array($headers)) {
+        $headers = array();
+    }
+    if (!is_array($pagestrings)) {
+        $pagestrings = array();
+    }
+    if (!is_array($extraconfig)) {
+        $extraconfig = array();
+    }
+
     $SIDEBLOCKS = array();
 
     $smarty = smarty_core();
@@ -271,10 +282,22 @@ EOF;
         $stylesheets[] = get_config('wwwroot') . 'theme/debug.css';
     }
 
+    // look for extra stylesheets
+    if (isset($extraconfig['stylesheets']) && is_array($extraconfig['stylesheets'])) {
+        foreach ($extraconfig['stylesheets'] as $extrasheet) {
+            if ($sheet = theme_get_url($extrasheet)) {
+                $stylesheets[] = $sheet;
+            }
+        }
+    }
+
     $smarty = smarty_core();
 
     $smarty->assign('STYLESHEETLIST', $stylesheets);
-    $smarty->append('THEMELIST', json_encode($theme_list)); // this gets assigned in core, but do it again here in case it's different
+    if (!empty($theme_list)) {
+        // this gets assigned in smarty_core, but do it again here if it's changed locally
+        $smarty->assign('THEMELIST', json_encode(array_merge((array)json_decode($smarty->get_template_vars('THEMELIST')),  $theme_list))); 
+    }
 
     if (defined('TITLE')) {
         $smarty->assign('PAGETITLE', TITLE . ' - ' . get_config('sitename'));
