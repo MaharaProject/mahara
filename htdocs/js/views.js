@@ -40,6 +40,9 @@ function ViewManager() {
         // Rewrite the 'remove column' buttons to be ajax
         self.rewriteRemoveColumnButtons();
 
+        // Ensure the enabled/disabled state of the add/remove buttons is correct
+        self.checkColumnButtonDisabledState();
+
         // Make the block instances draggable
         self.makeBlockinstancesDraggable();
 
@@ -118,9 +121,6 @@ function ViewManager() {
         // Wire up the new column buttons to be AJAX
         self.rewriteAddColumnButtons('column_' + id);
         self.rewriteRemoveColumnButtons('column_' + id);
-
-        // Ensure the enabled/disabled state of the add/remove buttons is correct
-        self.checkColumnButtonDisabledState();
     }
 
     /**
@@ -188,9 +188,6 @@ function ViewManager() {
                 i = 1;
             }
         });
-
-        // Ensure the enabled/disabled state of the add/remove buttons is correct
-        self.checkColumnButtonDisabledState();
     }
 
     /**
@@ -225,12 +222,19 @@ function ViewManager() {
      */
     this.rewriteDeleteButton = function(button) {
         connect(button, 'onclick', function(e) {
+            setNodeAttribute(button, 'disabled', 'disabled');
             if (confirm(get_string('confirmdeleteblockinstance'))) {
                 var pd = {'view': $('viewid').value, 'change': 1};
                 pd[e.src().getAttribute('name')] = 1;
                 sendjsonrequest('viewrework.json.php', pd, 'POST', function(data) {
                     removeElement(getFirstParentByTagAndClassName(button, 'div', 'blockinstance'));
+                    removeNodeAttribute(button, 'disabled');
+                }, function() {
+                    removeNodeAttribute(button, 'disabled');
                 });
+            }
+            else {
+                removeNodeAttribute(button, 'disabled');
             }
             e.stop();
         });
@@ -253,12 +257,16 @@ function ViewManager() {
 
         forEach(getElementsByTagAndClassName('input', 'addcolumn', parentNode), function(i) {
             connect(i, 'onclick', function(e) {
+                setNodeAttribute(i, 'disabled', 'disabled');
                 var name = e.src().getAttribute('name');
                 var id   = parseInt(name.substr(-1));
                 var pd   = {'view': $('viewid').value, 'change': 1}
                 pd['action_addcolumn_before_' + id] = 1;
                 sendjsonrequest('viewrework.json.php', pd, 'POST', function(data) {
                     self.addColumn(id, data);
+                    self.checkColumnButtonDisabledState();
+                }, function() {
+                    self.checkColumnButtonDisabledState();
                 });
                 e.stop();
             });
@@ -282,12 +290,16 @@ function ViewManager() {
 
         forEach(getElementsByTagAndClassName('input', 'removecolumn', parentNode), function(i) {
             connect(i, 'onclick', function(e) {
+                setNodeAttribute(i, 'disabled', 'disabled');
                 var name = e.src().getAttribute('name');
                 var id   = parseInt(name.substr(-1));
                 var pd   = {'view': $('viewid').value, 'change': 1}
                 pd['action_removecolumn_column_' + id] = 1;
                 sendjsonrequest('viewrework.json.php', pd, 'POST', function(data) {
                     self.removeColumn(id);
+                    self.checkColumnButtonDisabledState();
+                }, function() {
+                    self.checkColumnButtonDisabledState();
                 });
                 e.stop();
             });
