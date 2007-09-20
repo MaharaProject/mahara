@@ -282,6 +282,200 @@ class View {
     }
 
     /**
+     * Returns HTML for the category list
+     *
+     * @param string $defaultcategory The currently selected category
+     * @param View   $view            The view we're currently using
+    */
+    public static function build_category_list($defaultcategory, View $view) {
+        require_once(get_config('docroot') . '/blocktype/lib.php');
+        $cats = get_records_array('blocktype_category');
+        $categories = array_map(
+            create_function(
+                '$a', 
+                '$a = $a->name;
+                return array(
+                    "name" => $a, 
+                    "title" => call_static_method("PluginBlocktype", "category_title_from_name", $a),
+                );'
+            ),
+            $cats
+        );
+
+        $flag = false;
+        foreach ($categories as &$cat) {
+            $classes = '';
+            if (!$flag) {
+                $flag = true;
+                $classes[] = 'first';
+            }
+            if ($defaultcategory == $cat['name']) {
+                $classes[] = 'current';
+            }
+            if ($classes) {
+                $cat['class'] = hsc(implode(' ', $classes)); 
+            }
+        }
+
+        $smarty = smarty_core();
+        $smarty->assign('categories', $categories);
+        $smarty->assign('viewid', $view->get('id'));
+        return $smarty->fetch('view/blocktypecategorylist.tpl');
+    }
+
+    /**
+     * Returns HTML for the blocktype list for a particular category
+     *
+     * @param string $category   The category to build the blocktype list for
+     * @param bool   $javascript Set to true if the caller is a json script, 
+     *                           meaning that nothing for the standard HTML version 
+     *                           alone should be output
+     */
+    public static function build_blocktype_list($category, $javascript=false) {
+        require_once(get_config('docroot') . 'blocktype/lib.php');
+        if (!$blocktypes = PluginBlockType::get_blocktypes_for_category($category)) {
+            return '';
+        }
+
+        $smarty = smarty_core();
+        $smarty->assign_by_ref('blocktypes', $blocktypes);
+        $smarty->assign('javascript', $javascript);
+        return $smarty->fetch('view/blocktypelist.tpl');
+    }
+
+    /**
+     * Process view changes. This function is used both by the json stuff and 
+     * by normal posts
+     */
+    public function process_changes() {
+        global $SESSION, $USER;
+
+        // Security
+        if ($USER->get('id') != $this->get('owner')) {
+            throw new AccessDeniedException(get_string('canteditdontown', 'view'));
+        }
+
+        if (!count($_POST) && count($_GET) < 3) {
+            return;
+        }
+
+        $category = param_alpha('category', null);
+
+        $action = '';
+        foreach ($_POST as $key => $value) {
+            if (substr($key, 0, 7) == 'action_') {
+                $action = substr($key, 7);
+            }
+        }
+        // TODO Scan GET for an action. The only action that is GETted is 
+        // confirming deletion of a blockinstance. It _should_ be a POST, but 
+        // that can be fixed later.
+        if (!$action) {
+            foreach ($_GET as $key => $value) {
+                if (substr($key, 0, 7) == 'action_') {
+                    $action = substr($key, 7);
+                }
+            }
+        }
+
+        $actionstring = $action;
+        $action = substr($action, 0, strpos($action, '_'));
+        $actionstring  = substr($actionstring, strlen($action) + 1);
+        
+        $values = self::get_values_for_action($actionstring);
+
+        $result = null;
+        switch ($action) {
+            // the view class method is the same as the action,
+            // but I've left these here in case any additional
+            // parameter handling has to be done.
+            case 'addblocktype': // requires action_addblocktype  (blocktype in separate parameter)
+                $values['blocktype'] = param_alpha('blocktype', null);
+            break;
+            case 'removeblockinstance': // requires action_removeblockinstance_id_\d
+                if (!defined('JSON')) {
+                    if (!$sure = param_boolean('sure')) {
+                        $yeslink = '/viewrework.php?view=1&category=file&action_' . $action . '_' .  $actionstring . '=1&sure=true';
+                        $baselink = '/viewrework.php?view=' . $this->get('id') . '&category=' . $category;
+                        $SESSION->add_info_msg(get_string('confirmdeleteblockinstance', 'view') 
+                            . ' <a href="' . $yeslink . '">' . get_string('yes') . '</a>'
+                            . ' <a href="' . $baselink . '">' . get_string('no') . '</a>', false);
+                        redirect($baselink);
+                        exit;
+                    }
+                }
+            break;
+            case 'configureblockinstance': // requires action_configureblockinstance_id_\d_column_\d_order_\d
+                if (!defined('JSON')) {
+                    $this->blockinstance_currently_being_configured = $values['id'];
+                }
+                // And we're done here for now
+                return;
+            case 'moveblockinstance': // requires action_moveblockinstance_id_\d_column_\d_order_\d
+            case 'addcolumn': // requires action_addcolumn_before_\d
+            case 'removecolumn': // requires action_removecolumn_column_\d
+            break;
+            default:
+                throw new InvalidArgumentException(get_string('noviewcontrolaction', 'error', $action));
+        }
+       
+        $message = '';
+        $success = false;
+        try {
+            $values['returndata'] = defined('JSON');
+            $returndata = $this->$action($values);
+            if (!defined('JSON')) {
+                $message = $this->get_viewcontrol_ok_string($action);
+            }
+            $success = true;
+        }
+        catch (Exception $e) {
+            // if we're in ajax land, just throw it
+            // the handler will deal with the message.
+            if (defined('JSON')) {
+                throw $e;
+            }
+            $message = $this->get_viewcontrol_err_string($action) . ': ' . $e->getMessage();
+        }
+        if (!defined('JSON')) {
+            // set stuff in the session and redirect
+            $fun = 'add_ok_msg';
+            if (!$success) {
+                $fun = 'add_err_msg';
+            }
+            $SESSION->{$fun}($message);
+            // TODO fix this url
+            redirect('/viewrework.php?view=' . $this->get('id') . '&category=' . $category);
+        }
+        return array('message' => $message, 'data' => $returndata);
+    }
+
+    /** 
+     * Parses the string and returns a hash of values
+     *
+     * @param string $action expects format name_value_name_value
+     *                       where values are all numeric
+     * @return array associative
+    */
+    private static function get_values_for_action($action) {
+        $values = array();
+        $bits = explode('_', $action);
+        if ((count($bits) % 2) == 1) {
+            throw new ParamOutOfRangeException(get_string('invalidviewaction', 'error', $action));
+        }
+        $lastkey = null;
+        foreach ($bits as $index => $bit) {
+            if ($index % 2 == 0) { 
+                $lastkey = $bit;
+            }
+            else {
+                $values[$lastkey] = $bit;
+            }
+        }
+        return $values;
+    }
+
+    /**
     * builds up the data structure for  this view
     * @param boolean $force force a re-read from the database
     *                       use this if a column is dirty
@@ -362,6 +556,42 @@ class View {
 
 
     /**
+     * Returns the HTML for the columns of this view
+     */
+    public function build_columns() {
+        $numcols = $this->get('numcolumns');
+
+        $result = '';
+        for ($i = 1; $i <= $numcols; $i++) {
+            $result .= $this->build_column($i);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Returns the HTML for a particular column
+     *
+     * @param int  $column     The column to build
+     */
+    public function build_column($column) {
+        $data = $this->get_column_datastructure($column);
+
+        $blockcontent = '';
+        foreach($data['blockinstances'] as $blockinstance) {
+            $blockcontent .= $blockinstance->render($blockinstance->get('id') == $this->blockinstance_currently_being_configured);
+        }
+
+        $smarty = smarty_core();
+        $smarty->assign('javascript',  defined('JSON'));
+        $smarty->assign('column',      $column);
+        $smarty->assign('numcolumns',  $this->get('numcolumns'));
+        $smarty->assign('blockcontent', $blockcontent);
+
+        return $smarty->fetch('view/column.tpl');
+    }
+
+    /**
      * adds a block with the given type to a view
      * 
      * @param array $values parameters for this function
@@ -392,7 +622,7 @@ class View {
         $this->dirtycolumns[$values['column']] = 1;
 
         if ($values['returndata']) {
-            return $bi->render(true);
+            return $bi->render();
         }
     }
 
@@ -473,6 +703,30 @@ class View {
     }
 
 
+    private $blockinstance_currently_being_configured = 0;
+
+    /**
+     * Sets what blockinstance is currently being edited
+     * TODO: use get()
+     */
+    public function set_blockinstance_currently_being_configured($id) {
+        $this->blockinstance_currently_being_configured = $id;
+    }
+
+    public function get_blockinstance_currently_being_configured() {
+        return $this->blockinstance_currently_being_configured;
+    }
+
+    /**
+     * Configures a blockinstance
+     *
+     * @param array $values parameters for this function
+     */
+    public function configureblockinstance($values) {
+        log_debug('configuring block instance');
+        log_debug($values);
+    }
+
     /**
      * adds a column to a view
      *
@@ -501,7 +755,7 @@ class View {
         $this->columns[$this->get('numcolumns')] = null; // set the key 
         db_commit();
         if ($values['returndata']) {
-            return view_build_column($this, $values['before'], true);
+            return $this->build_column($values['before'], true);
         }
     }
 
