@@ -63,11 +63,10 @@ $string['classmissing'] = "class %s for type %s in plugin %s was missing";
 $string['artefacttypeclassmissing'] = "Artefact types must all implement a class.  Missing %s";
 $string['artefactpluginmethodmissing'] =  "Artefact plugin %s must implement %s and doesn't";
 $string['blocktypelibmissing'] = 'Missing lib.php for block %s in artefact plugin %s';
-$string['blocktypemissingconfigform'] = 'Block type %s must implement config_form';
-$string['blocktypemissingconfigsave'] = 'Block type %s must implement config_save';
+$string['blocktypemissingconfigform'] = 'Block type %s must implement instance_config_form';
 $string['versionphpmissing'] = 'Plugin %s %s is missing version.php!';
 $string['blocktypeprovidedbyartefactnotinstallable'] = 'This will be installed as part of the installation of artefact plugin %s';
-$string['blockconfigdatacalledfromset'] = 'Configdata should not be set directly, use PluginBlockType::instance_config_save instead';
+$string['blockconfigdatacalledfromset'] = 'Configdata should not be set directly, use PluginBlocktype::instance_config_save instead';
 $string['invaliddirection'] = 'Invalid direction %s';
 
 // if you change these next two , be sure to change them in libroot/errors.php
