@@ -251,31 +251,41 @@ class PluginSearchInternal extends PluginSearch {
 
 
     public static function admin_search_user_pg($s) {
-        $values = array();
         $where = 'WHERE u.id <> 0 AND u.deleted = 0';
-        if (!empty($s->query)) {
-            $where .= '
-            AND ( u.firstname ILIKE \'%\' || ? || \'%\'
-                  OR u.lastname ILIKE \'%\' || ? || \'%\'
-            ) ';
-            $values = array($s->query, $s->query);
+
+        $strings = array();
+        $values = array();
+        if (!empty($s->name)) {
+            $strings[] = ' u.firstname ILIKE \'%\' || ? || \'%\' OR u.lastname ILIKE \'%\' || ? || \'%\' ';
+            $values = array($s->name, $s->name);
         } else {
             if (!empty($s->f)) {
-                $where .= ' AND u.firstname ILIKE ? || \'%\'';
+                $strings[] = ' u.firstname ILIKE ? || \'%\'';
                 $values[] = $s->f;
             }
             if (!empty($s->l)) {
-                $where .= ' AND u.lastname ILIKE ? || \'%\'';
+                $strings[] = ' u.lastname ILIKE ? || \'%\'';
                 $values[] = $s->l;
             }
         }
+        if (!empty($strings)) {
+            $strings = '( ' . join(' AND ', $strings) . ' )';
+        } else {
+            $strings = '';
+        }
+
+        if (!empty($s->email)) {
+            $strings = $strings . ' OR u.email ILIKE \'%\' || ? || \'%\'';
+            $values[] = $s->email;
+        }
+
+        if (!empty($strings)) {
+            $where .= ' AND ( ' . $strings . ' ) ';
+        }
+
         if (!empty($s->institution)) {
             $where .= ' AND u.institution = ? ';
             $values[] = $s->institution;
-        }
-        if (!empty($s->email)) {
-            $where .= ' AND u.email ILIKE \'%\' || ? || \'%\'';
-            $values[] = $s->email;
         }
 
         $count = get_field_sql('SELECT COUNT(*) FROM {usr} u ' . $where, $values);

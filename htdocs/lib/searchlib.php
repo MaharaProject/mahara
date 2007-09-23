@@ -119,15 +119,27 @@ function search_user($query_string, $limit, $offset = 0) {
 
 function build_admin_user_search_results($search) {
     $smarty = smarty_core();
-    $results = admin_user_search($search);
     $params = array();
     foreach ($search as $k => $v) {
         if (!empty($v) && $k != 'offset') {
             $params[] = $k . '=' . $v;
         }
     }
-    $params = join('&amp;', $params);
-    $smarty->assign_by_ref('params', $params);
+    $paramstring = join('&amp;', $params);
+
+    // In admin search, the search string is interpreted as either a
+    // name search or an email search depending on its contents
+    if (!empty($search->query)) {
+        $search->name = $search->query;
+        if (strpos($search->query, '@') !== false) {
+            $search->email = $search->query;
+        }
+        unset($search->query);
+    }
+
+    $results = admin_user_search($search);
+
+    $smarty->assign_by_ref('params', $paramstring);
     $results['pages'] = ceil($results['count'] / $results['limit']);
     $results['page'] = $results['offset'] / $results['limit']; // $results['pages'];
     $lastpage = $results['pages'] - 1;
