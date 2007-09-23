@@ -60,6 +60,7 @@ $string['format.rendermetadata'] = 'Display metadata for this Artefact';
 
 $string['addtutors'] = 'Add Tutors';
 $string['viewcreatedsuccessfully'] = 'View created successfully';
+$string['viewaccesseditedsuccessfully'] = 'View access saved successfully';
 $string['viewsavedsuccessfully'] = 'View saved successfully';
 
 $string['invalidcolumn'] = 'Column %s out of range';

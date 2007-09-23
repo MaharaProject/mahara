@@ -275,7 +275,6 @@ class View {
         delete_records('artefact_feedback','view',$this->id);
         delete_records('view_feedback','view',$this->id);
         delete_records('view_artefact','view',$this->id);
-        delete_records('view_content','view',$this->id);
         delete_records('view_access','view',$this->id);
         delete_records('view_access_group','view',$this->id);
         delete_records('view_access_usr','view',$this->id);
@@ -285,6 +284,137 @@ class View {
         delete_records('view','id',$this->id);
         $this->deleted = true;
     }
+
+    public function get_access() {
+
+        $data = get_records_sql_array('SELECT va.accesstype AS type, va.startdate, va.stopdate
+            FROM {view_access} va
+            LEFT JOIN {view} v ON (va.view = v.id)
+            WHERE v.id = ?
+            ORDER BY va.accesstype', array($this->id));
+        if (!$data) {
+            $data = array();
+        }
+        foreach ($data as &$item) {
+            $item = (array)$item;
+        }
+
+        // Get access for users and groups
+        $extradata = get_records_sql_array("
+            SELECT 'user' AS type, usr AS id, 0 AS tutoronly, startdate, stopdate
+                FROM {view_access_usr}
+                WHERE view = ?
+        UNION
+            SELECT 'group', \"group\", tutoronly, startdate, stopdate FROM {view_access_group}
+                WHERE view = ?", array($this->id, $this->id));
+        if ($extradata) {
+            foreach ($extradata as &$extraitem) {
+                $extraitem = (array)$extraitem;
+                $extraitem['tutoronly'] = (int)$extraitem['tutoronly'];
+            }
+            $data = array_merge($data, $extradata);
+        }
+        return $data;
+    }
+
+    public function set_access($accessdata) {
+        global $USER;
+
+        // For users who are being removed from having access to this view, they
+        // need to have the view and any attached artefacts removed from their
+        // watchlist.
+        $oldusers = array();
+        foreach ($this->get_access() as $item) {
+            if ($item['type'] == 'user') {
+                $oldusers[] = $item;
+            }
+        }
+
+        $newusers = array();
+        if ($accessdata) {
+            foreach ($accessdata as $item) {
+                if ($item['type'] == 'user') {
+                    $newusers[] = $item;
+                }
+            }
+        }
+
+        $userstodelete = array();
+        foreach ($oldusers as $olduser) {
+            foreach ($newusers as $newuser) {
+                if ($olduser['id'] == $newuser['id']) {
+                    continue(2);
+                }
+            }
+            $userstodelete[] = $olduser;
+        }
+
+        if ($userstodelete) {
+            $userids = array();
+            foreach ($userstodelete as $user) {
+                $userids[] = intval($user['id']);
+            }
+            $userids = implode(',', $userids);
+
+            execute_sql('DELETE FROM {usr_watchlist_view}
+                WHERE view = ' . $this->get('id') . '
+                AND usr IN (' . $userids . ')');
+        }
+
+        $beforeusers = activity_get_viewaccess_users($this->get('id'), $USER->get('id'), 'viewaccess');
+
+        // Procedure:
+        // get list of current friends - this is available in global $data
+        // compare with list of new friends
+        // work out which friends are being removed
+        // foreach friend
+        //     // remove record from usr_watchlist_view where usr = ? and view = ?
+        //     // remove records from usr_watchlist_artefact where usr = ? and view = ?
+        // endforeach
+        //
+        db_begin();
+        delete_records('view_access', 'view', $this->get('id'));
+        delete_records('view_access_usr', 'view', $this->get('id'));
+        delete_records('view_access_group', 'view', $this->get('id'));
+        $time = db_format_timestamp(time());
+
+        // View access
+        if ($accessdata) {
+            foreach ($accessdata as $item) {
+                $accessrecord = new StdClass;
+                $accessrecord->view = $this->get('id');
+                $accessrecord->startdate = db_format_timestamp($item['startdate']);
+                $accessrecord->stopdate  = db_format_timestamp($item['stopdate']);
+                switch ($item['type']) {
+                    case 'public':
+                    case 'loggedin':
+                    case 'friends':
+                        $accessrecord->accesstype = $item['type'];
+                        insert_record('view_access', $accessrecord);
+                        break;
+                    case 'user':
+                        $accessrecord->usr = $item['id'];
+                        insert_record('view_access_usr', $accessrecord);
+                        break;
+                    case 'group':
+                        $accessrecord->group = $item['id'];
+                        $accessrecord->tutoronly = $item['tutoronly'];
+                        insert_record('view_access_group', $accessrecord);
+                        break;
+                }
+            }
+        }
+
+        $data = new StdClass;
+        $data->view = $this->get('id');
+        $data->owner = $USER->get('id');
+        $data->oldusers = $beforeusers;
+        activity_occurred('viewaccess', $data);
+        handle_event('saveview', $this->get('id'));
+
+        db_commit();
+    }
+
 
     public function release($groupid, $releaseuser=null) {
         if ($this->get('submittedto') != $groupid) {
@@ -309,7 +439,7 @@ class View {
      * @param string $defaultcategory The currently selected category
      * @param View   $view            The view we're currently using
     */
-    public static function build_category_list($defaultcategory, View $view) {
+    public static function build_category_list($defaultcategory, View $view, $new=0) {
         require_once(get_config('docroot') . '/blocktype/lib.php');
         $cats = get_records_array('blocktype_category');
         $categories = array_map(
@@ -342,6 +472,7 @@ class View {
         $smarty = smarty_core();
         $smarty->assign('categories', $categories);
         $smarty->assign('viewid', $view->get('id'));
+        $smarty->assign('new', $new);
         return $smarty->fetch('view/blocktypecategorylist.tpl');
     }
 
@@ -369,7 +500,7 @@ class View {
      * Process view changes. This function is used both by the json stuff and 
      * by normal posts
      */
-    public function process_changes() {
+    public function process_changes($category='', $new=0) {
         global $SESSION, $USER;
 
         // Security
@@ -380,8 +511,6 @@ class View {
         if (!count($_POST) && count($_GET) < 3) {
             return;
         }
-
-        $category = param_alpha('category', null);
 
         $action = '';
         foreach ($_POST as $key => $value) {
@@ -400,6 +529,10 @@ class View {
             }
         }
 
+        if (empty($action)) {
+            return;
+        }
+    
         $actionstring = $action;
         $action = substr($action, 0, strpos($action, '_'));
         $actionstring  = substr($actionstring, strlen($action) + 1);
@@ -417,8 +550,8 @@ class View {
             case 'removeblockinstance': // requires action_removeblockinstance_id_\d
                 if (!defined('JSON')) {
                     if (!$sure = param_boolean('sure')) {
-                        $yeslink = '/viewrework.php?view=1&category=file&action_' . $action . '_' .  $actionstring . '=1&sure=true';
-                        $baselink = '/viewrework.php?view=' . $this->get('id') . '&category=' . $category;
+                        $yeslink = get_config('wwwroot') . '/view/blocks.php?id=1&c=file&new=' . $new . '&action_' . $action . '_' .  $actionstring . '=1&sure=true';
+                        $baselink = '/viewrework.php?id=' . $this->get('id') . '&c=' . $category . '&new=' . $new;
                         $SESSION->add_info_msg(get_string('confirmdeleteblockinstance', 'view') 
                             . ' <a href="' . $yeslink . '">' . get_string('yes') . '</a>'
                             . ' <a href="' . $baselink . '">' . get_string('no') . '</a>', false);
@@ -466,8 +599,7 @@ class View {
                 $fun = 'add_err_msg';
             }
             $SESSION->{$fun}($message);
-            // TODO fix this url
-            redirect('/viewrework.php?view=' . $this->get('id') . '&category=' . $category);
+            redirect('/view/blocks.php?id=' . $this->get('id') . 'c=' . $category . '&new=' . $new);
         }
         return array('message' => $message, 'data' => $returndata);
     }

@@ -288,7 +288,6 @@ $string['saveaccess'] = 'Save Access';
 $string['submitview'] = 'Submit View';
 $string['submitviewfailed'] = 'Submit view failed';
 $string['submitviewquestion'] = 'If you submit this view for assessment, you will not be able to edit the view or any of its associated artefacts until your tutor has finished marking the view.  Are you sure you want to submit this view now?';
-$string['viewaccesseditedsuccessfully'] = 'View access saved successfully';
 $string['viewdeleted'] = 'View deleted';
 $string['views'] = 'Views';
 $string['viewsubmitted'] = 'View submitted';
@@ -833,5 +832,6 @@ $string['system'] = 'System';
 $string['preview'] = 'Preview';
 $string['done'] = 'Done';
 $string['next'] = 'Next';
+$string['back'] = 'Back';
 
 ?>

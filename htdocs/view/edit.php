@@ -35,8 +35,11 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('docroot') . 'lib/view.php');
 
 $viewid = param_integer('id', 0); // if 0, we're creating a new view
+$new = param_boolean('new');
+
 if (empty($viewid)) {
     define('TITLE', get_string('createview', 'view'));
+    $new = true;
 }
 else {
     define('TITLE', get_string('editview', 'view'));
@@ -78,6 +81,10 @@ $editview = pieform(array(
         'viewid' => array(
             'type'  => 'hidden',
             'value' => $viewid,
+        ),
+        'new' => array(
+            'type' => 'hidden',
+            'value' => $new,
         ),
         'title' => array(
             'type'         => 'text',
@@ -132,7 +139,7 @@ $editview = pieform(array(
         ),
         'submit'   => array(
             'type'  => 'submitcancel',
-            'value' => array(isset($view) ? get_string('save') : get_string('next'), get_string('cancel')),
+            'value' => array(!isset($new) ? get_string('save') : get_string('next'), get_string('cancel')),
         ),
     ),
 ));
@@ -165,7 +172,7 @@ function editview_submit(Pieform $form, $values) {
 
     $view->commit();
 
-    if (empty($editing)) {
+    if ($values['new']) {
         $redirecturl = '/view/blocks.php?id=' . $view->get('id') . '&new=1';
     } 
     else {
