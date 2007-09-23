@@ -116,6 +116,41 @@ function search_user($query_string, $limit, $offset = 0) {
     return $results;
 }
 
+
+function build_admin_user_search_results($search) {
+    $smarty = smarty_core();
+    $results = admin_user_search($search);
+    $params = array();
+    foreach ($search as $k => $v) {
+        if (!empty($v) && $k != 'offset') {
+            $params[] = $k . '=' . $v;
+        }
+    }
+    $params = join('&amp;', $params);
+    $smarty->assign_by_ref('params', $params);
+    $results['pages'] = ceil($results['count'] / $results['limit']);
+    $results['page'] = $results['offset'] / $results['limit']; // $results['pages'];
+    $lastpage = $results['pages'] - 1;
+    $results['next'] = min($lastpage, $results['page'] + 1);
+    $results['prev'] = max(0, $results['page'] - 1);
+    $range = min(1, $lastpage);
+    $pagenumbers = array_unique(array_merge(range(0, min($range, $results['page'])),
+                                            range(max($range, $results['page']-$range), 
+                                                  min($results['page']+$range, $lastpage)),
+                                            range(max($range, $lastpage-$range), $lastpage)));
+    $smarty->assign_by_ref('results', $results);
+    $smarty->assign_by_ref('pagenumbers', $pagenumbers);
+    return $smarty->fetch('admin/users/resulttable.tpl');
+}
+
+
+function admin_user_search($searchparams) {
+    $plugin = 'internal';  // No admin search with solr yet.
+    safe_require('search', $plugin);
+    return call_static_method(generate_class_name('search', $plugin), 'admin_search_user', $searchparams);
+}
+
+
 /**
  * Given a query string and limits, return an array of matching groups using the
  * search plugin defined in config.php

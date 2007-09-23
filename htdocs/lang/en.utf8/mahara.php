@@ -469,7 +469,8 @@ $string['groupconfirmdelete'] = 'Are you sure you wish to delete this community?
 $string['groupconfirmdeletehasviews'] = 'Are you sure you wish to delete this community? Some of your views use this community for access control, removing this community would mean that the members of that community would not have access to the views.';
 $string['deletegroup'] = 'Group Deleted Successfully';
 
-
+$string['alphabet'] = 'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z';
+$string['all'] = 'All';
 
 // friendslist
 $string['reasonoptional'] = 'Reason (optional)';

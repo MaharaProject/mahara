@@ -236,6 +236,80 @@ class PluginSearchInternal extends PluginSearch {
         );
     }
     
+
+    public static function admin_search_user($s) {
+        if (is_postgres()) {
+            return self::admin_search_user_pg($s);
+        } 
+        //else if (is_mysql()) {
+        //    return self::admin_search_user_my($query_string, $limit, $offset);
+        //}
+        else {
+            throw new SQLException('admin_search_user() is not implemented for your database engine (' . get_config('dbtype') . ')');
+        }
+    }
+
+
+    public static function admin_search_user_pg($s) {
+        $values = array();
+        $where = 'WHERE u.id <> 0 AND u.deleted = 0';
+        if (!empty($s->query)) {
+            $where .= '
+            AND ( u.firstname ILIKE \'%\' || ? || \'%\'
+                  OR u.lastname ILIKE \'%\' || ? || \'%\'
+            ) ';
+            $values = array($s->query, $s->query);
+        } else {
+            if (!empty($s->f)) {
+                $where .= ' AND u.firstname ILIKE ? || \'%\'';
+                $values[] = $s->f;
+            }
+            if (!empty($s->l)) {
+                $where .= ' AND u.lastname ILIKE ? || \'%\'';
+                $values[] = $s->l;
+            }
+        }
+        if (!empty($s->institution)) {
+            $where .= ' AND u.institution = ? ';
+            $values[] = $s->institution;
+        }
+        if (!empty($s->email)) {
+            $where .= ' AND u.email ILIKE \'%\' || ? || \'%\'';
+            $values[] = $s->email;
+        }
+
+        $count = get_field_sql('SELECT COUNT(*) FROM {usr} u ' . $where, $values);
+
+        if ($count > 0) {
+            $data = get_records_sql_array('
+                SELECT 
+                    u.id, u.firstname, u.lastname, u.username, u.institution, u.email, u.staff,
+                    u.active, u.suspendedctime
+                FROM
+                    {usr} u ' . $where . '
+                ORDER BY u.firstname, u.lastname, u.id',
+                $values,
+                $s->offset,
+                $s->limit);
+
+            if ($data) {
+                foreach ($data as &$item) {
+                    $item = (array)$item;
+                }
+            }
+        }
+        else {
+            $data = false;
+        }
+
+        return array(
+            'count'   => $count,
+            'limit'   => $s->limit,
+            'offset'  => $s->offset,
+            'data'    => $data,
+        );
+    }
+
     /**
      * Implement group searching with SQL
      *

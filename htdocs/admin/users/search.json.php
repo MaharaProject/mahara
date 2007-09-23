@@ -47,18 +47,16 @@ if ($action == 'suspend') {
 
 if ($action == 'search') {
     require('searchlib.php');
-    try {
-        $query = param_variable('query');
-    }
-    catch (ParameterException $e) {
-        json_reply('missingparameter','Missing parameter \'query\'');
-    }
-    $limit = param_integer('limit', 20);
-    $offset = param_integer('offset', 0);
 
-    $data = search_user($query, $limit, $offset);
+    $params = new StdClass;
+    $params->query = trim(param_variable('query', ''));
+    $params->offset = param_integer('offset', 0);
+    $params->limit = param_integer('limit', 10);
+    $params->f = param_alpha('f', null);
+    $params->l = param_alpha('l', null);
 
     json_headers();
+    $data['data'] = build_admin_user_search_results($params);
     $data['error'] = false;
     $data['message'] = '';
     echo json_encode($data);

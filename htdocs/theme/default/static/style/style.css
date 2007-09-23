@@ -1547,3 +1547,10 @@ a.pieform-calendar-toggle img {
 .maincontent .maharatable {
     border: none;
 }
+
+#initials span.selected a,
+.search-results-pages span.selected a {
+  color: #000 !important;
+  text-decoration: none;
+  font-weight: bold;
+}
