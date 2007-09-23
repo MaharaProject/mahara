@@ -551,7 +551,7 @@ class View {
                 if (!defined('JSON')) {
                     if (!$sure = param_boolean('sure')) {
                         $yeslink = get_config('wwwroot') . '/view/blocks.php?id=1&c=file&new=' . $new . '&action_' . $action . '_' .  $actionstring . '=1&sure=true';
-                        $baselink = '/viewrework.php?id=' . $this->get('id') . '&c=' . $category . '&new=' . $new;
+                        $baselink = '/view/blocks.php?id=' . $this->get('id') . '&c=' . $category . '&new=' . $new;
                         $SESSION->add_info_msg(get_string('confirmdeleteblockinstance', 'view') 
                             . ' <a href="' . $yeslink . '">' . get_string('yes') . '</a>'
                             . ' <a href="' . $baselink . '">' . get_string('no') . '</a>', false);
