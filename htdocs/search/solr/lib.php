@@ -179,7 +179,7 @@ END;
                         continue;
                     }
 
-                    if ($key_parts[0] == 'store' || $key == 'ref_institution') {
+                    if ($key_parts[0] == 'store' || $key_parts[0] == 'text' || $key == 'ref_institution') {
                         $new_result[$key_parts[1]] = $value;
                     }
                 }
@@ -210,10 +210,10 @@ END;
             $solrfields = array(
                 'id'          => 'id',
                 'institution' => 'ref_institution',
-                'email'       => 'index_email',
-                'username'    => 'index_username',
-                'firstname'   => 'index_firstname',
-                'lastname'    => 'index_lastname'
+                'email'       => 'text_email',
+                'username'    => 'text_username',
+                'firstname'   => 'text_firstname',
+                'lastname'    => 'text_lastname'
             );
             $terms = array();
             foreach ($s->expr[$op] as $f) {
@@ -427,15 +427,11 @@ END;
             'type'                => 'user',
             'index_name'          => $user['preferredname'],
             'ref_institution'     => $user['institution'],
-            'index_email'         => $user['email'],
-            'store_email'         => $user['email'],
-            'index_username'      => $user['username'],
-            'store_username'      => $user['username'],
+            'text_email'          => $user['email'],
+            'text_username'       => $user['username'],
             'store_preferredname' => $user['preferredname'],
-            'index_firstname'     => $user['firstname'],
-            'store_firstname'     => $user['firstname'],
-            'index_lastname'      => $user['lastname'],
-            'store_lastname'      => $user['lastname'],
+            'text_firstname'      => $user['firstname'],
+            'text_lastname'       => $user['lastname'],
         );
         if (empty($doc['index_name'])) {
             $doc['index_name'] = $user['firstname'] . ' ' . $user['lastname'];
