@@ -163,9 +163,7 @@ END;
         set_config_plugin('search', 'solr', 'solrurl', $values['solrurl']);
     }
 
-    public static function search_user($query_string, $limit, $offset = 0) {
-        $results = self::send_query($query_string, $limit, $offset, array('type' => 'user'));
-
+    private static function remove_key_prefix($results) {
         if (is_array($results['data'])) {
             foreach ($results['data'] as &$result) {
                 $new_result = array();
@@ -188,13 +186,46 @@ END;
                 $result = $new_result;
             }
         }
+    }
 
+    public static function search_user($query_string, $limit, $offset = 0) {
+        if (!empty($query_string)) {
+            $query_string .= '*';
+        }
+        $results = self::send_query($query_string, $limit, $offset, array('type' => 'user'));
+        self::remove_key_prefix(&$results);
         return $results;
     }
 
+
     public static function admin_search_user($s) {
-        //$results = self::send_query($query_string, $limit, $offset, array('type' => 'user'));
-        return array();
+        if (!empty($s->expr['or'])) {
+            $op = 'or';
+        } else if (!empty($s->expr['and'])) {
+            $op = 'and';
+        } else {
+            $q = '';
+        }
+        if (!empty($op)) {
+            $solrfields = array(
+                'id'          => 'id',
+                'institution' => 'ref_institution',
+                'email'       => 'index_email',
+                'username'    => 'index_username',
+                'firstname'   => 'index_firstname',
+                'lastname'    => 'index_lastname'
+            );
+            $terms = array();
+            foreach ($s->expr[$op] as $f) {
+                $terms[] = $solrfields[$f['field']] . ':' . strtolower($f['string'])
+                    . ($f['type'] != 'equals' ? '*' : '');
+            }
+            $q = join(' '.strtoupper($op).' ', $terms);
+        }
+
+        $results = self::send_query($q, $s->limit, $s->offset, array('type' => 'user'));
+        self::remove_key_prefix(&$results);
+        return $results;
     }
 
 
@@ -396,10 +427,14 @@ END;
             'type'                => 'user',
             'index_name'          => $user['preferredname'],
             'ref_institution'     => $user['institution'],
+            'index_email'         => $user['email'],
             'store_email'         => $user['email'],
+            'index_username'      => $user['username'],
             'store_username'      => $user['username'],
             'store_preferredname' => $user['preferredname'],
+            'index_firstname'     => $user['firstname'],
             'store_firstname'     => $user['firstname'],
+            'index_lastname'      => $user['lastname'],
             'store_lastname'      => $user['lastname'],
         );
         if (empty($doc['index_name'])) {

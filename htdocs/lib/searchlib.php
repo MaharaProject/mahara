@@ -179,8 +179,7 @@ function build_admin_user_search_results($search) {
 
 
 function admin_user_search($searchparams) {
-    $plugin = 'internal';  // No admin search with solr yet.
-    //$plugin = get_config('searchplugin');
+    $plugin = get_config('searchplugin');
     safe_require('search', $plugin);
     return call_static_method(generate_class_name('search', $plugin), 'admin_search_user', $searchparams);
 }
