@@ -198,32 +198,34 @@ END;
     }
 
 
-    public static function admin_search_user($s) {
-        if (!empty($s->expr['or'])) {
-            $op = 'or';
-        } else if (!empty($s->expr['and'])) {
-            $op = 'and';
-        } else {
-            $q = '';
-        }
-        if (!empty($op)) {
-            $solrfields = array(
-                'id'          => 'id',
-                'institution' => 'ref_institution',
-                'email'       => 'text_email',
-                'username'    => 'text_username',
-                'firstname'   => 'text_firstname',
-                'lastname'    => 'text_lastname'
-            );
+    public static function admin_search_user($queries, $constraints, $offset, $limit) {
+        $q = '';
+        $solrfields = array(
+            'id'          => 'id',
+            'institution' => 'ref_institution',
+            'email'       => 'text_email',
+            'username'    => 'text_username',
+            'firstname'   => 'text_firstname',
+            'lastname'    => 'text_lastname'
+        );
+        if (!empty($queries)) {
             $terms = array();
-            foreach ($s->expr[$op] as $f) {
+            foreach ($queries as $f) {
                 $terms[] = $solrfields[$f['field']] . ':' . strtolower($f['string'])
                     . ($f['type'] != 'equals' ? '*' : '');
             }
-            $q = join(' '.strtoupper($op).' ', $terms);
+            $q .= '(' . join(' OR ', $terms) . ')';
+        }
+        if (!empty($constraints)) {
+            $terms = array();
+            foreach ($constraints as $f) {
+                $terms[] = $solrfields[$f['field']] . ':' . strtolower($f['string'])
+                    . ($f['type'] != 'equals' ? '*' : '');
+            }
+            $q .= join(' AND ', $terms);
         }
 
-        $results = self::send_query($q, $s->limit, $s->offset, array('type' => 'user'));
+        $results = self::send_query($q, $limit, $offset, array('type' => 'user'));
         self::remove_key_prefix(&$results);
         return $results;
     }

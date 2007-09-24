@@ -237,9 +237,9 @@ class PluginSearchInternal extends PluginSearch {
     }
     
 
-    public static function admin_search_user($s) {
+    public static function admin_search_user($queries, $constratints, $offset, $limit) {
         if (is_postgres()) {
-            return self::admin_search_user_pg($s);
+            return self::admin_search_user_pg($queries, $constratints, $offset, $limit);
         } 
         //else if (is_mysql()) {
         //    return self::admin_search_user_my($query_string, $limit, $offset);
@@ -250,7 +250,7 @@ class PluginSearchInternal extends PluginSearch {
     }
 
 
-    public static function admin_search_user_pg($s) {
+    public static function admin_search_user_pg($queries, $constraints, $offset, $limit) {
         $where = 'WHERE u.id <> 0 AND u.deleted = 0';
         $values = array();
 
@@ -260,18 +260,18 @@ class PluginSearchInternal extends PluginSearch {
                             'equals' => ' = ? ',
                             'contains' => ' ILIKE \'%\' || ? || \'%\'');
 
-        if (!empty($s->expr['or'])) {
+        if (!empty($queries)) {
             $where .= ' AND ( ';
             $str = array();
-            foreach ($s->expr['or'] as $f) {
+            foreach ($queries as $f) {
                 $str[] = 'u.' . $f['field'] . $matchtypes[$f['type']];
                 $values[] = $f['string'];
             }
             $where .= join(' OR ', $str) . ') ';
         } 
 
-        if (!empty($s->expr['and'])) {
-            foreach ($s->expr['and'] as $f) {
+        if (!empty($constraints)) {
+            foreach ($constraints as $f) {
                 $where .= ' AND u.' . $f['field'] . $matchtypes[$f['type']];
                 $values[] = $f['string'];
             }
@@ -288,8 +288,8 @@ class PluginSearchInternal extends PluginSearch {
                     {usr} u ' . $where . '
                 ORDER BY u.firstname, u.lastname, u.id',
                 $values,
-                $s->offset,
-                $s->limit);
+                $offset,
+                $limit);
 
             if ($data) {
                 foreach ($data as &$item) {
@@ -303,8 +303,8 @@ class PluginSearchInternal extends PluginSearch {
 
         return array(
             'count'   => $count,
-            'limit'   => $s->limit,
-            'offset'  => $s->offset,
+            'limit'   => $limit,
+            'offset'  => $offset,
             'data'    => $data,
         );
     }
