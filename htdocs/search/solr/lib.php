@@ -190,7 +190,7 @@ END;
 
     public static function search_user($query_string, $limit, $offset = 0) {
         if (!empty($query_string)) {
-            $query_string .= '*';
+            $query_string = 'index_name:' . $query_string . '*';
         }
         $results = self::send_query($query_string, $limit, $offset, array('type' => 'user'));
         self::remove_key_prefix(&$results);
