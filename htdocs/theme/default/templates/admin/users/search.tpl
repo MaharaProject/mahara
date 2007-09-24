@@ -35,8 +35,20 @@
         <div class="searchform">
             <label>Query: 
                 <input type="text" name="query" id="query">
-                <button id="query-button" type="submit">{str tag="go"}</button>
             </label>
+            {if $USER->get('admin') && !empty($institutions)}
+            <span class="institutions">
+                <label>Institution: 
+                    <select name="institution">
+                        <option value=all>{str tag=all}</option>
+                        {foreach from=$institutions item=i}
+                        <option value={$i->name}>{$i->displayname}</option>
+                        {/foreach}
+                    </select>
+                </label>
+            </span>
+            {/if}
+            <button id="query-button" type="submit">{str tag="go"}</button>
         </div>
         <div id="results">
             {$results}

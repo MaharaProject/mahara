@@ -37,6 +37,7 @@ require('searchlib.php');
 $search = (object) array(
     'query' => trim(param_variable('query', '')),
     'sort' => param_alpha('sort', 'lastname'),
+    'institution' => param_alpha('institution', 'all'),
     'f' => param_alpha('f', null),
     'l' => param_alpha('l', null),
     'offset' => param_integer('offset', 0),
@@ -46,6 +47,7 @@ $search = (object) array(
 $smarty = smarty(array('usersearch'));
 $smarty->assign('search', $search);
 $smarty->assign('alphabet', explode(',', get_string('alphabet')));
+$smarty->assign('institutions', get_records_array('institution'));
 $smarty->assign('results', build_admin_user_search_results($search));
 $smarty->display('admin/users/search.tpl');
 

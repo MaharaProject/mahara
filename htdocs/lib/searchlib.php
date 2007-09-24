@@ -153,7 +153,7 @@ function build_admin_user_search_results($search) {
                                            'string' => $search->l);
         }
     }
-    if (!empty($search->institution)) {
+    if (!empty($search->institution) && $search->institution != 'all') {
         $search->expr['and'][] = array('field' => 'institution',
                                        'type' => 'equals',
                                        'string' => $search->institution);
