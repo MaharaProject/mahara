@@ -252,40 +252,29 @@ class PluginSearchInternal extends PluginSearch {
 
     public static function admin_search_user_pg($s) {
         $where = 'WHERE u.id <> 0 AND u.deleted = 0';
-
-        $strings = array();
         $values = array();
-        if (!empty($s->name)) {
-            $strings[] = ' u.firstname ILIKE \'%\' || ? || \'%\' OR u.lastname ILIKE \'%\' || ? || \'%\' ';
-            $values = array($s->name, $s->name);
-        } else {
-            if (!empty($s->f)) {
-                $strings[] = ' u.firstname ILIKE ? || \'%\'';
-                $values[] = $s->f;
+
+        // Only handle OR/AND expressions at the top level.  Eventually we may need subexpressions.
+
+        $matchtypes = array('starts' => ' ILIKE ? || \'%\'',
+                            'equals' => ' = ? ',
+                            'contains' => ' ILIKE \'%\' || ? || \'%\'');
+
+        if (!empty($s->expr['or'])) {
+            $where .= ' AND ( ';
+            $str = array();
+            foreach ($s->expr['or'] as $f) {
+                $str[] = 'u.' . $f['field'] . $matchtypes[$f['type']];
+                $values[] = $f['string'];
             }
-            if (!empty($s->l)) {
-                $strings[] = ' u.lastname ILIKE ? || \'%\'';
-                $values[] = $s->l;
+            $where .= join(' OR ', $str) . ') ';
+        } 
+
+        if (!empty($s->expr['and'])) {
+            foreach ($s->expr['and'] as $f) {
+                $where .= ' AND u.' . $f['field'] . $matchtypes[$f['type']];
+                $values[] = $f['string'];
             }
-        }
-        if (!empty($strings)) {
-            $strings = '( ' . join(' AND ', $strings) . ' )';
-        } else {
-            $strings = '';
-        }
-
-        if (!empty($s->email)) {
-            $strings = $strings . ' OR u.email ILIKE \'%\' || ? || \'%\'';
-            $values[] = $s->email;
-        }
-
-        if (!empty($strings)) {
-            $where .= ' AND ( ' . $strings . ' ) ';
-        }
-
-        if (!empty($s->institution)) {
-            $where .= ' AND u.institution = ? ';
-            $values[] = $s->institution;
         }
 
         $count = get_field_sql('SELECT COUNT(*) FROM {usr} u ' . $where, $values);

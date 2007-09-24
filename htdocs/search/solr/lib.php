@@ -192,6 +192,12 @@ END;
         return $results;
     }
 
+    public static function admin_search_user($s) {
+        //$results = self::send_query($query_string, $limit, $offset, array('type' => 'user'));
+        return array();
+    }
+
+
     /**
      * Given a query string and limits, return an array of matching objects
      * owned by the current user.  Possible return types are ...

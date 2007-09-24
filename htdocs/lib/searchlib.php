@@ -130,11 +130,33 @@ function build_admin_user_search_results($search) {
     // In admin search, the search string is interpreted as either a
     // name search or an email search depending on its contents
     if (!empty($search->query)) {
-        $search->name = $search->query;
+        $search->expr['or'] = array(array('field' => 'firstname',
+                                          'type' => 'contains',
+                                          'string' => $search->query),
+                                    array('field' => 'lastname',
+                                          'type' => 'contains',
+                                          'string' => $search->query));
         if (strpos($search->query, '@') !== false) {
-            $search->email = $search->query;
+            $search->expr['or'][] = array('field' => 'email',
+                                          'type' => 'contains',
+                                          'string' => $search->query);
         }
-        unset($search->query);
+    } else {
+        if (!empty($search->f)) {
+            $search->expr['and'][] = array('field' => 'firstname',
+                                           'type' => 'starts',
+                                           'string' => $search->f);
+        }
+        if (!empty($search->l)) {
+            $search->expr['and'][] = array('field' => 'lastname',
+                                           'type' => 'starts',
+                                           'string' => $search->l);
+        }
+    }
+    if (!empty($search->institution)) {
+        $search->expr['and'][] = array('field' => 'institution',
+                                       'type' => 'equals',
+                                       'string' => $search->institution);
     }
 
     $results = admin_user_search($search);
@@ -158,6 +180,7 @@ function build_admin_user_search_results($search) {
 
 function admin_user_search($searchparams) {
     $plugin = 'internal';  // No admin search with solr yet.
+    //$plugin = get_config('searchplugin');
     safe_require('search', $plugin);
     return call_static_method(generate_class_name('search', $plugin), 'admin_search_user', $searchparams);
 }
