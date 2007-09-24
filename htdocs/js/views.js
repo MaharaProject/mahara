@@ -31,6 +31,9 @@ function ViewManager() {
         // Rewrite the links in the category select list to be ajax
         self.rewriteCategorySelectList();
 
+        // Rewrite the configure buttons to be ajax
+        self.rewriteConfigureButtons();
+
         // Rewrite the delete buttons to be ajax
         self.rewriteDeleteButtons();
 
@@ -201,6 +204,46 @@ function ViewManager() {
                     self.makeBlockTypesDraggable();
                 });
                 e.stop();
+            });
+        });
+    }
+
+    /**
+     * Rewrites the blockinstance configure buttons to be AJAX
+     */
+    this.rewriteConfigureButtons = function() {
+        forEach(getElementsByTagAndClassName('input', 'configurebutton', 'bottom-pane'), function(i) {
+            self.rewriteConfigureButton(i);
+        });
+    }
+
+    /**
+     * Rewrites one configure button to be AJAX
+     */
+    this.rewriteConfigureButton = function(button) {
+        connect(button, 'onclick', function(e) {
+            e.stop();
+            setNodeAttribute(button, 'disabled', 'disabled');
+            var pd = {'id': $('viewid').value, 'change': 1};
+            pd[e.src().getAttribute('name')] = 1;
+            sendjsonrequest('blocks.json.php', pd, 'POST', function(data) {
+                var blockinstance = getFirstParentByTagAndClassName(button, 'div', 'blockinstance');
+                var content = getFirstElementByTagAndClassName('div', 'blockinstance-content', blockinstance);
+                var oldContent = content.innerHTML;
+                content.innerHTML = data.data['html'];
+                eval(data.data['js']);
+
+                // Make the cancel button be supersmart
+                // TODO fix the id of the cancel button
+                var cancelButton = $('cancel_cb_8_action_configureblockinstance_id_8');
+                connect(cancelButton, 'onclick', function(e) {
+                    e.stop();
+                    content.innerHTML = oldContent;
+                    removeNodeAttribute(button, 'disabled');
+                });
+
+            }, function() {
+                removeNodeAttribute(button, 'disabled');
             });
         });
     }

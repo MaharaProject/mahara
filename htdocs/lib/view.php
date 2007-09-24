@@ -504,6 +504,8 @@ class View {
         global $SESSION, $USER;
 
         // Security
+        // TODO this might need to be moved below the requestdata check below, to prevent non owners of the view being 
+        // rejected
         if ($USER->get('id') != $this->get('owner')) {
             throw new AccessDeniedException(get_string('canteditdontown', 'view'));
         }
@@ -563,9 +565,9 @@ class View {
             case 'configureblockinstance': // requires action_configureblockinstance_id_\d_column_\d_order_\d
                 if (!defined('JSON')) {
                     $this->blockinstance_currently_being_configured = $values['id'];
+                    // And we're done here for now
+                    return;
                 }
-                // And we're done here for now
-                return;
             case 'moveblockinstance': // requires action_moveblockinstance_id_\d_column_\d_order_\d
             case 'addcolumn': // requires action_addcolumn_before_\d
             case 'removecolumn': // requires action_removecolumn_column_\d
@@ -877,9 +879,58 @@ class View {
      * @param array $values parameters for this function
      */
     public function configureblockinstance($values) {
-        // TODO is this needed?
-        log_debug('configuring block instance');
-        log_debug($values);
+        require_once(get_config('docroot') . 'blocktype/lib.php');
+        $bi = new BlockInstance($values['id']);
+        safe_require('blocktype', $bi->get('blocktype'));
+        $elements = call_static_method(generate_class_name('blocktype', $bi->get('blocktype')), 'instance_config_form', $bi);
+
+        // Add submit/cancel buttons and helper hidden variable
+        $elements['action_configureblockinstance_id_' . $bi->get('id')] = array(
+            'type' => 'submitcancel',
+            'value' => array(get_string('save'), get_string('cancel')),
+        );
+
+        $form = array(
+            'name' => 'cb_' . $bi->get('id'),
+            'validatecallback' => array(generate_class_name('blocktype', $bi->get('blocktype')), 'instance_config_validate'),
+            'successcallback'  => array($bi, 'instance_config_store'),
+            'elements' => $elements
+        );
+
+        require_once('pieforms/pieform.php');
+        $pieform = new Pieform($form);
+
+        // We need to load any javascript required for the pieform. We do this
+        // by inspecting the form array and seeing what elements there are, 
+        // getting their headdata and making sure that this js is made 
+        // available to be used on the client side
+        $js = '';
+        foreach ($elements as $key => $element) {
+            $function = 'pieform_element_' . $element['type'] . '_get_headdata';
+            if (is_callable($function)) {
+                $headers = call_user_func($function);
+
+                // TODO Eventually, we want to steal some code out of smarty(). For now I'm going to hack and kludge
+                if (in_array('tinytinymce', $headers)) {
+                    $js = <<<EOF
+    var script = createDOM('script', {'type': 'text/javascript'});
+    script.innerHTML = 'tinyMCE.execCommand("mceAddControl", true, "cb_{$values['id']}_{$key}");';
+    appendChildNodes(getFirstElementByTagAndClassName('head'), script);
+EOF;
+                }
+            }
+        }
+
+        // This is a bit hacky. Because pieforms will take values from 
+        // $_POST before 'defaultvalue's of form elements, we need to nuke 
+        // all of the post values for the form. The situation where this 
+        // becomes relevant is when someone clicks the configure button for 
+        // one block, then immediately configures another block
+        foreach (array_keys($elements) as $name) {
+            unset($_POST[$name]);
+        }
+
+        return array('html' => $pieform->build(false), 'js' => $js);
     }
 
     /**

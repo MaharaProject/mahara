@@ -209,8 +209,7 @@ class BlockInstance {
         }
 
         set_field('block_instance', 'configdata', serialize($values), 'id', $this->get('id'));
-        // TODO: fix url
-        redirect('/viewrework.php?view=1&category=file');
+        redirect('/view/blocks.php?id=' . $this->get('view'));
     }
 
     /**

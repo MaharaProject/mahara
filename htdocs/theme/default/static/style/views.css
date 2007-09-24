@@ -150,6 +150,9 @@
 .blockinstance-controls input.submit {
     margin: 0;
 }
+.blockinstance-content .maharatable {
+    border: 0;
+}
 
 #clearer {
     clear: both;
