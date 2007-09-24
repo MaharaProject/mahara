@@ -58,7 +58,7 @@ if ($action == 'search') {
     json_headers();
     $data['data'] = build_admin_user_search_results($params);
     $data['error'] = false;
-    $data['message'] = '';
+    $data['message'] = null;
     echo json_encode($data);
     exit;
 }
