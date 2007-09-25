@@ -730,8 +730,10 @@ class View {
     public function build_column($column, $editing=false) {
         $data = $this->get_column_datastructure($column);
 
-        $renderfunction = 'render';
-        if (!$editing) {
+        if ($editing) {
+            $renderfunction = 'render_editing';
+        }
+        else {
             $renderfunction = 'render_viewing';
         }
         
@@ -749,7 +751,7 @@ class View {
         if ($editing) {
             return $smarty->fetch('view/columnediting.tpl');
         }
-        return $smarty->fetch('view/column.tpl');
+        return $smarty->fetch('view/columnviewing.tpl');
     }
 
     /**

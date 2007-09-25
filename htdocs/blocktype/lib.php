@@ -222,7 +222,7 @@ class BlockInstance {
      * @param bool $configure Whether to render the block instance in configure 
      *                        mode
      */
-    public function render($configure=false) {
+    public function render_editing($configure=false) {
         safe_require('blocktype', $this->get('blocktype'));
         if ($configure) {
             $elements = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'instance_config_form', $this);
@@ -306,7 +306,7 @@ class BlockInstance {
         $smarty->assign('content', $content);
         $smarty->assign('javascript', defined('JSON'));
 
-        return $smarty->fetch('view/blocktypecontainer.tpl');
+        return $smarty->fetch('view/blocktypecontainerediting.tpl');
     }
 
     public function render_viewing() {
