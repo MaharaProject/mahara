@@ -130,20 +130,26 @@ function build_admin_user_search_results($search) {
     // In admin search, the search string is interpreted as either a
     // name search or an email search depending on its contents
     $queries = array();
+    $constraints = array();
     if (!empty($search->query)) {
-        $queries = array(array('field' => 'firstname',
-                               'type' => 'contains',
-                               'string' => $search->query),
-                         array('field' => 'lastname',
-                               'type' => 'contains',
-                               'string' => $search->query));
         if (strpos($search->query, '@') !== false) {
-            $queries[] = array('field' => 'email',
-                               'type' => 'contains',
-                               'string' => $search->query);
+            $terms = preg_split('/[\.@]/', $search->query);
+            foreach ($terms as $t) {
+                if (!empty($t)) {
+                    $constraints[] = array('field' => 'email',
+                                           'type' => 'contains',
+                                           'string' => $t);
+                }
+            }
+        } else {
+            $queries = array(array('field' => 'firstname',
+                                   'type' => 'contains',
+                                   'string' => $search->query),
+                             array('field' => 'lastname',
+                                   'type' => 'contains',
+                                   'string' => $search->query));
         }
     }
-    $constraints = array();
     if (!empty($search->f)) {
         $constraints[] = array('field' => 'firstname',
                                'type' => 'starts',
@@ -181,6 +187,7 @@ function build_admin_user_search_results($search) {
 
 function admin_user_search($queries, $constraints, $offset, $limit) {
     $plugin = get_config('searchplugin');
+    //$plugin='internal';
     safe_require('search', $plugin);
     return call_static_method(generate_class_name('search', $plugin), 'admin_search_user', 
                               $queries, $constraints, $offset, $limit);

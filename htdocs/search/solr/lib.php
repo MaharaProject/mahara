@@ -217,6 +217,9 @@ END;
             $q .= '(' . join(' OR ', $terms) . ')';
         }
         if (!empty($constraints)) {
+            if (!empty($q)) {
+                $q .= ' AND ';
+            }
             $terms = array();
             foreach ($constraints as $f) {
                 $terms[] = $solrfields[$f['field']] . ':' . strtolower($f['string'])
