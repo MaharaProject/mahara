@@ -13,13 +13,15 @@ function ViewManager() {
         self.columnContainer = $('column-container');
         makePositioned(self.columnContainer);
 
+        self.bottomPane = $('bottom-pane');
+
         // Hide 'new block here' buttons
-        forEach(getElementsByTagAndClassName('div', 'add-button', 'bottom-pane'), function(i) {
+        forEach(getElementsByTagAndClassName('div', 'add-button', self.bottomPane), function(i) {
             removeElement(i);
         });
 
         // Hide controls in each block instance that are not needed
-        forEach(getElementsByTagAndClassName('input', 'movebutton', 'bottom-pane'), function(i) {
+        forEach(getElementsByTagAndClassName('input', 'movebutton', self.bottomPane), function(i) {
             removeElement(i);
         });
 
@@ -66,7 +68,7 @@ function ViewManager() {
 
         // Now we're done, remove the loading message and display the page
         removeElement('views-loading');
-        showElement('bottom-pane');
+        showElement(self.bottomPane);
     }
 
     /**
@@ -74,7 +76,7 @@ function ViewManager() {
      */
     this.addColumn = function(id, data) {
         // Get the existing number of columns
-        var numColumns = parseInt(getFirstElementByTagAndClassName('div', 'column', 'bottom-pane').getAttribute('class').match(/columns([0-9]+)/)[1]);
+        var numColumns = parseInt(getFirstElementByTagAndClassName('div', 'column', self.bottomPane).getAttribute('class').match(/columns([0-9]+)/)[1]);
 
         // Here we are doing two things:
         // 1) The existing columns that are higher than the one being inserted need to be renumbered
@@ -140,9 +142,9 @@ function ViewManager() {
         // Remove the column itself
         removeElement('column_' + id);
         // Get the existing number of columns
-        var numColumns = parseInt(getFirstElementByTagAndClassName('div', 'column', 'bottom-pane').getAttribute('class').match(/columns([0-9]+)/)[1]);
+        var numColumns = parseInt(getFirstElementByTagAndClassName('div', 'column', self.bottomPane).getAttribute('class').match(/columns([0-9]+)/)[1]);
 
-        forEach(getElementsByTagAndClassName('div', 'columns' + numColumns, 'bottom-pane'), function(i) {
+        forEach(getElementsByTagAndClassName('div', 'columns' + numColumns, self.bottomPane), function(i) {
             removeElementClass(i, 'columns' + numColumns);
             addElementClass(i, 'columns' + (numColumns - 1));
         });
@@ -212,7 +214,7 @@ function ViewManager() {
      * Rewrites the blockinstance configure buttons to be AJAX
      */
     this.rewriteConfigureButtons = function() {
-        forEach(getElementsByTagAndClassName('input', 'configurebutton', 'bottom-pane'), function(i) {
+        forEach(getElementsByTagAndClassName('input', 'configurebutton', self.bottomPane), function(i) {
             self.rewriteConfigureButton(i);
         });
     }
@@ -252,7 +254,7 @@ function ViewManager() {
      * Rewrites the blockinstance delete buttons to be AJAX
      */
     this.rewriteDeleteButtons = function() {
-        forEach(getElementsByTagAndClassName('input', 'deletebutton', 'bottom-pane'), function(i) {
+        forEach(getElementsByTagAndClassName('input', 'deletebutton', self.bottomPane), function(i) {
             self.rewriteDeleteButton(i);
         });
     }
@@ -292,7 +294,7 @@ function ViewManager() {
             parentNode = arguments[0];
         }
         else {
-            parentNode = 'bottom-pane';
+            parentNode = self.bottomPane;
         }
 
         forEach(getElementsByTagAndClassName('input', 'addcolumn', parentNode), function(i) {
@@ -325,7 +327,7 @@ function ViewManager() {
             parentNode = arguments[0];
         }
         else {
-            parentNode = 'bottom-pane';
+            parentNode = self.bottomPane;
         }
 
         forEach(getElementsByTagAndClassName('input', 'removecolumn', parentNode), function(i) {
@@ -351,10 +353,10 @@ function ViewManager() {
      */
     this.checkColumnButtonDisabledState = function() {
         // Get the existing number of columns
-        var numColumns = parseInt(getFirstElementByTagAndClassName('div', 'column', 'bottom-pane').getAttribute('class').match(/columns([0-9]+)/)[1]);
+        var numColumns = parseInt(getFirstElementByTagAndClassName('div', 'column', self.bottomPane).getAttribute('class').match(/columns([0-9]+)/)[1]);
 
         var state = (numColumns == 5);
-        forEach(getElementsByTagAndClassName('input', 'addcolumn', 'bottom-pane'), function(i) {
+        forEach(getElementsByTagAndClassName('input', 'addcolumn', self.bottomPane), function(i) {
             if (state) {
                 setNodeAttribute(i, 'disabled', 'disabled');
             }
@@ -364,7 +366,7 @@ function ViewManager() {
         });
 
         var state = (numColumns == 1);
-        forEach(getElementsByTagAndClassName('input', 'removecolumn', 'bottom-pane'), function(i) {
+        forEach(getElementsByTagAndClassName('input', 'removecolumn', self.bottomPane), function(i) {
             if (state) {
                 setNodeAttribute(i, 'disabled', 'disabled');
             }
@@ -378,7 +380,7 @@ function ViewManager() {
      * Makes block instances draggable
      */
     this.makeBlockinstancesDraggable = function() {
-        forEach(getElementsByTagAndClassName('div', 'blockinstance', 'bottom-pane'), function(i) {
+        forEach(getElementsByTagAndClassName('div', 'blockinstance', self.bottomPane), function(i) {
             self.makeBlockinstanceDraggable(i);
         });
     }
@@ -417,6 +419,17 @@ function ViewManager() {
             'reverteffect': function (innerelement, top_offset, left_offset) {
                 self.destroyHotzones();
 
+                // Removing the block placeholder then reverting the position
+                // of the dragged blockinstance results in a flash where the
+                // height of the page reduces and then expands again. We can
+                // fix this
+                setElementDimensions(self.bottomPane, getElementDimensions(self.bottomPane));
+                // LEAVE THIS LINE
+                // Without it, firefox doesn't actually set the element
+                // dimensions properly, it seems, resulting in the very flash
+                // we are trying to get rid of
+                getElementDimensions(self.bottomPane);
+
                 // We don't need the block placeholder anymore
                 removeElement(self.blockPlaceholder);
 
@@ -425,6 +438,12 @@ function ViewManager() {
                     'top': 0,
                     'left': 0,
                     'position': 'relative',
+                    'width': 'auto',
+                    'height': 'auto'
+                });
+
+                // Revert the explicit size setting for the bottom pane
+                setStyle(self.bottomPane, {
                     'width': 'auto',
                     'height': 'auto'
                 });
@@ -546,7 +565,7 @@ function ViewManager() {
 
         // We place the hotzones by looping through the blockinstances on the
         // page and adding the hotzones to over the top of them as appropriate
-        forEach(getElementsByTagAndClassName('div', 'blockinstance', 'bottom-pane'), function(i) {
+        forEach(getElementsByTagAndClassName('div', 'blockinstance', self.bottomPane), function(i) {
             var blockinstancePosition   = elementPosition(i, self.columnContainer);
             var blockinstanceDimensions = elementDimensions(i);
             // NOTE: added for the border
@@ -801,7 +820,7 @@ function ViewManager() {
         var styleNode = createDOM('link', {
             'rel' : 'stylesheet',
             'type': 'text/css',
-            'href': config['wwwroot'] + 'theme/views-js.css',
+            'href': config['wwwroot'] + 'theme/views-js.css'
         });
         appendChildNodes(getFirstElementByTagAndClassName('head'), styleNode);
     }
@@ -828,6 +847,9 @@ function ViewManager() {
 
     // The column container - set in self.init
     this.columnContainer = null;
+
+    // The bottom pane - set in self.init
+    this.bottomPane = null;
 
     addLoadEvent(self.init);
 }
