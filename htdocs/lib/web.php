@@ -136,11 +136,20 @@ EOF;
                     $tinymce_config = <<<EOF
     editor_selector: 'tinywysiwyg',
     theme: "advanced",
-    theme_advanced_buttons1 : "bold,italic,underline,strikethrough,separator,bullist,numlist,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,hr,emotions,iespell,separator,link,unlink,separator,code",
-    theme_advanced_buttons2 : "",
+    plugins: "fullscreen",
+    theme_advanced_buttons1 : "bold,italic,underline,separator,justifyleft,justifycenter,justifyright,justifyfull",
+    theme_advanced_buttons2 : "bullist,numlist,separator,link,unlink,separator,code,fullscreen",
     theme_advanced_buttons3 : "",
     theme_advanced_toolbar_location : "top",
     theme_advanced_toolbar_align : "center",
+    fullscreen_new_window: true,
+    fullscreen_settings: {
+        theme: "advanced",
+        plugins: "table,emotions,iespell,inlinepopups,paste",
+        theme_advanced_buttons1 : "bold,italic,underline,strikethrough,separator,forecolor,backcolor,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,hr,emotions,iespell,cleanup,separator,link,unlink,separator,code",
+        theme_advanced_buttons2 : "bullist,numlist,separator,tablecontrols,separator,cut,copy,paste,pasteword",
+        theme_advanced_buttons3 : "fontselect,separator,fontsizeselect,separator,formatselect"
+    },
 EOF;
                 }
 
