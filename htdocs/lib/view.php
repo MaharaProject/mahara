@@ -915,7 +915,6 @@ class View {
             if (is_callable($function)) {
                 $headers = call_user_func($function);
 
-                // TODO Eventually, we want to steal some code out of smarty(). For now I'm going to hack and kludge
                 if (in_array('tinytinymce', $headers)) {
                     $js = <<<EOF
     var script = createDOM('script', {'type': 'text/javascript'});
