@@ -79,6 +79,7 @@ $string['success.removecolumn'] = 'Deleted column successfully';
 $string['err.removecolumn'] = 'Failed to delete column';
 
 $string['confirmdeleteblockinstance'] = 'Are you sure you wish to delete this block?';
+$string['blockinstanceconfiguredsuccessfully'] = 'Block configured successfully';
 
 $string['addnewblockhere'] = 'Add new block here';
 $string['addcolumn'] = 'Add column';

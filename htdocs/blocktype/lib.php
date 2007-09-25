@@ -199,6 +199,8 @@ class BlockInstance {
     }
 
     public function instance_config_store(Pieform $form, $values) {
+        global $SESSION;
+
         // Destroy form values we don't care about
         unset($values['sesskey']);
         unset($values['blockinstance']);
@@ -209,6 +211,7 @@ class BlockInstance {
         }
 
         set_field('block_instance', 'configdata', serialize($values), 'id', $this->get('id'));
+        $SESSION->add_ok_msg(get_string('blockinstanceconfiguredsuccessfully', 'view'));
         redirect('/view/blocks.php?id=' . $this->get('view'));
     }
 
@@ -239,6 +242,11 @@ class BlockInstance {
 
             require_once('pieforms/pieform.php');
             $pieform = new Pieform($form);
+
+            if ($pieform->is_submitted()) {
+                global $SESSION;
+                $SESSION->add_error_msg(get_string('errorprocessingform'));
+            }
 
             // This is a bit hacky. Because pieforms will take values from 
             // $_POST before 'defaultvalue's of form elements, we need to nuke 
