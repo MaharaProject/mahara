@@ -467,6 +467,15 @@ function jsstrings() {
                 'confirmdeleteblockinstance',
             ),
         ),
+        'adminusersearch' => array(
+            'admin' => array(
+                'suspenduser',
+                'suspensionreason',
+            ),
+            'mahara' => array(
+                'cancel',
+            ),
+        ),
     );
 }
 

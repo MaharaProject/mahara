@@ -44,7 +44,7 @@ $search = (object) array(
     'limit' => param_integer('limit', 10)
 );
 
-$smarty = smarty(array('usersearch'));
+$smarty = smarty(array('adminusersearch'));
 $smarty->assign('search', $search);
 $smarty->assign('alphabet', explode(',', get_string('alphabet')));
 $smarty->assign('institutions', get_records_array('institution'));

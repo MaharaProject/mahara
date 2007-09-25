@@ -8,6 +8,7 @@
                         <th>{str tag="name"}</th>
                         <th>{str tag=email}</th>
                         <th>{str tag=institution}</th>
+                        <th></th>
                       </tr>
                     </thead>
                     <tbody>
@@ -18,13 +19,14 @@
                         <td>{$r.firstname} {$r.lastname}</td>
                         <td>{$r.email}</td>
                         <td>{$r.institution}</td>
+                        <td><a class="suspend-user-link" href="{$WWWROOT}admin/users/suspend.php?id={$r.id}">{str tag=suspenduser section=admin}</a></td>
                       </tr>
                 {/foreach}
                     </tbody>
                 {if count($results.data) < $results.count}
                     <tfoot class="search-results-pages">
                       <tr>
-                        <td colspan=5>
+                        <td colspan=6>
                           {if $results.page > $results.prev}
                             <span class="search-results-page prev"><a href="?{$params}&amp;offset={$results.limit*$results.prev}">{str tag=prevpage}</a></span>
                           {/if}
