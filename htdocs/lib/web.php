@@ -109,18 +109,21 @@ function &smarty($javascript = array(), $headers = array(), $pagestrings = array
 
     // TinyMCE must be included first for some reason we're not sure about
     $checkarray = array(&$javascript, &$headers);
+    $found_tinymce = false;
     foreach ($checkarray as &$check) {
-        if (($key = array_search('tinymce', $check)) !== false || ($key = array_search('tinytinymce', $check) !== false)) {
-            $javascript_array[] = $jsroot . 'tinymce/tiny_mce.js';
-            if (isset($extraconfig['tinymceinit'])) {
-                $headers[] = $extraconfig['tinymceinit'];
-            }
-            else {
-                $content_css = json_encode(theme_get_url('style/tinymce.css'));
-                $language = substr(current_language(), 0, 2);
+        if (($key = array_search('tinymce', $check)) !== false || ($key = array_search('tinytinymce', $check)) !== false) {
+            if (!$found_tinymce) {
+                $found_tinymce = $check[$key];
+                $javascript_array[] = $jsroot . 'tinymce/tiny_mce.js';
+                if (isset($extraconfig['tinymceinit'])) {
+                    $headers[] = $extraconfig['tinymceinit'];
+                }
+                else {
+                    $content_css = json_encode(theme_get_url('style/tinymce.css'));
+                    $language = substr(current_language(), 0, 2);
 
-                if ($check[$key] == 'tinymce') {
-                    $tinymce_config = <<<EOF
+                    if ($check[$key] == 'tinymce') {
+                        $tinymce_config = <<<EOF
     editor_selector: 'wysiwyg',
     theme: "advanced",
     plugins: "table,emotions,iespell,inlinepopups,paste",
@@ -131,9 +134,9 @@ function &smarty($javascript = array(), $headers = array(), $pagestrings = array
     theme_advanced_toolbar_align : "center",
     width: '512',
 EOF;
-                }
-                else {
-                    $tinymce_config = <<<EOF
+                    }
+                    else {
+                        $tinymce_config = <<<EOF
     editor_selector: 'tinywysiwyg',
     theme: "advanced",
     plugins: "fullscreen",
@@ -151,9 +154,9 @@ EOF;
         theme_advanced_buttons3 : "fontselect,separator,fontsizeselect,separator,formatselect"
     },
 EOF;
-                }
+                    }
 
-                $headers[] = <<<EOF
+                    $headers[] = <<<EOF
 <script type="text/javascript">
 tinyMCE.init({
     mode: "textareas",
@@ -165,9 +168,15 @@ tinyMCE.init({
 </script>
 
 EOF;
+                }
+                unset($check[$key]);
             }
-            unset($check[$key]);
-            break;
+            else {
+                if ($check[$key] != $found_tinymce) {
+                    log_warn('Two differently configured tinyMCE instances have been asked for on this page! This is not possible');
+                }
+                unset($check[$key]);
+            }
         }
     }
 
