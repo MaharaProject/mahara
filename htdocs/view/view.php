@@ -40,6 +40,9 @@ if (!can_view_view($viewid)) {
 
 $viewbeingwatched = 0;
 
+$title = get_string('titleformatted', 'view', $view->get('title'), $view->formatted_owner());
+define('TITLE', $title);
+
 if ($artefactid) {
 
     if (!artefact_in_view($artefactid, $viewid)) {
@@ -61,7 +64,7 @@ if ($artefactid) {
     $content .= $rendered['html'];
 
     $viewhref = 'view.php?view=' . $viewid;
-    $navlist = array('<a href="' . $viewhref .  '">' . $view->get('title') . '</a>');
+    $navlist = array('<a href="' . $viewhref .  '">' . $title . '</a>');
     if (!empty($path)) {
         $titles = get_records_sql_assoc('
             SELECT id,title FROM {artefact}
@@ -96,10 +99,11 @@ if ($artefactid) {
     $jsartefact = $artefactid;
 }
 else {
-    $navlist = array($view->get('title'));
-    define('TITLE', $view->get('title'));
+    $navlist = array($title);
     $jsartefact = 'undefined';
-    $content = $view->render();
+
+    $content = $view->build_columns();
+    
     global $USER;
     $submittedgroup = $view->get('submittedto');
     if ($submittedgroup 
@@ -324,6 +328,9 @@ $smarty = smarty(
             'private',
             'makeprivate',
         ),
+    ),
+    array(
+        'stylesheets' => array('style/views.css'),
     )
 );
 $smarty->assign('INLINEJAVASCRIPT', $javascript);

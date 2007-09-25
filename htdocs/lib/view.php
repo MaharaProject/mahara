@@ -267,9 +267,6 @@ class View {
         return $this->ownerobj;
     }
 
-    public function render() {
-        //@ todo new view rendering system! 
-    }
     
     public function delete() {
         delete_records('artefact_feedback','view',$this->id);
@@ -714,12 +711,12 @@ class View {
     /**
      * Returns the HTML for the columns of this view
      */
-    public function build_columns() {
+    public function build_columns($editing=false) {
         $numcols = $this->get('numcolumns');
 
         $result = '';
         for ($i = 1; $i <= $numcols; $i++) {
-            $result .= $this->build_column($i);
+            $result .= $this->build_column($i, $editing);
         }
 
         return $result;
@@ -730,12 +727,17 @@ class View {
      *
      * @param int  $column     The column to build
      */
-    public function build_column($column) {
+    public function build_column($column, $editing=false) {
         $data = $this->get_column_datastructure($column);
 
+        $renderfunction = 'render';
+        if (!$editing) {
+            $renderfunction = 'render_viewing';
+        }
+        
         $blockcontent = '';
         foreach($data['blockinstances'] as $blockinstance) {
-            $blockcontent .= $blockinstance->render($blockinstance->get('id') == $this->blockinstance_currently_being_configured);
+            $blockcontent .= $blockinstance->$renderfunction($blockinstance->get('id') == $this->blockinstance_currently_being_configured);
         }
 
         $smarty = smarty_core();
@@ -744,6 +746,9 @@ class View {
         $smarty->assign('numcolumns',  $this->get('numcolumns'));
         $smarty->assign('blockcontent', $blockcontent);
 
+        if ($editing) {
+            return $smarty->fetch('view/columnediting.tpl');
+        }
         return $smarty->fetch('view/column.tpl');
     }
 
@@ -1088,6 +1093,33 @@ EOF;
      */
     private function get_current_max_order($column) {
         return get_field('block_instance', 'max("order")', 'column', $column, 'view', $this->get('id')); 
+    }
+
+    /**
+     * This function formats a user's name
+     * according to their view preference
+     *
+     * @return string formatted name
+     */
+    public function formatted_owner() {
+
+        $user = $this->get_owner_object();
+
+        switch ($this->ownerformat) {
+            case FORMAT_NAME_FIRSTNAME:
+                return $user->firstname;
+            case FORMAT_NAME_LASTNAME:
+                return $user->lastname;
+            case FORMAT_NAME_FIRSTNAMELASTNAME:
+                return $user->firstname . ' ' . $user->lastname;
+            case FORMAT_NAME_PREFERREDNAME:
+                return $user->preferredname;
+            case FORMAT_NAME_STUDENTID:
+                return $user->studentid;
+            case FORMAT_NAME_DISPLAYNAME:
+            default:
+                return display_name($user);
+        }
     }
 }
 

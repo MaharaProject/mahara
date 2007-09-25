@@ -301,6 +301,20 @@ class BlockInstance {
         return $smarty->fetch('view/blocktypecontainer.tpl');
     }
 
+    public function render_viewing() {
+
+        safe_require('blocktype', $this->get('blocktype'));
+        $content = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'render_instance', $this);
+
+        $smarty = smarty_core();
+        $smarty->assign('id',     $this->get('id'));
+        $smarty->assign('title',  $this->get('title'));
+
+        $smarty->assign('content', $content);
+        
+        return $smarty->fetch('view/blocktypecontainerviewing.tpl');
+    }
+
     public function commit() {
         if (empty($this->dirty)) {
             return;

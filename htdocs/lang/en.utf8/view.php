@@ -84,4 +84,6 @@ $string['addnewblockhere'] = 'Add new block here';
 $string['addcolumn'] = 'Add column';
 $string['removecolumn'] = 'Remove column';
 
+$string['titleformatted'] = '%s by %s';
+
 ?>
