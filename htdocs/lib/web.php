@@ -436,11 +436,6 @@ function jsstrings() {
                 'lastpage',
             )
         ),
-        'collapsabletree' => array(
-            'view' => array(
-                'nochildren',
-            ),
-        ),
         'friends' => array(
             'mahara' => array(
                 'confirmremovefriend',

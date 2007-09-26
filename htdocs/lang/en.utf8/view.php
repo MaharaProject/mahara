@@ -40,7 +40,6 @@ $string['stopdate']               = 'Access End Date/Time';
 $string['startdatemustbebeforestopdate'] = 'The start date must be before the stop date';
 $string['ownerformat']            = 'Name display format';
 $string['ownerformatdescription'] = 'This field controls what appears in the author field for the template you select in step 2';
-$string['nochildren']             = 'no artefacts';
 
 $string['emptylabel'] = 'Click here to enter text for this label';
 $string['empty_block'] = 'Select an artefact from the tree on the left to place here';
