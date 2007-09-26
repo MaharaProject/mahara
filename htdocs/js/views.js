@@ -76,7 +76,7 @@ function ViewManager() {
      */
     this.addColumn = function(id, data) {
         // Get the existing number of columns
-        var numColumns = parseInt(getFirstElementByTagAndClassName('div', 'column', self.bottomPane).getAttribute('class').match(/columns([0-9]+)/)[1]);
+        var numColumns = parseInt(getNodeAttribute(getFirstElementByTagAndClassName('div', 'column', self.bottomPane), 'class').match(/columns([0-9]+)/)[1]);
 
         // Here we are doing two things:
         // 1) The existing columns that are higher than the one being inserted need to be renumbered
@@ -142,7 +142,7 @@ function ViewManager() {
         // Remove the column itself
         removeElement('column_' + id);
         // Get the existing number of columns
-        var numColumns = parseInt(getFirstElementByTagAndClassName('div', 'column', self.bottomPane).getAttribute('class').match(/columns([0-9]+)/)[1]);
+        var numColumns = parseInt(getNodeAttribute(getFirstElementByTagAndClassName('div', 'column', self.bottomPane), 'class').match(/columns([0-9]+)/)[1]);
 
         forEach(getElementsByTagAndClassName('div', 'columns' + numColumns, self.bottomPane), function(i) {
             removeElementClass(i, 'columns' + numColumns);
@@ -227,7 +227,7 @@ function ViewManager() {
             e.stop();
             setNodeAttribute(button, 'disabled', 'disabled');
             var pd = {'id': $('viewid').value, 'change': 1};
-            pd[e.src().getAttribute('name')] = 1;
+            pd[getNodeAttribute(e.src(), 'name')] = 1;
             sendjsonrequest('blocks.json.php', pd, 'POST', function(data) {
                 var blockinstance = getFirstParentByTagAndClassName(button, 'div', 'blockinstance');
                 var content = getFirstElementByTagAndClassName('div', 'blockinstance-content', blockinstance);
@@ -267,7 +267,7 @@ function ViewManager() {
             setNodeAttribute(button, 'disabled', 'disabled');
             if (confirm(get_string('confirmdeleteblockinstance'))) {
                 var pd = {'id': $('viewid').value, 'change': 1};
-                pd[e.src().getAttribute('name')] = 1;
+                pd[getNodeAttribute(e.src(), 'name')] = 1;
                 sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
                     removeElement(getFirstParentByTagAndClassName(button, 'div', 'blockinstance'));
                     removeNodeAttribute(button, 'disabled');
@@ -300,7 +300,7 @@ function ViewManager() {
         forEach(getElementsByTagAndClassName('input', 'addcolumn', parentNode), function(i) {
             connect(i, 'onclick', function(e) {
                 setNodeAttribute(i, 'disabled', 'disabled');
-                var name = e.src().getAttribute('name');
+                var name = getNodeAttribute(e.src(), 'name');
                 var id   = parseInt(name.substr(-1));
                 var pd   = {'id': $('viewid').value, 'change': 1}
                 pd['action_addcolumn_before_' + id] = 1;
@@ -333,7 +333,7 @@ function ViewManager() {
         forEach(getElementsByTagAndClassName('input', 'removecolumn', parentNode), function(i) {
             connect(i, 'onclick', function(e) {
                 setNodeAttribute(i, 'disabled', 'disabled');
-                var name = e.src().getAttribute('name');
+                var name = getNodeAttribute(e.src(), 'name');
                 var id   = parseInt(name.substr(-1));
                 var pd   = {'id': $('viewid').value, 'change': 1}
                 pd['action_removecolumn_column_' + id] = 1;
@@ -353,7 +353,7 @@ function ViewManager() {
      */
     this.checkColumnButtonDisabledState = function() {
         // Get the existing number of columns
-        var numColumns = parseInt(getFirstElementByTagAndClassName('div', 'column', self.bottomPane).getAttribute('class').match(/columns([0-9]+)/)[1]);
+        var numColumns = parseInt(getNodeAttribute(getFirstElementByTagAndClassName('div', 'column', self.bottomPane), 'class').match(/columns([0-9]+)/)[1]);
 
         var state = (numColumns == 5);
         forEach(getElementsByTagAndClassName('input', 'addcolumn', self.bottomPane), function(i) {
