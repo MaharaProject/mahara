@@ -785,7 +785,7 @@ class View {
         $this->dirtycolumns[$values['column']] = 1;
 
         if ($values['returndata']) {
-            return $bi->render();
+            return $bi->render_editing();
         }
     }
 
