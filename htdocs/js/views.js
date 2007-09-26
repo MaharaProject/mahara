@@ -230,14 +230,14 @@ function ViewManager() {
             pd[getNodeAttribute(e.src(), 'name')] = 1;
             sendjsonrequest('blocks.json.php', pd, 'POST', function(data) {
                 var blockinstance = getFirstParentByTagAndClassName(button, 'div', 'blockinstance');
+                var blockinstanceId = blockinstance.id.substr(blockinstance.id.lastIndexOf('_') + 1);
                 var content = getFirstElementByTagAndClassName('div', 'blockinstance-content', blockinstance);
                 var oldContent = content.innerHTML;
                 content.innerHTML = data.data['html'];
                 eval(data.data['js']);
 
                 // Make the cancel button be supersmart
-                // TODO fix the id of the cancel button
-                var cancelButton = $('cancel_cb_8_action_configureblockinstance_id_8');
+                var cancelButton = $('cancel_cb_' + blockinstanceId + '_action_configureblockinstance_id_' + blockinstanceId);
                 connect(cancelButton, 'onclick', function(e) {
                     e.stop();
                     content.innerHTML = oldContent;
