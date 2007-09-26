@@ -1549,7 +1549,7 @@ a.pieform-calendar-toggle img {
 }
 
 table#initials {
-    width: 500px;
+    width: 550px;
     margin-top:10px;
     margin-bottom:10px;
     border: none;
@@ -1557,8 +1557,15 @@ table#initials {
 table#initials .initial-label {
     text-align: right;
 }
+table#initials .initial-letters {
+    font-size: 13px;
+}
+#initials .initial-letters span {
+    padding-left: 2px;
+    padding-right: 2px;
+}
 
-#initials span.selected a,
+#initials .initial-letters span.selected a,
 .search-results-pages span.selected a {
     color: #000 !important;
     text-decoration: none;

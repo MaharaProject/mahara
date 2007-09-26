@@ -7,7 +7,7 @@
     <table id="initials"><tbody>
      <tr id="firstnamelist">
       <td class="initial-label">{str tag="firstname"}:</td>
-      <td>
+      <td class="initial-letters">
        <span class="first-initial{if empty($search->f)} selected{/if} all">
         <a href="?{if $search->l}l={$search->l}{/if}">{str tag="all"}</a>
        </span>
@@ -20,7 +20,7 @@
      </tr>
      <tr id="lastnamelist">
       <td class="initial-label">{str tag="lastname"}:</td>
-      <td>
+      <td class="initial-letters">
        <span class="last-initial{if empty($search->l)} selected{/if} all">
         <a href="?{if $search->f}f={$search->f}{/if}">{str tag="all"}</a>
        </span>
