@@ -18,7 +18,7 @@
                         <td><a href="{$WWWROOT}user/view.php?id={$r.id}">{$r.username}</a></td>
                         <td>{$r.firstname} {$r.lastname}</td>
                         <td>{$r.email}</td>
-                        <td>{$r.institution}</td>
+                        <td>{$institutions[$r.institution]->displayname}</td>
                         <td><a class="suspend-user-link" href="{$WWWROOT}admin/users/suspend.php?id={$r.id}">{str tag=suspenduser section=admin}</a></td>
                       </tr>
                 {/foreach}

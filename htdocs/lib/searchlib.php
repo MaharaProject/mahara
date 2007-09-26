@@ -181,6 +181,7 @@ function build_admin_user_search_results($search) {
                                             range(max($range, $lastpage-$range), $lastpage)));
     $smarty->assign_by_ref('results', $results);
     $smarty->assign_by_ref('pagenumbers', $pagenumbers);
+    $smarty->assign_by_ref('institutions', get_records_assoc('institution', '', '', '', 'name,displayname'));
     return $smarty->fetch('admin/users/resulttable.tpl');
 }
 
