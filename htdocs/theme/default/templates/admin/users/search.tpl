@@ -6,7 +6,7 @@
     <p>{str tag="usersearchinstructions" section="admin"}</p>
     <table id="initials"><tbody>
      <tr id="firstnamelist">
-      <td>{str tag="firstname"}:</td>
+      <td class="initial-label">{str tag="firstname"}:</td>
       <td>
        <span class="first-initial{if empty($search->f)} selected{/if} all">
         <a href="?{if $search->l}l={$search->l}{/if}">{str tag="all"}</a>
@@ -19,7 +19,7 @@
       </td>
      </tr>
      <tr id="lastnamelist">
-      <td>{str tag="lastname"}:</td>
+      <td class="initial-label">{str tag="lastname"}:</td>
       <td>
        <span class="last-initial{if empty($search->l)} selected{/if} all">
         <a href="?{if $search->f}f={$search->f}{/if}">{str tag="all"}</a>

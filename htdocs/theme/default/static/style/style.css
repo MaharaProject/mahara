@@ -1548,9 +1548,19 @@ a.pieform-calendar-toggle img {
     border: none;
 }
 
+table#initials {
+    width: 500px;
+    margin-top:10px;
+    margin-bottom:10px;
+    border: none;
+}
+table#initials .initial-label {
+    text-align: right;
+}
+
 #initials span.selected a,
 .search-results-pages span.selected a {
-  color: #000 !important;
-  text-decoration: none;
-  font-weight: bold;
+    color: #000 !important;
+    text-decoration: none;
+    font-weight: bold;
 }
