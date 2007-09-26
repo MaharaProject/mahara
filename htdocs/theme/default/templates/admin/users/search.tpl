@@ -3,6 +3,7 @@
 {include file="columnfullstart.tpl"}
 
     <h2>{str tag="usersearch" section="admin"}</h2>
+    <p>{str tag="usersearchinstructions" section="admin"}</p>
     <table id="initials"><tbody>
      <tr id="firstnamelist">
       <td>{str tag="firstname"}:</td>
