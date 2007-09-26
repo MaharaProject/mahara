@@ -35,7 +35,7 @@
     <form action="" method="post">
         <div class="searchform">
             <label>Query: 
-                <input type="text" name="query" id="query">
+                <input type="text" name="query" id="query"{if !empty($search->query)} value="{$search->query}"{/if}>
             </label>
             {if $USER->get('admin') && !empty($institutions)}
             <span class="institutions">

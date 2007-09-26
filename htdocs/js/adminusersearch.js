@@ -5,6 +5,7 @@ function UserSearch() {
         self.rewriteInitials();
         self.rewriteQueryButton();
         self.rewritePaging();
+        self.rewriteSorting();
         self.rewriteSuspendLinks();
         self.params = {};
     }
@@ -60,20 +61,34 @@ function UserSearch() {
         e.stop();
     };
 
+    this.searchByChildLink = function (element) {
+        var children = getElementsByTagAndClassName('a', null, element);
+        if (children.length == 1) {
+            self.params = parseQueryString(getNodeAttribute(children[0], 'href'));
+            self.doSearch();
+        }
+    }
+
+    this.changePage = function(e) {
+        e.stop();
+        self.searchByChildLink(this);
+    }
+
     this.rewritePaging = function() {
         forEach(getElementsByTagAndClassName('span', 'search-results-page', 'searchresults'), function(i) {
             connect(i, 'onclick', self.changePage);
         });
     }
 
-    this.changePage = function(e) {
-        var children = getElementsByTagAndClassName('a', null, this);
-        if (children.length == 1) {
-            var linkparams = parseQueryString(getNodeAttribute(children[0], 'href'));
-            self.params.offset = linkparams.offset;
-            self.doSearch();
-        }
+    this.sortColumn = function(e) {
         e.stop();
+        self.searchByChildLink(this);
+    }
+
+    this.rewriteSorting = function() {
+        forEach(getElementsByTagAndClassName('th', 'search-results-sort-column', 'searchresults'), function(i) {
+            connect(i, 'onclick', self.sortColumn);
+        });
     }
 
     this.rewriteQueryButton = function() {
@@ -93,6 +108,7 @@ function UserSearch() {
         sendjsonrequest('search.json.php', self.params, 'POST', function(data) {
             $('results').innerHTML = data.data;
             self.rewritePaging();
+            self.rewriteSorting();
             self.rewriteSuspendLinks();
         });
     }

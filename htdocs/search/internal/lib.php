@@ -237,9 +237,11 @@ class PluginSearchInternal extends PluginSearch {
     }
     
 
-    public static function admin_search_user($queries, $constratints, $offset, $limit) {
+    public static function admin_search_user($queries, $constratints, $offset, $limit, 
+                                             $sortfield, $sortdir) {
         if (is_postgres()) {
-            return self::admin_search_user_pg($queries, $constratints, $offset, $limit);
+            return self::admin_search_user_pg($queries, $constratints, $offset, $limit, 
+                                              $sortfield . ' ' . strtoupper($sortdir));
         } 
         //else if (is_mysql()) {
         //    return self::admin_search_user_my($query_string, $limit, $offset);
@@ -250,7 +252,7 @@ class PluginSearchInternal extends PluginSearch {
     }
 
 
-    public static function admin_search_user_pg($queries, $constraints, $offset, $limit) {
+    public static function admin_search_user_pg($queries, $constraints, $offset, $limit, $sort) {
         $where = 'WHERE u.id <> 0 AND u.deleted = 0';
         $values = array();
 
@@ -286,7 +288,7 @@ class PluginSearchInternal extends PluginSearch {
                     u.active, u.suspendedctime
                 FROM
                     {usr} u ' . $where . '
-                ORDER BY u.firstname, u.lastname, u.id',
+                ORDER BY ' . $sort,
                 $values,
                 $offset,
                 $limit);

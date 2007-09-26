@@ -117,15 +117,24 @@ function search_user($query_string, $limit, $offset = 0) {
 }
 
 
-function build_admin_user_search_results($search) {
+function build_admin_user_search_results($search, $offset, $limit, $sortby, $sortdir) {
     $smarty = smarty_core();
+
     $params = array();
     foreach ($search as $k => $v) {
-        if (!empty($v) && $k != 'offset') {
+        if (!empty($v)) {
             $params[] = $k . '=' . $v;
         }
     }
-    $paramstring = join('&amp;', $params);
+    $params[] = 'limit=' . $limit;
+    $params = join('&amp;', $params);
+
+    $smarty->assign_by_ref('params', $params);
+    $smarty->assign_by_ref('offset', $offset);
+    $smarty->assign_by_ref('sortby', $sortby);
+    $smarty->assign_by_ref('sortdir', $sortdir);
+    $fieldnames = array('firstname','lastname','username','email','institution');
+    $smarty->assign_by_ref('fieldnames', $fieldnames);
 
     // In admin search, the search string is interpreted as either a
     // name search or an email search depending on its contents
@@ -166,9 +175,8 @@ function build_admin_user_search_results($search) {
                                'string' => $search->institution);
     }
 
-    $results = admin_user_search($queries, $constraints, $search->offset, $search->limit);
+    $results = admin_user_search($queries, $constraints, $offset, $limit, $sortby, $sortdir);
 
-    $smarty->assign_by_ref('params', $paramstring);
     $results['pages'] = ceil($results['count'] / $results['limit']);
     $results['page'] = $results['offset'] / $results['limit']; // $results['pages'];
     $lastpage = $results['pages'] - 1;
@@ -186,12 +194,12 @@ function build_admin_user_search_results($search) {
 }
 
 
-function admin_user_search($queries, $constraints, $offset, $limit) {
+function admin_user_search($queries, $constraints, $offset, $limit, $sortfield, $sortdir) {
     $plugin = get_config('searchplugin');
     //$plugin='internal';
     safe_require('search', $plugin);
     return call_static_method(generate_class_name('search', $plugin), 'admin_search_user', 
-                              $queries, $constraints, $offset, $limit);
+                              $queries, $constraints, $offset, $limit, $sortfield, $sortdir);
 }
 
 

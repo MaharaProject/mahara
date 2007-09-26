@@ -35,20 +35,22 @@ define('SECTION_PAGE', 'usersearch');
 require('searchlib.php');
 
 $search = (object) array(
-    'query' => trim(param_variable('query', '')),
-    'sort' => param_alpha('sort', 'lastname'),
+    'query'       => trim(param_variable('query', '')),
     'institution' => param_alpha('institution', 'all'),
-    'f' => param_alpha('f', null),
-    'l' => param_alpha('l', null),
-    'offset' => param_integer('offset', 0),
-    'limit' => param_integer('limit', 10)
+    'f'           => param_alpha('f', null), // first initial
+    'l'           => param_alpha('l', null), // last initial
 );
+
+$sortby  = param_alpha('sortby', 'firstname');
+$sortdir = param_alpha('sortdir', 'asc');
+$offset  = param_integer('offset', 0);
+$limit   = param_integer('limit', 10);
 
 $smarty = smarty(array('adminusersearch'));
 $smarty->assign('search', $search);
 $smarty->assign('alphabet', explode(',', get_string('alphabet')));
 $smarty->assign('institutions', get_records_array('institution'));
-$smarty->assign('results', build_admin_user_search_results($search));
+$smarty->assign('results', build_admin_user_search_results($search, $offset, $limit, $sortby, $sortdir));
 $smarty->display('admin/users/search.tpl');
 
 ?>
