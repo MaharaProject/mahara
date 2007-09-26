@@ -198,7 +198,7 @@ END;
     }
 
 
-    public static function admin_search_user($queries, $constraints, $offset, $limit) {
+    public static function admin_search_user($queries, $constraints, $offset, $limit, $sortby, $sortdir) {
         $q = '';
         $solrfields = array(
             'id'          => 'id',
@@ -228,7 +228,13 @@ END;
             $q .= join(' AND ', $terms);
         }
 
-        $results = self::send_query($q, $limit, $offset, array('type' => 'user'));
+        if ($sortby != 'email') {
+            $sort = $solrfields[$sortby] . ' ' . $sortdir;
+        } else {
+            $sort = null;
+        }
+
+        $results = self::send_query($q, $limit, $offset, array('type' => 'user'), '*', false, $sort);
         self::remove_key_prefix(&$results);
         return $results;
     }
@@ -491,7 +497,7 @@ END;
         }
     }
 
-    private static function send_query($query, $limit, $offset, $constraints = array(), $fields = '*', $highlight = false) {
+    private static function send_query($query, $limit, $offset, $constraints = array(), $fields = '*', $highlight = false, $sort = null) {
         $q = array();
 
         foreach ( $constraints as $key => $value ) {
@@ -518,6 +524,9 @@ END;
             'rows'   => $limit,
             //'indent' => 1,
         );
+        if (!empty($sort)) {
+            $data['sort'] = $sort;
+        }
 
         if ($highlight) {
             $data['hl']          = 'true';
