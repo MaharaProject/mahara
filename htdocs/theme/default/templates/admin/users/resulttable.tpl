@@ -5,7 +5,8 @@
                       <tr>
                         <th></th>
                         <th>{str tag="username"}</th>
-                        <th>{str tag="name"}</th>
+                        <th>{str tag="firstname"}</th>
+                        <th>{str tag="lastname"}</th>
                         <th>{str tag=email}</th>
                         <th>{str tag=institution}</th>
                         <th></th>
@@ -16,7 +17,8 @@
                       <tr>
                         <td><img src="{$WWWROOT}thumb.php?type=profileicon&size=40x40&id={$r.id}" alt="{str tag=profileimage}" /></td>
                         <td><a href="{$WWWROOT}user/view.php?id={$r.id}">{$r.username}</a></td>
-                        <td>{$r.firstname} {$r.lastname}</td>
+                        <td>{$r.firstname}</td>
+                        <td>{$r.lastname}</td>
                         <td>{$r.email}</td>
                         <td>{$institutions[$r.institution]->displayname}</td>
                         <td><a class="suspend-user-link" href="{$WWWROOT}admin/users/suspend.php?id={$r.id}">{str tag=suspenduser section=admin}</a></td>
@@ -26,7 +28,7 @@
                 {if count($results.data) < $results.count}
                     <tfoot class="search-results-pages">
                       <tr>
-                        <td colspan=6>
+                        <td colspan=7>
                           {if $results.page > $results.prev}
                             <span class="search-results-page prev"><a href="?{$params}&amp;offset={$results.limit*$results.prev}">{str tag=prevpage}</a></span>
                           {/if}
