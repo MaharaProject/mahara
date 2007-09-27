@@ -90,6 +90,15 @@ switch ($type) {
         }
         readfile(theme_get_path('images/no_thumbnail.png'));
         break;
+    case 'viewlayout':
+        header('Content-type: image/png');
+        $vl = param_integer('vl');
+        if ($widths = get_field('view_layout', 'widths', 'id', $vl)) {
+            $path = theme_get_path('images/vl-' . str_replace(',', '-', $widths) . '.png');
+            readfile($path);
+        }
+        readfile(theme_get_path('images/no_thumbnail.png'));
+        break;
 }
 
 ?>
