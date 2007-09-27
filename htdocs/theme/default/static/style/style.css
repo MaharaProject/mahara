@@ -1572,3 +1572,9 @@ table#initials .initial-letters {
     font-weight: bold;
 }
 
+table.tablerenderer th.asc { 
+    background: #e5e8da url(../images/down.png) no-repeat right;
+}
+table.tablerenderer th.desc { 
+    background: #e5e8da url(../images/up.png) no-repeat right;
+}

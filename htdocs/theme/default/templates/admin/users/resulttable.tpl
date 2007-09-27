@@ -5,7 +5,7 @@
                       <tr>
                         <th></th>
                         {foreach from=$fieldnames item=f}
-                        <th class="search-results-sort-column">{if $f == $sortby}{if $sortdir == 'asc'}&gt;{else}&lt;{/if} {/if}<a href="?{$params}&sortby={$f}&sortdir={if $f == $sortby && $sortdir == 'asc'}desc{else}asc{/if}">{str tag="$f"}</a></th>
+                        <th class="search-results-sort-column{if $f == $sortby} {$sortdir}{/if}"><a href="?{$params}&sortby={$f}&sortdir={if $f == $sortby && $sortdir == 'asc'}desc{else}asc{/if}">{str tag="$f"}</a></th>
                         {/foreach}
                         <th></th>
                       </tr>
