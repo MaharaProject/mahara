@@ -179,7 +179,8 @@ END;
                         continue;
                     }
 
-                    if ($key_parts[0] == 'store' || $key_parts[0] == 'text' || $key == 'ref_institution') {
+                    if ($key_parts[0] == 'store' || $key_parts[0] == 'text' || $key_parts[0] == 'string' 
+                        || $key == 'ref_institution') {
                         $new_result[$key_parts[1]] = $value;
                     }
                 }
@@ -203,7 +204,7 @@ END;
         $solrfields = array(
             'id'          => 'id',
             'institution' => 'ref_institution',
-            'email'       => 'text_email',
+            'email'       => 'string_email',
             'username'    => 'text_username',
             'firstname'   => 'text_firstname',
             'lastname'    => 'text_lastname'
@@ -211,8 +212,12 @@ END;
         if (!empty($queries)) {
             $terms = array();
             foreach ($queries as $f) {
-                $terms[] = $solrfields[$f['field']] . ':' . strtolower($f['string'])
-                    . ($f['type'] != 'equals' ? '*' : '');
+                if ($f['field'] == 'email' && $f['type'] == 'contains' && strpos($f['string'],'@') === 0) {
+                    $terms[] = 'string_emaildomain:' . substr($f['string'], 1) . '*';
+                } else {
+                    $terms[] = $solrfields[$f['field']] . ':' . strtolower($f['string'])
+                        . ($f['type'] != 'equals' ? '*' : '');
+                }
             }
             $q .= '(' . join(' OR ', $terms) . ')';
         }
@@ -228,11 +233,7 @@ END;
             $q .= join(' AND ', $terms);
         }
 
-        if ($sortby != 'email') {
-            $sort = $solrfields[$sortby] . ' ' . $sortdir;
-        } else {
-            $sort = null;
-        }
+        $sort = $solrfields[$sortby] . ' ' . $sortdir;
 
         $results = self::send_query($q, $limit, $offset, array('type' => 'user'), '*', false, $sort);
         self::remove_key_prefix(&$results);
@@ -438,7 +439,7 @@ END;
             'type'                => 'user',
             'index_name'          => $user['preferredname'],
             'ref_institution'     => $user['institution'],
-            'text_email'          => $user['email'],
+            'string_email'        => $user['email'],
             'text_username'       => $user['username'],
             'store_preferredname' => $user['preferredname'],
             'text_firstname'      => $user['firstname'],
@@ -446,6 +447,12 @@ END;
         );
         if (empty($doc['index_name'])) {
             $doc['index_name'] = $user['firstname'] . ' ' . $user['lastname'];
+        }
+        if ($emailparts = split('@', $user['email'])
+            and !empty($emailparts[1])) {
+            $doc['string_emaildomain'] = $emailparts[1];
+        } else {
+            $doc['string_emaildomain'] = $user['email'];
         }
 
         self::add_document($doc);

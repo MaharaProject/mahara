@@ -142,14 +142,9 @@ function build_admin_user_search_results($search, $offset, $limit, $sortby, $sor
     $constraints = array();
     if (!empty($search->query)) {
         if (strpos($search->query, '@') !== false) {
-            $terms = preg_split('/[\.@]/', $search->query);
-            foreach ($terms as $t) {
-                if (!empty($t)) {
-                    $constraints[] = array('field' => 'email',
-                                           'type' => 'contains',
-                                           'string' => $t);
-                }
-            }
+            $queries[] = array('field' => 'email',
+                               'type' => 'contains',
+                               'string' => $search->query);
         } else {
             $queries = array(array('field' => 'firstname',
                                    'type' => 'contains',
