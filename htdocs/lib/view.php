@@ -550,7 +550,7 @@ class View {
             case 'removeblockinstance': // requires action_removeblockinstance_id_\d
                 if (!defined('JSON')) {
                     if (!$sure = param_boolean('sure')) {
-                        $yeslink = get_config('wwwroot') . '/view/blocks.php?id=1&c=file&new=' . $new . '&action_' . $action . '_' .  $actionstring . '=1&sure=true';
+                        $yeslink = get_config('wwwroot') . '/view/blocks.php?id=' . $this->get('id') . '&c=file&new=' . $new . '&action_' . $action . '_' .  $actionstring . '=1&sure=true';
                         $baselink = '/view/blocks.php?id=' . $this->get('id') . '&c=' . $category . '&new=' . $new;
                         $SESSION->add_info_msg(get_string('confirmdeleteblockinstance', 'view') 
                             . ' <a href="' . $yeslink . '">' . get_string('yes') . '</a>'
@@ -599,7 +599,7 @@ class View {
                 $fun = 'add_error_msg';
             }
             $SESSION->{$fun}($message);
-            redirect('/view/blocks.php?id=' . $this->get('id') . 'c=' . $category . '&new=' . $new);
+            redirect('/view/blocks.php?id=' . $this->get('id') . '&c=' . $category . '&new=' . $new);
         }
         return array('message' => $message, 'data' => $returndata);
     }

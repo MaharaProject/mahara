@@ -212,7 +212,9 @@ class BlockInstance {
 
         set_field('block_instance', 'configdata', serialize($values), 'id', $this->get('id'));
         $SESSION->add_ok_msg(get_string('blockinstanceconfiguredsuccessfully', 'view'));
-        redirect('/view/blocks.php?id=' . $this->get('view'));
+        $new = param_boolean('new');
+        $category = param_alpha('c', '');
+        redirect('/view/blocks.php?id=' . $this->get('view') . '&c=' . $category . '&new=' . $new);
     }
 
     /**
