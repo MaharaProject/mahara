@@ -84,6 +84,11 @@ $string['addnewblockhere'] = 'Add new block here';
 $string['addcolumn'] = 'Add column';
 $string['removecolumn'] = 'Remove column';
 
+$string['viewlayout'] = 'View layout';
+$string['viewlayoutdescription'] = 'You can change the widths of the columns in your view.';
+$string['changeviewlayout'] = 'Change view layout';
+$string['backtoyourview'] = 'Back to your view';
+
 $string['titleformatted'] = '%s by %s';
 
 $string['50,50'] = $string['33,33,33'] = $string['25,25,25,25'] = 'Equal widths';

@@ -18,26 +18,26 @@
                 <div id="blocktype-footer"></div>
             </div>
 
-            <a id="layout-link" href="layout.php?id=1&c={$category}&new={$new}"{if !$can_change_layout} style="display: none;"{/if}>Change View Layout</a>
+            <a id="layout-link" href="layout.php?id=1&c={$category}&new={$new}"{if !$can_change_layout} style="display: none;"{/if}>{str tag='changeviewlayout' section='view'}</a>
 
             <div id="bottom-pane">
                 <div id="column-container">
                     {$columns}
-                    <div id="clearer">
+                    <div class="cb">
                     </div>
                 </div>
             </div>
             <script type="text/javascript">
             {literal}
-            insertSiblingNodesAfter('bottom-pane', DIV({'id': 'views-loading'}, 'Loading...'));
+            insertSiblingNodesAfter('bottom-pane', DIV({'id': 'views-loading'}, get_string('loading')));
             {/literal}
             </script>
         </div>
     </form>
 
-{* TODO theme me *}
+    <div class="center">
 {if $new}
-        <form action="{$WWWROOT}view/edit.php" method="GET">
+    <form action="{$WWWROOT}view/edit.php" method="GET">
         <input type="hidden" name="id" value="{$view}">
         <input type="hidden" name="new" value="1">
         <input type="submit" class="submit" value="{str tag='back'}">
@@ -52,6 +52,7 @@
         <input class="submit" type="submit" value="{str tag='done'}">
     </form>
 {/if}
+    </div>
 {include file="columnfullend.tpl"}
 
 {include file="footer.tpl"}
