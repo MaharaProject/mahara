@@ -5,6 +5,7 @@
     <form action="" method="post">
         <input type="hidden" id="viewid" name="id" value="{$view}">
         <input type="hidden" name="change" value="1">
+        <input type="hidden" id="category" name="c" value="{$category}">
         {if $new}<input type="hidden" name="new" value="1">{/if}
         <div id="page">
             <div id="top-pane">

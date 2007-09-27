@@ -58,6 +58,7 @@ $smarty->assign('columns', $columns);
 // Tell smarty we're editing rather than just rendering
 $smarty->assign('editing', true);
 
+$smarty->assign('category', $category);
 $smarty->assign('new', $new);
 $smarty->assign('view', $view->get('id'));
 

@@ -221,6 +221,7 @@ function ViewManager() {
                 removeElementClass(getFirstElementByTagAndClassName('li', 'current', 'category-list'), 'current');
                 addElementClass(i.parentNode, 'current');
                 sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', {'id': $('viewid').value, 'action': 'blocktype_list', 'c': queryString['c']}, 'POST', function(data) {
+                    setNodeAttribute('category', 'value', queryString['c']);
                     $('blocktype-list').innerHTML = data.data;
                     self.makeBlockTypesDraggable();
                 });
