@@ -33,6 +33,8 @@ require_once('view.php');
 define('TITLE', 'Views Layout [DANGER construction site]');
 
 $id = param_integer('id');
+$new = param_boolean('new');
+$category = param_alpha('c');
 $view = new View($id);
 
 if ($view->get('numcolumns') > 1) {
@@ -43,7 +45,7 @@ if ($view->get('numcolumns') > 1) {
     }
 }
 else {
-    redirect('/view/blocks.php?id=' . $id);
+    redirect('/view/blocks.php?id=' . $id . '&c=' . $category . '&new=' . $new);
 }
 
 // NOTE: not building the form, that's left to the template
@@ -69,11 +71,11 @@ $smarty->assign('options', $options);
 $smarty->display('view/layout.tpl');
 
 function viewlayout_submit(Pieform $form, $values) {
-    global $view, $SESSION;
+    global $view, $SESSION, $category, $new;
     $view->set('layout', $values['layout']);
     $view->commit();
     $SESSION->add_ok_msg('View layout changed');
-    redirect('/view/blocks.php?id=' . $view->get('id'));
+    redirect('/view/blocks.php?id=' . $view->get('id') . '&c=' . $category . '&new=' . $new);
 }
 
 ?>
