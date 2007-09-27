@@ -48,6 +48,7 @@ class View {
     private $artefact_hierarchy;
     private $ownerobj;
     private $numcolumns;
+    private $layout;
     private $columns;
     private $dirtycolumns; // for when we change stuff
     private $tags;
@@ -595,7 +596,7 @@ class View {
             // set stuff in the session and redirect
             $fun = 'add_ok_msg';
             if (!$success) {
-                $fun = 'add_err_msg';
+                $fun = 'add_error_msg';
             }
             $SESSION->{$fun}($message);
             redirect('/view/blocks.php?id=' . $this->get('id') . 'c=' . $category . '&new=' . $new);
@@ -651,6 +652,19 @@ class View {
         // fill up empty columns array keys
         for ($i = 1; $i <= $this->get('numcolumns'); $i++) {
             $this->columns[$i] = array('blockinstances' => array());
+        }
+
+        // Set column widths
+        if ($this->get('numcolumns') > 1) {
+            $layout = $this->get('layout');
+            if ($layout) {
+                $i = 0;
+                // The get_field also verifies the layout is correct for the
+                // number of columns in the view
+                foreach (explode(',', get_field('view_layout', 'widths', 'id', $layout, 'columns', $this->get('numcolumns'))) as $width) {
+                    $this->columns[++$i]['width'] = $width;
+                }
+            }
         }
 
         foreach ($data as $block) {
@@ -742,11 +756,23 @@ class View {
             $blockcontent .= $blockinstance->$renderfunction($blockinstance->get('id') == $this->blockinstance_currently_being_configured);
         }
 
+        // Widths don't appear to apply to divs unless they have at least
+        // _some_ content - at least in gecko (make a view with a particular
+        // layout like 25/50/25 and make the middle column empty and you'll see
+        // what I mean)
+        if ($blockcontent == '') {
+            $blockcontent = '&nbsp;';
+        }
+
         $smarty = smarty_core();
         $smarty->assign('javascript',  defined('JSON'));
         $smarty->assign('column',      $column);
         $smarty->assign('numcolumns',  $this->get('numcolumns'));
         $smarty->assign('blockcontent', $blockcontent);
+
+        if (isset($data['width'])) {
+            $smarty->assign('width', intval($data['width']));
+        }
 
         if ($editing) {
             return $smarty->fetch('view/columnediting.tpl');
@@ -957,6 +983,7 @@ EOF;
         if ($values['before'] != ($this->get('numcolumns') + 1)) {
             $this->shuffle_helper('column', 'up', '>=', $values['before']);
         }
+        $this->set('layout', null);
         $this->commit();
         // @TODO this could be optimised by actually moving the keys around,
         // but I don't think there's much point as the objects aren't persistent
@@ -1008,6 +1035,7 @@ EOF;
             }
         }
 
+        $this->set('layout', null);
         $this->set('numcolumns', $this->get('numcolumns') - 1);
         // now shift all blocks one left and we're done
         $this->shuffle_helper('column', 'down', '>', $values['column']);

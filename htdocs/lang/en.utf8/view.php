@@ -86,4 +86,11 @@ $string['removecolumn'] = 'Remove column';
 
 $string['titleformatted'] = '%s by %s';
 
+$string['50,50'] = $string['33,33,33'] = $string['25,25,25,25'] = 'Equal widths';
+$string['67,33'] = 'Larger left column';
+$string['33,67'] = 'Larger right column';
+$string['25,50,25'] = 'Larger centre column';
+$string['15,70,15'] = 'Much larger centre column';
+$string['20,30,30,20'] = 'Larger centre columns';
+
 ?>

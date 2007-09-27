@@ -81,6 +81,7 @@ function ViewManager() {
         // Here we are doing two things:
         // 1) The existing columns that are higher than the one being inserted need to be renumbered
         // 2) All columns need their 'columnsN' class renumbered one higher
+        // 3) All columns need their 'width' style attribute removed, if they have one
         for (var oldID = numColumns; oldID >= 1; oldID--) {
             var column = $('column_' + oldID);
             var newID = oldID + 1;
@@ -93,6 +94,7 @@ function ViewManager() {
             }
             removeElementClass(column, 'columns' + numColumns);
             addElementClass(column, 'columns' + (numColumns + 1));
+            removeNodeAttribute(column, 'style');
         }
 
         // If the column being added is the very first one, the 'left' add column button needs to be removed
@@ -120,6 +122,13 @@ function ViewManager() {
             insertSiblingNodesAfter('column_' + (id - 1), tempDiv.firstChild);
         }
 
+        if (numColumns == 1) {
+            showElement('layout-link');
+        }
+        else if (numColumns == 4) {
+            hideElement('layout-link');
+        }
+
         // Wire up the new column buttons to be AJAX
         self.rewriteAddColumnButtons('column_' + id);
         self.rewriteRemoveColumnButtons('column_' + id);
@@ -144,9 +153,12 @@ function ViewManager() {
         // Get the existing number of columns
         var numColumns = parseInt(getNodeAttribute(getFirstElementByTagAndClassName('div', 'column', self.bottomPane), 'class').match(/columns([0-9]+)/)[1]);
 
+        // Renumber the columnsN classes of the remaining columns, and remove any set widths
         forEach(getElementsByTagAndClassName('div', 'columns' + numColumns, self.bottomPane), function(i) {
             removeElementClass(i, 'columns' + numColumns);
             addElementClass(i, 'columns' + (numColumns - 1));
+
+            removeNodeAttribute(i, 'style');
         });
 
 
@@ -161,6 +173,13 @@ function ViewManager() {
                 getFirstElementByTagAndClassName('input', 'addcolumn', 'column_' + newID).setAttribute('name', 'action_addcolumn_before_' + oldID);
                 getFirstElementByTagAndClassName('input', 'removecolumn', 'column_' + newID).setAttribute('name', 'action_removecolumn_id_' + newID);
             }
+        }
+
+        if (numColumns == 2) {
+            hideElement('layout-link');
+        }
+        else if (numColumns == 5) {
+            showElement('layout-link');
         }
 
         // The last column needs the class of the header changed, the first column possibly too
