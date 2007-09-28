@@ -413,6 +413,7 @@ function ViewManager() {
             'handle': 'blockinstance-header',
             'starteffect': function () {
                 self.currentlyMovingObject = blockinstance;
+                self.origCoordinates = self.getBlockinstanceCoordinates(blockinstance);
                 self.createHotzones();
 
                 // Set the positioning of the blockinstance to 'absolute',
@@ -428,12 +429,11 @@ function ViewManager() {
                 });
 
                 // Resize the placeholder div
-                // NOTE: negative offsets to account for borders. These might be removed
-                setElementDimensions(self.blockPlaceholder, {w: dimensions.w - 4, h: dimensions.h - 2});
+                // NOTE: negative offset to account for the border. This might be removed
+                setElementDimensions(self.blockPlaceholder, {h: dimensions.h - 2});
+                setStyle(self.blockPlaceholder, {'width': '100%'});
 
                 setOpacity(blockinstance, 0.5);
-
-                self.origCoordinates = self.getBlockinstanceCoordinates(blockinstance);
             },
             'revert': true,
             'reverteffect': function (innerelement, top_offset, left_offset) {
@@ -595,8 +595,8 @@ function ViewManager() {
             if (getFirstElementByTagAndClassName('div', 'blockinstance', getFirstParentByTagAndClassName(i, 'div', 'column-content')) == i) {
                 // Put a hotzone across the top half of the blockinstance
                 var hotzone = self.createHotzone(i, insertSiblingNodesBefore);
-                setElementPosition(hotzone, blockinstancePosition);
-                setElementDimensions(hotzone, {w: blockinstanceDimensions.w, h: blockinstanceDimensions.h / 2});
+                setElementPosition(hotzone, {x: blockinstancePosition.x, y:0});
+                setElementDimensions(hotzone, {w: blockinstanceDimensions.w, h: blockinstanceDimensions.h / 2 + blockinstancePosition.y});
 
                 previousHotzone = hotzone;
 
@@ -673,7 +673,7 @@ function ViewManager() {
                 setElementPosition(hotzone, {x: blockinstancePosition.x, y: previousHotzonePosition.y + previousHotzoneDimensions.h});
                 setElementDimensions(hotzone, {
                     w: blockinstanceDimensions.w,
-                    h: viewportDimensions.h /* columnContainerDimensions.h */ - (previousHotzonePosition.y + previousHotzoneDimensions.h) - columnContainerPosition.y - 30
+                    h: Math.min(blockinstanceDimensions.h, 100)
                 });
             }
 
@@ -818,8 +818,7 @@ function ViewManager() {
     this.getBlockinstanceCoordinates = function(blockinstance) {
         // Work out where to send the block to
         var columnContainer = getFirstParentByTagAndClassName(blockinstance, 'div', 'column');
-        // TODO assumes id will always be 'column_N', should just look for last chars after the last _
-        var column = columnContainer.id.substr(7, 1);
+        var column = columnContainer.id.substr(columnContainer.id.lastIndexOf('_') + 1);
         var order  = 0;
         forEach(getFirstElementByTagAndClassName('div', 'column-content', columnContainer).childNodes, function(i) {
             if (hasElementClass(i, 'blockinstance')) {
