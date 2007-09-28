@@ -1572,6 +1572,12 @@ table#initials .initial-letters {
     font-weight: bold;
 }
 
+.search-results-pages span.dimmed a {
+    color: #999 !important;
+    text-decoration: none;
+    font-weight: bold;
+}
+
 table.tablerenderer th.asc { 
     background: #e5e8da url(../images/down.png) no-repeat right;
 }

@@ -64,7 +64,8 @@ function UserSearch() {
     this.searchByChildLink = function (element) {
         var children = getElementsByTagAndClassName('a', null, element);
         if (children.length == 1) {
-            self.params = parseQueryString(getNodeAttribute(children[0], 'href'));
+            var href = getNodeAttribute(children[0], 'href');
+            self.params = parseQueryString(href.substring(href.indexOf('?')+1, href.length));
             self.doSearch();
         }
     }

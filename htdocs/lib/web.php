@@ -1822,4 +1822,42 @@ function clean_attributes_2($htmlArray) {
 }
 
 
+/**
+ * Creates pagination links for a table
+ * appends an 'offset=n' parameter to the url to get the url for a different page
+ * @param integer $limit  number of items per page
+ * @param integer $offset offset of first data item on this page
+ * @param integer $count  total number of items
+ * @param string  $url    where to get results from
+ * @return string
+ */
+function table_page_links($limit, $offset, $count, $url) {
+    if ($limit <= $count) {
+        $pages = ceil($count / $limit);
+        $page = $offset / $limit;
+
+        $last = $pages - 1;
+        $next = min($last, $page + 1);
+        $prev = max(0, $page - 1);
+
+        $pagenumbers = array_values(array(0 => 0,
+                                          $prev => $prev,
+                                          $page => $page,
+                                          $next => $next,
+                                          $last => $last));
+        $smarty = smarty_core();
+        $smarty->assign_by_ref('pagenumbers', $pagenumbers);
+        $smarty->assign_by_ref('prev', $prev);
+        $smarty->assign_by_ref('page', $page);
+        $smarty->assign_by_ref('pages', $pages);
+        $smarty->assign_by_ref('next', $next);
+        $smarty->assign_by_ref('limit', $limit);
+        $smarty->assign_by_ref('url', $url);
+
+        return $smarty->fetch('pager.tpl');
+    }
+    return '';
+
+}
+
 ?>

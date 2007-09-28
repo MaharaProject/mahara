@@ -130,7 +130,6 @@ function build_admin_user_search_results($search, $offset, $limit, $sortby, $sor
     $params = join('&amp;', $params);
 
     $smarty->assign_by_ref('params', $params);
-    $smarty->assign_by_ref('offset', $offset);
     $smarty->assign_by_ref('sortby', $sortby);
     $smarty->assign_by_ref('sortdir', $sortdir);
     $fieldnames = array('firstname','lastname','username','email','institution');
@@ -172,18 +171,12 @@ function build_admin_user_search_results($search, $offset, $limit, $sortby, $sor
 
     $results = admin_user_search($queries, $constraints, $offset, $limit, $sortby, $sortdir);
 
-    $results['pages'] = ceil($results['count'] / $results['limit']);
-    $results['page'] = $results['offset'] / $results['limit']; // $results['pages'];
-    $lastpage = $results['pages'] - 1;
-    $results['next'] = min($lastpage, $results['page'] + 1);
-    $results['prev'] = max(0, $results['page'] - 1);
-    $range = min(1, $lastpage);
-    $pagenumbers = array_unique(array_merge(range(0, min($range, $results['page'])),
-                                            range(max($range, $results['page']-$range), 
-                                                  min($results['page']+$range, $lastpage)),
-                                            range(max($range, $lastpage-$range), $lastpage)));
+    $url = get_config('wwwroot').'admin/users/search.php?'.$params.'&sortby='.$sortby.'&sortdir='.$sortdir;
+    $pagelinks = table_page_links($results['limit'], $results['offset'], $results['count'], $url);
+                                  
+    $smarty->assign_by_ref('pagelinks', $pagelinks);
+
     $smarty->assign_by_ref('results', $results);
-    $smarty->assign_by_ref('pagenumbers', $pagenumbers);
     $smarty->assign_by_ref('institutions', get_records_assoc('institution', '', '', '', 'name,displayname'));
     return $smarty->fetch('admin/users/resulttable.tpl');
 }
