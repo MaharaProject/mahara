@@ -143,7 +143,7 @@ class ArtefactTypeContactinformation extends ArtefactTypeResume {
         foreach ($fields as $f) {
             try {
                 $$f = artefact_instance_from_type($f);
-                $rendered = $$f->render_self();
+                $rendered = $$f->render_self(array());
                 $smarty->assign($f, $rendered['html']);
             }
             catch (Exception $e) { }

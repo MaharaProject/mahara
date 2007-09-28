@@ -341,6 +341,10 @@ class ArtefactTypeProfileField extends ArtefactTypeProfile {
     public static function collapse_config() {
         return 'profile';
     }
+
+    public function render_self($options) {
+        return array('html' => $this->title, 'javascript' => null);
+    }
 }
 
 class ArtefactTypeCachedProfileField extends ArtefactTypeProfileField {
