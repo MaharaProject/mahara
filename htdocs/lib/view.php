@@ -866,6 +866,13 @@ class View {
                 // and set it in the object for good measure.
                 $bi->set('order', $values['order']);
             }
+            else if ($values['order'] == $this->get_current_max_order($values['column'])) {
+                // moving to the very bottom
+                set_field('block_instance', 'order', 0, 'view', $this->get('id'), 'column', $values['column'], 'order', $bi->get('order'));
+                $this->shuffle_helper('order', 'down', '>=', $bi->get('order'), '"column" = ?', array($bi->get('column')));
+                set_field('block_instance', 'order', $values['order'], 'view', $this->get('id'), 'column', $values['column'], 'order', 0);
+                $bi->set('order', $values['order']);
+            }
             else {
                 $this->shuffle_column($bi->get('column'), $values['order'], $bi->get('order'));
             }
