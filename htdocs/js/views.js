@@ -531,6 +531,12 @@ function ViewManager() {
                     // No longer is there a 'last hotzone' that was being dragged over
                     self.lastHotzone = null;
 
+                    // We don't need the block placeholder anymore, but it
+                    // still might be needed in the dropfunction, as the
+                    // reverteffect is called before the dropfunction. So we
+                    // only hide it here
+                    hideElement(self.blockPlaceholder);
+
                     self.movingBlockType = false;
 
                     // Sadly we have to return an effect, because this requires
@@ -670,10 +676,13 @@ function ViewManager() {
 
                 var viewportDimensions = getViewportDimensions();
 
+                var footerDimensions = getElementDimensions('footer', self.bottomPane);
+                var footerPosition   = getElementPosition('footer', self.bottomPane);
+
                 setElementPosition(hotzone, {x: blockinstancePosition.x, y: previousHotzonePosition.y + previousHotzoneDimensions.h});
                 setElementDimensions(hotzone, {
                     w: blockinstanceDimensions.w,
-                    h: Math.min(blockinstanceDimensions.h, 100)
+                    h: (footerPosition.y + footerDimensions.h) - (previousHotzonePosition.y + previousHotzoneDimensions.h)
                 });
             }
 
