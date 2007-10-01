@@ -674,8 +674,6 @@ function ViewManager() {
                 var columnContainerPosition   = elementPosition(self.columnContainer);
                 var columnContainerDimensions = elementDimensions(self.columnContainer);
 
-                var viewportDimensions = getViewportDimensions();
-
                 var footerDimensions = getElementDimensions('footer', self.bottomPane);
                 var footerPosition   = getElementPosition('footer', self.bottomPane);
 
@@ -694,11 +692,21 @@ function ViewManager() {
                 // Column with no blockinstances
                 var columnContent = getFirstElementByTagAndClassName('div', 'column-content', i);
                 var hotzone = self.createHotzone(columnContent, appendChildNodes, true);
-                setElementPosition(hotzone, getElementPosition(columnContent, self.columnContainer));
+
+                var footerDimensions = getElementDimensions('footer', self.bottomPane);
+                var footerPosition   = getElementPosition('footer', self.bottomPane);
+
+                setElementPosition(hotzone, {x: getElementPosition(columnContent, self.columnContainer).x, y: 0});
                 setElementDimensions(hotzone, {
                     w: getElementDimensions(columnContent).w,
-                    h: getViewportDimensions().h - getElementPosition(i).y - 60 // FIXME: math here is dodgy, unproven
+                    h: footerPosition.y + footerDimensions.h
                 });
+
+                // The column content may have whitespace in it. This
+                // whitespace causes the box to respect line-height, which
+                // pushes down where the blocks appear when dragged into the
+                // column. Removing all the children nodes fixes this
+                replaceChildNodes(columnContent);
 
                 previousHotzone = hotzone;
             }
