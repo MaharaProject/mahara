@@ -186,6 +186,7 @@ EOF;
         $javascript_array[] = $jsroot . 'MochiKit/Color.js';
         $javascript_array[] = $jsroot . 'MochiKit/Visual.js';
         $javascript_array[] = $jsroot . 'MochiKit/DragAndDrop.js';
+        $javascript_array[] = $jsroot . 'MochiKit/Format.js';
     }
     else {
         $javascript_array[] = $jsroot . 'MochiKit/Packed.js';
