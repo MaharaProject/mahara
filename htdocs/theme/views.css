@@ -1,64 +1,24 @@
 /**
- * Views stylesheet
+ * Views stylesheet - common between all themes
  */
-
-#page {
-    border: 3px solid #ccc;
-}
-
-#top-pane {
-    border-bottom: 3px solid #ccc;
-    background-color: #fffff0;
-}
 
 #category-list {
     float: left;
 }
 
-#category-list ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-    width: 150px;
-}
-#category-list li {
-    padding: .5em;
-    border-bottom: 1px solid #ccc;
-    background-color: #f0f0f0;
-    border-right: 3px solid #ccc;
-}
-#category-list li.current {
-    font-weight: bold;
-    background-color: #fffff0;
-    border-right: none;
-}
-#category-list li.first {
-    border-top: none;
-}
-
+/* This needs lots of work, and probably some html changes */
 #blocktype-list {
     overflow: scroll;
 }
-/* don't ask... fixing some wierd firefox problem */
-#blocktype-list * {
-    margin: 0;
-}
-
 #blocktype-list ul {
     list-style-type: none;
-    /*width: 65em;*/
 }
 #blocktype-list li {
     float: left;
     text-align: center;
     margin: 1em 1em 0;
 }
-#blocktype-list li h3 {
-    font-size: .8em;
-}
-#blocktype-list li p {
-    font-size: .8em;
-}
+
 #blocktype-footer {
     clear: left;
 }
@@ -130,16 +90,7 @@
 
 /* block instance styles */
 .blockinstance {
-    border: 2px solid #cc9;
     position: relative;
-    margin-top: 1em;
-    background-color: white;
-}
-.blockinstance-header h4 {
-    margin: 0;
-    padding: .25em;
-    border-bottom: 2px solid #cc9;
-    background-color: #ffd;
 }
 
 .blockinstance-controls {

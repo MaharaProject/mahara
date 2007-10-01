@@ -41,9 +41,8 @@ $columns = $view->build_columns(true);
 
 $extraconfig = array(
     'stylesheets' => array('style/views.css'),
-    'themepaths'  => array('style/views-js.css'), // for config.theme
 );
-$smarty = smarty(array('views', 'tinytinymce'), false, false, $extraconfig);
+$smarty = smarty(array('views', 'tinytinymce'), array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">'), false, $extraconfig);
 
 
 // The list of categories for the tabbed interface
