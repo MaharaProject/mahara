@@ -321,7 +321,7 @@ function ViewManager() {
             connect(i, 'onclick', function(e) {
                 setNodeAttribute(i, 'disabled', 'disabled');
                 var name = getNodeAttribute(e.src(), 'name');
-                var id   = parseInt(name.substr(-1));
+                var id   = parseInt(name.substr(name.length - 1, 1));
                 var pd   = {'id': $('viewid').value, 'change': 1}
                 pd['action_addcolumn_before_' + id] = 1;
                 sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
@@ -354,7 +354,7 @@ function ViewManager() {
             connect(i, 'onclick', function(e) {
                 setNodeAttribute(i, 'disabled', 'disabled');
                 var name = getNodeAttribute(e.src(), 'name');
-                var id   = parseInt(name.substr(-1));
+                var id   = parseInt(name.substr(name.length - 1, 1));
                 var pd   = {'id': $('viewid').value, 'change': 1}
                 pd['action_removecolumn_column_' + id] = 1;
                 sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
