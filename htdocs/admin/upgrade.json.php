@@ -52,7 +52,7 @@ if ($install) {
             $fun();
         }
         catch (SQLException $e) {
-            json_reply('local', array('key' => $name, 'errormessage' => $e->getMessage()));
+            json_reply('local', array('error' => true, 'key' => $name, 'errormessage' => $e->getMessage()));
         }
     }
     $data['coredata'] = true;

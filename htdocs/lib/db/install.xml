@@ -364,6 +364,17 @@
                 <KEY NAME="foreign" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id" />
             </KEYS>         
         </TABLE>
+        <TABLE NAME="view_layout">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+                <FIELD NAME="columns" TYPE="int" LENGTH="1" NOTNULL="true"/>
+                <FIELD NAME="widths" TYPE="char" LENGTH="255" NOTNULL="true"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+                <KEY NAME="columnwidthuk" TYPE="unique" FIELDS="columns,widths"/>
+            </KEYS>
+        </TABLE>
         <TABLE NAME="view">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
@@ -412,17 +423,6 @@
                 <KEY NAME="blocktypefk" TYPE="foreign" FIELDS="blocktype" REFTABLE="blocktype_installed" REFFIELDS="name" />
                 <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id" />
                 <KEY NAME="viewcolumnorderuk" TYPE="unique" FIELDS="view,column,order" />
-            </KEYS>
-        </TABLE>
-        <TABLE NAME="view_layout">
-            <FIELDS>
-                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-                <FIELD NAME="columns" TYPE="int" LENGTH="1" NOTNULL="true"/>
-                <FIELD NAME="widths" TYPE="char" LENGTH="255" NOTNULL="true"/>
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-                <KEY NAME="columnwidthuk" UNIQUE="true" FIELDS="columns,widths"/>
             </KEYS>
         </TABLE>
         <TABLE NAME="view_artefact">

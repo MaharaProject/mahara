@@ -88,6 +88,7 @@ $js = <<< EOJS
                             message += data.newversion;
                         }
                         $(data.key).innerHTML = '<img src="{$successicon}" alt=":)" />  ' + message;
+                        processNext();
                     }
                     else {
                         var message = '';
@@ -99,7 +100,6 @@ $js = <<< EOJS
                         }
                         $(data.key).innerHTML = '<img src="{$failureicon}" alt=":(" /> ' + message;
                     }
-                    processNext();
                 }, 
                 function () {
                     $(element).innerHTML = '<img src="{$failureicon}" alt=":(" /> ' + {$failurestring};
