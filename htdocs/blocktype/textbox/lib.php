@@ -26,7 +26,7 @@
 
 defined('INTERNAL') || die();
 
-class PluginBlocktypeTextbox extends PluginBlocktype {
+class PluginBlocktypeTextbox extends SystemBlocktype {
 
     public static function get_title() {
         return get_string('title', 'blocktype.textbox');

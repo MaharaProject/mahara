@@ -74,6 +74,16 @@ abstract class PluginBlocktype extends Plugin {
      */
     public static function instance_config_validate(Pieform $form, $values) { }
 
+    /**
+    * most Blocktype plugins will attach to artefacts.
+    * They should implement this function to keep a list of which ones
+    * note that it should just handle top level artefacts.
+    * the cache rebuilder will figure out the children.
+    *
+    * @return array ids of artefacts in this block instance
+    */
+    public static abstract function get_artefacts(BlockInstance $instance);
+
     public static function has_config() {
         return false;
     }
@@ -114,6 +124,15 @@ abstract class PluginBlocktype extends Plugin {
         return $blocktypes;
     }
 }
+
+abstract class SystemBlockType extends PluginBlockType {
+
+    public final static function get_artefacts(BlockInstance $instance) {
+        return array();
+    }
+
+}
+
 
 class BlockInstance {
 
@@ -211,6 +230,7 @@ class BlockInstance {
         }
 
         set_field('block_instance', 'configdata', serialize($values), 'id', $this->get('id'));
+        $this->rebuild_artefact_list();
         $SESSION->add_ok_msg(get_string('blockinstanceconfiguredsuccessfully', 'view'));
         $new = param_boolean('new');
         $category = param_alpha('c', '');
@@ -341,9 +361,33 @@ class BlockInstance {
             update_record('block_instance', $fordb, 'id');
         }
 
+        $this->rebuild_artefact_list();
         // @TODO maybe handle_event here.
 
         $this->dirty = false;
+    }
+
+    public function rebuild_artefact_list() {
+
+        db_begin();
+        delete_records('view_artefact', 'block', $this->id);
+        if (!$artefacts = call_static_method(
+            generate_class_name('blocktype', $this->get('blocktype')),
+            'get_artefacts', $this)) {
+            db_commit();
+            return true;
+        }
+            
+        $va = new StdClass;
+        $va->view = $this->get('view');
+        $va->block = $this->id;
+
+        foreach ($artefacts as $id) {
+            $va->artefact = $id;
+            insert_record('view_artefact', $va);
+        }
+
+        db_commit();
     }
 
     /**

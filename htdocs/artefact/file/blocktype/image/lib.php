@@ -48,6 +48,12 @@ class PluginBlocktypeImage extends PluginBlocktype {
         return 'whee!';
     }
 
+    public static function get_artefacts(BlockInstance $instance) {
+        $configdata = $instance->get('configdata');
+        //TODO return the id of the image, probably $configdata['artefactid']
+        return array();
+    }
+
 }
 
 ?>
