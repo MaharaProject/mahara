@@ -8,63 +8,65 @@ function ViewManager() {
     var self = this;
 
     this.init = function () {
-        // Set up the column container reference, and make the container the
-        // base for positioned elements inside it
-        self.columnContainer = $('column-container');
-        makePositioned(self.columnContainer);
-
         self.bottomPane = $('bottom-pane');
 
-        // Hide 'new block here' buttons
-        forEach(getElementsByTagAndClassName('div', 'add-button', self.bottomPane), function(i) {
-            removeElement(i);
-        });
+        if (!self.isIE6) {
+            // Set up the column container reference, and make the container the
+            // base for positioned elements inside it
+            self.columnContainer = $('column-container');
+            makePositioned(self.columnContainer);
 
-        // Hide controls in each block instance that are not needed
-        forEach(getElementsByTagAndClassName('input', 'movebutton', self.bottomPane), function(i) {
-            removeElement(i);
-        });
+            // Hide 'new block here' buttons
+            forEach(getElementsByTagAndClassName('div', 'add-button', self.bottomPane), function(i) {
+                removeElement(i);
+            });
 
-        // Remove radio buttons for moving block types into place
-        forEach(getElementsByTagAndClassName('input', 'blocktype-radio', 'top-pane'), function(i) {
-            setNodeAttribute(i, 'type', 'hidden');
-        });
+            // Hide controls in each block instance that are not needed
+            forEach(getElementsByTagAndClassName('input', 'movebutton', self.bottomPane), function(i) {
+                removeElement(i);
+            });
 
-        // Rewrite the links in the category select list to be ajax
-        self.rewriteCategorySelectList();
+            // Remove radio buttons for moving block types into place
+            forEach(getElementsByTagAndClassName('input', 'blocktype-radio', 'top-pane'), function(i) {
+                setNodeAttribute(i, 'type', 'hidden');
+            });
 
-        // Rewrite the configure buttons to be ajax
-        self.rewriteConfigureButtons();
+            // Rewrite the links in the category select list to be ajax
+            self.rewriteCategorySelectList();
 
-        // Rewrite the delete buttons to be ajax
-        self.rewriteDeleteButtons();
+            // Rewrite the configure buttons to be ajax
+            self.rewriteConfigureButtons();
 
-        // Rewrite the 'add column' buttons to be ajax
-        self.rewriteAddColumnButtons();
+            // Rewrite the delete buttons to be ajax
+            self.rewriteDeleteButtons();
 
-        // Rewrite the 'remove column' buttons to be ajax
-        self.rewriteRemoveColumnButtons();
+            // Rewrite the 'add column' buttons to be ajax
+            self.rewriteAddColumnButtons();
 
-        // Ensure the enabled/disabled state of the add/remove buttons is correct
-        self.checkColumnButtonDisabledState();
+            // Rewrite the 'remove column' buttons to be ajax
+            self.rewriteRemoveColumnButtons();
 
-        // Make the block instances draggable
-        self.makeBlockinstancesDraggable();
+            // Ensure the enabled/disabled state of the add/remove buttons is correct
+            self.checkColumnButtonDisabledState();
 
-        // Make the block types draggable
-        self.makeBlockTypesDraggable();
+            // Make the block instances draggable
+            self.makeBlockinstancesDraggable();
 
-        // Make the top pane a dropzone for cancelling adding block types
-        var count = 0;
-        new Droppable('top-pane', {
-            'onhover': function() {
-                if (count++ == 5) {
-                    count = 0;
-                    // Hide the dropzone
-                    hideElement(self.blockPlaceholder);
+            // Make the block types draggable
+            self.makeBlockTypesDraggable();
+
+            // Make the top pane a dropzone for cancelling adding block types
+            var count = 0;
+            new Droppable('top-pane', {
+                'onhover': function() {
+                    if (count++ == 5) {
+                        count = 0;
+                        // Hide the dropzone
+                        hideElement(self.blockPlaceholder);
+                    }
                 }
-            }
-        });
+            });
+        }
 
         // Now we're done, remove the loading message and display the page
         removeElement('views-loading');
@@ -921,6 +923,9 @@ function ViewManager() {
 
     // Whether the browser is IE7 - needed for some hacks
     this.isIE7 = document.all && document.documentElement && typeof(document.documentElement.style.maxHeight) != "undefined" && !window.opera;
+
+    // Whether the browser is IE6
+    this.isIE6 = !this.isIE7 && document.all && !window.opera;
 
     addLoadEvent(self.init);
 }
