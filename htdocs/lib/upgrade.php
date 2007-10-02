@@ -163,7 +163,8 @@ function check_upgrades($name=null) {
         // definitely fail
         $pluginversion = 0;
         if (!$installing) {
-            if ($installed = get_record($plugintype . '_installed', 'name', $pluginname)) {
+            if (table_exists(new XMLDBTable($plugintype . '_installed'))
+                && $installed = get_record($plugintype . '_installed', 'name', $pluginname)) {
                 $pluginversion = $installed->version;
                 $pluginrelease =  $installed->release;
             }
