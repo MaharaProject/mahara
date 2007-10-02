@@ -118,23 +118,6 @@ function search_user($query_string, $limit, $offset = 0) {
 
 
 function build_admin_user_search_results($search, $offset, $limit, $sortby, $sortdir) {
-    $smarty = smarty_core();
-
-    $params = array();
-    foreach ($search as $k => $v) {
-        if (!empty($v)) {
-            $params[] = $k . '=' . $v;
-        }
-    }
-    $params[] = 'limit=' . $limit;
-    $params = join('&amp;', $params);
-
-    $smarty->assign_by_ref('params', $params);
-    $smarty->assign_by_ref('sortby', $sortby);
-    $smarty->assign_by_ref('sortdir', $sortdir);
-    $fieldnames = array('firstname','lastname','username','email','institution');
-    $smarty->assign_by_ref('fieldnames', $fieldnames);
-
     // In admin search, the search string is interpreted as either a
     // name search or an email search depending on its contents
     $queries = array();
@@ -171,20 +154,46 @@ function build_admin_user_search_results($search, $offset, $limit, $sortby, $sor
 
     $results = admin_user_search($queries, $constraints, $offset, $limit, $sortby, $sortdir);
 
-    $url = get_config('wwwroot').'admin/users/search.php?'.$params.'&sortby='.$sortby.'&sortdir='.$sortdir;
-    $pagelinks = table_page_links($results['limit'], $results['offset'], $results['count'], $url);
-                                  
-    $smarty->assign_by_ref('pagelinks', $pagelinks);
+    $params = array();
+    foreach ($search as $k => $v) {
+        if (!empty($v)) {
+            $params[] = $k . '=' . $v;
+        }
+    }
+    $searchurl = get_config('wwwroot') . 'admin/users/search.php?' . join('&amp;', $params)
+        . '&amp;limit=' . $limit;
 
+    $templatedir = get_config('docroot') . 'theme/' . get_config('theme') . '/templates/admin/users/';
+
+    $cols = array(
+        'icon'        => array('name'     => '',
+                               'template' => file_get_contents($templatedir . 'icon.tpl')),
+        'firstname'   => array('name'     => get_string('firstname')),
+        'lastname'    => array('name'     => get_string('lastname')),
+        'username'    => array('name'     => get_string('username'),
+                               'template' => file_get_contents($templatedir . 'username.tpl')),
+        'email'       => array('name'     => get_string('email')),
+        'institution' => array('name'     => get_string('institution'),
+                               'template' => file_get_contents($templatedir . 'institution.tpl')),
+        'suspend'     => array('name'     => '',
+                               'template' => file_get_contents($templatedir . 'suspendlink.tpl'))
+    );
+
+    $smarty = smarty_core();
     $smarty->assign_by_ref('results', $results);
     $smarty->assign_by_ref('institutions', get_records_assoc('institution', '', '', '', 'name,displayname'));
-    return $smarty->fetch('admin/users/resulttable.tpl');
+    $smarty->assign('searchurl', $searchurl);
+    $smarty->assign('sortby', $sortby);
+    $smarty->assign('sortdir', $sortdir);
+    $smarty->assign('pagebaseurl', $searchurl . '&sortby=' . $sortby . '&sortdir=' . $sortdir);
+    $smarty->assign('cols', $cols);
+    $smarty->assign('ncols', count($cols));
+    return $smarty->fetch('searchresulttable.tpl');
 }
 
 
 function admin_user_search($queries, $constraints, $offset, $limit, $sortfield, $sortdir) {
     $plugin = get_config('searchplugin');
-    //$plugin='internal';
     safe_require('search', $plugin);
     return call_static_method(generate_class_name('search', $plugin), 'admin_search_user', 
                               $queries, $constraints, $offset, $limit, $sortfield, $sortdir);
