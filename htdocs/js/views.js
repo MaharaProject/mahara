@@ -492,14 +492,31 @@ function ViewManager() {
             // moved back into place
             makePositioned(i);
             var clone = DIV({'class': 'blocktype-clone'});
+
+            // The border rule is required for IE7 to behave - and it needs the
+            // semi-colon!
             setStyle(clone, {
-                //'outline': '3px dotted #ccc;',
+                'border': '0px dotted transparent;',
                 'position': 'absolute'
             });
-            setElementPosition(clone, getElementPosition(i, 'top-pane'));
+
             setElementDimensions(clone, getElementDimensions(i));
-            setOpacity(clone, 0.5);
+
+            if (self.isIE7) {
+                appendChildNodes(clone, i.cloneNode(true));
+                hideElement(i);
+                alert('is ie7');
+            }
+            else {
+                setElementPosition(clone, getElementPosition(i, 'top-pane'));
+                setOpacity(clone, 0.5);
+            }
             insertSiblingNodesAfter(i, clone);
+
+            // Prevents the height of the blocktype list doubling when dragging
+            if (self.isIE7) {
+                i.style.position = 'absolute';
+            }
 
             new Draggable(clone, {
                 'starteffect': function () {
@@ -517,14 +534,29 @@ function ViewManager() {
                     // Make it a ghost. Done when starting the drag because
                     // some browsers have trouble rendering things right on top
                     // of one another
-                    appendChildNodes(clone, i.cloneNode(true));
+                    if (self.isIE7) {
+                        showElement(i);
+                        setOpacity(clone, 0.5);
+                    }
+                    else {
+                        appendChildNodes(clone, i.cloneNode(true));
+                    }
                 },
                 'revert': true,
                 'reverteffect': function (innerelement, top_offset, left_offset) {
-                    // The actual draggable is the clone we were dragging
-                    // around, we can put it back and remove the clone now
-                    replaceChildNodes(clone);
-                    setElementPosition(clone, getElementPosition(i, 'top-pane'));
+                    if (self.isIE7) {
+                        // Move the clone back and hide the filler used while
+                        // dragging
+                        setElementPosition(clone, {x: 0, y: 0});
+                        hideElement(i);
+                        setOpacity(clone, 1);
+                    }
+                    else {
+                        // The actual draggable is the clone we were dragging
+                        // around, we can put it back and remove the clone now
+                        replaceChildNodes(clone);
+                        setElementPosition(clone, getElementPosition(i, 'top-pane'));
+                    }
 
                     self.destroyHotzones();
 
@@ -886,6 +918,9 @@ function ViewManager() {
 
     // The bottom pane - set in self.init
     this.bottomPane = null;
+
+    // Whether the browser is IE7 - needed for some hacks
+    this.isIE7 = document.all && document.documentElement && typeof(document.documentElement.style.maxHeight) != "undefined" && !window.opera;
 
     addLoadEvent(self.init);
 }
