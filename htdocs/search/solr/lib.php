@@ -193,7 +193,8 @@ END;
         if (!empty($query_string)) {
             $query_string = 'index_name:' . $query_string . '*';
         }
-        $results = self::send_query($query_string, $limit, $offset, array('type' => 'user'));
+        $results = self::send_query($query_string, $limit, $offset,
+                                    array('type' => 'user', 'index_active' => 1));
         self::remove_key_prefix(&$results);
         return $results;
     }
@@ -354,7 +355,7 @@ END;
 
         self::delete_bytype('user');
 
-        $users = get_recordset('usr', 'active', '1');
+        $users = get_recordset('usr', 'deleted', '0');
         safe_require('artefact', 'internal');
         $publicfields = array_keys(ArtefactTypeProfile::get_public_fields());
 
@@ -427,7 +428,7 @@ END;
             }
         }
 
-        if (!$user['active']) {
+        if ($user['deleted']) {
             self::delete_byidtype($user['id'], 'user');
             return;
         }
@@ -444,6 +445,7 @@ END;
             'store_preferredname' => $user['preferredname'],
             'text_firstname'      => $user['firstname'],
             'text_lastname'       => $user['lastname'],
+            'index_active'        => $user['active'],
         );
         if (empty($doc['index_name'])) {
             $doc['index_name'] = $user['firstname'] . ' ' . $user['lastname'];
