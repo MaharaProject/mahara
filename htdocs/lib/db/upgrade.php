@@ -325,6 +325,10 @@ function xmldb_core_upgrade($oldversion=0) {
 
         create_table($table);
         
+
+        // move old block field in view_artefact out of the way
+        table_column('view_artefact', 'block', 'oldblock');
+
         $table = new XMLDBTable('view_artefact');
         $field = new XMLDBField('block');
         $field->setAttributes(XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, null);
