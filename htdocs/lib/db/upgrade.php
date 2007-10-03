@@ -229,7 +229,7 @@ function xmldb_core_upgrade($oldversion=0) {
         $table->addFieldInfo('columns', XMLDB_TYPE_INTEGER, 1,  XMLDB_NOTNULL);
         $table->addFieldInfo('widths',  XMLDB_TYPE_CHAR, 255, XMLDB_NOTNULL);
         $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
-        $table->addKeyInfo('columnwidthuk', XMLDB_KEY_UNIQUE, array('columns', 'width'));
+        $table->addKeyInfo('columnwidthuk', XMLDB_KEY_UNIQUE, array('columns', 'widths'));
 
         create_table($table);
 
@@ -327,7 +327,7 @@ function xmldb_core_upgrade($oldversion=0) {
         
         $table = new XMLDBTable('view_artefact');
         $field = new XMLDBField('block');
-        $field->setAttributes(XMLDB_tYPE_INTEGER, 10, XMLDB_UNSIGNED, null)
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, null);
         add_field($table, $field);
 
 
