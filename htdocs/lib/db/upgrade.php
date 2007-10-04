@@ -226,8 +226,8 @@ function xmldb_core_upgrade($oldversion=0) {
         $table = new XMLDBTable('view_layout');
         $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED,
             XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null, null);
-        $table->addFieldInfo('columns', XMLDB_TYPE_INTEGER, 1,  XMLDB_NOTNULL);
-        $table->addFieldInfo('widths',  XMLDB_TYPE_CHAR, 255, XMLDB_NOTNULL);
+        $table->addFieldInfo('columns', XMLDB_TYPE_INTEGER, 1, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('widths',  XMLDB_TYPE_CHAR, 255, XMLDB_UNSIGNED, XMLDB_NOTNULL);
         $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
         $table->addKeyInfo('columnwidthuk', XMLDB_KEY_UNIQUE, array('columns', 'widths'));
 
@@ -238,6 +238,7 @@ function xmldb_core_upgrade($oldversion=0) {
         $field->setAttributes(XMLDB_TYPE_INTEGER, 2, XMLDB_UNSIGNED, null);
         add_field($table, $field);
         set_field('view', 'numcolumns', 3);
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 2, XMLDB_UNSIGNED, XMLDB_NOTNULL);
         change_field_notnull($table, $field);
 
         $field = new XMLDBField('layout');
@@ -250,29 +251,30 @@ function xmldb_core_upgrade($oldversion=0) {
     
         // plugin contract tables for new blocktype plugin type.
         $table = new XMLDBTable('blocktype_category');
-        $table->addFieldInfo('name', XMLDB_TYPE_CHAR, 50, XMLDB_NOTNULL);
+        $table->addFieldInfo('name', XMLDB_TYPE_CHAR, 50, XMLDB_UNSIGNED, XMLDB_NOTNULL);
         $table->addkeyInfo('primary', XMLDB_KEY_PRIMARY, array('name'));
 
         create_table($table);
 
         $table = new XMLDBTable('blocktype_installed');
-        $table->addFieldInfo('version', XMLDB_TYPE_CHAR, 255, XMLDB_NOTNULL);
-        $table->addFieldInfo('name', XMLDB_TYPE_CHAR, 10, XMLDB_NOTNULL);
-        $table->addFieldInfo('active', XMLDB_TYPE_INTEGER,  1, XMLDB_NOTNULL, null, null, null, 1);
-        $table->addFieldInfo('artefactplugin', XMLDB_TYPE_CHAR, 255, null);
+        $table->addFieldInfo('name', XMLDB_TYPE_CHAR, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('version', XMLDB_TYPE_CHAR, 255, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('release', XMLDB_TYPE_TEXT, 'small', XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('active', XMLDB_TYPE_INTEGER,  1, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, 1);
+        $table->addFieldInfo('artefactplugin', XMLDB_TYPE_CHAR, 255);
         $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('name'));
         $table->addKeyInfo('artefactpluginfk', XMLDB_KEY_FOREIGN, array('artefactplugin'), 'artefact_installed', array('name'));
 
         create_table($table);
        
         $table = new XMLDBTable('blocktype_cron');
-        $table->addFieldInfo('plugin', XMLDB_TYPE_CHAR, 255, XMLDB_NOTNULL);
-        $table->addFieldInfo('callfunction', XMLDB_TYPE_CHAR, 255, XMLDB_NOTNULL);
-        $table->addFieldInfo('minute', XMLDB_TYPE_CHAR, 25, XMLDB_NOTNULL, null, null, null, '*');
-        $table->addFieldInfo('hour', XMLDB_TYPE_CHAR, 25, XMLDB_NOTNULL, null, null, null, '*');
-        $table->addFieldInfo('day', XMLDB_TYPE_CHAR, 25, XMLDB_NOTNULL, null, null, null, '*');
-        $table->addFieldInfo('weekofmonth', XMLDB_TYPE_CHAR, 25, XMLDB_NOTNULL, null, null, null, '*');
-        $table->addFieldInfo('year', XMLDB_TYPE_CHAR, 25, XMLDB_NOTNULL, null, null, null, '*');
+        $table->addFieldInfo('plugin', XMLDB_TYPE_CHAR, 255, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('callfunction', XMLDB_TYPE_CHAR, 255, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('minute', XMLDB_TYPE_CHAR, 25, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '*');
+        $table->addFieldInfo('hour', XMLDB_TYPE_CHAR, 25, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '*');
+        $table->addFieldInfo('day', XMLDB_TYPE_CHAR, 25, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '*');
+        $table->addFieldInfo('dayofweek', XMLDB_TYPE_CHAR, 25, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '*');
+        $table->addFieldInfo('month', XMLDB_TYPE_CHAR, 25, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '*');
         $table->addFieldInfo('nextrun', XMLDB_TYPE_DATETIME, null, null);
         $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('plugin', 'callfunction'));
         $table->addKeyInfo('pluginfk', XMLDB_KEY_FOREIGN, array('plugin'), 'blocktype_installed', array('name'));
@@ -280,9 +282,9 @@ function xmldb_core_upgrade($oldversion=0) {
         create_table($table); 
 
         $table = new XMLDBTable('blocktype_config');
-        $table->addFieldInfo('plugin', XMLDB_TYPE_CHAR, 100, XMLDB_NOTNULL);
-        $table->addFieldInfo('field', XMLDB_TYPE_CHAR, 100, XMLDB_NOTNULL);
-        $table->addFieldInfo('value', XMLDB_TYPE_TEXT, 'small', XMLDB_NOTNULL);
+        $table->addFieldInfo('plugin', XMLDB_TYPE_CHAR, 100, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('field', XMLDB_TYPE_CHAR, 100, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('value', XMLDB_TYPE_TEXT, 'small', XMLDB_UNSIGNED, XMLDB_NOTNULL);
         $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('plugin', 'field'));
         $table->addKeyInfo('pluginfk', XMLDB_KEY_FOREIGN, array('plugin'), 'blocktype_installed', array('name'));
 
@@ -291,9 +293,9 @@ function xmldb_core_upgrade($oldversion=0) {
         $table = new XMLDBTable('blocktype_event_subscription');
         $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, 
             XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null, null);
-        $table->addFieldInfo('plugin', XMLDB_TYPE_CHAR, 255, XMLDB_NOTNULL);
-        $table->addFieldInfo('event', XMLDB_TYPE_CHAR, 50, XMLDB_NOTNULL);
-        $table->addFieldInfo('callfunction', XMLDB_TYPE_CHAR, 255, XMLDB_NOTNULL);
+        $table->addFieldInfo('plugin', XMLDB_TYPE_CHAR, 255, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('event', XMLDB_TYPE_CHAR, 50, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('callfunction', XMLDB_TYPE_CHAR, 255, XMLDB_UNSIGNED, XMLDB_NOTNULL);
         $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
         $table->addKeyInfo('pluginfk', XMLDB_KEY_FOREIGN, array('plugin'), 'blocktype_installed', array('name'));
         $table->addKeyInfo('eventfk', XMLDB_KEY_FOREIGN, array('event'), 'event_type', array('name'));
@@ -302,8 +304,8 @@ function xmldb_core_upgrade($oldversion=0) {
         create_table($table);
 
         $table = new XMLDBTable('blocktype_installed_category');
-        $table->addFieldInfo('blocktype', XMLDB_TYPE_CHAR, 50, XMLDB_NOTNULL);
-        $table->addFieldInfo('category', XMLDB_TYPE_CHAR, 50, XMLDB_NOTNULL);
+        $table->addFieldInfo('blocktype', XMLDB_TYPE_CHAR, 50, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('category', XMLDB_TYPE_CHAR, 50, XMLDB_UNSIGNED, XMLDB_NOTNULL);
         $table->addKeyInfo('blocktypefk', XMLDB_KEY_FOREIGN, array('blocktype'), 'blocktype_installed', array('name'));
         $table->addKeyInfo('categoryfk', XMLDB_KEY_FOREIGN, array('category'), 'blocktype_category', array('name'));
 
@@ -312,12 +314,12 @@ function xmldb_core_upgrade($oldversion=0) {
         $table = new XMLDBTable('block_instance');
         $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED,
             XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null, null);
-        $table->addFieldInfo('blocktype', XMLDB_TYPE_CHAR, 255, XMLDB_NOTNULL);
-        $table->addFieldInfo('title', XMLDB_TYPE_CHAR, 255, XMLDB_NOTNULL);
+        $table->addFieldInfo('blocktype', XMLDB_TYPE_CHAR, 255, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('title', XMLDB_TYPE_CHAR, 255, XMLDB_UNSIGNED, XMLDB_NOTNULL);
         $table->addFieldInfo('configdata', XMLDB_TYPE_TEXT, null);
-        $table->addFieldInfo('view', XMLDB_TYPE_INTEGER, 10, XMLDB_NOTNULL);
-        $table->addFIeldInfo('column', XMLDB_TYPE_INTEGER, 2, XMLDB_NOTNULL);
-        $table->addFIeldInfo('order', XMLDB_TYPE_INTEGER, 2, XMLDB_NOTNULL);
+        $table->addFieldInfo('view', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFIeldInfo('column', XMLDB_TYPE_INTEGER, 2, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFIeldInfo('order', XMLDB_TYPE_INTEGER, 2, XMLDB_UNSIGNED,  XMLDB_NOTNULL);
         $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
         $table->addKeyInfo('blocktypefk', XMLDB_KEY_FOREIGN, array('blocktype'), 'blocktype_installed', array('name'));
         $table->addKeyInfo('viewfk', XMLDB_KEY_FOREIGN, array('view'), 'view', array('id'));
@@ -327,13 +329,17 @@ function xmldb_core_upgrade($oldversion=0) {
         
 
         // move old block field in view_artefact out of the way
-        table_column('view_artefact', 'block', 'oldblock');
+//function table_column($table, $oldfield, $field, $type='integer', $size='10',
+//                      $signed='unsigned', $default='0', $null='not null', $after='') {
+        table_column('view_artefact', 'block', 'oldblock', 'text');
 
         $table = new XMLDBTable('view_artefact');
         $field = new XMLDBField('block');
         $field->setAttributes(XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, null);
         add_field($table, $field);
-
+        $key = new XMLDBKey('blockfk');
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('block'), 'block_instance', array('id'));
+        add_key($table, $key);
 
         // GIANT TODO  - after tempmlate migration is done, all entries in view_artefact should have a 'block',
         //  so set the field to be not null by uncommenting the next line
