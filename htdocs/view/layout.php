@@ -34,17 +34,19 @@ define('TITLE', 'Views Layout [DANGER construction site]');
 
 $id = param_integer('id');
 $new = param_boolean('new');
-$category = param_alpha('c');
+$category = param_alpha('c', '');
 $view = new View($id);
+$numcolumns = $view->get('numcolumns');
 
-if ($view->get('numcolumns') > 1) {
-    $layouts = get_records_array('view_layout', 'columns', $view->get('numcolumns'));
+if ($numcolumns > 1 && $numcolumns < 5) {
+    $layouts = get_records_array('view_layout', 'columns', $numcolumns);
     $options = array();
     foreach ($layouts as $layout) {
         $options[$layout->id] = get_string($layout->widths, 'view');
     }
 }
 else {
+    $SESSION->add_info_msg(get_string('noviewlayouts', 'view', $numcolumns));
     redirect('/view/blocks.php?id=' . $id . '&c=' . $category . '&new=' . $new);
 }
 
