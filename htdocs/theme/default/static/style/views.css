@@ -2,34 +2,31 @@
  * Stylesheet for views for the default theme
  */
 
-#page {
-    border: 3px solid #ccc;
-}
-
 #top-pane {
-    border-bottom: 3px solid #ccc;
-    background-color: #fffff0;
+    background: #acc067 url(../images/toppane_corner_topright.gif) no-repeat right top;
 }
-
-#category-list ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-    width: 150px;
+#category-list {
+    background: #acc067 url(../images/toppane_corner_topleft.gif) no-repeat left top;
 }
 #category-list li {
-    padding: .5em;
-    border-bottom: 1px solid #ccc;
-    background-color: #f0f0f0;
-    border-right: 3px solid #ccc;
+    background-color: #bacc7b;
+    margin-right: 5px;
+    line-height: 25px;
+    padding: 5px 10px;
 }
 #category-list li.current {
     font-weight: bold;
-    background-color: #fffff0;
-    border-right: none;
+    background-color: #eef4da;
 }
-#category-list li.first {
-    border-top: none;
+#blocktype-list {
+    background-color: #eef4da;
+    padding: 5px 5px 10px 5px;
+    margin-left: 5px;
+}
+#blocktype-list .blocktype-radio {
+    border: none;
+    /* ie fix */
+    cursor: default;
 }
 
 /* don't ask... fixing some wierd firefox problem */
@@ -38,20 +35,101 @@
 }
 
 #blocktype-list li h3 {
-    font-size: .8em;
+    font-size: .9em;
 }
 #blocktype-list li p {
     font-size: .8em;
 }
+#noblocks {
+    font-size: larger;
+    color: #547C22;
+    margin-top: 40px;
+    text-align: center;
+}
+
+#layout-link {
+    background: url(../images/layout-link.gif) no-repeat left;
+    padding: 5px 0 5px 20px;
+    margin-left: 10px;
+    font-size: .9em;
+}
+#layout-link.disabled {
+    color: #aaa;
+}
+
+#bottom-pane {
+    margin-top: 10px;
+    background: #eef4da url(../images/bottompane_corner_botright.gif) no-repeat right bottom;
+}
+#column-container {
+    background: url(../images/bottompane_corner_botleft.gif) no-repeat left bottom;
+}
+
+.add-column-center {
+    text-align: right;
+}
+.column-header input {
+    font-size: 9px;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    letter-spacing: -1px;
+    font-weight: normal;
+    height: 16px;
+    width: 42px;
+    color: #FFF;
+    /* konqueror/safari fix */
+    border: none;
+    background: none;
+    padding: 0;
+}
+.remove-column input.removecolumn {
+    width: 50px;
+}
+#column-container .column-header input[disabled="disabled"] {
+    color: #ccc;
+    cursor: default;
+}
 
 .blockinstance {
-    border: 2px solid #cc9;
     margin-top: 1em;
-    background-color: white;
+    background-color: #FFF;
+    padding: 5px;
 }
 .blockinstance-header h4 {
     margin: 0;
-    padding: .25em;
-    border-bottom: 2px solid #cc9;
-    background-color: #ffd;
+    padding: 3px 5px;
+    border-bottom: 1px solid #acc067;
+    background-color: #fff;
 }
+
+.blockinstance-controls input {
+    height: 16px;
+    width: 16px;
+    color: #acc067;
+    border: none;
+    background: none;
+    padding: 0;
+}
+
+.blockinstance-content {
+    padding: 5px;
+}
+.blockinstance-content .maharatable td {
+    padding: 0;
+}
+.column-content .add-button {
+    margin: 5px 0;
+}
+.add-button .newblockhere {
+    background: url(../images/btn_addblock.gif) repeat-x;
+    font-weight: normal;
+    height: 18px;
+    padding: 1px 5px 2px 5px;
+    color: #FFF;
+    width: 100%;
+    margin: 0;
+}
+/* this rule compresses and centres the buttons better in konqueror and safari */
+body:last-child:not(:root:root) .newblockhere {
+    color: #547C22;
+}
+
