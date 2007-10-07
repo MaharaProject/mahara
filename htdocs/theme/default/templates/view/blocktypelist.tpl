@@ -1,3 +1,4 @@
+{if $blocktypes}
 <ul>
 {foreach from=$blocktypes item=blocktype}
     <li>
@@ -10,3 +11,6 @@
     </li>
 {/foreach}
 <ul>
+{else}
+<div id="noblocks">{str tag='noblocks' section='view'}</div>
+{/if}
