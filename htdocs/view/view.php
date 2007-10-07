@@ -321,7 +321,7 @@ EOF;
 
 $smarty = smarty(
     array('tablerenderer'),
-    array(),
+    array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">'),
     array(
         'mahara' => array(
             'public',
