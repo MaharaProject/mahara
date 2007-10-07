@@ -125,10 +125,10 @@ function ViewManager() {
         }
 
         if (numColumns == 1) {
-            showElement('layout-link');
+            removeElementClass('layout-link', 'disabled');
         }
         else if (numColumns == 4) {
-            hideElement('layout-link');
+            addElementClass('layout-link', 'disabled');
         }
 
         // Wire up the new column buttons to be AJAX
@@ -178,10 +178,10 @@ function ViewManager() {
         }
 
         if (numColumns == 2) {
-            hideElement('layout-link');
+            addElementClass('layout-link', 'disabled');
         }
         else if (numColumns == 5) {
-            showElement('layout-link');
+            removeElementClass('layout-link', 'disabled');
         }
 
         // The last column needs the class of the header changed, the first column possibly too
@@ -321,17 +321,21 @@ function ViewManager() {
 
         forEach(getElementsByTagAndClassName('input', 'addcolumn', parentNode), function(i) {
             connect(i, 'onclick', function(e) {
-                setNodeAttribute(i, 'disabled', 'disabled');
-                var name = getNodeAttribute(e.src(), 'name');
-                var id   = parseInt(name.substr(name.length - 1, 1));
-                var pd   = {'id': $('viewid').value, 'change': 1}
-                pd['action_addcolumn_before_' + id] = 1;
-                sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
-                    self.addColumn(id, data);
-                    self.checkColumnButtonDisabledState();
-                }, function() {
-                    self.checkColumnButtonDisabledState();
-                });
+                // Work around for a konqueror bug - konqueror passes onclick
+                // events to disabled buttons
+                if (!i.disabled) {
+                    setNodeAttribute(i, 'disabled', 'disabled');
+                    var name = getNodeAttribute(e.src(), 'name');
+                    var id   = parseInt(name.substr(name.length - 1, 1));
+                    var pd   = {'id': $('viewid').value, 'change': 1}
+                    pd['action_addcolumn_before_' + id] = 1;
+                    sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
+                        self.addColumn(id, data);
+                        self.checkColumnButtonDisabledState();
+                    }, function() {
+                        self.checkColumnButtonDisabledState();
+                    });
+                }
                 e.stop();
             });
         });
@@ -354,17 +358,21 @@ function ViewManager() {
 
         forEach(getElementsByTagAndClassName('input', 'removecolumn', parentNode), function(i) {
             connect(i, 'onclick', function(e) {
-                setNodeAttribute(i, 'disabled', 'disabled');
-                var name = getNodeAttribute(e.src(), 'name');
-                var id   = parseInt(name.substr(name.length - 1, 1));
-                var pd   = {'id': $('viewid').value, 'change': 1}
-                pd['action_removecolumn_column_' + id] = 1;
-                sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
-                    self.removeColumn(id);
-                    self.checkColumnButtonDisabledState();
-                }, function() {
-                    self.checkColumnButtonDisabledState();
-                });
+                // Work around for a konqueror bug - konqueror passes onclick
+                // events to disabled buttons
+                if (!i.disabled) {
+                    setNodeAttribute(i, 'disabled', 'disabled');
+                    var name = getNodeAttribute(e.src(), 'name');
+                    var id   = parseInt(name.substr(name.length - 1, 1));
+                    var pd   = {'id': $('viewid').value, 'change': 1}
+                    pd['action_removecolumn_column_' + id] = 1;
+                    sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
+                        self.removeColumn(id);
+                        self.checkColumnButtonDisabledState();
+                    }, function() {
+                        self.checkColumnButtonDisabledState();
+                    });
+                }
                 e.stop();
             });
         });
