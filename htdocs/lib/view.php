@@ -467,6 +467,9 @@ class View {
             }
         }
 
+        // Because of the reference in the above loop, $cat refers to the last item
+        $cat['class'] = (isset($cat['class'])) ? $cat['class'] . ' last' : 'last';
+
         $smarty = smarty_core();
         $smarty->assign('categories', $categories);
         $smarty->assign('viewid', $view->get('id'));
@@ -484,9 +487,7 @@ class View {
      */
     public static function build_blocktype_list($category, $javascript=false) {
         require_once(get_config('docroot') . 'blocktype/lib.php');
-        if (!$blocktypes = PluginBlockType::get_blocktypes_for_category($category)) {
-            return '';
-        }
+        $blocktypes = PluginBlockType::get_blocktypes_for_category($category);
 
         $smarty = smarty_core();
         $smarty->assign_by_ref('blocktypes', $blocktypes);
@@ -516,6 +517,7 @@ class View {
         foreach ($_POST as $key => $value) {
             if (substr($key, 0, 7) == 'action_') {
                 $action = substr($key, 7);
+                break;
             }
         }
         // TODO Scan GET for an action. The only action that is GETted is 
@@ -536,6 +538,11 @@ class View {
         $actionstring = $action;
         $action = substr($action, 0, strpos($action, '_'));
         $actionstring  = substr($actionstring, strlen($action) + 1);
+
+        // Actions from <input type="image"> buttons send an _x and _y
+        if (substr($actionstring, -2) == '_x' || substr($actionstring, -2) == '_y') {
+            $actionstring = substr($actionstring, 0, -2);
+        }
         
         $values = self::get_values_for_action($actionstring);
 
