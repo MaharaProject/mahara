@@ -16,7 +16,7 @@
                     {if $VIEWCONTENT}
                        {$VIEWCONTENT}
                     {/if}
-                    <div id="clearer">
+                    <div class="cb">
                     </div>
                 </div>
             </div>
