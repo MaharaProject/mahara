@@ -33,8 +33,11 @@ define('TITLE', get_string('editblocks', 'view'));
 $view = new View(param_integer('id'));
 
 $new = param_boolean('new');
-// FIXME: we can't know the first category is 'aboutme'
-$category = param_alpha('c', 'aboutme');
+$category = param_alpha('c', '');
+// Make the default category the first tab if none is set
+if ($category === '') {
+    $category = get_field_sql('SELECT "name" FROM {blocktype_category} ORDER BY "name" LIMIT 1');
+}
 
 $view->process_changes($category, $new);
 $columns = $view->build_columns(true);
