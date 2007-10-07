@@ -98,11 +98,11 @@ abstract class PluginBlocktype extends Plugin {
     }
 
     public static function get_blocktypes_for_category($category) {
-
-        $sql = 'SELECT bti.name,bti.artefactplugin 
+        $sql = 'SELECT bti.name, bti.artefactplugin
             FROM {blocktype_installed} bti 
             JOIN {blocktype_installed_category} btic ON btic.blocktype = bti.name
-            WHERE btic.category = ?';
+            WHERE btic.category = ?
+            ORDER BY bti.name';
         if (!$bts = get_records_sql_array($sql, array($category))) {
             return false;
         }
@@ -293,13 +293,15 @@ class BlockInstance {
                     'column' => $this->get('column') - 1,
                     'order'  => $this->get('order'),
                     'arrow'  => '&larr;',
+                    'dir'    => 'left',
                 );
             }
             if ($this->get('canmovedown')) {
                 $movecontrols[] = array(
                     'column' => $this->get('column'),
-                    'order'   => $this->get('order') +1,
-                    'arrow'   => '&darr;',
+                    'order'  => $this->get('order') +1,
+                    'arrow'  => '&darr;',
+                    'dir'    => 'down',
                 );
             }
             if ($this->get('canmoveup')) {
@@ -307,6 +309,7 @@ class BlockInstance {
                     'column' => $this->get('column'),
                     'order'  => $this->get('order') -1,
                     'arrow'  => '&uarr;',
+                    'dir'    => 'up',
                 );
             }
             if ($this->get('canmoveright')) {
@@ -314,6 +317,7 @@ class BlockInstance {
                     'column' => $this->get('column') + 1,
                     'order'  => $this->get('order'),
                     'arrow'  => '&rarr;',
+                    'dir'    => 'right',
                 );
             }
         }
