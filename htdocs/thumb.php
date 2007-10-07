@@ -84,7 +84,8 @@ switch ($type) {
             $basepath = 'artefact/' . $ap . '/' . $basepath;
         }
         header('Content-type: image/png');
-        if (is_readable(get_config('docroot') . $basepath . '/thumb.png')) {
+        $path = get_config('docroot') . $basepath . '/thumb.png';
+        if (is_readable($path)) {
             readfile($path);
             exit;
         }
@@ -94,8 +95,10 @@ switch ($type) {
         header('Content-type: image/png');
         $vl = param_integer('vl');
         if ($widths = get_field('view_layout', 'widths', 'id', $vl)) {
-            $path = theme_get_path('images/vl-' . str_replace(',', '-', $widths) . '.png');
-            readfile($path);
+            if ($path = theme_get_path('images/vl-' . str_replace(',', '-', $widths) . '.png')) {
+                readfile($path);
+                exit;
+            }
         }
         readfile(theme_get_path('images/no_thumbnail.png'));
         break;
