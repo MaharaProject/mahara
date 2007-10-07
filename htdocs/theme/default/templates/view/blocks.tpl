@@ -18,7 +18,7 @@
                 <div id="blocktype-footer"></div>
             </div>
 
-            <a id="layout-link" href="layout.php?id=1&c={$category}&new={$new}"{if !$can_change_layout} style="display: none;"{/if}>{str tag='changeviewlayout' section='view'}</a>
+            <a id="layout-link" href="layout.php?id=1&c={$category}&new={$new}"{if !$can_change_layout} class="disabled"{/if}>{str tag='changeviewlayout' section='view'}</a>
 
             <div id="bottom-pane">
                 <div id="column-container">
