@@ -81,8 +81,8 @@ $string['confirmdeleteblockinstance'] = 'Are you sure you wish to delete this bl
 $string['blockinstanceconfiguredsuccessfully'] = 'Block configured successfully';
 
 $string['addnewblockhere'] = 'Add new block here';
-$string['addcolumn'] = 'Add column';
-$string['removecolumn'] = 'Remove column';
+$string['addcolumn'] = 'Add';
+$string['removecolumn'] = 'Remove';
 
 $string['viewlayout'] = 'View layout';
 $string['viewlayoutdescription'] = 'You can change the widths of the columns in your view.';
@@ -90,6 +90,7 @@ $string['changeviewlayout'] = 'Change view layout';
 $string['backtoyourview'] = 'Back to your view';
 
 $string['titleformatted'] = '%s by %s';
+$string['noblocks'] = 'Sorry, no blocks in this category :(';
 
 $string['50,50'] = $string['33,33,33'] = $string['25,25,25,25'] = 'Equal widths';
 $string['67,33'] = 'Larger left column';
@@ -97,5 +98,6 @@ $string['33,67'] = 'Larger right column';
 $string['25,50,25'] = 'Larger centre column';
 $string['15,70,15'] = 'Much larger centre column';
 $string['20,30,30,20'] = 'Larger centre columns';
+$string['noviewlayouts'] = 'There are no view layouts for a %s column view';
 
 ?>
