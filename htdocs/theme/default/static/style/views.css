@@ -2,6 +2,13 @@
  * Stylesheet for views for the default theme
  */
 
+#views-loading {
+    text-align: center;
+    margin: 1em;
+    font-size: 100%;
+    color: #547C22;
+}
+
 #top-pane {
     background: #acc067 url(../images/toppane_corner_topright.gif) no-repeat right top;
 }
