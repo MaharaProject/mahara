@@ -34,10 +34,10 @@ function smarty_function_mahara_pagelinks($params, &$smarty) {
                                           $next => $next,
                                           $last => $last));
 
-        if ($page != 0) {
-            $output .= mahara_pagelink('prev', $params['url'], $params['limit'] * $prev, 
-                                       get_string('prevpage'));
-        }
+        $isfirst = $page == 0;
+        $output .= mahara_pagelink('first', $params['url'], 0, get_string('firstpage'), $isfirst);
+        $output .= mahara_pagelink('prev', $params['url'], $params['limit'] * $prev, 
+                                   get_string('prevpage'), $isfirst);
 
         foreach ($pagenumbers as $k => $i) {
             if ($k != 0 && $prevpagenum < $i - 1) {
@@ -48,10 +48,11 @@ function smarty_function_mahara_pagelinks($params, &$smarty) {
             $prevpagenum = $i;
         }
 
-        if ($page < $pages - 1) {
-            $output .= mahara_pagelink('next', $params['url'], $params['limit'] * $next,
-                                       get_string('nextpage'));
-        }
+        $islast = $page == $last;
+        $output .= mahara_pagelink('next', $params['url'], $params['limit'] * $next,
+                                   get_string('nextpage'), $islast);
+        $output .= mahara_pagelink('last', $params['url'], $params['limit'] * $last,
+                                   get_string('lastpage'), $islast);
 
     }
 
@@ -64,8 +65,9 @@ function smarty_function_mahara_pagelinks($params, &$smarty) {
 
 }
 
-function mahara_pagelink($class, $url, $offset, $text) {
-    return '<span class="search-results-page' . (!empty($class) ? " $class" : '') . '"><a href="'
+function mahara_pagelink($class, $url, $offset, $text, $hide=false) {
+    return '<span class="search-results-page' . (!empty($class) ? " $class" : '') . '"' 
+        . ($hide ? ' style="visibility: hidden;"': '') . '><a href="'
         . $url . '&amp;offset=' . $offset . '">' . $text . '</a></span>' . "\n";
 }
 
