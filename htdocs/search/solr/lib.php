@@ -446,6 +446,7 @@ END;
             'text_firstname'      => $user['firstname'],
             'text_lastname'       => $user['lastname'],
             'index_active'        => $user['active'],
+            'store_suspended'     => (int)!empty($user['suspendedcusr']),
         );
         if (empty($doc['index_name'])) {
             $doc['index_name'] = $user['firstname'] . ' ' . $user['lastname'];
