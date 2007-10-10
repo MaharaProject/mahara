@@ -1054,6 +1054,19 @@ table#installer {
     border: 1px solid #d4d1c0;
     padding: 1px 2px 1px 2px;
 }
+.folderhover {
+        background-color: #996 !important;
+}
+.folderhover a {
+        color: #000;
+        text-decoration: none;
+}
+a.folderhover {
+        padding: 4px;
+        background-color: #996;
+        color: #000;
+        text-decoration: none;
+}
 
 /* My Friends styles */
 #friendslistcontrols, #friendslistcontrols td {

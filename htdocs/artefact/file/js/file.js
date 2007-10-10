@@ -24,6 +24,7 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
     this.createfolderscript = config.wwwroot+'artefact/file/createfolder.json.php';
     this.updatemetadatascript = config.wwwroot+'artefact/file/updatemetadata.json.php';
     this.downloadscript = config.wwwroot+'artefact/file/download.php';
+    this.movescript = config.wwwroot+'artefact/file/move.json.php';
     this.maxnamestrlen = 34;
 
     if (typeof(startDirectory) == 'object') {
@@ -49,6 +50,9 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
 
     if (this.actionname) {
         this.lastcolumnfunc = function(r) {
+            if (r.isparent) {
+                return TD(null);
+            }
             if (r.artefacttype != 'folder') {
                 var button = INPUT({'type':'button', 'class':'button', 'value':self.actionname});
                 button.onclick = function () { self.actioncallback(r) };
@@ -59,6 +63,9 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
     }
     else {
         this.lastcolumnfunc = function (r) {
+            if (r.isparent) {
+                return TD(null);
+            }
             var editb = INPUT({'type':'button', 'class':'button', 'value':get_string('edit')});
             editb.onclick = function () { self.openeditform(r); };
             var edith = SPAN(null);
@@ -121,7 +128,53 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
             self.filelist.statevars.push(property);
         }
         self.filelist.rowfunction = function (r, n) {
-            return TR({'class': 'r' + (n%2),'id':'row_' + r.id});
+            var row = TR({'class': 'r' + (n%2),'id':'row_' + r.id});
+            addElementClass(row, 'directory-item');
+            if (self.canmodify) {
+                if (r.artefacttype == 'folder') {
+                    new Droppable(row, {
+                        accept: ['directory-item'],
+                        hoverclass: 'folderhover',
+                        ondrop: function (dragged, dropped) {
+                            sendjsonrequest(
+                                self.movescript,
+                                { artefact : dragged.id.replace(/row_/, ''),
+                                  newparent : dropped.id.replace(/row_/, '') },
+                                'POST',
+                                self.refresh);
+                        }
+                    });
+                }
+                new Draggable(row, {
+                    starteffect: function(element) {
+                        this._clone = element.cloneNode(true);
+                        this.ghostPosition = MochiKit.Position.absolutize(element);
+                        element.parentNode.insertBefore(this._clone, element);
+                        var children = getElementsByTagAndClassName('td', null, element);
+                        var rowwidth = 0;
+                        for (var i = 0; i < children.length; i++) {
+                            if (i < 2) {
+                                children[i].style.width = children[i].clientWidth + 'px';
+                                rowwidth += children[i].clientWidth;
+                            } else {
+                                removeElement(children[i]);
+                            }
+                        }
+                        element.style.width = rowwidth + 'px';
+                        element.style.border = '2px solid #000';
+                        element.style.padding = '2px 2px 4px 2px';
+                        new Opacity(element, {duration:0.2, from:1.0, to:0.3});
+                    },
+                    endeffect: function(element) {
+                        MochiKit.Position.relativize(element, this.ghostPosition);
+                        replaceChildNodes(element, getElementsByTagAndClassName('td', null, this._clone));
+                        removeElement(this._clone);
+                        this._clone = null;
+                        new Opacity(element, {duration:0.2, from:0.3, to:1.0});
+                    },
+                });
+            }
+            return row;
         };
         self.chdir(self.currentDirectory);
     }
@@ -284,7 +337,15 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
         } else {
             var displaytitle = r.title;
         }
-        if (r.artefacttype == 'folder') {
+        if (r.isparent) {
+            parentattribs.href = '';
+            var link = A(parentattribs, displaytitle);
+            connect(link, 'onclick', function (e) {
+                self.chdir(self.currentDirectory.parent);
+                e.stop();
+            });
+            var cell = TD(null, link);
+        } else if (r.artefacttype == 'folder') {
             // If we haven't seen this directory before
             if (!self.currentDirectory.children[r.title]) {
                 self.currentDirectory.children[r.title] = {
@@ -300,13 +361,14 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
                 self.chdir(self.currentDirectory.children[r.title]);
                 e.stop();
             });
-            return TD(null, link);
+            var cell = TD(null, link);
+        } else if (self.actionname) {
+            var cell = TD(parentattribs, displaytitle);
+        } else {
+            parentattribs.href = self.downloadscript + '?file=' + r.id;
+            var cell = TD(null, A(parentattribs, displaytitle));
         }
-        if (self.actionname) {
-            return TD(parentattribs, displaytitle);
-        }
-        parentattribs.href = self.downloadscript + '?file=' + r.id;
-        return TD(null, A(parentattribs, displaytitle));
+        return cell;
     }
 
     this.fileexists = function (filename) { 
@@ -347,6 +409,21 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
                 self.chdir(dir);
                 e.stop();
             }, cwd));
+
+            if (self.canmodify) {
+                new Droppable(link, {
+                    accept: ['directory-item'],
+                    hoverclass: 'folderhover',
+                    ondrop: partial(function (dirid, dragged) {
+                        sendjsonrequest(
+                            self.movescript,
+                            { artefact : dragged.id.replace(/row_/, ''),
+                              newparent : dirid },
+                            'POST',
+                            self.refresh);
+                    }, cwd.folderid)
+                });
+            }
 
             folders.unshift(link);
 

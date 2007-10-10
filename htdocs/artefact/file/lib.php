@@ -337,6 +337,12 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         return 'file';
     }
 
+    public function move($newparentid) {
+        $this->set('parent', $newparentid);
+        $this->commit();
+        return true;
+    }
+
     public function delete() {
         if (empty($this->id)) {
             return; 
@@ -405,6 +411,18 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
                     $item->tags = array();
                 }
             }
+        }
+
+        // Add parent folder to the list
+        if (!empty($parentfolderid)) {
+            $grandparentid = get_field('artefact', 'parent', 'id', $parentfolderid);
+            $filedata[] = (object) array(
+                'title'        => '..',
+                'artefacttype' => 'folder',
+                'description'  => get_string('parentfolder', 'artefact.file'),
+                'isparent'     => true,
+                'id'           => (int) $grandparentid
+            );
         }
 
         usort($filedata, array("ArtefactTypeFileBase", "my_files_cmp"));
