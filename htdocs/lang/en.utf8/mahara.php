@@ -128,6 +128,7 @@ $string['youraccounthasbeenunsuspended'] = 'Your account has been unsuspeneded';
 $string['changepassword'] = 'Change Password';
 $string['changepasswordinfo'] = 'You are required to change your password before you can proceed.';
 $string['confirmpassword'] = 'Confirm password';
+$string['javascriptnotenabled'] = 'Your browser does not have javascript enabled for this site. Mahara requires javascript to be enabled before you can log in';
 $string['cookiesnotenabled'] = 'Your browser does not have cookies enabled, or is blocking cookies from this site. Mahara requires cookies to be enabled before you can log in';
 $string['institution'] = 'Institution';
 $string['loggedoutok'] = 'You have been logged out successfully';
