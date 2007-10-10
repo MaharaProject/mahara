@@ -481,12 +481,10 @@ class ArtefactTypeTown extends ArtefactTypeProfileField {}
 class ArtefactTypeCity extends ArtefactTypeProfileField {}
 class ArtefactTypeCountry extends ArtefactTypeProfileField {
     public function listself($options) {
-        $countries = getoptions_country();
-        return array('html' => $countries[$this->title], 'javascript' => null);
+        return array('html' => get_string("country.{$this->title}"), 'javascript' => null);
     }
     public function render_full($options) {
-        $countries = getoptions_country();
-        return array('html' => $countries[$this->title], 'javascript' => null);
+        return array('html' => get_string("country.{$this->title}"), 'javascript' => null);
     }
 }
 class ArtefactTypeHomenumber extends ArtefactTypeProfileField {}

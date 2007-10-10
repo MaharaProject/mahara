@@ -106,6 +106,9 @@ function search_user($query_string, $limit, $offset = 0) {
                     $result[$field] = $value;
                 }
             }
+            if (isset($result['country'])) {
+                $result['country'] = get_string('country.' . $result['country']);
+            }
         }
 
     }
