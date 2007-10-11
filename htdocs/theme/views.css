@@ -41,7 +41,7 @@
 #column-container {
     width: 100%;
     margin-top: 1em;
-    padding: 5px 0 10px 0;
+    padding: 5px 0 10px 0.2%;
 }
 #column-container input.submit {
     cursor: pointer;
@@ -67,7 +67,7 @@
     vertical-align: top;
     float: left;
     margin: 0;
-    padding: 0 1%;
+    padding: 0 0.9%;
 }
 
 /* An explicit height for when there is one column and no remove button */
