@@ -130,54 +130,82 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
         self.filelist.rowfunction = function (r, n) {
             var row = TR({'class': 'r' + (n%2),'id':'row_' + r.id});
             addElementClass(row, 'directory-item');
+            addElementClass(row, r.artefacttype);
             if (self.canmodify) {
-                if (r.artefacttype == 'folder') {
-                    new Droppable(row, {
-                        accept: ['directory-item'],
-                        hoverclass: 'folderhover',
-                        ondrop: function (dragged, dropped) {
-                            sendjsonrequest(
-                                self.movescript,
-                                { artefact : dragged.id.replace(/row_/, ''),
-                                  newparent : dropped.id.replace(/row_/, '') },
-                                'POST',
-                                self.refresh);
-                        }
-                    });
-                }
-                new Draggable(row, {
-                    starteffect: function(element) {
-                        this._clone = element.cloneNode(true);
-                        this.ghostPosition = MochiKit.Position.absolutize(element);
-                        element.parentNode.insertBefore(this._clone, element);
-                        var children = getElementsByTagAndClassName('td', null, element);
-                        var rowwidth = 0;
-                        for (var i = 0; i < children.length; i++) {
-                            if (i < 2) {
-                                children[i].style.width = children[i].clientWidth + 'px';
-                                rowwidth += children[i].clientWidth;
-                            } else {
-                                removeElement(children[i]);
-                            }
-                        }
-                        element.style.width = rowwidth + 'px';
-                        element.style.border = '2px solid #000';
-                        element.style.padding = '2px 2px 4px 2px';
-                        new Opacity(element, {duration:0.2, from:1.0, to:0.3});
-                    },
-                    endeffect: function(element) {
-                        MochiKit.Position.relativize(element, this.ghostPosition);
-                        replaceChildNodes(element, getElementsByTagAndClassName('td', null, this._clone));
-                        removeElement(this._clone);
-                        this._clone = null;
-                        new Opacity(element, {duration:0.2, from:0.3, to:1.0});
-                    },
-                });
+                self.makeRowDraggable(row);
             }
             return row;
         };
         self.chdir(self.currentDirectory);
     }
+
+    this.makeRowDroppable = function(row) {
+        new Droppable(row, {
+            accept: ['directory-item'],
+            hoverclass: 'folderhover',
+            ondrop: function (dragged, dropped) {
+                sendjsonrequest(
+                    self.movescript,
+                    { artefact : dragged.id.replace(/row_/, ''),
+                      newparent : dropped.id.replace(/row_/, '') },
+                    'POST',
+                    self.refresh);
+            }
+        });
+    };
+
+    this.drag = {};
+
+    this.makeRowDraggable = function(row) {
+        new Draggable(row, {
+            starteffect: function(row) {
+                // The existing row gets dragged around with only its first two children (icon & filename).
+                // self.drag.clone is a copy of the row which gets left behind.
+
+                map(self.makeRowDroppable,
+                    getElementsByTagAndClassName('tr', 'folder', 'filelist'));
+
+                var children = getElementsByTagAndClassName('td', null, row);
+                var newchildren = [];  // copy the cells
+                for (var i = 0; i < children.length; i++) {
+                    newchildren[i] = children[i].cloneNode(true);
+                    if (i > 1) {
+                        removeElement(children[i]);
+                    }
+                }
+
+                self.drag.clone = TR({'id':row.id}, newchildren);
+                setElementClass(self.drag.clone, row.className);
+                insertSiblingNodesAfter(row, self.drag.clone);
+
+                // Try to give the dragged row the same width as the first two cells
+                var id = getElementDimensions(children[0]);
+                var nd = getElementDimensions(children[1]);
+                setElementDimensions(children[0], id);
+                setElementDimensions(children[1], nd);
+
+                MochiKit.Position.absolutize(row);
+                setStyle(row, {
+                    'border': '2px solid #000', // doesn't show up in IE6
+                    'width': (id.w + nd.w) + 'px',
+                    'height': id.h + 'px'
+                });
+
+                setOpacity(row, 0.5);
+            },
+            revert: function(element) {
+                // Throw away the row being dragged
+                removeElement(element);
+                element = null;
+                self.refresh();
+            }
+        });
+        // Draggable sets position = 'relative', but we set it back
+        // here because with position = 'relative' in IE6 the rows
+        // stay put instead of moving down when the create/upload
+        // forms are opened on the page.
+        row.style.position = 'static';
+    };
 
     this.deleted = function (data) {
         quotaUpdate(data.quotaused, data.quota);
