@@ -959,9 +959,7 @@ class View {
 
                 if (in_array('tinytinymce', $headers)) {
                     $js = <<<EOF
-    var script = createDOM('script', {'type': 'text/javascript'});
-    script.innerHTML = 'tinyMCE.execCommand("mceAddControl", true, "cb_{$values['id']}_{$key}");';
-    appendChildNodes(getFirstElementByTagAndClassName('head'), script);
+        tinyMCE.execCommand("mceAddControl", true, "cb_{$values['id']}_{$key}");
 EOF;
                 }
             }
