@@ -29,6 +29,9 @@ function ViewManager() {
             // Remove radio buttons for moving block types into place
             forEach(getElementsByTagAndClassName('input', 'blocktype-radio', 'top-pane'), function(i) {
                 setNodeAttribute(i, 'type', 'hidden');
+                if (self.isIE7 || self.isIE6) {
+                    hideElement(i);
+                }
             });
 
             // Rewrite the links in the category select list to be ajax
@@ -55,17 +58,20 @@ function ViewManager() {
             // Make the block types draggable
             self.makeBlockTypesDraggable();
 
+
             // Make the top pane a dropzone for cancelling adding block types
-            var count = 0;
-            new Droppable('top-pane', {
-                'onhover': function() {
-                    if (count++ == 5) {
-                        count = 0;
-                        // Hide the dropzone
-                        hideElement(self.blockPlaceholder);
+            if (!self.isIE6) {
+                var count = 0;
+                new Droppable('top-pane', {
+                    'onhover': function() {
+                        if (count++ == 5) {
+                            count = 0;
+                            // Hide the dropzone
+                            hideElement(self.blockPlaceholder);
+                        }
                     }
-                }
-            });
+                });
+            }
         }
 
         // Now we're done, remove the loading message and display the page
@@ -256,7 +262,7 @@ function ViewManager() {
                 var content = getFirstElementByTagAndClassName('div', 'blockinstance-content', blockinstance);
                 var oldContent = content.innerHTML;
                 content.innerHTML = data.data['html'];
-                eval(data.data['js']);
+                eval(data.data.js);
 
                 // Make the cancel button be supersmart
                 var cancelButton = $('cancel_cb_' + blockinstanceId + '_action_configureblockinstance_id_' + blockinstanceId);
@@ -433,10 +439,10 @@ function ViewManager() {
                 // calculated, as the width is 'auto' by default, so we
                 // explicitly set it to have the width it needs.
                 var dimensions = elementDimensions(blockinstance);
-                setElementDimensions(blockinstance, dimensions);
                 setStyle(blockinstance, {
                     'position': 'absolute'
                 });
+                setElementDimensions(blockinstance, dimensions);
 
                 // Resize the placeholder div
                 // NOTE: negative offset to account for the border. This might be removed
@@ -449,25 +455,31 @@ function ViewManager() {
             'reverteffect': function (innerelement, top_offset, left_offset) {
                 self.destroyHotzones();
 
-                // Removing the block placeholder then reverting the position
-                // of the dragged blockinstance results in a flash where the
-                // height of the page reduces and then expands again. We can
-                // fix this
-                setElementDimensions(self.bottomPane, getElementDimensions(self.bottomPane));
-                // LEAVE THIS LINE
-                // Without it, firefox doesn't actually set the element
-                // dimensions properly, it seems, resulting in the very flash
-                // we are trying to get rid of
-                getElementDimensions(self.bottomPane);
+                // This in IE7 can cause major headaches - dragging a block
+                // when it's the only one in the column and releasing it there
+                // will cause the entire bottom pane to move up over the top
+                // pane
+                if (!self.isIE7) {
+                    // Removing the block placeholder then reverting the position
+                    // of the dragged blockinstance results in a flash where the
+                    // height of the page reduces and then expands again. We can
+                    // fix this
+                    setElementDimensions(self.bottomPane, getElementDimensions(self.bottomPane));
+                    // LEAVE THIS LINE
+                    // Without it, firefox doesn't actually set the element
+                    // dimensions properly, it seems, resulting in the very flash
+                    // we are trying to get rid of
+                    getElementDimensions(self.bottomPane);
+                }
 
                 // We don't need the block placeholder anymore
                 removeElement(self.blockPlaceholder);
 
                 // Revert the 'absolute' positioning of the blockinstance being moved
                 setStyle(self.currentlyMovingObject, {
+                    'position': 'relative',
                     'top': 0,
                     'left': 0,
-                    'position': 'relative',
                     'width': 'auto',
                     'height': 'auto'
                 });
@@ -482,6 +494,10 @@ function ViewManager() {
                 self.lastHotzone = null;
 
                 setOpacity(blockinstance, 1);
+
+                if (self.isIE7) {
+                    innerelement = null;
+                }
 
                 // Sadly we have to return an effect, because this requires
                 // something cancellable. Would be good to return nothing
@@ -511,7 +527,7 @@ function ViewManager() {
             });
 
 
-            if (self.isIE7) {
+            if (self.isIE7 || self.isIE6) {
                 appendChildNodes(clone, i.cloneNode(true));
                 hideElement(i);
             }
@@ -543,7 +559,7 @@ function ViewManager() {
                     // Make it a ghost. Done when starting the drag because
                     // some browsers have trouble rendering things right on top
                     // of one another
-                    if (self.isIE7) {
+                    if (self.isIE7 || self.isIE6) {
                         showElement(i);
                         setOpacity(clone, 0.5);
                     }
@@ -553,7 +569,7 @@ function ViewManager() {
                 },
                 'revert': true,
                 'reverteffect': function (innerelement, top_offset, left_offset) {
-                    if (self.isIE7) {
+                    if (self.isIE7 || self.isIE6) {
                         // Move the clone back and hide the filler used while
                         // dragging
                         setElementPosition(clone, {x: 0, y: 0});
@@ -579,6 +595,10 @@ function ViewManager() {
                     hideElement(self.blockPlaceholder);
 
                     self.movingBlockType = false;
+
+                    if (self.isIE7) {
+                        innerelement = null;
+                    }
 
                     // Sadly we have to return an effect, because this requires
                     // something cancellable. Would be good to return nothing
