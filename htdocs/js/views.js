@@ -510,18 +510,17 @@ function ViewManager() {
                 'position': 'absolute'
             });
 
-            setElementDimensions(clone, getElementDimensions(i));
 
             if (self.isIE7) {
                 appendChildNodes(clone, i.cloneNode(true));
                 hideElement(i);
-                alert('is ie7');
             }
             else {
                 setElementPosition(clone, getElementPosition(i, 'top-pane'));
                 setOpacity(clone, 0.5);
             }
             insertSiblingNodesAfter(i, clone);
+            setElementDimensions(clone, getElementDimensions(i));
 
             // Prevents the height of the blocktype list doubling when dragging
             if (self.isIE7) {
