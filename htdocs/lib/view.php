@@ -142,7 +142,7 @@ class View {
         $fordb = new StdClass;
         foreach (get_object_vars($this) as $k => $v) {
             $fordb->{$k} = $v;
-            if (in_array($k, array('mtime', 'ctime', 'atime')) && !empty($v)) {
+            if (in_array($k, array('mtime', 'ctime', 'atime', 'startdate', 'stopdate')) && !empty($v)) {
                 $fordb->{$k} = db_format_timestamp($v);
             }
         }
