@@ -753,12 +753,11 @@ p {
 .maincontent #profileprefs table,
 .maincontent #newblog table,
 .maincontent #template table,
-.maincontent #createview4 table,
 .maincontent #userview table,
 .maincontent #editpost table,
 .maincontent #editblog table,
 .maincontent #draftpost table,
-.maincontent #editviewaccess table,
+.maincontent #editaccess table,
 .maincontent #register table,
 .maincontent #editgroup table,
 .maincontent #creategroup table,
@@ -1166,13 +1165,12 @@ table#installer {
     padding: 0 0 3px 0;
 }
 
-#createview4 #createview4_accesslist_container {
+#editaccess_accesslist_container {
     color: #5c8727;
     font-weight: bold;
     width: 750px;
 }
-#editviewaccess #results,
-#createview4 #results {
+#editaccess #results {
     border: 1px solid #e5e8da;
     margin: 3px 0 15px 0;
     font-weight: normal;
