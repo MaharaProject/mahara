@@ -122,3 +122,6 @@
     border: 0;
 }
 
+#view-wizard-controls form {
+    display: inline;
+}

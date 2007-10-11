@@ -35,22 +35,22 @@
         </div>
     </form>
 
-    <div class="center">
+    <div id="view-wizard-controls" class="center">
 {if $new}
-    <form action="{$WWWROOT}view/edit.php" method="GET">
-        <input type="hidden" name="id" value="{$view}">
-        <input type="hidden" name="new" value="1">
-        <input type="submit" class="submit" value="{str tag='back'}">
-    </form>
-    <form action="{$WWWROOT}view/access.php" method="GET">
-        <input type="hidden" name="id" value="{$view}">
-        <input type="hidden" name="new" value="1">
-        <input class="submit" type="submit" value="{str tag='next'}">
-    </form>
+        <form action="{$WWWROOT}view/edit.php" method="GET">
+            <input type="hidden" name="id" value="{$view}">
+            <input type="hidden" name="new" value="1">
+            <input type="submit" class="submit" value="{str tag='back'}">
+        </form>
+        <form action="{$WWWROOT}view/access.php" method="GET">
+            <input type="hidden" name="id" value="{$view}">
+            <input type="hidden" name="new" value="1">
+            <input class="submit" type="submit" value="{str tag='next'}">
+        </form>
 {else}
-    <form action="{$WWWROOT}view/" method="GET">
-        <input class="submit" type="submit" value="{str tag='done'}">
-    </form>
+        <form action="{$WWWROOT}view/" method="GET">
+            <input class="submit" type="submit" value="{str tag='done'}">
+        </form>
 {/if}
     </div>
 {include file="columnfullend.tpl"}
