@@ -81,8 +81,16 @@ $string['confirmdeleteblockinstance'] = 'Are you sure you wish to delete this bl
 $string['blockinstanceconfiguredsuccessfully'] = 'Block configured successfully';
 
 $string['addnewblockhere'] = 'Add new block here';
-$string['addcolumn'] = 'Add';
-$string['removecolumn'] = 'Remove';
+$string['add'] = 'Add';
+$string['addcolumn'] = 'Add Column';
+$string['remove'] = 'Remove';
+$string['removecolumn'] = 'Remove this column';
+$string['moveblockleft'] = 'Move this block left';
+$string['moveblockdown'] = 'Move this block down';
+$string['moveblockup'] = 'Move this block up';
+$string['moveblockright'] = 'Move this block right';
+$string['configureblock'] = 'Configure this block';
+$string['removeblock'] = 'Remove this block';
 
 $string['viewlayout'] = 'View layout';
 $string['viewlayoutdescription'] = 'You can change the widths of the columns in your view.';

@@ -292,6 +292,7 @@ class BlockInstance {
                 $movecontrols[] = array(
                     'column' => $this->get('column') - 1,
                     'order'  => $this->get('order'),
+                    'title'  => get_string('moveblockleft', 'view'),
                     'arrow'  => '&larr;',
                     'dir'    => 'left',
                 );
@@ -299,7 +300,8 @@ class BlockInstance {
             if ($this->get('canmovedown')) {
                 $movecontrols[] = array(
                     'column' => $this->get('column'),
-                    'order'  => $this->get('order') +1,
+                    'order'  => $this->get('order') + 1,
+                    'title'  => get_string('moveblockdown', 'view'),
                     'arrow'  => '&darr;',
                     'dir'    => 'down',
                 );
@@ -307,7 +309,8 @@ class BlockInstance {
             if ($this->get('canmoveup')) {
                 $movecontrols[] = array(
                     'column' => $this->get('column'),
-                    'order'  => $this->get('order') -1,
+                    'order'  => $this->get('order') - 1,
+                    'title'  => get_string('moveblockup', 'view'),
                     'arrow'  => '&uarr;',
                     'dir'    => 'up',
                 );
@@ -316,6 +319,7 @@ class BlockInstance {
                 $movecontrols[] = array(
                     'column' => $this->get('column') + 1,
                     'order'  => $this->get('order'),
+                    'title'  => get_string('moveblockright', 'view'),
                     'arrow'  => '&rarr;',
                     'dir'    => 'right',
                 );

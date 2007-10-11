@@ -2,19 +2,19 @@
     <div class="column-header">
     {if $column == 1}
         <div class="add-column-left">
-            <input type="image" src="{theme_path location=images/btn_addcolumn_left.png}" class="submit addcolumn" name="action_addcolumn_before_1" alt="{str tag='addcolumn' section='view'}">
+            <input type="image" src="{theme_path location=images/btn_addcolumn_left.png}" class="submit addcolumn" name="action_addcolumn_before_1" alt="{str tag='add' section='view'}" title="{str tag='addcolumn' section='view'}">
         </div>
     {/if}
         <div class="remove-column">
-            <input type="image" src="{theme_path location=images/btn_removecolumn.png}" class="submit removecolumn" name="action_removecolumn_column_{$column}" alt="{str tag='removecolumn' section='view'}">
+            <input type="image" src="{theme_path location=images/btn_removecolumn.png}" class="submit removecolumn" name="action_removecolumn_column_{$column}" alt="{str tag='remove' section='view'}" title="{str tag='removecolumn' section='view'}">
         </div>
     {if $column == $numcolumns}
         <div class="add-column-right">
-            <input type="image" src="{theme_path location=images/btn_addcolumn_right.png}" class="submit addcolumn" name="action_addcolumn_before_{$column+1}" alt="{str tag='addcolumn' section='view'}">
+            <input type="image" src="{theme_path location=images/btn_addcolumn_right.png}" class="submit addcolumn" name="action_addcolumn_before_{$column+1}" alt="{str tag='add' section='view'}" title="{str tag='addcolumn' section='view'}">
         </div>
     {else}
         <div class="add-column-center">
-            <input type="image" src="{theme_path location=images/btn_addcolumn_right.png}" class="submit addcolumn" name="action_addcolumn_before_{$column+1}" alt="{str tag='addcolumn' section='view'}">
+            <input type="image" src="{theme_path location=images/btn_addcolumn_right.png}" class="submit addcolumn" name="action_addcolumn_before_{$column+1}" alt="{str tag='add' section='view'}" title="{str tag='addcolumn' section='view'}">
         </div>
     {/if}
     </div>
