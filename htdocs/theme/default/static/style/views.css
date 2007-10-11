@@ -140,3 +140,7 @@ body:last-child:not(:root:root) .newblockhere {
     color: #547C22;
 }
 
+#block-placeholder {
+    border: 2px dashed #94BC62;
+    margin-top: 1em;
+}

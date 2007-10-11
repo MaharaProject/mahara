@@ -921,7 +921,7 @@ function ViewManager() {
 
     // The placeholder that shows where the blockinstance will be placed when
     // it is dropped. Needs a margin the same as the blockinstances
-    this.blockPlaceholder = DIV({'style': 'border: 3px dashed #bbb; margin-top: 1em;'});
+    this.blockPlaceholder = DIV({'id': 'block-placeholder'});
 
     // The column container - set in self.init
     this.columnContainer = null;
