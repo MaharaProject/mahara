@@ -817,6 +817,7 @@ function ViewManager() {
                     var div = DIV();
                     div.innerHTML = data.data;
                     var blockinstance = getFirstElementByTagAndClassName('div', 'blockinstance', div);
+                    self.rewriteConfigureButton(getFirstElementByTagAndClassName('input', 'configurebutton', blockinstance));
                     self.rewriteDeleteButton(getFirstElementByTagAndClassName('input', 'deletebutton', blockinstance));
                     self.makeBlockinstanceDraggable(blockinstance);
                     insertSiblingNodesAfter(self.blockPlaceholder, blockinstance);
