@@ -24,8 +24,9 @@
  *
  */
 
+// TODO fix title of this page
+// TODO check security of this page
 define('INTERNAL', 1);
-define('PUBLIC', 1);
 define('MENUITEM', 'viewlayout');
 require_once(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
