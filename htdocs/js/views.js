@@ -815,13 +815,21 @@ function ViewManager() {
                 pd['action_addblocktype_column_' + whereTo['column'] + '_order_' + whereTo['order']] = true;
                 sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
                     var div = DIV();
-                    div.innerHTML = data.data;
+                    div.innerHTML = data.data.html;
                     var blockinstance = getFirstElementByTagAndClassName('div', 'blockinstance', div);
-                    self.rewriteConfigureButton(getFirstElementByTagAndClassName('input', 'configurebutton', blockinstance));
+
+                    // Make configure button clickable, but disabled as blocks are rendered in configure mode by default
+                    var configureButton = getFirstElementByTagAndClassName('input', 'configurebutton', blockinstance);
+                    if (configureButton) {
+                        self.rewriteConfigureButton(configureButton);
+                        setNodeAttribute(configureButton, 'disabled', 'disabled');
+                    }
+
                     self.rewriteDeleteButton(getFirstElementByTagAndClassName('input', 'deletebutton', blockinstance));
                     self.makeBlockinstanceDraggable(blockinstance);
                     insertSiblingNodesAfter(self.blockPlaceholder, blockinstance);
                     removeElement(self.blockPlaceholder);
+                    eval(data.data.js);
 
                 });
 

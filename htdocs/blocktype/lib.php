@@ -243,44 +243,14 @@ class BlockInstance {
      *
      * @param bool $configure Whether to render the block instance in configure 
      *                        mode
+     * @return array Array with two keys: 'html' for raw html, 'js' for
+     *               javascript to run
      */
     public function render_editing($configure=false) {
         safe_require('blocktype', $this->get('blocktype'));
+        $js = '';
         if ($configure) {
-            $elements = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'instance_config_form', $this);
-
-            // Add submit/cancel buttons and helper hidden variable
-            $elements['action_configureblockinstance_id_' . $this->get('id')] = array(
-                'type' => 'submitcancel',
-                'value' => array('Save', 'Cancel'),
-            );
-
-            $form = array(
-                'name' => 'cb_' . $this->get('id'),
-                'validatecallback' => array(generate_class_name('blocktype', $this->get('blocktype')), 'instance_config_validate'),
-                'successcallback'  => array($this, 'instance_config_store'),
-                'elements' => $elements
-            );
-
-            require_once('pieforms/pieform.php');
-            $pieform = new Pieform($form);
-
-            if ($pieform->is_submitted()) {
-                global $SESSION;
-                $SESSION->add_error_msg(get_string('errorprocessingform'));
-            }
-            else {
-                // This is a bit hacky. Because pieforms will take values from 
-                // $_POST before 'defaultvalue's of form elements, we need to nuke 
-                // all of the post values for the form. The situation where this 
-                // becomes relevant is when someone clicks the configure button for 
-                // one block, then immediately configures another block
-                foreach (array_keys($elements) as $name) {
-                    unset($_POST[$name]);
-                }
-            }
-
-            $content = $pieform->build(false);
+            list($content, $js) = array_values($this->build_configure_form());
         }
         else {
             $content = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'render_instance', $this);
@@ -337,7 +307,7 @@ class BlockInstance {
         $smarty->assign('content', $content);
         $smarty->assign('javascript', defined('JSON'));
 
-        return $smarty->fetch('view/blocktypecontainerediting.tpl');
+        return array('html' => $smarty->fetch('view/blocktypecontainerediting.tpl'), 'js' => $js);
     }
 
     public function render_viewing() {
@@ -352,6 +322,68 @@ class BlockInstance {
         $smarty->assign('content', $content);
         
         return $smarty->fetch('view/blocktypecontainerviewing.tpl');
+    }
+
+    /**
+     * Builds the configuration pieform for this blockinstance
+     *
+     * @return array Array with two keys: 'html' for raw html, 'js' for
+     *               javascript to run
+     */
+    public function build_configure_form() {
+        safe_require('blocktype', $this->get('blocktype'));
+        $elements = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'instance_config_form', $this);
+
+        // Add submit/cancel buttons
+        $elements['action_configureblockinstance_id_' . $this->get('id')] = array(
+            'type' => 'submitcancel',
+            'value' => array(get_string('save'), get_string('cancel')),
+        );
+
+        $form = array(
+            'name' => 'cb_' . $this->get('id'),
+            'validatecallback' => array(generate_class_name('blocktype', $this->get('blocktype')), 'instance_config_validate'),
+            'successcallback'  => array($this, 'instance_config_store'),
+            'elements' => $elements
+        );
+
+        require_once('pieforms/pieform.php');
+        $pieform = new Pieform($form);
+
+        // We need to load any javascript required for the pieform. We do this
+        // by inspecting the form array and seeing what elements there are,
+        // getting their headdata and making sure that this js is made
+        // available to be used on the client side
+        $js = '';
+        foreach ($elements as $key => $element) {
+            $function = 'pieform_element_' . $element['type'] . '_get_headdata';
+            if (is_callable($function)) {
+                $headers = call_user_func($function);
+
+                if (in_array('tinytinymce', $headers)) {
+                    $js = <<<EOF
+        tinyMCE.execCommand("mceAddControl", true, "cb_{$this->get('id')}_{$key}");
+EOF;
+                }
+            }
+        }
+
+        if ($pieform->is_submitted()) {
+            global $SESSION;
+            $SESSION->add_error_msg(get_string('errorprocessingform'));
+        }
+        else {
+            // This is a bit hacky. Because pieforms will take values from
+            // $_POST before 'defaultvalue's of form elements, we need to nuke
+            // all of the post values for the form. The situation where this
+            // becomes relevant is when someone clicks the configure button for
+            // one block, then immediately configures another block
+            foreach (array_keys($elements) as $name) {
+                unset($_POST[$name]);
+            }
+        }
+
+        return array('html' => $pieform->build(false), 'js' => $js);
     }
 
     public function commit() {

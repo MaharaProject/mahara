@@ -760,7 +760,16 @@ class View {
         
         $blockcontent = '';
         foreach($data['blockinstances'] as $blockinstance) {
-            $blockcontent .= $blockinstance->$renderfunction($blockinstance->get('id') == $this->blockinstance_currently_being_configured);
+            $result = $blockinstance->$renderfunction($blockinstance->get('id') == $this->blockinstance_currently_being_configured);
+            if ($editing) {
+                $blockcontent .= $result['html'];
+                // NOTE: build_column is always called in the context of column
+                // operations, so the javascript returned, which is currently
+                // for configuring block instances only, is not necessary
+            }
+            else {
+                $blockcontent .= $result;
+            }
         }
 
         // Widths don't appear to apply to divs unless they have at least
@@ -818,7 +827,8 @@ class View {
         $this->dirtycolumns[$values['column']] = 1;
 
         if ($values['returndata']) {
-            return $bi->render_editing();
+            // Make sure it's in configure mode if it has configuration
+            return $bi->render_editing(call_static_method(generate_class_name('blocktype', $values['blocktype']), 'has_instance_config'));
         }
     }
 
@@ -928,53 +938,7 @@ class View {
     public function configureblockinstance($values) {
         require_once(get_config('docroot') . 'blocktype/lib.php');
         $bi = new BlockInstance($values['id']);
-        safe_require('blocktype', $bi->get('blocktype'));
-        $elements = call_static_method(generate_class_name('blocktype', $bi->get('blocktype')), 'instance_config_form', $bi);
-
-        // Add submit/cancel buttons and helper hidden variable
-        $elements['action_configureblockinstance_id_' . $bi->get('id')] = array(
-            'type' => 'submitcancel',
-            'value' => array(get_string('save'), get_string('cancel')),
-        );
-
-        $form = array(
-            'name' => 'cb_' . $bi->get('id'),
-            'validatecallback' => array(generate_class_name('blocktype', $bi->get('blocktype')), 'instance_config_validate'),
-            'successcallback'  => array($bi, 'instance_config_store'),
-            'elements' => $elements
-        );
-
-        require_once('pieforms/pieform.php');
-        $pieform = new Pieform($form);
-
-        // We need to load any javascript required for the pieform. We do this
-        // by inspecting the form array and seeing what elements there are, 
-        // getting their headdata and making sure that this js is made 
-        // available to be used on the client side
-        $js = '';
-        foreach ($elements as $key => $element) {
-            $function = 'pieform_element_' . $element['type'] . '_get_headdata';
-            if (is_callable($function)) {
-                $headers = call_user_func($function);
-
-                if (in_array('tinytinymce', $headers)) {
-                    $js = <<<EOF
-        tinyMCE.execCommand("mceAddControl", true, "cb_{$values['id']}_{$key}");
-EOF;
-                }
-            }
-        }
-
-        // This is a bit hacky. Because pieforms will take values from 
-        // $_POST before 'defaultvalue's of form elements, we need to nuke 
-        // all of the post values for the form. The situation where this 
-        // becomes relevant is when someone clicks the configure button for 
-        // one block, then immediately configures another block
-        foreach (array_keys($elements) as $name) {
-            unset($_POST[$name]);
-        }
-
-        return array('html' => $pieform->build(false), 'js' => $js);
+        return $bi->build_configure_form();
     }
 
     /**
