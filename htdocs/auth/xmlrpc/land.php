@@ -14,7 +14,6 @@
 
 define('INTERNAL', 1);
 define('PUBLIC', 1);
-define('XMLRPC', 1);
 
 
 
@@ -39,11 +38,24 @@ $remotewwwroot = param_variable('idp');
 $wantsurl      = param_variable('wantsurl', '/');
 
 $institution = new Institution();
-$institution->findByWwwroot($remotewwwroot);
+
+try {
+    $institution->findByWwwroot($remotewwwroot);
+} catch (ParamOutOfRangeException $e) {
+    throw new ParameterException(get_string('errnoxmlrcpwwwroot','auth'). htmlentities($remotewwwroot, ENT_QUOTES, 'UTF-8'));
+}
+
 $instances = auth_get_auth_instances_for_wwwroot($remotewwwroot);
+
+if (empty($instances)) {
+    throw new ParameterException(get_string('errnoauthinstances','auth'). htmlentities($remotewwwroot, ENT_QUOTES, 'UTF-8'));
+}
+
+$rpcconfigured = false;
 
 foreach($instances as $instance) {
     if ($instance->authname == 'xmlrpc') {
+        $rpcconfigured = true;
         try {
             $auth = new AuthXmlrpc($instance->id);
             $res = $auth->request_user_authorise($token, $remotewwwroot);
@@ -51,13 +63,23 @@ foreach($instances as $instance) {
             continue;
             // we don't care
         }
-        if ($res instanceof User) {
+        if ($res == true) {
             break;
         }
     }
 }
-// confirm the MNET session
-// redirect
-redirect(get_config('wwwroot') . $wantsurl);
 
+if ($res == true) {
+    // Everything's ok - we have an authenticated User object
+    // confirm the MNET session
+    // redirect
+    redirect(get_config('wwwroot') . $wantsurl);
+    // Redirect exits
+}
+
+if ($rpcconfigured === false) {
+    throw new UserNotFoundException(get_string('errnoxmlrcpinstances','auth').htmlentities($remotewwwroot, ENT_QUOTES, 'UTF-8'));
+} else {
+    throw new UserNotFoundException(get_string('errnoxmlrcpuser','auth'));
+}
 ?>
