@@ -84,7 +84,12 @@ abstract class PluginBlocktype extends Plugin {
     */
     public static abstract function get_artefacts(BlockInstance $instance);
 
-    public static function has_config() {
+    /** 
+    * this is different to has_config - has_config is plugin wide config settings
+    * this is specific to this TYPE of plugin and relates to whether individual instances
+    * can be configured within a view
+    */
+    public static function has_instance_config() {
         return false;
     }
 
