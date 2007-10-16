@@ -42,7 +42,7 @@ foreach ($sitepages as $page) {
 }
 asort($pageoptions);
 
-$getstring = array('discardpageedits' => "'" . get_string('discardpageedits','admin') . "'");
+$getstring = array('discardpageedits' => json_encode(get_string('discardpageedits','admin')));
 
 $f = array(
     'name'                => 'editsitepage',
