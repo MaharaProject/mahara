@@ -55,4 +55,9 @@ $string['wessoout'] = 'We SSO out';
 $string['theyssoin'] = 'They SSO in';
 $string['application'] = 'Application';
 $string['cantretrievekey'] = 'An error occurred while retrieving the public key from the remote server.<br>Please ensure that the Application and WWW Root fields are correct, and that networking is enabled on the remote host.';
+
+$string['errnoauthinstances']   = 'We don\'t seem to have any authentication plugin instances configured for the host at ';
+$string['errnoxmlrcpinstances'] = 'We don\'t seem to have any XMLRPC authentication plugin instances configured for the host at ';
+$string['errnoxmlrcpwwwroot']   = 'We don\'t have a record for any host at ';
+$string['errnoxmlrcpuser']      = 'We were unable to authenticate you. Please ask your Mahara administrator to check Mahara\'s authentication plugin settings, and to check that either a user record exists for you on this Mahara, or that Mahara is configured to create new records for users from your Moodle.';
 ?>
