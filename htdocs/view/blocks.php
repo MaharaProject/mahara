@@ -25,7 +25,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'viewrework');
+define('MENUITEM', 'myportfolio/views');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require('view.php');
 define('TITLE', get_string('editblocks', 'view'));
