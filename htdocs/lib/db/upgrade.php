@@ -202,27 +202,8 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    // VIEW REWORK MIGRATION
     if ($oldversion < 20070100200) {
-        $table = new XMLDBTable('view');
-        $field = new XMLDBField('template');
-        drop_field($table, $field);
-
-        $table = new XMLDBTable('view_content');
-        drop_table($table);
-
-        $table = new XMLDBTable('template');
-        drop_table($table);
-        
-        $table = new XMLDBTable('template_category');
-        drop_table($table);
-
-        $table = new XMLDBTable('view_artefact');
-        $field = new XMLDBField('ctime');
-        drop_field($table, $field);
-
-        $field = new XMLDBField('format');
-        drop_field($table, $field);
-    
         $table = new XMLDBTable('view_layout');
         $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED,
             XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null, null);
@@ -329,8 +310,6 @@ function xmldb_core_upgrade($oldversion=0) {
         
 
         // move old block field in view_artefact out of the way
-//function table_column($table, $oldfield, $field, $type='integer', $size='10',
-//                      $signed='unsigned', $default='0', $null='not null', $after='') {
         table_column('view_artefact', 'block', 'oldblock', 'text');
 
         $table = new XMLDBTable('view_artefact');
@@ -341,11 +320,35 @@ function xmldb_core_upgrade($oldversion=0) {
         $key->setAttributes(XMLDB_KEY_FOREIGN, array('block'), 'block_instance', array('id'));
         add_key($table, $key);
 
-        // GIANT TODO  - after tempmlate migration is done, all entries in view_artefact should have a 'block',
-        //  so set the field to be not null by uncommenting the next line
-        //change_field_notnull(new XMLDBTAble('view_artefact'), new XMLDBTable('block'));
+        require_once(get_config('docroot') . 'lib/db/templatemigration.php');
+        upgrade_template_migration();
 
+        change_field_notnull(new XMLDBTAble('view_artefact'), new XMLDBTable('block'));
 
+        $table = new XMLDBTable('view_artefact');
+        $field = new XMLDBField('oldblock');
+        drop_field($table, $field);
+
+        $table = new XMLDBTable('view');
+        $field = new XMLDBField('template');
+        drop_field($table, $field);
+
+        $table = new XMLDBTable('view_content');
+        drop_table($table);
+
+        $table = new XMLDBTable('template');
+        drop_table($table);
+        
+        $table = new XMLDBTable('template_category');
+        drop_table($table);
+
+        $table = new XMLDBTable('view_artefact');
+        $field = new XMLDBField('ctime');
+        drop_field($table, $field);
+
+        $field = new XMLDBField('format');
+        drop_field($table, $field);
+    
     }
 
     return $status;
