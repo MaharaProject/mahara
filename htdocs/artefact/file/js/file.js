@@ -176,7 +176,8 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
 
                 self.drag.clone = TR({'id':row.id}, newchildren);
                 setElementClass(self.drag.clone, row.className);
-                insertSiblingNodesAfter(row, self.drag.clone);
+                //insertSiblingNodesAfter(row, self.drag.clone);
+                row.parentNode.insertBefore(self.drag.clone, row);
 
                 // Try to give the dragged row the same width as the first two cells
                 var id = getElementDimensions(children[0]);
@@ -188,7 +189,7 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
                 setStyle(row, {
                     'border': '2px solid #000', // doesn't show up in IE6
                     'width': (id.w + nd.w) + 'px',
-                    'height': id.h + 'px'
+                    'height': (id.h + 4) + 'px'
                 });
 
                 setOpacity(row, 0.5);
