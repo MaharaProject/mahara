@@ -291,9 +291,17 @@ function get_string_location($identifier, $section, $variables, $replacefunc='fo
     else {
         $extras = plugin_types(); // more later..
         foreach ($extras as $tocheck) {
-            if (strpos($section,$tocheck . '.') === 0) {
+            if (strpos($section, $tocheck . '.') === 0) {
                 $pluginname = substr($section ,strlen($tocheck) + 1);
-                $locations[] = $docroot . $tocheck . '/' . $pluginname . '/lang/';
+                if ($tocheck == 'blocktype' && 
+                    strpos($pluginname, '/') !== false) { // it belongs to an artefact plugin
+                    $bits = explode('/', $pluginname);
+                    $locations[] = $docroot . 'artefact/' . $bits[0] . '/blocktype/' . $bits[1] . '/lang/';
+                    $section = 'blocktype.' . $bits[1];
+                }
+                else {
+                    $locations[] = $docroot . $tocheck . '/' . $pluginname . '/lang/';
+                }
             }
         }
     }
@@ -757,7 +765,23 @@ function safe_require($plugintype, $pluginname, $filename='lib.php', $function='
         throw new Exception ('invalid require type');
     }
 
-    $fullpath = get_config('docroot') . $plugintype . '/' . $pluginname . '/' . $filename;
+    if ($plugintype == 'blocktype') { // these are a bit of a special case
+        $bits = explode('/', $pluginname);
+        if (count($bits) == 2) {
+           $fullpath = get_config('docroot') . 'artefact/' . $bits[0] . '/blocktype/' . $bits[1] . '/' . $filename;
+        }
+        else {
+            if (get_config('installed')) {
+                if ($artefactplugin = get_field('blocktype_installed', 'artefactplugin', 'name', $pluginname)) {
+                    $fullpath = get_config('docroot') . 'artefact/' . $artefactplugin . '/blocktype/' . $pluginname . '/'. $filename;
+                }
+            }
+        }
+    } 
+    if (empty($fullpath)) {
+        $fullpath = get_config('docroot') . $plugintype . '/' . $pluginname . '/' . $filename;
+    }
+
     if (!$realpath = realpath($fullpath)) {
         if (!empty($nonfatal)) {
             return false;
@@ -786,7 +810,8 @@ function safe_require($plugintype, $pluginname, $filename='lib.php', $function='
 function plugin_types() {
     static $pluginstocheck;
     if (empty($pluginstocheck)) {
-        $pluginstocheck = array('artefact', 'auth', 'notification', 'search');
+        // ORDER MATTERS! artefact has to be first!
+        $pluginstocheck = array('artefact', 'auth', 'notification', 'search', 'blocktype');
     }
     return $pluginstocheck;
 }
@@ -814,12 +839,30 @@ function call_static_method($class, $method) {
 
 function generate_class_name() {
     $args = func_get_args();
+    if (count($args) == 2 && $args[0] == 'blocktype') {
+        return 'PluginBlocktype' . ucfirst(blocktype_namespaced_to_single($args[1]));
+    }
     return 'Plugin' . implode('', array_map('ucfirst', $args));
 }
 
 function generate_artefact_class_name($type) {
     return 'ArtefactType' . ucfirst($type);
 }
+
+function blocktype_namespaced_to_single($blocktype) {
+    if (strpos($blocktype, '/') === false) { // system blocktype
+        return $blocktype;
+    }
+    return substr($blocktype, strpos($blocktype, '/') + 1 );
+}
+
+function blocktype_single_to_namespaced($blocktype, $artefact='') {
+    if (empty($artefact)) {
+        return $blocktype;
+    }
+    return $artefact . '/' . $blocktype;
+}
+
 
 /**
  * Fires an event which can be handled by different parts of the system

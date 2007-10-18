@@ -56,6 +56,9 @@ function db_quote_table_placeholders($sql) {
 function db_quote_identifier($identifier) {
     // Currently, postgres and mysql (in postgres compat. mode) both support 
     // the sql standard "
+    if (strpos($identifier, '"') !== false) {
+        return $identifier;
+    }
     return '"' . $identifier . '"';
 }
 
@@ -69,7 +72,7 @@ function db_quote_identifier($identifier) {
  * @return string
  * @throws SQLException
  */
-function execute_sql($command) {
+function execute_sql($command, $values=null) {
     global $db;
     
     if (!is_a($db, 'ADOConnection')) {
@@ -84,7 +87,13 @@ function execute_sql($command) {
     $db->debug = false;
 
     try {
-        $result = $db->Execute($command);
+        if (!empty($values) && is_array($values) && count($values) > 0) {
+            $stmt = $db->Prepare($command);
+            $result = $db->Execute($stmt, $values);
+        }
+        else {
+            $result = $db->Execute($command);
+        }
         // searching for these rather than just select as subqueries may have select in them.
         if (preg_match('/(update|insert|delete|alter|create)/i', $command)) {
             increment_perf_db_writes();
@@ -329,7 +338,7 @@ function get_record_select($table, $select='', $values=null, $fields='*') {
 function get_recordset($table, $field='', $value='', $sort='', $fields='*', $limitfrom='', $limitnum='') {
     $values = null;
     if ($field) {
-        $select = "$field = ?";
+        $select = db_quote_identifier($field) . " = ?";
         $values = array($value);
     } else {
         $select = '';
@@ -818,7 +827,7 @@ function set_field_select($table, $newfield, $newvalue, $select, $values) {
     $select = db_quote_table_placeholders($select);
 
     $values = array_merge(array($newvalue), $values);
-    $sql = 'UPDATE '. db_table_name($table) .' SET "'. $newfield  .'" = ? ' . $select;
+    $sql = 'UPDATE '. db_table_name($table) .' SET '. db_quote_identifier($newfield)  .' = ? ' . $select;
     try {
         $stmt = $db->Prepare($sql);
         increment_perf_db_writes();
@@ -1113,7 +1122,7 @@ function update_record($table, $dataobject, $where=null) {
 
     foreach ($ddd as $key => $value) {
         $count++;
-        $update .= $key .' = ? ';
+        $update .= db_quote_identifier($key) .' = ? ';
         if ($count < $numddd) {
             $update .= ', ';
         }
@@ -1126,7 +1135,7 @@ function update_record($table, $dataobject, $where=null) {
 
     foreach ($wherefields as $field) {
         $count++;
-        $whereclause .= $field .' = ? ';
+        $whereclause .= db_quote_identifier($field) .' = ? ';
         if ($count < $numddd) {
             $whereclause .= ' AND ';
         }

@@ -52,7 +52,6 @@ $string['upgradesuccess'] = 'Successfully upgraded';
 $string['upgradesuccesstoversion'] = 'Successfully upgraded to version ';
 $string['upgradefailure'] = 'Failed to upgrade!';
 $string['noupgrades'] = 'Nothing to upgrade! You are fully up to date!';
-$string['fixtemplatescontinue'] = 'Some view templates failed to install.  Continue here for more information and a fix.';
 $string['youcanupgrade'] = 'You can upgrade Mahara from %s (%s) to %s (%s)!';
 
 // Admin navigation menu
@@ -87,11 +86,10 @@ $string['uploadcsv'] = 'Add Users by CSV';
 $string['uploadcsvdescription'] = 'Upload a CSV file containing new users';
 $string['usersearch'] = 'User Search';
 $string['usersearchdescription'] = 'Search all users and perform administrative actions on them';
+$string['usersearchinstructions'] = 'You can search for users by clicking on the initials of their first and last names, or by entering a name in the search box.  You can also enter an email address in the search box if you would like to search email addresses.';
 
 $string['pluginadmin'] = 'Plugin Administration';
 $string['pluginadmindescription'] = 'Install and configure plugins';
-$string['templatesadmin'] = 'Configure View Templates';
-$string['templatesadmindescription'] = 'View installed templates to check their validity';
 
 // Site options
 $string['allowpublicviews'] = 'Allow public views';

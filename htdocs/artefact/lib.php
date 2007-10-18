@@ -41,6 +41,17 @@ abstract class PluginArtefact extends Plugin {
      */
     public static abstract function get_artefact_types();
 
+    
+    /**
+    * This function returns a list of classnames
+    * of block types this plugin provides
+    * they must match directories inside artefact/$name/blocktype
+    * @abstract
+    * @return array
+    */
+    public static abstract function get_block_types();
+
+
     /**
      * This function returns the name of the plugin.
      * @abstract
@@ -48,11 +59,6 @@ abstract class PluginArtefact extends Plugin {
      */
     public static abstract function get_plugin_name();
 
-
-    /**
-     * Gets a list of top level artefact types, used in the view creation wizard
-     */
-    public static abstract function get_toplevel_artefact_types(); 
 
     /**
      * This function returns an array of menu items
@@ -384,77 +390,11 @@ abstract class ArtefactType {
     }
 
     /**
-     * render instance to given format.  This function simply switches and
-     * calls one of listself(), listchildren(), render_metadata() or
-     * render_full().  If a format it doesn't know about is passed in, it
-     * throws an exception.  You should only need to override this if you have
-     * invented some kind of new format.
-     *
-     * @param int $format format type (constant)
-     * @param array $options options for format
-     */
-    public function render($format, $options) {
-        switch ($format) {
-        case FORMAT_ARTEFACT_LISTSELF:
-            return $this->listself($options);
-            
-        case FORMAT_ARTEFACT_RENDERMETADATA:
-            return $this->render_metadata($options);
-
-        case FORMAT_ARTEFACT_LISTCHILDREN:
-            return $this->listchildren($options);
-
-        case FORMAT_ARTEFACT_RENDERFULL:
-            return $this->render_full($options);
-            
-        default:
-            //@todo: This should be an invalid render format exception
-            throw new Exception('invalid render format');
-        }
-    }
-
-    
-    protected function get_metadata($options) {
-        $data = array('title'        => $this->get('title'),
-                      'type'         => get_string($this->get('artefacttype'), 'artefact.' . $this->get_plugin_name()),
-                      'owner'        => display_name(optional_userobj($this->get('owner'))),
-                      'created'      => format_date($this->get('ctime')),
-                      'lastmodified' => format_date($this->get('mtime')));
-        foreach ($data as $key => $value) {
-            $data[$key] = array('name' => get_string($key),
-                                'value' => $value);
-        }
-        return $data;
-    }
-
-
-    /**
-     * render instance to metadata format
-     * @param $options 
-     * @todo: get and display artefact size.
-     */
-    protected function render_metadata($options) {
-
-        $smarty = smarty();
-
-        if (isset($options['viewid'])) {
-            $smarty->assign('title', '<a href="' . get_config('wwwroot') . 'view/view.php?view=' . $options['viewid'] . '&amp;artefact=' . $this->get('id') . '">'
-                . $this->get('title') . '</a>');
-        } 
-        else {
-            $smarty->assign('title', $this->get('title'));
-        }
-        $smarty->assign('type', get_string($this->get('artefacttype'), 'artefact.' . $this->get_plugin_name()));
-        $smarty->assign('owner', display_name(optional_userobj($this->get('owner'))));
-        $smarty->assign('nicectime', format_date($this->get('ctime')));
-        $smarty->assign('nicemtime', format_date($this->get('mtime')));
-
-        return array('html' => $smarty->fetch('artefact/render_metadata.tpl'),
-                     'javascript' => null);
-
-    }
-
-
+    * 
+    * this function provides the way to link to viewing very deeply nested artefacts
+    * within a view, it makes urls like view/view.php?id=x&artefact=y
+    * which is important for the access check.
+    */
     public function add_to_render_path(&$options) {
         if (empty($options['path'])) {
             $options['path'] = $this->get('id');
@@ -462,72 +402,6 @@ abstract class ArtefactType {
         else {
             $options['path'] .= ',' . $this->get('id');
         }
-    }
-
-
-    /**
-     * list artefact children.  There's a default for this, but we only use it
-     * if the class thinks it can render FORMAT_ARTEFACT_LISTCHILDREN. 
-     *
-     * @param $options 
-     * @todo: use a smarty template.
-     */
-    protected function listchildren($options) {
-        if (in_array(FORMAT_ARTEFACT_LISTCHILDREN, $this->get_render_list())) {
-      
-            $html = '<ul>';
-            $js = '';
-            foreach ($this->get_children_instances() as $child) {
-                $renderedchild = $child->render(FORMAT_ARTEFACT_LISTSELF, $options);
-                $html .= '<li>' . $renderedchild['html'] . "</li>\n";
-                $js .= $renderedchild['javascript'] . "\n";
-            }
-            $html .= '</ul>';
-            return array('html' => $html,
-                         'javascript' => $js);
-        }
-
-        throw new Exception('This artefact cannot render to this format.');
-    }
-
-    /** 
-     * render self
-     * @param array options
-     */
-    protected function listself($options) {
-        if (isset($options['viewid'])) {
-            require_once('artefact.php');
-            if (artefact_in_view($id = $this->get('id'), $options['viewid'])) {
-                $title = '<a href="' . get_config('wwwroot') . 'view/view.php?view=' . $options['viewid']
-                    . '&artefact=' . $id;
-                if (!empty($options['path'])) {
-                    $title .= '&path=' . $options['path'];
-                }
-                $title .= '">' . $this->title . '</a>';
-            }
-        }
-        if (!isset($title)) {
-            $title = $this->title;
-        }
-        if (!empty($options['size']) && method_exists($this, 'describe_size')) {
-            $title .= ' (' . $this->describe_size() . ')';
-        }
-        if (!empty($options['link']) && method_exists($this, 'linkself')) {
-            $title .= ' (' . $this->linkself() . ')';
-        }
-        return array('html' => $title,
-                     'javascript' => null);
-    }
-
-    /**
-     * render the artefact in full.  This isn't supported by default.  You need
-     * to override this method if your artefact can do this.
-     *
-     * @param array
-     */
-    protected function render_full($options) {
-        // @todo This should be a proper exception of some sort.
-        throw new Exception('This artefact cannot render to this format.');
     }
 
 
@@ -572,16 +446,6 @@ abstract class ArtefactType {
     }
 
     /**
-     * returns array of formats can render to (constants)
-     */
-    public static function get_render_list() {
-        return array(
-            FORMAT_ARTEFACT_LISTSELF,
-            FORMAT_ARTEFACT_RENDERMETADATA
-        );
-    }
-
-    /**
      * whether a user will have exactly 0 or 1 of this artefact type
      * @abstract
      */
@@ -602,6 +466,19 @@ abstract class ArtefactType {
      * @param integer This is the ID of the artefact being linked to
      */
     public static abstract function get_links($id);
+
+    // @TODO maybe uncomment this later and implement it everywhere
+    // when we know a bit more about what blocks we want.
+    //public abstract function render_self($options);
+
+
+    /**
+    * Returns the printable name of this artefact
+    * (used in lists and such)
+    */
+    public function get_name() {
+        return $this->get('title');
+    }
 
     // ******************** HELPER FUNCTIONS ******************** //
 

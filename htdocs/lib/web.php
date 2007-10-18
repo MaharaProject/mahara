@@ -27,6 +27,32 @@
 defined('INTERNAL') || die();
 
 
+function &smarty_core() {
+
+    require_once(get_config('libroot') . 'smarty/Smarty.class.php');
+    $smarty =& new Smarty();
+    
+    $theme = theme_setup();
+    $themepaths = themepaths();
+
+    $smarty->template_dir = $theme->template_dir;
+
+    $smarty->compile_dir  = get_config('dataroot').'smarty/compile';
+    $smarty->cache_dir    = get_config('dataroot').'smarty/cache';
+
+    $smarty->assign('THEMEURL', get_config('themeurl'));
+    $smarty->assign('WWWROOT', get_config('wwwroot'));
+
+    $theme_list = array();
+    foreach ($themepaths['mahara'] as $themepath) {
+        $theme_list[$themepath] = theme_get_url($themepath);
+    }
+    $smarty->assign('THEMELIST', json_encode($theme_list));
+
+    return $smarty;
+}
+
+
 /**
  * This function creates a Smarty object and sets it up for use within our
  * podclass app, setting up some variables.
@@ -54,9 +80,21 @@ defined('INTERNAL') || die();
 //smarty(array('js/tablerenderer.js', 'artefact/file/js/filebrowser.js'))
 function &smarty($javascript = array(), $headers = array(), $pagestrings = array(), $extraconfig = array()) {
     global $USER, $SESSION;
+
+    if (!is_array($headers)) {
+        $headers = array();
+    }
+    if (!is_array($pagestrings)) {
+        $pagestrings = array();
+    }
+    if (!is_array($extraconfig)) {
+        $extraconfig = array();
+    }
+
     $SIDEBLOCKS = array();
 
-    require_once(get_config('libroot') . 'smarty/Smarty.class.php');
+    $smarty = smarty_core();
+
     $wwwroot = get_config('wwwroot');
 
     $theme_list = array();
@@ -71,22 +109,22 @@ function &smarty($javascript = array(), $headers = array(), $pagestrings = array
 
     // TinyMCE must be included first for some reason we're not sure about
     $checkarray = array(&$javascript, &$headers);
+    $found_tinymce = false;
     foreach ($checkarray as &$check) {
-        if (($key = array_search('tinymce', $check)) !== false) {
-            $javascript_array[] = $jsroot . 'tinymce/tiny_mce.js';
-            if (isset($extraconfig['tinymceinit'])) {
-                $headers[] = $extraconfig['tinymceinit'];
-            }
-            else {
-                $content_css = json_encode(theme_get_url('style/tinymce.css'));
-                $language = substr(current_language(), 0, 2);
-                $headers[] = <<<EOF
-<script type="text/javascript">
-tinyMCE.init({
-    mode: "textareas",
+        if (($key = array_search('tinymce', $check)) !== false || ($key = array_search('tinytinymce', $check)) !== false) {
+            if (!$found_tinymce) {
+                $found_tinymce = $check[$key];
+                $javascript_array[] = $jsroot . 'tinymce/tiny_mce.js';
+                if (isset($extraconfig['tinymceinit'])) {
+                    $headers[] = $extraconfig['tinymceinit'];
+                }
+                else {
+                    $content_css = json_encode(theme_get_url('style/tinymce.css'));
+                    $language = substr(current_language(), 0, 2);
+
+                    if ($check[$key] == 'tinymce') {
+                        $tinymce_config = <<<EOF
     editor_selector: 'wysiwyg',
-    button_tile_map: true,
-    language: '{$language}',
     theme: "advanced",
     plugins: "table,emotions,iespell,inlinepopups,paste",
     theme_advanced_buttons1 : "bold,italic,underline,strikethrough,separator,forecolor,backcolor,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,hr,emotions,iespell,cleanup,separator,link,unlink,separator,code",
@@ -95,19 +133,60 @@ tinyMCE.init({
     theme_advanced_toolbar_location : "top",
     theme_advanced_toolbar_align : "center",
     width: '512',
+EOF;
+                    }
+                    else {
+                        $tinymce_config = <<<EOF
+    editor_selector: 'tinywysiwyg',
+    theme: "advanced",
+    plugins: "fullscreen",
+    theme_advanced_buttons1 : "bold,italic,underline,separator,justifyleft,justifycenter,justifyright,justifyfull",
+    theme_advanced_buttons2 : "bullist,numlist,separator,link,unlink,separator,code,fullscreen",
+    theme_advanced_buttons3 : "",
+    theme_advanced_toolbar_location : "top",
+    theme_advanced_toolbar_align : "center",
+    fullscreen_new_window: true,
+    fullscreen_settings: {
+        theme: "advanced",
+        plugins: "table,emotions,iespell,inlinepopups,paste",
+        theme_advanced_buttons1 : "bold,italic,underline,strikethrough,separator,forecolor,backcolor,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,hr,emotions,iespell,cleanup,separator,link,unlink,separator,code",
+        theme_advanced_buttons2 : "bullist,numlist,separator,tablecontrols,separator,cut,copy,paste,pasteword",
+        theme_advanced_buttons3 : "fontselect,separator,fontsizeselect,separator,formatselect"
+    },
+EOF;
+                    }
+
+                    $headers[] = <<<EOF
+<script type="text/javascript">
+tinyMCE.init({
+    mode: "textareas",
+    button_tile_map: true,
+    {$tinymce_config}
+    language: '{$language}',
     content_css : {$content_css}
 });
 </script>
 
 EOF;
+                }
+                unset($check[$key]);
             }
-            unset($check[$key]);
-            break;
+            else {
+                if ($check[$key] != $found_tinymce) {
+                    log_warn('Two differently configured tinyMCE instances have been asked for on this page! This is not possible');
+                }
+                unset($check[$key]);
+            }
         }
     }
 
     if (get_config('developermode')) {
         $javascript_array[] = $jsroot . 'MochiKit/MochiKit.js';
+        $javascript_array[] = $jsroot . 'MochiKit/Position.js';
+        $javascript_array[] = $jsroot . 'MochiKit/Color.js';
+        $javascript_array[] = $jsroot . 'MochiKit/Visual.js';
+        $javascript_array[] = $jsroot . 'MochiKit/DragAndDrop.js';
+        $javascript_array[] = $jsroot . 'MochiKit/Format.js';
     }
     else {
         $javascript_array[] = $jsroot . 'MochiKit/Packed.js';
@@ -199,9 +278,6 @@ EOF;
             $strings[$tag] = get_raw_string($tag, $section);
         }
     }
-    foreach ($themepaths['mahara'] as $themepath) {
-        $theme_list[$themepath] = theme_get_url($themepath);
-    }
     if (isset($extraconfig['themepaths']) && is_array($extraconfig['themepaths'])) {
         foreach ($extraconfig['themepaths'] as $themepath) {
             $theme_list[$themepath] = theme_get_url($themepath);
@@ -213,16 +289,6 @@ EOF;
     $stringjs .= '</script>';
     $headers[] = $stringjs;
 
-    $smarty =& new Smarty();
-    
-    $theme = theme_setup();
-
-    $smarty->template_dir = $theme->template_dir;
-
-    $smarty->compile_dir  = get_config('dataroot').'smarty/compile';
-    $smarty->cache_dir    = get_config('dataroot').'smarty/cache';
-
-    $smarty->assign('THEMEURL', get_config('themeurl'));
 
     // stylesheet set up - if we're in a plugin also get its stylesheet
     $stylesheets = array_reverse(theme_get_url('style/style.css', null, true));
@@ -234,10 +300,23 @@ EOF;
     if (get_config('developermode')) {
         $stylesheets[] = get_config('wwwroot') . 'theme/debug.css';
     }
+
+    // look for extra stylesheets
+    if (isset($extraconfig['stylesheets']) && is_array($extraconfig['stylesheets'])) {
+        foreach ($extraconfig['stylesheets'] as $extrasheet) {
+            if ($sheet = theme_get_url($extrasheet)) {
+                $stylesheets[] = $sheet;
+            }
+        }
+    }
+
+    $smarty = smarty_core();
+
     $smarty->assign('STYLESHEETLIST', $stylesheets);
-    $smarty->assign('WWWROOT', $wwwroot);
-    $smarty->assign('SESSKEY', $USER->get('sesskey'));
-    $smarty->assign('THEMELIST', json_encode($theme_list));
+    if (!empty($theme_list)) {
+        // this gets assigned in smarty_core, but do it again here if it's changed locally
+        $smarty->assign('THEMELIST', json_encode(array_merge((array)json_decode($smarty->get_template_vars('THEMELIST')),  $theme_list))); 
+    }
 
     if (defined('TITLE')) {
         $smarty->assign('PAGETITLE', TITLE . ' - ' . get_config('sitename'));
@@ -265,6 +344,7 @@ EOF;
     }
 
     $smarty->assign_by_ref('USER', $USER);
+    $smarty->assign('SESSKEY', $USER->get('sesskey'));
     $smarty->assign_by_ref('JAVASCRIPT', $javascript_array);
     $smarty->assign_by_ref('HEADERS', $headers);
 
@@ -357,11 +437,6 @@ function jsstrings() {
                 'lastpage',
             )
         ),
-        'collapsabletree' => array(
-            'view' => array(
-                'nochildren',
-            ),
-        ),
         'friends' => array(
             'mahara' => array(
                 'confirmremovefriend',
@@ -387,19 +462,38 @@ function jsstrings() {
                 'cancel',
             ),
         ),
+        'views' => array(
+            'view' => array(
+                'confirmdeleteblockinstance',
+            ),
+        ),
+        'adminusersearch' => array(
+            'admin' => array(
+                'suspenduser',
+                'suspensionreason',
+            ),
+            'mahara' => array(
+                'cancel',
+            ),
+        ),
     );
 }
 
 function themepaths() {
-    return array(
-        'mahara' => array(
-            'images/icon_close.gif',
-            'images/failure.gif',
-            'images/loading.gif',
-            'images/success.gif',
-            'images/icon_help.gif',
-        ),
-    );
+
+    static $paths;
+    if (empty($paths)) {
+        $paths = array(
+            'mahara' => array(
+                'images/icon_close.gif',
+                'images/failure.gif',
+                'images/loading.gif',
+                'images/success.gif',
+                'images/icon_help.gif',
+            ),
+        );
+    }
+    return $paths;
 }
 
 /** 
@@ -1186,12 +1280,6 @@ function admin_nav() {
             'title'  => get_string('pluginadmin', 'admin'),
             'weight' => 10,
         ),
-        array(
-            'path'   => 'configextensions/templatesadmin',
-            'url'    => 'admin/extensions/templates.php',
-            'title'  => get_string('templatesadmin', 'admin'),
-            'weight' => 20
-        ),
     );
 
     return $menu;
@@ -1732,6 +1820,7 @@ function clean_attributes_2($htmlArray) {
     }
     return '<'. $slash . $elem . $attStr . $xhtml_slash .'>';
 }
+
 
 
 ?>

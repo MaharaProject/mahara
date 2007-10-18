@@ -288,7 +288,6 @@ $string['saveaccess'] = 'Save Access';
 $string['submitview'] = 'Submit View';
 $string['submitviewfailed'] = 'Submit view failed';
 $string['submitviewquestion'] = 'If you submit this view for assessment, you will not be able to edit the view or any of its associated artefacts until your tutor has finished marking the view.  Are you sure you want to submit this view now?';
-$string['viewaccesseditedsuccessfully'] = 'View access saved successfully';
 $string['viewdeleted'] = 'View deleted';
 $string['views'] = 'Views';
 $string['viewsubmitted'] = 'View submitted';
@@ -470,7 +469,8 @@ $string['groupconfirmdelete'] = 'Are you sure you wish to delete this community?
 $string['groupconfirmdeletehasviews'] = 'Are you sure you wish to delete this community? Some of your views use this community for access control, removing this community would mean that the members of that community would not have access to the views.';
 $string['deletegroup'] = 'Group Deleted Successfully';
 
-
+$string['alphabet'] = 'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z';
+$string['all'] = 'All';
 
 // friendslist
 $string['reasonoptional'] = 'Reason (optional)';
@@ -828,6 +828,11 @@ $string['country.ye'] = 'Yemen';
 $string['country.zm'] = 'Zambia';
 $string['country.zw'] = 'Zimbabwe';
 
-
+// general stuff that doesn't really fit anywhere else
+$string['system'] = 'System';
+$string['preview'] = 'Preview';
+$string['done'] = 'Done';
+$string['next'] = 'Next';
+$string['back'] = 'Back';
 
 ?>

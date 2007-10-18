@@ -40,6 +40,9 @@ if (!can_view_view($viewid)) {
 
 $viewbeingwatched = 0;
 
+$title = get_string('titleformatted', 'view', $view->get('title'), $view->formatted_owner());
+define('TITLE', $title);
+
 if ($artefactid) {
 
     if (!artefact_in_view($artefactid, $viewid)) {
@@ -52,12 +55,8 @@ if ($artefactid) {
     $feedbackisprivate = !$artefact->public_feedback_allowed();
     $options = array('viewid' => $viewid,
                      'path' => $path);
-    if (in_array(FORMAT_ARTEFACT_RENDERFULL, $artefact->get_render_list())) {
-        $rendered = $artefact->render(FORMAT_ARTEFACT_RENDERFULL, $options);
-    }
-    else {
-        $rendered = $artefact->render(FORMAT_ARTEFACT_RENDERMETADATA, $options);
-    }
+
+    $rendered = $artefact->render_self($options);
     $content = '';
     if (!empty($rendered['javascript'])) {
         $content = '<script type="text/javascript">' . $rendered['javascript'] . '</script>';
@@ -65,7 +64,7 @@ if ($artefactid) {
     $content .= $rendered['html'];
 
     $viewhref = 'view.php?view=' . $viewid;
-    $navlist = array('<a href="' . $viewhref .  '">' . $view->get('title') . '</a>');
+    $navlist = array('<a href="' . $viewhref .  '">' . $title . '</a>');
     if (!empty($path)) {
         $titles = get_records_sql_assoc('
             SELECT id,title FROM {artefact}
@@ -100,10 +99,11 @@ if ($artefactid) {
     $jsartefact = $artefactid;
 }
 else {
-    $navlist = array($view->get('title'));
-    define('TITLE', $view->get('title'));
+    $navlist = array($title);
     $jsartefact = 'undefined';
-    $content = $view->render();
+
+    $content = $view->build_columns();
+    
     global $USER;
     $submittedgroup = $view->get('submittedto');
     if ($submittedgroup 
@@ -321,13 +321,16 @@ EOF;
 
 $smarty = smarty(
     array('tablerenderer'),
-    array(),
+    array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">'),
     array(
         'mahara' => array(
             'public',
             'private',
             'makeprivate',
         ),
+    ),
+    array(
+        'stylesheets' => array('style/views.css'),
     )
 );
 $smarty->assign('INLINEJAVASCRIPT', $javascript);

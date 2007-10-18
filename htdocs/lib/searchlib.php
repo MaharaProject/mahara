@@ -116,6 +116,90 @@ function search_user($query_string, $limit, $offset = 0) {
     return $results;
 }
 
+
+function build_admin_user_search_results($search, $offset, $limit, $sortby, $sortdir) {
+    // In admin search, the search string is interpreted as either a
+    // name search or an email search depending on its contents
+    $queries = array();
+    $constraints = array();
+    if (!empty($search->query)) {
+        if (strpos($search->query, '@') !== false) {
+            $queries[] = array('field' => 'email',
+                               'type' => 'contains',
+                               'string' => $search->query);
+        } else {
+            $queries = array(array('field' => 'firstname',
+                                   'type' => 'contains',
+                                   'string' => $search->query),
+                             array('field' => 'lastname',
+                                   'type' => 'contains',
+                                   'string' => $search->query));
+        }
+    }
+    if (!empty($search->f)) {
+        $constraints[] = array('field' => 'firstname',
+                               'type' => 'starts',
+                               'string' => $search->f);
+    }
+    if (!empty($search->l)) {
+        $constraints[] = array('field' => 'lastname',
+                               'type' => 'starts',
+                               'string' => $search->l);
+    }
+    if (!empty($search->institution) && $search->institution != 'all') {
+        $constraints[] = array('field' => 'institution',
+                               'type' => 'equals',
+                               'string' => $search->institution);
+    }
+
+    $results = admin_user_search($queries, $constraints, $offset, $limit, $sortby, $sortdir);
+
+    $params = array();
+    foreach ($search as $k => $v) {
+        if (!empty($v)) {
+            $params[] = $k . '=' . $v;
+        }
+    }
+    $searchurl = get_config('wwwroot') . 'admin/users/search.php?' . join('&amp;', $params)
+        . '&amp;limit=' . $limit;
+
+    $templatedir = get_config('docroot') . 'theme/' . get_config('theme') . '/templates/admin/users/';
+
+    $cols = array(
+        'icon'        => array('name'     => '',
+                               'template' => file_get_contents($templatedir . 'icon.tpl')),
+        'firstname'   => array('name'     => get_string('firstname')),
+        'lastname'    => array('name'     => get_string('lastname')),
+        'username'    => array('name'     => get_string('username'),
+                               'template' => file_get_contents($templatedir . 'username.tpl')),
+        'email'       => array('name'     => get_string('email')),
+        'institution' => array('name'     => get_string('institution'),
+                               'template' => file_get_contents($templatedir . 'institution.tpl')),
+        'suspend'     => array('name'     => '',
+                               'template' => file_get_contents($templatedir . 'suspendlink.tpl'))
+    );
+
+    $smarty = smarty_core();
+    $smarty->assign_by_ref('results', $results);
+    $smarty->assign_by_ref('institutions', get_records_assoc('institution', '', '', '', 'name,displayname'));
+    $smarty->assign('searchurl', $searchurl);
+    $smarty->assign('sortby', $sortby);
+    $smarty->assign('sortdir', $sortdir);
+    $smarty->assign('pagebaseurl', $searchurl . '&sortby=' . $sortby . '&sortdir=' . $sortdir);
+    $smarty->assign('cols', $cols);
+    $smarty->assign('ncols', count($cols));
+    return $smarty->fetch('searchresulttable.tpl');
+}
+
+
+function admin_user_search($queries, $constraints, $offset, $limit, $sortfield, $sortdir) {
+    $plugin = get_config('searchplugin');
+    safe_require('search', $plugin);
+    return call_static_method(generate_class_name('search', $plugin), 'admin_search_user', 
+                              $queries, $constraints, $offset, $limit, $sortfield, $sortdir);
+}
+
+
 /**
  * Given a query string and limits, return an array of matching groups using the
  * search plugin defined in config.php

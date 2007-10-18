@@ -1,0 +1,16 @@
+/**
+ * CSS rules that only apply to the JS version of the views interface
+ */
+
+.blocktype, .blocktype-clone {
+    cursor: move;
+}
+
+.blockinstance-header {
+    cursor: move;
+}
+
+/* This will be hidden until loading is finished */
+#bottom-pane {
+    display: none;
+}

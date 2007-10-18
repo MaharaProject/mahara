@@ -1,5 +1,5 @@
 /**
- * $Id: editor_plugin_src.js 167 2007-01-05 15:35:53Z spocke $
+ * $Id: editor_plugin_src.js 296 2007-08-21 10:36:35Z spocke $
  *
  * @author Moxiecode
  * @copyright Copyright © 2004-2007, Moxiecode Systems AB, All rights reserved.
@@ -14,7 +14,7 @@ var TinyMCE_MediaPlugin = {
 			longname : 'Media',
 			author : 'Moxiecode Systems AB',
 			authorurl : 'http://tinymce.moxiecode.com',
-			infourl : 'http://tinymce.moxiecode.com/tinymce/docs/plugin_media.html',
+			infourl : 'http://wiki.moxiecode.com/index.php/TinyMCE:Plugins/media',
 			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion
 		};
 	},
@@ -98,6 +98,8 @@ var TinyMCE_MediaPlugin = {
 							break;
 
 						case 'clsid:6bf52a52-394a-11d3-b153-00c04f79faa6':
+						case 'clsid:22d6f312-b0f6-11d0-94ab-0080c74c7e95':
+						case 'clsid:05589fa1-c356-11ce-bf01-00aa0055595a':
 							nl[i].parentNode.replaceChild(TinyMCE_MediaPlugin._createImg('mceItemWindowsMedia', d, nl[i]), nl[i]);
 							break;
 
@@ -106,8 +108,6 @@ var TinyMCE_MediaPlugin = {
 							break;
 
 						case 'clsid:cfcdaa03-8be4-11cf-b84b-0020afbbccfa':
-						case 'clsid:22d6f312-b0f6-11d0-94ab-0080c74c7e95':
-						case 'clsid:05589fa1-c356-11ce-bf01-00aa0055595a':
 							nl[i].parentNode.replaceChild(TinyMCE_MediaPlugin._createImg('mceItemRealMedia', d, nl[i]), nl[i]);
 							break;
 					}
@@ -200,9 +200,8 @@ var TinyMCE_MediaPlugin = {
 								break;
 						}
 
-						// Force absolute URL
-						if (!tinyMCE.getParam("relative_urls"))
-							pl.src = tinyMCE.convertRelativeToAbsoluteURL(tinyMCE.settings['base_href'], pl.src);
+						// Convert the URL
+						pl.src = tinyMCE.convertURL(pl.src, null, true);
 
 						embedHTML = TinyMCE_MediaPlugin._getEmbed(ci, cb, mt, pl, attribs);
 					} else {
@@ -236,10 +235,8 @@ var TinyMCE_MediaPlugin = {
 							at = at.replace(/height:[^0-9]?[0-9]+%?[^0-9]?/g, "height:'" + attribs.height + "'");
 
 						// Force absolute URL
-						if (!tinyMCE.getParam("relative_urls")) {
-							pl.src = tinyMCE.convertRelativeToAbsoluteURL(tinyMCE.settings['base_href'], pl.src);
-							at = at.replace(new RegExp("src:'[^']*'", "g"), "src:'" + pl.src + "'");
-						}
+						pl.src = tinyMCE.convertURL(pl.src, null, true);
+						at = at.replace(new RegExp("src:'[^']*'", "g"), "src:'" + pl.src + "'");
 
 						embedHTML = '<script type="text/javascript">' + s + '({' + at + '});</script>';
 					}
@@ -360,7 +357,7 @@ var TinyMCE_MediaPlugin = {
 		h += '>';
 
 		for (n in p) {
-			if (p[n] && typeof(p[n]) != "function") {
+			if (typeof(p[n]) != "undefined" && typeof(p[n]) != "function") {
 				h += '<param name="' + n + '" value="' + p[n] + '" />';
 
 				// Add extra url parameter if it's an absolute URL on WMP

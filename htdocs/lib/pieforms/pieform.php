@@ -695,12 +695,14 @@ class Pieform {
 
         if ($this->data['jsform'] || $this->data['presubmitcallback']) {
             $result .= '<script type="text/javascript">';
-            $result .= "\n" . $this->whichbutton_js();
+            if ($outputformtags) {
+                $result .= "\n" . $this->whichbutton_js();
+            }
         }
         if ($this->data['jsform']) {
             $result .= $this->submit_js();
         }
-        else if ($this->data['presubmitcallback']) {
+        else if ($this->data['presubmitcallback'] && $outputformtags) {
             $result .= 'connect(\'' . $this->name . '\', \'onsubmit\', '
                 . 'function() { ' . $this->data['presubmitcallback'] . "('{$this->name}', {$this->name}_btn); });";
         }

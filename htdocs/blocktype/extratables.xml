@@ -1,0 +1,10 @@
+        <TABLE NAME="blocktype_installed_category">
+            <FIELDS>
+                <FIELD NAME="blocktype" TYPE="char" LENGTH="50" NOTNULL="true" />
+                <FIELD NAME="category" TYPE="char" LENGTH="50" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="blocktypefk" TYPE="foreign" FIELDS="blocktype" REFTABLE="blocktype_installed" REFFIELDS="name"  />
+                <KEY NAME="categoryfk" TYPE="foreign" FIELDS="category" REFTABLE="blocktype_category" REFFIELDS="name"  />
+            </KEYS>
+        </TABLE>

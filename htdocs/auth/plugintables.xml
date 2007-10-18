@@ -1,0 +1,80 @@
+        <TABLE NAME="auth_installed">
+            <FIELDS> 
+                <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="version" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="release" TYPE="text" LENGTH="small" NOTNULL="true" />
+                <FIELD NAME="active" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" />
+                <FIELD NAME="requires_config" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
+                <FIELD NAME="requires_parent" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="name" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="auth_instance">
+            <FIELDS> 
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+                <FIELD NAME="instancename" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="priority" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" />
+                <FIELD NAME="institution" TYPE="char" LENGTH="255" NOTNULL="true" />
+               <FIELD NAME="authname" TYPE="char" LENGTH="255" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+                <KEY NAME="authnamefk" TYPE="foreign" FIELDS="authname" REFTABLE="auth_installed" REFFIELDS="name" />
+                <KEY NAME="institutionfk" TYPE="foreign" FIELDS="institution" REFTABLE="institution" REFFIELDS="name" />
+            </KEYS>
+        </TABLE>
+        <!-- auth plugin tables -->
+        <TABLE NAME="auth_config">
+            <FIELDS>
+                <FIELD NAME="plugin" TYPE="char" LENGTH="100" NOTNULL="true" />
+                <FIELD NAME="field" TYPE="char" LENGTH="100" NOTNULL="true" />
+                <FIELD NAME="value" TYPE="text" LENGTH="small" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="plugin,field" />
+                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="auth_installed" REFFIELDS="name" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="auth_instance_config">
+            <FIELDS>
+                <FIELD NAME="instance" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="field" TYPE="char" LENGTH="100" NOTNULL="true" />
+                <FIELD NAME="value" TYPE="text" LENGTH="small" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="instance,field" />
+                <KEY NAME="instancefk" TYPE="foreign" FIELDS="instance" REFTABLE="auth_instance" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="auth_cron">
+            <FIELDS>
+                <FIELD NAME="plugin" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="callfunction" TYPE="char" LENGTH="255" NOTNULL="true"  />
+                <FIELD NAME="nextrun" TYPE="datetime" NOTNULL="false"  />
+                <FIELD NAME="minute" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*"  />
+                <FIELD NAME="hour" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*"  />
+                <FIELD NAME="day" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*"  />
+                <FIELD NAME="month" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*"  />
+                <FIELD NAME="dayofweek" TYPE="char" LENGTH="25" NOTNULL="true" DEFAULT="*" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="plugin,callfunction" />
+                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="auth_installed" REFFIELDS="name" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="auth_event_subscription">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" SEQUENCE="true"  NOTNULL="true" />
+                <FIELD NAME="plugin" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="event" TYPE="char" LENGTH="50" NOTNULL="true" />
+                <FIELD NAME="callfunction" TYPE="char" LENGTH="255" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+                <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="auth_installed" REFFIELDS="name" />
+                <KEY NAME="eventfk" TYPE="foreign" FIELDS="event" REFTABLE="event_type" REFFIELDS="name" />
+                <KEY NAME="subscruk" TYPE="unique" FIELDS="plugin,event,callfunction" />
+            </KEYS>
+        </TABLE>

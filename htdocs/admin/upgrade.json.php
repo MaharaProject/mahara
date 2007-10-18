@@ -32,9 +32,9 @@ define('JSON', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 require(get_config('libroot') . 'upgrade.php');
 
-$install = param_boolean('install');
+$name    = param_variable('name');
+$install = ($name == 'firstcoredata' || $name == 'lastcoredata');
 if (!$install) {
-    $name    = param_variable('name');
     $upgrade = check_upgrades($name);
     
     if (empty($upgrade->disablelogin)) {
@@ -42,31 +42,22 @@ if (!$install) {
     }
 }
 
-if ($install) {
-    $message = '';
-    if (!get_config('installed')) {
-        try {
-            $exceptions = core_install_defaults();
-        }
-        catch (SQLException $e) {
-            json_reply('local', $e->getMessage());
-        }
-        catch (TemplateParserException $e) {
-            $message = '<a href="' . get_config('wwwroot') .'admin/extensions/templates.php">' 
-                . get_string('fixtemplatescontinue', 'admin') . '</a>';
-        }
-        if (is_array($exceptions) && count($exceptions) > 0) {
-            // these ones are non fatal... 
-            $message = '<a href="' . get_config('wwwroot') .'admin/extensions/templates.php">' 
-                . get_string('fixtemplatescontinue', 'admin') . '</a>';
-        }
-    }
-    json_reply(false, $message);
-}
-
 $data = array(
     'key'        => $name
 );             
+if ($install) {
+    if (!get_config('installed')) {
+        try {
+            $fun = 'core_install_' . $name . '_defaults';
+            $fun();
+        }
+        catch (SQLException $e) {
+            json_reply('local', array('error' => true, 'key' => $name, 'errormessage' => $e->getMessage()));
+        }
+    }
+    $data['coredata'] = true;
+    json_reply(false, $data);
+}
 
 if (!empty($upgrade)) {
     $data['newversion'] = $upgrade->torelease . ' (' . $upgrade->to . ')' ;
@@ -95,7 +86,7 @@ if (!empty($upgrade)) {
 }
 else {
     json_reply(false, array('error' => false,
-                            'message' => string('nothingtoupgrade','admin')));
+                            'message' => get_string('nothingtoupgrade','admin')));
     exit;
 }
 ?>

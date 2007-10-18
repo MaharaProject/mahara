@@ -1,0 +1,127 @@
+/**
+ * Views stylesheet - common between all themes
+ */
+
+#top-pane {
+    margin-bottom: 10px;
+    padding: 0 5px 10px 0;
+}
+#category-list {
+    padding: 10px 0 0 10px;
+}
+#category-list ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+#category-list li {
+    display: inline;
+}
+
+/* This needs lots of work, and probably some html changes */
+#blocktype-list {
+    overflow: auto;
+    min-height: 95px;
+}
+#blocktype-list ul {
+    list-style-type: none;
+}
+#blocktype-list li {
+    float: left;
+    text-align: center;
+    margin: 1em 1em 0;
+}
+
+#blocktype-footer {
+    clear: left;
+}
+
+/* the div containing all the columns */
+#column-container {
+    width: 100%;
+    margin-top: 1em;
+    padding: 5px 0 10px 0.2%;
+}
+#column-container input.submit {
+    cursor: pointer;
+}
+/* each column div will have a class matching one of these, the number is the number of columns in total, so widths can be made equal */
+.columns1 {
+    width: 98%;
+}
+.columns2 {
+    width: 48%;
+}
+.columns3 {
+    width: 31%;
+}
+.columns4 {
+    width: 23%;
+}
+.columns5 {
+    width: 18%;
+}
+
+.column {
+    vertical-align: top;
+    float: left;
+    margin: 0;
+    padding: 0 0.9%;
+}
+
+/* An explicit height for when there is one column and no remove button */
+.column-header {
+    width: 100%;
+    position: relative;
+    height: 25px;
+}
+.add-button {
+    text-align: center;
+}
+
+/* contains the left-most 'add column' button */
+.add-column-left {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+/* contains all add column buttons in the middle of two columns */
+.add-column-center {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+/* contains the right most column */
+.add-column-right {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+/* contains the 'remove column' buttons */
+.remove-column {
+    text-align: center;
+}
+
+
+/* block instance styles */
+.blockinstance {
+    position: relative;
+}
+
+.blockinstance-controls {
+    position: absolute;
+    top: 9px;
+    right: 9px;
+}
+.blockinstance-controls input.submit {
+    margin: 0;
+}
+.blockinstance-content .maharatable {
+    border: 0;
+}
+
+#view-wizard-controls form {
+    display: inline;
+}

@@ -163,9 +163,7 @@ END;
         set_config_plugin('search', 'solr', 'solrurl', $values['solrurl']);
     }
 
-    public static function search_user($query_string, $limit, $offset = 0) {
-        $results = self::send_query($query_string, $limit, $offset, array('type' => 'user'));
-
+    private static function remove_key_prefix($results) {
         if (is_array($results['data'])) {
             foreach ($results['data'] as &$result) {
                 $new_result = array();
@@ -181,16 +179,68 @@ END;
                         continue;
                     }
 
-                    if ($key_parts[0] == 'store' || $key == 'ref_institution') {
+                    if ($key_parts[0] == 'store' || $key_parts[0] == 'text' || $key_parts[0] == 'string' 
+                        || $key == 'ref_institution') {
                         $new_result[$key_parts[1]] = $value;
                     }
                 }
                 $result = $new_result;
             }
         }
+    }
 
+    public static function search_user($query_string, $limit, $offset = 0) {
+        if (!empty($query_string)) {
+            $query_string = 'index_name:' . $query_string . '*';
+        }
+        $results = self::send_query($query_string, $limit, $offset,
+                                    array('type' => 'user', 'index_active' => 1));
+        self::remove_key_prefix(&$results);
         return $results;
     }
+
+
+    public static function admin_search_user($queries, $constraints, $offset, $limit, $sortby, $sortdir) {
+        $q = '';
+        $solrfields = array(
+            'id'          => 'id',
+            'institution' => 'ref_institution',
+            'email'       => 'string_email',
+            'username'    => 'text_username',
+            'firstname'   => 'text_firstname',
+            'lastname'    => 'text_lastname'
+        );
+        if (!empty($queries)) {
+            $terms = array();
+            foreach ($queries as $f) {
+                if ($f['field'] == 'email' && $f['type'] == 'contains' && strpos($f['string'],'@') === 0) {
+                    $terms[] = 'string_emaildomain:' . substr($f['string'], 1) . '*';
+                } else {
+                    $terms[] = $solrfields[$f['field']] . ':' . strtolower($f['string'])
+                        . ($f['type'] != 'equals' ? '*' : '');
+                }
+            }
+            $q .= '(' . join(' OR ', $terms) . ')';
+        }
+        if (!empty($constraints)) {
+            if (!empty($q)) {
+                $q .= ' AND ';
+            }
+            $terms = array();
+            foreach ($constraints as $f) {
+                $terms[] = $solrfields[$f['field']] . ':' . strtolower($f['string'])
+                    . ($f['type'] != 'equals' ? '*' : '');
+            }
+            $q .= join(' AND ', $terms);
+        }
+
+        $sort = $solrfields[$sortby] . ' ' . $sortdir;
+
+        $results = self::send_query($q, $limit, $offset, array('type' => 'user'), '*', false, $sort);
+        self::remove_key_prefix(&$results);
+        return $results;
+    }
+
 
     /**
      * Given a query string and limits, return an array of matching objects
@@ -305,7 +355,7 @@ END;
 
         self::delete_bytype('user');
 
-        $users = get_recordset('usr', 'active', '1');
+        $users = get_recordset('usr', 'deleted', '0');
         safe_require('artefact', 'internal');
         $publicfields = array_keys(ArtefactTypeProfile::get_public_fields());
 
@@ -378,7 +428,7 @@ END;
             }
         }
 
-        if (!$user['active']) {
+        if ($user['deleted']) {
             self::delete_byidtype($user['id'], 'user');
             return;
         }
@@ -390,14 +440,22 @@ END;
             'type'                => 'user',
             'index_name'          => $user['preferredname'],
             'ref_institution'     => $user['institution'],
-            'store_email'         => $user['email'],
-            'store_username'      => $user['username'],
+            'string_email'        => $user['email'],
+            'text_username'       => $user['username'],
             'store_preferredname' => $user['preferredname'],
-            'store_firstname'     => $user['firstname'],
-            'store_lastname'      => $user['lastname'],
+            'text_firstname'      => $user['firstname'],
+            'text_lastname'       => $user['lastname'],
+            'index_active'        => $user['active'],
+            'store_suspended'     => (int)!empty($user['suspendedcusr']),
         );
         if (empty($doc['index_name'])) {
             $doc['index_name'] = $user['firstname'] . ' ' . $user['lastname'];
+        }
+        if ($emailparts = split('@', $user['email'])
+            and !empty($emailparts[1])) {
+            $doc['string_emaildomain'] = $emailparts[1];
+        } else {
+            $doc['string_emaildomain'] = $user['email'];
         }
 
         self::add_document($doc);
@@ -449,7 +507,7 @@ END;
         }
     }
 
-    private static function send_query($query, $limit, $offset, $constraints = array(), $fields = '*', $highlight = false) {
+    private static function send_query($query, $limit, $offset, $constraints = array(), $fields = '*', $highlight = false, $sort = null) {
         $q = array();
 
         foreach ( $constraints as $key => $value ) {
@@ -476,6 +534,9 @@ END;
             'rows'   => $limit,
             //'indent' => 1,
         );
+        if (!empty($sort)) {
+            $data['sort'] = $sort;
+        }
 
         if ($highlight) {
             $data['hl']          = 'true';

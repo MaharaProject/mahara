@@ -93,7 +93,21 @@ function check_upgrades($name=null) {
 
     $plugins = array();
     if (!empty($name)) {
-        $plugins[] = explode('.', $name);
+        try {
+            $bits = explode('.', $name);
+            $pt = $bits[0];
+            $pn = $bits[1];
+            $pp = null;
+            if ($pt == 'blocktype' && strpos($pn, '/') !== false) {
+                $bits = explode('/', $pn);
+                $pp = get_config('docroot') . 'artefact/' . $bits[0]  . '/blocktype/' . $bits[1];
+            }
+            validate_plugin($pt, $pn, $pp);
+            $plugins[] = explode('.', $name);
+        }
+        catch (InstallationException $_e) {
+            log_warn("Plugin $pt $pn is not installable: " . $_e->GetMessage());
+        }
     }
     else {
         foreach ($pluginstocheck as $plugin) {
@@ -105,18 +119,30 @@ function check_upgrades($name=null) {
                 if (!is_dir(get_config('docroot') . $plugin . '/' . $dir)) {
                     continue;
                 }
-                require_once('artefact.php');
-                $funname = $plugin . '_check_plugin_sanity';
-                if (function_exists($funname)) {
-                    try {
-                        $funname($dir);
-                    }
-                    catch (InstallationException $e) {
-                        log_warn("Plugin $plugin $dir is not installable: " . $e->GetMessage());
+                try {
+                    validate_plugin($plugin, $dir);
+                    $plugins[] = array($plugin, $dir);
+                }
+                catch (InstallationException $_e) {
+                    log_warn("Plugin $plugin $dir is not installable: " . $_e->GetMessage());
+                }
+
+                if ($plugin == 'artefact') { // go check it for blocks as well
+                    $btlocation = get_config('docroot') . $plugin . '/' . $dir . '/blocktype';
+                    if (!is_dir($btlocation)) {
                         continue;
+                    }   
+                    $btdirhandle = opendir($btlocation);
+                    while (false !== ($btdir = readdir($btdirhandle))) {
+                        if (strpos($btdir, '.') === 0) {
+                            continue;
+                        }
+                        if (!is_dir(get_config('docroot') . $plugin . '/' . $dir . '/blocktype/' . $btdir)) {
+                            continue;
+                        }
+                        $plugins[] = array('blocktype', $dir . '/' . $btdir);
                     }
                 }
-                $plugins[] = array($plugin, $dir);
             }
         }
     }
@@ -127,12 +153,18 @@ function check_upgrades($name=null) {
         $pluginpath = "$plugin[0]/$plugin[1]";
         $pluginkey  = "$plugin[0].$plugin[1]";
 
-        
+        if ($plugintype == 'blocktype' && strpos($pluginname, '/') !== false) {
+            // sigh.. we're a bit special...
+            $bits = explode('/', $pluginname);
+            $pluginpath = 'artefact/' . $bits[0] . '/blocktype/' . $bits[1];
+        }
+
         // Don't try to get the plugin info if we are installing - it will
         // definitely fail
         $pluginversion = 0;
         if (!$installing) {
-            if ($installed = get_record($plugintype . '_installed', 'name', $pluginname)) {
+            if (table_exists(new XMLDBTable($plugintype . '_installed'))
+                && $installed = get_record($plugintype . '_installed', 'name', $pluginname)) {
                 $pluginversion = $installed->version;
                 $pluginrelease =  $installed->release;
             }
@@ -197,6 +229,7 @@ function check_upgrades($name=null) {
     if (count($toupgrade) == 1) {
         $toupgrade = array();
     }
+    uksort($toupgrade, 'sort_upgrades');
     return $toupgrade;
 }
 
@@ -250,6 +283,10 @@ function upgrade_plugin($upgrade) {
 
     list($plugintype, $pluginname) = explode('.', $upgrade->name);
 
+    if ($plugintype == 'blocktype' && strpos($pluginname, '/') !== false) {
+        list($artefactplugin, $blocktypename) = explode('/', $pluginname);
+    }   
+
     $location = get_config('docroot') . $plugintype . '/' . $pluginname . '/db/';
     $db->StartTrans();
 
@@ -280,6 +317,14 @@ function upgrade_plugin($upgrade) {
     $installed->name = $pluginname;
     $installed->version = $upgrade->to;
     $installed->release = $upgrade->torelease;
+    if ($plugintype == 'blocktype') {
+        if (!empty($blocktypename)) {
+            $installed->name = $blocktypename;
+        }
+        if (!empty($artefactplugin)) { // blocks come from artefactplugins.
+            $installed->artefactplugin = $artefactplugin;
+        }
+    }
     if (property_exists($upgrade, 'requires_config')) {
         $installed->requires_config = $upgrade->requires_config;
     }
@@ -297,7 +342,7 @@ function upgrade_plugin($upgrade) {
 
     // postinst stuff...
     safe_require($plugintype, $pluginname);
-    $pcname = generate_class_name($plugintype, $pluginname);
+    $pcname = generate_class_name($plugintype, $installed->name);
 
     if ($crons = call_static_method($pcname, 'get_cron')) {
         foreach ($crons as $cron) {
@@ -380,8 +425,17 @@ function upgrade_plugin($upgrade) {
             delete_records_select('artefact_installed_type', $select,
                                   array_merge(array($pluginname),$types));
         }
+        // install a blocktype category for this plugin
+        if (get_config('installed') && !record_exists('blocktype_category', 'name', $pluginname)) {
+            insert_record('blocktype_category', (object)array('name' => $pluginname));
+        }
     }
     
+    // install blocktype categories.
+    if ($plugintype == 'blocktype' && get_config('installed')) {
+        install_blocktype_categories_for_plugin($pluginname);
+    }
+
     $prevversion = (empty($upgrade->install)) ? $upgrade->from : 0;
     call_static_method($pcname, 'postinst', $prevversion);
     
@@ -389,6 +443,17 @@ function upgrade_plugin($upgrade) {
         $status = false;
     }
     $db->CompleteTrans();
+
+    // we have to do this after committing the current transaction because we call ourselves recursively...
+    if ($plugintype == 'artefact' && get_config('installed')) {
+        // only install associated blocktype plugins if we're not in the process of installing 
+        if ($blocktypes = call_static_method($pcname, 'get_block_types')) {
+            foreach ($blocktypes as $bt) {
+                $upgrade = check_upgrades('blocktype.' . $pluginname . '/' . $bt);
+                upgrade_plugin($upgrade);
+            }
+        }
+    }
     
     return $status;
 
@@ -445,26 +510,23 @@ function core_postinst() {
     set_config('searchplugin', 'internal');
 
     set_config('lang', 'en.utf8');
-
     return $status;
 }
 
-
-function core_install_defaults() {
-    // Install the default institution
+function core_install_lastcoredata_defaults() {
     db_begin();
-    $institution = new StdClass;
+    $auth_instance = new StdClass;
     $institution->name = 'mahara';
     $institution->displayname = 'No Institution';
     $institution->authplugin  = 'internal';
     insert_record('institution', $institution);
 
-    $auth_instance = new StdClass;
     $auth_instance->instancename  = 'internal';
     $auth_instance->priority='1';
     $auth_instance->institution   = 'mahara';
     $auth_instance->authname      = 'internal';
     $auth_instance->id = insert_record('auth_instance', $auth_instance, 'id', true);
+    $institution = new StdClass;
 
     // Insert the root user
     $user = new StdClass;
@@ -483,7 +545,6 @@ function core_install_defaults() {
         set_field('usr', 'id', 0, 'id', $newid);
     }
 
-    // Insert the admin user
     $user = new StdClass;
     $user->username = 'admin';
     $user->password = 'mahara';
@@ -499,118 +560,282 @@ function core_install_defaults() {
     set_profile_field($user->id, 'email', $user->email);
     set_profile_field($user->id, 'firstname', $user->firstname);
     set_profile_field($user->id, 'lastname', $user->lastname);
-    
-    require('template.php');
-    $exceptions = upgrade_templates(true);
     set_config('installed', true);
     db_commit();
-    return $exceptions;
+
+    // if we're installing, set up the block categories here and then poll the plugins.
+    // if we're upgrading this happens somewhere else.  This is because of dependency issues around 
+    // the order of installation stuff.
+
+    install_blocktype_categories();
+
 }
 
-function upgrade_templates($continue=false) {
+function core_install_firstcoredata_defaults() {
+    // Install the default institution
+    db_begin();
+    
+    set_config('session_timeout', 1800);
+    set_config('sitename', 'Mahara');
+    set_config('pathtofile', '/usr/bin/file');
 
-    $exceptions = array();
-    $dbtemplates = array();
+    // install the applications
+    $app = new StdClass;
+    $app->name = 'mahara';
+    $app->displayname = 'Mahara';
+    $app->xmlrpcserverurl = '/api/xmlrpc/server.php';
+    $app->ssolandurl = '/auth/xmlrpc/land.php';
+    insert_record('application', $app);
 
-    // check dataroot first, they get precedence.
-    $templates = get_dir_contents(get_config('dataroot') . 'templates/');
-    foreach ($templates as $dir) {
-        try {
-            $dbtemplates[$dir] = template_parse($dir);
-        }
-        catch (TemplateParserException $e) {
-            if (empty($continue)) {
-                throw $e;
-            }
-            $exceptions[] = $e;
-        }
+    $app->name = 'moodle';
+    $app->displayname = 'Moodle';
+    $app->xmlrpcserverurl = '/mnet/xmlrpc/server.php';
+    $app->ssolandurl = '/auth/mnet/land.php';
+    insert_record('application', $app);
+
+    // insert the event types
+    $eventtypes = array(
+        'createuser',
+        'updateuser',
+        'suspenduser',
+        'unsuspenduser',
+        'deleteuser',
+        'undeleteuser',
+        'expireuser',
+        'unexpireuser',
+        'deactivateuser',
+        'activateuser',
+        'saveartefact',
+        'deleteartefact',
+        'saveview',
+        'deleteview',
+    );
+
+    foreach ($eventtypes as $et) {
+        $e = new StdClass;
+        $e->name = $et;
+        insert_record('event_type', $e);
     }
 
-    // and now system templates
-    $templates = get_dir_contents(get_config('libroot') . 'templates/');
-    foreach ($templates as $dir) {
-        if (array_key_exists($dir, $dbtemplates)) { // dataroot gets preference
-            continue;
-        }
-        try {
-            $dbtemplates[$dir] = template_parse($dir);
-        }
-        catch (TemplateParserException $e) {
-            if (empty($continue)) {
-                throw $e;
-            }
-            $exceptions[] = $e;
-        }
+    // install the activity types
+    $activitytypes = array(
+        array('maharamessage', 0, 0),
+        array('usermessage', 0, 0),
+        array('feedback', 0, 0),
+        array('watchlist', 0, 1),
+        array('newview', 0, 1),
+        array('viewaccess', 0, 1),
+        array('contactus', 1, 1),
+        array('objectionable', 1, 1),
+        array('virusrepeat', 1, 1),
+        array('virusrelease', 1, 1),
+    );
+
+    foreach ($activitytypes as $at) {
+        $a = new StdClass;
+        $a->name = $at[0];
+        $a->admin = $at[1];
+        $a->delay = $at[2];
+        insert_record('activity_type', $a);
     }
 
-    foreach ($dbtemplates as $name => $data) {
-        try {
-            $ids = upgrade_template($name, $data);
+    // install the cronjobs...
+    $cronjobs = array(
+        'rebuild_artefact_parent_cache_dirty'    => array('*', '*', '*', '*', '*'),
+        'rebuild_artefact_parent_cache_complete' => array('0', '4', '*', '*', '*'),
+        'auth_clean_partial_registrations'       => array('5', '0', '*', '*', '*'),
+        'auth_handle_account_expiries'           => array('5', '10', '*', '*', '*'),
+        'activity_process_queue'                 => array('*/5', '*', '*', '*', '*'),
+    );
+    foreach ($cronjobs as $callfunction => $times) {
+        $cron = new StdClass;
+        $cron->callfunction = $callfunction;
+        $cron->minute       = $times[0];
+        $cron->hour         = $times[1];
+        $cron->day          = $times[2];
+        $cron->month        = $times[3];
+        $cron->dayofweek    = $times[4];
+        insert_record('cron', $cron);
+    }
+    
+    // install the view column widths
+    $layouts = array(
+        2 => array(
+            '50,50',
+            '67,33',
+            '33,67',
+            ),
+        3 => array(
+            '33,33,33',
+            '25,50,25',
+            '15,70,15',
+            ),
+        4 => array(
+            '25,25,25,25',
+            '20,30,30,20',
+            ),
+    );
+
+    $layout = new StdClass;
+    foreach ($layouts as $column => $widths) {
+        foreach ($widths as $width) {
+            $layout->columns = $column;
+            $layout->widths = $width;
+            insert_record('view_layout', $layout);
         }
-        catch (TemplateParserException $e) {
-            if (empty($continue)) {
-                throw $e;
-            }
-            $exceptions[] = $e;
-            unset($dbtemplates[$name]);
-            continue;
-        }
     }
-
-    if (count($dbtemplates) > 0) {
-        set_field_select('template', 'deleted', 1, 
-                         'name NOT IN (' . implode(',', db_array_to_ph(array_keys($dbtemplates))). ')', 
-                         array_keys($dbtemplates));
-    }
-    else {
-        set_field('template', 'deleted', 1);
-    }
-
-
-    return $exceptions;
+    db_commit();
 }
+
+
+/** 
+* xmldb will pass us the xml file and we can perform any substitution as necessary
+*/ 
+function local_xmldb_contents_sub(&$contents) {
+    // the main install.xml file needs to sub in plugintype tables.
+    $searchstring = '<!-- PLUGIN_TYPE_SUBSTITUTION -->';
+    if (strstr($contents, $searchstring) === 0) {
+        return;
+    }
+    // ok, we're in the main file and we need to install all the plugin tables
+    // get the basic skeleton structure
+    $plugintables = file_get_contents(get_config('docroot') . 'lib/db/plugintables.xml');
+    $tosub = '';
+    foreach (plugin_types() as $plugin) {
+        // any that want their own stuff can put it in docroot/plugintype/lib/db/plugintables.xml 
+        //- like auth is a bit special
+        $specialcase = get_config('docroot') . $plugin . '/plugintables.xml';
+        if (is_readable($specialcase)) {
+            $tosub .= file_get_contents($specialcase) . "\n";
+        } 
+        else {
+            $replaced = '';
+            // look for tables to put at the start...
+            $pretables = get_config('docroot') . $plugin . '/beforetables.xml';
+            if (is_readable($pretables)) {
+                $replaced = file_get_contents($pretables) . "\n";
+            }
+
+            // perform any additional once off substitutions
+            require_once(get_config('docroot') . $plugin . '/lib.php');
+            if (method_exists(generate_class_name($plugin), 'extra_xmldb_substitution')) {
+                $replaced  .= call_static_method(generate_class_name($plugin), 'extra_xmldb_substitution', $plugintables);
+            }
+            else {
+                $replaced .= $plugintables;
+            }
+            $tosub .= str_replace('__PLUGINTYPE__', $plugin, $replaced) . "\n";
+            // look for any tables to put at the end..
+            $extratables = get_config('docroot') . $plugin . '/extratables.xml';
+            if (is_readable($extratables)) {
+                $tosub .= file_get_contents($extratables) . "\n";
+            }
+        }
+    }
+    $contents = str_replace($searchstring, $tosub, $contents);
+}
+
 
 /**
- * This function upgrades or installs an individual template.
- *
- * @param $name the template name
- * @param $data what you would get from template_parse 
- */
-function upgrade_template($name, $data) {
-    if (!is_readable($data['location'] . 'config.php')) {
-        $e = new TemplateParserException("missing config.php for template $name");
-        if (empty($continue)) {
-            throw $e;
-        }
-        $exceptions[] = $e;
-        continue;
+ * validates a plugin for installation
+ * @throws InstallationException
+*/
+function validate_plugin($plugintype, $pluginname, $pluginpath='') {
+
+    if (empty($pluginpath)) {
+        $pluginpath = get_config('docroot') . $plugintype . '/' . $pluginname;
     }
-    require_once($data['location'] . 'config.php');
-    $fordb = new StdClass;
-    $fordb->name = $name;
-    $fordb->mtime = db_format_timestamp(time());
-    $fordb->title = $template->title;
-    $fordb->description = $template->description;
-    $fordb->category = $template->category;
-    $fordb->mtime = db_format_timestamp(time());
-    $fordb->cacheddata = serialize($data['parseddata']);
-    if (isset($data['thumbnail'])) {
-        $fordb->thumbnail = 1;
+    if (!file_exists($pluginpath . '/version.php')) {
+        throw new InstallationException(get_string('versionphpmissing', 'error', $plugintype, $pluginname));
     }
-    if (isset($template->owner)) {
-        $fordb->owner = $template->owner;
+    require_once('artefact.php');
+    $funname = $plugintype . '_check_plugin_sanity';
+    if (function_exists($funname)) {
+        $funname($pluginname);
     }
-    else {
-        $fordb->owner = 0; // root user
-    }
-    if (record_exists('template', 'name', $name)) {
-        update_record('template', $fordb, 'name');
-    }
-    else {
-        $fordb->ctime = $fordb->mtime;
-        insert_record('template', $fordb);
-    }
+    // @TODO more?
+    // validate the plugin class
 }
 
+/*
+* the order things are installed/upgraded in matters
+*/
+
+function sort_upgrades($k1, $k2) {
+    if ($k1 == 'core') {
+        return -1;
+    }
+    else if ($k2 == 'core') {
+        return 1;
+    }
+    else if ($k1 == 'firstcoredata') {
+        return -1;
+    }
+    else if ($k2 == 'firstcoredata') {
+        return 1;
+    }
+    else if ($k1 == 'lastcoredata') {
+        return 1;
+    }
+    else if ($k2 == 'lastcoredata') {
+        return -1;
+    }
+    // else obey the order plugin types returns (strip off plugintype. from the start)
+    $weight1 = array_search(substr($k1, 0, strpos($k1, '.')), plugin_types());
+    $weight2 = array_search(substr($k2, 0, strpos($k2, '.')), plugin_types());
+    return ($weight1 > $weight2);
+}
+
+/** core blocktype categories the system exports
+* (eg not tied to artefact plugins)
+*/
+function get_core_blocktype_categories() {
+    return array();
+}
+
+function install_blocktype_categories_for_plugin($blocktype) {
+    safe_require('blocktype', $blocktype);
+    $blocktype = blocktype_namespaced_to_single($blocktype);
+    db_begin();
+    delete_records('blocktype_installed_category', 'blocktype', $blocktype);
+    if ($cats = call_static_method(generate_class_name('blocktype', $blocktype), 'get_categories')) {
+        foreach ($cats as $cat) {
+            insert_record('blocktype_installed_category', (object)array(
+                'blocktype' => $blocktype,
+                'category' => $cat
+            ));
+        }
+    }
+    db_commit();
+}
+
+function install_blocktype_categories() {
+    db_begin();
+
+    if ($artefacts = plugins_installed('artefact')) {
+        $artefacts = array_map(create_function('$a', 'return $a->name;'), $artefacts);
+    }
+    else {
+        $artefacts = array();
+    }
+    $categories = array_merge(get_core_blocktype_categories(), $artefacts);
+    $installedcategories = get_column('blocktype_category', 'name');
+
+    if ($toinstall = array_diff($categories, $installedcategories)) {
+        foreach ($toinstall as $i) {
+            insert_record('blocktype_category', (object)array('name' => $i));
+        }
+    }
+
+    db_commit();
+
+
+    // poll all the installed blocktype plugins and ask them what categories they export
+    if ($blocktypes = plugins_installed('blocktype')) {
+        foreach ($blocktypes as $bt) {
+            install_blocktype_categories_for_plugin(blocktype_single_to_namespaced($bt->name, $bt->artefactplugin));
+        }
+    }
+}
 
 ?>
