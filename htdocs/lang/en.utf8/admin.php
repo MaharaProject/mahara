@@ -135,6 +135,8 @@ $string['promiscuousmodedisabled'] = 'Auto-register has been disabled. ';
 $string['promiscuousmodeenabled'] = 'Auto-register has been enabled. ';
 $string['promiscuousmodedescription'] = 'Create an institution record for any host that connects to you, and allow its users to log on to Mahara';
 $string['wwwroot'] = 'WWW Root';
+$string['whatisnetworking'] = 'What is Networking?';
+$string['whatnetworkingis'] = 'Mahara\'s networking features allow it to communicate with Mahara or Moodle sites running on the same or another machine. If networking is enabled, you can use it to configure single-sign-on for users who log in at either Moodle or Mahara.';
 
 // Admin menu editor
 //$string['menueditor']    = 'Menu editor';
