@@ -26,6 +26,7 @@
 
 defined('INTERNAL') || die();
 require_once('view.php');
+safe_require('blocktype', 'textbox'); // need this for labels, always
 
 function upgrade_template_migration() {
 
@@ -47,7 +48,7 @@ function upgrade_template_migration() {
     );
 
     foreach ($views as $view) {
-        if (!$viewcolumns = update_template_get_structure($view->template)) {
+        if (!$viewcolumns = upgrade_template_get_structure($view->template)) {
             log_warn("Unsupported custom template $view->template! Skipping!");
             // @TODO do something else
             continue;
@@ -59,8 +60,7 @@ function upgrade_template_migration() {
         $lblocks = get_records_array('view_content', 'view', $view->id);
 
         foreach ($lblocks as $block) {
-            // @TODO make a block instance (wysiwyg)
-            upgrade_template_insert_block($viewcolumns, $block->block, $block->content);
+            upgrade_template_insert_block($viewcolumns, $block->block, upgrade_template_create_wysiwyg($block->content, $view->id));
         }
 
         foreach ($ablocks as $block) {
@@ -91,48 +91,56 @@ function upgrade_template_migration() {
                     continue;
                 }
 
-                // @TODO prepend $text . "\n" to the label contents (wysiwyg configdata?) 
-                // - at the moment we're prepending it to something that's actually a block instance 
-                // (or will be - see up a few lines foreach ($lblocks as $block section))
+                $colkey = $fromc;
+                $labelkey = 'tpl_label' . $i;
+                $append = $text . '<br>' . upgrade_template_get_wysiwyg_content($viewcolumns, $fromc, 'tpl_label' . $i);
+                $replace = null;
                 if ($i == 2 || $i == 4) {
-                    $viewcolumns[0]['tpl_label' . ($i-1)].= $text . "\n" . $viewcolumns[$fromc]['tpl_label' . $i];
+                    $colkey = 0;
+                    $label = 'tpl_label' . $i-1;
                 }
-                else if ($i == 5) {
-                    $viewcolumns[0]['tpl_label6'].= $text . "\n" . $viewcolumns[$fromc]['tpl_label' . $i];
+                else if ($i == 5) { 
+                    $colkey = 0;
+                    $label = 'tpl_label6';
                 }
                 else {
-                    $viewcolumns[$fromc]['tpl_label' . $i] = $text . "\n" . $viewcolumns[$fromc]['tpl_label'] . $i;
+                    upgrade_template_update_wysiwyg($viewcolumns, $fromc, 'tpl_label' . $i, null, $text . '<br>' . upgrade_template_get_wysiwyg_content($viewcolumns, $fromc, 'tpl_label' . $i));
                 }
+                upgrade_template_update_wysiwyg($viewcolumns, $colkey, $labelkey, $append, $replace);
             }
         }
         else if ($view->template == 'PPAE') {
             if (!empty($viewcolumns[0]['tpl_label1'])) {
-                $viewcolumns[0]['tpl_label1'] = $ppaetext[0] . $viewcolumns[0]['tpl_label1'];
+                upgrade_template_update_wysiwyg($viewcolumns, 0, 'tpl_label1', $ppaetext[0] . '<br>' . update_template_get_wysiwyg_content($viewcolumns, 0, 'tpl_label1'));
             }
             if (!empty($viewcolumns[0]['tpl_label2']) || !empty($viewcolumns[0]['tpl_label3']) || !empty($viewcolumns[0]['tpl_label4']) || !empty($viewcolumns[0]['tpl_label5'])) {
-                // mash it all into the first one and unset the rest // @TODO maybe "\n" should be <br> here, we'll know when we actually start running this and fix all the TODOs.
-                $viewcolumns[0]['tpl_label2'] = $ppaetext[1] . "\n" . $viewcolumns[0]['tpl_label3'] . "\n" . $viewcolumns[0]['tpl_label4'] . "\n" . $viewcolumns[0]['tpl_label5'];
+                // mash it all into the first one and unset the rest 
+                upgrade_template_update_wysiwyg($viewcolumns, 0, 'tpl_label2', 
+                    $ppaetext[1] . '<br>'
+                    . upgrade_template_get_wysiwyg_content($viewcolumns, 0, 'tpl_label3') . '<br>' 
+                    . upgrade_template_get_wysiwyg_content($viewcolumns, 0, 'tpl_label4') . '<br>'
+                    . upgrade_template_get_wysiwyg_content($viewcolumns, 0, 'tpl_label5'));
                 unset($viewcolumns[0]['tpl_label3']);
                 unset($viewcolumns[0]['tpl_label4']);
                 unset($viewcolumns[0]['tpl_label5']);
             }
             if (!empty($viewcolumns[0]['tpl_blog1'])) {
-                $viewcolumns[0]['tpl_converted1'] = $ppaetext[2]; // @TODO wysiwyg block instance
+                $viewcolumns[0]['tpl_converted1'] = upgrade_template_create_wysiwyg($ppaetext[2], $view->id);
             }
             if (!empty($viewcolumns[0]['tpl_files1']) || !empty($viewcolumns[0]['tpl_blog2'])) {
-                $viewcolumns[0]['tpl_converted2'] = $ppaetext[3]; // @TODO wysiwyg block instance
+                $viewcolumns[0]['tpl_converted2'] = upgrade_template_create_wysiwyg($ppaetext[3], $view->id);
             }
             if (!empty($viewcolumns[0]['tpl_files2']) || !empty($viewcolumns[0]['tpl_blog3'])) {
-                $viewcolumns[0]['tpl_converted3'] = $ppaetext[4]; // @TODO wysiwyg block instance
+                $viewcolumns[0]['tpl_converted3'] = upgrade_template_create_wysiwyg($ppaetext[4], $view->id);
             }
             if (!empty($viewcolumns[0]['tpl_files3']) || !empty($viewcolumns[0]['tpl_blog4'])) {
-                $viewcolumns[0]['tpl_converted4'] = $ppaetext[5]; // @TODO wysiwyg block instance
+                $viewcolumns[0]['tpl_converted4'] = upgrade_template_create_wysiwyg($ppaetext[5], $view->id);
             }
             if (!empty($viewcolumns[0]['tpl_files4']) || !empty($viewcolumns[0]['tpl_blog5'])) {
-                $viewcolumns[0]['tpl_converted5'] = $ppaetext[6]; // @TODO wysiwyg block instance
+                $viewcolumns[0]['tpl_converted5'] = upgrade_template_create_wysiwyg($ppaetext[6], $view->id);
             }
             if (!empty($viewcolumns[0]['tpl_files5']) || !empty($viewcolumns[0]['tpl_blog6'])) {
-                $viewcolumns[0]['tpl_converted6'] = $ppaetext[7]; // @TODO wysiwyg block instance
+                $viewcolumns[0]['tpl_converted6'] = upgrade_template_create_wysiwyg($ppaetext[7], $view->id);
             }
         }
         
@@ -166,6 +174,14 @@ function upgrade_template_migration() {
     }
 }
 
+/**
+* helper function for setting content in the appropriate place
+* in the deeply nested array
+*
+* @param array (reference) $columns column structure
+* @param string            $key     key to insert data at
+* @param mixed             $data    data to insert
+*/
 function upgrade_template_insert_block(&$columns, $key, $data) {
     foreach ($columns as &$c) {
         if (array_key_exists($key, $c)) {
@@ -180,7 +196,37 @@ function upgrade_template_insert_block(&$columns, $key, $data) {
     }
 }
 
-function update_template_get_structure($template) {
+function upgrade_template_create_wysiwyg($content, $view) {
+    $b = new BlockInstance(0, array(
+        'blocktype'  => 'image',
+        'configdata' => serialize(array('text' => $content)),
+        'view'       => $view->get('id'),
+    ));
+
+    return $b;
+}
+
+function upgrade_template_update_wysiwyg(&$columns, $column, $key, $appendcontent=null, $replacecontent=null) {
+
+    $block &= $columns[$column][$key];
+    $data = $block->get('configdata');
+    if (!empty($appendcontent)) {
+        $data['text'] .= $appendcontent;
+    }
+    else {
+        $data['text'] = $replacecontent;
+    }
+    $block->set('configdata', $data);
+
+}
+
+function upgrade_template_get_wysiwyg_content($columns, $column, $key) {
+    $block = $columns[$column][$key];
+    $data = $block->get('configdata');
+    return $data['text'];
+}  
+
+function upgrade_template_get_structure($template) {
 
     static $columnstructure;
     if (empty($columnstructure)) {
@@ -335,4 +381,5 @@ class TemplateBlockExistsAlreadyException extends MaharaException {
         return $this->blockdata;
     }
 }
+
 ?>
