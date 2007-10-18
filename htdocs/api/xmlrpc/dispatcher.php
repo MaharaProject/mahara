@@ -43,7 +43,7 @@ class Dispatcher {
                                      'system.keyswap'           => 'keyswap', 
                                      'system/keyswap'           => 'keyswap');
 
-    private $user_methods = array(
+    private $services = array(
         'sso_in' => array(),
         'sso_out' =>array(
             'auth/mnet/auth.php/user_authorise' => 'user_authorise',
@@ -94,7 +94,7 @@ class Dispatcher {
                 throw new XmlrpcServerException('The function does not exist', 6011);
             }
 
-            foreach ($this->user_methods as $container) {
+            foreach ($this->services as $container) {
                 if (array_key_exists($this->method, $container)) {
                     $xmlrpcserver = xmlrpc_server_create();
                     $bool = xmlrpc_server_register_method($xmlrpcserver, $this->method, 'api_dummy_method');
@@ -138,6 +138,10 @@ class Dispatcher {
         }
         $openssl = OpenSslRepo::singleton();
         return $openssl->certificate;
+    }
+
+    function listMethods($service) {
+        
     }
 }
 
