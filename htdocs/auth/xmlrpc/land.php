@@ -53,15 +53,20 @@ if (empty($instances)) {
 
 $rpcconfigured = false;
 
+$res = false;
 foreach($instances as $instance) {
     if ($instance->authname == 'xmlrpc') {
         $rpcconfigured = true;
         try {
             $auth = new AuthXmlrpc($instance->id);
             $res = $auth->request_user_authorise($token, $remotewwwroot);
-        } catch (Exception $e) {
+        } catch (AccessDeniedException $e) {
             continue;
-            // we don't care
+            // we don't care - a future plugin might accept the user
+        }
+        catch (Exception $e) {
+            log_info($e);
+            continue;
         }
         if ($res == true) {
             break;

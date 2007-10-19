@@ -666,6 +666,7 @@ function change_password_submit(Pieform $form, $values) {
         redirect();
     }
 
+    // TODO: Exception is the wrong type here!
     throw new Exception('Attempt by "' . $USER->get('username') . '@'
         . $USER->get('institution') . 'to change their password failed');
 }
