@@ -150,7 +150,7 @@ function setupCalendar(item, type) {
         "button"    : type + 'date_' + count + '_btn',
         //"dateStatusFunc" : dateStatusFunc,
         //"onSelect"       : selectedFunc
-        "showTimes" : true
+        "showsTime" : true
     });
 }
 
@@ -165,7 +165,7 @@ forEach(potentialPresets, function(preset) {
 // Left hand side
 var searchTable = new TableRenderer(
     'results',
-    'create4.json.php',
+    'access.json.php',
     [
         undefined, undefined, undefined
     ]

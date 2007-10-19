@@ -33,8 +33,9 @@ $string['wwwroot'] = 'WWW root';
 $string['port'] = 'Port number'; 
 $string['protocol'] = 'Protocol';
 $string['changepasswordurl'] = 'Password-change URL';
-$string['configureanother']  = 'Please configure another plugin before deleting this one.';
 $string['cannotremove']  = "We can't remove this auth plugin, as it's the only \\nplugin that exists for this institution.";
+$string['cannotremoveinuse']  = "We can't remove this auth plugin, as it's being used by some users.\nYou must update their records before you can remove this plugin.";
+$string['saveinstitutiondetailsfirst'] = 'Please save the institution details before configuring authentication plugins.';
 
 $string['editauthority'] = 'Edit an Authority';
 $string['addauthority']  = 'Add an Authority';
@@ -54,4 +55,9 @@ $string['wessoout'] = 'We SSO out';
 $string['theyssoin'] = 'They SSO in';
 $string['application'] = 'Application';
 $string['cantretrievekey'] = 'An error occurred while retrieving the public key from the remote server.<br>Please ensure that the Application and WWW Root fields are correct, and that networking is enabled on the remote host.';
+
+$string['errnoauthinstances']   = 'We don\'t seem to have any authentication plugin instances configured for the host at ';
+$string['errnoxmlrcpinstances'] = 'We don\'t seem to have any XMLRPC authentication plugin instances configured for the host at ';
+$string['errnoxmlrcpwwwroot']   = 'We don\'t have a record for any host at ';
+$string['errnoxmlrcpuser']      = 'We were unable to authenticate you. Please ask your Mahara administrator to check Mahara\'s authentication plugin settings, and to check that either a user record exists for you on this Mahara, or that Mahara is configured to create new records for users from your Moodle.';
 ?>

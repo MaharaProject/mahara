@@ -37,6 +37,10 @@ class PluginArtefactBlog extends PluginArtefact {
             'blogpost',
         );
     }
+    
+    public static function get_block_types() {
+        return array();
+    }
 
     public static function get_plugin_name() {
         return 'blog';
@@ -51,10 +55,6 @@ class PluginArtefactBlog extends PluginArtefact {
                 'weight' => 30,
             ),
         );
-    }
-
-    public static function get_toplevel_artefact_types() {
-        return array('blog');
     }
 
     public static function get_cron() {
@@ -137,7 +137,6 @@ class ArtefactTypeBlog extends ArtefactType {
      * @param object
      */
     public function __construct($id = 0, $data = null) {
-        global $USER;
         parent::__construct($id, $data);
 
         if (!$data) {
@@ -158,9 +157,6 @@ class ArtefactTypeBlog extends ArtefactType {
 
         if (empty($this->id)) {
             $this->container = 1;
-        }
-        else if ($this->owner != $USER->get('id')) {
-            throw new AccessDeniedException(get_string('youarenottheownerofthisblogpost', 'artefact.blog'));
         }
     }
 
@@ -221,30 +217,16 @@ class ArtefactTypeBlog extends ArtefactType {
     }
 
     /**
-     * This function overrides the default functionality for listing children,
-     * using a smarty template and tablerenderer stuff.
-     *
-     * @param array
-     * @return string
+     * Checks that the person viewing this blog is the owner. If not, throws an 
+     * AccessDeniedException. Used in the blog section to ensure only the 
+     * owners of the blogs can view or change them there. Other people see 
+     * blogs when they are placed in views.
      */
-    protected function listchildren($options) {
-        // This is because if there are multiple blocks on a page, they need separate
-        // js variables.
-        $blockid = isset($options['blockid'])
-            ? $options['blockid']
-            : mt_rand();
-
-        $this->add_to_render_path($options);
-
-        // This uses the above blockid, so needs to be inlcuded after.
-        $javascript = require(get_config('docroot') . 'artefact/blog/render/blog_listchildren.js.php');
-
-        $smarty = smarty();
-        $smarty->assign('artefact', $this);
-        $smarty->assign('blockid', $blockid);
-        $smarty->assign_by_ref('options', $options);
-        return array('html' => $smarty->fetch('artefact:blog:render/blog_listchildren.tpl'),
-                     'javascript' => $javascript);
+    public function check_permission() {
+        global $USER;
+        if ($USER->get('id') != $this->owner) {
+            throw new AccessDeniedException(get_string('youarenottheownerofthisblog', 'artefact.blog'));
+        }
     }
 
 
@@ -252,77 +234,8 @@ class ArtefactTypeBlog extends ArtefactType {
         return $this->count_children() . ' ' . get_string('posts', 'artefact.blog');
     }
 
-
-    /**
-     * This function implements the render_full functionality for blogs.
-     * Rendering full involves rendering blog posts with render_full, and
-     * possibly some other stuff.
-     *
-     * @param array
-     * @return string
-     */
-    function render_full($options) {
-        // This is because if there are multiple blocks on a page, they need separate
-        // js variables.
-        $blockid = isset($options['blockid'])
-            ? $options['blockid']
-            : mt_rand();
-
-        $this->add_to_render_path($options);
-
-        // This uses the above blockid, so needs to be inlcuded after.
-        $javascript = require(get_config('docroot') . 'artefact/blog/render/blog_renderfull.js.php');
-        
-        $smarty = smarty();
-        if (isset($options['viewid'])) {
-            $smarty->assign('artefacttitle', '<a href="' . get_config('wwwroot') . 'view/view.php?view=' 
-                                             . $options['viewid'] . '&artefact=' . $this->get('id')
-                                             . '">' . $this->get('title') . '</a>');
-        }
-        else {
-            $smarty->assign('artefacttitle', $this->get('title'));
-        }
-        $smarty->assign('blockid', $blockid);
-        $smarty->assign_by_ref('options', $options);
-        return array('html' => $smarty->fetch('artefact:blog:render/blog_renderfull.tpl'),
-                     'javascript' => $javascript);
-    }
-
-    protected function get_metadata($options=array()) {
-        $data = parent::get_metadata($options);
-        $data['description'] = array('name' => get_string('description'),
-                                     'value' => $this->get('description'));
-        $data['type']['value'] = get_string($this->get('artefacttype'), 'artefact.blog');
-        $data['size'] = array('name' => get_string('size'),
-                              'value' => $this->count_children() . ' ' 
-                                         . get_string('posts', 'artefact.blog'));
-
-        if (isset($options['viewid']) && artefact_in_view($id = $this->get('id'), $options['viewid'])) {
-            $data['title']['value'] = '<a href="' . get_config('wwwroot') . 'view/view.php?view=' . $options['viewid'] . '&artefact=' . $id . '">' . $data['title']['value'] . '</a>';
-        }
-
-        return $data;
-    }
-
-    protected function render_metadata($options) {
-        $smarty = smarty();
-        $smarty->assign('PROPERTIES', $this->get_metadata($options));
-        return array('html' => $smarty->fetch('artefact:blog:render/blog_rendermetadata.tpl'),
-                     'javascript' => null);
-    }
-
                 
     public function get_icon() {
-    }
-
-    public static function get_render_list() {
-        return array_values(array_unique(array_merge(
-            array(
-                FORMAT_ARTEFACT_LISTCHILDREN,
-                FORMAT_ARTEFACT_RENDERFULL
-            ),
-            parent::get_render_list()
-        )));
     }
 
     public static function is_singular() {
@@ -437,7 +350,6 @@ class ArtefactTypeBlogPost extends ArtefactType {
      * @param object
      */
     public function __construct($id = 0, $data = null) {
-        global $USER;
         parent::__construct($id, $data);
 
         if (!$data) {
@@ -454,10 +366,6 @@ class ArtefactTypeBlogPost extends ArtefactType {
                     throw new ArtefactNotFoundException(get_string('blogpostdoesnotexist', 'artefact.blog'));
                 }
             }
-        }
-
-        if ($this->id && $this->owner != $USER->get('id')) {
-            throw new AccessDeniedException(get_string('youarenottheownerofthisblogpost', 'artefact.blog'));
         }
     }
 
@@ -505,50 +413,22 @@ class ArtefactTypeBlogPost extends ArtefactType {
       
         parent::delete();
     }
+
+    /**
+     * Checks that the person viewing this blog is the owner. If not, throws an 
+     * AccessDeniedException. Used in the blog section to ensure only the 
+     * owners of the blogs can view or change them there. Other people see 
+     * blogs when they are placed in views.
+     */
+    public function check_permission() {
+        global $USER;
+        if ($USER->get('id') != $this->owner) {
+            throw new AccessDeniedException(get_string('youarenottheownerofthisblogpost', 'artefact.blog'));
+        }
+    }
   
     public function describe_size() {
         return $this->count_attachments() . ' ' . get_string('attachments', 'artefact.blog');
-    }
-
-    /**
-     * This function displays the blogpost in renderfull mode.
-     *
-     * @param array
-     */
-    protected function render_full($options) {
-        $smarty = smarty();
-        if (isset($options['viewid'])) {
-            $smarty->assign('artefacttitle', '<a href="' . get_config('wwwroot') . 'view/view.php?view=' 
-                                             . $options['viewid'] . '&artefact=' . $this->get('id')
-                                             . '">' . $this->get('title') . '</a>');
-        }
-        else {
-            $smarty->assign('artefacttitle', $this->get('title'));
-        }
-
-        // We need to make sure that the images in the post have the right viewid associated with them
-        $postcontent = $this->get('description');
-        if (isset($options['viewid'])) {
-            $postcontent = preg_replace('#(<img src=".*artefact/file/download\.php\?file=\d+)#', '\1&amp;view=' . $options['viewid'], $postcontent);
-        }
-        $smarty->assign('artefactdescription', $postcontent);
-        $smarty->assign('artefact', $this);
-        $attachments = $this->get_attached_files();
-        if ($attachments) {
-            $this->add_to_render_path($options);
-            require_once('artefact.php');
-            foreach ($attachments as &$attachment) {
-                $f = artefact_instance_from_id($attachment->id);
-                $rf = $f->render(FORMAT_ARTEFACT_LISTSELF, $options);
-                $attachment->content = $rf['html'];
-            }
-            $smarty->assign('attachments', $attachments);
-        }
-        $smarty->assign('postedbyon', get_string('postedbyon', 'artefact.blog',
-                                                 display_name($this->owner),
-                                                 format_date($this->ctime)));
-        return array('html' => $smarty->fetch('artefact:blog:render/blogpost_renderfull.tpl'),
-                     'javascript' => null);
     }
 
     public function attachment_id_list() {
@@ -596,26 +476,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
     }
 
                 
-    protected function render_metadata($options=array()) {
-        $smarty = smarty();
-        $smarty->assign('PROPERTIES', $this->get_metadata($options));
-        return array('html' => $smarty->fetch('artefact:blog:render/blog_rendermetadata.tpl'),
-                     'javascript' => null);
-    }
-
-
-
     public function get_icon() {
-    }
-
-    public static function get_render_list() {
-        return array_values(array_unique(array_merge(
-            array(
-                FORMAT_ARTEFACT_LISTSELF,
-                FORMAT_ARTEFACT_RENDERFULL
-            ),
-            parent::get_render_list()
-        )));
     }
 
     public static function is_singular() {
@@ -674,45 +535,6 @@ class ArtefactTypeBlogPost extends ArtefactType {
     }
 
     /** 
-     * This function returns a list of rendered blog posts.
-     *
-     * @param integer
-     * @param integer
-     * @param integer
-     * @param integer
-     */
-    public static function render_posts($format, $options, $id, $limit = self::pagination, $offset = 0) {
-        ($postids = get_records_sql_array("
-         SELECT a.id
-         FROM {artefact} a
-          LEFT OUTER JOIN {artefact_blog_blogpost} bp
-           ON a.id = bp.blogpost
-         WHERE a.parent = ?
-          AND bp.published = 1
-         ORDER BY a.ctime DESC
-         LIMIT ? OFFSET ?;", array($id, $limit, $offset)))
-            || ($postids = array());
-
-        $posts = array();
-        foreach($postids as $postid) {
-            $blogpost = new ArtefactTypeBlogPost($postid->id);
-            $posts[] = array(
-                'id' => $postid->id,
-                'content' => $blogpost->render($format, (array) $options)
-            );
-        }
-
-        $count = (int)get_field_sql("
-         SELECT COUNT(*)
-         FROM {artefact} a
-          LEFT OUTER JOIN {artefact_blog_blogpost} bp
-           ON a.id = bp.blogpost
-         WHERE a.parent = ?
-          AND bp.published = 1", array($id));
-
-        return array($count, $posts);
-    }
-
     /**
      * This function creates a new blog post.
      *

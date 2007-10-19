@@ -27,6 +27,32 @@
 defined('INTERNAL') || die();
 
 
+function &smarty_core() {
+
+    require_once(get_config('libroot') . 'smarty/Smarty.class.php');
+    $smarty =& new Smarty();
+    
+    $theme = theme_setup();
+    $themepaths = themepaths();
+
+    $smarty->template_dir = $theme->template_dir;
+
+    $smarty->compile_dir  = get_config('dataroot').'smarty/compile';
+    $smarty->cache_dir    = get_config('dataroot').'smarty/cache';
+
+    $smarty->assign('THEMEURL', get_config('themeurl'));
+    $smarty->assign('WWWROOT', get_config('wwwroot'));
+
+    $theme_list = array();
+    foreach ($themepaths['mahara'] as $themepath) {
+        $theme_list[$themepath] = theme_get_url($themepath);
+    }
+    $smarty->assign('THEMELIST', json_encode($theme_list));
+
+    return $smarty;
+}
+
+
 /**
  * This function creates a Smarty object and sets it up for use within our
  * podclass app, setting up some variables.
@@ -54,9 +80,21 @@ defined('INTERNAL') || die();
 //smarty(array('js/tablerenderer.js', 'artefact/file/js/filebrowser.js'))
 function &smarty($javascript = array(), $headers = array(), $pagestrings = array(), $extraconfig = array()) {
     global $USER, $SESSION;
+
+    if (!is_array($headers)) {
+        $headers = array();
+    }
+    if (!is_array($pagestrings)) {
+        $pagestrings = array();
+    }
+    if (!is_array($extraconfig)) {
+        $extraconfig = array();
+    }
+
     $SIDEBLOCKS = array();
 
-    require_once(get_config('libroot') . 'smarty/Smarty.class.php');
+    $smarty = smarty_core();
+
     $wwwroot = get_config('wwwroot');
 
     $theme_list = array();
@@ -71,22 +109,22 @@ function &smarty($javascript = array(), $headers = array(), $pagestrings = array
 
     // TinyMCE must be included first for some reason we're not sure about
     $checkarray = array(&$javascript, &$headers);
+    $found_tinymce = false;
     foreach ($checkarray as &$check) {
-        if (($key = array_search('tinymce', $check)) !== false) {
-            $javascript_array[] = $jsroot . 'tinymce/tiny_mce.js';
-            if (isset($extraconfig['tinymceinit'])) {
-                $headers[] = $extraconfig['tinymceinit'];
-            }
-            else {
-                $content_css = json_encode(theme_get_url('style/tinymce.css'));
-                $language = substr(current_language(), 0, 2);
-                $headers[] = <<<EOF
-<script type="text/javascript">
-tinyMCE.init({
-    mode: "textareas",
+        if (($key = array_search('tinymce', $check)) !== false || ($key = array_search('tinytinymce', $check)) !== false) {
+            if (!$found_tinymce) {
+                $found_tinymce = $check[$key];
+                $javascript_array[] = $jsroot . 'tinymce/tiny_mce.js';
+                if (isset($extraconfig['tinymceinit'])) {
+                    $headers[] = $extraconfig['tinymceinit'];
+                }
+                else {
+                    $content_css = json_encode(theme_get_url('style/tinymce.css'));
+                    $language = substr(current_language(), 0, 2);
+
+                    if ($check[$key] == 'tinymce') {
+                        $tinymce_config = <<<EOF
     editor_selector: 'wysiwyg',
-    button_tile_map: true,
-    language: '{$language}',
     theme: "advanced",
     plugins: "table,emotions,iespell,inlinepopups,paste",
     theme_advanced_buttons1 : "bold,italic,underline,strikethrough,separator,forecolor,backcolor,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,hr,emotions,iespell,cleanup,separator,link,unlink,separator,code",
@@ -95,19 +133,60 @@ tinyMCE.init({
     theme_advanced_toolbar_location : "top",
     theme_advanced_toolbar_align : "center",
     width: '512',
+EOF;
+                    }
+                    else {
+                        $tinymce_config = <<<EOF
+    editor_selector: 'tinywysiwyg',
+    theme: "advanced",
+    plugins: "fullscreen",
+    theme_advanced_buttons1 : "bold,italic,underline,separator,justifyleft,justifycenter,justifyright,justifyfull",
+    theme_advanced_buttons2 : "bullist,numlist,separator,link,unlink,separator,code,fullscreen",
+    theme_advanced_buttons3 : "",
+    theme_advanced_toolbar_location : "top",
+    theme_advanced_toolbar_align : "center",
+    fullscreen_new_window: true,
+    fullscreen_settings: {
+        theme: "advanced",
+        plugins: "table,emotions,iespell,inlinepopups,paste",
+        theme_advanced_buttons1 : "bold,italic,underline,strikethrough,separator,forecolor,backcolor,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,hr,emotions,iespell,cleanup,separator,link,unlink,separator,code",
+        theme_advanced_buttons2 : "bullist,numlist,separator,tablecontrols,separator,cut,copy,paste,pasteword",
+        theme_advanced_buttons3 : "fontselect,separator,fontsizeselect,separator,formatselect"
+    },
+EOF;
+                    }
+
+                    $headers[] = <<<EOF
+<script type="text/javascript">
+tinyMCE.init({
+    mode: "textareas",
+    button_tile_map: true,
+    {$tinymce_config}
+    language: '{$language}',
     content_css : {$content_css}
 });
 </script>
 
 EOF;
+                }
+                unset($check[$key]);
             }
-            unset($check[$key]);
-            break;
+            else {
+                if ($check[$key] != $found_tinymce) {
+                    log_warn('Two differently configured tinyMCE instances have been asked for on this page! This is not possible');
+                }
+                unset($check[$key]);
+            }
         }
     }
 
     if (get_config('developermode')) {
         $javascript_array[] = $jsroot . 'MochiKit/MochiKit.js';
+        $javascript_array[] = $jsroot . 'MochiKit/Position.js';
+        $javascript_array[] = $jsroot . 'MochiKit/Color.js';
+        $javascript_array[] = $jsroot . 'MochiKit/Visual.js';
+        $javascript_array[] = $jsroot . 'MochiKit/DragAndDrop.js';
+        $javascript_array[] = $jsroot . 'MochiKit/Format.js';
     }
     else {
         $javascript_array[] = $jsroot . 'MochiKit/Packed.js';
@@ -199,9 +278,6 @@ EOF;
             $strings[$tag] = get_raw_string($tag, $section);
         }
     }
-    foreach ($themepaths['mahara'] as $themepath) {
-        $theme_list[$themepath] = theme_get_url($themepath);
-    }
     if (isset($extraconfig['themepaths']) && is_array($extraconfig['themepaths'])) {
         foreach ($extraconfig['themepaths'] as $themepath) {
             $theme_list[$themepath] = theme_get_url($themepath);
@@ -213,16 +289,6 @@ EOF;
     $stringjs .= '</script>';
     $headers[] = $stringjs;
 
-    $smarty =& new Smarty();
-    
-    $theme = theme_setup();
-
-    $smarty->template_dir = $theme->template_dir;
-
-    $smarty->compile_dir  = get_config('dataroot').'smarty/compile';
-    $smarty->cache_dir    = get_config('dataroot').'smarty/cache';
-
-    $smarty->assign('THEMEURL', get_config('themeurl'));
 
     // stylesheet set up - if we're in a plugin also get its stylesheet
     $stylesheets = array_reverse(theme_get_url('style/style.css', null, true));
@@ -234,10 +300,23 @@ EOF;
     if (get_config('developermode')) {
         $stylesheets[] = get_config('wwwroot') . 'theme/debug.css';
     }
+
+    // look for extra stylesheets
+    if (isset($extraconfig['stylesheets']) && is_array($extraconfig['stylesheets'])) {
+        foreach ($extraconfig['stylesheets'] as $extrasheet) {
+            if ($sheet = theme_get_url($extrasheet)) {
+                $stylesheets[] = $sheet;
+            }
+        }
+    }
+
+    $smarty = smarty_core();
+
     $smarty->assign('STYLESHEETLIST', $stylesheets);
-    $smarty->assign('WWWROOT', $wwwroot);
-    $smarty->assign('SESSKEY', $USER->get('sesskey'));
-    $smarty->assign('THEMELIST', json_encode($theme_list));
+    if (!empty($theme_list)) {
+        // this gets assigned in smarty_core, but do it again here if it's changed locally
+        $smarty->assign('THEMELIST', json_encode(array_merge((array)json_decode($smarty->get_template_vars('THEMELIST')),  $theme_list))); 
+    }
 
     if (defined('TITLE')) {
         $smarty->assign('PAGETITLE', TITLE . ' - ' . get_config('sitename'));
@@ -265,6 +344,7 @@ EOF;
     }
 
     $smarty->assign_by_ref('USER', $USER);
+    $smarty->assign('SESSKEY', $USER->get('sesskey'));
     $smarty->assign_by_ref('JAVASCRIPT', $javascript_array);
     $smarty->assign_by_ref('HEADERS', $headers);
 
@@ -357,11 +437,6 @@ function jsstrings() {
                 'lastpage',
             )
         ),
-        'collapsabletree' => array(
-            'view' => array(
-                'nochildren',
-            ),
-        ),
         'friends' => array(
             'mahara' => array(
                 'confirmremovefriend',
@@ -383,6 +458,21 @@ function jsstrings() {
                 'existingfriend',
                 'nosearchresultsfound',
                 'reason',
+                'requestfriendship',
+                'cancel',
+            ),
+        ),
+        'views' => array(
+            'view' => array(
+                'confirmdeleteblockinstance',
+            ),
+        ),
+        'adminusersearch' => array(
+            'admin' => array(
+                'suspenduser',
+                'suspensionreason',
+            ),
+            'mahara' => array(
                 'cancel',
             ),
         ),
@@ -390,15 +480,20 @@ function jsstrings() {
 }
 
 function themepaths() {
-    return array(
-        'mahara' => array(
-            'images/icon_close.gif',
-            'images/failure.gif',
-            'images/loading.gif',
-            'images/success.gif',
-            'images/icon_help.gif',
-        ),
-    );
+
+    static $paths;
+    if (empty($paths)) {
+        $paths = array(
+            'mahara' => array(
+                'images/icon_close.gif',
+                'images/failure.gif',
+                'images/loading.gif',
+                'images/success.gif',
+                'images/icon_help.gif',
+            ),
+        );
+    }
+    return $paths;
 }
 
 /** 
@@ -789,251 +884,261 @@ function set_cookie($name, $value='', $expires=0, $path='', $domain='', $secure=
  * @return array Associative array of countrycodes => countrynames
  */
 function getoptions_country() {
-    return array(
-        'af' => 'Afghanistan',
-        'ax' => 'Åland Islands',
-        'al' => 'Albania',
-        'dz' => 'Algeria',
-        'as' => 'American Samoa',
-        'ad' => 'Andorra',
-        'ao' => 'Angola',
-        'ai' => 'Anguilla',
-        'aq' => 'Antarctica',
-        'ag' => 'Antigua and Barbuda',
-        'ar' => 'Argentina',
-        'am' => 'Armenia',
-        'aw' => 'Aruba',
-        'au' => 'Australia',
-        'at' => 'Austria',
-        'az' => 'Azerbaijan',
-        'bs' => 'Bahamas',
-        'bh' => 'Bahrain',
-        'bd' => 'Bangladesh',
-        'bb' => 'Barbados',
-        'by' => 'Belarus',
-        'be' => 'Belgium',
-        'bz' => 'Belize',
-        'bj' => 'Benin',
-        'bm' => 'Bermuda',
-        'bt' => 'Bhutan',
-        'bo' => 'Bolivia',
-        'ba' => 'Bosnia and Herzegovina',
-        'bw' => 'Botswana',
-        'bv' => 'Bouvet Island',
-        'br' => 'Brazil',
-        'io' => 'British Indian Ocean Territory',
-        'bn' => 'Brunei Darussalam',
-        'bg' => 'Bulgaria',
-        'bf' => 'Burkina Faso',
-        'bi' => 'Burundi',
-        'kh' => 'Cambodia',
-        'cm' => 'Cameroon',
-        'ca' => 'Canada',
-        'cv' => 'Cape Verde',
-        'ky' => 'Cayman Islands',
-        'cf' => 'Central African Republic',
-        'td' => 'Chad',
-        'cl' => 'Chile',
-        'cn' => 'China',
-        'cx' => 'Christmas Island',
-        'cc' => 'Cocos (Keeling) Islands',
-        'co' => 'Colombia',
-        'km' => 'Comoros',
-        'cg' => 'Congo',
-        'cd' => 'Congo, The Democratic Republic of The',
-        'ck' => 'Cook Islands',
-        'cr' => 'Costa Rica',
-        'ci' => 'Cote D\'ivoire',
-        'hr' => 'Croatia',
-        'cu' => 'Cuba',
-        'cy' => 'Cyprus',
-        'cz' => 'Czech Republic',
-        'dk' => 'Denmark',
-        'dj' => 'Djibouti',
-        'dm' => 'Dominica',
-        'do' => 'Dominican Republic',
-        'ec' => 'Ecuador',
-        'eg' => 'Egypt',
-        'sv' => 'El Salvador',
-        'gq' => 'Equatorial Guinea',
-        'er' => 'Eritrea',
-        'ee' => 'Estonia',
-        'et' => 'Ethiopia',
-        'fk' => 'Falkland Islands (Malvinas)',
-        'fo' => 'Faroe Islands',
-        'fj' => 'Fiji',
-        'fi' => 'Finland',
-        'fr' => 'France',
-        'gf' => 'French Guiana',
-        'pf' => 'French Polynesia',
-        'tf' => 'French Southern Territories',
-        'ga' => 'Gabon',
-        'gm' => 'Gambia',
-        'ge' => 'Georgia',
-        'de' => 'Germany',
-        'gh' => 'Ghana',
-        'gi' => 'Gibraltar',
-        'gr' => 'Greece',
-        'gl' => 'Greenland',
-        'gd' => 'Grenada',
-        'gp' => 'Guadeloupe',
-        'gu' => 'Guam',
-        'gt' => 'Guatemala',
-        'gg' => 'Guernsey',
-        'gn' => 'Guinea',
-        'gw' => 'Guinea-bissau',
-        'gy' => 'Guyana',
-        'ht' => 'Haiti',
-        'hm' => 'Heard Island and Mcdonald Islands',
-        'va' => 'Holy See (Vatican City State)',
-        'hn' => 'Honduras',
-        'hk' => 'Hong Kong',
-        'hu' => 'Hungary',
-        'is' => 'Iceland',
-        'in' => 'India',
-        'id' => 'Indonesia',
-        'ir' => 'Iran, Islamic Republic of',
-        'iq' => 'Iraq',
-        'ie' => 'Ireland',
-        'im' => 'Isle of Man',
-        'il' => 'Israel',
-        'it' => 'Italy',
-        'jm' => 'Jamaica',
-        'jp' => 'Japan',
-        'je' => 'Jersey',
-        'jo' => 'Jordan',
-        'kz' => 'Kazakhstan',
-        'ke' => 'Kenya',
-        'ki' => 'Kiribati',
-        'kp' => 'Korea, Democratic People\'s Republic of',
-        'kr' => 'Korea, Republic of',
-        'kw' => 'Kuwait',
-        'kg' => 'Kyrgyzstan',
-        'la' => 'Lao People\'s Democratic Republic',
-        'lv' => 'Latvia',
-        'lb' => 'Lebanon',
-        'ls' => 'Lesotho',
-        'lr' => 'Liberia',
-        'ly' => 'Libyan Arab Jamahiriya',
-        'li' => 'Liechtenstein',
-        'lt' => 'Lithuania',
-        'lu' => 'Luxembourg',
-        'mo' => 'Macao',
-        'mk' => 'Macedonia, The Former Yugoslav Republic of',
-        'mg' => 'Madagascar',
-        'mw' => 'Malawi',
-        'my' => 'Malaysia',
-        'mv' => 'Maldives',
-        'ml' => 'Mali',
-        'mt' => 'Malta',
-        'mh' => 'Marshall Islands',
-        'mq' => 'Martinique',
-        'mr' => 'Mauritania',
-        'mu' => 'Mauritius',
-        'yt' => 'Mayotte',
-        'mx' => 'Mexico',
-        'fm' => 'Micronesia, Federated States of',
-        'md' => 'Moldova, Republic of',
-        'mc' => 'Monaco',
-        'mn' => 'Mongolia',
-        'ms' => 'Montserrat',
-        'ma' => 'Morocco',
-        'mz' => 'Mozambique',
-        'mm' => 'Myanmar',
-        'na' => 'Namibia',
-        'nr' => 'Nauru',
-        'np' => 'Nepal',
-        'nl' => 'Netherlands',
-        'an' => 'Netherlands Antilles',
-        'nc' => 'New Caledonia',
-        'nz' => 'New Zealand',
-        'ni' => 'Nicaragua',
-        'ne' => 'Niger',
-        'ng' => 'Nigeria',
-        'nu' => 'Niue',
-        'nf' => 'Norfolk Island',
-        'mp' => 'Northern Mariana Islands',
-        'no' => 'Norway',
-        'om' => 'Oman',
-        'pk' => 'Pakistan',
-        'pw' => 'Palau',
-        'ps' => 'Palestinian Territory, Occupied',
-        'pa' => 'Panama',
-        'pg' => 'Papua New Guinea',
-        'py' => 'Paraguay',
-        'pe' => 'Peru',
-        'ph' => 'Philippines',
-        'pn' => 'Pitcairn',
-        'pl' => 'Poland',
-        'pt' => 'Portugal',
-        'pr' => 'Puerto Rico',
-        'qa' => 'Qatar',
-        're' => 'Reunion',
-        'ro' => 'Romania',
-        'ru' => 'Russian Federation',
-        'rw' => 'Rwanda',
-        'sh' => 'Saint Helena',
-        'kn' => 'Saint Kitts and Nevis',
-        'lc' => 'Saint Lucia',
-        'pm' => 'Saint Pierre and Miquelon',
-        'vc' => 'Saint Vincent and The Grenadines',
-        'ws' => 'Samoa',
-        'sm' => 'San Marino',
-        'st' => 'Sao Tome and Principe',
-        'sa' => 'Saudi Arabia',
-        'sn' => 'Senegal',
-        'cs' => 'Serbia and Montenegro',
-        'sc' => 'Seychelles',
-        'sl' => 'Sierra Leone',
-        'sg' => 'Singapore',
-        'sk' => 'Slovakia',
-        'si' => 'Slovenia',
-        'sb' => 'Solomon Islands',
-        'so' => 'Somalia',
-        'za' => 'South Africa',
-        'gs' => 'South Georgia and The South Sandwich Islands',
-        'es' => 'Spain',
-        'lk' => 'Sri Lanka',
-        'sd' => 'Sudan',
-        'sr' => 'Suriname',
-        'sj' => 'Svalbard and Jan Mayen',
-        'sz' => 'Swaziland',
-        'se' => 'Sweden',
-        'ch' => 'Switzerland',
-        'sy' => 'Syrian Arab Republic',
-        'tw' => 'Taiwan, Province of China',
-        'tj' => 'Tajikistan',
-        'tz' => 'Tanzania, United Republic of',
-        'th' => 'Thailand',
-        'tl' => 'Timor-leste',
-        'tg' => 'Togo',
-        'tk' => 'Tokelau',
-        'to' => 'Tonga',
-        'tt' => 'Trinidad and Tobago',
-        'tn' => 'Tunisia',
-        'tr' => 'Turkey',
-        'tm' => 'Turkmenistan',
-        'tc' => 'Turks and Caicos Islands',
-        'tv' => 'Tuvalu',
-        'ug' => 'Uganda',
-        'ua' => 'Ukraine',
-        'ae' => 'United Arab Emirates',
-        'gb' => 'United Kingdom',
-        'us' => 'United States',
-        'um' => 'United States Minor Outlying Islands',
-        'uy' => 'Uruguay',
-        'uz' => 'Uzbekistan',
-        'vu' => 'Vanuatu',
-        've' => 'Venezuela',
-        'vn' => 'Viet Nam',
-        'vg' => 'Virgin Islands, British',
-        'vi' => 'Virgin Islands, U.S.',
-        'wf' => 'Wallis and Futuna',
-        'eh' => 'Western Sahara',
-        'ye' => 'Yemen',
-        'zm' => 'Zambia',
-        'zw' => 'Zimbabwe',
+    static $countries;
+    if (!empty($countries)) {
+        return $countries;
+    }
+    $codes = array(
+        'af',
+        'ax',
+        'al',
+        'dz',
+        'as',
+        'ad',
+        'ao',
+        'ai',
+        'aq',
+        'ag',
+        'ar',
+        'am',
+        'aw',
+        'au',
+        'at',
+        'az',
+        'bs',
+        'bh',
+        'bd',
+        'bb',
+        'by',
+        'be',
+        'bz',
+        'bj',
+        'bm',
+        'bt',
+        'bo',
+        'ba',
+        'bw',
+        'bv',
+        'br',
+        'io',
+        'bn',
+        'bg',
+        'bf',
+        'bi',
+        'kh',
+        'cm',
+        'ca',
+        'cv',
+        'ky',
+        'cf',
+        'td',
+        'cl',
+        'cn',
+        'cx',
+        'cc',
+        'co',
+        'km',
+        'cg',
+        'cd',
+        'ck',
+        'cr',
+        'ci',
+        'hr',
+        'cu',
+        'cy',
+        'cz',
+        'dk',
+        'dj',
+        'dm',
+        'do',
+        'ec',
+        'eg',
+        'sv',
+        'gq',
+        'er',
+        'ee',
+        'et',
+        'fk',
+        'fo',
+        'fj',
+        'fi',
+        'fr',
+        'gf',
+        'pf',
+        'tf',
+        'ga',
+        'gm',
+        'ge',
+        'de',
+        'gh',
+        'gi',
+        'gr',
+        'gl',
+        'gd',
+        'gp',
+        'gu',
+        'gt',
+        'gg',
+        'gn',
+        'gw',
+        'gy',
+        'ht',
+        'hm',
+        'va',
+        'hn',
+        'hk',
+        'hu',
+        'is',
+        'in',
+        'id',
+        'ir',
+        'iq',
+        'ie',
+        'im',
+        'il',
+        'it',
+        'jm',
+        'jp',
+        'je',
+        'jo',
+        'kz',
+        'ke',
+        'ki',
+        'kp',
+        'kr',
+        'kw',
+        'kg',
+        'la',
+        'lv',
+        'lb',
+        'ls',
+        'lr',
+        'ly',
+        'li',
+        'lt',
+        'lu',
+        'mo',
+        'mk',
+        'mg',
+        'mw',
+        'my',
+        'mv',
+        'ml',
+        'mt',
+        'mh',
+        'mq',
+        'mr',
+        'mu',
+        'yt',
+        'mx',
+        'fm',
+        'md',
+        'mc',
+        'mn',
+        'ms',
+        'ma',
+        'mz',
+        'mm',
+        'na',
+        'nr',
+        'np',
+        'nl',
+        'an',
+        'nc',
+        'nz',
+        'ni',
+        'ne',
+        'ng',
+        'nu',
+        'nf',
+        'mp',
+        'no',
+        'om',
+        'pk',
+        'pw',
+        'ps',
+        'pa',
+        'pg',
+        'py',
+        'pe',
+        'ph',
+        'pn',
+        'pl',
+        'pt',
+        'pr',
+        'qa',
+        're',
+        'ro',
+        'ru',
+        'rw',
+        'sh',
+        'kn',
+        'lc',
+        'pm',
+        'vc',
+        'ws',
+        'sm',
+        'st',
+        'sa',
+        'sn',
+        'cs',
+        'sc',
+        'sl',
+        'sg',
+        'sk',
+        'si',
+        'sb',
+        'so',
+        'za',
+        'gs',
+        'es',
+        'lk',
+        'sd',
+        'sr',
+        'sj',
+        'sz',
+        'se',
+        'ch',
+        'sy',
+        'tw',
+        'tj',
+        'tz',
+        'th',
+        'tl',
+        'tg',
+        'tk',
+        'to',
+        'tt',
+        'tn',
+        'tr',
+        'tm',
+        'tc',
+        'tv',
+        'ug',
+        'ua',
+        'ae',
+        'gb',
+        'us',
+        'um',
+        'uy',
+        'uz',
+        'vu',
+        've',
+        'vn',
+        'vg',
+        'vi',
+        'wf',
+        'eh',
+        'ye',
+        'zm',
+        'zw',
     );
+
+    foreach ($codes as $c) {
+        $countries[$c] = get_string("country.{$c}");
+    };
+    uasort($countries, 'strcoll');
+    return $countries;
 }
 
 /**
@@ -1175,12 +1280,6 @@ function admin_nav() {
             'title'  => get_string('pluginadmin', 'admin'),
             'weight' => 10,
         ),
-        array(
-            'path'   => 'configextensions/templatesadmin',
-            'url'    => 'admin/extensions/templates.php',
-            'title'  => get_string('templatesadmin', 'admin'),
-            'weight' => 20
-        ),
     );
 
     return $menu;
@@ -1257,9 +1356,9 @@ function main_nav() {
                 'weight' => 10,
             ),
             array(
-                'path' => 'settings/recentactivity',
+                'path' => 'settings/notifications',
                 'url' => 'account/activity/',
-                'title' => get_string('recentactivity'),
+                'title' => get_string('notifications'),
                 'weight' => 20,
             ),
             array(
@@ -1424,7 +1523,7 @@ function searchform() {
         'elements'            => array(
             'query' => array(
                 'type'           => 'text',
-                'defaultvalue'   => 'Search',
+                'defaultvalue'   => get_string('search'),
                 'class'          => 'emptyonfocus'
             ),
             'submit' => array(
@@ -1721,6 +1820,7 @@ function clean_attributes_2($htmlArray) {
     }
     return '<'. $slash . $elem . $attStr . $xhtml_slash .'>';
 }
+
 
 
 ?>

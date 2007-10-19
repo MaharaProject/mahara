@@ -110,6 +110,9 @@ foreach (array_keys($publicfields) as $field) {
         }
     }
 }
+if (isset($userfields['country'])) {
+    $userfields['country'] = get_string('country.' . $userfields['country']);
+}
 
 // Get viewable views
 $views = array();
@@ -408,6 +411,16 @@ function messageform_submit(Pieform $form, $values) {
     }
 }    
     
+function friend_validate(Pieform $form, $values) {
+    global $USER;
+    if ($USER->get('id') == $values['id']) {
+        $form->set_error('submit', get_string('cannotrequestfriendshipwithself'));
+    }
+    if (get_account_preference($values['id'], 'friendscontrol') == 'nobody') {
+        $form->set_error('submit', get_string('userdoesntwantfriends'));
+    }
+}
+
 
 // friend submit function lives in lib/user.php
 ?>

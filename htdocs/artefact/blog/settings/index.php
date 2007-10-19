@@ -33,6 +33,7 @@ safe_require('artefact', 'blog');
 
 $id = param_integer('id');
 $blog = new ArtefactTypeBlog($id);
+$blog->check_permission();
 
 $form = pieform(array(
     'name' => 'editblog',

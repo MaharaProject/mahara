@@ -59,6 +59,11 @@ $networkingform = pieform(
         'name'     => 'networkingform',
         'jsform'   => true,
         'elements' => array(
+            'whatis' => array(
+                'type'         => 'html',
+                'title'        => get_string('whatisnetworking','admin'),
+                'value'        => get_string('whatnetworkingis','admin')
+            ),
             'wwwroot' => array(
                 'type'         => 'html',
                 'title'        => get_string('wwwroot','admin'),

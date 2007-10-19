@@ -99,7 +99,7 @@ function pieform_renderer_table(Pieform $form, $builtelement, $rawelement) {
 
     // Description - optional description of the element, or other note that should be visible
     // on the form itself (without the user having to hover over contextual help 
-    if (!empty($rawelement['description'])) {
+    if ((!$form->has_errors() || $form->get_property('showdescriptiononerror')) && !empty($rawelement['description'])) {
         $result .= "\t<tr>\n\t\t<td colspan=\"2\" class=\"description\">";
         $result .= $rawelement['description'];
         $result .= "</td>\n\t</tr>\n";

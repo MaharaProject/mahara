@@ -74,7 +74,7 @@ function pieform_renderer_div(Pieform $form, $builtelement, $rawelement) {
 
     // Description - optional description of the element, or other note that should be visible
     // on the form itself (without the user having to hover over contextual help 
-    if (!empty($rawelement['description'])) {
+    if ((!$form->has_errors() || $form->get_property('showdescriptiononerror')) && !empty($rawelement['description'])) {
         $result .= '<div class="description"> ' . Pieform::hsc($rawelement['description']) . "</div>";
     }
 

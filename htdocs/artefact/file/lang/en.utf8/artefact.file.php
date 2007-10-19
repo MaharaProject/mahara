@@ -26,6 +26,8 @@
 
 defined('INTERNAL') || die();
 
+$string['pluginname'] = 'Files';
+
 $string['adminfilesloaded'] = 'Admin files loaded';
 $string['bytes'] = 'bytes';
 $string['changessaved'] = 'Changes saved';
@@ -44,11 +46,13 @@ $string['editfile'] = 'Edit file';
 $string['editfolder'] = 'Edit folder';
 $string['emptyfolder'] = 'Empty folder';
 $string['file'] = 'File';
+$string['filealreadyindestination'] = 'The file you moved is already in that folder';
 $string['files'] = 'files';
 $string['fileexists'] = 'File exists';
 $string['fileexistsonserver'] = 'A file with the name %s already exists.';
 $string['fileexistsoverwritecancel'] =  'A file with that name already exists.  You can try a different name, or overwrite the existing file.';
 $string['filelistloaded'] = 'File list loaded';
+$string['filemoved'] = 'File moved successfully';
 $string['filenamefieldisrequired'] = 'The file field is required';
 $string['filethingdeleted'] = '%s deleted';
 $string['filetypes'] = 'Configure Uploadable File Types';
@@ -60,8 +64,14 @@ $string['image'] = 'Image';
 $string['myfiles'] = 'My Files';
 $string['name'] = 'Name';
 $string['namefieldisrequired'] = 'The name field is required';
+$string['movefaileddestinationinartefact'] = 'You cannot put a folder inside itself.';
+$string['movefaileddestinationnotfolder'] = 'You can only move files into folders.';
+$string['movefailednotfileartefact'] = 'Only file, folder and image artefacts can be moved.';
+$string['movefailednotowner'] = 'You do not have permission to move the file into this folder';
+$string['movefailed'] = 'Move failed.';
 $string['nofilesfound'] = 'No files found';
 $string['overwrite'] = 'Overwrite';
+$string['parentfolder'] = 'Parent folder';
 $string['savechanges'] = 'Save changes';
 $string['size'] = 'Size';
 $string['title'] = 'Name';

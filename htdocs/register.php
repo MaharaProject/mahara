@@ -272,6 +272,7 @@ $elements = array(
     'password1' => array(
         'type' => 'password',
         'title' => get_string('password'),
+        'description' => get_string('passwordformdescription', 'auth.internal'),
         'rules' => array(
             'required' => true
         ),
@@ -361,7 +362,7 @@ $elements['captcha'] = array(
     'title' => get_string('captchatitle'),
     'description' => get_string('captchadescription'),
     'value' => '<img src="' . get_config('wwwroot') . 'captcha.php" alt="' . get_string('captchaimage') . '" style="padding: 2px 0;"><br>'
-        . '<input type="text" class="text required" name="captcha" style="width: 137px;" tabindex="3">',
+        . '<input type="text" class="text required" name="captcha" style="width: 137px;" tabindex="4">',
     'rules' => array('required' => true)
 );
 
@@ -376,6 +377,7 @@ $form = array(
     'plugintype' => 'core',
     'pluginname' => 'register',
     'action' => '',
+    'showdescriptiononerror' => false,
     'renderer' => 'table',
     'elements' => $elements
 );
@@ -399,7 +401,9 @@ function register_validate(Pieform $form, $values) {
         $form->set_error('username', get_string('usernamealreadytaken', 'auth.internal'));
     }
 
-    password_validate($form, $values, $values['username'], $values['institution']);
+    $user =(object) $values;
+    $user->authinstance = 1; // Internal
+    password_validate($form, $values, $user);
 
     // First name and last name must contain at least one non whitespace
     // character, so that there's something to read
@@ -443,6 +447,9 @@ function register_submit(Pieform $form, $values) {
     $values['expiry'] = db_format_timestamp(time() + 86400);
     try {
         insert_record('usr_registration', $values);
+
+        $f = fopen('/tmp/donal.txt','w');
+        fwrite($f, get_string('registeredemailmessagetext', 'auth.internal', $values['firstname'], get_config('sitename'), $values['key'], get_config('sitename')));
 
         $user =(object) $values;
         $user->admin = 0;

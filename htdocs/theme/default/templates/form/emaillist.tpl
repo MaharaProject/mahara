@@ -34,7 +34,7 @@
                     ' ',
                     {{$name}}_newrefinput.value,
                     A({'href': '', 'onclick': '{{$name}}_remove(this); return false'}, '[x]'),
-                    ' a validation email will be sent when you save your profile'
+                    ' ' + {{$validationemailstr}}
                 ));
             }
         }

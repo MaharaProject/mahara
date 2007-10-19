@@ -32,23 +32,55 @@ class Dispatcher {
     private $method    = '';
     private $response  = '';
 
-    private $system_methods  = array('system.listMethods'       => 'listMethods', 
-                                     'system/listMethods'       => 'listMethods', 
-                                     'system.methodSignature'   => 'methodSignature', 
-                                     'system/methodSignature'   => 'methodSignature', 
-                                     'system.methodHelp'        => 'methodHelp', 
-                                     'system/methodHelp'        => 'methodHelp', 
-                                     'system.listServices'      => 'listServices', 
-                                     'system/listServices'      => 'listServices', 
+    private $system_methods  = array('system.listMethods'       => 'list_methods',
+                                     'system/listMethods'       => 'list_methods',
+                                     'system.methodSignature'   => 'method_signature', 
+                                     'system/methodSignature'   => 'method_signature', 
+                                     'system.methodHelp'        => 'method_help', 
+                                     'system/methodHelp'        => 'method_help', 
+                                     'system.listServices'      => 'list_services', 
+                                     'system/listServices'      => 'list_services', 
                                      'system.keyswap'           => 'keyswap', 
                                      'system/keyswap'           => 'keyswap');
 
-    private $user_methods = array(
+    private $services = array(
         'sso_in' => array(),
         'sso_out' =>array(
             'auth/mnet/auth.php/user_authorise' => 'user_authorise',
             'auth/mnet/auth.php/fetch_user_image' => 'fetch_user_image'
             )
+    );
+
+    private $methodhelp = array(
+        'user_authorise'   => 'Given an authentication token and a useragent hash, look for a record we\'ve created that associates those values with a single user. If we find it, return that user\'s details to the remote host',
+        'fetch_user_image' => 'Given a username, return the default profile icon for that user.'
+    );
+
+    private $methodsig = array(
+        'user_authorise'   => array(
+                                array(
+                                    array('type' => 'array', 
+                                          'description' => '$userdata Array of user info for remote host'
+                                          ), 
+                                    array('type' => 'string',
+                                          'description' => 'token - The unique ID provided by remotehost.'
+                                          ),
+                                    array('type' => 'string',
+                                          'description' => 'useragent - User Agent string.'
+                                          )
+                                     )
+                               ),
+
+        'fetch_user_image' => array(
+                                array(
+                                    array('type' => 'string', 
+                                          'description' => 'The encoded image.'
+                                          ), 
+                                    array('type' => 'string',
+                                          'description' => 'username - The id of the user.'
+                                          )
+                                      )
+                               )
     );
 
     function __construct($payload, $payload_signed, $payload_encrypted) {
@@ -94,7 +126,7 @@ class Dispatcher {
                 throw new XmlrpcServerException('The function does not exist', 6011);
             }
 
-            foreach ($this->user_methods as $container) {
+            foreach ($this->services as $container) {
                 if (array_key_exists($this->method, $container)) {
                     $xmlrpcserver = xmlrpc_server_create();
                     $bool = xmlrpc_server_register_method($xmlrpcserver, $this->method, 'api_dummy_method');
@@ -138,6 +170,36 @@ class Dispatcher {
         }
         $openssl = OpenSslRepo::singleton();
         return $openssl->certificate;
+    }
+
+    function list_methods($xmlrpc_method_name, $args = null) {
+        $list = array();
+        if (empty($args)) {
+            foreach ($this->services as $service => $methods) {
+                $list = array_merge($list, $methods);
+            }
+            return $list;
+        } else {
+            return $this->services[$args[0]];
+        }
+    }
+
+    function list_services() {
+        $list = array();
+        foreach ($this->services as $service => $methods) {
+            $list[] = array('name' => $service, 'apiversion' => 1, 'publish' => 1, 'subscribe' => 1);
+        }
+        return $list;
+    }
+
+    function method_signature($xmlrpc_method_name, $methodname) {
+        error_log(var_export(array('A',$xmlrpc_method_name, $methodname[0]),1));
+        return $this->methodsig[$methodname[0]];
+    }
+
+    function method_help($xmlrpc_method_name, $methodname) {
+        error_log(var_export(array('B',$xmlrpc_method_name, $methodname[0]),1));
+        return $this->methodhelp[$methodname[0]];
     }
 }
 

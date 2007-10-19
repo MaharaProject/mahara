@@ -1,0 +1,49 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Remove_Menuitem</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Remove_Menuitem</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/admin/site/menu.php</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Site menu</td>
+	<td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>menuselect</td>
+	<td>label=Logged in menu</td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Test Menu Link</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//tr[contains(td[2], "Test Menu Link")]/td/input[@value="Delete"]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertConfirmation</td>
+	<td>Do you really want to delete this item?</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Menu item deleted</td>
+	<td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

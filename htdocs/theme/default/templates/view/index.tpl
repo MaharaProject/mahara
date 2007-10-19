@@ -5,8 +5,10 @@
                         <h2>{str tag='myviews'}</h2>
     			<div id="views">
         			<div style="text-align:right;">
-            		<input type="button" class="button" value="{str tag="createnewview"}" onclick="window.location='create1.php';" id="createnew">
-                                {contextualhelp plugintype='core' pluginname='views' section='createviewbutton'}
+                    <form action="{$WWWROOT}view/edit.php" method="GET">
+                        <input class="button" type="submit" value="{str tag="createnewview"}" id="createnew">
+                        {contextualhelp plugintype='core' pluginname='views' section='createviewbutton'}
+                    </form>
         			</div>
 					<table id="viewlist">
 						<tbody>

@@ -194,8 +194,13 @@ function sendjsonrequest(script, data, rtype, successcallback, errorcallback, qu
             processingStop();
         }
     },
-    function () {
-        displayMessage(get_string('unknownerror'), 'error');
+    function (e) {
+        if (e instanceof MochiKit.Async.XMLHttpRequestError) {
+            log(e);
+        }
+        else {
+            displayMessage(get_string('unknownerror'), 'error');
+        }
         errorcallback();
         processingStop();
     });

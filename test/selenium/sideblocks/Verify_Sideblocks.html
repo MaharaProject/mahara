@@ -1,0 +1,144 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Verify_Sideblocks</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Verify_Sideblocks</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/</td>
+	<td></td>
+</tr>
+<tr>
+    <td>assertElementPresent</td>
+    <td>//div[@class='sidebar sidebar_1']</td>
+    <td></td>
+</tr>
+<tr>
+    <td>assertElementPresent</td>
+    <td>//ul[@id='sitemenu']</td>
+    <td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Profile</td>
+	<td></td>
+</tr>
+<tr>
+    <td>assertElementNotPresent</td>
+    <td>//p[@id='quota_message']</td>
+    <td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Profile Icons</td>
+	<td></td>
+</tr>
+<tr>
+    <td>assertElementPresent</td>
+    <td>//div[@class='sidebar sidebar_1']</td>
+    <td></td>
+</tr>
+<tr>
+    <td>assertElementPresent</td>
+    <td>//p[@id='quota_message']</td>
+    <td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=My Portfolio</td>
+	<td></td>
+</tr>
+<tr>
+    <td>assertElementPresent</td>
+    <td>//form[@id='selfsearch']</td>
+    <td></td>
+</tr>
+<tr>
+    <td>assertElementPresent</td>
+    <td>//ul[@id='sitemenu']</td>
+    <td></td>
+</tr>
+<tr>
+    <td>assertElementNotPresent</td>
+    <td>//p[@id='quota_message']</td>
+    <td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=files</td>
+	<td></td>
+</tr>
+<tr>
+    <td>assertElementPresent</td>
+    <td>//form[@id='selfsearch']</td>
+    <td></td>
+</tr>
+<tr>
+    <td>assertElementPresent</td>
+    <td>//ul[@id='sitemenu']</td>
+    <td></td>
+</tr>
+<tr>
+    <td>assertElementPresent</td>
+    <td>//p[@id='quota_message']</td>
+    <td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Groups</td>
+	<td></td>
+</tr>
+<tr>
+    <td>assertElementPresent</td>
+    <td>//ul[@id='sitemenu']</td>
+    <td></td>
+</tr>
+<tr>
+    <td>assertElementPresent</td>
+    <td>//form[@id='friendscontrol']</td>
+    <td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Groups I'm In</td>
+	<td></td>
+</tr>
+<tr>
+    <td>assertElementPresent</td>
+    <td>//ul[@id='sitemenu']</td>
+    <td></td>
+</tr>
+<tr>
+    <td>assertElementNotPresent</td>
+    <td>//form[@id='friendscontrol']</td>
+    <td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Settings</td>
+	<td></td>
+</tr>
+<tr>
+    <td>assertElementPresent</td>
+    <td>//ul[@id='sitemenu']</td>
+    <td></td>
+</tr>
+<tr>
+    <td>open</td>
+    <td>/user/view.php?id=1</td>
+    <td></td>
+</tr>
+<tr>
+    <td>assertElementPresent</td>
+    <td>//ul[@id='sitemenu']</td>
+    <td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

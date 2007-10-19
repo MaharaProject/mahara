@@ -26,6 +26,8 @@
 
 defined('INTERNAL') || die();
 
+$string['pluginname'] = 'Profile';
+
 $string['profile'] = 'Profile';
 $string['myfiles'] = 'My Files';
 
@@ -83,6 +85,7 @@ visit the link below to activate this address.
 %s
 EOF;
 
+$string['validationemailwillbesent'] = 'a validation email will be sent when you save your profile';
 $string['emailactivation'] = 'Email Activation';
 $string['emailactivationsucceeded'] = 'Email Activation Successful';
 $string['emailactivationfailed'] = 'Email Activation Failed';
@@ -104,6 +107,7 @@ $string['profileiconsnoneselected'] = 'No profile icons were selected to be dele
 $string['onlyfiveprofileicons'] = 'You may upload only five profile icons';
 $string['profileiconuploadexceedsquota'] = 'Uploading this profile icon would exceed your disk quota. Try deleting some files you have uploaded';
 $string['profileiconimagetoobig'] = 'The image you uploaded was too big (%sx%s pixels). It must not be larger than 300x300 pixels';
+$string['uploadingfile'] = 'uploading file...';
 $string['uploadprofileicon'] = 'Upload Profile Icon';
 $string['profileiconsiconsizenotice'] = 'You may upload up to <strong>five</strong> profile icons here, and choose one to be displayed as your default icon at any one time. Your icons must be between 100x100 and 300x300 pixels';
 

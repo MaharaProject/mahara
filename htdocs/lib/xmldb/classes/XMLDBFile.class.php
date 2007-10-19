@@ -71,7 +71,11 @@ class XMLDBFile extends XMLDBObject {
         if ($this->fileExists()) {
         /// File exists, so let's process it
         /// Load everything to a big array
-            $xmlarr = xmlize(file_get_contents($this->path));
+            $contents = file_get_contents($this->path);
+            if (function_exists('local_xmldb_contents_sub')) {
+                local_xmldb_contents_sub($contents);
+            }
+            $xmlarr = xmlize($contents);
         /// Convert array to xmldb structure
             $this->xmldb_structure = $this->arr2XMLDBStructure($xmlarr);
         /// Analize results

@@ -2,9 +2,9 @@
 {include file="sidebar.tpl"}
 
 {include file="columnleftstart.tpl"}	
-			<h2>{str tag="recentactivity"}</h2>
+			<h2>{str tag="notifications"}</h2>
 			
-			<div id="recentactivity">
+			<div id="notifications">
 			<form method="post">
 			{str section='activity' tag='type'}:
 			<select name="type" onChange="{$typechange}">

@@ -1,0 +1,144 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>edit_resume</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">edit_resume</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Profile</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Profile Icons</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+    <td>//a[contains(@href,'/artefact/resume/')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>chooseCancelOnNextConfirmation</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//button[@onclick='return editprofilebutton();']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertConfirmation</td>
+	<td>If you continue to edit your profile now, you will lose any unsaved information in this area</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>resumemainform_save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>addemploymenthistorybutton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//form/table/tbody/tr[2]/td/a/img</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//form/table/tbody/tr[2]/td/a/img</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//form/table/tbody/tr[4]/td/span/a/img</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//tr[4]/td/a/img</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>addemploymenthistory_employer</td>
+	<td>test</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>addemploymenthistory_jobtitle</td>
+	<td>test</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>addemploymenthistory_positiondescription</td>
+	<td>test</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>addemploymenthistory_submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>addeducationhistorybutton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[5]/div/form/table/tbody/tr[2]/td/a/img</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertAlert</td>
+	<td>Date/Time Selector<br />(c) dynarch.com 2002-2005 / Author: Mihai Bazon<br />Distributed under GNU LGPL.&nbsp;&nbsp;See http://gnu.org/licenses/lgpl.html for details.<br /><br />Date selection:<br />- Use the «, » buttons to select year<br />- Use the ‹, › buttons to select month<br />- Hold mouse button on any of the above buttons for faster selection.</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[5]/div/form/table/tbody/tr[4]/td/a/img</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>addeducationhistory_institution</td>
+	<td>test</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>addeducationhistory_qualtype</td>
+	<td>test</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>addeducationhistory_qualname</td>
+	<td>test</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>addeducationhistory_qualdescription</td>
+	<td>test</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>addeducationhistory_submit</td>
+	<td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

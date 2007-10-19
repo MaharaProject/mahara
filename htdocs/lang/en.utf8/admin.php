@@ -52,7 +52,6 @@ $string['upgradesuccess'] = 'Successfully upgraded';
 $string['upgradesuccesstoversion'] = 'Successfully upgraded to version ';
 $string['upgradefailure'] = 'Failed to upgrade!';
 $string['noupgrades'] = 'Nothing to upgrade! You are fully up to date!';
-$string['fixtemplatescontinue'] = 'Some view templates failed to install.  Continue here for more information and a fix.';
 $string['youcanupgrade'] = 'You can upgrade Mahara from %s (%s) to %s (%s)!';
 
 // Admin navigation menu
@@ -87,11 +86,10 @@ $string['uploadcsv'] = 'Add Users by CSV';
 $string['uploadcsvdescription'] = 'Upload a CSV file containing new users';
 $string['usersearch'] = 'User Search';
 $string['usersearchdescription'] = 'Search all users and perform administrative actions on them';
+$string['usersearchinstructions'] = 'You can search for users by clicking on the initials of their first and last names, or by entering a name in the search box.  You can also enter an email address in the search box if you would like to search email addresses.';
 
 $string['pluginadmin'] = 'Plugin Administration';
 $string['pluginadmindescription'] = 'Install and configure plugins';
-$string['templatesadmin'] = 'Configure View Templates';
-$string['templatesadmindescription'] = 'View installed templates to check their validity';
 
 // Site options
 $string['allowpublicviews'] = 'Allow public views';
@@ -106,6 +104,7 @@ $string['pathtofiledescription'] = 'Filesystem path to the \'file\' program';
 $string['sessionlifetime'] = 'Session lifetime';
 $string['sessionlifetimedescription'] = 'Time in minutes after which an inactive logged in user will be automatically logged out';
 $string['setsiteoptionsfailed'] = 'Failed setting the %s option';
+$string['sitedefault'] = 'Site Default';
 $string['sitelanguagedescription'] = 'The default language for the site';
 $string['sitename'] = 'Site name';
 $string['sitenamedescription'] = ' ';
@@ -134,6 +133,8 @@ $string['promiscuousmodedisabled'] = 'Auto-register has been disabled. ';
 $string['promiscuousmodeenabled'] = 'Auto-register has been enabled. ';
 $string['promiscuousmodedescription'] = 'Create an institution record for any host that connects to you, and allow its users to log on to Mahara';
 $string['wwwroot'] = 'WWW Root';
+$string['whatisnetworking'] = 'What is Networking?';
+$string['whatnetworkingis'] = 'Mahara\'s networking features allow it to communicate with Mahara or Moodle sites running on the same or another machine. If networking is enabled, you can use it to configure single-sign-on for users who log in at either Moodle or Mahara.';
 
 // Admin menu editor
 //$string['menueditor']    = 'Menu editor';

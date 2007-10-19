@@ -32,21 +32,6 @@ require_once('file.php');
 $type = param_alpha('type');
 
 switch ($type) {
-    case 'template':
-        require_once('template.php');
-        $name = param_alpha('name');
-        $template = template_locate($name);
-        if (isset($template['thumbnail'])) {
-            header("Content-type: " . $template['thumbnailcontenttype']);
-            readfile($template['thumbnail']);
-            exit;
-        }
-
-        header('Content-type: ' . 'image/gif');
-        readfile(theme_get_path('images/no_thumbnail.gif'));
-        exit;
-        break;
-
     case 'profileiconbyid':
     case 'profileicon':
         $id = param_integer('id');
@@ -82,12 +67,40 @@ switch ($type) {
             }
         }
 
-        header('Content-type: ' . 'image/gif');
-        if ($path = theme_get_path('images/no_userphoto' . $size . '.gif')) {
+        header('Content-type: ' . 'image/png');
+        if ($path = theme_get_path('images/no_userphoto' . $size . '.png')) {
             readfile($path);
             exit;
         }
-        readfile(theme_get_path('images/no_userphoto40x40.gif'));
+        readfile(theme_get_path('images/no_userphoto40x40.png'));
+        break;
+
+    case 'blocktype':
+        $bt = param_alpha('bt'); // blocktype
+        $ap = param_alpha('ap', null); // artefact plugin (optional)
+        
+        $basepath = 'blocktype/' . $bt;
+        if (!empty($ap)) {
+            $basepath = 'artefact/' . $ap . '/' . $basepath;
+        }
+        header('Content-type: image/png');
+        $path = get_config('docroot') . $basepath . '/thumb.png';
+        if (is_readable($path)) {
+            readfile($path);
+            exit;
+        }
+        readfile(theme_get_path('images/no_thumbnail.png'));
+        break;
+    case 'viewlayout':
+        header('Content-type: image/png');
+        $vl = param_integer('vl');
+        if ($widths = get_field('view_layout', 'widths', 'id', $vl)) {
+            if ($path = theme_get_path('images/vl-' . str_replace(',', '-', $widths) . '.png')) {
+                readfile($path);
+                exit;
+            }
+        }
+        readfile(theme_get_path('images/no_thumbnail.png'));
         break;
 }
 

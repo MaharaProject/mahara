@@ -24,6 +24,8 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
     this.createfolderscript = config.wwwroot+'artefact/file/createfolder.json.php';
     this.updatemetadatascript = config.wwwroot+'artefact/file/updatemetadata.json.php';
     this.downloadscript = config.wwwroot+'artefact/file/download.php';
+    this.movescript = config.wwwroot+'artefact/file/move.json.php';
+    this.maxnamestrlen = 34;
 
     if (typeof(startDirectory) == 'object') {
         var dirWalk = this.rootDirectory;
@@ -48,6 +50,9 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
 
     if (this.actionname) {
         this.lastcolumnfunc = function(r) {
+            if (r.isparent) {
+                return TD(null);
+            }
             if (r.artefacttype != 'folder') {
                 var button = INPUT({'type':'button', 'class':'button', 'value':self.actionname});
                 button.onclick = function () { self.actioncallback(r) };
@@ -58,6 +63,9 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
     }
     else {
         this.lastcolumnfunc = function (r) {
+            if (r.isparent) {
+                return TD(null);
+            }
             var editb = INPUT({'type':'button', 'class':'button', 'value':get_string('edit')});
             editb.onclick = function () { self.openeditform(r); };
             var edith = SPAN(null);
@@ -120,10 +128,85 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
             self.filelist.statevars.push(property);
         }
         self.filelist.rowfunction = function (r, n) {
-            return TR({'class': 'r' + (n%2),'id':'row_' + r.id});
+            var row = TR({'class': 'r' + (n%2),'id':'row_' + r.id});
+            addElementClass(row, 'directory-item');
+            addElementClass(row, r.artefacttype);
+            if (self.canmodify) {
+                self.makeRowDraggable(row);
+            }
+            return row;
         };
         self.chdir(self.currentDirectory);
     }
+
+    this.makeRowDroppable = function(row) {
+        new Droppable(row, {
+            accept: ['directory-item'],
+            hoverclass: 'folderhover',
+            ondrop: function (dragged, dropped) {
+                sendjsonrequest(
+                    self.movescript,
+                    { artefact : dragged.id.replace(/row_/, ''),
+                      newparent : dropped.id.replace(/row_/, '') },
+                    'POST',
+                    self.refresh);
+            }
+        });
+    };
+
+    this.drag = {};
+
+    this.makeRowDraggable = function(row) {
+        new Draggable(row, {
+            starteffect: function(row) {
+                // The existing row gets dragged around with only its first two children (icon & filename).
+                // self.drag.clone is a copy of the row which gets left behind.
+
+                map(self.makeRowDroppable,
+                    getElementsByTagAndClassName('tr', 'folder', 'filelist'));
+
+                var children = getElementsByTagAndClassName('td', null, row);
+                var newchildren = [];  // copy the cells
+                for (var i = 0; i < children.length; i++) {
+                    newchildren[i] = children[i].cloneNode(true);
+                    if (i > 1) {
+                        removeElement(children[i]);
+                    }
+                }
+
+                self.drag.clone = TR({'id':row.id}, newchildren);
+                setElementClass(self.drag.clone, row.className);
+                //insertSiblingNodesAfter(row, self.drag.clone);
+                row.parentNode.insertBefore(self.drag.clone, row);
+
+                // Try to give the dragged row the same width as the first two cells
+                var id = getElementDimensions(children[0]);
+                var nd = getElementDimensions(children[1]);
+                setElementDimensions(children[0], id);
+                setElementDimensions(children[1], nd);
+
+                MochiKit.Position.absolutize(row);
+                setStyle(row, {
+                    'border': '2px solid #000', // doesn't show up in IE6
+                    'width': (id.w + nd.w) + 'px',
+                    'height': (id.h + 4) + 'px'
+                });
+
+                setOpacity(row, 0.5);
+            },
+            revert: function(element) {
+                // Throw away the row being dragged
+                removeElement(element);
+                element = null;
+                self.refresh();
+            }
+        });
+        // Draggable sets position = 'relative', but we set it back
+        // here because with position = 'relative' in IE6 the rows
+        // stay put instead of moving down when the create/upload
+        // forms are opened on the page.
+        row.style.position = 'static';
+    };
 
     this.deleted = function (data) {
         quotaUpdate(data.quotaused, data.quota);
@@ -265,7 +348,33 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
 
     this.formatname = function(r) {
         self.filenames[r.title] = true;
-        if (r.artefacttype == 'folder') {
+        var parentattribs = {};
+        if (r.title.length > self.maxnamestrlen + 3) {
+            var parts = map(
+                function (s) {
+                    if (s.length > self.maxnamestrlen + 3)
+                        return s.substring(0,self.maxnamestrlen/2) + '...'
+                        + s.substring(s.length-self.maxnamestrlen/2,s.length);
+                    else 
+                        return s;
+                },
+                r.title.split(' '));
+            var displaytitle = parts.join(' ');
+            if (displaytitle != r.title) {
+                parentattribs.title = r.title;
+            }
+        } else {
+            var displaytitle = r.title;
+        }
+        if (r.isparent) {
+            parentattribs.href = '';
+            var link = A(parentattribs, displaytitle);
+            connect(link, 'onclick', function (e) {
+                self.chdir(self.currentDirectory.parent);
+                e.stop();
+            });
+            var cell = TD(null, link);
+        } else if (r.artefacttype == 'folder') {
             // If we haven't seen this directory before
             if (!self.currentDirectory.children[r.title]) {
                 self.currentDirectory.children[r.title] = {
@@ -275,17 +384,20 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
                     'folderid': r.id
                 }
             }
-            var link = A({'href':''}, r.title);
+            parentattribs.href = '';
+            var link = A(parentattribs, displaytitle);
             connect(link, 'onclick', function (e) {
                 self.chdir(self.currentDirectory.children[r.title]);
                 e.stop();
             });
-            return TD(null, link);
+            var cell = TD(null, link);
+        } else if (self.actionname) {
+            var cell = TD(parentattribs, displaytitle);
+        } else {
+            parentattribs.href = self.downloadscript + '?file=' + r.id;
+            var cell = TD(null, A(parentattribs, displaytitle));
         }
-        if (self.actionname) {
-            return TD(null, r.title);
-        }
-        return TD(null, A({'href':self.downloadscript + '?file=' + r.id}, r.title));
+        return cell;
     }
 
     this.fileexists = function (filename) { 
@@ -326,6 +438,21 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
                 self.chdir(dir);
                 e.stop();
             }, cwd));
+
+            if (self.canmodify) {
+                new Droppable(link, {
+                    accept: ['directory-item'],
+                    hoverclass: 'folderhover',
+                    ondrop: partial(function (dirid, dragged) {
+                        sendjsonrequest(
+                            self.movescript,
+                            { artefact : dragged.id.replace(/row_/, ''),
+                              newparent : dirid },
+                            'POST',
+                            self.refresh);
+                    }, cwd.folderid)
+                });
+            }
 
             folders.unshift(link);
 

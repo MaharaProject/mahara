@@ -49,6 +49,7 @@ if ($institution || $add) {
     if ($delete) {
         function delete_validate(Pieform $form, $values) {
             if (get_field('usr', 'COUNT(*)', 'institution', $values['i'])) {
+                // TODO: exception is of the wrong type
                 throw new Exception('Attempt to delete an institution that has members');
             }
         }
@@ -105,6 +106,13 @@ if ($institution || $add) {
             $instancearray[] = $val->id;
         }
 
+        $instancestring = implode(',',$instancearray);
+        $inuserecords = array();
+        $records = get_records_sql_assoc('select authinstance, count(id) from {usr} where authinstance in ('.$instancestring.') group by authinstance', array());
+        foreach ($records as $record) {
+            $inuserecords[] = $record->authinstance;
+        }
+        $inuse = implode(',',$inuserecords);
         $authtypes = auth_get_available_auth_types($institution);
     }
     else {
@@ -138,6 +146,11 @@ if ($institution || $add) {
             'value'  => true,
             'ignore' => !$add
         ),
+        'inuse' => array(
+            'type'   => 'hidden',
+            'value'  => $inuse,
+            'id'     => 'inuse'
+        ),
         'i' => array(
             'type'   => 'hidden',
             'value'  => $institution,
@@ -159,7 +172,7 @@ if ($institution || $add) {
             'options' => $authinstances,
             'authtypes' => $authtypes,
             'instancearray' => $instancearray,
-            'instancestring' => implode(',',$instancearray),
+            'instancestring' => $instancestring,
             'institution' => $institution,
             'help'   => true,
             'ignore' => count($authtypes) == 0
@@ -252,16 +265,19 @@ function institution_submit(Pieform $form, $values) {
     $allinstances = array_merge($values['authplugin']['instancearray'], $values['authplugin']['deletearray']);
 
     if (array_diff($allinstances, $instancearray)) {
+        // TODO wrong exception type
         throw new Exception('Attempt to delete or update another institution\'s auth instance');
     }
 
     if (array_diff($instancearray, $allinstances)) {
+        // TODO wrong exception type
         throw new Exception('One of your instances is unaccounted for in this transaction');
     }
 
     foreach($values['authplugin']['instancearray'] as $priority => $instanceid) {
         if (in_array($instanceid, $values['authplugin']['deletearray'])) {
             // Should never happen:
+            // TODO wrong exception type
             throw new Exception('Attempt to update AND delete an auth instance');
         }
         $record = new StdClass;

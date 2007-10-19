@@ -236,6 +236,81 @@ class PluginSearchInternal extends PluginSearch {
         );
     }
     
+
+    public static function admin_search_user($queries, $constratints, $offset, $limit, 
+                                             $sortfield, $sortdir) {
+        if (is_postgres()) {
+            return self::admin_search_user_pg($queries, $constratints, $offset, $limit, 
+                                              $sortfield . ' ' . strtoupper($sortdir));
+        } 
+        //else if (is_mysql()) {
+        //    return self::admin_search_user_my($query_string, $limit, $offset);
+        //}
+        else {
+            throw new SQLException('admin_search_user() is not implemented for your database engine (' . get_config('dbtype') . ')');
+        }
+    }
+
+
+    public static function admin_search_user_pg($queries, $constraints, $offset, $limit, $sort) {
+        $where = 'WHERE u.id <> 0 AND u.deleted = 0';
+        $values = array();
+
+        // Only handle OR/AND expressions at the top level.  Eventually we may need subexpressions.
+
+        $matchtypes = array('starts' => ' ILIKE ? || \'%\'',
+                            'equals' => ' = ? ',
+                            'contains' => ' ILIKE \'%\' || ? || \'%\'');
+
+        if (!empty($queries)) {
+            $where .= ' AND ( ';
+            $str = array();
+            foreach ($queries as $f) {
+                $str[] = 'u.' . $f['field'] . $matchtypes[$f['type']];
+                $values[] = $f['string'];
+            }
+            $where .= join(' OR ', $str) . ') ';
+        } 
+
+        if (!empty($constraints)) {
+            foreach ($constraints as $f) {
+                $where .= ' AND u.' . $f['field'] . $matchtypes[$f['type']];
+                $values[] = $f['string'];
+            }
+        }
+
+        $count = get_field_sql('SELECT COUNT(*) FROM {usr} u ' . $where, $values);
+
+        if ($count > 0) {
+            $data = get_records_sql_array('
+                SELECT 
+                    u.id, u.firstname, u.lastname, u.username, u.institution, u.email, u.staff,
+                    u.active, NOT u.suspendedcusr IS NULL as suspended
+                FROM
+                    {usr} u ' . $where . '
+                ORDER BY ' . $sort,
+                $values,
+                $offset,
+                $limit);
+
+            if ($data) {
+                foreach ($data as &$item) {
+                    $item = (array)$item;
+                }
+            }
+        }
+        else {
+            $data = false;
+        }
+
+        return array(
+            'count'   => $count,
+            'limit'   => $limit,
+            'offset'  => $offset,
+            'data'    => $data,
+        );
+    }
+
     /**
      * Implement group searching with SQL
      *

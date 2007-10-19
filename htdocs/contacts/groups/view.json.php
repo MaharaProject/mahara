@@ -109,7 +109,7 @@ switch ($type) {
                 group_json_empty();
             }
             $sql = str_replace('group_member', 'group_member_request', $sql);
-            $select = 'SELECT u.*, 1 AS request, c.reason';
+            $select = 'SELECT u.*, 1 AS request, g.reason';
             $count = count_records('group_member_request', 'group', $id);
             $data = get_records_sql_array($select . $sql, array($id), $offset, $limit);
         }

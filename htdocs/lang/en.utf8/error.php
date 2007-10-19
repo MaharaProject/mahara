@@ -56,6 +56,18 @@ $string['dbconnfailed'] = 'Mahara could not connect to the application database.
 The error received was:
 ';
 
+// general exception error messages
+$string['blocktypenametaken'] = "Block type %s is already taken by another plugin (%s)";
+$string['artefacttypenametaken'] = "Artefact type %s is already taken by another plugin (%s)";
+$string['classmissing'] = "class %s for type %s in plugin %s was missing";
+$string['artefacttypeclassmissing'] = "Artefact types must all implement a class.  Missing %s";
+$string['artefactpluginmethodmissing'] =  "Artefact plugin %s must implement %s and doesn't";
+$string['blocktypelibmissing'] = 'Missing lib.php for block %s in artefact plugin %s';
+$string['blocktypemissingconfigform'] = 'Block type %s must implement instance_config_form';
+$string['versionphpmissing'] = 'Plugin %s %s is missing version.php!';
+$string['blocktypeprovidedbyartefactnotinstallable'] = 'This will be installed as part of the installation of artefact plugin %s';
+$string['blockconfigdatacalledfromset'] = 'Configdata should not be set directly, use PluginBlocktype::instance_config_save instead';
+$string['invaliddirection'] = 'Invalid direction %s';
 
 // if you change these next two , be sure to change them in libroot/errors.php
 // as they are duplicated there, in the case that get_string was not available.
@@ -69,4 +81,12 @@ $string['viewnotfoundexceptionmessage'] = 'You tried to access a view that didn\
 
 $string['artefactnotfoundmaybedeleted'] = "Artefact with id %s not found (maybe it has been deleted already?)";
 $string['notartefactowner'] = 'You do not own this artefact';
+
+$string['blockinstancednotfound'] = 'Block instance with id %s not found';
+$string['invalidviewaction'] = 'Invalid view control action: %s';
+
+$string['missingparamblocktype'] = 'Try selecting a block type to add first';
+$string['missingparamcolumn'] = 'Missing column specification';
+$string['missingparamorder'] = 'Missing order specification';
+$string['missingparamid'] = 'Missing id';
 ?>
