@@ -1,3 +1,14 @@
+mahara (0.9.0~alpha1-1) unstable; urgency=low
+
+  * New upstream release
+  * Unfortunately the ~dev policy wasn't well thought out, as it sorts ~dev as
+    being greater than ~alpha. Future dev releases will be called ~alpha
+    instead. A concious decision has been made to NOT use an epoch to fix
+    this - if you're running ~dev you will have to force downgrade to this
+    release.
+
+ -- Nigel McNie <nigel@catalyst.net.nz>  Fri, 19 Oct 2007 13:23:05 +1300
+
 mahara (0.9.0~dev) unstable; urgency=low
 
   * 0.9.0 Dev version
