@@ -50,9 +50,13 @@ $string['yes']    = 'Yes';
 $string['none']   = 'None';
 $string['at'] = 'at';
 
+$string['next']      = 'Next';
 $string['nextpage']  = 'Next page';
+$string['previous']  = 'Previous';
 $string['prevpage']  = 'Previous page';
+$string['first']     = 'First';
 $string['firstpage'] = 'First page';
+$string['last']      = 'Last';
 $string['lastpage']  = 'Last page';
 
 $string['accept'] = 'Accept';
@@ -832,7 +836,6 @@ $string['country.zw'] = 'Zimbabwe';
 $string['system'] = 'System';
 $string['preview'] = 'Preview';
 $string['done'] = 'Done';
-$string['next'] = 'Next';
 $string['back'] = 'Back';
 
 ?>
