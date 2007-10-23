@@ -34,16 +34,16 @@ define('SECTION_PAGE', 'edit');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('docroot') . 'lib/view.php');
 
-$viewid = param_integer('id', 0); // if 0, we're creating a new view
+$id = param_integer('id', 0); // if 0, we're creating a new view
 $new = param_boolean('new');
 
-if (empty($viewid)) {
+if (empty($id)) {
     define('TITLE', get_string('createview', 'view'));
     $new = true;
 }
 else {
     define('TITLE', get_string('editview', 'view'));
-    $view = new View($viewid);
+    $view = new View($id);
     if ($view->get('owner') != $USER->get('id')) {
         throw new AccessDeniedException(get_string('canteditdontown', 'view'));
     }
@@ -78,9 +78,9 @@ $editview = pieform(array(
     'plugintype' => 'core',
     'pluginname' => 'view',
     'elements' => array(
-        'viewid' => array(
+        'id' => array(
             'type'  => 'hidden',
-            'value' => $viewid,
+            'value' => $id,
         ),
         'new' => array(
             'type' => 'hidden',
@@ -139,7 +139,7 @@ $editview = pieform(array(
         ),
         'submit'   => array(
             'type'  => 'submitcancel',
-            'value' => array(!isset($new) ? get_string('save') : get_string('next'), get_string('cancel')),
+            'value' => array(empty($new) ? get_string('save') : get_string('next'), get_string('cancel')),
         ),
     ),
 ));
@@ -158,8 +158,8 @@ function editview_submit(Pieform $form, $values) {
 
     global $USER, $SESSION;
 
-    $editing = !empty($values['viewid']);
-    $view = new View($values['viewid'], $values);
+    $editing = !empty($values['id']);
+    $view = new View($values['id'], $values);
 
 
     if (empty($editing)) {
