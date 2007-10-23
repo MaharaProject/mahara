@@ -1126,6 +1126,21 @@ class View {
                 return display_name($user);
         }
     }
+
+    /**
+     * Makes a URL for a view block editing page
+     */
+    public static function make_base_url() {
+        static $allowed_keys = array('id', 'change', 'c', 'new');
+        $baseurl = '?';
+        foreach (array_merge($_POST, $_GET) as $key => $value) {
+            if (in_array($key, $allowed_keys) || preg_match('/^action_.*_x$/', $key)/* || preg_match('/^cb_\d+_[a-z_]+_o$/', $key)*/) {
+                $baseurl .= hsc($key) . '=' . hsc($value) . '&amp;';
+            }
+        }
+        $baseurl = substr($baseurl, 0, -5);
+        return $baseurl;
+    }
 }
 
 /**
