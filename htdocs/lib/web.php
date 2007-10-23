@@ -1941,11 +1941,11 @@ function build_pagination($params) {
     }
 
     // Begin building the output
-    $output = '<div id="' . $params['id'] . '"';
+    $output = '<div id="' . $params['id'] . '" class="pagination';
     if (isset($params['class'])) {
-        $output .= ' class="' . hsc($params['class']) . '"';
+        $output .= ' ' . hsc($params['class']);
     }
-    $output .= '>';
+    $output .= '">';
 
     if ($params['limit'] <= $params['count']) {
         $pages = ceil($params['count'] / $params['limit']);
