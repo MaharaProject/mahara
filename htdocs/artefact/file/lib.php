@@ -329,7 +329,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         return false;
     }
 
-    public function get_icon() {
+    public static function get_icon($id=0) {
 
     }
 
@@ -599,8 +599,8 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         return true;
     }
 
-    public function get_icon() {
-
+    public static function get_icon($id=0) {
+        return theme_get_url('images/file.gif');
     }
 
     public static function get_config_options() {
@@ -728,7 +728,7 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
         return $this->count_children() . ' ' . get_string('files', 'artefact.file');
     }
 
-    public function get_icon() {
+    public static function get_icon($id=0) {
 
     }
 
@@ -875,6 +875,17 @@ class ArtefactTypeImage extends ArtefactTypeFile {
         return is_image_mime_type($type);
     }
 
+    public static function get_icon($id=0) {
+        return get_config('wwwroot') . 'artefact/file/download.php?file=' . $id . '&size=20x20';
+        return theme_get_url('images/image.gif');
+    }
+
+    public function get_path($data=array()) {
+        $size = (isset($data['size'])) ? $data['size'] : null;
+        $result = get_dataroot_image_path('artefact/file/', $this->id, $size);
+        return $result;
+    }
+
     public function delete() {
         if (empty($this->id)) {
             return; 
@@ -888,10 +899,16 @@ class ArtefactTypeImage extends ArtefactTypeFile {
         if (isset($options['viewid'])) {
             $src .= '&amp;view=' . $options['viewid'];
         }
-        // like width & height maybe
-        return array('html' => '<img src="' . $src . '" />', // more later
-                     'javascript' => false);
 
+        if (isset($options['width']) || isset($options['height'])) {
+            $options['width']  = (isset($options['width'])) ? $options['width'] : $options['height'];
+            $options['height'] = (isset($options['height'])) ? $options['height'] : $options['width'];
+
+            $src .= '&amp;size=' . $options['width'] . 'x' . $options['height'];
+        }
+
+        // like width & height maybe
+        return '<img src="' . $src . '" alt="' . hsc($this->get('description')) .'">'; // more later
     }
 }
 
