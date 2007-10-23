@@ -42,6 +42,7 @@ $viewbeingwatched = 0;
 
 $title = get_string('titleformatted', 'view', $view->get('title'), $view->formatted_owner());
 define('TITLE', $title);
+$description = '';
 
 if ($artefactid) {
 
@@ -100,6 +101,7 @@ if ($artefactid) {
 }
 else {
     $navlist = array($title);
+    $description = $view->get('description');
     $jsartefact = 'undefined';
 
     $content = $view->build_columns();
@@ -333,6 +335,7 @@ $smarty = smarty(
         'stylesheets' => array('style/views.css'),
     )
 );
+$smarty->assign('DESCRIPTION', $description);
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('VIEWNAV', $navlist);
 if (isset($content)) {
