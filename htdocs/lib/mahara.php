@@ -42,8 +42,20 @@ function ensure_sanity() {
     if (!extension_loaded('json')) {
         throw new ConfigSanityException(get_string('jsonextensionnotloaded', 'error'));
     }
-    if (!extension_loaded('pgsql') && !extension_loaded('mysqli')) {
-        throw new ConfigSanityException(get_string('dbextensionnotloaded', 'error'));
+    switch (get_config('dbtype')) {
+    case 'postgres8':
+        if (!extension_loaded('pgsql')) {
+            throw new ConfigSanityException(get_string('pgsqldbextensionnotloaded', 'error'));
+        }
+        break;
+    case 'mysql5':
+    case 'mysql': // NOTE: mysql to be phased out. This should be log_environ() in 1.0 and removed in 1.1
+        if (!extension_loaded('mysql')) {
+            throw new ConfigSanityException(get_string('mysqldbextensionnotloaded', 'error'));
+        }
+        break;
+    default:
+        throw new ConfigSanityException(get_string('unknowndbtype', 'error'));
     }
     if (!extension_loaded('libxml')) {
         throw new ConfigSanityException(get_string('libxmlextensionnotloaded', 'error'));
