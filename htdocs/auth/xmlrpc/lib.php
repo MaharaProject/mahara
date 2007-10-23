@@ -148,7 +148,7 @@ class AuthXmlrpc extends Auth {
             if ('1' == $this->config['updateuserinfoonlogin']) {
                 $update = true;
             }
-        } catch (Exception $e) {
+        } catch (AuthUnknownUserException $e) {
             if (!empty($this->config['weautocreateusers'])) {
                 $user = new User;
                 $create = true;

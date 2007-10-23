@@ -60,7 +60,7 @@ done
 
 # If done properly, we don't need this here - the build can happen from any place that has this script
 git-fetch -t
-STABLE_RELEASE="`ls -1 .git/refs/tags | grep 'RELEASE$' | tail -n1`"
+STABLE_RELEASE="`ls -1 .git/refs/tags | egrep '[0-9]+\.[0-9]+\.[0-9]+_RELEASE$' | tail -n1`"
 TESTING_RELEASE="`git branch -a | grep "origin.*STABLE$" | sort | tail -1 | sed 's/origin\///' | tr -d ' '`"
 
 pushd ${BUILDDIR}

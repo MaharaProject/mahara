@@ -31,7 +31,8 @@ git clone -n "http://git.catalyst.net.nz/mahara.git" mahara
 pushd ${BUILDDIR}/mahara
 
 # Switch to the release tag
-git checkout -b "${MAJOR}_STABLE" "origin/${MAJOR}_STABLE"
+#git checkout -b "${MAJOR}_STABLE" "origin/${MAJOR}_STABLE"
+git checkout "${MAJOR}.${MINOR}_RELEASE"
 
 # Remove git directories
 rm .git -rf

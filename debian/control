@@ -4,6 +4,7 @@ Priority: optional
 Maintainer: Martyn Smith <martyn@catalyst.net.nz>
 Build-Depends: debhelper (>= 5)
 Standards-Version: 3.7.2
+Homepage: http://www.mahara.org
 
 Package: mahara-apache
 Architecture: all
@@ -36,8 +37,6 @@ Description: Mahara is an electronic portfolio, weblog, and resume builder
  Mahara provided you agree to; provide the source code to others; not modify or
  remove the original license and copyrights, and apply this same license to any
  derivative work.
- .
- For further information please see http://mahara.org
 
 Package: mahara-apache2
 Architecture: all
@@ -70,6 +69,3 @@ Description: Mahara is an electronic portfolio, weblog, and resume builder
  Mahara provided you agree to; provide the source code to others; not modify or
  remove the original license and copyrights, and apply this same license to any
  derivative work.
- .
- For further information please see http://mahara.org
-
