@@ -210,13 +210,13 @@ class BlockInstance {
     public function set($field, $value) {
         if (property_exists($this, $field)) {
             if ($field == 'configdata') {
-                throw new InvalidArgumentException(get_string('blockconfigdatacalledfromset', 'error'));
+                $value = serialize($value);
             }
             if ($this->{$field} != $value) {
                 // only set it to dirty if it's changed
                 $this->dirty = true;
+                $this->{$field} = $value;
             }
-            $this->{$field} = $value;
             return true;
         }
         throw new ParamOutOfRangeException("Field $field wasn't found in class " . get_class($this));
@@ -234,8 +234,10 @@ class BlockInstance {
             $values = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'instance_config_save', $values);
         }
 
-        set_field('block_instance', 'configdata', serialize($values), 'id', $this->get('id'));
-        $this->rebuild_artefact_list();
+        $configdata = $values;
+        $this->set('configdata', $configdata);
+        $this->commit();
+
         $SESSION->add_ok_msg(get_string('blockinstanceconfiguredsuccessfully', 'view'));
         $new = param_boolean('new');
         $category = param_alpha('c', '');
@@ -343,6 +345,7 @@ class BlockInstance {
         $elements['action_configureblockinstance_id_' . $this->get('id')] = array(
             'type' => 'submitcancel',
             'value' => array(get_string('save'), get_string('cancel')),
+            'goto' => View::make_base_url(),
         );
 
         $form = array(
@@ -356,20 +359,15 @@ class BlockInstance {
         $pieform = new Pieform($form);
 
         // We need to load any javascript required for the pieform. We do this
-        // by inspecting the form array and seeing what elements there are,
-        // getting their headdata and making sure that this js is made
-        // available to be used on the client side
+        // by checking for an api function that has been added especially for 
+        // the purpose, but that is not part of Pieforms. Maybe one day later 
+        // it will be though
         $js = '';
         foreach ($elements as $key => $element) {
-            $function = 'pieform_element_' . $element['type'] . '_get_headdata';
+            $element['name'] = $key;
+            $function = 'pieform_element_' . $element['type'] . '_views_js';
             if (is_callable($function)) {
-                $headers = call_user_func($function);
-
-                if (in_array('tinytinymce', $headers)) {
-                    $js = <<<EOF
-        tinyMCE.execCommand("mceAddControl", true, "cb_{$this->get('id')}_{$key}");
-EOF;
-                }
+                $js .= call_user_func_array($function, array($pieform, $element));
             }
         }
 
@@ -413,7 +411,6 @@ EOF;
     }
 
     public function rebuild_artefact_list() {
-
         db_begin();
         delete_records('view_artefact', 'block', $this->id);
         if (!$artefacts = call_static_method(
