@@ -10,6 +10,10 @@
           {/if}
         {/foreach}
         </h3>
+
+        {if $DESCRIPTION}
+        <p class="view-description">{$DESCRIPTION}</p>
+        {/if}
 	
             <div id="bottom-pane">
                 <div id="column-container">
