@@ -35,7 +35,7 @@ switch ($type) {
     case 'profileiconbyid':
     case 'profileicon':
         $id = param_integer('id');
-        $size = param_variable('size', '');
+        $size = param_imagesize('size', '');
 
         if ($type == 'profileicon') {
             // Convert ID of user to the ID of a profileicon
@@ -43,20 +43,6 @@ switch ($type) {
         }
 
         if ($id) {
-            if ($size && !preg_match('/\d+x\d+/', $size)) {
-                throw new UserException('Invalid size for image specified');
-            }
-
-            if ($size) {
-                list($width, $height) = explode('x', $size);
-                if ($width > 300 || $height > 300) {
-                    throw new UserException('Requested image size is too big');
-                }
-                if ($width % 5 != 0 || $height % 5 != 0) {
-                    throw new UserException('Requested image size must be in multiples of 5 for width and height');
-                }
-            }
-
             if ($path = get_dataroot_image_path('artefact/internal/profileicons', $id, $size)) {
                 $type = get_mime_type($path);
                 if ($type) {
