@@ -343,6 +343,7 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
     }
 
     this.icon = function (type) {
+        // TODO: for images, you can get a thumbnail by hitting artefact/file/download.php?file=[id]&size=[width]x[height]
         return IMG({'src':get_themeurl('images/'+type+'.gif')});
     }
 
