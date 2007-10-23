@@ -31,7 +31,6 @@ defined('INTERNAL') || die();
  *  - document this class and methods
  *  - correct category
  *  - more video url sources, and good default behaviour
- *  - block in configure mode when created
  *  - block title editable
  *  - i18n
  *  - minvalue/maxvalue rules
@@ -111,10 +110,6 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
             ),
         );
     }
-
-    //public static function instance_config_save($values) {
-    //    return $values;
-    //}
 
     private static function make_video_url($url) {
         static $embedsources = array(
