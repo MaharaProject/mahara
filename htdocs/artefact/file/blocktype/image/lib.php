@@ -43,17 +43,58 @@ class PluginBlocktypeImage extends PluginBlocktype {
     public static function render_instance(BlockInstance $instance) {
         require_once(get_config('docroot') . 'lib/artefact.php');
         $configdata = $instance->get('configdata'); // this will make sure to unserialize it for us
-//        $image = artefact_instance_from_id($configdata['artefactid']);
-//        return $image->render_self($configdata); // in this case, config data contains width & height //TODO change this, we have an array now with javascript and html
-        return 'whee!';
+        $configdata['viewid'] = $instance->get('view');
+
+        // This can be either an image or profileicon. They both implement 
+        // render_self
+        $result = '';
+        if (isset($configdata['artefactid'])) {
+            $image = artefact_instance_from_id($configdata['artefactid']);
+            $result = $image->render_self($configdata); // in this case, config data contains width & height //TODO change this, we have an array now with javascript and html
+            $result = '<div class="center"><div>' . $result . '</div>';
+
+            $description = (is_a($image, 'ArtefacttypeImage')) ? $image->get('description') : $image->get('title');
+            if (!empty($configdata['showdescription']) && $description) {
+                $result .= '<p>' . $description . '</p>';
+            }
+            $result .= '</div>';
+        }
+
+        return $result;
     }
 
     public static function get_artefacts(BlockInstance $instance) {
         $configdata = $instance->get('configdata');
-        //TODO return the id of the image, probably $configdata['artefactid']
-        return array();
+        if (isset($configdata['artefactid'])) {
+            return array($configdata['artefactid']);
+        }
+        return false;
     }
 
+    public static function has_instance_config() {
+        return true;
+    }
+
+    public static function instance_config_form($instance) {
+        $configdata = $instance->get('configdata');
+        return array(
+            'artefactid' => array(
+                'type'  => 'artefactchooser',
+                'title' => 'Image',
+                'defaultvalue' => (isset($configdata['artefactid'])) ? $configdata['artefactid'] : null,
+                'rules' => array(
+                    'required' => true,
+                ),
+                'limit' => 3,
+                'artefacttypes' => array('image', 'profileicon'),
+            ),
+            'showdescription' => array(
+                'type'  => 'checkbox',
+                'title' => 'Show Description?',
+                'defaultvalue' => $configdata['showdescription'],
+            ),
+        );
+    }
 }
 
 ?>
