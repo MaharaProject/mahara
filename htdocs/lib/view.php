@@ -1141,6 +1141,75 @@ class View {
         $baseurl = substr($baseurl, 0, -5);
         return $baseurl;
     }
+
+    /**
+     * Builds data for the artefact chooser.
+     *
+     * This builds three pieces of information:
+     *
+     * - HTML containing table rows
+     * - Pagination HTML and Javascript
+     * - The total number of artefacts found
+     */
+    public static function build_artefactchooser_data($artefacttypes, $offset, $offsetname, $limit, $selectone, $value, $elementname) {
+        global $USER;
+
+        $select = 'owner = ' . $USER->get('id');
+        if (!empty($artefacttypes)) {
+            $select .= ' AND artefacttype IN(' . implode(',', array_map('db_quote', $artefacttypes)) . ')';
+        }
+        $artefacts = get_records_select_array('artefact', $select, null, 'title', '*', $offset, $limit);
+        $totalartefacts = count_records_select('artefact', $select);
+
+        $result = '';
+        foreach ($artefacts as &$artefact) {
+            safe_require('artefact', get_field('artefact_installed_type', 'plugin', 'name', $artefact->artefacttype));
+            $artefact->icon = call_static_method(generate_artefact_class_name($artefact->artefacttype), 'get_icon', $artefact->id);
+            $artefact->hovertitle =  ($artefact->artefacttype == 'profileicon') ? $artefact->note : $artefact->title;
+            $artefact->description = ($artefact->artefacttype == 'profileicon') ? $artefact->title : $artefact->description;
+
+            $smarty = smarty_core();
+            $smarty->assign('artefact', $artefact);
+            $smarty->assign('selectone', $selectone);
+            $smarty->assign('elementname', $elementname);
+            $smarty->assign('value', $value);
+            $result .= $smarty->fetch('form/artefactchooser-element.tpl') . "\n";
+        }
+
+        $smarty = smarty_core();
+        $smarty->assign('artefacts', $result);
+        $smarty->assign('datatable', $elementname . '_data');
+        //$smarty->assign('elementname', $element['name']);
+        $smarty->assign('count', $totalartefacts);
+        $baseurl = View::make_base_url();
+        $pagination = build_pagination(array(
+            'id' => $elementname . '_pagination',
+            'class' => 'ac-pagination',
+            'url' => View::make_base_url(),
+            'count' => $totalartefacts,
+            'limit' => $limit,
+            'offset' => $offset,
+            'offsetname' => $offsetname,
+            'datatable' => $elementname . '_data',
+            'jsonscript' => 'view/artefactchooser.json.php',
+            'firsttext' => '',
+            'previoustext' => '',
+            'nexttext' => '',
+            'lasttext' => '',
+            'numbersincludefirstlast' => false,
+            'extradata' => array(
+                'artefacttypes' => $artefacttypes,
+                'offset'        => $offset,
+                'offsetname'    => $offsetname,
+                'limit'         => $limit,
+                'selectone'     => $selectone,
+                'value'         => $value,
+                'elementname'   => $elementname,
+            ),
+        ));
+
+        return array($result, $pagination, $totalartefacts);
+    }
 }
 
 /**
