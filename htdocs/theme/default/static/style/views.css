@@ -144,3 +144,13 @@ body:last-child:not(:root:root) .newblockhere {
     border: 2px dashed #94BC62;
     margin-top: 1em;
 }
+
+.ac-pagination {
+    text-align: center;
+    white-space: nowrap;
+}
+
+.ac-pagination a, .ac-pagination .disabled {
+    padding: 1px 3px;
+    margin: 0 1px;
+}

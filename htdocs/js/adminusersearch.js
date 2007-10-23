@@ -76,7 +76,7 @@ function UserSearch() {
     }
 
     this.rewritePaging = function() {
-        forEach(getElementsByTagAndClassName('span', 'search-results-page', 'searchresults'), function(i) {
+        forEach(getElementsByTagAndClassName('span', 'pagination', 'searchresults'), function(i) {
             connect(i, 'onclick', self.changePage);
         });
     }

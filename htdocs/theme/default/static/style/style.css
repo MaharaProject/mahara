@@ -809,23 +809,6 @@ p {
     background: #a6aa99 url(../images/tablenavbg.gif) repeat-x;
     height: 15px;
 }
-.maincontent thead tr td a,
-.maincontent thead tr td a:link,
-.maincontent thead tr td a:active,
-.maincontent thead tr td a:visited,
-.maincontent tfoot tr td a,
-.maincontent tfoot tr td a:link,
-.maincontent tfoot tr td a:active,
-.maincontent tfoot tr td a:visited {
-    font-weight: bold;
-    color: #5c8727;
-    margin: 0 10px;
-    font-size: 11px;
-}
-.maincontent thead tr td a:hover,
-.maincontent tfoot tr td a:hover {
-    color: #4c7c10;
-}
 /* Within Table Navigation Styles End */
 
 acronym {
@@ -1578,17 +1561,42 @@ table#initials .initial-letters {
     padding-right: 2px;
 }
 
-#initials .initial-letters span.selected a,
-.search-results-pages span.selected a {
+#initials .initial-letters span.selected a {
     color: #000 !important;
     text-decoration: none;
     font-weight: bold;
 }
 
-.search-results-pages span.dimmed a {
-    color: #999 !important;
+.pagination a, .pagination .disabled {
+    border: 1px solid #547C22;
+    padding: 1px 5px;
     text-decoration: none;
+    margin: 0 .5em;
+}
+.pagination a:hover {
+    background-color: #E7EFC5;
+}
+.pagination .prev {
+    margin-right: .5em;
     font-weight: bold;
+}
+.pagination .next {
+    margin-left: .5em;
+    font-weight: bold;
+}
+.pagination .disabled {
+    background-color: #e0e0e0;
+    color: #888;
+    font-weight: normal;
+}
+.pagination .selected {
+    font-weight: bold;
+    padding: 0 3px;
+}
+.pagination .results {
+    text-align: center;
+    color: #888;
+    margin-top: .5em;
 }
 
 table.tablerenderer th.asc { 
