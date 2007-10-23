@@ -101,27 +101,18 @@ function pieform_element_artefactchooser_set_attributes($element) {
     return $element;
 }
 
-/*
-function pieform_element_artefactchooser_get_headdata() {
-    return array('paginator');
-}
-*/
 /**
- * Extension by Mahara. This api function returns the javascript required to set up the element, assuming the element has been placed in the page using javascript. This feature is used in the views interface.
+ * Extension by Mahara. This api function returns the javascript required to 
+ * set up the element, assuming the element has been placed in the page using 
+ * javascript. This feature is used in the views interface.
  *
  * In theory, this could go upstream to pieforms itself
  *
  * @param Pieform $form     The form
  * @param array   $element  The element
- * @param string  $key      The name of the element (might be available as $element['name'], should check that)
  */
 function pieform_element_artefactchooser_views_js(Pieform $form, $element) {
-    //$extradata = json_encode(array(
-    //));
-    //return 'new Paginator(' . json_encode($element['name'] . '_pagination') . ', ' . json_encode($element['name'] . '_data') . ', "view/artefactchooser.json.php", ' . $extradata . ');';
     global $pagination_js;
-    log_debug('returning');
-    log_debug($pagination_js);
     return $pagination_js;
 }
 
