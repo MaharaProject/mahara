@@ -358,19 +358,6 @@ class BlockInstance {
         require_once('pieforms/pieform.php');
         $pieform = new Pieform($form);
 
-        // We need to load any javascript required for the pieform. We do this
-        // by checking for an api function that has been added especially for 
-        // the purpose, but that is not part of Pieforms. Maybe one day later 
-        // it will be though
-        $js = '';
-        foreach ($elements as $key => $element) {
-            $element['name'] = $key;
-            $function = 'pieform_element_' . $element['type'] . '_views_js';
-            if (is_callable($function)) {
-                $js .= call_user_func_array($function, array($pieform, $element));
-            }
-        }
-
         if ($pieform->is_submitted()) {
             global $SESSION;
             $SESSION->add_error_msg(get_string('errorprocessingform'));
@@ -386,7 +373,22 @@ class BlockInstance {
             }
         }
 
-        return array('html' => $pieform->build(false), 'js' => $js);
+        $html = $pieform->build(false);
+
+        // We need to load any javascript required for the pieform. We do this
+        // by checking for an api function that has been added especially for 
+        // the purpose, but that is not part of Pieforms. Maybe one day later 
+        // it will be though
+        $js = '';
+        foreach ($elements as $key => $element) {
+            $element['name'] = $key;
+            $function = 'pieform_element_' . $element['type'] . '_views_js';
+            if (is_callable($function)) {
+                $js .= call_user_func_array($function, array($pieform, $element));
+            }
+        }
+
+        return array('html' => $html, 'js' => $js);
     }
 
     public function commit() {
