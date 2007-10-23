@@ -57,4 +57,18 @@ function pieform_element_tinywysiwyg_get_value(Pieform $form, $element) {
     return pieform_element_wysiwyg_get_value($form, $element);
 }
 
+/**
+ * Extension by Mahara. This api function returns the javascript required to 
+ * set up the element, assuming the element has been placed in the page using 
+ * javascript. This feature is used in the views interface.
+ *
+ * In theory, this could go upstream to pieforms itself
+ *
+ * @param Pieform $form     The form
+ * @param array   $element  The element
+ */
+function pieform_element_tinywysiwyg_views_js(Pieform $form, $element) {
+    return 'tinyMCE.execCommand("mceAddControl", true, ' . json_encode($form->get_name() . '_' . $element['name']) . ');';
+}
+
 ?>
