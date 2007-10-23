@@ -1886,6 +1886,7 @@ function clean_attributes_2($htmlArray) {
  * Optional options include:
  *
  * - id: The ID of the div enclosing the pagination
+ * - class: The class of the div enclosing the pagination
  * - offsetname: The name of the offset parameter in the url
  * - firsttext: The text to use for the 'first page' link
  * - previoustext: The text to use for the 'previous page' link
@@ -1935,8 +1936,16 @@ function build_pagination($params) {
         $params['numbersincludeprevnext'] = true;
     }
 
+    if (!isset($params['extradata'])) {
+        $params['extradata'] = null;
+    }
+
     // Begin building the output
-    $output = '<div id="' . $params['id'] . '">';
+    $output = '<div id="' . $params['id'] . '"';
+    if (isset($params['class'])) {
+        $output .= ' class="' . hsc($params['class']) . '"';
+    }
+    $output .= '>';
 
     if ($params['limit'] <= $params['count']) {
         $pages = ceil($params['count'] / $params['limit']);
@@ -1998,9 +2007,13 @@ function build_pagination($params) {
         $paginator_js = hsc(get_config('wwwroot') . 'js/paginator.js');
         $id           = json_encode($params['id']);
         $datatable    = json_encode($params['datatable']);
-        $jsonscript  = json_encode($params['jsonscript']);
-        $js .= "new Paginator($id, $datatable, $jsonscript);";
+        $jsonscript   = json_encode($params['jsonscript']);
+        $extradata    = json_encode($params['extradata']);
+        $js .= "new Paginator($id, $datatable, $jsonscript, $extradata);";
     }
+
+    // Output the count of results
+    $output .= '<div class="results">' . $params['count'] . ' results</div>';
 
     // Close the container div
     $output .= '</div>';
