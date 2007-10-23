@@ -26,6 +26,7 @@
 
 defined('INTERNAL') || die();
 
+$pagination_js = '';
 /**
  * Provides a mechanism for choosing one or more artefacts from a list of them.
  *
@@ -34,55 +35,24 @@ defined('INTERNAL') || die();
  * @return string           The HTML for the element
  */
 function pieform_element_artefactchooser(Pieform $form, $element) {
-    global $USER;
+    global $USER, $pagination_js;
 
-    $smarty = smarty_core();
     $value = $form->get_value($element);
 
     // internal configuration
     $offsetname = $form->get_name() . '_' . $element['name'] . '_o';
     $offset = param_integer($offsetname, 0);
 
-    $select = 'owner = ' . $USER->get('id');
-    if (!empty($element['artefacttypes'])) {
-        $select .= ' AND artefacttype IN(' . implode(',', array_map('db_quote', $element['artefacttypes'])) . ')';
-    }
-    $artefacts = get_records_select_array('artefact', $select, null, 'title', '*', $offset, $element['limit']);
-    $totalartefacts = count_records_select('artefact', $select);
-
-    foreach ($artefacts as &$artefact) {
-        safe_require('artefact', get_field('artefact_installed_type', 'plugin', 'name', $artefact->artefacttype));
-        $artefact->icon = call_static_method(generate_artefact_class_name($artefact->artefacttype), 'get_icon', $artefact->id);
-        $artefact->hovertitle =  ($artefact->artefacttype == 'profileicon') ? $artefact->note : $artefact->title;
-        $artefact->description = ($artefact->artefacttype == 'profileicon') ? $artefact->title : $artefact->description;
-    }
-
-    $smarty->assign('elementname', $element['name']);
-    $smarty->assign('artefacts', $artefacts);
-    $smarty->assign('count', $totalartefacts);
-    //$smarty->assign('limit', $element['limit']);
-    //$smarty->assign('offset', $offset);
-    //$smarty->assign('offsetname', $offsetname);
-    $smarty->assign('selectone', $element['selectone']);
-    $smarty->assign('value', $value);
+    list($html, $pagination, $count) = View::build_artefactchooser_data($element['artefacttypes'], $offset, $offsetname, $element['limit'], $element['selectone'], $value, $element['name']);
+    $smarty = smarty_core();
     $smarty->assign('datatable', $element['name'] . '_data');
-    $baseurl = View::make_base_url();
-    $pagination = build_pagination(array(
-        'id' => $element['name'] . '_pagination',
-        'url' => View::make_base_url(),
-        'count' => $totalartefacts,
-        'limit' => $element['limit'],
-        'offset' => $offset,
-        'offsetname' => $offsetname,
-        'datatable' => $element['name'] . '_data',
-        'jsonscript' => 'view/artefactchooser.json.php',
-        'firsttext' => '',
-        'previoustext' => '',
-        'nexttext' => '',
-        'lasttext' => '',
-        'numbersincludefirstlast' => false,
-    ));
+    $smarty->assign('artefacts', $html);
     $smarty->assign('pagination', $pagination['html']);
+
+    // Save the pagination javascript for later, when it is asked for. This is 
+    // messy, but can't be helped until Pieforms goes to a more OO way of 
+    // managing stuff.
+    $pagination_js = $pagination['js'];
 
     return $smarty->fetch('form/artefactchooser.tpl');
 }
@@ -146,9 +116,13 @@ function pieform_element_artefactchooser_get_headdata() {
  * @param string  $key      The name of the element (might be available as $element['name'], should check that)
  */
 function pieform_element_artefactchooser_views_js(Pieform $form, $element) {
-    log_debug('pieform_element_artefactchooser_views_js');
-    log_debug($element);
-    return 'new Paginator(' . json_encode($element['name'] . '_pagination') . ', ' . json_encode($element['name'] . '_data') . ', "view/artefactchooser.json.php");';
+    //$extradata = json_encode(array(
+    //));
+    //return 'new Paginator(' . json_encode($element['name'] . '_pagination') . ', ' . json_encode($element['name'] . '_data') . ', "view/artefactchooser.json.php", ' . $extradata . ');';
+    global $pagination_js;
+    log_debug('returning');
+    log_debug($pagination_js);
+    return $pagination_js;
 }
 
 ?>
