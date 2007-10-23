@@ -427,12 +427,11 @@ abstract class ArtefactType {
 
     /**
      * returns path to icon
-     * can be called statically but not defined so
-     * so that can be either from instance or static.
+     * @param int $id The ID of the artefact to render
      * @abstract 
      * @return string path to icon (relative to docroot)
      */
-    public abstract function get_icon();
+    public static abstract function get_icon($id=0);
     
 
     // ******************** STATIC FUNCTIONS ******************** //
