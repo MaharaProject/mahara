@@ -153,7 +153,7 @@ class ArtefactTypeProfile extends ArtefactType {
         return parent::set($field, $value);
     }
 
-    public function get_icon() {
+    public static function get_icon($id=0) {
 
     }
 
@@ -460,14 +460,8 @@ class ArtefactTypeProfileIcon extends ArtefactTypeProfileField {
     public function render_self($options) {
         $html = '<img src="' . get_config('wwwroot') . 'thumb.php?type=profileiconbyid&id=' . $this->id . '"'
             . 'alt="' . hsc($this->title) . '"';
-        if (isset($options['width'])) {
-            $html .= ' width="' . hsc($options['width']) . '"';
-        }
-        if (isset($options['height'])) {
-            $html .= ' height="' . hsc($options['height']) . '"';
-        }
         $html .= '>';
-        return array('html' => $html, 'javascript' => null);
+        return $html;
     }
 
     public static function get_links($id) {
@@ -476,6 +470,10 @@ class ArtefactTypeProfileIcon extends ArtefactTypeProfileField {
         return array(
             '_default' => $wwwroot . 'artefact/internal/profileicons.php',
         );
+    }
+
+    public static function get_icon($id=0) {
+        return get_config('wwwroot') . 'thumb.php?type=profileiconbyid&id=' . hsc($id) . '&size=20x20';
     }
 }
 
