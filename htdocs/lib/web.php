@@ -853,6 +853,54 @@ function param_boolean($name) {
 }
 
 /**
+ * This function returns a GET or POST parameter as a two element array 
+ * repesenting an allowed width and height value for a resized image. If the 
+ * default isn't specified and the parameter hasn't been sent, a 
+ * ParameterException is thrown. Likewise, if the parameter isn't a valid size 
+ * dimension, a ParameterException is thrown.
+ *
+ * A size parameter is a string, in the form /\d+x\d+/ - e.g. 200x150. The 
+ * width and height are not allowed to be greater than 300x300. The numbers 
+ * must be multiples of five.
+ *
+ * NOTE: The reason for the % 5 limitation is that the files are cached on disk 
+ * after being generated once, so the limitation prevents too much creation of 
+ * randomly sized images and thus lots of disk space wastage.
+ *
+ * NOTE: The 300x300 restriction may prove a problem later. It might be that 
+ * the caller should specify what maximum size is OK.
+ *
+ * You call this function like so:
+ *
+ * list($width, $height) = param_imagesize('size');
+ *
+ * @param string The GET or POST parameter you want returned.
+ */
+function param_imagesize($name) {
+    $args = func_get_args();
+
+    list ($value, $defaultused) = call_user_func_array('_param_retrieve', $args);
+
+    if ($defaultused) {
+        return $value;
+    }
+
+    if (!preg_match('/\d+x\d+/', $value)) {
+        throw new ParameterException('Invalid size for image specified');
+    }
+
+    list($width, $height) = explode('x', $value);
+    if ($width > 300 || $height > 300) {
+        throw new ParameterException('Requested image size is too big');
+    }
+    if ($width % 5 != 0 || $height % 5 != 0) {
+        throw new ParameterException('Requested image size must be in multiples of 5 for width and height');
+    }
+
+    return "{$width}x{$height}";
+}
+
+/**
  * Gets a cookie, respecting the configured cookie prefix
  *
  * @param string $name The name of the cookie to get the value of
@@ -1821,6 +1869,164 @@ function clean_attributes_2($htmlArray) {
     return '<'. $slash . $elem . $attStr . $xhtml_slash .'>';
 }
 
+/**
+ * Builds pagination links for HTML display.
+ *
+ * The pagination is quite configurable, but at the same time gives a consitent 
+ * look and feel to all pagination.
+ *
+ * This function takes one array that contains the options to configure the 
+ * pagination. Required options include:
+ *
+ * - url: The base URL to use for all links
+ * - count: The total number of results to paginate for
+ * - limit: How many to show per page
+ * - offset: At which result to start showing results
+ *
+ * Optional options include:
+ *
+ * - id: The ID of the div enclosing the pagination
+ * - offsetname: The name of the offset parameter in the url
+ * - firsttext: The text to use for the 'first page' link
+ * - previoustext: The text to use for the 'previous page' link
+ * - nexttext: The text to use for the 'next page' link
+ * - lasttext: The text to use for the 'last page' link
+ * - numbersincludefirstlast: Whether the page numbering should include links 
+ *   for the first and last pages
+ *
+ * Optional options to support javascript pagination include:
+ *
+ * - datatable: The ID of the table whose TBODY's rows will be replaced with the 
+ *   resulting rows
+ * - jsonscript: The script to make a json request to in order to retrieve 
+ *   both the new rows and the new pagination. See js/artefactchooser.json.php 
+ *   for an example. Note that the paginator javascript library is NOT 
+ *   automatically included just because you call this function, so make sure 
+ *   that your smarty() call hooks it in.
+ *
+ * @param array $params Options for the pagination
+ */
+function build_pagination($params) {
+    // Bail if the required attributes are not present
+    $required = array('url', 'count', 'limit', 'offset');
+    foreach ($required as $option) {
+        if (!isset($params[$option])) {
+            throw new ParameterException('You must supply option "' . $option . '" to build_pagination');
+        }
+    }
 
+    // Work out default values for parameters
+    if (!isset($params['id'])) {
+        $params['id'] = substr(md5(microtime()), 0, 4);
+    }
+
+    $params['offsetname'] = (isset($params['offsetname'])) ? $params['offsetname'] : 'offset';
+    $params['offset'] = param_integer($params['offsetname'], 0);
+
+    $params['firsttext'] = (isset($params['firsttext'])) ? $params['firsttext'] : get_string('first');
+    $params['previoustext'] = (isset($params['previoustext'])) ? $params['previoustext'] : get_string('previous');
+    $params['nexttext']  = (isset($params['nexttext']))  ? $params['nexttext'] : get_string('next');
+    $params['lasttext']  = (isset($params['lasttext']))  ? $params['lasttext'] : get_string('last');
+
+    if (!isset($params['numbersincludefirstlast'])) {
+        $params['numbersincludefirstlast'] = true;
+    }
+    if (!isset($params['numbersincludeprevnext'])) {
+        $params['numbersincludeprevnext'] = true;
+    }
+
+    // Begin building the output
+    $output = '<div id="' . $params['id'] . '">';
+
+    if ($params['limit'] <= $params['count']) {
+        $pages = ceil($params['count'] / $params['limit']);
+        $page = $params['offset'] / $params['limit'];
+
+        $last = $pages - 1;
+        $next = min($last, $page + 1);
+        $prev = max(0, $page - 1);
+
+        // Build a list of what pagenumbers will be put between the previous/next links
+        $pagenumbers = array();
+        if ($params['numbersincludefirstlast']) {
+            $pagenumbers[] = 0;
+        }
+        if ($params['numbersincludeprevnext']) {
+            $pagenumbers[] = $prev;
+        }
+        $pagenumbers[] = $page;
+        if ($params['numbersincludeprevnext']) {
+            $pagenumbers[] = $next;
+        }
+        if ($params['numbersincludefirstlast']) {
+            $pagenumbers[] = $last;
+        }
+        $pagenumbers = array_unique($pagenumbers);
+
+        // Build the first/previous links
+        $isfirst = $page == 0;
+        $output .= build_pagination_pagelink('first', $params['url'], 0, '&laquo; ' . $params['firsttext'], get_string('firstpage'), $isfirst, $params['offsetname']);
+        $output .= build_pagination_pagelink('prev', $params['url'], $params['limit'] * $prev, 
+            '&larr; ' . $params['previoustext'], get_string('prevpage'), $isfirst, $params['offsetname']);
+
+        // Build the pagenumbers in the middle
+        foreach ($pagenumbers as $k => $i) {
+            if ($k != 0 && $prevpagenum < $i - 1) {
+                $output .= '…';
+            }
+            if ($i == $page) {
+                $output .= '<span class="selected">' . ($i + 1) . '</span>';
+            }
+            else {
+                $output .= build_pagination_pagelink('', $params['url'],
+                    $params['limit'] * $i, $i + 1, '', false, $params['offsetname']);
+            }
+            $prevpagenum = $i;
+        }
+
+        // Build the next/last links
+        $islast = $page == $last;
+        $output .= build_pagination_pagelink('next', $params['url'], $params['limit'] * $next,
+            $params['nexttext'] . ' &rarr;', get_string('nextpage'), $islast, $params['offsetname']);
+        $output .= build_pagination_pagelink('last', $params['url'], $params['limit'] * $last,
+            $params['lasttext'] . ' &raquo;', get_string('lastpage'), $islast, $params['offsetname']);
+    }
+
+    // Work out what javascript we need for the paginator
+    $js = '';
+    if (isset($params['jsonscript']) && isset($params['datatable'])) {
+        $paginator_js = hsc(get_config('wwwroot') . 'js/paginator.js');
+        $id           = json_encode($params['id']);
+        $datatable    = json_encode($params['datatable']);
+        $jsonscript  = json_encode($params['jsonscript']);
+        $js .= "new Paginator($id, $datatable, $jsonscript);";
+    }
+
+    // Close the container div
+    $output .= '</div>';
+
+    return array('html' => $output, 'js' => $js);
+
+}
+
+/**
+ * Used by build_pagination to build individual links. Shouldn't be used 
+ * elsewhere.
+ */
+function build_pagination_pagelink($class, $url, $offset, $text, $title, $disabled=false, $offsetname='offset') {
+    $return = '<span class="pagination';
+    $return .= ($class) ? " $class" : '';
+
+    if ($disabled) {
+        $return .= ' disabled">' . $text . '</span>';
+    }
+    else {
+        $return .= '">'
+            . '<a href="' . $url . '&amp;' . $offsetname . '=' . $offset
+            . '" title="' . $title . '">' . $text . '</a></span>';
+    }
+
+    return $return;
+}
 
 ?>
