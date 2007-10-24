@@ -439,7 +439,7 @@ class View {
     */
     public static function build_category_list($defaultcategory, View $view, $new=0) {
         require_once(get_config('docroot') . '/blocktype/lib.php');
-        $cats = get_records_array('blocktype_category');
+        $cats = get_records_array('blocktype_category', '', '', 'name');
         $categories = array_map(
             create_function(
                 '$a', 
@@ -451,6 +451,10 @@ class View {
             ),
             $cats
         );
+
+        // The 'internal' plugin is known to the outside world as 'profile', so 
+        // we need to sort on the actual name
+        usort($categories, create_function('$a, $b', 'return strnatcasecmp($a[\'title\'], $b[\'title\']);'));
 
         $flag = false;
         foreach ($categories as &$cat) {
