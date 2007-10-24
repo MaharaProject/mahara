@@ -415,6 +415,7 @@ class BlockInstance {
     public function rebuild_artefact_list() {
         db_begin();
         delete_records('view_artefact', 'block', $this->id);
+        safe_require('blocktype', $this->get('blocktype'));
         if (!$artefacts = call_static_method(
             generate_class_name('blocktype', $this->get('blocktype')),
             'get_artefacts', $this)) {
