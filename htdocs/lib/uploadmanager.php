@@ -91,12 +91,14 @@ class upload_manager {
         require_once('file.php');
         $type = get_mime_type($file['tmp_name']);
         if ($type) {
-            $validtypes = get_column_sql('SELECT mimetype
-                FROM {artefact_file_mime_types} m
-                LEFT JOIN {artefact_file_file_types} f ON (m.description = f.description)
-                WHERE f.enabled = 1');
-            if (!in_array($type, $validtypes)) {
-                return get_string('filetypenotallowed');
+            if (substr($type, 0, 5) != 'text/') {
+                $validtypes = get_column_sql('SELECT mimetype
+                    FROM {artefact_file_mime_types} m
+                    LEFT JOIN {artefact_file_file_types} f ON (m.description = f.description)
+                    WHERE f.enabled = 1');
+                if (!in_array($type, $validtypes)) {
+                    return get_string('filetypenotallowed');
+                }
             }
         }
 
