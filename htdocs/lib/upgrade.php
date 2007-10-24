@@ -162,9 +162,15 @@ function check_upgrades($name=null) {
         // Don't try to get the plugin info if we are installing - it will
         // definitely fail
         $pluginversion = 0;
-        if (!$installing) {
-            if (table_exists(new XMLDBTable($plugintype . '_installed'))
-                && $installed = get_record($plugintype . '_installed', 'name', $pluginname)) {
+        if (!$installing && table_exists(new XMLDBTable($plugintype . '_installed'))) {
+            if ($plugintype == 'blocktype' && strpos($pluginname, '/')) {
+                $bits = explode('/', $pluginname);
+                $installed = get_record('blocktype_installed', 'name', $bits[1], 'artefactplugin', $bits[0]);
+            }
+            else {
+                $installed = get_record($plugintype . '_installed', 'name', $pluginname);
+            }
+            if ($installed) {
                 $pluginversion = $installed->version;
                 $pluginrelease =  $installed->release;
             }
