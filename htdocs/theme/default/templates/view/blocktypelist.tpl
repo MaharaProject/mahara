@@ -3,7 +3,9 @@
 {foreach from=$blocktypes item=blocktype}
     <li>
         <div class="blocktype">
-            <img src="{$blocktype.thumbnail_path | escape}" alt="{str tag='preview'}">
+            {* The width and height are required so that the javascript that places the clones knows how
+               big it should make itself. Talk to Nigel before changing this *}
+            <img src="{$blocktype.thumbnail_path | escape}" alt="{str tag='preview'}" width="70" height="58">
             <h3>{$blocktype.title | escape}</h3>
             <p>{$blocktype.description | escape}</p>
             <input type="{if $javascript}hidden{else}radio{/if}" class="blocktype-radio" name="blocktype" value="{$blocktype.name | escape}">
