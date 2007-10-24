@@ -676,27 +676,6 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         return floor(($bytes / 1048576) * 10 + 0.5) / 10 . 'M';
     }
 
-    private function file_url($options) {
-        $result = get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->get('id');
-        if (isset($options['viewid'])) {
-            $result .= '&view=' . $options['viewid'];
-        }
-        return $result;
-    }
-
-    public function linkself() {
-        return '<a href="' . $this->file_url() . '">' . get_string('download', 'artefact.file') . '</a>';
-    }
-
-    protected function get_metadata($options=array()) {
-        $data = parent::get_metadata($options);
-        $data['size'] = array('name' => get_string('size', 'artefact.file'),
-                              'value' => $this->get('size') . ' ' . get_string('bytes', 'artefact.file'));
-        $data['download'] = array('name' => get_string('download', 'artefact.file'),
-                                  'value' => make_link($this->file_url($options)));
-        return $data;
-    }
-
     public static function get_links($id) {
         $wwwroot = get_config('wwwroot');
 
@@ -793,13 +772,6 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
             return $f->get('id');
         }
         return $record->id;
-    }
-
-    protected function get_metadata($options=array()) {
-        $data = parent::get_metadata($options);
-        $data['size'] = array('name' => get_string('size', 'artefact.file'),
-                              'value' => $this->count_children() . ' ' . get_string('files', 'artefact.file'));
-        return $data;
     }
 
     public static function get_links($id) {

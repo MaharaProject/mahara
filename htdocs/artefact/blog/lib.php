@@ -461,21 +461,6 @@ class ArtefactTypeBlogPost extends ArtefactType {
     }
 
 
-    protected function get_metadata($options=array()) {
-        $data = parent::get_metadata($options);
-        unset($data['description']);
-        unset($data['size']);
-        $data['type']['value'] = get_string($this->get('artefacttype'), 'artefact.blog');
-        $data['attachments'] = array('name' => get_string('attachments', 'artefact.blog'),
-                                     'value' => $this->count_attachments() . ' ' 
-                                               . get_string('files', 'artefact.file'));
-        if (isset($options['viewid']) && artefact_in_view($id = $this->get('id'), $options['viewid'])) {
-            $data['title']['value'] = '<a href="' . get_config('wwwroot') . 'view/view.php?view=' . $options['viewid'] . '&artefact=' . $id . '">' . $data['title']['value'] . '</a>';
-        }
-        return $data;
-    }
-
-                
     public static function get_icon($id=0) {
     }
 
