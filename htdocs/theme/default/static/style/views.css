@@ -123,6 +123,9 @@
 .blockinstance-content .maharatable td {
     padding: 0;
 }
+.blockinstance-content p {
+    margin: .25em 0 .5em;
+}
 .column-content .add-button {
     margin: 5px 0;
 }
