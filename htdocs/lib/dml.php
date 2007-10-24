@@ -1050,6 +1050,8 @@ function update_record($table, $dataobject, $where=null) {
 
     global $db;
 
+    $dataobject = clone $dataobject;
+
     if (empty($where)) {
         $where = 'id';
         if (!isset($dataobject->id) ) { 
