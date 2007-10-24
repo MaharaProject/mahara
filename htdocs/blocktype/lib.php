@@ -94,7 +94,7 @@ abstract class PluginBlocktype extends Plugin {
     }
 
     public static function category_title_from_name($name) {
-        $title = get_string('blocktypecategory.'. $name);
+        $title = get_string('blocktypecategory.'. $name, 'view');
         if (strpos($title, '[[') !== 0) {
             return $title;
         }
