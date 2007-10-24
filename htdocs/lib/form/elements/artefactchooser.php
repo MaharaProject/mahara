@@ -82,7 +82,7 @@ function pieform_element_artefactchooser_get_value(Pieform $form, $element) {
             // 1) Start with what's currently available
             // 2) Remove everything on the page that was active when submitted
             // 3) Add in everything that was selected
-            $value = array_merge(array_diff($element['defaultvalue'], $onpage), $selected);
+            $value = array_merge(array_diff($default, $onpage), $selected);
             return array_map('intval', $value);
         }
 
