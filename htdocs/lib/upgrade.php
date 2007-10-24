@@ -790,7 +790,7 @@ function sort_upgrades($k1, $k2) {
 * (eg not tied to artefact plugins)
 */
 function get_core_blocktype_categories() {
-    return array();
+    return array('general', 'images', 'multimedia', 'rss');
 }
 
 function install_blocktype_categories_for_plugin($blocktype) {
