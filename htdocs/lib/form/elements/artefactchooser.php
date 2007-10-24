@@ -70,7 +70,7 @@ function pieform_element_artefactchooser_get_value(Pieform $form, $element) {
                 return null;
             }
 
-            if (preg_match('/^(\d+)*)$/', $value)) {
+            if (preg_match('/^\d+$/', $value)) {
                 return intval($value);
             }
         }
