@@ -62,15 +62,28 @@ function pieform_element_artefactchooser_get_value(Pieform $form, $element) {
 
     $global = ($form->get_property('method') == 'get') ? $_GET : $_POST;
 
-    if (isset($global[$name])) {
-        $value = $global[$name];
+    if (isset($global[$name]) || isset($global["{$name}_onpage"])) {
+        $value  = (isset($global[$name])) ? $global[$name] : array();
 
-        if ($value == '') {
-            return ($element['selectone']) ? null : array();
+        if ($element['selectone']) {
+            if (!$value) {
+                return null;
+            }
+
+            if (preg_match('/^(\d+)*)$/', $value)) {
+                return intval($value);
+            }
         }
+        else {
+            $onpage = (isset($global["{$name}_onpage"])) ? $global["{$name}_onpage"] : array();
+            $selected = (is_array($value)) ? array_map('intval', array_keys($value)) : array();
+            $default  = (is_array($element['defaultvalue'])) ? $element['defaultvalue'] : array();
 
-        if (preg_match('/^(\d+(,\d+)*)$/',$value)) {
-            return ($element['selectone']) ? intval($value) : array_map('intval', explode(',', $value));
+            // 1) Start with what's currently available
+            // 2) Remove everything on the page that was active when submitted
+            // 3) Add in everything that was selected
+            $value = array_merge(array_diff($element['defaultvalue'], $onpage), $selected);
+            return array_map('intval', $value);
         }
 
         throw new PieformException("Invalid value for artefactchooser form element '$name' = '$value'");
