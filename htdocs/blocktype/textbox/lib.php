@@ -37,7 +37,7 @@ class PluginBlocktypeTextbox extends SystemBlocktype {
     }
 
     public static function get_categories() {
-        return array('file');
+        return array('general');
     }
 
     public static function render_instance(BlockInstance $instance) {
