@@ -108,4 +108,8 @@ $string['15,70,15'] = 'Much larger centre column';
 $string['20,30,30,20'] = 'Larger centre columns';
 $string['noviewlayouts'] = 'There are no view layouts for a %s column view';
 
+$string['blocktypecategory.rss'] = 'RSS';
+$string['blocktypecategory.images'] = 'Images';
+$string['blocktypecategory.general'] = 'General';
+$string['blocktypecategory.multimedia'] = 'Multimedia';
 ?>
