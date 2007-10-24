@@ -1631,4 +1631,20 @@ function display_size($size) {
     }
     return $size;
 }
+
+/**
+ * Takes a string and a length, and ensures that the string is no longer than 
+ * this length, by putting '...' in the middle
+ *
+ * @param string $str String to shorten
+ * @param int $maxlen The maximum length the new string should be
+ * @return string
+ */
+function str_shorten($str, $maxlen) {
+    if (strlen($str) > ($maxlen - 3)) {
+        return substr($str, 0, floor($maxlen / 2) - 1) . '...' . substr($str, -(floor($maxlen / 2) - 2));
+    }
+    return $str;
+}
+
 ?>
