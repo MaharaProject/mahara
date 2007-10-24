@@ -238,8 +238,8 @@ function xmldb_core_upgrade($oldversion=0) {
         create_table($table);
 
         $table = new XMLDBTable('blocktype_installed');
-        $table->addFieldInfo('name', XMLDB_TYPE_CHAR, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL);
-        $table->addFieldInfo('version', XMLDB_TYPE_CHAR, 255, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('name', XMLDB_TYPE_CHAR, 255, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('version', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL);
         $table->addFieldInfo('release', XMLDB_TYPE_TEXT, 'small', XMLDB_UNSIGNED, XMLDB_NOTNULL);
         $table->addFieldInfo('active', XMLDB_TYPE_INTEGER,  1, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, 1);
         $table->addFieldInfo('artefactplugin', XMLDB_TYPE_CHAR, 255);
