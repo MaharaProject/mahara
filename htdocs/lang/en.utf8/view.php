@@ -112,4 +112,7 @@ $string['blocktypecategory.rss'] = 'RSS';
 $string['blocktypecategory.images'] = 'Images';
 $string['blocktypecategory.general'] = 'General';
 $string['blocktypecategory.multimedia'] = 'Multimedia';
+
+$string['notitle'] = 'No title';
+
 ?>
