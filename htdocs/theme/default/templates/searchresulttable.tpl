@@ -1,5 +1,5 @@
 {if !empty($results.data)}
-    <h3>{str tag="results"}</h3>
+    <h3>{str tag="Results"}</h3>
     <table id="searchresults" class="tablerenderer">
         <thead>
           {mahara_pagelinks offset=$results.offset limit=$results.limit count=$results.count url=$pagebaseurl assign=pagelinks}

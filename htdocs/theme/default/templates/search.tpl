@@ -15,7 +15,7 @@
                     </form>
 				</div>
 				<div id="seachresults">
-                    <h3>{str tag="results"}</h3>
+                    <h3>{str tag="Results"}</h3>
                     <table id="searchresults" class="hidden tablerenderer">
                         <tbody>
                         </tbody>
@@ -23,4 +23,3 @@
 				</div>
 {include file="columnfullend.tpl"}
 {include file="footer.tpl"}
-
