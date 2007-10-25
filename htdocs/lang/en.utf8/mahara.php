@@ -343,6 +343,7 @@ $string['search'] = 'Search';
 $string['advancedsearch'] = 'Advanced search';
 $string['query'] = 'Query';
 $string['querydescription'] = 'The words to be searched for';
+$string['result'] = 'result';
 $string['results'] = 'results';
 $string['Results'] = 'Results';
 $string['noresultsfound'] = 'No results found';
