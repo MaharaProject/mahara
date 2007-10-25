@@ -2013,7 +2013,8 @@ function build_pagination($params) {
     }
 
     // Output the count of results
-    $output .= '<div class="results">' . $params['count'] . ' results</div>';
+    $resultsstr = ($params['count'] == 1) ? get_string('result') : get_string('results');
+    $output .= '<div class="results">' . $params['count'] . ' ' . $resultsstr . '</div>';
 
     // Close the container div
     $output .= '</div>';
