@@ -33,7 +33,7 @@ require_once('file.php');
 
 $fileid = param_integer('file');
 $viewid = param_integer('view', null);
-$size   = param_imagesize('size', '');
+$size   = get_imagesize_parameters();
 
 if ($viewid && $fileid) {
     if (!artefact_in_view($fileid, $viewid)) {
