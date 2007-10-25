@@ -50,7 +50,8 @@ class PluginBlocktypeImage extends PluginBlocktype {
         $result = '';
         if (isset($configdata['artefactid'])) {
             $image = artefact_instance_from_id($configdata['artefactid']);
-            $result = $image->render_self($configdata); // in this case, config data contains width & height //TODO change this, we have an array now with javascript and html
+            $data = $image->render_self($configdata);
+            $result = $data['html'];
             $result = '<div class="center"><div>' . $result . '</div>';
 
             $description = (is_a($image, 'ArtefacttypeImage')) ? $image->get('description') : $image->get('title');
@@ -80,7 +81,7 @@ class PluginBlocktypeImage extends PluginBlocktype {
         return array(
             'artefactid' => array(
                 'type'  => 'artefactchooser',
-                'title' => 'Image',
+                'title' => get_string('image'),
                 'defaultvalue' => (isset($configdata['artefactid'])) ? $configdata['artefactid'] : null,
                 'rules' => array(
                     'required' => true,
@@ -90,8 +91,19 @@ class PluginBlocktypeImage extends PluginBlocktype {
             ),
             'showdescription' => array(
                 'type'  => 'checkbox',
-                'title' => 'Show Description?',
+                'title' => get_string('showdescription', 'blocktype.file/image'),
                 'defaultvalue' => $configdata['showdescription'],
+            ),
+            'width' => array(
+                'type' => 'text',
+                'title' => get_string('width', 'blocktype.file/image'),
+                'size' => 3,
+                'description' => get_string('widthdescription', 'blocktype.file/image'),
+                'rules' => array(
+                    'minvalue' => 16,
+                    'maxvalue' => get_config('imagemaxwidth'),
+                ),
+                'defaultvalue' => (isset($configdata['width'])) ? $configdata['width'] : '',
             ),
         );
     }
