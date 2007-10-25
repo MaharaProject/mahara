@@ -229,12 +229,15 @@ class BlockInstance {
         unset($values['sesskey']);
         unset($values['blockinstance']);
         unset($values['action_configureblockinstance_id_' . $this->get('id')]);
+        $title = $values['title'];
+        unset($values['title']);
 
         if (is_callable(array(generate_class_name('blocktype', $this->get('blocktype')), 'instance_config_save'))) {
             $values = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'instance_config_save', $values);
         }
 
         $configdata = $values;
+        $this->set('title', $title);
         $this->set('configdata', $configdata);
         $this->commit();
 
@@ -313,6 +316,7 @@ class BlockInstance {
         $smarty->assign('configurable', call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'has_instance_config'));
         $smarty->assign('content', $content);
         $smarty->assign('javascript', defined('JSON'));
+        $smarty->assign('strnotitle', get_string('notitle', 'view'));
 
         return array('html' => $smarty->fetch('view/blocktypecontainerediting.tpl'), 'js' => $js);
     }
@@ -339,7 +343,16 @@ class BlockInstance {
      */
     public function build_configure_form() {
         safe_require('blocktype', $this->get('blocktype'));
-        $elements = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'instance_config_form', $this);
+        $elements = array_merge(
+            array(
+                'title' => array(
+                    'type' => 'text',
+                    'title' => 'Block Title',
+                    'defaultvalue' => $this->get('title')
+                ),
+            ),
+            call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'instance_config_form', $this)
+        );
 
         // Add submit/cancel buttons
         $elements['action_configureblockinstance_id_' . $this->get('id')] = array(
