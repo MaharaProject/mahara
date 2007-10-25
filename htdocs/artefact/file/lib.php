@@ -329,7 +329,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         return false;
     }
 
-    public static function get_icon($id=0) {
+    public static function get_icon($options=null) {
 
     }
 
@@ -441,15 +441,8 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
 
     }
 
-
-    // Where to store files under dataroot in the filesystem
-    static $artefactfileroot = 'artefact/file/';
-
-    // Number of subdirectories to create under $artefactfileroot
-    static $artefactfilesubdirs = 256;
-
     public static function get_file_directory($id) {
-        return self::$artefactfileroot . $id % self::$artefactfilesubdirs;
+        return "artefact/file/originals/" . ($id % 256);
     }
 
     public function get_path() {
@@ -599,7 +592,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         return true;
     }
 
-    public static function get_icon($id=0) {
+    public static function get_icon($options=null) {
         return theme_get_url('images/file.gif');
     }
 
@@ -707,7 +700,7 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
         return $this->count_children() . ' ' . get_string('files', 'artefact.file');
     }
 
-    public static function get_icon($id=0) {
+    public static function get_icon($options=null) {
 
     }
 
@@ -847,9 +840,21 @@ class ArtefactTypeImage extends ArtefactTypeFile {
         return is_image_mime_type($type);
     }
 
-    public static function get_icon($id=0) {
-        return get_config('wwwroot') . 'artefact/file/download.php?file=' . $id . '&size=20x20';
-        return theme_get_url('images/image.gif');
+    public static function get_icon($options=null) {
+        $url = get_config('wwwroot') . 'artefact/file/download.php?';
+        $url .= 'file=' . $options['id'];
+
+        if (isset($options['view'])) {
+            $url .= '&view=' . $options['view'];
+        }
+        if (isset($options['size'])) {
+            $url .= '&size=' . $options['size'];
+        }
+        else {
+            $url .= '&size=20x20';
+        }
+
+        return $url;
     }
 
     public function get_path($data=array()) {
@@ -869,18 +874,23 @@ class ArtefactTypeImage extends ArtefactTypeFile {
     public function render_self($options) {
         $src = get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->id;
         if (isset($options['viewid'])) {
-            $src .= '&amp;view=' . $options['viewid'];
+            $src .= '&view=' . $options['viewid'];
         }
 
-        if (isset($options['width']) || isset($options['height'])) {
-            $options['width']  = (isset($options['width'])) ? $options['width'] : $options['height'];
-            $options['height'] = (isset($options['height'])) ? $options['height'] : $options['width'];
-
-            $src .= '&amp;size=' . $options['width'] . 'x' . $options['height'];
+        if (isset($options['width']) && isset($options['height'])) {
+            $src .= '&size=' . $width . 'x' . $height;
+        }
+        else if (isset($options['width'])) {
+            $src .= '&width=' . $options['width'];
+        }
+        else if (isset($options['height'])) {
+            $src .= '&height=' . $options['height'];
         }
 
-        // like width & height maybe
-        return '<img src="' . $src . '" alt="' . hsc($this->get('description')) .'">'; // more later
+        return array(
+            'html' => '<img src="' . hsc($src) . '" alt="' . hsc($this->get('description')) .'">',
+            'javascript' => ''
+        );
     }
 }
 
