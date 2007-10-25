@@ -153,7 +153,7 @@ class ArtefactTypeProfile extends ArtefactType {
         return parent::set($field, $value);
     }
 
-    public static function get_icon($id=0) {
+    public static function get_icon($options=null) {
 
     }
 
@@ -458,10 +458,18 @@ class ArtefactTypeProfileIcon extends ArtefactTypeProfileField {
     }
 
     public function render_self($options) {
-        $html = '<img src="' . get_config('wwwroot') . 'thumb.php?type=profileiconbyid&id=' . $this->id . '"'
+        $src = get_config('wwwroot') . 'thumb.php?type=profileiconbyid&id=' . $this->id;
+
+        if (isset($options['width']) || isset($options['height'])) {
+            $options['width']  = (isset($options['width'])) ? $options['width'] : $options['height'];
+            $options['height'] = (isset($options['height'])) ? $options['height'] : $options['width'];
+
+            $src .= '&size=' . $options['width'] . 'x' . $options['height'];
+        }
+        $html = '<img src="' . hsc($src) . '"'
             . 'alt="' . hsc($this->title) . '"';
         $html .= '>';
-        return $html;
+        return array('html' => $html, 'javascript' =>'');
     }
 
     public static function get_links($id) {
@@ -472,8 +480,17 @@ class ArtefactTypeProfileIcon extends ArtefactTypeProfileField {
         );
     }
 
-    public static function get_icon($id=0) {
-        return get_config('wwwroot') . 'thumb.php?type=profileiconbyid&id=' . hsc($id) . '&size=20x20';
+    public static function get_icon($options=null) {
+        $url = get_config('wwwroot') . 'thumb.php?type=profileiconbyid&id=' . hsc($options['id']);
+
+        if (isset($options['size'])) {
+            $url .= '&size=' . $options['size'];
+        }
+        else {
+            $url .= '&size=20x20';
+        }
+
+        return $url;
     }
 }
 
