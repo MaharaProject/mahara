@@ -426,12 +426,19 @@ abstract class ArtefactType {
 
 
     /**
-     * returns path to icon
-     * @param int $id The ID of the artefact to render
+     * Returns a URL for an icon for the appropriate artefact
+     *
+     * @param array $options Options for the artefact. The array MUST have the 
+     *                       'id' key, representing the ID of the artefact for 
+     *                       which the icon is being generated. Other keys 
+     *                       include 'size' for a [width]x[height] version of 
+     *                       the icon, as opposed to the default 20x20, and 
+     *                       'view' for the id of the view in which the icon is 
+     *                       being displayed.
      * @abstract 
-     * @return string path to icon (relative to docroot)
+     * @return string URL for the icon
      */
-    public static abstract function get_icon($id=0);
+    public static abstract function get_icon($options=null);
     
 
     // ******************** STATIC FUNCTIONS ******************** //

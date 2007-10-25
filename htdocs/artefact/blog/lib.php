@@ -235,7 +235,7 @@ class ArtefactTypeBlog extends ArtefactType {
     }
 
                 
-    public static function get_icon($id=0) {
+    public static function get_icon($options=null) {
     }
 
     public static function is_singular() {
@@ -461,7 +461,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
     }
 
 
-    public static function get_icon($id=0) {
+    public static function get_icon($options=null) {
     }
 
     public static function is_singular() {
