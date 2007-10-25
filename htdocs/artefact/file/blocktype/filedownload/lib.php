@@ -43,22 +43,28 @@ class PluginBlocktypeFiledownload extends PluginBlocktype {
     public static function render_instance(BlockInstance $instance) {
         require_once(get_config('docroot') . 'lib/artefact.php');
         $configdata = $instance->get('configdata');
-        $configdata['viewid'] = $instance->get('view');
 
         $result = '';
         if (isset($configdata['artefactids']) && is_array($configdata['artefactids'])) {
             foreach ($configdata['artefactids'] as $artefactid) {
                 $artefact = artefact_instance_from_id($artefactid);
+
+                $icondata = array(
+                    'id'   => $artefactid,
+                    'view' => $instance->get('view'),
+                );
+
                 $result .= '<div title="' . hsc($artefact->get('title')) . '">';
-                $result .= '<div class="fl"><img src="' . call_static_method(generate_artefact_class_name($artefact->get('artefacttype')), 'get_icon', $artefactid) . '" alt=""></div>';
+                $result .= '<div class="fl"><img src="' . call_static_method(generate_artefact_class_name($artefact->get('artefacttype')), 'get_icon', $icondata) . '" alt=""></div>';
                 $result .= '<div style="margin-left: 30px;">';
+
                 if ($artefact instanceof ArtefactTypeProfileIcon) {
                     require_once('file.php');
                     $url = get_config('wwwroot') . 'thumb.php?type=profileiconbyid&id=' . $artefactid;
-                    $size = filesize(get_dataroot_image_path('artefact/internal/profileicons/', $artefactid, ''));
+                    $size = filesize(get_dataroot_image_path('artefact/internal/profileicons/', $artefactid));
                 }
                 else if ($artefact instanceof ArtefactTypeFile) {
-                    $url = get_config('wwwroot') . 'artefact/file/download.php?file=' . $artefactid . '&view=' . $configdata['viewid'];
+                    $url = get_config('wwwroot') . 'artefact/file/download.php?file=' . $artefactid . '&view=' . $icondata['view'];
                     $size = $artefact->get('size');
                 }
                 $result .= '<h4><a href="' . hsc($url) . '">' . str_shorten($artefact->get('title'), 20) . '</a></h4>';
