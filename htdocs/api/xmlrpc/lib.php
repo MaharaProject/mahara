@@ -186,7 +186,7 @@ function fetch_user_image($username) {
         $return['f1'] = base64_encode($fi);
 
         require_once('file.php');
-        $im = get_dataroot_image_path('artefact/internal/profileicons' , $user->profileicon, '100x100');
+        $im = get_dataroot_image_path('artefact/internal/profileicons' , $user->profileicon, 100);
         $fi = file_get_contents($im);
         $return['f2'] = base64_encode($fi);
         return $return;
