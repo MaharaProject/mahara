@@ -172,7 +172,7 @@ $string['firstnamedescription'] = ' ';
 $string['lastname'] = 'Last name';
 $string['lastnamedescription'] = ' ';
 $string['registerstep1description'] = 'Welcome! To use this site you must first register. You must also agree to the <a href="terms.php">terms and conditions</a>. The data we collect here will be stored according to our <a href="privacy.php">privacy statement</a>.';
-$string['registerstep3fieldsoptional'] = '<h3>Choose an Optional Profile Image</h3><p>You have now successfully registered with ' . get_config('sitename') . '! You may now choose an optional profile icon to be displayed as your avatar. This image cannot be larger than 300x300 pixels.</p>';
+$string['registerstep3fieldsoptional'] = '<h3>Choose an Optional Profile Image</h3><p>You have now successfully registered with ' . get_config('sitename') . '! You may now choose an optional profile icon to be displayed as your avatar.</p>';
 $string['registerstep3fieldsmandatory'] = '<h3>Fill Out Mandatory Profile Fields</h3><p>The following fields are required. You must fill them out before your registration is complete.</p>';
 $string['registeringdisallowed'] = 'Sorry, you cannot register for this system at this time';
 
