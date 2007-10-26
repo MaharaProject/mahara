@@ -1,6 +1,13 @@
 {include file="header.tpl"}
 
 {include file="columnfullstart.tpl"}
+{if $can_edit}
+<div class="fr editview">
+    <span class="settingsicon">
+        <a href="blocks.php?id={$viewid}">Edit this view</a>
+    </span>
+</div>
+{/if}
 <div id="view">
 	<h3>
         {foreach name=viewnav from=$VIEWNAV item=item}
