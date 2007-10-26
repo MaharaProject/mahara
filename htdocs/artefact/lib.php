@@ -365,6 +365,10 @@ abstract class ArtefactType {
             return;
         }
       
+        if (empty($GLOBALS['_TRANSACTION_STARTED'])) {
+            db_begin();
+        }
+
         // Call delete() on children (if there are any)
         if ($children = $this->get_children_instances()) {
             foreach ($children as $child) {
@@ -374,6 +378,15 @@ abstract class ArtefactType {
 
         // Delete any references to this artefact from non-artefact places.
         delete_records_select('artefact_parent_cache', 'artefact = ? OR parent = ?', array($this->id, $this->id));
+
+        // Make sure that the artefact is removed from any view blockinstances that have it
+        if ($records = get_column('view_artefact', 'block', 'artefact', $this->id)) {
+            foreach ($records as $blockid) {
+                require_once(get_config('docroot') . 'blocktype/lib.php');
+                $bi = new BlockInstance($blockid);
+                $bi->delete_artefact($this->id);
+            }
+        }
         delete_records('view_artefact', 'artefact', $this->id);
         delete_records('artefact_feedback', 'artefact', $this->id);
         delete_records('artefact_tag', 'artefact', $this->id);
@@ -387,6 +400,10 @@ abstract class ArtefactType {
         $this->dirty = false;
         $this->parentdirty = true;
         $this->deleted = true;
+
+        if (!empty($GLOBALS['_TRANSACTION_STARTED'])) {
+            db_commit();
+        }
     }
 
     /**
