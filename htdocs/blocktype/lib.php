@@ -488,6 +488,43 @@ class BlockInstance {
         call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'delete_instance', $this);
     }
 
+    /**
+     * Deletes an artefact from the blockinstance.
+     *
+     * This is implemented in the baseclass by looking for arrays in the block 
+     * instance configuration called 'artefactid' or 'artefactids', and 
+     * removing the one we were looking to delete. This means two things:
+     *
+     * 1) In order to not have to re-implement this method for new blocktypes, 
+     *    your blocktype should ALWAYS store its artefact IDs in the config data 
+     *    value 'artefactid' or in the array 'artefactids'
+     * 2) The block must ALWAYS continue to work even when artefacts are 
+     *    removed from it
+     */
+    public function delete_artefact($artefact) {
+        $configdata = $this->get('configdata');
+        $changed = false;
+
+        if (isset($configdata['artefactid'])) {
+            if ($configdata['artefactid'] == $artefact) {
+                $configdata['artefactid'] = null;
+            }
+            $changed = true;
+        }
+
+        if (isset($configdata['artefactids']) && is_array($configdata['artefactids'])) {
+            $configdata['artefactids'] = array_diff($configdata['artefactids'], array($artefact));
+            $changed = true;
+        }
+
+        if ($changed) {
+            $this->set('configdata', $configdata);
+
+            // We would commit here but we don't want to rebuild the artefact list
+            set_field('block_instance', 'configdata', serialize($configdata), 'id', $this->get('id'));
+        }
+    }
+
 }
 
 
