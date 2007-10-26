@@ -853,6 +853,9 @@ function param_boolean($name) {
 }
 
 /**
+ * NOTE: this function is only meant to be used by get_imagesize_parameters(),
+ * which you should use in your scripts.
+ *
  * This function returns a GET or POST parameter as a two element array 
  * repesenting an allowed width and height value for a resized image. If the 
  * default isn't specified and the parameter hasn't been sent, a 
@@ -860,21 +863,15 @@ function param_boolean($name) {
  * dimension, a ParameterException is thrown.
  *
  * A size parameter is a string, in the form /\d+x\d+/ - e.g. 200x150. The 
- * width and height are not allowed to be greater than 300x300. The numbers 
- * must be multiples of five.
- *
- * NOTE: The reason for the % 5 limitation is that the files are cached on disk 
- * after being generated once, so the limitation prevents too much creation of 
- * randomly sized images and thus lots of disk space wastage.
- *
- * NOTE: The 300x300 restriction may prove a problem later. It might be that 
- * the caller should specify what maximum size is OK.
+ * width and height are not allowed to be greater than the configured allowed
+ * maximums - config variables imagemaxwidth and imagemaxheight.
  *
  * You call this function like so:
  *
  * list($width, $height) = param_imagesize('size');
  *
  * @param string The GET or POST parameter you want returned.
+ * TODO: i18n for the error messages
  */
 function param_imagesize($name) {
     $args = func_get_args();
@@ -890,14 +887,61 @@ function param_imagesize($name) {
     }
 
     list($width, $height) = explode('x', $value);
-    if ($width > 300 || $height > 300) {
+    if ($width > get_config('imagemaxwidth') || $height > get_config('imagemaxheight')) {
         throw new ParameterException('Requested image size is too big');
     }
-    if ($width % 5 != 0 || $height % 5 != 0) {
-        throw new ParameterException('Requested image size must be in multiples of 5 for width and height');
+    if ($width < 16 || $height < 16) {
+        throw new ParameterException('Requested image size is too small');
     }
+    return array('w' => $width, 'h' => $height);
+}
 
-    return "{$width}x{$height}";
+/**
+ * Works out what size a requested image should be, based on request parameters
+ *
+ * The result of this function can be passed to get_dataroot_image_path to 
+ * retrieve the filesystem path of the appropriate image
+ */
+function get_imagesize_parameters($sizeparam='size', $widthparam='width', $heightparam='height', $maxsizeparam='maxsize') {
+    $size    = param_imagesize($sizeparam, '');
+    $width   = param_integer($widthparam, 0);
+    $height  = param_integer($heightparam, 0);
+    $maxsize = param_integer($maxsizeparam, 0);
+
+    $imagemaxwidth  = get_config('imagemaxwidth');
+    $imagemaxheight = get_config('imagemaxheight');
+
+    if ($size) {
+        return $size;
+    }
+    if ($maxsize) {
+        if ($maxsize > $imagemaxwidth && $maxsize > $imagemaxheight) {
+            throw new ParameterException('Requested image size is too big');
+        }
+        if ($maxsize < 16) {
+            throw new ParameterException('Requested image size is too small');
+        }
+        return $maxsize;
+    }
+    if ($width) {
+        if ($width > $imagemaxwidth) {
+            throw new ParameterException('Requested image size is too big');
+        }
+        if ($width < 16) {
+            throw new ParameterException('Requested image size is too small');
+        }
+        return array('w' => $width);
+    }
+    if ($height) {
+        if ($height > $imagemaxheight) {
+            throw new ParameterException('Requested image size is too big');
+        }
+        if ($height < 16) {
+            throw new ParameterException('Requested image size is too small');
+        }
+        return array('h' => $height);
+    }
+    return null;
 }
 
 /**
