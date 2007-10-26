@@ -35,7 +35,7 @@ switch ($type) {
     case 'profileiconbyid':
     case 'profileicon':
         $id = param_integer('id');
-        $size = param_imagesize('size', '');
+        $size = get_imagesize_parameters();
 
         if ($type == 'profileicon') {
             // Convert ID of user to the ID of a profileicon
