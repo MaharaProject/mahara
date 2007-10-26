@@ -271,8 +271,10 @@ class AuthXmlrpc extends Auth {
                     }
 
                     list($width, $height) = getimagesize($filename);
-                    if ($width > 300 || $height > 300) {
-                        $error = get_string('profileiconimagetoobig', 'artefact.internal', $width, $height);
+                    $imagemaxwidth  = get_config('imagemaxwidth');
+                    $imagemaxheight = get_config('imagemaxheight');
+                    if ($width > $imagemaxwidth || $height > $imagemaxheight) {
+                        $error = get_string('profileiconimagetoobig', 'artefact.internal', $width, $height, $imagemaxwidth, $imagemaxheight);
                     }
 
                     try {
