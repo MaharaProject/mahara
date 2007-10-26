@@ -135,7 +135,7 @@ if (isset($key)) {
             $registration->profileicon = $id;
 
             // Move the file into the correct place.
-            $directory = get_config('dataroot') . 'artefact/internal/profileicons/' . ($id % 256) . '/';
+            $directory = get_config('dataroot') . 'artefact/internal/profileicons/originals/' . ($id % 256) . '/';
             check_dir_exists($directory);
             move_uploaded_file($values['profileimg']['tmp_name'], $directory . $id);
         }
@@ -161,10 +161,12 @@ if (isset($key)) {
                 $form->set_error('profileimg', get_string('filenotimage'));
             }
 
-            // Check the file isn't greater than 300x300
+            // Check the file isn't greater than the maximum allowed size
             list($width, $height) = getimagesize($values['profileimg']['tmp_name']);
-            if ($width > 300 || $height > 300) {
-                $form->set_error('profileimg', get_string('profileiconimagetoobig', 'artefact.internal', $width, $height));
+            $imagemaxwidth  = get_config('imagemaxwidth');
+            $imagemaxheight = get_config('imagemaxheight');
+            if ($width > $imagemaxwidth || $height > $imagemaxheight) {
+                $form->set_error('profileimg', get_string('profileiconimagetoobig', 'artefact.internal', $width, $height, $imagemaxwidth, $imagemaxheight));
             }
         }
 
