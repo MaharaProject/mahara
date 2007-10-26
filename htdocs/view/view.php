@@ -341,6 +341,10 @@ $smarty->assign('VIEWNAV', $navlist);
 if (isset($content)) {
     $smarty->assign('VIEWCONTENT', $content);
 }
+if ($USER->get('id') == $view->get('owner')) {
+    $smarty->assign('can_edit', true);
+    $smarty->assign('viewid', $viewid);
+}
 $smarty->display('view/view.tpl');
 
 ?>
