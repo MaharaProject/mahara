@@ -106,15 +106,10 @@ class PluginBlocktypeFiledownload extends PluginBlocktype {
                 'rules' => array(
                     'required' => true,
                 ),
-                'limit' => 3,
+                'limit' => 5,
                 'selectone' => false,
                 'artefacttypes' => array('file', 'image', 'profileicon'),
             ),
-            //'showdescription' => array(
-            //    'type'  => 'checkbox',
-            //    'title' => 'Show Description?',
-            //    'defaultvalue' => $configdata['showdescription'],
-            //),
         );
     }
 }
