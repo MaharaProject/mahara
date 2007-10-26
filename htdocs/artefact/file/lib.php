@@ -877,13 +877,13 @@ class ArtefactTypeImage extends ArtefactTypeFile {
             $src .= '&view=' . $options['viewid'];
         }
 
-        if (isset($options['width']) && isset($options['height'])) {
+        if (!empty($options['width']) && !empty($options['height'])) {
             $src .= '&size=' . $width . 'x' . $height;
         }
-        else if (isset($options['width'])) {
+        else if (!empty($options['width'])) {
             $src .= '&width=' . $options['width'];
         }
-        else if (isset($options['height'])) {
+        else if (!empty($options['height'])) {
             $src .= '&height=' . $options['height'];
         }
 
