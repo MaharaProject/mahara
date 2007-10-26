@@ -9,6 +9,16 @@
     color: #547C22;
 }
 
+#view h3 {
+    margin-top: .25em;
+}
+#view p.view-description {
+    margin: .5em .25em;
+}
+div.editview {
+    margin-top: .75em;
+}
+
 #top-pane {
     background: #acc067 url(../images/toppane_corner_topright.gif) no-repeat right top;
 }
