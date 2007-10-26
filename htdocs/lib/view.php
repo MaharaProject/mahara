@@ -1168,7 +1168,7 @@ class View {
         $result = '';
         foreach ($artefacts as &$artefact) {
             safe_require('artefact', get_field('artefact_installed_type', 'plugin', 'name', $artefact->artefacttype));
-            $artefact->icon = call_static_method(generate_artefact_class_name($artefact->artefacttype), 'get_icon', $artefact->id);
+            $artefact->icon = call_static_method(generate_artefact_class_name($artefact->artefacttype), 'get_icon', array('id' => $artefact->id));
             $artefact->hovertitle =  ($artefact->artefacttype == 'profileicon') ? $artefact->note : $artefact->title;
             $artefact->description = ($artefact->artefacttype == 'profileicon') ? $artefact->title : $artefact->description;
 
