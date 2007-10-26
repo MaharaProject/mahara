@@ -858,6 +858,7 @@ class ArtefactTypeImage extends ArtefactTypeFile {
     }
 
     public function get_path($data=array()) {
+        require_once('file.php');
         $size = (isset($data['size'])) ? $data['size'] : null;
         $result = get_dataroot_image_path('artefact/file/', $this->id, $size);
         return $result;
