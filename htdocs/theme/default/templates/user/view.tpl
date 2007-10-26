@@ -10,7 +10,7 @@
 		{foreach from=$USERFIELDS name=userfields key=key item=item}
 			<tr>{if $smarty.foreach.userfields.first}
                 <td style="width: 100px;" rowspan="{$smarty.foreach.userfields.total+1}">
-                    <img src="{$WWWROOT}thumb.php?type=profileicon&size=100x100&id={$USERID}" alt="">
+                    <img src="{$WWWROOT}thumb.php?type=profileicon&maxsize=100&id={$USERID}" alt="">
                 </td>{/if}
                 <th>{str section=artefact.internal tag=$key}</th><td>{$item}</td>
             </tr>
