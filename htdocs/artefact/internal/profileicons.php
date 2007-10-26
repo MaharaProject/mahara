@@ -98,7 +98,7 @@ var table = new TableRenderer(
     'profileicons.json.php',
     [
         function(rowdata) {
-            return TD(null, IMG({'src': '$wwwroot/thumb.php?type=profileiconbyid&size=100x100&id=' + rowdata.id, 'alt': rowdata.note}));
+            return TD(null, IMG({'src': '$wwwroot/thumb.php?type=profileiconbyid&maxsize=100&id=' + rowdata.id, 'alt': rowdata.note}));
         },
         function(rowdata) {
             return TD(null, rowdata.title ? rowdata.title : rowdata.note);
@@ -162,10 +162,12 @@ function upload_validate(Pieform $form, $values) {
         $form->set_error('file', get_string('profileiconuploadexceedsquota', 'artefact.internal', get_config('wwwroot')));
     }
 
-    // Check the file isn't greater than 300x300
+    // Check the file isn't greater than the max allowable size
     list($width, $height) = getimagesize($values['file']['tmp_name']);
-    if ($width > 300 || $height > 300) {
-        $form->set_error('file', get_string('profileiconimagetoobig', 'artefact.internal', $width, $height));
+    $imagemaxwidth  = get_config('imagemaxwidth');
+    $imagemaxheight = get_config('imagemaxheight');
+    if ($width > $imagemaxwidth || $height > $imagemaxheight) {
+        $form->set_error('file', get_string('profileiconimagetoobig', 'artefact.internal', $width, $height, $imagemaxwidth, $imagemaxheight));
     }
 }
 
@@ -198,7 +200,7 @@ function upload_submit(Pieform $form, $values) {
     $id = $artefact->get('id');
 
     // Move the file into the correct place.
-    $directory = get_config('dataroot') . 'artefact/internal/profileicons/' . ($id % 256) . '/';
+    $directory = get_config('dataroot') . 'artefact/internal/profileicons/originals/' . ($id % 256) . '/';
     check_dir_exists($directory);
     move_uploaded_file($values['file']['tmp_name'], $directory . $id);
 
@@ -241,7 +243,7 @@ function settings_submit_delete(Pieform $form, $values) {
             id IN($icons)", array($USER->id));
         // Remove all of the images
         foreach (explode(',', $icons) as $icon) {
-            $USER->quota_remove(filesize(get_config('dataroot') . 'artefact/internal/profileicons/' . ($icon % 256) . '/' . $icon));
+            $USER->quota_remove(filesize(get_config('dataroot') . 'artefact/internal/profileicons/originals/' . ($icon % 256) . '/' . $icon));
             $USER->commit();
             delete_image('artefact/internal/profileicons', $icon);
         }
@@ -259,6 +261,7 @@ $smarty->assign('uploadform', $uploadform);
 // it only contains submit buttons (which we can just write as HTML), and
 // the buttons need to be inside the tablerenderer.
 $smarty->assign('settingsformtag', $settingsform->get_form_tag());
+$smarty->assign('imagemaxdimensions', array(get_config('imagemaxwidth'), get_config('imagemaxheight')));
 $smarty->display('artefact:internal:profileicons.tpl');
 
 ?>
