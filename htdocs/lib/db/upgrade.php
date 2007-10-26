@@ -351,8 +351,34 @@ function xmldb_core_upgrade($oldversion=0) {
     
     }
 
+    // Move files in dataroot into an 'originals' directory, and remove any 
+    // cached images
+    if ($oldversion < 2007082202) {
+        require('file.php');
+        foreach(array('artefact/file', 'artefact/internal/profileicons') as $dir) {
+            $datadir = get_config('dataroot') . $dir;
+            check_dir_exists("$datadir/originals");
+            check_dir_exists("$datadir/resized");
+            foreach (new DirectoryIterator($datadir) as $folder) {
+                $name = $folder->getFilename();
+                if (preg_match('/^\d+$/', $name)) {
+                    log_debug("$dir: Moving folder {$name} to ${datadir}/originals");
+                    rename("{$datadir}/{$name}", "{$datadir}/originals/{$name}");
+                }
+                else if (preg_match('/^\d+x\d+$/', $name)) {
+                    log_debug("$dir: Deleting folder {$name}");
+                    rmdirr("{$datadir}/{$name}");
+                }
+            }
+        }
+
+        // Last part - setting config variables for max width/height for images
+        set_config('imagemaxwidth', 1024);
+        set_config('imagemaxheight', 1024);
+    }
+
     return $status;
 
 }
-?>
 
+?>
