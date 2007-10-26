@@ -4,7 +4,7 @@
 {include file="columnleftstart.tpl"}
             
             <div style="position: relative;">
-            <div style="position: absolute; top: 3.5em; right: 0;"><img src="{$WWWROOT}thumb.php?type=profileicon&size=100x100&id={$USER->get('id')}" alt=""></div>
+            <div style="position: absolute; top: 3.5em; right: 0;"><img src="{$WWWROOT}thumb.php?type=profileicon&maxsize=100&id={$USER->get('id')}" alt=""></div>
             </div>
 			<h2>{str section="artefact.internal" tag="profile"}</h2>
 			{$profileform}
