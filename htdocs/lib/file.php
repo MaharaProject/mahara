@@ -308,33 +308,80 @@ function is_image_mime_type($type) {
  *
  * If the file with the ID exists but not of the correct size, this function
  * will make a copy that is resized to the correct size.
+ *
+ * @param string $path The base path in dataroot where the image is stored. For 
+ *                     example, 'artefact/internal/profileicons/' for profile 
+ *                     icons
+ * @param int $id      The ID of the image to return. Is typically the ID of an 
+ *                     artefact
+ * @param mixed $size  The size the image should be.
+ *
+ *                      As a two element hash with 'w' and 'h' keys:
+ *                     - If 'w' and 'h' are not empty, the image will be 
+ *                       exactly that size
+ *                     - If just 'w' is not empty, the image will be that wide, 
+ *                       and the height will be set to make the image scale 
+ *                       correctly
+ *                     - If just 'h' is not empty, the image will be that high, 
+ *                       and the width will be set to make the image scale 
+ *                       correctly
+ *                     - If neither are set or the parameter is not set, the 
+ *                       image will not be resized
+ *
+ *                     As a number, the path returned will have the largest side being 
+ *                     the length specified.
+ * @return string The path on disk where the appropriate file resides, or false 
+ *                if an appropriate file could not be located or generated
  */
-function get_dataroot_image_path($path, $id, $size) {
+function get_dataroot_image_path($path, $id, $size=null) {
+    log_debug("get_dataroot_image_path($path, $id, " . serialize($size) . ')');
     $dataroot = get_config('dataroot');
     $imagepath = $dataroot . $path;
+    if (substr($imagepath, -1) == '/') {
+        $imagepath = substr($imagepath , 0, -1);
+    }
 
     if (!is_dir($imagepath) || !is_readable($imagepath)) {
         return false;
     }
-    //$imagepath .= "/$id";
 
-    if ($size && !preg_match('/\d+x\d+/', $size)) {
-        throw new UserException('Invalid size for image specified');
+    // Work out the location of the original image
+    $originalimage = $imagepath . '/originals/' . ($id % 256) . "/$id";
+    log_debug("original image path = $originalimage");
+
+    if (!$size) {
+        // No size has been asked for. Check for the original and return that
+        if (is_readable($originalimage)) {
+            log_debug("Found original image and no size asked for");
+            return $originalimage;
+        }
+        // Oops - no original available
+        log_debug("Original image NOT found");
+        return false;
     }
+    else {
+        // Check if the image is available in the size requested
+        $sizestr = serialize($size);
+        $md5     = md5("{$id}.{$sizestr}");
 
-    // If the image is already available, return the path to it
-    $path = $imagepath . '/' . ($size ? "$size/" : '') . ($id % 256) . "/$id";
-    if (is_readable($path)) {
-        return $path;
-    }
+        $resizedimagedir = $imagepath . '/resized/';
+        check_dir_exists($resizedimagedir);
+        for ($i = 0; $i <= 2; $i++) {
+           $resizedimagedir .= substr($md5, $i, 1) . '/';
+            check_dir_exists($resizedimagedir);
+        }
+        $resizedimagefile = "{$resizedimagedir}{$md5}.$id";//.$sizestr";
+        log_debug("$sizestr   $md5   $resizedimagefile");
 
-    if ($size) {
+        if (is_readable($resizedimagefile)) {
+            log_debug("Found cached version of image $resizedimagefile");
+            return $resizedimagefile;
+        }
+
         // Image is not available in this size. If there is a base image for
         // it, we can make one however.
-        $originalimage = $imagepath . '/' . ($id % 256) . "/$id";
         if (is_readable($originalimage)) {
-
-            list($width, $height) = explode('x', $size);
+            log_debug("Couldn't find a resized one, but found an original at $originalimage");
 
             $originalmimetype = get_mime_type($originalimage);
             switch ($originalmimetype) {
@@ -353,17 +400,19 @@ function get_dataroot_image_path($path, $id, $size) {
                 case 'image/ms-bmp':
                 case 'image/x-ms-bmp':
                     if (!extension_loaded('imagick')) {
+                        log_info('Bitmap image detected for resizing, but imagick extension is not available');
                         return false;
                     }
-                    // Nightmare...
-                    $oldih = imagick_readimage($originalimage);
-                    imagick_resize($oldih, $width, $height, IMAGICK_FILTER_UNDEFINED, 1);
-                    $newpath = $imagepath . "/$size/" . ($id % 256);
-                    check_dir_exists($newpath);
-                    $newpath .= "/$id";
-                    $result = imagick_writeimage($oldih, $newpath);
-                    return $newpath;
-                    break;
+
+                    $ih = imagick_readimage($originalimage);
+                    if (!$newdimensions = image_get_new_dimensions(imagick_getwidth($ih), imagick_getheight($ih), $size)) {
+                        return false;
+                    }
+                    imagick_resize($ih, $newdimensions['w'], $newdimensions['h'], IMAGICK_FILTER_LANCZOS, 1);
+                    if (imagick_writeimage($ih, $resizedimagefile)) {
+                        return $resizedimagefile;
+                    }
+                    return false;
                 default:
                     return false;
             }
@@ -375,16 +424,12 @@ function get_dataroot_image_path($path, $id, $size) {
             $oldx = imagesx($oldih);
             $oldy = imagesy($oldih);
 
-            if ($oldy > $oldx) {
-                $newy = $height;
-                $newx = ($oldx * $newy) / $oldy;
+            if (!$newdimensions = image_get_new_dimensions($oldx, $oldy, $size)) {
+                return false;
             }
-            else {
-                $newx = $width;
-                $newy = ($oldx * $newx) / $oldx;
-            }
+            log_debug("storing at $resizedimagefile");
 
-            $newih = imagecreatetruecolor($newx, $newy);
+            $newih = imagecreatetruecolor($newdimensions['w'], $newdimensions['h']);
 
             if ($originalmimetype == 'image/png' || $originalmimetype == 'image/gif') {
                 // Create a new destination image which is completely 
@@ -395,27 +440,82 @@ function get_dataroot_image_path($path, $id, $size) {
                 $background = imagecolorallocate($newih, 0, 0, 0);
                 imagecolortransparent($newih, $background);
                 imagealphablending($newih, false);
-                imagecopyresampled($newih, $oldih, 0, 0, 0, 0, $newx, $newy, $oldx, $oldy);
+                imagecopyresampled($newih, $oldih, 0, 0, 0, 0, $newdimensions['w'], $newdimensions['h'], $oldx, $oldy);
                 imagesavealpha($newih, true);
             }
             else {
                 // imagecopyresized is faster, but results in noticeably worse image quality. 
                 // Given the images are resized only once each time they're 
                 // made, I suggest you just leave the good quality one in place
-                imagecopyresampled($newih, $oldih, 0, 0, 0, 0, $newx, $newy, $oldx, $oldy);
-                //imagecopyresized($newih, $oldih, 0, 0, 0, 0, $newx, $newy, $oldx, $oldy);
+                imagecopyresampled($newih, $oldih, 0, 0, 0, 0, $newdimensions['w'], $newdimensions['h'], $oldx, $oldy);
+                //imagecopyresized($newih, $oldih, 0, 0, 0, 0, $newdimensions['w'], $newdimensions['h'], $oldx, $oldy);
             }
 
-            $newpath = $imagepath . "/$size/" . ($id % 256);
-            check_dir_exists($newpath);
-            $newpath .= "/$id";
-            $result = imagepng($newih, $newpath);
-            return $newpath;
-        }
+            $result = imagepng($newih, $resizedimagefile);
+            log_debug("RESULT");
+            log_debug($result);
+            if ($result) {
+                return $resizedimagefile;
+            }
+        } // end attempting to build a resized image
     }
 
     // Image not available in any size
     return false;
+}
+
+/**
+ * Given the old dimensions of an image and a size object as obtained from 
+ * get_imagesize_parameters(), calculates what the new size of the image should 
+ * be
+ *
+ * @param int $oldx   The width of the image to calculate the new size for
+ * @param int $oldy   The height of the image to calculate the new size for
+ * @param mixed $size The size data
+ * @return array      A hash with the new width and height, keyed by 'w' and 'h'
+ */
+function image_get_new_dimensions($oldx, $oldy, $size) {
+    log_debug("STRATEGY:");
+    log_debug("Old image is $oldx x $oldy");
+    if (is_int($size)) {
+        // If just a number (number is width AND height here)
+        if ($oldy > $oldx) {
+            $newy = $size;
+            $newx = ($oldx * $newy) / $oldy;
+        }
+        else {
+            $newx = $size;
+            $newy = ($oldy * $newx) / $oldx;
+        }
+        log_debug("Resizing so the maximum size of the largest side = $size");
+        log_debug("New size = $newx x $newy");
+    }
+    else if (isset($size['w']) && isset($size['h'])) {
+        // If size explicitly X by Y
+        $newx = $size['w'];
+        $newy = $size['h'];
+        log_debug("Resizing to EXACTLY $newx x $newy");
+    }
+    else if (isset($size['w'])) {
+        // Else if just width
+        $newx = $size['w'];
+        $newy = ($oldy * $newx) / $oldx;
+        log_debug("Resizing so WIDTH = " . $size['w']);
+        log_debug("New dimensions: $newx x $newy");
+    }
+    else if (isset($size['h'])) {
+        // Else if just height
+        $newy = $size['h'];
+        $newx = ($oldx * $newy) / $oldy;
+        log_debug("Resizing so HEIGHT = " . $size['h']);
+        log_debug("New dimensions: $newx x $newy");
+    }
+    else {
+        log_debug("Unknown size specification:");
+        log_debug($size);
+        return false;
+    }
+    return array('w' => $newx, 'h' => $newy);
 }
 
 /**
@@ -432,7 +532,7 @@ function get_dataroot_image_path($path, $id, $size) {
 function delete_image($path, $id) {
     // Check that the image exists.
     $dataroot = get_config('dataroot');
-    $imagepath = $dataroot . $path;
+    $imagepath = $dataroot . $path . '/originals';
 
     if (!is_dir($imagepath) || !is_readable($imagepath)) {
         return false;
@@ -444,22 +544,45 @@ function delete_image($path, $id) {
     }
 
     unlink($originalimage);
+    return true;
+}
 
-    // Check the size subdirectories
-    $dh = opendir($imagepath);
-    while (false !== ($file = readdir($dh))) {
-        $path = $imagepath . '/' . $file;
-        if (!preg_match('/\d+x\d+/', $file) || !is_dir($path)) {
+/**
+ * Delete a file, or a folder and its contents
+ *
+ * @author      Aidan Lister <aidan@php.net>
+ * @version     1.0.3
+ * @link        http://aidanlister.com/repos/v/function.rmdirr.php
+ * @param       string   $dirname    Directory to delete
+ * @return      bool     Returns TRUE on success, FALSE on failure
+ */
+function rmdirr($dirname)
+{
+    // Sanity check
+    if (!file_exists($dirname)) {
+        return false;
+    }
+ 
+    // Simple delete for a file
+    if (is_file($dirname) || is_link($dirname)) {
+        return unlink($dirname);
+    }
+ 
+    // Loop through the folder
+    $dir = dir($dirname);
+    while (false !== $entry = $dir->read()) {
+        // Skip pointers
+        if ($entry == '.' || $entry == '..') {
             continue;
         }
-
-        $image = $path . '/' . ($id % 256) . '/' . $id;
-        if (is_readable($image)) {
-            unlink($image);
-        }
+ 
+        // Recurse
+        rmdirr($dirname . DIRECTORY_SEPARATOR . $entry);
     }
-
-    return true;
+ 
+    // Clean up
+    $dir->close();
+    return rmdir($dirname);
 }
 
 ?>
