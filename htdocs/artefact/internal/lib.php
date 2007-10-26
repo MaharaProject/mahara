@@ -460,12 +460,16 @@ class ArtefactTypeProfileIcon extends ArtefactTypeProfileField {
     public function render_self($options) {
         $src = get_config('wwwroot') . 'thumb.php?type=profileiconbyid&id=' . $this->id;
 
-        if (isset($options['width']) || isset($options['height'])) {
-            $options['width']  = (isset($options['width'])) ? $options['width'] : $options['height'];
-            $options['height'] = (isset($options['height'])) ? $options['height'] : $options['width'];
-
-            $src .= '&size=' . $options['width'] . 'x' . $options['height'];
+        if (!empty($options['width']) && !empty($options['height'])) {
+            $src .= '&size=' . $width . 'x' . $height;
         }
+        else if (!empty($options['width'])) {
+            $src .= '&width=' . $options['width'];
+        }
+        else if (!empty($options['height'])) {
+            $src .= '&height=' . $options['height'];
+        }
+
         $html = '<img src="' . hsc($src) . '"'
             . 'alt="' . hsc($this->title) . '"';
         $html .= '>';
