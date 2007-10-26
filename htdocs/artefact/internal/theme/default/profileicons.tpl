@@ -26,7 +26,7 @@
             </form>
 
             <h3>{str tag="uploadprofileicon" section="artefact.internal"}</h3>
-            <p>{str tag="profileiconsiconsizenotice" section="artefact.internal"}</p>
+            <p>{str tag="profileiconsiconsizenotice" section="artefact.internal" args=$imagemaxdimensions}</p>
 
             {$uploadform}
 
