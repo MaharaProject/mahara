@@ -117,4 +117,10 @@ $cfg->developermode = false;
 // using an IP address that is not the same as the IP address that is registered
 // for its host name, then you should change the value below to 'true'.
 $cfg->xmlrpc_allow_masquerading = false;
+
+// maximum allowed size of uploaded images
+// NOTE: the scalable resize might result in images with one dimesion larger than one of these sizes, but not both
+$cfg->imagemaxwidth = 1024;
+$cfg->imagemaxheight = 1024;
+
 ?>
