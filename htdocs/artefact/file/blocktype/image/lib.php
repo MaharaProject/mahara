@@ -86,7 +86,7 @@ class PluginBlocktypeImage extends PluginBlocktype {
                 'rules' => array(
                     'required' => true,
                 ),
-                'limit' => 3,
+                'limit' => 5,
                 'artefacttypes' => array('image', 'profileicon'),
             ),
             'showdescription' => array(
