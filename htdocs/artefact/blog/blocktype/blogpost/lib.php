@@ -86,9 +86,8 @@ class PluginBlocktypeBlogpost extends PluginBlocktype {
 
     public static function instance_config_form($instance) {
         $configdata = $instance->get('configdata');
-        $default = (isset($configdata['artefactid'])) ? $configdata['artefactid'] : null;
         return array(
-            self::artefactchooser_element($default),
+            self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null),
         );
     }
 
