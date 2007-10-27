@@ -18,6 +18,19 @@
 div.editview {
     margin-top: .75em;
 }
+/** When viewing an artefact */
+#view .filedata-icon {
+    margin: 0 .5em;
+}
+#view table.filedata {
+    margin-top: 1em;
+    width: 95%;
+    border: none;
+}
+#view table.filedata th {
+    width: 8em;
+    padding: 3px 0 0 0;
+}
 
 #top-pane {
     background: #acc067 url(../images/toppane_corner_topright.gif) no-repeat right top;
@@ -116,6 +129,10 @@ div.editview {
     padding: 3px 5px;
     border-bottom: 1px solid #acc067;
     background-color: #fff;
+}
+.blockinstance-header h4 a {
+    text-decoration: none;
+    color: inherit;
 }
 
 .blockinstance-controls input {
