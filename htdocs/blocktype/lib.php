@@ -229,16 +229,22 @@ class BlockInstance {
         unset($values['sesskey']);
         unset($values['blockinstance']);
         unset($values['action_configureblockinstance_id_' . $this->get('id')]);
-        $title = $values['title'];
-        unset($values['title']);
 
         if (is_callable(array(generate_class_name('blocktype', $this->get('blocktype')), 'instance_config_save'))) {
             $values = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'instance_config_save', $values);
         }
 
-        $configdata = $values;
+        $title = (isset($values['title'])) ? $values['title'] : '';
+        unset($values['title']);
+        $this->set('configdata', $values);
+
+        $blocktypeclass = generate_class_name('blocktype', $this->get('blocktype'));
+        if (method_exists($blocktypeclass, 'get_instance_title')) {
+            // Get the explicitly set instance title
+            $title = call_static_method($blocktypeclass, 'get_instance_title', $this);
+        }
+
         $this->set('title', $title);
-        $this->set('configdata', $configdata);
         $this->commit();
 
         $SESSION->add_ok_msg(get_string('blockinstanceconfiguredsuccessfully', 'view'));
@@ -330,6 +336,14 @@ class BlockInstance {
         $smarty->assign('id',     $this->get('id'));
         $smarty->assign('title',  $this->get('title'));
 
+        // If this block is for just one artefact, we set the title of the 
+        // block to be a link to view more information about that artefact
+        $configdata = $this->get('configdata');
+        if (!empty($configdata['artefactid'])) {
+            $smarty->assign('viewartefacturl', get_config('wwwroot') . 'view/view.php?view='
+                . $this->get('view') . '&artefact=' . $configdata['artefactid']);
+        }
+
         $smarty->assign('content', $content);
         
         return $smarty->fetch('view/blocktypecontainerviewing.tpl');
@@ -343,16 +357,26 @@ class BlockInstance {
      */
     public function build_configure_form() {
         safe_require('blocktype', $this->get('blocktype'));
-        $elements = array_merge(
-            array(
-                'title' => array(
-                    'type' => 'text',
-                    'title' => 'Block Title',
-                    'defaultvalue' => $this->get('title')
+        $elements = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'instance_config_form', $this);
+
+        $blocktypeclass = generate_class_name('blocktype', $this->get('blocktype'));
+        if (method_exists($blocktypeclass, 'get_instance_title')) {
+            // Get the explicitly set instance title
+            $title = call_static_method($blocktypeclass, 'get_instance_title', $this);
+        }
+        else {
+            // Use the blocktype title as a default
+            $elements = array_merge(
+                array(
+                    'title' => array(
+                        'type' => 'text',
+                        'title' => 'Block Title',
+                        'defaultvalue' => $this->get('title')
+                    ),
                 ),
-            ),
-            call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'instance_config_form', $this)
-        );
+                $elements
+            );
+        }
 
         // Add submit/cancel buttons
         $elements['action_configureblockinstance_id_' . $this->get('id')] = array(
@@ -410,7 +434,15 @@ class BlockInstance {
         }
         $fordb = new StdClass;
         foreach (get_object_vars($this) as $k => $v) {
-            $fordb->{$k} = $v;
+            // The configdata is initially fetched from the database in string 
+            // form. Calls to get() will convert it to an array on the fly. We 
+            // ensure that it is a string again here
+            if ($k == 'configdata' && is_array($v)) {
+                $fordb->{$k} = serialize($v);
+            }
+            else {
+                $fordb->{$k} = $v;
+            }
         }
         if (empty($this->id)) {
             $this->id = insert_record('block_instance', $fordb, 'id', true);
