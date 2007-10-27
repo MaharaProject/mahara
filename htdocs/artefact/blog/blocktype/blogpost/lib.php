@@ -86,19 +86,57 @@ class PluginBlocktypeBlogpost extends PluginBlocktype {
 
     public static function instance_config_form($instance) {
         $configdata = $instance->get('configdata');
+        $default = (isset($configdata['artefactid'])) ? $configdata['artefactid'] : null;
         return array(
-            'artefactid' => array(
-                'type'  => 'artefactchooser',
-                'title' => get_string('blogpost', 'artefact.blog'),
-                'defaultvalue' => (isset($configdata['artefactid'])) ? $configdata['artefactid'] : null,
-                'rules' => array(
-                    'required' => true,
-                ),
-                'limit' => 5,
-                'selectone' => true,
-                'artefacttypes' => array('blogpost'),
-            ),
+            self::artefactchooser_element($default),
         );
+    }
+
+    public static function artefactchooser_element($default=null) {
+        return array(
+            'name'  => 'artefactid',
+            'type'  => 'artefactchooser',
+            'title' => get_string('blogpost', 'artefact.blog'),
+            'defaultvalue' => $default,
+            'rules' => array(
+                'required' => true,
+            ),
+            'blocktype' => 'blogpost',
+            'limit'     => 2,
+            'selectone' => true,
+            'artefacttypes' => array('blogpost'),
+            'template'  => 'artefact:blog:artefactchooser-element.tpl',
+        );
+    }
+
+    /**
+     * Optional method. If specified, allows the blocktype class to munge the 
+     * artefactchooser element data before it's templated
+     */
+    public static function artefactchooser_get_element_data($artefact) {
+        static $blognames = array();
+
+        if (!isset($blognames[$artefact->parent])) {
+            $blognames[$artefact->parent] = get_field('artefact', 'title', 'id', $artefact->parent);
+        }
+        $artefact->blog = $blognames[$artefact->parent];
+
+        $ellipsis = '';
+        if (strlen($artefact->description) > 100) {
+            $ellipsis = '…';
+        }
+        $artefact->description = substr(trim(strip_tags($artefact->description)), 0, 100) . $ellipsis;
+
+        return $artefact;
+    }
+
+    /**
+     * Optional method. If specified, changes the order in which the artefacts are sorted in the artefact chooser.
+     *
+     * This is a valid SQL string for the ORDER BY clause. Fields you can sort on are as per the artefact table
+     */
+    public static function artefactchooser_get_sort_order() {
+        return 'parent, ctime DESC';
     }
 }
 
