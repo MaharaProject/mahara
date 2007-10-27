@@ -94,16 +94,7 @@ class PluginBlocktypeImage extends PluginBlocktype {
     public static function instance_config_form($instance) {
         $configdata = $instance->get('configdata');
         return array(
-            'artefactid' => array(
-                'type'  => 'artefactchooser',
-                'title' => get_string('image'),
-                'defaultvalue' => (isset($configdata['artefactid'])) ? $configdata['artefactid'] : null,
-                'rules' => array(
-                    'required' => true,
-                ),
-                'limit' => 5,
-                'artefacttypes' => array('image', 'profileicon'),
-            ),
+            self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null),
             'showdescription' => array(
                 'type'  => 'checkbox',
                 'title' => get_string('showdescription', 'blocktype.file/image'),
@@ -122,6 +113,49 @@ class PluginBlocktypeImage extends PluginBlocktype {
             ),
         );
     }
+
+    public static function artefactchooser_element($default=null) {
+        return array(
+            'name'  => 'artefactid',
+            'type'  => 'artefactchooser',
+            'title' => get_string('image'),
+            'defaultvalue' => $default,
+            'rules' => array(
+                'required' => true,
+            ),
+            'blocktype' => 'image',
+            'limit' => 5,
+            'artefacttypes' => array('image', 'profileicon'),
+            'template' => 'artefact:file:artefactchooser-element.tpl',
+        );
+    }
+
+    /**
+     * Optional method. If specified, allows the blocktype class to munge the 
+     * artefactchooser element data before it's templated
+     *
+     * Note: this method is the same as the one for the 'filedownload' blocktype
+     */
+    public static function artefactchooser_get_element_data($artefact) {
+        $artefact->icon = call_static_method(generate_artefact_class_name($artefact->artefacttype), 'get_icon', array('id' => $artefact->id));
+        if ($artefact->artefacttype == 'profileicon') {
+            $artefact->hovertitle  =  $artefact->note;
+            if ($artefact->title) {
+                $artefact->hovertitle .= ': ' . $artefact->title;
+            }
+        }
+        else {
+            $artefact->hovertitle  =  $artefact->title;
+            if ($artefact->description) {
+                $artefact->hovertitle .= ': ' . $artefact->description;
+            }
+        }
+        $artefact->title       = str_shorten($artefact->title, 20);
+        $artefact->description = ($artefact->artefacttype == 'profileicon') ? $artefact->title : $artefact->description;
+
+        return $artefact;
+    }
+
 }
 
 ?>
