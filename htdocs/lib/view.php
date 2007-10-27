@@ -1155,47 +1155,50 @@ class View {
      * - Pagination HTML and Javascript
      * - The total number of artefacts found
      */
-    public static function build_artefactchooser_data($artefacttypes, $offset, $offsetname, $limit, $selectone, $value, $elementname) {
+    public static function build_artefactchooser_data($data) {
         global $USER;
+
+        $artefacttypes = $data['artefacttypes'];
+        $offset        = $data['offset'];
+        $limit         = $data['limit'];
+        $selectone     = $data['selectone'];
+        $value         = $data['defaultvalue'];
+        $elementname   = $data['name'];
+        $template      = $data['template'];
+
+        safe_require('blocktype', $data['blocktype']);
+        $blocktypeclass = generate_class_name('blocktype', $data['blocktype']);
 
         $select = 'owner = ' . $USER->get('id');
         if (!empty($artefacttypes)) {
             $select .= ' AND artefacttype IN(' . implode(',', array_map('db_quote', $artefacttypes)) . ')';
         }
-        $artefacts = get_records_select_array('artefact', $select, null, 'title', '*', $offset, $limit);
+        $sortorder = 'title';
+        if (method_exists($blocktypeclass, 'artefactchooser_get_sort_order')) {
+            $sortorder = call_static_method($blocktypeclass, 'artefactchooser_get_sort_order');
+        }
+        $artefacts = get_records_select_array('artefact', $select, null, $sortorder, '*', $offset, $limit);
         $totalartefacts = count_records_select('artefact', $select);
 
         $result = '';
         foreach ($artefacts as &$artefact) {
             safe_require('artefact', get_field('artefact_installed_type', 'plugin', 'name', $artefact->artefacttype));
-            $artefact->icon = call_static_method(generate_artefact_class_name($artefact->artefacttype), 'get_icon', array('id' => $artefact->id));
-            if ($artefact->artefacttype == 'profileicon') {
-                $artefact->hovertitle  =  $artefact->note;
-                if ($artefact->title) {
-                    $artefact->hovertitle .= ': ' . $artefact->title;
-                }
+
+            if (method_exists($blocktypeclass, 'artefactchooser_get_element_data')) {
+                $artefact = call_static_method($blocktypeclass, 'artefactchooser_get_element_data', $artefact);
             }
-            else {
-                $artefact->hovertitle  =  $artefact->title;
-                if ($artefact->description) {
-                    $artefact->hovertitle .= ': ' . $artefact->description;
-                }
-            }
-            $artefact->title       = str_shorten($artefact->title, 20);
-            $artefact->description = ($artefact->artefacttype == 'profileicon') ? $artefact->title : $artefact->description;
 
             $smarty = smarty_core();
             $smarty->assign('artefact', $artefact);
             $smarty->assign('selectone', $selectone);
             $smarty->assign('elementname', $elementname);
             $smarty->assign('value', $value);
-            $result .= $smarty->fetch('form/artefactchooser-element.tpl') . "\n";
+            $result .= $smarty->fetch($template) . "\n";
         }
 
         $smarty = smarty_core();
         $smarty->assign('artefacts', $result);
         $smarty->assign('datatable', $elementname . '_data');
-        //$smarty->assign('elementname', $element['name']);
         $smarty->assign('count', $totalartefacts);
         $baseurl = View::make_base_url();
         $pagination = build_pagination(array(
@@ -1205,7 +1208,6 @@ class View {
             'count' => $totalartefacts,
             'limit' => $limit,
             'offset' => $offset,
-            'offsetname' => $offsetname,
             'datatable' => $elementname . '_data',
             'jsonscript' => 'view/artefactchooser.json.php',
             'firsttext' => '',
@@ -1214,13 +1216,8 @@ class View {
             'lasttext' => '',
             'numbersincludefirstlast' => false,
             'extradata' => array(
-                'artefacttypes' => $artefacttypes,
-                'offset'        => $offset,
-                'offsetname'    => $offsetname,
-                'limit'         => $limit,
-                'selectone'     => $selectone,
-                'value'         => $value,
-                'elementname'   => $elementname,
+                'value'     => $value,
+                'blocktype' => $data['blocktype'],
             ),
         ));
 
