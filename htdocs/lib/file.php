@@ -510,6 +510,34 @@ function image_get_new_dimensions($oldx, $oldy, $size) {
         log_debug("Resizing so HEIGHT = " . $size['h']);
         log_debug("New dimensions: $newx x $newy");
     }
+    else if (isset($size['maxw'])) {
+        // Else if just maximum width
+        if ($oldx > $size['maxw']) {
+            $newx = $size['maxw'];
+            $newy = ($oldy * $newx) / $oldx;
+            log_debug("maxwidth: Resizing so WIDTH = " . $size['maxw']);
+            log_debug("New dimensions: $newx x $newy");
+        }
+        else {
+            log_debug('maxwidth: image width smaller than maxwidth, doing nothing');
+            $newx = $oldx;
+            $newy = $oldy;
+        }
+    }
+    else if (isset($size['maxh'])) {
+        // Else if just maximum height
+        if ($oldy > $size['maxh']) {
+            $newy = $size['maxh'];
+            $newx = ($oldx * $newy) / $oldy;
+            log_debug("Resizing so HEIGHT = " . $size['maxh']);
+            log_debug("New dimensions: $newx x $newy");
+        }
+        else {
+            log_debug('maxheight: image height smaller than maxheight, doing nothing');
+            $newx = $oldx;
+            $newy = $oldy;
+        }
+    }
     else {
         log_debug("Unknown size specification:");
         log_debug($size);
