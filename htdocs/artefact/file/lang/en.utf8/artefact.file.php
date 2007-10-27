@@ -99,6 +99,7 @@ $string['doc'] = 'MS Word Document';
 $string['dss'] = 'Digital Speech Standard Sound File';
 $string['gif'] = 'GIF Image';
 $string['html'] = 'HTML File';
+$string['jpg'] = 'JPEG Image';
 $string['jpeg'] = 'JPEG Image';
 $string['js'] = 'Javascript File';
 $string['latex'] = 'LaTeX Document';
