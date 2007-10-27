@@ -39,11 +39,9 @@ function pieform_element_artefactchooser(Pieform $form, $element) {
 
     $value = $form->get_value($element);
 
-    // internal configuration
-    $offsetname = $form->get_name() . '_' . $element['name'] . '_o';
-    $offset = param_integer($offsetname, 0);
+    $element['offset'] = param_integer('offset', 0);
+    list($html, $pagination, $count) = View::build_artefactchooser_data($element);
 
-    list($html, $pagination, $count) = View::build_artefactchooser_data($element['artefacttypes'], $offset, $offsetname, $element['limit'], $element['selectone'], $value, $element['name']);
     $smarty = smarty_core();
     $smarty->assign('datatable', $element['name'] . '_data');
     $smarty->assign('artefacts', $html);
@@ -111,6 +109,10 @@ function pieform_element_artefactchooser_set_attributes($element) {
     if (!isset($element['limit'])) {
         $element['limit'] = 10;
     }
+    if (!isset($element['template'])) {
+        $element['template'] = 'form/artefactchooser-element.tpl';
+    }
+
     return $element;
 }
 
