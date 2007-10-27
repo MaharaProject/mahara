@@ -50,9 +50,24 @@ class PluginBlocktypeImage extends PluginBlocktype {
         $result = '';
         if (isset($configdata['artefactid'])) {
             $image = artefact_instance_from_id($configdata['artefactid']);
-            $data = $image->render_self($configdata);
-            $result = $data['html'];
-            $result = '<div class="center"><div>' . $result . '</div>';
+
+            if ($image instanceof ArtefactTypeProfileIcon) {
+                $src = get_config('wwwroot') . 'thumb.php?type=profileiconbyid&id=' . $configdata['artefactid'];
+                $description = $image->get('title');
+            }
+            else {
+                $src = get_config('wwwroot') . 'artefact/file/download.php?file=' . $configdata['artefactid'];
+                $src .= '&view=' . $instance->get('view');
+                $description = $image->get('description');
+            }
+
+            if (!empty($configdata['width'])) {
+                $src .= '&maxwidth=' . $configdata['width'];
+            }
+
+            $result  = '<div class="center"><div>';
+            $result .= '<a href="' . get_config('wwwroot') . 'view/view.php?view=' . $instance->get('view') . '&artefact=' . $configdata['artefactid'] . '"><img src="' . hsc($src) . '" alt="' . hsc($description) .'"></a>';
+            $result .= '</div>';
 
             $description = (is_a($image, 'ArtefacttypeImage')) ? $image->get('description') : $image->get('title');
             if (!empty($configdata['showdescription']) && $description) {
