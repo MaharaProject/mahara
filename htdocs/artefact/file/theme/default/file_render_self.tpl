@@ -4,7 +4,7 @@
 </div>
 
 <table class="filedata">
-    <tr><th>Type:</th><td>{str tag=$artefacttype section=artefact.file}</td></tr>
+    <tr><th>Type:</th><td>{$filetype}</td></tr>
     <tr><th>Owner:</th><td>{$owner}</td></tr>
     <tr><th>Created:</th><td>{$created}</td></tr>
     <tr><th>Last modified:</th><td>{$modified}</td></tr>

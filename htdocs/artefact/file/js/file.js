@@ -539,7 +539,7 @@ function FileUploader(element, uploadscript, statevars, foldername, folderid, up
                 TD(null, SPAN({'id':'uploaddest'},self.foldername))),
              TR(null, TH(null,LABEL(null,get_string('copyrightnotice'))),
                 TD(null,INPUT({'type':'checkbox','class':'checkbox','name':'notice'}),notice)),
-             TR(null, TH(null, LABEL(null, get_string('file'))),
+             TR(null, TH(null, LABEL(null, get_string('File'))),
                 TD(null, INPUT({'type':'file','class':'file','name':'userfile','size':40,'onchange':function () {
                     self.form.title.value = basename(self.form.userfile.value);
                 }}))),

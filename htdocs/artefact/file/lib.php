@@ -118,7 +118,7 @@ class PluginArtefactFile extends PluginArtefact {
                     'destination',
                     'editfile',
                     'editfolder',
-                    'file',
+                    'File',
                     'fileexistsoverwritecancel',
                     'filenamefieldisrequired',
                     'home',
@@ -293,9 +293,15 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         if (isset($options['viewid'])) {
             $downloadpath .= '&view=' . $options['viewid'];
         }
+        $filetype = get_string($this->get('oldextension'), 'artefact.file');
+        if (substr($filetype, 0, 2) == '[[') {
+            $filetype = $this->get('oldextension') . ' ' . get_string('file', 'artefact.file');
+        }
+
         $smarty = smarty_core();
         $smarty->assign('iconpath', $this->get_icon($options));
         $smarty->assign('downloadpath', $downloadpath);
+        $smarty->assign('filetype', $filetype);
         $smarty->assign('owner', display_name($this->get('owner')));
         $smarty->assign('created', strftime(get_string('strftimedaydatetime'), $this->get('ctime')));
         $smarty->assign('modified', strftime(get_string('strftimedaydatetime'), $this->get('mtime')));
