@@ -28,11 +28,25 @@ define('INTERNAL', 1);
 define('JSON', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 require('view.php');
+require('form/elements/artefactchooser.php');
 
 $extradata = json_decode(param_variable('extradata'));
-$offset = param_integer($extradata->offsetname, 0);
 
-list($html, $pagination, $count) = View::build_artefactchooser_data($extradata->artefacttypes, $offset, $extradata->offsetname, $extradata->limit, $extradata->selectone, $extradata->value, $extradata->elementname);
-json_reply(false, array('message' => null, 'data' => array('tablerows' => $html, 'pagination' => $pagination['html'], 'pagination_js' => $pagination['js'], 'count' => $count)));
+safe_require('blocktype', $extradata->blocktype);
+$data = pieform_element_artefactchooser_set_attributes(
+    call_static_method(generate_class_name('blocktype', $extradata->blocktype), 'artefactchooser_element', $extradata->value)
+);
+$data['offset'] = param_integer('offset', 0);
+list($html, $pagination, $count) = View::build_artefactchooser_data($data);
+
+json_reply(false, array(
+    'message' => null,
+    'data' => array(
+        'tablerows' => $html,
+        'pagination' => $pagination['html'],
+        'pagination_js' => $pagination['js'],
+        'count' => $count
+    )
+));
 
 ?>
