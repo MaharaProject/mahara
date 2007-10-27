@@ -286,6 +286,28 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
 
     }
 
+    public function render_self($options) {
+        $options['id'] = $this->get('id');
+
+        $downloadpath = get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->get('id');
+        if (isset($options['viewid'])) {
+            $downloadpath .= '&view=' . $options['viewid'];
+        }
+        $smarty = smarty_core();
+        $smarty->assign('iconpath', $this->get_icon($options));
+        $smarty->assign('downloadpath', $downloadpath);
+        $smarty->assign('owner', display_name($this->get('owner')));
+        $smarty->assign('created', strftime(get_string('strftimedaydatetime'), $this->get('ctime')));
+        $smarty->assign('modified', strftime(get_string('strftimedaydatetime'), $this->get('mtime')));
+        $smarty->assign('size', $this->describe_size() . ' (' . $this->get('size') . ' ' . get_string('bytes', 'artefact.file') . ')');
+
+        foreach (array('title', 'description', 'artefacttype') as $field) {
+            $smarty->assign($field, $this->get($field));
+        }
+
+        return array('html' => $smarty->fetch('artefact:file:file_render_self.tpl'), 'javascript' => '');
+    }
+
     /**
      * This function updates or inserts the artefact.  This involves putting
      * some data in the artefact table (handled by parent::commit()), and then
@@ -664,7 +686,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             return $bytes <= 0 ? '0' : ($bytes . ' ' . get_string('bytes', 'artefact.file'));
         }
         if ($bytes < 1048576) {
-            return floor(($bytes / 1024) * 10 + 0.5) / 10 . 'k';
+            return floor(($bytes / 1024) * 10 + 0.5) / 10 . 'K';
         }
         return floor(($bytes / 1048576) * 10 + 0.5) / 10 . 'M';
     }
@@ -835,6 +857,9 @@ class ArtefactTypeImage extends ArtefactTypeFile {
         return 'file';
    } 
 
+    /**
+     * err... wtf. Let's find where this method is called and change the call eh?
+     */
     public static function is_image_mime_type($type) {
         require_once('file.php');
         return is_image_mime_type($type);
@@ -873,25 +898,11 @@ class ArtefactTypeImage extends ArtefactTypeFile {
     }
 
     public function render_self($options) {
-        $src = get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->id;
-        if (isset($options['viewid'])) {
-            $src .= '&view=' . $options['viewid'];
-        }
-
-        if (!empty($options['width']) && !empty($options['height'])) {
-            $src .= '&size=' . $width . 'x' . $height;
-        }
-        else if (!empty($options['width'])) {
-            $src .= '&width=' . $options['width'];
-        }
-        else if (!empty($options['height'])) {
-            $src .= '&height=' . $options['height'];
-        }
-
-        return array(
-            'html' => '<img src="' . hsc($src) . '" alt="' . hsc($this->get('description')) .'">',
-            'javascript' => ''
-        );
+        $result = parent::render_self($options);
+        $result['html'] = '<div class="fr filedata-icon" style="text-align: center;"><h4>Preview</h4><img src="'
+            . hsc(get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->id . '&maxwidth=400')
+            . '" alt=""></div>' . $result['html'];
+        return $result;
     }
 }
 
