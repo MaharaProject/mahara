@@ -359,6 +359,7 @@ $string['owner'] = 'Owner';
 $string['size'] = 'Size';
 $string['title'] = 'Title';
 $string['type'] = 'Type';
+$string['download'] = 'Download';
 
 $string['belongingto'] = 'Belonging to';
 $string['allusers'] = 'All users';
@@ -587,6 +588,7 @@ $string['sizemb'] = 'MB';
 $string['sizekb'] = 'KB';
 $string['sizegb'] = 'GB';
 $string['sizeb'] = 'b';
+$string['bytes'] = 'bytes';
 
 // countries
 
