@@ -54,6 +54,24 @@ abstract class PluginBlocktype extends Plugin {
     public static abstract function render_instance(BlockInstance $instance);
 
     /**
+     * If this blocktype contains artefacts, and uses the artefactchooser 
+     * Pieform element to choose them, this method must return the definition 
+     * for the element.
+     *
+     * This is used in view/artefactchooser.json.php to build pagination for 
+     * the element.
+     *
+     * The element returned MUST have the name key set to either 'artefactid' 
+     * or 'artefactids', depending on whether 'selectone' is true or false.
+     *
+     * The element must also have the 'blocktype' key set to the name of the 
+     * blocktype that the form is for.
+     *
+     * @param mixed $default The default value for the element
+     */
+    public static abstract function artefactchooser_element($default=null);
+
+    /**
     * subclasses can override this if they need to do something a bit special
     * eg more than just what the BlockInstance->delete function does.
     * 
@@ -134,6 +152,9 @@ abstract class SystemBlockType extends PluginBlockType {
 
     public final static function get_artefacts(BlockInstance $instance) {
         return array();
+    }
+
+    public final static function artefactchooser_element($default=null) {
     }
 
 }
