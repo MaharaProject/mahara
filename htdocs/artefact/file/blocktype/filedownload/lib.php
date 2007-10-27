@@ -54,20 +54,24 @@ class PluginBlocktypeFiledownload extends PluginBlocktype {
                     'view' => $instance->get('view'),
                 );
 
-                $result .= '<div title="' . hsc($artefact->get('title')) . '">';
-                $result .= '<div class="fl"><img src="' . call_static_method(generate_artefact_class_name($artefact->get('artefacttype')), 'get_icon', $icondata) . '" alt=""></div>';
-                $result .= '<div style="margin-left: 30px;">';
-
+                $detailsurl = get_config('wwwroot') . 'view/view.php?view=' . $instance->get('view') . '&artefact=' . $artefactid;
                 if ($artefact instanceof ArtefactTypeProfileIcon) {
                     require_once('file.php');
-                    $url = get_config('wwwroot') . 'thumb.php?type=profileiconbyid&id=' . $artefactid;
+                    $downloadurl = get_config('wwwroot') . 'thumb.php?type=profileiconbyid&id=' . $artefactid;
                     $size = filesize(get_dataroot_image_path('artefact/internal/profileicons/', $artefactid));
                 }
                 else if ($artefact instanceof ArtefactTypeFile) {
-                    $url = get_config('wwwroot') . 'artefact/file/download.php?file=' . $artefactid . '&view=' . $icondata['view'];
+                    $downloadurl = get_config('wwwroot') . 'artefact/file/download.php?file=' . $artefactid . '&view=' . $icondata['view'];
                     $size = $artefact->get('size');
                 }
-                $result .= '<h4><a href="' . hsc($url) . '">' . str_shorten($artefact->get('title'), 20) . '</a></h4>';
+
+                $result .= '<div title="' . hsc($artefact->get('title')) . '">';
+                $result .= '<div class="fl"><a href="' . hsc($downloadurl) . '">';
+                $result .= '<img src="' . call_static_method(generate_artefact_class_name($artefact->get('artefacttype')), 'get_icon', $icondata)
+                    . '" alt=""></a></div>';
+                $result .= '<div style="margin-left: 30px;">';
+
+                $result .= '<h4><a href="' . hsc($detailsurl) . '">' . str_shorten($artefact->get('title'), 20) . '</a></h4>';
 
                 $description = $artefact->get('description');
                 if ($description) {
