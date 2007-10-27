@@ -431,6 +431,50 @@ class ArtefactTypeBlogPost extends ArtefactType {
         return $this->count_attachments() . ' ' . get_string('attachments', 'artefact.blog');
     }
 
+    public function render_self($options) {
+        $smarty = smarty_core();
+        if (empty($options['hidetitle'])) {
+            if (isset($options['viewid'])) {
+                $smarty->assign('artefacttitle', '<a href="' . get_config('wwwroot') . 'view/view.php?view='
+                     . $options['viewid'] . '&artefact=' . $this->get('id')
+                     . '">' . $this->get('title') . '</a>');
+            }
+            else {
+                $smarty->assign('artefacttitle', $this->get('title'));
+            }
+        }
+
+        // We need to make sure that the images in the post have the right viewid associated with them
+        $postcontent = $this->get('description');
+        if (isset($options['viewid'])) {
+            $postcontent = preg_replace('#(<img src=".*artefact/file/download\.php\?file=\d+)#', '\1&amp;view=' . $options['viewid'], $postcontent);
+        }
+        $smarty->assign('artefactdescription', $postcontent);
+        $smarty->assign('artefact', $this);
+        $attachments = $this->get_attached_files();
+        if ($attachments) {
+            $this->add_to_render_path($options);
+            require_once('artefact.php');
+            foreach ($attachments as &$attachment) {
+                $f = artefact_instance_from_id($attachment->id);
+                $attachment->size = $f->describe_size();
+                $attachment->iconpath = $f->get_icon(array('id' => $attachment->id, 'viewid' => $options['viewid']));
+                $attachment->viewpath = get_config('wwwroot') . 'view/view.php?view=' . $options['viewid'] . '&artefact=' . $attachment->id;
+                $attachment->downloadpath = get_config('wwwroot') . 'artefact/file/download.php?file=' . $attachment->id;
+                if (isset($options['viewid'])) {
+                    $attachment->downloadpath .= '&view=' . $options['viewid'];
+                }
+            }
+            $smarty->assign('attachments', $attachments);
+        }
+        $smarty->assign('postedbyon', get_string('postedbyon', 'artefact.blog',
+                                                 display_name($this->owner),
+                                                 format_date($this->ctime)));
+        return array('html' => $smarty->fetch('artefact:blog:render/blogpost_renderfull.tpl'),
+                     'javascript' => '');
+    }
+
+
     public function attachment_id_list() {
         if (!$list = get_column('artefact_blog_blogpost_file', 'file', 'blogpost', $this->get('id'))) {
             $list = array();
@@ -668,7 +712,8 @@ class ArtefactTypeBlogPost extends ArtefactType {
         $list = get_records_sql_array('SELECT a.id, a.artefacttype, a.title, a.description 
             FROM {artefact_blog_blogpost_file} f
             INNER JOIN {artefact} a ON a.id = f.file
-            WHERE f.blogpost = ' . $this->id, '');
+            WHERE f.blogpost = ?
+            ORDER BY a.title', array($this->id));
 
         // load tags
         if ($list) {
