@@ -902,11 +902,15 @@ function param_imagesize($name) {
  * The result of this function can be passed to get_dataroot_image_path to 
  * retrieve the filesystem path of the appropriate image
  */
-function get_imagesize_parameters($sizeparam='size', $widthparam='width', $heightparam='height', $maxsizeparam='maxsize') {
-    $size    = param_imagesize($sizeparam, '');
-    $width   = param_integer($widthparam, 0);
-    $height  = param_integer($heightparam, 0);
-    $maxsize = param_integer($maxsizeparam, 0);
+function get_imagesize_parameters($sizeparam='size', $widthparam='width', $heightparam='height',
+    $maxsizeparam='maxsize', $maxwidthparam='maxwidth', $maxheightparam='maxheight') {
+
+    $size      = param_imagesize($sizeparam, '');
+    $width     = param_integer($widthparam, 0);
+    $height    = param_integer($heightparam, 0);
+    $maxsize   = param_integer($maxsizeparam, 0);
+    $maxwidth  = param_integer($maxwidthparam, 0);
+    $maxheight = param_integer($maxheightparam, 0);
 
     $imagemaxwidth  = get_config('imagemaxwidth');
     $imagemaxheight = get_config('imagemaxheight');
@@ -940,6 +944,24 @@ function get_imagesize_parameters($sizeparam='size', $widthparam='width', $heigh
             throw new ParameterException('Requested image size is too small');
         }
         return array('h' => $height);
+    }
+    if ($maxwidth) {
+        if ($maxwidth > $imagemaxwidth) {
+            throw new ParameterException('Requested image size is too big');
+        }
+        if ($maxwidth < 16) {
+            throw new ParameterException('Requested image size is too small');
+        }
+        return array('maxw' => $maxwidth);
+    }
+    if ($maxheight) {
+        if ($maxheight > $imagemaxheight) {
+            throw new ParameterException('Requested image size is too big');
+        }
+        if ($maxheight < 16) {
+            throw new ParameterException('Requested image size is too small');
+        }
+        return array('maxh' => $maxheight);
     }
     return null;
 }
