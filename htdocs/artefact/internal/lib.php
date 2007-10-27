@@ -458,22 +458,27 @@ class ArtefactTypeProfileIcon extends ArtefactTypeProfileField {
     }
 
     public function render_self($options) {
-        $src = get_config('wwwroot') . 'thumb.php?type=profileiconbyid&id=' . $this->id;
+        $options['id'] = $this->get('id');
 
-        if (!empty($options['width']) && !empty($options['height'])) {
-            $src .= '&size=' . $width . 'x' . $height;
-        }
-        else if (!empty($options['width'])) {
-            $src .= '&width=' . $options['width'];
-        }
-        else if (!empty($options['height'])) {
-            $src .= '&height=' . $options['height'];
-        }
+        $size = filesize(get_config('dataroot') . 'artefact/internal/profileicons/originals/'
+            . ($this->get('id') % 256) . '/' . $this->get('id'));
 
-        $html = '<img src="' . hsc($src) . '"'
-            . 'alt="' . hsc($this->title) . '"';
-        $html .= '>';
-        return array('html' => $html, 'javascript' =>'');
+        $downloadpath = get_config('wwwroot') . 'thumb.php?type=profileiconbyid&id=' . $this->id;
+        if (isset($options['viewid'])) {
+            $downloadpath .= '&view=' . $options['viewid'];
+        }
+        $smarty = smarty_core();
+        $smarty->assign('iconpath', $this->get_icon($options));
+        $smarty->assign('downloadpath', $downloadpath);
+        $smarty->assign('owner', display_name($this->get('owner')));
+        $smarty->assign('title', $this->get('note'));
+        $smarty->assign('description', $this->get('title'));
+        $smarty->assign('artefacttype', $this->get('artefacttype'));
+        $smarty->assign('created', strftime(get_string('strftimedaydatetime'), $this->get('ctime')));
+        $smarty->assign('modified', strftime(get_string('strftimedaydatetime'), $this->get('mtime')));
+        $smarty->assign('size', display_size($size) . ' (' . $size . ' ' . get_string('bytes') . ')');
+        $smarty->assign('previewpath', get_config('wwwroot') . 'thumb.php?type=profileiconbyid&id=' . $this->get('id') . '&maxwidth=400');
+        return array('html' => $smarty->fetch('artefact:internal:profileicon_render_self.tpl'), 'javascript' => '');
     }
 
     public static function get_links($id) {
