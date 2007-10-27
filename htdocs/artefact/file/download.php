@@ -45,6 +45,9 @@ if ($viewid && $fileid) {
     }
 
     $file = artefact_instance_from_id($fileid);
+    if (!($file instanceof ArtefactTypeFile)) {
+        throw new NotFoundException();
+    }
     $path = $file->get_path(array('size' => $size));
     $title = $file->download_title();
     serve_file($path, $title);
@@ -52,6 +55,9 @@ if ($viewid && $fileid) {
 
 // We just have a file ID
 $file = artefact_instance_from_id($fileid);
+if (!($file instanceof ArtefactTypeFile)) {
+    throw new NotFoundException();
+}
 
 // If the file is in the public directory, it's fine to serve
 $fileispublic = $file->get('parent') == ArtefactTypeFolder::admin_public_folder_id();
