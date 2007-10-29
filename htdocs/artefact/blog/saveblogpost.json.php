@@ -132,9 +132,9 @@ if (!empty($uploads)) {
 if (!empty($uploadartefact)) {
     $originalbody = $body;
     foreach ($uploadartefact as $k => $v) {
-        $regexps = array('/\/artefact\/blog\/downloadtemp.php\?uploadnumber=' . $k .'&amp;createid=\d+/',
+        $regexps = array('/<img([^>]+)src="(artefact\/blog\/)?downloadtemp.php\?uploadnumber=' . $k .'&amp;createid=\d+/',
                          '/alt="uploaded:' . $k . '"/');
-        $subs = array('/artefact/file/download.php?file=' . $v,
+        $subs = array('<img$1src="/artefact/file/download.php?file=' . $v,
                       'alt="artefact:' . $v . '"');
         $body = preg_replace($regexps, $subs, $body);
     }
