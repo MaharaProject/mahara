@@ -439,14 +439,18 @@ class View {
     */
     public static function build_category_list($defaultcategory, View $view, $new=0) {
         require_once(get_config('docroot') . '/blocktype/lib.php');
-        $cats = get_records_array('blocktype_category', '', '', 'name');
+        // Change to a left join to show tabs with no results
+        $cats = get_records_sql_array('SELECT bc.name, COUNT(bic.*) AS "count"
+            FROM {blocktype_category} bc
+            INNER JOIN {blocktype_installed_category} bic ON (bc.name = bic.category)
+            GROUP BY bc.name
+            ORDER BY bc.name', array());
         $categories = array_map(
             create_function(
                 '$a', 
-                '$a = $a->name;
-                return array(
-                    "name" => $a, 
-                    "title" => call_static_method("PluginBlocktype", "category_title_from_name", $a),
+                'return array(
+                    "name" => $a->name,
+                    "title" => call_static_method("PluginBlocktype", "category_title_from_name", $a->name) . " (" . $a->count . ")",
                 );'
             ),
             $cats
