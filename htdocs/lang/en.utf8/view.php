@@ -114,5 +114,6 @@ $string['blocktypecategory.general'] = 'General';
 $string['blocktypecategory.multimedia'] = 'Multimedia';
 
 $string['notitle'] = 'No title';
+$string['clickformoreinformation'] = 'Click for more information and to place feedback';
 
 ?>
