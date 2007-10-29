@@ -1166,6 +1166,8 @@ class View {
         $elementname   = $data['name'];
         $template      = $data['template'];
 
+        $params['offset'] -= $params['offset'] % $params['limit'];
+
         safe_require('blocktype', $data['blocktype']);
         $blocktypeclass = generate_class_name('blocktype', $data['blocktype']);
 

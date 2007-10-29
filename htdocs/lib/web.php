@@ -1989,6 +1989,8 @@ function build_pagination($params) {
 
     $params['offsetname'] = (isset($params['offsetname'])) ? $params['offsetname'] : 'offset';
     $params['offset'] = param_integer($params['offsetname'], 0);
+    // Correct for odd offsets
+    $params['offset'] -= $params['offset'] % $params['limit'];
 
     $params['firsttext'] = (isset($params['firsttext'])) ? $params['firsttext'] : get_string('first');
     $params['previoustext'] = (isset($params['previoustext'])) ? $params['previoustext'] : get_string('previous');
