@@ -348,7 +348,7 @@ function auth_setup () {
         $USER->logout();
 
         if (defined('JSON')) {
-            json_reply('global', '', 1);
+            json_reply('global', get_string('sessiontimedoutreload'), 1);
         }
 
         // If the page the user is viewing is public, inform them that they can
@@ -377,6 +377,11 @@ function auth_setup () {
         // Check if the page is public or the site is configured to be public.
         if (defined('PUBLIC') && !isset($_GET['login'])) {
             return;
+        }
+
+        // No session and a json request
+        if (defined('JSON')) {
+            json_reply('global', get_string('nosessionreload'), 1);
         }
         
         auth_draw_login_page(null, $form);

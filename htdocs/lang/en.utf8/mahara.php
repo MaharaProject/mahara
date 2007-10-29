@@ -140,6 +140,7 @@ $string['login'] = 'Login';
 $string['loginfailed'] = 'You have not provided the correct credentials to log in. Please check your username and password are correct.';
 $string['loginto'] = 'Log in to %s';
 $string['newpassword'] = 'New Password';
+$string['nosessionreload'] = 'Reload the page to log in';
 $string['oldpassword'] = 'Current Password';
 $string['password'] = 'Password';
 $string['passworddescription'] = ' ';
@@ -151,6 +152,7 @@ $string['passwordtooeasy'] = 'Your password is too easy! Please choose a harder 
 $string['register'] = 'Register';
 $string['sessiontimedout'] = 'Your session has timed out, please enter your login details to continue';
 $string['sessiontimedoutpublic'] = 'Your session has timed out. You may <a href="?login">log in</a> to continue browsing';
+$string['sessiontimedoutreload'] = 'Your session has timed out. Reload the page to log in again';
 $string['username'] = 'Username';
 $string['preferredname'] = 'Preferred Name';
 $string['usernamedescription'] = ' ';

@@ -26,8 +26,10 @@ function get_themeurl(s) {
 }
 
 function globalErrorHandler(data) {
-    if (data.returnCode == 3) {
+    if (data.returnCode == 1) {
         // Logged out!
+        // Later - ajaxlogin
+        displayMessage(data.message, 'error');
     }
     else {
         displayMessage(data.message, 'error');
