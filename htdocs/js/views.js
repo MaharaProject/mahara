@@ -254,21 +254,44 @@ function ViewManager() {
         connect(button, 'onclick', function(e) {
             e.stop();
             setNodeAttribute(button, 'disabled', 'disabled');
+
+            // If there is a configuration form open, close it. This is because
+            // each one shares the same form tag - the one for the entire form.
+            // We might be able to support having more than one form open at
+            // any one time, as long as we can detect precisely which form was
+            // submitted
+            if (self.currentConfigureData) {
+                self.currentConfigureData['contentdiv'].innerHTML = self.currentConfigureData['oldcontent'];
+                removeNodeAttribute(self.currentConfigureData['button'], 'disabled');
+                self.currentConfigureData = null;
+            }
+
             var pd = {'id': $('viewid').value, 'change': 1};
             pd[getNodeAttribute(e.src(), 'name')] = 1;
+
+            var blockinstance = getFirstParentByTagAndClassName(button, 'div', 'blockinstance');
+            var blockinstanceId = blockinstance.id.substr(blockinstance.id.lastIndexOf('_') + 1);
+            var contentDiv = getFirstElementByTagAndClassName('div', 'blockinstance-content', blockinstance);
+            var oldContent = contentDiv.innerHTML;
+
+            // Put a loading message in place while the form downloads
+            replaceChildNodes(contentDiv, IMG({'src': config.theme['images/loading.gif']}), ' ', get_string('loading'));
+
             sendjsonrequest('blocks.json.php', pd, 'POST', function(data) {
-                var blockinstance = getFirstParentByTagAndClassName(button, 'div', 'blockinstance');
-                var blockinstanceId = blockinstance.id.substr(blockinstance.id.lastIndexOf('_') + 1);
-                var content = getFirstElementByTagAndClassName('div', 'blockinstance-content', blockinstance);
-                var oldContent = content.innerHTML;
-                content.innerHTML = data.data['html'];
+                self.currentConfigureData = {
+                    'contentdiv': contentDiv,
+                    'oldcontent': oldContent,
+                    'button'    : button
+                };
+                contentDiv.innerHTML = data.data['html'];
                 eval(data.data.js);
 
                 // Make the cancel button be supersmart
                 var cancelButton = $('cancel_cb_' + blockinstanceId + '_action_configureblockinstance_id_' + blockinstanceId);
                 connect(cancelButton, 'onclick', function(e) {
                     e.stop();
-                    content.innerHTML = oldContent;
+                    contentDiv.innerHTML = oldContent;
+                    self.currentConfigureData = null;
                     removeNodeAttribute(button, 'disabled');
                 });
 
@@ -950,6 +973,10 @@ function ViewManager() {
     // The placeholder that shows where the blockinstance will be placed when
     // it is dropped. Needs a margin the same as the blockinstances
     this.blockPlaceholder = DIV({'id': 'block-placeholder'});
+
+    // A container for information about the blockinstance current being
+    // configured
+    this.currentConfigureData = null;
 
     // The column container - set in self.init
     this.columnContainer = null;

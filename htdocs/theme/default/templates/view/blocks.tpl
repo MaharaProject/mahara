@@ -2,7 +2,7 @@
 
 {include file="columnfullstart.tpl"}
 
-    <form action="" method="post">
+    <form action="{$formurl}" method="post">
         <input type="hidden" id="viewid" name="id" value="{$view}">
         <input type="hidden" name="change" value="1">
         <input type="hidden" id="category" name="c" value="{$category}">
