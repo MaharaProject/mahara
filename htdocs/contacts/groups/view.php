@@ -121,7 +121,7 @@ $invited   = get_record('group_member_invite', 'group', $id, 'member', $USER->ge
 $requested = get_record('group_member_request', 'group', $id, 'member', $USER->get('id'));
 
 $userview = get_config('wwwroot') . 'user/view.php?id=';
-$viewview = get_config('wwwroot') . 'view/view.php?view=';
+$viewview = get_config('wwwroot') . 'view/view.php?id=';
 $commview = get_config('wwwroot') . 'contacts/groups/view.php';
 
 // strings that are used in the js

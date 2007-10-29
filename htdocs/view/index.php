@@ -85,7 +85,7 @@ function title(r, groups) {
     if (r._rownumber == 1) {
         s.innerHTML = '{$editcontrolshelp}';
     }
-    return [TD(null,A({'href':'view.php?view='+r.id},r.title)),
+    return [TD(null,A({'href':'view.php?id='+r.id},r.title)),
             TD(null,f, s)];
 }
 
@@ -106,7 +106,7 @@ function assessselect(viewid, grouplist) {
 }
 
 function renderartefact(viewid,a) {
-    var link = A({'href':'{$wwwroot}view/view.php?view='+viewid+'&artefact='+a.id});
+    var link = A({'href':'{$wwwroot}view/view.php?id='+viewid+'&artefact='+a.id});
     link.innerHTML = a.title;
     return LI(null,link);
 }

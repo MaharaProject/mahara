@@ -46,7 +46,7 @@ $viewdata = get_record_sql('
      INNER JOIN {group} g ON v.submittedto = g.id
      WHERE v.id = ' . $viewid, '');
 
-$page = '/view/view.php?view=' . $viewid;
+$page = '/view/view.php?id=' . $viewid;
 
 require_once('uploadmanager.php');
 $um = new upload_manager('attachment');
@@ -103,6 +103,6 @@ require_once('activity.php');
 activity_occurred('feedback', $data);
 
 
-redirect('/view/view.php?view=' . $viewid);
+redirect('/view/view.php?id=' . $viewid);
 
 ?>

@@ -120,7 +120,7 @@ var friendslist = new TableRenderer(
             if (typeof(d.views) == 'object' && d.views[r.id] && d.numviews[r.id] > 0) {
                 views = UL();
                 forEach(d.views[r.id], function(i) {
-                    appendChildNodes(views, LI(null, A({'href': config['wwwroot'] + 'view/view.php?view=' + i.id}, i.title)));
+                    appendChildNodes(views, LI(null, A({'href': config['wwwroot'] + 'view/view.php?id=' + i.id}, i.title)));
                 });
 
                 if (d.views[r.id].length < d.numviews[r.id]) {

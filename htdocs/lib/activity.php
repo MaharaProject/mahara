@@ -119,12 +119,12 @@ function handle_activity($activitytype, $data, $cron=false) {
                     throw new InvalidArgumentException("Couldn't find view with id " . $data->view);
                 }
                 if (empty($data->artefact)) {
-                    $data->url = get_config('wwwroot') . 'view/view.php?view=' . $data->view;
+                    $data->url = get_config('wwwroot') . 'view/view.php?id=' . $data->view;
                     $data->subject = get_string('objectionablecontentview', 'activity') 
                         . ' ' . get_string('onview', 'activity') . ' ' . $viewtitle;
                 }
                 else {
-                    $data->url = get_config('wwwroot') . 'view/view.php?artefact=' . $data->artefact . '&view=' . $data->view;
+                    $data->url = get_config('wwwroot') . 'view/view.php?artefact=' . $data->artefact . '&id=' . $data->view;
                     if (!$artefacttitle = get_field('artefact', 'title', 'id', $data->artefact)) {
                         throw new InvalidArgumentException("Couldn't find artefact with id " . $data->view);
                     }
@@ -193,7 +193,7 @@ function handle_activity($activitytype, $data, $cron=false) {
                     if (empty($data->url)) {
                         // @todo this might change later
                         $data->url = get_config('wwwroot') . 'view/view.php?artefact=' 
-                            . $data->artefact . '&view=' . $data->view;
+                            . $data->artefact . '&id=' . $data->view;
                     }
                 } 
                 else { // feedback on view.
@@ -205,7 +205,7 @@ function handle_activity($activitytype, $data, $cron=false) {
                     $data->subject .= ' ' .$view->title;
                     if (empty($data->url)) {
                         // @todo this might change later
-                        $data->url = get_config('wwwroot') . 'view/view.php?view=' . $data->view;
+                        $data->url = get_config('wwwroot') . 'view/view.php?id=' . $data->view;
                     }
                 }
                 if ($userid) {
@@ -242,7 +242,7 @@ function handle_activity($activitytype, $data, $cron=false) {
                                 AND wv.view = ?
                            ';
                     $users = get_records_sql_array($sql, 
-                                                   array(get_config('wwwroot') . 'view/view.php?view=' 
+                                                   array(get_config('wwwroot') . 'view/view.php?id=' 
                                                          . $data->view, 'watchlist', $data->view));
                     if (empty($users)) {
                         $users = array();
@@ -272,7 +272,7 @@ function handle_activity($activitytype, $data, $cron=false) {
 
                 $data->message = get_string('newviewmessage', 'activity', $viewinfo->title);
                 $data->subject = get_string('newviewsubject', 'activity');
-                $data->url = get_config('wwwroot') . 'view/view.php?view=' . $data->view;
+                $data->url = get_config('wwwroot') . 'view/view.php?id=' . $data->view;
 
                 // add users on friendslist or userlist...
                 $users = activity_get_viewaccess_users($data->view, $data->owner, 'newview');
@@ -303,7 +303,7 @@ function handle_activity($activitytype, $data, $cron=false) {
                 $data->message = get_string('newviewaccessmessage', 'activity')
                     . ' "' . $viewinfo->title . '" ' . get_string('ownedby', 'activity');
                 $data->subject = get_string('newviewaccesssubject', 'activity');
-                $data->url = get_config('wwwroot') . 'view/view.php?view=' . $data->view;
+                $data->url = get_config('wwwroot') . 'view/view.php?id=' . $data->view;
                 $users = array_diff_key(activity_get_viewaccess_users($data->view, $data->owner, 'viewaccess'), $data->oldusers);
                 if (empty($users)) {
                     $users = array();

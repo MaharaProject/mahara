@@ -23,7 +23,7 @@
 			</td></tr></thead>
 			<tbody><tr><td><ul>
 		{foreach from=$VIEWS key=key item=item name=view}
-			<li><a href="{$WWWROOT}view/view.php?view={$key}">{$item}</a></li>
+			<li><a href="{$WWWROOT}view/view.php?id={$key}">{$item}</a></li>
 		{/foreach}
 			</ul></td></tr></tbody></table>
 		{/if}

@@ -57,7 +57,7 @@ class PluginBlocktypeImage extends PluginBlocktype {
             }
             else {
                 $src = get_config('wwwroot') . 'artefact/file/download.php?file=' . $configdata['artefactid'];
-                $src .= '&view=' . $instance->get('view');
+                $src .= '&id=' . $instance->get('view');
                 $description = $image->get('description');
             }
 
@@ -66,7 +66,7 @@ class PluginBlocktypeImage extends PluginBlocktype {
             }
 
             $result  = '<div class="center"><div>';
-            $result .= '<a href="' . get_config('wwwroot') . 'view/view.php?view=' . $instance->get('view') . '&artefact=' . $configdata['artefactid'] . '"><img src="' . hsc($src) . '" alt="' . hsc($description) .'"></a>';
+            $result .= '<a href="' . get_config('wwwroot') . 'view/view.php?id=' . $instance->get('view') . '&artefact=' . $configdata['artefactid'] . '"><img src="' . hsc($src) . '" alt="' . hsc($description) .'"></a>';
             $result .= '</div>';
 
             $description = (is_a($image, 'ArtefacttypeImage')) ? $image->get('description') : $image->get('title');

@@ -29,7 +29,12 @@ define('PUBLIC', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 require(get_config('libroot') . 'view.php');
 
-$viewid     = param_integer('view');
+// TODO for 1.0 - remove 'view' as an allowed value for this
+$viewid     = param_integer('id', 0);
+if (!$viewid) {
+    $viewid     = param_integer('view');
+    log_info('view/view.php accessed with view parameter instead of ID. If this was because of a link internal to mahara, please change it!');
+}
 $artefactid = param_integer('artefact', null);
 $path       = param_variable('path', null);
 
@@ -64,7 +69,7 @@ if ($artefactid) {
     }
     $content .= $rendered['html'];
 
-    $viewhref = 'view.php?view=' . $viewid;
+    $viewhref = 'view.php?id=' . $viewid;
     $navlist = array('<a href="' . $viewhref .  '">' . $title . '</a>');
     if (!empty($path)) {
         $titles = get_records_sql_assoc('
@@ -88,7 +93,7 @@ if ($artefactid) {
             $ancestorid = $artefact->parent;
             while ($ancestorid && isset($hierarchy['refs'][$ancestorid])) {
                 $ancestor = $hierarchy['refs'][$ancestorid];
-                $link = '<a href="view.php?view=' . $viewid . '&amp;artefact=' . $ancestorid . '">' 
+                $link = '<a href="view.php?id=' . $viewid . '&amp;artefact=' . $ancestorid . '">' 
                     . $ancestor->title . "</a>\n";
                 array_push($navlist, $link);
                 $ancestorid = $ancestor->parent;

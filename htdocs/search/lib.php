@@ -138,7 +138,8 @@ abstract class PluginSearch extends Plugin {
                         break;
                     case 'view':
                         $result['links'] = array(
-                            '_default'                        => $wwwroot . 'view/view.php?view=' . $result['id'],
+                            '_default'                        => $wwwroot . 'view/view.php?id=' . $result['id'],
+                            // TODO: these are certainly broken!
                             get_string('editviewinformation') => $wwwroot . 'view/editmetadata.php?viewid=' . $result['id'],
                             get_string('editview')            => $wwwroot . 'view/edit.php?viewid=' . $result['id'],
                             get_string('editaccess')          => $wwwroot . 'view/editaccess.php?viewid=' . $result['id'],

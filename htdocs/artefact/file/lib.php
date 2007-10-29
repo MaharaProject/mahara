@@ -291,7 +291,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
 
         $downloadpath = get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->get('id');
         if (isset($options['viewid'])) {
-            $downloadpath .= '&view=' . $options['viewid'];
+            $downloadpath .= '&id=' . $options['viewid'];
         }
         $filetype = get_string($this->get('oldextension'), 'artefact.file');
         if (substr($filetype, 0, 2) == '[[') {
@@ -876,7 +876,7 @@ class ArtefactTypeImage extends ArtefactTypeFile {
         $url .= 'file=' . $options['id'];
 
         if (isset($options['view'])) {
-            $url .= '&view=' . $options['view'];
+            $url .= '&id=' . $options['view'];
         }
         if (isset($options['size'])) {
             $url .= '&size=' . $options['size'];

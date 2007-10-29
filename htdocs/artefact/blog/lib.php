@@ -435,7 +435,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
         $smarty = smarty_core();
         if (empty($options['hidetitle'])) {
             if (isset($options['viewid'])) {
-                $smarty->assign('artefacttitle', '<a href="' . get_config('wwwroot') . 'view/view.php?view='
+                $smarty->assign('artefacttitle', '<a href="' . get_config('wwwroot') . 'view/view.php?id='
                      . $options['viewid'] . '&artefact=' . $this->get('id')
                      . '">' . $this->get('title') . '</a>');
             }
@@ -447,7 +447,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
         // We need to make sure that the images in the post have the right viewid associated with them
         $postcontent = $this->get('description');
         if (isset($options['viewid'])) {
-            $postcontent = preg_replace('#(<img src=".*artefact/file/download\.php\?file=\d+)#', '\1&amp;view=' . $options['viewid'], $postcontent);
+            $postcontent = preg_replace('#(<img src=".*artefact/file/download\.php\?file=\d+)#', '\1&amp;id=' . $options['viewid'], $postcontent);
         }
         $smarty->assign('artefactdescription', $postcontent);
         $smarty->assign('artefact', $this);
@@ -459,10 +459,10 @@ class ArtefactTypeBlogPost extends ArtefactType {
                 $f = artefact_instance_from_id($attachment->id);
                 $attachment->size = $f->describe_size();
                 $attachment->iconpath = $f->get_icon(array('id' => $attachment->id, 'viewid' => $options['viewid']));
-                $attachment->viewpath = get_config('wwwroot') . 'view/view.php?view=' . $options['viewid'] . '&artefact=' . $attachment->id;
+                $attachment->viewpath = get_config('wwwroot') . 'view/view.php?id=' . $options['viewid'] . '&artefact=' . $attachment->id;
                 $attachment->downloadpath = get_config('wwwroot') . 'artefact/file/download.php?file=' . $attachment->id;
                 if (isset($options['viewid'])) {
-                    $attachment->downloadpath .= '&view=' . $options['viewid'];
+                    $attachment->downloadpath .= '&id=' . $options['viewid'];
                 }
             }
             $smarty->assign('attachments', $attachments);
