@@ -9,10 +9,10 @@
 
 <table class="filedata">
     <tr><th>{str tag=type}:</th><td>{str tag=$artefacttype section=artefact.internal}</td></tr>
+    <tr><th>{str tag=description}:</th><td>{$description|escape}</td></tr>
     <tr><th>{str tag=owner}:</th><td>{$owner}</td></tr>
     <tr><th>{str tag=created}:</th><td>{$created}</td></tr>
     <tr><th>{str tag=lastmodified}:</th><td>{$modified}</td></tr>
-    <tr><th>{str tag=description}:</th><td>{$description|escape}</td></tr>
     <tr><th>{str tag=size}:</th><td>{$size|escape}</td></tr>
     <tr><th>{str tag=download}:</th><td><a href="{$downloadpath|escape}">{str tag=download}</a></td></tr>
 </table>
