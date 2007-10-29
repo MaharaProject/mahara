@@ -121,10 +121,11 @@ class PluginBlocktypeBlogpost extends PluginBlocktype {
         $artefact->blog = $blognames[$artefact->parent];
 
         $ellipsis = '';
+        $artefact->description = trim(strip_tags($artefact->description));
         if (strlen($artefact->description) > 100) {
             $ellipsis = '…';
         }
-        $artefact->description = substr(trim(strip_tags($artefact->description)), 0, 100) . $ellipsis;
+        $artefact->description = substr($artefact->description, 0, 100) . $ellipsis;
 
         return $artefact;
     }
