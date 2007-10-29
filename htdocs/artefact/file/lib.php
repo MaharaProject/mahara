@@ -291,7 +291,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
 
         $downloadpath = get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->get('id');
         if (isset($options['viewid'])) {
-            $downloadpath .= '&id=' . $options['viewid'];
+            $downloadpath .= '&view=' . $options['viewid'];
         }
         $filetype = get_string($this->get('oldextension'), 'artefact.file');
         if (substr($filetype, 0, 2) == '[[') {
@@ -875,8 +875,8 @@ class ArtefactTypeImage extends ArtefactTypeFile {
         $url = get_config('wwwroot') . 'artefact/file/download.php?';
         $url .= 'file=' . $options['id'];
 
-        if (isset($options['view'])) {
-            $url .= '&id=' . $options['view'];
+        if (isset($options['viewid'])) {
+            $url .= '&view=' . $options['viewid'];
         }
         if (isset($options['size'])) {
             $url .= '&size=' . $options['size'];
@@ -906,7 +906,7 @@ class ArtefactTypeImage extends ArtefactTypeFile {
     public function render_self($options) {
         $result = parent::render_self($options);
         $result['html'] = '<div class="fr filedata-icon" style="text-align: center;"><h4>Preview</h4><img src="'
-            . hsc(get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->id . '&maxwidth=400')
+            . hsc(get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->id . '&view=' . $options['viewid'] . '&maxwidth=400')
             . '" alt=""></div>' . $result['html'];
         return $result;
     }

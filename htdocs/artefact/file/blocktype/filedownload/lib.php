@@ -50,8 +50,8 @@ class PluginBlocktypeFiledownload extends PluginBlocktype {
                 $artefact = artefact_instance_from_id($artefactid);
 
                 $icondata = array(
-                    'id'   => $artefactid,
-                    'view' => $instance->get('view'),
+                    'id'     => $artefactid,
+                    'viewid' => $instance->get('view'),
                 );
 
                 $detailsurl = get_config('wwwroot') . 'view/view.php?id=' . $instance->get('view') . '&artefact=' . $artefactid;
@@ -61,7 +61,7 @@ class PluginBlocktypeFiledownload extends PluginBlocktype {
                     $size = filesize(get_dataroot_image_path('artefact/internal/profileicons/', $artefactid));
                 }
                 else if ($artefact instanceof ArtefactTypeFile) {
-                    $downloadurl = get_config('wwwroot') . 'artefact/file/download.php?file=' . $artefactid . '&id=' . $icondata['view'];
+                    $downloadurl = get_config('wwwroot') . 'artefact/file/download.php?file=' . $artefactid . '&view=' . $icondata['viewid'];
                     $size = $artefact->get('size');
                 }
 

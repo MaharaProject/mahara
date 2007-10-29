@@ -57,7 +57,7 @@ class PluginBlocktypeImage extends PluginBlocktype {
             }
             else {
                 $src = get_config('wwwroot') . 'artefact/file/download.php?file=' . $configdata['artefactid'];
-                $src .= '&id=' . $instance->get('view');
+                $src .= '&view=' . $instance->get('view');
                 $description = $image->get('description');
             }
 
