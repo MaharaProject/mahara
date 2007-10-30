@@ -28,7 +28,7 @@ define('INTERNAL', 1);
 define('MENUITEM', 'groups/groupsiown');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
-define('TITLE', get_string('editgroup'));
+define('TITLE', get_string('editgroup', 'group'));
 
 $id = param_integer('id');
 
@@ -40,12 +40,12 @@ if (!$group_data) {
 }
 
 $joinoptions = array(
-    'invite'     => get_string('membershiptype.invite'),
-    'request'    => get_string('membershiptype.request'),
-    'open'       => get_string('membershiptype.open'),
+    'invite'     => get_string('membershiptype.invite', 'group'),
+    'request'    => get_string('membershiptype.request', 'group'),
+    'open'       => get_string('membershiptype.open', 'group'),
 );
 if ($USER->get('admin') || $USER->get('staff')) {
-    $joinoptions['controlled'] = get_string('membershiptype.controlled');
+    $joinoptions['controlled'] = get_string('membershiptype.controlled', 'group');
 }
 
 $editgroup = pieform(array(
@@ -56,20 +56,20 @@ $editgroup = pieform(array(
     'elements' => array(
         'name' => array(
             'type'         => 'text',
-            'title'        => get_string('groupname'),
+            'title'        => get_string('groupname', 'group'),
             'rules'        => array( 'required' => true, 'maxlength' => 128 ),
             'defaultvalue' => $group_data->name,
         ),
         'description' => array(
             'type'         => 'wysiwyg',
-            'title'        => get_string('groupdescription'),
+            'title'        => get_string('groupdescription', 'group'),
             'rows'         => 10,
             'cols'         => 70,
             'defaultvalue' => $group_data->description,
         ),
         'membershiptype' => array(
             'type'         => 'select',
-            'title'        => get_string('membershiptype'),
+            'title'        => get_string('membershiptype', 'group'),
             'options'      => $joinoptions,
             'defaultvalue' => $group_data->jointype,
             'help'         => true,
@@ -80,7 +80,7 @@ $editgroup = pieform(array(
         ),
         'submit'   => array(
             'type'  => 'submitcancel',
-            'value' => array(get_string('savegroup'), get_string('cancel')),
+            'value' => array(get_string('savegroup', 'group'), get_string('cancel')),
         ),
     ),
 ));
@@ -92,7 +92,7 @@ function editgroup_validate(Pieform $form, $values) {
     $cid = get_field('group', 'id', 'owner', $USER->get('id'), 'name', $values['name']);
 
     if ($cid && $cid != $values['id']) {
-        $form->set_error('name', get_string('groupalreadyexists'));
+        $form->set_error('name', get_string('groupalreadyexists', 'group'));
     }
 }
 
@@ -120,7 +120,7 @@ function editgroup_submit(Pieform $form, $values) {
         'id'
     );
 
-    $SESSION->add_ok_msg(get_string('groupsaved'));
+    $SESSION->add_ok_msg(get_string('groupsaved', 'group'));
 
     db_commit();
 

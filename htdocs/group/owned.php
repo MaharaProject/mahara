@@ -38,8 +38,8 @@ $editurl = get_config('wwwroot') . 'group/edit.php?id=';
 $editstr = json_encode(get_string('edit'));
 $edithelp = get_help_icon('core', 'groups', null, null, null, 'groupeditlink');
 $deletestr = json_encode(get_string('delete'));
-$confirmdelete_hasviews = json_encode(get_string('groupconfirmdeletehasviews'));
-$confirmdelete = json_encode(get_string('groupconfirmdelete'));
+$confirmdelete_hasviews = json_encode(get_string('groupconfirmdeletehasviews', 'group'));
+$confirmdelete = json_encode(get_string('groupconfirmdelete', 'group'));
 
 $javascript = <<<EOF
 var grouplist = new TableRenderer(

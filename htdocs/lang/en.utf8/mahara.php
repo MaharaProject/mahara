@@ -400,6 +400,7 @@ $string['View'] = 'View';
 $string['watchlistupdated'] = 'Your watchlist has been updated';
 
 // group
+/*
 $string['groupname'] = 'Group Name';
 $string['creategroup'] = 'Create Group';
 $string['groupmemberrequests'] = 'Pending membership requests';
@@ -478,11 +479,12 @@ $string['grouprequestmessagereason'] = '%s has sent a membership request to join
 $string['groupconfirmdelete'] = 'Are you sure you wish to delete this community?';
 $string['groupconfirmdeletehasviews'] = 'Are you sure you wish to delete this community? Some of your views use this community for access control, removing this community would mean that the members of that community would not have access to the views.';
 $string['deletegroup'] = 'Group Deleted Successfully';
-
+*/
 $string['alphabet'] = 'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z';
 $string['all'] = 'All';
 
 // friendslist
+/*
 $string['reasonoptional'] = 'Reason (optional)';
 $string['request'] = 'Request';
 
@@ -553,6 +555,7 @@ $string['sendmessage'] = 'Send message';
 $string['messagesent'] = 'Message sent!';
 $string['messagenotsent'] = 'Failed to send message';
 $string['newusermessage'] = 'New message from %s';
+*/
 
 
 $string['friend'] = 'Friend';
