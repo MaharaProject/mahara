@@ -33,7 +33,7 @@
             </div>
             <script type="text/javascript">
             {literal}
-            insertSiblingNodesAfter('bottom-pane', DIV({'id': 'views-loading'}, get_string('loading')));
+            insertSiblingNodesAfter('bottom-pane', DIV({'id': 'views-loading'}, IMG({'src': config.theme['images/loading.gif'], 'alt': ''}), ' ', get_string('loading')));
             {/literal}
             </script>
         </div>
