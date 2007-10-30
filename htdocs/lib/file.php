@@ -334,7 +334,6 @@ function is_image_mime_type($type) {
  *                if an appropriate file could not be located or generated
  */
 function get_dataroot_image_path($path, $id, $size=null) {
-    log_debug("get_dataroot_image_path($path, $id, " . serialize($size) . ')');
     $dataroot = get_config('dataroot');
     $imagepath = $dataroot . $path;
     if (substr($imagepath, -1) == '/') {
@@ -347,16 +346,13 @@ function get_dataroot_image_path($path, $id, $size=null) {
 
     // Work out the location of the original image
     $originalimage = $imagepath . '/originals/' . ($id % 256) . "/$id";
-    log_debug("original image path = $originalimage");
 
     if (!$size) {
         // No size has been asked for. Check for the original and return that
         if (is_readable($originalimage)) {
-            log_debug("Found original image and no size asked for");
             return $originalimage;
         }
         // Oops - no original available
-        log_debug("Original image NOT found");
         return false;
     }
     else {
@@ -371,17 +367,14 @@ function get_dataroot_image_path($path, $id, $size=null) {
             check_dir_exists($resizedimagedir);
         }
         $resizedimagefile = "{$resizedimagedir}{$md5}.$id";//.$sizestr";
-        log_debug("$sizestr   $md5   $resizedimagefile");
 
         if (is_readable($resizedimagefile)) {
-            log_debug("Found cached version of image $resizedimagefile");
             return $resizedimagefile;
         }
 
         // Image is not available in this size. If there is a base image for
         // it, we can make one however.
         if (is_readable($originalimage)) {
-            log_debug("Couldn't find a resized one, but found an original at $originalimage");
 
             $originalmimetype = get_mime_type($originalimage);
             switch ($originalmimetype) {
@@ -427,7 +420,6 @@ function get_dataroot_image_path($path, $id, $size=null) {
             if (!$newdimensions = image_get_new_dimensions($oldx, $oldy, $size)) {
                 return false;
             }
-            log_debug("storing at $resizedimagefile");
 
             $newih = imagecreatetruecolor($newdimensions['w'], $newdimensions['h']);
 
@@ -452,8 +444,6 @@ function get_dataroot_image_path($path, $id, $size=null) {
             }
 
             $result = imagepng($newih, $resizedimagefile);
-            log_debug("RESULT");
-            log_debug($result);
             if ($result) {
                 return $resizedimagefile;
             }
@@ -475,8 +465,6 @@ function get_dataroot_image_path($path, $id, $size=null) {
  * @return array      A hash with the new width and height, keyed by 'w' and 'h'
  */
 function image_get_new_dimensions($oldx, $oldy, $size) {
-    log_debug("STRATEGY:");
-    log_debug("Old image is $oldx x $oldy");
     if (is_int($size)) {
         // If just a number (number is width AND height here)
         if ($oldy > $oldx) {
@@ -487,39 +475,29 @@ function image_get_new_dimensions($oldx, $oldy, $size) {
             $newx = $size;
             $newy = ($oldy * $newx) / $oldx;
         }
-        log_debug("Resizing so the maximum size of the largest side = $size");
-        log_debug("New size = $newx x $newy");
     }
     else if (isset($size['w']) && isset($size['h'])) {
         // If size explicitly X by Y
         $newx = $size['w'];
         $newy = $size['h'];
-        log_debug("Resizing to EXACTLY $newx x $newy");
     }
     else if (isset($size['w'])) {
         // Else if just width
         $newx = $size['w'];
         $newy = ($oldy * $newx) / $oldx;
-        log_debug("Resizing so WIDTH = " . $size['w']);
-        log_debug("New dimensions: $newx x $newy");
     }
     else if (isset($size['h'])) {
         // Else if just height
         $newy = $size['h'];
         $newx = ($oldx * $newy) / $oldy;
-        log_debug("Resizing so HEIGHT = " . $size['h']);
-        log_debug("New dimensions: $newx x $newy");
     }
     else if (isset($size['maxw'])) {
         // Else if just maximum width
         if ($oldx > $size['maxw']) {
             $newx = $size['maxw'];
             $newy = ($oldy * $newx) / $oldx;
-            log_debug("maxwidth: Resizing so WIDTH = " . $size['maxw']);
-            log_debug("New dimensions: $newx x $newy");
         }
         else {
-            log_debug('maxwidth: image width smaller than maxwidth, doing nothing');
             $newx = $oldx;
             $newy = $oldy;
         }
@@ -529,18 +507,13 @@ function image_get_new_dimensions($oldx, $oldy, $size) {
         if ($oldy > $size['maxh']) {
             $newy = $size['maxh'];
             $newx = ($oldx * $newy) / $oldy;
-            log_debug("Resizing so HEIGHT = " . $size['maxh']);
-            log_debug("New dimensions: $newx x $newy");
         }
         else {
-            log_debug('maxheight: image height smaller than maxheight, doing nothing');
             $newx = $oldx;
             $newy = $oldy;
         }
     }
     else {
-        log_debug("Unknown size specification:");
-        log_debug($size);
         return false;
     }
     return array('w' => $newx, 'h' => $newy);
