@@ -80,7 +80,7 @@ results.updatecallback = function (d) {
 results.rowfunction = function(r,n,d) {
     if ( d.type == 'group' ) {
         return TR({'class':'r'+(n%2)},
-                  TD(null,A({'href':'contacts/groups/view.php?id=' + r.id},r.name)));
+                  TD(null,A({'href':'group/view.php?id=' + r.id},r.name)));
     }
     var row = TR({'class':'r'+(n%2)},TD(null,A({'href':'user/view.php?id=' + r.id},r.name)));
     for (var i = 0; i < userfields.length; i++) {

@@ -44,7 +44,6 @@ class User {
     protected $authenticated = false;
     protected $changed       = false;
     protected $attributes    = array();
-    protected $SESSION;
 
     /**
      * Sets defaults for the user object (only because PHP5 does not appear
@@ -86,7 +85,6 @@ class User {
             'sesskey'          => ''
         );
         $this->attributes = array();
-        $this->SESSION = Session::singleton();
 
     }
 
@@ -350,9 +348,12 @@ class User {
 
 class LiveUser extends User {
 
+    protected $SESSION;
+
     public function __construct() {
 
         parent::__construct();
+        $this->SESSION = Session::singleton();
 
         if ($this->SESSION->is_live()) {
             $this->authenticated  = true;

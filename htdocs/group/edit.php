@@ -26,9 +26,18 @@
 
 define('INTERNAL', 1);
 define('MENUITEM', 'groups/groupsiown');
-require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
-define('TITLE', get_string('creategroup'));
+define('TITLE', get_string('editgroup'));
+
+$id = param_integer('id');
+
+$group_data = get_record('group', 'id', $id, 'owner', $USER->get('id'));
+
+if (!$group_data) {
+    $SESSION->add_error_msg(get_string('canteditdontown'));
+    redirect('/group/owned.php');
+}
 
 $joinoptions = array(
     'invite'     => get_string('membershiptype.invite'),
@@ -39,29 +48,35 @@ if ($USER->get('admin') || $USER->get('staff')) {
     $joinoptions['controlled'] = get_string('membershiptype.controlled');
 }
 
-$creategroup = pieform(array(
-    'name'     => 'creategroup',
+$editgroup = pieform(array(
+    'name'     => 'editgroup',
     'method'   => 'post',
     'plugintype' => 'core',
     'pluginname' => 'groups',
     'elements' => array(
         'name' => array(
             'type'         => 'text',
-            'title'        => get_string('groups'),
+            'title'        => get_string('groupname'),
             'rules'        => array( 'required' => true, 'maxlength' => 128 ),
+            'defaultvalue' => $group_data->name,
         ),
         'description' => array(
             'type'         => 'wysiwyg',
             'title'        => get_string('groupdescription'),
             'rows'         => 10,
-            'cols'         => 80,
+            'cols'         => 70,
+            'defaultvalue' => $group_data->description,
         ),
         'membershiptype' => array(
             'type'         => 'select',
             'title'        => get_string('membershiptype'),
             'options'      => $joinoptions,
-            'defaultvalue' => 'open',
+            'defaultvalue' => $group_data->jointype,
             'help'         => true,
+        ),
+        'id'          => array(
+            'type'         => 'hidden',
+            'value'        => $id,
         ),
         'submit'   => array(
             'type'  => 'submitcancel',
@@ -70,22 +85,22 @@ $creategroup = pieform(array(
     ),
 ));
 
-function creategroup_validate(Pieform $form, $values) {
+function editgroup_validate(Pieform $form, $values) {
     global $USER;
     global $SESSION;
 
     $cid = get_field('group', 'id', 'owner', $USER->get('id'), 'name', $values['name']);
 
-    if ($cid) {
+    if ($cid && $cid != $values['id']) {
         $form->set_error('name', get_string('groupalreadyexists'));
     }
 }
 
-function creategroup_cancel_submit() {
-    redirect('/contacts/groups/owned.php');
+function editgroup_cancel_submit() {
+    redirect('/group/owned.php');
 }
 
-function creategroup_submit(Pieform $form, $values) {
+function editgroup_submit(Pieform $form, $values) {
     global $USER;
     global $SESSION;
 
@@ -93,45 +108,29 @@ function creategroup_submit(Pieform $form, $values) {
 
     $now = db_format_timestamp(time());
 
-    $id = insert_record(
+    update_record(
         'group',
         (object) array(
+            'id'             => $values['id'],
             'name'           => $values['name'],
             'description'    => $values['description'],
             'jointype'       => $values['membershiptype'],
-            'owner'          => $USER->get('id'),
-            'ctime'          => $now,
             'mtime'          => $now,
         ),
-        'id',
-        true
+        'id'
     );
-
-    // If the user is a staff member, they should be added as a tutor automatically
-    if ($values['membershiptype'] == 'controlled' && $USER->get('staff')) {
-        log_debug('Adding staff user to group');
-        insert_record(
-            'group_member',
-            (object) array(
-                'group'  => $id,
-                'member' => $USER->get('id'),
-                'ctime'  => $now,
-                'tutor'  => 1
-            )
-        );
-    }
 
     $SESSION->add_ok_msg(get_string('groupsaved'));
 
     db_commit();
 
-    redirect('/contacts/groups/owned.php');
+    redirect('/group/owned.php');
 }
 
 $smarty = smarty();
 
-$smarty->assign('creategroup', $creategroup);
+$smarty->assign('editgroup', $editgroup);
 
-$smarty->display('contacts/groups/create.tpl');
+$smarty->display('group/edit.tpl');
 
 ?>

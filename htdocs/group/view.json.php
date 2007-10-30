@@ -27,7 +27,7 @@
 define('INTERNAL', 1);
 define('JSON', 1);
 
-require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('group.php');
 
 json_headers();
@@ -168,7 +168,7 @@ switch ($type) {
                      array('users' => array($user),
                            'subject' => get_string('groupmembershipchangesubject', 'mahara', $group->name), 
                            'message' => get_string('groupmembershipchangemessage' . $v),
-                           'url'     => get_config('wwwroot') . 'contacts/groups/view.php?id=' . $id));
+                           'url'     => get_config('wwwroot') . 'group/view.php?id=' . $id));
                                     
              }
          }
@@ -187,7 +187,7 @@ if (!$data) {
     $data = array();
 }
 
-print json_encode(array(
+echo json_encode(array(
     'count'      => $count,
     'data'    =>  $data,
     'limit'   => $limit,
@@ -200,7 +200,7 @@ print json_encode(array(
 
 function group_json_empty() {
     global $limit, $offset, $id, $type, $pending, $submitted;
-    print json_encode(array(
+    echo json_encode(array(
         'count'     => 0 ,
         'data'      => array(),
         'limit'     => $limit,

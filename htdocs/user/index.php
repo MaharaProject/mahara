@@ -27,7 +27,7 @@
 define('INTERNAL', 1);
 define('MENUITEM', 'groups/myfriends');
 define('SECTION_PLUGINTYPE', 'core');
-define('SECTION_PLUGINNAME', 'contacts');
+define('SECTION_PLUGINNAME', 'user');
 define('SECTION_PAGE', 'friends');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
@@ -75,6 +75,6 @@ function friendscontrol_submit(Pieform $form, $values) {
 }
 
 $smarty = smarty(array('mahara', 'tablerenderer', 'friends'), array(), array(), array('sideblocks' => array($sideblock)));
-$smarty->display('contacts/index.tpl');
+$smarty->display('user/index.tpl');
 
 ?>

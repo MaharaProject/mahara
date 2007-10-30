@@ -272,7 +272,7 @@ function hideFriendMessage() {
 
 var searchresults = new TableRenderer(
     'searchresults',
-    config['wwwroot'] + 'contacts/searchfriends.json.php',
+    config['wwwroot'] + 'user/searchfriends.json.php',
     []
 );
 searchresults.statevars.push('query');
