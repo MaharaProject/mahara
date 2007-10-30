@@ -203,7 +203,7 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     // VIEW REWORK MIGRATION
-    if ($oldversion < 20070100200) {
+    if ($oldversion < 2007100200) {
         $table = new XMLDBTable('view_layout');
         $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED,
             XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null, null);
