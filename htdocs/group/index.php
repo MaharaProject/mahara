@@ -27,13 +27,13 @@
 define('INTERNAL', 1);
 define('MENUITEM', 'groups/groupsimin');
 define('SECTION_PLUGINTYPE', 'core');
-define('SECTION_PLUGINNAME', 'contacts');
+define('SECTION_PLUGINNAME', 'groups');
 define('SECTION_PAGE', 'groups');
 
-require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+require(dirname(dirname(__FILE__)) . '/init.php');
 define('TITLE', get_string('groupsimin'));
 
-$viewurl = get_config('wwwroot') . 'contacts/groups/view.php?id=';
+$viewurl = get_config('wwwroot') . 'group/view.php?id=';
 $leftsuccess = get_string('leftgroup');
 $leftfailed = get_string('leftgroupfailed');
 
@@ -68,6 +68,6 @@ function leaveGroup(id) {
 EOF;
 $smarty = smarty(array('tablerenderer'));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
-$smarty->display('contacts/groups/index.tpl');
+$smarty->display('group/index.tpl');
 
 ?>

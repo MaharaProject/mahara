@@ -400,6 +400,7 @@ $string['View'] = 'View';
 $string['watchlistupdated'] = 'Your watchlist has been updated';
 
 // group
+$string['groupname'] = 'Group Name';
 $string['creategroup'] = 'Create Group';
 $string['groupmemberrequests'] = 'Pending membership requests';
 $string['addgroup'] = 'Add new group';
@@ -461,7 +462,7 @@ $string['groupinvitedeclined'] = 'Invite declined successfully!';
 $string['acceptinvitegroup'] = 'Accept';
 $string['declineinvitegroup'] = 'Decline';
 $string['leftgroup'] = 'You have now left this group';
-$string['leftgroup'] = 'Leaving group failed';
+$string['leftgroupfailed'] = 'Leaving group failed';
 $string['couldnotleavegroup'] = 'You cannot leave this group';
 $string['joinedgroup'] = 'You are now a group member';
 $string['couldnotjoingroup'] = 'You cannot join this group';

@@ -3,8 +3,7 @@
 
 {include file="columnleftstart.tpl"}
 			<div id="userview">
-			<h3>{$NAME}</h3>
-            <div></div>
+			<h3>{$NAME|escape}</h3>
             <div>
 			<table id="userview_profile"><tbody>
 		{foreach from=$USERFIELDS name=userfields key=key item=item}
@@ -23,7 +22,7 @@
 			</td></tr></thead>
 			<tbody><tr><td><ul>
 		{foreach from=$VIEWS key=key item=item name=view}
-			<li><a href="{$WWWROOT}view/view.php?id={$key}">{$item}</a></li>
+			<li><a href="{$WWWROOT}view/view.php?id={$key}">{$item|escape}</a></li>
 		{/foreach}
 			</ul></td></tr></tbody></table>
 		{/if}
@@ -33,7 +32,7 @@
 			</td></tr></thead>
 			<tbody>
 		{foreach from=$USERGROUPS item=item}
-                        <tr><td><a href="{$WWWROOT}contacts/groups/view.php?id={$item->id}">{$item->name}</a></td><td>{$item->type}</td></tr>
+                        <tr><td><a href="{$WWWROOT}group/view.php?id={$item->id}">{$item->name|escape}</a></td><td>{$item->type|escape}</td></tr>
 		{/foreach}
 			</tbody></table>
 		{/if}

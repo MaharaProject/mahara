@@ -26,7 +26,7 @@
 
 define('INTERNAL', 1);
 define('MENUITEM', 'groups');
-require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+require(dirname(dirname(__FILE__)) . '/init.php');
 define('TITLE', get_string('groups'));
 require_once('group.php');
 
@@ -104,7 +104,7 @@ if (!empty($joincontrol)) {
                     array('users'   => array($group->owner), 
                           'subject' => get_string('grouprequestsubject'),
                           'message' => $message,
-                          'url'     => get_config('wwwroot') . 'contacts/groups/view.php?id=' . $id));
+                          'url'     => get_config('wwwroot') . 'group/view.php?id=' . $id));
                 $SESSION->add_ok_msg(get_string('grouprequestsent'));
             }
             else {
@@ -113,7 +113,7 @@ if (!empty($joincontrol)) {
             break;
     }
     // redirect, stuff will have changed
-    redirect('/contacts/groups/view.php?id=' . $id);
+    redirect('/group/view.php?id=' . $id);
     exit;
 }
 
@@ -122,7 +122,7 @@ $requested = get_record('group_member_request', 'group', $id, 'member', $USER->g
 
 $userview = get_config('wwwroot') . 'user/view.php?id=';
 $viewview = get_config('wwwroot') . 'view/view.php?id=';
-$commview = get_config('wwwroot') . 'contacts/groups/view.php';
+$commview = get_config('wwwroot') . 'group/view.php';
 
 // strings that are used in the js
 $releaseviewstr  = get_string('releaseview');
@@ -323,7 +323,7 @@ $smarty->assign('canpromote', $canpromote);
 $smarty->assign('canupdate', $canupdate);
 $smarty->assign('canacceptinvite', $invited);
 $smarty->assign('group', $group);
-$smarty->display('contacts/groups/view.tpl');
+$smarty->display('group/view.tpl');
 
 
 ?>

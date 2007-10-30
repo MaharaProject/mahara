@@ -364,7 +364,7 @@ function invite_submit(Pieform $form, $values) {
                   'subject' => get_string('invitetogroupsubject'),
                   'message' => get_string('invitetogroupmessage', 'mahara', display_name($USER, $adduser), $ctitle),
                   'url'     => get_config('wwwroot') 
-                  . 'contacts/groups/view.php?id=' . $values['group']));
+                  . 'group/view.php?id=' . $values['group']));
     }
     catch (SQLException $e) {
         $form->json_reply(PIEFORM_ERR, get_string('inviteuserfailed'));
@@ -391,7 +391,7 @@ function addmember_submit(Pieform $form, $values) {
                   'subject' => get_string('addedtogroupsubject'),
                   'message' => get_string('addedtogroupmessage', 'mahara', display_name($USER, $adduser), $ctitle),
                   'url'     => get_config('wwwroot') 
-                  . 'contacts/groups/view.php?id=' . $values['group']));
+                  . 'group/view.php?id=' . $values['group']));
     }
     catch (SQLException $e) {
         $form->json_reply(PIEFORM_ERR, get_string('adduserfailed'));

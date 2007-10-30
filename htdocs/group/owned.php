@@ -27,14 +27,14 @@
 define('INTERNAL', 1);
 define('MENUITEM', 'groups/groupsiown');
 define('SECTION_PLUGINTYPE', 'core');
-define('SECTION_PLUGINNAME', 'contacts');
+define('SECTION_PLUGINNAME', 'group');
 define('SECTION_PAGE', 'ownedgroups');
 
-require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+require(dirname(dirname(__FILE__)) . '/init.php');
 define('TITLE', get_string('groupsiown'));
 
-$viewurl = get_config('wwwroot') . 'contacts/groups/view.php?id=';
-$editurl = get_config('wwwroot') . 'contacts/groups/edit.php?id=';
+$viewurl = get_config('wwwroot') . 'group/view.php?id=';
+$editurl = get_config('wwwroot') . 'group/edit.php?id=';
 $editstr = json_encode(get_string('edit'));
 $edithelp = get_help_icon('core', 'groups', null, null, null, 'groupeditlink');
 $deletestr = json_encode(get_string('delete'));
@@ -105,6 +105,6 @@ EOF;
 $smarty = smarty(array('tablerenderer'));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 
-$smarty->display('contacts/groups/owned.tpl');
+$smarty->display('group/owned.tpl');
 
 ?>

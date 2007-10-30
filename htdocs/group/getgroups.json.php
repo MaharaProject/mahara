@@ -27,7 +27,7 @@
 define('INTERNAL', 1);
 define('JSON', 1);
 
-require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('group.php');
 
 json_headers();

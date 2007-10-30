@@ -2,15 +2,15 @@
 {include file="sidebar.tpl"}
 
 {include file="columnleftstart.tpl"}
-                <h2>{$group->name}</h2>
+                <h2>{$group->name|escape}</h2>
                 
-                <p>{str tag='owner'}: {$group->ownername}</p>
+                <p>{str tag='owner'}: {$group->ownername|escape}</p>
 	        {assign var="jointype" value=$group->jointype}
 	        {assign var="joinstr" value=groupjointype$jointype}
                 <p>{str tag=$joinstr}</p>
                 {if $group->description} <p>{$group->description}</p> {/if}
                 {if $canleave} <p><a href="view.php?id={$group->id}&amp;joincontrol=leave">{str tag='leavegroup'}</a></p>
-                {elseif $canrequestjoin} <p id="joinrequest"><a href="" onClick="return joinRequestControl();">{str tag='requestjoingroup'}</a></p>
+                {elseif $canrequestjoin} <p id="joinrequest"><a href="" onclick="return joinRequestControl();">{str tag='requestjoingroup'}</a></p>
                 {elseif $canjoin} <p><a href="view.php?id={$group->id}&amp;joincontrol=join"">{str tag='joingroup'}</a></p>
                 {elseif $canacceptinvite} <p>{str tag='grouphaveinvite'} <a href="view.php?id={$group->id}&amp;joincontrol=acceptinvite">{str tag='acceptinvitegroup'}</a> | <a href="view.php?id={$group->id}&amp;joincontrol=declineinvite">{str tag='declineinvitegroup'}</a></p>{/if}
                 {if $member}
@@ -57,7 +57,7 @@
                              </tbody>
                          </table>
 	                 {if $canupdate}
-                             <input type="button" class="button" value="{str tag='updatemembership'}" onClick="return updateMembership();" id="groupmembers_update">
+                             <input type="button" class="button" value="{str tag='updatemembership'}" onclick="return updateMembership();" id="groupmembers_update">
                          {/if}
                      </div>
                 {/if}

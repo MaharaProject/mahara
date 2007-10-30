@@ -410,7 +410,8 @@ class BlockInstance {
             'name' => 'cb_' . $this->get('id'),
             'validatecallback' => array(generate_class_name('blocktype', $this->get('blocktype')), 'instance_config_validate'),
             'successcallback'  => array($this, 'instance_config_store'),
-            'elements' => $elements
+            'elements' => $elements,
+            'renderer' => 'table',
         );
 
         require_once('pieforms/pieform.php');
