@@ -64,8 +64,8 @@ class PluginBlocktypeProfileinfo extends PluginBlocktype {
 
         // Work out the path to the thumbnail for the profile image
         if (!empty($configdata['profileicon'])) {
-            $downloadpath = get_config('wwwroot') . 'thumb.php?type=profileicon&id=' . $configdata['profileicon'];
-            $downloadpath .= '&id=' . $instance->get('view') . '&maxwidth=80';
+            $downloadpath = get_config('wwwroot') . 'thumb.php?type=profileiconbyid&id=' . $configdata['profileicon'];
+            $downloadpath .= '&maxwidth=80';
             $smarty->assign('profileiconpath', $downloadpath);
         }
 
