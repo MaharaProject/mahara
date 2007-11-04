@@ -106,7 +106,7 @@ class PluginBlocktypeProfileinfo extends PluginBlocktype {
         $form[] = self::artefactchooser_element((isset($configdata['artefactids'])) ? $configdata['artefactids'] : null);
 
         // Profile icon
-        $result = get_records_sql_array('SELECT a.id, a.title, a.note
+        if (!$result = get_records_sql_array('SELECT a.id, a.title, a.note
             FROM {artefact} a
             WHERE artefacttype = \'profileicon\'
             AND a.owner = (
@@ -114,7 +114,9 @@ class PluginBlocktypeProfileinfo extends PluginBlocktype {
                 FROM {view}
                 WHERE id = ?
             )
-            ORDER BY a.id', array($instance->get('view')));
+            ORDER BY a.id', array($instance->get('view')))) {
+            $result = array();
+        }
 
         $options = array(
             0 => get_string('dontshowprofileicon', 'blocktype.internal/profileinfo'),
