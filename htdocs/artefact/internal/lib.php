@@ -58,6 +58,29 @@ class PluginArtefactInternal extends PluginArtefact {
             'profileicon'
         );
     }
+
+    public static function get_contactinfo_artefact_types() {
+        return array(
+            'email',
+            'officialwebsite',
+            'personalwebsite',
+            'blogaddress',
+            'address',
+            'town',
+            'city',
+            'country',
+            'homenumber',
+            'businessnumber',
+            'mobilenumber',
+            'faxnumber',
+            'icqnumber',
+            'msnnumber',
+            'aimscreenname',
+            'yahoochat',
+            'skypeusername',
+            'jabberusername',
+        );
+    }
     
     public static function get_block_types() {
         return array();

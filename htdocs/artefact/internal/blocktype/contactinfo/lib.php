@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage blocktype-profileinfo
- * @author     Nigel McNie <nigel@catalyst.net.nz>
+ * @subpackage blocktype-contactinfo
+ * @author     Penny Leach <penny@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
@@ -26,14 +26,14 @@
 
 defined('INTERNAL') || die();
 
-class PluginBlocktypeProfileinfo extends PluginBlocktype {
+class PluginBlocktypeContactinfo extends PluginBlocktype {
 
     public static function get_title() {
-        return get_string('title', 'blocktype.internal/profileinfo');
+        return get_string('title', 'blocktype.internal/contactinfo');
     }
 
     public static function get_description() {
-        return get_string('description', 'blocktype.internal/profileinfo');
+        return get_string('description', 'blocktype.internal/contactinfo');
     }
 
     public static function get_categories() {
@@ -67,32 +67,17 @@ class PluginBlocktypeProfileinfo extends PluginBlocktype {
             }
         }
 
-        // Work out the path to the thumbnail for the profile image
-        if (!empty($configdata['profileicon'])) {
-            $downloadpath = get_config('wwwroot') . 'thumb.php?type=profileiconbyid&id=' . $configdata['profileicon'];
-            $downloadpath .= '&maxwidth=80';
-            $smarty->assign('profileiconpath', $downloadpath);
-        }
-
-        // Override the introduction text if the user has any for this 
-        // particular blockinstance
-        if (!empty($configdata['introtext'])) {
-            $data['introduction'] = $configdata['introtext'];
-        }
-
         $smarty->assign('profileinfo', $data);
 
-        return $smarty->fetch('blocktype:profileinfo:content.tpl');
+        return $smarty->fetch('blocktype:contactinfo:content.tpl');
     }
 
     public static function get_artefacts(BlockInstance $instance) {
         $configdata = $instance->get('configdata');
         $return = false;
+
         if (isset($configdata['artefactids'])) {
             $return = $configdata['artefactids'];
-        }
-        if (!empty($configdata['profileicon'])) {
-            $return = array_merge((array)$return, array($configdata['profileicon']));
         }
 
         return $return;
@@ -107,62 +92,35 @@ class PluginBlocktypeProfileinfo extends PluginBlocktype {
 
         $form = array();
 
-        // Which fields does the user want
-        $form[] = self::artefactchooser_element((isset($configdata['artefactids'])) ? $configdata['artefactids'] : null);
-
-        // Profile icon
-        if (!$result = get_records_sql_array('SELECT a.id, a.artefacttype, a.title, a.note
+        // email addresses
+        $result = get_records_sql_array('SELECT a.id, a.title, a.note
             FROM {artefact} a
-            WHERE artefacttype = \'profileicon\' OR artefacttype = \'email\'
+            WHERE artefacttype = \'email\'
             AND a.owner = (
                 SELECT owner
                 FROM {view}
                 WHERE id = ?
             )
-            ORDER BY a.id', array($instance->get('view')))) {
-            $result = array();
-        }
+            ORDER BY a.id', array($instance->get('view')));
 
-        $iconoptions = array(
-            0 => get_string('dontshowprofileicon', 'blocktype.internal/profileinfo'),
+        $options = array(
+            0 => get_string('dontshowemail', 'blocktype.internal/contactinfo'),
         );
-        $emailoptions = array(
-            0 => get_string('dontshowemail', 'blocktype.internal/profileinfo'),
-        );
-        foreach ($result as $profilefield) {
-            if ($profilefield->artefacttype == 'profileicon') {
-                $iconoptions[$profilefield->id] = ($profilefield->title) ? $profilefield->title : $profilefield->note;
-            } 
-            else {
-                $emailoptions[$profilefield->id] = $profilefield->title;
-            }
-        }
 
-        $form['profileicon'] = array(
-            'type'    => 'radio',
-            'title'   => get_string('profileicon', 'artefact.internal'),
-            'options' => $iconoptions,
-            'defaultvalue' => (isset($configdata['profileicon'])) ? $configdata['profileicon'] : 0,
-            'separator' => HTML_BR,
-        );
+        foreach ($result as $email) {
+            $options[$email->id] = $email->title;
+        }
 
         $form['email'] = array(
             'type'    => 'radio',
             'title'   => get_string('email', 'artefact.internal'),
-            'options' => $emailoptions,
+            'options' => $options,
             'defaultvalue' => (isset($configdata['email'])) ? $configdata['email'] : 0,
             'separator' => HTML_BR,
         );
 
-        // Introduction
-        $form['introtext'] = array(
-            'type'    => 'tinywysiwyg',
-            'title'   => get_string('introtext', 'blocktype.internal/profileinfo'),
-            'description' => get_string('useintroductioninstead', 'blocktype.internal/profileinfo'),
-            'defaultvalue' => (isset($configdata['introtext'])) ? $configdata['introtext'] : '',
-            'width' => '100%',
-            'height' => '150px',
-        );
+        // Which fields does the user want
+        $form[] = self::artefactchooser_element((isset($configdata['artefactids'])) ? $configdata['artefactids'] : null);
 
         return $form;
     }
@@ -173,12 +131,12 @@ class PluginBlocktypeProfileinfo extends PluginBlocktype {
         return array(
             'name'  => 'artefactids',
             'type'  => 'artefactchooser',
-            'title' => get_string('fieldstoshow', 'blocktype.internal/profileinfo'),
+            'title' => get_string('fieldstoshow', 'blocktype.internal/contactinfo'),
             'defaultvalue' => $default,
-            'blocktype' => 'profileinfo',
+            'blocktype' => 'contactinfo',
             'limit'     => 655360, // 640K profile fields is enough for anyone!
             'selectone' => false,
-            'artefacttypes' => array_diff(PluginArtefactInternal::get_artefact_types(), array('profileicon', 'email')),
+            'artefacttypes' => array_diff(PluginArtefactInternal::get_contactinfo_artefact_types(), array('email')),
             'template'  => 'artefact:internal:artefactchooser-element.tpl',
         );
     }

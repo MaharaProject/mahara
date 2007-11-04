@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage blocktype-profileinfo
- * @author     Nigel McNie <nigel@catalyst.net.nz>
+ * @subpackage blocktype-contactinfo
+ * @author     Penny Leach <penny@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
@@ -26,14 +26,8 @@
 
 defined('INTERNAL') || die();
 
-$string['title'] = 'Profile Information';
-$string['description'] = 'Choose profile information to display';
-
-$string['aboutme'] = 'About Me';
-$string['fieldstoshow'] = 'Fields to show';
-$string['introtext'] = 'Introduction Text';
-$string['useintroductioninstead'] = 'You can use your introduction profile field instead by enabling that and leaving this field blank';
-$string['dontshowprofileicon'] = "Don't show a profile icon";
-$string['dontshowemail'] = "Don't show email address";
+$config = new StdClass;
+$config->version = 2007110200;
+$config->release = '0.9';
 
 ?>
