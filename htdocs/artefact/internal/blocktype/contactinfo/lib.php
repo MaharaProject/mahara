@@ -47,6 +47,11 @@ class PluginBlocktypeContactinfo extends PluginBlocktype {
 
         $data = array();
 
+        // add in the selected email address
+        if (!empty($configdata['email'])) {
+            $configdata['artefactids'][] = $configdata['email'];
+        }
+
         // Get data about the profile fields in this blockinstance
         if (!empty($configdata['artefactids'])) {
             $artefactids = implode(', ', array_map('db_quote', $configdata['artefactids']));
@@ -87,6 +92,33 @@ class PluginBlocktypeContactinfo extends PluginBlocktype {
 
         $form = array();
 
+        // email addresses
+        $result = get_records_sql_array('SELECT a.id, a.title, a.note
+            FROM {artefact} a
+            WHERE artefacttype = \'email\'
+            AND a.owner = (
+                SELECT owner
+                FROM {view}
+                WHERE id = ?
+            )
+            ORDER BY a.id', array($instance->get('view')));
+
+        $options = array(
+            0 => get_string('dontshowemail', 'blocktype.internal/contactinfo'),
+        );
+
+        foreach ($result as $email) {
+            $options[$email->id] = $email->title;
+        }
+
+        $form['email'] = array(
+            'type'    => 'radio',
+            'title'   => get_string('email', 'artefact.internal'),
+            'options' => $options,
+            'defaultvalue' => (isset($configdata['email'])) ? $configdata['email'] : 0,
+            'separator' => HTML_BR,
+        );
+
         // Which fields does the user want
         $form[] = self::artefactchooser_element((isset($configdata['artefactids'])) ? $configdata['artefactids'] : null);
 
@@ -104,7 +136,7 @@ class PluginBlocktypeContactinfo extends PluginBlocktype {
             'blocktype' => 'contactinfo',
             'limit'     => 655360, // 640K profile fields is enough for anyone!
             'selectone' => false,
-            'artefacttypes' => PluginArtefactInternal::get_contactinfo_artefact_types(),
+            'artefacttypes' => array_diff(PluginArtefactInternal::get_contactinfo_artefact_types(), array('email')),
             'template'  => 'artefact:internal:artefactchooser-element.tpl',
         );
     }

@@ -28,7 +28,7 @@ defined('INTERNAL') || die();
 
 $string['title'] = 'Contact Information';
 $string['description'] = 'Choose contact information to display';
-
+$string['dontshowemail'] = 'Don\'t show email address';
 $string['fieldstoshow'] = 'Fields to show';
 
 ?>
