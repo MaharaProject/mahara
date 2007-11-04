@@ -33,7 +33,7 @@ safe_require('artefact', 'blog');
 json_headers();
 
 $id = param_integer('id');
-$limit = param_integer('limit', ArtefactTypeBlogPost::pagination);
+$limit = param_integer('limit', ArtefactTypeBlog::pagination);
 $offset = param_integer('offset', 0);
 
 list($count, $data) = ArtefactTypeBlogPost::get_posts($USER, $id, $limit, $offset);
