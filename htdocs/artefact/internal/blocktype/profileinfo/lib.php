@@ -47,6 +47,11 @@ class PluginBlocktypeProfileinfo extends PluginBlocktype {
 
         $data = array();
 
+        // add in the selected email address
+        if (!empty($configdata['email'])) {
+            $configdata['artefactids'][] = $configdata['email'];
+        }
+
         // Get data about the profile fields in this blockinstance
         if (!empty($configdata['artefactids'])) {
             $artefactids = implode(', ', array_map('db_quote', $configdata['artefactids']));
@@ -106,9 +111,9 @@ class PluginBlocktypeProfileinfo extends PluginBlocktype {
         $form[] = self::artefactchooser_element((isset($configdata['artefactids'])) ? $configdata['artefactids'] : null);
 
         // Profile icon
-        if (!$result = get_records_sql_array('SELECT a.id, a.title, a.note
+        if (!$result = get_records_sql_array('SELECT a.id, a.artefacttype, a.title, a.note
             FROM {artefact} a
-            WHERE artefacttype = \'profileicon\'
+            WHERE artefacttype = \'profileicon\' OR artefacttype = \'email\'
             AND a.owner = (
                 SELECT owner
                 FROM {view}
@@ -118,18 +123,34 @@ class PluginBlocktypeProfileinfo extends PluginBlocktype {
             $result = array();
         }
 
-        $options = array(
+        $iconoptions = array(
             0 => get_string('dontshowprofileicon', 'blocktype.internal/profileinfo'),
         );
-        foreach ($result as $profileicon) {
-            $options[$profileicon->id] = ($profileicon->title) ? $profileicon->title : $profileicon->note;
+        $emailoptions = array(
+            0 => get_string('dontshowemail', 'blocktype.internal/profileinfo'),
+        );
+        foreach ($result as $profilefield) {
+            if ($profilefield->artefacttype == 'profileicon') {
+                $iconoptions[$profilefield->id] = ($profilefield->title) ? $profilefield->title : $profilefield->note;
+            } 
+            else {
+                $emailoptions[$profilefield->id] = $profilefield->title;
+            }
         }
 
         $form['profileicon'] = array(
             'type'    => 'radio',
             'title'   => get_string('profileicon', 'artefact.internal'),
-            'options' => $options,
+            'options' => $iconoptions,
             'defaultvalue' => (isset($configdata['profileicon'])) ? $configdata['profileicon'] : 0,
+            'separator' => HTML_BR,
+        );
+
+        $form['email'] = array(
+            'type'    => 'radio',
+            'title'   => get_string('email', 'artefact.internal'),
+            'options' => $emailoptions,
+            'defaultvalue' => (isset($configdata['email'])) ? $configdata['email'] : 0,
             'separator' => HTML_BR,
         );
 
@@ -157,7 +178,7 @@ class PluginBlocktypeProfileinfo extends PluginBlocktype {
             'blocktype' => 'profileinfo',
             'limit'     => 655360, // 640K profile fields is enough for anyone!
             'selectone' => false,
-            'artefacttypes' => array_diff(PluginArtefactInternal::get_artefact_types(), array('profileicon')),
+            'artefacttypes' => array_diff(PluginArtefactInternal::get_artefact_types(), array('profileicon', 'email')),
             'template'  => 'artefact:internal:artefactchooser-element.tpl',
         );
     }

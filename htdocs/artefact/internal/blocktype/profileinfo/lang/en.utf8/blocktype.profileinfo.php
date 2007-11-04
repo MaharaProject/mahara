@@ -34,5 +34,6 @@ $string['fieldstoshow'] = 'Fields to show';
 $string['introtext'] = 'Introduction Text';
 $string['useintroductioninstead'] = 'You can use your introduction profile field instead by enabling that and leaving this field blank';
 $string['dontshowprofileicon'] = "Don't show a profile icon";
+$string['dontshowemail'] = "Don't show email address";
 
 ?>
