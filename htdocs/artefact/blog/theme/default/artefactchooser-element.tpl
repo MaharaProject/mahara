@@ -4,7 +4,7 @@
             {else}<input type="checkbox" id="{$elementname}_{$artefact->id}" name="{$elementname}[{$artefact->id}]"{if $value && in_array($artefact->id, $value)} checked="checked"{/if}>
             <input type="hidden" name="{$elementname}_onpage[]" value="{$artefact->id}">
             {/if}</td>
-        <th><label for="{$elementname}_{$artefact->id}">{$artefact->blog|escape}: {$artefact->title|escape}</label></th>
+        <th><label for="{$elementname}_{$artefact->id}">{if $artefact->blog}{$artefact->blog|escape}: {/if}{$artefact->title|escape}</label></th>
     </tr>
     <tr>
         <td>{if $artefact->description}{$artefact->description}{/if}</td>
