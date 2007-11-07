@@ -44,7 +44,7 @@ json_reply(false, array(
     'data' => array(
         'tablerows' => $html,
         'pagination' => $pagination['html'],
-        'pagination_js' => $pagination['js'],
+        'pagination_js' => $pagination['javascript'],
         'count' => $count
     )
 ));

@@ -50,7 +50,7 @@ function pieform_element_artefactchooser(Pieform $form, $element) {
     // Save the pagination javascript for later, when it is asked for. This is 
     // messy, but can't be helped until Pieforms goes to a more OO way of 
     // managing stuff.
-    $pagination_js = $pagination['js'];
+    $pagination_js = $pagination['javascript'];
 
     return $smarty->fetch('form/artefactchooser.tpl');
 }

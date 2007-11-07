@@ -284,7 +284,7 @@ function ViewManager() {
                     'button'    : button
                 };
                 contentDiv.innerHTML = data.data['html'];
-                eval(data.data.js);
+                eval(data.data.javascript);
 
                 // Make the cancel button be supersmart
                 var cancelButton = $('cancel_cb_' + blockinstanceId + '_action_configureblockinstance_id_' + blockinstanceId);
@@ -852,7 +852,7 @@ function ViewManager() {
                     self.makeBlockinstanceDraggable(blockinstance);
                     insertSiblingNodesAfter(self.blockPlaceholder, blockinstance);
                     removeElement(self.blockPlaceholder);
-                    eval(data.data.js);
+                    eval(data.data.javascript);
 
                 });
 
