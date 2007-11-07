@@ -44,11 +44,12 @@ class PluginBlocktypeResumefield extends PluginBlocktype {
         require_once(get_config('docroot') . 'lib/artefact.php');
         $smarty = smarty_core();
         $configdata = $instance->get('configdata');
+        $configdata['viewid'] = $instance->get('view');
 
         // Get data about the resume field in this blockinstance
         if (!empty($configdata['artefactid'])) {
             $resumefield = artefact_instance_from_id($configdata['artefactid']);
-            $rendered = $resumefield->render_self(false);
+            $rendered = $resumefield->render_self($configdata);
             $result = $rendered['html'];
             if (!empty($rendered['javascript'])) {
                 $result .= '<script type="text/javascript">' . $rendered['javascript'] . '</script>';
@@ -69,12 +70,17 @@ class PluginBlocktypeResumefield extends PluginBlocktype {
 
         // Which resume field does the user want
         $form[] = self::artefactchooser_element((isset($configdata['artefactid'])) ? $configdata['artefactid'] : null);
-        $form[] = array(
+        $form['message'] = array(
             'type' => 'html',
             'value' => '<a href="' . get_config('wwwroot') . 'artefact/resume/">Fill out your resume</a> in order to add more fields!'
         );
 
         return $form;
+    }
+
+    public static function instance_config_save($values) {
+        unset($values['message']);
+        return $values;
     }
 
     // TODO: make decision on whether this should be abstract or not
