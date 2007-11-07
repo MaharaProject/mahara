@@ -71,15 +71,6 @@ class PluginBlocktypeBlogpost extends PluginBlocktype {
         return $result;
     }
 
-    // TODO: Implement in parent class, saving us a lot of hassle
-    public static function get_artefacts(BlockInstance $instance) {
-        $configdata = $instance->get('configdata');
-        if (!empty($configdata['artefactid'])) {
-            return array($configdata['artefactid']);
-        }
-        return false;
-    }
-
     public static function has_instance_config() {
         return true;
     }

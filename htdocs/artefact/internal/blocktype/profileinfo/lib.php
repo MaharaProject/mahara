@@ -85,6 +85,14 @@ class PluginBlocktypeProfileinfo extends PluginBlocktype {
         return $smarty->fetch('blocktype:profileinfo:content.tpl');
     }
 
+    /**
+     * Overrides the standard get_artefacts method to make sure the profileicon 
+     * is added also.
+     *
+     * @param BlockInstance $instance The blockinstance to get artefacts for
+     * @return array A list of artefact IDs in the blockinstance, or false if 
+     *               there are none
+     */
     public static function get_artefacts(BlockInstance $instance) {
         $configdata = $instance->get('configdata');
         $return = false;

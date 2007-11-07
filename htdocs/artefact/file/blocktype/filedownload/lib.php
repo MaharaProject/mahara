@@ -88,14 +88,6 @@ class PluginBlocktypeFiledownload extends PluginBlocktype {
         return $result;
     }
 
-    public static function get_artefacts(BlockInstance $instance) {
-        $configdata = $instance->get('configdata');
-        if (isset($configdata['artefactids']) && is_array($configdata['artefactids'])) {
-            return $configdata['artefactids'];
-        }
-        return false;
-    }
-
     public static function has_instance_config() {
         return true;
     }

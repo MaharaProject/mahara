@@ -58,15 +58,6 @@ class PluginBlocktypeResumefield extends PluginBlocktype {
         return '';
     }
 
-    public static function get_artefacts(BlockInstance $instance) {
-        $configdata = $instance->get('configdata');
-        if (isset($configdata['artefactid'])) {
-            return array($configdata['artefactid']);
-        }
-
-        return false;
-    }
-
     public static function has_instance_config() {
         return true;
     }

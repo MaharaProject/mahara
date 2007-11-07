@@ -100,7 +100,16 @@ abstract class PluginBlocktype extends Plugin {
     *
     * @return array ids of artefacts in this block instance
     */
-    public static abstract function get_artefacts(BlockInstance $instance);
+    public static function get_artefacts(BlockInstance $instance) {
+        $configdata = $instance->get('configdata');
+        if (isset($configdata['artefactids']) && is_array($configdata['artefactids'])) {
+            return $configdata['artefactids'];
+        }
+        if (!empty($configdata['artefactid'])) {
+            return array($configdata['artefactid']);
+        }
+        return false;
+    }
 
     /** 
     * this is different to has_config - has_config is plugin wide config settings

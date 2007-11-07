@@ -72,17 +72,6 @@ class PluginBlocktypeContactinfo extends PluginBlocktype {
         return $smarty->fetch('blocktype:contactinfo:content.tpl');
     }
 
-    public static function get_artefacts(BlockInstance $instance) {
-        $configdata = $instance->get('configdata');
-        $return = false;
-
-        if (isset($configdata['artefactids'])) {
-            $return = $configdata['artefactids'];
-        }
-
-        return $return;
-    }
-
     public static function has_instance_config() {
         return true;
     }

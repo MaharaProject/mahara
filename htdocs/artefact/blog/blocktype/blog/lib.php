@@ -73,23 +73,6 @@ class PluginBlocktypeBlog extends PluginBlocktype {
         return $result;
     }
 
-    // TODO: Implement in parent class, saving us a lot of hassle
-    public static function get_artefacts(BlockInstance $instance) {
-        $configdata = $instance->get('configdata');
-        if (!empty($configdata['artefactid'])) {
-            //require_once(get_config('docroot') . 'lib/artefact.php');
-            //$blog = artefact_instance_from_id($configdata['artefactid']);
-
-            $list = array();
-            //foreach ($blog->get_children_instances() as $blogpost) {
-            //    $list = array_merge($list, $blogpost->attachment_id_list());
-            //}
-            $list[] = $configdata['artefactid'];
-            return $list;
-        }
-        return false;
-    }
-
     public static function has_instance_config() {
         return true;
     }
