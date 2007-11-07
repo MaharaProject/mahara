@@ -1,8 +1,8 @@
-<h3>{str tag='membership' section='artefact.resume'}
+{if !$hidetitle}<h3>{str tag='membership' section='artefact.resume'}
 {if $controls}
     {contextualhelp plugintype='artefact' pluginname='resume' section='addmembership'}
 {/if}
-</h3>
+</h3>{/if}
 <table id="membershiplist" class="tablerenderer hidden resumefive">
     <thead>
         <tr>
