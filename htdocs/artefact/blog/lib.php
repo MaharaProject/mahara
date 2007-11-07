@@ -539,7 +539,10 @@ class ArtefactTypeBlogPost extends ArtefactType {
         $data->artefact = $artefactid;
         $data->parent = $this->get('parent');
         $data->dirty = 0;
-        insert_record_if_not_exists('artefact_parent_cache', $data);
+
+        $where = $data;
+        unset($where->dirty);
+        ensure_record_exists('artefact_parent_cache', $where, $data);
     }
 
     public function detach_file($artefactid) {

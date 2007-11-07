@@ -55,7 +55,7 @@ function smarty_resource_blocktype_get_filepath($tpl_name) {
          $basedir .= 'artefact/' . $artefactplugin . '/blocktype/' . $name[0] . '/theme/';
     }
     else {
-        $basedir .= 'blocktype/' . $name[0];
+        $basedir .= 'blocktype/' . $name[0] . '/theme/';
     }
 
     foreach (theme_setup()->inheritance as $theme) {
