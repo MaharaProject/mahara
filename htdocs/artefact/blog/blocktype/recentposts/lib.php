@@ -92,7 +92,7 @@ class PluginBlocktypeRecentposts extends PluginBlocktype {
                 'required' => true,
             ),
             'blocktype' => 'recentposts',
-            'limit'     => 5,
+            'limit'     => 10,
             'selectone' => false,
             'artefacttypes' => array('blog'),
             'template'  => 'artefact:blog:artefactchooser-element.tpl',

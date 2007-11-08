@@ -92,7 +92,7 @@ class PluginBlocktypeBlogpost extends PluginBlocktype {
                 'required' => true,
             ),
             'blocktype' => 'blogpost',
-            'limit'     => 2,
+            'limit'     => 10,
             'selectone' => true,
             'artefacttypes' => array('blogpost'),
             'template'  => 'artefact:blog:artefactchooser-element.tpl',

@@ -109,7 +109,7 @@ class PluginBlocktypeFiledownload extends PluginBlocktype {
                 'required' => true,
             ),
             'blocktype' => 'filedownload',
-            'limit' => 5,
+            'limit' => 10,
             'selectone' => false,
             'artefacttypes' => array('file', 'image', 'profileicon'),
             'template' => 'artefact:file:artefactchooser-element.tpl',

@@ -116,7 +116,7 @@ class PluginBlocktypeImage extends PluginBlocktype {
                 'required' => true,
             ),
             'blocktype' => 'image',
-            'limit' => 5,
+            'limit' => 10,
             'artefacttypes' => array('image', 'profileicon'),
             'template' => 'artefact:file:artefactchooser-element.tpl',
         );
