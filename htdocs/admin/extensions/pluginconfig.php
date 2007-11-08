@@ -32,7 +32,7 @@ define('TITLE', get_string('pluginadmin', 'admin'));
 require_once('pieforms/pieform.php');
 
 $plugintype = param_alpha('plugintype');
-$pluginname = param_alpha('pluginname');
+$pluginname = param_variable('pluginname');
 
 define('SECTION_PLUGINTYPE', $plugintype);
 define('SECTION_PLUGINNAME', $pluginname);
