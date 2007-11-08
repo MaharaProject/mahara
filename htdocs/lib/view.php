@@ -1169,6 +1169,7 @@ class View {
         $value         = $data['defaultvalue'];
         $elementname   = $data['name'];
         $template      = $data['template'];
+        $extraselect   = (isset($data['extraselect']) ? ' AND ' . $data['extraselect'] : '');
 
         $offset -= $offset % $limit;
 
@@ -1179,6 +1180,7 @@ class View {
         if (!empty($artefacttypes)) {
             $select .= ' AND artefacttype IN(' . implode(',', array_map('db_quote', $artefacttypes)) . ')';
         }
+        $select .= $extraselect;
         $sortorder = 'title';
         if (method_exists($blocktypeclass, 'artefactchooser_get_sort_order')) {
             $sortorder = call_static_method($blocktypeclass, 'artefactchooser_get_sort_order');
@@ -1187,12 +1189,13 @@ class View {
         $totalartefacts = count_records_select('artefact', $select);
 
         $result = '';
-        foreach ($artefacts as &$artefact) {
-            safe_require('artefact', get_field('artefact_installed_type', 'plugin', 'name', $artefact->artefacttype));
+        if ($artefacts) {
+            foreach ($artefacts as &$artefact) {
+                safe_require('artefact', get_field('artefact_installed_type', 'plugin', 'name', $artefact->artefacttype));
 
-            if (method_exists($blocktypeclass, 'artefactchooser_get_element_data')) {
-                $artefact = call_static_method($blocktypeclass, 'artefactchooser_get_element_data', $artefact);
-            }
+                if (method_exists($blocktypeclass, 'artefactchooser_get_element_data')) {
+                    $artefact = call_static_method($blocktypeclass, 'artefactchooser_get_element_data', $artefact);
+                }
 
             // Build the radio button or checkbox for the artefact
             $formcontrols = '';
