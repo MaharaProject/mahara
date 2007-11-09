@@ -1197,30 +1197,31 @@ class View {
                     $artefact = call_static_method($blocktypeclass, 'artefactchooser_get_element_data', $artefact);
                 }
 
-            // Build the radio button or checkbox for the artefact
-            $formcontrols = '';
-            if ($selectone) {
-                $formcontrols .= '<input type="radio" class="radio" id="' . hsc($elementname . '_' . $artefact->id)
-                    . '" name="' . hsc($elementname) . '" value="' . hsc($artefact->id) . '"';
-                if ($value == $artefact->id) {
-                    $formcontrols .= ' checked="checked"';
+                // Build the radio button or checkbox for the artefact
+                $formcontrols = '';
+                if ($selectone) {
+                    $formcontrols .= '<input type="radio" class="radio" id="' . hsc($elementname . '_' . $artefact->id)
+                        . '" name="' . hsc($elementname) . '" value="' . hsc($artefact->id) . '"';
+                    if ($value == $artefact->id) {
+                        $formcontrols .= ' checked="checked"';
+                    }
+                    $formcontrols .= '>';
                 }
-                $formcontrols .= '>';
-            }
-            else {
-                $formcontrols .= '<input type="checkbox" id="' . hsc($elementname . '_' . $artefact->id) . '" name="' . hsc($elementname) . '[' . hsc($artefact->id) . ']"';
-                if ($value && in_array($artefact->id, $value)) {
-                    $formcontrols .= ' checked="checked"';
+                else {
+                    $formcontrols .= '<input type="checkbox" id="' . hsc($elementname . '_' . $artefact->id) . '" name="' . hsc($elementname) . '[' . hsc($artefact->id) . ']"';
+                    if ($value && in_array($artefact->id, $value)) {
+                        $formcontrols .= ' checked="checked"';
+                    }
+                    $formcontrols .= '>';
+                    $formcontrols .= '<input type="hidden" name="' . hsc($elementname) . '_onpage[]" value="' . hsc($artefact->id) . '">';
                 }
-                $formcontrols .= '>';
-                $formcontrols .= '<input type="hidden" name="' . hsc($elementname) . '_onpage[]" value="' . hsc($artefact->id) . '">';
-            }
 
-            $smarty = smarty_core();
-            $smarty->assign('artefact', $artefact);
-            $smarty->assign('elementname', $elementname);
-            $smarty->assign('formcontrols', $formcontrols);
-            $result .= $smarty->fetch($template) . "\n";
+                $smarty = smarty_core();
+                $smarty->assign('artefact', $artefact);
+                $smarty->assign('elementname', $elementname);
+                $smarty->assign('formcontrols', $formcontrols);
+                $result .= $smarty->fetch($template) . "\n";
+            }
         }
 
         $smarty = smarty_core();
