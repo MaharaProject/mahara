@@ -121,7 +121,7 @@ class PluginBlocktypeProfileinfo extends PluginBlocktype {
         // Profile icon
         if (!$result = get_records_sql_array('SELECT a.id, a.artefacttype, a.title, a.note
             FROM {artefact} a
-            WHERE artefacttype = \'profileicon\' OR artefacttype = \'email\'
+            WHERE (artefacttype = \'profileicon\' OR artefacttype = \'email\')
             AND a.owner = (
                 SELECT owner
                 FROM {view}

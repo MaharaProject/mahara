@@ -44,6 +44,9 @@ define('BYTESERVING_BOUNDARY', 'm1i2k3e40516'); //unique string constant
  * @param string $filename The name of the file as the browser should use to
  *                         serve it.
  * @param array  $options  Any options to use when serving the file. Currently
+ *                         lifetime = 0 for no cache
+ *                         forcedownload - force application rather than inline
+ *                         overridecontenttype - send this instead of the mimetype
  *                         there are none.
  */
 function serve_file($path, $filename, $options=array()) {
@@ -81,7 +84,7 @@ function serve_file($path, $filename, $options=array()) {
 
     // @todo possibly need addslashes on the filename, but I'm unsure on exactly
     // how the browsers will handle it.
-    if ($mimetype == 'application/forcedownload') {
+    if ($mimetype == 'application/forcedownload' || isset($options['forcedownload'])) {
         header('Content-Disposition: attachment; filename="' . $filename . '"');
     }
     else {
@@ -154,7 +157,12 @@ function serve_file($path, $filename, $options=array()) {
         header('Content-Type: Text/plain; charset=utf-8');
     }
     else {
-        header('Content-Type: ' . $mimetype);
+        if (isset($options['overridecontenttype'])) {
+            header('Content-Type: ' . $options['overridecontenttype']);
+        }
+        else {
+            header('Content-Type: ' . $mimetype);
+        }
     }
     header('Content-Length: ' . $filesize);
     while (@ob_end_flush()); //flush the buffers - save memory and disable sid rewrite

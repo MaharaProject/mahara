@@ -1175,6 +1175,7 @@ class View {
         $value         = $data['defaultvalue'];
         $elementname   = $data['name'];
         $template      = $data['template'];
+        $extraselect   = (isset($data['extraselect']) ? ' AND ' . $data['extraselect'] : '');
 
         $offset -= $offset % $limit;
 
@@ -1185,10 +1186,14 @@ class View {
         if (!empty($artefacttypes)) {
             $select .= ' AND artefacttype IN(' . implode(',', array_map('db_quote', $artefacttypes)) . ')';
         }
+
         if ($search != '') {
             $search = db_quote('%' . str_replace('%', '%%', $search) . '%');
             $select .= 'AND (title ILIKE(' . $search . ') OR description ILIKE(' . $search . ') )';
         }
+
+        $select .= $extraselect;
+
         $sortorder = 'title';
         if (method_exists($blocktypeclass, 'artefactchooser_get_sort_order')) {
             $sortorder = call_static_method($blocktypeclass, 'artefactchooser_get_sort_order');
@@ -1197,37 +1202,39 @@ class View {
         $totalartefacts = count_records_select('artefact', $select);
 
         $result = '';
-        foreach ($artefacts as &$artefact) {
-            safe_require('artefact', get_field('artefact_installed_type', 'plugin', 'name', $artefact->artefacttype));
+        if ($artefacts) {
+            foreach ($artefacts as &$artefact) {
+                safe_require('artefact', get_field('artefact_installed_type', 'plugin', 'name', $artefact->artefacttype));
 
-            if (method_exists($blocktypeclass, 'artefactchooser_get_element_data')) {
-                $artefact = call_static_method($blocktypeclass, 'artefactchooser_get_element_data', $artefact);
-            }
-
-            // Build the radio button or checkbox for the artefact
-            $formcontrols = '';
-            if ($selectone) {
-                $formcontrols .= '<input type="radio" class="radio" id="' . hsc($elementname . '_' . $artefact->id)
-                    . '" name="' . hsc($elementname) . '" value="' . hsc($artefact->id) . '"';
-                if ($value == $artefact->id) {
-                    $formcontrols .= ' checked="checked"';
+                if (method_exists($blocktypeclass, 'artefactchooser_get_element_data')) {
+                    $artefact = call_static_method($blocktypeclass, 'artefactchooser_get_element_data', $artefact);
                 }
-                $formcontrols .= '>';
-            }
-            else {
-                $formcontrols .= '<input type="checkbox" id="' . hsc($elementname . '_' . $artefact->id) . '" name="' . hsc($elementname) . '[' . hsc($artefact->id) . ']"';
-                if ($value && in_array($artefact->id, $value)) {
-                    $formcontrols .= ' checked="checked"';
-                }
-                $formcontrols .= '>';
-                $formcontrols .= '<input type="hidden" name="' . hsc($elementname) . '_onpage[]" value="' . hsc($artefact->id) . '">';
-            }
 
-            $smarty = smarty_core();
-            $smarty->assign('artefact', $artefact);
-            $smarty->assign('elementname', $elementname);
-            $smarty->assign('formcontrols', $formcontrols);
-            $result .= $smarty->fetch($template) . "\n";
+                // Build the radio button or checkbox for the artefact
+                $formcontrols = '';
+                if ($selectone) {
+                    $formcontrols .= '<input type="radio" class="radio" id="' . hsc($elementname . '_' . $artefact->id)
+                        . '" name="' . hsc($elementname) . '" value="' . hsc($artefact->id) . '"';
+                    if ($value == $artefact->id) {
+                        $formcontrols .= ' checked="checked"';
+                    }
+                    $formcontrols .= '>';
+                }
+                else {
+                    $formcontrols .= '<input type="checkbox" id="' . hsc($elementname . '_' . $artefact->id) . '" name="' . hsc($elementname) . '[' . hsc($artefact->id) . ']"';
+                    if ($value && in_array($artefact->id, $value)) {
+                        $formcontrols .= ' checked="checked"';
+                    }
+                    $formcontrols .= '>';
+                    $formcontrols .= '<input type="hidden" name="' . hsc($elementname) . '_onpage[]" value="' . hsc($artefact->id) . '">';
+                }
+
+                $smarty = smarty_core();
+                $smarty->assign('artefact', $artefact);
+                $smarty->assign('elementname', $elementname);
+                $smarty->assign('formcontrols', $formcontrols);
+                $result .= $smarty->fetch($template) . "\n";
+            }
         }
 
         $smarty = smarty_core();
