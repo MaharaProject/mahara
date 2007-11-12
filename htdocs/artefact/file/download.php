@@ -34,6 +34,12 @@ require_once('file.php');
 $fileid = param_integer('file');
 $viewid = param_integer('view', null);
 $size   = get_imagesize_parameters();
+$forcedl = param_boolean('download');
+
+$options = array();
+if ($forcedl) {
+    $options['forcedownload'] = true;
+}
 
 if ($viewid && $fileid) {
     if (!artefact_in_view($fileid, $viewid)) {
@@ -50,7 +56,10 @@ if ($viewid && $fileid) {
     }
     $path = $file->get_path(array('size' => $size));
     $title = $file->download_title();
-    serve_file($path, $title);
+    if ($contenttype = $file->override_content_type()) {
+        $options['overridecontenttype'] = $contenttype;
+    }
+    serve_file($path, $title, $options);
 }
 
 // We just have a file ID
@@ -84,6 +93,9 @@ if (!$fileispublic) {
 
 $path  = $file->get_path(array('size' => $size));
 $title = $file->download_title();
-serve_file($path, $title);
+if ($contenttype = $file->override_content_type()) {
+    $options['overridecontenttype'] = $contenttype;
+}
+serve_file($path, $title, $options);
 
 ?>
