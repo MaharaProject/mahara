@@ -80,8 +80,8 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
         return array(
             'videoid' => array(
                 'type'  => 'text',
-                'title' => get_string('videoURL','blocktype.externalvideo'),
-                'description' => get_string('videoURLdescription','blocktype.externalvideo'),
+                'title' => get_string('videourl','blocktype.externalvideo'),
+                'description' => get_string('videourldescription','blocktype.externalvideo'),
                 'width' => '90%',
                 'defaultvalue' => $configdata['videoid'],
                 'rules' => array(
