@@ -202,6 +202,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
             'mov'   => 'qt_player',  // tested
             'wmv'   => 'wmp_player', // tested
             'mpeg'  => 'qt_player',  // tested
+            'mpg'   => 'qt_player',  // tested
             'avi'   => 'wmp_player', // tested
             /* commenting out for now
             'ram'   => 'real_player',
@@ -217,6 +218,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
         $extn = $artefact->get('oldextension');
         if ($extn == 'mp3') {
             $height = 0; // one line
+            $width = 100;
         }
         $id = 'blocktype_internalmedia_flash_' . time() . $count;
         $url = self::get_download_link($artefact, $block);
@@ -230,7 +232,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
                <span class="blocktype_internalmedia_mp3" id="' . $id . '">(' 
                . get_string('flash', 'blocktype.file/internalmedia') . ')</span>
                 <script type="text/javascript">
-                    var so = new SWFObject(" ' . $playerurl . '","player","400","400","7");
+                    var so = new SWFObject(" ' . $playerurl . '","player","' . $width . '","' . ($height + 20). '","7");
                     so.addParam("allowfullscreen","false");
                     so.addVariable("file","' . urlencode($url) . '");
                     so.addVariable("displayheight"," ' . $height . '");
