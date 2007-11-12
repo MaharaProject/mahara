@@ -157,6 +157,8 @@ $getstring = quotestrings(array(
         'insert',
         'insertimage',
         'left',
+        'mustspecifycontent',
+        'mustspecifytitle',
         'middle',
         'name',
         'nofilesattachedtothispost',
@@ -343,7 +345,7 @@ function fileattached_id(id) {
 function saveblogpost() {
     // Hacky inline validation - see bug #380
     if ($('editpost_title').value == '') {
-        alert('You must specify a title for your post');
+        alert({$getstring['mustspecifytitle']});
         return false;
     }
     var data = {'title' : $('editpost_title').value,
@@ -379,7 +381,7 @@ function saveblogpost() {
 
     data.body = $('editpost_description').value;
     if (data.body == '') {
-        alert('You must specify some content for your post');
+        alert({$getstring['mustspecifycontent']});
         return false;
     }
     data.tags = $('editpost_tags').value;
