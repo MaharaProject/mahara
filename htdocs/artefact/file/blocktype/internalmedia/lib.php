@@ -203,9 +203,11 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
             'wmv'   => 'wmp_player', // tested
             'mpeg'  => 'qt_player',  // tested
             'avi'   => 'wmp_player', // tested
+            /* commenting out for now
             'ram'   => 'real_player',
             'rm'    => 'real_player',
             'rpm'   => 'real_player',
+            */
         );
     }
 
