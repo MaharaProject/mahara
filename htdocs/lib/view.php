@@ -576,6 +576,7 @@ class View {
                 }
             break;
             case 'configureblockinstance': // requires action_configureblockinstance_id_\d_column_\d_order_\d
+            case 'acsearch': // requires action_acsearch_id_\d
                 if (!defined('JSON')) {
                     $this->blockinstance_currently_being_configured = $values['id'];
                     // And we're done here for now
@@ -1139,7 +1140,7 @@ class View {
      * Makes a URL for a view block editing page
      */
     public static function make_base_url() {
-        static $allowed_keys = array('id', 'change', 'c', 'new');
+        static $allowed_keys = array('id', 'change', 'c', 'new', 'search');
         $baseurl = '?';
         foreach (array_merge($_POST, $_GET) as $key => $value) {
             if (in_array($key, $allowed_keys) || preg_match('/^action_.*_x$/', $key)/* || preg_match('/^cb_\d+_[a-z_]+_o$/', $key)*/) {
@@ -1162,6 +1163,11 @@ class View {
     public static function build_artefactchooser_data($data) {
         global $USER;
 
+        $search = param_variable('search', '');
+        //if (strlen($search) < 3) {
+        //    $search = '';
+        //}
+
         $artefacttypes = $data['artefacttypes'];
         $offset        = $data['offset'];
         $limit         = $data['limit'];
@@ -1180,7 +1186,14 @@ class View {
         if (!empty($artefacttypes)) {
             $select .= ' AND artefacttype IN(' . implode(',', array_map('db_quote', $artefacttypes)) . ')';
         }
+
+        if ($search != '') {
+            $search = db_quote('%' . str_replace('%', '%%', $search) . '%');
+            $select .= 'AND (title ILIKE(' . $search . ') OR description ILIKE(' . $search . ') )';
+        }
+
         $select .= $extraselect;
+
         $sortorder = 'title';
         if (method_exists($blocktypeclass, 'artefactchooser_get_sort_order')) {
             $sortorder = call_static_method($blocktypeclass, 'artefactchooser_get_sort_order');
