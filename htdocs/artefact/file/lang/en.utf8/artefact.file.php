@@ -134,5 +134,13 @@ $string['wav'] = 'WAV Audio File';
 $string['wmv'] = 'WMV Video File';
 $string['xml'] = 'XML File';
 $string['zip'] = 'ZIP Archive';
+$string['swf'] = 'SWF Flash movie';
+$string['flv'] = 'FLV Flash movie';
+$string['mov'] = 'MOV Quicktime movie';
+$string['mpg'] = 'MPEG Movie';
+$string['ram'] = 'RAM Real Player Movie';
+$string['rpm'] = 'RPM Real Player Movie';
+$string['rm'] = 'RM Real Player Movie';
+
 
 ?>
