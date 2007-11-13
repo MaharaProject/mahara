@@ -438,7 +438,7 @@ function jsstrings() {
             )
         ),
         'friends' => array(
-            'mahara' => array(
+            'group' => array(
                 'confirmremovefriend',
                 'seeallviews',
                 'noviewstosee',

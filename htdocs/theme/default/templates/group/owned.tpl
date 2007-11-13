@@ -5,14 +5,14 @@
 			<h2>{str tag="groupsiown"}</h2>
                         <div class="addgrouplink">
                             <span class="addicon">
-                                <a href="{$WWWROOT}group/create.php">{str tag='addgroup'}</a>
+                                <a href="{$WWWROOT}group/create.php">{str tag='addgroup' section='group'}</a>
                             </span>
                         </div>
                             <table id="grouplist" class="hidden tablerenderer">
 	                        <thead>
                                     <tr>
  	                                <th>{str tag='name'}</th>
- 	                                <th>{str tag='groupmemberrequests'}
+ 	                                <th>{str tag='groupmemberrequests' section='group'}
                                         {contextualhelp plugintype='core' pluginname='groups' section='pendingmembershipheader'}
                                     </th>
  	                                <th></th>
