@@ -3,7 +3,7 @@
     {if $data}
     <ul>
     {foreach from=$data item=interaction}
-        <li><a href="{$WWWROOT}interaction/{$interaction.plugin|escape}/?id={$interaction.id|escape}">{$interaction.name|escape}</a></li>
+        <li><a href="{$WWWROOT}interaction/{$interaction->plugin|escape}/?id={$interaction->id|escape}">{$interaction->title|escape}</a></li>
     {/foreach}
     </ul>
     {else}

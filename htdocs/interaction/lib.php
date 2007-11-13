@@ -31,24 +31,19 @@ defined('INTERNAL') || die();
  * Base interaction plugin class
  * @abstract
  */
-class PluginInteraction extends Plugin {
-
-
-
-
-}
+abstract class PluginInteraction extends Plugin { }
 
 
 /** 
  * Base class for interaction instances
  */
-class InteractionInstance {
+abstract class InteractionInstance {
 
     protected $id;
     protected $title;
     protected $description;
     protected $group;
-    protected $plugin;
+    protected $plugin; // I wanted to make this private but then get_object_vars doesn't include it.
     protected $ctime;
     protected $dirty;
 
@@ -72,6 +67,10 @@ class InteractionInstance {
                 $this->{$field} = $value;
             }
         }
+        if (empty($this->id)) {
+            $this->ctime = time();
+        }
+        $this->plugin = $this->get_plugin();
     }
 
     public function get($field) {
@@ -99,6 +98,9 @@ class InteractionInstance {
         }
         $fordb = new StdClass;
         foreach (get_object_vars($this) as $k => $v) {
+            if ($k == 'ctime') {
+                $v = db_format_timestamp($v);
+            }
             $fordb->{$k} = $v;
         }
         if (empty($this->id)) {
@@ -123,6 +125,8 @@ class InteractionInstance {
 
         $this->dirty = false;
     }
+
+    public static abstract function get_plugin();
 }
 
 function interaction_check_plugin_sanity($pluginname) {
