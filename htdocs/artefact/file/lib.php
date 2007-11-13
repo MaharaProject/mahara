@@ -705,6 +705,20 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             get_string('folder', 'artefact.file') => $wwwroot . 'artefact/file/?folder=' . $id,
         );
     }
+
+    public function override_content_type() {
+        static $extensions;
+        if (empty($extensions)) {
+            $extensions = array(
+                'wmv' => 'video/x-ms-wmv',
+                'flv' => 'video/x-flv',
+            );
+        }
+        if (array_key_exists($this->get('oldextension'), $extensions)) {
+            return $extensions[$this->get('oldextension')];
+        }
+        return false;
+    }
 }
 
 class ArtefactTypeFolder extends ArtefactTypeFileBase {

@@ -234,6 +234,48 @@ class ArtefactTypeBlog extends ArtefactType {
         return $this->count_children() . ' ' . get_string('posts', 'artefact.blog');
     }
 
+    /**
+     * Renders a blog for a view. This involves using a tablerenderer to paginate the posts.
+     *
+     * This uses some legacy stuff from the old views interface, including its 
+     * dependence on javascript and the table renderer, which would be nice to 
+     * fix using the new pagination stuff some time.
+     *
+     * @param  array  Options for rendering
+     * @return array  A two key array, 'html' and 'javascript'.
+     */
+    public function render_self($options) {
+        // This is because if there are multiple blocks on a page, they need separate
+        // js variables.
+        $blockid = isset($options['blockid'])
+            ? $options['blockid']
+            : mt_rand();
+
+        $this->add_to_render_path($options);
+
+        $smarty = smarty_core();
+        if (isset($options['viewid'])) {
+            $smarty->assign('artefacttitle', '<a href="' . get_config('wwwroot') . 'view/view.php?id='
+                                             . $options['viewid'] . '&artefact=' . $this->get('id')
+                                             . '">' . $this->get('title') . '</a>');
+        }
+        else {
+            $smarty->assign('artefacttitle', $this->get('title'));
+        }
+
+        $smarty->assign('blockid', $blockid);
+        $smarty->assign('options', $options);
+        $smarty->assign('enc_id', json_encode($this->id));
+        $smarty->assign('limit', self::pagination);
+        $smarty->assign('loading_img', theme_get_url('images/loading.gif'));
+
+        // Remove unnecessary options for blog posts
+        unset($options['hidetitle']);
+        $smarty->assign('enc_options', json_encode(json_encode($options)));
+
+        return array('html' => $smarty->fetch('blocktype:blog:blog_render_self.tpl'), 'javascript' => '');
+    }
+
                 
     public static function get_icon($options=null) {
     }
@@ -330,11 +372,6 @@ class ArtefactTypeBlog extends ArtefactType {
  * BlogPost artefacts occur within Blog artefacts
  */
 class ArtefactTypeBlogPost extends ArtefactType {
-
-    /**
-     * This gives the number of blog posts to display at a time.
-     */
-    const pagination = 10;
 
     /**
      * This defines whether the blogpost is published or not.
@@ -447,7 +484,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
         // We need to make sure that the images in the post have the right viewid associated with them
         $postcontent = $this->get('description');
         if (isset($options['viewid'])) {
-            $postcontent = preg_replace('#(<img src=".*artefact/file/download\.php\?file=\d+)#', '\1&amp;id=' . $options['viewid'], $postcontent);
+            $postcontent = preg_replace('#(<img src=".*artefact/file/download\.php\?file=\d+)#', '\1&amp;view=' . $options['viewid'], $postcontent);
         }
         $smarty->assign('artefactdescription', $postcontent);
         $smarty->assign('artefact', $this);
@@ -475,6 +512,9 @@ class ArtefactTypeBlogPost extends ArtefactType {
     }
 
 
+    /**
+     * Returns an array of IDs of artefacts attached to this blogpost
+     */
     public function attachment_id_list() {
         if (!$list = get_column('artefact_blog_blogpost_file', 'file', 'blogpost', $this->get('id'))) {
             $list = array();
@@ -488,15 +528,28 @@ class ArtefactTypeBlogPost extends ArtefactType {
         $data->file = $artefactid;
         insert_record('artefact_blog_blogpost_file', $data);
 
-        $data->artefact = $data->file;
-        $data->parent = $data->blogpost;
+        $data = new StdClass;
+        $data->artefact = $artefactid;
+        $data->parent = $this->get('id');
         $data->dirty = true;
         insert_record('artefact_parent_cache', $data);
+
+        // Ensure the attachment is recorded as being related to the blog as well
+        $data = new StdClass;
+        $data->artefact = $artefactid;
+        $data->parent = $this->get('parent');
+        $data->dirty = 0;
+
+        $where = $data;
+        unset($where->dirty);
+        ensure_record_exists('artefact_parent_cache', $where, $data);
     }
 
     public function detach_file($artefactid) {
         delete_records('artefact_blog_blogpost_file', 'blogpost', $this->get('id'), 'file', $artefactid);
         delete_records('artefact_parent_cache', 'parent', $this->get('id'), 'artefact', $artefactid);
+        // Remove the record relating the attachment with the blog
+        delete_records('artefact_parent_cache', 'parent', $this->get('parent'), 'artefact', $artefactid);
     }
 
 

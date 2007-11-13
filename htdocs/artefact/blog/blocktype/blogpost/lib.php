@@ -71,15 +71,6 @@ class PluginBlocktypeBlogpost extends PluginBlocktype {
         return $result;
     }
 
-    // TODO: Implement in parent class, saving us a lot of hassle
-    public static function get_artefacts(BlockInstance $instance) {
-        $configdata = $instance->get('configdata');
-        if (!empty($configdata['artefactid'])) {
-            return array($configdata['artefactid']);
-        }
-        return false;
-    }
-
     public static function has_instance_config() {
         return true;
     }
@@ -101,7 +92,7 @@ class PluginBlocktypeBlogpost extends PluginBlocktype {
                 'required' => true,
             ),
             'blocktype' => 'blogpost',
-            'limit'     => 2,
+            'limit'     => 10,
             'selectone' => true,
             'artefacttypes' => array('blogpost'),
             'template'  => 'artefact:blog:artefactchooser-element.tpl',

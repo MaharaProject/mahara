@@ -110,6 +110,13 @@ class ArtefactTypeResume extends ArtefactType {
     public static function get_links($id) {
         // @todo penny
     }
+
+    /**
+     * Default render method for resume fields - show their description
+     */
+    public function render_self($options) {
+        return array('html' => $this->description);
+    }
 }
 
 class ArtefactTypeCoverletter extends ArtefactTypeResume {
@@ -137,24 +144,24 @@ class ArtefactTypeInterest extends ArtefactTypeResume {
 
 class ArtefactTypeContactinformation extends ArtefactTypeResume {
 
-    public function get_html($editing=true) {
+    public function render_self($options) {
         $smarty = smarty();
         $fields = ArtefactTypeContactinformation::get_profile_fields();
         foreach ($fields as $f) {
             try {
                 $$f = artefact_instance_from_type($f);
                 $rendered = $$f->render_self(array());
-                $smarty->assign($f, $rendered['html']);
+                $smarty->assign($f, format_whitespace($rendered['html']));
             }
             catch (Exception $e) { }
         }
 
         $template = 'artefact:resume:fragments/contactinformation.';
-        if (!empty($editing)) {
+        if (!empty($options['editing'])) {
             $template .= 'editing.';
         }
         $template .= 'tpl';
-        return $smarty->fetch($template);
+        return array('html' => $smarty->fetch($template));
     }
 
     public static function is_singular() {
@@ -259,6 +266,16 @@ class ArtefactTypePersonalinformation extends ArtefactTypeResume {
 
     public static function is_singular() {
         return true;
+    }
+
+    public function render_self($options) {
+        $smarty = smarty();
+        $fields = array();
+        foreach (array_keys(ArtefactTypePersonalInformation::get_composite_fields()) as $field) {
+            $fields[get_string($field, 'artefact.resume')] = $this->get_composite($field);
+        }
+        $smarty->assign('fields', $fields);
+        return array('html' => $smarty->fetch('artefact:resume:fragments/personalinformation.tpl'));
     }
 
 }
@@ -408,6 +425,36 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
     */
     public function get_other_table_name() {
         return 'artefact_resume_' . $this->get_artefact_type();
+    }
+
+    public function render_self($options) {
+        $smarty = smarty();
+        $smarty->assign('hidetitle', true);
+        $type = $this->get('artefacttype');
+        $content = array(
+            'html'         => $smarty->fetch('artefact:resume:fragments/' . $type . '.tpl'),
+            'javascript'   =>
+                $this->get_showhide_composite_js()
+                ."
+                var {$type}list = new TableRenderer(
+                   '{$type}list',
+                   '" . get_config('wwwroot') . "artefact/resume/composite.json.php',
+                   [
+                   " . call_static_method(generate_artefact_class_name($type), 'get_tablerenderer_js') ."
+                   ]
+                );
+
+                {$type}list.type = '{$type}';
+                {$type}list.statevars.push('type');
+                " .
+                (( array_key_exists('viewid', $options))
+                    ? "{$type}list.view = " . $options['viewid'] . ";
+                       {$type}list.statevars.push('view');"
+                    : ""
+                ) . "
+                {$type}list.updateOnLoad();
+            ");
+        return $content;
     }
 
     static function get_tablerenderer_title_js($titlestring, $bodystring) {

@@ -1032,6 +1032,60 @@ function insert_record($table, $dataobject, $primarykey=false, $returnpk=false) 
 }
 
 /**
+ * Inserts a record, only if the record does not already exist. 
+ * If the record DOES exist, it is updated.
+ *
+ * @uses $db
+ * @param string $table The database table to be checked against.
+ * @param array $whereobject A data object with values for one or more fields in the record (to determine whether the record exists or not)
+ * @param array $dataobject A data object with values for one or more fields in the record (to be inserted or updated)
+ * @param string $primarykey The primary key of the table we are inserting into (almost always "id")
+ * @param bool $returnpk Should the id of the newly created record entry be returned? If this option is not requested then true/false is returned.
+ * @throws SQLException
+ */
+function ensure_record_exists($table, $whereobject, $dataobject, $primarykey=false, $returnpk=false) {
+    $columns = (array)$whereobject;
+    $field = '*';
+    $where = array();
+    $toreturn = false;
+
+    foreach ($columns as $key => $value) {
+        if ($field == '*') {
+            $field = $key;
+        }
+
+        $where[] = db_quote_identifier($key) . ' = ' . db_quote($value);
+    }
+
+    $where = implode(' AND ', $where);
+
+    if (is_postgres()) {
+        $where .= ' FOR UPDATE ';
+    }
+    else {
+        // @TODO maybe some mysql specific stuff here
+    }
+        
+    db_begin();
+    if ($exists = get_record_select($table, $where)) {
+        if ($returnpk) {
+            $toreturn = $exists->{$primarykey};
+        }
+        else {
+            $toreturn = true;
+        }
+        if ($dataobject) { // we want to update it)
+            update_record($table, $dataobject, $whereobject);
+        }
+    }
+    else {
+        $toreturn = insert_record($table, $dataobject, $primarykey, $returnpk);
+    }
+    db_commit();
+    return $toreturn;
+}
+
+/**
  * Update a record in a table
  *
  * $dataobject is an object containing needed data

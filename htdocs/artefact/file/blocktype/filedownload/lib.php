@@ -88,14 +88,6 @@ class PluginBlocktypeFiledownload extends PluginBlocktype {
         return $result;
     }
 
-    public static function get_artefacts(BlockInstance $instance) {
-        $configdata = $instance->get('configdata');
-        if (isset($configdata['artefactids']) && is_array($configdata['artefactids'])) {
-            return $configdata['artefactids'];
-        }
-        return false;
-    }
-
     public static function has_instance_config() {
         return true;
     }
@@ -117,7 +109,7 @@ class PluginBlocktypeFiledownload extends PluginBlocktype {
                 'required' => true,
             ),
             'blocktype' => 'filedownload',
-            'limit' => 5,
+            'limit' => 10,
             'selectone' => false,
             'artefacttypes' => array('file', 'image', 'profileicon'),
             'template' => 'artefact:file:artefactchooser-element.tpl',

@@ -68,7 +68,11 @@ function pieform_element_tinywysiwyg_get_value(Pieform $form, $element) {
  * @param array   $element  The element
  */
 function pieform_element_tinywysiwyg_views_js(Pieform $form, $element) {
-    return 'tinyMCE.execCommand("mceAddControl", true, ' . json_encode($form->get_name() . '_' . $element['name']) . ');';
+    global $USER;
+    if ($USER->get_account_preference('wysiwyg') || defined('PUBLIC')) {
+        return 'tinyMCE.execCommand("mceAddControl", true, ' . json_encode($form->get_name() . '_' . $element['name']) . ');';
+    }
+    return '';
 }
 
 ?>

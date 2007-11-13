@@ -79,14 +79,6 @@ class PluginBlocktypeImage extends PluginBlocktype {
         return $result;
     }
 
-    public static function get_artefacts(BlockInstance $instance) {
-        $configdata = $instance->get('configdata');
-        if (isset($configdata['artefactid'])) {
-            return array($configdata['artefactid']);
-        }
-        return false;
-    }
-
     public static function has_instance_config() {
         return true;
     }
@@ -124,7 +116,7 @@ class PluginBlocktypeImage extends PluginBlocktype {
                 'required' => true,
             ),
             'blocktype' => 'image',
-            'limit' => 5,
+            'limit' => 10,
             'artefacttypes' => array('image', 'profileicon'),
             'template' => 'artefact:file:artefactchooser-element.tpl',
         );

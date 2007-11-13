@@ -2087,7 +2087,7 @@ function build_pagination($params) {
     // Close the container div
     $output .= '</div>';
 
-    return array('html' => $output, 'js' => $js);
+    return array('html' => $output, 'javascript' => $js);
 
 }
 

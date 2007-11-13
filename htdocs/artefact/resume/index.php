@@ -31,6 +31,7 @@ define('SECTION_PLUGINNAME', 'resume');
 define('SECTION_PAGE', 'index');
 
 require_once(dirname(dirname(dirname(__FILE__))) . '/init.php');
+define('TITLE', get_string('myresume', 'artefact.resume'));
 require_once('pieforms/pieform.php');
 require_once('pieforms/pieform/elements/calendar.php');
 require('artefact.php');
@@ -58,6 +59,9 @@ try {
     $interest = artefact_instance_from_type('interest');
 }
 catch (Exception $e) { }
+
+$contactinformation_value = $contactinformation->render_self(array('editing' => true));
+$contactinformation_value = $contactinformation_value['html'];
 
 $form = array(
     'name'        => 'resumemainform',
@@ -107,7 +111,7 @@ $form = array(
             'elements' => array(
                 'contactinformation' => array(
                     'type'  => 'html',
-                    'value' => $contactinformation->get_html(), 
+                    'value' => $contactinformation_value,
                     'help'  => true,
                 ),
             ),

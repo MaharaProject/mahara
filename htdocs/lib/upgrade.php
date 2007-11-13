@@ -450,16 +450,19 @@ function upgrade_plugin($upgrade) {
     }
     $db->CompleteTrans();
 
+    /*  they do themselves already
     // we have to do this after committing the current transaction because we call ourselves recursively...
     if ($plugintype == 'artefact' && get_config('installed')) {
         // only install associated blocktype plugins if we're not in the process of installing 
         if ($blocktypes = call_static_method($pcname, 'get_block_types')) {
             foreach ($blocktypes as $bt) {
-                $upgrade = check_upgrades('blocktype.' . $pluginname . '/' . $bt);
-                upgrade_plugin($upgrade);
+                if ($upgrade = check_upgrades('blocktype.' . $pluginname . '/' . $bt)) {
+                    upgrade_plugin($upgrade); 
+                }
             }
         }
     }
+    */
     
     return $status;
 
@@ -796,7 +799,7 @@ function sort_upgrades($k1, $k2) {
 * (eg not tied to artefact plugins)
 */
 function get_core_blocktype_categories() {
-    return array('general', 'images', 'multimedia', 'rss');
+    return array('general', 'images', 'multimedia', 'feeds');
 }
 
 function install_blocktype_categories_for_plugin($blocktype) {

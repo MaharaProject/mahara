@@ -100,7 +100,16 @@ abstract class PluginBlocktype extends Plugin {
     *
     * @return array ids of artefacts in this block instance
     */
-    public static abstract function get_artefacts(BlockInstance $instance);
+    public static function get_artefacts(BlockInstance $instance) {
+        $configdata = $instance->get('configdata');
+        if (isset($configdata['artefactids']) && is_array($configdata['artefactids'])) {
+            return $configdata['artefactids'];
+        }
+        if (!empty($configdata['artefactid'])) {
+            return array($configdata['artefactid']);
+        }
+        return false;
+    }
 
     /** 
     * this is different to has_config - has_config is plugin wide config settings
@@ -280,7 +289,7 @@ class BlockInstance {
      *
      * @param bool $configure Whether to render the block instance in configure 
      *                        mode
-     * @return array Array with two keys: 'html' for raw html, 'js' for
+     * @return array Array with two keys: 'html' for raw html, 'javascript' for
      *               javascript to run
      */
     public function render_editing($configure=false) {
@@ -345,7 +354,7 @@ class BlockInstance {
         $smarty->assign('javascript', defined('JSON'));
         $smarty->assign('strnotitle', get_string('notitle', 'view'));
 
-        return array('html' => $smarty->fetch('view/blocktypecontainerediting.tpl'), 'js' => $js);
+        return array('html' => $smarty->fetch('view/blocktypecontainerediting.tpl'), 'javascript' => $js);
     }
 
     public function render_viewing() {
@@ -373,7 +382,7 @@ class BlockInstance {
     /**
      * Builds the configuration pieform for this blockinstance
      *
-     * @return array Array with two keys: 'html' for raw html, 'js' for
+     * @return array Array with two keys: 'html' for raw html, 'javascript' for
      *               javascript to run
      */
     public function build_configure_form() {
@@ -446,7 +455,7 @@ class BlockInstance {
             }
         }
 
-        return array('html' => $html, 'js' => $js);
+        return array('html' => $html, 'javascript' => $js);
     }
 
     public function commit() {

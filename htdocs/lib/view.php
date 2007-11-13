@@ -576,6 +576,7 @@ class View {
                 }
             break;
             case 'configureblockinstance': // requires action_configureblockinstance_id_\d_column_\d_order_\d
+            case 'acsearch': // requires action_acsearch_id_\d
                 if (!defined('JSON')) {
                     $this->blockinstance_currently_being_configured = $values['id'];
                     // And we're done here for now
@@ -1139,7 +1140,7 @@ class View {
      * Makes a URL for a view block editing page
      */
     public static function make_base_url() {
-        static $allowed_keys = array('id', 'change', 'c', 'new');
+        static $allowed_keys = array('id', 'change', 'c', 'new', 'search');
         $baseurl = '?';
         foreach (array_merge($_POST, $_GET) as $key => $value) {
             if (in_array($key, $allowed_keys) || preg_match('/^action_.*_x$/', $key)/* || preg_match('/^cb_\d+_[a-z_]+_o$/', $key)*/) {
@@ -1162,6 +1163,11 @@ class View {
     public static function build_artefactchooser_data($data) {
         global $USER;
 
+        $search = param_variable('search', '');
+        //if (strlen($search) < 3) {
+        //    $search = '';
+        //}
+
         $artefacttypes = $data['artefacttypes'];
         $offset        = $data['offset'];
         $limit         = $data['limit'];
@@ -1169,6 +1175,7 @@ class View {
         $value         = $data['defaultvalue'];
         $elementname   = $data['name'];
         $template      = $data['template'];
+        $extraselect   = (isset($data['extraselect']) ? ' AND ' . $data['extraselect'] : '');
 
         $offset -= $offset % $limit;
 
@@ -1179,6 +1186,14 @@ class View {
         if (!empty($artefacttypes)) {
             $select .= ' AND artefacttype IN(' . implode(',', array_map('db_quote', $artefacttypes)) . ')';
         }
+
+        if ($search != '') {
+            $search = db_quote('%' . str_replace('%', '%%', $search) . '%');
+            $select .= 'AND (title ILIKE(' . $search . ') OR description ILIKE(' . $search . ') )';
+        }
+
+        $select .= $extraselect;
+
         $sortorder = 'title';
         if (method_exists($blocktypeclass, 'artefactchooser_get_sort_order')) {
             $sortorder = call_static_method($blocktypeclass, 'artefactchooser_get_sort_order');
@@ -1187,19 +1202,39 @@ class View {
         $totalartefacts = count_records_select('artefact', $select);
 
         $result = '';
-        foreach ($artefacts as &$artefact) {
-            safe_require('artefact', get_field('artefact_installed_type', 'plugin', 'name', $artefact->artefacttype));
+        if ($artefacts) {
+            foreach ($artefacts as &$artefact) {
+                safe_require('artefact', get_field('artefact_installed_type', 'plugin', 'name', $artefact->artefacttype));
 
-            if (method_exists($blocktypeclass, 'artefactchooser_get_element_data')) {
-                $artefact = call_static_method($blocktypeclass, 'artefactchooser_get_element_data', $artefact);
+                if (method_exists($blocktypeclass, 'artefactchooser_get_element_data')) {
+                    $artefact = call_static_method($blocktypeclass, 'artefactchooser_get_element_data', $artefact);
+                }
+
+                // Build the radio button or checkbox for the artefact
+                $formcontrols = '';
+                if ($selectone) {
+                    $formcontrols .= '<input type="radio" class="radio" id="' . hsc($elementname . '_' . $artefact->id)
+                        . '" name="' . hsc($elementname) . '" value="' . hsc($artefact->id) . '"';
+                    if ($value == $artefact->id) {
+                        $formcontrols .= ' checked="checked"';
+                    }
+                    $formcontrols .= '>';
+                }
+                else {
+                    $formcontrols .= '<input type="checkbox" id="' . hsc($elementname . '_' . $artefact->id) . '" name="' . hsc($elementname) . '[' . hsc($artefact->id) . ']"';
+                    if ($value && in_array($artefact->id, $value)) {
+                        $formcontrols .= ' checked="checked"';
+                    }
+                    $formcontrols .= '>';
+                    $formcontrols .= '<input type="hidden" name="' . hsc($elementname) . '_onpage[]" value="' . hsc($artefact->id) . '">';
+                }
+
+                $smarty = smarty_core();
+                $smarty->assign('artefact', $artefact);
+                $smarty->assign('elementname', $elementname);
+                $smarty->assign('formcontrols', $formcontrols);
+                $result .= $smarty->fetch($template) . "\n";
             }
-
-            $smarty = smarty_core();
-            $smarty->assign('artefact', $artefact);
-            $smarty->assign('selectone', $selectone);
-            $smarty->assign('elementname', $elementname);
-            $smarty->assign('value', $value);
-            $result .= $smarty->fetch($template) . "\n";
         }
 
         $smarty = smarty_core();

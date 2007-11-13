@@ -80,8 +80,8 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
         return array(
             'videoid' => array(
                 'type'  => 'text',
-                'title' => 'Video URL',
-                'description' => 'Paste the URL of the page where the video is located',
+                'title' => get_string('videourl','blocktype.externalvideo'),
+                'description' => get_string('videourldescription','blocktype.externalvideo'),
                 'width' => '90%',
                 'defaultvalue' => $configdata['videoid'],
                 'rules' => array(
@@ -90,7 +90,7 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
             ),
             'width' => array(
                 'type' => 'text',
-                'title' => 'Width',
+                'title' => get_string('width','blocktype.externalvideo'),
                 'size' => 3,
                 //'rules' => array(
                 //    'minvalue' => 100,
@@ -100,7 +100,7 @@ class PluginBlocktypeExternalvideo extends SystemBlocktype {
             ),
             'height' => array(
                 'type' => 'text',
-                'title' => 'Height',
+                'title' => get_string('height','blocktype.externalvideo'),
                 'size' => 3,
                 //'rules' => array(
                 //    'minvalue' => 100,

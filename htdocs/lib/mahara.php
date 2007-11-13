@@ -1190,6 +1190,8 @@ function can_view_view($view_id, $user_id=null) {
 
     // check public
     if (
+        get_config('allowpublicviews') == '1'
+        &&
         isset($view_record['access']['public'])
         && (    
             $view_record['access']['public']['startdate'] == null
