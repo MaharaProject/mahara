@@ -1142,8 +1142,8 @@ class View {
     public static function make_base_url() {
         static $allowed_keys = array('id', 'change', 'c', 'new', 'search');
         $baseurl = '?';
-        foreach (array_merge($_POST, $_GET) as $key => $value) {
-            if (in_array($key, $allowed_keys) || preg_match('/^action_.*_x$/', $key)/* || preg_match('/^cb_\d+_[a-z_]+_o$/', $key)*/) {
+        foreach ($_POST + $_GET as $key => $value) {
+            if (in_array($key, $allowed_keys) || preg_match('/^action_.*(_x)?$/', $key)) {
                 $baseurl .= hsc($key) . '=' . hsc($value) . '&amp;';
             }
         }
@@ -1163,10 +1163,15 @@ class View {
     public static function build_artefactchooser_data($data) {
         global $USER;
 
-        $search = param_variable('search', '');
-        //if (strlen($search) < 3) {
-        //    $search = '';
-        //}
+        $search = '';
+        if (!empty($data['search']) && param_boolean('s')) {
+            $search = param_variable('search', '');
+            // Maybe later, depending on performance - don't search if there's 
+            // not enough characters. Prompts should be added to the UI too.
+            //if (strlen($search) < 3) {
+            //    $search = '';
+            //}
+        }
 
         $artefacttypes = $data['artefacttypes'];
         $offset        = $data['offset'];
@@ -1245,7 +1250,7 @@ class View {
         $pagination = build_pagination(array(
             'id' => $elementname . '_pagination',
             'class' => 'ac-pagination',
-            'url' => View::make_base_url(),
+            'url' => View::make_base_url() . (param_boolean('s') ? '&s=1' : ''),
             'count' => $totalartefacts,
             'limit' => $limit,
             'offset' => $offset,
