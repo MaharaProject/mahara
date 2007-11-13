@@ -186,6 +186,7 @@ class PluginBlocktypeProfileinfo extends PluginBlocktype {
             'blocktype' => 'profileinfo',
             'limit'     => 655360, // 640K profile fields is enough for anyone!
             'selectone' => false,
+            'search'    => false,
             'artefacttypes' => array_diff(PluginArtefactInternal::get_artefact_types(), array('profileicon', 'email')),
             'template'  => 'artefact:internal:artefactchooser-element.tpl',
         );

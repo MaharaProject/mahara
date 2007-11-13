@@ -125,6 +125,7 @@ class PluginBlocktypeContactinfo extends PluginBlocktype {
             'blocktype' => 'contactinfo',
             'limit'     => 655360, // 640K profile fields is enough for anyone!
             'selectone' => false,
+            'search'    => false,
             'artefacttypes' => array_diff(PluginArtefactInternal::get_contactinfo_artefact_types(), array('email')),
             'template'  => 'artefact:internal:artefactchooser-element.tpl',
         );

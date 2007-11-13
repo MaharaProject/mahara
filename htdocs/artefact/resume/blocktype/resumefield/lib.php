@@ -94,6 +94,7 @@ class PluginBlocktypeResumefield extends PluginBlocktype {
             'blocktype' => 'resumefield',
             'limit'     => 655360, // 640K profile fields is enough for anyone!
             'selectone' => true,
+            'search'    => false,
             'artefacttypes' => PluginArtefactResume::get_artefact_types(),
             'template'  => 'artefact:resume:artefactchooser-element.tpl',
         );
