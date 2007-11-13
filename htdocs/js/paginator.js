@@ -26,32 +26,36 @@ var Paginator = function(id, datatable, script, extradata) {
 
             // If there is a link
             if (a) {
-                connect(a, 'onclick', function(e) {
-                    e.stop();
-
-                    var loc = a.href.indexOf('?');
-                    var queryData = [];
-                    if (loc != -1) {
-                        queryData = parseQueryString(a.href.substring(loc + 1, a.href.length));
-                        queryData.extradata = serializeJSON(self.extraData);
-                    }
-
-                    sendjsonrequest(self.jsonScript, queryData, 'GET', function(data) {
-                        getFirstElementByTagAndClassName('tbody', null, self.datatable).innerHTML = data['data']['tablerows'];
-
-                        // Update the pagination
-                        var tmp = DIV();
-                        tmp.innerHTML = data['data']['pagination'];
-                        swapDOM(self.id, tmp.firstChild);
-
-                        // Run the pagination js to make it live
-                        eval(data['data']['pagination_js']);
-
-                        // Update the result count
-                        getFirstElementByTagAndClassName('div', 'results', self.id).innerHTML = data['data']['count'] + ' results'; // TODO i18n
-                    });
-                });
+                self.rewritePaginatorLink(a);
             }
+        });
+    }
+
+    this.rewritePaginatorLink = function(a) {
+        connect(a, 'onclick', function(e) {
+            e.stop();
+
+            var loc = a.href.indexOf('?');
+            var queryData = [];
+            if (loc != -1) {
+                queryData = parseQueryString(a.href.substring(loc + 1, a.href.length));
+                queryData.extradata = serializeJSON(self.extraData);
+            }
+
+            sendjsonrequest(self.jsonScript, queryData, 'GET', function(data) {
+                getFirstElementByTagAndClassName('tbody', null, self.datatable).innerHTML = data['data']['tablerows'];
+
+                // Update the pagination
+                var tmp = DIV();
+                tmp.innerHTML = data['data']['pagination'];
+                swapDOM(self.id, tmp.firstChild);
+
+                // Run the pagination js to make it live
+                eval(data['data']['pagination_js']);
+
+                // Update the result count
+                getFirstElementByTagAndClassName('div', 'results', self.id).innerHTML = data['data']['count'] + ' results'; // TODO i18n
+            });
         });
     }
 
