@@ -693,6 +693,11 @@ class ArtefactNotFoundException extends NotFoundException {}
  */
 class BlockInstanceNotFoundException extends NotFoundException {}
 
+/** 
+ * Exception - interaction instance not found
+ */
+class InteractionInstanceNotFoundException extends NotFoundException {}
+
 /**
  * Exception - view not found
  */

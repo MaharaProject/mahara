@@ -31,6 +31,110 @@ defined('INTERNAL') || die();
  * Base interaction plugin class
  * @abstract
  */
-abstract class PluginInteraction extends Plugin {
+class PluginInteraction extends Plugin {
+
+
+
 
 }
+
+
+/** 
+ * Base class for interaction instances
+ */
+class InteractionInstance {
+
+    protected $id;
+    protected $title;
+    protected $description;
+    protected $group;
+    protected $plugin;
+    protected $ctime;
+    protected $dirty;
+
+    public function __construct($id=0, $data=null) {
+         if (!empty($id)) {
+            if (empty($data)) {
+                if (!$data = get_record('interaction_instance', 'id', $id)) {
+                    throw new InteractionInstanceNotFoundException(get_string('interactioninstancenotfound', 'error', $id));
+                }
+            }
+            $this->id = $id;
+        }
+        else {
+            $this->dirty = true;
+        }
+        if (empty($data)) {
+            $data = array();
+        }
+        foreach ((array)$data as $field => $value) {
+            if (property_exists($this, $field)) {
+                $this->{$field} = $value;
+            }
+        }
+    }
+
+    public function get($field) {
+        if (!property_exists($this, $field)) {
+            throw new ParamOutOfRangeException("Field $field wasn't found in class " . get_class($this));
+        }
+        return $this->{$field};
+    }
+
+    public function set($field, $value) {
+        if (property_exists($this, $field)) {
+            if ($this->{$field} != $value) {
+                // only set it to dirty if it's changed
+                $this->dirty = true;
+                $this->{$field} = $value;
+            }
+            return true;
+        }
+        throw new ParamOutOfRangeException("Field $field wasn't found in class " . get_class($this));
+    }
+
+    public function commit() {
+        if (empty($this->dirty)) {
+            return;
+        }
+        $fordb = new StdClass;
+        foreach (get_object_vars($this) as $k => $v) {
+            $fordb->{$k} = $v;
+        }
+        if (empty($this->id)) {
+            $this->id = insert_record('interaction_instance', $fordb, 'id', true);
+        }
+        else {
+            update_record('interaction_instance', $fordb, 'id');
+        }
+
+        // @TODO maybe handle_event here.
+
+        $this->dirty = false;
+    }
+
+    public function delete() {
+        if (empty($this->id)) {
+            $this->dirty = false;
+            return;
+        }
+        
+        delete_records('interaction_instance', 'id', $this->id);
+
+        $this->dirty = false;
+    }
+}
+
+function interaction_check_plugin_sanity($pluginname) {
+
+    safe_require('interaction', $pluginname);
+    $classname = generate_interaction_instance_class_name($pluginname);
+
+    if (!class_exists($classname)) {
+        throw new InstallationException(get_string('classmissing', 'error', $classname, 'interaction', $pluginname));
+    }
+}
+
+
+
+?>

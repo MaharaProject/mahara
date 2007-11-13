@@ -861,6 +861,10 @@ function generate_artefact_class_name($type) {
     return 'ArtefactType' . ucfirst($type);
 }
 
+function generate_interaction_instance_class_name($type) {
+    return 'Interaction' . ucfirst($type) . 'Instance';
+}
+
 function blocktype_namespaced_to_single($blocktype) {
     if (strpos($blocktype, '/') === false) { // system blocktype
         return $blocktype;
