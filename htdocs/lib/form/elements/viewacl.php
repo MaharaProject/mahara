@@ -39,7 +39,13 @@ function pieform_element_viewacl(Pieform $form, $element) {
     $value = $form->get_value($element);
 
     // Look for the presets and split them into two groups
-    $presets = array('public', 'loggedin', 'friends');
+    $presets = array();
+    if (get_config('allowpublicviews') == '1') {
+         $presets = array('public', 'loggedin', 'friends');
+    }
+    else {
+        $presets = array('loggedin', 'friends');
+    }
     if ($value) {
         foreach ($value as $key => &$item) {
             if (is_array($item)) {
@@ -85,6 +91,30 @@ function pieform_render_viewacl_getvaluebytype($type, $id) {
             break;
     }
     return "$type: $id";
+}
+
+function pieform_element_viewacl_get_value(Pieform $form, $element) {
+    global $USER;
+    $values = null;
+    $global = ($form->get_property('method') == 'get') ? $_GET : $_POST;
+    if (isset($element['value'])) {
+        $values = $element['value'];
+    }
+    else if (isset($global[$element['name']])) {
+        $value = $global[$element['name']];
+        $values = $value;
+    }
+    else if (isset($element['defaultvalue'])) {
+        $values = $element['defaultvalue'];
+    }
+    if (get_config('allowpublicviews') != '1') {
+        foreach ($values as $key => $value) {
+            if ($value['type'] == 'public') {
+                unset($values[$key]);
+            }
+        }
+    }
+    return $values;
 }
 
 ?>

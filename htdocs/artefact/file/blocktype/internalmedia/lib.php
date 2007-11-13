@@ -68,7 +68,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
         $height = (!empty($configdata['height'])) ? hsc($configdata['height']) : '300';
         $extn = $artefact->get('oldextension');
         if (!in_array($extn, self::get_allowed_extensions())) {
-            return 'This has been removed as an allowed type'; // TODO
+            return get_string('typeremoved', 'blocktype.file/internalmedia');
         }
         $callbacks = self::get_all_extensions();
         $result .= call_static_method('PluginBlocktypeInternalmedia', $callbacks[$extn], $artefact, $instance, $width, $height);
@@ -133,6 +133,9 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
     public static function save_config_options($values) {
         $enabledtypes = array();
         foreach ($values as $type => $enabled) {
+            if (!in_array($type, array_keys(self::get_all_extensions()))) {
+                continue;
+            }
             if (!empty($enabled)) {
                 $enabledtypes[] = $type;
             }
@@ -146,19 +149,33 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
         $filetypes = array();
         $currenttypes = self::get_allowed_extensions();
 
+        if (!$plugindisabled = get_column_sql('SELECT description
+            FROM {artefact_file_file_types} 
+            WHERE enabled = 0')) {
+            $plugindisabled = array();
+        }
         foreach (array_keys(self::get_all_extensions()) as $filetype) {
-            // TODO  add checks for types that have been disabled by the file plugin
-            $filetypes[$filetype] = array(
-                'type'  => 'checkbox',
-                'title' => get_string($filetype, 'artefact.file'),
-                'defaultvalue' => in_array($filetype, $currenttypes),
-            );
+            if (in_array($filetype, $plugindisabled)) {
+                $filetypes[$filetype] = array(
+                    'type'  => 'checkbox',
+                    'title' => get_string($filetype, 'artefact.file'),
+                    'value' => false,
+                    'disabled' => true,
+                );
+            }
+            else {
+                $filetypes[$filetype] = array(
+                    'type'  => 'checkbox',
+                    'title' => get_string($filetype, 'artefact.file'),
+                    'defaultvalue' => in_array($filetype, $currenttypes),
+                );
+            }
         }
         uasort($filetypes, create_function('$a, $b', 'return $a["title"] > $b["title"];'));
         $filetypes = array_merge(
             array(
                 'description' => array(
-                    'value' => 'Some stuff goes here' // TODO
+                    'value' => get_string('configdesc', 'blocktype.file/internalmedia'),
                 ),
             ),
             $filetypes
@@ -184,12 +201,14 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
             'flv'   => 'flash_player', // tested
             'mov'   => 'qt_player',  // tested
             'wmv'   => 'wmp_player', // tested
-            'mpg'   => 'qt_player',  // tested
             'mpeg'  => 'qt_player',  // tested
+            'mpg'   => 'qt_player',  // tested
             'avi'   => 'wmp_player', // tested
+            /* commenting out for now
             'ram'   => 'real_player',
             'rm'    => 'real_player',
             'rpm'   => 'real_player',
+            */
         );
     }
 
@@ -199,6 +218,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
         $extn = $artefact->get('oldextension');
         if ($extn == 'mp3') {
             $height = 0; // one line
+            $width = 100;
         }
         $id = 'blocktype_internalmedia_flash_' . time() . $count;
         $url = self::get_download_link($artefact, $block);
@@ -212,7 +232,7 @@ class PluginBlocktypeInternalmedia extends PluginBlocktype {
                <span class="blocktype_internalmedia_mp3" id="' . $id . '">(' 
                . get_string('flash', 'blocktype.file/internalmedia') . ')</span>
                 <script type="text/javascript">
-                    var so = new SWFObject(" ' . $playerurl . '","player","400","400","7");
+                    var so = new SWFObject(" ' . $playerurl . '","player","' . $width . '","' . ($height + 20). '","7");
                     so.addParam("allowfullscreen","false");
                     so.addVariable("file","' . urlencode($url) . '");
                     so.addVariable("displayheight"," ' . $height . '");
