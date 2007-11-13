@@ -757,13 +757,16 @@ function validate_plugin($plugintype, $pluginname, $pluginpath='') {
     if (!file_exists($pluginpath . '/version.php')) {
         throw new InstallationException(get_string('versionphpmissing', 'error', $plugintype, $pluginname));
     }
-    require_once('artefact.php');
+    safe_require($plugintype, $pluginname);
+    $classname = generate_class_name($plugintype, $pluginname);
+    if (!class_exists($classname)) {
+        throw new InstallationException(get_string('classmissing', 'error', $classname, $plugintype, $pluginname));
+    }
+    require_once(get_config('docroot') . $plugintype . '/lib.php');
     $funname = $plugintype . '_check_plugin_sanity';
     if (function_exists($funname)) {
         $funname($pluginname);
     }
-    // @TODO more?
-    // validate the plugin class
 }
 
 /*
