@@ -534,4 +534,54 @@ abstract class ArtefactType {
     }
 }
 
+/**
+ * Given an artefact plugin name, this function will test if 
+ * it's installable or not.  If not, InstallationException will be thrown.
+ */
+function artefact_check_plugin_sanity($pluginname) {
+    $classname = generate_class_name('artefact', $pluginname);
+    safe_require('artefact', $pluginname);
+    if (!is_callable(array($classname, 'get_artefact_types'))) {
+        throw new InstallationException(get_string('artefactpluginmethodmissing', 'error', $classname, 'get_artefact_types'));
+    }
+    if (!is_callable(array($classname, 'get_block_types'))) {
+        throw new InstallationException(get_string('artefactpluginmethodmissing', 'error', $classname, 'get_block_types'));
+    }
+    $types = call_static_method($classname, 'get_artefact_types');
+    foreach ($types as $type) {
+        $typeclassname = generate_artefact_class_name($type);
+        if (get_config('installed')) {
+            if ($taken = get_record_select('artefact_installed_type', 'name = ? AND plugin != ?', 
+                                           array($type, $pluginname))) {
+                throw new InstallationException(get_string('artefacttypenametaken', 'error', $type, $taken->plugin));
+            }
+        }
+        if (!class_exists($typeclassname)) {
+            throw new InstallationException(get_string('classmissing', 'error', $typeclassname, $type, $plugin));
+        }
+    }
+    $types = call_static_method($classname, 'get_block_types');
+    foreach ($types as $type) {
+        $pluginclassname = generate_class_name('blocktype', 'image');
+        if (get_config('installed')) {
+            if (table_exists(new XMLDBTable('blocktype_installed')) && $taken = get_record_select('blocktype_installed', 
+                'name = ? AND artefactplugin != ? ',
+                array($type, $pluginname))) {
+                throw new InstallationException(get_string('blocktypenametaken', 'error', $type,
+                    ((!empty($taken->artefactplugin)) ? $taken->artefactplugin : get_string('system'))));
+            }
+        }
+        // go look for the lib file to include
+        try {
+            safe_require('blocktype', $pluginname . '/' . $type);
+        }
+        catch (Exception $_e) {
+            throw new InstallationException(get_string('blocktypelibmissing', 'error', $type, $pluginname));
+        }
+        if (!class_exists($pluginclassname)) {
+            throw new InstallationException(get_string('classmissing', 'error', $pluginclassname, $type, $pluginname));
+        }
+    }
+}
+
 ?>
