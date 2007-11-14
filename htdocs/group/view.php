@@ -147,7 +147,7 @@ $canpromote     = (int)(bool)(($staff || $admin) && $controlled);
 $canremove      = (int)(bool)(($tutor && $controlled) || $staff || $admin || $owner);
 $canleave       = ($ismember && !$controlled);
 $canrequestjoin = (!$ismember && empty($invited) && empty($requested) && $group->jointype == 'request');
-$canjoin        = (!$ismember && $group->jointype == 'open');
+$canjoin        = (!$ismember && $group->jointype == 'open' && !$owner);
 
 $javascript = '';
 if ($membership) {
