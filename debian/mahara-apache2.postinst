@@ -27,6 +27,8 @@ APACHE_CONF_FILE=/etc/apache2/sites-available/mahara
 case "$1" in
     configure)
         # Configure Mahara
+        db_get mahara/db_type
+        set_config dbtype "${RET}"
         db_get mahara/db_host
         set_config dbhost "${RET}"
         db_get mahara/db_port
@@ -35,6 +37,8 @@ case "$1" in
         set_config dbname "${RET}"
         db_get mahara/db_user
         set_config dbuser "${RET}"
+        db_get mahara/db_pass
+        set_config dbpass "${RET}"
         db_get mahara/servername
         set_config wwwroot "http://${RET}/"
         db_get mahara/smtphosts

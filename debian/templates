@@ -1,3 +1,10 @@
+Template: mahara/db_type
+Type: select
+Default: postgres8
+Choices: postgres8, mysql5
+Description: Database type:
+ What type of database should be used for the Mahara site
+
 Template: mahara/db_host
 Type: string
 Default: 
@@ -23,6 +30,13 @@ Type: string
 Default: mahara
 Description: Database username:
  Which username should be used to connect to the Mahara database
+
+Template: mahara/db_pass
+Type: string
+Default:
+Description: Database password:
+ Which password is associated with the given username
+ You can leave this blank if you are not using password authentication.
 
 Template: mahara/servername
 Type: string

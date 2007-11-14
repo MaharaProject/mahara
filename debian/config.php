@@ -29,12 +29,12 @@ $cfg = new StdClass;
 require('config.debconf.php');
 
 // database connection details
-$cfg->dbtype   = 'postgres8';
+//$cfg->dbtype   = 'postgres8';
 //$cfg->dbhost   = 'localhost';
-//$cfg->dbport   = 5432;
+//$cfg->dbport   = '';
 //$cfg->dbname   = 'mahara';
 //$cfg->dbuser   = 'mahara';
-$cfg->dbpass   = 'mahara';
+//$cfg->dbpass   = '';
 //$cfg->dbprefix = '';
 
 // wwwroot - the web-visible path to your Mahara installation

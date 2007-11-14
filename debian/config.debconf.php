@@ -6,10 +6,12 @@
 //
 // Your local customizations should go into /etc/mahara/config.php
 
+$cfg->dbtype   = 'postgres8';
 $cfg->dbhost   = 'localhost';
 $cfg->dbport   = '';
 $cfg->dbname   = 'mahara';
 $cfg->dbuser   = 'mahara';
+$cfg->dbpass   = '';
 $cfg->wwwroot = 'http://localhost/mahara/';
 $cfg->smtphosts = '';
 $cfg->dataroot = '/var/lib/mahara';
