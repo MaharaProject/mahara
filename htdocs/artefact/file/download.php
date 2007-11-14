@@ -28,7 +28,6 @@ define('INTERNAL', 1);
 define('PUBLIC', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('artefact', 'file');
-require_once('artefact.php');
 require_once('file.php');
 
 $fileid = param_integer('file');

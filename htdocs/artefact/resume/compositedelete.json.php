@@ -28,7 +28,7 @@ define('INTERNAL', 1);
 define('JSON', 1);
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-require('artefact.php');
+require_once(get_config('docroot') . 'artefact/lib.php');
 
 $id = param_integer('id');
 $artefact = param_integer('artefact');

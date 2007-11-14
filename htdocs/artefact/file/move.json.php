@@ -34,7 +34,7 @@ json_headers();
 $artefactid  = param_integer('artefact');    // Artefact being moved
 $newparentid = param_integer('newparent');   // Folder to move it to
 
-require_once('artefact.php');
+require_once(get_config('docroot') . 'artefact/lib.php');
 $artefact = artefact_instance_from_id($artefactid);
 
 global $USER;

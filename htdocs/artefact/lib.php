@@ -25,7 +25,6 @@
  */
 
 defined('INTERNAL') || die();
-require_once('artefact.php');
 
 /**
  * Base artefact plugin class
@@ -584,4 +583,148 @@ function artefact_check_plugin_sanity($pluginname) {
     }
 }
 
+function rebuild_artefact_parent_cache_dirty() {
+    // this will give us a list of artefacts, as the first returned column
+    // is not unqiue, but that's ok, it's what we want.
+    if (!$dirty = get_records_array('artefact_parent_cache', 'dirty', 1, '', 'DISTINCT(artefact)')) {
+        return;
+    }
+    db_begin();
+    delete_records('artefact_parent_cache', 'dirty', 1);
+    foreach ($dirty as $d) {
+        $parentids = array();
+        $current = $d->artefact;
+        delete_records('artefact_parent_cache', 'artefact', $current);
+        $parentids = array_keys(artefact_get_parents_for_cache($current));
+        foreach ($parentids as $p) {
+            $apc = new StdClass;
+            $apc->artefact = $d->artefact;
+            $apc->parent   = $p;
+            $apc->dirty    = 0;
+            insert_record('artefact_parent_cache', $apc);
+        }
+    }
+    db_commit();
+}
+
+function rebuild_artefact_parent_cache_complete() {
+    db_begin();
+    delete_records('artefact_parent_cache');
+    if ($artefactids = get_column('artefact', 'id')) {
+        foreach ($artefactids as $id) {
+            $parentids = array_keys(artefact_get_parents_for_cache($id));
+            foreach ($parentids as $p) {
+                $apc = new StdClass;
+                $apc->artefact = $id;
+                $apc->parent   = $p;
+                $apc->dirty    = 0;
+                insert_record('artefact_parent_cache', $apc);
+            }
+        }
+    }
+    db_commit();
+}
+
+
+function artefact_get_parents_for_cache($artefactid, &$parentids=false) {
+    static $blogsinstalled;
+    if (!isset($blogsinstalled)) {
+        $blogsinstalled = get_field('artefact_installed', 'active', 'name', 'blog');
+    }
+    $current = $artefactid;
+    if (empty($parentids)) { // first call
+        $parentids = array();
+    }
+    while (true) {
+        if (!$parent = get_record('artefact', 'id', $current)) {
+            break;
+        }
+        // get any blog posts it may be attached to 
+        if (($parent->artefacttype == 'file' || $parent->artefacttype == 'image') && $blogsinstalled
+            && $associated = get_column('artefact_blog_blogpost_file', 'blogpost', 'file', $parent->id)) {
+            foreach ($associated as $a) {
+                $parentids[$a] = 1;
+                artefact_get_parents_for_cache($a, $parentids);
+            }
+        }
+        if (!$parent->parent) {
+            break;
+        }
+        $parentids[$parent->parent] = 1;
+        $current = $parent->parent;
+    }
+    return $parentids;
+}
+
+function artefact_can_render_to($type, $format) {
+    return in_array($format, call_static_method(generate_artefact_class_name($type), 'get_render_list'));
+}
+
+function artefact_instance_from_id($id) {
+    $sql = 'SELECT a.*, i.plugin 
+            FROM {artefact} a 
+            JOIN {artefact_installed_type} i ON a.artefacttype = i.name
+            WHERE a.id = ?';
+    if (!$data = get_record_sql($sql, array($id))) {
+        throw new ArtefactNotFoundException(get_string('artefactnotfound', 'mahara', $id));
+    }
+    $classname = generate_artefact_class_name($data->artefacttype);
+    safe_require('artefact', $data->plugin);
+    return new $classname($id, $data);
+}
+
+/**
+ * This function will return an instance of any "0 or 1" artefact. That is any
+ * artefact that each user will have at most one instance of (e.g. profile
+ * fields).
+ *
+ * @param string Is the type of artefact to return
+ * @param string The user_id who owns the fetched artefact. (defaults to the
+ * current user)
+ *
+ * @returns ArtefactType Instance of the artefact.
+ */
+function artefact_instance_from_type($artefact_type, $user_id=null) {
+    global $USER;
+
+    if ($user_id === null) {
+        $user_id = $USER->get('id');
+    }
+
+    safe_require('artefact', get_field('artefact_installed_type', 'plugin', 'name', $artefact_type));
+
+    if (!call_static_method(generate_artefact_class_name($artefact_type), 'is_singular')) {
+        throw new ArtefactNotFoundException("This artefact type is not a 'singular' artefact type");
+    }
+
+    // email is special (as in the user can have more than one of them, but
+    // it's treated as a 0 or 1 artefact and the primary is returned
+    if ($artefact_type == 'email') {
+        $id = get_field('artefact_internal_profile_email', 'artefact', 'owner', $user_id, 'principal', 1);
+
+        if (!$id) {
+            throw new ArtefactNotFoundException("Artefact of type '${artefact_type}' doesn't exist");
+        }
+
+        $classname = generate_artefact_class_name($artefact_type);
+        safe_require('artefact', 'internal');
+        return new $classname($id);
+    }
+    else {
+        $sql = 'SELECT a.*, i.plugin 
+                FROM {artefact} a 
+                JOIN {artefact_installed_type} i ON a.artefacttype = i.name
+                WHERE a.artefacttype = ? AND a.owner = ?';
+        if (!$data = get_record_sql($sql, array($artefact_type, $user_id))) {
+            throw new ArtefactNotFoundException("Artefact of type '${artefact_type}' doesn't exist");
+        }
+
+        $classname = generate_artefact_class_name($artefact_type);
+        safe_require('artefact', $data->plugin);
+        return new $classname($data->id, $data);
+    }
+
+    throw new ArtefactNotFoundException("Artefact of type '${artefact_type}' doesn't exist");
+}
+        
 ?>

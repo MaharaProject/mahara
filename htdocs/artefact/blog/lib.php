@@ -491,7 +491,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
         $attachments = $this->get_attached_files();
         if ($attachments) {
             $this->add_to_render_path($options);
-            require_once('artefact.php');
+            require_once(get_config('docroot') . 'artefact/lib.php');
             foreach ($attachments as &$attachment) {
                 $f = artefact_instance_from_id($attachment->id);
                 $attachment->size = $f->describe_size();

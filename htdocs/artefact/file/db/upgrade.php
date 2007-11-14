@@ -70,7 +70,7 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
 
         $images = get_column('artefact', 'id', 'artefacttype', 'image');
         log_debug(count($images));
-        require_once('artefact.php');
+        require_once(get_config('docroot') . 'artefact/lib.php');
         foreach ($images as $imageid) {
             $image = artefact_instance_from_id($imageid);
             $path = $image->get_path();

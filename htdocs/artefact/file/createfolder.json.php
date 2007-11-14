@@ -52,7 +52,7 @@ $data->adminfiles = (int)$adminfiles;
 
 if ($oldid = ArtefactTypeFileBase::file_exists($data->title, $data->owner, $parentfolder, $adminfiles)) {
     if ($collideaction == 'replace') {
-        require_once('artefact.php');
+        require_once(get_config('docroot') . 'artefact/lib.php');
         $obj = artefact_instance_from_id($oldid);
         $obj->delete();
     }
