@@ -29,6 +29,7 @@ defined('INTERNAL') || die();
 // group
 $string['groupname'] = 'Group Name';
 $string['creategroup'] = 'Create Group';
+$string['groupnotfound'] = 'Group with id %s was not found';
 $string['groupmemberrequests'] = 'Pending membership requests';
 $string['addgroup'] = 'Add new group';
 $string['sendinvitation'] = 'Send invite';
@@ -181,5 +182,10 @@ $string['newusermessage'] = 'New message from %s';
 // Group interactions
 $string['groupinteractions'] = 'Group Interactions';
 $string['nointeractions'] = 'There are no interactions in this group';
-
+$string['notallowedtoeditinteractions'] = 'You are not allowed to add or edit interactions in this group';
+$string['notallowedtodeleteinteractions'] = 'You are not allowed to delete interactions in this group';
+$string['interactionsaved'] = '%s saved successfully';
+$string['deleteinteraction'] = 'Delete %s \'%s\'';
+$string['deleteinteractionsure'] = 'Are you sure you want to do this? It cannot be undone.';
+$string['interactiondeleted'] = '%s deleted successfully';
 ?>

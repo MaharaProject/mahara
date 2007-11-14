@@ -282,11 +282,14 @@
                 <FIELD NAME="title" TYPE="text" NOTNULL="true"  />
                 <FIELD NAME="description" TYPE="text" NOTNULL="false"  />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true"  />
+                <FIELD NAME="creator" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="deleted" TYPE="int" LENGTH="1" DEFAULT="0" NOTNULL="true" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
                 <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="interaction_installed" REFFIELDS="name" />
                 <KEY NAME="groupfk" TYPE="foreign" FIELDS="group" REFTABLE="group" REFFIELDS="id" />
+                <KEY NAME="creatorfk" TYPE="foregin" FIELDS="creator" REFTABLE="usr" REFFIELDS="id" />
             </KEYS>
         </TABLE>
         <!-- user related tables -->

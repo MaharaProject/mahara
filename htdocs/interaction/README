@@ -1,0 +1,14 @@
+To create a new interaction plugin, you must subclass the two classes in lib.php
+and create the following entry points:
+
+index.php?group=x - lists all instances in the given group
+view.php?id=x display page for one instance.
+
+The following strings are contract strings for an interaction plugin:
+(example from forum)
+
+$string['name'] = 'Forum';
+$string['nameplural'] = 'Forums';
+$string['addtitle'] = 'Add forum';
+$string['edittitle'] = 'Edit forum';
+

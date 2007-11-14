@@ -31,7 +31,46 @@ defined('INTERNAL') || die();
  * Base interaction plugin class
  * @abstract
  */
-abstract class PluginInteraction extends Plugin { }
+abstract class PluginInteraction extends Plugin { 
+
+    public static abstract function instance_config_form($instance=null);
+
+    public static function instance_config_base_form($plugin, $group, $instance=null) {
+        return array(
+            'id' => array(
+                'type'  => 'hidden',
+                'value' => (isset($instance) ? $instance->get('id') : 0),
+            ),
+            'plugin' => array(
+                'type'  => 'hidden',
+                'value' => $plugin,
+            ),
+            'group' => array(
+                'type'  => 'hidden',
+                'value' => $group->id
+            ),
+            'title' => array(
+                'type'         => 'text',
+                'title'        => get_string('title'),
+                'defaultvalue' => (isset($instance) ? $instance->get('title') : ''),
+                'rules'        => array(
+                    'required' => true,
+                )
+            ),
+            'description' => array(
+                'type'         => 'wysiwyg',
+                'title'        => get_string('description'),
+                'rows'         => 10,
+                'cols'         => 70,
+                'defaultvalue' => (isset($instance) ? $instance->get('description') : ''),
+                'rules'        => array(
+                    'required' => true,
+                )
+            ),
+        );
+    }
+
+}
 
 
 /** 
@@ -120,8 +159,8 @@ abstract class InteractionInstance {
             $this->dirty = false;
             return;
         }
-        
-        delete_records('interaction_instance', 'id', $this->id);
+       
+        set_field('interaction_instance', 'deleted', 1, 'id', $this->id);
 
         $this->dirty = false;
     }
@@ -139,6 +178,47 @@ function interaction_check_plugin_sanity($pluginname) {
     }
 }
 
+function interaction_instance_from_id($id) {
+    if (!$interaction = get_record('interaction_instance', 'id', $id)) {
+        throw new InteractionInstanceNotFoundException(get_string('interactioninstancenotfound', 'error', $id));
+    }
+    $classname = generate_interaction_instance_class_name($interaction->plugin);
+    safe_require('interaction', $interaction->plugin);
+    return new $classname($id, $interaction);
+}
 
+function edit_interaction_validation(Pieform $form, $values) {
+    safe_require('interaction', $values['plugin']);
+    if (is_callable(array(generate_class_name('interaction', $values['plugin'])))) {
+        call_static_method(generate_class_name('interaction', $values['plugin']));
+    }
+}
+
+function edit_interaction_submit(Pieform $form, $values) {
+    safe_require('interaction', $values['plugin']);
+    $classname = generate_interaction_instance_class_name($values['plugin']);
+    $instance = new $classname($values['id']);
+    $instance->set('title', $values['title']);
+    $instance->set('description', $values['description']);
+    if (empty($values['id'])) {
+        $instance->set('group', $values['group']);
+    }
+    $instance->commit();
+    global $SESSION;
+    $SESSION->add_ok_msg(get_string('interactionsaved', 'group', get_string('name', 'interaction.' . $values['plugin'])));
+    redirect('/interaction/' . $values['plugin'] . '/view.php?id=' . $instance->get('id'));
+}
+
+function delete_interaction_submit(Pieform $form, $values) {
+   
+    require_once(get_config('docroot') . 'interaction/lib.php');
+    $instance = interaction_instance_from_id($values['id']);
+
+    $instance->delete();
+    global $SESSION;
+    $SESSION->add_ok_msg(get_string('interactiondeleted', 'group', get_string('name', 'interaction.' . $instance->get('plugin'))));
+    redirect('/interaction/' . $values['plugin'] . 'index.php?group=' . $instance->get('group'));
+
+}
 
 ?>
