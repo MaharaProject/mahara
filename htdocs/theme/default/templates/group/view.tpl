@@ -56,7 +56,7 @@
                              <tbody>
                              </tbody>
                          </table>
-	                 {if $canupdate}
+	                 {if $canupdate && $hasmembers}
                              <input type="button" class="button" value="{str tag='updatemembership' section='group'}" onclick="return updateMembership();" id="groupmembers_update">
                          {/if}
                      </div>

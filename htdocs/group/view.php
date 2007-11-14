@@ -352,6 +352,7 @@ $smarty->assign('canpromote', $canpromote);
 $smarty->assign('canupdate', $canupdate);
 $smarty->assign('canacceptinvite', $invited);
 $smarty->assign('group', $group);
+$smarty->assign('hasmembers', group_has_members($group->id));
 $smarty->display('group/view.tpl');
 
 
