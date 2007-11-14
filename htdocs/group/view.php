@@ -311,11 +311,31 @@ addLoadEvent(function () { switchPending(1) });
 EOF;
 }
 
+$interactiontypes = array_flip(
+    array_map(
+        create_function('$a', 'return $a->name;'),
+        plugins_installed('interaction')
+    )
+);
+
+if (!$interactions = get_records_select_array('interaction_instance', 
+    '"group" = ? AND deleted = ?', array($id, 0), 
+    'plugin, ctime', 'id, plugin, title')) {
+    $interactions = array();
+}
+
+foreach ($interactions as $i) {
+    if (!is_array($interactiontypes[$i->plugin])) {
+        $interactiontypes[$i->plugin] = array();
+    }
+    $interactiontypes[$i->plugin][] = $i;
+}
+
 // Add a sideblock for group interactions
 $sideblock = array(
     'name' => 'groupinteractions',
     'weight' => -5,
-    'data' => get_records_array('interaction_instance', 'group', $id, 'ctime', 'id, plugin, title'),
+    'data' => $interactiontypes,
 );
 
 $smarty = smarty(array('tablerenderer'), array(), array(), array('sideblocks' => array($sideblock)));
