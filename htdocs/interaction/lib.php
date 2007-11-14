@@ -217,7 +217,7 @@ function delete_interaction_submit(Pieform $form, $values) {
     $instance->delete();
     global $SESSION;
     $SESSION->add_ok_msg(get_string('interactiondeleted', 'group', get_string('name', 'interaction.' . $instance->get('plugin'))));
-    redirect('/interaction/' . $values['plugin'] . 'index.php?group=' . $instance->get('group'));
+    redirect('/interaction/' . $instance->get('plugin') . '/index.php?group=' . $instance->get('group'));
 
 }
 
