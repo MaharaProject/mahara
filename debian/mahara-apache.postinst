@@ -26,8 +26,6 @@ APACHE_CONF_FILE=/etc/apache/conf.d/100-mahara
 
 case "$1" in
     configure)
-        cp /var/www/mahara/config-dist.php /var/www/mahara/config.php
-
         # Configure Mahara
         db_get mahara/db_host
         set_config dbhost "${RET}"

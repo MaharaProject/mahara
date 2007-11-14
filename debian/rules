@@ -13,13 +13,21 @@ configure-stamp:
 
 build: configure-stamp
 
+install: configure-stamp
+	dh_testdir
+	dh_testroot
+	dh_installdirs
+
+	cp $(CURDIR)/debian/config.php $(CURDIR)/debian/mahara-apache2/etc/mahara/
+	cp $(CURDIR)/debian/config.php $(CURDIR)/debian/mahara-apache/etc/mahara/
+
 clean:
 	dh_testdir
 	dh_testroot
 	rm -f configure-stamp
 	dh_clean 
 
-binary:
+binary: build install
 	dh_testdir
 	dh_testroot
 	dh_installchangelogs 
@@ -30,13 +38,12 @@ binary:
 	dh_compress 
 	dh_fixperms
 
-	cat debian/commonfunctions.sh >> debian/mahara-apache2.postinst.debhelper
-	cat debian/commonfunctions.sh >> debian/mahara-apache2.postrm.debhelper
-	cat debian/commonfunctions.sh >> debian/mahara-apache.postinst.debhelper
-	cat debian/commonfunctions.sh >> debian/mahara-apache.postrm.debhelper
+	cat $(CURDIR)/debian/commonfunctions.sh >> $(CURDIR)/debian/mahara-apache2.postinst.debhelper
+	cat $(CURDIR)/debian/commonfunctions.sh >> $(CURDIR)/debian/mahara-apache2.postrm.debhelper
+	cat $(CURDIR)/debian/commonfunctions.sh >> $(CURDIR)/debian/mahara-apache.postinst.debhelper
+	cat $(CURDIR)/debian/commonfunctions.sh >> $(CURDIR)/debian/mahara-apache.postrm.debhelper
 	dh_installdeb
 
-	dh_installdirs
 	dh_install
 
 	dh_link

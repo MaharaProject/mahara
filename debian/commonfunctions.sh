@@ -23,5 +23,5 @@ function restart_apache2 {
 }
 
 function set_config {
-    perl -i -e '$field=shift;$value=shift if (scalar(@ARGV)>1);$value||="";while (<>) { s/(?:\s*\/\/\s*)?(\$cfg->$field.*=\s*).*/$1'\''$value'\'';/; print; }' $1 $2 /var/www/mahara/config.php
+    perl -i -e '$field=shift;$value=shift if (scalar(@ARGV)>1);$value||="";while (<>) { s/(?:\s*\/\/\s*)?(\$cfg->$field.*=\s*).*/$1'\''$value'\'';/; print; }' $1 $2 /etc/mahara/config.debconf.php
 }
