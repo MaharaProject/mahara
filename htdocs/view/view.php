@@ -55,7 +55,7 @@ if ($artefactid) {
         throw new AccessDeniedException("Artefact $artefactid not in View $viewid");
     }
 
-    require_once('artefact.php');
+    require_once(get_config('docroot') . 'artefact/lib.php');
     $artefact = artefact_instance_from_id($artefactid);
 
     $feedbackisprivate = !$artefact->public_feedback_allowed();

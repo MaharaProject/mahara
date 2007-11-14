@@ -41,7 +41,7 @@ class PluginBlocktypeProfileinfo extends PluginBlocktype {
     }
 
     public static function render_instance(BlockInstance $instance) {
-        require_once(get_config('docroot') . 'lib/artefact.php');
+        require_once(get_config('docroot') . 'artefact/lib.php');
         $smarty = smarty_core();
         $configdata = $instance->get('configdata');
 
@@ -186,6 +186,7 @@ class PluginBlocktypeProfileinfo extends PluginBlocktype {
             'blocktype' => 'profileinfo',
             'limit'     => 655360, // 640K profile fields is enough for anyone!
             'selectone' => false,
+            'search'    => false,
             'artefacttypes' => array_diff(PluginArtefactInternal::get_artefact_types(), array('profileicon', 'email')),
             'template'  => 'artefact:internal:artefactchooser-element.tpl',
         );

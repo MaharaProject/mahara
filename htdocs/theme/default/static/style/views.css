@@ -184,3 +184,32 @@ body:last-child:not(:root:root) .newblockhere {
     padding: 1px 3px;
     margin: 0 1px;
 }
+
+/* styling the tabs for the artefact chooser */
+.maincontent ul.artefactchooser-tabs li a {
+    background-color: #BACC7B;
+    padding: 3px 1em;
+    text-decoration: none;
+}
+.maincontent ul.artefactchooser-tabs li.current a {
+    background-color: #EEF4DA;
+}
+.maincontent div.artefactchooser-splitter {
+    border-top: 1px solid #e0e0e0;
+    background-color: #EEF4DA;
+    margin-top: 3px;
+    padding: .25em 0 .25em .5em;
+}
+.blockinstance-content p.noartefacts {
+    background-color: #EEF4DA;
+    color: #808080;
+    text-align: center;
+    margin-top: 0;
+    padding: .5em;
+}
+.maincontent table.artefactchooser-data {
+    border: none;
+    margin-top: 0;
+    background-color: #EEF4DA;
+    padding: .5em .5em 0;
+}

@@ -55,7 +55,6 @@ $result->uploadnumber = $uploadnumber;
 
 if ($oldid = ArtefactTypeFileBase::file_exists($title, $data->owner, $parentfolder, $adminfiles)) {
     if ($collideaction == 'replace') {
-        require_once('artefact.php');
         $obj = artefact_instance_from_id($oldid);
         $obj->delete();
     }

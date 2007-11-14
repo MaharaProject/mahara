@@ -34,7 +34,7 @@ require_once(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('myresume', 'artefact.resume'));
 require_once('pieforms/pieform.php');
 require_once('pieforms/pieform/elements/calendar.php');
-require('artefact.php');
+require_once(get_config('docroot') . 'artefact/lib.php');
 
 // load up all the artefacts this user already has....
 $coverletter = null;

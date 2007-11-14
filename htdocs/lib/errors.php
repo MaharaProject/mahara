@@ -122,6 +122,12 @@ function log_message ($message, $loglevel, $escape, $backtrace, $file=null, $lin
         require_once(get_config('docroot') . 'auth/lib.php');
         $SESSION = Session::singleton();
     }
+
+    static $requestprefix = '';
+    if (!$requestprefix) {
+        $requestprefix = substr(md5(microtime()), 0, 2) . ' ';
+    }
+
     static $loglevelnames = array(
         LOG_LEVEL_ENVIRON => 'environ',
         LOG_LEVEL_DBG     => 'dbg',
@@ -163,15 +169,13 @@ function log_message ($message, $loglevel, $escape, $backtrace, $file=null, $lin
     }
 
     // Make a prefix for each line, if we are logging a normal debug/info/warn message
+    $prefix = $requestprefix;
     if ($loglevel != LOG_LEVEL_ENVIRON && function_exists('get_config')) {
         $docroot = get_config('docroot');
         $prefixfilename = (substr($filename, 0, strlen($docroot)) == $docroot)
             ? substr($filename, strlen($docroot))
             : $filename;
-        $prefix = '(' . $prefixfilename . ':' . $linenum . ') ';
-    }
-    else {
-        $prefix = '';
+        $prefix .= '(' . $prefixfilename . ':' . $linenum . ') ';
     }
     $prefix = '[' . str_pad(substr(strtoupper($loglevelnames[$loglevel]), 0, 3), 3) . '] ' . $prefix;
 

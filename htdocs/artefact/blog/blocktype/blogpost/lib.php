@@ -40,7 +40,7 @@ class PluginBlocktypeBlogpost extends PluginBlocktype {
         $configdata = $bi->get('configdata');
 
         if (!empty($configdata['artefactid'])) {
-            require_once(get_config('docroot') . 'lib/artefact.php');
+            require_once(get_config('docroot') . 'artefact/lib.php');
             $blogpost = artefact_instance_from_id($configdata['artefactid']);
             return $blogpost->get('title');
         }
@@ -60,7 +60,7 @@ class PluginBlocktypeBlogpost extends PluginBlocktype {
 
         $result = '';
         if (!empty($configdata['artefactid'])) {
-            require_once(get_config('docroot') . 'lib/artefact.php');
+            require_once(get_config('docroot') . 'artefact/lib.php');
             $blogpost = artefact_instance_from_id($configdata['artefactid']);
             $configdata['hidetitle'] = true;
             $configdata['viewid'] = $instance->get('view');

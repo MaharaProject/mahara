@@ -29,7 +29,6 @@ define('JSON', 1);
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('artefact', 'file');
-require_once('artefact.php');
 
 json_headers();
 

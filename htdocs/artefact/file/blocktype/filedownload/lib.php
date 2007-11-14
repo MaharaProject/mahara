@@ -41,7 +41,7 @@ class PluginBlocktypeFiledownload extends PluginBlocktype {
     }
 
     public static function render_instance(BlockInstance $instance) {
-        require_once(get_config('docroot') . 'lib/artefact.php');
+        require_once(get_config('docroot') . 'artefact/lib.php');
         $configdata = $instance->get('configdata');
 
         $result = '';

@@ -125,3 +125,14 @@
 #view-wizard-controls form {
     display: inline;
 }
+
+.maincontent ul.artefactchooser-tabs {
+    list-style-type: none;
+    padding: 0;
+    margin: .5em .5em 0;
+    width: 100%;
+}
+.maincontent ul.artefactchooser-tabs li {
+    display: inline;
+    padding-right: .5em;
+}

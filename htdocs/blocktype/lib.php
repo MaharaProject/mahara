@@ -422,6 +422,10 @@ class BlockInstance {
             'elements' => $elements,
         );
 
+        if (param_variable('action_acsearch_id_' . $this->get('id'), false)) {
+            $form['validate'] = false;
+        }
+
         require_once('pieforms/pieform.php');
         $pieform = new Pieform($form);
 

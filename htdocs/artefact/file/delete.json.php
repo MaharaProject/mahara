@@ -33,7 +33,7 @@ json_headers();
 
 $fileid = param_integer('id');
 
-require_once('artefact.php');
+require_once(get_config('docroot') . 'artefact/lib.php');
 
 $artefact = artefact_instance_from_id($fileid);
 $artefact->delete();

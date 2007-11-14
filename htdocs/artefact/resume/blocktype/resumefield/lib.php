@@ -41,7 +41,7 @@ class PluginBlocktypeResumefield extends PluginBlocktype {
     }
 
     public static function render_instance(BlockInstance $instance) {
-        require_once(get_config('docroot') . 'lib/artefact.php');
+        require_once(get_config('docroot') . 'artefact/lib.php');
         $smarty = smarty_core();
         $configdata = $instance->get('configdata');
         $configdata['viewid'] = $instance->get('view');
@@ -94,6 +94,7 @@ class PluginBlocktypeResumefield extends PluginBlocktype {
             'blocktype' => 'resumefield',
             'limit'     => 655360, // 640K profile fields is enough for anyone!
             'selectone' => true,
+            'search'    => false,
             'artefacttypes' => PluginArtefactResume::get_artefact_types(),
             'template'  => 'artefact:resume:artefactchooser-element.tpl',
         );

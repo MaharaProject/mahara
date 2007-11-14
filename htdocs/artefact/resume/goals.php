@@ -32,7 +32,7 @@ define('SECTION_PAGE', 'goals');
 
 require_once(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('pieforms/pieform.php');
-require('artefact.php');
+require_once(get_config('docroot') . 'artefact/lib.php');
 
 $personal = null;
 $academic = null;

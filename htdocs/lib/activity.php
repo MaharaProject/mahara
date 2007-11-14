@@ -181,7 +181,7 @@ function handle_activity($activitytype, $data, $cron=false) {
                 }
                 if (!empty($data->artefact)) { // feedback on artefact
                     $data->subject = get_string('newfeedbackonartefact', 'activity');
-                    require_once('artefact.php');
+                    require_once(get_config('docroot') . 'artefact/lib.php');
                     $artefact = artefact_instance_from_id($data->artefact);
                     if ($artefact->feedback_notify_owner()) {
                         $userid = $artefact->get('owner');

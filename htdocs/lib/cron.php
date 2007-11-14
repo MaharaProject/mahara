@@ -47,7 +47,7 @@ define('MAXRUNAGE', 300);
 
 
 require(dirname(dirname(__FILE__)).'/init.php');
-require('artefact.php');
+require_once(get_config('docroot') . 'artefact/lib.php');
 
 // This is here for debugging purposes, it allows us to fake the time to test
 // cron behaviour
