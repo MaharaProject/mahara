@@ -31,10 +31,10 @@ $cfg = new StdClass;
 // valid values for dbtype are 'postgres8' and 'mysql5'
 $cfg->dbtype   = 'postgres8';
 $cfg->dbhost   = 'localhost';
-$cfg->dbport   = 5432;
-$cfg->dbname   = 'mahara';
-$cfg->dbuser   = 'mahara';
-$cfg->dbpass   = 'mahara';
+$cfg->dbport   = null;
+$cfg->dbname   = '';
+$cfg->dbuser   = '';
+$cfg->dbpass   = '';
 $cfg->dbprefix = '';
 
 // wwwroot - the web-visible path to your Mahara installation
