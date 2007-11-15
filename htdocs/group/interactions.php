@@ -17,7 +17,7 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
- * @subpackage group-interaction
+ * @subpackage group-interactions
  * @author     Penny Leach <penny@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
@@ -30,41 +30,49 @@ define('MENUITEM', 'groups');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('docroot') . 'interaction/lib.php');
 
-require_once('pieforms/pieform.php');
-
 $id = param_integer('id');
 
-$instance = interaction_instance_from_id($id);
-$group = get_record('group', 'id', $instance->get('group'));
-
-if (!$group->owner == $USER->get('id')) {
-    throw new AccessDeniedException(get_string('notallowedtodeleteinteraction', 'group'));
+if (!$group = get_record('group', 'id', $id)) {
+    throw new GroupNotFoundException('groupnotfound', 'group', $id);
 }
 
-define('TITLE', get_string('deleteinteraction', 'group', get_string('name', 'interaction.' . $instance->get('plugin')), $instance->get('title')));
-// submit handler in interaction/lib.php
-$form = pieform(array(
-    'name'     => 'delete_interaction',
-    'elements' => array(
-        'title' => array(
-            'value' => get_string('deleteinteractionsure', 'group'),
-        ),
-        'id' => array(
-            'type'  => 'hidden',
-            'value' => $id,
-        ),
-        'submit' => array(
-            'type'  => 'submitcancel',
-            'value' => array(get_string('yes'), get_string('no')),
-            'goto'  => get_config('wwwroot') . 'group/interactions.php?id=' . $group->id,
-        )
-    )
-));
+if (!$group->owner == $USER->get('id')) {
+    throw new AccessDeniedException(get_string('notallowedtoeditinteraction', 'group'));
+}
 
+define('TITLE', get_string('groupinteractions', 'group'));
+
+$interactiontypes = array_flip(
+    array_map(
+        create_function('$a', 'return $a->name;'),
+        plugins_installed('interaction')
+    )
+);
+
+if (!$interactions = get_records_select_array('interaction_instance', 
+    '"group" = ? AND deleted = ?', array($id, 0), 
+    'plugin, ctime', 'id, plugin, title')) {
+    $interactions = array();
+}
+$names = array();
+foreach (array_keys($interactiontypes) as $plugin) {
+    $names[$plugin] = array(
+        'single' => get_string('name', 'interaction.' . $plugin),
+        'plural' => get_string('nameplural', 'interaction.' . $plugin)
+    );
+}
+
+foreach ($interactions as $i) {
+    if (!is_array($interactiontypes[$i->plugin])) {
+        $interactiontypes[$i->plugin] = array();
+    }
+    $interactiontypes[$i->plugin][] = $i;
+}
 $smarty = smarty();
-$smarty->assign('form', $form);
-$smarty->assign('heading', TITLE);
 $smarty->assign('group', $group);
-$smarty->display('interaction/delete.tpl');
+$smarty->assign('data', $interactiontypes);
+$smarty->assign('pluginnames', $names);
+$smarty->assign('heading', TITLE);
+$smarty->display('group/interactions.tpl');
 
 ?>

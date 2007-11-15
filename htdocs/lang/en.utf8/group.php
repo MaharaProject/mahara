@@ -188,4 +188,5 @@ $string['interactionsaved'] = '%s saved successfully';
 $string['deleteinteraction'] = 'Delete %s \'%s\'';
 $string['deleteinteractionsure'] = 'Are you sure you want to do this? It cannot be undone.';
 $string['interactiondeleted'] = '%s deleted successfully';
+$string['addnewinteraction'] = 'Add new %s';
 ?>

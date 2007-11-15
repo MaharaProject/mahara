@@ -64,7 +64,7 @@ $elements = array_merge(
         'submit' => array(
             'type'  => 'submitcancel',
             'value' => array(get_string('save'), get_string('cancel')),
-            'goto'  => get_config('wwwroot') . 'group/view.php?id=' . $groupid,
+            'goto'  => get_config('wwwroot') . 'group/interactions.php?id=' . $groupid,
         )
     )
 );
