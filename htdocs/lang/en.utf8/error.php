@@ -80,8 +80,10 @@ $string['accessdeniedexception'] = 'You do not have access to view this page';
 
 $string['viewnotfoundexceptiontitle'] = 'View not found';
 $string['viewnotfoundexceptionmessage'] = 'You tried to access a view that didn\'t exist!';
+$string['viewnotfound'] = 'View with id %s not found';
 
 $string['artefactnotfoundmaybedeleted'] = "Artefact with id %s not found (maybe it has been deleted already?)";
+$string['artefactnotfound'] = 'Artefact with id %s not found';
 $string['notartefactowner'] = 'You do not own this artefact';
 
 $string['blockinstancednotfound'] = 'Block instance with id %s not found';
