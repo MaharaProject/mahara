@@ -2,7 +2,7 @@ Source: mahara
 Section: web
 Priority: optional
 Maintainer: Martyn Smith <martyn@catalyst.net.nz>
-Build-Depends: debhelper (>= 5)
+Build-Depends: debhelper (>= 5), po-debconf
 Standards-Version: 3.7.2
 Homepage: http://www.mahara.org
 

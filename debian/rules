@@ -26,6 +26,7 @@ clean:
 	dh_testroot
 	rm -f configure-stamp
 	dh_clean 
+	debconf-updatepo
 
 binary: build install
 	dh_testdir
