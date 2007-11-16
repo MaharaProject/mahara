@@ -26,7 +26,7 @@
         var newEmail = {{$name}}_newrefinput.value;
         if (typeof(newEmail) == 'string' && newEmail.length > 0) {
             if (newEmail.length > 255) {
-                alert('{{str tag="emailtoolong"}}');
+                alert(get_string('emailtoolong'));
             }
             else {
                 appendChildNodes('{{$name}}_list', DIV({'class': 'unvalidated'},
@@ -69,7 +69,7 @@
         );
 
         if (radio[0] && radio[0].checked) {
-            alert('{{str tag="cannotremovedefaultemail"}}');
+            alert(get_string('cannotremovedefaultemail'));
             return;
         }
 
