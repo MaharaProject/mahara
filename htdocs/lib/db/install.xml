@@ -289,7 +289,7 @@
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
                 <KEY NAME="pluginfk" TYPE="foreign" FIELDS="plugin" REFTABLE="interaction_installed" REFFIELDS="name" />
                 <KEY NAME="groupfk" TYPE="foreign" FIELDS="group" REFTABLE="group" REFFIELDS="id" />
-                <KEY NAME="creatorfk" TYPE="foregin" FIELDS="creator" REFTABLE="usr" REFFIELDS="id" />
+                <KEY NAME="creatorfk" TYPE="foreign" FIELDS="creator" REFTABLE="usr" REFFIELDS="id" />
             </KEYS>
         </TABLE>
         <!-- user related tables -->
