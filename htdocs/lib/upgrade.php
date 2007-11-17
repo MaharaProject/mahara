@@ -548,7 +548,8 @@ function core_install_lastcoredata_defaults() {
     $user->lastname = 'User';
     $user->email = 'root@example.org';
     $user->quota = get_config_plugin('artefact', 'file', 'defaultquota');
-    $newid = insert_record('usr', $user);
+    $user->authinstance = $auth_instance->id;
+    $newid = insert_record('usr', $user, 'id', true);
 
     if ($newid > 0 && get_config('dbtype') == 'mysql') { // gratuitous mysql workaround
         set_field('usr', 'id', 0, 'id', $newid);
