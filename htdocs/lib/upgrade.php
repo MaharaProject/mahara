@@ -551,7 +551,8 @@ function core_install_lastcoredata_defaults() {
     $user->authinstance = $auth_instance->id;
     $newid = insert_record('usr', $user, 'id', true);
 
-    if ($newid > 0 && get_config('dbtype') == 'mysql') { // gratuitous mysql workaround
+    $dbtype = get_config('dbtype');
+    if ($newid > 0 && ($dbtype == 'mysql' || $dbtype == 'mysql5')) { // gratuitous mysql workaround
         set_field('usr', 'id', 0, 'id', $newid);
     }
 
