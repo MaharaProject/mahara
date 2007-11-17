@@ -78,7 +78,8 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
                 'width' => '90%',
                 'defaultvalue' => $url,
                 'rules' => array(
-                    'required' => true
+                    'required' => true,
+                    'maxlength' => 255, // mysql hack, see install.xml for this plugin
                 ),
             ),
         );
@@ -110,7 +111,7 @@ class PluginBlocktypeExternalfeed extends SystemBlocktype {
                 $form->set_error('url', get_string('invalidurl', 'blocktype.externalfeed'));
             }
         }
-        if (!record_exists('blocktype_externalfeed_data', 'url', $values['url']) && !self::parse_feed($values['url'])) {
+        if (!$form->get_error('url') && !record_exists('blocktype_externalfeed_data', 'url', $values['url']) && !self::parse_feed($values['url'])) {
             $form->set_error('url', get_string('invalidurl', 'blocktype.externalfeed'));
         }
     }
