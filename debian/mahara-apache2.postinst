@@ -21,7 +21,7 @@ set -e
 
 . /usr/share/debconf/confmodule
 
-TMP_M4_FILE=/tmp/mahara.postinst.m4.tmp
+TMP_M4_FILE=`mktemp`
 APACHE_CONF_FILE=/etc/apache2/sites-available/mahara
 
 case "$1" in
