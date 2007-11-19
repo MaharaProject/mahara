@@ -5,6 +5,8 @@ Maintainer: Martyn Smith <martyn@catalyst.net.nz>
 Build-Depends: debhelper (>= 5), po-debconf
 Standards-Version: 3.7.2
 Homepage: http://www.mahara.org
+XS-Vcs-Git: http://git.catalyst.net.nz/mahara.git
+XS-Vcs-Browser: http://git.catalyst.net.nz/gw?p=mahara.git
 
 Package: mahara-apache
 Architecture: all
