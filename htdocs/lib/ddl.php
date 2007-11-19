@@ -943,8 +943,8 @@ function add_key($table, $key, $continue=true, $feedback=true) {
         return false;
     }
     if ($key->getType() == XMLDB_KEY_PRIMARY) { // Prevent PRIMARY to be added (only in create table, being serious  :-P)
-        debugging('Primary Keys can be added at table create time only', DEBUG_DEVELOPER);
-        return true;
+        //debugging('Primary Keys can be added at table create time only', DEBUG_DEVELOPER);
+        //return true;
     }
 
     if(!$sqlarr = $table->getAddKeySQL($CFG->dbtype, $CFG->prefix, $key, false)) {
@@ -977,8 +977,8 @@ function drop_key($table, $key, $continue=true, $feedback=true) {
         return false;
     }
     if ($key->getType() == XMLDB_KEY_PRIMARY) { // Prevent PRIMARY to be dropped (only in drop table, being serious  :-P)
-        debugging('Primary Keys can be deleted at table drop time only', DEBUG_DEVELOPER);
-        return true;
+//        debugging('Primary Keys can be deleted at table drop time only', DEBUG_DEVELOPER);
+//        return true;
     }
 
     if(!$sqlarr = $table->getDropKeySQL($CFG->dbtype, $CFG->prefix, $key, false)) {
