@@ -440,7 +440,7 @@ class View {
     public static function build_category_list($defaultcategory, View $view, $new=0) {
         require_once(get_config('docroot') . '/blocktype/lib.php');
         // Change to a left join to show tabs with no results
-        $cats = get_records_sql_array('SELECT bc.name, COUNT(bic.*) AS "count"
+        $cats = get_records_sql_array('SELECT bc.name, COUNT(*) AS "count"
             FROM {blocktype_category} bc
             INNER JOIN {blocktype_installed_category} bic ON (bc.name = bic.category)
             GROUP BY bc.name

@@ -1,5 +1,5 @@
 <VirtualHost *>
-    ServerName __SERVERNAME__
+    Include /etc/mahara/servername.conf
 
     DocumentRoot /var/www/mahara
 
@@ -32,3 +32,4 @@
     </Location>
 </VirtualHost>
 
+Include /etc/mahara/serverredirects.conf

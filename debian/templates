@@ -2,46 +2,46 @@ Template: mahara/db_type
 Type: select
 Default: postgres8
 Choices: postgres8, mysql5
-Description: Database type:
+_Description: Database type:
  What type of database should be used for the Mahara site
 
 Template: mahara/db_host
 Type: string
 Default: 
-Description: Database host:
+_Description: Database host:
  Which database host should be used for the Mahara site
  You can leave this blank to connect via UNIX sockets
 
 Template: mahara/db_port
 Type: string
 Default:
-Description: Database port:
+_Description: Database port:
  Which database port should be used for the Mahara site
  You can leave this blank for the default
 
 Template: mahara/db_name
 Type: string
 Default: mahara
-Description: Database name (not username):
+_Description: Database name (not username):
  Which database should be used for the Mahara site
 
 Template: mahara/db_user
 Type: string
 Default: mahara
-Description: Database username:
+_Description: Database username:
  Which username should be used to connect to the Mahara database
 
 Template: mahara/db_pass
 Type: string
 Default:
-Description: Database password:
+_Description: Database password:
  Which password is associated with the given username
  You can leave this blank if you are not using password authentication.
 
 Template: mahara/servername
 Type: string
 Default:
-Description: Server name:
+_Description: Server name:
  This is the servername of the Mahara site.
  .
  Note that this is just the domain name, so for "http://my.site.com" you only
@@ -50,7 +50,7 @@ Description: Server name:
 Template: mahara/serverredirects
 Type: string
 Default:
-Description: Server redirects:
+_Description: Server redirects:
  Comma separated list of domain names that the server should permanently
  redirect to the server name.
  .
@@ -60,7 +60,7 @@ Description: Server redirects:
 Template: mahara/smtphosts
 Type: string
 Default:
-Description: SMTP Hosts:
+_Description: SMTP Hosts:
  Comma separated list of SMTP servers to use to send mail
  .
  If you leave this blank, the system mailer will be used. Generally, this will

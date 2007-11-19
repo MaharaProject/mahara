@@ -7,7 +7,10 @@
         <TABLE NAME="blocktype_externalfeed_data">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" SEQUENCE="true" NOTNULL="true" />
-                <FIELD NAME="url" TYPE="text" NOTNULL="true" />
+                <!-- This field (url) should be TYPE="text", but MySQL can't handle making unique
+                indexes on fields that do not have an explicit length. Testing suggests it can only
+                handle 255 characters of uniqueness also. -->
+                <FIELD NAME="url" TYPE="char" LENGTH="255" NOTNULL="true" />
                 <FIELD NAME="link" TYPE="text" NOTNULL="false" />
                 <FIELD NAME="title" TYPE="text" NOTNULL="false" />
                 <FIELD NAME="description" TYPE="text" NOTNULL="false" />

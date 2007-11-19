@@ -18,14 +18,22 @@ install: configure-stamp
 	dh_testroot
 	dh_installdirs
 
-	cp $(CURDIR)/debian/config.php $(CURDIR)/debian/mahara-apache2/etc/mahara/
+	# Config files (-apache)
 	cp $(CURDIR)/debian/config.php $(CURDIR)/debian/mahara-apache/etc/mahara/
+	cp $(CURDIR)/debian/apache.conf.template $(CURDIR)/debian/mahara-apache/etc/mahara/apache.conf
+	perl -i -p -e "s|__APACHELOGDIR__|/var/log/apache|" $(CURDIR)/debian/mahara-apache/etc/mahara/apache.conf
+
+	# Config files (-apache2)
+	cp $(CURDIR)/debian/config.php $(CURDIR)/debian/mahara-apache2/etc/mahara/
+	cp $(CURDIR)/debian/apache.conf.template $(CURDIR)/debian/mahara-apache2/etc/mahara/apache.conf
+	perl -i -p -e "s|__APACHELOGDIR__|/var/log/apache2|" $(CURDIR)/debian/mahara-apache2/etc/mahara/apache.conf
 
 clean:
 	dh_testdir
 	dh_testroot
 	rm -f configure-stamp
 	dh_clean 
+	debconf-updatepo
 
 binary: build install
 	dh_testdir
