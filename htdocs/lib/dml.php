@@ -1436,7 +1436,7 @@ function db_array_to_ph($array) {
 
 // This is used by the SQLException, to detect if there is a transaction when
 // an error occurs, so it can roll the transaction back
-$GLOBALS['_TRANSACTION_STARTED'] = false;
+$GLOBALS['_TRANSACTION_LEVEL'] = 0;
 
 /**
  * This function starts a smart transaction
@@ -1445,7 +1445,8 @@ $GLOBALS['_TRANSACTION_STARTED'] = false;
 function db_begin() {
     global $db;
 
-    $GLOBALS['_TRANSACTION_STARTED'] = true;
+    $GLOBALS['_TRANSACTION_LEVEL']++;
+    log_debug('db_begin(): transaction level now ' . $GLOBALS['_TRANSACTION_LEVEL']);
     $db->StartTrans();
 }
 
@@ -1457,14 +1458,19 @@ function db_begin() {
  */
 function db_commit() {
     global $db;
-    $GLOBALS['_TRANSACTION_STARTED'] = false;
+    $GLOBALS['_TRANSACTION_LEVEL']--;
+    log_debug('db_commit(): transaction level now ' . $GLOBALS['_TRANSACTION_LEVEL']);
 
-    if ($db->HasFailedTrans()) {
-        $db->CompleteTrans();
-        throw new SQLException('Transaction Failed');
+    if ($GLOBALS['_TRANSACTION_LEVEL'] == 0) {
+
+        if ($db->HasFailedTrans()) {
+            $db->CompleteTrans();
+            throw new SQLException('Transaction Failed');
+        }
     }
 
-    $db->CompleteTrans();
+    log_debug('peforming commit');
+    return $db->CompleteTrans();
 }
 
 /**
@@ -1472,9 +1478,12 @@ function db_commit() {
  */
 function db_rollback() {
     global $db;
-    $GLOBALS['_TRANSACTION_STARTED'] = false;
+    log_debug('db_rollback(): rolling back transaction from level '. $GLOBALS['_TRANSACTION_LEVEL']);
     $db->FailTrans();
-    $db->CompleteTrans();
+    for ($i = $GLOBALS['_TRANSACTION_LEVEL']; $i >= 0; $i--) {
+        $db->CompleteTrans();
+    }
+    $GLOBALS['_TRANSACTION_LEVEL'] = 0;
 }
 
 /**

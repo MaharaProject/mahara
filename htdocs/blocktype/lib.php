@@ -242,7 +242,7 @@ class BlockInstance {
             if ($field == 'configdata') {
                 $value = serialize($value);
             }
-            if ($this->{$field} != $value) {
+            if ($this->{$field} !== $value) {
                 // only set it to dirty if it's changed
                 $this->dirty = true;
                 $this->{$field} = $value;

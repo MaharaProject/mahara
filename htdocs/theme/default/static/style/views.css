@@ -153,6 +153,15 @@ div.editview {
 .blockinstance-content p {
     margin: .25em 0 .5em;
 }
+.blockinstance-content h1,
+.blockinstance-content h2,
+.blockinstance-content h3,
+.blockinstance-content h4,
+.blockinstance-content h5,
+.blockinstance-content h6 {
+    margin: .25em 0 0;
+}
+
 .column-content .add-button {
     margin: 5px 0;
 }

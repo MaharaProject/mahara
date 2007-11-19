@@ -364,9 +364,7 @@ abstract class ArtefactType {
             return;
         }
       
-        if (empty($GLOBALS['_TRANSACTION_STARTED'])) {
-            db_begin();
-        }
+        db_begin();
 
         // Call delete() on children (if there are any)
         if ($children = $this->get_children_instances()) {
@@ -400,9 +398,7 @@ abstract class ArtefactType {
         $this->parentdirty = true;
         $this->deleted = true;
 
-        if (!empty($GLOBALS['_TRANSACTION_STARTED'])) {
-            db_commit();
-        }
+        db_commit();
     }
 
     /**
