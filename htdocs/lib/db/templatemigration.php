@@ -28,15 +28,29 @@ defined('INTERNAL') || die();
 require_once('view.php');
 safe_require('blocktype', 'textbox'); // need this for labels, always
 
+/**
+ * Performs the template migration, from the old view template style of 0.8 to 
+ * the new views format for 0.9
+ */
 function upgrade_template_migration() {
+    log_debug('upgrade_template_migration()');
 
-    if (!$views = get_records_array('view')) {
+    if (!$views = get_records_array('view', '', '', 'id')) {
+        log_debug('no views to migrate');
         return;
     }
+    log_debug('we have ' . count($views) . ' views to migrate...');
 
 
-    $numbers = array(1 => 'One', 3 => 'Two', 6 => 'Three');
-    $ppaetext = array(
+    //
+    // Static data needed by various templates when they are migrated
+    //
+
+    // blogreflection
+    $blogreflection_numbers = array(1 => 'One', 2 => 'One', 3 => 'Two', 4 => 'Two', 5 => 'Three', 6 => 'Three');
+
+    // ppae
+    $ppae_text = array(
         'Group Name', 
         'Student Names', 
         'Mission and Vision Statement (Concept and Concept Outline)', 
@@ -47,76 +61,121 @@ function upgrade_template_migration() {
         'Priorised table of equipment, materials and supplies'
     );
 
+
+    // The main view migration loop
+    $count = 0;
     foreach ($views as $view) {
-        if (!$viewcolumns = upgrade_template_get_structure($view->template)) {
-            log_warn("Unsupported custom template $view->template! Skipping!");
-            // @TODO do something else
+        $count++;
+        log_debug("Migrating view $view->id ($count)");
+        if ($view->template == 'test') {
+            // We are NOT migrating test templates. There's not much point. The 
+            // only real data loss from this is the labels, which are only one 
+            // line text inputs. If this annoys someone they could always have 
+            // a go at writing a migration. There's no technical reason why one 
+            // couldn't be done.
+            log_debug("View $view->id is a test view. Deleting instead");
+            $view = new View($view->id);
+            delete_records('view_content', 'view', $view->get('id'));
+            $view->delete();
             continue;
         }
 
+        //
+        // $viewcolumns is a datastructure representing the new structure of a 
+        // view. It's an array of columns, which are arrays of label titles etc.
+        // All the values are null.
+        //
+        // We are trying to turn the nulls into blockinstances
+        //
+        if (!$viewcolumns = upgrade_template_get_structure($view->template)) {
+            log_warn("Unsupported custom template $view->template! Deleting!");
+            $view = new View($view->id);
+            delete_records('view_content', 'view', $view->get('id'));
+            $view->delete();
+            continue;
+        }
         $numcolumns = count($viewcolumns);
 
-        $ablocks = get_records_array('view_artefact', 'view', $view->id);
-        $lblocks = get_records_array('view_content', 'view', $view->id);
-
-        foreach ($lblocks as $block) {
-            upgrade_template_insert_block($viewcolumns, $block->block, upgrade_template_create_wysiwyg($block->content, $view->id));
+        // Temporary, testing the migration of blogreflection only
+        if ($view->template != 'blogreflection') {
+            //log_debug('skipping template, it is not blogreflection');
+            continue;
         }
 
-        foreach ($ablocks as $block) {
-            // @TODO make appropriate block instance
-            try {
-                upgrade_template_insert_block($viewcolumns, $block->block, $block);
-            }
-            catch (TemplateBlockExistsAlreadyException $e) {
-                // @TODO  we're dealing with multiple artefacts in the same block... just need to append
+        // Handle all label blocks, by converting them to WYSIWYG blocks
+        if ($lblocks = get_records_array('view_content', 'view', $view->id)) {
+            foreach ($lblocks as $block) {
+                upgrade_template_insert_block($viewcolumns, $block->block, upgrade_template_create_wysiwyg($block->content, $view->id));
             }
         }
 
-        if ($view->template == 'blogreflection') {
-            // we're going to end up with three new labels, made of 6
-            $newlabels = array();
-            for ($i = 1; $i <= 6; $i++) {
-                $fromcol = 0;
-                if (in_array($i, array(2, 4, 5))) {
-                    $fromc = 1;
-                    $text = 'Last Date Available';
+        // Get all artefact blocks in the view
+        if ($ablocks = get_records_sql_array('
+            SELECT va.*, a.artefacttype, a.title
+            FROM {view_artefact} va
+            INNER JOIN {artefact} a ON (va.artefact = a.id)
+            WHERE "view" = ?', array($view->id))) {
+            foreach ($ablocks as $block) {
+                if (!upgrade_template_block_exists($viewcolumns, $block->oldblock)) {
+                    // There's no block here. We can make one and insert it
+                    $bi = upgrade_template_convert_block_to_blockinstance($block, $view->id);
+                    // note: the location to insert the block is known as 
+                    // 'oldblock', as the column as been renamed in the database 
+                    // in preparation for its removal
+                    upgrade_template_insert_block($viewcolumns, $block->oldblock, $bi);
                 }
                 else {
-                    $fromc = 0;
-                    $text = 'Reflection ' . $numbers[$i] . ' Title'; 
+                    // We're dealing with multiple artefacts in the same block... just need to append
+                    upgrade_template_update_block($viewcolumns, $block);
+                }
+            }
+        }
+
+        //
+        // Special case code for each template, to make sure the labels and 
+        // hard coded text are migrated nicely
+        //
+        if ($view->template == 'blogreflection') {
+            // There are six labels in this view - the three reflection titles 
+            // and three 'last date available' fields
+            for ($i = 1; $i <= 6; $i++) {
+                // The labels were badly numbered, 2, 4 and 5 are the right 
+                // hand side (and thus the 'last date available' ones)
+                if (in_array($i, array(2, 4, 5))) {
+                    $column = 1;
+                    $text = '<h4>Reflection ' . $blogreflection_numbers[$i] . ': Last Date Available</h4>';
+                }
+                else {
+                    $column = 0;
+                    $text = '<h3>Reflection ' . $blogreflection_numbers[$i] . ' Title</h3>'; 
                 }
 
-                if (empty($viewcolumns[$fromc]['tpl_label' . $i])) {
+                // The label migration would have put WYSIWYG blocks in where 
+                // there was content. If there is none, let's ignore this block
+                if (empty($viewcolumns[$column]['tpl_label' . $i])) {
                     continue;
                 }
 
-                $colkey = $fromc;
                 $labelkey = 'tpl_label' . $i;
-                $append = $text . '<br>' . upgrade_template_get_wysiwyg_content($viewcolumns, $fromc, 'tpl_label' . $i);
-                $replace = null;
-                if ($i == 2 || $i == 4) {
-                    $colkey = 0;
-                    $label = 'tpl_label' . $i-1;
-                }
-                else if ($i == 5) { 
-                    $colkey = 0;
-                    $label = 'tpl_label6';
+                $replace = $text . '<p>' . upgrade_template_get_wysiwyg_content($viewcolumns, $column, 'tpl_label' . $i) . '</p>';
+
+                // Update the WYSIWYG blocks to have the titles they need
+                if (in_array($i, array(2, 4, 5))) {
+                    upgrade_template_update_wysiwyg($viewcolumns, $column, $labelkey, null, $replace);
                 }
                 else {
-                    upgrade_template_update_wysiwyg($viewcolumns, $fromc, 'tpl_label' . $i, null, $text . '<br>' . upgrade_template_get_wysiwyg_content($viewcolumns, $fromc, 'tpl_label' . $i));
+                    upgrade_template_update_wysiwyg($viewcolumns, $column, 'tpl_label' . $i, null, $replace);
                 }
-                upgrade_template_update_wysiwyg($viewcolumns, $colkey, $labelkey, $append, $replace);
             }
         }
         else if ($view->template == 'PPAE') {
             if (!empty($viewcolumns[0]['tpl_label1'])) {
-                upgrade_template_update_wysiwyg($viewcolumns, 0, 'tpl_label1', $ppaetext[0] . '<br>' . update_template_get_wysiwyg_content($viewcolumns, 0, 'tpl_label1'));
+                upgrade_template_update_wysiwyg($viewcolumns, 0, 'tpl_label1', $ppae_text[0] . '<br>' . update_template_get_wysiwyg_content($viewcolumns, 0, 'tpl_label1'));
             }
             if (!empty($viewcolumns[0]['tpl_label2']) || !empty($viewcolumns[0]['tpl_label3']) || !empty($viewcolumns[0]['tpl_label4']) || !empty($viewcolumns[0]['tpl_label5'])) {
                 // mash it all into the first one and unset the rest 
                 upgrade_template_update_wysiwyg($viewcolumns, 0, 'tpl_label2', 
-                    $ppaetext[1] . '<br>'
+                    $ppae_text[1] . '<br>'
                     . upgrade_template_get_wysiwyg_content($viewcolumns, 0, 'tpl_label3') . '<br>' 
                     . upgrade_template_get_wysiwyg_content($viewcolumns, 0, 'tpl_label4') . '<br>'
                     . upgrade_template_get_wysiwyg_content($viewcolumns, 0, 'tpl_label5'));
@@ -125,64 +184,76 @@ function upgrade_template_migration() {
                 unset($viewcolumns[0]['tpl_label5']);
             }
             if (!empty($viewcolumns[0]['tpl_blog1'])) {
-                $viewcolumns[0]['tpl_converted1'] = upgrade_template_create_wysiwyg($ppaetext[2], $view->id);
+                $viewcolumns[0]['tpl_converted1'] = upgrade_template_create_wysiwyg($ppae_text[2], $view->id);
             }
             if (!empty($viewcolumns[0]['tpl_files1']) || !empty($viewcolumns[0]['tpl_blog2'])) {
-                $viewcolumns[0]['tpl_converted2'] = upgrade_template_create_wysiwyg($ppaetext[3], $view->id);
+                $viewcolumns[0]['tpl_converted2'] = upgrade_template_create_wysiwyg($ppae_text[3], $view->id);
             }
             if (!empty($viewcolumns[0]['tpl_files2']) || !empty($viewcolumns[0]['tpl_blog3'])) {
-                $viewcolumns[0]['tpl_converted3'] = upgrade_template_create_wysiwyg($ppaetext[4], $view->id);
+                $viewcolumns[0]['tpl_converted3'] = upgrade_template_create_wysiwyg($ppae_text[4], $view->id);
             }
             if (!empty($viewcolumns[0]['tpl_files3']) || !empty($viewcolumns[0]['tpl_blog4'])) {
-                $viewcolumns[0]['tpl_converted4'] = upgrade_template_create_wysiwyg($ppaetext[5], $view->id);
+                $viewcolumns[0]['tpl_converted4'] = upgrade_template_create_wysiwyg($ppae_text[5], $view->id);
             }
             if (!empty($viewcolumns[0]['tpl_files4']) || !empty($viewcolumns[0]['tpl_blog5'])) {
-                $viewcolumns[0]['tpl_converted5'] = upgrade_template_create_wysiwyg($ppaetext[6], $view->id);
+                $viewcolumns[0]['tpl_converted5'] = upgrade_template_create_wysiwyg($ppae_text[6], $view->id);
             }
             if (!empty($viewcolumns[0]['tpl_files5']) || !empty($viewcolumns[0]['tpl_blog6'])) {
-                $viewcolumns[0]['tpl_converted6'] = upgrade_template_create_wysiwyg($ppaetext[7], $view->id);
+                $viewcolumns[0]['tpl_converted6'] = upgrade_template_create_wysiwyg($ppae_text[7], $view->id);
             }
         }
         
-        // clean up empty columns 
+        // Clean up empty columns 
         foreach ($viewcolumns as $c => $col) {
             $empty = true;
-            foreach ($blocks as $key => $guff) {
+            foreach ($col as $key => $guff) {
                 if (!empty($guff)) {
                     $empty = false;
                 }
             }
             if ($empty) {
+                log_debug("Column $c is empty");
                 $numcolumns--;
                 unset($viewcolumns[$c]);
             }
         }
-        // make all the block instances have the correct column and order (danger!)
+        log_debug("Final number of columns in view: $numcolumns");
+
+        // Make all the block instances have the correct column and order 
         foreach ($viewcolumns as $c => $col) {
-            $count = 0;
-            foreach ($blocks as $key => $data) {
-                $block->set('column', $c);
-                $block->set('order', $count);
-                $block->commit();
-                $count++;
+            $order = 1;
+            foreach ($col as $key => $block) {
+                if ($block instanceof BlockInstance) {
+                    $block->set('column', ($c + 1));
+                    $block->set('order', $order);
+                    $block->commit();
+                    $order++;
+                }
             }
         }
 
+        // Work out what layout to set the view to
+        $layout = upgrade_template_get_view_layout($view->template);
+
+        // Commit the view!
         $view = new View($view->id);
         $view->set('numcolumns', $numcolumns);
+        if ($layout) {
+            $view->set('layout', $layout);
+        }
         $view->commit();
-    }
+    } // End of the view loop
 }
 
 /**
-* helper function for setting content in the appropriate place
-* in the deeply nested array
+* Puts blockinstances into the appropriate place in the deeply nested array
 *
 * @param array (reference) $columns column structure
-* @param string            $key     key to insert data at
-* @param mixed             $data    data to insert
+* @param string            $key     key to insert blockinstance at
+* @param BlockInstance     $bi      blockinstance to insert
 */
-function upgrade_template_insert_block(&$columns, $key, $data) {
+function upgrade_template_insert_block(&$columns, $key, BlockInstance $bi) {
+    log_debug('upgrade_template_insert_block() for key ' . $key);
     foreach ($columns as &$c) {
         if (array_key_exists($key, $c)) {
             if (!empty($c[$key])) {
@@ -190,25 +261,89 @@ function upgrade_template_insert_block(&$columns, $key, $data) {
                 $e->set_block_data($c[$key]);
                 throw $e;
             }
-            $c[$key] = $data;
+            $c[$key] = $bi;
             return;
         }
     }
 }
 
+/**
+ * Takes a block that, according to its oldblock setting, wants to be inserted 
+ * somewhere where there is an existing blockinstance.  With this information, 
+ * establishes how to change the existing blockinstance, or what to replace it 
+ * with, so that both artefacts are in the same blockinstance.
+ *
+ * @param array (reference) $columns column structure
+ * @param stdClass          $block   the new block data
+ */
+function upgrade_template_update_block(&$columns, $block) {
+    // $block->oldblock is where the existing blockinstance is
+    // Then we need to establish what to put in $columns, or in the blockinstance
+    $bi = null;
+    foreach ($columns as &$c) {
+        if (array_key_exists($block->oldblock, $c)) {
+            if (!empty($c[$block->oldblock])) {
+                $bi = $c[$block->oldblock];
+            }
+        }
+    }
+
+    if (empty($bi)) {
+        log_debug("WTF: tried to update a block when there was nothing there to update");
+        return;
+    }
+
+    // If the blockinstance is a filedownload block and we have a file or image 
+    // to add, add it directly to the blockinstance
+    if ($bi->get('blocktype') == 'filedownload') {
+        if ($block->artefacttype == 'file' || $block->artefacttype == 'image') {
+            $configdata = $bi->get('configdata');
+            $configdata['artefactids'][] = $block->artefact;
+            $bi->set('configdata', $configdata);
+        }
+    }
+
+}
+
+/**
+ * Determines whether a block already exists at the given location
+ *
+ * @param array (reference) $columns column structure
+ * @param string            $key     key to check for existance
+ */
+function upgrade_template_block_exists(&$columns, $key) {
+    foreach ($columns as &$c) {
+        if (array_key_exists($key, $c)) {
+            if (!empty($c[$key])) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+/**
+ * Creates a WYSIWYG blockinstance
+ *
+ * @param string $content The content for the wysiwyg block
+ * @param int $view The view the new block will be in
+ */
 function upgrade_template_create_wysiwyg($content, $view) {
     $b = new BlockInstance(0, array(
-        'blocktype'  => 'image',
+        'title'      => '',
+        'blocktype'  => 'textbox',
         'configdata' => serialize(array('text' => $content)),
-        'view'       => $view->get('id'),
+        'view'       => $view,
     ));
 
     return $b;
 }
 
+/**
+ * Given a location with a WYSIWYG blockinstance, either appends or replaces its content
+ */
 function upgrade_template_update_wysiwyg(&$columns, $column, $key, $appendcontent=null, $replacecontent=null) {
-
-    $block &= $columns[$column][$key];
+    $block = $columns[$column][$key];
     $data = $block->get('configdata');
     if (!empty($appendcontent)) {
         $data['text'] .= $appendcontent;
@@ -217,15 +352,23 @@ function upgrade_template_update_wysiwyg(&$columns, $column, $key, $appendconten
         $data['text'] = $replacecontent;
     }
     $block->set('configdata', $data);
-
 }
 
+/**
+ * Gets content of an existing WYSIWYG blockinstance
+ */
 function upgrade_template_get_wysiwyg_content($columns, $column, $key) {
     $block = $columns[$column][$key];
     $data = $block->get('configdata');
     return $data['text'];
-}  
+}
 
+/**
+ * Get the new view structure for the given template.
+ *
+ * @param string $template The template to get the structure for
+ * @return array
+ */
 function upgrade_template_get_structure($template) {
 
     static $columnstructure;
@@ -233,7 +376,9 @@ function upgrade_template_get_structure($template) {
 
         $columnstructure = array(
             'blogandprofile' => array(
+                // First column
                 array(
+                    // Each thing in the column, from top to bottom
                     'tpl_blogslabel' => null,
                     'tpl_blog1'      => null,
                     'tpl_blog2'      => null
@@ -250,6 +395,7 @@ function upgrade_template_get_structure($template) {
                     'tpl_label3' => null, 
                     'tpl_blog2'  => null,
                     'tpl_label6' => null,
+                    'tpl_blog3'  => null,
                 ), 
                 array(
                     'tpl_label2' => null,
@@ -367,6 +513,68 @@ function upgrade_template_get_structure($template) {
         return false;
     }
     return $columnstructure[$template];
+}
+
+/**
+ * Select what view layout the template should be migrated to
+ */
+function upgrade_template_get_view_layout($template) {
+    if ($template == 'blogreflection') {
+        return 2; // 67/33
+    }
+    return null;
+}
+
+/**
+ * Given a record from the view_artefact table (otherwise known as a "block"), 
+ * try and establish a blockinstance that it could be under the new system and 
+ * return it
+ */
+function upgrade_template_convert_block_to_blockinstance($block, $view) {
+    if ($block->artefacttype == 'blogpost') {
+        $bi = new BlockInstance(0, array(
+            'title' => $block->title,
+            'blocktype' => 'blogpost',
+            'configdata' => serialize(array('artefactid' => $block->artefact)),
+            'view' => $view,
+        ));
+        return $bi;
+    }
+    else if ($block->artefacttype == 'blog') {
+        $bi = new BlockInstance(0, array(
+            'title' => $block->title,
+            'blocktype' => 'blog',
+            'configdata' => serialize(array('artefactid' => $block->artefact)),
+            'view' => $view,
+        ));
+        return $bi;
+    }
+    else if ($block->artefacttype == 'image') {
+        $bi = new BlockInstance(0, array(
+            'title' => $block->title,
+            'blocktype' => 'image',
+            'configdata' => serialize(array('artefactid' => $block->artefact)),
+            'view' => $view,
+        ));
+        return $bi;
+    }
+    else if ($block->artefacttype == 'file') {
+        $bi = new BlockInstance(0, array(
+            'title' => $block->title,
+            'blocktype' => 'filedownload',
+            'configdata' => serialize(array('artefactids' => array($block->artefact))),
+            'view' => $view,
+        ));
+        return $bi;
+    }
+
+    $bi = new BlockInstance(0, array(
+        'title' => 'TODO - correct blocktype',
+        'blocktype' => 'textbox',
+        'configdata' => serialize(array('text' => 'TODO - correct blocktype')),
+        'view' => $view,
+    ));
+    return $bi;
 }
 
 class TemplateBlockExistsAlreadyException extends MaharaException {
