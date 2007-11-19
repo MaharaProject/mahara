@@ -668,31 +668,8 @@ function core_install_firstcoredata_defaults() {
     }
     
     // install the view column widths
-    $layouts = array(
-        2 => array(
-            '50,50',
-            '67,33',
-            '33,67',
-            ),
-        3 => array(
-            '33,33,33',
-            '25,50,25',
-            '15,70,15',
-            ),
-        4 => array(
-            '25,25,25,25',
-            '20,30,30,20',
-            ),
-    );
+    install_view_column_widths();
 
-    $layout = new StdClass;
-    foreach ($layouts as $column => $widths) {
-        foreach ($widths as $width) {
-            $layout->columns = $column;
-            $layout->widths = $width;
-            insert_record('view_layout', $layout);
-        }
-    }
     db_commit();
 }
 
@@ -848,6 +825,40 @@ function install_blocktype_categories() {
             install_blocktype_categories_for_plugin(blocktype_single_to_namespaced($bt->name, $bt->artefactplugin));
         }
     }
+}
+
+/**
+ * Installs all the allowed column widths for views. Used when installing core 
+ * defaults, and also when upgrading from 0.8 to 0.9
+ */
+function install_view_column_widths() {
+    db_begin();
+    $layouts = array(
+        2 => array(
+            '50,50',
+            '67,33',
+            '33,67',
+            ),
+        3 => array(
+            '33,33,33',
+            '25,50,25',
+            '15,70,15',
+            ),
+        4 => array(
+            '25,25,25,25',
+            '20,30,30,20',
+            ),
+    );
+
+    $layout = new StdClass;
+    foreach ($layouts as $column => $widths) {
+        foreach ($widths as $width) {
+            $layout->columns = $column;
+            $layout->widths = $width;
+            insert_record('view_layout', $layout);
+        }
+    }
+    db_commit();
 }
 
 ?>
