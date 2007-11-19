@@ -5,7 +5,7 @@
   {if $artefacttitle}<h3>{$artefacttitle}</h3>{/if}
   <div>{$artefactdescription}</div>
   {if isset($attachments)}
-  <table>
+  <table class="cb">
     <tbody>
       <tr><th colspan="2">{str tag=attachedfiles section=artefact.blog}:</th></tr>
   {foreach from=$attachments item=item}
