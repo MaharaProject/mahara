@@ -1,4 +1,1 @@
-var/www/mahara/js/MochiKit/Packed.js var/www/mahara/js/MochiKit/setup.js
-etc/mahara/config.debconf.php        var/www/mahara/config.debconf.php
-etc/mahara/config.php                var/www/mahara/config.php
-etc/mahara/apache.conf               etc/apache2/conf.d/mahara
+etc/mahara/apache.conf                  etc/apache2/conf.d/mahara

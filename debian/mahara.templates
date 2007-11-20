@@ -7,7 +7,7 @@ _Description: Database type:
 
 Template: mahara/db_host
 Type: string
-Default: 
+Default:
 _Description: Database host:
  Which database host should be used for the Mahara site
  You can leave this blank to connect via UNIX sockets
@@ -38,25 +38,6 @@ _Description: Database password:
  Which password is associated with the given username
  You can leave this blank if you are not using password authentication.
 
-Template: mahara/servername
-Type: string
-Default:
-_Description: Server name:
- This is the servername of the Mahara site.
- .
- Note that this is just the domain name, so for "http://my.site.com" you only
- need to enter "my.site.com"
-
-Template: mahara/serverredirects
-Type: string
-Default:
-_Description: Server redirects:
- Comma separated list of domain names that the server should permanently
- redirect to the server name.
- .
- Note that this is just the domain name, so for "http://my.site.com" you only
- need to enter "my.site.com"
-
 Template: mahara/smtphosts
 Type: string
 Default:
@@ -65,3 +46,12 @@ _Description: SMTP Hosts:
  .
  If you leave this blank, the system mailer will be used. Generally, this will
  work fine
+
+Template: mahara/servername
+Type: string
+Default:
+_Description: Server name:
+ This is the servername of the Mahara site.
+ .
+ Note that this is just the domain name, so for "http://my.site.com" you only
+ need to enter "my.site.com"

@@ -1,5 +1,0 @@
-htdocs/*                         var/www/mahara
-htdocs/.htaccess                 var/www/mahara
-debian/servername.conf           etc/mahara/
-debian/serverredirects.conf      etc/mahara/
-debian/config.debconf.php        etc/mahara/
