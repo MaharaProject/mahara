@@ -9,10 +9,8 @@
 			{str section='activity' tag='type'}:
 			<select name="type" onChange="{$typechange}">
 				<option value="all">{str section='activity' tag='alltypes'}</option>
-			{foreach from=$types item='type'}
-				{assign var="tag1" value=$type->name}
-				{assign var="tag" value=type$tag1}
-				<option value="{$type->name}">{str section='activity' tag=$tag}</option>
+			{foreach from=$types item=name key=type}
+				<option value="{$type}">{$name}</option>
 			{/foreach}
 			</select>{contextualhelp plugintype='core' pluginname='activity' section='activitytypeselect'}
 			</form>

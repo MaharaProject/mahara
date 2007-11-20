@@ -410,6 +410,21 @@ function upgrade_plugin($upgrade) {
         }
     }
 
+    if ($activities = call_static_method($pcname, 'get_activity_types')) {
+        foreach ($activities as $activity) {
+            $classname = 'ActivityType' . ucfirst($plugintype) . ucfirst($pluginname) . ucfirst($activity->name);
+            if (!class_exists($classname)) {
+                throw new InstallationException(get_string('classmissing', 'error',  $classname, $pluginname, $plugintype));
+            }
+            $activity->plugintype = $plugintype;
+            $activity->pluginname = $pluginname;
+            $where = $activity;
+            unset($where->admin);
+            unset($where->delay);
+            ensure_record_exists('activity_type', $where, $activity);
+        }
+    }
+
      // install artefact types
     if ($plugintype == 'artefact') {
         if (!is_callable(array($pcname, 'get_artefact_types'))) {

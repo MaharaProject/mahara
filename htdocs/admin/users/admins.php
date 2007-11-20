@@ -73,7 +73,7 @@ function adminusers_submit(Pieform $form, $values) {
         SET admin = 1
         WHERE id IN (' . join(',', $values['users']) . ')');
     execute_sql('DELETE FROM {usr_activity_preference}
-        WHERE activity IN (SELECT name FROM {activity_type}
+        WHERE activity IN (SELECT id FROM {activity_type}
             WHERE admin = 1)
         AND usr NOT IN (' . join(',', $values['users']) . ')');
     db_commit();

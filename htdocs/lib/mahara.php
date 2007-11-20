@@ -1007,6 +1007,15 @@ class Plugin {
     public static function has_config() {
         return false;
     }
+
+    /**
+    * Does this plugin offer any activity types
+    * If it does, you must subclass ActivityTypePlugin like 
+    * ActivityType{$PluginType}{$Pluginname}
+    */
+    public static function get_activity_types() {
+        return array();
+    }
 }
 
 /**

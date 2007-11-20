@@ -5,4 +5,5 @@ $string['nameplural'] = 'Forums';
 $string['addtitle'] = 'Add forum';
 $string['edittitle'] = 'Edit forum';
 
+$string['typenewpost'] = 'New post';
 ?>
