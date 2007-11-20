@@ -1446,7 +1446,6 @@ function db_begin() {
     global $db;
 
     $GLOBALS['_TRANSACTION_LEVEL']++;
-    log_debug('db_begin(): transaction level now ' . $GLOBALS['_TRANSACTION_LEVEL']);
     $db->StartTrans();
 }
 
@@ -1459,7 +1458,6 @@ function db_begin() {
 function db_commit() {
     global $db;
     $GLOBALS['_TRANSACTION_LEVEL']--;
-    log_debug('db_commit(): transaction level now ' . $GLOBALS['_TRANSACTION_LEVEL']);
 
     if ($GLOBALS['_TRANSACTION_LEVEL'] == 0) {
 
@@ -1469,7 +1467,6 @@ function db_commit() {
         }
     }
 
-    log_debug('peforming commit');
     return $db->CompleteTrans();
 }
 
@@ -1478,7 +1475,6 @@ function db_commit() {
  */
 function db_rollback() {
     global $db;
-    log_debug('db_rollback(): rolling back transaction from level '. $GLOBALS['_TRANSACTION_LEVEL']);
     $db->FailTrans();
     for ($i = $GLOBALS['_TRANSACTION_LEVEL']; $i >= 0; $i--) {
         $db->CompleteTrans();
