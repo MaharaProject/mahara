@@ -783,7 +783,7 @@ function safe_require($plugintype, $pluginname, $filename='lib.php', $function='
            $fullpath = get_config('docroot') . 'artefact/' . $bits[0] . '/blocktype/' . $bits[1] . '/' . $filename;
         }
         else {
-            if (get_config('installed')) {
+            if (table_exists(new XMLDBTable('blocktype_installed'))) {
                 if ($artefactplugin = get_field('blocktype_installed', 'artefactplugin', 'name', $pluginname)) {
                     $fullpath = get_config('docroot') . 'artefact/' . $artefactplugin . '/blocktype/' . $pluginname . '/'. $filename;
                 }
@@ -884,7 +884,7 @@ function handle_event($event, $data) {
         throw new Exception("Invalid event");
     }
 
-    if ($data instanceof ArtefactType) {
+    if ($data instanceof ArtefactType || $data instanceof BlockInstance) {
         // leave it alone
     }
     else if (is_object($data)) {
