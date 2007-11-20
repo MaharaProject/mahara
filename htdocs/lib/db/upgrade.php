@@ -377,6 +377,14 @@ function xmldb_core_upgrade($oldversion=0) {
         set_config('imagemaxheight', 1024);
     }
 
+    // Add the 'blockinstancecommit' event type
+    if ($oldversion < 2007082203) {
+        $event = (object)array(
+            'name' => 'blockinstancecommit',
+        );
+        ensure_record_exists('event_type', $event, $event);
+    }
+
     return $status;
 
 }
