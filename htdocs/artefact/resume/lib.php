@@ -117,6 +117,35 @@ class ArtefactTypeResume extends ArtefactType {
     public function render_self($options) {
         return array('html' => $this->description);
     }
+
+    /**
+     * Overrides the default commit to make sure that any 'entireresume' blocks 
+     * in views the user have know about this artefact - but only if necessary. 
+     * Goals and skills are not in the entireresume block
+     *
+     * @param boolean $updateresumeblocks Whether to update any resume blockinstances
+     */
+    public function commit($updateresumeblocks=true) {
+        if ($updateresumeblocks) {
+            foreach (get_records_sql_array('
+                SELECT id, view, configdata
+                FROM {block_instance}
+                WHERE blocktype = \'entireresume\'
+                AND "view" IN (
+                    SELECT id
+                    FROM {view}
+                    WHERE "owner" = ?)', array($this->owner)) as $blockinstance) {
+
+                $whereobject = (object)array(
+                    'view' => $blockinstance->view,
+                    'artefact' => $this->get('id'),
+                    'block' => $blockinstance->id,
+                );
+                ensure_record_exists('view_artefact', $whereobject, $whereobject);
+            }
+        }
+        parent::commit();
+    }
 }
 
 class ArtefactTypeCoverletter extends ArtefactTypeResume {
