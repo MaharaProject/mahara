@@ -100,7 +100,7 @@ function upgrade_template_migration() {
         $numcolumns = count($viewcolumns);
 
         // Temporary, testing the migration of certain templates only
-        if ($view->template != 'filelist' && $view->template != 'PPAE') {
+        if ($view->template != 'generaltemplate') {
             //log_debug('skipping template, it is not blogreflection');
             continue;
         }
@@ -316,6 +316,8 @@ function upgrade_template_update_block(&$columns, $block) {
         if ($block->artefacttype == 'file' || $block->artefacttype == 'image') {
             upgrade_template_add_artefact_to_blockinstance($bi, $block->artefact);
         }
+        // More than one artefact in this filedownload block, so remove the title
+        $bi->set('title', '');
     }
     // If the blockinstance is profileinfo, we can keep adding profile fields to it
     else if ($bi->get('blocktype') == 'profileinfo') {
@@ -326,7 +328,7 @@ function upgrade_template_update_block(&$columns, $block) {
             else {
                 // The profileicon is stored in a dedicated field, not 'artefactids'
                 $configdata = $bi->get('configdata');
-                $configdata['profileicon'] = $artefact;
+                $configdata['profileicon'] = $block->artefact;
                 $bi->set('configdata', $configdata);
             }
         }
