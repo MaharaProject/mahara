@@ -1,5 +1,5 @@
 #! /bin/sh
-# preinst script for mahara-apache2
+# preinst script for mahara
 #
 # see: dh_installdeb(1)
 
@@ -13,8 +13,6 @@ set -e
 #
 # for details, see http://www.debian.org/doc/debian-policy/ or
 # the debian-policy package
-
-. /usr/share/debconf/confmodule
 
 case "$1" in
     upgrade)
@@ -34,5 +32,4 @@ esac
 
 #DEBHELPER#
 
-db_stop
 exit 0
