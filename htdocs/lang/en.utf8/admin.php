@@ -238,6 +238,20 @@ $string['usersdeletedsuccessfully'] = 'Users deleted successfully';
 $string['usersunsuspendedsuccessfully'] = 'Users unsuspended successfully';
 $string['suspendingadmin'] = 'Suspending Admin';
 $string['usersuspended'] = 'User suspended';
+$string['userunsuspended'] = 'User unsuspended';
+
+// User account settings
+$string['siteaccountsettings'] = 'Site account settings';
+$string['resetpassword'] = 'Reset password';
+$string['forcepasswordchange'] = 'Force password change on next login';
+$string['sitestaff'] = 'Site staff';
+$string['siteadmin'] = 'Site administrator';
+$string['suspended'] = 'Suspended';
+$string['suspendedreason'] = 'Reason for suspension';
+$string['suspendedreasondescription'] = 'The explanation you enter here will be displayed to the user when they try to login';
+$string['unsuspenduser'] = 'Unsuspend User';
+$string['thisuserissuspended'] = 'This user has been suspended';
+$string['filequota'] = 'File quota (MB)';
 
 // Institutions
 $string['admininstitutions'] = 'Admininster Institutions';

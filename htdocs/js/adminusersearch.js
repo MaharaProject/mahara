@@ -6,7 +6,6 @@ function UserSearch() {
         self.rewriteQueryButton();
         self.rewritePaging();
         self.rewriteSorting();
-        self.rewriteSuspendLinks();
         self.params = {};
     }
 
@@ -110,13 +109,6 @@ function UserSearch() {
             $('results').innerHTML = data.data;
             self.rewritePaging();
             self.rewriteSorting();
-            self.rewriteSuspendLinks();
-        });
-    }
-
-    this.rewriteSuspendLinks = function() {
-        forEach(getElementsByTagAndClassName('a', 'suspend-user-link', 'searchresults'), function(i) {
-            connect(i, 'onclick', suspendDisplay);
         });
     }
 
@@ -124,46 +116,3 @@ function UserSearch() {
 }
 
 userSearch = new UserSearch();
-
-
-
-
-function suspendDisplay(e) {
-    e.stop();
-    ref = this.parentNode.parentNode; // get the TR
-    var reason = INPUT({'type': 'text'});
-    var cancelButton = BUTTON({'type': 'button'}, get_string('cancel'));
-    var saveButton = BUTTON({'type': 'button'}, get_string('suspenduser'));
-
-    insertSiblingNodesAfter(ref, TR(null, TD({'colSpan': 6},
-        get_string('suspensionreason') + ': ',
-        reason,
-        cancelButton,
-        saveButton
-    )));
-
-    reason.focus();
-
-    connect(reason, 'onkeypress', function (k) {
-        if (k.key().code == 13) {
-            self.suspendSave(reason);
-        }
-        if (k.key().code == 27) {
-            suspendCancel(reason);
-        }
-    });
-
-    connect(cancelButton, 'onclick', partial(suspendCancel, reason));
-    var id = getNodeAttribute(this, 'href').replace(/.*\?id=(\d+).*/, '$1');
-    connect(saveButton, 'onclick', partial(suspendSave, id, reason));
-}
-
-function suspendSave(id, reason) {
-    var susReason = reason.value;
-    sendjsonrequest('search.json.php', {'action': 'suspend', 'reason': susReason, 'id': id}, 'GET');
-    removeElement(reason.parentNode.parentNode);
-}
-
-function suspendCancel(reason) {
-    removeElement(reason.parentNode.parentNode);
-}

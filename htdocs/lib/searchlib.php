@@ -175,8 +175,6 @@ function build_admin_user_search_results($search, $offset, $limit, $sortby, $sor
         'email'       => array('name'     => get_string('email')),
         'institution' => array('name'     => get_string('institution'),
                                'template' => file_get_contents($templatedir . 'institution.tpl')),
-        'suspend'     => array('name'     => '',
-                               'template' => file_get_contents($templatedir . 'suspendlink.tpl'))
     );
 
     $smarty = smarty_core();
