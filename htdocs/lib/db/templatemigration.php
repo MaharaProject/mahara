@@ -51,14 +51,14 @@ function upgrade_template_migration() {
 
     // ppae
     $ppae_text = array(
-        'Group Name', 
-        'Student Names', 
-        'Mission and Vision Statement (Concept and Concept Outline)', 
-        'Physical Design of the space (explain, using theorists, how you created ambeince and support of holistic learning for each child)', 
-        'Schedule or timetable of tasks and events prior to opening', 
-        'Curriculum Matrix for first six weeks, specific activities for beginners, intermediates, end-game (provide NZCF AO/level cross-reference)', 
-        'Yearlong Teaching and Learning Topics plan for beginners, intermediates and end-game.<br>(Justify your choices by citing educationalists, psychologists and other theorists)', 
-        'Priorised table of equipment, materials and supplies'
+        '<h4>Group Name</h4>', 
+        '<h4>Student Names</h4>', 
+        '<h4>Mission and Vision Statement (Concept and Concept Outline)</h4>', 
+        '<h4>Physical Design of the space</h4><p>Explain, using theorists, how you created ambeince and support of holistic learning for each child</p>', 
+        '<h4>Schedule or timetable of tasks and events prior to opening</h4>', 
+        '<h4>Curriculum Matrix for first six weeks, specific activities for beginners, intermediates, end-game</h4><p>provide NZCF AO/level cross-reference</p>', 
+        '<h4>Yearlong Teaching and Learning Topics plan for beginners, intermediates and end-game.</h4><p>Justify your choices by citing educationalists, psychologists and other theorists</p>', 
+        '<h4>Priorised table of equipment, materials and supplies</h4>'
     );
 
 
@@ -96,8 +96,8 @@ function upgrade_template_migration() {
         }
         $numcolumns = count($viewcolumns);
 
-        // Temporary, testing the migration of blogreflection only
-        if ($view->template != 'blogreflection') {
+        // Temporary, testing the migration of certain templates only
+        if ($view->template != 'PPAE') {
             //log_debug('skipping template, it is not blogreflection');
             continue;
         }
@@ -170,15 +170,26 @@ function upgrade_template_migration() {
         }
         else if ($view->template == 'PPAE') {
             if (!empty($viewcolumns[0]['tpl_label1'])) {
-                upgrade_template_update_wysiwyg($viewcolumns, 0, 'tpl_label1', $ppae_text[0] . '<br>' . update_template_get_wysiwyg_content($viewcolumns, 0, 'tpl_label1'));
+                log_debug('tpl_label1 is not empty, assuming it is a wysiwyg and updating its content');
+                upgrade_template_update_wysiwyg($viewcolumns, 0, 'tpl_label1', null, '<h4>' . $ppae_text[0] . '</h4>' . upgrade_template_get_wysiwyg_content($viewcolumns, 0, 'tpl_label1'));
             }
             if (!empty($viewcolumns[0]['tpl_label2']) || !empty($viewcolumns[0]['tpl_label3']) || !empty($viewcolumns[0]['tpl_label4']) || !empty($viewcolumns[0]['tpl_label5'])) {
                 // mash it all into the first one and unset the rest 
-                upgrade_template_update_wysiwyg($viewcolumns, 0, 'tpl_label2', 
-                    $ppae_text[1] . '<br>'
+                log_debug('assuming tpl_label2 is a wysiwyg');
+                $label2_text = '<h4>' . $ppae_text[1] . '</h4>'
+                    . upgrade_template_get_wysiwyg_content($viewcolumns, 0, 'tpl_label2') . '<br>' 
                     . upgrade_template_get_wysiwyg_content($viewcolumns, 0, 'tpl_label3') . '<br>' 
                     . upgrade_template_get_wysiwyg_content($viewcolumns, 0, 'tpl_label4') . '<br>'
-                    . upgrade_template_get_wysiwyg_content($viewcolumns, 0, 'tpl_label5'));
+                    . upgrade_template_get_wysiwyg_content($viewcolumns, 0, 'tpl_label5');
+
+                $label2_text = preg_replace('#(<br>)+$#', '', $label2_text);
+
+                if (upgrade_template_block_exists($viewcolumns, 'tpl_label2')) {
+                    upgrade_template_update_wysiwyg($viewcolumns, 0, 'tpl_label2', null, $label2_text);
+                }
+                else {
+                    upgrate_template_insert_block($viewcolumns, 'tpl_label2', upgrade_template_create_wysiwyg($label2_text, $view->id));
+                }
                 unset($viewcolumns[0]['tpl_label3']);
                 unset($viewcolumns[0]['tpl_label4']);
                 unset($viewcolumns[0]['tpl_label5']);
@@ -355,10 +366,14 @@ function upgrade_template_update_wysiwyg(&$columns, $column, $key, $appendconten
 }
 
 /**
- * Gets content of an existing WYSIWYG blockinstance
+ * Gets content of an existing WYSIWYG blockinstance, or an empty string if the 
+ * block is empty
  */
 function upgrade_template_get_wysiwyg_content($columns, $column, $key) {
     $block = $columns[$column][$key];
+    if (empty($block)) {
+        return '';
+    }
     $data = $block->get('configdata');
     return $data['text'];
 }
@@ -531,6 +546,8 @@ function upgrade_template_get_view_layout($template) {
  * return it
  */
 function upgrade_template_convert_block_to_blockinstance($block, $view) {
+    safe_require('artefact', 'resume');
+
     if ($block->artefacttype == 'blogpost') {
         $bi = new BlockInstance(0, array(
             'title' => $block->title,
@@ -563,6 +580,15 @@ function upgrade_template_convert_block_to_blockinstance($block, $view) {
             'title' => $block->title,
             'blocktype' => 'filedownload',
             'configdata' => serialize(array('artefactids' => array($block->artefact))),
+            'view' => $view,
+        ));
+        return $bi;
+    }
+    else if (in_array($block->artefacttype, PluginArtefactResume::get_artefact_types())) {
+        $bi = new BlockInstance(0, array(
+            'title' => $block->title,
+            'blocktype' => 'resumefield',
+            'configdata' => serialize(array('artefactid' => $block->artefact)),
             'view' => $view,
         ));
         return $bi;
