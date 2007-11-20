@@ -486,7 +486,9 @@ class BlockInstance {
         }
 
         $this->rebuild_artefact_list();
-        // @TODO maybe handle_event here.
+
+        // Tell stuff about this
+        handle_event('blockinstancecommit', $this);
 
         $this->dirty = false;
     }
