@@ -97,7 +97,7 @@ function upgrade_template_migration() {
         $numcolumns = count($viewcolumns);
 
         // Temporary, testing the migration of certain templates only
-        if ($view->template != 'PPAE') {
+        if ($view->template != 'gallery') {
             //log_debug('skipping template, it is not blogreflection');
             continue;
         }
@@ -118,7 +118,7 @@ function upgrade_template_migration() {
             foreach ($ablocks as $block) {
                 if (!upgrade_template_block_exists($viewcolumns, $block->oldblock)) {
                     // There's no block here. We can make one and insert it
-                    $bi = upgrade_template_convert_block_to_blockinstance($block, $view->id);
+                    $bi = upgrade_template_convert_block_to_blockinstance($block, $view);
                     // note: the location to insert the block is known as 
                     // 'oldblock', as the column as been renamed in the database 
                     // in preparation for its removal
@@ -214,18 +214,21 @@ function upgrade_template_migration() {
             }
         }
         
-        // Clean up empty columns 
-        foreach ($viewcolumns as $c => $col) {
-            $empty = true;
-            foreach ($col as $key => $guff) {
-                if (!empty($guff)) {
-                    $empty = false;
+        // Clean up empty columns, although the gallery should always have its 
+        // five columns
+        if ($view->template != 'gallery') {
+            foreach ($viewcolumns as $c => $col) {
+                $empty = true;
+                foreach ($col as $key => $guff) {
+                    if (!empty($guff)) {
+                        $empty = false;
+                    }
                 }
-            }
-            if ($empty) {
-                log_debug("Column $c is empty");
-                $numcolumns--;
-                unset($viewcolumns[$c]);
+                if ($empty) {
+                    log_debug("Column $c is empty");
+                    $numcolumns--;
+                    unset($viewcolumns[$c]);
+                }
             }
         }
         log_debug("Final number of columns in view: $numcolumns");
@@ -553,7 +556,7 @@ function upgrade_template_convert_block_to_blockinstance($block, $view) {
             'title' => $block->title,
             'blocktype' => 'blogpost',
             'configdata' => serialize(array('artefactid' => $block->artefact)),
-            'view' => $view,
+            'view' => $view->id,
         ));
         return $bi;
     }
@@ -562,16 +565,16 @@ function upgrade_template_convert_block_to_blockinstance($block, $view) {
             'title' => $block->title,
             'blocktype' => 'blog',
             'configdata' => serialize(array('artefactid' => $block->artefact)),
-            'view' => $view,
+            'view' => $view->id,
         ));
         return $bi;
     }
     else if ($block->artefacttype == 'image') {
         $bi = new BlockInstance(0, array(
-            'title' => $block->title,
+            'title' => ($view->template == 'gallery' ? '' : $block->title),
             'blocktype' => 'image',
-            'configdata' => serialize(array('artefactid' => $block->artefact)),
-            'view' => $view,
+            'configdata' => serialize(array('artefactid' => $block->artefact, 'width' => ($view->template == 'gallery' ? '200' : ''))),
+            'view' => $view->id,
         ));
         return $bi;
     }
@@ -580,7 +583,7 @@ function upgrade_template_convert_block_to_blockinstance($block, $view) {
             'title' => $block->title,
             'blocktype' => 'filedownload',
             'configdata' => serialize(array('artefactids' => array($block->artefact))),
-            'view' => $view,
+            'view' => $view->id,
         ));
         return $bi;
     }
@@ -589,7 +592,7 @@ function upgrade_template_convert_block_to_blockinstance($block, $view) {
             'title' => $block->title,
             'blocktype' => 'resumefield',
             'configdata' => serialize(array('artefactid' => $block->artefact)),
-            'view' => $view,
+            'view' => $view->id,
         ));
         return $bi;
     }
@@ -598,7 +601,7 @@ function upgrade_template_convert_block_to_blockinstance($block, $view) {
         'title' => 'TODO - correct blocktype',
         'blocktype' => 'textbox',
         'configdata' => serialize(array('text' => 'TODO - correct blocktype')),
-        'view' => $view,
+        'view' => $view->id,
     ));
     return $bi;
 }
