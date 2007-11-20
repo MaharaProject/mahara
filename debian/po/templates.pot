@@ -7,8 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: martyn@catalyst.net.nz\n"
-"POT-Creation-Date: 2007-11-16 16:15+1300\n"
+"Report-Msgid-Bugs-To: francois@debian.org\n"
+"POT-Creation-Date: 2007-11-20 14:12+1300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,25 +18,25 @@ msgstr ""
 
 #. Type: select
 #. Description
-#: ../templates:1001
+#: ../mahara.templates:1001
 msgid "Database type:"
 msgstr ""
 
 #. Type: select
 #. Description
-#: ../templates:1001
+#: ../mahara.templates:1001
 msgid "What type of database should be used for the Mahara site"
 msgstr ""
 
 #. Type: string
 #. Description
-#: ../templates:2001
+#: ../mahara.templates:2001
 msgid "Database host:"
 msgstr ""
 
 #. Type: string
 #. Description
-#: ../templates:2001
+#: ../mahara.templates:2001
 msgid ""
 "Which database host should be used for the Mahara site You can leave this "
 "blank to connect via UNIX sockets"
@@ -44,13 +44,13 @@ msgstr ""
 
 #. Type: string
 #. Description
-#: ../templates:3001
+#: ../mahara.templates:3001
 msgid "Database port:"
 msgstr ""
 
 #. Type: string
 #. Description
-#: ../templates:3001
+#: ../mahara.templates:3001
 msgid ""
 "Which database port should be used for the Mahara site You can leave this "
 "blank for the default"
@@ -58,37 +58,37 @@ msgstr ""
 
 #. Type: string
 #. Description
-#: ../templates:4001
+#: ../mahara.templates:4001
 msgid "Database name (not username):"
 msgstr ""
 
 #. Type: string
 #. Description
-#: ../templates:4001
+#: ../mahara.templates:4001
 msgid "Which database should be used for the Mahara site"
 msgstr ""
 
 #. Type: string
 #. Description
-#: ../templates:5001
+#: ../mahara.templates:5001
 msgid "Database username:"
 msgstr ""
 
 #. Type: string
 #. Description
-#: ../templates:5001
+#: ../mahara.templates:5001
 msgid "Which username should be used to connect to the Mahara database"
 msgstr ""
 
 #. Type: string
 #. Description
-#: ../templates:6001
+#: ../mahara.templates:6001
 msgid "Database password:"
 msgstr ""
 
 #. Type: string
 #. Description
-#: ../templates:6001
+#: ../mahara.templates:6001
 msgid ""
 "Which password is associated with the given username You can leave this "
 "blank if you are not using password authentication."
@@ -96,21 +96,39 @@ msgstr ""
 
 #. Type: string
 #. Description
-#: ../templates:7001
+#: ../mahara.templates:7001
+msgid "SMTP Hosts:"
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../mahara.templates:7001
+msgid "Comma separated list of SMTP servers to use to send mail"
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../mahara.templates:7001
+msgid ""
+"If you leave this blank, the system mailer will be used. Generally, this "
+"will work fine"
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../mahara.templates:8001
 msgid "Server name:"
 msgstr ""
 
 #. Type: string
 #. Description
-#: ../templates:7001
+#: ../mahara.templates:8001
 msgid "This is the servername of the Mahara site."
 msgstr ""
 
 #. Type: string
 #. Description
-#. Type: string
-#. Description
-#: ../templates:7001 ../templates:8001
+#: ../mahara.templates:8001 ../mahara-apache.templates:1001
 msgid ""
 "Note that this is just the domain name, so for \"http://my.site.com\" you "
 "only need to enter \"my.site.com\""
@@ -118,34 +136,14 @@ msgstr ""
 
 #. Type: string
 #. Description
-#: ../templates:8001
+#: ../mahara-apache.templates:1001
 msgid "Server redirects:"
 msgstr ""
 
 #. Type: string
 #. Description
-#: ../templates:8001
+#: ../mahara-apache.templates:1001
 msgid ""
 "Comma separated list of domain names that the server should permanently "
 "redirect to the server name."
-msgstr ""
-
-#. Type: string
-#. Description
-#: ../templates:9001
-msgid "SMTP Hosts:"
-msgstr ""
-
-#. Type: string
-#. Description
-#: ../templates:9001
-msgid "Comma separated list of SMTP servers to use to send mail"
-msgstr ""
-
-#. Type: string
-#. Description
-#: ../templates:9001
-msgid ""
-"If you leave this blank, the system mailer will be used. Generally, this "
-"will work fine"
 msgstr ""

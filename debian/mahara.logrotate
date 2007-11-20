@@ -3,4 +3,5 @@
      rotate 12
      weekly
      compress
+     missingok
 }
