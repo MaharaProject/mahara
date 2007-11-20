@@ -178,7 +178,7 @@ function table_column($table, $oldfield, $field, $type='integer', $size='10',
             //}
 
             //Use transactions
-            execute_sql('BEGIN');
+            db_begin();
 
             //Always use temporary column
             execute_sql('ALTER TABLE '. $CFG->prefix . $table .' ADD COLUMN '. $field .' '. $type);
@@ -224,7 +224,7 @@ function table_column($table, $oldfield, $field, $type='integer', $size='10',
 
             execute_sql('ALTER TABLE '. $CFG->prefix . $table .' RENAME COLUMN '. $field .' TO '. $realfield);
 
-            return execute_sql('COMMIT');
+            return db_commit();
 
         default:
             switch (strtolower($type)) {

@@ -47,90 +47,92 @@ foreach (plugin_types()  as $plugin) {
     $plugins[$plugin]['notinstalled'] = array();
 }
 foreach (array_keys($plugins) as $plugin) {
-    if ($installed = get_records_array($plugin . '_installed')) {
-        foreach ($installed as $i) {
-            $key = $i->name;
-            if ($plugin == 'blocktype') {
-                $key = blocktype_single_to_namespaced($i->name, $i->artefactplugin);
-            }
-            $plugins[$plugin]['installed'][$key] = array();
-            if ($plugin == 'artefact') {
-                $plugins[$plugin]['installed'][$key]['types'] = array();
-                safe_require('artefact', $key);
-                if ($types = call_static_method(generate_class_name('artefact', $i->name), 'get_artefact_types')) {
-                    foreach ($types as $t) {
-                        $classname = generate_artefact_class_name($t);
-                        if ($collapseto = call_static_method($classname, 'collapse_config')) {
-                            $plugins[$plugin]['installed'][$key]['types'][$collapseto] = true;
-                        }
-                        else {
-                            $plugins[$plugin]['installed'][$key]['types'][$t] = 
-                                call_static_method($classname, 'has_config');
+    if (table_exists(new XMLDBTable($plugin . '_installed'))) {
+        if ($installed = get_records_array($plugin . '_installed')) {
+            foreach ($installed as $i) {
+                $key = $i->name;
+                if ($plugin == 'blocktype') {
+                    $key = blocktype_single_to_namespaced($i->name, $i->artefactplugin);
+                }
+                $plugins[$plugin]['installed'][$key] = array();
+                if ($plugin == 'artefact') {
+                    $plugins[$plugin]['installed'][$key]['types'] = array();
+                    safe_require('artefact', $key);
+                    if ($types = call_static_method(generate_class_name('artefact', $i->name), 'get_artefact_types')) {
+                        foreach ($types as $t) {
+                            $classname = generate_artefact_class_name($t);
+                            if ($collapseto = call_static_method($classname, 'collapse_config')) {
+                                $plugins[$plugin]['installed'][$key]['types'][$collapseto] = true;
+                            }
+                            else {
+                                $plugins[$plugin]['installed'][$key]['types'][$t] = 
+                                    call_static_method($classname, 'has_config');
+                            }
                         }
                     }
-                }
-            } 
-            else {
-                $classname = generate_class_name($plugin, $i->name);
-                safe_require($plugin, $i->name);
-                if (call_static_method($classname, 'has_config')) {
-                    $plugins[$plugin]['installed'][$key]['config'] = true;
+                } 
+                else {
+                    $classname = generate_class_name($plugin, $i->name);
+                    safe_require($plugin, $i->name);
+                    if (call_static_method($classname, 'has_config')) {
+                        $plugins[$plugin]['installed'][$key]['config'] = true;
+                    }
                 }
             }
         }
-    }
     
-    $dirhandle = opendir(get_config('docroot') . $plugin);
-    while (false !== ($dir = readdir($dirhandle))) {
-        $installed = false; // reinitialise
-        if (strpos($dir, '.') === 0) {
-            continue;
-        }
-        if (!is_dir(get_config('docroot') . $plugin . '/' . $dir)) {
-            continue;
-        }
-        if (array_key_exists($dir, $plugins[$plugin]['installed'])) {
-            $installed = true;
-        }
-        // if we're already installed keep going
-        // if we're an artefact plugin, we have to check for blocktypes.
-        if ($plugin != 'artefact' && !empty($installed)) {
-            continue;
-        }
-        if (empty($installed)) {
-            $plugins[$plugin]['notinstalled'][$dir] = array();
-            try {
-                validate_plugin($plugin, $dir);
-            }
-            catch (InstallationException $e) {
-                $plugins[$plugin]['notinstalled'][$dir]['notinstallable'] = $e->GetMessage();
-            }
-        }
-        if ($plugin == 'artefact') { // go check it for blocks as well
-            $btlocation = get_config('docroot') . $plugin . '/' . $dir . '/blocktype';
-            if (!is_dir($btlocation)) {
+        $dirhandle = opendir(get_config('docroot') . $plugin);
+        while (false !== ($dir = readdir($dirhandle))) {
+            $installed = false; // reinitialise
+            if (strpos($dir, '.') === 0) {
                 continue;
             }
+            if (!is_dir(get_config('docroot') . $plugin . '/' . $dir)) {
+                continue;
+            }
+            if (array_key_exists($dir, $plugins[$plugin]['installed'])) {
+                $installed = true;
+            }
+            // if we're already installed keep going
+            // if we're an artefact plugin, we have to check for blocktypes.
+            if ($plugin != 'artefact' && !empty($installed)) {
+                continue;
+            }
+            if (empty($installed)) {
+                $plugins[$plugin]['notinstalled'][$dir] = array();
+                try {
+                    validate_plugin($plugin, $dir);
+                }
+                catch (InstallationException $e) {
+                    $plugins[$plugin]['notinstalled'][$dir]['notinstallable'] = $e->GetMessage();
+                }
+            }
+            if ($plugin == 'artefact' && table_exists(new XMLDBTable('blocktype_installed'))) { // go check it for blocks as well
+                $btlocation = get_config('docroot') . $plugin . '/' . $dir . '/blocktype';
+                if (!is_dir($btlocation)) {
+                    continue;
+                }
 
-            $btdirhandle = opendir($btlocation);
-            while (false !== ($btdir = readdir($btdirhandle))) {
-                if (strpos($btdir, '.') === 0) {
-                    continue;
-                }
-                if (!is_dir(get_config('docroot') . $plugin . '/' . $dir . '/blocktype/' . $btdir)) {
-                    continue;
-                }
-                if (!array_key_exists($dir . '/' . $btdir, $plugins['blocktype']['installed'])) {
-                    try {
-                        if (!array_key_exists($dir, $plugins['artefact']['installed'])) {
-                            throw new InstallationException(get_string('blocktypeprovidedbyartefactnotinstallable', 'error', $dir));
-                        }
-                        validate_plugin('blocktype', $dir . '/' . $btdir, 
-                            get_config('docroot') . 'artefact/' . $dir . '/blocktype/' . $btdir);
-                        $plugins['blocktype']['notinstalled'][$dir . '/' . $btdir] = array();
+                $btdirhandle = opendir($btlocation);
+                while (false !== ($btdir = readdir($btdirhandle))) {
+                    if (strpos($btdir, '.') === 0) {
+                        continue;
                     }
-                    catch (InstallationException $_e) {
-                        $plugins['blocktype']['notinstalled'][$dir . '/' . $btdir]['notinstallable'] = $_e->getMessage();
+                    if (!is_dir(get_config('docroot') . $plugin . '/' . $dir . '/blocktype/' . $btdir)) {
+                        continue;
+                    }
+                    if (!array_key_exists($dir . '/' . $btdir, $plugins['blocktype']['installed'])) {
+                        try {
+                            if (!array_key_exists($dir, $plugins['artefact']['installed'])) {
+                                throw new InstallationException(get_string('blocktypeprovidedbyartefactnotinstallable', 'error', $dir));
+                            }
+                            validate_plugin('blocktype', $dir . '/' . $btdir, 
+                                get_config('docroot') . 'artefact/' . $dir . '/blocktype/' . $btdir);
+                            $plugins['blocktype']['notinstalled'][$dir . '/' . $btdir] = array();
+                        }
+                        catch (InstallationException $_e) {
+                            $plugins['blocktype']['notinstalled'][$dir . '/' . $btdir]['notinstallable'] = $_e->getMessage();
+                        }
                     }
                 }
             }

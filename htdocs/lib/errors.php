@@ -395,6 +395,8 @@ function exception (Exception $e) {
             $e->set_log_off();
         }
     }
+
+    // Display the message and die
     $e->handle_exception();
 }
 
@@ -460,7 +462,7 @@ class MaharaException extends Exception {
         return $this->getMessage();
     }
 
-    public function handle_exception() {
+    public final function handle_exception() {
 
         if (!empty($this->log)) {
             log_message($this->getMessage(), LOG_LEVEL_WARN, true, true, $this->getFile(), $this->getLine(), $this->getTrace());
@@ -635,12 +637,13 @@ class ConfigSanityException extends ConfigException {
  * An SQL related error occured
  */
 class SQLException extends SystemException {
-    public function handle_exception() {
-        if (!empty($GLOBALS['_TRANSACTION_STARTED'])) {
+    public function __construct($message=null, $code=0) {
+        if ($GLOBALS['_TRANSACTION_LEVEL'] > 0) {
+            log_debug('rolling back a transaction');
             db_rollback();
         }
+        parent::__construct($message, $code);
         log_warn($this->getMessage());
-        parent::handle_exception();
     }
 }
 

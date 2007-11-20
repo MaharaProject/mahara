@@ -1,14 +1,14 @@
 <VirtualHost *>
-    ServerName __SERVERNAME__
+    Include /etc/mahara/servername.conf
 
-    DocumentRoot /var/www/mahara
+    DocumentRoot /usr/share/mahara
 
     CustomLog __APACHELOGDIR__/mahara.access.log combined
     ErrorLog  __APACHELOGDIR__/mahara.error.log
 
     php_value upload_max_filesize 5M
 
-    <Directory /var/www/mahara>
+    <Directory /usr/share/mahara>
         Options -Indexes
         AllowOverride All
     </Directory>
@@ -32,3 +32,4 @@
     </Location>
 </VirtualHost>
 
+Include /etc/mahara/serverredirects.conf

@@ -549,9 +549,11 @@ function core_install_lastcoredata_defaults() {
     $user->lastname = 'User';
     $user->email = 'root@example.org';
     $user->quota = get_config_plugin('artefact', 'file', 'defaultquota');
-    $newid = insert_record('usr', $user);
+    $user->authinstance = $auth_instance->id;
+    $newid = insert_record('usr', $user, 'id', true);
 
-    if ($newid > 0 && get_config('dbtype') == 'mysql') { // gratuitous mysql workaround
+    $dbtype = get_config('dbtype');
+    if ($newid > 0 && ($dbtype == 'mysql' || $dbtype == 'mysql5')) { // gratuitous mysql workaround
         set_field('usr', 'id', 0, 'id', $newid);
     }
 
@@ -670,31 +672,8 @@ function core_install_firstcoredata_defaults() {
     }
     
     // install the view column widths
-    $layouts = array(
-        2 => array(
-            '50,50',
-            '67,33',
-            '33,67',
-            ),
-        3 => array(
-            '33,33,33',
-            '25,50,25',
-            '15,70,15',
-            ),
-        4 => array(
-            '25,25,25,25',
-            '20,30,30,20',
-            ),
-    );
+    install_view_column_widths();
 
-    $layout = new StdClass;
-    foreach ($layouts as $column => $widths) {
-        foreach ($widths as $width) {
-            $layout->columns = $column;
-            $layout->widths = $width;
-            insert_record('view_layout', $layout);
-        }
-    }
     db_commit();
 }
 
@@ -850,6 +829,40 @@ function install_blocktype_categories() {
             install_blocktype_categories_for_plugin(blocktype_single_to_namespaced($bt->name, $bt->artefactplugin));
         }
     }
+}
+
+/**
+ * Installs all the allowed column widths for views. Used when installing core 
+ * defaults, and also when upgrading from 0.8 to 0.9
+ */
+function install_view_column_widths() {
+    db_begin();
+    $layouts = array(
+        2 => array(
+            '50,50',
+            '67,33',
+            '33,67',
+            ),
+        3 => array(
+            '33,33,33',
+            '25,50,25',
+            '15,70,15',
+            ),
+        4 => array(
+            '25,25,25,25',
+            '20,30,30,20',
+            ),
+    );
+
+    $layout = new StdClass;
+    foreach ($layouts as $column => $widths) {
+        foreach ($widths as $width) {
+            $layout->columns = $column;
+            $layout->widths = $width;
+            insert_record('view_layout', $layout);
+        }
+    }
+    db_commit();
 }
 
 ?>

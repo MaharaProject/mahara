@@ -27,6 +27,7 @@
 defined('INTERNAL') || die();
 
 function xmldb_core_upgrade($oldversion=0) {
+    ini_set('max_execution_time', 120); // Let's be safe
 
     $status = true;
 
@@ -320,10 +321,35 @@ function xmldb_core_upgrade($oldversion=0) {
         $key->setAttributes(XMLDB_KEY_FOREIGN, array('block'), 'block_instance', array('id'));
         add_key($table, $key);
 
+        // These fields will be dropped after the template migration. However, 
+        // given that the table needs to be used by block instances being 
+        // created, make the fields nullable during that time.
+        // Note - XMLDB - you are a whore. Hate, Nigel
+        execute_sql('ALTER TABLE {view_artefact} ALTER ctime DROP NOT NULL');
+        execute_sql('ALTER TABLE {view_artefact} ALTER format DROP NOT NULL');
+
+        // Install all the blocktypes and their categories now, as they'll be 
+        // needed for the template migration
+        install_blocktype_categories();
+        foreach(array(
+            'textbox',
+            'file/image', 'file/filedownload',
+            'blog/blogpost', 'blog/blog', 'blog/recentposts',
+            'resume/resumefield',
+            'internal/profileinfo') as $blocktype) {
+            $data = check_upgrades("blocktype.$blocktype");
+            upgrade_plugin($data);
+        }
+
+        // install the view column widths
+        install_view_column_widths();
+
+        // Run the template migration
         require_once(get_config('docroot') . 'lib/db/templatemigration.php');
         upgrade_template_migration();
 
-        change_field_notnull(new XMLDBTAble('view_artefact'), new XMLDBTable('block'));
+        // TODO - enable this again
+        //execute_sql('ALTER TABLE {view_artefact} ALTER block SET NOT NULL');
 
         $table = new XMLDBTable('view_artefact');
         $field = new XMLDBField('oldblock');

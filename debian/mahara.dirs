@@ -1,5 +1,4 @@
 etc/mahara
-var/www/mahara
 usr/share/mahara
 var/lib/mahara
 var/lib/mahara/smarty/compile

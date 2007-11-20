@@ -291,8 +291,12 @@ function profileform_submit(Pieform $form, $values) {
 
 
 $smarty = smarty(array(), array(), array(
-    'mahara' => array('cantremovedefaultemail'),
+    'mahara' => array(
+        'cannotremovedefaultemail',
+        'emailtoolong'
+    ),
 ));
+
 
 $smarty->assign('profileform', $profileform);
 

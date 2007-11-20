@@ -1,3 +1,22 @@
+mahara (0.9.0~alpha3~dev) unstable; urgency=low
+
+  * Dev version
+
+ -- Nigel McNie <nigel@catalyst.net.nz>  Fri, 16 Nov 2007 11:14:45 +1300
+
+mahara (0.9.0~alpha2-1) unstable; urgency=low
+
+  * New upstream release
+  * Recommend php5-xmlrpc
+  * Change the way config.php is handled to allow debconf to ask questions,
+    and users to have their own settings if they want.
+  * Remove default username, password and dbname from the config file, to
+    prevent tempting users to use easily guessable details. This change
+    applied upstream.
+  * Added debconf questions for dbtype and dbpass
+
+ -- Nigel McNie <nigel@catalyst.net.nz>  Fri, 16 Nov 2007 10:19:32 +1300
+
 mahara (0.9.0~alpha2~dev) unstable; urgency=low
 
   * Dev version
