@@ -29,6 +29,7 @@ install: configure-stamp
 	find $(CURDIR)/debian/mahara/usr/share/mahara/ -name "LICENSE*" -exec rm {} \;
 
 	# Exclude specific files/directories
+	rm -f $(CURDIR)/debian/mahara/usr/share/mahara/robots.txt
 	rm -f $(CURDIR)/debian/mahara/usr/share/mahara/lib/phpmailer/ChangeLog.txt
 	rm -rf $(CURDIR)/debian/mahara/usr/share/mahara/lib/adodb/docs/
 	rm -rf $(CURDIR)/debian/mahara/usr/share/mahara/lib/adodb/tests/
@@ -43,8 +44,9 @@ install: configure-stamp
 	rm -f $(CURDIR)/debian/mahara/usr/share/mahara/lib/snoopy/TODO
 	rm -f $(CURDIR)/debian/mahara/usr/share/mahara/lib/snoopy/NEWS
 
-	# Config file (common package)
+	# Config files (common package)
 	cp $(CURDIR)/debian/config.php $(CURDIR)/debian/mahara/etc/mahara/
+	cp $(CURDIR)/htdocs/robots.txt $(CURDIR)/debian/mahara/etc/mahara/
 
 	# Config file (-apache)
 	cp $(CURDIR)/htdocs/.htaccess $(CURDIR)/debian/mahara-apache/usr/share/mahara
