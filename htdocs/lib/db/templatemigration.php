@@ -27,6 +27,9 @@
 defined('INTERNAL') || die();
 require_once('view.php');
 safe_require('blocktype', 'textbox'); // need this for labels, always
+safe_require('artefact', 'internal'); // needed for blocktype creation
+safe_require('artefact', 'resume');   // ditto
+
 
 /**
  * Performs the template migration, from the old view template style of 0.8 to 
@@ -51,14 +54,14 @@ function upgrade_template_migration() {
 
     // ppae
     $ppae_text = array(
-        'Group Name', 
-        'Student Names', 
-        'Mission and Vision Statement (Concept and Concept Outline)', 
-        'Physical Design of the space (explain, using theorists, how you created ambeince and support of holistic learning for each child)', 
-        'Schedule or timetable of tasks and events prior to opening', 
-        'Curriculum Matrix for first six weeks, specific activities for beginners, intermediates, end-game (provide NZCF AO/level cross-reference)', 
-        'Yearlong Teaching and Learning Topics plan for beginners, intermediates and end-game.<br>(Justify your choices by citing educationalists, psychologists and other theorists)', 
-        'Priorised table of equipment, materials and supplies'
+        '<h4>Group Name</h4>', 
+        '<h4>Student Names</h4>', 
+        '<h4>Mission and Vision Statement (Concept and Concept Outline)</h4>', 
+        '<h4>Physical Design of the space</h4><p>Explain, using theorists, how you created ambeince and support of holistic learning for each child</p>', 
+        '<h4>Schedule or timetable of tasks and events prior to opening</h4>', 
+        '<h4>Curriculum Matrix for first six weeks, specific activities for beginners, intermediates, end-game</h4><p>provide NZCF AO/level cross-reference</p>', 
+        '<h4>Yearlong Teaching and Learning Topics plan for beginners, intermediates and end-game.</h4><p>Justify your choices by citing educationalists, psychologists and other theorists</p>', 
+        '<h4>Priorised table of equipment, materials and supplies</h4>'
     );
 
 
@@ -96,8 +99,8 @@ function upgrade_template_migration() {
         }
         $numcolumns = count($viewcolumns);
 
-        // Temporary, testing the migration of blogreflection only
-        if ($view->template != 'blogreflection') {
+        // Temporary, testing the migration of certain templates only
+        if ($view->template != 'blogandprofile') {
             //log_debug('skipping template, it is not blogreflection');
             continue;
         }
@@ -118,7 +121,7 @@ function upgrade_template_migration() {
             foreach ($ablocks as $block) {
                 if (!upgrade_template_block_exists($viewcolumns, $block->oldblock)) {
                     // There's no block here. We can make one and insert it
-                    $bi = upgrade_template_convert_block_to_blockinstance($block, $view->id);
+                    $bi = upgrade_template_convert_block_to_blockinstance($block, $view);
                     // note: the location to insert the block is known as 
                     // 'oldblock', as the column as been renamed in the database 
                     // in preparation for its removal
@@ -170,15 +173,26 @@ function upgrade_template_migration() {
         }
         else if ($view->template == 'PPAE') {
             if (!empty($viewcolumns[0]['tpl_label1'])) {
-                upgrade_template_update_wysiwyg($viewcolumns, 0, 'tpl_label1', $ppae_text[0] . '<br>' . update_template_get_wysiwyg_content($viewcolumns, 0, 'tpl_label1'));
+                log_debug('tpl_label1 is not empty, assuming it is a wysiwyg and updating its content');
+                upgrade_template_update_wysiwyg($viewcolumns, 0, 'tpl_label1', null, '<h4>' . $ppae_text[0] . '</h4>' . upgrade_template_get_wysiwyg_content($viewcolumns, 0, 'tpl_label1'));
             }
             if (!empty($viewcolumns[0]['tpl_label2']) || !empty($viewcolumns[0]['tpl_label3']) || !empty($viewcolumns[0]['tpl_label4']) || !empty($viewcolumns[0]['tpl_label5'])) {
                 // mash it all into the first one and unset the rest 
-                upgrade_template_update_wysiwyg($viewcolumns, 0, 'tpl_label2', 
-                    $ppae_text[1] . '<br>'
+                log_debug('assuming tpl_label2 is a wysiwyg');
+                $label2_text = '<h4>' . $ppae_text[1] . '</h4>'
+                    . upgrade_template_get_wysiwyg_content($viewcolumns, 0, 'tpl_label2') . '<br>' 
                     . upgrade_template_get_wysiwyg_content($viewcolumns, 0, 'tpl_label3') . '<br>' 
                     . upgrade_template_get_wysiwyg_content($viewcolumns, 0, 'tpl_label4') . '<br>'
-                    . upgrade_template_get_wysiwyg_content($viewcolumns, 0, 'tpl_label5'));
+                    . upgrade_template_get_wysiwyg_content($viewcolumns, 0, 'tpl_label5');
+
+                $label2_text = preg_replace('#(<br>)+$#', '', $label2_text);
+
+                if (upgrade_template_block_exists($viewcolumns, 'tpl_label2')) {
+                    upgrade_template_update_wysiwyg($viewcolumns, 0, 'tpl_label2', null, $label2_text);
+                }
+                else {
+                    upgrate_template_insert_block($viewcolumns, 'tpl_label2', upgrade_template_create_wysiwyg($label2_text, $view->id));
+                }
                 unset($viewcolumns[0]['tpl_label3']);
                 unset($viewcolumns[0]['tpl_label4']);
                 unset($viewcolumns[0]['tpl_label5']);
@@ -203,18 +217,21 @@ function upgrade_template_migration() {
             }
         }
         
-        // Clean up empty columns 
-        foreach ($viewcolumns as $c => $col) {
-            $empty = true;
-            foreach ($col as $key => $guff) {
-                if (!empty($guff)) {
-                    $empty = false;
+        // Clean up empty columns, although the gallery should always have its 
+        // five columns
+        if ($view->template != 'gallery') {
+            foreach ($viewcolumns as $c => $col) {
+                $empty = true;
+                foreach ($col as $key => $guff) {
+                    if (!empty($guff)) {
+                        $empty = false;
+                    }
                 }
-            }
-            if ($empty) {
-                log_debug("Column $c is empty");
-                $numcolumns--;
-                unset($viewcolumns[$c]);
+                if ($empty) {
+                    log_debug("Column $c is empty");
+                    $numcolumns--;
+                    unset($viewcolumns[$c]);
+                }
             }
         }
         log_debug("Final number of columns in view: $numcolumns");
@@ -297,12 +314,39 @@ function upgrade_template_update_block(&$columns, $block) {
     // to add, add it directly to the blockinstance
     if ($bi->get('blocktype') == 'filedownload') {
         if ($block->artefacttype == 'file' || $block->artefacttype == 'image') {
-            $configdata = $bi->get('configdata');
-            $configdata['artefactids'][] = $block->artefact;
-            $bi->set('configdata', $configdata);
+            upgrade_template_add_artefact_to_blockinstance($bi, $block->artefact);
         }
     }
+    // If the blockinstance is profileinfo, we can keep adding profile fields to it
+    else if ($bi->get('blocktype') == 'profileinfo') {
+        if (in_array($block->artefacttype, PluginArtefactInternal::get_artefact_types())) {
+            if ($block->artefacttype != 'profileicon') {
+                upgrade_template_add_artefact_to_blockinstance($bi, $block->artefact);
+            }
+            else {
+                // The profileicon is stored in a dedicated field, not 'artefactids'
+                $configdata = $bi->get('configdata');
+                $configdata['profileicon'] = $artefact;
+                $bi->set('configdata', $configdata);
+            }
+        }
+    }
+    else if ($bi->get('blocktype') == 'recentposts') {
+        if ($block->artefacttype == 'blog') {
+            upgrade_template_add_artefact_to_blockinstance($bi, $block->artefact);
+        }
+    }
+}
 
+/**
+ * Given a blockinstance that is assumed to have an 'artefactids' config field 
+ * and an artefact, ensures that the blockinstance config includes the given 
+ * artefact ID
+ */
+function upgrade_template_add_artefact_to_blockinstance(BlockInstance $bi, $artefact) {
+    $configdata = $bi->get('configdata');
+    $configdata['artefactids'][] = $artefact;
+    $bi->set('configdata', $configdata);
 }
 
 /**
@@ -355,10 +399,14 @@ function upgrade_template_update_wysiwyg(&$columns, $column, $key, $appendconten
 }
 
 /**
- * Gets content of an existing WYSIWYG blockinstance
+ * Gets content of an existing WYSIWYG blockinstance, or an empty string if the 
+ * block is empty
  */
 function upgrade_template_get_wysiwyg_content($columns, $column, $key) {
     $block = $columns[$column][$key];
+    if (empty($block)) {
+        return '';
+    }
     $data = $block->get('configdata');
     return $data['text'];
 }
@@ -536,25 +584,34 @@ function upgrade_template_convert_block_to_blockinstance($block, $view) {
             'title' => $block->title,
             'blocktype' => 'blogpost',
             'configdata' => serialize(array('artefactid' => $block->artefact)),
-            'view' => $view,
+            'view' => $view->id,
         ));
         return $bi;
     }
     else if ($block->artefacttype == 'blog') {
+        if ($block->format == 'listself') {
+            $blocktype = 'recentposts';
+            $configdata = array('artefactids' => array($block->artefact));
+        }
+        else {
+            $blocktype = 'blog';
+            $configdata = array('artefactid' => $block->artefact);
+        }
+
         $bi = new BlockInstance(0, array(
-            'title' => $block->title,
-            'blocktype' => 'blog',
-            'configdata' => serialize(array('artefactid' => $block->artefact)),
-            'view' => $view,
+            'title' => '',
+            'blocktype' => $blocktype,
+            'configdata' => serialize($configdata),
+            'view' => $view->id,
         ));
         return $bi;
     }
     else if ($block->artefacttype == 'image') {
         $bi = new BlockInstance(0, array(
-            'title' => $block->title,
+            'title' => ($view->template == 'gallery' ? '' : $block->title),
             'blocktype' => 'image',
-            'configdata' => serialize(array('artefactid' => $block->artefact)),
-            'view' => $view,
+            'configdata' => serialize(array('artefactid' => $block->artefact, 'width' => ($view->template == 'gallery' ? '200' : ''))),
+            'view' => $view->id,
         ));
         return $bi;
     }
@@ -563,7 +620,26 @@ function upgrade_template_convert_block_to_blockinstance($block, $view) {
             'title' => $block->title,
             'blocktype' => 'filedownload',
             'configdata' => serialize(array('artefactids' => array($block->artefact))),
-            'view' => $view,
+            'view' => $view->id,
+        ));
+        return $bi;
+    }
+    else if (in_array($block->artefacttype, PluginArtefactResume::get_artefact_types())) {
+        $bi = new BlockInstance(0, array(
+            'title' => $block->title,
+            'blocktype' => 'resumefield',
+            'configdata' => serialize(array('artefactid' => $block->artefact)),
+            'view' => $view->id,
+        ));
+        return $bi;
+    }
+    else if (in_array($block->artefacttype, PluginArtefactInternal::get_artefact_types())) {
+        // This happens in the blogandprofile template, there's a 'listself' internal artefact thing
+        $bi = new BlockInstance(0, array(
+            'title' => '',
+            'blocktype' => 'profileinfo',
+            'configdata' => serialize(array('artefactids' => array($block->artefact))),
+            'view' => $view->id,
         ));
         return $bi;
     }
@@ -572,7 +648,7 @@ function upgrade_template_convert_block_to_blockinstance($block, $view) {
         'title' => 'TODO - correct blocktype',
         'blocktype' => 'textbox',
         'configdata' => serialize(array('text' => 'TODO - correct blocktype')),
-        'view' => $view,
+        'view' => $view->id,
     ));
     return $bi;
 }

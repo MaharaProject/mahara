@@ -330,7 +330,12 @@ function xmldb_core_upgrade($oldversion=0) {
         // Install all the blocktypes and their categories now, as they'll be 
         // needed for the template migration
         install_blocktype_categories();
-        foreach(array('textbox', 'file/image', 'file/filedownload', 'blog/blogpost', 'blog/blog') as $blocktype) {
+        foreach(array(
+            'textbox',
+            'file/image', 'file/filedownload',
+            'blog/blogpost', 'blog/blog', 'blog/recentposts',
+            'resume/resumefield',
+            'internal/profileinfo') as $blocktype) {
             $data = check_upgrades("blocktype.$blocktype");
             upgrade_plugin($data);
         }
