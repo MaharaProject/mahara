@@ -100,7 +100,7 @@ function upgrade_template_migration() {
         $numcolumns = count($viewcolumns);
 
         // Temporary, testing the migration of certain templates only
-        if ($view->template != 'blogandprofile') {
+        if ($view->template != 'filelist' && $view->template != 'PPAE') {
             //log_debug('skipping template, it is not blogreflection');
             continue;
         }
@@ -607,10 +607,18 @@ function upgrade_template_convert_block_to_blockinstance($block, $view) {
         return $bi;
     }
     else if ($block->artefacttype == 'image') {
+        if ($block->format == 'listself') {
+            $blocktype = 'filedownload';
+            $configdata = array('artefactids' => array($block->artefact));
+        }
+        else {
+            $blocktype = 'image';
+            $configdata = array('artefactid' => $block->artefact, 'width' => ($view->template == 'gallery' ? 200 : ''));
+        }
         $bi = new BlockInstance(0, array(
             'title' => ($view->template == 'gallery' ? '' : $block->title),
-            'blocktype' => 'image',
-            'configdata' => serialize(array('artefactid' => $block->artefact, 'width' => ($view->template == 'gallery' ? '200' : ''))),
+            'blocktype' => $blocktype,
+            'configdata' => serialize($configdata),
             'view' => $view->id,
         ));
         return $bi;
