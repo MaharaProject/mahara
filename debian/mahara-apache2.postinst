@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # postinst script for mahara-apache2
 #
 # see: dh_installdeb(1)

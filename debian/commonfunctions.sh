@@ -1,4 +1,4 @@
-function restart_apache {
+restart_apache() {
         if (apachectl configtest >/dev/null 2>&1); then
             echo "Gracefully restarting apache"
             apachectl graceful
@@ -10,7 +10,7 @@ function restart_apache {
         fi
 }
 
-function restart_apache2 {
+restart_apache2() {
         if (apache2ctl configtest >/dev/null 2>&1); then
             echo "Gracefully restarting apache2"
             apache2ctl graceful
