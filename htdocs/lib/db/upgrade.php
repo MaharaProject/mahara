@@ -333,8 +333,9 @@ function xmldb_core_upgrade($oldversion=0) {
         foreach(array(
             'textbox',
             'file/image', 'file/filedownload',
-            'blog/blogpost', 'blog/blog',
-            'resume/resumefield') as $blocktype) {
+            'blog/blogpost', 'blog/blog', 'blog/recentposts',
+            'resume/resumefield',
+            'internal/profileinfo') as $blocktype) {
             $data = check_upgrades("blocktype.$blocktype");
             upgrade_plugin($data);
         }

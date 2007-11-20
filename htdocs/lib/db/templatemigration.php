@@ -27,6 +27,9 @@
 defined('INTERNAL') || die();
 require_once('view.php');
 safe_require('blocktype', 'textbox'); // need this for labels, always
+safe_require('artefact', 'internal'); // needed for blocktype creation
+safe_require('artefact', 'resume');   // ditto
+
 
 /**
  * Performs the template migration, from the old view template style of 0.8 to 
@@ -97,7 +100,7 @@ function upgrade_template_migration() {
         $numcolumns = count($viewcolumns);
 
         // Temporary, testing the migration of certain templates only
-        if ($view->template != 'gallery') {
+        if ($view->template != 'blogandprofile') {
             //log_debug('skipping template, it is not blogreflection');
             continue;
         }
@@ -311,12 +314,39 @@ function upgrade_template_update_block(&$columns, $block) {
     // to add, add it directly to the blockinstance
     if ($bi->get('blocktype') == 'filedownload') {
         if ($block->artefacttype == 'file' || $block->artefacttype == 'image') {
-            $configdata = $bi->get('configdata');
-            $configdata['artefactids'][] = $block->artefact;
-            $bi->set('configdata', $configdata);
+            upgrade_template_add_artefact_to_blockinstance($bi, $block->artefact);
         }
     }
+    // If the blockinstance is profileinfo, we can keep adding profile fields to it
+    else if ($bi->get('blocktype') == 'profileinfo') {
+        if (in_array($block->artefacttype, PluginArtefactInternal::get_artefact_types())) {
+            if ($block->artefacttype != 'profileicon') {
+                upgrade_template_add_artefact_to_blockinstance($bi, $block->artefact);
+            }
+            else {
+                // The profileicon is stored in a dedicated field, not 'artefactids'
+                $configdata = $bi->get('configdata');
+                $configdata['profileicon'] = $artefact;
+                $bi->set('configdata', $configdata);
+            }
+        }
+    }
+    else if ($bi->get('blocktype') == 'recentposts') {
+        if ($block->artefacttype == 'blog') {
+            upgrade_template_add_artefact_to_blockinstance($bi, $block->artefact);
+        }
+    }
+}
 
+/**
+ * Given a blockinstance that is assumed to have an 'artefactids' config field 
+ * and an artefact, ensures that the blockinstance config includes the given 
+ * artefact ID
+ */
+function upgrade_template_add_artefact_to_blockinstance(BlockInstance $bi, $artefact) {
+    $configdata = $bi->get('configdata');
+    $configdata['artefactids'][] = $artefact;
+    $bi->set('configdata', $configdata);
 }
 
 /**
@@ -549,8 +579,6 @@ function upgrade_template_get_view_layout($template) {
  * return it
  */
 function upgrade_template_convert_block_to_blockinstance($block, $view) {
-    safe_require('artefact', 'resume');
-
     if ($block->artefacttype == 'blogpost') {
         $bi = new BlockInstance(0, array(
             'title' => $block->title,
@@ -561,10 +589,19 @@ function upgrade_template_convert_block_to_blockinstance($block, $view) {
         return $bi;
     }
     else if ($block->artefacttype == 'blog') {
+        if ($block->format == 'listself') {
+            $blocktype = 'recentposts';
+            $configdata = array('artefactids' => array($block->artefact));
+        }
+        else {
+            $blocktype = 'blog';
+            $configdata = array('artefactid' => $block->artefact);
+        }
+
         $bi = new BlockInstance(0, array(
-            'title' => $block->title,
-            'blocktype' => 'blog',
-            'configdata' => serialize(array('artefactid' => $block->artefact)),
+            'title' => '',
+            'blocktype' => $blocktype,
+            'configdata' => serialize($configdata),
             'view' => $view->id,
         ));
         return $bi;
@@ -592,6 +629,16 @@ function upgrade_template_convert_block_to_blockinstance($block, $view) {
             'title' => $block->title,
             'blocktype' => 'resumefield',
             'configdata' => serialize(array('artefactid' => $block->artefact)),
+            'view' => $view->id,
+        ));
+        return $bi;
+    }
+    else if (in_array($block->artefacttype, PluginArtefactInternal::get_artefact_types())) {
+        // This happens in the blogandprofile template, there's a 'listself' internal artefact thing
+        $bi = new BlockInstance(0, array(
+            'title' => '',
+            'blocktype' => 'profileinfo',
+            'configdata' => serialize(array('artefactids' => array($block->artefact))),
             'view' => $view->id,
         ));
         return $bi;
