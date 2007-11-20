@@ -20,7 +20,6 @@ install: configure-stamp
 
 	# Main Mahara files
 	cp -r $(CURDIR)/htdocs/* $(CURDIR)/debian/mahara/usr/share/mahara
-	cp $(CURDIR)/htdocs/.htaccess $(CURDIR)/debian/mahara/usr/share/mahara
 
 	# Exclude common files
 	find $(CURDIR)/debian/mahara/usr/share/mahara/ -name "readme.txt" -exec rm {} \;
@@ -48,10 +47,12 @@ install: configure-stamp
 	cp $(CURDIR)/debian/config.php $(CURDIR)/debian/mahara/etc/mahara/
 
 	# Config file (-apache)
+	cp $(CURDIR)/htdocs/.htaccess $(CURDIR)/debian/mahara-apache/usr/share/mahara
 	cp $(CURDIR)/debian/apache.conf.template $(CURDIR)/debian/mahara-apache/etc/mahara/apache.conf
 	perl -i -p -e "s|__APACHELOGDIR__|/var/log/apache|" $(CURDIR)/debian/mahara-apache/etc/mahara/apache.conf
 
 	# Config file (-apache2)
+	cp $(CURDIR)/htdocs/.htaccess $(CURDIR)/debian/mahara-apache2/usr/share/mahara
 	cp $(CURDIR)/debian/apache.conf.template $(CURDIR)/debian/mahara-apache2/etc/mahara/apache.conf
 	perl -i -p -e "s|__APACHELOGDIR__|/var/log/apache2|" $(CURDIR)/debian/mahara-apache2/etc/mahara/apache.conf
 
