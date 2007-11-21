@@ -636,7 +636,6 @@ function core_install_firstcoredata_defaults() {
         array('usermessage', 0, 0),
         array('feedback', 0, 0),
         array('watchlist', 0, 1),
-        array('newview', 0, 1),
         array('viewaccess', 0, 1),
         array('contactus', 1, 1),
         array('objectionable', 1, 1),

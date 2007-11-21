@@ -30,7 +30,6 @@ $string['typemaharamessage'] = 'System message';
 $string['typeusermessage'] = 'Message from other users';
 $string['typefeedback'] = 'Feedback';
 $string['typewatchlist'] = 'Watchlist';
-$string['typenewview'] = 'New view';
 $string['typeviewaccess'] = 'New view access';
 $string['typecontactus'] = 'Contact us';
 $string['typeobjectionable'] = 'Objectionable content';
@@ -72,8 +71,6 @@ $string['newcontactusfrom'] = 'New contact us from';
 $string['newcontactus'] = 'New contact us';
 $string['newfeedbackonview'] = 'New feedback on view';
 $string['newfeedbackonartefact'] = 'New feedback on artefact';
-$string['newviewmessage'] = 'has created a view called "%s" and has granted you access to it.';
-$string['newviewsubject'] = 'New view created';
 
 $string['newviewaccessmessage'] = 'You have been added to the access list for the view called';
 $string['newviewaccesssubject'] = 'New view access';
