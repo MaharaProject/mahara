@@ -644,6 +644,15 @@ function upgrade_template_convert_block_to_blockinstance($block, $view) {
         ));
         return $bi;
     }
+    else if ($block->artefacttype == 'folder') {
+        $bi = new BlockInstance(0, array(
+            'title' => '',
+            'blocktype' => 'folder',
+            'configdata' => serialize(array('artefactid' => $block->artefact)),
+            'view' => $view->id,
+        ));
+        return $bi;
+    }
 
     log_info("Created a placeholder blockinstance for:");
     log_info($block);
