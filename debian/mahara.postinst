@@ -61,6 +61,10 @@ case "$1" in
         # Touch cron log
         touch /var/log/mahara-cron.log
         chown www-data:www-data /var/log/mahara-cron.log
+
+        # Link to captcha font
+        ln -s /usr/share/fonts/truetype/freefont/FreeMono.ttf /usr/share/mahara/theme/default/static/captcha.ttf
+        ln -s /usr/share/fonts/truetype/freefont/FreeMono.ttf /usr/share/mahara/theme/schoolmyportfolio/static/captcha.ttf
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

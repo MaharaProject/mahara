@@ -29,6 +29,8 @@ install: configure-stamp
 	find $(CURDIR)/debian/mahara/usr/share/mahara/ -name "LICENSE*" -exec rm {} \;
 
 	# Exclude specific files/directories
+	rm -f $(CURDIR)/debian/mahara/usr/share/mahara/theme/default/static/captcha.ttf
+	rm -f $(CURDIR)/debian/mahara/usr/share/mahara/theme/schoolmyportfolio/static/captcha.ttf
 	rm -f $(CURDIR)/debian/mahara/usr/share/mahara/robots.txt
 	rm -f $(CURDIR)/debian/mahara/usr/share/mahara/lib/phpmailer/ChangeLog.txt
 	rm -rf $(CURDIR)/debian/mahara/usr/share/mahara/lib/adodb/docs/
