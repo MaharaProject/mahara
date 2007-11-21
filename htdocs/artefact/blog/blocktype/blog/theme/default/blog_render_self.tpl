@@ -12,7 +12,12 @@ var blog_renderfull{$blockid} = new TableRenderer(
     [
         {literal}function(r) {
             var td = TD();
-            td.innerHTML = r.content.html;
+            if (r.content.html) {
+                td.innerHTML = r.content.html;
+            }
+            else {
+                td.innerHTML = r.content;
+            }
             return td;
         }{/literal}
     ]
