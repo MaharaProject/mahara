@@ -3,7 +3,7 @@
     {contextualhelp plugintype='artefact' pluginname='resume' section='addeducationhistory'}
 {/if}
 </h3>{/if}
-<table id="educationhistorylist" class="tablerenderer hidden resumefive">
+<table id="educationhistorylist_{$suffix}" class="tablerenderer hidden resumefive">
     <thead>
         <tr>
             <th class="resumedate">{str tag='startdate' section='artefact.resume'}</th>
