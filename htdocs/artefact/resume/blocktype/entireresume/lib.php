@@ -100,29 +100,31 @@ class PluginBlocktypeEntireresume extends PluginBlocktype {
      * blockinstance at blockinstance commit time
      */
     public static function ensure_resume_artefacts_in_blockinstance($event, $blockinstance) {
-        safe_require('artefact', 'resume');
-        $artefacttypes = implode(', ', array_map('db_quote', PluginArtefactResume::get_artefact_types()));
+        if ($blockinstance->get('blocktype') == 'entireresume') {
+            safe_require('artefact', 'resume');
+            $artefacttypes = implode(', ', array_map('db_quote', PluginArtefactResume::get_artefact_types()));
 
-        // Get all artefacts that are resume related and belong to the correct owner
-        $artefacts = get_records_sql_array('
-            SELECT id
-            FROM {artefact}
-            WHERE artefacttype IN(' . $artefacttypes . ')
-            AND owner = (
-                SELECT owner
-                FROM {view}
-                WHERE id = ?
-            )', array($blockinstance->get('view')));
+            // Get all artefacts that are resume related and belong to the correct owner
+            $artefacts = get_records_sql_array('
+                SELECT id
+                FROM {artefact}
+                WHERE artefacttype IN(' . $artefacttypes . ')
+                AND owner = (
+                    SELECT owner
+                    FROM {view}
+                    WHERE id = ?
+                )', array($blockinstance->get('view')));
 
-        if ($artefacts) {
-            // Make sure they're registered as being in this view
-            foreach ($artefacts as $artefact) {
-                $record = (object)array(
-                    'view' => $blockinstance->get('view'),
-                    'artefact' => $artefact->id,
-                    'block' => $blockinstance->get('id'),
-                );
-                ensure_record_exists('view_artefact', $record, $record);
+            if ($artefacts) {
+                // Make sure they're registered as being in this view
+                foreach ($artefacts as $artefact) {
+                    $record = (object)array(
+                        'view' => $blockinstance->get('view'),
+                        'artefact' => $artefact->id,
+                        'block' => $blockinstance->get('id'),
+                    );
+                    ensure_record_exists('view_artefact', $record, $record);
+                }
             }
         }
     }

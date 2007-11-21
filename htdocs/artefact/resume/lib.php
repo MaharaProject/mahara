@@ -127,21 +127,22 @@ class ArtefactTypeResume extends ArtefactType {
      */
     public function commit($updateresumeblocks=true) {
         if ($updateresumeblocks) {
-            foreach (get_records_sql_array('
+            if ($blockinstances = get_records_sql_array('
                 SELECT id, view, configdata
                 FROM {block_instance}
                 WHERE blocktype = \'entireresume\'
                 AND "view" IN (
                     SELECT id
                     FROM {view}
-                    WHERE "owner" = ?)', array($this->owner)) as $blockinstance) {
-
-                $whereobject = (object)array(
-                    'view' => $blockinstance->view,
-                    'artefact' => $this->get('id'),
-                    'block' => $blockinstance->id,
-                );
-                ensure_record_exists('view_artefact', $whereobject, $whereobject);
+                    WHERE "owner" = ?)', array($this->owner))) {
+                foreach ($blockinstances as $blockinstance) {
+                    $whereobject = (object)array(
+                        'view' => $blockinstance->view,
+                        'artefact' => $this->get('id'),
+                        'block' => $blockinstance->id,
+                    );
+                    ensure_record_exists('view_artefact', $whereobject, $whereobject);
+                }
             }
         }
         parent::commit();
