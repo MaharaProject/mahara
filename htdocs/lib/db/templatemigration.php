@@ -99,12 +99,6 @@ function upgrade_template_migration() {
         }
         $numcolumns = count($viewcolumns);
 
-        // Temporary, testing the migration of certain templates only
-        if ($view->template != 'filelist' && $view->template != 'PPAE') {
-            //log_debug('skipping template, it is not blogreflection');
-            continue;
-        }
-
         // Handle all label blocks, by converting them to WYSIWYG blocks
         if ($lblocks = get_records_array('view_content', 'view', $view->id)) {
             foreach ($lblocks as $block) {
@@ -228,13 +222,11 @@ function upgrade_template_migration() {
                     }
                 }
                 if ($empty) {
-                    log_debug("Column $c is empty");
                     $numcolumns--;
                     unset($viewcolumns[$c]);
                 }
             }
         }
-        log_debug("Final number of columns in view: $numcolumns");
 
         // Make all the block instances have the correct column and order 
         foreach ($viewcolumns as $c => $col) {
@@ -270,7 +262,6 @@ function upgrade_template_migration() {
 * @param BlockInstance     $bi      blockinstance to insert
 */
 function upgrade_template_insert_block(&$columns, $key, BlockInstance $bi) {
-    log_debug('upgrade_template_insert_block() for key ' . $key);
     foreach ($columns as &$c) {
         if (array_key_exists($key, $c)) {
             if (!empty($c[$key])) {
@@ -316,6 +307,8 @@ function upgrade_template_update_block(&$columns, $block) {
         if ($block->artefacttype == 'file' || $block->artefacttype == 'image') {
             upgrade_template_add_artefact_to_blockinstance($bi, $block->artefact);
         }
+        // More than one artefact in this filedownload block, so remove the title
+        $bi->set('title', '');
     }
     // If the blockinstance is profileinfo, we can keep adding profile fields to it
     else if ($bi->get('blocktype') == 'profileinfo') {
@@ -326,7 +319,7 @@ function upgrade_template_update_block(&$columns, $block) {
             else {
                 // The profileicon is stored in a dedicated field, not 'artefactids'
                 $configdata = $bi->get('configdata');
-                $configdata['profileicon'] = $artefact;
+                $configdata['profileicon'] = $block->artefact;
                 $bi->set('configdata', $configdata);
             }
         }
@@ -613,10 +606,10 @@ function upgrade_template_convert_block_to_blockinstance($block, $view) {
         }
         else {
             $blocktype = 'image';
-            $configdata = array('artefactid' => $block->artefact, 'width' => ($view->template == 'gallery' ? 200 : ''));
+            $configdata = array('artefactid' => $block->artefact, 'width' => ($view->template == 'gallery' ? 175 : 350));
         }
         $bi = new BlockInstance(0, array(
-            'title' => ($view->template == 'gallery' ? '' : $block->title),
+            'title' => '',
             'blocktype' => $blocktype,
             'configdata' => serialize($configdata),
             'view' => $view->id,
@@ -652,6 +645,8 @@ function upgrade_template_convert_block_to_blockinstance($block, $view) {
         return $bi;
     }
 
+    log_info("Created a placeholder blockinstance for:");
+    log_info($block);
     $bi = new BlockInstance(0, array(
         'title' => 'TODO - correct blocktype',
         'blocktype' => 'textbox',

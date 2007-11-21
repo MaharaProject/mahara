@@ -397,10 +397,11 @@ function upgrade_plugin($upgrade) {
             }
             $exists = false;
             $table = $plugintype . '_event_subscription';
+            $block = blocktype_namespaced_to_single($pluginname);
             if (empty($upgrade->install)) {
-                $exists = get_record($table, 'plugin' , $pluginname, 'event', $event->event);
+                $exists = get_record($table, 'plugin' , $block, 'event', $event->event);
             }
-            $event->plugin = $pluginname;
+            $event->plugin = $block;
             if (empty($exists)) {
                 insert_record($table, $event);
             }
@@ -620,6 +621,7 @@ function core_install_firstcoredata_defaults() {
         'deleteartefact',
         'saveview',
         'deleteview',
+        'blockinstancecommit',
     );
 
     foreach ($eventtypes as $et) {

@@ -884,7 +884,7 @@ function handle_event($event, $data) {
         throw new Exception("Invalid event");
     }
 
-    if ($data instanceof ArtefactType) {
+    if ($data instanceof ArtefactType || $data instanceof BlockInstance) {
         // leave it alone
     }
     else if (is_object($data)) {

@@ -738,12 +738,34 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
         return get_records_array('artefact', 'parent', $this->get('id'));
     }
 
+    public function render_self($options) {
+        $smarty = smarty_core();
+        $smarty->assign('title', $this->get('title'));
+        $smarty->assign('description', $this->get('description'));
+        $smarty->assign('viewid', $options['viewid']);
+
+        if ($childrecords = $this->folder_contents()) {
+            $this->add_to_render_path($options);
+            usort($childrecords, array('ArtefactTypeFileBase', 'my_files_cmp'));
+            $children = array();
+            foreach ($childrecords as &$child) {
+                $c = artefact_instance_from_id($child->id);
+                $child->title = $c->get('title');
+                $child->date = format_date(strtotime($child->mtime), 'strfdaymonthyearshort');
+                $child->iconsrc = call_static_method(generate_artefact_class_name($child->artefacttype), 'get_icon', array('id' => $child->id, 'viewid' => $options['viewid']));
+            }
+            $smarty->assign('children', $childrecords);
+        }
+        return array('html' => $smarty->fetch('artefact:file:folder_render_self.tpl'),
+                     'javascript' => null);
+    }
+
     public function describe_size() {
         return $this->count_children() . ' ' . get_string('files', 'artefact.file');
     }
 
     public static function get_icon($options=null) {
-
+        return theme_get_url('images/folder.gif');
     }
 
     public static function collapse_config() {

@@ -27,6 +27,7 @@
 defined('INTERNAL') || die();
 
 function xmldb_core_upgrade($oldversion=0) {
+    ini_set('max_execution_time', 120); // Let's be safe
 
     $status = true;
 
@@ -400,6 +401,14 @@ function xmldb_core_upgrade($oldversion=0) {
         // Last part - setting config variables for max width/height for images
         set_config('imagemaxwidth', 1024);
         set_config('imagemaxheight', 1024);
+    }
+
+    // Add the 'blockinstancecommit' event type
+    if ($oldversion < 2007082203) {
+        $event = (object)array(
+            'name' => 'blockinstancecommit',
+        );
+        ensure_record_exists('event_type', $event, $event);
     }
 
     return $status;
