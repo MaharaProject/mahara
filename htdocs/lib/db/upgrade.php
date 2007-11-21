@@ -28,6 +28,7 @@ defined('INTERNAL') || die();
 
 function xmldb_core_upgrade($oldversion=0) {
     ini_set('max_execution_time', 120); // Let's be safe
+    ini_set('memory_limit', '64M');
 
     $status = true;
 
@@ -168,6 +169,14 @@ function xmldb_core_upgrade($oldversion=0) {
         $field = new XMLDBField('recurse');
         $field->setAttributes(XMLDB_TYPE_INTEGER, 1, false, true, false, null, null, 1);
         drop_field($table, $field);
+    }
+
+    // Add the 'blockinstancecommit' event type
+    if ($oldversion < 2007082203) {
+        $event = (object)array(
+            'name' => 'blockinstancecommit',
+        );
+        ensure_record_exists('event_type', $event, $event);
     }
 
     if ($oldversion < 2007082201) {
@@ -332,11 +341,11 @@ function xmldb_core_upgrade($oldversion=0) {
         // needed for the template migration
         install_blocktype_categories();
         foreach(array(
-            'textbox',
-            'file/image', 'file/filedownload',
+            'textbox', 'externalfeed', 'externalvideo',
+            'file/image', 'file/filedownload', 'file/folder', 'file/internalmedia',
             'blog/blogpost', 'blog/blog', 'blog/recentposts',
-            'resume/resumefield',
-            'internal/profileinfo') as $blocktype) {
+            'resume/resumefield', 'resume/entireresume',
+            'internal/profileinfo', 'internal/contactinfo') as $blocktype) {
             $data = check_upgrades("blocktype.$blocktype");
             upgrade_plugin($data);
         }
@@ -401,14 +410,6 @@ function xmldb_core_upgrade($oldversion=0) {
         // Last part - setting config variables for max width/height for images
         set_config('imagemaxwidth', 1024);
         set_config('imagemaxheight', 1024);
-    }
-
-    // Add the 'blockinstancecommit' event type
-    if ($oldversion < 2007082203) {
-        $event = (object)array(
-            'name' => 'blockinstancecommit',
-        );
-        ensure_record_exists('event_type', $event, $event);
     }
 
     return $status;
