@@ -550,13 +550,16 @@ function core_install_lastcoredata_defaults() {
     $user->email = 'root@example.org';
     $user->quota = get_config_plugin('artefact', 'file', 'defaultquota');
     $user->authinstance = $auth_instance->id;
-    $newid = insert_record('usr', $user, 'id', true);
 
-    $dbtype = get_config('dbtype');
-    if ($newid > 0 && ($dbtype == 'mysql' || $dbtype == 'mysql5')) { // gratuitous mysql workaround
+    if (is_mysql()) { // gratuitous mysql workaround
+        $newid = insert_record('usr', $user, 'id', true);
         set_field('usr', 'id', 0, 'id', $newid);
     }
+    else {
+        insert_record('usr', $user);
+    }
 
+    // Insert the admin user
     $user = new StdClass;
     $user->username = 'admin';
     $user->password = 'mahara';
@@ -636,7 +639,6 @@ function core_install_firstcoredata_defaults() {
         array('usermessage', 0, 0),
         array('feedback', 0, 0),
         array('watchlist', 0, 1),
-        array('newview', 0, 1),
         array('viewaccess', 0, 1),
         array('contactus', 1, 1),
         array('objectionable', 1, 1),

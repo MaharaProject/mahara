@@ -69,7 +69,6 @@ function activity_occurred($activitytype, $data) {
  *  - <b>feedback (view)</b> must contain $view (id) and $message
  *  - <b>watchlist (view) </b> must contain $view (id of view) 
     -       and should also contain $subject (or a boring default will be used)
- *  - <b>newview</b> must contain $owner userid of view owner AND $view (id of new view)
  *  - <b>viewaccess</b> must contain $owner userid of view owner AND $view (id of view) and $oldusers array of userids before access change was committed.
  */
 function handle_activity($activitytype, $data, $cron=false) {
@@ -258,33 +257,7 @@ function handle_activity($activitytype, $data, $cron=false) {
                 }
                 break;
             case 'newview':
-                if (!is_numeric($data->owner) || !is_numeric($data->view)) {
-                    throw new InvalidArgumentException("New view activity type requires view and owner to be set");
-                }
-                if (!$viewinfo = get_record_sql('SELECT u.*, v.title FROM {usr} u
-                                                 JOIN {view} v ON v.owner = u.id
-                                                 WHERE v.id = ?', array($data->view))) {
-                    if (!empty($cron)) { //probably deleted already
-                        return;
-                    }
-                    throw new InvalidArgumentException("Couldn't find view with id " . $data->view);
-                }
-
-                $data->message = get_string('newviewmessage', 'activity', $viewinfo->title);
-                $data->subject = get_string('newviewsubject', 'activity');
-                $data->url = get_config('wwwroot') . 'view/view.php?id=' . $data->view;
-
-                // add users on friendslist or userlist...
-                $users = activity_get_viewaccess_users($data->view, $data->owner, 'newview');
-                if (empty($users)) {
-                    $users = array();
-                }
-                // ick
-                foreach ($users as $user) {
-                    $user->message = display_name($viewinfo, $user) . ' ' . $data->message;
-                }
-
-                break;
+                $data->oldusers = array();
             case 'viewaccess':
                 if (!is_numeric($data->owner) || !is_numeric($data->view)) {
                     throw new InvalidArgumentException("view access activity type requires view and owner to be set");

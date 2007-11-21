@@ -412,6 +412,14 @@ function xmldb_core_upgrade($oldversion=0) {
         set_config('imagemaxheight', 1024);
     }
 
+    if ($oldversion < 20070782205) {
+        set_field('activity_queue', 'type', 'viewaccess', 'type', 'newview');
+        set_field('notification_internal_activity', 'type', 'viewaccess', 'type', 'newview');
+        set_field('notification_emaildigest_queue', 'type', 'viewaccess', 'type', 'newview');
+        delete_records('usr_activity_preference', 'activity', 'newview');
+        delete_records('activity_type', 'name', 'newview');
+    }
+
     return $status;
 
 }
