@@ -123,7 +123,7 @@ function upgrade_template_migration() {
                 }
                 else {
                     // We're dealing with multiple artefacts in the same block... just need to append
-                    upgrade_template_update_block($viewcolumns, $block);
+                    upgrade_template_update_block($viewcolumns, $block, $view);
                 }
             }
         }
@@ -232,11 +232,21 @@ function upgrade_template_migration() {
         foreach ($viewcolumns as $c => $col) {
             $order = 1;
             foreach ($col as $key => $block) {
-                if ($block instanceof BlockInstance) {
-                    $block->set('column', ($c + 1));
-                    $block->set('order', $order);
-                    $block->commit();
-                    $order++;
+                if (is_array($block)) {
+                    foreach ($block as $bi) {
+                        $bi->set('column', ($c + 1));
+                        $bi->set('order', $order);
+                        $bi->commit();
+                        $order++;
+                    }
+                }
+                else {
+                    if ($block instanceof BlockInstance) {
+                        $block->set('column', ($c + 1));
+                        $block->set('order', $order);
+                        $block->commit();
+                        $order++;
+                    }
                 }
             }
         }
@@ -284,15 +294,23 @@ function upgrade_template_insert_block(&$columns, $key, BlockInstance $bi) {
  * @param array (reference) $columns column structure
  * @param stdClass          $block   the new block data
  */
-function upgrade_template_update_block(&$columns, $block) {
+function upgrade_template_update_block(&$columns, $block, $view) {
     // $block->oldblock is where the existing blockinstance is
     // Then we need to establish what to put in $columns, or in the blockinstance
     $bi = null;
+    $column = null;
     foreach ($columns as &$c) {
         if (array_key_exists($block->oldblock, $c)) {
+            $column =& $c;
             if (!empty($c[$block->oldblock])) {
                 $bi = $c[$block->oldblock];
+                // Will be an array if there's more than one blockinstance here. 
+                // See the 'else' clause below
+                if (is_array($bi)) {
+                    $bi = $bi[0];
+                }
             }
+            break;
         }
     }
 
@@ -328,6 +346,14 @@ function upgrade_template_update_block(&$columns, $block) {
         if ($block->artefacttype == 'blog') {
             upgrade_template_add_artefact_to_blockinstance($bi, $block->artefact);
         }
+    }
+    else {
+        // Make a new blockinstance and insert it below
+        $bi = upgrade_template_convert_block_to_blockinstance($block, $view);
+        if (!is_array($column[$block->oldblock])) {
+            $column[$block->oldblock] = array($column[$block->oldblock]);
+        }
+        $column[$block->oldblock] = array_merge(array($bi), $column[$block->oldblock]);
     }
 }
 
