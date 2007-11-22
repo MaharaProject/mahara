@@ -672,7 +672,7 @@ function upgrade_template_convert_block_to_blockinstance($block, $view) {
     }
     else if ($block->artefacttype == 'folder') {
         $bi = new BlockInstance(0, array(
-            'title' => '',
+            'title' => $block->title,
             'blocktype' => 'folder',
             'configdata' => serialize(array('artefactid' => $block->artefact)),
             'view' => $view->id,
