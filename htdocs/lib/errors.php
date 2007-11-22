@@ -638,12 +638,16 @@ class ConfigSanityException extends ConfigException {
  */
 class SQLException extends SystemException {
     public function __construct($message=null, $code=0) {
+        global $DB_IGNORE_SQL_EXCEPTIONS;
+
         if ($GLOBALS['_TRANSACTION_LEVEL'] > 0) {
-            log_debug('rolling back a transaction');
             db_rollback();
         }
         parent::__construct($message, $code);
-        log_warn($this->getMessage());
+
+        if (empty($DB_IGNORE_SQL_EXCEPTIONS)) {
+            log_warn($this->getMessage());
+        }
     }
 }
 

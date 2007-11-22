@@ -476,15 +476,7 @@ function ini_get_bool($ini_get_arg) {
 function load_config() {
     global $CFG;
     
-    try {
-        $dbconfig = get_records_array('config', '', '', '', 'field, value');
-    } 
-    catch (SQLException $e) {
-        // TODO: better reporting if config could not be obtained? This 
-        // normally happens when the system isn't installed
-        log_info($e->getMessage());
-        return false;
-    }
+    $dbconfig = get_records_array('config', '', '', '', 'field, value');
     
     foreach ($dbconfig as $cfg) {
         if (isset($CFG->{$cfg->field}) && $CFG->{$cfg->field} != $cfg->value) {
@@ -523,6 +515,7 @@ function get_config($key) {
 function set_config($key, $value) {
     global $CFG;
 
+    db_ignore_sql_exceptions(true);
     if (get_record('config', 'field', $key)) {
         if (set_field('config', 'value', $value, 'field', $key)) {
             $status = true;
@@ -534,6 +527,7 @@ function set_config($key, $value) {
         $config->value = $value;
         $status = insert_record('config', $config);
     }
+    db_ignore_sql_exceptions(false);
 
     if (!empty($status)) {
         $CFG->{$key} = $value;

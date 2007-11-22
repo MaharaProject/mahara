@@ -172,14 +172,14 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     // Add the 'blockinstancecommit' event type
-    if ($oldversion < 2007082203) {
+    if ($oldversion < 2007082201) {
         $event = (object)array(
             'name' => 'blockinstancecommit',
         );
         ensure_record_exists('event_type', $event, $event);
     }
 
-    if ($oldversion < 2007082201) {
+    if ($oldversion < 2007082202) {
         // Rename the community tables to group - mysql version.
         // This is really quite hacky. You can't rename columns with a foreign 
         // key on them, so you have to drop the key, rename the column, re-add 
@@ -213,7 +213,7 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     // VIEW REWORK MIGRATION
-    if ($oldversion < 2007100200) {
+    if ($oldversion < 2007100203) {
         $table = new XMLDBTable('view_layout');
         $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED,
             XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null, null);
@@ -388,7 +388,7 @@ function xmldb_core_upgrade($oldversion=0) {
 
     // Move files in dataroot into an 'originals' directory, and remove any 
     // cached images
-    if ($oldversion < 2007082202) {
+    if ($oldversion < 2007082204) {
         require('file.php');
         foreach(array('artefact/file', 'artefact/internal/profileicons') as $dir) {
             $datadir = get_config('dataroot') . $dir;
