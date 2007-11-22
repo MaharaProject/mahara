@@ -167,12 +167,10 @@ function upgrade_template_migration() {
         }
         else if ($view->template == 'PPAE') {
             if (!empty($viewcolumns[0]['tpl_label1'])) {
-                log_debug('tpl_label1 is not empty, assuming it is a wysiwyg and updating its content');
                 upgrade_template_update_wysiwyg($viewcolumns, 0, 'tpl_label1', null, '<h4>' . $ppae_text[0] . '</h4>' . upgrade_template_get_wysiwyg_content($viewcolumns, 0, 'tpl_label1'));
             }
             if (!empty($viewcolumns[0]['tpl_label2']) || !empty($viewcolumns[0]['tpl_label3']) || !empty($viewcolumns[0]['tpl_label4']) || !empty($viewcolumns[0]['tpl_label5'])) {
                 // mash it all into the first one and unset the rest 
-                log_debug('assuming tpl_label2 is a wysiwyg');
                 $label2_text = '<h4>' . $ppae_text[1] . '</h4>'
                     . upgrade_template_get_wysiwyg_content($viewcolumns, 0, 'tpl_label2') . '<br>' 
                     . upgrade_template_get_wysiwyg_content($viewcolumns, 0, 'tpl_label3') . '<br>' 
