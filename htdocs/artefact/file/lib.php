@@ -743,6 +743,7 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
         $smarty->assign('title', $this->get('title'));
         $smarty->assign('description', $this->get('description'));
         $smarty->assign('viewid', $options['viewid']);
+        $smarty->assign('hidetitle', isset($options['hidetitle']) ? $options['hidetitle'] : false);
 
         if ($childrecords = $this->folder_contents()) {
             $this->add_to_render_path($options);
