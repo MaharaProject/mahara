@@ -79,10 +79,25 @@ This package also includes the following code:
   Released under the GNU Lesser General Public License 2.1
 
   htdocs/lib/constants.php, searchlib.php, dml.php, ddl.php, 
-  uploadmanager.php, mahara.php, web.php, xmldb/:
+  uploadmanager.php, mahara.php, web.php, file.php, xmldb/:
   Copyright (C) 2006-2007 Catalyst IT Ltd
-  Portions from Moodle, Copyright (C) 1999-2007 Martin Dougiamas
+  Copyright (C) 1999-2007 Martin Dougiamas
   Released under the GNU General Public License 2
+
+  htdocs/lib/xmldb/:
+  Copyright (C) 2001-2007 Martin Dougiamas
+  Copyright (C) 2001-2007 Eloy Lafuente
+  Released under the GNU General Public License 2
+
+  htdocs/lib/pieforms/static/core/pieforms.js:
+  Copyright (C) 2006 Nigel McNie
+  Copyright (C) 2006 Drupal
+  Released under the GNU General Public License 2
+
+  htdocs/search/internal/lib.php:
+  Copyright (C) 2006-2007 Catalyst IT
+  Copyright (C) 2007 Drupal
+  Released under the GNU General Public License
 
 On Debian systems, the complete text of the GNU Lesser General
 Public License can be found in `/usr/share/common-licenses/LGPL-2.1'.
