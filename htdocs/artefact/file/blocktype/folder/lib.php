@@ -32,6 +32,21 @@ class PluginBlocktypeFolder extends PluginBlocktype {
         return get_string('title', 'blocktype.file/folder');
     }
 
+    /**
+     * Optional method. If exists, allows this class to decide the title for 
+     * all blockinstances of this type
+     */
+    public static function get_instance_title(BlockInstance $bi) {
+        $configdata = $bi->get('configdata');
+
+        if (!empty($configdata['artefactid'])) {
+            require_once(get_config('docroot') . 'artefact/lib.php');
+            $folder = artefact_instance_from_id($configdata['artefactid']);
+            return $folder->get('title');
+        }
+        return '';
+    }
+
     public static function get_description() {
         return get_string('description', 'blocktype.file/folder');
     }
@@ -44,6 +59,7 @@ class PluginBlocktypeFolder extends PluginBlocktype {
         require_once(get_config('docroot') . 'artefact/lib.php');
         $configdata = $instance->get('configdata');
         $configdata['viewid'] = $instance->get('view');
+        $configdata['hidetitle'] = true;
 
         // This can be either an image or profileicon. They both implement 
         // render_self
@@ -72,7 +88,7 @@ class PluginBlocktypeFolder extends PluginBlocktype {
         return array(
             'name'  => 'artefactid',
             'type'  => 'artefactchooser',
-            'title' => get_string('folder'),
+            'title' => get_string('folder', 'artefact.file'),
             'defaultvalue' => $default,
             'rules' => array(
                 'required' => true,

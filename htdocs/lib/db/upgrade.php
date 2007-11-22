@@ -357,8 +357,8 @@ function xmldb_core_upgrade($oldversion=0) {
         require_once(get_config('docroot') . 'lib/db/templatemigration.php');
         upgrade_template_migration();
 
-        // TODO - enable this again
-        //execute_sql('ALTER TABLE {view_artefact} ALTER block SET NOT NULL');
+        delete_records_select('view_artefact', 'block IS NULL');
+        execute_sql('ALTER TABLE {view_artefact} ALTER block SET NOT NULL');
 
         $table = new XMLDBTable('view_artefact');
         $field = new XMLDBField('oldblock');

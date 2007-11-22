@@ -1,5 +1,5 @@
 <div>
-  <h3>{$title|escape}</h3>
+  {if !$hidetitle}<h3>{$title|escape}</h3>{/if}
   <div>{$description|escape}</div>
   <div>
   {if (isset($children))}
