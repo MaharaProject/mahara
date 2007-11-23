@@ -28,7 +28,7 @@ defined('INTERNAL') || die();
 
 $config = new StdClass;
 $config->version = 2007112300;
-$config->release = '0.9.0alpha3dev';
+$config->release = '0.9.0beta1';
 $config->minupgradefrom = 2007080700;
 $config->minupgraderelease = '0.8.0 (release tag 0.8.0_RELEASE)';
 $config->disablelogin = false;
