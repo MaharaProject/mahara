@@ -1519,4 +1519,32 @@ function increment_perf_db_writes() {
     global $PERF;
     $PERF->dbwrites++;
 }
+
+/**
+ * Gives the caller the ability to disable logging of SQL exceptions in the 
+ * SQLException constructor.
+ *
+ * This is only used by the config loading code to prevent spurious errors 
+ * about the config table not existing going to the logs. If you are going to 
+ * use this function, you had better have a very good reason!
+ *
+ * @param bool $status Whether to ignore logging exceptions or not. If null, 
+ *                     you can retrieve the current value of this setting
+ */
+function db_ignore_sql_exceptions($status=null) {
+    global $DB_IGNORE_SQL_EXCEPTIONS;
+
+    // Initialise it if being called for the first time
+    if ($DB_IGNORE_SQL_EXCEPTIONS === null) {
+        $DB_IGNORE_SQL_EXCEPTIONS = false;
+    }
+
+    // Return the value if asked for
+    if ($status === null) {
+        return $DB_IGNORE_SQL_EXCEPTIONS;
+    }
+
+    $DB_IGNORE_SQL_EXCEPTIONS = (bool)$status;
+}
+
 ?>

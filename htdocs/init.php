@@ -110,12 +110,12 @@ catch (Exception $e) {
     throw new ConfigSanityException($errormessage);
 }
 try {
+    db_ignore_sql_exceptions(true);
     load_config();
+    db_ignore_sql_exceptions(false);
 } 
 catch (SQLException $e) {
-    if (!defined('INSTALLER')) {
-        throw $e;
-    }
+    db_ignore_sql_exceptions(false);
 }
 
 // Make sure wwwroot is set and available, either in the database or int the

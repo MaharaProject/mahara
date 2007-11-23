@@ -1,8 +1,26 @@
 mahara (0.9.0~alpha3~dev) unstable; urgency=low
 
-  * Dev version
+  * User config files (config.php and apache.conf) are no longer overwritten 
+    by debconf. Also make robots.txt a config file.
+  * Create a common mahara package which contains everything but the Apache
+    config files.
+  * Cleaned-up and shortened package descriptions
+  * Moved Mahara into /usr/share/mahara instead of /var/www
+  * Removed unnecessary files (like LICENSE and readme.txt)
+  * No longer require Postgres 8.1, support MySQL 5.0 and Postgres 8.2
+  * Add debconf questions for dbtype and dbpass
+  * Added instructions for creating the DB in README.Debian
+  * Document all foreign code into debian/copyright
+  * Added a watch file
+  * Depend on ttf-freefont for the CAPTCHA plugin
+  * Removed bashisms in the maintainer scripts
+  * Set myself as maintainer
+  * Added homepage and Vcs-* fields to debian/control
+  * Fixed rotation of empty log files
+  * Check for the existence of the cron script before running it
+  * Use po-debconf and provide a French translation
 
- -- Nigel McNie <nigel@catalyst.net.nz>  Fri, 16 Nov 2007 11:14:45 +1300
+ -- Francois Marier <francois@catalyst.net.nz>  Fri, 23 Nov 2007 12:24:25 +1300
 
 mahara (0.9.0~alpha2-1) unstable; urgency=low
 
