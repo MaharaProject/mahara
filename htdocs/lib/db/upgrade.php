@@ -320,7 +320,7 @@ function xmldb_core_upgrade($oldversion=0) {
         
 
         // move old block field in view_artefact out of the way
-        table_column('view_artefact', 'block', 'oldblock', 'text');
+        table_column('view_artefact', 'block', 'oldblock');
 
         $table = new XMLDBTable('view_artefact');
         $field = new XMLDBField('block');
