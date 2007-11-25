@@ -48,7 +48,7 @@ if ($institution || $add) {
 
     if ($delete) {
         function delete_validate(Pieform $form, $values) {
-            if (get_field('usr', 'COUNT(*)', 'institution', $values['i'])) {
+            if (get_field('usr_institution', 'COUNT(*)', 'institution', $values['i'])) {
                 // TODO: exception is of the wrong type
                 throw new Exception('Attempt to delete an institution that has members');
             }
@@ -63,6 +63,7 @@ if ($institution || $add) {
 
             db_begin();
             delete_records('institution_locked_profile_field', 'name', $values['i']);
+            delete_records('usr_institution_request', 'institution', $values['i']);
             delete_records('institution', 'name', $values['i']);
             db_commit();
 
@@ -110,9 +111,12 @@ if ($institution || $add) {
 
             $instancestring = implode(',',$instancearray);
             $inuserecords = array();
-            $records = get_records_sql_assoc('select authinstance, count(id) from {usr} where authinstance in ('.$instancestring.') group by authinstance', array());
-            foreach ($records as $record) {
-                $inuserecords[] = $record->authinstance;
+            if ($records = get_records_sql_assoc('select authinstance, count(id) from {usr} where authinstance in ('.$instancestring.') group by authinstance', array())) {
+                foreach ($records as $record) {
+                    if (!in_array($record->authinstance, $inuserecords)) {
+                        $inuserecords[] = $record->authinstance;
+                    }
+                }
             }
             $inuse = implode(',',$inuserecords);
         }

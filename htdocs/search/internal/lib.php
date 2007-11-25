@@ -272,28 +272,47 @@ class PluginSearchInternal extends PluginSearch {
             $where .= join(' OR ', $str) . ') ';
         } 
 
+        $institutionsearch = '';
         if (!empty($constraints)) {
             foreach ($constraints as $f) {
-                $where .= ' AND u.' . $f['field'] . $matchtypes[$f['type']];
-                $values[] = $f['string'];
+                if ($f['field'] == 'institution') {
+                    $institutionsearch .= ' LEFT OUTER JOIN {usr_institution} i ON i.usr = u.id ';
+                    if ($f['string'] == 'mahara') {
+                        $where .= ' AND i.institution IS NULL';
+                    } else {
+                        $where .= ' AND i.institution' . $matchtypes[$f['type']];
+                        $values[] = $f['string'];
+                    }
+                } else {
+                    $where .= ' AND u.' . $f['field'] . $matchtypes[$f['type']];
+                    $values[] = $f['string'];
+                }
             }
         }
 
-        $count = get_field_sql('SELECT COUNT(*) FROM {usr} u ' . $where, $values);
+        $count = get_field_sql('SELECT COUNT(*) FROM {usr} u ' . $institutionsearch . $where, $values);
 
         if ($count > 0) {
-            $data = get_records_sql_array('
+            $data = get_records_sql_assoc('
                 SELECT 
-                    u.id, u.firstname, u.lastname, u.username, u.institution, u.email, u.staff,
+                    u.id, u.firstname, u.lastname, u.username, u.email, u.staff,
                     u.active, NOT u.suspendedcusr IS NULL as suspended
                 FROM
-                    {usr} u ' . $where . '
+                    {usr} u ' . $institutionsearch . $where . '
                 ORDER BY ' . $sort,
                 $values,
                 $offset,
                 $limit);
 
             if ($data) {
+                $inst = get_records_select_array('usr_institution', 
+                                                 'usr IN (' . join(',', array_keys($data)) . ')',
+                                                 null, '', 'usr,institution');
+                if ($inst) {
+                    foreach ($inst as $i) {
+                        $data[$i->usr]->institutions[] = $i->institution;
+                    }
+                }
                 foreach ($data as &$item) {
                     $item = (array)$item;
                 }

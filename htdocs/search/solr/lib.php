@@ -204,7 +204,7 @@ END;
         $q = '';
         $solrfields = array(
             'id'          => 'id',
-            'institution' => 'ref_institution',
+            'institution' => 'text_institutions',
             'email'       => 'string_email',
             'username'    => 'text_username',
             'firstname'   => 'text_firstname',
@@ -427,6 +427,9 @@ END;
                 $user = (array)$user;
             }
         }
+        if (!isset($user['institutions'])) {
+            $user['institutions'] = get_column('usr_institution', 'institution', 'usr', $user['id']);
+        }
 
         if ($user['deleted']) {
             self::delete_byidtype($user['id'], 'user');
@@ -440,6 +443,7 @@ END;
             'type'                => 'user',
             'index_name'          => $user['preferredname'],
             'ref_institution'     => $user['institution'],
+            'text_institutions'   => empty($user['institutions']) ? 'mahara' : join(' ', $user['institutions']),
             'string_email'        => $user['email'],
             'text_username'       => $user['username'],
             'store_preferredname' => $user['preferredname'],

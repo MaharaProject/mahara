@@ -191,7 +191,7 @@ function forgotpasschange_submit(Pieform $form, $values) {
         exit;
     }
 
-    throw new Exception('User "' . $user->username . '@' . $user->institution
+    throw new Exception('User "' . $user->username
         . ' tried to change their password, but the attempt failed');
 }
 

@@ -202,7 +202,7 @@ abstract class Auth {
      */
     public function user_exists($username) {
         $this->must_be_ready();
-        if (record_exists('usr', 'LOWER(username)', strtolower($username), 'authinstance', $this->instanceid)) {
+        if (record_exists('usr', 'LOWER(username)', strtolower($username))) {
             return true;
         }
         throw new AuthUnknownUserException("\"$username\" is not known to Auth");
@@ -243,7 +243,7 @@ abstract class Auth {
      */
     public function get_user_info_cached($username) {
         $this->must_be_ready();
-        if (!$result = get_record('usr', 'LOWER(username)', strtolower($username), 'authinstance', $this->instanceid,
+        if (!$result = get_record('usr', 'LOWER(username)', strtolower($username), null, null, null, null,
                     '*, ' . db_format_tsfield('expiry') . ', ' . db_format_tsfield('lastlogin'))) {
             throw new AuthUnknownUserException("\"$username\" is not known to AuthInternal");
         }
@@ -751,16 +751,6 @@ function auth_get_login_form() {
                 'required'    => true
             )
         ),
-        'login_institution' => array(
-            'type'         => 'select',
-            'title'        => get_string('institution'). ':',
-            'defaultvalue' => $defaultinstitution,
-            'options'      => $institutions,
-            'rules' => array(
-                'required' => true
-            ),
-            'ignore' => count($institutions) == 1
-        ),
         'submit' => array(
             'type'  => 'submit',
             'value' => get_string('login')
@@ -888,13 +878,12 @@ function login_submit(Pieform $form, $values) {
 
     $username      = $values['login_username'];
     $password      = $values['login_password'];
-    $institution   = (isset($values['login_institution'])) ? $values['login_institution'] : 'mahara';
     $authenticated = false;
     $oldlastlogin  = 0;
 
     try {
         //var_dump(array($username, $password, $institution, $_SESSION));
-        $authenticated = $USER->login($username, $password, $institution);
+        $authenticated = $USER->login($username, $password);
 
         if (empty($authenticated)) {
             $SESSION->add_error_msg(get_string('loginfailed'));
@@ -903,36 +892,33 @@ function login_submit(Pieform $form, $values) {
     }
     catch (AuthUnknownUserException $e) {
         try {
-            // The user doesn't exist, but maybe the institution wants us to 
-            // create users that don't exist
-            $institution  = get_record('institution', 'name', $institution);
-            if ($institution != false) {
-                if ($institution->updateuserinfoonlogin == 0) {
-                    // Institution does not want us to create unknown users
-                    throw new AuthUnknownUserException("\"$username\" at \"$institution\" is not known");
-                }
+            // If the user doesn't exist, check for institutions that
+            // want to create users automatically.
+            $authinstances = get_records_sql_array('
+                SELECT a.id, a.instancename, a.priority, a.authname, a.institution
+                FROM {institution} i JOIN {auth_instance} a ON a.institution = i.name
+                WHERE i.updateuserinfoonlogin = 1
+                ORDER BY a.institution, a.priority, a.instancename', null);
+
+            if ($authinstances == false) {
+                throw new AuthUnknownUserException("\"$username\" is not known");
             }
 
-            // Institution says we should create unknown users
-            // Get all the auth options for the institution
-            $authinstances = get_records_array('auth_instance', 'institution', $institution, 'priority, instancename', 'id, instancename, priority, authname');
+            $USER->username = $username;
 
-            $USER->username    = $username;
-            $USER->institution = $institution->name;
+            foreach ($authinstances as $authinstance) {
 
-            while (list(, $authinstance) = each($authinstances) && false == $authenticated) {
-                // TODO: Test this code with an auth plugin that provides a 
-                // get_user_info method
-                $auth = AuthFactory::create($authinstance->id);
-                if ($auth->authenticate_user_account($USER, $password)) {
-                    $authenticated = true;
-                } else {
-                    continue;
-                }
+                while (list(, $authinstance) = each($authinstances) && false == $authenticated) {
+                    // TODO: Test this code with an auth plugin that provides a 
+                    // get_user_info method
+                    $auth = AuthFactory::create($authinstance->id);
+                    if ($auth->authenticate_user_account($USER, $password)) {
+                        $authenticated = true;
+                    } else {
+                        continue;
+                    }
 
-                $USER->authinstance = $authinstance->id;
-
-                if ($auth->authenticate_user_account($username, $password, $institution)) {
+                    $USER->authinstance = $authinstance->id;
                     $userdata = $auth->get_user_info();
                     if (
                          empty($userdata) ||
@@ -940,7 +926,7 @@ function login_submit(Pieform $form, $values) {
                          empty($userdata->lastname) ||
                          empty($userdata->email) 
                         ) {
-                        throw new AuthUnknownUserException("\"$username\" at \"$institution\" is not known");
+                        throw new AuthUnknownUserException("\"$username\" is not known");
                     } else {
                         // We have the data - create the user
                         $USER->expiry    = db_format_timestamp(time() + 86400);
@@ -952,6 +938,10 @@ function login_submit(Pieform $form, $values) {
                         try {
                             db_begin();
                             $USER->commit();
+
+                            if ($authinstance->institution !== 'mahara') {
+                                $USER->join_institution($authinstance->institution);
+                            }
     
                             handle_event('createuser', $USER);
                             db_commit();
@@ -987,7 +977,8 @@ function login_submit(Pieform $form, $values) {
     }
 
     // Check if the user's account has become inactive
-    $inactivetime = get_field('institution', 'defaultaccountinactiveexpire', 'name', $USER->institution);
+    // To become a config setting:
+    $inactivetime = get_field('institution', 'defaultaccountinactiveexpire', 'name', 'mahara');
     if ($inactivetime && $oldlastlogin > 0
         && $oldlastlogin + $inactivetime < time()) {
         die_info(get_string('accountinactive'));
@@ -1093,11 +1084,6 @@ function auth_generate_login_form() {
         return;
     }
     require_once('pieforms/pieform.php');
-    $institutions = get_records_menu('institution', '', '', 'name, displayname');
-    $defaultinstitution = get_cookie('institution');
-    if (!$defaultinstitution) {
-        $defaultinstitution = 'mahara';
-    }
     $loginform = get_login_form_js(pieform(array(
         'name'       => 'login',
         'renderer'   => 'div',
@@ -1121,17 +1107,6 @@ function auth_generate_login_form() {
                 'rules' => array(
                     'required'    => true
                 )
-            ),
-            'login_institution' => array(
-                'type' => 'select',
-                'title' => get_string('institution') . ':',
-                'defaultvalue' => $defaultinstitution,
-                'options' => $institutions,
-                'rules' => array(
-                    'required' => true
-                ),
-                'ignore' => count($institutions) == 1,
-                'help' => true,
             ),
             'submit' => array(
                 'type'  => 'submit',
@@ -1235,7 +1210,8 @@ class PluginAuth extends Plugin {
         // ensure we have everything we need
         $user = get_user($user['id']);
 
-        $inactivetime = get_field('institution', 'defaultaccountinactiveexpire', 'name', $user->institution);
+        // To become a config setting:
+        $inactivetime = get_field('institution', 'defaultaccountinactiveexpire', 'name', 'mahara');
         if ($user->suspendedcusr) {
             $active = false;
         }

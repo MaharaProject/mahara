@@ -377,6 +377,116 @@ function xmldb_core_upgrade($oldversion=0) {
         set_config('imagemaxheight', 1024);
     }
 
+    if ($oldversion < 2007112300) {
+
+        $table = new XMLDBTable('usr_institution');
+        $table->addFieldInfo('usr', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('institution', XMLDB_TYPE_CHAR, 255, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('ctime', XMLDB_TYPE_DATETIME, null, null);
+        $table->addFieldInfo('expiry', XMLDB_TYPE_DATETIME, null, null);
+        $table->addFieldInfo('studentid', XMLDB_TYPE_TEXT, null);
+        $table->addFieldInfo('staff', XMLDB_TYPE_INTEGER, 1, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, 0);
+        $table->addFieldInfo('admin', XMLDB_TYPE_INTEGER, 1, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, 0);
+        $table->addKeyInfo('usrfk', XMLDB_KEY_FOREIGN, array('usr'), 'usr', array('id'));
+        $table->addKeyInfo('institutionfk', XMLDB_KEY_FOREIGN, array('institution'), 'institution', array('name'));
+        $table->addKeyInfo('usrinstitutionuk', XMLDB_KEY_UNIQUE, array('usr', 'institution'));
+        create_table($table);
+
+        $table = new XMLDBTable('usr_institution_request');
+        $table->addFieldInfo('usr', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('institution', XMLDB_TYPE_CHAR, 255, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('confirmedusr', XMLDB_TYPE_INTEGER, 1, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, 0);
+        $table->addFieldInfo('confirmedinstitution', XMLDB_TYPE_INTEGER, 1, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, 0);
+        $table->addFieldInfo('studentid', XMLDB_TYPE_TEXT, null);
+        $table->addFieldInfo('ctime', XMLDB_TYPE_DATETIME, null, null);
+        $table->addKeyInfo('usrfk', XMLDB_KEY_FOREIGN, array('usr'), 'usr', array('id'));
+        $table->addKeyInfo('institutionfk', XMLDB_KEY_FOREIGN, array('institution'), 'institution', array('name'));
+        $table->addKeyInfo('usrinstitutionuk', XMLDB_KEY_UNIQUE, array('usr', 'institution'));
+        create_table($table);
+
+        $users = get_records_array('usr', '', '', '', 'id, username, institution, lastlogin, expiry, studentid, staff, admin, email, firstname, lastname');
+        if ($users) {
+            $usernames = get_column_sql("SELECT DISTINCT username FROM {usr}");
+            $newusernames = array();
+            $renamed = array();
+            // Create new usr_institution records for every non-default institution
+            // Make usernames unique
+            foreach ($users as $u) {
+                if ($u->institution != 'mahara') {
+                    $ui = (object) array(
+                        'usr' => $u->id,
+                        'institution' => $u->institution,
+                        'expiry' => $u->expiry,
+                        'studentid' => $u->studentid,
+                        'staff' => $u->staff,
+                        'admin' => $u->admin
+                    );
+                    insert_record('usr_institution', $ui);
+                }
+                if (!isset($newusernames[$u->username])) {
+                    $newname = $u->username;
+                } else { // Rename the user
+                    $newname = false;
+                    if ($u->institution != 'mahara') { // First try prepending the institution
+                        $try = $u->institution . $u->username;
+                        if (strlen($try) <= 30 && !isset($newusernames[$try]) && !isset($usernames[$try])) {
+                            $newname = $try;
+                        }
+                    }
+                    if ($newname == false) { // Append digits keeping total length <= 30
+                        $i = 1;
+                        $newname = substr($u->username, 0, 29) . $i;
+                        while (isset($newusernames[$newname]) || isset($usernames[$newname])) {
+                            $i++;
+                            $newname = substr($u->username, 0, 30 - floor(log10($i)+1)) . $i;
+                        }
+                    }
+                    set_field('usr', 'username', $newname, 'id', $u->id);
+                    $renamed[$newname] = $u;
+                }
+                $newusernames[$newname] = true;
+            }
+        }
+
+        execute_sql('DROP INDEX {usr_useaut_uix};');
+        execute_sql('CREATE UNIQUE INDEX {usr_use_uix} ON {usr} (username);');
+
+        $table = new XMLDBField('usr');
+        $field = new XMLDBField('institution');
+        drop_field($table, $field);
+
+        if (!empty($renamed)) {
+            // Notify changed usernames to administrator
+            $report = '# Each line in this file is in the form "institution old_username new_username"'."\n";
+            $message = "Mahara now requires usernames to be unique.\n";
+            $message .= "Some usernames on your site were changed during the upgrade:\n\n";
+            foreach ($renamed as $newname => $olduser) {
+                $report .= "$olduser->institution $olduser->username $newname\n";
+                $message .= "Institution: $olduser->institution\n"
+                    . "Old username: $olduser->username\n"
+                    . "New username: $newname\n\n";
+            }
+            $sitename = get_config('sitename');
+            $file = get_config('dataroot') . 'user_migration_report.txt';
+            if (file_put_contents($file, $report)) {
+                $message .= "\n" . 'A copy of this list has been saved to the file ' . $file;
+            }
+            global $USER;
+            email_user($USER, null, $sitename . ': User migration', $message);
+            // Notify changed usernames to users
+            $usermessagestart = "Your username at $sitename has been changed:\n\n";
+            $usermessageend = "\n\nNext time you visit the site, please login using your new username.";
+            foreach ($renamed as $newname => $olduser) {
+                if (empty($olduser->email)) {
+                    continue;
+                }
+                email_user($olduser, null, $sitename, $usermessagestart
+                           . "Old username: $olduser->username\nNew username: $newname"
+                           . $usermessageend);
+            }
+        }
+    }
+
     return $status;
 
 }

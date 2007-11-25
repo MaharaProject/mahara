@@ -173,13 +173,19 @@ function build_admin_user_search_results($search, $offset, $limit, $sortby, $sor
         'username'    => array('name'     => get_string('username'),
                                'template' => file_get_contents($templatedir . 'username.tpl')),
         'email'       => array('name'     => get_string('email')),
-        'institution' => array('name'     => get_string('institution'),
-                               'template' => file_get_contents($templatedir . 'institution.tpl')),
     );
+
+    $institutions = get_records_assoc('institution', '', '', '', 'name,displayname');
+    if (count($institutions) > 1) {
+        $cols['institution'] = array('name'     => get_string('institution'),
+                                     'template' => file_get_contents($templatedir . 'institution.tpl'));
+    }
+    $cols['suspended'] = array('name'     => get_string('suspended', 'admin'),
+                               'template' => file_get_contents($templatedir . 'suspendlink.tpl'));
 
     $smarty = smarty_core();
     $smarty->assign_by_ref('results', $results);
-    $smarty->assign_by_ref('institutions', get_records_assoc('institution', '', '', '', 'name,displayname'));
+    $smarty->assign_by_ref('institutions', $institutions);
     $smarty->assign('searchurl', $searchurl);
     $smarty->assign('sortby', $sortby);
     $smarty->assign('sortdir', $sortdir);

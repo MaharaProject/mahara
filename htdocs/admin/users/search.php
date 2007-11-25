@@ -36,7 +36,7 @@ require('searchlib.php');
 
 $search = (object) array(
     'query'       => trim(param_variable('query', '')),
-    'institution' => param_alpha('institution', 'all'),
+    'institution' => param_alphanum('institution', 'all'),
     'f'           => param_alpha('f', null), // first initial
     'l'           => param_alpha('l', null), // last initial
 );

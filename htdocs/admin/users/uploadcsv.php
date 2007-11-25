@@ -296,7 +296,6 @@ function uploadcsv_submit(Pieform $form, $values) {
     foreach ($CSVDATA as $record) {
         log_debug('adding user ' . $record[$formatkeylookup['username']]);
         $user = new StdClass;
-        $user->institution  = $institution;
         $user->authinstance = $authinstance;
         $user->username     = $record[$formatkeylookup['username']];
         $user->password     = $record[$formatkeylookup['password']];
@@ -311,6 +310,15 @@ function uploadcsv_submit(Pieform $form, $values) {
         $user->passwordchange = 1;
         $id = insert_record('usr', $user, 'id', true);
         $user->id = $id;
+        if ($institution != 'mahara') {
+            $userinstitution = new StdClass;
+            $userinstitution->usr = $user->id;
+            $userinstitution->institution = $institution;
+            if (isset($formatkeylookup['studentid'])) {
+                $userinstitution->studentid = $record[$formatkeylookup['studentid']];
+            }
+            insert_record('usr_institution', $userinstitution);
+        }
 
         foreach ($FORMAT as $field) {
             if ($field == 'username' || $field == 'password') {

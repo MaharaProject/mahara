@@ -82,6 +82,7 @@ class User {
             'sessionid'        => '', /* The real session ID that PHP knows about */
             'accountprefs'     => array(),
             'activityprefs'    => array(),
+            'institutions'     => array(),
             'sesskey'          => ''
         );
         $this->attributes = array();
@@ -343,6 +344,20 @@ class User {
 
         return true;
     }
+
+
+    public function join_institution($institution) {
+        $institutions = $this->get('institutions');
+        if (!isset($institutions[$institution])) {
+            // @todo: set expiry, studentid, ctime
+            insert_record('usr_institution', (object) array(
+                'usr' => $this->get('id'),
+                'institution' => $institution
+            ));
+        }
+    }
+
+
 }
 
 
@@ -364,28 +379,25 @@ class LiveUser extends User {
     }
 
     /**
-     * Take a username, password and institution and try to authenticate the
+     * Take a username and password and try to authenticate the
      * user
      *
      * @param  string $username
      * @param  string $password
-     * @param  string $institution
      * @return bool
      */
-    public function login($username, $password, $institution) {
-        $users = get_records_select_array('usr', 'LOWER(username) = ? AND institution = ?', array(strtolower($username), $institution), 'authinstance', '*');
+    public function login($username, $password) {
+        $user = get_record_select('usr', 'LOWER(username) = ?', array(strtolower($username)), '*');
 
-        if ($users == false) {
-            throw new AuthUnknownUserException("\"$username\" at \"$institution\" is not known");
+        if ($user == false) {
+            throw new AuthUnknownUserException("\"$username\" is not known");
         }
 
-        foreach($users as $user) {
-            $auth = AuthFactory::create($user->authinstance);
-            if ($auth->authenticate_user_account($user, $password)) {
-                $user->lastauthinstance = $auth->instanceid;
-                $this->authenticate($user);
-                return true;
-            }
+        $auth = AuthFactory::create($user->authinstance);
+        if ($auth->authenticate_user_account($user, $password)) {
+            $user->lastauthinstance = $auth->instanceid;
+            $this->authenticate($user);
+            return true;
         }
 
         return false;
@@ -441,6 +453,7 @@ class LiveUser extends User {
         if (empty($user->id)) $this->commit();
         $this->activityprefs      = load_activity_preferences($user->id);
         $this->accountprefs       = load_account_preferences($user->id);
+        $this->institutions       = load_user_institutions($user->id);
         $this->commit();
     }
 

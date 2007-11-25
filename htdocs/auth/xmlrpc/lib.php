@@ -162,7 +162,6 @@ class AuthXmlrpc extends Auth {
         if ($create) {
 
             $user->username           = $remoteuser->username;
-            $user->institution        = $peer->institution;            
             $user->passwordchange     = 1;
             $user->active             = 1;
             $user->deleted            = 0;
@@ -183,6 +182,7 @@ class AuthXmlrpc extends Auth {
             $user->authinstance       = empty($this->config['parent']) ? $this->instanceid : $this->parent;
             $user->commit();
 
+            $user->join_institution($peer->institution);
 
             set_profile_field($user->id, 'firstname', $user->firstname);
             set_profile_field($user->id, 'lastname', $user->lastname);

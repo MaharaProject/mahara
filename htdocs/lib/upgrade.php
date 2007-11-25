@@ -543,7 +543,6 @@ function core_install_lastcoredata_defaults() {
     $user->username = 'root';
     $user->password = '*';
     $user->salt = '*';
-    $user->institution = 'mahara';
     $user->firstname = 'System';
     $user->lastname = 'User';
     $user->email = 'root@example.org';
@@ -559,7 +558,6 @@ function core_install_lastcoredata_defaults() {
     $user = new StdClass;
     $user->username = 'admin';
     $user->password = 'mahara';
-    $user->institution = 'mahara';
     $user->authinstance = $auth_instance->id;
     $user->passwordchange = 1;
     $user->admin = 1;

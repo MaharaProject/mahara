@@ -769,4 +769,16 @@ function send_user_message($to, $message, $from=null) {
     }
 }
 
+
+function load_user_institutions($userid) {
+    if (empty($userid)) {
+        throw new InvalidArgumentException("couldn't load institutions, no user id specified");
+    }
+    if ($institutions = get_records_assoc('usr_institution', 'usr', $userid, '', 
+                                          'institution,ctime,expiry,studentid,staff,admin')) {
+        return $institutions;
+    }
+    return array();
+}
+
 ?>

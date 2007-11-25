@@ -97,6 +97,8 @@ if (isset($key)) {
         $user->lastname         = $registration->lastname;
         $user->commit();
 
+        $user->join_institution($registration->institution);
+
         $registration->id = $user->id;
 
         // Insert standard stuff as artefacts

@@ -50,7 +50,7 @@ if ($action == 'search') {
 
     $params = new StdClass;
     $params->query       = trim(param_variable('query', ''));
-    $params->institution = param_alpha('institution', null);
+    $params->institution = param_alphanum('institution', null);
     $params->f           = param_alpha('f', null);
     $params->l           = param_alpha('l', null);
 

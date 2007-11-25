@@ -37,13 +37,13 @@
             <label>Query: 
                 <input type="text" name="query" id="query"{if !empty($search->query)} value="{$search->query}"{/if}>
             </label>
-            {if $USER->get('admin') && !empty($institutions)}
+            {if $USER->get('admin') && count($institutions) > 1}
             <span class="institutions">
                 <label>Institution: 
-                    <select name="institution">
-                        <option value=all>{str tag=all}</option>
+                    <select name="institution" id="institution">
+                        <option value="all" selected>{str tag=all}</option>
                         {foreach from=$institutions item=i}
-                        <option value={$i->name}>{$i->displayname}</option>
+                        <option value="{$i->name}">{$i->displayname}</option>
                         {/foreach}
                     </select>
                 </label>

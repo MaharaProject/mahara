@@ -80,7 +80,15 @@ define('TITLE', $name);
 // If the logged in user is on staff, get full name, institution, id number, email address
 if ($USER->get('staff')) {
     $userfields['fullname']     = $user->firstname . ' ' . $user->lastname;
-    $userfields['institution']  = $user->institution;
+    $institutions = get_column_sql('
+        SELECT i.displayname
+        FROM {institution} i, {usr_institution} ui 
+        WHERE ui.usr = ? AND ui.institution = i.name', array($user->id));
+    if (!empty($institutions)) {
+        $userfields['institution'] = join(', ', $institutions);
+    } else {
+        $userfields['institution'] = get_field('institution', 'displayname', 'name', 'mahara');
+    }
     $userfields['studentid']    = get_profile_field($user->id, 'studentid');
     $userfields['principalemailaddress'] = $user->email;
 }
