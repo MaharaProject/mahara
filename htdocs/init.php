@@ -84,7 +84,10 @@ try {
     
     $db = &ADONewConnection($CFG->dbtype);
     $dbgenerator = null;
-    if (!empty($CFG->dbport)) {
+    if (empty($CFG->dbhost)) {
+        $CFG->dbhost = '';
+    }
+    else if (!empty($CFG->dbport)) {
         $CFG->dbhost .= ':'.$CFG->dbport;
     }
     if (!empty($CFG->dbpersist)) {    // Use persistent connection (default)
