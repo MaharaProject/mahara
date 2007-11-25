@@ -308,7 +308,7 @@ function xmldb_core_upgrade($oldversion=0) {
         $table->addFieldInfo('blocktype', XMLDB_TYPE_CHAR, 255, XMLDB_UNSIGNED, XMLDB_NOTNULL);
         $table->addFieldInfo('title', XMLDB_TYPE_CHAR, 255, XMLDB_UNSIGNED, XMLDB_NOTNULL);
         $table->addFieldInfo('configdata', XMLDB_TYPE_TEXT, null);
-        $table->addFieldInfo('view', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('view', XMLDB_TYPE_INTEGER, 10, false, XMLDB_NOTNULL);
         $table->addFIeldInfo('column', XMLDB_TYPE_INTEGER, 2, XMLDB_UNSIGNED, XMLDB_NOTNULL);
         $table->addFIeldInfo('order', XMLDB_TYPE_INTEGER, 2, XMLDB_UNSIGNED,  XMLDB_NOTNULL);
         $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
@@ -320,7 +320,7 @@ function xmldb_core_upgrade($oldversion=0) {
         
 
         // move old block field in view_artefact out of the way
-        table_column('view_artefact', 'block', 'oldblock', 'text');
+        table_column('view_artefact', 'block', 'oldblock', 'text', '', '', null);
 
         $table = new XMLDBTable('view_artefact');
         $field = new XMLDBField('block');
@@ -334,8 +334,14 @@ function xmldb_core_upgrade($oldversion=0) {
         // given that the table needs to be used by block instances being 
         // created, make the fields nullable during that time.
         // Note - XMLDB - you are a whore. Hate, Nigel
-        execute_sql('ALTER TABLE {view_artefact} ALTER ctime DROP NOT NULL');
-        execute_sql('ALTER TABLE {view_artefact} ALTER format DROP NOT NULL');
+        if (is_postgres()) {
+            execute_sql('ALTER TABLE {view_artefact} ALTER ctime DROP NOT NULL');
+            execute_sql('ALTER TABLE {view_artefact} ALTER format DROP NOT NULL');
+        }
+        else {
+            execute_sql('ALTER TABLE {view_artefact} CHANGE ctime ctime DATETIME');
+            execute_sql('ALTER TABLE {view_artefact} CHANGE format format TEXT');
+        }
 
         // Install all the blocktypes and their categories now, as they'll be 
         // needed for the template migration
@@ -358,13 +364,24 @@ function xmldb_core_upgrade($oldversion=0) {
         upgrade_template_migration();
 
         delete_records_select('view_artefact', 'block IS NULL');
-        execute_sql('ALTER TABLE {view_artefact} ALTER block SET NOT NULL');
+        if (is_postgres()) {
+            execute_sql('ALTER TABLE {view_artefact} ALTER block SET NOT NULL');
+        }
+        else {
+            execute_sql('ALTER TABLE {view_artefact} CHANGE block block BIGINT(10) UNSIGNED NOT NULL');
+        }
 
         $table = new XMLDBTable('view_artefact');
         $field = new XMLDBField('oldblock');
         drop_field($table, $field);
 
         $table = new XMLDBTable('view');
+
+        // Especially for MySQL cos it's "advanced"
+        $key = new XMLDBKey('templatefk');
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('template'), 'template', array('name'));
+        drop_key($table, $key);
+
         $field = new XMLDBField('template');
         drop_field($table, $field);
 

@@ -1,5 +1,12 @@
-mahara (0.9.0~alpha3~dev) unstable; urgency=low
+mahara (0.9.0~beta2~dev) unstable; urgency=low
 
+  * Dev version
+
+ -- Nigel McNie <nigel@catalyst.net.nz>  Sat, 24 Nov 2007 10:38:02 +1300
+
+mahara (0.9.0~beta1-1) unstable; urgency=low
+
+  * New upstream release
   * User config files (config.php and apache.conf) are no longer overwritten 
     by debconf. Also make robots.txt a config file.
   * Create a common mahara package which contains everything but the Apache
@@ -20,7 +27,7 @@ mahara (0.9.0~alpha3~dev) unstable; urgency=low
   * Check for the existence of the cron script before running it
   * Use po-debconf and provide a French translation
 
- -- Francois Marier <francois@catalyst.net.nz>  Fri, 23 Nov 2007 12:24:25 +1300
+ -- Nigel McNie <nigel@catalyst.net.nz>  Sat, 24 Nov 2007 10:24:48 +1300
 
 mahara (0.9.0~alpha2-1) unstable; urgency=low
 

@@ -59,8 +59,8 @@ case "$1" in
         echo "?>" >> $CONFIG_DEBCONF_PHP
 
         # Touch cron log
-        touch /var/log/mahara-cron.log
-        chown www-data:www-data /var/log/mahara-cron.log
+        touch /var/log/mahara/cron.log
+        chown www-data:www-data /var/log/mahara/cron.log
 
         # Link to captcha font
         ln -s /usr/share/fonts/truetype/freefont/FreeMono.ttf /usr/share/mahara/theme/default/static/captcha.ttf
