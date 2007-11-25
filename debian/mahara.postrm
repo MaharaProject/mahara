@@ -22,7 +22,7 @@ set -e
 
 case "$1" in
     purge)
-        rm -f /var/log/mahara/cron.log*
+        rm -rf /var/log/mahara/
         [ -d /var/lib/mahara ] && echo "NOTE: purge does _not_ remove /var/lib/mahara, you must do this yourself if you really want to!"
     ;;
     remove)

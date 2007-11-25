@@ -54,6 +54,10 @@ This package also includes the following code:
   Copyright (C) 2001-2005 Brent R. Matzelle
   Released under the GNU Lesser General Public License 2.1
 
+  htdocs/lib/pear/XML/:
+  Copyright (C) 2005 James Stewart <james@jystewart.net>
+  Released under the GNU Lesser General Public License
+
   htdocs/lib/snoopy/:
   Copyright (C) 1999-2000 ispi
   Released under the GNU Lesser General Public License 2.1

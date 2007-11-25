@@ -59,6 +59,7 @@ case "$1" in
         echo "?>" >> $CONFIG_DEBCONF_PHP
 
         # Touch cron log
+        mkdir -p /var/log/mahara
         touch /var/log/mahara/cron.log
         chown www-data:www-data /var/log/mahara/cron.log
 
