@@ -35,7 +35,7 @@ $group = param_integer('group');
 $membership = user_can_access_group($group);
 
 if (!$membership) {
-	throw new AccessDeniedException();
+    throw new AccessDeniedException();
 }
 
 $admin = (bool)($membership & GROUP_MEMBERSHIP_OWNER);
@@ -77,33 +77,33 @@ foreach ($forums as $forum) {
 }
 
 function subscribe_submit(Pieform $form, $values) {
-	global $USER;
-	$groupid = param_integer('group');
-	if ($values['submit'] == get_string('subscribe', 'interaction.forum')) {
-	    insert_record(
+    global $USER;
+    $groupid = param_integer('group');
+    if ($values['submit'] == get_string('subscribe', 'interaction.forum')) {
+        insert_record(
             'interaction_forum_subscription_forum',
             (object)array(
                 'forum' => $values['forum'],
                 'user' => $USER->get('id')
             )
         );
-	}
-	else {
-	    delete_records(
-	        'interaction_forum_subscription_forum',
-	        'forum', $values['forum'],
-	        'user', $USER->get('id')
-	    );
-	    delete_records_sql(
-	        'DELETE FROM {interaction_forum_subscription_topic}
-	        WHERE topic IN (
-	            SELECT id
-	            FROM {interaction_forum_topic}
-	            WHERE forum = ?
-	        )',
-	        array($values['forum'])
-	    );
-	}
+    }
+    else {
+        delete_records(
+            'interaction_forum_subscription_forum',
+            'forum', $values['forum'],
+            'user', $USER->get('id')
+        );
+        delete_records_sql(
+            'DELETE FROM {interaction_forum_subscription_topic}
+            WHERE topic IN (
+                SELECT id
+                FROM {interaction_forum_topic}
+                WHERE forum = ?
+            )',
+            array($values['forum'])
+        );
+    }
     redirect('/interaction/forum/index.php?group=' . $groupid);
 }
 

@@ -51,7 +51,7 @@ if ($topicid==0) {
     $moderator = $admin || is_forum_moderator($forumid);
 
     if (!$membership) {
-	    throw new AccessDeniedException();
+        throw new AccessDeniedException();
     }
 }
 
@@ -81,7 +81,7 @@ if (isset($topicid)) {
     $moderator = $admin || is_forum_moderator((int)$info->forum);
 
     if (!$moderator) {
-	    throw new AccessDeniedException();
+        throw new AccessDeniedException();
     }
 }
 
@@ -112,7 +112,7 @@ $editform =array(
             'type'         => 'checkbox',
             'title'        => get_string('sticky', 'interaction.forum'),
             'defaultvalue' => isset($topicinfo) && $topicinfo->sticky == 1 ? 'checked' : null
-        ),        
+        ),
         'closed' => array(
             'type'         => 'checkbox',
             'title'        => get_string('closed', 'interaction.forum'),
@@ -130,8 +130,8 @@ $editform =array(
 );
 
 if(!$moderator){
-	unset($editform['elements']['sticky']);
-	unset($editform['elements']['closed']);
+    unset($editform['elements']['sticky']);
+    unset($editform['elements']['closed']);
 }
 
 $editform = pieform($editform);
@@ -164,13 +164,13 @@ function edittopic_submit(Pieform $form, $values) {
         );
     }
     else {
-    	$post = get_record_sql(
-    	    'SELECT id
-    	    FROM {interaction_forum_post}
-    	    WHERE parent IS NULL
-    	    AND topic = ?',
-    	    array($topicid)
-    	);
+        $post = get_record_sql(
+            'SELECT id
+            FROM {interaction_forum_post}
+            WHERE parent IS NULL
+            AND topic = ?',
+            array($topicid)
+        );
         update_record(
             'interaction_forum_post',
             array(

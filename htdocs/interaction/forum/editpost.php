@@ -48,7 +48,7 @@ if ($postid==0) {
 }
 
 if (isset($postid)) {
-	$post = get_record_sql(
+    $post = get_record_sql(
         'SELECT p.subject, p.body, p.parent, p.topic, p.poster, p.ctime, t.forum, f.group
         FROM {interaction_forum_post} p
         INNER JOIN {interaction_forum_topic} t
@@ -65,7 +65,7 @@ if (isset($postid)) {
     $admin = (bool)($membership & GROUP_MEMBERSHIP_OWNER);
 
     $moderator = $admin || is_forum_moderator((int)$post->forum);
-    
+
     if (!$moderator &&
         ($post->poster != $userid
         || (time() - strtotime($post->ctime)) > (30 * 60))) {
@@ -148,14 +148,14 @@ function editpost_submit(Pieform $form, $values) {
         );
         if ($topic->poster != $USER->get('id') ||
            (time() - strtotime($topic->posttime)) > (30 * 60)) {
-        	insert_record(
-        	    'interaction_forum_edit',
-        	    (object)array(
-        	        'user' => $USER->get('id'),
-        	        'post' => $postid,
-        	        'ctime' => db_format_timestamp(time())
-        	    )
-        	);
+            insert_record(
+                'interaction_forum_edit',
+                (object)array(
+                    'user' => $USER->get('id'),
+                    'post' => $postid,
+                    'ctime' => db_format_timestamp(time())
+                )
+            );
         }
     }
     redirect('/interaction/forum/topic.php?id='.$topic->id);

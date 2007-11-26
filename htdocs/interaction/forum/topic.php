@@ -46,7 +46,7 @@ $info = get_record_sql(
 $membership = user_can_access_group((int)$info->group);
 
 if (!$membership) {
-	throw new AccessDeniedException();
+    throw new AccessDeniedException();
 }
 
 $admin = (bool)($membership & GROUP_MEMBERSHIP_OWNER);
@@ -75,19 +75,19 @@ $posts = get_records_sql_array(
 
 $count = count($posts);
 for ($i = 0; $i < $count; $i++) {
-	$postedits = array();
+    $postedits = array();
     if (!empty($posts[$i]->edit)) {
         $postedits[] = array(
             'edittime' => $posts[$i]->edit,
-    	    'editor'   => $posts[$i]->editor
+            'editor'   => $posts[$i]->editor
         );
     }
     $temp = $i;
     while (isset($posts[$i+1]) && $posts[$i+1]->id == $posts[$temp]->id) {
-    	$i++;
+        $i++;
         $postedits[] = array(
             'edittime' => $posts[$i]->edit,
-    	    'editor'   => $posts[$i]->editor
+            'editor'   => $posts[$i]->editor
         );
         unset($posts[$i]);
     }
@@ -99,7 +99,7 @@ foreach ($posts as $post) {
         $post->editor = true;
     }
     else {
-    	$post->editor = false;
+        $post->editor = false;
     }
 }
 
@@ -114,23 +114,23 @@ $smarty->assign('posts', $threadedposts);
 $smarty->display('interaction:forum:topic.tpl');
 
 function buildthread($parent, $parentsubject, &$posts){
-	global $moderator;
-	global $info;
-	if ($posts[$parent]->subject) {
-	    $parentsubject = $posts[$parent]->subject;
-	}
-	else {
+    global $moderator;
+    global $info;
+    if ($posts[$parent]->subject) {
+        $parentsubject = $posts[$parent]->subject;
+    }
+    else {
         $posts[$parent]->subject = get_string('re', 'interaction.forum') . $parentsubject;
-	}
+    }
     $children = array();
-	foreach ($posts as $index => $post) {
-		if ($posts[$index]->parent == $posts[$parent]->id) {
-			$children[] = buildthread($index, $parentsubject, $posts);
-		}
-	}
-	$smarty = smarty_core();
-	$smarty->assign('post', $posts[$parent]);
-	$smarty->assign('children', $children);
+    foreach ($posts as $index => $post) {
+        if ($posts[$index]->parent == $posts[$parent]->id) {
+            $children[] = buildthread($index, $parentsubject, $posts);
+        }
+    }
+    $smarty = smarty_core();
+    $smarty->assign('post', $posts[$parent]);
+    $smarty->assign('children', $children);
     $smarty->assign('moderator', $moderator);
     $smarty->assign('closed', $info->closed);
 	return $smarty->fetch('interaction:forum:post.tpl');

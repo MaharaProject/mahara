@@ -3,9 +3,7 @@
 class PluginInteractionForum extends PluginInteraction {
 
     public static function instance_config_form($instance=null) {
-        return array(
-            
-        );
+        return array();
     }
 
     public static function get_activity_types() {
@@ -36,7 +34,7 @@ class ActivityTypeInteractionForumNewPost extends ActivityType {
 
 /**
  * Is a user a moderator of a given forum
- * 
+ *
  * @param int $forumid id of forum
  * @param int $userid optional id of user, defaults to logged in user
  *
@@ -50,7 +48,7 @@ function is_forum_moderator($forumid, $userid=null) {
     else if (!is_int($userid)) {
         throw new InvalidArgumentException("non integer user id given to is_forum_moderator: $userid");
     }
-    
+
     if (!is_int($forumid)) {
         throw new InvalidArgumentException("non integer forum id given to is_forum_moderator: $forumid");
 

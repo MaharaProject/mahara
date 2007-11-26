@@ -219,8 +219,8 @@ function subscribe_topic_submit(Pieform $form, $values) {
             'interaction_forum_subscription_topic',
             'topic', $values['topic'],
             'user', $USER->get('id')
-	    );
-	}
+        );
+    }
     redirect('/interaction/forum/view.php?id=' . $forumid . '&offset=' . $offset);
 }
 

@@ -84,7 +84,7 @@
     </tr>
     {/foreach}
     {/if}
-    
+
 </table>
 
 {$pagination}

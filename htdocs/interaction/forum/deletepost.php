@@ -53,7 +53,7 @@ $admin = (bool)($membership & GROUP_MEMBERSHIP_OWNER);
 $moderator = $admin || is_forum_moderator((int)$info->forum);
 
 if (!$moderator) {
-	throw new AccessDeniedException();
+    throw new AccessDeniedException();
 }
 
 $postinfo = get_record_sql(

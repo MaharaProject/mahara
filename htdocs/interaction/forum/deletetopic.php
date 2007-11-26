@@ -39,7 +39,7 @@ $forum = get_record_sql(
     INNER JOIN {interaction_instance} f
     ON (f.id = t.forum)
     WHERE t.id = ?',
-    array($topicid) 
+    array($topicid)
 );
 
 $membership = user_can_access_group((int)$forum->group);
@@ -49,7 +49,7 @@ $admin = (bool)($membership & GROUP_MEMBERSHIP_OWNER);
 $moderator = $admin || is_forum_moderator((int)$forum->id);
 
 if (!$moderator) {
-	throw new AccessDeniedException();
+    throw new AccessDeniedException();
 }
 
 $postinfo = get_record_sql(
