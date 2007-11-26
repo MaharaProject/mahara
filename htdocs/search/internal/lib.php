@@ -487,22 +487,33 @@ class PluginSearchInternal extends PluginSearch {
 
         $sql = "
             SELECT
-                id, artefacttype, title, description
+                a.id, a.artefacttype, a.title, a.description
             FROM
                 {artefact} a
+            LEFT JOIN {artefact_tag} at ON (at.artefact = a.id)
             WHERE
-                owner = ?
-            AND ($querydata[0])";
+                a.owner = ?
+            AND (
+                ($querydata[0])
+                OR
+                (LOWER(at.tag) = ?)
+            )";
         $count_sql = "
             SELECT
                 COUNT(*)
             FROM
                 {artefact} a
+            LEFT JOIN {artefact_tag} at ON (at.artefact = a.id)
             WHERE
-                owner = ?
-            AND ($querydata[0])";
-
+                a.owner = ?
+            AND (
+                ($querydata[0])
+                OR
+                (LOWER(at.tag) = ?)
+            )";
         array_unshift($querydata[1], $USER->get('id'));
+        array_push($querydata[1], $querystring);
+
         $results = array(
             'data'   => get_records_sql_array($sql, $querydata[1], $offset, $limit),
             'offset' => $offset,
@@ -510,26 +521,28 @@ class PluginSearchInternal extends PluginSearch {
             'count'  => get_field_sql($count_sql, $querydata[1])
         );
 
-        foreach ($results['data'] as &$result) {
-            $newresult = array();
-            foreach ($result as $key => &$value) {
-                if ($key == 'id' || $key == 'artefacttype' || $key == 'title' || $key == 'description') {
-                    $newresult[$key] = $value;
+        if ($results['data']) {
+            foreach ($results['data'] as &$result) {
+                $newresult = array();
+                foreach ($result as $key => &$value) {
+                    if ($key == 'id' || $key == 'artefacttype' || $key == 'title' || $key == 'description') {
+                        $newresult[$key] = $value;
+                    }
                 }
+                $newresult['type'] = 'artefact';
+                $artefactplugin = get_field('artefact_installed_type', 'plugin', 'name', $newresult['artefacttype']);
+                if ($artefactplugin == 'internal') {
+                    $newresult['summary'] = $newresult['title'];
+                    $newresult['title'] = get_string($newresult['artefacttype'], 'artefact.' . $artefactplugin);
+                }
+                else {
+                    $newresult['summary'] = $newresult['description'];
+                }
+                $result = $newresult;
             }
-            $newresult['type'] = 'artefact';
-            $artefactplugin = get_field('artefact_installed_type', 'plugin', 'name', $newresult['artefacttype']);
-            if ($artefactplugin == 'internal') {
-                $newresult['summary'] = $newresult['title'];
-                $newresult['title'] = get_string($newresult['artefacttype'], 'artefact.' . $artefactplugin);
-            }
-            else {
-                $newresult['summary'] = $newresult['description'];
-            }
-            $result = $newresult;
+
+            self::self_search_make_links($results);
         }
-        
-        self::self_search_make_links($results);
 
         return $results;
     }
