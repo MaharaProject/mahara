@@ -313,7 +313,7 @@ END;
                 'type'               => 'view',
                 'title'              => $view['title'],
                 'description'        => strip_tags($view['description']),
-                'tags'               => join(', ', get_column('view_tag', 'tag', 'view', $view['id'])),
+                'tags'               => get_column('view_tag', 'tag', 'view', $view['id']),
                 'ctime'              => $view['ctime'],
                 'mtime'              => $view['mtime'],
             );
@@ -339,7 +339,7 @@ END;
                 'type'               => 'artefact',
                 'title'              => $artefact['title'],
                 'description'        => strip_tags($artefact['description']),
-                'tags'               => join(', ', get_column('artefact_tag', 'tag', 'artefact', $artefact['id'])),
+                'tags'               => get_column('artefact_tag', 'tag', 'artefact', $artefact['id']),
                 'ctime'              => $artefact['ctime'],
                 'mtime'              => $artefact['mtime'],
             );
@@ -384,7 +384,7 @@ END;
             'type'                => 'artefact',
             'title'               => $artefact->get('title'),
             'description'         => $artefact->get('description'),
-            'tags'                => join(', ', $artefact->get('tags')),
+            'tags'                => $artefact->get('tags'),
             'ctime'               => $artefact->get('ctime'),
             'mtime'               => $artefact->get('mtime'),
         );
@@ -401,7 +401,7 @@ END;
             'type'               => 'view',
             'title'              => $view['title'],
             'description'        => strip_tags($view['description']),
-            'tags'               => join(', ', get_column('view_tag', 'tag', 'view', $view['id'])),
+            'tags'               => get_column('view_tag', 'tag', 'view', $view['id']),
             'ctime'              => $view['ctime'],
             'mtime'              => $view['mtime'],
         );
@@ -486,6 +486,9 @@ END;
     private static function send_update($message) {
         require_once('snoopy/Snoopy.class.php');
         $snoopy = new Snoopy;
+        $snoopy->rawheaders = array(
+            'Content-type' => 'text/xml'
+        );
 
         $url = get_config_plugin('search', 'solr', 'solrurl') . 'update';
 
@@ -499,7 +502,7 @@ END;
             throw new RemoteServerException('Parsing Solr response failed');
         }
 
-        $root = $dom->getElementsByTagName('result'); // get root node
+        $root = $dom->getElementsByTagName('response'); // get root node
         $root = $root->item(0);
         if (is_null($root) || $root->getAttribute('status') != 0) {
             log_warn('PluginSearchSolr::send_update (Got non-zero return status)' . $snoopy->results);
@@ -551,7 +554,8 @@ END;
         }
 
         if( $client->status != 200 ) {
-            log_warn('solr_send_query(Solr Error)',$client->results);
+            log_warn('solr_send_query(Solr Error)', true, false);
+            log_warn($client->results);
             $result = array(
                 'error'   => 'Bad repsponse from Solr (HTTP ' . $client->status . ')',
                 'data' => array()
@@ -561,7 +565,8 @@ END;
 
         $dom = new DOMDocument;
         if (!$dom->loadXML($client->results)) {
-            log_warn('solr_send_query(Solr Error)',$client->results);
+            log_warn('solr_send_query(Solr Error)', true, false);
+            log_warn($client->results);
             $result = array(
                 'error'   => 'Query parse error',
                 'data' => array()
@@ -657,11 +662,14 @@ END;
 
         foreach ( $data as $key => $value )
         {
-            $node_field = $dom->createElement('field');
-            $text = $dom->createTextNode($value);
-            $node_field->appendChild($text);
-            $node_field->setAttribute('name', $key);
-            $node_doc->appendChild($node_field);
+            $value = (array)$value;
+            foreach ($value as $v) {
+                $node_field = $dom->createElement('field');
+                $text = $dom->createTextNode($v);
+                $node_field->appendChild($text);
+                $node_field->setAttribute('name', $key);
+                $node_doc->appendChild($node_field);
+            }
         }
 
         self::send_update($dom->saveXML());
