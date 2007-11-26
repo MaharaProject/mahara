@@ -43,6 +43,10 @@ $group = get_record_sql(
     array($forumid)
 );
 
+if (!$group) {
+    throw new InteractionInstanceNotFoundException("Couldn't find forum with id $forumid");
+}
+
 $membership = user_can_access_group((int)$group->id);
 
 if (!$membership) {

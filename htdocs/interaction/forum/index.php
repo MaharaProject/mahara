@@ -32,6 +32,10 @@ define('TITLE', get_string('nameplural', 'interaction.forum'));
 
 $group = param_integer('group');
 
+if (!record_exists('group', 'id', $group)) {
+	throw new GroupNotFoundException("Couldn't find group with id $group");
+}
+
 $membership = user_can_access_group($group);
 
 if (!$membership) {

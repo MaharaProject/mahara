@@ -39,12 +39,16 @@ $topicid = 0;
 if ($postid==0) {
     unset($postid);
     $parentid = param_integer('parent');
-    $topicid = get_record_sql(
+    $topic = get_record_sql(
         'SELECT topic
         FROM {interaction_forum_post}
         WHERE id = ?',
         array($parentid)
     );
+    if (!$topic) {
+        throw new NotFoundException("Couldn't find topic with id $parentid");
+    }
+    $topicid = $topic->id;
 }
 
 if (isset($postid)) {
@@ -58,6 +62,11 @@ if (isset($postid)) {
         WHERE p.id = ?',
         array($postid)
     );
+
+    if (!$post) {
+        throw new NotFoundException("Couldn't find post with id $postid");
+    }
+    
     $topicid = $post->topic;
 
     $membership = user_can_access_group((int)$post->group);

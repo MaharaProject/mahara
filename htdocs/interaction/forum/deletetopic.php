@@ -42,6 +42,10 @@ $forum = get_record_sql(
     array($topicid)
 );
 
+if (!$forum) {
+	throw new NotFoundException("Couldn't find topic with id $topicid");
+}
+
 $membership = user_can_access_group((int)$forum->group);
 
 $admin = (bool)($membership & GROUP_MEMBERSHIP_OWNER);

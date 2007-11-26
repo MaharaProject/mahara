@@ -43,6 +43,10 @@ if ($topicid==0) {
         WHERE id = ?',
         array($forumid)
     );
+    
+    if (!$group) {
+        throw new NotFoundException("Couldn't find forum with id $forumid");
+    }
 
     $membership = user_can_access_group((int)$group->id);
 
@@ -65,6 +69,11 @@ if (isset($topicid)) {
         AND topic = ?',
         array($topicid)
     );
+    
+    if (!$topicinfo) {
+        throw new NotFoundException("Couldn't find topic with id $topicid");
+    }
+    
     $info = get_record_sql(
         'SELECT f.group, t.forum
         FROM {interaction_forum_topic} t

@@ -43,6 +43,11 @@ $info = get_record_sql(
     WHERE t.id = ?',
     array($topicid)
 );
+
+if (!$info) {
+    throw new NotFoundException("Couldn't find topic with id $topicid");
+}
+
 $membership = user_can_access_group((int)$info->group);
 
 if (!$membership) {

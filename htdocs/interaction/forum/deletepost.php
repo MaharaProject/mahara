@@ -33,7 +33,7 @@ require_once('group.php');
 $userid = $USER->get('id');
 $postid = param_integer('id');
 $info = get_record_sql(
-    'SELECT p.topic, t.forum, f.group
+    'SELECT p.topic, p.parent, t.forum, f.group
     FROM {interaction_forum_post} p
     INNER JOIN {interaction_forum_topic} t
     ON (p.topic = t.id)
@@ -44,7 +44,13 @@ $info = get_record_sql(
 
 );
 
-$topicid = $info->topic;
+if (!$info) {
+    throw new NotFoundException("Couldn't find post with id $postid");
+}
+
+if (!$info->parent) {
+	throw new NotFoundException("Cannot edit first post"); // TODO: replace with correct exception
+}
 
 $membership = user_can_access_group((int)$info->group);
 
@@ -76,7 +82,7 @@ $form = pieform(array(
         'submit' => array(
             'type'  => 'submitcancel',
             'value' => array(get_string('yes'), get_string('no')),
-            'goto'  => get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $topicid,
+            'goto'  => get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $info->topic,
         )
     )
 ));
@@ -88,14 +94,13 @@ function deletepost_submit(Pieform $form, $values) {
         array('deleted' => 1),
         array('id' => $postid)
     );
-    $topicid = get_record_sql(
-        'SELECT topic
+    $topic = get_record_sql(
+        'SELECT topic as id
         FROM {interaction_forum_post}
         WHERE id = ?',
         array($postid)
     );
-$topicid = $topicid->topic;
-    redirect('/interaction/forum/topic.php?id=' . $topicid);
+    redirect('/interaction/forum/topic.php?id=' . $topic->id);
 }
 
 $smarty = smarty();
