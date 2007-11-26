@@ -35,16 +35,22 @@ define('SECTION_PAGE', 'notifications');
 
 require_once('pieforms/pieform.php');
 
-$sql = 'SELECT u.*, a.activity, a.method 
+$sql = 'SELECT u.*, a.activity, a.method
     FROM {usr} u 
     LEFT JOIN {usr_activity_preference} a ON a.usr = u.id
     WHERE u.admin = ?';
 
 $admins  = get_records_sql_array($sql, array(1));
-$types   = get_column('activity_type', 'name', 'admin', 1);
-$types   = array_flip($types);
-foreach (array_keys($types) as $k) {
-    $types[$k] = get_string('type' . $k, 'activity');
+$temptypes   = get_records_array('activity_type', 'admin', 1);
+$types   = array();
+foreach ($temptypes as $t) {
+    if (empty($t->plugintype)) {
+        $section = 'activity';
+    }
+    else {
+        $section = $t->plugintype . '.' . $t->pluginname;
+    }
+    $types[$t->id] = get_string('type' . $t->name, $section);
 }
 $users = array();
 foreach ($admins as $u) {

@@ -32,10 +32,18 @@ define('SECTION_PAGE', 'activity');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
-$types = get_records_array('activity_type', 'admin', 0);
+$types = get_records_assoc('activity_type', 'admin', 0, 'plugintype,pluginname,name', 'id,name,plugintype,pluginname');
+$types = array_map(create_function('$a', '
+    if (!empty($a->plugintype)) { 
+        $section = "{$a->plugintype}.{$a->pluginname}";
+    }
+    else {
+        $section = "activity";
+    }
+    return get_string("type" . $a->name, $section);
+    '), $types);
 if ($USER->get('admin')) {
-    $admintypes = get_records_array('activity_type');
-    $types[] = (object)array('name' => 'adminmessages');
+    $types['adminmessages'] = get_string('typeadminmessages', 'activity');
 }
 
 $morestr = get_string('more...');

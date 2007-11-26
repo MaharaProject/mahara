@@ -3,7 +3,7 @@
 
 {include file="columnleftstart.tpl"}
 
-<h3>{$subject}</h3>
+<h2>{$subject}</h2>
 <ul>
     <li>
         {$posts}

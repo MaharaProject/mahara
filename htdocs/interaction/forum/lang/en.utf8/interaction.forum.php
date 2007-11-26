@@ -32,6 +32,7 @@ $string['stickytopics'] = 'Sticky topics';
 $string['subject'] = 'Subject';
 $string['subscribe'] = 'Subscribe';
 $string['topic'] = 'Topic';
-$string['unsubscribe'] = 'Unsubscribe';6
+$string['typenewpost'] = 'New post';
+$string['unsubscribe'] = 'Unsubscribe';
 
 ?>

@@ -1,6 +1,6 @@
 <?php
 
-$config->version = 2007111300;
+$config->version = 2007111303;
 $config->release = '0.1';
 
 ?>

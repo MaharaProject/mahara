@@ -2,6 +2,8 @@
 {include file="sidebar.tpl"}
 
 {include file="columnleftstart.tpl"}
+
+<h2>{str tag=nameplural section=interaction.forum}</h2>
 {if $admin}
 <a href="{$WWWROOT}interaction/edit.php?group={$group|escape}&plugin=forum">{str tag="newforum" section=interaction.forum}</a>
 {/if}

@@ -155,24 +155,28 @@
         </TABLE>
         <TABLE NAME="activity_type">
             <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
                 <FIELD NAME="name" TYPE="char" LENGTH="50" NOTNULL="true" />
                 <FIELD NAME="admin" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
                 <FIELD NAME="delay" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" />
+                <FIELD NAME="plugintype" TYPE="char" LENGTH="25" NOTNULL="false" />
+                <FIELD NAME="pluginname" TYPE="char" LENGTH="255" NOTNULL="false" />
             </FIELDS>
             <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="name" />
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+                <KEY NAME="namepluginuk" TYPE="unique" FIELDS="name, plugintype, pluginname" />
             </KEYS>
         </TABLE>
         <TABLE NAME="activity_queue">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
-                <FIELD NAME="type" TYPE="char" LENGTH="50" NOTNULL="true" />
+                <FIELD NAME="type" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="data" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="ctime" TYPE="datetime" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
-                <KEY NAME="typefk" TYPE="foreign" FIELDS="type" REFTABLE="activity_type" REFFIELDS="name" />
+                <KEY NAME="typefk" TYPE="foreign" FIELDS="type" REFTABLE="activity_type" REFFIELDS="id" />
             </KEYS>
         </TABLE>
         <TABLE NAME="artefact">
@@ -307,13 +311,13 @@
         <TABLE NAME="usr_activity_preference">
             <FIELDS>
                 <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="activity" TYPE="char" LENGTH="100" NOTNULL="true" />
+                <FIELD NAME="activity" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="method" TYPE="char" LENGTH="255" NOTNULL="true" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="usr,activity" />
                 <KEY NAME="usrfk" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id" />
-                <KEY NAME="activityfk" TYPE="foreign" FIELDS="activity" REFTABLE="activity_type" REFFIELDS="name" />
+                <KEY NAME="activityfk" TYPE="foreign" FIELDS="activity" REFTABLE="activity_type" REFFIELDS="id" />
                 <KEY NAME="methodfk" TYPE="foreign" FIELDS="method" REFTABLE="notification_installed" REFFIELDS="name" />
             </KEYS>
         </TABLE>

@@ -3,7 +3,19 @@
 class PluginInteractionForum extends PluginInteraction {
 
     public static function instance_config_form($instance=null) {
-        return array();
+        return array(
+            
+        );
+    }
+
+    public static function get_activity_types() {
+        return array(
+            (object)array(
+                'name' => 'newpost',
+                'admin' => 0,
+                'delay' => 1,
+            )
+        );
     }
 }
 
@@ -13,6 +25,13 @@ class InteractionForumInstance extends InteractionInstance {
         return 'forum';
     }
 
+}
+
+class ActivityTypeInteractionForumNewPost extends ActivityType {
+
+    public function get_required_parameters() {
+        return array();
+    }
 }
 
 /**
@@ -34,8 +53,8 @@ function is_forum_moderator($forumid, $userid=null) {
     
     if (!is_int($forumid)) {
         throw new InvalidArgumentException("non integer forum id given to is_forum_moderator: $forumid");
+
     }
-    
     return record_exists_sql(
         'SELECT "user"
         FROM {interaction_forum_moderator}

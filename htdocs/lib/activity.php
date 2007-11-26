@@ -33,14 +33,11 @@ defined('INTERNAL') || die();
  * @param string $activitytype type of activity
  * @param mixed $data data 
  */
-function activity_occurred($activitytype, $data) {
-    if (!$at = get_record('activity_type', 'name', $activitytype)) {
-        throw new Exception("Invalid activity type $activitytype");
-    }
-
+function activity_occurred($activitytype, $data, $plugintype=null, $pluginname=null) {
+    $at = activity_locate_typerecord($activitytype, $plugintype, $pluginname);
     if (!empty($at->delay)) {
         $delayed = new StdClass;
-        $delayed->type = $activitytype;
+        $delayed->type = $at->id;
         $delayed->data = serialize($data);
         $delayed->ctime = db_format_timestamp(time());
         insert_record('activity_queue', $delayed);
@@ -74,21 +71,9 @@ function activity_occurred($activitytype, $data) {
  */
 function handle_activity($activitytype, $data, $cron=false) {
 
-    // mysql compatibility (sigh...)
-    $casturl = 'CAST(? AS TEXT)';
-    if (get_config('dbtype') == 'mysql') {
-        $casturl = 'CAST(? AS CHAR)'; // note, NOT varchar
-    }
 
     $data = (object)$data;
-    if (is_string($activitytype)) {
-        $activitytype = get_record('activity_type', 'name', $activitytype);
-    }
-    
-
-    if (!is_object($activitytype)) {
-        throw new InvalidArgumentException("Invalid activitytype $activitytype");
-    }
+    $activitytype = activity_locate_typerecord($activitytype);
 
     $classname = 'ActivityType' . ucfirst($activitytype->name);
     if (!empty($activitytype->plugintype)) {
@@ -106,7 +91,7 @@ function handle_activity($activitytype, $data, $cron=false) {
 
     $data = $activity->to_stdclass();
     safe_require('notification', 'internal', 'lib.php', 'require_once');
-    $data->type = $activity->get_type();
+    $data->type = $activity->get_id();
     foreach ($activity->get_users() as $user) {
         $userdata = $data;
         // some stuff gets overridden by user specific stuff
@@ -144,7 +129,7 @@ function handle_activity($activitytype, $data, $cron=false) {
  * for a particular activitytype
  * including the notification method.
  *
- * @param string $activitytype the name of the activity type
+ * @param int $activitytype the id of the activity type
  * @param array $userids an array of userids to filter by
  * @param array $userobjs an array of user objects to filterby
  * @param bool $adminonly whether to filter by admin flag
@@ -201,7 +186,7 @@ function activity_process_queue() {
 }
 
 function activity_get_viewaccess_users($view, $owner, $type) {
-
+    $type = activity_locate_typerecord($type);
     $sql = 'SELECT userid, u.*, p.method
                 FROM (
                 SELECT (CASE WHEN usr1 = ? THEN usr2 ELSE usr1 END) AS userid 
@@ -224,13 +209,35 @@ function activity_get_viewaccess_users($view, $owner, $type) {
                 JOIN {usr} u ON u.id = userlist.userid
                 LEFT JOIN {usr_activity_preference} p ON p.usr = u.id
             WHERE p.activity = ?';
-    $values = array($owner, $owner, $owner, 'friends', $view, $view, $view, 0, 1, $view, $type);
+    $values = array($owner, $owner, $owner, 'friends', $view, $view, $view, 0, 1, $view, $type->id);
     if (!$u = get_records_sql_assoc($sql, $values)) {
         $u = array();
     }
     return $u;
 }
 
+function activity_locate_typerecord($activitytype, $plugintype=null, $pluginname=null) {
+    if (is_object($activitytype)) {
+        return $activitytype;
+    }
+    if (is_numeric($activitytype)) {
+        $at = get_record('activity_type', 'id', $activitytype);
+    }
+    else {
+        if (empty($plugintype) && empty($pluginname)) {
+            $at = get_record_select('activity_type', 
+                'name = ? AND plugintype IS NULL AND pluginname IS NULL', 
+                array($activitytype));
+        } 
+        else {
+            $at = get_record('activity_type', 'name', $activitytype, 'plugintype', $plugintype, 'pluginname', $pluginname);
+        }
+    }
+    if (empty($at)) {
+        throw new Exception("Invalid activity type $activitytype");
+    }
+    return $at;
+}
 
 /** activity type classes **/
 abstract class ActivityType {
@@ -239,6 +246,15 @@ abstract class ActivityType {
     protected $message;
     protected $users = array();
     protected $url;
+    protected $id;
+   
+    public function get_id() {
+        if (!isset($this->id)) {
+            $tmp = activity_locate_typerecord($this->get_type());
+            $this->id = $tmp->id;
+        }
+        return $this->id;
+    }
     
     public function get_type() {
         $prefix = 'ActivityType';
@@ -287,8 +303,7 @@ abstract class ActivityTypeAdmin extends ActivityType {
 
     public function __construct($data) {
         parent::__construct($data);
-        $this->users = activity_get_users($this->get_type(), null, null, true);
-        log_debug($this->users);
+        $this->users = activity_get_users($this->get_id(), null, null, true);
     }
 }
 
@@ -378,7 +393,7 @@ class ActivityTypeMaharamessage extends ActivityType {
 
     public function __construct($data) { 
         parent::__construct($data);
-        $this->users = activity_get_users('maharamessage', $this->users);
+        $this->users = activity_get_users($this->get_id(), $this->users);
     }
 
     public function get_required_parameters() {
@@ -396,7 +411,7 @@ class ActivityTypeUsermessage extends ActivityType {
         if (empty($this->subject)) {
             $this->subject = get_string('newusermessage', 'mahara', display_name($this->userfrom));
         }
-        $this->users = activity_get_users('usermessage', array($this->userto));
+        $this->users = activity_get_users($this->get_id(), array($this->userto));
         if (empty($this->url)) {
             $this->url = get_config('wwwroot') . 'user/view.php?id=' . $this->userfrom;
         }
@@ -442,7 +457,7 @@ class ActivityTypeFeedback extends ActivityType {
             }
         }
         if ($userid) {
-            $this->users = activity_get_users('feedback', array($userid));
+            $this->users = activity_get_users($this->get_id(), array($userid));
         } 
     }
 
@@ -468,6 +483,11 @@ class ActivityTypeWatchlist extends ActivityType {
             throw new ViewNotFoundException(get_string('viewnotfound', 'error', $this->view));
         }
         $this->message = $oldsubject . ' ' . $viewinfo->title;
+        // mysql compatibility (sigh...)
+        $casturl = 'CAST(? AS TEXT)';
+        if (get_config('dbtype') == 'mysql') {
+            $casturl = 'CAST(? AS CHAR)'; // note, NOT varchar
+        }
         $sql = 'SELECT u.*, p.method, ' . $casturl . ' AS url
                     FROM {usr_watchlist_view} wv
                     JOIN {usr} u
@@ -511,7 +531,7 @@ class ActivityTypeNewview extends ActivityType {
         $this->url = get_config('wwwroot') . 'view/view.php?id=' . $this->view;
 
         // add users on friendslist or userlist...
-        $this->users = activity_get_viewaccess_users($this->view, $this->owner, 'newview');
+        $this->users = activity_get_viewaccess_users($this->view, $this->owner, $this->get_id()); 
         // ick
         foreach ($this->users as &$user) {
             $user->message = display_name($viewinfo, $user) . ' ' . $this->message;
@@ -544,7 +564,7 @@ class ActivityTypeViewaccess extends ActivityType {
         $this->subject = get_string('newviewaccesssubject', 'activity');
         $this->url = get_config('wwwroot') . 'view/view.php?id=' . $this->view;
         $this->users = array_diff_key(
-            activity_get_viewaccess_users($this->view, $this->owner, 'viewaccess'), 
+            activity_get_viewaccess_users($this->view, $this->owner, $this->get_id()),
             $this->oldusers
         );
 
@@ -556,6 +576,21 @@ class ActivityTypeViewaccess extends ActivityType {
 
     public function get_required_parameters() {
         return array('view', 'owner', 'oldusers');
+    }
+}
+
+abstract class ActivityTypePlugin extends ActivityType {
+
+    abstract public function get_plugintype();
+
+    abstract public function get_pluginname();
+
+    public function get_id() {
+        if (!isset($this->id)) {
+            $tmp = activity_locate_typerecord($this->get_type(), $this->get_plugintype(), $this->get_pluginname());
+            $this->id = $tmp->id;
+        }
+        return $this->id;
     }
 }
 

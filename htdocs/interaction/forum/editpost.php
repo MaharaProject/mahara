@@ -48,8 +48,8 @@ if ($postid==0) {
 }
 
 if (isset($postid)) {
-	$info = get_record_sql(
-        'SELECT p.topic, p.poster, p.ctime, t.forum, f.group
+	$post = get_record_sql(
+        'SELECT p.subject, p.body, p.parent, p.topic, p.poster, p.ctime, t.forum, f.group
         FROM {interaction_forum_post} p
         INNER JOIN {interaction_forum_topic} t
         ON (p.topic = t.id)
@@ -58,27 +58,19 @@ if (isset($postid)) {
         WHERE p.id = ?',
         array($postid)
     );
-    $topicid = $info->topic;
+    $topicid = $post->topic;
 
-    $membership = user_can_access_group((int)$info->group);
+    $membership = user_can_access_group((int)$post->group);
 
     $admin = (bool)($membership & GROUP_MEMBERSHIP_OWNER);
 
-    $moderator = $admin || is_forum_moderator((int)$info->forum);
+    $moderator = $admin || is_forum_moderator((int)$post->forum);
     
     if (!$moderator &&
-        ($info->poster != $userid
-        || (time() - strtotime($info->ctime)) > (30 * 60))) {
+        ($post->poster != $userid
+        || (time() - strtotime($post->ctime)) > (30 * 60))) {
         throw new AccessDeniedException();
     }
-    
-    $postinfo = get_record_sql(
-        'SELECT p.subject, p.body, p.topic
-        FROM {interaction_forum_post} p
-        WHERE id = ?',
-        array($postid)
-    );
-    $topicid = $postinfo->topic;
 }
 
 require_once('pieforms/pieform.php');
@@ -90,9 +82,10 @@ $editform = pieform(array(
         'subject' => array(
             'type'         => 'text',
             'title'        => get_string('subject', 'interaction.forum'),
-            'defaultvalue' => isset($postinfo) ? $postinfo->subject : null,
+            'defaultvalue' => isset($post) ? $post->subject : null,
             'rules'        => array(
-                'maxlength' => 255
+                'maxlength' => 255,
+                'required'  => isset($post) && !$post->parent ? true : false
             )
         ),
         'body' => array(
@@ -100,13 +93,13 @@ $editform = pieform(array(
             'title'        => get_string('body', 'interaction.forum'),
             'rows'         => 10,
             'cols'         => 70,
-            'defaultvalue' => isset($postinfo) ? $postinfo->body : null,
+            'defaultvalue' => isset($post) ? $post->body : null,
             'rules'        => array( 'required' => true )
         ),
         'submit'   => array(
             'type'  => 'submitcancel',
             'value'       => array(
-                isset($postinfo) ? get_string('edit', 'interaction.forum') : get_string('post','interaction.forum'),
+                isset($post) ? get_string('edit', 'interaction.forum') : get_string('post','interaction.forum'),
                 get_string('cancel', 'interaction.forum')
             ),
         'goto'      => get_config('wwwroot') . 'interaction/forum/topic.php?id='.$topicid
@@ -154,7 +147,7 @@ function editpost_submit(Pieform $form, $values) {
             array('id' => $postid)
         );
         if ($topic->poster != $USER->get('id') ||
-            (time() - strtotime($topic->posttime)) > (30 * 60)) {
+           (time() - strtotime($topic->posttime)) > (30 * 60)) {
         	insert_record(
         	    'interaction_forum_edit',
         	    (object)array(
