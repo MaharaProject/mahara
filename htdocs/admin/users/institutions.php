@@ -126,14 +126,14 @@ if ($institution || $add) {
         $data = new StdClass;
         $data->displayname = '';
         $data->registerallowed = 1;
-        $data->defaultaccountlifetime = null;
-        $data->defaultaccountinactiveexpire = null;
-        $data->defaultaccountinactivewarn = 604800; // 1 week
+        $data->theme = 'default';
+        $data->defaultmembershipperiod = null;
         $lockedprofilefields = array();
         $smarty->assign('add', true);
 
         $authtypes = auth_get_available_auth_types();
     }
+    $themeoptions = get_themes();
     
     safe_require('artefact', 'internal');
     $elements = array(
@@ -192,26 +192,21 @@ if ($institution || $add) {
             'defaultvalue' => $data->registerallowed,
             'help'   => true,
         ),
-        'defaultaccountlifetime' => array(
+        'defaultmembershipperiod' => array(
             'type'         => 'expiry',
-            'title'        => get_string('defaultaccountlifetime', 'admin'),
-            'description'  => get_string('defaultaccountlifetimedescription', 'admin'),
-            'defaultvalue' => $data->defaultaccountlifetime,
+            'title'        => get_string('defaultmembershipperiod', 'admin'),
+            'description'  => get_string('defaultmembershipperioddescription', 'admin'),
+            'defaultvalue' => $data->defaultmembershipperiod,
             'help'   => true,
         ),
-        'defaultaccountinactiveexpire' => array(
-            'type'         => 'expiry',
-            'title'        => get_string('defaultaccountinactiveexpire', 'admin'),
-            'description'  => get_string('defaultaccountinactiveexpiredescription', 'admin'),
-            'defaultvalue' => $data->defaultaccountinactiveexpire,
-            'help'   => true,
-        ),
-        'defaultaccountinactivewarn' => array(
-            'type' => 'expiry',
-            'title' => get_string('defaultaccountinactivewarn', 'admin'),
-            'description' => get_string('defaultaccountinactivewarndescription', 'admin'),
-            'defaultvalue' => $data->defaultaccountinactivewarn,
-            'help'   => true,
+        'theme' => array(
+            'type'         => 'select',
+            'title'        => get_string('theme','admin'),
+            'description'  => get_string('sitethemedescription','admin'),
+            'defaultvalue' => $data->theme,
+            'collapseifoneoption' => true,
+            'options'      => $themeoptions,
+            'help'         => true,
         ),
         'lockedfields' => array(
             'value' => '<tr><th colspan="2">Locked fields ' 
@@ -245,9 +240,9 @@ if ($institution || $add) {
 }
 else {
     // Get a list of institutions
-    $institutions = get_records_sql_array('SELECT i.name, i.displayname, i.registerallowed, COUNT(u.id) AS hasmembers
+    $institutions = get_records_sql_array('SELECT i.name, i.displayname, i.registerallowed, COUNT(u.usr) AS hasmembers
         FROM {institution} i
-        LEFT OUTER JOIN {usr} u ON (u.institution = i.name)
+        LEFT OUTER JOIN {usr_institution} u ON (u.institution = i.name)
         GROUP BY 1, 2, 3
         ORDER BY i.name', array());
     $smarty->assign('institutions', $institutions);
@@ -266,9 +261,8 @@ function institution_submit(Pieform $form, $values) {
     $newinstitution->displayname                  = $values['displayname'];
     $newinstitution->authplugin                   = $values['authplugin'];
     $newinstitution->registerallowed              = ($values['registerallowed']) ? 1 : 0;
-    $newinstitution->defaultaccountlifetime       = ($values['defaultaccountlifetime']) ? intval($values['defaultaccountlifetime']) : null;
-    $newinstitution->defaultaccountinactiveexpire = ($values['defaultaccountinactiveexpire']) ? intval($values['defaultaccountinactiveexpire']) : null;
-    $newinstitution->defaultaccountinactivewarn   = ($values['defaultaccountinactivewarn']) ? intval($values['defaultaccountinactivewarn']) : null;
+    $newinstitution->theme                        = $values['theme'];
+    $newinstitution->defaultmembershipperiod      = ($values['defaultmembershipperiod']) ? intval($values['defaultmembershipperiod']) : null;
 
     $allinstances = array_merge($values['authplugin']['instancearray'], $values['authplugin']['deletearray']);
 

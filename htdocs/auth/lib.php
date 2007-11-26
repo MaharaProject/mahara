@@ -977,8 +977,7 @@ function login_submit(Pieform $form, $values) {
     }
 
     // Check if the user's account has become inactive
-    // To become a config setting:
-    $inactivetime = get_field('institution', 'defaultaccountinactiveexpire', 'name', 'mahara');
+    $inactivetime = get_config('defaultaccountinactiveexpire');
     if ($inactivetime && $oldlastlogin > 0
         && $oldlastlogin + $inactivetime < time()) {
         die_info(get_string('accountinactive'));
@@ -1019,16 +1018,17 @@ function auth_handle_account_expiries() {
     // The 'expiry' flag on the usr table
     $sitename = get_config('sitename');
     $wwwroot  = get_config('wwwroot');
+    $expire   = get_config('defaultaccountinactiveexpire');
+    $warn     = get_config('defaultaccountinactivewarn');
 
     // Expiry warning messages
-    if ($users = get_records_sql_array('SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, i.defaultaccountinactivewarn AS timeout
-        FROM {usr} u, {institution} i
-        WHERE u.institution = i.name
-        AND ? - ' . db_format_tsfield('u.expiry', false) . ' < i.defaultaccountinactivewarn
+    if ($users = get_records_sql_array('SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email
+        FROM {usr} u
+        AND ? - ' . db_format_tsfield('u.expiry', false) . ' < ' . $warn . '
         AND expirymailsent = 0', array(time()))) {
         foreach ($users as $user) {
             $displayname  = display_name($user);
-            $daystoexpire = ceil($user->timeout / 86400) . ' ';
+            $daystoexpire = ceil($warn / 86400) . ' ';
             $daystoexpire .= ($daystoexpire == 1) ? get_string('day') : get_string('days');
             email_user($user, null,
                 get_string('accountexpirywarning'),
@@ -1049,15 +1049,15 @@ function auth_handle_account_expiries() {
         }
     }
 
+    
     // Inactivity (lastlogin is too old)
-    if ($users = get_records_sql_array('SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, i.defaultaccountinactivewarn AS timeout
-        FROM {usr} u, {institution} i
-        WHERE u.institution = i.name
-        AND (? - ' . db_format_tsfield('u.lastlogin', false) . ') > (i.defaultaccountinactiveexpire - i.defaultaccountinactivewarn)
+    if ($users = get_records_sql_array('SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email
+        FROM {usr} u
+        AND (? - ' . db_format_tsfield('u.lastlogin', false) . ') > ' . ($expire - $warn) . '
         AND inactivemailsent = 0', array(time()))) {
         foreach ($users as $user) {
             $displayname = display_name($user);
-            $daystoinactive = ceil($user->timeout / 86400) . ' ';
+            $daystoinactive = ceil($warn / 86400) . ' ';
             $daystoinactive .= ($daystoexpire == 1) ? get_string('day') : get_string('days');
             email_user($user, null, get_string('accountinactivewarning'),
                 get_string('accountinactivewarningtext', 'mahara', $displayname, $sitename, $daystoinactive, $sitename),
@@ -1070,8 +1070,7 @@ function auth_handle_account_expiries() {
     // Actual inactive users
     if ($users = get_records_sql_array('SELECT u.id
         FROM {usr} u
-        LEFT JOIN {institution} i ON (u.institution = i.name)
-        WHERE ' . db_format_tsfield('lastlogin', false) . ' < ? - i.defaultaccountinactiveexpire', array(time()))) {
+        WHERE ' . db_format_tsfield('lastlogin', false) . ' < ? - ' . $expire, array(time()))) {
         // Users have become inactive!
         foreach ($users as $user) {
             deactivate_user($user->id);
@@ -1210,8 +1209,7 @@ class PluginAuth extends Plugin {
         // ensure we have everything we need
         $user = get_user($user['id']);
 
-        // To become a config setting:
-        $inactivetime = get_field('institution', 'defaultaccountinactiveexpire', 'name', 'mahara');
+        $inactivetime = get_config('defaultaccountinactiveexpire');
         if ($user->suspendedcusr) {
             $active = false;
         }

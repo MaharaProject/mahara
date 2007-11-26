@@ -450,10 +450,7 @@ function xmldb_core_upgrade($oldversion=0) {
 
         execute_sql('DROP INDEX {usr_useaut_uix};');
         execute_sql('CREATE UNIQUE INDEX {usr_use_uix} ON {usr} (username);');
-
-        $table = new XMLDBField('usr');
-        $field = new XMLDBField('institution');
-        drop_field($table, $field);
+        execute_sql('ALTER TABLE {usr} DROP COLUMN institution;');
 
         if (!empty($renamed)) {
             // Notify changed usernames to administrator
@@ -485,6 +482,34 @@ function xmldb_core_upgrade($oldversion=0) {
                            . $usermessageend);
             }
         }
+    }
+
+    if ($oldversion < 2007112600) {
+
+        // Move site-wide stuff from institution table to config table
+        $default = get_record('institution', 'name', 'mahara');
+        $c = new StdClass;
+        $c->field = 'defaultaccountinactivewarn';
+        $c->value = empty($default->defaultaccountinactivewarn) ? 604800 : $default->defaultaccountinactivewarn;
+        insert_record('config', $c);
+        if (!empty($default->defaultaccountlifetime)) {
+            $c->field = 'defaultaccountlifetime';
+            $c->value = $default->defaultaccountlifetime;
+            insert_record('config', $c);
+        }
+        if (!empty($default->defaultaccountinactiveexpire)) {
+            $c->field = 'defaultaccountinactiveexpire';
+            $c->value = $default->defaultaccountinactiveexpire;
+            insert_record('config', $c);
+        }
+
+        execute_sql('ALTER TABLE {institution} DROP COLUMN defaultaccountlifetime;');
+        execute_sql('ALTER TABLE {institution} DROP COLUMN defaultaccountinactiveexpire;');
+        execute_sql('ALTER TABLE {institution} DROP COLUMN defaultaccountinactivewarn;');
+
+        // Add theme, default institution membership period to institution table
+        execute_sql('ALTER TABLE {institution} ADD COLUMN theme varchar(255)');
+        execute_sql('ALTER TABLE {institution} ADD COLUMN defaultmembershipperiod bigint');
     }
 
     return $status;

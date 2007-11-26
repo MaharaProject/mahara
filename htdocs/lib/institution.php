@@ -42,9 +42,8 @@ class Institution {
         'displayname' => '',
         'registerallowed' => 1,
         'updateuserinfoonlogin' => 0,
-        'defaultaccountlifetime' => null,
-        'defaultaccountinactiveexpire' => null,
-        'defaultaccountinactivewarn' => 0
+        'theme' => 'default',
+        'defaultmembershipperiod' => 0
         ); 
 
     function __construct($name = null) {
@@ -89,17 +88,13 @@ class Institution {
             if (!is_numeric($value) || $value < 0 || $value > 1) {
                 throw new ParamOutOfRangeException("'updateuserinfoonlogin' should be zero or one");
             }
-        } elseif ($name == 'defaultaccountlifetime') {
+        } elseif ($name == 'theme') {
+            if (!is_string($value) || empty($value) || strlen($value) > 255) {
+                throw new ParamOutOfRangeException("'theme' ($value) should be a string between 1 and 255 characters in length");
+            }
+        } elseif ($name == 'defaultmembershipperiod') {
             if (!empty($value) && (!is_numeric($value) || $value < 0 || $value > 9999999999)) {
-                throw new ParamOutOfRangeException("'defaultaccountlifetime' should be a number between 1 and 9,999,999,999");
-            }
-        } elseif ($name == 'defaultaccountinactiveexpire') {
-            if (!empty($value) && (!is_string($value) || empty($value) || strlen($value) > 255)) {
-                throw new ParamOutOfRangeException("'defaultaccountinactiveexpire' should be a number between 1 and 9,999,999,999");
-            }
-        } elseif ($name == 'defaultaccountinactivewarn') {
-            if (!empty($value) && strlen($value) > 255) {
-                throw new ParamOutOfRangeException("'defaultaccountinactivewarn' should be a number between 1 and 9,999,999,999");
+                throw new ParamOutOfRangeException("'defaultmembershipperiod' should be a number between 1 and 9,999,999,999");
             }
         }
         $this->members[$name] = $value;
@@ -185,9 +180,8 @@ class Institution {
         $record->name                         = $this->name;
         $record->displayname                  = $this->displayname;
         $record->updateuserinfoonlogin        = $this->updateuserinfoonlogin;
-        $record->defaultaccountlifetime       = $this->defaultaccountlifetime;
-        $record->defaultaccountinactiveexpire = $this->defaultaccountinactiveexpire;
-        $record->defaultaccountinactivewarn   = $this->defaultaccountinactivewarn;
+        $record->theme                        = $this->theme;
+        $record->defaultmembershipperiod      = $this->defaultmembershipperiod;
 
         if ($this->initialized == self::INITIALIZED) {
             return insert_record('institution', $record);
@@ -215,9 +209,8 @@ class Institution {
         $this->displayname                  = $result->displayname;
         $this->registerallowed              = $result->registerallowed;
         $this->updateuserinfoonlogin        = $result->updateuserinfoonlogin;
-        $this->defaultaccountlifetime       = $result->defaultaccountlifetime;
-        $this->defaultaccountinactiveexpire = $result->defaultaccountinactiveexpire;
-        $this->defaultaccountinactivewarn   = $result->defaultaccountinactivewarn;
+        $this->theme                        = $result->theme;
+        $this->defaultmembershipperiod      = $result->defaultmembershipperiod;
         $this->verifyReady();
     }
 

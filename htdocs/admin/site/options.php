@@ -125,6 +125,27 @@ $siteoptionform = pieform(array(
             'defaultvalue' => get_config('artefactviewinactivitytime'),
             'help'         => true,
         ),
+        'defaultaccountlifetime' => array(
+            'type'         => 'expiry',
+            'title'        => get_string('defaultaccountlifetime', 'admin'),
+            'description'  => get_string('defaultaccountlifetimedescription', 'admin'),
+            'defaultvalue' => get_config('defaultaccountlifetime'),
+            'help'         => true,
+        ),
+        'defaultaccountinactiveexpire' => array(
+            'type'         => 'expiry',
+            'title'        => get_string('defaultaccountinactiveexpire', 'admin'),
+            'description'  => get_string('defaultaccountinactiveexpiredescription', 'admin'),
+            'defaultvalue' => get_config('defaultaccountinactiveexpire'),
+            'help'         => true,
+        ),
+        'defaultaccountinactivewarn' => array(
+            'type'         => 'expiry',
+            'title'        => get_string('defaultaccountinactivewarn', 'admin'),
+            'description'  => get_string('defaultaccountinactivewarndescription', 'admin'),
+            'defaultvalue' => get_config('defaultaccountinactivewarn'),
+            'help'         => true,
+        ),
         'submit' => array(
             'type'  => 'submit',
             'value' => get_string('updatesiteoptions','admin')
@@ -138,6 +159,7 @@ function siteoptions_fail(Pieform $form, $field) {
 
 function siteoptions_submit(Pieform $form, $values) {
     $fields = array('sitename','lang','theme','pathtofile', 'pathtoclam',
+                    'defaultaccountlifetime', 'defaultaccountinactiveexpire', 'defaultaccountinactivewarn', 
                     'allowpublicviews','artefactviewinactivitytime', 'searchplugin');
     foreach ($fields as $field) {
         if (!set_config($field, $values[$field])) {

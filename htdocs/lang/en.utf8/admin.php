@@ -273,6 +273,8 @@ $string['institutiondisplayname'] = 'Institution display name';
 $string['institutionupdatedsuccessfully'] = 'Institution updated successfully';
 $string['registrationallowed'] = 'Registration allowed?';
 $string['registrationalloweddescription'] = 'Whether users can register for the system with this institution';
+$string['defaultmembershipperiod'] = 'Default membership period';
+$string['defaultmembershipperioddescription'] = 'How long new members remain associated with the institution';
 
 
 // general stuff
