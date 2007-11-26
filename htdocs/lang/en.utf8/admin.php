@@ -241,6 +241,7 @@ $string['usersuspended'] = 'User suspended';
 $string['userunsuspended'] = 'User unsuspended';
 
 // User account settings
+$string['accountsettings'] = 'Account settings';
 $string['siteaccountsettings'] = 'Site account settings';
 $string['resetpassword'] = 'Reset password';
 $string['forcepasswordchange'] = 'Force password change on next login';
@@ -275,6 +276,7 @@ $string['registrationallowed'] = 'Registration allowed?';
 $string['registrationalloweddescription'] = 'Whether users can register for the system with this institution';
 $string['defaultmembershipperiod'] = 'Default membership period';
 $string['defaultmembershipperioddescription'] = 'How long new members remain associated with the institution';
+$string['authenticatedby'] = 'Authentication Method';
 
 
 // general stuff

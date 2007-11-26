@@ -27,7 +27,7 @@
 define('INTERNAL', 1);
 define('ADMIN', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-define('TITLE', get_string('edituseraccount', 'admin'));
+define('TITLE', get_string('accountsettings', 'admin'));
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'admin');
 require_once('pieforms/pieform.php');
@@ -124,6 +124,23 @@ $elements['quota'] = array(
     'defaultvalue' => $user->quota / 1048576,
     'rules'        => array('integer' => true),
 );
+
+$authinstances = auth_get_auth_instances();
+if (count($authinstances) > 1) {
+    $options = array();
+
+    foreach ($authinstances as $authinstance) {
+        $options[$authinstance->id] = $authinstance->displayname. ': '.$authinstance->instancename;
+    }
+
+    $elements['authinstance'] = array(
+        'type' => 'select',
+        'title' => get_string('authenticatedby', 'admin'),
+        'options' => $options,
+        'defaultvalue' => $user->authinstance
+    );
+}
+
 $elements['submit'] = array(
     'type'  => 'submit',
     'value' => get_string('savechanges','admin'),
@@ -150,6 +167,9 @@ function edituser_submit(Pieform $form, $values) {
     $user->staff = (int) ($values['staff'] == 'on');
     $user->admin = (int) ($values['admin'] == 'on');
     $user->quota = $values['quota'] * 1048576;
+    if (isset($values['authinstance'])) {
+        $user->authinstance = $values['authinstance'];
+    }
 
     update_record('usr', $user);
 

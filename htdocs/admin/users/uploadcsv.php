@@ -68,44 +68,6 @@ $ALLOWEDKEYS = array(
     'authinstance'
 );
 
-/**
- * TODO: do we want to keep this function? Then it should be in auth/lib.php
- * Given an institution, returns the authentication methods used by it, sorted 
- * by priority.
- *
- * @param  string   $institution     Name of the institution
- * @return array                     Array of auth instance records
- */
-function auth_get_auth_instances() {
-    static $cache = array();
-
-    if (count($cache) > 0) {
-        return $cache;
-    }
-
-    $sql ='
-        SELECT DISTINCT
-            i.id,
-            inst.name,
-            inst.displayname,
-            i.instancename
-        FROM 
-            {institution} inst,
-            {auth_instance} i
-        WHERE 
-            i.institution = inst.name
-        ORDER BY
-            inst.displayname,
-            i.instancename';
-
-    $cache = get_records_sql_array($sql, array());
-
-    if (empty($cache)) {
-        return array();
-    }
-
-    return $cache;
-}
 
 $authinstances = auth_get_auth_instances();
 if (count($authinstances) > 1) {
