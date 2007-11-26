@@ -1336,14 +1336,14 @@ function admin_nav() {
         ),
         array(
             'path'   => 'configusers',
-            'url'    => 'admin/users/suspended.php',
+            'url'    => 'admin/users/search.php',
             'title'  => get_string('configusers', 'admin'),
             'weight' => 30,
         ),
         array(
-            'path'   => 'configusers/suspendedusers',
-            'url'    => 'admin/users/suspended.php',
-            'title'  => get_string('suspendedusers', 'admin'),
+            'path'   => 'configusers/usersearch',
+            'url'    => 'admin/users/search.php',
+            'title'  => get_string('usersearch', 'admin'),
             'weight' => 10,
         ),
         array(
@@ -1377,9 +1377,9 @@ function admin_nav() {
             'weight' => 60,
         ),
         array(
-            'path'   => 'configusers/usersearch',
-            'url'    => 'admin/users/search.php',
-            'title'  => get_string('usersearch', 'admin'),
+            'path'   => 'configusers/suspendedusers',
+            'url'    => 'admin/users/suspended.php',
+            'title'  => get_string('suspendedusers', 'admin'),
             'weight' => 70,
         ),
         array(
