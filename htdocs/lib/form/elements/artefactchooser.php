@@ -151,63 +151,65 @@ var ul = getFirstElementByTagAndClassName('ul', 'artefactchooser-tabs', '{$form-
 var doneBrowse = false;
 var browseA = null;
 var searchA = null;
-forEach(getElementsByTagAndClassName('a', null, ul), function(a) {
-    p.rewritePaginatorLink(a);
-    if (!doneBrowse) {
-        doneBrowse = true;
+if (ul) {
+    forEach(getElementsByTagAndClassName('a', null, ul), function(a) {
+        p.rewritePaginatorLink(a);
+        if (!doneBrowse) {
+            doneBrowse = true;
 
-        browseA = a;
-        // Hide the search form
-        connect(a, 'onclick', function(e) {
-            hideElement('artefactchooser-searchform');
-            removeElementClass(searchA.parentNode, 'current');
-            addElementClass(browseA.parentNode, 'current');
-            browseA.blur();
-            $('artefactchooser-searchfield').value = ''; // forget the search for now, easier than making the tabs remember it
-            e.stop();
-        });
-    }
-    else {
-        searchA = a;
-
-        // Display the search form
-        connect(a, 'onclick', function(e) {
-            showElement('artefactchooser-searchform');
-            removeElementClass(browseA.parentNode, 'current');
-            addElementClass(searchA.parentNode, 'current');
-            $('artefactchooser-searchfield').focus();
-            e.stop();
-        });
-
-        // Wire up the search button
-        connect('artefactchooser-searchsubmit', 'onclick', function(e) {
-            e.stop();
-
-            var loc = searchA.href.indexOf('?');
-            var queryData = [];
-            if (loc != -1) {
-                queryData = parseQueryString(searchA.href.substring(loc + 1, searchA.href.length));
-                queryData.extradata = serializeJSON(p.extraData);
-                queryData.search = $('artefactchooser-searchfield').value;
-            }
-
-            sendjsonrequest(p.jsonScript, queryData, 'GET', function(data) {
-                getFirstElementByTagAndClassName('tbody', null, p.datatable).innerHTML = data['data']['tablerows'];
-
-                // Update the pagination
-                var tmp = DIV();
-                tmp.innerHTML = data['data']['pagination'];
-                swapDOM(p.id, tmp.firstChild);
-
-                // Run the pagination js to make it live
-                eval(data['data']['pagination_js']);
-
-                // Update the result count
-                getFirstElementByTagAndClassName('div', 'results', p.id).innerHTML = data['data']['count'] + ' results'; // TODO i18n and pluralisation
+            browseA = a;
+            // Hide the search form
+            connect(a, 'onclick', function(e) {
+                hideElement('artefactchooser-searchform');
+                removeElementClass(searchA.parentNode, 'current');
+                addElementClass(browseA.parentNode, 'current');
+                browseA.blur();
+                $('artefactchooser-searchfield').value = ''; // forget the search for now, easier than making the tabs remember it
+                e.stop();
             });
-        });
-    }
-});
+        }
+        else {
+            searchA = a;
+
+            // Display the search form
+            connect(a, 'onclick', function(e) {
+                showElement('artefactchooser-searchform');
+                removeElementClass(browseA.parentNode, 'current');
+                addElementClass(searchA.parentNode, 'current');
+                $('artefactchooser-searchfield').focus();
+                e.stop();
+            });
+
+            // Wire up the search button
+            connect('artefactchooser-searchsubmit', 'onclick', function(e) {
+                e.stop();
+
+                var loc = searchA.href.indexOf('?');
+                var queryData = [];
+                if (loc != -1) {
+                    queryData = parseQueryString(searchA.href.substring(loc + 1, searchA.href.length));
+                    queryData.extradata = serializeJSON(p.extraData);
+                    queryData.search = $('artefactchooser-searchfield').value;
+                }
+
+                sendjsonrequest(p.jsonScript, queryData, 'GET', function(data) {
+                    getFirstElementByTagAndClassName('tbody', null, p.datatable).innerHTML = data['data']['tablerows'];
+
+                    // Update the pagination
+                    var tmp = DIV();
+                    tmp.innerHTML = data['data']['pagination'];
+                    swapDOM(p.id, tmp.firstChild);
+
+                    // Run the pagination js to make it live
+                    eval(data['data']['pagination_js']);
+
+                    // Update the result count
+                    getFirstElementByTagAndClassName('div', 'results', p.id).innerHTML = data['data']['count'] + ' results'; // TODO i18n and pluralisation
+                });
+            });
+        }
+    });
+}
 
 EOF;
     return $pagination_js;
