@@ -125,27 +125,26 @@ class ArtefactTypeResume extends ArtefactType {
      *
      * @param boolean $updateresumeblocks Whether to update any resume blockinstances
      */
-    public function commit($updateresumeblocks=true) {
-        if ($updateresumeblocks) {
-            if ($blockinstances = get_records_sql_array('
-                SELECT id, view, configdata
-                FROM {block_instance}
-                WHERE blocktype = \'entireresume\'
-                AND "view" IN (
-                    SELECT id
-                    FROM {view}
-                    WHERE "owner" = ?)', array($this->owner))) {
-                foreach ($blockinstances as $blockinstance) {
-                    $whereobject = (object)array(
-                        'view' => $blockinstance->view,
-                        'artefact' => $this->get('id'),
-                        'block' => $blockinstance->id,
-                    );
-                    ensure_record_exists('view_artefact', $whereobject, $whereobject);
-                }
+    public function commit() {
+        parent::commit();
+
+        if ($blockinstances = get_records_sql_array('
+            SELECT id, view, configdata
+            FROM {block_instance}
+            WHERE blocktype = \'entireresume\'
+            AND "view" IN (
+                SELECT id
+                FROM {view}
+                WHERE "owner" = ?)', array($this->owner))) {
+            foreach ($blockinstances as $blockinstance) {
+                $whereobject = (object)array(
+                    'view' => $blockinstance->view,
+                    'artefact' => $this->get('id'),
+                    'block' => $blockinstance->id,
+                );
+                ensure_record_exists('view_artefact', $whereobject, $whereobject);
             }
         }
-        parent::commit();
     }
 }
 
@@ -175,13 +174,14 @@ class ArtefactTypeInterest extends ArtefactTypeResume {
 class ArtefactTypeContactinformation extends ArtefactTypeResume {
 
     public function render_self($options) {
-        $smarty = smarty();
+        $smarty = smarty_core();
         $fields = ArtefactTypeContactinformation::get_profile_fields();
         foreach ($fields as $f) {
             try {
                 $$f = artefact_instance_from_type($f);
                 $rendered = $$f->render_self(array());
                 $smarty->assign($f, format_whitespace($rendered['html']));
+                $smarty->assign('hascontent', true);
             }
             catch (Exception $e) { }
         }

@@ -1,3 +1,4 @@
+{if $hascontent}
 <table>
 {if $address}
     <tr>
@@ -48,3 +49,4 @@
     </tr>
 {/if}
 </table>
+{/if}
