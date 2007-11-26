@@ -118,7 +118,7 @@ class PluginSearchInternal extends PluginSearch {
         if ($count > 0) {
             $data = get_records_sql_array('
                 SELECT DISTINCT ON (u.firstname, u.lastname, u.id)
-                    u.id, u.username, u.institution, u.firstname, u.lastname, u.preferredname, u.email, u.staff
+                    u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.staff
                 FROM {artefact} a
                     INNER JOIN {usr} u ON u.id = a.owner
                 WHERE
@@ -196,7 +196,7 @@ class PluginSearchInternal extends PluginSearch {
             // way is to rewrite the query using a self join on the usr table.
             $data = get_records_sql_array('
                 SELECT DISTINCT
-                    u.id, u.username, u.institution, u.firstname, u.lastname, u.preferredname, u.email, u.staff
+                    u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.staff
                 FROM {artefact} a
                     INNER JOIN {usr} u ON u.id = a.owner
                 WHERE
