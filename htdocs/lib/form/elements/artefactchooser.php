@@ -193,18 +193,26 @@ if (ul) {
                 }
 
                 sendjsonrequest(p.jsonScript, queryData, 'GET', function(data) {
-                    getFirstElementByTagAndClassName('tbody', null, p.datatable).innerHTML = data['data']['tablerows'];
+                    var tbody = getFirstElementByTagAndClassName('tbody', null, p.datatable);
+                    if (tbody) {
+                        tbody.innerHTML = data['data']['tablerows'];
+                    }
 
                     // Update the pagination
-                    var tmp = DIV();
-                    tmp.innerHTML = data['data']['pagination'];
-                    swapDOM(p.id, tmp.firstChild);
+                    if ($(p.id)) {
+                        var tmp = DIV();
+                        tmp.innerHTML = data['data']['pagination'];
+                        swapDOM(p.id, tmp.firstChild);
 
-                    // Run the pagination js to make it live
-                    eval(data['data']['pagination_js']);
+                        // Run the pagination js to make it live
+                        eval(data['data']['pagination_js']);
+                    }
 
                     // Update the result count
-                    getFirstElementByTagAndClassName('div', 'results', p.id).innerHTML = data['data']['count'] + ' results'; // TODO i18n and pluralisation
+                    var results = getFirstElementByTagAndClassName('div', 'results', p.id);
+                    if (results) {
+                        results.innerHTML = data['data']['count'] + ' results'; // TODO i18n and pluralisation
+                    }
                 });
             });
         }
