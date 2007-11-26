@@ -845,6 +845,16 @@ function ViewManager() {
                     var configureButton = getFirstElementByTagAndClassName('input', 'configurebutton', blockinstance);
                     if (configureButton) {
                         self.rewriteConfigureButton(configureButton);
+                        if (self.currentConfigureData) {
+                            self.currentConfigureData['contentdiv'].innerHTML = self.currentConfigureData['oldcontent'];
+                            removeNodeAttribute(self.currentConfigureData['button'], 'disabled');
+                            self.currentConfigureData = null;
+                        }
+                        self.currentConfigureData = {
+                            'contentdiv': getFirstElementByTagAndClassName('div', 'blockinstance-content', blockinstance),
+                            'oldcontent': '',
+                            'button'    : configureButton
+                        };
                         setNodeAttribute(configureButton, 'disabled', 'disabled');
                     }
 
