@@ -43,18 +43,26 @@ var Paginator = function(id, datatable, script, extradata) {
             }
 
             sendjsonrequest(self.jsonScript, queryData, 'GET', function(data) {
-                getFirstElementByTagAndClassName('tbody', null, self.datatable).innerHTML = data['data']['tablerows'];
+                var tbody = getFirstElementByTagAndClassName('tbody', null, self.datatable);
+                if (tbody) {
+                    tbody.innerHTML = data['data']['tablerows'];
+                }
 
                 // Update the pagination
-                var tmp = DIV();
-                tmp.innerHTML = data['data']['pagination'];
-                swapDOM(self.id, tmp.firstChild);
+                if ($(self.id)) {
+                    var tmp = DIV();
+                    tmp.innerHTML = data['data']['pagination'];
+                    swapDOM(self.id, tmp.firstChild);
 
-                // Run the pagination js to make it live
-                eval(data['data']['pagination_js']);
+                    // Run the pagination js to make it live
+                    eval(data['data']['pagination_js']);
 
-                // Update the result count
-                getFirstElementByTagAndClassName('div', 'results', self.id).innerHTML = data['data']['count'] + ' results'; // TODO i18n
+                    // Update the result count
+                    var results = getFirstElementByTagAndClassName('div', 'results', self.id);
+                    if (results) {
+                        results.innerHTML = data['data']['count'] + ' results'; // TODO i18n
+                    }
+                }
             });
         });
     }
