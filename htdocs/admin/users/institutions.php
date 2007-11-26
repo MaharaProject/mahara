@@ -192,14 +192,17 @@ if ($institution || $add) {
             'defaultvalue' => $data->registerallowed,
             'help'   => true,
         ),
-        'defaultmembershipperiod' => array(
+    );
+
+    if ($data->name != 'mahara') {
+        $elements['defaultmembershipperiod'] = array(
             'type'         => 'expiry',
             'title'        => get_string('defaultmembershipperiod', 'admin'),
             'description'  => get_string('defaultmembershipperioddescription', 'admin'),
             'defaultvalue' => $data->defaultmembershipperiod,
             'help'   => true,
-        ),
-        'theme' => array(
+        );
+        $elements['theme'] = array(
             'type'         => 'select',
             'title'        => get_string('theme','admin'),
             'description'  => get_string('sitethemedescription','admin'),
@@ -207,14 +210,14 @@ if ($institution || $add) {
             'collapseifoneoption' => true,
             'options'      => $themeoptions,
             'help'         => true,
-        ),
-        'lockedfields' => array(
-            'value' => '<tr><th colspan="2">Locked fields ' 
-                . get_help_icon('core', 'admin', 'institution', 'lockedfields') 
-                . '</th></tr>'
-        )
-    );
+        );
+    }
 
+    $elements['lockedfields'] = array(
+        'value' => '<tr><th colspan="2">Locked fields ' 
+        . get_help_icon('core', 'admin', 'institution', 'lockedfields') 
+        . '</th></tr>'
+    );
     foreach (ArtefactTypeProfile::get_all_fields() as $field => $type) {
         $elements[$field] = array(
             'type' => 'checkbox',
@@ -261,7 +264,7 @@ function institution_submit(Pieform $form, $values) {
     $newinstitution->displayname                  = $values['displayname'];
     $newinstitution->authplugin                   = $values['authplugin'];
     $newinstitution->registerallowed              = ($values['registerallowed']) ? 1 : 0;
-    $newinstitution->theme                        = $values['theme'];
+    $newinstitution->theme                        = empty($values['theme']) ? null : $values['theme'];
     $newinstitution->defaultmembershipperiod      = ($values['defaultmembershipperiod']) ? intval($values['defaultmembershipperiod']) : null;
 
     $allinstances = array_merge($values['authplugin']['instancearray'], $values['authplugin']['deletearray']);
