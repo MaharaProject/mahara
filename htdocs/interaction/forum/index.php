@@ -45,7 +45,7 @@ if (!$membership) {
 $admin = (bool)($membership & GROUP_MEMBERSHIP_OWNER);
 
 $forums = get_records_sql_array(
-    'SELECT f.id, f.title, f.description, COUNT(t.*), s.forum as subscribed
+    'SELECT f.id, f.title, f.description, COUNT(t.*), s.forum AS subscribed
     FROM {interaction_instance} f
     LEFT JOIN {interaction_forum_topic} t
     ON (t.forum = f.id AND t.deleted != 1)
@@ -63,21 +63,23 @@ $forums = get_records_sql_array(
 require_once('pieforms/pieform.php');
 
 $i = 0;
-foreach ($forums as $forum) {
-    $forum->subscribe = pieform(array(
-        'name'     => 'subscribe'.$i++,
-        'successcallback' => 'subscribe_submit',
-        'elements' => array(
-            'submit' => array(
-                'type'  => 'submit',
-                'value' => $forum->subscribed ? get_string('unsubscribe', 'interaction.forum') : get_string('subscribe', 'interaction.forum')
-            ),
-            'forum' => array(
-                'type' => 'hidden',
-                'value' => $forum->id
+if ($forums) {
+    foreach ($forums as $forum) {
+        $forum->subscribe = pieform(array(
+            'name'     => 'subscribe'.$i++,
+            'successcallback' => 'subscribe_submit',
+            'elements' => array(
+                'submit' => array(
+                    'type'  => 'submit',
+                    'value' => $forum->subscribed ? get_string('unsubscribe', 'interaction.forum') : get_string('subscribe', 'interaction.forum')
+                ),
+                'forum' => array(
+                    'type' => 'hidden',
+                    'value' => $forum->id
+                )
             )
-        )
-    ));
+        ));
+    }
 }
 
 function subscribe_submit(Pieform $form, $values) {

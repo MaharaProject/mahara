@@ -95,7 +95,7 @@ function deletepost_submit(Pieform $form, $values) {
         array('id' => $postid)
     );
     $topic = get_record_sql(
-        'SELECT topic as id
+        'SELECT topic AS id
         FROM {interaction_forum_post}
         WHERE id = ?',
         array($postid)

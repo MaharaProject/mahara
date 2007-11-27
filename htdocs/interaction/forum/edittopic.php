@@ -38,7 +38,7 @@ if ($topicid==0) {
     unset($topicid);
     $forumid = param_integer('forum');
     $group = get_record_sql(
-        'SELECT "group" as id
+        'SELECT "group" AS id
         FROM {interaction_instance}
         WHERE id = ?',
         array($forumid)
@@ -61,7 +61,7 @@ if ($topicid==0) {
 
 if (isset($topicid)) {
     $topicinfo = get_record_sql(
-        'SELECT p.subject, p.body, p.topic as id, t.sticky, t.closed
+        'SELECT p.subject, p.body, p.topic AS id, t.sticky, t.closed
         FROM {interaction_forum_post} p
         INNER JOIN {interaction_forum_topic} t
         ON (p.topic = t.id)

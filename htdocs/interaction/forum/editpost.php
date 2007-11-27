@@ -40,11 +40,26 @@ if ($postid==0) {
     unset($postid);
     $parentid = param_integer('parent');
     $topic = get_record_sql(
-        'SELECT topic
-        FROM {interaction_forum_post}
-        WHERE id = ?',
+        'SELECT p.topic AS id, t.closed, f.id as forum, f.group
+        FROM {interaction_forum_post} p
+        INNER JOIN {interaction_forum_topic} t
+        ON (p.topic = t.id)
+        INNER JOIN {interaction_instance} f
+        ON (t.forum = f.id)
+        WHERE p.id = ?',
         array($parentid)
     );
+
+    $membership = user_can_access_group((int)$topic->group);
+
+    $admin = (bool)($membership & GROUP_MEMBERSHIP_OWNER);
+
+    $moderator = $admin || is_forum_moderator((int)$topic->forum);
+
+    if (!$membership || (!$moderator && $topic->closed)) {
+        throw new AccessDeniedException();
+    }
+
     if (!$topic) {
         throw new NotFoundException("Couldn't find topic with id $parentid");
     }
@@ -122,7 +137,7 @@ function editpost_submit(Pieform $form, $values) {
     if ($postid==0) {
         $parentid = param_integer('parent');
         $topic = get_record_sql(
-            'SELECT topic as id
+            'SELECT topic AS id
             FROM {interaction_forum_post}
             WHERE id = ?',
             array($parentid)
@@ -142,7 +157,7 @@ function editpost_submit(Pieform $form, $values) {
     }
     else {
         $topic = get_record_sql(
-            'SELECT topic as id, poster, ctime as posttime
+            'SELECT topic AS id, poster, ctime AS posttime
             FROM {interaction_forum_post}
             WHERE id = ?',
             array($postid)
@@ -171,7 +186,7 @@ function editpost_submit(Pieform $form, $values) {
 }
 
 $smarty = smarty();
-$smarty->assign('editform',$editform);
+$smarty->assign('editform', $editform);
 $smarty->display('interaction:forum:editpost.tpl');
 
 ?>
