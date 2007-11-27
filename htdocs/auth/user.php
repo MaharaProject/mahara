@@ -83,6 +83,7 @@ class User {
             'accountprefs'     => array(),
             'activityprefs'    => array(),
             'institutions'     => array(),
+            'admininstitutions' => array(),
             'sesskey'          => ''
         );
         $this->attributes = array();
@@ -345,7 +346,6 @@ class User {
         return true;
     }
 
-
     public function join_institution($institution) {
         $institutions = $this->get('institutions');
         if (!isset($institutions[$institution])) {
@@ -357,6 +357,16 @@ class User {
         }
     }
 
+    public function in_institution($institution, $role = null) {
+        $institutions = $this->get('institutions');
+        return isset($institutions[$institution]) 
+            && (is_null($role) || $institutions[$institution]->{$role});
+    }
+
+    public function is_institutional_admin() {
+        $a = $this->get('admininstitutions');
+        return !empty($a);
+    }
 
 }
 
@@ -453,7 +463,15 @@ class LiveUser extends User {
         if (empty($user->id)) $this->commit();
         $this->activityprefs      = load_activity_preferences($user->id);
         $this->accountprefs       = load_account_preferences($user->id);
-        $this->institutions       = load_user_institutions($user->id);
+        $institutions             = load_user_institutions($user->id);
+        $admininstitutions = array();
+        foreach ($institutions as $i) {
+            if ($i->admin) {
+                $admininstitutions[$i->institution] = true;
+            }
+        }
+        $this->institutions       = $institutions;
+        $this->admininstitutions  = $admininstitutions;
         $this->commit();
     }
 
