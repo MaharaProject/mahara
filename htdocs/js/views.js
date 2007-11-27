@@ -285,6 +285,7 @@ function ViewManager() {
                 };
                 contentDiv.innerHTML = data.data['html'];
                 eval(data.data.javascript);
+                $('action-dummy').name = getNodeAttribute(e.src(), 'name');
 
                 // Make the cancel button be supersmart
                 var cancelButton = $('cancel_cb_' + blockinstanceId + '_action_configureblockinstance_id_' + blockinstanceId);
@@ -855,6 +856,7 @@ function ViewManager() {
                             'oldcontent': '',
                             'button'    : configureButton
                         };
+                        $('action-dummy').name = 'action_addblocktype_column_' + whereTo['column'] + '_order_' + whereTo['order'];
                         setNodeAttribute(configureButton, 'disabled', 'disabled');
                     }
 

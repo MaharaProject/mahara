@@ -180,9 +180,18 @@ if (ul) {
                 e.stop();
             });
 
+            connect('artefactchooser-searchfield', 'onkeypress', function(e) {
+                if (e.key().code == 13) { // enter pressed - submitting form
+                    e.stop();
+                    signal('artefactchooser-searchsubmit', 'onclick', true);
+                }
+            });
+
             // Wire up the search button
             connect('artefactchooser-searchsubmit', 'onclick', function(e) {
-                e.stop();
+                if (e._event != true) {
+                    e.stop();
+                }
 
                 var loc = searchA.href.indexOf('?');
                 var queryData = [];
