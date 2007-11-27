@@ -104,7 +104,6 @@ function editaccess_submit(Pieform $form, $values) {
 }
 
 
-$smarty->assign('titlestr', get_string('editaccess', 'view'));
 $smarty->assign('form', pieform($form));
 $smarty->display('view/access.tpl');
 
