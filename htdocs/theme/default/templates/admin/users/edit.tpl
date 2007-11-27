@@ -1,7 +1,7 @@
 {include file="header.tpl"}
 
 {include file="columnfullstart.tpl"}
-
+<div id="edituser">
     <h2><a href="{$WWWROOT}user/view.php?id={$user->id}">{$user->firstname} {$user->lastname} ({$user->username})</a></h2>
     {if empty($user->suspendedcusr)}
       <h3>{str tag="suspenduser" section="admin"}</h3>
@@ -12,7 +12,10 @@
     {/if}
     {$suspendform}
     <h3>{str tag="siteaccountsettings" section="admin"}</h3>
-    {$mainform}
+    {$siteform}
+    <h3>{str tag="institution"}</h3>
+    {$institutionform}
+</div>
 {include file="columnfullend.tpl"}
 {include file="footer.tpl"}
 

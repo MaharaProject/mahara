@@ -41,7 +41,7 @@ if (!$user = get_record('usr', 'id', $id)) {
 
 if (empty($user->suspendedcusr)) {
     $suspendform = pieform(array(
-        'name'       => 'suspend',
+        'name'       => 'edituser_suspend',
         'plugintype' => 'core',
         'pluginname' => 'admin',
         'elements'   => array(
@@ -61,7 +61,7 @@ if (empty($user->suspendedcusr)) {
     ));
 } else {
     $suspendform = pieform(array(
-        'name'       => 'unsuspend',
+        'name'       => 'edituser_unsuspend',
         'plugintype' => 'core',
         'pluginname' => 'admin',
         'elements'   => array(
@@ -77,14 +77,14 @@ if (empty($user->suspendedcusr)) {
     ));
 }
 
-function suspend_submit(Pieform $form, $values) {
+function edituser_suspend_submit(Pieform $form, $values) {
     global $SESSION;
     suspend_user($values['id'], $values['reason']);
     $SESSION->add_ok_msg(get_string('usersuspended', 'admin'));
     redirect('/admin/users/edit.php?id=' . $values['id']);
 }
 
-function unsuspend_submit(Pieform $form, $values) {
+function edituser_unsuspend_submit(Pieform $form, $values) {
     global $SESSION;
     unsuspend_user($values['id']);
     $SESSION->add_ok_msg(get_string('userunsuspended', 'admin'));
@@ -93,7 +93,7 @@ function unsuspend_submit(Pieform $form, $values) {
 
 
 // Site-wide account settings
-
+$elements = array();
 $elements['id'] = array(
     'type'    => 'hidden',
     'rules'   => array('integer' => true),
@@ -146,8 +146,8 @@ $elements['submit'] = array(
     'value' => get_string('savechanges','admin'),
 );
 
-$mainform = pieform(array(
-    'name'       => 'edituser',
+$siteform = pieform(array(
+    'name'       => 'edituser_site',
     'renderer'   => 'table',
     'plugintype' => 'core',
     'pluginname' => 'admin',
@@ -155,7 +155,7 @@ $mainform = pieform(array(
 ));
 
 
-function edituser_submit(Pieform $form, $values) {
+function edituser_site_submit(Pieform $form, $values) {
     if (!$user = get_record('usr', 'id', $values['id'])) {
         return false;
     }
@@ -177,12 +177,119 @@ function edituser_submit(Pieform $form, $values) {
 }
 
 
+// Institution settings
+$userinstitution = get_record('usr_institution', 'usr', $id, null, null, null, null,
+                              'usr,institution,studentid,staff,admin,'.db_format_tsfield('expiry'));
+$allinstitutions = get_records_array('institution');
+$options = array();
+foreach ($allinstitutions as $i) {
+    $options[$i->name] = $i->displayname;
+}
 
+$elements = array(
+    'id' => array(
+         'type'    => 'hidden',
+         'value'   => $id,
+     ),
+    'institution' => array(
+         'type'         => 'select',
+         'title'        => get_string('institution'),
+         'options'      => $options,
+         'defaultvalue' => empty($userinstitution) ? 'mahara' : $userinstitution->institution
+    ),
+    'change' => array(
+        'type'  => 'submit',
+        'value' => get_string('changeinstitution','admin'),
+    ),
+);
+
+if ($userinstitution) {
+    $elements['subtitle'] = array(
+        'type'         => 'html',
+        'title'        => get_string('settingsfor', 'admin'),
+        'value'        => $options[$userinstitution->institution],
+    );
+    $currentdate = getdate();
+    $elements['expiry'] = array(
+        'type'         => 'date',
+        'title'        => get_string('membershipexpiry'),
+        'minyear'      => $currentdate['year'],
+        'maxyear'      => $currentdate['year'] + 20
+    );
+    if (!empty($userinstitution->expiry)) {
+        $elements['expiry']['defaultvalue'] = $userinstitution->expiry;
+    }
+    $elements['studentid'] = array(
+        'type'         => 'text',
+        'title'        => get_string('studentid'),
+        'defaultvalue' => $userinstitution->studentid,
+    );
+    $elements['staff'] = array(
+        'type'         => 'checkbox',
+        'title'        => get_string('institutionstaff','admin'),
+        'defaultvalue' => $userinstitution->staff,
+    );
+    $elements['admin'] = array(
+        'type'         => 'checkbox',
+        'title'        => get_string('institutionadmin','admin'),
+        'defaultvalue' => $userinstitution->admin,
+    );
+    $elements['submit'] = array(
+        'type'  => 'submit',
+        'value' => get_string('update'),
+    );
+}
+
+$institutionform = pieform(array(
+    'name'       => 'edituser_institution',
+    'renderer'   => 'table',
+    'plugintype' => 'core',
+    'pluginname' => 'admin',
+    'elements'   => $elements,
+));
+
+function edituser_institution_submit(Pieform $form, $values) {
+    if (!$user = get_record('usr', 'id', $values['id'])) {
+        return false;
+    }
+    $userinstitution = get_record('usr_institution', 'usr', $user->id);
+
+    if (isset($values['change'])) {
+        if (!$userinstitution && $values['institution'] == 'mahara'
+            || $userinstitution && $values['institution'] == $userinstitution->institution) {
+            redirect('/admin/users/edit.php?id='.$user->id);
+        }
+        delete_records('usr_institution', 'usr', $user->id);
+        if ($values['institution'] != 'mahara') {
+            insert_record('usr_institution', (object) array(
+                'usr' => $user->id,
+                'institution' => $values['institution']  // ctime, expiry, etc
+            ));
+        }
+    } else { // Changing settings for an existing institution
+        $newuser = (object) array(
+            'usr'         => $userinstitution->usr,
+            'institution' => $userinstitution->institution,
+            'ctime'       => $userinstitution->ctime,
+            'studentid'   => $values['studentid'],
+            'staff'       => (int) ($values['staff'] == 'on'),
+            'admin'       => (int) ($values['admin'] == 'on'),
+        );
+        if ($values['expiry']) {
+            $newuser->expiry = db_format_timestamp($values['expiry']);
+        }
+        delete_records('usr_institution', 'usr', $user->id);
+        insert_record('usr_institution', $newuser);
+    }
+
+    redirect('/admin/users/edit.php?id='.$user->id);
+}
 
 $smarty = smarty();
 $smarty->assign('user', $user);
 $smarty->assign('suspendform', $suspendform);
-$smarty->assign('mainform', $mainform);
+$smarty->assign('siteform', $siteform);
+$smarty->assign('institutionform', $institutionform);
 $smarty->display('admin/users/edit.tpl');
 
 ?>

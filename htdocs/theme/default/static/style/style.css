@@ -754,6 +754,7 @@ p {
 .maincontent #newblog table,
 .maincontent #template table,
 .maincontent #userview table,
+.maincontent #edituser table,
 .maincontent #editpost table,
 .maincontent #editblog table,
 .maincontent #draftpost table,
@@ -1334,6 +1335,11 @@ a.folderhover {
 }
 #adminnotifications th {
     padding: 0 0 0 5px;
+}
+
+.maincontent #edituser table {
+    padding: 5px 0 0 15px;
+    width: 500px;
 }
 
 .maincontent #institution table {
