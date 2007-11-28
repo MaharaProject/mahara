@@ -667,16 +667,36 @@ function unsuspend_user($userid) {
  * @param int $userid The ID of the user to delete
  */
 function delete_user($userid) {
+    db_begin();
+
+    $emailsuffix = '.deleted.' . time();
+
     $deleterec = new StdClass;
     $deleterec->id = $userid;
     $deleterec->deleted = 1;
+    $deleterec->email = get_field('usr', 'email', 'id', $userid) . $emailsuffix;
     update_record('usr', $deleterec);
+
+    // Because the user is being deleted, but their email address may be wanted 
+    // for a new user, we change their email addresses to add 
+    // 'deleted.[timestamp]'
+    execute_sql('UPDATE {artefact_internal_profile_email}
+    SET email = email || ?
+    WHERE owner = ?', array($emailsuffix, $userid));
+
+    db_commit();
 
     handle_event('deleteuser', $userid);
 }
 
 /**
  * Undeletes a user
+ *
+ * NOTE: changing their email addresses to remove the .deleted.timestamp part 
+ * has not been implemented yet! This function is not actually used anywhere in 
+ * Mahara, so hasn't really been tested because of this. It's a simple enough 
+ * job for the first person who gets there - see how delete_user works to see 
+ * what you must undo.
  *
  * @param int $userid The ID of the user to undelete
  */
