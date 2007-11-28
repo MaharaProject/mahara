@@ -289,6 +289,10 @@ class PluginSearchInternal extends PluginSearch {
                 }
             }
         }
+        if (strpos($sort, 'institution') === 0 && $institutionsearch == '') {
+            $institutionsearch = ' LEFT OUTER JOIN {usr_institution} i ON i.usr = u.id ';
+            $sort = 'i.' . $sort;
+        }
 
         $count = get_field_sql('SELECT COUNT(*) FROM {usr} u ' . $institutionsearch . $where, $values);
 
