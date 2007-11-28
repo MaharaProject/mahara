@@ -179,8 +179,7 @@ END;
                         continue;
                     }
 
-                    if ($key_parts[0] == 'store' || $key_parts[0] == 'text' || $key_parts[0] == 'string' 
-                        || $key == 'ref_institution') {
+                    if ($key_parts[0] == 'store' || $key_parts[0] == 'text' || $key_parts[0] == 'string') { 
                         $new_result[$key_parts[1]] = $value;
                     }
                 }
@@ -208,7 +207,8 @@ END;
             'email'       => 'string_email',
             'username'    => 'text_username',
             'firstname'   => 'text_firstname',
-            'lastname'    => 'text_lastname'
+            'lastname'    => 'text_lastname',
+            'institution_requested' => 'text_institutions_requested',
         );
         if (!empty($queries)) {
             $terms = array();
@@ -422,7 +422,6 @@ END;
         }
         if (
             !isset($user['preferredname'])
-            || !isset($user['institution'])
             || !isset($user['email'])
             || !isset($user['username'])
             || !isset($user['preferredname'])
@@ -434,22 +433,30 @@ END;
                 $user = (array)$user;
             }
         }
-        if (!isset($user['institutions'])) {
-            $user['institutions'] = get_column('usr_institution', 'institution', 'usr', $user['id']);
-        }
 
         if ($user['deleted']) {
             self::delete_byidtype($user['id'], 'user');
             return;
         }
         
+        if (!isset($user['institutions'])) {
+            $user['institutions'] = get_column('usr_institution', 'institution', 'usr', $user['id']);
+        }
+        if (!isset($user['institutions_requested'])) {
+            $institutions_requested = $user['institutions'];
+            foreach (get_column('usr_institution_request', 'institution', 'usr', $user['id']) as $i) {
+                if (!in_array($i, $institutions_requested)) {
+                    $institutions_requested[] = $i;
+                }
+            }
+        }
+
         // @todo: need to index public profile fields
         $doc = array(
             'id'                  => $user['id'],
             'owner'               => $user['id'],
             'type'                => 'user',
             'index_name'          => $user['preferredname'],
-            'ref_institution'     => $user['institution'],
             'text_institutions'   => empty($user['institutions']) ? 'mahara' : join(' ', $user['institutions']),
             'string_email'        => $user['email'],
             'text_username'       => $user['username'],
@@ -458,6 +465,7 @@ END;
             'text_lastname'       => $user['lastname'],
             'index_active'        => $user['active'],
             'store_suspended'     => (int)!empty($user['suspendedcusr']),
+            'text_institutions_requested' => join(' ', $institutions_requested),
         );
         if (empty($doc['index_name'])) {
             $doc['index_name'] = $user['firstname'] . ' ' . $user['lastname'];

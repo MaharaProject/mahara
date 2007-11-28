@@ -277,12 +277,21 @@ class PluginSearchInternal extends PluginSearch {
             foreach ($constraints as $f) {
                 if ($f['field'] == 'institution') {
                     $institutionsearch .= ' LEFT OUTER JOIN {usr_institution} i ON i.usr = u.id ';
-                    if ($f['type'] == 'in') {
-                        $where .= " AND i.institution IN ('" . join("','", $f['list']) . "')";
-                    } else if ($f['string'] == 'mahara') {
+                    if ($f['string'] == 'mahara') {
                         $where .= ' AND i.institution IS NULL';
                     } else {
                         $where .= ' AND i.institution' . $matchtypes[$f['type']];
+                        $values[] = $f['string'];
+                    }
+                } else if ($f['field'] == 'institution_requested') {
+                    $institutionsearch .= ' LEFT OUTER JOIN {usr_institution} i ON i.usr = u.id ';
+                    $institutionsearch .= ' LEFT OUTER JOIN {usr_institution_request} ir ON ir.usr = u.id ';
+                    if ($f['type'] == 'in') {
+                        $institutions = "('" . join("','", $f['list']) . "')";
+                        $where .= ' AND (i.institution IN ' . $institutions . 'OR ir.institution IN ' . $institutions . ')';
+                    } else if ($f['type'] == 'equals') {
+                        $where .= ' AND (i.institution = ? OR ir.institution = ?)';
+                        $values[] = $f['string'];
                         $values[] = $f['string'];
                     }
                 } else {
@@ -291,9 +300,11 @@ class PluginSearchInternal extends PluginSearch {
                 }
             }
         }
-        if (strpos($sort, 'institution') === 0 && $institutionsearch == '') {
-            $institutionsearch = ' LEFT OUTER JOIN {usr_institution} i ON i.usr = u.id ';
+        if (strpos($sort, 'institution') === 0) {
             $sort = 'i.' . $sort;
+            if ($institutionsearch == '') {
+                $institutionsearch = ' LEFT OUTER JOIN {usr_institution} i ON i.usr = u.id ';
+            }
         }
 
         $count = get_field_sql('SELECT COUNT(*) FROM {usr} u ' . $institutionsearch . $where, $values);

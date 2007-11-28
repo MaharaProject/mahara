@@ -154,11 +154,11 @@ function build_admin_user_search_results($search, $offset, $limit, $sortby, $sor
     if (!$USER->get('admin')) {
         $allowed = $USER->get('admininstitutions');
         if ($search->institution == 'all' || !isset($allowed[$search->institution])) {
-            $constraints[] = array('field' => 'institution',
+            $constraints[] = array('field' => 'institution_requested',
                                    'type' => 'in',
                                    'list' => $allowed);
         } else {
-            $constraints[] = array('field' => 'institution',
+            $constraints[] = array('field' => 'institution_requested',
                                    'type' => 'equals',
                                    'string' => $search->institution);
         }
