@@ -331,11 +331,20 @@ function auth_setup () {
             else if ($USER->get('admin') && !$userreallyadmin) {
                 // The user's admin rights have been taken away
                 $USER->admin = 0;
+            }
+            if (!$USER->get('admin')) {
                 $SESSION->add_error_msg(get_string('accessforbiddentoadminsection'));
                 redirect();
             }
-            elseif (!$USER->get('admin')) {
-                // The user never was an admin
+        } else if (defined('INSTITUTIONALADMIN')) {
+            $userreallyadminfor = get_column('usr_institution', 'institution', 'usr', $USER->id, 'admin', 1);
+            if (!$USER->is_institutional_admin() && !empty($userreallyadminfor)) {
+                $USER->set_admin_institutions($userreallyadminfor);
+            }
+            else if ($USER->is_institutional_admin() && empty($userreallyadminfor)) {
+                $USER->set_admin_institutions(array());
+            }
+            if (!$USER->is_institutional_admin()) {
                 $SESSION->add_error_msg(get_string('accessforbiddentoadminsection'));
                 redirect();
             }
@@ -1001,7 +1010,8 @@ function login_submit(Pieform $form, $values) {
     }
 
     // Only admins in the admin section!
-    if (defined('ADMIN') && !$USER->admin) {
+    if (defined('ADMIN') && !$USER->get('admin')
+        || defined('INSTITUTIONALADMIN') && !$USER->is_institutional_admin()) {
         $SESSION->add_error_msg(get_string('accessforbiddentoadminsection'));
         redirect();
     }

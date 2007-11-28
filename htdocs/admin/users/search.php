@@ -25,7 +25,7 @@
  */
 
 define('INTERNAL', 1);
-define('ADMIN', 1);
+define('INSTITUTIONALADMIN', 1);
 define('MENUITEM', 'configusers/usersearch');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('usersearch', 'admin'));

@@ -41,7 +41,7 @@
 {elseif $USER->get('admin')}
                     <li id="globalnav-siteadmin"><a href="{$WWWROOT}admin/">Site Administration</a></li>
 {else}
-                    <li id="globalnav-siteadmin"><a href="{$WWWROOT}admin/">User Administration</a></li>
+                    <li id="globalnav-siteadmin"><a href="{$WWWROOT}admin/users/search.php">User Administration</a></li>
 {/if}
                     {* <li><a href="" onclick="createLoggingPane(); return false;">Create Logging Pane</a></li> *}
 {/if}

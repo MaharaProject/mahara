@@ -55,7 +55,6 @@ class User {
             'id'               => 0,
             'username'         => '',
             'password'         => '',
-            'institution'      => 'mahara',
             'salt'             => '',
             'passwordchange'   => 0,
             'active'           => 1,
@@ -366,6 +365,10 @@ class User {
     public function is_institutional_admin() {
         $a = $this->get('admininstitutions');
         return !empty($a);
+    }
+
+    public function set_admin_institutions($institutions) {
+        $this->set('admininstitutions', array_fill_keys($institutions, true));
     }
 
 }

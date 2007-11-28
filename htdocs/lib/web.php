@@ -336,6 +336,9 @@ EOF;
     if (defined('ADMIN')) {
         $smarty->assign('ADMIN', true);
     }
+    if (defined('INSTITUTIONALADMIN')) {
+        $smarty->assign('INSTITUTIONALADMIN', true);
+    }
 
     $smarty->assign('LOGGEDIN', $USER->is_logged_in());
     if ($USER->is_logged_in()) {
@@ -1289,7 +1292,54 @@ function make_link($url) {
  * @return $adminnav a data structure containing the admin navigation
  */
 function admin_nav() {
-    $wwwroot = get_config('wwwroot');
+    global $USER;
+    if (!$USER->get('admin')) {
+        // Institutional Admin menu
+        return array(
+            array(
+                'path'   => 'configusers',
+                'url'    => 'admin/users/search.php',
+                'title'  => get_string('institutionadministration', 'admin'),
+                'weight' => 10,
+            ),
+            array(
+                'path'   => 'configusers/usersearch',
+                'url'    => 'admin/users/search.php',
+                'title'  => get_string('usersearch', 'admin'),
+                'weight' => 10,
+            ),
+            array(
+                'path'   => 'configusers/institutionmembers',
+                'url'    => 'admin/users/staff.php',
+                'title'  => get_string('institutionmembers', 'admin'),
+                'weight' => 20,
+            ),
+            array(
+                'path'   => 'configusers/staff',
+                'url'    => 'admin/users/staff.php',
+                'title'  => get_string('staffusers', 'admin'),
+                'weight' => 30,
+            ),
+            array(
+                'path'   => 'configusers/admins',
+                'url'    => 'admin/users/admins.php',
+                'title'  => get_string('adminusers', 'admin'),
+                'weight' => 40,
+            ),
+            array(
+                'path'   => 'configusers/adminnotifications',
+                'url'    => 'admin/users/notifications.php',
+                'title'  => get_string('adminnotifications', 'admin'),
+                'weight' => 50,
+            ),
+            array(
+                'path'   => 'configusers/uploadcsv',
+                'url'    => 'admin/users/uploadcsv.php',
+                'title'  => get_string('uploadcsv', 'admin'),
+                'weight' => 60,
+            ),
+        );
+    }
 
     $menu = array(
         array(
@@ -1403,7 +1453,7 @@ function admin_nav() {
  * Builds a data structure representing the menu for Mahara.
  */
 function main_nav() {
-    if (defined('ADMIN')) {
+    if (defined('ADMIN') || defined('INSTITUTIONALADMIN')) {
         $menu = admin_nav();
     }
     else {

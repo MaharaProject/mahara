@@ -282,6 +282,8 @@ $string['changeinstitution'] = 'Change Institution';
 $string['institutionstaff'] = 'Institution Staff';
 $string['institutionadmin'] = 'Institution Admin';
 $string['settingsfor'] = 'Settings for:';
+$string['institutionadministration'] = 'Institution Administration';
+$string['institutionmembers'] = 'Institution Members';
 
 
 // general stuff
