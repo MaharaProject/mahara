@@ -42,7 +42,7 @@ $userinstitution = get_record('usr_institution', 'usr', $id, null, null, null, n
                               'usr,institution,studentid,staff,admin,'.db_format_tsfield('expiry'));
 global $USER;
 if (!$USER->get('admin')) {
-    if (empty($userinstitution) || !in_array($userinstitution->institution, $USER->get('admininstitutions'))) {
+    if (empty($userinstitution) || !$USER->is_institutional_admin($userinstitution->institution)) {
         redirect(get_config('wwwroot').'user/view.php?id='.$id);
     }
 }
@@ -116,16 +116,18 @@ $elements['passwordchange'] = array(
     'title'        => get_string('forcepasswordchange','admin'),
     'defaultvalue' => $user->passwordchange,
 );
-$elements['staff'] = array(
-    'type'         => 'checkbox',
-    'title'        => get_string('sitestaff','admin'),
-    'defaultvalue' => $user->staff,
-);
-$elements['admin'] = array(
-    'type'         => 'checkbox',
-    'title'        => get_string('siteadmin','admin'),
-    'defaultvalue' => $user->admin,
-);
+if ($USER->get('admin')) {
+    $elements['staff'] = array(
+        'type'         => 'checkbox',
+        'title'        => get_string('sitestaff','admin'),
+        'defaultvalue' => $user->staff,
+    );
+    $elements['admin'] = array(
+        'type'         => 'checkbox',
+        'title'        => get_string('siteadmin','admin'),
+        'defaultvalue' => $user->admin,
+    );
+}
 $elements['quota'] = array(
     'type'         => 'text',
     'title'        => get_string('filequota','admin'),
@@ -138,7 +140,9 @@ if (count($authinstances) > 1) {
     $options = array();
 
     foreach ($authinstances as $authinstance) {
-        $options[$authinstance->id] = $authinstance->displayname. ': '.$authinstance->instancename;
+        if ($USER->get('admin') || $USER->is_institutional_admin($authinstance->name)) {
+            $options[$authinstance->id] = $authinstance->displayname. ': '.$authinstance->instancename;
+        }
     }
 
     $elements['authinstance'] = array(
@@ -172,10 +176,20 @@ function edituser_site_submit(Pieform $form, $values) {
         $user->password = $values['password'];
     }
     $user->passwordchange = (int) ($values['passwordchange'] == 'on');
-    $user->staff = (int) ($values['staff'] == 'on');
-    $user->admin = (int) ($values['admin'] == 'on');
     $user->quota = $values['quota'] * 1048576;
-    if (isset($values['authinstance'])) {
+
+    global $USER;
+    if ($USER->get('admin')) {  // Not editable by institutional admins
+        $user->staff = (int) ($values['staff'] == 'on');
+        $user->admin = (int) ($values['admin'] == 'on');
+    }
+
+    // Authinstance can be changed by institutional admins if both the
+    // old and new authinstances belong to the admin's institutions
+    if (isset($values['authinstance']) &&
+        ($USER->get('admin') || 
+         ($USER->is_institutional_admin(get_field('auth_instance', 'institution', 'id', $values['authinstance'])) &&
+          $USER->is_institutional_admin(get_field('auth_instance', 'institution', 'id', $user->authinstance))))) {
         $user->authinstance = $values['authinstance'];
     }
 
@@ -189,7 +203,9 @@ function edituser_site_submit(Pieform $form, $values) {
 $allinstitutions = get_records_array('institution');
 $options = array();
 foreach ($allinstitutions as $i) {
-    $options[$i->name] = $i->displayname;
+    if ($USER->get('admin') || $i->name == 'mahara' || $USER->is_institutional_admin($i->name)) {
+        $options[$i->name] = $i->displayname;
+    }
 }
 
 $elements = array(
@@ -260,11 +276,25 @@ function edituser_institution_submit(Pieform $form, $values) {
     }
     $userinstitution = get_record('usr_institution', 'usr', $user->id);
 
+    // Make sure institutional admins are from the same institution as
+    // the user being edited
+    global $USER;
+    if (!$USER->get('admin')
+        && (!$userinstitution || !$USER->is_institutional_admin($userinstitution->institution))) {
+        redirect('/admin/users/edit.php?id='.$user->id);
+    }
+
     if (isset($values['change'])) {
+        // Do nothing if there's no change to the institution
         if (!$userinstitution && $values['institution'] == 'mahara'
             || $userinstitution && $values['institution'] == $userinstitution->institution) {
             redirect('/admin/users/edit.php?id='.$user->id);
         }
+        // Don't let institutional admins change the institution, but let them unset it
+        if (!$USER->get('admin') && $values['institution'] != 'mahara') {
+            redirect('/admin/users/edit.php?id='.$user->id);
+        }
+
         delete_records('usr_institution', 'usr', $user->id);
         if ($values['institution'] != 'mahara') {
             insert_record('usr_institution', (object) array(
