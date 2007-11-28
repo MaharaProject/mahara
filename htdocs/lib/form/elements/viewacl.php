@@ -107,7 +107,7 @@ function pieform_element_viewacl_get_value(Pieform $form, $element) {
     else if (isset($element['defaultvalue'])) {
         $values = $element['defaultvalue'];
     }
-    if (get_config('allowpublicviews') != '1') {
+    if (get_config('allowpublicviews') != '1' && $values) {
         foreach ($values as $key => $value) {
             if ($value['type'] == 'public') {
                 unset($values[$key]);
