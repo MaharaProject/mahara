@@ -150,6 +150,7 @@ function edittopic_submit(Pieform $form, $values) {
     $topicid = param_integer('id',0);
     if ($topicid==0) {
         $forumid = param_integer('forum');
+        db_begin();
         $topicid = insert_record(
             'interaction_forum_topic',
             (object)array(
@@ -171,6 +172,7 @@ function edittopic_submit(Pieform $form, $values) {
             ),
             'id'
         );
+        db_commit();
     }
     else {
         $post = get_record_sql(
@@ -180,6 +182,7 @@ function edittopic_submit(Pieform $form, $values) {
             AND topic = ?',
             array($topicid)
         );
+        db_begin();
         update_record(
             'interaction_forum_post',
             array(
@@ -206,6 +209,7 @@ function edittopic_submit(Pieform $form, $values) {
                 array('id' => $topicid)
             );
         }
+        db_commit();
     }
     redirect('/interaction/forum/topic.php?id='.$topicid);
 }
