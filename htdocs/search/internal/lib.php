@@ -68,14 +68,14 @@ class PluginSearchInternal extends PluginSearch {
      *               ),
      *           );
      */
-    public static function search_user($query_string, $limit, $offset = 0) {
+    public static function search_user($query_string, $limit, $offset = 0, $data=array()) {
         safe_require('artefact', 'internal');
         $publicfields = array_keys(ArtefactTypeProfile::get_public_fields());
         if (empty($publicfields)) {
             $publicfields = array('preferredname');
         }
         if (is_postgres()) {
-            return self::search_user_pg($query_string, $limit, $offset, $publicfields);
+            return self::search_user_pg($query_string, $limit, $offset, $data, $publicfields);
         } 
         else if (is_mysql()) {
             return self::search_user_my($query_string, $limit, $offset, $publicfields);
@@ -85,8 +85,11 @@ class PluginSearchInternal extends PluginSearch {
         }
     }
 
-    public static function search_user_pg($query_string, $limit, $offset, $publicfields) {
+    public static function search_user_pg($query_string, $limit, $offset, $data, $publicfields) {
         $fieldlist = "('" . join("','", $publicfields) . "')";
+        $group = isset($data['group'])
+            ? 'INNER JOIN {group_member} g ON g.group = ' . (int)$data['group'] . ' AND g.member = u.id'
+            : '';
 
         $count = get_field_sql('
             SELECT 
@@ -94,6 +97,7 @@ class PluginSearchInternal extends PluginSearch {
             FROM
                 {usr} u
                 LEFT JOIN {artefact} a ON u.id=a.owner
+                ' . $group . '
             WHERE
                 u.id <> 0 AND u.active = 1
                 AND ((
@@ -121,6 +125,7 @@ class PluginSearchInternal extends PluginSearch {
                     u.id, u.username, u.institution, u.firstname, u.lastname, u.preferredname, u.email, u.staff
                 FROM {artefact} a
                     INNER JOIN {usr} u ON u.id = a.owner
+                    ' . $group . '
                 WHERE
                     u.id <> 0 AND u.active = 1
                     AND ((
@@ -161,8 +166,13 @@ class PluginSearchInternal extends PluginSearch {
         );
     }
 
-    public static function search_user_my($query_string, $limit, $offset, $publicfields) {
+    public static function search_user_my($query_string, $limit, $offset, $data, $publicfields) {
         $fieldlist = "('" . join("','", $publicfields) . "')";
+
+        $group = isset($data['group'])
+            ? 'INNER JOIN {group_member} g ON g.group = ' . (int)$data['group'] . ' AND g.member = u.id'
+            : '';
+
 
         $count = get_field_sql('
             SELECT 
@@ -170,6 +180,7 @@ class PluginSearchInternal extends PluginSearch {
             FROM
                 {usr} u
                 LEFT JOIN {artefact} a ON u.id=a.owner
+                ' . $group . '
             WHERE
                 u.id <> 0 AND u.active = 1
                 AND ((
@@ -199,6 +210,7 @@ class PluginSearchInternal extends PluginSearch {
                     u.id, u.username, u.institution, u.firstname, u.lastname, u.preferredname, u.email, u.staff
                 FROM {artefact} a
                     INNER JOIN {usr} u ON u.id = a.owner
+                    ' . $group . '
                 WHERE
                     u.id <> 0 AND u.active = 1
                     AND ((

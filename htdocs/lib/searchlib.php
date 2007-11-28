@@ -61,7 +61,7 @@ defined('INTERNAL') || die();
  *               ),
  *           );
  */
-function search_user($query_string, $limit, $offset = 0) {
+function search_user($query_string, $limit, $offset = 0, $data = array()) {
     $plugin = get_config('searchplugin');
     safe_require('search', $plugin);
     safe_require('artefact', 'internal');
@@ -72,7 +72,7 @@ function search_user($query_string, $limit, $offset = 0) {
     }
     $fieldlist = "('" . join("','", $publicfields) . "')";
 
-    $results = call_static_method(generate_class_name('search', $plugin), 'search_user', $query_string, $limit, $offset);
+    $results = call_static_method(generate_class_name('search', $plugin), 'search_user', $query_string, $limit, $offset, $data);
 
     if ($results['data']) {
         $userlist = '('.join(',', array_map(create_function('$u','return $u[\'id\'];'), $results['data'])).')';

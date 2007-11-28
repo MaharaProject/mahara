@@ -5,7 +5,7 @@
 
         replaceChildNodes('{{$name}}_messages');
 
-        sendjsonrequest('{{$WWWROOT}}json/usersearch.php', {'query':q, 'limit': 100}, 'GET', 
+        sendjsonrequest('{{$WWWROOT}}json/usersearch.php', {'query':q, 'limit': 100 {{if $group}}, 'group': {{$group}}{{/if}}}, 'GET',
             function (users) {
                 var members = {};
                 var counter = 0;

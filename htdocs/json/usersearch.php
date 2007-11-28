@@ -42,8 +42,17 @@ catch (ParameterException $e) {
 $limit = param_integer('limit', 20);
 $offset = param_integer('offset', 0);
 $allfields = param_boolean('allfields');
+$group = param_integer('group', 0);
 
-$data = search_user($query, $limit, $offset);
+if ($group) {
+    $data = array(
+	    'group' => $group
+    );
+    $data = search_user($query, $limit, $offset, $data);
+}
+else {
+    $data = search_user($query, $limit, $offset);
+}
 
 json_headers();
 $data['error'] = false;
