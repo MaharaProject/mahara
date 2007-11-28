@@ -202,6 +202,7 @@ function build_admin_user_search_results($search, $offset, $limit, $sortby, $sor
     $smarty = smarty_core();
     $smarty->assign_by_ref('results', $results);
     $smarty->assign_by_ref('institutions', $institutions);
+    $smarty->assign('USER', $USER);
     $smarty->assign('searchurl', $searchurl);
     $smarty->assign('sortby', $sortby);
     $smarty->assign('sortdir', $sortdir);
