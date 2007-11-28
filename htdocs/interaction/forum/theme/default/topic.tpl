@@ -3,11 +3,12 @@
 
 {include file="columnleftstart.tpl"}
 
-<h2>{$subject}</h2>
+<h2>{$topic->subject}</h2>
 {if $moderator}
-<a href="{$WWWROOT}interaction/forum/edittopic.php?id={$id|escape}">{str tag="edittopic" section="interaction.forum}</a>
-<a href="{$WWWROOT}interaction/forum/deletetopic.php?id={$id|escape}">{str tag="deletetopic" section="interaction.forum}</a>
+<a href="{$WWWROOT}interaction/forum/edittopic.php?id={$topic->id|escape}">{str tag="edittopic" section="interaction.forum}</a>
+<a href="{$WWWROOT}interaction/forum/deletetopic.php?id={$topic->id|escape}">{str tag="deletetopic" section="interaction.forum}</a>
 {/if}
+{if !$topic->forumsubscribed}{$topic->subscribe}{/if}
 <ul>
     <li>
         {$posts}

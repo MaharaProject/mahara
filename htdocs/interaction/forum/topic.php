@@ -33,22 +33,26 @@ define('TITLE', get_string('topic','interaction.forum'));
 
 $topicid = param_integer('id');
 
-$info = get_record_sql(
-    'SELECT p.subject, f.group, f.id as forum, t.closed
+$topic = get_record_sql(
+    'SELECT p.subject, f.group, f.id AS forum, t.closed, sf.forum AS forumsubscribed, st.topic AS topicsubscribed
     FROM {interaction_forum_topic} t
     INNER JOIN {interaction_instance} f
     ON (t.forum = f.id)
     INNER JOIN {interaction_forum_post} p
     ON (p.topic = t.id AND p.parent IS NULL)
+    LEFT JOIN {interaction_forum_subscription_forum} sf
+    ON (sf.forum = f.id AND sf.user = ?)
+    LEFT JOIN {interaction_forum_subscription_topic} st
+    ON (st.topic = t.id AND st.user = ?)
     WHERE t.id = ?',
-    array($topicid)
+    array($USER->get('id'), $USER->get('id'), $topicid)
 );
 
-if (!$info) {
+if (!$topic) {
     throw new NotFoundException("Couldn't find topic with id $topicid");
 }
 
-$membership = user_can_access_group((int)$info->group);
+$membership = user_can_access_group((int)$topic->group);
 
 if (!$membership) {
     throw new AccessDeniedException();
@@ -56,10 +60,24 @@ if (!$membership) {
 
 $admin = (bool)($membership & GROUP_MEMBERSHIP_OWNER);
 
-$moderator = $admin || is_forum_moderator((int)$info->forum);
+$moderator = $admin || is_forum_moderator((int)$topic->forum);
+
+require_once('pieforms/pieform.php');
+
+if (!$topic->forumsubscribed) {
+    $topic->subscribe = pieform(array(
+        'name'     => 'subscribe',
+        'elements' => array(
+            'submit' => array(
+               'type'  => 'submit',
+               'value' => $topic->topicsubscribed ? get_string('unsubscribe', 'interaction.forum') : get_string('subscribe', 'interaction.forum')
+            )
+        )
+   ));
+}
 
 $posts = get_records_sql_array(
-    'SELECT p1.id, p1.parent, p1.poster, p1.subject, p1.body, p1.ctime as posttime, COUNT(p2.*), e.ctime as edit, e.user as editor
+    'SELECT p1.id, p1.parent, p1.poster, p1.subject, p1.body, p1.ctime AS posttime, COUNT(p2.*), e.ctime AS edit, e.user AS editor
     FROM interaction_forum_post p1
     INNER JOIN interaction_forum_post p2
     ON (p1.poster = p2.poster
@@ -68,6 +86,11 @@ $posts = get_records_sql_array(
         SELECT t.id
         FROM interaction_forum_topic t
         WHERE t.deleted != 1
+        AND t.forum IN (
+            SELECT id
+            FROM {interaction_instance} f
+            WHERE "group" = ?
+        )
     ))
     LEFT JOIN interaction_forum_edit e
     ON (e.post = p1.id)
@@ -75,7 +98,7 @@ $posts = get_records_sql_array(
     AND p1.deleted != 1
     GROUP BY 1, 2, 3, 4, 5, 6, 8, 9
     ORDER BY p1.ctime',
-    array($topicid)
+    array($topic->group, $topicid)
 );
 
 $count = count($posts);
@@ -111,16 +134,14 @@ foreach ($posts as $post) {
 $threadedposts = buildthread(0, '', $posts);
 
 $smarty = smarty();
-$smarty->assign('id', $topicid);
-$smarty->assign('subject', $info->subject);
+$smarty->assign('topic', $topic);
 $smarty->assign('moderator', $moderator);
-$smarty->assign('closed', $info->closed);
 $smarty->assign('posts', $threadedposts);
 $smarty->display('interaction:forum:topic.tpl');
 
 function buildthread($parent, $parentsubject, &$posts){
     global $moderator;
-    global $info;
+    global $topic;
     if ($posts[$parent]->subject) {
         $parentsubject = $posts[$parent]->subject;
     }
@@ -137,8 +158,30 @@ function buildthread($parent, $parentsubject, &$posts){
     $smarty->assign('post', $posts[$parent]);
     $smarty->assign('children', $children);
     $smarty->assign('moderator', $moderator);
-    $smarty->assign('closed', $info->closed);
-	return $smarty->fetch('interaction:forum:post.tpl');
+    $smarty->assign('closed', $topic->closed);
+    return $smarty->fetch('interaction:forum:post.tpl');
+}
+
+function subscribe_submit(Pieform $form, $values) {
+    global $USER;
+    $topicid = param_integer('id');
+    if ($values['submit'] == get_string('subscribe', 'interaction.forum')) {
+        insert_record(
+            'interaction_forum_subscription_topic',
+            (object)array(
+                'topic' => $topicid,
+                'user' => $USER->get('id')
+            )
+        );
+    }
+    else {
+        delete_records(
+            'interaction_forum_subscription_topic',
+            'topic', $topicid,
+            'user', $USER->get('id')
+        );
+    }
+    redirect('/interaction/forum/topic.php?id=' . $topicid);
 }
 
 ?>
