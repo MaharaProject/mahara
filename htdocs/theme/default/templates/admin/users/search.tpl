@@ -37,7 +37,7 @@
             <label>Query: 
                 <input type="text" name="query" id="query"{if !empty($search->query)} value="{$search->query}"{/if}>
             </label>
-            {if $USER->get('admin') && count($institutions) > 1}
+            {if count($institutions) > 1}
             <span class="institutions">
                 <label>Institution: 
                     <select name="institution" id="institution">
