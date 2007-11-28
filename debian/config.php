@@ -120,7 +120,7 @@ $cfg->developermode = false;
 $cfg->xmlrpc_allow_masquerading = false;
 
 // maximum allowed size of uploaded images
-// // NOTE: the scalable resize might result in images with one dimesion larger than one of these sizes, but not both
+// NOTE: the scalable resize might result in images with one dimesion larger than one of these sizes, but not both
 $cfg->imagemaxwidth = 1024;
 $cfg->imagemaxheight = 1024;
 
