@@ -9,11 +9,11 @@
       <td class="initial-label">{str tag="firstname"}:</td>
       <td class="initial-letters">
        <span class="first-initial{if empty($search->f)} selected{/if} all">
-        <a href="{$WWWROOT}admin/users/search.php{if $search->l}?l={$search->l}{/if}">{str tag="all"}</a>
+        <a href="{$WWWROOT}admin/users/search.php{if $search->l}?l={$search->l|escape}{/if}">{str tag="all"}</a>
        </span>
        {foreach from=$alphabet item=a}
        <span class="first-initial{if $a == $search->f} selected{/if}">
-        <a href="{$WWWROOT}admin/users/search.php?f={$a}{if $search->l}&amp;l={$search->l}{/if}">{$a}</a>
+        <a href="{$WWWROOT}admin/users/search.php?f={$a}{if $search->l}&amp;l={$search->l|escape}{/if}">{$a}</a>
        </span>
        {/foreach}
       </td>
@@ -22,11 +22,11 @@
       <td class="initial-label">{str tag="lastname"}:</td>
       <td class="initial-letters">
        <span class="last-initial{if empty($search->l)} selected{/if} all">
-        <a href="{$WWWROOT}admin/users/search.php{if $search->f}?f={$search->f}{/if}">{str tag="all"}</a>
+        <a href="{$WWWROOT}admin/users/search.php{if $search->f}?f={$search->f|escape}{/if}">{str tag="all"}</a>
        </span>
        {foreach from=$alphabet item=a}
        <span class="last-initial{if $a == $search->l} selected{/if}">
-        <a href="{$WWWROOT}admin/users/search.php?l={$a}{if $search->f}&amp;f={$search->f}{/if}">{$a}</a>
+        <a href="{$WWWROOT}admin/users/search.php?l={$a}{if $search->f}&amp;f={$search->f|escape}{/if}">{$a}</a>
        </span>
        {/foreach}
       </td>
@@ -34,16 +34,16 @@
     </tbody></table>
     <form action="{$WWWROOT}admin/users/search.php" method="post">
         <div class="searchform">
-            <label>Query: 
-                <input type="text" name="query" id="query"{if !empty($search->query)} value="{$search->query}"{/if}>
+            <label>{str tag='Query' section='admin'}:
+                <input type="text" name="query" id="query"{if !empty($search->query)} value="{$search->query|escape}"{/if}>
             </label>
             {if $USER->get('admin') && !empty($institutions)}
             <span class="institutions">
-                <label>Institution: 
+                <label>{str tag='Institution' section='admin'}:
                     <select name="institution">
                         <option value=all>{str tag=all}</option>
                         {foreach from=$institutions item=i}
-                        <option value={$i->name}>{$i->displayname}</option>
+                        <option value={$i->name|escape}>{$i->displayname|escape}</option>
                         {/foreach}
                     </select>
                 </label>

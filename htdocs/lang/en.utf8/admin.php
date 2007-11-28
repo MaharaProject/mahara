@@ -260,6 +260,9 @@ $string['institutionupdatedsuccessfully'] = 'Institution updated successfully';
 $string['registrationallowed'] = 'Registration allowed?';
 $string['registrationalloweddescription'] = 'Whether users can register for the system with this institution';
 
+// Admin User Search
+$string['Query'] = 'Query';
+$string['Institution'] = 'Institution';
 
 // general stuff
 $string['notificationssaved'] = 'Notification settings saved';
