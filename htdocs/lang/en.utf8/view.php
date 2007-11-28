@@ -66,6 +66,9 @@ $string['invalidcolumn'] = 'Column %s out of range';
 
 // view control stuff
 
+$string['displaymyview'] = 'Display my view';
+$string['editthisview'] = 'Edit this view';
+
 $string['success.addblocktype'] = 'Added block successfully';
 $string['err.addblocktype'] = 'Could not add the block to your view';
 $string['success.moveblockinstance'] = 'Moved block successfully';
