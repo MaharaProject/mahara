@@ -36,7 +36,7 @@ abstract class PluginInteraction extends Plugin {
     /**
     * override this to add extra pieform elements to the edit instance form
     */
-    public static abstract function instance_config_form($instance=null);
+    public static abstract function instance_config_form($group, $instance=null);
 
     /**
     * override this to save any extra fields in the instance form.
@@ -98,6 +98,7 @@ abstract class InteractionInstance {
     protected $group;
     protected $plugin; // I wanted to make this private but then get_object_vars doesn't include it.
     protected $ctime;
+    protected $creator;
     protected $dirty;
 
     public function __construct($id=0, $data=null) {
@@ -213,13 +214,15 @@ function edit_interaction_submit(Pieform $form, $values) {
     safe_require('interaction', $values['plugin']);
     $classname = generate_interaction_instance_class_name($values['plugin']);
     $instance = new $classname($values['id']);
+    global $USER;
+    $instance->set('creator', $USER->get('id'));
     $instance->set('title', $values['title']);
     $instance->set('description', $values['description']);
     if (empty($values['id'])) {
         $instance->set('group', $values['group']);
     }
-    call_static_method(generate_class_name('interaction', $values['plugin']), 'instance_config_save', $instance, $values);
     $instance->commit();
+    call_static_method(generate_class_name('interaction', $values['plugin']), 'instance_config_save', $instance, $values);
     global $SESSION;
     $SESSION->add_ok_msg(get_string('interactionsaved', 'group', get_string('name', 'interaction.' . $values['plugin'])));
     redirect('/interaction/' . $values['plugin'] . '/view.php?id=' . $instance->get('id'));

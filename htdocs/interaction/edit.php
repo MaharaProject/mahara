@@ -59,7 +59,7 @@ if (!$group->owner == $USER->get('id')) {
 
 $elements = array_merge(
     PluginInteraction::instance_config_base_form($plugin, $group, $instance),
-    call_static_method(generate_class_name('interaction', $plugin), 'instance_config_form'),
+    call_static_method(generate_class_name('interaction', $plugin), 'instance_config_form', $group, $instance),
     array(
         'submit' => array(
             'type'  => 'submitcancel',

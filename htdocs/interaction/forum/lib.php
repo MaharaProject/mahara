@@ -2,8 +2,72 @@
 
 class PluginInteractionForum extends PluginInteraction {
 
-    public static function instance_config_form($instance=null) {
-        return array();
+    public static function instance_config_form($group, $instance=null) {
+        if (isset($instance)) {
+            $weight = get_record_sql(
+                'SELECT c.value as weight
+                FROM {interaction_forum_instance_config} c
+                WHERE c.field=\'weight\'
+                AND forum = ?',
+                array($instance->get('id'))
+            )->weight;
+            $moderators = get_column('interaction_forum_moderator', '"user"', 'forum', $instance->get('id'));
+        }
+
+        return array(
+            'weight' => array(
+                'type' => 'text',
+                'title' => get_string('weight', 'interaction.forum'),
+                'defaultvalue' => isset($weight) ? $weight : 0,
+                'rules' => array(
+                    'required' => true,
+                    'integer' => true
+                )
+            ),
+            'moderator' => array(
+                'type' => 'userlist',
+                'title' => get_string('moderators', 'interaction.forum'),
+                'defaultvalue' => isset($moderators) ? $moderators : null,
+                'group' => $group->id,
+                'filter' => false,
+                'lefttitle' => get_string('potentialmoderators', 'interaction.forum'),
+                'righttitle' => get_string('currentmoderators', 'interaction.forum')
+            ),
+            'submit' => array(
+                'type' => 'submit',
+                'value' => get_string('submit')
+            )
+        );
+    }
+
+    public static function instance_config_save($instance, $values){
+        delete_records(
+            'interaction_forum_moderator',
+            'forum', $instance->get('id')
+        );
+        foreach ($values['moderator'] as $user) {
+            insert_record(
+                'interaction_forum_moderator',
+                (object)array(
+                    'user' => $user,
+                    'forum' => $instance->get('id')
+                )
+            );
+        }
+
+        delete_records(
+            'interaction_forum_instance_config',
+            'forum', $instance->get('id'),
+            'field', 'weight'
+        );
+        insert_record(
+            'interaction_forum_instance_config',
+            (object)array(
+                'forum' => $instance->get('id'),
+                'field' => 'weight',
+                'value' => $values['weight']
+            )
+        );
     }
 
     public static function get_activity_types() {
