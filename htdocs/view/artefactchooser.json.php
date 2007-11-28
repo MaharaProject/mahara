@@ -45,7 +45,8 @@ json_reply(false, array(
         'tablerows' => $html,
         'pagination' => $pagination['html'],
         'pagination_js' => $pagination['javascript'],
-        'count' => $count
+        'count' => $count,
+        'results' => $count . ' ' . ($count == 1 ? get_string('result') : get_string('results')),
     )
 ));
 

@@ -119,4 +119,6 @@ $string['clickformoreinformation'] = 'Click for more information and to place fe
 $string['From'] = 'From';
 $string['To'] = 'To';
 
+$string['noartefactstochoosefrom'] = 'Sorry, no artefacts to choose from';
+
 ?>

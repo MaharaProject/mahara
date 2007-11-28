@@ -17,7 +17,7 @@
         </table>
         {$pagination}
         {else}
-        <p class="noartefacts">Sorry, no artefacts to choose from</p>
+        <p class="noartefacts">{str tag=noartefactstochoosefrom section=view}</p>
         {/if}
     </div>
 </div>

@@ -220,7 +220,7 @@ if (ul) {
                     // Update the result count
                     var results = getFirstElementByTagAndClassName('div', 'results', p.id);
                     if (results) {
-                        results.innerHTML = data['data']['count'] + ' results'; // TODO i18n and pluralisation
+                        results.innerHTML = data['data']['results'];
                     }
                 });
             });
