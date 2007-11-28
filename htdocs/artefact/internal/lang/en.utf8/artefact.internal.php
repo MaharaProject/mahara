@@ -79,8 +79,7 @@ $string['emailvalidation_subject'] = 'Email validation';
 $string['emailvalidation_body'] = <<<EOF
 Hello %s,
 
-The email address %s has been added to your user account in Mahara. Please
-visit the link below to activate this address.
+The email address %s has been added to your user account in Mahara. Please visit the link below to activate this address.
 
 %s
 EOF;
