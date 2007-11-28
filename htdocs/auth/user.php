@@ -368,7 +368,7 @@ class User {
     }
 
     public function set_admin_institutions($institutions) {
-        $this->set('admininstitutions', array_fill_keys($institutions, true));
+        $this->set('admininstitutions', array_combine($institutions, $institutions));
     }
 
 }
@@ -470,7 +470,7 @@ class LiveUser extends User {
         $admininstitutions = array();
         foreach ($institutions as $i) {
             if ($i->admin) {
-                $admininstitutions[$i->institution] = true;
+                $admininstitutions[$i->institution] = $i->institution;
             }
         }
         $this->institutions       = $institutions;

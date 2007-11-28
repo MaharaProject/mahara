@@ -277,7 +277,9 @@ class PluginSearchInternal extends PluginSearch {
             foreach ($constraints as $f) {
                 if ($f['field'] == 'institution') {
                     $institutionsearch .= ' LEFT OUTER JOIN {usr_institution} i ON i.usr = u.id ';
-                    if ($f['string'] == 'mahara') {
+                    if ($f['type'] == 'in') {
+                        $where .= " AND i.institution IN ('" . join("','", $f['list']) . "')";
+                    } else if ($f['string'] == 'mahara') {
                         $where .= ' AND i.institution IS NULL';
                     } else {
                         $where .= ' AND i.institution' . $matchtypes[$f['type']];

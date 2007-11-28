@@ -228,8 +228,15 @@ END;
             }
             $terms = array();
             foreach ($constraints as $f) {
-                $terms[] = $solrfields[$f['field']] . ':' . strtolower($f['string'])
-                    . ($f['type'] != 'equals' ? '*' : '');
+                if ($f['type'] == 'in' && !empty($f['list'])) {
+                    foreach ($f['list'] as &$string) {
+                        $string = $solrfields[$f['field']] . ':' . strtolower($string);
+                    }
+                    $terms[] = '(' . join(' OR ', $f['list']) . ')';
+                } else {
+                    $terms[] = $solrfields[$f['field']] . ':' . strtolower($f['string'])
+                        . ($f['type'] != 'equals' ? '*' : '');
+                }
             }
             $q .= join(' AND ', $terms);
         }

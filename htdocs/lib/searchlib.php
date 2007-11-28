@@ -146,7 +146,23 @@ function build_admin_user_search_results($search, $offset, $limit, $sortby, $sor
                                'type' => 'starts',
                                'string' => $search->l);
     }
-    if (!empty($search->institution) && $search->institution != 'all') {
+    // Filter by viewable institutions:
+    if (empty($search->institution)) {
+        $search->institution = 'all';
+    }
+    global $USER;
+    if (!$USER->get('admin')) {
+        $allowed = $USER->get('admininstitutions');
+        if ($search->institution == 'all' || !isset($allowed[$search->institution])) {
+            $constraints[] = array('field' => 'institution',
+                                   'type' => 'in',
+                                   'list' => $allowed);
+        } else {
+            $constraints[] = array('field' => 'institution',
+                                   'type' => 'equals',
+                                   'string' => $search->institution);
+        }
+    } else if ($search->institution != 'all') {
         $constraints[] = array('field' => 'institution',
                                'type' => 'equals',
                                'string' => $search->institution);
