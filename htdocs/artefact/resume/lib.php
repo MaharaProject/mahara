@@ -458,7 +458,7 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
     }
 
     public function render_self($options) {
-        $suffix = substr(md5(microtime()), 0, 4);
+        $suffix = '_' . substr(md5(microtime()), 0, 4);
         $smarty = smarty();
         $smarty->assign('hidetitle', true);
         $smarty->assign('suffix', $suffix);
@@ -468,23 +468,23 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
             'javascript'   =>
                 $this->get_showhide_composite_js()
                 ."
-                var {$type}list_{$suffix} = new TableRenderer(
-                   '{$type}list_{$suffix}',
+                var {$type}list{$suffix} = new TableRenderer(
+                   '{$type}list{$suffix}',
                    '" . get_config('wwwroot') . "artefact/resume/composite.json.php',
                    [
                    " . call_static_method(generate_artefact_class_name($type), 'get_tablerenderer_js') ."
                    ]
                 );
 
-                {$type}list_{$suffix}.type = '{$type}';
-                {$type}list_{$suffix}.statevars.push('type');
+                {$type}list{$suffix}.type = '{$type}';
+                {$type}list{$suffix}.statevars.push('type');
                 " .
                 (( array_key_exists('viewid', $options))
-                    ? "{$type}list_{$suffix}.view = " . $options['viewid'] . ";
-                       {$type}list_{$suffix}.statevars.push('view');"
+                    ? "{$type}list{$suffix}.view = " . $options['viewid'] . ";
+                       {$type}list{$suffix}.statevars.push('view');"
                     : ""
                 ) . "
-                {$type}list_{$suffix}.updateOnLoad();
+                {$type}list{$suffix}.updateOnLoad();
             ");
         return $content;
     }
