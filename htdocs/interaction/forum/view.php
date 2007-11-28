@@ -37,7 +37,7 @@ $userid = $USER->get('id');
 $topicsperpage = 25;
 
 $group = get_record_sql(
-    'SELECT "group" as id
+    'SELECT "group" AS id
     FROM {interaction_instance}
     WHERE id = ?',
     array($forumid)
@@ -57,11 +57,44 @@ $admin = (bool)($membership & GROUP_MEMBERSHIP_OWNER);
 
 $moderator = $admin || is_forum_moderator($forumid);
 
+if (isset($_POST['subscribe'])) {
+    $values = array_flip($_POST['subscribe']);
+    if (isset($values[get_string('subscribe', 'interaction.forum')])) {
+        insert_record(
+            'interaction_forum_subscription_topic',
+            (object)array(
+                'topic' => $values[get_string('subscribe', 'interaction.forum')],
+                'user' => $USER->get('id')
+            )
+        );
+    }
+    else {
+        delete_records(
+            'interaction_forum_subscription_topic',
+            'topic', $values[get_string('unsubscribe', 'interaction.forum')],
+            'user', $USER->get('id')
+        );
+    }
+}
+
+if ($moderator && isset($_POST['update'])) {
+	if (!isset($_POST['sticky'])) {
+	    $_POST['sticky'] = array();
+	}
+	if (!isset($_POST['closed'])) {
+		$_POST['closed'] = array();
+	}
+    updatetopics($_POST['sticky'], $_POST['prevsticky'], 'sticky = 1');
+    updatetopics($_POST['prevsticky'], $_POST['sticky'], 'sticky = 0');
+    updatetopics($_POST['closed'], $_POST['prevclosed'], 'closed = 1');
+    updatetopics($_POST['prevclosed'], $_POST['closed'], 'closed = 0');
+}
+
 $forum = get_record_sql(
-    'SELECT f.title, f.description, f.id, COUNT(t.*), s.forum as subscribed
+    'SELECT f.title, f.description, f.id, COUNT(t.*), s.forum AS subscribed
     FROM {interaction_instance} f
     LEFT JOIN {interaction_forum_topic} t
-    ON (t.forum = f.id)
+    ON (t.forum = f.id AND t.deleted != 1 AND t.sticky != 1)
     LEFT JOIN {interaction_forum_subscription_forum} s
     ON (s.forum = f.id AND s."user" = ?)
     WHERE f.id=?
@@ -77,12 +110,12 @@ $forum->subscribe = pieform(array(
         'submit' => array(
             'type'  => 'submit',
             'value' => $forum->subscribed ? get_string('unsubscribe', 'interaction.forum') : get_string('subscribe', 'interaction.forum')
-            )
+        )
     )
 ));
 
 $stickytopics = get_records_sql_array(
-    'SELECT t.id, p1.subject, p1.poster, COUNT(p2.*), t.closed, s.topic as subscribed
+    'SELECT t.id, p1.subject, p1.poster, COUNT(p2.*), t.closed, s.topic AS subscribed
     FROM {interaction_forum_topic} t
     INNER JOIN {interaction_forum_post} p1
     ON (p1.topic = t.id AND p1.parent is null)
@@ -98,31 +131,11 @@ $stickytopics = get_records_sql_array(
     array($userid, $forumid)
 );
 
-$i=0;
-if (!$forum->subscribe) {
-    foreach ($stickytopics as $topic) {
-        $topic->subscribe = pieform(array(
-            'name'     => 'subscribe_topic'.$i++,
-            'successcallback' => 'subscribe_topic_submit',
-            'elements' => array(
-                'submit' => array(
-                    'type'  => 'submit',
-                    'value' => $topic->subscribed ? get_string('unsubscribe', 'interaction.forum') : get_string('subscribe', 'interaction.forum')
-                ),
-                'topic' => array(
-                    'type' => 'hidden',
-                    'value' => $topic->id
-                )
-            )
-        ));
-    }
-}
-
 $regulartopics = get_records_sql_array(
-    'SELECT t.id, p1.subject, p1.poster, COUNT(p2.*), t.closed, s.topic as subscribed
+    'SELECT t.id, p1.subject, p1.poster, COUNT(p2.*), t.closed, s.topic AS subscribed
     FROM {interaction_forum_topic} t
     INNER JOIN {interaction_forum_post} p1
-    ON (p1.topic = t.id AND p1.parent is null)
+    ON (p1.topic = t.id AND p1.parent IS NULL)
     LEFT JOIN {interaction_forum_post} p2
     ON (p2.topic = t.id AND p2.deleted != 1)
     LEFT JOIN {interaction_forum_subscription_topic} s
@@ -137,28 +150,8 @@ $regulartopics = get_records_sql_array(
     $topicsperpage
 );
 
-$i=0;
-if (!$forum->subscribe) {
-    foreach ($regulartopics as $topic) {
-        $topic->subscribe = pieform(array(
-            'name'     => 'subscribe_topic'.$i++,
-            'successcallback' => 'subscribe_topic_submit',
-            'elements' => array(
-                'submit' => array(
-                    'type'  => 'submit',
-                    'value' => $topic->subscribed ? get_string('unsubscribe', 'interaction.forum') : get_string('subscribe', 'interaction.forum')
-                ),
-                'topic' => array(
-                    'type' => 'hidden',
-                    'value' => $topic->id
-                )
-            )
-        ));
-    }
-}
-
 $pagination = build_pagination(array(
-    'url' => 'view.php?id='.$forumid,
+    'url' => 'view.php?id=' . $forumid,
     'count' => $forum->count,
     'limit' => $topicsperpage,
     'offset' => $offset,
@@ -205,27 +198,22 @@ function subscribe_forum_submit(Pieform $form, $values) {
     redirect('/interaction/forum/view.php?id=' . $forumid . '&offset=' . $offset);
 }
 
-function subscribe_topic_submit(Pieform $form, $values) {
-    global $USER;
-    $forumid = param_integer('id');
-    $offset = param_integer('offset', 0);
-    if ($values['submit'] == get_string('subscribe', 'interaction.forum')) {
-        insert_record(
-            'interaction_forum_subscription_topic',
-            (object)array(
-                'topic' => $values['topic'],
-                'user' => $USER->get('id')
-            )
+function updatetopics($new, $old, $set) {
+	if (empty($new)) {
+		log_debug($new);
+	    $new = array();
+	}
+	if (empty($old)) {
+	    $old = array();
+	}
+    $keydiff = array_keys(array_diff_key($new, $old));
+    if (!empty($keydiff)) {
+        execute_sql(
+            'UPDATE {interaction_forum_topic}
+            SET ' . $set .
+            'WHERE id in (' . implode(',', $keydiff) . ')'
         );
     }
-    else {
-        delete_records(
-            'interaction_forum_subscription_topic',
-            'topic', $values['topic'],
-            'user', $USER->get('id')
-        );
-    }
-    redirect('/interaction/forum/view.php?id=' . $forumid . '&offset=' . $offset);
 }
 
 ?>

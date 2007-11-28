@@ -5,14 +5,13 @@
 <h2>{$forum->title|escape}</h2>
 <p>{$forum->description}</p>
 <a href="{$WWWROOT}interaction/forum/edittopic.php?forum={$forum->id|escape}">{str tag="newtopic" section="interaction.forum}</a>
-<br>
 {if $admin}
 <a href="{$WWWROOT}interaction/edit.php?id={$forum->id|escape}">{str tag="edittitle" section="interaction.forum}</a>
-<br>
 <a href="{$WWWROOT}interaction/delete.php?id={$forum->id|escape}">{str tag="deleteforum" section="interaction.forum}</a>
-<br>
 {/if}
 {$forum->subscribe}
+<form action="" method="post">
+{if $moderator}<input type="submit" name="update" value="{str tag="update" section="interaction.forum"}">{/if}
 <h4>{str tag="stickytopics" section=interaction.forum}</h4>
 <table>
     <tr>
@@ -33,17 +32,25 @@
         <td>{$topic->poster|display_name|escape}</td>
         <td>{$topic->count|escape}</td>
         {if $moderator}
-        <td>X</td>
+        <td><input type="checkbox" name="sticky[{$topic->id|escape}]" checked="checked"></td>
+        <input type=hidden name="prevsticky[{$topic->id|escape}]">
         <td>
-            {if $topic->closed}X{/if}
-        </td>
+        {if $topic->closed}
+            <input type="checkbox" name="closed[{$topic->id|escape}]" checked="checked">
+            <input type=hidden name="prevclosed[{$topic->id|escape}]">
+        {else}
+            <input type="checkbox" name="closed[{$topic->id|escape}]">
         {/if}
-        {if $moderator}
-        <td><a href="{$WWWROOT}interaction/forum/edittopic.php?id={$topic->id|escape}">{str tag="edit" section="interaction.forum}</a></td>
-        <td><a href="{$WWWROOT}interaction/forum/deletetopic.php?id={$topic->id|escape}">{str tag="delete" section="interaction.forum}</a></td>
+        </td>
+        <td><a href="{$WWWROOT}interaction/forum/edittopic.php?id={$topic->id|escape}">{str tag="edit" section="interaction.forum"}</a></td>
+        <td><a href="{$WWWROOT}interaction/forum/deletetopic.php?id={$topic->id|escape}">{str tag="delete" section="interaction.forum"}</a></td>
         {/if}
         {if !$forum->subscribed}
-            <td>{$topic->subscribe}</td>
+            {if $topic->subscribed}
+                <td><input type="submit" name="subscribe[{$topic->id}]" value="{str tag="unsubscribe" section="interaction.forum"}"></td>
+            {else}
+                <td><input type="submit" name="subscribe[{$topic->id}]" value="{str tag="subscribe" section="interaction.forum"}"></td>
+            {/if}
         {/if}
     </tr>
     {/foreach}
@@ -69,25 +76,31 @@
         <td>{$topic->poster|display_name|escape}</td>
         <td>{$topic->count|escape}</td>
         {if $moderator}
-        <td></td>
+        <td><input type="checkbox" name="sticky[{$topic->id|escape}]"></td>
         <td>
-        {if $topic->closed}X{/if}
-        </td>
+        {if $topic->closed}
+            <input type="checkbox" name="closed[{$topic->id|escape}]" checked="checked">
+            <input type=hidden name="prevclosed[{$topic->id|escape}]">
+        {else}
+            <input type="checkbox" name="closed[{$topic->id|escape}]">
         {/if}
-        {if $moderator}
-        <td><a href="{$WWWROOT}interaction/forum/edittopic.php?id={$topic->id|escape}">{str tag="edit" section="interaction.forum}</a></td>
-        <td><a href="{$WWWROOT}interaction/forum/deletetopic.php?id={$topic->id|escape}">{str tag="delete" section="interaction.forum}</a></td>
+        </td>
+        <td><a href="{$WWWROOT}interaction/forum/edittopic.php?id={$topic->id|escape}">{str tag="edit" section="interaction.forum"}</a></td>
+        <td><a href="{$WWWROOT}interaction/forum/deletetopic.php?id={$topic->id|escape}">{str tag="delete" section="interaction.forum"}</a></td>
         {/if}
         {if !$forum->subscribed}
-            <td>{$topic->subscribe}</td>
+            {if $topic->subscribed}
+                <td><input type="submit" name="subscribe[{$topic->id}]" value="{str tag="unsubscribe" section="interaction.forum"}"></td>
+            {else}
+                <td><input type="submit" name="subscribe[{$topic->id}]" value="{str tag="subscribe" section="interaction.forum"}"></td>
+            {/if}
         {/if}
     </tr>
     {/foreach}
     {/if}
-
 </table>
-
 {$pagination}
+</form>
 
 {include file="columnleftend.tpl"}
 {include file="footer.tpl"}
