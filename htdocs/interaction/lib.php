@@ -33,7 +33,21 @@ defined('INTERNAL') || die();
  */
 abstract class PluginInteraction extends Plugin { 
 
+    /**
+    * override this to add extra pieform elements to the edit instance form
+    */
     public static abstract function instance_config_form($instance=null);
+
+    /**
+    * override this to save any extra fields in the instance form.
+    */
+    public static abstract function instance_config_save($instance, $values);
+
+    /*
+    * override this to perform extra validation
+    * public abstract function instance_config_validate(Pieform $form,  $values);
+    */
+
 
     public static function instance_config_base_form($plugin, $group, $instance=null) {
         return array(
@@ -166,6 +180,7 @@ abstract class InteractionInstance {
     }
 
     public static abstract function get_plugin();
+
 }
 
 function interaction_check_plugin_sanity($pluginname) {
@@ -189,8 +204,8 @@ function interaction_instance_from_id($id) {
 
 function edit_interaction_validation(Pieform $form, $values) {
     safe_require('interaction', $values['plugin']);
-    if (is_callable(array(generate_class_name('interaction', $values['plugin'])))) {
-        call_static_method(generate_class_name('interaction', $values['plugin']));
+    if (is_callable(array(generate_class_name('interaction', $values['plugin'])), 'instance_config_validate')) {
+        call_static_method(generate_class_name('interaction', $values['plugin']), 'instance_config_validate', $form, $values);
     }
 }
 
@@ -203,6 +218,7 @@ function edit_interaction_submit(Pieform $form, $values) {
     if (empty($values['id'])) {
         $instance->set('group', $values['group']);
     }
+    call_static_method(generate_class_name('interaction', $values['plugin']), 'instance_config_save', $instance, $values);
     $instance->commit();
     global $SESSION;
     $SESSION->add_ok_msg(get_string('interactionsaved', 'group', get_string('name', 'interaction.' . $values['plugin'])));
