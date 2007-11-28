@@ -32,9 +32,6 @@ define('JSON', 1);
 
 require(dirname(dirname(__FILE__)) . '/init.php');
 require('searchlib.php');
-safe_require('search', 'internal');
-
-json_headers();
 
 $type   = param_variable('type');
 $query  = param_variable('query', '');
@@ -43,10 +40,10 @@ $offset = param_integer('offset', 0);
 
 switch ($type) {
     case 'user':
-        $data = get_user_results($query, $limit, $offset);
+        $data = search_user($query, $limit, $offset);
         break;
     case 'group':
-        $data = get_group_results($query, $limit, $offset);
+        $data = search_group($query, $limit, $offset);
         break;
 }
 
@@ -54,21 +51,5 @@ json_headers();
 $data['error'] = false;
 $data['message'] = '';
 echo json_encode($data);
-
-
-function get_user_results($query, $limit, $offset) {
-    $data = search_user($query, $limit, $offset);
-    return $data;
-}
-
-function get_group_results($query, $limit, $offset) {
-    $data = search_group($query, $limit, $offset);
-    if ($data['data']) {
-        foreach ($data['data'] as &$result) {
-        }
-    }
-
-    return $data;
-}
 
 ?>
