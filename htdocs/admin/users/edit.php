@@ -203,7 +203,7 @@ function edituser_site_submit(Pieform $form, $values) {
 $allinstitutions = get_records_array('institution');
 $options = array();
 foreach ($allinstitutions as $i) {
-    if ($USER->get('admin') || $i->name == 'mahara' || $USER->is_institutional_admin($i->name)) {
+    if ($USER->get('admin') || $i->name == 'mahara' || $i->name == $userinstitution->institution) {
         $options[$i->name] = $i->displayname;
     }
 }
