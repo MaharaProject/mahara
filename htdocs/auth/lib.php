@@ -978,11 +978,13 @@ function login_submit(Pieform $form, $values) {
 
     // Check if the user's account has been deleted
     if ($USER->deleted) {
+        $USER->logout();
         die_info(get_string('accountdeleted'));
     }
 
     // Check if the user's account has expired
     if ($USER->expiry > 0 && time() > $USER->expiry) {
+        $USER->logout();
         die_info(get_string('accountexpired'));
     }
 
@@ -990,12 +992,16 @@ function login_submit(Pieform $form, $values) {
     $inactivetime = get_field('institution', 'defaultaccountinactiveexpire', 'name', $USER->institution);
     if ($inactivetime && $oldlastlogin > 0
         && $oldlastlogin + $inactivetime < time()) {
+        $USER->logout();
         die_info(get_string('accountinactive'));
     }
 
     // Check if the user's account has been suspended
     if ($USER->suspendedcusr) {
-        die_info(get_string('accountsuspended', 'mahara', $USER->suspendedctime, $USER->suspendedreason));
+        $suspendedctime  = $USER->suspendedctime;
+        $suspendedreason = $USER->suspendedreason;
+        $USER->logout();
+        die_info(get_string('accountsuspended', 'mahara', $suspendedctime, $suspendedreason));
     }
 
     // User is allowed to log in
