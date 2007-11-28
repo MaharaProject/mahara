@@ -32,7 +32,7 @@
  * @return string           The HTML for the element
  */
 function pieform_element_viewacl(Pieform $form, $element) {
-    $smarty = smarty();
+    $smarty = smarty_core();
     $smarty->left_delimiter  = '{{';
     $smarty->right_delimiter = '}}';
 

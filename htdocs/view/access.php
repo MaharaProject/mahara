@@ -35,7 +35,7 @@ define('TITLE', get_string('editaccess', 'view'));
 require_once('pieforms/pieform.php');
 require_once('pieforms/pieform/elements/calendar.php');
 require_once(get_config('docroot') . 'lib/view.php');
-$smarty = smarty(array('tablerenderer'), pieform_element_calendar_get_headdata(pieform_element_calendar_configure(array())));
+$smarty = smarty(array('tablerenderer'), pieform_element_calendar_get_headdata(pieform_element_calendar_configure(array())), array('view' => array('From', 'To')));
 
 $view = new View(param_integer('id'));
 $new = param_boolean('new');
