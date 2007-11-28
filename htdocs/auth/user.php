@@ -362,9 +362,12 @@ class User {
             && (is_null($role) || $institutions[$institution]->{$role});
     }
 
-    public function is_institutional_admin() {
+    public function is_institutional_admin($institution = null) {
         $a = $this->get('admininstitutions');
-        return !empty($a);
+        if (is_null($institution)) {
+            return !empty($a);
+        }
+        return isset($a[$institution]);
     }
 
     public function set_admin_institutions($institutions) {
