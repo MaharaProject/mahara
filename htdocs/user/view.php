@@ -69,7 +69,7 @@ EOF;
 
 $profile = array();
 $userfields = array();
-if (!$user = get_record('usr', 'id', $userid)) {
+if (!$user = get_record('usr', 'id', $userid, 'deleted', 0)) {
     throw new UserNotFoundException("User with id $userid not found");
 }
 $is_friend = is_friend($userid, $loggedinid);
