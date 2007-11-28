@@ -3,7 +3,7 @@
 <h5>{str tag="posts" section=interaction.forum} {$post->count|escape}</h5>
 <div><img src="{$WWWROOT}thumb.php?type=profileicon&maxsize=100&id={$post->poster}" alt=""></div>
 <p>{$post->body}</p>
-<a href="{$WWWROOT}interaction/forum/editpost.php?parent={$post->id|escape}">{str tag="reply" section=interaction.forum}</a>
+{if $moderator || !$closed}<a href="{$WWWROOT}interaction/forum/editpost.php?parent={$post->id|escape}">{str tag="reply" section=interaction.forum}</a>{/if}
 {if $moderator || $post->editor}<a href="{$WWWROOT}interaction/forum/editpost.php?id={$post->id|escape}"> {str tag="edit" section=interaction.forum}</a>{/if}
 {if $moderator && $post->parent}<a href="{$WWWROOT}interaction/forum/deletepost.php?id={$post->id|escape}"> {str tag="delete" section=interaction.forum}</a>{/if}
 {if $post->edit}
