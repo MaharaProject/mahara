@@ -25,19 +25,27 @@
  */
 
 define('INTERNAL', 1);
-define('ADMIN', 1);
+define('INSTITUTIONALADMIN', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('accountsettings', 'admin'));
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'admin');
 require_once('pieforms/pieform.php');
 
-
 $id = param_integer('id');
 if (!$user = get_record('usr', 'id', $id)) {
     throw new UserNotFoundException("User not found");
 }
 
+// Deny access to institutional admins from different institutions to the displayed user
+$userinstitution = get_record('usr_institution', 'usr', $id, null, null, null, null,
+                              'usr,institution,studentid,staff,admin,'.db_format_tsfield('expiry'));
+global $USER;
+if (!$USER->get('admin')) {
+    if (empty($userinstitution) || !in_array($userinstitution->institution, $USER->get('admininstitutions'))) {
+        redirect(get_config('wwwroot').'user/view.php?id='.$id);
+    }
+}
 
 if (empty($user->suspendedcusr)) {
     $suspendform = pieform(array(
@@ -178,8 +186,6 @@ function edituser_site_submit(Pieform $form, $values) {
 
 
 // Institution settings
-$userinstitution = get_record('usr_institution', 'usr', $id, null, null, null, null,
-                              'usr,institution,studentid,staff,admin,'.db_format_tsfield('expiry'));
 $allinstitutions = get_records_array('institution');
 $options = array();
 foreach ($allinstitutions as $i) {
