@@ -237,12 +237,12 @@ function get_helpfile_location($plugintype, $pluginname, $form, $element, $page=
 
     // if it's not found, try the parent language if there is one...
     if (empty($data) && empty($trieden)) {
-        $langfile = $location . $lang . '/langconfig.php';
+        $langfile = get_config('docroot') . 'lang/' . $lang . '/langconfig.php';
         if ($parentlang = get_string_from_file('parentlanguage', $langfile)) {
             if ($parentlang == 'en.utf8') {
                 $trieden = true;
             }
-            $langfile = $location . $parentlang . '/' . $file;
+            $langfile = get_config('docroot') . 'lang/' . $parentlang . '/' . $file;
             if (is_readable($langfile)) {
                 return $langfile;
             }
