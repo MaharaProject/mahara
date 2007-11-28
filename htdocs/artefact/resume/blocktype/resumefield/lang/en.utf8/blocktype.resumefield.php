@@ -30,4 +30,6 @@ $string['title'] = 'One Resume Field';
 $string['description'] = 'Display any resume information';
 
 $string['fieldtoshow'] = 'Field to show';
+$string['filloutyourresume'] = '%sFill out your resume%s in order to add more fields!';
+
 ?>
