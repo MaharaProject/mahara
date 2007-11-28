@@ -613,8 +613,8 @@ class UserException extends MaharaException implements MaharaThrowable {
 class NotFoundException extends UserException {
     public function strings() {
         return array_merge(parent::strings(), 
-                           array('message' => 'The page you are looking for could not be found',
-                                 'title' => 'Not Found'));
+                           array('message' => get_string('notfoundexception', 'error'),
+                                 'title'   => get_string('notfound', 'error')));
     }
 
     public function render_exception() {
@@ -730,8 +730,8 @@ class QuotaExceededException extends UserException {}
 class AccessDeniedException extends UserException {
     public function strings() {
         return array_merge(parent::strings(), 
-                           array('message' => 'You do not have access to view this page',
-                                 'title' => 'Access denied'));
+                           array('message' => get_string('accessdeniedexception', 'error'),
+                                 'title'   => get_string('accessdenied', 'error')));
     }
 
     public function render_exception() {

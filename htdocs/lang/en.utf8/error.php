@@ -78,6 +78,12 @@ $string['unrecoverableerrortitle'] = '%s - Site Unavailable';
 $string['parameterexception'] = 'A required parameter was missing';
 $string['accessdeniedexception'] = 'You do not have access to view this page';
 
+$string['notfound'] = 'Not Found';
+$string['notfoundexception'] = 'The page you are looking for could not be found';
+
+$string['accessdenied'] = 'Access Denied';
+$string['accessdeniedexception'] =  'You do not have access to view this page';
+
 $string['viewnotfoundexceptiontitle'] = 'View not found';
 $string['viewnotfoundexceptionmessage'] = 'You tried to access a view that didn\'t exist!';
 
