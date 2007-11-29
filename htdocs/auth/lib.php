@@ -436,6 +436,34 @@ function auth_get_auth_instances() {
 }
 
 
+/**
+ * 
+ * Given a list of institutions, returns all auth instances associated with them
+ *
+ * @return array                     Array of auth instance records
+ */
+function auth_get_auth_instances_for_institutions($institutions) {
+    if (empty($institutions)) {
+        return array();
+    }
+    $sql ='
+        SELECT DISTINCT
+            i.id,
+            inst.name,
+            inst.displayname,
+            i.instancename
+        FROM 
+            {institution} inst,
+            {auth_instance} i
+        WHERE 
+            i.institution = inst.name AND
+            inst.name IN (' . join(',', array_map('db_quote',$institutions)) . ')
+        ORDER BY
+            inst.displayname,
+            i.instancename';
+
+    return get_records_sql_array($sql, array());
+}
 
 
 /**

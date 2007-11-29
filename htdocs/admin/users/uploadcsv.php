@@ -25,7 +25,7 @@
  */
 
 define('INTERNAL', 1);
-define('ADMIN', 1);
+define('INSTITUTIONALADMIN', 1);
 define('MENUITEM', 'configusers/uploadcsv');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('uploadcsv', 'admin'));
@@ -64,17 +64,29 @@ $ALLOWEDKEYS = array(
     'jabberusername',
     'occupation',
     'industry',
-    'institution',
     'authinstance'
 );
 
+global $USER;
 
-$authinstances = auth_get_auth_instances();
+if ($USER->get('admin')) {
+    $authinstances = auth_get_auth_instances();
+} else {
+    $admininstitutions = $USER->get('admininstitutions');
+    $authinstances = auth_get_auth_instances_for_institutions($admininstitutions);
+    if (empty($authinstances)) {
+        $SESSION->add_info_msg(get_string('uploadcsvconfigureauthplugin', 'admin'));
+        redirect(get_config('wwwroot').'admin/users/institutions.php?i='.key($admininstitutions).'&amp;edit=1');
+    }
+}
+
 if (count($authinstances) > 1) {
     $options = array();
 
     foreach ($authinstances as $authinstance) {
-        $options[$authinstance->id .'_'. $authinstance->name] = $authinstance->displayname. ': '.$authinstance->instancename;
+        if ($USER->get('admin') || $USER->is_institutional_admin($authinstance->name)) {
+            $options[$authinstance->id .'_'. $authinstance->name] = $authinstance->displayname. ': '.$authinstance->instancename;
+        }
     }
     $default = key($options);
 
@@ -125,7 +137,7 @@ $form = array(
  * @param array    $values The values submitted
  */
 function uploadcsv_validate(Pieform $form, $values) {
-    global $CSVDATA, $ALLOWEDKEYS, $FORMAT;
+    global $CSVDATA, $ALLOWEDKEYS, $FORMAT, $USER;
 
     // Don't even start attempting to parse if there are previous errors
     if ($form->has_errors()) {
@@ -144,6 +156,10 @@ function uploadcsv_validate(Pieform $form, $values) {
     $break = strpos($values['authinstance'], '_');
     $authinstance = substr($values['authinstance'], 0, $break);
     $institution  = substr($values['authinstance'], $break+1);
+    if (!$USER->get('admin') && !$USER->is_institutional_admin($institution)) {
+        $form->set_error('authinstance', get_string('notadminforinstitution', 'admin'));
+        return;
+    }
 
     $conf = File_CSV::discoverFormat($values['file']['tmp_name']);
     $i = 0;

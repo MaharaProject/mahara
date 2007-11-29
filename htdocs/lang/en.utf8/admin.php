@@ -182,7 +182,8 @@ $string['uploadcopyright']     = 'Upload Copyright Statement';
 
 // Upload CSV
 $string['csvfile'] = 'CSV File';
-$string['uploadcsvinstitution'] = 'The institution to upload users for';
+$string['uploadcsvinstitution'] = 'The institution and authentication method for the new users';
+$string['uploadcsvconfigureauthplugin'] = 'You must configure an authentication plugin before you can add users by CSV';
 $string['csvfiledescription'] = 'The file containing users to add';
 $string['uploadcsverrorinvalidfieldname'] = 'The field name "%s" is invalid';
 $string['uploadcsverrorrequiredfieldnotspecified'] = 'A required field "%s" has not been specified in the format line';
@@ -284,6 +285,7 @@ $string['institutionadmin'] = 'Institution Admin';
 $string['settingsfor'] = 'Settings for:';
 $string['institutionadministration'] = 'Institution Administration';
 $string['institutionmembers'] = 'Institution Members';
+$string['notadminforinstitution'] = 'You are not an administrator for that institution';
 
 
 // general stuff
