@@ -88,10 +88,7 @@ if (isset($key)) {
         $user->salt             = $registration->salt;
         $user->passwordchange   = 0;
         $user->active           = 1;
-        $user->firstname        = $registration->firstname;
-        $user->lastname         = $registration->lastname;
         $user->authinstance     = $authinstance->id;
-        $user->lastname         = $registration->lastname;
         $user->firstname        = $registration->firstname;
         $user->lastname         = $registration->lastname;
         $user->commit();
