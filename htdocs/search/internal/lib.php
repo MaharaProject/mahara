@@ -272,6 +272,9 @@ class PluginSearchInternal extends PluginSearch {
             $where .= join(' OR ', $str) . ') ';
         } 
 
+        // @todo: Institution stuff is messy and will probably need to
+        // be rewritten when we get multiple institutions per user
+
         $institutionsearch = '';
         if (!empty($constraints)) {
             foreach ($constraints as $f) {

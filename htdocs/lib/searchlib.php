@@ -117,7 +117,7 @@ function search_user($query_string, $limit, $offset = 0) {
 }
 
 
-function build_admin_user_search_results($search, $offset, $limit, $sortby, $sortdir) {
+function get_admin_user_search_results($search, $offset, $limit, $sortby, $sortdir) {
     // In admin search, the search string is interpreted as either a
     // name search or an email search depending on its contents
     $queries = array();
@@ -147,9 +147,6 @@ function build_admin_user_search_results($search, $offset, $limit, $sortby, $sor
                                'string' => $search->l);
     }
     // Filter by viewable institutions:
-    if (empty($search->institution)) {
-        $search->institution = 'all';
-    }
     global $USER;
     if (!$USER->get('admin')) {
         $allowed = $USER->get('admininstitutions');
@@ -168,7 +165,18 @@ function build_admin_user_search_results($search, $offset, $limit, $sortby, $sor
                                'string' => $search->institution);
     }
 
-    $results = admin_user_search($queries, $constraints, $offset, $limit, $sortby, $sortdir);
+    return admin_user_search($queries, $constraints, $offset, $limit, $sortby, $sortdir);
+}
+
+
+function build_admin_user_search_results($search, $offset, $limit, $sortby, $sortdir) {
+    global $USER;
+
+    if (empty($search->institution)) {
+        $search->institution = 'all';
+    }
+
+    $results = get_admin_user_search_results($search, $offset, $limit, $sortby, $sortdir);
 
     $params = array();
     foreach ($search as $k => $v) {
