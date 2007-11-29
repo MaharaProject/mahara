@@ -1,11 +1,17 @@
 <script type="text/javascript">
     var {{$name}}_d;
 
-    var {{$name}}_searchfunc = function (q) {
+    var {{$name}}_searchparams;
+
+    var {{$name}}_searchfunc = function (params) {
 
         replaceChildNodes('{{$name}}_messages');
 
-        sendjsonrequest('{{$WWWROOT}}json/usersearch.php', {'query':q, 'limit': 100}, 'GET', 
+        for (var p in params) {
+            {{$name}}_searchparams[p] = params[p];
+        }
+
+        sendjsonrequest('{{$WWWROOT}}{{$searchscript}}', {{$name}}_searchparams, 'GET', 
             function (users) {
                 var members = {};
                 var counter = 0;
@@ -59,17 +65,19 @@
         removeElement($('{{$name}}_potential').childNodes[0]);
         removeElement($('{{$name}}_members').childNodes[0]);
 
-        {{$name}}_searchfunc('');
+        {{$name}}_searchparams = {{$searchparams}};
+
+        {{$name}}_searchfunc({});
 
         connect('{{$name}}_search', 'onkeypress', function (k) {
             if (k.key().code == 13) {
-                {{$name}}_searchfunc($('{{$name}}_search').value);
+                {{$name}}_searchfunc({'query': $('{{$name}}_search').value});
                 k.stop();
             }
         });
 
         connect('{{$name}}_search_btn', 'onclick', function(e) {
-            {{$name}}_searchfunc($('{{$name}}_search').value);
+            {{$name}}_searchfunc({'query': $('{{$name}}_search').value});
             e.stop();
         });
     });
