@@ -85,7 +85,6 @@ if (isset($key)) {
         $user = new User();
         $user->username         = $registration->username;
         $user->password         = $registration->password;
-        $user->institution      = $registration->institution;
         $user->salt             = $registration->salt;
         $user->passwordchange   = 0;
         $user->active           = 1;
@@ -97,7 +96,7 @@ if (isset($key)) {
         $user->lastname         = $registration->lastname;
         $user->commit();
 
-        $user->join_institution($registration->institution);
+        $user->add_institution_request($registration->institution);
 
         $registration->id = $user->id;
 
