@@ -92,6 +92,7 @@ if (isset($key)) {
         $user->authinstance     = $authinstance->id;
         $user->firstname        = $registration->firstname;
         $user->lastname         = $registration->lastname;
+        $user->email            = $registration->email;
         $user->commit();
 
         $registration->id = $user->id;
