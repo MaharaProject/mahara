@@ -180,6 +180,9 @@ END;
                     }
 
                     if ($key_parts[0] == 'store' || $key_parts[0] == 'text' || $key_parts[0] == 'string') { 
+                        if ($key_parts[1] == 'institutions') {
+                            $value = $value == 'mahara' ? array() : explode(' ', $value);
+                        }
                         $new_result[$key_parts[1]] = $value;
                     }
                 }
