@@ -302,6 +302,7 @@ function edituser_institution_submit(Pieform $form, $values) {
                 'institution' => $values['institution']  // ctime, expiry, etc
             ));
         }
+        handle_event('updateuser', $user->id);
     } else { // Changing settings for an existing institution
         $newuser = (object) array(
             'usr'         => $userinstitution->usr,
