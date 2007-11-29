@@ -346,13 +346,14 @@ class User {
     }
 
     public function join_institution($institution) {
-        $institutions = $this->get('institutions');
-        if (!isset($institutions[$institution])) {
+        if ($institution != 'mahara' && !$this->in_institution($institution)) {
             // @todo: set expiry, studentid, ctime
             insert_record('usr_institution', (object) array(
                 'usr' => $this->get('id'),
                 'institution' => $institution
             ));
+            delete_records('usr_institution_request', 'usr', $this->get('id'), 'institution', $institution);
+            // Send confirmation
         }
     }
 
@@ -372,6 +373,28 @@ class User {
 
     public function set_admin_institutions($institutions) {
         $this->set('admininstitutions', array_combine($institutions, $institutions));
+    }
+
+    public function add_institution_request($institution) {
+        if (empty($institution) || $institution == 'mahara') {
+            return;
+        }
+        $request = get_record('usr_institution_request', 'usr', $this->get('id'), 'institution', $institution);
+        if (!$request) {
+            $request = (object) array(
+                'usr'          => $this->get('id'),
+                'institution'  => $institution,
+                'confirmedusr' => 1,
+                'studentid'    => $this->get('studentid'),
+                'ctime'        => db_format_timestamp(time())
+            );
+            insert_record('usr_institution_request', $request);
+            // Send request notification
+        } else if ($request->confirmedinstitution) {
+            $this->join_institution($institution);
+            delete_records('usr_institution_request', 'usr', $this->get('id'), 'institution', $institution);
+            // Send confirmation
+        }
     }
 
 }
