@@ -681,6 +681,7 @@ EOF;
 
 $content_css = json_encode(theme_get_url('style/tinymce.css'));
 $language = substr(current_language(), 0, 2);
+$wwwroot = json_encode(get_config('wwwroot'));
 $tinymceinit = <<<EOF
 <script type="text/javascript">
 tinyMCE.init({
@@ -696,7 +697,9 @@ tinyMCE.init({
     theme_advanced_toolbar_location : "top",
     theme_advanced_toolbar_align : "center",
     content_css : {$content_css},
-    execcommand_callback : "blogpostExecCommandHandler"
+    execcommand_callback : "blogpostExecCommandHandler",
+    document_base_url: {$wwwroot},
+    relative_urls: false
 });
 </script>
 EOF;

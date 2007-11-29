@@ -96,6 +96,7 @@ function &smarty($javascript = array(), $headers = array(), $pagestrings = array
     $smarty = smarty_core();
 
     $wwwroot = get_config('wwwroot');
+    $jswwwroot = json_encode($wwwroot);
 
     $theme_list = array();
     
@@ -163,7 +164,9 @@ tinyMCE.init({
     button_tile_map: true,
     {$tinymce_config}
     language: '{$language}',
-    content_css : {$content_css}
+    content_css : {$content_css},
+    document_base_url: {$jswwwroot},
+    relative_urls: false
 });
 </script>
 
