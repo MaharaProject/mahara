@@ -74,9 +74,9 @@ function pieform_element_userlist(Pieform $form, $element) {
     }
     $smarty->assign('searchscript', $element['searchscript']);
     if (empty($element['searchparams'])) {
-        $element['searchparams'] = "{'query':'', 'limit':100}";
+        $element['searchparams'] = array('query' => '', 'limit' => 100);
     }
-    $smarty->assign('searchparams', $element['searchparams']);
+    $smarty->assign('searchparams', json_encode($element['searchparams']));
 
     return $smarty->fetch('form/userlist.tpl');
 }
