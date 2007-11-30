@@ -49,6 +49,8 @@ $string['no']     = 'No';
 $string['yes']    = 'Yes';
 $string['none']   = 'None';
 $string['at'] = 'at';
+$string['From'] = 'From';
+$string['To'] = 'To';
 
 $string['next']      = 'Next';
 $string['nextpage']  = 'Next page';

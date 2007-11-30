@@ -53,6 +53,7 @@ $string['upgradesuccesstoversion'] = 'Successfully upgraded to version ';
 $string['upgradefailure'] = 'Failed to upgrade!';
 $string['noupgrades'] = 'Nothing to upgrade! You are fully up to date!';
 $string['youcanupgrade'] = 'You can upgrade Mahara from %s (%s) to %s (%s)!';
+$string['Plugin'] = 'Plugin';
 
 // Admin navigation menu
 $string['adminhome']      = 'Admin home';
