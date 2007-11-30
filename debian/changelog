@@ -1,3 +1,9 @@
+mahara (0.9.0~beta2-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Nigel McNie <nigel@catalyst.net.nz>  Fri, 30 Nov 2007 15:23:10 +1300
+
 mahara (0.9.0~beta2~dev) unstable; urgency=low
 
   * Dev version
