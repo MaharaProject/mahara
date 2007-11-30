@@ -113,9 +113,7 @@ if ($institution || $add) {
             $inuserecords = array();
             if ($records = get_records_sql_assoc('select authinstance, count(id) from {usr} where authinstance in ('.$instancestring.') group by authinstance', array())) {
                 foreach ($records as $record) {
-                    if (!in_array($record->authinstance, $inuserecords)) {
-                        $inuserecords[] = $record->authinstance;
-                    }
+                    $inuserecords[] = $record->authinstance;
                 }
             }
             $inuse = implode(',',$inuserecords);
