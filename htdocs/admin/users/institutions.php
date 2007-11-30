@@ -94,25 +94,29 @@ if ($institution || $add) {
     $instancearray = array();
     $instancestring = '';
     $c = count($authinstances);
+    $inuse = '';
 
     if (!$add) {
         $data = get_record('institution', 'name', $institution);
         $lockedprofilefields = (array) get_column('institution_locked_profile_field', 'profilefield', 'name', $institution);
         
         // TODO: Find a better way to work around Smarty's minimal looping logic
-        foreach($authinstances as $key => $val) {
-            $authinstances[$key]->index = $key;
-            $authinstances[$key]->total = $c;
-            $instancearray[] = $val->id;
-        }
+        if (!empty($authinstances)) {
+            foreach($authinstances as $key => $val) {
+                $authinstances[$key]->index = $key;
+                $authinstances[$key]->total = $c;
+                $instancearray[] = $val->id;
+            }
 
-        $instancestring = implode(',',$instancearray);
-        $inuserecords = array();
-        $records = get_records_sql_assoc('select authinstance, count(id) from {usr} where authinstance in ('.$instancestring.') group by authinstance', array());
-        foreach ($records as $record) {
-            $inuserecords[] = $record->authinstance;
+            $instancestring = implode(',',$instancearray);
+            $inuserecords = array();
+            if ($records = get_records_sql_assoc('select authinstance, count(id) from {usr} where authinstance in ('.$instancestring.') group by authinstance', array())) {
+                foreach ($records as $record) {
+                    $inuserecords[] = $record->authinstance;
+                }
+            }
+            $inuse = implode(',',$inuserecords);
         }
-        $inuse = implode(',',$inuserecords);
         $authtypes = auth_get_available_auth_types($institution);
     }
     else {
@@ -149,7 +153,8 @@ if ($institution || $add) {
         'inuse' => array(
             'type'   => 'hidden',
             'value'  => $inuse,
-            'id'     => 'inuse'
+            'id'     => 'inuse',
+            'ignore' => $add
         ),
         'i' => array(
             'type'   => 'hidden',
