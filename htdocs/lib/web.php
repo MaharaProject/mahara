@@ -1322,7 +1322,7 @@ function admin_nav() {
             ),
             array(
                 'path'   => 'configusers/admins',
-                'url'    => 'admin/users/admins.php',
+                'url'    => 'admin/users/institutionadmins.php',
                 'title'  => get_string('adminusers', 'admin'),
                 'weight' => 40,
             ),

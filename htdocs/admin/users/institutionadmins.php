@@ -28,12 +28,12 @@
 // here might need to be fixed there too.
 define('INTERNAL', 1);
 define('INSTITUTIONALADMIN', 1);
-define('MENUITEM', 'configusers/staffusers');
+define('MENUITEM', 'configusers/adminusers');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-define('TITLE', get_string('staffusers', 'admin'));
+define('TITLE', get_string('adminusers', 'admin'));
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'admin');
-define('SECTION_PAGE', 'staffusers');
+define('SECTION_PAGE', 'adminusers');
 require_once('pieforms/pieform.php');
 $smarty = smarty();
 
@@ -41,19 +41,19 @@ require_once('institution.php');
 $institutionelement = get_institution_selector();
 $institution = empty($institutionelement['value']) ? $institutionelement['defaultvalue'] : $institutionelement['value'];
 
-// Get users who are currently staff
-$staffusers = get_column('usr_institution', 'usr', 'staff', 1, 'institution', $institution);
+// Get users who are currently admins
+$adminusers = get_column('usr_institution', 'usr', 'admin', 1, 'institution', $institution);
 
 $form = array(
-    'name' => 'staffusers',
+    'name' => 'adminusers',
     'elements' => array(
         'users' => array(
             'type' => 'userlist',
-            'title' => get_string('staffusers', 'admin'),
-            'defaultvalue' => $staffusers,
+            'title' => get_string('adminusers', 'admin'),
+            'defaultvalue' => $adminusers,
             'filter' => false,
             'lefttitle' => get_string('institutionmembers', 'admin'),
-            'righttitle' => get_string('institutionstaff', 'admin'),
+            'righttitle' => get_string('currentadmins', 'admin'),
             'searchparams' => array('limit' => 100, 'query' => '', 'raw' => true, 'action' => 'search',
                                     'institution' => $institution),
             'searchscript' => 'admin/users/search.json.php',
@@ -66,30 +66,30 @@ $form = array(
     )
 );
 
-function staffusers_submit(Pieform $form, $values) {
+function adminusers_submit(Pieform $form, $values) {
     global $SESSION, $USER;
 
     $inst = $values['institution'];
     if (empty($inst) || !$USER->is_institutional_admin($inst)) {
         $SESSION->add_error_msg(get_string('notadminforinstitution', 'admin'));
-        redirect('/admin/users/institutionstaff.php');
+        redirect('/admin/users/institutionadmins.php');
     }
 
     db_begin();
     execute_sql('UPDATE {usr_institution}
-        SET staff = 0
-        WHERE staff = 1 AND institution = ' . db_quote($inst));
+        SET admin = 0
+        WHERE admin = 1 AND institution = ' . db_quote($inst));
     if ($values['users']) {
         execute_sql('UPDATE {usr_institution}
-            SET staff = 1
+            SET admin = 1
             WHERE usr IN (' . join(',', $values['users']) . ') AND institution = ' . db_quote($inst));
     }
     db_commit();
-    $SESSION->add_ok_msg(get_string('staffusersupdated', 'admin'));
-    redirect('/admin/users/institutionstaff.php');
+    $SESSION->add_ok_msg(get_string('adminusersupdated', 'admin'));
+    redirect('/admin/users/institutionadmins.php');
 }
 
-$smarty->assign('staffusersform', pieform($form));
-$smarty->display('admin/users/institutionstaff.tpl');
+$smarty->assign('adminusersform', pieform($form));
+$smarty->display('admin/users/institutionadmins.tpl');
 
 ?>

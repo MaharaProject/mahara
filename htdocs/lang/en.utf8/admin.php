@@ -211,6 +211,7 @@ $string['uploadcsvusersaddedsuccessfully'] = 'The users in the file have been ad
 
 // Admin Users
 $string['adminuserspagedescription'] = '<p>Here you can choose which users are administrators for the site. The current administrators are listed on the right, and potential administrators are on the left.</p><p>The system must have at least one administrator.</p>';
+$string['institutionadminuserspagedescription'] = 'Here you can choose which users are administrators for the institution. The current administrators are listed on the right, and potential administrators are on the left.';
 $string['potentialadmins'] = 'Potential Admins';
 $string['currentadmins'] = 'Current Admins';
 $string['adminusersupdated'] = 'Admin users updated';
@@ -282,6 +283,7 @@ $string['authenticatedby'] = 'Authentication Method';
 $string['institutionsettings'] = 'Institution Settings';
 $string['changeinstitution'] = 'Change Institution';
 $string['institutionstaff'] = 'Institution Staff';
+$string['institutionadmins'] = 'Institution Administrators';
 $string['institutionadmin'] = 'Institution Admin';
 $string['settingsfor'] = 'Settings for:';
 $string['institutionadministration'] = 'Institution Administration';

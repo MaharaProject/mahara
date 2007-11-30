@@ -215,4 +215,40 @@ class Institution {
     }
 
 }
+
+function get_institution_selector() {
+    global $USER;
+
+    if ($USER->get('admin')) {
+        $institutions = get_records_array('institution');
+    } else if ($USER->is_institutional_admin()) {
+        $institutions = get_records_select_array('institution', 'name IN (' 
+            . join(',', array_map('db_quote',$USER->get('admininstitutions'))) . ')');
+    } else {
+        return null;
+    }
+
+    if (count($institutions) > 1) {
+        $options = array();
+        foreach ($institutions as $i) {
+            $options[$i->name] = $i->displayname;
+        }
+        $institution = key($options);
+        $institutionelement = array(
+            'type' => 'select',
+            'title' => get_string('institution'),
+            'defaultvalue' => $institution,
+            'options' => $options
+        );
+    } else {
+        $institution = $institutions[0]->name;
+        $institutionelement = array(
+            'type' => 'hidden',
+            'value' => $institution,
+        );
+    }
+
+    return $institutionelement;
+}
+
 ?>
