@@ -290,7 +290,6 @@ EOF;
     $stringjs = '<script type="text/javascript">';
     $stringjs .= 'var strings = ' . json_encode($strings) . ';';
     $stringjs .= '</script>';
-    $headers[] = $stringjs;
 
 
     // stylesheet set up - if we're in a plugin also get its stylesheet
@@ -314,6 +313,7 @@ EOF;
     }
 
     $smarty = smarty_core();
+    $smarty->assign('STRINGJS', $stringjs);
 
     $smarty->assign('STYLESHEETLIST', $stylesheets);
     if (!empty($theme_list)) {
