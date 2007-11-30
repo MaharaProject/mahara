@@ -1316,7 +1316,7 @@ function admin_nav() {
             ),
             array(
                 'path'   => 'configusers/staff',
-                'url'    => 'admin/users/staff.php',
+                'url'    => 'admin/users/institutionstaff.php',
                 'title'  => get_string('staffusers', 'admin'),
                 'weight' => 30,
             ),

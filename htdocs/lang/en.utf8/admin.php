@@ -217,6 +217,7 @@ $string['adminusersupdated'] = 'Admin users updated';
 
 // Staff Users
 $string['staffuserspagedescription'] = 'Here you can choose which users are staff for the site. The current staff are on the right, and potential staff are on the left.';
+$string['institutionstaffuserspagedescription'] = 'Here you can choose which users are staff for your institution. The current staff are on the right, and potential staff are on the left.';
 $string['potentialstaff'] = 'Potential Staff';
 $string['currentstaff'] = 'Current Staff';
 $string['staffusersupdated'] = 'Staff users updated';

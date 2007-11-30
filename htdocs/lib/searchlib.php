@@ -150,31 +150,35 @@ function get_admin_user_search_results($search, $offset, $limit, $sortby, $sortd
     global $USER;
     if (!$USER->get('admin')) {
         $allowed = $USER->get('admininstitutions');
-        if ($search->institution == 'all' || !isset($allowed[$search->institution])) {
-            $constraints[] = array('field' => 'institution_requested',
-                                   'type' => 'in',
-                                   'list' => $allowed);
-        } else {
-            $constraints[] = array('field' => 'institution_requested',
-                                   'type' => 'equals',
-                                   'string' => $search->institution);
+        foreach (array('institution', 'institution_requested') as $p) {
+            if (isset($search->{$p})) {
+                if ($search->{$p} == 'all' || !isset($allowed[$p])) {
+                    $constraints[] = array('field' => $p,
+                                           'type' => 'in',
+                                           'list' => $allowed);
+                } else {
+                    $constraints[] = array('field' => $p,
+                                           'type' => 'equals',
+                                           'string' => $search->{$p});
+                }
+            }
         }
     } else if ($search->institution != 'all') {
         $constraints[] = array('field' => 'institution',
                                'type' => 'equals',
                                'string' => $search->institution);
     }
-
-    return admin_user_search($queries, $constraints, $offset, $limit, $sortby, $sortdir);
+            
+    $results = admin_user_search($queries, $constraints, $offset, $limit, $sortby, $sortdir);
+    foreach ($results['data'] as &$result) {
+        $result['name'] = display_name($result);
+    }
+    return $results;
 }
 
 
 function build_admin_user_search_results($search, $offset, $limit, $sortby, $sortdir) {
     global $USER;
-
-    if (empty($search->institution)) {
-        $search->institution = 'all';
-    }
 
     $results = get_admin_user_search_results($search, $offset, $limit, $sortby, $sortdir);
 
