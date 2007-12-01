@@ -6,5 +6,6 @@ Version: 5.20.5
 
 Modifications:
 
+- RecordSet_postgres7->MoveNext() - remove expensive is_array() (04ef8a3b9770f93326a2ece31e4089368117faca)
 - Deleted many files we're not using, including tests, docs, other drivers, other error langs
 
