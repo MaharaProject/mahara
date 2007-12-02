@@ -100,7 +100,6 @@ $string['viewlayoutdescription'] = 'You can change the widths of the columns in 
 $string['changeviewlayout'] = 'Change view layout';
 $string['backtoyourview'] = 'Back to your view';
 
-$string['titleformatted'] = '%s by %s';
 $string['by'] = 'by';
 $string['in'] = 'in';
 $string['noblocks'] = 'Sorry, no blocks in this category :(';
