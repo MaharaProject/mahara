@@ -19,7 +19,7 @@
     {foreach from=$children item=child}
       <tr class="{cycle values=r1,r0}">
         <td><img src="{$child->iconsrc}" border="0" alt="{$child->artefacttype|escape}"></td>
-        <td><a href="{$WWWROOT}view/view.php?id={$viewid|escape}&amp;artefact={$child->id|escape}">{$child->title}</a></td>
+        <td><a href="{$WWWROOT}view/artefact.php?artefact={$child->id|escape}&amp;view={$viewid|escape}">{$child->title}</a></td>
         <td>{$child->description}</td>
         <td>{$child->date}</td>
       </tr>
