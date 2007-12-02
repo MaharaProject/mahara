@@ -28,9 +28,9 @@ define('INTERNAL', 1);
 define('MENUITEM', 'myportfolio/views');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require('view.php');
-define('TITLE', get_string('editblocks', 'view'));
 
 $view = new View(param_integer('id'));
+define('TITLE', get_string('editblocksforview', 'view', $view->get('title')));
 
 $new = param_boolean('new');
 $category = param_alpha('c', '');
