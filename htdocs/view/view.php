@@ -274,11 +274,14 @@ var feedbacklist = new TableRenderer(
     'feedbacktable',
     'getfeedback.json.php',
     [
-        function (r) {
+       function (r) {
+            var td = TD(null);
+            td.innerHTML = r.message;
             if (r.attachid && r.ownedbythisuser) {
-                return TD(null, r.message, DIV(null, {$getstring['feedbackattachmessage']}));
+                appendChildNodes(td, DIV(null, {$getstring['feedbackattachmessage']}));
+                return td;
             }
-            return TD(null, r.message);
+            return td;
         },
         'name',
         'date', 
