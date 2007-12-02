@@ -119,6 +119,8 @@ $string['blocktypecategory.multimedia'] = 'Multimedia';
 $string['notitle'] = 'No title';
 $string['clickformoreinformation'] = 'Click for more information and to place feedback';
 
+$string['Browse'] = 'Browse';
+$string['Search'] = 'Search';
 $string['noartefactstochoosefrom'] = 'Sorry, no artefacts to choose from';
 
 ?>

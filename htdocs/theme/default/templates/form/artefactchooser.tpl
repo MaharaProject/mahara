@@ -1,6 +1,6 @@
 {if $searchable}<ul class="artefactchooser-tabs">
-    <li{if !$smarty.request.s} class="current"{/if}><a href="{$browseurl}">Browse</a></li>
-    <li{if $smarty.request.s} class="current"{/if}><a href="{$searchurl}">Search</a></li>
+    <li{if !$smarty.request.s} class="current"{/if}><a href="{$browseurl}">{str tag=Browse section=view}</a></li>
+    <li{if $smarty.request.s} class="current"{/if}><a href="{$searchurl}">{str tag=Search section=view}</a></li>
 </ul>{/if}
 <div id="artefactchooser-body">
     <div class="cb artefactchooser-splitter">
