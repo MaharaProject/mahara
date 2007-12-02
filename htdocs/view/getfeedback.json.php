@@ -91,7 +91,7 @@ if ($feedback) {
             'ownedbythisuser' => ( $owner == $userid ? true : false ),
             'name'            => display_name($record->author),
             'date'            => format_date(strtotime($record->ctime), 'strftimedate'),
-            'message'         => $record->message,
+            'message'         => format_whitespace($record->message),
             'ispublic'        => $record->public
         );
         if (!empty($record->attachment)) {
