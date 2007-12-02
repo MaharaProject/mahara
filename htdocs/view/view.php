@@ -29,17 +29,13 @@ define('PUBLIC', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 require(get_config('libroot') . 'view.php');
 
-$viewid     = param_integer('id');
-$path       = param_variable('path', null);
-
+$viewid = param_integer('id');
 $view = new View($viewid);
 if (!can_view_view($viewid)) {
     throw new AccessDeniedException();
 }
 
-// TODO: remove this langstring
-$title = get_string('titleformatted', 'view', $view->get('title'), $view->formatted_owner());
-define('TITLE', $title);
+define('TITLE', $view->get('title') . ' ' . get_string('by', 'view') . ' ' . $view->formatted_owner());
 
 $tutorfilefeedbackformrow = '';
 $submittedgroup = $view->get('submittedto');
