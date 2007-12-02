@@ -42,70 +42,56 @@ if (!artefact_in_view($artefactid, $viewid)) {
     throw new AccessDeniedException("Artefact $artefactid not in View $viewid");
 }
 
-// @todo define TITLE
-
 require_once(get_config('docroot') . 'artefact/lib.php');
 $artefact = artefact_instance_from_id($artefactid);
 
-//    $feedbackisprivate = !$artefact->public_feedback_allowed();
+define('TITLE', $artefact->get('title') . ' ' . get_string('in', 'view') . ' ' . $view->get('title'));
+
+// Render the artefact
 $options = array('viewid' => $viewid,
                  'path' => $path);
-
 $rendered = $artefact->render_self($options);
-
 $content = '';
 if (!empty($rendered['javascript'])) {
     $content = '<script type="text/javascript">' . $rendered['javascript'] . '</script>';
 }
 $content .= $rendered['html'];
 
-
-
-
-
-
-
-
-    $viewhref = 'view.php?id=' . $viewid;
-    $navlist = array('<a href="' . $viewhref .  '">' . $title . '</a>');
-    if (!empty($path)) {
-        $titles = get_records_sql_assoc('
-            SELECT id,title FROM {artefact}
-            WHERE id IN (' . $path . ')','');
-        $artefactids = split(',', $path);
-        for ($i = 0; $i < count($artefactids); $i++) {
-            if ($artefactid == $artefactid[$i]) {
-                break;
-            }
-            array_push($navlist, '<a href="' . $viewhref . '&artefact=' . $artefactids[$i]
-                       . ($i>0 ? '&path=' . join(',', array_slice($artefactids, 0, $i)) : '') . '">' 
-                       . $titles[$artefactids[$i]]->title . '</a>');
-        }
-        array_push($navlist, $artefact->get('title'));
+// Build the path to the artefact, through its parents
+$artefactpath = array();
+$parent = $artefact->get('parent');
+while ($parent !== null) {
+    // This loop could get expensive when there are a lot of parents. But at least 
+    // it works, unlike the old attempt
+    $artefactdata = get_record('artefact', 'id', $parent);
+    if (artefact_in_view($parent, $viewid)) {
+        array_unshift($artefactpath, array(
+            'url'   => get_config('wwwroot') . 'view/artefact.php?artefact=' . $parent . '&view=' . $viewid,
+            'title' => $artefactdata->title,
+        ));
     }
 
-    else {
-        $hierarchy = $view->get_artefact_hierarchy();
-        if (!empty($hierarchy['refs'][$artefactid])) {
-            $artefact = $hierarchy['refs'][$artefactid];
-            $ancestorid = $artefact->parent;
-            while ($ancestorid && isset($hierarchy['refs'][$ancestorid])) {
-                $ancestor = $hierarchy['refs'][$ancestorid];
-                $link = '<a href="view.php?id=' . $viewid . '&amp;artefact=' . $ancestorid . '">' 
-                    . $ancestor->title . "</a>\n";
-                array_push($navlist, $link);
-                $ancestorid = $ancestor->parent;
-            }
-        }
-        array_push($navlist, $artefact->title);
-    }
+    $parent = $artefactdata->parent;
+}
 
-    $jsartefact = $artefactid;
-    $viewbeingwatched = (int)record_exists('usr_watchlist_view', 'usr', $USER->get('id'), 'view', $viewid);
-//}
+$artefactpath[] = array(
+    'url' => '',
+    'title' => $artefact->get('title'),
+);
 
-if (empty($tutorfilefeedbackformrow)) {
-        $tutorfilefeedbackformrow = '';
+
+$tutorfilefeedbackformrow = '';
+$submittedgroup = $view->get('submittedto');
+if ($submittedgroup 
+    && record_exists('group_member', 
+                     'group', $submittedgroup,
+                     'member', $USER->get('id'),
+                     'tutor', 1)) {
+    // The user is a tutor of the group that this view has
+    // been submitted to, and is entitled to upload an additional
+    // file when submitting feedback.
+    $tutorfilefeedbackformrow = "TR(null, TH(null, LABEL(null, '" . get_string('attachfile') . "'))),"
+        . "TR(null, TD(null, INPUT({'type':'file', 'name':'attachment'}))),";
 }
 
 $getstring = quotestrings(array('mahara' => array(
@@ -117,6 +103,7 @@ $getstring = quotestrings(array('mahara' => array(
 $getstring['feedbackattachmessage'] = "'(" . get_string('feedbackattachmessage', 'mahara', get_string('feedbackattachdirname')) . ")'";
 
 // Safari doesn't seem to like these inputs to be called 'public', so call them 'ispublic' instead.
+$feedbackisprivate = !$artefact->public_feedback_allowed();
 if (!empty($feedbackisprivate)) {
     $makepublic = "TR(null, INPUT({'type':'hidden','name':'ispublic','value':'false'}), TD({'colspan':2}, " 
         . $getstring['feedbackonthisartefactwillbeprivate'] . ")),";
@@ -129,7 +116,7 @@ else {
 $javascript = <<<EOF
 
 var view = {$viewid};
-var artefact = {$jsartefact};
+var artefact = {$artefactid};
 
 function feedbackform() {
     if ($('menuform')) {
@@ -285,50 +272,6 @@ feedbacklist.updateOnLoad();
 
 EOF;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//
-//$smarty = smarty(
-//    array('tablerenderer'),
-//    array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">'),
-//    array(
-//        'mahara' => array(
-//            'public',
-//            'private',
-//            'makeprivate',
-//        ),
-//    ),
-//    array(
-//        'stylesheets' => array('style/views.css'),
-//    )
-//);
-//$smarty->assign('DESCRIPTION', $description);
-//$smarty->assign('INLINEJAVASCRIPT', $javascript);
-//$smarty->assign('VIEWNAV', $navlist);
-//if (isset($content)) {
-//    $smarty->assign('VIEWCONTENT', $content);
-//}
-//if ($USER->get('id') == $view->get('owner')) {
-//    $smarty->assign('can_edit', true);
-//    $smarty->assign('viewid', $viewid);
-//}
-//$smarty->display('view/view.tpl');
-
 $smarty = smarty(
     array('tablerenderer'),
     array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">'),
@@ -344,6 +287,7 @@ $smarty = smarty(
     )
 );
 $smarty->assign('artefact', $content);
+$smarty->assign('artefactpath', $artefactpath);
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 
 $smarty->assign('viewid', $viewid);
