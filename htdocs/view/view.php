@@ -37,19 +37,11 @@ if (!can_view_view($viewid)) {
     throw new AccessDeniedException();
 }
 
-$viewbeingwatched = 0;
-
+// TODO: remove this langstring
 $title = get_string('titleformatted', 'view', $view->get('title'), $view->formatted_owner());
 define('TITLE', $title);
-$description = '';
 
-$navlist = array($title);
-$description = $view->get('description');
-$jsartefact = 'undefined';
-
-$content = $view->build_columns();
-
-global $USER;
+$tutorfilefeedbackformrow = '';
 $submittedgroup = $view->get('submittedto');
 if ($submittedgroup 
     && record_exists('group_member', 
@@ -63,10 +55,6 @@ if ($submittedgroup
         . "TR(null, TD(null, INPUT({'type':'file', 'name':'attachment'}))),";
 }
 $viewbeingwatched = (int)record_exists('usr_watchlist_view', 'usr', $USER->get('id'), 'view', $viewid);
-
-if (empty($tutorfilefeedbackformrow)) {
-        $tutorfilefeedbackformrow = '';
-}
 
 $getstring = quotestrings(array('mahara' => array(
         'message', 'makepublic', 'placefeedback', 'cancel', 'complaint', 
@@ -91,7 +79,6 @@ else {
 $javascript = <<<EOF
 
 var view = {$viewid};
-var artefact = {$jsartefact};
 
 function feedbackform() {
     if ($('menuform')) {
@@ -112,9 +99,6 @@ function feedbackform() {
             var data = {'view':view, 
                         'public':form.ispublic.checked,
                         'message':form.message.value};
-            if (artefact) {
-                data.artefact = artefact;
-            }
             sendjsonrequest('addfeedback.json.php', data, 'POST', function () { 
                 removeElement('menuform');
                 feedbacklist.doupdate();
@@ -147,9 +131,6 @@ function objectionform() {
     var form = FORM({'id':'menuform','method':'post'});
     submitobjection = function () {
         var data = {'view':view, 'message':form.message.value};
-        if (artefact) {
-            data.artefact = artefact;
-        }
         sendjsonrequest('objectionable.json.php', data, 'POST', function () { removeElement('menuform'); });
         return false;
     }
@@ -182,7 +163,7 @@ function view_menu() {
         A({'href':'', 'onclick':'window.print();return false;'}, 
             {$getstring['print']})
     );
-    if (config.loggedin && !artefact) {
+    if (config.loggedin) {
         var linkTextFlag = {$viewbeingwatched};
         var linkText = [{$getstring['addtowatchlist']}, {$getstring['removefromwatchlist']}];
         link = A({'href': ''}, linkText[linkTextFlag]);
@@ -252,8 +233,7 @@ var feedbacklist = new TableRenderer(
 
 feedbacklist.limit = 10;
 feedbacklist.view = view;
-feedbacklist.artefact = artefact;
-feedbacklist.statevars.push('view','artefact');
+feedbacklist.statevars.push('view');
 feedbacklist.emptycontent = {$getstring['nopublicfeedback']};
 feedbacklist.updateOnLoad();
 
@@ -274,15 +254,17 @@ $smarty = smarty(
         'stylesheets' => array('style/views.css'),
     )
 );
-$smarty->assign('DESCRIPTION', $description);
+
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
-$smarty->assign('VIEWNAV', $navlist);
-if (isset($content)) {
-    $smarty->assign('VIEWCONTENT', $content);
-}
+$smarty->assign('viewid', $viewid);
+$smarty->assign('viewtitle', $view->get('title'));
+$smarty->assign('viewdescription', $view->get('description'));
+$smarty->assign('viewcontent', $view->build_columns());
+$smarty->assign('viewowner', $view->get('owner'));
+$smarty->assign('formattedowner', $view->formatted_owner());
+
 if ($USER->get('id') == $view->get('owner')) {
     $smarty->assign('can_edit', true);
-    $smarty->assign('viewid', $viewid);
 }
 $smarty->display('view/view.tpl');
 
