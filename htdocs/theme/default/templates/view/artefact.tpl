@@ -1,7 +1,24 @@
 {include file="header.tpl"}
 
 {include file="columnfullstart.tpl"}
-Viewing an artefact!
+        <h3><a href="{$WWWROOT}view/view.php?id={$viewid|escape}">{$viewtitle|escape}</a> {str tag=by section=view} <a href="{$WWWROOT}user/view.php?id={$viewowner}">{$formattedowner|escape}</a>: Artefact Name</h3>
+        <div id="view">
+            <div id="bottom-pane">
+                <div id="column-container">
+                {$artefact}
+                </div>
+            </div>
+        </div>
+
+        <div id="publicfeedback">
+            <table id="feedbacktable">
+                <thead>
+                    <tr><th colspan=5>{str tag=feedback}</th></tr>
+                </thead>
+            </table>
+        </div>
+        <div id="viewmenu"></div>
+
 {include file="columnfullend.tpl"}
 
 {include file="footer.tpl"}
