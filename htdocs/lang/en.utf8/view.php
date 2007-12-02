@@ -27,9 +27,9 @@
 defined('INTERNAL') || die();
 
 $string['createview']             = 'Create View';
-$string['editview']               = 'Edit View';
+$string['editview']               = 'Edit Details for View "%s"';
 $string['editaccessforview']      = 'Edit View Access for View "%s"';
-$string['editblocksforview']      = 'Edit blocks for View "%s"';
+$string['editblocksforview']      = 'Edit Blocks for View "%s"';
 $string['next']                   = 'Next';
 $string['back']                   = 'Back';
 $string['createview']             = 'Create View';
@@ -39,7 +39,7 @@ $string['startdate']              = 'Access Start Date/Time';
 $string['stopdate']               = 'Access End Date/Time';
 $string['startdatemustbebeforestopdate'] = 'The start date must be before the stop date';
 $string['ownerformat']            = 'Name display format';
-$string['ownerformatdescription'] = 'This field controls what appears in the author field for the template you select in step 2';
+$string['ownerformatdescription'] = 'How do you want people who look at your view to see your name?';
 
 $string['editaccesspagedescription'] = '<p>You can control who can see your view, and when they can do so. By default, only you can see your views.</p>
     <p>You can grant access to your view to your friends, all logged in users, or only to the certain users and groups you choose.</p>
