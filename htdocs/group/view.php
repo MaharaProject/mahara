@@ -314,6 +314,8 @@ $smarty = smarty(array('tablerenderer'));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('member', $membership);
 $smarty->assign('tutor', $tutor);
+$smarty->assign('staff', $staff);
+$smarty->assign('admin', $admin);
 $smarty->assign('controlled', $controlled);
 $smarty->assign('request', $request);
 $smarty->assign('canjoin', $canjoin);
