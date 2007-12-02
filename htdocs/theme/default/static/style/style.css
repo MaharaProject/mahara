@@ -110,6 +110,13 @@ input.submit, input.submitcancel, input.cancelbackcreate, input.button, button {
     font-size: 11px;
     font-weight: bold;
 }
+/* safari/konqueror workaround to make the button text readable */
+body:last-child:not(:root:root) input.submit,
+body:last-child:not(:root:root) input.submitcancel,
+body:last-child:not(:root:root) input.cancelbackcreate,
+body:last-child:not(:root:root) input.button {
+    color: #547C22;
+}
 /* Ones inside tables should be smaller... */
 .maincontent table input.button, .maincontent table input.submit, .maincontent table button {
     background-image: url(../images/btn_short_tile.gif);
