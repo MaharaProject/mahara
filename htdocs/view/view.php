@@ -29,13 +29,7 @@ define('PUBLIC', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 require(get_config('libroot') . 'view.php');
 
-// TODO for 1.0 - remove 'view' as an allowed value for this
-$viewid     = param_integer('id', 0);
-if (!$viewid) {
-    $viewid     = param_integer('view');
-    log_info('view/view.php accessed with view parameter instead of ID. If this was because of a link internal to mahara, please change it!');
-}
-$artefactid = param_integer('artefact', null);
+$viewid     = param_integer('id');
 $path       = param_variable('path', null);
 
 $view = new View($viewid);
@@ -49,83 +43,27 @@ $title = get_string('titleformatted', 'view', $view->get('title'), $view->format
 define('TITLE', $title);
 $description = '';
 
-if ($artefactid) {
+$navlist = array($title);
+$description = $view->get('description');
+$jsartefact = 'undefined';
 
-    if (!artefact_in_view($artefactid, $viewid)) {
-        throw new AccessDeniedException("Artefact $artefactid not in View $viewid");
-    }
+$content = $view->build_columns();
 
-    require_once(get_config('docroot') . 'artefact/lib.php');
-    $artefact = artefact_instance_from_id($artefactid);
-
-    $feedbackisprivate = !$artefact->public_feedback_allowed();
-    $options = array('viewid' => $viewid,
-                     'path' => $path);
-
-    $rendered = $artefact->render_self($options);
-    $content = '';
-    if (!empty($rendered['javascript'])) {
-        $content = '<script type="text/javascript">' . $rendered['javascript'] . '</script>';
-    }
-    $content .= $rendered['html'];
-
-    $viewhref = 'view.php?id=' . $viewid;
-    $navlist = array('<a href="' . $viewhref .  '">' . $title . '</a>');
-    if (!empty($path)) {
-        $titles = get_records_sql_assoc('
-            SELECT id,title FROM {artefact}
-            WHERE id IN (' . $path . ')','');
-        $artefactids = split(',', $path);
-        for ($i = 0; $i < count($artefactids); $i++) {
-            if ($artefactid == $artefactid[$i]) {
-                break;
-            }
-            array_push($navlist, '<a href="' . $viewhref . '&artefact=' . $artefactids[$i]
-                       . ($i>0 ? '&path=' . join(',', array_slice($artefactids, 0, $i)) : '') . '">' 
-                       . $titles[$artefactids[$i]]->title . '</a>');
-        }
-        array_push($navlist, $artefact->get('title'));
-    }
-    else {
-        $hierarchy = $view->get_artefact_hierarchy();
-        if (!empty($hierarchy['refs'][$artefactid])) {
-            $artefact = $hierarchy['refs'][$artefactid];
-            $ancestorid = $artefact->parent;
-            while ($ancestorid && isset($hierarchy['refs'][$ancestorid])) {
-                $ancestor = $hierarchy['refs'][$ancestorid];
-                $link = '<a href="view.php?id=' . $viewid . '&amp;artefact=' . $ancestorid . '">' 
-                    . $ancestor->title . "</a>\n";
-                array_push($navlist, $link);
-                $ancestorid = $ancestor->parent;
-            }
-        }
-        array_push($navlist, $artefact->title);
-    }
-
-    $jsartefact = $artefactid;
+global $USER;
+$submittedgroup = $view->get('submittedto');
+if ($submittedgroup 
+    && record_exists('group_member', 
+                     'group', $submittedgroup,
+                     'member', $USER->get('id'),
+                     'tutor', 1)) {
+    // The user is a tutor of the group that this view has
+    // been submitted to, and is entitled to upload an additional
+    // file when submitting feedback.
+    $tutorfilefeedbackformrow = "TR(null, TH(null, LABEL(null, '" . get_string('attachfile') . "'))),"
+        . "TR(null, TD(null, INPUT({'type':'file', 'name':'attachment'}))),";
 }
-else {
-    $navlist = array($title);
-    $description = $view->get('description');
-    $jsartefact = 'undefined';
+$viewbeingwatched = (int)record_exists('usr_watchlist_view', 'usr', $USER->get('id'), 'view', $viewid);
 
-    $content = $view->build_columns();
-    
-    global $USER;
-    $submittedgroup = $view->get('submittedto');
-    if ($submittedgroup 
-        && record_exists('group_member', 
-                         'group', $submittedgroup,
-                         'member', $USER->get('id'),
-                         'tutor', 1)) {
-        // The user is a tutor of the group that this view has
-        // been submitted to, and is entitled to upload an additional
-        // file when submitting feedback.
-        $tutorfilefeedbackformrow = "TR(null, TH(null, LABEL(null, '" . get_string('attachfile') . "'))),"
-            . "TR(null, TD(null, INPUT({'type':'file', 'name':'attachment'}))),";
-    }
-    $viewbeingwatched = (int)record_exists('usr_watchlist_view', 'usr', $USER->get('id'), 'view', $viewid);
-}
 if (empty($tutorfilefeedbackformrow)) {
         $tutorfilefeedbackformrow = '';
 }
@@ -136,15 +74,8 @@ $getstring = quotestrings(array('mahara' => array(
         'nopublicfeedback', 'reportobjectionablematerial', 'print',
 )));
 
-if (!$artefactid) {
-    $getstring['addtowatchlist'] = json_encode(get_string('addtowatchlist'));
-    $getstring['removefromwatchlist'] = json_encode(get_string('removefromwatchlist'));
-}
-else {
-    $getstring['addtowatchlist'] = '""';
-    $getstring['removefromwatchlist'] = '""';
-}
-
+$getstring['addtowatchlist'] = json_encode(get_string('addtowatchlist'));
+$getstring['removefromwatchlist'] = json_encode(get_string('removefromwatchlist'));
 $getstring['feedbackattachmessage'] = "'(" . get_string('feedbackattachmessage', 'mahara', get_string('feedbackattachdirname')) . ")'";
 
 // Safari doesn't seem to like these inputs to be called 'public', so call them 'ispublic' instead.
@@ -275,10 +206,13 @@ var feedbacklist = new TableRenderer(
     'getfeedback.json.php',
     [
         function (r) {
+            var td = TD(null);
+            td.innerHTML = r.message;
             if (r.attachid && r.ownedbythisuser) {
-                return TD(null, r.message, DIV(null, {$getstring['feedbackattachmessage']}));
+                appendChildNodes(td, DIV(null, {$getstring['feedbackattachmessage']}));
+                return td;
             }
-            return TD(null, r.message);
+            return td;
         },
         'name',
         'date', 
