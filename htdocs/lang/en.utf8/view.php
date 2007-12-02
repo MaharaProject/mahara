@@ -101,6 +101,7 @@ $string['changeviewlayout'] = 'Change view layout';
 $string['backtoyourview'] = 'Back to your view';
 
 $string['titleformatted'] = '%s by %s';
+$string['by'] = 'by';
 $string['noblocks'] = 'Sorry, no blocks in this category :(';
 
 $string['50,50'] = $string['33,33,33'] = $string['25,25,25,25'] = 'Equal widths';
