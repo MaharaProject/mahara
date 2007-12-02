@@ -238,7 +238,6 @@ addLoadEvent(function () {
     var accesslist = {{$accesslist}};
     if (accesslist) {
         forEach(accesslist, function(item) {
-            log(item);
             renderAccessListItem(item);
         });
     }
