@@ -45,7 +45,6 @@ class View {
     private $friendsonly;
     private $artefact_instances;
     private $artefact_metadata;
-    private $artefact_hierarchy;
     private $ownerobj;
     private $numcolumns;
     private $layout;
@@ -192,46 +191,6 @@ class View {
             $this->artefact_metadata = get_records_sql_array($sql, array($this->id));
         }
         return $this->artefact_metadata;
-    }
-
-    public function get_artefact_hierarchy() {
-        if (isset($this->artefact_hierarchy)) {
-            return $this->artefact_hierarchy;
-        }
-
-        if (!$artefacts = $this->get_artefact_metadata()) {
-            return array();
-        }
-
-        $this->artefact_hierarchy = array('data' => array(),
-                                          'refs' => array());
-
-        $sql = 'SELECT a.*,a.parent,pc.parent,a.artefacttype 
-                    FROM {artefact} a 
-                    JOIN (
-                        SELECT apc1.* 
-                        FROM {artefact_parent_cache} apc1 
-                        JOIN {artefact_parent_cache} apc2 ON apc1.artefact = apc2.artefact 
-                        WHERE apc2.parent IN (
-                            SELECT artefact FROM {view_artefact} where view = ?
-                        )
-                    ) pc ON pc.artefact = a.id 
-                UNION SELECT a2.*,a2.parent,null,a2.artefacttype 
-                    FROM {artefact} a2 
-                    JOIN {view_artefact} va ON va.artefact = a2.id 
-                    WHERE va.id = ?';
-
-        $allchildren = get_records_sql_array($sql, array($this->id, $this->id));        
-
-        foreach ($artefacts as $toplevel) {
-            $a = array();
-            $a['artefact'] = $toplevel;
-            $a['children'] = $this->find_artefact_children($toplevel, 
-                                  $allchildren, $this->artefact_hierarchy['refs']);
-            $this->artefact_hierarchy['data'][$toplevel->id] = $a;
-            $this->artefact_hierarchy['refs'][$toplevel->id] = $toplevel;
-        }
-        return $this->artefact_hierarchy;
     }
 
     public function find_artefact_children($artefact, $allchildren, &$refs) {
