@@ -302,7 +302,11 @@ class ArtefactTypePersonalinformation extends ArtefactTypeResume {
         $smarty = smarty();
         $fields = array();
         foreach (array_keys(ArtefactTypePersonalInformation::get_composite_fields()) as $field) {
-            $fields[get_string($field, 'artefact.resume')] = $this->get_composite($field);
+            $value = $this->get_composite($field);
+            if ($field == 'gender' && !empty($field)) {
+                $value = get_string($value, 'artefact.resume');
+            }
+            $fields[get_string($field, 'artefact.resume')] = $value;
         }
         $smarty->assign('fields', $fields);
         return array('html' => $smarty->fetch('artefact:resume:fragments/personalinformation.tpl'));
