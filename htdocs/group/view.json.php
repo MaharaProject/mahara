@@ -52,10 +52,19 @@ $dbnow  = db_format_timestamp(time());
 
 switch ($type) {
     case 'views':
-        $where = 'WHERE v.submittedto = ?';
-        $values = array($id);
-        if (!$submitted) {
-            $where .= ' OR (
+        if ($submitted && !($membership & GROUP_MEMBERSHIP_TUTOR) && !($membership & GROUP_MEMBERSHIP_ADMIN) && !($membership & GROUP_MEMBERSHIP_STAFF) && !($membership & GROUP_MEMBERSHIP_OWNER)) {
+            throw new AccessDeniedException();
+        }
+
+        $where = '';
+        $values = array();
+
+        if ($submitted) {
+            $where = 'WHERE v.submittedto = ?';
+            $values[] = $id;
+        }
+        else {
+            $where = 'WHERE (
                      a.group = ? 
                      AND ( v.startdate IS NULL OR v.startdate < ? )
                      AND ( v.stopdate IS NULL OR v.stopdate > ? )
@@ -67,6 +76,11 @@ switch ($type) {
             $values[] = $dbnow;
             $values[] = $dbnow;
             $values[] = $dbnow;
+
+            if ($membership & GROUP_MEMBERSHIP_TUTOR) {
+                $where .= ' OR v.submittedto = ?';
+                $values[] = $id;
+            }
         }
 
         $count = count_records_sql('
@@ -76,7 +90,7 @@ switch ($type) {
             ' . $where,
             $values
         );
-                                   
+
         $data = get_records_sql_array('
             SELECT DISTINCT v.*, u.username, u.firstname, u.lastname, u.preferredname, u.id AS usr 
             FROM {view} v
@@ -124,6 +138,9 @@ switch ($type) {
         }
         break;
      case 'membercontrol':
+         if (!($membership & GROUP_MEMBERSHIP_OWNER) && !($membership & GROUP_MEMBERSHIP_ADMIN) && !($membership & GROUP_MEMBERSHIP_TUTOR) && !($membership & GROUP_MEMBERSHIP_STAFF)) {
+             throw new AccessDeniedException();
+         }
          foreach ($_REQUEST as $k => $v) {
              if (preg_match('/member-(\d+)/', $k, $m)) {
                  $user = $m[1];
@@ -175,6 +192,9 @@ switch ($type) {
          json_reply(false, get_string('memberchangesuccess'));
          break;
      case 'release':
+         if (!($membership & GROUP_MEMBERSHIP_OWNER) && !($membership & GROUP_MEMBERSHIP_ADMIN) && !($membership & GROUP_MEMBERSHIP_TUTOR) && !($membership & GROUP_MEMBERSHIP_STAFF)) {
+             throw new AccessDeniedException();
+         }
          $view = param_integer('view');
          require_once(get_config('libroot') . 'view.php');
          $view = new View($view);
