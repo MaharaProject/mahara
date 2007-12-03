@@ -184,6 +184,9 @@ function get_admin_user_search_results($search, $offset, $limit, $sortby, $sortd
     // Filter by viewable institutions:
     global $USER;
     if (!$USER->get('admin')) {
+        if (empty($search->institution) && empty($search->institution_requested)) {
+            $search->institution_requested = 'all';
+        }
         $allowed = $USER->get('admininstitutions');
         foreach (array('institution', 'institution_requested') as $p) {
             if (!empty($search->{$p})) {
