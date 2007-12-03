@@ -204,13 +204,24 @@ if (ul) {
                 sendjsonrequest(p.jsonScript, queryData, 'GET', function(data) {
                     var tbody = getFirstElementByTagAndClassName('tbody', null, p.datatable);
                     if (tbody) {
-                        var temp = DIV();
-                        temp.innerHTML = data['data']['tablerows'];
-                        swapDOM(tbody, temp);
-                        // This does not work in IE and Konqueror, the tbody 
-                        // innerHTML property is readonly.
-                        // http://www.ericvasilik.com/2006/07/code-karma.html
-                        //tbody.innerHTML = data['data']['tablerows'];
+                    //    var temp = DIV();
+                    //    temp.innerHTML = data['data']['tablerows'];
+                    //    swapDOM(tbody, temp);
+                        if (
+                            (document.all && document.documentElement && typeof(document.documentElement.style.maxHeight) != "undefined" && !window.opera)
+                            ||
+                            (/Konqueror|AppleWebKit|KHTML/.test(navigator.userAgent))) {
+                            var temp = $('ie-workaround');
+                            temp.innerHTML = '<table><tbody>' + data['data']['tablerows'];
+                            swapDOM(tbody, temp.childNodes[0].childNodes[0]);
+                            replaceChildNodes(temp);
+                        }
+                        else {
+                            // This does not work in IE and Konqueror, the tbody 
+                            // innerHTML property is readonly.
+                            // http://www.ericvasilik.com/2006/07/code-karma.html
+                            tbody.innerHTML = data['data']['tablerows'];
+                        }
                     }
 
                     // Update the pagination
