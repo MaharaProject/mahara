@@ -1074,7 +1074,7 @@ function ensure_record_exists($table, $whereobject, $dataobject, $primarykey=fal
         else {
             $toreturn = true;
         }
-        if ($dataobject) { // we want to update it)
+        if ($dataobject && $dataobject != $whereobject) { // we want to update it)
             update_record($table, $dataobject, $whereobject);
         }
     }
