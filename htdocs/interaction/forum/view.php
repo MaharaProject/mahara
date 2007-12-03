@@ -178,21 +178,22 @@ function subscribe_forum_submit(Pieform $form, $values) {
                 'user' => $USER->get('id')
             )
         );
-    }
-    else {
-        delete_records(
-            'interaction_forum_subscription_forum',
-            'forum', $forumid,
-            'user', $USER->get('id')
-        );
         delete_records_sql(
             'DELETE FROM {interaction_forum_subscription_topic}
             WHERE topic IN (
                 SELECT id
                 FROM {interaction_forum_topic}
                 WHERE forum = ?
+                AND "user" = ?
             )',
-            array($forumid)
+            array($forumid, $USER->get('id'))
+        );
+    }
+    else {
+        delete_records(
+            'interaction_forum_subscription_forum',
+            'forum', $forumid,
+            'user', $USER->get('id')
         );
     }
     redirect('/interaction/forum/view.php?id=' . $forumid . '&offset=' . $offset);
