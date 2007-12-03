@@ -571,6 +571,7 @@ class ArtefactTypeEmploymenthistory extends ArtefactTypeResumeComposite {
                 ),
                 'rules' => array(
                     'required' => true,
+                    'before'   => 'enddate',
                 ),
                 'title' => get_string('startdate', 'artefact.resume'),
                 'help'  => true,
@@ -650,6 +651,7 @@ class ArtefactTypeEducationhistory extends ArtefactTypeResumeComposite {
                 ),
                 'rules' => array(
                     'required' => true,
+                    'before'   => 'enddate',
                 ),
                 'title' => get_string('startdate', 'artefact.resume'),
                 'help'  => true,
@@ -862,6 +864,7 @@ class ArtefactTypeMembership extends ArtefactTypeResumeComposite {
                 ),
                 'rules' => array(
                     'required' => true,
+                    'before'   => 'enddate',
                 ),
                 'title' => get_string('startdate', 'artefact.resume'),
                 'help'  => true,
