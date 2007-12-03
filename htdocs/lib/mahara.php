@@ -498,7 +498,7 @@ function load_config() {
  */
 function get_config($key) {
     global $CFG;
-    if (array_key_exists($key,$CFG)) {
+    if (isset($CFG->$key)) {
         return $CFG->$key;
     }
     return null;

@@ -82,7 +82,7 @@ class Session {
     private function __construct() {
         // Resume an existing session if required
         if (isset($_COOKIE[session_name()])) {
-            session_start();
+            @session_start();
         }
     }
 
