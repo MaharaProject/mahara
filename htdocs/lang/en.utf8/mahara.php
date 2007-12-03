@@ -360,13 +360,6 @@ $string['artefact'] = 'artefact';
 $string['Artefact'] = 'Artefact';
 $string['artefactnotfound'] = 'Artefact with id %s not found';
 $string['artefactnotrendered'] = 'Artefact not rendered';
-$string['created'] = 'Created';
-$string['lastmodified'] = 'Last modified';
-$string['owner'] = 'Owner';
-$string['size'] = 'Size';
-$string['title'] = 'Title';
-$string['type'] = 'Type';
-$string['download'] = 'Download';
 
 $string['belongingto'] = 'Belonging to';
 $string['allusers'] = 'All users';

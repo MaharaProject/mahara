@@ -8,9 +8,9 @@
 			<table id="filelist" class="hidden tablerenderer">
 				<thead><tr>
 					<th></th>
-					<th>{str tag=name section=artefact.file}</th>
-					<th>{str tag=description section=artefact.file}</th>
-					<th>{str tag=size section=artefact.file}</th>
+					<th>{str tag=Name section=artefact.file}</th>
+					<th>{str tag=Description section=artefact.file}</th>
+					<th>{str tag=Size section=artefact.file}</th>
 					<th>{str tag=date}</th>
 					<th></th>
 				</tr></thead>
