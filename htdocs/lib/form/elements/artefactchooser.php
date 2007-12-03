@@ -204,7 +204,13 @@ if (ul) {
                 sendjsonrequest(p.jsonScript, queryData, 'GET', function(data) {
                     var tbody = getFirstElementByTagAndClassName('tbody', null, p.datatable);
                     if (tbody) {
-                        tbody.innerHTML = data['data']['tablerows'];
+                        var temp = DIV();
+                        temp.innerHTML = data['data']['tablerows'];
+                        swapDOM(tbody, temp);
+                        // This does not work in IE and Konqueror, the tbody 
+                        // innerHTML property is readonly.
+                        // http://www.ericvasilik.com/2006/07/code-karma.html
+                        //tbody.innerHTML = data['data']['tablerows'];
                     }
 
                     // Update the pagination
