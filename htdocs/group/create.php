@@ -108,7 +108,7 @@ function creategroup_submit(Pieform $form, $values) {
     );
 
     // If the user is a staff member, they should be added as a tutor automatically
-    if ($values['membershiptype'] == 'controlled' && $USER->get('staff')) {
+    if ($values['membershiptype'] == 'controlled' && ($USER->get('staff') && $USER->get('admin'))) {
         log_debug('Adding staff user to group');
         insert_record(
             'group_member',
@@ -117,6 +117,17 @@ function creategroup_submit(Pieform $form, $values) {
                 'member' => $USER->get('id'),
                 'ctime'  => $now,
                 'tutor'  => 1
+            )
+        );
+    }
+    else {
+        insert_record(
+            'group_member',
+            (object) array(
+                'group'  => $id,
+                'member' => $USER->get('id'),
+                'ctime'  => $now,
+                'tutor'  => 0
             )
         );
     }
