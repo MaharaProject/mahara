@@ -201,7 +201,7 @@ function get_admin_user_search_results($search, $offset, $limit, $sortby, $sortd
                 }
             }
         }
-    } else if ($search->institution != 'all') {
+    } else if (!empty($search->institution) && $search->institution != 'all') {
         $constraints[] = array('field' => 'institution',
                                'type' => 'equals',
                                'string' => $search->institution);
