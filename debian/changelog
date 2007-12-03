@@ -1,8 +1,8 @@
 mahara (0.9.0~beta3~dev) unstable; urgency=low
 
-  * Dev version
+  * Add dependency on php-file and php-pear
 
- -- Nigel McNie <nigel@catalyst.net.nz>  Fri, 30 Nov 2007 15:53:45 +1300
+ -- Francois Marier <francois@catalyst.net.nz>  Mon, 03 Dec 2007 16:16:54 +1300
 
 mahara (0.9.0~beta2-1) unstable; urgency=low
 
