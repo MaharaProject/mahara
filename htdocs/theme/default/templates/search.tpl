@@ -4,7 +4,7 @@
                 <div class="searchform">
                     <h2>{str tag="search"}</h2>
                     <form action="" method="get" onsubmit="doSearch(); return false;">
-                    <label>Query: 
+                    <label>{str tag=Query}: 
                         <input type="text" name="search_query" id="search_query" value="{$search_query_value|escape}">
                     </label>
                     <select id="search_type">

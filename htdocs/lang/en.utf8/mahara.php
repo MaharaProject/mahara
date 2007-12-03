@@ -346,6 +346,7 @@ $string['addemail'] = 'Add email address';
 
 // Search
 $string['search'] = 'Search';
+$string['Query'] = 'Query';
 $string['advancedsearch'] = 'Advanced search';
 $string['query'] = 'Query';
 $string['querydescription'] = 'The words to be searched for';
