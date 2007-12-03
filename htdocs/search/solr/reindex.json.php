@@ -32,25 +32,30 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 $type = param_variable('type', 'all');
 safe_require('search', 'solr');
 
-switch ($type) {
-    case 'user':
-        PluginSearchSolr::rebuild_users();
-        PluginSearchSolr::commit();
-        PluginSearchSolr::optimize();
-        break;
-    case 'artefact':
-        PluginSearchSolr::rebuild_artefacts();
-        PluginSearchSolr::commit();
-        PluginSearchSolr::optimize();
-        break;
-    case 'view':
-        PluginSearchSolr::rebuild_views();
-        PluginSearchSolr::commit();
-        PluginSearchSolr::optimize();
-        break;
-    default:
-        PluginSearchSolr::rebuild_all();
-        break;
+try {
+    switch ($type) {
+        case 'user':
+            PluginSearchSolr::rebuild_users();
+            PluginSearchSolr::commit();
+            PluginSearchSolr::optimize();
+            break;
+        case 'artefact':
+            PluginSearchSolr::rebuild_artefacts();
+            PluginSearchSolr::commit();
+            PluginSearchSolr::optimize();
+            break;
+        case 'view':
+            PluginSearchSolr::rebuild_views();
+            PluginSearchSolr::commit();
+            PluginSearchSolr::optimize();
+            break;
+        default:
+            PluginSearchSolr::rebuild_all();
+            break;
+    }
+}
+catch (RemoteServerException $e) {
+    json_reply('local', 'Unable to perform re-index. Please check the ErrorLog for more information');
 }
 
 

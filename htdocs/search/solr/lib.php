@@ -109,6 +109,7 @@ class PluginSearchSolr extends PluginSearchInternal {
         $elements = array();
 
         $enc_complete = json_encode(get_string('complete'));
+        $enc_failed   = json_encode(get_string('Failed'));
 
         $script = <<<END
 <script type="text/javascript">
@@ -118,7 +119,7 @@ class PluginSearchSolr extends PluginSearchInternal {
         insertSiblingNodesAfter(td, progress);
 
         sendjsonrequest(config.wwwroot + 'search/solr/reindex.json.php', {'type': type}, 'POST', function (data) {
-            replaceChildNodes(progress, {$enc_complete});
+            replaceChildNodes(progress, (data.error) ? {$enc_failed} : {$enc_complete});
         });
     }
 </script>
@@ -128,6 +129,10 @@ END;
             'type'         => 'text',
             'title'        => get_string('solrurl', 'search.solr'), 
             'defaultvalue' => get_config_plugin('search', 'solr', 'solrurl'),
+            'rules' => array(
+                // Rather simplistic for now. Should match a valid URL
+                'regex' => '#^https?://.*$#',
+            ),
         );
         $elements['indexcontrol'] = array(
             'type'     => 'fieldset',
