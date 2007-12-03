@@ -148,6 +148,14 @@ if (isset($key)) {
         // Log the user in and send them to the homepage
         $USER = new LiveUser();
         $USER->reanimate($user->id, $authinstance->id);
+
+        // A special greeting for special people
+        if (in_array($user->username, array('waawaamilk', 'Mjollnir`', 'Ned', 'richardm', 'fmarier'))) {
+            $SESSION->add_ok_msg('MAMA!!! Maharababy happy to see you :D :D!');
+        }
+        else if ($user->username == 'htaccess') {
+            $SESSION->add_ok_msg('Welcome B-Quack, htaccess!');
+        }
         redirect();
     }
 

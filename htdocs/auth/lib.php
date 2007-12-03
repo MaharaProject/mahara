@@ -1197,14 +1197,6 @@ function password_validate(Pieform $form, $values, User $user) {
         $form->set_error('password2', get_string('passwordsdonotmatch'));
     }
 
-    // No Mike, that's a _BAD_ Mike! :)
-    if (substr($values['password1'], 0, 6) == 'mike01') {
-        if (!$form->get_property('jsform')) {
-            die_info('<img src="'
-                . theme_get_url('images/sidebox1_corner_botright.gif')
-                . '" alt="(C) 2007 MSS Enterprises"></p>');
-        }
-    }
 }
 
 class PluginAuth extends Plugin {

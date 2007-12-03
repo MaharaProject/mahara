@@ -19,5 +19,6 @@
         {else}
         <p class="noartefacts">{str tag=noartefactstochoosefrom section=view}</p>
         {/if}
+        <div style="visibility: hidden;" id="ie-workaround"></div>
     </div>
 </div>
