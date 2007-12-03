@@ -238,17 +238,41 @@ function get_institution_selector() {
             'type' => 'select',
             'title' => get_string('institution'),
             'defaultvalue' => $institution,
-            'options' => $options
+            'options' => $options,
+            'rules' => array('regex' => '/^[a-zA-Z0-9]+$/')
         );
     } else {
         $institution = $institutions[0]->name;
         $institutionelement = array(
             'type' => 'hidden',
             'value' => $institution,
+            'rules' => array('regex' => '/^[a-zA-Z0-9]+$/')
         );
     }
 
     return $institutionelement;
+}
+
+function add_user_to_institution($id, $institution) {
+    // @todo: set expiry, studentid, ctime
+    db_begin();
+    insert_record('usr_institution', (object) array(
+        'usr' => $id,
+        'institution' => $institution
+    ));
+    delete_records('usr_institution_request', 'usr', $id, 'institution', $institution);
+    // Send confirmation
+    db_commit();
+}
+
+function invite_user_to_institution($id, $institution) {
+    insert_record('usr_institution_request', (object) array(
+        'usr' => $id,
+        'institution' => $institution,
+        'confirmedinstitution' => 1,
+        'ctime' => db_format_timestamp(time())
+    ));
+    // Send notification
 }
 
 ?>

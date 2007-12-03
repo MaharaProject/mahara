@@ -1310,7 +1310,7 @@ function admin_nav() {
             ),
             array(
                 'path'   => 'configusers/institutionmembers',
-                'url'    => 'admin/users/staff.php',
+                'url'    => 'admin/users/institutionusers.php',
                 'title'  => get_string('institutionmembers', 'admin'),
                 'weight' => 20,
             ),

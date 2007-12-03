@@ -117,6 +117,41 @@ function search_user($query_string, $limit, $offset = 0) {
 }
 
 
+
+/* 
+ * Institutional admin queries:
+ *
+ * These are only used to populate user lists on the Institution
+ * Members page.  They may return users who are not in the same
+ * institution as the logged in institutional admin, so they should
+ * return names only, not email addresses.
+ */
+
+function get_institutional_admin_search_results($search, $limit) {
+    $institution = new StdClass;
+    $institution->name = $search->institution;
+    foreach (array('member', 'requested', 'invited') as $p) {
+        $institution->{$p} = $search->{$p};
+    }
+    $results = institutional_admin_user_search($search->query, $institution, $limit);
+    if ($results['count']) {
+        foreach ($results['data'] as &$result) {
+            $result['name'] = display_name($result);
+        }
+    }
+    return $results;
+}
+
+function institutional_admin_user_search($query, $institution, $limit) {
+    $plugin = get_config('searchplugin');
+    safe_require('search', $plugin);
+    return call_static_method(generate_class_name('search', $plugin), 'institutional_admin_search_user', 
+                              $query, $institution, $limit);
+}
+
+
+
+
 function get_admin_user_search_results($search, $offset, $limit, $sortby, $sortdir) {
     // In admin search, the search string is interpreted as either a
     // name search or an email search depending on its contents
@@ -151,11 +186,11 @@ function get_admin_user_search_results($search, $offset, $limit, $sortby, $sortd
     if (!$USER->get('admin')) {
         $allowed = $USER->get('admininstitutions');
         foreach (array('institution', 'institution_requested') as $p) {
-            if (isset($search->{$p})) {
-                if ($search->{$p} == 'all' || !isset($allowed[$p])) {
+            if (!empty($search->{$p})) {
+                if ($search->{$p} == 'all' || !isset($allowed[$search->{$p}])) {
                     $constraints[] = array('field' => $p,
                                            'type' => 'in',
-                                           'list' => $allowed);
+                                           'string' => $allowed);
                 } else {
                     $constraints[] = array('field' => $p,
                                            'type' => 'equals',
@@ -168,10 +203,12 @@ function get_admin_user_search_results($search, $offset, $limit, $sortby, $sortd
                                'type' => 'equals',
                                'string' => $search->institution);
     }
-            
+    
     $results = admin_user_search($queries, $constraints, $offset, $limit, $sortby, $sortdir);
-    foreach ($results['data'] as &$result) {
-        $result['name'] = display_name($result);
+    if ($results['count']) {
+        foreach ($results['data'] as &$result) {
+            $result['name'] = display_name($result);
+        }
     }
     return $results;
 }

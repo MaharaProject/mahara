@@ -347,13 +347,8 @@ class User {
 
     public function join_institution($institution) {
         if ($institution != 'mahara' && !$this->in_institution($institution)) {
-            // @todo: set expiry, studentid, ctime
-            insert_record('usr_institution', (object) array(
-                'usr' => $this->get('id'),
-                'institution' => $institution
-            ));
-            delete_records('usr_institution_request', 'usr', $this->get('id'), 'institution', $institution);
-            // Send confirmation
+            require_once('institution.php');
+            add_user_to_institution($this->id, $institution);
         }
     }
 

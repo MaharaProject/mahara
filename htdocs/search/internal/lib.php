@@ -252,22 +252,35 @@ class PluginSearchInternal extends PluginSearch {
     }
 
 
+    private static function field_match($type, $string, &$values) {
+        switch ($type) {
+        case 'starts':
+            $values[] = $string;
+            return ' ILIKE ? || \'%\'';
+        case 'equals':
+            $values[] = $string;
+            return ' = ? ';
+        case 'contains':
+            $values[] = $string;
+            return ' ILIKE \'%\' || ? || \'%\'';
+        case 'in':
+            return ' IN (' . join(',', array_map('db_quote',$string)) . ')';
+        }
+    }
+
+
     public static function admin_search_user_pg($queries, $constraints, $offset, $limit, $sort) {
         $where = 'WHERE u.id <> 0 AND u.deleted = 0';
         $values = array();
 
         // Only handle OR/AND expressions at the top level.  Eventually we may need subexpressions.
 
-        $matchtypes = array('starts' => ' ILIKE ? || \'%\'',
-                            'equals' => ' = ? ',
-                            'contains' => ' ILIKE \'%\' || ? || \'%\'');
-
         if (!empty($queries)) {
             $where .= ' AND ( ';
             $str = array();
             foreach ($queries as $f) {
-                $str[] = 'u.' . $f['field'] . $matchtypes[$f['type']];
-                $values[] = $f['string'];
+                $str[] = 'u.' . $f['field'] 
+                    . PluginSearchInternal::field_match($f['type'], $f['string'], $values);
             }
             $where .= join(' OR ', $str) . ') ';
         } 
@@ -278,28 +291,29 @@ class PluginSearchInternal extends PluginSearch {
         $institutionsearch = '';
         if (!empty($constraints)) {
             foreach ($constraints as $f) {
-                if ($f['field'] == 'institution') {
-                    $institutionsearch .= ' LEFT OUTER JOIN {usr_institution} i ON i.usr = u.id ';
-                    if ($f['string'] == 'mahara') {
-                        $where .= ' AND i.institution IS NULL';
-                    } else {
-                        $where .= ' AND i.institution' . $matchtypes[$f['type']];
-                        $values[] = $f['string'];
+                if (strpos($f['field'], 'institution') === 0) {
+                    $institutionsearch .= ' 
+                        LEFT OUTER JOIN {usr_institution} i ON i.usr = u.id ';
+                    if (strpos($f['field'], 'requested') > 0) {
+                        $institutionsearch .= ' 
+                            LEFT OUTER JOIN {usr_institution_request} ir ON ir.usr = u.id ';
                     }
-                } else if ($f['field'] == 'institution_requested') {
-                    $institutionsearch .= ' LEFT OUTER JOIN {usr_institution} i ON i.usr = u.id ';
-                    $institutionsearch .= ' LEFT OUTER JOIN {usr_institution_request} ir ON ir.usr = u.id ';
-                    if ($f['type'] == 'in') {
-                        $institutions = "('" . join("','", $f['list']) . "')";
-                        $where .= ' AND (i.institution IN ' . $institutions . 'OR ir.institution IN ' . $institutions . ')';
-                    } else if ($f['type'] == 'equals') {
-                        $where .= ' AND (i.institution = ? OR ir.institution = ?)';
-                        $values[] = $f['string'];
-                        $values[] = $f['string'];
+                    if ($f['field'] == 'institution_requested') {
+                        $where .= ' AND ( i.institution ' .
+                            PluginSearchInternal::field_match($f['type'], $f['string'], $values) .
+                            ' OR ir.institution ' .
+                            PluginSearchInternal::field_match($f['type'], $f['string'], $values) . ')';
+                    } else {
+                        if ($f['string'] == 'mahara') {
+                            $where .= ' AND i.institution IS NULL';
+                        } else {
+                            $where .= ' AND i.institution'
+                                . PluginSearchInternal::field_match($f['type'], $f['string'], $values);
+                        }
                     }
                 } else {
-                    $where .= ' AND u.' . $f['field'] . $matchtypes[$f['type']];
-                    $values[] = $f['string'];
+                    $where .= ' AND u.' . $f['field'] 
+                        . PluginSearchInternal::field_match($f['type'], $f['string'], $values);
                 }
             }
         }
@@ -336,6 +350,7 @@ class PluginSearchInternal extends PluginSearch {
                 foreach ($data as &$item) {
                     $item = (array)$item;
                 }
+                $data = array_values($data);
             }
         }
         else {
@@ -349,6 +364,91 @@ class PluginSearchInternal extends PluginSearch {
             'data'    => $data,
         );
     }
+
+
+
+    public static function institutional_admin_search_user($query, $institution, $limit) {
+        if (is_postgres()) {
+            return self::institutional_admin_search_user_pg($query, $institution, $limit);
+        } 
+        else {
+            throw new SQLException('institutional_admin_search_user() is not implemented for your database engine (' . get_config('dbtype') . ')');
+        }
+    }
+
+
+    public static function institutional_admin_search_user_pg($query, $institution, $limit) {
+        $sql = '
+            FROM {usr} u ';
+
+        $where = '
+            WHERE u.id <> 0 AND u.deleted = 0 ';
+
+        $values = array();
+        if (!empty($query)) {
+            $where .= '
+                AND (u.firstname ILIKE \'%\' || ? || \'%\'
+                     OR u.lastname ILIKE \'%\' || ? || \'%\') ';
+            $values = array($query,$query);
+        }
+
+        if (!is_null($institution->member)) {
+            $sql .= '
+                LEFT OUTER JOIN {usr_institution} member ON (member.usr = u.id
+                    AND member.institution = ' . db_quote($institution->name) . ')';
+            $where .= '
+                AND ' . ($institution->member ? ' NOT ' : '') . ' member.usr IS NULL';
+        }
+        if (!is_null($institution->requested) || !is_null($institution->invited)) {
+            $sql .= '
+                LEFT OUTER JOIN {usr_institution_request} req ON (req.usr = u.id
+                    AND req.institution = ' . db_quote($institution->name) . ')';
+            if (!is_null($institution->requested)) {
+                if ($institution->requested == 1) {
+                    $where .= ' AND req.confirmedusr = 1';
+                } else {
+                    $where .= ' AND (req.confirmedusr = 0 OR req.confirmedusr IS NULL)';
+                }
+            }
+            if (!is_null($institution->invited)) {
+                if ($institution->requested == 1) {
+                    $where .= ' AND req.confirmedinstitution = 1';
+                } else {
+                    $where .= ' AND (req.confirmedinstitution = 0 OR req.confirmedinstitution IS NULL)';
+                }
+            }
+        }
+
+        $count = get_field_sql('SELECT COUNT(*) ' . $sql . $where, $values);
+
+        if ($count > 0) {
+            $data = get_records_sql_array('
+                SELECT 
+                    u.id, u.firstname, u.lastname, u.username, u.preferredname, 
+                    u.admin, u.staff ' . $sql . $where . '
+                ORDER BY u.firstname ASC',
+                $values,
+                0,
+                $limit);
+            foreach ($data as &$item) {
+                $item = (array)$item;
+            }
+        }
+        else {
+            $data = false;
+        }
+
+        return array(
+            'count'   => $count,
+            'limit'   => $limit,
+            'offset'  => 0,
+            'data'    => $data,
+        );
+    }
+
+
+
+
 
     /**
      * Implement group searching with SQL

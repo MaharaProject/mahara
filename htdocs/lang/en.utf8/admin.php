@@ -289,7 +289,26 @@ $string['settingsfor'] = 'Settings for:';
 $string['institutionadministration'] = 'Institution Administration';
 $string['institutionmembers'] = 'Institution Members';
 $string['notadminforinstitution'] = 'You are not an administrator for that institution';
+$string['institutionmemberspagedescription'] = 'On this page you can see users who have requested membership of your institution and add them as members.  You can also remove users from your institution, and invite users to join.';
 
+$string['userstodisplay'] = 'Users to display:';
+$string['institutionusersrequesters'] = 'People who have requested institution membership';
+$string['institutionusersnonmembers'] = 'People who have not requested membership yet';
+$string['institutionusersmembers'] = 'People who are already institution members';
+
+$string['addnewmembers'] = 'Add new members';
+$string['addnewmembersdescription'] = '';
+$string['usersrequested'] = 'Users who have requested membership';
+$string['userstobeadded'] = 'Users to be added as members';
+$string['addmembers'] = 'Add members';
+$string['inviteuserstojoin'] = 'Invite users to join the institution';
+$string['Non-members'] = 'Non-members';
+$string['userstobeinvited'] = 'Users to be invited';
+$string['inviteusers'] = 'Invite Users';
+$string['removeusersfrominstitution'] = 'Remove users from the institution';
+$string['currentmembers'] = 'Current Members';
+$string['userstoberemoved'] = 'Users to be removed';
+$string['removeusers'] = 'Remove Users';
 
 // general stuff
 $string['notificationssaved'] = 'Notification settings saved';
