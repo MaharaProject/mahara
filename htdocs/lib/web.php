@@ -1397,6 +1397,12 @@ function admin_nav() {
             'weight' => 10,
         ),
         array(
+            'path'   => 'configusers/suspendedusers',
+            'url'    => 'admin/users/suspended.php',
+            'title'  => get_string('suspendedusers', 'admin'),
+            'weight' => 15,
+        ),
+        array(
             'path'   => 'configusers/staffusers',
             'url'    => 'admin/users/staff.php',
             'title'  => get_string('staffusers', 'admin'),
