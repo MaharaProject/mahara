@@ -38,14 +38,15 @@ $offset = param_integer('offset', 0);
 // NOTE: the check is not done on the 'active' column here, since suspended
 // users are by definition not active. However deleted users are filtered out.
 $count = get_field_sql('SELECT COUNT(*) FROM {usr} WHERE suspendedcusr IS NOT NULL AND deleted = 0');
-$data = get_records_sql_array('SELECT u.id, u.firstname, u.lastname, u.studentid, u.suspendedreason AS reason,
+$data = get_records_sql_array('SELECT DISTINCT ON (u.suspendedctime, u.id) u.id, u.firstname, u.lastname, u.studentid, u.suspendedreason AS reason,
     i.displayname AS institution, ua.firstname AS cusrfirstname, ua.lastname AS cusrlastname
     FROM {usr} u
-    LEFT JOIN {institution} i ON (u.institution = i.name)
+    LEFT OUTER JOIN {usr_institution} ui ON (ui.usr = u.id)
+    LEFT OUTER JOIN {institution} i ON (ui.institution = i.name)
     LEFT JOIN {usr} ua on (ua.id = u.suspendedcusr)
     WHERE u.suspendedcusr IS NOT NULL
     AND u.deleted = 0
-    ORDER BY u.suspendedctime
+    ORDER BY u.suspendedctime, u.id
     LIMIT ?
     OFFSET ?', array($limit, $offset));
 if (!$data) {
