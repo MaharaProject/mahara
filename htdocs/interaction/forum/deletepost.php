@@ -50,10 +50,6 @@ if (!$info) {
     throw new NotFoundException("Couldn't find post with id $postid");
 }
 
-if (!$info->parent) {
-	throw new NotFoundException("Cannot edit first post"); // TODO: replace with correct exception
-}
-
 $membership = user_can_access_group((int)$info->group);
 
 $admin = (bool)($membership & GROUP_MEMBERSHIP_OWNER);
@@ -64,14 +60,14 @@ if (!$moderator) {
     throw new AccessDeniedException();
 }
 
-$postinfo = get_record_sql(
+$post = get_record_sql(
     'SELECT p.subject
     FROM {interaction_forum_post} p
     WHERE p.id = ?',
     array($postid)
 );
 
-define('TITLE', get_string('deletepost', 'interaction.forum', $postinfo->subject));
+define('TITLE', get_string('deletepost', 'interaction.forum', $post->subject));
 
 require_once('pieforms/pieform.php');
 
