@@ -51,7 +51,7 @@ class Institution {
             return $this;
         }
 
-        if ($this->findByName($name)) {
+        if (!$this->findByName($name)) {
             throw new ParamOutOfRangeException('No such institution');
         }
     }
@@ -214,6 +214,61 @@ class Institution {
         $this->verifyReady();
     }
 
+    public function addUserAsMember($user) {
+        $userinst = new StdClass;
+        $userinst->institution = $this->name;
+        if (is_object($user)) {
+            if (!empty($user->studentid)) {
+                $userinst->studentid = $user->studentid;
+            }
+            $userinst->usr = $user->id;
+        } else {
+            $userinst->usr = $user;
+        }
+        if (!empty($this->defaultmembershipperiod)) {
+            $userinst->expiry = db_format_timestamp(time() + $this->defaultmembershipperiod);
+        }
+        db_begin();
+        insert_record('usr_institution', $userinst);
+        delete_records('usr_institution_request', 'usr', $userinst->usr, 'institution', $this->name);
+        // Send confirmation
+        db_commit();
+        handle_event('updateuser', $userinst->usr);
+    }
+
+    public function addRequestFromUser($user) {
+        $request = get_record('usr_institution_request', 'usr', $user->id, 'institution', $this->name);
+        if (!$request) {
+            $request = (object) array(
+                'usr'          => $user->id,
+                'institution'  => $this->name,
+                'confirmedusr' => 1,
+                'studentid'    => $user->studentid,
+                'ctime'        => db_format_timestamp(time())
+            );
+            insert_record('usr_institution_request', $request);
+            // Send request notification
+        } else if ($request->confirmedinstitution) {
+            $this->addUserAsMember($user);
+        }
+        handle_event('updateuser', $user->id);
+    }
+
+    public function inviteUser($userid) {
+        insert_record('usr_institution_request', (object) array(
+            'usr' => $userid,
+            'institution' => $this->name,
+            'confirmedinstitution' => 1,
+            'ctime' => db_format_timestamp(time())
+        ));
+        // Send notification
+        handle_event('updateuser', $userid);
+    }
+
+    public function removeMember($userid) {
+        delete_records('usr_institution', 'usr', $userid, 'institution', $this->name);
+        handle_event('updateuser', $userid);
+    }
 }
 
 function get_institution_selector() {
@@ -251,28 +306,6 @@ function get_institution_selector() {
     }
 
     return $institutionelement;
-}
-
-function add_user_to_institution($id, $institution) {
-    // @todo: set expiry, studentid, ctime
-    db_begin();
-    insert_record('usr_institution', (object) array(
-        'usr' => $id,
-        'institution' => $institution
-    ));
-    delete_records('usr_institution_request', 'usr', $id, 'institution', $institution);
-    // Send confirmation
-    db_commit();
-}
-
-function invite_user_to_institution($id, $institution) {
-    insert_record('usr_institution_request', (object) array(
-        'usr' => $id,
-        'institution' => $institution,
-        'confirmedinstitution' => 1,
-        'ctime' => db_format_timestamp(time())
-    ));
-    // Send notification
 }
 
 ?>

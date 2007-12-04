@@ -509,6 +509,8 @@ function xmldb_core_upgrade($oldversion=0) {
 
         // Add theme, default institution membership period to institution table
         execute_sql('ALTER TABLE {institution} ADD COLUMN theme varchar(255)');
+        set_field('institution', 'theme', get_config('theme'));
+        
         execute_sql('ALTER TABLE {institution} ADD COLUMN defaultmembershipperiod bigint');
     }
 

@@ -73,6 +73,7 @@ if ($usertype == 'requesters') {
         'righttitle' => get_string('userstobeadded', 'admin'),
         'searchparams' => array('requested' => 1),
     );
+    $update = 'addUserAsMember';
     $submittext = get_string('addmembers', 'admin');
 } else if ($usertype == 'members') {
     // LHS shows institution members, RHS shows users to be removed
@@ -83,6 +84,7 @@ if ($usertype == 'requesters') {
         'righttitle' => get_string('userstoberemoved', 'admin'),
         'searchparams' => array('member' => 1),
     );
+    $update = 'removeMember';
     $submittext = get_string('removeusers', 'admin');
 } else { // $usertype == nonmembers
     // Behaviour depends on whether we allow users to have > 1 institution
@@ -95,6 +97,7 @@ if ($usertype == 'requesters') {
         'righttitle' => get_string('userstobeinvited', 'admin'),
         'searchparams' => array('member' => 0, 'invited' => 0, 'requested' => 0)
     );
+    $update = 'inviteUser';
     $submittext = get_string('inviteusers', 'admin');
 }
 
@@ -116,6 +119,11 @@ $userlistform = pieform(array(
             'value' => $usertype,
             'rules' => array('regex' => '/^[a-z]+$/')
         ),
+        'update' => array(
+            'type' => 'hidden',
+            'value' => $update,
+            'rules' => array('regex' => '/^[a-zA-Z]+$/')
+        ),
         'submit' => array(
             'type' => 'submit',
             'value' => $submittext
@@ -126,42 +134,25 @@ $userlistform = pieform(array(
 function institutionusers_submit(Pieform $form, $values) {
     global $SESSION, $USER;
 
+    $url = '/admin/users/institutionusers.php?usertype=' . $values['usertype'];
     $inst = $values['institution'];
     if (empty($inst) || !$USER->is_institutional_admin($inst)) {
         $SESSION->add_error_msg(get_string('notadminforinstitution', 'admin'));
-        redirect('/admin/users/institutionusers.php?usertype='.$values['usertype']);
+        redirect($url);
     }
 
-    $update = 'update_' . $values['usertype'];
-    if ($update($values['users'], $values['institution'])) {
-        $SESSION->add_ok_msg(get_string('usersupdated', 'admin'));
-    } else {
-        $SESSION->add_error_msg(get_string('dberrorupdatingusers', 'admin'));
+    $institution = new Institution($values['institution']);
+    if (!in_array($values['update'], array('addUserAsMember', 'removeMember', 'inviteUser'))) {
+        $SESSION->add_error_msg(get_string('errorupdatinginstitutionusers', 'admin'));
+        redirect($url);
     }
-    redirect('/admin/users/institutionusers.php?usertype='.$values['usertype']);
-}
-
-function update_nonmembers($userids, $institution) {
     db_begin();
-    foreach ($userids as $id) {
-        invite_user_to_institution($id, $institution);
+    foreach ($values['users'] as $id) {
+        $institution->{$values['update']}($id);
     }
     db_commit();
-    return true;
-}
-
-function update_requesters($userids, $institution) {
-    db_begin();
-    foreach ($userids as $id) {
-        add_user_to_institution($id, $institution);
-    }
-    db_commit();
-    return true;
-}
-
-function update_members($userids, $institution) {
-    delete_records_select('usr_institution', 'usr IN (' . join(',', $userids) . ') AND institution = ' . db_quote($institution));
-    return true;
+    $SESSION->add_ok_msg(get_string('usersupdated', 'admin'));
+    redirect($url);
 }
 
 $wwwroot = get_config('wwwroot');

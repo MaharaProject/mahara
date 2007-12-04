@@ -30,6 +30,7 @@ define('MENUITEM', 'configusers/uploadcsv');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('uploadcsv', 'admin'));
 require_once('pieforms/pieform.php');
+require_once('institution.php');
 safe_require('artefact', 'internal');
 
 // Turn on autodetecting of line endings, so mac newlines (\r) will work
@@ -269,7 +270,8 @@ function uploadcsv_submit(Pieform $form, $values) {
     // Don't be tempted to use 'explode' here. There may be > 1 underscore.
     $break = strpos($values['authinstance'], '_');
     $authinstance = substr($values['authinstance'], 0, $break);
-    $institution  = substr($values['authinstance'], $break+1);
+    $institution = substr($values['authinstance'], $break+1);
+    $institution = new Institution($institution);
 
     foreach ($CSVDATA as $record) {
         log_debug('adding user ' . $record[$formatkeylookup['username']]);
@@ -288,14 +290,8 @@ function uploadcsv_submit(Pieform $form, $values) {
         $user->passwordchange = 1;
         $id = insert_record('usr', $user, 'id', true);
         $user->id = $id;
-        if ($institution != 'mahara') {
-            $userinstitution = new StdClass;
-            $userinstitution->usr = $user->id;
-            $userinstitution->institution = $institution;
-            if (isset($formatkeylookup['studentid'])) {
-                $userinstitution->studentid = $record[$formatkeylookup['studentid']];
-            }
-            insert_record('usr_institution', $userinstitution);
+        if ($institution->name != 'mahara') {
+            $institution->addUserAsMember($user);
         }
 
         foreach ($FORMAT as $field) {

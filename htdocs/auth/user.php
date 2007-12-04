@@ -348,7 +348,8 @@ class User {
     public function join_institution($institution) {
         if ($institution != 'mahara' && !$this->in_institution($institution)) {
             require_once('institution.php');
-            add_user_to_institution($this->id, $institution);
+            $institution = new Institution($institution);
+            $institution->addUserAsMember($this);
         }
     }
 
@@ -374,22 +375,9 @@ class User {
         if (empty($institution) || $institution == 'mahara') {
             return;
         }
-        $request = get_record('usr_institution_request', 'usr', $this->get('id'), 'institution', $institution);
-        if (!$request) {
-            $request = (object) array(
-                'usr'          => $this->get('id'),
-                'institution'  => $institution,
-                'confirmedusr' => 1,
-                'studentid'    => $this->get('studentid'),
-                'ctime'        => db_format_timestamp(time())
-            );
-            insert_record('usr_institution_request', $request);
-            // Send request notification
-        } else if ($request->confirmedinstitution) {
-            $this->join_institution($institution);
-            delete_records('usr_institution_request', 'usr', $this->get('id'), 'institution', $institution);
-            // Send confirmation
-        }
+        require_once('institution.php');
+        $institution = new Institution($institution);
+        $institution->addRequestFromUser($this);
     }
 
 }
