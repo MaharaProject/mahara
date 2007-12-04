@@ -3,9 +3,10 @@
 
 {include file="columnleftstart.tpl"}
 
-<h2>{str tag=nameplural section=interaction.forum}</h2>
+<h2>{$groupname|escape}</h2>
+<h3>{str tag=nameplural section=interaction.forum}</h3>
 {if $admin}
-<a href="{$WWWROOT}interaction/edit.php?group={$group|escape}&plugin=forum">{str tag="newforum" section=interaction.forum}</a>
+<a href="{$WWWROOT}interaction/edit.php?group={$groupid|escape}&plugin=forum">{str tag="newforum" section=interaction.forum}</a>
 {/if}
 {if $forums}
 <ul>

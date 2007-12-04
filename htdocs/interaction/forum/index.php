@@ -30,13 +30,20 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('group.php');
 define('TITLE', get_string('nameplural', 'interaction.forum'));
 
-$group = param_integer('group');
+$groupid = param_integer('group');
 
-if (!record_exists('group', 'id', $group)) {
-	throw new GroupNotFoundException("Couldn't find group with id $group");
+if (!record_exists('group', 'id', $groupid)) {
+	throw new GroupNotFoundException("Couldn't find group with id $groupid");
 }
 
-$membership = user_can_access_group($group);
+$groupname = get_record_sql(
+    'SELECT name
+    FROM {group}
+    WHERE id = ?',
+    array($groupid)
+)->name;
+
+$membership = user_can_access_group($groupid);
 
 if (!$membership) {
     throw new AccessDeniedException();
@@ -57,7 +64,7 @@ $forums = get_records_sql_array(
     AND f.deleted!=1
     GROUP BY 1, 2, 3, 5, c.value
     ORDER BY c.value',
-    array($USER->get('id'), $group)
+    array($USER->get('id'), $groupid)
 );
 
 require_once('pieforms/pieform.php');
@@ -115,7 +122,8 @@ function subscribe_submit(Pieform $form, $values) {
 }
 
 $smarty = smarty();
-$smarty->assign('group', $group);
+$smarty->assign('groupid', $groupid);
+$smarty->assign('groupname', $groupname);
 $smarty->assign('admin', $admin);
 $smarty->assign('forums', $forums);
 $smarty->display('interaction:forum:index.tpl');

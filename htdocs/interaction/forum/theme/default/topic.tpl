@@ -2,8 +2,8 @@
 {include file="sidebar.tpl"}
 
 {include file="columnleftstart.tpl"}
-
-<h2>{$topic->subject}</h2>
+<h2>{$topic->forumtitle|escape}</h2>
+<h3>{$topic->subject|escape}</h3>
 {if $moderator}
 <a href="{$WWWROOT}interaction/forum/edittopic.php?id={$topic->id|escape}">{str tag="edit"}</a>
 <a href="{$WWWROOT}interaction/forum/deletetopic.php?id={$topic->id|escape}">{str tag="delete"}</a>

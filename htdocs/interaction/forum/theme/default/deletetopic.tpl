@@ -3,7 +3,8 @@
 
 {include file="columnleftstart.tpl"}
 
-<h2>{$heading|escape}</h2>
+<h2>{$forum|escape}</h2>
+<h3>{$heading|escape}</h3>
 {$deleteform}
 
 {include file="columnleftend.tpl"}

@@ -29,13 +29,13 @@ define('MENUITEM', 'groups');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('interaction', 'forum');
 require_once('group.php');
-define('TITLE', get_string('edittopic','interaction.forum'));
 
 $userid = $USER->get('id');
 $moderator = false;
 $topicid = param_integer('id',0);
 if ($topicid==0) {
     unset($topicid);
+    define('TITLE', get_string('addtopic','interaction.forum'));
     $forumid = param_integer('forum');
     $group = get_record_sql(
         'SELECT "group" AS id
@@ -60,6 +60,7 @@ if ($topicid==0) {
 }
 
 if (isset($topicid)) {
+	define('TITLE', get_string('edittopic','interaction.forum'));
     $topicinfo = get_record_sql(
         'SELECT p.subject, p.body, p.topic AS id, t.sticky, t.closed
         FROM {interaction_forum_post} p
@@ -83,20 +84,28 @@ if (isset($topicid)) {
         array($topicinfo->id)
     );
 
+    $forumid = $info->forum;
+
     $membership = user_can_access_group((int)$info->group);
 
     $admin = (bool)($membership & GROUP_MEMBERSHIP_OWNER);
 
-    $moderator = $admin || is_forum_moderator((int)$info->forum);
+    $moderator = $admin || is_forum_moderator($forumid);
 
     if (!$moderator) {
         throw new AccessDeniedException();
     }
 }
+$forum = get_record_sql(
+    'SELECT title
+    FROM {interaction_instance}
+    WHERE id = ?',
+    array($forumid)
+);
 
 require_once('pieforms/pieform.php');
 
-$editform =array(
+$editform = array(
     'name'     => 'edittopic',
     'method'   => 'post',
     'elements' => array(
@@ -215,6 +224,8 @@ function edittopic_submit(Pieform $form, $values) {
 }
 
 $smarty = smarty();
+$smarty->assign('heading', TITLE);
+$smarty->assign('forum', $forum->title);
 $smarty->assign('editform',$editform);
 $smarty->display('interaction:forum:edittopic.tpl');
 

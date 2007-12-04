@@ -2,7 +2,8 @@
 {include file="sidebar.tpl"}
 
 {include file="columnleftstart.tpl"}
-<h2>{$forum->title|escape}</h2>
+<h2>{$groupname|escape}</h2>
+<h3>{$forum->title|escape}</h3>
 <p>{$forum->description}</p>
 <a href="{$WWWROOT}interaction/forum/edittopic.php?forum={$forum->id|escape}">{str tag="newtopic" section="interaction.forum}</a>
 {if $admin}

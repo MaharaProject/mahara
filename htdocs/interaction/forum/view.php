@@ -28,8 +28,8 @@ define('INTERNAL', 1);
 define('MENUITEM', 'groups');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('group.php');
-safe_require('interaction' ,'forum');
-define('TITLE', get_string('name','interaction.forum'));
+safe_require('interaction', 'forum');
+define('TITLE', get_string('name', 'interaction.forum'));
 
 $forumid = param_integer('id');
 $offset = param_integer('offset', 0);
@@ -37,9 +37,11 @@ $userid = $USER->get('id');
 $topicsperpage = 25;
 
 $group = get_record_sql(
-    'SELECT "group" AS id
-    FROM {interaction_instance}
-    WHERE id = ?',
+    'SELECT g.id, g.name
+    FROM {interaction_instance} f
+    INNER JOIN {group} g
+    ON g.id = f."group"
+    WHERE f.id = ?',
     array($forumid)
 );
 
@@ -78,12 +80,18 @@ if (isset($_POST['subscribe'])) {
 }
 
 if ($moderator && isset($_POST['update'])) {
-	if (!isset($_POST['sticky'])) {
-	    $_POST['sticky'] = array();
-	}
-	if (!isset($_POST['closed'])) {
-		$_POST['closed'] = array();
-	}
+    if (!isset($_POST['sticky'])) {
+        $_POST['sticky'] = array();
+    }
+    if (!isset($_POST['closed'])) {
+        $_POST['closed'] = array();
+    }
+    if (!isset($POST['prevsticky'])) {
+        $_POST['prevsticky'] = array();
+    }
+    if (!isset($POST['prevclosed'])) {
+        $_POST['prevclosed'] = array();
+    }
     updatetopics($_POST['sticky'], $_POST['prevsticky'], 'sticky = 1');
     updatetopics($_POST['prevsticky'], $_POST['sticky'], 'sticky = 0');
     updatetopics($_POST['closed'], $_POST['prevclosed'], 'closed = 1');
@@ -158,6 +166,7 @@ $pagination = build_pagination(array(
 ));
 
 $smarty = smarty();
+$smarty->assign('groupname', $group->name);
 $smarty->assign('forum', $forum);
 $smarty->assign('moderator', $moderator);
 $smarty->assign('admin', $admin);
@@ -200,13 +209,6 @@ function subscribe_forum_submit(Pieform $form, $values) {
 }
 
 function updatetopics($new, $old, $set) {
-	if (empty($new)) {
-		log_debug($new);
-	    $new = array();
-	}
-	if (empty($old)) {
-	    $old = array();
-	}
     $keydiff = array_keys(array_diff_key($new, $old));
     if (!empty($keydiff)) {
         execute_sql(

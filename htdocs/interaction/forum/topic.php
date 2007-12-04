@@ -34,7 +34,7 @@ define('TITLE', get_string('topic','interaction.forum'));
 $topicid = param_integer('id');
 
 $topic = get_record_sql(
-    'SELECT p.subject, f.group, f.id AS forum, t.closed, sf.forum AS forumsubscribed, st.topic AS topicsubscribed
+    'SELECT p.subject, f.group, f.id AS forumid, f.title as forumtitle, t.closed, sf.forum AS forumsubscribed, st.topic AS topicsubscribed
     FROM {interaction_forum_topic} t
     INNER JOIN {interaction_instance} f
     ON (t.forum = f.id)
@@ -60,7 +60,7 @@ if (!$membership) {
 
 $admin = (bool)($membership & GROUP_MEMBERSHIP_OWNER);
 
-$moderator = $admin || is_forum_moderator((int)$topic->forum);
+$moderator = $admin || is_forum_moderator((int)$topic->forumid);
 
 require_once('pieforms/pieform.php');
 

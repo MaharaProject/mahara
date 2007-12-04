@@ -30,7 +30,6 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('interaction', 'forum');
 require('group.php');
 
-define('TITLE', get_string('editpost','interaction.forum'));
 
 $userid = $USER->get('id');
 
@@ -38,14 +37,18 @@ $postid = param_integer('id',0);
 $topicid = 0;
 if ($postid==0) {
     unset($postid);
+    define('TITLE', get_string('postreply','interaction.forum'));
     $parentid = param_integer('parent');
     $topic = get_record_sql(
-        'SELECT p.topic AS id, t.closed, f.id as forum, f.group
+        'SELECT p.topic AS id, p2.subject, t.closed, f.id AS forum, f.group
         FROM {interaction_forum_post} p
         INNER JOIN {interaction_forum_topic} t
-        ON (p.topic = t.id)
+        ON p.topic = t.id
+        INNER JOIN {interaction_forum_post} p2
+        ON p2.topic = t.id
+        AND p2.parent IS NULL
         INNER JOIN {interaction_instance} f
-        ON (t.forum = f.id)
+        ON t.forum = f.id
         WHERE p.id = ?',
         array($parentid)
     );
@@ -64,16 +67,21 @@ if ($postid==0) {
         throw new NotFoundException("Couldn't find topic with id $parentid");
     }
     $topicid = $topic->id;
+    $topicsubject = $topic->subject;
 }
 
 if (isset($postid)) {
+    define('TITLE', get_string('editpost','interaction.forum'));
     $post = get_record_sql(
-        'SELECT p.subject, p.body, p.parent, p.topic, p.poster, p.ctime, t.forum, f.group
+        'SELECT p.subject, p.body, p.parent, p.topic, p.poster, p.ctime, t.forum, p2.subject AS topicsubject, f.group
         FROM {interaction_forum_post} p
         INNER JOIN {interaction_forum_topic} t
-        ON (p.topic = t.id)
+        ON p.topic = t.id
+        INNER JOIN {interaction_forum_post} p2
+        ON p2.topic = t.id
+        AND p2.parent IS NULL
         INNER JOIN {interaction_instance} f
-        ON (t.forum = f.id)
+        ON t.forum = f.id
         WHERE p.id = ?',
         array($postid)
     );
@@ -83,6 +91,7 @@ if (isset($postid)) {
     }
     
     $topicid = $post->topic;
+    $topicsubject = $post->topicsubject;
 
     $membership = user_can_access_group((int)$post->group);
 
@@ -186,6 +195,9 @@ function editpost_submit(Pieform $form, $values) {
 }
 
 $smarty = smarty();
+$smarty->assign('topicsubject', $topicsubject);
+$smarty->assign('heading', TITLE);
+$smarty->assign('topic', $topicsubject);
 $smarty->assign('editform', $editform);
 $smarty->display('interaction:forum:editpost.tpl');
 

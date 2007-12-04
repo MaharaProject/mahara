@@ -34,7 +34,7 @@ $userid = $USER->get('id');
 $topicid = param_integer('id');
 
 $forum = get_record_sql(
-    'SELECT f."group", f.id
+    'SELECT f."group", f.id, f.title
     FROM {interaction_forum_topic} t
     INNER JOIN {interaction_instance} f
     ON (f.id = t.forum)
@@ -64,7 +64,7 @@ $postinfo = get_record_sql(
     array($topicid)
 );
 
-define('TITLE', get_string('deletetopic', 'interaction.forum') . ' \'' . $postinfo->subject . '\'');
+define('TITLE', get_string('deletetopic', 'interaction.forum', $postinfo->subject));
 
 require_once('pieforms/pieform.php');
 
@@ -100,6 +100,7 @@ function deletepost_submit(Pieform $form, $values) {
 }
 
 $smarty = smarty();
+$smarty->assign('forum', $forum->title);
 $smarty->assign('heading', TITLE);
 $smarty->assign('deleteform', $form);
 $smarty->display('interaction:forum:deletetopic.tpl');
