@@ -26,6 +26,7 @@ case "$1" in
         [ -d /var/lib/mahara ] && echo "NOTE: purge does _not_ remove /var/lib/mahara, you must do this yourself if you really want to!"
     ;;
     remove)
+        rm -f /usr/share/mahara/theme/default/static/captcha.ttf /usr/share/mahara/theme/schoolmyportfolio/static/captcha.ttf
     ;;
     failed-upgrade|abort-install|abort-upgrade|disappear|upgrade)
     ;;
