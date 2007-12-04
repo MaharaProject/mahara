@@ -130,8 +130,8 @@ $editform =array(
         'submit'   => array(
             'type'  => 'submitcancel',
             'value'       => array(
-                isset($topicinfo) ? get_string('edit', 'interaction.forum') : get_string('post','interaction.forum'),
-                get_string('cancel', 'interaction.forum')
+                isset($topicinfo) ? get_string('edit') : get_string('post','interaction.forum'),
+                get_string('cancel')
             ),
             'goto'      => get_config('wwwroot') . 'interaction/forum/' . (isset($topicinfo) ? 'topic.php?id='.$topicid : 'view.php?id='.$forumid)
         ),

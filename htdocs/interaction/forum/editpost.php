@@ -123,8 +123,8 @@ $editform = pieform(array(
         'submit'   => array(
             'type'  => 'submitcancel',
             'value'       => array(
-                isset($post) ? get_string('edit', 'interaction.forum') : get_string('post','interaction.forum'),
-                get_string('cancel', 'interaction.forum')
+                isset($post) ? get_string('edit') : get_string('post','interaction.forum'),
+                get_string('cancel')
             ),
         'goto'      => get_config('wwwroot') . 'interaction/forum/topic.php?id='.$topicid
         ),

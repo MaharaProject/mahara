@@ -77,7 +77,7 @@ if (!$topic->forumsubscribed) {
 }
 
 $posts = get_records_sql_array(
-    'SELECT p1.id, p1.parent, p1.poster, p1.subject, p1.body, p1.ctime AS posttime, COUNT(p2.*), e.ctime AS edit, e.user AS editor
+    'SELECT p1.id, p1.parent, p1.poster, p1.subject, p1.body, p1.ctime AS posttime, p1.deleted, COUNT(p2.*), e.ctime AS edit, e.user AS editor
     FROM interaction_forum_post p1
     INNER JOIN interaction_forum_post p2
     ON (p1.poster = p2.poster
@@ -95,8 +95,7 @@ $posts = get_records_sql_array(
     LEFT JOIN interaction_forum_edit e
     ON (e.post = p1.id)
     WHERE p1.topic = ?
-    AND p1.deleted != 1
-    GROUP BY 1, 2, 3, 4, 5, 6, 8, 9
+    GROUP BY 1, 2, 3, 4, 5, 6, 7, 9, 10
     ORDER BY p1.ctime',
     array($topic->group, $topicid)
 );

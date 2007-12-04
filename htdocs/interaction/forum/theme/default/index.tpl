@@ -15,8 +15,8 @@
         <p>{$forum->description}</p>
         <div class="fr">{$forum->count|escape}</div>
         {if $admin}
-        <a href="{$WWWROOT}interaction/edit.php?id={$forum->id|escape}">{str tag=edit section=interaction.forum}</a>
-        <a href="{$WWWROOT}interaction/delete.php?id={$forum->id|escape}">{str tag=delete section=interaction.forum}</a>
+        <a href="{$WWWROOT}interaction/edit.php?id={$forum->id|escape}">{str tag=edit}</a>
+        <a href="{$WWWROOT}interaction/delete.php?id={$forum->id|escape}">{str tag=delete}</a>
         {/if}
         {$forum->subscribe}
     </li>

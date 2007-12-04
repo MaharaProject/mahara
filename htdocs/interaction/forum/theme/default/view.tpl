@@ -6,12 +6,12 @@
 <p>{$forum->description}</p>
 <a href="{$WWWROOT}interaction/forum/edittopic.php?forum={$forum->id|escape}">{str tag="newtopic" section="interaction.forum}</a>
 {if $admin}
-<a href="{$WWWROOT}interaction/edit.php?id={$forum->id|escape}">{str tag="edittitle" section="interaction.forum}</a>
-<a href="{$WWWROOT}interaction/delete.php?id={$forum->id|escape}">{str tag="deleteforum" section="interaction.forum}</a>
+<a href="{$WWWROOT}interaction/edit.php?id={$forum->id|escape}">{str tag="edit"}</a>
+<a href="{$WWWROOT}interaction/delete.php?id={$forum->id|escape}">{str tag="delete"}</a>
 {/if}
 {$forum->subscribe}
 <form action="" method="post">
-{if $moderator}<input type="submit" name="update" value="{str tag="update" section="interaction.forum"}">{/if}
+{if $moderator}<input type="submit" name="update" value="{str tag="update"}">{/if}
 <h4>{str tag="stickytopics" section=interaction.forum}</h4>
 <table>
     <tr>
@@ -42,8 +42,8 @@
             <input type="checkbox" name="closed[{$topic->id|escape}]">
         {/if}
         </td>
-        <td><a href="{$WWWROOT}interaction/forum/edittopic.php?id={$topic->id|escape}">{str tag="edit" section="interaction.forum"}</a></td>
-        <td><a href="{$WWWROOT}interaction/forum/deletetopic.php?id={$topic->id|escape}">{str tag="delete" section="interaction.forum"}</a></td>
+        <td><a href="{$WWWROOT}interaction/forum/edittopic.php?id={$topic->id|escape}">{str tag="edit"}</a></td>
+        <td><a href="{$WWWROOT}interaction/forum/deletetopic.php?id={$topic->id|escape}">{str tag="delete"}</a></td>
         {/if}
         {if !$forum->subscribed}
             {if $topic->subscribed}
@@ -85,8 +85,8 @@
             <input type="checkbox" name="closed[{$topic->id|escape}]">
         {/if}
         </td>
-        <td><a href="{$WWWROOT}interaction/forum/edittopic.php?id={$topic->id|escape}">{str tag="edit" section="interaction.forum"}</a></td>
-        <td><a href="{$WWWROOT}interaction/forum/deletetopic.php?id={$topic->id|escape}">{str tag="delete" section="interaction.forum"}</a></td>
+        <td><a href="{$WWWROOT}interaction/forum/edittopic.php?id={$topic->id|escape}">{str tag="edit"}</a></td>
+        <td><a href="{$WWWROOT}interaction/forum/deletetopic.php?id={$topic->id|escape}">{str tag="delete"}</a></td>
         {/if}
         {if !$forum->subscribed}
             {if $topic->subscribed}
