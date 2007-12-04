@@ -211,6 +211,7 @@ END;
             'username'    => 'text_username',
             'firstname'   => 'text_firstname',
             'lastname'    => 'text_lastname',
+            'suspended'   => 'string_suspended',
             'institution_requested' => 'text_institutions_requested',
         );
         if (!empty($queries)) {
@@ -494,7 +495,7 @@ END;
             'text_firstname'      => $user['firstname'],
             'text_lastname'       => $user['lastname'],
             'index_active'        => $user['active'],
-            'store_suspended'     => (int)!empty($user['suspendedcusr']),
+            'string_suspended'    => (int)!empty($user['suspendedcusr']),
             'text_institutions_requested' => join(' ', $institutions_requested),
             'text_member_institution'     => join(' ', $user['institutions']),
             'text_requested_institution'  => join(' ', $requested),
