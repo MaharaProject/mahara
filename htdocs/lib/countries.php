@@ -1,10 +1,7 @@
 <?php
 /*
- * The data in the countries.php file was copied in from the Wikipedia site here: 
+ * The data below is based on the Wikipedia list at:
  * http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
- * 
- * This data is published under the GNU Free Documentation License: 
- * http://en.wikipedia.org/wiki/Wikipedia:Text_of_the_GNU_Free_Documentation_License
  */
 
 // TODO: sort by country name (not code).
