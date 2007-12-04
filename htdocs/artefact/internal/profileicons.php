@@ -55,11 +55,11 @@ $settingsform = new Pieform(array(
     'elements' => array(
         'default' => array(
             'type'  => 'submit',
-            'value' => get_string('default')
+            'value' => get_string('Default', 'artefact.internal')
         ),
         'delete' => array(
             'type'  => 'submit', 
-            'value' => get_string('delete')
+            'value' => get_string('Delete', 'artefact.internal')
         )
     )
 ));
@@ -79,7 +79,7 @@ $uploadform = pieform(array(
         ),
         'title' => array(
             'type' => 'text',
-            'title' => get_string('title'),
+            'title' => get_string('Title', 'artefact.internal'),
             'help'  => true,
         ),
         'submit' => array(

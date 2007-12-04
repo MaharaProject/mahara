@@ -95,7 +95,7 @@ $string['emailingfailed'] = 'Profile saved, but emails were not sent to: %s';
 // Profile icons
 $string['editprofile']  = 'Edit Profile';
 $string['profileicons'] = 'Profile Icons';
-$string['default'] = 'Default';
+$string['Default'] = 'Default';
 $string['profileicon'] = 'Profile Icon';
 $string['noimagesfound'] = 'No images found';
 $string['uploadedprofileiconsuccessfully'] = 'Uploaded new profile icon successfully';
@@ -109,5 +109,6 @@ $string['profileiconimagetoobig'] = 'The image you uploaded was too big (%sx%s p
 $string['uploadingfile'] = 'uploading file...';
 $string['uploadprofileicon'] = 'Upload Profile Icon';
 $string['profileiconsiconsizenotice'] = 'You may upload up to <strong>five</strong> profile icons here, and choose one to be displayed as your default icon at any one time. Your icons must be between 16x16 and %sx%s pixels';
+$string['Title'] = 'Title';
 
 ?>
