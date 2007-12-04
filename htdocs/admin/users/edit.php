@@ -129,10 +129,9 @@ if ($USER->get('admin')) {
     );
 }
 $elements['quota'] = array(
-    'type'         => 'text',
+    'type'         => 'bytes',
     'title'        => get_string('filequota','admin'),
-    'defaultvalue' => $user->quota / 1048576,
-    'rules'        => array('integer' => true),
+    'defaultvalue' => $user->quota,
 );
 
 $authinstances = auth_get_auth_instances();
@@ -176,7 +175,7 @@ function edituser_site_submit(Pieform $form, $values) {
         $user->password = $values['password'];
     }
     $user->passwordchange = (int) ($values['passwordchange'] == 'on');
-    $user->quota = $values['quota'] * 1048576;
+    $user->quota = $values['quota'];
 
     global $USER;
     if ($USER->get('admin')) {  // Not editable by institutional admins
