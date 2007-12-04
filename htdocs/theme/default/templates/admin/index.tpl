@@ -39,6 +39,7 @@
     <li><h3>{str tag=configusers section=admin}</h3>
     <ul>
         <li><strong><a href="{$WWWROOT}admin/users/search.php">{str tag=usersearch section=admin}</a></strong> - {str tag=usersearchdescription section=admin}</li>
+        <li><strong><a href="{$WWWROOT}admin/users/suspended.php">{str tag=suspendedusers section=admin}</a></strong> - {str tag=suspendedusersdescription section=admin}</li>
         <li><strong><a href="{$WWWROOT}admin/users/staff.php">{str tag=staffusers section=admin}</a></strong> - {str tag=staffusersdescription section=admin}</li>
         <li><strong><a href="{$WWWROOT}admin/users/admins.php">{str tag=adminusers section=admin}</a></strong> - {str tag=adminusersdescription section=admin}</li>
         <li><strong><a href="{$WWWROOT}admin/users/notifications.php">{str tag=adminnotifications section=admin}</a></strong> - {str tag=adminnotificationsdescription section=admin}</li>
