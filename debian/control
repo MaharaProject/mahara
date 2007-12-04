@@ -24,7 +24,7 @@ Description: Electronic portfolio, weblog, and resume builder
 
 Package: mahara-apache
 Architecture: all
-Depends: ${misc:Depends}, mahara, apache, libapache-mod-php5
+Depends: ${misc:Depends}, mahara (>= 0.9.0~beta1), apache, libapache-mod-php5
 Conflicts: mahara-apache2
 Description: Electronic portfolio, weblog, and resume builder
  Mahara is a fully featured electronic portfolio, weblog, resume builder and
@@ -37,7 +37,7 @@ Description: Electronic portfolio, weblog, and resume builder
 
 Package: mahara-apache2
 Architecture: all
-Depends: ${misc:Depends}, mahara, apache2, libapache2-mod-php5
+Depends: ${misc:Depends}, mahara (>= 0.9.0~beta1), apache2, libapache2-mod-php5
 Conflicts: mahara-apache
 Description: Electronic portfolio, weblog, and resume builder
  Mahara is a fully featured electronic portfolio, weblog, resume builder and

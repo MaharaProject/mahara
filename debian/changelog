@@ -1,8 +1,10 @@
 mahara (0.9.0~beta3~dev) unstable; urgency=low
 
   * Add dependency on php-file and php-pear
+  * Make the -apache* packages depend on 0.9.0~beta1 at least
+  * Delete the font symlinks in the postrm script, check for them in postinst
 
- -- Francois Marier <francois@catalyst.net.nz>  Mon, 03 Dec 2007 16:16:54 +1300
+ -- Francois Marier <francois@catalyst.net.nz>  Tue, 04 Dec 2007 14:28:57 +1300
 
 mahara (0.9.0~beta2-1) unstable; urgency=low
 
@@ -39,7 +41,7 @@ mahara (0.9.0~beta1-1) unstable; urgency=low
   * Check for the existence of the cron script before running it
   * Use po-debconf and provide a French translation
 
- -- Nigel McNie <nigel@catalyst.net.nz>  Sat, 24 Nov 2007 10:24:48 +1300
+ -- Francois Marier <francois@catalyst.net.nz>  Sat, 24 Nov 2007 10:24:48 +1300
 
 mahara (0.9.0~alpha2-1) unstable; urgency=low
 
