@@ -12,19 +12,19 @@
 {$forum->subscribe}
 <form action="" method="post">
 {if $moderator}<input type="submit" name="update" value="{str tag="update"}">{/if}
-<h4>{str tag="stickytopics" section=interaction.forum}</h4>
+{if $stickytopics}
+<h4>{str tag="stickytopics" section="interaction.forum"}</h4>
 <table>
     <tr>
         <th></th>
-        <th>{str tag="subject" section=interaction.forum}</th>
-        <th>{str tag="poster" section=interaction.forum}</th>
-        <th>{str tag="count" section=interaction.forum}</th>
+        <th>{str tag="subject" section="interaction.forum"}</th>
+        <th>{str tag="poster" section="interaction.forum"}</th>
+        <th>{str tag="count" section="interaction.forum"}</th>
         {if $moderator}
-        <th>{str tag="sticky" section=interaction.forum}</th>
-        <th>{str tag="closed" section=interaction.forum}</th>
+        <th>{str tag="sticky" section="interaction.forum"}</th>
+        <th>{str tag="closed" section="interaction.forum"}</th>
         {/if}
     </tr>
-    {if $stickytopics}
     {foreach from=$stickytopics item=topic}
     <tr>
         <td>X</td>
@@ -54,21 +54,23 @@
         {/if}
     </tr>
     {/foreach}
-    {/if}
 </table>
-<h4>{str tag="regulartopics" section=interaction.forum}</h4>
+{else}
+<h4>{str tag="nostickytopics" section="interaction.forum"}</h4>
+{/if}
+{if $regulartopics}
+<h4>{str tag="regulartopics" section="interaction.forum"}</h4>
 <table>
     <tr>
         <th></th>
-        <th>{str tag="subject" section=interaction.forum}</th>
-        <th>{str tag="poster" section=interaction.forum}</th>
-        <th>{str tag="count" section=interaction.forum}</th>
+        <th>{str tag="subject" section="interaction.forum"}</th>
+        <th>{str tag="poster" section="interaction.forum"}</th>
+        <th>{str tag="count" section="interaction.forum"}</th>
         {if $moderator}
-        <th>{str tag="sticky" section=interaction.forum}</th>
-        <th>{str tag="closed" section=interaction.forum}</th>
+        <th>{str tag="sticky" section="interaction.forum"}</th>
+        <th>{str tag="closed" section="interaction.forum"}</th>
         {/if}
     </tr>
-    {if $regulartopics}
     {foreach from=$regulartopics item=topic}
     <tr>
         <td>X</td>
@@ -97,8 +99,10 @@
         {/if}
     </tr>
     {/foreach}
-    {/if}
 </table>
+{else}
+<h4>{str tag="noregulartopics" section="interaction.forum"}</h4>
+{/if}
 {$pagination}
 </form>
 
