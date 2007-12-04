@@ -111,4 +111,13 @@ $string['uploadprofileicon'] = 'Upload Profile Icon';
 $string['profileiconsiconsizenotice'] = 'You may upload up to <strong>five</strong> profile icons here, and choose one to be displayed as your default icon at any one time. Your icons must be between 16x16 and %sx%s pixels';
 $string['Title'] = 'Title';
 
+$string['Created'] = 'Created';
+$string['Description'] = 'Description';
+$string['Download'] = 'Download';
+$string['lastmodified'] = 'Last Modified';
+$string['Owner'] = 'Owner';
+$string['Preview'] = 'Preview';
+$string['Size'] = 'Size';
+$string['Type'] = 'Type';
+
 ?>

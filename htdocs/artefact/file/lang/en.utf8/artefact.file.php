@@ -76,6 +76,7 @@ $string['nofilesfound'] = 'No files found';
 $string['overwrite'] = 'Overwrite';
 $string['Owner'] = 'Owner';
 $string['parentfolder'] = 'Parent folder';
+$string['Preview'] = 'Preview';
 $string['savechanges'] = 'Save changes';
 $string['Size'] = 'Size';
 $string['title'] = 'Name';
