@@ -231,11 +231,11 @@ END;
             }
             $terms = array();
             foreach ($constraints as $f) {
-                if ($f['type'] == 'in' && !empty($f['list'])) {
-                    foreach ($f['list'] as &$string) {
+                if ($f['type'] == 'in' && is_array($f['string'])) {
+                    foreach ($f['string'] as &$string) {
                         $string = $solrfields[$f['field']] . ':' . strtolower($string);
                     }
-                    $terms[] = '(' . join(' OR ', $f['list']) . ')';
+                    $terms[] = '(' . join(' OR ', $f['string']) . ')';
                 } else {
                     $terms[] = $solrfields[$f['field']] . ':' . strtolower($f['string'])
                         . ($f['type'] != 'equals' ? '*' : '');
@@ -251,6 +251,36 @@ END;
         return $results;
     }
 
+
+    public static function institutional_admin_search_user($query, $institution, $limit) {
+        $fields = 'id,text_firstname,text_lastname,text_username,store_preferredname,idtype';
+        if (empty($query)) {
+            $q = array();
+        } else {
+            $query = strtolower($query);
+            $q = array('(text_firstname:'.$query.'* OR text_lastname:'.$query.'*)');
+        }
+
+        if (!empty($institution->name)) {
+            foreach (array('member', 'requested', 'invited') as $f) {
+                if ($institution->{$f} == 0) {
+                    $neg[] = '-text_' . $f . '_institution:' . $institution->name;
+                } else if ($institution->{$f} == 1) {
+                    $q[] = 'text_' . $f . '_institution:' . $institution->name;
+                }
+            }
+        }
+        // Solr doesn't like all-negative queries
+        if (empty($q) && !empty($neg)) {
+            $q = array('*:*');
+        }
+        $q = join(' AND ', array_merge($q, $neg));
+
+        $results = self::send_query($q, $limit, 0, array('type' => 'user'), $fields);
+        self::remove_key_prefix(&$results);
+        return $results;
+        
+    }
 
     /**
      * Given a query string and limits, return an array of matching objects
@@ -443,15 +473,12 @@ END;
         }
         
         if (!isset($user['institutions'])) {
-            $user['institutions'] = get_column('usr_institution', 'institution', 'usr', $user['id']);
-        }
-        if (!isset($user['institutions_requested'])) {
-            $institutions_requested = $user['institutions'];
-            foreach (get_column('usr_institution_request', 'institution', 'usr', $user['id']) as $i) {
-                if (!in_array($i, $institutions_requested)) {
-                    $institutions_requested[] = $i;
-                }
-            }
+            $user['institutions']   = get_column('usr_institution', 'institution', 'usr', $user['id']);
+            $requested              = get_column('usr_institution_request', 'institution', 
+                                                 'usr', $user['id'], 'confirmedusr', 1);
+            $invited                = get_column('usr_institution_request', 'institution', 
+                                                 'usr', $user['id'], 'confirmedinstitution', 1);
+            $institutions_requested = array_merge($user['institutions'], $requested, $invited);
         }
 
         // @todo: need to index public profile fields
@@ -469,6 +496,9 @@ END;
             'index_active'        => $user['active'],
             'store_suspended'     => (int)!empty($user['suspendedcusr']),
             'text_institutions_requested' => join(' ', $institutions_requested),
+            'text_member_institution'     => join(' ', $user['institutions']),
+            'text_requested_institution'  => join(' ', $requested),
+            'text_invited_institution'    => join(' ', $invited),
         );
         if (empty($doc['index_name'])) {
             $doc['index_name'] = $user['firstname'] . ' ' . $user['lastname'];
