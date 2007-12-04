@@ -585,6 +585,11 @@ abstract class ActivityTypePlugin extends ActivityType {
 
     abstract public function get_pluginname();
 
+    public function get_type() {
+        $prefix = 'ActivityType' . $this->get_plugintype() . $this->get_pluginname();
+        return strtolower(substr(get_class($this), strlen($prefix)));
+    }
+
     public function get_id() {
         if (!isset($this->id)) {
             $tmp = activity_locate_typerecord($this->get_type(), $this->get_plugintype(), $this->get_pluginname());
