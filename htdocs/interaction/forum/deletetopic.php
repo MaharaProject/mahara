@@ -32,7 +32,7 @@ require('group.php');
 $topicid = param_integer('id');
 
 $topic = get_record_sql(
-    'SELECT f."group", f.id as forumid, f.title, p.subject, p.body
+    'SELECT f."group", f.id as forumid, f.title, p.poster, p.subject, p.body, COUNT(p2.*), t.closed
     FROM {interaction_forum_topic} t
     INNER JOIN {interaction_instance} f
     ON f.id = t.forum
@@ -40,8 +40,19 @@ $topic = get_record_sql(
     INNER JOIN {interaction_forum_post} p
     ON p.topic = t.id
     AND p.parent IS NULL
+    INNER JOIN {interaction_forum_post} p2
+    ON p.poster = p2.poster
+    AND p2.deleted != 1
+    INNER JOIN {interaction_forum_topic} t2
+    ON t2.deleted != 1
+    AND p2.topic = t2.id
+    INNER JOIN {interaction_instance} f2
+    ON t2.forum = f2.id
+    AND f2.deleted != 1
+    AND f2.group = f.group
     WHERE t.id = ?
-    AND t.deleted != 1',
+    AND t.deleted != 1
+    GROUP BY 1, 2, 3, 4, 5, 6, 8',
     array($topicid)
 );
 
@@ -118,6 +129,7 @@ $smarty = smarty();
 $smarty->assign('breadcrumbs', $breadcrumbs);
 $smarty->assign('forum', $topic->title);
 $smarty->assign('heading', TITLE);
+$smarty->assign('topic', $topic);
 $smarty->assign('deleteform', $form);
 $smarty->display('interaction:forum:deletetopic.tpl');
 
