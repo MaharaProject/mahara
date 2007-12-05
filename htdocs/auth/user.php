@@ -353,6 +353,14 @@ class User {
         }
     }
 
+    public function leave_institution($institution) {
+        if ($institution != 'mahara' && $this->in_institution($institution)) {
+            require_once('institution.php');
+            $institution = new Institution($institution);
+            $institution->removeMember($this);
+        }
+    }
+
     public function in_institution($institution, $role = null) {
         $institutions = $this->get('institutions');
         return isset($institutions[$institution]) 

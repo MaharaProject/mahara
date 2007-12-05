@@ -277,6 +277,13 @@ $string['preferences'] = 'Preferences';
 $string['activityprefs'] = 'Activity preferences';
 $string['changepassword'] = 'Change password';
 $string['notifications'] = 'Notifications';
+$string['institutionmembership'] = 'Institution membership';
+$string['youareamemberof'] = 'You are a member of %s';
+$string['leaveinstitution'] = 'Leave institution';
+$string['youhaverequestedmembershipof'] = 'You have requested membership of %s';
+$string['cancelrequest'] = 'Cancel request';
+$string['joininstitution'] = 'Join institution';
+$string['requestmembership'] = 'Request membership';
 
 // my views
 $string['accessstartdate'] = 'Access start date';
