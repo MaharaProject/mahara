@@ -34,17 +34,22 @@ define('TITLE', get_string('topic','interaction.forum'));
 $topicid = param_integer('id');
 
 $topic = get_record_sql(
-    'SELECT p.subject, f.group, f.id AS forumid, f.title as forumtitle, t.closed, sf.forum AS forumsubscribed, st.topic AS topicsubscribed
+    'SELECT p.subject, f.group, f.id AS forumid, f.title as forumtitle, t.closed, t.id, sf.forum AS forumsubscribed, st.topic AS topicsubscribed
     FROM {interaction_forum_topic} t
     INNER JOIN {interaction_instance} f
-    ON (t.forum = f.id)
+    ON t.forum = f.id
+    AND f.deleted != 1
     INNER JOIN {interaction_forum_post} p
-    ON (p.topic = t.id AND p.parent IS NULL)
+    ON p.topic = t.id
+    AND p.parent IS NULL
     LEFT JOIN {interaction_forum_subscription_forum} sf
-    ON (sf.forum = f.id AND sf.user = ?)
+    ON sf.forum = f.id
+    AND sf.user = ?
     LEFT JOIN {interaction_forum_subscription_topic} st
-    ON (st.topic = t.id AND st.user = ?)
-    WHERE t.id = ?',
+    ON st.topic = t.id
+    AND st.user = ?
+    WHERE t.id = ?
+    AND t.deleted != 1',
     array($USER->get('id'), $USER->get('id'), $topicid)
 );
 
@@ -78,21 +83,18 @@ if (!$topic->forumsubscribed) {
 
 $posts = get_records_sql_array(
     'SELECT p1.id, p1.parent, p1.poster, p1.subject, p1.body, p1.ctime AS posttime, p1.deleted, COUNT(p2.*), e.ctime AS edit, e.user AS editor
-    FROM interaction_forum_post p1
-    INNER JOIN interaction_forum_post p2
-    ON (p1.poster = p2.poster
+    FROM {interaction_forum_post} p1
+    INNER JOIN {interaction_forum_post} p2
+    ON p1.poster = p2.poster
     AND p2.deleted != 1
-    AND p2.topic IN (
-        SELECT t.id
-        FROM interaction_forum_topic t
-        WHERE t.deleted != 1
-        AND t.forum IN (
-            SELECT id
-            FROM {interaction_instance} f
-            WHERE "group" = ?
-        )
-    ))
-    LEFT JOIN interaction_forum_edit e
+    INNER JOIN {interaction_forum_topic} t
+    ON t.deleted != 1
+    AND p2.topic = t.id
+    INNER JOIN {interaction_instance} f
+    ON t.forum = f.id
+    AND f.deleted != 1
+    AND f.group = ?
+    LEFT JOIN {interaction_forum_edit} e
     ON (e.post = p1.id)
     WHERE p1.topic = ?
     GROUP BY 1, 2, 3, 4, 5, 6, 7, 9, 10
@@ -145,7 +147,7 @@ function buildthread($parent, $parentsubject, &$posts){
         $parentsubject = $posts[$parent]->subject;
     }
     else {
-        $posts[$parent]->subject = get_string('re', 'interaction.forum') . $parentsubject;
+        $posts[$parent]->subject = get_string('re', 'interaction.forum', $parentsubject);
     }
     $children = array();
     foreach ($posts as $index => $post) {
@@ -163,7 +165,7 @@ function buildthread($parent, $parentsubject, &$posts){
 
 function subscribe_submit(Pieform $form, $values) {
     global $USER;
-    $topicid = param_integer('id');
+    global $topicid;
     if ($values['submit'] == get_string('subscribe', 'interaction.forum')) {
         insert_record(
             'interaction_forum_subscription_topic',

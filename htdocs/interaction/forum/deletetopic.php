@@ -29,16 +29,16 @@ define('MENUITEM', 'groups');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('interaction' ,'forum');
 require('group.php');
-
-$userid = $USER->get('id');
 $topicid = param_integer('id');
 
 $forum = get_record_sql(
     'SELECT f."group", f.id, f.title
     FROM {interaction_forum_topic} t
     INNER JOIN {interaction_instance} f
-    ON (f.id = t.forum)
-    WHERE t.id = ?',
+    ON f.id = t.forum
+    AND f.deleted != 1
+    WHERE t.id = ?
+    AND t.deleted != 1',
     array($topicid)
 );
 
@@ -60,7 +60,7 @@ $postinfo = get_record_sql(
     'SELECT p.subject, p.body
     FROM {interaction_forum_post} p
     WHERE p.topic = ?
-    AND p.parent is null',
+    AND p.parent IS NULL',
     array($topicid)
 );
 

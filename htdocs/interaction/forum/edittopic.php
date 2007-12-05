@@ -37,18 +37,20 @@ if ($topicid==0) {
     unset($topicid);
     define('TITLE', get_string('addtopic','interaction.forum'));
     $forumid = param_integer('forum');
-    $group = get_record_sql(
-        'SELECT "group" AS id
+    $forum = get_record_sql(
+        'SELECT "group" AS groupid, title
         FROM {interaction_instance}
-        WHERE id = ?',
+        WHERE id = ?
+        AND deleted != 1',
         array($forumid)
     );
-    
-    if (!$group) {
+
+    if (!$forum) {
         throw new NotFoundException("Couldn't find forum with id $forumid");
     }
 
-    $membership = user_can_access_group((int)$group->id);
+    $forumtitle = $forum->title;
+    $membership = user_can_access_group((int)$forum->groupid);
 
     $admin = (bool)($membership & GROUP_MEMBERSHIP_OWNER);
 
@@ -61,47 +63,37 @@ if ($topicid==0) {
 
 if (isset($topicid)) {
 	define('TITLE', get_string('edittopic','interaction.forum'));
-    $topicinfo = get_record_sql(
-        'SELECT p.subject, p.body, p.topic AS id, t.sticky, t.closed
+    $topic = get_record_sql(
+        'SELECT p.subject, p.body, p.topic AS id, t.sticky, t.closed, f.id as forumid, f.group as groupid, f.title
         FROM {interaction_forum_post} p
         INNER JOIN {interaction_forum_topic} t
-        ON (p.topic = t.id)
-        WHERE parent IS NULL
-        AND topic = ?',
+        ON p.topic = t.id
+        AND t.deleted != 1
+        INNER JOIN {interaction_instance} f
+        ON f.id = t.forum
+        AND f.deleted != 1
+        WHERE p.parent IS NULL
+        AND p.topic = ?',
         array($topicid)
     );
     
-    if (!$topicinfo) {
+    if (!$topic) {
         throw new NotFoundException("Couldn't find topic with id $topicid");
     }
-    
-    $info = get_record_sql(
-        'SELECT f.group, t.forum
-        FROM {interaction_forum_topic} t
-        INNER JOIN {interaction_instance} f
-        ON (t.forum = f.id)
-        WHERE t.id = ?',
-        array($topicinfo->id)
-    );
 
-    $forumid = $info->forum;
+    $forumid = $topic->forumid;
+    $forumtitle = $topic->title;
 
-    $membership = user_can_access_group((int)$info->group);
+    $membership = user_can_access_group((int)$topic->groupid);
 
     $admin = (bool)($membership & GROUP_MEMBERSHIP_OWNER);
 
-    $moderator = $admin || is_forum_moderator($forumid);
+    $moderator = $admin || is_forum_moderator((int)$forumid);
 
     if (!$moderator) {
         throw new AccessDeniedException();
     }
 }
-$forum = get_record_sql(
-    'SELECT title
-    FROM {interaction_instance}
-    WHERE id = ?',
-    array($forumid)
-);
 
 require_once('pieforms/pieform.php');
 
@@ -112,7 +104,7 @@ $editform = array(
         'subject' => array(
             'type'         => 'text',
             'title'        => get_string('subject', 'interaction.forum'),
-            'defaultvalue' => isset($topicinfo) ? $topicinfo->subject : null,
+            'defaultvalue' => isset($topic) ? $topic->subject : null,
             'rules'        => array(
                 'required' => true,
                 'maxlength' => 255
@@ -123,26 +115,26 @@ $editform = array(
             'title'        => get_string('body', 'interaction.forum'),
             'rows'         => 10,
             'cols'         => 70,
-            'defaultvalue' => isset($topicinfo) ? $topicinfo->body : null,
+            'defaultvalue' => isset($topic) ? $topic->body : null,
             'rules'        => array( 'required' => true )
         ),
         'sticky' => array(
             'type'         => 'checkbox',
             'title'        => get_string('sticky', 'interaction.forum'),
-            'defaultvalue' => isset($topicinfo) && $topicinfo->sticky == 1 ? 'checked' : null
+            'defaultvalue' => isset($topic) && $topic->sticky == 1 ? 'checked' : null
         ),
         'closed' => array(
             'type'         => 'checkbox',
             'title'        => get_string('closed', 'interaction.forum'),
-            'defaultvalue' => isset($topicinfo) && $topicinfo->closed == 1 ? 'checked' : null
+            'defaultvalue' => isset($topic) && $topic->closed == 1 ? 'checked' : null
         ),
         'submit'   => array(
             'type'  => 'submitcancel',
             'value'       => array(
-                isset($topicinfo) ? get_string('edit') : get_string('post','interaction.forum'),
+                isset($topic) ? get_string('edit') : get_string('post','interaction.forum'),
                 get_string('cancel')
             ),
-            'goto'      => get_config('wwwroot') . 'interaction/forum/' . (isset($topicinfo) ? 'topic.php?id='.$topicid : 'view.php?id='.$forumid)
+            'goto'      => get_config('wwwroot') . 'interaction/forum/' . (isset($topic) ? 'topic.php?id='.$topicid : 'view.php?id='.$forumid)
         ),
     ),
 );
@@ -225,8 +217,8 @@ function edittopic_submit(Pieform $form, $values) {
 
 $smarty = smarty();
 $smarty->assign('heading', TITLE);
-$smarty->assign('forum', $forum->title);
-$smarty->assign('editform',$editform);
+$smarty->assign('forum', $forumtitle);
+$smarty->assign('editform', $editform);
 $smarty->display('interaction:forum:edittopic.tpl');
 
 ?>

@@ -41,7 +41,8 @@ $group = get_record_sql(
     FROM {interaction_instance} f
     INNER JOIN {group} g
     ON g.id = f."group"
-    WHERE f.id = ?',
+    WHERE f.id = ?
+    AND f.deleted != 1',
     array($forumid)
 );
 
@@ -80,16 +81,16 @@ if (isset($_POST['subscribe'])) {
 }
 
 if ($moderator && isset($_POST['update'])) {
-    if (!isset($_POST['sticky'])) {
+    if (!isset($_POST['sticky']) || !is_numeric(implode(array_keys($_POST['sticky'])))) {
         $_POST['sticky'] = array();
     }
-    if (!isset($_POST['closed'])) {
+    if (!isset($_POST['closed']) || !is_numeric(implode(array_keys($_POST['closed'])))) {
         $_POST['closed'] = array();
     }
-    if (!isset($POST['prevsticky'])) {
+    if (!isset($_POST['prevsticky']) || !is_numeric(implode(array_keys($_POST['prevsticky'])))) {
         $_POST['prevsticky'] = array();
     }
-    if (!isset($POST['prevclosed'])) {
+    if (!isset($_POST['prevclosed']) || !is_numeric(implode(array_keys($_POST['prevclosed'])))) {
         $_POST['prevclosed'] = array();
     }
     updatetopics($_POST['sticky'], $_POST['prevsticky'], 'sticky = 1');
@@ -102,10 +103,14 @@ $forum = get_record_sql(
     'SELECT f.title, f.description, f.id, COUNT(t.*), s.forum AS subscribed
     FROM {interaction_instance} f
     LEFT JOIN {interaction_forum_topic} t
-    ON (t.forum = f.id AND t.deleted != 1 AND t.sticky != 1)
+    ON t.forum = f.id
+    AND t.deleted != 1
+    AND t.sticky != 1
     LEFT JOIN {interaction_forum_subscription_forum} s
-    ON (s.forum = f.id AND s."user" = ?)
-    WHERE f.id=?
+    ON s.forum = f.id
+    AND s."user" = ?
+    WHERE f.id = ?
+    AND f.deleted != 1
     GROUP BY 1, 2, 3, 5',
     array($userid, $forumid)
 );
@@ -126,11 +131,14 @@ $stickytopics = get_records_sql_array(
     'SELECT t.id, p1.subject, p1.poster, COUNT(p2.*), t.closed, s.topic AS subscribed
     FROM {interaction_forum_topic} t
     INNER JOIN {interaction_forum_post} p1
-    ON (p1.topic = t.id AND p1.parent is null)
+    ON p1.topic = t.id
+    AND p1.parent IS NULL
     LEFT JOIN {interaction_forum_post} p2
-    ON (p2.topic = t.id AND p2.deleted != 1)
+    ON p2.topic = t.id
+    AND p2.deleted != 1
     LEFT JOIN {interaction_forum_subscription_topic} s
-    ON (s.topic = t.id AND s."user" = ?)
+    ON s.topic = t.id
+    AND s."user" = ?
     WHERE t.forum = ?
     AND t.sticky = 1
     AND t.deleted != 1
@@ -143,11 +151,14 @@ $regulartopics = get_records_sql_array(
     'SELECT t.id, p1.subject, p1.poster, COUNT(p2.*), t.closed, s.topic AS subscribed
     FROM {interaction_forum_topic} t
     INNER JOIN {interaction_forum_post} p1
-    ON (p1.topic = t.id AND p1.parent IS NULL)
+    ON p1.topic = t.id
+    AND p1.parent IS NULL
     LEFT JOIN {interaction_forum_post} p2
-    ON (p2.topic = t.id AND p2.deleted != 1)
+    ON p2.topic = t.id
+    AND p2.deleted != 1
     LEFT JOIN {interaction_forum_subscription_topic} s
-    ON (s.topic = t.id AND s."user" = ?)
+    ON s.topic = t.id
+    AND s."user" = ?
     WHERE t.forum = ?
     AND t.sticky != 1
     AND t.deleted != 1

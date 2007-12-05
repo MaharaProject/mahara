@@ -55,13 +55,16 @@ $forums = get_records_sql_array(
     'SELECT f.id, f.title, f.description, COUNT(t.*), s.forum AS subscribed
     FROM {interaction_instance} f
     LEFT JOIN {interaction_forum_topic} t
-    ON (t.forum = f.id AND t.deleted != 1)
+    ON t.forum = f.id
+    AND t.deleted != 1
     INNER JOIN {interaction_forum_instance_config} c
-    ON (c.forum = f.id AND c.field = \'weight\')
+    ON c.forum = f.id
+    AND c.field = \'weight\'
     LEFT JOIN {interaction_forum_subscription_forum} s
-    ON (s.forum = f.id AND s."user" = ?)
-    WHERE f.group=?
-    AND f.deleted!=1
+    ON s.forum = f.id
+    AND s."user" = ?
+    WHERE f.group = ?
+    AND f.deleted != 1
     GROUP BY 1, 2, 3, 5, c.value
     ORDER BY c.value',
     array($USER->get('id'), $groupid)
@@ -91,7 +94,7 @@ if ($forums) {
 
 function subscribe_submit(Pieform $form, $values) {
     global $USER;
-    $groupid = param_integer('group');
+    global $groupid;
     if ($values['submit'] == get_string('subscribe', 'interaction.forum')) {
         insert_record(
             'interaction_forum_subscription_forum',

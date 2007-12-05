@@ -44,14 +44,21 @@ if ($postid==0) {
         FROM {interaction_forum_post} p
         INNER JOIN {interaction_forum_topic} t
         ON p.topic = t.id
+        AND t.deleted != 1
         INNER JOIN {interaction_forum_post} p2
         ON p2.topic = t.id
         AND p2.parent IS NULL
         INNER JOIN {interaction_instance} f
         ON t.forum = f.id
-        WHERE p.id = ?',
+        AND f.deleted != 1
+        WHERE p.id = ?
+        AND p.deleted != 1',
         array($parentid)
     );
+
+    if (!$topic) {
+        throw new NotFoundException("Couldn't find post with id $parentid");
+    }
 
     $membership = user_can_access_group((int)$topic->group);
 
@@ -63,9 +70,6 @@ if ($postid==0) {
         throw new AccessDeniedException();
     }
 
-    if (!$topic) {
-        throw new NotFoundException("Couldn't find topic with id $parentid");
-    }
     $topicid = $topic->id;
     $topicsubject = $topic->subject;
 }
@@ -77,12 +81,15 @@ if (isset($postid)) {
         FROM {interaction_forum_post} p
         INNER JOIN {interaction_forum_topic} t
         ON p.topic = t.id
+        AND t.deleted != 1
         INNER JOIN {interaction_forum_post} p2
         ON p2.topic = t.id
         AND p2.parent IS NULL
         INNER JOIN {interaction_instance} f
         ON t.forum = f.id
-        WHERE p.id = ?',
+        AND f.deleted != 1
+        WHERE p.id = ?
+        AND p.deleted != 1',
         array($postid)
     );
 

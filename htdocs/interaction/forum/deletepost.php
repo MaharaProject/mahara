@@ -30,42 +30,37 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('interaction' ,'forum');
 require_once('group.php');
 
-$userid = $USER->get('id');
 $postid = param_integer('id');
-$info = get_record_sql(
-    'SELECT p.topic, p.parent, t.forum, p2.subject, f.group
+$post = get_record_sql(
+    'SELECT p.subject, p.topic, p.parent, t.forum, p2.subject as topicsubject, f.group
     FROM {interaction_forum_post} p
     INNER JOIN {interaction_forum_topic} t
     ON p.topic = t.id
+    AND t.deleted != 1
     INNER JOIN {interaction_forum_post} p2
     ON p2.topic = t.id
     AND p2.parent IS NULL
     INNER JOIN {interaction_instance} f
     ON t.forum = f.id
-    WHERE p.id = ?',
+    AND f.deleted != 1
+    WHERE p.id = ?
+    AND p.deleted != 1',
     array($postid)
 );
 
-if (!$info) {
+if (!$post) {
     throw new NotFoundException("Couldn't find post with id $postid");
 }
 
-$membership = user_can_access_group((int)$info->group);
+$membership = user_can_access_group((int)$post->group);
 
 $admin = (bool)($membership & GROUP_MEMBERSHIP_OWNER);
 
-$moderator = $admin || is_forum_moderator((int)$info->forum);
+$moderator = $admin || is_forum_moderator((int)$post->forum);
 
 if (!$moderator) {
     throw new AccessDeniedException();
 }
-
-$post = get_record_sql(
-    'SELECT p.subject
-    FROM {interaction_forum_post} p
-    WHERE p.id = ?',
-    array($postid)
-);
 
 define('TITLE', get_string('deletepost', 'interaction.forum', $post->subject));
 
@@ -80,29 +75,24 @@ $form = pieform(array(
         'submit' => array(
             'type'  => 'submitcancel',
             'value' => array(get_string('yes'), get_string('no')),
-            'goto'  => get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $info->topic,
+            'goto'  => get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $post->topic,
         )
     )
 ));
 
 function deletepost_submit(Pieform $form, $values) {
-    $postid = param_integer('id');
+    global $postid;
+    global $post;
     update_record(
         'interaction_forum_post',
         array('deleted' => 1),
         array('id' => $postid)
     );
-    $topic = get_record_sql(
-        'SELECT topic AS id
-        FROM {interaction_forum_post}
-        WHERE id = ?',
-        array($postid)
-    );
-    redirect('/interaction/forum/topic.php?id=' . $topic->id);
+    redirect('/interaction/forum/topic.php?id=' . $post->topic);
 }
 
 $smarty = smarty();
-$smarty->assign('topicsubject', $info->subject);
+$smarty->assign('topicsubject', $post->topicsubject);
 $smarty->assign('heading', TITLE);
 $smarty->assign('deleteform', $form);
 $smarty->display('interaction:forum:deletepost.tpl');

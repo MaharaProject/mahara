@@ -102,9 +102,16 @@ class PluginInteractionForum extends PluginInteraction {
                 ON t.forum = sf.forum
             ) s
             INNER JOIN {interaction_forum_topic} t
-            ON t.deleted != 1 AND t.id = s.topic
+            ON t.deleted != 1
+            AND t.id = s.topic
             INNER JOIN {interaction_forum_post} p
-            ON p.sent != 1 AND p.ctime < ? AND p.deleted != 1 AND p.topic = t.id
+            ON p.sent != 1
+            AND p.ctime < ?
+            AND p.deleted != 1
+            AND p.topic = t.id
+            INNER JOIN {interaction_instance} f
+            ON f.id = t.forum
+            AND f.deleted != 1
             ORDER BY type, p.id',
             array(db_format_timestamp($currenttime - 30 * 60))
         );
@@ -151,22 +158,13 @@ class InteractionForumInstance extends InteractionInstance {
         return 'forum';
     }
 
-    public function delete() {
-        parent::delete();
-        update_record(
-            'interaction_forum_topic',
-            (object)array('deleted' => 1),
-            array('forum' => $this->id)
-        );
-    }
-
 }
 
 
 class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
 
     protected $postid;
-    protected $type; // forum/topic
+    protected $type; // forum or topic
 
     public function __construct($data) {
         parent::__construct($data);
@@ -181,11 +179,15 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
             FROM {interaction_forum_post} p
             INNER JOIN {interaction_forum_topic} t
             ON t.id = p.topic
+            AND t.deleted != 1
             INNER JOIN {interaction_forum_post} p2
-            ON p2.parent IS NULL AND p2.topic = t.id
+            ON p2.parent IS NULL
+            AND p2.topic = t.id
             INNER JOIN {interaction_instance} f
             ON t.forum = f.id
-            WHERE p.id = ?',
+            AND f.deleted != 1
+            WHERE p.id = ?
+            AND p.deleted != 1',
             array($this->postid)
         );
         $this->url = get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $post->topicid;
