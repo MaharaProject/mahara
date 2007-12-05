@@ -350,6 +350,7 @@ class User {
             require_once('institution.php');
             $institution = new Institution($institution);
             $institution->addUserAsMember($this);
+            $this->reset_institutions();
         }
     }
 
@@ -358,6 +359,7 @@ class User {
             require_once('institution.php');
             $institution = new Institution($institution);
             $institution->removeMember($this);
+            $this->reset_institutions();
         }
     }
 
@@ -386,6 +388,18 @@ class User {
         require_once('institution.php');
         $institution = new Institution($institution);
         $institution->addRequestFromUser($this);
+    }
+
+    protected function reset_institutions() {
+        $institutions             = load_user_institutions($this->id);
+        $admininstitutions = array();
+        foreach ($institutions as $i) {
+            if ($i->admin) {
+                $admininstitutions[$i->institution] = $i->institution;
+            }
+        }
+        $this->institutions       = $institutions;
+        $this->admininstitutions  = $admininstitutions;
     }
 
 }
@@ -483,15 +497,7 @@ class LiveUser extends User {
         if (empty($user->id)) $this->commit();
         $this->activityprefs      = load_activity_preferences($user->id);
         $this->accountprefs       = load_account_preferences($user->id);
-        $institutions             = load_user_institutions($user->id);
-        $admininstitutions = array();
-        foreach ($institutions as $i) {
-            if ($i->admin) {
-                $admininstitutions[$i->institution] = $i->institution;
-            }
-        }
-        $this->institutions       = $institutions;
-        $this->admininstitutions  = $admininstitutions;
+        $this->reset_institutions();
         $this->commit();
     }
 
