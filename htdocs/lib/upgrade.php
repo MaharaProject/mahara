@@ -587,6 +587,7 @@ function core_install_firstcoredata_defaults() {
     set_config('session_timeout', 1800);
     set_config('sitename', 'Mahara');
     set_config('pathtofile', '/usr/bin/file');
+    set_config('defaultaccountinactivewarn', 604800);
 
     // install the applications
     $app = new StdClass;
