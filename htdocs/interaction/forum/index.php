@@ -55,7 +55,8 @@ $breadcrumbs = array(
     array(
         get_config('wwwroot') . 'interaction/forum/index.php?group=' . $groupid,
         get_string('nameplural', 'interaction.forum')
-    )
+    ),
+    array()
 );
 
 $forums = get_records_sql_array(

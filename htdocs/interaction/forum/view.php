@@ -113,8 +113,10 @@ $breadcrumbs = array(
         get_string('nameplural', 'interaction.forum')
     ),
     array(
-        get_config('wwwroot') . 'interaction/forum/view.php?id=' . $forumid,
-        $forum->title
+        array(
+            get_config('wwwroot') . 'interaction/forum/view.php?id=' . $forumid,
+            $forum->title
+        )
     )
 );
 

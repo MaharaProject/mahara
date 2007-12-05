@@ -70,16 +70,18 @@ $breadcrumbs = array(
         get_string('nameplural', 'interaction.forum')
     ),
     array(
-        get_config('wwwroot') . 'interaction/forum/view.php?id=' . $post->forum,
-        $post->forumtitle
-    ),
-    array(
-        get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $post->topic,
-        $post->topicsubject
-    ),
-    array(
-        get_config('wwwroot') . 'interaction/forum/deletepost.php?id=' . $postid,
-        get_string('deletepost', 'interaction.forum')
+        array(
+            get_config('wwwroot') . 'interaction/forum/view.php?id=' . $post->forum,
+            $post->forumtitle
+        ),
+        array(
+            get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $post->topic,
+            $post->topicsubject
+        ),
+        array(
+            get_config('wwwroot') . 'interaction/forum/deletepost.php?id=' . $postid,
+            get_string('deletepost', 'interaction.forum')
+        )
     )
 );
 

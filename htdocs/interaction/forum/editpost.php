@@ -79,16 +79,18 @@ if ($postid==0) {
             get_string('nameplural', 'interaction.forum')
         ),
         array(
-            get_config('wwwroot') . 'interaction/forum/view.php?id=' . $topic->forum,
-            $topic->forumtitle
-        ),
-        array(
-            get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $topicid,
-            $topic->subject
-        ),
-        array(
-            get_config('wwwroot') . 'interaction/forum/editpost.php?parent=' . $parentid,
-            get_string('postreply', 'interaction.forum')
+            array(
+                get_config('wwwroot') . 'interaction/forum/view.php?id=' . $topic->forum,
+                $topic->forumtitle
+            ),
+            array(
+                get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $topicid,
+                $topic->subject
+            ),
+            array(
+                get_config('wwwroot') . 'interaction/forum/editpost.php?parent=' . $parentid,
+                get_string('postreply', 'interaction.forum')
+            )
         )
     );
 }
@@ -137,16 +139,18 @@ if (isset($postid)) {
             get_string('nameplural', 'interaction.forum')
         ),
         array(
-            get_config('wwwroot') . 'interaction/forum/view.php?id=' . $post->forum,
-            $post->forumtitle
-        ),
-        array(
-            get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $topicid,
-            $topicsubject
-        ),
-        array(
-            get_config('wwwroot') . 'interaction/forum/editpost.php?id=' . $postid,
-            get_string('editpost', 'interaction.forum')
+            array(
+                get_config('wwwroot') . 'interaction/forum/view.php?id=' . $post->forum,
+                $post->forumtitle
+            ),
+            array(
+                get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $topicid,
+                $topicsubject
+            ),
+            array(
+                get_config('wwwroot') . 'interaction/forum/editpost.php?id=' . $postid,
+                get_string('editpost', 'interaction.forum')
+            )
         )
     );
 }

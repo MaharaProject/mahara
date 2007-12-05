@@ -4,8 +4,9 @@
 {include file="columnleftstart.tpl"}
 
 <p>
-{foreach from=$breadcrumbs item=item}
-<a href="{$item[0]}">{$item[1]|escape}</a>
+<a href="{$breadcrumbs[0][0]|escape}">{$breadcrumbs[0][1]|escape}</a>
+{foreach from=$breadcrumbs[1] item=item}
+&raquo <a href="{$item[0]|escape}">{$item[1]|escape}</a>
 {/foreach}
 </p>
 

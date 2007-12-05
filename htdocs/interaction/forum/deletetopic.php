@@ -46,7 +46,7 @@ $topic = get_record_sql(
 );
 
 if (!$topic) {
-	throw new NotFoundException(get_string('cantfindtopic', 'interaction.forum', $topicid));
+    throw new NotFoundException(get_string('cantfindtopic', 'interaction.forum', $topicid));
 }
 
 $membership = user_can_access_group((int)$topic->group);
@@ -67,16 +67,18 @@ $breadcrumbs = array(
         get_string('nameplural', 'interaction.forum')
     ),
     array(
-        get_config('wwwroot') . 'interaction/forum/view.php?id=' . $topic->forumid,
-        $topic->title
-    ),
-    array(
-        get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $topicid,
-        $topic->subject
-    ),
-    array(
-        get_config('wwwroot') . 'interaction/forum/deletetopic.php?id=' . $topicid,
-        get_string('deletetopic', 'interaction.forum')
+        array(
+            get_config('wwwroot') . 'interaction/forum/view.php?id=' . $topic->forumid,
+            $topic->title
+        ),
+        array(
+            get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $topicid,
+            $topic->subject
+        ),
+        array(
+            get_config('wwwroot') . 'interaction/forum/deletetopic.php?id=' . $topicid,
+            get_string('deletetopic', 'interaction.forum')
+        )
     )
 );
 

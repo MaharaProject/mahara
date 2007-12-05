@@ -73,12 +73,14 @@ $breadcrumbs = array(
         get_string('nameplural', 'interaction.forum')
     ),
     array(
-        get_config('wwwroot') . 'interaction/forum/view.php?id=' . $topic->forumid,
-        $topic->forumtitle
-    ),
-    array(
-        get_config('wwwroot') . 'interaction/forum/topic?id=' . $topic->id,
-        $topic->subject
+        array(
+            get_config('wwwroot') . 'interaction/forum/view.php?id=' . $topic->forumid,
+            $topic->forumtitle
+        ),
+        array(
+            get_config('wwwroot') . 'interaction/forum/topic?id=' . $topic->id,
+            $topic->subject
+        )
     )
 );
 

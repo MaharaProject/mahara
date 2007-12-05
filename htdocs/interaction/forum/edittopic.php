@@ -66,12 +66,14 @@ if ($topicid==0) {
             get_string('nameplural', 'interaction.forum')
         ),
         array(
-            get_config('wwwroot') . 'interaction/forum/view.php?id=' . $forumid,
-            $forum->title
-        ),
-        array(
-            get_config('wwwroot') . 'interaction/forum/edittopic.php?forum=' . $forumid,
-            get_string('addtopic', 'interaction.forum')
+            array(
+                get_config('wwwroot') . 'interaction/forum/view.php?id=' . $forumid,
+                $forum->title
+            ),
+            array(
+                get_config('wwwroot') . 'interaction/forum/edittopic.php?forum=' . $forumid,
+                get_string('addtopic', 'interaction.forum')
+            )
         )
     );
 }
@@ -115,16 +117,18 @@ if (isset($topicid)) {
             get_string('nameplural', 'interaction.forum')
         ),
         array(
-            get_config('wwwroot') . 'interaction/forum/view.php?id=' . $topic->forumid,
-            $topic->title
-        ),
-        array(
-            get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $topicid,
-            $topic->subject
-        ),
-        array(
-            get_config('wwwroot') . 'interaction/forum/edittopic.php?id=' . $topicid,
-            get_string('edittopic', 'interaction.forum')
+            array(
+                get_config('wwwroot') . 'interaction/forum/view.php?id=' . $topic->forumid,
+                $topic->title
+            ),
+            array(
+                get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $topicid,
+                $topic->subject
+            ),
+            array(
+                get_config('wwwroot') . 'interaction/forum/edittopic.php?id=' . $topicid,
+                get_string('edittopic', 'interaction.forum')
+            )
         )
     );
 
