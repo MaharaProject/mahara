@@ -254,7 +254,8 @@ class Institution {
         handle_event('updateuser', $user->id);
     }
 
-    public function inviteUser($userid) {
+    public function inviteUser($user) {
+        $userid = is_object($user) ? $user->id : $user;
         insert_record('usr_institution_request', (object) array(
             'usr' => $userid,
             'institution' => $this->name,
@@ -265,7 +266,8 @@ class Institution {
         handle_event('updateuser', $userid);
     }
 
-    public function removeMember($userid) {
+    public function removeMember($user) {
+        $userid = is_object($user) ? $user->id : $user;
         delete_records('usr_institution', 'usr', $userid, 'institution', $this->name);
         handle_event('updateuser', $userid);
     }
