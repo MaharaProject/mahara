@@ -1230,8 +1230,8 @@ class View {
                     if ($value && in_array($artefact->id, $value)) {
                         $formcontrols .= ' checked="checked"';
                     }
-                    $formcontrols .= '>';
-                    $formcontrols .= '<input type="hidden" name="' . hsc($elementname) . '_onpage[]" value="' . hsc($artefact->id) . '">';
+                    $formcontrols .= ' class="artefactid-checkbox checkbox">';
+                    $formcontrols .= '<input type="hidden" name="' . hsc($elementname) . '_onpage[]" value="' . hsc($artefact->id) . '" class="artefactid-onpage">';
                 }
 
                 $smarty = smarty_core();
@@ -1267,7 +1267,7 @@ class View {
             ),
         ));
 
-        return array($result, $pagination, $totalartefacts);
+        return array($result, $pagination, $totalartefacts, $offset);
     }
 }
 
