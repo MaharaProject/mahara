@@ -9,7 +9,7 @@
                         <h4>{str tag="institutionmembership"}</h4>
 {$memberform}
 {$requestedform}
-{$inviteform}
+{$invitedform}
 {$joinform}
 {include file="columnleftend.tpl"}
 {include file="footer.tpl"}

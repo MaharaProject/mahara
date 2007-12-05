@@ -282,8 +282,10 @@ $string['youareamemberof'] = 'You are a member of %s';
 $string['leaveinstitution'] = 'Leave institution';
 $string['youhaverequestedmembershipof'] = 'You have requested membership of %s';
 $string['cancelrequest'] = 'Cancel request';
+$string['youhavebeeninvitedtojoin'] = 'You have been invited to join %s';
+$string['confirminvitation'] = 'Confirm invitation';
 $string['joininstitution'] = 'Join institution';
-$string['requestmembership'] = 'Request membership';
+$string['requestmembershipofaninstitution'] = 'Request membership of an institution';
 
 // my views
 $string['accessstartdate'] = 'Access start date';

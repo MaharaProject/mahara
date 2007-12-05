@@ -278,8 +278,7 @@ function cancelrequest_submit(Pieform $form, $values) {
 
 // List all institutions the user has been invited to join, with a
 // confirm membership button
-$invited = get_column('usr_institution_request', 'institution',
-                      'usr', $USER->id, 'confirmedinstitution', 1);
+$invited = get_column('usr_institution_request', 'institution', 'usr', $USER->id, 'confirmedinstitution', 1);
 if (!empty($invited)) {
     $elements = array();
     foreach ($invited as $i) {
@@ -288,7 +287,7 @@ if (!empty($invited)) {
             'name' => 'confirminvite_' . $i,
             'title' => get_string('youhavebeeninvitedtojoin', 'mahara', 
                                   $institutions[$i]->displayname),
-            'value' => get_string('confirminvitation')
+            'value' => get_string('joininstitution')
         );
         unset($institutions[$i]);
     }
@@ -338,14 +337,14 @@ if (!empty($institutions)) {
         'elements'    => array(
             'institution' => array(
                 'type' => 'select',
-                'title' => get_string('joininstitution'),
+                'title' => get_string('requestmembershipofaninstitution'),
                 'collapseifoneoption' => false,
                 'options' => $options,
                 'defaultvalue' => key($options),
              ),
             'submit' => array(
                 'type' => 'submit',
-                'value' => get_string('requestmembership'),
+                'value' => get_string('sendrequest'),
              ),
         )
     ));
