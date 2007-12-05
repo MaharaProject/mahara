@@ -139,7 +139,7 @@ if ($loggedinid != $userid) {
             if (array_key_exists($group->id, $userassocgroups)) {
                 continue;
             }
-            $invitelist[$groups->id] = $groups->name;
+            $invitelist[$group->id] = $group->name;
         }
         if (count($invitelist) > 0) {
             $default = array_keys($invitelist);
