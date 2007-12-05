@@ -67,6 +67,21 @@ $admin = (bool)($membership & GROUP_MEMBERSHIP_OWNER);
 
 $moderator = $admin || is_forum_moderator((int)$topic->forumid);
 
+$breadcrumbs = array(
+    array(
+        get_config('wwwroot') . 'interaction/forum/index.php?group=' . $topic->group,
+        get_string('nameplural', 'interaction.forum')
+    ),
+    array(
+        get_config('wwwroot') . 'interaction/forum/view.php?id=' . $topic->forumid,
+        $topic->forumtitle
+    ),
+    array(
+        get_config('wwwroot') . 'interaction/forum/topic?id=' . $topic->id,
+        $topic->subject
+    )
+);
+
 require_once('pieforms/pieform.php');
 
 if (!$topic->forumsubscribed) {
@@ -135,6 +150,7 @@ foreach ($posts as $post) {
 $threadedposts = buildthread(0, '', $posts);
 
 $smarty = smarty();
+$smarty->assign('breadcrumbs', $breadcrumbs);
 $smarty->assign('topic', $topic);
 $smarty->assign('moderator', $moderator);
 $smarty->assign('posts', $threadedposts);

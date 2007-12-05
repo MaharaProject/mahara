@@ -51,6 +51,13 @@ if (!$membership) {
 
 $admin = (bool)($membership & GROUP_MEMBERSHIP_OWNER);
 
+$breadcrumbs = array(
+    array(
+        get_config('wwwroot') . 'interaction/forum/index.php?group=' . $groupid,
+        get_string('nameplural', 'interaction.forum')
+    )
+);
+
 $forums = get_records_sql_array(
     'SELECT f.id, f.title, f.description, COUNT(t.*), s.forum AS subscribed
     FROM {interaction_instance} f
@@ -125,6 +132,7 @@ function subscribe_submit(Pieform $form, $values) {
 }
 
 $smarty = smarty();
+$smarty->assign('breadcrumbs', $breadcrumbs);
 $smarty->assign('groupid', $groupid);
 $smarty->assign('groupname', $groupname);
 $smarty->assign('admin', $admin);

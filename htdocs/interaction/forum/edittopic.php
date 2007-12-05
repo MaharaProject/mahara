@@ -38,8 +38,8 @@ if ($topicid==0) {
     define('TITLE', get_string('addtopic','interaction.forum'));
     $forumid = param_integer('forum');
     $forum = get_record_sql(
-        'SELECT "group" AS groupid, title
-        FROM {interaction_instance}
+        'SELECT f.group AS group, f.title
+        FROM {interaction_instance} f
         WHERE id = ?
         AND deleted != 1',
         array($forumid)
@@ -50,7 +50,7 @@ if ($topicid==0) {
     }
 
     $forumtitle = $forum->title;
-    $membership = user_can_access_group((int)$forum->groupid);
+    $membership = user_can_access_group((int)$forum->group);
 
     $admin = (bool)($membership & GROUP_MEMBERSHIP_OWNER);
 
@@ -59,12 +59,27 @@ if ($topicid==0) {
     if (!$membership) {
         throw new AccessDeniedException(get_string('cantaddtopic', 'interaction.forum'));
     }
+
+    $breadcrumbs = array(
+        array(
+            get_config('wwwroot') . 'interaction/forum/index.php?group=' . $forum->group,
+            get_string('nameplural', 'interaction.forum')
+        ),
+        array(
+            get_config('wwwroot') . 'interaction/forum/view.php?id=' . $forumid,
+            $forum->title
+        ),
+        array(
+            get_config('wwwroot') . 'interaction/forum/edittopic.php?forum=' . $forumid,
+            get_string('addtopic', 'interaction.forum')
+        )
+    );
 }
 
 if (isset($topicid)) {
 	define('TITLE', get_string('edittopic','interaction.forum'));
     $topic = get_record_sql(
-        'SELECT p.subject, p.body, p.topic AS id, t.sticky, t.closed, f.id as forumid, f.group as groupid, f.title
+        'SELECT p.subject, p.body, p.topic AS id, t.sticky, t.closed, f.id as forumid, f.group as group, f.title
         FROM {interaction_forum_post} p
         INNER JOIN {interaction_forum_topic} t
         ON p.topic = t.id
@@ -84,7 +99,7 @@ if (isset($topicid)) {
     $forumid = $topic->forumid;
     $forumtitle = $topic->title;
 
-    $membership = user_can_access_group((int)$topic->groupid);
+    $membership = user_can_access_group((int)$topic->group);
 
     $admin = (bool)($membership & GROUP_MEMBERSHIP_OWNER);
 
@@ -93,6 +108,26 @@ if (isset($topicid)) {
     if (!$moderator) {
         throw new AccessDeniedException(get_string('cantedittopic', 'interaction.forum'));
     }
+
+    $breadcrumbs = array(
+        array(
+            get_config('wwwroot') . 'interaction/forum/index.php?group=' . $topic->group,
+            get_string('nameplural', 'interaction.forum')
+        ),
+        array(
+            get_config('wwwroot') . 'interaction/forum/view.php?id=' . $topic->forumid,
+            $topic->title
+        ),
+        array(
+            get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $topicid,
+            $topic->subject
+        ),
+        array(
+            get_config('wwwroot') . 'interaction/forum/edittopic.php?id=' . $topicid,
+            get_string('edittopic', 'interaction.forum')
+        )
+    );
+
 }
 
 require_once('pieforms/pieform.php');
@@ -216,6 +251,7 @@ function edittopic_submit(Pieform $form, $values) {
 }
 
 $smarty = smarty();
+$smarty->assign('breadcrumbs', $breadcrumbs);
 $smarty->assign('heading', TITLE);
 $smarty->assign('forum', $forumtitle);
 $smarty->assign('editform', $editform);

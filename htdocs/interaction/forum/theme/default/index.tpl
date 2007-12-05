@@ -3,6 +3,11 @@
 
 {include file="columnleftstart.tpl"}
 
+<p>
+{foreach from=$breadcrumbs item=item}
+<a href="{$item[0]}">{$item[1]|escape}</a>
+{/foreach}
+</p>
 <h2>{$groupname|escape}</h2>
 <h3>{str tag=nameplural section=interaction.forum}</h3>
 {if $admin}

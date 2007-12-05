@@ -40,7 +40,7 @@ if ($postid==0) {
     define('TITLE', get_string('postreply','interaction.forum'));
     $parentid = param_integer('parent');
     $topic = get_record_sql(
-        'SELECT p.topic AS id, p2.subject, t.closed, f.id AS forum, f.group
+        'SELECT p.topic AS id, p2.subject, t.closed, f.id AS forum, f.title AS forumtitle, f.group
         FROM {interaction_forum_post} p
         INNER JOIN {interaction_forum_topic} t
         ON p.topic = t.id
@@ -72,12 +72,31 @@ if ($postid==0) {
 
     $topicid = $topic->id;
     $topicsubject = $topic->subject;
+
+    $breadcrumbs = array(
+        array(
+            get_config('wwwroot') . 'interaction/forum/index.php?group=' . $topic->group,
+            get_string('nameplural', 'interaction.forum')
+        ),
+        array(
+            get_config('wwwroot') . 'interaction/forum/view.php?id=' . $topic->forum,
+            $topic->forumtitle
+        ),
+        array(
+            get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $topicid,
+            $topic->subject
+        ),
+        array(
+            get_config('wwwroot') . 'interaction/forum/editpost.php?parent=' . $parentid,
+            get_string('postreply', 'interaction.forum')
+        )
+    );
 }
 
 if (isset($postid)) {
     define('TITLE', get_string('editpost','interaction.forum'));
     $post = get_record_sql(
-        'SELECT p.subject, p.body, p.parent, p.topic, p.poster, p.ctime, t.forum, p2.subject AS topicsubject, f.group
+        'SELECT p.subject, p.body, p.parent, p.topic, p.poster, p.ctime, t.forum, p2.subject AS topicsubject, f.title AS forumtitle, f.group
         FROM {interaction_forum_post} p
         INNER JOIN {interaction_forum_topic} t
         ON p.topic = t.id
@@ -96,7 +115,7 @@ if (isset($postid)) {
     if (!$post) {
         throw new NotFoundException(get_string('cantfindpost', 'interaction.forum', $postid));
     }
-    
+
     $topicid = $post->topic;
     $topicsubject = $post->topicsubject;
 
@@ -111,6 +130,25 @@ if (isset($postid)) {
         || (time() - strtotime($post->ctime)) > (30 * 60))) {
         throw new AccessDeniedException(get_string('canteditpost', 'interaction.forum'));
     }
+
+    $breadcrumbs = array(
+        array(
+            get_config('wwwroot') . 'interaction/forum/index.php?group=' . $post->group,
+            get_string('nameplural', 'interaction.forum')
+        ),
+        array(
+            get_config('wwwroot') . 'interaction/forum/view.php?id=' . $post->forum,
+            $post->forumtitle
+        ),
+        array(
+            get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $topicid,
+            $topicsubject
+        ),
+        array(
+            get_config('wwwroot') . 'interaction/forum/editpost.php?id=' . $postid,
+            get_string('editpost', 'interaction.forum')
+        )
+    );
 }
 
 require_once('pieforms/pieform.php');
@@ -202,6 +240,7 @@ function editpost_submit(Pieform $form, $values) {
 }
 
 $smarty = smarty();
+$smarty->assign('breadcrumbs', $breadcrumbs);
 $smarty->assign('topicsubject', $topicsubject);
 $smarty->assign('heading', TITLE);
 $smarty->assign('topic', $topicsubject);

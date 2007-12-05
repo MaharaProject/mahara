@@ -36,21 +36,29 @@ $offset = param_integer('offset', 0);
 $userid = $USER->get('id');
 $topicsperpage = 25;
 
-$group = get_record_sql(
-    'SELECT g.id, g.name
+$forum = get_record_sql(
+    'SELECT f.title, f.description, f.id, COUNT(t.*), s.forum AS subscribed, g.id as groupid, g.name as groupname
     FROM {interaction_instance} f
     INNER JOIN {group} g
     ON g.id = f."group"
+    LEFT JOIN {interaction_forum_topic} t
+    ON t.forum = f.id
+    AND t.deleted != 1
+    AND t.sticky != 1
+    LEFT JOIN {interaction_forum_subscription_forum} s
+    ON s.forum = f.id
+    AND s."user" = ?
     WHERE f.id = ?
-    AND f.deleted != 1',
-    array($forumid)
+    AND f.deleted != 1
+    GROUP BY 1, 2, 3, 5, 6, 7',
+    array($userid, $forumid)
 );
 
-if (!$group) {
+if (!$forum) {
     throw new InteractionInstanceNotFoundException(get_string('cantfindforum', 'interaction.forum', $forumid));
 }
 
-$membership = user_can_access_group((int)$group->id);
+$membership = user_can_access_group((int)$forum->groupid);
 
 if (!$membership) {
     throw new AccessDeniedException(get_string('cantviewforums', 'interaction.forum'));
@@ -99,20 +107,15 @@ if ($moderator && isset($_POST['update'])) {
     updatetopics($_POST['prevclosed'], $_POST['closed'], 'closed = 0');
 }
 
-$forum = get_record_sql(
-    'SELECT f.title, f.description, f.id, COUNT(t.*), s.forum AS subscribed
-    FROM {interaction_instance} f
-    LEFT JOIN {interaction_forum_topic} t
-    ON t.forum = f.id
-    AND t.deleted != 1
-    AND t.sticky != 1
-    LEFT JOIN {interaction_forum_subscription_forum} s
-    ON s.forum = f.id
-    AND s."user" = ?
-    WHERE f.id = ?
-    AND f.deleted != 1
-    GROUP BY 1, 2, 3, 5',
-    array($userid, $forumid)
+$breadcrumbs = array(
+    array(
+        get_config('wwwroot') . 'interaction/forum/index.php?group=' . $forum->groupid,
+        get_string('nameplural', 'interaction.forum')
+    ),
+    array(
+        get_config('wwwroot') . 'interaction/forum/view.php?id=' . $forumid,
+        $forum->title
+    )
 );
 
 require_once('pieforms/pieform.php');
@@ -177,7 +180,8 @@ $pagination = build_pagination(array(
 ));
 
 $smarty = smarty();
-$smarty->assign('groupname', $group->name);
+$smarty->assign('breadcrumbs', $breadcrumbs);
+$smarty->assign('groupname', $forum->groupname);
 $smarty->assign('forum', $forum);
 $smarty->assign('moderator', $moderator);
 $smarty->assign('admin', $admin);

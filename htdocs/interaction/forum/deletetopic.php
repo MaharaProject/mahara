@@ -31,40 +31,54 @@ safe_require('interaction' ,'forum');
 require('group.php');
 $topicid = param_integer('id');
 
-$forum = get_record_sql(
-    'SELECT f."group", f.id, f.title
+$topic = get_record_sql(
+    'SELECT f."group", f.id as forumid, f.title, p.subject, p.body
     FROM {interaction_forum_topic} t
     INNER JOIN {interaction_instance} f
     ON f.id = t.forum
     AND f.deleted != 1
+    INNER JOIN {interaction_forum_post} p
+    ON p.topic = t.id
+    AND p.parent IS NULL
     WHERE t.id = ?
     AND t.deleted != 1',
     array($topicid)
 );
 
-if (!$forum) {
+if (!$topic) {
 	throw new NotFoundException(get_string('cantfindtopic', 'interaction.forum', $topicid));
 }
 
-$membership = user_can_access_group((int)$forum->group);
+$membership = user_can_access_group((int)$topic->group);
 
 $admin = (bool)($membership & GROUP_MEMBERSHIP_OWNER);
 
-$moderator = $admin || is_forum_moderator((int)$forum->id);
+$moderator = $admin || is_forum_moderator((int)$topic->forumid);
 
 if (!$moderator) {
     throw new AccessDeniedException(get_string('cantdeletetopic', 'interaction.forum'));
 }
 
-$post = get_record_sql(
-    'SELECT p.subject, p.body
-    FROM {interaction_forum_post} p
-    WHERE p.topic = ?
-    AND p.parent IS NULL',
-    array($topicid)
-);
+define('TITLE', get_string('deletetopicvariable', 'interaction.forum', $topic->subject));
 
-define('TITLE', get_string('deletetopic', 'interaction.forum', $post->subject));
+$breadcrumbs = array(
+    array(
+        get_config('wwwroot') . 'interaction/forum/index.php?group=' . $topic->group,
+        get_string('nameplural', 'interaction.forum')
+    ),
+    array(
+        get_config('wwwroot') . 'interaction/forum/view.php?id=' . $topic->forumid,
+        $topic->title
+    ),
+    array(
+        get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $topicid,
+        $topic->subject
+    ),
+    array(
+        get_config('wwwroot') . 'interaction/forum/deletetopic.php?id=' . $topicid,
+        get_string('deletetopic', 'interaction.forum')
+    )
+);
 
 require_once('pieforms/pieform.php');
 
@@ -94,13 +108,13 @@ function deletepost_submit(Pieform $form, $values) {
         FROM interaction_forum_topic
         WHERE id = ?',
         array($topicid)
-    );
-    $forumid = $forumid->forum;
+    )->forum;
     redirect('/interaction/forum/view.php?id=' . $forumid);
 }
 
 $smarty = smarty();
-$smarty->assign('forum', $forum->title);
+$smarty->assign('breadcrumbs', $breadcrumbs);
+$smarty->assign('forum', $topic->title);
 $smarty->assign('heading', TITLE);
 $smarty->assign('deleteform', $form);
 $smarty->display('interaction:forum:deletetopic.tpl');

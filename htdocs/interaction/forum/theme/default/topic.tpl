@@ -2,6 +2,13 @@
 {include file="sidebar.tpl"}
 
 {include file="columnleftstart.tpl"}
+
+<p>
+{foreach from=$breadcrumbs item=item}
+<a href="{$item[0]}">{$item[1]|escape}</a>
+{/foreach}
+</p>
+
 <h2>{$topic->forumtitle|escape}</h2>
 <h3>{$topic->subject|escape}</h3>
 {if $moderator}

@@ -32,7 +32,7 @@ require_once('group.php');
 
 $postid = param_integer('id');
 $post = get_record_sql(
-    'SELECT p.subject, p.topic, p.parent, t.forum, p2.subject as topicsubject, f.group
+    'SELECT p.subject, p.topic, p.parent, t.forum, p2.subject as topicsubject, f.group, f.title as forumtitle
     FROM {interaction_forum_post} p
     INNER JOIN {interaction_forum_topic} t
     ON p.topic = t.id
@@ -62,7 +62,26 @@ if (!$moderator) {
     throw new AccessDeniedException(get_string('cantdeletepost', 'interaction.forum'));
 }
 
-define('TITLE', get_string('deletepost', 'interaction.forum', $post->subject));
+define('TITLE', get_string('deletepostvariable', 'interaction.forum', $post->subject));
+
+$breadcrumbs = array(
+    array(
+        get_config('wwwroot') . 'interaction/forum/index.php?group=' . $post->group,
+        get_string('nameplural', 'interaction.forum')
+    ),
+    array(
+        get_config('wwwroot') . 'interaction/forum/view.php?id=' . $post->forum,
+        $post->forumtitle
+    ),
+    array(
+        get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $post->topic,
+        $post->topicsubject
+    ),
+    array(
+        get_config('wwwroot') . 'interaction/forum/deletepost.php?id=' . $postid,
+        get_string('deletepost', 'interaction.forum')
+    )
+);
 
 require_once('pieforms/pieform.php');
 
@@ -92,6 +111,7 @@ function deletepost_submit(Pieform $form, $values) {
 }
 
 $smarty = smarty();
+$smarty->assign('breadcrumbs', $breadcrumbs);
 $smarty->assign('topicsubject', $post->topicsubject);
 $smarty->assign('heading', TITLE);
 $smarty->assign('deleteform', $form);
