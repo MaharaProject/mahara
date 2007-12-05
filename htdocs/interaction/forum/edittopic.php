@@ -46,7 +46,7 @@ if ($topicid==0) {
     );
 
     if (!$forum) {
-        throw new NotFoundException("Couldn't find forum with id $forumid");
+        throw new NotFoundException(get_string('cantfindforum', 'interaction.forum', $forumid));
     }
 
     $forumtitle = $forum->title;
@@ -57,7 +57,7 @@ if ($topicid==0) {
     $moderator = $admin || is_forum_moderator($forumid);
 
     if (!$membership) {
-        throw new AccessDeniedException();
+        throw new AccessDeniedException(get_string('cantaddtopic', 'interaction.forum'));
     }
 }
 
@@ -78,7 +78,7 @@ if (isset($topicid)) {
     );
     
     if (!$topic) {
-        throw new NotFoundException("Couldn't find topic with id $topicid");
+        throw new NotFoundException(get_string('cantfindtopic', 'interaction.forum', $topicid));
     }
 
     $forumid = $topic->forumid;
@@ -91,7 +91,7 @@ if (isset($topicid)) {
     $moderator = $admin || is_forum_moderator((int)$forumid);
 
     if (!$moderator) {
-        throw new AccessDeniedException();
+        throw new AccessDeniedException(get_string('cantedittopic', 'interaction.forum'));
     }
 }
 

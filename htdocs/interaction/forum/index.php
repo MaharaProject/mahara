@@ -33,7 +33,7 @@ define('TITLE', get_string('nameplural', 'interaction.forum'));
 $groupid = param_integer('group');
 
 if (!record_exists('group', 'id', $groupid)) {
-	throw new GroupNotFoundException("Couldn't find group with id $groupid");
+	throw new GroupNotFoundException(get_string('groupnotfound', 'group', $groupid));
 }
 
 $groupname = get_record_sql(
@@ -46,7 +46,7 @@ $groupname = get_record_sql(
 $membership = user_can_access_group($groupid);
 
 if (!$membership) {
-    throw new AccessDeniedException();
+    throw new AccessDeniedException(get_string('cantviewforums', 'interaction.forum'));
 }
 
 $admin = (bool)($membership & GROUP_MEMBERSHIP_OWNER);

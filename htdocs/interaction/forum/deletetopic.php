@@ -43,7 +43,7 @@ $forum = get_record_sql(
 );
 
 if (!$forum) {
-	throw new NotFoundException("Couldn't find topic with id $topicid");
+	throw new NotFoundException(get_string('cantfindtopic', 'interaction.forum', $topicid));
 }
 
 $membership = user_can_access_group((int)$forum->group);
@@ -53,10 +53,10 @@ $admin = (bool)($membership & GROUP_MEMBERSHIP_OWNER);
 $moderator = $admin || is_forum_moderator((int)$forum->id);
 
 if (!$moderator) {
-    throw new AccessDeniedException();
+    throw new AccessDeniedException(get_string('cantdeletetopic', 'interaction.forum'));
 }
 
-$postinfo = get_record_sql(
+$post = get_record_sql(
     'SELECT p.subject, p.body
     FROM {interaction_forum_post} p
     WHERE p.topic = ?
@@ -64,7 +64,7 @@ $postinfo = get_record_sql(
     array($topicid)
 );
 
-define('TITLE', get_string('deletetopic', 'interaction.forum', $postinfo->subject));
+define('TITLE', get_string('deletetopic', 'interaction.forum', $post->subject));
 
 require_once('pieforms/pieform.php');
 

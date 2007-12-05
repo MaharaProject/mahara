@@ -54,13 +54,13 @@ $topic = get_record_sql(
 );
 
 if (!$topic) {
-    throw new NotFoundException("Couldn't find topic with id $topicid");
+    throw new NotFoundException(get_string('cantfindtopic', 'interaction.forum', $topicid));
 }
 
 $membership = user_can_access_group((int)$topic->group);
 
 if (!$membership) {
-    throw new AccessDeniedException();
+    throw new AccessDeniedException(get_string('cantviewtopic', 'interaction.forum'));
 }
 
 $admin = (bool)($membership & GROUP_MEMBERSHIP_OWNER);

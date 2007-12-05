@@ -3,6 +3,17 @@
 $string['addtitle'] = 'Add forum';
 $string['addtopic'] = 'Add topic';
 $string['body'] = 'Body';
+$string['cantaddpost'] = 'You are not allowed to post in this forum';
+$string['cantaddtopic'] = 'You are not allowed to add topics to this forum';
+$string['cantdeletepost'] = 'You are not allowed to delete posts in this forum';
+$string['cantdeletetopic'] = 'You are not allowed to delete topics in this forum';
+$string['canteditpost'] = 'You are not allowed to edit that post';
+$string['cantedittopic'] = 'You are not allowed to edit topics in this forum';
+$string['cantfindforum'] = 'Coudn\'t find forum with id %s';
+$string['cantfindpost'] = 'Couldn\'t find post with id %s';
+$string['cantfindtopic'] = 'Couldn\'t find topic with id %s';
+$string['cantviewforums'] = 'You are not allowed to view forums in this group';
+$string['cantviewtopic'] = 'You are not allowed to view topics in this forum';
 $string['closed'] = 'Closed';
 $string['count'] = 'Count';
 $string['currentmoderators'] = 'Current Moderators';

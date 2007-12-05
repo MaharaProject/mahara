@@ -49,7 +49,7 @@ $post = get_record_sql(
 );
 
 if (!$post) {
-    throw new NotFoundException("Couldn't find post with id $postid");
+    throw new NotFoundException(get_string('cantfindpost', 'interaction.forum', $postid));
 }
 
 $membership = user_can_access_group((int)$post->group);
@@ -59,7 +59,7 @@ $admin = (bool)($membership & GROUP_MEMBERSHIP_OWNER);
 $moderator = $admin || is_forum_moderator((int)$post->forum);
 
 if (!$moderator) {
-    throw new AccessDeniedException();
+    throw new AccessDeniedException(get_string('cantdeletepost', 'interaction.forum'));
 }
 
 define('TITLE', get_string('deletepost', 'interaction.forum', $post->subject));

@@ -57,7 +57,7 @@ if ($postid==0) {
     );
 
     if (!$topic) {
-        throw new NotFoundException("Couldn't find post with id $parentid");
+        throw new NotFoundException(get_string('cantfindpost', 'interaction.forum', $parentid));
     }
 
     $membership = user_can_access_group((int)$topic->group);
@@ -67,7 +67,7 @@ if ($postid==0) {
     $moderator = $admin || is_forum_moderator((int)$topic->forum);
 
     if (!$membership || (!$moderator && $topic->closed)) {
-        throw new AccessDeniedException();
+        throw new AccessDeniedException(get_string('cantaddpost', 'interaction.forum'));
     }
 
     $topicid = $topic->id;
@@ -94,7 +94,7 @@ if (isset($postid)) {
     );
 
     if (!$post) {
-        throw new NotFoundException("Couldn't find post with id $postid");
+        throw new NotFoundException(get_string('cantfindpost', 'interaction.forum', $postid));
     }
     
     $topicid = $post->topic;
@@ -109,7 +109,7 @@ if (isset($postid)) {
     if (!$moderator &&
         ($post->poster != $userid
         || (time() - strtotime($post->ctime)) > (30 * 60))) {
-        throw new AccessDeniedException();
+        throw new AccessDeniedException(get_string('canteditpost', 'interaction.forum'));
     }
 }
 

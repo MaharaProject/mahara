@@ -47,13 +47,13 @@ $group = get_record_sql(
 );
 
 if (!$group) {
-    throw new InteractionInstanceNotFoundException("Couldn't find forum with id $forumid");
+    throw new InteractionInstanceNotFoundException(get_string('cantfindforum', 'interaction.forum', $forumid));
 }
 
 $membership = user_can_access_group((int)$group->id);
 
 if (!$membership) {
-    throw new AccessDeniedException();
+    throw new AccessDeniedException(get_string('cantviewforums', 'interaction.forum'));
 }
 
 $admin = (bool)($membership & GROUP_MEMBERSHIP_OWNER);
