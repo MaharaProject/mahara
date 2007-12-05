@@ -37,7 +37,7 @@ $data = pieform_element_artefactchooser_set_attributes(
     call_static_method(generate_class_name('blocktype', $extradata->blocktype), 'artefactchooser_element', $extradata->value)
 );
 $data['offset'] = param_integer('offset', 0);
-list($html, $pagination, $count) = View::build_artefactchooser_data($data);
+list($html, $pagination, $count, $offset) = View::build_artefactchooser_data($data);
 
 json_reply(false, array(
     'message' => null,
@@ -47,6 +47,7 @@ json_reply(false, array(
         'pagination_js' => $pagination['javascript'],
         'count' => $count,
         'results' => $count . ' ' . ($count == 1 ? get_string('result') : get_string('results')),
+        'offset' => $offset,
     )
 ));
 
