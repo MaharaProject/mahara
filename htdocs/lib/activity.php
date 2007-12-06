@@ -158,7 +158,7 @@ function handle_activity($activitytype, $data, $cron=false) {
                 break;
             case 'institutionmessage':
                 if ($data->messagetype == 'request') {
-                    $userstring = $data->username . ' (' . $data->fullname . ')';
+                    $userstring = $data->fullname . ' (' . $data->username . ')';
                     $data->subject = get_string('institutionrequestsubject', 'activity', $userstring, 
                                                 $data->institution->displayname);
                     $data->message = get_string('institutionrequestmessage', 'activity');
@@ -171,6 +171,14 @@ function handle_activity($activitytype, $data, $cron=false) {
                         array($data->institution->name));
                     $users = activity_get_users($activitytype->name, $admins);
                 } else if ($data->messagetype == 'invite') {
+                    if (!is_array($data->users) || empty($data->users)) {
+                        throw new InvalidArgumentException("Institution invitations expect an array of users");
+                    }
+                    $data->subject = get_string('institutioninvitesubject', 'activity', 
+                                                $data->institution->displayname);
+                    $data->message = get_string('institutioninvitemessage', 'activity');
+                    $data->url = get_config('wwwroot') . 'account/index.php';
+                    $users = activity_get_users($activitytype->name, $data->users);
                 }
                 break;
             case 'usermessage':

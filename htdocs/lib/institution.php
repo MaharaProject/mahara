@@ -215,25 +215,29 @@ class Institution {
     }
 
     public function addUserAsMember($user) {
+        if (is_numeric($user)) {
+            $user = get_record('usr', 'id', $user);
+        }
         $userinst = new StdClass;
         $userinst->institution = $this->name;
-        if (is_object($user)) {
-            if (!empty($user->studentid)) {
-                $userinst->studentid = $user->studentid;
-            }
-            $userinst->usr = $user->id;
-        } else {
-            $userinst->usr = $user;
+        if (!empty($user->studentid)) {
+            $userinst->studentid = $user->studentid;
         }
+        $userinst->usr = $user->id;
         if (!empty($this->defaultmembershipperiod)) {
             $userinst->expiry = db_format_timestamp(time() + $this->defaultmembershipperiod);
         }
+        $message = (object) array(
+            'users' => array($user->id),
+            'subject' => get_string('institutionmemberconfirmsubject'),
+            'message' => get_string('institutionmemberconfirmmessage', 'mahara', $this->displayname),
+        );
         db_begin();
         insert_record('usr_institution', $userinst);
         delete_records('usr_institution_request', 'usr', $userinst->usr, 'institution', $this->name);
-        // Send confirmation
-        db_commit();
+        activity_occurred('maharamessage', $message);
         handle_event('updateuser', $userinst->usr);
+        db_commit();
     }
 
     public function addRequestFromUser($user) {
@@ -246,31 +250,38 @@ class Institution {
                 'studentid'    => $user->studentid,
                 'ctime'        => db_format_timestamp(time())
             );
+            $message = (object) array(
+                'messagetype' => 'request',
+                'username' => $user->username,
+                'fullname' => $user->firstname . ' ' . $user->lastname,
+                'institution' => (object)array('name' => $this->name, 'displayname' => $this->displayname),
+            );
+            db_begin();
             insert_record('usr_institution_request', $request);
-            // Send request notification
-            $data = new StdClass;
-            $data->messagetype = 'request';
-            $data->username = $user->username;
-            $data->fullname = $user->firstname . ' ' . $user->lastname;
-            $data->institution = (object)array('name' => $this->name, 'displayname' => $this->displayname);
-            $data->url = get_config('wwwroot') . 'foo';
-            activity_occurred('institutionmessage', $data);
+            activity_occurred('institutionmessage', $message);
+            handle_event('updateuser', $user->id);
+            db_commit();
         } else if ($request->confirmedinstitution) {
             $this->addUserAsMember($user);
         }
-        handle_event('updateuser', $user->id);
     }
 
     public function inviteUser($user) {
         $userid = is_object($user) ? $user->id : $user;
+        db_begin();
         insert_record('usr_institution_request', (object) array(
             'usr' => $userid,
             'institution' => $this->name,
             'confirmedinstitution' => 1,
             'ctime' => db_format_timestamp(time())
         ));
-        // Send notification
+        activity_occurred('institutionmessage', (object) array(
+            'messagetype' => 'invite',
+            'users' => array($userid),
+            'institution' => (object)array('name' => $this->name, 'displayname' => $this->displayname),
+        ));
         handle_event('updateuser', $userid);
+        db_commit();
     }
 
     public function removeMember($user) {

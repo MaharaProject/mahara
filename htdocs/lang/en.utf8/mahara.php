@@ -286,6 +286,8 @@ $string['youhavebeeninvitedtojoin'] = 'You have been invited to join %s';
 $string['confirminvitation'] = 'Confirm invitation';
 $string['joininstitution'] = 'Join institution';
 $string['requestmembershipofaninstitution'] = 'Request membership of an institution';
+$string['institutionmemberconfirmsubject'] = 'Institution membership confirmation';
+$string['institutionmemberconfirmmessage'] = 'You have been added as a member of %s.';
 
 // my views
 $string['accessstartdate'] = 'Access start date';
