@@ -74,7 +74,7 @@ function creategroup_validate(Pieform $form, $values) {
     global $USER;
     global $SESSION;
 
-    $cid = get_field('group', 'id', 'owner', $USER->get('id'), 'name', $values['name']);
+    $cid = get_field('group', 'id', 'name', $values['name']);
 
     if ($cid) {
         $form->set_error('name', get_string('groupalreadyexists'));
