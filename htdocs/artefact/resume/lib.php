@@ -178,7 +178,7 @@ class ArtefactTypeContactinformation extends ArtefactTypeResume {
         $fields = ArtefactTypeContactinformation::get_profile_fields();
         foreach ($fields as $f) {
             try {
-                $$f = artefact_instance_from_type($f);
+                $$f = artefact_instance_from_type($f, $this->get('owner'));
                 $rendered = $$f->render_self(array());
                 $smarty->assign($f, format_whitespace($rendered['html']));
                 $smarty->assign('hascontent', true);
