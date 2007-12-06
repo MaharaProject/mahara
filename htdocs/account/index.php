@@ -196,7 +196,8 @@ if (!empty($member)) {
     foreach ($member as $i) {
         $elements[] = array(
             'type' => 'submit',
-            'name' => 'leave_' . $i->institution,
+            'name' => '_leave_' . $i->institution,
+            'confirm' => get_string('reallyleaveinstitution'),
             'title' => get_string('youareamemberof', 'mahara', 
                                   $institutions[$i->institution]->displayname),
             'value' => get_string('leaveinstitution')
@@ -218,7 +219,7 @@ if (!empty($member)) {
 function leaveinstitution_submit(Pieform $form, $values) {
     global $USER;
     foreach ($values as $k => $v) {
-        if (preg_match('/^leave\_([a-z0-9]+)$/', $k, $m)) {
+        if (preg_match('/^\_leave\_([a-z0-9]+)$/', $k, $m)) {
             $institution = $m[1];
             break;
         }
@@ -240,7 +241,7 @@ if (!empty($requested)) {
     foreach ($requested as $i) {
         $elements[] = array(
             'type' => 'submit',
-            'name' => 'cancelrequest_' . $i,
+            'name' => '_cancelrequest_' . $i,
             'title' => get_string('youhaverequestedmembershipof', 'mahara', 
                                   $institutions[$i]->displayname),
             'value' => get_string('cancelrequest')
@@ -262,7 +263,7 @@ if (!empty($requested)) {
 function cancelrequest_submit(Pieform $form, $values) {
     global $USER;
     foreach ($values as $k => $v) {
-        if (preg_match('/^cancelrequest\_([a-z0-9]+)$/', $k, $m)) {
+        if (preg_match('/^\_cancelrequest\_([a-z0-9]+)$/', $k, $m)) {
             $institution = $m[1];
             break;
         }
@@ -284,7 +285,7 @@ if (!empty($invited)) {
     foreach ($invited as $i) {
         $elements[] = array(
             'type' => 'submit',
-            'name' => 'confirminvite_' . $i,
+            'name' => '_confirminvite_' . $i,
             'title' => get_string('youhavebeeninvitedtojoin', 'mahara', 
                                   $institutions[$i]->displayname),
             'value' => get_string('joininstitution')
@@ -306,7 +307,7 @@ if (!empty($invited)) {
 function confirminvite_submit(Pieform $form, $values) {
     global $USER;
     foreach ($values as $k => $v) {
-        if (preg_match('/^confirminvite\_([a-z0-9]+)$/', $k, $m)) {
+        if (preg_match('/^\_confirminvite\_([a-z0-9]+)$/', $k, $m)) {
             $institution = $m[1];
             break;
         }

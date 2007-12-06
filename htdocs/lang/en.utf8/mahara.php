@@ -280,6 +280,7 @@ $string['notifications'] = 'Notifications';
 $string['institutionmembership'] = 'Institution membership';
 $string['youareamemberof'] = 'You are a member of %s';
 $string['leaveinstitution'] = 'Leave institution';
+$string['reallyleaveinstitution'] = 'Are you sure you want to leave this institution?';
 $string['youhaverequestedmembershipof'] = 'You have requested membership of %s';
 $string['cancelrequest'] = 'Cancel request';
 $string['youhavebeeninvitedtojoin'] = 'You have been invited to join %s';
