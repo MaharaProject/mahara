@@ -56,7 +56,7 @@ $form = pieform(array(
         'submit' => array(
             'type'  => 'submitcancel',
             'value' => array(get_string('yes'), get_string('no')),
-            'goto'  => get_config('wwwroot') . 'group/interactions.php?id=' . $group->id,
+            'goto'  => get_config('wwwroot') . 'interaction/' .$instance->get('plugin') . '/view.php?id=' . $instance->get('id'),
         )
     )
 ));
