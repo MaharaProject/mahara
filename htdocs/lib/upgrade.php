@@ -639,6 +639,7 @@ function core_install_firstcoredata_defaults() {
         array('objectionable', 1, 1),
         array('virusrepeat', 1, 1),
         array('virusrelease', 1, 1),
+        array('institutionmessage', 0, 0),
     );
 
     foreach ($activitytypes as $at) {

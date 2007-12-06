@@ -248,6 +248,13 @@ class Institution {
             );
             insert_record('usr_institution_request', $request);
             // Send request notification
+            $data = new StdClass;
+            $data->messagetype = 'request';
+            $data->username = $user->username;
+            $data->fullname = $user->firstname . ' ' . $user->lastname;
+            $data->institution = (object)array('name' => $this->name, 'displayname' => $this->displayname);
+            $data->url = get_config('wwwroot') . 'foo';
+            activity_occurred('institutionmessage', $data);
         } else if ($request->confirmedinstitution) {
             $this->addUserAsMember($user);
         }

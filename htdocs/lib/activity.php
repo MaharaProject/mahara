@@ -156,6 +156,23 @@ function handle_activity($activitytype, $data, $cron=false) {
                 }
                 $users = activity_get_users($activitytype->name, $data->users);
                 break;
+            case 'institutionmessage':
+                if ($data->messagetype == 'request') {
+                    $userstring = $data->username . ' (' . $data->fullname . ')';
+                    $data->subject = get_string('institutionrequestsubject', 'activity', $userstring, 
+                                                $data->institution->displayname);
+                    $data->message = get_string('institutionrequestmessage', 'activity');
+                    $data->url = get_config('wwwroot') . 'admin/users/institutionusers.php';
+                    $admins = get_column_sql('
+                        SELECT u.id
+                        FROM {usr} u
+                        LEFT OUTER JOIN {usr_institution} i ON (u.id = i.usr AND i.institution = ?)
+                        WHERE u.admin = 1 OR i.admin = 1',
+                        array($data->institution->name));
+                    $users = activity_get_users($activitytype->name, $admins);
+                } else if ($data->messagetype == 'invite') {
+                }
+                break;
             case 'usermessage':
                 if (!is_numeric($data->userto) || !is_numeric($data->userfrom)) {
                     throw new InvalidArgumentException("User message requires userto and userfrom to be set");
@@ -394,11 +411,18 @@ function activity_get_users($activitytype, $userids=null, $userobjs=null, $admin
  */
 function activity_set_defaults($user_id) {
     $activitytypes = get_records_array('activity_type', 'admin', 0);
+    $haveemail = in_array('email', array_map(create_function('$a', 'return $a->name;'),
+                                             plugins_installed('notification')));
     foreach ($activitytypes as $type) {
+        if ($type->name == 'institutionmessage' && $haveemail) {
+            $method = 'email';
+        } else {
+            $method = 'internal';
+        }
         insert_record('usr_activity_preference', (object)array(
             'usr' => $user_id,
             'activity' => $type->name,
-            'method' => 'internal',
+            'method' => $method,
         ));
     }
     

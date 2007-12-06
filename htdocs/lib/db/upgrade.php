@@ -514,6 +514,27 @@ function xmldb_core_upgrade($oldversion=0) {
         execute_sql('ALTER TABLE {institution} ADD COLUMN defaultmembershipperiod bigint');
     }
 
+    if ($oldversion < 2007120500) {
+        insert_record('activity_type', (object) array(
+            'name' => 'institutionmessage',
+            'admin' => 0,
+            'delay' => 0
+        ));
+        if (in_array('email', array_map(create_function('$a', 'return $a->name;'),
+                                        plugins_installed('notification')))) {
+            $method = 'email';
+        } else {
+            $method = 'internal';
+        }
+        foreach (get_column('usr', 'id') as $userid) {
+            insert_record('usr_activity_preference', (object) array(
+                'usr' => $userid,
+                'activity' => 'institutionmessage',
+                'method' => $method
+            ));
+        }
+    }
+
     return $status;
 
 }
