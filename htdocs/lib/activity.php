@@ -67,8 +67,7 @@ function activity_occurred($activitytype, $data) {
     -       and $subject and $message (contents of message)
  *  - <b>feedback (artefact)</b> must contain both $artefact (id) and $view (id) and $message 
  *  - <b>feedback (view)</b> must contain $view (id) and $message
- *  - <b>watchlist (view) </b> must contain $view (id of view) 
-    -       and should also contain $subject (or a boring default will be used)
+ *  - <b>watchlist (view) </b> must contain $view (id of view) as $message
  *  - <b>viewaccess</b> must contain $owner userid of view owner AND $view (id of view) and $oldusers array of userids before access change was committed.
  */
 function handle_activity($activitytype, $data, $cron=false) {
@@ -217,11 +216,10 @@ function handle_activity($activitytype, $data, $cron=false) {
             // and now the harder ones
             case 'watchlist':
                 if (!empty($data->view)) {
-                    if (empty($data->subject)) {
-                        throw new InvalidArgumentException("subject must be provided for watchlist view");
+                    if (empty($data->message)) {
+                        throw new InvalidArgumentException("message must be provided for watchlist view");
                     }
-                    $oldsubject = isset($data->subject) ? $data->subject : '';
-                    $data->subject = get_string('newwatchlistmessage', 'activity');
+                    $data->subject = get_string('newwatchlistmessagesubject', 'activity');
                     if (!$viewinfo = get_record_sql('SELECT u.*, v.title FROM {usr} u
                                                      JOIN {view} v ON v.owner = u.id
                                                      WHERE v.id = ?', array($data->view))) {
@@ -230,7 +228,6 @@ function handle_activity($activitytype, $data, $cron=false) {
                         }
                         throw new InvalidArgumentException("Couldn't find view with id " . $data->view);
                     }
-                    $data->message = $oldsubject . ' ' . $viewinfo->title;
                     $sql = 'SELECT u.*, p.method, ' . $casturl . ' AS url
                                 FROM {usr_watchlist_view} wv
                                 JOIN {usr} u

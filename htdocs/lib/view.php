@@ -595,6 +595,14 @@ class View {
         try {
             $values['returndata'] = defined('JSON');
             $returndata = $this->$action($values);
+
+            // Tell the watchlist that the view changed
+            $data = (object)array(
+                'view' => $this->get('id'),
+                'message' => get_string('newwatchlistmessageview', 'activity', $this->get('title')),
+            );
+            activity_occurred('watchlist', $data);
+
             if (!defined('JSON')) {
                 $message = $this->get_viewcontrol_ok_string($action);
             }
