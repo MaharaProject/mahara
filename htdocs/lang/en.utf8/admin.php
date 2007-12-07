@@ -312,6 +312,11 @@ $string['currentmembers'] = 'Current Members';
 $string['userstoberemoved'] = 'Users to be removed';
 $string['removeusers'] = 'Remove Users';
 
+$string['institutionusersupdatedrequesters'] = 'Users added';
+$string['institutionusersupdatedmembers'] = 'Users removed';
+$string['institutionusersupdatednonmembers'] = 'Invitations sent';
+
+
 // general stuff
 $string['notificationssaved'] = 'Notification settings saved';
 

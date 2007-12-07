@@ -151,7 +151,7 @@ function institutionusers_submit(Pieform $form, $values) {
         $institution->{$values['update']}($id);
     }
     db_commit();
-    $SESSION->add_ok_msg(get_string('usersupdated', 'admin'));
+    $SESSION->add_ok_msg(get_string('institutionusersupdated'.$values['usertype'], 'admin'));
     redirect($url);
 }
 
