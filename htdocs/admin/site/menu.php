@@ -87,9 +87,9 @@ function formatrow (item) {
     var type = eval(item.type);
     var linkedto = A({'href':item.linkedto},item.linktext);
     var del = INPUT({'type':'button','class':'button','value':{$getstring['delete']}});
-    del.onclick = function () { delitem(item.id); };
+    connect(del, 'onclick', function () { delitem(item.id); });
     var edit = INPUT({'type':'button','class':'button','value':{$getstring['edit']}});
-    edit.onclick = function () { edititem(item); };
+    connect(edit, 'onclick', function () { edititem(item); });
     var cells = map(
         partial(TD,null),
         [
@@ -120,7 +120,7 @@ function editform(item) {
     // Either a save, a cancel button, or both.
     var savecancel = [];
     var save = INPUT({'type':'button','class':'button'});
-    save.onclick = function () { saveitem(item.id); };
+    connect(save, 'onclick', function () { saveitem(item.id); });
 
     // The link field will be a text box or a select in the case of an admin file.
     var linkedto = null;
@@ -134,8 +134,8 @@ function editform(item) {
     if (!item.linkedto) {
         item.linkedto = '';
         item.name = '';
-        elink.onclick = function () { changeaddform('externallink'); };
-        afile.onclick = function () { changeaddform('adminfile'); };
+        connect(elink, 'onclick', function () { changeaddform('externallink'); });
+        connect(afile, 'onclick', function () { changeaddform('adminfile'); });
         // The save button says 'add', and there's no cancel button.
         setNodeAttribute(save,'value',{$getstring['add']});
         savecancel = [save];
@@ -145,10 +145,10 @@ function editform(item) {
         var rowtype = 'edit';
         setNodeAttribute(save,'value',{$getstring['update']});
         var cancel = INPUT({'type':'button','class':'button','value':{$getstring['cancel']}});
-        cancel.onclick = closeopenedits;
+        connect(cancel, 'onclick', closeopenedits);
         savecancel = [save,cancel];
-        elink.onclick = function () { changeeditform(item,'externallink'); };
-        afile.onclick = function () { changeeditform(item,'adminfile'); };
+        connect(elink, 'onclick', function () { changeeditform(item,'externallink'); });
+        connect(afile, 'onclick', function () { changeeditform(item,'adminfile'); });
     }
 
     // A text field for the name
@@ -241,7 +241,7 @@ function saveitem(itemid) {
         displayMessage(get_string('namedfieldempty',{$getstring['linkedto']}),'error');
         return false;
     }
-    logDebug({$getstring['savingmenuitem']});
+
     var data = {'type':eval('f.type'+itemid+'[0].checked') ? 'externallink' : 'adminfile',
                 'name':name,
                 'linkedto':linkedto,
