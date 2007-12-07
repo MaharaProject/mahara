@@ -167,16 +167,16 @@ function build_admin_user_search_results($search, $offset, $limit, $sortby, $sor
 
     $cols = array(
         'icon'        => array('name'     => '',
-                               'template' => file_get_contents($templatedir . 'icon.tpl')),
+                               'template' => '<img src="' . get_config('wwwroot') . 'thumb.php?type=profileicon&size=40x40&id={$r.id}" alt="' . get_string('profileimage') . '" />'),
         'firstname'   => array('name'     => get_string('firstname')),
         'lastname'    => array('name'     => get_string('lastname')),
         'username'    => array('name'     => get_string('username'),
-                               'template' => file_get_contents($templatedir . 'username.tpl')),
+                               'template' => '<a href="' . get_config('wwwroot') . 'user/view.php?id={$r.id}">{$r.username|escape}</a>'),
         'email'       => array('name'     => get_string('email')),
         'institution' => array('name'     => get_string('institution'),
-                               'template' => file_get_contents($templatedir . 'institution.tpl')),
+                               'template' => '{$institutions[$r.institution]->displayname|escape}'),
         'suspend'     => array('name'     => '',
-                               'template' => file_get_contents($templatedir . 'suspendlink.tpl'))
+                               'template' => '{if !$r.suspended || $r.suspended == \'f\'}<a class="suspend-user-link" href="' . get_config('wwwroot') . 'admin/users/suspend.php?id={$r.id}">' . get_string('suspenduser', 'admin') . '</a>{/if}'),
     );
 
     $smarty = smarty_core();
