@@ -1342,6 +1342,10 @@ a.folderhover {
     width: 500px;
 }
 
+form#edituser_institution {
+    width: 600px;
+}
+
 .maincontent #institution table {
     padding: 5px 0 0 15px;
     width: 450px;

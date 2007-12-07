@@ -33,16 +33,17 @@ define('SECTION_PLUGINNAME', 'admin');
 require_once('pieforms/pieform.php');
 
 $id = param_integer('id');
-if (!$user = get_record('usr', 'id', $id)) {
-    throw new UserNotFoundException("User not found");
-}
+$user = new User;
+$user->find_by_id($id);
 
-// Deny access to institutional admins from different institutions to the displayed user
-$userinstitution = get_record('usr_institution', 'usr', $id, null, null, null, null,
-                              'usr,institution,studentid,staff,admin,'.db_format_tsfield('expiry'));
 global $USER;
 if (!$USER->get('admin')) {
-    if (empty($userinstitution) || !$USER->is_institutional_admin($userinstitution->institution)) {
+    // Institutional admins must share an institution with the displayed user
+    $shared = false;
+    foreach ($user->get('institutions') as $i) {
+        $shared = $shared || $USER->is_institutional_admin($i->institution);
+    }
+    if (!$shared) {
         redirect(get_config('wwwroot').'user/view.php?id='.$id);
     }
 }
@@ -58,7 +59,9 @@ if (empty($user->suspendedcusr)) {
                  'value'   => $id,
             ),
             'reason' => array(
-                'type'        => 'text',
+                'type'        => 'textarea',
+                'rows'        => 5,
+                'cols'        => 60,
                 'title'       => get_string('reason'),
             ),
             'submit' => array(
@@ -144,12 +147,14 @@ if (count($authinstances) > 1) {
         }
     }
 
-    $elements['authinstance'] = array(
-        'type' => 'select',
-        'title' => get_string('authenticatedby', 'admin'),
-        'options' => $options,
-        'defaultvalue' => $user->authinstance
-    );
+    if (isset($options[$user->authinstance])) {
+        $elements['authinstance'] = array(
+            'type' => 'select',
+            'title' => get_string('authenticatedby', 'admin'),
+            'options' => $options,
+            'defaultvalue' => $user->authinstance,
+        );
+    }
 }
 
 $elements['submit'] = array(
@@ -198,67 +203,76 @@ function edituser_site_submit(Pieform $form, $values) {
 }
 
 
-// Institution settings
-$allinstitutions = get_records_array('institution');
-$options = array();
-foreach ($allinstitutions as $i) {
-    if ($USER->get('admin') || $i->name == 'mahara' || $i->name == $userinstitution->institution) {
-        $options[$i->name] = $i->displayname;
-    }
-}
+// Institution settings form
 
 $elements = array(
     'id' => array(
          'type'    => 'hidden',
          'value'   => $id,
      ),
-    'institution' => array(
-         'type'         => 'select',
-         'title'        => get_string('institution'),
-         'options'      => $options,
-         'defaultvalue' => empty($userinstitution) ? 'mahara' : $userinstitution->institution
-    ),
-    'change' => array(
-        'type'  => 'submit',
-        'value' => get_string('changeinstitution','admin'),
-    ),
 );
 
-if ($userinstitution) {
-    $elements['subtitle'] = array(
-        'type'         => 'html',
-        'title'        => get_string('settingsfor', 'admin'),
-        'value'        => $options[$userinstitution->institution],
+$allinstitutions = get_records_assoc('institution');
+$currentdate = getdate();
+foreach ($user->get('institutions') as $i) {
+    $elements[$i->institution.'_settings'] = array(
+        'type' => 'fieldset',
+        'legend' => $allinstitutions[$i->institution]->displayname,
+        'elements' => array(
+            $i->institution.'_expiry' => array(
+                'type'         => 'date',
+                'title'        => get_string('membershipexpiry'),
+                'minyear'      => $currentdate['year'],
+                'maxyear'      => $currentdate['year'] + 20,
+                'defaultvalue' => $i->expiry
+            ),
+            $i->institution.'_studentid' => array(
+                'type'         => 'text',
+                'title'        => get_string('studentid'),
+                'defaultvalue' => $i->studentid,
+            ),
+            $i->institution.'_staff' => array(
+                'type'         => 'checkbox',
+                'title'        => get_string('institutionstaff','admin'),
+                'defaultvalue' => $i->staff,
+            ),
+            $i->institution.'_admin' => array(
+                'type'         => 'checkbox',
+                'title'        => get_string('institutionadmin','admin'),
+                'defaultvalue' => $i->admin,
+            ),
+            $i->institution.'_submit' => array(
+                'type'  => 'submit',
+                'value' => get_string('update'),
+            ),
+        ),
     );
-    $currentdate = getdate();
-    $elements['expiry'] = array(
-        'type'         => 'date',
-        'title'        => get_string('membershipexpiry'),
-        'minyear'      => $currentdate['year'],
-        'maxyear'      => $currentdate['year'] + 20
-    );
-    if (!empty($userinstitution->expiry)) {
-        $elements['expiry']['defaultvalue'] = $userinstitution->expiry;
-    }
-    $elements['studentid'] = array(
-        'type'         => 'text',
-        'title'        => get_string('studentid'),
-        'defaultvalue' => $userinstitution->studentid,
-    );
-    $elements['staff'] = array(
-        'type'         => 'checkbox',
-        'title'        => get_string('institutionstaff','admin'),
-        'defaultvalue' => $userinstitution->staff,
-    );
-    $elements['admin'] = array(
-        'type'         => 'checkbox',
-        'title'        => get_string('institutionadmin','admin'),
-        'defaultvalue' => $userinstitution->admin,
-    );
-    $elements['submit'] = array(
+    $elements[$i->institution.'_remove'] = array(
         'type'  => 'submit',
-        'value' => get_string('update'),
+        'value' => get_string('remove'),
     );
+}
+
+// Only site admins can add institutions; institutional admins must invite
+if ($USER->get('admin') 
+    && (get_config('usersallowedmultipleinstitutions') || count($user->institutions) == 0)) {
+    $options = array();
+    foreach ($allinstitutions as $i) {
+        if (!$user->in_institution($i->name) && $i->name != 'mahara') {
+            $options[$i->name] = $i->displayname;
+        }
+    }
+    if (!empty($options)) {
+        $elements['addinstitution'] = array(
+            'type'         => 'select',
+            'title'        => get_string('addinstitution', 'admin'),
+            'options'      => $options,
+        );
+        $elements['add'] = array(
+            'type'  => 'submit',
+            'value' => get_string('addinstitution','admin'),
+        );
+    }
 }
 
 $institutionform = pieform(array(
@@ -270,52 +284,72 @@ $institutionform = pieform(array(
 ));
 
 function edituser_institution_submit(Pieform $form, $values) {
-    if (!$user = get_record('usr', 'id', $values['id'])) {
+    $user = new User;
+    if (!$user->find_by_id($values['id'])) {
         return false;
     }
-    $userinstitution = get_record('usr_institution', 'usr', $user->id);
+    $userinstitutions = $user->get('institutions');
 
-    // Make sure institutional admins are from the same institution as
-    // the user being edited
     global $USER;
-    if (!$USER->get('admin')
-        && (!$userinstitution || !$USER->is_institutional_admin($userinstitution->institution))) {
-        redirect('/admin/users/edit.php?id='.$user->id);
+    foreach ($userinstitutions as $i) {
+        if ($USER->get('admin') || $USER->is_institutional_admin($i->institution)) {
+            if (isset($values[$i->institution.'_submit'])) {
+                $newuser = (object) array(
+                    'usr'         => $user->id,
+                    'institution' => $i->institution,
+                    'ctime'       => $i->ctime,
+                    'studentid'   => $values[$i->institution . '_studentid'],
+                    'staff'       => (int) ($values[$i->institution . '_staff'] == 'on'),
+                    'admin'       => (int) ($values[$i->institution . '_admin'] == 'on'),
+                );
+                if ($values[$i->institution . '_expiry']) {
+                    $newuser->expiry = db_format_timestamp($values[$i->institution . '_expiry']);
+                }
+                db_begin();
+                delete_records('usr_institution', 'usr', $user->id, 'institution', $i->institution);
+                insert_record('usr_institution', $newuser);
+                handle_event('updateuser', $user->id);
+                db_commit();
+                break;
+            } else if (isset($values[$i->institution.'_remove'])) {
+                db_begin();
+                delete_records('usr_institution', 'usr', $user->id, 'institution', $i->institution);
+                handle_event('updateuser', $user->id);
+                db_commit();
+                // Institutional admins can no longer access this page
+                // if they remove the user from the institution, so
+                // send them back to user search.
+                if (!$USER->get('admin')) {
+                    redirect('/admin/users/search.php');
+                }
+                break;
+            }
+        }
     }
 
-    if (isset($values['change'])) {
-        // Do nothing if there's no change to the institution
-        if (!$userinstitution && $values['institution'] == 'mahara'
-            || $userinstitution && $values['institution'] == $userinstitution->institution) {
+    if (isset($values['add']) && $USER->get('admin')
+        && (empty($userinstitutions) || get_config('usersallowedmultipleinstitutions'))) {
+        // Do nothing if the user is already in the institution
+        $addinstitution = get_record('institution', 'name', $values['addinstitution']);
+        if (!$addinstitution || $addinstitution->name == 'mahara'
+            || $user->in_institution($addinstitution->name)) {
             redirect('/admin/users/edit.php?id='.$user->id);
         }
-        // Don't let institutional admins change the institution, but let them unset it
-        if (!$USER->get('admin') && $values['institution'] != 'mahara') {
-            redirect('/admin/users/edit.php?id='.$user->id);
+        $now = time();
+        if (!empty($addinstitution->defaultmembershipperiod)) {
+            $expiry = db_format_timestamp($now + $addinstitution->defaultmembershipperiod);
+        } else {
+            $expiry = null;
         }
-
-        delete_records('usr_institution', 'usr', $user->id);
-        if ($values['institution'] != 'mahara') {
-            insert_record('usr_institution', (object) array(
-                'usr' => $user->id,
-                'institution' => $values['institution']  // ctime, expiry, etc
-            ));
-        }
+        db_begin();
+        insert_record('usr_institution', (object) array(
+            'usr' => $user->id,
+            'institution' => $addinstitution->name,
+            'ctime' => db_format_timestamp($now),
+            'expiry' => $expiry,
+        ));
         handle_event('updateuser', $user->id);
-    } else { // Changing settings for an existing institution
-        $newuser = (object) array(
-            'usr'         => $userinstitution->usr,
-            'institution' => $userinstitution->institution,
-            'ctime'       => $userinstitution->ctime,
-            'studentid'   => $values['studentid'],
-            'staff'       => (int) ($values['staff'] == 'on'),
-            'admin'       => (int) ($values['admin'] == 'on'),
-        );
-        if ($values['expiry']) {
-            $newuser->expiry = db_format_timestamp($values['expiry']);
-        }
-        delete_records('usr_institution', 'usr', $user->id);
-        insert_record('usr_institution', $newuser);
+        db_commit();
     }
 
     redirect('/admin/users/edit.php?id='.$user->id);

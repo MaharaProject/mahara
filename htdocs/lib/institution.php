@@ -233,6 +233,9 @@ class Institution {
             'message' => get_string('institutionmemberconfirmmessage', 'mahara', $this->displayname),
         );
         db_begin();
+        if (!get_config('usersallowedmultipleinstitutions')) {
+            delete_records('usr_institution', 'usr', $user->id);
+        }
         insert_record('usr_institution', $userinst);
         delete_records('usr_institution_request', 'usr', $userinst->usr, 'institution', $this->name);
         activity_occurred('maharamessage', $message);

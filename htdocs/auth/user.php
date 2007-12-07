@@ -115,6 +115,7 @@ class User {
         }
 
         $this->populate($user);
+        $this->reset_institutions();
         return $this;
     }
 

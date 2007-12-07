@@ -13,7 +13,7 @@
     {$suspendform}
     <h3>{str tag="siteaccountsettings" section="admin"}</h3>
     {$siteform}
-    <h3>{str tag="institution"}</h3>
+    <h3>{str tag="institutionsettings" section="admin"}</h3>
     {$institutionform}
 </div>
 {include file="columnfullend.tpl"}
