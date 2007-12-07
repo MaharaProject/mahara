@@ -324,7 +324,8 @@ function confirminvite_submit(Pieform $form, $values) {
 
 unset($institutions['mahara']);
 // Request institution membership button for the remaining insitutions
-if (!empty($institutions)) {
+if (!empty($institutions) &&
+    (get_config('usersallowedmultipleinstitutions') || empty($member))) {
     $options = array();
     foreach ($institutions as $i) {
         $options[$i->name] = $i->displayname;
