@@ -2,6 +2,6 @@
   {$institutions.mahara->displayname}
 {else}
   {foreach from=$r.institutions item=i}
-    {$institutions[$i]->displayname}
+    <div>{$institutions[$i]->displayname}</div>
   {/foreach}
 {/if}
