@@ -163,8 +163,6 @@ function build_admin_user_search_results($search, $offset, $limit, $sortby, $sor
     $searchurl = get_config('wwwroot') . 'admin/users/search.php?' . join('&amp;', $params)
         . '&amp;limit=' . $limit;
 
-    $templatedir = get_config('docroot') . 'theme/' . get_config('theme') . '/templates/admin/users/';
-
     $cols = array(
         'icon'        => array('name'     => '',
                                'template' => '<img src="' . get_config('wwwroot') . 'thumb.php?type=profileicon&size=40x40&id={$r.id}" alt="' . get_string('profileimage') . '" />'),
