@@ -237,30 +237,20 @@ class PluginSearchInternal extends PluginSearch {
     }
     
 
-    public static function admin_search_user($queries, $constratints, $offset, $limit, 
+    public static function admin_search_user($queries, $constraints, $offset, $limit, 
                                              $sortfield, $sortdir) {
-        if (is_postgres()) {
-            return self::admin_search_user_pg($queries, $constratints, $offset, $limit, 
-                                              $sortfield . ' ' . strtoupper($sortdir));
-        } 
-        //else if (is_mysql()) {
-        //    return self::admin_search_user_my($query_string, $limit, $offset);
-        //}
-        else {
-            throw new SQLException('admin_search_user() is not implemented for your database engine (' . get_config('dbtype') . ')');
-        }
-    }
-
-
-    public static function admin_search_user_pg($queries, $constraints, $offset, $limit, $sort) {
+        $sort = $sortfield . ' ' . strtoupper($sortdir);
         $where = 'WHERE u.id <> 0 AND u.deleted = 0';
         $values = array();
 
+        // Get the correct keyword for case insensitive LIKE
+        $ilike = db_ilike();
+
         // Only handle OR/AND expressions at the top level.  Eventually we may need subexpressions.
 
-        $matchtypes = array('starts' => ' ILIKE ? || \'%\'',
+        $matchtypes = array('starts' => " $ilike ? || '%'",
                             'equals' => ' = ? ',
-                            'contains' => ' ILIKE \'%\' || ? || \'%\'');
+                            'contains' => " $ilike '%' || ? || '%'");
 
         if (!empty($queries)) {
             $where .= ' AND ( ';

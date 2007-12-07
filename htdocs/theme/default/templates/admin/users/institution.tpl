@@ -1,1 +1,0 @@
-{$institutions[$r.institution]->displayname}

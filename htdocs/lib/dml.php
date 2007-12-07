@@ -1547,4 +1547,17 @@ function db_ignore_sql_exceptions($status=null) {
     $DB_IGNORE_SQL_EXCEPTIONS = (bool)$status;
 }
 
+/**
+ * Returns the SQL keyword required to do LIKE in a case insensitive fashion.
+ *
+ * MySQL, as long as you use a case insensitive collation (as is the default), 
+ * uses LIKE for this, while real databases use ILIKE.
+ */
+function db_ilike() {
+    if (is_mysql()) {
+        return 'LIKE';
+    }
+    return 'ILIKE';
+}
+
 ?>
