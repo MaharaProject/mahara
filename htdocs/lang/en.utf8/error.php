@@ -27,7 +27,7 @@
 defined('INTERNAL') || die();
 
 // @todo<nigel>: most likely need much better descriptions here for these environment issues
-$string['phpversion'] = 'Mahara will not run on PHP < 5.1.0. Please upgrade your PHP version, or move Mahara to a different host.';
+$string['phpversion'] = 'Mahara will not run on PHP < 5.1.3. Please upgrade your PHP version, or move Mahara to a different host.';
 $string['jsonextensionnotloaded'] = 'Your server configuration does not include the JSON extension. Mahara requires this in order to send some data to and from the browser. Please make sure that it is loaded in php.ini, or install it if it is not installed.';
 $string['pgsqldbextensionnotloaded'] = 'Your server configuration does not include the pgsql extension. Mahara requires this in order to store data in a relational database. Please make sure that it is loaded in php.ini, or install it if it is not installed.';
 $string['mysqldbextensionnotloaded'] = 'Your server configuration does not include the mysql extension. Mahara requires this in order to store data in a relational database. Please make sure that it is loaded in php.ini, or install it if it is not installed.';
