@@ -95,4 +95,3 @@ $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->display('selfsearch.tpl');
 
 ?>
-
