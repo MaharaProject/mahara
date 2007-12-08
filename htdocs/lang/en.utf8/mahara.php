@@ -436,6 +436,7 @@ $string['releaseview'] = 'Release view';
 $string['tutor'] = 'Tutor';
 $string['tutors'] = 'Tutors';
 $string['member'] = 'Member';
+$string['invite'] = 'Invite';
 $string['remove'] = 'Remove';
 $string['updatemembership'] = 'Update membership';
 $string['memberchangefailed'] = 'Failed to update some membership information';
