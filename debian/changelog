@@ -1,3 +1,9 @@
+mahara (1.0.0~alpha) unstable; urgency=low
+
+  * Change the header of debian/config.php to be GPL3
+
+ -- Nigel McNie <nigel@catalyst.net.nz>  Sun,  9 Dec 2007 11:15:30 +1300
+
 mahara (0.9.0~beta3~dev) unstable; urgency=low
 
   * Add dependency on php-file and php-pear
