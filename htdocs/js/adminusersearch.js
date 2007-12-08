@@ -108,9 +108,11 @@ function UserSearch() {
         self.params.action = 'search';
         sendjsonrequest('search.json.php', self.params, 'POST', function(data) {
             $('results').innerHTML = data.data;
-            self.rewritePaging();
-            self.rewriteSorting();
-            self.rewriteSuspendLinks();
+            if ($('searchresults')) {
+                self.rewritePaging();
+                self.rewriteSorting();
+                self.rewriteSuspendLinks();
+            }
         });
     }
 
