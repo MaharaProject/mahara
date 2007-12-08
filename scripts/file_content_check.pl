@@ -10,6 +10,7 @@ use Text::Diff;
 my $EXCLUDE_FILES = [
     qr{ \A test/                            }xms,
     qr{ \A examples/                        }xms,
+    qr{ \A htdocs/config.php                }xms,
     qr{ \A htdocs/tests                     }xms,
     qr{ \A htdocs/lib/adodb                 }xms,
     qr{ \A htdocs/lib/phpmailer             }xms,
