@@ -71,7 +71,7 @@ $sideblock = array(
 function friendscontrol_submit(Pieform $form, $values) {
     global $USER;
     $USER->set_account_preference('friendscontrol', $values['friendscontrol']);
-    $form->json_reply(PIEFORM_OK, 'Updated friend control setting successfully');
+    $form->json_reply(PIEFORM_OK, get_string('updatedfriendcontrolsetting'));
 }
 
 $smarty = smarty(array('mahara', 'tablerenderer', 'friends'), array(), array(), array('sideblocks' => array($sideblock)));

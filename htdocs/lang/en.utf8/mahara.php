@@ -483,6 +483,7 @@ $string['all'] = 'All';
 // friendslist
 $string['reasonoptional'] = 'Reason (optional)';
 $string['request'] = 'Request';
+$string['updatedfriendcontrolsetting'] = 'Updated friend control setting successfully';
 
 $string['friendformaddsuccess'] = 'Added %s to your friends list';
 $string['friendformremovesuccess'] = 'Removed %s from your friends list';
