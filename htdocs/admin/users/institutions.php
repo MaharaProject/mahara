@@ -225,6 +225,15 @@ if ($institution || $add) {
             'options'      => $themeoptions,
             'help'         => true,
         );
+        if ($USER->get('admin')) {
+            $elements['maxuseraccounts'] = array(
+                'type'         => 'text',
+                'title'        => get_string('maxuseraccounts','admin'),
+                'description'  => get_string('maxuseraccountsdescription','admin'),
+                'defaultvalue' => empty($data->maxuseraccounts) ? '' : $data->maxuseraccounts,
+                'rules'        => array('regex' => '/^\d*$/'),
+            );
+        }
     }
 
     $elements['lockedfields'] = array(
@@ -274,7 +283,7 @@ else {
 }
 
 function institution_submit(Pieform $form, $values) {
-    global $SESSION, $institution, $add, $instancearray;
+    global $SESSION, $institution, $add, $instancearray, $USER;
 
     db_begin();
     // Update the basic institution record...
@@ -288,6 +297,10 @@ function institution_submit(Pieform $form, $values) {
     $newinstitution->registerallowed              = ($values['registerallowed']) ? 1 : 0;
     $newinstitution->theme                        = empty($values['theme']) ? null : $values['theme'];
     $newinstitution->defaultmembershipperiod      = ($values['defaultmembershipperiod']) ? intval($values['defaultmembershipperiod']) : null;
+
+    if ($USER->get('admin')) {
+        $newinstitution->maxuseraccounts          = ($values['maxuseraccounts']) ? intval($values['maxuseraccounts']) : null;
+    }
 
     $allinstances = array_merge($values['authplugin']['instancearray'], $values['authplugin']['deletearray']);
 

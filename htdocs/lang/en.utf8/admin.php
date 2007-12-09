@@ -316,6 +316,9 @@ $string['institutionusersupdatedrequesters'] = 'Users added';
 $string['institutionusersupdatedmembers'] = 'Users removed';
 $string['institutionusersupdatednonmembers'] = 'Invitations sent';
 
+$string['maxuseraccounts'] = 'Maximum User Accounts Allowed';
+$string['maxuseraccountsdescription'] = 'The maximum number of user accounts that can be associated with the institution.  If there is no limit, this field should be left blank.';
+
 
 // general stuff
 $string['notificationssaved'] = 'Notification settings saved';

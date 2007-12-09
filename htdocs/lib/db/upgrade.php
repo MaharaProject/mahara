@@ -535,6 +535,10 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2007121000) {
+        execute_sql('ALTER TABLE {institution} ADD COLUMN maxuseraccounts bigint');
+    }
+
     return $status;
 
 }
