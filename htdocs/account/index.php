@@ -207,7 +207,7 @@ if (!empty($member)) {
     $memberform = pieform(array(
         'name'        => 'leaveinstitution',
         'method'      => 'post',
-        'renderer'    => 'table',
+        'renderer'    => 'oneline',
         'plugintype'  => 'core',
         'pluginname'  => 'account',
         'elements'    => $elements
@@ -251,7 +251,7 @@ if (!empty($requested)) {
     $requestedform = pieform(array(
         'name'        => 'cancelrequest',
         'method'      => 'post',
-        'renderer'    => 'table',
+        'renderer'    => 'oneline',
         'plugintype'  => 'core',
         'pluginname'  => 'account',
         'elements'    => $elements
@@ -295,7 +295,7 @@ if (!empty($invited)) {
     $invitedform = pieform(array(
         'name'        => 'confirminvite',
         'method'      => 'post',
-        'renderer'    => 'table',
+        'renderer'    => 'oneline',
         'plugintype'  => 'core',
         'pluginname'  => 'account',
         'elements'    => $elements
@@ -333,7 +333,7 @@ if (!empty($institutions) &&
     $joinform = pieform(array(
         'name'        => 'requestmembership',
         'method'      => 'post',
-        'renderer'    => 'table',
+        'renderer'    => 'oneline',
         'plugintype'  => 'core',
         'pluginname'  => 'account',
         'elements'    => array(

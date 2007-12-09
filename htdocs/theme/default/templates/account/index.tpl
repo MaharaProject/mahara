@@ -6,7 +6,7 @@
 	
 			{$form}
 
-                        <h4>{str tag="institutionmembership"}</h4>
+                        <h3>{str tag="institutionmembership"}</h3>
 {$memberform}
 {$requestedform}
 {$invitedform}

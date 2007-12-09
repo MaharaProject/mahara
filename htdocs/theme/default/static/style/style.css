@@ -812,6 +812,25 @@ p {
 }
 /* Within Table Navigation Styles End */
 
+.maincontent #leaveinstitution,
+.maincontent #cancelrequest,
+.maincontent #confirminvite,
+.maincontent #requestmembership {
+    margin-top: 10px;
+}
+
+.maincontent #leaveinstitution label,
+.maincontent #cancelrequest label,
+.maincontent #confirminvite label,
+.maincontent #requestmembership label {
+    width: 450px;
+    display: block !important;
+}
+
+.maincontent #requestmembership select {
+    margin-right: 10px;
+}
+
 acronym {
     color: #474220;
     border-bottom: 1px dotted #d4d1c0;
