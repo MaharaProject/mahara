@@ -1321,22 +1321,28 @@ function admin_nav() {
                 'weight' => 30,
             ),
             array(
-                'path'   => 'configusers/admins',
+                'path'   => 'configusers/admin',
                 'url'    => 'admin/users/institutionadmins.php',
                 'title'  => get_string('adminusers', 'admin'),
                 'weight' => 40,
             ),
             array(
+                'path'   => 'configusers/institutions',
+                'url'    => 'admin/users/institutions.php',
+                'title'  => get_string('institutionsettings', 'admin'),
+                'weight' => 50,
+            ),
+            array(
                 'path'   => 'configusers/adminnotifications',
                 'url'    => 'admin/users/notifications.php',
                 'title'  => get_string('adminnotifications', 'admin'),
-                'weight' => 50,
+                'weight' => 60,
             ),
             array(
                 'path'   => 'configusers/uploadcsv',
                 'url'    => 'admin/users/uploadcsv.php',
                 'title'  => get_string('uploadcsv', 'admin'),
-                'weight' => 60,
+                'weight' => 70,
             ),
         );
     }

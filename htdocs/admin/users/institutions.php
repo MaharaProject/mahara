@@ -24,7 +24,7 @@
  *
  */
 define('INTERNAL', 1);
-define('ADMIN', 1);
+define('INSTITUTIONALADMIN', 1);
 define('MENUITEM', 'configusers/institutions');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('institutions', 'admin'));
@@ -38,6 +38,22 @@ $institution = param_variable('i', '');
 $add         = param_boolean('add');
 $edit        = param_boolean('edit');
 $delete      = param_boolean('delete');
+
+global $USER;
+if (!$USER->get('admin')) {
+    // Institutional admins with only 1 institution go straight to the edit page for that institution
+    // They cannot add or delete institutions, or edit an institution they don't administer
+    $add = false;
+    $delete = false;
+    if (!empty($institution) && !$USER->is_institutional_admin($institution)) {
+        $institution = '';
+        $edit = false;
+    }
+    if (empty($institution) && count($USER->get('admininstitutions')) == 1) {
+        redirect(get_config('wwwroot') . 'admin/users/institutions.php?i='
+                 . key($USER->get('institutions')));
+    }
+}
 
 if ($institution || $add) {
 
@@ -241,9 +257,17 @@ if ($institution || $add) {
 }
 else {
     // Get a list of institutions
+    if (!$USER->get('admin')) { // Filter the list for institutional admins
+        $where = '
+        WHERE i.name IN (' . join(',', array_map('db_quote', $USER->get('admininstitutions'))) . ')';
+    }
+    else {
+        $where = '';
+        $smarty->assign('siteadmin', true);
+    }
     $institutions = get_records_sql_array('SELECT i.name, i.displayname, i.registerallowed, COUNT(u.usr) AS hasmembers
         FROM {institution} i
-        LEFT OUTER JOIN {usr_institution} u ON (u.institution = i.name)
+        LEFT OUTER JOIN {usr_institution} u ON (u.institution = i.name) ' . $where . '
         GROUP BY 1, 2, 3
         ORDER BY i.name', array());
     $smarty->assign('institutions', $institutions);

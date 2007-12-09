@@ -36,7 +36,7 @@
 						<form action="" method="post">
 							<input type="hidden" name="i" value="{$institution->name}">
 							<input type="submit" class="submit" name="edit" value="{str tag="edit"}" id="admininstitution_edit">
-							{if !$institution->hasmembers && $institution->name != 'mahara'}<input type="submit" class="submit" name="delete" value="{str tag="delete"}" id="admininstitution_delete">{/if}
+							{if $siteadmin && !$institution->hasmembers && $institution->name != 'mahara'}<input type="submit" class="submit" name="delete" value="{str tag="delete"}" id="admininstitution_delete">{/if}
 						</form>
 					</td>
 				</tr>
@@ -44,9 +44,11 @@
 				<tr>
 				</tbody>
 			</table>
+{if $siteadmin}
             <form action="" method="post">
                 <input type="submit" class="submit" name="add" value="{str tag="addinstitution" section="admin"}" id="admininstitution_add">
             </form>
+{/if}
 			{/if}
 			
 			{/if}
