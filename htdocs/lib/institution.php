@@ -235,6 +235,7 @@ class Institution {
         db_begin();
         if (!get_config('usersallowedmultipleinstitutions')) {
             delete_records('usr_institution', 'usr', $user->id);
+            delete_records('usr_institution_request', 'usr', $user->id);
         }
         insert_record('usr_institution', $userinst);
         delete_records('usr_institution_request', 'usr', $userinst->usr, 'institution', $this->name);
@@ -260,6 +261,9 @@ class Institution {
                 'institution' => (object)array('name' => $this->name, 'displayname' => $this->displayname),
             );
             db_begin();
+            if (!get_config('usersallowedmultipleinstitutions')) {
+                delete_records('usr_institution_request', 'usr', $user->id);
+            }
             insert_record('usr_institution_request', $request);
             activity_occurred('institutionmessage', $message);
             handle_event('updateuser', $user->id);
