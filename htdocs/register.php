@@ -432,6 +432,22 @@ function register_validate(Pieform $form, $values) {
     if (!isset($_POST['captcha']) || strtolower($_POST['captcha']) != strtolower($SESSION->get('captcha'))) {
         $form->set_error('captcha', get_string('captchaincorrect'));
     }
+
+    $membercount = get_record_sql('
+        SELECT 
+            i.name, i.maxuseraccounts, COUNT(u.id)
+        FROM {institution} i
+            LEFT OUTER JOIN {usr_institution} ui ON ui.institution = i.name
+            LEFT OUTER JOIN {usr} u ON (ui.usr = u.id AND u.deleted = 0)
+        WHERE
+            i.name = ?
+        GROUP BY
+            i.name, i.maxuseraccounts', array($institution));
+
+    if (!empty($membercount->maxuseraccounts) && $membercount->count >= $membercount->maxuseraccounts) {
+        $form->set_error('institution', get_string('institutionfull'));
+    }
+
 }
 
 function register_submit(Pieform $form, $values) {
