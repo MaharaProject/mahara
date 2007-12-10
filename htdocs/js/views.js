@@ -824,12 +824,10 @@ function ViewManager() {
         placementFunction = partial(placementFunction, node, self.blockPlaceholder);
         if (self.movingBlockType) {
             dropFunction = function(draggable, node, placeAfter) {
-                log('after?', placeAfter);
                 var whereTo = self.getBlockinstanceCoordinates(node);
                 if (placeAfter) {
                     whereTo['order'] += 1;
                 }
-                log(whereTo);
 
                 var pd = {
                     'id': $('viewid').value,
