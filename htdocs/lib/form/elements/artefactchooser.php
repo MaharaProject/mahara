@@ -148,7 +148,8 @@ function pieform_element_artefactchooser_views_js(Pieform $form, $element) {
 
     // TODO: This is quite a lot of javascript to be sending inline, especially the ArtefactChooserData 
     // class.
-    $pagination_js .= <<<EOF
+    if (empty($element['selectone'])) {
+        $pagination_js .= <<<EOF
 var ul = getFirstElementByTagAndClassName('ul', 'artefactchooser-tabs', '{$form->get_name()}_{$element['name']}_container');
 var doneBrowse = false;
 var browseA = null;
@@ -454,6 +455,7 @@ function ArtefactChooserData() {
 new ArtefactChooserData();
 
 EOF;
+    }
     return $pagination_js;
 }
 
