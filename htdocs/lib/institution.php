@@ -43,7 +43,8 @@ class Institution {
         'registerallowed' => 1,
         'updateuserinfoonlogin' => 0,
         'theme' => 'default',
-        'defaultmembershipperiod' => 0
+        'defaultmembershipperiod' => 0,
+        'maxuseraccounts' => null
         ); 
 
     function __construct($name = null) {
@@ -93,6 +94,10 @@ class Institution {
                 throw new ParamOutOfRangeException("'theme' ($value) should be a string between 1 and 255 characters in length");
             }
         } elseif ($name == 'defaultmembershipperiod') {
+            if (!empty($value) && (!is_numeric($value) || $value < 0 || $value > 9999999999)) {
+                throw new ParamOutOfRangeException("'defaultmembershipperiod' should be a number between 1 and 9,999,999,999");
+            }
+        } elseif ($name == 'maxuseraccounts') {
             if (!empty($value) && (!is_numeric($value) || $value < 0 || $value > 9999999999)) {
                 throw new ParamOutOfRangeException("'defaultmembershipperiod' should be a number between 1 and 9,999,999,999");
             }
@@ -182,6 +187,7 @@ class Institution {
         $record->updateuserinfoonlogin        = $this->updateuserinfoonlogin;
         $record->theme                        = $this->theme;
         $record->defaultmembershipperiod      = $this->defaultmembershipperiod;
+        $record->maxuseraccounts              = $this->maxuseraccounts;
 
         if ($this->initialized == self::INITIALIZED) {
             return insert_record('institution', $record);
@@ -211,6 +217,7 @@ class Institution {
         $this->updateuserinfoonlogin        = $result->updateuserinfoonlogin;
         $this->theme                        = $result->theme;
         $this->defaultmembershipperiod      = $result->defaultmembershipperiod;
+        $this->maxuseraccounts              = $result->maxuseraccounts;
         $this->verifyReady();
     }
 
