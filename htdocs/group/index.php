@@ -33,6 +33,7 @@ define('SECTION_PAGE', 'groups');
 require(dirname(dirname(__FILE__)) . '/init.php');
 define('TITLE', get_string('groupsimin'));
 
+
 $viewurl = get_config('wwwroot') . 'group/view.php?id=';
 $leftsuccess = get_string('leftgroup');
 $leftfailed = get_string('leftgroupfailed');
