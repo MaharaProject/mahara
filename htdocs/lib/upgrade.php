@@ -554,6 +554,7 @@ function core_install_lastcoredata_defaults() {
     if (is_mysql()) { // gratuitous mysql workaround
         $newid = insert_record('usr', $user, 'id', true);
         set_field('usr', 'id', 0, 'id', $newid);
+        execute_sql('ALTER TABLE {usr} AUTO_INCREMENT=1');
     }
     else {
         insert_record('usr', $user);
