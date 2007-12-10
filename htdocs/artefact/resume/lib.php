@@ -303,7 +303,7 @@ class ArtefactTypePersonalinformation extends ArtefactTypeResume {
         $fields = array();
         foreach (array_keys(ArtefactTypePersonalInformation::get_composite_fields()) as $field) {
             $value = $this->get_composite($field);
-            if ($field == 'gender' && !empty($field)) {
+            if ($field == 'gender' && !empty($value)) {
                 $value = get_string($value, 'artefact.resume');
             }
             $fields[get_string($field, 'artefact.resume')] = $value;
