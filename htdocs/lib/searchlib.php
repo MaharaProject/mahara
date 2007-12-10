@@ -237,7 +237,7 @@ function build_admin_user_search_results($search, $offset, $limit, $sortby, $sor
         'firstname'   => array('name'     => get_string('firstname')),
         'lastname'    => array('name'     => get_string('lastname')),
         'username'    => array('name'     => get_string('username'),
-                               'template' => '<a href="' . get_config('wwwroot') . 'user/view.php?id={$r.id}">{$r.username|escape}</a>'),
+                               'template' => '{if $USER->get(\'admin\') || !empty($r.institutions)}<a href="' . get_config('wwwroot') . 'admin/users/edit.php?id={$r.id}">{$r.username|escape}</a>{else}{$r.username}{/if}'),
         'email'       => array('name'     => get_string('email')),
     );
 
