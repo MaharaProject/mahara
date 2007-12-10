@@ -3,6 +3,7 @@
 {include file="columnfullstart.tpl"}
 
     <form action="{$formurl}" method="post">
+        <input type="submit" name="{$action_name}" id="action-dummy" class="hidden">
         <input type="hidden" id="viewid" name="id" value="{$view}">
         <input type="hidden" name="change" value="1">
         <input type="hidden" id="category" name="c" value="{$category}">
@@ -19,7 +20,7 @@
             </div>
 
             <div class="fr" style="font-size: smaller; padding-right: 5px;">
-                <strong><a href="view.php?id={$view}">Display my view &raquo;</a></strong>
+                <strong><a href="view.php?id={$view}">{str tag=displaymyview section=view} &raquo;</a></strong>
             </div>
 
             <a id="layout-link" href="layout.php?id={$view}&c={$category}&new={$new}"{if !$can_change_layout} class="disabled"{/if}>{str tag='changeviewlayout' section='view'}</a>

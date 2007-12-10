@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage core
@@ -27,6 +27,8 @@
 defined('INTERNAL') || die();
 
 function xmldb_core_upgrade($oldversion=0) {
+    ini_set('max_execution_time', 120); // Let's be safe
+    ini_set('memory_limit', '64M');
 
     $status = true;
 
@@ -169,7 +171,15 @@ function xmldb_core_upgrade($oldversion=0) {
         drop_field($table, $field);
     }
 
+    // Add the 'blockinstancecommit' event type
     if ($oldversion < 2007082201) {
+        $event = (object)array(
+            'name' => 'blockinstancecommit',
+        );
+        ensure_record_exists('event_type', $event, $event);
+    }
+
+    if ($oldversion < 2007082202) {
         // Rename the community tables to group - mysql version.
         // This is really quite hacky. You can't rename columns with a foreign 
         // key on them, so you have to drop the key, rename the column, re-add 
@@ -203,7 +213,7 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     // VIEW REWORK MIGRATION
-    if ($oldversion < 2007100200) {
+    if ($oldversion < 2007100203) {
         $table = new XMLDBTable('view_layout');
         $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED,
             XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null, null);
@@ -298,7 +308,7 @@ function xmldb_core_upgrade($oldversion=0) {
         $table->addFieldInfo('blocktype', XMLDB_TYPE_CHAR, 255, XMLDB_UNSIGNED, XMLDB_NOTNULL);
         $table->addFieldInfo('title', XMLDB_TYPE_CHAR, 255, XMLDB_UNSIGNED, XMLDB_NOTNULL);
         $table->addFieldInfo('configdata', XMLDB_TYPE_TEXT, null);
-        $table->addFieldInfo('view', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('view', XMLDB_TYPE_INTEGER, 10, false, XMLDB_NOTNULL);
         $table->addFIeldInfo('column', XMLDB_TYPE_INTEGER, 2, XMLDB_UNSIGNED, XMLDB_NOTNULL);
         $table->addFIeldInfo('order', XMLDB_TYPE_INTEGER, 2, XMLDB_UNSIGNED,  XMLDB_NOTNULL);
         $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
@@ -310,7 +320,7 @@ function xmldb_core_upgrade($oldversion=0) {
         
 
         // move old block field in view_artefact out of the way
-        table_column('view_artefact', 'block', 'oldblock', 'text');
+        table_column('view_artefact', 'block', 'oldblock', 'text', '', '', null);
 
         $table = new XMLDBTable('view_artefact');
         $field = new XMLDBField('block');
@@ -320,16 +330,58 @@ function xmldb_core_upgrade($oldversion=0) {
         $key->setAttributes(XMLDB_KEY_FOREIGN, array('block'), 'block_instance', array('id'));
         add_key($table, $key);
 
+        // These fields will be dropped after the template migration. However, 
+        // given that the table needs to be used by block instances being 
+        // created, make the fields nullable during that time.
+        // Note - XMLDB - you are a whore. Hate, Nigel
+        if (is_postgres()) {
+            execute_sql('ALTER TABLE {view_artefact} ALTER ctime DROP NOT NULL');
+            execute_sql('ALTER TABLE {view_artefact} ALTER format DROP NOT NULL');
+        }
+        else {
+            execute_sql('ALTER TABLE {view_artefact} CHANGE ctime ctime DATETIME');
+            execute_sql('ALTER TABLE {view_artefact} CHANGE format format TEXT');
+        }
+
+        // Install all the blocktypes and their categories now, as they'll be 
+        // needed for the template migration
+        install_blocktype_categories();
+        foreach(array(
+            'textbox', 'externalfeed', 'externalvideo',
+            'file/image', 'file/filedownload', 'file/folder', 'file/internalmedia',
+            'blog/blogpost', 'blog/blog', 'blog/recentposts',
+            'resume/resumefield', 'resume/entireresume',
+            'internal/profileinfo', 'internal/contactinfo') as $blocktype) {
+            $data = check_upgrades("blocktype.$blocktype");
+            upgrade_plugin($data);
+        }
+
+        // install the view column widths
+        install_view_column_widths();
+
+        // Run the template migration
         require_once(get_config('docroot') . 'lib/db/templatemigration.php');
         upgrade_template_migration();
 
-        change_field_notnull(new XMLDBTAble('view_artefact'), new XMLDBTable('block'));
+        delete_records_select('view_artefact', 'block IS NULL');
+        if (is_postgres()) {
+            execute_sql('ALTER TABLE {view_artefact} ALTER block SET NOT NULL');
+        }
+        else {
+            execute_sql('ALTER TABLE {view_artefact} CHANGE block block BIGINT(10) UNSIGNED NOT NULL');
+        }
 
         $table = new XMLDBTable('view_artefact');
         $field = new XMLDBField('oldblock');
         drop_field($table, $field);
 
         $table = new XMLDBTable('view');
+
+        // Especially for MySQL cos it's "advanced"
+        $key = new XMLDBKey('templatefk');
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('template'), 'template', array('name'));
+        drop_key($table, $key);
+
         $field = new XMLDBField('template');
         drop_field($table, $field);
 
@@ -353,7 +405,7 @@ function xmldb_core_upgrade($oldversion=0) {
 
     // Move files in dataroot into an 'originals' directory, and remove any 
     // cached images
-    if ($oldversion < 2007082202) {
+    if ($oldversion < 2007082204) {
         require('file.php');
         foreach(array('artefact/file', 'artefact/internal/profileicons') as $dir) {
             $datadir = get_config('dataroot') . $dir;
@@ -537,6 +589,14 @@ function xmldb_core_upgrade($oldversion=0) {
 
     if ($oldversion < 2007121000) {
         execute_sql('ALTER TABLE {institution} ADD COLUMN maxuseraccounts bigint');
+    }
+
+    if ($oldversion < 2007121001) {
+        set_field('activity_queue', 'type', 'viewaccess', 'type', 'newview');
+        set_field('notification_internal_activity', 'type', 'viewaccess', 'type', 'newview');
+        set_field('notification_emaildigest_queue', 'type', 'viewaccess', 'type', 'newview');
+        delete_records('usr_activity_preference', 'activity', 'newview');
+        delete_records('activity_type', 'name', 'newview');
     }
 
     return $status;

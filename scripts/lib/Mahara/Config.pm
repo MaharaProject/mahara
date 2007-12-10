@@ -13,7 +13,7 @@ sub new {
 
     my $data = slurp($self->{config_file});
 
-    while ( $data =~ m{ \$cfg-> ( [^=\s]+ ) \s* = \s* ([^;]+) }gxms ) {
+    while ( $data =~ m{ ^ \s+ \$cfg-> ( [^=\s]+ ) \s* = \s* ([^;]+) }gxms ) {
         my ($key, $value) = ($1, $2);
         $value =~ s{ \A ' ( .*? ) ' \z }{$1}xms;
         $self->{config}{$key} = $value;

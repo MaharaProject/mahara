@@ -18,13 +18,49 @@ install: configure-stamp
 	dh_testroot
 	dh_installdirs
 
-	# Config files (-apache)
-	cp $(CURDIR)/debian/config.php $(CURDIR)/debian/mahara-apache/etc/mahara/
+	# Main Mahara files
+	cp -r $(CURDIR)/htdocs/* $(CURDIR)/debian/mahara/usr/share/mahara
+
+	# Exclude common files
+	find $(CURDIR)/debian/mahara/usr/share/mahara/ -name "readme.txt" -exec rm {} \;
+	find $(CURDIR)/debian/mahara/usr/share/mahara/ -name "license.txt" -exec rm {} \;
+	find $(CURDIR)/debian/mahara/usr/share/mahara/ -name "COPYING*" -exec rm {} \;
+	find $(CURDIR)/debian/mahara/usr/share/mahara/ -name "README" -exec rm {} \;
+	find $(CURDIR)/debian/mahara/usr/share/mahara/ -name "LICENSE*" -exec rm {} \;
+
+	# Exclude specific files/directories
+	rm -f $(CURDIR)/debian/mahara/usr/share/mahara/theme/default/static/captcha.ttf
+	rm -f $(CURDIR)/debian/mahara/usr/share/mahara/theme/schoolmyportfolio/static/captcha.ttf
+	rm -f $(CURDIR)/debian/mahara/usr/share/mahara/robots.txt
+	rm -f $(CURDIR)/debian/mahara/usr/share/mahara/lib/phpmailer/ChangeLog.txt
+	rm -rf $(CURDIR)/debian/mahara/usr/share/mahara/lib/adodb/docs/
+	rm -rf $(CURDIR)/debian/mahara/usr/share/mahara/lib/adodb/tests/
+	rm -f $(CURDIR)/debian/mahara/usr/share/mahara/lib/adodb/pear/readme.Auth.txt
+	rm -f $(CURDIR)/debian/mahara/usr/share/mahara/lib/snoopy/configure.in
+	rm -f $(CURDIR)/debian/mahara/usr/share/mahara/lib/snoopy/INSTALL
+	rm -f $(CURDIR)/debian/mahara/usr/share/mahara/lib/snoopy/ChangeLog
+	rm -f $(CURDIR)/debian/mahara/usr/share/mahara/lib/snoopy/FAQ
+	rm -f $(CURDIR)/debian/mahara/usr/share/mahara/lib/snoopy/AUTHORS
+	rm -f $(CURDIR)/debian/mahara/usr/share/mahara/lib/snoopy/Makefile.am
+	rm -f $(CURDIR)/debian/mahara/usr/share/mahara/lib/snoopy/autogen.sh
+	rm -f $(CURDIR)/debian/mahara/usr/share/mahara/lib/snoopy/TODO
+	rm -f $(CURDIR)/debian/mahara/usr/share/mahara/lib/snoopy/NEWS
+	rm -rf $(CURDIR)/debian/mahara/usr/share/mahara/lib/pear/File
+	rm -f $(CURDIR)/debian/mahara/usr/share/mahara/lib/pear/File.php
+	rm -rf $(CURDIR)/debian/mahara/usr/share/mahara/lib/pear/PEAR
+	rm -f $(CURDIR)/debian/mahara/usr/share/mahara/lib/pear/PEAR.php
+
+	# Config files (common package)
+	cp $(CURDIR)/debian/config.php $(CURDIR)/debian/mahara/etc/mahara/
+	cp $(CURDIR)/htdocs/robots.txt $(CURDIR)/debian/mahara/etc/mahara/
+
+	# Config file (-apache)
+	cp $(CURDIR)/htdocs/.htaccess $(CURDIR)/debian/mahara-apache/usr/share/mahara
 	cp $(CURDIR)/debian/apache.conf.template $(CURDIR)/debian/mahara-apache/etc/mahara/apache.conf
 	perl -i -p -e "s|__APACHELOGDIR__|/var/log/apache|" $(CURDIR)/debian/mahara-apache/etc/mahara/apache.conf
 
-	# Config files (-apache2)
-	cp $(CURDIR)/debian/config.php $(CURDIR)/debian/mahara-apache2/etc/mahara/
+	# Config file (-apache2)
+	cp $(CURDIR)/htdocs/.htaccess $(CURDIR)/debian/mahara-apache2/usr/share/mahara
 	cp $(CURDIR)/debian/apache.conf.template $(CURDIR)/debian/mahara-apache2/etc/mahara/apache.conf
 	perl -i -p -e "s|__APACHELOGDIR__|/var/log/apache2|" $(CURDIR)/debian/mahara-apache2/etc/mahara/apache.conf
 
@@ -51,8 +87,6 @@ binary: build install
 	cat $(CURDIR)/debian/commonfunctions.sh >> $(CURDIR)/debian/mahara-apache.postinst.debhelper
 	cat $(CURDIR)/debian/commonfunctions.sh >> $(CURDIR)/debian/mahara-apache.postrm.debhelper
 	dh_installdeb
-
-	dh_install
 
 	dh_link
 

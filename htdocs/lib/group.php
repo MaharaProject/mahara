@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage core
@@ -161,10 +161,13 @@ function get_associated_groups($userid=0) {
         FROM {group_member_request} gm WHERE gm.member = ?
     UNION 	
     SELECT gm.group, 'member' AS type
-        FROM {group_member} gm WHERE gm.member = ?
+        FROM {group_member} gm WHERE gm.member = ? AND gm.tutor = 0
+    UNION
+    SELECT gm.group, 'tutor' AS type
+        FROM {group_member} gm WHERE gm.member = ? AND gm.tutor = 1
     ) AS a ON a.group = g.id";
     
-    return get_records_sql_assoc($sql, array($userid, $userid, $userid));
+    return get_records_sql_assoc($sql, array($userid, $userid, $userid, $userid));
 }
 
 

@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage artefact-internal
@@ -113,8 +113,7 @@ class PluginArtefactFile extends PluginArtefact {
                     'createfolder',
                     'deletefile?',
                     'deletefolder?',
-                    'description',
-                    'description',
+                    'Description',
                     'destination',
                     'editfile',
                     'editfolder',
@@ -122,7 +121,7 @@ class PluginArtefactFile extends PluginArtefact {
                     'fileexistsoverwritecancel',
                     'filenamefieldisrequired',
                     'home',
-                    'name',
+                    'Name',
                     'namefieldisrequired',
                     'nofilesfound',
                     'overwrite',
@@ -738,12 +737,35 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
         return get_records_array('artefact', 'parent', $this->get('id'));
     }
 
+    public function render_self($options) {
+        $smarty = smarty_core();
+        $smarty->assign('title', $this->get('title'));
+        $smarty->assign('description', $this->get('description'));
+        $smarty->assign('viewid', $options['viewid']);
+        $smarty->assign('hidetitle', isset($options['hidetitle']) ? $options['hidetitle'] : false);
+
+        if ($childrecords = $this->folder_contents()) {
+            $this->add_to_render_path($options);
+            usort($childrecords, array('ArtefactTypeFileBase', 'my_files_cmp'));
+            $children = array();
+            foreach ($childrecords as &$child) {
+                $c = artefact_instance_from_id($child->id);
+                $child->title = $c->get('title');
+                $child->date = format_date(strtotime($child->mtime), 'strfdaymonthyearshort');
+                $child->iconsrc = call_static_method(generate_artefact_class_name($child->artefacttype), 'get_icon', array('id' => $child->id, 'viewid' => $options['viewid']));
+            }
+            $smarty->assign('children', $childrecords);
+        }
+        return array('html' => $smarty->fetch('artefact:file:folder_render_self.tpl'),
+                     'javascript' => null);
+    }
+
     public function describe_size() {
         return $this->count_children() . ' ' . get_string('files', 'artefact.file');
     }
 
     public static function get_icon($options=null) {
-
+        return theme_get_url('images/folder.gif');
     }
 
     public static function collapse_config() {
@@ -919,7 +941,7 @@ class ArtefactTypeImage extends ArtefactTypeFile {
 
     public function render_self($options) {
         $result = parent::render_self($options);
-        $result['html'] = '<div class="fr filedata-icon" style="text-align: center;"><h4>Preview</h4><img src="'
+        $result['html'] = '<div class="fr filedata-icon" style="text-align: center;"><h4>' . get_string('Preview', 'artefact.file') . '</h4><img src="'
             . hsc(get_config('wwwroot') . 'artefact/file/download.php?file=' . $this->id . '&view=' . $options['viewid'] . '&maxwidth=400')
             . '" alt=""></div>' . $result['html'];
         return $result;

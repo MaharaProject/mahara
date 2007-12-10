@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage core
@@ -667,16 +667,36 @@ function unsuspend_user($userid) {
  * @param int $userid The ID of the user to delete
  */
 function delete_user($userid) {
+    db_begin();
+
+    $emailsuffix = '.deleted.' . time();
+
     $deleterec = new StdClass;
     $deleterec->id = $userid;
     $deleterec->deleted = 1;
+    $deleterec->email = get_field('usr', 'email', 'id', $userid) . $emailsuffix;
     update_record('usr', $deleterec);
+
+    // Because the user is being deleted, but their email address may be wanted 
+    // for a new user, we change their email addresses to add 
+    // 'deleted.[timestamp]'
+    execute_sql('UPDATE {artefact_internal_profile_email}
+    SET email = email || ?
+    WHERE owner = ?', array($emailsuffix, $userid));
+
+    db_commit();
 
     handle_event('deleteuser', $userid);
 }
 
 /**
  * Undeletes a user
+ *
+ * NOTE: changing their email addresses to remove the .deleted.timestamp part 
+ * has not been implemented yet! This function is not actually used anywhere in 
+ * Mahara, so hasn't really been tested because of this. It's a simple enough 
+ * job for the first person who gets there - see how delete_user works to see 
+ * what you must undo.
  *
  * @param int $userid The ID of the user to undelete
  */

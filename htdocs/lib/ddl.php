@@ -1,37 +1,55 @@
 <?php // $Id: ddllib.php,v 1.42 2006/10/09 22:28:22 stronk7 Exp $
 /**
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  * @package mahara
  * @subpackage core
+ * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
+ *
+ * This file incorporates work covered by the following copyright and
+ * permission notice:
+ *
+ *    Moodle - Modular Object-Oriented Dynamic Learning Environment
+ *             http://moodle.com
+ *
+ *    Copyright (C) 2001-3001 Martin Dougiamas        http://dougiamas.com
+ *              (C) 2001-3001 Eloy Lafuente (stronk7) http://contiento.com
+ *
+ *    This program is free software; you can redistribute it and/or modify
+ *    it under the terms of the GNU General Public License as published by
+ *    the Free Software Foundation; either version 2 of the License, or
+ *    (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU General Public License for more details:
+ *
+ *             http://www.gnu.org/copyleft/gpl.html
  */
-///////////////////////////////////////////////////////////////////////////
-//                                                                       //
-// NOTICE OF COPYRIGHT                                                   //
-//                                                                       //
-// Moodle - Modular Object-Oriented Dynamic Learning Environment         //
-//          http://moodle.com                                            //
-//                                                                       //
-// Copyright (C) 2001-3001 Martin Dougiamas        http://dougiamas.com  //
-//           (C) 2001-3001 Eloy Lafuente (stronk7) http://contiento.com  //
-//                                                                       //
-// This program is free software; you can redistribute it and/or modify  //
-// it under the terms of the GNU General Public License as published by  //
-// the Free Software Foundation; either version 2 of the License, or     //
-// (at your option) any later version.                                   //
-//                                                                       //
-// This program is distributed in the hope that it will be useful,       //
-// but WITHOUT ANY WARRANTY; without even the implied warranty of        //
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         //
-// GNU General Public License for more details:                          //
-//                                                                       //
-//          http://www.gnu.org/copyleft/gpl.html                         //
-//                                                                       //
-///////////////////////////////////////////////////////////////////////////
 
 // Mahara hacks
 $CFG->libdir = get_config('libroot');
 $CFG->prefix = $CFG->dbprefix;
 if (is_postgres()) {
     $CFG->dbtype = 'postgres7';
+}
+else if (is_mysql()) {
+    $CFG->dbtype = 'mysql';
 }
 // Mahara hacks end
 
@@ -178,7 +196,7 @@ function table_column($table, $oldfield, $field, $type='integer', $size='10',
             //}
 
             //Use transactions
-            execute_sql('BEGIN');
+            db_begin();
 
             //Always use temporary column
             execute_sql('ALTER TABLE '. $CFG->prefix . $table .' ADD COLUMN '. $field .' '. $type);
@@ -224,7 +242,7 @@ function table_column($table, $oldfield, $field, $type='integer', $size='10',
 
             execute_sql('ALTER TABLE '. $CFG->prefix . $table .' RENAME COLUMN '. $field .' TO '. $realfield);
 
-            return execute_sql('COMMIT');
+            return db_commit();
 
         default:
             switch (strtolower($type)) {

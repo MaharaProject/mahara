@@ -285,6 +285,7 @@ function ViewManager() {
                 };
                 contentDiv.innerHTML = data.data['html'];
                 eval(data.data.javascript);
+                $('action-dummy').name = getNodeAttribute(e.src(), 'name');
 
                 // Make the cancel button be supersmart
                 var cancelButton = $('cancel_cb_' + blockinstanceId + '_action_configureblockinstance_id_' + blockinstanceId);
@@ -823,12 +824,10 @@ function ViewManager() {
         placementFunction = partial(placementFunction, node, self.blockPlaceholder);
         if (self.movingBlockType) {
             dropFunction = function(draggable, node, placeAfter) {
-                log('after?', placeAfter);
                 var whereTo = self.getBlockinstanceCoordinates(node);
                 if (placeAfter) {
                     whereTo['order'] += 1;
                 }
-                log(whereTo);
 
                 var pd = {
                     'id': $('viewid').value,
@@ -845,6 +844,17 @@ function ViewManager() {
                     var configureButton = getFirstElementByTagAndClassName('input', 'configurebutton', blockinstance);
                     if (configureButton) {
                         self.rewriteConfigureButton(configureButton);
+                        if (self.currentConfigureData) {
+                            self.currentConfigureData['contentdiv'].innerHTML = self.currentConfigureData['oldcontent'];
+                            removeNodeAttribute(self.currentConfigureData['button'], 'disabled');
+                            self.currentConfigureData = null;
+                        }
+                        self.currentConfigureData = {
+                            'contentdiv': getFirstElementByTagAndClassName('div', 'blockinstance-content', blockinstance),
+                            'oldcontent': '',
+                            'button'    : configureButton
+                        };
+                        $('action-dummy').name = 'action_addblocktype_column_' + whereTo['column'] + '_order_' + whereTo['order'];
                         setNodeAttribute(configureButton, 'disabled', 'disabled');
                     }
 

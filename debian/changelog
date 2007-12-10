@@ -1,8 +1,53 @@
-mahara (0.9.0~alpha3~dev) unstable; urgency=low
+mahara (1.0.0~alpha) unstable; urgency=low
+
+  * Change the header of debian/config.php to be GPL3
+
+ -- Nigel McNie <nigel@catalyst.net.nz>  Sun,  9 Dec 2007 11:15:30 +1300
+
+mahara (0.9.0~beta3~dev) unstable; urgency=low
+
+  * Add dependency on php-file and php-pear
+  * Make the -apache* packages depend on 0.9.0~beta1 at least
+  * Delete the font symlinks in the postrm script, check for them in postinst
+
+ -- Francois Marier <francois@catalyst.net.nz>  Tue, 04 Dec 2007 14:28:57 +1300
+
+mahara (0.9.0~beta2-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Nigel McNie <nigel@catalyst.net.nz>  Fri, 30 Nov 2007 15:23:10 +1300
+
+mahara (0.9.0~beta2~dev) unstable; urgency=low
 
   * Dev version
 
- -- Nigel McNie <nigel@catalyst.net.nz>  Fri, 16 Nov 2007 11:14:45 +1300
+ -- Nigel McNie <nigel@catalyst.net.nz>  Sat, 24 Nov 2007 10:38:02 +1300
+
+mahara (0.9.0~beta1-1) unstable; urgency=low
+
+  * New upstream release
+  * User config files (config.php and apache.conf) are no longer overwritten 
+    by debconf. Also make robots.txt a config file.
+  * Create a common mahara package which contains everything but the Apache
+    config files.
+  * Cleaned-up and shortened package descriptions
+  * Moved Mahara into /usr/share/mahara instead of /var/www
+  * Removed unnecessary files (like LICENSE and readme.txt)
+  * No longer require Postgres 8.1, support MySQL 5.0 and Postgres 8.2
+  * Add debconf questions for dbtype and dbpass
+  * Added instructions for creating the DB in README.Debian
+  * Document all foreign code into debian/copyright
+  * Added a watch file
+  * Depend on ttf-freefont for the CAPTCHA plugin
+  * Removed bashisms in the maintainer scripts
+  * Set myself as maintainer
+  * Added homepage and Vcs-* fields to debian/control
+  * Fixed rotation of empty log files
+  * Check for the existence of the cron script before running it
+  * Use po-debconf and provide a French translation
+
+ -- Francois Marier <francois@catalyst.net.nz>  Sat, 24 Nov 2007 10:24:48 +1300
 
 mahara (0.9.0~alpha2-1) unstable; urgency=low
 

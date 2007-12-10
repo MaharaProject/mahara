@@ -16,7 +16,7 @@
                 {if $member}
                     <div class="groupviews">
                         <h5>{str tag='views'}</h5>
-                        {if $tutor && $controlled}
+                        {if ($tutor || $staff || $admin) && $controlled}
                             <form>
                                 <select name="submitted" onChange="viewlist.submitted=this.options[this.selectedIndex].value;viewlist.doupdate();">
                                     <option value="0">{str tag='allviews'}</option>

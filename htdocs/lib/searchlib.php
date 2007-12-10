@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage core
@@ -231,25 +231,23 @@ function build_admin_user_search_results($search, $offset, $limit, $sortby, $sor
     $searchurl = get_config('wwwroot') . 'admin/users/search.php?' . join('&amp;', $params)
         . '&amp;limit=' . $limit;
 
-    $templatedir = get_config('docroot') . 'theme/' . get_config('theme') . '/templates/admin/users/';
-
     $cols = array(
         'icon'        => array('name'     => '',
-                               'template' => file_get_contents($templatedir . 'icon.tpl')),
+                               'template' => '<img src="' . get_config('wwwroot') . 'thumb.php?type=profileicon&size=40x40&id={$r.id}" alt="' . get_string('profileimage') . '" />'),
         'firstname'   => array('name'     => get_string('firstname')),
         'lastname'    => array('name'     => get_string('lastname')),
         'username'    => array('name'     => get_string('username'),
-                               'template' => file_get_contents($templatedir . 'username.tpl')),
+                               'template' => '<a href="' . get_config('wwwroot') . 'user/view.php?id={$r.id}">{$r.username|escape}</a>'),
         'email'       => array('name'     => get_string('email')),
     );
 
     $institutions = get_records_assoc('institution', '', '', '', 'name,displayname');
     if (count($institutions) > 1) {
         $cols['institution'] = array('name'     => get_string('institution'),
-                                     'template' => file_get_contents($templatedir . 'institution.tpl'));
+                                     'template' => '{if empty($r.institutions)}{$institutions.mahara->displayname}{else}{foreach from=$r.institutions item=i}<div>{$institutions[$i]->displayname}</div>{/foreach}{/if}');
     }
     $cols['suspended'] = array('name'     => get_string('suspended', 'admin'),
-                               'template' => file_get_contents($templatedir . 'suspendlink.tpl'));
+                               'template' => '{if !$r.suspended || $r.suspended == \'f\'}<a class="suspend-user-link" href="' . get_config('wwwroot') . 'admin/users/suspend.php?id={$r.id}">' . get_string('suspenduser', 'admin') . '</a>{/if}');
 
     $smarty = smarty_core();
     $smarty->assign_by_ref('results', $results);

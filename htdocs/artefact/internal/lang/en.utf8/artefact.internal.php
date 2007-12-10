@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage lang
@@ -79,8 +79,7 @@ $string['emailvalidation_subject'] = 'Email validation';
 $string['emailvalidation_body'] = <<<EOF
 Hello %s,
 
-The email address %s has been added to your user account in Mahara. Please
-visit the link below to activate this address.
+The email address %s has been added to your user account in Mahara. Please visit the link below to activate this address.
 
 %s
 EOF;
@@ -96,7 +95,7 @@ $string['emailingfailed'] = 'Profile saved, but emails were not sent to: %s';
 // Profile icons
 $string['editprofile']  = 'Edit Profile';
 $string['profileicons'] = 'Profile Icons';
-$string['default'] = 'Default';
+$string['Default'] = 'Default';
 $string['profileicon'] = 'Profile Icon';
 $string['noimagesfound'] = 'No images found';
 $string['uploadedprofileiconsuccessfully'] = 'Uploaded new profile icon successfully';
@@ -110,5 +109,15 @@ $string['profileiconimagetoobig'] = 'The image you uploaded was too big (%sx%s p
 $string['uploadingfile'] = 'uploading file...';
 $string['uploadprofileicon'] = 'Upload Profile Icon';
 $string['profileiconsiconsizenotice'] = 'You may upload up to <strong>five</strong> profile icons here, and choose one to be displayed as your default icon at any one time. Your icons must be between 16x16 and %sx%s pixels';
+$string['Title'] = 'Title';
+
+$string['Created'] = 'Created';
+$string['Description'] = 'Description';
+$string['Download'] = 'Download';
+$string['lastmodified'] = 'Last Modified';
+$string['Owner'] = 'Owner';
+$string['Preview'] = 'Preview';
+$string['Size'] = 'Size';
+$string['Type'] = 'Type';
 
 ?>

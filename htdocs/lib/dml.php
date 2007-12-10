@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage core
@@ -1074,7 +1074,7 @@ function ensure_record_exists($table, $whereobject, $dataobject, $primarykey=fal
         else {
             $toreturn = true;
         }
-        if ($dataobject) { // we want to update it)
+        if ($dataobject && $dataobject != $whereobject) { // we want to update it)
             update_record($table, $dataobject, $whereobject);
         }
     }
@@ -1436,7 +1436,7 @@ function db_array_to_ph($array) {
 
 // This is used by the SQLException, to detect if there is a transaction when
 // an error occurs, so it can roll the transaction back
-$GLOBALS['_TRANSACTION_STARTED'] = false;
+$GLOBALS['_TRANSACTION_LEVEL'] = 0;
 
 /**
  * This function starts a smart transaction
@@ -1445,7 +1445,7 @@ $GLOBALS['_TRANSACTION_STARTED'] = false;
 function db_begin() {
     global $db;
 
-    $GLOBALS['_TRANSACTION_STARTED'] = true;
+    $GLOBALS['_TRANSACTION_LEVEL']++;
     $db->StartTrans();
 }
 
@@ -1457,14 +1457,17 @@ function db_begin() {
  */
 function db_commit() {
     global $db;
-    $GLOBALS['_TRANSACTION_STARTED'] = false;
+    $GLOBALS['_TRANSACTION_LEVEL']--;
 
-    if ($db->HasFailedTrans()) {
-        $db->CompleteTrans();
-        throw new SQLException('Transaction Failed');
+    if ($GLOBALS['_TRANSACTION_LEVEL'] == 0) {
+
+        if ($db->HasFailedTrans()) {
+            $db->CompleteTrans();
+            throw new SQLException('Transaction Failed');
+        }
     }
 
-    $db->CompleteTrans();
+    return $db->CompleteTrans();
 }
 
 /**
@@ -1472,9 +1475,11 @@ function db_commit() {
  */
 function db_rollback() {
     global $db;
-    $GLOBALS['_TRANSACTION_STARTED'] = false;
     $db->FailTrans();
-    $db->CompleteTrans();
+    for ($i = $GLOBALS['_TRANSACTION_LEVEL']; $i >= 0; $i--) {
+        $db->CompleteTrans();
+    }
+    $GLOBALS['_TRANSACTION_LEVEL'] = 0;
 }
 
 /**
@@ -1514,4 +1519,45 @@ function increment_perf_db_writes() {
     global $PERF;
     $PERF->dbwrites++;
 }
+
+/**
+ * Gives the caller the ability to disable logging of SQL exceptions in the 
+ * SQLException constructor.
+ *
+ * This is only used by the config loading code to prevent spurious errors 
+ * about the config table not existing going to the logs. If you are going to 
+ * use this function, you had better have a very good reason!
+ *
+ * @param bool $status Whether to ignore logging exceptions or not. If null, 
+ *                     you can retrieve the current value of this setting
+ */
+function db_ignore_sql_exceptions($status=null) {
+    global $DB_IGNORE_SQL_EXCEPTIONS;
+
+    // Initialise it if being called for the first time
+    if ($DB_IGNORE_SQL_EXCEPTIONS === null) {
+        $DB_IGNORE_SQL_EXCEPTIONS = false;
+    }
+
+    // Return the value if asked for
+    if ($status === null) {
+        return $DB_IGNORE_SQL_EXCEPTIONS;
+    }
+
+    $DB_IGNORE_SQL_EXCEPTIONS = (bool)$status;
+}
+
+/**
+ * Returns the SQL keyword required to do LIKE in a case insensitive fashion.
+ *
+ * MySQL, as long as you use a case insensitive collation (as is the default), 
+ * uses LIKE for this, while real databases use ILIKE.
+ */
+function db_ilike() {
+    if (is_mysql()) {
+        return 'LIKE';
+    }
+    return 'ILIKE';
+}
+
 ?>

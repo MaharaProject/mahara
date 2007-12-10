@@ -109,8 +109,17 @@ function UserSearch() {
         self.params.action = 'search';
         sendjsonrequest('search.json.php', self.params, 'POST', function(data) {
             $('results').innerHTML = data.data;
-            self.rewritePaging();
-            self.rewriteSorting();
+            if ($('searchresults')) {
+                self.rewritePaging();
+                self.rewriteSorting();
+                self.rewriteSuspendLinks();
+            }
+        });
+    }
+
+    this.rewriteSuspendLinks = function() {
+        forEach(getElementsByTagAndClassName('a', 'suspend-user-link', 'searchresults'), function(i) {
+            connect(i, 'onclick', suspendDisplay);
         });
     }
 

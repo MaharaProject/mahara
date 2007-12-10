@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage core
@@ -37,7 +37,7 @@ $data = pieform_element_artefactchooser_set_attributes(
     call_static_method(generate_class_name('blocktype', $extradata->blocktype), 'artefactchooser_element', $extradata->value)
 );
 $data['offset'] = param_integer('offset', 0);
-list($html, $pagination, $count) = View::build_artefactchooser_data($data);
+list($html, $pagination, $count, $offset) = View::build_artefactchooser_data($data);
 
 json_reply(false, array(
     'message' => null,
@@ -45,7 +45,9 @@ json_reply(false, array(
         'tablerows' => $html,
         'pagination' => $pagination['html'],
         'pagination_js' => $pagination['javascript'],
-        'count' => $count
+        'count' => $count,
+        'results' => $count . ' ' . ($count == 1 ? get_string('result') : get_string('results')),
+        'offset' => $offset,
     )
 ));
 

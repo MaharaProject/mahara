@@ -12,6 +12,7 @@
             'userid': {$USER->get('id')}
         {literal}}{/literal};
         </script>
+        {$STRINGJS}
 {foreach from=$JAVASCRIPT item=script}        <script type="text/javascript" src="{$script}"></script>
 {/foreach}
 {foreach from=$HEADERS item=header}        {$header}

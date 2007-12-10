@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage artefact-resume
@@ -117,6 +117,35 @@ class ArtefactTypeResume extends ArtefactType {
     public function render_self($options) {
         return array('html' => $this->description);
     }
+
+    /**
+     * Overrides the default commit to make sure that any 'entireresume' blocks 
+     * in views the user have know about this artefact - but only if necessary. 
+     * Goals and skills are not in the entireresume block
+     *
+     * @param boolean $updateresumeblocks Whether to update any resume blockinstances
+     */
+    public function commit() {
+        parent::commit();
+
+        if ($blockinstances = get_records_sql_array('
+            SELECT id, view, configdata
+            FROM {block_instance}
+            WHERE blocktype = \'entireresume\'
+            AND "view" IN (
+                SELECT id
+                FROM {view}
+                WHERE "owner" = ?)', array($this->owner))) {
+            foreach ($blockinstances as $blockinstance) {
+                $whereobject = (object)array(
+                    'view' => $blockinstance->view,
+                    'artefact' => $this->get('id'),
+                    'block' => $blockinstance->id,
+                );
+                ensure_record_exists('view_artefact', $whereobject, $whereobject);
+            }
+        }
+    }
 }
 
 class ArtefactTypeCoverletter extends ArtefactTypeResume {
@@ -145,13 +174,14 @@ class ArtefactTypeInterest extends ArtefactTypeResume {
 class ArtefactTypeContactinformation extends ArtefactTypeResume {
 
     public function render_self($options) {
-        $smarty = smarty();
+        $smarty = smarty_core();
         $fields = ArtefactTypeContactinformation::get_profile_fields();
         foreach ($fields as $f) {
             try {
-                $$f = artefact_instance_from_type($f);
+                $$f = artefact_instance_from_type($f, $this->get('owner'));
                 $rendered = $$f->render_self(array());
                 $smarty->assign($f, format_whitespace($rendered['html']));
+                $smarty->assign('hascontent', true);
             }
             catch (Exception $e) { }
         }
@@ -272,7 +302,11 @@ class ArtefactTypePersonalinformation extends ArtefactTypeResume {
         $smarty = smarty();
         $fields = array();
         foreach (array_keys(ArtefactTypePersonalInformation::get_composite_fields()) as $field) {
-            $fields[get_string($field, 'artefact.resume')] = $this->get_composite($field);
+            $value = $this->get_composite($field);
+            if ($field == 'gender' && !empty($field)) {
+                $value = get_string($value, 'artefact.resume');
+            }
+            $fields[get_string($field, 'artefact.resume')] = $value;
         }
         $smarty->assign('fields', $fields);
         return array('html' => $smarty->fetch('artefact:resume:fragments/personalinformation.tpl'));
@@ -428,31 +462,33 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
     }
 
     public function render_self($options) {
+        $suffix = '_' . substr(md5(microtime()), 0, 4);
         $smarty = smarty();
         $smarty->assign('hidetitle', true);
+        $smarty->assign('suffix', $suffix);
         $type = $this->get('artefacttype');
         $content = array(
             'html'         => $smarty->fetch('artefact:resume:fragments/' . $type . '.tpl'),
             'javascript'   =>
                 $this->get_showhide_composite_js()
                 ."
-                var {$type}list = new TableRenderer(
-                   '{$type}list',
+                var {$type}list{$suffix} = new TableRenderer(
+                   '{$type}list{$suffix}',
                    '" . get_config('wwwroot') . "artefact/resume/composite.json.php',
                    [
                    " . call_static_method(generate_artefact_class_name($type), 'get_tablerenderer_js') ."
                    ]
                 );
 
-                {$type}list.type = '{$type}';
-                {$type}list.statevars.push('type');
+                {$type}list{$suffix}.type = '{$type}';
+                {$type}list{$suffix}.statevars.push('type');
                 " .
                 (( array_key_exists('viewid', $options))
-                    ? "{$type}list.view = " . $options['viewid'] . ";
-                       {$type}list.statevars.push('view');"
+                    ? "{$type}list{$suffix}.view = " . $options['viewid'] . ";
+                       {$type}list{$suffix}.statevars.push('view');"
                     : ""
                 ) . "
-                {$type}list.updateOnLoad();
+                {$type}list{$suffix}.updateOnLoad();
             ");
         return $content;
     }
@@ -535,6 +571,7 @@ class ArtefactTypeEmploymenthistory extends ArtefactTypeResumeComposite {
                 ),
                 'rules' => array(
                     'required' => true,
+                    'before'   => 'enddate',
                 ),
                 'title' => get_string('startdate', 'artefact.resume'),
                 'help'  => true,
@@ -614,6 +651,7 @@ class ArtefactTypeEducationhistory extends ArtefactTypeResumeComposite {
                 ),
                 'rules' => array(
                     'required' => true,
+                    'before'   => 'enddate',
                 ),
                 'title' => get_string('startdate', 'artefact.resume'),
                 'help'  => true,
@@ -826,6 +864,7 @@ class ArtefactTypeMembership extends ArtefactTypeResumeComposite {
                 ),
                 'rules' => array(
                     'required' => true,
+                    'before'   => 'enddate',
                 ),
                 'title' => get_string('startdate', 'artefact.resume'),
                 'help'  => true,

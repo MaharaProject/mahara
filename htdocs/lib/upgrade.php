@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage core
@@ -397,10 +397,11 @@ function upgrade_plugin($upgrade) {
             }
             $exists = false;
             $table = $plugintype . '_event_subscription';
+            $block = blocktype_namespaced_to_single($pluginname);
             if (empty($upgrade->install)) {
-                $exists = get_record($table, 'plugin' , $pluginname, 'event', $event->event);
+                $exists = get_record($table, 'plugin' , $block, 'event', $event->event);
             }
-            $event->plugin = $pluginname;
+            $event->plugin = $block;
             if (empty($exists)) {
                 insert_record($table, $event);
             }
@@ -548,13 +549,17 @@ function core_install_lastcoredata_defaults() {
     $user->email = 'root@example.org';
     $user->quota = get_config_plugin('artefact', 'file', 'defaultquota');
     $user->authinstance = $auth_instance->id;
-    $newid = insert_record('usr', $user, 'id', true);
 
-    $dbtype = get_config('dbtype');
-    if ($newid > 0 && ($dbtype == 'mysql' || $dbtype == 'mysql5')) { // gratuitous mysql workaround
+    if (is_mysql()) { // gratuitous mysql workaround
+        $newid = insert_record('usr', $user, 'id', true);
         set_field('usr', 'id', 0, 'id', $newid);
+        execute_sql('ALTER TABLE {usr} AUTO_INCREMENT=1');
+    }
+    else {
+        insert_record('usr', $user);
     }
 
+    // Insert the admin user
     $user = new StdClass;
     $user->username = 'admin';
     $user->password = 'mahara';
@@ -619,6 +624,7 @@ function core_install_firstcoredata_defaults() {
         'deleteartefact',
         'saveview',
         'deleteview',
+        'blockinstancecommit',
     );
 
     foreach ($eventtypes as $et) {
@@ -633,7 +639,6 @@ function core_install_firstcoredata_defaults() {
         array('usermessage', 0, 0),
         array('feedback', 0, 0),
         array('watchlist', 0, 1),
-        array('newview', 0, 1),
         array('viewaccess', 0, 1),
         array('contactus', 1, 1),
         array('objectionable', 1, 1),
@@ -670,31 +675,8 @@ function core_install_firstcoredata_defaults() {
     }
     
     // install the view column widths
-    $layouts = array(
-        2 => array(
-            '50,50',
-            '67,33',
-            '33,67',
-            ),
-        3 => array(
-            '33,33,33',
-            '25,50,25',
-            '15,70,15',
-            ),
-        4 => array(
-            '25,25,25,25',
-            '20,30,30,20',
-            ),
-    );
+    install_view_column_widths();
 
-    $layout = new StdClass;
-    foreach ($layouts as $column => $widths) {
-        foreach ($widths as $width) {
-            $layout->columns = $column;
-            $layout->widths = $width;
-            insert_record('view_layout', $layout);
-        }
-    }
     db_commit();
 }
 
@@ -850,6 +832,40 @@ function install_blocktype_categories() {
             install_blocktype_categories_for_plugin(blocktype_single_to_namespaced($bt->name, $bt->artefactplugin));
         }
     }
+}
+
+/**
+ * Installs all the allowed column widths for views. Used when installing core 
+ * defaults, and also when upgrading from 0.8 to 0.9
+ */
+function install_view_column_widths() {
+    db_begin();
+    $layouts = array(
+        2 => array(
+            '50,50',
+            '67,33',
+            '33,67',
+            ),
+        3 => array(
+            '33,33,33',
+            '25,50,25',
+            '15,70,15',
+            ),
+        4 => array(
+            '25,25,25,25',
+            '20,30,30,20',
+            ),
+    );
+
+    $layout = new StdClass;
+    foreach ($layouts as $column => $widths) {
+        foreach ($widths as $width) {
+            $layout->columns = $column;
+            $layout->widths = $width;
+            insert_record('view_layout', $layout);
+        }
+    }
+    db_commit();
 }
 
 ?>

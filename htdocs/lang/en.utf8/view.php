@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage lang
@@ -66,6 +66,9 @@ $string['invalidcolumn'] = 'Column %s out of range';
 
 // view control stuff
 
+$string['displaymyview'] = 'Display my view';
+$string['editthisview'] = 'Edit this view';
+
 $string['success.addblocktype'] = 'Added block successfully';
 $string['err.addblocktype'] = 'Could not add the block to your view';
 $string['success.moveblockinstance'] = 'Moved block successfully';
@@ -115,5 +118,9 @@ $string['blocktypecategory.multimedia'] = 'Multimedia';
 
 $string['notitle'] = 'No title';
 $string['clickformoreinformation'] = 'Click for more information and to place feedback';
+
+$string['Browse'] = 'Browse';
+$string['Search'] = 'Search';
+$string['noartefactstochoosefrom'] = 'Sorry, no artefacts to choose from';
 
 ?>

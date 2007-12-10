@@ -110,6 +110,13 @@ input.submit, input.submitcancel, input.cancelbackcreate, input.button, button {
     font-size: 11px;
     font-weight: bold;
 }
+/* safari/konqueror workaround to make the button text readable */
+body:last-child:not(:root:root) input.submit,
+body:last-child:not(:root:root) input.submitcancel,
+body:last-child:not(:root:root) input.cancelbackcreate,
+body:last-child:not(:root:root) input.button {
+    color: #547C22;
+}
 /* Ones inside tables should be smaller... */
 .maincontent table input.button, .maincontent table input.submit, .maincontent table button {
     background-image: url(../images/btn_short_tile.gif);
@@ -1195,16 +1202,20 @@ a.folderhover {
 }
 #accesslistitems {
     padding: 5px;
-    float: right;
+    margin-left: 35em;
 }
-#accesslistitems table {
+#accesslistitems table.ai-container {
     background-color: #e5e8da;
     padding: 5px 7px 1px 7px;
     color: #000000;
-    margin: 0 0 5px 0;
+    margin: 5px;
     line-height: 20px;
     font-weight: normal;
-    width: 230px;
+    width: auto;
+    float: left;
+}
+#accesslistitems table.preset {
+    background-color: #f5f8da;
 }
 #accesslistitems div div {
     background: none;
@@ -1415,36 +1426,6 @@ form#edituser_institution {
 
 
 /* Administer Extensions styles */
-.maincontent #admintemplates tr th {
-    font-weight: bold;
-    color: #3a5813;
-    background: #e5e8da;
-    margin: 0;
-    padding: 2px 4px 2px 4px;
-}
-.maincontent #admintemplates tr td {
-    padding: 3px;
-}
-.maincontent #admintemplates #admintemplates_reinstall {
-    border: 0;
-    color: #FFF;
-    font-weight: bold;
-    font-size: 11px;
-    background: url(../images/btn_reinstall.gif) no-repeat;
-    width: 60px;
-    height: 18px;
-    padding: 2px 7px 2px 7px;
-}
-.maincontent #admintemplates #admintemplates_install {
-    border: 0;
-    color: #eef7d4;
-    font-weight: bold;
-    font-size: 11px;
-    background: url(../images/btn_install.gif) no-repeat;
-    width: 60px;
-    height: 18px;
-    padding: 2px 14px 2px 14px;
-}
 .maincontent #pluginconfig table {
     padding: 10px;
     border: 0;
@@ -1593,6 +1574,9 @@ table#initials .initial-letters {
     color: #000 !important;
     text-decoration: none;
     font-weight: bold;
+}
+.searchform .institutions {
+    padding-left: 1em;
 }
 
 .pagination a, .pagination .disabled {

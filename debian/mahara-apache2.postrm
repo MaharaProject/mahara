@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # postrm script for mahara
 #
 # see: dh_installdeb(1)
@@ -23,10 +23,8 @@ set -e
 case "$1" in
     purge)
         restart_apache2;
-        rm -f /var/log/mahara-cron.log*
         rm -f /var/log/apache2/mahara.access.log*
         rm -f /var/log/apache2/mahara.error.log*
-        [ -d /var/lib/mahara ] && echo "NOTE: purge does _not_ remove /var/lib/mahara, you must do this yourself if you really want to!"
     ;;
     remove)
         restart_apache2;

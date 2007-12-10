@@ -1,1 +1,2 @@
-[type: gettext/rfc822deb] templates
+[type: gettext/rfc822deb] mahara.templates
+[type: gettext/rfc822deb] mahara-apache.templates

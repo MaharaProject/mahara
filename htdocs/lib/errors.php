@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage core
@@ -117,8 +117,8 @@ function log_environ ($message, $escape=true, $backtrace=true) {
  * @access private
  */
 function log_message ($message, $loglevel, $escape, $backtrace, $file=null, $line=null, $trace=null) {
-    global $SESSION;
-    if (!$SESSION && function_exists('get_config')) {
+    global $SESSION, $CFG;
+    if (!$SESSION && function_exists('get_config') && $CFG) {
         require_once(get_config('docroot') . 'auth/lib.php');
         $SESSION = Session::singleton();
     }
@@ -395,6 +395,8 @@ function exception (Exception $e) {
             $e->set_log_off();
         }
     }
+
+    // Display the message and die
     $e->handle_exception();
 }
 
@@ -460,7 +462,7 @@ class MaharaException extends Exception {
         return $this->getMessage();
     }
 
-    public function handle_exception() {
+    public final function handle_exception() {
 
         if (!empty($this->log)) {
             log_message($this->getMessage(), LOG_LEVEL_WARN, true, true, $this->getFile(), $this->getLine(), $this->getTrace());
@@ -611,8 +613,8 @@ class UserException extends MaharaException implements MaharaThrowable {
 class NotFoundException extends UserException {
     public function strings() {
         return array_merge(parent::strings(), 
-                           array('message' => 'The page you are looking for could not be found',
-                                 'title' => 'Not Found'));
+                           array('message' => get_string('notfoundexception', 'error'),
+                                 'title'   => get_string('notfound', 'error')));
     }
 
     public function render_exception() {
@@ -635,12 +637,17 @@ class ConfigSanityException extends ConfigException {
  * An SQL related error occured
  */
 class SQLException extends SystemException {
-    public function handle_exception() {
-        if (!empty($GLOBALS['_TRANSACTION_STARTED'])) {
+    public function __construct($message=null, $code=0) {
+        global $DB_IGNORE_SQL_EXCEPTIONS;
+
+        if ($GLOBALS['_TRANSACTION_LEVEL'] > 0) {
             db_rollback();
         }
-        log_warn($this->getMessage());
-        parent::handle_exception();
+        parent::__construct($message, $code);
+
+        if (empty($DB_IGNORE_SQL_EXCEPTIONS)) {
+            log_warn($this->getMessage());
+        }
     }
 }
 
@@ -723,8 +730,8 @@ class QuotaExceededException extends UserException {}
 class AccessDeniedException extends UserException {
     public function strings() {
         return array_merge(parent::strings(), 
-                           array('message' => 'You do not have access to view this page',
-                                 'title' => 'Access denied'));
+                           array('message' => get_string('accessdeniedexception', 'error'),
+                                 'title'   => get_string('accessdenied', 'error')));
     }
 
     public function render_exception() {

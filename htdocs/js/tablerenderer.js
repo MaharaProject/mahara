@@ -20,7 +20,7 @@ function TableRenderer(target, source, columns, options) {
 
     this.init = function() {
         self.table = getElement(target);
-        self.loadingMessage = DIV({'class': 'tablerenderer-loading'}, IMG({'src': config.theme['images/loading.gif'], 'alt': ''}), ' Loading...');
+        self.loadingMessage = DIV({'class': 'tablerenderer-loading'}, IMG({'src': config.theme['images/loading.gif'], 'alt': ''}), ' ', get_string('loading'));
         insertSiblingNodesAfter(self.table, self.loadingMessage);
 
         self.tbody = getFirstElementByTagAndClassName('tbody', null, self.table);

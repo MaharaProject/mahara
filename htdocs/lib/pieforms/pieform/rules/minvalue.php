@@ -44,6 +44,9 @@ function pieform_rule_minvalue_i18n() {
         'en.utf8' => array(
             'minvalue' => 'This value can not be smaller than %d'
         ),
+        'de.utf8' => array(
+            'minvalue' => 'Dieser Wert kann nicht kleiner als %d sein'
+        ),
     );
 }
 

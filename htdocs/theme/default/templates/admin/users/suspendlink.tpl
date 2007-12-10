@@ -1,1 +1,0 @@
-{if $r.suspended && $r.suspended != 'f'}<span>{str tag=suspended section=admin}</span>{/if}

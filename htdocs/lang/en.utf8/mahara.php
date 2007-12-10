@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage lang
@@ -41,6 +41,7 @@ $string['go']      = 'Go';
 $string['default'] = 'Default';
 $string['upload']  = 'Upload';
 $string['complete']  = 'Complete';
+$string['Failed']  = 'Failed';
 $string['loading'] = 'Loading ...';
 $string['showtags'] = 'Show my tags';
 $string['errorprocessingform'] = 'There was an error with submitting this form. Please check the marked fields and try again.';
@@ -49,6 +50,8 @@ $string['no']     = 'No';
 $string['yes']    = 'Yes';
 $string['none']   = 'None';
 $string['at'] = 'at';
+$string['From'] = 'From';
+$string['To'] = 'To';
 
 $string['next']      = 'Next';
 $string['nextpage']  = 'Next page';
@@ -164,6 +167,7 @@ $string['cannotremovedefaultemail'] = 'You cannot remove your primary email addr
 $string['emailtoolong'] = 'E-mail addresses cannot be longer that 255 characters';
 $string['mustspecifyoldpassword'] = 'You must specify your current password';
 $string['captchatitle'] = 'CAPTCHA Image';
+$string['captchaimage'] = 'CAPTCHA Image';
 $string['captchadescription'] = 'Enter the characters you see in the picture to the right. Letters are not case sensitive';
 $string['captchaincorrect'] = 'Enter the letters as they are shown in the image';
 
@@ -358,6 +362,7 @@ $string['addemail'] = 'Add email address';
 
 // Search
 $string['search'] = 'Search';
+$string['Query'] = 'Query';
 $string['advancedsearch'] = 'Advanced search';
 $string['query'] = 'Query';
 $string['querydescription'] = 'The words to be searched for';
@@ -371,13 +376,6 @@ $string['artefact'] = 'artefact';
 $string['Artefact'] = 'Artefact';
 $string['artefactnotfound'] = 'Artefact with id %s not found';
 $string['artefactnotrendered'] = 'Artefact not rendered';
-$string['created'] = 'Created';
-$string['lastmodified'] = 'Last modified';
-$string['owner'] = 'Owner';
-$string['size'] = 'Size';
-$string['title'] = 'Title';
-$string['type'] = 'Type';
-$string['download'] = 'Download';
 
 $string['belongingto'] = 'Belonging to';
 $string['allusers'] = 'All users';
@@ -454,6 +452,7 @@ $string['releaseview'] = 'Release view';
 $string['tutor'] = 'Tutor';
 $string['tutors'] = 'Tutors';
 $string['member'] = 'Member';
+$string['invite'] = 'Invite';
 $string['remove'] = 'Remove';
 $string['updatemembership'] = 'Update membership';
 $string['memberchangefailed'] = 'Failed to update some membership information';
@@ -501,6 +500,7 @@ $string['all'] = 'All';
 // friendslist
 $string['reasonoptional'] = 'Reason (optional)';
 $string['request'] = 'Request';
+$string['updatedfriendcontrolsetting'] = 'Updated friend control setting successfully';
 
 $string['friendformaddsuccess'] = 'Added %s to your friends list';
 $string['friendformremovesuccess'] = 'Removed %s from your friends list';
@@ -857,7 +857,6 @@ $string['country.zw'] = 'Zimbabwe';
 
 // general stuff that doesn't really fit anywhere else
 $string['system'] = 'System';
-$string['preview'] = 'Preview';
 $string['done'] = 'Done';
 $string['back'] = 'Back';
 

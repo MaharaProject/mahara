@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage core
@@ -67,9 +67,7 @@ function activity_occurred($activitytype, $data) {
     -       and $subject and $message (contents of message)
  *  - <b>feedback (artefact)</b> must contain both $artefact (id) and $view (id) and $message 
  *  - <b>feedback (view)</b> must contain $view (id) and $message
- *  - <b>watchlist (view) </b> must contain $view (id of view) 
-    -       and should also contain $subject (or a boring default will be used)
- *  - <b>newview</b> must contain $owner userid of view owner AND $view (id of new view)
+ *  - <b>watchlist (view) </b> must contain $view (id of view) as $message
  *  - <b>viewaccess</b> must contain $owner userid of view owner AND $view (id of view) and $oldusers array of userids before access change was committed.
  */
 function handle_activity($activitytype, $data, $cron=false) {
@@ -227,6 +225,10 @@ function handle_activity($activitytype, $data, $cron=false) {
                         throw new InvalidArgumentException("Couldn't find view with id " . $data->view);
                     }
                     $userid = $view->owner;
+                    // Don't send a message if the view owner submitted the feedback
+                    if ($data->author == $userid) {
+                        $userid = null;
+                    }
                     $data->subject .= ' ' .$view->title;
                     if (empty($data->url)) {
                         // @todo this might change later
@@ -243,11 +245,10 @@ function handle_activity($activitytype, $data, $cron=false) {
             // and now the harder ones
             case 'watchlist':
                 if (!empty($data->view)) {
-                    if (empty($data->subject)) {
-                        throw new InvalidArgumentException("subject must be provided for watchlist view");
+                    if (empty($data->message)) {
+                        throw new InvalidArgumentException("message must be provided for watchlist view");
                     }
-                    $oldsubject = isset($data->subject) ? $data->subject : '';
-                    $data->subject = get_string('newwatchlistmessage', 'activity');
+                    $data->subject = get_string('newwatchlistmessagesubject', 'activity');
                     if (!$viewinfo = get_record_sql('SELECT u.*, v.title FROM {usr} u
                                                      JOIN {view} v ON v.owner = u.id
                                                      WHERE v.id = ?', array($data->view))) {
@@ -256,7 +257,6 @@ function handle_activity($activitytype, $data, $cron=false) {
                         }
                         throw new InvalidArgumentException("Couldn't find view with id " . $data->view);
                     }
-                    $data->message = $oldsubject . ' ' . $viewinfo->title;
                     $sql = 'SELECT u.*, p.method, ' . $casturl . ' AS url
                                 FROM {usr_watchlist_view} wv
                                 JOIN {usr} u
@@ -283,33 +283,7 @@ function handle_activity($activitytype, $data, $cron=false) {
                 }
                 break;
             case 'newview':
-                if (!is_numeric($data->owner) || !is_numeric($data->view)) {
-                    throw new InvalidArgumentException("New view activity type requires view and owner to be set");
-                }
-                if (!$viewinfo = get_record_sql('SELECT u.*, v.title FROM {usr} u
-                                                 JOIN {view} v ON v.owner = u.id
-                                                 WHERE v.id = ?', array($data->view))) {
-                    if (!empty($cron)) { //probably deleted already
-                        return;
-                    }
-                    throw new InvalidArgumentException("Couldn't find view with id " . $data->view);
-                }
-
-                $data->message = get_string('newviewmessage', 'activity', $viewinfo->title);
-                $data->subject = get_string('newviewsubject', 'activity');
-                $data->url = get_config('wwwroot') . 'view/view.php?id=' . $data->view;
-
-                // add users on friendslist or userlist...
-                $users = activity_get_viewaccess_users($data->view, $data->owner, 'newview');
-                if (empty($users)) {
-                    $users = array();
-                }
-                // ick
-                foreach ($users as $user) {
-                    $user->message = display_name($viewinfo, $user) . ' ' . $data->message;
-                }
-
-                break;
+                $data->oldusers = array();
             case 'viewaccess':
                 if (!is_numeric($data->owner) || !is_numeric($data->view)) {
                     throw new InvalidArgumentException("view access activity type requires view and owner to be set");

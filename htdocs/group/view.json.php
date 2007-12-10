@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage core
@@ -52,10 +52,19 @@ $dbnow  = db_format_timestamp(time());
 
 switch ($type) {
     case 'views':
-        $where = 'WHERE v.submittedto = ?';
-        $values = array($id);
-        if (!$submitted) {
-            $where .= ' OR (
+        if ($submitted && !($membership & GROUP_MEMBERSHIP_TUTOR) && !($membership & GROUP_MEMBERSHIP_ADMIN) && !($membership & GROUP_MEMBERSHIP_STAFF) && !($membership & GROUP_MEMBERSHIP_OWNER)) {
+            throw new AccessDeniedException();
+        }
+
+        $where = '';
+        $values = array();
+
+        if ($submitted) {
+            $where = 'WHERE v.submittedto = ?';
+            $values[] = $id;
+        }
+        else {
+            $where = 'WHERE (
                      a.group = ? 
                      AND ( v.startdate IS NULL OR v.startdate < ? )
                      AND ( v.stopdate IS NULL OR v.stopdate > ? )
@@ -67,6 +76,11 @@ switch ($type) {
             $values[] = $dbnow;
             $values[] = $dbnow;
             $values[] = $dbnow;
+
+            if ($membership & GROUP_MEMBERSHIP_TUTOR) {
+                $where .= ' OR v.submittedto = ?';
+                $values[] = $id;
+            }
         }
 
         $count = count_records_sql('
@@ -76,7 +90,7 @@ switch ($type) {
             ' . $where,
             $values
         );
-                                   
+
         $data = get_records_sql_array('
             SELECT DISTINCT v.*, u.username, u.firstname, u.lastname, u.preferredname, u.id AS usr 
             FROM {view} v
@@ -124,6 +138,9 @@ switch ($type) {
         }
         break;
      case 'membercontrol':
+         if (!($membership & GROUP_MEMBERSHIP_OWNER) && !($membership & GROUP_MEMBERSHIP_ADMIN) && !($membership & GROUP_MEMBERSHIP_TUTOR) && !($membership & GROUP_MEMBERSHIP_STAFF)) {
+             throw new AccessDeniedException();
+         }
          foreach ($_REQUEST as $k => $v) {
              if (preg_match('/member-(\d+)/', $k, $m)) {
                  $user = $m[1];
@@ -175,6 +192,9 @@ switch ($type) {
          json_reply(false, get_string('memberchangesuccess'));
          break;
      case 'release':
+         if (!($membership & GROUP_MEMBERSHIP_OWNER) && !($membership & GROUP_MEMBERSHIP_ADMIN) && !($membership & GROUP_MEMBERSHIP_TUTOR) && !($membership & GROUP_MEMBERSHIP_STAFF)) {
+             throw new AccessDeniedException();
+         }
          $view = param_integer('view');
          require_once(get_config('libroot') . 'view.php');
          $view = new View($view);
