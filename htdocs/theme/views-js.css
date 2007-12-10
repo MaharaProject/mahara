@@ -10,6 +10,13 @@
     cursor: move;
 }
 
+/* This file is loaded by IE6 as it does support javascript - although the
+   interface itself is disabled in IE. So we unset the cursor styles here if in
+   IE6 */
+* html .blocktype, * html .blocktype-clone, * html .blockinstance-header {
+    cursor: default;
+}
+
 /* This will be hidden until loading is finished */
 #bottom-pane {
     display: none;

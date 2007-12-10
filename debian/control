@@ -10,7 +10,7 @@ Vcs-Browser: http://git.catalyst.net.nz/gw?p=mahara.git
 
 Package: mahara
 Architecture: all
-Depends: ${misc:Depends}, php5-pgsql | php5-mysql, php5-cli, php5-gd, file, cron, perl, ttf-freefont
+Depends: ${misc:Depends}, php5-pgsql | php5-mysql, php5-cli, php5-gd, file, cron, perl, ttf-freefont, php-file, php-pear
 Recommends: mahara-apache2 | mahara-apache, postgresql | postgresql-8.2 | postgresql-8.1 | mysql-server | mysql-server-5.0, clamav, clamav-daemon, php5-curl, php5-openssl, php5-xmlrpc, php5-imagick, libfile-slurp-perl, libtext-diff-perl
 Description: Electronic portfolio, weblog, and resume builder
  Mahara is a fully featured electronic portfolio, weblog, resume builder and
@@ -24,7 +24,7 @@ Description: Electronic portfolio, weblog, and resume builder
 
 Package: mahara-apache
 Architecture: all
-Depends: ${misc:Depends}, mahara, apache, libapache-mod-php5
+Depends: ${misc:Depends}, mahara (>= 0.9.0~beta1), apache, libapache-mod-php5
 Conflicts: mahara-apache2
 Description: Electronic portfolio, weblog, and resume builder
  Mahara is a fully featured electronic portfolio, weblog, resume builder and
@@ -37,7 +37,7 @@ Description: Electronic portfolio, weblog, and resume builder
 
 Package: mahara-apache2
 Architecture: all
-Depends: ${misc:Depends}, mahara, apache2, libapache2-mod-php5
+Depends: ${misc:Depends}, mahara (>= 0.9.0~beta1), apache2, libapache2-mod-php5
 Conflicts: mahara-apache
 Description: Electronic portfolio, weblog, and resume builder
  Mahara is a fully featured electronic portfolio, weblog, resume builder and

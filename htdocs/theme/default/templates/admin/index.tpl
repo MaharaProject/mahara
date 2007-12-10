@@ -11,9 +11,9 @@
 <h4>{str tag=thefollowingupgradesareready section=admin}</h4>
 <table cellspacing="0">
     <tr>
-        <th>Plugin</th>
-        <th>From</th>
-        <th>To</th>
+        <th>{str tag=Plugin section=admin}</th>
+        <th>{str tag=From}</th>
+        <th>{str tag=To}</th>
     </tr>
 {foreach from=$upgrades key=key item=upgrade}
 {if $key != 'disablelogin'}

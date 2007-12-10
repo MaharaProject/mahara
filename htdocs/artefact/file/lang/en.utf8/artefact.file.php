@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage lang
@@ -34,14 +34,15 @@ $string['changessaved'] = 'Changes saved';
 $string['contents'] = 'Contents';
 $string['copyrightnotice'] = 'Copyright notice';
 $string['create'] = 'Create';
+$string['Created'] = 'Created';
 $string['createfolder'] = 'Create folder';
 $string['defaultquota'] = 'Default Quota';
 $string['defaultquotadescription'] = 'You can set the amount of disk space that new users will have as their quota here. Existing user quotas will not be changed.';
 $string['deletefile?'] = 'Are you sure you want to delete this file?';
 $string['deletefolder?'] = 'Are you sure you want to delete this folder?';
-$string['description'] = 'Description';
+$string['Description'] = 'Description';
 $string['destination'] = 'Destination';
-$string['download'] = 'Download';
+$string['Download'] = 'Download';
 $string['editfile'] = 'Edit file';
 $string['editfolder'] = 'Edit folder';
 $string['emptyfolder'] = 'Empty folder';
@@ -62,8 +63,9 @@ $string['folder'] = 'Folder';
 $string['foldercreated'] = 'Folder created';
 $string['home'] = 'Home';
 $string['image'] = 'Image';
+$string['lastmodified'] = 'Last Modified';
 $string['myfiles'] = 'My Files';
-$string['name'] = 'Name';
+$string['Name'] = 'Name';
 $string['namefieldisrequired'] = 'The name field is required';
 $string['movefaileddestinationinartefact'] = 'You cannot put a folder inside itself.';
 $string['movefaileddestinationnotfolder'] = 'You can only move files into folders.';
@@ -72,11 +74,14 @@ $string['movefailednotowner'] = 'You do not have permission to move the file int
 $string['movefailed'] = 'Move failed.';
 $string['nofilesfound'] = 'No files found';
 $string['overwrite'] = 'Overwrite';
+$string['Owner'] = 'Owner';
 $string['parentfolder'] = 'Parent folder';
+$string['Preview'] = 'Preview';
 $string['savechanges'] = 'Save changes';
-$string['size'] = 'Size';
+$string['Size'] = 'Size';
 $string['title'] = 'Name';
 $string['titlefieldisrequired'] = 'The name field is required';
+$string['Type'] = 'Type';
 $string['unlinkthisfilefromblogposts?'] = 'This file is attached to one or more blog posts.  If you delete the file, it will be removed from these posts.';
 $string['upload'] = 'Upload';
 $string['uploadfile'] =  'Upload file';
@@ -87,6 +92,7 @@ $string['uploadoffilefailed'] =  'Upload of %s failed';
 $string['uploadoffiletofoldercomplete'] = 'Upload of %s to %s complete';
 $string['uploadoffiletofolderfailed'] = 'Upload of %s to %s failed';
 $string['youmustagreetothecopyrightnotice'] = 'You must agree to the copyright notice';
+
 
 // File types
 $string['ai'] = 'Postscript Document';

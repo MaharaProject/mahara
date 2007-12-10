@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage admin
@@ -94,25 +94,29 @@ if ($institution || $add) {
     $instancearray = array();
     $instancestring = '';
     $c = count($authinstances);
+    $inuse = '';
 
     if (!$add) {
         $data = get_record('institution', 'name', $institution);
         $lockedprofilefields = (array) get_column('institution_locked_profile_field', 'profilefield', 'name', $institution);
         
         // TODO: Find a better way to work around Smarty's minimal looping logic
-        foreach($authinstances as $key => $val) {
-            $authinstances[$key]->index = $key;
-            $authinstances[$key]->total = $c;
-            $instancearray[] = $val->id;
-        }
+        if (!empty($authinstances)) {
+            foreach($authinstances as $key => $val) {
+                $authinstances[$key]->index = $key;
+                $authinstances[$key]->total = $c;
+                $instancearray[] = $val->id;
+            }
 
-        $instancestring = implode(',',$instancearray);
-        $inuserecords = array();
-        $records = get_records_sql_assoc('select authinstance, count(id) from {usr} where authinstance in ('.$instancestring.') group by authinstance', array());
-        foreach ($records as $record) {
-            $inuserecords[] = $record->authinstance;
+            $instancestring = implode(',',$instancearray);
+            $inuserecords = array();
+            if ($records = get_records_sql_assoc('select authinstance, count(id) from {usr} where authinstance in ('.$instancestring.') group by authinstance', array())) {
+                foreach ($records as $record) {
+                    $inuserecords[] = $record->authinstance;
+                }
+            }
+            $inuse = implode(',',$inuserecords);
         }
-        $inuse = implode(',',$inuserecords);
         $authtypes = auth_get_available_auth_types($institution);
     }
     else {
@@ -149,7 +153,8 @@ if ($institution || $add) {
         'inuse' => array(
             'type'   => 'hidden',
             'value'  => $inuse,
-            'id'     => 'inuse'
+            'id'     => 'inuse',
+            'ignore' => $add
         ),
         'i' => array(
             'type'   => 'hidden',

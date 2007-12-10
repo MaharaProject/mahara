@@ -43,21 +43,92 @@ var Paginator = function(id, datatable, script, extradata) {
             }
 
             sendjsonrequest(self.jsonScript, queryData, 'GET', function(data) {
-                getFirstElementByTagAndClassName('tbody', null, self.datatable).innerHTML = data['data']['tablerows'];
+                var tbody = getFirstElementByTagAndClassName('tbody', null, self.datatable);
+                if (tbody) {
+                    // Currently the paginator is used for the artefact chooser
+                    // alone. This block assumes there is a DOM node with an ID
+                    // of 'ie-workaround', but could be improved somewhat to
+                    // perhaps not need the DOM node to be in the DOM - at
+                    // least not when the page loads.
+                    //
+                    // You can't write to table nodes innerHTML in IE and
+                    // konqueror, so this workaround detects them and does
+                    // things differently
+                    if (
+                        (document.all && document.documentElement && typeof(document.documentElement.style.maxHeight) != "undefined" && !window.opera)
+                        ||
+                        (/Konqueror|AppleWebKit|KHTML/.test(navigator.userAgent))) {
+                        var temp = $('ie-workaround');
+                        temp.innerHTML = '<table><tbody>' + data['data']['tablerows'];
+                        swapDOM(tbody, temp.childNodes[0].childNodes[0]);
+                        replaceChildNodes(temp);
+                    }
+                    else {
+                        tbody.innerHTML = data['data']['tablerows'];
+                    }
+                }
 
                 // Update the pagination
-                var tmp = DIV();
-                tmp.innerHTML = data['data']['pagination'];
-                swapDOM(self.id, tmp.firstChild);
+                if ($(self.id)) {
+                    var tmp = DIV();
+                    tmp.innerHTML = data['data']['pagination'];
+                    swapDOM(self.id, tmp.firstChild);
 
-                // Run the pagination js to make it live
-                eval(data['data']['pagination_js']);
+                    // Run the pagination js to make it live
+                    eval(data['data']['pagination_js']);
 
-                // Update the result count
-                getFirstElementByTagAndClassName('div', 'results', self.id).innerHTML = data['data']['count'] + ' results'; // TODO i18n
+                    // Update the result count
+                    var results = getFirstElementByTagAndClassName('div', 'results', self.id);
+                    if (results) {
+                        results.innerHTML = data['data']['results'];
+                    }
+                }
+
+                self.alertProxy('pagechanged', data['data']);
             });
         });
     }
 
+    this.alertProxy = function(eventName, data) {
+        if (typeof(paginatorProxy) == 'object') {
+            paginatorProxy.alertObservers(eventName, data);
+        }
+    }
+
     this.init(id, datatable, script, extradata);
 }
+
+/**
+ * Any object can subscribe to the PaginatorProxy and thus be alerted when a
+ * paginator changes page.
+ *
+ * This is done through a proxy object because generally a new Paginator object
+ * is instantiated for each time the page is changed, and the old one thrown
+ * away, so you can't really subscribe to events on the paginator itself.
+ *
+ * Generally, one paginator object should be created for an entire page.
+ */
+function PaginatorProxy() {
+    var self = this;
+
+    /**
+     * Alerts any observers to a fired event. Called by paginator objects
+     */
+    this.alertObservers = function(eventName, data) {
+        forEach(self.observers, function(o) {
+            signal(o, eventName, data);
+        });
+    }
+
+    /**
+     * Adds an observer to listen to paginator events
+     */
+    this.addObserver = function(o) {
+        self.observers.push(o);
+    }
+
+    this.observers = [];
+}
+
+// Create the paginator proxy
+var paginatorProxy = new PaginatorProxy();

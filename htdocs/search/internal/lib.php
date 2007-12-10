@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage search-internal
@@ -237,30 +237,20 @@ class PluginSearchInternal extends PluginSearch {
     }
     
 
-    public static function admin_search_user($queries, $constratints, $offset, $limit, 
+    public static function admin_search_user($queries, $constraints, $offset, $limit, 
                                              $sortfield, $sortdir) {
-        if (is_postgres()) {
-            return self::admin_search_user_pg($queries, $constratints, $offset, $limit, 
-                                              $sortfield . ' ' . strtoupper($sortdir));
-        } 
-        //else if (is_mysql()) {
-        //    return self::admin_search_user_my($query_string, $limit, $offset);
-        //}
-        else {
-            throw new SQLException('admin_search_user() is not implemented for your database engine (' . get_config('dbtype') . ')');
-        }
-    }
-
-
-    public static function admin_search_user_pg($queries, $constraints, $offset, $limit, $sort) {
+        $sort = $sortfield . ' ' . strtoupper($sortdir);
         $where = 'WHERE u.id <> 0 AND u.deleted = 0';
         $values = array();
 
+        // Get the correct keyword for case insensitive LIKE
+        $ilike = db_ilike();
+
         // Only handle OR/AND expressions at the top level.  Eventually we may need subexpressions.
 
-        $matchtypes = array('starts' => ' ILIKE ? || \'%\'',
+        $matchtypes = array('starts' => " $ilike ? || '%'",
                             'equals' => ' = ? ',
-                            'contains' => ' ILIKE \'%\' || ? || \'%\'');
+                            'contains' => " $ilike '%' || ? || '%'");
 
         if (!empty($queries)) {
             $where .= ' AND ( ';
@@ -487,22 +477,33 @@ class PluginSearchInternal extends PluginSearch {
 
         $sql = "
             SELECT
-                id, artefacttype, title, description
+                a.id, a.artefacttype, a.title, a.description
             FROM
                 {artefact} a
+            LEFT JOIN {artefact_tag} at ON (at.artefact = a.id)
             WHERE
-                owner = ?
-            AND ($querydata[0])";
+                a.owner = ?
+            AND (
+                ($querydata[0])
+                OR
+                (LOWER(at.tag) = ?)
+            )";
         $count_sql = "
             SELECT
                 COUNT(*)
             FROM
                 {artefact} a
+            LEFT JOIN {artefact_tag} at ON (at.artefact = a.id)
             WHERE
-                owner = ?
-            AND ($querydata[0])";
-
+                a.owner = ?
+            AND (
+                ($querydata[0])
+                OR
+                (LOWER(at.tag) = ?)
+            )";
         array_unshift($querydata[1], $USER->get('id'));
+        array_push($querydata[1], $querystring);
+
         $results = array(
             'data'   => get_records_sql_array($sql, $querydata[1], $offset, $limit),
             'offset' => $offset,
@@ -510,26 +511,28 @@ class PluginSearchInternal extends PluginSearch {
             'count'  => get_field_sql($count_sql, $querydata[1])
         );
 
-        foreach ($results['data'] as &$result) {
-            $newresult = array();
-            foreach ($result as $key => &$value) {
-                if ($key == 'id' || $key == 'artefacttype' || $key == 'title' || $key == 'description') {
-                    $newresult[$key] = $value;
+        if ($results['data']) {
+            foreach ($results['data'] as &$result) {
+                $newresult = array();
+                foreach ($result as $key => &$value) {
+                    if ($key == 'id' || $key == 'artefacttype' || $key == 'title' || $key == 'description') {
+                        $newresult[$key] = $value;
+                    }
                 }
+                $newresult['type'] = 'artefact';
+                $artefactplugin = get_field('artefact_installed_type', 'plugin', 'name', $newresult['artefacttype']);
+                if ($artefactplugin == 'internal') {
+                    $newresult['summary'] = $newresult['title'];
+                    $newresult['title'] = get_string($newresult['artefacttype'], 'artefact.' . $artefactplugin);
+                }
+                else {
+                    $newresult['summary'] = $newresult['description'];
+                }
+                $result = $newresult;
             }
-            $newresult['type'] = 'artefact';
-            $artefactplugin = get_field('artefact_installed_type', 'plugin', 'name', $newresult['artefacttype']);
-            if ($artefactplugin == 'internal') {
-                $newresult['summary'] = $newresult['title'];
-                $newresult['title'] = get_string($newresult['artefacttype'], 'artefact.' . $artefactplugin);
-            }
-            else {
-                $newresult['summary'] = $newresult['description'];
-            }
-            $result = $newresult;
+
+            self::self_search_make_links($results);
         }
-        
-        self::self_search_make_links($results);
 
         return $results;
     }

@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage core
@@ -74,7 +74,7 @@ function creategroup_validate(Pieform $form, $values) {
     global $USER;
     global $SESSION;
 
-    $cid = get_field('group', 'id', 'owner', $USER->get('id'), 'name', $values['name']);
+    $cid = get_field('group', 'id', 'name', $values['name']);
 
     if ($cid) {
         $form->set_error('name', get_string('groupalreadyexists'));
@@ -108,7 +108,7 @@ function creategroup_submit(Pieform $form, $values) {
     );
 
     // If the user is a staff member, they should be added as a tutor automatically
-    if ($values['membershiptype'] == 'controlled' && $USER->get('staff')) {
+    if ($values['membershiptype'] == 'controlled' && ($USER->get('staff') && $USER->get('admin'))) {
         log_debug('Adding staff user to group');
         insert_record(
             'group_member',
@@ -117,6 +117,17 @@ function creategroup_submit(Pieform $form, $values) {
                 'member' => $USER->get('id'),
                 'ctime'  => $now,
                 'tutor'  => 1
+            )
+        );
+    }
+    else {
+        insert_record(
+            'group_member',
+            (object) array(
+                'group'  => $id,
+                'member' => $USER->get('id'),
+                'ctime'  => $now,
+                'tutor'  => 0
             )
         );
     }

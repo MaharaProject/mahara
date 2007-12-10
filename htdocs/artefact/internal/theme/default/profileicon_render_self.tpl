@@ -1,5 +1,5 @@
 <div class="fr filedata-icon" style="text-align: center;">
-    <h4>Preview</h4>
+    <h4>{str tag=Preview section=artefact.internal}</h4>
     <img src="{$previewpath|escape}" alt="">
 </div>
 <div>
@@ -8,11 +8,11 @@
 </div>
 
 <table class="filedata">
-    <tr><th>{str tag=type}:</th><td>{str tag=$artefacttype section=artefact.internal}</td></tr>
-    <tr><th>{str tag=description}:</th><td>{$description|escape}</td></tr>
-    <tr><th>{str tag=owner}:</th><td>{$owner}</td></tr>
-    <tr><th>{str tag=created}:</th><td>{$created}</td></tr>
-    <tr><th>{str tag=lastmodified}:</th><td>{$modified}</td></tr>
-    <tr><th>{str tag=size}:</th><td>{$size|escape}</td></tr>
-    <tr><th>{str tag=download}:</th><td><a href="{$downloadpath|escape}">{str tag=download}</a></td></tr>
+    <tr><th>{str tag=Type section=artefact.internal}:</th><td>{str tag=$artefacttype section=artefact.internal}</td></tr>
+    <tr><th>{str tag=Description section=artefact.internal}:</th><td>{$description|escape}</td></tr>
+    <tr><th>{str tag=Owner section=artefact.internal}:</th><td>{$owner}</td></tr>
+    <tr><th>{str tag=Created section=artefact.internal}:</th><td>{$created}</td></tr>
+    <tr><th>{str tag=lastmodified section=artefact.internal}:</th><td>{$modified}</td></tr>
+    <tr><th>{str tag=Size section=artefact.internal}:</th><td>{$size|escape}</td></tr>
+    <tr><th>{str tag=Download section=artefact.internal}:</th><td><a href="{$downloadpath|escape}">{str tag=Download section=artefact.internal}</a></td></tr>
 </table>

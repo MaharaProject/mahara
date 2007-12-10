@@ -101,7 +101,7 @@
        <field name="idtype"      type="string" indexed="true" stored="true"                     />
        <field name="title"       type="text"   indexed="true" stored="true"                     />
        <field name="description" type="text"   indexed="true" stored="true"                     />
-       <field name="tags"        type="text"   indexed="true" stored="true"                     />
+       <field name="tags"        type="textTight"   indexed="true" stored="true" multiValued="true" />
        <field name="ctime"       type="sint"   indexed="true" stored="true"                     />
        <field name="mtime"       type="sint"   indexed="true" stored="true"                     />
 

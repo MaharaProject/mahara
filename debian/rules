@@ -45,6 +45,10 @@ install: configure-stamp
 	rm -f $(CURDIR)/debian/mahara/usr/share/mahara/lib/snoopy/autogen.sh
 	rm -f $(CURDIR)/debian/mahara/usr/share/mahara/lib/snoopy/TODO
 	rm -f $(CURDIR)/debian/mahara/usr/share/mahara/lib/snoopy/NEWS
+	rm -rf $(CURDIR)/debian/mahara/usr/share/mahara/lib/pear/File
+	rm -f $(CURDIR)/debian/mahara/usr/share/mahara/lib/pear/File.php
+	rm -rf $(CURDIR)/debian/mahara/usr/share/mahara/lib/pear/PEAR
+	rm -f $(CURDIR)/debian/mahara/usr/share/mahara/lib/pear/PEAR.php
 
 	# Config files (common package)
 	cp $(CURDIR)/debian/config.php $(CURDIR)/debian/mahara/etc/mahara/

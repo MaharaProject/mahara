@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage core
@@ -595,6 +595,14 @@ class View {
         try {
             $values['returndata'] = defined('JSON');
             $returndata = $this->$action($values);
+
+            // Tell the watchlist that the view changed
+            $data = (object)array(
+                'view' => $this->get('id'),
+                'message' => get_string('newwatchlistmessageview', 'activity', $this->get('title')),
+            );
+            activity_occurred('watchlist', $data);
+
             if (!defined('JSON')) {
                 $message = $this->get_viewcontrol_ok_string($action);
             }
@@ -1230,8 +1238,8 @@ class View {
                     if ($value && in_array($artefact->id, $value)) {
                         $formcontrols .= ' checked="checked"';
                     }
-                    $formcontrols .= '>';
-                    $formcontrols .= '<input type="hidden" name="' . hsc($elementname) . '_onpage[]" value="' . hsc($artefact->id) . '">';
+                    $formcontrols .= ' class="artefactid-checkbox checkbox">';
+                    $formcontrols .= '<input type="hidden" name="' . hsc($elementname) . '_onpage[]" value="' . hsc($artefact->id) . '" class="artefactid-onpage">';
                 }
 
                 $smarty = smarty_core();
@@ -1267,7 +1275,7 @@ class View {
             ),
         ));
 
-        return array($result, $pagination, $totalartefacts);
+        return array($result, $pagination, $totalartefacts, $offset);
     }
 }
 

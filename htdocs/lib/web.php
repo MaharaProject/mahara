@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage core
@@ -96,6 +96,7 @@ function &smarty($javascript = array(), $headers = array(), $pagestrings = array
     $smarty = smarty_core();
 
     $wwwroot = get_config('wwwroot');
+    $jswwwroot = json_encode($wwwroot);
 
     $theme_list = array();
     
@@ -163,7 +164,9 @@ tinyMCE.init({
     button_tile_map: true,
     {$tinymce_config}
     language: '{$language}',
-    content_css : {$content_css}
+    content_css : {$content_css},
+    document_base_url: {$jswwwroot},
+    relative_urls: false
 });
 </script>
 
@@ -287,7 +290,6 @@ EOF;
     $stringjs = '<script type="text/javascript">';
     $stringjs .= 'var strings = ' . json_encode($strings) . ';';
     $stringjs .= '</script>';
-    $headers[] = $stringjs;
 
 
     // stylesheet set up - if we're in a plugin also get its stylesheet
@@ -311,6 +313,7 @@ EOF;
     }
 
     $smarty = smarty_core();
+    $smarty->assign('STRINGJS', $stringjs);
 
     $smarty->assign('STYLESHEETLIST', $stylesheets);
     if (!empty($theme_list)) {

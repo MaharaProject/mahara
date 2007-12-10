@@ -15,7 +15,7 @@ Copyright: (C) 2006-2007 Catalyst IT Ltd http://catalyst.net.nz
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
+   the Free Software Foundation; either version 3 of the License, or
    (at your option) any later version.
  
    This program is distributed in the hope that it will be useful,
@@ -23,14 +23,12 @@ Copyright: (C) 2006-2007 Catalyst IT Ltd http://catalyst.net.nz
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
  
-   You should have received a copy of the GNU General Public License with
-   the Debian GNU/Linux distribution in file /usr/share/common-licenses/GPL;
-   if not, write to the Free Software Foundation, Inc., 51 Franklin Street, 
-   Fifth Floor, Boston, MA 02110-1301, USA
+   You should have received a copy of the GNU General Public License
+   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 You are free to distribute this software under the terms of the GNU General
 Public License. On Debian systems, the complete text of the GNU General
-Public License can be found in /usr/share/common-licenses/GPL-2 file.
+Public License can be found in /usr/share/common-licenses/GPL-3 file.
 
 The Debian packaging is (C) 2007, Catalyst IT <dev@mahara.org> and
 is licensed under the GPL, see `/usr/share/common-licenses/GPL'.
@@ -39,7 +37,7 @@ This package also includes the following code:
 
   htdocs/js/tinymce/:
   Copyright (C) 2004-2007 Moxiecode Systems AB
-  Released under the GNU Lesser General Public License 2.1
+  Released under the GNU Lesser General Public License 2.1+
 
   htdocs/js/tinymce/plugins/devkit/jscripts/diff.js:
   Copyright (C) 2006 Neil Fraser
@@ -47,20 +45,24 @@ This package also includes the following code:
 
   htdocs/lib/adodb/:
   Copyright (c) 2000-2004 John Lim
-  Released under both the GNU Lesser General Public License 2.1
+  Released under both the GNU Lesser General Public License 2.1+
   and a Modified BSD license
 
   htdocs/lib/phpmailer/:
   Copyright (C) 2001-2005 Brent R. Matzelle
-  Released under the GNU Lesser General Public License 2.1
+  Released under the GNU Lesser General Public License 2.1+
+
+  htdocs/lib/pear/XML/:
+  Copyright (C) 2005 James Stewart <james@jystewart.net>
+  Released under the GNU Lesser General Public License 2.1+
 
   htdocs/lib/snoopy/:
   Copyright (C) 1999-2000 ispi
-  Released under the GNU Lesser General Public License 2.1
+  Released under the GNU Lesser General Public License 2.1+
 
   htdocs/lib/pieforms/static/jscalendar/:
   Copyright (C) 2002-2005 Mihai Bazon
-  Released under the GNU Lesser General Public License 2.1
+  Released under the GNU Lesser General Public License 2.1+
 
   htdocs/js/MochiKit/Style.js:
   Copyright (c) 2006 Yahoo! Inc.
@@ -68,31 +70,32 @@ This package also includes the following code:
 
   htdocs/lib/kses.php:
   Copyright (C) 2002-2005 Ulf Harnhammar
-  Released under the GNU General Public License 2
+  Released under the GNU General Public License 2+
 
   htdocs/lib/validateurlsyntax.php:
   Copyright (C) 2004 Rod Apeldoorn
-  Released under the GNU General Public License 2
+  Released under the GNU General Public License 2+
 
   htdocs/lib/smarty/:
   Copyright (C) 2001-2005 New Digital Group, Inc.
-  Released under the GNU Lesser General Public License 2.1
+  Released under the GNU Lesser General Public License 2.1+
 
   htdocs/lib/constants.php, searchlib.php, dml.php, ddl.php, 
   uploadmanager.php, mahara.php, web.php, file.php, xmldb/:
   Copyright (C) 2006-2007 Catalyst IT Ltd
   Copyright (C) 1999-2007 Martin Dougiamas
-  Released under the GNU General Public License 2
+  Released under the GNU General Public License 2+
 
   htdocs/lib/xmldb/:
+  Copyright (C) 2006-2007 Catalyst IT Ltd
   Copyright (C) 2001-2007 Martin Dougiamas
   Copyright (C) 2001-2007 Eloy Lafuente
-  Released under the GNU General Public License 2
+  Released under the GNU General Public License 3+
 
   htdocs/lib/pieforms/static/core/pieforms.js:
   Copyright (C) 2006 Nigel McNie
   Copyright (C) 2006 Drupal
-  Released under the GNU General Public License 2
+  Released under the GNU General Public License 2+
 
   htdocs/search/internal/lib.php:
   Copyright (C) 2006-2007 Catalyst IT

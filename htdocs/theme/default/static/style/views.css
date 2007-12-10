@@ -123,6 +123,10 @@ div.editview {
     margin-top: 1em;
     background-color: #FFF;
     padding: 5px;
+    font-size: 12px;
+}
+.maincontent .blockinstance table {
+    font-size: 12px;
 }
 .blockinstance-header h4 {
     margin: 0;

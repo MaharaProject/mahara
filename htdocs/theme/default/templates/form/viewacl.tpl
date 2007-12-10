@@ -33,6 +33,7 @@ var count = 0;
 function renderPotentialPresetItem(item) {
     var addButton = BUTTON({'type': 'button'}, '{{str tag=add}}');
     var row = DIV(null, addButton, ' ', item.name);
+    item.preset = true;
 
     connect(addButton, 'onclick', function() {
         appendChildNodes('accesslist', renderAccessListItem(item));
@@ -45,13 +46,21 @@ function renderPotentialPresetItem(item) {
 // Given a row, render it on the right hand side
 function renderAccessListItem(item) {
     var removeButton = BUTTON({'type': 'button'}, '{{str tag=remove}}');
-    var dateDiv = DIV(null,
-        makeCalendarInput(item, 'start'),
-        makeCalendarLink(item, 'start'),
-        makeCalendarInput(item, 'stop'),
-        makeCalendarLink(item, 'stop')
+    var dateInfo = TABLE(null,
+        TR(null,
+            TH(null, get_string('From') + ':'),
+            TD(null, makeCalendarInput(item, 'start'), makeCalendarLink(item, 'start'))
+        ),
+        TR(null,
+            TH(null, get_string('To') + ':'),
+            TD(null, makeCalendarInput(item, 'stop'), makeCalendarLink(item, 'stop'))
+        )
     );
-    var row = TABLE(null,
+    var cssClass = 'ai-container';
+    if (item.preset) {
+        cssClass += '  preset';
+    }
+    var row = TABLE({'class': cssClass},
         TBODY(null, 
             TR(null,
                 TH(null, item.name + (item.tutoronly ? ' ' + '{{str tag=tutors}}' : '')),
@@ -59,7 +68,7 @@ function renderAccessListItem(item) {
             ),
             TR(null,
                 TD({'colspan': 2},
-                    dateDiv,
+                    dateInfo,
                     INPUT({
                         'type': 'hidden',
                         'name': 'accesslist[' + count + '][type]',

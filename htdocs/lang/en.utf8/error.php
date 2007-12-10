@@ -1,20 +1,20 @@
 <?php
 /**
- * This program is part of Mahara
+ * Mahara: Electronic portfolio, weblog, resume builder and social networking
+ * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
  * @subpackage lang
@@ -27,7 +27,7 @@
 defined('INTERNAL') || die();
 
 // @todo<nigel>: most likely need much better descriptions here for these environment issues
-$string['phpversion'] = 'Mahara will not run on PHP < 5.1.0. Please upgrade your PHP version, or move Mahara to a different host.';
+$string['phpversion'] = 'Mahara will not run on PHP < 5.1.3. Please upgrade your PHP version, or move Mahara to a different host.';
 $string['jsonextensionnotloaded'] = 'Your server configuration does not include the JSON extension. Mahara requires this in order to send some data to and from the browser. Please make sure that it is loaded in php.ini, or install it if it is not installed.';
 $string['pgsqldbextensionnotloaded'] = 'Your server configuration does not include the pgsql extension. Mahara requires this in order to store data in a relational database. Please make sure that it is loaded in php.ini, or install it if it is not installed.';
 $string['mysqldbextensionnotloaded'] = 'Your server configuration does not include the mysql extension. Mahara requires this in order to store data in a relational database. Please make sure that it is loaded in php.ini, or install it if it is not installed.';
@@ -77,6 +77,12 @@ $string['unrecoverableerror'] = 'A nonrecoverable error occurred.  This probably
 $string['unrecoverableerrortitle'] = '%s - Site Unavailable';
 $string['parameterexception'] = 'A required parameter was missing';
 $string['accessdeniedexception'] = 'You do not have access to view this page';
+
+$string['notfound'] = 'Not Found';
+$string['notfoundexception'] = 'The page you are looking for could not be found';
+
+$string['accessdenied'] = 'Access Denied';
+$string['accessdeniedexception'] =  'You do not have access to view this page';
 
 $string['viewnotfoundexceptiontitle'] = 'View not found';
 $string['viewnotfoundexceptionmessage'] = 'You tried to access a view that didn\'t exist!';
