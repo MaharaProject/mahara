@@ -30,6 +30,7 @@ define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'groups');
 define('SECTION_PAGE', 'groups');
 
+
 require(dirname(dirname(__FILE__)) . '/init.php');
 define('TITLE', get_string('groupsimin'));
 
