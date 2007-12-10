@@ -319,7 +319,8 @@ $string['institutionusersupdatednonmembers'] = 'Invitations sent';
 
 $string['maxuseraccounts'] = 'Maximum User Accounts Allowed';
 $string['maxuseraccountsdescription'] = 'The maximum number of user accounts that can be associated with the institution.  If there is no limit, this field should be left blank.';
-
+$string['institutionuserserrortoomanyusers'] = 'The users were not added.  The number of members cannot exceed the maximum allowed for the institution.  You can add fewer users, remove some users from the institution, or ask the site administrator to increase the maximum number of users.';
+$string['institutionuserserrortoomanyinvites'] = 'Your invitations were not sent.  The number of existing members plus the number of outstanding invitations cannot exceed the institution\'s maximum number of users.  You can invite fewer users, remove some users from the institution, or ask the site administrator to increase the maximum number of users.';
 
 // general stuff
 $string['notificationssaved'] = 'Notification settings saved';

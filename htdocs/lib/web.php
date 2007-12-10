@@ -1309,7 +1309,7 @@ function admin_nav() {
                 'weight' => 10,
             ),
             array(
-                'path'   => 'configusers/institutionmembers',
+                'path'   => 'configusers/institutionusers',
                 'url'    => 'admin/users/institutionusers.php',
                 'title'  => get_string('institutionmembers', 'admin'),
                 'weight' => 20,

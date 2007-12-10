@@ -303,6 +303,19 @@ class Institution {
         delete_records('usr_institution', 'usr', $userid, 'institution', $this->name);
         handle_event('updateuser', $userid);
     }
+
+    public function countMembers() {
+        return count_records_sql('
+            SELECT COUNT(*) FROM {usr} u INNER JOIN {usr_institution} i ON u.id = i.usr
+            WHERE i.institution = ? AND u.deleted = 0', array($this->name));
+    }
+
+    public function countInvites() {
+        return count_records_sql('
+            SELECT COUNT(*) FROM {usr} u INNER JOIN {usr_institution_request} r ON u.id = r.usr
+            WHERE r.institution = ? AND u.deleted = 0 AND r.confirmedinstitution = 1',
+            array($this->name));
+    }
 }
 
 function get_institution_selector() {

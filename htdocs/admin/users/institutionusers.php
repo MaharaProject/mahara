@@ -146,6 +146,19 @@ function institutionusers_submit(Pieform $form, $values) {
         $SESSION->add_error_msg(get_string('errorupdatinginstitutionusers', 'admin'));
         redirect($url);
     }
+    $maxusers = $institution->maxuseraccounts;
+    if (!empty($maxusers)) {
+        $members = $institution->countMembers();
+        if ($values['update'] == 'addUserAsMember' && $members + count($values['users']) >= $maxusers) {
+            $SESSION->add_error_msg(get_string('institutionuserserrortoomanyusers', 'admin'));
+            redirect($url);
+        }
+        if ($values['update'] == 'inviteUser' 
+            && $members + $institution->countInvites() + count($values['users']) >= $maxusers) {
+            $SESSION->add_error_msg(get_string('institutionuserserrortoomanyinvites', 'admin'));
+            redirect($url);
+        }
+    }
     db_begin();
     foreach ($values['users'] as $id) {
         $institution->{$values['update']}($id);
