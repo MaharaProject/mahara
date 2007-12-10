@@ -531,7 +531,13 @@ function theme_setup() {
     }
     
     $theme = new StdClass;
-    $theme->theme = get_config('theme');
+    global $USER;
+    if (!empty($USER)) {
+        $theme->theme = $USER->get('theme');
+    }
+    if (empty($theme->theme)) {
+        $theme->theme = get_config('theme');
+    }
     $theme->path = get_config('docroot') . 'theme/' . $theme->theme . '/';
     $theme->template_dir = array($theme->path . 'templates/');
     $theme->inheritance = array($theme->theme);

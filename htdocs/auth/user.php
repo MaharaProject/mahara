@@ -82,6 +82,7 @@ class User {
             'accountprefs'     => array(),
             'activityprefs'    => array(),
             'institutions'     => array(),
+            'theme'            => null,
             'admininstitutions' => array(),
             'sesskey'          => ''
         );
@@ -397,6 +398,9 @@ class User {
         foreach ($institutions as $i) {
             if ($i->admin) {
                 $admininstitutions[$i->institution] = $i->institution;
+            }
+            if (empty($this->theme)) {
+                $this->theme = $i->theme;
             }
         }
         $this->institutions       = $institutions;
