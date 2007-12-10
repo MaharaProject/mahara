@@ -200,6 +200,10 @@ function handle_activity($activitytype, $data, $cron=false) {
                         throw new InvalidArgumentException("Couldn't find view with id " . $data->view);
                     }
                     $userid = $view->owner;
+                    // Don't send a message if the view owner submitted the feedback
+                    if ($data->author == $userid) {
+                        $userid = null;
+                    }
                     $data->subject .= ' ' .$view->title;
                     if (empty($data->url)) {
                         // @todo this might change later
