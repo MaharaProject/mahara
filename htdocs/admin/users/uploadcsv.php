@@ -85,7 +85,7 @@ if (count($authinstances) > 1) {
     $options = array();
 
     foreach ($authinstances as $authinstance) {
-        if ($USER->get('admin') || $USER->is_institutional_admin($authinstance->name)) {
+        if ($USER->can_edit_institution($authinstance->name)) {
             $options[$authinstance->id .'_'. $authinstance->name] = $authinstance->displayname. ': '.$authinstance->instancename;
         }
     }
@@ -157,7 +157,7 @@ function uploadcsv_validate(Pieform $form, $values) {
     $break = strpos($values['authinstance'], '_');
     $authinstance = substr($values['authinstance'], 0, $break);
     $institution  = substr($values['authinstance'], $break+1);
-    if (!$USER->get('admin') && !$USER->is_institutional_admin($institution)) {
+    if (!$USER->can_edit_institution($institution)) {
         $form->set_error('authinstance', get_string('notadminforinstitution', 'admin'));
         return;
     }

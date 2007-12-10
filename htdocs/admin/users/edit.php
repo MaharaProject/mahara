@@ -142,7 +142,7 @@ if (count($authinstances) > 1) {
     $options = array();
 
     foreach ($authinstances as $authinstance) {
-        if ($USER->get('admin') || $USER->is_institutional_admin($authinstance->name)) {
+        if ($USER->can_edit_institution($authinstance->name)) {
             $options[$authinstance->id] = $authinstance->displayname. ': '.$authinstance->instancename;
         }
     }
@@ -292,7 +292,7 @@ function edituser_institution_submit(Pieform $form, $values) {
 
     global $USER;
     foreach ($userinstitutions as $i) {
-        if ($USER->get('admin') || $USER->is_institutional_admin($i->institution)) {
+        if ($USER->can_edit_institution($i->institution)) {
             if (isset($values[$i->institution.'_submit'])) {
                 $newuser = (object) array(
                     'usr'         => $user->id,
