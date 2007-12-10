@@ -210,6 +210,7 @@ $string['uploadcsvpagedescription'] = '<p>You may use this facility to upload ne
 
 %s';
 $string['uploadcsvusersaddedsuccessfully'] = 'The users in the file have been added successfully';
+$string['uploadcsvfailedusersexceedmaxallowed'] = 'No users have been added because there are too many users in your file.  The number of users in the institution would have exceeded the maximum number allowed.';
 
 // Admin Users
 $string['adminuserspagedescription'] = '<p>Here you can choose which users are administrators for the site. The current administrators are listed on the right, and potential administrators are on the left.</p><p>The system must have at least one administrator.</p>';

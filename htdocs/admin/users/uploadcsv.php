@@ -263,8 +263,7 @@ function uploadcsv_validate(Pieform $form, $values) {
  */
 function uploadcsv_submit(Pieform $form, $values) {
     global $SESSION, $CSVDATA, $FORMAT;
-    log_info('Inserting users from the CSV file');
-    db_begin();
+
     $formatkeylookup = array_flip($FORMAT);
 
     // Don't be tempted to use 'explode' here. There may be > 1 underscore.
@@ -272,6 +271,20 @@ function uploadcsv_submit(Pieform $form, $values) {
     $authinstance = substr($values['authinstance'], 0, $break);
     $institution = substr($values['authinstance'], $break+1);
     $institution = new Institution($institution);
+
+    $maxusers = $institution->maxuseraccounts; 
+    if (!empty($maxusers)) {
+        $members = count_records_sql('
+            SELECT COUNT(*) FROM {usr} u INNER JOIN {usr_institution} i ON u.id = i.usr
+            WHERE i.institution = ? AND u.deleted = 0', array($institution->name));
+        if ($members + count($CSVDATA) > $maxusers) {
+            $SESSION->add_error_msg(get_string('uploadcsvfailedusersexceedmaxallowed', 'admin'));
+            redirect('/admin/users/uploadcsv.php');
+        }
+    }
+
+    log_info('Inserting users from the CSV file');
+    db_begin();
 
     foreach ($CSVDATA as $record) {
         log_debug('adding user ' . $record[$formatkeylookup['username']]);
