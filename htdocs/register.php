@@ -316,7 +316,8 @@ $sql = 'SELECT
             {auth_instance} ai
         WHERE
             ai.authname = \'internal\' AND
-            ai.institution = i.name';
+            ai.institution = i.name AND
+            i.registerallowed = 1';
 $institutions = get_records_sql_array($sql, array());
 
 if (count($institutions) > 1) {
@@ -433,19 +434,23 @@ function register_validate(Pieform $form, $values) {
         $form->set_error('captcha', get_string('captchaincorrect'));
     }
 
-    $membercount = get_record_sql('
+    $institution = get_record_sql('
         SELECT 
-            i.name, i.maxuseraccounts, COUNT(u.id)
+            i.name, i.maxuseraccounts, i.registerallowed, COUNT(u.id)
         FROM {institution} i
             LEFT OUTER JOIN {usr_institution} ui ON ui.institution = i.name
             LEFT OUTER JOIN {usr} u ON (ui.usr = u.id AND u.deleted = 0)
         WHERE
             i.name = ?
         GROUP BY
-            i.name, i.maxuseraccounts', array($institution));
+            i.name, i.maxuseraccounts, i.registerallowed', array($institution));
 
-    if (!empty($membercount->maxuseraccounts) && $membercount->count >= $membercount->maxuseraccounts) {
+    if (!empty($institution->maxuseraccounts) && $institution->count >= $institution->maxuseraccounts) {
         $form->set_error('institution', get_string('institutionfull'));
+    }
+
+    if (!$institution->registerallowed) {
+        $form->set_error('institution', get_string('registrationnotallowed'));
     }
 
 }

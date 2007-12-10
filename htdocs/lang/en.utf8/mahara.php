@@ -180,6 +180,7 @@ $string['registerstep3fieldsmandatory'] = '<h3>Fill Out Mandatory Profile Fields
 $string['registeringdisallowed'] = 'Sorry, you cannot register for this system at this time';
 $string['membershipexpiry'] = 'Membership expires';
 $string['institutionfull'] = 'The institution you have chosen is not accepting any more registrations.';
+$string['registrationnotallowed'] = 'The institution you have chosen does not allow self-registration.';
 
 // Forgot password
 $string['cantchangepassword'] = 'Sorry, you are unable to change your password through this interface - please use your institution\'s interface instead';
