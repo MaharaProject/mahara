@@ -379,6 +379,10 @@ class User {
         return isset($a[$institution]);
     }
 
+    public function can_edit_institution($institution = null) {
+        return $this->get('admin') || $this->is_institutional_admin($institution);
+    }
+
     public function set_admin_institutions($institutions) {
         $this->set('admininstitutions', array_combine($institutions, $institutions));
     }

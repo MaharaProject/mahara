@@ -318,11 +318,16 @@ class Institution {
     }
 }
 
-function get_institution_selector() {
+function get_institution_selector($includedefault = true) {
     global $USER;
 
     if ($USER->get('admin')) {
-        $institutions = get_records_array('institution');
+        if ($includedefault) {
+            $institutions = get_records_array('institution');
+        }
+        else {
+            $institutions = get_records_select_array('institution', "name != 'mahara'");
+        }
     } else if ($USER->is_institutional_admin()) {
         $institutions = get_records_select_array('institution', 'name IN (' 
             . join(',', array_map('db_quote',$USER->get('admininstitutions'))) . ')');

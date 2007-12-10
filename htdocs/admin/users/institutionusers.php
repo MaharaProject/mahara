@@ -37,11 +37,11 @@ define('SECTION_PAGE', 'institutionusers');
 require_once('pieforms/pieform.php');
 
 require_once('institution.php');
-$institutionelement = get_institution_selector();
+$institutionelement = get_institution_selector(false);
 
 global $USER;
 $institution = param_alphanum('institution', false);
-if (!$institution || !$USER->is_institutional_admin($institution)) {
+if (!$institution || !$USER->can_edit_institution($institution)) {
     $institution = empty($institutionelement['value']) ? $institutionelement['defaultvalue'] : $institutionelement['value'];
 }
 else if (!empty($institution)) {
@@ -144,7 +144,7 @@ function institutionusers_submit(Pieform $form, $values) {
 
     $url = '/admin/users/institutionusers.php?usertype=' . $values['usertype'];
     $inst = $values['institution'];
-    if (empty($inst) || !$USER->is_institutional_admin($inst)) {
+    if (empty($inst) || !$USER->can_edit_institution($inst)) {
         $SESSION->add_error_msg(get_string('notadminforinstitution', 'admin'));
         redirect($url);
     }
