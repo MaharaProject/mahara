@@ -44,6 +44,9 @@ $institution = param_alphanum('institution', false);
 if (!$institution || !$USER->is_institutional_admin($institution)) {
     $institution = empty($institutionelement['value']) ? $institutionelement['defaultvalue'] : $institutionelement['value'];
 }
+else if (!empty($institution)) {
+    $institutionelement['defaultvalue'] = $institution;
+}
 
 // Show either requesters, members, or nonmembers on the left hand side
 $usertype = param_alpha('usertype', 'requesters');
@@ -61,6 +64,7 @@ $usertypeselector = pieform(array(
              ),
             'defaultvalue' => $usertype
         ),
+        'institution' => $institutionelement,
     )
 ));
 
@@ -113,11 +117,15 @@ $userlistform = pieform(array(
     'name' => 'institutionusers',
     'elements' => array(
         'users' => $userlistelement,
-        'institution' => $institutionelement,
         'usertype' => array(
             'type' => 'hidden',
             'value' => $usertype,
             'rules' => array('regex' => '/^[a-z]+$/')
+        ),
+        'institution' => array(
+            'type' => 'hidden',
+            'value' => $institution,
+            'rules' => array('regex' => '/^[a-zA-Z0-9]+$/')
         ),
         'update' => array(
             'type' => 'hidden',
@@ -170,10 +178,18 @@ function institutionusers_submit(Pieform $form, $values) {
 
 $wwwroot = get_config('wwwroot');
 $js = <<< EOF
+function reloadUsers() {
+    var inst = '';
+    if ($('usertypeselect_institution')) {
+        inst = '&institution=' + $('usertypeselect_institution').value;
+    }
+    window.location.href = '{$wwwroot}admin/users/institutionusers.php?usertype='+$('usertypeselect_usertype').value+inst;
+}
 addLoadEvent(function() {
-    connect($('usertypeselect_usertype'), 'onchange', function () {
-        window.location.href = '{$wwwroot}admin/users/institutionusers.php?usertype='+$('usertypeselect_usertype').value;
-    });
+    connect($('usertypeselect_usertype'), 'onchange', reloadUsers);
+    if ($('usertypeselect_institution')) {
+        connect($('usertypeselect_institution'), 'onchange', reloadUsers);
+    }
 });
 EOF;
 
