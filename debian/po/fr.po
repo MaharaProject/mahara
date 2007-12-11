@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: dev@mahara.org\n"
 "POT-Creation-Date: 2007-11-20 14:12+1300\n"
-"PO-Revision-Date: 2007-11-16 16:15+1300\n"
+"PO-Revision-Date: 2007-12-11 18:24+1300\n"
 "Last-Translator: Francois Marier <francois@catalyst.net.nz>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -19,7 +19,7 @@ msgstr ""
 #. Description
 #: ../mahara.templates:1001
 msgid "Database type:"
-msgstr "Type de base de données:"
+msgstr "Type de base de données :"
 
 #. Type: select
 #. Description
@@ -31,7 +31,7 @@ msgstr "Type de base de données à utiliser pour ce site Mahara"
 #. Description
 #: ../mahara.templates:2001
 msgid "Database host:"
-msgstr "Hôte de la base de données:"
+msgstr "Hôte de la base de données :"
 
 #. Type: string
 #. Description
@@ -47,7 +47,7 @@ msgstr ""
 #. Description
 #: ../mahara.templates:3001
 msgid "Database port:"
-msgstr ""
+msgstr "Port de la base de données :"
 
 #. Type: string
 #. Description
@@ -63,7 +63,7 @@ msgstr ""
 #. Description
 #: ../mahara.templates:4001
 msgid "Database name (not username):"
-msgstr "Nom de la base de données (pas l'identifiant)"
+msgstr "Nom de la base de données (pas l'identifiant) :"
 
 #. Type: string
 #. Description
@@ -75,7 +75,7 @@ msgstr "Base de données à utiliser pour ce site Mahara"
 #. Description
 #: ../mahara.templates:5001
 msgid "Database username:"
-msgstr "Identifiant pour la base de données"
+msgstr "Identifiant pour la base de données :"
 
 #. Type: string
 #. Description
@@ -89,7 +89,7 @@ msgstr ""
 #. Description
 #: ../mahara.templates:6001
 msgid "Database password:"
-msgstr "Mot de passe de la base de données"
+msgstr "Mot de passe de la base de données :"
 
 #. Type: string
 #. Description
@@ -106,7 +106,7 @@ msgstr ""
 #. Description
 #: ../mahara.templates:7001
 msgid "SMTP Hosts:"
-msgstr "Hôtes SMTP:"
+msgstr "Hôtes SMTP :"
 
 #. Type: string
 #. Description
@@ -130,7 +130,7 @@ msgstr ""
 #. Description
 #: ../mahara.templates:8001
 msgid "Server name:"
-msgstr "Nom du serveur"
+msgstr "Nom du serveur :"
 
 #. Type: string
 #. Description
