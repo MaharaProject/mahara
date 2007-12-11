@@ -26,6 +26,7 @@
 
 define('INTERNAL', 1);
 define('INSTITUTIONALADMIN', 1);
+define('MENUITEM', 'configusers/usersearch');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('accountsettings', 'admin'));
 define('SECTION_PLUGINTYPE', 'core');
@@ -252,6 +253,7 @@ foreach ($user->get('institutions') as $i) {
     $elements[$i->institution.'_remove'] = array(
         'type'  => 'submit',
         'value' => get_string('remove'),
+        'confirm' => get_string('confirmremoveuserfrominstitution', 'admin'),
     );
 }
 

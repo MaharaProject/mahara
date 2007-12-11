@@ -262,6 +262,7 @@ $string['unsuspenduser'] = 'Unsuspend User';
 $string['thisuserissuspended'] = 'This user has been suspended';
 $string['suspendedby'] = 'This user has been suspended by %s';
 $string['filequota'] = 'File quota (MB)';
+$string['confirmremoveuserfrominstitution'] = 'Are you sure you want to remove the user from this institution?';
 
 // Institutions
 $string['admininstitutions'] = 'Admininster Institutions';
