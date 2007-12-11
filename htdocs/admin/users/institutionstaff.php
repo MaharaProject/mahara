@@ -73,7 +73,7 @@ function staffusers_submit(Pieform $form, $values) {
     global $SESSION, $USER;
 
     $inst = $values['institution'];
-    if (empty($inst) || !$USER->is_institutional_admin($inst)) {
+    if (empty($inst) || !$USER->can_edit_institution($inst)) {
         $SESSION->add_error_msg(get_string('notadminforinstitution', 'admin'));
         redirect('/admin/users/institutionstaff.php');
     }
