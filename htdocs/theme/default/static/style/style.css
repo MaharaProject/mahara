@@ -774,6 +774,9 @@ p {
     border: 0px;
 }
 
+.maincontent th.center {
+    text-align: center;
+}
 .maincontent th {
     text-align: left;
     color: #3a5813;

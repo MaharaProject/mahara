@@ -323,6 +323,11 @@ $string['maxuseraccountsdescription'] = 'The maximum number of user accounts tha
 $string['institutionuserserrortoomanyusers'] = 'The users were not added.  The number of members cannot exceed the maximum allowed for the institution.  You can add fewer users, remove some users from the institution, or ask the site administrator to increase the maximum number of users.';
 $string['institutionuserserrortoomanyinvites'] = 'Your invitations were not sent.  The number of existing members plus the number of outstanding invitations cannot exceed the institution\'s maximum number of users.  You can invite fewer users, remove some users from the institution, or ask the site administrator to increase the maximum number of users.';
 
+$string['Members'] = 'Members';
+$string['Maximum'] = 'Maximum';
+$string['Staff'] = 'Staff';
+$string['Admins'] = 'Admins';
+
 // Admin User Search
 $string['Query'] = 'Query';
 $string['Institution'] = 'Institution';

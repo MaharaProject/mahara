@@ -273,12 +273,24 @@ else {
     else {
         $where = '';
         $smarty->assign('siteadmin', true);
+        $defaultinstmembers = count_records_sql('
+            SELECT COUNT(u.id) FROM {usr} u LEFT OUTER JOIN {usr_institution} i ON u.id = i.usr
+            WHERE u.deleted = 0 AND i.usr IS NULL
+        ');
     }
-    $institutions = get_records_sql_array('SELECT i.name, i.displayname, i.registerallowed, COUNT(u.usr) AS hasmembers
+    $institutions = get_records_sql_assoc('
+        SELECT
+            i.name, i.displayname, i.maxuseraccounts, 
+            COUNT(ui.usr) AS members, SUM(ui.staff) AS staff, SUM(ui.admin) AS admins
         FROM {institution} i
-        LEFT OUTER JOIN {usr_institution} u ON (u.institution = i.name) ' . $where . '
-        GROUP BY 1, 2, 3
+        LEFT OUTER JOIN {usr_institution} ui ON (ui.institution = i.name)
+        LEFT OUTER JOIN {usr} u ON (u.id = ui.usr AND u.deleted = 0) ' . $where . '
+        GROUP BY
+            i.name, i.displayname, i.maxuseraccounts
         ORDER BY i.name', array());
+    if (isset($defaultinstmembers)) {
+        $institutions['mahara']->members = $defaultinstmembers;
+    }
     $smarty->assign('institutions', $institutions);
 }
 

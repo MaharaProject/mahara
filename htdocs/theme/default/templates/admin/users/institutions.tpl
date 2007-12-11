@@ -21,8 +21,10 @@
 				<thead>
 				<tr>
 					<th>{str tag="institution"}</th>
-					<th>{str tag="authplugin" section="admin"}</th>
-					<th>{str tag="registrationallowed" section="admin"}</th>
+					<th class="center">{str tag="Members" section="admin"}</th>
+					<th class="center">{str tag="Maximum" section="admin"}</th>
+					<th class="center">{str tag="Staff" section="admin"}</th>
+					<th class="center">{str tag="Admins" section="admin"}</th>
 					<th></th>
 				</tr>
 				</thead>
@@ -30,13 +32,21 @@
 				<tbody>
 				<tr class="{cycle values=r1,r0}">
 					<td>{$institution->displayname|escape}</td>
-					<td>{$institution->authplugin}</td>
-					<td>{if $institution->authplugin == 'internal'}{if $institution->registerallowed}{str tag="yes"}{else}{str tag="no"}{/if}{else}-{/if}</td>
+					<td class="center">
+                                          {if $institution->name != 'mahara'}
+                                            <a href="{$WWWROOT}admin/users/institutionusers.php?usertype=members&institution={$institution->name}">{$institution->members}</a>
+                                          {else}
+                                            {$institution->members}
+                                          {/if}
+                                        </td>
+					<td class="center">{$institution->maxuseraccounts}</td>
+					<td class="center"><a href="{$WWWROOT}admin/users/institutionstaff.php?institution={$institution->name}">{$institution->staff}</a></td>
+					<td class="center"><a href="{$WWWROOT}admin/users/institutionadmins.php?institution={$institution->name}">{$institution->admins}</a></td>
 					<td>
 						<form action="" method="post">
 							<input type="hidden" name="i" value="{$institution->name}">
 							<input type="submit" class="submit" name="edit" value="{str tag="edit"}" id="admininstitution_edit">
-							{if $siteadmin && !$institution->hasmembers && $institution->name != 'mahara'}<input type="submit" class="submit" name="delete" value="{str tag="delete"}" id="admininstitution_delete">{/if}
+							{if $siteadmin && !$institution->members && $institution->name != 'mahara'}<input type="submit" class="submit" name="delete" value="{str tag="delete"}" id="admininstitution_delete">{/if}
 						</form>
 					</td>
 				</tr>
