@@ -5,6 +5,7 @@
 
 			<p>{str tag="institutionstaffuserspagedescription" section="admin"}</p>
 
+			{$institutionselector}
 			{$staffusersform}
 
 {include file="columnfullend.tpl"}

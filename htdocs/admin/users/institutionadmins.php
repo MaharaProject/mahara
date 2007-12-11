@@ -38,8 +38,8 @@ require_once('pieforms/pieform.php');
 $smarty = smarty();
 
 require_once('institution.php');
-$institutionelement = get_institution_selector();
-$institution = empty($institutionelement['value']) ? $institutionelement['defaultvalue'] : $institutionelement['value'];
+$institution = add_institution_selector_to_page(&$smarty, param_alphanum('institution', false), 
+                                                get_config('wwwroot') . 'admin/users/institutionadmins.php');
 
 // Get users who are currently admins
 $adminusers = get_column('usr_institution', 'usr', 'admin', 1, 'institution', $institution);
@@ -58,7 +58,10 @@ $form = array(
                                     'institution' => $institution),
             'searchscript' => 'admin/users/search.json.php',
         ),
-        'institution' => $institutionelement,
+        'institution' => array(
+            'type' => 'hidden',
+            'value' => $institution,
+        ),
         'submit' => array(
             'type' => 'submit',
             'value' => get_string('submit')
@@ -86,7 +89,7 @@ function adminusers_submit(Pieform $form, $values) {
     }
     db_commit();
     $SESSION->add_ok_msg(get_string('adminusersupdated', 'admin'));
-    redirect('/admin/users/institutionadmins.php');
+    redirect('/admin/users/institutionadmins.php?institution=' . $inst);
 }
 
 $smarty->assign('adminusersform', pieform($form));
