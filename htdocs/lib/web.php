@@ -1324,13 +1324,13 @@ function admin_nav() {
                 'weight' => 20,
             ),
             array(
-                'path'   => 'configusers/staff',
+                'path'   => 'configusers/institutionstaff',
                 'url'    => 'admin/users/institutionstaff.php',
                 'title'  => get_string('staffusers', 'admin'),
                 'weight' => 30,
             ),
             array(
-                'path'   => 'configusers/admin',
+                'path'   => 'configusers/institutionadmins',
                 'url'    => 'admin/users/institutionadmins.php',
                 'title'  => get_string('adminusers', 'admin'),
                 'weight' => 40,
@@ -1575,12 +1575,10 @@ function find_menu_children(&$menu, $path) {
     }
 
     foreach ($menu as $key => $item) {
-        if (
-            defined('MENUITEM') &&
-            ((MENUITEM == '' && $item['path'] == '') ||
-            ($item['path'] != '' && $item['path'] == substr(MENUITEM, 0, strlen($item['path']))))) {
-            $item['selected'] = true;
-        }
+        $len = strlen($item['path']);
+        $item['selected'] = defined('MENUITEM')
+            && ($item['path'] == MENUITEM
+                || ($item['path'] . '/' == substr(MENUITEM, 0, strlen($item['path'])+1)));
         if (
             ($path == '' && $item['path'] == '') ||
             ($item['path'] != '' && substr($item['path'], 0, strlen($path)) == $path && !preg_match('%/%', substr($item['path'], strlen($path) + 1)))) {

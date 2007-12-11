@@ -28,18 +28,18 @@
 // here might need to be fixed there too.
 define('INTERNAL', 1);
 define('INSTITUTIONALADMIN', 1);
-define('MENUITEM', 'configusers/institutionusers');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('adminusers', 'admin'));
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'admin');
 define('SECTION_PAGE', 'institutionusers');
+global $USER;
+define('MENUITEM', $USER->get('admin') ? 'configusers/institutions' : 'configusers/institutionusers');
 require_once('pieforms/pieform.php');
 
 require_once('institution.php');
 $institutionelement = get_institution_selector(false);
 
-global $USER;
 $institution = param_alphanum('institution', false);
 if (!$institution || !$USER->can_edit_institution($institution)) {
     $institution = empty($institutionelement['value']) ? $institutionelement['defaultvalue'] : $institutionelement['value'];

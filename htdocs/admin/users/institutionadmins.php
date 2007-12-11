@@ -28,12 +28,13 @@
 // here might need to be fixed there too.
 define('INTERNAL', 1);
 define('INSTITUTIONALADMIN', 1);
-define('MENUITEM', 'configusers/adminusers');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('adminusers', 'admin'));
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'admin');
 define('SECTION_PAGE', 'adminusers');
+global $USER;
+define('MENUITEM', $USER->get('admin') ? 'configusers/institutions' : 'configusers/institutionadmins');
 require_once('pieforms/pieform.php');
 $smarty = smarty();
 
