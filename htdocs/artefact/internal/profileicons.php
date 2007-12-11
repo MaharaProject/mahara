@@ -237,16 +237,34 @@ function settings_submit_delete(Pieform $form, $values) {
 
     $icons = join(',', array_map('intval', $icons));
     if ($icons) {
+        db_begin();
+        delete_records_select('view_artefact', "artefact IN ($icons)");
         delete_records_select('artefact', "
             artefacttype = 'profileicon' AND
             owner = ? AND
             id IN($icons)", array($USER->id));
-        // Remove all of the images
+
+        // Make sure a default is still set if possible. This behaviour will 
+        // change later, see bug #1774
+        if (in_array($USER->get('profileicon'), explode(',', $icons))) {
+            if ($ids = get_records_select_array('artefact', "owner = ? AND artefacttype = 'profileicon'", array($USER->get('id')), '', 'id')) {
+                $USER->profileicon = $ids[0]->id;
+            }
+            else {
+                $USER->profileicon = null;
+            }
+        }
+
+        db_commit();
+
+        // Now all the database manipulation has happened successfully, remove 
+        // all of the images
         foreach (explode(',', $icons) as $icon) {
             $USER->quota_remove(filesize(get_config('dataroot') . 'artefact/internal/profileicons/originals/' . ($icon % 256) . '/' . $icon));
             $USER->commit();
             delete_image('artefact/internal/profileicons', $icon);
         }
+
         $SESSION->add_ok_msg(get_string('profileiconsdeletedsuccessfully', 'artefact.internal'));
     }
     else {
