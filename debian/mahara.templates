@@ -49,7 +49,7 @@ _Description: SMTP Hosts:
 
 Template: mahara/servername
 Type: string
-Default:
+Default: localhost
 _Description: Server name:
  This is the servername of the Mahara site.
  .
