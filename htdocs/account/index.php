@@ -186,7 +186,7 @@ function accountprefs_submit(Pieform $form, $values) {
 
 // Institution forms
 
-$institutions = get_records_assoc('institution', '', '', '', 'name,displayname');
+$institutions = get_records_assoc('institution', 'registerallowed', 1, '', 'name,displayname');
 
 // For all institutions the user is already a member of, create a
 // button to leave the institution
@@ -355,9 +355,14 @@ if (!empty($institutions) &&
 }
 
 function requestmembership_submit(Pieform $form, $values) {
-    global $USER;
+    global $USER, $SESSION;
     if (!empty($values['institution'])) {
-        $USER->add_institution_request($values['institution']);
+        if (get_field('institution', 'registerallowed', 'name', $values['institution'])) {
+            $USER->add_institution_request($values['institution']);
+        }
+        else {
+            $SESSION->add_error_msg(get_string('registrationnotallowed'));
+        }
     }
     redirect(get_config('wwwroot') . 'account/index.php');
 }
