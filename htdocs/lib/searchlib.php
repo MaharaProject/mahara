@@ -137,6 +137,9 @@ function get_institutional_admin_search_results($search, $limit) {
     if ($results['count']) {
         foreach ($results['data'] as &$result) {
             $result['name'] = display_name($result);
+            if (!empty($result['studentid'])) {
+                $result['name'] .= ' (' . $result['studentid'] . ')';
+            }
         }
     }
     return $results;

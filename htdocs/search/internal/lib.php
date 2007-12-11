@@ -382,12 +382,14 @@ class PluginSearchInternal extends PluginSearch {
             $values = array($query,$query);
         }
 
+        $studentid = '';
         if (!is_null($institution->member)) {
             $sql .= '
                 LEFT OUTER JOIN {usr_institution} member ON (member.usr = u.id
                     AND member.institution = ' . db_quote($institution->name) . ')';
             $where .= '
                 AND ' . ($institution->member ? ' NOT ' : '') . ' member.usr IS NULL';
+            $studentid = ', member.studentid';
         }
         if (!is_null($institution->requested) || !is_null($institution->invited)) {
             $sql .= '
@@ -399,6 +401,7 @@ class PluginSearchInternal extends PluginSearch {
                 } else {
                     $where .= ' AND (req.confirmedusr = 0 OR req.confirmedusr IS NULL)';
                 }
+                $studentid = ', req.studentid';
             }
             if (!is_null($institution->invited)) {
                 if ($institution->requested == 1) {
@@ -415,7 +418,7 @@ class PluginSearchInternal extends PluginSearch {
             $data = get_records_sql_array('
                 SELECT 
                     u.id, u.firstname, u.lastname, u.username, u.preferredname, 
-                    u.admin, u.staff ' . $sql . $where . '
+                    u.admin, u.staff' . $studentid . $sql . $where . '
                 ORDER BY u.firstname ASC',
                 $values,
                 0,
