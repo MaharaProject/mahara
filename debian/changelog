@@ -1,4 +1,4 @@
-mahara (1.0.0~alpha) unstable; urgency=low
+mahara (1.0.0~alpha1~dev) unstable; urgency=low
 
   * Change the header of debian/config.php to be GPL3
 
