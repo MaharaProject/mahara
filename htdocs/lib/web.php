@@ -1420,13 +1420,13 @@ function admin_nav() {
         array(
             'path'   => 'configusers/staffusers',
             'url'    => 'admin/users/staff.php',
-            'title'  => get_string('staffusers', 'admin'),
+            'title'  => get_string('sitestaff', 'admin'),
             'weight' => 20,
         ),
         array(
             'path'   => 'configusers/adminusers',
             'url'    => 'admin/users/admins.php',
-            'title'  => get_string('adminusers', 'admin'),
+            'title'  => get_string('siteadmins', 'admin'),
             'weight' => 30,
         ),
         array(

@@ -253,6 +253,7 @@ $string['siteaccountsettings'] = 'Site account settings';
 $string['resetpassword'] = 'Reset password';
 $string['forcepasswordchange'] = 'Force password change on next login';
 $string['sitestaff'] = 'Site staff';
+$string['siteadmins'] = 'Site Admins';
 $string['siteadmin'] = 'Site administrator';
 $string['suspended'] = 'Suspended';
 $string['suspendedreason'] = 'Reason for suspension';
