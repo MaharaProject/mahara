@@ -3,10 +3,10 @@
 {include file="columnfullstart.tpl"}
 <div id="edituser">
     <h2><a href="{$WWWROOT}user/view.php?id={$user->id}">{$user->firstname} {$user->lastname} ({$user->username})</a></h2>
-    {if empty($user->suspendedcusr)}
+    {if !$suspended}
       <h3>{str tag="suspenduser" section="admin"}</h3>
     {else}
-      <h4>{str tag="thisuserissuspended" section="admin"}</h4>
+      <h4>{$suspendedby|escape}</h4>
       <div><strong>{str tag="suspendedreason" section="admin"}:</strong></div>
       <div>{$user->suspendedreason}</div>
     {/if}

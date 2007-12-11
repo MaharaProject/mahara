@@ -48,7 +48,8 @@ if (!$USER->get('admin')) {
     }
 }
 
-if (empty($user->suspendedcusr)) {
+$suspended = $user->get('suspendedcusr');
+if (empty($suspended)) {
     $suspendform = pieform(array(
         'name'       => 'edituser_suspend',
         'plugintype' => 'core',
@@ -86,6 +87,7 @@ if (empty($user->suspendedcusr)) {
             ),
         )
     ));
+    $suspender = display_name(get_record('usr', 'id', $suspended));
 }
 
 function edituser_suspend_submit(Pieform $form, $values) {
@@ -357,6 +359,10 @@ function edituser_institution_submit(Pieform $form, $values) {
 
 $smarty = smarty();
 $smarty->assign('user', $user);
+$smarty->assign('suspended', $suspended);
+if ($suspended) {
+    $smarty->assign('suspendedby', get_string('suspendedby', 'admin', $suspender));
+}
 $smarty->assign('suspendform', $suspendform);
 $smarty->assign('siteform', $siteform);
 $smarty->assign('institutionform', $institutionform);

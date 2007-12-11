@@ -260,6 +260,7 @@ $string['suspendedreason'] = 'Reason for suspension';
 $string['suspendedreasondescription'] = 'The explanation you enter here will be displayed to the user when they try to login';
 $string['unsuspenduser'] = 'Unsuspend User';
 $string['thisuserissuspended'] = 'This user has been suspended';
+$string['suspendedby'] = 'This user has been suspended by %s';
 $string['filequota'] = 'File quota (MB)';
 
 // Institutions
