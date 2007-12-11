@@ -36,6 +36,7 @@ git checkout "${MAJOR}.${MINOR}_RELEASE"
 
 # Remove git directories
 rm .git -rf
+rm debian -rf
 
 # Pack MochiKit
 scripts/pack.sh
