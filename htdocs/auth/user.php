@@ -387,13 +387,13 @@ class User {
         $this->set('admininstitutions', array_combine($institutions, $institutions));
     }
 
-    public function add_institution_request($institution) {
+    public function add_institution_request($institution, $studentid = null) {
         if (empty($institution) || $institution == 'mahara') {
             return;
         }
         require_once('institution.php');
         $institution = new Institution($institution);
-        $institution->addRequestFromUser($this);
+        $institution->addRequestFromUser($this, $studentid);
     }
 
     protected function reset_institutions() {

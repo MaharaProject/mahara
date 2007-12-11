@@ -826,19 +826,23 @@ p {
 .maincontent #cancelrequest,
 .maincontent #confirminvite,
 .maincontent #requestmembership {
-    margin-top: 10px;
+    margin-top: 5px;
+    width: 450px;
 }
 
-.maincontent #leaveinstitution label,
-.maincontent #cancelrequest label,
-.maincontent #confirminvite label,
 .maincontent #requestmembership label {
-    width: 450px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.maincontent #leaveinstitution input.submit,
+.maincontent #cancelrequest input.submit,
+.maincontent #confirminvite input.submit,
+.maincontent #requestmembership input.submit {
     display: block !important;
 }
 
 .maincontent #requestmembership select {
-    margin-right: 10px;
 }
 
 acronym {

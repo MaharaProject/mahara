@@ -10,6 +10,9 @@
 {$memberform}
 {$requestedform}
 {$invitedform}
-{$joinform}
+{if !empty($joinform)}
+  <h6>{str tag="requestmembershipofaninstitution"}</h6>
+  {$joinform}
+{/if}
 {include file="columnleftend.tpl"}
 {include file="footer.tpl"}

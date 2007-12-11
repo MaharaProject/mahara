@@ -339,10 +339,14 @@ if (!empty($institutions) &&
         'elements'    => array(
             'institution' => array(
                 'type' => 'select',
-                'title' => get_string('requestmembershipofaninstitution'),
                 'collapseifoneoption' => false,
                 'options' => $options,
                 'defaultvalue' => key($options),
+             ),
+            'studentid' => array(
+                'type'         => 'text',
+                'title'        => get_string('optionalinstitutionid'),
+                'defaultvalue' => $USER->studentid,
              ),
             'submit' => array(
                 'type' => 'submit',
@@ -358,7 +362,7 @@ function requestmembership_submit(Pieform $form, $values) {
     global $USER, $SESSION;
     if (!empty($values['institution'])) {
         if (get_field('institution', 'registerallowed', 'name', $values['institution'])) {
-            $USER->add_institution_request($values['institution']);
+            $USER->add_institution_request($values['institution'], $values['studentid']);
         }
         else {
             $SESSION->add_error_msg(get_string('registrationnotallowed'));

@@ -227,12 +227,19 @@ class Institution {
         }
         $userinst = new StdClass;
         $userinst->institution = $this->name;
-        if (!empty($user->studentid)) {
+        $studentid = get_field('usr_institution_request', 'studentid', 'usr', $user->id, 
+                               'institution', $this->name);
+        if (!empty($studentid)) {
+            $userinst->studentid = $studentid;
+        }
+        else if (!empty($user->studentid)) {
             $userinst->studentid = $user->studentid;
         }
         $userinst->usr = $user->id;
+        $now = time();
+        $userinst->ctime = db_format_timestamp($now);
         if (!empty($this->defaultmembershipperiod)) {
-            $userinst->expiry = db_format_timestamp(time() + $this->defaultmembershipperiod);
+            $userinst->expiry = db_format_timestamp($now + $this->defaultmembershipperiod);
         }
         $message = (object) array(
             'users' => array($user->id),
@@ -251,14 +258,14 @@ class Institution {
         db_commit();
     }
 
-    public function addRequestFromUser($user) {
+    public function addRequestFromUser($user, $studentid = null) {
         $request = get_record('usr_institution_request', 'usr', $user->id, 'institution', $this->name);
         if (!$request) {
             $request = (object) array(
                 'usr'          => $user->id,
                 'institution'  => $this->name,
                 'confirmedusr' => 1,
-                'studentid'    => $user->studentid,
+                'studentid'    => empty($studentid) ? $user->studentid : $studentid,
                 'ctime'        => db_format_timestamp(time())
             );
             $message = (object) array(

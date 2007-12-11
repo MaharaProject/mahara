@@ -293,6 +293,7 @@ $string['youhavebeeninvitedtojoin'] = 'You have been invited to join %s';
 $string['confirminvitation'] = 'Confirm invitation';
 $string['joininstitution'] = 'Join institution';
 $string['requestmembershipofaninstitution'] = 'Request membership of an institution';
+$string['optionalinstitutionid'] = 'Institution ID (optional)';
 $string['institutionmemberconfirmsubject'] = 'Institution membership confirmation';
 $string['institutionmemberconfirmmessage'] = 'You have been added as a member of %s.';
 
