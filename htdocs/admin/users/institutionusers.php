@@ -142,8 +142,8 @@ $userlistform = pieform(array(
 function institutionusers_submit(Pieform $form, $values) {
     global $SESSION, $USER;
 
-    $url = '/admin/users/institutionusers.php?usertype=' . $values['usertype'];
     $inst = $values['institution'];
+    $url = '/admin/users/institutionusers.php?usertype=' . $values['usertype'] . '&institution=' . $inst;
     if (empty($inst) || !$USER->can_edit_institution($inst)) {
         $SESSION->add_error_msg(get_string('notadminforinstitution', 'admin'));
         redirect($url);
