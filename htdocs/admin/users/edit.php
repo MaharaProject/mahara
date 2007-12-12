@@ -38,15 +38,8 @@ $user = new User;
 $user->find_by_id($id);
 
 global $USER;
-if (!$USER->get('admin')) {
-    // Institutional admins must share an institution with the displayed user
-    $shared = false;
-    foreach ($user->get('institutions') as $i) {
-        $shared = $shared || $USER->is_institutional_admin($i->institution);
-    }
-    if (!$shared) {
-        redirect(get_config('wwwroot').'user/view.php?id='.$id);
-    }
+if (!$USER->is_admin_for_user($user)) {
+    redirect(get_config('wwwroot').'user/view.php?id='.$id);
 }
 
 $suspended = $user->get('suspendedcusr');

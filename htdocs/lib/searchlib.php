@@ -135,10 +135,10 @@ function get_institutional_admin_search_results($search, $limit) {
     }
     $results = institutional_admin_user_search($search->query, $institution, $limit);
     if ($results['count']) {
-        foreach ($results['data'] as &$result) {
-            $result['name'] = display_name($result);
-            if (!empty($result['studentid'])) {
-                $result['name'] .= ' (' . $result['studentid'] . ')';
+        foreach ($results['data'] as &$r) {
+            $r['name'] = $r['firstname'] . ' ' . $r['lastname'] . ' (' . $r['username'] . ')';
+            if (!empty($r['studentid'])) {
+                $r['name'] .= ' (' . $r['studentid'] . ')';
             }
         }
     }

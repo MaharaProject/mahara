@@ -383,6 +383,18 @@ class User {
         return $this->get('admin') || $this->is_institutional_admin($institution);
     }
 
+    public function is_admin_for_user($user) {
+        if ($this->get('admin')) {
+            return true;
+        }
+        foreach ($user->get('institutions') as $i) {
+            if ($this->is_institutional_admin($i->institution)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public function set_admin_institutions($institutions) {
         $this->set('admininstitutions', array_combine($institutions, $institutions));
     }

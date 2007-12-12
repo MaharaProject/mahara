@@ -312,7 +312,7 @@ function display_name($user, $userto=null) {
         $userto->preferredname = $USER->get('preferredname');
         $userto->firstname     = $USER->get('firstname');
         $userto->lastname      = $USER->get('lastname');
-        $userto->admin         = $USER->get('admin');
+        $userto->admin         = $USER->get('admin') || $USER->is_institutional_admin();
         $userto->staff         = $USER->get('staff');
     }
     if (is_array($user)) {

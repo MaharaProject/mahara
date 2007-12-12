@@ -55,9 +55,9 @@ $form = array(
             'filter' => false,
             'lefttitle' => get_string('institutionmembers', 'admin'),
             'righttitle' => get_string('currentadmins', 'admin'),
-            'searchparams' => array('limit' => 100, 'query' => '', 'raw' => true, 'action' => 'search',
+            'searchparams' => array('limit' => 100, 'query' => '', 'member' => 1,
                                     'institution' => $institution),
-            'searchscript' => 'admin/users/search.json.php',
+            'searchscript' => 'admin/users/userinstitutionsearch.json.php',
         ),
         'institution' => array(
             'type' => 'hidden',
