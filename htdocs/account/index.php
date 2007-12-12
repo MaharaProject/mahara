@@ -186,7 +186,7 @@ function accountprefs_submit(Pieform $form, $values) {
 
 // Institution forms
 
-$institutions = get_records_assoc('institution', '', '', '', 'name,displayname');
+$institutions = get_records_assoc('institution', '', '', '', 'name,displayname,registerallowed');
 
 // For all institutions the user is already a member of, create a
 // button to leave the institution
