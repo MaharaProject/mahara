@@ -99,7 +99,7 @@ class Institution {
             }
         } elseif ($name == 'maxuseraccounts') {
             if (!empty($value) && (!is_numeric($value) || $value < 0 || $value > 9999999999)) {
-                throw new ParamOutOfRangeException("'defaultmembershipperiod' should be a number between 1 and 9,999,999,999");
+                throw new ParamOutOfRangeException("'maxuseraccounts' should be a number between 1 and 9,999,999,999");
             }
         }
         $this->members[$name] = $value;
@@ -238,8 +238,9 @@ class Institution {
         $userinst->usr = $user->id;
         $now = time();
         $userinst->ctime = db_format_timestamp($now);
-        if (!empty($this->defaultmembershipperiod)) {
-            $userinst->expiry = db_format_timestamp($now + $this->defaultmembershipperiod);
+        $defaultexpiry = $this->defaultmembershipperiod;
+        if (!empty($defaultexpiry)) {
+            $userinst->expiry = db_format_timestamp($now + $defaultexpiry);
         }
         $message = (object) array(
             'users' => array($user->id),
