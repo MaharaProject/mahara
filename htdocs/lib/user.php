@@ -795,7 +795,7 @@ function load_user_institutions($userid) {
         throw new InvalidArgumentException("couldn't load institutions, no user id specified");
     }
     if ($institutions = get_records_sql_assoc('
-        SELECT u.institution,u.ctime,u.expiry,u.studentid,u.staff,u.admin,i.theme
+        SELECT u.institution,'.db_format_tsfield('ctime').','.db_format_tsfield('expiry').',u.studentid,u.staff,u.admin,i.theme
         FROM {usr_institution} u INNER JOIN {institution} i ON u.institution = i.name
         WHERE u.usr = ?', array($userid))) {
         return $institutions;

@@ -294,7 +294,7 @@ function edituser_institution_submit(Pieform $form, $values) {
                 $newuser = (object) array(
                     'usr'         => $user->id,
                     'institution' => $i->institution,
-                    'ctime'       => $i->ctime,
+                    'ctime'       => db_format_timestamp($i->ctime),
                     'studentid'   => $values[$i->institution . '_studentid'],
                     'staff'       => (int) ($values[$i->institution . '_staff'] == 'on'),
                     'admin'       => (int) ($values[$i->institution . '_admin'] == 'on'),
