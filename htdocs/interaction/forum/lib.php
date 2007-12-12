@@ -240,4 +240,45 @@ function is_forum_moderator($forumid, $userid=null) {
     );
 }
 
+/**
+ * For a pieform with forum, group and subscribe elements.
+ * forum and group are the forum and group ids
+ * subscribe has value get_string('subscribe', 'interaction.forum') if the user should be subscribed
+ * get_string('unsubscribe', 'interaction.forum') if the user should be unsubscribed
+ */
+function subscribe_forum_submit(Pieform $form, $values) {
+    global $USER, $SESSION;
+    db_begin();
+    if ($values['submit'] == get_string('subscribe', 'interaction.forum')) {
+        insert_record(
+            'interaction_forum_subscription_forum',
+            (object)array(
+                'forum' => $values['forum'],
+                'user' => $USER->get('id')
+            )
+        );
+        delete_records_sql(
+            'DELETE FROM {interaction_forum_subscription_topic}
+            WHERE topic IN (
+                SELECT id
+                FROM {interaction_forum_topic}
+                WHERE forum = ?
+                AND "user" = ?
+            )',
+            array($values['forum'], $USER->get('id'))
+        );
+        $SESSION->add_ok_msg(get_string('forumsuccessfulsubscribe', 'interaction.forum'));
+    }
+    else {
+        delete_records(
+            'interaction_forum_subscription_forum',
+            'forum', $values['forum'],
+            'user', $USER->get('id')
+        );
+        $SESSION->add_ok_msg(get_string('forumsuccessfulunsubscribe', 'interaction.forum'));
+    }
+    db_commit();
+    redirect('/interaction/forum/index.php?group=' . $values['group']);
+}
+
 ?>

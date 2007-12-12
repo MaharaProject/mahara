@@ -3,28 +3,27 @@
 
 {include file="columnleftstart.tpl"}
 
-<p>
-<a href="{$breadcrumbs[0][0]|escape}">{$breadcrumbs[0][1]|escape}</a>
-{foreach from=$breadcrumbs[1] item=item}
-&raquo <a href="{$item[0]|escape}">{$item[1]|escape}</a>
-{/foreach}
-</p>
-
-<h2>{$groupname|escape}</h2>
-<h3>{str tag=nameplural section=interaction.forum}</h3>
+<h2>{$groupname|escape} - {str tag=nameplural section=interaction.forum}</h2>
+{include file="interaction:forum:breadcrumbs.tpl" breadcrumbs=$breadcrumbs}
 {if $admin}
-<a href="{$WWWROOT}interaction/edit.php?group={$groupid|escape}&plugin=forum">{str tag="newforum" section=interaction.forum}</a>
+<div class="fr">
+<span class="addicon">
+<a href="{$WWWROOT}interaction/edit.php?group={$groupid|escape}&amp;plugin=forum">{str tag="newforum" section=interaction.forum}</a>
+</span>
+</div>
 {/if}
 {if $forums}
 <ul>
     {foreach from=$forums item=forum}
     <li>
-        <a href="{$WWWROOT}interaction/forum/view.php?id={$forum->id|escape}">{$forum->title|escape}</a>
-        <p>{$forum->description}</p>
-        <div class="fr">{$forum->count|escape}</div>
+        <h4><a href="{$WWWROOT}interaction/forum/view.php?id={$forum->id|escape}">{$forum->title|escape}</a></h4>
+        {$forum->description}
+        <div class="fr">{str tag=topics section=interaction.forum args=$forum->count}</div>
         {if $admin}
+        <div>
         <a href="{$WWWROOT}interaction/edit.php?id={$forum->id|escape}">{str tag=edit}</a>
-        <a href="{$WWWROOT}interaction/delete.php?id={$forum->id|escape}">{str tag=delete}</a>
+         | <a href="{$WWWROOT}interaction/delete.php?id={$forum->id|escape}">{str tag=delete}</a>
+        </div>
         {/if}
         {$forum->subscribe}
     </li>
