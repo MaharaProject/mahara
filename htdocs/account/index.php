@@ -186,7 +186,7 @@ function accountprefs_submit(Pieform $form, $values) {
 
 // Institution forms
 
-$institutions = get_records_assoc('institution', 'registerallowed', 1, '', 'name,displayname');
+$institutions = get_records_assoc('institution', '', '', '', 'name,displayname');
 
 // For all institutions the user is already a member of, create a
 // button to leave the institution
@@ -328,7 +328,9 @@ if (!empty($institutions) &&
     (get_config('usersallowedmultipleinstitutions') || empty($member))) {
     $options = array();
     foreach ($institutions as $i) {
-        $options[$i->name] = $i->displayname;
+        if ($i->registerallowed) {
+            $options[$i->name] = $i->displayname;
+        }
     }
     $joinform = pieform(array(
         'name'        => 'requestmembership',
