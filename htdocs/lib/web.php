@@ -1960,6 +1960,8 @@ function clean_attributes_2($htmlArray) {
  * - lasttext: The text to use for the 'last page' link
  * - numbersincludefirstlast: Whether the page numbering should include links 
  *   for the first and last pages
+ * - resultcounttextsingular: The text to use for 'result'
+ * - resultcounttextplural: The text to use for 'reusults'
  *
  * Optional options to support javascript pagination include:
  *
@@ -1996,6 +1998,8 @@ function build_pagination($params) {
     $params['previoustext'] = (isset($params['previoustext'])) ? $params['previoustext'] : get_string('previous');
     $params['nexttext']  = (isset($params['nexttext']))  ? $params['nexttext'] : get_string('next');
     $params['lasttext']  = (isset($params['lasttext']))  ? $params['lasttext'] : get_string('last');
+    $params['resultcounttextsingular'] = (isset($params['resultcounttextsingular'])) ? $params['resultcounttextsingular'] : get_string('result');
+    $params['resultcounttextplural'] = (isset($params['resultcounttextplural'])) ? $params['resultcounttextplural'] : get_string('results');
 
     if (!isset($params['numbersincludefirstlast'])) {
         $params['numbersincludefirstlast'] = true;
@@ -2081,7 +2085,7 @@ function build_pagination($params) {
     }
 
     // Output the count of results
-    $resultsstr = ($params['count'] == 1) ? get_string('result') : get_string('results');
+    $resultsstr = ($params['count'] == 1) ? $params['resultcounttextsingular'] : $params['resultcounttextplural'];
     $output .= '<div class="results">' . $params['count'] . ' ' . $resultsstr . '</div>';
 
     // Close the container div
