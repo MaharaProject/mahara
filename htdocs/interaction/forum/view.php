@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This program is part of Mahara
  *
@@ -62,46 +63,60 @@ $admin = (bool)($membership & GROUP_MEMBERSHIP_OWNER);
 
 $moderator = $admin || is_forum_moderator($forumid);
 
-if (isset($_POST['subscribe'])) { // TODO: make safe
-    $values = array_flip($_POST['subscribe']);
-    if (isset($values[get_string('subscribe', 'interaction.forum')])) {
-        insert_record(
-            'interaction_forum_subscription_topic',
-            (object)array(
-                'topic' => $values[get_string('subscribe', 'interaction.forum')],
-                'user' => $USER->get('id')
-            )
-        );
-        $SESSION->add_ok_msg(get_string('topicsuccessfulsubscribe', 'interaction.forum'));
+if (isset($_POST['topics'])) {
+    $topics = array_keys($_POST['topics']);
+    if (isset($_POST['checkbox'])) {
+        $checked = array_keys($_POST['checkbox']);
     }
     else {
-        delete_records(
-            'interaction_forum_subscription_topic',
-            'topic', $values[get_string('unsubscribe', 'interaction.forum')],
-            'user', $USER->get('id')
-        );
-        $SESSION->add_ok_msg(get_string('topicsuccessfulunsubscribe', 'interaction.forum'));
+        $checked = array();
     }
-}
-
-if ($moderator && isset($_POST['update'])) { // TODO: make safe + nice
-    if (!isset($_POST['sticky']) || !is_numeric(implode(array_keys($_POST['sticky'])))) {
-        $_POST['sticky'] = array();
+    // check that user is only messing with topics from this forum
+    $alltopics = get_column('interaction_forum_topic', 'id', 'forum', $forumid, 'deleted', 0);
+    if ($topics == array_intersect($topics, $alltopics) && $checked == array_intersect($checked, $topics)) { // $topics and $checked are ok
+        $unchecked = array_diff($topics, $checked);
+        db_begin();
+        if ($moderator && isset($_POST['sticky'])) {
+            if (!empty($checked)) {
+                set_field_select('interaction_forum_topic', 'sticky', 1, 'id in (' . implode($checked, ',') . ')', array());
+            }
+            if (!empty($unchecked)) {
+                set_field_select('interaction_forum_topic', 'sticky', 0, 'id in (' . implode($unchecked, ',') . ')', array());
+            }
+            $SESSION->add_ok_msg(get_string('topicstickysuccess', 'interaction.forum'));
+        }
+        else if ($moderator && isset($_POST['closed'])) {
+            if (!empty($checked)) {
+                set_field_select('interaction_forum_topic', 'sticky', 1, 'id in (' . implode($checked, ',') . ')', array());
+            }
+            if (!empty($unchecked)) {
+                set_field_select('interaction_forum_topic', 'sticky', 0, 'id in (' . implode($unchecked, ',') . ')', array());
+            }
+            $SESSION->add_ok_msg(get_string('topicclosedsuccess', 'interaction.forum'));
+        }
+        else if (isset($_POST['subscribe']) && !$forum->subscribed) {
+            if (!empty($unchecked)) {
+                delete_records_sql('DELETE FROM {interaction_forum_subscription_topic}
+                    WHERE topic in (' . implode($unchecked, ',') . ') AND "user" = ?',
+                    array($USER->get('id')
+                ));
+            }
+            foreach ($checked as $key => $value) {
+                insert_record('interaction_forum_subscription_topic',
+                    (object) array(
+                        'user' => $USER->get('id'),
+                        'topic' => $value
+                    ));
+            }
+            $SESSION->add_ok_msg(get_string('topicsubscribesuccess', 'interaction.forum'));
+        }
+        db_commit();
+        redirect('/interaction/forum/view.php?id=' . $forumid);
     }
-    if (!isset($_POST['closed']) || !is_numeric(implode(array_keys($_POST['closed'])))) {
-        $_POST['closed'] = array();
+    else {
+        $SESSION->add_error_msg(get_string('topicupdatefailed', 'interaction.forum'));
+        redirect('/interaction/forum/view.php?id=' . $forumid);
     }
-    if (!isset($_POST['prevsticky']) || !is_numeric(implode(array_keys($_POST['prevsticky'])))) {
-        $_POST['prevsticky'] = array();
-    }
-    if (!isset($_POST['prevclosed']) || !is_numeric(implode(array_keys($_POST['prevclosed'])))) {
-        $_POST['prevclosed'] = array();
-    }
-    updatetopics($_POST['sticky'], $_POST['prevsticky'], 'sticky = 1');
-    updatetopics($_POST['prevsticky'], $_POST['sticky'], 'sticky = 0');
-    updatetopics($_POST['closed'], $_POST['prevclosed'], 'closed = 1');
-    updatetopics($_POST['prevclosed'], $_POST['closed'], 'closed = 0');
-    $SESSION->add_ok_msg(get_string('updatesuccessful', 'interaction.forum'));
 }
 
 $breadcrumbs = array(
@@ -122,20 +137,20 @@ $breadcrumbs = array(
 require_once('pieforms/pieform.php');
 
 $forum->subscribe = pieform(array(
-    'name'     => 'subscribe_forum',
+    'name' => 'subscribe_forum',
     'autofocus' => false,
     'elements' => array(
         'submit' => array(
-            'type'  => 'submit',
+            'type' => 'submit',
             'value' => $forum->subscribed ? get_string('unsubscribe', 'interaction.forum') : get_string('subscribe', 'interaction.forum')
         ),
         'forum' => array(
-             'type' => 'hidden',
-             'value' => $forumid
+            'type' => 'hidden',
+            'value' => $forumid
         ),
         'redirect' => array(
-             'type' => 'hidden',
-             'value' => '/interaction/forum/view.php?id=' . $forumid . '&offset=' . $offset
+            'type' => 'hidden',
+            'value' => '/interaction/forum/view.php?id=' . $forumid . '&amp;offset=' . $offset
         )
     )
 ));
@@ -186,16 +201,4 @@ $smarty->assign('stickytopics', $stickytopics);
 $smarty->assign('regulartopics', $regulartopics);
 $smarty->assign('pagination', $pagination['html']);
 $smarty->display('interaction:forum:view.tpl');
-
-function updatetopics($new, $old, $set) {
-    $keydiff = array_keys(array_diff_key($new, $old));
-    if (!empty($keydiff)) {
-        execute_sql(
-            'UPDATE {interaction_forum_topic}
-            SET ' . $set .
-            'WHERE id in (' . implode(',', $keydiff) . ')'
-        );
-    }
-}
-
 ?>
