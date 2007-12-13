@@ -15,27 +15,33 @@ class PluginInteractionForum extends PluginInteraction {
         }
 
         return array(
-            'weight' => array(
-                'type' => 'text',
-                'title' => get_string('weight', 'interaction.forum'),
-                'defaultvalue' => isset($weight) ? $weight : 0,
-                'rules' => array(
-                    'required' => true,
-                    'integer' => true
+            'fieldset' => array(
+                'type' => 'fieldset',
+                'collapsible' => true,
+                'collapsed' => true,
+                'legend' => get_string('settings'),
+                'elements' => array(
+                    'weight' => array(
+                        'type' => 'text',
+                        'title' => get_string('weight', 'interaction.forum'),
+                        'description' => get_string('weightdescription', 'interaction.forum'),
+                        'defaultvalue' => isset($weight) ? $weight : 0,
+                        'rules' => array(
+                            'required' => true,
+                            'integer' => true
+                        )
+                    ),
+                    'moderator' => array(
+                        'type' => 'userlist',
+                        'title' => get_string('moderators', 'interaction.forum'),
+                        'description' => get_string('moderatorsdescription', 'interaction.forum'),
+                        'defaultvalue' => isset($moderators) ? $moderators : null,
+                        'group' => $group->id,
+                        'filter' => false,
+                        'lefttitle' => get_string('potentialmoderators', 'interaction.forum'),
+                        'righttitle' => get_string('currentmoderators', 'interaction.forum')
+                    )
                 )
-            ),
-            'moderator' => array(
-                'type' => 'userlist',
-                'title' => get_string('moderators', 'interaction.forum'),
-                'defaultvalue' => isset($moderators) ? $moderators : null,
-                'group' => $group->id,
-                'filter' => false,
-                'lefttitle' => get_string('potentialmoderators', 'interaction.forum'),
-                'righttitle' => get_string('currentmoderators', 'interaction.forum')
-            ),
-            'submit' => array(
-                'type' => 'submit',
-                'value' => get_string('submit')
             )
         );
     }
@@ -241,8 +247,9 @@ function is_forum_moderator($forumid, $userid=null) {
 }
 
 /**
- * For a pieform with forum, group and subscribe elements.
- * forum and group are the forum and group ids
+ * For a pieform with forum, redirect and subscribe elements.
+ * forum is the forum id
+ * redirect is where to redirect to
  * subscribe has value get_string('subscribe', 'interaction.forum') if the user should be subscribed
  * get_string('unsubscribe', 'interaction.forum') if the user should be unsubscribed
  */
@@ -278,7 +285,7 @@ function subscribe_forum_submit(Pieform $form, $values) {
         $SESSION->add_ok_msg(get_string('forumsuccessfulunsubscribe', 'interaction.forum'));
     }
     db_commit();
-    redirect('/interaction/forum/index.php?group=' . $values['group']);
+    redirect($values['redirect']);
 }
 
 ?>

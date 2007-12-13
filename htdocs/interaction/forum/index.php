@@ -94,9 +94,9 @@ if ($forums) {
                     'type' => 'hidden',
                     'value' => $forum->id
                 ),
-                'group' => array(
+                'redirect' => array(
                     'type' => 'hidden',
-                    'value' => $groupid
+                    'value' => '/interaction/forum/index.php?group=' . $groupid
                 )
             )
         ));
