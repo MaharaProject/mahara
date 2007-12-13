@@ -156,6 +156,7 @@ $smarty->display('interaction:forum:topic.tpl');
 function buildthread($parent, $parentsubject, &$posts){
     global $moderator;
     global $topic;
+    $localposts = $posts;
     if ($posts[$parent]->subject) {
         $parentsubject = $posts[$parent]->subject;
     }
@@ -163,7 +164,7 @@ function buildthread($parent, $parentsubject, &$posts){
         $posts[$parent]->subject = get_string('re', 'interaction.forum', $parentsubject);
     }
     $children = array();
-    foreach ($posts as $index => $post) {
+    foreach ($localposts as $index => $post) {
         if ($posts[$index]->parent == $posts[$parent]->id) {
             $children[] = buildthread($index, $parentsubject, $posts);
         }
