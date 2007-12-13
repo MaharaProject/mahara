@@ -25,7 +25,7 @@
  */
 
 define('INTERNAL', 1);
-define('ADMIN', 1);
+define('INSTITUTIONALADMIN', 1);
 define('MENUITEM', 'configusers/adminnotifications');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('adminnotifications', 'admin'));
@@ -35,12 +35,23 @@ define('SECTION_PAGE', 'notifications');
 
 require_once('pieforms/pieform.php');
 
-$sql = 'SELECT u.*, a.activity, a.method 
+global $USER;
+
+$sql = '
+    SELECT
+        u.id, u.username, u.firstname, u.lastname, u.preferredname, u.admin, u.staff,
+        a.activity, a.method
     FROM {usr} u 
     LEFT JOIN {usr_activity_preference} a ON a.usr = u.id
-    WHERE u.admin = ?';
+    LEFT OUTER JOIN {usr_institution} ui 
+        ON (ui.usr = u.id' . ($USER->get('admin') ? '' : ' AND ui.institution IN (' 
+                              . join(',',array_map('db_quote', array_keys($USER->get('institutions')))) . ')') . ')
+    GROUP BY
+        u.id, u.username, u.firstname, u.lastname, u.preferredname, u.admin, u.staff,
+        a.activity, a.method
+    HAVING (' . ($USER->get('admin') ? 'u.admin = 1 OR ' : '') . 'SUM(ui.admin) > 0)';
 
-$admins  = get_records_sql_array($sql, array(1));
+$admins  = get_records_sql_array($sql, null);
 $types   = get_column('activity_type', 'name', 'admin', 1);
 $types   = array_flip($types);
 foreach (array_keys($types) as $k) {
