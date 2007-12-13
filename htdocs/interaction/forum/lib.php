@@ -4,13 +4,13 @@ class PluginInteractionForum extends PluginInteraction {
 
     public static function instance_config_form($group, $instance=null) {
         if (isset($instance)) {
-            $weight = get_record_sql(
+            $weight = get_field_sql(
                 'SELECT c.value as weight
                 FROM {interaction_forum_instance_config} c
                 WHERE c.field=\'weight\'
                 AND forum = ?',
                 array($instance->get('id'))
-            )->weight;
+            );
             $moderators = get_column('interaction_forum_moderator', '"user"', 'forum', $instance->get('id'));
         }
 
@@ -104,20 +104,12 @@ class PluginInteractionForum extends PluginInteraction {
                 FROM {interaction_forum_subscription_topic} st
                 UNION SELECT sf."user" AS subscriber, t.id AS topic, \'forum\' AS type
                 FROM {interaction_forum_subscription_forum} sf
-                INNER JOIN {interaction_forum_topic} t
-                ON t.forum = sf.forum
+                INNER JOIN {interaction_forum_topic} t ON t.forum = sf.forum
             ) s
-            INNER JOIN {interaction_forum_topic} t
-            ON t.deleted != 1
-            AND t.id = s.topic
-            INNER JOIN {interaction_forum_post} p
-            ON p.sent != 1
-            AND p.ctime < ?
-            AND p.deleted != 1
-            AND p.topic = t.id
-            INNER JOIN {interaction_instance} f
-            ON f.id = t.forum
-            AND f.deleted != 1
+            INNER JOIN {interaction_forum_topic} t ON (t.deleted != 1 AND t.id = s.topic)
+            INNER JOIN {interaction_forum_post} p ON (p.sent != 1 AND p.ctime < ? AND p.deleted != 1 AND p.topic = t.id)
+            INNER JOIN {interaction_instance} f ON (f.id = t.forum AND f.deleted != 1)
+            INNER JOIN {group_member} gm ON (gm.member = s.subscriber AND gm.group = f.group)
             ORDER BY type, p.id',
             array(db_format_timestamp($currenttime - 30 * 60))
         );
@@ -238,10 +230,12 @@ function is_forum_moderator($forumid, $userid=null) {
 
     }
     return record_exists_sql(
-        'SELECT "user"
-        FROM {interaction_forum_moderator}
-        WHERE "user" = ?
-        AND forum = ?',
+        'SELECT fm.user
+        FROM {interaction_forum_moderator} fm
+        INNER JOIN {interaction_instance} f ON f.id = fm.forum
+        INNER JOIN {group_member} gm ON (gm.group = f.group AND gm.member = fm.user)
+        WHERE fm.user = ?
+        AND fm.forum = ?',
         array($userid, $forumid)
     );
 }
