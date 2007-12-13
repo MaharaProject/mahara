@@ -38,10 +38,11 @@ if ($topicid==0) {
     define('TITLE', get_string('addtopic','interaction.forum'));
     $forumid = param_integer('forum');
     $forum = get_record_sql(
-        'SELECT f.group AS group, f.title
+        'SELECT f.group AS group, f.title, g.name as groupname
         FROM {interaction_instance} f
-        WHERE id = ?
-        AND deleted != 1',
+        INNER JOIN {group} g ON g.id = f.group
+        WHERE f.id = ?
+        AND f.deleted != 1',
         array($forumid)
     );
 
@@ -62,18 +63,20 @@ if ($topicid==0) {
 
     $breadcrumbs = array(
         array(
+            get_config('wwwroot') . 'group/view.php?id=' . $forum->group,
+            $forum->groupname
+        ),
+        array(
             get_config('wwwroot') . 'interaction/forum/index.php?group=' . $forum->group,
             get_string('nameplural', 'interaction.forum')
         ),
         array(
-            array(
-                get_config('wwwroot') . 'interaction/forum/view.php?id=' . $forumid,
-                $forum->title
-            ),
-            array(
-                get_config('wwwroot') . 'interaction/forum/edittopic.php?forum=' . $forumid,
-                get_string('addtopic', 'interaction.forum')
-            )
+            get_config('wwwroot') . 'interaction/forum/view.php?id=' . $forumid,
+            $forum->title
+        ),
+        array(
+            get_config('wwwroot') . 'interaction/forum/edittopic.php?forum=' . $forumid,
+            get_string('addtopic', 'interaction.forum')
         )
     );
 }
@@ -81,14 +84,11 @@ if ($topicid==0) {
 if (isset($topicid)) {
 	define('TITLE', get_string('edittopic','interaction.forum'));
     $topic = get_record_sql(
-        'SELECT p.subject, p.body, p.topic AS id, t.sticky, t.closed, f.id as forumid, f.group as group, f.title
+        'SELECT p.subject, p.body, p.topic AS id, t.sticky, t.closed, f.id as forumid, f.group AS group, f.title, g.name AS groupname
         FROM {interaction_forum_post} p
-        INNER JOIN {interaction_forum_topic} t
-        ON p.topic = t.id
-        AND t.deleted != 1
-        INNER JOIN {interaction_instance} f
-        ON f.id = t.forum
-        AND f.deleted != 1
+        INNER JOIN {interaction_forum_topic} t ON (p.topic = t.id AND t.deleted != 1)
+        INNER JOIN {interaction_instance} f ON (f.id = t.forum AND f.deleted != 1)
+        INNER JOIN {group} g ON g.id = f.group
         WHERE p.parent IS NULL
         AND p.topic = ?',
         array($topicid)
@@ -113,22 +113,24 @@ if (isset($topicid)) {
 
     $breadcrumbs = array(
         array(
+            get_config('wwwroot') . 'group/view.php?id=' . $topic->group,
+            $topic->groupname
+        ),
+        array(
             get_config('wwwroot') . 'interaction/forum/index.php?group=' . $topic->group,
             get_string('nameplural', 'interaction.forum')
         ),
         array(
-            array(
-                get_config('wwwroot') . 'interaction/forum/view.php?id=' . $topic->forumid,
-                $topic->title
-            ),
-            array(
-                get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $topicid,
-                $topic->subject
-            ),
-            array(
-                get_config('wwwroot') . 'interaction/forum/edittopic.php?id=' . $topicid,
-                get_string('edittopic', 'interaction.forum')
-            )
+            get_config('wwwroot') . 'interaction/forum/view.php?id=' . $topic->forumid,
+            $topic->title
+        ),
+        array(
+            get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $topicid,
+            $topic->subject
+        ),
+        array(
+            get_config('wwwroot') . 'interaction/forum/edittopic.php?id=' . $topicid,
+            get_string('edittopic', 'interaction.forum')
         )
     );
 

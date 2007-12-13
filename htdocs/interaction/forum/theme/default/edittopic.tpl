@@ -3,15 +3,8 @@
 
 {include file="columnleftstart.tpl"}
 
-<p>
-<a href="{$breadcrumbs[0][0]|escape}">{$breadcrumbs[0][1]|escape}</a>
-{foreach from=$breadcrumbs[1] item=item}
-&raquo <a href="{$item[0]|escape}">{$item[1]|escape}</a>
-{/foreach}
-</p>
-
-<h2>{$forum|escape}</h2>
-<h3>{$heading|escape}</h3>
+<h2>{$forum|escape} - {$heading|escape}</h2>
+{include file="interaction:forum:breadcrumbs.tpl" breadcrumbs=$breadcrumbs}
 {$editform}
 
 {include file="columnleftend.tpl"}

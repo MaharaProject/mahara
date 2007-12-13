@@ -32,27 +32,17 @@ require('group.php');
 $topicid = param_integer('id');
 
 $topic = get_record_sql(
-    'SELECT f."group", f.id as forumid, f.title, p.poster, p.subject, p.body, COUNT(p2.*), t.closed
+    'SELECT f."group", f.id as forumid, f.title, g.name as groupname, p.poster, p.subject, p.body, COUNT(p2.*), t.closed
     FROM {interaction_forum_topic} t
-    INNER JOIN {interaction_instance} f
-    ON f.id = t.forum
-    AND f.deleted != 1
-    INNER JOIN {interaction_forum_post} p
-    ON p.topic = t.id
-    AND p.parent IS NULL
-    INNER JOIN {interaction_forum_post} p2
-    ON p.poster = p2.poster
-    AND p2.deleted != 1
-    INNER JOIN {interaction_forum_topic} t2
-    ON t2.deleted != 1
-    AND p2.topic = t2.id
-    INNER JOIN {interaction_instance} f2
-    ON t2.forum = f2.id
-    AND f2.deleted != 1
-    AND f2.group = f.group
+    INNER JOIN {interaction_instance} f ON (f.id = t.forum AND f.deleted != 1)
+    INNER JOIN {group} g ON g.id = f.group
+    INNER JOIN {interaction_forum_post} p ON (p.topic = t.id AND p.parent IS NULL)
+    INNER JOIN {interaction_forum_post} p2 ON (p.poster = p2.poster AND p2.deleted != 1)
+    INNER JOIN {interaction_forum_topic} t2 ON (t2.deleted != 1 AND p2.topic = t2.id)
+    INNER JOIN {interaction_instance} f2 ON (t2.forum = f2.id AND f2.deleted != 1 AND f2.group = f.group)
     WHERE t.id = ?
     AND t.deleted != 1
-    GROUP BY 1, 2, 3, 4, 5, 6, 8',
+    GROUP BY 1, 2, 3, 4, 5, 6, 7, 9',
     array($topicid)
 );
 
@@ -74,22 +64,24 @@ define('TITLE', get_string('deletetopicvariable', 'interaction.forum', $topic->s
 
 $breadcrumbs = array(
     array(
+        get_config('wwwroot') . 'group/view.php?id=' . $topic->group,
+        $topic->groupname,
+    ),
+    array(
         get_config('wwwroot') . 'interaction/forum/index.php?group=' . $topic->group,
         get_string('nameplural', 'interaction.forum')
     ),
     array(
-        array(
-            get_config('wwwroot') . 'interaction/forum/view.php?id=' . $topic->forumid,
-            $topic->title
-        ),
-        array(
-            get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $topicid,
-            $topic->subject
-        ),
-        array(
-            get_config('wwwroot') . 'interaction/forum/deletetopic.php?id=' . $topicid,
-            get_string('deletetopic', 'interaction.forum')
-        )
+        get_config('wwwroot') . 'interaction/forum/view.php?id=' . $topic->forumid,
+        $topic->title
+    ),
+    array(
+        get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $topicid,
+        $topic->subject
+    ),
+    array(
+        get_config('wwwroot') . 'interaction/forum/deletetopic.php?id=' . $topicid,
+        get_string('deletetopic', 'interaction.forum')
     )
 );
 
@@ -116,12 +108,12 @@ function deletepost_submit(Pieform $form, $values) {
         array('deleted' => 1),
         array('id' => $topicid)
     );
-    $forumid = get_record_sql(
+    $forumid = get_field_sql(
         'SELECT forum
         FROM interaction_forum_topic
         WHERE id = ?',
         array($topicid)
-    )->forum;
+    );
     redirect('/interaction/forum/view.php?id=' . $forumid);
 }
 

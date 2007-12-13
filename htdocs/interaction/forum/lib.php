@@ -138,14 +138,8 @@ class PluginInteractionForum extends PluginInteraction {
                     'forum'
                 );
             }
-            execute_sql(
-                'UPDATE {interaction_forum_post}
-                SET sent = 1
-                WHERE ctime < ?
-                AND deleted != 1
-                AND sent = 0',
-                array(db_format_timestamp($currenttime - 30 * 60))
-            );
+            set_field_select('interaction_forum_post', 'sent', 1,
+                'ctime < ? AND deleted = 0 AND sent = 0', array(db_format_timestamp($currenttime - 30 * 60)));
         }
     }
 }

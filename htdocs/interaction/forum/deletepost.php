@@ -32,30 +32,18 @@ require_once('group.php');
 
 $postid = param_integer('id');
 $post = get_record_sql(
-    'SELECT p.subject, p.body, p.topic, p.parent, p.poster, t.forum, p2.subject as topicsubject, f.group, f.title as forumtitle, COUNT(p3.*)
+    'SELECT p.subject, p.body, p.topic, p.parent, p.poster, t.forum, p2.subject as topicsubject, f.group, f.title as forumtitle, g.name as groupname, COUNT(p3.*)
     FROM {interaction_forum_post} p
-    INNER JOIN {interaction_forum_topic} t
-    ON p.topic = t.id
-    AND t.deleted != 1
-    INNER JOIN {interaction_forum_post} p2
-    ON p2.topic = t.id
-    AND p2.parent IS NULL
-    INNER JOIN {interaction_instance} f
-    ON t.forum = f.id
-    AND f.deleted != 1
-    INNER JOIN {interaction_forum_post} p3
-    ON p.poster = p3.poster
-    AND p3.deleted != 1
-    INNER JOIN {interaction_forum_topic} t2
-    ON t2.deleted != 1
-    AND p3.topic = t2.id
-    INNER JOIN {interaction_instance} f2
-    ON t2.forum = f2.id
-    AND f2.deleted != 1
-    AND f2.group = f.group
+    INNER JOIN {interaction_forum_topic} t ON (p.topic = t.id AND t.deleted != 1)
+    INNER JOIN {interaction_forum_post} p2 ON (p2.topic = t.id AND p2.parent IS NULL)
+    INNER JOIN {interaction_instance} f ON (t.forum = f.id AND f.deleted != 1)
+    INNER JOIN {group} g ON g.id = f.group
+    INNER JOIN {interaction_forum_post} p3 ON (p.poster = p3.poster AND p3.deleted) != 1
+    INNER JOIN {interaction_forum_topic} t2 ON (t2.deleted != 1 AND p3.topic = t2.id)
+    INNER JOIN {interaction_instance} f2 ON (t2.forum = f2.id AND f2.deleted != 1 AND f2.group = f.group)
     WHERE p.id = ?
     AND p.deleted != 1
-    GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9',
+    GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10',
     array($postid)
 );
 
@@ -77,22 +65,24 @@ define('TITLE', get_string('deletepostvariable', 'interaction.forum', $post->sub
 
 $breadcrumbs = array(
     array(
+        get_config('wwwroot') . 'group/view.php?id=' . $post->group,
+        $post->groupname,
+    ),
+    array(
         get_config('wwwroot') . 'interaction/forum/index.php?group=' . $post->group,
         get_string('nameplural', 'interaction.forum')
     ),
     array(
-        array(
-            get_config('wwwroot') . 'interaction/forum/view.php?id=' . $post->forum,
-            $post->forumtitle
-        ),
-        array(
-            get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $post->topic,
-            $post->topicsubject
-        ),
-        array(
-            get_config('wwwroot') . 'interaction/forum/deletepost.php?id=' . $postid,
-            get_string('deletepost', 'interaction.forum')
-        )
+        get_config('wwwroot') . 'interaction/forum/view.php?id=' . $post->forum,
+        $post->forumtitle
+    ),
+    array(
+        get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $post->topic,
+        $post->topicsubject
+    ),
+    array(
+        get_config('wwwroot') . 'interaction/forum/deletepost.php?id=' . $postid,
+        get_string('deletepost', 'interaction.forum')
     )
 );
 

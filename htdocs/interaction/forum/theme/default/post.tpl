@@ -4,7 +4,7 @@
 <h4>{$post->subject|escape}</h4>
 <h5>{$post->poster|display_name|escape}</h5>
 <h5>{str tag="posts" section=interaction.forum} {$post->count|escape}</h5>
-<div><img src="{$WWWROOT}thumb.php?type=profileicon&maxsize=100&id={$post->poster}" alt=""></div>
+<div><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=100&amp;id={$post->poster}" alt=""></div>
 <p>{$post->body}</p>
 {if $moderator || !$closed}<a href="{$WWWROOT}interaction/forum/editpost.php?parent={$post->id|escape}">{str tag="reply" section=interaction.forum}</a>{/if}
 {if $moderator || $post->editor}<a href="{$WWWROOT}interaction/forum/editpost.php?id={$post->id|escape}"> {str tag="edit"}</a>{/if}

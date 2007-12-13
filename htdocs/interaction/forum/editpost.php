@@ -40,17 +40,12 @@ if ($postid==0) {
     define('TITLE', get_string('postreply','interaction.forum'));
     $parentid = param_integer('parent');
     $topic = get_record_sql(
-        'SELECT p.topic AS id, p2.subject, t.closed, f.id AS forum, f.title AS forumtitle, f.group
+        'SELECT p.topic AS id, p2.subject, t.closed, f.id AS forum, f.title AS forumtitle, f.group, g.name AS groupname
         FROM {interaction_forum_post} p
-        INNER JOIN {interaction_forum_topic} t
-        ON p.topic = t.id
-        AND t.deleted != 1
-        INNER JOIN {interaction_forum_post} p2
-        ON p2.topic = t.id
-        AND p2.parent IS NULL
-        INNER JOIN {interaction_instance} f
-        ON t.forum = f.id
-        AND f.deleted != 1
+        INNER JOIN {interaction_forum_topic} t ON (p.topic = t.id AND t.deleted != 1)
+        INNER JOIN {interaction_forum_post} p2 ON (p2.topic = t.id AND p2.parent IS NULL)
+        INNER JOIN {interaction_instance} f ON (t.forum = f.id AND f.deleted != 1)
+        INNER JOIN {group} g ON g.id = f.group
         WHERE p.id = ?
         AND p.deleted != 1',
         array($parentid)
@@ -75,22 +70,24 @@ if ($postid==0) {
 
     $breadcrumbs = array(
         array(
+            get_config('wwwroot') . 'group/view.php?id=' . $topic->group,
+            $topic->groupname
+        ),
+        array(
             get_config('wwwroot') . 'interaction/forum/index.php?group=' . $topic->group,
             get_string('nameplural', 'interaction.forum')
         ),
         array(
-            array(
-                get_config('wwwroot') . 'interaction/forum/view.php?id=' . $topic->forum,
-                $topic->forumtitle
-            ),
-            array(
-                get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $topicid,
-                $topic->subject
-            ),
-            array(
-                get_config('wwwroot') . 'interaction/forum/editpost.php?parent=' . $parentid,
-                get_string('postreply', 'interaction.forum')
-            )
+            get_config('wwwroot') . 'interaction/forum/view.php?id=' . $topic->forum,
+            $topic->forumtitle
+        ),
+        array(
+            get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $topicid,
+            $topic->subject
+        ),
+        array(
+            get_config('wwwroot') . 'interaction/forum/editpost.php?parent=' . $parentid,
+            get_string('postreply', 'interaction.forum')
         )
     );
 }
@@ -98,17 +95,12 @@ if ($postid==0) {
 if (isset($postid)) {
     define('TITLE', get_string('editpost','interaction.forum'));
     $post = get_record_sql(
-        'SELECT p.subject, p.body, p.parent, p.topic, p.poster, p.ctime, t.forum, p2.subject AS topicsubject, f.title AS forumtitle, f.group
+        'SELECT p.subject, p.body, p.parent, p.topic, p.poster, p.ctime, t.forum, p2.subject AS topicsubject, f.title AS forumtitle, f.group, g.name AS groupname
         FROM {interaction_forum_post} p
-        INNER JOIN {interaction_forum_topic} t
-        ON p.topic = t.id
-        AND t.deleted != 1
-        INNER JOIN {interaction_forum_post} p2
-        ON p2.topic = t.id
-        AND p2.parent IS NULL
-        INNER JOIN {interaction_instance} f
-        ON t.forum = f.id
-        AND f.deleted != 1
+        INNER JOIN {interaction_forum_topic} t ON (p.topic = t.id AND t.deleted != 1)
+        INNER JOIN {interaction_forum_post} p2 ON (p2.topic = t.id AND p2.parent IS NULL)
+        INNER JOIN {interaction_instance} f ON (t.forum = f.id AND f.deleted != 1)
+        INNER JOIN {group} g ON g.id = f.group
         WHERE p.id = ?
         AND p.deleted != 1',
         array($postid)
@@ -135,22 +127,24 @@ if (isset($postid)) {
 
     $breadcrumbs = array(
         array(
+            get_config('wwwroot') . 'group/view.php?id=' . $post->group,
+            $post->groupname
+        ),
+        array(
             get_config('wwwroot') . 'interaction/forum/index.php?group=' . $post->group,
             get_string('nameplural', 'interaction.forum')
         ),
         array(
-            array(
-                get_config('wwwroot') . 'interaction/forum/view.php?id=' . $post->forum,
-                $post->forumtitle
-            ),
-            array(
-                get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $topicid,
-                $topicsubject
-            ),
-            array(
-                get_config('wwwroot') . 'interaction/forum/editpost.php?id=' . $postid,
-                get_string('editpost', 'interaction.forum')
-            )
+            get_config('wwwroot') . 'interaction/forum/view.php?id=' . $post->forum,
+            $post->forumtitle
+        ),
+        array(
+            get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $topicid,
+            $topicsubject
+        ),
+        array(
+            get_config('wwwroot') . 'interaction/forum/editpost.php?id=' . $postid,
+            get_string('editpost', 'interaction.forum')
         )
     );
 }

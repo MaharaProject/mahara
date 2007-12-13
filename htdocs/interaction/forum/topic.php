@@ -34,20 +34,13 @@ define('TITLE', get_string('topic','interaction.forum'));
 $topicid = param_integer('id');
 
 $topic = get_record_sql(
-    'SELECT p.subject, f.group, f.id AS forumid, f.title as forumtitle, t.closed, t.id, sf.forum AS forumsubscribed, st.topic AS topicsubscribed
+    'SELECT p.subject, f.group, g.name AS groupname, f.id AS forumid, f.title as forumtitle, t.closed, t.id, sf.forum AS forumsubscribed, st.topic AS topicsubscribed
     FROM {interaction_forum_topic} t
-    INNER JOIN {interaction_instance} f
-    ON t.forum = f.id
-    AND f.deleted != 1
-    INNER JOIN {interaction_forum_post} p
-    ON p.topic = t.id
-    AND p.parent IS NULL
-    LEFT JOIN {interaction_forum_subscription_forum} sf
-    ON sf.forum = f.id
-    AND sf.user = ?
-    LEFT JOIN {interaction_forum_subscription_topic} st
-    ON st.topic = t.id
-    AND st.user = ?
+    INNER JOIN {interaction_instance} f ON (t.forum = f.id AND f.deleted != 1)
+    INNER JOIN {group} g ON g.id = f.group
+    INNER JOIN {interaction_forum_post} p ON (p.topic = t.id AND p.parent IS NULL)
+    LEFT JOIN {interaction_forum_subscription_forum} sf ON (sf.forum = f.id AND sf.user = ?)
+    LEFT JOIN {interaction_forum_subscription_topic} st ON (st.topic = t.id AND st.user = ?)
     WHERE t.id = ?
     AND t.deleted != 1',
     array($USER->get('id'), $USER->get('id'), $topicid)
@@ -69,18 +62,20 @@ $moderator = $admin || is_forum_moderator((int)$topic->forumid);
 
 $breadcrumbs = array(
     array(
+        get_config('wwwroot') . 'group/view.php?id=' . $topic->group,
+        $topic->groupname
+    ),
+    array(
         get_config('wwwroot') . 'interaction/forum/index.php?group=' . $topic->group,
         get_string('nameplural', 'interaction.forum')
     ),
     array(
-        array(
-            get_config('wwwroot') . 'interaction/forum/view.php?id=' . $topic->forumid,
-            $topic->forumtitle
-        ),
-        array(
-            get_config('wwwroot') . 'interaction/forum/topic?id=' . $topic->id,
-            $topic->subject
-        )
+        get_config('wwwroot') . 'interaction/forum/view.php?id=' . $topic->forumid,
+        $topic->forumtitle
+    ),
+    array(
+        get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $topic->id,
+        $topic->subject
     )
 );
 
