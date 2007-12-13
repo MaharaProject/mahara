@@ -88,6 +88,7 @@ function adminusers_submit(Pieform $form, $values) {
             SET admin = 1
             WHERE usr IN (' . join(',', $values['users']) . ') AND institution = ' . db_quote($inst));
     }
+    activity_add_admin_defaults($values['users']);
     db_commit();
     $SESSION->add_ok_msg(get_string('adminusersupdated', 'admin'));
     redirect('/admin/users/institutionadmins.php?institution=' . $inst);

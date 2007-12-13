@@ -425,6 +425,22 @@ function activity_set_defaults($user_id) {
 }
 
 
+function activity_add_admin_defaults($userids) {
+    $activitytypes = get_records_array('activity_type', 'admin', 1);
+    foreach ($activitytypes as $type) {
+        foreach ($userids as $id) {
+            if (!record_exists('usr_activity_preference', 'usr', $id, 'activity', $type->name)) {
+                insert_record('usr_activity_preference', (object)array(
+                    'usr' => $id,
+                    'activity' => $type->name,
+                    'method' => 'internal',
+                ));
+            }
+        }
+    }
+}
+
+
 function activity_process_queue() {
 
     db_begin();

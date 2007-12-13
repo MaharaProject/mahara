@@ -305,6 +305,9 @@ function edituser_institution_submit(Pieform $form, $values) {
                 db_begin();
                 delete_records('usr_institution', 'usr', $user->id, 'institution', $i->institution);
                 insert_record('usr_institution', $newuser);
+                if ($newuser->admin) {
+                    activity_add_admin_defaults(array($user->id));
+                }
                 handle_event('updateuser', $user->id);
                 db_commit();
                 break;
