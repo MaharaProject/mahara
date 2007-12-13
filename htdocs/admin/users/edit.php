@@ -182,6 +182,9 @@ function edituser_site_submit(Pieform $form, $values) {
     if ($USER->get('admin')) {  // Not editable by institutional admins
         $user->staff = (int) ($values['staff'] == 'on');
         $user->admin = (int) ($values['admin'] == 'on');
+        if ($user->admin) {
+            activity_add_admin_defaults(array($user->id));
+        }
     }
 
     // Authinstance can be changed by institutional admins if both the

@@ -72,10 +72,7 @@ function adminusers_submit(Pieform $form, $values) {
     execute_sql('UPDATE {usr}
         SET admin = 1
         WHERE id IN (' . join(',', $values['users']) . ')');
-    execute_sql('DELETE FROM {usr_activity_preference}
-        WHERE activity IN (SELECT name FROM {activity_type}
-            WHERE admin = 1)
-        AND usr NOT IN (' . join(',', $values['users']) . ')');
+    activity_add_admin_defaults($values['users']);
     db_commit();
     $SESSION->add_ok_msg(get_string('adminusersupdated', 'admin'));
     redirect('/admin/users/admins.php');
