@@ -33,7 +33,7 @@ define('TITLE', get_string('deletepost', 'interaction.forum'));
 
 $postid = param_integer('id');
 $post = get_record_sql(
-    'SELECT p.subject, p.body, p.topic, p.parent, p.poster, t.forum, p2.subject as topicsubject, f.group, f.title as forumtitle, g.name as groupname, COUNT(p3.*)
+    'SELECT p.subject, p.body, p.topic, p.parent, p.poster, p.ctime, t.forum, p2.subject as topicsubject, f.group, f.title as forumtitle, g.name as groupname, COUNT(p3.*)
     FROM {interaction_forum_post} p
     INNER JOIN {interaction_forum_topic} t ON (p.topic = t.id AND t.deleted != 1)
     INNER JOIN {interaction_forum_post} p2 ON (p2.topic = t.id AND p2.parent IS NULL)
@@ -44,7 +44,7 @@ $post = get_record_sql(
     INNER JOIN {interaction_instance} f2 ON (t2.forum = f2.id AND f2.deleted != 1 AND f2.group = f.group)
     WHERE p.id = ?
     AND p.deleted != 1
-    GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10',
+    GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11',
     array($postid)
 );
 

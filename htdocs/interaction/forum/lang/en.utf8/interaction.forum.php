@@ -25,6 +25,7 @@
  *
  */
 
+$string['addpostsuccess'] = 'Added post successfully';
 $string['addtitle'] = 'Add forum';
 $string['addtopic'] = 'Add topic';
 $string['addtopicsuccess'] = 'Added topic successfully';
@@ -57,6 +58,7 @@ $string['deletetopicsuccess'] = 'Topic deleted successfully';
 $string['deletetopicsure'] = 'Are you sure you want to do this? It cannot be undone.';
 $string['editedon'] = '%s on %s';
 $string['editpost'] = 'Edit post';
+$string['editpostsuccess'] = 'Post edited successfully';
 $string['editstothispost'] = 'Edits to this post:';
 $string['edittitle'] = 'Edit forum';
 $string['edittopic'] = 'Edit topic';
@@ -84,6 +86,7 @@ $string['potentialmoderators'] = 'Potential Moderators';
 $string['re'] ='Re: %s';
 $string['regulartopics'] = 'Regular topics';
 $string['reply'] = 'Reply';
+$string['replyto'] = 'Reply to: ';
 $string['sticky'] = 'Sticky';
 $string['stickydescription'] = 'Sticky topics are at the top of every page';
 $string['stickytopics'] = 'Sticky topics';

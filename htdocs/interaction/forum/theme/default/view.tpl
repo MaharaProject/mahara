@@ -3,7 +3,7 @@
 
 {include file="columnleftstart.tpl"}
 
-<h2>{$groupname|escape} - {$forum->title|escape}</h3>
+<h2>{$groupname|escape} - {$forum->title|escape}</h2>
 {include file="interaction:forum:breadcrumbs.tpl" breadcrumbs=$breadcrumbs}
 <div>
 {$forum->description}

@@ -32,7 +32,7 @@ require('group.php');
 $topicid = param_integer('id');
 
 $topic = get_record_sql(
-    'SELECT f."group", f.id as forumid, f.title, g.name as groupname, p.poster, p.subject, p.body, COUNT(p2.*), t.closed
+    'SELECT f."group", f.id as forumid, f.title, g.name as groupname, p.poster, p.subject, p.body, COUNT(p2.*), p.ctime, t.closed
     FROM {interaction_forum_topic} t
     INNER JOIN {interaction_instance} f ON (f.id = t.forum AND f.deleted != 1)
     INNER JOIN {group} g ON g.id = f.group
@@ -42,7 +42,7 @@ $topic = get_record_sql(
     INNER JOIN {interaction_instance} f2 ON (t2.forum = f2.id AND f2.deleted != 1 AND f2.group = f.group)
     WHERE t.id = ?
     AND t.deleted != 1
-    GROUP BY 1, 2, 3, 4, 5, 6, 7, 9',
+    GROUP BY 1, 2, 3, 4, 5, 6, 7, 9, 10',
     array($topicid)
 );
 

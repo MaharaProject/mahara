@@ -25,7 +25,7 @@
         {/if}
         <td>
         <a href="{$WWWROOT}interaction/forum/topic.php?id={$topic->id|escape}">{$topic->subject|escape}</a>
-        <div>{$topic->body|escape}</div>
+        <div>{$topic->body}</div>
         </td>
         <td>
         <img src="{$WWWROOT}thumb.php?type=profileicon&amp;size=20x20&amp;id={$topic->poster}" alt="">
@@ -33,7 +33,6 @@
         </td>
         <td>{$topic->count|escape}</td>
         {if $moderator}
-        </td>
         <td><a href="{$WWWROOT}interaction/forum/edittopic.php?id={$topic->id|escape}">{str tag="edit"}</a></td>
         <td><a href="{$WWWROOT}interaction/forum/deletetopic.php?id={$topic->id|escape}">{str tag="delete"}</a></td>
         {/if}
