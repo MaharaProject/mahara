@@ -95,7 +95,7 @@ if (!$topic->forumsubscribed) {
 }
 
 $posts = get_records_sql_array(
-    'SELECT p1.id, p1.parent, p1.poster, p1.subject, p1.body, p1.ctime AS posttime, p1.deleted, COUNT(p2.*), e.ctime AS edit, e.user AS editor
+    'SELECT p1.id, p1.parent, p1.poster, p1.subject, p1.body, p1.ctime, p1.deleted, COUNT(p2.*), e.ctime AS edit, e.user AS editor
     FROM {interaction_forum_post} p1
     INNER JOIN {interaction_forum_post} p2
     ON p1.poster = p2.poster
@@ -131,7 +131,7 @@ for ($i = 0; $i < $count; $i++) {
 }
 
 foreach ($posts as $post) {
-    if ($post->poster == $USER->get('id') && (time() - strtotime($post->posttime)) < (30 * 60)) {
+    if ($post->poster == $USER->get('id') && (time() - strtotime($post->ctime)) < (30 * 60)) {
         $post->editor = true;
     }
     else {
