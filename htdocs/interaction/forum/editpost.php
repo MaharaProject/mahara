@@ -149,6 +149,27 @@ if (isset($postid)) {
     );
 }
 
+// Javascript to hide the subject box if it has nothing in it, with a link you 
+// click to expand it.
+$clicksetsubject = json_encode(get_string('clicksetsubject', 'interaction.forum'));
+$inlinejs = <<<EOF
+addLoadEvent(function() {
+    var subjectInput = $('editpost_subject');
+    if (subjectInput.value == '') {
+        hideElement(subjectInput);
+        var expandLink = A({'href': ''}, {$clicksetsubject});
+        connect(expandLink, 'onclick', function(e) {
+            showElement(subjectInput);
+            subjectInput.focus();
+            e.stop();
+            removeElement(expandLink);
+        });
+        insertSiblingNodesBefore(subjectInput, expandLink);
+    }
+    tinyMCE.execCommand('mceFocus',false,'mce_editor_0');
+});
+EOF;
+
 require_once('pieforms/pieform.php');
 
 $editform = pieform(array(
@@ -243,6 +264,9 @@ $smarty->assign('topicsubject', $topicsubject);
 $smarty->assign('heading', TITLE);
 $smarty->assign('topic', $topicsubject);
 $smarty->assign('editform', $editform);
+if (isset($inlinejs)) {
+    $smarty->assign('INLINEJAVASCRIPT', $inlinejs);
+}
 $smarty->display('interaction:forum:editpost.tpl');
 
 ?>
