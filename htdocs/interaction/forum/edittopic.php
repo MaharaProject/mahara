@@ -139,8 +139,9 @@ if (isset($topicid)) {
 require_once('pieforms/pieform.php');
 
 $editform = array(
-    'name'     => 'edittopic',
+    'name'     => isset($topic) ? 'edittopic' : 'addtopic',
     'method'   => 'post',
+    'autofocus' => false,
     'elements' => array(
         'subject' => array(
             'type'         => 'text',
@@ -162,11 +163,13 @@ $editform = array(
         'sticky' => array(
             'type'         => 'checkbox',
             'title'        => get_string('sticky', 'interaction.forum'),
+            'description'  => get_string('stickydescription', 'interaction.forum'),
             'defaultvalue' => isset($topic) && $topic->sticky == 1 ? 'checked' : null
         ),
         'closed' => array(
             'type'         => 'checkbox',
             'title'        => get_string('closed', 'interaction.forum'),
+            'description'  => get_string('closeddescription', 'interaction.forum'),
             'defaultvalue' => isset($topic) && $topic->closed == 1 ? 'checked' : null
         ),
         'submit'   => array(
@@ -187,72 +190,75 @@ if(!$moderator){
 
 $editform = pieform($editform);
 
+function addtopic_submit(Pieform $form, $values) {
+    global $USER, $SESSION;
+    $forumid = param_integer('forum');
+    db_begin();
+    $topicid = insert_record(
+        'interaction_forum_topic',
+        (object)array(
+            'forum' => $forumid,
+            'sticky' => isset($values['sticky']) && $values['sticky'] ? 1 : 0,
+            'closed' => isset($values['closed']) && $values['closed'] ? 1 : 0
+        ),
+        'id',
+        true
+    );
+    insert_record(
+        'interaction_forum_post',
+        (object)array(
+            'topic' => $topicid,
+            'poster' => $USER->get('id'),
+            'subject' => $values['subject'],
+            'body' => $values['body'],
+            'ctime' =>  db_format_timestamp(time())
+        ),
+        'id'
+    );
+    db_commit();
+    $SESSION->add_ok_msg(get_string('addtopicsuccess', 'interaction.forum'));
+    redirect('/interaction/forum/topic.php?id='.$topicid);
+}
+
 function edittopic_submit(Pieform $form, $values) {
-    global $USER;
-    $topicid = param_integer('id',0);
-    if ($topicid==0) {
-        $forumid = param_integer('forum');
-        db_begin();
-        $topicid = insert_record(
-            'interaction_forum_topic',
-            (object)array(
-                'forum' => $forumid,
-                'sticky' => isset($values['sticky']) && $values['sticky'] ? 1 : 0,
-                'closed' => isset($values['closed']) && $values['closed'] ? 1 : 0
-            ),
-            'id',
-            true
-        );
-        insert_record(
-            'interaction_forum_post',
-            (object)array(
-                'topic' => $topicid,
-                'poster' => $USER->get('id'),
-                'subject' => $values['subject'],
-                'body' => $values['body'],
-                'ctime' =>  db_format_timestamp(time())
-            ),
-            'id'
-        );
-        db_commit();
-    }
-    else {
-        $post = get_record_sql(
-            'SELECT id
-            FROM {interaction_forum_post}
-            WHERE parent IS NULL
-            AND topic = ?',
-            array($topicid)
-        );
-        db_begin();
-        update_record(
-            'interaction_forum_post',
-            array(
-                'subject' => $values['subject'],
-                'body' => $values['body']
-            ),
-            array('id' => $post->id)
-        );
-        insert_record(
-            'interaction_forum_edit',
-            (object)array(
-                'user' => $USER->get('id'),
-                'post' => $post->id,
-                'ctime' => db_format_timestamp(time())
-            )
-        );
-        if(isset($values['sticky'])){
+    global $SESSION, $USER;
+    $topicid = param_integer('id');
+    $post = get_record_sql(
+        'SELECT id
+        FROM {interaction_forum_post}
+        WHERE parent IS NULL
+        AND topic = ?',
+        array($topicid)
+    );
+    db_begin();
+    update_record(
+        'interaction_forum_post',
+        array(
+            'subject' => $values['subject'],
+            'body' => $values['body']
+        ),
+        array('id' => $post->id)
+    );
+    insert_record(
+        'interaction_forum_edit',
+        (object)array(
+            'user' => $USER->get('id'),
+            'post' => $post->id,
+            'ctime' => db_format_timestamp(time())
+        )
+    );
+    if(isset($values['sticky'])){
         update_record(
             'interaction_forum_topic',
             array(
-                    'sticky' => isset($values['sticky']) && $values['sticky'] == 1 ? 1 : 0,
-                    'closed' => isset($values['closed']) && $values['closed'] == 1 ? 1 : 0
-                ),
-                array('id' => $topicid)
-            );
-        }
-        db_commit();
+                'sticky' => isset($values['sticky']) && $values['sticky'] == 1 ? 1 : 0,
+                'closed' => isset($values['closed']) && $values['closed'] == 1 ? 1 : 0
+            ),
+            array('id' => $topicid)
+        );
     }
+    db_commit();
+    $SESSION->add_ok_msg(get_string('edittopicsuccess', 'interaction.forum'));
     redirect('/interaction/forum/topic.php?id='.$topicid);
 }
 

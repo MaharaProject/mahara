@@ -89,6 +89,7 @@ require_once('pieforms/pieform.php');
 
 $form = pieform(array(
     'name'     => 'deletepost',
+    'autofocus' => false,
     'elements' => array(
         'title' => array(
             'value' => get_string('deletetopicsure', 'interaction.forum'),
@@ -102,7 +103,9 @@ $form = pieform(array(
 ));
 
 function deletepost_submit(Pieform $form, $values) {
+    global $SESSION;
     $topicid = param_integer('id');
+    db_begin();
     update_record(
         'interaction_forum_topic',
         array('deleted' => 1),
@@ -114,6 +117,8 @@ function deletepost_submit(Pieform $form, $values) {
         WHERE id = ?',
         array($topicid)
     );
+    db_commit();
+    $SESSION->add_ok_msg(get_string('deletetopicsuccess', 'interaction.forum'));
     redirect('/interaction/forum/view.php?id=' . $forumid);
 }
 

@@ -29,6 +29,7 @@ define('MENUITEM', 'groups');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('interaction' ,'forum');
 require_once('group.php');
+define('TITLE', get_string('deletepost', 'interaction.forum'));
 
 $postid = param_integer('id');
 $post = get_record_sql(
@@ -38,7 +39,7 @@ $post = get_record_sql(
     INNER JOIN {interaction_forum_post} p2 ON (p2.topic = t.id AND p2.parent IS NULL)
     INNER JOIN {interaction_instance} f ON (t.forum = f.id AND f.deleted != 1)
     INNER JOIN {group} g ON g.id = f.group
-    INNER JOIN {interaction_forum_post} p3 ON (p.poster = p3.poster AND p3.deleted) != 1
+    INNER JOIN {interaction_forum_post} p3 ON (p.poster = p3.poster AND p3.deleted != 1)
     INNER JOIN {interaction_forum_topic} t2 ON (t2.deleted != 1 AND p3.topic = t2.id)
     INNER JOIN {interaction_instance} f2 ON (t2.forum = f2.id AND f2.deleted != 1 AND f2.group = f.group)
     WHERE p.id = ?
@@ -60,8 +61,6 @@ $moderator = $admin || is_forum_moderator((int)$post->forum);
 if (!$moderator) {
     throw new AccessDeniedException(get_string('cantdeletepost', 'interaction.forum'));
 }
-
-define('TITLE', get_string('deletepostvariable', 'interaction.forum', $post->subject));
 
 $breadcrumbs = array(
     array(
@@ -90,6 +89,7 @@ require_once('pieforms/pieform.php');
 
 $form = pieform(array(
     'name'     => 'deletepost',
+    'autofocus' => false,
     'elements' => array(
         'title' => array(
             'value' => get_string('deletepostsure', 'interaction.forum'),
@@ -98,19 +98,27 @@ $form = pieform(array(
             'type'  => 'submitcancel',
             'value' => array(get_string('yes'), get_string('no')),
             'goto'  => get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $post->topic,
+        ),
+        'post' => array(
+            'type' => 'hidden',
+            'value' => $postid
+        ),
+        'topic' => array(
+            'type' => 'hidden',
+            'value' => $post->topic
         )
     )
 ));
 
 function deletepost_submit(Pieform $form, $values) {
-    global $postid;
-    global $post;
+    global $SESSION;
     update_record(
         'interaction_forum_post',
         array('deleted' => 1),
-        array('id' => $postid)
+        array('id' => $values['post'])
     );
-    redirect('/interaction/forum/topic.php?id=' . $post->topic);
+    $SESSION->add_ok_msg(get_string('deletepostsuccess', 'interaction.forum'));
+    redirect('/interaction/forum/topic.php?id=' . $values['topic']);
 }
 
 $smarty = smarty();
