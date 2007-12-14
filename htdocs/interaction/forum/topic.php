@@ -84,6 +84,7 @@ require_once('pieforms/pieform.php');
 if (!$topic->forumsubscribed) {
     $topic->subscribe = pieform(array(
         'name'     => 'subscribe',
+        'autofocus' => false,
         'elements' => array(
             'submit' => array(
                'type'  => 'submit',
@@ -118,18 +119,12 @@ $count = count($posts);
 for ($i = 0; $i < $count; $i++) {
     $postedits = array();
     if (!empty($posts[$i]->edit)) {
-        $postedits[] = array(
-            'edittime' => $posts[$i]->edit,
-            'editor'   => $posts[$i]->editor
-        );
+        $postedits[] = get_string('editedon', 'interaction.forum', display_name($posts[$i]->editor), $posts[$i]->edit);
     }
     $temp = $i;
     while (isset($posts[$i+1]) && $posts[$i+1]->id == $posts[$temp]->id) {
         $i++;
-        $postedits[] = array(
-            'edittime' => $posts[$i]->edit,
-            'editor'   => $posts[$i]->editor
-        );
+        $postedits[] = get_string('editedon', 'interaction.forum', display_name($posts[$i]->editor), $posts[$i]->edit);
         unset($posts[$i]);
     }
     $posts[$temp]->edit = $postedits;

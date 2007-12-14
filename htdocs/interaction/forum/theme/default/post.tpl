@@ -3,19 +3,21 @@
 {else}
 <h4>{$post->subject|escape}</h4>
 <h5>{$post->poster|display_name|escape}</h5>
-<h5>{str tag="posts" section=interaction.forum} {$post->count|escape}</h5>
+<h5>{str tag="postsvariable" section=interaction.forum args=$post->count}</h5>
 <div><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=100&amp;id={$post->poster}" alt=""></div>
-<p>{$post->body}</p>
+{$post->body}
+<div>
 {if $moderator || !$closed}<a href="{$WWWROOT}interaction/forum/editpost.php?parent={$post->id|escape}">{str tag="reply" section=interaction.forum}</a>{/if}
+{if $moderator || (!$closed && $post->editor)} | {/if}
 {if $moderator || $post->editor}<a href="{$WWWROOT}interaction/forum/editpost.php?id={$post->id|escape}"> {str tag="edit"}</a>{/if}
-{if $moderator}<a href="{$WWWROOT}interaction/forum/deletepost.php?id={$post->id|escape}"> {str tag="delete"}</a>{/if}
+{if $moderator} | <a href="{$WWWROOT}interaction/forum/deletepost.php?id={$post->id|escape}"> {str tag="delete"}</a>{/if}
+</div>
 {if $post->edit}
-<p>{str tag="edited" section="interaction.forum}</p>
+{str tag="editstothispost" section="interaction.forum}
 <ul>
     {foreach from=$post->edit item=edit}
     <li>
-        {$edit.editor|display_name|escape}
-        {$edit.edittime|escape}
+        {$edit}
     </li>
     {/foreach}
 </ul>
