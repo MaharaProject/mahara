@@ -14,6 +14,7 @@ $string['cantfindpost'] = 'Couldn\'t find post with id %s';
 $string['cantfindtopic'] = 'Couldn\'t find topic with id %s';
 $string['cantviewforums'] = 'You are not allowed to view forums in this group';
 $string['cantviewtopic'] = 'You are not allowed to view topics in this forum';
+$string['clicksetsubject'] = 'Click to set a subject';
 $string['closed'] = 'Closed';
 $string['count'] = 'Count';
 $string['currentmoderators'] = 'Current Moderators';
