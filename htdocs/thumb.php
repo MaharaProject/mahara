@@ -53,12 +53,37 @@ switch ($type) {
             }
         }
 
-        header('Content-type: ' . 'image/png');
-        if ($path = theme_get_path('images/no_userphoto' . $size . '.png')) {
+        // We couldn't find an image for this user. Attempt to use the 'no user 
+        // photo' image for the current theme
+        //
+        // NOTE: the institutional admin branch allows the theme to be locked 
+        // down. This means that $USER->get('theme') should be used here 
+        // instead, when that branch is merged. And don't forget to change it 
+        // below at the other get_config('theme') call!
+        if ($path = get_dataroot_image_path('artefact/internal/profileicons/no_userphoto/' . get_config('theme'), 0, $size)) {
+            header('Content-type: ' . 'image/png');
             readfile($path);
             exit;
         }
-        readfile(theme_get_path('images/no_userphoto40x40.png'));
+
+        // If we couldn't find the no user photo picture, we put it into 
+        // dataroot if we can
+        $nouserphotopic = theme_get_path('images/no_userphoto.png');
+        if ($nouserphotopic) {
+            // Move the file into the correct place.
+            $directory = get_config('dataroot') . 'artefact/internal/profileicons/no_userphoto/' . get_config('theme') . '/originals/0/';
+            check_dir_exists($directory);
+            copy($nouserphotopic, $directory . '0');
+            header('Content-type: ' . 'image/png');
+            readfile($directory . '0');
+            exit;
+        }
+
+
+        // Emergency fallback
+        header('Content-type: ' . 'image/png');
+        readfile(theme_get_path('images/no_userphoto.png'));
+        exit;
         break;
 
     case 'blocktype':
