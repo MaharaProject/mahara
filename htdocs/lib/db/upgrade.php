@@ -599,6 +599,10 @@ function xmldb_core_upgrade($oldversion=0) {
         delete_records('activity_type', 'name', 'newview');
     }
 
+    if ($oldversion < 2007121002) {
+        execute_sql('ALTER TABLE {usr_institution} ADD COLUMN expirymailsent smallint NOT NULL DEFAULT 0');
+    }
+
     return $status;
 
 }

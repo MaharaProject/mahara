@@ -108,6 +108,7 @@
                 <FIELD NAME="institution" TYPE="char" LENGTH="255" NOTNULL="true" />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="false"/>
                 <FIELD NAME="expiry" TYPE="datetime" NOTNULL="false"/>
+                <FIELD NAME="expirymailsent" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
                 <FIELD NAME="studentid" TYPE="text" NOTNULL="false"/>
                 <FIELD NAME="staff" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
                 <FIELD NAME="admin" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
