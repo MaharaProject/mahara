@@ -3,6 +3,9 @@
 {include file="columnfullstart.tpl"}
 <div id="edituser">
     <h2><a href="{$WWWROOT}user/view.php?id={$user->id}">{$user->firstname} {$user->lastname} ({$user->username})</a></h2>
+    {if !empty($loginas)}
+      <div><a href="{$WWWROOT}admin/users/changeuser.php?id={$user->id}">{$loginas}</a></div>
+    {/if}
     {if !$suspended}
       <h3>{str tag="suspenduser" section="admin"}</h3>
     {else}

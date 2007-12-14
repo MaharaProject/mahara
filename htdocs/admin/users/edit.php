@@ -367,6 +367,13 @@ if ($suspended) {
 $smarty->assign('suspendform', $suspendform);
 $smarty->assign('siteform', $siteform);
 $smarty->assign('institutionform', $institutionform);
+
+if ($id != $USER->get('id') && is_null($USER->get('parentuser'))) {
+    $loginas = get_string('loginasuser', 'admin', $user->username);
+} else {
+    $loginas = null;
+}
+$smarty->assign('loginas', $loginas);
 $smarty->display('admin/users/edit.tpl');
 
 ?>

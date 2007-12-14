@@ -84,6 +84,7 @@ class User {
             'institutions'     => array(),
             'theme'            => null,
             'admininstitutions' => array(),
+            'parentuser'       => null,
             'sesskey'          => ''
         );
         $this->attributes = array();
@@ -572,5 +573,46 @@ class LiveUser extends User {
         $this->SESSION->set("user/$key", $value);
         return $this;
     }
+
+    protected function reloadLiveUser($id) {
+        $this->commit();
+        $this->find_by_id($id);
+        $this->activityprefs = load_activity_preferences($id);
+        $this->accountprefs = load_account_preferences($id);
+    }
+
+    public function change_identity_to($userid) {
+        $user = new User;
+        $user->find_by_id($userid);
+        if (!$this->is_admin_for_user($user)) {
+            throw new AccessDeniedException(get_string('loginasdenied', 'admin'));
+        }
+        $olduser = $this->get('parentuser');
+        if (!is_null($olduser)) {
+            throw new UserException(get_string('loginastwice', 'admin'));
+        }
+
+        $olduser = new StdClass;
+        $olduser->id = $this->get('id');
+        $olduser->name = $this->firstname . ' ' . $this->lastname;
+
+        $this->reloadLiveUser($userid);
+
+        $this->set('parentuser', $olduser);
+    }
+
+    public function restore_identity() {
+        $id = $this->get('id');
+        $olduser = $this->get('parentuser');
+        if (empty($olduser) || empty($olduser->id)) {
+            throw new UserException(get_string('loginasrestorenodata', 'admin'));
+        }
+
+        $this->reloadLiveUser($olduser->id);
+        $this->set('parentuser', null);
+
+        return $id;
+    }
+
 }
 ?>

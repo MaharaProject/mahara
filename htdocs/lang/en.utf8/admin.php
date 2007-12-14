@@ -264,6 +264,14 @@ $string['suspendedby'] = 'This user has been suspended by %s';
 $string['filequota'] = 'File quota (MB)';
 $string['confirmremoveuserfrominstitution'] = 'Are you sure you want to remove the user from this institution?';
 
+// Login as
+$string['loginasuser'] = 'Login as %s';
+$string['becomeadminagain'] = 'Become %s again';
+// Login-as exceptions
+$string['loginasdenied'] = 'Attempt to login as another user without permission';
+$string['loginastwice'] = 'Attempt to login as another user when already logged in as another user';
+$string['loginasrestorenodata'] = 'No user data to restore';
+
 // Institutions
 $string['admininstitutions'] = 'Admininster Institutions';
 $string['adminauthorities'] = 'Admininster Authorities';

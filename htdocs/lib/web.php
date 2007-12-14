@@ -1733,6 +1733,12 @@ function get_loggedin_string() {
             '<span id="headerunreadmessages">' . get_string($key) . '</span></a>)';
     }
 
+    $saveduser = $USER->get('parentuser');
+    if (!empty($saveduser) && $saveduser->name) {
+        $str .= ' (<a href="' . get_config('wwwroot') . 'admin/users/changeuser.php?restore=1">'
+            . get_string('becomeadminagain', 'admin', $saveduser->name) . '</a>)';
+    }
+
     return $str;
 }
 
