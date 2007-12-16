@@ -47,6 +47,9 @@ function pieform_rule_maxlength_i18n() {
          'de.utf8' => array(
             'maxlength' => 'Das Feld darf höchstens %d Zeichen lang sein'
         ),
+         'fr.utf8' => array(
+            'maxlength' => 'Ce champ ne peut pas contenir plus de %d signes'
+        ),
     );
 }
 

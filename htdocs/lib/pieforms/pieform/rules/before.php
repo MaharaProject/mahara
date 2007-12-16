@@ -51,6 +51,9 @@ function pieform_rule_before_i18n() {
         'de.utf8' => array(
             'before' => 'Dies kann nicht nach dem Feld "%s" sein'
         ),
+        'fr.utf8' => array(
+            'before' => 'Ceci ne peut pas être placé après le champ "%s"'
+        ),
     );
 }
 
