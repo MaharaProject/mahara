@@ -54,11 +54,26 @@
 				<tr>
 				</tbody>
 			</table>
+<div class="institutioneditbuttons">
 {if $siteadmin}
             <form action="" method="post">
                 <input type="submit" class="submit" name="add" value="{str tag="addinstitution" section="admin"}" id="admininstitution_add">
             </form>
 {/if}
+{if count($institutions) > 1}
+  <div class="institutionedituserbuttons">
+    <form action="{$WWWROOT}admin/users/institutionusers.php" method="post">
+      <input type="submit" class="submit" name="editmembers" value="{str tag="editmembers" section="admin"}">
+    </form>
+    <form action="{$WWWROOT}admin/users/institutionstaff.php" method="post">
+      <input type="submit" class="submit" name="editstaff" value="{str tag="editstaff" section="admin"}">
+    </form>
+    <form action="{$WWWROOT}admin/users/institutionadmins.php" method="post">
+      <input type="submit" class="submit" name="editadmins" value="{str tag="editadmins" section="admin"}">
+    </form>
+  </div>
+{/if}
+</div>
 			{/if}
 			
 			{/if}

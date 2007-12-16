@@ -305,6 +305,9 @@ $string['institutionadministration'] = 'Institution Administration';
 $string['institutionmembers'] = 'Institution Members';
 $string['notadminforinstitution'] = 'You are not an administrator for that institution';
 $string['institutionmemberspagedescription'] = 'On this page you can see users who have requested membership of your institution and add them as members.  You can also remove users from your institution, and invite users to join.';
+$string['editmembers'] = 'Edit Members';
+$string['editstaff'] = 'Edit Staff';
+$string['editadmins'] = 'Edit Admins';
 
 $string['userstodisplay'] = 'Users to display:';
 $string['institutionusersrequesters'] = 'People who have requested institution membership';

@@ -845,6 +845,19 @@ p {
     display: block !important;
 }
 
+input#admininstitution_add {
+    float: left;
+}
+.institutioneditbuttons {
+    height: 25px;
+}
+.institutionedituserbuttons {
+    float: right;
+}
+.institutionedituserbuttons form {
+    display: inline;
+}
+
 acronym {
     color: #474220;
     border-bottom: 1px dotted #d4d1c0;
