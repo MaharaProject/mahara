@@ -71,6 +71,15 @@ foreach ($admins as $u) {
     }
 }
 
+$userinstitutions = get_records_sql_array('
+    SELECT u.usr, i.name, i.displayname
+    FROM {institution} i INNER JOIN {usr_institution} u ON i.name = u.institution
+    WHERE u.usr IN (' . join(',', array_keys($users)) . ')', null);
+if ($userinstitutions) {
+    foreach ($userinstitutions as $ui) {
+        $users[$ui->usr]['user']->institutions[] = $ui->displayname;
+    }
+}
 
 $smarty = smarty();
 $smarty->assign('users', $users);
