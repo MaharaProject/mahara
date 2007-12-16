@@ -208,7 +208,7 @@ if ($institution || $add) {
         ),
     );
 
-    if ($data->name != 'mahara') {
+    if (empty($data->name) || $data->name != 'mahara') {
         $elements['defaultmembershipperiod'] = array(
             'type'         => 'expiry',
             'title'        => get_string('defaultmembershipperiod', 'admin'),
