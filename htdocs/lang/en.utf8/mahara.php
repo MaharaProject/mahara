@@ -309,6 +309,7 @@ $string['cancelrequest'] = 'Cancel request';
 $string['youhavebeeninvitedtojoin'] = 'You have been invited to join %s';
 $string['confirminvitation'] = 'Confirm invitation';
 $string['joininstitution'] = 'Join institution';
+$string['decline'] = 'Decline';
 $string['requestmembershipofaninstitution'] = 'Request membership of an institution';
 $string['optionalinstitutionid'] = 'Institution ID (optional)';
 $string['institutionmemberconfirmsubject'] = 'Institution membership confirmation';

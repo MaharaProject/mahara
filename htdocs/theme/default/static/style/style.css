@@ -837,12 +837,12 @@ p {
 
 .maincontent #leaveinstitution input.submit,
 .maincontent #cancelrequest input.submit,
-.maincontent #confirminvite input.submit,
 .maincontent #requestmembership input.submit {
     display: block !important;
 }
 
-.maincontent #requestmembership select {
+.maincontent #confirminvite label {
+    display: block !important;
 }
 
 acronym {

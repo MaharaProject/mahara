@@ -290,6 +290,11 @@ if (!empty($invited)) {
                                   $institutions[$i]->displayname),
             'value' => get_string('joininstitution')
         );
+        $elements[] = array(
+            'type' => 'submit',
+            'name' => '_declineinvite_' . $i,
+            'value' => get_string('decline')
+        );
         unset($institutions[$i]);
     }
     $invitedform = pieform(array(
@@ -309,12 +314,18 @@ function confirminvite_submit(Pieform $form, $values) {
     foreach ($values as $k => $v) {
         if (preg_match('/^\_confirminvite\_([a-z0-9]+)$/', $k, $m)) {
             $institution = $m[1];
+            if (count_records('usr_institution_request', 'usr', $USER->id,
+                              'institution', $institution, 'confirmedinstitution', 1)) {
+                $USER->join_institution($institution);
+                break;
+            }
+        }
+        if (preg_match('/^\_declineinvite\_([a-z0-9]+)$/', $k, $m)) {
+            $institution = $m[1];
+            delete_records('usr_institution_request', 'usr', $USER->id,
+                           'institution', $institution, 'confirmedinstitution', 1);
             break;
         }
-    }
-    if (!empty($institution) && count_records('usr_institution_request', 'usr', $USER->id,
-                                              'institution', $institution, 'confirmedinstitution', 1)) {
-        $USER->join_institution($institution);
     }
     redirect(get_config('wwwroot') . 'account/index.php');
 }
