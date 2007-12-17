@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 NEWEST_FILE="`ls -1 -t htdocs/js/MochiKit/*.js | head -n1`"
 PACKED_FILE="htdocs/js/MochiKit/Packed.js"
