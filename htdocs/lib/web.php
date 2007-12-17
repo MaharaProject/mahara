@@ -1318,40 +1318,46 @@ function admin_nav() {
                 'weight' => 10,
             ),
             array(
+                'path'   => 'configusers/suspendedusers',
+                'url'    => 'admin/users/suspended.php',
+                'title'  => get_string('suspendedusers', 'admin'),
+                'weight' => 20,
+            ),
+            array(
                 'path'   => 'configusers/institutionusers',
                 'url'    => 'admin/users/institutionusers.php',
                 'title'  => get_string('institutionmembers', 'admin'),
-                'weight' => 20,
+                'weight' => 30,
             ),
             array(
                 'path'   => 'configusers/institutionstaff',
                 'url'    => 'admin/users/institutionstaff.php',
                 'title'  => get_string('staffusers', 'admin'),
-                'weight' => 30,
+                'weight' => 40,
             ),
             array(
                 'path'   => 'configusers/institutionadmins',
                 'url'    => 'admin/users/institutionadmins.php',
                 'title'  => get_string('adminusers', 'admin'),
-                'weight' => 40,
+                'weight' => 50,
             ),
             array(
                 'path'   => 'configusers/institutions',
                 'url'    => 'admin/users/institutions.php',
                 'title'  => get_string('institutionsettings', 'admin'),
-                'weight' => 50,
+                'weight' => 60,
             ),
             array(
                 'path'   => 'configusers/adminnotifications',
                 'url'    => 'admin/users/notifications.php',
                 'title'  => get_string('adminnotifications', 'admin'),
-                'weight' => 60,
+                'weight' => 70,
             ),
             array(
                 'path'   => 'configusers/uploadcsv',
                 'url'    => 'admin/users/uploadcsv.php',
                 'title'  => get_string('uploadcsv', 'admin'),
-                'weight' => 70,
+                'weight' => 80,
             ),
         );
     }
