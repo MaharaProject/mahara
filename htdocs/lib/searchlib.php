@@ -249,8 +249,6 @@ function build_admin_user_search_results($search, $offset, $limit, $sortby, $sor
         $cols['institution'] = array('name'     => get_string('institution'),
                                      'template' => '{if empty($r.institutions)}{$institutions.mahara->displayname}{else}{foreach from=$r.institutions item=i}<div>{$institutions[$i]->displayname}</div>{/foreach}{/if}');
     }
-    $cols['suspended'] = array('name'     => get_string('suspended', 'admin'),
-                               'template' => '{if !$r.suspended || $r.suspended == \'f\'}<a class="suspend-user-link" href="' . get_config('wwwroot') . 'admin/users/suspend.php?id={$r.id}">' . get_string('suspenduser', 'admin') . '</a>{/if}');
 
     $smarty = smarty_core();
     $smarty->assign_by_ref('results', $results);
