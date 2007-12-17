@@ -827,7 +827,6 @@ p {
 .maincontent #confirminvite,
 .maincontent #requestmembership {
     margin-top: 5px;
-    width: 450px;
 }
 
 .maincontent #requestmembership label {
