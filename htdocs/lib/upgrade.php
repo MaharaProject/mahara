@@ -529,6 +529,7 @@ function core_install_lastcoredata_defaults() {
     $institution->name = 'mahara';
     $institution->displayname = 'No Institution';
     $institution->authplugin  = 'internal';
+    $institution->theme  = 'default';
     insert_record('institution', $institution);
 
     $auth_instance = new StdClass;
