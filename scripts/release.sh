@@ -39,7 +39,7 @@ rm .git -rf
 rm debian -rf
 
 # Pack MochiKit
-scripts/pack.sh
+bash scripts/pack.sh
 
 popd
 
