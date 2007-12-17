@@ -525,18 +525,18 @@ function core_postinst() {
 
 function core_install_lastcoredata_defaults() {
     db_begin();
-    $auth_instance = new StdClass;
+    $institution = new StdClass;
     $institution->name = 'mahara';
     $institution->displayname = 'No Institution';
     $institution->authplugin  = 'internal';
     insert_record('institution', $institution);
 
+    $auth_instance = new StdClass;
     $auth_instance->instancename  = 'internal';
     $auth_instance->priority='1';
     $auth_instance->institution   = 'mahara';
     $auth_instance->authname      = 'internal';
     $auth_instance->id = insert_record('auth_instance', $auth_instance, 'id', true);
-    $institution = new StdClass;
 
     // Insert the root user
     $user = new StdClass;
