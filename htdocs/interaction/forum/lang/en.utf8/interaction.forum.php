@@ -101,6 +101,7 @@ $string['topiclower'] = 'topic';
 $string['topics'] = 'Topics: %s';
 $string['topicslower'] = 'topics';
 $string['topicclosedsuccess'] = 'Topics closed successfully';
+$string['topicisclosed'] = 'This topic is closed. Only moderators and the group owner can post new replies';
 $string['topicopenedsuccess'] = 'Topics opened successfully';
 $string['topicstickysuccess'] = 'Topics set as sticky successfully';
 $string['topicsubscribesuccess'] = 'Topics subscribed successfully';
