@@ -29,7 +29,7 @@
                 <FIELD NAME="registerallowed" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1"/>
                 <FIELD NAME="updateuserinfoonlogin" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="0"/>
                 <FIELD NAME="theme" TYPE="char" LENGTH="255" NOTNULL="false"/>
-                <FIELD NAME="defaultmembershipperiod" TYPE="int" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="defaultmembershipperiod" TYPE="int" NOTNULL="false" />
                 <FIELD NAME="maxuseraccounts" TYPE="int" NOTNULL="false" />
             </FIELDS>
             <KEYS>
