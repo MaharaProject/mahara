@@ -34,7 +34,7 @@ define('TITLE', get_string('nameplural', 'interaction.forum'));
 $groupid = param_integer('group');
 
 if (!record_exists('group', 'id', $groupid)) {
-	throw new GroupNotFoundException(get_string('groupnotfound', 'group', $groupid));
+    throw new GroupNotFoundException(get_string('groupnotfound', 'group', $groupid));
 }
 
 $groupname = get_field_sql(
@@ -97,6 +97,10 @@ if ($forums) {
                 'redirect' => array(
                     'type' => 'hidden',
                     'value' => '/interaction/forum/index.php?group=' . $groupid
+                ),
+                'type' => array(
+                    'type' => 'hidden',
+                    'value' => $forum->subscribed ? 'unsubscribe' : 'subscribe'
                 )
             )
         ));

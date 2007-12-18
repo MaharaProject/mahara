@@ -33,7 +33,7 @@ define('TITLE', get_string('deletepost', 'interaction.forum'));
 
 $postid = param_integer('id');
 $post = get_record_sql(
-    'SELECT p.subject, p.body, p.topic, p.parent, p.poster, p.ctime, t.forum, p2.subject as topicsubject, f.group, f.title as forumtitle, g.name as groupname, COUNT(p3.*)
+    'SELECT p.subject, p.body, p.topic, p.parent, p.poster, ' . db_format_tsfield('p.ctime', 'ctime') . ', t.forum, p2.subject AS topicsubject, f.group, f.title AS forumtitle, g.name AS groupname, COUNT(p3.*)
     FROM {interaction_forum_post} p
     INNER JOIN {interaction_forum_topic} t ON (p.topic = t.id AND t.deleted != 1)
     INNER JOIN {interaction_forum_post} p2 ON (p2.topic = t.id AND p2.parent IS NULL)
@@ -57,6 +57,8 @@ $membership = user_can_access_group((int)$post->group);
 $admin = (bool)($membership & GROUP_MEMBERSHIP_OWNER);
 
 $moderator = $admin || is_forum_moderator((int)$post->forum);
+
+$post->ctime = strftime(get_string('strftimerecentfull'), $post->ctime);
 
 if (!$moderator) {
     throw new AccessDeniedException(get_string('cantdeletepost', 'interaction.forum'));
