@@ -1961,7 +1961,7 @@ function clean_attributes_2($htmlArray) {
  * - numbersincludefirstlast: Whether the page numbering should include links 
  *   for the first and last pages
  * - resultcounttextsingular: The text to use for 'result'
- * - resultcounttextplural: The text to use for 'reusults'
+ * - resultcounttextplural: The text to use for 'results'
  *
  * Optional options to support javascript pagination include:
  *
