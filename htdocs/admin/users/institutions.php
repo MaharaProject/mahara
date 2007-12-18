@@ -77,7 +77,14 @@ if ($institution || $add) {
         function delete_submit(Pieform $form, $values) {
             global $SESSION;
 
+            $authinstanceids = get_column('auth_instance', 'id', 'institution', $values['i']);
+
             db_begin();
+            foreach ($authinstanceids as $id) {
+                delete_records('auth_instance_config', 'instance', $id);
+            }
+            delete_records('auth_instance', 'institution', $values['i']);
+            delete_records('host', 'institution', $values['i']);
             delete_records('institution_locked_profile_field', 'name', $values['i']);
             delete_records('usr_institution_request', 'institution', $values['i']);
             delete_records('institution', 'name', $values['i']);
