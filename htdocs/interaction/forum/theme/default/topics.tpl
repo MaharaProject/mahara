@@ -26,7 +26,7 @@
     </td>
     <td>{$topic->count|escape}</td>
     <td>
-    {if $topic->lastposter}
+    {if !$topic->lastpostdeleted}
     <a href="{$WWWROOT}user/view.php?id={$topic->lastposter}">{$topic->lastposter|display_name|escape}</a>
     <br>{$topic->lastposttime}
     {/if}
