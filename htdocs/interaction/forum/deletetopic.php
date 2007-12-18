@@ -62,7 +62,7 @@ if (!$moderator) {
     throw new AccessDeniedException(get_string('cantdeletetopic', 'interaction.forum'));
 }
 
-define('TITLE', get_string('deletetopicvariable', 'interaction.forum', $topic->subject));
+define('TITLE', $topic->title . ' - ' . get_string('deletetopicvariable', 'interaction.forum', $topic->subject));
 
 $breadcrumbs = array(
     array(

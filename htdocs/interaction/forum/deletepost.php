@@ -29,7 +29,6 @@ define('MENUITEM', 'groups');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('interaction' ,'forum');
 require_once('group.php');
-define('TITLE', get_string('deletepost', 'interaction.forum'));
 
 $postid = param_integer('id');
 $post = get_record_sql(
@@ -48,6 +47,7 @@ $post = get_record_sql(
     array($postid)
 );
 
+
 if (!$post) {
     throw new NotFoundException(get_string('cantfindpost', 'interaction.forum', $postid));
 }
@@ -58,11 +58,12 @@ $admin = (bool)($membership & GROUP_MEMBERSHIP_OWNER);
 
 $moderator = $admin || is_forum_moderator((int)$post->forum);
 
-$post->ctime = strftime(get_string('strftimerecentfull'), $post->ctime);
-
 if (!$moderator) {
     throw new AccessDeniedException(get_string('cantdeletepost', 'interaction.forum'));
 }
+
+define('TITLE', get_string('deletepost', 'interaction.forum') . ' - ' . $post->topicsubject);
+$post->ctime = strftime(get_string('strftimerecentfull'), $post->ctime);
 
 $breadcrumbs = array(
     array(
@@ -125,7 +126,6 @@ function deletepost_submit(Pieform $form, $values) {
 
 $smarty = smarty();
 $smarty->assign('breadcrumbs', $breadcrumbs);
-$smarty->assign('topicsubject', $post->topicsubject);
 $smarty->assign('heading', TITLE);
 $smarty->assign('post', $post);
 $smarty->assign('deleteform', $form);

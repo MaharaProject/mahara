@@ -30,7 +30,6 @@ define('MENUITEM', 'groups');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('group.php');
 safe_require('interaction', 'forum');
-define('TITLE', get_string('name', 'interaction.forum'));
 
 $forumid = param_integer('id');
 $offset = param_integer('offset', 0);
@@ -66,6 +65,7 @@ $admin = (bool)($membership & GROUP_MEMBERSHIP_OWNER);
 
 $moderator = $admin || is_forum_moderator($forumid);
 
+define('TITLE', $forum->groupname . ' - ' . $forum->title);
 
 if (isset($_POST['topics']) && isset($_POST['checkbox'])) {
     $topics = array_keys($_POST['topics']);
@@ -202,7 +202,7 @@ $pagination = build_pagination(array(
 
 $smarty = smarty();
 $smarty->assign('breadcrumbs', $breadcrumbs);
-$smarty->assign('groupname', $forum->groupname);
+$smarty->assign('heading', TITLE);
 $smarty->assign('forum', $forum);
 $smarty->assign('moderator', $moderator);
 $smarty->assign('admin', $admin);

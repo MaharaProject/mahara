@@ -3,7 +3,7 @@
 
 {include file="columnleftstart.tpl"}
 
-<h2>{$forum|escape} - {$heading|escape}</h2>
+<h2>{$heading|escape}</h2>
 
 {include file="interaction:forum:breadcrumbs.tpl" breadcrumbs=$breadcrumbs}
 

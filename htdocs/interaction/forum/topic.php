@@ -29,7 +29,6 @@ define('MENUITEM', 'groups');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('interaction', 'forum');
 require_once('group.php');
-define('TITLE', get_string('topic','interaction.forum'));
 
 $topicid = param_integer('id');
 
@@ -59,6 +58,8 @@ if (!$membership) {
 $admin = (bool)($membership & GROUP_MEMBERSHIP_OWNER);
 
 $moderator = $admin || is_forum_moderator((int)$topic->forumid);
+
+define('TITLE', $topic->forumtitle . ' - ' . $topic->subject);
 
 $breadcrumbs = array(
     array(
@@ -148,6 +149,7 @@ $posts = buildpost(0, '', $posts);
 
 $smarty = smarty();
 $smarty->assign('breadcrumbs', $breadcrumbs);
+$smarty->assign('heading', TITLE);
 $smarty->assign('topic', $topic);
 $smarty->assign('moderator', $moderator);
 $smarty->assign('posts', $posts);

@@ -36,7 +36,6 @@ $userid = $USER->get('id');
 $postid = param_integer('id', 0);
 if ($postid == 0) { // post reply
     unset($postid);
-    define('TITLE', get_string('postreply','interaction.forum'));
     $parentid = param_integer('parent');
 
     $parent = get_record_sql(
@@ -69,8 +68,8 @@ if ($postid == 0) { // post reply
         throw new AccessDeniedException(get_string('cantaddpost', 'interaction.forum'));
     }
 
+    define('TITLE', $parent->topicsubject . ' - ' . get_string('postreply','interaction.forum'));
     $topicid = $parent->topicid;
-    $topicsubject = $parent->topicsubject;
     $parent->ctime = strftime(get_string('strftimerecentfull'), $parent->ctime);
 
     $breadcrumbs = array(
@@ -97,7 +96,6 @@ if ($postid == 0) { // post reply
     );
 }
 else { // edit post
-    define('TITLE', get_string('editpost','interaction.forum'));
     $post = get_record_sql(
         'SELECT p.subject, p.body, p.parent, p.topic, p.poster, ' . db_format_tsfield('p.ctime', 'ctime') . ', t.forum, p2.subject AS topicsubject, f.title AS forumtitle, f.group, g.name AS groupname
         FROM {interaction_forum_post} p
@@ -115,7 +113,6 @@ else { // edit post
     }
 
     $topicid = $post->topic;
-    $topicsubject = $post->topicsubject;
 
     $membership = user_can_access_group((int)$post->group);
 
@@ -132,6 +129,8 @@ else { // edit post
     else {
         throw new AccessDeniedException(get_string('canteditpost', 'interaction.forum'));
     }
+
+    define('TITLE', $post->topicsubject . ' - ' . get_string('editpost','interaction.forum'));
 
     $breadcrumbs = array(
         array(
@@ -267,7 +266,6 @@ function addpost_submit(Pieform $form, $values) {
 
 $smarty = smarty();
 $smarty->assign('breadcrumbs', $breadcrumbs);
-$smarty->assign('topicsubject', $topicsubject);
 $smarty->assign('heading', TITLE);
 $smarty->assign('topic', $topicsubject);
 $smarty->assign('editform', $editform);

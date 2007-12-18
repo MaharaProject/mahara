@@ -34,7 +34,6 @@ $userid = $USER->get('id');
 $topicid = param_integer('id', 0);
 if ($topicid == 0) { // new topic
     unset($topicid);
-    define('TITLE', get_string('addtopic','interaction.forum'));
     $forumid = param_integer('forum');
     $forum = get_record_sql(
         'SELECT f.group AS group, f.title, g.name AS groupname
@@ -49,7 +48,6 @@ if ($topicid == 0) { // new topic
         throw new NotFoundException(get_string('cantfindforum', 'interaction.forum', $forumid));
     }
 
-    $forumtitle = $forum->title;
     $membership = user_can_access_group((int)$forum->group);
 
     $admin = (bool)($membership & GROUP_MEMBERSHIP_OWNER);
@@ -59,6 +57,8 @@ if ($topicid == 0) { // new topic
     if (!$membership) {
         throw new AccessDeniedException(get_string('cantaddtopic', 'interaction.forum'));
     }
+
+    define('TITLE', $forum->title . ' - ' . get_string('addtopic','interaction.forum'));
 
     $breadcrumbs = array(
         array(
@@ -81,7 +81,6 @@ if ($topicid == 0) { // new topic
 }
 
 else { // edit topic
-    define('TITLE', get_string('edittopic','interaction.forum'));
     $topic = get_record_sql(
         'SELECT p.subject, p.id AS postid, p.body, p.topic AS id, t.sticky, t.closed, f.id AS forumid, f.group AS group, f.title, g.name AS groupname
         FROM {interaction_forum_post} p
@@ -98,7 +97,6 @@ else { // edit topic
     }
 
     $forumid = $topic->forumid;
-    $forumtitle = $topic->title;
 
     $membership = user_can_access_group((int)$topic->group);
 
@@ -109,6 +107,8 @@ else { // edit topic
     if (!$moderator) {
         throw new AccessDeniedException(get_string('cantedittopic', 'interaction.forum'));
     }
+
+    define('TITLE', $topic->title . ' - ' . get_string('edittopic','interaction.forum'));
 
     $breadcrumbs = array(
         array(
@@ -258,7 +258,6 @@ function edittopic_submit(Pieform $form, $values) {
 $smarty = smarty();
 $smarty->assign('breadcrumbs', $breadcrumbs);
 $smarty->assign('heading', TITLE);
-$smarty->assign('forum', $forumtitle);
 $smarty->assign('editform', $editform);
 $smarty->display('interaction:forum:edittopic.tpl');
 

@@ -3,7 +3,7 @@
 
 {include file="columnleftstart.tpl"}
 
-<h2>{$groupname|escape} - {str tag=nameplural section=interaction.forum}</h2>
+<h2>{$heading|escape}</h2>
 {include file="interaction:forum:breadcrumbs.tpl" breadcrumbs=$breadcrumbs}
 {if $admin}
 <div class="fr">

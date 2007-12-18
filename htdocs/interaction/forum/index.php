@@ -29,7 +29,6 @@ define('MENUITEM', 'groups');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('group.php');
 safe_require('interaction', 'forum');
-define('TITLE', get_string('nameplural', 'interaction.forum'));
 
 $groupid = param_integer('group');
 
@@ -51,6 +50,8 @@ if (!$membership) {
 }
 
 $admin = (bool)($membership & GROUP_MEMBERSHIP_OWNER);
+
+define('TITLE', $groupname . ' - ' . get_string('nameplural', 'interaction.forum'));
 
 $breadcrumbs = array(
     array(
@@ -110,7 +111,7 @@ if ($forums) {
 $smarty = smarty();
 $smarty->assign('breadcrumbs', $breadcrumbs);
 $smarty->assign('groupid', $groupid);
-$smarty->assign('groupname', $groupname);
+$smarty->assign('heading', TITLE);
 $smarty->assign('admin', $admin);
 $smarty->assign('forums', $forums);
 $smarty->display('interaction:forum:index.tpl');
