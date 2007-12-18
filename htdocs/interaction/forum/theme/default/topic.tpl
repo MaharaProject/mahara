@@ -12,6 +12,9 @@
 </div>
 {/if}
 {if !$topic->forumsubscribed}{$topic->subscribe}{/if}
+{if $topic->closed}
+{str tag=topicisclosed section=interaction.forum}
+{/if}
 <ul>
     <li>
         {$posts}
