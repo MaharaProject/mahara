@@ -111,8 +111,8 @@ $posts = get_records_sql_array(
     INNER JOIN {interaction_instance} f ON (t.forum = f.id AND f.deleted != 1 AND f.group = ?)
     LEFT JOIN {interaction_forum_edit} e ON e.post = p1.id
     WHERE p1.topic = ?
-    GROUP BY 1, 2, 3, 4, 5, p1.ctime, 7, 9, 10
-    ORDER BY p1.ctime, p1.id',
+    GROUP BY 1, 2, 3, 4, 5, p1.ctime, 7, 9, 10, e.ctime
+    ORDER BY p1.ctime, p1.id, e.ctime',
     array($topic->group, $topicid)
 );
 // $posts has an object for every edit to a post
@@ -133,10 +133,11 @@ for ($i = 0; $i < $count; $i++) {
     $posts[$temp]->edit = $postedits;
 }
 // works out if the logged in user can edit each post
+// users can edit own posts within 30 minutes of making them
 // and formats the post time
 foreach ($posts as $post) {
     if ($moderator ||
-        ($post->poster == $USER->get('id') && (time() - $post->ctime) < (30 * 60))) {
+        ($post->poster == $USER->get('id') && $post->ctime > (time() - 30 * 60))) {
         $post->canedit = true;
     }
     else {

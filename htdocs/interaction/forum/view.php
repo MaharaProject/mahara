@@ -184,7 +184,7 @@ $sql = 'SELECT t.id, p1.subject, p1.body, p1.poster, p1.deleted, COUNT(p2.*), t.
     AND t.sticky = ?
     AND t.deleted != 1
     GROUP BY 1, 2, 3, 4, 5, 7, 8, p4.ctime, p4.poster, p4.deleted, p4.id
-    ORDER BY p4.ctime DESC, t.id, p4.id DESC';
+    ORDER BY p4.ctime DESC, p4.id DESC';
 
 $stickytopics = get_records_sql_array($sql, array($userid, $forumid, 1));
 
@@ -237,7 +237,7 @@ function setup_topics(&$topics) {
             }
             if (!$topic->lastpostdeleted) {
                 $topic->lastposttime = strftime(get_string('strftimerecent'), $topic->lastposttime);
-	        }
+            }
         }
     }
 }

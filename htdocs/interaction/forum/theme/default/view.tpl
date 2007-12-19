@@ -37,7 +37,7 @@
     {/if}
     <table>
         <tr>
-        <th> &nbsp; </th>
+        <th></th>
         {if !$forum->subscribed || $moderator}<th></th>{/if}
         <th>{str tag="topic" section="interaction.forum"}</th>
         <th>{str tag="poster" section="interaction.forum"}</th>

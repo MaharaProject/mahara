@@ -64,8 +64,11 @@ if ($postid == 0) { // post reply
 
     $moderator = $admin || is_forum_moderator((int)$parent->forum);
 
-    if (!$membership || (!$moderator && $parent->topicclosed)) {
-        throw new AccessDeniedException(get_string('cantaddpost', 'interaction.forum'));
+    if (!$membership) {
+        throw new AccessDeniedException(get_string('cantaddposttoforum', 'interaction.forum'));
+    }
+    if (!$moderator && $parent->topicclosed) {
+        throw new AccessDeniedException(get_string('cantaddposttotopic', 'interaction.forum'));
     }
 
     define('TITLE', $parent->topicsubject . ' - ' . get_string('postreply','interaction.forum'));
@@ -120,7 +123,8 @@ else { // edit post
 
     $moderator = $admin || is_forum_moderator((int)$post->forum);
 
-    if ($post->poster == $userid && (time() - $post->ctime) < (30 * 60)) {
+    // no record for edits to own posts with 30 minutes
+    if ($post->poster == $userid && $post->ctime > (time() - 30 * 60)) {
         $post->editrecord = false;
     }
     else if ($moderator) {
@@ -147,7 +151,7 @@ else { // edit post
         ),
         array(
             get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $topicid,
-            $topicsubject
+            $post->topicsubject
         ),
         array(
             get_config('wwwroot') . 'interaction/forum/editpost.php?id=' . $postid,
@@ -267,7 +271,6 @@ function addpost_submit(Pieform $form, $values) {
 $smarty = smarty();
 $smarty->assign('breadcrumbs', $breadcrumbs);
 $smarty->assign('heading', TITLE);
-$smarty->assign('topic', $topicsubject);
 $smarty->assign('editform', $editform);
 if (isset($parent)) {
     $smarty->assign('parent', $parent);

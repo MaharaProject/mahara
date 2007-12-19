@@ -20,7 +20,7 @@
     </td>
     <td>
     <a href="{$WWWROOT}user/view.php?id={$topic->poster}">
-    <img src="{$WWWROOT}thumb.php?type=profileicon&amp;size=20x20&amp;id={$topic->poster}" alt="">
+    <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$topic->poster}" alt="">
     {$topic->poster|display_name|escape}
     </a>
     </td>
