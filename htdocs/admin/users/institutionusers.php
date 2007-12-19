@@ -72,7 +72,6 @@ if ($usertype == 'requesters') {
     // LHS shows users who have requested membership, RHS shows users to be added
     $userlistelement = array(
         'title' => get_string('addnewmembers', 'admin'),
-        'description' => get_string('addnewmembersdescription', 'admin'),
         'lefttitle' => get_string('usersrequested', 'admin'),
         'righttitle' => get_string('userstobeadded', 'admin'),
         'searchparams' => array('requested' => 1),
@@ -83,7 +82,6 @@ if ($usertype == 'requesters') {
     // LHS shows institution members, RHS shows users to be removed
     $userlistelement = array(
         'title' => get_string('removeusersfrominstitution', 'admin'),
-        'description' => get_string('removeusersdescription', 'admin'),
         'lefttitle' => get_string('currentmembers', 'admin'),
         'righttitle' => get_string('userstoberemoved', 'admin'),
         'searchparams' => array('member' => 1),
@@ -96,7 +94,6 @@ if ($usertype == 'requesters') {
     // RHS shows users to be invited
     $userlistelement = array(
         'title' => get_string('inviteuserstojoin', 'admin'),
-        'description' => get_string('inviteusersdescription', 'admin'),
         'lefttitle' => get_string('Non-members', 'admin'),
         'righttitle' => get_string('userstobeinvited', 'admin'),
         'searchparams' => array('member' => 0, 'invited' => 0, 'requested' => 0)
