@@ -165,18 +165,18 @@ $forum->subscribe = pieform(array(
 $sql = 'SELECT t.id, p1.subject, p1.body, p1.poster, p1.deleted, COUNT(p2.*), t.closed, s.topic AS subscribed, ' . db_format_tsfield('p4.ctime', 'lastposttime') . ', p4.poster AS lastposter, p4.deleted AS lastpostdeleted
     FROM interaction_forum_topic t
     INNER JOIN {interaction_forum_post} p1 ON (p1.topic = t.id AND p1.parent IS NULL)
-    LEFT JOIN {interaction_forum_post} p2 ON (p2.topic = t.id AND p2.deleted != 1)
+    INNER JOIN {interaction_forum_post} p2 ON (p2.topic = t.id AND p2.deleted != 1)
     LEFT JOIN {interaction_forum_subscription_topic} s ON (s.topic = t.id AND s."user" = ?)
-    LEFT JOIN (
+    INNER JOIN (
         SELECT MAX(p2.id) AS post, t.id AS topic
         FROM {interaction_forum_topic} t
         INNER JOIN (
             SELECT MAX(p.ctime) AS ctime, t.id AS topic
             FROM {interaction_forum_topic} t
-            INNER JOIN {interaction_forum_post} p ON (p.topic = t.id AND (p.deleted = 0 OR p.parent IS NULL))
+            INNER JOIN {interaction_forum_post} p ON (p.topic = t.id AND p.deleted = 0)
             GROUP BY 2
         ) p1 ON t.id = p1.topic
-        INNER JOIN {interaction_forum_post} p2 ON (p1.topic = p2.topic AND p1.ctime = p2.ctime AND (p2.deleted = 0 OR p2.parent IS NULL))
+        INNER JOIN {interaction_forum_post} p2 ON (p1.topic = p2.topic AND p1.ctime = p2.ctime AND p2.deleted = 0)
         GROUP BY 2
     ) p3 ON p3.topic = t.id
     LEFT JOIN {interaction_forum_post} p4 ON (p4.id = p3.post)

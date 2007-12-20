@@ -33,7 +33,7 @@ require_once('group.php');
 $topicid = param_integer('id');
 
 $topic = get_record_sql(
-    'SELECT p.subject, t.id, f.group, g.name AS groupname, f.id AS forumid, f.title AS forumtitle, t.closed, sf.forum AS forumsubscribed, st.topic AS topicsubscribed
+    'SELECT p.subject, p.poster, p.id AS firstpost, ' . db_format_tsfield('p.ctime', 'ctime') . ', t.id, f.group, g.name AS groupname, f.id AS forumid, f.title AS forumtitle, t.closed, sf.forum AS forumsubscribed, st.topic AS topicsubscribed
     FROM {interaction_forum_topic} t
     INNER JOIN {interaction_instance} f ON (t.forum = f.id AND f.deleted != 1)
     INNER JOIN {group} g ON g.id = f.group
@@ -58,6 +58,8 @@ if (!$membership) {
 $admin = (bool)($membership & GROUP_MEMBERSHIP_OWNER);
 
 $moderator = $admin || is_forum_moderator((int)$topic->forumid);
+
+$topic->canedit = $moderator || user_can_edit_post($topic->poster, $topic->ctime);
 
 define('TITLE', $topic->forumtitle . ' - ' . $topic->subject);
 
@@ -132,17 +134,8 @@ for ($i = 0; $i < $count; $i++) {
     }
     $posts[$temp]->edit = $postedits;
 }
-// works out if the logged in user can edit each post
-// users can edit own posts within 30 minutes of making them
-// and formats the post time
 foreach ($posts as $post) {
-    if ($moderator ||
-        ($post->poster == $USER->get('id') && $post->ctime > (time() - 30 * 60))) {
-        $post->canedit = true;
-    }
-    else {
-        $post->canedit = false;
-    }
+    $post->canedit = $moderator || user_can_edit_post($post->poster, $post->ctime);
     $post->ctime = strftime(get_string('strftimerecentfull'), $post->ctime);
 }
 // builds the first post (with index 0) which has as children all the posts in the topic

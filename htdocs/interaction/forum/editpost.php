@@ -107,7 +107,8 @@ else { // edit post
         INNER JOIN {interaction_instance} f ON (t.forum = f.id AND f.deleted != 1)
         INNER JOIN {group} g ON g.id = f.group
         WHERE p.id = ?
-        AND p.deleted != 1',
+        AND p.deleted != 1
+        AND p.parent IS NOT NULL',
         array($postid)
     );
 
@@ -124,7 +125,7 @@ else { // edit post
     $moderator = $admin || is_forum_moderator((int)$post->forum);
 
     // no record for edits to own posts with 30 minutes
-    if ($post->poster == $userid && $post->ctime > (time() - 30 * 60)) {
+    if (user_can_edit_post($post->poster, $post->ctime)) {
         $post->editrecord = false;
     }
     else if ($moderator) {

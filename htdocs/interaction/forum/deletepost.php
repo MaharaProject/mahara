@@ -62,6 +62,10 @@ if (!$moderator) {
     throw new AccessDeniedException(get_string('cantdeletepost', 'interaction.forum'));
 }
 
+if (!$post->parent) {
+    throw new AccessDeniedException(get_string('cantdeletethispost', 'interaction.forum'));
+}
+
 define('TITLE', get_string('deletepost', 'interaction.forum') . ' - ' . $post->topicsubject);
 $post->ctime = strftime(get_string('strftimerecentfull'), $post->ctime);
 
