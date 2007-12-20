@@ -1,42 +1,40 @@
-<table>
-    <tr>
-        <th></th>
-        {if !$forum->subscribed || $moderator}<th></th>{/if}
-        <th>{str tag="topic" section="interaction.forum"}</th>
-        <th>{str tag="poster" section="interaction.forum"}</th>
-        <th>{str tag="posts" section="interaction.forum"}</th>
-        {if $moderator}
-        <th></th>
-        <th></th>
-        {/if}
-        <th></th>
-    </tr>
-    {foreach from=$topics item=topic}
-    <tr>
-        <td>
-        {if $topic->closed}C{else}O{/if}
-        {if $topic->subscribed}S{else}U{/if}
-        </td>
-        {if !$forum->subscribed || $moderator}
-        <td>
-        <input type="checkbox" name="checkbox[{$topic->id|escape}]">
-        <input type="hidden" name="topics[{$topic->id|escape}]">
-        </td>
-        {/if}
-        <td>
-        <a href="{$WWWROOT}interaction/forum/topic.php?id={$topic->id|escape}">{$topic->subject|escape}</a>
-        <div>{$topic->body|escape}</div>
-        </td>
-        <td>
-        <img src="{$WWWROOT}thumb.php?type=profileicon&amp;size=20x20&amp;id={$topic->poster}" alt="">
-        {$topic->poster|display_name|escape}
-        </td>
-        <td>{$topic->count|escape}</td>
-        {if $moderator}
-        </td>
-        <td><a href="{$WWWROOT}interaction/forum/edittopic.php?id={$topic->id|escape}">{str tag="edit"}</a></td>
-        <td><a href="{$WWWROOT}interaction/forum/deletetopic.php?id={$topic->id|escape}">{str tag="delete"}</a></td>
-        {/if}
-    </tr>
-    {/foreach}
-</table>
+{foreach from=$topics item=topic}
+{if $sticky}
+<tr class="r1">
+{else}
+<tr class="r0">
+{/if}
+    <td>
+    {if $topic->closed}C{else}O{/if}
+    {if $topic->subscribed}S{else}U{/if}
+    </td>
+    {if !$forum->subscribed || $moderator}
+    <td>
+    <input type="checkbox" name="checkbox[{$topic->id|escape}]">
+    <input type="hidden" name="topics[{$topic->id|escape}]">
+    </td>
+    {/if}
+    <td>
+    <a href="{$WWWROOT}interaction/forum/topic.php?id={$topic->id|escape}">{$topic->subject|escape}</a>
+    <div>{$topic->body}</div>
+    </td>
+    <td>
+    <a href="{$WWWROOT}user/view.php?id={$topic->poster}">
+    <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$topic->poster}" alt="">
+    {$topic->poster|display_name|escape}
+    </a>
+    </td>
+    <td>{$topic->count|escape}</td>
+    <td>
+    {if !$topic->lastpostdeleted}
+    <a href="{$WWWROOT}user/view.php?id={$topic->lastposter}">{$topic->lastposter|display_name|escape}</a>
+    <br>{$topic->lastposttime}
+    {/if}
+    </td>
+    {if $moderator}
+    <td>
+    <a href="{$WWWROOT}interaction/forum/edittopic.php?id={$topic->id|escape}">{str tag="edit"}</a>
+    <br><a href="{$WWWROOT}interaction/forum/deletetopic.php?id={$topic->id|escape}">{str tag="delete"}</a></td>
+    {/if}
+</tr>
+{/foreach}

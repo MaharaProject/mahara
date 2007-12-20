@@ -5,7 +5,7 @@ class PluginInteractionForum extends PluginInteraction {
     public static function instance_config_form($group, $instance=null) {
         if (isset($instance)) {
             $weight = get_field_sql(
-                'SELECT c.value as weight
+                'SELECT c.value AS weight
                 FROM {interaction_forum_instance_config} c
                 WHERE c.field=\'weight\'
                 AND forum = ?',
@@ -72,6 +72,7 @@ class PluginInteractionForum extends PluginInteraction {
     }
 
     public static function instance_config_save($instance, $values){
+        db_begin();
         delete_records(
             'interaction_forum_moderator',
             'forum', $instance->get('id')
@@ -234,7 +235,7 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
         $this->users = get_records_sql_array(
             'SELECT id, username, preferredname, firstname, lastname, admin, staff
             FROM {usr} u
-            WHERE id in (' . implode(',', $this->users) . ')',
+            WHERE id IN (' . implode(',', $this->users) . ')',
             array()
         );
         $post = get_record_sql(
@@ -306,16 +307,15 @@ function is_forum_moderator($forumid, $userid=null) {
 }
 
 /**
- * For a pieform with forum, redirect and subscribe elements.
+ * For a pieform with forum, redirect and type elements.
  * forum is the forum id
  * redirect is where to redirect to
- * subscribe has value get_string('subscribe', 'interaction.forum') if the user should be subscribed
- * get_string('unsubscribe', 'interaction.forum') if the user should be unsubscribed
+ * type is unsubscribe or subscribe depending on the intended action
  */
 function subscribe_forum_submit(Pieform $form, $values) {
     global $USER, $SESSION;
-    db_begin();
-    if ($values['submit'] == get_string('subscribe', 'interaction.forum')) {
+    if ($values['type'] == 'subscribe') {
+        db_begin();
         insert_record(
             'interaction_forum_subscription_forum',
             (object)array(
@@ -333,6 +333,7 @@ function subscribe_forum_submit(Pieform $form, $values) {
             )',
             array($values['forum'], $USER->get('id'))
         );
+        db_commit();
         $SESSION->add_ok_msg(get_string('forumsuccessfulsubscribe', 'interaction.forum'));
     }
     else {
@@ -343,7 +344,6 @@ function subscribe_forum_submit(Pieform $form, $values) {
         );
         $SESSION->add_ok_msg(get_string('forumsuccessfulunsubscribe', 'interaction.forum'));
     }
-    db_commit();
     redirect($values['redirect']);
 }
 

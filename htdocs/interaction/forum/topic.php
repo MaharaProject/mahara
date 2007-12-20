@@ -29,12 +29,11 @@ define('MENUITEM', 'groups');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('interaction', 'forum');
 require_once('group.php');
-define('TITLE', get_string('topic','interaction.forum'));
 
 $topicid = param_integer('id');
 
 $topic = get_record_sql(
-    'SELECT p.subject, f.group, g.name AS groupname, f.id AS forumid, f.title as forumtitle, t.closed, t.id, sf.forum AS forumsubscribed, st.topic AS topicsubscribed
+    'SELECT p.subject, t.id, f.group, g.name AS groupname, f.id AS forumid, f.title AS forumtitle, t.closed, sf.forum AS forumsubscribed, st.topic AS topicsubscribed
     FROM {interaction_forum_topic} t
     INNER JOIN {interaction_instance} f ON (t.forum = f.id AND f.deleted != 1)
     INNER JOIN {group} g ON g.id = f.group
@@ -60,6 +59,8 @@ $admin = (bool)($membership & GROUP_MEMBERSHIP_OWNER);
 
 $moderator = $admin || is_forum_moderator((int)$topic->forumid);
 
+define('TITLE', $topic->forumtitle . ' - ' . $topic->subject);
+
 $breadcrumbs = array(
     array(
         get_config('wwwroot') . 'group/view.php?id=' . $topic->group,
@@ -74,7 +75,7 @@ $breadcrumbs = array(
         $topic->forumtitle
     ),
     array(
-        get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $topic->id,
+        get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $topicid,
         $topic->subject
     )
 );
@@ -88,84 +89,101 @@ if (!$topic->forumsubscribed) {
         'elements' => array(
             'submit' => array(
                'type'  => 'submit',
-               'value' => $topic->topicsubscribed ? get_string('unsubscribe', 'interaction.forum') : get_string('subscribe', 'interaction.forum')
+               'value' => $topic->topicsubscribed ? get_string('unsubscribefromtopic', 'interaction.forum') : get_string('subscribetotopic', 'interaction.forum')
+            ),
+            'topic' => array(
+                'type' => 'hidden',
+                'value' => $topicid
+            ),
+            'type' => array(
+                'type' => 'hidden',
+                'value' => $topic->topicsubscribed ? 'unsubscribe' : 'subscribe'
             )
         )
    ));
 }
 
 $posts = get_records_sql_array(
-    'SELECT p1.id, p1.parent, p1.poster, p1.subject, p1.body, p1.ctime AS posttime, p1.deleted, COUNT(p2.*), e.ctime AS edit, e.user AS editor
+    'SELECT p1.id, p1.parent, p1.poster, p1.subject, p1.body, ' . db_format_tsfield('p1.ctime', 'ctime') . ', p1.deleted, COUNT(p2.*), ' . db_format_tsfield('e.ctime', 'edittime') . ', e.user AS editor
     FROM {interaction_forum_post} p1
-    INNER JOIN {interaction_forum_post} p2
-    ON p1.poster = p2.poster
-    AND p2.deleted != 1
-    INNER JOIN {interaction_forum_topic} t
-    ON t.deleted != 1
-    AND p2.topic = t.id
-    INNER JOIN {interaction_instance} f
-    ON t.forum = f.id
-    AND f.deleted != 1
-    AND f.group = ?
-    LEFT JOIN {interaction_forum_edit} e
-    ON (e.post = p1.id)
+    INNER JOIN {interaction_forum_post} p2 ON (p1.poster = p2.poster AND p2.deleted != 1)
+    INNER JOIN {interaction_forum_topic} t ON (t.deleted != 1 AND p2.topic = t.id)
+    INNER JOIN {interaction_instance} f ON (t.forum = f.id AND f.deleted != 1 AND f.group = ?)
+    LEFT JOIN {interaction_forum_edit} e ON e.post = p1.id
     WHERE p1.topic = ?
-    GROUP BY 1, 2, 3, 4, 5, 6, 7, 9, 10
-    ORDER BY p1.ctime',
+    GROUP BY 1, 2, 3, 4, 5, p1.ctime, 7, 9, 10, e.ctime
+    ORDER BY p1.ctime, p1.id, e.ctime',
     array($topic->group, $topicid)
 );
-
+// $posts has an object for every edit to a post
+// this combines all the edits into a single object for each post
+// also formats the edits a bit
 $count = count($posts);
 for ($i = 0; $i < $count; $i++) {
     $postedits = array();
-    if (!empty($posts[$i]->edit)) {
-        $postedits[] = get_string('editedon', 'interaction.forum', display_name($posts[$i]->editor), $posts[$i]->edit);
+    if (!empty($posts[$i]->edittime)) {
+        $postedits[] = get_string('editedon', 'interaction.forum', display_name($posts[$i]->editor), strftime(get_string('strftimerecentfull'), $posts[$i]->edittime));
     }
     $temp = $i;
-    while (isset($posts[$i+1]) && $posts[$i+1]->id == $posts[$temp]->id) {
+    while (isset($posts[$i+1]) && $posts[$i+1]->id == $posts[$temp]->id) { // while the next object is the same post
         $i++;
-        $postedits[] = get_string('editedon', 'interaction.forum', display_name($posts[$i]->editor), $posts[$i]->edit);
+        $postedits[] = get_string('editedon', 'interaction.forum', display_name($posts[$i]->editor), strftime(get_string('strftimerecentfull'), $posts[$i]->edittime));
         unset($posts[$i]);
     }
     $posts[$temp]->edit = $postedits;
 }
-
+// works out if the logged in user can edit each post
+// users can edit own posts within 30 minutes of making them
+// and formats the post time
 foreach ($posts as $post) {
-    if ($post->poster == $USER->get('id') && (time() - strtotime($post->posttime)) < (30 * 60)) {
-        $post->editor = true;
+    if ($moderator ||
+        ($post->poster == $USER->get('id') && $post->ctime > (time() - 30 * 60))) {
+        $post->canedit = true;
     }
     else {
-        $post->editor = false;
+        $post->canedit = false;
     }
+    $post->ctime = strftime(get_string('strftimerecentfull'), $post->ctime);
 }
-
-$threadedposts = buildthread(0, '', $posts);
+// builds the first post (with index 0) which has as children all the posts in the topic
+$posts = buildpost(0, '', $posts);
 
 $smarty = smarty();
 $smarty->assign('breadcrumbs', $breadcrumbs);
+$smarty->assign('heading', TITLE);
 $smarty->assign('topic', $topic);
 $smarty->assign('moderator', $moderator);
-$smarty->assign('posts', $threadedposts);
+$smarty->assign('posts', $posts);
 $smarty->display('interaction:forum:topic.tpl');
 
-function buildthread($parent, $parentsubject, &$posts){
+/**
+ * builds a post (including its children)
+ *
+ * @param int $postindex the index of the post
+ * @param string $parentsubject the subject of the parent
+ * @param array $posts the posts in the topic
+ *
+ * @returns string the html for the post
+ */
+
+function buildpost($postindex, $parentsubject, &$posts){
     global $moderator;
     global $topic;
     $localposts = $posts;
-    if ($posts[$parent]->subject) {
-        $parentsubject = $posts[$parent]->subject;
+    if ($posts[$postindex]->subject) {
+        $parentsubject = $posts[$postindex]->subject;
     }
     else {
-        $posts[$parent]->subject = get_string('re', 'interaction.forum', $parentsubject);
+        $posts[$postindex]->subject = get_string('re', 'interaction.forum', $parentsubject);
     }
     $children = array();
     foreach ($localposts as $index => $post) {
-        if ($posts[$index]->parent == $posts[$parent]->id) {
-            $children[] = buildthread($index, $parentsubject, $posts);
+        if ($posts[$index]->parent == $posts[$postindex]->id) {
+            $children[] = buildpost($index, $parentsubject, $posts);
         }
     }
     $smarty = smarty_core();
-    $smarty->assign('post', $posts[$parent]);
+    $smarty->assign('post', $posts[$postindex]);
     $smarty->assign('children', $children);
     $smarty->assign('moderator', $moderator);
     $smarty->assign('closed', $topic->closed);
@@ -174,12 +192,11 @@ function buildthread($parent, $parentsubject, &$posts){
 
 function subscribe_submit(Pieform $form, $values) {
     global $USER;
-    global $topicid;
-    if ($values['submit'] == get_string('subscribe', 'interaction.forum')) {
+    if ($values['type'] == 'subscribe') {
         insert_record(
             'interaction_forum_subscription_topic',
             (object)array(
-                'topic' => $topicid,
+                'topic' => $values['topic'],
                 'user' => $USER->get('id')
             )
         );
@@ -187,11 +204,11 @@ function subscribe_submit(Pieform $form, $values) {
     else {
         delete_records(
             'interaction_forum_subscription_topic',
-            'topic', $topicid,
+            'topic', $values['topic'],
             'user', $USER->get('id')
         );
     }
-    redirect('/interaction/forum/topic.php?id=' . $topicid);
+    redirect('/interaction/forum/topic.php?id=' . $values['topic']);
 }
 
 ?>

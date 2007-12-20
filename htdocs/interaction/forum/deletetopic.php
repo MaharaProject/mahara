@@ -32,7 +32,7 @@ require('group.php');
 $topicid = param_integer('id');
 
 $topic = get_record_sql(
-    'SELECT f."group", f.id as forumid, f.title, g.name as groupname, p.poster, p.subject, p.body, COUNT(p2.*), t.closed
+    'SELECT f."group", f.id AS forumid, f.title, g.name AS groupname, p.poster, p.subject, p.body, COUNT(p2.*), ' . db_format_tsfield('p.ctime', 'ctime') . ', t.closed
     FROM {interaction_forum_topic} t
     INNER JOIN {interaction_instance} f ON (f.id = t.forum AND f.deleted != 1)
     INNER JOIN {group} g ON g.id = f.group
@@ -42,7 +42,7 @@ $topic = get_record_sql(
     INNER JOIN {interaction_instance} f2 ON (t2.forum = f2.id AND f2.deleted != 1 AND f2.group = f.group)
     WHERE t.id = ?
     AND t.deleted != 1
-    GROUP BY 1, 2, 3, 4, 5, 6, 7, 9',
+    GROUP BY 1, 2, 3, 4, 5, 6, 7, 9, 10',
     array($topicid)
 );
 
@@ -56,11 +56,13 @@ $admin = (bool)($membership & GROUP_MEMBERSHIP_OWNER);
 
 $moderator = $admin || is_forum_moderator((int)$topic->forumid);
 
+$topic->ctime = strftime(get_string('strftimerecentfull'), $topic->ctime);
+
 if (!$moderator) {
     throw new AccessDeniedException(get_string('cantdeletetopic', 'interaction.forum'));
 }
 
-define('TITLE', get_string('deletetopicvariable', 'interaction.forum', $topic->subject));
+define('TITLE', $topic->title . ' - ' . get_string('deletetopicvariable', 'interaction.forum', $topic->subject));
 
 $breadcrumbs = array(
     array(
@@ -88,7 +90,7 @@ $breadcrumbs = array(
 require_once('pieforms/pieform.php');
 
 $form = pieform(array(
-    'name'     => 'deletepost',
+    'name'     => 'deletetopic',
     'autofocus' => false,
     'elements' => array(
         'title' => array(
@@ -98,28 +100,24 @@ $form = pieform(array(
             'type'  => 'submitcancel',
             'value' => array(get_string('yes'), get_string('no')),
             'goto'  => get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $topicid,
+        ),
+        'forum' => array(
+            'type' => 'hidden',
+            'value' => $topic->forumid
         )
     )
 ));
 
-function deletepost_submit(Pieform $form, $values) {
+function deletetopic_submit(Pieform $form, $values) {
     global $SESSION;
     $topicid = param_integer('id');
-    db_begin();
     update_record(
         'interaction_forum_topic',
         array('deleted' => 1),
         array('id' => $topicid)
     );
-    $forumid = get_field_sql(
-        'SELECT forum
-        FROM interaction_forum_topic
-        WHERE id = ?',
-        array($topicid)
-    );
-    db_commit();
     $SESSION->add_ok_msg(get_string('deletetopicsuccess', 'interaction.forum'));
-    redirect('/interaction/forum/view.php?id=' . $forumid);
+    redirect('/interaction/forum/view.php?id=' . $values['forum']);
 }
 
 $smarty = smarty();

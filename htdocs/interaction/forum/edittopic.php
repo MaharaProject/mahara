@@ -31,14 +31,12 @@ safe_require('interaction', 'forum');
 require_once('group.php');
 
 $userid = $USER->get('id');
-$moderator = false;
-$topicid = param_integer('id',0);
-if ($topicid==0) {
+$topicid = param_integer('id', 0);
+if ($topicid == 0) { // new topic
     unset($topicid);
-    define('TITLE', get_string('addtopic','interaction.forum'));
     $forumid = param_integer('forum');
     $forum = get_record_sql(
-        'SELECT f.group AS group, f.title, g.name as groupname
+        'SELECT f.group AS group, f.title, g.name AS groupname
         FROM {interaction_instance} f
         INNER JOIN {group} g ON g.id = f.group
         WHERE f.id = ?
@@ -50,7 +48,6 @@ if ($topicid==0) {
         throw new NotFoundException(get_string('cantfindforum', 'interaction.forum', $forumid));
     }
 
-    $forumtitle = $forum->title;
     $membership = user_can_access_group((int)$forum->group);
 
     $admin = (bool)($membership & GROUP_MEMBERSHIP_OWNER);
@@ -60,6 +57,8 @@ if ($topicid==0) {
     if (!$membership) {
         throw new AccessDeniedException(get_string('cantaddtopic', 'interaction.forum'));
     }
+
+    define('TITLE', $forum->title . ' - ' . get_string('addtopic','interaction.forum'));
 
     $breadcrumbs = array(
         array(
@@ -81,10 +80,9 @@ if ($topicid==0) {
     );
 }
 
-if (isset($topicid)) {
-	define('TITLE', get_string('edittopic','interaction.forum'));
+else { // edit topic
     $topic = get_record_sql(
-        'SELECT p.subject, p.body, p.topic AS id, t.sticky, t.closed, f.id as forumid, f.group AS group, f.title, g.name AS groupname
+        'SELECT p.subject, p.id AS postid, p.body, p.topic AS id, t.sticky, t.closed, f.id AS forumid, f.group AS group, f.title, g.name AS groupname
         FROM {interaction_forum_post} p
         INNER JOIN {interaction_forum_topic} t ON (p.topic = t.id AND t.deleted != 1)
         INNER JOIN {interaction_instance} f ON (f.id = t.forum AND f.deleted != 1)
@@ -99,7 +97,6 @@ if (isset($topicid)) {
     }
 
     $forumid = $topic->forumid;
-    $forumtitle = $topic->title;
 
     $membership = user_can_access_group((int)$topic->group);
 
@@ -110,6 +107,8 @@ if (isset($topicid)) {
     if (!$moderator) {
         throw new AccessDeniedException(get_string('cantedittopic', 'interaction.forum'));
     }
+
+    define('TITLE', $topic->title . ' - ' . get_string('edittopic','interaction.forum'));
 
     $breadcrumbs = array(
         array(
@@ -180,6 +179,10 @@ $editform = array(
             ),
             'goto'      => get_config('wwwroot') . 'interaction/forum/' . (isset($topic) ? 'topic.php?id='.$topicid : 'view.php?id='.$forumid)
         ),
+        'post' => array(
+            'type' => 'hidden',
+            'value' => isset($topic) ? $topic->postid : false
+        )
     ),
 );
 
@@ -200,9 +203,7 @@ function addtopic_submit(Pieform $form, $values) {
             'forum' => $forumid,
             'sticky' => isset($values['sticky']) && $values['sticky'] ? 1 : 0,
             'closed' => isset($values['closed']) && $values['closed'] ? 1 : 0
-        ),
-        'id',
-        true
+        ), 'id', true
     );
     insert_record(
         'interaction_forum_post',
@@ -212,8 +213,7 @@ function addtopic_submit(Pieform $form, $values) {
             'subject' => $values['subject'],
             'body' => $values['body'],
             'ctime' =>  db_format_timestamp(time())
-        ),
-        'id'
+        )
     );
     db_commit();
     $SESSION->add_ok_msg(get_string('addtopicsuccess', 'interaction.forum'));
@@ -223,13 +223,6 @@ function addtopic_submit(Pieform $form, $values) {
 function edittopic_submit(Pieform $form, $values) {
     global $SESSION, $USER;
     $topicid = param_integer('id');
-    $post = get_record_sql(
-        'SELECT id
-        FROM {interaction_forum_post}
-        WHERE parent IS NULL
-        AND topic = ?',
-        array($topicid)
-    );
     db_begin();
     update_record(
         'interaction_forum_post',
@@ -237,13 +230,13 @@ function edittopic_submit(Pieform $form, $values) {
             'subject' => $values['subject'],
             'body' => $values['body']
         ),
-        array('id' => $post->id)
+        array('id' => $values['post'])
     );
     insert_record(
         'interaction_forum_edit',
         (object)array(
             'user' => $USER->get('id'),
-            'post' => $post->id,
+            'post' => $values['post'],
             'ctime' => db_format_timestamp(time())
         )
     );
@@ -265,7 +258,6 @@ function edittopic_submit(Pieform $form, $values) {
 $smarty = smarty();
 $smarty->assign('breadcrumbs', $breadcrumbs);
 $smarty->assign('heading', TITLE);
-$smarty->assign('forum', $forumtitle);
 $smarty->assign('editform', $editform);
 $smarty->display('interaction:forum:edittopic.tpl');
 

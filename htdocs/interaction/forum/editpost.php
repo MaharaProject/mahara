@@ -33,57 +33,64 @@ require('group.php');
 
 $userid = $USER->get('id');
 
-$postid = param_integer('id',0);
-$topicid = 0;
-if ($postid==0) {
+$postid = param_integer('id', 0);
+if ($postid == 0) { // post reply
     unset($postid);
-    define('TITLE', get_string('postreply','interaction.forum'));
     $parentid = param_integer('parent');
-    $topic = get_record_sql(
-        'SELECT p.topic AS id, p2.subject, t.closed, f.id AS forum, f.title AS forumtitle, f.group, g.name AS groupname
+
+    $parent = get_record_sql(
+        'SELECT p.subject, p.body, p.topic, p.parent, p.poster, ' . db_format_tsfield('p.ctime', 'ctime') . ', t.id AS topicid, t.forum, t.closed AS topicclosed, p2.subject AS topicsubject, f.group, f.title AS forumtitle, g.name AS groupname, COUNT(p3.*)
         FROM {interaction_forum_post} p
         INNER JOIN {interaction_forum_topic} t ON (p.topic = t.id AND t.deleted != 1)
         INNER JOIN {interaction_forum_post} p2 ON (p2.topic = t.id AND p2.parent IS NULL)
         INNER JOIN {interaction_instance} f ON (t.forum = f.id AND f.deleted != 1)
         INNER JOIN {group} g ON g.id = f.group
+        INNER JOIN {interaction_forum_post} p3 ON (p.poster = p3.poster AND p3.deleted != 1)
+        INNER JOIN {interaction_forum_topic} t2 ON (t2.deleted != 1 AND p3.topic = t2.id)
+        INNER JOIN {interaction_instance} f2 ON (t2.forum = f2.id AND f2.deleted != 1 AND f2.group = f.group)
         WHERE p.id = ?
-        AND p.deleted != 1',
+        AND p.deleted != 1
+        GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13',
         array($parentid)
     );
 
-    if (!$topic) {
+    if (!$parent) {
         throw new NotFoundException(get_string('cantfindpost', 'interaction.forum', $parentid));
     }
 
-    $membership = user_can_access_group((int)$topic->group);
+    $membership = user_can_access_group((int)$parent->group);
 
     $admin = (bool)($membership & GROUP_MEMBERSHIP_OWNER);
 
-    $moderator = $admin || is_forum_moderator((int)$topic->forum);
+    $moderator = $admin || is_forum_moderator((int)$parent->forum);
 
-    if (!$membership || (!$moderator && $topic->closed)) {
-        throw new AccessDeniedException(get_string('cantaddpost', 'interaction.forum'));
+    if (!$membership) {
+        throw new AccessDeniedException(get_string('cantaddposttoforum', 'interaction.forum'));
+    }
+    if (!$moderator && $parent->topicclosed) {
+        throw new AccessDeniedException(get_string('cantaddposttotopic', 'interaction.forum'));
     }
 
-    $topicid = $topic->id;
-    $topicsubject = $topic->subject;
+    define('TITLE', $parent->topicsubject . ' - ' . get_string('postreply','interaction.forum'));
+    $topicid = $parent->topicid;
+    $parent->ctime = strftime(get_string('strftimerecentfull'), $parent->ctime);
 
     $breadcrumbs = array(
         array(
-            get_config('wwwroot') . 'group/view.php?id=' . $topic->group,
-            $topic->groupname
+            get_config('wwwroot') . 'group/view.php?id=' . $parent->group,
+            $parent->groupname
         ),
         array(
-            get_config('wwwroot') . 'interaction/forum/index.php?group=' . $topic->group,
+            get_config('wwwroot') . 'interaction/forum/index.php?group=' . $parent->group,
             get_string('nameplural', 'interaction.forum')
         ),
         array(
-            get_config('wwwroot') . 'interaction/forum/view.php?id=' . $topic->forum,
-            $topic->forumtitle
+            get_config('wwwroot') . 'interaction/forum/view.php?id=' . $parent->forum,
+            $parent->forumtitle
         ),
         array(
             get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $topicid,
-            $topic->subject
+            $parent->topicsubject
         ),
         array(
             get_config('wwwroot') . 'interaction/forum/editpost.php?parent=' . $parentid,
@@ -91,11 +98,9 @@ if ($postid==0) {
         )
     );
 }
-
-if (isset($postid)) {
-    define('TITLE', get_string('editpost','interaction.forum'));
+else { // edit post
     $post = get_record_sql(
-        'SELECT p.subject, p.body, p.parent, p.topic, p.poster, p.ctime, t.forum, p2.subject AS topicsubject, f.title AS forumtitle, f.group, g.name AS groupname
+        'SELECT p.subject, p.body, p.parent, p.topic, p.poster, ' . db_format_tsfield('p.ctime', 'ctime') . ', t.forum, p2.subject AS topicsubject, f.title AS forumtitle, f.group, g.name AS groupname
         FROM {interaction_forum_post} p
         INNER JOIN {interaction_forum_topic} t ON (p.topic = t.id AND t.deleted != 1)
         INNER JOIN {interaction_forum_post} p2 ON (p2.topic = t.id AND p2.parent IS NULL)
@@ -111,7 +116,6 @@ if (isset($postid)) {
     }
 
     $topicid = $post->topic;
-    $topicsubject = $post->topicsubject;
 
     $membership = user_can_access_group((int)$post->group);
 
@@ -119,11 +123,18 @@ if (isset($postid)) {
 
     $moderator = $admin || is_forum_moderator((int)$post->forum);
 
-    if (!$moderator &&
-        ($post->poster != $userid
-        || (time() - strtotime($post->ctime)) > (30 * 60))) {
+    // no record for edits to own posts with 30 minutes
+    if ($post->poster == $userid && $post->ctime > (time() - 30 * 60)) {
+        $post->editrecord = false;
+    }
+    else if ($moderator) {
+        $post->editrecord = true;
+    }
+    else {
         throw new AccessDeniedException(get_string('canteditpost', 'interaction.forum'));
     }
+
+    define('TITLE', $post->topicsubject . ' - ' . get_string('editpost','interaction.forum'));
 
     $breadcrumbs = array(
         array(
@@ -140,7 +151,7 @@ if (isset($postid)) {
         ),
         array(
             get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $topicid,
-            $topicsubject
+            $post->topicsubject
         ),
         array(
             get_config('wwwroot') . 'interaction/forum/editpost.php?id=' . $postid,
@@ -174,7 +185,7 @@ require_once('pieforms/pieform.php');
 
 $editform = pieform(array(
     'name'     => 'editpost',
-    'method'   => 'post',
+    'successcallback' => isset($post) ? 'editpost_submit' : 'addpost_submit',
     'elements' => array(
         'subject' => array(
             'type'         => 'text',
@@ -199,71 +210,71 @@ $editform = pieform(array(
                 isset($post) ? get_string('edit') : get_string('post','interaction.forum'),
                 get_string('cancel')
             ),
-        'goto'      => get_config('wwwroot') . 'interaction/forum/topic.php?id='.$topicid
+            'goto'      => get_config('wwwroot') . 'interaction/forum/topic.php?id='.$topicid
         ),
+        'topic' => array(
+            'type' => 'hidden',
+            'value' => $topicid
+        ),
+        'editrecord' => array(
+            'type' => 'hidden',
+            'value' => isset($post) ? $post->editrecord : false
+        )
     ),
 ));
 
 function editpost_submit(Pieform $form, $values) {
-    global $USER;
-    $postid = param_integer('id',0);
-    if ($postid==0) {
-        $parentid = param_integer('parent');
-        $topic = get_record_sql(
-            'SELECT topic AS id
-            FROM {interaction_forum_post}
-            WHERE id = ?',
-            array($parentid)
-        );
+    global $USER, $SESSION;
+    $postid = param_integer('id');
+    db_begin();
+    update_record(
+        'interaction_forum_post',
+        array(
+            'subject' => $values['subject'],
+            'body' => $values['body']
+        ),
+        array('id' => $postid)
+    );
+    if ($values['editrecord']) {
         insert_record(
-            'interaction_forum_post',
+            'interaction_forum_edit',
             (object)array(
-                'topic' => $topic->id,
-                'poster' => $USER->get('id'),
-                'parent' => $parentid,
-                'subject' => $values['subject'],
-                'body' => $values['body'],
-                'ctime' =>  db_format_timestamp(time())
-            ),
-            'id'
+                'user' => $USER->get('id'),
+                'post' => $postid,
+                'ctime' => db_format_timestamp(time())
+            )
         );
     }
-    else {
-        $topic = get_record_sql(
-            'SELECT topic AS id, poster, ctime AS posttime
-            FROM {interaction_forum_post}
-            WHERE id = ?',
-            array($postid)
-        );
-        update_record(
-            'interaction_forum_post',
-            array(
-                'subject' => $values['subject'],
-                'body' => $values['body']
-            ),
-            array('id' => $postid)
-        );
-        if ($topic->poster != $USER->get('id') ||
-           (time() - strtotime($topic->posttime)) > (30 * 60)) {
-            insert_record(
-                'interaction_forum_edit',
-                (object)array(
-                    'user' => $USER->get('id'),
-                    'post' => $postid,
-                    'ctime' => db_format_timestamp(time())
-                )
-            );
-        }
-    }
-    redirect('/interaction/forum/topic.php?id='.$topic->id);
+    db_commit();
+    $SESSION->add_ok_msg(get_string('editpostsuccess', 'interaction.forum'));
+    redirect('/interaction/forum/topic.php?id=' . $values['topic']);
+}
+
+function addpost_submit(Pieform $form, $values) {
+    global $USER, $SESSION;
+    $parentid = param_integer('parent');
+    insert_record(
+        'interaction_forum_post',
+        (object)array(
+            'topic' => $values['topic'],
+            'poster' => $USER->get('id'),
+            'parent' => $parentid,
+            'subject' => $values['subject'],
+            'body' => $values['body'],
+            'ctime' =>  db_format_timestamp(time())
+        )
+    );
+    $SESSION->add_ok_msg(get_string('addpostsuccess', 'interaction.forum'));
+    redirect('/interaction/forum/topic.php?id=' . $values['topic']);
 }
 
 $smarty = smarty();
 $smarty->assign('breadcrumbs', $breadcrumbs);
-$smarty->assign('topicsubject', $topicsubject);
 $smarty->assign('heading', TITLE);
-$smarty->assign('topic', $topicsubject);
 $smarty->assign('editform', $editform);
+if (isset($parent)) {
+    $smarty->assign('parent', $parent);
+}
 if (isset($inlinejs)) {
     $smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 }

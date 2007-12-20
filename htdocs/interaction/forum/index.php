@@ -29,12 +29,11 @@ define('MENUITEM', 'groups');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('group.php');
 safe_require('interaction', 'forum');
-define('TITLE', get_string('nameplural', 'interaction.forum'));
 
 $groupid = param_integer('group');
 
 if (!record_exists('group', 'id', $groupid)) {
-	throw new GroupNotFoundException(get_string('groupnotfound', 'group', $groupid));
+    throw new GroupNotFoundException(get_string('groupnotfound', 'group', $groupid));
 }
 
 $groupname = get_field_sql(
@@ -51,6 +50,8 @@ if (!$membership) {
 }
 
 $admin = (bool)($membership & GROUP_MEMBERSHIP_OWNER);
+
+define('TITLE', $groupname . ' - ' . get_string('nameplural', 'interaction.forum'));
 
 $breadcrumbs = array(
     array(
@@ -97,6 +98,10 @@ if ($forums) {
                 'redirect' => array(
                     'type' => 'hidden',
                     'value' => '/interaction/forum/index.php?group=' . $groupid
+                ),
+                'type' => array(
+                    'type' => 'hidden',
+                    'value' => $forum->subscribed ? 'unsubscribe' : 'subscribe'
                 )
             )
         ));
@@ -106,7 +111,7 @@ if ($forums) {
 $smarty = smarty();
 $smarty->assign('breadcrumbs', $breadcrumbs);
 $smarty->assign('groupid', $groupid);
-$smarty->assign('groupname', $groupname);
+$smarty->assign('heading', TITLE);
 $smarty->assign('admin', $admin);
 $smarty->assign('forums', $forums);
 $smarty->display('interaction:forum:index.tpl');
