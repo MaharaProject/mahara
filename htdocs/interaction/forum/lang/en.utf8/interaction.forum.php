@@ -80,6 +80,8 @@ $string['newtopic'] = 'New topic';
 $string['noforums'] = 'There are no forums in this group';
 $string['notopics'] = 'There are no topics in this forum';
 $string['open'] = 'Open';
+$string['order'] = 'Order';
+$string['orderdescription'] = 'Choose where you want the forum to be ordered compared to the other forums';
 $string['post'] = 'Post';
 $string['postedin'] = '%s posted in %s';
 $string['poster'] = 'Poster';
@@ -116,7 +118,5 @@ $string['unsubscribe'] = 'Unsubscribe';
 $string['unsubscribefromforum'] = 'Unsubscribe from forum';
 $string['unsubscribefromtopic'] = 'Unsubscribe from topic';
 $string['updatetopics'] = 'Update topics';
-$string['weight'] = 'Weight';
-$string['weightdescription'] = 'The weight controls the order of forums. Forums with lower weights appear above forums with higher weights';
 
 ?>
