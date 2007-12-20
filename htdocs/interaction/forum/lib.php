@@ -223,7 +223,6 @@ function is_forum_moderator($forumid, $userid=null) {
 
     if (!is_int($forumid)) {
         throw new InvalidArgumentException("non integer forum id given to is_forum_moderator: $forumid");
-
     }
     return record_exists_sql(
         'SELECT fm.user
@@ -234,6 +233,24 @@ function is_forum_moderator($forumid, $userid=null) {
         AND fm.forum = ?',
         array($userid, $forumid)
     );
+}
+
+/**
+ * Is a user allowed to edit a post
+ *
+ * @param boolean $moderator
+ * @param int $poster the the id of the user who created the post
+ * @param int $posttime the time the post was made
+ * @param int $userid optional id of user, defaults to logged in user
+ *
+ * @returns boolean
+ */
+function user_can_edit_post($poster, $posttime, $userid=null) {
+	if (empty($userid)) {
+        global $USER;
+        $userid = $USER->get('id');
+    }
+    return $poster == $userid && $posttime > (time() - 30 * 60);
 }
 
 /**

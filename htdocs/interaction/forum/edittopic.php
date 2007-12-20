@@ -82,7 +82,7 @@ if ($topicid == 0) { // new topic
 
 else { // edit topic
     $topic = get_record_sql(
-        'SELECT p.subject, p.id AS postid, p.body, p.topic AS id, t.sticky, t.closed, f.id AS forumid, f.group AS group, f.title, g.name AS groupname
+        'SELECT p.subject, p.id AS postid, p.body, p.poster, p.topic AS id, ' . db_format_tsfield('p.ctime', 'ctime') . ', t.sticky, t.closed, f.id AS forumid, f.group AS group, f.title, g.name AS groupname
         FROM {interaction_forum_post} p
         INNER JOIN {interaction_forum_topic} t ON (p.topic = t.id AND t.deleted != 1)
         INNER JOIN {interaction_instance} f ON (f.id = t.forum AND f.deleted != 1)
@@ -91,7 +91,7 @@ else { // edit topic
         AND p.topic = ?',
         array($topicid)
     );
-    
+
     if (!$topic) {
         throw new NotFoundException(get_string('cantfindtopic', 'interaction.forum', $topicid));
     }
@@ -104,7 +104,14 @@ else { // edit topic
 
     $moderator = $admin || is_forum_moderator((int)$forumid);
 
-    if (!$moderator) {
+    // no record for edits to own posts with 30 minutes
+    if (user_can_edit_post($topic->poster, $topic->ctime)) {
+        $topic->editrecord = false;
+    }
+    else if ($moderator) {
+        $topic->editrecord = true;
+    }
+    else {
         throw new AccessDeniedException(get_string('cantedittopic', 'interaction.forum'));
     }
 
@@ -182,6 +189,10 @@ $editform = array(
         'post' => array(
             'type' => 'hidden',
             'value' => isset($topic) ? $topic->postid : false
+        ),
+        'editrecord' => array(
+            'type' => 'hidden',
+            'value' => isset($topic) ? $topic->editrecord : false
         )
     ),
 );
@@ -221,25 +232,32 @@ function addtopic_submit(Pieform $form, $values) {
 }
 
 function edittopic_submit(Pieform $form, $values) {
-    global $SESSION, $USER;
+    global $SESSION, $USER, $topic;
     $topicid = param_integer('id');
     db_begin();
-    update_record(
-        'interaction_forum_post',
-        array(
-            'subject' => $values['subject'],
-            'body' => $values['body']
-        ),
-        array('id' => $values['post'])
-    );
-    insert_record(
-        'interaction_forum_edit',
-        (object)array(
-            'user' => $USER->get('id'),
-            'post' => $values['post'],
-            'ctime' => db_format_timestamp(time())
-        )
-    );
+    // check the post content actually changed
+    // otherwise topic could have been set as sticky/closed
+    $postchanged = $values['subject'] != $topic->subject || $values['body'] != $topic->body;
+    if ($postchanged) {
+        update_record(
+            'interaction_forum_post',
+            array(
+                'subject' => $values['subject'],
+                'body' => $values['body']
+            ),
+            array('id' => $values['post'])
+        );
+    }
+    if ($values['editrecord'] && $postchanged) {
+        insert_record(
+            'interaction_forum_edit',
+            (object)array(
+                'user' => $USER->get('id'),
+                'post' => $values['post'],
+                'ctime' => db_format_timestamp(time())
+            )
+        );
+    }
     if(isset($values['sticky'])){
         update_record(
             'interaction_forum_topic',
