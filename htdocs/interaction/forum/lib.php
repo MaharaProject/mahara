@@ -14,6 +14,30 @@ class PluginInteractionForum extends PluginInteraction {
             $moderators = get_column('interaction_forum_moderator', '"user"', 'forum', $instance->get('id'));
         }
 
+        if ($instance === null) {
+            $exclude = '';
+        }
+        else {
+            $exclude = 'AND i.id != ' . db_quote($instance->get('id'));
+        }
+
+        $existing = get_records_sql_array('
+            SELECT i.id, i.title, c.value AS weight
+            FROM {interaction_instance} i
+            INNER JOIN {interaction_forum_instance_config} c ON (i.id = c.forum AND c.field = \'weight\')
+            WHERE i.group = ?
+            ' . $exclude . '
+            ORDER BY c.value',
+            array($group->id));
+        if ($existing) {
+            foreach ($existing as &$item) {
+                $item = (array)$item;
+            }
+        }
+        else {
+            $existing = array();
+        }
+
         return array(
             'fieldset' => array(
                 'type' => 'fieldset',
@@ -22,14 +46,15 @@ class PluginInteractionForum extends PluginInteraction {
                 'legend' => get_string('settings'),
                 'elements' => array(
                     'weight' => array(
-                        'type' => 'text',
-                        'title' => get_string('weight', 'interaction.forum'),
-                        'description' => get_string('weightdescription', 'interaction.forum'),
-                        'defaultvalue' => isset($weight) ? $weight : 0,
+                        'type' => 'weight',
+                        'title' => get_string('order', 'interaction.forum'),
+                        'description' => get_string('orderdescription', 'interaction.forum'),
+                        'defaultvalue' => isset($weight) ? $weight : count($existing),
                         'rules' => array(
                             'required' => true,
-                            'integer' => true
-                        )
+                        ),
+                        'existing' => $existing,
+                        'ignore'   => (count($existing) == 0)
                     ),
                     'moderator' => array(
                         'type' => 'userlist',
@@ -61,19 +86,40 @@ class PluginInteractionForum extends PluginInteraction {
             );
         }
 
+        // Re-order the forums according to their new ordering
         delete_records(
             'interaction_forum_instance_config',
-            'forum', $instance->get('id'),
             'field', 'weight'
         );
-        insert_record(
-            'interaction_forum_instance_config',
-            (object)array(
-                'forum' => $instance->get('id'),
-                'field' => 'weight',
-                'value' => $values['weight']
-            )
-        );
+
+        if (isset($values['weight'])) {
+            foreach ($values['weight'] as $weight => $id) {
+                if ($id === null) {
+                    // This is where the current forum is to be placed
+                    $id = $instance->get('id');
+                }
+
+                insert_record(
+                    'interaction_forum_instance_config',
+                    (object)array(
+                        'forum' => $id,
+                        'field' => 'weight',
+                        'value' => $weight,
+                    )
+                );
+            }
+        }
+        else {
+            // Element was ignored - because this is the first forum in a group
+            insert_record(
+                'interaction_forum_instance_config',
+                (object)array(
+                    'forum' => $instance->get('id'),
+                    'field' => 'weight',
+                    'value' => 0,
+                )
+            );
+        }
     }
 
     public static function get_activity_types() {
@@ -93,6 +139,31 @@ class PluginInteractionForum extends PluginInteraction {
                 'minute'       => '*/30',
             ),
         );
+    }
+
+    /**
+     * Optional method. Takes a list of forums and sorts them according to 
+     * their weights for the sideblock
+     *
+     * @param array $forums An array of hashes of forum data
+     * @return array        The array, sorted appropriately
+     */
+    public static function sideblock_sort($forums) {
+        if (!$forums) {
+            return $forums;
+        }
+
+        $weights = get_records_assoc('interaction_forum_instance_config', 'field', 'weight', 'forum', 'forum, value');
+        foreach ($forums as &$forum) {
+            // Note: forums expect every forum to have a 'weight' record in the 
+            // forum instance config table, so we don't need to check that 
+            // there is a weight for the forum here - there should be, 
+            // otherwise someone has futz'd with the database or there's a bug 
+            // elsewhere that allowed this to happen
+            $forum->weight = $weights[$forum->id]->value;
+        }
+        usort($forums, create_function('$a, $b', 'return $a->weight > $b->weight;'));
+        return $forums;
     }
 
     public static function interaction_forum_new_post() {
