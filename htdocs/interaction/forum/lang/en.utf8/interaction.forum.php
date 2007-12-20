@@ -42,6 +42,7 @@ $string['cantfindpost'] = 'Couldn\'t find post with id %s';
 $string['cantfindtopic'] = 'Couldn\'t find topic with id %s';
 $string['cantviewforums'] = 'You are not allowed to view forums in this group';
 $string['cantviewtopic'] = 'You are not allowed to view topics in this forum';
+$string['chooseanaction'] = 'Choose an action';
 $string['clicksetsubject'] = 'Click to set a subject';
 $string['closed'] = 'Closed';
 $string['closeddescription'] = 'Closed topics can only be replied to by moderators and the group owner';
@@ -116,6 +117,6 @@ $string['unsticky'] = 'Unsticky';
 $string['unsubscribe'] = 'Unsubscribe';
 $string['unsubscribefromforum'] = 'Unsubscribe from forum';
 $string['unsubscribefromtopic'] = 'Unsubscribe from topic';
-$string['updatetopics'] = 'Update topics';
+$string['updateselectedtopics'] = 'Update selected topics';
 
 ?>

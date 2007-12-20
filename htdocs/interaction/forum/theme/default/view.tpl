@@ -22,6 +22,7 @@
 <form action="" method="post">
     {if !$forum->subscribed || $moderator}
     <select name="type1">
+        <option value="default" selected="selected">{str tag="chooseanaction" section="interaction.forum"}</option>
         {if !$forum->subscribed}
         <option value="subscribe">{str tag="subscribe" section="interaction.forum"}</option>
         <option value="unsubscribe">{str tag="unsubscribe" section="interaction.forum"}</option>
@@ -33,7 +34,7 @@
         <option value="open">{str tag="open" section="interaction.forum"}</option>
         {/if}
     </select>
-    <input type="submit" name="updatetopics1" value="{str tag="updatetopics" section="interaction.forum"}" class="submit">
+    <input type="submit" name="updatetopics1" value="{str tag="updateselectedtopics" section="interaction.forum"}" class="submit">
     {/if}
     <table>
         <tr>
@@ -58,6 +59,7 @@
     {/if}
     {if !$forum->subscribed || $moderator}
     <select name="type2">
+        <option value="default" selected="selected">{str tag="chooseanaction" section="interaction.forum"}</option>
         {if !$forum->subscribed}
         <option value="subscribe">{str tag="subscribe" section="interaction.forum"}</option>
         <option value="unsubscribe">{str tag="unsubscribe" section="interaction.forum"}</option>
@@ -69,7 +71,7 @@
         <option value="open">{str tag="open" section="interaction.forum"}</option>
         {/if}
     </select>
-    <input type="submit" name="updatetopics2" value="{str tag="updatetopics" section="interaction.forum"}" class="submit">
+    <input type="submit" name="updatetopics2" value="{str tag="updateselectedtopics" section="interaction.forum"}" class="submit">
     {/if}
 </form>
 {else}
