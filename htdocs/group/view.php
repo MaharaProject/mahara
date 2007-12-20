@@ -331,6 +331,17 @@ foreach ($interactions as $i) {
     $interactiontypes[$i->plugin][] = $i;
 }
 
+// Sort them according to how the plugin wants them sorted
+if ($interactiontypes) {
+    foreach ($interactiontypes as $plugin => &$interactions) {
+        safe_require('interaction', $plugin);
+        $classname = generate_class_name('interaction', $plugin);
+        if (method_exists($classname, 'sideblock_sort')) {
+            $interactions = call_static_method($classname, 'sideblock_sort', $interactions);
+        }
+    }
+}
+
 // Add a sideblock for group interactions
 $sideblock = array(
     'name' => 'groupinteractions',
