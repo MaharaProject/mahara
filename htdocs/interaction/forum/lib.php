@@ -26,6 +26,7 @@ class PluginInteractionForum extends PluginInteraction {
             FROM {interaction_instance} i
             INNER JOIN {interaction_forum_instance_config} c ON (i.id = c.forum AND c.field = \'weight\')
             WHERE i.group = ?
+            AND i.deleted != 1
             ' . $exclude . '
             ORDER BY c.value',
             array($group->id));
@@ -121,6 +122,7 @@ class PluginInteractionForum extends PluginInteraction {
                 )
             );
         }
+        db_commit();
     }
 
     public static function get_activity_types() {
