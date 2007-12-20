@@ -57,6 +57,8 @@ if (!$group->owner == $USER->get('id')) {
     throw new AccessDeniedException(get_string('notallowedtoeditinteraction', 'group'));
 }
 
+$returnto = param_alpha('returnto', 'view');
+
 $elements = array_merge(
     PluginInteraction::instance_config_base_form($plugin, $group, $instance),
     call_static_method(generate_class_name('interaction', $plugin), 'instance_config_form', $group, $instance),
@@ -64,8 +66,8 @@ $elements = array_merge(
         'submit' => array(
             'type'  => 'submitcancel',
             'value' => array(get_string('save'), get_string('cancel')),
-            'goto'  => isset($instance) ? get_config('wwwroot') . 'interaction/' . $plugin . '/view.php?id=' . $instance->get('id')
-                                        : get_config('wwwroot') . 'interaction/' . $plugin . '/index.php?group=' . $groupid,
+            'goto'  => get_config('wwwroot') . 'interaction/' . $plugin .
+                (isset($instance) && $returnto != 'index' ? '/view.php?id=' . $instance->get('id') : '/index.php?group=' . $groupid),
         )
     )
 );

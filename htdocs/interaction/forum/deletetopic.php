@@ -30,6 +30,7 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('interaction' ,'forum');
 require('group.php');
 $topicid = param_integer('id');
+$returnto = param_alpha('returnto', 'topic');
 
 $topic = get_record_sql(
     'SELECT f."group", f.id AS forumid, f.title, g.name AS groupname, p.poster, p.subject, p.body, COUNT(p2.*), ' . db_format_tsfield('p.ctime', 'ctime') . ', t.closed
@@ -99,7 +100,7 @@ $form = pieform(array(
         'submit' => array(
             'type'  => 'submitcancel',
             'value' => array(get_string('yes'), get_string('no')),
-            'goto'  => get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $topicid,
+            'goto'  => get_config('wwwroot') . ($returnto == 'view' ? 'interaction/forum/view.php?id=' . $topic->forumid : 'interaction/forum/topic.php?id=' . $topicid),
         ),
         'forum' => array(
             'type' => 'hidden',

@@ -43,6 +43,9 @@ if (!$group->owner == $USER->get('id')) {
 
 define('TITLE', get_string('deleteinteraction', 'group', get_string('name', 'interaction.' . $instance->get('plugin')), $instance->get('title')));
 // submit handler in interaction/lib.php
+
+$returnto = param_alpha('returnto', 'view');
+
 $form = pieform(array(
     'name'     => 'delete_interaction',
     'elements' => array(
@@ -56,7 +59,8 @@ $form = pieform(array(
         'submit' => array(
             'type'  => 'submitcancel',
             'value' => array(get_string('yes'), get_string('no')),
-            'goto'  => get_config('wwwroot') . 'interaction/' .$instance->get('plugin') . '/view.php?id=' . $instance->get('id'),
+            'goto'  => get_config('wwwroot') . 'interaction/' .$instance->get('plugin') .
+                ($returnto == 'index' ? '/index.php?group=' . $instance->get('group') : '/view.php?id=' . $instance->get('id')),
         )
     )
 ));

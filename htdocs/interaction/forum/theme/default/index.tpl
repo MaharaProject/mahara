@@ -21,8 +21,8 @@
         <div class="fr">{str tag=topics section=interaction.forum args=$forum->count}</div>
         {if $admin}
         <div>
-        <a href="{$WWWROOT}interaction/edit.php?id={$forum->id|escape}">{str tag=edit}</a>
-         | <a href="{$WWWROOT}interaction/delete.php?id={$forum->id|escape}">{str tag=delete}</a>
+        <a href="{$WWWROOT}interaction/edit.php?id={$forum->id|escape}&amp;returnto=index">{str tag=edit}</a>
+         | <a href="{$WWWROOT}interaction/delete.php?id={$forum->id|escape}&amp;returnto=index">{str tag=delete}</a>
         </div>
         {/if}
         {$forum->subscribe}

@@ -225,7 +225,13 @@ function edit_interaction_submit(Pieform $form, $values) {
     call_static_method(generate_class_name('interaction', $values['plugin']), 'instance_config_save', $instance, $values);
     global $SESSION;
     $SESSION->add_ok_msg(get_string('interactionsaved', 'group', get_string('name', 'interaction.' . $values['plugin'])));
-    redirect('/interaction/' . $values['plugin'] . '/view.php?id=' . $instance->get('id'));
+    $returnto = param_alpha('returnto', 'view');
+    if ($returnto == 'index') {
+        redirect('/interaction/' . $values['plugin'] . '/index.php?group=' . $instance->get('group'));
+    }
+    else {
+        redirect('/interaction/' . $values['plugin'] . '/view.php?id=' . $instance->get('id'));
+    }
 }
 
 function delete_interaction_submit(Pieform $form, $values) {

@@ -32,6 +32,8 @@ require_once('group.php');
 
 $userid = $USER->get('id');
 $topicid = param_integer('id', 0);
+$returnto = param_alpha('returnto', 'topic');
+
 if ($topicid == 0) { // new topic
     unset($topicid);
     $forumid = param_integer('forum');
@@ -184,7 +186,7 @@ $editform = array(
                 isset($topic) ? get_string('edit') : get_string('post','interaction.forum'),
                 get_string('cancel')
             ),
-            'goto'      => get_config('wwwroot') . 'interaction/forum/' . (isset($topic) ? 'topic.php?id='.$topicid : 'view.php?id='.$forumid)
+            'goto'      => get_config('wwwroot') . 'interaction/forum/' . (isset($topic) && $returnto != 'view'  ? 'topic.php?id='.$topicid : 'view.php?id='.$forumid)
         ),
         'post' => array(
             'type' => 'hidden',
@@ -234,6 +236,7 @@ function addtopic_submit(Pieform $form, $values) {
 function edittopic_submit(Pieform $form, $values) {
     global $SESSION, $USER, $topic;
     $topicid = param_integer('id');
+    $returnto = param_alpha('returnto', 'topic');
     db_begin();
     // check the post content actually changed
     // otherwise topic could have been set as sticky/closed
@@ -270,7 +273,12 @@ function edittopic_submit(Pieform $form, $values) {
     }
     db_commit();
     $SESSION->add_ok_msg(get_string('edittopicsuccess', 'interaction.forum'));
-    redirect('/interaction/forum/topic.php?id='.$topicid);
+    if ($returnto == 'view') {
+        redirect('/interaction/forum/view.php?id=' . $topic->forumid);
+    }
+    else {
+        redirect('/interaction/forum/topic.php?id=' . $topicid);
+    }
 }
 
 $smarty = smarty();
