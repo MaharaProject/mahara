@@ -135,7 +135,7 @@ for ($i = 0; $i < $count; $i++) {
     $posts[$temp]->edit = $postedits;
 }
 foreach ($posts as $post) {
-    $post->canedit = $moderator || user_can_edit_post($post->poster, $post->ctime);
+    $post->canedit = $post->parent && ($moderator || user_can_edit_post($post->poster, $post->ctime));
     $post->ctime = strftime(get_string('strftimerecentfull'), $post->ctime);
 }
 // builds the first post (with index 0) which has as children all the posts in the topic

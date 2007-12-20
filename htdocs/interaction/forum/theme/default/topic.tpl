@@ -5,13 +5,6 @@
 
 <h2>{$heading|escape}</h2>
 {include file="interaction:forum:breadcrumbs.tpl" breadcrumbs=$breadcrumbs}
-{if !$topic->closed}
-<div class="fr">
-<span class ="addicon">
-<a href="{$WWWROOT}interaction/forum/editpost.php?parent={$topic->firstpost|escape}">{str tag=postreply section=interaction.forum}</a>
-</span>
-</div>
-{/if}
 {if $topic->canedit}
 <div>
 <a href="{$WWWROOT}interaction/forum/edittopic.php?id={$topic->id|escape}">{str tag=edittopic section=interaction.forum}</a>
@@ -22,7 +15,7 @@
 {/if}
 {if !$topic->forumsubscribed}{$topic->subscribe}{/if}
 {if $topic->closed}
-{str tag=topicisclosed section=interaction.forum}
+<div class="message">{str tag=topicisclosed section=interaction.forum}</div>
 {/if}
 {$posts}
 {include file="columnleftend.tpl"}
