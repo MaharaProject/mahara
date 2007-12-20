@@ -99,7 +99,7 @@ $string['topicsubscribesuccess'] = 'Topics subscribed successfully';
 $string['topicupdatefailed'] = 'Topics update failed';
 $string['typenewpost'] = 'New post';
 $string['unsubscribe'] = 'Unsubscribe';
-$string['weight'] = 'Weight';
-$string['weightdescription'] = 'The weight controls the order of forums. Forums with lower weights appear above forums with higher weights';
+$string['order'] = 'Order';
+$string['orderdescription'] = 'Choose where you want the forum to be ordered compared to the other forums';
 
 ?>
