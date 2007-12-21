@@ -803,4 +803,29 @@ function load_user_institutions($userid) {
     return array();
 }
 
+
+/**
+ * Return a username which isn't taken and which is similar to a desired username
+ * 
+ * @param string $desired
+ */
+function get_new_username($desired) {
+    $maxlen = 30;
+    $desired = substr($desired, 0, $maxlen);
+    $taken = get_column_sql('
+        SELECT username FROM {usr}
+        WHERE username ' . db_ilike() . " '" . substr($desired, 0, $maxlen - 6) . "%'");
+    if (!$taken) {
+        return $desired;
+    }
+    $taken = array_flip($taken);
+    $i = '';
+    $newname = substr($desired, 0, $maxlen - 1) . $i;
+    while (isset($taken[$newname])) {
+        $i++;
+        $newname = substr($desired, 0, $maxlen - strlen($i)) . $i;
+    }
+    return $newname;
+}
+
 ?>
