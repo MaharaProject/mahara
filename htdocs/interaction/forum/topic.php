@@ -122,21 +122,19 @@ $posts = get_records_sql_array(
 // also formats the edits a bit
 $count = count($posts);
 for ($i = 0; $i < $count; $i++) {
+    $posts[$i]->canedit = $posts[$i]->parent && ($moderator || user_can_edit_post($posts[$i]->poster, $posts[$i]->ctime));
+    $posts[$i]->ctime = strftime(get_string('strftimerecentfull'), $posts[$i]->ctime);
     $postedits = array();
     if (!empty($posts[$i]->edittime)) {
-        $postedits[] = get_string('editedon', 'interaction.forum', display_name($posts[$i]->editor), strftime(get_string('strftimerecentfull'), $posts[$i]->edittime));
+        $postedits[] = array('editor' => $posts[$i]->editor, 'edittime' => strftime(get_string('strftimerecentfull'), $posts[$i]->edittime));
     }
     $temp = $i;
     while (isset($posts[$i+1]) && $posts[$i+1]->id == $posts[$temp]->id) { // while the next object is the same post
         $i++;
-        $postedits[] = get_string('editedon', 'interaction.forum', display_name($posts[$i]->editor), strftime(get_string('strftimerecentfull'), $posts[$i]->edittime));
+        $postedits[] = array('editor' => $posts[$i]->editor, 'edittime' => strftime(get_string('strftimerecentfull'), $posts[$i]->edittime));
         unset($posts[$i]);
     }
     $posts[$temp]->edit = $postedits;
-}
-foreach ($posts as $post) {
-    $post->canedit = $post->parent && ($moderator || user_can_edit_post($post->poster, $post->ctime));
-    $post->ctime = strftime(get_string('strftimerecentfull'), $post->ctime);
 }
 // builds the first post (with index 0) which has as children all the posts in the topic
 $posts = buildpost(0, '', $posts);
