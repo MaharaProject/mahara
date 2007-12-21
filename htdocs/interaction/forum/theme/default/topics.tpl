@@ -5,8 +5,8 @@
 <tr class="r0">
 {/if}
     <td>
-    {if $topic->closed}C{else}O{/if}
-    {if $topic->subscribed}S{else}U{/if}
+    {if $topic->closed}<img src="{$closedicon|escape}" alt="{str tag="closed" section="interaction.forum"}">{/if}
+    {if $topic->subscribed}<img src="{$subscribedicon|escape}" alt="{str tag="subscribed" section="interaction.forum"}">{/if}
     </td>
     {if !$forum->subscribed || $moderator}
     <td>
