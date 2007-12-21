@@ -28,13 +28,7 @@ class PluginInteractionForum extends PluginInteraction {
 
     public static function instance_config_form($group, $instance=null) {
         if (isset($instance)) {
-            $weight = get_field_sql(
-                'SELECT c.value AS weight
-                FROM {interaction_forum_instance_config} c
-                WHERE c.field=\'weight\'
-                AND forum = ?',
-                array($instance->get('id'))
-            );
+            $weight = get_field('interaction_forum_instance_config', 'value', 'field', '\'weight\'', 'forum', $instance->get('id'));
             $moderators = get_column('interaction_forum_moderator', '"user"', 'forum', $instance->get('id'));
         }
 
@@ -193,6 +187,9 @@ class PluginInteractionForum extends PluginInteraction {
         return $forums;
     }
 
+/**
+ * cronjob for new forum posts
+ */
     public static function interaction_forum_new_post() {
         $currenttime = time();
         $posts = get_records_sql_array(
@@ -211,6 +208,8 @@ class PluginInteractionForum extends PluginInteraction {
             ORDER BY type, p.id',
             array(db_format_timestamp($currenttime - 30 * 60))
         );
+        // query gets a new object for every subscription
+        // this combines all the objects for the same post together with an array for the subscribers
         if ($posts) {
             $count = count($posts);
             for ($i = 0; $i < $count; $i++) {
@@ -349,12 +348,6 @@ function user_can_edit_post($poster, $posttime, $userid=null) {
     return $poster == $userid && $posttime > (time() - 30 * 60);
 }
 
-/**
- * For a pieform with forum, redirect and type elements.
- * forum is the forum id
- * redirect is where to redirect to
- * type is unsubscribe or subscribe depending on the intended action
- */
 function subscribe_forum_submit(Pieform $form, $values) {
     global $USER, $SESSION;
     if ($values['type'] == 'subscribe') {
