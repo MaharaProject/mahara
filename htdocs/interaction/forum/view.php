@@ -66,6 +66,7 @@ $moderator = $admin || is_forum_moderator($forumid);
 
 define('TITLE', $forum->groupname . ' - ' . $forum->title);
 
+// updates the selected topics as subscribed/closed/sticky
 if (isset($_POST['topics']) && isset($_POST['checkbox'])) {
     $topics = array_keys($_POST['topics']);
     $checked = array_keys($_POST['checkbox']);
@@ -160,7 +161,9 @@ $forum->subscribe = pieform(array(
         )
     )
 ));
-
+// gets the info about topics
+// the last post is found by taking the max id of the posts in a topic with the max post time
+// taking the max id is needed because multiple posts can have the same post time
 $sql = 'SELECT t.id, p1.subject, p1.body, p1.poster, p1.deleted, COUNT(p2.*), t.closed, s.topic AS subscribed, ' . db_format_tsfield('p4.ctime', 'lastposttime') . ', p4.poster AS lastposter, p4.deleted AS lastpostdeleted
     FROM interaction_forum_topic t
     INNER JOIN {interaction_forum_post} p1 ON (p1.topic = t.id AND p1.parent IS NULL)

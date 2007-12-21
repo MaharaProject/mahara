@@ -36,12 +36,7 @@ if (!record_exists('group', 'id', $groupid)) {
     throw new GroupNotFoundException(get_string('groupnotfound', 'group', $groupid));
 }
 
-$groupname = get_field_sql(
-    'SELECT name
-    FROM {group}
-    WHERE id = ?',
-    array($groupid)
-);
+$groupname = get_field('group', 'name', 'id', $groupid);
 
 $membership = user_can_access_group($groupid);
 
@@ -73,7 +68,7 @@ $forums = get_records_sql_array(
     WHERE f.group = ?
     AND f.deleted != 1
     GROUP BY 1, 2, 3, 5, c.value
-    ORDER BY c.value, f.id',
+    ORDER BY c.value',
     array($USER->get('id'), $groupid)
 );
 
