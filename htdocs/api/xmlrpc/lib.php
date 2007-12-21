@@ -159,7 +159,7 @@ function fetch_user_image($username) {
         }
         try {
             $user = new User;
-            $user->find_by_instanceid_username($authinstance->id, $username);
+            $user->find_by_instanceid_username($authinstance->id, $username, true);
             $candidates[$user->id] = $user;
         } catch (Exception $e) {
             // we don't care

@@ -144,7 +144,7 @@ class AuthXmlrpc extends Auth {
         // Retrieve a $user object. If that fails, create a blank one.
         try {
             $user = new User;
-            $user->find_by_instanceid_username($this->instanceid, $remoteuser->username);
+            $user->find_by_instanceid_username($this->instanceid, $remoteuser->username, true);
             if ('1' == $this->config['updateuserinfoonlogin']) {
                 $update = true;
             }
@@ -161,7 +161,6 @@ class AuthXmlrpc extends Auth {
 
         if ($create) {
 
-            $user->username           = $remoteuser->username;
             $user->passwordchange     = 1;
             $user->active             = 1;
             $user->deleted            = 0;
@@ -180,7 +179,16 @@ class AuthXmlrpc extends Auth {
             //TODO: import institution's per-user-quota?:
             //$user->quota              = $userrecord->quota;
             $user->authinstance       = empty($this->config['parent']) ? $this->instanceid : $this->parent;
+
+            db_begin();
+            $user->username           = get_new_username($remoteuser->username);
             $user->commit();
+
+            insert_record('auth_remote_user', (object) array(
+                'authinstance'   => $user->authinstance,
+                'remoteusername' => $remoteuser->username,
+                'localusr'       => $user->id,
+            ));
 
             $user->join_institution($peer->institution);
 
@@ -197,6 +205,7 @@ class AuthXmlrpc extends Auth {
             $userobj = $user->to_stdclass();
             $userarray = (array)$userobj;
             handle_event('createuser', $userarray);
+            db_commit();
 
         } elseif ($update) {
 
@@ -228,7 +237,7 @@ class AuthXmlrpc extends Auth {
         if ($create || $update) {
 
             $client->set_method('auth/mnet/auth.php/fetch_user_image')
-                   ->add_param($user->username)
+                   ->add_param($remoteuser->username)
                    ->send($remotewwwroot);
 
             $imageobject = (object)$client->response;

@@ -124,7 +124,7 @@ class User {
     /**
      * 
      */
-    public function find_by_instanceid_username($instanceid, $username) {
+    public function find_by_instanceid_username($instanceid, $username, $remoteuser=false) {
 
         if (!is_numeric($instanceid) || $instanceid < 0) {
             throw new InvalidArgumentException('parameter must be a positive integer to create a User object');
@@ -134,16 +134,30 @@ class User {
             $instanceid = $parentid;
         }
 
-        $sql = 'SELECT
-                    *, 
-                    ' . db_format_tsfield('expiry') . ', 
-                    ' . db_format_tsfield('lastlogin') . ', 
-                    ' . db_format_tsfield('suspendedctime') . '
-                FROM
-                    {usr}
-                WHERE
-                    LOWER(username) = ? AND
-                    authinstance = ?';
+        if ($remoteuser) {
+            $sql = 'SELECT
+                        u.*, 
+                        ' . db_format_tsfield('u.expiry', 'expiry') . ', 
+                        ' . db_format_tsfield('u.lastlogin', 'lastlogin') . ', 
+                        ' . db_format_tsfield('u.suspendedctime', 'suspendedctime') . '
+                    FROM {usr} u
+                    INNER JOIN {auth_remote_user} r ON u.id = r.localusr
+                    WHERE
+                        LOWER(r.remoteusername) = ? AND
+                        r.authinstance = ?';
+        } else {
+            $sql = 'SELECT
+                        *, 
+                        ' . db_format_tsfield('expiry') . ', 
+                        ' . db_format_tsfield('lastlogin') . ', 
+                        ' . db_format_tsfield('suspendedctime') . '
+                    FROM
+                        {usr}
+                    WHERE
+                        LOWER(username) = ? AND
+                        authinstance = ?';
+        }
+
 
         $user = get_record_sql($sql, array($username, $instanceid));
 
