@@ -412,7 +412,7 @@ function register_validate(Pieform $form, $values) {
     }
 
     $user =(object) $values;
-    $user->authinstance = get_field('auth_instance', 'id', 'authname', 'internal'); // Internal
+    $user->authinstance = get_field('auth_instance', 'id', 'authname', 'internal', 'institution', $institution);
     password_validate($form, $values, $user);
 
     // First name and last name must contain at least one non whitespace
