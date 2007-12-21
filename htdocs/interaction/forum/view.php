@@ -201,6 +201,23 @@ $pagination = build_pagination(array(
     'resultcounttextplural' => get_string('topicslower', 'interaction.forum')
 ));
 
+$inlinejavascript = <<<EOF
+addLoadEvent(function() {
+    forEach(getElementsByTagAndClassName('input', 'topic-checkbox'), function(checkbox) {
+        var tr = getFirstParentByTagAndClassName(checkbox, 'tr', null);
+        var origColour = tr.style.backgroundColor;
+        connect(checkbox, 'onclick', function(e) {
+            if (tr.style.backgroundColor == origColour) {
+                tr.style.backgroundColor = '#ffc';
+            }
+            else {
+                tr.style.backgroundColor = origColour;
+            }
+        });
+    });
+});
+EOF;
+
 $smarty = smarty();
 $smarty->assign('breadcrumbs', $breadcrumbs);
 $smarty->assign('heading', TITLE);
@@ -210,6 +227,7 @@ $smarty->assign('admin', $admin);
 $smarty->assign('stickytopics', $stickytopics);
 $smarty->assign('regulartopics', $regulartopics);
 $smarty->assign('pagination', $pagination['html']);
+$smarty->assign('INLINEJAVASCRIPT', $inlinejavascript);
 $smarty->display('interaction:forum:view.tpl');
 
 /**

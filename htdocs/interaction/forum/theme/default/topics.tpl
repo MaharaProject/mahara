@@ -10,7 +10,7 @@
     </td>
     {if !$forum->subscribed || $moderator}
     <td>
-    <input type="checkbox" name="checkbox[{$topic->id|escape}]">
+    <input type="checkbox" name="checkbox[{$topic->id|escape}]" class="topic-checkbox">
     <input type="hidden" name="topics[{$topic->id|escape}]">
     </td>
     {/if}
