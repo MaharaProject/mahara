@@ -302,7 +302,7 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='')
  *
  * @returns string name to display
  */
-function display_name($user, $userto=null) {
+function display_name($user, $userto=null, $nameonly=false) {
     global $USER;
     
     if (empty($userto)) {
@@ -339,13 +339,13 @@ function display_name($user, $userto=null) {
 
     // if they don't have a preferred name set, just return here
     if (empty($user->preferredname)) {
-        if ($userto->admin || $userto->staff) {
+        if (($userto->admin || $userto->staff) && !$nameonly) {
             return $user->firstname . ' ' . $user->lastname . ' (' . $user->username . ')';
         }
         return $user->firstname . ' ' . $user->lastname;
     }
 
-    if ($userto->admin || $userto->staff) {
+    if (($userto->admin || $userto->staff) && !$nameonly) {
         return $user->preferredname . ' (' . $user->firstname . ' ' . $user->lastname . ' - ' . $user->username . ')';
     }
 
@@ -355,7 +355,7 @@ function display_name($user, $userto=null) {
                 ON g1.group = g2.group 
             WHERE g1.member = ? AND g2.member = ? AND g2.tutor = ?';
     if (record_exists_sql($sql, array($user->id, $userto->id, 1))) {
-        return $user->preferredname . ' (' . $user->firstname . ' ' . $user->lastname . ')';
+        return $user->preferredname . ($nameonly ? '' : ' (' . $user->firstname . ' ' . $user->lastname . ')');
     }
     return  $user->preferredname;
 }
