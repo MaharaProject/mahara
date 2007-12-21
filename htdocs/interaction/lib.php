@@ -50,6 +50,7 @@ abstract class PluginInteraction extends Plugin {
 
 
     public static function instance_config_base_form($plugin, $group, $instance=null) {
+        global $USER;
         return array(
             'id' => array(
                 'type'  => 'hidden',
@@ -62,6 +63,10 @@ abstract class PluginInteraction extends Plugin {
             'group' => array(
                 'type'  => 'hidden',
                 'value' => $group->id
+            ),
+            'creator' => array(
+                'type' => 'hidden',
+                'value' => (isset($instance) ? $instance->get('creator') : $USER->get('id'))
             ),
             'title' => array(
                 'type'         => 'text',
@@ -211,11 +216,10 @@ function edit_interaction_validation(Pieform $form, $values) {
 }
 
 function edit_interaction_submit(Pieform $form, $values) {
-    safe_require('interaction', $values['plugin']);
+	safe_require('interaction', $values['plugin']);
     $classname = generate_interaction_instance_class_name($values['plugin']);
     $instance = new $classname($values['id']);
-    global $USER;
-    $instance->set('creator', $USER->get('id'));
+    $instance->set('creator', $values['creator']);
     $instance->set('title', $values['title']);
     $instance->set('description', $values['description']);
     if (empty($values['id'])) {

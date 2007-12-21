@@ -60,7 +60,7 @@ if (!$membership) {
     throw new AccessDeniedException(get_string('cantviewforums', 'interaction.forum'));
 }
 
-$admin = (bool)($membership & GROUP_MEMBERSHIP_OWNER);
+$admin = (bool)($membership & (GROUP_MEMBERSHIP_OWNER | GROUP_MEMBERSHIP_ADMIN | GROUP_MEMBERSHIP_STAFF));
 
 $moderator = $admin || is_forum_moderator($forumid);
 

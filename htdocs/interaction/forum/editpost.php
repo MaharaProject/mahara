@@ -60,7 +60,7 @@ if ($postid == 0) { // post reply
 
     $membership = user_can_access_group((int)$parent->group);
 
-    $admin = (bool)($membership & GROUP_MEMBERSHIP_OWNER);
+    $admin = (bool)($membership & (GROUP_MEMBERSHIP_OWNER | GROUP_MEMBERSHIP_ADMIN | GROUP_MEMBERSHIP_STAFF));
 
     $moderator = $admin || is_forum_moderator((int)$parent->forum);
 
@@ -132,7 +132,7 @@ else { // edit post
 
     $membership = user_can_access_group((int)$post->group);
 
-    $admin = (bool)($membership & GROUP_MEMBERSHIP_OWNER);
+    $admin = (bool)($membership & (GROUP_MEMBERSHIP_OWNER | GROUP_MEMBERSHIP_ADMIN | GROUP_MEMBERSHIP_STAFF));
 
     $moderator = $admin || is_forum_moderator((int)$post->forum);
 

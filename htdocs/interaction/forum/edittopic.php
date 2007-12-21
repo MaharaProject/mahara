@@ -52,7 +52,7 @@ if ($topicid == 0) { // new topic
 
     $membership = user_can_access_group((int)$forum->group);
 
-    $admin = (bool)($membership & GROUP_MEMBERSHIP_OWNER);
+    $admin = (bool)($membership & (GROUP_MEMBERSHIP_OWNER | GROUP_MEMBERSHIP_ADMIN | GROUP_MEMBERSHIP_STAFF));
 
     $moderator = $admin || is_forum_moderator($forumid);
 
@@ -102,7 +102,7 @@ else { // edit topic
 
     $membership = user_can_access_group((int)$topic->group);
 
-    $admin = (bool)($membership & GROUP_MEMBERSHIP_OWNER);
+    $admin = (bool)($membership & (GROUP_MEMBERSHIP_OWNER | GROUP_MEMBERSHIP_ADMIN | GROUP_MEMBERSHIP_STAFF));
 
     $moderator = $admin || is_forum_moderator((int)$forumid);
 
