@@ -97,6 +97,7 @@ $string['sticky'] = 'Sticky';
 $string['stickydescription'] = 'Sticky topics are at the top of every page';
 $string['stickytopics'] = 'Sticky topics';
 $string['subscribe'] = 'Subscribe';
+$string['Subscribed'] = 'Subscribed';
 $string['subscribetoforum'] = 'Subscribe to forum';
 $string['subscribetotopic'] = 'Subscribe to topic';
 $string['subject'] = 'Subject';

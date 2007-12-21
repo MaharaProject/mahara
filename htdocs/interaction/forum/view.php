@@ -229,6 +229,8 @@ $smarty->assign('moderator', $moderator);
 $smarty->assign('admin', $admin);
 $smarty->assign('stickytopics', $stickytopics);
 $smarty->assign('regulartopics', $regulartopics);
+$smarty->assign('closedicon', theme_get_url('images/closed.gif', 'interaction/forum/'));
+$smarty->assign('subscribedicon', theme_get_url('images/subscribed.gif', 'interaction/forum/'));
 $smarty->assign('pagination', $pagination['html']);
 $smarty->assign('INLINEJAVASCRIPT', $inlinejavascript);
 $smarty->display('interaction:forum:view.tpl');

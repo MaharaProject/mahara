@@ -74,6 +74,13 @@
     <input type="submit" name="updatetopics2" value="{str tag="updateselectedtopics" section="interaction.forum"}" class="submit">
     {/if}
 </form>
+
+<h4>Key:</h4>
+<ul>
+    <li><img src="{$closedicon|escape}" alt="{str tag="closed" section="interaction.forum"}"> {str tag="closed" section="interaction.forum"}</li>
+    <li><img src="{$subscribedicon|escape}" alt="{str tag="Subscribed" section="interaction.forum"}"> {str tag="Subscribed" section="interaction.forum"}</li>
+</ul>
+
 {else}
 {str tag="notopics" section="interaction.forum"}
 {/if}
