@@ -429,7 +429,15 @@ function xmldb_core_upgrade($oldversion=0) {
         set_config('imagemaxheight', 1024);
     }
 
-    if ($oldversion < 2007112300) {
+    if ($oldversion < 2007121001) {
+        set_field('activity_queue', 'type', 'viewaccess', 'type', 'newview');
+        set_field('notification_internal_activity', 'type', 'viewaccess', 'type', 'newview');
+        set_field('notification_emaildigest_queue', 'type', 'viewaccess', 'type', 'newview');
+        delete_records('usr_activity_preference', 'activity', 'newview');
+        delete_records('activity_type', 'name', 'newview');
+    }
+
+    if ($oldversion < 2007121002) {
 
         $table = new XMLDBTable('usr_institution');
         $table->addFieldInfo('usr', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL);
@@ -439,6 +447,7 @@ function xmldb_core_upgrade($oldversion=0) {
         $table->addFieldInfo('studentid', XMLDB_TYPE_TEXT, null);
         $table->addFieldInfo('staff', XMLDB_TYPE_INTEGER, 1, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, 0);
         $table->addFieldInfo('admin', XMLDB_TYPE_INTEGER, 1, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, 0);
+        $table->addFieldInfo('expirymailsent', XMLDB_TYPE_INTEGER, 1, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, 0);
         $table->addKeyInfo('usrfk', XMLDB_KEY_FOREIGN, array('usr'), 'usr', array('id'));
         $table->addKeyInfo('institutionfk', XMLDB_KEY_FOREIGN, array('institution'), 'institution', array('name'));
         $table->addKeyInfo('usrinstitutionuk', XMLDB_KEY_UNIQUE, array('usr', 'institution'));
@@ -456,7 +465,42 @@ function xmldb_core_upgrade($oldversion=0) {
         $table->addKeyInfo('usrinstitutionuk', XMLDB_KEY_UNIQUE, array('usr', 'institution'));
         create_table($table);
 
-        $users = get_records_array('usr', '', '', '', 'id, username, institution, lastlogin, expiry, studentid, staff, admin, email, firstname, lastname');
+        // From now on usernames will be unique, and remote xmlrpc
+        // usernames will not be the same as local usernames.  The
+        // mapping from remote usernames to local usr records will be
+        // stored in auth_remote_user
+        $table = new XMLDBTable('auth_remote_user');
+        $table->addFieldInfo('authinstance', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('remoteusername', XMLDB_TYPE_CHAR, 255, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('localusr', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('authinstance', 'remoteusername'));
+        $table->addKeyInfo('authinstancefk', XMLDB_KEY_FOREIGN, array('authinstance'), 'auth_instance', array('id'));
+        $table->addKeyInfo('localusrfk', XMLDB_KEY_FOREIGN, array('localusr'), 'usr', array('id'));
+        create_table($table);
+
+        $theyssoin = get_column('auth_instance_config', 'instance', 'field', 'theyssoin', 'value', 1);
+        if (empty($theyssoin)) {
+            $theyssoin = array();
+            $authparents = false;
+        } else {
+            $authparents = get_records_select_array('auth_instance_config', "
+                field = 'parent' AND instance IN (" . join(',', $theyssoin) . ')');
+        }
+
+        $authchildren = array();
+        if ($authparents) {
+            foreach ($authparents as $a) {
+                $authchildren[$a->value][] = $a->instance;
+            }
+        }
+
+        $users = get_records_sql_array('
+            SELECT
+                u.id, u.username, u.institution, u.lastlogin, u.expiry, u.studentid, u.staff, u.admin,
+                u.email, u.firstname, u.lastname, u.authinstance, ai.authname
+            FROM {usr} u
+            INNER JOIN {auth_instance} ai ON u.authinstance = ai.id', null);
+
         if ($users) {
             $usernames = get_column_sql("SELECT DISTINCT username FROM {usr}");
             $newusernames = array();
@@ -478,25 +522,27 @@ function xmldb_core_upgrade($oldversion=0) {
                 if (!isset($newusernames[$u->username])) {
                     $newname = $u->username;
                 } else { // Rename the user
-                    $newname = false;
-                    if ($u->institution != 'mahara') { // First try prepending the institution
-                        $try = $u->institution . $u->username;
-                        if (strlen($try) <= 30 && !isset($newusernames[$try]) && !isset($usernames[$try])) {
-                            $newname = $try;
-                        }
-                    }
-                    if ($newname == false) { // Append digits keeping total length <= 30
-                        $i = 1;
-                        $newname = substr($u->username, 0, 29) . $i;
-                        while (isset($newusernames[$newname]) || isset($usernames[$newname])) {
-                            $i++;
-                            $newname = substr($u->username, 0, 30 - floor(log10($i)+1)) . $i;
-                        }
+                    // Append digits keeping total length <= 30
+                    $i = 1;
+                    $newname = substr($u->username, 0, 29) . $i;
+                    while (isset($newusernames[$newname]) || isset($usernames[$newname])) {
+                        $i++;
+                        $newname = substr($u->username, 0, 30 - floor(log10($i)+1)) . $i;
                     }
                     set_field('usr', 'username', $newname, 'id', $u->id);
                     $renamed[$newname] = $u;
                 }
                 $newusernames[$newname] = true;
+                // Enter record in xmlrpc username list.
+                if ($u->authname == 'xmlrpc' && in_array($u->authinstance, $theyssoin)
+                    || $u->authname == 'imap' && isset($authchildren[$u->authinstance])) {
+                    insert_record('auth_remote_user', (object) array(
+                        'authinstance'   => $u->authinstance,
+                        'remoteusername' => $u->username,
+                        'localusr'       => $u->id,
+                    ));
+                    $u->ssoonly = $u->authname == 'xmlrpc';
+                }
             }
         }
 
@@ -504,6 +550,8 @@ function xmldb_core_upgrade($oldversion=0) {
         execute_sql('CREATE UNIQUE INDEX {usr_use_uix} ON {usr} (username);');
         execute_sql('ALTER TABLE {usr} DROP COLUMN institution;');
 
+
+        // Rename users
         if (!empty($renamed)) {
             // Notify changed usernames to administrator
             $report = '# Each line in this file is in the form "institution old_username new_username"'."\n";
@@ -526,7 +574,9 @@ function xmldb_core_upgrade($oldversion=0) {
             $usermessagestart = "Your username at $sitename has been changed:\n\n";
             $usermessageend = "\n\nNext time you visit the site, please login using your new username.";
             foreach ($renamed as $newname => $olduser) {
-                if (empty($olduser->email)) {
+                // Don't notify sso-only users; they don't need to know
+                // their usernames.
+                if (empty($olduser->email) || !empty($olduser->ssoonly)) {
                     continue;
                 }
                 email_user($olduser, null, $sitename, $usermessagestart
@@ -534,9 +584,7 @@ function xmldb_core_upgrade($oldversion=0) {
                            . $usermessageend);
             }
         }
-    }
 
-    if ($oldversion < 2007112600) {
 
         // Move site-wide stuff from institution table to config table
         $default = get_record('institution', 'name', 'mahara');
@@ -559,14 +607,15 @@ function xmldb_core_upgrade($oldversion=0) {
         execute_sql('ALTER TABLE {institution} DROP COLUMN defaultaccountinactiveexpire;');
         execute_sql('ALTER TABLE {institution} DROP COLUMN defaultaccountinactivewarn;');
 
-        // Add theme, default institution membership period to institution table
+
+        // New columns for institution table
         execute_sql('ALTER TABLE {institution} ADD COLUMN theme varchar(255)');
         set_field('institution', 'theme', get_config('theme'));
-        
         execute_sql('ALTER TABLE {institution} ADD COLUMN defaultmembershipperiod bigint');
-    }
+        execute_sql('ALTER TABLE {institution} ADD COLUMN maxuseraccounts bigint');
 
-    if ($oldversion < 2007120500) {
+
+        // Institution message activity type
         insert_record('activity_type', (object) array(
             'name' => 'institutionmessage',
             'admin' => 0,
@@ -585,22 +634,6 @@ function xmldb_core_upgrade($oldversion=0) {
                 'method' => $method
             ));
         }
-    }
-
-    if ($oldversion < 2007121000) {
-        execute_sql('ALTER TABLE {institution} ADD COLUMN maxuseraccounts bigint');
-    }
-
-    if ($oldversion < 2007121001) {
-        set_field('activity_queue', 'type', 'viewaccess', 'type', 'newview');
-        set_field('notification_internal_activity', 'type', 'viewaccess', 'type', 'newview');
-        set_field('notification_emaildigest_queue', 'type', 'viewaccess', 'type', 'newview');
-        delete_records('usr_activity_preference', 'activity', 'newview');
-        delete_records('activity_type', 'name', 'newview');
-    }
-
-    if ($oldversion < 2007121002) {
-        execute_sql('ALTER TABLE {usr_institution} ADD COLUMN expirymailsent smallint NOT NULL DEFAULT 0');
     }
 
     return $status;
