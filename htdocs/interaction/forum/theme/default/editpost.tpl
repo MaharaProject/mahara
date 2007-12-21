@@ -8,10 +8,8 @@
 
 {$editform}
 
-{if $parent}
 <h4>{str tag="replyto" section="interaction.forum"}</h4>
 {include file="interaction:forum:simplepost.tpl" post=$parent}
-{/if}
 
 {include file="columnleftend.tpl"}
 {include file="footer.tpl"}

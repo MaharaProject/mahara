@@ -73,7 +73,6 @@ if ($postid == 0) { // post reply
 
     define('TITLE', $parent->topicsubject . ' - ' . get_string('postreply','interaction.forum'));
     $topicid = $parent->topicid;
-    $parent->ctime = strftime(get_string('strftimerecentfull'), $parent->ctime);
 
     $breadcrumbs = array(
         array(
@@ -110,6 +109,19 @@ else { // edit post
         AND p.deleted != 1
         AND p.parent IS NOT NULL',
         array($postid)
+    );
+
+    $parent = get_record_sql(
+        'SELECT p.subject, p.body, p.topic, p.poster, ' . db_format_tsfield('p.ctime', 'ctime') . ', COUNT(p2.*)
+        FROM {interaction_forum_post} p
+        INNER JOIN {interaction_forum_topic} t ON (p.topic = t.id AND t.deleted != 1)
+        INNER JOIN {interaction_instance} f ON (t.forum = f.id AND f.deleted != 1)
+        INNER JOIN {group} g ON g.id = f.group
+        INNER JOIN {interaction_forum_post} p2 ON (p.poster = p2.poster AND p2.deleted != 1)
+        WHERE p.id = ?
+        AND p.deleted != 1
+        GROUP BY 1, 2, 3, 4, 5',
+        array($post->parent)
     );
 
     if (!$post) {
@@ -160,6 +172,8 @@ else { // edit post
         )
     );
 }
+
+$parent->ctime = strftime(get_string('strftimerecentfull'), $parent->ctime);
 
 // Javascript to hide the subject box if it has nothing in it, with a link you 
 // click to expand it.
@@ -273,9 +287,7 @@ $smarty = smarty();
 $smarty->assign('breadcrumbs', $breadcrumbs);
 $smarty->assign('heading', TITLE);
 $smarty->assign('editform', $editform);
-if (isset($parent)) {
     $smarty->assign('parent', $parent);
-}
 if (isset($inlinejs)) {
     $smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 }
