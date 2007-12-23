@@ -6,17 +6,32 @@
 <h2>{$heading|escape}</h2>
 {include file="interaction:forum:breadcrumbs.tpl" breadcrumbs=$breadcrumbs}
 <div>
-{$forum->description}
-</div>
-<div class="fr"><span class="addicon">
+<div class="fr">
+<span class="addicon">
 <a href="{$WWWROOT}interaction/forum/edittopic.php?forum={$forum->id|escape}">{str tag="newtopic" section="interaction.forum}</a>
-</span></div>
+</span>
+</div>
+{$forum->description}
 {if $admin}
 <div>
 <a href="{$WWWROOT}interaction/edit.php?id={$forum->id|escape}">{str tag="edittitle" section="interaction.forum"}</a>
  | <a href="{$WWWROOT}interaction/delete.php?id={$forum->id|escape}">{str tag="deleteforum" section="interaction.forum"}</a>
 </div>
 {/if}
+{str tag="groupownerlist" section="interaction.forum"}
+<a href="{$WWWROOT}user/view.php?id={$groupowner}" class="groupowner">
+<img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$groupowner}" alt="">
+{$groupowner|display_name|escape}
+</a>
+<br>
+{str tag="moderatorslist" section="interaction.forum"}
+{foreach from=$moderators item=mod name=moderators}
+<a href="{$WWWROOT}user/view.php?id={$mod}" class="moderator">
+<img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$mod}" alt="">
+{$mod|display_name|escape}</a>{if !$smarty.foreach.moderators.last}, {/if}
+{/foreach}
+
+</div>
 {$forum->subscribe}
 {if $stickytopics || $regulartopics}
 <form action="" method="post">
@@ -79,6 +94,8 @@
 <ul>
     <li><img src="{$closedicon|escape}" alt="{str tag="closed" section="interaction.forum"}"> {str tag="closed" section="interaction.forum"}</li>
     <li><img src="{$subscribedicon|escape}" alt="{str tag="Subscribed" section="interaction.forum"}"> {str tag="Subscribed" section="interaction.forum"}</li>
+    <li><span class="groupowner">{str tag="groupowner" section="interaction.forum"}</span></li>
+    <li><span class="moderator">{str tag="moderators" section="interaction.forum"}</span></li>
 </ul>
 
 {else}

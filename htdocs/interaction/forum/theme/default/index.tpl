@@ -4,6 +4,7 @@
 {include file="columnleftstart.tpl"}
 
 <h2>{$heading|escape}</h2>
+<div>
 {include file="interaction:forum:breadcrumbs.tpl" breadcrumbs=$breadcrumbs}
 {if $admin}
 <div class="fr">
@@ -12,12 +13,25 @@
 </span>
 </div>
 {/if}
+<br>
+{str tag="groupownerlist" section="interaction.forum"}
+<a href="{$WWWROOT}user/view.php?id={$groupowner}" class="groupowner">
+<img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$groupowner}" alt="">
+{$groupowner|display_name|escape}</a>
+</div>
 {if $forums}
 <ul>
     {foreach from=$forums item=forum}
     <li>
         <h4><a href="{$WWWROOT}interaction/forum/view.php?id={$forum->id|escape}">{$forum->title|escape}</a></h4>
         {$forum->description}
+        <br>
+        {str tag="moderatorslist" section="interaction.forum"}
+        {foreach from=$forum->moderators item=mod name=moderators}
+            <a href="{$WWWROOT}user/view.php?id={$mod}" class="moderator">
+            <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$mod}" alt="">
+            {$mod|display_name|escape}</a>{if !$smarty.foreach.moderators.last}, {/if}
+        {/foreach}
         <div class="fr">{str tag=topics section=interaction.forum args=$forum->count}</div>
         {if $admin}
         <div>

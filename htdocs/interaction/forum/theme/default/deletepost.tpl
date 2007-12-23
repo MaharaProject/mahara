@@ -9,7 +9,7 @@
 
 <div class="message">{$deleteform}</div>
 
-{include file="interaction:forum:simplepost.tpl" post=$post}
+{include file="interaction:forum:simplepost.tpl" post=$post groupowner=$post->groupowner}
 
 {include file="columnleftend.tpl"}
 {include file="footer.tpl"}

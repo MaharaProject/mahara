@@ -33,7 +33,7 @@ require_once('group.php');
 $topicid = param_integer('id');
 
 $topic = get_record_sql(
-    'SELECT p.subject, p.poster, p.id AS firstpost, ' . db_format_tsfield('p.ctime', 'ctime') . ', t.id, f.group, g.name AS groupname, f.id AS forumid, f.title AS forumtitle, t.closed, sf.forum AS forumsubscribed, st.topic AS topicsubscribed
+    'SELECT p.subject, p.poster, p.id AS firstpost, ' . db_format_tsfield('p.ctime', 'ctime') . ', t.id, f.group, g.name AS groupname, f.id AS forumid, f.title AS forumtitle, t.closed, sf.forum AS forumsubscribed, st.topic AS topicsubscribed, g.owner
     FROM {interaction_forum_topic} t
     INNER JOIN {interaction_instance} f ON (t.forum = f.id AND f.deleted != 1)
     INNER JOIN {group} g ON g.id = f.group
@@ -106,17 +106,23 @@ if (!$topic->forumsubscribed) {
 }
 
 $posts = get_records_sql_array(
-    'SELECT p1.id, p1.parent, p1.poster, p1.subject, p1.body, ' . db_format_tsfield('p1.ctime', 'ctime') . ', p1.deleted, COUNT(p2.*), ' . db_format_tsfield('e.ctime', 'edittime') . ', e.user AS editor
+    'SELECT p1.id, p1.parent, p1.poster, p1.subject, p1.id, ' . db_format_tsfield('p1.ctime', 'ctime') . ', p1.deleted, m.user AS moderator, COUNT(p2.*), ' . db_format_tsfield('e.ctime', 'edittime') . ', e.user AS editor, m2.user as editormoderator
     FROM {interaction_forum_post} p1
+    INNER JOIN {interaction_forum_topic} t ON (t.id = p1.topic)
     INNER JOIN {interaction_forum_post} p2 ON (p1.poster = p2.poster AND p2.deleted != 1)
-    INNER JOIN {interaction_forum_topic} t ON (t.deleted != 1 AND p2.topic = t.id)
+    INNER JOIN {interaction_forum_topic} t2 ON (t2.deleted != 1 AND p2.topic = t2.id)
     INNER JOIN {interaction_instance} f ON (t.forum = f.id AND f.deleted != 1 AND f.group = ?)
+    LEFT JOIN {interaction_forum_moderator} m oN (t.forum = m.forum AND p1.poster = m.user)
     LEFT JOIN {interaction_forum_edit} e ON e.post = p1.id
+    LEFT JOIN {interaction_forum_post} p3 ON p3.id = e.post
+    LEFT JOIN {interaction_forum_topic} t3 ON t3.id = p3.topic
+    LEFT JOIN {interaction_forum_moderator} m2 ON t3.forum = m2.forum AND e.user = m2.user
     WHERE p1.topic = ?
-    GROUP BY 1, 2, 3, 4, 5, p1.ctime, 7, 9, 10, e.ctime
+    GROUP BY 1, 2, 3, 4, 5, p1.ctime, 7, 8, 10, 11, 12, e.ctime
     ORDER BY p1.ctime, p1.id, e.ctime',
     array($topic->group, $topicid)
 );
+
 // $posts has an object for every edit to a post
 // this combines all the edits into a single object for each post
 // also formats the edits a bit
@@ -125,17 +131,18 @@ for ($i = 0; $i < $count; $i++) {
     $posts[$i]->canedit = $posts[$i]->parent && ($moderator || user_can_edit_post($posts[$i]->poster, $posts[$i]->ctime));
     $posts[$i]->ctime = strftime(get_string('strftimerecentfull'), $posts[$i]->ctime);
     $postedits = array();
-    if (!empty($posts[$i]->edittime)) {
-        $postedits[] = array('editor' => $posts[$i]->editor, 'edittime' => strftime(get_string('strftimerecentfull'), $posts[$i]->edittime));
+    if ($posts[$i]->editor) {
+        $postedits[] = array('editor' => $posts[$i]->editor, 'edittime' => strftime(get_string('strftimerecentfull'), $posts[$i]->edittime), 'moderator' => $posts[$i]->editormoderator);
     }
     $temp = $i;
     while (isset($posts[$i+1]) && $posts[$i+1]->id == $posts[$temp]->id) { // while the next object is the same post
         $i++;
-        $postedits[] = array('editor' => $posts[$i]->editor, 'edittime' => strftime(get_string('strftimerecentfull'), $posts[$i]->edittime));
+        $postedits[] = array('editor' => $posts[$i]->editor, 'edittime' => strftime(get_string('strftimerecentfull'), $posts[$i]->edittime), 'moderator' => $posts[$i]->editormoderator);
         unset($posts[$i]);
     }
     $posts[$temp]->edit = $postedits;
 }
+
 // builds the first post (with index 0) which has as children all the posts in the topic
 $posts = buildpost(0, '', $posts);
 
@@ -158,8 +165,7 @@ $smarty->display('interaction:forum:topic.tpl');
  */
 
 function buildpost($postindex, $parentsubject, &$posts){
-    global $moderator;
-    global $topic;
+    global $moderator, $topic;
     $localposts = $posts;
     if ($posts[$postindex]->subject) {
         $parentsubject = $posts[$postindex]->subject;
@@ -175,6 +181,7 @@ function buildpost($postindex, $parentsubject, &$posts){
     }
     $smarty = smarty_core();
     $smarty->assign('post', $posts[$postindex]);
+    $smarty->assign('groupowner', $topic->owner);
     $smarty->assign('children', $children);
     $smarty->assign('moderator', $moderator);
     $smarty->assign('closed', $topic->closed);

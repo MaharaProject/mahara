@@ -39,14 +39,14 @@ $topicsperpage = 25;
 $offset = (int)($offset / $topicsperpage) * $topicsperpage;
 
 $forum = get_record_sql(
-    'SELECT f.title, f.description, f.id, COUNT(t.*), s.forum AS subscribed, g.id AS group, g.name AS groupname
+    'SELECT f.title, f.description, f.id, COUNT(t.*), s.forum AS subscribed, g.id AS group, g.name AS groupname, g.owner as groupowner
     FROM {interaction_instance} f
     INNER JOIN {group} g ON g.id = f."group"
     LEFT JOIN {interaction_forum_topic} t ON (t.forum = f.id AND t.deleted != 1 AND t.sticky != 1)
     LEFT JOIN {interaction_forum_subscription_forum} s ON (s.forum = f.id AND s."user" = ?)
     WHERE f.id = ?
     AND f.deleted != 1
-    GROUP BY 1, 2, 3, 5, 6, 7',
+    GROUP BY 1, 2, 3, 5, 6, 7, 8',
     array($userid, $forumid)
 );
 
@@ -63,6 +63,8 @@ if (!$membership) {
 $admin = (bool)($membership & (GROUP_MEMBERSHIP_OWNER | GROUP_MEMBERSHIP_ADMIN | GROUP_MEMBERSHIP_STAFF));
 
 $moderator = $admin || is_forum_moderator($forumid);
+
+$moderators = get_column('interaction_forum_moderator', '"user"', 'forum', $forumid);
 
 define('TITLE', $forum->groupname . ' - ' . $forum->title);
 
@@ -164,9 +166,10 @@ $forum->subscribe = pieform(array(
 // gets the info about topics
 // the last post is found by taking the max id of the posts in a topic with the max post time
 // taking the max id is needed because multiple posts can have the same post time
-$sql = 'SELECT t.id, p1.subject, p1.body, p1.poster, p1.deleted, COUNT(p2.*), t.closed, s.topic AS subscribed, ' . db_format_tsfield('p4.ctime', 'lastposttime') . ', p4.poster AS lastposter, p4.deleted AS lastpostdeleted
+$sql = 'SELECT t.id, p1.subject, p1.body, p1.poster, p1.deleted, m.user AS moderator, COUNT(p2.*), t.closed, s.topic AS subscribed, ' . db_format_tsfield('p4.ctime', 'lastposttime') . ', p4.poster AS lastposter, p4.deleted AS lastpostdeleted, m2.user AS lastpostermoderator
     FROM interaction_forum_topic t
     INNER JOIN {interaction_forum_post} p1 ON (p1.topic = t.id AND p1.parent IS NULL)
+    LEFT JOIN {interaction_forum_moderator} m ON (m.forum = t.forum AND p1.poster = m.user)
     INNER JOIN {interaction_forum_post} p2 ON (p2.topic = t.id AND p2.deleted != 1)
     LEFT JOIN {interaction_forum_subscription_topic} s ON (s.topic = t.id AND s."user" = ?)
     INNER JOIN (
@@ -182,10 +185,12 @@ $sql = 'SELECT t.id, p1.subject, p1.body, p1.poster, p1.deleted, COUNT(p2.*), t.
         GROUP BY 2
     ) p3 ON p3.topic = t.id
     LEFT JOIN {interaction_forum_post} p4 ON (p4.id = p3.post)
+    LEFT JOIN {interaction_forum_topic} t2 ON (p4.topic = t2.id)
+    LEFT JOIN {interaction_forum_moderator} m2 ON (p4.poster = m2.user AND t2.forum = m2.forum)
     WHERE t.forum = ?
     AND t.sticky = ?
     AND t.deleted != 1
-    GROUP BY 1, 2, 3, 4, 5, 7, 8, p4.ctime, p4.poster, p4.deleted, p4.id
+    GROUP BY 1, 2, 3, 4, 5, 6, 8, 9, p4.ctime, p4.poster, p4.deleted, p4.id, m2.user
     ORDER BY p4.ctime DESC, p4.id DESC';
 
 $stickytopics = get_records_sql_array($sql, array($userid, $forumid, 1));
@@ -229,6 +234,8 @@ $smarty->assign('moderator', $moderator);
 $smarty->assign('admin', $admin);
 $smarty->assign('stickytopics', $stickytopics);
 $smarty->assign('regulartopics', $regulartopics);
+$smarty->assign('moderators', $moderators);
+$smarty->assign('groupowner', $forum->groupowner);
 $smarty->assign('closedicon', theme_get_url('images/closed.gif', 'interaction/forum/'));
 $smarty->assign('subscribedicon', theme_get_url('images/subscribed.gif', 'interaction/forum/'));
 $smarty->assign('pagination', $pagination['html']);

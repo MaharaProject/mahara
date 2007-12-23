@@ -9,7 +9,7 @@
 {$editform}
 
 <h4>{str tag="replyto" section="interaction.forum"}</h4>
-{include file="interaction:forum:simplepost.tpl" post=$parent}
+{include file="interaction:forum:simplepost.tpl" post=$parent groupowner=$parent->groupowner}
 
 {include file="columnleftend.tpl"}
 {include file="footer.tpl"}

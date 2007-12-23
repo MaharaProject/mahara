@@ -19,7 +19,11 @@
     <div>{$topic->body}</div>
     </td>
     <td>
-    <a href="{$WWWROOT}user/view.php?id={$topic->poster}">
+    <a href="{$WWWROOT}user/view.php?id={$topic->poster}"
+    {if $topic->poster == $groupowner} class="groupowner"
+    {elseif $topic->moderator} class="moderator"
+    {/if}
+    >
     <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$topic->poster}" alt="">
     {$topic->poster|display_name|escape}
     </a>
@@ -27,7 +31,12 @@
     <td>{$topic->count|escape}</td>
     <td>
     {if !$topic->lastpostdeleted}
-    <a href="{$WWWROOT}user/view.php?id={$topic->lastposter}">{$topic->lastposter|display_name|escape}</a>
+    <a href="{$WWWROOT}user/view.php?id={$topic->lastposter}"
+    {if $topic->lastposter == $groupowner} class="groupowner"
+    {elseif $topic->lastpostermoderator} class="moderator"
+    {/if}
+    >
+    {$topic->lastposter|display_name|escape}</a>
     <br>{$topic->lastposttime}
     {/if}
     </td>

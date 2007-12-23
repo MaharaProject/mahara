@@ -32,18 +32,19 @@ require_once('group.php');
 
 $postid = param_integer('id');
 $post = get_record_sql(
-    'SELECT p.subject, p.body, p.topic, p.parent, p.poster, ' . db_format_tsfield('p.ctime', 'ctime') . ', t.forum, p2.subject AS topicsubject, f.group, f.title AS forumtitle, g.name AS groupname, COUNT(p3.*)
+    'SELECT p.subject, p.body, p.topic, p.parent, p.poster, ' . db_format_tsfield('p.ctime', 'ctime') . ', m.user AS moderator, t.forum, p2.subject AS topicsubject, f.group, f.title AS forumtitle, g.name AS groupname, g.owner AS groupowner, COUNT(p3.*)
     FROM {interaction_forum_post} p
     INNER JOIN {interaction_forum_topic} t ON (p.topic = t.id AND t.deleted != 1)
     INNER JOIN {interaction_forum_post} p2 ON (p2.topic = t.id AND p2.parent IS NULL)
     INNER JOIN {interaction_instance} f ON (t.forum = f.id AND f.deleted != 1)
     INNER JOIN {group} g ON g.id = f.group
+    LEFT JOIN {interaction_forum_moderator} m ON (m.forum = f.id AND m.user = p.poster)
     INNER JOIN {interaction_forum_post} p3 ON (p.poster = p3.poster AND p3.deleted != 1)
     INNER JOIN {interaction_forum_topic} t2 ON (t2.deleted != 1 AND p3.topic = t2.id)
     INNER JOIN {interaction_instance} f2 ON (t2.forum = f2.id AND f2.deleted != 1 AND f2.group = f.group)
     WHERE p.id = ?
     AND p.deleted != 1
-    GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11',
+    GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13',
     array($postid)
 );
 
@@ -133,6 +134,7 @@ $smarty->assign('breadcrumbs', $breadcrumbs);
 $smarty->assign('heading', TITLE);
 $smarty->assign('post', $post);
 $smarty->assign('deleteform', $form);
+$smarty->assign('groupowner', $post->groupowner);
 $smarty->display('interaction:forum:deletepost.tpl');
 
 ?>

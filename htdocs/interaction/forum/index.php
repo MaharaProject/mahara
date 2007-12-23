@@ -36,7 +36,7 @@ if (!record_exists('group', 'id', $groupid)) {
     throw new GroupNotFoundException(get_string('groupnotfound', 'group', $groupid));
 }
 
-$groupname = get_field('group', 'name', 'id', $groupid);
+$group = get_record('group', 'id', $groupid);
 
 $membership = user_can_access_group($groupid);
 
@@ -46,12 +46,12 @@ if (!$membership) {
 
 $admin = (bool)($membership & (GROUP_MEMBERSHIP_OWNER | GROUP_MEMBERSHIP_ADMIN | GROUP_MEMBERSHIP_STAFF));
 
-define('TITLE', $groupname . ' - ' . get_string('nameplural', 'interaction.forum'));
+define('TITLE', $group->name . ' - ' . get_string('nameplural', 'interaction.forum'));
 
 $breadcrumbs = array(
     array(
         get_config('wwwroot') . 'group/view.php?id=' . $groupid,
-        $groupname
+        $group->name
     ),
     array(
         get_config('wwwroot') . 'interaction/forum/index.php?group=' . $groupid,
@@ -60,17 +60,36 @@ $breadcrumbs = array(
 );
 
 $forums = get_records_sql_array(
-    'SELECT f.id, f.title, f.description, COUNT(t.*), s.forum AS subscribed
+    'SELECT f.id, f.title, f.description, m.user AS moderator, COUNT(t.*), s.forum AS subscribed
     FROM {interaction_instance} f
+    LEFT JOIN {interaction_forum_moderator} m ON (m.forum = f.id)
     LEFT JOIN {interaction_forum_topic} t ON (t.forum = f.id AND t.deleted != 1)
     INNER JOIN {interaction_forum_instance_config} c ON (c.forum = f.id AND c.field = \'weight\')
     LEFT JOIN {interaction_forum_subscription_forum} s ON (s.forum = f.id AND s."user" = ?)
     WHERE f.group = ?
     AND f.deleted != 1
-    GROUP BY 1, 2, 3, 5, c.value
+    GROUP BY 1, 2, 3, 4, 6, c.value
     ORDER BY c.value',
     array($USER->get('id'), $groupid)
 );
+
+// query gets a new forum object for every moderator of that forum
+// this combines all moderators together into one object per forum
+if ($forums) {
+    $count = count($forums);
+    for ($i = 0; $i < $count; $i++) {
+        $forums[$i]->moderators = array();
+        if ($forums[$i]->moderator) {
+            $forums[$i]->moderators[] = $forums[$i]->moderator;
+        }
+        $temp = $i;
+        while (isset($forums[$i+1]) && $forums[$i+1]->id == $forums[$temp]->id) {
+            $i++;
+            $forums[$temp]->moderators[] = $forums[$i]->moderator;
+            unset($forums[$i]);
+        }
+   }
+}
 
 require_once('pieforms/pieform.php');
 
@@ -106,6 +125,7 @@ if ($forums) {
 $smarty = smarty();
 $smarty->assign('breadcrumbs', $breadcrumbs);
 $smarty->assign('groupid', $groupid);
+$smarty->assign('groupowner', $group->owner);
 $smarty->assign('heading', TITLE);
 $smarty->assign('admin', $admin);
 $smarty->assign('forums', $forums);
