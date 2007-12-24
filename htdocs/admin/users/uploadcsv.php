@@ -306,6 +306,15 @@ function uploadcsv_submit(Pieform $form, $values) {
         if ($institution->name != 'mahara') {
             $institution->addUserAsMember($user);
         }
+        if (get_field('auth_instance', 'authname', 'id', $authinstance) != 'internal') {
+            // Assume the admin knows what they're doing when they choose the external auth instance.
+            delete_records('auth_remote_user', 'authinstance', $authinstance, 'remoteusername', $user->username);
+            insert_record('auth_remote_user', (object) array(
+                'authinstance'   => $authinstance,
+                'remoteusername' => $user->username,
+                'localusr'       => $id,
+            ));
+        }
 
         foreach ($FORMAT as $field) {
             if ($field == 'username' || $field == 'password') {
