@@ -153,7 +153,7 @@ $editform = array(
     'elements' => array(
         'subject' => array(
             'type'         => 'text',
-            'title'        => get_string('subject', 'interaction.forum'),
+            'title'        => get_string('Subject', 'interaction.forum'),
             'defaultvalue' => isset($topic) ? $topic->subject : null,
             'rules'        => array(
                 'required' => true,
@@ -162,7 +162,7 @@ $editform = array(
         ),
         'body' => array(
             'type'         => 'wysiwyg',
-            'title'        => get_string('body', 'interaction.forum'),
+            'title'        => get_string('Body', 'interaction.forum'),
             'rows'         => 10,
             'cols'         => 70,
             'defaultvalue' => isset($topic) ? $topic->body : null,
@@ -170,20 +170,20 @@ $editform = array(
         ),
         'sticky' => array(
             'type'         => 'checkbox',
-            'title'        => get_string('sticky', 'interaction.forum'),
+            'title'        => get_string('Sticky', 'interaction.forum'),
             'description'  => get_string('stickydescription', 'interaction.forum'),
             'defaultvalue' => isset($topic) && $topic->sticky == 1 ? 'checked' : null
         ),
         'closed' => array(
             'type'         => 'checkbox',
-            'title'        => get_string('closed', 'interaction.forum'),
+            'title'        => get_string('Closed', 'interaction.forum'),
             'description'  => get_string('closeddescription', 'interaction.forum'),
             'defaultvalue' => isset($topic) && $topic->closed == 1 ? 'checked' : null
         ),
         'submit'   => array(
             'type'  => 'submitcancel',
             'value'       => array(
-                isset($topic) ? get_string('edit') : get_string('post','interaction.forum'),
+                isset($topic) ? get_string('edit') : get_string('Post','interaction.forum'),
                 get_string('cancel')
             ),
             'goto'      => get_config('wwwroot') . 'interaction/forum/' . (isset($topic) && $returnto != 'view'  ? 'topic.php?id='.$topicid : 'view.php?id='.$forumid)

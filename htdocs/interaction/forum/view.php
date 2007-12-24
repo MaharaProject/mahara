@@ -155,7 +155,11 @@ $forum->subscribe = pieform(array(
         ),
         'redirect' => array(
             'type' => 'hidden',
-            'value' => '/interaction/forum/view.php?id=' . $forumid . '&amp;offset=' . $offset
+            'value' => 'view'
+        ),
+        'offset' => array(
+            'type' => 'hidden',
+            'value' => $offset
         ),
         'type' => array(
             'type' => 'hidden',
@@ -249,24 +253,35 @@ $smarty->display('interaction:forum:view.tpl');
 function setup_topics(&$topics) {
     if ($topics) {
         foreach ($topics as $topic) {
-            if ($topic->deleted) {
-                $topic->body = '';
+            $more = false;
+            $nextbreak = strpos($topic->body, '<p', 1);
+            if ($nextbreak !== false) {
+                $topic->body = substr($topic->body, 0, $nextbreak);
+                $more = true;
             }
-            else {
-                $topic->body = strip_tags($topic->body);
-                // take the first 50 chars, then up to the first space (max length 60 chars)
-                if (strlen($topic->body) > 60) {
-                    $topic->body = substr($topic->body, 0, 60);
-                    $nextspace = strpos($topic->body, ' ', 50);
-                    if ($nextspace !== false) {
-                        $topic->body = substr($topic->body, 0, $nextspace);
-                    }
-                    $topic->body .= '...';
+            $nextbreak = strpos($topic->body, '<br', 1);
+            if ($nextbreak !== false) {
+                $topic->body = substr($topic->body, 0, $nextbreak);
+                $more = true;
+            }
+            $topic->body = strip_tags($topic->body);
+            $topic->body = html_entity_decode($topic->body);
+            // take the first 50 chars, then up to the first space (max length 60 chars)
+            if (strlen($topic->body) > 60) {
+                $topic->body = substr($topic->body, 0, 60);
+                $nextspace = strpos($topic->body, ' ', 50);
+                if ($nextspace !== false) {
+                    $topic->body = substr($topic->body, 0, $nextspace);
                 }
+                $more = true;
             }
-            if (!$topic->lastpostdeleted) {
-                $topic->lastposttime = strftime(get_string('strftimerecent'), $topic->lastposttime);
+            if ($more) {
+                $topic->body .= '...';
             }
+            $topic->body = htmlentities($topic->body);
+        }
+        if (!$topic->lastpostdeleted) {
+            $topic->lastposttime = strftime(get_string('strftimerecent'), $topic->lastposttime);
         }
     }
 }

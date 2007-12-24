@@ -39,14 +39,14 @@
     <select name="type1">
         <option value="default" selected="selected">{str tag="chooseanaction" section="interaction.forum"}</option>
         {if !$forum->subscribed}
-        <option value="subscribe">{str tag="subscribe" section="interaction.forum"}</option>
-        <option value="unsubscribe">{str tag="unsubscribe" section="interaction.forum"}</option>
+        <option value="subscribe">{str tag="Subscribe" section="interaction.forum"}</option>
+        <option value="unsubscribe">{str tag="Unsubscribe" section="interaction.forum"}</option>
         {/if}
         {if $moderator}
-        <option value="sticky">{str tag="sticky" section="interaction.forum"}</option>
-        <option value="unsticky">{str tag="unsticky" section="interaction.forum"}</option>
-        <option value="closed">{str tag="closed" section="interaction.forum"}</option>
-        <option value="open">{str tag="open" section="interaction.forum"}</option>
+        <option value="sticky">{str tag="Sticky" section="interaction.forum"}</option>
+        <option value="unsticky">{str tag="Unsticky" section="interaction.forum"}</option>
+        <option value="closed">{str tag="Closed" section="interaction.forum"}</option>
+        <option value="open">{str tag="Open" section="interaction.forum"}</option>
         {/if}
     </select>
     <input type="submit" name="updatetopics1" value="{str tag="updateselectedtopics" section="interaction.forum"}" class="submit">
@@ -55,9 +55,9 @@
         <tr>
         <th></th>
         {if !$forum->subscribed || $moderator}<th></th>{/if}
-        <th>{str tag="topic" section="interaction.forum"}</th>
-        <th>{str tag="poster" section="interaction.forum"}</th>
-        <th>{str tag="posts" section="interaction.forum"}</th>
+        <th>{str tag="Topic" section="interaction.forum"}</th>
+        <th>{str tag="Poster" section="interaction.forum"}</th>
+        <th>{str tag="Posts" section="interaction.forum"}</th>
         <th>{str tag="lastpost" section="interaction.forum"}</th>
         {if $moderator}<th></th>{/if}
     </tr>
@@ -76,14 +76,14 @@
     <select name="type2">
         <option value="default" selected="selected">{str tag="chooseanaction" section="interaction.forum"}</option>
         {if !$forum->subscribed}
-        <option value="subscribe">{str tag="subscribe" section="interaction.forum"}</option>
-        <option value="unsubscribe">{str tag="unsubscribe" section="interaction.forum"}</option>
+        <option value="subscribe">{str tag="Subscribe" section="interaction.forum"}</option>
+        <option value="unsubscribe">{str tag="Unsubscribe" section="interaction.forum"}</option>
         {/if}
         {if $moderator}
-        <option value="sticky">{str tag="sticky" section="interaction.forum"}</option>
-        <option value="unsticky">{str tag="unsticky" section="interaction.forum"}</option>
-        <option value="closed">{str tag="closed" section="interaction.forum"}</option>
-        <option value="open">{str tag="open" section="interaction.forum"}</option>
+        <option value="sticky">{str tag="Sticky" section="interaction.forum"}</option>
+        <option value="unsticky">{str tag="Unsticky" section="interaction.forum"}</option>
+        <option value="closed">{str tag="Closed" section="interaction.forum"}</option>
+        <option value="open">{str tag="Open" section="interaction.forum"}</option>
         {/if}
     </select>
     <input type="submit" name="updatetopics2" value="{str tag="updateselectedtopics" section="interaction.forum"}" class="submit">
@@ -92,10 +92,10 @@
 
 <h4>Key:</h4>
 <ul>
-    <li><img src="{$closedicon|escape}" alt="{str tag="closed" section="interaction.forum"}"> {str tag="closed" section="interaction.forum"}</li>
+    <li><img src="{$closedicon|escape}" alt="{str tag="Closed" section="interaction.forum"}"> {str tag="Closed" section="interaction.forum"}</li>
     <li><img src="{$subscribedicon|escape}" alt="{str tag="Subscribed" section="interaction.forum"}"> {str tag="Subscribed" section="interaction.forum"}</li>
     <li><span class="groupowner">{str tag="groupowner" section="interaction.forum"}</span></li>
-    <li><span class="moderator">{str tag="moderators" section="interaction.forum"}</span></li>
+    <li><span class="moderator">{str tag="Moderators" section="interaction.forum"}</span></li>
 </ul>
 
 {else}

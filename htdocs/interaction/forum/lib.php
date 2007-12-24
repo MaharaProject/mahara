@@ -66,7 +66,7 @@ class PluginInteractionForum extends PluginInteraction {
                 'elements' => array(
                     'weight' => array(
                         'type' => 'weight',
-                        'title' => get_string('order', 'interaction.forum'),
+                        'title' => get_string('Order', 'interaction.forum'),
                         'description' => get_string('orderdescription', 'interaction.forum'),
                         'defaultvalue' => isset($weight) ? $weight : count($existing),
                         'rules' => array(
@@ -77,7 +77,7 @@ class PluginInteractionForum extends PluginInteraction {
                     ),
                     'moderator' => array(
                         'type' => 'userlist',
-                        'title' => get_string('moderators', 'interaction.forum'),
+                        'title' => get_string('Moderators', 'interaction.forum'),
                         'description' => get_string('moderatorsdescription', 'interaction.forum'),
                         'defaultvalue' => isset($moderators) ? $moderators : null,
                         'group' => $group->id,
@@ -380,7 +380,12 @@ function subscribe_forum_submit(Pieform $form, $values) {
         );
         $SESSION->add_ok_msg(get_string('forumsuccessfulunsubscribe', 'interaction.forum'));
     }
-    redirect($values['redirect']);
+    if ($values['redirect'] == 'index') {
+        redirect('/interaction/forum/index.php?group=' . $values['group']);
+    }
+    else {
+        redirect('/interaction/forum/view.php?id=' . $values['forum'] . '&offset=' . $values['offset']);
+    }
 }
 
 ?>

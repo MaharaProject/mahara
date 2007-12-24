@@ -103,7 +103,7 @@ if ($forums) {
             'elements' => array(
                 'submit' => array(
                     'type'  => 'submit',
-                    'value' => $forum->subscribed ? get_string('unsubscribe', 'interaction.forum') : get_string('subscribe', 'interaction.forum')
+                    'value' => $forum->subscribed ? get_string('Unsubscribe', 'interaction.forum') : get_string('Subscribe', 'interaction.forum')
                 ),
                 'forum' => array(
                     'type' => 'hidden',
@@ -111,7 +111,11 @@ if ($forums) {
                 ),
                 'redirect' => array(
                     'type' => 'hidden',
-                    'value' => '/interaction/forum/index.php?group=' . $groupid
+                    'value' => 'index'
+                ),
+                'group' => array(
+                    'type' => 'hidden',
+                    'value' => $groupid
                 ),
                 'type' => array(
                     'type' => 'hidden',

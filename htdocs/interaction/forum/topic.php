@@ -106,7 +106,7 @@ if (!$topic->forumsubscribed) {
 }
 
 $posts = get_records_sql_array(
-    'SELECT p1.id, p1.parent, p1.poster, p1.subject, p1.id, ' . db_format_tsfield('p1.ctime', 'ctime') . ', p1.deleted, m.user AS moderator, COUNT(p2.*), ' . db_format_tsfield('e.ctime', 'edittime') . ', e.user AS editor, m2.user as editormoderator
+    'SELECT p1.id, p1.parent, p1.poster, p1.subject, p1.body, ' . db_format_tsfield('p1.ctime', 'ctime') . ', p1.deleted, m.user AS moderator, COUNT(p2.*), ' . db_format_tsfield('e.ctime', 'edittime') . ', e.user AS editor, m2.user as editormoderator
     FROM {interaction_forum_post} p1
     INNER JOIN {interaction_forum_topic} t ON (t.id = p1.topic)
     INNER JOIN {interaction_forum_post} p2 ON (p1.poster = p2.poster AND p2.deleted != 1)

@@ -206,7 +206,7 @@ $editform = pieform(array(
     'elements' => array(
         'subject' => array(
             'type'         => 'text',
-            'title'        => get_string('subject', 'interaction.forum'),
+            'title'        => get_string('Subject', 'interaction.forum'),
             'defaultvalue' => isset($post) ? $post->subject : null,
             'rules'        => array(
                 'maxlength' => 255,
@@ -215,7 +215,7 @@ $editform = pieform(array(
         ),
         'body' => array(
             'type'         => 'wysiwyg',
-            'title'        => get_string('body', 'interaction.forum'),
+            'title'        => get_string('Body', 'interaction.forum'),
             'rows'         => 10,
             'cols'         => 70,
             'defaultvalue' => isset($post) ? $post->body : null,
@@ -224,7 +224,7 @@ $editform = pieform(array(
         'submit'   => array(
             'type'  => 'submitcancel',
             'value'       => array(
-                isset($post) ? get_string('edit') : get_string('post','interaction.forum'),
+                isset($post) ? get_string('edit') : get_string('Post','interaction.forum'),
                 get_string('cancel')
             ),
             'goto'      => get_config('wwwroot') . 'interaction/forum/topic.php?id='.$topicid
