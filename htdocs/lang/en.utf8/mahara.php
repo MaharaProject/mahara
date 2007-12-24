@@ -249,6 +249,41 @@ $string['forgotpasswordenternew'] = 'Please enter your new password to continue'
 $string['nosuchpasswordrequest'] = 'No such password request';
 $string['passwordchangedok'] = 'Your password was successfully changed';
 
+// Reset password when moving from external to internal auth.
+$string['noinstitutionsetpassemailsubject'] = '%s: Membership of %s';
+$string['noinstitutionsetpassemailmessagetext'] = 'Dear %s,
+
+You are no longer a member of %s.
+You may continue to use %s with your current username %s, but you must set a new password for your account.
+
+Please follow the link below to continue the reset process.
+
+' . get_config('wwwroot') . 'forgotpass.php?key=%s
+
+If you have any questsions regarding the above, please feel free to contact
+us.
+
+' . get_config('wwwroot') . 'contact.php
+
+Regards, %s Site Administrator
+
+' . get_config('wwwroot') . 'forgotpass.php?key=%s';
+$string['noinstitutionsetpassemailmessagehtml'] = '<p>Dear %s,</p>
+
+<p>You are no longer a member of %s.</p>
+<p>You may continue to use %s with your current username %s, but you must set a new password for your account.</p>
+
+<p>Please follow the link below to continue the reset process.</p>
+
+<p><a href="' . get_config('wwwroot') . 'forgotpass.php?key=%s">' . get_config('wwwroot') . 'forgotpass.php?key=%s</a></p>
+
+<p>If you have any questsions regarding the above, please feel free to <a href="' . get_config('wwwroot') . 'contact.php">contact us</a>.</p>
+
+<p>Regards, %s Site Administrator</p>
+
+<p><a href="' . get_config('wwwroot') . 'forgotpass.php?key=%s">' . get_config('wwwroot') . 'forgotpass.php?key=%s</a></p>';
+
+
 // Expiry times
 $string['noenddate'] = 'No end date';
 $string['day']       = 'day';

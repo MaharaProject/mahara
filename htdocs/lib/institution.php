@@ -306,10 +306,82 @@ class Institution {
         db_commit();
     }
 
+    public function removeMembers($userids) {
+        // Remove self last.
+        global $USER;
+        $users = get_records_select_array('usr', 'id IN (' . join(',', $userids) . ')');
+        $removeself = false;
+        foreach ($users as $user) {
+            if ($user->id == $USER->id) {
+                $removeself = true;
+                continue;
+            }
+            $this->removeMember($user);
+        }
+        if ($removeself) {
+            $USER->leave_institution($this->name);
+        }
+    }
+
     public function removeMember($user) {
-        $userid = is_object($user) ? $user->id : $user;
-        delete_records('usr_institution', 'usr', $userid, 'institution', $this->name);
-        handle_event('updateuser', $userid);
+        if (is_numeric($user)) {
+            $user = get_record('usr', 'id', $user);
+        }
+        db_begin();
+        // If the user is being authed by the institution they are
+        // being removed from, change them to internal auth
+        $authinstances = get_records_select_assoc('auth_instance', "
+            institution IN ('mahara','" . $this->name . "')");
+        $oldauth = $user->authinstance;
+        if (isset($authinstances[$oldauth]) && $authinstances[$oldauth]->institution == $this->name) {
+            foreach ($authinstances as $ai) {
+                if ($ai->instancename == 'internal' && $ai->institution == 'mahara') {
+                    $user->authinstance = $ai->id;
+                    break;
+                }
+            }
+            delete_records('auth_remote_user', 'authinstance', $oldauth, 'localusr', $user->id);
+            // If the old authinstance was external, the user may need
+            // to set a password
+            if ($user->password == '') {
+                log_debug('resetting pw for '.$user->id);
+                $this->removeMemberSetPassword($user);
+            }
+            update_record('usr', $user);
+        }
+        delete_records('usr_institution', 'usr', $user->id, 'institution', $this->name);
+        handle_event('updateuser', $user->id);
+        db_commit();
+    }
+
+    /**
+     * Reset user's password, and send them a password change email
+     */
+    private function removeMemberSetPassword(&$user) {
+        global $SESSION, $USER;
+        if ($user->id == $USER->id) {
+            $user->passwordchange = 1;
+            return;
+        }
+        try {
+            $pwrequest = new StdClass;
+            $pwrequest->usr = $user->id;
+            $pwrequest->expiry = db_format_timestamp(time() + 86400);
+            $pwrequest->key = get_random_key();
+            $sitename = get_config('sitename');
+            $fullname = display_name($user, null, true);
+            email_user($user, null,
+                get_string('noinstitutionsetpassemailsubject', 'mahara', $sitename, $this->displayname),
+                get_string('noinstitutionsetpassemailmessagetext', 'mahara', $fullname, $this->displayname, $sitename, $user->username, $pwrequest->key, $sitename, $pwrequest->key),
+                get_string('noinstitutionsetpassemailmessagehtml', 'mahara', $fullname, $this->displayname, $sitename, $user->username, $pwrequest->key, $pwrequest->key, $sitename, $pwrequest->key, $pwrequest->key));
+            insert_record('usr_password_request', $pwrequest);
+        }
+        catch (SQLException $e) {
+            $SESSION->add_error_msg(get_string('forgotpassemailsendunsuccessful'));
+        }
+        catch (EmailException $e) {
+            $SESSION->add_error_msg(get_string('forgotpassemailsendunsuccessful'));
+        }
     }
 
     public function countMembers() {

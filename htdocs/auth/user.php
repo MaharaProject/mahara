@@ -375,8 +375,7 @@ class User {
         if ($institution != 'mahara' && $this->in_institution($institution)) {
             require_once('institution.php');
             $institution = new Institution($institution);
-            $institution->removeMember($this);
-            $this->reset_institutions();
+            $institution->removeMember($this->to_stdclass());
         }
     }
 
@@ -411,7 +410,11 @@ class User {
     }
 
     public function set_admin_institutions($institutions) {
-        $this->set('admininstitutions', array_combine($institutions, $institutions));
+        if (empty($institutions)) {
+            $this->set('admininstitutions', array());
+        } else {
+            $this->set('admininstitutions', array_combine($institutions, $institutions));
+        }
     }
 
     public function add_institution_request($institution, $studentid = null) {
@@ -588,7 +591,10 @@ class LiveUser extends User {
         return $this;
     }
 
-    protected function reloadLiveUser($id) {
+    protected function reloadLiveUser($id=null) {
+        if (is_null($id)) {
+            $id = $this->get('id');
+        }
         $this->commit();
         $this->find_by_id($id);
         $this->activityprefs = load_activity_preferences($id);
@@ -627,6 +633,13 @@ class LiveUser extends User {
 
         return $id;
     }
+
+    public function leave_institution($institution) {
+        parent::leave_institution($institution);
+        $this->find_by_id($this->get('id'));
+        $this->reset_institutions();
+    }
+
 
 }
 ?>

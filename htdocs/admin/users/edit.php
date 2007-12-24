@@ -315,14 +315,18 @@ function edituser_institution_submit(Pieform $form, $values) {
                 db_commit();
                 break;
             } else if (isset($values[$i->institution.'_remove'])) {
-                db_begin();
-                delete_records('usr_institution', 'usr', $user->id, 'institution', $i->institution);
-                handle_event('updateuser', $user->id);
-                db_commit();
+                if ($user->id == $USER->id) {
+                    $USER->leave_institution($i->institution);
+                } else {
+                    $user->leave_institution($i->institution);
+                }
                 // Institutional admins can no longer access this page
                 // if they remove the user from the institution, so
                 // send them back to user search.
                 if (!$USER->get('admin')) {
+                    if (!$USER->is_institutional_admin()) {
+                        redirect(get_config('wwwroot'));
+                    }
                     redirect('/admin/users/search.php');
                 }
                 break;
