@@ -130,6 +130,7 @@ if ($USER->get('admin')) {
 $elements['quota'] = array(
     'type'         => 'bytes',
     'title'        => get_string('filequota','admin'),
+    'rules'        => array('integer' => true),
     'defaultvalue' => $user->quota,
 );
 
@@ -137,9 +138,13 @@ $authinstances = auth_get_auth_instances();
 if (count($authinstances) > 1) {
     $options = array();
 
+    $external = false;
     foreach ($authinstances as $authinstance) {
         if ($USER->can_edit_institution($authinstance->name)) {
             $options[$authinstance->id] = $authinstance->displayname. ': '.$authinstance->instancename;
+            if ($authinstance->authname != 'internal') {
+                $external = true;
+            }
         }
     }
 
@@ -150,7 +155,17 @@ if (count($authinstances) > 1) {
             'options' => $options,
             'defaultvalue' => $user->authinstance,
         );
+        if ($external) {
+            $un = get_field('auth_remote_user', 'remoteusername', 'authinstance', $user->authinstance, 'localusr', $user->id);
+            $elements['remoteusername'] = array(
+                'type' => 'text',
+                'title' => get_string('remoteusername', 'admin'),
+                'rules' => array('regex' => '/^[a-zA-Z]+[0-9a-zA-Z\.-]*$/'),
+                'defaultvalue' => $un ? $un : $user->username,
+            );
+        }
     }
+
 }
 
 $elements['submit'] = array(
@@ -189,7 +204,12 @@ function edituser_site_submit(Pieform $form, $values) {
 
     // Authinstance can be changed by institutional admins if both the
     // old and new authinstances belong to the admin's institutions
-    if (isset($values['authinstance']) && $values['authinstance'] != $user->authinstance) {
+    $remotename = get_field('auth_remote_user', 'remoteusername', 'authinstance', $user->authinstance, 'localusr', $user->id);
+    if (!$remotename) {
+        $remotename = $user->username;
+    }
+    if (isset($values['authinstance']) && ($values['authinstance'] != $user->authinstance
+                                           || $values['remoteusername'] != $remotename)) {
         $authinst = get_records_select_assoc('auth_instance', 'id = ? OR id = ?', 
                                              array($values['authinstance'], $user->authinstance));
         if ($USER->get('admin') || 
@@ -197,9 +217,15 @@ function edituser_site_submit(Pieform $form, $values) {
              $USER->is_institutional_admin($authinst[$user->authinstance]->institution))) {
             delete_records('auth_remote_user', 'authinstance', $user->authinstance, 'localusr', $user->id);
             if ($authinst[$values['authinstance']]->authname != 'internal') {
+                if (isset($values['remoteusername']) && strlen($values['remoteusername']) > 0) {
+                    $un = $values['remoteusername'];
+                }
+                else {
+                    $un = $remotename;
+                }
                 insert_record('auth_remote_user', (object) array(
                     'authinstance'   => $values['authinstance'],
-                    'remoteusername' => $user->username,
+                    'remoteusername' => $un,
                     'localusr'       => $user->id,
                 ));
             }

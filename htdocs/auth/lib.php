@@ -416,7 +416,8 @@ function auth_get_auth_instances() {
             i.id,
             inst.name,
             inst.displayname,
-            i.instancename
+            i.instancename,
+            i.authname
         FROM 
             {institution} inst,
             {auth_instance} i

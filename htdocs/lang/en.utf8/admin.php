@@ -295,6 +295,7 @@ $string['registrationalloweddescription'] = 'Whether users can register for the 
 $string['defaultmembershipperiod'] = 'Default membership period';
 $string['defaultmembershipperioddescription'] = 'How long new members remain associated with the institution';
 $string['authenticatedby'] = 'Authentication Method';
+$string['remoteusername'] = 'Username for external authentication';
 $string['institutionsettings'] = 'Institution Settings';
 $string['changeinstitution'] = 'Change Institution';
 $string['institutionstaff'] = 'Institution Staff';
