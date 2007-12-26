@@ -189,11 +189,22 @@ function edituser_site_submit(Pieform $form, $values) {
 
     // Authinstance can be changed by institutional admins if both the
     // old and new authinstances belong to the admin's institutions
-    if (isset($values['authinstance']) &&
-        ($USER->get('admin') || 
-         ($USER->is_institutional_admin(get_field('auth_instance', 'institution', 'id', $values['authinstance'])) &&
-          $USER->is_institutional_admin(get_field('auth_instance', 'institution', 'id', $user->authinstance))))) {
-        $user->authinstance = $values['authinstance'];
+    if (isset($values['authinstance']) && $values['authinstance'] != $user->authinstance) {
+        $authinst = get_records_select_assoc('auth_instance', 'id = ? OR id = ?', 
+                                             array($values['authinstance'], $user->authinstance));
+        if ($USER->get('admin') || 
+            ($USER->is_institutional_admin($authinst[$values['authinstance']]->institution) &&
+             $USER->is_institutional_admin($authinst[$user->authinstance]->institution))) {
+            delete_records('auth_remote_user', 'authinstance', $user->authinstance, 'localusr', $user->id);
+            if ($authinst[$values['authinstance']]->authname != 'internal') {
+                insert_record('auth_remote_user', (object) array(
+                    'authinstance'   => $values['authinstance'],
+                    'remoteusername' => $user->username,
+                    'localusr'       => $user->id,
+                ));
+            }
+            $user->authinstance = $values['authinstance'];
+        }
     }
 
     update_record('usr', $user);
