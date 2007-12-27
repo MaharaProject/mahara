@@ -58,6 +58,7 @@ if (empty($suspended)) {
                 'rows'        => 5,
                 'cols'        => 60,
                 'title'       => get_string('reason'),
+                'description' => get_string('suspendedreasondescription', 'admin'),
             ),
             'submit' => array(
                 'type'  => 'submit',
@@ -109,27 +110,32 @@ $elements['id'] = array(
 $elements['password'] = array(
     'type'         => 'text',
     'title'        => get_string('resetpassword','admin'),
+    'description'  => get_string('resetpassworddescription','admin'),
 );
 $elements['passwordchange'] = array(
     'type'         => 'checkbox',
     'title'        => get_string('forcepasswordchange','admin'),
+    'description'  => get_string('forcepasswordchangedescription','admin'),
     'defaultvalue' => $user->passwordchange,
 );
 if ($USER->get('admin')) {
     $elements['staff'] = array(
         'type'         => 'checkbox',
         'title'        => get_string('sitestaff','admin'),
+        //'description'  => get_string('sitestaffdescription','admin'),
         'defaultvalue' => $user->staff,
     );
     $elements['admin'] = array(
         'type'         => 'checkbox',
         'title'        => get_string('siteadmin','admin'),
+        //'description'  => get_string('siteadmindescription','admin'),
         'defaultvalue' => $user->admin,
     );
 }
 $elements['quota'] = array(
     'type'         => 'bytes',
     'title'        => get_string('filequota','admin'),
+    'description'  => get_string('filequotadescription','admin'),
     'rules'        => array('integer' => true),
     'defaultvalue' => $user->quota,
 );
@@ -150,17 +156,18 @@ if (count($authinstances) > 1) {
 
     if (isset($options[$user->authinstance])) {
         $elements['authinstance'] = array(
-            'type' => 'select',
-            'title' => get_string('authenticatedby', 'admin'),
-            'options' => $options,
+            'type'         => 'select',
+            'title'        => get_string('authenticatedby', 'admin'),
+            //'description'  => get_string('authenticatedbydescription', 'admin'),
+            'options'      => $options,
             'defaultvalue' => $user->authinstance,
         );
         if ($external) {
             $un = get_field('auth_remote_user', 'remoteusername', 'authinstance', $user->authinstance, 'localusr', $user->id);
             $elements['remoteusername'] = array(
-                'type' => 'text',
-                'title' => get_string('remoteusername', 'admin'),
-                'rules' => array('regex' => '/^[a-zA-Z]+[0-9a-zA-Z\.-]*$/'),
+                'type'         => 'text',
+                'title'        => get_string('remoteusername', 'admin'),
+                'description'  => get_string('remoteusernamedescription', 'admin'),
                 'defaultvalue' => $un ? $un : $user->username,
             );
         }
@@ -258,24 +265,27 @@ foreach ($user->get('institutions') as $i) {
         'elements' => array(
             $i->institution.'_expiry' => array(
                 'type'         => 'date',
-                'title'        => get_string('membershipexpiry'),
+                'title'        => get_string('membershipexpiry', 'admin'),
+                'description'  => get_string('membershipexpirydescription', 'admin'),
                 'minyear'      => $currentdate['year'],
                 'maxyear'      => $currentdate['year'] + 20,
                 'defaultvalue' => $i->expiry
             ),
             $i->institution.'_studentid' => array(
                 'type'         => 'text',
-                'title'        => get_string('studentid'),
+                'title'        => get_string('studentid', 'admin'),
+                'description'  => get_string('institutionstudentiddescription', 'admin'),
                 'defaultvalue' => $i->studentid,
             ),
-            $i->institution.'_staff' => array(
+            /* $i->institution.'_staff' => array(
                 'type'         => 'checkbox',
                 'title'        => get_string('institutionstaff','admin'),
                 'defaultvalue' => $i->staff,
-            ),
+            ), */
             $i->institution.'_admin' => array(
                 'type'         => 'checkbox',
                 'title'        => get_string('institutionadmin','admin'),
+                'description'  => get_string('institutionadmindescription','admin'),
                 'defaultvalue' => $i->admin,
             ),
             $i->institution.'_submit' => array(
