@@ -346,6 +346,10 @@ $string['Admins'] = 'Admins';
 // Admin User Search
 $string['Query'] = 'Query';
 $string['Institution'] = 'Institution';
+$string['confirm'] = 'confirm';
+$string['invited'] = 'invited';
+$string['useradded'] = 'User added';
+$string['invitationsent'] = 'Invitation sent';
 
 // general stuff
 $string['notificationssaved'] = 'Notification settings saved';

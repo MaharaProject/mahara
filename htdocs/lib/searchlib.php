@@ -247,7 +247,7 @@ function build_admin_user_search_results($search, $offset, $limit, $sortby, $sor
     $institutions = get_records_assoc('institution', '', '', '', 'name,displayname');
     if (count($institutions) > 1) {
         $cols['institution'] = array('name'     => get_string('institution'),
-                                     'template' => '{if empty($r.institutions)}{$institutions.mahara->displayname}{else}{foreach from=$r.institutions item=i}<div>{$institutions[$i]->displayname}</div>{/foreach}{/if}');
+                                     'template' => '{if empty($r.institutions)}{$institutions.mahara->displayname}{else}{foreach from=$r.institutions item=i}<div>{$institutions[$i]->displayname}</div>{/foreach}{/if}{if !empty($r.requested)}{foreach from=$r.requested item=i}<div>{$institutions[$i]->displayname} ({if $USER->is_institutional_admin("$i")}<a href="{$WWWROOT}admin/users/addtoinstitution.php?id={$r.id}&institution={$i}">{str tag=confirm section=admin}</a>{else}{str tag=requested}{/if})</div>{/foreach}{/if}{if !empty($r.invitedby)}{foreach from=$r.invitedby item=i}<div>{$institutions[$i]->displayname} ({str tag=invited section=admin})</div>{/foreach}{/if}');
     }
 
     $smarty = smarty_core();

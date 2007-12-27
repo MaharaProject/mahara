@@ -278,6 +278,7 @@ class PluginSearchInternal extends PluginSearch {
         // @todo: Institution stuff is messy and will probably need to
         // be rewritten when we get multiple institutions per user
 
+        $requested = false;
         $institutionsearch = '';
         if (!empty($constraints)) {
             foreach ($constraints as $f) {
@@ -293,6 +294,7 @@ class PluginSearchInternal extends PluginSearch {
                             PluginSearchInternal::match_expression($f['type'], $f['string'], $values, $ilike) .
                             ' OR ir.institution ' .
                             PluginSearchInternal::match_expression($f['type'], $f['string'], $values, $ilike) . ')';
+                        $requested = true;
                     } else {
                         if ($f['string'] == 'mahara') {
                             $where .= ' AND i.institution IS NULL';
@@ -335,6 +337,21 @@ class PluginSearchInternal extends PluginSearch {
                 if ($inst) {
                     foreach ($inst as $i) {
                         $data[$i->usr]->institutions[] = $i->institution;
+                    }
+                }
+                if ($requested) {
+                    $inst = get_records_select_array('usr_institution_request', 
+                                                     'usr IN (' . join(',', array_keys($data)) . ')',
+                                                     null, '', 'usr,institution,confirmedusr,confirmedinstitution');
+                    if ($inst) {
+                        foreach ($inst as $i) {
+                            if ($i->confirmedusr) {
+                                $data[$i->usr]->requested[] = $i->institution;
+                            }
+                            if ($i->confirmedinstitution) {
+                                $data[$i->usr]->invitedby[] = $i->institution;
+                            }
+                        }
                     }
                 }
                 foreach ($data as &$item) {
