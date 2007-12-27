@@ -189,6 +189,7 @@ function edituser_site_submit(Pieform $form, $values) {
 
     if (isset($values['password']) && $values['password'] !== '') {
         $user->password = $values['password'];
+        $user->salt = '';
     }
     $user->passwordchange = (int) ($values['passwordchange'] == 'on');
     $user->quota = $values['quota'];
