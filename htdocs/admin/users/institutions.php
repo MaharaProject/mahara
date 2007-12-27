@@ -294,7 +294,7 @@ else {
         LEFT OUTER JOIN {usr} u ON (u.id = ui.usr AND u.deleted = 0) ' . $where . '
         GROUP BY
             i.name, i.displayname, i.maxuseraccounts
-        ORDER BY i.name', array());
+        ORDER BY i.name = \'mahara\', i.displayname', array());
     if (isset($defaultinstmembers)) {
         $institutions['mahara']->members = $defaultinstmembers;
     }
