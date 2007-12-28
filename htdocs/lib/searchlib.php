@@ -214,6 +214,9 @@ function get_admin_user_search_results($search, $offset, $limit, $sortby, $sortd
     if ($results['count']) {
         foreach ($results['data'] as &$result) {
             $result['name'] = display_name($result);
+            if (!empty($result['institutions'])) {
+                $result['institutions'] = array_combine($result['institutions'],$result['institutions']);
+            }
         }
     }
     return $results;
@@ -234,13 +237,23 @@ function build_admin_user_search_results($search, $offset, $limit, $sortby, $sor
     $searchurl = get_config('wwwroot') . 'admin/users/search.php?' . join('&amp;', $params)
         . '&amp;limit=' . $limit;
 
+    $usernametemplate = '<a href="' . get_config('wwwroot') . 'admin/users/edit.php?id={$r.id}">{$r.username|escape}</a>';
+    if (!$USER->get('admin')) {
+        // Only create the edit link if the returned user belongs to an institution that the viewer administers
+        $cond = array();
+        foreach ($USER->get('admininstitutions') as $i) {
+            $cond[] = 'isset($r.institutions.' . $i . ')';
+        }
+        $usernametemplate = '{if ' . join('||', $cond) . '}' . $usernametemplate . '{else}{$r.username}{/if}';
+    }
+
     $cols = array(
         'icon'        => array('name'     => '',
                                'template' => '<img src="' . get_config('wwwroot') . 'thumb.php?type=profileicon&size=40x40&id={$r.id}" alt="' . get_string('profileimage') . '" />'),
         'firstname'   => array('name'     => get_string('firstname')),
         'lastname'    => array('name'     => get_string('lastname')),
         'username'    => array('name'     => get_string('username'),
-                               'template' => '{if $USER->get(\'admin\') || !empty($r.institutions)}<a href="' . get_config('wwwroot') . 'admin/users/edit.php?id={$r.id}">{$r.username|escape}</a>{else}{$r.username}{/if}'),
+                               'template' => $usernametemplate),
         'email'       => array('name'     => get_string('email')),
     );
 
