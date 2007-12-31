@@ -84,6 +84,7 @@ class User {
             'institutions'     => array(),
             'theme'            => null,
             'admininstitutions' => array(),
+            'staffinstitutions' => array(),
             'parentuser'       => null,
             'sesskey'          => ''
         );
@@ -393,6 +394,23 @@ class User {
         return isset($a[$institution]);
     }
 
+    public function is_institutional_staff($institution = null) {
+        $a = $this->get('staffinstitutions');
+        if (is_null($institution)) {
+            return !empty($a);
+        }
+        return isset($a[$institution]);
+    }
+
+    /**
+     * There is currently no difference in privileges of site staff
+     * and institutional staff
+     */
+    public function can_create_controlled_groups() {
+        return $this->get('admin') || $this->get('staff') || $this->is_institutional_admin()
+            || $this->is_institutional_staff();
+    }
+
     public function can_edit_institution($institution = null) {
         return $this->get('admin') || $this->is_institutional_admin($institution);
     }
@@ -401,8 +419,37 @@ class User {
         if ($this->get('admin')) {
             return true;
         }
-        foreach ($user->get('institutions') as $i) {
+        if (!$this->is_institutional_admin()) {
+            return false;
+        }
+        if ($user instanceof User) {
+            $userinstitutions = $user->get('institutions');
+        } else {
+            $userinstitutions = load_user_institutions($user->id);
+        }
+        foreach ($userinstitutions as $i) {
             if ($this->is_institutional_admin($i->institution)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function is_staff_for_user($user) {
+        if ($this->get('admin') || $this->get('staff')) {
+            return true;
+        }
+        if (!$this->is_institutional_admin() && !$this->is_institutional_staff()) {
+            return false;
+        }
+        if ($user instanceof User) {
+            $userinstitutions = $user->get('institutions');
+        } else {
+            $userinstitutions = load_user_institutions($user->id);
+        }
+        foreach ($userinstitutions as $i) {
+            if ($this->is_institutional_admin($i->institution)
+                || $this->is_institutional_staff($i->institution)) {
                 return true;
             }
         }
@@ -429,9 +476,13 @@ class User {
     protected function reset_institutions() {
         $institutions             = load_user_institutions($this->id);
         $admininstitutions = array();
+        $staffinstitutions = array();
         foreach ($institutions as $i) {
             if ($i->admin) {
                 $admininstitutions[$i->institution] = $i->institution;
+            }
+            if ($i->staff) {
+                $staffinstitutions[$i->institution] = $i->institution;
             }
             if (empty($this->theme)) {
                 $this->theme = $i->theme;
@@ -439,6 +490,7 @@ class User {
         }
         $this->institutions       = $institutions;
         $this->admininstitutions  = $admininstitutions;
+        $this->staffinstitutions  = $staffinstitutions;
     }
 
 }
