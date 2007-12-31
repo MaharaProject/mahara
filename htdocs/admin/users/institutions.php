@@ -315,10 +315,11 @@ function institution_submit(Pieform $form, $values) {
     $newinstitution->authplugin                   = $values['authplugin'];
     $newinstitution->registerallowed              = ($values['registerallowed']) ? 1 : 0;
     $newinstitution->theme                        = empty($values['theme']) ? null : $values['theme'];
-    $newinstitution->defaultmembershipperiod      = ($values['defaultmembershipperiod']) ? intval($values['defaultmembershipperiod']) : null;
-
-    if ($USER->get('admin')) {
-        $newinstitution->maxuseraccounts          = ($values['maxuseraccounts']) ? intval($values['maxuseraccounts']) : null;
+    if ($institution != 'mahara') {
+        $newinstitution->defaultmembershipperiod  = ($values['defaultmembershipperiod']) ? intval($values['defaultmembershipperiod']) : null;
+        if ($USER->get('admin')) {
+            $newinstitution->maxuseraccounts      = ($values['maxuseraccounts']) ? intval($values['maxuseraccounts']) : null;
+        }
     }
 
     $allinstances = array_merge($values['authplugin']['instancearray'], $values['authplugin']['deletearray']);
