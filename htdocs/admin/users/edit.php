@@ -347,7 +347,7 @@ function edituser_institution_submit(Pieform $form, $values) {
                     'institution' => $i->institution,
                     'ctime'       => db_format_timestamp($i->ctime),
                     'studentid'   => $values[$i->institution . '_studentid'],
-                    'staff'       => (int) ($values[$i->institution . '_staff'] == 'on'),
+                    //'staff'       => (int) ($values[$i->institution . '_staff'] == 'on'),
                     'admin'       => (int) ($values[$i->institution . '_admin'] == 'on'),
                 );
                 if ($values[$i->institution . '_expiry']) {
