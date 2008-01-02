@@ -269,6 +269,10 @@ $string['filequota'] = 'File quota (MB)';
 $string['filequotadescription'] = 'Total storage available in the user\'s files area.';
 $string['confirmremoveuserfrominstitution'] = 'Are you sure you want to remove the user from this institution?';
 
+// Add User
+$string['adduser'] = 'Add User';
+$string['createuser'] = 'Create User';
+
 // Login as
 $string['loginasuser'] = 'Login as %s';
 $string['becomeadminagain'] = 'Become %s again';
@@ -308,6 +312,7 @@ $string['changeinstitution'] = 'Change Institution';
 $string['institutionstaff'] = 'Institution Staff';
 $string['institutionadmins'] = 'Institution Administrators';
 $string['institutionadmin'] = 'Institution Admin';
+$string['institutionadministrator'] = 'Institution Administrator';
 $string['institutionadmindescription'] = 'If checked, the user can administer all users in this institution.';
 $string['settingsfor'] = 'Settings for:';
 $string['institutionadministration'] = 'Institution Administration';
