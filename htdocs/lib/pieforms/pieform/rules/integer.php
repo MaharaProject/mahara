@@ -47,6 +47,9 @@ function pieform_rule_integer_i18n() {
          'de.utf8' => array(
             'integer'   => 'Das Feld muss eine Zahl sein'
         ),
+         'fr.utf8' => array(
+            'integer'   => 'Ce champ doit être un nombre entier'
+        ),
     );
 }
 

@@ -1252,7 +1252,10 @@ EOF;
         $function = 'pieform_' . $plugin . '_' . $pluginname . '_i18n';
         if (function_exists($function)) {
             $strings = $function();
-            return $strings[$this->data['language']][$key];
+            if (isset($strings[$this->data['language']][$key])) {
+                return $strings[$this->data['language']][$key];
+            }
+            return '[[' . $key . '/' . $this->data['language'] . ']]';
         }
 
         // We don't recognise this string

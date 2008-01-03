@@ -429,7 +429,7 @@ function xmldb_core_upgrade($oldversion=0) {
         set_config('imagemaxheight', 1024);
     }
 
-    if ($oldversion < 2007121001) {
+    if ($oldversion < 2007082205) {
         set_field('activity_queue', 'type', 'viewaccess', 'type', 'newview');
         set_field('notification_internal_activity', 'type', 'viewaccess', 'type', 'newview');
         set_field('notification_emaildigest_queue', 'type', 'viewaccess', 'type', 'newview');

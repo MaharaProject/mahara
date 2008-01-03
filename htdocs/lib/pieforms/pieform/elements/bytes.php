@@ -133,6 +133,12 @@ function pieform_element_bytes_i18n() {
             'megabytes'    => 'Megabytes',
             'invalidvalue' => 'Wert muss eine Zahl sein',
         ),
+        'fr.utf8' => array(
+            'bytes'        => 'Octets',
+            'kilobytes'    => 'Kilooctets',
+            'megabytes'    => 'Mégaoctets',
+            'invalidvalue' => 'Valeur doit être un nombre',
+        ),
     );
 }
 

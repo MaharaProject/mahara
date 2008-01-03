@@ -1,3 +1,0 @@
-version=3
-opts=dversionmangle=s/~.*// \
-  http://eduforge.org/frs/?group_id=176 /frs/download.php/\d+/mahara-([\d.]+).tar.bz2
