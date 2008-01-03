@@ -94,7 +94,7 @@ if ($usertype == 'requesters') {
         'title' => get_string('inviteuserstojoin', 'admin'),
         'lefttitle' => get_string('Non-members', 'admin'),
         'righttitle' => get_string('userstobeinvited', 'admin'),
-        'searchparams' => array('member' => 0, 'invited' => 0, 'requested' => 0)
+        'searchparams' => array('member' => 0, 'invitedby' => 0, 'requested' => 0)
     );
     $submittext = get_string('inviteusers', 'admin');
 }

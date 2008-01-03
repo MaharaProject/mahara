@@ -364,7 +364,8 @@ $string['Admins'] = 'Admins';
 $string['Query'] = 'Query';
 $string['Institution'] = 'Institution';
 $string['confirm'] = 'confirm';
-$string['invited'] = 'invited';
+$string['invitedby'] = 'Invited by';
+$string['requestto'] = 'Request to';
 $string['useradded'] = 'User added';
 $string['invitationsent'] = 'Invitation sent';
 

@@ -170,6 +170,12 @@ END;
 
     private static function remove_key_prefix($results) {
         if (is_array($results['data'])) {
+            $toarray = array(
+                'institutions' => 1,
+                'invitedby'    => 1,
+                'member'       => 1,
+                'requested'    => 1,
+            );
             foreach ($results['data'] as &$result) {
                 $new_result = array();
                 foreach ($result as $key => &$value) {
@@ -185,7 +191,7 @@ END;
                     }
 
                     if ($key_parts[0] == 'store' || $key_parts[0] == 'text' || $key_parts[0] == 'string') { 
-                        if ($key_parts[1] == 'institutions') {
+                        if (isset($toarray[$key_parts[1]])) {
                             $value = $value == 'mahara' ? array() : explode(' ', $value);
                         }
                         $new_result[$key_parts[1]] = $value;
@@ -268,11 +274,11 @@ END;
         }
 
         if (!empty($institution->name)) {
-            foreach (array('member', 'requested', 'invited') as $f) {
+            foreach (array('member', 'requested', 'invitedby') as $f) {
                 if ($institution->{$f} == 0) {
-                    $neg[] = '-text_' . $f . '_institution:' . $institution->name;
+                    $neg[] = '-text_' . $f . ':' . $institution->name;
                 } else if ($institution->{$f} == 1) {
-                    $q[] = 'text_' . $f . '_institution:' . $institution->name;
+                    $q[] = 'text_' . $f . ':' . $institution->name;
                 }
             }
         }
@@ -502,9 +508,9 @@ END;
             'index_active'        => $user['active'],
             'string_suspended'    => (int)!empty($user['suspendedcusr']),
             'text_institutions_requested' => join(' ', $institutions_requested),
-            'text_member_institution'     => join(' ', $user['institutions']),
-            'text_requested_institution'  => join(' ', $requested),
-            'text_invited_institution'    => join(' ', $invited),
+            'text_member'         => join(' ', $user['institutions']),
+            'text_requested'      => join(' ', $requested),
+            'text_invitedby'      => join(' ', $invited),
         );
         if (empty($doc['index_name'])) {
             $doc['index_name'] = $user['firstname'] . ' ' . $user['lastname'];

@@ -130,7 +130,7 @@ function search_user($query_string, $limit, $offset = 0) {
 function get_institutional_admin_search_results($search, $limit) {
     $institution = new StdClass;
     $institution->name = $search->institution;
-    foreach (array('member', 'requested', 'invited') as $p) {
+    foreach (array('member', 'requested', 'invitedby') as $p) {
         $institution->{$p} = $search->{$p};
     }
     $results = institutional_admin_user_search($search->query, $institution, $limit);
@@ -260,7 +260,7 @@ function build_admin_user_search_results($search, $offset, $limit, $sortby, $sor
     $institutions = get_records_assoc('institution', '', '', '', 'name,displayname');
     if (count($institutions) > 1) {
         $cols['institution'] = array('name'     => get_string('institution'),
-                                     'template' => '{if empty($r.institutions)}{$institutions.mahara->displayname}{else}{foreach from=$r.institutions item=i}<div>{$institutions[$i]->displayname}</div>{/foreach}{/if}{if !empty($r.requested)}{foreach from=$r.requested item=i}<div>{$institutions[$i]->displayname} ({if $USER->is_institutional_admin("$i")}<a href="{$WWWROOT}admin/users/addtoinstitution.php?id={$r.id}&institution={$i}">{str tag=confirm section=admin}</a>{else}{str tag=requested}{/if})</div>{/foreach}{/if}{if !empty($r.invitedby)}{foreach from=$r.invitedby item=i}<div>{$institutions[$i]->displayname} ({str tag=invited section=admin})</div>{/foreach}{/if}');
+                                     'template' => '{if empty($r.institutions)}{$institutions.mahara->displayname}{else}{foreach from=$r.institutions item=i}<div>{$institutions[$i]->displayname}</div>{/foreach}{/if}{if !empty($r.requested)}{foreach from=$r.requested item=i}<div class="pending">{str tag=requestto section=admin} {$institutions[$i]->displayname}{if $USER->is_institutional_admin("$i")} (<a href="{$WWWROOT}admin/users/addtoinstitution.php?id={$r.id}&institution={$i}">{str tag=confirm section=admin}</a>){/if}</div>{/foreach}{/if}{if !empty($r.invitedby)}{foreach from=$r.invitedby item=i}<div class="pending">{str tag=invitedby section=admin} {$institutions[$i]->displayname}</div>{/foreach}{/if}');
     }
 
     $smarty = smarty_core();

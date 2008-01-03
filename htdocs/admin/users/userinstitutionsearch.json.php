@@ -34,7 +34,7 @@ $params = new StdClass;
 $params->query       = trim(param_variable('query', ''));
 $params->institution = param_alphanum('institution', null);
 $params->requested   = param_integer('requested', null);
-$params->invited     = param_integer('invited', null);
+$params->invitedby   = param_integer('invitedby', null);
 $params->member      = param_integer('member', null);
 $limit               = param_integer('limit', 100);
 

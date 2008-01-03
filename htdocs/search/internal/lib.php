@@ -408,7 +408,7 @@ class PluginSearchInternal extends PluginSearch {
                 AND ' . ($institution->member ? ' NOT ' : '') . ' member.usr IS NULL';
             $studentid = ', member.studentid';
         }
-        if (!is_null($institution->requested) || !is_null($institution->invited)) {
+        if (!is_null($institution->requested) || !is_null($institution->invitedby)) {
             $sql .= '
                 LEFT OUTER JOIN {usr_institution_request} req ON (req.usr = u.id
                     AND req.institution = ' . db_quote($institution->name) . ')';
@@ -420,7 +420,7 @@ class PluginSearchInternal extends PluginSearch {
                 }
                 $studentid = ', req.studentid';
             }
-            if (!is_null($institution->invited)) {
+            if (!is_null($institution->invitedby)) {
                 if ($institution->requested == 1) {
                     $where .= ' AND req.confirmedinstitution = 1';
                 } else {
