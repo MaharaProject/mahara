@@ -1354,9 +1354,9 @@ function admin_nav() {
                 'weight' => 70,
             ),
             array(
-                'path'   => 'configusers/uploadcsv',
-                'url'    => 'admin/users/uploadcsv.php',
-                'title'  => get_string('uploadcsv', 'admin'),
+                'path'   => 'configusers/addusers',
+                'url'    => 'admin/users/add.php',
+                'title'  => get_string('addusers', 'admin'),
                 'weight' => 80,
             ),
         );
@@ -1448,9 +1448,9 @@ function admin_nav() {
             'weight' => 50,
         ),
         array(
-            'path'   => 'configusers/uploadcsv',
-            'url'    => 'admin/users/uploadcsv.php',
-            'title'  => get_string('uploadcsv', 'admin'),
+            'path'   => 'configusers/addusers',
+            'url'    => 'admin/users/add.php',
+            'title'  => get_string('addusers', 'admin'),
             'weight' => 60,
         ),
         array(

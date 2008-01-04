@@ -199,7 +199,7 @@ $string['uploadcsverrorinvalidusername'] = 'Error on line %s of your file: The u
 $string['uploadcsverrormandatoryfieldnotspecified'] = 'Line %s of the file does not have the required "%s" field';
 $string['uploadcsverroruseralreadyexists'] = 'Line %s of the file specifies the username "%s" that already exists';
 $string['uploadcsverroremailaddresstaken'] = 'Line %s of the file specifies the e-mail address "%s" that is already taken by another user';
-$string['uploadcsvpagedescription'] = '<p>You may use this facility to upload new users via a <acronym title="Comma Separated Values">CSV</acronym> file.</p>
+$string['uploadcsvpagedescription'] = '<p>You may use this facility to upload new users via a <acronym title="Comma Separated Values">CSV</acronym> file.  You may also add users one at a time <a href="%s">here</a>.</p>
    
 <p>The first row of your CSV file should specify the format of your CSV data. For example, it should look like this:</p>
 
@@ -271,7 +271,10 @@ $string['confirmremoveuserfrominstitution'] = 'Are you sure you want to remove t
 
 // Add User
 $string['adduser'] = 'Add User';
+$string['addusers'] = 'Add Users';
 $string['createuser'] = 'Create User';
+$string['adduserspagedescription'] = 'Otherwise you can create a single user using the form below.';
+$string['adduserspagedescriptioncsv'] = 'If you have many users to add, you can import users in bulk from a CSV file by clicking on the button.';
 
 // Login as
 $string['loginasuser'] = 'Login as %s';

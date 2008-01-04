@@ -26,9 +26,9 @@
 
 define('INTERNAL', 1);
 define('INSTITUTIONALADMIN', 1);
-define('MENUITEM', 'configusers/usersearch');
+define('MENUITEM', 'configusers/addusers');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-define('TITLE', get_string('adduser', 'admin'));
+define('TITLE', get_string('addusers', 'admin'));
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'admin');
 require_once('pieforms/pieform.php');
