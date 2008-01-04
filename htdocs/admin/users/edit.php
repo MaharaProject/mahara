@@ -277,11 +277,11 @@ foreach ($user->get('institutions') as $i) {
                 'description'  => get_string('institutionstudentiddescription', 'admin'),
                 'defaultvalue' => $i->studentid,
             ),
-            /* $i->institution.'_staff' => array(
+            $i->institution.'_staff' => array(
                 'type'         => 'checkbox',
                 'title'        => get_string('institutionstaff','admin'),
                 'defaultvalue' => $i->staff,
-            ), */
+            ),
             $i->institution.'_admin' => array(
                 'type'         => 'checkbox',
                 'title'        => get_string('institutionadmin','admin'),
@@ -347,7 +347,7 @@ function edituser_institution_submit(Pieform $form, $values) {
                     'institution' => $i->institution,
                     'ctime'       => db_format_timestamp($i->ctime),
                     'studentid'   => $values[$i->institution . '_studentid'],
-                    //'staff'       => (int) ($values[$i->institution . '_staff'] == 'on'),
+                    'staff'       => (int) ($values[$i->institution . '_staff'] == 'on'),
                     'admin'       => (int) ($values[$i->institution . '_admin'] == 'on'),
                 );
                 if ($values[$i->institution . '_expiry']) {
