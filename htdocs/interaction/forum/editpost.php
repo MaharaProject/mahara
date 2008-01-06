@@ -44,7 +44,12 @@ if ($postid == 0) { // post reply
         INNER JOIN {interaction_forum_topic} t ON (p.topic = t.id AND t.deleted != 1)
         INNER JOIN {interaction_forum_post} p2 ON (p2.topic = t.id AND p2.parent IS NULL)
         INNER JOIN {interaction_instance} f ON (t.forum = f.id AND f.deleted != 1)
-        LEFT JOIN {interaction_forum_moderator} m ON (m.user = p.poster AND m.forum = f.id)
+        LEFT JOIN (
+            SELECT fm.user, fm.forum
+            FROM {interaction_forum_moderator} fm
+            INNER JOIN {interaction_instance} f ON (fm.forum = f.id)
+            INNER JOIN {group_member} gm ON (gm.group = f.group AND gm.member = fm.user)
+        ) m ON (m.user = p.poster AND m.forum = f.id)
         INNER JOIN {group} g ON g.id = f.group
         INNER JOIN {interaction_forum_post} p3 ON (p.poster = p3.poster AND p3.deleted != 1)
         INNER JOIN {interaction_forum_topic} t2 ON (t2.deleted != 1 AND p3.topic = t2.id)
@@ -117,7 +122,12 @@ else { // edit post
         FROM {interaction_forum_post} p
         INNER JOIN {interaction_forum_topic} t ON (p.topic = t.id AND t.deleted != 1)
         INNER JOIN {interaction_instance} f ON (t.forum = f.id AND f.deleted != 1)
-        LEFT JOIN {interaction_forum_moderator} m ON (m.user = p.poster AND m.forum = f.id)
+        LEFT JOIN (
+            SELECT fm.user, fm.forum
+            FROM {interaction_forum_moderator} fm
+            INNER JOIN {interaction_instance} f ON (fm.forum = f.id)
+            INNER JOIN {group_member} gm ON (gm.group = f.group AND gm.member = fm.user)
+        ) m ON (m.user = p.poster AND m.forum = f.id)
         INNER JOIN {group} g ON g.id = f.group
         INNER JOIN {interaction_forum_post} p2 ON (p.poster = p2.poster AND p2.deleted != 1)
         WHERE p.id = ?
@@ -175,7 +185,7 @@ else { // edit post
     );
 }
 
-$parent->ctime = strftime(get_string('strftimerecentfull'), $parent->ctime);
+$parent->ctime = relative_date(get_string('strftimerecentfullrelative', 'interaction.forum'), get_string('strftimerecentfull'), $parent->ctime);
 
 // Javascript to hide the subject box if it has nothing in it, with a link you 
 // click to expand it.

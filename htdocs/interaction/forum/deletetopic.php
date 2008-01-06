@@ -38,7 +38,12 @@ $topic = get_record_sql(
     INNER JOIN {interaction_instance} f ON (f.id = t.forum AND f.deleted != 1)
     INNER JOIN {group} g ON g.id = f.group
     INNER JOIN {interaction_forum_post} p ON (p.topic = t.id AND p.parent IS NULL)
-    LEFT JOIN {interaction_forum_moderator} m ON (m.user = p.poster AND m.forum = t.forum)
+    LEFT JOIN (
+        SELECT fm.user, fm.forum
+        FROM {interaction_forum_moderator} fm
+        INNER JOIN {interaction_instance} f ON (fm.forum = f.id)
+        INNER JOIN {group_member} gm ON (gm.group = f.group AND gm.member = fm.user)
+    ) m ON (m.user = p.poster AND m.forum = t.forum)
     INNER JOIN {interaction_forum_post} p2 ON (p.poster = p2.poster AND p2.deleted != 1)
     INNER JOIN {interaction_forum_topic} t2 ON (t2.deleted != 1 AND p2.topic = t2.id)
     INNER JOIN {interaction_instance} f2 ON (t2.forum = f2.id AND f2.deleted != 1 AND f2.group = f.group)
@@ -58,7 +63,7 @@ $admin = (bool)($membership & (GROUP_MEMBERSHIP_OWNER | GROUP_MEMBERSHIP_ADMIN |
 
 $moderator = $admin || is_forum_moderator((int)$topic->forumid);
 
-$topic->ctime = strftime(get_string('strftimerecentfull'), $topic->ctime);
+$topic->ctime = relative_date(get_string('strftimerecentfullrelative', 'interaction.forum'), get_string('strftimerecentfull'), $topic->ctime);
 
 if (!$moderator) {
     throw new AccessDeniedException(get_string('cantdeletetopic', 'interaction.forum'));

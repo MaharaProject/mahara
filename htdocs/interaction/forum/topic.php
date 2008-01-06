@@ -112,11 +112,21 @@ $posts = get_records_sql_array(
     INNER JOIN {interaction_forum_post} p2 ON (p1.poster = p2.poster AND p2.deleted != 1)
     INNER JOIN {interaction_forum_topic} t2 ON (t2.deleted != 1 AND p2.topic = t2.id)
     INNER JOIN {interaction_instance} f ON (t.forum = f.id AND f.deleted != 1 AND f.group = ?)
-    LEFT JOIN {interaction_forum_moderator} m oN (t.forum = m.forum AND p1.poster = m.user)
+    LEFT JOIN (
+        SELECT fm.user, fm.forum
+        FROM {interaction_forum_moderator} fm
+        INNER JOIN {interaction_instance} f ON (fm.forum = f.id)
+        INNER JOIN {group_member} gm ON (gm.group = f.group AND gm.member = fm.user)
+    ) m oN (t.forum = m.forum AND p1.poster = m.user)
     LEFT JOIN {interaction_forum_edit} e ON e.post = p1.id
     LEFT JOIN {interaction_forum_post} p3 ON p3.id = e.post
     LEFT JOIN {interaction_forum_topic} t3 ON t3.id = p3.topic
-    LEFT JOIN {interaction_forum_moderator} m2 ON t3.forum = m2.forum AND e.user = m2.user
+    LEFT JOIN (
+        SELECT fm.user, fm.forum
+        FROM {interaction_forum_moderator} fm
+        INNER JOIN {interaction_instance} f ON (fm.forum = f.id)
+        INNER JOIN {group_member} gm ON (gm.group = f.group AND gm.member = fm.user)
+    ) m2 ON t3.forum = m2.forum AND e.user = m2.user
     WHERE p1.topic = ?
     GROUP BY 1, 2, 3, 4, 5, p1.ctime, 7, 8, 10, 11, 12, e.ctime
     ORDER BY p1.ctime, p1.id, e.ctime',
@@ -129,15 +139,15 @@ $posts = get_records_sql_array(
 $count = count($posts);
 for ($i = 0; $i < $count; $i++) {
     $posts[$i]->canedit = $posts[$i]->parent && ($moderator || user_can_edit_post($posts[$i]->poster, $posts[$i]->ctime));
-    $posts[$i]->ctime = strftime(get_string('strftimerecentfull'), $posts[$i]->ctime);
+    $posts[$i]->ctime = relative_date(get_string('strftimerecentfullrelative', 'interaction.forum'), get_string('strftimerecentfull'), $posts[$i]->ctime);
     $postedits = array();
     if ($posts[$i]->editor) {
-        $postedits[] = array('editor' => $posts[$i]->editor, 'edittime' => strftime(get_string('strftimerecentfull'), $posts[$i]->edittime), 'moderator' => $posts[$i]->editormoderator);
+        $postedits[] = array('editor' => $posts[$i]->editor, 'edittime' => relative_date(get_string('strftimerecentfullrelative', 'interaction.forum'), get_string('strftimerecentfull'), $posts[$i]->edittime), 'moderator' => $posts[$i]->editormoderator);
     }
     $temp = $i;
     while (isset($posts[$i+1]) && $posts[$i+1]->id == $posts[$temp]->id) { // while the next object is the same post
         $i++;
-        $postedits[] = array('editor' => $posts[$i]->editor, 'edittime' => strftime(get_string('strftimerecentfull'), $posts[$i]->edittime), 'moderator' => $posts[$i]->editormoderator);
+        $postedits[] = array('editor' => $posts[$i]->editor, 'edittime' => relative_date(get_string('strftimerecentfullrelative', 'interaction.forum'), get_string('strftimerecentfull'), $posts[$i]->edittime), 'moderator' => $posts[$i]->editormoderator);
         unset($posts[$i]);
     }
     $posts[$temp]->edit = $postedits;

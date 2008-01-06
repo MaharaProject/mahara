@@ -29,7 +29,14 @@ class PluginInteractionForum extends PluginInteraction {
     public static function instance_config_form($group, $instance=null) {
         if (isset($instance)) {
             $weight = get_field('interaction_forum_instance_config', 'value', 'field', '\'weight\'', 'forum', $instance->get('id'));
-            $moderators = get_column('interaction_forum_moderator', '"user"', 'forum', $instance->get('id'));
+            $moderators = get_column_sql(
+                'SELECT fm.user
+                FROM {interaction_forum_moderator} fm
+                INNER JOIN {interaction_instance} f ON f.id = fm.forum
+                INNER JOIN {group_member} gm ON gm.group = f.group AND fm.user = gm.member
+                WHERE fm.forum = ?',
+                array($instance->get('id'))
+            );
         }
 
         if ($instance === null) {
@@ -346,6 +353,27 @@ function user_can_edit_post($poster, $posttime, $userid=null) {
         $userid = $USER->get('id');
     }
     return $poster == $userid && $posttime > (time() - 30 * 60);
+}
+
+function relative_date($relative, $absolute, $time1, $time2=null) {
+    if ($time2==null) {
+        $time2 = time();
+    }
+
+    $date = getdate($time1);
+
+    $yesterday = getdate(strtotime('-1 day', $time2));
+    $tomorrow = getdate(strtotime('+1 day', $time2));
+    $today = getdate($time2);
+
+    if ($date['year'] == $yesterday['year'] && $date['yday'] == $yesterday['yday']) {
+        return str_replace('%v', get_string('yesterday', 'interaction.forum'), strftime($relative, $time1));
+    }
+    else if ($date['year'] == $today['year'] && $date['yday'] == $today['yday']) {
+        return str_replace('%v', get_string('today', 'interaction.forum'), strftime($relative, $time1));
+    }
+    return strftime($absolute, $time1);
+
 }
 
 function subscribe_forum_submit(Pieform $form, $values) {

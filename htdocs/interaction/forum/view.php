@@ -64,9 +64,16 @@ $admin = (bool)($membership & (GROUP_MEMBERSHIP_OWNER | GROUP_MEMBERSHIP_ADMIN |
 
 $moderator = $admin || is_forum_moderator($forumid);
 
-$moderators = get_column('interaction_forum_moderator', '"user"', 'forum', $forumid);
-
 define('TITLE', $forum->groupname . ' - ' . $forum->title);
+
+$moderators = get_column_sql(
+    'SELECT m.user
+    FROM {interaction_forum_moderator} m
+    INNER JOIN {group_member} gm ON (m.user = gm.member AND gm.group = ?)
+    WHERE m.forum = ?
+    ORDER BY m.user',
+    array($forum->group, $forumid)
+);
 
 // updates the selected topics as subscribed/closed/sticky
 if (isset($_POST['topics']) && isset($_POST['checkbox'])) {
@@ -167,13 +174,19 @@ $forum->subscribe = pieform(array(
         )
     )
 ));
+
 // gets the info about topics
 // the last post is found by taking the max id of the posts in a topic with the max post time
 // taking the max id is needed because multiple posts can have the same post time
-$sql = 'SELECT t.id, p1.subject, p1.body, p1.poster, p1.deleted, m.user AS moderator, COUNT(p2.*), t.closed, s.topic AS subscribed, ' . db_format_tsfield('p4.ctime', 'lastposttime') . ', p4.poster AS lastposter, p4.deleted AS lastpostdeleted, m2.user AS lastpostermoderator
+$sql = 'SELECT t.id, p1.subject, p1.body, p1.poster, p1.deleted, m.user AS moderator, COUNT(p2.*), t.closed, s.topic AS subscribed, ' . db_format_tsfield('p4.ctime', 'lastposttime') . ', p4.poster AS lastposter, m2.user AS lastpostermoderator
     FROM interaction_forum_topic t
     INNER JOIN {interaction_forum_post} p1 ON (p1.topic = t.id AND p1.parent IS NULL)
-    LEFT JOIN {interaction_forum_moderator} m ON (m.forum = t.forum AND p1.poster = m.user)
+    LEFT JOIN (
+        SELECT fm.user, fm.forum
+        FROM {interaction_forum_moderator} fm
+        INNER JOIN {interaction_instance} f ON (fm.forum = f.id)
+        INNER JOIN {group_member} gm ON (gm.group = f.group AND gm.member = fm.user)
+    ) m ON (m.forum = t.forum AND p1.poster = m.user)
     INNER JOIN {interaction_forum_post} p2 ON (p2.topic = t.id AND p2.deleted != 1)
     LEFT JOIN {interaction_forum_subscription_topic} s ON (s.topic = t.id AND s."user" = ?)
     INNER JOIN (
@@ -190,11 +203,16 @@ $sql = 'SELECT t.id, p1.subject, p1.body, p1.poster, p1.deleted, m.user AS moder
     ) p3 ON p3.topic = t.id
     LEFT JOIN {interaction_forum_post} p4 ON (p4.id = p3.post)
     LEFT JOIN {interaction_forum_topic} t2 ON (p4.topic = t2.id)
-    LEFT JOIN {interaction_forum_moderator} m2 ON (p4.poster = m2.user AND t2.forum = m2.forum)
+    LEFT JOIN (
+        SELECT fm.user, fm.forum
+        FROM {interaction_forum_moderator} fm
+        INNER JOIN {interaction_instance} f ON (fm.forum = f.id)
+        INNER JOIN {group_member} gm ON (gm.group = f.group AND gm.member = fm.user)
+    ) m2 ON (p4.poster = m2.user AND t2.forum = m2.forum)
     WHERE t.forum = ?
     AND t.sticky = ?
     AND t.deleted != 1
-    GROUP BY 1, 2, 3, 4, 5, 6, 8, 9, p4.ctime, p4.poster, p4.deleted, p4.id, m2.user
+    GROUP BY 1, 2, 3, 4, 5, 6, 8, 9, p4.ctime, p4.poster, p4.id, m2.user
     ORDER BY p4.ctime DESC, p4.id DESC';
 
 $stickytopics = get_records_sql_array($sql, array($userid, $forumid, 1));
@@ -279,9 +297,7 @@ function setup_topics(&$topics) {
                 $topic->body .= '...';
             }
             $topic->body = htmlentities($topic->body);
-        }
-        if (!$topic->lastpostdeleted) {
-            $topic->lastposttime = strftime(get_string('strftimerecent'), $topic->lastposttime);
+            $topic->lastposttime = relative_date(get_string('strftimerecentrelative', 'interaction.forum'), get_string('strftimerecent'), $topic->lastposttime);
         }
     }
 }

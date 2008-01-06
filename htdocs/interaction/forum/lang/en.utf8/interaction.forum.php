@@ -120,4 +120,9 @@ $string['unsubscribefromforum'] = 'Unsubscribe from forum';
 $string['unsubscribefromtopic'] = 'Unsubscribe from topic';
 $string['updateselectedtopics'] = 'Update selected topics';
 
+$string['today'] = 'Today';
+$string['yesterday'] = 'Yesterday';
+$string['strftimerecentrelative'] = '%%v, %%k:%%M';
+$string['strftimerecentfullrelative'] = '%%v, %%l:%%M %%p';
+
 ?>

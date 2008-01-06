@@ -25,6 +25,7 @@
     <li>
         <h4><a href="{$WWWROOT}interaction/forum/view.php?id={$forum->id|escape}">{$forum->title|escape}</a></h4>
         {$forum->description}
+        {if $forum->moderators}
         <br>
         {str tag="moderatorslist" section="interaction.forum"}
         {foreach from=$forum->moderators item=mod name=moderators}
@@ -32,6 +33,7 @@
             <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=20&amp;id={$mod}" alt="">
             {$mod|display_name|escape}</a>{if !$smarty.foreach.moderators.last}, {/if}
         {/foreach}
+        {/if}
         <div class="fr">{str tag=topics section=interaction.forum args=$forum->count}</div>
         {if $admin}
         <div>
