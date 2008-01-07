@@ -1258,7 +1258,7 @@ function auth_generate_login_form() {
  * @param array $values         The values passed through
  * @param string $authplugin    The authentication plugin that the user uses
  */
-function password_validate(Pieform $form, $values, User $user) {
+function password_validate(Pieform $form, $values, $user) {
 
     $authobj = AuthFactory::create($user->authinstance);
 
