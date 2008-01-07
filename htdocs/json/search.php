@@ -46,7 +46,7 @@ $offset = param_integer('offset', 0);
 
 switch($type) {
     case 'group':
-        $data = search_group($query, $limit, $offset, true);
+        $data = search_group($query, $limit, $offset, 'all');
         $data['type'] = 'group';
         break;
     default:

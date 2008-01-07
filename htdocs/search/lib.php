@@ -76,8 +76,7 @@ abstract class PluginSearch extends Plugin {
      * @param string  The query string
      * @param integer How many results to return
      * @param integer What result to start at (0 == first result)
-     * @param boolean Return all matching groups, or just ones this user
-     * is a member of?
+     * @param string  Which groups to search (all, member, notmember)
      * @return array  A data structure containing results looking like ...
      *         $results = array(
      *               count   => integer, // total number of results
@@ -106,7 +105,7 @@ abstract class PluginSearch extends Plugin {
      *               ),
      *           );
      */
-    public static abstract function search_group($query_string, $limit, $offset=0, $all=false);
+    public static abstract function search_group($query_string, $limit, $offset=0, $type='member');
 
     /**
      * Given a query string and limits, return an array of matching objects
