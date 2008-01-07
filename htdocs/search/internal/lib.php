@@ -569,11 +569,11 @@ class PluginSearchInternal extends PluginSearch {
             )";
         $values = array($query_string, $query_string);
         if (!$all) {
-            $sql .=  "AND ( 
+            $sql .=  'AND (
                 owner = ? OR id IN (
-                    SELECT group FROM {group_member} WHERE member = ?
+                    SELECT "group" FROM {group_member} WHERE member = ?
                 )
-            )";
+            )';
             $values[] = $USER->get('id');
             $values[] = $USER->get('id');
         }
@@ -589,12 +589,12 @@ class PluginSearchInternal extends PluginSearch {
                 OR description LIKE '%' || ? || '%' 
             )";
         if (!$all) {
-            $sql .= "AND ( 
+            $sql .= 'AND (
                     owner = ? OR id IN (
-                        SELECT group FROM {group_member} WHERE member = ?
+                        SELECT "group" FROM {group_member} WHERE member = ?
                     )
                 )
-            ";
+            ';
         }
         $count = get_field_sql($sql, $values);
 
