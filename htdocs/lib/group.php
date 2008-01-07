@@ -286,4 +286,88 @@ function group_add_member($groupid, $userid) {
     $user = optional_userobj($userid);
 }
 
+/**
+ * function to set up groups for display in mygroups.php and find.php
+ *
+ * @param array $groups
+ */
+function setup_groups($groups, $returnto='mygroups') {
+    if (!$groups) {
+        return;
+    }
+    $i = 0;
+    foreach ($groups as $group) {
+        if ($group->type == 'member') {
+            $group->canleave = group_user_can_leave($group->id);
+        }
+        else if ($group->jointype == 'open') {
+            $group->groupjoin = pieform(array(
+                'name' => 'joingroup' . $i++,
+                'successcallback' => 'joingroup_submit',
+                'elements' => array(
+                    'join' => array(
+                        'type' => 'submit',
+                        'value' => get_string('joingroup')
+                    ),
+                    'group' => array(
+                        'type' => 'hidden',
+                        'value' => $group->id
+                    )
+                )
+            ));
+        }
+        else if ($group->type == 'invite') {
+           $group->invite = pieform(array(
+               'name'     => 'invite' . $i++,
+               'renderer' => 'oneline',
+               'successcallback' => 'group_invite_submit',
+               'elements' => array(
+                    'accept' => array(
+                        'type'  => 'submit',
+                        'value' => get_string('acceptinvitegroup')
+                    ),
+                    'decline' => array(
+                        'type'  => 'submit',
+                        'value' => get_string('declineinvitegroup')
+                    ),
+                    'group' => array(
+                        'type' => 'hidden',
+                        'value' => $group->id
+                    ),
+                    'returnto' => array(
+                        'type' => 'hidden',
+                        'value' => $returnto
+                    )
+                )
+            ));
+        }
+        else if ($group->type == 'owner' && $group->requests > 1) {
+            $group->requests = array($group->requests);
+        }
+    }
+}
+
+function joingroup_submit(Pieform $form, $values) {
+    global $SESSION, $USER;
+    group_add_member($values['group'], $USER->get('id'));
+    $SESSION->add_ok_msg(get_string('joinedgroup'));
+    redirect('/group/view.php?id=' . $values['group']);
+}
+
+function group_invite_submit(Pieform $form, $values) {
+    global $SESSION, $USER;
+    if (get_record('group_member_invite', 'member', $USER->get('id'), 'group', $values['group'])) {
+        delete_records('group_member_invite', 'group', $values['group'], 'member', $USER->get('id'));
+        if (isset($values['accept'])) {
+            group_add_member($values['group'], $USER->get('id'));
+            $SESSION->add_ok_msg(get_string('groupinviteaccepted'));
+            redirect('/group/view.php?id=' . $values['group']);
+        }
+        else {
+            $SESSION->add_ok_msg(get_string('groupinvitedeclined'));
+            redirect($values['returnto'] == 'find' ? '/group/find.php' : '/group/mygroups.php');
+        }
+    }
+}
+
 ?>
