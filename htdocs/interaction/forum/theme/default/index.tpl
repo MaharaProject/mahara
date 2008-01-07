@@ -46,7 +46,7 @@
     {/foreach}
 </ul>
 {else}
-<div>{str tag=noforums section=interaction.forum}</div>
+<div class="message">{str tag=noforums section=interaction.forum}</div>
 {/if}
 {include file="columnleftend.tpl"}
 {include file="footer.tpl"}
