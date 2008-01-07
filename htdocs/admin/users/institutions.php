@@ -31,7 +31,6 @@ define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'admin');
 define('SECTION_PAGE', 'institutions');
 require_once('pieforms/pieform.php');
-global $USER;
 define('MENUITEM', ($USER->get('admin') ? 'configusers' : 'manageinstitutions') . '/institutions');
 $smarty = smarty();
 

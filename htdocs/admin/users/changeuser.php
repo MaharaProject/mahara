@@ -27,8 +27,6 @@
 define('INTERNAL', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
-global $USER;
-
 if (param_integer('restore', 0)) {
     $id = $USER->restore_identity();
     redirect(get_config('wwwroot') . 'admin/users/edit.php?id=' . $id);

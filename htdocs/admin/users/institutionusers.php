@@ -36,7 +36,6 @@ define('SECTION_PAGE', 'institutionusers');
 define('MENUITEM', 'configusers/institutionusers');
 require_once('pieforms/pieform.php');
 require_once('institution.php');
-global $USER;
 $institutionelement = get_institution_selector(false);
 
 $institution = param_alphanum('institution', false);
