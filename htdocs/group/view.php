@@ -49,7 +49,7 @@ if (!empty($joincontrol)) {
         case 'leave':
             // make sure they're a member and can leave
             if ($ismember && $group->jointype != 'controlled') {
-                group_remove_member($id, $USER->get('id'));
+                group_remove_user($id, $USER->get('id'));
                 $SESSION->add_ok_msg(get_string('leftgroup'));
             } 
             else {
