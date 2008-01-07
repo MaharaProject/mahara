@@ -71,6 +71,7 @@ function pieform_element_userlist(Pieform $form, $element) {
 
     if (!empty($element['group'])) {
         $smarty->assign('group', $element['group']);
+        $smarty->assign('owner', !isset($element['owner']) || $element['owner'] ? 1 : 0);
     }
 
     return $smarty->fetch('form/userlist.tpl');
