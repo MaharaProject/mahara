@@ -1454,24 +1454,6 @@ function admin_nav() {
             'weight' => 50,
         ),
         array(
-            'path'   => 'configusers/institutionusers',
-            'url'    => 'admin/users/institutionusers.php',
-            'title'  => get_string('institutionmembers', 'admin'),
-            'weight' => 60,
-        ),
-        array(
-            'path'   => 'configusers/institutionstaff',
-            'url'    => 'admin/users/institutionstaff.php',
-            'title'  => get_string('institutionstaff', 'admin'),
-            'weight' => 70,
-        ),
-        array(
-            'path'   => 'configusers/institutionadmins',
-            'url'    => 'admin/users/institutionadmins.php',
-            'title'  => get_string('institutionadmins', 'admin'),
-            'weight' => 80,
-        ),
-        array(
             'path'   => 'configusers/adduser',
             'url'    => 'admin/users/add.php',
             'title'  => get_string('adduser', 'admin'),
