@@ -419,27 +419,18 @@ function get_institution_selector($includedefault = true) {
         return null;
     }
 
-    if (count($institutions) > 1) {
-        $options = array();
-        foreach ($institutions as $i) {
-            $options[$i->name] = $i->displayname;
-        }
-        $institution = key($options);
-        $institutionelement = array(
-            'type' => 'select',
-            'title' => get_string('institution'),
-            'defaultvalue' => $institution,
-            'options' => $options,
-            'rules' => array('regex' => '/^[a-zA-Z0-9]+$/')
-        );
-    } else {
-        $institution = $institutions[0]->name;
-        $institutionelement = array(
-            'type' => 'hidden',
-            'value' => $institution,
-            'rules' => array('regex' => '/^[a-zA-Z0-9]+$/')
-        );
+    $options = array();
+    foreach ($institutions as $i) {
+        $options[$i->name] = $i->displayname;
     }
+    $institution = key($options);
+    $institutionelement = array(
+        'type' => 'select',
+        'title' => get_string('institution'),
+        'defaultvalue' => $institution,
+        'options' => $options,
+        'rules' => array('regex' => '/^[a-zA-Z0-9]+$/')
+    );
 
     return $institutionelement;
 }
