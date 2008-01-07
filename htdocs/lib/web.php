@@ -1354,10 +1354,16 @@ function admin_nav() {
                 'weight' => 70,
             ),
             array(
-                'path'   => 'configusers/addusers',
+                'path'   => 'configusers/adduser',
                 'url'    => 'admin/users/add.php',
-                'title'  => get_string('addusers', 'admin'),
+                'title'  => get_string('adduser', 'admin'),
                 'weight' => 80,
+            ),
+            array(
+                'path'   => 'configusers/uploadcsv',
+                'url'    => 'admin/users/uploadcsv.php',
+                'title'  => get_string('uploadcsv', 'admin'),
+                'weight' => 90,
             ),
         );
     }
@@ -1448,10 +1454,34 @@ function admin_nav() {
             'weight' => 50,
         ),
         array(
-            'path'   => 'configusers/addusers',
-            'url'    => 'admin/users/add.php',
-            'title'  => get_string('addusers', 'admin'),
+            'path'   => 'configusers/institutionusers',
+            'url'    => 'admin/users/institutionusers.php',
+            'title'  => get_string('institutionmembers', 'admin'),
             'weight' => 60,
+        ),
+        array(
+            'path'   => 'configusers/institutionstaff',
+            'url'    => 'admin/users/institutionstaff.php',
+            'title'  => get_string('institutionstaff', 'admin'),
+            'weight' => 70,
+        ),
+        array(
+            'path'   => 'configusers/institutionadmins',
+            'url'    => 'admin/users/institutionadmins.php',
+            'title'  => get_string('institutionadmins', 'admin'),
+            'weight' => 80,
+        ),
+        array(
+            'path'   => 'configusers/adduser',
+            'url'    => 'admin/users/add.php',
+            'title'  => get_string('adduser', 'admin'),
+            'weight' => 90,
+        ),
+        array(
+            'path'   => 'configusers/uploadcsv',
+            'url'    => 'admin/users/uploadcsv.php',
+            'title'  => get_string('uploadcsv', 'admin'),
+            'weight' => 100,
         ),
         array(
             'path'   => 'configextensions',

@@ -33,11 +33,10 @@ define('TITLE', get_string('adminusers', 'admin'));
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'admin');
 define('SECTION_PAGE', 'institutionusers');
-global $USER;
-define('MENUITEM', $USER->get('admin') ? 'configusers/institutions' : 'configusers/institutionusers');
+define('MENUITEM', 'configusers/institutionusers');
 require_once('pieforms/pieform.php');
-
 require_once('institution.php');
+global $USER;
 $institutionelement = get_institution_selector(false);
 
 $institution = param_alphanum('institution', false);

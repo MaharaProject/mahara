@@ -26,7 +26,7 @@
 
 define('INTERNAL', 1);
 define('INSTITUTIONALADMIN', 1);
-define('MENUITEM', 'configusers/addusers');
+define('MENUITEM', 'configusers/uploadcsv');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('uploadcsv', 'admin'));
 require_once('pieforms/pieform.php');
@@ -345,7 +345,6 @@ $fields .= "</ul>\n";
 
 $smarty = smarty();
 $smarty->assign('uploadcsvpagedescription', get_string('uploadcsvpagedescription', 'admin',
-    get_config('wwwroot') . 'admin/users/add.php',
     get_config('wwwroot') . 'admin/extensions/pluginconfig.php?plugintype=artefact&pluginname=internal&type=profile',
     get_config('wwwroot') . 'admin/users/institutions.php',
     $fields
