@@ -254,7 +254,7 @@ $string['resetpassword'] = 'Reset password';
 $string['resetpassworddescription'] = 'If you enter text here, it will replace the user\'s current password.';
 $string['forcepasswordchange'] = 'Force password change on next login';
 $string['forcepasswordchangedescription'] = 'The user will be directed to a change password page the next time they login.';
-$string['sitestaff'] = 'Site staff';
+$string['sitestaff'] = 'Site Staff';
 $string['sitestaffdescription'] = 'If checked, the user can create controlled Communities, receive and release submitted views and access key user profile information.';
 $string['siteadmins'] = 'Site Admins';
 $string['siteadmin'] = 'Site administrator';
@@ -271,6 +271,7 @@ $string['confirmremoveuserfrominstitution'] = 'Are you sure you want to remove t
 
 // Add User
 $string['adduser'] = 'Add User';
+$string['adduserdescription'] = 'Create a new user';
 $string['createuser'] = 'Create User';
 
 // Login as
