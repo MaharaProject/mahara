@@ -5,12 +5,7 @@
 
         replaceChildNodes('{{$name}}_messages');
 
-        // NOTE TO MERGE PEOPLE: I'm aware this template has changed, so
-        // there's a conflict here. The general plan here is to make this use
-        // richardm's admin/users/search.json.php script with raw=1, and remove
-        // json/adminusersearch.php when the merge happens. Talk to him or
-        // Nigel about this.
-        sendjsonrequest('{{$WWWROOT}}json/adminusersearch.php', {'query':q, 'limit': 100}, 'GET', 
+        sendjsonrequest('{{$WWWROOT}}json/usersearch.php', {'query':q, 'limit': 100 {{if $group}}, 'group': {{$group}} , 'owner': {{$owner}} {{/if}}}, 'GET',
             function (users) {
                 var members = {};
                 var counter = 0;

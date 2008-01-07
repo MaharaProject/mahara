@@ -1,16 +1,10 @@
 {include file="header.tpl"}
 {include file="sidebar.tpl"}
+{include file="columnleftstart.tpl"}
 
-<div id="column-left">
-	<div class="content">
-		<div class="box-cnrs"><span class="cnr-tl"><span class="cnr-tr"><span class="cnr-bl"><span class="cnr-br">
-			<div class="maincontent">
-    		<h2>{str tag="creategroup"}</h2>
+    		<h2>{str tag=creategroup section=group}</h2>
     		{$creategroup}
-			</div>
-		</span></span></span></span></div>	
-	</div>
-</div>
 
+{include file="columnleftend.tpl"}
 {include file="footer.tpl"}
 

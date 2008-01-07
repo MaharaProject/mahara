@@ -50,33 +50,33 @@ if (!empty($joincontrol)) {
             // make sure they're a member and can leave
             if ($ismember && $group->jointype != 'controlled') {
                 group_remove_member($id, $USER->get('id'));
-                $SESSION->add_ok_msg(get_string('leftgroup'));
+                $SESSION->add_ok_msg(get_string('leftgroup', 'group'));
             } 
             else {
-                $SESSION->add_error_msg(get_string('couldnotleavegroup'));
+                $SESSION->add_error_msg(get_string('couldnotleavegroup', 'group'));
             }
             break;
         case 'join':
             if (!$ismember && $group->jointype == 'open') {
                 group_add_member($id, $USER->get('id'));
-                $SESSION->add_ok_msg(get_string('joinedgroup'));
+                $SESSION->add_ok_msg(get_string('joinedgroup', 'group'));
             }
             else {
-                $SESSION->add_error_msg(get_string('couldnotjoingroup'));
+                $SESSION->add_error_msg(get_string('couldnotjoingroup', 'group'));
             }
             break;
         case 'acceptinvite':
         case 'declineinvite':
             if (!$request = get_record('group_member_invite', 'member', $USER->get('id'), 'group', $id)) {
-                $SESSION->add_error_msg(get_string('groupnotinvited'));
+                $SESSION->add_error_msg(get_string('groupnotinvited', 'group'));
                 break;
             }
             if ($joincontrol == 'acceptinvite') {
                 group_add_member($id, $USER->get('id'));
-                $message = get_string('groupinviteaccepted');
+                $message = get_string('groupinviteaccepted', 'group');
             }
             else {
-                $message = get_string('groupinvitedeclined');
+                $message = get_string('groupinvitedeclined', 'group');
             }
             delete_records('group_member_invite', 'member', $USER->get('id'), 'group', $id);
             $SESSION->add_ok_msg($message);
@@ -92,23 +92,23 @@ if (!empty($joincontrol)) {
                 $owner = get_record('usr', 'id', $group->owner);
                 insert_record('group_member_request', $gmr);
                 if (empty($gmr->reason)) {
-                    $message = get_string('grouprequestmessage', 'mahara', 
+                    $message = get_string('grouprequestmessage', 'group', 
                                           display_name($USER, $owner), $group->name);
                 } 
                 else {
-                    $message = get_string('grouprequestmessagereason', 'mahara', 
+                    $message = get_string('grouprequestmessagereason', 'group', 
                                           display_name($USER, $owner), $group->name, $gmr->reason);
                 }
                 require_once('activity.php');
                 activity_occurred('maharamessage', 
                     array('users'   => array($group->owner), 
-                          'subject' => get_string('grouprequestsubject'),
+                          'subject' => get_string('grouprequestsubject', 'group'),
                           'message' => $message,
                           'url'     => get_config('wwwroot') . 'group/view.php?id=' . $id));
-                $SESSION->add_ok_msg(get_string('grouprequestsent'));
+                $SESSION->add_ok_msg(get_string('grouprequestsent', 'group'));
             }
             else {
-                $SESSION->add_error_msg(get_string('couldnotrequestgroup'));
+                $SESSION->add_error_msg(get_string('couldnotrequestgroup', 'group'));
             }
             break;
     }
@@ -125,14 +125,14 @@ $viewview = get_config('wwwroot') . 'view/view.php?id=';
 $commview = get_config('wwwroot') . 'group/view.php';
 
 // strings that are used in the js
-$releaseviewstr  = get_string('releaseview');
-$tutorstr        = get_string('tutor');
-$memberstr       = get_string('member');
-$removestr       = get_string('remove');
-$declinestr      = get_string('declinerequest');
-$updatefailedstr = get_string('updatefailed');
-$requeststr      = get_string('sendrequest');
-$reasonstr       = get_string('reason');
+$releaseviewstr  = get_string('releaseview', 'group');
+$tutorstr        = get_string('tutor', 'group');
+$memberstr       = get_string('member', 'group');
+$removestr       = get_string('remove', 'group');
+$declinestr      = get_string('declinerequest', 'group');
+$updatefailedstr = get_string('updatefailed', 'group');
+$requeststr      = get_string('sendrequest', 'group');
+$reasonstr       = get_string('reason', 'group');
 
 // all the permissions stuff
 //$tutor          = (int)($membership && ($membership != GROUP_MEMBERSHIP_MEMBER));
@@ -147,7 +147,7 @@ $canpromote     = (int)(bool)(($staff || $admin) && $controlled);
 $canremove      = (int)(bool)(($tutor && $controlled) || $staff || $admin || $owner);
 $canleave       = ($ismember && !$controlled);
 $canrequestjoin = (!$ismember && empty($invited) && empty($requested) && $group->jointype == 'request');
-$canjoin        = (!$ismember && $group->jointype == 'open');
+$canjoin        = (!$ismember && $group->jointype == 'open' && !$owner);
 
 $javascript = '';
 if ($membership) {
@@ -310,7 +310,47 @@ if (!empty($pending) && $canupdate && $request) {
 addLoadEvent(function () { switchPending(1) });
 EOF;
 }
-$smarty = smarty(array('tablerenderer'));
+
+$interactiontypes = array_flip(
+    array_map(
+        create_function('$a', 'return $a->name;'),
+        plugins_installed('interaction')
+    )
+);
+
+if (!$interactions = get_records_select_array('interaction_instance', 
+    '"group" = ? AND deleted = ?', array($id, 0), 
+    'plugin, ctime', 'id, plugin, title')) {
+    $interactions = array();
+}
+
+foreach ($interactions as $i) {
+    if (!is_array($interactiontypes[$i->plugin])) {
+        $interactiontypes[$i->plugin] = array();
+    }
+    $interactiontypes[$i->plugin][] = $i;
+}
+
+// Sort them according to how the plugin wants them sorted
+if ($interactiontypes) {
+    foreach ($interactiontypes as $plugin => &$interactions) {
+        safe_require('interaction', $plugin);
+        $classname = generate_class_name('interaction', $plugin);
+        if (method_exists($classname, 'sideblock_sort')) {
+            $interactions = call_static_method($classname, 'sideblock_sort', $interactions);
+        }
+    }
+}
+
+// Add a sideblock for group interactions
+$sideblock = array(
+    'name' => 'groupinteractions',
+    'weight' => -5,
+    'data' => $interactiontypes,
+);
+
+$smarty = smarty(array('tablerenderer'), array(), array(), array('sideblocks' => array($sideblock)));
+
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('member', $membership);
 $smarty->assign('tutor', $tutor);
@@ -325,6 +365,7 @@ $smarty->assign('canpromote', $canpromote);
 $smarty->assign('canupdate', $canupdate);
 $smarty->assign('canacceptinvite', $invited);
 $smarty->assign('group', $group);
+$smarty->assign('hasmembers', group_has_members($group->id));
 $smarty->display('group/view.tpl');
 
 

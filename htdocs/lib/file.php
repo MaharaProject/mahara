@@ -355,13 +355,16 @@ function get_dataroot_image_path($path, $id, $size=null) {
     // Work out the location of the original image
     $originalimage = $imagepath . '/originals/' . ($id % 256) . "/$id";
 
-    if (!$size) {
-        // No size has been asked for. Check for the original and return that
-        if (is_readable($originalimage)) {
-            return $originalimage;
-        }
-        // Oops - no original available
+    // If the original has been deleted, then don't show any image, even a cached one. 
+    // delete_image only deletes the original, not any cached ones, so we have 
+    // to make sure the original is still around
+    if (!is_readable($originalimage)) {
         return false;
+    }
+
+    if (!$size) {
+        // No size has been asked for. Return the original
+        return $originalimage;
     }
     else {
         // Check if the image is available in the size requested

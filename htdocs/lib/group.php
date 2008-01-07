@@ -287,4 +287,13 @@ function group_add_member($groupid, $userid) {
     $user = optional_userobj($userid);
 }
 
+function group_has_members($groupid) {
+    $sql = 'SELECT (
+        (SELECT COUNT(*) FROM {group_member} WHERE "group" = ?)
+        +
+        (SELECT COUNT(*) FROM {group_member_request} WHERE "group" = ?)
+    )';
+    return count_records_sql($sql, array($groupid, $groupid));
+}
+
 ?>

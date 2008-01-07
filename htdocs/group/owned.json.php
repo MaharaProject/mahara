@@ -38,7 +38,7 @@ if ($action == 'delete') {
     // check owner
     $owner = get_field('group', 'owner', 'id', $id);
     if ($owner != $USER->get('id')) {
-        json_reply('local', get_string('cantdeletegroupdontown'));
+        json_reply('local', get_string('cantdeletegroupdontown', 'group'));
     }
     db_begin();
     delete_records('view_access_group', 'group', $id);
@@ -48,7 +48,7 @@ if ($action == 'delete') {
     delete_records('group', 'id', $id);
     db_commit();
 
-    json_reply(null, get_string('deletegroupsuccessful'));
+    json_reply(null, get_string('deletegroupsuccessful', 'group'));
 }
 
 json_reply('local', 'Unknown action');

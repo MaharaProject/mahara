@@ -40,6 +40,10 @@ class PluginSearchInternal extends PluginSearch {
      * @param string  The query string
      * @param integer How many results to return
      * @param integer What result to start at (0 == first result)
+     * @param data    Filters the users searched by
+     *                can contain:
+     *             'group' => integer, // only users in this group
+     *             'owner' => boolean  // include the group ownwer (only if group is set)
      * @return array  A data structure containing results looking like ...
      *         $results = array(
      *               count   => integer, // total number of results
@@ -68,33 +72,40 @@ class PluginSearchInternal extends PluginSearch {
      *               ),
      *           );
      */
-    public static function search_user($query_string, $limit, $offset = 0) {
+    public static function search_user($query_string, $limit, $offset = 0, $data=array()) {
         safe_require('artefact', 'internal');
         $publicfields = array_keys(ArtefactTypeProfile::get_public_fields());
         if (empty($publicfields)) {
             $publicfields = array('preferredname');
         }
         if (is_postgres()) {
-            return self::search_user_pg($query_string, $limit, $offset, $publicfields);
+            return self::search_user_pg($query_string, $limit, $offset, $data, $publicfields);
         } 
         else if (is_mysql()) {
-            return self::search_user_my($query_string, $limit, $offset, $publicfields);
+            return self::search_user_my($query_string, $limit, $offset, $data, $publicfields);
         }
         else {
             throw new SQLException('search_user() is not implemented for your database engine (' . get_config('dbtype') . ')');
         }
     }
 
-    public static function search_user_pg($query_string, $limit, $offset, $publicfields) {
+    public static function search_user_pg($query_string, $limit, $offset, $data, $publicfields) {
         $fieldlist = "('" . join("','", $publicfields) . "')";
-
-        $count = get_field_sql('
-            SELECT 
+        $sql = 'SELECT
                 COUNT(DISTINCT u.id)
             FROM
                 {usr} u
                 LEFT JOIN {artefact} a ON u.id=a.owner
-            WHERE
+                ';
+        if (isset($data['group'])) {
+            $sql .= 'INNER JOIN {group_member} gm ON (gm.member = u.id AND gm.group = ' . (int)$data['group'] . ')
+                ';
+            if (isset($data['owner']) && !$data['owner']) {
+                $sql .= 'INNER JOIN {group} g ON (g.id = gm.group AND g.owner != u.id)
+                    ';
+            }
+        }
+        $sql .= 'WHERE
                 u.id <> 0 AND u.active = 1
                 AND ((
                         u.preferredname ILIKE \'%\' || ? || \'%\'
@@ -111,17 +122,24 @@ class PluginSearchInternal extends PluginSearch {
                         AND ( a.title ILIKE \'%\' || ? || \'%\')
                     )
                 )
-            ',
-            array($query_string, $query_string, $query_string, $query_string)
-        );
+            ';
+        $count = get_field_sql($sql, array($query_string, $query_string, $query_string, $query_string));
 
         if ($count > 0) {
-            $data = get_records_sql_array('
-                SELECT DISTINCT ON (u.firstname, u.lastname, u.id)
+            $sql = 'SELECT DISTINCT ON (u.firstname, u.lastname, u.id)
                     u.id, u.username, u.institution, u.firstname, u.lastname, u.preferredname, u.email, u.staff
                 FROM {artefact} a
                     INNER JOIN {usr} u ON u.id = a.owner
-                WHERE
+                ';
+            if (isset($data['group'])) {
+                $sql .= 'INNER JOIN {group_member} gm ON (gm.member = u.id AND gm.group = ' . (int)$data['group'] . ')
+                    ';
+                if (isset($data['owner']) && !$data['owner']) {
+                    $sql .= 'INNER JOIN {group} g ON (g.id = gm.group AND g.owner != u.id)
+                        ';
+                    }
+            }
+            $sql .= 'WHERE
                     u.id <> 0 AND u.active = 1
                     AND ((
                             u.preferredname ILIKE \'%\' || ? || \'%\'
@@ -138,7 +156,8 @@ class PluginSearchInternal extends PluginSearch {
                             AND ( a.title ILIKE \'%\' || ? || \'%\')
                         )
                     )
-                ORDER BY u.firstname, u.lastname, u.id',
+                ORDER BY u.firstname, u.lastname, u.id';
+            $data = get_records_sql_array($sql,
             array($query_string, $query_string, $query_string, $query_string),
             $offset,
             $limit);
@@ -161,16 +180,24 @@ class PluginSearchInternal extends PluginSearch {
         );
     }
 
-    public static function search_user_my($query_string, $limit, $offset, $publicfields) {
+    public static function search_user_my($query_string, $limit, $offset, $data, $publicfields) {
         $fieldlist = "('" . join("','", $publicfields) . "')";
 
-        $count = get_field_sql('
-            SELECT 
+        $sql = 'SELECT
                 COUNT(DISTINCT owner)
             FROM
                 {usr} u
                 LEFT JOIN {artefact} a ON u.id=a.owner
-            WHERE
+                ';
+        if (isset($data['group'])) {
+            $sql .= 'INNER JOIN {group_member} gm ON (gm.member = u.id AND gm.group = ' . (int)$data['group'] . ')
+                ';
+            if (isset($data['owner']) && !$data['owner']) {
+                $sql .= 'INNER JOIN {group} g ON (g.id = gm.group AND g.owner != u.id)
+                    ';
+            }
+        }
+        $sql .= 'WHERE
                 u.id <> 0 AND u.active = 1
                 AND ((
                         u.preferredname IS NULL
@@ -184,9 +211,8 @@ class PluginSearchInternal extends PluginSearch {
                         AND ( a.title LIKE \'%\' || ? || \'%\')
                     )
                 )
-            ',
-            array($query_string, $query_string, $query_string)
-        );
+            ';
+        $count = get_field_sql($sql, array($query_string, $query_string, $query_string));
 
         if ($count > 0) {
             // @todo This is quite possibly not correct. See the postgres 
@@ -194,12 +220,20 @@ class PluginSearchInternal extends PluginSearch {
             // postgres query. There is a workaround by using SELECT * followed 
             // by GROUP BY 1, 2, 3, but it's not really valid SQL. The other 
             // way is to rewrite the query using a self join on the usr table.
-            $data = get_records_sql_array('
-                SELECT DISTINCT
+            $sql = 'SELECT DISTINCT
                     u.id, u.username, u.institution, u.firstname, u.lastname, u.preferredname, u.email, u.staff
                 FROM {artefact} a
                     INNER JOIN {usr} u ON u.id = a.owner
-                WHERE
+                    ';
+            if (isset($data['group'])) {
+                $sql .= 'INNER JOIN {group_member} gm ON (gm.member = u.id AND gm.group = ' . (int)$data['group'] . ')
+                    ';
+                if (isset($data['owner']) && !$data['owner']) {
+                    $sql .= 'INNER JOIN {group} g ON (g.id = gm.group AND g.owner != u.id)
+                        ';
+                    }
+            }
+            $sql .= 'WHERE
                     u.id <> 0 AND u.active = 1
                     AND ((
                             u.preferredname IS NULL
@@ -213,8 +247,8 @@ class PluginSearchInternal extends PluginSearch {
                             AND ( a.title LIKE \'%\' || ? || \'%\')
                         )
                     )
-                ORDER BY u.firstname, u.lastname, u.id',
-            array($query_string, $query_string, $query_string),
+                ORDER BY u.firstname, u.lastname, u.id';
+            get_records_sql_array($sql, array($query_string, $query_string, $query_string),
             $offset,
             $limit);
 

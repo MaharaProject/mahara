@@ -817,7 +817,7 @@ function plugin_types() {
     static $pluginstocheck;
     if (empty($pluginstocheck)) {
         // ORDER MATTERS! artefact has to be first!
-        $pluginstocheck = array('artefact', 'auth', 'notification', 'search', 'blocktype');
+        $pluginstocheck = array('artefact', 'auth', 'notification', 'search', 'blocktype', 'interaction');
     }
     return $pluginstocheck;
 }
@@ -853,6 +853,10 @@ function generate_class_name() {
 
 function generate_artefact_class_name($type) {
     return 'ArtefactType' . ucfirst($type);
+}
+
+function generate_interaction_instance_class_name($type) {
+    return 'Interaction' . ucfirst($type) . 'Instance';
 }
 
 function blocktype_namespaced_to_single($blocktype) {
@@ -996,6 +1000,15 @@ class Plugin {
      */
     public static function has_config() {
         return false;
+    }
+
+    /**
+    * Does this plugin offer any activity types
+    * If it does, you must subclass ActivityTypePlugin like 
+    * ActivityType{$PluginType}{$Pluginname}
+    */
+    public static function get_activity_types() {
+        return array();
     }
 }
 

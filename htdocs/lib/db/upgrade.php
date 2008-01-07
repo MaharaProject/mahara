@@ -437,6 +437,142 @@ function xmldb_core_upgrade($oldversion=0) {
         delete_records('activity_type', 'name', 'newview');
     }
 
+    if ($oldversion < 2007103000) {
+        // create interaction tables
+
+        $table = new XMLDBTable('interaction_installed');
+        $table->addFieldInfo('name', XMLDB_TYPE_CHAR, 255, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('version', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('release', XMLDB_TYPE_TEXT, 'small', XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('active', XMLDB_TYPE_INTEGER,  1, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, 1);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('name'));
+
+        create_table($table);
+       
+        $table = new XMLDBTable('interaction_cron');
+        $table->addFieldInfo('plugin', XMLDB_TYPE_CHAR, 255, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('callfunction', XMLDB_TYPE_CHAR, 255, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('minute', XMLDB_TYPE_CHAR, 25, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '*');
+        $table->addFieldInfo('hour', XMLDB_TYPE_CHAR, 25, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '*');
+        $table->addFieldInfo('day', XMLDB_TYPE_CHAR, 25, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '*');
+        $table->addFieldInfo('dayofweek', XMLDB_TYPE_CHAR, 25, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '*');
+        $table->addFieldInfo('month', XMLDB_TYPE_CHAR, 25, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '*');
+        $table->addFieldInfo('nextrun', XMLDB_TYPE_DATETIME, null, null);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('plugin', 'callfunction'));
+        $table->addKeyInfo('pluginfk', XMLDB_KEY_FOREIGN, array('plugin'), 'interaction_installed', array('name'));
+        
+        create_table($table); 
+
+        $table = new XMLDBTable('interaction_config');
+        $table->addFieldInfo('plugin', XMLDB_TYPE_CHAR, 100, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('field', XMLDB_TYPE_CHAR, 100, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('value', XMLDB_TYPE_TEXT, 'small', XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('plugin', 'field'));
+        $table->addKeyInfo('pluginfk', XMLDB_KEY_FOREIGN, array('plugin'), 'interaction_installed', array('name'));
+
+        create_table($table);
+
+        $table = new XMLDBTable('interaction_event_subscription');
+        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, 
+            XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null, null);
+        $table->addFieldInfo('plugin', XMLDB_TYPE_CHAR, 255, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('event', XMLDB_TYPE_CHAR, 50, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('callfunction', XMLDB_TYPE_CHAR, 255, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->addKeyInfo('pluginfk', XMLDB_KEY_FOREIGN, array('plugin'), 'interaction_installed', array('name'));
+        $table->addKeyInfo('eventfk', XMLDB_KEY_FOREIGN, array('event'), 'event_type', array('name'));
+        $table->addKeyInfo('subscruk', XMLDB_KEY_UNIQUE, array('plugin', 'event', 'callfunction'));
+
+        create_table($table);
+
+        $table = new XMLDBTable('interaction_instance');
+        $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED,
+            XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null, null);
+        $table->addFieldInfo('plugin', XMLDB_TYPE_CHAR, 255, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('title', XMLDB_TYPE_CHAR, 255, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('description', XMLDB_TYPE_TEXT, null, XMLDB_UNSIGNED, null);
+        $table->addFieldInfo('group', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFieldInfo('ctime', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
+        $table->addFieldInfo('creator', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+        $table->addFIeldInfo('deleted', XMLDB_TYPE_INTEGER, 1, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, 0);
+        $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->addKeyInfo('pluginfk', XMLDB_KEY_FOREIGN, array('plugin'), 'interaction_installed', array('name'));
+        $table->addKeyInfo('groupfk', XMLDB_KEY_FOREIGN, array('group'), 'group', array('id'));
+        $table->addKeyInfo('creatorfk', XMLDB_KEY_FOREIGN, array('creator'), 'usr', array('id'));
+
+        create_table($table);
+
+    }
+
+    if ($oldversion < 2007111900) {
+        // move the activitytype table around
+        $fks = array(
+            'activity_queue' => 'type',
+            'usr_activity_preference' => 'activity',
+            'notification_internal_activity' => 'type',
+            'notification_emaildigest_queue' => 'type',
+        );
+        // drop all the keys that fk to us
+        foreach ($fks as $table => $field) {
+            $xmldbtable = new XMLDBTable($table);
+            $xmldbkey = new XMLDBKey($field . 'fk');
+            $xmldbkey->setAttributes(XMLDB_KEY_FOREIGN, array($field), 'activity_type', array('name'));
+            drop_key($xmldbtable, $xmldbkey);
+        }
+        // drop the primary key
+        $typetable = new XMLDBTable('activity_type');
+        $typekey = new XMLDBKey('primary');
+        $typekey->setAttributes(XMLDB_KEY_PRIMARY, array('name'));
+        drop_key($typetable, $typekey);
+
+        // create the new field
+        $typefield = new XMLDBField('id');
+        $typefield->setAttributes(XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+        add_field($typetable, $typefield);
+
+        // create the new primary key
+        $typekey = new XMLDBKey('primary');
+        $typekey->setAttributes(XMLDB_KEY_PRIMARY, array('id'));
+        add_key($typetable, $typekey);
+
+        foreach ($fks as $table => $field) {
+            $xmldbtable = new XMLDBTable($table);
+            $xmldbfield = new XMLDBField($field . 'new');
+            $xmldbfield->setAttributes(XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, null);
+            add_field($xmldbtable, $xmldbfield);
+            $sql = 'UPDATE {' . $table . '} 
+                SET ' . $field . 'new = 
+                (SELECT id FROM {activity_type} t where ' . $field . ' = t.name)';
+            execute_sql($sql);
+            $xmldbfield->setAttributes(XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+            change_field_notnull($xmldbtable, $xmldbfield);
+            drop_field($xmldbtable, new XMLDBField($field));
+            rename_field($xmldbtable, $xmldbfield, $field);
+            $xmldbkey = new XMLDBKey($field . 'fk');
+            $xmldbkey->setAttributes(XMLDB_KEY_FOREIGN, array($field), 'activity_type', array('id'));
+            add_key($xmldbtable, $xmldbkey);
+        }
+        // special case... 
+        $table = new XMLDBTable('usr_activity_preference');
+        $key = new XMLDBKey('primary');
+        $key->setAttributes(XMLDB_KEY_PRIMARY, array('usr', 'activity'));
+        add_key($table, $key);
+    
+        // and now add the new fields to the activity_type table
+        $pluginfield = new XMLDBField('plugintype');
+        $pluginfield->setAttributes(XMLDB_TYPE_CHAR, 25);
+        add_field($typetable, $pluginfield);
+        $pluginfield = new XMLDBField('pluginname');
+        $pluginfield->setAttributes(XMLDB_TYPE_CHAR, 255);
+        add_field($typetable, $pluginfield);
+
+        // and the unique key
+        $key = new XMLDBKey('namepluginuk');
+        $key->setAttributes(XMLDB_KEY_UNIQUE, array('name', 'plugintype', 'pluginname'));
+        add_key($typetable, $key);
+    }
+
+
     return $status;
 
 }

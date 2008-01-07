@@ -108,7 +108,7 @@ function set_account_preference($userid, $field, $value) {
  * use $SESSION->set_activity_preference 
  *
  * @param int $userid user id to set preference for
- * @param string $activity activity type to set
+ * @param int $activity activity type to set
  * @param string $method notification method to set.
  */
 function set_activity_preference($userid, $activity, $method) {

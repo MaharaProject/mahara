@@ -133,7 +133,7 @@ switch ($type) {
         foreach ($data as $d) {
             $d->displayname = display_name($d);
             if (!empty($d->tutor) && $membership == GROUP_MEMBERSHIP_MEMBER) {
-                $d->displayname .= ' (' . get_string('tutor') . ')';
+                $d->displayname .= ' (' . get_string('tutor', 'group') . ')';
             }
         }
         break;
@@ -178,18 +178,18 @@ switch ($type) {
                      }
                  }
                  catch (SQLException $e) {
-                     json_reply(true, get_string('memberchangefailed'));
+                     json_reply(true, get_string('memberchangefailed', 'group'));
                  }
                  require_once('activity.php');
                  activity_occurred('maharamessage', 
                      array('users' => array($user),
-                           'subject' => get_string('groupmembershipchangesubject', 'mahara', $group->name), 
-                           'message' => get_string('groupmembershipchangemessage' . $v),
+                           'subject' => get_string('groupmembershipchangesubject', 'group', $group->name), 
+                           'message' => get_string('groupmembershipchangemessage' . $v, 'group'),
                            'url'     => get_config('wwwroot') . 'group/view.php?id=' . $id));
                                     
              }
          }
-         json_reply(false, get_string('memberchangesuccess'));
+         json_reply(false, get_string('memberchangesuccess', 'group'));
          break;
      case 'release':
          if (!($membership & GROUP_MEMBERSHIP_OWNER) && !($membership & GROUP_MEMBERSHIP_ADMIN) && !($membership & GROUP_MEMBERSHIP_TUTOR) && !($membership & GROUP_MEMBERSHIP_STAFF)) {
@@ -199,7 +199,7 @@ switch ($type) {
          require_once(get_config('libroot') . 'view.php');
          $view = new View($view);
          $view->release($id);
-         json_reply(false, get_string('viewreleasedsuccess'));
+         json_reply(false, get_string('viewreleasedsuccess', 'group'));
          break;
 }
 

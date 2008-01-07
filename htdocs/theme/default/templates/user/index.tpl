@@ -9,16 +9,16 @@
                 <tr>
                     <td>
                         <select id="filter" name="filter" onchange="filterChange();">
-                            <option value="0">{str tag='allfriends'}</option>
-                            <option value="1">{str tag='currentfriends'}</option>
-                            <option value="2">{str tag='pendingfriends'}</option>
+                            <option value="0">{str tag='allfriends' section='group'}</option>
+                            <option value="1">{str tag='currentfriends' section='group'}</option>
+                            <option value="2">{str tag='pendingfriends' section='group'}</option>
                         </select>
-                        <a href="" onclick="showFriendslist(); return false;" class="hidden" id="backlink">&laquo; {str tag="backtofriendslist"}</a>
+                        <a href="" onclick="showFriendslist(); return false;" class="hidden" id="backlink">&laquo; {str tag="backtofriendslist" section='group'}</a>
                     </td>
                     <td class="right">
                         <form action="" method="post" onsubmit="searchUsers(); return false;">
                             <input type="text" class="text" name="search" id="friendsquery">
-                            <input type="submit" class="submit" value="{str tag="findnewfriends"}">
+                            <input type="submit" class="submit" value="{str tag="findnewfriends" section='group'}">
                         </form>
                     </td>
                 </tr>

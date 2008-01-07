@@ -54,7 +54,7 @@ if ($markasread) {
 
 // normal processing
 
-$type = param_alpha('type', 'all');
+$type = param_alphanum('type', 'all');
 $limit = param_integer('limit', 10);
 $offset = param_integer('offset', 0);
 
@@ -62,23 +62,26 @@ $userid = $USER->get('id');
 
 if ($type == 'all') {
     $count = count_records('notification_internal_activity', 'usr', $userid);
-    $records = get_records_array('notification_internal_activity', 'usr', $userid,
-                                 'ctime DESC', '*', $offset, $limit);
+    $sql = 'SELECT a.*, at.name AS type,at.plugintype, at.pluginname FROM {notification_internal_activity} a 
+        JOIN {activity_type} at ON a.type = at.id
+        WHERE a.usr = ? ORDER BY ctime DESC';
+    $records = get_records_sql_array($sql, array($userid), $offset, $limit);
 } else if ($type == 'adminmessages' && $USER->get('admin')) {
     $count = count_records_select('notification_internal_activity', 'usr = ? AND type IN (
-         SELECT name FROM {activity_type} WHERE admin = ?)', 
+         SELECT id FROM {activity_type} WHERE admin = ?)', 
                                   array($userid, 1));
-    $records = get_records_select_array('notification_internal_activity', 'usr = ? AND type IN (
-         SELECT name FROM {activity_type} WHERE admin = ?)', 
-                                  array($userid, 1),
-                                  'ctime DESC', '*', $offset, $limit);
+    $sql = 'SELECT a.*, at.name AS type,at.plugintype, at.pluginname FROM {notification_internal_activity} a 
+        JOIN {activity_type} at ON a.type = at.id
+        WHERE a.usr = ? AND at.admin = ? ORDER BY ctime DESC';
+    $records = get_records_sql_array($sql, array($userid, 1), $offset, $limit);
 }
 else {
     $count = count_records_select('notification_internal_activity', 'usr = ? AND type = ?',
                                   array($userid,$type));
-    $records = get_records_select_array('notification_internal_activity', 'usr = ? AND type = ?', 
-                                  array($userid, $type), 
-                                  'ctime DESC', '*', $offset, $limit);
+    $sql = 'SELECT a.*, at.name AS type,at.plugintype, at.pluginname FROM {notification_internal_activity} a
+        JOIN {activity_type} at ON a.type = at.id
+        WHERE a.usr = ? AND a.type = ?';
+    $records = get_records_sql_array($sql, array($userid, $type), $offset, $limit);
 }
 
 if (empty($records)) {
@@ -90,7 +93,11 @@ $unread = get_string('unread', 'activity');
 
 foreach ($records as &$r) {
     $r->date = format_date(strtotime($r->ctime));
-    $r->type = get_string('type' . $r->type, 'activity');
+    $section = 'activity';
+    if (!empty($r->plugintype)) {
+        $section = $r->plugintype . '.' . $r->pluginname;
+    }
+    $r->type = get_string('type' . $r->type, $section);
     $r->message = format_whitespace($r->message);
 }
 

@@ -256,7 +256,7 @@ class User {
      * This function returns a method for a particular
      * activity type, or null if it's not set.
      * 
-     * @param string $key the activity type
+     * @param int $key the activity type id
      */
     public function get_activity_preference($key) {
         $activityprefs = $this->get('activityprefs');

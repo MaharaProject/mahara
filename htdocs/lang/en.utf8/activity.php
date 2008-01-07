@@ -91,4 +91,5 @@ $string['removedgroupmembersubj'] = '%s is no longer a group member';
 $string['addtowatchlist'] = 'Add to watchlist';
 $string['removefromwatchlist'] = 'Remove from watchlist';
 
+$string['missingparam'] = 'Required parameter %s was empty for activity type %s';
 ?>

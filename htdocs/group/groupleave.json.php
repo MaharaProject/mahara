@@ -35,15 +35,15 @@ json_headers();
 $leave = param_integer('leave');
 
 if (!$group = get_record('group', 'id', $leave)) {
-    json_reply(true, get_string('invalidgroup'));
+    json_reply(true, get_string('invalidgroup', 'group'));
 }
 
 if (!group_user_can_leave($group)) {
-    json_reply(true, get_string('couldnotleavegroup'));
+    json_reply(true, get_string('couldnotleavegroup', 'group'));
 }
 
 group_remove_user($group->id, $USER->get('id'));
 
-json_reply(false, get_string('leftgroup'));
+json_reply(false, get_string('leftgroup', 'group'));
 
 ?>
