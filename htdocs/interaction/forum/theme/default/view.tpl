@@ -47,7 +47,7 @@
         {if $moderator}
         <option value="sticky">{str tag="Sticky" section="interaction.forum"}</option>
         <option value="unsticky">{str tag="Unsticky" section="interaction.forum"}</option>
-        <option value="closed">{str tag="Closed" section="interaction.forum"}</option>
+        <option value="closed">{str tag="Close" section="interaction.forum"}</option>
         <option value="open">{str tag="Open" section="interaction.forum"}</option>
         {/if}
     </select>
@@ -84,7 +84,7 @@
         {if $moderator}
         <option value="sticky">{str tag="Sticky" section="interaction.forum"}</option>
         <option value="unsticky">{str tag="Unsticky" section="interaction.forum"}</option>
-        <option value="closed">{str tag="Closed" section="interaction.forum"}</option>
+        <option value="closed">{str tag="Close" section="interaction.forum"}</option>
         <option value="open">{str tag="Open" section="interaction.forum"}</option>
         {/if}
     </select>

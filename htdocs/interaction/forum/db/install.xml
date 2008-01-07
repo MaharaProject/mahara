@@ -11,7 +11,7 @@
                 <FIELD NAME="value" TYPE="text" NOTNULL="true" />
             </FIELDS>
             <KEYS>
-            <KEY NAME="forumfk" TYPE="foreign" FIELDS="forum" REFTABLE="interaction_instance" REFFIELDS="id" />
+                <KEY NAME="forumfk" TYPE="foreign" FIELDS="forum" REFTABLE="interaction_instance" REFFIELDS="id" />
             </KEYS>
         </TABLE>
 

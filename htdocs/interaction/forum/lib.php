@@ -28,7 +28,7 @@ class PluginInteractionForum extends PluginInteraction {
 
     public static function instance_config_form($group, $instance=null) {
         if (isset($instance)) {
-            $weight = get_field('interaction_forum_instance_config', 'value', 'field', '\'weight\'', 'forum', $instance->get('id'));
+            $weight = get_field('interaction_forum_instance_config', 'value', 'field', 'weight', 'forum', $instance->get('id'));
             $moderators = get_column_sql(
                 'SELECT fm.user
                 FROM {interaction_forum_moderator} fm
@@ -114,9 +114,12 @@ class PluginInteractionForum extends PluginInteraction {
         }
 
         // Re-order the forums according to their new ordering
-        delete_records(
-            'interaction_forum_instance_config',
-            'field', 'weight'
+        delete_records_sql(
+            'DELETE FROM {interaction_forum_instance_config}
+            WHERE field = \'weight\' AND forum IN (
+                SELECT id FROM {interaction_instance} WHERE "group" = ?
+            )',
+            array($instance->get('group'))
         );
 
         if (isset($values['weight'])) {

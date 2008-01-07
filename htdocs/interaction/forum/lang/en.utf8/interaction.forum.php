@@ -45,6 +45,7 @@ $string['cantviewtopic'] = 'You are not allowed to view topics in this forum';
 $string['chooseanaction'] = 'Choose an action';
 $string['clicksetsubject'] = 'Click to set a subject';
 $string['Closed'] = 'Closed';
+$string['Close'] = 'Close';
 $string['closeddescription'] = 'Closed topics can only be replied to by moderators and the group owner';
 $string['Count'] = 'Count';
 $string['currentmoderators'] = 'Current Moderators';

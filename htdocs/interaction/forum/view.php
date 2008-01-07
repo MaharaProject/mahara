@@ -76,9 +76,8 @@ $moderators = get_column_sql(
 );
 
 // updates the selected topics as subscribed/closed/sticky
-if (isset($_POST['topics']) && isset($_POST['checkbox'])) {
-    $topics = array_keys($_POST['topics']);
-    $checked = array_keys($_POST['checkbox']);
+if (isset($_POST['checked'])) {
+    $checked = array_keys($_POST['checked']);
     // get type based on which button was pressed
     if (isset($_POST['updatetopics1'])) {
         $type = $_POST['type1'];
@@ -88,7 +87,7 @@ if (isset($_POST['topics']) && isset($_POST['checkbox'])) {
     }
     // check that user is only messing with topics from this forum
     $alltopics = get_column('interaction_forum_topic', 'id', 'forum', $forumid, 'deleted', 0);
-    if ($topics == array_intersect($topics, $alltopics) && $checked == array_intersect($checked, $topics)) { // $topics and $checked are ok
+    if ($checked == array_intersect($checked, $alltopics)) { // $checked is a subset of the topics in this forum
         if ($moderator && $type == 'sticky') {
             set_field_select('interaction_forum_topic', 'sticky', 1, 'id IN (' . implode($checked, ',') . ')', array());
             $SESSION->add_ok_msg(get_string('topicstickysuccess', 'interaction.forum'));
@@ -103,7 +102,7 @@ if (isset($_POST['topics']) && isset($_POST['checkbox'])) {
         }
         else if ($moderator && $type == 'open') {
             set_field_select('interaction_forum_topic', 'closed', 0, 'id IN (' . implode($checked, ',') . ')', array());
-            $SESSION->add_ok_msg(get_string('topicopensuccess', 'interaction.forum'));
+            $SESSION->add_ok_msg(get_string('topicopenedsuccess', 'interaction.forum'));
         }
         else if ($type == 'subscribe' && !$forum->subscribed) {
             db_begin();
@@ -125,7 +124,7 @@ if (isset($_POST['topics']) && isset($_POST['checkbox'])) {
             $SESSION->add_ok_msg(get_string('topicunsubscribesuccess', 'interaction.forum'));
         }
     }
-    else { // $topics or $checked contain bad values
+    else { // $checked contains bad values
         $SESSION->add_error_msg(get_string('topicupdatefailed', 'interaction.forum'));
     }
     redirect('/interaction/forum/view.php?id=' . $forumid . '&offset=' . $offset);
