@@ -36,6 +36,7 @@ $string['typeobjectionable'] = 'Objectionable content';
 $string['typevirusrepeat'] = 'Repeat virus upload';
 $string['typevirusrelease'] = 'Virus flag release';
 $string['typeadminmessages'] = 'Administration messages';
+$string['typeinstitutionmessage'] = 'Institution message';
 
 $string['type'] = 'Activity type';
 $string['attime'] = 'at';
@@ -90,5 +91,11 @@ $string['removedgroupmembersubj'] = '%s is no longer a group member';
 
 $string['addtowatchlist'] = 'Add to watchlist';
 $string['removefromwatchlist'] = 'Remove from watchlist';
+
+$string['institutionrequestsubject'] = '%s has requested membership of %s.';
+$string['institutionrequestmessage'] = 'You can add users to institutions on the Institution Members page:';
+
+$string['institutioninvitesubject'] = 'You have been invited to join the institution %s.';
+$string['institutioninvitemessage'] = 'You can confirm your membership of this institution on your Account Preferences Page:';
 
 ?>

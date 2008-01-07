@@ -25,7 +25,7 @@
  */
 
 define('INTERNAL', 1);
-define('ADMIN', 1);
+define('INSTITUTIONALADMIN', 1);
 define('MENUITEM', 'configusers/suspendedusers');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('suspendedusers', 'admin'));
@@ -42,8 +42,12 @@ var suspendedlist = new TableRenderer(
     'suspended.json.php',
     [
         'name',
-        'studentid',
-        'institution',
+        function (r) {
+            return TD(null, r.institutions ? map(partial(DIV, null), r.institutions) : null);
+        },
+        function (r) {
+            return TD(null, r.institutions ? map(partial(DIV, null), r.institutionids) : r.studentid);
+        },
         'cusrname',
         'reason',
         function (rowdata) { return TD(null, INPUT({'type': 'checkbox', 'name': 'usr_' + rowdata.id})); }

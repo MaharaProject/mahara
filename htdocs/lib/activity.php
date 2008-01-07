@@ -91,7 +91,6 @@ function handle_activity($activitytype, $data, $cron=false) {
     $users = array();
 
     if (!empty($activitytype->admin)) {
-        $users = activity_get_users($activitytype->name, null, null, true);
         // validation stuff
         switch ($activitytype->name) {
             case 'contactus':
@@ -104,6 +103,7 @@ function handle_activity($activitytype, $data, $cron=false) {
                 $data->subject = get_string('newcontactus', 'activity');
                 if (!empty($data->userfrom)) {
                     $data->url = get_config('wwwroot') . 'user/view.php?id=' . $data->userfrom;
+                    $userid = $data->userfrom;
                 }
                 break;
             case 'objectionable':
@@ -113,13 +113,14 @@ function handle_activity($activitytype, $data, $cron=false) {
                 if (empty($data->message)) {
                     throw new InvalidArgumentException("Objectionable content requires a message");
                 }
-                if (!$viewtitle = get_field('view', 'title', 'id', $data->view)) {
+                if (!$view = get_record('view', 'id', $data->view, null, null, null, null, 'title,owner')) {
                     throw new InvalidArgumentException("Couldn't find view with id " . $data->view);
                 }
+                $userid = $view->owner;
                 if (empty($data->artefact)) {
                     $data->url = get_config('wwwroot') . 'view/view.php?id=' . $data->view;
                     $data->subject = get_string('objectionablecontentview', 'activity') 
-                        . ' ' . get_string('onview', 'activity') . ' ' . $viewtitle;
+                        . ' ' . get_string('onview', 'activity') . ' ' . $view->title;
                 }
                 else {
                     $data->url = get_config('wwwroot') . 'view/view.php?artefact=' . $data->artefact . '&id=' . $data->view;
@@ -134,9 +135,16 @@ function handle_activity($activitytype, $data, $cron=false) {
                 $userstring = $data->username . ' (' . $data->fullname . ') (userid:' . $data->userid . ')' ;
                 $data->subject = get_string('virusrepeatsubject', 'mahara', $userstring);
                 $data->message = get_string('virusrepeatmessage');
+                $userid = $data->userid;
                 break;
             case 'virusrelease':
                 break;
+        }
+        if (empty($userid)) {
+            $users = activity_get_users($activitytype->name, null, null, true);
+        } else {
+            $userinstitutions = get_column('usr_institution', 'institution', 'usr', $userid);
+            $users = activity_get_users($activitytype->name, null, null, null, $userinstitutions);
         }
     }
     else {
@@ -153,6 +161,26 @@ function handle_activity($activitytype, $data, $cron=false) {
                     throw new InvalidArgumentException("Mahara message activity type expects a message");
                 }
                 $users = activity_get_users($activitytype->name, $data->users);
+                break;
+            case 'institutionmessage':
+                if ($data->messagetype == 'request') {
+                    $userstring = $data->fullname . ' (' . $data->username . ')';
+                    $data->subject = get_string('institutionrequestsubject', 'activity', $userstring, 
+                                                $data->institution->displayname);
+                    $data->message = get_string('institutionrequestmessage', 'activity');
+                    $data->url = get_config('wwwroot') . 'admin/users/institutionusers.php';
+                    $users = activity_get_users($activitytype->name, null, null, null,
+                                                array($data->institution->name));
+                } else if ($data->messagetype == 'invite') {
+                    if (!is_array($data->users) || empty($data->users)) {
+                        throw new InvalidArgumentException("Institution invitations expect an array of users");
+                    }
+                    $data->subject = get_string('institutioninvitesubject', 'activity', 
+                                                $data->institution->displayname);
+                    $data->message = get_string('institutioninvitemessage', 'activity');
+                    $data->url = get_config('wwwroot') . 'account/index.php';
+                    $users = activity_get_users($activitytype->name, $data->users);
+                }
                 break;
             case 'usermessage':
                 if (!is_numeric($data->userto) || !is_numeric($data->userfrom)) {
@@ -338,19 +366,22 @@ function handle_activity($activitytype, $data, $cron=false) {
  * @param array $userids an array of userids to filter by
  * @param array $userobjs an array of user objects to filterby
  * @param bool $adminonly whether to filter by admin flag
+ * @param array $admininstitutions list of institution names to get admins for
  * @return array of users
  */
-function activity_get_users($activitytype, $userids=null, $userobjs=null, $adminonly=false) {
+function activity_get_users($activitytype, $userids=null, $userobjs=null, $adminonly=false,
+                            $admininstitutions = array()) {
     $values = array($activitytype);
-    $sql = 'SELECT u.*, p.method
-                FROM {usr} u
-                LEFT JOIN {usr_activity_preference} p
-                    ON p.usr = u.id
-                WHERE (p.activity = ? ' . (empty($adminonly) ? ' OR p.activity IS NULL' : '') . ')';
-    if (!empty($adminonly)) {
-        $sql .= ' AND u.admin = ? ';
-        $values[] = 1;
-    }
+    $sql = '
+        SELECT
+            u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff, p.method
+        FROM {usr} u
+        LEFT JOIN {usr_activity_preference} p
+            ON p.usr = u.id ' . (empty($admininstitutions) ? '' : '
+        LEFT OUTER JOIN {usr_institution} ui
+            ON (u.id = ui.usr
+                AND ui.institution IN ('.join(',',array_map('db_quote',$admininstitutions)).'))') . '
+        WHERE (p.activity = ? ' . ($adminonly ? '' : ' OR p.activity IS NULL') . ')';
     if (!empty($userobjs) && is_array($userobjs)) {
         $sql .= ' AND u.id IN (' . implode(',',db_array_to_ph($userobjs)) . ')';
         $values = array_merge($values, array_to_fields($userobjs));
@@ -358,6 +389,14 @@ function activity_get_users($activitytype, $userids=null, $userobjs=null, $admin
     else if (!empty($userids) && is_array($userids)) {
         $sql .= ' AND u.id IN (' . implode(',',db_array_to_ph($userids)) . ')';
         $values = array_merge($values, $userids);
+    }
+    if (!empty($admininstitutions)) {
+        $sql .= '
+        GROUP BY
+            u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff, p.method
+        HAVING (u.admin = 1 OR SUM(ui.admin) > 0)';
+    } else if ($adminonly) {
+        $sql .= ' AND u.admin = 1';
     }
     return get_records_sql_array($sql, $values);
 }
@@ -368,14 +407,37 @@ function activity_get_users($activitytype, $userids=null, $userobjs=null, $admin
  */
 function activity_set_defaults($user_id) {
     $activitytypes = get_records_array('activity_type', 'admin', 0);
+    $haveemail = in_array('email', array_map(create_function('$a', 'return $a->name;'),
+                                             plugins_installed('notification')));
     foreach ($activitytypes as $type) {
+        if ($type->name == 'institutionmessage' && $haveemail) {
+            $method = 'email';
+        } else {
+            $method = 'internal';
+        }
         insert_record('usr_activity_preference', (object)array(
             'usr' => $user_id,
             'activity' => $type->name,
-            'method' => 'internal',
+            'method' => $method,
         ));
     }
     
+}
+
+
+function activity_add_admin_defaults($userids) {
+    $activitytypes = get_records_array('activity_type', 'admin', 1);
+    foreach ($activitytypes as $type) {
+        foreach ($userids as $id) {
+            if (!record_exists('usr_activity_preference', 'usr', $id, 'activity', $type->name)) {
+                insert_record('usr_activity_preference', (object)array(
+                    'usr' => $id,
+                    'activity' => $type->name,
+                    'method' => 'internal',
+                ));
+            }
+        }
+    }
 }
 
 

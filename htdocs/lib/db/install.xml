@@ -28,9 +28,9 @@
                 <FIELD NAME="displayname" TYPE="char" LENGTH="255" NOTNULL="true"/>
                 <FIELD NAME="registerallowed" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1"/>
                 <FIELD NAME="updateuserinfoonlogin" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="0"/>
-               <FIELD NAME="defaultaccountlifetime" TYPE="int" NOTNULL="false"/>
-                <FIELD NAME="defaultaccountinactiveexpire" TYPE="int" NOTNULL="false"/>
-                <FIELD NAME="defaultaccountinactivewarn" TYPE="int" NOTNULL="false" DEFAULT="604800"/>
+                <FIELD NAME="theme" TYPE="char" LENGTH="255" NOTNULL="false"/>
+                <FIELD NAME="defaultmembershipperiod" TYPE="int" NOTNULL="false" />
+                <FIELD NAME="maxuseraccounts" TYPE="int" NOTNULL="false" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="name" />
@@ -101,6 +101,38 @@
             <INDEXES>
                 <INDEX NAME="usernameuk" UNIQUE="true" FIELDS="username,authinstance"/>
             </INDEXES>
+        </TABLE>
+        <TABLE NAME="usr_institution">
+            <FIELDS>
+                <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="true"/>
+                <FIELD NAME="institution" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="false"/>
+                <FIELD NAME="expiry" TYPE="datetime" NOTNULL="false"/>
+                <FIELD NAME="expirymailsent" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="studentid" TYPE="text" NOTNULL="false"/>
+                <FIELD NAME="staff" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="admin" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="usr,institution" />
+                <KEY NAME="usr" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id"/>
+                <KEY NAME="institution" TYPE="foreign" FIELDS="institution" REFTABLE="institution" REFFIELDS="name"/>
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="usr_institution_request">
+            <FIELDS>
+                <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="true"/>
+                <FIELD NAME="institution" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="confirmedusr" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
+                <FIELD NAME="confirmedinstitution" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
+                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="false"/>
+                <FIELD NAME="studentid" TYPE="text" NOTNULL="false"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="usr,institution" />
+                <KEY NAME="usr" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id"/>
+                <KEY NAME="institution" TYPE="foreign" FIELDS="institution" REFTABLE="institution" REFFIELDS="name"/>
+            </KEYS>
         </TABLE>
         <TABLE NAME="sso_session">
             <FIELDS>

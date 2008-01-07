@@ -114,6 +114,8 @@ $string['siteoptionsset'] = 'Site options have been updated';
 $string['sitethemedescription'] = ' ';
 $string['theme'] = 'Theme';
 $string['updatesiteoptions'] = 'Update site options';
+$string['usersallowedmultipleinstitutions'] = 'Users allowed multiple institutions';
+$string['usersallowedmultipleinstitutionsdescription'] = 'If checked, users can be members of several institutions at the same time';
 $string['viruschecking'] = 'Virus checking';
 $string['viruscheckingdescription'] = 'If checked, virus checking will be enabled for all uploaded files using ClamAV';
 $string['searchplugin'] = 'Search plugin';
@@ -183,7 +185,8 @@ $string['uploadcopyright']     = 'Upload Copyright Statement';
 
 // Upload CSV
 $string['csvfile'] = 'CSV File';
-$string['uploadcsvinstitution'] = 'The institution to upload users for';
+$string['uploadcsvinstitution'] = 'The institution and authentication method for the new users';
+$string['uploadcsvconfigureauthplugin'] = 'You must configure an authentication plugin before you can add users by CSV';
 $string['csvfiledescription'] = 'The file containing users to add';
 $string['uploadcsverrorinvalidfieldname'] = 'The field name "%s" is invalid';
 $string['uploadcsverrorrequiredfieldnotspecified'] = 'A required field "%s" has not been specified in the format line';
@@ -208,15 +211,18 @@ $string['uploadcsvpagedescription'] = '<p>You may use this facility to upload ne
 
 %s';
 $string['uploadcsvusersaddedsuccessfully'] = 'The users in the file have been added successfully';
+$string['uploadcsvfailedusersexceedmaxallowed'] = 'No users have been added because there are too many users in your file.  The number of users in the institution would have exceeded the maximum number allowed.';
 
 // Admin Users
 $string['adminuserspagedescription'] = '<p>Here you can choose which users are administrators for the site. The current administrators are listed on the right, and potential administrators are on the left.</p><p>The system must have at least one administrator.</p>';
+$string['institutionadminuserspagedescription'] = 'Here you can choose which users are administrators for the institution. The current administrators are listed on the right, and potential administrators are on the left.';
 $string['potentialadmins'] = 'Potential Admins';
 $string['currentadmins'] = 'Current Admins';
 $string['adminusersupdated'] = 'Admin users updated';
 
 // Staff Users
 $string['staffuserspagedescription'] = 'Here you can choose which users are staff for the site. The current staff are on the right, and potential staff are on the left.';
+$string['institutionstaffuserspagedescription'] = 'Here you can choose which users are staff for your institution. The current staff are on the right, and potential staff are on the left.';
 $string['potentialstaff'] = 'Potential Staff';
 $string['currentstaff'] = 'Current Staff';
 $string['staffusersupdated'] = 'Staff users updated';
@@ -239,6 +245,41 @@ $string['usersdeletedsuccessfully'] = 'Users deleted successfully';
 $string['usersunsuspendedsuccessfully'] = 'Users unsuspended successfully';
 $string['suspendingadmin'] = 'Suspending Admin';
 $string['usersuspended'] = 'User suspended';
+$string['userunsuspended'] = 'User unsuspended';
+
+// User account settings
+$string['accountsettings'] = 'Account settings';
+$string['siteaccountsettings'] = 'Site account settings';
+$string['resetpassword'] = 'Reset password';
+$string['resetpassworddescription'] = 'If you enter text here, it will replace the user\'s current password.';
+$string['forcepasswordchange'] = 'Force password change on next login';
+$string['forcepasswordchangedescription'] = 'The user will be directed to a change password page the next time they login.';
+$string['sitestaff'] = 'Site staff';
+$string['sitestaffdescription'] = 'If checked, the user can create controlled Communities, receive and release submitted views and access key user profile information.';
+$string['siteadmins'] = 'Site Admins';
+$string['siteadmin'] = 'Site administrator';
+$string['siteadmindescription'] = 'Site administrators can to do anything and go anywhere on the site';
+$string['suspended'] = 'Suspended';
+$string['suspendedreason'] = 'Reason for suspension';
+$string['suspendedreasondescription'] = 'The text that will be displayed to the user on their next login attempt.';
+$string['unsuspenduser'] = 'Unsuspend User';
+$string['thisuserissuspended'] = 'This user has been suspended';
+$string['suspendedby'] = 'This user has been suspended by %s';
+$string['filequota'] = 'File quota (MB)';
+$string['filequotadescription'] = 'Total storage available in the user\'s files area.';
+$string['confirmremoveuserfrominstitution'] = 'Are you sure you want to remove the user from this institution?';
+
+// Add User
+$string['adduser'] = 'Add User';
+$string['createuser'] = 'Create User';
+
+// Login as
+$string['loginasuser'] = 'Login as %s';
+$string['becomeadminagain'] = 'Become %s again';
+// Login-as exceptions
+$string['loginasdenied'] = 'Attempt to login as another user without permission';
+$string['loginastwice'] = 'Attempt to login as another user when already logged in as another user';
+$string['loginasrestorenodata'] = 'No user data to restore';
 
 // Institutions
 $string['admininstitutions'] = 'Admininster Institutions';
@@ -260,10 +301,73 @@ $string['institutiondisplayname'] = 'Institution display name';
 $string['institutionupdatedsuccessfully'] = 'Institution updated successfully';
 $string['registrationallowed'] = 'Registration allowed?';
 $string['registrationalloweddescription'] = 'Whether users can register for the system with this institution';
+$string['defaultmembershipperiod'] = 'Default membership period';
+$string['defaultmembershipperioddescription'] = 'How long new members remain associated with the institution';
+$string['authenticatedby'] = 'Authentication Method';
+$string['authenticatedbydescription'] = '';
+$string['remoteusername'] = 'Username for external authentication';
+$string['remoteusernamedescription'] = 'If this user is authenticated by an external method and you would like to associate them with a different identity on a remote database, enter their remote username here.';
+$string['institutionsettings'] = 'Institution Settings';
+$string['changeinstitution'] = 'Change Institution';
+$string['institutionstaff'] = 'Institution Staff';
+$string['institutionadmins'] = 'Institution Administrators';
+$string['institutionadmin'] = 'Institution Admin';
+$string['institutionadministrator'] = 'Institution Administrator';
+$string['institutionadmindescription'] = 'If checked, the user can administer all users in this institution.';
+$string['settingsfor'] = 'Settings for:';
+$string['institutionadministration'] = 'Institution Administration';
+$string['institutionmembers'] = 'Institution Members';
+$string['notadminforinstitution'] = 'You are not an administrator for that institution';
+$string['institutionmemberspagedescription'] = 'On this page you can see users who have requested membership of your institution and add them as members.  You can also remove users from your institution, and invite users to join.';
+$string['editmembers'] = 'Edit Members';
+$string['editstaff'] = 'Edit Staff';
+$string['editadmins'] = 'Edit Admins';
+$string['membershipexpiry'] = 'Membership expires';
+$string['membershipexpirydescription'] = 'Date on which the user will be automatically removed from the institution.';
+$string['studentid'] = 'ID Number';
+$string['institutionstudentiddescription'] = 'An optional identifier specific to the institution.  This field is not editable by the user.';
+
+$string['userstodisplay'] = 'Users to display:';
+$string['institutionusersrequesters'] = 'People who have requested institution membership';
+$string['institutionusersnonmembers'] = 'People who have not requested membership yet';
+$string['institutionusersmembers'] = 'People who are already institution members';
+
+$string['addnewmembers'] = 'Add new members';
+$string['addnewmembersdescription'] = '';
+$string['usersrequested'] = 'Users who have requested membership';
+$string['userstobeadded'] = 'Users to be added as members';
+$string['addmembers'] = 'Add members';
+$string['inviteuserstojoin'] = 'Invite users to join the institution';
+$string['Non-members'] = 'Non-members';
+$string['userstobeinvited'] = 'Users to be invited';
+$string['inviteusers'] = 'Invite Users';
+$string['removeusersfrominstitution'] = 'Remove users from the institution';
+$string['currentmembers'] = 'Current Members';
+$string['userstoberemoved'] = 'Users to be removed';
+$string['removeusers'] = 'Remove Users';
+
+$string['institutionusersupdatedrequesters'] = 'Users added';
+$string['institutionusersupdatedmembers'] = 'Users removed';
+$string['institutionusersupdatednonmembers'] = 'Invitations sent';
+
+$string['maxuseraccounts'] = 'Maximum User Accounts Allowed';
+$string['maxuseraccountsdescription'] = 'The maximum number of user accounts that can be associated with the institution.  If there is no limit, this field should be left blank.';
+$string['institutionuserserrortoomanyusers'] = 'The users were not added.  The number of members cannot exceed the maximum allowed for the institution.  You can add fewer users, remove some users from the institution, or ask the site administrator to increase the maximum number of users.';
+$string['institutionuserserrortoomanyinvites'] = 'Your invitations were not sent.  The number of existing members plus the number of outstanding invitations cannot exceed the institution\'s maximum number of users.  You can invite fewer users, remove some users from the institution, or ask the site administrator to increase the maximum number of users.';
+
+$string['Members'] = 'Members';
+$string['Maximum'] = 'Maximum';
+$string['Staff'] = 'Staff';
+$string['Admins'] = 'Admins';
 
 // Admin User Search
 $string['Query'] = 'Query';
 $string['Institution'] = 'Institution';
+$string['confirm'] = 'confirm';
+$string['invitedby'] = 'Invited by';
+$string['requestto'] = 'Request to';
+$string['useradded'] = 'User added';
+$string['invitationsent'] = 'Invitation sent';
 
 // general stuff
 $string['notificationssaved'] = 'Notification settings saved';

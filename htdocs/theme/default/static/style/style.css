@@ -761,6 +761,7 @@ p {
 .maincontent #newblog table,
 .maincontent #template table,
 .maincontent #userview table,
+.maincontent #edituser table,
 .maincontent #editpost table,
 .maincontent #editblog table,
 .maincontent #draftpost table,
@@ -773,6 +774,9 @@ p {
     border: 0px;
 }
 
+.maincontent th.center {
+    text-align: center;
+}
 .maincontent th {
     text-align: left;
     color: #3a5813;
@@ -817,6 +821,41 @@ p {
     height: 15px;
 }
 /* Within Table Navigation Styles End */
+
+.maincontent #leaveinstitution,
+.maincontent #cancelrequest,
+.maincontent #confirminvite,
+.maincontent #requestmembership {
+    margin-top: 5px;
+}
+
+.maincontent #requestmembership label {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.maincontent #leaveinstitution input.submit,
+.maincontent #cancelrequest input.submit,
+.maincontent #requestmembership input.submit {
+    display: block !important;
+}
+
+.maincontent #confirminvite label {
+    display: block !important;
+}
+
+input#admininstitution_add {
+    float: left;
+}
+.institutioneditbuttons {
+    height: 25px;
+}
+.institutionedituserbuttons {
+    float: right;
+}
+.institutionedituserbuttons form {
+    display: inline;
+}
 
 acronym {
     color: #474220;
@@ -1345,6 +1384,15 @@ a.folderhover {
 }
 #adminnotifications th {
     padding: 0 0 0 5px;
+}
+
+.maincontent #edituser table {
+    padding: 5px 0 0 15px;
+    width: 500px;
+}
+
+form#edituser_institution {
+    width: 600px;
 }
 
 .maincontent #institution table {

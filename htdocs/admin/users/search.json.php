@@ -50,9 +50,10 @@ if ($action == 'search') {
 
     $params = new StdClass;
     $params->query       = trim(param_variable('query', ''));
-    $params->institution = param_alpha('institution', null);
+    $params->institution = param_alphanum('institution', null);
     $params->f           = param_alpha('f', null);
     $params->l           = param_alpha('l', null);
+    $params->institution_requested = param_alphanum('institution_requested', null);
 
     $offset  = param_integer('offset', 0);
     $limit   = param_integer('limit', 10);
@@ -60,7 +61,11 @@ if ($action == 'search') {
     $sortdir = param_alpha('sortdir', 'asc');
 
     json_headers();
-    $data['data'] = build_admin_user_search_results($params, $offset, $limit, $sortby, $sortdir);
+    if (param_boolean('raw', false)) {
+        $data = get_admin_user_search_results($params, $offset, $limit, $sortby, $sortdir);
+    } else {
+        $data['data'] = build_admin_user_search_results($params, $offset, $limit, $sortby, $sortdir);
+    }
     $data['error'] = false;
     $data['message'] = null;
     echo json_encode($data);

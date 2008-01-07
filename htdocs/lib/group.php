@@ -241,7 +241,7 @@ function user_can_access_group($group, $user=null) {
     if ($user->get('admin')) {
         $membertypes = GROUP_MEMBERSHIP_ADMIN;
     }
-    if ($user->get('staff')) {
+    if ($user->get('staff') || $user->is_institutional_admin() || $user->is_institutional_staff()) {
         $membertypes = $membertypes | GROUP_MEMBERSHIP_STAFF;
     }
     if ($group->owner == $user->get('id')) {
@@ -286,5 +286,7 @@ function group_add_member($groupid, $userid) {
     insert_record('group_member', $cm);
     $user = optional_userobj($userid);
 }
+
+
 
 ?>

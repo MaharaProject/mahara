@@ -339,6 +339,9 @@ EOF;
     if (defined('ADMIN')) {
         $smarty->assign('ADMIN', true);
     }
+    if (defined('INSTITUTIONALADMIN')) {
+        $smarty->assign('INSTITUTIONALADMIN', true);
+    }
 
     $smarty->assign('LOGGEDIN', $USER->is_logged_in());
     if ($USER->is_logged_in()) {
@@ -531,7 +534,13 @@ function theme_setup() {
     }
     
     $theme = new StdClass;
-    $theme->theme = get_config('theme');
+    global $USER;
+    if (!empty($USER)) {
+        $theme->theme = $USER->get('theme');
+    }
+    if (empty($theme->theme)) {
+        $theme->theme = get_config('theme');
+    }
     $theme->path = get_config('docroot') . 'theme/' . $theme->theme . '/';
     $theme->template_dir = array($theme->path . 'templates/');
     $theme->inheritance = array($theme->theme);
@@ -1292,7 +1301,72 @@ function make_link($url) {
  * @return $adminnav a data structure containing the admin navigation
  */
 function admin_nav() {
-    $wwwroot = get_config('wwwroot');
+    global $USER;
+    if (!$USER->get('admin')) {
+        // Institutional Admin menu
+        return array(
+            array(
+                'path'   => 'configusers',
+                'url'    => 'admin/users/search.php',
+                'title'  => get_string('institutionadministration', 'admin'),
+                'weight' => 10,
+            ),
+            array(
+                'path'   => 'configusers/usersearch',
+                'url'    => 'admin/users/search.php',
+                'title'  => get_string('usersearch', 'admin'),
+                'weight' => 10,
+            ),
+            array(
+                'path'   => 'configusers/suspendedusers',
+                'url'    => 'admin/users/suspended.php',
+                'title'  => get_string('suspendedusers', 'admin'),
+                'weight' => 20,
+            ),
+            array(
+                'path'   => 'configusers/institutionusers',
+                'url'    => 'admin/users/institutionusers.php',
+                'title'  => get_string('institutionmembers', 'admin'),
+                'weight' => 30,
+            ),
+            array(
+                'path'   => 'configusers/institutionstaff',
+                'url'    => 'admin/users/institutionstaff.php',
+                'title'  => get_string('staffusers', 'admin'),
+                'weight' => 40,
+            ),
+            array(
+                'path'   => 'configusers/institutionadmins',
+                'url'    => 'admin/users/institutionadmins.php',
+                'title'  => get_string('adminusers', 'admin'),
+                'weight' => 50,
+            ),
+            array(
+                'path'   => 'configusers/institutions',
+                'url'    => 'admin/users/institutions.php',
+                'title'  => get_string('institutionsettings', 'admin'),
+                'weight' => 60,
+            ),
+            array(
+                'path'   => 'configusers/adminnotifications',
+                'url'    => 'admin/users/notifications.php',
+                'title'  => get_string('adminnotifications', 'admin'),
+                'weight' => 70,
+            ),
+            array(
+                'path'   => 'configusers/adduser',
+                'url'    => 'admin/users/add.php',
+                'title'  => get_string('adduser', 'admin'),
+                'weight' => 80,
+            ),
+            array(
+                'path'   => 'configusers/uploadcsv',
+                'url'    => 'admin/users/uploadcsv.php',
+                'title'  => get_string('uploadcsv', 'admin'),
+                'weight' => 90,
+            ),
+        );
+    }
 
     $menu = array(
         array(
@@ -1339,26 +1413,32 @@ function admin_nav() {
         ),
         array(
             'path'   => 'configusers',
-            'url'    => 'admin/users/suspended.php',
+            'url'    => 'admin/users/search.php',
             'title'  => get_string('configusers', 'admin'),
             'weight' => 30,
+        ),
+        array(
+            'path'   => 'configusers/usersearch',
+            'url'    => 'admin/users/search.php',
+            'title'  => get_string('usersearch', 'admin'),
+            'weight' => 10,
         ),
         array(
             'path'   => 'configusers/suspendedusers',
             'url'    => 'admin/users/suspended.php',
             'title'  => get_string('suspendedusers', 'admin'),
-            'weight' => 10,
+            'weight' => 15,
         ),
         array(
             'path'   => 'configusers/staffusers',
             'url'    => 'admin/users/staff.php',
-            'title'  => get_string('staffusers', 'admin'),
+            'title'  => get_string('sitestaff', 'admin'),
             'weight' => 20,
         ),
         array(
             'path'   => 'configusers/adminusers',
             'url'    => 'admin/users/admins.php',
-            'title'  => get_string('adminusers', 'admin'),
+            'title'  => get_string('siteadmins', 'admin'),
             'weight' => 30,
         ),
         array(
@@ -1374,16 +1454,34 @@ function admin_nav() {
             'weight' => 50,
         ),
         array(
-            'path'   => 'configusers/uploadcsv',
-            'url'    => 'admin/users/uploadcsv.php',
-            'title'  => get_string('uploadcsv', 'admin'),
+            'path'   => 'configusers/institutionusers',
+            'url'    => 'admin/users/institutionusers.php',
+            'title'  => get_string('institutionmembers', 'admin'),
             'weight' => 60,
         ),
         array(
-            'path'   => 'configusers/usersearch',
-            'url'    => 'admin/users/search.php',
-            'title'  => get_string('usersearch', 'admin'),
+            'path'   => 'configusers/institutionstaff',
+            'url'    => 'admin/users/institutionstaff.php',
+            'title'  => get_string('institutionstaff', 'admin'),
             'weight' => 70,
+        ),
+        array(
+            'path'   => 'configusers/institutionadmins',
+            'url'    => 'admin/users/institutionadmins.php',
+            'title'  => get_string('institutionadmins', 'admin'),
+            'weight' => 80,
+        ),
+        array(
+            'path'   => 'configusers/adduser',
+            'url'    => 'admin/users/add.php',
+            'title'  => get_string('adduser', 'admin'),
+            'weight' => 90,
+        ),
+        array(
+            'path'   => 'configusers/uploadcsv',
+            'url'    => 'admin/users/uploadcsv.php',
+            'title'  => get_string('uploadcsv', 'admin'),
+            'weight' => 100,
         ),
         array(
             'path'   => 'configextensions',
@@ -1406,7 +1504,7 @@ function admin_nav() {
  * Builds a data structure representing the menu for Mahara.
  */
 function main_nav() {
-    if (defined('ADMIN')) {
+    if (defined('ADMIN') || defined('INSTITUTIONALADMIN')) {
         $menu = admin_nav();
     }
     else {
@@ -1513,12 +1611,10 @@ function find_menu_children(&$menu, $path) {
     }
 
     foreach ($menu as $key => $item) {
-        if (
-            defined('MENUITEM') &&
-            ((MENUITEM == '' && $item['path'] == '') ||
-            ($item['path'] != '' && $item['path'] == substr(MENUITEM, 0, strlen($item['path']))))) {
-            $item['selected'] = true;
-        }
+        $len = strlen($item['path']);
+        $item['selected'] = defined('MENUITEM')
+            && ($item['path'] == MENUITEM
+                || ($item['path'] . '/' == substr(MENUITEM, 0, strlen($item['path'])+1)));
         if (
             ($path == '' && $item['path'] == '') ||
             ($item['path'] != '' && substr($item['path'], 0, strlen($path)) == $path && !preg_match('%/%', substr($item['path'], strlen($path) + 1)))) {
@@ -1671,6 +1767,12 @@ function get_loggedin_string() {
             ' (<a href="' . get_config('wwwroot') . 'account/activity/">'  . 
             '<span id="headerunreadmessagecount">' . $count . '</span> ' . 
             '<span id="headerunreadmessages">' . get_string($key) . '</span></a>)';
+    }
+
+    $saveduser = $USER->get('parentuser');
+    if (!empty($saveduser) && $saveduser->name) {
+        $str .= ' (<a href="' . get_config('wwwroot') . 'admin/users/changeuser.php?restore=1">'
+            . get_string('becomeadminagain', 'admin', $saveduser->name) . '</a>)';
     }
 
     return $str;

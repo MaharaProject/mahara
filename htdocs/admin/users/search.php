@@ -25,7 +25,7 @@
  */
 
 define('INTERNAL', 1);
-define('ADMIN', 1);
+define('INSTITUTIONALADMIN', 1);
 define('MENUITEM', 'configusers/usersearch');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('usersearch', 'admin'));
@@ -36,7 +36,6 @@ require('searchlib.php');
 
 $search = (object) array(
     'query'       => trim(param_variable('query', '')),
-    'institution' => param_alpha('institution', 'all'),
     'f'           => param_alpha('f', null), // first initial
     'l'           => param_alpha('l', null), // last initial
 );
@@ -46,10 +45,18 @@ $sortdir = param_alpha('sortdir', 'asc');
 $offset  = param_integer('offset', 0);
 $limit   = param_integer('limit', 10);
 
+if ($USER->get('admin')) {
+    $institutions = get_records_array('institution');
+    $search->institution = param_alphanum('institution', 'all');
+} else {
+    $institutions = get_records_select_array('institution', "name IN ('" . join("','", array_keys($USER->get('admininstitutions'))) . "')");
+    $search->institution_requested = param_alphanum('institution_requested', 'all');
+}
+
 $smarty = smarty(array('adminusersearch'));
 $smarty->assign('search', $search);
 $smarty->assign('alphabet', explode(',', get_string('alphabet')));
-$smarty->assign('institutions', get_records_array('institution'));
+$smarty->assign('institutions', $institutions);
 $smarty->assign('results', build_admin_user_search_results($search, $offset, $limit, $sortby, $sortdir));
 $smarty->display('admin/users/search.tpl');
 

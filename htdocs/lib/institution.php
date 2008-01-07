@@ -42,9 +42,9 @@ class Institution {
         'displayname' => '',
         'registerallowed' => 1,
         'updateuserinfoonlogin' => 0,
-        'defaultaccountlifetime' => null,
-        'defaultaccountinactiveexpire' => null,
-        'defaultaccountinactivewarn' => 0
+        'theme' => 'default',
+        'defaultmembershipperiod' => 0,
+        'maxuseraccounts' => null
         ); 
 
     function __construct($name = null) {
@@ -52,7 +52,7 @@ class Institution {
             return $this;
         }
 
-        if ($this->findByName($name)) {
+        if (!$this->findByName($name)) {
             throw new ParamOutOfRangeException('No such institution');
         }
     }
@@ -89,17 +89,17 @@ class Institution {
             if (!is_numeric($value) || $value < 0 || $value > 1) {
                 throw new ParamOutOfRangeException("'updateuserinfoonlogin' should be zero or one");
             }
-        } elseif ($name == 'defaultaccountlifetime') {
+        } elseif ($name == 'theme') {
+            if (!is_string($value) || empty($value) || strlen($value) > 255) {
+                throw new ParamOutOfRangeException("'theme' ($value) should be a string between 1 and 255 characters in length");
+            }
+        } elseif ($name == 'defaultmembershipperiod') {
             if (!empty($value) && (!is_numeric($value) || $value < 0 || $value > 9999999999)) {
-                throw new ParamOutOfRangeException("'defaultaccountlifetime' should be a number between 1 and 9,999,999,999");
+                throw new ParamOutOfRangeException("'defaultmembershipperiod' should be a number between 1 and 9,999,999,999");
             }
-        } elseif ($name == 'defaultaccountinactiveexpire') {
-            if (!empty($value) && (!is_string($value) || empty($value) || strlen($value) > 255)) {
-                throw new ParamOutOfRangeException("'defaultaccountinactiveexpire' should be a number between 1 and 9,999,999,999");
-            }
-        } elseif ($name == 'defaultaccountinactivewarn') {
-            if (!empty($value) && strlen($value) > 255) {
-                throw new ParamOutOfRangeException("'defaultaccountinactivewarn' should be a number between 1 and 9,999,999,999");
+        } elseif ($name == 'maxuseraccounts') {
+            if (!empty($value) && (!is_numeric($value) || $value < 0 || $value > 9999999999)) {
+                throw new ParamOutOfRangeException("'maxuseraccounts' should be a number between 1 and 9,999,999,999");
             }
         }
         $this->members[$name] = $value;
@@ -185,9 +185,9 @@ class Institution {
         $record->name                         = $this->name;
         $record->displayname                  = $this->displayname;
         $record->updateuserinfoonlogin        = $this->updateuserinfoonlogin;
-        $record->defaultaccountlifetime       = $this->defaultaccountlifetime;
-        $record->defaultaccountinactiveexpire = $this->defaultaccountinactiveexpire;
-        $record->defaultaccountinactivewarn   = $this->defaultaccountinactivewarn;
+        $record->theme                        = $this->theme;
+        $record->defaultmembershipperiod      = $this->defaultmembershipperiod;
+        $record->maxuseraccounts              = $this->maxuseraccounts;
 
         if ($this->initialized == self::INITIALIZED) {
             return insert_record('institution', $record);
@@ -215,11 +215,272 @@ class Institution {
         $this->displayname                  = $result->displayname;
         $this->registerallowed              = $result->registerallowed;
         $this->updateuserinfoonlogin        = $result->updateuserinfoonlogin;
-        $this->defaultaccountlifetime       = $result->defaultaccountlifetime;
-        $this->defaultaccountinactiveexpire = $result->defaultaccountinactiveexpire;
-        $this->defaultaccountinactivewarn   = $result->defaultaccountinactivewarn;
+        $this->theme                        = $result->theme;
+        $this->defaultmembershipperiod      = $result->defaultmembershipperiod;
+        $this->maxuseraccounts              = $result->maxuseraccounts;
         $this->verifyReady();
     }
 
+    public function addUserAsMember($user) {
+        if (is_numeric($user)) {
+            $user = get_record('usr', 'id', $user);
+        }
+        $userinst = new StdClass;
+        $userinst->institution = $this->name;
+        $studentid = get_field('usr_institution_request', 'studentid', 'usr', $user->id, 
+                               'institution', $this->name);
+        if (!empty($studentid)) {
+            $userinst->studentid = $studentid;
+        }
+        else if (!empty($user->studentid)) {
+            $userinst->studentid = $user->studentid;
+        }
+        $userinst->usr = $user->id;
+        $now = time();
+        $userinst->ctime = db_format_timestamp($now);
+        $defaultexpiry = $this->defaultmembershipperiod;
+        if (!empty($defaultexpiry)) {
+            $userinst->expiry = db_format_timestamp($now + $defaultexpiry);
+        }
+        $message = (object) array(
+            'users' => array($user->id),
+            'subject' => get_string('institutionmemberconfirmsubject'),
+            'message' => get_string('institutionmemberconfirmmessage', 'mahara', $this->displayname),
+        );
+        db_begin();
+        if (!get_config('usersallowedmultipleinstitutions')) {
+            delete_records('usr_institution', 'usr', $user->id);
+            delete_records('usr_institution_request', 'usr', $user->id);
+        }
+        insert_record('usr_institution', $userinst);
+        delete_records('usr_institution_request', 'usr', $userinst->usr, 'institution', $this->name);
+        activity_occurred('maharamessage', $message);
+        handle_event('updateuser', $userinst->usr);
+        db_commit();
+    }
+
+    public function addRequestFromUser($user, $studentid = null) {
+        $request = get_record('usr_institution_request', 'usr', $user->id, 'institution', $this->name);
+        if (!$request) {
+            $request = (object) array(
+                'usr'          => $user->id,
+                'institution'  => $this->name,
+                'confirmedusr' => 1,
+                'studentid'    => empty($studentid) ? $user->studentid : $studentid,
+                'ctime'        => db_format_timestamp(time())
+            );
+            $message = (object) array(
+                'messagetype' => 'request',
+                'username' => $user->username,
+                'fullname' => $user->firstname . ' ' . $user->lastname,
+                'institution' => (object)array('name' => $this->name, 'displayname' => $this->displayname),
+            );
+            db_begin();
+            if (!get_config('usersallowedmultipleinstitutions')) {
+                delete_records('usr_institution_request', 'usr', $user->id);
+            }
+            insert_record('usr_institution_request', $request);
+            activity_occurred('institutionmessage', $message);
+            handle_event('updateuser', $user->id);
+            db_commit();
+        } else if ($request->confirmedinstitution) {
+            $this->addUserAsMember($user);
+        }
+    }
+
+    public function inviteUser($user) {
+        $userid = is_object($user) ? $user->id : $user;
+        db_begin();
+        insert_record('usr_institution_request', (object) array(
+            'usr' => $userid,
+            'institution' => $this->name,
+            'confirmedinstitution' => 1,
+            'ctime' => db_format_timestamp(time())
+        ));
+        activity_occurred('institutionmessage', (object) array(
+            'messagetype' => 'invite',
+            'users' => array($userid),
+            'institution' => (object)array('name' => $this->name, 'displayname' => $this->displayname),
+        ));
+        handle_event('updateuser', $userid);
+        db_commit();
+    }
+
+    public function removeMembers($userids) {
+        // Remove self last.
+        global $USER;
+        $users = get_records_select_array('usr', 'id IN (' . join(',', $userids) . ')');
+        $removeself = false;
+        foreach ($users as $user) {
+            if ($user->id == $USER->id) {
+                $removeself = true;
+                continue;
+            }
+            $this->removeMember($user);
+        }
+        if ($removeself) {
+            $USER->leave_institution($this->name);
+        }
+    }
+
+    public function removeMember($user) {
+        if (is_numeric($user)) {
+            $user = get_record('usr', 'id', $user);
+        }
+        db_begin();
+        // If the user is being authed by the institution they are
+        // being removed from, change them to internal auth
+        $authinstances = get_records_select_assoc('auth_instance', "
+            institution IN ('mahara','" . $this->name . "')");
+        $oldauth = $user->authinstance;
+        if (isset($authinstances[$oldauth]) && $authinstances[$oldauth]->institution == $this->name) {
+            foreach ($authinstances as $ai) {
+                if ($ai->instancename == 'internal' && $ai->institution == 'mahara') {
+                    $user->authinstance = $ai->id;
+                    break;
+                }
+            }
+            delete_records('auth_remote_user', 'authinstance', $oldauth, 'localusr', $user->id);
+            // If the old authinstance was external, the user may need
+            // to set a password
+            if ($user->password == '') {
+                log_debug('resetting pw for '.$user->id);
+                $this->removeMemberSetPassword($user);
+            }
+            update_record('usr', $user);
+        }
+        delete_records('usr_institution', 'usr', $user->id, 'institution', $this->name);
+        handle_event('updateuser', $user->id);
+        db_commit();
+    }
+
+    /**
+     * Reset user's password, and send them a password change email
+     */
+    private function removeMemberSetPassword(&$user) {
+        global $SESSION, $USER;
+        if ($user->id == $USER->id) {
+            $user->passwordchange = 1;
+            return;
+        }
+        try {
+            $pwrequest = new StdClass;
+            $pwrequest->usr = $user->id;
+            $pwrequest->expiry = db_format_timestamp(time() + 86400);
+            $pwrequest->key = get_random_key();
+            $sitename = get_config('sitename');
+            $fullname = display_name($user, null, true);
+            email_user($user, null,
+                get_string('noinstitutionsetpassemailsubject', 'mahara', $sitename, $this->displayname),
+                get_string('noinstitutionsetpassemailmessagetext', 'mahara', $fullname, $this->displayname, $sitename, $user->username, $pwrequest->key, $sitename, $pwrequest->key),
+                get_string('noinstitutionsetpassemailmessagehtml', 'mahara', $fullname, $this->displayname, $sitename, $user->username, $pwrequest->key, $pwrequest->key, $sitename, $pwrequest->key, $pwrequest->key));
+            insert_record('usr_password_request', $pwrequest);
+        }
+        catch (SQLException $e) {
+            $SESSION->add_error_msg(get_string('forgotpassemailsendunsuccessful'));
+        }
+        catch (EmailException $e) {
+            $SESSION->add_error_msg(get_string('forgotpassemailsendunsuccessful'));
+        }
+    }
+
+    public function countMembers() {
+        return count_records_sql('
+            SELECT COUNT(*) FROM {usr} u INNER JOIN {usr_institution} i ON u.id = i.usr
+            WHERE i.institution = ? AND u.deleted = 0', array($this->name));
+    }
+
+    public function countInvites() {
+        return count_records_sql('
+            SELECT COUNT(*) FROM {usr} u INNER JOIN {usr_institution_request} r ON u.id = r.usr
+            WHERE r.institution = ? AND u.deleted = 0 AND r.confirmedinstitution = 1',
+            array($this->name));
+    }
+}
+
+function get_institution_selector($includedefault = true) {
+    global $USER;
+
+    if ($USER->get('admin')) {
+        if ($includedefault) {
+            $institutions = get_records_array('institution');
+        }
+        else {
+            $institutions = get_records_select_array('institution', "name != 'mahara'");
+        }
+    } else if ($USER->is_institutional_admin()) {
+        $institutions = get_records_select_array('institution', 'name IN (' 
+            . join(',', array_map('db_quote',$USER->get('admininstitutions'))) . ')');
+    } else {
+        return null;
+    }
+
+    if (count($institutions) > 1) {
+        $options = array();
+        foreach ($institutions as $i) {
+            $options[$i->name] = $i->displayname;
+        }
+        $institution = key($options);
+        $institutionelement = array(
+            'type' => 'select',
+            'title' => get_string('institution'),
+            'defaultvalue' => $institution,
+            'options' => $options,
+            'rules' => array('regex' => '/^[a-zA-Z0-9]+$/')
+        );
+    } else {
+        $institution = $institutions[0]->name;
+        $institutionelement = array(
+            'type' => 'hidden',
+            'value' => $institution,
+            'rules' => array('regex' => '/^[a-zA-Z0-9]+$/')
+        );
+    }
+
+    return $institutionelement;
+}
+
+/* The institution selector does exactly the same thing in both
+   institutionadmins.php and institutionstaff.php (in /admin/users/).
+   This function creates the form for the page, setting
+   $institutionselector and $INLINEJAVASCRIPT in the smarty object. */
+function add_institution_selector_to_page($smarty, $institution, $page) {
+    require_once('pieforms/pieform.php');
+    $institutionelement = get_institution_selector(false);
+
+    global $USER;
+    if (empty($institution) || !$USER->can_edit_institution($institution)) {
+        $institution = empty($institutionelement['value']) ? $institutionelement['defaultvalue'] : $institutionelement['value'];
+    }
+    else {
+        $institutionelement['defaultvalue'] = $institution;
+    }
+    
+    $institutionselector = pieform(array(
+        'name' => 'institutionselect',
+        'elements' => array(
+            'institution' => $institutionelement,
+        )
+    ));
+    
+    $js = <<< EOF
+function reloadUsers() {
+    var inst = '';
+    if ($('institutionselect_institution')) {
+        inst = '?institution='+$('institutionselect_institution').value;
+    }
+    window.location.href = '{$page}'+inst;
+}
+addLoadEvent(function() {
+    if ($('institutionselect_institution')) {
+        connect($('institutionselect_institution'), 'onchange', reloadUsers);
+    }
+});
+EOF;
+    
+    $smarty->assign('institutionselector', $institutionselector);
+    $smarty->assign('INLINEJAVASCRIPT', $js);
+
+    return $institution;
 }
 ?>

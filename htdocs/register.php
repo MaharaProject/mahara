@@ -71,7 +71,7 @@ if (isset($key)) {
         $registrationid = $registration->id;
         unset($registration->id);
         unset($registration->expiry);
-        if ($expirytime = get_field('institution', 'defaultaccountlifetime', 'name', $registration->institution)) {
+        if ($expirytime = get_config('defaultaccountlifetime')) {
             $registration->expiry = db_format_timestamp(time() + $expirytime);
         }
         $registration->lastlogin = db_format_timestamp(time());
@@ -85,7 +85,6 @@ if (isset($key)) {
         $user = new User();
         $user->username         = $registration->username;
         $user->password         = $registration->password;
-        $user->institution      = $registration->institution;
         $user->salt             = $registration->salt;
         $user->passwordchange   = 0;
         $user->active           = 1;
@@ -94,6 +93,8 @@ if (isset($key)) {
         $user->lastname         = $registration->lastname;
         $user->email            = $registration->email;
         $user->commit();
+
+        $user->add_institution_request($registration->institution);
 
         $registration->id = $user->id;
 
@@ -323,7 +324,8 @@ $sql = 'SELECT
             {auth_instance} ai
         WHERE
             ai.authname = \'internal\' AND
-            ai.institution = i.name';
+            ai.institution = i.name AND
+            i.registerallowed = 1';
 $institutions = get_records_sql_array($sql, array());
 
 if (count($institutions) > 1) {
@@ -410,7 +412,7 @@ function register_validate(Pieform $form, $values) {
     }
 
     $user =(object) $values;
-    $user->authinstance = get_field('auth_instance', 'id', 'authname', 'internal'); // Internal
+    $user->authinstance = get_field('auth_instance', 'id', 'authname', 'internal', 'institution', $institution);
     password_validate($form, $values, $user);
 
     // First name and last name must contain at least one non whitespace
@@ -439,6 +441,26 @@ function register_validate(Pieform $form, $values) {
     if (!isset($_POST['captcha']) || strtolower($_POST['captcha']) != strtolower($SESSION->get('captcha'))) {
         $form->set_error('captcha', get_string('captchaincorrect'));
     }
+
+    $institution = get_record_sql('
+        SELECT 
+            i.name, i.maxuseraccounts, i.registerallowed, COUNT(u.id)
+        FROM {institution} i
+            LEFT OUTER JOIN {usr_institution} ui ON ui.institution = i.name
+            LEFT OUTER JOIN {usr} u ON (ui.usr = u.id AND u.deleted = 0)
+        WHERE
+            i.name = ?
+        GROUP BY
+            i.name, i.maxuseraccounts, i.registerallowed', array($institution));
+
+    if (!empty($institution->maxuseraccounts) && $institution->count >= $institution->maxuseraccounts) {
+        $form->set_error('institution', get_string('institutionfull'));
+    }
+
+    if (!$institution->registerallowed) {
+        $form->set_error('institution', get_string('registrationnotallowed'));
+    }
+
 }
 
 function register_submit(Pieform $form, $values) {

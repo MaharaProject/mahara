@@ -25,11 +25,12 @@
  */
 
 define('INTERNAL', 1);
-define('ADMIN', 1);
+define('INSTITUTIONALADMIN', 1);
 define('MENUITEM', 'configusers/uploadcsv');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('uploadcsv', 'admin'));
 require_once('pieforms/pieform.php');
+require_once('institution.php');
 safe_require('artefact', 'internal');
 
 // Turn on autodetecting of line endings, so mac newlines (\r) will work
@@ -64,55 +65,29 @@ $ALLOWEDKEYS = array(
     'jabberusername',
     'occupation',
     'industry',
-    'institution',
     'authinstance'
 );
 
-/**
- * TODO: do we want to keep this function? Then it should be in auth/lib.php
- * Given an institution, returns the authentication methods used by it, sorted 
- * by priority.
- *
- * @param  string   $institution     Name of the institution
- * @return array                     Array of auth instance records
- */
-function auth_get_auth_instances() {
-    static $cache = array();
+global $USER;
 
-    if (count($cache) > 0) {
-        return $cache;
+if ($USER->get('admin')) {
+    $authinstances = auth_get_auth_instances();
+} else {
+    $admininstitutions = $USER->get('admininstitutions');
+    $authinstances = auth_get_auth_instances_for_institutions($admininstitutions);
+    if (empty($authinstances)) {
+        $SESSION->add_info_msg(get_string('uploadcsvconfigureauthplugin', 'admin'));
+        redirect(get_config('wwwroot').'admin/users/institutions.php?i='.key($admininstitutions).'&amp;edit=1');
     }
-
-    $sql ='
-        SELECT DISTINCT
-            i.id,
-            inst.name,
-            inst.displayname,
-            i.instancename
-        FROM 
-            {institution} inst,
-            {auth_instance} i
-        WHERE 
-            i.institution = inst.name
-        ORDER BY
-            inst.displayname,
-            i.instancename';
-
-    $cache = get_records_sql_array($sql, array());
-
-    if (empty($cache)) {
-        return array();
-    }
-
-    return $cache;
 }
 
-$authinstances = auth_get_auth_instances();
 if (count($authinstances) > 1) {
     $options = array();
 
     foreach ($authinstances as $authinstance) {
-        $options[$authinstance->id .'_'. $authinstance->name] = $authinstance->displayname. ': '.$authinstance->instancename;
+        if ($USER->can_edit_institution($authinstance->name)) {
+            $options[$authinstance->id .'_'. $authinstance->name] = $authinstance->displayname. ': '.$authinstance->instancename;
+        }
     }
     $default = key($options);
 
@@ -163,7 +138,7 @@ $form = array(
  * @param array    $values The values submitted
  */
 function uploadcsv_validate(Pieform $form, $values) {
-    global $CSVDATA, $ALLOWEDKEYS, $FORMAT;
+    global $CSVDATA, $ALLOWEDKEYS, $FORMAT, $USER;
 
     // Don't even start attempting to parse if there are previous errors
     if ($form->has_errors()) {
@@ -182,6 +157,10 @@ function uploadcsv_validate(Pieform $form, $values) {
     $break = strpos($values['authinstance'], '_');
     $authinstance = substr($values['authinstance'], 0, $break);
     $institution  = substr($values['authinstance'], $break+1);
+    if (!$USER->can_edit_institution($institution)) {
+        $form->set_error('authinstance', get_string('notadminforinstitution', 'admin'));
+        return;
+    }
 
     $conf = File_CSV::discoverFormat($values['file']['tmp_name']);
     $i = 0;
@@ -284,19 +263,32 @@ function uploadcsv_validate(Pieform $form, $values) {
  */
 function uploadcsv_submit(Pieform $form, $values) {
     global $SESSION, $CSVDATA, $FORMAT;
-    log_info('Inserting users from the CSV file');
-    db_begin();
+
     $formatkeylookup = array_flip($FORMAT);
 
     // Don't be tempted to use 'explode' here. There may be > 1 underscore.
     $break = strpos($values['authinstance'], '_');
     $authinstance = substr($values['authinstance'], 0, $break);
-    $institution  = substr($values['authinstance'], $break+1);
+    $institution = substr($values['authinstance'], $break+1);
+    $institution = new Institution($institution);
+
+    $maxusers = $institution->maxuseraccounts; 
+    if (!empty($maxusers)) {
+        $members = count_records_sql('
+            SELECT COUNT(*) FROM {usr} u INNER JOIN {usr_institution} i ON u.id = i.usr
+            WHERE i.institution = ? AND u.deleted = 0', array($institution->name));
+        if ($members + count($CSVDATA) > $maxusers) {
+            $SESSION->add_error_msg(get_string('uploadcsvfailedusersexceedmaxallowed', 'admin'));
+            redirect('/admin/users/uploadcsv.php');
+        }
+    }
+
+    log_info('Inserting users from the CSV file');
+    db_begin();
 
     foreach ($CSVDATA as $record) {
         log_debug('adding user ' . $record[$formatkeylookup['username']]);
         $user = new StdClass;
-        $user->institution  = $institution;
         $user->authinstance = $authinstance;
         $user->username     = $record[$formatkeylookup['username']];
         $user->password     = $record[$formatkeylookup['password']];
@@ -311,6 +303,18 @@ function uploadcsv_submit(Pieform $form, $values) {
         $user->passwordchange = 1;
         $id = insert_record('usr', $user, 'id', true);
         $user->id = $id;
+        if ($institution->name != 'mahara') {
+            $institution->addUserAsMember($user);
+        }
+        if (get_field('auth_instance', 'authname', 'id', $authinstance) != 'internal') {
+            // Assume the admin knows what they're doing when they choose the external auth instance.
+            delete_records('auth_remote_user', 'authinstance', $authinstance, 'remoteusername', $user->username);
+            insert_record('auth_remote_user', (object) array(
+                'authinstance'   => $authinstance,
+                'remoteusername' => $user->username,
+                'localusr'       => $id,
+            ));
+        }
 
         foreach ($FORMAT as $field) {
             if ($field == 'username' || $field == 'password') {

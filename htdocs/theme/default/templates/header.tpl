@@ -36,11 +36,13 @@
             <div id="globalTabs">
                 <ul>
                     <li id="globalnav-logout"><a href="{$WWWROOT}?logout">Logout</a></li>
-{if $USER->get('admin')}
-{if $ADMIN}
+{if $USER->get('admin') || $USER->is_institutional_admin()}
+{if $ADMIN || $INSTITUTIONALADMIN}
                     <li id="globalnav-returntosite"><a href="{$WWWROOT}">Return to Site</a></li>
-{else}
+{elseif $USER->get('admin')}
                     <li id="globalnav-siteadmin"><a href="{$WWWROOT}admin/">Site Administration</a></li>
+{else}
+                    <li id="globalnav-siteadmin"><a href="{$WWWROOT}admin/users/search.php">User Administration</a></li>
 {/if}
                     {* <li><a href="" onclick="createLoggingPane(); return false;">Create Logging Pane</a></li> *}
 {/if}

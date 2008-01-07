@@ -18,19 +18,31 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Penny Leach <penny@catalyst.net.nz>
+ * @author     Martyn Smith <martyn@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
-defined('INTERNAL') || die();
+define('INTERNAL', 1);
+define('JSON', 1);
 
-$config = new StdClass;
-$config->version = 2007121002;
-$config->release = '1.0.0alpha1dev';
-$config->minupgradefrom = 2007080700;
-$config->minupgraderelease = '0.8.0 (release tag 0.8.0_RELEASE)';
-$config->disablelogin = false;
+require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+require('searchlib.php');
+
+$params = new StdClass;
+$params->query       = trim(param_variable('query', ''));
+$params->institution = param_alphanum('institution', null);
+$params->requested   = param_integer('requested', null);
+$params->invitedby   = param_integer('invitedby', null);
+$params->member      = param_integer('member', null);
+$limit               = param_integer('limit', 100);
+
+json_headers();
+$data = get_institutional_admin_search_results($params, $limit);
+$data['error'] = false;
+$data['message'] = null;
+echo json_encode($data);
+exit;
 
 ?>

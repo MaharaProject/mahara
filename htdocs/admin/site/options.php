@@ -125,6 +125,33 @@ $siteoptionform = pieform(array(
             'defaultvalue' => get_config('artefactviewinactivitytime'),
             'help'         => true,
         ),
+        'defaultaccountlifetime' => array(
+            'type'         => 'expiry',
+            'title'        => get_string('defaultaccountlifetime', 'admin'),
+            'description'  => get_string('defaultaccountlifetimedescription', 'admin'),
+            'defaultvalue' => get_config('defaultaccountlifetime'),
+            'help'         => true,
+        ),
+        'defaultaccountinactiveexpire' => array(
+            'type'         => 'expiry',
+            'title'        => get_string('defaultaccountinactiveexpire', 'admin'),
+            'description'  => get_string('defaultaccountinactiveexpiredescription', 'admin'),
+            'defaultvalue' => get_config('defaultaccountinactiveexpire'),
+            'help'         => true,
+        ),
+        'defaultaccountinactivewarn' => array(
+            'type'         => 'expiry',
+            'title'        => get_string('defaultaccountinactivewarn', 'admin'),
+            'description'  => get_string('defaultaccountinactivewarndescription', 'admin'),
+            'defaultvalue' => get_config('defaultaccountinactivewarn'),
+            'help'         => true,
+        ),
+        'usersallowedmultipleinstitutions' => array(
+            'type'         => 'checkbox',
+            'title'        => get_string('usersallowedmultipleinstitutions','admin'),
+            'description'  => get_string('usersallowedmultipleinstitutionsdescription','admin'),
+            'defaultvalue' => get_config('usersallowedmultipleinstitutions'),
+        ),
         'submit' => array(
             'type'  => 'submit',
             'value' => get_string('updatesiteoptions','admin')
@@ -138,6 +165,7 @@ function siteoptions_fail(Pieform $form, $field) {
 
 function siteoptions_submit(Pieform $form, $values) {
     $fields = array('sitename','lang','theme','pathtofile', 'pathtoclam',
+                    'defaultaccountlifetime', 'defaultaccountinactiveexpire', 'defaultaccountinactivewarn', 
                     'allowpublicviews','artefactviewinactivitytime', 'searchplugin');
     foreach ($fields as $field) {
         if (!set_config($field, $values[$field])) {
@@ -149,8 +177,10 @@ function siteoptions_submit(Pieform $form, $values) {
         siteoptions_fail($form, 'sessionlifetime');
     }
     // Submitted value is on/off; database entry should be 1/0
-    if (!set_config('viruschecking', (int) ($values['viruschecking'] == 'on'))) {
-        siteoptions_fail($form, 'viruschecking');
+    foreach(array('viruschecking', 'usersallowedmultipleinstitutions') as $checkbox) {
+        if (!set_config($checkbox, (int) ($values[$checkbox] == 'on'))) {
+            siteoptions_fail($form, $checkbox);
+        }
     }
     $form->json_reply(PIEFORM_OK, get_string('siteoptionsset','admin'));
 }

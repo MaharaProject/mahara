@@ -1,16 +1,17 @@
 <script type="text/javascript">
     var {{$name}}_d;
 
-    var {{$name}}_searchfunc = function (q) {
+    var {{$name}}_searchparams;
+
+    var {{$name}}_searchfunc = function (params) {
 
         replaceChildNodes('{{$name}}_messages');
 
-        // NOTE TO MERGE PEOPLE: I'm aware this template has changed, so
-        // there's a conflict here. The general plan here is to make this use
-        // richardm's admin/users/search.json.php script with raw=1, and remove
-        // json/adminusersearch.php when the merge happens. Talk to him or
-        // Nigel about this.
-        sendjsonrequest('{{$WWWROOT}}json/adminusersearch.php', {'query':q, 'limit': 100}, 'GET', 
+        for (var p in params) {
+            {{$name}}_searchparams[p] = params[p];
+        }
+
+        sendjsonrequest('{{$WWWROOT}}{{$searchscript}}', {{$name}}_searchparams, 'GET', 
             function (users) {
                 var members = {};
                 var counter = 0;
@@ -64,17 +65,19 @@
         removeElement($('{{$name}}_potential').childNodes[0]);
         removeElement($('{{$name}}_members').childNodes[0]);
 
-        {{$name}}_searchfunc('');
+        {{$name}}_searchparams = {{$searchparams}};
+
+        {{$name}}_searchfunc({});
 
         connect('{{$name}}_search', 'onkeypress', function (k) {
             if (k.key().code == 13) {
-                {{$name}}_searchfunc($('{{$name}}_search').value);
+                {{$name}}_searchfunc({'query': $('{{$name}}_search').value});
                 k.stop();
             }
         });
 
         connect('{{$name}}_search_btn', 'onclick', function(e) {
-            {{$name}}_searchfunc($('{{$name}}_search').value);
+            {{$name}}_searchfunc({'query': $('{{$name}}_search').value});
             e.stop();
         });
     });

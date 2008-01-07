@@ -32,7 +32,6 @@ define('SECTION_PAGE', 'forgotpass');
 
 require('init.php');
 require_once('pieforms/pieform.php');
-define('TITLE', get_string('forgotpassword'));
 
 if (!session_id()) {
     session_start();
@@ -44,6 +43,8 @@ if (!empty($_SESSION['pwchangerequested'])) {
 }
 
 if (isset($_GET['key'])) {
+    define('TITLE', get_string('changepassword'));
+
     if (!$pwrequest = get_record('usr_password_request', 'key', $_GET['key'])) {
         die_info(get_string('nosuchpasswordrequest'));
     }
@@ -83,6 +84,8 @@ if (isset($_GET['key'])) {
     $smarty->assign('forgotpasschange_form', pieform($form));
     $smarty->display('forgotpass.tpl');
     exit;
+} else {
+    define('TITLE', get_string('forgotpassword'));
 }
 
 $form = array(
@@ -191,7 +194,7 @@ function forgotpasschange_submit(Pieform $form, $values) {
         exit;
     }
 
-    throw new Exception('User "' . $user->username . '@' . $user->institution
+    throw new Exception('User "' . $user->username
         . ' tried to change their password, but the attempt failed');
 }
 
