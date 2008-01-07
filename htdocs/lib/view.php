@@ -1202,7 +1202,7 @@ class View {
 
         if ($search != '') {
             $search = db_quote('%' . str_replace('%', '%%', $search) . '%');
-            $select .= 'AND (title ILIKE(' . $search . ') OR description ILIKE(' . $search . ') )';
+            $select .= 'AND (title ' . db_ilike() . '(' . $search . ') OR description ' . db_ilike() . '(' . $search . ') )';
         }
 
         $select .= $extraselect;

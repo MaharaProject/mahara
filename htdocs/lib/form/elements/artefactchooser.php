@@ -148,6 +148,13 @@ function pieform_element_artefactchooser_views_js(Pieform $form, $element) {
 
     // TODO: This is quite a lot of javascript to be sending inline, especially the ArtefactChooserData 
     // class.
+
+    if (!empty($element['selectone'])) {
+        $artefactchooserdata = '';
+    }
+    else {
+        $artefactchooserdata = 'new ArtefactChooserData();';
+    }
     $pagination_js .= <<<EOF
 var ul = getFirstElementByTagAndClassName('ul', 'artefactchooser-tabs', '{$form->get_name()}_{$element['name']}_container');
 var doneBrowse = false;
@@ -169,7 +176,7 @@ if (ul) {
                 browseA.blur();
                 $('artefactchooser-searchfield').value = ''; // forget the search for now, easier than making the tabs remember it
                 if (!browseTabCurrent) {
-                    new ArtefactChooserData();
+                    {$artefactchooserdata}
                     browseTabCurrent = true;
                 }
                 e.stop();
@@ -185,7 +192,7 @@ if (ul) {
                 addElementClass(searchA.parentNode, 'current');
                 $('artefactchooser-searchfield').focus();
                 if (browseTabCurrent) {
-                    new ArtefactChooserData();
+                    {$artefactchooserdata}
                     browseTabCurrent = false;
                 }
                 e.stop();
@@ -235,7 +242,7 @@ if (ul) {
                         }
                     }
 
-                    new ArtefactChooserData();
+                    {$artefactchooserdata}
 
                     // Update the pagination
                     if ($(p.id)) {
@@ -245,12 +252,12 @@ if (ul) {
 
                         // Run the pagination js to make it live
                         eval(data['data']['pagination_js']);
-                    }
 
-                    // Update the result count
-                    var results = getFirstElementByTagAndClassName('div', 'results', p.id);
-                    if (results) {
-                        results.innerHTML = data['data']['results'];
+                        // Update the result count
+                        var results = getFirstElementByTagAndClassName('div', 'results', p.id);
+                        if (results) {
+                            results.innerHTML = data['data']['results'];
+                        }
                     }
                 });
             });
