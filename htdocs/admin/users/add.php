@@ -109,7 +109,11 @@ if (count($authinstances) > 1) {
             'description'  => get_string('remoteusernamedescription', 'admin'),
         );
     }
-
+} else if (count($authinstances == 1)) {
+    $elements['authinstance'] = array(
+        'type'         => 'hidden',
+        'value'        => $authinstances[0]->id,
+    );
 }
 
 $elements['submit'] = array(
