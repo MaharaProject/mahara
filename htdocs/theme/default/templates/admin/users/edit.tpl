@@ -16,8 +16,10 @@
     {$suspendform}
     <h3>{str tag="siteaccountsettings" section="admin"}</h3>
     {$siteform}
+    {if ($institutions)}
     <h3>{str tag="institutionsettings" section="admin"}</h3>
     {$institutionform}
+    {/if}
 </div>
 {include file="columnfullend.tpl"}
 {include file="footer.tpl"}

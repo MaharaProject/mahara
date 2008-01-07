@@ -418,6 +418,7 @@ if ($suspended) {
 }
 $smarty->assign('suspendform', $suspendform);
 $smarty->assign('siteform', $siteform);
+$smarty->assign('institutions', count($allinstitutions) > 1);
 $smarty->assign('institutionform', $institutionform);
 
 if ($id != $USER->get('id') && is_null($USER->get('parentuser'))) {
