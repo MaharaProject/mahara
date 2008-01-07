@@ -34,12 +34,17 @@ define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'admin');
 define('SECTION_PAGE', 'adminusers');
 require_once('pieforms/pieform.php');
-define('MENUITEM', ($USER->get('admin') ? 'configusers' : 'manageinstitutions') . '/institutionadmins');
+define('MENUITEM', 'manageinstitutions/institutionadmins');
 $smarty = smarty();
 
 require_once('institution.php');
 $institution = add_institution_selector_to_page(&$smarty, param_alphanum('institution', false), 
                                                 get_config('wwwroot') . 'admin/users/institutionadmins.php');
+
+if ($institution === false) {
+    $smarty->display('admin/users/noinstitutions.tpl');
+    exit;
+}
 
 // Get users who are currently admins
 $adminusers = get_column('usr_institution', 'usr', 'admin', 1, 'institution', $institution);

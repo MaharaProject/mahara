@@ -1381,22 +1381,46 @@ function admin_nav() {
             'weight' => 40,
         ),
         array(
-            'path'   => 'configusers/institutions',
-            'url'    => 'admin/users/institutions.php',
-            'title'  => get_string('institutions', 'admin'),
-            'weight' => 50,
-        ),
-        array(
             'path'   => 'configusers/adduser',
             'url'    => 'admin/users/add.php',
             'title'  => get_string('adduser', 'admin'),
-            'weight' => 90,
+            'weight' => 50,
         ),
         array(
             'path'   => 'configusers/uploadcsv',
             'url'    => 'admin/users/uploadcsv.php',
             'title'  => get_string('uploadcsv', 'admin'),
-            'weight' => 100,
+            'weight' => 60,
+        ),
+        array(
+            'path'   => 'manageinstitutions',
+            'url'    => 'admin/users/institutions.php',
+            'title'  => get_string('manageinstitutions', 'admin'),
+            'weight' => 35,
+        ),
+        array(
+            'path'   => 'manageinstitutions/institutions',
+            'url'    => 'admin/users/institutions.php',
+            'title'  => get_string('institutions', 'admin'),
+            'weight' => 10,
+        ),
+        array(
+            'path'   => 'manageinstitutions/institutionusers',
+            'url'    => 'admin/users/institutionusers.php',
+            'title'  => get_string('institutionmembers', 'admin'),
+            'weight' => 20,
+        ),
+        array(
+            'path'   => 'manageinstitutions/institutionstaff',
+            'url'    => 'admin/users/institutionstaff.php',
+            'title'  => get_string('institutionstaff', 'admin'),
+            'weight' => 30,
+        ),
+        array(
+            'path'   => 'manageinstitutions/institutionadmins',
+            'url'    => 'admin/users/institutionadmins.php',
+            'title'  => get_string('institutionadmins', 'admin'),
+            'weight' => 40,
         ),
         array(
             'path'   => 'configextensions',
@@ -1442,22 +1466,16 @@ function institutional_admin_nav() {
             'weight' => 20,
         ),
         array(
-            'path'   => 'configusers/institutionusers',
-            'url'    => 'admin/users/institutionusers.php',
-            'title'  => get_string('institutionmembers', 'admin'),
-            'weight' => 30,
-        ),
-        array(
             'path'   => 'configusers/adduser',
             'url'    => 'admin/users/add.php',
             'title'  => get_string('adduser', 'admin'),
-            'weight' => 40,
+            'weight' => 30,
         ),
         array(
             'path'   => 'configusers/uploadcsv',
             'url'    => 'admin/users/uploadcsv.php',
             'title'  => get_string('uploadcsv', 'admin'),
-            'weight' => 50,
+            'weight' => 40,
         ),
         array(
             'path'   => 'manageinstitutions',
@@ -1472,22 +1490,28 @@ function institutional_admin_nav() {
             'weight' => 10,
         ),
         array(
+            'path'   => 'manageinstitutions/institutionusers',
+            'url'    => 'admin/users/institutionusers.php',
+            'title'  => get_string('institutionmembers', 'admin'),
+            'weight' => 20,
+        ),
+        array(
             'path'   => 'manageinstitutions/institutionstaff',
             'url'    => 'admin/users/institutionstaff.php',
-            'title'  => get_string('staffusers', 'admin'),
-            'weight' => 20,
+            'title'  => get_string('institutionstaff', 'admin'),
+            'weight' => 30,
         ),
         array(
             'path'   => 'manageinstitutions/institutionadmins',
             'url'    => 'admin/users/institutionadmins.php',
-            'title'  => get_string('adminusers', 'admin'),
-            'weight' => 30,
+            'title'  => get_string('institutionadmins', 'admin'),
+            'weight' => 40,
         ),
         array(
             'path'   => 'manageinstitutions/adminnotifications',
             'url'    => 'admin/users/notifications.php',
             'title'  => get_string('adminnotifications', 'admin'),
-            'weight' => 40,
+            'weight' => 50,
         ),
     );
 

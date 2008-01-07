@@ -415,6 +415,10 @@ function get_institution_selector($includedefault = true) {
         return null;
     }
 
+    if (empty($institutions)) {
+        return null;
+    }
+
     if (count($institutions) > 1) {
         $options = array();
         foreach ($institutions as $i) {
@@ -447,6 +451,10 @@ function get_institution_selector($includedefault = true) {
 function add_institution_selector_to_page($smarty, $institution, $page) {
     require_once('pieforms/pieform.php');
     $institutionelement = get_institution_selector(false);
+
+    if (empty($institutionelement)) {
+        return false;
+    }
 
     global $USER;
     if (empty($institution) || !$USER->can_edit_institution($institution)) {
