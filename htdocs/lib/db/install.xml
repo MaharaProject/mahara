@@ -134,6 +134,18 @@
                 <KEY NAME="institution" TYPE="foreign" FIELDS="institution" REFTABLE="institution" REFFIELDS="name"/>
             </KEYS>
         </TABLE>
+        <TABLE NAME="auth_remote_user">
+            <FIELDS>
+                <FIELD NAME="authinstance" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="remoteusername" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="localusr" TYPE="int" LENGTH="10" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="authinstance,remoteusername" />
+                <KEY NAME="authinstancefk" TYPE="foreign" FIELDS="authinstance" REFTABLE="auth_instance" REFFIELDS="id" />
+                <KEY NAME="localusrfk" TYPE="foreign" FIELDS="localusr" REFTABLE="usr" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
         <TABLE NAME="sso_session">
             <FIELDS>
                 <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
