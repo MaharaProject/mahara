@@ -63,6 +63,16 @@ function group_user_can_leave($group, $userid=null) {
 function group_remove_user($group, $userid) {    
     db_begin();
     delete_records('group_member', 'group', $group, 'member', $userid);
+    delete_records_sql(
+        'DELETE FROM {view_access_group} a
+        WHERE a.group = ?
+        AND a.view IN (
+            SELECT v.id
+            FROM {view} v
+            WHERE v.owner = ?
+        )',
+        array($group, $userid)
+    );
     db_commit();
 }
 
@@ -121,7 +131,7 @@ function get_invited_groups($userid=0) {
     return get_records_sql_array('SELECT g.*, gmi.ctime, gmi.reason
              FROM {group} g 
              JOIN {group_member_invite} gmi ON gmi.group = g.id
-             WHERE gmi.member = ?)', array($userid));
+             WHERE gmi.member = ?', array($userid));
 }
 
 /**
@@ -156,10 +166,10 @@ function get_associated_groups($userid=0) {
     $sql = "SELECT g.*, a.type FROM {group} g JOIN (
     SELECT gm.group, 'invite' AS type
         FROM {group_member_invite} gm WHERE gm.member = ?
-    UNION 
+    UNION
     SELECT gm.group, 'request' AS type
         FROM {group_member_request} gm WHERE gm.member = ?
-    UNION 	
+    UNION
     SELECT gm.group, 'member' AS type
         FROM {group_member} gm WHERE gm.member = ? AND gm.tutor = 0
     UNION
@@ -257,17 +267,6 @@ function user_can_access_group($group, $user=null) {
     }
     
     return ($membertypes | GROUP_MEMBERSHIP_MEMBER);
-}
-
-
-/**
- * helper function to remove a user from a group
- *
- * @param int $groupid
- * @param int $userid
- */
-function group_remove_member($groupid, $userid) {
-    delete_records('group_member', 'member', $userid, 'group', $groupid);
 }
 
 /**
