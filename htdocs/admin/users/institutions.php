@@ -25,13 +25,14 @@
  */
 define('INTERNAL', 1);
 define('INSTITUTIONALADMIN', 1);
-define('MENUITEM', 'configusers/institutions');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('institutions', 'admin'));
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'admin');
 define('SECTION_PAGE', 'institutions');
 require_once('pieforms/pieform.php');
+global $USER;
+define('MENUITEM', ($USER->get('admin') ? 'configusers' : 'manageinstitutions') . '/institutions');
 $smarty = smarty();
 
 $institution = param_variable('i', '');
@@ -39,7 +40,6 @@ $add         = param_boolean('add');
 $edit        = param_boolean('edit');
 $delete      = param_boolean('delete');
 
-global $USER;
 if (!$USER->get('admin')) {
     // Institutional admins with only 1 institution go straight to the edit page for that institution
     // They cannot add or delete institutions, or edit an institution they don't administer

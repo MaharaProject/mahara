@@ -60,6 +60,7 @@ $string['adminhome']      = 'Admin home';
 $string['configsite']  = 'Configure Site';
 $string['configusers'] = 'Manage Users';
 $string['configextensions']   = 'Administer Extensions';
+$string['manageinstitutions'] = 'Manage Institutions';
 
 // Admin homepage strings
 $string['siteoptions']    = 'Site options';

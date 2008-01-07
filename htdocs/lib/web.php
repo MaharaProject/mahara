@@ -1301,76 +1301,9 @@ function make_link($url) {
  * @return $adminnav a data structure containing the admin navigation
  */
 function admin_nav() {
-    global $USER;
-    if (!$USER->get('admin')) {
-        // Institutional Admin menu
-        return array(
-            array(
-                'path'   => 'configusers',
-                'url'    => 'admin/users/search.php',
-                'title'  => get_string('institutionadministration', 'admin'),
-                'weight' => 10,
-            ),
-            array(
-                'path'   => 'configusers/usersearch',
-                'url'    => 'admin/users/search.php',
-                'title'  => get_string('usersearch', 'admin'),
-                'weight' => 10,
-            ),
-            array(
-                'path'   => 'configusers/suspendedusers',
-                'url'    => 'admin/users/suspended.php',
-                'title'  => get_string('suspendedusers', 'admin'),
-                'weight' => 20,
-            ),
-            array(
-                'path'   => 'configusers/institutionusers',
-                'url'    => 'admin/users/institutionusers.php',
-                'title'  => get_string('institutionmembers', 'admin'),
-                'weight' => 30,
-            ),
-            array(
-                'path'   => 'configusers/institutionstaff',
-                'url'    => 'admin/users/institutionstaff.php',
-                'title'  => get_string('staffusers', 'admin'),
-                'weight' => 40,
-            ),
-            array(
-                'path'   => 'configusers/institutionadmins',
-                'url'    => 'admin/users/institutionadmins.php',
-                'title'  => get_string('adminusers', 'admin'),
-                'weight' => 50,
-            ),
-            array(
-                'path'   => 'configusers/institutions',
-                'url'    => 'admin/users/institutions.php',
-                'title'  => get_string('institutionsettings', 'admin'),
-                'weight' => 60,
-            ),
-            array(
-                'path'   => 'configusers/adminnotifications',
-                'url'    => 'admin/users/notifications.php',
-                'title'  => get_string('adminnotifications', 'admin'),
-                'weight' => 70,
-            ),
-            array(
-                'path'   => 'configusers/adduser',
-                'url'    => 'admin/users/add.php',
-                'title'  => get_string('adduser', 'admin'),
-                'weight' => 80,
-            ),
-            array(
-                'path'   => 'configusers/uploadcsv',
-                'url'    => 'admin/users/uploadcsv.php',
-                'title'  => get_string('uploadcsv', 'admin'),
-                'weight' => 90,
-            ),
-        );
-    }
-
     $menu = array(
         array(
-            'path'   => 'admin',
+            'path'   => 'adminhome',
             'url'    => 'admin/',
             'title'  => get_string('adminhome', 'admin'),
             'weight' => 10,
@@ -1483,11 +1416,90 @@ function admin_nav() {
 }
 
 /**
+ * Returns the entries in the standard institutional admin menu
+ *
+ * @return $adminnav a data structure containing the admin navigation
+ */
+function institutional_admin_nav() {
+
+    return array(
+        array(
+            'path'   => 'configusers',
+            'url'    => 'admin/users/search.php',
+            'title'  => get_string('configusers', 'admin'),
+            'weight' => 10,
+        ),
+        array(
+            'path'   => 'configusers/usersearch',
+            'url'    => 'admin/users/search.php',
+            'title'  => get_string('usersearch', 'admin'),
+            'weight' => 10,
+        ),
+        array(
+            'path'   => 'configusers/suspendedusers',
+            'url'    => 'admin/users/suspended.php',
+            'title'  => get_string('suspendedusers', 'admin'),
+            'weight' => 20,
+        ),
+        array(
+            'path'   => 'configusers/institutionusers',
+            'url'    => 'admin/users/institutionusers.php',
+            'title'  => get_string('institutionmembers', 'admin'),
+            'weight' => 30,
+        ),
+        array(
+            'path'   => 'configusers/adduser',
+            'url'    => 'admin/users/add.php',
+            'title'  => get_string('adduser', 'admin'),
+            'weight' => 40,
+        ),
+        array(
+            'path'   => 'configusers/uploadcsv',
+            'url'    => 'admin/users/uploadcsv.php',
+            'title'  => get_string('uploadcsv', 'admin'),
+            'weight' => 50,
+        ),
+        array(
+            'path'   => 'manageinstitutions',
+            'url'    => 'admin/users/institutions.php',
+            'title'  => get_string('manageinstitutions', 'admin'),
+            'weight' => 20,
+        ),
+        array(
+            'path'   => 'manageinstitutions/institutions',
+            'url'    => 'admin/users/institutions.php',
+            'title'  => get_string('institutionsettings', 'admin'),
+            'weight' => 10,
+        ),
+        array(
+            'path'   => 'manageinstitutions/institutionstaff',
+            'url'    => 'admin/users/institutionstaff.php',
+            'title'  => get_string('staffusers', 'admin'),
+            'weight' => 20,
+        ),
+        array(
+            'path'   => 'manageinstitutions/institutionadmins',
+            'url'    => 'admin/users/institutionadmins.php',
+            'title'  => get_string('adminusers', 'admin'),
+            'weight' => 30,
+        ),
+        array(
+            'path'   => 'manageinstitutions/adminnotifications',
+            'url'    => 'admin/users/notifications.php',
+            'title'  => get_string('adminnotifications', 'admin'),
+            'weight' => 40,
+        ),
+    );
+
+}
+
+/**
  * Builds a data structure representing the menu for Mahara.
  */
 function main_nav() {
     if (defined('ADMIN') || defined('INSTITUTIONALADMIN')) {
-        $menu = admin_nav();
+        global $USER;
+        $menu = $USER->get('admin') ? admin_nav() : institutional_admin_nav();
     }
     else {
         // Build the menu structure for the site

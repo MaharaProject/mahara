@@ -26,16 +26,14 @@
 
 define('INTERNAL', 1);
 define('INSTITUTIONALADMIN', 1);
-define('MENUITEM', 'configusers/adminnotifications');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('adminnotifications', 'admin'));
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'admin');
 define('SECTION_PAGE', 'notifications');
-
 require_once('pieforms/pieform.php');
-
 global $USER;
+define('MENUITEM', ($USER->get('admin') ? 'configusers' : 'manageinstitutions') . '/adminnotifications');
 
 $sql = '
     SELECT
