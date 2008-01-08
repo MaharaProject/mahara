@@ -215,8 +215,9 @@ function edituser_site_submit(Pieform $form, $values) {
     if (!$remotename) {
         $remotename = $user->username;
     }
-    if (isset($values['authinstance']) && ($values['authinstance'] != $user->authinstance
-                                           || $values['remoteusername'] != $remotename)) {
+    if (isset($values['authinstance'])
+        && ($values['authinstance'] != $user->authinstance
+            || (isset($values['remoteusername']) && $values['remoteusername'] != $remotename))) {
         $authinst = get_records_select_assoc('auth_instance', 'id = ? OR id = ?', 
                                              array($values['authinstance'], $user->authinstance));
         if ($USER->get('admin') || 
