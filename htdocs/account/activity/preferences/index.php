@@ -48,7 +48,7 @@ foreach ($notifications as $n) {
 }
 
 foreach ($activitytypes as $type) {
-    $dv = $USER->get_activity_preference($type->name);
+    $dv = $USER->get_activity_preference($type->id);
     if (empty($dv)) {
         if (!empty($type->admin) && $USER->get('admin')) {
             $dv = 'none';

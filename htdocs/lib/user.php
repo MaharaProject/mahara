@@ -37,7 +37,7 @@ function load_activity_preferences($userid) {
     if (empty($userid)) {
         throw new InvalidArgumentException("couldn't load activity preferences, no user id specified");
     }
-    if ($prefs = get_records_array('usr_activity_preference', 'usr', $userid)) {
+    if ($prefs = get_records_assoc('usr_activity_preference', 'usr', $userid, '', 'activity,method')) {
         foreach ($prefs as $p) {
             $prefs[$p->activity] = $p->method;
         }

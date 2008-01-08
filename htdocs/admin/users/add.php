@@ -246,7 +246,7 @@ function adduser_submit(Pieform $form, $values) {
     foreach (array('firstname', 'lastname', 'email') as $field) {
         set_profile_field($id, $field, $user->{$field});
     }
-
+    handle_event('createuser', $user);
     db_commit();
 
     redirect('/admin/users/edit.php?id='.$id);

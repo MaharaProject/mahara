@@ -416,7 +416,7 @@ function activity_set_defaults($user_id) {
         }
         insert_record('usr_activity_preference', (object)array(
             'usr' => $user_id,
-            'activity' => $type->name,
+            'activity' => $type->id,
             'method' => $method,
         ));
     }
