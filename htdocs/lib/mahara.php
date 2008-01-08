@@ -147,7 +147,8 @@ function ensure_sanity() {
         !check_dir_exists(get_config('dataroot') . 'smarty/compile') ||
         !check_dir_exists(get_config('dataroot') . 'smarty/cache') ||
         !check_dir_exists(get_config('dataroot') . 'templates') ||
-        !check_dir_exists(get_config('dataroot') . 'sessions')) {
+        !check_dir_exists(get_config('dataroot') . 'sessions') ||
+        !check_dir_exists(get_config('dataroot') . 'htmlpurifier')) {
         throw new ConfigSanityException(get_string('couldnotmakedatadirectories', 'error'));
     }
 }
