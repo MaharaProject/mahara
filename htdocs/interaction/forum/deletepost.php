@@ -69,7 +69,7 @@ if (!$post->parent) {
     throw new AccessDeniedException(get_string('cantdeletethispost', 'interaction.forum'));
 }
 
-define('TITLE', get_string('deletepost', 'interaction.forum') . ' - ' . $post->topicsubject);
+define('TITLE', $post->topicsubject . ' - ' . get_string('deletepost', 'interaction.forum'));
 $post->ctime = relative_date(get_string('strftimerecentfullrelative', 'interaction.forum'), get_string('strftimerecentfull'), $post->ctime);
 
 $breadcrumbs = array(
