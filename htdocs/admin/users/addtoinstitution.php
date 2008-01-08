@@ -29,7 +29,6 @@ define('INSTITUTIONALADMIN', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require('institution.php');
 
-global $USER, $SESSION;
 $id          = param_integer('id');
 $institution = new Institution(param_alpha('institution'));
 

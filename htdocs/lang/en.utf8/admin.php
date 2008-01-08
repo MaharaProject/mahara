@@ -89,7 +89,9 @@ $string['uploadcsvdescription'] = 'Upload a CSV file containing new users';
 $string['usersearch'] = 'User Search';
 $string['usersearchdescription'] = 'Search all users and perform administrative actions on them';
 $string['usersearchinstructions'] = 'You can search for users by clicking on the initials of their first and last names, or by entering a name in the search box.  You can also enter an email address in the search box if you would like to search email addresses.';
-
+$string['institutionmembersdescription'] = 'Associate users with institutions';
+$string['institutionstaffdescription'] = 'Assign users Staff permissions';
+$string['institutionadminsdescription'] = 'Assign Institution Administrator access rights';
 $string['pluginadmin'] = 'Plugin Administration';
 $string['pluginadmindescription'] = 'Install and configure plugins';
 
@@ -361,6 +363,9 @@ $string['Members'] = 'Members';
 $string['Maximum'] = 'Maximum';
 $string['Staff'] = 'Staff';
 $string['Admins'] = 'Admins';
+
+$string['noinstitutions'] = 'No Institutions';
+$string['noinstitutionsdescription'] = 'If you would like to associate users with an institution, you should create the institution first.';
 
 // Admin User Search
 $string['Query'] = 'Query';

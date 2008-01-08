@@ -34,13 +34,17 @@ define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'admin');
 define('SECTION_PAGE', 'staffusers');
 require_once('pieforms/pieform.php');
-global $USER;
-define('MENUITEM', ($USER->get('admin') ? 'configusers' : 'manageinstitutions') . '/institutionstaff');
+define('MENUITEM', 'manageinstitutions/institutionstaff');
 $smarty = smarty();
 
 require_once('institution.php');
 $institution = add_institution_selector_to_page(&$smarty, param_alphanum('institution', false), 
                                                 get_config('wwwroot') . 'admin/users/institutionstaff.php');
+
+if ($institution === false) {
+    $smarty->display('admin/users/noinstitutions.tpl');
+    exit;
+}
 
 // Get users who are currently staff
 $staffusers = get_column('usr_institution', 'usr', 'staff', 1, 'institution', $institution);

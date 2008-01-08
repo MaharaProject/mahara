@@ -68,8 +68,6 @@ $ALLOWEDKEYS = array(
     'authinstance'
 );
 
-global $USER;
-
 if ($USER->get('admin')) {
     $authinstances = auth_get_auth_instances();
 } else {

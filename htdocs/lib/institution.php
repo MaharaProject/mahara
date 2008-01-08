@@ -415,27 +415,22 @@ function get_institution_selector($includedefault = true) {
         return null;
     }
 
-    if (count($institutions) > 1) {
-        $options = array();
-        foreach ($institutions as $i) {
-            $options[$i->name] = $i->displayname;
-        }
-        $institution = key($options);
-        $institutionelement = array(
-            'type' => 'select',
-            'title' => get_string('institution'),
-            'defaultvalue' => $institution,
-            'options' => $options,
-            'rules' => array('regex' => '/^[a-zA-Z0-9]+$/')
-        );
-    } else {
-        $institution = $institutions[0]->name;
-        $institutionelement = array(
-            'type' => 'hidden',
-            'value' => $institution,
-            'rules' => array('regex' => '/^[a-zA-Z0-9]+$/')
-        );
+    if (empty($institutions)) {
+        return null;
     }
+
+    $options = array();
+    foreach ($institutions as $i) {
+        $options[$i->name] = $i->displayname;
+    }
+    $institution = key($options);
+    $institutionelement = array(
+        'type' => 'select',
+        'title' => get_string('institution'),
+        'defaultvalue' => $institution,
+        'options' => $options,
+        'rules' => array('regex' => '/^[a-zA-Z0-9]+$/')
+    );
 
     return $institutionelement;
 }
@@ -447,6 +442,10 @@ function get_institution_selector($includedefault = true) {
 function add_institution_selector_to_page($smarty, $institution, $page) {
     require_once('pieforms/pieform.php');
     $institutionelement = get_institution_selector(false);
+
+    if (empty($institutionelement)) {
+        return false;
+    }
 
     global $USER;
     if (empty($institution) || !$USER->can_edit_institution($institution)) {

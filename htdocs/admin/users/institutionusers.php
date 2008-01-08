@@ -33,11 +33,15 @@ define('TITLE', get_string('adminusers', 'admin'));
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'admin');
 define('SECTION_PAGE', 'institutionusers');
-define('MENUITEM', 'configusers/institutionusers');
+define('MENUITEM', 'manageinstitutions/institutionusers');
 require_once('pieforms/pieform.php');
 require_once('institution.php');
-global $USER;
 $institutionelement = get_institution_selector(false);
+$smarty = smarty();
+if (empty($institutionelement)) {
+    $smarty->display('admin/users/noinstitutions.tpl');
+    exit;
+}
 
 $institution = param_alphanum('institution', false);
 if (!$institution || !$USER->can_edit_institution($institution)) {
@@ -202,7 +206,6 @@ addLoadEvent(function() {
 });
 EOF;
 
-$smarty = smarty();
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('usertypeselector', $usertypeselector);
 $smarty->assign('institutionusersform', $userlistform);
