@@ -402,10 +402,10 @@ abstract class ArtefactType {
     }
 
     /**
-    * 
     * this function provides the way to link to viewing very deeply nested artefacts
-    * within a view, it makes urls like view/view.php?id=x&artefact=y
-    * which is important for the access check.
+    * within a view
+    *
+    * @todo not sure the comment here is appropriate
     */
     public function add_to_render_path(&$options) {
         if (empty($options['path'])) {
