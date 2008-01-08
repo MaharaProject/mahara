@@ -31,14 +31,16 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('docroot') . 'interaction/lib.php');
 
 require_once('pieforms/pieform.php');
+require_once('group.php');
 
 $id = param_integer('id');
 
 $instance = interaction_instance_from_id($id);
 $group = get_record('group', 'id', $instance->get('group'));
 
-if (!$group->owner == $USER->get('id')) {
-    throw new AccessDeniedException(get_string('notallowedtodeleteinteraction', 'group'));
+$membership = user_can_access_group((int)$group->id);
+if (!(bool)($membership & (GROUP_MEMBERSHIP_OWNER | GROUP_MEMBERSHIP_ADMIN | GROUP_MEMBERSHIP_STAFF))) {
+    throw new AccessDeniedException(get_string('notallowedtodeleteinteractions', 'group'));
 }
 
 define('TITLE', get_string('deleteinteraction', 'group', get_string('name', 'interaction.' . $instance->get('plugin')), $instance->get('title')));

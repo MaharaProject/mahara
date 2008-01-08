@@ -36,15 +36,16 @@ if (!record_exists('group', 'id', $groupid)) {
     throw new GroupNotFoundException(get_string('groupnotfound', 'group', $groupid));
 }
 
-$group = get_record('group', 'id', $groupid);
-
-$membership = user_can_access_group($groupid);
+$membership = user_can_access_group((int)$groupid);
+$admin = (bool)($membership & (GROUP_MEMBERSHIP_OWNER | GROUP_MEMBERSHIP_ADMIN | GROUP_MEMBERSHIP_STAFF));
 
 if (!$membership) {
     throw new AccessDeniedException(get_string('cantviewforums', 'interaction.forum'));
 }
 
 $admin = (bool)($membership & (GROUP_MEMBERSHIP_OWNER | GROUP_MEMBERSHIP_ADMIN | GROUP_MEMBERSHIP_STAFF));
+
+$group = get_record('group', 'id', $groupid);
 
 define('TITLE', $group->name . ' - ' . get_string('nameplural', 'interaction.forum'));
 

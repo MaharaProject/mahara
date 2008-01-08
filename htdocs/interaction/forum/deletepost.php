@@ -58,11 +58,8 @@ if (!$post) {
     throw new NotFoundException(get_string('cantfindpost', 'interaction.forum', $postid));
 }
 
-$membership = user_can_access_group((int)$post->group);
-
-$admin = (bool)($membership & (GROUP_MEMBERSHIP_OWNER | GROUP_MEMBERSHIP_ADMIN | GROUP_MEMBERSHIP_STAFF));
-
-$moderator = $admin || is_forum_moderator((int)$post->forum);
+$membership = user_can_access_forum((int)$post->forum);
+$moderator = (bool)($membership & INTERACTION_FORUM_MOD);
 
 if (!$moderator) {
     throw new AccessDeniedException(get_string('cantdeletepost', 'interaction.forum'));

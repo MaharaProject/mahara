@@ -310,35 +310,47 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
     }
 }
 
+// constants for forum membership types
+define('INTERACTION_FORUM_ADMIN', 1);
+define('INTERACTION_FORUM_MOD', 2);
+define('INTERACTION_FORUM_MEMBER', 4);
+
 /**
- * Is a user a moderator of a given forum
+ * Can a user access a given forum?
  *
  * @param int $forumid id of forum
  * @param int $userid optional id of user, defaults to logged in user
  *
- * @returns boolean
+ * @returns constant access level or false
  */
-function is_forum_moderator($forumid, $userid=null) {
+function user_can_access_forum($forumid, $userid=null) {
     if (empty($userid)) {
         global $USER;
         $userid = $USER->get('id');
     }
     else if (!is_int($userid)) {
-        throw new InvalidArgumentException("non integer user id given to is_forum_moderator: $userid");
+        throw new InvalidArgumentException("non integer user id given to user_can_access_forum: $userid");
+    }
+    if (!is_int($forumid)) {
+        throw new InvalidArgumentException("non integer forum id given to user_can_access_forum: $forumid");
     }
 
-    if (!is_int($forumid)) {
-        throw new InvalidArgumentException("non integer forum id given to is_forum_moderator: $forumid");
+    $membership = 0;
+
+    $groupid = get_field('interaction_instance', '"group"', 'id', $forumid);
+    $groupmembership = user_can_access_group((int)$groupid, (int)$userid);
+
+    if (!$groupmembership) {
+        return $membership;
     }
-    return record_exists_sql(
-        'SELECT fm.user
-        FROM {interaction_forum_moderator} fm
-        INNER JOIN {interaction_instance} f ON f.id = fm.forum
-        INNER JOIN {group_member} gm ON (gm.group = f.group AND gm.member = fm.user)
-        WHERE fm.user = ?
-        AND fm.forum = ?',
-        array($userid, $forumid)
-    );
+    $membership = $membership | INTERACTION_FORUM_MEMBER;
+    if ($groupmembership & (GROUP_MEMBERSHIP_OWNER | GROUP_MEMBERSHIP_ADMIN | GROUP_MEMBERSHIP_STAFF)) {
+        $membership = $membership | INTERACTION_FORUM_ADMIN | INTERACTION_FORUM_MOD;
+    }
+    if(record_exists('interaction_forum_moderator', 'forum', $forumid, 'user', $userid)) {
+        $membership = $membership | INTERACTION_FORUM_MOD;
+    }
+    return $membership;
 }
 
 /**

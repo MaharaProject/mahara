@@ -30,9 +30,6 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('interaction', 'forum');
 require('group.php');
 
-
-$userid = $USER->get('id');
-
 $postid = param_integer('id', 0);
 if ($postid == 0) { // post reply
     unset($postid);
@@ -64,11 +61,8 @@ if ($postid == 0) { // post reply
         throw new NotFoundException(get_string('cantfindpost', 'interaction.forum', $parentid));
     }
 
-    $membership = user_can_access_group((int)$parent->group);
-
-    $admin = (bool)($membership & (GROUP_MEMBERSHIP_OWNER | GROUP_MEMBERSHIP_ADMIN | GROUP_MEMBERSHIP_STAFF));
-
-    $moderator = $admin || is_forum_moderator((int)$parent->forum);
+    $membership = user_can_access_forum((int)$parent->forum);
+    $moderator = (bool)($membership & INTERACTION_FORUM_MOD);
 
     if (!$membership) {
         throw new AccessDeniedException(get_string('cantaddposttoforum', 'interaction.forum'));
@@ -142,11 +136,8 @@ else { // edit post
 
     $topicid = $post->topic;
 
-    $membership = user_can_access_group((int)$post->group);
-
-    $admin = (bool)($membership & (GROUP_MEMBERSHIP_OWNER | GROUP_MEMBERSHIP_ADMIN | GROUP_MEMBERSHIP_STAFF));
-
-    $moderator = $admin || is_forum_moderator((int)$post->forum);
+    $membership = user_can_access_forum((int)$post->forum);
+    $moderator = (bool)($membership & INTERACTION_FORUM_MOD);
 
     // no record for edits to own posts with 30 minutes
     if (user_can_edit_post($post->poster, $post->ctime)) {

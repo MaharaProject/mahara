@@ -50,11 +50,8 @@ if ($topicid == 0) { // new topic
         throw new NotFoundException(get_string('cantfindforum', 'interaction.forum', $forumid));
     }
 
-    $membership = user_can_access_group((int)$forum->group);
-
-    $admin = (bool)($membership & (GROUP_MEMBERSHIP_OWNER | GROUP_MEMBERSHIP_ADMIN | GROUP_MEMBERSHIP_STAFF));
-
-    $moderator = $admin || is_forum_moderator($forumid);
+    $membership = user_can_access_forum((int)$forumid);
+    $moderator = (bool)($membership & INTERACTION_FORUM_MOD);
 
     if (!$membership) {
         throw new AccessDeniedException(get_string('cantaddtopic', 'interaction.forum'));
@@ -100,11 +97,8 @@ else { // edit topic
 
     $forumid = $topic->forumid;
 
-    $membership = user_can_access_group((int)$topic->group);
-
-    $admin = (bool)($membership & (GROUP_MEMBERSHIP_OWNER | GROUP_MEMBERSHIP_ADMIN | GROUP_MEMBERSHIP_STAFF));
-
-    $moderator = $admin || is_forum_moderator((int)$forumid);
+    $membership = user_can_access_forum((int)$topic->forumid);
+    $moderator = (bool)($membership & INTERACTION_FORUM_MOD);
 
     // no record for edits to own posts with 30 minutes
     if (user_can_edit_post($topic->poster, $topic->ctime)) {

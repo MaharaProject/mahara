@@ -49,16 +49,12 @@ if (!$topic) {
     throw new NotFoundException(get_string('cantfindtopic', 'interaction.forum', $topicid));
 }
 
-$membership = user_can_access_group((int)$topic->group);
+$membership = user_can_access_forum((int)$topic->forumid);
+$moderator = (bool)($membership & INTERACTION_FORUM_MOD);
 
 if (!$membership) {
     throw new AccessDeniedException(get_string('cantviewtopic', 'interaction.forum'));
 }
-
-$admin = (bool)($membership & (GROUP_MEMBERSHIP_OWNER | GROUP_MEMBERSHIP_ADMIN | GROUP_MEMBERSHIP_STAFF));
-
-$moderator = $admin || is_forum_moderator((int)$topic->forumid);
-
 $topic->canedit = $moderator || user_can_edit_post($topic->poster, $topic->ctime);
 
 define('TITLE', $topic->forumtitle . ' - ' . $topic->subject);

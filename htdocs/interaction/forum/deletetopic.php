@@ -57,11 +57,9 @@ if (!$topic) {
     throw new NotFoundException(get_string('cantfindtopic', 'interaction.forum', $topicid));
 }
 
-$membership = user_can_access_group((int)$topic->group);
+$membership = user_can_access_forum((int)$topic->forumid);
 
-$admin = (bool)($membership & (GROUP_MEMBERSHIP_OWNER | GROUP_MEMBERSHIP_ADMIN | GROUP_MEMBERSHIP_STAFF));
-
-$moderator = $admin || is_forum_moderator((int)$topic->forumid);
+$moderator = (bool)($membership & INTERACTION_FORUM_MOD);
 
 $topic->ctime = relative_date(get_string('strftimerecentfullrelative', 'interaction.forum'), get_string('strftimerecentfull'), $topic->ctime);
 

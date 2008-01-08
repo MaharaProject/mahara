@@ -54,15 +54,13 @@ if (!$forum) {
     throw new InteractionInstanceNotFoundException(get_string('cantfindforum', 'interaction.forum', $forumid));
 }
 
-$membership = user_can_access_group((int)$forum->group);
+$membership = user_can_access_forum((int)$forumid);
+$admin = (bool)($membership & INTERACTION_FORUM_ADMIN);
+$moderator = (bool)($membership & INTERACTION_FORUM_MOD);
 
 if (!$membership) {
     throw new AccessDeniedException(get_string('cantviewforums', 'interaction.forum'));
 }
-
-$admin = (bool)($membership & (GROUP_MEMBERSHIP_OWNER | GROUP_MEMBERSHIP_ADMIN | GROUP_MEMBERSHIP_STAFF));
-
-$moderator = $admin || is_forum_moderator($forumid);
 
 define('TITLE', $forum->groupname . ' - ' . $forum->title);
 

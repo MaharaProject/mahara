@@ -32,6 +32,7 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('docroot') . 'interaction/lib.php');
 
 require_once('pieforms/pieform.php');
+require_once('group.php');
 
 $id = param_integer('id', 0);
 
@@ -52,9 +53,9 @@ safe_require('interaction', $plugin);
 if (!$group = get_record('group', 'id', $groupid)) {
     throw new GroupNotFoundException('groupnotfound', 'group', $groupid);
 }
-
-if (!$group->owner == $USER->get('id')) {
-    throw new AccessDeniedException(get_string('notallowedtoeditinteraction', 'group'));
+$membership = user_can_access_group((int)$groupid);
+if (!(bool)($membership & (GROUP_MEMBERSHIP_OWNER | GROUP_MEMBERSHIP_ADMIN | GROUP_MEMBERSHIP_STAFF))) {
+    throw new AccessDeniedException(get_string('notallowedtoeditinteractions', 'group'));
 }
 
 $returnto = param_alpha('returnto', 'view');
