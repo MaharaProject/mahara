@@ -35,7 +35,7 @@ $joinoptions = array(
     'request'    => get_string('membershiptype.request', 'group'),
     'open'       => get_string('membershiptype.open', 'group'),
 );
-if ($USER->get('admin') || $USER->get('staff')) {
+if ($USER->can_create_controlled_groups()) {
     $joinoptions['controlled'] = get_string('membershiptype.controlled', 'group');
 }
 
@@ -108,7 +108,7 @@ function creategroup_submit(Pieform $form, $values) {
     );
 
     // If the user is a staff member, they should be added as a tutor automatically
-    if ($values['membershiptype'] == 'controlled' && ($USER->get('staff') && $USER->get('admin'))) {
+    if ($values['membershiptype'] == 'controlled' && $USER->can_create_controlled_groups()) {
         log_debug('Adding staff user to group');
         insert_record(
             'group_member',

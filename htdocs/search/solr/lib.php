@@ -170,6 +170,12 @@ END;
 
     private static function remove_key_prefix($results) {
         if (is_array($results['data'])) {
+            $toarray = array(
+                'institutions' => 1,
+                'invitedby'    => 1,
+                'member'       => 1,
+                'requested'    => 1,
+            );
             foreach ($results['data'] as &$result) {
                 $new_result = array();
                 foreach ($result as $key => &$value) {
@@ -184,8 +190,10 @@ END;
                         continue;
                     }
 
-                    if ($key_parts[0] == 'store' || $key_parts[0] == 'text' || $key_parts[0] == 'string' 
-                        || $key == 'ref_institution') {
+                    if ($key_parts[0] == 'store' || $key_parts[0] == 'text' || $key_parts[0] == 'string') { 
+                        if (isset($toarray[$key_parts[1]])) {
+                            $value = $value == 'mahara' ? array() : explode(' ', $value);
+                        }
                         $new_result[$key_parts[1]] = $value;
                     }
                 }
@@ -209,11 +217,13 @@ END;
         $q = '';
         $solrfields = array(
             'id'          => 'id',
-            'institution' => 'ref_institution',
+            'institution' => 'text_institutions',
             'email'       => 'string_email',
             'username'    => 'text_username',
             'firstname'   => 'text_firstname',
-            'lastname'    => 'text_lastname'
+            'lastname'    => 'text_lastname',
+            'suspended'   => 'string_suspended',
+            'institution_requested' => 'text_institutions_requested',
         );
         if (!empty($queries)) {
             $terms = array();
@@ -233,8 +243,15 @@ END;
             }
             $terms = array();
             foreach ($constraints as $f) {
-                $terms[] = $solrfields[$f['field']] . ':' . strtolower($f['string'])
-                    . ($f['type'] != 'equals' ? '*' : '');
+                if ($f['type'] == 'in' && is_array($f['string'])) {
+                    foreach ($f['string'] as &$string) {
+                        $string = $solrfields[$f['field']] . ':' . strtolower($string);
+                    }
+                    $terms[] = '(' . join(' OR ', $f['string']) . ')';
+                } else {
+                    $terms[] = $solrfields[$f['field']] . ':' . strtolower($f['string'])
+                        . ($f['type'] != 'equals' ? '*' : '');
+                }
             }
             $q .= join(' AND ', $terms);
         }
@@ -246,6 +263,36 @@ END;
         return $results;
     }
 
+
+    public static function institutional_admin_search_user($query, $institution, $limit) {
+        $fields = 'id,text_firstname,text_lastname,text_username,store_preferredname,idtype';
+        if (empty($query)) {
+            $q = array();
+        } else {
+            $query = strtolower($query);
+            $q = array('(text_firstname:'.$query.'* OR text_lastname:'.$query.'*)');
+        }
+
+        if (!empty($institution->name)) {
+            foreach (array('member', 'requested', 'invitedby') as $f) {
+                if ($institution->{$f} == 0) {
+                    $neg[] = '-text_' . $f . ':' . $institution->name;
+                } else if ($institution->{$f} == 1) {
+                    $q[] = 'text_' . $f . ':' . $institution->name;
+                }
+            }
+        }
+        // Solr doesn't like all-negative queries
+        if (empty($q) && !empty($neg)) {
+            $q = array('*:*');
+        }
+        $q = join(' AND ', array_merge($q, $neg));
+
+        $results = self::send_query($q, $limit, 0, array('type' => 'user'), $fields);
+        self::remove_key_prefix(&$results);
+        return $results;
+        
+    }
 
     /**
      * Given a query string and limits, return an array of matching objects
@@ -420,7 +467,6 @@ END;
         }
         if (
             !isset($user['preferredname'])
-            || !isset($user['institution'])
             || !isset($user['email'])
             || !isset($user['username'])
             || !isset($user['preferredname'])
@@ -438,20 +484,33 @@ END;
             return;
         }
         
+        if (!isset($user['institutions'])) {
+            $user['institutions']   = get_column('usr_institution', 'institution', 'usr', $user['id']);
+            $requested              = get_column('usr_institution_request', 'institution', 
+                                                 'usr', $user['id'], 'confirmedusr', 1);
+            $invited                = get_column('usr_institution_request', 'institution', 
+                                                 'usr', $user['id'], 'confirmedinstitution', 1);
+            $institutions_requested = array_merge($user['institutions'], $requested, $invited);
+        }
+
         // @todo: need to index public profile fields
         $doc = array(
             'id'                  => $user['id'],
             'owner'               => $user['id'],
             'type'                => 'user',
             'index_name'          => $user['preferredname'],
-            'ref_institution'     => $user['institution'],
+            'text_institutions'   => empty($user['institutions']) ? 'mahara' : join(' ', $user['institutions']),
             'string_email'        => $user['email'],
             'text_username'       => $user['username'],
             'store_preferredname' => $user['preferredname'],
             'text_firstname'      => $user['firstname'],
             'text_lastname'       => $user['lastname'],
             'index_active'        => $user['active'],
-            'store_suspended'     => (int)!empty($user['suspendedcusr']),
+            'string_suspended'    => (int)!empty($user['suspendedcusr']),
+            'text_institutions_requested' => join(' ', $institutions_requested),
+            'text_member'         => join(' ', $user['institutions']),
+            'text_requested'      => join(' ', $requested),
+            'text_invitedby'      => join(' ', $invited),
         );
         if (empty($doc['index_name'])) {
             $doc['index_name'] = $user['firstname'] . ' ' . $user['lastname'];

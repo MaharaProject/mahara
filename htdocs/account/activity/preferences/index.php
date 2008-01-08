@@ -34,7 +34,7 @@ require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
 require_once('pieforms/pieform.php');
 
 $activitytypes = get_records_array('activity_type', 'admin', 0);
-if ($USER->get('admin')) {
+if ($USER->get('admin') || $USER->is_institutional_admin()) {
     $admintypes = get_records_array('activity_type', 'admin', 1);
     $activitytypes = array_merge($activitytypes , $admintypes);
 }
@@ -50,7 +50,7 @@ foreach ($notifications as $n) {
 foreach ($activitytypes as $type) {
     $dv = $USER->get_activity_preference($type->name);
     if (empty($dv)) {
-        if (!empty($type->admin)) {
+        if (!empty($type->admin) && $USER->get('admin')) {
             $dv = 'none';
         } else {
             $dv = 'internal';

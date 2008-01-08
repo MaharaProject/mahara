@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 
 print_usage() {
@@ -39,7 +39,7 @@ rm .git -rf
 rm debian -rf
 
 # Pack MochiKit
-scripts/pack.sh
+bash scripts/pack.sh
 
 popd
 

@@ -302,7 +302,7 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='')
  *
  * @returns string name to display
  */
-function display_name($user, $userto=null) {
+function display_name($user, $userto=null, $nameonly=false) {
     global $USER;
     
     if (empty($userto)) {
@@ -312,8 +312,8 @@ function display_name($user, $userto=null) {
         $userto->preferredname = $USER->get('preferredname');
         $userto->firstname     = $USER->get('firstname');
         $userto->lastname      = $USER->get('lastname');
-        $userto->admin         = $USER->get('admin');
-        $userto->staff         = $USER->get('staff');
+        $userto->admin         = $USER->get('admin') || $USER->is_institutional_admin();
+        $userto->staff         = $USER->get('staff') || $USER->is_institutional_staff();
     }
     if (is_array($user)) {
         $user = (object)$user;
@@ -339,13 +339,13 @@ function display_name($user, $userto=null) {
 
     // if they don't have a preferred name set, just return here
     if (empty($user->preferredname)) {
-        if ($userto->admin || $userto->staff) {
+        if (($userto->admin || $userto->staff) && !$nameonly) {
             return $user->firstname . ' ' . $user->lastname . ' (' . $user->username . ')';
         }
         return $user->firstname . ' ' . $user->lastname;
     }
 
-    if ($userto->admin || $userto->staff) {
+    if (($userto->admin || $userto->staff) && !$nameonly) {
         return $user->preferredname . ' (' . $user->firstname . ' ' . $user->lastname . ' - ' . $user->username . ')';
     }
 
@@ -355,7 +355,7 @@ function display_name($user, $userto=null) {
                 ON g1.group = g2.group 
             WHERE g1.member = ? AND g2.member = ? AND g2.tutor = ?';
     if (record_exists_sql($sql, array($user->id, $userto->id, 1))) {
-        return $user->preferredname . ' (' . $user->firstname . ' ' . $user->lastname . ')';
+        return $user->preferredname . ($nameonly ? '' : ' (' . $user->firstname . ' ' . $user->lastname . ')');
     }
     return  $user->preferredname;
 }
@@ -787,6 +787,45 @@ function send_user_message($to, $message, $from=null) {
     else {
         throw new AccessDeniedException('Cannot send messages between ' . display_name($from) . ' and ' . display_name($to));
     }
+}
+
+
+function load_user_institutions($userid) {
+    if (empty($userid)) {
+        throw new InvalidArgumentException("couldn't load institutions, no user id specified");
+    }
+    if ($institutions = get_records_sql_assoc('
+        SELECT u.institution,'.db_format_tsfield('ctime').','.db_format_tsfield('expiry').',u.studentid,u.staff,u.admin,i.theme
+        FROM {usr_institution} u INNER JOIN {institution} i ON u.institution = i.name
+        WHERE u.usr = ?', array($userid))) {
+        return $institutions;
+    }
+    return array();
+}
+
+
+/**
+ * Return a username which isn't taken and which is similar to a desired username
+ * 
+ * @param string $desired
+ */
+function get_new_username($desired) {
+    $maxlen = 30;
+    $desired = substr($desired, 0, $maxlen);
+    $taken = get_column_sql('
+        SELECT username FROM {usr}
+        WHERE username ' . db_ilike() . " '" . substr($desired, 0, $maxlen - 6) . "%'");
+    if (!$taken) {
+        return $desired;
+    }
+    $taken = array_flip($taken);
+    $i = '';
+    $newname = substr($desired, 0, $maxlen - 1) . $i;
+    while (isset($taken[$newname])) {
+        $i++;
+        $newname = substr($desired, 0, $maxlen - strlen($i)) . $i;
+    }
+    return $newname;
 }
 
 ?>

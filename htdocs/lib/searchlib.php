@@ -117,7 +117,45 @@ function search_user($query_string, $limit, $offset = 0, $data = array()) {
 }
 
 
-function build_admin_user_search_results($search, $offset, $limit, $sortby, $sortdir) {
+
+/* 
+ * Institutional admin queries:
+ *
+ * These are only used to populate user lists on the Institution
+ * Members page.  They may return users who are not in the same
+ * institution as the logged in institutional admin, so they should
+ * return names only, not email addresses.
+ */
+
+function get_institutional_admin_search_results($search, $limit) {
+    $institution = new StdClass;
+    $institution->name = $search->institution;
+    foreach (array('member', 'requested', 'invitedby') as $p) {
+        $institution->{$p} = $search->{$p};
+    }
+    $results = institutional_admin_user_search($search->query, $institution, $limit);
+    if ($results['count']) {
+        foreach ($results['data'] as &$r) {
+            $r['name'] = $r['firstname'] . ' ' . $r['lastname'] . ' (' . $r['username'] . ')';
+            if (!empty($r['studentid'])) {
+                $r['name'] .= ' (' . $r['studentid'] . ')';
+            }
+        }
+    }
+    return $results;
+}
+
+function institutional_admin_user_search($query, $institution, $limit) {
+    $plugin = get_config('searchplugin');
+    safe_require('search', $plugin);
+    return call_static_method(generate_class_name('search', $plugin), 'institutional_admin_search_user', 
+                              $query, $institution, $limit);
+}
+
+
+
+
+function get_admin_user_search_results($search, $offset, $limit, $sortby, $sortdir) {
     // In admin search, the search string is interpreted as either a
     // name search or an email search depending on its contents
     $queries = array();
@@ -146,13 +184,49 @@ function build_admin_user_search_results($search, $offset, $limit, $sortby, $sor
                                'type' => 'starts',
                                'string' => $search->l);
     }
-    if (!empty($search->institution) && $search->institution != 'all') {
+    // Filter by viewable institutions:
+    global $USER;
+    if (!$USER->get('admin')) {
+        if (empty($search->institution) && empty($search->institution_requested)) {
+            $search->institution_requested = 'all';
+        }
+        $allowed = $USER->get('admininstitutions');
+        foreach (array('institution', 'institution_requested') as $p) {
+            if (!empty($search->{$p})) {
+                if ($search->{$p} == 'all' || !isset($allowed[$search->{$p}])) {
+                    $constraints[] = array('field' => $p,
+                                           'type' => 'in',
+                                           'string' => $allowed);
+                } else {
+                    $constraints[] = array('field' => $p,
+                                           'type' => 'equals',
+                                           'string' => $search->{$p});
+                }
+            }
+        }
+    } else if (!empty($search->institution) && $search->institution != 'all') {
         $constraints[] = array('field' => 'institution',
                                'type' => 'equals',
                                'string' => $search->institution);
     }
-
+    
     $results = admin_user_search($queries, $constraints, $offset, $limit, $sortby, $sortdir);
+    if ($results['count']) {
+        foreach ($results['data'] as &$result) {
+            $result['name'] = display_name($result);
+            if (!empty($result['institutions'])) {
+                $result['institutions'] = array_combine($result['institutions'],$result['institutions']);
+            }
+        }
+    }
+    return $results;
+}
+
+
+function build_admin_user_search_results($search, $offset, $limit, $sortby, $sortdir) {
+    global $USER;
+
+    $results = get_admin_user_search_results($search, $offset, $limit, $sortby, $sortdir);
 
     $params = array();
     foreach ($search as $k => $v) {
@@ -163,23 +237,36 @@ function build_admin_user_search_results($search, $offset, $limit, $sortby, $sor
     $searchurl = get_config('wwwroot') . 'admin/users/search.php?' . join('&amp;', $params)
         . '&amp;limit=' . $limit;
 
+    $usernametemplate = '<a href="' . get_config('wwwroot') . 'admin/users/edit.php?id={$r.id}">{$r.username|escape}</a>';
+    if (!$USER->get('admin')) {
+        // Only create the edit link if the returned user belongs to an institution that the viewer administers
+        $cond = array();
+        foreach ($USER->get('admininstitutions') as $i) {
+            $cond[] = 'isset($r.institutions.' . $i . ')';
+        }
+        $usernametemplate = '{if ' . join('||', $cond) . '}' . $usernametemplate . '{else}{$r.username}{/if}';
+    }
+
     $cols = array(
         'icon'        => array('name'     => '',
                                'template' => '<img src="' . get_config('wwwroot') . 'thumb.php?type=profileicon&size=40x40&id={$r.id}" alt="' . get_string('profileimage') . '" />'),
         'firstname'   => array('name'     => get_string('firstname')),
         'lastname'    => array('name'     => get_string('lastname')),
         'username'    => array('name'     => get_string('username'),
-                               'template' => '<a href="' . get_config('wwwroot') . 'user/view.php?id={$r.id}">{$r.username|escape}</a>'),
+                               'template' => $usernametemplate),
         'email'       => array('name'     => get_string('email')),
-        'institution' => array('name'     => get_string('institution'),
-                               'template' => '{$institutions[$r.institution]->displayname|escape}'),
-        'suspend'     => array('name'     => '',
-                               'template' => '{if !$r.suspended || $r.suspended == \'f\'}<a class="suspend-user-link" href="' . get_config('wwwroot') . 'admin/users/suspend.php?id={$r.id}">' . get_string('suspenduser', 'admin') . '</a>{/if}'),
     );
+
+    $institutions = get_records_assoc('institution', '', '', '', 'name,displayname');
+    if (count($institutions) > 1) {
+        $cols['institution'] = array('name'     => get_string('institution'),
+                                     'template' => '{if empty($r.institutions)}{$institutions.mahara->displayname}{else}{foreach from=$r.institutions item=i}<div>{$institutions[$i]->displayname}</div>{/foreach}{/if}{if !empty($r.requested)}{foreach from=$r.requested item=i}<div class="pending">{str tag=requestto section=admin} {$institutions[$i]->displayname}{if $USER->is_institutional_admin("$i")} (<a href="{$WWWROOT}admin/users/addtoinstitution.php?id={$r.id}&institution={$i}">{str tag=confirm section=admin}</a>){/if}</div>{/foreach}{/if}{if !empty($r.invitedby)}{foreach from=$r.invitedby item=i}<div class="pending">{str tag=invitedby section=admin} {$institutions[$i]->displayname}</div>{/foreach}{/if}');
+    }
 
     $smarty = smarty_core();
     $smarty->assign_by_ref('results', $results);
-    $smarty->assign_by_ref('institutions', get_records_assoc('institution', '', '', '', 'name,displayname'));
+    $smarty->assign_by_ref('institutions', $institutions);
+    $smarty->assign('USER', $USER);
     $smarty->assign('searchurl', $searchurl);
     $smarty->assign('sortby', $sortby);
     $smarty->assign('sortdir', $sortdir);

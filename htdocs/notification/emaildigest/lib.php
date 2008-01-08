@@ -67,6 +67,7 @@ class PluginNotificationEmaildigest extends PluginNotification {
                     $users[$queue->usr] = new StdClass;
                     
                     $users[$queue->usr]->user = new StdClass;
+                    $users[$queue->usr]->user->username      = $queue->username;
                     $users[$queue->usr]->user->firstname     = $queue->firstname;
                     $users[$queue->usr]->user->lastname      = $queue->lastname;
                     $users[$queue->usr]->user->preferredname = $queue->preferredname;
@@ -85,7 +86,7 @@ class PluginNotificationEmaildigest extends PluginNotification {
             $subject = get_string('emailsubject', 'notification.emaildigest', $sitename);
             $body = get_string('emailbodynoreply', 'notification.emaildigest', $sitename);
             foreach ($user->entries as $entry) {
-                $body .= get_string('type', 'activity') . $entry->nicetype 
+                $body .= get_string('type', 'activity') . ': ' . $entry->nicetype 
                     . ' ' . get_string('attime', 'activity')  . ' ' . format_date($entry->ctime) . "\n";
                 if (!empty($queue->subject)) {
                     $body .= get_string('subject') . $queue->subject ."\n";

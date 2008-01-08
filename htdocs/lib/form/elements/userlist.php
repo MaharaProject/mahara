@@ -73,6 +73,14 @@ function pieform_element_userlist(Pieform $form, $element) {
         $smarty->assign('group', $element['group']);
         $smarty->assign('owner', !isset($element['owner']) || $element['owner'] ? 1 : 0);
     }
+    if (empty($element['searchscript'])) {
+        $element['searchscript'] = 'json/usersearch.php';
+    }
+    $smarty->assign('searchscript', $element['searchscript']);
+    if (empty($element['searchparams'])) {
+        $element['searchparams'] = array('query' => '', 'limit' => 100);
+    }
+    $smarty->assign('searchparams', json_encode($element['searchparams']));
 
     return $smarty->fetch('form/userlist.tpl');
 }

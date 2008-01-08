@@ -47,6 +47,9 @@ function pieform_rule_maxvalue_i18n() {
         'de.utf8' => array(
             'maxvalue' => 'Dieser Wert kann nicht größer als %d sein'
         ),
+        'fr.utf8' => array(
+            'maxvalue' => 'Cette valeur ne peut pas supérieure à %d'
+        ),
     );
 }
 

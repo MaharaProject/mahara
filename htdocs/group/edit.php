@@ -44,7 +44,7 @@ $joinoptions = array(
     'request'    => get_string('membershiptype.request', 'group'),
     'open'       => get_string('membershiptype.open', 'group'),
 );
-if ($USER->get('admin') || $USER->get('staff')) {
+if ($USER->can_create_controlled_groups()) {
     $joinoptions['controlled'] = get_string('membershiptype.controlled', 'group');
 }
 

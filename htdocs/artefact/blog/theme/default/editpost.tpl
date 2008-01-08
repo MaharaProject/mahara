@@ -22,9 +22,9 @@
           <table id='filebrowser' class='tablerenderer'>
             <thead><tr>
               <th></th>
-              <th>{str section=artefact.file tag=name}</th>
-              <th>{str section=artefact.file tag=description}</th>
-              <th>{str section=artefact.file tag=size}</th>
+              <th>{str section=artefact.file tag=Name}</th>
+              <th>{str section=artefact.file tag=Description}</th>
+              <th>{str section=artefact.file tag=Size}</th>
               <th>{str section=mahara tag=date}</th>
               <th></th>
             </tr></thead>
@@ -35,8 +35,8 @@
         <table id='attachedfiles' class='tablerenderer'>
           <thead><tr>
             <th></th>
-            <th>{str section=artefact.file tag=name}</th>
-            <th>{str section=artefact.file tag=description}</th>
+            <th>{str section=artefact.file tag=Name}</th>
+            <th>{str section=artefact.file tag=Description}</th>
             <th>{str tag=tags}</th>
             <th></th>
           </tr></thead>

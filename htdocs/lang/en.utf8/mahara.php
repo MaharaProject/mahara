@@ -109,6 +109,23 @@ $string['accountexpirywarninghtml'] = '<p>Dear %s,</p>
 <p>If you wish to extend your account access or have any questions regarding the above, please feel free to <a href="%s">Contact Us</a>.</p>
 
 <p>Regards, %s Site Administrator</p>';
+$string['institutionexpirywarning'] = 'Institution membership expiry warning';
+$string['institutionexpirywarningtext'] = 'Dear %s,
+
+Your membership of %s on %s will expire within %s.
+
+If you wish to extend your membership or have any questions regarding the above, please feel free to contact us:
+
+%s
+
+Regards, %s Site Administrator';
+$string['institutionexpirywarninghtml'] = '<p>Dear %s,</p>
+    
+<p>Your membership of %s on %s will expire within %s.</p>
+
+<p>If you wish to extend your membership or have any questions regarding the above, please feel free to <a href="%s">Contact Us</a>.</p>
+
+<p>Regards, %s Site Administrator</p>';
 $string['accountinactive'] = 'Sorry, your account is currently inactive';
 $string['accountinactivewarning'] = 'Account inactivity warning';
 $string['accountinactivewarningtext'] = 'Dear %s,
@@ -182,6 +199,9 @@ $string['registerstep1description'] = 'Welcome! To use this site you must first 
 $string['registerstep3fieldsoptional'] = '<h3>Choose an Optional Profile Image</h3><p>You have now successfully registered with ' . get_config('sitename') . '! You may now choose an optional profile icon to be displayed as your avatar.</p>';
 $string['registerstep3fieldsmandatory'] = '<h3>Fill Out Mandatory Profile Fields</h3><p>The following fields are required. You must fill them out before your registration is complete.</p>';
 $string['registeringdisallowed'] = 'Sorry, you cannot register for this system at this time';
+$string['membershipexpiry'] = 'Membership expires';
+$string['institutionfull'] = 'The institution you have chosen is not accepting any more registrations.';
+$string['registrationnotallowed'] = 'The institution you have chosen does not allow self-registration.';
 
 // Forgot password
 $string['cantchangepassword'] = 'Sorry, you are unable to change your password through this interface - please use your institution\'s interface instead';
@@ -228,6 +248,41 @@ $string['forgotpassnosuchemailaddress'] = 'The email address you entered doesn\'
 $string['forgotpasswordenternew'] = 'Please enter your new password to continue';
 $string['nosuchpasswordrequest'] = 'No such password request';
 $string['passwordchangedok'] = 'Your password was successfully changed';
+
+// Reset password when moving from external to internal auth.
+$string['noinstitutionsetpassemailsubject'] = '%s: Membership of %s';
+$string['noinstitutionsetpassemailmessagetext'] = 'Dear %s,
+
+You are no longer a member of %s.
+You may continue to use %s with your current username %s, but you must set a new password for your account.
+
+Please follow the link below to continue the reset process.
+
+' . get_config('wwwroot') . 'forgotpass.php?key=%s
+
+If you have any questsions regarding the above, please feel free to contact
+us.
+
+' . get_config('wwwroot') . 'contact.php
+
+Regards, %s Site Administrator
+
+' . get_config('wwwroot') . 'forgotpass.php?key=%s';
+$string['noinstitutionsetpassemailmessagehtml'] = '<p>Dear %s,</p>
+
+<p>You are no longer a member of %s.</p>
+<p>You may continue to use %s with your current username %s, but you must set a new password for your account.</p>
+
+<p>Please follow the link below to continue the reset process.</p>
+
+<p><a href="' . get_config('wwwroot') . 'forgotpass.php?key=%s">' . get_config('wwwroot') . 'forgotpass.php?key=%s</a></p>
+
+<p>If you have any questsions regarding the above, please feel free to <a href="' . get_config('wwwroot') . 'contact.php">contact us</a>.</p>
+
+<p>Regards, %s Site Administrator</p>
+
+<p><a href="' . get_config('wwwroot') . 'forgotpass.php?key=%s">' . get_config('wwwroot') . 'forgotpass.php?key=%s</a></p>';
+
 
 // Expiry times
 $string['noenddate'] = 'No end date';
@@ -280,6 +335,20 @@ $string['preferences'] = 'Preferences';
 $string['activityprefs'] = 'Activity preferences';
 $string['changepassword'] = 'Change password';
 $string['notifications'] = 'Notifications';
+$string['institutionmembership'] = 'Institution membership';
+$string['youareamemberof'] = 'You are a member of %s';
+$string['leaveinstitution'] = 'Leave institution';
+$string['reallyleaveinstitution'] = 'Are you sure you want to leave this institution?';
+$string['youhaverequestedmembershipof'] = 'You have requested membership of %s';
+$string['cancelrequest'] = 'Cancel request';
+$string['youhavebeeninvitedtojoin'] = 'You have been invited to join %s';
+$string['confirminvitation'] = 'Confirm invitation';
+$string['joininstitution'] = 'Join institution';
+$string['decline'] = 'Decline';
+$string['requestmembershipofaninstitution'] = 'Request membership of an institution';
+$string['optionalinstitutionid'] = 'Institution ID (optional)';
+$string['institutionmemberconfirmsubject'] = 'Institution membership confirmation';
+$string['institutionmemberconfirmmessage'] = 'You have been added as a member of %s.';
 
 // my views
 $string['accessstartdate'] = 'Access start date';

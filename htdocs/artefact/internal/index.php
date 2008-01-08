@@ -48,6 +48,8 @@ if ($profile_data) {
     }
 }
 
+$lockedfields = locked_profile_fields();
+
 $profilefields['email'] = array();
 $profilefields['email']['all'] = get_records_array('artefact_internal_profile_email', 'owner', $USER->get('id'));
 $profilefields['email']['validated'] = array();
@@ -101,6 +103,10 @@ foreach ( $element_list as $element => $type ) {
         $elements[$element]['rules']['required'] = true;
     }
 
+    if (isset($lockedfields[$element]) && !$USER->get('admin')) {
+        $elements[$element]['disabled'] = true;
+    }
+
 }
 $elements['submit'] = array(
     'type'  => 'submit',
@@ -147,7 +153,13 @@ function profileform_submit(Pieform $form, $values) {
     $now = db_format_timestamp(time());
     $email_errors = array();
 
+    $lockedfields = locked_profile_fields();
+
     foreach ($element_list as $element => $type) {
+
+        if (isset($lockedfields[$element]) && !$USER->get('admin')) {
+            continue;
+        }
 
         if ($element == 'email') {
             if (!isset($values['email']['unvalidated'])) {
@@ -301,5 +313,22 @@ $smarty = smarty(array(), array(), array(
 $smarty->assign('profileform', $profileform);
 
 $smarty->display('artefact:internal:index.tpl');
+
+
+function locked_profile_fields() {
+    global $USER;
+
+    // Profile fields are locked for a user if they are locked by any
+    // institution the user is a member of, but not an admin for.
+    $lockinginstitutions = array_keys($USER->get('institutions'));
+    $lockinginstitutions[] = 'mahara';
+    $lockinginstitutions = array_diff($lockinginstitutions, $USER->get('admininstitutions'));
+
+    return get_records_select_assoc(
+        'institution_locked_profile_field',
+        'name IN (' . join(',', array_map('db_quote', $lockinginstitutions)) . ')',
+        null, '', 'profilefield,name'
+    );
+}
 
 ?>

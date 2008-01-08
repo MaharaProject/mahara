@@ -540,18 +540,19 @@ function core_postinst() {
 
 function core_install_lastcoredata_defaults() {
     db_begin();
-    $auth_instance = new StdClass;
+    $institution = new StdClass;
     $institution->name = 'mahara';
     $institution->displayname = 'No Institution';
     $institution->authplugin  = 'internal';
+    $institution->theme  = 'default';
     insert_record('institution', $institution);
 
+    $auth_instance = new StdClass;
     $auth_instance->instancename  = 'internal';
     $auth_instance->priority='1';
     $auth_instance->institution   = 'mahara';
     $auth_instance->authname      = 'internal';
     $auth_instance->id = insert_record('auth_instance', $auth_instance, 'id', true);
-    $institution = new StdClass;
 
     // Insert the root user
     $user = new StdClass;
@@ -559,7 +560,6 @@ function core_install_lastcoredata_defaults() {
     $user->username = 'root';
     $user->password = '*';
     $user->salt = '*';
-    $user->institution = 'mahara';
     $user->firstname = 'System';
     $user->lastname = 'User';
     $user->email = 'root@example.org';
@@ -579,7 +579,6 @@ function core_install_lastcoredata_defaults() {
     $user = new StdClass;
     $user->username = 'admin';
     $user->password = 'mahara';
-    $user->institution = 'mahara';
     $user->authinstance = $auth_instance->id;
     $user->passwordchange = 1;
     $user->admin = 1;
@@ -609,6 +608,7 @@ function core_install_firstcoredata_defaults() {
     set_config('session_timeout', 1800);
     set_config('sitename', 'Mahara');
     set_config('pathtofile', '/usr/bin/file');
+    set_config('defaultaccountinactivewarn', 604800);
 
     // install the applications
     $app = new StdClass;
@@ -660,6 +660,7 @@ function core_install_firstcoredata_defaults() {
         array('objectionable', 1, 1),
         array('virusrepeat', 1, 1),
         array('virusrelease', 1, 1),
+        array('institutionmessage', 0, 0),
     );
 
     foreach ($activitytypes as $at) {

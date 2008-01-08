@@ -202,7 +202,7 @@ abstract class Auth {
      */
     public function user_exists($username) {
         $this->must_be_ready();
-        if (record_exists('usr', 'LOWER(username)', strtolower($username), 'authinstance', $this->instanceid)) {
+        if (record_exists('usr', 'LOWER(username)', strtolower($username))) {
             return true;
         }
         throw new AuthUnknownUserException("\"$username\" is not known to Auth");
@@ -243,7 +243,7 @@ abstract class Auth {
      */
     public function get_user_info_cached($username) {
         $this->must_be_ready();
-        if (!$result = get_record('usr', 'LOWER(username)', strtolower($username), 'authinstance', $this->instanceid,
+        if (!$result = get_record('usr', 'LOWER(username)', strtolower($username), null, null, null, null,
                     '*, ' . db_format_tsfield('expiry') . ', ' . db_format_tsfield('lastlogin'))) {
             throw new AuthUnknownUserException("\"$username\" is not known to AuthInternal");
         }
@@ -331,11 +331,20 @@ function auth_setup () {
             else if ($USER->get('admin') && !$userreallyadmin) {
                 // The user's admin rights have been taken away
                 $USER->admin = 0;
+            }
+            if (!$USER->get('admin')) {
                 $SESSION->add_error_msg(get_string('accessforbiddentoadminsection'));
                 redirect();
             }
-            elseif (!$USER->get('admin')) {
-                // The user never was an admin
+        } else if (defined('INSTITUTIONALADMIN') && !$USER->get('admin')) {
+            $userreallyadminfor = get_column('usr_institution', 'institution', 'usr', $USER->id, 'admin', 1);
+            if (!$USER->is_institutional_admin() && !empty($userreallyadminfor)) {
+                $USER->set_admin_institutions($userreallyadminfor);
+            }
+            else if ($USER->is_institutional_admin() && empty($userreallyadminfor)) {
+                $USER->set_admin_institutions(array());
+            }
+            if (!$USER->is_institutional_admin()) {
                 $SESSION->add_error_msg(get_string('accessforbiddentoadminsection'));
                 redirect();
             }
@@ -388,6 +397,75 @@ function auth_setup () {
         exit;
     }
 }
+
+/**
+ * 
+ * Returns all auth instances
+ *
+ * @return array                     Array of auth instance records
+ */
+function auth_get_auth_instances() {
+    static $cache = array();
+
+    if (count($cache) > 0) {
+        return $cache;
+    }
+
+    $sql ='
+        SELECT DISTINCT
+            i.id,
+            inst.name,
+            inst.displayname,
+            i.instancename,
+            i.authname
+        FROM 
+            {institution} inst,
+            {auth_instance} i
+        WHERE 
+            i.institution = inst.name
+        ORDER BY
+            inst.displayname,
+            i.instancename';
+
+    $cache = get_records_sql_array($sql, array());
+
+    if (empty($cache)) {
+        return array();
+    }
+
+    return $cache;
+}
+
+
+/**
+ * 
+ * Given a list of institutions, returns all auth instances associated with them
+ *
+ * @return array                     Array of auth instance records
+ */
+function auth_get_auth_instances_for_institutions($institutions) {
+    if (empty($institutions)) {
+        return array();
+    }
+    $sql ='
+        SELECT DISTINCT
+            i.id,
+            inst.name,
+            inst.displayname,
+            i.instancename
+        FROM 
+            {institution} inst,
+            {auth_instance} i
+        WHERE 
+            i.institution = inst.name AND
+            inst.name IN (' . join(',', array_map('db_quote',$institutions)) . ')
+        ORDER BY
+            inst.displayname,
+            i.instancename';
+
+    return get_records_sql_array($sql, array());
+}
+
 
 /**
  * Given an institution, returns the authentication methods used by it, sorted 
@@ -751,16 +829,6 @@ function auth_get_login_form() {
                 'required'    => true
             )
         ),
-        'login_institution' => array(
-            'type'         => 'select',
-            'title'        => get_string('institution'). ':',
-            'defaultvalue' => $defaultinstitution,
-            'options'      => $institutions,
-            'rules' => array(
-                'required' => true
-            ),
-            'ignore' => count($institutions) == 1
-        ),
         'submit' => array(
             'type'  => 'submit',
             'value' => get_string('login')
@@ -888,13 +956,12 @@ function login_submit(Pieform $form, $values) {
 
     $username      = $values['login_username'];
     $password      = $values['login_password'];
-    $institution   = (isset($values['login_institution'])) ? $values['login_institution'] : 'mahara';
     $authenticated = false;
     $oldlastlogin  = 0;
 
     try {
         //var_dump(array($username, $password, $institution, $_SESSION));
-        $authenticated = $USER->login($username, $password, $institution);
+        $authenticated = $USER->login($username, $password);
 
         if (empty($authenticated)) {
             $SESSION->add_error_msg(get_string('loginfailed'));
@@ -903,36 +970,33 @@ function login_submit(Pieform $form, $values) {
     }
     catch (AuthUnknownUserException $e) {
         try {
-            // The user doesn't exist, but maybe the institution wants us to 
-            // create users that don't exist
-            $institution  = get_record('institution', 'name', $institution);
-            if ($institution != false) {
-                if ($institution->updateuserinfoonlogin == 0) {
-                    // Institution does not want us to create unknown users
-                    throw new AuthUnknownUserException("\"$username\" at \"$institution\" is not known");
-                }
+            // If the user doesn't exist, check for institutions that
+            // want to create users automatically.
+            $authinstances = get_records_sql_array('
+                SELECT a.id, a.instancename, a.priority, a.authname, a.institution
+                FROM {institution} i JOIN {auth_instance} a ON a.institution = i.name
+                WHERE i.updateuserinfoonlogin = 1
+                ORDER BY a.institution, a.priority, a.instancename', null);
+
+            if ($authinstances == false) {
+                throw new AuthUnknownUserException("\"$username\" is not known");
             }
 
-            // Institution says we should create unknown users
-            // Get all the auth options for the institution
-            $authinstances = get_records_array('auth_instance', 'institution', $institution, 'priority, instancename', 'id, instancename, priority, authname');
+            $USER->username = $username;
 
-            $USER->username    = $username;
-            $USER->institution = $institution->name;
+            foreach ($authinstances as $authinstance) {
 
-            while (list(, $authinstance) = each($authinstances) && false == $authenticated) {
-                // TODO: Test this code with an auth plugin that provides a 
-                // get_user_info method
-                $auth = AuthFactory::create($authinstance->id);
-                if ($auth->authenticate_user_account($USER, $password)) {
-                    $authenticated = true;
-                } else {
-                    continue;
-                }
+                while (list(, $authinstance) = each($authinstances) && false == $authenticated) {
+                    // TODO: Test this code with an auth plugin that provides a 
+                    // get_user_info method
+                    $auth = AuthFactory::create($authinstance->id);
+                    if ($auth->authenticate_user_account($USER, $password)) {
+                        $authenticated = true;
+                    } else {
+                        continue;
+                    }
 
-                $USER->authinstance = $authinstance->id;
-
-                if ($auth->authenticate_user_account($username, $password, $institution)) {
+                    $USER->authinstance = $authinstance->id;
                     $userdata = $auth->get_user_info();
                     if (
                          empty($userdata) ||
@@ -940,7 +1004,7 @@ function login_submit(Pieform $form, $values) {
                          empty($userdata->lastname) ||
                          empty($userdata->email) 
                         ) {
-                        throw new AuthUnknownUserException("\"$username\" at \"$institution\" is not known");
+                        throw new AuthUnknownUserException("\"$username\" is not known");
                     } else {
                         // We have the data - create the user
                         $USER->expiry    = db_format_timestamp(time() + 86400);
@@ -952,6 +1016,10 @@ function login_submit(Pieform $form, $values) {
                         try {
                             db_begin();
                             $USER->commit();
+
+                            if ($authinstance->institution !== 'mahara') {
+                                $USER->join_institution($authinstance->institution);
+                            }
     
                             handle_event('createuser', $USER);
                             db_commit();
@@ -971,7 +1039,8 @@ function login_submit(Pieform $form, $values) {
     }
 
     // Only admins in the admin section!
-    if (defined('ADMIN') && !$USER->admin) {
+    if (!$USER->get('admin') && 
+        (defined('ADMIN') || defined('INSTITUTIONALADMIN') && !$USER->is_institutional_admin())) {
         $SESSION->add_error_msg(get_string('accessforbiddentoadminsection'));
         redirect();
     }
@@ -989,7 +1058,7 @@ function login_submit(Pieform $form, $values) {
     }
 
     // Check if the user's account has become inactive
-    $inactivetime = get_field('institution', 'defaultaccountinactiveexpire', 'name', $USER->institution);
+    $inactivetime = get_config('defaultaccountinactiveexpire');
     if ($inactivetime && $oldlastlogin > 0
         && $oldlastlogin + $inactivetime < time()) {
         $USER->logout();
@@ -1034,17 +1103,19 @@ function auth_handle_account_expiries() {
     // The 'expiry' flag on the usr table
     $sitename = get_config('sitename');
     $wwwroot  = get_config('wwwroot');
+    $expire   = get_config('defaultaccountinactiveexpire');
+    $warn     = get_config('defaultaccountinactivewarn');
+
+    $daystoexpire = ceil($warn / 86400) . ' ';
+    $daystoexpire .= ($daystoexpire == 1) ? get_string('day') : get_string('days');
 
     // Expiry warning messages
-    if ($users = get_records_sql_array('SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, i.defaultaccountinactivewarn AS timeout
-        FROM {usr} u, {institution} i
-        WHERE u.institution = i.name
-        AND ? - ' . db_format_tsfield('u.expiry', false) . ' < i.defaultaccountinactivewarn
-        AND expirymailsent = 0', array(time()))) {
+    if ($users = get_records_sql_array('SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff
+        FROM {usr} u
+        WHERE ' . db_format_tsfield('u.expiry', false) . ' < ?
+        AND expirymailsent = 0', array(time() + $warn))) {
         foreach ($users as $user) {
             $displayname  = display_name($user);
-            $daystoexpire = ceil($user->timeout / 86400) . ' ';
-            $daystoexpire .= ($daystoexpire == 1) ? get_string('day') : get_string('days');
             email_user($user, null,
                 get_string('accountexpirywarning'),
                 get_string('accountexpirywarningtext', 'mahara', $displayname, $sitename, $daystoexpire, $wwwroot . 'contact.php', $sitename),
@@ -1064,19 +1135,17 @@ function auth_handle_account_expiries() {
         }
     }
 
+    
     // Inactivity (lastlogin is too old)
-    if ($users = get_records_sql_array('SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, i.defaultaccountinactivewarn AS timeout
-        FROM {usr} u, {institution} i
-        WHERE u.institution = i.name
-        AND (? - ' . db_format_tsfield('u.lastlogin', false) . ') > (i.defaultaccountinactiveexpire - i.defaultaccountinactivewarn)
+    if ($users = get_records_sql_array('SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff
+        FROM {usr} u
+        WHERE (? - ' . db_format_tsfield('u.lastlogin', false) . ') > ' . ($expire - $warn) . '
         AND inactivemailsent = 0', array(time()))) {
         foreach ($users as $user) {
             $displayname = display_name($user);
-            $daystoinactive = ceil($user->timeout / 86400) . ' ';
-            $daystoinactive .= ($daystoexpire == 1) ? get_string('day') : get_string('days');
             email_user($user, null, get_string('accountinactivewarning'),
-                get_string('accountinactivewarningtext', 'mahara', $displayname, $sitename, $daystoinactive, $sitename),
-                get_string('accountinactivewarninghtml', 'mahara', $displayname, $sitename, $daystoinactive, $sitename)
+                get_string('accountinactivewarningtext', 'mahara', $displayname, $sitename, $daystoexpire, $sitename),
+                get_string('accountinactivewarninghtml', 'mahara', $displayname, $sitename, $daystoexpire, $sitename)
             );
             set_field('usr', 'inactivemailsent', 1, 'id', $user->id);
         }
@@ -1085,13 +1154,41 @@ function auth_handle_account_expiries() {
     // Actual inactive users
     if ($users = get_records_sql_array('SELECT u.id
         FROM {usr} u
-        LEFT JOIN {institution} i ON (u.institution = i.name)
-        WHERE ' . db_format_tsfield('lastlogin', false) . ' < ? - i.defaultaccountinactiveexpire', array(time()))) {
+        WHERE (? - ' . db_format_tsfield('lastlogin', false) . ') > ?', array(time(), $expire))) {
         // Users have become inactive!
         foreach ($users as $user) {
             deactivate_user($user->id);
         }
     }
+
+    // Institution membership expiry
+    delete_records_sql('DELETE FROM {usr_institution} 
+        WHERE ' . db_format_tsfield('expiry', false) . ' < ? AND expirymailsent = 1', array(time()));
+
+    // Institution membership expiry warnings
+    if ($users = get_records_sql_array('
+        SELECT
+            u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff,
+            ui.institution, ui.expiry, i.displayname as institutionname
+        FROM {usr} u
+        INNER JOIN {usr_institution} ui ON u.id = ui.usr
+        INNER JOIN {institution} i ON ui.institution = i.name
+        WHERE ' . db_format_tsfield('ui.expiry', false) . ' < ?
+        AND ui.expirymailsent = 0', array(time() + $warn))) {
+        foreach ($users as $user) {
+            $displayname  = display_name($user);
+            email_user($user, null,
+                get_string('institutionexpirywarning'),
+                get_string('institutionexpirywarningtext', 'mahara', $displayname, $user->institutionname,
+                           $sitename, $daystoexpire, $wwwroot . 'contact.php', $sitename),
+                get_string('institutionexpirywarninghtml', 'mahara', $displayname, $user->institutionname,
+                           $sitename, $daystoexpire, $wwwroot . 'contact.php', $sitename)
+            );
+            set_field('usr_institution', 'expirymailsent', 1, 'usr', $user->id,
+                      'institution', $user->institution);
+        }
+    }
+
 }
 
 function auth_generate_login_form() {
@@ -1099,11 +1196,6 @@ function auth_generate_login_form() {
         return;
     }
     require_once('pieforms/pieform.php');
-    $institutions = get_records_menu('institution', '', '', 'name, displayname');
-    $defaultinstitution = get_cookie('institution');
-    if (!$defaultinstitution) {
-        $defaultinstitution = 'mahara';
-    }
     $loginform = get_login_form_js(pieform(array(
         'name'       => 'login',
         'renderer'   => 'div',
@@ -1127,17 +1219,6 @@ function auth_generate_login_form() {
                 'rules' => array(
                     'required'    => true
                 )
-            ),
-            'login_institution' => array(
-                'type' => 'select',
-                'title' => get_string('institution') . ':',
-                'defaultvalue' => $defaultinstitution,
-                'options' => $institutions,
-                'rules' => array(
-                    'required' => true
-                ),
-                'ignore' => count($institutions) == 1,
-                'help' => true,
             ),
             'submit' => array(
                 'type'  => 'submit',
@@ -1177,7 +1258,7 @@ function auth_generate_login_form() {
  * @param array $values         The values passed through
  * @param string $authplugin    The authentication plugin that the user uses
  */
-function password_validate(Pieform $form, $values, User $user) {
+function password_validate(Pieform $form, $values, $user) {
 
     $authobj = AuthFactory::create($user->authinstance);
 
@@ -1233,7 +1314,7 @@ class PluginAuth extends Plugin {
         // ensure we have everything we need
         $user = get_user($user['id']);
 
-        $inactivetime = get_field('institution', 'defaultaccountinactiveexpire', 'name', $user->institution);
+        $inactivetime = get_config('defaultaccountinactiveexpire');
         if ($user->suspendedcusr) {
             $active = false;
         }

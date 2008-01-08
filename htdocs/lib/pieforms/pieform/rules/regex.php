@@ -45,8 +45,11 @@ function pieform_rule_regex_i18n() {
         'en.utf8' => array(
             'regex' => 'This field is not in valid form'
         ),
-         'de.utf8' => array(
+        'de.utf8' => array(
             'regex' => 'Das Feld hat keine zulässige Form'
+        ),
+        'fr.utf8' => array(
+            'regex' => 'Ce champ n\'a pas une forme correcte'
         ),
     );
 }

@@ -36,10 +36,10 @@ function pieform_element_date(Pieform $form, $element) {
     $name   = $element['name'];
     $element['minyear'] = (isset($element['minyear'])) ? intval($element['minyear']) : 1950;
     $element['maxyear'] = (isset($element['maxyear'])) ? intval($element['maxyear']) : 2050;
-    if (!isset($element['defaultvalue'])) {
+    $required = (!empty($element['rules']['required']));
+    if ($required && !isset($element['defaultvalue'])) {
         $element['defaultvalue'] = time();
     }
-    $required = (!empty($element['rules']['required']));
 
     // Year
     $value = pieform_element_date_get_timeperiod_value('year', $element['minyear'], $element['maxyear'], $element, $form);
@@ -136,6 +136,10 @@ function pieform_element_date_i18n() {
          'de.utf8' => array(
             'or' => 'oder',
             'notspecified' => 'Nicht festgelegt'
+        ),
+         'fr.utf8' => array(
+            'or' => 'ou',
+            'notspecified' => 'Non indiqué'
         ),
     );
 }

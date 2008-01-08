@@ -123,7 +123,9 @@ function pieform_element_select(Pieform $form, $element) {
 }
 
 function pieform_element_select_set_attributes($element) {
-    $element['collapseifoneoption'] = true;
+    if (!isset($element['collapseifoneoption'])) {
+        $element['collapseifoneoption'] = true;
+    }
     $element['rules']['validateoptions'] = true;
     return $element;
 }

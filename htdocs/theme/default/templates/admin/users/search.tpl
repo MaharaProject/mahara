@@ -37,11 +37,15 @@
             <label>{str tag='Query' section='admin'}:
                 <input type="text" name="query" id="query"{if !empty($search->query)} value="{$search->query|escape}"{/if}>
             </label>
-            {if $USER->get('admin') && !empty($institutions)}
+            {if count($institutions) > 1}
             <span class="institutions">
                 <label>{str tag='Institution' section='admin'}:
-                    <select name="institution">
-                        <option value=all>{str tag=all}</option>
+                    {if $USER->get('admin')}
+                    <select name="institution" id="institution">
+                    {else}
+                    <select name="institution_requested" id="institution">
+                    {/if}
+                        <option value="all" selected>{str tag=all}</option>
                         {foreach from=$institutions item=i}
                         <option value={$i->name|escape}>{$i->displayname|escape}</option>
                         {/foreach}

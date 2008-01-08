@@ -38,13 +38,14 @@
     </li>
     <li><h3>{str tag=configusers section=admin}</h3>
     <ul>
+        <li><strong><a href="{$WWWROOT}admin/users/search.php">{str tag=usersearch section=admin}</a></strong> - {str tag=usersearchdescription section=admin}</li>
         <li><strong><a href="{$WWWROOT}admin/users/suspended.php">{str tag=suspendedusers section=admin}</a></strong> - {str tag=suspendedusersdescription section=admin}</li>
-        <li><strong><a href="{$WWWROOT}admin/users/staff.php">{str tag=staffusers section=admin}</a></strong> - {str tag=staffusersdescription section=admin}</li>
-        <li><strong><a href="{$WWWROOT}admin/users/admins.php">{str tag=adminusers section=admin}</a></strong> - {str tag=adminusersdescription section=admin}</li>
+        <li><strong><a href="{$WWWROOT}admin/users/staff.php">{str tag=sitestaff section=admin}</a></strong> - {str tag=staffusersdescription section=admin}</li>
+        <li><strong><a href="{$WWWROOT}admin/users/admins.php">{str tag=siteadmins section=admin}</a></strong> - {str tag=adminusersdescription section=admin}</li>
         <li><strong><a href="{$WWWROOT}admin/users/notifications.php">{str tag=adminnotifications section=admin}</a></strong> - {str tag=adminnotificationsdescription section=admin}</li>
         <li><strong><a href="{$WWWROOT}admin/users/institutions.php">{str tag=institutions section=admin}</a></strong> - {str tag=institutionsdescription section=admin}</li>
+        <li><strong><a href="{$WWWROOT}admin/users/add.php">{str tag=adduser section=admin}</a></strong> - {str tag=adduserdescription section=admin}</li>
         <li><strong><a href="{$WWWROOT}admin/users/uploadcsv.php">{str tag=uploadcsv section=admin}</a></strong> - {str tag=uploadcsvdescription section=admin}</li>
-        <li><strong><a href="{$WWWROOT}admin/users/search.php">{str tag=usersearch section=admin}</a></strong> - {str tag=usersearchdescription section=admin}</li>
     </ul>
     </li>
     <li><h3>{str tag=configextensions section=admin}</h3>
