@@ -37,68 +37,72 @@ $returnto = param_alpha('returnto', 'topic');
 if ($topicid == 0) { // new topic
     unset($topicid);
     $forumid = param_integer('forum');
-    $forum = get_record_sql(
-        'SELECT f.group AS group, f.title, g.name AS groupname
-        FROM {interaction_instance} f
-        INNER JOIN {group} g ON g.id = f.group
-        WHERE f.id = ?
-        AND f.deleted != 1',
-        array($forumid)
-    );
-
-    if (!$forum) {
-        throw new NotFoundException(get_string('cantfindforum', 'interaction.forum', $forumid));
-    }
-
-    $membership = user_can_access_forum((int)$forumid);
-    $moderator = (bool)($membership & INTERACTION_FORUM_MOD);
-
-    if (!$membership) {
-        throw new AccessDeniedException(get_string('cantaddtopic', 'interaction.forum'));
-    }
-
-    define('TITLE', $forum->title . ' - ' . get_string('addtopic','interaction.forum'));
-
-    $breadcrumbs = array(
-        array(
-            get_config('wwwroot') . 'group/view.php?id=' . $forum->group,
-            $forum->groupname
-        ),
-        array(
-            get_config('wwwroot') . 'interaction/forum/index.php?group=' . $forum->group,
-            get_string('nameplural', 'interaction.forum')
-        ),
-        array(
-            get_config('wwwroot') . 'interaction/forum/view.php?id=' . $forumid,
-            $forum->title
-        ),
-        array(
-            get_config('wwwroot') . 'interaction/forum/edittopic.php?forum=' . $forumid,
-            get_string('addtopic', 'interaction.forum')
-        )
-    );
 }
-
 else { // edit topic
     $topic = get_record_sql(
-        'SELECT p.subject, p.id AS postid, p.body, p.poster, p.topic AS id, ' . db_format_tsfield('p.ctime', 'ctime') . ', t.sticky, t.closed, f.id AS forumid, f.group AS group, f.title, g.name AS groupname
+        'SELECT p.subject, p.id AS postid, p.body, p.poster, p.topic AS id, ' . db_format_tsfield('p.ctime', 'ctime') . ', t.sticky, t.closed, f.id AS forum
         FROM {interaction_forum_post} p
         INNER JOIN {interaction_forum_topic} t ON (p.topic = t.id AND t.deleted != 1)
         INNER JOIN {interaction_instance} f ON (f.id = t.forum AND f.deleted != 1)
-        INNER JOIN {group} g ON g.id = f.group
         WHERE p.parent IS NULL
         AND p.topic = ?',
         array($topicid)
     );
+    $forumid = $topic->forum;
 
     if (!$topic) {
         throw new NotFoundException(get_string('cantfindtopic', 'interaction.forum', $topicid));
     }
+}
 
-    $forumid = $topic->forumid;
+$forum = get_record_sql(
+    'SELECT f.group AS group, f.title, g.name AS groupname
+    FROM {interaction_instance} f
+    INNER JOIN {group} g ON g.id = f.group
+    WHERE f.id = ?
+    AND f.deleted != 1',
+    array($forumid)
+);
+if (!$forum) {
+    throw new NotFoundException(get_string('cantfindforum', 'interaction.forum', $forumid));
+}
 
-    $membership = user_can_access_forum((int)$topic->forumid);
-    $moderator = (bool)($membership & INTERACTION_FORUM_MOD);
+$membership = user_can_access_forum((int)$forumid);
+$moderator = (bool)($membership & INTERACTION_FORUM_MOD);
+
+if (!$membership) {
+    throw new AccessDeniedException(get_string('cantaddtopic', 'interaction.forum'));
+}
+
+$breadcrumbs = array(
+    array(
+        get_config('wwwroot') . 'group/view.php?id=' . $forum->group,
+        $forum->groupname
+    ),
+    array(
+        get_config('wwwroot') . 'interaction/forum/index.php?group=' . $forum->group,
+        get_string('nameplural', 'interaction.forum')
+    ),
+    array(
+        get_config('wwwroot') . 'interaction/forum/view.php?id=' . $forumid,
+        $forum->title
+    )
+);
+
+if (!isset($topicid)) { // new topic
+    define('TITLE', $forum->title . ' - ' . get_string('addtopic','interaction.forum'));
+    $breadcrumbs[] = array(
+        get_config('wwwroot') . 'interaction/forum/edittopic.php?forum=' . $forumid,
+        get_string('addtopic', 'interaction.forum')
+    );
+}
+
+else { // edit topic
+    define('TITLE', $forum->title . ' - ' . get_string('edittopic','interaction.forum'));
+    $breadcrumbs[] = array(
+        get_config('wwwroot') . 'interaction/forum/edittopic.php?id=' . $topicid,
+        get_string('edittopic', 'interaction.forum')
+    );
 
     // no record for edits to own posts with 30 minutes
     if (user_can_edit_post($topic->poster, $topic->ctime)) {
@@ -110,32 +114,6 @@ else { // edit topic
     else {
         throw new AccessDeniedException(get_string('cantedittopic', 'interaction.forum'));
     }
-
-    define('TITLE', $topic->title . ' - ' . get_string('edittopic','interaction.forum'));
-
-    $breadcrumbs = array(
-        array(
-            get_config('wwwroot') . 'group/view.php?id=' . $topic->group,
-            $topic->groupname
-        ),
-        array(
-            get_config('wwwroot') . 'interaction/forum/index.php?group=' . $topic->group,
-            get_string('nameplural', 'interaction.forum')
-        ),
-        array(
-            get_config('wwwroot') . 'interaction/forum/view.php?id=' . $topic->forumid,
-            $topic->title
-        ),
-        array(
-            get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $topicid,
-            $topic->subject
-        ),
-        array(
-            get_config('wwwroot') . 'interaction/forum/edittopic.php?id=' . $topicid,
-            get_string('edittopic', 'interaction.forum')
-        )
-    );
-
 }
 
 require_once('pieforms/pieform.php');
