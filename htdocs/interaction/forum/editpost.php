@@ -45,6 +45,9 @@ else { // edit post
         AND p.parent IS NOT NULL',
         array($postid)
     );
+    if (!$parent) {
+        throw new NotFoundException(get_string('cantfindpost', 'interaction.forum', $postid));
+    }
     $parentid = $post->parent;
 }
 
@@ -71,7 +74,7 @@ $parent = get_record_sql(
 );
 
 if (!$parent) {
-    throw new NotFoundException(get_string('cantfindpost', 'interaction.forum', $postid));
+    throw new NotFoundException(get_string('cantfindpost', 'interaction.forum', $parentid));
 }
 
 $breadcrumbs = array(
