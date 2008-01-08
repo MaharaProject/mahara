@@ -427,10 +427,10 @@ function activity_add_admin_defaults($userids) {
     $activitytypes = get_records_array('activity_type', 'admin', 1);
     foreach ($activitytypes as $type) {
         foreach ($userids as $id) {
-            if (!record_exists('usr_activity_preference', 'usr', $id, 'activity', $type->name)) {
+            if (!record_exists('usr_activity_preference', 'usr', $id, 'activity', $type->id)) {
                 insert_record('usr_activity_preference', (object)array(
                     'usr' => $id,
-                    'activity' => $type->name,
+                    'activity' => $type->id,
                     'method' => 'internal',
                 ));
             }
