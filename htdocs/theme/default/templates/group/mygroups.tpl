@@ -23,7 +23,9 @@
 </table>
 <div class="center">{$pagination}</div>
 {else}
-<h4>{str tag="nogroups"}</h4>
+<div class="message">
+{str tag="trysearchingforgroups" args=$searchingforgroups}
+</div>
 {/if}
 {include file="columnleftend.tpl"}
 {include file="footer.tpl"}

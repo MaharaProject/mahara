@@ -499,6 +499,8 @@ $string['youaregroupmember'] = 'You are  a member of this group';
 $string['youowngroup'] = 'You own this group';
 $string['groupsnotin'] = 'Groups I\'m not in';
 $string['allgroups'] = 'All groups';
+$string['trysearchingforgroups'] = 'Try %ssearching for groups%s to join!';
+$string['nogroupsfound'] = 'No groups found :(';
 
 $string['alphabet'] = 'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z';
 $string['all'] = 'All';

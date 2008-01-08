@@ -31,7 +31,7 @@ require_once('pieforms/pieform.php');
 define('TITLE', get_string('findgroups'));
 require('group.php');
 require('searchlib.php');
-$filter = param_alpha('filter', 'groupsnotin');
+$filter = param_alpha('filter', 'notmember');
 $offset = param_integer('offset', 0);
 
 $groupsperpage = 20;
@@ -50,8 +50,8 @@ $searchform = pieform(array(
         'filter' => array(
             'type' => 'select',
             'options' => array(
-                'groupsnotin' => get_string('groupsnotin'),
-                'groupsin' => get_string('groupsin'),
+                'notmember' => get_string('groupsnotin'),
+                'member' => get_string('groupsimin'),
                 'allgroups' => get_string('allgroups')
             ),
             'defaultvalue' => $filter
@@ -63,10 +63,10 @@ $searchform = pieform(array(
     )
 ));
 
-if ($filter == 'groupsin') {
+if ($filter == 'member') {
     $type = 'member';
 }
-else if ($filter == 'groupsnotin') {
+else if ($filter == 'notmember') {
     $type = 'notmember';
 }
 else if ($filter == 'allgroups'){
@@ -119,8 +119,6 @@ if ($groups['data']) {
         array($USER->get('id'), $USER->get('id'), $USER->get('id'), $USER->get('id'))
     );
 }
-$i = 0;
-
 setup_groups($groups['data'], 'find');
 
 $pagination = build_pagination(array(

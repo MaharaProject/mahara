@@ -158,6 +158,7 @@ $smarty->assign('groups', $groups);
 $smarty->assign('form', $form);
 $smarty->assign('filter', $filter);
 $smarty->assign('pagination', $pagination['html']);
+$smarty->assign('searchingforgroups', array('<a href="' . get_config('wwwroot') . 'group/find.php">', '</a>'));
 $smarty->display('group/mygroups.tpl');
 
 function filter_submit(Pieform $form, $values) {

@@ -21,7 +21,9 @@
 
 <div class="center">{$pagination}</div>
 {else}
-{str tag="nogroups"}
+<div class="message">
+{str tag="nogroupsfound"}
+</div>
 {/if}
 
 {include file="columnleftend.tpl"}
