@@ -31,114 +31,85 @@ safe_require('interaction', 'forum');
 require('group.php');
 
 $postid = param_integer('id', 0);
+
 if ($postid == 0) { // post reply
     unset($postid);
     $parentid = param_integer('parent');
-
-    $parent = get_record_sql(
-        'SELECT p.subject, p.body, p.topic, p.parent, p.poster, ' . db_format_tsfield('p.ctime', 'ctime') . ', m.user AS moderator, t.id AS topicid, t.forum, t.closed AS topicclosed, p2.subject AS topicsubject, f.group, f.title AS forumtitle, g.name AS groupname, g.owner AS groupowner, COUNT(p3.*)
+}
+else { // edit post
+    $post = get_record_sql(
+        'SELECT p.subject, p.body, p.parent, p.topic, p.poster, ' . db_format_tsfield('p.ctime', 'ctime') . '
         FROM {interaction_forum_post} p
-        INNER JOIN {interaction_forum_topic} t ON (p.topic = t.id AND t.deleted != 1)
-        INNER JOIN {interaction_forum_post} p2 ON (p2.topic = t.id AND p2.parent IS NULL)
-        INNER JOIN {interaction_instance} f ON (t.forum = f.id AND f.deleted != 1)
-        LEFT JOIN (
-            SELECT fm.user, fm.forum
-            FROM {interaction_forum_moderator} fm
-            INNER JOIN {interaction_instance} f ON (fm.forum = f.id)
-            INNER JOIN {group_member} gm ON (gm.group = f.group AND gm.member = fm.user)
-        ) m ON (m.user = p.poster AND m.forum = f.id)
-        INNER JOIN {group} g ON g.id = f.group
-        INNER JOIN {interaction_forum_post} p3 ON (p.poster = p3.poster AND p3.deleted != 1)
-        INNER JOIN {interaction_forum_topic} t2 ON (t2.deleted != 1 AND p3.topic = t2.id)
-        INNER JOIN {interaction_instance} f2 ON (t2.forum = f2.id AND f2.deleted != 1 AND f2.group = f.group)
         WHERE p.id = ?
         AND p.deleted != 1
-        GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15',
-        array($parentid)
+        AND p.parent IS NOT NULL',
+        array($postid)
     );
+    $parentid = $post->parent;
+}
 
-    if (!$parent) {
-        throw new NotFoundException(get_string('cantfindpost', 'interaction.forum', $parentid));
-    }
+$parent = get_record_sql(
+    'SELECT p.subject, p.body, p.topic, p.parent, p.poster, ' . db_format_tsfield('p.ctime', 'ctime') . ', m.user AS moderator, t.id AS topic, t.forum, t.closed AS topicclosed, p2.subject AS topicsubject, f.group, f.title AS forumtitle, g.name AS groupname, g.owner AS groupowner, COUNT(p3.*)
+    FROM {interaction_forum_post} p
+    INNER JOIN {interaction_forum_topic} t ON (p.topic = t.id AND t.deleted != 1)
+    INNER JOIN {interaction_forum_post} p2 ON (p2.topic = t.id AND p2.parent IS NULL)
+    INNER JOIN {interaction_instance} f ON (t.forum = f.id AND f.deleted != 1)
+    LEFT JOIN (
+        SELECT fm.user, fm.forum
+        FROM {interaction_forum_moderator} fm
+        INNER JOIN {interaction_instance} f ON (fm.forum = f.id)
+        INNER JOIN {group_member} gm ON (gm.group = f.group AND gm.member = fm.user)
+    ) m ON (m.user = p.poster AND m.forum = f.id)
+    INNER JOIN {group} g ON g.id = f.group
+    INNER JOIN {interaction_forum_post} p3 ON (p.poster = p3.poster AND p3.deleted != 1)
+    INNER JOIN {interaction_forum_topic} t2 ON (t2.deleted != 1 AND p3.topic = t2.id)
+    INNER JOIN {interaction_instance} f2 ON (t2.forum = f2.id AND f2.deleted != 1 AND f2.group = f.group)
+    WHERE p.id = ?
+    AND p.deleted != 1
+    GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15',
+    array($parentid)
+);
 
-    $membership = user_can_access_forum((int)$parent->forum);
-    $moderator = (bool)($membership & INTERACTION_FORUM_MOD);
+if (!$parent) {
+    throw new NotFoundException(get_string('cantfindpost', 'interaction.forum', $postid));
+}
 
+$breadcrumbs = array(
+    array(
+        get_config('wwwroot') . 'group/view.php?id=' . $parent->group,
+        $parent->groupname
+    ),
+    array(
+        get_config('wwwroot') . 'interaction/forum/index.php?group=' . $parent->group,
+        get_string('nameplural', 'interaction.forum')
+    ),
+    array(
+        get_config('wwwroot') . 'interaction/forum/view.php?id=' . $parent->forum,
+        $parent->forumtitle
+    ),
+    array(
+        get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $parent->topic,
+        $parent->topicsubject
+    )
+);
+
+$membership = user_can_access_forum((int)$parent->forum);
+$moderator = (bool)($membership & INTERACTION_FORUM_MOD);
+
+if (!isset($postid)) { // post reply
     if (!$membership) {
         throw new AccessDeniedException(get_string('cantaddposttoforum', 'interaction.forum'));
     }
     if (!$moderator && $parent->topicclosed) {
         throw new AccessDeniedException(get_string('cantaddposttotopic', 'interaction.forum'));
     }
-
     define('TITLE', $parent->topicsubject . ' - ' . get_string('postreply','interaction.forum'));
-    $topicid = $parent->topicid;
-
-    $breadcrumbs = array(
-        array(
-            get_config('wwwroot') . 'group/view.php?id=' . $parent->group,
-            $parent->groupname
-        ),
-        array(
-            get_config('wwwroot') . 'interaction/forum/index.php?group=' . $parent->group,
-            get_string('nameplural', 'interaction.forum')
-        ),
-        array(
-            get_config('wwwroot') . 'interaction/forum/view.php?id=' . $parent->forum,
-            $parent->forumtitle
-        ),
-        array(
-            get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $topicid,
-            $parent->topicsubject
-        ),
-        array(
-            get_config('wwwroot') . 'interaction/forum/editpost.php?parent=' . $parentid,
-            get_string('postreply', 'interaction.forum')
-        )
+    $breadcrumbs[] = array(
+        get_config('wwwroot') . 'interaction/forum/editpost.php?parent=' . $parentid,
+        get_string('postreply', 'interaction.forum')
     );
 }
 else { // edit post
-    $post = get_record_sql(
-        'SELECT p.subject, p.body, p.parent, p.topic, p.poster, ' . db_format_tsfield('p.ctime', 'ctime') . ', t.forum, p2.subject AS topicsubject, f.title AS forumtitle, f.group, g.name AS groupname
-        FROM {interaction_forum_post} p
-        INNER JOIN {interaction_forum_topic} t ON (p.topic = t.id AND t.deleted != 1)
-        INNER JOIN {interaction_forum_post} p2 ON (p2.topic = t.id AND p2.parent IS NULL)
-        INNER JOIN {interaction_instance} f ON (t.forum = f.id AND f.deleted != 1)
-        INNER JOIN {group} g ON g.id = f.group
-        WHERE p.id = ?
-        AND p.deleted != 1
-        AND p.parent IS NOT NULL',
-        array($postid)
-    );
-
-    $parent = get_record_sql(
-        'SELECT p.subject, p.body, p.topic, p.poster, ' . db_format_tsfield('p.ctime', 'ctime') . ', m.user AS moderator, g.owner AS groupowner, COUNT(p2.*)
-        FROM {interaction_forum_post} p
-        INNER JOIN {interaction_forum_topic} t ON (p.topic = t.id AND t.deleted != 1)
-        INNER JOIN {interaction_instance} f ON (t.forum = f.id AND f.deleted != 1)
-        LEFT JOIN (
-            SELECT fm.user, fm.forum
-            FROM {interaction_forum_moderator} fm
-            INNER JOIN {interaction_instance} f ON (fm.forum = f.id)
-            INNER JOIN {group_member} gm ON (gm.group = f.group AND gm.member = fm.user)
-        ) m ON (m.user = p.poster AND m.forum = f.id)
-        INNER JOIN {group} g ON g.id = f.group
-        INNER JOIN {interaction_forum_post} p2 ON (p.poster = p2.poster AND p2.deleted != 1)
-        WHERE p.id = ?
-        AND p.deleted != 1
-        GROUP BY 1, 2, 3, 4, 5, 6, 7',
-        array($post->parent)
-    );
-
-    if (!$post) {
-        throw new NotFoundException(get_string('cantfindpost', 'interaction.forum', $postid));
-    }
-
-    $topicid = $post->topic;
-
-    $membership = user_can_access_forum((int)$post->forum);
-    $moderator = (bool)($membership & INTERACTION_FORUM_MOD);
-
     // no record for edits to own posts with 30 minutes
     if (user_can_edit_post($post->poster, $post->ctime)) {
         $post->editrecord = false;
@@ -149,30 +120,10 @@ else { // edit post
     else {
         throw new AccessDeniedException(get_string('canteditpost', 'interaction.forum'));
     }
-
-    define('TITLE', $post->topicsubject . ' - ' . get_string('editpost','interaction.forum'));
-
-    $breadcrumbs = array(
-        array(
-            get_config('wwwroot') . 'group/view.php?id=' . $post->group,
-            $post->groupname
-        ),
-        array(
-            get_config('wwwroot') . 'interaction/forum/index.php?group=' . $post->group,
-            get_string('nameplural', 'interaction.forum')
-        ),
-        array(
-            get_config('wwwroot') . 'interaction/forum/view.php?id=' . $post->forum,
-            $post->forumtitle
-        ),
-        array(
-            get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $topicid,
-            $post->topicsubject
-        ),
-        array(
-            get_config('wwwroot') . 'interaction/forum/editpost.php?id=' . $postid,
-            get_string('editpost', 'interaction.forum')
-        )
+    define('TITLE', $parent->topicsubject . ' - ' . get_string('editpost','interaction.forum'));
+    $breadcrumbs[] = array(
+        get_config('wwwroot') . 'interaction/forum/editpost.php?id=' . $postid,
+        get_string('editpost', 'interaction.forum')
     );
 }
 
@@ -228,11 +179,11 @@ $editform = pieform(array(
                 isset($post) ? get_string('edit') : get_string('Post','interaction.forum'),
                 get_string('cancel')
             ),
-            'goto'      => get_config('wwwroot') . 'interaction/forum/topic.php?id='.$topicid
+            'goto'      => get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $parent->topic
         ),
         'topic' => array(
             'type' => 'hidden',
-            'value' => $topicid
+            'value' => $parent->topic
         ),
         'editrecord' => array(
             'type' => 'hidden',
@@ -290,7 +241,7 @@ $smarty = smarty();
 $smarty->assign('breadcrumbs', $breadcrumbs);
 $smarty->assign('heading', TITLE);
 $smarty->assign('editform', $editform);
-    $smarty->assign('parent', $parent);
+$smarty->assign('parent', $parent);
 if (isset($inlinejs)) {
     $smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 }
