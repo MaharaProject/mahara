@@ -255,8 +255,8 @@ class ArtefactTypeBlog extends ArtefactType {
 
         $smarty = smarty_core();
         if (isset($options['viewid'])) {
-            $smarty->assign('artefacttitle', '<a href="' . get_config('wwwroot') . 'view/view.php?id='
-                                             . $options['viewid'] . '&artefact=' . $this->get('id')
+            $smarty->assign('artefacttitle', '<a href="' . get_config('wwwroot') . 'view/artefact.php?artefact='
+                                             . $this->get('id') . '&view=' . $options['viewid']
                                              . '">' . $this->get('title') . '</a>');
         }
         else {
@@ -472,8 +472,8 @@ class ArtefactTypeBlogPost extends ArtefactType {
         $smarty = smarty_core();
         if (empty($options['hidetitle'])) {
             if (isset($options['viewid'])) {
-                $smarty->assign('artefacttitle', '<a href="' . get_config('wwwroot') . 'view/view.php?id='
-                     . $options['viewid'] . '&artefact=' . $this->get('id')
+                $smarty->assign('artefacttitle', '<a href="' . get_config('wwwroot') . 'view/artefact.php?artefact='
+                     . $this->get('id') . '&view=' . $options['viewid']
                      . '">' . $this->get('title') . '</a>');
             }
             else {
@@ -496,7 +496,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
                 $f = artefact_instance_from_id($attachment->id);
                 $attachment->size = $f->describe_size();
                 $attachment->iconpath = $f->get_icon(array('id' => $attachment->id, 'viewid' => $options['viewid']));
-                $attachment->viewpath = get_config('wwwroot') . 'view/view.php?id=' . $options['viewid'] . '&artefact=' . $attachment->id;
+                $attachment->viewpath = get_config('wwwroot') . 'view/artefact.php?artefact=' . $attachment->id . '&view=' . $options['viewid'];
                 $attachment->downloadpath = get_config('wwwroot') . 'artefact/file/download.php?file=' . $attachment->id;
                 if (isset($options['viewid'])) {
                     $attachment->downloadpath .= '&id=' . $options['viewid'];

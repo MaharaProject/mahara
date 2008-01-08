@@ -66,7 +66,7 @@ class PluginBlocktypeImage extends PluginBlocktype {
             }
 
             $result  = '<div class="center"><div>';
-            $result .= '<a href="' . get_config('wwwroot') . 'view/view.php?id=' . $instance->get('view') . '&artefact=' . $configdata['artefactid'] . '"><img src="' . hsc($src) . '" alt="' . hsc($description) .'"></a>';
+            $result .= '<a href="' . get_config('wwwroot') . 'view/artefact.php?artefact=' . $configdata['artefactid'] . '&view=' . $instance->get('view') . '"><img src="' . hsc($src) . '" alt="' . hsc($description) .'"></a>';
             $result .= '</div>';
 
             $description = (is_a($image, 'ArtefacttypeImage')) ? $image->get('description') : $image->get('title');

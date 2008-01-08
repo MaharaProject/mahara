@@ -107,7 +107,7 @@ function handle_activity($activitytype, $data, $cron=false) {
 //                        . ' ' . get_string('onview', 'activity') . ' ' . $view->title;
 //                }
 //                else {
-//                    $data->url = get_config('wwwroot') . 'view/view.php?artefact=' . $data->artefact . '&id=' . $data->view;
+//                    $data->url = get_config('wwwroot') . 'view/artefact.php?artefact=' . $data->artefact . '&view=' . $data->view;
 //                    if (!$artefacttitle = get_field('artefact', 'title', 'id', $data->artefact)) {
 //                        throw new InvalidArgumentException("Couldn't find artefact with id " . $data->view);
 //                    }
@@ -202,8 +202,8 @@ function handle_activity($activitytype, $data, $cron=false) {
 //                    $data->subject .= ' ' .$artefact->get('title');
 //                    if (empty($data->url)) {
 //                        // @todo this might change later
-//                        $data->url = get_config('wwwroot') . 'view/view.php?artefact=' 
-//                            . $data->artefact . '&id=' . $data->view;
+//                        $data->url = get_config('wwwroot') . 'view/artefact.php?artefact=' 
+//                            . $data->artefact . '&view=' . $data->view;
 //                    }
 //                } 
 //                else { // feedback on view.
@@ -614,7 +614,7 @@ class ActivityTypeObjectionable extends ActivityTypeAdmin {
             if (!$artefacttitle = get_field('artefact', 'title', 'id', $this->artefact)) {
                 throw new ArtefactNotFoundException(get_string('artefactnotfound', 'error', $this->artefact));
             }
-            $this->url = get_config('wwwroot') . 'view/view.php?artefact=' . $this->artefact . '&id=' . $this->view;
+            $this->url = get_config('wwwroot') . 'view/artefact.php?artefact=' . $this->artefact . '&view=' . $this->view;
             $this->subject = get_string('objectionablecontentartefact', 'activity') 
                 . ' '  . get_string('onartefact', 'activity') . ' ' . $artefacttitle;
         }
@@ -707,8 +707,8 @@ class ActivityTypeFeedback extends ActivityType {
                 $userid = $artefact->get('owner');
             }
             if (empty($this->url)) {
-                $this->url = get_config('wwwroot') . 'view/view.php?artefact=' 
-                    . $this->artefact . '&id=' . $this->view;
+                $this->url = get_config('wwwroot') . 'view/artefact.php?artefact=' 
+                    . $this->artefact . '&view=' . $this->view;
             }
         } 
         else { // feedback on view.

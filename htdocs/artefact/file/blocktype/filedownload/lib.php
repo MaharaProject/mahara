@@ -54,7 +54,7 @@ class PluginBlocktypeFiledownload extends PluginBlocktype {
                     'viewid' => $instance->get('view'),
                 );
 
-                $detailsurl = get_config('wwwroot') . 'view/view.php?id=' . $instance->get('view') . '&artefact=' . $artefactid;
+                $detailsurl = get_config('wwwroot') . 'view/artefact.php?artefact=' . $artefactid . '&view=' . $instance->get('view');
                 if ($artefact instanceof ArtefactTypeProfileIcon) {
                     require_once('file.php');
                     $downloadurl = get_config('wwwroot') . 'thumb.php?type=profileiconbyid&id=' . $artefactid;
