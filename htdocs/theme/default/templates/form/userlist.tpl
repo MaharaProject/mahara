@@ -10,7 +10,7 @@
         {{if $group}}
         {{$name}}_searchparams['group'] = {{$group}};
         {{$name}}_searchparams['owner'] = {{$owner}};
-        {/if}
+        {{/if}}
 
         for (var p in params) {
             {{$name}}_searchparams[p] = params[p];
