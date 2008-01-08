@@ -70,7 +70,7 @@ abstract class PluginInteraction extends Plugin {
             ),
             'title' => array(
                 'type'         => 'text',
-                'title'        => get_string('title'),
+                'title'        => get_string('title', 'group'),
                 'defaultvalue' => (isset($instance) ? $instance->get('title') : ''),
                 'rules'        => array(
                     'required' => true,
