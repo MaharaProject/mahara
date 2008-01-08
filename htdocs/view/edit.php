@@ -42,11 +42,11 @@ if (empty($id)) {
     $new = true;
 }
 else {
-    define('TITLE', get_string('editview', 'view'));
     $view = new View($id);
     if ($view->get('owner') != $USER->get('id')) {
         throw new AccessDeniedException(get_string('canteditdontown', 'view'));
     }
+    define('TITLE', get_string('editview', 'view', $view->get('title')));
 }
 
 $heading = TITLE; // for the smarty template

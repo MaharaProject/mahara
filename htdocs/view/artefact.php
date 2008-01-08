@@ -1,24 +1,24 @@
 <?php
 /**
- * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2007 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * This program is part of Mahara
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  *
  * @package    mahara
  * @subpackage core
- * @author     Richard Mansfield <richard.mansfield@catalyst.net.nz>
+ * @author     Nigel McNie <nigel@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
@@ -29,13 +29,56 @@ define('PUBLIC', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 require(get_config('libroot') . 'view.php');
 
-$viewid = param_integer('id');
+$artefactid = param_integer('artefact');
+$viewid     = param_integer('view');
+$path       = param_variable('path', null);
+
 $view = new View($viewid);
 if (!can_view_view($viewid)) {
     throw new AccessDeniedException();
 }
 
-define('TITLE', $view->get('title') . ' ' . get_string('by', 'view') . ' ' . $view->formatted_owner());
+if (!artefact_in_view($artefactid, $viewid)) {
+    throw new AccessDeniedException("Artefact $artefactid not in View $viewid");
+}
+
+require_once(get_config('docroot') . 'artefact/lib.php');
+$artefact = artefact_instance_from_id($artefactid);
+
+define('TITLE', $artefact->get('title') . ' ' . get_string('in', 'view') . ' ' . $view->get('title'));
+
+// Render the artefact
+$options = array('viewid' => $viewid,
+                 'path' => $path);
+$rendered = $artefact->render_self($options);
+$content = '';
+if (!empty($rendered['javascript'])) {
+    $content = '<script type="text/javascript">' . $rendered['javascript'] . '</script>';
+}
+$content .= $rendered['html'];
+
+// Build the path to the artefact, through its parents
+$artefactpath = array();
+$parent = $artefact->get('parent');
+while ($parent !== null) {
+    // This loop could get expensive when there are a lot of parents. But at least 
+    // it works, unlike the old attempt
+    $artefactdata = get_record('artefact', 'id', $parent);
+    if (artefact_in_view($parent, $viewid)) {
+        array_unshift($artefactpath, array(
+            'url'   => get_config('wwwroot') . 'view/artefact.php?artefact=' . $parent . '&view=' . $viewid,
+            'title' => $artefactdata->title,
+        ));
+    }
+
+    $parent = $artefactdata->parent;
+}
+
+$artefactpath[] = array(
+    'url' => '',
+    'title' => $artefact->get('title'),
+);
+
 
 $tutorfilefeedbackformrow = '';
 $submittedgroup = $view->get('submittedto');
@@ -50,7 +93,6 @@ if ($submittedgroup
     $tutorfilefeedbackformrow = "TR(null, TH(null, LABEL(null, '" . get_string('attachfile') . "'))),"
         . "TR(null, TD(null, INPUT({'type':'file', 'name':'attachment'}))),";
 }
-$viewbeingwatched = (int)record_exists('usr_watchlist_view', 'usr', $USER->get('id'), 'view', $viewid);
 
 $getstring = quotestrings(array('mahara' => array(
         'message', 'makepublic', 'placefeedback', 'cancel', 'complaint', 
@@ -58,11 +100,10 @@ $getstring = quotestrings(array('mahara' => array(
         'nopublicfeedback', 'reportobjectionablematerial', 'print',
 )));
 
-$getstring['addtowatchlist'] = json_encode(get_string('addtowatchlist'));
-$getstring['removefromwatchlist'] = json_encode(get_string('removefromwatchlist'));
 $getstring['feedbackattachmessage'] = "'(" . get_string('feedbackattachmessage', 'mahara', get_string('feedbackattachdirname')) . ")'";
 
 // Safari doesn't seem to like these inputs to be called 'public', so call them 'ispublic' instead.
+$feedbackisprivate = !$artefact->public_feedback_allowed();
 if (!empty($feedbackisprivate)) {
     $makepublic = "TR(null, INPUT({'type':'hidden','name':'ispublic','value':'false'}), TD({'colspan':2}, " 
         . $getstring['feedbackonthisartefactwillbeprivate'] . ")),";
@@ -75,6 +116,7 @@ else {
 $javascript = <<<EOF
 
 var view = {$viewid};
+var artefact = {$artefactid};
 
 function feedbackform() {
     if ($('menuform')) {
@@ -95,6 +137,9 @@ function feedbackform() {
             var data = {'view':view, 
                         'public':form.ispublic.checked,
                         'message':form.message.value};
+            if (artefact) {
+                data.artefact = artefact;
+            }
             sendjsonrequest('addfeedback.json.php', data, 'POST', function () { 
                 removeElement('menuform');
                 feedbacklist.doupdate();
@@ -127,6 +172,9 @@ function objectionform() {
     var form = FORM({'id':'menuform','method':'post'});
     submitobjection = function () {
         var data = {'view':view, 'message':form.message.value};
+        if (artefact) {
+            data.artefact = artefact;
+        }
         sendjsonrequest('objectionable.json.php', data, 'POST', function () { removeElement('menuform'); });
         return false;
     }
@@ -159,19 +207,6 @@ function view_menu() {
         A({'href':'', 'onclick':'window.print();return false;'}, 
             {$getstring['print']})
     );
-    if (config.loggedin) {
-        var linkTextFlag = {$viewbeingwatched};
-        var linkText = [{$getstring['addtowatchlist']}, {$getstring['removefromwatchlist']}];
-        link = A({'href': ''}, linkText[linkTextFlag]);
-        connect(link, 'onclick', function(e) {
-            var data = {'view': view};
-            sendjsonrequest('togglewatchlist.json.php', data, 'POST', function() {
-                link.innerHTML = linkText[++linkTextFlag % 2];
-            });
-            e.stop();
-        });
-        appendChildNodes('viewmenu', ' | ', link);
-     }
 
 }
 
@@ -229,7 +264,8 @@ var feedbacklist = new TableRenderer(
 
 feedbacklist.limit = 10;
 feedbacklist.view = view;
-feedbacklist.statevars.push('view');
+feedbacklist.artefact = artefact;
+feedbacklist.statevars.push('view','artefact');
 feedbacklist.emptycontent = {$getstring['nopublicfeedback']};
 feedbacklist.updateOnLoad();
 
@@ -247,21 +283,18 @@ $smarty = smarty(
         ),
     ),
     array(
-        'stylesheets' => array('style/views.css'),
+        'stylesheets' => array('style/views.css')
     )
 );
-
+$smarty->assign('artefact', $content);
+$smarty->assign('artefactpath', $artefactpath);
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
+
 $smarty->assign('viewid', $viewid);
-$smarty->assign('viewtitle', $view->get('title'));
-$smarty->assign('viewdescription', $view->get('description'));
-$smarty->assign('viewcontent', $view->build_columns());
 $smarty->assign('viewowner', $view->get('owner'));
+$smarty->assign('viewtitle', $view->get('title'));
 $smarty->assign('formattedowner', $view->formatted_owner());
 
-if ($USER->get('id') == $view->get('owner')) {
-    $smarty->assign('can_edit', true);
-}
-$smarty->display('view/view.tpl');
+$smarty->display('view/artefact.tpl');
 
 ?>

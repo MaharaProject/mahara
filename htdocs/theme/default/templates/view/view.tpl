@@ -9,28 +9,17 @@
 </div>
 {/if}
 <div id="view">
-	<h3>
-        {foreach name=viewnav from=$VIEWNAV item=item}
-          {$item}
-          {if !$smarty.foreach.viewnav.last}
-            :
-          {/if}
-        {/foreach}
-        </h3>
+	<h3>{$viewtitle|escape} {str tag=by section=view} <a href="{$WWWROOT}user/view.php?id={$viewowner}">{$formattedowner|escape}</a></h3>
 
-        {if $DESCRIPTION}
-        <p class="view-description">{$DESCRIPTION}</p>
-        {/if}
+        <p class="view-description">{$viewdescription}</p>
 	
-            <div id="bottom-pane">
-                <div id="column-container">
-                    {if $VIEWCONTENT}
-                       {$VIEWCONTENT}
-                    {/if}
-                    <div class="cb">
-                    </div>
+        <div id="bottom-pane">
+            <div id="column-container">
+               {$viewcontent}
+                <div class="cb">
                 </div>
             </div>
+        </div>
 	<div id="publicfeedback">
 	<table id="feedbacktable">
 		<thead>

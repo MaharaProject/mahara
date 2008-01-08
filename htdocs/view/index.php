@@ -106,7 +106,7 @@ function assessselect(viewid, grouplist) {
 }
 
 function renderartefact(viewid,a) {
-    var link = A({'href':'{$wwwroot}view/view.php?id='+viewid+'&artefact='+a.id});
+    var link = A({'href':'{$wwwroot}view/artefact.php?artefact='+a.id+'&view='+viewid});
     link.innerHTML = a.title;
     return LI(null,link);
 }

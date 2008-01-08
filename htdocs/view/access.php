@@ -31,14 +31,15 @@ define('SECTION_PLUGINNAME', 'view');
 define('SECTION_PAGE', 'editaccess');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
-define('TITLE', get_string('editaccess', 'view'));
 require_once('pieforms/pieform.php');
 require_once('pieforms/pieform/elements/calendar.php');
 require_once(get_config('docroot') . 'lib/view.php');
-$smarty = smarty(array('tablerenderer'), pieform_element_calendar_get_headdata(pieform_element_calendar_configure(array())), array('mahara' => array('From', 'To')));
 
 $view = new View(param_integer('id'));
+define('TITLE', get_string('editaccessforview', 'view', $view->get('title')));
 $new = param_boolean('new');
+
+$smarty = smarty(array('tablerenderer'), pieform_element_calendar_get_headdata(pieform_element_calendar_configure(array())), array('mahara' => array('From', 'To')));
 
 $artefacts = $view->get_artefact_metadata();
 if (empty($artefacts)) {
@@ -104,6 +105,7 @@ function editaccess_submit(Pieform $form, $values) {
 }
 
 
+$smarty->assign('pagetitle', TITLE);
 $smarty->assign('form', pieform($form));
 $smarty->display('view/access.tpl');
 

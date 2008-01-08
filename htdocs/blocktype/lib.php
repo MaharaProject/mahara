@@ -370,8 +370,8 @@ class BlockInstance {
         // block to be a link to view more information about that artefact
         $configdata = $this->get('configdata');
         if (!empty($configdata['artefactid'])) {
-            $smarty->assign('viewartefacturl', get_config('wwwroot') . 'view/view.php?id='
-                . $this->get('view') . '&artefact=' . $configdata['artefactid']);
+            $smarty->assign('viewartefacturl', get_config('wwwroot') . 'view/artefact.php?artefact='
+                . $configdata['artefactid'] . '&view=' . $this->get('view'));
         }
 
         $smarty->assign('content', $content);
