@@ -29,6 +29,8 @@ define('MENUITEM', 'groups');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('interaction', 'forum');
 require_once('group.php');
+require_once(get_config('docroot') . 'interaction/lib.php');
+require_once('pieforms/pieform.php');
 
 $topicid = param_integer('id');
 
@@ -77,8 +79,6 @@ $breadcrumbs = array(
         $topic->subject
     )
 );
-
-require_once('pieforms/pieform.php');
 
 if (!$topic->forumsubscribed) {
     $topic->subscribe = pieform(array(
@@ -152,7 +152,7 @@ for ($i = 0; $i < $count; $i++) {
 // builds the first post (with index 0) which has as children all the posts in the topic
 $posts = buildpost(0, '', $posts);
 
-$smarty = smarty();
+$smarty = smarty(array(), array(), array(), array('sideblocks' => array(interaction_sideblock($topic->group))));
 $smarty->assign('breadcrumbs', $breadcrumbs);
 $smarty->assign('heading', TITLE);
 $smarty->assign('topic', $topic);

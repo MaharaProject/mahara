@@ -29,6 +29,8 @@ define('MENUITEM', 'groups');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('group.php');
 safe_require('interaction', 'forum');
+require_once('pieforms/pieform.php');
+require_once(get_config('docroot') . 'interaction/lib.php');
 
 $groupid = param_integer('group');
 
@@ -97,8 +99,6 @@ if ($forums) {
    }
 }
 
-require_once('pieforms/pieform.php');
-
 $i = 0;
 if ($forums) {
     foreach ($forums as $forum) {
@@ -132,7 +132,7 @@ if ($forums) {
     }
 }
 
-$smarty = smarty();
+$smarty = smarty(array(), array(), array(), array('sideblocks' => array(interaction_sideblock($groupid))));
 $smarty->assign('breadcrumbs', $breadcrumbs);
 $smarty->assign('groupid', $groupid);
 $smarty->assign('groupowner', $group->owner);

@@ -29,6 +29,9 @@ define('MENUITEM', 'groups');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('interaction' ,'forum');
 require('group.php');
+require_once('pieforms/pieform.php');
+require_once(get_config('docroot') . 'interaction/lib.php');
+
 $topicid = param_integer('id');
 $returnto = param_alpha('returnto', 'topic');
 
@@ -92,8 +95,6 @@ $breadcrumbs = array(
     )
 );
 
-require_once('pieforms/pieform.php');
-
 $form = pieform(array(
     'name'     => 'deletetopic',
     'autofocus' => false,
@@ -125,7 +126,7 @@ function deletetopic_submit(Pieform $form, $values) {
     redirect('/interaction/forum/view.php?id=' . $values['forum']);
 }
 
-$smarty = smarty();
+$smarty = smarty(array(), array(), array(), array('sideblocks' => array(interaction_sideblock($topic->group))));
 $smarty->assign('breadcrumbs', $breadcrumbs);
 $smarty->assign('forum', $topic->title);
 $smarty->assign('heading', TITLE);

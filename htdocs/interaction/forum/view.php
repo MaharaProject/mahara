@@ -29,6 +29,8 @@ define('MENUITEM', 'groups');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('group.php');
 safe_require('interaction', 'forum');
+require_once(get_config('docroot') . 'interaction/lib.php');
+require_once('pieforms/pieform.php');
 
 $forumid = param_integer('id');
 $offset = param_integer('offset', 0);
@@ -143,8 +145,6 @@ $breadcrumbs = array(
     )
 );
 
-require_once('pieforms/pieform.php');
-
 $forum->subscribe = pieform(array(
     'name' => 'subscribe_forum',
     'autofocus' => false,
@@ -245,7 +245,7 @@ addLoadEvent(function() {
 });
 EOF;
 
-$smarty = smarty();
+$smarty = smarty(array(), array(), array(), array('sideblocks' => array(interaction_sideblock($forum->group))));
 $smarty->assign('breadcrumbs', $breadcrumbs);
 $smarty->assign('heading', TITLE);
 $smarty->assign('forum', $forum);

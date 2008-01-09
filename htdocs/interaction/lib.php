@@ -216,7 +216,7 @@ function edit_interaction_validation(Pieform $form, $values) {
 }
 
 function edit_interaction_submit(Pieform $form, $values) {
-	safe_require('interaction', $values['plugin']);
+    safe_require('interaction', $values['plugin']);
     $classname = generate_interaction_instance_class_name($values['plugin']);
     $instance = new $classname($values['id']);
     $instance->set('creator', $values['creator']);
@@ -248,6 +248,52 @@ function delete_interaction_submit(Pieform $form, $values) {
     $SESSION->add_ok_msg(get_string('interactiondeleted', 'group', get_string('name', 'interaction.' . $instance->get('plugin'))));
     redirect('/interaction/' . $instance->get('plugin') . '/index.php?group=' . $instance->get('group'));
 
+}
+
+/**
+ * creates the information for the interaction_sideblock
+ *
+ * @param int $groupid the group the sideblock is for
+ * @return array containing indices 'name', 'weight', 'data'
+ */
+function interaction_sideblock($groupid) {
+    $interactiontypes = array_flip(
+        array_map(
+            create_function('$a', 'return $a->name;'),
+            plugins_installed('interaction')
+        )
+    );
+
+    if (!$interactions = get_records_select_array('interaction_instance',
+        '"group" = ? AND deleted = ?', array($groupid, 0),
+        'plugin, ctime', 'id, plugin, title')) {
+        $interactions = array();
+    }
+
+    foreach ($interactions as $i) {
+        if (!is_array($interactiontypes[$i->plugin])) {
+            $interactiontypes[$i->plugin] = array();
+        }
+        $interactiontypes[$i->plugin][] = $i;
+    }
+
+    // Sort them according to how the plugin wants them sorted
+    if ($interactiontypes) {
+        foreach ($interactiontypes as $plugin => &$interactions) {
+            safe_require('interaction', $plugin);
+            $classname = generate_class_name('interaction', $plugin);
+            if (method_exists($classname, 'sideblock_sort')) {
+                $interactions = call_static_method($classname, 'sideblock_sort', $interactions);
+            }
+        }
+    }
+
+    // Add a sideblock for group interactions
+    return array(
+        'name' => 'groupinteractions',
+        'weight' => -5,
+        'data' => $interactiontypes,
+    );
 }
 
 ?>

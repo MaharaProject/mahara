@@ -29,6 +29,8 @@ define('MENUITEM', 'groups');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('interaction', 'forum');
 require_once('group.php');
+require_once(get_config('docroot') . 'interaction/lib.php');
+require_once('pieforms/pieform.php');
 
 $userid = $USER->get('id');
 $topicid = param_integer('id', 0);
@@ -115,8 +117,6 @@ else { // edit topic
         throw new AccessDeniedException(get_string('cantedittopic', 'interaction.forum'));
     }
 }
-
-require_once('pieforms/pieform.php');
 
 $editform = array(
     'name'     => isset($topic) ? 'edittopic' : 'addtopic',
@@ -253,7 +253,7 @@ function edittopic_submit(Pieform $form, $values) {
     }
 }
 
-$smarty = smarty();
+$smarty = smarty(array(), array(), array(), array('sideblocks' => array(interaction_sideblock($forum->group))));
 $smarty->assign('breadcrumbs', $breadcrumbs);
 $smarty->assign('heading', TITLE);
 $smarty->assign('editform', $editform);

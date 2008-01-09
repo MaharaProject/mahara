@@ -29,6 +29,7 @@ define('MENUITEM', 'groups');
 require(dirname(dirname(__FILE__)) . '/init.php');
 define('TITLE', get_string('groups'));
 require_once('group.php');
+require_once(get_config('docroot') . 'interaction/lib.php');
 
 $id = param_integer('id');
 $joincontrol = param_alpha('joincontrol', null);
@@ -311,45 +312,7 @@ addLoadEvent(function () { switchPending(1) });
 EOF;
 }
 
-$interactiontypes = array_flip(
-    array_map(
-        create_function('$a', 'return $a->name;'),
-        plugins_installed('interaction')
-    )
-);
-
-if (!$interactions = get_records_select_array('interaction_instance', 
-    '"group" = ? AND deleted = ?', array($id, 0), 
-    'plugin, ctime', 'id, plugin, title')) {
-    $interactions = array();
-}
-
-foreach ($interactions as $i) {
-    if (!is_array($interactiontypes[$i->plugin])) {
-        $interactiontypes[$i->plugin] = array();
-    }
-    $interactiontypes[$i->plugin][] = $i;
-}
-
-// Sort them according to how the plugin wants them sorted
-if ($interactiontypes) {
-    foreach ($interactiontypes as $plugin => &$interactions) {
-        safe_require('interaction', $plugin);
-        $classname = generate_class_name('interaction', $plugin);
-        if (method_exists($classname, 'sideblock_sort')) {
-            $interactions = call_static_method($classname, 'sideblock_sort', $interactions);
-        }
-    }
-}
-
-// Add a sideblock for group interactions
-$sideblock = array(
-    'name' => 'groupinteractions',
-    'weight' => -5,
-    'data' => $interactiontypes,
-);
-
-$smarty = smarty(array('tablerenderer'), array(), array(), array('sideblocks' => array($sideblock)));
+$smarty = smarty(array('tablerenderer'), array(), array(), array('sideblocks' => array(interaction_sideblock($id))));
 
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('member', $membership);

@@ -67,7 +67,7 @@ $form = pieform(array(
     )
 ));
 
-$smarty = smarty();
+$smarty = smarty(array('tablerenderer'), array(), array(), array('sideblocks' => array(interaction_sideblock($group->id))));
 $smarty->assign('form', $form);
 $smarty->assign('heading', TITLE);
 $smarty->assign('group', $group);

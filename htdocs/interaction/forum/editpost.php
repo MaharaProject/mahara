@@ -29,6 +29,8 @@ define('MENUITEM', 'groups');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('interaction', 'forum');
 require('group.php');
+require_once(get_config('docroot') . 'interaction/lib.php');
+require_once('pieforms/pieform.php');
 
 $postid = param_integer('id', 0);
 
@@ -45,7 +47,7 @@ else { // edit post
         AND p.parent IS NOT NULL',
         array($postid)
     );
-    if (!$parent) {
+    if (!$post) {
         throw new NotFoundException(get_string('cantfindpost', 'interaction.forum', $postid));
     }
     $parentid = $post->parent;
@@ -153,8 +155,6 @@ addLoadEvent(function() {
 });
 EOF;
 
-require_once('pieforms/pieform.php');
-
 $editform = pieform(array(
     'name'     => 'editpost',
     'successcallback' => isset($post) ? 'editpost_submit' : 'addpost_submit',
@@ -240,7 +240,7 @@ function addpost_submit(Pieform $form, $values) {
     redirect('/interaction/forum/topic.php?id=' . $values['topic']);
 }
 
-$smarty = smarty();
+$smarty = smarty(array(), array(), array(), array('sideblocks' => array(interaction_sideblock($parent->group))));
 $smarty->assign('breadcrumbs', $breadcrumbs);
 $smarty->assign('heading', TITLE);
 $smarty->assign('editform', $editform);
