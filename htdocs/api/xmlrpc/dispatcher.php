@@ -47,7 +47,10 @@ class Dispatcher {
         'sso_in' => array(),
         'sso_out' =>array(
             'auth/mnet/auth.php/user_authorise' => 'user_authorise',
-            'auth/mnet/auth.php/fetch_user_image' => 'fetch_user_image'
+            'auth/mnet/auth.php/fetch_user_image' => 'fetch_user_image',
+            'auth/mnet/auth.php/update_enrolments' => 'xmlrpc_not_implemented',
+            'auth/mnet/auth.php/keepalive_server' => 'xmlrpc_not_implemented',
+            'auth/mnet/auth.php/kill_children' => 'xmlrpc_not_implemented',
             )
     );
 
@@ -136,7 +139,7 @@ class Dispatcher {
                 }
             }
 
-            throw new XmlrpcServerException('No such method');
+            throw new XmlrpcServerException('No such method: ' . $this->method);
 
         }
 

@@ -260,6 +260,10 @@ function user_authorise($token, $useragent) {
     return $userdata;
 }
 
+function xmlrpc_not_implemented() {
+    return true;
+}
+
 /**
  * Given a USER, get all Service Providers for that User, based on child auth
  * instances of its canonical auth instance
