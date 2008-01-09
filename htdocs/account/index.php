@@ -146,16 +146,18 @@ function accountprefs_validate(Pieform $form, $values) {
 
     $authobj = AuthFactory::create($USER->authinstance);
 
-    if ($values['oldpassword'] !== '') {
-        global $USER, $authtype, $authclass;
-        if (!$authobj->authenticate_user_account($USER, $values['oldpassword'])) {
-            $form->set_error('oldpassword', get_string('oldpasswordincorrect', 'account'));
-            return;
+    if (isset($values['oldpassword'])) {
+        if ($values['oldpassword'] !== '') {
+            global $USER, $authtype, $authclass;
+            if (!$authobj->authenticate_user_account($USER, $values['oldpassword'])) {
+                $form->set_error('oldpassword', get_string('oldpasswordincorrect', 'account'));
+                return;
+            }
+            password_validate($form, $values, $USER);
         }
-        password_validate($form, $values, $USER);
-    }
-    else if ($values['password1'] !== '' || $values['password2'] !== '') {
-        $form->set_error('oldpassword', get_string('mustspecifyoldpassword'));
+        else if ($values['password1'] !== '' || $values['password2'] !== '') {
+            $form->set_error('oldpassword', get_string('mustspecifyoldpassword'));
+        }
     }
 }
 
@@ -165,7 +167,7 @@ function accountprefs_submit(Pieform $form, $values) {
     $authobj = AuthFactory::create($USER->authinstance);
 
     db_begin();
-    if ($values['password1'] !== '') {
+    if (isset($values['password1']) && $values['password1'] !== '') {
         global $authclass;
         $password = $authobj->change_password($USER, $values['password1']);
         $USER->password = $password;
@@ -398,9 +400,11 @@ $smarty->assign('joinform', $joinform);
 $smarty->assign('INLINEJAVASCRIPT', "
 function clearPasswords(form, data) {
     formSuccess(form, data);
-    $('accountprefs_oldpassword').value = '';
-    $('accountprefs_password1').value = '';
-    $('accountprefs_password2').value = '';
+    if ($('accountprefs_oldpassword')) {
+        $('accountprefs_oldpassword').value = '';
+        $('accountprefs_password1').value = '';
+        $('accountprefs_password2').value = '';
+    }
 }");
 $smarty->display('account/index.tpl');
 
