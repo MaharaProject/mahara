@@ -280,7 +280,7 @@ function setup_topics(&$topics) {
                 $more = true;
             }
             $topic->body = strip_tags($topic->body);
-            $topic->body = html_entity_decode($topic->body);
+            $topic->body = html_entity_decode($topic->body); // no things like &nbsp; only take up one character
             // take the first 50 chars, then up to the first space (max length 60 chars)
             if (strlen($topic->body) > 60) {
                 $topic->body = substr($topic->body, 0, 60);
@@ -293,7 +293,7 @@ function setup_topics(&$topics) {
             if ($more) {
                 $topic->body .= '...';
             }
-            $topic->body = htmlentities($topic->body);
+            $topic->body = htmlspecialchars($topic->body);
             $topic->lastposttime = relative_date(get_string('strftimerecentrelative', 'interaction.forum'), get_string('strftimerecent'), $topic->lastposttime);
         }
     }
