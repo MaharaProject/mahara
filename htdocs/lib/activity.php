@@ -88,6 +88,7 @@ function handle_activity($activitytype, $data, $cron=false) {
     $data = $activity->to_stdclass();
     safe_require('notification', 'internal', 'lib.php', 'require_once');
     $data->type = $activity->get_id();
+    $data->activityname = $activitytype->name;
     foreach ($activity->get_users() as $user) {
         $userdata = $data;
         // some stuff gets overridden by user specific stuff
