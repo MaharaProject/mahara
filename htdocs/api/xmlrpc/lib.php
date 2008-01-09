@@ -253,7 +253,6 @@ function user_authorise($token, $useragent) {
 
     // Todo: push application name to list of hosts... update Moodle block to display more info, maybe in 'Other' list
     $userdata['myhosts'] = array();
-    $userdata['myhosts'][] = array('name'=> $SITE->shortname, 'url' => get_config('wwwroot'), 'count' => 0);
 
     return $userdata;
 }
