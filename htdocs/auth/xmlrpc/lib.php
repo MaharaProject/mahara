@@ -173,7 +173,6 @@ class AuthXmlrpc extends Auth {
     
             $user->firstname          = $remoteuser->firstname;
             $user->lastname           = $remoteuser->lastname;
-            $user->preferredname      = $remoteuser->firstname;
             $user->email              = $remoteuser->email;
 
             //TODO: import institution's per-user-quota?:
@@ -196,6 +195,8 @@ class AuthXmlrpc extends Auth {
             set_profile_field($user->id, 'lastname', $user->lastname);
             set_profile_field($user->id, 'email', $user->email);
 
+            $this->import_user_settings($user, $remoteuser);
+
             /*
              * We need to convert the object to a stdclass with its own
              * custom method because it uses overloaders in its implementation
@@ -208,23 +209,16 @@ class AuthXmlrpc extends Auth {
             db_commit();
 
         } elseif ($update) {
-
-            if ($user->firstname != $remoteuser->firstname) {
-                $user->firstname = $remoteuser->firstname;
-                set_profile_field($user->id, 'firstname', $user->firstname);
+            $simplefieldstoimport = array('firstname', 'lastname', 'email');
+            foreach ($simplefieldstoimport as $field) {
+                if ($user->$field != $remoteuser->$field) {
+                    $user->$field = $remoteuser->$field;
+                    set_profile_field($user->id, $field, $user->$field);
+                }
             }
 
-            if ($user->lastname != $remoteuser->lastname) {
-                $user->lastname = $remoteuser->lastname;
-                set_profile_field($user->id, 'lastname', $user->lastname);
-            }
+            $this->import_user_settings($user, $remoteuser);
 
-            if ($user->email != $remoteuser->email) {
-                $user->email = $remoteuser->email;
-                set_profile_field($user->id, 'email', $user->email);
-            }
-
-            $user->preferredname      = $remoteuser->firstname;
             $user->lastlogin          = time();
 
             //TODO: import institution's per-user-quota?:
@@ -369,6 +363,69 @@ class AuthXmlrpc extends Auth {
          * Here, we will sift through the data returned by the XMLRPC server
          * and update any userdata properties that have changed
          */
+    }
+
+    /**
+     * Given a user and their remote user record, attempt to populate some of 
+     * the user's profile fields and account settings from the remote data.
+     *
+     * This does not change the first name, last name or e-mail fields, as these are 
+     * dealt with differently depending on whether we are creating the user 
+     * record or updating it.
+     *
+     * This method attempts to set:
+     *
+     * * City
+     * * Country
+     * * Language
+     * * Introduction
+     * * WYSIWYG editor setting
+     *
+     * @param User $user
+     * @param stdClass $remoteuser
+     */
+    private function import_user_settings($user, $remoteuser) {
+        // City
+        if (!empty($remoteuser->city)) {
+            if (get_profile_field($user->id, 'city') != $remoteuser->city) {
+                set_profile_field($user->id, 'city', $remoteuser->city);
+            }
+        }
+
+        // Country
+        if (!empty($remoteuser->country)) {
+            $validcountries = array_keys(getoptions_country());
+            $newcountry = strtolower($remoteuser->country);
+            if (in_array($newcountry, $validcountries)) {
+                set_profile_field($user->id, 'country', $newcountry);
+            }
+        }
+
+        // Language
+        if (!empty($remoteuser->lang)) {
+            $validlanguages = array_keys(get_languages());
+            $newlanguage = str_replace('_', '.', strtolower($remoteuser->lang));
+            if (in_array($newlanguage, $validlanguages)) {
+                set_account_preference($user->id, 'lang', $newlanguage);
+                $user->set_account_preference('lang', $newlanguage);
+            }
+        }
+
+        // Description
+        if (isset($remoteuser->description)) {
+            if (get_profile_field($user->id, 'introduction') != $remoteuser->description) {
+                set_profile_field($user->id, 'introduction', $remoteuser->description);
+            }
+        }
+
+        // HTML Editor setting
+        if (isset($remoteuser->htmleditor)) {
+            $htmleditor = ($remoteuser->htmleditor) ? 1 : 0;
+            if ($htmleditor != get_account_preference($user->id, 'wysiwyg')) {
+                set_account_preference($user->id, 'wysiwyg', $htmleditor);
+                $user->set_account_preference('wysiwyg', $htmleditor);
+            }
+        }
     }
 
 }
