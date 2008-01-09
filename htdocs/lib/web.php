@@ -378,7 +378,15 @@ EOF;
             'data'   => array(),
         );
     }
-   
+
+    if($USER->is_logged_in()) {
+        $SIDEBLOCKS[] = array(
+            'name'   => 'profile',
+            'weight' => -10,
+            'data'   => profile_sideblock()
+        );
+    }
+
    if (!$USER->is_logged_in()) {
         $SIDEBLOCKS[] = array(
             'name'   => 'login',

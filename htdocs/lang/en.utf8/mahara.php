@@ -84,6 +84,12 @@ $string['declinerequest'] = 'Decline request';
 
 $string['strftimenotspecified']  = 'Not specified';
 
+// profile sideblock strings
+$string['invitedgroup'] = '1 group invited to';
+$string['invitedgroups'] = '%s groups invited to';
+$string['pendingfriend'] = '1 pending friend';
+$string['pendingfriends'] = '%s pending friends';
+
 // auth
 $string['accessforbiddentoadminsection'] = 'You are forbidden from accessing the administration section';
 $string['accountdeleted'] = 'Sorry, your account has been deletd';
