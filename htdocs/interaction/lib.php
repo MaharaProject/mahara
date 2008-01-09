@@ -288,11 +288,16 @@ function interaction_sideblock($groupid) {
         }
     }
 
+    $data = array(
+        'group' => $groupid,
+        'interactiontypes' => $interactiontypes
+    );
+
     // Add a sideblock for group interactions
     return array(
         'name' => 'groupinteractions',
         'weight' => -5,
-        'data' => $interactiontypes,
+        'data' => $data
     );
 }
 

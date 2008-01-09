@@ -2,8 +2,8 @@
 
     {if $data}
     <ul>
-    {foreach from=$data item=interactions key=plugin}
-        <li><a href="{$WWWROOT}interaction/{$plugin}/index.php?group={$group->id}">{str tag=nameplural section='interaction.$plugin}</a></li>
+    {foreach from=$data.interactiontypes item=interactions key=plugin}
+        <li><a href="{$WWWROOT}interaction/{$plugin}/index.php?group={$data.group}">{str tag=nameplural section='interaction.$plugin}</a></li>
         {if $interactions}
             <ul>
             {foreach from=$interactions item=interaction}
