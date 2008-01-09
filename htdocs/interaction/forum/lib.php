@@ -371,6 +371,14 @@ function user_can_edit_post($poster, $posttime, $userid=null) {
     return $poster == $userid && $posttime > (time() - 30 * 60);
 }
 
+/**
+ * Generates a relative date containing yesterday/today when appropriate
+ *
+ * @param string $relative the format (for strftime) for a relative date (with %v where yesterday/today should be)
+ * @param string $absolute the format (for strftime) for an absolute date
+ * @param int $time1 the time to display
+ * @param int $time2 optional the time $time1 is relative to, defaults to current time
+ */
 function relative_date($relative, $absolute, $time1, $time2=null) {
     if ($time2==null) {
         $time2 = time();
