@@ -68,243 +68,6 @@ function activity_occurred($activitytype, $data, $plugintype=null, $pluginname=n
  *  - <b>viewaccess</b> must contain $owner userid of view owner AND $view (id of view) and $oldusers array of userids before access change was committed.
  */
 function handle_activity($activitytype, $data, $cron=false) {
-//    if (!is_object($activitytype)) {
-//        throw new InvalidArgumentException("Invalid activitytype $activitytype");
-//    }
-//
-//    $users = array();
-//
-//    if (!empty($activitytype->admin)) {
-//        // validation stuff
-//        switch ($activitytype->name) {
-//            case 'contactus':
-//                if (empty($data->message)) {
-//                    throw new InvalidArgumentException("Message was empty for activity type contactus");
-//                }
-//                $data->subject = get_string('newcontactusfrom', 'activity') . ' ' .$data->fromname 
-//                    . '<' . $data->fromemail .'>' . (isset($data->subject) ? ': ' . $data->subject : '');
-//                $data->message = $data->subject . "\n\n" . $data->message;
-//                $data->subject = get_string('newcontactus', 'activity');
-//                if (!empty($data->userfrom)) {
-//                    $data->url = get_config('wwwroot') . 'user/view.php?id=' . $data->userfrom;
-//                    $userid = $data->userfrom;
-//                }
-//                break;
-//            case 'objectionable':
-//                if (empty($data->view)) {
-//                    throw new InvalidArgumentException("Objectionable content requires an id of a view");
-//                }
-//                if (empty($data->message)) {
-//                    throw new InvalidArgumentException("Objectionable content requires a message");
-//                }
-//                if (!$view = get_record('view', 'id', $data->view, null, null, null, null, 'title,owner')) {
-//                    throw new InvalidArgumentException("Couldn't find view with id " . $data->view);
-//                }
-//                $userid = $view->owner;
-//                if (empty($data->artefact)) {
-//                    $data->url = get_config('wwwroot') . 'view/view.php?id=' . $data->view;
-//                    $data->subject = get_string('objectionablecontentview', 'activity') 
-//                        . ' ' . get_string('onview', 'activity') . ' ' . $view->title;
-//                }
-//                else {
-//                    $data->url = get_config('wwwroot') . 'view/artefact.php?artefact=' . $data->artefact . '&view=' . $data->view;
-//                    if (!$artefacttitle = get_field('artefact', 'title', 'id', $data->artefact)) {
-//                        throw new InvalidArgumentException("Couldn't find artefact with id " . $data->view);
-//                    }
-//                    $data->subject = get_string('objectionablecontentartefact', 'activity') 
-//                        . ' '  . get_string('onartefact', 'activity') . ' ' . $artefacttitle;
-//                }
-//                break;
-//            case 'virusrepeat':
-//                $userstring = $data->username . ' (' . $data->fullname . ') (userid:' . $data->userid . ')' ;
-//                $data->subject = get_string('virusrepeatsubject', 'mahara', $userstring);
-//                $data->message = get_string('virusrepeatmessage');
-//                $userid = $data->userid;
-//                break;
-//            case 'virusrelease':
-//                break;
-//        }
-//        if (empty($userid)) {
-//            $users = activity_get_users($activitytype->name, null, null, true);
-//        } else {
-//            $userinstitutions = get_column('usr_institution', 'institution', 'usr', $userid);
-//            $users = activity_get_users($activitytype->name, null, null, null, $userinstitutions);
-//        }
-//    }
-//    else {
-//        switch ($activitytype->name) {
-//            // easy ones first :)
-//            case 'maharamessage':
-//                if (!is_array($data->users) || empty($data->users)) {
-//                    throw new InvalidArgumentException("Mahara message activity type expects an array of users");
-//                }
-//                if (empty($data->subject)) {
-//                    throw new InvalidArgumentException("Mahara message activity type expects a subject");
-//                }
-//                if (empty($data->message)) {
-//                    throw new InvalidArgumentException("Mahara message activity type expects a message");
-//                }
-//                $users = activity_get_users($activitytype->name, $data->users);
-//                break;
-//            case 'institutionmessage':
-//                if ($data->messagetype == 'request') {
-//                    $userstring = $data->fullname . ' (' . $data->username . ')';
-//                    $data->subject = get_string('institutionrequestsubject', 'activity', $userstring, 
-//                                                $data->institution->displayname);
-//                    $data->message = get_string('institutionrequestmessage', 'activity');
-//                    $data->url = get_config('wwwroot') . 'admin/users/institutionusers.php';
-//                    $users = activity_get_users($activitytype->name, null, null, null,
-//                                                array($data->institution->name));
-//                } else if ($data->messagetype == 'invite') {
-//                    if (!is_array($data->users) || empty($data->users)) {
-//                        throw new InvalidArgumentException("Institution invitations expect an array of users");
-//                    }
-//                    $data->subject = get_string('institutioninvitesubject', 'activity', 
-//                                                $data->institution->displayname);
-//                    $data->message = get_string('institutioninvitemessage', 'activity');
-//                    $data->url = get_config('wwwroot') . 'account/index.php';
-//                    $users = activity_get_users($activitytype->name, $data->users);
-//                }
-//                break;
-//            case 'usermessage':
-//                if (!is_numeric($data->userto) || !is_numeric($data->userfrom)) {
-//                    throw new InvalidArgumentException("User message requires userto and userfrom to be set");
-//                }
-//                if (empty($data->subject)) {
-//                    $data->subject = get_string('newusermessage', 'mahara', display_name($data->userfrom));
-//                }
-//                if (empty($data->message)) {
-//                    throw new InvalidArgumentException("User message activity type expects a message");
-//                }
-//                $users = activity_get_users($activitytype->name, array($data->userto));
-//                if (empty($data->url)) {
-//                    // @todo when user messaging is implemented, this might change... 
-//                    $data->url = get_config('wwwroot') . 'user/view.php?id=' . $data->userfrom;
-//                }
-//                break;
-//            case 'feedback':
-//                if (empty($data->message)) {
-//                    throw new InvalidArgumentException("Feedbackactivity type expects a message");
-//                }
-//                if (empty($data->view)) {
-//                    throw new InvalidArgumentException("Feedback missing view id");
-//                }
-//                if (!empty($data->artefact)) { // feedback on artefact
-//                    $data->subject = get_string('newfeedbackonartefact', 'activity');
-//                    require_once(get_config('docroot') . 'artefact/lib.php');
-//                    $artefact = artefact_instance_from_id($data->artefact);
-//                    if ($artefact->feedback_notify_owner()) {
-//                        $userid = $artefact->get('owner');
-//                    }
-//                    else {
-//                        $userid = null;
-//                    }
-//                    $data->subject .= ' ' .$artefact->get('title');
-//                    if (empty($data->url)) {
-//                        // @todo this might change later
-//                        $data->url = get_config('wwwroot') . 'view/artefact.php?artefact=' 
-//                            . $data->artefact . '&view=' . $data->view;
-//                    }
-//                } 
-//                else { // feedback on view.
-//                    $data->subject = get_string('newfeedbackonview', 'activity');
-//                    if (!$view = get_record('view', 'id', $data->view)) {
-//                        throw new InvalidArgumentException("Couldn't find view with id " . $data->view);
-//                    }
-//                    $userid = $view->owner;
-//                    // Don't send a message if the view owner submitted the feedback
-//                    if ($data->author == $userid) {
-//                        $userid = null;
-//                    }
-//                    $data->subject .= ' ' .$view->title;
-//                    if (empty($data->url)) {
-//                        // @todo this might change later
-//                        $data->url = get_config('wwwroot') . 'view/view.php?id=' . $data->view;
-//                    }
-//                }
-//                if ($userid) {
-//                    $users = activity_get_users($activitytype->name, array($userid));
-//                } 
-//                else {
-//                    $users = array();
-//                }
-//                break;
-//            // and now the harder ones
-//            case 'watchlist':
-//                if (!empty($data->view)) {
-//                    if (empty($data->message)) {
-//                        throw new InvalidArgumentException("message must be provided for watchlist view");
-//                    }
-//                    $data->subject = get_string('newwatchlistmessagesubject', 'activity');
-//                    if (!$viewinfo = get_record_sql('SELECT u.*, v.title FROM {usr} u
-//                                                     JOIN {view} v ON v.owner = u.id
-//                                                     WHERE v.id = ?', array($data->view))) {
-//                        if (!empty($cron)) { // probably deleted already
-//                            return;
-//                        }
-//                        throw new InvalidArgumentException("Couldn't find view with id " . $data->view);
-//                    }
-//                    $sql = 'SELECT u.*, p.method, ' . $casturl . ' AS url
-//                                FROM {usr_watchlist_view} wv
-//                                JOIN {usr} u
-//                                    ON wv.usr = u.id
-//                                LEFT JOIN {usr_activity_preference} p
-//                                    ON p.usr = u.id
-//                                WHERE (p.activity = ? OR p.activity IS NULL)
-//                                AND wv.view = ?
-//                           ';
-//                    $users = get_records_sql_array($sql, 
-//                                                   array(get_config('wwwroot') . 'view/view.php?id=' 
-//                                                         . $data->view, 'watchlist', $data->view));
-//                    if (empty($users)) {
-//                        $users = array();
-//                    }
-//                    // ick
-//                    foreach ($users as $user) {
-//                        $user->message = display_name($viewinfo, $user) . ' ' . $data->message;
-//                    }
-//                } 
-//                else {
-//                    log_debug($data);
-//                    throw new InvalidArgumentException("Invalid watchlist type");
-//                }
-//                break;
-//            case 'newview':
-//                $data->oldusers = array();
-//            case 'viewaccess':
-//                if (!is_numeric($data->owner) || !is_numeric($data->view)) {
-//                    throw new InvalidArgumentException("view access activity type requires view and owner to be set");
-//                }
-//                if (!isset($data->oldusers)) {
-//                    throw new InvalidArgumentException("view access activity type requires oldusers to be set (even if empty)");
-//                }
-//                if (!$viewinfo = get_record_sql('SELECT u.*, v.title FROM {usr} u
-//                                                 JOIN {view} v ON v.owner = u.id
-//                                                 WHERE v.id = ?', array($data->view))) {
-//                    if (!empty($cron)) { // probably deleted already
-//                        return;
-//                    }
-//                    throw new InvalidArgumentException("Couldn't find view with id " . $data->view);
-//                }
-//                $data->message = get_string('newviewaccessmessage', 'activity')
-//                    . ' "' . $viewinfo->title . '" ' . get_string('ownedby', 'activity');
-//                $data->subject = get_string('newviewaccesssubject', 'activity');
-//                $data->url = get_config('wwwroot') . 'view/view.php?id=' . $data->view;
-//                $users = array_diff_key(activity_get_viewaccess_users($data->view, $data->owner, 'viewaccess'), $data->oldusers);
-//                if (empty($users)) {
-//                    $users = array();
-//                }
-//                // ick
-//                foreach ($users as $user) {
-//                    $user->message = $data->message . ' ' . display_name($viewinfo, $user);
-//                }
-//            case 'contactus':
-//                
-//                break;
-//                // @todo more here (admin messages!)
-//        }
-
-
     $data = (object)$data;
     $activitytype = activity_locate_typerecord($activitytype);
 
@@ -664,6 +427,37 @@ class ActivityTypeMaharamessage extends ActivityType {
 
     public function get_required_parameters() {
         return array('message', 'subject', 'users');
+    }
+}
+
+class ActivityTypeInstitutionmessage extends ActivityType {
+
+    protected $messagetype;
+    protected $institution;
+    protected $username;
+    protected $fullname;
+
+    public function __construct($data) {
+        parent::__construct($data);
+        if ($this->messagetype == 'request') {
+            $userstring = $this->fullname . ' (' . $this->username . ')';
+            $this->subject = get_string('institutionrequestsubject', 'activity', $userstring, 
+                                        $this->institution->displayname);
+            $this->message = get_string('institutionrequestmessage', 'activity');
+            $this->url = get_config('wwwroot') . 'admin/users/institutionusers.php';
+            $this->users = activity_get_users($this->get_id(), null, null, null,
+                                              array($this->institution->name));
+        } else if ($this->messagetype == 'invite') {
+            $this->subject = get_string('institutioninvitesubject', 'activity', 
+                                        $this->institution->displayname);
+            $this->message = get_string('institutioninvitemessage', 'activity');
+            $this->url = get_config('wwwroot') . 'account/index.php';
+            $this->users = activity_get_users($this->get_id(), $this->users);
+        }
+    }
+
+    public function get_required_parameters() {
+        return array('messagetype', 'institution');
     }
 }
 
