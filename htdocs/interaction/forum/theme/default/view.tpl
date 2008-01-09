@@ -92,7 +92,7 @@
     {/if}
 </form>
 
-<h4>Key:</h4>
+<h4>{str tag="Key" section="interaction.forum"}:</h4>
 <ul>
     <li><img src="{$closedicon|escape}" alt="{str tag="Closed" section="interaction.forum"}"> {str tag="Closed" section="interaction.forum"}</li>
     <li><img src="{$subscribedicon|escape}" alt="{str tag="Subscribed" section="interaction.forum"}"> {str tag="Subscribed" section="interaction.forum"}</li>

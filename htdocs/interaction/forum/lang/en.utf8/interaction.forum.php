@@ -68,6 +68,7 @@ $string['forumsuccessfulsubscribe'] = 'Forum subscribed successfully';
 $string['forumsuccessfulunsubscribe'] = 'Forum unsubscribed successfully';
 $string['groupowner'] = 'Group owner';
 $string['groupownerlist'] = 'Group owner:';
+$string['Key'] = 'Key';
 $string['lastpost'] = 'Last post';
 $string['Moderators'] = 'Moderators';
 $string['moderatorslist'] = 'Moderators:';
