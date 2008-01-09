@@ -53,39 +53,34 @@ if ($viewid && $fileid) {
     if (!($file instanceof ArtefactTypeFile)) {
         throw new NotFoundException();
     }
-    $path = $file->get_path(array('size' => $size));
-    $title = $file->download_title();
-    if ($contenttype = $file->override_content_type()) {
-        $options['overridecontenttype'] = $contenttype;
+}
+else {
+    // We just have a file ID
+    $file = artefact_instance_from_id($fileid);
+    if (!($file instanceof ArtefactTypeFile)) {
+        throw new NotFoundException();
     }
-    serve_file($path, $title, $options);
-}
 
-// We just have a file ID
-$file = artefact_instance_from_id($fileid);
-if (!($file instanceof ArtefactTypeFile)) {
-    throw new NotFoundException();
-}
+    // If the file is in the public directory, it's fine to serve
+    $fileispublic = $file->get('parent') == ArtefactTypeFolder::admin_public_folder_id();
+    $fileispublic &= $file->get('adminfiles');
+    $fileispublic &= record_exists('site_menu', 'file', $fileid, 'public', 1);
 
-// If the file is in the public directory, it's fine to serve
-$fileispublic = $file->get('parent') == ArtefactTypeFolder::admin_public_folder_id();
-$fileispublic &= $file->get('adminfiles');
-$fileispublic &= record_exists('site_menu', 'file', $fileid, 'public', 1);
+    if (!$fileispublic) {
+        // If the file is in the logged in menu and the user is logged in then
+        // they can view it
+        $fileinloggedinmenu = $file->get('adminfiles');
+        $fileinloggedinmenu &= $file->get('parent') == null;
+        $fileinloggedinmenu &= record_exists('site_menu', 'file', $fileid, 'public', 0);
+        $fileinloggedinmenu &= $USER->is_logged_in();
 
-if (!$fileispublic) {
-    // If the file is in the logged in menu and the user is logged in then
-    // they can view it
-    $fileinloggedinmenu = $file->get('adminfiles');
-    $fileinloggedinmenu &= $file->get('parent') == null;
-    $fileinloggedinmenu &= record_exists('site_menu', 'file', $fileid, 'public', 0);
-    $fileinloggedinmenu &= $USER->is_logged_in();
+        if (!$fileinloggedinmenu) {
+            // Alternatively, if you own the file or you are an admin, it should always work
+            $fileisavailable = $USER->get('admin') || $file->get('owner') == $USER->get('id');
 
-    if (!$fileinloggedinmenu) {
-        // Alternatively, if you own the file or you are an admin, it should always work
-        $fileisavailable = $USER->get('admin') || $file->get('owner') == $USER->get('id');
-
-        if (!$fileisavailable) {
-            throw new AccessDeniedException();
+            if (!$fileisavailable) {
+                throw new AccessDeniedException();
+            }
         }
     }
 }
