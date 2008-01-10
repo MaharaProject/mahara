@@ -363,12 +363,15 @@ EOF;
 
     // ---------- sideblock stuff ----------
     if (get_config('installed')) {
-        $smarty->assign('SITEMENU', site_menu());
-        $SIDEBLOCKS[] = array(
-            'name'   => 'mainmenu',
-            'weight' => 10,
-            'data'   => site_menu(),
-        );
+        $data = site_menu();
+        if (!empty($data)) {
+            $smarty->assign('SITEMENU', site_menu());
+            $SIDEBLOCKS[] = array(
+                'name'   => 'mainmenu',
+                'weight' => 10,
+                'data'   => site_menu(),
+            );
+        }
     }
 
     if ($USER->is_logged_in() && defined('MENUITEM') && substr(MENUITEM, 0, 11) == 'myportfolio') {
