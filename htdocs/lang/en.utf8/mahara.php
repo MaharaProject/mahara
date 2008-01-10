@@ -87,6 +87,7 @@ $string['strftimenotspecified']  = 'Not specified';
 // profile sideblock strings
 $string['invitedgroup'] = '1 group invited to';
 $string['invitedgroups'] = '%s groups invited to';
+$string['logout'] = 'Logout';
 $string['pendingfriend'] = '1 pending friend';
 $string['pendingfriends'] = '%s pending friends';
 
