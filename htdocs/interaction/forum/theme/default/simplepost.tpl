@@ -1,3 +1,4 @@
+<a name="post{$post->id}"></a>
 <div>
 {if $post->subject && !$nosubject}<h4>{$post->subject|escape}</h4>{/if}
 {$post->ctime}

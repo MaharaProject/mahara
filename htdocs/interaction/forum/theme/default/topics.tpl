@@ -36,7 +36,8 @@
     {/if}
     >
     {$topic->lastposter|display_name|escape}</a>
-    <br>{$topic->lastposttime}
+    <br>
+    <a href="{$WWWROOT}interaction/forum/topic.php?id={$topic->id}#post{$topic->lastpost}">{$topic->lastposttime}</a>
     {/if}
     </td>
     {if $moderator}
