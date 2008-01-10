@@ -121,7 +121,7 @@ function get_invited_groups($userid=0) {
     return get_records_sql_array('SELECT g.*, gmi.ctime, gmi.reason
              FROM {group} g 
              JOIN {group_member_invite} gmi ON gmi.group = g.id
-             WHERE gmi.member = ?)', array($userid));
+             WHERE gmi.member = ?', array($userid));
 }
 
 /**
