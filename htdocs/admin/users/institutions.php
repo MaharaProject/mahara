@@ -300,6 +300,12 @@ else {
     $smarty->assign('institutions', $institutions);
 }
 
+function institution_validate(Pieform $form, $values) {
+    if (!$form->get_error('name') && record_exists('institution', 'name', $values['name'])) {
+        $form->set_error('name', get_string('institutionnamealreadytaken', 'admin'));
+    }
+}
+
 function institution_submit(Pieform $form, $values) {
     global $SESSION, $institution, $add, $instancearray, $USER;
 

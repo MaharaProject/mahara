@@ -301,6 +301,7 @@ $string['deleteinstitutionconfirm'] = 'Are you really sure you wish to delete th
 $string['institutionaddedsuccessfully'] = 'Institution added successfully. Please configure an authentication plugin for this institution.';
 $string['institutiondeletedsuccessfully'] = 'Institution deleted successfully';
 $string['institutionname'] = 'Institution name';
+$string['institutionnamealreadytaken'] = 'This institution name is already taken';
 $string['institutiondisplayname'] = 'Institution display name';
 $string['institutionupdatedsuccessfully'] = 'Institution updated successfully';
 $string['registrationallowed'] = 'Registration allowed?';
