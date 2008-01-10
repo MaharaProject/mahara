@@ -319,7 +319,7 @@ tr.required th {
     padding: 15px 0 0 0px;
     color: #474220;
 }
-#headerunreadmessagecount {
+.unreadmessagecount {
     background: url(../images/email-green.gif) no-repeat;
     padding: 3px 0 5px 18px;
     margin: 0 0 3px 2px;

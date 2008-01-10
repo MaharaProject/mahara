@@ -1791,8 +1791,8 @@ function get_loggedin_string() {
         // these spans are here so that on the ajax page that marks messages as read, the contents can be updated.
         $str .=
             ' (<a href="' . get_config('wwwroot') . 'account/activity/">'  . 
-            '<span id="headerunreadmessagecount">' . $count . '</span> ' . 
-            '<span id="headerunreadmessages">' . get_string($key) . '</span></a>)';
+            '<span class="unreadmessagescontainer"><span class="unreadmessagecount">' . $count . '</span> ' .
+            '<span class="unreadmessages">' . get_string($key) . '</span></span></a>)';
     }
 
     $saveduser = $USER->get('parentuser');

@@ -1,8 +1,7 @@
     <h3><a style="color:white" href="{$WWWROOT}user/view.php?id={$data.id}">{$data.id|display_name|escape}</a></h3>
-    <a href="{$WWWROOT}user/view.php?id={$data.id}"><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=50&amp;id={$data.id}" alt=""></a>
-    <a href="{$WWWROOT}?logout">{str tag="logout"}</a>
-    <ul style="color:black">
-        {if $data.unreadnotifications}<li><a href="{$WWWROOT}account/activity/">{$data.unreadnotifications}</a></li>{/if}
+    <div class="fr"><a href="{$WWWROOT}user/view.php?id={$data.id}"><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=50&amp;id={$data.id}" alt=""></a></div>
+    <ul>
+        {if $data.unreadnotifications}<li><a href="{$WWWROOT}account/activity/"><span class="unreadmessagescontainer">{$data.unreadnotifications}</span></a></li>{/if}
         {if $data.invitedgroups}<li><a href="{$WWWROOT}group/mygroups.php?filter=invited">{$data.invitedgroups}</a></li>{/if}
         {if $data.pendingfriends}<li><a href="{$WWWROOT}user/?filter=2">{$data.pendingfriends}</a></li>{/if}
         {if $data.groups}
@@ -26,3 +25,4 @@
         </li>
         {/if}
     </ul>
+    <div class="center"><a href="{$WWWROOT}?logout">{str tag="logout"}</a></div>

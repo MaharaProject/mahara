@@ -1666,10 +1666,10 @@ function profile_sideblock() {
     );
     $unreadnotifications = call_static_method(generate_class_name('notification', 'internal'), 'unread_count', $USER->get('id'));
     if ($unreadnotifications == 1) {
-        $data['unreadnotifications'] = '1 ' . get_string('unreadmessages');
+        $data['unreadnotifications'] = '<span class="unreadmessagecount">1</span> <span class="unreadmessages">' . get_string('unreadmessages') . '</span>';
     }
     else if ($unreadnotifications > 1) {
-        $data['unreadnotifications'] = $unreadnotifications . ' ' . get_string('unreadmessages');
+        $data['unreadnotifications'] = '<span class="unreadmessagecount">' . $unreadnotifications . '</span> <span class="unreadmessages">' . get_string('unreadmessages') . '</span>';
     }
     $invitedgroups = get_invited_groups();
     $invitedgroups = $invitedgroups ? count($invitedgroups) : 0;
@@ -1694,6 +1694,14 @@ function profile_sideblock() {
         WHERE v.owner = ?
         ORDER BY v.title',
         array('profile', $USER->get('id'))
+    );
+    $data['artefacts'] = get_records_sql_array(
+         'SELECT a.id, a.artefacttype, a.title
+         FROM {artefact} a
+         INNER JOIN {artefact_tag} at ON (a.id = at.artefact AND tag = ?)
+         WHERE a.owner = ?
+         ORDER BY a.title',
+         array('profile', $USER->get('id'))
     );
     return $data;
 }
