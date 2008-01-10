@@ -293,7 +293,6 @@ function setup_topics(&$topics) {
             if ($more) {
                 $topic->body .= '...';
             }
-            $topic->body = htmlspecialchars($topic->body);
             $topic->lastposttime = relative_date(get_string('strftimerecentrelative', 'interaction.forum'), get_string('strftimerecent'), $topic->lastposttime);
         }
     }
