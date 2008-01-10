@@ -52,7 +52,7 @@ $searchform = pieform(array(
             'options' => array(
                 'notmember' => get_string('groupsnotin'),
                 'member' => get_string('groupsimin'),
-                'allgroups' => get_string('allgroups')
+                'all' => get_string('allgroups')
             ),
             'defaultvalue' => $filter
         ),
@@ -69,7 +69,7 @@ if ($filter == 'member') {
 else if ($filter == 'notmember') {
     $type = 'notmember';
 }
-else if ($filter == 'allgroups'){
+else if ($filter == 'all'){
     $type = 'all';
 }
 
@@ -129,7 +129,7 @@ $pagination = build_pagination(array(
 ));
 
 function search_submit(Pieform $form, $values) {
-    redirect('/group/find.php?filter=' . $values['filter'] . (isset($values['query']) ? '&query=' . $values['query'] : ''));
+    redirect('/group/find.php?filter=' . $values['filter'] . (isset($values['query']) ? '&query=' . urlencode($values['query']) : ''));
 }
 
 $smarty = smarty();
