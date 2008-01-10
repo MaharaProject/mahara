@@ -49,7 +49,7 @@ require_once(get_config('libroot') .'institution.php');
 
 $remotewwwroot = param_variable('wr');
 $instanceid    = param_variable('ins');
-$wantsurl      = '';
+$wantsurl      = param_variable('wantsurl');
 
 if (!get_config('enablenetworking')) {
     throw new XmlrpcClientException('Sorry - networking has been disabled for this Mahara site.');
@@ -62,7 +62,7 @@ $url = $remotewwwroot.$peer->application->ssolandurl;
 $providers = get_service_providers($USER->authinstance);
 $approved  = false;
 
-$url = start_jump_session($peer, $instanceid);
+$url = start_jump_session($peer, $instanceid, $wantsurl);
 
 if (empty($url)) {
     throw new XmlrpcClientException('DEBUG: Jump session was not started correctly or blank URL returned.'); // TODO: errors
