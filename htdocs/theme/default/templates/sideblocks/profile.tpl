@@ -16,7 +16,7 @@
         {/if}
         {if $data.views}
         <li>
-            <a href="{$WWWROOT}view/">{str tag="myviews"}:</a>
+            <a href="{$WWWROOT}view/">{str tag="views"}:</a>
             <ul>
             {foreach from=$data.views item=view}
                 <li><a href="{$WWWROOT}view/view.php?id={$view->id}">{$view->title|escape}</a></li>
@@ -24,5 +24,24 @@
             </ul>
         </li>
         {/if}
+        {if $data.artefacts}
+        <li>
+            <a href="{$WWWROOT}artefact/file/">{str tag="artefacts"}:</a>
+            <ul>
+            {foreach from=$data.artefacts item=artefact}
+                {if $artefact->artefacttype == 'blog'}
+                    <li><a href="{$WWWROOT}artefact/blog/view/?id={$artefact->id}">{$artefact->title|escape}</a></li>
+                {elseif $artefact->artefacttype == 'file' || $artefact->artefacttype == 'image'}
+                    <li><a href="{$WWWROOT}artefact/file/download.php?file={$artefact->id}">{$artefact->title|escape}</a></li>
+                {elseif $artefact->artefacttype == 'folder'}
+                    <li><a href="{$WWWROOT}artefact/file/?folder={$artefact->id}">{$artefact->title|escape}</a></li>
+                {/if}
+            {/foreach}
+            </ul>
+        </li>
+        {/if}
     </ul>
-    <div class="center"><a href="{$WWWROOT}?logout">{str tag="logout"}</a></div>
+    <div class="center">
+    <a href="{$WWWROOT}?logout">{str tag="logout"}</a>
+    | <a href="{$WWWROOT}account/">{str tag="settings"}</a>
+    </div>
