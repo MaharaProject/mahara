@@ -59,6 +59,7 @@ $form = pieform(array(
     ),
 ));
 
+// different filters join on the different kinds of association
 if ($filter == 'all') {
     $sql = '
         INNER JOIN (
@@ -120,6 +121,13 @@ else if ($filter == 'request') {
 }
 
 $count = count_records_sql('SELECT COUNT(g.*) FROM {group} g ' . $sql, $values);
+
+// almost the same as query used in find - common parts should probably be pulled out
+// gets the groups filtered by
+// including type if the user is associated with the group in some way
+// and the first three members by id
+// does this by finding the lowest id, then the next lowest, then the third lowest in subselects
+// which is just horrible :(
 
 $sql = 'SELECT g.id, g.name, g.description, g.owner, g.jointype, m.member1 AS member1, m.member2 AS member2, t.type, MIN(gm.member) AS member3, COUNT(gm2.*) AS membercount, COUNT(gmr.*) AS requests
     FROM {group} g

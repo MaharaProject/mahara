@@ -56,6 +56,7 @@ function group_user_can_leave($group, $userid=null) {
 
 /**
  * removes a user from a group
+ * removed view access given by the user to the group
  *
  * @param int $group id of group
  * @param int $user id of user to remove

@@ -75,6 +75,11 @@ else if ($filter == 'all'){
 
 $groups = search_group($query, $groupsperpage, $offset, $type);
 
+// gets more data about the groups found by search_group
+// including type if the user is associated with the group in some way
+// and the first three members by id
+// does this by finding the lowest id, then the next lowest, then the third lowest in subselects
+// which is just horrible :(
 if ($groups['data']) {
     $groupids = array();
     foreach ($groups['data'] as $group) {
