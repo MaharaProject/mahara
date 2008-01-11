@@ -1565,33 +1565,34 @@ function main_nav() {
             ),
             array(
                 'path' => 'groups',
-                'url' => 'user/',
+                'url' => 'group/mygroups.php',
                 'title' => get_string('groups'),
                 'weight' => 40,
+            ),
+            array(
+                'path' => 'groups/mygroups',
+                'url' => 'group/mygroups.php',
+                'title' => get_string('mygroups'),
+                'weight' => 10
             ),
             array(
                 'path' => 'groups/myfriends',
                 'url' => 'user/',
                 'title' => get_string('myfriends'),
-                'weight' => 10,
-            ),
-            array(
-                'path' => 'groups/groupsimin',
-                'url' => 'group/',
-                'title' => get_string('groupsimin'),
                 'weight' => 20,
             ),
             array(
-                'path' => 'groups/groupsiown',
-                'url' => 'group/owned.php',
-                'title' => get_string('groupsiown'),
-                'weight' => 30,
+                'path' => 'groups/find',
+                'url' => 'group/find.php',
+                'title' => get_string('findgroups'),
+                'weight' => 30
             ),
+
             array(
                 'path' => 'settings',
                 'url' => 'account/',
                 'title' => get_string('settings'),
-                'weight' => 50
+                'weight' => 60
             ),
             array(
                 'path' => 'settings/preferences',

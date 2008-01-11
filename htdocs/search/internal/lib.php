@@ -500,6 +500,7 @@ class PluginSearchInternal extends PluginSearch {
      * @param string  The query string
      * @param integer How many results to return
      * @param integer What result to start at (0 == first result)
+     * @param string  Which groups to search (all, member, notmember)
      * @return array  A data structure containing results looking like ...
      *         $results = array(
      *               count   => integer, // total number of results
@@ -528,19 +529,19 @@ class PluginSearchInternal extends PluginSearch {
      *               ),
      *           );
      */
-    public static function search_group($query_string, $limit, $offset=0, $all=false) {
+    public static function search_group($query_string, $limit, $offset=0, $type='member') {
         if (is_postgres()) {
-            return self::search_group_pg($query_string, $limit, $offset, $all);
+            return self::search_group_pg($query_string, $limit, $offset, $type);
         } 
         else if (is_mysql()) {
-            return self::search_group_my($query_string, $limit, $offset, $all);
+            return self::search_group_my($query_string, $limit, $offset, $type);
         } 
         else {
             throw new SQLException('search_group() is not implemented for your database engine (' . get_config('dbtype') . ')');
         }
     }
 
-    public static function search_group_pg($query_string, $limit, $offset, $all) {
+    public static function search_group_pg($query_string, $limit, $offset, $type) {
         global $USER;
         $sql = "
             SELECT
@@ -552,8 +553,8 @@ class PluginSearchInternal extends PluginSearch {
                 OR description ILIKE '%' || ? || '%' 
             )";
         $values = array($query_string, $query_string);
-        if (!$all) {
-            $sql .=  'AND ( 
+        if ($type == 'member') {
+            $sql .=  'AND (
                 owner = ? OR id IN (
                     SELECT "group" FROM {group_member} WHERE member = ?
                 )
@@ -561,6 +562,16 @@ class PluginSearchInternal extends PluginSearch {
             $values[] = $USER->get('id');
             $values[] = $USER->get('id');
         }
+        else if ($type == 'notmember') {
+            $sql .=  'AND (
+                owner != ? AND id NOT IN (
+                    SELECT "group" FROM {group_member} WHERE member = ?
+                )
+            )';
+            $values[] = $USER->get('id');
+            $values[] = $USER->get('id');
+        }
+        $sql .= 'ORDER BY name';
         $data = get_records_sql_array($sql, $values, $offset, $limit);
 
         $sql = "
@@ -572,9 +583,17 @@ class PluginSearchInternal extends PluginSearch {
                 name ILIKE '%' || ? || '%' 
                 OR description ILIKE '%' || ? || '%' 
             )";
-        if (!$all) {
-            $sql .= 'AND ( 
+        if ($type == 'member') {
+            $sql .= 'AND (
                     owner = ? OR id IN (
+                        SELECT "group" FROM {group_member} WHERE member = ?
+                    )
+                )
+            ';
+        }
+        else if ($type == 'notmember') {
+            $sql .= 'AND (
+                    owner != ? AND id NOT IN (
                         SELECT "group" FROM {group_member} WHERE member = ?
                     )
                 )
@@ -590,7 +609,7 @@ class PluginSearchInternal extends PluginSearch {
         );
     }
 
-    public static function search_group_my($query_string, $limit, $offset, $all) {
+    public static function search_group_my($query_string, $limit, $offset, $type) {
         global $USER;
         $sql = "
             SELECT
@@ -602,7 +621,7 @@ class PluginSearchInternal extends PluginSearch {
                 OR description LIKE '%' || ? || '%' 
             )";
         $values = array($query_string, $query_string);
-        if (!$all) {
+        if ($type == 'member') {
             $sql .=  'AND (
                 owner = ? OR id IN (
                     SELECT "group" FROM {group_member} WHERE member = ?
@@ -611,6 +630,16 @@ class PluginSearchInternal extends PluginSearch {
             $values[] = $USER->get('id');
             $values[] = $USER->get('id');
         }
+        else if ($type == 'notmember') {
+            $sql .=  "AND (
+                owner != ? AND id NOT IN (
+                    SELECT group FROM {group_member} WHERE member = ?
+                )
+            )";
+            $values[] = $USER->get('id');
+            $values[] = $USER->get('id');
+        }
+        $sql .= 'ORDER BY name';
         $data = get_records_sql_array($sql, $values, $offset, $limit);
 
         $sql = "
@@ -622,13 +651,21 @@ class PluginSearchInternal extends PluginSearch {
                 name LIKE '%' || ? || '%' 
                 OR description LIKE '%' || ? || '%' 
             )";
-        if (!$all) {
+        if ($type == 'member') {
             $sql .= 'AND (
                     owner = ? OR id IN (
                         SELECT "group" FROM {group_member} WHERE member = ?
                     )
                 )
             ';
+        }
+        else if ($type == 'notmember') {
+            $sql .= "AND (
+                    owner != ? AND id NOT IN (
+                        SELECT group FROM {group_member} WHERE member = ?
+                    )
+                )
+            ";
         }
         $count = get_field_sql($sql, $values);
 

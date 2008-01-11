@@ -318,11 +318,11 @@ function admin_user_search($queries, $constraints, $offset, $limit, $sortfield, 
  *               ),
  *           );
  */
-function search_group($query_string, $limit, $offset = 0, $all = false) {
+function search_group($query_string, $limit, $offset = 0, $type = 'member') {
     $plugin = get_config('searchplugin');
     safe_require('search', $plugin);
 
-    return call_static_method(generate_class_name('search', $plugin), 'search_group', $query_string, $limit, $offset, $all);
+    return call_static_method(generate_class_name('search', $plugin), 'search_group', $query_string, $limit, $offset, $type);
 }
 
 function search_selfsearch($query_string, $limit, $offset, $type = 'all') {

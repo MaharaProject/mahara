@@ -56,6 +56,7 @@ function group_user_can_leave($group, $userid=null) {
 
 /**
  * removes a user from a group
+ * removed view access given by the user to the group
  *
  * @param int $group id of group
  * @param int $user id of user to remove
@@ -63,6 +64,16 @@ function group_user_can_leave($group, $userid=null) {
 function group_remove_user($group, $userid) {    
     db_begin();
     delete_records('group_member', 'group', $group, 'member', $userid);
+    delete_records_sql(
+        'DELETE FROM {view_access_group} a
+        WHERE a.group = ?
+        AND a.view IN (
+            SELECT v.id
+            FROM {view} v
+            WHERE v.owner = ?
+        )',
+        array($group, $userid)
+    );
     db_commit();
 }
 
@@ -156,10 +167,10 @@ function get_associated_groups($userid=0) {
     $sql = "SELECT g.*, a.type FROM {group} g JOIN (
     SELECT gm.group, 'invite' AS type
         FROM {group_member_invite} gm WHERE gm.member = ?
-    UNION 
+    UNION
     SELECT gm.group, 'request' AS type
         FROM {group_member_request} gm WHERE gm.member = ?
-    UNION 	
+    UNION
     SELECT gm.group, 'member' AS type
         FROM {group_member} gm WHERE gm.member = ? AND gm.tutor = 0
     UNION
@@ -259,17 +270,6 @@ function user_can_access_group($group, $user=null) {
     return ($membertypes | GROUP_MEMBERSHIP_MEMBER);
 }
 
-
-/**
- * helper function to remove a user from a group
- *
- * @param int $groupid
- * @param int $userid
- */
-function group_remove_member($groupid, $userid) {
-    delete_records('group_member', 'member', $userid, 'group', $groupid);
-}
-
 /**
  * function to add a member to a group
  * doesn't do any jointype checking, that should be handled by the caller
@@ -294,6 +294,90 @@ function group_has_members($groupid) {
         (SELECT COUNT(*) FROM {group_member_request} WHERE "group" = ?)
     )';
     return count_records_sql($sql, array($groupid, $groupid));
+}
+
+/**
+ * function to set up groups for display in mygroups.php and find.php
+ *
+ * @param array $groups
+ */
+function setup_groups($groups, $returnto='mygroups') {
+    if (!$groups) {
+        return;
+    }
+    $i = 0;
+    foreach ($groups as $group) {
+        if ($group->type == 'member') {
+            $group->canleave = group_user_can_leave($group->id);
+        }
+        else if ($group->jointype == 'open') {
+            $group->groupjoin = pieform(array(
+                'name' => 'joingroup' . $i++,
+                'successcallback' => 'joingroup_submit',
+                'elements' => array(
+                    'join' => array(
+                        'type' => 'submit',
+                        'value' => get_string('joingroup')
+                    ),
+                    'group' => array(
+                        'type' => 'hidden',
+                        'value' => $group->id
+                    )
+                )
+            ));
+        }
+        else if ($group->type == 'invite') {
+           $group->invite = pieform(array(
+               'name'     => 'invite' . $i++,
+               'renderer' => 'oneline',
+               'successcallback' => 'group_invite_submit',
+               'elements' => array(
+                    'accept' => array(
+                        'type'  => 'submit',
+                        'value' => get_string('acceptinvitegroup')
+                    ),
+                    'decline' => array(
+                        'type'  => 'submit',
+                        'value' => get_string('declineinvitegroup')
+                    ),
+                    'group' => array(
+                        'type' => 'hidden',
+                        'value' => $group->id
+                    ),
+                    'returnto' => array(
+                        'type' => 'hidden',
+                        'value' => $returnto
+                    )
+                )
+            ));
+        }
+        else if ($group->type == 'owner' && $group->requests > 1) {
+            $group->requests = array($group->requests);
+        }
+    }
+}
+
+function joingroup_submit(Pieform $form, $values) {
+    global $SESSION, $USER;
+    group_add_member($values['group'], $USER->get('id'));
+    $SESSION->add_ok_msg(get_string('joinedgroup'));
+    redirect('/group/view.php?id=' . $values['group']);
+}
+
+function group_invite_submit(Pieform $form, $values) {
+    global $SESSION, $USER;
+    if (get_record('group_member_invite', 'member', $USER->get('id'), 'group', $values['group'])) {
+        delete_records('group_member_invite', 'group', $values['group'], 'member', $USER->get('id'));
+        if (isset($values['accept'])) {
+            group_add_member($values['group'], $USER->get('id'));
+            $SESSION->add_ok_msg(get_string('groupinviteaccepted'));
+            redirect('/group/view.php?id=' . $values['group']);
+        }
+        else {
+            $SESSION->add_ok_msg(get_string('groupinvitedeclined'));
+            redirect($values['returnto'] == 'find' ? '/group/find.php' : '/group/mygroups.php');
+        }
+    }
 }
 
 ?>

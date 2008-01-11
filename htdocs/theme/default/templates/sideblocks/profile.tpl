@@ -6,7 +6,7 @@
         {if $data.pendingfriends}<li><a href="{$WWWROOT}user/?filter=2">{$data.pendingfriends}</a></li>{/if}
         {if $data.groups}
         <li>
-            <a href="{$WWWROOT}group/mygroups.php?filter=owned">{str tag="groupsiown"}:</a>
+            <a href="{$WWWROOT}group/mygroups.php?filter=owned">{str tag="groupsiown" section="group"}:</a>
             <ul>
             {foreach from=$data.groups item=group}
                 <li><a href="{$WWWROOT}group/view.php?id={$group->id}">{$group->name|escape}</a></li>

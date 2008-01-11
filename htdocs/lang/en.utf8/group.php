@@ -26,10 +26,9 @@
 
 defined('INTERNAL') || die();
 
-// group
+// my groups
 $string['groupname'] = 'Group Name';
 $string['creategroup'] = 'Create Group';
-$string['groupnotfound'] = 'Group with id %s was not found';
 $string['groupmemberrequests'] = 'Pending membership requests';
 $string['addgroup'] = 'Add new group';
 $string['sendinvitation'] = 'Send invite';
@@ -66,6 +65,7 @@ $string['releaseview'] = 'Release view';
 $string['tutor'] = 'Tutor';
 $string['tutors'] = 'Tutors';
 $string['member'] = 'Member';
+$string['invite'] = 'Invite';
 $string['remove'] = 'Remove';
 $string['updatemembership'] = 'Update membership';
 $string['memberchangefailed'] = 'Failed to update some membership information';
@@ -96,16 +96,39 @@ $string['joinedgroup'] = 'You are now a group member';
 $string['couldnotjoingroup'] = 'You cannot join this group';
 $string['grouprequestsent'] = 'Group membership request sent';
 $string['couldnotrequestgroup'] = 'Could not send group membership request';
-$string['groupjointypeopen'] = 'Membership to this group is open';
-$string['groupjointypecontrolled'] = 'Membership to this group  is controlled.  You cannot join this group';
-$string['groupjointypeinvite'] = 'Membership to this group is invite only';
-$string['groupjointyperequest'] = 'Membership to this group is by request only';
-$string['grouprequestsubject'] = 'New group membership request';
-$string['grouprequestmessage'] = '%s has sent a membership request to join the group %s';
-$string['grouprequestmessagereason'] = '%s has sent a membership request to join the group %s with the reason %s.';
-$string['groupconfirmdelete'] = 'Are you sure you wish to delete this group?';
-$string['groupconfirmdeletehasviews'] = 'Are you sure you wish to delete this group? Some of your views use this group for access control, removing this group would mean that the members of that group would not have access to the views.';
+$string['groupjointypeopen'] = 'Membership to this community is open';
+$string['groupjointypecontrolled'] = 'Membership to this community  is controlled.  You cannot join this community';
+$string['groupjointypeinvite'] = 'Membership to this community is invite only';
+$string['groupjointyperequest'] = 'Membership to this community is by request only';
+$string['grouprequestsubject'] = 'New community membership request';
+$string['grouprequestmessage'] = '%s has sent a membership request to join the community %s';
+$string['grouprequestmessagereason'] = '%s has sent a membership request to join the community %s with the reason %s.';
+$string['groupconfirmdelete'] = 'Are you sure you wish to delete this community?';
+$string['groupconfirmdeletehasviews'] = 'Are you sure you wish to delete this community? Some of your views use this community for access control, removing this community would mean that the members of that community would not have access to the views.';
 $string['deletegroup'] = 'Group Deleted Successfully';
+$string['allmygroups'] = 'All My Groups';
+$string['groupsimin']  = 'Groups I\'m In';
+$string['groupsiown']  = 'Groups I Own';
+$string['groupsiminvitedto'] = 'Groups I\'m Invited To';
+$string['groupsiwanttojoin'] = 'Groups I Want To Join';
+$string['therearependingrequests'] = 'There are %s pending membership requests for this group';
+$string['thereispendingrequest'] = 'There is 1 pending membership request for this group';
+$string['requestedtojoin'] = 'You have requested to join this group';
+$string['groupnotfound'] = 'Group with id %s not found';
+$string['groupconfirmleave'] = 'Are you sure you want to leave this group?';
+$string['groupconfirmleavehasviews'] = 'Are you sure you want to leave this group? Some of your views use this group for access control, leaving this group would mean that the members of the group would not have access to the views';
+$string['cantleavegroup'] = 'You can\'t leave this group';
+$string['leavespecifiedgroup'] = 'Leave group \'%s\'';
+$string['memberslist'] = 'Members: ';
+$string['nogroups'] = 'No groups';
+$string['deletespecifiedgroup'] = 'Delete group \'%s\'';
+$string['requestjoinspecifiedgroup'] = 'Request to join group \'%s\'';
+$string['youaregroupmember'] = 'You are  a member of this group';
+$string['youowngroup'] = 'You own this group';
+$string['groupsnotin'] = 'Groups I\'m not in';
+$string['allgroups'] = 'All groups';
+$string['trysearchingforgroups'] = 'Try %ssearching for groups%s to join!';
+$string['nogroupsfound'] = 'No groups found :(';
 
 // friendslist
 $string['reasonoptional'] = 'Reason (optional)';
