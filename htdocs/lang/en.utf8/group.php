@@ -129,6 +129,8 @@ $string['groupsnotin'] = 'Groups I\'m not in';
 $string['allgroups'] = 'All groups';
 $string['trysearchingforgroups'] = 'Try %ssearching for groups%s to join!';
 $string['nogroupsfound'] = 'No groups found :(';
+$string['group'] = 'Group';
+$string['groups'] = 'Groups';
 
 // friendslist
 $string['reasonoptional'] = 'Reason (optional)';

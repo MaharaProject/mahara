@@ -156,7 +156,9 @@ $pagination = build_pagination(array(
     'url' => 'mygroups.php?filter=' . $filter,
     'count' => $count,
     'limit' => $groupsperpage,
-    'offset' => $offset
+    'offset' => $offset,
+    'resultcounttextsingular' => get_string('group', 'group'),
+    'resultcounttextplural' => get_string('groups', 'group'),
 ));
 
 setup_groups($groups, 'mygroups');

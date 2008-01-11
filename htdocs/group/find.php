@@ -130,7 +130,9 @@ $pagination = build_pagination(array(
     'url' => 'find.php?filter=' . $filter . '&amp;query=' . $query,
     'count' => $groups['count'],
     'limit' => $groupsperpage,
-    'offset' => $offset
+    'offset' => $offset,
+    'resultcounttextsingular' => get_string('group', 'group'),
+    'resultcounttextplural' => get_string('groups', 'group'),
 ));
 
 function search_submit(Pieform $form, $values) {
