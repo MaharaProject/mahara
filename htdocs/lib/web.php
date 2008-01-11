@@ -369,7 +369,7 @@ EOF;
             $SIDEBLOCKS[] = array(
                 'name'   => 'mainmenu',
                 'weight' => 10,
-                'data'   => $data(),
+                'data'   => $data,
             );
         }
     }
