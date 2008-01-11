@@ -10,7 +10,7 @@
         {/if}
         {if $data.invitedgroups}
         <li>
-            <a href="{$WWWROOT}group/mygroups.php?filter=invited">
+            <a href="{$WWWROOT}group/mygroups.php?filter=invite">
                 <span id="invitedgroupscount">{$data.invitedgroups}</span>
                 <span id="invitedgroupsmessage">{$data.invitedgroupsmessage}</span>
             </a>
