@@ -34,7 +34,6 @@ function approveFriend(id, tableRenderer) {
 
 function disallowFriend(id, link) {
     friendRequestWithMessage(id, link, 'disallow', friendslist);
-    decrementPendingFriends();
 }
 
 function decrementPendingFriends() {
@@ -83,6 +82,7 @@ function friendRequestWithMessage(id, link, type, tableRenderer) {
         if (type == 'disallow') {
             // type accept due to wierdness in friend_submit caused by form wierdness in lib/user.php
             pd = {'id': id, 'control': 1, 'filter': 0, 'type': 'accept', 'rejectsubmit': 'reject', 'rejectreason': $(type + '_message_' + id).value};
+            decrementPendingFriends();
         }
         else if (type == 'message') {
             pd = {'id': id, 'control': 1, 'filter': 0, 'type': 'message', 'message': $(type + '_message_' + id).value};
