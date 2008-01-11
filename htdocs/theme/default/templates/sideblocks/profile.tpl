@@ -24,6 +24,16 @@
             </a>
         </li>
         {/if}
+        {if $data.groups}
+        <li>
+            <a href="{$WWWROOT}group/mygroups.php?filter=owned">{str tag="groups"}:</a>
+            <ul>
+            {foreach from=$data.groups item=group}
+                <li><a href="{$WWWROOT}group/view.php?id={$group->id}">{$group->name|escape}</a></li>
+            {/foreach}
+            </ul>
+        </li>
+        {/if}
         {if $data.views}
         <li>
             <a href="{$WWWROOT}view/">{str tag="views"}:</a>
