@@ -164,8 +164,7 @@ $editform = pieform(array(
             'title'        => get_string('Subject', 'interaction.forum'),
             'defaultvalue' => isset($post) ? $post->subject : null,
             'rules'        => array(
-                'maxlength' => 255,
-                'required'  => isset($post) && !$post->parent ? true : false
+                'maxlength' => 255
             )
         ),
         'body' => array(
@@ -182,7 +181,7 @@ $editform = pieform(array(
                 isset($post) ? get_string('edit') : get_string('Post','interaction.forum'),
                 get_string('cancel')
             ),
-            'goto'      => get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $parent->topic
+            'goto'      => get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $parent->topic . '#post' . (isset($postid) ? $postid : $parentid)
         ),
         'topic' => array(
             'type' => 'hidden',
@@ -219,13 +218,13 @@ function editpost_submit(Pieform $form, $values) {
     }
     db_commit();
     $SESSION->add_ok_msg(get_string('editpostsuccess', 'interaction.forum'));
-    redirect('/interaction/forum/topic.php?id=' . $values['topic']);
+    redirect('/interaction/forum/topic.php?id=' . $values['topic'] . '#post' . $postid);
 }
 
 function addpost_submit(Pieform $form, $values) {
     global $USER, $SESSION;
     $parentid = param_integer('parent');
-    insert_record(
+    $postid = insert_record(
         'interaction_forum_post',
         (object)array(
             'topic' => $values['topic'],
@@ -234,10 +233,11 @@ function addpost_submit(Pieform $form, $values) {
             'subject' => $values['subject'],
             'body' => $values['body'],
             'ctime' =>  db_format_timestamp(time())
-        )
+        ),
+        'id', true
     );
     $SESSION->add_ok_msg(get_string('addpostsuccess', 'interaction.forum'));
-    redirect('/interaction/forum/topic.php?id=' . $values['topic']);
+    redirect('/interaction/forum/topic.php?id=' . $values['topic'] . '#post' . $postid);
 }
 
 $smarty = smarty(array(), array(), array(), array('sideblocks' => array(interaction_sideblock($parent->group))));

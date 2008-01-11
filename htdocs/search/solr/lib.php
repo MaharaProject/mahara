@@ -168,7 +168,7 @@ END;
         set_config_plugin('search', 'solr', 'solrurl', $values['solrurl']);
     }
 
-    private static function remove_key_prefix($results) {
+    private static function remove_key_prefix(&$results) {
         if (is_array($results['data'])) {
             $toarray = array(
                 'institutions' => 1,
@@ -208,7 +208,7 @@ END;
         }
         $results = self::send_query($query_string, $limit, $offset,
                                     array('type' => 'user', 'index_active' => 1));
-        self::remove_key_prefix(&$results);
+        self::remove_key_prefix($results);
         return $results;
     }
 
@@ -259,7 +259,7 @@ END;
         $sort = $solrfields[$sortby] . ' ' . $sortdir;
 
         $results = self::send_query($q, $limit, $offset, array('type' => 'user'), '*', false, $sort);
-        self::remove_key_prefix(&$results);
+        self::remove_key_prefix($results);
         return $results;
     }
 

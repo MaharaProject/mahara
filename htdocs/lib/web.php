@@ -363,12 +363,15 @@ EOF;
 
     // ---------- sideblock stuff ----------
     if (get_config('installed')) {
-        $smarty->assign('SITEMENU', site_menu());
-        $SIDEBLOCKS[] = array(
-            'name'   => 'mainmenu',
-            'weight' => 10,
-            'data'   => site_menu(),
-        );
+        $data = site_menu();
+        if (!empty($data)) {
+            $smarty->assign('SITEMENU', site_menu());
+            $SIDEBLOCKS[] = array(
+                'name'   => 'mainmenu',
+                'weight' => 10,
+                'data'   => $data,
+            );
+        }
     }
 
     if ($USER->is_logged_in() && defined('MENUITEM') && substr(MENUITEM, 0, 11) == 'myportfolio') {
@@ -1791,8 +1794,8 @@ function get_loggedin_string() {
         // these spans are here so that on the ajax page that marks messages as read, the contents can be updated.
         $str .=
             ' (<a href="' . get_config('wwwroot') . 'account/activity/">'  . 
-            '<span id="headerunreadmessagecount">' . $count . '</span> ' . 
-            '<span id="headerunreadmessages">' . get_string($key) . '</span></a>)';
+            '<span class="unreadmessagescontainer"><span class="unreadmessagecount">' . $count . '</span> ' .
+            '<span class="unreadmessages">' . get_string($key) . '</span></span></a>)';
     }
 
     $saveduser = $USER->get('parentuser');

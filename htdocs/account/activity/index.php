@@ -105,16 +105,19 @@ function markread(form) {
         if (!data.error) {
             if (data.count > 0) {
                 activitylist.doupdate();
-                var oldcount = parseInt($('headerunreadmessagecount').innerHTML);
-                var newcount = (oldcount - data.count);
-                var messagenode = $('headerunreadmessages');
-                if (newcount == 1) { // jump through hoops to change between plural and singular
-                    messagenode.innerHTML = get_string('unreadmessage');
-                } 
-                else {
-                    messagenode.innerHTML = get_string('unreadmessages');
-                }
-                $('headerunreadmessagecount').innerHTML = newcount;
+                forEach(getElementsByTagAndClassName('span', 'unreadmessagescontainer'), function(message) {
+                    var countnode = message.firstChild;
+                    var oldcount = parseInt(countnode.innerHTML);
+                    var newcount = (oldcount - data.count);
+                    var messagenode = message.lastChild;
+                    if (newcount == 1) { // jump through hoops to change between plural and singular
+                        messagenode.innerHTML = get_string('unreadmessage');
+                    }
+                    else {
+                        messagenode.innerHTML = get_string('unreadmessages');
+                    }
+                    countnode.innerHTML = newcount;
+                });
             }
         }
     }, function () {
