@@ -1,17 +1,27 @@
     <h3><a style="color:white" href="{$WWWROOT}user/view.php?id={$data.id}">{$data.id|display_name|escape}</a></h3>
     <div class="fr"><a href="{$WWWROOT}user/view.php?id={$data.id}"><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=50&amp;id={$data.id}" alt=""></a></div>
     <ul>
-        {if $data.unreadnotifications}<li><a href="{$WWWROOT}account/activity/"><span class="unreadmessagescontainer">{$data.unreadnotifications}</span></a></li>{/if}
-        {if $data.invitedgroups}<li><a href="{$WWWROOT}group/mygroups.php?filter=invited">{$data.invitedgroups}</a></li>{/if}
-        {if $data.pendingfriends}<li><a href="{$WWWROOT}user/?filter=2">{$data.pendingfriends}</a></li>{/if}
-        {if $data.groups}
+        {if $data.unreadnotifications}
         <li>
-            <a href="{$WWWROOT}group/mygroups.php?filter=owned">{str tag="groupsiown" section="group"}:</a>
-            <ul>
-            {foreach from=$data.groups item=group}
-                <li><a href="{$WWWROOT}group/view.php?id={$group->id}">{$group->name|escape}</a></li>
-            {/foreach}
-            </ul>
+        <a href="{$WWWROOT}account/activity/">
+            <span class="unreadmessagescontainer"><span class="unreadmessagecount">{$data.unreadnotifications}</span> <span class="unreadmessages">{$data.unreadnotificationsmessage}</span></span>
+        </a>
+        </li>
+        {/if}
+        {if $data.invitedgroups}
+        <li>
+            <a href="{$WWWROOT}group/mygroups.php?filter=invited">
+                <span id="invitedgroupscount">{$data.invitedgroups}</span>
+                <span id="invitedgroupsmessage">{$data.invitedgroupsmessage}</span>
+            </a>
+        </li>
+        {/if}
+        {if $data.pendingfriends}
+        <li>
+            <a href="{$WWWROOT}user/">
+                <span id="pendingfriendscount">{$data.pendingfriends}</span>
+                <span id="pendingfriendsmessage">{$data.pendingfriendsmessage}</span>
+            </a>
         </li>
         {/if}
         {if $data.views}

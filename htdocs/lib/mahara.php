@@ -1664,28 +1664,13 @@ function profile_sideblock() {
     $data = array(
         'id' => $USER->get('id'),
     );
-    $unreadnotifications = call_static_method(generate_class_name('notification', 'internal'), 'unread_count', $USER->get('id'));
-    if ($unreadnotifications == 1) {
-        $data['unreadnotifications'] = '<span class="unreadmessagecount">1</span> <span class="unreadmessages">' . get_string('unreadmessages') . '</span>';
-    }
-    else if ($unreadnotifications > 1) {
-        $data['unreadnotifications'] = '<span class="unreadmessagecount">' . $unreadnotifications . '</span> <span class="unreadmessages">' . get_string('unreadmessages') . '</span>';
-    }
+    $data['unreadnotifications'] = call_static_method(generate_class_name('notification', 'internal'), 'unread_count', $USER->get('id'));
+    $data['unreadnotificationsmessage'] = $data['unreadnotifications'] == 1 ? get_string('unreadmessage') : get_string('unreadmessages');
     $invitedgroups = get_invited_groups();
-    $invitedgroups = $invitedgroups ? count($invitedgroups) : 0;
-    if ($invitedgroups && $invitedgroups == 1) {
-        $data['invitedgroups'] = get_string('invitedgroup', 'mahara', 1);
-    }
-    else if ($invitedgroups > 1) {
-        $data['invitedgroups'] = get_string('invitedgroups', 'mahara', $invitedgroups);
-    }
-    $pendingfriends = count_records('usr_friend_request', 'owner', $USER->get('id'));
-    if ($pendingfriends == 1) {
-        $data['pendingfriends'] = get_string('pendingfriend');
-    }
-    else if ($pendingfriends > 1) {
-        $data['pendingfriends'] = get_string('pendingfriends', 'mahara', $pendingfriends);
-    }
+    $data['invitedgroups'] = $invitedgroups ? count($invitedgroups) : 0;
+    $data['invitedgroupsmessage'] = $data['invitedgroups'] == 1 ? get_string('invitedgroup') : get_string('invitedgroups');
+    $data['pendingfriends'] = count_records('usr_friend_request', 'owner', $USER->get('id'));
+    $data['pendingfriendsmessage'] = $data['pendingfriends'] == 1 ? get_string('pendingfriend') : get_string('pendingfriends');
     $data['groups'] = get_owned_groups();
     $data['views'] = get_records_sql_array(
         'SELECT v.id, v.title

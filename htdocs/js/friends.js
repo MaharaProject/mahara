@@ -29,10 +29,25 @@ function sendMessage(id, link, tableRenderer) {
 function approveFriend(id, tableRenderer) {
     var pd = {'id': id, 'control': 1, 'filter': 0, 'type': 'accept'};
     sendjsonrequest('index.json.php', pd, 'POST', function() { tableRenderer.doupdate(); });
+    decrementPendingFriends();
 }
 
 function disallowFriend(id, link) {
     friendRequestWithMessage(id, link, 'disallow', friendslist);
+    decrementPendingFriends();
+}
+
+function decrementPendingFriends() {
+    var oldcount = parseInt($('pendingfriendscount').innerHTML);
+    var newcount = oldcount - 1;
+    var messagenode = $('pendingfriendsmessage');
+    if (newcount == 1) { // jump through hoops to change between plural and singular
+        messagenode.innerHTML = get_string('pendingfriend');
+    }
+    else {
+        messagenode.innerHTML = get_string('pendingfriends');
+    }
+    $('pendingfriendscount').innerHTML = newcount;
 }
 
 function sendFriendRequest(id, link) {

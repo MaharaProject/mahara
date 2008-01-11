@@ -69,7 +69,7 @@ $string['reason'] = 'Reason';
 $string['select'] = 'Select';
 
 $string['tags'] = 'Tags';
-$string['tagsdesc'] = 'Enter comma separated tags for this item';
+$string['tagsdesc'] = 'Enter comma separated tags for this item. Artefacts tagged with \'profile\' are displayed in the sidebar';
 
 $string['selfsearch'] = 'Search My Portfolio';
 $string['ssopeers'] = 'SSO Peers';
@@ -85,11 +85,11 @@ $string['declinerequest'] = 'Decline request';
 $string['strftimenotspecified']  = 'Not specified';
 
 // profile sideblock strings
-$string['invitedgroup'] = '1 group invited to';
-$string['invitedgroups'] = '%s groups invited to';
+$string['invitedgroup'] = 'group invited to';
+$string['invitedgroups'] = 'groups invited to';
 $string['logout'] = 'Logout';
-$string['pendingfriend'] = '1 pending friend';
-$string['pendingfriends'] = '%s pending friends';
+$string['pendingfriend'] = 'pending friend';
+$string['pendingfriends'] = 'pending friends';
 
 // auth
 $string['accessforbiddentoadminsection'] = 'You are forbidden from accessing the administration section';

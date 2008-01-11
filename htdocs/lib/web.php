@@ -385,7 +385,7 @@ EOF;
     if($USER->is_logged_in()) {
         $SIDEBLOCKS[] = array(
             'name'   => 'profile',
-            'weight' => -10,
+            'weight' => -20,
             'data'   => profile_sideblock()
         );
     }
@@ -477,6 +477,10 @@ function jsstrings() {
                 'reason',
                 'requestfriendship',
                 'cancel',
+            ),
+            'mahara' => array(
+                'pendingfriend',
+                'pendingfriends',
             ),
         ),
         'views' => array(
