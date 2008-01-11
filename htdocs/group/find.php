@@ -38,6 +38,18 @@ $groupsperpage = 20;
 
 $query = param_variable('query', '');
 
+
+if ($filter == 'member') {
+    $type = 'member';
+}
+else if ($filter == 'notmember') {
+    $type = 'notmember';
+}
+else { // all or some other text
+    $filter = 'all';
+    $type = 'all';
+}
+
 $searchform = pieform(array(
     'name' => 'search',
     'method' => 'post',
@@ -62,16 +74,6 @@ $searchform = pieform(array(
         )
     )
 ));
-
-if ($filter == 'member') {
-    $type = 'member';
-}
-else if ($filter == 'notmember') {
-    $type = 'notmember';
-}
-else if ($filter == 'all'){
-    $type = 'all';
-}
 
 $groups = search_group($query, $groupsperpage, $offset, $type);
 

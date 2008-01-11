@@ -36,50 +36,8 @@ $offset = param_integer('offset', 'all');
 $groupsperpage = 20;
 $offset = (int)($offset / $groupsperpage) * $groupsperpage;
 
-$form = pieform(array(
-    'name' => 'filter',
-    'method' => 'post',
-    'renderer' => 'oneline',
-    'elements' => array(
-        'options' => array(
-            'type' => 'select',
-            'options' => array(
-                'all' => get_string('allmygroups', 'group'),
-                'owner' => get_string('groupsiown', 'group'),
-                'member' => get_string('groupsimin', 'group'),
-                'invite' => get_string('groupsiminvitedto', 'group'),
-                'request' => get_string('groupsiwanttojoin', 'group')
-            ),
-            'defaultvalue' => $filter
-        ),
-        'submit' => array(
-            'type' => 'submit',
-            'value' => get_string('filter')
-        )
-    ),
-));
-
 // different filters join on the different kinds of association
-if ($filter == 'all') {
-    $sql = '
-        INNER JOIN (
-            SELECT g.id, CAST(\'owner\' AS TEXT) AS type
-            FROM {group} g
-            WHERE g.owner = ?
-            UNION SELECT g.id, CAST(\'member\' AS TEXT) AS type
-            FROM {group} g
-            INNER JOIN {group_member} gm ON (g.id = gm.group AND gm.member = ?)
-            WHERE g.owner != gm.member
-            UNION SELECT g.id, CAST(\'invite\' AS TEXT) AS type
-            FROM {group} g
-            INNER JOIN {group_member_invite} gmi ON (gmi.group = g.id AND gmi.member = ?)
-            UNION SELECT g.id, CAST(\'request\' AS TEXT) AS type
-            FROM {group} g
-            INNER JOIN {group_member_request} gmr ON (gmr.group = g.id AND gmr.member = ?)
-        ) t ON t.id = g.id';
-    $values = array($USER->get('id'), $USER->get('id'), $USER->get('id'), $USER->get('id'));
-}
-else if ($filter == 'owner') {
+if ($filter == 'owner') {
     $sql = '
         INNER JOIN (
             SELECT g.id, CAST(\'owner\' AS TEXT) AS type
@@ -119,6 +77,49 @@ else if ($filter == 'request') {
         ) t ON t.id = g.id';
     $values = array($USER->get('id'));
 }
+else { // all or some other text
+    $filter = 'all';
+    $sql = '
+        INNER JOIN (
+            SELECT g.id, CAST(\'owner\' AS TEXT) AS type
+            FROM {group} g
+            WHERE g.owner = ?
+            UNION SELECT g.id, CAST(\'member\' AS TEXT) AS type
+            FROM {group} g
+            INNER JOIN {group_member} gm ON (g.id = gm.group AND gm.member = ?)
+            WHERE g.owner != gm.member
+            UNION SELECT g.id, CAST(\'invite\' AS TEXT) AS type
+            FROM {group} g
+            INNER JOIN {group_member_invite} gmi ON (gmi.group = g.id AND gmi.member = ?)
+            UNION SELECT g.id, CAST(\'request\' AS TEXT) AS type
+            FROM {group} g
+            INNER JOIN {group_member_request} gmr ON (gmr.group = g.id AND gmr.member = ?)
+        ) t ON t.id = g.id';
+    $values = array($USER->get('id'), $USER->get('id'), $USER->get('id'), $USER->get('id'));
+}
+
+$form = pieform(array(
+    'name' => 'filter',
+    'method' => 'post',
+    'renderer' => 'oneline',
+    'elements' => array(
+        'options' => array(
+            'type' => 'select',
+            'options' => array(
+                'all' => get_string('allmygroups', 'group'),
+                'owner' => get_string('groupsiown', 'group'),
+                'member' => get_string('groupsimin', 'group'),
+                'invite' => get_string('groupsiminvitedto', 'group'),
+                'request' => get_string('groupsiwanttojoin', 'group')
+            ),
+            'defaultvalue' => $filter
+        ),
+        'submit' => array(
+            'type' => 'submit',
+            'value' => get_string('filter')
+        )
+    ),
+));
 
 $count = count_records_sql('SELECT COUNT(g.*) FROM {group} g ' . $sql, $values);
 
