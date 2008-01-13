@@ -124,7 +124,7 @@ $editview = pieform(array(
         'tags'        => array(
             'type'         => 'tags',
             'title'        => get_string('tags'),
-            'description'  => get_string('tagsdesc'),
+            'description'  => get_string('tagsdescprofile'),
             'defaultvalue' => isset($view) ? $view->get('tags') : null,
             'help'        => true,
         ),

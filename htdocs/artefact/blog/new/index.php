@@ -61,7 +61,7 @@ $form = pieform(array(
         'tags'        => array(
             'type'        => 'tags',
             'title'       => get_string('tags'),
-            'description' => get_string('tagsdesc'),
+            'description' => get_string('tagsdescprofile'),
             'help'        => true,
         ),
         'commentsallowed' => array(

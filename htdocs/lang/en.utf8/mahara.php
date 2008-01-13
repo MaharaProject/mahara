@@ -69,7 +69,8 @@ $string['reason'] = 'Reason';
 $string['select'] = 'Select';
 
 $string['tags'] = 'Tags';
-$string['tagsdesc'] = 'Enter comma separated tags for this item. Artefacts tagged with \'profile\' are displayed in the sidebar';
+$string['tagsdesc'] = 'Enter comma separated tags for this item.';
+$string['tagsdescprofile'] = 'Enter comma separated tags for this item. Artefacts tagged with \'profile\' are displayed in the sidebar';
 
 $string['selfsearch'] = 'Search My Portfolio';
 $string['ssopeers'] = 'SSO Peers';
