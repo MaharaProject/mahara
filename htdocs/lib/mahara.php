@@ -1678,7 +1678,7 @@ function profile_sideblock() {
         INNER JOIN {view_tag} vt ON (vt.tag = ? AND vt.view = v.id)
         WHERE v.owner = ?
         ORDER BY v.title',
-        array('profile', $USER->get('id'))
+        array(get_string('profile'), $USER->get('id'))
     );
     $data['artefacts'] = get_records_sql_array(
          'SELECT a.id, a.artefacttype, a.title
@@ -1686,7 +1686,7 @@ function profile_sideblock() {
          INNER JOIN {artefact_tag} at ON (a.id = at.artefact AND tag = ?)
          WHERE a.owner = ?
          ORDER BY a.title',
-         array('profile', $USER->get('id'))
+         array(get_string('profile'), $USER->get('id'))
     );
     return $data;
 }

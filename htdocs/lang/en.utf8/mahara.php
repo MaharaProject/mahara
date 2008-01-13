@@ -90,6 +90,7 @@ $string['invitedgroups'] = 'groups invited to';
 $string['logout'] = 'Logout';
 $string['pendingfriend'] = 'pending friend';
 $string['pendingfriends'] = 'pending friends';
+$string['profile'] = 'profile';
 
 // auth
 $string['accessforbiddentoadminsection'] = 'You are forbidden from accessing the administration section';
