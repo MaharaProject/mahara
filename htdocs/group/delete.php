@@ -34,10 +34,10 @@ $groupid = param_integer('id');
 $group = get_record('group', 'id', $groupid, 'owner', $USER->get('id'));
 
 if (!$group) {
-    throw new AccessDeniedException(get_string('cantdeletegroupdontown'));
+    throw new AccessDeniedException(get_string('cantdeletegroup', 'group'));
 }
 
-define('TITLE', get_string('deletespecifiedgroup', 'mahara', $group->name));
+define('TITLE', get_string('deletespecifiedgroup', 'group', $group->name));
 
 $views = count_records_sql(
     'SELECT COUNT(a.*)
@@ -53,7 +53,7 @@ $form = pieform(array(
     'elements' => array(
         'submit' => array(
             'type' => 'submitcancel',
-            'title' => $views ? get_string('groupconfirmdeletehasviews') : get_string('groupconfirmdelete'),
+            'title' => $views ? get_string('groupconfirmdeletehasviews', 'group') : get_string('groupconfirmdelete', 'group'),
             'value' => array(get_string('yes'), get_string('no')),
             'goto' => get_config('wwwroot') . 'group/view.php?id=' . $groupid
         )
@@ -66,7 +66,7 @@ $smarty->assign('form', $form);
 $smarty->display('group/delete.tpl');
 
 function deletegroup_submit(Pieform $form, $values) {
-    global $USER, $groupid;
+    global $SESSION, $USER, $groupid;
     db_begin();
     delete_records('view_access_group', 'group', $groupid);
     delete_records('group_member_invite', 'group', $groupid);
@@ -74,6 +74,7 @@ function deletegroup_submit(Pieform $form, $values) {
     delete_records('group_member', 'group', $groupid);
     delete_records('group', 'id', $groupid);
     db_commit();
+    $SESSION->add_ok_msg(get_string('deletegroup', 'group'));
     redirect('/group/mygroups.php');
 }
 ?>

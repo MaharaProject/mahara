@@ -34,16 +34,16 @@ $returnto = param_alpha('returnto', 'mygroups');
 
 $group = get_record('group', 'id', $groupid);
 if (!$group) {
-	throw new GroupNotFoundException(get_string('groupnotfound', 'mahara', $groupid));
+	throw new GroupNotFoundException(get_string('groupnotfound', 'group', $groupid));
 }
 
 if ($group->jointype != 'request'
     || record_exists('group_member', 'group', $groupid, 'member', $USER->get('id'))
     || record_exists('group_member_request', 'group', $groupid, 'member', $USER->get('id'))) {
-    throw new AccessDeniedException(get_string('cannotrequestjoingroup'));
+    throw new AccessDeniedException(get_string('cannotrequestjoingroup', 'group'));
 }
 
-define('TITLE', get_string('requestjoinspecifiedgroup', 'mahara', $group->name));
+define('TITLE', get_string('requestjoinspecifiedgroup', 'group', $group->name));
 
 $form = pieform(array(
     'name' => 'requestjoingroup',
@@ -82,19 +82,19 @@ function requestjoingroup_submit(Pieform $form, $values) {
             'reason' => isset($values['reason']) ? $values['reason'] : null            
         )
     );
-    if (isset($values['reason'])) {
-        $message = get_string('grouprequestmessagereason', 'mahara', display_name($USER, get_record('usr', 'id', $group->owner)), $group->name, $values['reason']);
+    if (isset($values['reason']) && $values['reason'] != '') {
+        $message = get_string('grouprequestmessagereason', 'group', display_name($USER, get_record('usr', 'id', $group->owner)), $group->name, $values['reason']);
     } 
     else {
-        $message = get_string('grouprequestmessage', 'mahara', display_name($USER, $group->owner), $group->name);
+        $message = get_string('grouprequestmessage', 'group', display_name($USER, get_record('usr', 'id', $group->owner)), $group->name);
     }
     require_once('activity.php');
     activity_occurred('maharamessage', 
         array('users'   => array($group->owner),
-        'subject' => get_string('grouprequestsubject'),
+        'subject' => get_string('grouprequestsubject', 'group'),
         'message' => $message,
         'url'     => get_config('wwwroot') . 'group/view.php?id=' . $group->id));
-    $SESSION->add_ok_msg(get_string('grouprequestsent'));
+    $SESSION->add_ok_msg(get_string('grouprequestsent', 'group'));
     redirect($values['returnto'] == 'find' ? '/group/find.php' : '/group/mygroups.php');
 }
 ?>

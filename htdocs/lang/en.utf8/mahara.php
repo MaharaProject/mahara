@@ -81,7 +81,6 @@ $string['quotausage'] = 'You have used <span id="quota_used">%s</span> of your <
 
 $string['mainmenu'] = 'Main menu';
 $string['updatefailed'] = 'Update failed';
-$string['declinerequest'] = 'Decline request';
 
 $string['strftimenotspecified']  = 'Not specified';
 

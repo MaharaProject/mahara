@@ -34,19 +34,19 @@ $returnto = param_alpha('returnto', 'mygroups');
 
 $group = get_record('group', 'id', $groupid);
 if (!$group) {
-    throw new GroupNotFoundException(get_string('groupnotfound', 'mahara', $groupid));
+    throw new GroupNotFoundException(get_string('groupnotfound', 'group', $groupid));
 }
 
-define('TITLE', get_string('leavespecifiedgroup', 'mahara', $group->name));
+define('TITLE', get_string('leavespecifiedgroup', 'group', $group->name));
 
 $membership = user_can_access_group($group);
 
 if (!($membership & GROUP_MEMBERSHIP_MEMBER)) {
-    throw new AccessDeniedException(get_string('notamember'));
+    throw new AccessDeniedException(get_string('notamember', 'group'));
 }
 
 if (!group_user_can_leave($group)) {
-    throw new AccessDeniedException(get_string('cantleavegroup'));
+    throw new AccessDeniedException(get_string('cantleavegroup', 'group'));
 }
 
 $views = count_records_sql(
@@ -66,7 +66,7 @@ $form = pieform(array(
     'elements' => array(
         'submit' => array(
             'type' => 'submitcancel',
-            'title' => $views ? get_string('groupconfirmleavehasviews') : get_string('groupconfirmleave'),
+            'title' => $views ? get_string('groupconfirmleavehasviews', 'group') : get_string('groupconfirmleave', 'group'),
             'value' => array(get_string('yes'), get_string('no')),
             'goto' => get_config('wwwroot') . ($returnto == 'find' ? 'group/find.php' : 'group/mygroups.php')
         ),
@@ -85,7 +85,7 @@ $smarty->display('group/leave.tpl');
 function leavegroup_submit(Pieform $form, $values) {
     global $USER, $SESSION, $groupid;
     group_remove_user($groupid, $USER->get('id'));
-    $SESSION->add_ok_msg(get_string('leftgroup'));
+    $SESSION->add_ok_msg(get_string('leftgroup', 'group'));
     redirect($values['returnto'] == 'find' ? '/group/find.php' : '/group/mygroups.php');
 }
 ?>

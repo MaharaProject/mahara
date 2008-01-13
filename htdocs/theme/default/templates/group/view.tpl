@@ -4,7 +4,7 @@
 {include file="columnleftstart.tpl"}
                 <h2>{$group->name|escape}</h2>
                 
-                <p>{str tag='owner'}: {$group->ownername|escape}</p>
+                <p>{str tag='owner' section='group'}: {$group->ownername|escape}</p>
 	        {assign var="jointype" value=$group->jointype}
 	        {assign var="joinstr" value=groupjointype$jointype}
                 <p>{str tag=$joinstr section='group'}</p>
@@ -20,7 +20,7 @@
                             <form>
                                 <select name="submitted" onChange="viewlist.submitted=this.options[this.selectedIndex].value;viewlist.doupdate();">
                                     <option value="0">{str tag='allviews'}</option>
-                                    <option value="1">{str tag='submittedviews'}</option>
+                                    <option value="1">{str tag='submittedviews' section='group'}</option>
                                 </select>
                             </form>
                         {/if}
@@ -28,7 +28,7 @@
                             <thead>
                                 <tr>
                                     <th>{str tag='name'}</th>
-                                    <th>{str tag='owner'}</th>
+                                    <th>{str tag='owner' section='group'}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -41,8 +41,8 @@
                         {if $canupdate && $request}
                             <form>
                                 <select id="pendingselect" name="pending" onChange="switchPending();">
-                                    <option value="0">{str tag='members'}</option>
-                                    <option value="1">{str tag='memberrequests'}</option>
+                                    <option value="0">{str tag='members' section='group'}</option>
+                                    <option value="1">{str tag='memberrequests' section='group'}</option>
                                 </select>
                             </form>
                          {/if}

@@ -317,7 +317,7 @@ function setup_groups($groups, $returnto='mygroups') {
                 'elements' => array(
                     'join' => array(
                         'type' => 'submit',
-                        'value' => get_string('joingroup')
+                        'value' => get_string('joingroup', 'group')
                     ),
                     'group' => array(
                         'type' => 'hidden',
@@ -334,11 +334,11 @@ function setup_groups($groups, $returnto='mygroups') {
                'elements' => array(
                     'accept' => array(
                         'type'  => 'submit',
-                        'value' => get_string('acceptinvitegroup')
+                        'value' => get_string('acceptinvitegroup', 'group')
                     ),
                     'decline' => array(
                         'type'  => 'submit',
-                        'value' => get_string('declineinvitegroup')
+                        'value' => get_string('declineinvitegroup', 'group')
                     ),
                     'group' => array(
                         'type' => 'hidden',
@@ -360,7 +360,7 @@ function setup_groups($groups, $returnto='mygroups') {
 function joingroup_submit(Pieform $form, $values) {
     global $SESSION, $USER;
     group_add_member($values['group'], $USER->get('id'));
-    $SESSION->add_ok_msg(get_string('joinedgroup'));
+    $SESSION->add_ok_msg(get_string('joinedgroup', 'group'));
     redirect('/group/view.php?id=' . $values['group']);
 }
 
@@ -370,11 +370,11 @@ function group_invite_submit(Pieform $form, $values) {
         delete_records('group_member_invite', 'group', $values['group'], 'member', $USER->get('id'));
         if (isset($values['accept'])) {
             group_add_member($values['group'], $USER->get('id'));
-            $SESSION->add_ok_msg(get_string('groupinviteaccepted'));
+            $SESSION->add_ok_msg(get_string('groupinviteaccepted', 'group'));
             redirect('/group/view.php?id=' . $values['group']);
         }
         else {
-            $SESSION->add_ok_msg(get_string('groupinvitedeclined'));
+            $SESSION->add_ok_msg(get_string('groupinvitedeclined', 'group'));
             redirect($values['returnto'] == 'find' ? '/group/find.php' : '/group/mygroups.php');
         }
     }
