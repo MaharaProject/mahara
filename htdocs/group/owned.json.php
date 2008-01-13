@@ -27,7 +27,7 @@
 define('INTERNAL', 1);
 define('JSON', 1);
 
-require(dirname(dirname(dirname(__FILE__))) . '/init.php');
+require(dirname(dirname(__FILE__)) . '/init.php');
 
 json_headers();
 
@@ -48,7 +48,7 @@ if ($action == 'delete') {
     delete_records('group', 'id', $id);
     db_commit();
 
-    json_reply(null, get_string('deletegroupsuccessful', 'group'));
+    json_reply(null, get_string('deletegroup', 'group'));
 }
 
 json_reply('local', 'Unknown action');
