@@ -85,7 +85,14 @@ results.rowfunction = function(r,n,d) {
     var row = TR({'class':'r'+(n%2)},TD(null,A({'href':'user/view.php?id=' + r.id},r.name)));
     for (var i = 0; i < userfields.length; i++) {
         if (r[userfields[i]]) {
-            appendChildNodes(row, TD(null, r[userfields[i]]));
+            if (userfields[i] == 'introduction') {
+                var td = TD();
+                td.innerHTML = r[userfields[i]];
+                appendChildNodes(row, td);
+            }
+            else {
+                appendChildNodes(row, TD(null, r[userfields[i]]));
+            }
         }
         else {
             appendChildNodes(row, TD(null));
