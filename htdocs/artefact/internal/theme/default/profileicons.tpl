@@ -18,8 +18,8 @@
                 <tfoot>
                     <td></td>
                     <td></td>
-                    <td><input id="settings_default" type="submit" class="submit" name="default" value="{str tag="default"}" tabindex="2"></td>
-                    <td><input id="settings_delete" type="submit" class="submit" name="delete" value="{str tag="delete"}" tabindex="2"></td>
+                    <td><input id="settings_default" type="submit" class="submit" name="default" value="{str tag="setdefault" section=artefact.internal}" tabindex="2"> {str tag="or" section="artefact.internal"} <input type="submit" class="submit" name="unsetdefault" value="{str tag="usenodefault" section="artefact.internal}" tabindex="2"></td>
+                    <td><input id="settings_delete" type="submit" class="submit" name="delete" value="{str tag="deleteselectedicons" section=artefact.internal}" tabindex="2"></td>
                 </tfoot>
             </table>
             <input type="hidden" name="pieform_settings" value="">

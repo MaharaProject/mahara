@@ -55,12 +55,16 @@ $settingsform = new Pieform(array(
     'elements' => array(
         'default' => array(
             'type'  => 'submit',
-            'value' => get_string('Default', 'artefact.internal')
+            'value' => get_string('Default', 'artefact.internal'),
         ),
         'delete' => array(
             'type'  => 'submit', 
-            'value' => get_string('Delete', 'artefact.internal')
-        )
+            'value' => get_string('Delete', 'artefact.internal'),
+        ),
+        'unsetdefault' => array(
+            'type' => 'submit',
+            'value' => get_string('usenodefault', 'artefact.internal'),
+        ),
     )
 ));
 
@@ -244,15 +248,8 @@ function settings_submit_delete(Pieform $form, $values) {
             owner = ? AND
             id IN($icons)", array($USER->id));
 
-        // Make sure a default is still set if possible. This behaviour will 
-        // change later, see bug #1774
         if (in_array($USER->get('profileicon'), explode(',', $icons))) {
-            if ($ids = get_records_select_array('artefact', "owner = ? AND artefacttype = 'profileicon'", array($USER->get('id')), '', 'id')) {
-                $USER->profileicon = $ids[0]->id;
-            }
-            else {
-                $USER->profileicon = null;
-            }
+            $USER->profileicon = null;
         }
 
         db_commit();
@@ -272,6 +269,13 @@ function settings_submit_delete(Pieform $form, $values) {
     }
 
     redirect('/artefact/internal/profileicons.php');
+}
+
+function settings_submit_unsetdefault(Pieform $form, $values) {
+    global $USER, $SESSION;
+    $USER->profileicon = null;
+    $USER->commit();
+    $SESSION->add_info_msg(get_string('usingnodefaultprofileicon', 'artefact.internal'));
 }
 
 $smarty->assign('uploadform', $uploadform);
