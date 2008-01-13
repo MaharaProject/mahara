@@ -557,7 +557,7 @@ function suspend_user($suspendeduserid, $reason, $suspendinguserid=null) {
  * handle the add/remove/approve/reject friend form
  * @param array $values from pieforms.
  */
-function friend_submit(Pieform $form, $values) {
+function friend_submit($form, $values) {
     global $user, $USER;
 
     $loggedinid = $USER->get('id');
