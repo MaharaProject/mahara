@@ -36,7 +36,7 @@ $group_data = get_record('group', 'id', $id, 'owner', $USER->get('id'));
 
 if (!$group_data) {
     $SESSION->add_error_msg(get_string('canteditdontown'));
-    redirect('/group/owned.php');
+    redirect('/group/mygroups.php');
 }
 
 $joinoptions = array(
@@ -97,7 +97,7 @@ function editgroup_validate(Pieform $form, $values) {
 }
 
 function editgroup_cancel_submit() {
-    redirect('/group/owned.php');
+    redirect('/group/mygroups.php');
 }
 
 function editgroup_submit(Pieform $form, $values) {
@@ -124,7 +124,7 @@ function editgroup_submit(Pieform $form, $values) {
 
     db_commit();
 
-    redirect('/group/owned.php');
+    redirect('/group/mygroups.php');
 }
 
 $smarty = smarty();
