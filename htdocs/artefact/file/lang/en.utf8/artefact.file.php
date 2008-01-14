@@ -43,6 +43,7 @@ $string['deletefolder?'] = 'Are you sure you want to delete this folder?';
 $string['Description'] = 'Description';
 $string['destination'] = 'Destination';
 $string['Download'] = 'Download';
+$string['downloadoriginalversion'] = 'Download the original version';
 $string['editfile'] = 'Edit file';
 $string['editfolder'] = 'Edit folder';
 $string['emptyfolder'] = 'Empty folder';
@@ -62,6 +63,7 @@ $string['filetypedescription'] = '<p>You may configure the allowed file types th
 $string['folder'] = 'Folder';
 $string['foldercreated'] = 'Folder created';
 $string['home'] = 'Home';
+$string['htmlremovedmessage'] = 'You are viewing <strong>%s</strong> by <a href="%s">%s</a>. The file displayed below has been filtered to remove malicious content, and is only a rough representation of the original.';
 $string['image'] = 'Image';
 $string['lastmodified'] = 'Last Modified';
 $string['myfiles'] = 'My Files';

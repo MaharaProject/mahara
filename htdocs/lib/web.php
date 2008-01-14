@@ -1985,13 +1985,14 @@ function clean_text($text) {
 /**
  * Displays purified html on a page with an explanatory message.
  * 
- * @param string $html  The purified html.
- * @param array $params Variables passed to the template. Currently
- *                      downloadurl - link to download the original (dirty) file.
+ * @param string $html     The purified html.
+ * @param string $filename The filename to serve the file as
+ * @param array $params    Parameters previously passed to serve_file
  */
-function display_cleaned_html($html, $params) {
+function display_cleaned_html($html, $filename, $params) {
     $smarty = smarty_core();
     $smarty->assign('params', $params);
+    $smarty->assign('htmlremovedmessage', get_string('htmlremovedmessage', 'artefact.file', $filename, get_config('wwwroot') . 'user/view.php?id=' . $params['owner'], display_name($params['owner'])));
     $smarty->assign('content', clean_text($html));
     $smarty->display('cleanedhtml.tpl');
     exit;

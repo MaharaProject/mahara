@@ -509,10 +509,6 @@ $string['youraccounthasbeensuspendedtext'] = 'Your account has been suspended'; 
 $string['youraccounthasbeenunsuspended'] = 'Your account has been unsuspended';
 $string['youraccounthasbeenunsuspendedtext'] = 'Your account has been unsuspended'; // @todo: more info?
 
-// Display of purified html
-$string['htmlremovedmessage'] = 'The file displayed below has been filtered to remove malicious content.';
-$string['downloadoriginalversion'] = 'Download the original version';
-
 // size of stuff
 $string['sizemb'] = 'MB';
 $string['sizekb'] = 'KB';

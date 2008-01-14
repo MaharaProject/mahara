@@ -48,7 +48,7 @@ else {
         $downloadurl .= '&amp;size=' . $size;
     }
     $downloadurl .= '&amp;download=1';
-    $options['cleanhtmlparams'] = array('downloadurl' => $downloadurl);
+    $options['downloadurl'] = $downloadurl;
 }
 
 if ($viewid && $fileid) {
@@ -101,6 +101,7 @@ $title = $file->download_title();
 if ($contenttype = $file->override_content_type()) {
     $options['overridecontenttype'] = $contenttype;
 }
+$options['owner'] = $file->get('owner');
 serve_file($path, $title, $options);
 
 ?>

@@ -70,9 +70,9 @@ function serve_file($path, $filename, $options=array()) {
     $lastmodified = filemtime($path);
     $filesize     = filesize($path);
 
-    if ($mimetype == 'text/html') {
-        if (isset($options['cleanhtmlparams']) && $filesize < 1024 * 1024) {
-            display_cleaned_html(file_get_contents($path), $options['cleanhtmlparams']);
+    if ($mimetype == 'text/html' || $mimetype == 'text/xml') {
+        if (isset($options['downloadurl']) && $filesize < 1024 * 1024) {
+            display_cleaned_html(file_get_contents($path), $filename, $options);
             exit;
         }
         $options['forcedownload'] = true;
