@@ -1282,7 +1282,7 @@ function can_view_view($view_id, $user_id=null) {
             a.view
         FROM
             {view_access_group} a
-            INNER JOIN {group} g ON a.group = g.id
+            INNER JOIN {group} g ON (a.group = g.id AND g.deleted = ?)
             INNER JOIN {group_member} m ON g.id=m.group
         WHERE
             a.view = ? 
@@ -1290,7 +1290,7 @@ function can_view_view($view_id, $user_id=null) {
             AND ( a.stopdate > ?  OR a.stopdate  IS NULL )
             AND ( ( m.member = ? AND (a.tutoronly = 0 OR m.tutor = 1 ) ) OR g.owner = ?)
         LIMIT 1',
-        array( $view_id, $dbnow, $dbnow, $user_id, $user_id  )
+        array(0, $view_id, $dbnow, $dbnow, $user_id, $user_id  )
         )
     ) {
         //log_debug('Yes - View is available to a specific group');
@@ -1431,12 +1431,13 @@ function get_views($users, $userlooking=null, $limit=5) {
             {view} v
             INNER JOIN {view_access_group} a ON v.id=a.view
             INNER JOIN {group_member} m ON m.group=a.group AND m.member=?
+            INNER JOIN {group} g ON (g.id = a.group AND g.deleted = ?)
         WHERE
             v.owner IN (' . join(',',array_map('db_quote', array_keys($users))) . ')
             AND ( v.startdate IS NULL OR v.startdate < ? )
             AND ( v.stopdate IS NULL OR v.stopdate > ? )
         ',
-        array($userlooking, $dbnow, $dbnow)
+        array($userlooking, 1, $dbnow, $dbnow)
         )
     ) {
         foreach ($results as &$row) {

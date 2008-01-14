@@ -229,12 +229,13 @@ function activity_get_viewaccess_users($view, $owner, $type) {
                         WHERE u.view = ?
                 UNION SELECT m.member 
                     FROM {group_member} m
-                    JOIN {view_access_group} g ON g.group = m.group
-                        WHERE g.view = ? AND (g.tutoronly = ? OR m.tutor = ?)
+                    JOIN {view_access_group} vg ON vg.group = m.group
+                    JOIN {group} g ON (g.id = vg.group AND g.deleted = 0)
+                        WHERE vg.view = ? AND (vg.tutoronly = ? OR m.tutor = ?)
                 UNION SELECT g.owner
                     FROM {group} g
                     JOIN {view_access_group} ag ON ag.group = g.id
-                        WHERE ag.view = ?
+                        WHERE ag.view = ? AND g.deleted = 0
                 ) AS userlist
                 JOIN {usr} u ON u.id = userlist.userid
                 LEFT JOIN {usr_activity_preference} p ON p.usr = u.id

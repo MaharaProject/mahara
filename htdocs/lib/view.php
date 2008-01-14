@@ -263,7 +263,8 @@ class View {
                 WHERE view = ?
         UNION
             SELECT 'group', \"group\", tutoronly, startdate, stopdate FROM {view_access_group}
-                WHERE view = ?", array($this->id, $this->id));
+                INNER JOIN {group} g ON (\"group\" = g.id AND g.deleted = ?)
+                WHERE view = ?", array($this->id, 0, $this->id));
         if ($extradata) {
             foreach ($extradata as &$extraitem) {
                 $extraitem = (array)$extraitem;
