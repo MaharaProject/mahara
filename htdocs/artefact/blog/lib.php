@@ -724,11 +724,11 @@ class ArtefactTypeBlogPost extends ArtefactType {
         return $fileid;
     }
 
-    public static function blogfiles_folder_id() {
+    public static function blogfiles_folder_id($create = true) {
         $name = get_string('blogfilesdirname', 'artefact.blog');
         $description = get_string('blogfilesdirdescription', 'artefact.blog');
         safe_require('artefact', 'file');
-        return ArtefactTypeFolder::get_folder_id($name, $description);
+        return ArtefactTypeFolder::get_folder_id($name, $description, null, null, $create);
     }
 
     /**

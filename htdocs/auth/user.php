@@ -309,6 +309,46 @@ class User {
         $this->set('accountprefs', $accountprefs);
     }
 
+
+    public function set_language($value) {
+        $oldlang = $this->get_account_preference('lang');
+        if (empty($oldlang) || $oldlang == 'default') {
+            $oldlang = get_config('lang');
+        }
+        if (empty($value) || $value == 'default') {
+            $newlang = get_config('lang');
+        } else {
+            $newlang = $value;
+        }
+
+        // Update the name of the user's blogfiles folder.
+
+        // @todo: This is nasty because we can't currently specify a
+        // language when calling get_string(), so we will get the
+        // folder here, using the old language, and then rename it
+        // below after the language has been reset.
+
+        if ($newlang != $oldlang && get_field('artefact_installed', 'active', 'name', 'blog')) {
+            safe_require('artefact', 'blog');
+            $blogfilesid = ArtefactTypeBlogPost::blogfiles_folder_id(false);
+        }
+
+        $this->set_account_preference('lang', $value);
+
+        $blogfiles = null;
+        if ($newlang != $oldlang && !empty($blogfilesid)) {
+            $name = get_string('blogfilesdirname', 'artefact.blog');
+            $description = get_string('blogfilesdirdescription', 'artefact.blog');
+            if (!empty($name)) {
+                $blogfiles = artefact_instance_from_id($blogfilesid);
+                $blogfiles->set('title', $name);
+                $blogfiles->set('description', $description);
+                $blogfiles->commit();
+            }
+        }
+    }
+
+
     /**
      * Determines if the user is currently logged in
      *

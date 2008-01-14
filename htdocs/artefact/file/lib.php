@@ -813,12 +813,15 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
     }
 
     // Get the id of a folder, creating the folder if necessary
-    public static function get_folder_id($name, $description, $parentfolderid=null, $userid=null) {
+    public static function get_folder_id($name, $description, $parentfolderid=null, $userid=null, $create=true) {
         if (empty($userid)) {
             global $USER;
             $userid = $USER->id;
         }
         if (!$record = self::get_folder_by_name($name, $parentfolderid, $userid)) {
+            if (!$create) {
+                return false;
+            }
             $data = new StdClass;
             $data->title = $name;
             $data->description = $description;
