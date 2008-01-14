@@ -202,7 +202,7 @@ function get_tutor_groups($userid=0, $jointype=null) {
     $sql = 'SELECT DISTINCT g.*, gm.ctime
               FROM {group} g 
               LEFT JOIN {group_member} gm ON gm.group = g.id
-              WHERE (g.owner = ? OR (gm.member = ? AND gm.tutor = ?) AND g.deleted = ?)';
+              WHERE (g.owner = ? OR (gm.member = ? AND gm.tutor = ?)) AND g.deleted = ?';
     $values = array($userid, $userid, 1, 0);
     
     if (!empty($jointype)) {
