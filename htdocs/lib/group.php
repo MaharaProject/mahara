@@ -75,6 +75,12 @@ function group_remove_user($group, $userid) {
         array($group, $userid)
     );
     db_commit();
+
+    require_once(get_config('docroot') . 'interaction/lib.php');
+    $interactions = get_column('interaction_instance', 'id', 'group', $group);
+    foreach ($interactions as $interaction) {
+        interaction_instance_from_id($interaction)->interaction_remove_user($userid);
+    }
 }
 
 /**

@@ -187,6 +187,8 @@ abstract class InteractionInstance {
 
     public static abstract function get_plugin();
 
+    public abstract function interaction_remove_user($userid);
+
 }
 
 function interaction_check_plugin_sanity($pluginname) {

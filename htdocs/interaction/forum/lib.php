@@ -259,6 +259,10 @@ class InteractionForumInstance extends InteractionInstance {
         return 'forum';
     }
 
+    public function interaction_remove_user($userid) {
+        delete_records('interaction_forum_moderator', 'forum', $this->id, 'user', $userid);
+    }
+
 }
 
 
