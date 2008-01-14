@@ -39,7 +39,7 @@ function group_user_can_leave($group, $userid=null) {
     $userid = optional_userid($userid);
     
     if (is_numeric($group)) {
-        if (!$group = get_record('group', 'id', $group)) {
+        if (!$group = get_record('group', 'id', $group, 'deleted', 0)) {
             return false;
         }
     }
@@ -91,8 +91,8 @@ function get_member_groups($userid=0, $offset=0, $limit=0) {
               FROM {group} g 
               JOIN {group_member} gm ON gm.group = g.id
               LEFT JOIN {view_access_group} v ON v.group = g.id
-              WHERE g.owner != ? AND gm.member = ?
-              GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9', array($userid, $userid), $offset, $limit);
+              WHERE g.owner != ? AND gm.member = ? AND g.deleted = ?
+              GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9', array($userid, $userid, 0), $offset, $limit);
 }
 
 
@@ -108,8 +108,8 @@ function get_owned_groups($userid=0, $jointype=null) {
     $userid = optional_userid($userid);
 
     $sql = 'SELECT g.* FROM {group} g 
-             WHERE g.owner = ?';
-    $values = array($userid);
+             WHERE g.owner = ? AND g.deleted = ?';
+    $values = array($userid, 0);
 
     if (!empty($jointype)) {
         $sql .= ' AND jointype = ?';
@@ -132,7 +132,7 @@ function get_invited_groups($userid=0) {
     return get_records_sql_array('SELECT g.*, gmi.ctime, gmi.reason
              FROM {group} g 
              JOIN {group_member_invite} gmi ON gmi.group = g.id
-             WHERE gmi.member = ?', array($userid));
+             WHERE gmi.member = ? AND g.deleted = ?', array($userid, 0));
 }
 
 /**
@@ -149,7 +149,7 @@ function get_requested_group($userid=0) {
     return get_records_sql_array('SELECT g.*, gmr.ctime, gmr.reason 
               FROM {group} g 
               JOIN {group_member_request} gmr ON gmr.group = g.id
-              WHERE gmr.member = ?', array($userid));
+              WHERE gmr.member = ? AND g.deleted = ?', array($userid, 0));
 }
 
 /**
@@ -176,9 +176,9 @@ function get_associated_groups($userid=0) {
     UNION
     SELECT gm.group, 'tutor' AS type
         FROM {group_member} gm WHERE gm.member = ? AND gm.tutor = 1
-    ) AS a ON a.group = g.id";
+    ) AS a ON a.group = g.id AND g.deleted = ?";
     
-    return get_records_sql_assoc($sql, array($userid, $userid, $userid, $userid));
+    return get_records_sql_assoc($sql, array($userid, $userid, $userid, $userid, 0));
 }
 
 
@@ -195,8 +195,8 @@ function get_tutor_groups($userid=0, $jointype=null) {
     $sql = 'SELECT DISTINCT g.*, gm.ctime
               FROM {group} g 
               LEFT JOIN {group_member} gm ON gm.group = g.id
-              WHERE (g.owner = ? OR (gm.member = ? AND gm.tutor = ?))';
-    $values = array($userid, $userid, 1);
+              WHERE (g.owner = ? OR (gm.member = ? AND gm.tutor = ?) AND g.deleted = ?)';
+    $values = array($userid, $userid, 1, 0);
     
     if (!empty($jointype)) {
         $sql .= ' AND g.jointype = ? ';
@@ -239,7 +239,7 @@ function user_can_access_group($group, $user=null) {
     }
 
     if (is_int($group)) {
-        $group = get_record('group', 'id', $group);
+        $group = get_record('group', 'id', $group, 'deleted', 0);
     }
 
     if (!is_object($group)) {

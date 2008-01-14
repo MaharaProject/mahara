@@ -32,7 +32,7 @@ require('group.php');
 $groupid = param_integer('id');
 $returnto = param_alpha('returnto', 'mygroups');
 
-$group = get_record('group', 'id', $groupid);
+$group = get_record('group', 'id', $groupid, 'deleted', 0);
 if (!$group) {
     throw new GroupNotFoundException(get_string('groupnotfound', 'group', $groupid));
 }

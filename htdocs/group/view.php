@@ -35,7 +35,7 @@ $id = param_integer('id');
 $joincontrol = param_alpha('joincontrol', null);
 $pending = param_integer('pending', 0);
 
-if (!$group = get_record('group', 'id', $id)) {
+if (!$group = get_record('group', 'id', $id, 'deleted', 0)) {
     throw new GroupNotFoundException("Couldn't find group with id $id");
 }
 $group->ownername = display_name(get_record('usr', 'id', $group->owner));

@@ -36,7 +36,7 @@ $action = param_variable('action');
 if ($action == 'delete') {
     $id = param_integer('id');
     // check owner
-    $owner = get_field('group', 'owner', 'id', $id);
+    $owner = get_field('group', 'owner', 'id', $id, 'deleted', 0);
     if ($owner != $USER->get('id')) {
         json_reply('local', get_string('cantdeletegroupdontown', 'group'));
     }

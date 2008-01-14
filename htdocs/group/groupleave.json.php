@@ -34,7 +34,7 @@ json_headers();
 
 $leave = param_integer('leave');
 
-if (!$group = get_record('group', 'id', $leave)) {
+if (!$group = get_record('group', 'id', $leave, 'deleted', 0)) {
     json_reply(true, get_string('invalidgroup', 'group'));
 }
 

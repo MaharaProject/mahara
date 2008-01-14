@@ -46,7 +46,7 @@ $data = array();
 if (!$membership = user_can_access_group($id)) {
     group_json_empty();
 }
-$group = get_record('group', 'id', $id);
+$group = get_record('group', 'id', $id, 'deleted', 0);
 
 $dbnow  = db_format_timestamp(time());
 

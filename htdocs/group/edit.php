@@ -32,7 +32,7 @@ define('TITLE', get_string('editgroup', 'group'));
 
 $id = param_integer('id');
 
-$group_data = get_record('group', 'id', $id, 'owner', $USER->get('id'));
+$group_data = get_record('group', 'id', $id, 'owner', $USER->get('id'), 'deleted', 0);
 
 if (!$group_data) {
     $SESSION->add_error_msg(get_string('canteditdontown'));

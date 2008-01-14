@@ -43,22 +43,22 @@ if (empty($owned)) { // just get groups this user is a member of.
     $count = get_record_sql('SELECT COUNT(distinct g.id) AS count
               FROM {group} g 
               JOIN {group_member} gm ON gm.group = g.id
-              WHERE g.owner != ? AND gm.member = ?', array($userid, $userid));
+              WHERE g.owner != ? AND gm.member = ? AND deleted = ?', array($userid, $userid, 0));
     $count = $count->count;
 }
 else {
 
-    $count = count_records_sql('SELECT COUNT(*) FROM {group} g WHERE g.owner = ?',
-                               array($userid));
+    $count = count_records_sql('SELECT COUNT(*) FROM {group} g WHERE g.owner = ? AND deleted = ?',
+                               array($userid, 0));
 
     $datasql = 'SELECT g.id,g.jointype,g.name,g.owner,count(distinct gmr.group) as requestcount, COUNT(distinct v.view) AS hasviews
                 FROM {group} g 
                 LEFT JOIN {group_member_request} gmr ON gmr.group = g.id
                 LEFT JOIN {view_access_group} v ON v.group = g.id
-                WHERE g.owner = ?
+                WHERE g.owner = ? AND g.deleted = ?
                 GROUP BY g.id,g.jointype,g.name,g.owner';
                 
-    $data  = get_records_sql_array($datasql,array($userid), $offset, $limit);
+    $data  = get_records_sql_array($datasql,array($userid, 0), $offset, $limit);
 }
 
 if (!$data) {

@@ -121,7 +121,9 @@ $form = pieform(array(
     ),
 ));
 
-$count = count_records_sql('SELECT COUNT(g.*) FROM {group} g ' . $sql, $values);
+$values[] = 0;
+
+$count = count_records_sql('SELECT COUNT(g.*) FROM {group} g ' . $sql . ' WHERE g.deleted != ?', $values);
 
 // almost the same as query used in find - common parts should probably be pulled out
 // gets the groups filtered by
@@ -148,6 +150,7 @@ $sql = 'SELECT g.id, g.name, g.description, g.owner, g.jointype, m.member1 AS me
     LEFT JOIN {group_member} gm2 ON (gm2.group = g.id)
     LEFT JOIN {group_member_request} gmr ON (gmr.group = g.id)' .
     $sql . '
+    WHERE g.deleted = ?
     GROUP BY 1, 2, 3, 4, 5, 6, 7, 8
     ORDER BY g.name';
 
