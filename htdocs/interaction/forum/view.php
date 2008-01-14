@@ -66,14 +66,7 @@ if (!$membership) {
 
 define('TITLE', $forum->groupname . ' - ' . $forum->title);
 
-$moderators = get_column_sql(
-    'SELECT m.user
-    FROM {interaction_forum_moderator} m
-    INNER JOIN {group_member} gm ON (m.user = gm.member AND gm.group = ?)
-    WHERE m.forum = ?
-    ORDER BY m.user',
-    array($forum->group, $forumid)
-);
+$moderators = get_column('interaction_forum_moderator', '"user"', 'forum', $forumid);
 
 // updates the selected topics as subscribed/closed/sticky
 if (isset($_POST['checked'])) {
@@ -178,12 +171,7 @@ $forum->subscribe = pieform(array(
 $sql = 'SELECT t.id, p1.subject, p1.body, p1.poster, p1.deleted, m.user AS moderator, COUNT(p2.*), t.closed, s.topic AS subscribed, p4.id AS lastpost, ' . db_format_tsfield('p4.ctime', 'lastposttime') . ', p4.poster AS lastposter, m2.user AS lastpostermoderator
     FROM interaction_forum_topic t
     INNER JOIN {interaction_forum_post} p1 ON (p1.topic = t.id AND p1.parent IS NULL)
-    LEFT JOIN (
-        SELECT fm.user, fm.forum
-        FROM {interaction_forum_moderator} fm
-        INNER JOIN {interaction_instance} f ON (fm.forum = f.id)
-        INNER JOIN {group_member} gm ON (gm.group = f.group AND gm.member = fm.user)
-    ) m ON (m.forum = t.forum AND p1.poster = m.user)
+    LEFT JOIN {interaction_forum_moderator} m ON (m.forum = t.forum AND p1.poster = m.user)
     INNER JOIN {interaction_forum_post} p2 ON (p2.topic = t.id AND p2.deleted != 1)
     LEFT JOIN {interaction_forum_subscription_topic} s ON (s.topic = t.id AND s."user" = ?)
     INNER JOIN (
@@ -200,12 +188,7 @@ $sql = 'SELECT t.id, p1.subject, p1.body, p1.poster, p1.deleted, m.user AS moder
     ) p3 ON p3.topic = t.id
     LEFT JOIN {interaction_forum_post} p4 ON (p4.id = p3.post)
     LEFT JOIN {interaction_forum_topic} t2 ON (p4.topic = t2.id)
-    LEFT JOIN (
-        SELECT fm.user, fm.forum
-        FROM {interaction_forum_moderator} fm
-        INNER JOIN {interaction_instance} f ON (fm.forum = f.id)
-        INNER JOIN {group_member} gm ON (gm.group = f.group AND gm.member = fm.user)
-    ) m2 ON (p4.poster = m2.user AND t2.forum = m2.forum)
+    LEFT JOIN {interaction_forum_moderator} m2 ON (p4.poster = m2.user AND t2.forum = m2.forum)
     WHERE t.forum = ?
     AND t.sticky = ?
     AND t.deleted != 1

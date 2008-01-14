@@ -108,21 +108,11 @@ $posts = get_records_sql_array(
     INNER JOIN {interaction_forum_post} p2 ON (p1.poster = p2.poster AND p2.deleted != 1)
     INNER JOIN {interaction_forum_topic} t2 ON (t2.deleted != 1 AND p2.topic = t2.id)
     INNER JOIN {interaction_instance} f ON (t.forum = f.id AND f.deleted != 1 AND f.group = ?)
-    LEFT JOIN (
-        SELECT fm.user, fm.forum
-        FROM {interaction_forum_moderator} fm
-        INNER JOIN {interaction_instance} f ON (fm.forum = f.id)
-        INNER JOIN {group_member} gm ON (gm.group = f.group AND gm.member = fm.user)
-    ) m oN (t.forum = m.forum AND p1.poster = m.user)
+    LEFT JOIN {interaction_forum_moderator} m oN (t.forum = m.forum AND p1.poster = m.user)
     LEFT JOIN {interaction_forum_edit} e ON e.post = p1.id
     LEFT JOIN {interaction_forum_post} p3 ON p3.id = e.post
     LEFT JOIN {interaction_forum_topic} t3 ON t3.id = p3.topic
-    LEFT JOIN (
-        SELECT fm.user, fm.forum
-        FROM {interaction_forum_moderator} fm
-        INNER JOIN {interaction_instance} f ON (fm.forum = f.id)
-        INNER JOIN {group_member} gm ON (gm.group = f.group AND gm.member = fm.user)
-    ) m2 ON t3.forum = m2.forum AND e.user = m2.user
+    LEFT JOIN {interaction_forum_moderator} m2 ON t3.forum = m2.forum AND e.user = m2.user
     WHERE p1.topic = ?
     GROUP BY 1, 2, 3, 4, 5, p1.ctime, 7, 8, 10, 11, 12, e.ctime
     ORDER BY p1.ctime, p1.id, e.ctime',
