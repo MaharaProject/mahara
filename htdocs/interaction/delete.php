@@ -36,7 +36,10 @@ require_once('group.php');
 $id = param_integer('id');
 
 $instance = interaction_instance_from_id($id);
-$group = get_record('group', 'id', $instance->get('group'));
+
+if (!$group = get_record('group', 'id', $id, 'deleted', 0)) {
+    throw new GroupNotFoundException(get_string('groupnotfound', 'group', $id));
+}
 
 $membership = user_can_access_group((int)$group->id);
 if (!(bool)($membership & (GROUP_MEMBERSHIP_OWNER | GROUP_MEMBERSHIP_ADMIN | GROUP_MEMBERSHIP_STAFF))) {

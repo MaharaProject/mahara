@@ -215,9 +215,10 @@ class PluginInteractionForum extends PluginInteraction {
             INNER JOIN {interaction_forum_topic} t ON (t.deleted != 1 AND t.id = s.topic)
             INNER JOIN {interaction_forum_post} p ON (p.sent != 1 AND p.ctime < ? AND p.deleted != 1 AND p.topic = t.id)
             INNER JOIN {interaction_instance} f ON (f.id = t.forum AND f.deleted != 1)
+            INNER JOIN {group} g ON (g.id = g.group AND g.deleted = ?)
             INNER JOIN {group_member} gm ON (gm.member = s.subscriber AND gm.group = f.group)
             ORDER BY type, p.id',
-            array(db_format_timestamp($currenttime - 30 * 60))
+            array(db_format_timestamp($currenttime - 30 * 60), 0)
         );
         // query gets a new object for every subscription
         // this combines all the objects for the same post together with an array for the subscribers
@@ -277,17 +278,10 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
         $post = get_record_sql(
             'SELECT p.subject, p.poster, t.id AS topicid, p2.subject AS topicsubject, f.title AS forumtitle
             FROM {interaction_forum_post} p
-            INNER JOIN {interaction_forum_topic} t
-            ON t.id = p.topic
-            AND t.deleted != 1
-            INNER JOIN {interaction_forum_post} p2
-            ON p2.parent IS NULL
-            AND p2.topic = t.id
-            INNER JOIN {interaction_instance} f
-            ON t.forum = f.id
-            AND f.deleted != 1
-            WHERE p.id = ?
-            AND p.deleted != 1',
+            INNER JOIN {interaction_forum_topic} t ON t.id = p.topic
+            INNER JOIN {interaction_forum_post} p2 ON (p2.parent IS NULL AND p2.topic = t.id)
+            INNER JOIN {interaction_instance} f ON t.forum = f.id
+            WHERE p.id = ?',
             array($this->postid)
         );
         $this->url = get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $post->topicid;

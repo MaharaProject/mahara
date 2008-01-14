@@ -39,7 +39,7 @@ $topic = get_record_sql(
     'SELECT f."group", f.id AS forumid, f.title, g.name AS groupname, p.poster, p.subject, p.body, COUNT(p2.*), ' . db_format_tsfield('p.ctime', 'ctime') . ', t.closed, m.user AS moderator, g.owner AS groupowner
     FROM {interaction_forum_topic} t
     INNER JOIN {interaction_instance} f ON (f.id = t.forum AND f.deleted != 1)
-    INNER JOIN {group} g ON g.id = f.group
+    INNER JOIN {group} g ON (g.id = f.group AND g.deleted = ?)
     INNER JOIN {interaction_forum_post} p ON (p.topic = t.id AND p.parent IS NULL)
     LEFT JOIN (
         SELECT fm.user, fm.forum
@@ -53,7 +53,7 @@ $topic = get_record_sql(
     WHERE t.id = ?
     AND t.deleted != 1
     GROUP BY 1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12',
-    array($topicid)
+    array(0, $topicid)
 );
 
 if (!$topic) {

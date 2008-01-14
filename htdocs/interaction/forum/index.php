@@ -34,7 +34,7 @@ require_once(get_config('docroot') . 'interaction/lib.php');
 
 $groupid = param_integer('group');
 
-if (!record_exists('group', 'id', $groupid)) {
+if (!record_exists('group', 'id', $groupid, 'deleted', 0)) {
     throw new GroupNotFoundException(get_string('groupnotfound', 'group', $groupid));
 }
 

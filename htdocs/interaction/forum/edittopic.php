@@ -60,10 +60,10 @@ else { // edit topic
 $forum = get_record_sql(
     'SELECT f.group AS group, f.title, g.name AS groupname
     FROM {interaction_instance} f
-    INNER JOIN {group} g ON g.id = f.group
+    INNER JOIN {group} g ON (g.id = f.group AND g.deleted = ?)
     WHERE f.id = ?
-    AND f.deleted != 1',
-    array($forumid)
+    AND f.deleted != ?',
+    array(0, $forumid, 1)
 );
 if (!$forum) {
     throw new NotFoundException(get_string('cantfindforum', 'interaction.forum', $forumid));

@@ -32,8 +32,8 @@ require_once(get_config('docroot') . 'interaction/lib.php');
 
 $id = param_integer('id');
 
-if (!$group = get_record('group', 'id', $id)) {
-    throw new GroupNotFoundException('groupnotfound', 'group', $id);
+if (!$group = get_record('group', 'id', $id, 'deleted', 0)) {
+    throw new GroupNotFoundException(get_string('groupnotfound', 'group', $id));
 }
 
 if (!$group->owner == $USER->get('id')) {

@@ -43,13 +43,13 @@ $offset = (int)($offset / $topicsperpage) * $topicsperpage;
 $forum = get_record_sql(
     'SELECT f.title, f.description, f.id, COUNT(t.*), s.forum AS subscribed, g.id AS group, g.name AS groupname, g.owner as groupowner
     FROM {interaction_instance} f
-    INNER JOIN {group} g ON g.id = f."group"
+    INNER JOIN {group} g ON (g.id = f."group" AND g.deleted = ?)
     LEFT JOIN {interaction_forum_topic} t ON (t.forum = f.id AND t.deleted != 1 AND t.sticky != 1)
     LEFT JOIN {interaction_forum_subscription_forum} s ON (s.forum = f.id AND s."user" = ?)
     WHERE f.id = ?
     AND f.deleted != 1
     GROUP BY 1, 2, 3, 5, 6, 7, 8',
-    array($userid, $forumid)
+    array(0, $userid, $forumid)
 );
 
 if (!$forum) {

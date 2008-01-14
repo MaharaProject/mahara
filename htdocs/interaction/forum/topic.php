@@ -38,13 +38,13 @@ $topic = get_record_sql(
     'SELECT p.subject, p.poster, p.id AS firstpost, ' . db_format_tsfield('p.ctime', 'ctime') . ', t.id, f.group, g.name AS groupname, f.id AS forumid, f.title AS forumtitle, t.closed, sf.forum AS forumsubscribed, st.topic AS topicsubscribed, g.owner
     FROM {interaction_forum_topic} t
     INNER JOIN {interaction_instance} f ON (t.forum = f.id AND f.deleted != 1)
-    INNER JOIN {group} g ON g.id = f.group
+    INNER JOIN {group} g ON (g.id = f.group AND g.deleted = ?)
     INNER JOIN {interaction_forum_post} p ON (p.topic = t.id AND p.parent IS NULL)
     LEFT JOIN {interaction_forum_subscription_forum} sf ON (sf.forum = f.id AND sf.user = ?)
     LEFT JOIN {interaction_forum_subscription_topic} st ON (st.topic = t.id AND st.user = ?)
     WHERE t.id = ?
     AND t.deleted != 1',
-    array($USER->get('id'), $USER->get('id'), $topicid)
+    array(0, $USER->get('id'), $USER->get('id'), $topicid)
 );
 
 if (!$topic) {

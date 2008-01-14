@@ -50,8 +50,8 @@ else {
 }
 
 safe_require('interaction', $plugin);
-if (!$group = get_record('group', 'id', $groupid)) {
-    throw new GroupNotFoundException('groupnotfound', 'group', $groupid);
+if (!$group = get_record('group', 'id', $groupid, 'deleted', 0)) {
+    throw new GroupNotFoundException(get_string('groupnotfound', 'group', $groupid));
 }
 $membership = user_can_access_group((int)$groupid);
 if (!(bool)($membership & (GROUP_MEMBERSHIP_OWNER | GROUP_MEMBERSHIP_ADMIN | GROUP_MEMBERSHIP_STAFF))) {
