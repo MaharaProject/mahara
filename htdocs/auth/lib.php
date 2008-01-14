@@ -1136,28 +1136,30 @@ function auth_handle_account_expiries() {
     }
 
     
-    // Inactivity (lastlogin is too old)
-    if ($users = get_records_sql_array('SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff
-        FROM {usr} u
-        WHERE (? - ' . db_format_tsfield('u.lastlogin', false) . ') > ' . ($expire - $warn) . '
-        AND inactivemailsent = 0', array(time()))) {
-        foreach ($users as $user) {
-            $displayname = display_name($user);
-            email_user($user, null, get_string('accountinactivewarning'),
-                get_string('accountinactivewarningtext', 'mahara', $displayname, $sitename, $daystoexpire, $sitename),
-                get_string('accountinactivewarninghtml', 'mahara', $displayname, $sitename, $daystoexpire, $sitename)
-            );
-            set_field('usr', 'inactivemailsent', 1, 'id', $user->id);
+    if ($expire) {
+        // Inactivity (lastlogin is too old)
+        if ($users = get_records_sql_array('SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff
+            FROM {usr} u
+            WHERE (? - ' . db_format_tsfield('u.lastlogin', false) . ') > ' . ($expire - $warn) . '
+            AND inactivemailsent = 0', array(time()))) {
+            foreach ($users as $user) {
+                $displayname = display_name($user);
+                email_user($user, null, get_string('accountinactivewarning'),
+                    get_string('accountinactivewarningtext', 'mahara', $displayname, $sitename, $daystoexpire, $sitename),
+                    get_string('accountinactivewarninghtml', 'mahara', $displayname, $sitename, $daystoexpire, $sitename)
+                );
+                set_field('usr', 'inactivemailsent', 1, 'id', $user->id);
+            }
         }
-    }
-    
-    // Actual inactive users
-    if ($users = get_records_sql_array('SELECT u.id
-        FROM {usr} u
-        WHERE (? - ' . db_format_tsfield('lastlogin', false) . ') > ?', array(time(), $expire))) {
-        // Users have become inactive!
-        foreach ($users as $user) {
-            deactivate_user($user->id);
+        
+        // Actual inactive users
+        if ($users = get_records_sql_array('SELECT u.id
+            FROM {usr} u
+            WHERE (? - ' . db_format_tsfield('lastlogin', false) . ') > ?', array(time(), $expire))) {
+            // Users have become inactive!
+            foreach ($users as $user) {
+                deactivate_user($user->id);
+            }
         }
     }
 
