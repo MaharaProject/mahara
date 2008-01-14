@@ -777,6 +777,14 @@ function xmldb_core_upgrade($oldversion=0) {
         execute_sql('ALTER TABLE {institution} ADD COLUMN maxuseraccounts bigint');
 
     }
+
+    if ($oldversion < 2008011400) {
+        $table = new XMLDBTable('group');
+        $field = new XMLDBField('deleted');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, 0);
+        add_field($table, $field);
+    }
+
     return $status;
 
 }
