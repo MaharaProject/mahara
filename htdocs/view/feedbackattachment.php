@@ -41,7 +41,7 @@ $filename = param_variable('filename');
 // Group name, view title, feedback number?
 $viewdata = get_record_sql('
      SELECT
-         v.title, v.owner, c.name
+         v.title, v.owner, g.name
      FROM {view} v
      INNER JOIN {group} g ON v.submittedto = g.id
      WHERE v.id = ' . $viewid, '');
