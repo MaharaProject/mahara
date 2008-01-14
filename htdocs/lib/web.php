@@ -362,66 +362,68 @@ EOF;
     }
 
     // ---------- sideblock stuff ----------
-    if (get_config('installed')) {
-        $data = site_menu();
-        if (!empty($data)) {
-            $smarty->assign('SITEMENU', site_menu());
+    if (!defined('INSTALLER') && (defined('MENUITEM') && substr(MENUTIEM, 0, 5) != 'admin')) {
+        if (get_config('installed')) {
+            $data = site_menu();
+            if (!empty($data)) {
+                $smarty->assign('SITEMENU', site_menu());
+                $SIDEBLOCKS[] = array(
+                    'name'   => 'mainmenu',
+                    'weight' => 10,
+                    'data'   => $data,
+                );
+            }
+        }
+
+        if ($USER->is_logged_in() && defined('MENUITEM') && substr(MENUITEM, 0, 11) == 'myportfolio') {
             $SIDEBLOCKS[] = array(
-                'name'   => 'mainmenu',
-                'weight' => 10,
-                'data'   => $data,
+                'name'   => 'selfsearch',
+                'weight' => 0,
+                'data'   => array(),
             );
         }
-    }
 
-    if ($USER->is_logged_in() && defined('MENUITEM') && substr(MENUITEM, 0, 11) == 'myportfolio') {
-        $SIDEBLOCKS[] = array(
-            'name'   => 'selfsearch',
-            'weight' => 0,
-            'data'   => array(),
-        );
-    }
-
-    if($USER->is_logged_in()) {
-        $SIDEBLOCKS[] = array(
-            'name'   => 'profile',
-            'weight' => -20,
-            'data'   => profile_sideblock()
-        );
-    }
-
-   if (!$USER->is_logged_in()) {
-        $SIDEBLOCKS[] = array(
-            'name'   => 'login',
-            'weight' => -10,
-            'id'     => 'loginbox',
-            'data'   => array(
-                'loginform' => auth_generate_login_form(),
-            ),
-        );
-    }
-
-    if (get_config('enablenetworking')) {
-        require_once(get_config('docroot') .'api/xmlrpc/lib.php');
-        if ($USER->is_logged_in() && $ssopeers = get_service_providers($USER->authinstance)) {
+        if($USER->is_logged_in()) {
             $SIDEBLOCKS[] = array(
-                'name'   => 'ssopeers',
-                'weight' => 1,
-                'data'   => $ssopeers,
+                'name'   => 'profile',
+                'weight' => -20,
+                'data'   => profile_sideblock()
             );
         }
-    }
 
-    if (isset($extraconfig['sideblocks']) && is_array($extraconfig['sideblocks'])) {
-        foreach ($extraconfig['sideblocks'] as $sideblock) {
-            $SIDEBLOCKS[] = $sideblock;
+       if (!$USER->is_logged_in()) {
+            $SIDEBLOCKS[] = array(
+                'name'   => 'login',
+                'weight' => -10,
+                'id'     => 'loginbox',
+                'data'   => array(
+                    'loginform' => auth_generate_login_form(),
+                ),
+            );
         }
+
+        if (get_config('enablenetworking')) {
+            require_once(get_config('docroot') .'api/xmlrpc/lib.php');
+            if ($USER->is_logged_in() && $ssopeers = get_service_providers($USER->authinstance)) {
+                $SIDEBLOCKS[] = array(
+                    'name'   => 'ssopeers',
+                    'weight' => 1,
+                    'data'   => $ssopeers,
+                );
+            }
+        }
+
+        if (isset($extraconfig['sideblocks']) && is_array($extraconfig['sideblocks'])) {
+            foreach ($extraconfig['sideblocks'] as $sideblock) {
+                $SIDEBLOCKS[] = $sideblock;
+            }
+        }
+
+        usort($SIDEBLOCKS, create_function('$a,$b', 'if ($a["weight"] == $b["weight"]) return 0; return ($a["weight"] < $b["weight"]) ? -1 : 1;'));
+
+        $smarty->assign('userauthinstance', $USER->lastauthinstance);
+        $smarty->assign('SIDEBLOCKS', $SIDEBLOCKS);
     }
-
-    usort($SIDEBLOCKS, create_function('$a,$b', 'if ($a["weight"] == $b["weight"]) return 0; return ($a["weight"] < $b["weight"]) ? -1 : 1;'));
-
-    $smarty->assign('userauthinstance', $USER->lastauthinstance);
-    $smarty->assign('SIDEBLOCKS', $SIDEBLOCKS);
 
     return $smarty;
 }
