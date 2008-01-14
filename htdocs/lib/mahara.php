@@ -1437,7 +1437,7 @@ function get_views($users, $userlooking=null, $limit=5) {
             AND ( v.startdate IS NULL OR v.startdate < ? )
             AND ( v.stopdate IS NULL OR v.stopdate > ? )
         ',
-        array($userlooking, 1, $dbnow, $dbnow)
+        array($userlooking, 0, $dbnow, $dbnow)
         )
     ) {
         foreach ($results as &$row) {
