@@ -205,7 +205,6 @@ function get_tutor_groups($userid=0, $jointype=null) {
     return get_records_sql_array($sql, $values);
 }
 
-
 // constants for group membership type
 define('GROUP_MEMBERSHIP_ADMIN', 1);
 define('GROUP_MEMBERSHIP_STAFF', 2);
@@ -294,6 +293,10 @@ function group_has_members($groupid) {
         (SELECT COUNT(*) FROM {group_member_request} WHERE "group" = ?)
     )';
     return count_records_sql($sql, array($groupid, $groupid));
+}
+
+function delete_group($groupid) {
+    update_record('group', array('deleted' => 1), array('id' => $groupid));
 }
 
 /**

@@ -67,13 +67,7 @@ $smarty->display('group/delete.tpl');
 
 function deletegroup_submit(Pieform $form, $values) {
     global $SESSION, $USER, $groupid;
-    db_begin();
-    delete_records('view_access_group', 'group', $groupid);
-    delete_records('group_member_invite', 'group', $groupid);
-    delete_records('group_member_request', 'group', $groupid);
-    delete_records('group_member', 'group', $groupid);
-    delete_records('group', 'id', $groupid);
-    db_commit();
+    delete_group($groupid);
     $SESSION->add_ok_msg(get_string('deletegroup', 'group'));
     redirect('/group/mygroups.php');
 }

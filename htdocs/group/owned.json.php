@@ -40,13 +40,7 @@ if ($action == 'delete') {
     if ($owner != $USER->get('id')) {
         json_reply('local', get_string('cantdeletegroupdontown', 'group'));
     }
-    db_begin();
-    delete_records('view_access_group', 'group', $id);
-    delete_records('group_member_invite', 'group', $id);
-    delete_records('group_member_request', 'group', $id);
-    delete_records('group_member', 'group', $id);
-    delete_records('group', 'id', $id);
-    db_commit();
+    delete_group($id);
 
     json_reply(null, get_string('deletegroup', 'group'));
 }
