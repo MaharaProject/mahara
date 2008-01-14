@@ -1969,15 +1969,14 @@ function format_introduction($introduction) {
  * and removes any nasty tags that could mess up pages.
  *
  * @param string $text The text to be cleaned
- * @param string $test Test whether anything was cleaned
  * @return string The cleaned up text
  */
-function clean_text($text, $test = false) {
+function clean_text($text) {
     require_once('htmlpurifier/HTMLPurifier.auto.php');
     $config = HTMLPurifier_Config::createDefault();
     $config->set('Cache', 'SerializerPath', get_config('dataroot') . 'htmlpurifier');
     $purifier = new HTMLPurifier($config);
-    return $purifier->purify($text, null, $test);
+    return $purifier->purify($text);
 }
 
 
@@ -1991,7 +1990,7 @@ function clean_text($text, $test = false) {
 function display_cleaned_html($html, $params) {
     $smarty = smarty_core();
     $smarty->assign('params', $params);
-    $smarty->assign('content', $html);
+    $smarty->assign('content', clean_text($html));
     $smarty->display('cleanedhtml.tpl');
     exit;
 }

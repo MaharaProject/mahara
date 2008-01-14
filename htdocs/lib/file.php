@@ -72,22 +72,14 @@ function serve_file($path, $filename, $options=array()) {
 
     if ($mimetype == 'text/html') {
         if (isset($options['cleanhtmlparams']) && $filesize < 1024 * 1024) {
-            // Read file contents, clean if necessary
-            $originalhtml = file_get_contents($path);
-            $purifyresult = clean_text($originalhtml, true);
-            if ($purifyresult->purified) {
-                display_cleaned_html($purifyresult->html, $options['cleanhtmlparams']);
-                exit;
-            }
-            $fileoutput = $originalhtml;
+            display_cleaned_html(file_get_contents($path), $options['cleanhtmlparams']);
+            exit;
         }
-        else {
-            $options['forcedownload'] = true;
-            $mimetype = 'application/octet-stream';
-        }
+        $options['forcedownload'] = true;
+        $mimetype = 'application/octet-stream';
     }
 
-    if (!$mimetype || (!is_image_mime_type($mimetype) && (isset($_SERVER['HTTP_USER_AGENT']) && false !== strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE'))) && !isset($fileoutput)) {
+    if (!$mimetype || (!is_image_mime_type($mimetype) && (isset($_SERVER['HTTP_USER_AGENT']) && false !== strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE')))) {
         $mimetype = 'application/forcedownload';
     }
 
@@ -184,12 +176,7 @@ function serve_file($path, $filename, $options=array()) {
     }
     header('Content-Length: ' . $filesize);
     while (@ob_end_flush()); //flush the buffers - save memory and disable sid rewrite
-    if (isset($fileoutput)) {
-        echo $fileoutput;
-    }
-    else {
-        readfile_chunked($path);
-    }
+    readfile_chunked($path);
     exit;
 }
 
