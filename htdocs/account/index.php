@@ -178,11 +178,7 @@ function accountprefs_submit(Pieform $form, $values) {
     // use this as looping through values is not safe.
     $expectedprefs = expected_account_preferences(); 
     foreach (array_keys($expectedprefs) as $pref) {
-        if ($pref == 'lang') {
-            $USER->set_language($values[$pref]);
-        } else {
-            $USER->set_account_preference($pref, $values[$pref]);
-        }
+        $USER->set_account_preference($pref, $values[$pref]);
     }
 
     db_commit();

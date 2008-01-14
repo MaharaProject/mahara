@@ -84,6 +84,16 @@ function load_account_preferences($userid) {
  * @param string $value preference value to set.
  */
 function set_account_preference($userid, $field, $value) {
+    if ($field == 'lang') {
+        $oldlang = get_field('usr_account_preference', 'value', 'usr', $userid, 'field', 'lang');
+        if (empty($oldlang) || $oldlang == 'default') {
+            $oldlang = get_config('lang');
+        }
+        $newlang = (empty($value) || $value == 'default') ? get_config('lang') : $value;
+        if ($newlang != $oldlang) {
+            change_language($userid, $oldlang, $newlang);
+        }
+    }
     if (record_exists('usr_account_preference', 'usr', $userid, 'field', $field)) {
         set_field('usr_account_preference', 'value', $value, 'usr', $userid, 'field', $field);
     }
@@ -99,6 +109,23 @@ function set_account_preference($userid, $field, $value) {
             throw new InvalidArgumentException("Failed to insert account preference "
                 ." $value for $field for user $userid");
         }
+    }
+}
+
+
+/** 
+ * Change language-specific stuff in the db for a user.  Currently
+ * just changes the name of the 'blogfiles' folder in the user's files
+ * area.
+ *
+ * @param int $userid user id to set preference for
+ * @param string $oldlang old language
+ * @param string $newlang new language
+ */
+function change_language($userid, $oldlang, $newlang) {
+    if (get_field('artefact_installed', 'active', 'name', 'blog')) {
+        safe_require('artefact', 'blog');
+        ArtefactTypeBlogPost::change_language($userid, $oldlang, $newlang);
     }
 }
 

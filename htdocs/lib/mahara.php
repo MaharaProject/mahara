@@ -181,6 +181,21 @@ function get_string($identifier, $section='mahara') {
     return get_string_location($identifier, $section, $variables);
 }
 
+function get_string_from_language($lang, $identifier, $section='mahara') {
+
+    $variables = func_get_args();
+    if (count($variables) > 3) { // we have some stuff we need to sprintf
+        array_shift($variables);
+        array_shift($variables);
+        array_shift($variables); //shift off the first three.
+    }
+    else {
+        $variables = array();
+    }
+    
+    return get_string_location($identifier, $section, $variables, 'format_langstring', $lang);
+}
+
 function get_helpfile($plugintype, $pluginname, $form, $element, $page=null, $section=null) {
     if ($langfile = get_helpfile_location($plugintype, $pluginname, $form, $element, $page, $section)) {
         return file_get_contents($langfile);
@@ -281,7 +296,7 @@ function get_raw_string($identifier, $section='mahara') {
  * @param function $replacefunc
  * @return string
  */
-function get_string_location($identifier, $section, $variables, $replacefunc='format_langstring') {
+function get_string_location($identifier, $section, $variables, $replacefunc='format_langstring', $lang='') {
 
     $langconfigstrs = array('parentlanguage', 'strftimedate', 'strftimedateshort', 'strftimedatetime',
                             'strftimedaydate', 'strftimedaydatetime', 'strftimedayshort', 'strftimedaytime',
@@ -292,7 +307,9 @@ function get_string_location($identifier, $section, $variables, $replacefunc='fo
         $section = 'langconfig';
     }
 
-    $lang = current_language();
+    if (empty($lang)) {
+        $lang = current_language();
+    }
 
     // Define the locations of language strings for this section
     $docroot = get_config('docroot');
