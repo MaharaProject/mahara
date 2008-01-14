@@ -100,6 +100,7 @@ function edituser_unsuspend_submit(Pieform $form, $values) {
 
 
 // Site-wide account settings
+$currentdate = getdate();
 $elements = array();
 $elements['id'] = array(
     'type'    => 'hidden',
@@ -131,6 +132,14 @@ if ($USER->get('admin')) {
         'defaultvalue' => $user->admin,
     );
 }
+$elements['expiry'] = array(
+    'type'         => 'date',
+    'title'        => get_string('accountexpiry', 'admin'),
+    'description'  => get_string('accountexpirydescription', 'admin'),
+    'minyear'      => $currentdate['year'] - 2,
+    'maxyear'      => $currentdate['year'] + 20,
+    'defaultvalue' => $user->expiry
+);
 $elements['quota'] = array(
     'type'         => 'bytes',
     'title'        => get_string('filequota','admin'),
@@ -199,6 +208,7 @@ function edituser_site_submit(Pieform $form, $values) {
     }
     $user->passwordchange = (int) ($values['passwordchange'] == 'on');
     $user->quota = $values['quota'];
+    $user->expiry = db_format_timestamp($values['expiry']);
 
     global $USER;
     if ($USER->get('admin')) {  // Not editable by institutional admins
@@ -257,7 +267,6 @@ $elements = array(
 );
 
 $allinstitutions = get_records_assoc('institution');
-$currentdate = getdate();
 foreach ($user->get('institutions') as $i) {
     $elements[$i->institution.'_settings'] = array(
         'type' => 'fieldset',
