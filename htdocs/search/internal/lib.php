@@ -551,8 +551,8 @@ class PluginSearchInternal extends PluginSearch {
             WHERE (
                 name ILIKE '%' || ? || '%' 
                 OR description ILIKE '%' || ? || '%' 
-            )";
-        $values = array($query_string, $query_string);
+            ) AND deleted = ? ";
+        $values = array($query_string, $query_string, 0);
         if ($type == 'member') {
             $sql .=  'AND (
                 owner = ? OR id IN (
@@ -582,7 +582,7 @@ class PluginSearchInternal extends PluginSearch {
             WHERE (
                 name ILIKE '%' || ? || '%' 
                 OR description ILIKE '%' || ? || '%' 
-            )";
+            ) AND deleted = ? ";
         if ($type == 'member') {
             $sql .= 'AND (
                     owner = ? OR id IN (
@@ -619,8 +619,8 @@ class PluginSearchInternal extends PluginSearch {
             WHERE (
                 name LIKE '%' || ? || '%' 
                 OR description LIKE '%' || ? || '%' 
-            )";
-        $values = array($query_string, $query_string);
+            ) AND deleted = ? ";
+        $values = array($query_string, $query_string, 0);
         if ($type == 'member') {
             $sql .=  'AND (
                 owner = ? OR id IN (
@@ -650,7 +650,7 @@ class PluginSearchInternal extends PluginSearch {
             WHERE (
                 name LIKE '%' || ? || '%' 
                 OR description LIKE '%' || ? || '%' 
-            )";
+            ) AND deleted = ? ";
         if ($type == 'member') {
             $sql .= 'AND (
                     owner = ? OR id IN (
