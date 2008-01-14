@@ -176,7 +176,8 @@ function get_associated_groups($userid=0) {
     UNION
     SELECT gm.group, 'tutor' AS type
         FROM {group_member} gm WHERE gm.member = ? AND gm.tutor = 1
-    ) AS a ON a.group = g.id AND g.deleted = ?";
+    ) AS a ON a.group = g.id
+    WHERE g.deleted = ?";
     
     return get_records_sql_assoc($sql, array($userid, $userid, $userid, $userid, 0));
 }

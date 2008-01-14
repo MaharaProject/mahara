@@ -45,7 +45,7 @@ $count = count_records('view', 'owner', $userid);
 
 $viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description,g.name
         FROM {view} v
-        LEFT OUTER JOIN {group} g ON v.submittedto = g.id
+        LEFT OUTER JOIN {group} g ON (v.submittedto = g.id AND g.deleted = 0)
         WHERE v.owner = ' . $userid . '
         ORDER BY v.title', '', $offset, $limit);
 
@@ -100,7 +100,7 @@ if ($viewdata) {
 
 if (!$tutorgroupdata = @get_records_sql_array('SELECT g.id, g.name
        FROM {group_member} u
-       INNER JOIN {group} g ON u.group = g.id 
+       INNER JOIN {group} g ON (u.group = g.id AND g.deleted = 0)
        INNER JOIN {group_member} t ON t.group = g.id 
        WHERE u.member = ' . $userid . '
        AND t.tutor = 1

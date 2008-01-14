@@ -352,7 +352,8 @@ function display_name($user, $userto=null, $nameonly=false) {
     $sql = 'SELECT g1.member
             FROM {group_member} g1 
             JOIN {group_member} g2
-                ON g1.group = g2.group 
+                ON g1.group = g2.group
+            JOIN {group} g ON (g.id = g1.group AND g.deleted = 0)
             WHERE g1.member = ? AND g2.member = ? AND g2.tutor = ?';
     if (record_exists_sql($sql, array($user->id, $userto->id, 1))) {
         return $user->preferredname . ($nameonly ? '' : ' (' . $user->firstname . ' ' . $user->lastname . ')');
