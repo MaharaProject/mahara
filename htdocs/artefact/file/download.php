@@ -39,6 +39,17 @@ $options = array();
 if ($forcedl) {
     $options['forcedownload'] = true;
 }
+else {
+    $downloadurl = get_config('wwwroot') . 'artefact/file/download.php?file=' . $fileid;
+    if (!empty($viewid)) {
+        $downloadurl .= '&amp;view=' . $viewid;
+    }
+    if (!empty($size)) {
+        $downloadurl .= '&amp;size=' . $size;
+    }
+    $downloadurl .= '&amp;download=1';
+    $options['cleanhtmlparams'] = array('downloadurl' => $downloadurl);
+}
 
 if ($viewid && $fileid) {
     if (!artefact_in_view($fileid, $viewid)) {

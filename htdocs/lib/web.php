@@ -1969,14 +1969,31 @@ function format_introduction($introduction) {
  * and removes any nasty tags that could mess up pages.
  *
  * @param string $text The text to be cleaned
+ * @param string $test Test whether anything was cleaned
  * @return string The cleaned up text
  */
-function clean_text($text) {
+function clean_text($text, $test = false) {
     require_once('htmlpurifier/HTMLPurifier.auto.php');
     $config = HTMLPurifier_Config::createDefault();
     $config->set('Cache', 'SerializerPath', get_config('dataroot') . 'htmlpurifier');
     $purifier = new HTMLPurifier($config);
-    return $purifier->purify($text);
+    return $purifier->purify($text, null, $test);
+}
+
+
+/**
+ * Displays purified html on a page with an explanatory message.
+ * 
+ * @param string $html  The purified html.
+ * @param array $params Variables passed to the template. Currently
+ *                      downloadurl - link to download the original (dirty) file.
+ */
+function display_cleaned_html($html, $params) {
+    $smarty = smarty_core();
+    $smarty->assign('params', $params);
+    $smarty->assign('content', $html);
+    $smarty->display('cleanedhtml.tpl');
+    exit;
 }
 
 

@@ -67,11 +67,29 @@ function serve_file($path, $filename, $options=array()) {
     session_write_close(); // unlock session during fileserving
 
     $mimetype     = get_mime_type($path);
-    if (!$mimetype || (!is_image_mime_type($mimetype) && (isset($_SERVER['HTTP_USER_AGENT']) && false !== strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE')))) {
-        $mimetype = 'application/forcedownload';
-    }
     $lastmodified = filemtime($path);
     $filesize     = filesize($path);
+
+    if ($mimetype == 'text/html') {
+        if (isset($options['cleanhtmlparams']) && $filesize < 1024 * 1024) {
+            // Read file contents, clean if necessary
+            $originalhtml = file_get_contents($path);
+            $purifyresult = clean_text($originalhtml, true);
+            if ($purifyresult->purified) {
+                display_cleaned_html($purifyresult->html, $options['cleanhtmlparams']);
+                exit;
+            }
+            $fileoutput = $originalhtml;
+        }
+        else {
+            $options['forcedownload'] = true;
+            $mimetype = 'application/octet-stream';
+        }
+    }
+
+    if (!$mimetype || (!is_image_mime_type($mimetype) && (isset($_SERVER['HTTP_USER_AGENT']) && false !== strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE'))) && !isset($fileoutput)) {
+        $mimetype = 'application/forcedownload';
+    }
 
     if (ini_get('zlib.output_compression')) {
         ini_set('zlib.output_compression', 'Off');
@@ -96,7 +114,7 @@ function serve_file($path, $filename, $options=array()) {
         header('Expires: '. gmdate('D, d M Y H:i:s', time() + $options['lifetime']) .' GMT');
         header('Pragma: ');
 
-        if ($mimetype != 'text/plain' && $mimetype != 'text/html') {
+        if ($mimetype != 'text/plain' && $mimetype != 'text/html' && !isset($fileoutput)) {
             @header('Accept-Ranges: bytes');
 
             if (!empty($_SERVER['HTTP_RANGE']) && strpos($_SERVER['HTTP_RANGE'],'bytes=') !== FALSE) {
@@ -166,7 +184,12 @@ function serve_file($path, $filename, $options=array()) {
     }
     header('Content-Length: ' . $filesize);
     while (@ob_end_flush()); //flush the buffers - save memory and disable sid rewrite
-    readfile_chunked($path);
+    if (isset($fileoutput)) {
+        echo $fileoutput;
+    }
+    else {
+        readfile_chunked($path);
+    }
     exit;
 }
 

@@ -131,7 +131,7 @@ class HTMLPurifier
      *                that HTMLPurifier_Config::create() supports.
      * @return Purified HTML
      */
-    public function purify($html, $config = null) {
+    public function purify($html, $config = null, $test = false) {
         
         // todo: make the config merge in, instead of replace
         $config = $config ? HTMLPurifier_Config::create($config) : $this->config;
@@ -168,27 +168,21 @@ class HTMLPurifier
             $html = $this->filters[$i]->preFilter($html, $config, $context);
         }
         
+        $dirtytokens = $lexer->tokenizeHTML($html, $config, $context);
+        $cleantokens = $this->strategy->execute($dirtytokens, $config, $context);
+
         // purified HTML
-        $html = 
-            $this->generator->generateFromTokens(
-                // list of tokens
-                $this->strategy->execute(
-                    // list of un-purified tokens
-                    $lexer->tokenizeHTML(
-                        // un-purified HTML
-                        $html, $config, $context
-                    ),
-                    $config, $context
-                ),
-                $config, $context
-            );
-        
+        $html = $this->generator->generateFromTokens($cleantokens, $config, $context);
+
         for ($i = $size - 1; $i >= 0; $i--) {
             $html = $this->filters[$i]->postFilter($html, $config, $context);
         }
         
         $html = HTMLPurifier_Encoder::convertFromUTF8($html, $config, $context);
         $this->context =& $context;
+        if ($test) {
+            return (object) array('html' => $html, 'purified' => $dirtytokens != $cleantokens);
+        }
         return $html;
     }
     
