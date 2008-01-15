@@ -22,6 +22,7 @@ if [ ! -d .git ]; then
     exit 1
 fi
 
+
 echo " *** STOP *** "
 echo " Make sure you have merged master into pkg-catalyst, and the latest"
 echo " stable branch into the appropriate pkg-catalyst-* branch. If you"
@@ -139,7 +140,8 @@ done
 
 popd
 
-cp debian/index.html ${REPODIR}
+# Steal the latest index.html and dump into 
+git cat-file blob origin/pkg-catalyst:debian/index.html > ${REPODIR}/index.html
 
 # Now (optionally) sync the repo to the git repository
 echo " The repo has now been set up in ${REPODIR}. If you're really sure,"
