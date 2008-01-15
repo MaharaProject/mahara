@@ -34,9 +34,9 @@ pushd ${BUILDDIR}/mahara
 #git checkout -b "${MAJOR}_STABLE" "origin/${MAJOR}_STABLE"
 git checkout "${MAJOR}.${MINOR}_RELEASE"
 
-# Remove git directories
+# Remove git stuff
 rm .git -rf
-rm debian -rf
+find . -name '.gitignore' -exec rm {} \;
 
 # Pack MochiKit
 bash scripts/pack.sh
