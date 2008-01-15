@@ -32,7 +32,7 @@
 			</td></tr></thead>
 			<tbody>
 		{foreach from=$USERGROUPS item=item}
-                        <tr><td><a href="{$WWWROOT}group/view.php?id={$item->id}">{$item->name|escape}</a></td><td>{str tag=$item->type}</td></tr>
+                        <tr><td><a href="{$WWWROOT}group/view.php?id={$item->id}">{$item->name|escape}</a></td><td>{str tag=$item->type section=group}</td></tr>
 		{/foreach}
 			</tbody></table>
 		{/if}
