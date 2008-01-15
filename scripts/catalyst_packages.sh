@@ -11,6 +11,23 @@ REPODIR="/tmp/mahara_repo"
 ARCHLIST="i386 amd64"
 DATE="`date`"
 
+print_usage() {
+    echo "Usage: ./scripts/catalyst-packages.sh [stable|unstable]"
+    echo "Run this script from the root directory of a Mahara checkout"
+    echo ""
+}
+
+if [ ! -d .git ]; then
+    print_usage
+    exit 1
+fi
+
+echo " *** STOP *** "
+echo " Make sure you have merged master into pkg-catalyst, and the latest"
+echo " stable branch into the appropriate pkg-catalyst-* branch. If you"
+echo " have not done this, hit Ctrl-C now and do so."
+read junk
+
 RELEASE=$1
 if [ "$RELEASE" = "" ]; then
     echo -n "Building ALL versions: are you sure? (y/N) "
@@ -19,24 +36,12 @@ if [ "$RELEASE" = "" ]; then
         echo "Abort."
         exit 1
     fi
-    RELEASELIST="stable testing unstable"
-elif [ "$RELEASE" != "stable" ] && [ "$RELEASE" != "testing" ] && [ "$RELEASE" != "unstable" ]; then
+    RELEASELIST="stable unstable"
+elif [ "$RELEASE" != "stable" ] && [ "$RELEASE" != "unstable" ]; then
     echo "Invalid release: $RELEASE"
     exit 1
 else
     RELEASELIST=$RELEASE
-fi
-
-
-print_usage() {
-    echo "Usage is debian_release.sh"
-    echo "(must be run from a trunk checkout of mahara)"
-    echo ""
-    exit 1;
-}
-
-if [ ! -d .git ]; then
-    print_usage;
 fi
 
 if [ -d ${BUILDDIR} ]; then
@@ -62,6 +67,7 @@ done
 git-fetch -t
 STABLE_RELEASE="`ls -1 .git/refs/tags | egrep '[0-9]+\.[0-9]+\.[0-9]+_RELEASE$' | tail -n1`"
 TESTING_RELEASE="`git branch -a | grep "origin.*STABLE$" | sort | tail -1 | sed 's/origin\///' | tr -d ' '`"
+STABLE_DEBIAN_BRANCH=${STABLE_RELEASE:0:3}
 
 pushd ${BUILDDIR}
 
@@ -71,7 +77,7 @@ if [ "$RELEASE" = "" ] || [ "$RELEASE" = "stable" ]; then
     echo "Building ${STABLE_RELEASE} ..."
 
     git clone -n "git+ssh://git.catalyst.net.nz/git/public/mahara.git" mahara
-    ( cd mahara && git checkout -b "${STABLE_RELEASE}" "${STABLE_RELEASE}" )
+    ( cd mahara && git checkout -b "pkg-catalyst-${STABLE_DEBIAN_BRANCH}" "origin/pkg-catalyst-${STABLE_DEBIAN_BRANCH}" )
     rm -f *.deb
     pushd ${BUILDDIR}/mahara
     make
@@ -80,29 +86,13 @@ if [ "$RELEASE" = "" ] || [ "$RELEASE" = "stable" ]; then
     rm ${BUILDDIR}/mahara -rf
 fi
 
-# Build Testing (tip of stable)
-if [ "$RELEASE" = "" ] || [ "$RELEASE" = "testing" ]; then
-    echo
-    echo "Building Testing (${TESTING_RELEASE})..."
-
-    git clone -n "git+ssh://git.catalyst.net.nz/git/public/mahara.git" mahara
-    ( cd mahara && git checkout -b ${TESTING_RELEASE} "origin/${TESTING_RELEASE}" )
-    rm -f *.deb
-    pushd ${BUILDDIR}/mahara
-    make
-    popd
-    cp *.deb ${REPODIR}/pool/testing/
-    rm ${BUILDDIR}/mahara -rf
-fi
-
-
 # Build Unstable
 if [ "$RELEASE" = "" ] || [ "$RELEASE" = "unstable" ]; then
     echo
     echo "Building Unstable ..."
 
     git clone "git+ssh://git.catalyst.net.nz/git/public/mahara.git" mahara
-    ( cd mahara && git checkout master )
+    ( cd mahara && git checkout -b pkg-catalyst origin/pkg-catalyst )
     rm -f *.deb
     pushd ${BUILDDIR}/mahara
     make
@@ -150,6 +140,16 @@ done
 popd
 
 cp debian/index.html ${REPODIR}
+
+# Now (optionally) sync the repo to the git repository
+echo " The repo has now been set up in ${REPODIR}. If you're really sure,"
+echo " this script can rsync this to the git repository."
+echo " rsync to git repository? [y/N] "
+read ANS
+if [ "$ANS" != "y" ] && [ "$ANS" != "Y" ]; then
+    echo "Abort."
+    exit 1
+fi
 
 if [ "$RELEASE" = "" ]; then
     rsync -PIlvr --delete-after --no-p --no-g --chmod=Dg+ws,Fg+w ${REPODIR}/* locke.catalyst.net.nz:/home/ftp/pub/mahara/
