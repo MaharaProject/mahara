@@ -123,7 +123,7 @@ $form = pieform(array(
 
 $values[] = 0;
 
-$count = count_records_sql('SELECT COUNT(g.*) FROM {group} g ' . $sql . ' WHERE g.deleted != ?', $values);
+$count = count_records_sql('SELECT COUNT(g.*) FROM {group} g ' . $sql . ' WHERE g.deleted = ?', $values);
 
 // almost the same as query used in find - common parts should probably be pulled out
 // gets the groups filtered by
