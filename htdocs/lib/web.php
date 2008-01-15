@@ -445,6 +445,8 @@ function jsstrings() {
                 'showtags',
                 'unreadmessages',
                 'unreadmessage',
+                'pendingfriend',
+                'pendingfriends',
                 'couldnotgethelp',
             ),
         ),
@@ -479,10 +481,6 @@ function jsstrings() {
                 'reason',
                 'requestfriendship',
                 'cancel',
-            ),
-            'mahara' => array(
-                'pendingfriend',
-                'pendingfriends',
             ),
         ),
         'views' => array(

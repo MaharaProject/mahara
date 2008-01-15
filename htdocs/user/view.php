@@ -59,9 +59,23 @@ $inlinejs = <<<EOF
                 }
             }
         }
-        
+
         swapDOM(formname, P(null, data.message));
         return true;
+    }
+
+    function friendship_accept_reject(formname, data) {
+        var oldcount = parseInt($('pendingfriendscount').innerHTML);
+        var newcount = oldcount - 1;
+        var messagenode = $('pendingfriendsmessage');
+        if (newcount == 1) { // jump through hoops to change between plural and singular
+            messagenode.innerHTML = get_string('pendingfriend');
+        }
+        else {
+            messagenode.innerHTML = get_string('pendingfriends');
+        }
+        $('pendingfriendscount').innerHTML = newcount;
+        usercontrol_success(formname, data);
     }
 EOF;
 
@@ -244,6 +258,7 @@ EOF;
             $friendformmessage = get_string('friendshipalreadyrequested', 'mahara', $name);
         }
         else {
+            $friendform['jssuccesscallback'] = 'friendship_accept_reject';
             $friendform['elements']['requested'] = array(
                 'type' => 'html', 
                 'value' => get_string('friendshipalreadyrequestedowner', 'mahara', $name)
