@@ -70,7 +70,6 @@ if ($studentid !== '') {
 }
 $ownerformatoptions[FORMAT_NAME_DISPLAYNAME] = sprintf($formatstring, get_string('displayname'), display_name($USER));
 
-// @todo need a rule here that prevents stopdate being smaller than startdate
 $editview = pieform(array(
     'name'     => 'editview',
     'method'   => 'post',
@@ -91,26 +90,6 @@ $editview = pieform(array(
             'title'        => get_string('title','view'),
             'defaultvalue' => isset($view) ? $view->get('title') : null,
             'rules'        => array( 'required' => true ),
-            'help'         => true,
-        ),
-        'startdate'        => array(
-            'type'         => 'calendar',
-            'title'        => get_string('startdate','view'),
-            'defaultvalue' => isset($view) ? $view->get('startdate') : null,
-            'caloptions'   => array(
-                'showsTime'      => true,
-                'ifFormat'       => '%Y/%m/%d %H:%M'
-            ),
-            'help'         => true,
-        ),
-        'stopdate'  => array(
-            'type'         => 'calendar',
-            'title'        => get_string('stopdate','view'),
-            'defaultvalue' => isset($view) ? $view->get('stopdate') : null,
-            'caloptions'   => array(
-                'showsTime'      => true,
-                'ifFormat'       => '%Y/%m/%d %H:%M'
-            ),
             'help'         => true,
         ),
         'description' => array(
@@ -143,12 +122,6 @@ $editview = pieform(array(
         ),
     ),
 ));
-
-function editview_validate(Pieform $form, $values) {
-    if ($values['startdate'] && $values['stopdate'] && $values['startdate'] > $values['stopdate']) {
-        $form->set_error('startdate', get_string('startdatemustbebeforestopdate', 'view'));
-    }
-}
 
 function editview_cancel_submit() {
     redirect('/view');

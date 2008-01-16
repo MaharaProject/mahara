@@ -57,8 +57,11 @@ EOF;
     $smarty->assign('INLINEJAVASCRIPT', $js);
 }
 
+// @todo need a rule here that prevents stopdate being smaller than startdate
 $form = array(
     'name' => 'editaccess',
+    'plugintype' => 'core',
+    'pluginname' => 'view',
     'elements' => array(
         'id' => array(
             'type' => 'hidden',
@@ -67,6 +70,26 @@ $form = array(
         'new' => array(
             'type' => 'hidden',
             'value' => $new,
+        ),
+        'startdate'        => array(
+            'type'         => 'calendar',
+            'title'        => get_string('startdate','view'),
+            'defaultvalue' => isset($view) ? strtotime($view->get('startdate')) : null,
+            'caloptions'   => array(
+                'showsTime'      => true,
+                'ifFormat'       => '%Y/%m/%d %H:%M'
+            ),
+            'help'         => true,
+        ),
+        'stopdate'  => array(
+            'type'         => 'calendar',
+            'title'        => get_string('stopdate','view'),
+            'defaultvalue' => isset($view) ? strtotime($view->get('stopdate')) : null,
+            'caloptions'   => array(
+                'showsTime'      => true,
+                'ifFormat'       => '%Y/%m/%d %H:%M'
+            ),
+            'help'         => true,
         ),
         'accesslist' => array(
             'type'         => 'viewacl',
@@ -81,6 +104,12 @@ $form = array(
     )
 );
 
+function editaccess_validate(Pieform $form, $values) {
+    if ($values['startdate'] && $values['stopdate'] && $values['startdate'] > $values['stopdate']) {
+        $form->set_error('startdate', get_string('startdatemustbebeforestopdate', 'view'));
+    }
+}
+
 function editaccess_cancel_submit() {
     redirect('/view/');
 }
@@ -94,6 +123,11 @@ function editaccess_submit(Pieform $form, $values) {
     }
 
     $view->set_access($values['accesslist']);
+
+    $view->set('startdate', $values['startdate']);
+    $view->set('stopdate', $values['stopdate']);
+    $view->commit();
+
     if ($values['new']) {
         $str = get_string('viewcreatedsuccessfully', 'view');
     }
