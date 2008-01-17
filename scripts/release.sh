@@ -1,21 +1,32 @@
 #!/bin/bash
+#
+# Builds release tarballs of Mahara at the given version, ready for
+# distribution
 set -e
 
 print_usage() {
-    echo "Usage is release.sh major minor"
-    echo "e.g. release.sh 0.6 2"
-    echo ""
-    exit 1;
+    echo "Usage is release.sh [version]"
+    echo "e.g. release.sh 0.6.2"
+    echo "e.g. release.sh 1.0.0alpha1"
 }
 
-MAJOR="$1"
-MINOR="$2"
+if [ -z "$1" ]; then
+    print_usage
+    exit 1
+fi
+
+MAJOR=${1:0:3}
+MINOR=${1:4:1}
+MICRO=${1:5}
 BUILDDIR="/tmp/mahara_release"
 CURRENTDIR="`pwd`"
 
 if [ -z "${MAJOR}" ] || [ -z "${MINOR}" ]; then
-    print_usage;
+    print_usage
+    exit 1
 fi
+
+VERSION="${MAJOR}.${MINOR}${MICRO}"
 
 if [ -d ${BUILDDIR} ]; then
     rm -rf ${BUILDDIR}
@@ -32,7 +43,8 @@ pushd ${BUILDDIR}/mahara
 
 # Switch to the release tag
 #git checkout -b "${MAJOR}_STABLE" "origin/${MAJOR}_STABLE"
-git checkout "${MAJOR}.${MINOR}_RELEASE"
+RELEASETAG="`echo $VERSION | tr '[:lower:]' '[:upper:]'`_RELEASE"
+git checkout $RELEASETAG
 
 # Remove git stuff
 rm .git -rf
@@ -43,11 +55,11 @@ bash scripts/pack.sh
 
 popd
 
-mv mahara mahara-${MAJOR}.${MINOR}
+mv mahara mahara-${VERSION}
 
-tar zcf ${CURRENTDIR}/mahara-${MAJOR}.${MINOR}.tar.gz mahara-${MAJOR}.${MINOR}
-tar jcf ${CURRENTDIR}/mahara-${MAJOR}.${MINOR}.tar.bz2 mahara-${MAJOR}.${MINOR}
-zip -qrT9 ${CURRENTDIR}/mahara-${MAJOR}.${MINOR}.zip mahara-${MAJOR}.${MINOR}
+tar zcf ${CURRENTDIR}/mahara-${VERSION}.tar.gz mahara-${VERSION}
+tar jcf ${CURRENTDIR}/mahara-${VERSION}.tar.bz2 mahara-${VERSION}
+zip -qrT9 ${CURRENTDIR}/mahara-${VERSION}.zip mahara-${VERSION}
 
 popd
 #rm -rf ${BUILDDIR}
