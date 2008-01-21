@@ -38,6 +38,10 @@ function pieform_element_cancel(Pieform $form, $element) {
         throw new PieformException('Cancel elements must have a value');
     }
 
+    if (isset($element['confirm'])) {
+        $element['onclick'] = 'return confirm(' . json_encode($element['confirm']) . ');';
+    }
+
     $attributes = $form->element_attributes($element);
     $attributes = preg_replace('/name="(.*)"/', 'name="cancel_$1"', $attributes);
     $attributes = preg_replace('/id="(.*)"/', 'id="cancel_$1"', $attributes);

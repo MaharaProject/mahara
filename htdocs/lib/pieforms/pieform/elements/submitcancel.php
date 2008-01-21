@@ -42,6 +42,18 @@ function pieform_element_submitcancel(Pieform $form, $element) {
     $submitelement['value'] = $element['value'][0];
     $cancelelement = $element;
     $cancelelement['value'] = $element['value'][1];
+    if (isset($element['confirm']) && isset($element['confirm'][0])) {
+        $submitelement['confirm'] = $element['confirm'][0];
+    }
+    else {
+        unset($submitelement['confirm']);
+    }
+    if (isset($element['confirm']) && isset($element['confirm'][1])) {
+        $cancelelement['confirm'] = $element['confirm'][1];
+    }
+    else {
+        unset($cancelelement['confirm']);
+    }
     return pieform_element_submit($form, $submitelement) . ' ' . pieform_element_cancel($form, $cancelelement);
 }
 
