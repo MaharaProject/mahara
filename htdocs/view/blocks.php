@@ -33,6 +33,13 @@ $view = new View(param_integer('id'));
 define('TITLE', get_string('editblocksforview', 'view', $view->get('title')));
 
 $new = param_boolean('new');
+
+// check if cancel was selected
+if ($new && isset($_POST['cancel'])) {
+    $view->delete();
+    redirect(get_config('wwwroot') . '/view/');
+}
+
 $category = param_alpha('c', '');
 // Make the default category the first tab if none is set
 if ($category === '') {

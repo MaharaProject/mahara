@@ -168,6 +168,8 @@ $string['viewsavedsuccessfully'] = 'View saved successfully';
 
 $string['invalidcolumn'] = 'Column %s out of range';
 
+$string['confirmcancelcreatingview'] = 'This view has not been completed. Do you really want to cancel?';
+
 // view control stuff
 
 $string['displaymyview'] = 'Display my view';

@@ -119,11 +119,16 @@ $editview = pieform(array(
         'submit'   => array(
             'type'  => 'submitcancel',
             'value' => array(empty($new) ? get_string('save') : get_string('next'), get_string('cancel')),
-        ),
+            'confirm' => $new && isset($view) ? array(null, get_string('confirmcancelcreatingview', 'view')) : null,
+        )
     ),
 ));
 
 function editview_cancel_submit() {
+	global $view, $new;
+	if (isset($view) && $new) {
+	    $view->delete();
+	}
     redirect('/view');
 }
 

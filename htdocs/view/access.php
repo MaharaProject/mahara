@@ -100,6 +100,7 @@ $form = array(
             'value' => !empty($new) 
                 ? array(get_string('cancel'), get_string('back','view'), get_string('save'))
                 : array(get_string('save'), get_string('cancel')),
+            'confirm' => !empty($new) ? array(get_string('confirmcancelcreatingview', 'view'), null, null) : null,
         ),
     )
 );
@@ -111,6 +112,10 @@ function editaccess_validate(Pieform $form, $values) {
 }
 
 function editaccess_cancel_submit() {
+	global $view, $new;
+	if ($new) {
+	    $view->delete();
+	}
     redirect('/view/');
 }
 
