@@ -129,7 +129,7 @@ if ($groups['data']) {
 setup_groups($groups['data'], 'find');
 
 $pagination = build_pagination(array(
-    'url' => 'find.php?filter=' . $filter . '&amp;query=' . $query,
+    'url' => get_config('wwwroot') . 'group/find.php?filter=' . $filter . '&amp;query=' . $query,
     'count' => $groups['count'],
     'limit' => $groupsperpage,
     'offset' => $offset,

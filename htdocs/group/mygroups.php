@@ -157,7 +157,7 @@ $sql = 'SELECT g.id, g.name, g.description, g.owner, g.jointype, m.member1 AS me
 $groups = get_records_sql_array($sql, $values, $offset, $groupsperpage);
 
 $pagination = build_pagination(array(
-    'url' => 'mygroups.php?filter=' . $filter,
+    'url' => get_config('wwwroot') . 'group/mygroups.php?filter=' . $filter,
     'count' => $count,
     'limit' => $groupsperpage,
     'offset' => $offset,
