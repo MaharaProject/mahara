@@ -1564,7 +1564,7 @@ function main_nav() {
             array(
                 'path' => 'myportfolio/views',
                 'url' => 'view/',
-                'title' => get_string('views'),
+                'title' => get_string('myviews'),
                 'weight' => 10
             ),
             array(
