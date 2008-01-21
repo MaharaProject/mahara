@@ -36,7 +36,7 @@ if (!empty($_SERVER['MAHARA_LIBDIR'])) {
 else {
     $CFG->libroot = dirname(__FILE__) . '/lib/';
 }
-set_include_path($CFG->libroot . PATH_SEPARATOR . $CFG->libroot . 'pear/');
+set_include_path($CFG->libroot . PATH_SEPARATOR . $CFG->libroot . 'pear/' . PATH_SEPARATOR . get_include_path());
 
 // Set up error handling
 require('errors.php');
