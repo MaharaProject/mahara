@@ -203,7 +203,7 @@ setup_topics($stickytopics);
 setup_topics($regulartopics);
 
 $pagination = build_pagination(array(
-    'url' => 'view.php?id=' . $forumid,
+    'url' => get_config('wwwroot') . 'interaction/forum/view.php?id=' . $forumid,
     'count' => $forum->count,
     'limit' => $topicsperpage,
     'offset' => $offset,
