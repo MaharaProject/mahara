@@ -38,12 +38,12 @@ require_once('view.php');
 $view = new View($viewid, null);
 
 if ($view->get('owner') != $USER->get('id')) {
-    json_reply('local', get_string('notownerofview'));
+    json_reply('local', get_string('notownerofview', 'view'));
 }
 $view->delete();
 
 handle_event('deleteview', $viewid);
 
-json_reply(false,get_string('viewdeleted'));
+json_reply(false,get_string('viewdeleted', 'view'));
 
 ?>
