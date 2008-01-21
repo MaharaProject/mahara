@@ -41,16 +41,16 @@ function pieform_element_viewacl(Pieform $form, $element) {
     // Look for the presets and split them into two groups
     $presets = array();
     if (get_config('allowpublicviews') == '1') {
-         $presets = array('public', 'loggedin', 'friends');
+         $presets = array('Public', 'loggedinusers', 'Friends');
     }
     else {
-        $presets = array('loggedin', 'friends');
+        $presets = array('loggedinusers', 'Friends');
     }
     if ($value) {
         foreach ($value as $key => &$item) {
             if (is_array($item)) {
                 if (in_array($item['type'], $presets)) {
-                    $item['name'] = get_string($item['type']);
+                    $item['name'] = get_string($item['type'], 'view');
                     $item['preset'] = true;
                 }
                 else {
@@ -70,7 +70,7 @@ function pieform_element_viewacl(Pieform $form, $element) {
             'id'   => $preset,
             'start' => null,
             'end'   => null,
-            'name' => get_string($preset),
+            'name' => get_string($preset, 'view'),
             'preset' => true
         );
     }

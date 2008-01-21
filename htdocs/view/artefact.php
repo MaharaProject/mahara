@@ -90,17 +90,19 @@ if ($submittedgroup
     // The user is a tutor of the group that this view has
     // been submitted to, and is entitled to upload an additional
     // file when submitting feedback.
-    $tutorfilefeedbackformrow = "TR(null, TH(null, LABEL(null, '" . get_string('attachfile') . "'))),"
+    $tutorfilefeedbackformrow = "TR(null, TH(null, LABEL(null, '" . get_string('attachfile', 'view') . "'))),"
         . "TR(null, TD(null, INPUT({'type':'file', 'name':'attachment'}))),";
 }
 
 $getstring = quotestrings(array('mahara' => array(
-        'message', 'makepublic', 'placefeedback', 'cancel', 'complaint', 
+        'cancel', 'message',
+     ),
+     'view' => array('print', 'makepublic', 'placefeedback', 'complaint',
         'feedbackonthisartefactwillbeprivate', 'notifysiteadministrator',
-        'nopublicfeedback', 'reportobjectionablematerial', 'print',
-)));
+        'nopublicfeedback', 'reportobjectionablematerial')
+));
 
-$getstring['feedbackattachmessage'] = "'(" . get_string('feedbackattachmessage', 'mahara', get_string('feedbackattachdirname')) . ")'";
+$getstring['feedbackattachmessage'] = "'(" . get_string('feedbackattachmessage', 'view', get_string('feedbackattachdirname', 'view')) . ")'";
 
 // Safari doesn't seem to like these inputs to be called 'public', so call them 'ispublic' instead.
 $feedbackisprivate = !$artefact->public_feedback_allowed();
@@ -276,7 +278,7 @@ $smarty = smarty(
     array('tablerenderer'),
     array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">'),
     array(
-        'mahara' => array(
+        'view' => array(
             'public',
             'private',
             'makeprivate',

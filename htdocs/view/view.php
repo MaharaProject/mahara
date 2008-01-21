@@ -52,15 +52,16 @@ if ($submittedgroup
 }
 $viewbeingwatched = (int)record_exists('usr_watchlist_view', 'usr', $USER->get('id'), 'view', $viewid);
 
-$getstring = quotestrings(array('mahara' => array(
-        'message', 'makepublic', 'placefeedback', 'cancel', 'complaint', 
+$getstring = quotestrings(array(
+    'mahara' => array('message', 'cancel'),
+    'view' => array('makepublic', 'placefeedback', 'complaint',
         'feedbackonthisartefactwillbeprivate', 'notifysiteadministrator',
-        'nopublicfeedback', 'reportobjectionablematerial', 'print',
-)));
+        'nopublicfeedback', 'reportobjectionablematerial', 'print')
+));
 
-$getstring['addtowatchlist'] = json_encode(get_string('addtowatchlist'));
-$getstring['removefromwatchlist'] = json_encode(get_string('removefromwatchlist'));
-$getstring['feedbackattachmessage'] = "'(" . get_string('feedbackattachmessage', 'mahara', get_string('feedbackattachdirname')) . ")'";
+$getstring['addtowatchlist'] = json_encode(get_string('addtowatchlist', 'view'));
+$getstring['removefromwatchlist'] = json_encode(get_string('removefromwatchlist', 'view'));
+$getstring['feedbackattachmessage'] = "'(" . get_string('feedbackattachmessage', 'view', get_string('feedbackattachdirname', 'view')) . ")'";
 
 // Safari doesn't seem to like these inputs to be called 'public', so call them 'ispublic' instead.
 if (!empty($feedbackisprivate)) {
@@ -240,7 +241,7 @@ $smarty = smarty(
     array('tablerenderer'),
     array('<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'theme/views.css">'),
     array(
-        'mahara' => array(
+        'view' => array(
             'public',
             'private',
             'makeprivate',

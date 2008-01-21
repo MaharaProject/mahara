@@ -38,15 +38,15 @@ $data->ctime = db_format_timestamp(time());
 
 if (get_record('usr_watchlist_view', 'usr', $data->usr, 'view', $view)) {
     if (!delete_records('usr_watchlist_view', 'usr', $data->usr, 'view', $view)) {
-        json_reply('local', get_string('updatewatchlistfailed'));
+        json_reply('local', get_string('updatewatchlistfailed', 'view'));
     }
-    json_reply(false, get_string('removedfromwatchlist'));
+    json_reply(false, get_string('removedfromwatchlist', 'view'));
 }
 
 if (!insert_record('usr_watchlist_view', $data)) {
-    json_reply('local', get_string('updatewatchlistfailed'));
+    json_reply('local', get_string('updatewatchlistfailed', 'view'));
 }
 
-json_reply(false, get_string('addedtowatchlist'));
+json_reply(false, get_string('addedtowatchlist', 'view'));
 
 ?>

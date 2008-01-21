@@ -45,6 +45,7 @@ $string['Failed']  = 'Failed';
 $string['loading'] = 'Loading ...';
 $string['showtags'] = 'Show my tags';
 $string['errorprocessingform'] = 'There was an error with submitting this form. Please check the marked fields and try again.';
+$string['description'] = 'Description';
 
 $string['no']     = 'No';
 $string['yes']    = 'Yes';
@@ -70,7 +71,7 @@ $string['select'] = 'Select';
 
 $string['tags'] = 'Tags';
 $string['tagsdesc'] = 'Enter comma separated tags for this item.';
-$string['tagsdescprofile'] = 'Enter comma separated tags for this item. Artefacts tagged with \'profile\' are displayed in the sidebar';
+$string['tagsdescprofile'] = 'Enter comma separated tags for this item. Items tagged with \'profile\' are displayed in the sidebar.';
 
 $string['selfsearch'] = 'Search My Portfolio';
 $string['ssopeers'] = 'SSO Peers';
@@ -91,6 +92,7 @@ $string['logout'] = 'Logout';
 $string['pendingfriend'] = 'pending friend';
 $string['pendingfriends'] = 'pending friends';
 $string['profile'] = 'profile';
+$string['views'] = 'Views';
 
 // auth
 $string['accessforbiddentoadminsection'] = 'You are forbidden from accessing the administration section';
@@ -203,6 +205,9 @@ $string['firstname'] = 'First name';
 $string['firstnamedescription'] = ' ';
 $string['lastname'] = 'Last name';
 $string['lastnamedescription'] = ' ';
+$string['studentid'] = 'ID number';
+$string['displayname'] = 'Display name';
+$string['fullname'] = 'Full name';
 $string['registerstep1description'] = 'Welcome! To use this site you must first register. You must also agree to the <a href="terms.php">terms and conditions</a>. The data we collect here will be stored according to our <a href="privacy.php">privacy statement</a>.';
 $string['registerstep3fieldsoptional'] = '<h3>Choose an Optional Profile Image</h3><p>You have now successfully registered with ' . get_config('sitename') . '! You may now choose an optional profile icon to be displayed as your avatar.</p>';
 $string['registerstep3fieldsmandatory'] = '<h3>Fill Out Mandatory Profile Fields</h3><p>The following fields are required. You must fill them out before your registration is complete.</p>';
@@ -322,8 +327,10 @@ $string['unknownerror']       = 'An unknown error occurred (0x20f91a0)';
 // menu
 $string['home']        = 'Home';
 $string['myportfolio'] = 'My Portfolio';
+$string['myviews']       = ' My Views';
 $string['settings']    = 'Settings';
 $string['myfriends']          = 'My Friends';
+$string['groups']             = 'Groups';
 $string['mygroups']           = 'My Groups';
 $string['findgroups']         = 'Find Groups';
 $string['youareloggedinas']   = 'You are logged in as %s';
@@ -357,43 +364,6 @@ $string['requestmembershipofaninstitution'] = 'Request membership of an institut
 $string['optionalinstitutionid'] = 'Institution ID (optional)';
 $string['institutionmemberconfirmsubject'] = 'Institution membership confirmation';
 $string['institutionmemberconfirmmessage'] = 'You have been added as a member of %s.';
-
-// my views
-$string['accessstartdate'] = 'Access start date';
-$string['accessstopdate'] = 'Access end date';
-$string['artefacts'] = 'Artefacts';
-$string['createnewview'] = 'Create New View';
-$string['deleteviewfailed'] = 'Delete view failed';
-$string['deleteviewquestion'] = 'Do you really want to delete this view?';
-$string['description'] = 'Description';
-$string['editaccess'] = 'Edit Access';
-$string['editview'] = 'Edit View';
-$string['editviewinformation'] = 'Edit View Information';
-$string['myviews'] = 'My Views';
-$string['notownerofview'] = 'You are not the owner of this view';
-$string['reallyaddaccesstoemptyview'] = 'Your view contains no artefacts.  Do you really want to give these users access to the view?';
-$string['saveaccess'] = 'Save Access';
-$string['submitview'] = 'Submit View';
-$string['submitviewfailed'] = 'Submit view failed';
-$string['submitviewquestion'] = 'If you submit this view for assessment, you will not be able to edit the view or any of its associated artefacts until your tutor has finished marking the view.  Are you sure you want to submit this view now?';
-$string['viewdeleted'] = 'View deleted';
-$string['views'] = 'Views';
-$string['viewsubmitted'] = 'View submitted';
-$string['viewsubmittedto'] = 'This view has been submitted to %s';
-
-// access levels
-$string['public'] = 'Public';
-$string['loggedin'] = 'Logged In Users';
-$string['friends'] = 'Friends';
-$string['groups'] = 'Groups';
-$string['users'] = 'Users';
-
-// view user
-$string['fullname'] = 'Full name';
-$string['displayname'] = 'Display name';
-$string['studentid'] = 'ID number';
-$string['inviteusertojoingroup'] = 'Invite this user to join a group';
-$string['addusertogroup'] = 'Add this user to a group';
 
 $string['emailname'] = 'Mahara System'; // robot! 
 
@@ -432,6 +402,7 @@ $string['result'] = 'result';
 $string['results'] = 'results';
 $string['Results'] = 'Results';
 $string['noresultsfound'] = 'No results found';
+$string['users'] = 'Users';
 
 // artefact
 $string['artefact'] = 'artefact';
@@ -441,48 +412,6 @@ $string['artefactnotrendered'] = 'Artefact not rendered';
 
 $string['belongingto'] = 'Belonging to';
 $string['allusers'] = 'All users';
-
-// view view
-$string['addedtowatchlist'] = 'This view has been added to your watchlist';
-$string['removedfromwatchlist'] = 'This view has been removed from your watchlist';
-$string['addfeedbackfailed'] = 'Add feedback failed';
-$string['addtowatchlist'] = 'Add view to watchlist';
-$string['removefromwatchlist'] = 'Remove view from watchlist';
-$string['alreadyinwatchlist'] = 'This view is already in your watchlist';
-$string['attachedfileaddedtofolder'] = "The attached file %s has been added to your '%s' folder.";
-$string['attachfile'] = "Attach file";
-$string['complaint'] = 'Complaint';
-$string['date'] = 'Date';
-$string['feedback'] = 'Feedback';
-$string['feedbackattachdirname'] = 'assessmentfiles';
-$string['feedbackattachdirdesc'] = 'Files attached to view assessments';
-$string['feedbackattachmessage'] = 'The attached file has been added to your %s folder';
-$string['feedbackmadeprivate'] = 'Feedback changed to private';
-$string['feedbackonthisartefactwillbeprivate'] = 'Feedback on this artefact will only be visible to the owner.';
-$string['feedbackonviewbytutorofgroup'] = 'Feedback on %s by %s of %s';
-$string['feedbacksubmitted'] = 'Feedback submitted';
-$string['makepublic'] = 'Make public';
-$string['nopublicfeedback'] = 'No public feedback';
-$string['notifysiteadministrator'] = 'Notify site administrator';
-$string['placefeedback'] = 'Place feedback';
-$string['print'] = 'Print';
-$string['private'] = 'Private';
-$string['makeprivate'] = 'Change to Private';
-$string['reportobjectionablematerial'] = 'Report objectionable material';
-$string['reportsent'] = 'Your report has been sent';
-$string['updatewatchlistfailed'] = 'Update of watchlist failed';
-$string['view'] = 'view';
-$string['View'] = 'View';
-$string['watchlistupdated'] = 'Your watchlist has been updated';
-
-$string['alphabet'] = 'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z';
-$string['all'] = 'All';
-
-$string['friend'] = 'Friend';
-$string['profileicon'] = 'Profile Icon';
-
-// general views stuff
-$string['allviews'] = 'All views';
 
 // Upload manager
 $string['quarantinedirname'] = 'quarantine';

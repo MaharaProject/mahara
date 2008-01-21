@@ -37,9 +37,9 @@ $data->id          = param_integer('viewid');
 $data->submittedto = param_integer('groupid');
 
 if (!update_record('view',$data,'id')) {
-    json_reply('local', get_string('submitviewfailed'));
+    json_reply('local', get_string('submitviewfailed', 'view'));
 }
 
-json_reply(false,get_string('viewsubmitted'));
+json_reply(false,get_string('viewsubmitted', 'view'));
 
 ?>

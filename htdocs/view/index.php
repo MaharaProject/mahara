@@ -32,14 +32,15 @@ define('SECTION_PLUGINNAME', 'view');
 define('SECTION_PAGE', 'index');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
-define('TITLE', get_string('myviews'));
+define('TITLE', get_string('myviews', 'view'));
 
 $wwwroot = get_config('wwwroot');
 
-$getstring = quotestrings(array('mahara' => array(
-    'accessstartdate', 'accessstopdate', 'artefacts', 'delete', 'deleteviewquestion', 'description', 
-    'editaccess', 'editview', 'editviewinformation', 'submitted', 'submitview', 'submitviewquestion'
-)));
+$getstring = quotestrings(array(
+    'mahara' => array('delete', 'description'),
+    'view' => array('accessstartdate', 'accessstopdate', 'artefacts',
+    'deleteviewquestion', 'editaccess', 'editview', 'editviewinformation',
+    'submitted', 'submitview', 'submitviewquestion')));
 
 $editcontrolshelp = get_help_icon('core', 'views', null, null, null, 'vieweditcontrols');
 
@@ -146,7 +147,7 @@ viewlist.updateOnLoad();
 
 JAVASCRIPT;
 
-$smarty = smarty(array('tablerenderer'), array(), array('viewsubmittedto' => 'mahara'));
+$smarty = smarty(array('tablerenderer'), array(), array('viewsubmittedto' => 'view'));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->display('view/index.tpl');
 

@@ -39,6 +39,6 @@ $data->message    = param_variable('message');
 
 activity_occurred('objectionable', $data);
 
-json_reply(false, get_string('reportsent'));
+json_reply(false, get_string('reportsent', 'view'));
 
 ?>

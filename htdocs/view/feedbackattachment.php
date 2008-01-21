@@ -59,8 +59,8 @@ if ($error = $um->preprocess_file()) {
 $size = $um->file['size'];
 
 safe_require('artefact', 'file');
-$folderid = ArtefactTypeFolder::get_folder_id(get_string('feedbackattachdirname'),
-                                              get_string('feedbackattachdirdesc'),
+$folderid = ArtefactTypeFolder::get_folder_id(get_string('feedbackattachdirname', 'view'),
+                                              get_string('feedbackattachdirdesc', 'view'),
                                               null, $viewdata->owner);
 
 // Create a new file object
@@ -68,7 +68,7 @@ $data = (object) array('owner' => $viewdata->owner,
                        'parent' => $folderid,
                        'size' => $size,
                        'title' => $filename,
-                       'description' => get_string('feedbackonviewbytutorofgroup', 'mahara', 
+                       'description' => get_string('feedbackonviewbytutorofgroup', 'view',
                                                    $viewdata->title, display_name($USER), $viewdata->name));
 $f = ArtefactTypeFile::new_file($um->file['tmp_name'], $data);
 $f->commit();

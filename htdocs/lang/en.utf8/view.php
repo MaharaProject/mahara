@@ -27,12 +27,11 @@
 defined('INTERNAL') || die();
 
 $string['createview']             = 'Create View';
-$string['editview']               = 'Edit Details for View "%s"';
+$string['editviewdetails']        = 'Edit Details for View "%s"';
 $string['editaccessforview']      = 'Edit View Access for View "%s"';
 $string['editblocksforview']      = 'Edit Blocks for View "%s"';
 $string['next']                   = 'Next';
 $string['back']                   = 'Back';
-$string['createview']             = 'Create View';
 $string['title']                  = 'View Title';
 $string['description']            = 'View Description';
 $string['startdate']              = 'Access Start Date/Time';
@@ -40,6 +39,108 @@ $string['stopdate']               = 'Access End Date/Time';
 $string['startdatemustbebeforestopdate'] = 'The start date must be before the stop date';
 $string['ownerformat']            = 'Name display format';
 $string['ownerformatdescription'] = 'How do you want people who look at your view to see your name?';
+
+// my views
+$string['accessstartdate'] = 'Access start date';
+$string['accessstopdate'] = 'Access end date';
+$string['artefacts'] = 'Artefacts';
+$string['deleteviewfailed'] = 'Delete view failed';
+$string['deleteviewquestion'] = 'Do you really want to delete this view?';
+$string['editaccess'] = 'Edit Access';
+$string['editview'] = 'Edit View';
+$string['editviewinformation'] = 'Edit View Details';
+$string['myviews'] = 'My Views';
+$string['notownerofview'] = 'You are not the owner of this view';
+$string['reallyaddaccesstoemptyview'] = 'Your view contains no artefacts.  Do you really want to give these users access to the view?';
+$string['saveaccess'] = 'Save Access';
+$string['submitview'] = 'Submit View';
+$string['submitviewfailed'] = 'Submit view failed';
+$string['submitviewquestion'] = 'If you submit this view for assessment, you will not be able to edit the view or any of its associated artefacts until your tutor has finished marking the view.  Are you sure you want to submit this view now?';
+$string['viewdeleted'] = 'View deleted';
+$string['views'] = 'Views';
+$string['viewsubmitted'] = 'View submitted';
+$string['viewsubmittedto'] = 'This view has been submitted to %s';
+
+// my views 2
+$string['editviewnameanddescription'] = 'Edit view details';
+$string['editviewaccess'] = 'Edit view access';
+$string['deletethisview'] = 'Delete this view';
+$string['submitviewforassessment'] = 'Submit view for assessment';
+$string['accessfromdate'] = 'Nobody can see this view before %s';
+$string['accessuntildate'] = 'Nobody can see this view after %s';
+$string['accessbetweendates'] = 'Nobody can see this view before %s or after %s';
+$string['artefactsinthisview'] = 'Artefacts in this view';
+$string['whocanseethisview'] = 'Who can see this view';
+$string['view'] = 'view';
+$string['views'] = 'views';
+$string['viewsubmittedtogroup'] = 'This view has been submitted to <a href="' . get_config('wwwroot') . 'group/view.php?id=%s">%s</a>';
+$string['nobodycanseethisview'] = 'Nobody can see this view';
+
+// access levels
+$string['Public'] = 'Public';
+$string['loggedinusers'] = 'Logged In Users';
+$string['Friends'] = 'Friends';
+$string['Groups'] = 'Groups';
+$string['Users'] = 'Users';
+$string['friends'] = 'friends';
+$string['group'] = 'group';
+$string['tutors'] = 'tutors';
+$string['loggedin'] = 'logged in users';
+$string['public'] = 'public';
+
+// view user
+$string['inviteusertojoingroup'] = 'Invite this user to join a group';
+$string['addusertogroup'] = 'Add this user to a group';
+
+// view view
+$string['addedtowatchlist'] = 'This view has been added to your watchlist';
+$string['removedfromwatchlist'] = 'This view has been removed from your watchlist';
+$string['addfeedbackfailed'] = 'Add feedback failed';
+$string['addtowatchlist'] = 'Add view to watchlist';
+$string['removefromwatchlist'] = 'Remove view from watchlist';
+$string['alreadyinwatchlist'] = 'This view is already in your watchlist';
+$string['attachedfileaddedtofolder'] = "The attached file %s has been added to your '%s' folder.";
+$string['attachfile'] = "Attach file";
+$string['complaint'] = 'Complaint';
+$string['date'] = 'Date';
+$string['feedback'] = 'Feedback';
+$string['feedbackattachdirname'] = 'assessmentfiles';
+$string['feedbackattachdirdesc'] = 'Files attached to view assessments';
+$string['feedbackattachmessage'] = 'The attached file has been added to your %s folder';
+$string['feedbackmadeprivate'] = 'Feedback changed to private';
+$string['feedbackonthisartefactwillbeprivate'] = 'Feedback on this artefact will only be visible to the owner.';
+$string['feedbackonviewbytutorofgroup'] = 'Feedback on %s by %s of %s';
+$string['feedbacksubmitted'] = 'Feedback submitted';
+$string['makepublic'] = 'Make public';
+$string['nopublicfeedback'] = 'No public feedback';
+$string['notifysiteadministrator'] = 'Notify site administrator';
+$string['placefeedback'] = 'Place feedback';
+$string['print'] = 'Print';
+$string['private'] = 'Private';
+$string['makeprivate'] = 'Change to Private';
+$string['reportobjectionablematerial'] = 'Report objectionable material';
+$string['reportsent'] = 'Your report has been sent';
+$string['updatewatchlistfailed'] = 'Update of watchlist failed';
+$string['View'] = 'View';
+$string['watchlistupdated'] = 'Your watchlist has been updated';
+
+$string['alphabet'] = 'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z';
+$string['all'] = 'All';
+
+$string['friend'] = 'Friend';
+$string['profileicon'] = 'Profile Icon';
+
+// general views stuff
+$string['allviews'] = 'All views';
+
+$string['submitviewconfirm'] = 'If you submit \'%s\' to \'%s\' for assessment, you will not be able to edit the view or any of its associated artefacts until your tutor has finished marking the view.  Are you sure you want to submit this view now?';
+$string['viewsubmitted'] = 'View submitted';
+$string['submitviewtogroup'] = 'Submit \'%s\' to \'%s\' for assessment';
+$string['cantsubmitviewtogroup'] = 'You cannot submit this view to this group for assessment';
+
+$string['cantdeleteview'] = 'You cannot delete this view';
+$string['deletespecifiedview'] = 'Delete view \'%s\'';
+$string['deleteviewconfirm'] = 'Do you really want to delete this view? It cannot be undone.';
 
 $string['editaccesspagedescription'] = '<p>You can control who can see your view, and when they can do so. By default, only you can see your views.</p>
     <p>You can grant access to your view to your friends, all logged in users, or only to the certain users and groups you choose.</p>
@@ -106,6 +207,7 @@ $string['backtoyourview'] = 'Back to your view';
 $string['by'] = 'by';
 $string['in'] = 'in';
 $string['noblocks'] = 'Sorry, no blocks in this category :(';
+$string['Preview'] = 'Preview';
 
 $string['50,50'] = $string['33,33,33'] = $string['25,25,25,25'] = 'Equal widths';
 $string['67,33'] = 'Larger left column';
@@ -126,5 +228,7 @@ $string['clickformoreinformation'] = 'Click for more information and to place fe
 $string['Browse'] = 'Browse';
 $string['Search'] = 'Search';
 $string['noartefactstochoosefrom'] = 'Sorry, no artefacts to choose from';
+
+$string['access'] = 'Access';
 
 ?>

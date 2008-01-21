@@ -49,12 +49,12 @@ else {
 }
 
 if (!insert_record($table, $data, 'id', true)) {
-    json_reply('local', get_string('addfeedbackfailed'));
+    json_reply('local', get_string('addfeedbackfailed', 'view'));
 }
 
 require_once('activity.php');
 activity_occurred('feedback', $data);
 
-json_reply(false,get_string('feedbacksubmitted'));
+json_reply(false,get_string('feedbacksubmitted', 'view'));
 
 ?>
