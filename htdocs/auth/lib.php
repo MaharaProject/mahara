@@ -744,6 +744,8 @@ function change_password_submit(Pieform $form, $values) {
     if ($password = $authobj->change_password($USER, $values['password1'])) {
         $SESSION->add_ok_msg(get_string('passwordsaved'));
         if (!empty($values['email'])) {
+            $USER->email = $values['email'];
+            $USER->commit();
             set_profile_field($USER->id, 'email', $values['email']);
         }
         redirect();
