@@ -211,5 +211,5 @@ function submitto_submit(Pieform $form, $values) {
 $smarty = smarty();
 $smarty->assign('views', $data);
 $smarty->assign('pagination', $pagination['html']);
-$smarty->display('view/myviews.tpl');
+$smarty->display('view/index.tpl');
 ?>
