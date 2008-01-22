@@ -14,7 +14,7 @@
     <td>
     {if !$view.submittedto}
         <a href="{$WWWROOT}view/delete.php?id={$view.id}" class="fr"><strong>{str tag="deletethisview" section="view"}</strong></a>
-        <a href="{$WWWROOT}view/blocks.php?id={$view.od}" class="fr"><strong>{str tag ="editthisview" section="view"}</strong></a>
+        <a href="{$WWWROOT}view/blocks.php?id={$view.id}" class="fr"><strong>{str tag ="editthisview" section="view"}</strong></a>
     {/if}
     <h3><a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title|escape}</a></h3>
     <div class="viewitem">
