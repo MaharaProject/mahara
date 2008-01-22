@@ -68,13 +68,6 @@ if (!$data = get_records_sql_array($sql, array($owner, $type))) {
 
 $count = count_records('artefact', 'owner', $owner, 'artefacttype', $type);
 
-foreach ($data as &$row) {
-    foreach (array('date', 'startdate', 'enddate') as $key) {
-        if (array_key_exists($key, $row)) {
-            $row->{$key} = format_date(strtotime($row->{$key}), 'strftimedate', 'current', 'artefact.resume');
-        }
-    }
-}
 echo json_encode(array(
     'data' => $data,
     'limit' => $limit,

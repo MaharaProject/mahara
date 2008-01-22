@@ -23,8 +23,8 @@
             <FIELDS> 
                 <FIELD NAME="id" TYPE="int" LENGTH="10" SEQUENCE="true" NOTNULL="true" />
                 <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="startdate" TYPE="datetime" NOTNULL="true" />
-                <FIELD NAME="enddate" TYPE="datetime" NOTNULL="false" />
+                <FIELD NAME="startdate" TYPE="text" NOTNULL="true" />
+                <FIELD NAME="enddate" TYPE="text" NOTNULL="false" />
                 <FIELD NAME="employer" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="jobtitle" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="positiondescription" TYPE="text" NOTNULL="false" />
@@ -38,8 +38,8 @@
             <FIELDS> 
                 <FIELD NAME="id" TYPE="int" LENGTH="10" SEQUENCE="true" NOTNULL="true" />
                 <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="startdate" TYPE="datetime" NOTNULL="true" />
-                <FIELD NAME="enddate" TYPE="datetime" NOTNULL="false" />
+                <FIELD NAME="startdate" TYPE="text" NOTNULL="true" />
+                <FIELD NAME="enddate" TYPE="text" NOTNULL="false" />
                 <FIELD NAME="qualtype" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="qualname" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="institution" TYPE="text" NOTNULL="true" />
@@ -54,7 +54,7 @@
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" SEQUENCE="true" NOTNULL="true" />
                 <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="date" TYPE="datetime" NOTNULL="true" />
+                <FIELD NAME="date" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="title" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="description" TYPE="text" NOTNULL="false" />
             </FIELDS>
@@ -67,7 +67,7 @@
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" SEQUENCE="true" NOTNULL="true" />
                 <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="date" TYPE="datetime" NOTNULL="true" />
+                <FIELD NAME="date" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="title" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="contribution" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="description" TYPE="text" NOTNULL="false" />
@@ -81,8 +81,8 @@
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" SEQUENCE="true" NOTNULL="true" />
                 <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="startdate" TYPE="datetime" NOTNULL="true" />
-                <FIELD NAME="enddate" TYPE="datetime" NOTNULL="false" />
+                <FIELD NAME="startdate" TYPE="text" NOTNULL="true" />
+                <FIELD NAME="enddate" TYPE="text" NOTNULL="false" />
                 <FIELD NAME="title" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="description" TYPE="text" NOTNULL="false" />
             </FIELDS>

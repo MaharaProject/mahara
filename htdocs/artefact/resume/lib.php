@@ -376,12 +376,6 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
 
         $a->commit();
 
-        foreach (array('date', 'startdate', 'enddate') as $k) {
-            if (array_key_exists($k, $values)) {
-                $values[$k] = db_format_timestamp($values[$k]);
-            }
-        }
-
         $values['artefact'] = $a->get('id');
 
         $table = 'artefact_resume_' . $values['compositetype'];
@@ -423,12 +417,7 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
                 continue;
             }
             if (isset($composite->{$k})) {
-                if (in_array($k, $datetypes)) {
-                    $form['elements'][$k]['defaultvalue'] = strtotime($composite->{$k});
-                }
-                else {
-                    $form['elements'][$k]['defaultvalue'] = $composite->{$k};
-                }
+                $form['elements'][$k]['defaultvalue'] = $composite->{$k};
             }
         }
         $form['elements']['id'] = array(
@@ -564,26 +553,15 @@ class ArtefactTypeEmploymenthistory extends ArtefactTypeResumeComposite {
     public static function get_addform_elements() {
         return array(
             'startdate' => array(
-                'type' => 'calendar',
-                'caloptions' => array(
-                    'showsTime'      => false,
-                    'ifFormat'       => '%Y/%m/%d'
-                ),
+                'type' => 'text',
                 'rules' => array(
                     'required' => true,
-                    'before'   => 'enddate',
                 ),
                 'title' => get_string('startdate', 'artefact.resume'),
-                'help'  => true,
             ),
             'enddate' => array(
-                'type' => 'calendar', 
-                'caloptions' => array(
-                    'showsTime'     => false,
-                    'ifFormat'      => '%Y/%m/%d',
-                ),
+                'type' => 'text', 
                 'title' => get_string('enddate', 'artefact.resume'),
-                'help'  => true,
             ),
             'employer' => array(
                 'type' => 'text',
@@ -641,26 +619,15 @@ class ArtefactTypeEducationhistory extends ArtefactTypeResumeComposite {
     public static function get_addform_elements() {
         return array(
             'startdate' => array(
-                'type' => 'calendar',
-                'caloptions' => array(
-                    'showsTime'      => false,
-                    'ifFormat'       => '%Y/%m/%d'
-                ),
+                'type' => 'text',
                 'rules' => array(
                     'required' => true,
-                    'before'   => 'enddate',
                 ),
                 'title' => get_string('startdate', 'artefact.resume'),
-                'help'  => true,
             ),
             'enddate' => array(
-                'type' => 'calendar', 
-                'caloptions' => array(
-                    'showsTime'     => false,
-                    'ifFormat'      => '%Y/%m/%d',
-                ),
+                'type' => 'text', 
                 'title' => get_string('enddate', 'artefact.resume'),
-                'help'  => true,
             ),
             'institution' => array(
                 'type' => 'text',
@@ -723,16 +690,11 @@ class ArtefactTypeCertification extends ArtefactTypeResumeComposite {
     public static function get_addform_elements() {
         return array(
             'date' => array(
-                'type' => 'calendar',
-                'caloptions' => array(
-                    'showsTime'      => false,
-                    'ifFormat'       => '%Y/%m/%d'
-                ),
+                'type' => 'text',
                 'rules' => array(
                     'required' => true,
                 ),
                 'title' => get_string('date', 'artefact.resume'),
-                'help'  => true,
             ),
             'title' => array(
                 'type' => 'text',
@@ -782,16 +744,11 @@ class ArtefactTypeBook extends ArtefactTypeResumeComposite {
     public static function get_addform_elements() {
         return array(
             'date' => array(
-                'type' => 'calendar',
-                'caloptions' => array(
-                    'showsTime'      => false,
-                    'ifFormat'       => '%Y/%m/%d'
-                ),
+                'type' => 'text',
                 'rules' => array(
                     'required' => true,
                 ),
                 'title' => get_string('date', 'artefact.resume'),
-                'help'  => true,
             ),
             'title' => array(
                 'type' => 'text',
@@ -845,26 +802,15 @@ class ArtefactTypeMembership extends ArtefactTypeResumeComposite {
     public static function get_addform_elements() {
         return array(
             'startdate' => array(
-                'type' => 'calendar',
-                'caloptions' => array(
-                    'showsTime'      => false,
-                    'ifFormat'       => '%Y/%m/%d'
-                ),
+                'type' => 'text',
                 'rules' => array(
                     'required' => true,
-                    'before'   => 'enddate',
                 ),
                 'title' => get_string('startdate', 'artefact.resume'),
-                'help'  => true,
             ),
             'enddate' => array(
-                'type' => 'calendar', 
-                'caloptions' => array(
-                    'showsTime'     => false,
-                    'ifFormat'      => '%Y/%m/%d',
-                ),
+                'type' => 'text', 
                 'title' => get_string('enddate', 'artefact.resume'),
-                'help'  => true,
             ),
             'title' => array(
                 'type' => 'text',
