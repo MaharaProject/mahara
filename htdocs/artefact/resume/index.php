@@ -138,14 +138,12 @@ $form = array(
                     'defaultvalue' => ((!empty($personalinformation)) 
                         ? $personalinformation->get_composite('placeofbirth') : null),
                     'title' => get_string('placeofbirth', 'artefact.resume'),
-                    'help'  => true,
                 ),  
                 'citizenship' => array(
                     'type' => 'text',
                     'defaultvalue' => ((!empty($personalinformation))
                         ? $personalinformation->get_composite('citizenship') : null),
                     'title' => get_string('citizenship', 'artefact.resume'),
-                    'help'  => true,
                 ),
                 'visastatus' => array(
                     'type' => 'text', 
@@ -163,14 +161,12 @@ $form = array(
                         'male'   => get_string('male', 'artefact.resume'),
                     ),
                     'title' => get_string('gender', 'artefact.resume'),
-                    'help'  => true,
                 ),
                 'maritalstatus' => array(
                     'type' => 'text',
                     'defaultvalue' => ((!empty($personalinformation))
                         ? $personalinformation->get_composite('maritalstatus') :  null),
                     'title' => get_string('maritalstatus', 'artefact.resume'),
-                    'help'  => true,
                 ),
             ),
         ),
