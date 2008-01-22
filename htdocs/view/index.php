@@ -65,17 +65,17 @@ if ($viewdata) {
     $accessgroups = get_records_sql_array('SELECT view, accesstype, id, name, startdate, stopdate
         FROM (
             SELECT view, \'group\' AS accesstype, g.id, g.name, startdate, stopdate
-            FROM view_access_group vg
-            INNER JOIN "group" g ON g.id = vg.group AND g.deleted = 0
+            FROM {view_access_group} vg
+            INNER JOIN {group} g ON g.id = vg.group AND g.deleted = 0
             WHERE vg.tutoronly = 0
             UNION SELECT view, \'tutorgroup\' AS accesstype, g.id, g.name, startdate, stopdate
-            FROM view_access_group vg
-            INNER JOIN "group" g ON g.id = vg.group AND g.deleted = 0
+            FROM {view_access_group} vg
+            INNER JOIN {group} g ON g.id = vg.group AND g.deleted = 0
             WHERE vg.tutoronly = 1
             UNION SELECT view, \'user\' AS accesstype, usr AS id, \'\' AS name, startdate, stopdate
-            FROM view_access_usr vu
+            FROM {view_access_usr} vu
             UNION SELECT view, accesstype, 0 AS id, \'\' AS name, startdate, stopdate
-            FROM view_access va
+            FROM {view_access} va
         ) AS a
         WHERE view in (' . $viewidlist . ')
         ORDER BY view, accesstype, name, id
