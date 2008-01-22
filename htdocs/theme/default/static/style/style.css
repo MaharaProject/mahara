@@ -100,6 +100,10 @@ div.grippie {
     margin: 0px;
 }
 
+#profileform #profileform_topsubmit_container td {
+    padding-bottom: 5px;
+}
+
 /* Default buttons to the big ones */
 input.submit, input.submitcancel, input.cancelbackcreate, input.button, button {
     background: url(../images/btn_tall_tile.gif) repeat-x;

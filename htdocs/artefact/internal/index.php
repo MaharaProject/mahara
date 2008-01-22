@@ -70,7 +70,12 @@ if ($profilefields['email']['all']) {
 }
 
 // build form elements
-$elements = array();
+$elements = array(
+    'topsubmit' => array(
+        'type'  => 'submit',
+        'value' => get_string('saveprofile','artefact.internal'),
+    ),
+);
 foreach ( $element_list as $element => $type ) {
     $elements[$element] = array(
         'type'  => $type,
@@ -108,6 +113,9 @@ foreach ( $element_list as $element => $type ) {
     }
 
 }
+if ($elements['firstname']) {
+    $elements['firstname']['autofocus'] = true;
+}
 $elements['submit'] = array(
     'type'  => 'submit',
     'value' => get_string('saveprofile','artefact.internal'),
@@ -120,6 +128,7 @@ $profileform = pieform(array(
     'jsform'     => true,
     'method'     => 'post',
     'elements'   => $elements,
+    'autofocus'  => false,
 ));
 
 function profileform_validate(Pieform $form, $values) {
