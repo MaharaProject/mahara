@@ -9,7 +9,7 @@
       <td class="initial-label">{str tag="firstname"}:</td>
       <td class="initial-letters">
        <span class="first-initial{if empty($search->f)} selected{/if} all">
-        <a href="{$WWWROOT}admin/users/search.php{if $search->l}?l={$search->l|escape}{/if}">{str tag="all"}</a>
+        <a href="{$WWWROOT}admin/users/search.php{if $search->l}?l={$search->l|escape}{/if}">{str tag="all" section="view"}</a>
        </span>
        {foreach from=$alphabet item=a}
        <span class="first-initial{if $a == $search->f} selected{/if}">
@@ -22,7 +22,7 @@
       <td class="initial-label">{str tag="lastname"}:</td>
       <td class="initial-letters">
        <span class="last-initial{if empty($search->l)} selected{/if} all">
-        <a href="{$WWWROOT}admin/users/search.php{if $search->f}?f={$search->f|escape}{/if}">{str tag="all"}</a>
+        <a href="{$WWWROOT}admin/users/search.php{if $search->f}?f={$search->f|escape}{/if}">{str tag="all" section="view"}</a>
        </span>
        {foreach from=$alphabet item=a}
        <span class="last-initial{if $a == $search->l} selected{/if}">

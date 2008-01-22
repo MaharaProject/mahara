@@ -55,7 +55,7 @@ if ($USER->get('admin')) {
 
 $smarty = smarty(array('adminusersearch'));
 $smarty->assign('search', $search);
-$smarty->assign('alphabet', explode(',', get_string('alphabet')));
+$smarty->assign('alphabet', explode(',', get_string('alphabet', 'view')));
 $smarty->assign('institutions', $institutions);
 $smarty->assign('results', build_admin_user_search_results($search, $offset, $limit, $sortby, $sortdir));
 $smarty->display('admin/users/search.tpl');
