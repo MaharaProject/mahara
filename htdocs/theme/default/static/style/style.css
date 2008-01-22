@@ -1245,6 +1245,10 @@ a.folderhover {
     padding: 5px;
 }
 
+.viewitem {
+    margin-top: .5em;
+}
+
 /* My Account styles */
 .maincontent #accountprefs #accountprefs_friendscontrol_container label,
 .maincontent #accountprefs #accountprefs_wysiwyg_container label,

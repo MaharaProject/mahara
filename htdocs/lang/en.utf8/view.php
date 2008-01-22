@@ -62,7 +62,7 @@ $string['viewsubmitted'] = 'View submitted';
 $string['viewsubmittedto'] = 'This view has been submitted to %s';
 
 // my views 2
-$string['editviewnameanddescription'] = 'Edit view details';
+$string['editviewnameanddescription'] = 'Edit view name and description';
 $string['editviewaccess'] = 'Edit view access';
 $string['deletethisview'] = 'Delete this view';
 $string['submitviewforassessment'] = 'Submit view for assessment';

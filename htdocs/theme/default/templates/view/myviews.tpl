@@ -17,22 +17,24 @@
         <button class="fr" type="button"><strong>{str tag ="editthisview" section="view"}</strong></button>
     {/if}
     <h3><a href="{$WWWROOT}view/view.php?id={$view.id}">{$view.title|escape}</a></h3>
+    <div class="viewitem">
+    {if !$view.submittedto}
+        <a style="text-decoration:underline" href="{$WWWROOT}view/edit.php?id={$view.id}">{str tag="editviewnameanddescription" section="view"}</a>
+    {/if}
     {if $view.description}
+        {if !$view.submittedto}<br>{/if}
         {$view.description}
     {/if}
-    {if !$view.submittedto}
-        <button type="button">{str tag="editviewnameanddescription" section="view"}</button>
-    {/if}
-    <ul>
+    </div>
+    <div class="viewitem">
     {if $view.artefacts}
-        <li>
-        {str tag="artefactsinthisview" section="view"}:
-        {foreach from=$view.artefacts item=artefact name=artefacts}
-            <a href="{$WWWROOT}view/artefact.php?artefact={$artefact.id}&amp;view={$view.id}">{$artefact.title|escape}</a>{if !$smarty.foreach.artefacts.last}, {/if}
-        {/foreach}
-        </li>
+        <strong>{str tag="artefacts" section="view"}:</strong>
+        {foreach from=$view.artefacts item=artefact name=artefacts}<a href="{$WWWROOT}view/artefact.php?artefact={$artefact.id}&amp;view={$view.id}">{$artefact.title|escape}</a>{if !$smarty.foreach.artefacts.last}, {/if}{/foreach}
     {/if}
-    <li>
+    </div>
+    <div class="viewitem">
+    <a style="text-decoration:underline" href="{$WWWROOT}view/access.php?id={$view.id}">{str tag="editviewaccess" section="view"}</a>
+    <br>
     {if $view.access}
         {$view.access}
         <br>
@@ -40,25 +42,28 @@
     {if $view.accessgroups}
         {str tag="whocanseethisview" section="view"}:
         {foreach from=$view.accessgroups item=accessgroup name=artefacts}
+        {* this is messy, but is like this so there aren't spaces between links and commas *}
             {if $accessgroup.accesstype == 'loggedin'}
                 {str tag="loggedin" section="view"}{elseif $accessgroup.accesstype == 'public'}
                 {str tag="public" section="view"}{elseif $accessgroup.accesstype == 'friends'}
                 <a href="{$WWWROOT}user/">{str tag="friends" section="view"}</a>{elseif $accessgroup.accesstype == 'group'}
                 <a href="{$WWWROOT}group/view.php?id={$accessgroup.id}">{$accessgroup.name|escape}</a>{elseif $accessgroup.accesstype == 'tutorgroup'}
-                <a href="{$WWWROOT}group/view.php?id={$accessgroup.id}">{$accessgroup.name|escape} ({str tag="tutors" section="view"})</a>{elseif $accessgroup.accesstype == 'user'}
+                <a href="{$WWWROOT}group/view.php?id={$accessgroup.id}">{$accessgroup.name|escape}</a> ({str tag="tutors" section="view"}){elseif $accessgroup.accesstype == 'user'}
                 <a href="{$WWWROOT}user/view.php?id={$accessgroup.id}">{$accessgroup.id|display_name|escape}</a>{/if}{if !$smarty.foreach.artefacts.last},{/if}
         {/foreach}
     {else}
-    {str tag="nobodycanseethisview" section="view"}
+        {str tag="nobodycanseethisview" section="view"}
     {/if}
-    <button type="button">{str tag="editviewaccess" section="view"}</button>
-    </li>
+    </div>
     {if $view.submittedto}
-        <li>{$view.submittedto}</li>
+        <div class="viewitem">
+        {$view.submittedto}
+        </div>
     {/if}
-    </ul>
     {if $view.submitto}
+        <div class="viewitem">
         {$view.submitto}
+        </div>
     {/if}
     </td>
     </tr>
