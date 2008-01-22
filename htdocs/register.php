@@ -62,7 +62,12 @@ $key = param_alphanum('key', null);
 // optional profile icon, and register the user
 if (isset($key)) {
 
-    function profileform_submit(Pieform $form, $values) {
+    // Begin the registration form buliding
+    if (!$registration = get_record_select('usr_registration', '"key" = ? AND expiry >= ?', array($key, db_format_timestamp(time())))) {
+        die_info(get_string('registrationnosuchkey', 'auth.internal'));
+    }
+
+    function create_registered_user($profilefields=array()) {
         global $registration, $SESSION, $USER;
 
         db_begin();
@@ -112,36 +117,11 @@ if (isset($key)) {
             if (in_array($field, array('firstname', 'lastname', 'email'))) {
                 continue;
             }
-            set_profile_field($user->id, $field, $values[$field]);
+            set_profile_field($user->id, $field, $profilefields[$field]);
         }
 
-        // Handle the profile image if uploaded
-        if ($values['profileimg'] && $values['profileimg']['error'] == 0 && $values['profileimg']['size'] > 0) {
-            // Entry in artefact table
-            $artefact = new ArtefactTypeProfileIcon();
-            $artefact->set('owner', $user->id);
-            $artefact->set('title', ($values['profileimgtitle']) ? $values['profileimgtitle'] : $values['profileimg']['name']);
-            $artefact->set('note', $values['profileimg']['name']);
-            $artefact->commit();
-
-            $id = $artefact->get('id');
-
-            $filesize = filesize($values['profileimg']['tmp_name']);
-            set_field('usr', 'quotaused', $filesize, 'id', $user->id);
-            $registration->quotaused = $filesize;
-            $registration->quota = get_config_plugin('artefact', 'file', 'defaultquota');
-            set_field('usr', 'profileicon', $id, 'id', $user->id);
-            $registration->profileicon = $id;
-
-            // Move the file into the correct place.
-            $directory = get_config('dataroot') . 'artefact/internal/profileicons/originals/' . ($id % 256) . '/';
-            check_dir_exists($directory);
-            move_uploaded_file($values['profileimg']['tmp_name'], $directory . $id);
-        }
-        else {
-            $registration->quotaused = 0;
-            $registration->quota = get_config_plugin('artefact', 'file', 'defaultquota');
-        }
+        $registration->quotaused = 0;
+        $registration->quota = get_config_plugin('artefact', 'file', 'defaultquota');
 
         db_commit();
         handle_event('createuser', $registration);
@@ -157,26 +137,17 @@ if (isset($key)) {
         else if ($user->username == 'htaccess') {
             $SESSION->add_ok_msg('Welcome B-Quack, htaccess!');
         }
+        else {
+            $SESSION->add_ok_msg(get_string('registrationcomplete', 'mahara', get_config('sitename')));
+        }
         redirect();
     }
 
+    function profileform_submit(Pieform $form, $values) {
+        create_registered_user($values);
+    }
+
     function profileform_validate(Pieform $form, $values) {
-        // Profile icon, if uploaded
-        if ($values['profileimg'] && $values['profileimg']['error'] == 0 && $values['profileimg']['size'] > 0) {
-            require_once('file.php');
-            if (!is_image_mime_type(get_mime_type($values['profileimg']['tmp_name']))) {
-                $form->set_error('profileimg', get_string('filenotimage'));
-            }
-
-            // Check the file isn't greater than the maximum allowed size
-            list($width, $height) = getimagesize($values['profileimg']['tmp_name']);
-            $imagemaxwidth  = get_config('imagemaxwidth');
-            $imagemaxheight = get_config('imagemaxheight');
-            if ($width > $imagemaxwidth || $height > $imagemaxheight) {
-                $form->set_error('profileimg', get_string('profileiconimagetoobig', 'artefact.internal', $width, $height, $imagemaxwidth, $imagemaxheight));
-            }
-        }
-
         foreach(ArtefactTypeProfile::get_mandatory_fields() as $field => $type) {
             // @todo here and above, use the method for getting "always mandatory" fields
             if (in_array($field, array('firstname', 'lastname', 'email'))) {
@@ -186,40 +157,18 @@ if (isset($key)) {
         }
     }
 
-
-    // Begin the registration form buliding
-    if (!$registration = get_record_select('usr_registration', '"key" = ? AND expiry >= ?', array($key, db_format_timestamp(time())))) {
-        die_info(get_string('registrationnosuchkey', 'auth.internal'));
-    }
+    safe_require('artefact', 'internal');
 
     $elements = array(
-        'optionalheader' => array(
+        'mandatoryheader' => array(
             'type'  => 'html',
-            'value' => get_string('registerstep3fieldsoptional')
-        ),
-        'profileimg' => array(
-            'type' => 'file',
-            'title' => 'Profile Image'
-        ),
-        'profileimgtitle' => array(
-            'type' => 'text',
-            'title' => 'Title'
+            'value' => get_string('registerstep3fieldsmandatory')
         )
     );
 
-    $mandatoryheaderadded = false;
-    safe_require('artefact', 'internal');
     foreach(ArtefactTypeProfile::get_mandatory_fields() as $field => $type) {
         if (in_array($field, array('firstname', 'lastname', 'email'))) {
             continue;
-        }
-
-        if (!$mandatoryheaderadded) {
-            $elements['mandatoryheader'] = array(
-                'type'  => 'html',
-                'value' => get_string('registerstep3fieldsmandatory')
-            );
-            $mandatoryheaderadded = true;
         }
 
         $elements[$field] = array(
@@ -241,6 +190,10 @@ if (isset($key)) {
             $elements[$field]['options'] = getoptions_country();
             $elements[$field]['defaultvalue'] = 'nz';
         }
+    }
+
+    if (count($elements) < 2) { // No mandatory fields, just create the user
+        create_registered_user();
     }
 
     $elements['key'] = array(

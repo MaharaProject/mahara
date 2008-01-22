@@ -215,6 +215,7 @@ $string['registeringdisallowed'] = 'Sorry, you cannot register for this system a
 $string['membershipexpiry'] = 'Membership expires';
 $string['institutionfull'] = 'The institution you have chosen is not accepting any more registrations.';
 $string['registrationnotallowed'] = 'The institution you have chosen does not allow self-registration.';
+$string['registrationcomplete'] = 'Thank you for registering at %s';
 
 // Forgot password
 $string['cantchangepassword'] = 'Sorry, you are unable to change your password through this interface - please use your institution\'s interface instead';
