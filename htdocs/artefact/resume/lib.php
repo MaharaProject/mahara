@@ -332,10 +332,6 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume {
         );
     }
 
-    public static function get_order_field() {
-        return 'startdate';
-    }
-
     /**
     * This function should return a snippet of javascript
     * to be plugged into a table renderer instantiation
@@ -683,10 +679,6 @@ class ArtefactTypeCertification extends ArtefactTypeResumeComposite {
         return "r.description";
     }
 
-    public static function get_order_field() {
-        return 'date';
-    }
-
     public static function get_addform_elements() {
         return array(
             'date' => array(
@@ -735,10 +727,6 @@ class ArtefactTypeBook extends ArtefactTypeResumeComposite {
 
     public static function get_tablerenderer_body_js_string() {
         return "r.description";
-    }
-
-    public static function get_order_field() {
-        return 'date';
     }
 
     public static function get_addform_elements() {

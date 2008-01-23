@@ -50,7 +50,7 @@ $sql = 'SELECT ar.*, a.owner
     FROM {artefact} a 
     JOIN {' . $othertable . '} ar ON ar.artefact = a.id
     WHERE a.owner = ? AND a.artefacttype = ?
-    ORDER BY ' . call_static_method(generate_artefact_class_name($type), 'get_order_field') . ' DESC
+    ORDER BY ar.displayorder
     LIMIT ' . $limit . ' OFFSET ' . $offset;
 
 if (!empty($view)) { 
