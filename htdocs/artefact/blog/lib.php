@@ -484,7 +484,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
         // We need to make sure that the images in the post have the right viewid associated with them
         $postcontent = $this->get('description');
         if (isset($options['viewid'])) {
-            $postcontent = preg_replace('#(<img src=".*artefact/file/download\.php\?file=\d+)#', '\1&amp;view=' . $options['viewid'], $postcontent);
+            $postcontent = preg_replace('#(<img[^>]+src="[^>]+artefact/file/download\.php\?file=\d+)#', '\1&amp;view=' . $options['viewid'], $postcontent);
         }
         $smarty->assign('artefactdescription', $postcontent);
         $smarty->assign('artefact', $this);

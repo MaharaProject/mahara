@@ -50,6 +50,49 @@ function xmldb_artefact_blog_upgrade($oldversion=0) {
         $status = $status && create_table($table);
     }
 
+    if ($oldversion < 2008012200) {
+        // From 0.9, some files were not having their temporary download paths 
+        // translated to proper artefact/file/download.php paths. This upgrade 
+        // attempts to fix them. It should work in the vast majority of cases, 
+        // the largest assumption made is that artefacts were inserted in 
+        // ascending ID order when the post was created, which is a pretty safe 
+        // bet.
+        if ($blogfiles = get_records_array('artefact_blog_blogpost_file', '', '', 'blogpost ASC, file ASC')) {
+            $blogpostids = join(', ', array_map(create_function('$a', 'return $a->blogpost;'), $blogfiles));
+            // Find all blogposts that have attached files
+            if ($blogposts = get_records_select_array('artefact', 'id IN(' . $blogpostids . ')', null, 'id ASC')) {
+                foreach ($blogposts as $post) {
+                    log_debug("Checking post {$post->id}");
+                    // Only doublecheck posts that are likely to have a broken URL in them
+                    if (false !== strpos($post->description, 'createid')) {
+                        log_debug(" * Looks like post " . $post->id . " has a createid in it");
+                        $i = 0;
+                        $body = $post->description;
+                        foreach ($blogfiles as $file) {
+                            if ($file->blogpost == $post->id) {
+                                // This file is connected to this post, so likely it is to be displayed
+                                $i++;
+                                log_debug('* Replace uploadnumber = ' . $i . ' with artefact id ' . $file->file);
+                                $regexps = array('/<img([^>]+)src="([^>]+)downloadtemp.php\?uploadnumber=' . $i .'&amp;createid=\d+/',
+                                                 '/alt="uploaded:' . $i . '"/');
+                                $subs = array('<img$1src="' . get_config('wwwroot') . 'artefact/file/download.php?file=' . $file->file,
+                                              'alt="artefact:' . $file->file . '"');
+                                $body = preg_replace($regexps, $subs, $body);
+                            }
+                        }
+
+                        // Update the post if necessary
+                        if ($body != $post->description) {
+                            $postobj = new ArtefactTypeBlogPost($post->id, null);
+                            $postobj->set('description', $body);
+                            $postobj->commit();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     return $status;
 }
 
