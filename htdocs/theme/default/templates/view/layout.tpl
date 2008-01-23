@@ -10,7 +10,7 @@
 
             {foreach from=$options key=id item=description}
             <div class="fl" style="margin: 0 .5em; text-align: center;">
-                <div><img src="/thumb.php?type=viewlayout&vl={$id}" alt=""></div>
+                <div><img src="{$WWWROOT}thumb.php?type=viewlayout&vl={$id}" alt=""></div>
                 <div><input type="radio" class="radio" name="layout" value="{$id}"></div>
                 <div>{$description|escape}</div>
             </div>
