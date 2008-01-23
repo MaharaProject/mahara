@@ -301,7 +301,7 @@ else {
 }
 
 function institution_validate(Pieform $form, $values) {
-    if (!$form->get_error('name') && record_exists('institution', 'name', $values['name'])) {
+    if (!empty($values['name']) && !$form->get_error('name') && record_exists('institution', 'name', $values['name'])) {
         $form->set_error('name', get_string('institutionnamealreadytaken', 'admin'));
     }
 }
