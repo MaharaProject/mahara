@@ -35,10 +35,12 @@ function xmldb_artefact_resume_upgrade($oldversion=0) {
             'artefact_resume_employmenthistory',
             'artefact_resume_educationhistory',
             'artefact_resume_membership') as $table) {
-            $records = get_records_array($table, '', '', '', 'id,startdate,enddate');
+            $records = get_records_array($table, '', '', 'startdate DESC', 'id,startdate,enddate');
+            table_column($table, null, 'displayorder');
             table_column($table, 'startdate', 'startdate', 'text', null, null, '', 'not null');
             table_column($table, 'enddate', 'enddate', 'text', null, null, '', '');
-            foreach ($records as $r) {
+            foreach ($records as $k => $r) {
+                set_field($table, 'displayorder', $k, 'id', $r->id);
                 set_field($table, 'startdate', 
                           format_date(strtotime($r->startdate), 'strftimedate', 'current', 'artefact.resume'),
                           'id', $r->id);
@@ -50,9 +52,11 @@ function xmldb_artefact_resume_upgrade($oldversion=0) {
         foreach (array(
             'artefact_resume_certification',
             'artefact_resume_book') as $table) {
-            $records = get_records_array($table, '', '', '', 'id,date');
+            $records = get_records_array($table, '', '', 'date DESC', 'id,date');
+            table_column($table, null, 'displayorder');
             table_column($table, 'date', 'date', 'text', null, null, '', 'not null');
-            foreach ($records as $r) {
+            foreach ($records as $k => $r) {
+                set_field($table, 'displayorder', $k, 'id', $r->id);
                 set_field($table, 'date', 
                           format_date(strtotime($r->date), 'strftimedate', 'current', 'artefact.resume'),
                           'id', $r->id);

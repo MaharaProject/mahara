@@ -28,6 +28,7 @@
                 <FIELD NAME="employer" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="jobtitle" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="positiondescription" TYPE="text" NOTNULL="false" />
+                <FIELD NAME="displayorder" TYPE="int" LENGTH="10" NOTNULL="true" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
@@ -44,6 +45,7 @@
                 <FIELD NAME="qualname" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="institution" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="qualdescription" TYPE="text" NOTNULL="false" />
+                <FIELD NAME="displayorder" TYPE="int" LENGTH="10" NOTNULL="true" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
@@ -57,6 +59,7 @@
                 <FIELD NAME="date" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="title" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="description" TYPE="text" NOTNULL="false" />
+                <FIELD NAME="displayorder" TYPE="int" LENGTH="10" NOTNULL="true" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
@@ -71,6 +74,7 @@
                 <FIELD NAME="title" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="contribution" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="description" TYPE="text" NOTNULL="false" />
+                <FIELD NAME="displayorder" TYPE="int" LENGTH="10" NOTNULL="true" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
@@ -85,6 +89,7 @@
                 <FIELD NAME="enddate" TYPE="text" NOTNULL="false" />
                 <FIELD NAME="title" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="description" TYPE="text" NOTNULL="false" />
+                <FIELD NAME="displayorder" TYPE="int" LENGTH="10" NOTNULL="true" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
