@@ -32,7 +32,7 @@ define('SECTION_PLUGINNAME', 'view');
 define('SECTION_PAGE', 'index');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
-require('pieforms/pieform.php');
+require_once('pieforms/pieform.php');
 define('TITLE', get_string('myviews', 'view'));
 
 $limit = param_integer('limit', 5);
