@@ -12,6 +12,7 @@
             {if $controls}
             <th class="resumecontrols"></th>
             <th class="resumecontrols"></th>
+            <th class="resumecontrols"></th>
             {/if}
         </tr>
     </thead>

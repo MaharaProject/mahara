@@ -183,6 +183,9 @@ $editstr = get_string('edit');
 $delstr = get_string('delete');
 $confirmdelstr = get_string('compositedeleteconfirm', 'artefact.resume');
 $confirmeditprofilestr = get_string('confirmeditprofile', 'artefact.resume');
+$imagepath = theme_get_url('images');
+$upstr = get_string('moveup', 'artefact.resume');
+$downstr = get_string('movedown', 'artefact.resume');
 
 $wwwroot = get_config('wwwroot');
 
@@ -229,6 +232,20 @@ function deleteComposite(type, id, artefact) {
     return false;
 }
 
+function moveComposite(type, id, artefact, direction) {
+    sendjsonrequest('compositemove.json.php',
+        {'id': id, 'artefact': artefact, 'direction':direction},
+        'GET', 
+        function(data) {
+            tableRenderers[type].doupdate();
+        },
+        function() {
+            // @todo error
+        }
+    );
+    return false;
+}
+
 function editprofilebutton() {
     if (confirm('{$confirmeditprofilestr}')) {
         document.location='{$wwwroot}artefact/internal/';
@@ -260,6 +277,19 @@ EOF;
                 return deleteComposite(d.type, r.id, r.artefact);
             });
             return TD(null, link);
+        },
+        function (r, d) {
+            var up = A({'href': ''}, IMG({'src': '{$imagepath}/move-block-up.png', 'alt':'{$upstr}'}));
+            connect(up, 'onclick', function (e) {
+                e.stop();
+                return moveComposite(d.type, r.id, r.artefact, 'up');
+            });
+            var down = A({'href': ''}, IMG({'src': '{$imagepath}/move-block-down.png', 'alt':'{$downstr}'}));
+            connect(down, 'onclick', function (e) {
+                e.stop();
+                return moveComposite(d.type, r.id, r.artefact, 'down');
+            });
+            return TD(null, up, ' ', down);
         }
     ]
 );
