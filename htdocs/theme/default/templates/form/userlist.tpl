@@ -56,9 +56,9 @@
                 if(users.count > users.limit) {
                     replaceChildNodes('{{$name}}_messages',
                         DIV(null,
-                            'Only showing first ',
+                            {{$onlyshowingfirst}}, ' ',
                             SPAN({'id': '{{$name}}_userlimit'}, users.limit),
-                            ' results of ',
+                            ' ', {{$resultsof}}, ' ',
                             SPAN({'id': '{{$name}}_usercount'}, users.count - counter)
                         )
                     );

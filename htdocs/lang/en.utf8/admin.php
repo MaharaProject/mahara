@@ -381,6 +381,8 @@ $string['invitationsent'] = 'Invitation sent';
 
 // general stuff
 $string['notificationssaved'] = 'Notification settings saved';
+$string['onlyshowingfirst'] = 'Only showing first';
+$string['resultsof'] = 'results of';
 
 $string['installed'] = 'Installed';
 $string['errors'] = 'Errors';

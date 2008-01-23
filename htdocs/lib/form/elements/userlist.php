@@ -81,6 +81,8 @@ function pieform_element_userlist(Pieform $form, $element) {
         $element['searchparams'] = array('query' => '', 'limit' => 100);
     }
     $smarty->assign('searchparams', json_encode($element['searchparams']));
+    $smarty->assign('onlyshowingfirst', json_encode(get_string('onlyshowingfirst', 'admin')));
+    $smarty->assign('resultsof', json_encode(get_string('resultsof', 'admin')));
 
     return $smarty->fetch('form/userlist.tpl');
 }
