@@ -67,6 +67,12 @@ if (isset($key)) {
         die_info(get_string('registrationnosuchkey', 'auth.internal'));
     }
 
+    // In case a new session has started, reset the session language
+    // to the one selected during registration
+    if (!empty($registration->lang)) {
+        $SESSION->set('lang', $registration->lang);
+    }
+
     function create_registered_user($profilefields=array()) {
         global $registration, $SESSION, $USER;
 
@@ -107,6 +113,9 @@ if (isset($key)) {
         set_profile_field($user->id, 'email', $registration->email);
         set_profile_field($user->id, 'firstname', $registration->firstname);
         set_profile_field($user->id, 'lastname', $registration->lastname);
+        if (!empty($registration->lang) && $registration->lang != 'default') {
+            set_account_preference($user->id, 'lang', $registration->lang);
+        }
 
         // Delete the old registration record
         delete_records('usr_registration', 'id', $registrationid);
@@ -428,6 +437,7 @@ function register_submit(Pieform $form, $values) {
     $values['key']   = get_random_key();
     // @todo the expiry date should be configurable
     $values['expiry'] = db_format_timestamp(time() + 86400);
+    $values['lang'] = $SESSION->get('lang');
     try {
         insert_record('usr_registration', $values);
 

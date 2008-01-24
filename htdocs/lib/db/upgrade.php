@@ -785,6 +785,10 @@ function xmldb_core_upgrade($oldversion=0) {
         add_field($table, $field);
     }
 
+    if ($oldversion < 2008012400) {
+        table_column('usr_registration', null, 'lang', 'text', null, null, '', '');
+    }
+
     return $status;
 
 }

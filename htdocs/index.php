@@ -34,6 +34,10 @@ define('TITLE', get_string('home'));
 // this, we can guarantee whether the user is logged in or not for this page.
 if (!$USER->is_logged_in()) {
     $pagename = 'loggedouthome';
+    $lang = param_alphanumext('lang', null);
+    if (!empty($lang)) {
+        $SESSION->set('lang', $lang);
+    }
 }
 else {
     $pagename = 'home';

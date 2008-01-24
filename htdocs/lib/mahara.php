@@ -700,12 +700,16 @@ function print_object($mixed) {
  * @return string
  */
 function current_language() {
-    global $USER, $CFG;
+    global $USER, $CFG, $SESSION;
     if ($USER instanceof User) {
         $lang = $USER->get_account_preference('lang');
         if ($lang !== null && $lang != 'default') {
             return $lang;
         }
+    }
+    $sesslang = $SESSION->get('lang');
+    if (!empty($sesslang)) {
+        return $sesslang;
     }
     if (!empty($CFG->lang)) {
         return $CFG->lang;

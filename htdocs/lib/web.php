@@ -348,6 +348,11 @@ EOF;
         $smarty->assign('MAINNAV', main_nav());
         $smarty->assign('LOGGEDINSTR', get_loggedin_string());
     }
+    else {
+        $smarty->assign('sitedefaultlang', get_string('sitedefault', 'admin') . ' (' . 
+                        get_string_from_language('default', 'thislanguage') . ')');
+        $smarty->assign('LANGUAGES', get_languages());
+    }
 
     $smarty->assign_by_ref('USER', $USER);
     $smarty->assign('SESSKEY', $USER->get('sesskey'));

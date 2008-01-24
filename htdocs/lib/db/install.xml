@@ -401,6 +401,7 @@
                 <FIELD NAME="firstname" TYPE="text" NOTNULL="true"/>
                 <FIELD NAME="lastname" TYPE="text" NOTNULL="true"/>
                 <FIELD NAME="email" TYPE="text" NOTNULL="true"/>
+                <FIELD NAME="lang" TYPE="text" NOTNULL="false"/>
                 <FIELD NAME="key" TYPE="char" LENGTH="16" NOTNULL="true"/>
                 <FIELD NAME="expiry" TYPE="datetime" NOTNULL="true"/>
             </FIELDS>

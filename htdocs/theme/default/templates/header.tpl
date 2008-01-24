@@ -63,6 +63,23 @@
                     </tr>
                     *}
 {/if}
+{if defined('MENUITEM') && MENUITEM == '' && !$LOGGEDIN && (count($LANGUAGES) > 1)}
+<tr class="headerlanguage">
+  <td>
+    <form method="post">
+      <label>{str tag=language}: </label>
+      <select name="lang">
+        <option value="default" selected>{$sitedefaultlang}</option>
+{foreach from=$LANGUAGES key=k item=i}
+        <option value="{$k}">{$i}</option>
+{/foreach}
+      </select>
+      <input type="submit" class="submit" name="changelang" value="{str tag=change}" />
+    </form>
+  </td>
+</tr>
+{/if}
+
 					<tr>
 						<td><div id="loggedinstring">{$LOGGEDINSTR}</div></td>
 					</tr>	
