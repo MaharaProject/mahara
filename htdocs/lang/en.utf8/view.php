@@ -220,9 +220,8 @@ $string['20,30,30,20'] = 'Larger centre columns';
 $string['noviewlayouts'] = 'There are no view layouts for a %s column view';
 
 $string['blocktypecategory.feeds'] = 'External feeds';
-$string['blocktypecategory.images'] = 'Images';
+$string['blocktypecategory.fileimagevideo'] = 'Files, images and video';
 $string['blocktypecategory.general'] = 'General';
-$string['blocktypecategory.multimedia'] = 'Multimedia';
 
 $string['notitle'] = 'No title';
 $string['clickformoreinformation'] = 'Click for more information and to place feedback';
