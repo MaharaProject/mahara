@@ -137,13 +137,16 @@ function activity_get_users($activitytype, $userids=null, $userobjs=null, $admin
     $values = array($activitytype);
     $sql = '
         SELECT
-            u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff, p.method
+            u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff, 
+            p.method, ap.value AS lang
         FROM {usr} u
         LEFT JOIN {usr_activity_preference} p
             ON p.usr = u.id ' . (empty($admininstitutions) ? '' : '
         LEFT OUTER JOIN {usr_institution} ui
             ON (u.id = ui.usr
                 AND ui.institution IN ('.join(',',array_map('db_quote',$admininstitutions)).'))') . '
+        LEFT OUTER JOIN {usr_account_preference} ap
+            ON (ap.usr = u.id AND ap.field = \'lang\')
         WHERE (p.activity = ? ' . ($adminonly ? '' : ' OR p.activity IS NULL') . ')';
     if (!empty($userobjs) && is_array($userobjs)) {
         $sql .= ' AND u.id IN (' . implode(',',db_array_to_ph($userobjs)) . ')';
@@ -156,7 +159,8 @@ function activity_get_users($activitytype, $userids=null, $userobjs=null, $admin
     if (!empty($admininstitutions)) {
         $sql .= '
         GROUP BY
-            u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff, p.method
+            u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff,
+            p.method, ap.value
         HAVING (u.admin = 1 OR SUM(ui.admin) > 0)';
     } else if ($adminonly) {
         $sql .= ' AND u.admin = 1';
@@ -217,7 +221,7 @@ function activity_process_queue() {
 
 function activity_get_viewaccess_users($view, $owner, $type) {
     $type = activity_locate_typerecord($type);
-    $sql = 'SELECT userid, u.*, p.method
+    $sql = 'SELECT userid, u.*, p.method, ap.value AS lang
                 FROM (
                 SELECT (CASE WHEN usr1 = ? THEN usr2 ELSE usr1 END) AS userid 
                     FROM {usr_friend} f
@@ -239,6 +243,7 @@ function activity_get_viewaccess_users($view, $owner, $type) {
                 ) AS userlist
                 JOIN {usr} u ON u.id = userlist.userid
                 LEFT JOIN {usr_activity_preference} p ON p.usr = u.id
+                LEFT OUTER JOIN {usr_account_preference} ap ON (ap.usr = u.id AND ap.field = \'lang\')
             WHERE p.activity = ?';
     $values = array($owner, $owner, $owner, 'friends', $view, $view, $view, 0, 1, $view, $type->id);
     if (!$u = get_records_sql_assoc($sql, $values)) {
@@ -550,18 +555,20 @@ class ActivityTypeWatchlist extends ActivityType {
         if (get_config('dbtype') == 'mysql') {
             $casturl = 'CAST(? AS CHAR)'; // note, NOT varchar
         }
-        $sql = 'SELECT u.*, p.method, ' . $casturl . ' AS url
+        $sql = 'SELECT u.*, p.method, ap.value AS lang, ' . $casturl . ' AS url
                     FROM {usr_watchlist_view} wv
                     JOIN {usr} u
                         ON wv.usr = u.id
                     LEFT JOIN {usr_activity_preference} p
                         ON p.usr = u.id
+                    LEFT OUTER JOIN {usr_account_preference} ap
+                        ON (ap.usr = u.id AND ap.field = \'lang\')
                     WHERE (p.activity = ? OR p.activity IS NULL)
                     AND wv.view = ?
                ';
         $this->users = get_records_sql_array($sql, 
                                        array(get_config('wwwroot') . 'view/view.php?id=' 
-                                             . $this->view, 'watchlist', $this->view));
+                                             . $this->view, $this->get_id(), $this->view));
         foreach ($this->users as &$user) {
             $user->message = display_name($viewinfo, $user) . ' ' . $this->message;
         }
