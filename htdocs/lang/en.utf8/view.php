@@ -77,16 +77,16 @@ $string['viewsubmittedtogroup'] = 'This view has been submitted to <a href="' . 
 $string['nobodycanseethisview'] = 'Nobody can see this view';
 
 // access levels
-$string['Public'] = 'Public';
-$string['loggedinusers'] = 'Logged In Users';
-$string['Friends'] = 'Friends';
-$string['Groups'] = 'Groups';
-$string['Users'] = 'Users';
-$string['friends'] = 'friends';
-$string['group'] = 'group';
+$string['public'] = 'Public';
+$string['loggedin'] = 'Logged In Users';
+$string['friends'] = 'Friends';
+$string['groups'] = 'Groups';
+$string['users'] = 'Users';
+$string['friendslower'] = 'friends';
+$string['grouplower'] = 'group';
 $string['tutors'] = 'tutors';
-$string['loggedin'] = 'logged in users';
-$string['public'] = 'public';
+$string['loggedinlower'] = 'logged in users';
+$string['publiclower'] = 'public';
 
 // view user
 $string['inviteusertojoingroup'] = 'Invite this user to join a group';

@@ -44,9 +44,9 @@
         {foreach from=$view.accessgroups item=accessgroup name=artefacts}
         {* this is messy, but is like this so there aren't spaces between links and commas *}
             {if $accessgroup.accesstype == 'loggedin'}
-                {str tag="loggedin" section="view"}{elseif $accessgroup.accesstype == 'public'}
-                {str tag="public" section="view"}{elseif $accessgroup.accesstype == 'friends'}
-                <a href="{$WWWROOT}user/">{str tag="friends" section="view"}</a>{elseif $accessgroup.accesstype == 'group'}
+                {str tag="loggedinlower" section="view"}{elseif $accessgroup.accesstype == 'public'}
+                {str tag="publiclower" section="view"}{elseif $accessgroup.accesstype == 'friends'}
+                <a href="{$WWWROOT}user/">{str tag="friendslower" section="view"}</a>{elseif $accessgroup.accesstype == 'group'}
                 <a href="{$WWWROOT}group/view.php?id={$accessgroup.id}">{$accessgroup.name|escape}</a>{elseif $accessgroup.accesstype == 'tutorgroup'}
                 <a href="{$WWWROOT}group/view.php?id={$accessgroup.id}">{$accessgroup.name|escape}</a> ({str tag="tutors" section="view"}){elseif $accessgroup.accesstype == 'user'}
                 <a href="{$WWWROOT}user/view.php?id={$accessgroup.id}">{$accessgroup.id|display_name|escape}</a>{/if}{if !$smarty.foreach.artefacts.last},{/if}

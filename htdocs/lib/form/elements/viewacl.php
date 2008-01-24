@@ -41,10 +41,10 @@ function pieform_element_viewacl(Pieform $form, $element) {
     // Look for the presets and split them into two groups
     $presets = array();
     if (get_config('allowpublicviews') == '1') {
-         $presets = array('Public', 'loggedinusers', 'Friends');
+         $presets = array('public', 'loggedin', 'friends');
     }
     else {
-        $presets = array('loggedinusers', 'Friends');
+        $presets = array('loggedinu', 'friends');
     }
     if ($value) {
         foreach ($value as $key => &$item) {
