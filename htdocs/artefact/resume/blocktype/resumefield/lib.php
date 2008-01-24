@@ -40,6 +40,21 @@ class PluginBlocktypeResumefield extends PluginBlocktype {
         return array('resume');
     }
 
+     /**
+     * Optional method. If exists, allows this class to decide the title for
+     * all blockinstances of this type
+     */
+    public static function get_instance_title(BlockInstance $bi) {
+        $configdata = $bi->get('configdata');
+
+        if (!empty($configdata['artefactid'])) {
+            require_once(get_config('docroot') . 'artefact/lib.php');
+            $resumefield = artefact_instance_from_id($configdata['artefactid']);
+            return $resumefield->get('title');
+        }
+        return '';
+    }
+
     public static function render_instance(BlockInstance $instance) {
         require_once(get_config('docroot') . 'artefact/lib.php');
         $smarty = smarty_core();
