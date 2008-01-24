@@ -67,6 +67,7 @@ $string['qualdescription'] = 'Qualification Description';
 $string['contribution'] = 'Contribution';
 $string['compositedeleteconfirm'] = 'Are you sure you want to delete this?';
 $string['compositesaved'] = 'Saved successfully';
+$string['compositesavefailed'] = 'Save failed';
 $string['compositedeleted'] = 'Deleted successfully';
 $string['backtoresume'] = 'Back to My Resumé';
 $string['personalgoal'] = 'Personal Goals';

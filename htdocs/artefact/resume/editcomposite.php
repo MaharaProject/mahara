@@ -44,8 +44,9 @@ if ($a->get('owner') != $USER->get('id')) {
 
 $elements = call_static_method(generate_artefact_class_name($type), 'get_addform_elements');
 $elements['submit'] = array(
-    'type' => 'submit',
-    'value' => get_string('save'),
+    'type' => 'submitcancel',
+    'value' => array(get_string('save'), get_string('cancel')),
+    'goto' => get_config('wwwroot') . '/artefact/resume/',
 );
 $elements['compositetype'] = array(
     'type' => 'hidden',
@@ -55,9 +56,8 @@ $cform = array(
     'name' => $type,
     'plugintype' => 'artefact',
     'pluginname' => 'resume',
-    'elements' => $elements, 
-    'jsform' => true,
-    'successcallback' => 'compositeform_submit',
+    'elements' => $elements,
+    'successcallback' => 'compositeformedit_submit',
 );
 
 $a->populate_form($cform, $id, $type);

@@ -851,6 +851,20 @@ function compositeform_submit(Pieform $form, $values) {
     $form->json_reply(PIEFORM_OK, get_string('compositesaved', 'artefact.resume'));
 }
 
+function compositeformedit_submit(Pieform $form, $values) {
+    global $SESSION;
+    try {
+        call_static_method(generate_artefact_class_name($values['compositetype']),
+            'process_compositeform', $form, $values);
+    }
+    catch (Exception $e) {
+        $SESSION->add_error_msg(get_string('compositesavefailed', 'artefact.resume'));
+        redirect('/artefact/resume/');
+    }
+    $SESSION->add_ok_msg(get_string('compositesaved', 'artefact.resume'));
+    redirect('/artefact/resume/');
+}
+
 function goalandskillform_submit(Pieform $form, $values) {
     foreach ($values as $key => $value) {
         if (!in_array($key, ArtefactTypeResumeGoalAndSkill::get_goalandskill_artefact_types())) {
