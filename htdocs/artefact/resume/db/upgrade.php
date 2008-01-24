@@ -39,14 +39,16 @@ function xmldb_artefact_resume_upgrade($oldversion=0) {
             table_column($table, null, 'displayorder');
             table_column($table, 'startdate', 'startdate', 'text', null, null, '', 'not null');
             table_column($table, 'enddate', 'enddate', 'text', null, null, '', '');
-            foreach ($records as $k => $r) {
-                set_field($table, 'displayorder', $k, 'id', $r->id);
-                set_field($table, 'startdate', 
-                          format_date(strtotime($r->startdate), 'strftimedate', 'current', 'artefact.resume'),
-                          'id', $r->id);
-                set_field($table, 'enddate', 
-                          format_date(strtotime($r->enddate), 'strftimedate', 'current', 'artefact.resume'),
-                          'id', $r->id);
+            if (!empty($records)) {
+                foreach ($records as $k => $r) {
+                    set_field($table, 'displayorder', $k, 'id', $r->id);
+                    set_field($table, 'startdate', 
+                              format_date(strtotime($r->startdate), 'strftimedate', 'current', 'artefact.resume'),
+                              'id', $r->id);
+                    set_field($table, 'enddate', 
+                              format_date(strtotime($r->enddate), 'strftimedate', 'current', 'artefact.resume'),
+                              'id', $r->id);
+                }
             }
         }
         foreach (array(
@@ -55,11 +57,13 @@ function xmldb_artefact_resume_upgrade($oldversion=0) {
             $records = get_records_array($table, '', '', 'date DESC', 'id,date');
             table_column($table, null, 'displayorder');
             table_column($table, 'date', 'date', 'text', null, null, '', 'not null');
-            foreach ($records as $k => $r) {
-                set_field($table, 'displayorder', $k, 'id', $r->id);
-                set_field($table, 'date', 
-                          format_date(strtotime($r->date), 'strftimedate', 'current', 'artefact.resume'),
-                          'id', $r->id);
+            if (!empty($records)) {
+                foreach ($records as $k => $r) {
+                    set_field($table, 'displayorder', $k, 'id', $r->id);
+                    set_field($table, 'date', 
+                              format_date(strtotime($r->date), 'strftimedate', 'current', 'artefact.resume'),
+                              'id', $r->id);
+                }
             }
         }
     }
