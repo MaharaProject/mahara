@@ -48,7 +48,7 @@ $form = pieform(array(
             'type' => 'submitcancel',
             'title' => get_string('deleteviewconfirm', 'view'),
             'value' => array(get_string('yes'), get_string('no')),
-            'goto' => get_config('wwwroot') . 'view/temp.php'
+            'goto' => get_config('wwwroot') . 'view/'
         )
     ),
 ));
@@ -64,6 +64,6 @@ function deleteview_submit(Pieform $form, $values) {
     $view->delete();
     handle_event('deleteview', $viewid);
     $SESSION->add_ok_msg(get_string('viewdeleted', 'view'));
-    redirect('/view/temp.php');
+    redirect('/view/');
 }
 ?>

@@ -37,7 +37,7 @@ class PluginBlocktypeImage extends PluginBlocktype {
     }
 
     public static function get_categories() {
-        return array('file', 'images');
+        return array('fileimagevideo');
     }
 
     public static function render_instance(BlockInstance $instance) {

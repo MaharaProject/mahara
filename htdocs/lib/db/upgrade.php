@@ -786,6 +786,27 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2008012400) {
+        $blocktypes = get_column_sql(
+            'SELECT DISTINCT blocktype
+            FROM {blocktype_installed_category}
+            WHERE category IN (\'file\', \'images\', \'multimedia\')'
+        );
+        delete_records_sql(
+            'DELETE FROM {blocktype_installed_category}
+            WHERE category IN (\'file\', \'images\', \'multimedia\')'
+        );
+        delete_records_sql(
+            'DELETE FROM {blocktype_category}
+            WHERE name IN (\'file\', \'images\', \'multimedia\')'
+        );
+
+        insert_record('blocktype_category', array('name' => 'fileimagevideo'));
+        foreach ($blocktypes as $bt) {
+            insert_record('blocktype_installed_category', array('blocktype' => $bt, 'category' => 'fileimagevideo'));
+        }
+    }
+
+    if ($oldversion < 2008012401) {
         table_column('usr_registration', null, 'lang', 'text', null, null, '', '');
     }
 

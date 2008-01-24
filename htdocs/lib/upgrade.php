@@ -447,10 +447,6 @@ function upgrade_plugin($upgrade) {
             delete_records_select('artefact_installed_type', $select,
                                   array_merge(array($pluginname),$types));
         }
-        // install a blocktype category for this plugin
-        if (get_config('installed') && !record_exists('blocktype_category', 'name', $pluginname)) {
-            insert_record('blocktype_category', (object)array('name' => $pluginname));
-        }
     }
     
     // install blocktype categories.
@@ -798,11 +794,10 @@ function sort_upgrades($k1, $k2) {
     return ($weight1 > $weight2);
 }
 
-/** core blocktype categories the system exports
-* (eg not tied to artefact plugins)
+/** blocktype categories the system exports (including artefact categories)
 */
-function get_core_blocktype_categories() {
-    return array('general', 'images', 'multimedia', 'feeds');
+function get_blocktype_categories() {
+    return array('general', 'internal', 'blog', 'resume', 'fileimagevideo', 'feeds');
 }
 
 function install_blocktype_categories_for_plugin($blocktype) {
@@ -824,13 +819,7 @@ function install_blocktype_categories_for_plugin($blocktype) {
 function install_blocktype_categories() {
     db_begin();
 
-    if ($artefacts = plugins_installed('artefact')) {
-        $artefacts = array_map(create_function('$a', 'return $a->name;'), $artefacts);
-    }
-    else {
-        $artefacts = array();
-    }
-    $categories = array_merge(get_core_blocktype_categories(), $artefacts);
+    $categories = get_blocktype_categories();
     $installedcategories = get_column('blocktype_category', 'name');
 
     if ($toinstall = array_diff($categories, $installedcategories)) {

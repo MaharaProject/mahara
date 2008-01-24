@@ -63,7 +63,7 @@ $form = pieform(array(
             'type' => 'submitcancel',
             'title' => get_string('submitviewconfirm', 'view', $view->title, $group->name),
             'value' => array(get_string('yes'), get_string('no')),
-            'goto' => get_config('wwwroot') . 'view/temp.php'
+            'goto' => get_config('wwwroot') . 'view/'
         )
     ),
 ));
@@ -76,7 +76,7 @@ $smarty->display('view/submit.tpl');
 function submitview_submit(Pieform $form, $values) {
 	global $SESSION, $viewid, $groupid;
     update_record('view', array('submittedto' => $groupid), array('id' => $viewid));
-    $SESSION->add_ok_msg(get_string('submitview', 'view'));
-    redirect('/view/temp.php');
+    $SESSION->add_ok_msg(get_string('viewsubmitted', 'view'));
+    redirect('/view/');
 }
 ?>

@@ -48,7 +48,7 @@ class PluginBlocktypeRecentposts extends PluginBlocktype {
         if (!empty($configdata['artefactids'])) {
             $artefactids = implode(', ', array_map('db_quote', $configdata['artefactids']));
             if (!$mostrecent = get_records_sql_array(
-            'SELECT a.title, a.ctime, p.title AS parenttitle, a.id, a.parent
+            'SELECT a.title, ' . db_format_tsfield('a.ctime', 'ctime') . ', p.title AS parenttitle, a.id, a.parent
                 FROM {artefact} a
                 JOIN {artefact} p ON a.parent = p.id
                 WHERE a.artefacttype = \'blogpost\'
@@ -60,7 +60,7 @@ class PluginBlocktypeRecentposts extends PluginBlocktype {
             }
             // format the dates
             foreach ($mostrecent as &$data) {
-                $data->displaydate = format_date(time($data->ctime));
+                $data->displaydate = format_date($data->ctime);
             }
             $smarty = smarty_core();
             $smarty->assign('mostrecent', $mostrecent);
