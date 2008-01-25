@@ -222,6 +222,9 @@ class Institution {
     }
 
     public function addUserAsMember($user) {
+        if ($this->isFull()) {
+            throw new SystemException('Trying to add a user to an institution that already has a full quota of members');
+        }
         if (is_numeric($user)) {
             $user = get_record('usr', 'id', $user);
         }
@@ -395,6 +398,16 @@ class Institution {
             SELECT COUNT(*) FROM {usr} u INNER JOIN {usr_institution_request} r ON u.id = r.usr
             WHERE r.institution = ? AND u.deleted = 0 AND r.confirmedinstitution = 1',
             array($this->name));
+    }
+
+    /**
+     * Returns true if the institution already has its full quota of users 
+     * assigned to it.
+     *
+     * @return bool
+     */
+    public function isFull() {
+        return ($this->maxuseraccounts != '') && ($this->countMembers() >= $this->maxuseraccounts);
     }
 }
 
