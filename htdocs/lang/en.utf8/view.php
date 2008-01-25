@@ -192,7 +192,7 @@ $string['removeblock'] = 'Remove this block';
 
 $string['viewlayout'] = 'View layout';
 $string['viewlayoutdescription'] = 'You can change the widths of the columns in your view.';
-$string['changeviewlayout'] = 'Change view layout';
+$string['changeviewlayout'] = 'Change my view layout';
 $string['backtoyourview'] = 'Back to your view';
 
 $string['by'] = 'by';

@@ -25,7 +25,7 @@
                 <strong><a href="view.php?id={$view}&amp;new={$new}">{str tag=displaymyview section=view} &raquo;</a></strong>
             </div>
 
-            <a id="layout-link" href="layout.php?id={$view}&amp;c={$category}&amp;new={$new}"{if !$can_change_layout} class="disabled"{/if}>{str tag='changeviewlayout' section='view'}</a>
+            <strong><a id="layout-link" href="layout.php?id={$view}&amp;c={$category}&amp;new={$new}"{if !$can_change_layout} class="disabled"{/if}>{str tag='changeviewlayout' section='view'}</a></strong>
 
             <div id="bottom-pane">
                 <div id="column-container">
