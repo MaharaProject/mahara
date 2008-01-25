@@ -27,9 +27,12 @@
 defined('INTERNAL') || die();
 
 $string['createview']             = 'Create View';
+$string['createviewstepone']      = 'Create View Step One: Details';
+$string['createviewsteptwo']      = 'Create View Step Two: Layout';
+$string['createviewstepthree']    = 'Create View Step Three: Access';
 $string['editviewdetails']        = 'Edit Details for View "%s"';
-$string['editaccessforview']      = 'Edit View Access for View "%s"';
-$string['editblocksforview']      = 'Edit Blocks for View "%s"';
+$string['editblocksforview']      = 'Edit View "%s"';
+$string['editaccessforview']      = 'Edit Access for View "%s"';
 $string['next']                   = 'Next';
 $string['back']                   = 'Back';
 $string['title']                  = 'View Title';
@@ -41,28 +44,12 @@ $string['ownerformat']            = 'Name display format';
 $string['ownerformatdescription'] = 'How do you want people who look at your view to see your name?';
 
 // my views
-$string['accessstartdate'] = 'Access start date';
-$string['accessstopdate'] = 'Access end date';
 $string['artefacts'] = 'Artefacts';
-$string['deleteviewfailed'] = 'Delete view failed';
-$string['deleteviewquestion'] = 'Do you really want to delete this view?';
-$string['editaccess'] = 'Edit Access';
-$string['editview'] = 'Edit View';
-$string['editviewinformation'] = 'Edit View Details';
 $string['myviews'] = 'My Views';
-$string['notownerofview'] = 'You are not the owner of this view';
 $string['reallyaddaccesstoemptyview'] = 'Your view contains no artefacts.  Do you really want to give these users access to the view?';
-$string['saveaccess'] = 'Save Access';
-$string['submitview'] = 'Submit View';
-$string['submitviewfailed'] = 'Submit view failed';
-$string['submitviewquestion'] = 'If you submit this view for assessment, you will not be able to edit the view or any of its associated artefacts until your tutor has finished marking the view.  Are you sure you want to submit this view now?';
 $string['viewdeleted'] = 'View deleted';
-$string['views'] = 'Views';
 $string['viewsubmitted'] = 'View submitted';
-$string['viewsubmittedto'] = 'This view has been submitted to %s';
-
-// my views 2
-$string['editviewnameanddescription'] = 'Edit view name and description';
+$string['editviewnameanddescription'] = 'Edit view details';
 $string['editviewaccess'] = 'Edit view access';
 $string['deletethisview'] = 'Delete this view';
 $string['submitviewforassessment'] = 'Submit view for assessment';
@@ -73,6 +60,8 @@ $string['artefactsinthisview'] = 'Artefacts in this view';
 $string['whocanseethisview'] = 'Who can see this view';
 $string['view'] = 'view';
 $string['views'] = 'views';
+$string['View'] = 'View';
+$string['Views'] = 'Views';
 $string['viewsubmittedtogroup'] = 'This view has been submitted to <a href="' . get_config('wwwroot') . 'group/view.php?id=%s">%s</a>';
 $string['nobodycanseethisview'] = 'Nobody can see this view';
 
@@ -139,7 +128,7 @@ $string['submitviewtogroup'] = 'Submit \'%s\' to \'%s\' for assessment';
 $string['cantsubmitviewtogroup'] = 'You cannot submit this view to this group for assessment';
 
 $string['cantdeleteview'] = 'You cannot delete this view';
-$string['deletespecifiedview'] = 'Delete view \'%s\'';
+$string['deletespecifiedview'] = 'Delete View "%s"';
 $string['deleteviewconfirm'] = 'Do you really want to delete this view? It cannot be undone.';
 
 $string['editaccesspagedescription'] = '<p>You can control who can see your view, and when they can do so. By default, only you can see your views.</p>
