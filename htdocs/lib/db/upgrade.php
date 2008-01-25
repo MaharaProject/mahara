@@ -810,6 +810,21 @@ function xmldb_core_upgrade($oldversion=0) {
         table_column('usr_registration', null, 'lang', 'text', null, null, '', '');
     }
 
+    if ($oldversion < 2008012500) {
+        // _Really_ remove the institution field this time (also from install.xml!)
+        $table = new XMLDBTable('usr');
+        $field = new XMLDBField('institution');
+        $field->setAttributes(XMLDB_TYPE_CHAR, 255, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, 'mahara');
+        drop_field($table, $field);
+
+        // Remove the updateuserinfoonlogin column from the institution table. 
+        // It's copied from Moodle, and not used by Mahara
+        $table = new XMLDBTable('institution');
+        $field = new XMLDBField('updateuserinfoonlogin');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, XMLDB_UNSIGNED, null, null, null, null, 0);
+        drop_field($table, $field);
+    }
+
     return $status;
 
 }
