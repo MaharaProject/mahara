@@ -30,6 +30,8 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 require(get_config('libroot') . 'view.php');
 
 $viewid = param_integer('id');
+$new = param_boolean('new');
+
 $view = new View($viewid);
 if (!can_view_view($viewid)) {
     throw new AccessDeniedException();
@@ -262,6 +264,7 @@ $smarty->assign('formattedowner', $view->formatted_owner());
 
 if ($USER->get('id') == $view->get('owner')) {
     $smarty->assign('can_edit', true);
+    $smarty->assign('new', $new);
 }
 $smarty->display('view/view.tpl');
 

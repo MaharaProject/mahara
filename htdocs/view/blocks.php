@@ -30,9 +30,15 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 require('view.php');
 
 $view = new View(param_integer('id'));
-define('TITLE', get_string('editblocksforview', 'view', $view->get('title')));
 
 $new = param_boolean('new');
+
+if ($new) {
+    define('TITLE', get_string('createviewsteptwo', 'view'));
+}
+else {
+    define('TITLE', get_string('editblocksforview', 'view', $view->get('title')));
+}
 
 // check if cancel was selected
 if ($new && isset($_POST['cancel'])) {
@@ -85,6 +91,7 @@ foreach (array_keys($_POST + $_GET) as $key) {
     }
 }
 
+$smarty->assign('heading', TITLE);
 $smarty->assign('formurl', get_config('wwwroot') . 'view/blocks.php');
 $smarty->assign('category', $category);
 $smarty->assign('new', $new);
