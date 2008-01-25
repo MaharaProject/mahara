@@ -63,8 +63,8 @@ catch (Exception $e) { }
 $contactinformation_value = $contactinformation->render_self(array('editing' => true));
 $contactinformation_value = $contactinformation_value['html'];
 
-$form = array(
-    'name'        => 'resumemainform',
+$coverletterform = array(
+    'name'        => 'coverletter',
     'jsform'      => true,
     'plugintype'  => 'artefact',
     'pluginname'  => 'account',
@@ -86,8 +86,25 @@ $form = array(
                     'defaultvalue' => ((!empty($coverletter)) ? $coverletter->get('description') : null),
                     'help' => true,
                 ),
+                'save' => array(
+                    'type' => 'submit',
+                    'value' => get_string('save'),
+                ),
             )
-        ),
+        )
+    )
+);
+
+$interestsform = array(
+    'name'        => 'interests',
+    'jsform'      => true,
+    'plugintype'  => 'artefact',
+    'pluginname'  => 'account',
+    'plugintype'  => 'artefact',
+    'pluginname'  => 'resume',
+    'jsform'      => true,
+    'method'      => 'post',
+    'elements'    => array(
         'interestsfs' => array(
             'type' => 'fieldset',
             'legend' => get_string('interest', 'artefact.resume'),
@@ -101,8 +118,25 @@ $form = array(
                     'rows'  => 10,
                     'help'  => true,
                 ),
-            ),
-        ),
+                'save' => array(
+                    'type' => 'submit',
+                    'value' => get_string('save'),
+                ),
+            )
+        )
+    )
+);
+
+$contactinformationform = array(
+    'name'        => 'contactinformation',
+    'jsform'      => true,
+    'plugintype'  => 'artefact',
+    'pluginname'  => 'account',
+    'plugintype'  => 'artefact',
+    'pluginname'  => 'resume',
+    'jsform'      => true,
+    'method'      => 'post',
+    'elements'    => array(
         'contactinformationfs' => array(
             'type' => 'fieldset',
             'legend' => get_string('contactinformation', 'artefact.resume'),
@@ -114,8 +148,21 @@ $form = array(
                     'value' => $contactinformation_value,
                     'help'  => true,
                 ),
-            ),
-        ),
+            )
+        )
+    )
+);
+
+$personalinformationform = array(
+    'name'        => 'personalinformation',
+    'jsform'      => true,
+    'plugintype'  => 'artefact',
+    'pluginname'  => 'account',
+    'plugintype'  => 'artefact',
+    'pluginname'  => 'resume',
+    'jsform'      => true,
+    'method'      => 'post',
+    'elements'    => array(
         'personalinformation' => array(
             'type'        => 'fieldset',
             'legend'      => get_string('personalinformation', 'artefact.resume'),
@@ -168,12 +215,12 @@ $form = array(
                         ? $personalinformation->get_composite('maritalstatus') :  null),
                     'title' => get_string('maritalstatus', 'artefact.resume'),
                 ),
-            ),
-        ),
-        'save' => array(
-            'type' => 'submit',
-            'value' => get_string('save'),
-        ),
+                'save' => array(
+                    'type' => 'submit',
+                    'value' => get_string('save'),
+                ),
+            )
+        )
     )
 );
 
@@ -189,10 +236,13 @@ $downstr = get_string('movedown', 'artefact.resume');
 
 $wwwroot = get_config('wwwroot');
 
-$mainform = pieform($form);
-$smarty = smarty(array('tablerenderer'));
+$smarty = smarty(array('tablerenderer'), pieform_element_calendar_get_headdata(pieform_element_calendar_configure(array())));
 
-$smarty->assign('mainform', $mainform);
+$smarty->assign('coverletterform', pieform($coverletterform));
+$smarty->assign('interestsform', pieform($interestsform));
+$smarty->assign('contactinformationform', pieform($contactinformationform));
+$smarty->assign('personalinformationform', pieform($personalinformationform));
+
 $inlinejs = <<<EOF
 var tableRenderers = {};
 
@@ -325,7 +375,7 @@ $smarty->assign('compositeforms', $compositeforms);
 $smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 $smarty->display('artefact:resume:index.tpl');
 
-function resumemainform_submit(Pieform $form, $values) {
+function coverletter_submit(Pieform $form, $values) {
     global $coverletter, $personalinformation, $interest, $USER;
 
     $userid = $USER->get('id');
@@ -350,7 +400,24 @@ function resumemainform_submit(Pieform $form, $values) {
     catch (Exception $e) {
         $errors['coverletter'] = true;
     }
-        
+    if (empty($errors)) {
+        $form->json_reply(PIEFORM_OK, get_string('resumesaved','artefact.resume'));
+    }
+    else {
+        $message = '';
+        foreach (array_keys($errors) as $key) {
+            $message .= get_string('resumesavefailed', 'artefact.resume')."\n";
+        }
+        $form->json_reply(PIEFORM_ERR, $message);
+    }
+}
+
+function interests_submit(Pieform $form, $values) {
+    global $coverletter, $personalinformation, $interest, $USER;
+
+    $userid = $USER->get('id');
+    $errors = array();
+
     try {
         if (empty($interest) && !empty($values['interest'])) {
             $interest = new ArtefactTypeInterest(0, array( 
@@ -371,6 +438,23 @@ function resumemainform_submit(Pieform $form, $values) {
         $errors['interest'] = true;
     }   
 
+    if (empty($errors)) {
+        $form->json_reply(PIEFORM_OK, get_string('resumesaved','artefact.resume'));
+    }
+    else {
+        $message = '';
+        foreach (array_keys($errors) as $key) {
+            $message .= get_string('resumesavefailed', 'artefact.resume')."\n";
+        }
+        $form->json_reply(PIEFORM_ERR, $message);
+    }
+}
+
+function personalinformation_submit(Pieform $form, $values) {
+    global $personalinformation, $USER;
+    $userid = $USER->get('id');
+    $errors = array();
+
     try {
         if (empty($personalinformation)) {
             $personalinformation = new ArtefactTypePersonalinformation(0, array(
@@ -389,7 +473,7 @@ function resumemainform_submit(Pieform $form, $values) {
 
     if (empty($errors)) {
         $form->json_reply(PIEFORM_OK, get_string('resumesaved','artefact.resume'));
-    }   
+    }
     else {
         $message = '';
         foreach (array_keys($errors) as $key) {
