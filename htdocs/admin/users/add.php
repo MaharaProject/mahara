@@ -146,15 +146,9 @@ function adduser_validate(Pieform $form, $values) {
     $institution = new Institution($authobj->institution);
 
     // Don't exceed max user accounts for the institution
-    $maxusers = $institution->maxuseraccounts; 
-    if (!empty($maxusers)) {
-        $members = count_records_sql('
-            SELECT COUNT(*) FROM {usr} u INNER JOIN {usr_institution} i ON u.id = i.usr
-            WHERE i.institution = ? AND u.deleted = 0', array($institution->name));
-        if ($members >= $maxusers) {
-            $SESSION->add_error_msg(get_string('institutionmaxusersexceeded', 'admin'));
-            redirect('/admin/users/add.php');
-        }
+    if ($institution->isFull()) {
+        $SESSION->add_error_msg(get_string('institutionmaxusersexceeded', 'admin'));
+        redirect('/admin/users/add.php');
     }
 
     $username  = $values['username'];
