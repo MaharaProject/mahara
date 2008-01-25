@@ -523,7 +523,16 @@ class LiveUser extends User {
      * @return bool
      */
     public function login($username, $password) {
-        $user = get_record_select('usr', 'LOWER(username) = ?', array(strtolower($username)), '*');
+        $sql = 'SELECT
+                    *, 
+                    ' . db_format_tsfield('expiry') . ', 
+                    ' . db_format_tsfield('lastlogin') . ', 
+                    ' . db_format_tsfield('suspendedctime') . '
+                FROM
+                    {usr}
+                WHERE
+                    LOWER(username) = ?';
+        $user = get_record_sql($sql, array(strtolower($username)));
 
         if ($user == false) {
             throw new AuthUnknownUserException("\"$username\" is not known");
