@@ -38,6 +38,7 @@ $new = param_boolean('new');
 $category = param_alpha('c', '');
 $view = new View($id);
 $numcolumns = $view->get('numcolumns');
+$currentlayout = $view->get('layout');
 
 if ($numcolumns > 1 && $numcolumns < 5) {
     $layouts = get_records_array('view_layout', 'columns', $numcolumns);
@@ -61,13 +62,15 @@ $form = new Pieform(array(
             'defaultvalue' => $view->get('layout'),
         ),
         'submit' => array(
-            'type' => 'submit',
-            'value' => get_string('submit'),
+            'type' => 'submitcancel',
+            'value' => array(get_string('submit'), get_string('cancel')),
+            'goto' => get_config('wwwroot') . '/view/blocks.php?id=' . $id . '&c=' . $category . '$new=' . $new,
         ),
     ),
 ));
 
 $smarty = smarty();
+$smarty->assign('currentlayout', $currentlayout);
 $smarty->assign('view', $id);
 $smarty->assign('form_start_tag', $form->get_form_tag());
 $smarty->assign('options', $options);
