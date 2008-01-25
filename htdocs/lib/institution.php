@@ -41,7 +41,6 @@ class Institution {
         'name' => '',
         'displayname' => '',
         'registerallowed' => 1,
-        'updateuserinfoonlogin' => 0,
         'theme' => 'default',
         'defaultmembershipperiod' => 0,
         'maxuseraccounts' => null
@@ -84,10 +83,6 @@ class Institution {
         } elseif ($name == 'registerallowed') {
             if (!is_numeric($value) || $value < 0 || $value > 1) {
                 throw new ParamOutOfRangeException("'registerallowed' should be zero or one");
-            }
-        } elseif ($name == 'updateuserinfoonlogin') {
-            if (!is_numeric($value) || $value < 0 || $value > 1) {
-                throw new ParamOutOfRangeException("'updateuserinfoonlogin' should be zero or one");
             }
         } elseif ($name == 'theme') {
             if (!is_string($value) || empty($value) || strlen($value) > 255) {
@@ -184,7 +179,6 @@ class Institution {
         $record = new stdClass();
         $record->name                         = $this->name;
         $record->displayname                  = $this->displayname;
-        $record->updateuserinfoonlogin        = $this->updateuserinfoonlogin;
         $record->theme                        = $this->theme;
         $record->defaultmembershipperiod      = $this->defaultmembershipperiod;
         $record->maxuseraccounts              = $this->maxuseraccounts;
@@ -214,7 +208,6 @@ class Institution {
         $this->name                         = $result->name;
         $this->displayname                  = $result->displayname;
         $this->registerallowed              = $result->registerallowed;
-        $this->updateuserinfoonlogin        = $result->updateuserinfoonlogin;
         $this->theme                        = $result->theme;
         $this->defaultmembershipperiod      = $result->defaultmembershipperiod;
         $this->maxuseraccounts              = $result->maxuseraccounts;
