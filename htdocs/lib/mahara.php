@@ -708,7 +708,7 @@ function current_language() {
         }
     }
     $sesslang = $SESSION->get('lang');
-    if (!empty($sesslang)) {
+    if (!empty($sesslang) && $sesslang != 'default') {
         return $sesslang;
     }
     if (!empty($CFG->lang)) {

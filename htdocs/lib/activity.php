@@ -85,40 +85,7 @@ function handle_activity($activitytype, $data, $cron=false) {
         return;
     }
 
-    $data = $activity->to_stdclass();
-    safe_require('notification', 'internal', 'lib.php', 'require_once');
-    $data->type = $activity->get_id();
-    $data->activityname = $activitytype->name;
-    foreach ($activity->get_users() as $user) {
-        $userdata = $data;
-        // some stuff gets overridden by user specific stuff
-        if (!empty($user->url)) {
-            $userdata->url = $user->url;
-        }
-        if (!empty($user->message)) {
-            $userdata->message = $user->message;
-        }
-        if (!empty($user->subject)) {
-            $userdata->subject = $user->subject;
-        }
-        if (empty($user->method)) {
-            $user->method = 'internal';
-        }
-        if ($user->method != 'internal') {
-            $method = $user->method;
-            safe_require('notification', $method, 'lib.php', 'require_once');
-            try {
-                call_static_method(generate_class_name('notification', $method), 'notify_user', $user, $userdata);
-                $user->markasread = true; // if we're doing something else, don't generate unread internal ones.
-            }
-            catch (Exception $e) {
-                $user->markasread = false; // if we fail (eg email falls over), don't mark it as read...
-                // @todo penny notify them that their notification type failed....
-            }
-        }
-        // always do internal
-        call_static_method('PluginNotificationInternal', 'notify_user', $user, $userdata);
-    }
+    $activity->notify_users();
 }
 
 /**
@@ -283,6 +250,8 @@ abstract class ActivityType {
     protected $users = array();
     protected $url;
     protected $id;
+    protected $type;
+    protected $activityname;
    
     public function get_id() {
         if (!isset($this->id)) {
@@ -308,6 +277,7 @@ abstract class ActivityType {
     public function __construct($data) {
         $this->set_parameters($data);
         $this->ensure_parameters();
+        $this->activityname = strtolower(substr(get_class($this), strlen('ActivityType')));
     }
 
     private function set_parameters($data) {
@@ -329,9 +299,55 @@ abstract class ActivityType {
     public function to_stdclass() {
        return (object)get_object_vars($this); 
     }
+
+    public function get_message($user) {
+        return $this->message;
+    }
         
+    public function get_subject($user) {
+        return $this->subject;
+    }
 
     abstract function get_required_parameters();
+
+    public function notify_user($user) {
+        $userdata = $this->to_stdclass();
+        // some stuff gets overridden by user specific stuff
+        if (!empty($user->url)) {
+            $userdata->url = $user->url;
+        }
+        if (empty($user->lang) || $user->lang == 'default') {
+            $user->lang = get_config('lang');
+        }
+        $userdata->message = $this->get_message($user);
+        $userdata->subject = $this->get_subject($user);
+        if (empty($user->method)) {
+            $user->method = 'internal';
+        }
+        if ($user->method != 'internal') {
+            $method = $user->method;
+            safe_require('notification', $method, 'lib.php', 'require_once');
+            try {
+                call_static_method(generate_class_name('notification', $method), 'notify_user', $user, $userdata);
+                $user->markasread = true; // if we're doing something else, don't generate unread internal ones.
+            }
+            catch (Exception $e) {
+                $user->markasread = false; // if we fail (eg email falls over), don't mark it as read...
+                // @todo penny notify them that their notification type failed....
+            }
+        }
+        // always do internal
+        call_static_method('PluginNotificationInternal', 'notify_user', $user, $userdata);
+    }
+
+    public function notify_users() {
+        safe_require('notification', 'internal', 'lib.php', 'require_once');
+        $this->type = $this->get_id();
+
+        foreach ($this->get_users() as $user) {
+            $this->notify_user($user);
+        }
+    }
 }
 
 
@@ -351,15 +367,21 @@ class ActivityTypeContactus extends ActivityTypeAdmin {
 
     function __construct($data) { 
         parent::__construct($data);
-        $this->subject = get_string('newcontactusfrom', 'activity') . ' ' .$this->fromname 
-            . '<' . $this->fromemail .'>' . (isset($this->subject) ? ': ' . $this->subject : '');
-        $this->message = $this->subject . "\n\n" . $this->message;
-        $this->subject = get_string('newcontactus', 'activity');
         if (!empty($this->userfrom)) {
             $this->url = get_config('wwwroot') . 'user/view.php?id=' . $this->userfrom;
         }
     }
-    
+
+    function get_subject($user) {
+        return get_string_from_language($user->lang, 'newcontactus', 'activity');
+    }
+
+    function get_message($user) {
+        return get_string_from_language($user->lang, 'newcontactusfrom', 'activity') . ' ' . $this->fromname 
+            . '<' . $this->fromemail .'>' . (isset($this->subject) ? ': ' . $this->subject : '')
+            . "\n\n" . $this->message;
+    }
+
     public function get_required_parameters() {
         return array('message', 'fromname', 'fromemail');
     }
@@ -372,21 +394,28 @@ class ActivityTypeObjectionable extends ActivityTypeAdmin {
 
     function __construct($data) { 
         parent::__construct($data);
+        if (empty($this->artefact)) {
+            $this->url = get_config('wwwroot') . 'view/view.php?id=' . $this->view;
+        }
+        else {
+            $this->url = get_config('wwwroot') . 'view/artefact.php?artefact=' . $this->artefact . '&view=' . $this->view;
+        }
+    }
+
+    function get_subject($user) {
         if (!$viewtitle = get_field('view', 'title', 'id', $this->view)) {
             throw new ViewNotFoundException(get_string('viewnotfound', 'error', $this->view));
         }
         if (empty($this->artefact)) {
-            $this->url = get_config('wwwroot') . 'view/view.php?id=' . $this->view;
-            $this->subject = get_string('objectionablecontentview', 'activity') 
-                . ' ' . get_string('onview', 'activity') . ' ' . $viewtitle;
+            return get_string_from_language($user->lang, 'objectionablecontentview', 'activity') 
+                . ' ' . get_string_from_language($user->lang, 'onview', 'activity') . ' ' . $viewtitle;
         }
         else {
             if (!$artefacttitle = get_field('artefact', 'title', 'id', $this->artefact)) {
                 throw new ArtefactNotFoundException(get_string('artefactnotfound', 'error', $this->artefact));
             }
-            $this->url = get_config('wwwroot') . 'view/artefact.php?artefact=' . $this->artefact . '&view=' . $this->view;
-            $this->subject = get_string('objectionablecontentartefact', 'activity') 
-                . ' '  . get_string('onartefact', 'activity') . ' ' . $artefacttitle;
+            return get_string_from_language($user->lang, 'objectionablecontentartefact', 'activity') 
+                . ' '  . get_string_from_language($user->lang, 'onartefact', 'activity') . ' ' . $artefacttitle;
         }
     }
 
@@ -404,9 +433,15 @@ class ActivityTypeVirusRepeat extends ActivityTypeAdmin {
 
     public function __construct($data) { 
         parent::__construct($data);
+    }
+
+    public function get_subject($user) {
         $userstring = $this->username . ' (' . $this->fullname . ') (userid:' . $this->userid . ')' ;
-        $this->subject = get_string('virusrepeatsubject', 'mahara', $userstring);
-        $this->message = get_string('virusrepeatmessage');
+        return get_string_from_language($user->lang, 'virusrepeatsubject', 'mahara', $userstring);
+    }
+
+    public function get_message($user) {
+        return get_string_from_language($user->lang, 'virusrepeatmessage');
     }
 
     public function get_required_parameters() {
@@ -447,19 +482,31 @@ class ActivityTypeInstitutionmessage extends ActivityType {
     public function __construct($data) {
         parent::__construct($data);
         if ($this->messagetype == 'request') {
-            $userstring = $this->fullname . ' (' . $this->username . ')';
-            $this->subject = get_string('institutionrequestsubject', 'activity', $userstring, 
-                                        $this->institution->displayname);
-            $this->message = get_string('institutionrequestmessage', 'activity');
             $this->url = get_config('wwwroot') . 'admin/users/institutionusers.php';
             $this->users = activity_get_users($this->get_id(), null, null, null,
                                               array($this->institution->name));
         } else if ($this->messagetype == 'invite') {
-            $this->subject = get_string('institutioninvitesubject', 'activity', 
-                                        $this->institution->displayname);
-            $this->message = get_string('institutioninvitemessage', 'activity');
             $this->url = get_config('wwwroot') . 'account/index.php';
             $this->users = activity_get_users($this->get_id(), $this->users);
+        }
+    }
+
+    public function get_subject($user) {
+        if ($this->messagetype == 'request') {
+            $userstring = $this->fullname . ' (' . $this->username . ')';
+            return get_string_from_language($user->lang, 'institutionrequestsubject', 'activity', $userstring, 
+                                            $this->institution->displayname);
+        } else if ($this->messagetype == 'invite') {
+            return get_string_from_language($user->lang, 'institutioninvitesubject', 'activity', 
+                                            $this->institution->displayname);
+        }
+    }
+
+    public function get_message($user) {
+        if ($this->messagetype == 'request') {
+            return get_string_from_language($user->lang, 'institutionrequestmessage', 'activity');
+        } else if ($this->messagetype == 'invite') {
+            return get_string_from_language($user->lang, 'institutioninvitemessage', 'activity');
         }
     }
 
@@ -475,14 +522,19 @@ class ActivityTypeUsermessage extends ActivityType {
 
     public function __construct($data) { 
         parent::__construct($data);
-        if (empty($this->subject)) {
-            $this->subject = get_string('newusermessage', 'mahara', display_name($this->userfrom));
-        }
         $this->users = activity_get_users($this->get_id(), array($this->userto));
         if (empty($this->url)) {
             $this->url = get_config('wwwroot') . 'user/view.php?id=' . $this->userfrom;
         }
     } 
+
+    public function get_subject($user) {
+        if (empty($this->subject)) {
+            return get_string_from_language($user->lang, 'newusermessage', 'mahara', 
+                                            display_name($this->userfrom));
+        }
+        return $this->subject;
+    }
 
     public function get_required_parameters() {
         return array('message', 'userto', 'userfrom');
@@ -495,17 +547,18 @@ class ActivityTypeFeedback extends ActivityType {
     protected $view;
     protected $artefact;
 
+    private $viewrecord;
+    private $artefactinstance;
+
     public function __construct($data) { 
         parent::__construct($data);
-        if (!empty($this->artefact)) { // feedback on artefact
-            $this->subject = get_string('newfeedbackonartefact', 'activity');
-            require_once(get_config('docroot') . 'artefact/lib.php');
-            $artefact = artefact_instance_from_id($this->artefact);
-            $this->subject .= ' ' .$artefact->get('title');
 
+        if (!empty($this->artefact)) { // feedback on artefact
             $userid = null;
-            if ($artefact->feedback_notify_owner()) {
-                $userid = $artefact->get('owner');
+            require_once(get_config('docroot') . 'artefact/lib.php');
+            $this->artefactinstance = artefact_instance_from_id($this->artefact);
+            if ($this->artefactinstance->feedback_notify_owner()) {
+                $userid = $this->artefactinstance->get('owner');
             }
             if (empty($this->url)) {
                 $this->url = get_config('wwwroot') . 'view/artefact.php?artefact=' 
@@ -513,12 +566,10 @@ class ActivityTypeFeedback extends ActivityType {
             }
         } 
         else { // feedback on view.
-            $this->subject = get_string('newfeedbackonview', 'activity');
-            if (!$view = get_record('view', 'id', $this->view)) {
+            if (!$this->viewrecord = get_record('view', 'id', $this->view)) {
                 throw new ViewNotFoundException(get_string('viewnotfound', 'error', $this->view));
             }
-            $userid = $view->owner;
-            $this->subject .= ' ' .$view->title;
+            $userid = $this->viewrecord->owner;
             if (empty($this->url)) {
                 $this->url = get_config('wwwroot') . 'view/view.php?id=' . $this->view;
             }
@@ -526,6 +577,17 @@ class ActivityTypeFeedback extends ActivityType {
         if ($userid) {
             $this->users = activity_get_users($this->get_id(), array($userid));
         } 
+    }
+
+    public function get_subject($user) {
+        if (!empty($this->artefact)) { // feedback on artefact
+            return get_string_from_language($user->lang, 'newfeedbackonartefact', 'activity')
+                . ' ' . $this->artefactinstance->get('title');
+        }
+        else {
+            return get_string_from_language($user->lang, 'newfeedbackonview', 'activity')
+                . ' ' . $this->viewrecord->title;
+        }
     }
 
     public function get_required_parameters() {
@@ -537,11 +599,12 @@ class ActivityTypeWatchlist extends ActivityType {
 
     protected $view;
 
+    private $viewinfo;
+
     public function __construct($data) { 
         parent::__construct($data); 
-        $oldsubject = $this->subject;
-        $this->subject = get_string('newwatchlistmessage', 'activity');
-        if (!$viewinfo = get_record_sql('SELECT u.*, v.title FROM {usr} u
+        //$oldsubject = $this->subject;
+        if (!$this->viewinfo = get_record_sql('SELECT u.*, v.title FROM {usr} u
                                          JOIN {view} v ON v.owner = u.id
                                          WHERE v.id = ?', array($this->view))) {
             if (!empty($cron)) { // probably deleted already
@@ -549,7 +612,6 @@ class ActivityTypeWatchlist extends ActivityType {
             }
             throw new ViewNotFoundException(get_string('viewnotfound', 'error', $this->view));
         }
-        $this->message = $oldsubject . ' ' . $viewinfo->title;
         // mysql compatibility (sigh...)
         $casturl = 'CAST(? AS TEXT)';
         if (get_config('dbtype') == 'mysql') {
@@ -569,9 +631,15 @@ class ActivityTypeWatchlist extends ActivityType {
         $this->users = get_records_sql_array($sql, 
                                        array(get_config('wwwroot') . 'view/view.php?id=' 
                                              . $this->view, $this->get_id(), $this->view));
-        foreach ($this->users as &$user) {
-            $user->message = display_name($viewinfo, $user) . ' ' . $this->message;
-        }
+    }
+
+    public function get_subject($user) {
+        return get_string_from_language($user->lang, 'newwatchlistmessage', 'activity');
+    }
+
+    public function get_message($user) {
+        return display_name($this->viewinfo, $user) . ' ' . $this->message . 
+            $this->subject . ' ' . $this->viewinfo->title;
     }
 
     public function get_required_parameters() {
@@ -584,9 +652,11 @@ class ActivityTypeNewview extends ActivityType {
     protected $owner;
     protected $view;
 
+    private $viewinfo;
+
     public function __construct($data) { 
         parent::__construct($data);
-        if (!$viewinfo = get_record_sql('SELECT u.*, v.title FROM {usr} u
+        if (!$this->viewinfo = get_record_sql('SELECT u.*, v.title FROM {usr} u
                                          JOIN {view} v ON v.owner = u.id
                                          WHERE v.id = ?', array($this->view))) {
             if (!empty($cron)) { //probably deleted already
@@ -595,16 +665,19 @@ class ActivityTypeNewview extends ActivityType {
             throw new ViewNotFoundException(get_string('viewnotfound', 'error', $this->view));
         }
 
-        $this->message = get_string('newviewmessage', 'activity', $viewinfo->title);
-        $this->subject = get_string('newviewsubject', 'activity');
         $this->url = get_config('wwwroot') . 'view/view.php?id=' . $this->view;
 
         // add users on friendslist or userlist...
         $this->users = activity_get_viewaccess_users($this->view, $this->owner, $this->get_id()); 
-        // ick
-        foreach ($this->users as &$user) {
-            $user->message = display_name($viewinfo, $user) . ' ' . $this->message;
-        }
+    }
+
+    public function get_subject($user) {
+        return get_string_from_language($user->lang, 'newviewsubject', 'activity');
+    }
+    
+    public function get_message($user) {
+        return display_name($this->viewinfo, $user) . ' ' 
+            . get_string_from_language($user->lang, 'newviewmessage', 'activity', $this->viewinfo->title);
     }
     
     public function get_required_parameters() {
@@ -618,9 +691,11 @@ class ActivityTypeViewaccess extends ActivityType {
     protected $owner;
     protected $oldusers; // this can be empty though
 
+    private $viewinfo;
+
     public function __construct($data) { 
         parent::__construct($data);
-        if (!$viewinfo = get_record_sql('SELECT u.*, v.title FROM {usr} u
+        if (!$this->viewinfo = get_record_sql('SELECT u.*, v.title FROM {usr} u
                                          JOIN {view} v ON v.owner = u.id
                                          WHERE v.id = ?', array($this->view))) {
             if (!empty($cron)) { // probably deleted already
@@ -628,21 +703,23 @@ class ActivityTypeViewaccess extends ActivityType {
             }
             throw new ViewNotFoundException(get_string('viewnotfound', 'error', $this->view));
         }
-        $this->message = get_string('newviewaccessmessage', 'activity')
-            . ' "' . $viewinfo->title . '" ' . get_string('ownedby', 'activity');
-        $this->subject = get_string('newviewaccesssubject', 'activity');
         $this->url = get_config('wwwroot') . 'view/view.php?id=' . $this->view;
         $this->users = array_diff_key(
             activity_get_viewaccess_users($this->view, $this->owner, $this->get_id()),
             $this->oldusers
         );
+    }
 
-        // ick
-        foreach ($this->users as &$user) {
-            $user->message = $this->message . ' ' . display_name($viewinfo, $user);
-        }
-   }
-
+    public function get_subject($user) {
+        return get_string('newviewaccesssubject', 'activity');
+    }
+    
+    public function get_message($user) {
+        return get_string_from_language($user->lang, 'newviewaccessmessage', 'activity')
+            . ' "' . $this->viewinfo->title . '" ' . get_string_from_language($user->lang, 'ownedby', 'activity')
+            . ' ' . display_name($this->viewinfo, $user);
+    }
+    
     public function get_required_parameters() {
         return array('view', 'owner', 'oldusers');
     }
