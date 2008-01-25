@@ -38,7 +38,6 @@ $id = param_integer('id', 0); // if 0, we're creating a new view
 $new = param_boolean('new');
 
 if (empty($id)) {
-    define('TITLE', get_string('createview', 'view'));
     $new = true;
 }
 else {
@@ -46,7 +45,13 @@ else {
     if ($view->get('owner') != $USER->get('id')) {
         throw new AccessDeniedException(get_string('canteditdontown', 'view'));
     }
-    define('TITLE', get_string('editview', 'view', $view->get('title')));
+}
+
+if ($new || empty($id)) {
+    define('TITLE', get_string('createviewstepone', 'view'));
+}
+else {
+    define('TITLE', get_string('editviewdetails', 'view', $view->get('title')));
 }
 
 $heading = TITLE; // for the smarty template

@@ -36,14 +36,20 @@ require_once('pieforms/pieform/elements/calendar.php');
 require_once(get_config('docroot') . 'lib/view.php');
 
 $view = new View(param_integer('id'));
-define('TITLE', get_string('editaccessforview', 'view', $view->get('title')));
 $new = param_boolean('new');
+
+if ($new) {
+    define('TITLE', get_string('createviewstepthree', 'view'));
+}
+else {
+    define('TITLE', get_string('editaccessforview', 'view', $view->get('title')));
+}
 
 $smarty = smarty(array('tablerenderer'), pieform_element_calendar_get_headdata(pieform_element_calendar_configure(array())), array('mahara' => array('From', 'To')));
 
 $artefacts = $view->get_artefact_metadata();
 if (empty($artefacts)) {
-    $confirmmessage = get_string('reallyaddaccesstoemptyview');
+    $confirmmessage = get_string('reallyaddaccesstoemptyview', 'view');
     $js = <<<EOF
 addLoadEvent(function() {
     connect('editaccess_submit', 'onclick', function () {
