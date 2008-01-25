@@ -209,8 +209,30 @@ abstract class Auth {
     }
 
     /**
+     * Returns whether the authentication instance can automatically create a 
+     * user record.
+     *
+     * Auto creating users means that the authentication plugin can say that 
+     * users who don't exist yet in Mahara's usr table are allowed, and Mahara
+     * should create a user account for them. Example: the first time a user logs
+     * in, when authenticating against an ldap store or similar).
+     *
+     * However, if a plugin says a user can be authenticated, then it must 
+     * implement the get_user_info() method which will be called to find out 
+     * information about the user so a record in the usr table _can_ be created 
+     * for the new user.
+     *
+     * Authentication methods must implement this method. Some may choose to 
+     * implement it by returning an instance config value that the admin user 
+     * can set.
+     *
+     * @return bool
+     */
+    public abstract function can_auto_create_users();
+
+    /**
      * Given a username, returns a hash of information about a user from the
-     * external data source, e.g. Moodle or Drupal.
+     * external data source.
      *
      * @param string $username The username to look up information for
      * @return array           The information for the user
@@ -962,7 +984,6 @@ function login_submit(Pieform $form, $values) {
     $oldlastlogin  = 0;
 
     try {
-        //var_dump(array($username, $password, $institution, $_SESSION));
         $authenticated = $USER->login($username, $password);
 
         if (empty($authenticated)) {
@@ -971,13 +992,17 @@ function login_submit(Pieform $form, $values) {
 
     }
     catch (AuthUnknownUserException $e) {
+        // If the user doesn't exist, check for institutions that
+        // want to create users automatically.
         try {
-            // If the user doesn't exist, check for institutions that
-            // want to create users automatically.
+            // Reset the LiveUser object, since we are attempting to create a 
+            // new user
+            session_destroy();
+            $USER = new LiveUser();
+
             $authinstances = get_records_sql_array('
                 SELECT a.id, a.instancename, a.priority, a.authname, a.institution
                 FROM {institution} i JOIN {auth_instance} a ON a.institution = i.name
-                WHERE i.updateuserinfoonlogin = 1
                 ORDER BY a.institution, a.priority, a.instancename', null);
 
             if ($authinstances == false) {
@@ -986,57 +1011,72 @@ function login_submit(Pieform $form, $values) {
 
             $USER->username = $username;
 
-            foreach ($authinstances as $authinstance) {
+            reset($authinstances);
+            while ((list(, $authinstance) = each($authinstances)) && false == $authenticated) {
+                $auth = AuthFactory::create($authinstance->id);
+                if (!$auth->can_auto_create_users()) {
+                    continue;
+                }
+                if ($auth->authenticate_user_account($USER, $password)) {
+                    $authenticated = true;
+                } else {
+                    continue;
+                }
 
-                while (list(, $authinstance) = each($authinstances) && false == $authenticated) {
-                    // TODO: Test this code with an auth plugin that provides a 
-                    // get_user_info method
-                    $auth = AuthFactory::create($authinstance->id);
-                    if ($auth->authenticate_user_account($USER, $password)) {
-                        $authenticated = true;
-                    } else {
-                        continue;
+                // Check now to see if the institution has its maximum quota of users
+                require_once('institution.php');
+                $institution = new Institution($authinstance->institution);
+                if ($institution->isFull()) {
+                    throw new AuthUnknownUserException('Institution has too many users');
+                }
+
+                $USER->authinstance = $authinstance->id;
+                $userdata = $auth->get_user_info($username);
+                if (
+                     empty($userdata) ||
+                     empty($userdata->firstname) ||
+                     empty($userdata->lastname) ||
+                     empty($userdata->email) 
+                    ) {
+                    throw new AuthUnknownUserException("\"$username\" is not known");
+                } else {
+                    // We have the data - create the user
+                    $USER->lastlogin = db_format_timestamp(time());
+                    $USER->firstname = $userdata->firstname;
+                    $USER->lastname  = $userdata->lastname;
+                    $USER->email     = $userdata->email;
+
+                    try {
+                        db_begin();
+                        $USER->commit();
+                        set_profile_field($USER->id, 'firstname', $USER->firstname);
+                        set_profile_field($USER->id, 'lastname', $USER->lastname);
+                        set_profile_field($USER->id, 'email', $USER->email);
+
+                        if ($authinstance->institution !== 'mahara') {
+                            $USER->join_institution($authinstance->institution);
+                        }
+
+                        handle_event('createuser', $USER->to_stdclass());
+                        db_commit();
+                        $USER->reanimate($USER->id, $authinstance->id);
                     }
-
-                    $USER->authinstance = $authinstance->id;
-                    $userdata = $auth->get_user_info();
-                    if (
-                         empty($userdata) ||
-                         empty($userdata->firstname) ||
-                         empty($userdata->lastname) ||
-                         empty($userdata->email) 
-                        ) {
-                        throw new AuthUnknownUserException("\"$username\" is not known");
-                    } else {
-                        // We have the data - create the user
-                        $USER->expiry    = db_format_timestamp(time() + 86400);
-                        $USER->lastlogin = db_format_timestamp(time());
-                        $USER->firstname = $userdata->firstname;
-                        $USER->lastname  = $userdata->lastname;
-                        $USER->email     = $userdata->email;
-
-                        try {
-                            db_begin();
-                            $USER->commit();
-
-                            if ($authinstance->institution !== 'mahara') {
-                                $USER->join_institution($authinstance->institution);
-                            }
-    
-                            handle_event('createuser', $USER);
-                            db_commit();
-                        }
-                        catch (Exception $e) {
-                            db_rollback();
-                            throw $e;
-                        }
+                    catch (Exception $e) {
+                        db_rollback();
+                        throw $e;
                     }
                 }
+            }
+
+            if (!$authenticated) {
+                $SESSION->add_error_msg(get_string('loginfailed'));
+                return;
             }
 
         }
         catch (AuthUnknownUserException $e) {
             $SESSION->add_error_msg(get_string('loginfailed'));
+            return;
         }
     }
 

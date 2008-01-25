@@ -62,6 +62,14 @@ class AuthInternal extends Auth {
     }
 
     /**
+     * Internal authentication never auto-creates users - users instead 
+     * register through register.php
+     */
+    public function can_auto_create_users() {
+        return false;
+    }
+
+    /**
      * For internal authentication, passwords can contain a range of letters,
      * numbers and symbols. There is a minimum limit of six characters allowed
      * for the password, and no upper limit

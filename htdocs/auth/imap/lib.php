@@ -100,6 +100,13 @@ class AuthImap extends Auth {
         return false;  // No match
     }
 
+    /**
+     * Imap doesn't export enough information to be able to auto-create users
+     */
+    public function can_auto_create_users() {
+        return false;
+    }
+
 }
 
 /**

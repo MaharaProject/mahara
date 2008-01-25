@@ -347,22 +347,13 @@ class AuthXmlrpc extends Auth {
     }
 
     /**
-     * Given a user that we know about, return an array of information about them
-     *
-     * Used when a user who was otherwise unknown authenticates successfully,
-     * or if getting userinfo on each login is enabled for this auth method.
-     *
-     * Does not need to be implemented for the internal authentication method,
-     * because all users are already known about.
+     * In practice, I don't think this method needs to return an accurate 
+     * answer for this, because XMLRPC authentication doesn't use the standard 
+     * authentication mechanisms, instead relying on land.php to handle 
+     * everything.
      */
-    public function get_user_info($username) {
-        $this->must_be_ready();
-        
-        $userdata = parent::get_user_info_cached($username);
-        /**
-         * Here, we will sift through the data returned by the XMLRPC server
-         * and update any userdata properties that have changed
-         */
+    public function can_auto_create_users() {
+        return (bool)$this->config['weautocreateusers'];
     }
 
     /**
