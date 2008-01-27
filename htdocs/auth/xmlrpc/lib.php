@@ -105,7 +105,7 @@ class AuthXmlrpc extends Auth {
         $peer = get_peer($remotewwwroot);
 
         if ($peer->deleted != 0 || $this->config['theyssoin'] != 1) {
-            throw new MaharaException('We don\'t accept SSO connections from '.$peer->name );
+            throw new XmlrpcClientException('We don\'t accept SSO connections from ' . $peer->name);
         }
 
         $client = new Client();
@@ -117,26 +117,12 @@ class AuthXmlrpc extends Auth {
         $remoteuser = (object)$client->response;
 
         if (empty($remoteuser) or !property_exists($remoteuser, 'username')) {
-            $errorobject = $remoteuser;
-
-            $errreport = 'Authorisation failure. ';
-            $faultcode = 1;
-
-            if (property_exists($errorobject, 'faultCode')) {
-                $errreport .= "\nCode: ".$errorobject->faultCode;
-                $faultcode  = $errorobject->faultCode;
-            }
-
-            if (property_exists($errorobject, 'faultString')) {
-                $errreport .= "\nMessage: ".$errorobject->faultString;
-            }
-
-            throw new AccessDeniedException($errreport, $faultcode);
+            // Caught by land.php
+            throw new AccessDeniedException();
         }
 
         $virgin = false;
 
-        set_cookie('institution', $peer->institution, 0, get_mahara_install_subdirectory());
         $oldlastlogin = null;
         $create = false;
         $update = false;
@@ -150,6 +136,10 @@ class AuthXmlrpc extends Auth {
             }
         } catch (AuthUnknownUserException $e) {
             if (!empty($this->config['weautocreateusers'])) {
+                $institution = new Institution($this->institution);
+                if ($institution->isFull()) {
+                    throw new XmlrpcClientException('SSO attempt from ' . $institution->displayname . ' failed - institution is full');
+                }
                 $user = new User;
                 $create = true;
             } else {
