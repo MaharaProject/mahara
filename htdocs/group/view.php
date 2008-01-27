@@ -91,19 +91,20 @@ if (!empty($joincontrol)) {
                 $gmr->member = $USER->get('id');
                 $gmr->ctime = db_format_timestamp(time());
                 $owner = get_record('usr', 'id', $group->owner);
+                $lang = get_user_language($owner->id);
                 insert_record('group_member_request', $gmr);
                 if (empty($gmr->reason)) {
-                    $message = get_string('grouprequestmessage', 'group', 
+                    $message = get_string_from_language($lang, 'grouprequestmessage', 'group', 
                                           display_name($USER, $owner), $group->name);
                 } 
                 else {
-                    $message = get_string('grouprequestmessagereason', 'group', 
+                    $message = get_string_from_language($lang, 'grouprequestmessagereason', 'group', 
                                           display_name($USER, $owner), $group->name, $gmr->reason);
                 }
                 require_once('activity.php');
                 activity_occurred('maharamessage', 
                     array('users'   => array($group->owner), 
-                          'subject' => get_string('grouprequestsubject', 'group'),
+                          'subject' => get_string_from_language($lang, 'grouprequestsubject', 'group'),
                           'message' => $message,
                           'url'     => get_config('wwwroot') . 'group/view.php?id=' . $id));
                 $SESSION->add_ok_msg(get_string('grouprequestsent', 'group'));
