@@ -560,8 +560,6 @@ class View {
             // Tell the watchlist that the view changed
             $data = (object)array(
                 'view' => $this->get('id'),
-                'subject' => get_string('newwatchlistmessagesubject', 'activity'),
-                'message' => get_string('newwatchlistmessageview', 'activity', $this->get('title')),
             );
             activity_occurred('watchlist', $data);
 

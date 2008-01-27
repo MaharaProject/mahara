@@ -638,12 +638,13 @@ class ActivityTypeWatchlist extends ActivityType {
     }
 
     public function get_message($user) {
-        return display_name($this->viewinfo, $user) . ' ' . $this->message . 
-            $this->subject . ' ' . $this->viewinfo->title;
+        return display_name($this->viewinfo, $user) . ' ' 
+            . get_string_from_language($user->lang, 'newwatchlistmessageview', 'activity', 
+                                       $this->viewinfo->title);
     }
 
     public function get_required_parameters() {
-        return array('subject', 'view');
+        return array('view');
     }
 }
 
