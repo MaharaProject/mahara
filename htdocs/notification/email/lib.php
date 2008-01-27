@@ -32,30 +32,32 @@ class PluginNotificationEmail extends PluginNotification {
 
     public static function notify_user($user, $data) {
 
+        $lang = (empty($user->lang) || $user->lang == 'default') ? get_config('lang') : $user->lang;
+
         $sitename = get_config('sitename');
-        $fulltype = get_string('type' . $data->activityname, 'activity');
-        $subject = get_string('emailsubject', 'notification.email', $sitename, $fulltype);
+        $fulltype = get_string_from_language($lang, 'type' . $data->activityname, 'activity');
+        $subject = get_string_from_language($lang, 'emailsubject', 'notification.email', $sitename, $fulltype);
         if (!empty($data->subject)) {
             $subject .= ': ' . $data->subject;
         }
 
         if (!empty($data->userfrom)) {
             $userfrom = get_record('usr', 'id', $data->userfrom);
-            $messagebody = get_string('emailbody', 'notification.email', $sitename)
-                . get_string('subject') . ': ' . $data->subject . "\n\n"
+            $messagebody = get_string_from_language($lang, 'emailbody', 'notification.email', $sitename)
+                . get_string_from_language($lang, 'subject') . ': ' . $data->subject . "\n\n"
                 . $data->message;
         } 
         else {
             $userfrom = null;
-            $messagebody = get_string('emailbodynoreply', 'notification.email', $sitename)
-                . get_string('subject') . ': ' . $data->subject . "\n\n"
+            $messagebody = get_string_from_language($lang, 'emailbodynoreply', 'notification.email', $sitename)
+                . get_string_from_language($lang, 'subject') . ': ' . $data->subject . "\n\n"
                 . $data->message;
         }
         if (!empty($data->url)) {
-            $messagebody .= "\n\n" . get_string('referurl', 'notification.email', $data->url);
+            $messagebody .= "\n\n" . get_string_from_language($lang, 'referurl', 'notification.email', $data->url);
         }
         $prefurl = get_config('wwwroot') . 'account/activity/preferences/';
-        $messagebody .=  "\n\n" . get_string('emailbodyending', 'notification.email', $prefurl);
+        $messagebody .=  "\n\n" . get_string_from_language($lang, 'emailbodyending', 'notification.email', $prefurl);
         email_user($user, $userfrom, $subject, $messagebody);
     }
 }
