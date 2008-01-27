@@ -830,10 +830,6 @@ function auth_draw_login_page($message=null, Pieform $form=null) {
  */
 function auth_get_login_form() {
     $institutions = get_records_menu('institution', '', '', 'name, displayname');
-    $defaultinstitution = get_cookie('institution');
-    if (!$defaultinstitution) {
-        $defaultinstitution = 'mahara';
-    }
 
     $elements = array(
         'login_username' => array(
