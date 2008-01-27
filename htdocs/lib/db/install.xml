@@ -92,7 +92,6 @@
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
-                <KEY NAME="institution" TYPE="foreign" FIELDS="institution" REFTABLE="institution" REFFIELDS="name"/>
                 <KEY NAME="lastauthinstancefk" TYPE="foreign" FIELDS="lastauthinstance" REFTABLE="auth_instance" REFFIELDS="id" />
                 <KEY NAME="authinstancefk" TYPE="foreign" FIELDS="authinstance" REFTABLE="auth_instance" REFFIELDS="id" />
             </KEYS>
