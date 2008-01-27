@@ -51,6 +51,7 @@ class Dispatcher {
             'auth/mnet/auth.php/update_enrolments' => 'xmlrpc_not_implemented',
             'auth/mnet/auth.php/keepalive_server' => 'xmlrpc_not_implemented',
             'auth/mnet/auth.php/kill_children' => 'xmlrpc_not_implemented',
+            'auth/mnet/auth.php/kill_child' => 'xmlrpc_not_implemented',
             )
     );
 
