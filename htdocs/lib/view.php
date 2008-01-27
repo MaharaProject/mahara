@@ -382,11 +382,12 @@ class View {
         $releaseuser = optional_userobj($releaseuser);
         $this->set('submittedto', null);
         $this->commit();
+        $ownerlang = get_user_language($this->get('owner'));
         require_once('activity.php');
         activity_occurred('maharamessage', 
                   array('users'   => array($this->get('owner')),
-                  'subject' => get_string('viewreleasedsubject'),
-                  'message' => get_string('viewreleasedmessage', 'mahara', 
+                  'subject' => get_string_from_language($ownerlang, 'viewreleasedsubject'),
+                  'message' => get_string_from_language($ownerlang, 'viewreleasedmessage', 'mahara', 
                        get_field('group', 'name', 'id', $groupid), 
                        display_name($releaseuser, $this->get_owner_object()))));
     }
