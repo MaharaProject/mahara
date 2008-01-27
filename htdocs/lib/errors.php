@@ -486,7 +486,7 @@ class MaharaException extends Exception {
         }
 
         $outputtitle = $this->get_string('title');
-        $outputmessage = $this->render_exception();
+        $outputmessage = trim($this->render_exception());
 
         if (function_exists('smarty') && !$this instanceof ConfigSanityException) {
             $smarty = smarty();
@@ -555,6 +555,11 @@ EOF;
  * SystemException - this is basically a bug in the system.
  */
 class SystemException extends MaharaException implements MaharaThrowable {
+
+    public function __construct($message, $code=0) {
+        parent::__construct($message, $code);
+        $this->set_log();
+    }
 
     public function render_exception () {
         return $this->get_string('message');
@@ -682,7 +687,14 @@ class XmlrpcServerException extends SystemException {}
 /**
  * Xmlrpc Client exception - Something has gone wrong in the networking
  */
-class XmlrpcClientException extends SystemException {}
+class XmlrpcClientException extends SystemException {
+    public function strings() {
+        return array_merge(parent::strings(), array(
+            'title'   => get_string('xmlrpccouldnotlogyouin'),
+            'message' => get_string('xmlrpccouldnotlogyouindetail'))
+        );
+    }
+}
 
 /**
  * Error with SSL and encryption
@@ -718,6 +730,17 @@ class ViewNotFoundException extends NotFoundException {}
  * Exception - user not found
  */
 class UserNotFoundException extends NotFoundException {}
+
+/**
+ * Exception - user not found while doing XMLRPC authentication
+ */
+class XmlrpcUserNotFoundException extends UserNotFoundException {
+    public function strings() {
+        return array_merge(parent::strings(),
+            array('message' => ''),
+            array('title'   => get_string('unabletosigninviasso', 'auth')));
+    }
+}
 
 /**
  * Exception - group not found
