@@ -59,5 +59,8 @@ $string['cantretrievekey'] = 'An error occurred while retrieving the public key 
 $string['errnoauthinstances']   = 'We don\'t seem to have any authentication plugin instances configured for the host at ';
 $string['errnoxmlrcpinstances'] = 'We don\'t seem to have any XMLRPC authentication plugin instances configured for the host at ';
 $string['errnoxmlrcpwwwroot']   = 'We don\'t have a record for any host at ';
-$string['errnoxmlrcpuser']      = 'We were unable to authenticate you. Please ask your Mahara administrator to check Mahara\'s authentication plugin settings, and to check that either a user record exists for you on this Mahara, or that Mahara is configured to create new records for users from your Moodle.';
+$string['errnoxmlrpcuser']      = "We were unable to authenticate you at this time. Possible reasons might be:
+
+    * Your SSO session might have expired. Go back to the other application and click the link to sign into Mahara again.
+    * You may not be allowed to SSO to Mahara. Please check with your administrator if you think you should be allowed to.";
 ?>
