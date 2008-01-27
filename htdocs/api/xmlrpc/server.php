@@ -99,46 +99,12 @@ try {
 
 // Cascading switch. Kinda.
 if ($xml->getName() == 'encryptedMessage') {
-
-    // The IP address for the hostname supplied by the client.
-    // This hostname can't be trusted.
-    $ipaddress = gethostbyname(get_hostname_from_uri((string)$xml->wwwroot));
-
-    // Check for masquerading
-    if (!get_config('xmlrpc_allow_masquerading') && $ipaddress != $_SERVER['REMOTE_ADDR']) {
-        if ($networkingdebug) {
-            throw new XmlrpcServerException('Your hostname ('.
-            get_hostname_from_uri((string)$xml->wwwroot) .
-            ') resolves to the IP address '.$ipaddress .
-            ' but your IP address is actually '.$_SERVER['REMOTE_ADDR'] , 6012);
-        }
-        header($protocol.' 403 Forbidden');
-        exit;
-    }
-
     $payload_encrypted = true;
     $REMOTEWWWROOT     = (string)$xml->wwwroot;
     $payload           = xmlenc_envelope_strip($xml);
 }
 
 if ($xml->getName() == 'signedMessage') {
-
-    // The IP address for the hostname supplied by the client.
-    // This hostname can't be trusted.
-    $ipaddress = gethostbyname(get_hostname_from_uri((string)$xml->wwwroot));
-
-    // Check for masquerading
-    if (!get_config('xmlrpc_allow_masquerading') && $ipaddress != $_SERVER['REMOTE_ADDR']) {
-        if ($networkingdebug) {
-            throw new XmlrpcServerException('Your hostname ('.
-            get_hostname_from_uri((string)$xml->wwwroot) .
-            ') resolves to the IP address '.$ipaddress .
-            ' but your IP address is actually '.$_SERVER['REMOTE_ADDR'] , 6012);
-        }
-        header($protocol.' 403 Forbidden');
-        exit;
-    }
-
     $payload_signed = true;
     $REMOTEWWWROOT  = (string)$xml->wwwroot;
     $payload        = xmldsig_envelope_strip($xml);
