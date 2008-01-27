@@ -33,7 +33,7 @@ $string['wwwroot'] = 'WWW root';
 $string['port'] = 'Port number'; 
 $string['protocol'] = 'Protocol';
 $string['changepasswordurl'] = 'Password-change URL';
-$string['cannotremove']  = "We can't remove this auth plugin, as it's the only \\nplugin that exists for this institution.";
+$string['cannotremove']  = "We can't remove this auth plugin, as it's the only \nplugin that exists for this institution.";
 $string['cannotremoveinuse']  = "We can't remove this auth plugin, as it's being used by some users.\nYou must update their records before you can remove this plugin.";
 $string['saveinstitutiondetailsfirst'] = 'Please save the institution details before configuring authentication plugins.';
 
@@ -63,4 +63,9 @@ $string['errnoxmlrpcuser']      = "We were unable to authenticate you at this ti
 
     * Your SSO session might have expired. Go back to the other application and click the link to sign into Mahara again.
     * You may not be allowed to SSO to Mahara. Please check with your administrator if you think you should be allowed to.";
+
+$string['unabletosigninviasso'] = 'Unable to sign in via SSO';
+$string['xmlrpccouldnotlogyouin'] = 'Sorry, could not log you in :(';
+$string['xmlrpccouldnotlogyouindetail'] = 'Sorry, we could not log you into Mahara at this time. Please tryin again shortly, and if the problem persists, contact your administrator';
+
 ?>
