@@ -181,10 +181,11 @@ switch ($type) {
                      json_reply(true, get_string('memberchangefailed', 'group'));
                  }
                  require_once('activity.php');
+                 $lang = get_user_language($user);
                  activity_occurred('maharamessage', 
                      array('users' => array($user),
-                           'subject' => get_string('groupmembershipchangesubject', 'group', $group->name), 
-                           'message' => get_string('groupmembershipchangemessage' . $v, 'group'),
+                           'subject' => get_string_from_language($lang, 'groupmembershipchangesubject', 'group', $group->name), 
+                           'message' => get_string_from_language($lang, 'groupmembershipchangemessage' . $v, 'group'),
                            'url'     => get_config('wwwroot') . 'group/view.php?id=' . $id));
                                     
              }

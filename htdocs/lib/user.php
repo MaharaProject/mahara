@@ -176,6 +176,16 @@ function get_account_preference($userid, $field) {
     return $expected[$field];
 }
 
+
+function get_user_language($userid) {
+    $langpref = get_account_preference($userid, 'lang');
+    if (empty($langpref) || $langpref == 'default') {
+        return get_config('lang');
+    }
+    return $langpref;
+}
+
+
 /**
  * default account settings
  * 
