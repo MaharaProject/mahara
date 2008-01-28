@@ -33,7 +33,6 @@ define('SECTION_PAGE', 'index');
 require_once(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('myresume', 'artefact.resume'));
 require_once('pieforms/pieform.php');
-require_once('pieforms/pieform/elements/calendar.php');
 require_once(get_config('docroot') . 'artefact/lib.php');
 
 // load up all the artefacts this user already has....
@@ -63,11 +62,9 @@ catch (Exception $e) { }
 $contactinformation_value = $contactinformation->render_self(array('editing' => true));
 $contactinformation_value = $contactinformation_value['html'];
 
-$coverletterform = array(
+$coverletterform = pieform(array(
     'name'        => 'coverletter',
     'jsform'      => true,
-    'plugintype'  => 'artefact',
-    'pluginname'  => 'account',
     'plugintype'  => 'artefact',
     'pluginname'  => 'resume',
     'jsform'      => true,
@@ -93,13 +90,11 @@ $coverletterform = array(
             )
         )
     )
-);
+));
 
-$interestsform = array(
+$interestsform = pieform(array(
     'name'        => 'interests',
     'jsform'      => true,
-    'plugintype'  => 'artefact',
-    'pluginname'  => 'account',
     'plugintype'  => 'artefact',
     'pluginname'  => 'resume',
     'jsform'      => true,
@@ -125,13 +120,11 @@ $interestsform = array(
             )
         )
     )
-);
+));
 
-$contactinformationform = array(
+$contactinformationform = pieform(array(
     'name'        => 'contactinformation',
     'jsform'      => true,
-    'plugintype'  => 'artefact',
-    'pluginname'  => 'account',
     'plugintype'  => 'artefact',
     'pluginname'  => 'resume',
     'jsform'      => true,
@@ -151,13 +144,11 @@ $contactinformationform = array(
             )
         )
     )
-);
+));
 
-$personalinformationform = array(
+$personalinformationform = pieform(array(
     'name'        => 'personalinformation',
     'jsform'      => true,
-    'plugintype'  => 'artefact',
-    'pluginname'  => 'account',
     'plugintype'  => 'artefact',
     'pluginname'  => 'resume',
     'jsform'      => true,
@@ -222,7 +213,7 @@ $personalinformationform = array(
             )
         )
     )
-);
+));
 
 $cancelstr = get_string('cancel');
 $addstr = get_string('add');
@@ -236,12 +227,12 @@ $downstr = get_string('movedown', 'artefact.resume');
 
 $wwwroot = get_config('wwwroot');
 
-$smarty = smarty(array('tablerenderer'), pieform_element_calendar_get_headdata(pieform_element_calendar_configure(array())));
+$smarty = smarty(array('tablerenderer'));
 
-$smarty->assign('coverletterform', pieform($coverletterform));
-$smarty->assign('interestsform', pieform($interestsform));
-$smarty->assign('contactinformationform', pieform($contactinformationform));
-$smarty->assign('personalinformationform', pieform($personalinformationform));
+$smarty->assign('coverletterform', $coverletterform);
+$smarty->assign('interestsform', $interestsform);
+$smarty->assign('contactinformationform', $contactinformationform);
+$smarty->assign('personalinformationform',$personalinformationform);
 
 $inlinejs = <<<EOF
 var tableRenderers = {};
