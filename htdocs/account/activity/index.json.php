@@ -32,6 +32,7 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 json_headers();
 
 $markasread = param_integer('markasread', 0);
+$delete     = param_integer('delete', 0);
 $quiet      = param_integer('quiet', 0);
 
 if ($markasread) {
@@ -40,7 +41,7 @@ if ($markasread) {
     try {
         foreach ($_GET as $k => $v) {
             if (preg_match('/^unread\-(\d+)$/',$k,$m)) {
-                set_field('notification_internal_activity', 'read', 1, 'id', $m[1]);
+                set_field('notification_internal_activity', 'read', 1, 'id', $m[1], 'usr', $USER->get('id'));
                 $count++;
             }
         }
@@ -54,6 +55,25 @@ if ($markasread) {
         json_reply(false, null);
     }
     json_reply(false, array('message' => get_string('markedasread', 'activity'), 'count' => $count));
+}
+else if ($delete) {
+    $count = 0;
+    db_begin();
+    try {
+        foreach ($_GET as $k => $v) {
+            if (preg_match('/^delete\-(\d+)$/',$k,$m)) {
+                delete_records('notification_internal_activity', 'id', $m[1], 'usr', $USER->get('id'));
+                $count++;
+            }
+        }
+    }
+    catch (Exception $e) {
+        db_rollback();
+        json_reply('local', get_string('failedtodeletenotifications', 'activity') . ': ' . $e->getMessage());
+    }
+    db_commit();
+    json_reply(false, array('message' => get_string('deletednotifications', 'activity', $count),
+                            'count' => $count));
 }
 
 // normal processing
