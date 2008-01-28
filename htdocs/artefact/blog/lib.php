@@ -51,7 +51,7 @@ class PluginArtefactBlog extends PluginArtefact {
             array(
                 'path'   => 'myportfolio/blogs',
                 'url'    => 'artefact/blog/',
-                'title'  => get_string('blogs', 'artefact.blog'),
+                'title'  => get_string('myblogs', 'artefact.blog'),
                 'weight' => 30,
             ),
         );
