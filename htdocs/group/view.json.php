@@ -180,14 +180,17 @@ switch ($type) {
                  catch (SQLException $e) {
                      json_reply(true, get_string('memberchangefailed', 'group'));
                  }
-                 require_once('activity.php');
-                 $lang = get_user_language($user);
-                 activity_occurred('maharamessage', 
-                     array('users' => array($user),
-                           'subject' => get_string_from_language($lang, 'groupmembershipchangesubject', 'group', $group->name), 
-                           'message' => get_string_from_language($lang, 'groupmembershipchangemessage' . $v, 'group'),
-                           'url'     => get_config('wwwroot') . 'group/view.php?id=' . $id));
-                                    
+                 if ($changed) {
+                     require_once('activity.php');
+                     $lang = get_user_language($user);
+                     activity_occurred('maharamessage', 
+                         array('users' => array($user),
+                               'subject' => get_string_from_language($lang, 'groupmembershipchangesubject',
+                                                                     'group', $group->name), 
+                               'message' => get_string_from_language($lang, 'groupmembershipchangemessage'
+                                                                     . $v, 'group'),
+                               'url'     => get_config('wwwroot') . 'group/view.php?id=' . $id));
+                 }
              }
          }
          json_reply(false, get_string('memberchangesuccess', 'group'));
