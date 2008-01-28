@@ -65,9 +65,9 @@ function group_remove_user($group, $userid) {
     db_begin();
     delete_records('group_member', 'group', $group, 'member', $userid);
     delete_records_sql(
-        'DELETE FROM {view_access_group} a
-        WHERE a.group = ?
-        AND a.view IN (
+        'DELETE FROM {view_access_group}
+        WHERE "group" = ?
+        AND view IN (
             SELECT v.id
             FROM {view} v
             WHERE v.owner = ?
