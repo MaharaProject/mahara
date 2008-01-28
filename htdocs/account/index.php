@@ -125,7 +125,18 @@ $elements['lang'] = array(
         'required' => true
     ),
     'help' => true,
-);                        
+);
+$elements['addremovecolumns'] = array(
+    'type' => 'radio',
+    'options' => array(
+        1 => get_string('on', 'account'),
+        0 => get_string('off', 'account'),
+    ),
+    'defaultvalue' => $prefs->addremovecolumns,
+    'title' => get_string('showviewcolumns', 'account'),
+    'rules' => array('required' => true),
+    'help' => 'true'
+);
 $elements['submit'] = array(
     'type' => 'submit',
     'value' => get_string('save')

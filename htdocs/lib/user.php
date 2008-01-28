@@ -196,6 +196,7 @@ function expected_account_preferences() {
                  'wysiwyg'        =>  1,
                  'messages'       => 'allow',
                  'lang'           => 'default',
+                 'addremovecolumns' => 0,
                  );
 }
 

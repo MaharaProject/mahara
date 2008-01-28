@@ -1,4 +1,5 @@
 <div id="column_{$column}" class="column columns{$numcolumns}"{if $width} style="width: {$width-2}%;"{/if}>
+{if $addremovecolumns}
     <div class="column-header">
     {if $column == 1}
         <div class="add-column-left">
@@ -18,6 +19,9 @@
         </div>
     {/if}
     </div>
+{else}
+    <div class="column-header-empty"></div>
+{/if}
     <div class="column-content">
     {if !$javascript}
         <div class="add-button">

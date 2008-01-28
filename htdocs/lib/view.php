@@ -726,6 +726,7 @@ class View {
      * @param int  $column     The column to build
      */
     public function build_column($column, $editing=false) {
+        global $USER;
         $data = $this->get_column_datastructure($column);
 
         if ($editing) {
@@ -734,7 +735,6 @@ class View {
         else {
             $renderfunction = 'render_viewing';
         }
-        
         $blockcontent = '';
         foreach($data['blockinstances'] as $blockinstance) {
             $result = $blockinstance->$renderfunction($blockinstance->get('id') == $this->blockinstance_currently_being_configured);
@@ -766,6 +766,8 @@ class View {
         if (isset($data['width'])) {
             $smarty->assign('width', intval($data['width']));
         }
+
+        $smarty->assign('addremovecolumns', $USER->accountprefs['addremovecolumns']);
 
         if ($editing) {
             return $smarty->fetch('view/columnediting.tpl');
