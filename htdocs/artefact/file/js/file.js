@@ -300,7 +300,7 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
         var cancelbutton = INPUT({'type':'button','class':'button',
                                   'value':get_string('cancel'), 'onclick':cancelcreateform});
         var createbutton = INPUT({'type':'button','class':'button',
-                                  'value':get_string('create'),'onclick':function () {
+                                  'value':get_string('createfolder'),'onclick':function () {
             if (self.savemetadata(null, formid, false)) {
                 cancelcreateform();
             }
@@ -552,7 +552,7 @@ function FileUploader(element, uploadscript, statevars, foldername, folderid, up
              TR(null,TD({'colspan':2, 'id':'uploadformmessage'})),
              TR(null,TD({'colspan':2},
               INPUT({'name':'upload','type':'button','class':'button',
-                     'value':get_string('upload'),
+                     'value':get_string('uploadfile'),
                      'onclick':function () { if (self.sendform(false)) { cancelform(); } }}),
               INPUT({'name':'replace','type':'button','class':'button',
                      'value':get_string('overwrite'),
