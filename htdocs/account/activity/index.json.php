@@ -32,6 +32,7 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 json_headers();
 
 $markasread = param_integer('markasread', 0);
+$quiet      = param_integer('quiet', 0);
 
 if ($markasread) {
     $count = 0;
@@ -49,6 +50,9 @@ if ($markasread) {
         json_reply('local', get_string('failedtomarkasread', 'activity') . ': ' . $e->getMessage());
     }
     db_commit();
+    if ($quiet) {
+        json_reply(false, null);
+    }
     json_reply(false, array('message' => get_string('markedasread', 'activity'), 'count' => $count));
 }
 

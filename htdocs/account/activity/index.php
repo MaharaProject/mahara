@@ -48,6 +48,9 @@ if ($USER->get('admin')) {
 
 $morestr = get_string('more...');
 
+$star = json_encode(theme_get_url('images/star.png'));
+$unread = json_encode(get_string('unread', 'activity'));
+
 $javascript = <<<JAVASCRIPT
 var activitylist = new TableRenderer(
     'activitylist',
@@ -127,6 +130,16 @@ function markread(form) {
 
 function showHideMessage(id) {
     if (getStyle('message-' + id, 'display') == 'none') {
+        var unread = getFirstElementByTagAndClassName('input', 'tocheck', 
+                                                      $('message-' + id).parentNode.parentNode);
+        if (unread) {
+            var pd = {'markasread':1, 'quiet':1};
+            pd['unread-'+id] = 1;
+            sendjsonrequest('index.json.php', pd, 'GET', function(data) {
+                return !!data.error;
+            });
+            swapDOM(unread, IMG({'src' : {$star}, 'alt' : {$unread}}));
+        }
         showElement('message-' + id);
     }
     else {
