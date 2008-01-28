@@ -116,15 +116,15 @@ function &smarty($javascript = array(), $headers = array(), $pagestrings = array
             if (!$found_tinymce) {
                 $found_tinymce = $check[$key];
                 $javascript_array[] = $jsroot . 'tinymce/tiny_mce.js';
-                if (isset($extraconfig['tinymceinit'])) {
-                    $headers[] = $extraconfig['tinymceinit'];
+                $content_css = json_encode(theme_get_url('style/tinymce.css'));
+                $language = substr(current_language(), 0, 2);
+                $execcommand = '';
+                if (isset($extraconfig['tinymcecommandcallback'])) {
+                    $execcommand = 'execcommand_callback: "' . $extraconfig['tinymcecommandcallback'] . '",';
                 }
-                else {
-                    $content_css = json_encode(theme_get_url('style/tinymce.css'));
-                    $language = substr(current_language(), 0, 2);
 
-                    if ($check[$key] == 'tinymce') {
-                        $tinymce_config = <<<EOF
+                if ($check[$key] == 'tinymce') {
+                    $tinymce_config = <<<EOF
     editor_selector: 'wysiwyg',
     theme: "advanced",
     plugins: "table,emotions,iespell,inlinepopups,paste",
@@ -135,9 +135,9 @@ function &smarty($javascript = array(), $headers = array(), $pagestrings = array
     theme_advanced_toolbar_align : "center",
     width: '512',
 EOF;
-                    }
-                    else {
-                        $tinymce_config = <<<EOF
+                }
+                else {
+                    $tinymce_config = <<<EOF
     editor_selector: 'tinywysiwyg',
     theme: "advanced",
     plugins: "fullscreen",
@@ -155,14 +155,15 @@ EOF;
         theme_advanced_buttons3 : "fontselect,separator,fontsizeselect,separator,formatselect"
     },
 EOF;
-                    }
+                }
 
-                    $headers[] = <<<EOF
+                $headers[] = <<<EOF
 <script type="text/javascript">
 tinyMCE.init({
     mode: "textareas",
     button_tile_map: true,
     {$tinymce_config}
+    {$execcommand}
     language: '{$language}',
     content_css : {$content_css},
     document_base_url: {$jswwwroot},
@@ -171,7 +172,6 @@ tinyMCE.init({
 </script>
 
 EOF;
-                }
                 unset($check[$key]);
             }
             else {
