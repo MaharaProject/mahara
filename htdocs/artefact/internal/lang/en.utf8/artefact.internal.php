@@ -35,6 +35,11 @@ $string['mandatory'] = 'Mandatory';
 $string['public'] = 'Public';
 $string['profileiconsize'] = 'Icon size';
 
+// profile categories
+$string['aboutme'] = 'About me';
+$string['contact'] = 'Contact information';
+$string['messaging'] = 'Messaging';
+$string['general'] = 'General';
 
 // profile fields
 $string['firstname'] = 'First Name';
