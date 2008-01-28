@@ -373,7 +373,7 @@ EOF;
             if (!empty($data)) {
                 $smarty->assign('SITEMENU', site_menu());
                 $SIDEBLOCKS[] = array(
-                    'name'   => 'mainmenu',
+                    'name'   => 'usefullinksandresources',
                     'weight' => 10,
                     'data'   => $data,
                 );
