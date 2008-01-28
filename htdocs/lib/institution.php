@@ -221,6 +221,15 @@ class Institution {
         if (is_numeric($user)) {
             $user = get_record('usr', 'id', $user);
         }
+        if ($user instanceof User) {
+            $lang = $user->get_account_preference('lang');
+            if (empty($lang) || $lang == 'default') {
+                $lang = get_config('lang');
+            }
+        }
+        else { // stdclass object
+            $lang = get_user_language($user->id);
+        }
         $userinst = new StdClass;
         $userinst->institution = $this->name;
         $studentid = get_field('usr_institution_request', 'studentid', 'usr', $user->id, 
@@ -240,8 +249,8 @@ class Institution {
         }
         $message = (object) array(
             'users' => array($user->id),
-            'subject' => get_string('institutionmemberconfirmsubject'),
-            'message' => get_string('institutionmemberconfirmmessage', 'mahara', $this->displayname),
+            'subject' => get_string_from_language($lang, 'institutionmemberconfirmsubject'),
+            'message' => get_string_from_language($lang, 'institutionmemberconfirmmessage', 'mahara', $this->displayname),
         );
         db_begin();
         if (!get_config('usersallowedmultipleinstitutions')) {
