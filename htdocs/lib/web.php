@@ -366,7 +366,7 @@ EOF;
     }
 
     // ---------- sideblock stuff ----------
-    if (!defined('INSTALLER') && (defined('MENUITEM') && substr(MENUITEM, 0, 5) != 'admin')) {
+    if (!defined('INSTALLER') && (!defined('MENUITEM') || substr(MENUITEM, 0, 5) != 'admin')) {
         if (get_config('installed')) {
             $data = site_menu();
             if (!empty($data)) {
