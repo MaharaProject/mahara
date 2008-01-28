@@ -49,7 +49,7 @@ if (!empty($joincontrol)) {
     switch ($joincontrol) {
         case 'leave':
             // make sure they're a member and can leave
-            if ($ismember && $group->jointype != 'controlled') {
+            if ($ismember && group_user_can_leave($id, $USER->get('id'))) {
                 group_remove_user($id, $USER->get('id'));
                 $SESSION->add_ok_msg(get_string('leftgroup', 'group'));
             } 
@@ -147,7 +147,7 @@ $owner          = (int)(bool)($membership & GROUP_MEMBERSHIP_OWNER);
 $canupdate      = (int)(bool)($tutor || $staff || $admin || $owner);
 $canpromote     = (int)(bool)(($staff || $admin) && $controlled);
 $canremove      = (int)(bool)(($tutor && $controlled) || $staff || $admin || $owner);
-$canleave       = ($ismember && !$controlled);
+$canleave       = ($ismember && group_user_can_leave($id, $USER->get('id')));
 $canrequestjoin = (!$ismember && empty($invited) && empty($requested) && $group->jointype == 'request');
 $canjoin        = (!$ismember && $group->jointype == 'open' && !$owner);
 
