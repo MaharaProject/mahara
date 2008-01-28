@@ -64,6 +64,7 @@ $string['View'] = 'View';
 $string['Views'] = 'Views';
 $string['viewsubmittedtogroup'] = 'This view has been submitted to <a href="' . get_config('wwwroot') . 'group/view.php?id=%s">%s</a>';
 $string['nobodycanseethisview'] = 'Nobody can see this view';
+$string['noviews'] = 'You have no views.';
 
 // access levels
 $string['public'] = 'Public';
