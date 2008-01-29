@@ -69,7 +69,7 @@ $string['stopmonitoring'] = 'Stop monitoring';
 $string['stopmonitoringsuccess'] = 'Stopped monitoring successfully';
 $string['stopmonitoringfailed'] = 'Failed to stop monitoring';
 
-$string['newwatchlistmessagesubject'] = 'New activity on your watchlist';
+$string['newwatchlistmessage'] = 'New activity on your watchlist';
 $string['newwatchlistmessageview'] = '%s has changed their view "%s"';
 
 $string['newviewsubject'] = 'New view created';
