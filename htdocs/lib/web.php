@@ -99,6 +99,8 @@ function &smarty($javascript = array(), $headers = array(), $pagestrings = array
     $jswwwroot = json_encode($wwwroot);
 
     $theme_list = array();
+
+    $smarty->assign('searchform', searchform());
     
     if (function_exists('pieform_get_headdata')) {
         $headers = array_merge($headers, pieform_get_headdata());
@@ -312,7 +314,6 @@ EOF;
         }
     }
 
-    $smarty = smarty_core();
     $smarty->assign('STRINGJS', $stringjs);
 
     $smarty->assign('STYLESHEETLIST', $stylesheets);
@@ -358,8 +359,6 @@ EOF;
     $smarty->assign('SESSKEY', $USER->get('sesskey'));
     $smarty->assign_by_ref('JAVASCRIPT', $javascript_array);
     $smarty->assign_by_ref('HEADERS', $headers);
-
-    $smarty->assign('searchform', searchform());
 
     if ($help = has_page_help()) {
         $smarty->assign('PAGEHELPNAME', $help[0]);
