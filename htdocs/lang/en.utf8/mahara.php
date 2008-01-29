@@ -334,6 +334,7 @@ $string['myportfolio'] = 'My Portfolio';
 $string['myviews']       = ' My Views';
 $string['settings']    = 'Settings';
 $string['myfriends']          = 'My Friends';
+$string['findfriends']        = 'Find Friends';
 $string['groups']             = 'Groups';
 $string['mygroups']           = 'My Groups';
 $string['findgroups']         = 'Find Groups';

@@ -1584,18 +1584,23 @@ function main_nav() {
                 'weight' => 10
             ),
             array(
-                'path' => 'groups/myfriends',
-                'url' => 'user/',
-                'title' => get_string('myfriends'),
-                'weight' => 20,
-            ),
-            array(
                 'path' => 'groups/find',
                 'url' => 'group/find.php',
                 'title' => get_string('findgroups'),
+                'weight' => 20
+            ),
+            array(
+                'path' => 'groups/myfriends',
+                'url' => 'friends/myfriends.php',
+                'title' => get_string('myfriends'),
                 'weight' => 30
             ),
-
+            array(
+                'path' => 'groups/findfriends',
+                'url' => 'friends/find.php',
+                'title' => get_string('findfriends'),
+                'weight' => 40
+            ),
             array(
                 'path' => 'settings',
                 'url' => 'account/',
