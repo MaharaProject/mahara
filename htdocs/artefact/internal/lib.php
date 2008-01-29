@@ -234,12 +234,13 @@ class ArtefactTypeProfile extends ArtefactType {
         return array(
             'firstname' => 'text', 
             'lastname'  => 'text', 
-            'email'     => 'emaillist', 
+            'email'     => 'emaillist',
         );
     }
 
     public static function get_public_fields() {
         $all = self::get_all_fields();
+        $alwaysp = self::get_always_public_fields();
         $p = array();
         if ($pub = get_config_plugin('artefact', 'internal', 'profilepublic')) {
             $public = explode(',', $pub);
@@ -250,7 +251,13 @@ class ArtefactTypeProfile extends ArtefactType {
         foreach ($public as $pf) {
             $p[$pf] = $all[$pf];
         }
-        return $p;
+        return array_merge($p, $alwaysp);
+    }
+
+    public static function get_always_public_fields() {
+        return array(
+            'introduction' => 'wysiwyg'
+        );
     }
 
     public static function has_config() {
@@ -261,6 +268,7 @@ class ArtefactTypeProfile extends ArtefactType {
         $mandatory = self::get_mandatory_fields();
         $public = self::get_public_fields();
         $alwaysmandatory = self::get_always_mandatory_fields();
+        $alwayspublic = self::get_always_public_fields();
         $form = array(
             'renderer'   => 'multicolumntable',
             'elements'   => array(
@@ -295,6 +303,10 @@ class ArtefactTypeProfile extends ArtefactType {
                 'type'         => 'checkbox',
 
             );
+            if (isset($alwayspublic[$field])) {
+                $form['elements'][$field . '_public']['value'] = 'checked';
+                $form['elements'][$field . '_public']['disabled'] = true;
+            }
         }
 
         $form['elements']['emptyrow'] = array(
