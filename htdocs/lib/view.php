@@ -488,6 +488,11 @@ class View {
                 $action = substr($key, 7);
                 break;
             }
+            else if (substr($key, 0, 37) == 'cancel_action_configureblockinstance_'
+                     && param_integer('removeoncancel', 0)) {
+                $action = 'removeblockinstance_' . substr($key, 37);
+                break;
+            }
         }
         // TODO Scan GET for an action. The only action that is GETted is 
         // confirming deletion of a blockinstance. It _should_ be a POST, but 
@@ -807,7 +812,7 @@ class View {
 
         if ($values['returndata']) {
             // Make sure it's in configure mode if it has configuration
-            return $bi->render_editing(call_static_method(generate_class_name('blocktype', $values['blocktype']), 'has_instance_config'));
+            return $bi->render_editing(call_static_method(generate_class_name('blocktype', $values['blocktype']), 'has_instance_config'), true);
         }
     }
 

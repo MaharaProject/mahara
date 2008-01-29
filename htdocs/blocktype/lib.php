@@ -292,11 +292,11 @@ class BlockInstance {
      * @return array Array with two keys: 'html' for raw html, 'javascript' for
      *               javascript to run
      */
-    public function render_editing($configure=false) {
+    public function render_editing($configure=false, $new=false) {
         safe_require('blocktype', $this->get('blocktype'));
         $js = '';
         if ($configure) {
-            list($content, $js) = array_values($this->build_configure_form());
+            list($content, $js) = array_values($this->build_configure_form($new));
         }
         else {
             $content = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'render_instance', $this);
@@ -385,7 +385,7 @@ class BlockInstance {
      * @return array Array with two keys: 'html' for raw html, 'javascript' for
      *               javascript to run
      */
-    public function build_configure_form() {
+    public function build_configure_form($new=false) {
         safe_require('blocktype', $this->get('blocktype'));
         $elements = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'instance_config_form', $this);
 
@@ -408,10 +408,19 @@ class BlockInstance {
             );
         }
 
+        if ($new) {
+            $cancel = get_string('remove', 'view');
+            $elements['removeoncancel'] = array('type' => 'hidden', 'value' => 1);
+            $elements['sure']           = array('type' => 'hidden', 'value' => 1);
+        }
+        else {
+            $cancel = get_string('cancel');
+        }
+
         // Add submit/cancel buttons
         $elements['action_configureblockinstance_id_' . $this->get('id')] = array(
             'type' => 'submitcancel',
-            'value' => array(get_string('save'), get_string('cancel')),
+            'value' => array(get_string('save'), $cancel),
             'goto' => View::make_base_url(),
         );
 
