@@ -767,7 +767,7 @@ class View {
             $smarty->assign('width', intval($data['width']));
         }
 
-        $smarty->assign('addremovecolumns', $USER->accountprefs['addremovecolumns']);
+        $smarty->assign('addremovecolumns', $USER->get_account_preference('addremovecolumns'));
 
         if ($editing) {
             return $smarty->fetch('view/columnediting.tpl');
