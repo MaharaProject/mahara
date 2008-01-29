@@ -1093,6 +1093,7 @@ function pieform_configure() {
         'renderer'  => 'maharatable',
         'requiredmarker' => true,
         'elementclasses' => true,
+        'jsdirectory'    => get_config('wwwroot') . 'lib/pieforms/static/core/',
         'jserrorcallback'       => 'formError',
         'globaljserrorcallback' => 'formGlobalError',
         'jssuccesscallback'     => 'formSuccess',
