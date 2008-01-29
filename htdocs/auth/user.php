@@ -657,7 +657,6 @@ class LiveUser extends User {
         if (is_null($id)) {
             $id = $this->get('id');
         }
-        $this->commit();
         $this->find_by_id($id);
         $this->activityprefs = load_activity_preferences($id);
         $this->accountprefs = load_account_preferences($id);
