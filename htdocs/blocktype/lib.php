@@ -409,7 +409,7 @@ class BlockInstance {
         }
 
         if ($new) {
-            $cancel = get_string('remove', 'view');
+            $cancel = get_string('remove');
             $elements['removeoncancel'] = array('type' => 'hidden', 'value' => 1);
             $elements['sure']           = array('type' => 'hidden', 'value' => 1);
         }
