@@ -24,6 +24,8 @@
  *
  */
 
+$_PIEFORM_WYSIWYGS = array();
+
 /**
  * Renders a textarea, but with extra javascript to turn it into a wysiwyg
  * textarea.
@@ -35,7 +37,8 @@
  * @return string          The HTML for the element
  */
 function pieform_element_wysiwyg(Pieform $form, $element) {
-    global $USER;
+    global $USER, $_PIEFORM_WYSIWYGS;
+    $_PIEFORM_WYSIWYGS[] = $form->get_name() . '_' . $element['name'];
     if ($USER->get_account_preference('wysiwyg')) {
         if (!$form->get_property('elementclasses')) {
             $element['class'] = isset($element['class']) && $element['class'] !== '' ? $element['class'] . ' wysiwyg' : 'wysiwyg';
@@ -90,9 +93,19 @@ function pieform_element_wysiwyg_rule_required(Pieform $form, $value, $element, 
 }
 
 function pieform_element_wysiwyg_get_headdata() {
-    global $USER;
+    global $USER, $_PIEFORM_WYSIWYGS;
     if ($USER->get_account_preference('wysiwyg') || defined('PUBLIC')) {
-        return array('tinymce');
+        $result = '<script type="text/javascript">'
+         . "\nPieformManager.connect('onload', null, function() {\n";
+        foreach ($_PIEFORM_WYSIWYGS as $editor) {
+            $result .= "    tinyMCE.execCommand('mceAddControl', false, '$editor');\n";
+        }
+        $result .= "});\nPieformManager.connect('onreply', null, function() {\n";
+        foreach ($_PIEFORM_WYSIWYGS as $editor) {
+            $result .= "    tinyMCE.execCommand('mceRemoveControl', false, '$editor');\n";
+        }
+        $result .= "});</script>";
+        return array('tinymce', $result);
     }
     return array();
 }
