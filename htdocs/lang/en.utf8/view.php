@@ -64,6 +64,7 @@ $string['View'] = 'View';
 $string['Views'] = 'Views';
 $string['viewsubmittedtogroup'] = 'This view has been submitted to <a href="' . get_config('wwwroot') . 'group/view.php?id=%s">%s</a>';
 $string['nobodycanseethisview'] = 'Nobody can see this view';
+$string['noviews'] = 'You have no views.';
 
 // access levels
 $string['public'] = 'Public';
@@ -112,6 +113,7 @@ $string['reportsent'] = 'Your report has been sent';
 $string['updatewatchlistfailed'] = 'Update of watchlist failed';
 $string['View'] = 'View';
 $string['watchlistupdated'] = 'Your watchlist has been updated';
+$string['editmyview'] = 'Edit my view';
 
 $string['alphabet'] = 'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z';
 $string['all'] = 'All';
@@ -192,8 +194,11 @@ $string['removeblock'] = 'Remove this block';
 
 $string['viewlayout'] = 'View layout';
 $string['viewlayoutdescription'] = 'You can change the widths of the columns in your view.';
-$string['changeviewlayout'] = 'Change view layout';
-$string['backtoyourview'] = 'Back to your view';
+$string['changeviewlayout'] = 'Change my view layout';
+$string['backtoyourview'] = 'Back to my view';
+$string['viewlayoutchanged'] = 'View layout changed';
+$string['selectnumberofcolumns'] = 'You can change the number of columns in your view';
+$string['changeviewcolumns'] = 'Change my view columns';
 
 $string['by'] = 'by';
 $string['in'] = 'in';

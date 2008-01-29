@@ -382,10 +382,11 @@ function invite_submit(Pieform $form, $values) {
     $adduser = get_record('usr', 'id', $data->member);
     try {
         insert_record('group_member_invite', $data);
+        $lang = get_user_language($values['id']);
         activity_occurred('maharamessage', 
             array('users'   => array($values['id']), 
-                  'subject' => get_string('invitetogroupsubject'),
-                  'message' => get_string('invitetogroupmessage', 'mahara', display_name($USER, $adduser), $ctitle),
+                  'subject' => get_string_from_language($lang, 'invitetogroupsubject'),
+                  'message' => get_string_from_language($lang, 'invitetogroupmessage', 'mahara', display_name($USER, $adduser), $ctitle),
                   'url'     => get_config('wwwroot') 
                   . 'group/view.php?id=' . $values['group']));
     }
@@ -409,10 +410,11 @@ function addmember_submit(Pieform $form, $values) {
 
     try {
         insert_record('group_member', $data);
+        $lang = get_user_language($values['id']);
         activity_occurred('maharamessage', 
             array('users'   => array($values['id']), 
-                  'subject' => get_string('addedtogroupsubject'),
-                  'message' => get_string('addedtogroupmessage', 'mahara', display_name($USER, $adduser), $ctitle),
+                  'subject' => get_string_from_language($lang, 'addedtogroupsubject'),
+                  'message' => get_string_from_language($lang, 'addedtogroupmessage', 'mahara', display_name($USER, $adduser), $ctitle),
                   'url'     => get_config('wwwroot') 
                   . 'group/view.php?id=' . $values['group']));
     }

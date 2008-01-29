@@ -55,6 +55,9 @@ $string['alltypes'] = 'All types';
 $string['markedasread'] = 'Marked your notifications as read';
 $string['failedtomarkasread'] = 'Failed to mark your notifications as read';
 
+$string['deletednotifications'] = 'Deleted %s notifications';
+$string['failedtodeletenotifications'] = 'Failed to delete your notifications';
+
 $string['stopmonitoring'] = 'Stop monitoring';
 $string['viewsandartefacts'] = 'Views and Artefacts';
 $string['views'] = 'Views';
@@ -67,14 +70,17 @@ $string['stopmonitoringsuccess'] = 'Stopped monitoring successfully';
 $string['stopmonitoringfailed'] = 'Failed to stop monitoring';
 
 $string['newwatchlistmessagesubject'] = 'New activity on your watchlist';
-$string['newwatchlistmessageview'] = 'has changed their view "%s"';
+$string['newwatchlistmessageview'] = '%s has changed their view "%s"';
+
+$string['newviewsubject'] = 'New view created';
+$string['newviewmessage'] = '%s has created a new view "%s"';
 
 $string['newcontactusfrom'] = 'New contact us from';
 $string['newcontactus'] = 'New contact us';
 $string['newfeedbackonview'] = 'New feedback on view';
 $string['newfeedbackonartefact'] = 'New feedback on artefact';
 
-$string['newviewaccessmessage'] = 'You have been added to the access list for the view called';
+$string['newviewaccessmessage'] = 'You have been added to the access list for the view called "%s" by %s';
 $string['newviewaccesssubject'] = 'New view access';
 
 $string['viewmodified'] = 'has changed their view';

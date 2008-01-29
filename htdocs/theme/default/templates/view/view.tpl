@@ -4,7 +4,7 @@
 {if $can_edit}
 <div class="fr editview">
     <span class="settingsicon">
-        <a href="blocks.php?id={$viewid}&amp;new={$new}">{str tag=editthisview section=view}</a>
+        <a href="blocks.php?id={$viewid}&amp;new={$new}">{str tag=editmyview section=view}</a>
     </span>
 </div>
 {/if}

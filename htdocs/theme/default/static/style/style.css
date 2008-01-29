@@ -1309,6 +1309,13 @@ a.folderhover {
     font-weight: normal;
 }
 
+/* Forums styles */
+.groupowner, a.groupowner {
+    color: red;
+}
+.moderator, a.moderator{
+    color: blue;
+}
 
 /* Administration Home styles */
 #adminhome ul {
@@ -1645,9 +1652,3 @@ table.tablerenderer th.desc {
     background: #e5e8da url(../images/up.png) no-repeat right;
 }
 
-.groupowner, a.groupowner {
-    color: red;
-}
-.moderator, a.moderator{
-    color: blue;
-}

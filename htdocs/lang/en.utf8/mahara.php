@@ -80,7 +80,7 @@ $string['ssopeers'] = 'SSO Peers';
 $string['quota'] = 'Quota';
 $string['quotausage'] = 'You have used <span id="quota_used">%s</span> of your <span id="quota_total">%s</span> quota.';
 
-$string['mainmenu'] = 'Main menu';
+$string['usefullinksandresources'] = 'Useful links and resources';
 $string['updatefailed'] = 'Update failed';
 
 $string['strftimenotspecified']  = 'Not specified';

@@ -382,11 +382,12 @@ class View {
         $releaseuser = optional_userobj($releaseuser);
         $this->set('submittedto', null);
         $this->commit();
+        $ownerlang = get_user_language($this->get('owner'));
         require_once('activity.php');
         activity_occurred('maharamessage', 
                   array('users'   => array($this->get('owner')),
-                  'subject' => get_string('viewreleasedsubject'),
-                  'message' => get_string('viewreleasedmessage', 'mahara', 
+                  'subject' => get_string_from_language($ownerlang, 'viewreleasedsubject'),
+                  'message' => get_string_from_language($ownerlang, 'viewreleasedmessage', 'mahara', 
                        get_field('group', 'name', 'id', $groupid), 
                        display_name($releaseuser, $this->get_owner_object()))));
     }
@@ -559,8 +560,6 @@ class View {
             // Tell the watchlist that the view changed
             $data = (object)array(
                 'view' => $this->get('id'),
-                'subject' => get_string('newwatchlistmessagesubject', 'activity'),
-                'message' => get_string('newwatchlistmessageview', 'activity', $this->get('title')),
             );
             activity_occurred('watchlist', $data);
 
@@ -727,6 +726,7 @@ class View {
      * @param int  $column     The column to build
      */
     public function build_column($column, $editing=false) {
+        global $USER;
         $data = $this->get_column_datastructure($column);
 
         if ($editing) {
@@ -735,7 +735,6 @@ class View {
         else {
             $renderfunction = 'render_viewing';
         }
-        
         $blockcontent = '';
         foreach($data['blockinstances'] as $blockinstance) {
             $result = $blockinstance->$renderfunction($blockinstance->get('id') == $this->blockinstance_currently_being_configured);
@@ -767,6 +766,8 @@ class View {
         if (isset($data['width'])) {
             $smarty->assign('width', intval($data['width']));
         }
+
+        $smarty->assign('addremovecolumns', $USER->accountprefs['addremovecolumns']);
 
         if ($editing) {
             return $smarty->fetch('view/columnediting.tpl');

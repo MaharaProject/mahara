@@ -5,7 +5,10 @@
 </div>
 {include file="columnleftstart.tpl"}
 <h3>{str tag='myresume' section='artefact.resume'}</h3>
-{$mainform}
+{$coverletterform}
+{$interestsform}
+{$contactinformationform}
+{$personalinformationform}
 {include file="artefact:resume:fragments/employmenthistory.tpl" controls="true"}
 {include file="artefact:resume:fragments/educationhistory.tpl" controls="true"}
 {include file="artefact:resume:fragments/certification.tpl" controls="true"}

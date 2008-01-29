@@ -104,6 +104,10 @@
     text-align: center;
 }
 
+/* needed for when there are no add/remove buttons so the column doesn't disappear */
+.column-header-empty {
+    height: 1px;
+}
 
 /* block instance styles */
 .blockinstance {

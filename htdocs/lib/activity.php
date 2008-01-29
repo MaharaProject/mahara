@@ -638,12 +638,12 @@ class ActivityTypeWatchlist extends ActivityType {
     }
 
     public function get_message($user) {
-        return display_name($this->viewinfo, $user) . ' ' . $this->message . 
-            $this->subject . ' ' . $this->viewinfo->title;
+        return get_string_from_language($user->lang, 'newwatchlistmessageview', 'activity', 
+                                        display_name($this->viewinfo, $user), $this->viewinfo->title);
     }
 
     public function get_required_parameters() {
-        return array('subject', 'view');
+        return array('view');
     }
 }
 
@@ -676,8 +676,8 @@ class ActivityTypeNewview extends ActivityType {
     }
     
     public function get_message($user) {
-        return display_name($this->viewinfo, $user) . ' ' 
-            . get_string_from_language($user->lang, 'newviewmessage', 'activity', $this->viewinfo->title);
+        return get_string_from_language($user->lang, 'newviewmessage', 'activity', 
+                                        display_name($this->viewinfo, $user), $this->viewinfo->title);
     }
     
     public function get_required_parameters() {
@@ -715,9 +715,8 @@ class ActivityTypeViewaccess extends ActivityType {
     }
     
     public function get_message($user) {
-        return get_string_from_language($user->lang, 'newviewaccessmessage', 'activity')
-            . ' "' . $this->viewinfo->title . '" ' . get_string_from_language($user->lang, 'ownedby', 'activity')
-            . ' ' . display_name($this->viewinfo, $user);
+        return get_string_from_language($user->lang, 'newviewaccessmessage', 'activity',
+                                        $this->viewinfo->title, display_name($this->viewinfo, $user));
     }
     
     public function get_required_parameters() {

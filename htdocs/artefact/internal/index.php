@@ -69,56 +69,86 @@ if ($profilefields['email']['all']) {
     }
 }
 
+$items = array();
+foreach ( $element_list as $element => $type ) {
+    $items[$element] = array(
+        'type'  => $type,
+        'title' => get_string($element, 'artefact.internal'),
+    );
+
+    if ($type == 'wysiwyg') {
+        $items[$element]['rows'] = 10;
+        $items[$element]['cols'] = 60;
+    }
+    if ($type == 'textarea') {
+        $items[$element]['rows'] = 4;
+        $items[$element]['cols'] = 60;
+    }
+    if ($element == 'country') {
+        $items[$element]['options'] = getoptions_country();
+        // @todo configure default country somehow...
+        $items[$element]['defaultvalue'] = 'nz';
+    }
+
+    if (get_helpfile_location('artefact', 'internal', 'profileform', $element)) {
+        $items[$element]['help'] = true;
+    }
+
+    if (isset($profilefields[$element])) {
+        $items[$element]['defaultvalue'] = $profilefields[$element];
+    }
+
+    if (isset($element_required[$element])) {
+        $items[$element]['rules']['required'] = true;
+    }
+
+    if (isset($lockedfields[$element]) && !$USER->get('admin')) {
+        $items[$element]['disabled'] = true;
+    }
+
+}
+if ($items['firstname']) {
+    $items['firstname']['autofocus'] = true;
+}
+
 // build form elements
 $elements = array(
     'topsubmit' => array(
         'type'  => 'submit',
         'value' => get_string('saveprofile','artefact.internal'),
     ),
-);
-foreach ( $element_list as $element => $type ) {
-    $elements[$element] = array(
-        'type'  => $type,
-        'title' => get_string($element, 'artefact.internal'),
-    );
-
-    if ($type == 'wysiwyg') {
-        $elements[$element]['rows'] = 10;
-        $elements[$element]['cols'] = 60;
-    }
-    if ($type == 'textarea') {
-        $elements[$element]['rows'] = 4;
-        $elements[$element]['cols'] = 60;
-    }
-    if ($element == 'country') {
-        $elements[$element]['options'] = getoptions_country();
-        // @todo configure default country somehow...
-        $elements[$element]['defaultvalue'] = 'nz';
-    }
-
-    if (get_helpfile_location('artefact', 'internal', 'profileform', $element)) {
-        $elements[$element]['help'] = true;
-    }
-
-    if (isset($profilefields[$element])) {
-        $elements[$element]['defaultvalue'] = $profilefields[$element];
-    }
-
-    if (isset($element_required[$element])) {
-        $elements[$element]['rules']['required'] = true;
-    }
-
-    if (isset($lockedfields[$element]) && !$USER->get('admin')) {
-        $elements[$element]['disabled'] = true;
-    }
-
-}
-if ($elements['firstname']) {
-    $elements['firstname']['autofocus'] = true;
-}
-$elements['submit'] = array(
-    'type'  => 'submit',
-    'value' => get_string('saveprofile','artefact.internal'),
+    'profile' => array(
+        'type' => 'fieldset',
+        'legend' => get_string('aboutme', 'artefact.internal'),
+        'collapsible' => true,
+        'collapsed' => false,
+        'elements' => get_desired_fields(&$items, array('firstname', 'lastname', 'studentid', 'preferredname', 'introduction')),
+    ),
+    'contact' => array(
+        'type' => 'fieldset',
+        'legend' => get_string('contact', 'artefact.internal'),
+        'collapsible' => true,
+        'collapsed' => true,
+        'elements' => get_desired_fields(&$items, array('email', 'officialwebsite', 'personalwebsite', 'blogaddress', 'address', 'town', 'city', 'country', 'homenumber', 'businessnumber', 'mobilenumber', 'faxnumber')),
+    ),
+    'messaging' => array(
+        'type' => 'fieldset',
+        'legend' => get_string('messaging', 'artefact.internal'),
+        'collapsible' => true,
+        'collapsed' => true,
+        'elements' => get_desired_fields(&$items, array('icqnumber', 'msnnumber', 'aimscreenname', 'yahoochat', 'skypeusername', 'jabberusername')),
+    ),
+    'general' => array(
+        'type' => 'fieldset',
+        'legend' => get_string('general', 'artefact.internal'),
+        'collapsible' => true,
+        'collapsed' => true,
+        'elements' => $items
+    ),
+    'submit' => array(
+        'type'  => 'submit',
+        'value' => get_string('saveprofile','artefact.internal'),
+    )
 );
 
 $profileform = pieform(array(
@@ -130,6 +160,17 @@ $profileform = pieform(array(
     'elements'   => $elements,
     'autofocus'  => false,
 ));
+
+function get_desired_fields($allfields, $desiredfields) {
+    $return = array();
+    foreach ($desiredfields as $field) {
+        if (isset($allfields[$field])) {
+            $return[$field] = $allfields[$field];
+            unset($allfields[$field]);
+        }
+    }
+    return $return;
+}
 
 function profileform_validate(Pieform $form, $values) {
     global $profilefields;

@@ -676,35 +676,6 @@ function blogpostExecCommandHandler(editor_id, elm, command, user_interface, val
 EOF;
 
 
-// Override the default Mahara tinyMCE.init();  Add an image button and
-// the execcommand_callback.
-
-$content_css = json_encode(theme_get_url('style/tinymce.css'));
-$language = substr(current_language(), 0, 2);
-$wwwroot = json_encode(get_config('wwwroot'));
-$tinymceinit = <<<EOF
-<script type="text/javascript">
-tinyMCE.init({
-    mode: "textareas",
-    editor_selector: 'wysiwyg',
-    button_tile_map: true,
-    language: '{$language}',
-    theme: "advanced",
-    plugins: "table,emotions,iespell,inlinepopups",
-    theme_advanced_buttons1 : "bold,italic,underline,strikethrough,separator,forecolor,backcolor,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,hr,emotions,iespell,cleanup,separator,link,unlink,image,separator,code",
-    theme_advanced_buttons2 : "bullist,numlist,separator,tablecontrols,separator,cut,copy,paste,pasteword",
-    theme_advanced_buttons3 : "fontselect,separator,fontsizeselect,separator,formatselect",
-    theme_advanced_toolbar_location : "top",
-    theme_advanced_toolbar_align : "center",
-    content_css : {$content_css},
-    execcommand_callback : "blogpostExecCommandHandler",
-    document_base_url: {$wwwroot},
-    relative_urls: false
-});
-</script>
-EOF;
-
-
 $draftform = pieform(array(
     'name' => 'draftpost',
     'plugintype' => 'artefact',
@@ -724,8 +695,8 @@ $draftform = pieform(array(
 
 
 
-$smarty = smarty(array('tablerenderer', 'artefact/file/js/file.js'), 
-                 array(), array(), array('tinymceinit' => $tinymceinit));
+$smarty = smarty(array('tablerenderer', 'artefact/file/js/file.js', 'tinymce'), 
+                 array(), array(), array('tinymcecommandcallback' => 'blogpostExecCommandHandler'));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign_by_ref('textinputform', $textinputform);
 $smarty->assign_by_ref('draftform', $draftform);

@@ -49,7 +49,7 @@ class PluginArtefactFile extends PluginArtefact {
             array(
                 'path' => 'myportfolio/files',
                 'url' => 'artefact/file/',
-                'title' => get_string('files', 'artefact.file'),
+                'title' => get_string('myfiles', 'artefact.file'),
                 'weight' => 20,
             ),
         );

@@ -15,7 +15,7 @@
         <th>{str tag=name}</th>
         <th>{str tag=description}</th>
         {if (isset($options.date))}
-        <th>{str tag=date}</th>
+        <th>{str tag=Date section=artefact.file}</th>
         {/if}
       </tr>
     </thead>

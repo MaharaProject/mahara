@@ -47,6 +47,8 @@ $string['messagesallow'] = 'Allow anyone to send me messages';
 
 $string['language'] = 'Language';
 
+$string['showviewcolumns'] = 'Show controls to add and remove columns when editing a view';
+
 $string['prefssaved']  = 'Preferences saved';
 $string['prefsnotsaved'] = 'Failed to save your Preferences!';
 

@@ -196,6 +196,7 @@ function expected_account_preferences() {
                  'wysiwyg'        =>  1,
                  'messages'       => 'allow',
                  'lang'           => 'default',
+                 'addremovecolumns' => 0,
                  );
 }
 
@@ -582,10 +583,11 @@ function suspend_user($suspendeduserid, $reason, $suspendinguserid=null) {
     $suspendrec->suspendedctime  = db_format_timestamp(time());
     update_record('usr', $suspendrec, 'id');
 
+    $lang = get_user_language($suspendeduserid);
     $message = new StdClass;
     $message->users = array($suspendeduserid);
-    $message->subject = get_string('youraccounthasbeensuspended');
-    $message->message = get_string('youraccounthasbeensuspendedtext');
+    $message->subject = get_string_from_language($lang, 'youraccounthasbeensuspended');
+    $message->message = get_string_from_language($lang, 'youraccounthasbeensuspendedtext');
     activity_occurred('maharamessage', $message);
 
     handle_event('suspenduser', $suspendeduserid);
@@ -609,6 +611,7 @@ function friend_submit($form, $values) {
     $n = new StdClass;
     $n->url = get_config('wwwroot') . 'user/view.php?id=' . $loggedinid;
     $n->users = array($user->id);
+    $lang = get_user_language($user->id);
     $displayname = display_name($USER, $user);
 
     switch ($values['type']) {
@@ -616,42 +619,42 @@ function friend_submit($form, $values) {
         $f->usr1 = $values['id'];
         $f->usr2 = $loggedinid;
         insert_record('usr_friend', $f);
-        $n->subject = get_string('addedtofriendslistsubject');
-        $n->message = get_string('addedtofriendslistmessage', 'mahara', $displayname, $displayname);
+        $n->subject = get_string_from_language($lang, 'addedtofriendslistsubject', 'group');
+        $n->message = get_string_from_language($lang, 'addedtofriendslistmessage', 'group', $displayname, $displayname);
         break;
     case 'request':
         $f->owner     = $values['id'];
         $f->requester = $loggedinid;
         $f->reason    = $values['reason'];
         insert_record('usr_friend_request', $f);
-        $n->subject = get_string('requestedfriendlistsubject');
+        $n->subject = get_string_from_language($lang, 'requestedfriendlistsubject', 'group');
         if (isset($values['reason']) && !empty($values['reason'])) {
-            $n->message = get_string('requestedfriendlistmessagereason', 'mahara', $displayname) . $values['reason'];
+            $n->message = get_string_from_language($lang, 'requestedfriendlistmessagereason', 'group', $displayname) . $values['reason'];
         }
         else {
-            $n->message = get_string('requestedfriendlistmessage', 'mahara', $displayname);
+            $n->message = get_string_from_language($lang, 'requestedfriendlistmessage', 'group', $displayname);
         }
         break;
     case 'remove':
         delete_records_select('usr_friend', '(usr1 = ? AND usr2 = ?) OR (usr2 = ? AND usr1 = ?)', 
                                 array($userid, $loggedinid, $userid, $loggedinid));
-        $n->subject = get_string('removedfromfriendslistsubject');
+        $n->subject = get_string_from_language($lang, 'removedfromfriendslistsubject');
         if (isset($values['reason']) && !empty($values['reason'])) {
-            $n->message = get_string('removedfromfriendslistmessage', 'mahara', $displayname) . $values['reason'];
+            $n->message = get_string_from_language($lang, 'removedfromfriendslistmessage', 'group', $displayname) . $values['reason'];
         }
         else {
-            $n->message = get_string('removedfromfriendslistmessage', 'mahara', $displayname);
+            $n->message = get_string_from_language($lang, 'removedfromfriendslistmessage', 'group', $displayname);
         }
         break;
     case 'accept':
         if (isset($values['rejectsubmit']) && !empty($values['rejectsubmit'])) {
             delete_records('usr_friend_request', 'owner', $loggedinid, 'requester', $userid);
-            $n->subject = get_string('friendrequestrejectedsubject');
+            $n->subject = get_string_from_language($lang, 'friendrequestrejectedsubject', 'group');
             if (isset($values['rejectreason']) && !empty($values['rejectreason'])) {
-                $n->message = get_string('friendrequestrejectedmessagereason', 'mahara', $displayname) . $values['rejectreason'];
+                $n->message = get_string_from_language($lang, 'friendrequestrejectedmessagereason', 'group', $displayname) . $values['rejectreason'];
             }
             else {
-                $n->message = get_string('friendrequestrejectedmessage', 'mahara', $displayname);
+                $n->message = get_string_from_language($lang, 'friendrequestrejectedmessage', 'group', $displayname);
             }
             $values['type'] = 'reject'; // for json reply message
         } 
@@ -661,8 +664,8 @@ function friend_submit($form, $values) {
             $f->usr1 = $userid;
             $f->usr2 = $loggedinid;
             insert_record('usr_friend', $f);
-            $n->subject = get_string('friendrequestacceptedsubject');
-            $n->message = get_string('friendrequestacceptedmessage', 'mahara', $displayname, $displayname);
+            $n->subject = get_string_from_language($lang, 'friendrequestacceptedsubject', 'group');
+            $n->message = get_string_from_language($lang, 'friendrequestacceptedmessage', 'group', $displayname, $displayname);
             db_commit();
         }
         break;
@@ -690,10 +693,11 @@ function unsuspend_user($userid) {
     $suspendedrec->suspendedctime  = null;
     update_record('usr', $suspendedrec);
 
+    $lang = get_user_language($userid);
     $message = new StdClass;
     $message->users = array($userid);
-    $message->subject = get_string('youraccounthasbeenunsuspended');
-    $message->message = get_string('youraccounthasbeenunsuspendedtext');
+    $message->subject = get_string_from_language($lang, 'youraccounthasbeenunsuspended');
+    $message->message = get_string_from_language($lang, 'youraccounthasbeenunsuspendedtext');
     activity_occurred('maharamessage', $message);
 
     handle_event('unsuspenduser', $userid);

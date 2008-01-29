@@ -1,4 +1,4 @@
-    <h3>{str tag="mainmenu"}</h3>
+    <h3>{str tag="usefullinksandresources"}</h3>
 
 {if $data}
     <ul id="sitemenu">

@@ -82,16 +82,17 @@ function requestjoingroup_submit(Pieform $form, $values) {
             'reason' => isset($values['reason']) ? $values['reason'] : null            
         )
     );
+    $ownerlang = get_user_language($group->owner);
     if (isset($values['reason']) && $values['reason'] != '') {
-        $message = get_string('grouprequestmessagereason', 'group', display_name($USER, get_record('usr', 'id', $group->owner)), $group->name, $values['reason']);
+        $message = get_string_from_language($ownerlang, 'grouprequestmessagereason', 'group', display_name($USER, get_record('usr', 'id', $group->owner)), $group->name, $values['reason']);
     } 
     else {
-        $message = get_string('grouprequestmessage', 'group', display_name($USER, get_record('usr', 'id', $group->owner)), $group->name);
+        $message = get_string_from_language($ownerlang, 'grouprequestmessage', 'group', display_name($USER, get_record('usr', 'id', $group->owner)), $group->name);
     }
     require_once('activity.php');
     activity_occurred('maharamessage', 
         array('users'   => array($group->owner),
-        'subject' => get_string('grouprequestsubject', 'group'),
+        'subject' => get_string_from_language($ownerlang, 'grouprequestsubject', 'group'),
         'message' => $message,
         'url'     => get_config('wwwroot') . 'group/view.php?id=' . $group->id));
     $SESSION->add_ok_msg(get_string('grouprequestsent', 'group'));

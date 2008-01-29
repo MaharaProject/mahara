@@ -74,7 +74,7 @@
 <div class="center">{$pagination}</div>
 
 {else}
-<div class="message">{str tag="noviews" section="views"}</div>
+<div class="message">{str tag="noviews" section="view"}</div>
 {/if}
 
 {include file="columnleftend.tpl"}

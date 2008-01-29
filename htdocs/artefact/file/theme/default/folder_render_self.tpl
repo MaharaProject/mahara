@@ -12,7 +12,7 @@
         <th></th>
         <th>{str tag=name}</th>
         <th>{str tag=description}</th>
-        <th>{str tag=date}</th>
+        <th>{str tag=Date section=artefact.file}</th>
       </tr>
     </thead>
     <tbody>

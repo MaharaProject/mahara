@@ -78,10 +78,7 @@ div.editview {
 }
 
 #layout-link {
-    background: url(../images/layout-link.gif) no-repeat left;
-    padding: 5px 0 5px 20px;
-    margin-left: 10px;
-    font-size: .9em;
+    font-size: smaller;
 }
 #layout-link.disabled {
     color: #aaa;

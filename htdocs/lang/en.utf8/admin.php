@@ -67,10 +67,10 @@ $string['siteoptions']    = 'Site options';
 $string['siteoptionsdescription'] = 'Configure basic site options such as the name, language and theme';
 $string['sitepages']     = 'Site pages';
 $string['sitepagesdescription'] = 'Edit the core site content';
-$string['sitemenu'] = 'Site menu';
-$string['sitemenudescription'] = 'Manage the links and files within the Main Menus';
+$string['sitemenu'] = 'Site links and resources';
+$string['sitemenudescription'] = 'Manage the links and files within Useful Links and Resources';
 $string['adminfiles']          = 'Admin Files';
-$string['adminfilesdescription'] = 'Upload and administer files that can be put in the menus';
+$string['adminfilesdescription'] = 'Upload and administer files that can be put in Useful Links and Resources';
 $string['networking']          = 'Networking';
 $string['networkingdescription'] = 'Configure networking for Mahara';
 
@@ -142,29 +142,29 @@ $string['wwwroot'] = 'WWW Root';
 $string['whatisnetworking'] = 'What is Networking?';
 $string['whatnetworkingis'] = 'Mahara\'s networking features allow it to communicate with Mahara or Moodle sites running on the same or another machine. If networking is enabled, you can use it to configure single-sign-on for users who log in at either Moodle or Mahara.';
 
-// Admin menu editor
+// Admin links and resources editor
 //$string['menueditor']    = 'Menu editor';
 $string['adminfile']           = 'Admin file';
 $string['adminpublicdirname']  = 'public';  // Name of the directory in which to store public admin files
 $string['adminpublicdirdescription'] = 'Files accessible by logged out users';
-$string['badmenuitemtype']     = 'Unknown menu item type';
+$string['badmenuitemtype']     = 'Unknown item type';
 $string['confirmdeletemenuitem'] = 'Do you really want to delete this item?';
 $string['externallink']        = 'External link';
 $string['type']                = 'Type';
 $string['name']                = 'Name';
 $string['noadminfiles']        = 'No admin files available';
 $string['linkedto']            = 'Linked to';
-$string['editmenus']           = 'Edit menus';
-$string['menuitemsaved']       = 'Menu item saved';
-$string['savingmenuitem']      = 'Saving menu item';
-$string['menuitemsloaded']     = 'Menu items loaded';
-$string['deletingmenuitem']    = 'Deleting menu item';
-$string['deletefailed']        = 'Failed deleting menu item';
-$string['menuitemdeleted']     = 'Menu item deleted';
-$string['loadingmenuitems']    = 'Loading menu items';
-$string['loadmenuitemsfailed'] = 'Failed to load menu items';
-$string['loggedinmenu']        = 'Logged in menu';
-$string['loggedoutmenu']       = 'Public menu';
+$string['editmenus']           = 'Edit links and resources';
+$string['menuitemsaved']       = 'Item saved';
+$string['savingmenuitem']      = 'Saving item';
+$string['menuitemsloaded']     = 'Items loaded';
+$string['deletingmenuitem']    = 'Deleting item';
+$string['deletefailed']        = 'Failed deleting item';
+$string['menuitemdeleted']     = 'Item deleted';
+$string['loadingmenuitems']    = 'Loading items';
+$string['loadmenuitemsfailed'] = 'Failed to load items';
+$string['loggedinmenu']        = 'Logged in links and resources';
+$string['loggedoutmenu']       = 'Public links and resources';
 $string['public']              = 'public';
 
 // Site content

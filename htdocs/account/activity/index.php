@@ -48,6 +48,9 @@ if ($USER->get('admin')) {
 
 $morestr = get_string('more...');
 
+$star = json_encode(theme_get_url('images/star.png'));
+$unread = json_encode(get_string('unread', 'activity'));
+
 $javascript = <<<JAVASCRIPT
 var activitylist = new TableRenderer(
     'activitylist',
@@ -77,8 +80,11 @@ var activitylist = new TableRenderer(
                 return TD({'class': 'center'},IMG({'src' : d.star, 'alt' : d.unread}));
             }
             else {
-                return TD({'class': 'center'}, INPUT({'type' : 'checkbox', 'class' : 'tocheck', 'name' : 'unread-' + r.id}));
+                return TD({'class': 'center'}, INPUT({'type' : 'checkbox', 'class' : 'tocheckread', 'name' : 'unread-' + r.id}));
             }
+        },
+        function (r, d) {
+            return TD({'class': 'center'}, INPUT({'type' : 'checkbox', 'class' : 'tocheckdel', 'name' : 'delete-' + r.id}));
         }
     ]
 );
@@ -87,10 +93,9 @@ activitylist.type = 'all';
 activitylist.statevars.push('type');
 activitylist.updateOnLoad();
 
-function markread(form) {
-    
-    var c = 'tocheck';
-    var e = getElementsByTagAndClassName(null,'tocheck',form);
+function markread(form, action) {
+
+    var e = getElementsByTagAndClassName(null,'tocheck'+action,form);
     var pd = {};
     
     for (cb in e) {
@@ -99,7 +104,11 @@ function markread(form) {
         }
     }
 
-    pd['markasread'] = 1;
+    if (action == 'read') {
+        pd['markasread'] = 1;
+    } else if (action == 'del') {
+        pd['delete'] = 1;
+    }
     
     sendjsonrequest('index.json.php', pd, 'GET', function (data) {
         if (!data.error) {
@@ -127,6 +136,16 @@ function markread(form) {
 
 function showHideMessage(id) {
     if (getStyle('message-' + id, 'display') == 'none') {
+        var unread = getFirstElementByTagAndClassName('input', 'tocheckread', 
+                                                      $('message-' + id).parentNode.parentNode);
+        if (unread) {
+            var pd = {'markasread':1, 'quiet':1};
+            pd['unread-'+id] = 1;
+            sendjsonrequest('index.json.php', pd, 'GET', function(data) {
+                return !!data.error;
+            });
+            swapDOM(unread, IMG({'src' : {$star}, 'alt' : {$unread}}));
+        }
         showElement('message-' + id);
     }
     else {
@@ -137,8 +156,10 @@ function showHideMessage(id) {
 JAVASCRIPT;
 
 $smarty = smarty(array('tablerenderer'));
-$smarty->assign('selectall', 'toggleChecked(\'tocheck\'); return false;');
-$smarty->assign('markread', 'markread(this); return false;');
+$smarty->assign('selectallread', 'toggleChecked(\'tocheckread\'); return false;');
+$smarty->assign('selectalldel', 'toggleChecked(\'tocheckdel\'); return false;');
+$smarty->assign('markread', 'markread(this, \'read\'); return false;');
+$smarty->assign('markdel', 'markread(document.notificationlist, \'del\'); return false;');
 $smarty->assign('typechange', 'activitylist.doupdate({\'type\':this.options[this.selectedIndex].value});');
 $smarty->assign('types', $types);
 $smarty->assign('INLINEJAVASCRIPT', $javascript);

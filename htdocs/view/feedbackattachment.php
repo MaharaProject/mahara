@@ -58,9 +58,11 @@ if ($error = $um->preprocess_file()) {
 }
 $size = $um->file['size'];
 
+$ownerlang = get_user_language($viewdata->owner);
+
 safe_require('artefact', 'file');
-$folderid = ArtefactTypeFolder::get_folder_id(get_string('feedbackattachdirname', 'view'),
-                                              get_string('feedbackattachdirdesc', 'view'),
+$folderid = ArtefactTypeFolder::get_folder_id(get_string_from_language($ownerlang, 'feedbackattachdirname', 'view'),
+                                              get_string_from_language($ownerlang, 'feedbackattachdirdesc', 'view'),
                                               null, $viewdata->owner);
 
 // Create a new file object
@@ -68,7 +70,7 @@ $data = (object) array('owner' => $viewdata->owner,
                        'parent' => $folderid,
                        'size' => $size,
                        'title' => $filename,
-                       'description' => get_string('feedbackonviewbytutorofgroup', 'view',
+                       'description' => get_string_from_language($ownerlang, 'feedbackonviewbytutorofgroup', 'view',
                                                    $viewdata->title, display_name($USER), $viewdata->name));
 $f = ArtefactTypeFile::new_file($um->file['tmp_name'], $data);
 $f->commit();

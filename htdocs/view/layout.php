@@ -46,42 +46,87 @@ if ($numcolumns > 1 && $numcolumns < 5) {
     foreach ($layouts as $layout) {
         $options[$layout->id] = get_string($layout->widths, 'view');
     }
+    $layoutform = new Pieform(array(
+        'name' => 'viewlayout',
+        'elements' => array(
+            'layout'  => array(
+                'type' => 'radio',
+                'options' => $options,
+                'defaultvalue' => $view->get('layout'),
+            ),
+            'submit' => array(
+                'type' => 'submit',
+                'value' => get_string('submit'),
+            ),
+        ),
+    ));
 }
 else {
-    $SESSION->add_info_msg(get_string('noviewlayouts', 'view', $numcolumns));
-    redirect('/view/blocks.php?id=' . $id . '&c=' . $category . '&new=' . $new);
+    $nolayoutsmessage = get_string('noviewlayouts', 'view', $numcolumns);
 }
 
-// NOTE: not building the form, that's left to the template
-$form = new Pieform(array(
-    'name' => 'viewlayout',
+$columnsform = pieform(array(
+    'name' => 'viewcolumns',
+    'renderer' => 'oneline',
     'elements' => array(
-        'layout'  => array(
-            'type' => 'radio',
-            'options' => $options,
-            'defaultvalue' => $view->get('layout'),
+        'numcolumns' => array(
+            'type' => 'select',
+            'options' => array( 1 => '1', 2 => '2', 3 => '3', 4 => '4', 5 => '5'),
+            'defaultvalue' => $numcolumns,
         ),
         'submit' => array(
-            'type' => 'submitcancel',
-            'value' => array(get_string('submit'), get_string('cancel')),
-            'goto' => get_config('wwwroot') . '/view/blocks.php?id=' . $id . '&c=' . $category . '$new=' . $new,
-        ),
-    ),
+            'type' => 'submit',
+            'value' => get_string('changeviewcolumns', 'view')
+        )
+    )
 ));
 
 $smarty = smarty();
+$smarty->assign('columnsform', $columnsform);
 $smarty->assign('currentlayout', $currentlayout);
 $smarty->assign('view', $id);
-$smarty->assign('form_start_tag', $form->get_form_tag());
-$smarty->assign('options', $options);
+$smarty->assign('new', $new);
+if (isset($layoutform)) {
+    $smarty->assign('form_start_tag', $layoutform->get_form_tag());
+    $smarty->assign('options', $options);
+}
+else {
+    $smarty->assign('nolayouts', $nolayoutsmessage);
+}
 $smarty->display('view/layout.tpl');
 
 function viewlayout_submit(Pieform $form, $values) {
     global $view, $SESSION, $category, $new;
     $view->set('layout', $values['layout']);
     $view->commit();
-    $SESSION->add_ok_msg('View layout changed');
-    redirect('/view/blocks.php?id=' . $view->get('id') . '&c=' . $category . '&new=' . $new);
+    $SESSION->add_ok_msg(get_string('viewlayoutchanged', 'view'));
+    redirect(get_config('wwwroot') . 'view/blocks.php?id=' . $view->get('id') . '&new=' . $new);
+}
+
+function viewcolumns_submit(Pieform $form, $values) {
+    global $view, $SESSION, $category, $new;
+
+    $oldcolumns = $view->get('numcolumns');
+    $newcolumns = $values['numcolumns'];
+
+    if ($oldcolumns > $newcolumns) {
+        for ($i = $oldcolumns; $i > $newcolumns; $i--) {
+            $view->removecolumn(array('column' => $i));
+        }
+    }
+    else if ($oldcolumns < $newcolumns) {
+        for ($i = $oldcolumns; $i < $newcolumns; $i++) {
+            $view->addcolumn(array('before' => $i + 1, 'returndata' => false));
+        }
+    }
+
+    $SESSION->add_ok_msg(get_string('viewlayoutchanged', 'view'));
+    if ($newcolumns > 1 && $newcolumns < 5) {
+        redirect(get_config('wwwroot') . 'view/layout.php?id=' . $view->get('id') . '&c=' . $category . '&new=' . $new);
+    }
+    else {
+        redirect(get_config('wwwroot') . 'view/blocks.php?id=' . $view->get('id') . '&new=' . $new);
+    }
 }
 
 ?>
