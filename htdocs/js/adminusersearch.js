@@ -99,8 +99,14 @@ function UserSearch() {
         self.params = {};
         self.resetInitials();
         self.params.query = $('query').value;
-        self.params.institution = $('institution').value;
-        self.params.institution_requested = $('institution_requested').value;
+        var institution = $('institution');
+        if (institution) {
+            self.params.institution = institution.value;
+        }
+        var institution_requested = $('institution_requested');
+        if (institution_requested) {
+            self.params.institution_requested = institution_requested.value;
+        }
         self.doSearch();
         e.stop();
     }
