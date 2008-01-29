@@ -841,6 +841,24 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
             '_default' => $wwwroot . 'artefact/file/?folder=' . $id,
         );
     }
+
+    public static function change_language($userid, $oldlang, $newlang) {
+        $oldname = get_string_from_language($oldlang, 'feedbackattachdirname', 'view');
+        $artefact = ArtefactTypeFolder::get_folder_by_name($oldname, null, $userid);
+        if (empty($artefact)) {
+            return;
+        }
+
+        $name = get_string_from_language($newlang, 'feedbackattachdirname', 'view');
+        $description = get_string_from_language($newlang, 'feedbackattachdirdesc', 'view');
+        if (!empty($name)) {
+            $artefact = artefact_instance_from_id($artefact->id);
+            $artefact->set('title', $name);
+            $artefact->set('description', $description);
+            $artefact->commit();
+        }
+    }
+
 }
 
 class ArtefactTypeImage extends ArtefactTypeFile {
