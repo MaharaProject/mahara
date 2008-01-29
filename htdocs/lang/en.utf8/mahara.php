@@ -53,6 +53,7 @@ $string['none']   = 'None';
 $string['at'] = 'at';
 $string['From'] = 'From';
 $string['To'] = 'To';
+$string['All'] = 'All';
 
 $string['next']      = 'Next';
 $string['nextpage']  = 'Next page';
@@ -697,5 +698,6 @@ $string['country.zw'] = 'Zimbabwe';
 $string['system'] = 'System';
 $string['done'] = 'Done';
 $string['back'] = 'Back';
+$string['alphabet'] = 'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z';
 
 ?>

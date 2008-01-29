@@ -9,7 +9,7 @@
       <td class="initial-label">{str tag="firstname"}:</td>
       <td class="initial-letters">
        <span class="first-initial{if empty($search->f)} selected{/if} all">
-        <a href="{$WWWROOT}admin/users/search.php{if $search->l}?l={$search->l|escape}{/if}">{str tag="all" section="view"}</a>
+        <a href="{$WWWROOT}admin/users/search.php{if $search->l}?l={$search->l|escape}{/if}">{str tag="All"}</a>
        </span>
        {foreach from=$alphabet item=a}
        <span class="first-initial{if $a == $search->f} selected{/if}">
@@ -22,7 +22,7 @@
       <td class="initial-label">{str tag="lastname"}:</td>
       <td class="initial-letters">
        <span class="last-initial{if empty($search->l)} selected{/if} all">
-        <a href="{$WWWROOT}admin/users/search.php{if $search->f}?f={$search->f|escape}{/if}">{str tag="all" section="view"}</a>
+        <a href="{$WWWROOT}admin/users/search.php{if $search->f}?f={$search->f|escape}{/if}">{str tag="All"}</a>
        </span>
        {foreach from=$alphabet item=a}
        <span class="last-initial{if $a == $search->l} selected{/if}">
@@ -43,11 +43,11 @@
                     {if $USER->get('admin')}
                     <select name="institution" id="institution">
                     {else}
-                    <select name="institution_requested" id="institution">
+                    <select name="institution_requested" id="institution_requested">
                     {/if}
-                        <option value="all" selected>{str tag=all}</option>
+                        <option value="all"{if !$smarty.request.institution} selected="selected"{/if}>{str tag=All}</option>
                         {foreach from=$institutions item=i}
-                        <option value={$i->name|escape}>{$i->displayname|escape}</option>
+                        <option value="{$i->name|escape}"{if $i->name == $smarty.request.institution}" selected="selected"{/if}>{$i->displayname|escape}</option>
                         {/foreach}
                     </select>
                 </label>
