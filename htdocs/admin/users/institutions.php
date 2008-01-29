@@ -243,17 +243,25 @@ if ($institution || $add) {
     }
 
     $elements['lockedfields'] = array(
-        'value' => '<tr><th colspan="2">Locked fields ' 
-        . get_help_icon('core', 'admin', 'institution', 'lockedfields') 
-        . '</th></tr>'
+        'type' => 'fieldset',
+        'legend' => 'Locked fields ',
+        'collapsible' => true,
+        'collapsed' => true,
+        'elements' => array(),
     );
     foreach (ArtefactTypeProfile::get_all_fields() as $field => $type) {
-        $elements[$field] = array(
+        $elements['lockedfields']['elements'][$field] = array(
             'type' => 'checkbox',
             'title' => get_string($field, 'artefact.internal'),
             'defaultvalue' => in_array($field, $lockedprofilefields)
         );
     }
+    $elements['lockedfieldshelp'] = array(
+        'value' => '<tr><th colspan="2">'
+        . get_help_icon('core', 'admin', 'institution', 'lockedfields') 
+        . '</th></tr>'
+    );
+
     $elements['submit'] = array(
         'type' => 'submitcancel',
         'value' => array(get_string('submit'), get_string('cancel'))
