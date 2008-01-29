@@ -27,17 +27,15 @@
 /**
  * Renders form elements inside a <table>.
  *
- * @param Pieform $form         The form the element is being rendered for
- * @param string  $builtelement The element, already built
- * @param array   $rawelement   The element in raw form, for looking up
- *                              information about it.
- * @return string               The element rendered inside an appropriate
- *                              container.
+ * @param Pieform $form    The form the element is being rendered for
+ * @param string  $element The element to be rendered
+ * @return string          The element rendered inside an appropriate container
  */
-function pieform_renderer_maharatable(Pieform $form, $builtelement, $rawelement) {
+function pieform_renderer_maharatable(Pieform $form, $element) {
     $formname = $form->get_name();
-    if ($rawelement['type'] == 'fieldset') {
+    if ($element['type'] == 'fieldset') {
         // Add table tags to the build element, to preserve HTML compliance
+        $builtelement = $element['html'];
         if (0 === strpos($builtelement, "\n<fieldset")) {
             $closelegendpos = strpos($builtelement, '</legend>');
             if ($closelegendpos !== false) {
@@ -61,48 +59,39 @@ function pieform_renderer_maharatable(Pieform $form, $builtelement, $rawelement)
     }
     
     $result = '';
-    if (isset($rawelement['title']) && $rawelement['title'] !== '') {
+    if (isset($element['labelhtml']) && $element['labelhtml'] !== '') {
         $result .= "\t<tr";
-        $result .= ' id="' . $formname . '_' . $rawelement['name'] . '_header"';
+        $result .= ' id="' . $formname . '_' . $element['name'] . '_header"';
         // Set the class of the enclosing <tr> to match that of the element
-        if ($rawelement['class']) {
-            $result .= ' class="' . $rawelement['class'] . '"';
+        if ($element['class']) {
+            $result .= ' class="' . $element['class'] . '"';
         }
         $result .= ">\n\t\t";
 
         $result .= '<th>';
-        if (!empty($rawelement['nolabel'])) {
-            // Don't bother with a label for the element
-            $result .= Pieform::hsc($rawelement['title']);
-        }
-        else {
-            $result .= '<label for="' . $formname . '_' . $rawelement['id'] . '">' . Pieform::hsc($rawelement['title']) . '</label>';
-        }
-        if ($form->get_property('requiredmarker') && !empty($rawelement['rules']['required'])) {
-            $result .= ' <span class="requiredmarker">*</span>';
-        }
+        $result .= $element['labelhtml'];
         $result .= "</th>\n\t</tr>\n";
     }
-    $result .= "\t<tr id=\"{$formname}_{$rawelement['name']}_container\">\n\t\t<td>";
+    $result .= "\t<tr id=\"{$formname}_{$element['name']}_container\">\n\t\t<td>";
 
     // Wrap WYSIWYG elements in a table with two cells side by side, one for the element and one for the help icon
-    if (!empty($rawelement['help']) && $rawelement['type'] == 'wysiwyg') {
+    if (!empty($element['help']) && $element['type'] == 'wysiwyg') {
         $result .= '<table class="help-wrapper"><tr><td>';
     }
 
     // Add the element itself
-    $result .= $builtelement;
+    $result .= $element['html'];
 
-    if (!empty($rawelement['help']) && $rawelement['type'] == 'wysiwyg') {
+    if (!empty($element['help']) && $element['type'] == 'wysiwyg') {
         $result .= '</td><td>';
     }
 
     // Contextual help
-    if (!empty($rawelement['help'])) {
+    if (!empty($element['help'])) {
         $result .= get_help_icon($form->get_property('plugintype'), 
                                  $form->get_property('pluginname'), 
-                                 $form->get_name(), $rawelement['name']);
-        if ($rawelement['type'] == 'wysiwyg') {
+                                 $form->get_name(), $element['name']);
+        if ($element['type'] == 'wysiwyg') {
             $result .= '</td></tr></table>';
         }
     }
@@ -111,15 +100,15 @@ function pieform_renderer_maharatable(Pieform $form, $builtelement, $rawelement)
 
     // Description - optional description of the element, or other note that should be visible
     // on the form itself (without the user having to hover over contextual help 
-    if ((!$form->has_errors() || $form->get_property('showdescriptiononerror')) && !empty($rawelement['description'])) {
+    if ((!$form->has_errors() || $form->get_property('showdescriptiononerror')) && !empty($element['description'])) {
         $result .= "\t<tr>\n\t\t<td class=\"description\">";
-        $result .= $rawelement['description'];
+        $result .= $element['description'];
         $result .= "</td>\n\t</tr>\n";
     }
 
-    if (!empty($rawelement['error'])) {
+    if (!empty($element['error'])) {
         $result .= "\t<tr>\n\t\t<td class=\"errmsg\">";
-        $result .= $rawelement['error'];
+        $result .= $element['error'];
         $result .= "</td>\n\t</tr>\n";
     }
 
