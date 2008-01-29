@@ -1591,13 +1591,13 @@ function main_nav() {
             ),
             array(
                 'path' => 'groups/myfriends',
-                'url' => 'friends/myfriends.php',
+                'url' => 'user/myfriends.php',
                 'title' => get_string('myfriends'),
                 'weight' => 30
             ),
             array(
                 'path' => 'groups/findfriends',
-                'url' => 'friends/find.php',
+                'url' => 'user/find.php',
                 'title' => get_string('findfriends'),
                 'weight' => 40
             ),

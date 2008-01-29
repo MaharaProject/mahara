@@ -25,7 +25,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'friends/myfriends');
+define('MENUITEM', 'groups/myfriends');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 define('TITLE', get_string('myfriends'));
