@@ -297,17 +297,34 @@ function profileform_submit(Pieform $form, $values) {
         db_commit();
     }
     catch (Exception $e) {
-        $form->json_reply(PIEFORM_ERR, get_string('profilefailedsaved','artefact.internal'));
+        profileform_reply($form, PIEFORM_ERR, get_string('profilefailedsaved','artefact.internal'));
     }
 
     handle_event('updateuser', $USER->get('id'));
 
     if (count($email_errors)) {
-        $form->json_reply(PIEFORM_ERR, array('message' => get_string('emailingfailed', 'artefact.internal', join(', ', $email_errors))));
+        profileform_reply($form, PIEFORM_ERR, array('message' => get_string('emailingfailed', 'artefact.internal', join(', ', $email_errors))));
     }
 
-    $form->json_reply(PIEFORM_OK, get_string('profilesaved','artefact.internal'));
+    profileform_reply($form, PIEFORM_OK, get_string('profilesaved','artefact.internal'));
+}
 
+function profileform_reply($form, $code, $message) {
+    global $SESSION;
+    if ($form->submitted_by_js()) {
+        $form->json_reply($code, $message);
+    }
+    else if (is_string($message)) {
+        if ($code == PIEFORM_ERR) {
+            $method = 'add_error_msg';
+        }
+        else {
+            $method = 'add_ok_msg';
+        }
+        $SESSION->$method($message);
+        redirect('/artefact/internal/');
+    }
+    // Should never be replying with an array for an OK message
 }
 
 
