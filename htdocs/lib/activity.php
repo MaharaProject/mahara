@@ -80,7 +80,7 @@ function handle_activity($activitytype, $data, $cron=false) {
             ucfirst($activitytype->name);
     }
 
-    $activity = new $classname($data);
+    $activity = new $classname($data, $cron);
     if (!$activity->any_users()) {
         return;
     }
@@ -178,8 +178,18 @@ function activity_process_queue() {
 
     db_begin();
     if ($toprocess = get_records_array('activity_queue')) {
+        // Hack to avoid duplicate watchlist notifications on the same view
+        $watchlist = activity_locate_typerecord('watchlist');
+        $viewsnotified = array();
         foreach ($toprocess as $activity) {
-            handle_activity($activity->type, unserialize($activity->data), true);
+            $data = unserialize($activity->data);
+            if ($activity->type == $watchlist->id && !empty($data->view)) {
+                if (isset($viewsnotified[$data->view])) {
+                    continue;
+                }
+                $viewsnotified[$data->view] = true;
+            }
+            handle_activity($activity->type, $data, true);
         }
         delete_records('activity_queue');
     }
@@ -252,6 +262,7 @@ abstract class ActivityType {
     protected $id;
     protected $type;
     protected $activityname;
+    protected $cron;
    
     public function get_id() {
         if (!isset($this->id)) {
@@ -274,7 +285,8 @@ abstract class ActivityType {
         return $this->users;
     }
 
-    public function __construct($data) {
+    public function __construct($data, $cron=false) {
+        $this->cron = $cron;
         $this->set_parameters($data);
         $this->ensure_parameters();
         $this->activityname = strtolower(substr(get_class($this), strlen('ActivityType')));
@@ -353,8 +365,8 @@ abstract class ActivityType {
 
 abstract class ActivityTypeAdmin extends ActivityType { 
 
-    public function __construct($data) {
-        parent::__construct($data);
+    public function __construct($data, $cron=false) {
+        parent::__construct($data, $cron);
         $this->users = activity_get_users($this->get_id(), null, null, true);
     }
 }
@@ -365,8 +377,8 @@ class ActivityTypeContactus extends ActivityTypeAdmin {
     protected $fromemail;
     protected $userfrom;
 
-    function __construct($data) { 
-        parent::__construct($data);
+    function __construct($data, $cron=false) { 
+        parent::__construct($data, $cron);
         if (!empty($this->userfrom)) {
             $this->url = get_config('wwwroot') . 'user/view.php?id=' . $this->userfrom;
         }
@@ -392,8 +404,8 @@ class ActivityTypeObjectionable extends ActivityTypeAdmin {
     protected $view;
     protected $artefact;
 
-    function __construct($data) { 
-        parent::__construct($data);
+    function __construct($data, $cron=false) { 
+        parent::__construct($data, $cron);
         if (empty($this->artefact)) {
             $this->url = get_config('wwwroot') . 'view/view.php?id=' . $this->view;
         }
@@ -431,8 +443,8 @@ class ActivityTypeVirusRepeat extends ActivityTypeAdmin {
     protected $fullname;
     protected $userid;
 
-    public function __construct($data) { 
-        parent::__construct($data);
+    public function __construct($data, $cron=false) { 
+        parent::__construct($data, $cron);
     }
 
     public function get_subject($user) {
@@ -451,8 +463,8 @@ class ActivityTypeVirusRepeat extends ActivityTypeAdmin {
 
 class ActivityTypeVirusRelease extends ActivityTypeAdmin {
 
-    public function __construct($data) { 
-        parent::__construct($data);
+    public function __construct($data, $cron=false) { 
+        parent::__construct($data, $cron);
     }
 
     public function get_required_parameters() {
@@ -462,8 +474,8 @@ class ActivityTypeVirusRelease extends ActivityTypeAdmin {
 
 class ActivityTypeMaharamessage extends ActivityType {
 
-    public function __construct($data) { 
-        parent::__construct($data);
+    public function __construct($data, $cron=false) { 
+        parent::__construct($data, $cron);
         $this->users = activity_get_users($this->get_id(), $this->users);
     }
 
@@ -479,8 +491,8 @@ class ActivityTypeInstitutionmessage extends ActivityType {
     protected $username;
     protected $fullname;
 
-    public function __construct($data) {
-        parent::__construct($data);
+    public function __construct($data, $cron=false) {
+        parent::__construct($data, $cron);
         if ($this->messagetype == 'request') {
             $this->url = get_config('wwwroot') . 'admin/users/institutionusers.php';
             $this->users = activity_get_users($this->get_id(), null, null, null,
@@ -520,8 +532,8 @@ class ActivityTypeUsermessage extends ActivityType {
     protected $userto;
     protected $userfrom;
 
-    public function __construct($data) { 
-        parent::__construct($data);
+    public function __construct($data, $cron=false) { 
+        parent::__construct($data, $cron);
         $this->users = activity_get_users($this->get_id(), array($this->userto));
         if (empty($this->url)) {
             $this->url = get_config('wwwroot') . 'user/view.php?id=' . $this->userfrom;
@@ -550,8 +562,8 @@ class ActivityTypeFeedback extends ActivityType {
     private $viewrecord;
     private $artefactinstance;
 
-    public function __construct($data) { 
-        parent::__construct($data);
+    public function __construct($data, $cron=false) { 
+        parent::__construct($data, $cron);
 
         if (!empty($this->artefact)) { // feedback on artefact
             $userid = null;
@@ -601,13 +613,13 @@ class ActivityTypeWatchlist extends ActivityType {
 
     private $viewinfo;
 
-    public function __construct($data) { 
-        parent::__construct($data); 
+    public function __construct($data, $cron) { 
+        parent::__construct($data, $cron); 
         //$oldsubject = $this->subject;
         if (!$this->viewinfo = get_record_sql('SELECT u.*, v.title FROM {usr} u
                                          JOIN {view} v ON v.owner = u.id
                                          WHERE v.id = ?', array($this->view))) {
-            if (!empty($cron)) { // probably deleted already
+            if (!empty($this->cron)) { // probably deleted already
                 return;
             }
             throw new ViewNotFoundException(get_string('viewnotfound', 'error', $this->view));
@@ -654,12 +666,12 @@ class ActivityTypeNewview extends ActivityType {
 
     private $viewinfo;
 
-    public function __construct($data) { 
-        parent::__construct($data);
+    public function __construct($data, $cron=false) { 
+        parent::__construct($data, $cron);
         if (!$this->viewinfo = get_record_sql('SELECT u.*, v.title FROM {usr} u
                                          JOIN {view} v ON v.owner = u.id
                                          WHERE v.id = ?', array($this->view))) {
-            if (!empty($cron)) { //probably deleted already
+            if (!empty($this->cron)) { //probably deleted already
                 return;
             }
             throw new ViewNotFoundException(get_string('viewnotfound', 'error', $this->view));
@@ -693,12 +705,12 @@ class ActivityTypeViewaccess extends ActivityType {
 
     private $viewinfo;
 
-    public function __construct($data) { 
-        parent::__construct($data);
+    public function __construct($data, $cron=false) { 
+        parent::__construct($data, $cron);
         if (!$this->viewinfo = get_record_sql('SELECT u.*, v.title FROM {usr} u
                                          JOIN {view} v ON v.owner = u.id
                                          WHERE v.id = ?', array($this->view))) {
-            if (!empty($cron)) { // probably deleted already
+            if (!empty($this->cron)) { // probably deleted already
                 return;
             }
             throw new ViewNotFoundException(get_string('viewnotfound', 'error', $this->view));
