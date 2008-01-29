@@ -289,7 +289,7 @@ else {
         $smarty->assign('siteadmin', true);
         $defaultinstmembers = count_records_sql('
             SELECT COUNT(u.id) FROM {usr} u LEFT OUTER JOIN {usr_institution} i ON u.id = i.usr
-            WHERE u.deleted = 0 AND i.usr IS NULL
+            WHERE u.deleted = 0 AND i.usr IS NULL AND u.id != 0
         ');
     }
     $institutions = get_records_sql_assoc('
