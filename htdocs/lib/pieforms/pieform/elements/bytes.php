@@ -1,26 +1,26 @@
 <?php
 /**
- * This program is part of Pieforms
+ * Pieforms: Advanced web forms made easy
+ * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    pieform
  * @subpackage element
  * @author     Martyn Smith <martyn@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -32,7 +32,7 @@
  * @param array   $element The element to render
  * @return string          The HTML for the element
  */
-function pieform_element_bytes(Pieform $form, $element) {
+function pieform_element_bytes(Pieform $form, $element) {/*{{{*/
     $formname = $form->get_name();
     $result = '';
     $name = $element['name'];
@@ -78,7 +78,7 @@ function pieform_element_bytes(Pieform $form, $element) {
     $uselect .= "</select>\n";
 
     return $numberinput . $uselect;
-}
+}/*}}}*/
 
 /**
  * Gets the value of the expiry element and converts it to a time in seconds.
@@ -87,7 +87,7 @@ function pieform_element_bytes(Pieform $form, $element) {
  * @param array   $element The element to get the value for
  * @return int             The number of seconds until expiry
  */
-function pieform_element_bytes_get_value(Pieform $form, $element) {
+function pieform_element_bytes_get_value(Pieform $form, $element) {/*{{{*/
     $name = $element['name'];
 
     $global = ($form->get_property('method') == 'get') ? $_GET : $_POST;
@@ -103,9 +103,9 @@ function pieform_element_bytes_get_value(Pieform $form, $element) {
         return null;
     }
     return $number * pieform_element_bytes_in($unit);
-}
+}/*}}}*/
 
-function pieform_element_bytes_in($units) {
+function pieform_element_bytes_in($units) {/*{{{*/
     switch ($units) {
         case 'megabytes':
             return 1048576;
@@ -117,9 +117,9 @@ function pieform_element_bytes_in($units) {
             return 1;
             break;
     };
-}
+}/*}}}*/
 
-function pieform_element_bytes_i18n() {
+function pieform_element_bytes_i18n() {/*{{{*/
     return array(
         'en.utf8' => array(
             'bytes'        => 'Bytes',
@@ -140,13 +140,13 @@ function pieform_element_bytes_i18n() {
             'invalidvalue' => 'Valeur doit être un nombre',
         ),
     );
-}
+}/*}}}*/
 
-function pieform_element_bytes_get_bytes_units() {
+function pieform_element_bytes_get_bytes_units() {/*{{{*/
     return array('bytes', 'kilobytes', 'megabytes');
-}
+}/*}}}*/
 
-function pieform_element_bytes_get_bytes_from_bytes($bytes) {
+function pieform_element_bytes_get_bytes_from_bytes($bytes) {/*{{{*/
     if ($bytes == null) {
         return array('number' => '0', 'units' => 'bytes');
     }
@@ -158,6 +158,6 @@ function pieform_element_bytes_get_bytes_from_bytes($bytes) {
     }
 
     return array('number' => $bytes, 'units' => 'bytes');
-}
+}/*}}}*/
 
 ?>

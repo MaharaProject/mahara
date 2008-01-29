@@ -1,26 +1,26 @@
 <?php
 /**
- * This program is part of Pieforms
+ * Pieforms: Advanced web forms made easy
+ * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    pieform
  * @subpackage rule
  * @author     Nigel McNie <nigel@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -34,7 +34,7 @@
  * @param string  $element   The element being checked
  * @return string            The error message, if the value is invalid.
  */
-function pieform_rule_validateoptions(Pieform $form, $field, $element) {
+function pieform_rule_validateoptions(Pieform $form, $field, $element) {/*{{{*/
     // Get the value into an array as a key if it's a scalar, since
     // the actual check involves array keys
     $field = (array) $field;
@@ -45,9 +45,9 @@ function pieform_rule_validateoptions(Pieform $form, $field, $element) {
             return sprintf($form->i18n('rule', 'validateoptions', 'validateoptions', $element), $key);
         }
     }
-}
+}/*}}}*/
 
-function pieform_rule_validateoptions_i18n() {
+function pieform_rule_validateoptions_i18n() {/*{{{*/
     return array(
         'en.utf8' => array(
             'validateoptions' => 'The option "%s" is invalid'
@@ -59,6 +59,6 @@ function pieform_rule_validateoptions_i18n() {
             'validateoptions' => 'Cette option "%s" n\'est pas valide'
         ),
     );
-}
+}/*}}}*/
 
 ?>

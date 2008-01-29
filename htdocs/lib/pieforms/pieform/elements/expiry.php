@@ -1,26 +1,26 @@
 <?php
 /**
- * This program is part of Pieforms
+ * Pieforms: Advanced web forms made easy
+ * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    pieform
  * @subpackage element
  * @author     Richard Mansfield <richard.mansfield@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -32,7 +32,7 @@
  * @param array   $element The element to render
  * @return string          The HTML for the element
  */
-function pieform_element_expiry(Pieform $form, $element) {
+function pieform_element_expiry(Pieform $form, $element) {/*{{{*/
     $formname = $form->get_name();
     $result = '';
     $name = $element['name'];
@@ -98,7 +98,7 @@ function {$name}_change() {
 EOJS;
 
     return $numberinput . $uselect . $script;
-}
+}/*}}}*/
 
 /**
  * Gets the value of the expiry element and converts it to a time in seconds.
@@ -107,7 +107,7 @@ EOJS;
  * @param array   $element The element to get the value for
  * @return int             The number of seconds until expiry
  */
-function pieform_element_expiry_get_value(Pieform $form, $element) {
+function pieform_element_expiry_get_value(Pieform $form, $element) {/*{{{*/
     $name = $element['name'];
     $global = ($form->get_property('method') == 'get') ? $_GET : $_POST;
     $unit = $global[$name . '_units'];
@@ -120,9 +120,9 @@ function pieform_element_expiry_get_value(Pieform $form, $element) {
         return null;
     }
     return $number * pieform_element_expiry_seconds_in($unit);
-}
+}/*}}}*/
 
-function pieform_element_expiry_i18n() {
+function pieform_element_expiry_i18n() {/*{{{*/
     return array(
         'en.utf8' => array(
             'days'      => 'Days',
@@ -146,13 +146,13 @@ function pieform_element_expiry_i18n() {
             'noenddate' => 'Pas de date de fin'
         ),
     );
-}
+}/*}}}*/
 
-function pieform_element_expire_get_expiry_units() {
+function pieform_element_expire_get_expiry_units() {/*{{{*/
     return array('days', 'weeks', 'months', 'years', 'noenddate');
-}
+}/*}}}*/
 
-function pieform_element_expiry_seconds_in($unit) {
+function pieform_element_expiry_seconds_in($unit) {/*{{{*/
     $dayseconds = 60 * 60 * 24;
     switch ($unit) {
         case 'days'   : return $dayseconds;
@@ -161,9 +161,9 @@ function pieform_element_expiry_seconds_in($unit) {
         case 'years'  : return $dayseconds * 365;
         default       : return null;
     }
-}
+}/*}}}*/
 
-function pieform_element_expiry_get_expiry_from_seconds($seconds) {
+function pieform_element_expiry_get_expiry_from_seconds($seconds) {/*{{{*/
     if ($seconds == null) {
         return array('number' => '', 'units' => 'noenddate');
     }
@@ -186,6 +186,6 @@ function pieform_element_expiry_get_expiry_from_seconds($seconds) {
         return array('number' => (int) ($seconds / $dayseconds), 'units' => 'days');
     }
     return null;
-}
+}/*}}}*/
 
 ?>

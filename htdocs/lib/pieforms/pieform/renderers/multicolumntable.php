@@ -1,26 +1,26 @@
 <?php
 /**
- * This program is part of Pieforms
+ * Pieforms: Advanced web forms made easy
+ * Copyright (C) 2006-2008 Catalyst IT Ltd (http://www.catalyst.net.nz)
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    pieform
  * @subpackage renderer
  * @author     Penny Leach <penny@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2008 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
@@ -33,67 +33,27 @@ static $formrenderermct;
  * Renders form elements inside a <table>. If elements have the same title,
  * they will be rendered in the same table row, allowing a grid layout.
  *
- * @param Pieform $form         The form the element is being rendered for
- * @param string $builtelement The element, already built
- * @param array  $rawelement   The element in raw form, for looking up
- *                             information about it.
- * @return string              The element rendered inside an appropriate
- *                             container.
+ * @param Pieform $form   The form the element is being rendered for
+ * @param array  $element The element to be rendered
+ * @return string         The element rendered inside an appropriate container
  */
-function pieform_renderer_multicolumntable(Pieform $form, $builtelement, $rawelement) {
+function pieform_renderer_multicolumntable(Pieform $form, $element) {/*{{{*/
     global $formrenderermct;
-    $formrenderermct->add_element($builtelement, $rawelement);
+    $formrenderermct->add_element($element['html'], $element);
     $formrenderermct->set_form($form);
-}
+}/*}}}*/
 
-function pieform_renderer_multicolumntable_get_js($id) {
-    return <<<EOF
-function {$id}_set_error (message, element) {
-    element = '{$id}_' + element;
-    var parentRow = $(element + '_container').parentNode;
-    var nextRow = parentRow.nextSibling;
-    if (!(nextRow && hasElementClass(nextRow, 'errorRow'))) {
-        var errorRow = TR({'class': 'errorRow'});
-        log(parentRow.cells.length);
-        for (var i = 0; i < parentRow.cells.length; i++) {
-            var attrs = null;
-            if (parentRow.cells[i].id) {
-                attrs = {
-                    'id': parentRow.cells[i].id.replace(/_container$/, '_error'),
-                    'class': 'error'
-                };
-            }
-            appendChildNodes(errorRow, TD(attrs));
-        }
-        insertSiblingNodesAfter($(element + '_container').parentNode, errorRow);
-    }
-
-    appendChildNodes(element + '_error', message);
-    addElementClass(element, 'error');
-    addElementClass( element + '_container', 'error');
-}
-function {$id}_remove_all_errors() {
-    forEach(getElementsByTagAndClassName('TR', 'errorRow', '{$id}'), function(row) {
-        removeElement(row);
-    });
-    forEach(getElementsByTagAndClassName(null, 'error', '{$id}'), function(item) {
-        removeElementClass(item, 'error');
-    });
-}
-EOF;
-}
-
-function pieform_renderer_multicolumntable_header() {
+function pieform_renderer_multicolumntable_header() {/*{{{*/
     global $formrenderermct;
     $formrenderermct = new FormRendererMultiColumnTable();
-}
+}/*}}}*/
 
-function pieform_renderer_multicolumntable_footer() {
+function pieform_renderer_multicolumntable_footer() {/*{{{*/
     global $formrenderermct;
     return $formrenderermct->build();
-}
+}/*}}}*/
 
-class FormRendererMultiColumnTable {
+class FormRendererMultiColumnTable {/*{{{*/
 
     private $elements = array();
     private $form;
@@ -159,13 +119,8 @@ class FormRendererMultiColumnTable {
 
                 // Contextual help
                 if (!empty($rawelement['help'])) {
-                    $function = $this->form->get_property('helpcallback');
-                    if (function_exists($function)) {
-                        $result .= $function($this->form, $rawelement);
-                    } 
-                    else {
-                        $result .= ' <span class="help"><a href="#" title="' . Pieform::hsc($rawelement['help']) . '">?</a></span>';
-                    }
+                    $result .= ' <span class="help"><a href="#" title="' 
+                        . Pieform::hsc($rawelement['help']) . '">?</a></span>';
                 }
                 $result .= "</td>\n\t";
 
@@ -180,6 +135,6 @@ class FormRendererMultiColumnTable {
         return $result;
     }
 
-}
+}/*}}}*/
 
 ?>
