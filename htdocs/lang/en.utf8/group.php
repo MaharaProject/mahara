@@ -183,6 +183,7 @@ $string['currentfriends'] = 'Current Friends';
 $string['pendingfriends'] = 'Pending friends';
 $string['backtofriendslist'] = 'Back to Friends List';
 $string['findnewfriends'] = 'Find New Friends';
+$string['Views']          = 'Views';
 $string['seeallviews']    = 'See all %s views...';
 $string['noviewstosee']   = 'None that you can see :(';
 $string['whymakemeyourfriend'] = 'This is why you should make me your friend:';
@@ -196,6 +197,8 @@ $string['addtomyfriends'] = 'Add to My Friends!';
 $string['friendshiprequested'] = 'Friendship requested!';
 $string['existingfriend'] = 'existing friend';
 $string['nosearchresultsfound'] = 'No search results found :(';
+$string['friend'] = 'friend';
+$string['friends'] = 'friends';
 
 $string['friendlistfailure'] = 'Failed to modify your friends list';
 $string['userdoesntwantfriends'] = 'This user doesn\'t want any new friends';
