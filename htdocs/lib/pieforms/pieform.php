@@ -666,7 +666,7 @@ class Pieform {/*{{{*/
         // The two cases where it is needed is when:
         // 1) The form is a JS form that hasn't been submitted yet. When the 
         // form has been submitted the javascript from the first page load is 
-        // still active in the documente
+        // still active in the document
         // 2) The form is NOT a JS form, but has a presubmitcallback
         if (($this->data['jsform'] && !$this->submitted)
             || (!$this->data['jsform'] && $this->data['presubmitcallback'])) {
