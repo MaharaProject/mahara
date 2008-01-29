@@ -125,7 +125,7 @@ function &smarty($javascript = array(), $headers = array(), $pagestrings = array
 
                     if ($check[$key] == 'tinymce') {
                         $tinymce_config = <<<EOF
-    editor_selector: 'wysiwyg',
+    mode: "none",
     theme: "advanced",
     plugins: "table,emotions,iespell,inlinepopups,paste",
     theme_advanced_buttons1 : "bold,italic,underline,strikethrough,separator,forecolor,backcolor,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,hr,emotions,image,iespell,cleanup,separator,link,unlink,separator,code",
@@ -138,6 +138,7 @@ EOF;
                     }
                     else {
                         $tinymce_config = <<<EOF
+    mode: "textareas",
     editor_selector: 'tinywysiwyg',
     theme: "advanced",
     plugins: "fullscreen",
@@ -160,7 +161,6 @@ EOF;
                     $headers[] = <<<EOF
 <script type="text/javascript">
 tinyMCE.init({
-    mode: "textareas",
     button_tile_map: true,
     {$tinymce_config}
     language: '{$language}',
