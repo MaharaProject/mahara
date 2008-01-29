@@ -167,11 +167,17 @@ function siteoptions_submit(Pieform $form, $values) {
     $fields = array('sitename','lang','theme','pathtofile', 'pathtoclam',
                     'defaultaccountlifetime', 'defaultaccountinactiveexpire', 'defaultaccountinactivewarn', 
                     'allowpublicviews','artefactviewinactivitytime', 'searchplugin');
+    $oldlanguage = get_config('lang');
     foreach ($fields as $field) {
         if (!set_config($field, $values[$field])) {
             siteoptions_fail($form, $field);
         }
     }
+    if ($oldlanguage != $values['lang']) {
+        safe_require('artefact', 'file');
+        ArtefactTypeFolder::change_public_folder_name($oldlanguage, $values['lang']);
+    }
+    
     // submitted sessionlifetime is in minutes; db entry session_timeout is in seconds
     if (!set_config('session_timeout', $values['sessionlifetime'] * 60)) {
         siteoptions_fail($form, 'sessionlifetime');
