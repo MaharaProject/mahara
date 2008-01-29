@@ -96,6 +96,7 @@ function pieform_element_wysiwyg_get_headdata() {
     global $USER, $_PIEFORM_WYSIWYGS;
     if ($USER->get_account_preference('wysiwyg') || defined('PUBLIC')) {
         $result = '<script type="text/javascript">'
+         . "\nPieformManager.connect('onsubmit', null, tinyMCE.triggerSave);"
          . "\nPieformManager.connect('onload', null, function() {\n";
         foreach ($_PIEFORM_WYSIWYGS as $editor) {
             $result .= "    tinyMCE.execCommand('mceAddControl', false, '$editor');\n";
