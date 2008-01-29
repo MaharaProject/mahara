@@ -36,7 +36,7 @@
                                           {if $institution->name != 'mahara'}
                                             <a href="{$WWWROOT}admin/users/institutionusers.php?usertype=members&institution={$institution->name}">{$institution->members}</a>
                                           {else}
-                                            {$institution->members}
+                                            <a href="{$WWWROOT}admin/users/search.php?institution=mahara">{$institution->members}</a>
                                           {/if}
                                         </td>
 					<td class="center">{$institution->maxuseraccounts}</td>
