@@ -32,15 +32,16 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
 $pagename = param_alpha('pagename');
 
-$data['pagename'] = $pagename;
-
-if (!$page = @get_record('site_content', 'name', $pagename)) {
+if (!$page = get_record('site_content', 'name', $pagename)) {
     json_reply('local', get_string('loadsitepagefailed', 'admin'));
 }
 
-$data['content'] = $page->content;
-$data['error']   = false;
-$data['message'] = false;
-json_headers();
-echo json_encode($data);  
+$data = array(
+    'pagename' => $pagename,
+    'content'  => $page->content,
+    'error'    => false,
+    'message'  => false,
+);
+json_reply(false, $data);
+
 ?>
