@@ -487,12 +487,12 @@ class PluginAuthXmlrpc extends PluginAuth {
         if ($instance > 0) {
             $default = get_record('auth_instance', 'id', $instance);
             if ($default == false) {
-                throw new Exception(get_string('nodataforinstance', 'auth').$instance);
+                throw new SystemException(get_string('nodataforinstance', 'auth').$instance);
             }
             $current_config = get_records_menu('auth_instance_config', 'instance', $instance, '', 'field, value');
 
             if ($current_config == false) {
-                throw new Exception('No config data for instance: '.$instance);
+                throw new SystemException('No config data for instance: '.$instance);
             }
 
             foreach (self::$default_config as $key => $value) {
