@@ -199,6 +199,8 @@ $string['existingfriend'] = 'existing friend';
 $string['nosearchresultsfound'] = 'No search results found :(';
 $string['friend'] = 'friend';
 $string['friends'] = 'friends';
+$string['user'] = 'user';
+$string['users'] = 'users';
 
 $string['friendlistfailure'] = 'Failed to modify your friends list';
 $string['userdoesntwantfriends'] = 'This user doesn\'t want any new friends';

@@ -9,7 +9,7 @@
     <table id="friendslist">
     {foreach from=$users item=user}
         <tr class="r{cycle values=1,0}">
-        {include file="user/user.tpl" user=$user }
+        {include file="user/user.tpl" user=$user page='myfriends'}
         </tr>
     {/foreach}
     </table>

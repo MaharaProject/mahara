@@ -29,9 +29,63 @@ define('MENUITEM', 'groups/findfriends');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 define('TITLE', get_string('findfriends'));
+require('searchlib.php');
+safe_require('search', 'internal');
 
-$smarty = smarty();
+$query = param_variable('query', '');
+$limit  = param_integer('limit', 10);
+$offset = param_integer('offset', 0);
+
+$data = search_user($query, $limit, $offset);
+
+if ($data['data']) {
+    $userlist = '(' . join(',', array_map(create_function('$u','return $u[\'id\'];'), $data['data'])) . ')';
+    $data['data'] = get_users_data($userlist);
+}
+
+$searchform = pieform(array(
+    'name' => 'search',
+    'renderer' => 'oneline',
+    'elements' => array(
+        'query' => array(
+            'type' => 'text',
+            'defaultvalue' => $query
+        ),
+        'submit' => array(
+            'type' => 'submit',
+            'value' => get_string('search')
+        )
+    )
+));
+
+$pagination = build_pagination(array(
+    'url' => get_config('wwwroot') . 'user/find.php?query=' . $query,
+    'count' => $data['count'],
+    'limit' => $limit,
+    'offset' => $offset,
+    'resultcounttextsingular' => get_string('user', 'group'),
+    'resultcounttextplural' => get_string('users', 'group'),
+));
+
+$smarty = smarty(array(), array(), array(), array('sideblocks' => array(friends_control_sideblock())));
 $smarty->assign('heading', TITLE);
+$smarty->assign('users', $data['data']);
+$smarty->assign('form', $searchform);
+$smarty->assign('pagination', $pagination['html']);
+if (isset($message)) {
+    $smarty->assign('message', $message);
+}
 $smarty->display('user/find.tpl');
+
+function search_submit(Pieform $form, $values) {
+    redirect('/user/find.php' . (isset($values['query']) ? '?query=' . urlencode($values['query']) : ''));
+}
+
+function friendscontrol_submit(Pieform $form, $values) {
+    global $USER, $SESSION;
+    $USER->set_account_preference('friendscontrol', $values['friendscontrol']);
+    $SESSION->add_ok_msg(get_string('updatedfriendcontrolsetting', 'group'));
+    redirect('/user/find.php');
+}
 
 ?>

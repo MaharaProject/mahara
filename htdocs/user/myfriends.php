@@ -28,6 +28,7 @@ define('INTERNAL', 1);
 define('MENUITEM', 'groups/myfriends');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
+require('searchlib.php');
 define('TITLE', get_string('myfriends'));
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'user');
@@ -41,113 +42,48 @@ $userid = $USER->get('id');
 $data = array();
 if ($filter == 'current') {
     $count = count_records_select('usr_friend', 'usr1 = ? OR usr2 = ?', array($userid, $userid));
-    $sql = 'SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname,
-            (SELECT a.title FROM {artefact} a WHERE a.owner = u.id AND a.artefacttype = \'introduction\') AS introduction,
-            COALESCE((SELECT ap.value FROM {usr_account_preference} ap WHERE ap.usr = u.id AND ap.field = \'messages\'), \'allow\') AS messages
-            FROM {usr} u
-            WHERE u.id IN (
-                SELECT (CASE WHEN usr1 = ? THEN usr2 ELSE usr1 END) AS userid
-                FROM {usr_friend} WHERE (usr1 = ? OR usr2 = ?))
-            ORDER BY u.id';
-    $data = get_records_sql_assoc($sql, array($userid, $userid, $userid), $offset, $limit);
+    $data = get_column_sql(
+        'SELECT usr1 AS id FROM {usr_friend} WHERE usr1 = ?
+        UNION SELECT usr2 AS id FROM {usr_friend} WHERE usr2 = ?
+        ORDER BY id
+        LIMIT ?
+        OFFSET ?', array($userid, $userid, $limit, $offset)
+    );
     if (!$data || !$views = get_views(array_keys($data), null, null)) {
         $views = array();
     }
 }
 else if ($filter == 'pending') {
     $count = count_records('usr_friend_request', 'owner', array($userid));
-    $sql = 'SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, fr.reason, 1 AS pending,
-            (SELECT a.title FROM {artefact} a WHERE a.owner = u.id AND a.artefacttype = \'introduction\') AS introduction,
-            COALESCE((SELECT ap.value FROM {usr_account_preference} ap WHERE ap.usr = u.id AND ap.field = \'messages\'), \'allow\') AS messages
-            FROM {usr} u
-            JOIN {usr_friend_request} fr ON fr.requester = u.id
-            WHERE fr.owner = ?
-            ORDER BY u.id';
-    $data = get_records_sql_array($sql, array($userid), $offset, $limit);
-    $views = array();
+    $data = get_column_sql(
+        'SELECT requester FROM {usr_friend_request} WHERE owner = ?
+        ORDER BY requester
+        LIMIT ?
+        OFFSET ?', array($userid, $limit, $offset)
+    );
 }
 else {
 	$filter = 'all';
-    $count = count_records_select('usr_friend', 'usr1 = ? OR usr2 = ?', array($userid, $userid))
-           + count_records('usr_friend_request', 'owner', array($userid));
-    $sql = 'SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, NULL as reason, 0 AS pending,
-                (SELECT a.title FROM {artefact} a WHERE a.owner = u.id AND a.artefacttype = \'introduction\') AS introduction,
-                COALESCE((SELECT ap.value FROM {usr_account_preference} ap WHERE ap.usr = u.id AND ap.field = \'messages\'), \'allow\') AS messages
-                FROM {usr} u
-                WHERE u.id IN (
-                    SELECT (CASE WHEN usr1 = ? THEN usr2 ELSE usr1 END) AS userid
-                    FROM {usr_friend} WHERE (usr1 = ? OR usr2 = ?))
-            UNION
-            SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, fr.reason, 1 AS pending,
-                (SELECT a.title FROM {artefact} a WHERE a.owner = u.id AND a.artefacttype = \'introduction\') AS introduction,
-                COALESCE((SELECT ap.value FROM {usr_account_preference} ap WHERE ap.usr = u.id AND ap.field = \'messages\'), \'allow\') AS messages
-                FROM {usr} u
-                JOIN {usr_friend_request} fr ON fr.requester = u.id
-                WHERE fr.owner = ?
-            ORDER BY pending DESC, id';
-    $data = get_records_sql_assoc($sql, array($userid, $userid, $userid, $userid));
+    $count = count_records_select('usr_friend_request', 'owner = ?', array($userid))
+        + count_records_select('usr_friend', 'usr1 = ? OR usr2 = ?', array($userid, $userid));
+    $data = get_column_sql(
+        'SELECT id FROM (
+            SELECT requester AS id, \'1\' AS status FROM {usr_friend_request} WHERE owner = ?
+            UNION SELECT usr2 AS id, \'2\' AS status FROM {usr_friend} WHERE usr1 = ?
+            UNION SELECT usr1 AS id, \'2\' AS status FROM {usr_friend} WHERE usr2 = ?
+        ) friend
+        ORDER BY status DESC, id
+        LIMIT ?
+        OFFSET ?', array($userid, $userid, $userid, $limit, $offset)
+    );
     if (!$data || !$views = get_views(array_keys($data), null, null)) {
         $views = array();
     }
 }
 
 if ($data) {
-    $data = array_values($data);
-    foreach ($data as $d) {
-        $d->name  = display_name($d);
-        if (isset($d->introduction)) {
-            $d->introduction = format_introduction($d->introduction);
-        }
-        $d->messages = ($d->messages == 'allow' || is_friend($userid, $d->id) && $d->messages == 'friends' || $USER->get('admin')) ? 1 : 0;
-    }
-}
-
-
-$viewcount = array_map('count', $views);
-// since php is so special and inconsistent, we can't use array_map for this because it breaks the top level indexes.
-$cleanviews = array();
-foreach ($views as $userindex => $viewarray) {
-    $cleanviews[$userindex] = array_slice($viewarray, 0, 5);
-
-    // Don't reveal any more about the view than necessary
-    foreach ($cleanviews as $userviews) {
-        foreach ($userviews as &$view) {
-            foreach (array_keys(get_object_vars($view)) as $key) {
-                if ($key != 'id' && $key != 'title') {
-                    unset($view->$key);
-                }
-            }
-        }
-    }
-
-}
-
-if ($data) {
-    foreach ($data as $friend) {
-        if (isset($cleanviews[$friend->id])) {
-            $friend->views = $cleanviews[$friend->id];
-        }
-    }
-    foreach ($data as $friend) {
-        if ($friend->pending) {
-            $friend->accept = pieform(array(
-                'name' => 'acceptfriend' . $friend->id,
-                'successcallback' => 'acceptfriend_submit',
-                'renderer' => 'div',
-                'autofocus' => 'false',
-                'elements' => array(
-                    'submit' => array(
-                        'type' => 'submit',
-                        'value' => get_string('approverequest', 'group')
-                    ),
-                    'id' => array(
-                        'type' => 'hidden',
-                        'value' => $friend->id
-                    )
-                )
-            ));
-        }
-    }
+    $userlist = '(' . join(',', $data) . ')';
+    $data = get_users_data($userlist);
 }
 
 $filterform = pieform(array(
@@ -192,36 +128,14 @@ function filter_submit(Pieform $form, $values) {
     redirect('/user/myfriends.php?filter=' . $values['filter']);
 }
 
-function acceptfriend_submit(Pieform $form, $values) {
-	global $USER, $SESSION;
-
-	$user = get_record('usr', 'id', $values['id']);
-
-    // friend db record
-    $f = new StdClass;
-    $f->ctime = db_format_timestamp(time());
-    $f->usr1 = $user->id;
-    $f->usr2 = $USER->get('id');
-
-    // notification info
-    $n = new StdClass;
-    $n->url = get_config('wwwroot') . 'user/view.php?id=' . $USER->get('id');
-    $n->users = array($user->id);
-    $lang = get_user_language($user->id);
-    $displayname = display_name($USER, $user);
-    $n->message = get_string_from_language($lang, 'friendrequestacceptedmessage', 'group', $displayname, $displayname);
-    $n->subject = get_string_from_language($lang, 'friendrequestacceptedsubject', 'group');
-
-    db_begin();
-    delete_records('usr_friend_request', 'owner', $USER->get('id'), 'requester', $user->id);
-    insert_record('usr_friend', $f);
-
-    db_commit();
-    $SESSION->add_ok_msg(get_string('friendformacceptsuccess', 'group'));
-    redirect('/user/view.php?id=' . $values['id']);
+function friendscontrol_submit(Pieform $form, $values) {
+    global $USER, $SESSION;
+    $USER->set_account_preference('friendscontrol', $values['friendscontrol']);
+    $SESSION->add_ok_msg(get_string('updatedfriendcontrolsetting', 'group'));
+    redirect('/user/myfriends.php');
 }
 
-$smarty = smarty();
+$smarty = smarty(array(), array(), array(), array('sideblocks' => array(friends_control_sideblock())));
 $smarty->assign('heading', TITLE);
 $smarty->assign('users', $data);
 $smarty->assign('form', $filterform);

@@ -1,7 +1,7 @@
 {if $user->pending}
 <td class="pending">
     <div class="fl">
-        <img src="{$WWWROOT}thumb.php?type=profileicon&amp;size=40x40&amp;id={$user->id}">
+        <img src="{$WWWROOT}thumb.php?type=profileicon&amp;size=40x40&amp;id={$user->id}" alt="">
     </div>
     <table class="friendinfo">
         <tr>
@@ -20,18 +20,14 @@
         <tr>
             <td id="friendinfo_{$user->id}">
                 {if $user->introduction}
-                <p>
-                    {$user->introduction|escape}
-                </p>
+                {$user->introduction|escape}
                 {/if}
                 <div class="pending">
-                    <div>
-                        <strong>
-                            {str tag='whymakemeyourfriend' section='group'}
-                            {user->reason}
-                        </strong>
-                    </div>
-                <div/>
+                    <strong>
+                        {str tag='whymakemeyourfriend' section='group'}
+                        {$user->reason}
+                    </strong>
+                </div>
                 <div>
                     <ul>
                         <li>
@@ -39,7 +35,7 @@
                                 {str tag='denyrequest' section='group'}
                             </a>
                         </li>
-                        {if $user->messages == 1}
+                        {if $user->messages}
                         <li>
                             <a href="{$WWWROOT}user/sendmessage.php?id={$user->id}">
                                 {str tag='sendmessage' section='group'}
@@ -52,20 +48,24 @@
         </tr>
     </table>
 </td>
-{else}
+{elseif $user->friend}
 <td>
     <div class="fl">
-        <img src="{$WWWROOT}thumb.php?type=profileicon&amp;size=40x40&amp;id={$user->id}">
+        <img src="{$WWWROOT}thumb.php?type=profileicon&amp;size=40x40&amp;id={$user->id}" alt="">
     </div>
     <table class="friendinfo">
         <tr>
             <th>
                 <h3>
-                    <a href="{$WWWROOT}user/view.php?id=}$user->id}">
+                    <a href="{$WWWROOT}user/view.php?id={$user->id}">
                         {$user->id|display_name|escape}
                     </a>
+                    {if $page == 'find'}
+                    - {str tag='existingfriend' section='group'}
+                    {/if}
                 </h3>
             </th>
+            {if $page == 'myfriends'}
             <td rowspan="2" class="viewlist">
                 <h3>
                     {str tag='Views' section='group'}
@@ -81,12 +81,13 @@
                     </li>
                     {/foreach}
                 </ul>
-            {else}
+                {else}
                 <p>
-                {str tag='noviewstosee' section='group'}
+                    {str tag='noviewstosee' section='group'}
                 </p>
-            {/if}
+                {/if}
             </td>
+            {/if}
         </tr>
         <tr>
             <td id="friendinfo_{$user->id}">
@@ -96,7 +97,7 @@
                 </p>
                 {/if}
                 <ul>
-                {if $user->messages > 0}
+                {if $user->messages}
                     <li>
                         <a href="{$WWWROOT}user/sendmessage.php?id={$user->id}">
                             {str tag='sendmessage' section='group'}
@@ -109,6 +110,90 @@
                         </a>
                     </li>
                 </ul>
+            </td>
+        </tr>
+    </table>
+</td>
+{elseif $user->requestedfriendship}
+<td>
+    <div class="fl">
+        <img src="{$WWWROOT}thumb.php?type=profileicon&amp;size=40x40&amp;id={$user->id}" alt="">
+    </div>
+    <table class="friendinfo">
+        <tr>
+            <th>
+                <div class="fr">
+                    {str tag='friendshiprequested' section='group'}
+                </div>
+                <h3>
+                    <a href="{$WWWROOT}user/view.php?id={$user->id}">
+                        {$user->id|display_name|escape}
+                    </a>
+                </h3>
+             </th>
+        </tr>
+        <tr>
+            <td id="friendinfo_{$user->id}">
+                {if $user->introduction}
+                {$user->introduction|escape}
+                {/if}
+                <div>
+                    <ul>
+                        {if $user->messages}
+                        <li>
+                            <a href="{$WWWROOT}user/sendmessage.php?id={$user->id}">
+                                {str tag='sendmessage' section='group'}
+                            </a>
+                        </li>
+                        {/if}
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    </table>
+</td>
+{else}
+<td>
+    <div class="fl">
+        <img src="{$WWWROOT}thumb.php?type=profileicon&amp;size=40x40&amp;id={$user->id}" alt="">
+    </div>
+    <table class="friendinfo">
+        <tr>
+            <th>
+                <div class="fr">
+                    {if $user->friendscontrol == 'auth'}
+                    <a href="{$wwwroot}user/requestfriendship.php?id={$user->id}">
+                        {str tag='sendfriendrequest' section='group'}
+                    </a>
+                    {elseif $user->friendscontrol == 'auto'}
+                        {$user->makefriend}
+                    {else}
+                        {str tag='userdoesntwantfriends' section='group'}
+                    {/if}
+                </div>
+                <h3>
+                    <a href="{$WWWROOT}user/view.php?id={$user->id}">
+                        {$user->id|display_name|escape}
+                    </a>
+                </h3>
+             </th>
+        </tr>
+        <tr>
+            <td id="friendinfo_{$user->id}">
+                {if $user->introduction}
+                {$user->introduction|escape}
+                {/if}
+                <div>
+                    <ul>
+                        {if $user->messages}
+                        <li>
+                            <a href="{$WWWROOT}user/sendmessage.php?id={$user->id}">
+                                {str tag='sendmessage' section='group'}
+                            </a>
+                        </li>
+                        {/if}
+                    </ul>
+                </div>
             </td>
         </tr>
     </table>
