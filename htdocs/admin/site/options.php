@@ -46,18 +46,19 @@ $siteoptionform = pieform(array(
     'renderer'   => 'table',
     'plugintype' => 'core',
     'pluginname' => 'admin',
+    'jssuccesscallback' => 'checkReload',
     'elements'   => array(
         'sitename' => array(
             'type'         => 'text',
-            'title'        => get_string('sitename','admin'),
-            'description'  => get_string('sitenamedescription','admin'),
+            'title'        => get_string('sitename', 'admin'),
+            'description'  => get_string('sitenamedescription', 'admin'),
             'defaultvalue' => get_config('sitename'),
             'help'         => true,
         ),
         'lang' => array(
             'type'         => 'select',
-            'title'        => get_string('language','admin'),
-            'description'  => get_string('sitelanguagedescription','admin'),
+            'title'        => get_string('language', 'admin'),
+            'description'  => get_string('sitelanguagedescription', 'admin'),
             'defaultvalue' => get_config('lang'),
             'collapseifoneoption' => true,
             'options'      => $langoptions,
@@ -65,8 +66,8 @@ $siteoptionform = pieform(array(
         ),
         'theme' => array(
             'type'         => 'select',
-            'title'        => get_string('theme','admin'),
-            'description'  => get_string('sitethemedescription','admin'),
+            'title'        => get_string('theme', 'admin'),
+            'description'  => get_string('sitethemedescription', 'admin'),
             'defaultvalue' => get_config('theme'),
             'collapseifoneoption' => true,
             'options'      => $themeoptions,
@@ -74,8 +75,8 @@ $siteoptionform = pieform(array(
         ),
         'searchplugin' => array(
             'type'         => 'select',
-            'title'        => get_string('searchplugin','admin'),
-            'description'  => get_string('searchplugindescription','admin'),
+            'title'        => get_string('searchplugin', 'admin'),
+            'description'  => get_string('searchplugindescription', 'admin'),
             'defaultvalue' => get_config('searchplugin'),
             'collapseifoneoption' => true,
             'options'      => $searchpluginoptions,
@@ -83,46 +84,39 @@ $siteoptionform = pieform(array(
         ),
         'pathtofile' => array(
             'type'         => 'text',
-            'title'        => get_string('pathtofile','admin'),
-            'description'  => get_string('pathtofiledescription','admin'),
+            'title'        => get_string('pathtofile', 'admin'),
+            'description'  => get_string('pathtofiledescription', 'admin'),
             'defaultvalue' => get_config('pathtofile'),
             'help'         => true,
         ),
         'viruschecking' => array(
             'type'         => 'checkbox',
-            'title'        => get_string('viruschecking','admin'),
-            'description'  => get_string('viruscheckingdescription','admin'),
+            'title'        => get_string('viruschecking', 'admin'),
+            'description'  => get_string('viruscheckingdescription', 'admin'),
             'defaultvalue' => get_config('viruschecking'),
             'help'         => true,
         ),
         'pathtoclam' => array(
             'type'         => 'text',
-            'title'        => get_string('pathtoclam','admin'),
-            'description'  => get_string('pathtoclamdescription','admin'),
+            'title'        => get_string('pathtoclam', 'admin'),
+            'description'  => get_string('pathtoclamdescription', 'admin'),
             'defaultvalue' => get_config('pathtoclam'),
             'help'         => true,
         ),
         'sessionlifetime' => array(
             'type'         => 'text',
             'size'         => 4,
-            'title'        => get_string('sessionlifetime','admin'),
-            'description'  => get_string('sessionlifetimedescription','admin'),
+            'title'        => get_string('sessionlifetime', 'admin'),
+            'description'  => get_string('sessionlifetimedescription', 'admin'),
             'defaultvalue' => get_config('session_timeout') / 60,
             'help'         => true,
         ),
         'allowpublicviews' => array(
             'type'         => 'select',
-            'title'        => get_string('allowpublicviews','admin'),
-            'description'  => get_string('allowpublicviewsdescription','admin'),
+            'title'        => get_string('allowpublicviews', 'admin'),
+            'description'  => get_string('allowpublicviewsdescription', 'admin'),
             'defaultvalue' => get_config('allowpublicviews'),
             'options'      => $yesno,
-            'help'         => true,
-        ),
-        'artefactviewinactivitytime' => array(
-            'type'         => 'expiry',
-            'title'        => get_string('artefactviewinactivitytime','admin'),
-            'description'  => get_string('artefactviewinactivitytimedescription','admin'),
-            'defaultvalue' => get_config('artefactviewinactivitytime'),
             'help'         => true,
         ),
         'defaultaccountlifetime' => array(
@@ -148,25 +142,29 @@ $siteoptionform = pieform(array(
         ),
         'usersallowedmultipleinstitutions' => array(
             'type'         => 'checkbox',
-            'title'        => get_string('usersallowedmultipleinstitutions','admin'),
-            'description'  => get_string('usersallowedmultipleinstitutionsdescription','admin'),
+            'title'        => get_string('usersallowedmultipleinstitutions', 'admin'),
+            'description'  => get_string('usersallowedmultipleinstitutionsdescription', 'admin'),
             'defaultvalue' => get_config('usersallowedmultipleinstitutions'),
+            'help'         => true,
         ),
         'submit' => array(
             'type'  => 'submit',
-            'value' => get_string('updatesiteoptions','admin')
+            'value' => get_string('updatesiteoptions', 'admin')
         ),
     )
 ));
 
 function siteoptions_fail(Pieform $form, $field) {
-    $form->json_reply(PIEFORM_ERR, get_string('setsiteoptionsfailed','admin', get_string($field)), array($field => get_string($field . 'invalid', 'admin')));
+    $form->reply(PIEFORM_ERR, array(
+        'message' => get_string('setsiteoptionsfailed', 'admin', get_string($field, 'admin')),
+        'goto'    => '/admin/site/options.php',
+    ));
 }
 
 function siteoptions_submit(Pieform $form, $values) {
     $fields = array('sitename','lang','theme','pathtofile', 'pathtoclam',
                     'defaultaccountlifetime', 'defaultaccountinactiveexpire', 'defaultaccountinactivewarn', 
-                    'allowpublicviews','artefactviewinactivitytime', 'searchplugin');
+                    'allowpublicviews', 'searchplugin');
     foreach ($fields as $field) {
         if (!set_config($field, $values[$field])) {
             siteoptions_fail($form, $field);
@@ -182,11 +180,12 @@ function siteoptions_submit(Pieform $form, $values) {
             siteoptions_fail($form, $checkbox);
         }
     }
-    $form->json_reply(PIEFORM_OK, get_string('siteoptionsset','admin'));
+    $form->reply(PIEFORM_OK, array('message' => get_string('siteoptionsset', 'admin'), 'goto' => '/admin/site/options.php'));
 }
 
-$smarty = smarty();
-$smarty->assign('SITEOPTIONFORM', $siteoptionform);
+$thispage = json_encode(get_config('wwwroot') . 'admin/site/options.php');
+$smarty = smarty(array('adminsiteoptions'));
+$smarty->assign('siteoptionform', $siteoptionform);
 $smarty->display('admin/site/options.tpl');
 
 ?>
