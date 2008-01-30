@@ -1,7 +1,6 @@
 {include file="header.tpl"}
 
 {include file="columnfullstart.tpl"}
-			<h2>{str tag='adminnotifications' section='admin'}</h2>
             <table>
                 <tr>
                     <th>&nbsp;</th>

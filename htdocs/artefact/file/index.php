@@ -90,6 +90,7 @@ $smarty = smarty(
     )
 );
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
+$smarty->assign('heading', get_string('myfiles', 'artefact.file'));
 $smarty->display('artefact:file:index.tpl');
 
 ?>

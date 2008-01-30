@@ -1,8 +1,6 @@
 {include file="header.tpl"}
 
 {include file="columnfullstart.tpl"}
-			<h2>{str tag=suspendedusers section=admin}</h2>
-
             {$buttonformopen}
             {$buttonform}
             <table id="suspendedlist">

@@ -107,15 +107,10 @@ function contactus_submit(Pieform $form, $values) {
     $form->json_reply(PIEFORM_OK, get_string('messagesent'));
 }
 
-$pagecontent = <<<EOF
-<h2>$contactus</h2>
-
-$contactform
-EOF;
-
 $smarty = smarty();
-$smarty->assign('page_content', $pagecontent);
+$smarty->assign('page_content', $contactform);
 $smarty->assign('searchform', searchform());
+$smarty->assign('heading', $contactus);
 $smarty->display('sitepage.tpl');
 
 ?>

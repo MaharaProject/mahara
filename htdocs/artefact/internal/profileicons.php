@@ -28,7 +28,7 @@ define('INTERNAL', 1);
 define('MENUITEM', 'profile/icons');
 define('SECTION_PLUGINTYPE', 'artefact');
 define('SECTION_PLUGINNAME', 'internal');
-define('SECTION_PAGE', 'profileficons');
+define('SECTION_PAGE', 'profileicons');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('profileicons', 'artefact.internal'));
@@ -284,6 +284,7 @@ $smarty->assign('uploadform', $uploadform);
 // the buttons need to be inside the tablerenderer.
 $smarty->assign('settingsformtag', $settingsform->get_form_tag());
 $smarty->assign('imagemaxdimensions', array(get_config('imagemaxwidth'), get_config('imagemaxheight')));
+$smarty->assign('heading', get_string('profileicons', 'artefact.internal'));
 $smarty->display('artefact:internal:profileicons.tpl');
 
 ?>

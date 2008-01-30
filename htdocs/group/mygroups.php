@@ -29,6 +29,9 @@ define('MENUITEM', 'groups/mygroups');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 define('TITLE', get_string('mygroups'));
+define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'group');
+define('SECTION_PAGE', 'mygroups');
 require('group.php');
 $filter = param_alpha('filter', 'all');
 $offset = param_integer('offset', 'all');
@@ -173,6 +176,7 @@ $smarty->assign('form', $form);
 $smarty->assign('filter', $filter);
 $smarty->assign('pagination', $pagination['html']);
 $smarty->assign('searchingforgroups', array('<a href="' . get_config('wwwroot') . 'group/find.php">', '</a>'));
+$smarty->assign('heading', get_string('mygroups'));
 $smarty->display('group/mygroups.tpl');
 
 function filter_submit(Pieform $form, $values) {

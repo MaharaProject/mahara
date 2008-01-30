@@ -1565,9 +1565,8 @@ a.pieform-calendar-toggle img {
     border: none;
     vertical-align: text-bottom;
 }
-.pagehelpicon {
-    padding-top: .25em;
-    float: right;
+.pagehelpicon .help {
+    vertical-align: text-top;
 }
 
 .tablerenderer-loading {

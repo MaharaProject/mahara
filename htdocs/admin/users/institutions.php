@@ -401,6 +401,7 @@ function institution_cancel_submit() {
     redirect('/admin/users/institutions.php');
 }
 
+$smarty->assign('heading', get_string('admininstitutions', 'admin'));			
 $smarty->display('admin/users/institutions.tpl');
 
 ?>

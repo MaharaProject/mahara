@@ -1,9 +1,6 @@
 {include file="header.tpl"}
 
 {include file="columnfullstart.tpl"}
-	
-			<h2>{str tag="admininstitutions" section="admin"}</h2>
-			
 			{if $delete_form}
 			<h3>{str tag="deleteinstitution" section="admin"}</h3>
 			<p>{str tag="deleteinstitutionconfirm" section="admin"}</p>

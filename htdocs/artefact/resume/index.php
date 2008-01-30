@@ -364,6 +364,7 @@ EOF;
 
 $smarty->assign('compositeforms', $compositeforms);
 $smarty->assign('INLINEJAVASCRIPT', $inlinejs);
+$smarty->assign('heading', get_string('myresume', 'artefact.resume'));
 $smarty->display('artefact:resume:index.tpl');
 
 function coverletter_submit(Pieform $form, $values) {

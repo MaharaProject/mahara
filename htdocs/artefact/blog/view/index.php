@@ -47,6 +47,7 @@ $smarty = smarty(array('tablerenderer'), array(), array(), $images);
 $smarty->assign_by_ref('blog', $blog);
 $smarty->assign_by_ref('editform', $form);
 $smarty->assign_by_ref('INLINEJAVASCRIPT', $js);
+$smarty->assign('heading', get_string('viewblog', 'artefact.blog') . ' - ' . $blog->get('title'));
 $smarty->display('artefact:blog:view.tpl');
 
 ?>

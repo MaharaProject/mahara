@@ -2,9 +2,6 @@
 {include file="sidebar.tpl"}
 
 {include file="columnleftstart.tpl"}
-
-			<h2>{str section="artefact.internal" tag="profileicons"}</h2>
-
             {$settingsformtag}
             <table id="profileicons" class="hidden tablerenderer">
                 <thead>

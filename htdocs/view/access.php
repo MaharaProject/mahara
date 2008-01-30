@@ -151,6 +151,7 @@ function editaccess_submit(Pieform $form, $values) {
 
 
 $smarty->assign('pagetitle', TITLE);
+$smarty->assign('heading', TITLE);
 $smarty->assign('form', pieform($form));
 $smarty->display('view/access.tpl');
 

@@ -83,6 +83,11 @@ $smarty->assign('form', pieform($form));
 $smarty->assign('plugintype', $plugintype);
 $smarty->assign('pluginname', $pluginname);
 $smarty->assign('type', $type);
+$heading = get_string('pluginadmin', 'admin') . ': ' . $plugintype . ': ' . $pluginname;
+if ($type) {
+    $heading .= ': ' . $type;
+}
+$smarty->assign('heading', $heading);
 $smarty->display('admin/extensions/pluginconfig.tpl');
 
 

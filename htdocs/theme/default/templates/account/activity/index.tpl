@@ -2,8 +2,6 @@
 {include file="sidebar.tpl"}
 
 {include file="columnleftstart.tpl"}	
-			<h2>{str tag="notifications"}</h2>
-			
 			<div id="notifications">
 			<form method="post">
 			{str section='activity' tag='type'}:

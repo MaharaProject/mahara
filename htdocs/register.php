@@ -224,6 +224,7 @@ if (isset($key)) {
 
     $smarty = smarty();
     $smarty->assign('register_profile_form', $form);
+    $smarty->assign('heading', get_string('register'));
     $smarty->display('register.tpl');
     exit;
 }
@@ -473,6 +474,7 @@ function register_cancel_submit() {
 
 $smarty = smarty();
 $smarty->assign('register_form', pieform($form));
+$smarty->assign('heading', get_string('register'));
 $smarty->display('register.tpl');
 
 ?>

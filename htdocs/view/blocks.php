@@ -26,6 +26,9 @@
 
 define('INTERNAL', 1);
 define('MENUITEM', 'myportfolio/views');
+define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'view');
+define('SECTION_PAGE', 'blocks');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require('view.php');
 

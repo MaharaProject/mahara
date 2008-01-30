@@ -52,6 +52,7 @@ $smarty = smarty(array('tablerenderer',
                        'artefact/file/js/file.js'));
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('descriptionstrargs', array('<a href="' . get_config('wwwroot') . 'admin/site/menu.php">', '</a>'));
+$smarty->assign('heading', get_string('adminfiles', 'admin'));
 $smarty->display('admin/site/files.tpl');
 
 ?>

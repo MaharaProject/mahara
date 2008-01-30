@@ -2,7 +2,6 @@
 {include file="sidebar.tpl"}
 
 {include file="columnleftstart.tpl"}
-<h2>{str tag="mygroups"}</h2>
 <div class="addgrouplink">
 <span class="addicon">
 <a href="{$WWWROOT}group/create.php">{str tag="addgroup" section="group"}</a>

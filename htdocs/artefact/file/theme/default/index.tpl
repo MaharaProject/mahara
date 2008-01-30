@@ -2,7 +2,6 @@
 {include file="sidebar.tpl"}
 
 {include file="columnleftstart.tpl"}
-			<h2>{str section="artefact.file" tag="myfiles"}</h2>
 			{str tag='fileinstructions' section='artefact.file'}
 			<div id="myfiles">
 				<div id="uploader"></div>

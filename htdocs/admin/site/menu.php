@@ -277,6 +277,7 @@ $smarty = smarty(array(), array($style));
 $smarty->assign('INLINEJAVASCRIPT', $ijs);
 $smarty->assign('MENUS', $menulist);
 $smarty->assign('descriptionstrargs', array('<a href="' . get_config('wwwroot') . 'admin/site/files.php">', '</a>'));
+$smarty->assign('heading', get_string('linksandresourcesmenu', 'admin'));
 $smarty->display('admin/site/menu.tpl');
 
 ?>

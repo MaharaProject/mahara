@@ -48,4 +48,4 @@
             {insert name="messages"}
             <div id="maincontentwrapper">
             <div class="maincontent">
-                {if $PAGEHELPNAME} <div id="{$PAGEHELPNAME}_container" class="pagehelpicon">{$PAGEHELPICON}</div>{/if}
+                {if $PAGEHELPNAME && $heading} <h2>{$heading|escape}<span id="{$PAGEHELPNAME}_container" class="pagehelpicon">{$PAGEHELPICON}</span></h2>{/if}

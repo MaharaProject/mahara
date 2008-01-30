@@ -9,8 +9,6 @@
 {include file="sidebar.tpl"}
 
 {include file="columnleftstart.tpl"}
-			<h2>{str section="artefact.blog" tag="viewblog"} - {$blog->get('title')|escape}</h2>
-			
 			<div id="myblogs">
                 <div class="blogsettingscontainer">
                     <div class="addiconcontainer">

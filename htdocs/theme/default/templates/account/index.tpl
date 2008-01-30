@@ -2,8 +2,6 @@
 {include file="sidebar.tpl"}
 
 {include file="columnleftstart.tpl"}
-			<h2>{str tag="preferences"}</h2>
-	
 			{$form}
 
                         <h3>{str tag="institutionmembership"}</h3>

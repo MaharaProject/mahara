@@ -76,6 +76,7 @@ function staffusers_submit(Pieform $form, $values) {
 }
 
 $smarty->assign('staffusersform', pieform($form));
+$smarty->assign('heading', get_string('staffusers', 'admin'));
 $smarty->display('admin/users/staff.tpl');
 
 ?>

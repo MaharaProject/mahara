@@ -97,6 +97,7 @@ $prefsform = array(
 $smarty = smarty();
 $smarty->assign('prefsdescr', get_string('prefsdescr', 'activity'));
 $smarty->assign('form', pieform($prefsform));
+$smarty->assign('heading', get_string('activityprefs'));
 $smarty->display('account/activity/preferences/index.tpl');
 
 function activityprefs_submit(Pieform $form, $values) {

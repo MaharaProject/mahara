@@ -417,6 +417,7 @@ function clearPasswords(form, data) {
         $('accountprefs_password2').value = '';
     }
 }");
+$smarty->assign('heading', get_string('preferences'));
 $smarty->display('account/index.tpl');
 
 

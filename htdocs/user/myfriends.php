@@ -29,6 +29,9 @@ define('MENUITEM', 'groups/myfriends');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 define('TITLE', get_string('myfriends'));
+define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'user');
+define('SECTION_PAGE', 'myfriends');
 
 $filter = param_alpha('filter', 'all');
 $offset = param_integer('offset', 0);

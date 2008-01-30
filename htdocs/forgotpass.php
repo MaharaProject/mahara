@@ -82,6 +82,7 @@ if (isset($_GET['key'])) {
 
     $smarty = smarty();
     $smarty->assign('forgotpasschange_form', pieform($form));
+    $smarty->assign('heading', get_string('changepassword'));
     $smarty->display('forgotpass.tpl');
     exit;
 } else {
@@ -200,6 +201,7 @@ function forgotpasschange_submit(Pieform $form, $values) {
 
 $smarty = smarty();
 $smarty->assign('forgotpass_form', pieform($form));
+$smarty->assign('heading', get_string('forgotpassword'));
 $smarty->display('forgotpass.tpl');
 
 ?>

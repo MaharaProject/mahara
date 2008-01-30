@@ -83,7 +83,7 @@ $form = new Pieform(array(
 ));
 $smarty->assign('buttonformopen', $form->get_form_tag());
 $smarty->assign('buttonform', $form->build(false));
-
+$smarty->assign('heading', get_string('suspendedusers', 'admin'));
 $smarty->display('admin/users/suspended.tpl');
 
 function buttons_submit_unsuspend(Pieform $form, $values) {

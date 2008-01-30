@@ -2,7 +2,6 @@
 {include file="sidebar.tpl"}
 
 {include file="columnleftstart.tpl"}
-			<h2>{str section="admin" tag="adminfiles"}</h2>
             <p>{str tag="adminfilespagedescription" section="admin" args=$descriptionstrargs}</p>
 			<div id="myfiles">
 				<div id="uploader"></div>

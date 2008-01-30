@@ -378,7 +378,7 @@ $smarty = smarty(array(), array(), array(
 
 
 $smarty->assign('profileform', $profileform);
-
+$smarty->assign('heading', get_string('profile', 'artefact.internal'));
 $smarty->display('artefact:internal:index.tpl');
 
 
