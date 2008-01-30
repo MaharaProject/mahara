@@ -62,7 +62,7 @@ foreach ($activitytypes as $type) {
     else {
         $section = 'activity';
     }
-    $elements[$type->id] = array(
+    $elements['activity_'.$type->id] = array(
         'defaultvalue' => $dv,
         'type' => 'select',
         'title' => get_string('type' . $type->name, $section),
@@ -72,8 +72,8 @@ foreach ($activitytypes as $type) {
         )
     );
     if (!empty($type->admin)) {
-        $elements[$type->id]['rules']['required'] = false;
-        $elements[$type->id]['options']['none'] = get_string('none');
+        $elements['activity_'.$type->id]['rules']['required'] = false;
+        $elements['activity_'.$type->id]['options']['none'] = get_string('none');
     }
 
 }
@@ -104,11 +104,11 @@ function activityprefs_submit(Pieform $form, $values) {
     
     $userid = $USER->get('id');
     foreach ($activitytypes as $type) {
-        if ($values[$type->id] == 'none') {
+        if ($values['activity_'.$type->id] == 'none') {
             $USER->set_activity_preference($type->id, null);
         } 
         else {
-            $USER->set_activity_preference($type->id, $values[$type->id]);
+            $USER->set_activity_preference($type->id, $values['activity_'.$type->id]);
         }
     }
     $form->json_reply(PIEFORM_OK, get_string('prefssaved', 'account'));

@@ -44,7 +44,7 @@ function pieform_element_viewacl(Pieform $form, $element) {
          $presets = array('public', 'loggedin', 'friends');
     }
     else {
-        $presets = array('loggedinu', 'friends');
+        $presets = array('loggedin', 'friends');
     }
     if ($value) {
         foreach ($value as $key => &$item) {

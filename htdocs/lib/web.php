@@ -366,7 +366,7 @@ EOF;
     }
 
     // ---------- sideblock stuff ----------
-    if (!defined('INSTALLER') && (defined('MENUITEM') && substr(MENUITEM, 0, 5) != 'admin')) {
+    if (!defined('INSTALLER') && (!defined('MENUITEM') || substr(MENUITEM, 0, 5) != 'admin')) {
         if (get_config('installed')) {
             $data = site_menu();
             if (!empty($data)) {
@@ -1584,18 +1584,23 @@ function main_nav() {
                 'weight' => 10
             ),
             array(
-                'path' => 'groups/myfriends',
-                'url' => 'user/',
-                'title' => get_string('myfriends'),
-                'weight' => 20,
-            ),
-            array(
                 'path' => 'groups/find',
                 'url' => 'group/find.php',
                 'title' => get_string('findgroups'),
+                'weight' => 20
+            ),
+            array(
+                'path' => 'groups/myfriends',
+                'url' => 'user/myfriends.php',
+                'title' => get_string('myfriends'),
                 'weight' => 30
             ),
-
+            array(
+                'path' => 'groups/findfriends',
+                'url' => 'user/find.php',
+                'title' => get_string('findfriends'),
+                'weight' => 40
+            ),
             array(
                 'path' => 'settings',
                 'url' => 'account/',
@@ -1767,7 +1772,7 @@ function searchform() {
     require_once('pieforms/pieform.php');
     return pieform(array(
         'name'                => 'searchform',
-        'action'              => get_config('wwwroot') . 'search.php',
+        'action'              => get_config('wwwroot') . 'user/find.php',
         'renderer'            => 'oneline',
         'autofocus'           => false,
         'validate'            => false,

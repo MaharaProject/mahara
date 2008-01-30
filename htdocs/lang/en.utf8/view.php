@@ -180,7 +180,6 @@ $string['blockinstanceconfiguredsuccessfully'] = 'Block configured successfully'
 $string['addnewblockhere'] = 'Add new block here';
 $string['add'] = 'Add';
 $string['addcolumn'] = 'Add Column';
-$string['remove'] = 'Remove';
 $string['removecolumn'] = 'Remove this column';
 $string['moveblockleft'] = 'Move this block left';
 $string['moveblockdown'] = 'Move this block down';

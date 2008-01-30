@@ -65,3 +65,8 @@
     <a href="{$WWWROOT}?logout">{str tag="logout"}</a>
     | <a href="{$WWWROOT}account/">{str tag="settings"}</a>
     </div>
+    {if $data.realuser}
+    <div>
+    <a href="{$WWWROOT}admin/users/changeuser.php?restore=1">{str tag=becomeadminagain section=admin args=$data.realuser}</a>
+    </div>
+    {/if}

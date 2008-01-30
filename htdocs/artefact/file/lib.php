@@ -773,7 +773,10 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
     }
     
     public static function admin_public_folder_id() {
-        $name = get_string('adminpublicdirname', 'admin');
+        // There is one public files directory and many admins, so the
+        // name of the directory uses the site language rather than
+        // the language of the admin who first creates it.
+        $name = get_string_from_language(get_config('lang'), 'adminpublicdirname', 'admin');
         $folderid = get_field_sql('
            SELECT
              a.id
@@ -786,7 +789,8 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
         if (!$folderid) {
             global $USER;
             if (get_field('usr', 'admin', 'id', $USER->id)) {
-                $description = get_string('adminpublicdirdescription', 'admin');
+                $description = get_string_from_language(get_config('lang'), 
+                                                        'adminpublicdirdescription', 'admin');
                 $data = (object) array('title' => $name,
                                        'description' => $description,
                                        'owner' => $USER->id,
@@ -799,6 +803,32 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
             }
         }
         return $folderid;
+    }
+
+    public static function change_public_folder_name($oldlang, $newlang) {
+        $oldname = get_string_from_language($oldlang, 'adminpublicdirname', 'admin');
+        $folderid = get_field_sql('
+           SELECT
+             a.id
+           FROM {artefact} a
+             INNER JOIN {artefact_file_files} f ON a.id = f.artefact
+           WHERE a.title = ?
+             AND a.artefacttype = ?
+             AND f.adminfiles = 1
+             AND a.parent IS NULL', array($oldname, 'folder'));
+
+        if (!$folderid) {
+            return;
+        }
+
+        $name = get_string_from_language($newlang, 'adminpublicdirname', 'admin');
+        $description = get_string_from_language($newlang, 'adminpublicdirdescription', 'admin');
+        if (!empty($name)) {
+            $artefact = artefact_instance_from_id($folderid);
+            $artefact->set('title', $name);
+            $artefact->set('description', $description);
+            $artefact->commit();
+        }
     }
 
     public static function get_folder_by_name($name, $parentfolderid=null, $userid=null) {
@@ -841,6 +871,24 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
             '_default' => $wwwroot . 'artefact/file/?folder=' . $id,
         );
     }
+
+    public static function change_language($userid, $oldlang, $newlang) {
+        $oldname = get_string_from_language($oldlang, 'feedbackattachdirname', 'view');
+        $artefact = ArtefactTypeFolder::get_folder_by_name($oldname, null, $userid);
+        if (empty($artefact)) {
+            return;
+        }
+
+        $name = get_string_from_language($newlang, 'feedbackattachdirname', 'view');
+        $description = get_string_from_language($newlang, 'feedbackattachdirdesc', 'view');
+        if (!empty($name)) {
+            $artefact = artefact_instance_from_id($artefact->id);
+            $artefact->set('title', $name);
+            $artefact->set('description', $description);
+            $artefact->commit();
+        }
+    }
+
 }
 
 class ArtefactTypeImage extends ArtefactTypeFile {
