@@ -222,6 +222,10 @@ class Pieform {/*{{{*/
             $this->data['successcallback'] = $this->name . '_submit';
         }
 
+        if (!$this->data['replycallback']) {
+            $this->data['replycallback'] = $this->name . '_reply';
+        }
+
         $this->data['configdirs'] = array_map(
             create_function('$a', 'return substr($a, -1) == "/" ? substr($a, 0, -1) : $a;'),
             (array) $this->data['configdirs']);
@@ -312,10 +316,6 @@ class Pieform {/*{{{*/
             else {
                 // Now we know what type the element is, we can load the plugin for it
                 $this->include_plugin('element',  $element['type']);
-                //if ($element['type'] == 'textarea') {
-                //    log_debug('finished including textarea');
-                //    log_debug($_PIEFORM_TEXTAREAS);
-                //}
 
                 // All elements should have at least the title key set
                 if (!isset($element['title'])) {
@@ -430,7 +430,7 @@ class Pieform {/*{{{*/
                     call_user_func_array($function, array($this, $values));
                     if ($this->data['dieaftersubmit']) {
                         if ($this->data['jsform']) {
-                            $message = 'Your ' . $this->name . '_submit function should use $form->json_reply to send a response';
+                            $message = 'Your ' . $this->name . '_submit function should use $form->reply to send a response, which should redirect or exit when it is done. Perhaps you want to make your reply callback do this?';
                         }
                         else {
                             $message = 'Your ' . $this->name . '_submit function should redirect or exit when it is done';
@@ -765,6 +765,20 @@ class Pieform {/*{{{*/
 
         throw new PieformException('Element "' . $name . '" cannot be found');
     }/*}}}*/
+
+    /**
+     * Sends a message back to a form
+     */
+    public function reply($returncode, $message) {
+        if ($this->submitted_by_js()) {
+            $this->json_reply($returncode, $message);
+        }
+
+        $function = $this->get_property('replycallback');
+        if (function_exists($function)) {
+            call_user_func_array($function, array($returncode, $message));
+        }
+    }
 
     /**
      * Sends a message back to a jsform.
@@ -1310,6 +1324,10 @@ EOF;
             // Required, unless a success function is provided for each submit
             // button in the form
             'successcallback' => '',
+
+            // The PHP callback called to handle replying to the form after 
+            // either a success or fail. Optional
+            'replycallback' => '',
 
             // The PHP callback called if there is any validation error. Optional
             'errorcallback' => '',
