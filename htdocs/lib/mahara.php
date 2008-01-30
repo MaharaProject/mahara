@@ -1094,6 +1094,7 @@ function pieform_configure() {
         'requiredmarker' => true,
         'elementclasses' => true,
         'jsdirectory'    => get_config('wwwroot') . 'lib/pieforms/static/core/',
+        'replycallback'  => 'pieform_reply',
         'jserrorcallback'       => 'formError',
         'globaljserrorcallback' => 'formGlobalError',
         'jssuccesscallback'     => 'formSuccess',
@@ -1130,6 +1131,23 @@ function pieform_validate(Pieform $form, $values) {
             throw new UserException(get_string('accountsuspended', 'mahara', $record->suspendedctime, $record->suspendedreason));
         }
     }
+}
+
+function pieform_reply($code, $data) {
+    global $SESSION;
+    if (isset($data['message'])) {
+        if ($code == PIEFORM_ERR) {
+            $SESSION->add_error_msg($data['message']);
+        }
+        else {
+            $SESSION->add_ok_msg($data['message']);
+        }
+    }
+    if (isset($data['goto'])) {
+        redirect($data['goto']);
+    }
+    // NOT explicitly exiting here. Pieforms will throw an exception which will 
+    // force the user to fix their form
 }
 
 function pieform_element_calendar_configure($element) {
