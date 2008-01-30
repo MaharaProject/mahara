@@ -2,7 +2,9 @@
 
 {include file="columnfullstart.tpl"}
 	
-			<h2>{str section=admin tag=editsitecontent}</h2>
+			<h2>{str tag=editsitepages section=admin}</h2>
+
+            <p>{str tag=editsitepagespagedescription section=admin}</p>
 	
 			{$pageeditform}
 

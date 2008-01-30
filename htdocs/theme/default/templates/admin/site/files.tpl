@@ -3,6 +3,7 @@
 
 {include file="columnleftstart.tpl"}
 			<h2>{str section="admin" tag="adminfiles"}</h2>
+            <p>{str tag="adminfilespagedescription" section="admin" args=$descriptionstrargs}</p>
 			<div id="myfiles">
 				<div id="uploader"></div>
 			<table id="filelist" class="hidden tablerenderer">
@@ -11,7 +12,7 @@
 					<th>{str tag=Name section=artefact.file}</th>
 					<th>{str tag=Description section=artefact.file}</th>
 					<th>{str tag=Size section=artefact.file}</th>
-					<th>{str tag=date}</th>
+					<th>{str tag=Date section=artefact.file}</th>
 					<th></th>
 				</tr></thead>
 				<tbody><tr><th></th></tr></tbody>
