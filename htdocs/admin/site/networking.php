@@ -59,14 +59,10 @@ $networkingform = pieform(
         'name'     => 'networkingform',
         'jsform'   => true,
         'elements' => array(
-            'whatis' => array(
-                'type'         => 'html',
-                'title'        => get_string('whatisnetworking','admin'),
-                'value'        => get_string('whatnetworkingis','admin')
-            ),
             'wwwroot' => array(
                 'type'         => 'html',
                 'title'        => get_string('wwwroot','admin'),
+                'description'  => get_string('wwwrootdescription', 'admin'),
                 'value'        => get_config('wwwroot')
             ),
             'pubkey' => array(
@@ -103,20 +99,24 @@ $networkingform = pieform(
 );
 
 function networkingform_fail(Pieform $form) {
-    $form->json_reply(PIEFORM_ERR, get_string('enablenetworkingfailed','admin'));
+    $form->reply(PIEFORM_ERR, array(
+        'message' => get_string('enablenetworkingfailed','admin'),
+        'goto'    => '/admin/site/networking.php',
+    ));
 }
 
 function networkingform_submit(Pieform $form, $values) {
-
     $reply = '';
 
     if (get_config('enablenetworking') != $values['enablenetworking']) {
         if (!set_config('enablenetworking', $values['enablenetworking'])) {
             networkingform_fail($form);
-        } else {
+        }
+        else {
             if (empty($values['enablenetworking'])) {
                 $reply .= get_string('networkingdisabled','admin');
-            } else {
+            }
+            else {
                 $reply .= get_string('networkingenabled','admin');
             }
         }
@@ -125,20 +125,25 @@ function networkingform_submit(Pieform $form, $values) {
     if (get_config('promiscuousmode') != $values['promiscuousmode']) {
         if (!set_config('promiscuousmode', $values['promiscuousmode'])) {
             networkingform_fail($form);
-        } else {
+        }
+        else {
             if (empty($values['promiscuousmode'])) {
                 $reply .= get_string('promiscuousmodedisabled','admin');
-            } else {
+            }
+            else {
                 $reply .= get_string('promiscuousmodeenabled','admin');
             }
         }
     }
 
-    $form->json_reply(PIEFORM_OK, ($reply == '') ? get_string('networkingunchanged','admin') : $reply);
+    $form->reply(PIEFORM_OK, array(
+        'message' => ($reply == '') ? get_string('networkingunchanged','admin') : $reply,
+        'goto'    => '/admin/site/networking.php',
+    ));
 }
 
 $smarty = smarty();
-$smarty->assign('NETWORKINGFORM',   $networkingform);
+$smarty->assign('networkingform', $networkingform);
+$smarty->display('admin/site/networking.tpl');
 
-$smarty->display('admin/networking.tpl');
 ?>
