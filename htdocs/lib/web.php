@@ -1342,13 +1342,13 @@ function admin_nav() {
         array(
             'path'   => 'configsite/sitepages',
             'url'    => 'admin/site/pages.php',
-            'title'  => get_string('sitepages', 'admin'),
+            'title'  => get_string('editsitepages', 'admin'),
             'weight' => 20
         ),
         array(
             'path'   => 'configsite/sitemenu',
             'url'    => 'admin/site/menu.php',
-            'title'  => get_string('sitemenu', 'admin'),
+            'title'  => get_string('linksandresourcesmenu', 'admin'),
             'weight' => 30,
         ),
         array(
