@@ -32,7 +32,7 @@ define('SECTION_PLUGINNAME', 'admin');
 define('SECTION_PAGE', 'sitemenu');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-define('TITLE', get_string('sitemenu', 'admin'));
+define('TITLE', get_string('linksandresourcesmenu', 'admin'));
 
 $strings = array('edit','delete','update','cancel','add','name','unknownerror');
 $adminstrings = array('confirmdeletemenuitem', 'deletefailed','deletingmenuitem','savingmenuitem',
@@ -276,6 +276,7 @@ $style = '<style type="text/css">.invisible{display:none;}</style>';
 $smarty = smarty(array(), array($style));
 $smarty->assign('INLINEJAVASCRIPT', $ijs);
 $smarty->assign('MENUS', $menulist);
+$smarty->assign('descriptionstrargs', array('<a href="' . get_config('wwwroot') . 'admin/site/files.php">', '</a>'));
 $smarty->display('admin/site/menu.tpl');
 
 ?>
