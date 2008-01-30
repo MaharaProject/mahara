@@ -874,4 +874,203 @@ function get_new_username($desired) {
     return $newname;
 }
 
+/**
+ * used by user/myfriends.php and user/find.php to get the data (including pieforms etc) for display
+ * @param $userlist the ids surrounded by round brackets and separated by commas
+ * @return array containing the users
+ */
+function get_users_data($userlist) {
+	global $USER;
+    $sql = 'SELECT u.id, 0 AS pending,
+                COALESCE((SELECT ap.value FROM {usr_account_preference} ap WHERE ap.usr = u.id AND ap.field = \'messages\'), \'allow\') AS messages,
+                COALESCE((SELECT ap.value FROM {usr_account_preference} ap WHERE ap.usr = u.id AND ap.field = \'friendscontrol\'), \'auth\') AS friendscontrol,
+                (SELECT 1 FROM {usr_friend} WHERE ((usr1 = ? AND usr2 = u.id) OR (usr2 = ? AND usr1 = u.id))) AS friend,
+                (SELECT 1 FROM {usr_friend_request} fr WHERE fr.requester = ? AND fr.owner = u.id) AS requestedfriendship,
+                (SELECT title FROM {artefact} WHERE artefacttype = \'introduction\' AND owner = u.id) AS introduction,
+                NULL AS reason
+                FROM {usr} u
+                WHERE u.id IN ' . $userlist . '
+            UNION
+            SELECT u.id, 1 AS pending,
+                COALESCE((SELECT ap.value FROM {usr_account_preference} ap WHERE ap.usr = u.id AND ap.field = \'messages\'), \'allow\') AS messages,
+                NULL AS friendscontrol,
+                NULL AS friend,
+                NULL AS requestedfriendship,
+                (SELECT title FROM {artefact} WHERE artefacttype = \'introduction\' AND owner = u.id) AS introduction,
+                reason
+                FROM {usr} u
+                JOIN {usr_friend_request} fr ON fr.requester = u.id
+                WHERE fr.owner = ?
+                AND u.id IN ' . $userlist;
+    $userid = $USER->get('id');
+    $data = get_records_sql_assoc($sql, array($userid, $userid, $userid, $userid));
+
+    foreach ($data as &$record) {
+        if (isset($record->introduction)) {
+            $record->introduction = format_introduction($record->introduction);
+        }
+
+        $record->messages = ($record->messages == 'allow' || $record->friend && $record->messages == 'friends' || $USER->get('admin')) ? 1 : 0;
+    }
+
+    if (!$data || !$views = get_views(array_keys($data), null, null)) {
+        $views = array();
+    }
+
+   $viewcount = array_map('count', $views);
+    // since php is so special and inconsistent, we can't use array_map for this because it breaks the top level indexes.
+    $cleanviews = array();
+    foreach ($views as $userindex => $viewarray) {
+        $cleanviews[$userindex] = array_slice($viewarray, 0, 5);
+
+        // Don't reveal any more about the view than necessary
+        foreach ($cleanviews as $userviews) {
+            foreach ($userviews as &$view) {
+               foreach (array_keys(get_object_vars($view)) as $key) {
+                    if ($key != 'id' && $key != 'title') {
+                        unset($view->$key);
+                    }
+                }
+            }
+        }
+
+    }
+
+    foreach ($data as $friend) {
+        if (isset($cleanviews[$friend->id])) {
+            $friend->views = $cleanviews[$friend->id];
+        }
+        if ($friend->pending) {
+            $friend->accept = pieform(array(
+                'name' => 'acceptfriend' . $friend->id,
+                'successcallback' => 'acceptfriend_submit',
+                'renderer' => 'div',
+                'autofocus' => 'false',
+                'elements' => array(
+                    'submit' => array(
+                        'type' => 'submit',
+                        'value' => get_string('approverequest', 'group')
+                    ),
+                    'id' => array(
+                        'type' => 'hidden',
+                        'value' => $friend->id
+                    )
+                )
+            ));
+        }
+        if (!$friend->friend && !$friend->pending && !$friend->requestedfriendship && $friend->friendscontrol == 'auto') {
+            $friend->makefriend = pieform(array(
+                'name' => 'makefriend' . $friend->id,
+                'successcallback' => 'makefriend_submit',
+                'renderer' => 'div',
+                'autofocus' => 'false',
+                'elements' => array(
+                    'submit' => array(
+                        'type' => 'submit',
+                        'value' => get_string('addtofriendslist', 'group')
+                    ),
+                    'id' => array(
+                        'type' => 'hidden',
+                        'value' => $friend->id
+                    )
+                )
+            ));
+        }
+    }
+    return $data;
+}
+
+function friends_control_sideblock() {
+    global $USER;
+    $form = array(
+        'name' => 'friendscontrol',
+        'plugintype'  => 'core',
+        'pluginname'  => 'account',
+        'autofocus'   => false,
+        'elements' => array(
+            'friendscontrol' => array(
+                'type' => 'radio',
+                'defaultvalue' => $USER->get_account_preference('friendscontrol'),
+                'separator' => HTML_BR,
+                'options' => array(
+                    'nobody' => get_string('friendsnobody', 'account'),
+                    'auth'   => get_string('friendsauth', 'account'),
+                    'auto'   => get_string('friendsauto', 'account')
+                ),
+                'rules' => array(
+                    'required' => true
+                ),
+            ),
+            'submit' => array(
+                'type' => 'submit',
+                'value' => get_string('save')
+            ),
+        )
+    );
+    // Make a sideblock to put the friendscontrol block in
+    return array(
+        'name' => 'friendscontrol',
+        'weight' => -5,
+        'data' => pieform($form)
+    );
+}
+
+function acceptfriend_submit(Pieform $form, $values) {
+    global $USER, $SESSION;
+
+    $user = get_record('usr', 'id', $values['id']);
+
+    // friend db record
+    $f = new StdClass;
+    $f->ctime = db_format_timestamp(time());
+    $f->usr1 = $user->id;
+    $f->usr2 = $USER->get('id');
+
+    // notification info
+    $n = new StdClass;
+    $n->url = get_config('wwwroot') . 'user/view.php?id=' . $USER->get('id');
+    $n->users = array($user->id);
+    $lang = get_user_language($user->id);
+    $displayname = display_name($USER, $user);
+    $n->message = get_string_from_language($lang, 'friendrequestacceptedmessage', 'group', $displayname, $displayname);
+    $n->subject = get_string_from_language($lang, 'friendrequestacceptedsubject', 'group');
+
+    db_begin();
+    delete_records('usr_friend_request', 'owner', $USER->get('id'), 'requester', $user->id);
+    insert_record('usr_friend', $f);
+
+    db_commit();
+    $SESSION->add_ok_msg(get_string('friendformacceptsuccess', 'group'));
+    redirect('/user/view.php?id=' . $values['id']);
+}
+
+function makefriend_submit(Pieform $form, $values) {
+    global $USER, $SESSION;
+    $user = get_record('usr', 'id', $values['id']);
+
+    $loggedinid = $USER->get('id');
+    $userid = $user->id;
+
+    // friend db record
+    $f = new StdClass;
+    $f->ctime = db_format_timestamp(time());
+
+    // notification info
+    $n = new StdClass;
+    $n->url = get_config('wwwroot') . 'user/view.php?id=' . $loggedinid;
+    $n->users = array($user->id);
+    $lang = get_user_language($user->id);
+    $displayname = display_name($USER, $user);
+
+    $f->usr1 = $values['id'];
+    $f->usr2 = $loggedinid;
+    insert_record('usr_friend', $f);
+    $n->subject = get_string_from_language($lang, 'addedtofriendslistsubject', 'group');
+    $n->message = get_string_from_language($lang, 'addedtofriendslistmessage', 'group', $displayname, $displayname);
+
+    activity_occurred('maharamessage', $n);
+    $SESSION->add_ok_msg(get_string('friendformaddsuccess', 'group', $displayname));
+    redirect('/iser/view.php?id=' . $values['id']);
+}
+
 ?>
