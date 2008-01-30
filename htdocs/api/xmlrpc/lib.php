@@ -440,11 +440,13 @@ function parse_payload($payload) {
     }
 }
 
-function get_peer($wwwroot) {
+function get_peer($wwwroot, $cache=true) {
 
     $wwwroot = (string)$wwwroot;
     static $peers = array();
-    if (isset($peers[$wwwroot])) return $peers[$wwwroot];
+    if ($cache) {
+        if (isset($peers[$wwwroot])) return $peers[$wwwroot];
+    }
 
     require_once(get_config('libroot') . 'peer.php');
     $peer = new Peer();

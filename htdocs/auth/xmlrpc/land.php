@@ -80,6 +80,14 @@ if (empty($instances)) {
     throw new ParameterException(get_string('errnoauthinstances','auth'). htmlentities($remotewwwroot, ENT_QUOTES, 'UTF-8'));
 }
 
+// If the user is already logged in as someone, log them out. That way, if 
+// XMLRPC authentication fails, the system isn't left looking stupid as it 
+// reports that the user couldn't log in while they actually are.
+if ($USER->is_logged_in()) {
+    $USER->logout();
+}
+$SESSION->set('messages', array());
+
 $rpcconfigured = false;
 
 $res = false;
@@ -92,10 +100,6 @@ foreach($instances as $instance) {
         } catch (AccessDeniedException $e) {
             continue;
             // we don't care - a future plugin might accept the user
-        }
-        catch (Exception $e) {
-            log_info($e);
-            continue;
         }
         if ($res == true) {
             break;
@@ -112,8 +116,8 @@ if ($res == true) {
 }
 
 if ($rpcconfigured === false) {
-    throw new UserNotFoundException(get_string('errnoxmlrcpinstances','auth').htmlentities($remotewwwroot, ENT_QUOTES, 'UTF-8'));
+    throw new XmlrpcUserNotFoundException(get_string('errnoxmlrcpinstances','auth').htmlentities($remotewwwroot, ENT_QUOTES, 'UTF-8'));
 } else {
-    throw new UserNotFoundException(get_string('errnoxmlrcpuser','auth'));
+    throw new XmlrpcUserNotFoundException(get_string('errnoxmlrpcuser','auth'));
 }
 ?>
