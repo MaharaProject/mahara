@@ -31,13 +31,13 @@
                 <div>
                     <ul>
                         <li>
-                            <a href="{$WWWROOT}user/denyrequest.php?id={$user->id}">
+                            <a href="{$WWWROOT}user/denyrequest.php?id={$user->id}&amp;returnto={$page}">
                                 {str tag='denyrequest' section='group'}
                             </a>
                         </li>
                         {if $user->messages}
                         <li>
-                            <a href="{$WWWROOT}user/sendmessage.php?id={$user->id}">
+                            <a href="{$WWWROOT}user/sendmessage.php?id={$user->id}&amp;returnto={$page}">
                                 {str tag='sendmessage' section='group'}
                             </a>
                         </li>
@@ -99,13 +99,13 @@
                 <ul>
                 {if $user->messages}
                     <li>
-                        <a href="{$WWWROOT}user/sendmessage.php?id={$user->id}">
+                        <a href="{$WWWROOT}user/sendmessage.php?id={$user->id}&amp;returnto={$page}">
                             {str tag='sendmessage' section='group'}
                         </a>
                     </li>
                 {/if}
                     <li>
-                        <a href="{$WWWROOT}user/removefriend.php?id={$user->id}">
+                        <a href="{$WWWROOT}user/removefriend.php?id={$user->id}&amp;returnto={$page}">
                             {str tag='removefromfriendslist' section='group'}
                         </a>
                     </li>
@@ -141,7 +141,7 @@
                     <ul>
                         {if $user->messages}
                         <li>
-                            <a href="{$WWWROOT}user/sendmessage.php?id={$user->id}">
+                            <a href="{$WWWROOT}user/sendmessage.php?id={$user->id}&amp;returnto={$page}">
                                 {str tag='sendmessage' section='group'}
                             </a>
                         </li>
@@ -162,7 +162,7 @@
             <th>
                 <div class="fr">
                     {if $user->friendscontrol == 'auth'}
-                    <a href="{$wwwroot}user/requestfriendship.php?id={$user->id}">
+                    <a href="{$WWWROOT}user/requestfriendship.php?id={$user->id}&amp;returnto={$page}">
                         {str tag='sendfriendrequest' section='group'}
                     </a>
                     {elseif $user->friendscontrol == 'auto'}
@@ -187,7 +187,7 @@
                     <ul>
                         {if $user->messages}
                         <li>
-                            <a href="{$WWWROOT}user/sendmessage.php?id={$user->id}">
+                            <a href="{$WWWROOT}user/sendmessage.php?id={$user->id}&amp;returnto={$page}">
                                 {str tag='sendmessage' section='group'}
                             </a>
                         </li>
