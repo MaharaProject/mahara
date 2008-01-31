@@ -165,7 +165,6 @@ function siteoptions_submit(Pieform $form, $values) {
     $fields = array('sitename','lang','theme','pathtofile', 'pathtoclam',
                     'defaultaccountlifetime', 'defaultaccountinactiveexpire', 'defaultaccountinactivewarn', 
                     'allowpublicviews', 'searchplugin');
-                    'allowpublicviews','artefactviewinactivitytime', 'searchplugin');
     $oldlanguage = get_config('lang');
     foreach ($fields as $field) {
         if (!set_config($field, $values[$field])) {
