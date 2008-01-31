@@ -212,6 +212,10 @@ $string['sendmessage'] = 'Send message';
 $string['messagesent'] = 'Message sent!';
 $string['messagenotsent'] = 'Failed to send message';
 $string['newusermessage'] = 'New message from %s';
+$string['sendmessageto'] = 'Send message to %s';
+
+// deny friend request
+$string['denyfriendrequest'] = 'Deny Friend Request';
 
 // Group interactions
 $string['groupinteractions'] = 'Group Interactions';
