@@ -360,7 +360,8 @@ EOF;
     $smarty->assign_by_ref('JAVASCRIPT', $javascript_array);
     $smarty->assign_by_ref('HEADERS', $headers);
 
-    if ($help = has_page_help()) {
+    if ((!isset($extraconfig['pagehelp']) || $extraconfig['pagehelp'] !== false)
+        and $help = has_page_help()) {
         $smarty->assign('PAGEHELPNAME', $help[0]);
         $smarty->assign('PAGEHELPICON', $help[1]);
     }

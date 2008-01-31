@@ -815,7 +815,7 @@ function auth_draw_login_page($message=null, Pieform $form=null) {
     if ($message) {
         $SESSION->add_info_msg($message);
     }
-    $smarty = smarty();
+    $smarty = smarty(array(), array(), array(), array('pagehelp' => false));
     $smarty->assign('login_form', $loginform);
     $smarty->assign('loginmessage', get_string('loginto', 'mahara', get_config('sitename')));
     $smarty->display('login.tpl');
