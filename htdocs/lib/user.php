@@ -834,7 +834,17 @@ function send_user_message($to, $message, $from=null) {
         throw new AccessDeniedException('Cannot send messages between ' . display_name($from) . ' and ' . display_name($to));
     }
 }
-
+/**
+ * can a user send a message to another?
+ *
+ * @param object from the user to send the message
+ * @param int to the user to receive the message
+ * @return boolean whether userfrom is allowed to send messages to userto
+ */
+function can_send_message($from, $to) {
+    $messagepref = get_account_preference($to, 'messages');
+    return (is_friend($from->id, $to) && $messagepref == 'friends') || $messagepref == 'allow' || $from->get('admin');
+}
 
 function load_user_institutions($userid) {
     if (empty($userid)) {
