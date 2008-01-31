@@ -43,9 +43,9 @@ $data = array();
 if ($filter == 'current') {
     $count = count_records_select('usr_friend', 'usr1 = ? OR usr2 = ?', array($userid, $userid));
     $data = get_column_sql(
-        'SELECT usr1 AS id FROM {usr_friend} WHERE usr1 = ?
-        UNION SELECT usr2 AS id FROM {usr_friend} WHERE usr2 = ?
-        ORDER BY id
+        'SELECT usr1 AS id FROM {usr_friend} JOIN {usr} u ON u.id = usr1 WHERE usr1 = ?
+        UNION SELECT usr2 AS id FROM {usr_friend} JOIN {usr} u ON u.id = usr2 WHERE usr2 = ?
+        ORDER BY firstname, lastname, u.id
         LIMIT ?
         OFFSET ?', array($userid, $userid, $limit, $offset)
     );
@@ -56,8 +56,8 @@ if ($filter == 'current') {
 else if ($filter == 'pending') {
     $count = count_records('usr_friend_request', 'owner', array($userid));
     $data = get_column_sql(
-        'SELECT requester FROM {usr_friend_request} WHERE owner = ?
-        ORDER BY requester
+        'SELECT requester FROM {usr_friend_request} JOIN {usr} ON requester = id WHERE owner = ?
+        ORDER BY firstname, lastname, id
         LIMIT ?
         OFFSET ?', array($userid, $limit, $offset)
     );
@@ -67,12 +67,13 @@ else {
     $count = count_records_select('usr_friend_request', 'owner = ?', array($userid))
         + count_records_select('usr_friend', 'usr1 = ? OR usr2 = ?', array($userid, $userid));
     $data = get_column_sql(
-        'SELECT id FROM (
+        'SELECT f.id FROM (
             SELECT requester AS id, \'1\' AS status FROM {usr_friend_request} WHERE owner = ?
             UNION SELECT usr2 AS id, \'2\' AS status FROM {usr_friend} WHERE usr1 = ?
             UNION SELECT usr1 AS id, \'2\' AS status FROM {usr_friend} WHERE usr2 = ?
-        ) friend
-        ORDER BY status DESC, id
+        ) f
+        JOIN {usr} u ON f.id = u.id
+        ORDER BY status DESC, firstname, lastname, u.id
         LIMIT ?
         OFFSET ?', array($userid, $userid, $userid, $limit, $offset)
     );
@@ -82,7 +83,7 @@ else {
 }
 
 if ($data) {
-    $userlist = '(' . join(',', $data) . ')';
+    $userlist = join(',', $data);
     $data = get_users_data($userlist);
 }
 
