@@ -44,6 +44,7 @@ class PluginSearchInternal extends PluginSearch {
      *                can contain:
      *             'group' => integer, // only users in this group
      *             'owner' => boolean  // include the group ownwer (only if group is set)
+     *             'exclude'=> int     // excludes a user
      * @return array  A data structure containing results looking like ...
      *         $results = array(
      *               count   => integer, // total number of results
@@ -122,6 +123,7 @@ class PluginSearchInternal extends PluginSearch {
                         AND ( a.title ILIKE \'%\' || ? || \'%\')
                     )
                 )
+                ' . (isset($data['exclude']) ? 'AND u.id != ' . $data['exclude'] : '') . '
             ';
         $count = get_field_sql($sql, array($query_string, $query_string, $query_string, $query_string));
 
@@ -156,6 +158,7 @@ class PluginSearchInternal extends PluginSearch {
                             AND ( a.title ILIKE \'%\' || ? || \'%\')
                         )
                     )
+                    ' . (isset($data['exclude']) ? 'AND u.id != ' . $data['exclude'] : '') . '
                 ORDER BY u.firstname, u.lastname, u.id';
             $data = get_records_sql_array($sql,
             array($query_string, $query_string, $query_string, $query_string),
@@ -211,6 +214,7 @@ class PluginSearchInternal extends PluginSearch {
                         AND ( a.title LIKE \'%\' || ? || \'%\')
                     )
                 )
+                ' . (isset($data['exclude']) ? 'AND u.id != ' . $data['exclude'] : '') . '
             ';
         $count = get_field_sql($sql, array($query_string, $query_string, $query_string));
 
@@ -247,6 +251,7 @@ class PluginSearchInternal extends PluginSearch {
                             AND ( a.title LIKE \'%\' || ? || \'%\')
                         )
                     )
+                    ' . (isset($data['exclude']) ? 'AND u.id != ' . $data['exclude'] : '') . '
                 ORDER BY u.firstname, u.lastname, u.id';
             get_records_sql_array($sql, array($query_string, $query_string, $query_string),
             $offset,
