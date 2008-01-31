@@ -163,6 +163,7 @@ $string['requestedfriendlistmessagereason'] = '%s has requested that you add the
     ';
 
 $string['removefromfriendslist'] = 'Remove from friends';
+$string['removefromfriends'] = 'Remove %s from friends';
 $string['confirmremovefriend'] = 'Are you sure you want to remove this user from your friends list?';
 $string['removedfromfriendslistsubject'] = 'Removed from friends list';
 $string['removedfromfriendslistmessage'] = '%s has removed you from their friends list.';
@@ -214,8 +215,11 @@ $string['messagenotsent'] = 'Failed to send message';
 $string['newusermessage'] = 'New message from %s';
 $string['sendmessageto'] = 'Send message to %s';
 
-// deny friend request
 $string['denyfriendrequest'] = 'Deny Friend Request';
+$string['sendfriendshiprequest'] = 'Send %s a friendship request';
+$string['cantdenyrequest'] = 'That is not a valid friendship request';
+$string['cantrequestfrienship'] = 'You cannot request frienship from this user';
+$string['cantmessageuser'] = 'You cannot send this user a message';
 
 // Group interactions
 $string['groupinteractions'] = 'Group Interactions';
