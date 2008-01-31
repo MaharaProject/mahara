@@ -1090,7 +1090,7 @@ function makefriend_submit(Pieform $form, $values) {
 
     activity_occurred('maharamessage', $n);
     $SESSION->add_ok_msg(get_string('friendformaddsuccess', 'group', $displayname));
-    redirect('/iser/view.php?id=' . $values['id']);
+    redirect('/user/view.php?id=' . $values['id']);
 }
 
 ?>
