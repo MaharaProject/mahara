@@ -36,10 +36,10 @@ $query = param_variable('query', '');
 $limit  = param_integer('limit', 10);
 $offset = param_integer('offset', 0);
 
-$data = search_user($query, $limit, $offset);
+$data = search_user($query, $limit, $offset, array('exclude' => $USER->get('id')));
 
 if ($data['data']) {
-    $userlist = '(' . join(',', array_map(create_function('$u','return $u[\'id\'];'), $data['data'])) . ')';
+    $userlist = join(',', array_map(create_function('$u','return $u[\'id\'];'), $data['data']));
     $data['data'] = get_users_data($userlist);
 }
 
