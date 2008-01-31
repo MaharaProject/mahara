@@ -370,6 +370,13 @@ class ArtefactTypeProfile extends ArtefactType {
             '_default' => $wwwroot . 'artefact/internal/',
         );
     }
+
+    public function in_view_list() {
+        return false;
+    }
+    public function display_title($maxlen=null) {
+        return get_string($this->get('artefacttype'), 'artefact.internal');
+    }
 }
 
 class ArtefactTypeProfileField extends ArtefactTypeProfile {
@@ -449,7 +456,11 @@ class ArtefactTypeEmail extends ArtefactTypeProfileField {
 }
 
 class ArtefactTypeStudentid extends ArtefactTypeProfileField {}
-class ArtefactTypeIntroduction extends ArtefactTypeProfileField {}
+class ArtefactTypeIntroduction extends ArtefactTypeProfileField {
+    public function in_view_list() {
+        return true;
+    }
+}
 class ArtefactTypeWebAddress extends ArtefactTypeProfileField {
 
     public function render_self($options) {
@@ -536,6 +547,10 @@ class ArtefactTypeProfileIcon extends ArtefactTypeProfileField {
         }
 
         return $url;
+    }
+
+    public function in_view_list() {
+        return true;
     }
 }
 

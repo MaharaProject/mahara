@@ -1689,10 +1689,14 @@ function display_size($size) {
  *
  * @param string $str String to shorten
  * @param int $maxlen The maximum length the new string should be
+ * @param bool $truncate if true, cut the string at the end rather than in the middle
  * @return string
  */
-function str_shorten($str, $maxlen) {
-    if (strlen($str) > ($maxlen - 3)) {
+function str_shorten($str, $maxlen, $truncate = false) {
+    if ($truncate && strlen($str) > $maxlen) {
+        return substr($str, 0, $maxlen-3) . '...';
+    }
+    if (strlen($str) > $maxlen) {
         return substr($str, 0, floor($maxlen / 2) - 1) . '...' . substr($str, -(floor($maxlen / 2) - 2));
     }
     return $str;

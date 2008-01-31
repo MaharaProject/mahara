@@ -498,6 +498,23 @@ abstract class ArtefactType {
         return $this->get('title');
     }
 
+    /**
+    * Should the artefact be linked to from the listing on my views?
+    */
+    public function in_view_list() {
+        return true;
+    }
+
+    /**
+    * Returns a short name for the artefact to be used in a list of artefacts in a view 
+    */
+    public function display_title($maxlen=null) {
+        if ($maxlen) {
+            return str_shorten($this->get('title'), $maxlen, true);
+        }
+        return $this->get('title');
+    }
+
     // ******************** HELPER FUNCTIONS ******************** //
 
     protected function get_artefact_type() {

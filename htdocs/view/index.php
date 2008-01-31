@@ -116,9 +116,14 @@ if ($viewdata) {
             $classname = generate_artefact_class_name($artefactrec->artefacttype);
             $artefactobj = new $classname(0, array('title' => $artefactrec->title));
             $artefactobj->set('dirty', false);
-            $artname = $artefactobj->get_name();
-            $data[$index[$artefactrec->view]]['artefacts'][] = array('id'    => $artefactrec->artefact,
-                                                                     'title' => $artname);
+            if (!$artefactobj->in_view_list()) {
+                continue;
+            }
+            $artname = $artefactobj->display_title(30);
+            if (strlen($artname)) {
+                $data[$index[$artefactrec->view]]['artefacts'][] = array('id'    => $artefactrec->artefact,
+                                                                         'title' => $artname);
+            }
         }
     }
     if ($accessgroups) {

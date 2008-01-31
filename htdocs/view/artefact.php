@@ -45,7 +45,11 @@ if (!artefact_in_view($artefactid, $viewid)) {
 require_once(get_config('docroot') . 'artefact/lib.php');
 $artefact = artefact_instance_from_id($artefactid);
 
-define('TITLE', $artefact->get('title') . ' ' . get_string('in', 'view') . ' ' . $view->get('title'));
+if (!$artefact->in_view_list()) {
+    throw new AccessDeniedException("Artefacts of this type are only viewable within a View");
+}
+
+define('TITLE', $artefact->display_title() . ' ' . get_string('in', 'view') . ' ' . $view->get('title'));
 
 // Render the artefact
 $options = array('viewid' => $viewid,
@@ -63,20 +67,20 @@ $parent = $artefact->get('parent');
 while ($parent !== null) {
     // This loop could get expensive when there are a lot of parents. But at least 
     // it works, unlike the old attempt
-    $artefactdata = get_record('artefact', 'id', $parent);
+    $parentobj = artefact_instance_from_id($parent);
     if (artefact_in_view($parent, $viewid)) {
         array_unshift($artefactpath, array(
             'url'   => get_config('wwwroot') . 'view/artefact.php?artefact=' . $parent . '&view=' . $viewid,
-            'title' => $artefactdata->title,
+            'title' => $parentobj->display_title(),
         ));
     }
 
-    $parent = $artefactdata->parent;
+    $parent = $parentobj->get('parent');
 }
 
 $artefactpath[] = array(
     'url' => '',
-    'title' => $artefact->get('title'),
+    'title' => $artefact->display_title(),
 );
 
 
