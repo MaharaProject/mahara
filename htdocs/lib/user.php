@@ -842,6 +842,9 @@ function send_user_message($to, $message, $from=null) {
  * @return boolean whether userfrom is allowed to send messages to userto
  */
 function can_send_message($from, $to) {
+    if ($from == $to) {
+        return false;
+    }
     $messagepref = get_account_preference($to, 'messages');
     return (is_friend($from->id, $to) && $messagepref == 'friends') || $messagepref == 'allow' || $from->get('admin');
 }
@@ -886,8 +889,8 @@ function get_new_username($desired) {
 
 /**
  * used by user/myfriends.php and user/find.php to get the data (including pieforms etc) for display
- * @param $userlist the ids surrounded by round brackets and separated by commas
- * @return array containing the users
+ * @param $userlist the ids separated by commas
+ * @return array containing the users in the order from $userlist
  */
 function get_users_data($userlist) {
 	global $USER;
@@ -899,7 +902,7 @@ function get_users_data($userlist) {
                 (SELECT title FROM {artefact} WHERE artefacttype = \'introduction\' AND owner = u.id) AS introduction,
                 NULL AS reason
                 FROM {usr} u
-                WHERE u.id IN ' . $userlist . '
+                WHERE u.id IN (' . $userlist . ')
             UNION
             SELECT u.id, 1 AS pending,
                 COALESCE((SELECT ap.value FROM {usr_account_preference} ap WHERE ap.usr = u.id AND ap.field = \'messages\'), \'allow\') AS messages,
@@ -911,7 +914,7 @@ function get_users_data($userlist) {
                 FROM {usr} u
                 JOIN {usr_friend_request} fr ON fr.requester = u.id
                 WHERE fr.owner = ?
-                AND u.id IN ' . $userlist;
+                AND u.id IN (' . $userlist . ')';
     $userid = $USER->get('id');
     $data = get_records_sql_assoc($sql, array($userid, $userid, $userid, $userid));
 
@@ -987,7 +990,14 @@ function get_users_data($userlist) {
             ));
         }
     }
-    return $data;
+    $order = explode(',', $userlist);
+    $ordereddata = array();
+    foreach ($order as $id) {
+        if (isset($data[$id])) {
+            $ordereddata[] = $data[$id];
+        }
+    }
+    return $ordereddata;
 }
 
 function friends_control_sideblock() {
