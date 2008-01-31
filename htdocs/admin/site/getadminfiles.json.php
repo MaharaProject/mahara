@@ -36,15 +36,8 @@ safe_require('artefact', 'file');
 
 $result = array();
 
-if ($adminfiles = ArtefactTypeFile::get_admin_files($public)) {
-    foreach ($adminfiles as $adminfile) {
-        $result['adminfiles'][] = array(
-            'name' => (!$public && $adminfile->parent ? get_string('public','admin').':' : '')
-                      . $adminfile->title,
-            'id' => $adminfile->id);
-    }
-}
-else {
+$result['adminfiles'] = ArtefactTypeFile::get_admin_files($public);
+if (empty($result['adminfiles'])) {
     $result['adminfiles'] = null;
 }
 

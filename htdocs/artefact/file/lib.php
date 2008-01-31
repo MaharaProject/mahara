@@ -579,20 +579,34 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
 
     public static function get_admin_files($public) {
         $pubfolder = ArtefactTypeFolder::admin_public_folder_id();
-        if ($public) {
-            $foldersql = ' a.parent = ' . $pubfolder;
-        }
-        else {
-            $foldersql = ' (a.parent = ' . $pubfolder . ' OR a.parent IS NULL) ';
-        }
-        return get_records_sql_array('
+        $artefacts = get_records_sql_assoc('
             SELECT
-                a.id, a.title, a.parent
+                a.id, a.title, a.parent, a.artefacttype
             FROM {artefact} a
                 INNER JOIN {artefact_file_files} f ON f.artefact = a.id
-            WHERE f.adminfiles = 1 
-                AND ' . $foldersql . "
-                AND a.artefacttype != 'folder'", null);
+            WHERE f.adminfiles = 1', array());
+
+        $files = array();
+        if (!empty($artefacts)) {
+            foreach ($artefacts as $a) {
+                if ($a->artefacttype != 'folder') {
+                    $title = $a->title;
+                    $parent = $a->parent;
+                    while (!empty($parent)) {
+                        if ($public && $parent == $pubfolder) {
+                            $files[] = array('name' => $title, 'id' => $a->id);
+                            continue 2;
+                        }
+                        $title = $artefacts[$parent]->title . '/' . $title;
+                        $parent = $artefacts[$parent]->parent;
+                    }
+                    if (!$public) {
+                        $files[] = array('name' => $title, 'id' => $a->id);
+                    }
+                }
+            }
+        }
+        return $files;
     }
 
     public function delete() {
