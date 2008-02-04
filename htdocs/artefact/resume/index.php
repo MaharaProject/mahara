@@ -240,13 +240,13 @@ var tableRenderers = {};
 function toggleCompositeForm(type) {
     var elemName = ''; 
     elemName = type + 'form';
-    if (hasElementClass(elemName, 'hiddenStructure')) {
-        removeElementClass(elemName, 'hiddenStructure');
+    if (hasElementClass(elemName, 'hidden')) {
+        removeElementClass(elemName, 'hidden');
         $('add' + type + 'button').innerHTML = '{$cancelstr}';
     }
     else {
         $('add' + type + 'button').innerHTML = '{$addstr}';
-        addElementClass(elemName, 'hiddenStructure'); 
+        addElementClass(elemName, 'hidden'); 
     }
 }
 

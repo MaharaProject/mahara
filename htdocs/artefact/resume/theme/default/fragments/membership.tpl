@@ -20,6 +20,6 @@
 {if $controls}
 <div>
     <button id="addmembershipbutton" onclick="toggleCompositeForm('membership');">{str tag='add'}</button>
-    <div id="membershipform" class="hiddenStructure">{$compositeforms.membership}</div>
+    <div id="membershipform" class="hidden">{$compositeforms.membership}</div>
 </div>
 {/if}
