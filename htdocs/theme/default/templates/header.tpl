@@ -29,7 +29,7 @@
     </head>
     <body>
 	<div id="container">
-        <div id="loading_box" style="display: none;"></div>
+        <div id="loading_box" class="hidden"></div>
         <div id="topwrapper">
 {if $LOGGEDIN}
             <div id="globalTabs">
@@ -49,18 +49,13 @@
             </div>
 {/if}
             <div id="header">
-                <div class="fr"><img src="{theme_path location='images/header_corner_topright.gif'}" border="0" alt=""></div>		
+                <div class="fr"><img src="{theme_path location='images/header_corner_topright.gif'}" border="0" alt=""></div>
 
                 <table cellspacing="0" class="searchbox fr">
 {if !$nosearch && $LOGGEDIN}
                     <tr>
                         <td>{$searchform}</td>
                     </tr>
-                    {*
-                    <tr>
-                        <td class="advancedsearch"><a href="{$WWWROOT}search.php">{str tag=advancedsearch}</a></td>
-                    </tr>
-                    *}
 {/if}
 {if defined('MENUITEM') && MENUITEM == '' && !$LOGGEDIN && (count($LANGUAGES) > 1)}
 <tr class="headerlanguage">
@@ -68,9 +63,9 @@
     <form method="post">
       <label>{str tag=language}: </label>
       <select name="lang">
-        <option value="default" selected>{$sitedefaultlang}</option>
+        <option value="default" selected="selected">{$sitedefaultlang}</option>
 {foreach from=$LANGUAGES key=k item=i}
-        <option value="{$k}">{$i}</option>
+        <option value="{$k|escape}">{$i|escape}</option>
 {/foreach}
       </select>
       <input type="submit" class="submit" name="changelang" value="{str tag=change}" />
@@ -86,7 +81,7 @@
 
                 
                 <div id="logo"><a href="{$WWWROOT}"><img src="{theme_path location='images/logo_mahara.gif'}" border="0" alt=""></a></div>
-                <h1 class="hiddenStructure"><a href="{$WWWROOT}">{$heading|default:"Mahara"|escape}</a></h1>
+                <h1 class="hidden"><a href="{$WWWROOT}">{$heading|default:"Mahara"|escape}</a></h1>
             </div>
         </div>
         <div id="mainwrapper">
