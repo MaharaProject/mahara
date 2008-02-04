@@ -19,6 +19,6 @@
 {if $controls}
 <div>
     <button id="addcertificationbutton" onclick="toggleCompositeForm('certification');">{str tag='add'}</button>
-    <div id="certificationform" class="hiddenStructure">{$compositeforms.certification}</div>
+    <div id="certificationform" class="hidden">{$compositeforms.certification}</div>
 </div>
 {/if}
