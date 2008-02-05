@@ -64,7 +64,7 @@ $form = pieform(array(
         ),
         'submit' => array(
             'type' => 'submitcancel',
-            'value' => array(get_string('yes'), get_string('no')),
+            'value' => array(get_string('invite', 'group'), get_string('cancel')),
             'goto' => get_config('wwwroot') . 'user/view.php?id=' . $userid,
         )
     ),
@@ -91,6 +91,7 @@ function invitetogroup_submit(Pieform $form, $values) {
               'message' => get_string_from_language($lang, 'invitetogroupmessage', 'group', display_name($USER, $user), $group->name),
               'url'     => get_config('wwwroot') 
               . 'group/view.php?id=' . $group->id));
+    $SESSION->add_ok_msg(get_string('userinvited', 'group'));
     redirect('/user/view.php?id=' . $user->id);
 }
 ?>
