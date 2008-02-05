@@ -30,54 +30,6 @@ require_once('pieforms/pieform.php');
 
 $userid = param_integer('id','');
 $loggedinid = $USER->get('id');
-$inlinejs = <<<EOF
-
-    function messageform_success(formname, data) {
-        swapDOM(formname, P(null, data.message));
-        return true;
-    }
-
-
-    function usercontrol_success(formname, data) {
-        
-        if (formname != 'friend') {
-            var dd = $(formname).elements['group'];
-            if (dd.nodeName == 'INPUT') {
-                $(formname).style.display = 'none';
-                return true;
-            }
-            if (dd.nodeName == 'SELECT') {
-                if (dd.options.length == 1) {
-                    $(formname).style.display = 'none';
-                    return true;
-                }
-                else {
-                    removeElement(dd.options[dd.selectedIndex]);
-                    if (dd.length > 0) {
-                        return true;
-                    }
-                }
-            }
-        }
-
-        swapDOM(formname, P(null, data.message));
-        return true;
-    }
-
-    function friendship_accept_reject(formname, data) {
-        var oldcount = parseInt($('pendingfriendscount').innerHTML);
-        var newcount = oldcount - 1;
-        var messagenode = $('pendingfriendsmessage');
-        if (newcount == 1) { // jump through hoops to change between plural and singular
-            messagenode.innerHTML = get_string('pendingfriend');
-        }
-        else {
-            messagenode.innerHTML = get_string('pendingfriends');
-        }
-        $('pendingfriendscount').innerHTML = newcount;
-        usercontrol_success(formname, data);
-    }
-EOF;
 
 // Get the user's details
 
@@ -136,12 +88,56 @@ if (isset($userfields['country'])) {
     $userfields['country'] = get_string('country.' . $userfields['country']);
 }
 
+if (isset($userfields['firstname'])) {
+    unset($userfields['firstname']);
+}
+
+if (isset($userfields['lastname'])) {
+    unset($userfields['lastname']);
+}
+
+if (isset($userfields['introduction'])) {
+    $introduction = $userfields['introduction'];
+    unset($userfields['introduction']);
+}
+
 // Get viewable views
 $views = array();
 if ($allviews = get_records_array('view', 'owner', $userid)) {
     foreach ($allviews as $view) {
         if (can_view_view($view->id)) {
-            $views[$view->id] = $view->title;
+            $views[$view->id] = $view;
+            $view->artefacts = array();
+            $view->description = format_description($view->description);
+        }
+    }
+}
+
+if ($views) {
+    $viewidlist = implode(', ', array_map(create_function('$a', 'return $a->id;'), $views));
+    $artefacts = get_records_sql_array('SELECT va.view, va.artefact, a.title, a.artefacttype, t.plugin
+        FROM {view_artefact} va
+        INNER JOIN {artefact} a ON va.artefact = a.id
+        INNER JOIN {artefact_installed_type} t ON a.artefacttype = t.name
+        WHERE va.view IN (' . $viewidlist . ')
+        GROUP BY 1, 2, 3, 4, 5
+        ORDER BY a.title, va.artefact', '');
+    if ($artefacts) {
+        foreach ($artefacts as $artefactrec) {
+            safe_require('artefact', $artefactrec->plugin);
+            // Perhaps I shouldn't have to construct the entire
+            // artefact object to render the name properly.
+            $classname = generate_artefact_class_name($artefactrec->artefacttype);
+            $artefactobj = new $classname(0, array('title' => $artefactrec->title));
+            $artefactobj->set('dirty', false);
+            if (!$artefactobj->in_view_list()) {
+                continue;
+            }
+            $artname = $artefactobj->display_title(30);
+            if (strlen($artname)) {
+                $views[$artefactrec->view]->artefacts[] = array('id'    => $artefactrec->artefact,
+                                                                'title' => $artname);
+            }
         }
     }
 }
@@ -149,6 +145,35 @@ if ($allviews = get_records_array('view', 'owner', $userid)) {
 // Group stuff
 if (!$userassocgroups = get_associated_groups($userid)) {
     $userassocgroups = array();
+}
+
+foreach ($userassocgroups as $group) {
+    $group->description = format_description($group->description);
+}
+
+if (is_postgres()) {
+    $random = 'RANDOM()';
+}
+else if (is_mysql()) {
+    $random = 'RAND()';
+}
+$records = get_records_select_array('usr_friend', 'usr1 = ? OR usr2 = ?', array($userid, $userid), $random, 'usr1, usr2', 0, 16);
+$numberoffriends = count_records_select('usr_friend', 'usr1 = ? OR usr2 = ?', array($userid, $userid));
+$friendsmessage = get_string('numberoffriends', 'group', $records ? count($records) : 0, $numberoffriends);
+// get the friends into a 4x4 array
+$friends = array();
+for ($i = 0; $i < 4; $i++) {
+    $friends[$i] = array();
+    for($j = 4 * $i; $j < ($i + 1 ) * 4; $j++) {
+        if (isset($records[$j])) {
+            if ($records[$j]->usr1 == $userid) {
+                $friends[$i][] = $records[$j]->usr2;
+            }
+            else {
+                $friends[$i][] = $records[$j]->usr1;
+            }
+        }
+    }
 }
 
 $smarty = smarty();
@@ -168,12 +193,12 @@ if ($loggedinid != $userid) {
             $default = $default[0];
             $inviteform = pieform(array(
                 'name'              => 'invite',
-                'jsform'            => true,
-                'jssuccesscallback' => 'usercontrol_success',
+                'successcallback'   => 'invite_submit',
+                'renderer'          => 'div',
                 'elements'          => array(
                     'group' => array(
                         'type'                => 'select',
-                        'title'               => get_string('inviteusertojoingroup'),
+                        'title'               => get_string('inviteusertojoingroup', 'group'),
                         'collapseifoneoption' => false,
                         'options'             => $invitelist,
                         'defaultvalue'        => $default,
@@ -184,11 +209,11 @@ if ($loggedinid != $userid) {
                     ),
                     'submit' => array(
                         'type'  => 'submit',
-                        'value' => get_string('sendinvitation'),
+                        'value' => get_string('sendinvitation', 'group'),
                     ),
                 ),
             ));
-            $smarty->assign('INVITEFORM',$inviteform);
+            $smarty->assign('inviteform',$inviteform);
         }
     }
 
@@ -206,19 +231,15 @@ if ($loggedinid != $userid) {
             $default = $default[0];
             $addform = pieform(array(
                 'name'                => 'addmember',
-                'jsform'              => true,
-                'jssuccesscallback'   => 'add_success',
+                'successcallback'     => 'addmember_submit',
+                'renderer'            => 'div',
                 'elements'            => array(
                     'group' => array(
                         'type'    => 'select',
-                        'title'   => get_string('addusertogroup'),
+                        'title'   => get_string('addusertogroup', 'group'),
                         'collapseifoneoption' => false,
                         'options' => $controlledlist,
                         'defaultvalue' => $default,
-                    ),
-                    'id' => array(
-                        'type'  => 'hidden',
-                        'value' => $userid,
                     ),
                     'submit' => array(
                         'type'  => 'submit',
@@ -226,183 +247,98 @@ if ($loggedinid != $userid) {
                     ),
                 ),
            ));
-            $inlinejs .= <<<EOF
-    
-    function add_success(data) {
-        usercontrol_success('addmember');
-    }
-EOF;
-            $smarty->assign('ADDFORM',$addform);
+            $smarty->assign('addform',$addform);
         } 
     }
 
-    // adding this user to the currently logged in user's friends list
-    // or removing or approving or rejecting or whatever else we can do.
-    $friendform = array(
-        'name'     => 'friend',
-        'jsform'   => true,
-        'elements' => array(),
-        'jssuccesscallback' => 'usercontrol_success',
-        );
-    $friendsubmit = '';
-    $friendtype = '';
-    $friendformmessage = '';
-    // already a friend ... we can remove.
     if ($is_friend) {
-        $friendtype = 'remove';
-        $friendsubmit = get_string('removefromfriendslist');
-    } 
-    // if there's a friends request already
-    else if ($request = get_friend_request($userid, $loggedinid)) {
-        if ($request->owner == $userid) {
-            $friendformmessage = get_string('friendshipalreadyrequested', 'mahara', $name);
-        }
-        else {
-            $friendform['jssuccesscallback'] = 'friendship_accept_reject';
-            $friendform['elements']['requested'] = array(
-                'type' => 'html', 
-                'value' => get_string('friendshipalreadyrequestedowner', 'mahara', $name)
-            );
-            $friendform['elements']['rejectreason'] = array(
-                'type'  => 'textarea',
-                'title' => get_string('rejectfriendshipreason'),
-                'cols'  => 50,
-                'rows'  => 4,                                
-            );    
-            $friendsubmit = get_string('accept');
-            $friendform['elements']['rejectsubmit'] = array(
-                'type'  => 'submit',
-                'value' => get_string('reject'),
-            );
-            $friendtype = 'accept';
-        }
+        $relationship = 'existingfriend';
     }
-    // check the preference
-    else {
-        $friendscontrol = get_account_preference($userid, 'friendscontrol');
-        if ($friendscontrol == 'nobody') {
-            $friendtype = '';
-            $friendformmessage = get_string('userdoesntwantfriends');
-        } 
-        else if ($friendscontrol == 'auth') {
-            $friendform['elements']['reason'] = array(
-                'type'  => 'textarea',
-                'title' => get_string('requestfriendship'),
-                'cols'  => 50,
-                'rows'  => 4,
-            );
-            $friendsubmit = get_string('request');
-            $friendtype = 'request';
-        } else {
-            $friendsubmit = get_string('addtofriendslist');
-            $friendtype = 'add';
-        }
+    else if (record_exists('usr_friend_request', 'requester', $loggedinid, 'owner', $userid)) {
+        $relationship = 'requestedfriendship';
     }
-
-    $messagepref = get_account_preference($userid, 'messages');
-    if (($is_friend && $messagepref == 'friends') || $messagepref == 'allow' || $USER->get('admin')) {
-        $messageform = array(
-            'name' => 'messageform', 
-            'jsform'   => true,
-            'jssuccesscallback' => 'messageform_success',
+    else if ($record = get_record('usr_friend_request', 'requester', $userid, 'owner', $loggedinid)) {
+        $relationship = 'pending';
+        $requestform = pieform(array(
+            'name' =>'approve_deny_friendrequest',
+            'renderer' => 'oneline',
+            'autofocus' => false,
             'elements' => array(
-                'body' => array(
-                    'type'  => 'textarea',
-                    'title' => get_string('messagebody'),
-                    'cols'  => 50,
-                    'rows'  => 4, 
-                    'rules' => array(
-                        'required' => true,
-                    ),    
-                ),
-                'submit' => array(
+                'approve' => array(
                     'type' => 'submit',
-                    'value' => get_string('sendmessage'),
-                ),    
-            ),
-       );     
-    }   
-}
-// if we have a form to display, do it
-if (!empty($friendtype)) {
-    $friendform['elements']['type'] = array(
-        'type'  => 'hidden',
-        'value' => $friendtype,
-    );
-    $friendform['elements']['id'] = array(
-        'type'  => 'hidden',
-        'value' => $userid,
-    );
-    $friendform['elements']['submit'] = array(
-        'type'  => 'submit',
-        'value' => $friendsubmit,
-    );
-    // friend submit function lives in lib/user.php
-    $friendform = pieform($friendform);
-} 
-else {
-    $friendform = '';
-    if (!empty($friendformmessage)) {
-        $friendform = $friendformmessage;
+                    'value' => get_string('approverequest', 'group'),
+                ),
+                'deny' => array(
+                    'type' => 'submit',
+                    'value' => get_string('denyrequest', 'group')
+                )
+            )
+        ));
+        $smarty->assign('reason', $record->reason);
+        $smarty->assign('requestform', $requestform);
     }
+    else {
+        $relationship = 'none';
+        $friendscontrol = get_account_preference($userid, 'friendscontrol');
+        if ($friendscontrol == 'auto') {
+            $newfriendform = pieform(array(
+                'name' => 'addfriend',
+                'autofocus' => false,
+                'renderer' => 'div',
+                'elements' => array(
+                    'add' => array(
+                        'type' => 'submit',
+                        'value' => get_string('addtomyfriends', 'group')
+                    ),
+                    'id' => array(
+                        'type' => 'hidden',
+                        'value' => $userid
+                    )
+                )
+            ));
+            $smarty->assign('newfriendform', $newfriendform);
+        }
+        $smarty->assign('friendscontrol', $friendscontrol);
+    }
+    $smarty->assign('relationship', $relationship);
+
 }
 
-if (!empty($messageform)) {
-    $messageform = pieform($messageform);
+if (isset($introduction)) {
+    $smarty->assign('introduction', $introduction);
 }
-else {
-    $messageform = '';
-}    
-
-$smarty->assign('FRIENDFORM', $friendform);
-$smarty->assign('MESSAGEFORM', $messageform);
-$smarty->assign('INLINEJAVASCRIPT', $inlinejs);
+$smarty->assign('canmessage', can_send_message($userid, $loggedinid));
 $smarty->assign('NAME',$name);
 $smarty->assign('USERID', $userid);
 $smarty->assign('USERFIELDS',$userfields);
-if ($USER->get('admin')) {
-    $smarty->assign('USERGROUPS',$userassocgroups);
-}
+$smarty->assign('USERGROUPS',$userassocgroups);
 $smarty->assign('VIEWS',$views);
+$smarty->assign('friends', $friends);
+$smarty->assign('friendsmessage', $friendsmessage);
 $smarty->display('user/view.tpl');
 
-////////// Functions to process ajax callbacks //////////
-
+function format_description($description) {
+    $description = strip_tags($description);
+    // Note: the lengths are different to prevent chopping off just one or two characters in order to add an ellipsis
+    if (strlen($description) < 110) {
+        return $description;
+    }
+    return substr($description, 0, 100) . '...';
+}
 
 // Send an invitation to the user to join a group
 function invite_submit(Pieform $form, $values) {
-    global $USER;
-    
-    $data = new StdClass;
-    $data->group = $values['group'];
-    $data->member= $values['id'];
-    $data->ctime = db_format_timestamp(time());
-    $data->tutor = 0;
-    $ctitle = get_field('group', 'name', 'id', $data->group);
-    $adduser = get_record('usr', 'id', $data->member);
-    try {
-        insert_record('group_member_invite', $data);
-        $lang = get_user_language($values['id']);
-        activity_occurred('maharamessage', 
-            array('users'   => array($values['id']), 
-                  'subject' => get_string_from_language($lang, 'invitetogroupsubject'),
-                  'message' => get_string_from_language($lang, 'invitetogroupmessage', 'mahara', display_name($USER, $adduser), $ctitle),
-                  'url'     => get_config('wwwroot') 
-                  . 'group/view.php?id=' . $values['group']));
-    }
-    catch (SQLException $e) {
-        $form->json_reply(PIEFORM_ERR, get_string('inviteuserfailed'));
-    }
-    $form->json_reply(PIEFORM_OK, get_string('userinvited'));
+    global $userid;
+    redirect('/group/invite.php?id=' . $values['group'] . '&user=' . $userid);
 }
 
 // Add the user as a member of a group
 function addmember_submit(Pieform $form, $values) {
-    global $USER;
+    global $USER, $SESSION, $userid;
 
     $data = new StdClass;
     $data->group  = $values['group'];
-    $data->member = $values['id'];
+    $data->member = $userid;
     $data->ctime  = db_format_timestamp(time());
     $data->tutor  = 0;
     $ctitle = get_field('group', 'name', 'id', $data->group);
@@ -410,42 +346,18 @@ function addmember_submit(Pieform $form, $values) {
 
     try {
         insert_record('group_member', $data);
-        $lang = get_user_language($values['id']);
+        $lang = get_user_language($userid);
         activity_occurred('maharamessage', 
-            array('users'   => array($values['id']), 
-                  'subject' => get_string_from_language($lang, 'addedtogroupsubject'),
-                  'message' => get_string_from_language($lang, 'addedtogroupmessage', 'mahara', display_name($USER, $adduser), $ctitle),
-                  'url'     => get_config('wwwroot') 
-                  . 'group/view.php?id=' . $values['group']));
+            array('users'   => array($userid),
+                  'subject' => get_string_from_language($lang, 'addedtogroupsubject', 'group'),
+                  'message' => get_string_from_language($lang, 'addedtogroupmessage', 'group', display_name($USER, $adduser), $ctitle),
+                  'url'     => get_config('wwwroot') . 'group/view.php?id=' . $values['group']));
+        $SESSION->add_ok_msg(get_string('useradded', 'group'));
     }
     catch (SQLException $e) {
-        $form->json_reply(PIEFORM_ERR, get_string('adduserfailed'));
+        $SESSION->ad_ok_msg(get_string('adduserfailed', 'group'));
     }
-    $form->json_reply(PIEFORM_OK, get_string('useradded'));
+    redirect('/user/view.php?id=' . $userid);
 }
 
-function messageform_submit(Pieform $form, $values) {
-    global $USER, $user;
-
-    try {
-        send_user_message($user, $values['body']);
-        $form->json_reply(PIEFORM_OK, get_string('messagesent'));
-    }
-    catch (InvalidException $_e) {
-        $form->json_reply(PIEFORM_ERR, get_string('messagenotsent'));
-    }
-}    
-    
-function friend_validate(Pieform $form, $values) {
-    global $USER;
-    if ($USER->get('id') == $values['id']) {
-        $form->set_error('submit', get_string('cannotrequestfriendshipwithself'));
-    }
-    if (get_account_preference($values['id'], 'friendscontrol') == 'nobody') {
-        $form->set_error('submit', get_string('userdoesntwantfriends'));
-    }
-}
-
-
-// friend submit function lives in lib/user.php
 ?>

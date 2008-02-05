@@ -202,6 +202,7 @@ $string['friend'] = 'friend';
 $string['friends'] = 'friends';
 $string['user'] = 'user';
 $string['users'] = 'users';
+$string['Friends'] = 'Friends';
 
 $string['friendlistfailure'] = 'Failed to modify your friends list';
 $string['userdoesntwantfriends'] = 'This user doesn\'t want any new friends';
@@ -220,6 +221,12 @@ $string['sendfriendshiprequest'] = 'Send %s a friendship request';
 $string['cantdenyrequest'] = 'That is not a valid friendship request';
 $string['cantrequestfrienship'] = 'You cannot request frienship from this user';
 $string['cantmessageuser'] = 'You cannot send this user a message';
+$string['requestedfriendship'] = 'requested friendship';
+$string['notinanygroups'] = 'Not in any groups';
+$string['numberoffriends'] = 'Friends (%s of %s)';
+$string['addusertogroup'] = 'Add to ';
+$string['inviteusertojoingroup'] = 'Invite to ';
+$string['invitemembertogroup'] = 'Invite %s to join \'%s\'';
 
 // Group interactions
 $string['groupinteractions'] = 'Group Interactions';
