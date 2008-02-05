@@ -542,7 +542,7 @@ class ActivityTypeUsermessage extends ActivityType {
 
     public function get_subject($user) {
         if (empty($this->subject)) {
-            return get_string_from_language($user->lang, 'newusermessage', 'mahara', 
+            return get_string_from_language($user->lang, 'newusermessage', 'group',
                                             display_name($this->userfrom));
         }
         return $this->subject;
