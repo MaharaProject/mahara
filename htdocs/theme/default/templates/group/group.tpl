@@ -1,9 +1,7 @@
 <h3><a href="{$WWWROOT}group/view.php?id={$group->id|escape}">{$group->name|escape}</a></h3>
 <h6><a href="{$WWWROOT}user/view.php?id={$group->owner|escape}">{$group->owner|display_name|escape}</a></h6>
+{$group->description}
 <ul>
-{if $group->description}
-<li>{$group->description}</li>
-{/if}
 <li>{str tag="memberslist" section="group"}
 {if $group->member1}<a href="{$WWWROOT}user/view.php?id={$group->member1|escape}">{$group->member1|display_name|escape}</a>{/if}
 {if $group->member2}, <a href="{$WWWROOT}user/view.php?id={$group->member2|escape}">{$group->member2|display_name|escape}</a>{/if}
