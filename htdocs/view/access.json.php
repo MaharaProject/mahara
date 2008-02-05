@@ -40,7 +40,7 @@ $offset = param_integer('offset', 0);
 
 switch ($type) {
     case 'user':
-        $data = search_user($query, $limit, $offset);
+        $data = search_user($query, $limit, $offset, array('exclude' => $USER->get('id')));
         break;
     case 'group':
         $data = search_group($query, $limit, $offset);
