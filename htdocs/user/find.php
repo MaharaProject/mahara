@@ -81,11 +81,4 @@ function search_submit(Pieform $form, $values) {
     redirect('/user/find.php' . (isset($values['query']) ? '?query=' . urlencode($values['query']) : ''));
 }
 
-function friendscontrol_submit(Pieform $form, $values) {
-    global $USER, $SESSION;
-    $USER->set_account_preference('friendscontrol', $values['friendscontrol']);
-    $SESSION->add_ok_msg(get_string('updatedfriendcontrolsetting', 'group'));
-    redirect('/user/find.php');
-}
-
 ?>

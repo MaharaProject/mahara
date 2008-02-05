@@ -35,6 +35,7 @@ $string['friendsnobody'] = 'Nobody may add me as a friend';
 $string['friendsauth'] = 'New friends require my authorisation';
 $string['friendsauto'] = 'New friends are automatically authorised';
 $string['friendsdescr'] = 'Friends control';
+$string['updatedfriendcontrolsetting'] = 'Updated friends control';
 
 $string['wysiwygdescr'] = 'HTML editor';
 $string['on'] = 'On';

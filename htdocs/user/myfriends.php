@@ -129,13 +129,6 @@ function filter_submit(Pieform $form, $values) {
     redirect('/user/myfriends.php?filter=' . $values['filter']);
 }
 
-function friendscontrol_submit(Pieform $form, $values) {
-    global $USER, $SESSION;
-    $USER->set_account_preference('friendscontrol', $values['friendscontrol']);
-    $SESSION->add_ok_msg(get_string('updatedfriendcontrolsetting', 'group'));
-    redirect('/user/myfriends.php');
-}
-
 $smarty = smarty(array(), array(), array(), array('sideblocks' => array(friends_control_sideblock())));
 $smarty->assign('heading', TITLE);
 $smarty->assign('users', $data);

@@ -954,6 +954,13 @@ function friends_control_sideblock() {
     );
 }
 
+function friendscontrol_submit(Pieform $form, $values) {
+    global $USER, $SESSION;
+    $USER->set_account_preference('friendscontrol', $values['friendscontrol']);
+    $SESSION->add_ok_msg(get_string('updatedfriendcontrolsetting', 'account'));
+    redirect('/user/myfriends.php');
+}
+
 function acceptfriend_submit(Pieform $form, $values) {
     global $USER, $SESSION;
 
