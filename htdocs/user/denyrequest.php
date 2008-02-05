@@ -46,7 +46,7 @@ $form = pieform(array(
             'type'  => 'textarea',
             'title' => get_string('rejectfriendshipreason', 'group'),
             'cols'  => 50,
-            'rows'  => 4,       
+            'rows'  => 4,
         ),
         'submit' => array(
             'type' => 'submitcancel',
