@@ -52,7 +52,8 @@ $form = pieform(array(
         ),
         'submit' => array(
             'type' => 'submitcancel',
-            'value' => array(get_string('yes'), get_string('no'))
+            'value' => array(get_string('yes'), get_string('no')),
+            'goto' => get_config('wwwroot') . 'user/view.php?id=' . $id,
         )
     )
 ));
