@@ -26,6 +26,9 @@
 
             <div id="bottom-pane">
                 <div id="column-container">
+                <div id="blocksinstruction" class="center">
+                    {str tag='blocksintructionnoajax' section='view'}
+                </div>
                     {$columns}
                     <div class="cb">
                     </div>

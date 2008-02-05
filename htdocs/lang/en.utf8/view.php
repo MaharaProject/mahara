@@ -177,6 +177,9 @@ $string['err.removecolumn'] = 'Failed to delete column';
 $string['confirmdeleteblockinstance'] = 'Are you sure you wish to delete this block?';
 $string['blockinstanceconfiguredsuccessfully'] = 'Block configured successfully';
 
+$string['blocksintructionnoajax'] = 'Select a block and choose where to add it to your view. You can position a block using the arrow buttons in its titlebar';
+$string['blocksinstructionajax'] = 'Drag blocks here to add them to your view. You can drag blocks around your view to position them.';
+
 $string['addnewblockhere'] = 'Add new block here';
 $string['add'] = 'Add';
 $string['addcolumn'] = 'Add Column';

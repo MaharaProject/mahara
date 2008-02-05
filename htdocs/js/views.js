@@ -58,6 +58,8 @@ function ViewManager() {
             // Make the block types draggable
             self.makeBlockTypesDraggable();
 
+            // Change the intruction to be for ajax
+            self.ajaxInstructions();
 
             // Make the top pane a dropzone for cancelling adding block types
             if (!self.isIE6) {
@@ -632,6 +634,14 @@ function ViewManager() {
                 }
             });
         });
+    }
+
+    /**
+     * changes the intructions so they are for ajax
+     */
+
+    this.ajaxInstructions = function() {
+        $('blocksinstruction').innerHTML = get_string('blocksinstructionajax');
     }
 
     /**
