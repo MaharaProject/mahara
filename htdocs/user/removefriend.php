@@ -49,7 +49,7 @@ $form = pieform(array(
         ),
         'submit' => array(
             'type' => 'submitcancel',
-            'value' => array(get_string('yes'), get_string('no'))
+            'value' => array(get_string('removefriend', 'group'), get_string('cancel'))
         )
     )
 ));

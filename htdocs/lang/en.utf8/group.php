@@ -227,6 +227,8 @@ $string['numberoffriends'] = 'Friends (%s of %s)';
 $string['addusertogroup'] = 'Add to ';
 $string['inviteusertojoingroup'] = 'Invite to ';
 $string['invitemembertogroup'] = 'Invite %s to join \'%s\'';
+$string['removefriend'] = 'Remove friend';
+$string['denyfriendrequestlower'] = 'Deny friend request';
 
 // Group interactions
 $string['groupinteractions'] = 'Group Interactions';
