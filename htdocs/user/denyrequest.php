@@ -50,7 +50,8 @@ $form = pieform(array(
         ),
         'submit' => array(
             'type' => 'submitcancel',
-            'value' => array(get_string('denyfriendrequestlower', 'group'), get_string('cancel'))
+            'value' => array(get_string('denyfriendrequestlower', 'group'), get_string('cancel')),
+            'goto' => get_config('wwwroot') . 'user/view.php?id=' . $id,
         )
     )
 ));
