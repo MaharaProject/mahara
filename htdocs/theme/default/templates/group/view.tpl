@@ -10,7 +10,7 @@
                 <p>{str tag=$joinstr section='group'}</p>
                 {if $group->description} <p>{$group->description}</p> {/if}
                 {if $canleave} <p><a href="view.php?id={$group->id}&amp;joincontrol=leave">{str tag='leavegroup' section='group'}</a></p>
-                {elseif $canrequestjoin} <p id="joinrequest"><a href="" onclick="return joinRequestControl();">{str tag='requestjoingroup', section='group'}</a></p>
+                {elseif $canrequestjoin} <p id="joinrequest"><a href="" onclick="return joinRequestControl();">{str tag='requestjoingroup' section='group'}</a></p>
                 {elseif $canjoin} <p><a href="view.php?id={$group->id}&amp;joincontrol=join"">{str tag='joingroup' section='group'}</a></p>
                 {elseif $canacceptinvite} <p>{str tag='grouphaveinvite'} <a href="view.php?id={$group->id}&amp;joincontrol=acceptinvite">{str tag='acceptinvitegroup' section='group'}</a> | <a href="view.php?id={$group->id}&amp;joincontrol=declineinvite">{str tag='declineinvitegroup' section='group'}</a></p>{/if}
                 {if $member}
