@@ -73,7 +73,7 @@ else {
             UNION SELECT usr1 AS id, \'2\' AS status FROM {usr_friend} WHERE usr2 = ?
         ) f
         JOIN {usr} u ON f.id = u.id
-        ORDER BY status DESC, firstname, lastname, u.id
+        ORDER BY status, firstname, lastname, u.id
         LIMIT ?
         OFFSET ?', array($userid, $userid, $userid, $limit, $offset)
     );
