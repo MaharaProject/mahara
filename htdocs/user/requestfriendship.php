@@ -31,12 +31,11 @@ require_once('pieforms/pieform.php');
 
 $id = param_integer('id');
 
-if (is_friend($id, $USER->get('id')) || get_friend_request($id, $USER->get('id')) || get_account_preference($id, 'friendscontrol') != 'auth') {
+if (is_friend($id, $USER->get('id'))
+    || get_friend_request($id, $USER->get('id'))
+    || get_account_preference($id, 'friendscontrol') != 'auth'
+    || $id == $USER->get('id')) {
     throw new AccessDeniedException(get_string('cantrequestfriendship', 'group'));
-}
-
-if ($id = $USER->get('id')) {
-    throw new AccessDeniedException(get_string('cantrequestownfriendship', 'group'));
 }
 
 define('TITLE', get_string('sendfriendshiprequest', 'group', display_name($id)));
