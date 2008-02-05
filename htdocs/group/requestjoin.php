@@ -51,8 +51,10 @@ $form = pieform(array(
     'method' => 'post',
     'elements' => array(
         'reason' => array(
-            'type' => 'text',
+            'type' => 'textarea',
             'title' => get_string('reason'),
+            'cols'  => 50,
+            'rows'  => 4,
         ),
         'submit' => array(
             'type' => 'submitcancel',
