@@ -271,6 +271,10 @@ if ($loggedinid != $userid) {
                 'deny' => array(
                     'type' => 'submit',
                     'value' => get_string('denyrequest', 'group')
+                ),
+                'id' => array(
+                    'type' => 'hidden',
+                    'value' => $userid
                 )
             )
         ));
@@ -358,6 +362,15 @@ function addmember_submit(Pieform $form, $values) {
         $SESSION->ad_ok_msg(get_string('adduserfailed', 'group'));
     }
     redirect('/user/view.php?id=' . $userid);
+}
+
+function approve_deny_friendrequest_submit(Pieform $form, $values) {
+    if (isset($values['deny'])) {
+        redirect('/user/denyrequest.php?id=' . $values['id']);
+    }
+    else {
+        acceptfriend_submit($form, $values);
+    }
 }
 
 ?>
