@@ -43,7 +43,7 @@ $form = pieform(array(
     'name' => 'sendmessage',
     'autofocus' => false,
     'elements' => array(
-        'reason' => array(
+        'message' => array(
             'type'  => 'textarea',
             'title' => get_string('message'),
             'cols'  => 50,
@@ -51,7 +51,8 @@ $form = pieform(array(
         ),
         'submit' => array(
             'type' => 'submitcancel',
-            'value' => array(get_string('sendmessage', 'group'), get_string('cancel'))
+            'value' => array(get_string('sendmessage', 'group'), get_string('cancel')),
+            'goto' => get_config('wwwroot') . 'user/view.php?id=' . $id,
         )
     )
 ));
@@ -63,7 +64,7 @@ $smarty->display('user/denyrequest.tpl');
 
 function sendmessage_submit(Pieform $form, $values) {
     global $USER, $SESSION, $id;
-    send_user_message($USER, $id);
+    send_user_message($USER, $values['message']);
     $SESSION->add_ok_msg(get_string('messagesent', 'group'));
     switch (param_alpha('returnto', 'myfriends')) {
         case 'find':
