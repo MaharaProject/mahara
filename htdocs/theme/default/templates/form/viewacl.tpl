@@ -63,7 +63,7 @@ function renderAccessListItem(item) {
     var row = TABLE({'class': cssClass},
         TBODY(null, 
             TR(null,
-                TH(null, item.name + (item.tutoronly ? ' ' + '{{str tag=tutors}}' : '')),
+                TH(null, item.name + (item.tutoronly ? ' ' + '{{str tag=tutors section=view}}' : '')),
                 TD({'class': 'right'}, removeButton)
             ),
             TR(null,
