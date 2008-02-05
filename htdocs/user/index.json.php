@@ -136,7 +136,7 @@ if ($data) {
     foreach ($data as $d) {
         $d->name  = display_name($d);
         if (isset($d->introduction)) {
-            $d->introduction = format_introduction($d->introduction);
+            $d->introduction = format_text($d->introduction);
         }
         $d->messages = ($d->messages == 'allow' || is_friend($userid, $d->id) && $d->messages == 'friends' || $USER->get('admin')) ? 1 : 0;
     }

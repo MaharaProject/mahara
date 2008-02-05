@@ -1705,7 +1705,9 @@ function str_shorten($str, $maxlen, $truncate = false) {
     }
     return $str;
 }
-
+/**
+ * creates the profile sideblock
+ */
 function profile_sideblock() {
     global $USER;
     safe_require('notification', 'internal');
@@ -1742,6 +1744,45 @@ function profile_sideblock() {
          array(get_string('profile'), $USER->get('id'))
     );
     return $data;
+}
+
+/**
+ * strips the tags and reduces the length of some text
+ *
+ * @param string $string the text to format
+ * @param int $length the number of characters desired (default 100)
+ * @param int $extra the max size on top of the length (default 10)
+ * @param boolean $newlines whether to include text past the first newline (default true)
+ */
+function format_text($string, $length=100, $extra=10, $newlines=true) {
+    $more = false;
+    if (!$newlines) {
+        $nextbreak = strpos($string, '<p', 1);
+        if ($nextbreak !== false) {
+            $string = substr($string, 0, $nextbreak);
+            $more = true;
+        }
+        $nextbreak = strpos($string, '<br', 1);
+        if ($nextbreak !== false) {
+            $string = substr($string, 0, $nextbreak);
+            $more = true;
+        }
+    }
+    $string = strip_tags($string);
+    $string = html_entity_decode($string); // no things like &nbsp; only take up one character
+    // take the first $length chars, then up to the first space (max length $length + $extra chars)
+    if (strlen($string) > $length + $extra) {
+        $string = substr($string, 0, $length + $extra);
+        $nextspace = strpos($string, ' ', $length);
+        if ($nextspace !== false) {
+            $string = substr($string, 0, $nextspace);
+        }
+        $more = true;
+    }
+    if ($more) {
+        $string .= '...';
+    }
+    return hsc($string);
 }
 
 ?>

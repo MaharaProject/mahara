@@ -69,7 +69,7 @@ if ($data['data']) {
 
     foreach ($data['data'] as &$record) {
         if (isset($record['introduction'])) {
-            $record['introduction'] = format_introduction($record['introduction']);
+            $record['introduction'] = format_text($record['introduction']);
         }
 
         foreach ($otherdata as $userid => $otherrecord) {
