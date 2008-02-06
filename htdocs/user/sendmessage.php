@@ -65,7 +65,8 @@ $smarty->display('user/denyrequest.tpl');
 
 function sendmessage_submit(Pieform $form, $values) {
     global $USER, $SESSION, $id;
-    send_user_message($USER, $values['message']);
+    $user = get_record('usr', 'id', $id);
+    send_user_message($user, $values['message']);
     $SESSION->add_ok_msg(get_string('messagesent', 'group'));
     switch (param_alpha('returnto', 'myfriends')) {
         case 'find':
