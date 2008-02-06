@@ -366,7 +366,7 @@ function addmember_submit(Pieform $form, $values) {
 
 function approve_deny_friendrequest_submit(Pieform $form, $values) {
     if (isset($values['deny'])) {
-        redirect('/user/denyrequest.php?id=' . $values['id']);
+        redirect('/user/denyrequest.php?id=' . $values['id'] . '&returnto=view');
     }
     else {
         acceptfriend_submit($form, $values);

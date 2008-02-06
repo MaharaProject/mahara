@@ -33,6 +33,7 @@ require('searchlib.php');
 safe_require('search', 'internal');
 
 $id = param_integer('id');
+$returnto = param_alpha('returnto', 'myfriends');
 
 if (!record_exists('usr_friend_request', 'owner', $USER->get('id'), 'requester', $id)) {
     throw new AccessDeniedException(get_string('cantdenyrequest', 'group'));
@@ -51,7 +52,7 @@ $form = pieform(array(
         'submit' => array(
             'type' => 'submitcancel',
             'value' => array(get_string('denyfriendrequestlower', 'group'), get_string('cancel')),
-            'goto' => get_config('wwwroot') . 'user/view.php?id=' . $id,
+            'goto' => get_config('wwwroot') . ($returnto == 'find' ? 'user/find.php' : ($returnto == 'view' ? 'user/view.php?id=' . $id : 'user/myfriends.php')),
         )
     )
 ));

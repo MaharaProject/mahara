@@ -30,6 +30,7 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 
 $id = param_integer('id');
+$returnto = param_alpha('returnto', 'myfriends');
 
 if (is_friend($id, $USER->get('id'))
     || get_friend_request($id, $USER->get('id'))
@@ -53,7 +54,7 @@ $form = pieform(array(
         'submit' => array(
             'type' => 'submitcancel',
             'value' => array(get_string('requestfriendship', 'group'), get_string('cancel')),
-            'goto' => get_config('wwwroot') . 'user/view.php?id=' . $id,
+            'goto' => get_config('wwwroot') . ($returnto == 'find' ? 'user/find.php' : ($returnto == 'view' ? 'user/view.php?id=' . $id : 'user/myfriends.php')),
         )
     )
 ));
