@@ -1014,7 +1014,8 @@ function login_submit(Pieform $form, $values) {
                 }
                 if ($auth->authenticate_user_account($USER, $password)) {
                     $authenticated = true;
-                } else {
+                }
+                else {
                     continue;
                 }
 
@@ -1033,8 +1034,10 @@ function login_submit(Pieform $form, $values) {
                      empty($userdata->lastname) ||
                      empty($userdata->email) 
                     ) {
+                    // TODO: eventually get_user_info won't have to return all of this information
                     throw new AuthUnknownUserException("\"$username\" is not known");
-                } else {
+                }
+                else {
                     // We have the data - create the user
                     $USER->lastlogin = db_format_timestamp(time());
                     $USER->firstname = $userdata->firstname;
@@ -1070,6 +1073,10 @@ function login_submit(Pieform $form, $values) {
 
         }
         catch (AuthUnknownUserException $e) {
+            // We weren't able to authenticate the user for some reason that 
+            // probably isn't their fault (e.g. ldap extension not available 
+            // when using ldap authentication)
+            log_info($e->getMessage());
             $SESSION->add_error_msg(get_string('loginfailed'));
             return;
         }
