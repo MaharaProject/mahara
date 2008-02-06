@@ -30,7 +30,6 @@ defined('INTERNAL') || die();
 $string['groupname'] = 'Group Name';
 $string['creategroup'] = 'Create Group';
 $string['groupmemberrequests'] = 'Pending membership requests';
-$string['addgroup'] = 'Add new group';
 $string['sendinvitation'] = 'Send invite';
 $string['invitetogroupsubject'] = 'You were invited to join a group';
 $string['invitetogroupmessage'] = '%s has invited you to join a group, \'%s\'.  Click on the link below for more information.';
