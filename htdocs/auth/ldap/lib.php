@@ -85,7 +85,7 @@ class AuthLdap extends Auth {
         $username = $user->username;
 
         // check ldap functionality exists
-        if (! function_exists('ldap_bind')) {
+        if (!function_exists('ldap_bind')) {
             throw new AuthUnknownUserException('LDAP is not available in your PHP environment. Check that it is properly installed');
         }
 
