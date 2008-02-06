@@ -18,7 +18,7 @@
         {/if}
         {if $data.pendingfriends}
         <li>
-            <a href="{$WWWROOT}user/">
+            <a href="{$WWWROOT}user/myfriends.php?filter=pending">
                 <span id="pendingfriendscount">{$data.pendingfriends}</span>
                 <span id="pendingfriendsmessage">{$data.pendingfriendsmessage}</span>
             </a>

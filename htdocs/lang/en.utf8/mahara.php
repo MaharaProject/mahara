@@ -376,6 +376,8 @@ $string['emailname'] = 'Mahara System'; // robot!
 
 $string['config'] = 'Config';
 
+$string['sendmessage'] = 'Send message';
+
 $string['notinstallable'] = 'Not installable!';
 $string['installedplugins'] = 'Installed plugins';
 $string['notinstalledplugins'] = 'Not installed plugins';

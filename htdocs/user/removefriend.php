@@ -78,7 +78,7 @@ function removefriend_submit(Pieform $form, $values) {
 
     delete_records_select('usr_friend', '(usr1 = ? AND usr2 = ?) OR (usr2 = ? AND usr1 = ?)', 
                             array($id, $loggedinid, $id, $loggedinid));
-    $n->subject = get_string_from_language($lang, 'removedfromfriendslistsubject');
+    $n->subject = get_string_from_language($lang, 'removedfromfriendslistsubject', 'group');
     
     if (isset($values['reason']) && !empty($values['reason'])) {
         $n->message = get_string_from_language($lang, 'removedfromfriendslistmessage', 'group', $displayname) . $values['reason'];
@@ -86,7 +86,8 @@ function removefriend_submit(Pieform $form, $values) {
     else {
         $n->message = get_string_from_language($lang, 'removedfromfriendslistmessage', 'group', $displayname);
     }
-    
+    activity_occurred('maharamessage', $n);
+
     $SESSION->add_ok_msg(get_string('friendformremovesuccess', 'group', display_name($id)));
     switch (param_alpha('returnto', 'myfriends')) {
         case 'find':

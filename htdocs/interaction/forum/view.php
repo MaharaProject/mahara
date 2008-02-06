@@ -251,31 +251,7 @@ $smarty->display('interaction:forum:view.tpl');
 function setup_topics(&$topics) {
     if ($topics) {
         foreach ($topics as $topic) {
-            $more = false;
-            $nextbreak = strpos($topic->body, '<p', 1);
-            if ($nextbreak !== false) {
-                $topic->body = substr($topic->body, 0, $nextbreak);
-                $more = true;
-            }
-            $nextbreak = strpos($topic->body, '<br', 1);
-            if ($nextbreak !== false) {
-                $topic->body = substr($topic->body, 0, $nextbreak);
-                $more = true;
-            }
-            $topic->body = strip_tags($topic->body);
-            $topic->body = html_entity_decode($topic->body); // no things like &nbsp; only take up one character
-            // take the first 50 chars, then up to the first space (max length 60 chars)
-            if (strlen($topic->body) > 60) {
-                $topic->body = substr($topic->body, 0, 60);
-                $nextspace = strpos($topic->body, ' ', 50);
-                if ($nextspace !== false) {
-                    $topic->body = substr($topic->body, 0, $nextspace);
-                }
-                $more = true;
-            }
-            if ($more) {
-                $topic->body .= '...';
-            }
+            $topic->body = format_text($topic->body, 50, 10, false);
             $topic->lastposttime = relative_date(get_string('strftimerecentrelative', 'interaction.forum'), get_string('strftimerecent'), $topic->lastposttime);
         }
     }

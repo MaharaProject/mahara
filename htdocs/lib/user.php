@@ -598,93 +598,6 @@ function suspend_user($suspendeduserid, $reason, $suspendinguserid=null) {
 }
 
 /**
- * handle the add/remove/approve/reject friend form
- * @param array $values from pieforms.
- */
-function friend_submit($form, $values) {
-    global $user, $USER;
-
-    $loggedinid = $USER->get('id');
-    $userid = $user->id;
-
-    // friend db record
-    $f = new StdClass;
-    $f->ctime = db_format_timestamp(time());
-    
-    // notification info
-    $n = new StdClass;
-    $n->url = get_config('wwwroot') . 'user/view.php?id=' . $loggedinid;
-    $n->users = array($user->id);
-    $lang = get_user_language($user->id);
-    $displayname = display_name($USER, $user);
-
-    switch ($values['type']) {
-    case 'add':
-        $f->usr1 = $values['id'];
-        $f->usr2 = $loggedinid;
-        insert_record('usr_friend', $f);
-        $n->subject = get_string_from_language($lang, 'addedtofriendslistsubject', 'group');
-        $n->message = get_string_from_language($lang, 'addedtofriendslistmessage', 'group', $displayname, $displayname);
-        break;
-    case 'request':
-        $f->owner     = $values['id'];
-        $f->requester = $loggedinid;
-        $f->reason    = $values['reason'];
-        insert_record('usr_friend_request', $f);
-        $n->subject = get_string_from_language($lang, 'requestedfriendlistsubject', 'group');
-        if (isset($values['reason']) && !empty($values['reason'])) {
-            $n->message = get_string_from_language($lang, 'requestedfriendlistmessagereason', 'group', $displayname) . $values['reason'];
-        }
-        else {
-            $n->message = get_string_from_language($lang, 'requestedfriendlistmessage', 'group', $displayname);
-        }
-        break;
-    case 'remove':
-        delete_records_select('usr_friend', '(usr1 = ? AND usr2 = ?) OR (usr2 = ? AND usr1 = ?)', 
-                                array($userid, $loggedinid, $userid, $loggedinid));
-        $n->subject = get_string_from_language($lang, 'removedfromfriendslistsubject');
-        if (isset($values['reason']) && !empty($values['reason'])) {
-            $n->message = get_string_from_language($lang, 'removedfromfriendslistmessage', 'group', $displayname) . $values['reason'];
-        }
-        else {
-            $n->message = get_string_from_language($lang, 'removedfromfriendslistmessage', 'group', $displayname);
-        }
-        break;
-    case 'accept':
-        if (isset($values['rejectsubmit']) && !empty($values['rejectsubmit'])) {
-            delete_records('usr_friend_request', 'owner', $loggedinid, 'requester', $userid);
-            $n->subject = get_string_from_language($lang, 'friendrequestrejectedsubject', 'group');
-            if (isset($values['rejectreason']) && !empty($values['rejectreason'])) {
-                $n->message = get_string_from_language($lang, 'friendrequestrejectedmessagereason', 'group', $displayname) . $values['rejectreason'];
-            }
-            else {
-                $n->message = get_string_from_language($lang, 'friendrequestrejectedmessage', 'group', $displayname);
-            }
-            $values['type'] = 'reject'; // for json reply message
-        } 
-        else {
-            db_begin();
-            delete_records('usr_friend_request', 'owner', $loggedinid, 'requester', $userid);
-            $f->usr1 = $userid;
-            $f->usr2 = $loggedinid;
-            insert_record('usr_friend', $f);
-            $n->subject = get_string_from_language($lang, 'friendrequestacceptedsubject', 'group');
-            $n->message = get_string_from_language($lang, 'friendrequestacceptedmessage', 'group', $displayname, $displayname);
-            db_commit();
-        }
-        break;
-    }
-    activity_occurred('maharamessage', $n);
-
-    if ($form instanceof Pieform) {
-        $form->json_reply(PIEFORM_OK, get_string('friendform' . $values['type'] . 'success', 'mahara', display_name($user)));
-    }
-    else {
-        json_reply(false, get_string('friendform' . $values['type'] . 'success', 'mahara', display_name($user)));
-    }
-}
-
-/**
  * Unsuspends a user
  *
  * @param int $userid The ID of the user to unsuspend
@@ -837,12 +750,18 @@ function send_user_message($to, $message, $from=null) {
 /**
  * can a user send a message to another?
  *
- * @param object from the user to send the message
- * @param int to the user to receive the message
+ * @param int/object from the user to send the message
+ * @param int/object to the user to receive the message
  * @return boolean whether userfrom is allowed to send messages to userto
  */
 function can_send_message($from, $to) {
-    if ($from == $to) {
+	if (!is_object($from)) {
+	    $from = get_record('usr', 'id', $from);
+	}
+	if (is_object($to)) {
+	    $to = $to->id;
+	}
+    if ($from->id == $to) {
         return false;
     }
     $messagepref = get_account_preference($to, 'messages');
@@ -920,7 +839,7 @@ function get_users_data($userlist) {
 
     foreach ($data as &$record) {
         if (isset($record->introduction)) {
-            $record->introduction = format_introduction($record->introduction);
+            $record->introduction = format_text($record->introduction);
         }
 
         $record->messages = ($record->messages == 'allow' || $record->friend && $record->messages == 'friends' || $USER->get('admin')) ? 1 : 0;
@@ -973,8 +892,8 @@ function get_users_data($userlist) {
         }
         if (!$friend->friend && !$friend->pending && !$friend->requestedfriendship && $friend->friendscontrol == 'auto') {
             $friend->makefriend = pieform(array(
-                'name' => 'makefriend' . $friend->id,
-                'successcallback' => 'makefriend_submit',
+                'name' => 'addfriend' . $friend->id,
+                'successcallback' => 'addfriend_submit',
                 'renderer' => 'div',
                 'autofocus' => 'false',
                 'elements' => array(
@@ -1035,6 +954,13 @@ function friends_control_sideblock() {
     );
 }
 
+function friendscontrol_submit(Pieform $form, $values) {
+    global $USER, $SESSION;
+    $USER->set_account_preference('friendscontrol', $values['friendscontrol']);
+    $SESSION->add_ok_msg(get_string('updatedfriendcontrolsetting', 'account'));
+    redirect('/user/myfriends.php');
+}
+
 function acceptfriend_submit(Pieform $form, $values) {
     global $USER, $SESSION;
 
@@ -1064,7 +990,7 @@ function acceptfriend_submit(Pieform $form, $values) {
     redirect('/user/view.php?id=' . $values['id']);
 }
 
-function makefriend_submit(Pieform $form, $values) {
+function addfriend_submit(Pieform $form, $values) {
     global $USER, $SESSION;
     $user = get_record('usr', 'id', $values['id']);
 
@@ -1090,7 +1016,7 @@ function makefriend_submit(Pieform $form, $values) {
 
     activity_occurred('maharamessage', $n);
     $SESSION->add_ok_msg(get_string('friendformaddsuccess', 'group', $displayname));
-    redirect('/iser/view.php?id=' . $values['id']);
+    redirect('/user/view.php?id=' . $values['id']);
 }
 
 ?>

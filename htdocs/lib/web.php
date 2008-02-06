@@ -491,6 +491,7 @@ function jsstrings() {
         'views' => array(
             'view' => array(
                 'confirmdeleteblockinstance',
+                'blocksinstructionajax',
             ),
         ),
         'adminusersearch' => array(
@@ -1960,18 +1961,6 @@ function format_whitespace($text) {
     $text = str_replace('  ', '&nbsp; ', $text);
     $text = nl2br($text);
     return $text;
-}
-
-/**
- * Returns only the first short snippet of a user's introduction
- */
-function format_introduction($introduction) {
-    $introduction = strip_tags($introduction);
-    // Note: the lengths are different to prevent chopping off just one or two characters in order to add an ellipsis
-    if (strlen($introduction) < 110) {
-        return $introduction;
-    }
-    return substr($introduction, 0, 100) . '...';
 }
 
 /**

@@ -1165,6 +1165,19 @@ a.folderhover {
     width: 40%;
 }
 
+/* View User styles */
+
+.friends table {
+    width: 320px;
+}
+
+.friendcell {
+    vertical-align: top;
+    text-align: center;
+    width: 25%;
+    font-size: smaller;
+}
+
 /* Groups I'm in and Groups I own styles */
 .maincontent .addgrouplink {
     margin: 10px 0 10px 0;

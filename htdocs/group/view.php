@@ -133,7 +133,7 @@ $memberstr       = get_string('member', 'group');
 $removestr       = get_string('remove');
 $declinestr      = get_string('declinerequest', 'group');
 $updatefailedstr = get_string('updatefailed', 'group');
-$requeststr      = get_string('sendrequest', 'group');
+$requeststr      = get_string('sendrequest');
 $reasonstr       = get_string('reason', 'group');
 
 // all the permissions stuff

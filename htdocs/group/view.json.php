@@ -187,7 +187,7 @@ switch ($type) {
                          array('users' => array($user),
                                'subject' => get_string_from_language($lang, 'groupmembershipchangesubject',
                                                                      'group', $group->name), 
-                               'message' => get_string_from_language($lang, 'groupmembershipchangemessage'
+                               'message' => get_string_from_language($lang, 'groupmembershipchangedmessage'
                                                                      . $v, 'group'),
                                'url'     => get_config('wwwroot') . 'group/view.php?id=' . $id));
                  }

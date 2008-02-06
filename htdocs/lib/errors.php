@@ -690,8 +690,8 @@ class XmlrpcServerException extends SystemException {}
 class XmlrpcClientException extends SystemException {
     public function strings() {
         return array_merge(parent::strings(), array(
-            'title'   => get_string('xmlrpccouldnotlogyouin'),
-            'message' => get_string('xmlrpccouldnotlogyouindetail'))
+            'title'   => get_string('xmlrpccouldnotlogyouin', 'auth'),
+            'message' => get_string('xmlrpccouldnotlogyouindetail', 'auth'))
         );
     }
 }
