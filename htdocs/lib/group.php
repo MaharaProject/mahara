@@ -345,7 +345,7 @@ function setup_groups($groups, $returnto='mygroups') {
     }
     $i = 0;
     foreach ($groups as $group) {
-        $group->description = format_text($group->description);
+        $group->description = str_shorten($group->description, 100, false);
         if ($group->type == 'member') {
             $group->canleave = group_user_can_leave($group->id);
         }

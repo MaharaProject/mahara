@@ -1688,24 +1688,6 @@ function display_size($size) {
 }
 
 /**
- * Takes a string and a length, and ensures that the string is no longer than 
- * this length, by putting '...' in the middle
- *
- * @param string $str String to shorten
- * @param int $maxlen The maximum length the new string should be
- * @param bool $truncate if true, cut the string at the end rather than in the middle
- * @return string
- */
-function str_shorten($str, $maxlen, $truncate = false) {
-    if ($truncate && strlen($str) > $maxlen) {
-        return substr($str, 0, $maxlen-3) . '...';
-    }
-    if (strlen($str) > $maxlen) {
-        return substr($str, 0, floor($maxlen / 2) - 1) . '...' . substr($str, -(floor($maxlen / 2) - 2));
-    }
-    return $str;
-}
-/**
  * creates the profile sideblock
  */
 function profile_sideblock() {
@@ -1744,51 +1726,6 @@ function profile_sideblock() {
          array(get_string('profile'), $USER->get('id'))
     );
     return $data;
-}
-
-/**
- * strips the tags and reduces the length of some text
- *
- * @param string $string the text to format
- * @param int $length the number of characters desired (default 100)
- * @param int $extra the max size on top of the length (default 10)
- * @param boolean $newlines whether to include text past the first newline (default true)
- */
-function format_text($string, $length=100, $extra=10, $newlines=true) {
-    $more = false;
-    if (!$newlines) {
-        $nextbreak = strpos($string, '<p', 1);
-        if ($nextbreak !== false) {
-            $string = substr($string, 0, $nextbreak);
-            $more = true;
-        }
-        $nextbreak = strpos($string, '<br', 1);
-        if ($nextbreak !== false) {
-            $string = substr($string, 0, $nextbreak);
-            $more = true;
-        }
-    }
-    // so newlines don't disappear.
-    $string = str_replace('<p', "%p<p", $string);
-    $string = str_replace('<br', "%br<br", $string);
-
-    $string = strip_tags($string);
-    $string = html_entity_decode($string); // no things like &nbsp; only take up one character
-    // take the first $length chars, then up to the first space (max length $length + $extra chars)
-    if (strlen($string) > $length + $extra) {
-        $string = substr($string, 0, $length + $extra);
-        $nextspace = strpos($string, ' ', $length);
-        if ($nextspace !== false) {
-            $string = substr($string, 0, $nextspace);
-        }
-        $more = true;
-    }
-    if ($more) {
-        $string .= '...';
-    }
-    $string = hsc($string);
-    $string = str_replace('%p', '<p>', $string);
-    return str_replace('%br', '<br>', $string);
 }
 
 ?>
