@@ -143,7 +143,7 @@ if ($views) {
 }
 
 // Group stuff
-if (!$userassocgroups = get_associated_groups($userid)) {
+if (!$userassocgroups = get_associated_groups($userid, false)) {
     $userassocgroups = array();
 }
 
