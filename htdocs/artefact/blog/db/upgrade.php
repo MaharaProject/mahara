@@ -92,7 +92,10 @@ function xmldb_artefact_blog_upgrade($oldversion=0) {
             }
         }
     }
-
+    if ($oldversion < 2008020700) {
+        $table = new XMLDBTable('artefact_blog_blog');
+        drop_table($table);
+    }
     return $status;
 }
 

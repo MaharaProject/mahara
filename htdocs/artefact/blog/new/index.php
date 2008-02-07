@@ -64,26 +64,6 @@ $form = pieform(array(
             'description' => get_string('tagsdescprofile'),
             'help'        => true,
         ),
-        'commentsallowed' => array(
-            'type'        => 'radio',
-            'title'       => get_string('commentsallowed', 'artefact.blog'),
-            'description' => get_string('commentsalloweddesc', 'artefact.blog'),
-            'options'     => array(
-                0 => get_string('commentsallowedno', 'artefact.blog'),
-                1 => get_string('commentsallowedyes', 'artefact.blog')
-            ),
-            'help'        => true,
-        ),
-        'commentsnotify' => array(
-            'type'        => 'radio',
-            'title'       => get_string('commentsnotify', 'artefact.blog'),
-            'description' => get_string('commentsnotifydesc', 'artefact.blog'),
-            'options'     => array(
-                0 => get_string('commentsnotifyno', 'artefact.blog'),
-                1 => get_string('commentsnotifyyes', 'artefact.blog')
-            ),
-            'help'        => true,
-        ),
         'submit' => array(
             'type'  => 'submitcancel',
             'value' => array(
