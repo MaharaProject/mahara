@@ -246,7 +246,7 @@ function edittopic_submit(Pieform $form, $values) {
     db_commit();
     $SESSION->add_ok_msg(get_string('edittopicsuccess', 'interaction.forum'));
     if ($returnto == 'view') {
-        redirect('/interaction/forum/view.php?id=' . $topic->forumid);
+        redirect('/interaction/forum/view.php?id=' . $topic->forum);
     }
     else {
         redirect('/interaction/forum/topic.php?id=' . $topicid);
