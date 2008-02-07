@@ -108,7 +108,7 @@ if ($allviews = get_records_array('view', 'owner', $userid)) {
         if (can_view_view($view->id)) {
             $views[$view->id] = $view;
             $view->artefacts = array();
-            $view->description = format_description($view->description);
+            $view->description = format_text($view->description);
         }
     }
 }
@@ -148,7 +148,7 @@ if (!$userassocgroups = get_associated_groups($userid, false)) {
 }
 
 foreach ($userassocgroups as $group) {
-    $group->description = format_description($group->description);
+    $group->description = format_text($group->description);
 }
 
 if (is_postgres()) {
@@ -325,15 +325,6 @@ $smarty->assign('VIEWS',$views);
 $smarty->assign('friends', $friends);
 $smarty->assign('friendsmessage', $friendsmessage);
 $smarty->display('user/view.tpl');
-
-function format_description($description) {
-    $description = strip_tags($description);
-    // Note: the lengths are different to prevent chopping off just one or two characters in order to add an ellipsis
-    if (strlen($description) < 110) {
-        return $description;
-    }
-    return substr($description, 0, 100) . '...';
-}
 
 // Send an invitation to the user to join a group
 function invite_submit(Pieform $form, $values) {

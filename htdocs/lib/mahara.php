@@ -1768,6 +1768,10 @@ function format_text($string, $length=100, $extra=10, $newlines=true) {
             $more = true;
         }
     }
+    // so newlines don't disappear.
+    $string = str_replace('<p', "%p<p", $string);
+    $string = str_replace('<br', "%br<br", $string);
+
     $string = strip_tags($string);
     $string = html_entity_decode($string); // no things like &nbsp; only take up one character
     // take the first $length chars, then up to the first space (max length $length + $extra chars)
@@ -1782,7 +1786,9 @@ function format_text($string, $length=100, $extra=10, $newlines=true) {
     if ($more) {
         $string .= '...';
     }
-    return hsc($string);
+    $string = hsc($string);
+    $string = str_replace('%p', '<p>', $string);
+    return str_replace('%br', '<br>', $string);
 }
 
 ?>

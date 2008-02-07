@@ -15,7 +15,7 @@
     {/if}
     <td>
     <a href="{$WWWROOT}interaction/forum/topic.php?id={$topic->id|escape}">{$topic->subject|escape}</a>
-    <div>{$topic->body|escape}</div>
+    <div>{$topic->body}</div>
     </td>
     <td>
     <a href="{$WWWROOT}user/view.php?id={$topic->poster}"
