@@ -178,14 +178,22 @@ function get_associated_groups($userid=0) {
         FROM {group_member_request} gm WHERE gm.member = ?
     UNION
     SELECT gm.group, 'member' AS type
-        FROM {group_member} gm WHERE gm.member = ? AND gm.tutor = 0
+        FROM {group_member} gm
+        JOIN {group} ON owner != ? AND id = gm.group
+        WHERE gm.member = ? AND gm.tutor = 0
     UNION
-    SELECT gm.group, 'tutor' AS type
-        FROM {group_member} gm WHERE gm.member = ? AND gm.tutor = 1
+    SELECT gm.group, 'member' AS type
+        FROM {group_member} gm
+        JOIN {group} ON owner != ? AND id = gm.group
+        WHERE gm.member = ? AND gm.tutor = 1
+    UNION
+    SELECT g.id, 'owner' AS type
+        FROM {group} g WHERE g.owner = ?
     ) AS a ON a.group = g.id
-    WHERE g.deleted = ?";
+    WHERE g.deleted = 0
+    ORDER BY g.name";
     
-    return get_records_sql_assoc($sql, array($userid, $userid, $userid, $userid, 0));
+    return get_records_sql_assoc($sql, array($userid, $userid, $userid, $userid, $userid, $userid, $userid));
 }
 
 
