@@ -125,6 +125,7 @@ $elements['lang'] = array(
         'required' => true
     ),
     'help' => true,
+    'ignore' => count(get_languages()) < 2,
 );
 $elements['addremovecolumns'] = array(
     'type' => 'radio',
