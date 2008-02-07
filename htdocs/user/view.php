@@ -159,7 +159,12 @@ else if (is_mysql()) {
 }
 $records = get_records_select_array('usr_friend', 'usr1 = ? OR usr2 = ?', array($userid, $userid), $random, 'usr1, usr2', 0, 16);
 $numberoffriends = count_records_select('usr_friend', 'usr1 = ? OR usr2 = ?', array($userid, $userid));
-$friendsmessage = get_string('numberoffriends', 'group', $records ? count($records) : 0, $numberoffriends);
+if ($numberoffriends > 16) {
+    $friendsmessage = get_string('numberoffriends', 'group', $records ? count($records) : 0, $numberoffriends);
+}
+else {
+    $friendsmessage = get_string('Friends', 'group');
+}
 // get the friends into a 4x4 array
 $friends = array();
 for ($i = 0; $i < 4; $i++) {
