@@ -196,8 +196,9 @@ $string['viewlayoutdescription'] = 'You can change the widths of the columns in 
 $string['changeviewlayout'] = 'Change my view layout';
 $string['backtoyourview'] = 'Back to my view';
 $string['viewlayoutchanged'] = 'View layout changed';
-$string['selectnumberofcolumns'] = 'You can change the number of columns in your view';
+$string['selectnumberofcolumns'] = 'Select the number of columns in your view';
 $string['changeviewcolumns'] = 'Change my view columns';
+
 
 $string['by'] = 'by';
 $string['in'] = 'in';
