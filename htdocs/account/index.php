@@ -190,7 +190,9 @@ function accountprefs_submit(Pieform $form, $values) {
     // use this as looping through values is not safe.
     $expectedprefs = expected_account_preferences(); 
     foreach (array_keys($expectedprefs) as $pref) {
-        $USER->set_account_preference($pref, $values[$pref]);
+        if (isset($values[$pref])) {
+            $USER->set_account_preference($pref, $values[$pref]);
+        }
     }
 
     db_commit();
