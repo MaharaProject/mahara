@@ -1,6 +1,8 @@
 {include file="header.tpl"}
 
 {include file="columnfullstart.tpl"}
+    <h2>{$heading}</h2>
+
     <form action="{$formurl}" method="post">
         <input type="submit" name="{$action_name}" id="action-dummy" class="hidden">
         <input type="hidden" id="viewid" name="id" value="{$view}">
