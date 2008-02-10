@@ -68,10 +68,8 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
             }
             var editb = INPUT({'type':'button', 'class':'button', 'value':get_string('edit')});
             editb.onclick = function () { self.openeditform(r); };
-            var edith = SPAN(null);
-            edith.innerHTML = get_string('edit.help');
             if (r.childcount > 0) {
-                return TD(null, editb, edith);
+                return TD(null, editb);
             }
             var deleteb = INPUT({'type':'button', 'class':'button', 'value':get_string('delete')});
             deleteb.onclick = function () {
@@ -82,9 +80,7 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
                     }
                 }
             };
-            var deleteh = SPAN(null);
-            deleteh.innerHTML = get_string('delete.help');
-            return TD(null, editb, edith, deleteb, deleteh);
+            return TD(null, editb, deleteb);
         }
     }
 
@@ -97,9 +93,7 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
                 hideElement(self.createfolderbutton);
                 showElement(self.createfolderform);
             }});
-            var help = SPAN(null);
-            help.innerHTML = get_string('createfolder.help');
-            self.createfolderbutton = SPAN(null, button, help);
+            self.createfolderbutton = SPAN(null, button);
             self.createfolderform = self.initcreatefolderform();
             insertSiblingNodesBefore(self.element, self.createfolderbutton, self.createfolderform);
         }
@@ -312,9 +306,6 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
                 cancelcreateform();
             }
         }});
-        var namehelp = SPAN(null); namehelp.innerHTML = get_string('name.help');
-        var deschelp = SPAN(null); deschelp.innerHTML = get_string('folderdescription.help');
-        var cancelhelp = SPAN(null); cancelhelp.innerHTML = get_string('cancelfolder.help');
         return FORM({'method':'post', 'id':formid, 'style':'display: none;'},
                 TABLE(null,
                  TBODY(null,
@@ -323,13 +314,13 @@ function FileBrowser(element, source, statevars, changedircallback, actionname, 
                      TD(null, SPAN({'id':'createdest'},self.generatePath(self.currentDirectory)))),
                   TR(null,TH(null,LABEL(get_string('Name'))),
                      TD(null,INPUT({'type':'text','class':'text','name':'name','value':'',
-                                    'size':40}), namehelp)),
+                                    'size':40}))),
                   TR(null,TH(null,LABEL(get_string('Description'))),
                      TD(null,INPUT({'type':'text','class':'text','name':'description',
-                                    'value':'','size':40}), deschelp)),
+                                    'value':'','size':40}))),
                   TR(null, TH(null, LABEL(null, get_string('tags'))), TD({'colspan':'2'}, create_tags_control('tags'))),
                   TR(null,TD({'colspan':2},SPAN({'id':formid+'message'}))),
-                  TR(null,TD({'colspan':2},createbutton,replacebutton,cancelbutton,cancelhelp)))));
+                  TR(null,TD({'colspan':2},createbutton,replacebutton,cancelbutton)))));
     };
 
     this.showsize = function(bytes) {
@@ -501,9 +492,7 @@ function FileUploader(element, uploadscript, statevars, foldername, folderid, up
             showElement(self.form);
             keepElementInViewport(self.form);
         }});
-        var uploadhelp = SPAN({'id':'uploadfilehelp'});
-        uploadhelp.innerHTML = get_string('uploadfile.help');
-        self.openbutton = SPAN(null, button, uploadhelp);
+        self.openbutton = SPAN(null, button);
 
         appendChildNodes(self.element, self.form, self.openbutton);
     }
@@ -527,9 +516,6 @@ function FileUploader(element, uploadscript, statevars, foldername, folderid, up
         };
         var notice = SPAN(null);
         notice.innerHTML = copyrightnotice + get_string('notice.help');
-        var titlehelp = SPAN(null); titlehelp.innerHTML = get_string('title.help');
-        var deschelp = SPAN(null); deschelp.innerHTML = get_string('description.help');
-        var cancelhelp = SPAN(null); cancelhelp.innerHTML = get_string('cancel.help');
         var destinationattributes = (self.folderid === false) ? {'style':'display: none;'} : null;
         appendChildNodes(form,
             TABLE(null,
@@ -544,9 +530,9 @@ function FileUploader(element, uploadscript, statevars, foldername, folderid, up
                     self.form.title.value = basename(self.form.userfile.value);
                 }}))),
              TR(null, TH(null, LABEL(null, get_string('Name'))),
-                TD(null, INPUT({'type':'text', 'class':'text', 'name':'title', 'size':40}), titlehelp)),
+                TD(null, INPUT({'type':'text', 'class':'text', 'name':'title', 'size':40}))),
              TR(null, TH(null, LABEL(null, get_string('Description'))),
-                TD(null, INPUT({'type':'text', 'class':'text', 'name':'description', 'size':40}), deschelp)),
+                TD(null, INPUT({'type':'text', 'class':'text', 'name':'description', 'size':40}))),
              TR(null, TH(null, LABEL(null, get_string('tags'))),
                 TD({'colspan': 2}, create_tags_control('tags'))),
              TR(null,TD({'colspan':2, 'id':'uploadformmessage'})),
@@ -558,7 +544,7 @@ function FileUploader(element, uploadscript, statevars, foldername, folderid, up
                      'value':get_string('overwrite'),
                      'onclick':function () { if (self.sendform(true)) { cancelform(); } }}),
               INPUT({'type':'button','class':'button','value':get_string('cancel'),
-                     'onclick':cancelform}), cancelhelp)))));
+                     'onclick':cancelform}))))));
 
 
         hideElement(form.replace);
