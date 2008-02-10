@@ -45,7 +45,6 @@ $form = pieform(array(
             'rules' => array(
                 'required'    => true
             ),
-            'help'        => true,
         ),
         'description' => array(
             'type'        => 'wysiwyg',
@@ -56,7 +55,6 @@ $form = pieform(array(
             'rules' => array(
                 'required'    => false
             ),
-            'help'        => true,
         ),
         'tags'        => array(
             'type'        => 'tags',

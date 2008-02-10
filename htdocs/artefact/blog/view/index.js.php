@@ -45,8 +45,6 @@ $enc_cannotdeleteblogpost = json_encode(get_string('cannotdeleteblogpost', 'arte
 
 
 $enc_publish_help = json_encode(get_help_icon('artefact', 'blog', null, null, null, 'publish'));
-$enc_edit_help = json_encode(get_help_icon('artefact', 'blog', null, null, null, 'edit'));
-$enc_delete_help = json_encode(get_help_icon('artefact', 'blog', null, null, null, 'delete'));
 
 return <<<EOJAVASCRIPT
 
@@ -108,12 +106,9 @@ postlist.rowfunction = function(d, n, gd) {
             }
         )
     );
-    var edithelp = SPAN(null); edithelp.innerHTML = {$enc_edit_help};
-
     var del = INPUT(
         { 'type' : 'button', 'class' : 'button', 'value': {$enc_delete} }
     );
-    var delhelp = SPAN(null); delhelp.innerHTML = {$enc_delete_help};
 
     var desctd = TD({'colSpan':3});
     desctd.innerHTML = d.description;
@@ -123,7 +118,7 @@ postlist.rowfunction = function(d, n, gd) {
             null,
             TH(null, d.title),
             status,
-            TH(null, [pub, pubhelp, ' ', edit, edithelp, ' ', del, delhelp])
+            TH(null, [pub, pubhelp, ' ', edit, ' ', del])
         ),
         TR(null, desctd)
     ];
