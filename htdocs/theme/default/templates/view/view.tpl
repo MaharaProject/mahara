@@ -9,8 +9,6 @@
 </div>
 {/if}
 <div id="view">
-	<h3>{$viewtitle|escape} {str tag=by section=view} <a href="{$WWWROOT}user/view.php?id={$viewowner}">{$formattedowner|escape}</a></h3>
-
         <p class="view-description">{$viewdescription}</p>
 	
         <div id="bottom-pane">

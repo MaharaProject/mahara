@@ -26,6 +26,10 @@
 
 define('INTERNAL', 1);
 define('PUBLIC', 1);
+define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'view');
+define('SECTION_PAGE', 'artefact');
+
 require(dirname(dirname(__FILE__)) . '/init.php');
 require(get_config('libroot') . 'view.php');
 
@@ -83,6 +87,15 @@ $artefactpath[] = array(
     'title' => $artefact->display_title(),
 );
 
+$heading = '<a href="' . get_config('wwwroot') . 'view/view.php?id=' . $view->get('id') .'">' . hsc($view->get('title')) . '</a> ' . get_string('by', 'view') . ' <a href="' . get_config('wwwroot') .'user/view.php?id=' . $view->get('owner'). '">' . $view->formatted_owner() . '</a>';
+foreach ($artefactpath as $item) {
+	if (empty($item['url'])) {
+	    $heading .= ': ' . $item['title'];
+	}
+	else {
+        $heading .= ': <a href="' . $item['url'] . '">' . $item['title'] . '</a>';
+	}
+}
 
 $tutorfilefeedbackformrow = '';
 $submittedgroup = $view->get('submittedto');
@@ -292,6 +305,8 @@ $smarty = smarty(
         'stylesheets' => array('style/views.css')
     )
 );
+$smarty->assign('heading', $heading);
+$smarty->assign('noheadingescape', true);
 $smarty->assign('artefact', $content);
 $smarty->assign('artefactpath', $artefactpath);
 $smarty->assign('INLINEJAVASCRIPT', $javascript);

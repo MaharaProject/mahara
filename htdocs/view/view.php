@@ -26,6 +26,10 @@
 
 define('INTERNAL', 1);
 define('PUBLIC', 1);
+define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'view');
+define('SECTION_PAGE', 'view');
+
 require(dirname(dirname(__FILE__)) . '/init.php');
 require(get_config('libroot') . 'view.php');
 
@@ -38,6 +42,8 @@ if (!can_view_view($viewid)) {
 }
 
 define('TITLE', $view->get('title') . ' ' . get_string('by', 'view') . ' ' . $view->formatted_owner());
+$heading = '<a href="' . get_config('wwwroot') . 'view/view.php?id=' . $view->get('id') .'">' . hsc($view->get('title')) . '</a> ' . get_string('by', 'view') . ' <a href="' . get_config('wwwroot') .'user/view.php?id=' . $view->get('owner'). '">' . $view->formatted_owner() . '</a>';
+
 
 $tutorfilefeedbackformrow = '';
 $submittedgroup = $view->get('submittedto');
@@ -253,7 +259,8 @@ $smarty = smarty(
         'stylesheets' => array('style/views.css'),
     )
 );
-
+$smarty->assign('heading', $heading);
+$smarty->assign('noheadingescape', true);
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('viewid', $viewid);
 $smarty->assign('viewtitle', $view->get('title'));
