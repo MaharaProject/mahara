@@ -71,6 +71,7 @@ $form = pieform(array(
 $smarty = smarty();
 $smarty->assign('heading', TITLE);
 $smarty->assign('form', $form);
+$smarty->assign('group', $group);
 $smarty->display('group/requestjoin.tpl');
 
 function requestjoingroup_submit(Pieform $form, $values) {
