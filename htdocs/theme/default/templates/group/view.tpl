@@ -4,11 +4,11 @@
 {include file="columnleftstart.tpl"}
                 <h2>{$group->name|escape}</h2>
                 
+                {if $group->description} <p>{$group->description}</p> {/if}
                 <p>{str tag='owner' section='group'}: {$group->ownername|escape}</p>
 	        {assign var="jointype" value=$group->jointype}
 	        {assign var="joinstr" value=groupjointype$jointype}
-                <p>{str tag=$joinstr section='group'}</p>
-                {if $group->description} <p>{$group->description}</p> {/if}
+                {if !$member}<p>{str tag=$joinstr section='group'}</p>{/if}
                 {if $canleave} <p><a href="{$WWWROOT}group/leave.php?id={$group->id}">{str tag='leavegroup' section='group'}</a></p>
                 {elseif $canrequestjoin} <p id="joinrequest"><a href="{$WWWROOT}group/requestjoin.php?id={$group->id}">{str tag='requestjoingroup' section='group'}</a></p>
                 {elseif $canjoin} <p><a href="view.php?id={$group->id}&amp;joincontrol=join"">{str tag='joingroup' section='group'}</a></p>
