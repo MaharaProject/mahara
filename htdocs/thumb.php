@@ -74,9 +74,12 @@ switch ($type) {
             $directory = get_config('dataroot') . 'artefact/internal/profileicons/no_userphoto/' . get_config('theme') . '/originals/0/';
             check_dir_exists($directory);
             copy($nouserphotopic, $directory . '0');
-            header('Content-type: ' . 'image/png');
-            readfile($directory . '0');
-            exit;
+            // Now we can try and get the image in the correct size
+            if ($path = get_dataroot_image_path('artefact/internal/profileicons/no_userphoto/' . get_config('theme'), 0, $size)) {
+                header('Content-type: ' . 'image/png');
+                readfile($path);
+                exit;
+            }
         }
 
 
