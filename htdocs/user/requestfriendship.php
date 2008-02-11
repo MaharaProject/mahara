@@ -39,6 +39,9 @@ if (is_friend($id, $USER->get('id'))
     throw new AccessDeniedException(get_string('cantrequestfriendship', 'group'));
 }
 
+$user = get_record('usr', 'id', $id);
+$user->introduction = get_field('artefact', 'title', 'artefacttype', 'introduction', 'owner', $id);
+
 define('TITLE', get_string('sendfriendshiprequest', 'group', display_name($id)));
 
 $form = pieform(array(
@@ -62,6 +65,7 @@ $form = pieform(array(
 $smarty = smarty();
 $smarty->assign('heading', TITLE);
 $smarty->assign('form', $form);
+$smarty->assign('user', $user);
 $smarty->display('user/requestfriendship.tpl');
 
 function requestfriendship_submit(Pieform $form, $values) {

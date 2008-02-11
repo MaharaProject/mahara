@@ -5,6 +5,8 @@
 
 <h2>{$heading}</h2>
 
+{include file="user/simpleuser.tpl" user=$user}
+
 {$form}
 
 {include file="columnleftend.tpl"}

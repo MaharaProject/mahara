@@ -39,6 +39,9 @@ if (!record_exists('usr_friend_request', 'owner', $USER->get('id'), 'requester',
     throw new AccessDeniedException(get_string('cantdenyrequest', 'group'));
 }
 
+$user = get_record('usr', 'id', $id);
+$user->introduction = get_field('artefact', 'title', 'artefacttype', 'introduction', 'owner', $id);
+
 $form = pieform(array(
     'name' => 'denyrequest',
     'autofocus' => false,
@@ -60,6 +63,7 @@ $form = pieform(array(
 $smarty = smarty();
 $smarty->assign('heading', TITLE);
 $smarty->assign('form', $form);
+$smarty->assign('user', $user);
 $smarty->display('user/denyrequest.tpl');
 
 function denyrequest_submit(Pieform $form, $values) {

@@ -36,6 +36,9 @@ if (!is_friend($id, $USER->get('id'))) {
     throw new AccessDeniedException(get_string('cantremovefriend', 'group'));
 }
 
+$user = get_record('usr', 'id', $id);
+$user->introduction = get_field('artefact', 'title', 'artefacttype', 'introduction', 'owner', $id);
+
 define('TITLE', get_string('removefromfriends', 'group', display_name($id)));
 
 $form = pieform(array(
@@ -59,6 +62,7 @@ $form = pieform(array(
 $smarty = smarty();
 $smarty->assign('heading', TITLE);
 $smarty->assign('form', $form);
+$smarty->assign('user', $user);
 $smarty->display('user/removefriend.tpl');
 
 function removefriend_submit(Pieform $form, $values) {
