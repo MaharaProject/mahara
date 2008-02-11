@@ -88,7 +88,7 @@ function ensure_sanity() {
     }
 
     // magic_quotes_gpc workaround
-    if (ini_get_bool('magic_quotes_gpc')) {
+    if (!defined('CRON') && ini_get_bool('magic_quotes_gpc')) {
         log_environ(get_string('magicquotesgpc', 'error'));
         function stripslashes_deep($value) {
             $value = is_array($value) ?
