@@ -2007,6 +2007,9 @@ function display_cleaned_html($html, $filename, $params) {
  * @return string
  */
 function str_shorten($str, $maxlen=100, $truncate=false, $newlines=true) {
+    if (empty($str)) {
+        return $str;
+    }
     if (!$newlines) {
         $nextbreak = strpos($str, '<p', 1);
         if ($nextbreak !== false) {
