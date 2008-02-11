@@ -226,6 +226,7 @@ $string['numberoffriends'] = 'Friends (%s of %s)';
 $string['addusertogroup'] = 'Add to ';
 $string['inviteusertojoingroup'] = 'Invite to ';
 $string['invitemembertogroup'] = 'Invite %s to join \'%s\'';
+$string['cannotinvitetogroup'] = 'You can\'t invite this user to this group';
 $string['removefriend'] = 'Remove friend';
 $string['denyfriendrequestlower'] = 'Deny friend request';
 
