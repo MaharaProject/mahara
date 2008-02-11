@@ -182,13 +182,13 @@ for ($i = 0; $i < 4; $i++) {
 }
 
 $smarty = smarty();
-
+$allusergroups = get_associated_groups($userid);
 if ($loggedinid != $userid) {
     // Get the logged in user's "invite only" groups
     if ($groups = get_owned_groups($loggedinid, 'invite')) {
         $invitelist = array();
         foreach ($groups as $group) {
-            if (array_key_exists($group->id, $userassocgroups)) {
+            if (array_key_exists($group->id, $allusergroups)) {
                 continue;
             }
             $invitelist[$group->id] = $group->name;
