@@ -98,13 +98,16 @@ $i = 0;
 if ($forums) {
     foreach ($forums as $forum) {
         $forum->subscribe = pieform(array(
-            'name'     => 'subscribe'.$i++,
+            'name'     => 'subscribe_forum' . ($i == 0 ? '' : $i),
+            'plugintype' => 'interaction',
+            'pluginname' => 'forum',
             'successcallback' => 'subscribe_forum_submit',
             'autofocus' => false,
             'elements' => array(
                 'submit' => array(
                     'type'  => 'submit',
-                    'value' => $forum->subscribed ? get_string('Unsubscribe', 'interaction.forum') : get_string('Subscribe', 'interaction.forum')
+                    'value' => $forum->subscribed ? get_string('Unsubscribe', 'interaction.forum') : get_string('Subscribe', 'interaction.forum'),
+                    'help' => $i == 0 ? true : false
                 ),
                 'forum' => array(
                     'type' => 'hidden',
@@ -124,6 +127,7 @@ if ($forums) {
                 )
             )
         ));
+        $i++;
     }
 }
 

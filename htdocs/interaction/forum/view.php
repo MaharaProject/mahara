@@ -140,11 +140,14 @@ $breadcrumbs = array(
 
 $forum->subscribe = pieform(array(
     'name' => 'subscribe_forum',
+    'plugintype' => 'interaction',
+    'pluginname' => 'forum',
     'autofocus' => false,
     'elements' => array(
         'submit' => array(
             'type' => 'submit',
-            'value' => $forum->subscribed ? get_string('unsubscribefromforum', 'interaction.forum') : get_string('subscribetoforum', 'interaction.forum')
+            'value' => $forum->subscribed ? get_string('unsubscribefromforum', 'interaction.forum') : get_string('subscribetoforum', 'interaction.forum'),
+            'help' => true
         ),
         'forum' => array(
             'type' => 'hidden',

@@ -82,12 +82,15 @@ $breadcrumbs = array(
 
 if (!$topic->forumsubscribed) {
     $topic->subscribe = pieform(array(
-        'name'     => 'subscribe',
+        'name'     => 'subscribe_topic',
+        'plugintype' => 'interaction',
+        'pluginname' => 'forum',
         'autofocus' => false,
         'elements' => array(
             'submit' => array(
                'type'  => 'submit',
-               'value' => $topic->topicsubscribed ? get_string('unsubscribefromtopic', 'interaction.forum') : get_string('subscribetotopic', 'interaction.forum')
+               'value' => $topic->topicsubscribed ? get_string('unsubscribefromtopic', 'interaction.forum') : get_string('subscribetotopic', 'interaction.forum'),
+               'help' => true
             ),
             'topic' => array(
                 'type' => 'hidden',
@@ -184,7 +187,7 @@ function buildpost($postindex, $parentsubject, &$posts){
     return $smarty->fetch('interaction:forum:post.tpl');
 }
 
-function subscribe_submit(Pieform $form, $values) {
+function subscribe_topic_submit(Pieform $form, $values) {
     global $USER;
     if ($values['type'] == 'subscribe') {
         insert_record(
