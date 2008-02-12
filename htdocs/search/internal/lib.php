@@ -187,7 +187,7 @@ class PluginSearchInternal extends PluginSearch {
         $fieldlist = "('" . join("','", $publicfields) . "')";
 
         $sql = 'SELECT
-                COUNT(DISTINCT owner)
+                COUNT(DISTINCT u.id)
             FROM
                 {usr} u
                 LEFT JOIN {artefact} a ON u.id=a.owner
