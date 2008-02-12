@@ -91,7 +91,7 @@ if ($viewdata) {
         $data[$i]['title'] = $viewdata[$i]->title;
         $data[$i]['description'] = $viewdata[$i]->description;
         if ($viewdata[$i]->name) {
-            $data[$i]['submittedto'] = array('name' => $viewdata[$i]->name, 'id' => $viewdata[$i]->group);
+            $data[$i]['submittedto'] = array('name' => $viewdata[$i]->name, 'id' => $viewdata[$i]->groupid);
         }
         $data[$i]['artefacts'] = array();
         $data[$i]['accessgroups'] = array();
@@ -195,7 +195,7 @@ else {
             ));
         }
         else {
-            $view['submittedto'] = get_string('viewsubmittedtogroup', 'view', $viewdata[$i]->group, $viewdata[$i]->name);
+            $view['submittedto'] = get_string('viewsubmittedtogroup', 'view', $view['submittedto']['id'], $view['submittedto']['name']);
         }
     }
 }
