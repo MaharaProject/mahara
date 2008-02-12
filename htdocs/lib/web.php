@@ -1627,6 +1627,12 @@ function main_nav() {
                 'title' => get_string('activityprefs'),
                 'weight' => 30,
             ),
+            array(
+                'path' => 'settings/institutions',
+                'url' => 'account/institutions.php',
+                'title' => get_string('institution'),
+                'weight' => 40,
+            ),
         );
 
         if ($plugins = get_records_array('artefact_installed', 'active', 1)) {

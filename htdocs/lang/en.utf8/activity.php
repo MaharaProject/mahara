@@ -104,6 +104,6 @@ $string['institutionrequestsubject'] = '%s has requested membership of %s.';
 $string['institutionrequestmessage'] = 'You can add users to institutions on the Institution Members page:';
 
 $string['institutioninvitesubject'] = 'You have been invited to join the institution %s.';
-$string['institutioninvitemessage'] = 'You can confirm your membership of this institution on your Account Preferences Page:';
+$string['institutioninvitemessage'] = 'You can confirm your membership of this institution on your Institution Settings Page:';
 
 ?>
