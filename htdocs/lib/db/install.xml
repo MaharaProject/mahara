@@ -96,7 +96,7 @@
                 <KEY NAME="authinstancefk" TYPE="foreign" FIELDS="authinstance" REFTABLE="auth_instance" REFFIELDS="id" />
             </KEYS>
             <INDEXES>
-                <INDEX NAME="usernameuk" UNIQUE="true" FIELDS="username,authinstance"/>
+                <INDEX NAME="usernameuk" UNIQUE="true" FIELDS="username"/>
             </INDEXES>
         </TABLE>
         <TABLE NAME="usr_institution">
