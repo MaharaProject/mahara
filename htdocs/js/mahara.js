@@ -54,22 +54,12 @@ function formStartProcessing(form, btn) {
         });
         insertSiblingNodesAfter(button, node);
 
-        button.proxyContainer = node;
         button.disabled = "disabled";
         button.blur();
     }
 }
 function formStopProcessing(form, btn) {
     processingStop();
-    var button = $(btn);
-    if (button) {
-        button.value = oldValue;
-        if(button.proxyContainer) {
-            removeElement(button.proxyContainer);
-            button.proxyContainer = null;
-        }
-        button.disabled = null;
-    }
 }
 function formError(form, data) {
     var errMsg = DIV({'id': 'messages'}, makeMessage(data.message.message, 'error'));
