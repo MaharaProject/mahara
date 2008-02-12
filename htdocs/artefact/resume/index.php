@@ -250,8 +250,8 @@ function toggleCompositeForm(type) {
     }
 }
 
-function compositeSaveCallback(name, data) {
-    key = name.substr(3);
+function compositeSaveCallback(form, data) {
+    key = form.id.substr(3);
     tableRenderers[key].doupdate(); 
     toggleCompositeForm(key);
     $('add' + key).reset();
