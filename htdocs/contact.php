@@ -45,53 +45,73 @@ else {
     $email = '';
 }
 
+$elements = array(
+    'name' => array(
+        'type'  => 'text',
+        'title' => get_string('name'),
+        'defaultvalue' => $name,
+        'rules' => array(
+            'required'    => true
+        ),
+    ),
+    'email' => array(
+        'type'  => 'text',
+        'title' => get_string('email'),
+        'defaultvalue' => $email,
+        'rules' => array(
+            'required'    => true
+        ),
+    ),
+    'subject' => array(
+        'type'  => 'text',
+        'title' => get_string('subject'),
+        'defaultvalue' => '',
+    ),
+    'message' => array(
+        'type'  => 'textarea',
+        'rows'  => 10,
+        'cols'  => 60,
+        'title' => get_string('message'),
+        'defaultvalue' => '',
+        'rules' => array(
+            'required'    => true
+        ),
+    )
+);
+
+$captcharequired = get_config('captcha_on_contact_form');
+if (is_null($captcharequired) || $captcharequired) {
+    $elements['captcha'] = array(
+        'type'  => 'captcha',
+        'title' => get_string('captchatitle'),
+        'description' => get_string('captchadescription'),
+        'rules' => array('required' => true)
+    );
+}
+
+$elements['userid'] = array(
+    'type'  => 'hidden',
+    'value' => $userid,
+);
+$elements['submit'] = array(
+    'type'  => 'submit',
+    'value' => get_string('sendmessage')
+);
+
 $contactform = pieform(array(
     'name'     => 'contactus',
     'method'   => 'post',
     'action'   => '',
     'jsform' => true,
-    'elements' => array(
-        'name' => array(
-            'type'  => 'text',
-            'title' => get_string('name'),
-            'defaultvalue' => $name,
-            'rules' => array(
-                'required'    => true
-            ),
-        ),
-        'email' => array(
-            'type'  => 'text',
-            'title' => get_string('email'),
-            'defaultvalue' => $email,
-            'rules' => array(
-                'required'    => true
-            ),
-        ),
-        'subject' => array(
-            'type'  => 'text',
-            'title' => get_string('subject'),
-            'defaultvalue' => '',
-        ),
-        'message' => array(
-            'type'  => 'textarea',
-            'rows'  => 10,
-            'cols'  => 60,
-            'title' => get_string('message'),
-            'defaultvalue' => '',
-            'rules' => array(
-                'required'    => true
-            ),
-        ),
-        'userid' => array(
-            'type'  => 'hidden',
-            'value' => $userid,
-        ),
-        'submit' => array(
-            'type'  => 'submit',
-            'value' => get_string('sendmessage')
-        ),
-    )
+    'elements' => $elements
 ));
+
+function contactus_validate(Pieform $form, $values) {
+    $captcharequired = get_config('captcha_on_contact_form');
+    if ((is_null($captcharequired) || $captcharequired) && !$values['captcha']) {
+        $form->set_error('captcha', get_string('captchaincorrect'));
+    }
+}
 
 function contactus_submit(Pieform $form, $values) {
     $data = new StdClass;

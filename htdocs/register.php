@@ -330,14 +330,15 @@ $elements['tandc'] = array(
     'separator' => ' &nbsp; '
 );
 
-$elements['captcha'] = array(
-    'type' => 'html',
-    'title' => get_string('captchatitle'),
-    'description' => get_string('captchadescription'),
-    'value' => '<img src="' . get_config('wwwroot') . 'captcha.php" alt="' . get_string('captchaimage') . '" style="padding: 2px 0;"><br>'
-        . '<input type="text" class="text required" name="captcha" style="width: 137px;" tabindex="4">',
-    'rules' => array('required' => true)
-);
+$captcharequired = get_config('captcha_on_register_form');
+if (is_null($captcharequired) || $captcharequired) {
+    $elements['captcha'] = array(
+        'type' => 'captcha',
+        'title' => get_string('captchatitle'),
+        'description' => get_string('captchadescription'),
+        'rules' => array('required' => true)
+    );
+}
 
 $elements['submit'] = array(
     'type' => 'submitcancel',
@@ -401,7 +402,8 @@ function register_validate(Pieform $form, $values) {
     }
 
     // CAPTCHA image
-    if (!isset($_POST['captcha']) || strtolower($_POST['captcha']) != strtolower($SESSION->get('captcha'))) {
+    $captcharequired = get_config('captcha_on_register_form');
+    if ((is_null($captcharequired) || $captcharequired) && !$values['captcha']) {
         $form->set_error('captcha', get_string('captchaincorrect'));
     }
 

@@ -17,39 +17,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package    mahara
- * @subpackage core
+ * @subpackage form
  * @author     Nigel McNie <nigel@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2006,2007 Catalyst IT Ltd http://catalyst.net.nz
  *
  */
 
-define('INTERNAL', 1);
-define('PUBLIC', 1);
-require('init.php');
-
-$name = param_alphanumext('name', 'captcha');
-
-// Get 5 random letters.
-$code    = get_random_key(5);
-$angles  = array(40, 0, 340, 20, 310);
-$lefts   = array(30, 50, 70, 95, 110);
-$bottoms = array(24, 20, 28, 34, 33);
-
-$file  = theme_get_path('images/captcha.png');
-$img   = imagecreatefrompng($file);
-$black = imagecolorallocate($img, 60, 60, 60);
-$ttf   = theme_get_path('captcha.ttf');
-
-$captcha = '';
-
-for ($i = 0; $i < strlen($code); $i++) {
-    imagettftext($img, 18, $angles[$i], $lefts[$i], $bottoms[$i], $black, $ttf, $code{$i});
-    $captcha .= $code{$i};
+function pieform_element_captcha(Pieform $form, $element) {
+    $id = $form->get_name() . '_' . $element['name'];
+    $image = '<img src="' . get_config('wwwroot') . 'captcha.php?name=' . $id . '" alt="' . get_string('captchaimage') . '" style="padding: 2px 0;"><br>';
+    $input = '<input type="text" class="text required" id="' . $id . '" name="' . $element['name'] . '" style="width: 137px;" tabindex="4">';
+    return $image . ' ' . $input;
 }
 
-$SESSION->set($name, $captcha);
-header('Content-type: image/png');
-imagepng($img);
+function pieform_element_captcha_get_value(Pieform $form, $element) {
+    global $SESSION;
+    $name = $element['name'];
+    $global = ($form->get_property('method') == 'get') ? $_GET : $_POST;
+    return isset($global[$name]) && strtolower($global[$name]) == strtolower($SESSION->get($form->get_name() . '_' . $name));
+}
 
 ?>
