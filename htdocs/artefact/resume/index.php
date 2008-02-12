@@ -320,17 +320,25 @@ EOF;
             return TD(null, link);
         },
         function (r, d) {
-            var up = A({'href': ''}, IMG({'src': '{$imagepath}/move-block-up.png', 'alt':'{$upstr}'}));
-            connect(up, 'onclick', function (e) {
-                e.stop();
-                return moveComposite(d.type, r.id, r.artefact, 'up');
-            });
-            var down = A({'href': ''}, IMG({'src': '{$imagepath}/move-block-down.png', 'alt':'{$downstr}'}));
-            connect(down, 'onclick', function (e) {
-                e.stop();
-                return moveComposite(d.type, r.id, r.artefact, 'down');
-            });
-            return TD(null, up, ' ', down);
+            var buttons = [];
+            if (r._rownumber > 1) {
+                var up = A({'href': ''}, IMG({'src': '{$imagepath}/move-block-up.png', 'alt':'{$upstr}'}));
+                connect(up, 'onclick', function (e) {
+                    e.stop();
+                    return moveComposite(d.type, r.id, r.artefact, 'up');
+                });
+                buttons.push(up);
+            }
+            if (!r._last) {
+                var down = A({'href': ''}, IMG({'src': '{$imagepath}/move-block-down.png', 'alt':'{$downstr}'}));
+                connect(down, 'onclick', function (e) {
+                    e.stop();
+                    return moveComposite(d.type, r.id, r.artefact, 'down');
+                });
+                buttons.push(' ');
+                buttons.push(down);
+            }
+            return TD({'style':'text-align:center;'}, buttons);
         }
     ]
 );

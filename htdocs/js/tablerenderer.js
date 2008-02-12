@@ -137,6 +137,7 @@ function TableRenderer(target, source, columns, options) {
                 rownumber++;
 
                 row._rownumber = rownumber;
+                row._last = rownumber == data.data.length;
                 var tr = self.rowfunction(row, rownumber, data);
                 if ( row._class ) { tr.className = row._class; }
                 if ( row._id ) { tr.id = row._id; }
