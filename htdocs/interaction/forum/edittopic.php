@@ -58,7 +58,7 @@ else { // edit topic
 }
 
 $forum = get_record_sql(
-    'SELECT f.group AS group, f.title, g.name AS groupname
+    'SELECT f.group AS groupid, f.title, g.name AS groupname
     FROM {interaction_instance} f
     INNER JOIN {group} g ON (g.id = f.group AND g.deleted = ?)
     WHERE f.id = ?
@@ -78,11 +78,11 @@ if (!$membership) {
 
 $breadcrumbs = array(
     array(
-        get_config('wwwroot') . 'group/view.php?id=' . $forum->group,
+        get_config('wwwroot') . 'group/view.php?id=' . $forum->groupid,
         $forum->groupname
     ),
     array(
-        get_config('wwwroot') . 'interaction/forum/index.php?group=' . $forum->group,
+        get_config('wwwroot') . 'interaction/forum/index.php?group=' . $forum->groupid,
         get_string('nameplural', 'interaction.forum')
     ),
     array(
@@ -253,7 +253,7 @@ function edittopic_submit(Pieform $form, $values) {
     }
 }
 
-$smarty = smarty(array(), array(), array(), array('sideblocks' => array(interaction_sideblock($forum->group))));
+$smarty = smarty(array(), array(), array(), array('sideblocks' => array(interaction_sideblock($forum->groupid))));
 $smarty->assign('breadcrumbs', $breadcrumbs);
 $smarty->assign('heading', TITLE);
 $smarty->assign('editform', $editform);

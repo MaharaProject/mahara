@@ -36,7 +36,7 @@ $topicid = param_integer('id');
 $returnto = param_alpha('returnto', 'topic');
 
 $topic = get_record_sql(
-    'SELECT f."group", f.id AS forumid, f.title, g.name AS groupname, p.poster, p.subject, p.body, COUNT(p2.*), ' . db_format_tsfield('p.ctime', 'ctime') . ', t.closed, m.user AS moderator, g.owner AS groupowner
+    'SELECT f.group, f.id AS forumid, f.title, g.name AS groupname, p.poster, p.subject, p.body, COUNT(p2.id), ' . db_format_tsfield('p.ctime', 'ctime') . ', t.closed, m.user AS moderator, g.owner AS groupowner
     FROM {interaction_forum_topic} t
     INNER JOIN {interaction_instance} f ON (f.id = t.forum AND f.deleted != 1)
     INNER JOIN {group} g ON (g.id = f.group AND g.deleted = ?)

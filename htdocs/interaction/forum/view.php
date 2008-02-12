@@ -41,7 +41,7 @@ $topicsperpage = 25;
 $offset = (int)($offset / $topicsperpage) * $topicsperpage;
 
 $forum = get_record_sql(
-    'SELECT f.title, f.description, f.id, COUNT(t.*), s.forum AS subscribed, g.id AS group, g.name AS groupname, g.owner as groupowner
+    'SELECT f.title, f.description, f.id, COUNT(t.id) AS topiccount, s.forum AS subscribed, g.id AS groupid, g.name AS groupname, g.owner as groupowner
     FROM {interaction_instance} f
     INNER JOIN {group} g ON (g.id = f."group" AND g.deleted = ?)
     LEFT JOIN {interaction_forum_topic} t ON (t.forum = f.id AND t.deleted != 1 AND t.sticky != 1)
@@ -125,11 +125,11 @@ if (isset($_POST['checked'])) {
 
 $breadcrumbs = array(
     array(
-        get_config('wwwroot') . 'group/view.php?id=' . $forum->group,
+        get_config('wwwroot') . 'group/view.php?id=' . $forum->groupid,
         $forum->groupname
     ),
     array(
-        get_config('wwwroot') . 'interaction/forum/index.php?group=' . $forum->group,
+        get_config('wwwroot') . 'interaction/forum/index.php?group=' . $forum->groupid,
         get_string('nameplural', 'interaction.forum')
     ),
     array(
@@ -171,7 +171,7 @@ $forum->subscribe = pieform(array(
 // gets the info about topics
 // the last post is found by taking the max id of the posts in a topic with the max post time
 // taking the max id is needed because multiple posts can have the same post time
-$sql = 'SELECT t.id, p1.subject, p1.body, p1.poster, p1.deleted, m.user AS moderator, COUNT(p2.*), t.closed, s.topic AS subscribed, p4.id AS lastpost, ' . db_format_tsfield('p4.ctime', 'lastposttime') . ', p4.poster AS lastposter, m2.user AS lastpostermoderator
+$sql = 'SELECT t.id, p1.subject, p1.body, p1.poster, p1.deleted, m.user AS moderator, COUNT(p2.id), t.closed, s.topic AS subscribed, p4.id AS lastpost, ' . db_format_tsfield('p4.ctime', 'lastposttime') . ', p4.poster AS lastposter, m2.user AS lastpostermoderator
     FROM interaction_forum_topic t
     INNER JOIN {interaction_forum_post} p1 ON (p1.topic = t.id AND p1.parent IS NULL)
     LEFT JOIN {interaction_forum_moderator} m ON (m.forum = t.forum AND p1.poster = m.user)
@@ -207,7 +207,7 @@ setup_topics($regulartopics);
 
 $pagination = build_pagination(array(
     'url' => get_config('wwwroot') . 'interaction/forum/view.php?id=' . $forumid,
-    'count' => $forum->count,
+    'count' => $forum->topiccount,
     'limit' => $topicsperpage,
     'offset' => $offset,
     'resultcounttextsingular' => get_string('topiclower', 'interaction.forum'),
@@ -231,7 +231,7 @@ addLoadEvent(function() {
 });
 EOF;
 
-$smarty = smarty(array(), array(), array(), array('sideblocks' => array(interaction_sideblock($forum->group))));
+$smarty = smarty(array(), array(), array(), array('sideblocks' => array(interaction_sideblock($forum->groupid))));
 $smarty->assign('breadcrumbs', $breadcrumbs);
 $smarty->assign('heading', TITLE);
 $smarty->assign('forum', $forum);

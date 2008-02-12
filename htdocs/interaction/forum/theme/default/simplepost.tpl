@@ -9,6 +9,6 @@
 >
 {$post->poster|display_name|escape}</a></h5>
 <div><img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=100&amp;id={$post->poster}" alt=""></div>
-<h5>{str tag="postsvariable" section=interaction.forum args=$post->count}</h5>
+<h5>{$post->postcount}</h5>
 {$post->body}
 </div>

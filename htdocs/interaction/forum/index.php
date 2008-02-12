@@ -63,7 +63,7 @@ $breadcrumbs = array(
 );
 
 $forums = get_records_sql_array(
-    'SELECT f.id, f.title, f.description, m.user AS moderator, COUNT(t.*), s.forum AS subscribed
+    'SELECT f.id, f.title, f.description, m.user AS moderator, COUNT(t.id), s.forum AS subscribed
     FROM {interaction_instance} f
     LEFT JOIN {interaction_forum_moderator} m ON m.forum = f.id
     LEFT JOIN {interaction_forum_topic} t ON (t.forum = f.id AND t.deleted != 1)
