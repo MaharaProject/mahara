@@ -220,7 +220,6 @@ $addstr = get_string('add');
 $editstr = get_string('edit');
 $delstr = get_string('delete');
 $confirmdelstr = get_string('compositedeleteconfirm', 'artefact.resume');
-$confirmeditprofilestr = get_string('confirmeditprofile', 'artefact.resume');
 $imagepath = theme_get_url('images');
 $upstr = get_string('moveup', 'artefact.resume');
 $downstr = get_string('movedown', 'artefact.resume');
@@ -288,9 +287,7 @@ function moveComposite(type, id, artefact, direction) {
 }
 
 function editprofilebutton() {
-    if (confirm('{$confirmeditprofilestr}')) {
-        document.location='{$wwwroot}artefact/internal/';
-    }
+    document.location='{$wwwroot}artefact/internal/';
     return false;
 }
 
