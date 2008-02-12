@@ -28,6 +28,8 @@ define('INTERNAL', 1);
 define('PUBLIC', 1);
 require('init.php');
 
+$name = param_alphanumext('name', 'captcha');
+
 // Get 5 random letters.
 $code    = get_random_key(5);
 $angles  = array(40, 0, 340, 20, 310);
@@ -46,7 +48,7 @@ for ($i = 0; $i < strlen($code); $i++) {
     $captcha .= $code{$i};
 }
 
-$SESSION->set('captcha', $captcha);
+$SESSION->set($name, $captcha);
 header('Content-type: image/png');
 imagepng($img);
 

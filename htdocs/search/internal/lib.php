@@ -187,7 +187,7 @@ class PluginSearchInternal extends PluginSearch {
         $fieldlist = "('" . join("','", $publicfields) . "')";
 
         $sql = 'SELECT
-                COUNT(DISTINCT owner)
+                COUNT(DISTINCT u.id)
             FROM
                 {usr} u
                 LEFT JOIN {artefact} a ON u.id=a.owner
@@ -629,7 +629,7 @@ class PluginSearchInternal extends PluginSearch {
         if ($type == 'member') {
             $sql .=  'AND (
                 owner = ? OR id IN (
-                    SELECT "group" FROM {group_member} WHERE member = ?
+                    SELECT gm.group FROM {group_member} gm WHERE gm.member = ?
                 )
             )';
             $values[] = $USER->get('id');
@@ -638,7 +638,7 @@ class PluginSearchInternal extends PluginSearch {
         else if ($type == 'notmember') {
             $sql .=  "AND (
                 owner != ? AND id NOT IN (
-                    SELECT group FROM {group_member} WHERE member = ?
+                    SELECT gm.group FROM {group_member} gm WHERE gm.member = ?
                 )
             )";
             $values[] = $USER->get('id');
@@ -659,7 +659,7 @@ class PluginSearchInternal extends PluginSearch {
         if ($type == 'member') {
             $sql .= 'AND (
                     owner = ? OR id IN (
-                        SELECT "group" FROM {group_member} WHERE member = ?
+                        SELECT gm.group FROM {group_member} gm WHERE gm.member = ?
                     )
                 )
             ';
@@ -667,7 +667,7 @@ class PluginSearchInternal extends PluginSearch {
         else if ($type == 'notmember') {
             $sql .= "AND (
                     owner != ? AND id NOT IN (
-                        SELECT group FROM {group_member} WHERE member = ?
+                        SELECT gm.group FROM {group_member} gm WHERE gm.member = ?
                     )
                 )
             ";

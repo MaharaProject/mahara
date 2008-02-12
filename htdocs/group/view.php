@@ -47,16 +47,6 @@ $ismember = (bool) ($membership & GROUP_MEMBERSHIP_MEMBER);
 if (!empty($joincontrol)) {
     // leave, join, acceptinvite, request
     switch ($joincontrol) {
-        case 'leave':
-            // make sure they're a member and can leave
-            if ($ismember && group_user_can_leave($id, $USER->get('id'))) {
-                group_remove_user($id, $USER->get('id'));
-                $SESSION->add_ok_msg(get_string('leftgroup', 'group'));
-            } 
-            else {
-                $SESSION->add_error_msg(get_string('couldnotleavegroup', 'group'));
-            }
-            break;
         case 'join':
             if (!$ismember && $group->jointype == 'open') {
                 group_add_member($id, $USER->get('id'));
@@ -82,42 +72,11 @@ if (!empty($joincontrol)) {
             delete_records('group_member_invite', 'member', $USER->get('id'), 'group', $id);
             $SESSION->add_ok_msg($message);
             break;
-        case 'request':
-            if (!$ismember && $group->jointype == 'request' 
-                && !record_exists('group_member_request', 'group', $id, 'member', $USER->get('id'))) {
-                $gmr = new StdClass;
-                $gmr->reason = param_variable('reason', null);
-                $gmr->group = $id;
-                $gmr->member = $USER->get('id');
-                $gmr->ctime = db_format_timestamp(time());
-                $owner = get_record('usr', 'id', $group->owner);
-                $lang = get_user_language($owner->id);
-                insert_record('group_member_request', $gmr);
-                if (empty($gmr->reason)) {
-                    $message = get_string_from_language($lang, 'grouprequestmessage', 'group', 
-                                          display_name($USER, $owner), $group->name);
-                } 
-                else {
-                    $message = get_string_from_language($lang, 'grouprequestmessagereason', 'group', 
-                                          display_name($USER, $owner), $group->name, $gmr->reason);
-                }
-                require_once('activity.php');
-                activity_occurred('maharamessage', 
-                    array('users'   => array($group->owner), 
-                          'subject' => get_string_from_language($lang, 'grouprequestsubject', 'group'),
-                          'message' => $message,
-                          'url'     => get_config('wwwroot') . 'group/view.php?id=' . $id));
-                $SESSION->add_ok_msg(get_string('grouprequestsent', 'group'));
-            }
-            else {
-                $SESSION->add_error_msg(get_string('couldnotrequestgroup', 'group'));
-            }
-            break;
     }
     // redirect, stuff will have changed
     redirect('/group/view.php?id=' . $id);
     exit;
-}
+ }
 
 $invited   = get_record('group_member_invite', 'group', $id, 'member', $USER->get('id'));
 $requested = get_record('group_member_request', 'group', $id, 'member', $USER->get('id'));
@@ -290,22 +249,6 @@ function updateMembership() {
 EOF;
 
 }// end of membership only javascript (tablerenderers etc)
-$javascript .= <<<EOF
-
-function joinRequestControl() {
-    var form = P({'id': 'joinrequestextras'},
-                 '{$reasonstr}: ', 
-                 FORM({'method': 'post', 'action': '{$commview}'}, 
-                      INPUT({'type': 'hidden', 'name': 'id', 'value': {$id}}),
-                      INPUT({'type': 'hidden', 'name': 'joincontrol', 'value': 'request'}),
-                      INPUT({'type': 'text', 'name': 'reason'}),
-                      ' ',
-                      INPUT({'type': 'submit', 'class': 'submit', 'value': '{$requeststr}'})));
-    insertSiblingNodesAfter('joinrequest', form);
-    return false;
-}
-
-EOF;
 
 if (!empty($pending) && $canupdate && $request) {
     $javascript .= <<<EOF

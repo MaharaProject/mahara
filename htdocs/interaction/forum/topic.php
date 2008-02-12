@@ -35,7 +35,7 @@ require_once('pieforms/pieform.php');
 $topicid = param_integer('id');
 
 $topic = get_record_sql(
-    'SELECT p.subject, p.poster, p.id AS firstpost, ' . db_format_tsfield('p.ctime', 'ctime') . ', t.id, f.group, g.name AS groupname, f.id AS forumid, f.title AS forumtitle, t.closed, sf.forum AS forumsubscribed, st.topic AS topicsubscribed, g.owner
+    'SELECT p.subject, p.poster, p.id AS firstpost, ' . db_format_tsfield('p.ctime', 'ctime') . ', t.id, f.group AS groupid, g.name AS groupname, f.id AS forumid, f.title AS forumtitle, t.closed, sf.forum AS forumsubscribed, st.topic AS topicsubscribed, g.owner
     FROM {interaction_forum_topic} t
     INNER JOIN {interaction_instance} f ON (t.forum = f.id AND f.deleted != 1)
     INNER JOIN {group} g ON (g.id = f.group AND g.deleted = ?)
@@ -63,11 +63,11 @@ define('TITLE', $topic->forumtitle . ' - ' . $topic->subject);
 
 $breadcrumbs = array(
     array(
-        get_config('wwwroot') . 'group/view.php?id=' . $topic->group,
+        get_config('wwwroot') . 'group/view.php?id=' . $topic->groupid,
         $topic->groupname
     ),
     array(
-        get_config('wwwroot') . 'interaction/forum/index.php?group=' . $topic->group,
+        get_config('wwwroot') . 'interaction/forum/index.php?group=' . $topic->groupid,
         get_string('nameplural', 'interaction.forum')
     ),
     array(
@@ -82,12 +82,15 @@ $breadcrumbs = array(
 
 if (!$topic->forumsubscribed) {
     $topic->subscribe = pieform(array(
-        'name'     => 'subscribe',
+        'name'     => 'subscribe_topic',
+        'plugintype' => 'interaction',
+        'pluginname' => 'forum',
         'autofocus' => false,
         'elements' => array(
             'submit' => array(
                'type'  => 'submit',
-               'value' => $topic->topicsubscribed ? get_string('unsubscribefromtopic', 'interaction.forum') : get_string('subscribetotopic', 'interaction.forum')
+               'value' => $topic->topicsubscribed ? get_string('unsubscribefromtopic', 'interaction.forum') : get_string('subscribetotopic', 'interaction.forum'),
+               'help' => true
             ),
             'topic' => array(
                 'type' => 'hidden',
@@ -102,7 +105,7 @@ if (!$topic->forumsubscribed) {
 }
 
 $posts = get_records_sql_array(
-    'SELECT p1.id, p1.parent, p1.poster, p1.subject, p1.body, ' . db_format_tsfield('p1.ctime', 'ctime') . ', p1.deleted, m.user AS moderator, COUNT(p2.*), ' . db_format_tsfield('e.ctime', 'edittime') . ', e.user AS editor, m2.user as editormoderator
+    'SELECT p1.id, p1.parent, p1.poster, p1.subject, p1.body, ' . db_format_tsfield('p1.ctime', 'ctime') . ', p1.deleted, m.user AS moderator, COUNT(p2.id) AS postcount, ' . db_format_tsfield('e.ctime', 'edittime') . ', e.user AS editor, m2.user as editormoderator
     FROM {interaction_forum_post} p1
     INNER JOIN {interaction_forum_topic} t ON (t.id = p1.topic)
     INNER JOIN {interaction_forum_post} p2 ON (p1.poster = p2.poster AND p2.deleted != 1)
@@ -116,7 +119,7 @@ $posts = get_records_sql_array(
     WHERE p1.topic = ?
     GROUP BY 1, 2, 3, 4, 5, p1.ctime, 7, 8, 10, 11, 12, e.ctime
     ORDER BY p1.ctime, p1.id, e.ctime',
-    array($topic->group, $topicid)
+    array($topic->groupid, $topicid)
 );
 
 // $posts has an object for every edit to a post
@@ -124,6 +127,7 @@ $posts = get_records_sql_array(
 // also formats the edits a bit
 $count = count($posts);
 for ($i = 0; $i < $count; $i++) {
+	$posts[$i]->postcount = get_string('postsvariable', 'interaction.forum', $posts[$i]->postcount);
     $posts[$i]->canedit = $posts[$i]->parent && ($moderator || user_can_edit_post($posts[$i]->poster, $posts[$i]->ctime));
     $posts[$i]->ctime = relative_date(get_string('strftimerecentfullrelative', 'interaction.forum'), get_string('strftimerecentfull'), $posts[$i]->ctime);
     $postedits = array();
@@ -142,7 +146,7 @@ for ($i = 0; $i < $count; $i++) {
 // builds the first post (with index 0) which has as children all the posts in the topic
 $posts = buildpost(0, '', $posts);
 
-$smarty = smarty(array(), array(), array(), array('sideblocks' => array(interaction_sideblock($topic->group))));
+$smarty = smarty(array(), array(), array(), array('sideblocks' => array(interaction_sideblock($topic->groupid))));
 $smarty->assign('breadcrumbs', $breadcrumbs);
 $smarty->assign('heading', TITLE);
 $smarty->assign('topic', $topic);
@@ -184,7 +188,7 @@ function buildpost($postindex, $parentsubject, &$posts){
     return $smarty->fetch('interaction:forum:post.tpl');
 }
 
-function subscribe_submit(Pieform $form, $values) {
+function subscribe_topic_submit(Pieform $form, $values) {
     global $USER;
     if ($values['type'] == 'subscribe') {
         insert_record(

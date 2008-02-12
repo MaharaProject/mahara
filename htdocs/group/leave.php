@@ -80,6 +80,7 @@ $form = pieform(array(
 $smarty = smarty();
 $smarty->assign('heading', TITLE);
 $smarty->assign('form', $form);
+$smarty->assign('group', $group);
 $smarty->display('group/leave.tpl');
 
 function leavegroup_submit(Pieform $form, $values) {

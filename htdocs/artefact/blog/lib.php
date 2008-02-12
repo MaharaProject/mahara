@@ -114,21 +114,7 @@ class ArtefactTypeBlog extends ArtefactType {
      * This constant gives the per-page pagination for listing blogs.
      */
     const pagination = 10;
-    
-    
-    /** 
-     * Whether comments are allowed on this blog or not.
-     *
-     * @var boolean
-     */
-    protected $commentsallowed = false;
 
-    /** 
-     * Whether the blog owner will be notified of comments or not.
-     *
-     * @var boolean
-     */
-    protected $commentsnotify = false;
 
     /**
      * We override the constructor to fetch the extra data.
@@ -138,22 +124,6 @@ class ArtefactTypeBlog extends ArtefactType {
      */
     public function __construct($id = 0, $data = null) {
         parent::__construct($id, $data);
-
-        if (!$data) {
-            if ($this->id) {
-                if ($blogdata = get_record('artefact_blog_blog', 'blog', $this->id)) {
-                    foreach($blogdata as $name => $value) {
-                        if (property_exists($this, $name)) {
-                            $this->$name = $value;
-                        }
-                    }
-                }
-                else {
-                    // This should never happen unless the user is playing around with blog IDs in the location bar or similar
-                    throw new ArtefactNotFoundException(get_string('blogdoesnotexist', 'artefact.blog'));
-                }
-            }
-        }
 
         if (empty($this->id)) {
             $this->container = 1;
@@ -181,22 +151,6 @@ class ArtefactTypeBlog extends ArtefactType {
         // Commit to the artefact table.
         parent::commit();
 
-        // Reset dirtyness for the time being.
-        $this->dirty = true;
-
-        $data = (object)array(
-            'blog'            => $this->get('id'),
-            'commentsallowed' => ($this->get('commentsallowed') ? 1 : 0),
-            'commentsnotify'  => ($this->get('commentsnotify') ? 1 : 0)
-        );
-
-        if ($new) {
-            insert_record('artefact_blog_blog', $data);
-        }
-        else {
-            update_record('artefact_blog_blog', $data, 'blog');
-        }
-
         $this->dirty = false;
     }
 
@@ -208,9 +162,6 @@ class ArtefactTypeBlog extends ArtefactType {
         if (empty($this->id)) {
             return;
         }
-
-        // Delete the blog-specific data.
-        delete_records('artefact_blog_blog', 'blog', $this->id);
 
         // Delete the artefact and all children.
         parent::delete();
@@ -319,8 +270,6 @@ class ArtefactTypeBlog extends ArtefactType {
         $artefact->set('title', $values['title']);
         $artefact->set('description', $values['description']);
         $artefact->set('owner', $user->get('id'));
-        $artefact->set('commentsallowed', $values['commentsallowed'] ? true : false);
-        $artefact->set('commentsnotify', $values['commentsnotify'] ? true : false);
         $artefact->set('tags', $values['tags']);
         $artefact->commit();
     }
@@ -343,19 +292,8 @@ class ArtefactTypeBlog extends ArtefactType {
         
         $artefact->set('title', $values['title']);
         $artefact->set('description', $values['description']);
-        $artefact->set('commentsallowed', $values['commentsallowed'] ? true : false);
-        $artefact->set('commentsnotify', $values['commentsnotify'] ? true : false);
         $artefact->set('tags', $values['tags']);
         $artefact->commit();
-    }
-
-    public function public_feedback_allowed() {
-        return $this->get('commentsallowed');
-    }
-
-
-    public function feedback_notify_owner() {
-        return $this->get('commentsnotify');
     }
 
     public static function get_links($id) {
@@ -794,21 +732,6 @@ class ArtefactTypeBlogPost extends ArtefactType {
             }
         }
         return $list;
-    }
-
-    public function public_feedback_allowed() {
-        // Comments are not allowed on posts when the blog has
-        // commentsallowed set to 0;
-        $parent = get_field('artefact', 'parent', 'id', $this->get('id'));
-        return get_field('artefact_blog_blog', 'commentsallowed', 'blog', $parent);
-    }
-    
-    
-    public function feedback_notify_owner() {
-        // Notify owner of comments on posts when the blog has
-        // commentsnotify set to 1;
-        $parent = get_field('artefact', 'parent', 'id', $this->get('id'));
-        return get_field('artefact_blog_blog', 'commentsnotify', 'blog', $parent);
     }
     
     public static function get_links($id) {

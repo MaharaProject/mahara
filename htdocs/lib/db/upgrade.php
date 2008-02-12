@@ -437,11 +437,13 @@ function xmldb_core_upgrade($oldversion=0) {
         delete_records('activity_type', 'name', 'newview');
     }
 
-    if ($oldversion < 2007082300) {
+    // 0.9 - 1.0 upgrade begins here
+    // Version numbers begin at one day after the release date of 0.9 - 
+    // although many were actually done before that date. A side effect of 
+    // parallel development
+
+    if ($oldversion < 2007120800) {
         // Institution message activity type
-        // NOTE: this patch was not actually done on 2007/08/23, but has been 
-        // placed here to ensure that the activity type upgrade happens after 
-        // it
         insert_record('activity_type', (object) array(
             'name' => 'institutionmessage',
             'admin' => 0,
@@ -462,7 +464,7 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
-    if ($oldversion < 2007103000) {
+    if ($oldversion < 2007120801) {
         // create interaction tables
 
         $table = new XMLDBTable('interaction_installed');
@@ -529,7 +531,7 @@ function xmldb_core_upgrade($oldversion=0) {
 
     }
 
-    if ($oldversion < 2007111900) {
+    if ($oldversion < 2007120802) {
         // move the activitytype table around
         $fks = array(
             'activity_queue' => 'type',
@@ -612,7 +614,7 @@ function xmldb_core_upgrade($oldversion=0) {
         $table->addFieldInfo('expirymailsent', XMLDB_TYPE_INTEGER, 1, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, 0);
         $table->addKeyInfo('usrfk', XMLDB_KEY_FOREIGN, array('usr'), 'usr', array('id'));
         $table->addKeyInfo('institutionfk', XMLDB_KEY_FOREIGN, array('institution'), 'institution', array('name'));
-        $table->addKeyInfo('usrinstitutionuk', XMLDB_KEY_UNIQUE, array('usr', 'institution'));
+        $table->addKeyInfo('usrinstitutionuk', XMLDB_KEY_PRIMARY, array('usr', 'institution'));
         create_table($table);
 
         $table = new XMLDBTable('usr_institution_request');
@@ -624,7 +626,7 @@ function xmldb_core_upgrade($oldversion=0) {
         $table->addFieldInfo('ctime', XMLDB_TYPE_DATETIME, null, null);
         $table->addKeyInfo('usrfk', XMLDB_KEY_FOREIGN, array('usr'), 'usr', array('id'));
         $table->addKeyInfo('institutionfk', XMLDB_KEY_FOREIGN, array('institution'), 'institution', array('name'));
-        $table->addKeyInfo('usrinstitutionuk', XMLDB_KEY_UNIQUE, array('usr', 'institution'));
+        $table->addKeyInfo('usrinstitutionuk', XMLDB_KEY_PRIMARY, array('usr', 'institution'));
         create_table($table);
 
         // From now on usernames will be unique, and remote xmlrpc
@@ -807,7 +809,7 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2008012401) {
-        table_column('usr_registration', null, 'lang', 'text', null, null, '', '');
+        execute_sql('ALTER TABLE {usr_registration} ADD COLUMN lang TEXT');
     }
 
     if ($oldversion < 2008012500) {
@@ -823,6 +825,18 @@ function xmldb_core_upgrade($oldversion=0) {
         $field = new XMLDBField('updateuserinfoonlogin');
         $field->setAttributes(XMLDB_TYPE_INTEGER, 1, XMLDB_UNSIGNED, null, null, null, null, 0);
         drop_field($table, $field);
+    }
+
+    if ($oldversion < 2008021200) {
+        // Install the new auth plugins and the group forums
+        $data = check_upgrades('auth.none');
+        upgrade_plugin($data);
+
+        $data = check_upgrades('auth.ldap');
+        upgrade_plugin($data);
+
+        $data = check_upgrades('interaction.forum');
+        upgrade_plugin($data);
     }
 
     return $status;

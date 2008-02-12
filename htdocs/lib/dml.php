@@ -43,7 +43,7 @@ function db_table_name($name) {
  * @return string
  */
 function db_quote_table_placeholders($sql) {
-    return preg_replace_callback('/\{([a-z_]+)\}/', create_function('$matches', 'return db_table_name($matches[1]);'), $sql);
+    return preg_replace_callback('/\{([a-z][a-z0-9_]+)\}/', create_function('$matches', 'return db_table_name($matches[1]);'), $sql);
 }
 
 /**

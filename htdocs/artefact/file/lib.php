@@ -144,17 +144,8 @@ class PluginArtefactFile extends PluginArtefact {
         static $jshelp = array(
             'file' => array(
                 'artefact.file' => array(
-                    'cancelfolder',
-                    'cancel',
-                    'createfolder',
-                    'delete',
-                    'description',
-                    'edit',
-                    'folderdescription',
-                    'name',
                     'notice',
                     'quota_message',
-                    'title',
                     'uploadfile',
                     'tags',
                 ),

@@ -498,7 +498,7 @@ class ActivityTypeInstitutionmessage extends ActivityType {
             $this->users = activity_get_users($this->get_id(), null, null, null,
                                               array($this->institution->name));
         } else if ($this->messagetype == 'invite') {
-            $this->url = get_config('wwwroot') . 'account/index.php';
+            $this->url = get_config('wwwroot') . 'account/institutions.php';
             $this->users = activity_get_users($this->get_id(), $this->users);
         }
     }

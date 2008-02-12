@@ -30,7 +30,6 @@ defined('INTERNAL') || die();
 $string['groupname'] = 'Group Name';
 $string['creategroup'] = 'Create Group';
 $string['groupmemberrequests'] = 'Pending membership requests';
-$string['addgroup'] = 'Add new group';
 $string['sendinvitation'] = 'Send invite';
 $string['invitetogroupsubject'] = 'You were invited to join a group';
 $string['invitetogroupmessage'] = '%s has invited you to join a group, \'%s\'.  Click on the link below for more information.';
@@ -227,6 +226,7 @@ $string['numberoffriends'] = 'Friends (%s of %s)';
 $string['addusertogroup'] = 'Add to ';
 $string['inviteusertojoingroup'] = 'Invite to ';
 $string['invitemembertogroup'] = 'Invite %s to join \'%s\'';
+$string['cannotinvitetogroup'] = 'You can\'t invite this user to this group';
 $string['removefriend'] = 'Remove friend';
 $string['denyfriendrequestlower'] = 'Deny friend request';
 

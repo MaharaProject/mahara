@@ -14,16 +14,16 @@
                     <img src="{$WWWROOT}thumb.php?type=profileicon&amp;maxsize=100&amp;id={$USERID}" alt="">
                     {if $canmessage}
                         <br>
-                        <a href="{$WWWROOT}user/sendmessage.php?id={$USERID}">{str tag='sendmessage' section='group'}</a>
+                        <a href="{$WWWROOT}user/sendmessage.php?id={$USERID}&amp;returnto=view">{str tag='sendmessage' section='group'}</a>
                     {/if}
                     {if $relationship == 'existingfriend'}
                         <br>
-                        <a href="{$WWWROOT}user/removefriend.php?id={$USERID}">{str tag='removefromfriendslist' section='group'}</a>
+                        <a href="{$WWWROOT}user/removefriend.php?id={$USERID}&amp;returnto=view">{str tag='removefromfriendslist' section='group'}</a>
                     {elseif $relationship == 'none' && $friendscontrol == 'auto'}
                         {$newfriendform}
                     {elseif $relationship == 'none' && $friendscontrol == 'auth'}
                         <br>
-                        <a href="{$WWWROOT}user/requestfriendship.php?id={$USERID}">{str tag='requestfriendship' section='group'}</a>
+                        <a href="{$WWWROOT}user/requestfriendship.php?id={$USERID}&amp;returnto=view">{str tag='requestfriendship' section='group'}</a>
                     {/if}
                     {if $inviteform}
                         {$inviteform}

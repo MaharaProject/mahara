@@ -43,7 +43,7 @@ $offset = (int)($offset / $groupsperpage) * $groupsperpage;
 if ($filter == 'owner') {
     $sql = '
         INNER JOIN (
-            SELECT g.id, CAST(\'owner\' AS TEXT) AS type
+            SELECT g.id, CAST(\'owner\' AS CHAR(7)) AS type
             FROM {group} g
             WHERE g.owner = ?
         ) t ON t.id = g.id';
@@ -52,10 +52,10 @@ if ($filter == 'owner') {
 else if ($filter == 'member') {
     $sql = '
         INNER JOIN (
-            SELECT g.id, CAST(\'owner\' AS TEXT) AS type
+            SELECT g.id, CAST(\'owner\' AS CHAR(7)) AS type
             FROM {group} g
             WHERE g.owner = ?
-            UNION SELECT g.id, CAST(\'member\' AS TEXT) AS type
+            UNION SELECT g.id, CAST(\'member\' AS CHAR(7)) AS type
             FROM {group} g
             INNER JOIN {group_member} gm ON (g.id = gm.group AND gm.member = ?)
             WHERE g.owner != gm.member
@@ -65,7 +65,7 @@ else if ($filter == 'member') {
 else if ($filter == 'invite') {
     $sql = '
         INNER JOIN (
-            SELECT g.id, CAST(\'invite\' AS TEXT) AS type
+            SELECT g.id, CAST(\'invite\' AS CHAR(7)) AS type
             FROM {group} g
             INNER JOIN {group_member_invite} gmi ON (gmi.group = g.id AND gmi.member = ?)
         ) t ON t.id = g.id';
@@ -74,7 +74,7 @@ else if ($filter == 'invite') {
 else if ($filter == 'request') {
     $sql = '
         INNER JOIN (
-            SELECT g.id, CAST(\'request\' AS TEXT) AS type
+            SELECT g.id, CAST(\'request\' AS CHAR(7)) AS type
             FROM {group} g
             INNER JOIN {group_member_request} gmr ON (gmr.group = g.id AND gmr.member = ?)
         ) t ON t.id = g.id';
@@ -84,17 +84,17 @@ else { // all or some other text
     $filter = 'all';
     $sql = '
         INNER JOIN (
-            SELECT g.id, CAST(\'owner\' AS TEXT) AS type
+            SELECT g.id, CAST(\'owner\' AS CHAR(7)) AS type
             FROM {group} g
             WHERE g.owner = ?
-            UNION SELECT g.id, CAST(\'member\' AS TEXT) AS type
+            UNION SELECT g.id, CAST(\'member\' AS CHAR(7)) AS type
             FROM {group} g
             INNER JOIN {group_member} gm ON (g.id = gm.group AND gm.member = ?)
             WHERE g.owner != gm.member
-            UNION SELECT g.id, CAST(\'invite\' AS TEXT) AS type
+            UNION SELECT g.id, CAST(\'invite\' AS CHAR(7)) AS type
             FROM {group} g
             INNER JOIN {group_member_invite} gmi ON (gmi.group = g.id AND gmi.member = ?)
-            UNION SELECT g.id, CAST(\'request\' AS TEXT) AS type
+            UNION SELECT g.id, CAST(\'request\' AS CHAR(7)) AS type
             FROM {group} g
             INNER JOIN {group_member_request} gmr ON (gmr.group = g.id AND gmr.member = ?)
         ) t ON t.id = g.id';
@@ -126,35 +126,23 @@ $form = pieform(array(
 
 $values[] = 0;
 
-$count = count_records_sql('SELECT COUNT(g.*) FROM {group} g ' . $sql . ' WHERE g.deleted = ?', $values);
+$count = count_records_sql('SELECT COUNT(*) FROM {group} g ' . $sql . ' WHERE g.deleted = ?', $values);
 
 // almost the same as query used in find - common parts should probably be pulled out
-// gets the groups filtered by
+// gets the groups filtered by above
 // including type if the user is associated with the group in some way
 // and the first three members by id
-// does this by finding the lowest id, then the next lowest, then the third lowest in subselects
-// which is just horrible :(
 
-$sql = 'SELECT g.id, g.name, g.description, g.owner, g.jointype, m.member1 AS member1, m.member2 AS member2, t.type, MIN(gm.member) AS member3, COUNT(gm2.*) AS membercount, COUNT(gmr.*) AS requests
+$sql = 'SELECT g.id, g.name, g.description, g.owner, g.jointype, t.type, COUNT(gm.member) AS membercount, COUNT(gmr.member) AS requests,
+	(SELECT gm.member FROM {group_member} gm WHERE gm.group = g.id ORDER BY member LIMIT 1) AS member1,
+	(SELECT gm.member FROM {group_member} gm WHERE gm.group = g.id ORDER BY member LIMIT 1 OFFSET 1) AS member2,
+	(SELECT gm.member FROM {group_member} gm WHERE gm.group = g.id ORDER BY member LIMIT 1 OFFSET 2) AS member3
     FROM {group} g
-    LEFT JOIN (
-        SELECT m.member AS member1, g.id AS group, MIN(gm.member) AS member2
-        FROM {group} g
-        LEFT JOIN (
-            SELECT g.id AS group, MIN(gm.member) AS member
-            FROM {group} g
-            LEFT JOIN {group_member} gm ON (gm.group = g.id)
-            GROUP BY 1
-        ) m on m.group = g.id
-        LEFT JOIN {group_member} gm ON (gm.group = g.id AND m.member != gm.member)
-           GROUP BY 1, 2
-    ) m ON m.group = g.id
-    LEFT JOIN {group_member} gm ON (gm.group = g.id AND gm.member != m.member1 AND gm.member != m.member2)
-    LEFT JOIN {group_member} gm2 ON (gm2.group = g.id)
+    LEFT JOIN {group_member} gm ON (gm.group = g.id)
     LEFT JOIN {group_member_request} gmr ON (gmr.group = g.id)' .
     $sql . '
     WHERE g.deleted = ?
-    GROUP BY 1, 2, 3, 4, 5, 6, 7, 8
+    GROUP BY 1, 2, 3, 4, 5, 6, 9, 10
     ORDER BY g.name';
 
 $groups = get_records_sql_array($sql, $values, $offset, $groupsperpage);

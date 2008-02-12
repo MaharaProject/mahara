@@ -110,7 +110,6 @@ $textinputform = pieform(array(
                 'required' => true
             ),
             'defaultvalue' => $title,
-            'help' => true
         ),
         'description' => array(
             'type' => 'wysiwyg',
@@ -122,7 +121,6 @@ $textinputform = pieform(array(
                 'required' => true
             ),
             'defaultvalue' => $description,
-            'help'        => true,
         ),
         'tags'       => array(
             'defaultvalue' => $tags,
@@ -177,8 +175,6 @@ $getstring = quotestrings(array(
 // automatically when file.js is included.
 $copyright = get_field('site_content', 'content', 'name', 'uploadcopyright');
 $wwwroot = get_config('wwwroot');
-$uploadfilehelp = json_encode(get_help_icon('artefact', 'blog', null, null, null, 'uploadfile'));
-$removehelp = json_encode(get_help_icon('artefact', 'blog', null, null, null, 'remove'));
 
 
 
@@ -197,15 +193,6 @@ var copyrightnotice = '{$copyright}';
 var uploader = new FileUploader('uploader', 'upload.php', null, {$getstring['blogpost']}, false, 
                                 attachtopost, fileattached);
 uploader.createid = {$createid};
-
-
-
-// Change the contextual help from the myfiles upload help to the
-// blogpost upload help
-addLoadEvent(function () {
-    var h = getElement('uploadfilehelp');
-    h.innerHTML = {$uploadfilehelp};
-});
 
 
 
@@ -235,11 +222,6 @@ addLoadEvent(function () {connect('browsebutton', 'onclick', browsemyfiles);});
 
 
 // List of attachments to the blog post
-function removehelp () {
-    var h = SPAN(null);
-    h.innerHTML = {$removehelp};
-    return h;
-}
 var attached = new TableRenderer(
     'attachedfiles',
     'attachedfiles.json.php',
@@ -252,8 +234,7 @@ var attached = new TableRenderer(
      function (r) { 
          return TD(null, INPUT({'type':'button', 'class':'button',
                                 'value':{$getstring['remove']},
-                                'onclick':"removefrompost('artefact:"+r.id+"')"}),
-                   removehelp());
+                                'onclick':"removefrompost('artefact:"+r.id+"')"}));
      }
     ]
 );
@@ -310,9 +291,7 @@ function attachtopost(data) {
                     [SPAN({'style':'display: none;'}, ext),
                      INPUT(
                         {'type':'button', 'class':'button', 'value':{$getstring['remove']},
-                        'onclick':"removefrompost('"+rowid+"')"}
-                        ),
-                     removehelp()]
+                        'onclick':"removefrompost('"+rowid+"')"})]
                 ]
             )
         )

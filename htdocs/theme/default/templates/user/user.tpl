@@ -20,7 +20,7 @@
         <tr>
             <td id="friendinfo_{$user->id}">
                 {if $user->introduction}
-                {$user->introduction|escape}
+                {$user->introduction}
                 {/if}
                 <div class="pending">
                     <strong>
@@ -93,7 +93,7 @@
             <td id="friendinfo_{$user->id}">
                 {if $user->introduction}
                 <p>
-                    {$user->introduction|escape}
+                    {$user->introduction}
                 </p>
                 {/if}
                 <ul>
@@ -135,7 +135,7 @@
         <tr>
             <td id="friendinfo_{$user->id}">
                 {if $user->introduction}
-                {$user->introduction|escape}
+                {$user->introduction}
                 {/if}
                 <div>
                     <ul>
@@ -181,7 +181,7 @@
         <tr>
             <td id="friendinfo_{$user->id}">
                 {if $user->introduction}
-                {$user->introduction|escape}
+                {$user->introduction}
                 {/if}
                 <div>
                     <ul>

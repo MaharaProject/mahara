@@ -63,7 +63,7 @@ $breadcrumbs = array(
 );
 
 $forums = get_records_sql_array(
-    'SELECT f.id, f.title, f.description, m.user AS moderator, COUNT(t.*), s.forum AS subscribed
+    'SELECT f.id, f.title, f.description, m.user AS moderator, COUNT(t.id), s.forum AS subscribed
     FROM {interaction_instance} f
     LEFT JOIN {interaction_forum_moderator} m ON m.forum = f.id
     LEFT JOIN {interaction_forum_topic} t ON (t.forum = f.id AND t.deleted != 1)
@@ -98,13 +98,16 @@ $i = 0;
 if ($forums) {
     foreach ($forums as $forum) {
         $forum->subscribe = pieform(array(
-            'name'     => 'subscribe'.$i++,
+            'name'     => 'subscribe_forum' . ($i == 0 ? '' : $i),
+            'plugintype' => 'interaction',
+            'pluginname' => 'forum',
             'successcallback' => 'subscribe_forum_submit',
             'autofocus' => false,
             'elements' => array(
                 'submit' => array(
                     'type'  => 'submit',
-                    'value' => $forum->subscribed ? get_string('Unsubscribe', 'interaction.forum') : get_string('Subscribe', 'interaction.forum')
+                    'value' => $forum->subscribed ? get_string('Unsubscribe', 'interaction.forum') : get_string('Subscribe', 'interaction.forum'),
+                    'help' => $i == 0 ? true : false
                 ),
                 'forum' => array(
                     'type' => 'hidden',
@@ -124,6 +127,7 @@ if ($forums) {
                 )
             )
         ));
+        $i++;
     }
 }
 

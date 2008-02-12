@@ -32,12 +32,17 @@ require('searchlib.php');
 safe_require('search', 'internal');
 
 $id = param_integer('id');
+$returnto = param_alpha('returnto', 'myfriends');
 
-if (!can_send_message($USER, $id)) {
+$user = get_record('usr', 'id', $id);
+
+if (!$user || !can_send_message($USER, $id)) {
 	throw new AccessDeniedException(get_string('cantmessageuser', 'group'));
 }
 
 define('TITLE', get_string('sendmessageto', 'group', display_name($id)));
+
+$user->introduction = get_field('artefact', 'title', 'artefacttype', 'introduction', 'owner', $id);
 
 $form = pieform(array(
     'name' => 'sendmessage',
@@ -52,7 +57,7 @@ $form = pieform(array(
         'submit' => array(
             'type' => 'submitcancel',
             'value' => array(get_string('sendmessage', 'group'), get_string('cancel')),
-            'goto' => get_config('wwwroot') . 'user/view.php?id=' . $id,
+            'goto' => get_config('wwwroot') . ($returnto == 'find' ? 'user/find.php' : ($returnto == 'view' ? 'user/view.php?id=' . $id : 'user/myfriends.php')),
         )
     )
 ));
@@ -60,11 +65,13 @@ $form = pieform(array(
 $smarty = smarty();
 $smarty->assign('heading', TITLE);
 $smarty->assign('form', $form);
-$smarty->display('user/denyrequest.tpl');
+$smarty->assign('user', $user);
+$smarty->display('user/sendmessage.tpl');
 
 function sendmessage_submit(Pieform $form, $values) {
     global $USER, $SESSION, $id;
-    send_user_message($USER, $values['message']);
+    $user = get_record('usr', 'id', $id);
+    send_user_message($user, $values['message']);
     $SESSION->add_ok_msg(get_string('messagesent', 'group'));
     switch (param_alpha('returnto', 'myfriends')) {
         case 'find':

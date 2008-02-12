@@ -77,9 +77,14 @@ $form = array(
             'type' => 'hidden',
             'value' => $new,
         ),
+        'accesslist' => array(
+            'type'         => 'viewacl',
+            'defaultvalue' => isset($view) ? $view->get_access() : null
+        ),
         'startdate'        => array(
             'type'         => 'calendar',
             'title'        => get_string('startdate','view'),
+            'description'  => get_string('startdatedescription', 'view'),
             'defaultvalue' => isset($view) ? strtotime($view->get('startdate')) : null,
             'caloptions'   => array(
                 'showsTime'      => true,
@@ -90,16 +95,13 @@ $form = array(
         'stopdate'  => array(
             'type'         => 'calendar',
             'title'        => get_string('stopdate','view'),
+            'description'  => get_string('stopdatedescription', 'view'),
             'defaultvalue' => isset($view) ? strtotime($view->get('stopdate')) : null,
             'caloptions'   => array(
                 'showsTime'      => true,
                 'ifFormat'       => '%Y/%m/%d %H:%M'
             ),
             'help'         => true,
-        ),
-        'accesslist' => array(
-            'type'         => 'viewacl',
-            'defaultvalue' => isset($view) ? $view->get_access() : null
         ),
         'submit'   => array(
             'type'  => !empty($new) ? 'cancelbackcreate' : 'submitcancel',

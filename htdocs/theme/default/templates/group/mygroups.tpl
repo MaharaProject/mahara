@@ -4,7 +4,7 @@
 {include file="columnleftstart.tpl"}
 <div class="addgrouplink">
 <span class="addicon">
-<a href="{$WWWROOT}group/create.php">{str tag="addgroup" section="group"}</a>
+<a href="{$WWWROOT}group/create.php">{str tag="creategroup" section="group"}</a>
 </span>
 </div>
 {$form}

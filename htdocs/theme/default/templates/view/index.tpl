@@ -1,6 +1,8 @@
 {include file="header.tpl"}
 {include file="sidebar.tpl"}
 {include file="columnleftstart.tpl"}
+
+<h2>{$heading}</h2>
 <div class="fr"><span class="addicon"><a href="{$WWWROOT}view/edit.php">{str tag="createview" section="view"}</a></span></div>
 <br>
 

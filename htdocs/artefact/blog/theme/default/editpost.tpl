@@ -15,7 +15,6 @@
         <div id='uploader'></div>
         <div id='browsebuttonstuff'>
           <input id='browsebutton' type='button' class='button' value='{str tag=browsemyfiles section=artefact.blog}'>
-          {contextualhelp plugintype='artefact' pluginname='blog' section='browsemyfiles'}
         </div>
         <div id='browsemyfiles' style='display: none;'>
           <h3>{str tag=myfiles section='artefact.file'}</h3>
@@ -45,9 +44,7 @@
         {$draftform}
         <div id='savecancel'>
           <input type='button' class='button' value='{str tag=savepost section=artefact.blog}' onclick="saveblogpost()">
-          {contextualhelp plugintype='artefact' pluginname='blog' section='saveblogpost'}
           <input type='button' class='button' value='{str tag=cancel}' onclick="canceledit()">
-          {contextualhelp plugintype='artefact' pluginname='blog' section='canceledit'}
         </div>
 {include file="columnleftend.tpl"}
 {include file="footer.tpl"}

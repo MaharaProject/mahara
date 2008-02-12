@@ -67,7 +67,7 @@ $pagination = build_pagination(array(
     'resultcounttextplural' => get_string('users', 'group'),
 ));
 
-$smarty = smarty(array(), array(), array(), array('sideblocks' => array(friends_control_sideblock())));
+$smarty = smarty(array(), array(), array(), array('sideblocks' => array(friends_control_sideblock('find'))));
 $smarty->assign('heading', TITLE);
 $smarty->assign('users', $data['data']);
 $smarty->assign('form', $searchform);

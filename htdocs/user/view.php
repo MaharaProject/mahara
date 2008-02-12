@@ -108,7 +108,7 @@ if ($allviews = get_records_array('view', 'owner', $userid)) {
         if (can_view_view($view->id)) {
             $views[$view->id] = $view;
             $view->artefacts = array();
-            $view->description = format_description($view->description);
+            $view->description = str_shorten($view->description, 100, false);
         }
     }
 }
@@ -143,12 +143,12 @@ if ($views) {
 }
 
 // Group stuff
-if (!$userassocgroups = get_associated_groups($userid)) {
+if (!$userassocgroups = get_associated_groups($userid, false)) {
     $userassocgroups = array();
 }
 
 foreach ($userassocgroups as $group) {
-    $group->description = format_description($group->description);
+    $group->description = str_shorten($group->description, 100, false);
 }
 
 if (is_postgres()) {
@@ -159,7 +159,12 @@ else if (is_mysql()) {
 }
 $records = get_records_select_array('usr_friend', 'usr1 = ? OR usr2 = ?', array($userid, $userid), $random, 'usr1, usr2', 0, 16);
 $numberoffriends = count_records_select('usr_friend', 'usr1 = ? OR usr2 = ?', array($userid, $userid));
-$friendsmessage = get_string('numberoffriends', 'group', $records ? count($records) : 0, $numberoffriends);
+if ($numberoffriends > 16) {
+    $friendsmessage = get_string('numberoffriends', 'group', $records ? count($records) : 0, $numberoffriends);
+}
+else {
+    $friendsmessage = get_string('Friends', 'group');
+}
 // get the friends into a 4x4 array
 $friends = array();
 for ($i = 0; $i < 4; $i++) {
@@ -177,13 +182,13 @@ for ($i = 0; $i < 4; $i++) {
 }
 
 $smarty = smarty();
-
+$allusergroups = get_associated_groups($userid);
 if ($loggedinid != $userid) {
     // Get the logged in user's "invite only" groups
     if ($groups = get_owned_groups($loggedinid, 'invite')) {
         $invitelist = array();
         foreach ($groups as $group) {
-            if (array_key_exists($group->id, $userassocgroups)) {
+            if (array_key_exists($group->id, $allusergroups)) {
                 continue;
             }
             $invitelist[$group->id] = $group->name;
@@ -321,15 +326,6 @@ $smarty->assign('friends', $friends);
 $smarty->assign('friendsmessage', $friendsmessage);
 $smarty->display('user/view.tpl');
 
-function format_description($description) {
-    $description = strip_tags($description);
-    // Note: the lengths are different to prevent chopping off just one or two characters in order to add an ellipsis
-    if (strlen($description) < 110) {
-        return $description;
-    }
-    return substr($description, 0, 100) . '...';
-}
-
 // Send an invitation to the user to join a group
 function invite_submit(Pieform $form, $values) {
     global $userid;
@@ -366,7 +362,7 @@ function addmember_submit(Pieform $form, $values) {
 
 function approve_deny_friendrequest_submit(Pieform $form, $values) {
     if (isset($values['deny'])) {
-        redirect('/user/denyrequest.php?id=' . $values['id']);
+        redirect('/user/denyrequest.php?id=' . $values['id'] . '&returnto=view');
     }
     else {
         acceptfriend_submit($form, $values);

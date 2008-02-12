@@ -31,7 +31,7 @@ define('MENUITEM', 'viewlayout');
 require_once(dirname(dirname(__FILE__)) . '/init.php');
 require_once('pieforms/pieform.php');
 require_once('view.php');
-define('TITLE', 'Views Layout [DANGER construction site]');
+define('TITLE', get_string('viewlayout', 'view'));
 
 $id = param_integer('id');
 $new = param_boolean('new');
@@ -39,6 +39,15 @@ $category = param_alpha('c', '');
 $view = new View($id);
 $numcolumns = $view->get('numcolumns');
 $currentlayout = $view->get('layout');
+$back = !$USER->get_account_preference('addremovecolumns');
+
+if ($view->get('owner') != $USER->get('id')) {
+    throw new AccessDeniedException(get_string('canteditdontown', 'view'));
+}
+// if not set, use equal width layout for that number of columns
+if (!$currentlayout) {
+    $currentlayout = ($numcolumns == 2 ? 1 : ($numcolumns == 3 ? 4 : 7));
+}
 
 if ($numcolumns > 1 && $numcolumns < 5) {
     $layouts = get_records_array('view_layout', 'columns', $numcolumns);
@@ -52,47 +61,27 @@ if ($numcolumns > 1 && $numcolumns < 5) {
             'layout'  => array(
                 'type' => 'radio',
                 'options' => $options,
-                'defaultvalue' => $view->get('layout'),
+                'defaultvalue' => $currentlayout,
             ),
             'submit' => array(
-                'type' => 'submit',
-                'value' => get_string('submit'),
+                'type' => 'submitcancel',
+                'value' => array(get_string('submit'), get_string('cancel')),
+                'goto' => get_config('wwwroot') . 'view/columns.php?id=' . $view->get('id') . '&c=' . $category . '&new=' . $new
             ),
         ),
     ));
 }
 else {
-    $nolayoutsmessage = get_string('noviewlayouts', 'view', $numcolumns);
+    $SESSION->add_error_msg(get_string('noviewlayouts', 'view', $numcolumns));
+    redirect('/view/blocks.php?id=' . $id . '&c=' . $category . '&new=' . $new);
 }
-
-$columnsform = pieform(array(
-    'name' => 'viewcolumns',
-    'renderer' => 'oneline',
-    'elements' => array(
-        'numcolumns' => array(
-            'type' => 'select',
-            'options' => array( 1 => '1', 2 => '2', 3 => '3', 4 => '4', 5 => '5'),
-            'defaultvalue' => $numcolumns,
-        ),
-        'submit' => array(
-            'type' => 'submit',
-            'value' => get_string('changeviewcolumns', 'view')
-        )
-    )
-));
 
 $smarty = smarty();
-$smarty->assign('columnsform', $columnsform);
 $smarty->assign('currentlayout', $currentlayout);
-$smarty->assign('view', $id);
-$smarty->assign('new', $new);
-if (isset($layoutform)) {
-    $smarty->assign('form_start_tag', $layoutform->get_form_tag());
-    $smarty->assign('options', $options);
-}
-else {
-    $smarty->assign('nolayouts', $nolayoutsmessage);
-}
+$smarty->assign('form', $layoutform);
+$smarty->assign('form_start_tag', $layoutform->get_form_tag());
+$smarty->assign('options', $options);
+$smarty->assign('back', $back);
 $smarty->display('view/layout.tpl');
 
 function viewlayout_submit(Pieform $form, $values) {
@@ -100,33 +89,7 @@ function viewlayout_submit(Pieform $form, $values) {
     $view->set('layout', $values['layout']);
     $view->commit();
     $SESSION->add_ok_msg(get_string('viewlayoutchanged', 'view'));
-    redirect(get_config('wwwroot') . 'view/blocks.php?id=' . $view->get('id') . '&new=' . $new);
-}
-
-function viewcolumns_submit(Pieform $form, $values) {
-    global $view, $SESSION, $category, $new;
-
-    $oldcolumns = $view->get('numcolumns');
-    $newcolumns = $values['numcolumns'];
-
-    if ($oldcolumns > $newcolumns) {
-        for ($i = $oldcolumns; $i > $newcolumns; $i--) {
-            $view->removecolumn(array('column' => $i));
-        }
-    }
-    else if ($oldcolumns < $newcolumns) {
-        for ($i = $oldcolumns; $i < $newcolumns; $i++) {
-            $view->addcolumn(array('before' => $i + 1, 'returndata' => false));
-        }
-    }
-
-    $SESSION->add_ok_msg(get_string('viewlayoutchanged', 'view'));
-    if ($newcolumns > 1 && $newcolumns < 5) {
-        redirect(get_config('wwwroot') . 'view/layout.php?id=' . $view->get('id') . '&c=' . $category . '&new=' . $new);
-    }
-    else {
-        redirect(get_config('wwwroot') . 'view/blocks.php?id=' . $view->get('id') . '&new=' . $new);
-    }
+    redirect(get_config('wwwroot') . 'view/blocks.php?id=' . $view->get('id') . '&c=' . $category . '&new=' . $new);
 }
 
 ?>

@@ -1627,6 +1627,12 @@ function main_nav() {
                 'title' => get_string('activityprefs'),
                 'weight' => 30,
             ),
+            array(
+                'path' => 'settings/institutions',
+                'url' => 'account/institutions.php',
+                'title' => get_string('institution'),
+                'weight' => 40,
+            ),
         );
 
         if ($plugins = get_records_array('artefact_installed', 'active', 1)) {
@@ -1995,6 +2001,48 @@ function display_cleaned_html($html, $filename, $params) {
     exit;
 }
 
+/**
+ * Takes a string and a length, and ensures that the string is no longer than
+ * this length, by putting '...' in the middle
+ * Strips all tags except <br> and <p>
+ *
+ * @param string $str String to shorten
+ * @param int $maxlen The maximum length the new string should be (default 100)
+ * @param bool $truncate if true, cut the string at the end rather than in the middle (default false)
+ * @param bool $newlines if false, cut off after the first newline (default true)
+ * @return string
+ */
+function str_shorten($str, $maxlen=100, $truncate=false, $newlines=true) {
+    if (empty($str)) {
+        return $str;
+    }
+    if (!$newlines) {
+        $nextbreak = strpos($str, '<p', 1);
+        if ($nextbreak !== false) {
+            $str = substr($str, 0, $nextbreak);
+        }
+        $nextbreak = strpos($str, '<br', 1);
+        if ($nextbreak !== false) {
+            $str = substr($str, 0, $nextbreak);
+        }
+    }
+    // so newlines don't disappear but ignore the first <p>
+    $str = $str[0] . str_replace('<p', "\n\n<p", substr($str, 1));
+    $str = str_replace('<br', "\n<br", $str);
+
+    $str = strip_tags($str);
+    $str = html_entity_decode($str); // no things like &nbsp; only take up one character
+    // take the first $length chars, then up to the first space (max length $length + $extra chars)
+
+    if ($truncate && strlen($str) > $maxlen) {
+        $str = substr($str, 0, $maxlen-3) . '...';
+    }
+    if (strlen($str) > $maxlen) {
+        $str =  substr($str, 0, floor($maxlen / 2) - 1) . '...' . substr($str, -(floor($maxlen / 2) - 2));
+    }
+
+    return nl2br(hsc($str));
+}
 
 /**
  * Builds pagination links for HTML display.

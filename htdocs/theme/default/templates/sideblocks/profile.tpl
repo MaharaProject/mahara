@@ -46,7 +46,7 @@
         {/if}
         {if $data.artefacts}
         <li>
-            <a href="{$WWWROOT}artefact/file/">{str tag="artefacts"}:</a>
+            {str tag="artefacts"}:
             <ul>
             {foreach from=$data.artefacts item=artefact}
                 {if $artefact->artefacttype == 'blog'}

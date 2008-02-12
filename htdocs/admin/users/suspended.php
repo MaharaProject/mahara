@@ -68,11 +68,6 @@ $form = new Pieform(array(
             'name' => 'unsuspend',
             'value' => get_string('unsuspendusers', 'admin')
         ),
-        'export' => array(
-            'type' => 'submit',
-            'name' => 'export',
-            'value' => get_string('exportuserprofiles', 'admin')
-        ),
         'delete' => array(
             'type'    => 'submit',
             'confirm' => get_string('confirmdeleteusers', 'admin'),
@@ -95,13 +90,6 @@ function buttons_submit_unsuspend(Pieform $form, $values) {
     }
 
     $SESSION->add_ok_msg(get_string('usersunsuspendedsuccessfully', 'admin'));
-    redirect('/admin/users/suspended.php');
-}
-
-function buttons_submit_export(Pieform $form, $values) {
-    global $SESSION;
-    $ids = get_user_ids_from_post();
-    $SESSION->add_info_msg(get_string('exportingnotsupportedyet', 'admin'));
     redirect('/admin/users/suspended.php');
 }
 

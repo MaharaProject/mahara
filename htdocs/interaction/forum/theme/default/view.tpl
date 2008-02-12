@@ -52,6 +52,11 @@
         {/if}
     </select>
     <input type="submit" name="updatetopics1" value="{str tag="updateselectedtopics" section="interaction.forum"}" class="submit">
+    {if $moderator}
+        {contextualhelp plugintype='interaction' pluginname='forum' section='updatemod'}
+    {else}
+        {contextualhelp plugintype='interaction' pluginname='forum' section='update'}
+    {/if}
     {/if}
     <table>
         <tr>
@@ -89,6 +94,11 @@
         {/if}
     </select>
     <input type="submit" name="updatetopics2" value="{str tag="updateselectedtopics" section="interaction.forum"}" class="submit">
+    {if $moderator}
+        {contextualhelp plugintype='interaction' pluginname='forum' section='updatemod'}
+    {else}
+        {contextualhelp plugintype='interaction' pluginname='forum' section='update'}
+    {/if}
     {/if}
 </form>
 

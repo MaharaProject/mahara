@@ -839,7 +839,7 @@ function get_users_data($userlist) {
 
     foreach ($data as &$record) {
         if (isset($record->introduction)) {
-            $record->introduction = format_text($record->introduction);
+            $record->introduction = str_shorten($record->introduction, 100, false);
         }
 
         $record->messages = ($record->messages == 'allow' || $record->friend && $record->messages == 'friends' || $USER->get('admin')) ? 1 : 0;
@@ -919,7 +919,7 @@ function get_users_data($userlist) {
     return $ordereddata;
 }
 
-function friends_control_sideblock() {
+function friends_control_sideblock($returnto='myfriends') {
     global $USER;
     $form = array(
         'name' => 'friendscontrol',
@@ -944,6 +944,10 @@ function friends_control_sideblock() {
                 'type' => 'submit',
                 'value' => get_string('save')
             ),
+            'returnto' => array(
+                'type' => 'hidden',
+                'value' => $returnto
+            )
         )
     );
     // Make a sideblock to put the friendscontrol block in
@@ -958,7 +962,7 @@ function friendscontrol_submit(Pieform $form, $values) {
     global $USER, $SESSION;
     $USER->set_account_preference('friendscontrol', $values['friendscontrol']);
     $SESSION->add_ok_msg(get_string('updatedfriendcontrolsetting', 'account'));
-    redirect('/user/myfriends.php');
+    redirect($values['returnto'] == 'find' ? '/user/find.php' : '/user/myfriends.php');
 }
 
 function acceptfriend_submit(Pieform $form, $values) {

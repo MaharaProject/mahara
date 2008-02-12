@@ -220,7 +220,6 @@ $addstr = get_string('add');
 $editstr = get_string('edit');
 $delstr = get_string('delete');
 $confirmdelstr = get_string('compositedeleteconfirm', 'artefact.resume');
-$confirmeditprofilestr = get_string('confirmeditprofile', 'artefact.resume');
 $imagepath = theme_get_url('images');
 $upstr = get_string('moveup', 'artefact.resume');
 $downstr = get_string('movedown', 'artefact.resume');
@@ -250,8 +249,8 @@ function toggleCompositeForm(type) {
     }
 }
 
-function compositeSaveCallback(name, data) {
-    key = name.substr(3);
+function compositeSaveCallback(form, data) {
+    key = form.id.substr(3);
     tableRenderers[key].doupdate(); 
     toggleCompositeForm(key);
     $('add' + key).reset();
@@ -288,9 +287,7 @@ function moveComposite(type, id, artefact, direction) {
 }
 
 function editprofilebutton() {
-    if (confirm('{$confirmeditprofilestr}')) {
-        document.location='{$wwwroot}artefact/internal/';
-    }
+    document.location='{$wwwroot}artefact/internal/index.php?fs=contact';
     return false;
 }
 
@@ -320,17 +317,25 @@ EOF;
             return TD(null, link);
         },
         function (r, d) {
-            var up = A({'href': ''}, IMG({'src': '{$imagepath}/move-block-up.png', 'alt':'{$upstr}'}));
-            connect(up, 'onclick', function (e) {
-                e.stop();
-                return moveComposite(d.type, r.id, r.artefact, 'up');
-            });
-            var down = A({'href': ''}, IMG({'src': '{$imagepath}/move-block-down.png', 'alt':'{$downstr}'}));
-            connect(down, 'onclick', function (e) {
-                e.stop();
-                return moveComposite(d.type, r.id, r.artefact, 'down');
-            });
-            return TD(null, up, ' ', down);
+            var buttons = [];
+            if (r._rownumber > 1) {
+                var up = A({'href': ''}, IMG({'src': '{$imagepath}/move-block-up.png', 'alt':'{$upstr}'}));
+                connect(up, 'onclick', function (e) {
+                    e.stop();
+                    return moveComposite(d.type, r.id, r.artefact, 'up');
+                });
+                buttons.push(up);
+            }
+            if (!r._last) {
+                var down = A({'href': ''}, IMG({'src': '{$imagepath}/move-block-down.png', 'alt':'{$downstr}'}));
+                connect(down, 'onclick', function (e) {
+                    e.stop();
+                    return moveComposite(d.type, r.id, r.artefact, 'down');
+                });
+                buttons.push(' ');
+                buttons.push(down);
+            }
+            return TD({'style':'text-align:center;'}, buttons);
         }
     ]
 );

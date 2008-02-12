@@ -73,6 +73,7 @@ $form = pieform(array(
 $smarty = smarty();
 $smarty->assign('heading', TITLE);
 $smarty->assign('form', $form);
+$smarty->assign('group', $group);
 $smarty->display('group/invite.tpl');
 
 function invitetogroup_submit(Pieform $form, $values) {

@@ -47,7 +47,7 @@ $count = count_records('view', 'owner', $userid);
 
 /* Do this in one query sometime */
 
-$viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description, g.id AS group, g.name
+$viewdata = get_records_sql_array('SELECT v.id,v.title,v.startdate,v.stopdate,v.description, g.id AS groupid, g.name
         FROM {view} v
         LEFT OUTER JOIN {group} g ON (v.submittedto = g.id AND g.deleted = 0)
         WHERE v.owner = ' . $userid . '

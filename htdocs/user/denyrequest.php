@@ -33,10 +33,14 @@ require('searchlib.php');
 safe_require('search', 'internal');
 
 $id = param_integer('id');
+$returnto = param_alpha('returnto', 'myfriends');
 
 if (!record_exists('usr_friend_request', 'owner', $USER->get('id'), 'requester', $id)) {
     throw new AccessDeniedException(get_string('cantdenyrequest', 'group'));
 }
+
+$user = get_record('usr', 'id', $id);
+$user->introduction = get_field('artefact', 'title', 'artefacttype', 'introduction', 'owner', $id);
 
 $form = pieform(array(
     'name' => 'denyrequest',
@@ -51,7 +55,7 @@ $form = pieform(array(
         'submit' => array(
             'type' => 'submitcancel',
             'value' => array(get_string('denyfriendrequestlower', 'group'), get_string('cancel')),
-            'goto' => get_config('wwwroot') . 'user/view.php?id=' . $id,
+            'goto' => get_config('wwwroot') . ($returnto == 'find' ? 'user/find.php' : ($returnto == 'view' ? 'user/view.php?id=' . $id : 'user/myfriends.php')),
         )
     )
 ));
@@ -59,6 +63,7 @@ $form = pieform(array(
 $smarty = smarty();
 $smarty->assign('heading', TITLE);
 $smarty->assign('form', $form);
+$smarty->assign('user', $user);
 $smarty->display('user/denyrequest.tpl');
 
 function denyrequest_submit(Pieform $form, $values) {

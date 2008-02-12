@@ -290,8 +290,12 @@ function clam_scan_file(&$file) {
         clam_handle_infected_file($fullpath); 
         // Notify admins if user has uploaded more than 3 infected
         // files in the last month
-        if (count_records_sql('SELECT COUNT(*) FROM {usr_infectedupload}
-            WHERE usr = ? AND time > CURRENT_TIMESTAMP - ?::INTERVAL;', array($userid, '1 month')) >= 2) {
+        if (count_records_sql('
+            SELECT
+                COUNT(*)
+            FROM {usr_infectedupload}
+            WHERE usr = ? AND time > ?',
+            array($userid, db_format_timestamp(time() - 60*60*24*30))) >= 2) {
             log_debug('sending virusrepeat notification');
             $data = (object) array('username' => $USER->get('username'),
                                    'userid' => $userid,
