@@ -36,9 +36,14 @@ function xmldb_artefact_resume_upgrade($oldversion=0) {
             'artefact_resume_educationhistory',
             'artefact_resume_membership') as $table) {
             $records = get_records_array($table, '', '', 'startdate DESC', 'id,startdate,enddate');
-            table_column($table, null, 'displayorder');
+            // Sigh. table_column is screwed beyond belief. We let it do its 
+            // work (in the case of start and stopdate at least because it does 
+            // cast the columns OK), then fix its bugs
+            execute_sql('ALTER TABLE {' . $table . '} ADD displayorder INTEGER');
             table_column($table, 'startdate', 'startdate', 'text', null, null, '', 'not null');
+            execute_sql('ALTER TABLE {' . $table . '} ALTER COLUMN startdate DROP DEFAULT');
             table_column($table, 'enddate', 'enddate', 'text', null, null, '', '');
+            execute_sql('ALTER TABLE {' . $table . '} ALTER COLUMN enddate DROP DEFAULT');
             if (!empty($records)) {
                 foreach ($records as $k => $r) {
                     set_field($table, 'displayorder', $k, 'id', $r->id);
@@ -50,13 +55,16 @@ function xmldb_artefact_resume_upgrade($oldversion=0) {
                               'id', $r->id);
                 }
             }
+            execute_sql('ALTER TABLE {' . $table . '} ALTER displayorder SET NOT NULL');
+            execute_sql('ALTER TABLE {' . $table . '} ALTER COLUMN startdate SET NOT NULL');
         }
         foreach (array(
             'artefact_resume_certification',
             'artefact_resume_book') as $table) {
             $records = get_records_array($table, '', '', 'date DESC', 'id,date');
-            table_column($table, null, 'displayorder');
+            execute_sql('ALTER TABLE {' . $table . '} ADD displayorder INTEGER');
             table_column($table, 'date', 'date', 'text', null, null, '', 'not null');
+            execute_sql('ALTER TABLE {' . $table . '} ALTER COLUMN date DROP DEFAULT');
             if (!empty($records)) {
                 foreach ($records as $k => $r) {
                     set_field($table, 'displayorder', $k, 'id', $r->id);
@@ -65,6 +73,8 @@ function xmldb_artefact_resume_upgrade($oldversion=0) {
                               'id', $r->id);
                 }
             }
+            execute_sql('ALTER TABLE {' . $table . '} ALTER displayorder SET NOT NULL');
+            execute_sql('ALTER TABLE {' . $table . '} ALTER COLUMN date SET NOT NULL');
         }
     }
 

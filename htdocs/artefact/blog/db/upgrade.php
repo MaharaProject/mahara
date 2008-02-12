@@ -95,6 +95,15 @@ function xmldb_artefact_blog_upgrade($oldversion=0) {
     if ($oldversion < 2008020700) {
         $table = new XMLDBTable('artefact_blog_blog');
         drop_table($table);
+
+        if (is_postgres()) {
+            // Rename indexes to keep things the same regardless of whether the 
+            // user installed or upgraded to this release
+            execute_sql('DROP INDEX {arteblogblog_blo2_ix}');
+            execute_sql('CREATE INDEX {arteblogblog_blo_ix} ON {artefact_blog_blogpost} USING btree (blogpost)');
+            execute_sql('ALTER TABLE {artefact_blog_blogpost} DROP CONSTRAINT {arteblogblog_blo2_fk}');
+            execute_sql('ALTER TABLE {artefact_blog_blogpost} ADD CONSTRAINT {arteblogblog_blo_fk} FOREIGN KEY (blogpost) REFERENCES {artefact}(id)');
+        }
     }
     return $status;
 }
