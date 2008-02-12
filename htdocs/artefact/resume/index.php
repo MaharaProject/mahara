@@ -287,7 +287,7 @@ function moveComposite(type, id, artefact, direction) {
 }
 
 function editprofilebutton() {
-    document.location='{$wwwroot}artefact/internal/';
+    document.location='{$wwwroot}artefact/internal/index.php?fs=contact';
     return false;
 }
 

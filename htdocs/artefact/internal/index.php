@@ -35,6 +35,8 @@ define('TITLE', get_string('profile','artefact.internal'));
 require_once('pieforms/pieform.php');
 safe_require('artefact', 'internal');
 
+$fieldset = param_alpha('fs', 'aboutme');
+
 $element_list = call_static_method('ArtefactTypeProfile', 'get_all_fields');
 $element_required = call_static_method('ArtefactTypeProfile', 'get_mandatory_fields');
 
@@ -121,28 +123,28 @@ $elements = array(
         'type' => 'fieldset',
         'legend' => get_string('aboutme', 'artefact.internal'),
         'collapsible' => true,
-        'collapsed' => false,
+        'collapsed' => $fieldset != 'aboutme',
         'elements' => get_desired_fields(&$items, array('firstname', 'lastname', 'studentid', 'preferredname', 'introduction')),
     ),
     'contact' => array(
         'type' => 'fieldset',
         'legend' => get_string('contact', 'artefact.internal'),
         'collapsible' => true,
-        'collapsed' => true,
+        'collapsed' => $fieldset != 'contact',
         'elements' => get_desired_fields(&$items, array('email', 'officialwebsite', 'personalwebsite', 'blogaddress', 'address', 'town', 'city', 'country', 'homenumber', 'businessnumber', 'mobilenumber', 'faxnumber')),
     ),
     'messaging' => array(
         'type' => 'fieldset',
         'legend' => get_string('messaging', 'artefact.internal'),
         'collapsible' => true,
-        'collapsed' => true,
+        'collapsed' => $fieldset != 'messaging',
         'elements' => get_desired_fields(&$items, array('icqnumber', 'msnnumber', 'aimscreenname', 'yahoochat', 'skypeusername', 'jabberusername')),
     ),
     'general' => array(
         'type' => 'fieldset',
         'legend' => get_string('general', 'artefact.internal'),
         'collapsible' => true,
-        'collapsed' => true,
+        'collapsed' => $fieldset != 'general',
         'elements' => $items
     ),
     'submit' => array(
