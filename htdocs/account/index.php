@@ -144,6 +144,7 @@ $elements['submit'] = array(
 
 $prefsform = array(
     'name'        => 'accountprefs',
+    'renderer'    => 'table',
     'method'      => 'post',
     'jsform'      => true,
     'plugintype'  => 'core',
