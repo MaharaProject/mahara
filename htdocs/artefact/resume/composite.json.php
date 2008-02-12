@@ -34,7 +34,7 @@ if (isset($_POST['view'])) {
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('artefact', 'resume');
 
-$limit = param_integer('limit', 10);
+$limit = param_integer('limit', null);
 $offset = param_integer('offset', 0);
 $type = param_alpha('type');
 $view = param_integer('view', 0);
@@ -50,8 +50,7 @@ $sql = 'SELECT ar.*, a.owner
     FROM {artefact} a 
     JOIN {' . $othertable . '} ar ON ar.artefact = a.id
     WHERE a.owner = ? AND a.artefacttype = ?
-    ORDER BY ar.displayorder
-    LIMIT ' . $limit . ' OFFSET ' . $offset;
+    ORDER BY ar.displayorder';
 
 if (!empty($view)) { 
     if (!can_view_view($view)) {
