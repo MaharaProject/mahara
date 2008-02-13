@@ -5,7 +5,7 @@
           {mahara_pagelinks offset=$results.offset limit=$results.limit count=$results.count url=$pagebaseurl assign=pagelinks}
           {if (!empty($pagelinks))}
           <tr class="search-results-pages">
-            <td colspan={$ncols}>
+            <td colspan="{$ncols}">
             {$pagelinks}
             </td>
           </tr>
@@ -24,7 +24,7 @@
         </thead>
         <tbody>
         {foreach from=$results.data item=r}
-          <tr>
+          <tr class="{cycle values="r0,r1"}">
           {foreach from=$cols key=f item=c}
             {if empty($c.template)}
             <td>{$r[$f]}</td>
