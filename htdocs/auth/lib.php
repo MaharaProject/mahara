@@ -373,6 +373,7 @@ function auth_setup () {
         }
         $USER->renew();
         auth_check_password_change();
+        auth_check_required_fields();
     }
     else if ($sessionlogouttime > 0) {
         // The session timed out
@@ -654,6 +655,74 @@ function auth_get_available_auth_types($institution=null) {
     }
 
     return $result;
+}
+/**
+ * Checks that all the required fields are set, and handles setting them if required.
+ */
+function auth_check_required_fields() {
+    global $USER;
+    safe_require('artefact', 'internal');
+    require_once('pieforms/pieform.php');
+    $elements = array();
+
+    foreach(ArtefactTypeProfile::get_mandatory_fields() as $field => $type) {
+        if (get_profile_field($USER->get('id'), $field) != null) {
+            continue;
+        }
+
+        $elements[$field] = array(
+            'type'  => $type,
+            'title' => get_string($field, 'artefact.internal'),
+            'rules' => array('required' => true)
+        );
+
+        // @todo ruthlessly stolen from artefact/internal/index.php, could be merged
+        if ($type == 'wysiwyg') {
+            $elements[$field]['rows'] = 10;
+            $elements[$field]['cols'] = 60;
+        }
+        if ($type == 'textarea') {
+            $elements[$field]['rows'] = 4;
+            $elements[$field]['cols'] = 60;
+        }
+        if ($field == 'country') {
+            $elements[$field]['options'] = getoptions_country();
+            $elements[$field]['defaultvalue'] = 'nz';
+        }
+    }
+
+    if (empty($elements)) { // No mandatory fields that aren't set
+        return;
+    }
+
+    $elements['submit'] = array(
+        'type' => 'submit',
+        'value' => get_string('submit')
+    );
+
+    $form = pieform(array(
+        'name'     => 'requiredfields',
+        'method'   => 'post',
+        'action'   => '',
+        'elements' => $elements
+    ));
+
+    $smarty = smarty();
+    $smarty->assign('form', $form);
+    $smarty->display('requiredfields.tpl');
+    exit;
+}
+
+function requiredfields_submit(Pieform $form, $values) {
+    global $USER, $SESSION;
+    foreach ($values as $field => $value) {
+        if (in_array($field, array('submit', 'sesskey'))) {
+            continue;
+        }
+        set_profile_field($USER->get('id'), $field, $value);
+    }
+    $SESSION->add_ok_msg(get_string('requiredfieldsset', 'auth'));
+    redirect();
 }
 
 /**
@@ -984,6 +1053,7 @@ function login_submit(Pieform $form, $values) {
 
         if (empty($authenticated)) {
             $SESSION->add_error_msg(get_string('loginfailed'));
+            return;
         }
 
     }
@@ -1028,41 +1098,40 @@ function login_submit(Pieform $form, $values) {
 
                 $USER->authinstance = $authinstance->id;
                 $userdata = $auth->get_user_info($username);
-                if (
-                     empty($userdata) ||
-                     empty($userdata->firstname) ||
-                     empty($userdata->lastname) ||
-                     empty($userdata->email) 
-                    ) {
-                    // TODO: eventually get_user_info won't have to return all of this information
+
+                if (empty($userdata) || empty($userdata->email)) {
                     throw new AuthUnknownUserException("\"$username\" is not known");
                 }
-                else {
-                    // We have the data - create the user
-                    $USER->lastlogin = db_format_timestamp(time());
+                // We have the data - create the user
+                $USER->lastlogin = db_format_timestamp(time());
+                if (isset($userdata->firstname)) {
                     $USER->firstname = $userdata->firstname;
-                    $USER->lastname  = $userdata->lastname;
-                    $USER->email     = $userdata->email;
-
-                    try {
-                        db_begin();
-                        $USER->commit();
+                }
+                if (isset($userdata->lastname)) {
+                    $USER->lastname = $userdata->lastname;
+                }
+                $USER->email = $userdata->email;
+                try {
+                    db_begin();
+                    $USER->commit();
+                    if (isset($userdata->firstname)) {
                         set_profile_field($USER->id, 'firstname', $USER->firstname);
+                    }
+                    if (isset($userdata->lastname)) {
                         set_profile_field($USER->id, 'lastname', $USER->lastname);
-                        set_profile_field($USER->id, 'email', $USER->email);
-
-                        if ($authinstance->institution !== 'mahara') {
-                            $USER->join_institution($authinstance->institution);
-                        }
-
-                        handle_event('createuser', $USER->to_stdclass());
-                        db_commit();
-                        $USER->reanimate($USER->id, $authinstance->id);
                     }
-                    catch (Exception $e) {
-                        db_rollback();
-                        throw $e;
+                    set_profile_field($USER->id, 'email', $USER->email);
+                    if ($authinstance->institution !== 'mahara') {
+                        $USER->join_institution($authinstance->institution);
                     }
+
+                    handle_event('createuser', $USER->to_stdclass());
+                    db_commit();
+                    $USER->reanimate($USER->id, $authinstance->id);
+                }
+                catch (Exception $e) {
+                    db_rollback();
+                    throw $e;
                 }
             }
 
@@ -1120,6 +1189,7 @@ function login_submit(Pieform $form, $values) {
     // User is allowed to log in
     //$USER->login($userdata);
     auth_check_password_change();
+    auth_check_required_fields();
 }
 
 /**

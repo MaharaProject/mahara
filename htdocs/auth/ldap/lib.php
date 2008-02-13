@@ -265,9 +265,7 @@ class AuthLdap extends Auth {
         $attributes['lastname']  = $this->config['surnamefield' ];
         $attributes['email']     = $this->config['emailfield'];
 
-        if (!$userinfo = $this->get_userinfo_ldap($username, $attributes)) {
-            throw new AuthUnknownUserException("Could not get data for user");
-        }
+        $userinfo = $this->get_userinfo_ldap($username, $attributes);
 
         return (object)$userinfo;
     }
@@ -551,6 +549,7 @@ class PluginAuthLdap extends PluginAuth {
                 'title' => get_string('ldapfieldforemail', 'auth.ldap'),
                 'defaultvalue' => self::$default_config['emailfield'],
                 'help' => true,
+                'rules' => array('required' => true),
             ),
         );
 
